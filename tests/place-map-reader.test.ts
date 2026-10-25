@@ -23,6 +23,24 @@ const row = (id: string, code: string, layer: string, version: string, extra: Re
   county_attachment: false, host_county_id: null, partial: false, fringe: false, ...extra,
 });
 
+test("a ballot map link without a named state shares its one exact point lookup", async () => {
+  const lat = 33.4484, lng = -112.074, id = state("AZ");
+  const geometry = { type: "Polygon", coordinates: [[[-113,33],[-111,33],[-111,34],[-113,34],[-113,33]]] };
+  let queries = 0;
+  installPlaceMapQuery(async () => { queries++; return [row(id,"AZ","state","state:2026",{geometry})]; });
+  try {
+    const handler = readerRoute("/ballot", async (params: { searchParams: Promise<{lat:string;lng:string}> }) => {
+      const place = await ballotPlaceFromParams(await params.searchParams);
+      assert.equal(place.zip,null);
+      assert.equal(place.state?.code,"AZ");
+      assert.deepEqual(place.centroid,{lat,lng});
+      assert.deepEqual(await ballotPlaceDivisions({lat,lng}),[id]);
+    });
+    await handler({searchParams:Promise.resolve({lat:String(lat),lng:String(lng)})});
+    assert.equal(queries,1);
+  } finally { installPlaceMapQuery(undefined); }
+});
+
 test("a map request uses one exact point lookup for its state and every downstream place read", async () => {
   const features = JSON.parse(readFileSync("public/geo/state-outlines.geojson", "utf8")).features;
   const points = [

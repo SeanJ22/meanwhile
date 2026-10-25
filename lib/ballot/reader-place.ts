@@ -14,14 +14,14 @@ export interface BallotPlace {
   readonly state: { readonly code: string; readonly name: string; readonly ocdId: string } | null;
 }
 
-/** A ZIP names the place unless the named state says the reader is elsewhere; then the map point does. */
+/** Typed ZIP links retain their area; map links carry their exact point. */
 export async function ballotPlaceFromParams(params: { zip?: string; state?: string; lat?: string; lng?: string }): Promise<BallotPlace> {
   const zip = params.zip && /^\d{5}$/.test(params.zip) ? params.zip : null;
   const resolution = zip ? await resolveZipLocation(zip) : null;
   const jurisdiction = US_JURISDICTIONS.find(row => row.usps === params.state?.toUpperCase());
   const lat = params.lat ? Number(params.lat) : NaN, lng = params.lng ? Number(params.lng) : NaN;
   const point = Number.isFinite(lat) && Math.abs(lat) <= 90 && Number.isFinite(lng) && Math.abs(lng) <= 180 ? { lat, lng } : null;
-  if (jurisdiction && point && !(resolution?.ok && resolution.centroid.postal?.state === jurisdiction.usps)) {
+  if (point && (!zip || jurisdiction && !(resolution?.ok && resolution.centroid.postal?.state === jurisdiction.usps))) {
     const selected = currentReaderSelection();
     const place = selected?.point?.[0] === lng && selected.point[1] === lat && !selected.zip && selected.place
       ? selected.place : await readPointPlace(lat,lng);

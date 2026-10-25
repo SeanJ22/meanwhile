@@ -398,7 +398,7 @@ export async function bodyById(bodyId: string): Promise<Body | null> {
   return null;
 }
 
-/** The divisions containing a point, from the committed geometry. */
+/** The divisions containing a point, from the shared place map. */
 export async function divisionsAt(lat: number, lng: number): Promise<Division[]> {
   const { divisionsById } = await registryLoaded();
   const selected = currentReaderSelection();

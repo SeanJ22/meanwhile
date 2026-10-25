@@ -120,7 +120,7 @@ interface TaggedResult extends MeetingSearchResult {
   zip: string;
   /** Which view request produced this answer; stale answers are dropped. */
   viewKey: string;
-  /** The nearest ZCTA to a settled viewport, resolved server-side. */
+  /** The typed ZIP when this answer came from ZIP entry. */
   nearZip?: string | null;
   /** Present when the committed snapshot served this answer. */
   snapshot?: SnapshotStatus | null;
@@ -129,7 +129,7 @@ interface TaggedResult extends MeetingSearchResult {
 interface ViewTarget {
   key: string;
   kind: "zip" | "settled";
-  /** Known for a typed zip; resolved server-side for a settled viewport. */
+  /** Present for a typed ZIP; a map point has no ZIP. */
   zip: string | null;
   lat: number;
   lng: number;
@@ -1050,7 +1050,7 @@ function MapEntryInner() {
   // The sidebar stays under the scrim while a card is open.
   const sidebarUp = sidebarVisible;
 
-  const clusterZip = shown
+  const clusterZip = view?.kind === "settled" ? null : shown
     ? /^\d{5}$/.test(shown.zip)
       ? shown.zip
       : (shown.nearZip ?? null)

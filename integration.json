@@ -4617,6 +4617,7 @@
     "river_sha": "e84d06c43",
     "tested_sha": "e84d06c43",
     "gates": "pass (9 of 9, 9,937 tests)",
-    "at": "2026-10-25T14:39:40Z"
+    "at": "2026-10-25T14:39:40Z",
+    "live": "release 117 main 03e0526b6 at 2026-10-25T15:12:37Z"
   }
 ]

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 116 (main 1d2ac473a, CL-01), live 9:31 AM EDT. SHIPPING: release 117 (RB-A4 2bdbde3ba, gates 9 of 9) PR #829, auto-merge on; reader checks within 5 min of live. GATING: RT-01 a13baecf8 alone (river-next on e84d06c43). Queue (each its own batch): AD-01 69806d306, DB-03 one fix at a time (04681516c, e4305907d, f2d76ac1f, ef74ed82e, 11072d2ed), RB-A7 (no READY yet; after RB-A4), DB-02 + BL-02 (bl-02-bills c3fff3702), MT-01 f26ebab8d, RB-A3 be0bef2bf, RN-03 1307d4e03. HELD: RB-A10 7b5eacd03 (place_boundary, zip_place, zcta_place all 0 rows at 10:25 AM EDT)
+build_state: LIVE FOR READERS: release 117 (main 03e0526b6, RB-A4), live 11:12 AM EDT; reader checks green; placement_basis column present in production. GATING: DB-03 inventory readback f2d76ac1f alone (cherry-picked onto river e84d06c43; one conflict resolved). Sean's order (11:15 AM EDT), each its own release: DB-03 inventory readback f2d76ac1f, DB-03 Admin 04681516c, DB-03 state doors e4305907d, DB-03 linking-page integration ef74ed82e, DB-03 read-path connection 11072d2ed, RT-01 a13baecf8, AD-01 69806d306, VS-05 when it posts, then the rest as they arrive. HELD: RB-A10 7b5eacd03 (place map 0 rows in all three tables at 10:25 AM EDT)
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T14:42:00Z
+heartbeat: 2026-10-25T15:40:00Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -938,3 +938,18 @@ Per fold: claim the lock, fold the exact READY, merge main in, number migrations
 - PR #828 merged at 9:29 AM EDT. /api/build showed 1d2ac473a at 9:31:55 AM; checks ran right after.
 - Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
 - Random ZIPs, seed 1116: 20/20 load (ballot 200, meetings 200). All 20 resolve to their county and city, across IN, AK, OH, VT, MO, TN, DE, FL, TX, IL, WI, OK, NC, AR, ME, NY, MN, VA, VI and WV.
+
+### Release 117 live, 11:12 AM EDT (main 03e0526b6: RB-A4)
+- Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
+- Random ZIPs, seed 1117: 20/20 load, 20/20 resolve to county and city, across AK, AR, NM, FL, WY, PA, CA, MD, NJ, MN, WA, GU, HI, TX, NV, SC, VA, ND, KY and DC. (Guam 96919's page is thin, 412 chars, as before.)
+- Migration: entity_place.placement_basis exists in production, default 'SERVICE_AREA'.
+
+### Sean's reorder, 11:15 AM EDT: Neon first, then the place map
+- I stopped the RT-01 gate run partway through. RT-01 now folds after the five DB-03 fixes.
+- The DB-03 READYs sit in one line on the lane: Admin 04681516c, then state doors e4305907d, then inventory readback f2d76ac1f. To ship readback first, River cherry-picked f2d76ac1f alone onto river (-x records the source). One conflict: scripts/routine-civic-data-runner.mts kept RV-MEET3's `await heldPublication` and dropped the removed readback's `readerRuns`. tsc clean.
+- Baseline, from database_transfer_hourly on the reader DB, response bytes by job, MB per hour, 5 AM to 10 AM EDT:
+  - total: 7,157 / 8,520 / 12,508 / 9,979 / 9,030 / 13,925
+  - reader-readback: 55 / 625 / 2,759 / 1,147 / 593 / 2,931 (average 1,352)
+  - people-portraits: 396 / 804 / 3,528 / 4,414 / 3,139 / 6,001
+  - research-cycle: 1,074 / 1,970 / 2,055 / 876 / 1,873 / 2,488
+- FOR SEAN: people-portraits is the biggest reader (6.0 GB in the 10 AM hour), and none of the five DB-03 fixes in the order targets it.

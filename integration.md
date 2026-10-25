@@ -417,3 +417,4 @@ One line per batch folded into river.
 - 2026-10-25T17:38:40Z · river-db03-readback · DB-03 inventory readback · ready 235c6f837 (River fold of stream/db-03 f2d76ac1f; 2 river tests and dead code fixed) · river be0b41a4f · pnpm gates pass on be0b41a4f (9 of 9, 9,910 tests) · release 118 PR #830
 - 2026-10-25T20:03:00Z · rb-a4 · RB-A4 catch-up · ready b2bbdc183 · river 456454204 · pnpm gates pass on 456454204 (9 of 9, 9,913 tests) · release 119 PR #831
 - 2026-10-25T21:30:00Z · river-portraits · DB-03 portraits and member offices, never re-read (River session session_012UDbgz3sjA8QN2m7CY78QS) · ready 9bf9801a5 · river ea117a0bb · pnpm gates pass on ea117a0bb (9 of 9, 9,919 tests) · release 120 PR #832
+- 2026-10-25T23:34:00Z · db-02-recut · DB-02 · ready e0f14fe59 (River re-cut of 2769c614e on river ea117a0bb, without docs and proof scripts) · river a37ce95a7 · pnpm gates pass on a37ce95a7 (9 of 9, 9,922 tests) · release 121 PR #833

@@ -4659,5 +4659,18 @@
     "gates": "pass (9 of 9, 9,919 tests)",
     "at": "2026-10-25T21:30:00Z",
     "live": "release 120 main 4687f6a00 at 2026-10-25T22:09:01Z"
+  },
+  {
+    "lane": "db-02-recut",
+    "steps": [
+      "DB-02"
+    ],
+    "ready_sha": "e0f14fe59",
+    "source_ready": "2769c614e (stream/db-02, re-cut by River)",
+    "merge_sha": "a37ce95a7",
+    "river_sha": "a37ce95a7",
+    "tested_sha": "a37ce95a7",
+    "gates": "pass (9 of 9, 9,922 tests)",
+    "at": "2026-10-25T23:34:00Z"
   }
 ]

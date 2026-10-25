@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 106 (main 526fe7131). NEXT: release 107 = RB-A8 + RB-A3 + RB-A5 (PR #818, CI). GATING: PT-01 + MT-01 (river-next 78a1f9e0d). THEN: DB-02 + BL-02 (pre-folded b42272b1b). Returned: RB-A6, RB-A4 (10:40 PM EDT), CL-01 (10:45 PM EDT)
+build_state: LIVE FOR READERS: release 106 (main 526fe7131). Release 107 merged (main d4ce7606a) but its Netlify build FAILED (RB-A8_count_hour deadlocked with the runner); readers stay on 106. GATING: RV-LOCK 94e9053e8 alone (the fix). HELD: release 108 PR #819 (auto-merge off) until RV-LOCK ships
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T01:35:29Z
+heartbeat: 2026-10-25T02:17:20Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,14 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Release 107 build failed: migration deadlock; fix RV-LOCK gating, 10:25 PM EDT
+- Release 107 merged at 9:44 PM EDT, but /api/build still shows 106 (readers unaffected).
+- The build's own record (owner digest "Production migrations", 9:47 PM EDT, d4ce7606a, expand, FAILED): RB-A3_expand applied (rebuild_queue, count_hour); RB-A8_count_hour "transaction rolled back … deadlock detected". The build stopped there, so release 107 never deployed and RB-A5/RB-A8's control-plane migrations didn't run.
+- Cause: RB-A8_count_hour's single transaction adds a trigger on fact, backfills about 1.06M fact rows (6.3 GB table), then adds triggers on civic_data_promotions and entity. It holds fact while the runner, writing those tables, holds the others. Every later build retries the same pending migration.
+- Fix RV-LOCK (stream/river-lock READY 94e9053e8, on main d4ce7606a): a migration can declare lockFirst tables in lib/db/migration-phases.ts. scripts/apply-migrations.mts locks them together (SHARE ROW EXCLUSIVE, what CREATE TRIGGER takes) before the first statement, so it never waits for a lock while holding another. RB-A8_count_hour declares fact, civic_data_promotions, entity. Readers' SELECTs aren't blocked; runner writes to those tables wait for the backfill (River measured an entity-joined scan of fact at 12.6 s read-only).
+- Checks: new test fails without the declaration; 92 migration tests pass; tsc and eslint clean. Full gates running from 10:25 PM EDT; it ships alone as release 108 (main 107 + RV-LOCK). The 108 build then retries RB-A8_count_hour with the locks first.
+- Held: PR #819 (PT-01 + MT-01, titled release 108) has auto-merge off until RV-LOCK is live; it becomes release 109. DB-02 + BL-02 gates stopped; re-gated after.
 
 ### Batches and returns, 9:45 PM EDT
 - Release 107 (PR #818): RB-A8 fb1783a62 with RB-A3 d92e9a054 and RB-A5 f7ab065e3. Gates 9 of 9, 9,850 tests. The preview against production shows Arizona's October 5 registration deadline on the 85701 ballot (RB-A8's retained-date repair); live today shows "Still gathering: … voter registration deadlines". Every other 85701 date matches.

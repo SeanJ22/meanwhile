@@ -37,11 +37,23 @@ export const RUNTIME_CONTRACT_ATTEMPT_MS = 5 * 60_000;
 // journalled DO statement must release them inside the reader query deadline.
 export const RUNTIME_CONTRACT_SQL_SETTINGS = ["SET LOCAL lock_timeout = '250ms'", "SET LOCAL statement_timeout = '1000ms'"] as const;
 
-/** Tables a migration declares are locked in one statement, so it never holds one while waiting for another. */
+/** NOWAIT plus a subtransaction releases every partial lock before waiting; a multi-table LOCK alone acquires them sequentially. */
 export function lockFirstStatement(tag: string): string {
   const tables = declaredPhase(tag)?.lockFirst ?? [];
   if (tables.some(table => !/^[a-z_][a-z0-9_]*$/.test(table))) throw new Error(`db:apply: REFUSED — ${tag} declares an invalid table to lock`);
-  return tables.length ? `LOCK TABLE ${tables.join(", ")} IN SHARE ROW EXCLUSIVE MODE;` : "";
+  if (!tables.length) return "";
+  return `DECLARE lock_deadline timestamptz := clock_timestamp() + interval '10 seconds';
+    BEGIN
+      LOOP
+        BEGIN
+          LOCK TABLE ${tables.map(table => `public.${table}`).join(", ")} IN SHARE ROW EXCLUSIVE MODE NOWAIT;
+          EXIT;
+        EXCEPTION WHEN lock_not_available THEN
+          IF clock_timestamp() >= lock_deadline THEN RAISE; END IF;
+        END;
+        PERFORM pg_sleep(0.05);
+      END LOOP;
+    END;`;
 }
 
 /** A migration may declare a longer statement budget; the lock wait stays bounded either way. */

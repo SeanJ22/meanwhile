@@ -43,7 +43,7 @@ export interface PhaseDeclaration {
   readonly why: string;
   /** A contract that must rebuild an index over a large reader table holds its locks this long, not the default second. */
   readonly contractStatementTimeoutMs?: number;
-  /** Tables a migration adds triggers to while the runner writes them, locked together before its first statement so it never waits holding one. */
+  /** Existing trigger tables acquired with NOWAIT and partial-lock rollback before any migration statement. */
   readonly lockFirst?: readonly string[];
 }
 
@@ -169,7 +169,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "RB-A8_count_hour": { phase: "expand", why: "Adds hourly counters and their writer hooks before the compact observer is deployed.",
     // Its trigger on fact, then a 1M-row backfill, then triggers on civic_data_promotions and entity deadlocked with the runner at the 9:47 PM EDT Oct 24 build.
-    lockFirst: ["fact", "civic_data_promotions", "entity"] },
+    lockFirst: ["fact", "civic_data_promotions", "entity", "count_hour"] },
   "RB-A2_place_boundaries": { phase: "contract", why: "Extends RB-A1's year-aware place tables after they exist, allows source-unknown shares and indexes source polygons without changing readers." },
   "RB-A3_expand": { phase: "expand", why: "Adds place rebuild requests and hourly fact counts alongside the live fact table before the shared door writes them." },
   "0051_rb_a1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy.",

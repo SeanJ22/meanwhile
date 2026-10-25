@@ -1,0 +1,26 @@
+{
+  "checkedAt": "2026-10-25T02:30:25.605Z",
+  "postgres": "18.4",
+  "proofs": [
+    {
+      "shape": "original migration",
+      "result": "40P01 reproduced; migration rolled back; writer committed"
+    },
+    {
+      "shape": "blocking multi-table LOCK",
+      "result": "40P01 reproduced; migration rolled back; writer committed"
+    },
+    {
+      "shape": "entity then fact",
+      "result": "writer and migration committed; readers responsive; partial locks=0; all stock dimensions equal direct SQL"
+    },
+    {
+      "shape": "fact then entity",
+      "result": "writer and migration committed; readers responsive; partial locks=0; all stock dimensions equal direct SQL"
+    },
+    {
+      "shape": "count_hour then entity",
+      "result": "writer and migration committed; readers responsive; partial locks=0; all stock dimensions equal direct SQL"
+    }
+  ]
+}

@@ -1,5 +1,9 @@
 # MD-01 current result
 
+At October 25, 12:11 PM EDT, production has **361 summaries, 85 more than the baseline, with 138 still missing and zero lost summary IDs**. The later shipped-code window records 83 CP publication completions for $15.838203845 (19.0822 cents per recorded completion), with every retained writer attempt starting on Haiku and zero writer-field/passages holds. Chrome shows 85701 at 12/12, 94102 at 23/25 and 98101 at 1/4. Proposition 318 changed with its original points and sections retained. [Full later observation, every-state counts and limits](md-01-later-production-note.md). The three production goals remain incomplete. Follow-up READY `02d702e34` is queued, not deployed in this observation. A locally reproduced measure-number abbreviation rejection is being repaired.
+
+## Earlier first scheduled-run observation
+
 The first scheduled source run on the shipped MD-01 revision published zero explanations and made zero translation model calls. Arizona, California and Washington were deferred for worker memory before their translation tasks started. All 276 existing summaries remain; 223 measures still need one. The three requested production goals are not complete.
 
 The exact initial implementation `576965f47345f3fea385c88bf85b10831fca1941`, marked by READY `a7014d303`, shipped in release 115 (`61d7ecc06ac79e106c7e37ce1ad04c3d3dbd7be4`). The follow-up on `stream/md-01` carries [`fb66ac393`](https://github.com/SeanJ22/meanwhile/commit/fb66ac39319d616e52926ba25dd47feca10e18d7) and adds failed-source feedback; its latest READY is the integration point. It includes smaller model inputs, direct measure-text selection, fair worker turns, section provenance and held-record Ask answers. At the 10:08 AM EDT River check, no new MD-01 return exists and this follow-up is not integrated. Release 116 serves the initial MD-01 code and does not contain the follow-up.
@@ -37,7 +41,7 @@ Source discovery previously stopped whenever a page named the measure, including
 
 ## Reader preservation and live Chrome
 
-The October 25, approximately 9:32 AM EDT database-side comparison retains **276 summaries, 265 checked translations and all 52 tracked Arizona section targets**. Zero existing summary IDs/texts, vote meanings, checked IDs or tracked section IDs/numbers/texts were lost or changed. The original summary comparison baseline is October 24 at 23:32:10 UTC. All 56 jurisdictions, including zero-count territories, are below and in the [state comparison](md-01-state-observation.csv).
+The October 25, approximately 9:32 AM EDT database-side comparison retains **276 summaries, 265 checked translations and all 52 tracked Arizona section targets**. Zero existing summary IDs/texts, vote meanings, checked IDs or tracked section IDs/numbers/texts were lost or changed. The original summary comparison baseline is October 24 at 23:32:10 UTC. All 56 jurisdictions, including zero-count territories, are below for that first observation; the [state comparison](md-01-state-observation.csv) now carries the latest later counts.
 
 The fresh [reference comparison](md-01-reference-observation.csv) retains all sixty references: 56 reactions, one Ask subject and three demand signals. All 36 distinct input IDs still resolve; zero baseline IDs lost resolution or changed canonical destination. There are no Speak your mind posts in this baseline.
 

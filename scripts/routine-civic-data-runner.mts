@@ -12,7 +12,7 @@ import { readerFactDb, readPassCursor, writePassCursor } from "../lib/facts/db.t
 import { routineTasksWithoutClocks } from "../lib/civic-data/clock-presence.ts";
 import { writeContractHandoff } from "../lib/civic-data/contract-handoff-parent.ts";
 import { savePublishNowFailure } from "../lib/civic-data/publish-now-failure.ts";
-import { ensureFactEntities, registeredStates } from "../lib/facts/entities.ts";
+import { ensureFactEntities, loadChangedStates, registeredStates } from "../lib/facts/entities.ts";
 import { syncReaderIds } from "../lib/core/resolve.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -764,7 +764,9 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   if (!state || Date.now() >= deadlineMs) return;
   step = "loading fact store entities";
   try {
-    const loaded = await ensureFactEntities(facts, ROOT, [state]);
+    const loaded = await loadChangedStates(states, await readPassCursor(facts.query, "routine-fact-entities-state"),
+      next => ensureFactEntities(facts, ROOT, [next]), next => writePassCursor(facts.query, "routine-fact-entities-state", next),
+      () => Date.now() < deadlineMs);
     if (loaded.length) console.log(`fact store entities: loaded ${loaded.join(", ")}`);
   } catch (error) {
     supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });

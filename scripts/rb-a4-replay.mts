@@ -27,7 +27,8 @@ try {
       await db.query(`INSERT INTO entity_external_id(entity_id,scheme,value) SELECT id,$2,geoid FROM jsonb_to_recordset($1::jsonb) AS e(id text,geoid text) ON CONFLICT DO NOTHING`,[JSON.stringify(rows),`census-geoid:${layer}`]);
     }
   }
-  await db.pg.exec('CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,current_version_id text,promoted_at timestamptz,payload jsonb); CREATE TABLE civic_data_candidate_events(candidate_id text,sequence integer,detail text); CREATE TABLE civic_data_candidates(id text,scope text,record_class text,source_id text,retrieved_at timestamptz,candidate jsonb,state text,acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,normalized_hash text,validation_receipt jsonb)');
+  // openFactCopy already holds the promotion table for RB-A8's hourly counts; add the registration columns this import reads.
+  await db.pg.exec('ALTER TABLE civic_data_promotions ADD COLUMN key text PRIMARY KEY, ADD COLUMN promoted_at timestamptz, ADD COLUMN payload jsonb; CREATE TABLE civic_data_candidate_events(candidate_id text,sequence integer,detail text); CREATE TABLE civic_data_candidates(id text,scope text,record_class text,source_id text,retrieved_at timestamptz,candidate jsonb,state text,acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,normalized_hash text,validation_receipt jsonb)');
   await db.pg.exec(BOOTSTRAP_DDL.find(sql=>sql.startsWith('CREATE TABLE IF NOT EXISTS cp_work_items ('))!);
   await db.pg.exec('CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)');
   for(const statement of readFileSync('lib/db/migrations/0036_ne01.sql','utf8').split('--> statement-breakpoint'))
@@ -36,7 +37,7 @@ try {
   for(const state of [...new Set(cohort.map(b=>b.state))]) {
     const ids=[...new Set(cohort.filter(b=>b.state===state).map(b=>b.parent_id))];
     const selected=pages.filter(page=>page.government.state===state && ids.includes(page.government.jurisdictionId));
-    if(selected.length) await db.query('INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4,$5,$6::jsonb)',
+    if(selected.length) await db.query('INSERT INTO civic_data_promotions(key,record_class,scope,current_version_id,promoted_at,payload) VALUES($1,$2,$3,$4,$5,$6::jsonb)',
       [`REGISTRATION:US-${state}:registration:v1`,'REGISTRATION',`US-${state}:registration:v1`,selected[0]!.versionId,selected[0]!.promotedAt,JSON.stringify({governments:selected.map(page=>page.government)})]);
   }
   const before=(await db.query('SELECT id,entity_id,field,value,status,source_copy_id FROM fact ORDER BY id'));

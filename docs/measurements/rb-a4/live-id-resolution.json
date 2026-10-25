@@ -1,0 +1,23 @@
+{
+  "observedAt": "2026-10-25T03:10:18.118Z",
+  "byFam": {
+    "reactions": {
+      "refs": 56,
+      "resolved": 56
+    },
+    "demand_signals": {
+      "refs": 3,
+      "resolved": 3
+    },
+    "ask_interactions": {
+      "refs": 1,
+      "resolved": 1
+    }
+  },
+  "distinct": 36,
+  "unresolved": [],
+  "canonicalChanged": 15,
+  "touchedByRbA4": [],
+  "database": "production reader, role readonly",
+  "note": "Read after River merged origin/river 90d0f445e into RB-A4; no interaction content selected."
+}

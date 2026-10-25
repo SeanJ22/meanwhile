@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T00:25:24Z
+heartbeat: 2026-10-25T00:36:41Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -25,7 +25,7 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 
 ### Release 105 live, 8:23 PM EDT (RB-A2)
 - /api/build 7f13a561c (PR #816 merge commit). Sean's checks in Chromium at 8:24 PM EDT, all pass: /ballot 85701 and 03255 200 (render, 0 console errors), Ask on the 85701 ballot 200 grounded, /api/meetings 85701 200 and 60602 200, /national 200.
-- RB-A2's contract migration (place_boundary, place_map_counts) is not applied yet at 8:25 PM EDT (journal 52); the runner applies contracts after the release is serving. River is watching for it, or for a failure digest.
+- RB-A2's contract migration applied in production at 8:35 PM EDT (owner digest "Production migrations": OK for every statement; place_boundary exists; journal 53). It finished inside the 1-second statement limit, as the local 173 ms timing predicted.
 - RB-A6 and RB-A10 can now build on river 667d8dad2 (RB-A2).
 
 ### Live for readers, 8:20 PM EDT

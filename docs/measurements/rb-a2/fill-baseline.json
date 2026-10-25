@@ -99,15 +99,15 @@
     "productionModelServiceBindings": false
   },
   "currentCombinationValidation": {
-    "runtimeRevision": "a41c494f1",
-    "river": "e84d06c43",
+    "runtimeRevision": "944c3846b",
+    "river": "be0b41a4f",
     "includes": [
+      "DB-03 inventory-readback removal",
       "CL-01",
       "RB-A4"
     ],
-    "startedAt": "2026-10-25T14:47:10.192Z",
-    "status": "All nine checks passed, including both builds and all 16 bundle tests; see fullChecks.",
-    "finishedAt": "2026-10-25T15:22:15.402Z"
+    "startedAt": "2026-10-25T17:44:36.026Z",
+    "status": "Full checks running; production database and model-service credentials removed."
   },
   "copyEnvironment": "The idle local PostgreSQL copy server is stopped, all seven superseded bulk replay entry points and their helper are deleted, and no Neon copy branch was created by this lane.",
   "productionVerificationMethod": "Database-side counts and small metadata samples only; no new production copies, no new Neon branches, no bulk copy replays.",
@@ -166,5 +166,26 @@
     "readerMatches": 0,
     "controlPlaneMatches": 0,
     "method": "Branch names and IDs only; no database contents read."
-  }
+  },
+  "completedCombinationValidations": [
+    {
+      "runtimeRevision": "a41c494f1",
+      "river": "e84d06c43",
+      "includes": [
+        "CL-01",
+        "RB-A4"
+      ],
+      "startedAt": "2026-10-25T14:47:10.192Z",
+      "status": "All nine checks passed, including both builds and all 16 bundle tests; see fullChecks.",
+      "finishedAt": "2026-10-25T15:22:15.402Z",
+      "gatesPassed": 9,
+      "gatesTotal": 9,
+      "testsRegistered": 9941,
+      "testsPassed": 9939,
+      "testsFailed": 0,
+      "testsSkipped": 2,
+      "productionDatabaseBindings": false,
+      "productionModelServiceBindings": false
+    }
+  ]
 }

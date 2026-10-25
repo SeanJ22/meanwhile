@@ -1,6 +1,6 @@
 # Place map
 
-Owner: RB-A2. Branch: stream/rb-a2, merged through River e84d06c43 (RB-A4), including c0205d49f (CL-01), 6d92e488c (MD-01), b2d07e636 (RB-A6), 180160158 (DB-03A), 6f57717fc (RV-MEET3), d62ca66ce (RV-BOX) and c02e4bf30 (RV-MEET2).
+Owner: RB-A2. Branch: stream/rb-a2, merged through River be0b41a4f (DB-03 inventory-readback removal), including e84d06c43 (RB-A4), c0205d49f (CL-01), 6d92e488c (MD-01), b2d07e636 (RB-A6), 180160158 (DB-03A), 6f57717fc (RV-MEET3), d62ca66ce (RV-BOX) and c02e4bf30 (RV-MEET2).
 
 Production fill follow-up (October 24): release 105 shipped the schema and importer, but neither a schema nor the reader smoke checks proved that the scheduled importer ran. Production still had zero rows in place_boundary, zip_place and zcta_place at 2026-10-25T04:40:29.655Z. This follow-up stays open until the normal production runner fills the tables and meeting reads continue.
 
@@ -12,7 +12,9 @@ Full checks on merged runtime revision a41c494f1, including River e84d06c43 (CL-
 
 Production verification now uses database-side count aggregates and small metadata samples only. No new production copies or Neon copy branches are opened, and no bulk copy replay is run. Consumer checks use ZIP membership metadata without transferring geometry or state payloads. The seven superseded RB-A2 copy/replay entry points and their local-copy helper remain deleted, and the idle local PostgreSQL copy server is stopped; earlier measurements remain recorded as results.
 
-Deployment handoff: merge the current stream/rb-a2 candidate from draft PR #822 into river-next, check the combination and deploy through River. Current runtime a41c494f1 combines CL-01 and RB-A4 with the loader and passes all nine checks. The draft publishes the implementation under CLAUDE.md’s Codex exception. Deployment precedes the final live-data READY because its production proof requires the existing scheduled place-map-<state> jobs to run this code. RB-A2 then measures the actual production load, all-state counts, ZIP completeness, source-to-map connections and meeting reads before the final READY. The source and memory measurements below are supporting tests, not proof that production has filled.
+DB-03 inventory-readback removal be0b41a4f is now integrated in runtime 944c3846b. Full checks are running without production credentials; the complete passing result above remains the validation for a41c494f1. The merge retains the Census scheduling regression and removes the retired repair test and obsolete repair-memory note.
+
+Deployment handoff: merge the current stream/rb-a2 candidate from draft PR #822 into river-next, check the combination and deploy through River. Current runtime 944c3846b combines inventory-readback removal, CL-01 and RB-A4 with the loader; combined checks are running. The draft publishes the implementation under CLAUDE.md’s Codex exception. Deployment precedes the final live-data READY because its production proof requires the existing scheduled place-map-<state> jobs to run this code. RB-A2 then measures the actual production load, all-state counts, ZIP completeness, source-to-map connections and meeting reads before the final READY. The source and memory measurements below are supporting tests, not proof that production has filled.
 
 Merged integrated River 59b7c5577 after its integration record listed RB-A1 5bde46615 and the River history contained that commit. The merge is e4cc78826.
 River's production reader-pool hotfix dfb076b40 is also merged, in 81b5eb867. River 720bc77b6 then folded RB-A1’s newer documentation READY 1d6df41d9; that revision is merged in 22b4b1e94. Verification is repeated on the latest integrated dependency.

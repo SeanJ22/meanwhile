@@ -403,3 +403,5 @@ One line per batch folded into river.
 - 2026-10-25T01:21:38Z · rb-a8 · RB-A8 · ready fb1783a62 · river af9ee8f78 · pnpm gates pass on 0916a5b87 (9 of 9, 9,850 tests) · release 107 PR #818
 - 2026-10-25T01:21:38Z · rb-a3 · RB-A3 · ready d92e9a054 · river af9ee8f78 · pnpm gates pass on 0916a5b87 (9 of 9, 9,850 tests) · release 107 PR #818
 - 2026-10-25T01:21:38Z · rb-a5 · RB-A5 · ready f7ab065e3 · river af9ee8f78 · pnpm gates pass on 0916a5b87 (9 of 9, 9,850 tests) · release 107 PR #818
+- 2026-10-25T02:08:34Z · pt-01 · PT-01 · ready a109cf965 · river 90d0f445e · pnpm gates pass on 78a1f9e0d (9 of 9, 9,880 tests) · release 108 PR #819
+- 2026-10-25T02:08:34Z · mt-01 · MT-01 · ready 0c28ca5c7 · river 90d0f445e · pnpm gates pass on 78a1f9e0d (9 of 9, 9,880 tests) · release 108 PR #819

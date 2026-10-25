@@ -4486,5 +4486,29 @@
     "tested_sha": "0916a5b87",
     "gates": "pass",
     "at": "2026-10-25T01:21:38Z"
+  },
+  {
+    "lane": "pt-01",
+    "steps": [
+      "PT-01"
+    ],
+    "ready_sha": "a109cf965",
+    "merge_sha": "78a1f9e0d",
+    "river_sha": "90d0f445e",
+    "tested_sha": "78a1f9e0d",
+    "gates": "pass",
+    "at": "2026-10-25T02:08:34Z"
+  },
+  {
+    "lane": "mt-01",
+    "steps": [
+      "MT-01"
+    ],
+    "ready_sha": "0c28ca5c7",
+    "merge_sha": "78a1f9e0d",
+    "river_sha": "90d0f445e",
+    "tested_sha": "78a1f9e0d",
+    "gates": "pass",
+    "at": "2026-10-25T02:08:34Z"
   }
 ]

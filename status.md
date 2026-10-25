@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T22:12:00Z
+heartbeat: 2026-10-25T22:20:00Z
 
 
 <!-- READY-LIST -->
@@ -1165,4 +1165,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
 - Random ZIPs, seed 1120: 20/20 load, 20/20 resolve to county and city, across MS, AK, WI, MI, MO, NM, PA, OK, MD, CO, IL, AR, WV, AL, DC, ND, SC, MT, TX and NV.
 - Portraits and member offices GB/h are measured on the first two full hours after the runner adopts 120. Per the other River session, cp_runner_heartbeat at 6:11 PM EDT still showed testedSha f6f68db6 (release 119, RUNNER_BEHIND_EXECUTABLE), next cycle 7:11 PM. If it adopts then, the hours are 8 PM and 9 PM EDT. 12-ZIP check (other session): same portraits and office contacts after 120 as at 5:32 PM in all 12 states. Before: portraits 0.37 / 5.92 / 1.67 / 5.85 GB, member offices 1.53 / 0 / 1.40 / 0.72 GB, 2 PM to 5 PM EDT.
+
+### Sean, 6:15 PM EDT: one River
+- Sean closed the second River session (session_012UDbgz3sjA8QN2m7CY78QS). River no longer messages it or hands it work.
+- Oversight measures release 120: portraits and member offices GB/h for the two full hours after the runner takes it, and portraits on 12 random ZIPs in Chrome.
+- River keeps the folds, gates, releases, the READY list and release 121.
 

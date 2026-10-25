@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 106 (main 526fe7131). Release 107 merged (main d4ce7606a) but its Netlify build FAILED (RB-A8_count_hour deadlocked with the runner); readers stay on 106. GATING: RV-LOCK 94e9053e8 alone (the fix). HELD: release 108 PR #819 (auto-merge off) until RV-LOCK ships
+build_state: LIVE FOR READERS: release 106 (main 526fe7131). Release 107 merged, build FAILED (migration deadlock). NEXT: release 108 = RV-LOCK (PR #820, auto-merge on). HELD: release 109 = PT-01 + MT-01 (PR #819). READY to fold: RB-A6 d7b31ba67 (River-finished), CL-01 b98903e96, DB-02 + BL-02
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T02:41:48Z
+heartbeat: 2026-10-25T03:06:17Z
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
@@ -22,6 +22,19 @@ Cause confirmed: lib/civic-data/reader-repair-protocol.ts installOutcomeRepairSe
 - Proof on real production data: all 3,836 Legistar doors from the production control plane, built into 3,831 outcome contracts, handed as JSON to a fresh child as the supervisor does. Release 95 code: 0 of 3,831 pass the store's authority check (door-outcomes 2,601 and door-minutes-outcomes 1,230 refused). Fixed code: 3,831 of 3,831 pass. By state: CA 1271, WI 457, TX 432, FL 388, MO 214, IL 162, NY 104, WA 89, CO 85, MI 67, NV 54, OK 50, CT 47, AL 46, AK 41, NC 41, AZ 39, MA 39, NM 37, OH 30, PA 26, MN 24, GA 20, VA 19, OR 14, ME 10, HI 8, UT 7, ID 2, MS 2, NJ 2, WY 2, KY 1, MD 1.
 - Baseline (Admin owner digest on release 95): "1308 Reader repair mechanism failure(s)" on every pass 2:59 to 4:42 AM EDT; supervisor failures 1,476 to 1,687 a pass.
 - Done when READER_READBACK_REPAIR_FAILED is under 60 on the next 2 passes that run reader repair after release 96 is live.
+
+### Release 108 (RV-LOCK) open; RB-A6 finished; disk, 11:20 PM EDT
+- Release 108 = RV-LOCK alone, PR #820 (branch release/108-lock, since release/108 is #819's), auto-merge on.
+  - Gates on 94e9053e8: 9,851 tests pass. build and build:standalone failed because River's container disk filled ("No space left on device"); after freeing space, build, test:bundle 16/16 and build:standalone pass.
+  - The preview of this tree (release 107's code + RV-LOCK) against production passes Sean's checks.
+  - Its build retries RB-A8_count_hour with fact, civic_data_promotions and entity locked first. If it applies, 107's code goes live too.
+- PR #819 renamed Release 109 (PT-01 + MT-01). It stays held until 108 is live; then River merges main into it and turns auto-merge back on.
+- River finished RB-A6 on its branch (standing order; no READY by 10:40 PM EDT): READY d7b31ba67, merging river 90d0f445e.
+  - lib/control-plane/line-keeper/country.ts keeps RB-A8's compact keeper (no deleted inventory restored); RB-A6's hunter handoff and Admin counts already read owed, held and missing per place on demand (lib/coverage/owed-read.ts). Three tests take river's versions, which include RB-A6's edgeOnly change.
+  - Checks: 110/110 assigned tests, 340/340 wider tests; tsc, eslint, knip clean.
+  - Proof (read-only production): all 57 state/territory/national rows match direct SQL; owed 1,895,086, held 519,794, missing 1,375,292; ten ZIPs replayed on copies keep every held fact id and value (15,571 held, 28,768 missing).
+- RB-A4: a River helper is still finishing it on stream/rb-a4.
+- Disk: River removed 12 finished worktrees (all pushed) and its local Postgres copy; free space went from 568 MB to 13 GB.
 
 ### Returns at 10:40 PM EDT
 - CL-01 posted READY b98903e96 at 10:05 PM EDT, inside its window; return cleared. It folds after PT-01 + MT-01.

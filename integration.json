@@ -4510,5 +4510,17 @@
     "tested_sha": "78a1f9e0d",
     "gates": "pass",
     "at": "2026-10-25T02:08:34Z"
+  },
+  {
+    "lane": "river-lock",
+    "steps": [
+      "RV-LOCK"
+    ],
+    "ready_sha": "94e9053e8",
+    "merge_sha": "829f38c05",
+    "river_sha": "829f38c05",
+    "tested_sha": "94e9053e8",
+    "gates": "pass (build steps rerun after freeing disk)",
+    "at": "2026-10-25T03:06:17Z"
   }
 ]

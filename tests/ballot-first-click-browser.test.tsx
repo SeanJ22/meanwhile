@@ -89,6 +89,10 @@ for (const surface of ["battlecard", "person"] as const) test(`the ${surface} op
     await dialog.waitFor({ state: "visible" });
     const openMs = Math.round(performance.now() - clicked);
     assert.ok(openMs < 3000, "the first enabled click opens the usable card within three seconds");
+    if (surface === "person") {
+      await dialog.getByText("State", { exact: true }).first().waitFor({ state: "visible" });
+      assert.equal(await dialog.getByText("Federal", { exact: true }).count(), 0, "the held governor's record must not be labelled Federal");
+    }
     await dialog.getByRole("button", { name: /^Sources/ }).click();
     const url = surface === "battlecard" ? filing.sourceUrl : person.sourceUrl!;
     await dialog.locator(`[data-source-list] a[href="${url}"]`).waitFor({ state: "visible" });

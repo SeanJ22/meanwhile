@@ -9,7 +9,7 @@ import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { meetingVenueChoices } from "./meeting-venue-inputs.ts";
 
 /** Attribution needs the named governments' other bodies and served divisions, never the state's inventory. */
-export async function readMeetingFamilyDependencies(query: Query, state: string, members: readonly DerivedWiringRecord[], now: string): Promise<{
+export async function readMeetingFamilyDependencies(query: Query, state: string, members: readonly DerivedWiringRecord[], now: string, ownerChoiceHash: string): Promise<{
   readonly registry: Registry; readonly venues: readonly VenueEntry[];
 }> {
   const bodies = [...new Set(members.map(member => member.row.bodyId))], governments = [...new Set(members.map(member => member.row.ocdId))];
@@ -40,5 +40,5 @@ export async function readMeetingFamilyDependencies(query: Query, state: string,
   const venuesHeld = venue?.valid === true && venue.source_id === contract.sourceId && venue.record_class === contract.recordClass && venue.scope === contract.scope && venue.kind === "venue-resolutions";
   if (!venuesHeld) console.warn("MEETING_FAMILY_VENUES_NOT_HELD: verified calendars remain independently readable; prior verified points remain held.");
   return { registry: { generatedAt: now, bodies: registry.payload.registry.bodies, divisions: registry.payload.registry.divisions },
-    venues: venuesHeld ? await meetingVenueChoices(query, venue.venues as VenueEntry[]) : [] };
+    venues: venuesHeld ? await meetingVenueChoices(query, venue.venues as VenueEntry[], ownerChoiceHash) : [] };
 }

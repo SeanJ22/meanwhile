@@ -106,7 +106,7 @@ import {
 } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { readStateWiringRows } from "../lib/civic-data/keyed-government-lookup.ts";
 import { readMeetingFamilyDependencies } from "../lib/civic-data/meeting-family-dependencies.ts";
-import { meetingVenueChoiceHash } from "../lib/civic-data/meeting-venue-inputs.ts";
+import { meetingVenueChoiceHash, meetingVenueChoices } from "../lib/civic-data/meeting-venue-inputs.ts";
 import {
   buildDerivedFamily,
   derivedFamilyCandidate,
@@ -763,6 +763,7 @@ export interface MeetingIngestOptions {
   readonly meetingClock?: MeetingClock;
   readonly sourceSession?: Awaited<ReturnType<typeof meetingSourceSession>>;
   readonly sourceInputHash?: string;
+  readonly ownerChoiceHash?: string;
   readonly measurement?: ReturnType<typeof diggerMeasurement>;
 }
 
@@ -913,8 +914,11 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
   const store = options.store ?? new PostgresRoutineDataStore();
   let prepared = false;
   let preparedVenues: readonly VenueEntry[] | undefined;
+  let ownerChoiceHash: string | undefined, preparedInputs: string | undefined;
+  let sourceSessionForInputs: Awaited<ReturnType<typeof meetingSourceSession>> | undefined;
   const prepare = async (members?: readonly DerivedWiringRecord[]) => {
-    if (prepared) return preparedVenues;
+    const inputs = JSON.stringify([ownerChoiceHash, members?.map(member => member.id).sort()]);
+    if (prepared && preparedInputs === inputs) return preparedVenues;
     if (options.registry) {
       if (partitions.length !== 1 || options.registry.bodies.length !== 1 || options.registry.bodies[0]!.id !== partitions[0]!.bodyId) {
         throw new Error("INGEST_PREPARED_REGISTRY_NOT_ONE_BODY");
@@ -923,18 +927,25 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
       preparedVenues = options.venues;
     } else {
       const query = options.facts?.db.query ?? factReader();
-      if (!query || !members) throw new Error("INGEST_MEETING_FAMILY_DEPENDENCIES_UNAVAILABLE");
-      const held = await readMeetingFamilyDependencies(query, state, members, new Date().toISOString());
+      if (!query || !members || !ownerChoiceHash) throw new Error("INGEST_MEETING_FAMILY_DEPENDENCIES_UNAVAILABLE");
+      let held: Awaited<ReturnType<typeof readMeetingFamilyDependencies>>;
+      try { held = await readMeetingFamilyDependencies(query, state, members, new Date().toISOString(), ownerChoiceHash); }
+      catch (error) {
+        if (error instanceof Error && error.message.startsWith("MEETING_VENUE_OWNER_INPUT_CHANGED")) await sourceSessionForInputs?.defer();
+        throw error;
+      }
       REGISTRY = held.registry;
       preparedVenues = held.venues;
     }
     prepared = true;
+    preparedInputs = inputs;
     return preparedVenues;
   };
   const results: MeetingIngestResult[] = [];
   const lastStartMs = passDeadlineFromEnv() - 45_000;
   const ordered = calendarReadOrder(partitions);
   for (const [index, partition] of ordered.entries()) {
+    sourceSessionForInputs = undefined;
     let stopWatch: (() => void) | undefined;
     if (Date.now() >= lastStartMs) {
       for (const owed of ordered.slice(index)) console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: owed.id })}`);
@@ -954,11 +965,13 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
         { recordClass: venue.recordClass, scope: venue.scope },
         ...(partition.derivedFamily ? [{ recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE }] : []),
       ]);
-      const sourceInputHash = meetingSourceInputHash(partition, at, { sources: sourceDependencies, venueChoices: await meetingVenueChoiceHash(facts.db.query) });
+      ownerChoiceHash = await meetingVenueChoiceHash(facts.db.query);
+      const sourceInputHash = meetingSourceInputHash(partition, at, { sources: sourceDependencies, venueChoices: ownerChoiceHash });
       const sourceHead = partition.derivedFamily ? await store.readSourceHead("MEETING", partition.scope) : null;
       const sourceBodies = partition.derivedFamily ? sourceHead ? await store.readCandidatePath<string[]>(sourceHead.versionId, ["normalizedPayload", "sourceProbe", "bodyIds"]) ?? [] : [] : [partition.bodyId];
       const sourceSession = dryRun ? undefined : await meetingSourceSession(partition, sourceInputHash, store, at, facts.vault,
         response => confirmMeetingFactsFromSources({ facts: facts.db, vault: facts.vault, bodyIds: sourceBodies, responses: [response] }).then(() => {}), options.initialResponse);
+      sourceSessionForInputs = sourceSession;
       stopWatch = sourceSession?.watchTermination();
       const measurement = diggerMeasurement(partition.bodyId, dryRun);
       measurement.worked();
@@ -981,9 +994,10 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
             succeeded, sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: [] });
         }
       } else {
-        results.push(await readMeetingPartition(partition, store, { ...options, sourceSession, sourceInputHash, measurement }, dryRun));
+        results.push(await readMeetingPartition(partition, store, { ...options, sourceSession, sourceInputHash, ownerChoiceHash, measurement }, dryRun));
       }
     } catch (error) {
+      if (error instanceof Error && error.message.startsWith("MEETING_VENUE_OWNER_INPUT_CHANGED")) await sourceSessionForInputs?.defer();
       // A one-body caller owns its failure; a state program keeps the next board moving.
       if (partitions.length === 1) throw error;
       console.error(error);
@@ -1079,6 +1093,11 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
     options = { ...options, ...await readHeldMeetingInput(query, partitions[0]!) };
   }
   if (options.registry) REGISTRY = options.registry;
+  if (options.venues && options.ownerChoiceHash) {
+    const query = options.facts?.db.query ?? factReader();
+    if (!query) throw new Error("MEETING_VENUE_OWNER_INPUT_UNREADABLE");
+    options = { ...options, venues: await meetingVenueChoices(query, options.venues, options.ownerChoiceHash) };
+  }
   const previous = options.previous !== undefined ? options.previous : source instanceof CompositeSource && promotionStore
     ? await readPreviousMeetingPartition(promotionStore, partitions[0]!)
     : null;

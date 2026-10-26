@@ -58,6 +58,7 @@ export async function readDerivedFamilyMembers(
         freshMeetings: ok ? meetings : [], freshAgendaDocuments: [], retrievedAt: new Date().toISOString() };
     });
   } catch (error) {
+    if (error instanceof Error && error.message.startsWith("MEETING_VENUE_OWNER_INPUT_CHANGED")) throw error;
     const detail = jobFailureDetail(error instanceof Error ? error.message : String(error));
     const retrievedAt = new Date().toISOString();
     return members.map(member => ({ member, acquisitions: [], ok: false, error: detail,

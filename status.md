@@ -53,7 +53,7 @@ Recommendation: Sean restarts both sessions. River's capacity is on the place ma
 | 1307d4e03 | RN-03 handoff | No code |
 | 2cce7754c, 9c2b0c58a | DB-03 portraits / 118 integration | Not folded (one portrait path: release 120's) |
 
-**Sean's step**: rebuild-place-pages fails every minute with "WTP_PRODUCTION_DATABASE_URL_WRITE is not set". Add that variable with the Functions scope in Netlify and redeploy; the place-page drain then runs.
+**Place pages move to the runner (Sean, 10:45 AM EDT):** no write address goes to Netlify. River helper is building stream/river-place-pages: the runner drains rebuild_queue with rebuildPlacePages as an always-on worker sized from its 403 MiB peak; the Netlify scheduled function and its write-handle path are deleted in the same change. Rides the next release when READY. Check after live: rebuild_queue falls every hour, place_page grows, 20 ZIPs in 20 states (half from the 29 states with meetings at under 1% of governments) first visit under 3 s and repeat under 300 ms, reader-meetings p90 under 1 s within a day.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)

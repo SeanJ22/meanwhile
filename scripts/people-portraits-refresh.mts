@@ -23,6 +23,7 @@ import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { peopleJurisdiction } from "../lib/civic-data/people-source-read.ts";
 import { factReader } from "../lib/facts/db.ts";
 import { personIdentityKeys } from "../lib/officials/people-identity.ts";
+import { portraitBindingMatches } from "../lib/photos/binding.ts";
 import type { Query } from "../lib/facts/publish.ts";
 
 export function parsePeoplePortraitArguments(args:readonly string[]):string {
@@ -97,7 +98,7 @@ async function sourceInputs(store:RoutineDataStore,list:PortraitList):Promise<(p
   };
 }
 
-function portraitInputs(person:Officeholder,facts:readonly PortraitAttempt[]):DerivedInputRef[] {
+function portraitInputs(person:Pick<Officeholder,"photo">,facts:readonly PortraitAttempt[]):DerivedInputRef[] {
   const saved=(person.photo?.verification?.sources ?? []).flatMap(row=>row.artifactId || row.vaultKey ? [{
     kind:"VAULTED_EVIDENCE" as const,artifactId:row.artifactId ?? row.vaultKey!,contentHash:row.contentHash,tier:"RAW" as const,retrievedAt:row.retrievedAt,
   }] : []);
@@ -151,11 +152,18 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
       const heldSchedule=heldFacts(held).find(fact=>fact.code === PORTRAIT_SCHEDULE_CODE);
       const news=batch.some(row=>row.facts.length>0) || Boolean(end && (end.continuation.length>0 ||
         canonicalCivicDataJson(heldSchedule?.record ?? null) !== canonicalCivicDataJson(end.schedule.record)));
+      // A partial save still contains its held portraits and attempts. Keep
+      // their original evidence alongside this batch's own entry evidence.
+      const retainedInputs=[...held.roster?.officeholders.filter(person=>person.photo?.verification&&
+        personIdentityKeys(person).has(person.photo.verification.personId)&&portraitBindingMatches(person.photo.verification.personId,person.photo))
+        .flatMap(person=>portraitInputs(person,[])) ?? [],
+        ...portraitInputs({photo:null},heldFacts(held))];
+      const derivedInputs=[...retainedInputs,...sources(batch.length ? batch.map(row=>row.person) : held.versionId ? [] : list.everyone),
+        ...batch.flatMap(row=>portraitInputs(row.person,row.facts))];
       const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",
         bindingPeople:list.everyone,
         roster:{scope:state,generatedAt:clock(),officeholders,divisions:[],unmatched:[]},acquisitions:[],releaseId:clock(),now:clock(),
-        derivedInputs:batch.length || !last ? [...sources(batch.length ? batch.map(row=>row.person) : held.versionId ? [] : list.everyone),
-          ...batch.flatMap(row=>portraitInputs(row.person,row.facts))] : last.candidate.retrieval.derived?.inputs,
+        derivedInputs:[...new Map(derivedInputs.map(ref=>[canonicalCivicDataJson(ref),ref])).values()],
         excludedFacts:[...kept,...savedCaptures.gaps,...batch.flatMap(row=>row.facts),...end ? [...end.continuation,end.schedule] : []],confirmUnchanged:!news,held});
       if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED"){held=await readHeldPeopleSource(store,jurisdiction,"people-portraits",clock());continue;}
       if(!publication.outcome.promoted && !publication.outcome.confirmed)throw Error(`PEOPLE_PORTRAIT_PUBLICATION_REFUSED:${publication.outcome.candidate.failureDetail}`);

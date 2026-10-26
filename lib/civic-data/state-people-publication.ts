@@ -147,8 +147,8 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
   const clock = options.now ?? (()=>new Date().toISOString());
   const now = input.now ?? clock();
   const { isOfficialSource } = await import("./source-authority.ts");
-  const { imagesIn,pickPortraits } = await import("../hunt/portrait-pick.ts");
-  const { portraitHash } = await import("../photos/evidence.ts");
+  const { imagesIn } = await import("../hunt/portrait-pick.ts");
+  const { portraitHash,profilePortraitImageUrls } = await import("../photos/evidence.ts");
   const { portraitBindingMatches } = await import("../photos/binding.ts");
   const { runBoundedWorkPool } = await import("../ops/bounded-work-pool.ts");
   const { sanitizedErrorDiagnostic } = await import("../ops/error-diagnostic.ts");
@@ -238,21 +238,23 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
           for (const url of links) queuedProfiles.add(url);
           profiles.splice(profileIndex+1,0,...links);
         }
-        const candidates=pickPortraits(person.name,imagesIn(text,page.finalUrl));
+        const capture: import("../photos/evidence.ts").PortraitCapture = {transport:"REACHABLE",partial:false,httpStatus:page.httpStatus,observedAt:page.checkedAt,
+          evidence:{retrievedAt:page.retrievedAt,vaultKey:page.vaultKey,canonicalUrl:page.finalUrl,sourceId:new URL(page.finalUrl).hostname,contentHash:portraitHash(page.bytes),text}};
+        const subject={personId:person.personId ?? person.id,name:person.name,nativeIds:person.nativeIds,
+          state:person.state,chamber:person.chamber,officeTitle:person.officeTitle,profileUrls:[page.finalUrl]};
+        const owned=new Set(profilePortraitImageUrls(subject,capture));
+        const candidates=imagesIn(text,page.finalUrl).filter(image=>owned.has(image.src));
         candidates.sort((a,b)=>Number(b.src===person.portraitCandidate?.imageUrl)-Number(a.src===person.portraitCandidate?.imageUrl));
         if (!candidates.length) {
           profileAttempts.push({sourceUrl,code:"STATE_PORTRAIT_IMAGE_NOT_FOUND",detail:"The captured official profile does not identify a portrait for this person."});
           continue;
         }
-        const capture: import("../photos/evidence.ts").PortraitCapture = {transport:"REACHABLE",partial:false,httpStatus:page.httpStatus,observedAt:page.checkedAt,
-          evidence:{retrievedAt:page.retrievedAt,vaultKey:page.vaultKey,canonicalUrl:page.finalUrl,sourceId:new URL(page.finalUrl).hostname,contentHash:portraitHash(page.bytes),text}};
         let failure:unknown;
         for (const selected of candidates) {
           signal.throwIfAborted();
           try {
             // Verify after capture while preserving the source's original vintage.
-            person.photo=await storePortrait(person.personId ?? person.id,{subject:{personId:person.personId ?? person.id,name:person.name,nativeIds:person.nativeIds,
-              state:person.state,chamber:person.chamber,officeTitle:person.officeTitle,profileUrls:[page.finalUrl]},imageUrl:selected.src,captures:[capture,...linkingCaptures]},clock(),signal);
+            person.photo=await storePortrait(person.personId ?? person.id,{subject,imageUrl:selected.src,captures:[capture,...linkingCaptures]},clock(),signal);
             person.profileUrls=[...new Set([...(person.profileUrls ?? []),page.finalUrl])];
             person.fieldSources={...person.fieldSources,photo:{sourceUrl:page.finalUrl,sourceOrg:new URL(page.finalUrl).hostname,collectedAt:page.retrievedAt,verifiedAt:clock()}};
             await recordPerson(person); return;

@@ -51,7 +51,7 @@ test("a saved archive member binds its own portrait to its own source URL",async
   assert.ok(seed.outcome.promoted);
   const result=await refreshPeoplePortraits({vault,store,state:"az",query:null,options:{now:()=>NOW,storePortrait:await images(),acquire:async()=>{throw Error("The saved member already names its own portrait");}}});
   assert.ok(result.outcome.promoted);
-  const reader=await readStatePeopleProjection("US-AZ",{store,now:NOW,bypassCache:true});assert.equal(reader.kind,"PROMOTED");if(reader.kind!=="PROMOTED")return;
+  const reader=await readStatePeopleProjection("US-AZ",{store,now:NOW});assert.equal(reader.kind,"PROMOTED");if(reader.kind!=="PROMOTED")return;
   const photo=reader.value.roster.officeholders[0].photo;assert.ok(photo);assert.equal(photo.verification?.basis,"SOURCE_FEED");
   assert.equal(photo.verification?.sources[0].url,sourceUrl);
 });

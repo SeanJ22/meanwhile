@@ -67,17 +67,24 @@ function namesImage(subject: PortraitSubject, imageUrl: string, capture: Portrai
       return Boolean(row?.bioguideId && (ids.has(row.bioguideId) || ids.has(`congress:${row.bioguideId}`)) && row.depiction?.imageUrl === imageUrl);
     } catch { return false; }
   }
+  return profilePortraitImageUrls(subject,capture).includes(imageUrl);
+}
+
+/** The same named member entry selects an image lead and verifies its ownership. */
+export function profilePortraitImageUrls(subject:PortraitSubject,capture:PortraitCapture):string[] {
+  const {text,canonicalUrl}=capture.evidence;
   if(subject.state&&subject.officeTitle&&["upper","lower"].includes(subject.chamber??"")) {
     const person={...emptyPerson(subject.personId,subject.name,subject.officeTitle,subject.state,
       provenance(canonicalUrl,capture.evidence.sourceId,capture.evidence.retrievedAt)),nativeIds:subject.nativeIds,chamber:subject.chamber,profileUrls:[...subject.profileUrls]};
     const roster={...emptyRoster(subject.state,capture.evidence.retrievedAt),officeholders:[person]};
     const parsed=normalizeOfficialLegislaturePage(text,canonicalUrl,{state:subject.state,sourceId:"official-state-people",asOf:capture.evidence.retrievedAt,
       signal:new AbortController().signal,roster},capture.evidence.retrievedAt);
-    if(parsed.officeholders.some(row=>row.portraitCandidate?.imageUrl===imageUrl&&
-      (sameName(row.name,subject.name)||Boolean(subject.nativeIds?.["ocd-person"]?.length&&row.nativeIds?.["ocd-person"]?.some(id=>subject.nativeIds!["ocd-person"].includes(id))))))return true;
+    const own=parsed.officeholders.filter(row=>sameName(row.name,subject.name)||Boolean(subject.nativeIds?.["ocd-person"]?.length&&
+      row.nativeIds?.["ocd-person"]?.some(id=>subject.nativeIds!["ocd-person"].includes(id))));
+    if(parsed.officeholders.length)return [...new Set(own.flatMap(row=>row.portraitCandidate?.imageUrl??[]))];
   }
-  return subject.profileUrls.includes(canonicalUrl) && pageWords(text).includes(pageWords(subject.name)) &&
-    pickPortraits(subject.name,imagesIn(text,canonicalUrl)).some(image=>image.src === imageUrl);
+  return subject.profileUrls.includes(canonicalUrl)&&pageWords(text).includes(pageWords(subject.name))
+    ? pickPortraits(subject.name,imagesIn(text,canonicalUrl)).map(image=>image.src) : [];
 }
 
 function ownPortraitPage(name: string, input: PortraitSources, capture: PortraitCapture, now: string): boolean {

@@ -64,10 +64,11 @@ test("a batched portrait save and its final schedule keep the actual image acqui
   await publishPeople(store, 51, sha, START);
   const bytes = await sharp({ create: { width: 160, height: 180, channels: 3, background: "navy" } }).png().toBuffer();
   const imageVaultKey = `project/freshness/source/person-portrait/raw/${portraitHash(bytes).slice(7)}`;
+  let imagesRead=0;
   const result = await refreshPeoplePortraits({ store, vault, state: "az", query: null, options: { now: () => VERIFIED,
     acquire: async options => profile(options),
     storePortrait: (id, sources, at, signal) => storeVerifiedPortrait(id, sources, at, {
-      read: async () => ({ bytes, retrievedAt: VERIFIED, contentType: "image/png", vaultKey: imageVaultKey }), put: async () => {},
+      read: async () => ({ bytes, retrievedAt: ++imagesRead===51 ? SOURCE_DATE : VERIFIED, contentType: "image/png", vaultKey: imageVaultKey }), put: async () => {},
     }, "officials", signal) } });
   assert.ok(result.outcome.promoted, result.outcome.candidate.failureDetail ?? undefined);
   assert.equal(result.candidate.retrieval.retrievedAt, VERIFIED);

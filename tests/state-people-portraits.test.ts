@@ -38,10 +38,10 @@ async function seed(count=1) {
   assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
   return {store,roster,acquisitions};
 }
-function profile(options:KnownReleaseOptions):KnownRelease {
+function profile(options:KnownReleaseOptions,html?:string):KnownRelease {
   const requestedUrl=new URL(options.url);
   const index=requestedUrl.pathname.split("/").at(-1);
-  const text=`<h1>Jane Member ${index}</h1><img alt="Portrait of Jane Member ${index}" src="/portraits/${index}.png">`;
+  const text=html??`<h1>Jane Member ${index}</h1><img alt="Portrait of Jane Member ${index}" src="/portraits/${index}.png">`;
   const bytes=new TextEncoder().encode(text),sha256=portraitHash(bytes).slice(7);
   return {sourceId:options.sourceId,releaseId:options.releaseId,requestedUrl:options.url,finalUrl:options.url,
     bytes,sha256,httpStatus:200,retrievedAt:SOURCE_DATE,sourceObservedAt:SOURCE_DATE,checkedAt:CHECK,lastCheckStatus:304,
@@ -79,6 +79,16 @@ test("a fresh state profile verifies after capture and its stored portrait reach
   assert.equal(schedule?.code,"PEOPLE_PORTRAIT_SCHEDULE");
   assert.equal((schedule?.record as {nextDueAt:string|null}).nextDueAt,null);
   assert.ok((schedule?.record as {seen?:{versions:object}}).seen?.versions,"the list's roster digests are saved for the runner's check");
+});
+
+test("a roster profile binds a numeric photo filename only to its own named member entry",async()=>{
+  const {roster}=await seed(),images=await imageStore(),selected:string[]=[];
+  const result=await statePeoplePortraits({state:"az",roster,now:VERIFIED},{now:()=>VERIFIED,
+    acquire:async options=>profile(options,'<h1>Senate members</h1><div><a href="/members/0">Jane Member 0</a><p>State Senator — District 7</p><img src="/35470.jpg"></div><div><a href="/members/1">Other Member</a><p>State Senator — District 8</p><img src="/35471.jpg"></div>'),
+    storePortrait:async(id,sources,at,signal)=>{selected.push(sources.imageUrl);return images.store(id,sources,at,signal);}});
+  assert.equal(result.attempted,1);
+  assert.ok(result.roster.officeholders[0].photo);
+  assert.deepEqual(selected,["https://legislature.example.gov/35470.jpg"]);
 });
 test("a state portrait failure advances durable attempt metadata without withholding the accepted person",async()=>{
   const {store}=await seed();let previousId="";

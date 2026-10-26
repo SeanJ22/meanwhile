@@ -26,6 +26,8 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { canonicalCivicDataHash } from "../lib/civic-data/changes.ts";
 import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { officialVoteSourceHash, readOfficialRosterIds, withOfficialVoteSourceHash } from "../lib/state-rollcalls/source-hash.ts";
+import { continueOfficialVoteDocument, oldestOfficialVoteObservation } from "../lib/state-rollcalls/source-continuation.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
 import {
@@ -86,6 +88,8 @@ interface NjTextDocument {
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly body: string;
+  readonly retrievedAt:string;
+  readonly rawHash:string;
 }
 
 interface NjArchiveDocument {
@@ -95,6 +99,7 @@ interface NjArchiveDocument {
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly bytes: Uint8Array;
+  readonly retrievedAt:string;
 }
 
 type NjDocument = NjTextDocument | NjArchiveDocument;
@@ -184,19 +189,28 @@ async function main(): Promise<void> {
   installNeonRequestDeadline();
   prepareProductionCivicDataWrite();
   const store = new PostgresRoutineDataStore();
+  const rosterPointer=await store.readSourceHead("STATE_LEGISLATOR",target.jurisdiction);
+  const vault=rawCaptureVault();
+  const parserVersion=target.state==="NH"?"nh-general-court/3":"nj-legislature/2";
+  const sourceContext=canonicalCivicDataHash([target.sourceId,target.jurisdiction,parserVersion,
+    rosterPointer?[rosterPointer.versionId,rosterPointer.lastKnownGoodVersionId,rosterPointer.rawHash,rosterPointer.parserVersion]:null]);
 
   if (state === "NH") {
-    let documents: readonly NhOfficialDocument[];
+    let documents: readonly (NhOfficialDocument&{readonly rawHash:string;readonly retrievedAt:string})[];
     let projection: ReturnType<typeof buildNhOfficialRollCallProjection>;
     let retrievedAt: string;
     try {
       documents = await withPublisherAcquisitionDeadline(
         "New Hampshire General Court complete roll-call horizon",
         ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
-        async (signal) => readNhOfficialDocumentsSerially(
+        async (signal) => {
+          let summaryHash:string|null=null;
+          return readNhOfficialDocumentsSerially(
           [NH_ROLL_SUMMARY_URL, NH_ROLL_HISTORY_URL, NH_LEGISLATORS_URL],
-          async (url): Promise<NhOfficialDocument> => {
+          async (url,index): Promise<NhOfficialDocument&{readonly rawHash:string;readonly retrievedAt:string}> => {
             const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
+            const document=await continueOfficialVoteDocument({sourceId:target.sourceId,parserVersion,context:canonicalCivicDataHash([sourceContext,index===0?"summary":summaryHash]),
+              url,vault,signal:requestSignal,reuse:index!==0,read:async()=>{
             const result = await requestPublisher(
               "New Hampshire General Court complete roll-call horizon",
               () => fetch(url, {
@@ -215,20 +229,23 @@ async function main(): Promise<void> {
               "New Hampshire General Court complete roll-call horizon",
               () => result.arrayBuffer(),
             );
-            requestSignal.throwIfAborted();
             return {
               requestedUrl: url,
               finalUrl: result.url || url,
               httpStatus: result.status,
-              body: decodeNhPublisherBytes(bytes),
+              bytes:new Uint8Array(bytes),retrievedAt:new Date().toISOString(),
             };
+            }});
+            const rawHash=sha256(document.bytes);
+            if(index===0)summaryHash=rawHash;
+            return{requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,httpStatus:document.httpStatus,
+              body:decodeNhPublisherBytes(document.bytes),retrievedAt:document.retrievedAt,rawHash};
           },
           { signal },
-        ),
+        );},
       );
-      // @freshness-reads-here — the clock is minted only after all three
-      // serial publisher reads settled with complete non-empty bytes.
-      retrievedAt = new Date().toISOString();
+      // A resumed source keeps its actual observation; the whole set is only as current as its oldest response.
+      retrievedAt = oldestOfficialVoteObservation(documents);
       projection = buildNhOfficialRollCallProjection({
         summaries: parseNhRollCallSummary(documents[0]!.body),
         history: parseNhRollCallHistory(documents[1]!.body),
@@ -249,8 +266,7 @@ async function main(): Promise<void> {
       return;
     }
 
-    const rosterPointer = await store.readSourceHead("STATE_LEGISLATOR", target.jurisdiction);
-    const sourceHash=officialVoteSourceHash(documents,rosterPointer);
+    const sourceHash=officialVoteSourceHash(documents.map(document=>({requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,capture:{rawHash:document.rawHash}})),rosterPointer);
     const confirmed=await confirmSourceHashUnchanged({store,sourceId:target.sourceId,recordClass:"STATE_LEGISLATOR_VOTES",scope:target.jurisdiction,
       parserVersion:"nh-general-court/3",rawHash:sourceHash,now:retrievedAt,complete:true,
       retrieval:{requestedUrl:NH_ROLL_SUMMARY_URL,finalUrl:documents[0]!.finalUrl,httpStatus:200,rawHash:sourceHash,retrievedAt}});
@@ -415,14 +431,19 @@ async function main(): Promise<void> {
               `New Jersey Legislature voting-record session index answered HTTP ${indexResponse.status}.`,
             );
           }
-          const indexBody = await readPublisherBody(
+          const indexBytes = new Uint8Array(await readPublisherBody(
             "New Jersey Legislature voting-record session index",
-            () => indexResponse.text(),
-          );
-          indexSignal.throwIfAborted();
+            () => indexResponse.arrayBuffer(),
+          ));
+          const indexRetrievedAt=new Date().toISOString();
           const indexFinalUrl = validateNjVotingRecordsIndexFinalUrl(indexResponse.url || NJ_VOTING_RECORDS_INDEX_URL);
+          await continueOfficialVoteDocument({sourceId:target.sourceId,parserVersion,context:sourceContext,url:NJ_VOTING_RECORDS_INDEX_URL,
+            vault,signal:indexSignal,reuse:false,read:async()=>({requestedUrl:NJ_VOTING_RECORDS_INDEX_URL,finalUrl:indexFinalUrl,httpStatus:indexResponse.status,
+              bytes:indexBytes,retrievedAt:indexRetrievedAt})});
+          const indexBody=new TextDecoder("utf-8",{fatal:true}).decode(indexBytes);
           const sessionYear = currentNjVotingSessionYear(new Date().toISOString());
           const index = parseNjVotingRecordsIndex(indexBody, sessionYear);
+          const detailContext=canonicalCivicDataHash([sourceContext,sessionYear,indexFinalUrl,sha256(indexBody)]);
           const requests: readonly (
             | { readonly kind: "MEMBER"; readonly participant: NjSessionParticipant; readonly url: string }
             | { readonly kind: "ARCHIVE"; readonly definition: NjVoteArchiveDefinition; readonly url: string }
@@ -447,6 +468,8 @@ async function main(): Promise<void> {
             > => {
               try {
                 const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
+                const completed=await continueOfficialVoteDocument({sourceId:target.sourceId,parserVersion,context:detailContext,url:request.url,
+                  vault,signal:requestSignal,read:async()=>{
                 const response = await requestPublisher(
                   `New Jersey Legislature ${request.kind === "MEMBER" ? `member ${request.participant.rosterKey}` : request.definition.kind}`,
                   () => fetch(request.url, {
@@ -465,44 +488,26 @@ async function main(): Promise<void> {
                     `New Jersey Legislature ${request.url} answered HTTP ${response.status}.`,
                   );
                 }
-                if (request.kind === "MEMBER") {
-                  const body = await readPublisherBody(
-                    `New Jersey Legislature member ${request.participant.rosterKey}`,
-                    () => response.text(),
-                  );
-                  requestSignal.throwIfAborted();
-                  const finalUrl = validateNjMemberVotingRecordsFinalUrl(
-                    response.url || request.url,
-                    sessionYear,
-                    request.participant.rosterKey,
-                  );
-                  return {
-                    ok: true,
-                    document: {
-                      kind: "MEMBER",
-                      participant: request.participant,
-                      requestedUrl: request.url,
-                      finalUrl,
-                      httpStatus: response.status,
-                      body,
-                    },
-                  };
-                }
                 const bytes = new Uint8Array(await readPublisherBody(
-                  `New Jersey Legislature ${request.definition.kind} archive`,
+                  `New Jersey Legislature ${request.kind==="MEMBER"?`member ${request.participant.rosterKey}`:request.definition.kind}`,
                   () => response.arrayBuffer(),
                 ));
-                requestSignal.throwIfAborted();
-                const finalUrl = validateNjVoteArchiveFinalUrl(response.url || request.url, request.definition);
+                const finalUrl=request.kind==="MEMBER"?validateNjMemberVotingRecordsFinalUrl(response.url||request.url,sessionYear,request.participant.rosterKey):
+                  validateNjVoteArchiveFinalUrl(response.url||request.url,request.definition);
+                return{requestedUrl:request.url,finalUrl,httpStatus:response.status,bytes,retrievedAt:new Date().toISOString()};
+                }});
+                if(request.kind==="MEMBER")return{ok:true,document:{kind:"MEMBER",participant:request.participant,
+                  requestedUrl:request.url,finalUrl:completed.finalUrl,httpStatus:completed.httpStatus,retrievedAt:completed.retrievedAt,
+                  body:new TextDecoder("utf-8",{fatal:true}).decode(completed.bytes),rawHash:sha256(completed.bytes)}};
                 return {
                   ok: true,
                   document: {
                     kind: "ARCHIVE",
                     definition: request.definition,
                     requestedUrl: request.url,
-                    finalUrl,
-                    httpStatus: response.status,
-                    bytes,
+                    finalUrl:completed.finalUrl,
+                    httpStatus:completed.httpStatus,
+                    bytes:completed.bytes,retrievedAt:completed.retrievedAt,
                   },
                 };
               } catch (error) {
@@ -526,8 +531,8 @@ async function main(): Promise<void> {
           const archiveDocuments = documents.filter((document): document is NjArchiveDocument => document.kind === "ARCHIVE");
           const memberBodies = memberDocuments.map(({ body }) => body);
           const archiveBodies = archiveDocuments.map(({ bytes, definition }) => decodeNjVoteArchive(bytes, definition.entryName));
-          const retrievedAt = new Date().toISOString();
-          if (currentNjVotingSessionYear(retrievedAt) !== sessionYear) {
+          const retrievedAt = oldestOfficialVoteObservation([{retrievedAt:indexRetrievedAt},...documents]);
+          if (currentNjVotingSessionYear(new Date().toISOString()) !== sessionYear) {
             throw sourceAcquisitionFailure(
               "PUBLISHER_DOCUMENT_INVALID",
               "New Jersey Legislature session boundary changed during one acquisition; no mixed-term candidate was emitted.",
@@ -539,8 +544,8 @@ async function main(): Promise<void> {
             archives: archiveDocuments.map(({ definition }, archiveIndex) => parseNjVoteArchive(archiveBodies[archiveIndex]!, definition, sessionYear)),
             retrievedAt,
           });
-          const sources=[{requestedUrl:NJ_VOTING_RECORDS_INDEX_URL,finalUrl:indexFinalUrl,body:indexBody},
-            ...memberDocuments.map(document=>({requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,body:document.body})),
+          const sources=[{requestedUrl:NJ_VOTING_RECORDS_INDEX_URL,finalUrl:indexFinalUrl,capture:{rawHash:sha256(indexBytes)}},
+            ...memberDocuments.map(document=>({requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,capture:{rawHash:document.rawHash}})),
             ...archiveDocuments.map(document=>({requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,capture:{rawHash:sha256(document.bytes)}}))];
           return { indexBody, memberBodies, archiveBodies, indexFinalUrl, retrievedAt, projection,sources };
         },
@@ -558,7 +563,6 @@ async function main(): Promise<void> {
       return;
     }
 
-    const rosterPointer = await store.readSourceHead("STATE_LEGISLATOR", target.jurisdiction);
     const sourceHash=officialVoteSourceHash(acquired.sources,rosterPointer);
     const confirmed=await confirmSourceHashUnchanged({store,sourceId:target.sourceId,recordClass:"STATE_ROLL_CALL",scope:target.jurisdiction,
       parserVersion:"nj-legislature/2",rawHash:sourceHash,now:acquired.retrievedAt,complete:true,

@@ -68,6 +68,11 @@ export interface LegiscanIdentityAuthority {
 export type LegiscanIdentityHolder = Pick<Officeholder,"id"|"personId"|"nativeIds"> &
   Partial<Pick<Officeholder,"level"|"websiteUrl"|"profileUrls"|"name"|"state"|"chamber"|"memberships"|"officeTitle">> &
   { provenance?: Officeholder["provenance"] | null };
+const IDENTITY_FIELDS=["id","personId","nativeIds","level","websiteUrl","profileUrls","name","state","chamber","memberships","officeTitle","provenance"] as const;
+/** Exactly the held fields the sponsor join reads; a card's offices, contacts and source copies stay out of bill evidence. */
+export function legiscanIdentityHolder(holder: LegiscanIdentityHolder): LegiscanIdentityHolder {
+  return Object.fromEntries(IDENTITY_FIELDS.flatMap(field=>holder[field]===undefined?[]:[[field,holder[field]]])) as unknown as LegiscanIdentityHolder;
+}
 export function sourcePersonIds(holder: Pick<Officeholder,"id"|"personId"|"nativeIds">): string[] {
   return [...new Set([...(holder.nativeIds?.["ocd-person"] ?? []), holder.personId ?? "", holder.id].flatMap(value =>
     nativePersonId(value) ? [value] : /^plural:(?:[a-z]{2}:)?([0-9a-f-]{36})$/.test(value) ? [`ocd-person/${value.split(":").at(-1)}`] : []))];

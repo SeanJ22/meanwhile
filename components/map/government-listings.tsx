@@ -34,7 +34,7 @@ function Listing({ row }: { row: RegistrationGovernmentListing }) {
           provenance: { sourceUrl: link.sourceUrl, sourceOrg: "CISA .gov registry", collectedAt: link.checkedAt, verifiedAt: null } })),
       ]} />
       {open && divisionId && <div className="pt-3"><h4 className="t-detail font-medium text-paper">Federal money and records</h4><FederalMoneySection divisionId={divisionId} bodyId={row.id}
-        recipientIds={[row.id, ...row.bodyIds, ...row.aliases]} recipientNames={row.recipientNameUnique === true ? [row.name] : undefined} recipientState={row.state} /></div>}
+        recipientIds={[row.id, ...(row.bodyIds ?? []), ...(row.aliases ?? [])]} recipientNames={row.recipientNameUnique === true ? [row.name] : undefined} recipientState={row.state} /></div>}
       {open && row.associations.length === 1 && <StateCampaignSection divisionId={row.associations[0].divisionId} />}
       {!insideCard && <CardFooter gaps={[]} sources={sources} />}
     </div>

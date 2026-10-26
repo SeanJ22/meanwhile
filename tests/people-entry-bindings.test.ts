@@ -35,6 +35,7 @@ test("a shared member-list route binds each entry's identity, district, contact 
   assert.equal(new Set(parsed.officeholders.map(person=>person.personId)).size,2);
   for(const [i,person]of parsed.officeholders.entries()) {
     assert.deepEqual(person.nativeIds?.["ocd-person"],[`ocd-person/${i?"jane":"vito"}`]);
+    assert.equal(person.portraitCandidate?.sourceUrl,page,"the image is on this roster entry; the linked profile is the member's route");
     assert.equal(person.phone,`208-555-000${i?4:3}`);assert.equal(person.email,`${i?"jane":"vito"}@house.example.gov`);
     assert.equal(person.portraitCandidate?.imageUrl,`https://legislature.example.gov/${i?"jane":"vito"}.jpg`);
     assert.equal(person.memberships?.[0].district,i?"4":"3");
@@ -55,6 +56,16 @@ test("a newer bound official entry replaces an older official profile's value",(
   const source={...people[0].provenance,kind:"OFFICIAL" as const,sourceUrl:"https://legislature.example.gov/members/vito",collectedAt:"2026-10-20T00:00:00.000Z"};
   const old={...people[0],phone:"208-555-9999",websiteUrl:source.sourceUrl,provenance:source};
   assert.equal(mergePeopleSets([roster([old]),parse()])!.officeholders.find(person=>person.name==="Vito Barbieri")?.phone,"208-555-0003");
+});
+
+test("a member's news and photo-album titles never become people or member-list routes",()=>{
+  const body='<h1>House Members</h1><div><a href="/members/vito">Vito Barbieri</a><p>Representative District 3</p><img src="/vito.jpg"></div><article><a href="/members/vito/photos/transportation-committee"><h2>Transportation Committee</h2></a><p>Representative District 3</p><img src="/committee.jpg"></article><a href="/members/vito/news/new-members">Members</a>';
+  const parsed=parse(body);
+  assert.deepEqual(parsed.officeholders.map(person=>person.name),["Vito Barbieri"]);
+  for(const path of ["/members/vito/news/grants","/members/vito/photos/transportation-committee"])
+    assert.equal(normalizeOfficialLegislaturePage('<title>Representative Vito Barbieri</title><p>Representative Vito Barbieri, District 3</p><img src="/vito.jpg">',`https://legislature.example.gov${path}`,
+      {state:"id",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster(people)},at).officeholders.length,0);
+  assert.deepEqual(legislatureRosterLinks(body,page),[]);
 });
 
 test("a portrait lead keeps its own source time when another page changes the person's contact",()=>{

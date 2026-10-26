@@ -117,14 +117,36 @@ function isRead(tokens: readonly Token[]): boolean {
   return true;
 }
 
+function assertSupportedExecution(tokens: readonly Token[]): void {
+  const first = tokens[0]?.word;
+  // These result protocols cannot embed a version comparison. Cursors and
+  // prepared SQL must not create another route for stored bodies to return.
+  if (["FETCH", "DECLARE", "EXECUTE", "CALL"].includes(first ?? "")) {
+    throw new Error(`Database ${first} cannot confirm row versions; use an ordinary query`);
+  }
+  if (first !== "COPY") return;
+  let depth = 0;
+  for (const token of tokens.slice(1)) {
+    if (token.word === "(") depth++;
+    else if (token.word === ")") depth--;
+    else if (depth === 0 && token.word === "TO") {
+      throw new Error("Database COPY TO cannot confirm row versions; use an ordinary query");
+    }
+  }
+}
+
 /** Writers return their own new values. Control statements do not read stored
  * row bodies. Every read inside a writer transaction uses the same protocol. */
 export function readsStoredRows(sql: string): boolean {
   const tokens = [...scan(sql)];
   if (tokens.at(-1)?.word === ";") tokens.pop();
-  if (!tokens.some(token => token.word === ";")) return isRead(tokens);
+  if (!tokens.some(token => token.word === ";")) {
+    assertSupportedExecution(tokens);
+    return isRead(tokens);
+  }
   const statements: Token[][] = [[]];
   for (const token of tokens) { if (token.word === ";") statements.push([]); else statements.at(-1)!.push(token); }
+  statements.forEach(assertSupportedExecution);
   if (statements.some(isRead)) throw new Error("A database row read must contain one SQL statement; use a transaction for multiple statements");
   return false;
 }

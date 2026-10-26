@@ -471,10 +471,9 @@ type PlaceInput = { readonly state: string; readonly divisionIds: readonly strin
   readonly neighbors?: boolean;
   /** Divisions read only for their names: the ones reaching into a ZIP where few of its residents live. */
   readonly namedDivisionIds?: readonly string[] };
-const places = serverReaderValue("place-inflight", () => new Map<string, Promise<PlacePackage>>());
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
 
-/** Reuse one place read within a request; concurrent requests share only work still in progress. */
+/** Compose one place's answer within a request; every independent request checks current rows. */
 export function readPlacePackage(input: PlaceInput, query?: Query | null): Promise<PlacePackage> {
   if (query !== undefined || currentReaderAuthorityEdge()) return loadPlacePackage(input, query === undefined ? factReader() : query);
   return readCachedPlacePackage(input, () => {
@@ -501,13 +500,10 @@ function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<P
   const key = JSON.stringify(selected), selection = currentReaderSelection();
   let request = selection ? requests.get(selection) : undefined;
   if (selection && !request) { request = new Map(); requests.set(selection, request); }
-  const prior = request?.get(key) ?? places.get(key);
-  if (prior) { request?.set(key, prior); return prior; }
+  const prior = request?.get(key);
+  if (prior) return prior;
   const read = loadPlacePackage(selected,query());
   request?.set(key, read);
-  places.set(key, read);
-  const settled = () => { if (places.get(key) === read) places.delete(key); };
-  void read.then(settled, settled);
   return read;
 }
 

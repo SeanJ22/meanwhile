@@ -13,6 +13,10 @@ import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { Division } from "../lib/registry/types.ts";
+import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
+import { versionedSelect } from "../lib/db/versioned-query.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 
 function stateRows(version: string, divisions: readonly string[], zip = false) {
   const at = "2026-10-19T00:00:00.000Z", scope = "US-AZ:reader-registry-runtime";
@@ -91,7 +95,7 @@ test("settled state and geography reads stay consistent within one request while
       const raw = readStatePackage("az"), first = await raw;
       assert.equal(first.registry.registry.divisions[0].label, "request-state:one");
       assert.equal(readStatePackage("US-AZ"), raw, "streamed cards reuse the settled state read");
-      assert.equal(await readStateDistricts("AZ"), first.districts, "settled geography remains available after the global in-flight entry is removed");
+      assert.equal(await readStateDistricts("AZ"), first.districts, "settled geography remains available in this request's composition");
       assert.equal(reads, 1);
       await refreshRegistryRuntimeFromPromoted(["AZ"]);
       assert.equal(getRegistryRuntimeReadModel(), first.registry, "the site adapter binds the state's existing canonical answer");
@@ -102,12 +106,13 @@ test("settled state and geography reads stay consistent within one request while
       const started = new Promise<void>(resolve => { queryStarted = resolve; });
       const next = withReaderSelection(selection("AZ"), () => readStatePackage("AZ"));
       const concurrent = withReaderSelection(selection("AZ"), () => readStatePackage("AZ"));
-      assert.equal(next, concurrent, "different requests share the same state only while it is in flight");
+      assert.notEqual(next, concurrent, "different requests each check their own current state");
       await started;
-      assert.equal(reads, 2);
+      assert.equal(reads, 3);
       assert.equal(await readStateDistricts("AZ"), first.districts, "another request's newer in-flight geography cannot replace this request's settled geography");
       release!(); block = undefined;
       const refreshed = await next;
+      assert.equal((await concurrent).registry.registry.divisions[0].label, "request-state:two");
       assert.equal(refreshed.registry.registry.divisions[0].label, "request-state:two");
       assert.notEqual(refreshed.version, first.version);
 
@@ -117,13 +122,94 @@ test("settled state and geography reads stay consistent within one request while
       assert.deepEqual(selected.localDivisions?.map(row => row.ocdId), [county, city]);
       assert.deepEqual(first.localDivisions, []);
       assert.equal(readStatePackage("AZ"), raw);
-      assert.equal(reads, 3);
+      assert.equal(reads, 4);
     });
     version = "request-state:three";
     const next = await withReaderSelection(selection("AZ"), () => readStatePackage("AZ"));
     assert.equal(next.registry.registry.divisions[0].label, version, "a later request checks the current canonical publication without a global TTL");
-    assert.equal(reads, 4);
+    assert.equal(reads, 5);
   } finally { release?.(); installReaderDatabaseQuery(undefined); }
+});
+
+test("an independent state request checks a committed change while an older query response is still pending", async () => {
+  const {pg,publish}=await migratedReaderDb();
+  const copies=new Map<string,string>();
+  const checked=versionedSelect("state-request-race",new CivicReadCache({read:async key=>copies.get(key)??null,
+    write:async(key,value)=>{copies.set(key,value);}}));
+  let reads=0,release=()=>{},started=()=>{};
+  const held=new Promise<void>(resolve=>{release=resolve;});
+  const queried=new Promise<void>(resolve=>{started=resolve;});
+  const publishState=async(version:string)=>publish({id:version,recordClass:"REGISTRY_RUNTIME_BINDING",
+    scope:stateRegistryRuntimeScope("AZ"),sourceId:"registry-reviewed-bindings",at:"2026-10-19T00:00:00.000Z",
+    value:(stateRows(version,[])[0] as {payload:RegistryRuntimeReadModel}).payload});
+  const firstSelection=selection("AZ"),secondSelection=selection("AZ");
+  installReaderDatabaseQuery(async statements=>{
+    const call=++reads,rows=[];
+    for(const statement of statements)rows.push(await checked(async(text,params)=>(await pg.query<Record<string,unknown>>(text,[...params])).rows,
+      statement.text,statement.params));
+    if(call===1){started();await held;}
+    return rows;
+  });
+  try {
+    await publishState("request-race:before");
+    const first=withReaderSelection(firstSelection,()=>readStatePackage("AZ"));
+    await queried;
+    await publishState("request-race:after");
+    const second=withReaderSelection(secondSelection,()=>readStatePackage("AZ"));
+    assert.notEqual(second,first,"a new request never joins an older database snapshot");
+    assert.equal(withReaderSelection(firstSelection,()=>readStatePackage("AZ")),first,"same-request composition retains its own snapshot");
+    assert.equal((await second).registry.registry.divisions[0].label,"request-race:after");
+    assert.equal(reads,2,"the independent request issues a fresh database version check");
+    release();
+    assert.equal((await first).registry.registry.divisions[0].label,"request-race:before");
+  } finally {release();installReaderDatabaseQuery(undefined);await pg.close();}
+});
+
+test("early districts and canonical pointers stay with their state promise across concurrent requests", async () => {
+  const firstSelection=selection("AZ"),secondSelection=selection("AZ"),zip="85701";
+  const scope=(version:string)=>`US:plain-english-translations:ocd-division/country:us/state:az/cd:${version}`;
+  let version="before",release=()=>{},selectedStarted=()=>{},firstSettled=false,reads=0;
+  const held=new Promise<void>(resolve=>{release=resolve;});
+  const selecting=new Promise<void>(resolve=>{selectedStarted=resolve;});
+  installReaderDatabaseQuery(async statements=>{
+    const statement=statements[0];reads++;
+    if(statement.text.startsWith("WITH state_geography")){
+      const selectedVersion=String(statement.params[0]).replace("geography:","");
+      if(selectedVersion==="before"){selectedStarted();await held;}
+      const row=stateRows(selectedVersion,[],true)[0] as {part_payload:Record<string,unknown>[]};
+      return [[row.part_payload[0]]];
+    }
+    const row=stateRows(version,[],true)[0] as {part_payload:Record<string,unknown>[]};
+    row.part_payload[0].canonical_keys=[`CURATED_READER_RECORD:${scope(version)}`];
+    return [[row]];
+  });
+  try {
+    const first=withReaderSelection(firstSelection,()=>readStatePackage("AZ",[],zip,{earlyDistricts:true}));
+    void first.then(()=>{firstSettled=true;},()=>{});
+    await selecting;
+    const districts=await withReaderSelection(firstSelection,()=>readStateDistricts("AZ"));
+    assert.equal(districts.kind,"HELD");
+    if(districts.kind==="HELD")assert.equal(districts.versionId,"geography:before");
+    await withReaderSelection(firstSelection,()=>primeStateDistrictPointers(first));
+    assert.equal(firstSettled,false,"geography and its canonical pointers arrive before selected people finish");
+    version="after";
+    const second=withReaderSelection(secondSelection,()=>readStatePackage("AZ",[],zip,{earlyDistricts:true}));
+    assert.notEqual(second,first);
+    await withReaderSelection(secondSelection,()=>primeStateDistrictPointers(second));
+    const secondDistricts=await withReaderSelection(secondSelection,()=>readStateDistricts("AZ"));
+    assert.equal(secondDistricts.kind,"HELD");
+    if(secondDistricts.kind==="HELD")assert.equal(secondDistricts.versionId,"geography:after");
+    for(const [selected,own,other] of [[firstSelection,"before","after"],[secondSelection,"after","before"]] as const)
+      await withReaderSelection(selected,async()=>{
+        assert.equal((await readerCanonicalEntry("CURATED_READER_RECORD",scope(own)))?.kind,"NOT_RECORDED");
+        assert.equal(readerCanonicalEntry("CURATED_READER_RECORD",scope(other)),undefined);
+      });
+    assert.equal((await second).registry.registry.divisions[0].label,"after");
+    assert.equal(reads,4,"each request reads its own district and selected-people statements");
+    release();
+    assert.equal((await first).registry.registry.divisions[0].label,"before");
+    assert.equal(await withReaderSelection(firstSelection,()=>readStateDistricts("AZ")),districts);
+  } finally {release();installReaderDatabaseQuery(undefined);}
 });
 
 test("a failed state read remains failed for that request and a later request can retry", async () => {

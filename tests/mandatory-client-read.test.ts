@@ -86,19 +86,40 @@ test("SQL classification cannot be changed by quoted writer words and preserves 
   for (const text of ["(SELECT body FROM held)", "((SELECT body FROM held)) UNION ALL (SELECT body FROM held)", "SELECT 'UPDATE' AS body", 'SELECT "delete" FROM held', "/* INSERT */ WITH rows AS (SELECT * FROM held) SELECT * FROM rows",
     "WITH rows AS (SELECT * FROM held FOR UPDATE) SELECT * FROM rows", "SELECT $$DELETE$$ AS body", "SELECT * FROM held; -- DELETE\n", "SELECT pg_sleep(0), custom_stored_body()", "SELECT pg_sleep_custom_body()", "WITH selected AS (SELECT body FROM held) SELECT body AS update FROM selected", "WITH selected AS (SELECT body FROM held) SELECT body AS delete FROM selected", "SELECT body AS into FROM held", "WITH written AS (UPDATE held SET body='after' RETURNING *) SELECT * FROM written", "SELECT pg_advisory_xact_lock(1)", "SELECT pg_sleep(1)", "SELECT pg_catalog.pg_sleep(1) AS waited"]) assert.ok(readsStoredRows(text), text);
   for (const text of ["BEGIN READ ONLY", "SET LOCAL statement_timeout=1000", "UPDATE held SET body='before' RETURNING *",
-    "SELECT body INTO new_held FROM held", "WITH rows AS (SELECT 1) UPDATE held SET body='before' RETURNING *"]) assert.ok(!readsStoredRows(text), text);
+    "SELECT body INTO new_held FROM held", "WITH rows AS (SELECT 1) UPDATE held SET body='before' RETURNING *",
+    "COPY held FROM STDIN", "PREPARE saved_read AS SELECT body FROM held", "CLOSE saved_cursor",
+    "DO $$ BEGIN EXECUTE 'SELECT body FROM held'; END $$"]) assert.ok(!readsStoredRows(text), text);
   assert.ok(readsStoredRows(String.raw`WITH marker AS (SELECT '\\' AS marker) SELECT body FROM held`));
   assert.throws(() => readsStoredRows("SELECT body FROM held; SELECT body FROM held"), /one SQL statement/);
   assert.throws(() => readsStoredRows("BEGIN; SELECT body FROM held; COMMIT"), /one SQL statement/);
+  for (const text of ["FETCH ALL FROM saved_cursor", "/* SELECT */ FETCH NEXT FROM saved_cursor", "DECLARE saved_cursor CURSOR FOR SELECT body FROM held",
+    "EXECUTE saved_read", "CALL stored_body(NULL)", "COPY held TO STDOUT", "COPY (SELECT body FROM held) TO STDOUT",
+    "BEGIN; FETCH ALL FROM saved_cursor; COMMIT"]) assert.throws(() => readsStoredRows(text), /cannot confirm row versions/, text);
+});
+
+test("unsupported row result protocols are refused before the Neon transport, including mixed batches", async t => {
+  const f = await fixture(t), sql = neon("postgres://fixture:fixture@ep-unsupported-read.invalid/neondb");
+  for (const text of ["FETCH ALL FROM saved_cursor", "DECLARE saved_cursor CURSOR FOR SELECT body FROM held", "EXECUTE saved_read",
+    "COPY held TO STDOUT", "CALL stored_body(NULL)"]) {
+    await assert.rejects(sql.query(text), /cannot confirm row versions/, text);
+  }
+  await assert.rejects(sql.transaction([sql`SELECT body FROM held`, sql.query("FETCH ALL FROM saved_cursor")]), /cannot confirm row versions/);
+  assert.equal(f.calls.length, 0, "no unsupported form or earlier batch member reaches PostgreSQL");
+  assert.deepEqual(await sql`SELECT body FROM held`, [{ body: "before" }]);
 });
 
 test("mandatory Client and Pool reads retain callback and array modes on pinned clients", async t => {
   const f = await fixture(t);
+  const prepared = new Map<string, string>();
   t.mock.method(RawClient.prototype, "connect", function(this: RawClient, callback?: (error?: Error) => void) {
     callback?.(); return Promise.resolve();
   });
-  t.mock.method(RawClient.prototype, "query", function(statement: string | { text: string; values?: unknown[]; rowMode?: string; binary?: boolean; types?: {getTypeParser(oid: number): (value: never) => unknown} }, params?: unknown[], callback?: (error: unknown, result?: unknown) => void) {
+  t.mock.method(RawClient.prototype, "query", function(statement: string | { text: string; name?: string; values?: unknown[]; rowMode?: string; binary?: boolean; types?: {getTypeParser(oid: number): (value: never) => unknown} }, params?: unknown[], callback?: (error: unknown, result?: unknown) => void) {
     const config = typeof statement === "string" ? { text: statement } : statement;
+    if (config.name) {
+      if (prepared.has(config.name)) assert.equal(config.text, prepared.get(config.name), "the driver refuses a changed prepared SQL definition");
+      prepared.set(config.name, config.text);
+    }
     const done = f.execute(config.text, params ?? config.values).then(result => {
       const tuples = result.rows.map(row => row.map((value, index) => {
         const field = result.fields[index];
@@ -114,6 +135,26 @@ test("mandatory Client and Pool reads retain callback and array modes on pinned 
   const binaryRead: import("@neondatabase/serverless").QueryConfig & { readonly binary: true } = { text: "SELECT body FROM held", binary: true };
   const connectionString = "postgres://fixture:fixture@ep-mandatory-pool.invalid/neondb";
   const client = new Client({ connectionString });
+  const named = { name: "held-reader", text: "SELECT body FROM held WHERE id=$1", values: ["a"] };
+  assert.deepEqual((await client.query(named)).rows, [{ body: "before" }]);
+  assert.deepEqual((await client.query(named)).rows, [{ body: "before" }], "random version-query aliases cannot collide under a server statement name");
+  const textless = () => Reflect.apply(client.query, client, [{ name: named.name, values: ["a"] }]) as Promise<{ rows: unknown[] }>;
+  await f.db.exec("UPDATE held SET body='after' WHERE id='a'");
+  assert.deepEqual((await textless()).rows, [{ body: "after" }], "named reuse resolves the original SQL and confirms its new current version");
+  f.calls.length = 0;
+  assert.deepEqual((await textless()).rows, [{ body: "after" }]);
+  assert.equal(checkedBodyRows(f.calls).length, 0, "textless reuse downloads no unchanged body");
+  const submitted = f.calls.length;
+  await assert.rejects(Reflect.apply(client.query, client, [{ name: "unknown-reader" }]), /SQL text on first use/);
+  await assert.rejects(client.query({ ...named, text: "SELECT stamp FROM held WHERE id=$1" }), /different SQL text/);
+  let opaqueSubmitted = false;
+  await assert.rejects(Reflect.apply(client.query, client, [{ submit() { opaqueSubmitted = true; } }]), /expose its SQL text/);
+  assert.equal(opaqueSubmitted, false);
+  await new Promise<void>(resolve => client.query("FETCH ALL FROM saved_cursor", error => {
+    assert.match(String(error), /cannot confirm row versions/); resolve();
+  }));
+  assert.equal(f.calls.length, submitted, "unknown names, opaque submissions and cursor reads never reach the driver");
+  await f.db.exec("UPDATE held SET body='before' WHERE id='a'");
   assert.deepEqual((await client.query("SELECT body FROM held")).rows, [{ body: "before" }]);
   f.calls.length = 0;
   assert.deepEqual((await client.query({ text: "SELECT body FROM held", rowMode: "array" })).rows, [["before"]]);

@@ -27,11 +27,12 @@ async function executeChecked(connection: string, defaults: Options, execute: Ex
   data: QueryData | readonly QueryData[], options: Options | readonly Options[] = {}, transaction?: Options): Promise<unknown> {
   const batch = Array.isArray(data), items = (batch ? data : [data]) as readonly QueryData[];
   const statements = items.map(parameterized);
-  if (statements.every(statement => !needsVersionedRead(statement.query))) return execute(data, options, transaction);
+  const checked = statements.map(statement => needsVersionedRead(statement.query));
+  if (checked.every(read => !read)) return execute(data, options, transaction);
   const perQuery = items.map((_, index) => (Array.isArray(options) ? options[index] : options) ?? {}) as Options[];
   const prepared = statements.map((statement, index) => {
     const effective = { ...defaults, ...transaction, ...perQuery[index] };
-    if (!needsVersionedRead(statement.query)) return { ready: Promise.resolve(statement), effective };
+    if (!checked[index]) return { ready: Promise.resolve(statement), effective };
     let readyResolve!: (query: Parameterized) => void, readyReject!: (error: unknown) => void;
     let replyResolve!: (result: DriverResult) => void, replyReject!: (error: unknown) => void;
     const ready = new Promise<Parameterized>((resolve, reject) => { readyResolve = resolve; readyReject = reject; });
@@ -139,6 +140,7 @@ function accountedInstance<T extends object>(instance: T, connection: string | u
     ? { getTypeParser: (oid, format) => Reflect.apply(Reflect.get(instance, "getTypeParser") as DriverParsers["getTypeParser"], instance, [oid, format]) }
     : parameters.types;
   const query = Reflect.get(instance, "query");
+  const preparedStatements = new Map<string, string>();
   if (typeof query === "function") Reflect.set(instance, "query", (...args: unknown[]) => {
     install(connection);
     const callback = typeof args.at(-1) === "function" ? args.pop() as (error: unknown, result?: unknown) => void : undefined;
@@ -150,8 +152,26 @@ function accountedInstance<T extends object>(instance: T, connection: string | u
       return result;
     }
     const statement = args[0];
-    const config = typeof statement === "string" ? { text: statement } : statement as Record<string, unknown> | undefined;
-    const checked = config && typeof config.text === "string" && needsVersionedRead(config.text);
+    let config = typeof statement === "string" ? { text: statement } : statement as Record<string, unknown> | undefined;
+    let checked: boolean, sqlText: string;
+    try {
+      if (!config || typeof config !== "object" || typeof config.submit === "function") {
+        throw new Error("A database query must expose its SQL text to confirm row versions");
+      }
+      const name = typeof config.name === "string" && config.name ? config.name : undefined;
+      const original = name ? preparedStatements.get(name) : undefined;
+      const text = config.text === undefined ? original : config.text;
+      if (typeof text !== "string") throw new Error("A database prepared query must provide its SQL text on first use");
+      sqlText = text;
+      if (name && original !== undefined && original !== text) throw new Error(`Prepared statement ${name} already has different SQL text`);
+      checked = needsVersionedRead(text);
+      if (name) preparedStatements.set(name, text);
+      config = { ...config, text };
+      if (typeof statement !== "string") args[0] = config;
+    } catch (error) {
+      if (callback) { queueMicrotask(() => callback(error)); return; }
+      return Promise.reject(error);
+    }
     const slot = reserve();
     const run = async (arguments_: unknown[]) => {
       await slot.wait;
@@ -159,12 +179,12 @@ function accountedInstance<T extends object>(instance: T, connection: string | u
       finally { slot.release(); }
     };
     let result: Promise<unknown>;
-    if (!checked || !config || typeof config.text !== "string") {
+    if (!checked) {
       result = run(args);
     } else {
       const values = (Array.isArray(args[1]) ? args[1] : config.values ?? []) as readonly unknown[];
       const binary = config.binary || Reflect.get(instance, "binary") || parameters.binary || false;
-      result = checkedDriverRead(address + (binary ? ":binary" : ":text"), config.text, values,
+      result = checkedDriverRead(address + (binary ? ":binary" : ":text"), sqlText, values,
         (text, params) => run([{ ...config, text, name: undefined,
           values: [...params], rowMode: "array", types: rawDriverTypes }]) as Promise<DriverResult>)
         .then(raw => decodeDriverResult(raw, { fullResults: true, arrayMode: config.rowMode === "array",

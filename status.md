@@ -1329,3 +1329,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Neon, both databases, midnight hour: 1,753 MB (11 PM: 2,933). Registry read 72 MB.
 - Drain fix gate: tests running. DB-04: branch active (last commit 12:25 AM), no READY yet.
 - rebuild_queue: 1,667.
+
+### 1:30 AM EDT: release 124 (drain fix alone) opened
+- Drain fix gate 9/9 (9,995 pass, 0 fail). READY 6f44f6a3a on stream/river-drain; river and river-next moved there. release/124 is [#836](https://github.com/SeanJ22/meanwhile/pull/836), auto-merge on. Report: releases/124.md.
+- Idaho fix gating now on river 6f44f6a3a + stream/river-idaho (river-next-idaho). Ships alone next as 125.
+- Batch 2 (gate 9/9 on the old river) re-folds onto river after the Idaho fix and becomes 126. Its report moved to releases/batch-2.md.

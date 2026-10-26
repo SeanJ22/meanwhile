@@ -110,6 +110,23 @@ test("an own directory link's district and party label are not part of the membe
   assert.deepEqual(parsed.officeholders[0].nativeIds?.["ocd-person"],["ocd-person/vito"]);
 });
 
+test("an official member without an aggregator ID gains its own district and keeps old document and button IDs",()=>{
+  const profile="https://www.flsenate.gov/Senators/S11",pdf="https://www.flsenate.gov/member-newsletter.pdf";
+  const member={...people[0],id:"old-massullo",personId:"old-massullo",name:"Massullo, Ralph E., Jr.",state:"FL",chamber:"upper",officeTitle:"State Senator",
+    nativeIds:{"official-legislature":[profile]},memberships:people[0].memberships?.map(row=>({...row,chamber:"upper",district:undefined}))};
+  const action={...member,id:"old-email-action",personId:"old-email-action",name:"Email this Senator",nativeIds:{"official-legislature":[profile]}};
+  const document={...member,id:"old-document",personId:"old-document",name:"Monthly Newsletter",nativeIds:{"official-legislature":[pdf]}};
+  const old=[member,action,document].map(person=>({...person,provenance:{...person.provenance,sourceUrl:profile}}));
+  const body=`<h1>The Florida Senate</h1><div><a href="${profile}">Email this Senator</a><h2>Senator Ralph E. Massullo, Jr.</h2><p>District 11</p><a href="${pdf}">Monthly Newsletter</a></div>`;
+  const parsed=normalizeOfficialLegislaturePage(body,profile,{state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster(old)},at);
+  assert.equal(parsed.officeholders.length,1);
+  assert.equal(parsed.officeholders[0].name,"Ralph E. Massullo Jr.");
+  assert.equal(parsed.officeholders[0].memberships?.[0].district,"11");
+  const repaired=mergePeopleSets([roster(old),parsed])!;
+  assert.equal(repaired.officeholders.length,1);
+  assert.ok(retainsPeopleBindings(old,repaired.officeholders));
+});
+
 test("normal publication binds a directory's member to its stated chamber",async()=>{
   const source="https://ohiosenate.gov/members/directory",body='<h1>Senate Members</h1><div><a href="/members/vito-barbieri"><div>Vito Barbieri</div><div>District 3 | R</div></a></div>';
   const member={...people[0],state:"OH",chamber:"upper",officeTitle:"State Senator",websiteUrl:"https://ohiosenate.gov/members/vito-barbieri",
@@ -137,6 +154,12 @@ test("a member's old form-page IDs resolve to the person owning its explicit pub
   assert.equal(repaired.officeholders.length,1);
   assert.equal(repaired.officeholders[0].name,member.name);
   assert.ok(retainsPeopleBindings([form],repaired.officeholders));
+  const directoryMember={...member,websiteUrl:"https://ohiosenate.gov/members/directory",profileUrls:[],
+    nativeIds:{...member.nativeIds,"official-legislature":[`${member.websiteUrl}#member=vito%20barbieri`]}};
+  const fromDirectory=mergePeopleSets([roster([form]),roster([directoryMember])])!;
+  assert.equal(fromDirectory.officeholders.length,1);
+  assert.equal(fromDirectory.officeholders[0].name,member.name);
+  assert.ok(retainsPeopleBindings([form],fromDirectory.officeholders));
 });
 
 test("profile routes keep their own identity without treating a term or directory as a person",()=>{

@@ -22,8 +22,9 @@ function documentRoute(value:string,base?:string):boolean {
 function rosterLabelName(label: string): string {
   const observed=label.replace(/\s*--[\s\S]*$/,"").replace(/\s+District\s*(?:No\.?\s*)?[:#-]?\s*\d+[a-z]?\b[\s\S]*$/i,"")
     .replace(/^(?:State\s+)?(?:Senator|Sen\.|Representative|Rep\.|Delegate|Assemblyman|Assemblywoman|Hon\.)\s+/i,"").trim();
-  const reversed=/,\s*(?:Jr\.?|Sr\.?|II|III|IV)$/i.test(observed)?null:/^([^,]+),\s*([^,]+)$/.exec(observed);
-  return reversed?`${reversed[2]} ${reversed[1]}`:observed;
+  const suffix= /,\s*(Jr\.?|Sr\.?|II|III|IV)$/i.exec(observed);
+  const reversed=/^([^,]+),\s*([^,]+)$/.exec(suffix?observed.slice(0,suffix.index):observed);
+  return reversed?`${reversed[2]} ${reversed[1]}${suffix?` ${suffix[1]}`:""}`:observed;
 }
 function anchorName(html:string):string {
   const heading=/<(?:h[1-6]|strong)\b[^>]*>([\s\S]*?)<\/(?:h[1-6]|strong)>/i.exec(html)?.[1];
@@ -108,7 +109,7 @@ function entryPerson(name:string,card:string,people:readonly Officeholder[],cham
   const exact=people.filter(person=>key(person.name)===key(name)&&(!chamber||person.chamber===chamber));
   const tokens=key(name).split(" "),text=textOf(card),districts=[...new Set([...text.matchAll(/\bDistrict\s*(?:No\.?\s*)?[:#-]?\s*(\d+[a-z]?)\b/gi)].map(match=>match[1].toLowerCase()))];
   const seatFor=(person:Officeholder)=>districts.length===1&&person.memberships?.some(row=>row.current!==false&&(!chamber||row.chamber===chamber)&&row.district?.toLowerCase().replace(/^0+(?=\d)/,"")===districts[0].replace(/^0+(?=\d)/,""));
-  if(exact.length===1&&(!districts.length||!exact[0].memberships?.length||seatFor(exact[0])))return exact[0];
+  if(exact.length===1&&(!districts.length||!exact[0].memberships?.some(row=>row.current!==false&&(!chamber||row.chamber===chamber)&&row.district)||seatFor(exact[0])))return exact[0];
   const emails=new Set([...card.matchAll(/href=["']mailto:([^"'?]+)/gi)].map(match=>match[1].toLowerCase()));
   const matches=people.filter(person=>{
     if(chamber&&person.chamber!==chamber)return false;
@@ -211,7 +212,8 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
   if(federalRoute(pageUrl)||memberContentRoute(pageUrl))return roster;
   const seeds=(options.roster?.officeholders??[]).flatMap(sourcePeople)
     .filter(holder=>holder.level==="STATE"&&["upper","lower","legislature"].includes(holder.chamber??"")&&holder.state?.toLowerCase()===options.state.toLowerCase()
-      &&(holder.nativeIds?.["ocd-person"]?.length??0)<=1&&(holder.nativeIds?.plural?.length??0)<=1&&!sourcePersonIsDocument(holder)&&!memberAction(holder.name));
+      &&(holder.nativeIds?.["ocd-person"]?.length??0)<=1&&(holder.nativeIds?.plural?.length??0)<=1&&!sourcePersonIsDocument(holder)&&!memberAction(holder.name))
+    .map(holder=>({...holder,name:rosterLabelName(holder.name)}));
   // The reference person's native membership corroborates its named entry.
   // A derived portrait copy carries no membership and cannot replace it.
   const seedByPerson=new Map<string,Officeholder>();
@@ -373,9 +375,9 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
   // A document link on a member's own profile is not another person. Return
   // those older reader IDs only when the saved page explicitly heads one
   // independently identified member; a chamber list has several headings.
-  const headed=roster.officeholders.filter(person=>person.nativeIds?.["ocd-person"]?.length===1&&
+  const headed=roster.officeholders.filter(person=>
     [...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)].some(heading=>samePublishedName(rosterLabelName(textOf(heading[1])),person.name)));
-  const owners=new Set(headed.map(person=>person.nativeIds!["ocd-person"][0]));
+  const owners=new Set(headed.map(person=>person.personId??person.id));
   if(owners.size===1&&roster.officeholders.length===1&&headed[0]) {
     const person=headed[0],old=(options.roster?.officeholders??[]).filter(source=>(sourcePersonIsDocument(source)||memberAction(source.name))&&source.provenance.sourceUrl===pageUrl);
     if(old.length)person.nativeIds={...person.nativeIds,reader:[...new Set([...person.nativeIds?.reader??[],...old.flatMap(source=>[...personIdentityKeys(source)])])]};

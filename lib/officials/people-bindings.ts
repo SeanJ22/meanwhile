@@ -5,6 +5,7 @@ import { portraitBindingMatches } from "../photos/binding.ts";
 
 const name = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const subject = (person: Officeholder) => `${person.state?.toUpperCase()}|${person.level}|${name(person.name)}`;
+const actionName = (value:string) => /^(?:sign up|subscribe|contact|email|sponsored bills|read more|view)(?: |$)/.test(name(value));
 const collapsed = (person: Officeholder) => (person.nativeIds?.["ocd-person"]?.length ?? 0) > 1 || (person.nativeIds?.plural?.length ?? 0) > 1;
 export function sourcePeople(person: Officeholder): readonly Officeholder[] {
   return person.sourceHolders?.length ? person.sourceHolders.flatMap(sourcePeople) : [person];
@@ -82,15 +83,15 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
   const foreign=(person:Officeholder,key:string)=>Boolean(ownerOf(key)&&ownerOf(key)!==identityOf(person));
   const documentReference=(person:Officeholder)=>{
     if(person.nativeIds?.["ocd-person"]?.length)return undefined;
-    const action=/^(?:sign up|subscribe|contact|email|sponsored bills|read more|view)(?: |$)/.test(name(person.name));
+    const action=actionName(person.name);
     const parents=new Set([...person.nativeIds?.["official-legislature"]??[],...(action&&person.provenance.sourceUrl?[person.provenance.sourceUrl]:[])].flatMap(url=>{
       const parent=memberProfileSubpageParentUrl(url);
       const native=parent||action?nativePersonIdFromUrl(parent??url):null;
       return native?[`${native.source}:${native.id}`]:[];
     }));
     if(!sourcePersonIsDocument(person)&&!parents.size&&!action)return undefined;
-    const matches=sources.filter(source=>source.nativeIds?.["ocd-person"]?.length===1&&(personIdentityKeys(source).has(person.id)||
-      [source.websiteUrl,...source.profileUrls??[]].some(url=>{
+    const matches=sources.filter(source=>!actionName(source.name)&&(personIdentityKeys(source).has(person.id)||
+      [source.websiteUrl,...source.profileUrls??[],...source.nativeIds?.["official-legislature"]??[]].some(url=>{
         const native=url?nativePersonIdFromUrl(url):null;return Boolean(native&&parents.has(`${native.source}:${native.id}`));
       })));
     const nativeMatches=matches.filter(sourcePersonIsNativeReference),references=nativeMatches.length?nativeMatches:matches;

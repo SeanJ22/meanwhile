@@ -205,6 +205,10 @@ test("the normal readerRoute filters a selected member after proving each comple
         current_version_id:pointer.versionId,last_known_good_version_id:pointer.lastKnownGoodVersionId,promoted_at:pointer.promotedAt,
         validation_receipt:pointer.receipt,payload:pointer.payload,normalized_hash:saved.candidate.normalization.normalizedHash,
         retrieved_at:saved.candidate.retrieval.retrievedAt,confirmation:null,published:true});
+      if(statement.text.includes("AS source_nonempty")){
+        const row=rows[rows.length-1],index=pointer.payload as import("../lib/sources/legiscan/bills.ts").BillIndex;
+        Object.assign(row,{source_nonempty:index.datasets.length>0,payload:{...index,datasets:statement.params![2]?[]:index.datasets.filter(dataset=>dataset.state_id===statement.params![1])}});
+      }
       if(statement.text.includes("AS full_rows") || statement.text.includes("AS bills")){
         const row=rows[rows.length-1],part=pointer.payload as import("../lib/sources/legiscan/bills.ts").BillPart;
         const {bills,sponsors,...header}=part;

@@ -2,8 +2,9 @@ import { readPromotedCivicData,type PromotedCivicDataReadOptions,type PromotedEd
 import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
 import {readerDatabaseQuery} from "../../reader/database.ts";
 import {readPersonBillParts,type PersonBillPart} from "./person-reader.ts";
+import {readStateCatalog,type BillCatalogSelection} from "./state-catalog.ts";
 import { bulkProjectionIssue } from "./publication.ts";
-import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,billScope,stateOfDataset,publicDatasetIndex,joinSponsors,hydrateBillPart,type BillSession,type BillPart,type BillIndex,type Bill,type HeldPerson } from "./bills.ts";
+import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,billScope,stateOfDataset,publicDatasetIndex,joinSponsors,hydrateBillPart,type BillSession,type BillPart,type BillIndex,type Bill,type HeldPerson,type Dataset } from "./bills.ts";
 import { currentLegiscanDatasets } from "./current-sessions.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
 import { readCanonicalShelf } from "../../reader/canonical.ts";
@@ -54,16 +55,48 @@ export async function readBulkProjection(scope:string,options:BulkReadOptions={}
   }
   return result;
 }
-/**
- * A request opens only its state's current sessions, the ones the fan-out publishes; a catalogue without session years
- * cannot name them, so it opens all of the state's sessions. A missing session, or one an earlier parser still holds
- * until the fan-out republishes it, remains an explicit coverage gap.
- */
+export type StateBillCatalogRead = {
+  readonly recorded:true;
+  readonly datasets:readonly Dataset[];
+  readonly checkedAt:string|null;
+  readonly capturedAt:string;
+} | {
+  readonly recorded:false;
+  readonly datasets:readonly Dataset[];
+  readonly checkedAt:null;
+  readonly capturedAt:null;
+};
+/** A state catalog is a named source selection, not an empty national source. */
+export async function readBillStateCatalog(state:string,options:PromotedCivicDataReadOptions={},headerOnly=false):Promise<StateBillCatalogRead>{
+  let selection:BillCatalogSelection|null=null;
+  if(!options.edge && !currentReaderAuthorityEdge() && (options.store || !readerCanonicalEntry("STATE_BILL",LEGISCAN_BULK_SCOPE))){
+    if(options.store?.readLegiscanStateCatalog)selection=await options.store.readLegiscanStateCatalog(state,headerOnly);
+    else if(!options.store){
+      const query=readerDatabaseQuery();if(!query)throw Error("READER_STORE_NOT_CONFIGURED");
+      selection=await readStateCatalog(async(text,params)=>(await query([{text,params:params??[]}]))[0]??[],state,headerOnly);
+    }
+  }
+  const index=selection?await readPromotedCivicData<BillIndex>("STATE_BILL",LEGISCAN_BULK_SCOPE,{...options,edge:selection.entry})
+    :await readBulkProjection(LEGISCAN_BULK_SCOPE,options);
+  if(index.kind!=="PROMOTED"||index.value.kind!=="INDEX")return {recorded:false,datasets:[],checkedAt:null,capturedAt:null};
+  if(index.metadata.sourceId!=="legiscan-bills")throw Error("LEGISCAN_BULK_SOURCE_INVALID");
+  const value=index.value;
+  if(selection){
+    if(!selection.sourceNonempty || ![undefined,"legiscan-bulk/2",LEGISCAN_BULK_PARSER].includes(value.parserVersion) ||
+      typeof value.capturedAt!=="string" || !Number.isFinite(Date.parse(value.capturedAt)) || !Array.isArray(value.datasets))throw Error("LEGISCAN_DATASET_INDEX_INVALID");
+    if(value.datasets.length)publicDatasetIndex(value);
+  }
+  return {recorded:true,datasets:headerOnly?[]:value.datasets.filter(row=>stateOfDataset(row)===state.toUpperCase()),checkedAt:index.metadata.retrievedAt,capturedAt:value.capturedAt};
+}
+/** The catalog selection keeps all state rows. Public bills retain main130's current-session
+ * behavior, with all sessions used when source years are unavailable. Older parser-held
+ * sessions remain explicit coverage gaps until the fan-out republishes them. */
 export async function readBillsForState(state:string,options:PromotedCivicDataReadOptions & {person?:HeldPerson}={}):Promise<{bills:Bill[];complete:boolean;checkedAt:string|null}> {
-  const index=await readBulkProjection(LEGISCAN_BULK_SCOPE,options);
-  if(index.kind!=="PROMOTED"||index.value.kind!=="INDEX") return {bills:[],complete:false,checkedAt:null};
-  const own=index.value.datasets.filter(row=>stateOfDataset(row)===state.toUpperCase());
-  const datasets=own.length&&own.every(row=>row.year_start!==undefined)?currentLegiscanDatasets(own,index.value.capturedAt):own;
+  const index=await readBillStateCatalog(state,options);
+  if(!index.recorded)return {bills:[],complete:false,checkedAt:null};
+  const own=index.datasets;
+  const datasets=own.length&&own.every(row=>row.year_start!==undefined)?currentLegiscanDatasets(own,index.capturedAt):own;
+
   const bills:Bill[]=[]; let complete=datasets.length>0;
   for(let offset=0;offset<datasets.length;offset+=READER_SCOPE_BATCH){
     const batch=datasets.slice(offset,offset+READER_SCOPE_BATCH);
@@ -114,7 +147,7 @@ export async function readBillsForState(state:string,options:PromotedCivicDataRe
     for(const result of sessions)if(!result.ok)throw Error(`LEGISCAN_READER_SESSION_UNAVAILABLE:${result.error}`);
   }
   if(new Set(bills.map(row=>row.id)).size!==bills.length)throw Error("LEGISCAN_READER_DUPLICATE_BILL");
-  return {bills,complete,checkedAt:index.metadata.retrievedAt};
+  return {bills,complete,checkedAt:index.checkedAt};
 }
 export function billsForPerson(bills:readonly Bill[],person:HeldPerson):Bill[] {
   const join=joinSponsors([person]);return bills.filter(bill=>bill.sponsors.some(sponsor=>join(sponsor).officeholderId===person.id));

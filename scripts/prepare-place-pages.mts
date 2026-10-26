@@ -1,5 +1,4 @@
 import { pathToFileURL } from "node:url";
-import { setTimeout as wait } from "node:timers/promises";
 import { readerFactDb } from "../lib/facts/db.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
@@ -18,7 +17,7 @@ type PageDatabase = FactDb & { readonly query: Query };
 interface PreparationOptions {
   readonly db: PageDatabase;
   readonly rebuild?: typeof rebuildPlacePages;
-  readonly waitForWorkers?: () => Promise<void>;
+  readonly budgetMs?: number;
 }
 
 interface ZipSeedOptions {
@@ -70,35 +69,32 @@ export async function seedZipPagePlaces(query: Query, options: ZipSeedOptions = 
   return zips;
 }
 
-/** Populate pages before Netlify can atomically publish the reader that consumes them. */
-export async function preparePlacePages({ db, rebuild = rebuildPlacePages,waitForWorkers=()=>wait(1_000) }: PreparationOptions) {
+/** The deployment builds pages for a fixed time; the published worker builds the rest while readers compose unbuilt places. */
+export const PREPARE_BUDGET_MS = 6 * 60_000;
+
+export async function preparePlacePages({ db, rebuild = rebuildPlacePages, budgetMs = PREPARE_BUDGET_MS }: PreparationOptions) {
   await db.query(`INSERT INTO rebuild_queue(place_id,queued_at)
     SELECT e.id,statement_timestamp() FROM entity e LEFT JOIN place_page p ON p.place_id=e.id
     WHERE e.kind IN ('place','body') AND p.place_id IS NULL
     ON CONFLICT(place_id) DO NOTHING`);
-  let rebuilt = 0;
-  let remaining: number;
-  do {
-    const result = await rebuild({ db, limit: 512, concurrency: 4, timeBudgetMs: 240_000, initialBackfill: true });
+  const deadline = Date.now() + budgetMs;
+  let rebuilt = 0, failed = 0, remaining = 0;
+  while (Date.now() < deadline) {
+    const result = await rebuild({ db, limit: 512, concurrency: 4, timeBudgetMs: Math.min(240_000, deadline - Date.now()), initialBackfill: true });
     rebuilt += result.rebuilt;
+    failed += result.failed;
     remaining = result.remaining;
-    if(result.rebuilt || result.failed || !remaining)
-      console.log(JSON.stringify({ placePages: "before deployment", rebuilt, remaining, failed: result.failed }));
-    if (result.failed) throw new Error("Some place pages could not be built; the current reader keeps serving");
-    if (remaining && result.rebuilt === 0) {
-      const [running]=await db.query("SELECT count(*)::int AS active FROM rebuild_queue WHERE lease_token IS NOT NULL AND lease_until>=clock_timestamp()");
-      if(!Number(running?.active))throw new Error("Place pages are still queued without progress; the current reader keeps serving");
-      await waitForWorkers();
-    }
-  } while (remaining);
+    console.log(JSON.stringify({ placePages: "before deployment", rebuilt, remaining, failed }));
+    // Leased, failed and remaining pages stay queued for the published worker.
+    if (!remaining || !result.rebuilt) break;
+  }
   const [population] = await db.query(`SELECT
     count(*) FILTER (WHERE e.kind='place')::int AS places,
     count(*) FILTER (WHERE e.kind='body')::int AS bodies,
     count(*) FILTER (WHERE p.place_id IS NULL)::int AS missing
     FROM entity e LEFT JOIN place_page p ON p.place_id=e.id WHERE e.kind IN ('place','body')`);
-  if (!population || Number(population.missing) !== 0)
-    throw new Error("Some reader places have no built page; the current reader keeps serving");
-  return { rebuilt, places: Number(population.places), bodies: Number(population.bodies), missing: 0 };
+  return { rebuilt, failed, remaining, places: Number(population?.places ?? 0), bodies: Number(population?.bodies ?? 0),
+    missing: Number(population?.missing ?? 0) };
 }
 
 export async function prepareProductionPlacePages(env: Record<string,string|undefined> = process.env): Promise<void> {

@@ -92,6 +92,7 @@ export async function congressPortraits(value: FederalDirectoryReadModel, asOf: 
     excludedFacts.push({ key: `${person.personId ?? person.id}:portrait`, code,
       detail: `${detail}${diagnostic ? ` ${diagnostic}` : ""}`,
       record: { personId: person.personId ?? person.id, sourceUrl, attemptedAt: now(), profiles: portraitProfileLinks(person),
+        ...(person.portraitCandidate ? {portraitEntry:person.portraitCandidate} : {}),
         ...(sourceSignal.aborted ? { interrupted: true } : {}),
         ...(page ? { httpStatus: page.httpStatus, rawHash: page.sha256, vaultKey: page.vaultKey,
           sourceRetrievedAt: page.retrievedAt, sourceCheckedAt: page.checkedAt } : {}),

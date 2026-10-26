@@ -185,6 +185,7 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
     if (sourceSignal.aborted) { code="STATE_PORTRAIT_INTERRUPTED"; detail="The pass deadline interrupted this attempt; it continues on the next pass."; }
     excludedFacts.push({key:`${person.personId ?? person.id}:portrait`,code,detail,
       record:{personId:person.personId ?? person.id,sourceUrl:page?.finalUrl ?? person.websiteUrl,attemptedAt:clock(),profiles:portraitProfileLinks(person),
+        ...(person.portraitCandidate ? {portraitEntry:person.portraitCandidate} : {}),
         ...(profileAttempts ? {profileAttempts} : {}),...(sourceSignal.aborted ? {interrupted:true} : {}),
         ...(page ? {sourceRetrievedAt:page.retrievedAt,sourceCheckedAt:page.checkedAt,rawHash:page.sha256,vaultKey:page.vaultKey} : {}),
         retainedVerifiedPortrait:Boolean(person.photo && portraitBindingMatches(person.personId ?? person.id,person.photo))}});

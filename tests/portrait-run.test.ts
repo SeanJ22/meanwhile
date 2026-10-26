@@ -50,9 +50,10 @@ test("a changed portrait entry is due even when the image URL stays the same", a
   const store = new MemoryRoutineDataStore();
   await publishPeople(store, 1, sha, START);
   const list = await import("../lib/photos/portrait-run.ts").then(({ portraitList }) => portraitList(store, "az", START, [], null));
-  const person = { ...list.everyone[0], portraitCandidate: { imageUrl: "https://legislature.example.gov/jane.png", sourceUrl: "https://legislature.example.gov/old-entry", collectedAt: SOURCE_DATE } };
+  const person = { ...list.everyone[0], profileUrls:["https://legislature.example.gov/old-entry","https://legislature.example.gov/new-entry"],
+    portraitCandidate: { imageUrl: "https://legislature.example.gov/jane.png", sourceUrl: "https://legislature.example.gov/old-entry", collectedAt: SOURCE_DATE } };
   const attemptedAt = START;
-  const attempt = { key: "attempt", code: "STATE_PORTRAIT_NOT_FOUND", detail: "No portrait", record: { attemptedAt, profiles: portraitProfileLinks(person) } };
+  const attempt = { key: "attempt", code: "STATE_PORTRAIT_NOT_FOUND", detail: "No portrait", record: { attemptedAt, profiles: portraitProfileLinks(person),portraitEntry:person.portraitCandidate } };
   assert.equal(portraitDueAt(person, attempt, () => false), Date.parse(attemptedAt) + PORTRAIT_RETRY_MS);
   assert.equal(portraitDueAt(person, { ...attempt, record: { attemptedAt } }, () => false), 0, "an old attempt without an entry binding cannot defer the current entry");
   assert.equal(portraitDueAt({ ...person, portraitCandidate: { ...person.portraitCandidate, sourceUrl: "https://legislature.example.gov/new-entry" } }, attempt, () => false), 0);

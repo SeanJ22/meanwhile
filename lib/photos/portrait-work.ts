@@ -81,10 +81,13 @@ export function portraitProfileLinks(person: PortraitPerson): readonly string[] 
 export function portraitDueAt(person: PortraitPerson, lastAttempt: PortraitAttempt | undefined,
   verified: (person: PortraitPerson) => boolean): number {
   if (verified(person)) return Number.POSITIVE_INFINITY;
-  const record = lastAttempt?.record as { attemptedAt?: string; profiles?: readonly string[]; interrupted?: boolean } | undefined;
+  const record = lastAttempt?.record as { attemptedAt?: string; profiles?: readonly string[]; interrupted?: boolean;
+    portraitEntry?: Pick<NonNullable<PortraitPerson["portraitCandidate"]>,"sourceUrl"|"imageUrl"|"collectedAt"> } | undefined;
   const attemptedAt = Date.parse(record?.attemptedAt ?? "");
   if (record?.interrupted || !Number.isFinite(attemptedAt)) return 0;
   if (!record?.profiles || record.profiles.join("\n") !== portraitProfileLinks(person).join("\n")) return 0;
+  const lead=person.portraitCandidate,entry=record.portraitEntry;
+  if(lead&&(!entry||entry.sourceUrl!==lead.sourceUrl||entry.imageUrl!==lead.imageUrl||entry.collectedAt!==lead.collectedAt))return 0;
   return attemptedAt + PORTRAIT_RETRY_MS;
 }
 

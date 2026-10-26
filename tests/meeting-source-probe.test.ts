@@ -93,7 +93,7 @@ test("internal evidence HTTP copies do not become off-host adapter acquisitions"
     put:async(key,bytes,meta)=>{await io();await saved.put(key,bytes,meta);},
     get:async key=>{await io();return saved.get(key);},head:async key=>{await io();return saved.head(key);},list:async prefix=>saved.list(prefix),
   };
-  await withFetch(async resource=>{assert.equal(String(resource),internalUrl);internalReads++;return new Response("internal copy");},async()=>{
+  await withFetch(async(resource:RequestInfo|URL)=>{assert.equal(String(resource),internalUrl);internalReads++;return new Response("internal copy");},async()=>{
     const session=await meetingSourceSession(partition,"internal-io",{readSourceHead:async()=>null},new Date().toISOString(),vault,undefined,undefined,
       {checkpoint,fetchImpl:async()=>new Response("public calendar"),publicationPending:async()=>false});
     const trace=await captureSourceAcquisitions(run=>run("ical",()=>session.fetch(calendar)));

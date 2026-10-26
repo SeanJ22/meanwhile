@@ -34,7 +34,7 @@ test("reviewed key votes confirm equal source bytes before held payload/history 
 
 test("reviewed selection and current identity content participate in the source hash; read dates and acquisition order do not",()=>{
   const selection=federalKeyVoteSelectionV1Snapshot(firstAt),selectionHash=keyVoteSelectionInputHash(selection);
-  const checked=structuredClone(selection);checked.fetchedAt=later;
+  const checked={...structuredClone(selection),fetchedAt:later};
   for(const entry of checked.entries)for(const ref of [...entry.house,...entry.senate]){ref.question="Newly checked wording";ref.tally="1-0";ref.verifiedAt=later.slice(0,10);}
   assert.equal(keyVoteSelectionInputHash(checked),selectionHash);
   checked.entries[0].explainer+=" Source correction.";

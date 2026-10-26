@@ -7,6 +7,7 @@ import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { memoryLockManager } from "../lib/control-plane/repository/memory.ts";
+import { authorityFor } from "../lib/civic-data/source-authority.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
@@ -26,7 +27,7 @@ async function fixture() {
     sources: [{ requestedUrl: url, finalUrl: url, rawHash: createHash("sha256").update(body).digest("hex"), checkedAt: now, httpStatus: 200 as const }] };
   const dataset = { ...JSON.parse(readFileSync(join(ROOT, "lib/census-geography/bootstrap-az.json"), "utf8")) as BuiltDataset, builtAt: now };
   const store = new MemoryRoutineDataStore(), candidate = censusGeographyCandidate(dataset, "US-AZ:place-map", probe);
-  const first = await processRegisteredRoutineCandidate(store, "place-map-az", candidate, now); assert.ok(first.promoted);
+  const first = await processRegisteredRoutineCandidate(store, "place-map-az", candidate, now); assert.ok(first.promoted, first.candidate.failureDetail ?? JSON.stringify(first.candidate.receipt));
   const path = store.readCandidatePath.bind(store);
   store.readCandidatePath = async <T>(id: string, keys: readonly string[]) => {
     assert.deepEqual(keys, ["normalizedPayload", "sourceProbe"]); return path<T>(id, keys);
@@ -62,4 +63,17 @@ test("a failed Census source check retains the exact map pointer and performs no
   await assert.rejects(refreshStatePlaceMap(f.db, ROOT, "AZ", f.store, f.options), /503/);
   assert.deepEqual(f.order, ["actual Census source"]);
   assert.equal((await f.store.readPromotionIdentity("CENSUS_GEOGRAPHY", "US-AZ:place-map"))?.versionId, f.candidate.id);
+});
+
+
+test("actual Census map inputs have source authority while unrelated routes and lookalike hosts stay refused", () => {
+  for (const source of [
+    "https://www2.census.gov/geo/docs/maps-data/data/rel2020/cd-sld/tab20_cd11920_zcta520_natl.txt",
+    "https://www2.census.gov/geo/docs/maps-data/data/grf/2026/public_grfc_cur26_04.txt",
+    "https://www2.census.gov/geo/tiger/TIGER2026/SLDU/tl_2026_04_sldu.zip",
+    "https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/2023/delineation-files/list1_2023.xlsx",
+  ]) assert.equal(authorityFor("census-geography-relationships", "CENSUS_GEOGRAPHY", source).ok, true, source);
+  for (const source of ["https://www2.census.gov.example.org/geo/tiger/TIGER2026/SLDU/tl_2026_04_sldu.zip",
+    "https://www2.census.gov/unrelated/source.txt", "https://example.gov/geo/docs/maps-data/data/grf/2026/public_grfc_cur26_04.txt"])
+    assert.equal(authorityFor("census-geography-relationships", "CENSUS_GEOGRAPHY", source).ok, false, source);
 });

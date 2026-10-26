@@ -64,13 +64,13 @@ test("an unchanged federal provider page checks hashes before recipient, locatio
   Object.assign(store,{readPromotion:async(...args:Parameters<MemoryRoutineDataStore["readPromotion"]>)=>{
     assert.notEqual(args[1],leafScope,"same native bytes never reread the held geography partition");return readPromotion(...args);},
     readCandidate:async(id:string)=>{assert.notEqual(id,leaf.versionId);return readCandidate(id);}});
-  clock="2026-10-14T23:45:00.000Z";
+  clock="2026-10-13T00:30:00.000Z";
   const repeated=await refreshFederalMoney({...input,identities:async()=>{assert.fail("unchanged source read recipient facts");},
     locate:async()=>{assert.fail("unchanged source read prior locations");},onPartition:async()=>{assert.fail("unchanged source rebuilt its published partition");}});
   assert.deepEqual(repeated.projection.counts,first.projection.counts);
   assert.equal(reads,1);
   Object.assign(store,{readPromotion,readCandidate});
-  clock="2026-10-16T23:45:00.000Z";
+  clock="2026-10-13T01:15:00.000Z";
   await refreshFederalMoney({...input,identityHash:async()=>"b".repeat(64)});
   assert.equal(reads,2,"changed native recipient dependencies rerun the joins even against identical provider bytes");
   assert.equal(federalMoneySourceHash("openfema","AR",fullPage),federalMoneySourceHash("openfema","AR",{
@@ -89,10 +89,10 @@ test("national federal raw_hash follows applied provider bytes rather than empty
   assert.equal(first.candidate.retrieval.rawHashBasis,"SOURCE_CONTENT_V1");
   assert.equal(first.candidate.retrieval.complete,true);
   assert.match(first.projection.sourceHashes?.AR??"",/^[a-f0-9]{64}$/);
-  clock="2026-10-14T23:45:00.000Z";
+  clock="2026-10-13T00:30:00.000Z";
   const repeated=await refreshFederalMoney(input);
   assert.equal(repeated.candidate?.retrieval.rawHash,first.candidate.retrieval.rawHash);
-  clock="2026-10-16T23:45:00.000Z";
+  clock="2026-10-13T01:15:00.000Z";
   const changedBody=JSON.parse(sourceBody);changedBody.DisasterDeclarationsSummaries[0].declarationTitle="Changed source declaration";
   const body=JSON.stringify(changedBody);
   assert.notEqual(body,sourceBody);

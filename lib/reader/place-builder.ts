@@ -369,6 +369,11 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), agenda_texts AS MATERIALIZED (
   SELECT (row_number() OVER (ORDER BY value)-1)::integer AS text_id,value
     FROM (SELECT DISTINCT value FROM agenda_text_candidates WHERE jsonb_typeof(value)='string') unique_texts
+), everyday_routing AS MATERIALIZED (
+  -- $11 is the row version a rebuild turn already holds; that body does not cross the connection again.
+  SELECT CASE WHEN version IS DISTINCT FROM $11::text THEN reader_payload_value(payload) END AS value,version FROM (
+    SELECT payload,xmin::text||':'||ctid::text AS version FROM civic_data_promotions
+      WHERE $8::text[] IS NULL AND key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD') routing
 ), hashes(hash) AS (
   SELECT ref#>>'{}' FROM (
     SELECT payload FROM meeting_rows UNION ALL SELECT item FROM archived_meetings UNION ALL SELECT item FROM archived_documents
@@ -380,7 +385,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 )
 SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS registration_held,ARRAY(SELECT id FROM selected_places) AS division_ids,
   coalesce((SELECT jsonb_agg(value ORDER BY text_id) FROM agenda_texts),'[]'::jsonb) AS agenda_texts,
-  CASE WHEN ${!bodyFactsOnly} THEN (SELECT reader_payload_value(payload) FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='${everydayRoutingKey}' AND record_class='CURATED_READER_RECORD') END AS everyday_routing,
+  CASE WHEN ${!bodyFactsOnly} THEN (SELECT value FROM everyday_routing) END AS everyday_routing,
   '[]'::jsonb AS publication_attempts,
   CASE WHEN ${!bodyFactsOnly} THEN (SELECT reader_payload_value(root.value-'registry'-'bodyRosters'-'rosterReaderDispositions'-'statewideExecutives'-'officialCandidacies'-'officialPhotos'-'rosterPhotos')
     || jsonb_build_object('registry',reader_payload_value(r.value-'bodies'-'divisions') || jsonb_build_object(
@@ -428,18 +433,36 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
   coalesce((SELECT jsonb_agg(item) FROM archived_meetings),'[]'::jsonb) AS archived_meetings,
   coalesce((SELECT jsonb_agg(item) FROM archived_documents),'[]'::jsonb) AS archived_documents,
   coalesce((SELECT jsonb_agg(item) FROM archived_document_links),'[]'::jsonb) AS archived_document_links,
-  coalesce((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)),'{}'::jsonb) AS parts`;
+  coalesce((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes JOIN civic_data_payload_parts part USING(hash)),'{}'::jsonb) AS parts,
+  CASE WHEN ${!bodyFactsOnly} THEN (SELECT version FROM everyday_routing) END AS everyday_routing_version`;
 
 export const PLACE_PACKAGE_SQL = placePackageSql(false);
 const BODY_FACTS_PACKAGE_SQL = placePackageSql(true);
 
 
-export async function buildPlaceRow(input: PlaceInput,query: Query): Promise<Record<string,unknown>> {
+/**
+ * Records every page carries whole, held for one rebuild turn. The national
+ * everyday-routing projection is the same ~25 KB on every page in the country;
+ * each page's query reads its current row version in the page's own snapshot
+ * and returns the body only when that version is not the one already held.
+ */
+export interface PlaceTurnReads {
+  everydayRouting?: { readonly version: string; readonly value: unknown };
+}
+
+export async function buildPlaceRow(input: PlaceInput,query: Query,shared?: PlaceTurnReads): Promise<Record<string,unknown>> {
   const state = input.state.toUpperCase();
   const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
-  const [row] = await query(input.bodyFactsOnly ? BODY_FACTS_PACKAGE_SQL : PLACE_PACKAGE_SQL,[state,input.divisionIds,input.bodyIds ?? [],stateRoot,
-    input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? true,null,input.neighbors ?? false,input.namedDivisionIds ?? []]);
-  if (!row) throw new Error("PLACE_PAGE_BUILD_FAILED");
+  const held = shared?.everydayRouting;
+  const [read] = await query(input.bodyFactsOnly ? BODY_FACTS_PACKAGE_SQL : PLACE_PACKAGE_SQL,[state,input.divisionIds,input.bodyIds ?? [],stateRoot,
+    input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? true,null,input.neighbors ?? false,input.namedDivisionIds ?? [],
+    held?.version ?? null]);
+  if (!read) throw new Error("PLACE_PAGE_BUILD_FAILED");
+  const {everyday_routing_version:version,...row} = read;
+  if (shared && typeof version === "string") {
+    if (version === held?.version) row.everyday_routing = structuredClone(held.value);
+    else shared.everydayRouting = {version,value:structuredClone(row.everyday_routing)};
+  }
   const parts = new CivicPayloadParts({existing:async()=>[],write:async()=>{},read:async()=>{throw new Error("PLACE_PAGE_PART_MISSING");}});
   const expanded = await parts.loadOwned({rows:row.meeting_rows,archived:row.archived_meetings ?? [],documents:row.archived_documents ?? []},row.parts as Record<string,unknown>) as Record<string,unknown>;
   return {...row,meeting_rows:expanded.rows,archived_meetings:expanded.archived,archived_documents:expanded.documents,parts:{}};
@@ -486,13 +509,13 @@ async function placeBuildSelection(id:string,kind:string,state:string):Promise<{
   return {input:{state,divisionIds:kind==='place'?[id]:[],bodyIds:kind==='body'?[id]:[]}};
 }
 
-export async function buildPageBody(id:string,kind:string,state:string,query:Query):Promise<StoredPlacePage> {
+export async function buildPageBody(id:string,kind:string,state:string,query:Query,shared?:PlaceTurnReads):Promise<StoredPlacePage> {
   const {input:selected,territory}=await placeBuildSelection(id,kind,state),zip=/^zip:\d{5}$/.test(id);
   const input:PlaceInput=zip?{...selected,includeAgenda:false}:selected;
-  const history=zip?undefined:await buildPlaceRow({...input,includeHistory:true},query);
-  const current=history?currentPlaceRow(history):await buildPlaceRow(input,query);
+  const history=zip?undefined:await buildPlaceRow({...input,includeHistory:true},query,shared);
+  const current=history?currentPlaceRow(history):await buildPlaceRow(input,query,shared);
   const stateRoot=kind==='place' && /^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(id);
-  const emptyHistory=stateRoot?await buildPlaceRow({...input,divisionIds:[],includeHistory:true},query):undefined;
+  const emptyHistory=stateRoot?await buildPlaceRow({...input,divisionIds:[],includeHistory:true},query,shared):undefined;
   const readyCurrent=await composePlaceRow(input,structuredClone(current));
   return {formatVersion:1,current,readyCurrent,
     ...(zip?{territory}:{}),
@@ -533,6 +556,8 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
   const db=options.db ?? readerFactDb(),purge=options.purge ?? purgeReaderCacheTags;
   const limit=Math.max(1,options.limit ?? 128),concurrency=Math.max(1,Math.min(options.concurrency ?? 4,limit));
   const deadline=Date.now()+(options.timeBudgetMs ?? 240_000);
+  // One turn builds hundreds of pages; a record every page carries crosses the connection once per version.
+  const shared:PlaceTurnReads={};
   let started=0,rebuilt=0,failed=0;
   const work=async()=>{
     while(started<limit && Date.now()<deadline) {
@@ -551,7 +576,7 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
         if(!built) {
           const body=await db.transaction<StoredPlacePage>(async query=>{
             await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
-            return buildPageBody(id,String(claim.kind),state,query);
+            return buildPageBody(id,String(claim.kind),state,query,shared);
           });
           // Writers can queue a newer generation while the snapshot is being read.
           // Lock its lease only after leaving that snapshot, in this short transaction.

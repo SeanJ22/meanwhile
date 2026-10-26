@@ -188,44 +188,43 @@ test("scoped state authorities cannot use database place slices", async () => {
   }
 });
 
-test("held slices carry only exact unchanged versions, isolate selectors, and remove missing pointers", async () => {
-  let version = "v1", exists = true, payloadReads = 0;
+test("held slices read current bodies even when a pointer ID is unchanged, isolate selectors, and remove missing pointers", async () => {
+  let version = "v1", meeting = "first", exists = true, reads = 0;
   const query: ReadOnlyQuery = async statements => {
     const statement = statements[0];
+    reads++;
     if (!exists) return [[]];
-    const carried = JSON.parse(statement.params[5] as string).held === version;
-    if (!carried) payloadReads++;
     return [[{ scope: "held", current_version_id: version, encoded: false,
-      value: carried ? null : { meetings: [{ id: version, ocdId: (statement.params[2] as string[])[0] }] } }]];
+      value: { meetings: [{ id: meeting, ocdId: (statement.params[2] as string[])[0] }] } }]];
   };
   const read = (division: string) => readPlacePointerSlices<{ meetings: { id: string; ocdId: string }[] }>("MEETING", ["held"], [division], [], [], query);
   const first = await read(county);
   assert.deepEqual(await read(county), first);
-  assert.equal(payloadReads, 1);
+  assert.equal(reads, 2, "the shared database gateway receives every independent read");
+  meeting = "changed-under-v1";
+  assert.equal((await read(county))[0].value!.meetings[0].id, meeting,
+    "a pointer ID cannot stand in for the current body's content revision");
   assert.equal((await read(neighbour))[0].value!.meetings[0].ocdId, neighbour);
-  assert.equal(payloadReads, 2, "another area's selector cannot carry this area's payload");
   version = "v2";
-  assert.equal((await read(county))[0].value!.meetings[0].id, version);
-  assert.equal(payloadReads, 3);
+  assert.equal((await read(county))[0].metadata.versionId, version);
   exists = false;
   assert.equal((await read(county))[0].kind, "NOT_RECORDED");
   exists = true;
-  assert.equal((await read(county))[0].value!.meetings[0].id, version);
-  assert.equal(payloadReads, 4, "a restored pointer is read again");
+  assert.equal((await read(county))[0].value!.meetings[0].id, meeting);
+  assert.equal(reads, 7, "a restored pointer is read again");
 });
 
 test("concurrent held reads retain the exact values carried by their own pointer query", async () => {
   let version = "v1", blockNext = false;
   let release: (() => void) | undefined;
-  const query: ReadOnlyQuery = async statements => {
+  const query: ReadOnlyQuery = async () => {
     const observed = version;
-    const carried = JSON.parse(statements[0].params[5] as string).held === observed;
     if (blockNext) {
       blockNext = false;
       await new Promise<void>(resolve => { release = resolve; });
     }
     return [[{ scope: "held", current_version_id: observed, encoded: false,
-      value: carried ? null : { meetings: [{ id: observed }] } }]];
+      value: { meetings: [{ id: observed }] } }]];
   };
   const read = () => readPlacePointerSlices<{ meetings: { id: string }[] }>("MEETING", ["held"], [county], [], [], query);
   await read();
@@ -265,20 +264,28 @@ test("held boundary provenance maps source, semantic version and effective use w
   assert.equal(projectHeldGeography(["unrelated"], divisions, [countyRow]).held.length, 0);
 });
 
-test("geography quiet reads fetch only the pointer, and a changed or racing version cannot serve the old field", async () => {
-  let version = "held-v1", payloadReads = 0, racing = false;
+test("geography reads current bodies with the same pointer ID and rejects a racing pointer", async () => {
+  let version = "held-v1", label = "First district", payloadReads = 0, racing = false;
+  const id = "ocd-division/country:us/state:az/cd:6";
+  const meta = { type: "congressional_district", version: "cd:119", versionMeta: {
+    key: "cd:119", type: "congressional_district", plan: "119th Congress", effectiveFor: "current representation",
+    provenance: { sourceUrls: ["https://www2.census.gov/held.txt"], sourceDataset: "CENSUS_TAB20_REL2020", computedAt: at },
+  } };
   const query = async (statements: readonly { text: string }[]) => {
     if (statements[0].text.startsWith("SELECT current_version_id")) return [[{ current_version_id: version }]];
     payloadReads++;
-    return [[{ meta: {}, grouping: { $version: racing ? "raced" : version } }]];
+    return [[{ meta, grouping: { geoid: "0406", ocdId: id, label } },
+      { meta: {}, grouping: { $version: racing ? "raced" : version } }]];
   };
-  const ids = ["ocd-division/country:us/state:az/cd:6"];
-  await readHeldPlaceGeography(ids, [], query);
-  await readHeldPlaceGeography(ids, [], query);
-  assert.equal(payloadReads, 1);
+  const ids = [id];
+  assert.equal((await readHeldPlaceGeography(ids, [], query)).subjects[0]?.label, label);
+  label = "Changed district";
+  assert.equal((await readHeldPlaceGeography(ids, [], query)).subjects[0]?.label, label,
+    "the pointer ID alone cannot reuse a previously decoded capture");
+  assert.equal(payloadReads, 2);
   version = "held-v2";
   await readHeldPlaceGeography(ids, [], query);
-  assert.equal(payloadReads, 2);
+  assert.equal(payloadReads, 3);
   version = "held-v3";
   racing = true;
   await assert.rejects(readHeldPlaceGeography(ids, [], query), /CIVIC_POINTER_CHANGED_DURING_READ/);

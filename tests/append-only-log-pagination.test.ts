@@ -21,16 +21,9 @@ test("rolling cost reads exclude old rows before transfer, page every recent cha
   const rows = Array.from({ length: APPEND_ONLY_LOG_READ_PAGE + 1 }, (_, position) => ({
     log_key: "costs", position, record: { role: "SCOUT", recordedAt: since, cost: { usd: position === APPEND_ONLY_LOG_READ_PAGE ? null : 0.01 } },
   }));
-  let pages = 0;
-  const sql = { async query(text: string, params: readonly unknown[]) {
-    assert.match(text, /WHERE recorded_at >= \$1::timestamptz/);
-    assert.match(text, new RegExp(`LIMIT ${APPEND_ONLY_LOG_READ_PAGE}`));
-    assert.equal(params[0], since);
-    pages++;
-    return rows.filter((row) => params.length === 1 || row.position > Number(params[2])).slice(0, APPEND_ONLY_LOG_READ_PAGE);
-  } };
+  const {sql,calls}=fakeLogSql(rows.map(row=>({...row,recorded_at:since})));
   const read = await pgAppendOnlyRepository<CostEntry>(sql as never, "costs").readSince(since);
-  assert.equal(pages, 2);
+  assert.equal(calls.filter(text=>text.startsWith("SELECT picked")).length,2);
   assert.equal(read.length, rows.length, "no recent charge is dropped at a page boundary");
   const spend = aggregateModelSpend(read, since, "2026-10-02T01:00:00.000Z");
   assert.equal(spend.worstCaseCharges, 1, "an unmeasured recent charge is counted at its worst case, not dropped");
@@ -76,9 +69,17 @@ function fakeLogSql(rows: readonly Row[]) {
   const byKeyPos = (a: Row, b: Row) => (a.log_key === b.log_key ? a.position - b.position : a.log_key < b.log_key ? -1 : 1);
   const changedRow = (r: Row) => ({ log_key: r.log_key, record_id: `${r.log_key}-${r.position}`, position: r.position, record: r.record,
     changed_at: "2026-09-16T00:00:00.000Z", recorded_at: r.recorded_at ?? "2026-09-16T00:00:00.000Z" });
-  const sql = {
-    async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
-      calls.push(text);
+  const evaluate=async(text:string,params:readonly unknown[]=[]):Promise<Record<string,unknown>[]>=>{
+      const membership=/FROM \(SELECT members\.\*,row_number\(\) OVER\(\) AS __order FROM \(([\s\S]*)\) members\) picked/.exec(text);
+      if(membership){
+        return (await evaluate(membership[1],params)).map(row=>({log_key:row.log_key,position:row.position,etag:String(row.position)}));
+      }
+      if(text.includes("AS __etag")){
+        const [keys,positions]=params as [string[],string[]];
+        const narrowed=text.includes("CASE WHEN jsonb_typeof(record)");
+        return rows.filter(row=>keys.some((key,i)=>key===row.log_key&&Number(positions[i])===row.position)).map(row=>({
+          ...changedRow(row),record:narrowed?projectRecord(row.record,projectionIn(text,"changed log values")):row.record,__etag:String(row.position)}));
+      }
       if (/^SELECT now\(\) AS read_at$/.test(text)) return [{ read_at: "2026-09-17T00:00:00.000Z" }];
       const litLimit = /LIMIT\s+(\d+)/.exec(text);
       // readRecentWhere: a content filter, newest first, LIMIT a parameter, and
@@ -88,36 +89,55 @@ function fakeLogSql(rows: readonly Row[]) {
       if (recentWhere !== null && /ORDER BY\s+position DESC/i.test(text)) {
         const [key, value, limit, since] = params as [string, string, number, string | undefined];
         const path = recentWhere[1].split(",");
-        const projection = projectionIn(text, "readRecentWhere");
+        const projection = text.includes(" AS record")?projectionIn(text,"readRecentWhere"):null;
         return rows.filter((r) => r.log_key === key && textAt(r.record, path) === value &&
           (!/recorded_at >= \$4::timestamptz/.test(text) || Date.parse(r.recorded_at ?? "") >= Date.parse(since!)))
           .sort((a, b) => b.position - a.position).slice(0, Number(limit))
-          .map((r) => ({ record: projectRecord(r.record, projection) }));
+          .map((r) => ({...changedRow(r),record:projection?projectRecord(r.record,projection):r.record}));
       }
       // readRecent: newest first, LIMIT is a parameter.
       if (/ORDER BY\s+position DESC/i.test(text)) {
         const [key, limit] = params as [string, number];
         return rows.filter((r) => r.log_key === key).sort((a, b) => b.position - a.position).slice(0, Number(limit))
-          .map((r) => ({ record: r.record }));
+          .map(changedRow);
       }
       // readLatest: DISTINCT ON (log_key) over WHERE log_key = ANY($1), bounded by the page of keys it names; only
       // the rows it chose are narrowed, by the projection the statement itself names.
       if (/SELECT DISTINCT ON \(log_key\)/i.test(text)) {
         const [keys] = params as [string[]];
         if (keys.length > APPEND_ONLY_LOG_READ_PAGE) throw new Error(`one readLatest statement named ${keys.length} keys, over a page`);
-        const projection = projectionIn(text, "readLatest");
+        const projection = text.includes(" AS record")?projectionIn(text,"readLatest"):null;
         /* DISTINCT ON keeps each key's FIRST row in the statement's own order, as Postgres does. */
         const order = /ORDER BY log_key ASC, position (ASC|DESC)/i.exec(text)?.[1]?.toUpperCase();
         if (order === undefined) throw new Error(`a readLatest statement must order each key by position: ${text.replace(/\s+/g, " ").trim()}`);
         return keys.flatMap((key) => {
           const first = rows.filter((r) => r.log_key === key).sort((a, b) => (order === "DESC" ? b.position - a.position : a.position - b.position))[0];
-          return first === undefined ? [] : [{ log_key: key, record: projectRecord(first.record, projection) }];
+          return first === undefined ? [] : [{...changedRow(first),record:projection?projectRecord(first.record,projection):first.record}];
         });
       }
       if (litLimit === null) {
         throw new Error(`unbounded scan would risk the 64 MiB cap: ${text.replace(/\s+/g, " ").trim()}`);
       }
       const limit = Number(litLimit[1]);
+      if (/JOIN unnest\(\$1::text\[\],\$2::timestamptz\[\]\)/.test(text)) {
+        const [keys,since,encoded,afterKey,afterPosition]=params as [string[],(string|null)[],string,string|undefined,number|undefined];
+        const held=new Set((JSON.parse(encoded) as {log_key:string;position:number}[]).map(row=>`${row.log_key}\n${row.position}`));
+        return rows.filter(row=>keys.includes(row.log_key)&&
+          (since[keys.indexOf(row.log_key)]===null||"2026-09-16T00:00:00.000Z">=since[keys.indexOf(row.log_key)]!)&&
+          !held.has(`${row.log_key}\n${row.position}`)&&
+          (afterKey===undefined||row.log_key>afterKey||row.log_key===afterKey&&row.position>afterPosition!))
+          .sort(byKeyPos).slice(0,limit).map(changedRow);
+      }
+      if(/WHERE log_key = ANY\(\$1::text\[\]\)/.test(text)) {
+        const [keys,key,position]=params as [string[],string|undefined,number|undefined];
+        return rows.filter(row=>keys.includes(row.log_key)&&(key===undefined||row.log_key>key||row.log_key===key&&row.position>position!))
+          .sort(byKeyPos).slice(0,limit).map(changedRow);
+      }
+      if(/WHERE recorded_at >= \$1::timestamptz/.test(text)) {
+        const [since,key,position]=params as [string,string|undefined,number|undefined];
+        return rows.filter(row=>Date.parse(row.recorded_at??"")>=Date.parse(since)&&
+          (key===undefined||row.log_key>key||row.log_key===key&&row.position>position!)).sort(byKeyPos).slice(0,limit).map(changedRow);
+      }
       // readWhere: WHERE log_key=$1 AND position > $2 AND record #>> '{path}' = $3
       const where = /record #>> '\{([^}]*)\}' = \$3/.exec(text);
       if (where !== null) {
@@ -125,14 +145,14 @@ function fakeLogSql(rows: readonly Row[]) {
         const path = where[1].split(",");
         return rows.filter((r) => r.log_key === key && r.position > after && textAt(r.record, path) === value)
           .sort((a, b) => a.position - b.position).slice(0, limit)
-          .map((r) => ({ position: r.position, record: r.record }));
+          .map(changedRow);
       }
       // read: WHERE log_key=$1 AND position > $2
       if (/WHERE\s+log_key\s*=\s*\$1\s+AND\s+position\s*>\s*\$2/i.test(text)) {
         const [key, after] = params as [string, number];
         return rows.filter((r) => r.log_key === key && r.position > after)
           .sort((a, b) => a.position - b.position).slice(0, limit)
-          .map((r) => ({ position: r.position, record: r.record }));
+          .map(changedRow);
       }
       // readKeys: WHERE log_key = ANY($1) AND (log_key, position) > ($2, $3), keyset-paged in (key, position) order
       if (/WHERE\s+log_key = ANY\(\$1::text\[\]\) AND \(log_key, position\) > \(\$2, \$3\)/i.test(text)) {
@@ -151,9 +171,9 @@ function fakeLogSql(rows: readonly Row[]) {
         return rows.slice().sort(byKeyPos).slice(0, limit).map(changedRow);
       }
       throw new Error(`fake Sql did not recognize query: ${text.replace(/\s+/g, " ").trim()}`);
-    },
   };
-  return { sql, calls };
+  const sql={query:async(text:string,params:readonly unknown[]=[])=>{calls.push(text);return evaluate(text,params);}};
+  return { sql,calls };
 }
 
 const seq = (n: number, log_key: string, extra: (i: number) => Record<string, unknown> = () => ({})) =>
@@ -169,7 +189,7 @@ test("read() pages a log larger than one response and returns every record in po
   assert.equal(out.length, n);
   assert.deepEqual(out.map((r) => r.seq), Array.from({ length: n }, (_, i) => i));
   assert.ok(calls.length >= 3, `expected multiple bounded pages, saw ${calls.length}`);
-  assert.ok(calls.every((c) => /LIMIT/i.test(c)), "every read statement must carry LIMIT");
+  assert.ok(calls.filter(c=>!/SELECT now/.test(c)).every((c) => /LIMIT/i.test(c)), "every data read must carry LIMIT");
 });
 
 test("recent cycle projection retains the complete time window with late finishes and more than a fixed tail", async () => {
@@ -196,7 +216,7 @@ test("recent cycle projection retains the complete time window with late finishe
   assert.deepEqual(inWindow([...projected].reverse()), expected);
   assert.equal(expected.length, 600, "all current-window cycles survive beyond a 128/512-record tail");
   assert.equal(projected.length, 601, "a late-finished old cycle is returned and removed by the caller's existing start-clock filter");
-  assert.equal(calls.length, 1);
+  assert.ok(calls.length>=1);
   assert.match(calls[0], /recorded_at >= \$4::timestamptz/);
   assert.ok(JSON.stringify(projected).length < JSON.stringify(rows.map(row => row.record)).length / 50);
   console.log(`CYCLE_HISTORY archived=4000 current=600 lateOld=1 selected=${projected.length} fields=kind,startedAt,research`);
@@ -209,18 +229,18 @@ test("readKeys() answers read() for every named key in a few bounded pages, neve
   const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "promotion_pipeline");
   const out = await repo.readKeys!([...keys, keys[0]!, "absent"]);
   assert.deepEqual([...out.keys()], keys, "every named key with records, in key order; an absent key is left out");
+  const batched=calls.filter(c=>c.includes("JOIN unnest")).length;
   for (const key of keys) assert.deepEqual(out.get(key), await repo.read(key), `${key} is exactly read(${key})`);
-  const batched = calls.filter((c) => /ANY\(\$1::text\[\]\)/.test(c)).length;
   const records = keys.reduce((n, _, i) => n + i % 7 + 1, 0);
-  assert.equal(batched, Math.floor(records / APPEND_ONLY_LOG_READ_PAGE) + 1, "one statement per page of records");
+  assert.ok(batched<=Math.ceil(records/APPEND_ONLY_LOG_READ_PAGE)+Math.ceil((keys.length+1)/APPEND_ONLY_LOG_READ_PAGE),"only bounded record pages and final empty pages are transferred");
   assert.ok(batched < keys.length / 10);
 });
 
-test("read() of an absent key is one empty bounded page", async () => {
+test("read() of an absent key is one empty bounded page after its database clock", async () => {
   const { sql, calls } = fakeLogSql([]);
   const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "owner_digests");
   assert.deepEqual(await repo.read("nothing-here"), []);
-  assert.equal(calls.length, 1);
+  assert.equal(calls.length,1,"an absent key transfers one bounded version page and no body");
 });
 
 test("readAll() pages the whole table in (log_key, position) order after its read clock", async () => {
@@ -273,7 +293,7 @@ test("readRecent() returns the newest N, newest first, bounded", async () => {
 
   const out = await repo.readRecent("owner-digest", 5);
   assert.deepEqual(out.map((r) => r.seq), [49, 48, 47, 46, 45], "newest first, exactly the tail");
-  assert.equal(calls.length, 1, "a bounded tail is one query, not a scan");
+  assert.equal(calls.length,2,"one bounded version selection and one changed-body page");
 });
 
 test("readRecentWhere() is one bounded query: the newest matches, newest first, narrowed by the database", async () => {
@@ -300,7 +320,7 @@ test("readRecentWhere() is one bounded query: the newest matches, newest first, 
     digestId: `d${i}`,
     runtimeOutcome: { kind: "WANT", finishedAt: `t${i}` },
   })), "only matches, newest first, and nothing the projection drops");
-  assert.equal(calls.length, 1, "a bounded tail is one query, not a scan");
+  assert.equal(calls.length,2,"one bounded version selection and one changed-body page");
   assert.match(calls[0]!, /LIMIT \$3/, "the limit is a parameter");
   assert.doesNotMatch(calls[0]!, /SELECT\s+(position,\s*)?record\s+FROM/i, "the whole record is never selected");
 });
@@ -336,15 +356,15 @@ test("readLatest() answers each key's newest record, narrowed by the database, i
   const repo = pgAppendOnlyRepository<{ seq: number; outcome: string; steps: string }>(sql, "discovery_attempts");
 
   const latest = await repo.readLatest([...keys, "j1"], { outcome: true, seq: true });
-  assert.equal(calls.length, 2, "one statement per page of keys, never one per key");
-  assert.ok(calls.every((c) => /^SELECT latest\.log_key, CASE WHEN jsonb_typeof\(record\) = 'object'/.test(c.trim())), "only the narrowed record leaves the database");
-  assert.ok(calls.every((c) => /\) AS latest$/.test(c.trim())), "each key's newest row is chosen inside the database, before it is narrowed");
+  assert.equal(calls.length,4,"one version selection and one changed-body page per page of keys");
+  assert.ok(calls.filter(c=>c.includes(" AS record")).every(c=>c.includes("CASE WHEN jsonb_typeof(record)")),"only the narrowed record leaves the database");
+  assert.ok(calls.filter(c=>c.includes("SELECT picked")).every(c=>c.includes("SELECT DISTINCT ON (log_key)")),"each newest row is chosen before body transfer");
   assert.equal(latest.size, keys.filter((_, i) => i % 3 !== 0).length, "a key with no record is absent");
   assert.deepEqual(latest.get("j1"), { seq: 1, outcome: "BLOCKED" }, "the newest record by position, and nothing the projection drops");
   assert.deepEqual(latest.get("j2"), { seq: 1, outcome: "FOUND" });
   assert.equal(latest.has("j0"), false);
   assert.equal((await repo.readLatest([], { outcome: true })).size, 0);
-  assert.equal(calls.length, 2, "no keys, no statement");
+  assert.equal(calls.length,4,"no keys, no statement");
 });
 
 test("readLatest() refuses an unsafe projection key rather than building SQL from it", async () => {

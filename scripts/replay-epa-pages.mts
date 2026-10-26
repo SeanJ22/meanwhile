@@ -35,7 +35,7 @@ try {
     const previous=baseline.readers.find((row:{state:string;label:string})=>row.state===state&&row.label==="initial");assert.ok(previous);const zip=previous.zip as string;
     const requests=[];let cursor:string|null=null;
     for(let index=0;index<3;index++){const response=await get(zip,cursor);requests.push(response);assert.ok(response.page.nextCursor);cursor=response.page.nextCursor;}
-    const iterator=readerOpenDataPages({zip},{store,vault,now:new OriginalDate(at).toISOString(),bypassCache:true}),found=new Set<string>(),digest=createHash("sha256"),started=performance.now();
+    const iterator=readerOpenDataPages({zip},{store,vault,now:new OriginalDate(at).toISOString()}),found=new Set<string>(),digest=createHash("sha256"),started=performance.now();
     let pages=0,rows=0,emptyPages=0,maxSharedPageMs=0,lastCursor:string|null=null,nextCursor:string|null=null,lastRows:readonly OpenDataFact[]=[];
     for(;;){const pageStart=performance.now(),step=await iterator.next();maxSharedPageMs=Math.max(maxSharedPageMs,performance.now()-pageStart);if(step.done)break;const page=step.value;
       assert.deepEqual(page.unavailable,[]);assert.ok(page.records.length<=50);if(pages<requests.length){assert.deepEqual(ids(page.records),ids(requests[pages].page.records));assert.equal(page.nextCursor,requests[pages].page.nextCursor);}

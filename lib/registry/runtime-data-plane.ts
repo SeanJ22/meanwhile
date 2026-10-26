@@ -804,7 +804,7 @@ async function readRegistryRuntimeSnapshot(
   const read = await readPromotedCivicData<RegistryRuntimeCarton>(contract.recordClass, contract.scope, {
     store: observedStore,
     now,
-    bypassCache: true,
+
   });
   if (read.kind === "NOT_RECORDED") return null;
   if (read.kind !== "PROMOTED") {

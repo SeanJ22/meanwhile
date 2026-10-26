@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "../../reader/database.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
@@ -8,22 +8,17 @@ import { validateV6Query } from "./v6-hunts-read.ts";
 import { ADMIN_V6_RESULTS_CONTRACT, owedResults, pipelineResults, readPipeline, readZipWitnesses, type AdminV6Result, type PipelineRead, type PipelineUnread, type ZipWitnessRow } from "./v6-results-read.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
-const MEMO_MS = 60_000;
-let memo: { at: number; read: PipelineRead } | null = null;
 
 async function pipeline(nowIso: string): Promise<PipelineRead | PipelineUnread | null> {
-  if (memo && Date.now() - memo.at < MEMO_MS) return memo.read;
   const url = controlPlaneUrlFromEnv();
   if (!url) return null;
-  const read = await readPipeline(neon(url), nowIso);
-  if (read.state === "READ") memo = { at: Date.now(), read };
-  return read;
+  return readPipeline(databaseReadOnlySql(url), nowIso);
 }
 
 async function witnessesFor(zip: string): Promise<readonly ZipWitnessRow[] | null> {
   const url = controlPlaneUrlFromEnv();
   if (!url) return null;
-  try { return await readZipWitnesses(neon(url), zip); } catch { return null; }
+  try { return await readZipWitnesses(databaseReadOnlySql(url), zip); } catch { return null; }
 }
 
 const unread = (says: string) => NextResponse.json({ state: "UNREAD", says }, { status: 503, headers: NO_STORE });

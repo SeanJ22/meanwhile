@@ -1,7 +1,7 @@
 /** Read-only reproduction of the owed-list connection checks. No migration or production write. */
 import assert from "node:assert/strict";
 import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { readStateOwedCounts, readPlaceNeeds } from "../lib/coverage/owed-read.ts";
 import { owedTable } from "../lib/coverage/owed-table.ts";
 import { isAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";

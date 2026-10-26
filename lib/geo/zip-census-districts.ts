@@ -1,14 +1,14 @@
 import type { GeographyType } from "../census-geography/contract.ts";
+import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { zipNeedsAddress } from "./postal.ts";
 import { censusWorkDivision, districtFamilyKey } from "../census-geography/division-id.ts";
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
-import { containersOfCode, type CodeSlice, type Slice } from "../control-plane/admin-view/promoted-slices.ts";
+import { codeSliceStatement, codeSliceOfValue, type CodeSlice, type Slice } from "../control-plane/admin-view/promoted-slices.ts";
 import type { ZipDivisionEntry } from "./zip-division-index.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { currentRepresentationSelection, selectGeographyVersion, type GeographySelection } from "../census-geography/selection.ts";
 
 const TYPES: readonly GeographyType[] = ["congressional_district", "state_leg_upper", "state_leg_lower"];
-const cached = new Map<string, { at: number; read: Promise<Slice<CodeSlice>>; good?: Slice<CodeSlice> & { kind: "HELD" } }>();
 
 /** Qualified district descriptions travel with the same ZIP membership read.
  * A registration boundary file need not contain a newly published district. */
@@ -81,8 +81,7 @@ export function censusDistrictsForZips(slice: Slice<CodeSlice>, selection: Geogr
   };
 }
 
-/** Same promoted Census slice Admin reads; bounded and shared for a ZIP.
- * Failed updates preserve the original index and are eligible to retry. */
+/** Each read asks the shared database path for the current published ZIP slice. */
 export async function publishedZipDistricts(zip: string): Promise<Slice<CodeSlice>> {
   const edge = currentReaderAuthorityEdge();
   const served = await edge?.censusDistricts?.slice(zip);
@@ -91,17 +90,23 @@ export async function publishedZipDistricts(zip: string): Promise<Slice<CodeSlic
   if (edge?.edgeOnly) return { kind: "UNREAD", detail: "Census districts are not available on this reader edge" };
   const query = readerQuery(1000);
   if (!query) return { kind: "UNREAD", detail: "No reader store is configured" };
-  const held = cached.get(zip);
-  if (held && Date.now() - held.at < 300_000) return held.read;
-  const read = containersOfCode(zip, TYPES, query).catch((): Slice<CodeSlice> => ({ kind: "UNREAD", detail: "Published Census district read failed" }));
-  cached.set(zip, { at: Date.now(), read, good: held?.good });
-  if (cached.size > 100) cached.delete(cached.keys().next().value!);
-  const result = await read;
-  if (result.kind === "HELD") cached.set(zip, { at: Date.now(), read: Promise.resolve(result), good: result });
-  else if (held?.good) {
-    // Keep the exact previous published version, and retry after one minute.
-    cached.set(zip, { at: Date.now() - 240_000, read: Promise.resolve(held.good), good: held.good });
-    return held.good;
-  } else cached.delete(zip);
-  return result;
+  try {
+    const slice = await runtimeCivicReadCache().row<Extract<Slice<CodeSlice>, { kind: "HELD" }>>({
+      namespace: "zip-census-districts:1", key: zip,
+      current: async heldVersion => {
+        const [rows] = await query([codeSliceStatement(zip, TYPES, heldVersion)]);
+        const row = rows[0];
+        if (!row) return null;
+        const version = row.etag;
+        if (typeof version !== "string" || !version) throw new Error("Published Census district version is missing");
+        if (row.unchanged === true) return { etag: version, unchanged: true };
+        const value = codeSliceOfValue(row.value, zip);
+        if (value.kind !== "HELD") return null;
+        return { etag: version, value };
+      },
+    });
+    return slice ?? { kind: "NOT_PUBLISHED" };
+  } catch {
+    return { kind: "UNREAD", detail: "Published Census district read failed" };
+  }
 }

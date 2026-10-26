@@ -1,5 +1,4 @@
 import { readFile } from "node:fs/promises";
-import { AsyncLocalStorage } from "node:async_hooks";
 import { join } from "node:path";
 import { setImmediate as yieldToReaders } from "node:timers/promises";
 import { readPromotedCivicDataBatch, CivicDataStoreUnavailableError, type CivicDataReadStore } from "../civic-data/read-model.ts";
@@ -12,11 +11,10 @@ import type { OfficeholderSet } from "../officials/types.ts";
 import type { ZipDivisionEntry } from "../geo/zip-division-index.ts";
 import { postalArea, postalTable } from "../geo/postal.ts";
 import { isTownOrCountyDivision, postalAreaNeedsAddress } from "../geo/postal-core.ts";
-import { readerMemory, serverReaderValue } from "./memory.ts";
+import { serverReaderValue } from "./memory.ts";
 import { indexedZipDivisionEntry, shardEntry, type ZipDivisionShard } from "../geo/zip-division-index.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 import { withFederalPortraits } from "../officials/federal-directory-read-model.ts";
-export { readerMemory } from "./memory.ts";
 
 export interface NationalShelf {
   readonly congress: FederalDirectoryReadModel;
@@ -45,7 +43,13 @@ export async function readZipPlace(zip: string): Promise<ZipDivisionEntry | null
   return own ?? entry;
 }
 
-export const readZipPlaces = serverReaderValue("zip-places", () => readerMemory(async (): Promise<ReadonlyMap<string, ZipDivisionEntry>> => {
+const zipPlaceFile = serverReaderValue("zip-places-file", () => ({ pending: undefined as Promise<ReadonlyMap<string, ZipDivisionEntry>> | undefined }));
+
+/** These immutable build files share one load; stored civic records do not. */
+export function readZipPlaces(): Promise<ReadonlyMap<string, ZipDivisionEntry>> {
+  return zipPlaceFile.pending ??= loadZipPlaces().catch(error => { zipPlaceFile.pending = undefined; throw error; });
+}
+async function loadZipPlaces(): Promise<ReadonlyMap<string, ZipDivisionEntry>> {
   const manifest = JSON.parse(await readFile(join(process.cwd(), "data", "derived", "zip-divisions", "index.json"), "utf8")) as { statesToShards: Record<string, string[]> };
   const names = [...new Set(Object.values(manifest.statesToShards).flat())].sort();
   const shards = await Promise.all(names.map(async name => {
@@ -88,7 +92,7 @@ export const readZipPlaces = serverReaderValue("zip-places", () => readerMemory(
   }
   stateZipPlaces.value = byState;
   return out;
-}, Number.POSITIVE_INFINITY));
+}
 
 /** Each ZIP belongs to every state its held places touch, including cross-state and postal aliases. */
 export async function readStateZipPlaces(input: string): Promise<ReadonlyMap<string, ZipDivisionEntry>> {
@@ -126,16 +130,13 @@ export function liveNationalExecutiveRoster(roster: OfficeholderSet | null): Off
     unmatched: current.unmatched.filter(row => ids.has(row.officeholderId)) };
 }
 
-/** The national roster is deliberately resident in each server, independent of runner publication copies. */
-const national = serverReaderValue("national-current", () => ({ value: null as NationalShelf | null }));
-
 /** States read the national executives independently of Congress's national directory load. */
 const presidentSources = ["statewide-executive-sources", "wikidata-people"];
 export const nationalPresidentPointers = () => [...presidentSources,"people-portraits"].map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope("US", source) }));
-const presidentContext = serverReaderValue("national-president-context", () => new AsyncLocalStorage<() => Promise<CivicDataReadStore>>());
-const residentPresident = serverReaderValue("national-president", () => readerMemory(async (): Promise<OfficeholderSet | null> => {
-  const supplied = presidentContext.getStore();
-  const canonical = await (supplied ? supplied() : readCanonicalShelf(nationalPresidentPointers()));
+/** Every independent read confirms the current stored rows. A state may supply
+ * the canonical package already read for this same composition. */
+export async function readNationalPresident(store?: () => Promise<CivicDataReadStore>): Promise<OfficeholderSet | null> {
+  const canonical = await Promise.resolve().then(() => store ? store() : readCanonicalShelf(nationalPresidentPointers()));
   const reads = await Promise.all([...presidentSources,"people-portraits"].map(source => readPeopleSourceProjection("US", source, { store: canonical })));
   const portraits=reads.at(-1);
   const president = reads.flatMap(read => {
@@ -143,16 +144,10 @@ const residentPresident = serverReaderValue("national-president", () => readerMe
     const roster = currentPresidentRoster(portraits?.kind === "PROMOTED" ? withFederalPortraits(read.value.roster,portraits.value.roster) : read.value.roster);
     return roster ? [roster] : [];
   })[0] ?? null;
-  if (national.value) national.value = { ...national.value, president };
   return president;
-}));
-
-/** A state's existing batch can supply the national executives without opening another connection. */
-export function readNationalPresident(store?: () => Promise<CivicDataReadStore>): Promise<OfficeholderSet | null> {
-  return store ? presidentContext.run(store,residentPresident) : residentPresident();
 }
 
-export const readNationalShelf = serverReaderValue("national", () => readerMemory(async (): Promise<NationalShelf> => {
+export async function readNationalShelf(): Promise<NationalShelf> {
   const [canonical, places, president] = await Promise.all([
     readCanonicalShelf(REGISTRY_STATES.map(state => ({ recordClass: "FEDERAL_DIRECTORY" as const, scope: federalDirectoryScope(state) }))),
     readZipPlaces(),
@@ -176,5 +171,5 @@ export const readNationalShelf = serverReaderValue("national", () => readerMemor
     roster: { ...first.roster, scope: "us", officeholders: values.flatMap(value => value.roster.officeholders), divisions: values.flatMap(value => value.roster.divisions), unmatched: values.flatMap(value => value.roster.unmatched) },
     directory: { ...first.directory, counts: {}, byMember: Object.assign({}, ...values.map(value => value.directory.byMember)), committees: Object.assign({}, ...values.map(value => value.directory.committees)) },
   };
-  return national.value = { congress, federalByState, president, zipPlaces: places, version: versions.join("|") };
-}));
+  return { congress, federalByState, president, zipPlaces: places, version: versions.join("|") };
+}

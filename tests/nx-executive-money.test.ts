@@ -8,7 +8,7 @@ import { presidentialFecMoney, resolvePresidentialFecIdentity } from "../lib/sou
 import { ADMINISTRATION_URL, verifiedWhiteHouseOfficial } from "../lib/sources/white-house/president.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../lib/officials/people-sources.ts";
 import { readNationalPresident } from "../lib/reader/national.ts";
-import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
+import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
 import { activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
 import { installPromotedValue } from "./helpers/promoted-fixtures.ts";
 import { FundingDisplay } from "../components/funding/funding-section.tsx";
@@ -56,16 +56,18 @@ test("money stays bound to the current presidency and the independently sourced 
   assert.equal(nationalExecutiveFundingAnswer(president.id, null).kind, "none");
 });
 
-test("the funding route serves resident President money without another database query or upstream request", async () => {
+test("the funding route confirms current President money on every read without upstream requests", async () => {
   installPromotedValue({ recordClass: peopleSourceRecordClass("statewide-executive-sources"), scope: peopleSourceScope("US", "statewide-executive-sources"),
     sourceId: "statewide-executive-sources", versionId: "test:nx-president-money", retrievedAt: NOW,
     value: { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", term: "current", generatedAt: NOW, roster } });
   activateCanonicalFixture("default");
   const primed = await readNationalPresident();
   assert.equal(primed?.officeholders[0].id, president.id);
-  let databaseReads = 0, upstreamRequests = 0;
+  const canonical = readerDatabaseQuery();
+  assert.ok(canonical);
+  let databaseReads = 0, upstreamRequests = 0, unavailable = false;
   const originalFetch = globalThis.fetch;
-  installReaderDatabaseQuery(async () => { databaseReads++; throw new Error("extra database read"); });
+  installReaderDatabaseQuery(async statements => { databaseReads++; if (unavailable) throw new Error("current national read unavailable"); return canonical(statements); });
   globalThis.fetch = (async () => { upstreamRequests++; throw new Error("upstream request on reader path"); }) as typeof fetch;
   try {
     const started = performance.now();
@@ -76,11 +78,26 @@ test("the funding route serves resident President money without another database
       assert.equal(answer.kind, "funding");
       assert.equal(answer.data.totals.receipts, 29133.95);
       assert.equal(answer.holdingStatus, "PARTIAL", "totals do not claim complete contributor coverage");
+      assert.equal(databaseReads, index + 1, "each independent request confirms the stored rows");
     }
     assert.ok(performance.now() - started < 3000);
-    assert.equal(databaseReads, 0);
     assert.equal(upstreamRequests, 0);
     assert.equal((await readNationalExecutiveFunding(president.id)).kind, "funding");
+    assert.equal(databaseReads, 3);
+    const changed = structuredClone(roster);
+    changed.officeholders[0].executive!.money!.totals.receipts = 40000;
+    installPromotedValue({ recordClass: peopleSourceRecordClass("statewide-executive-sources"), scope: peopleSourceScope("US", "statewide-executive-sources"),
+      sourceId: "statewide-executive-sources", versionId: "test:nx-president-money", retrievedAt: NOW,
+      value: { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", term: "current", generatedAt: NOW, roster: changed } });
+    const updated = await GET(new Request(`http://localhost/api/funding/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ target: president.id }) });
+    assert.equal(updated.status, 200);
+    assert.equal((await updated.json()).data.totals.receipts, 40000, "same-pointer changes reach the next request");
+    unavailable = true;
+    const failed = await GET(new Request(`http://localhost/api/funding/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ target: president.id }) });
+    assert.equal(failed.status, 503, "a failed current read cannot serve the earlier funding body");
+    assert.equal((await failed.json()).holdingStatus, "HOLDING_UNAVAILABLE");
+    assert.equal(databaseReads, 5);
+    assert.equal(upstreamRequests, 0);
   } finally {
     globalThis.fetch = originalFetch;
     installReaderDatabaseQuery(undefined);

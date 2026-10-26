@@ -14,7 +14,7 @@ import { once } from 'node:events';
 import { readFile, mkdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { isDeepStrictEqual } from 'node:util';
-import { neon } from '@neondatabase/serverless';
+import { neon } from '../lib/db/client.ts';
 import { launchGuarded, seedZip } from './browser.mts';
 import { PUBLIC_SITE_ORIGIN } from '../lib/ops/origins.ts';
 

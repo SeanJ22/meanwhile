@@ -38,7 +38,7 @@ async function promoteFixture() {
   };
   const outcome = await processRegisteredManualCandidate(store, "candidate-profiles:NJ", manualProjectionCandidate(pkg), AT, null);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
-  const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", "US-NJ:candidate-profiles", { store, bypassCache: true, now: AT });
+  const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", "US-NJ:candidate-profiles", { store,  now: AT });
   assert.equal(read.kind, "PROMOTED");
   return read;
 }

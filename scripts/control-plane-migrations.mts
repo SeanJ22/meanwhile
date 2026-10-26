@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { Pool, neonConfig } from "@neondatabase/serverless";
+import { Pool, neonConfig } from "../lib/db/client.ts";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { CP_MIGRATIONS_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandControlReads } from "../lib/control-plane/repository/migrations/CP-01.ts";
@@ -13,6 +13,7 @@ import { reopenHeldDoors, reopenHeldDoorsMigrationDefinition } from "../lib/cont
 import { reopenKeyHeldDoors, reopenKeyHeldDoorsMigrationDefinition } from "../lib/control-plane/repository/migrations/RIVER-KEYS-FX.ts";
 
 import { COUNT_SCHEMA_SOURCE, countHourMigrationDefinition, installHourlyCounts } from "../lib/control-plane/repository/migrations/RB-A8.ts";
+import { buildResearchRevisionIndexes, researchRevisionIndexesMigrationDefinition } from "../lib/control-plane/repository/migrations/DB-03.ts";
 import { boxDueIndexesMigrationDefinition, buildBoxDueIndexes } from "../lib/control-plane/repository/migrations/RV-BOX.ts";
 import { LINKING_SEEDS, linkingPagesMigrationDefinition, migrateLinkingPages } from "../lib/control-plane/repository/migrations/DB-03A.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
@@ -35,6 +36,8 @@ const MIGRATIONS = [
     definition: countHourMigrationDefinition, apply: async (sql: Sql) => { await installHourlyCounts(sql); return "hourly counts"; } },
   { id: "RV-BOX_expand", source: "lib/control-plane/repository/migrations/RV-BOX.ts", declarations: ["lib/control-plane/repository/pg-schema.ts"],
     definition: boxDueIndexesMigrationDefinition, apply: buildBoxDueIndexes },
+  { id: "DB-03_expand", source: "lib/control-plane/repository/migrations/DB-03.ts", declarations: ["lib/control-plane/repository/pg-schema.ts"],
+    definition: researchRevisionIndexesMigrationDefinition, apply: buildResearchRevisionIndexes },
   { id: "DB-03A_expand", source: "lib/control-plane/repository/migrations/DB-03A.ts", declarations: [LINKING_SEEDS, "lib/facts/linking-copy.ts"],
     definition: linkingPagesMigrationDefinition, apply: async (sql: Sql, env: NodeJS.ProcessEnv, connect: NonNullable<Dependencies["withDatabase"]>) => {
       const reader = resolveProductionWriteHandle(env);

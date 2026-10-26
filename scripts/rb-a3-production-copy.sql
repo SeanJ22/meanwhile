@@ -3,7 +3,7 @@
 WITH RECURSIVE picked AS MATERIALIZED (
   SELECT f.* FROM fact f JOIN entity e ON e.id=f.entity_id
   WHERE f.status='live' AND e.state='__STATE__'
-  ORDER BY f.id LIMIT 1000
+  ORDER BY f.id LIMIT 20
 ), seeds AS (
   SELECT entity_id AS id FROM picked
   UNION SELECT substr(field,8) FROM picked WHERE field LIKE 'member:%'

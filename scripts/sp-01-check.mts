@@ -5,7 +5,7 @@
 import assert from "node:assert/strict";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { DirectoryRecordsContent } from "../components/officials/member-directory.tsx";

@@ -1,6 +1,6 @@
 import { readFile, rename, writeFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
-import { Client } from "@neondatabase/serverless";
+import { Client } from "../lib/db/client.ts";
 import { assignment } from "./cli-args.mts";
 import { installDatabaseTransferCounter } from "../lib/db/transfer.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";
@@ -21,7 +21,7 @@ try {
     const origins = JSON.parse(await readFile(temporaryPath(originsFile!), "utf8")) as StateRetirementOrigin[];
     if (!Array.isArray(origins) || !origins.length) throw new Error("STATE_RETIREMENT_ORIGINS_INVALID");
     const { prepareRetirementStateInputs } = await import("../lib/civic-data/state-retirement-inputs.ts");
-    const { withRetirementSourceCursor } = await import("../lib/civic-data/state-retirement-inputs.ts");
+    const { withRetirementSourceSnapshot } = await import("../lib/civic-data/state-retirement-inputs.ts");
     const connectionString = process.env.DATABASE_URL;
     if (!connectionString) throw new Error("STATE_RETIREMENT_DATABASE_UNAVAILABLE");
     const client = new Client({ connectionString });
@@ -29,7 +29,7 @@ try {
     const directory = temporaryPath(resolve(prepare));
     try {
       const states = assignment(args, "states")?.split(",").map(requireRegistryState);
-      const plan = await withRetirementSourceCursor(client, source => prepareRetirementStateInputs({ ...source, directory, origins, states }));
+      const plan = await withRetirementSourceSnapshot(client, source => prepareRetirementStateInputs({ ...source, directory, origins, states }), connectionString);
       const manifestPath = temporaryPath(join(directory, "manifest.json")), temporary = temporaryPath(`${manifestPath}.${process.pid}.tmp`);
       await writeFile(temporary, JSON.stringify(plan), { mode: 0o600 });
       await rename(temporary, manifestPath);

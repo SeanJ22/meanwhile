@@ -1,4 +1,5 @@
 import { readFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import type { PGlite } from "@electric-sql/pglite";
 import { neonConfig } from "@neondatabase/serverless";
@@ -21,10 +22,16 @@ export async function withMigratedRoutineStore(
     .split("--> statement-breakpoint").filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
   for (const sql of readerFunctions) await pg.exec(sql);
   await pg.exec(readFileSync(COUNT_SCHEMA_SOURCE,"utf8"));
+  // Use the actual migration's table and triggers: scoped field copies must
+  // observe every candidate, event and pointer write in these adapter tests.
+  const readVersions=readFileSync(new URL("../../lib/db/migrations/DB-01_read_versions.sql",import.meta.url),"utf8")
+    .split("--> statement-breakpoint").map(statement=>statement.trim())
+    .filter(statement=>/^CREATE (?:TABLE civic_data_clock_versions\b|FUNCTION civic_data_clock_changed\b|TRIGGER civic_data_(?:candidate|event|pointer)_clock_changed\b)/.test(statement));
+  for(const statement of readVersions)await pg.exec(statement);
   const priorFetch = neonConfig.fetchFunction;
   const names = ["DATABASE_URL", "WTP_DB_ROLE", "WTP_VITAL_SIGNS_REPORT", "WTP_RUNTIME_MODE", "WTP_CONTROL_PLANE_DATABASE_URL"];
   const priorEnvironment = new Map(names.map(name => [name, process.env[name]]));
-  process.env.DATABASE_URL = "postgresql://local:local@ep-migration-test.us-east-2.aws.neon.tech/neondb";
+  process.env.DATABASE_URL = `postgresql://local:local@ep-migration-test.us-east-2.aws.neon.tech/fixture-${randomUUID()}`;
   process.env.WTP_DB_ROLE = "local";
   process.env.WTP_RUNTIME_MODE = "staging";
   process.env.WTP_CONTROL_PLANE_DATABASE_URL = "postgresql://local:local@localhost/control-test";

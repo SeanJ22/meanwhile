@@ -7,7 +7,7 @@ import { join, resolve } from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
 import React from "react";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { renderToStaticMarkup } from "react-dom/server";
 import { OpenDataFacts, openDataSources } from "../components/map/open-data.tsx";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
@@ -132,7 +132,7 @@ async function main() {
     try {
       const jurisdiction=US_JURISDICTIONS.find(row=>row.usps===state);
       const registrationStarted=realNow();
-      const registration=jurisdiction?await readRegistrationProjection(state,{store:production,bypassCache:true}):null;
+      const registration=jurisdiction?await readRegistrationProjection(state,{store:production}):null;
       result.registrationReadMs=realNow()-registrationStarted;
       result.registration=registration?{kind:registration.kind,version:registration.metadata.versionId,...registration.kind==="PROMOTED"?{governments:registration.value.governments?.length??0}: {}}:{kind:"OUTSIDE_REGISTERED_US_JURISDICTIONS",detail:"Source facts retain their native state code and unresolved joins."};
       const held=registration?.kind==="PROMOTED"?governmentJoinRows(registration.value.governments??[]):[];
@@ -182,7 +182,7 @@ async function main() {
     const due=routineTaskDue(task,clock,Date.parse(at));assert.equal(due,label!=="tomorrow");
     const publishStarted=realNow(),publication=due?await publishOpenData({store,source:"epa-echo",rows:[],reports,partitions:nationalReferences,captures:[capture],excludedFacts:allGaps.map(gap=>gap.fact),now:at,replace:true}):null;
     if(label==="initial")initialPublishMs=realNow()-publishStarted;
-    const projection=await readOpenDataProjection("epa-echo","national",{store,now:at,bypassCache:true});assert.equal(projection.kind,"PROMOTED");if(projection.kind!=="PROMOTED")throw Error("Missing actual combined national EPA projection.");
+    const projection=await readOpenDataProjection("epa-echo","national",{store,now:at});assert.equal(projection.kind,"PROMOTED");if(projection.kind!=="PROMOTED")throw Error("Missing actual combined national EPA projection.");
     const typed=await verifyRoutineReaderProjection(requiredRoutineContract("epa-echo"),{store,now:at,expectedVersionId:projection.metadata.versionId!});assert.equal(typed.status,"PASS");
     let availableArtifacts=0;for(const reference of nationalReferences){const meta=await nationalVault.head(reference.key);assert.ok(meta);assert.equal(meta.contentHash,`sha256-${reference.sha256}`);availableArtifacts++;}
     nationalClocks.push({label,at,due,availableArtifacts,clockBefore:clock,state:"PROMOTED",version:projection.metadata.versionId,outputRows:publication?.candidate.normalization.outputRecords??projection.value.reports.reduce((sum,report)=>sum+report.loaded,0),confirmed:!!publication?.outcome.confirmed,typedReader:typed.status});

@@ -106,7 +106,7 @@ export async function runFinanceDoorPublication(input: Parameters<typeof campaig
     const published = await publishCampaignFinance(input.store, input);
     candidateId = published.candidate.candidate.id;
     versionId = published.promoted?.versionId ?? null;
-    const confirmedRead = published.confirmed ? await readCampaignFinance(input.door.ocdId!, { store: input.store, now: input.now, bypassCache: true }) : null;
+    const confirmedRead = published.confirmed ? await readCampaignFinance(input.door.ocdId!, { store: input.store, now: input.now }) : null;
     const readback = published.readerReadback?.status === "PASS" || confirmedRead?.kind === "PROMOTED" && confirmedRead.metadata.versionId === versionId;
     if (!published.promoted || !readback) throw new Error(published.candidate.failureDetail ?? "Campaign finance has not reached its typed reader.");
     outcome = { at: input.now, workerResultId: input.workerResultId, candidateId, versionId,

@@ -32,6 +32,12 @@ test("held vacancies and chamber offices survive state and national composition 
   assert.deepEqual(combined.value.vacancies, vacancies);
   const shelf = await readNationalShelf();
   assert.deepEqual([...shelf.congress.vacancies ?? []].sort((a, b) => a.ocdId.localeCompare(b.ocdId)), vacancies);
+  const updatedName = "Newly Published Directory Name";
+  await installFederalDirectory({ ...model, roster: { ...model.roster,
+    officeholders: model.roster.officeholders.map(holder => holder.id === member.id ? { ...holder, name: updatedName } : holder) } });
+  activateCanonicalFixture("default");
+  assert.equal((await readNationalShelf()).congress.roster.officeholders.find(holder => holder.id === member.id)?.name, updatedName,
+    "an independent national composition reads the newly confirmed directory without a TTL");
   const runtime = registryTransferImport().projection.payload;
   const division: Division = { ...runtime.registry.divisions[0], ocdId: vacancies[0].ocdId,
     divisionType: "cd", tier: "national", state: states[0], label: "Vacant House district" };
@@ -49,5 +55,8 @@ test("held vacancies and chamber offices survive state and national composition 
     assert.deepEqual(body.officeDetails[0], { officeKind: "CAPITOL", sourceUrl, sourceOrg: "House Clerk", collectedAt: at, official: true });
     assert.equal(body.officeDetails.length, body.districtOffices.length);
     assert.equal(queries, 0);
+    await assert.rejects(readNationalShelf(), /The held national directory must not query again/,
+      "an independent national read cannot substitute a prior shelf when its current version query fails");
+    assert.equal(queries, 2, "the independent Congress and President sources both try the current store");
   } finally { installReaderDatabaseQuery(undefined); }
 });

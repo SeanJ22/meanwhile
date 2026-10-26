@@ -12,6 +12,13 @@ export function keepNeonBytesPart(dir: string, part: NeonBytesHour): boolean {
     /* The start time keeps a reused pid from overwriting another process's hour. */
     const started = Number.isSafeInteger(part.startedMs) ? `-${part.startedMs}` : "";
     const file = join(dir, `${part.hour.slice(0, 13)}--${part.pid}${started}.json`);
+    // A child now persists its complete counts before returning each response chunk.
+    // Its delayed, truncated stdout report must never overwrite that newer buffer.
+    try {
+      const current = JSON.parse(readFileSync(file, "utf8"));
+      if (current.counterFormat === 1 && (part as NeonBytesHour & { readonly counterFormat?: number }).counterFormat !== 1 &&
+        part.pid !== process.pid) return true;
+    } catch { /* The first report can still create the old-format file. */ }
     writeFileSync(`${file}.tmp`, JSON.stringify(part), "utf8");
     renameSync(`${file}.tmp`, file);
     return true;

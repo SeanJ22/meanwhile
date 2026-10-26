@@ -175,7 +175,7 @@ async function placeReading(repos: ControlPlaneRepositories, zips: readonly stri
   const rebuiltItems = new Map<string, PlaceOwedItem[]>();
   for (const group of readingGroups.values()) {
     const ids = [...new Set(group.flatMap(scope => [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])]))];
-    const capture = ids.length ? await readHeldPlaceCapture(ids, { now, bypassCache: true }) : { subjects: [], held: [] };
+    const capture = ids.length ? await readHeldPlaceCapture(ids, { now }) : { subjects: [], held: [] };
     for (const scope of group) {
       const items = buildPlaceOwedList({ divisions: [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])].map(id => ({ id, label: id })),
         subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] });

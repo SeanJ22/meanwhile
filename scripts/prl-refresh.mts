@@ -36,7 +36,7 @@ export async function refreshPrl(input: { archives: boolean; store: RoutineDataS
     printSourceRunnerReceipt(contractId, failed.candidate.candidate, failed);
     return 2;
   }
-  const held = input.archives ? await readPrlArchiveProjection({ store: input.store, bypassCache: true }) : null;
+  const held = input.archives ? await readPrlArchiveProjection({ store: input.store }) : null;
   if (held && held.kind !== "PROMOTED" && held.kind !== "NOT_RECORDED") throw new Error("PRL_ARCHIVE_PRIOR_UNAVAILABLE");
   let projection: PrlArchiveProjection = held?.kind === "PROMOTED" ? held.value : { formatVersion: 1, datasets: {} };
   let last: Awaited<ReturnType<typeof processRegisteredManualCandidate>> | null = null;

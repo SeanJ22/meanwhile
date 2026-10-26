@@ -1,7 +1,8 @@
-import { neon, neonConfig, Pool } from "@neondatabase/serverless";
+import { neonConfig, Pool } from "../db/client.ts";
 import type { FactDb, Query } from "./publish.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
+import { readerDatabaseQuery } from "../reader/database.ts";
 
 const pools = new Map<string, Pool>();
 
@@ -42,15 +43,15 @@ export function readerFactDb(url: string | undefined = process.env.DATABASE_URL)
 let installed: Query | null | undefined;
 let reader: { url: string; query: Query } | undefined;
 
-/** Reads of the reader database's facts over HTTP; null when no reader database is configured. */
+/** Fact reads share the reader's version-checked, read-only connection. */
 export function factReader(): Query | null {
   if (installed !== undefined) return installed;
   const url = process.env.DATABASE_URL?.trim();
   if (!url) return null;
   if (reader?.url === url) return reader.query;
-  installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
-  const sql = neon(url);
-  const query: Query = (text, params = []) => withDatabaseQuery(text, async () => (await sql.query(text, [...params])) as Record<string, unknown>[]);
+  const selected = readerDatabaseQuery();
+  if (!selected) return null;
+  const query = statementQuery(selected);
   reader = { url, query };
   return query;
 }

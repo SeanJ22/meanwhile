@@ -65,7 +65,7 @@ test("a fresh state profile verifies after capture and its stored portrait reach
       assert.equal(at,VERIFIED);return images.store(id,sources,at,signal);
     }});
   assert.ok(result?.outcome.promoted,JSON.stringify(result?.outcome.candidate.receipt));
-  const read=await readStatePeopleProjection("US-AZ",{store,now:VERIFIED,bypassCache:true});
+  const read=await readStatePeopleProjection("US-AZ",{store,now:VERIFIED});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
   const person=read.value.roster.officeholders[0],photo=person.photo!;
   assert.ok(photo,JSON.stringify(result!.candidate.excludedFacts));
@@ -91,7 +91,7 @@ test("a state portrait failure advances durable attempt metadata without withhol
     else assert.equal(result?.outcome.confirmed?.versionId,previousId,"a run with nothing due confirms the record as it was");
     const saved=await store.readCandidate(previousId),gap=saved?.candidate.excludedFacts?.find(row=>row.code==="STATE_PORTRAIT_PROCESSING_FAILED");
     assert.equal((gap?.record as {attemptedAt:string}).attemptedAt,attemptedAt);
-    const read=await readStatePeopleProjection("US-AZ",{store,now,bypassCache:true});
+    const read=await readStatePeopleProjection("US-AZ",{store,now});
     assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
     assert.equal(read.value.roster.officeholders.length,1);assert.equal(read.value.roster.officeholders[0].photo,null);
     assert.equal(read.value.roster.officeholders[0].provenance.collectedAt,SOURCE_DATE);
@@ -117,7 +117,7 @@ test("state portrait work finishes every known profile",async()=>{
   const result=await refreshStatePortraits({state:"az",store,now:START},{now:()=>VERIFIED,storePortrait:images.store,
     acquire:async options=>{requests++;return profile(options);}});
   assert.ok(result?.outcome.promoted);assert.equal(requests,25);
-  const read=await readStatePeopleProjection("US-AZ",{store,now:VERIFIED,bypassCache:true});
+  const read=await readStatePeopleProjection("US-AZ",{store,now:VERIFIED});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
   assert.equal(read.value.roster.officeholders.filter(row=>row.photo?.verification).length,25,JSON.stringify(result!.candidate.excludedFacts));
 });
@@ -155,7 +155,7 @@ test("per-person portrait publication preserves a concurrently refreshed phone a
       return profile(options);
     }});
   assert.ok(result?.outcome.promoted);
-  const read=await readStatePeopleProjection("US-AZ",{store,now:VERIFIED,bypassCache:true});
+  const read=await readStatePeopleProjection("US-AZ",{store,now:VERIFIED});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
   assert.equal(read.value.roster.officeholders.length,2);
   assert.equal(read.value.roster.officeholders.find(person=>person.id===roster.officeholders[0].id)?.phone,"202-225-2222");
@@ -262,7 +262,7 @@ test("exact held links and sources supply profiles when a native person's select
     assert.ok(result?.outcome.promoted,JSON.stringify(result?.outcome.candidate.receipt));
     assert.ok(requests.length<=1,"the captured Open States photo can publish without another profile read");
     if(requests.length)assert.ok(person.profileUrls!.includes(requests[0]));
-    const read=await readStatePeopleProjection(`US-${state.toUpperCase()}`,{store,now:HELD_NOW,bypassCache:true});
+    const read=await readStatePeopleProjection(`US-${state.toUpperCase()}`,{store,now:HELD_NOW});
     assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")continue;
     const shown=read.value.roster.officeholders[0];
     assert.ok(shown.photo,JSON.stringify(result!.candidate.excludedFacts));
@@ -295,7 +295,7 @@ test("failed held profiles advance to the next exact native link without accepti
       return heldPage(options,`<h1>${person.name}</h1><img alt="Portrait of ${person.name}" src="/correct.png">`);
     }});
   assert.ok(success?.outcome.promoted);assert.equal(requests.length,2);assert.equal(images.writes.length,1);
-  const read=await readStatePeopleProjection("US-AZ",{store,now:HELD_NOW,bypassCache:true});
+  const read=await readStatePeopleProjection("US-AZ",{store,now:HELD_NOW});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
   assert.ok(portraitBindingMatches(person.personId!,read.value.roster.officeholders[0].photo!));
   assert.deepEqual(success!.candidate.excludedFacts?.map(fact=>fact.code),["PEOPLE_PORTRAIT_SCHEDULE"]);

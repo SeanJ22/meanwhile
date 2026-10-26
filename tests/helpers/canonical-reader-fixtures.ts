@@ -69,14 +69,15 @@ function canonicalRows(sql: string, params: readonly unknown[]): Record<string, 
     || states.includes(meetingStateOf(sitting.bodyId));
   const stateScoped = (p: PromotedProjection) => keys.some(prefix => p.scope.startsWith(String(prefix).replace(/%$/, ""))) || doorPrefixes.some(prefix => p.scope.startsWith(prefix));
   const additional: Record<string, unknown>[] = [];
-  if (selectedKeys && sql.includes("AS local_divisions") && params[2] === "CENSUS_GEOGRAPHY") {
+  const accompanying = params.slice(1);
+  if (selectedKeys && sql.includes("AS local_divisions") && accompanying[0] === "CENSUS_GEOGRAPHY") {
     const census = fixture().values?.authority?.["census-districts"];
     const value = census?.value as CensusDistrictEdge | undefined;
-    const state = String(params[5]);
-    const divisionIds = params[6] as readonly string[];
+    const state = String(accompanying[3]);
+    const divisionIds = accompanying[4] as readonly string[];
     const registration = held.promotions.get(`REGISTRATION:US-${state}:registration:v1`)?.payload as RegistrationReadModel | undefined;
-    const types = params[4] as readonly string[];
-    const canonicalKeys = value && typeof params[7] === "string" ? [...new Set((value.codes[params[7]] ?? []).flatMap(([index]) => {
+    const types = accompanying[2] as readonly string[];
+    const canonicalKeys = value && typeof accompanying[5] === "string" ? [...new Set((value.codes[accompanying[5]] ?? []).flatMap(([index]) => {
       const { ref } = value.containers[index];
       if (!types.includes(ref.type) || ref.stateAbbr !== state && !ref.memberStates?.includes(state)) return [];
       const id = censusWorkDivision(ref);
@@ -87,11 +88,11 @@ function canonicalRows(sql: string, params: readonly unknown[]): Record<string, 
       geography: value ? censusRows(value, state).filter(row => row.row_kind === "scope" || types.includes(String(row.type))) : [],
       local_divisions: registration?.divisions.filter(row => divisionIds.includes(row.ocdId)) ?? [], canonical_keys: canonicalKeys }] });
   }
-  const zipKey = zipPeople ? `STATE_LEGISLATOR:US-${String(params[5])}:openstates-people:v1` : null;
-  const registryKey = sql.includes("AS zip_registry") ? `REGISTRY_RUNTIME_BINDING:US-${String(params[5])}:reader-registry-runtime` : null;
-  const officialKey = sql.includes("AS zip_official") ? `STATE_LEGISLATOR:US-${String(params[5])}` : null;
-  const sourceKeys=sql.includes("AS zip_sources") ? [`FEDERAL_DIRECTORY:US-${String(params[5])}:current-congress-directory`,
-    ...PEOPLE_SOURCE_IDS.map(source=>`${peopleSourceRecordClass(source)}:${peopleSourceScope(`US-${String(params[5])}`,source)}`)] : [];
+  const zipKey = zipPeople ? `STATE_LEGISLATOR:US-${String(accompanying[3])}:openstates-people:v1` : null;
+  const registryKey = sql.includes("AS zip_registry") ? `REGISTRY_RUNTIME_BINDING:US-${String(accompanying[3])}:reader-registry-runtime` : null;
+  const officialKey = sql.includes("AS zip_official") ? `STATE_LEGISLATOR:US-${String(accompanying[3])}` : null;
+  const sourceKeys=sql.includes("AS zip_sources") ? [`FEDERAL_DIRECTORY:US-${String(accompanying[3])}:current-congress-directory`,
+    ...PEOPLE_SOURCE_IDS.map(source=>`${peopleSourceRecordClass(source)}:${peopleSourceScope(`US-${String(accompanying[3])}`,source)}`)] : [];
   const queryKeys = [...keys,...sourceKeys,...(zipKey?[zipKey]:[]),...(registryKey?[registryKey]:[]),...(officialKey?[officialKey]:[])];
   const rows: Record<string, unknown>[] = [...held.promotions.values()].filter(p => selectedOutcomes
     ? p.recordClass === "MEETING_OUTCOME" && (stateScoped(p) || exactKeys.includes(p.key)

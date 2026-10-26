@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "../../reader/database.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { openControlPlane } from "../admin-data.ts";
@@ -31,7 +31,7 @@ export async function v6TrailGet(request: NextRequest): Promise<NextResponse> {
     if (query.send !== null) {
       const url = controlPlaneUrlFromEnv();
       if (!url) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so nothing was read." }, { status: 503, headers: NO_STORE });
-      const data = await readReached(neon(url), query.send);
+      const data = await readReached(databaseReadOnlySql(url), query.send);
       return NextResponse.json({ contract: ADMIN_V6_TRAIL_CONTRACT, mode: "reached", id: query.send, asOf: now, data }, { headers: NO_STORE });
     }
     const opened = await openControlPlane();

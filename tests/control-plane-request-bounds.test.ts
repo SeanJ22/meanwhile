@@ -1,5 +1,7 @@
+import { unwrapVersionedStatement } from "./helpers/versioned-neon-fixture.ts";
 import assert from "node:assert/strict";
-import test from "node:test";
+import test,{after} from "node:test";
+import { keepNeonBytesInProcess,VITAL_SIGNS_REPORT_ENV } from "../lib/db/transfer-by-caller.ts";
 
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { createLedger } from "../lib/control-plane/budget.ts";
@@ -22,6 +24,13 @@ import {
 } from "../lib/control-plane/repository/request-bounds.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
+
+// A scheduler child reports transfer to its supervisor; accounting writes have
+// their own lifecycle tests and must not compete with the mocked bound request.
+const reportBefore=process.env[VITAL_SIGNS_REPORT_ENV];
+process.env[VITAL_SIGNS_REPORT_ENV]="1";
+keepNeonBytesInProcess();
+after(()=>{if(reportBefore===undefined)delete process.env[VITAL_SIGNS_REPORT_ENV];else process.env[VITAL_SIGNS_REPORT_ENV]=reportBefore;});
 
 const URL = "postgresql://user:pass@ep-request-bounds-proof.us-east-2.aws.neon.tech/neondb";
 const TINY = { POINT: 60, DOCUMENT: 90, PAGE: 120 } as const;
@@ -104,18 +113,23 @@ async function withHungFetch<T>(honorAbort: boolean, fn: (hung: HungFetch) => Pr
   }
 }
 
-function answer(rows: readonly Record<string, string>[]): Response {
+function answer(rows: readonly Record<string,string>[],checked?:ReturnType<typeof unwrapVersionedStatement>):Response {
   const names = rows.length > 0 ? Object.keys(rows[0]!) : ["id"];
   return new Response(
-    JSON.stringify({
+    JSON.stringify((checked?.wrap??(value=>value))({
       command: "SELECT",
       fields: names.map((name) => ({ name, dataTypeID: 25 })),
       rows: rows.map((row) => names.map((name) => row[name] ?? null)),
       rowCount: rows.length,
       rowAsArray: true,
-    }),
+    })),
     { status: 200, headers: { "content-type": "application/json" } },
   );
+}
+
+function checkedAnswer(init:{body?:string}|undefined,rows:readonly Record<string,string>[]):Response {
+  const request=JSON.parse(init?.body??"{}");
+  return answer(rows,unwrapVersionedStatement(request.query,request.params));
 }
 
 async function elapsed<T>(fn: () => Promise<T>): Promise<{ readonly ms: number; readonly outcome: T | unknown }> {
@@ -237,15 +251,16 @@ test("a lost CAS reads only current revision metadata and preserves conflict or 
       const requests: { query: string; params: unknown[] }[] = [];
       neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
         const request = JSON.parse(init?.body ?? "{}") as { query: string; params: unknown[] };
-        requests.push(request);
-        if (requests.length === 1) return answer([]);
-        assert.equal(request.query, "SELECT revision FROM cp_budget WHERE id = $1");
-        assert.deepEqual(request.params, ["shared-budget-ledger"]);
-        return answer(foundRevision === null ? [] : [{ revision: String(foundRevision) }]);
+        const checked=unwrapVersionedStatement(request.query,request.params);
+        requests.push({query:checked.query,params:[...checked.params]});
+        if(requests.length===1)return answer([]);
+        assert.equal(checked.query,"SELECT revision FROM cp_budget WHERE id = $1");
+        assert.deepEqual(checked.params,["shared-budget-ledger"]);
+        return answer(foundRevision===null?[]:[{revision:String(foundRevision)}],checked);
       }) as typeof neonConfig.fetchFunction;
       const repos = await createPgRepositories(URL, now, { skipBootstrap: true });
       await assert.rejects(repos.budget.compareAndSet(7, createLedger({ hosts: [] }), now), error => {
-        assert.ok(error instanceof ConcurrentModification);
+        assert.ok(error instanceof ConcurrentModification,String(error));
         assert.equal(error.expectedRevision, 7);
         assert.equal(error.foundRevision, foundRevision);
         return true;
@@ -301,18 +316,18 @@ test("an answered call is returned untouched, and every timeout is told to the o
   const stop = observeControlPlaneTimeouts((timeout) => seen.push(timeout.operation));
   const original = neonConfig.fetchFunction;
   try {
-    neonConfig.fetchFunction = (async () => answer([{ id: "pilot-runner", revision: "3", updated_at: "2026-09-23T00:00:00.000Z", value: "{\"beatAt\":\"x\"}" }])) as typeof neonConfig.fetchFunction;
+    neonConfig.fetchFunction = (async (_input:unknown,init?:{body?:string})=>checkedAnswer(init,[{ id: "pilot-runner", revision: "3", updated_at: "2026-09-23T00:00:00.000Z", value: "{\"beatAt\":\"x\"}" }])) as typeof neonConfig.fetchFunction;
     const answered = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
     const row = await answered.runnerHeartbeat.read("pilot-runner");
     assert.equal(row?.revision, 3);
     assert.deepEqual(row?.value, { beatAt: "x" });
     assert.deepEqual(seen, []);
     let inFlight = 0, peak = 0;
-    neonConfig.fetchFunction = (async () => {
+    neonConfig.fetchFunction = (async (_input:unknown,init?:{body?:string}) => {
       inFlight++; peak = Math.max(peak, inFlight);
       await new Promise(resolve => setTimeout(resolve, 5));
       inFlight--;
-      return answer([{ id: "shared-budget", revision: "3", updated_at: "2026-09-23T00:00:00.000Z",
+      return checkedAnswer(init,[{ id: "shared-budget", revision: "3", updated_at: "2026-09-23T00:00:00.000Z",
         value: JSON.stringify(createLedger({ hosts: [] })) }]);
     }) as typeof neonConfig.fetchFunction;
     const writes = await Promise.all(Array.from({ length: 20 }, (_, result) =>
@@ -320,9 +335,9 @@ test("an answered call is returned untouched, and every timeout is told to the o
     assert.equal(peak, 1, "One repository instance does not contend with itself on the shared budget aggregate.");
     assert.deepEqual(writes.map(write => write.result), Array.from({ length: 20 }, (_, index) => index));
     let calls = 0;
-    neonConfig.fetchFunction = (async () => {
+    neonConfig.fetchFunction = (async (_input:unknown,init?:{body?:string}) => {
       if (++calls === 1) throw new Error("distinct accounting write failed");
-      return answer([{ id: "shared-budget", revision: "3", updated_at: "2026-09-23T00:00:00.000Z",
+      return checkedAnswer(init,[{ id: "shared-budget", revision: "3", updated_at: "2026-09-23T00:00:00.000Z",
         value: JSON.stringify(createLedger({ hosts: [] })) }]);
     }) as typeof neonConfig.fetchFunction;
     const recovered = await Promise.allSettled([
@@ -418,13 +433,15 @@ test("connect-retry: the real bootstrap survives a hung first connect, because t
           init?.signal?.addEventListener("abort", () => reject(init.signal?.reason), { once: true });
         });
       }
-      const query = JSON.parse(init?.body ?? "{}").query as string | undefined;
+      const request=JSON.parse(init?.body??"{}");
+      const checked=unwrapVersionedStatement(request.query,request.params);
+      const query=checked.query;
 
       const result = query?.includes("FROM pg_index i")
         ? { command: "SELECT", fields: [{ name: "valid", dataTypeID: 16 }, { name: "building", dataTypeID: 16 }], rows: [["t", "f"]], rowCount: 1, rowAsArray: false }
         : { command: "CREATE", fields: [], rows: [], rowCount: 0, rowAsArray: false };
       return Promise.resolve(
-        new Response(JSON.stringify(result), {
+        new Response(JSON.stringify(checked.wrap(result)), {
           status: 200,
           headers: { "content-type": "application/json" },
         }),

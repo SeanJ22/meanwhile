@@ -77,7 +77,7 @@ test("a saved CSV or PDF text candidate list publishes whole contests into the g
     const published = await processRegisteredManualCandidate(store, stateBallotContractId("ballot-contests", Object.values((candidate.readModel as GenericBallotProjection).ballots)[0].election.state), candidate, now, null);
     assert.ok(published.promoted, JSON.stringify(published.candidate));
     assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
-    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store, now, bypassCache: true });
+    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store, now });
     assert.equal(read.kind, "PROMOTED"); if (read.kind === "PROMOTED") assert.deepEqual(read.value, payload);
   }
 });
@@ -91,7 +91,7 @@ test("DC ballots use their registered OCD prefixes through promotion and the rea
     const store = new MemoryRoutineDataStore();
     const promoted = await processRegisteredManualCandidate(store, checked.contractId, manualProjectionCandidate(checked), now, null);
     assert.ok(promoted.promoted, JSON.stringify(promoted.candidate));
-    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, now, bypassCache: true });
+    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, now });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind !== "PROMOTED") throw new Error("State ballot was not published");
     const ballot = Object.values(read.value.ballots)[0];
@@ -150,7 +150,7 @@ test("a state publication retains usable ballot sources and office answers for i
   const store = new MemoryRoutineDataStore();
   const published = await processRegisteredManualCandidate(store, checked.contractId, manualProjectionCandidate(checked), now, null);
   assert.ok(published.promoted);
-  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now, bypassCache: true });
+  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("State ballot was not published");
   const sources = await readerBallotSourcesForDivisions(["ocd-division/country:us/state:tx/county:alder"], { store, now });
@@ -175,7 +175,7 @@ test("a proven state ballot artifact reads back without a database or a national
   const published = await processRegisteredManualCandidate(store, checked.contractId, manualProjectionCandidate(checked), now, null);
   assert.ok(published.promoted);
   const scope = stateBallotScope("ballot-contests", "TX");
-  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", scope, { store, now, bypassCache: true });
+  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", scope, { store, now });
   const edge = promotedEdgeEntryOf(read, "BALLOT_CANDIDACY", scope, store);
   assert.ok(edge);
   const unreachable = { readPromotion: async () => { throw new Error("Unexpected database read"); },
@@ -433,7 +433,7 @@ test("successive captures retain only receipt versions cited by current core or 
       assert.deepEqual(checked.heldContests, []);
       const published = await processRegisteredManualCandidate(store, checked.package.contractId, manualProjectionCandidate(checked.package), now, null);
       assert.ok(published.promoted, JSON.stringify(published.candidate)); assert.equal(published.readerReadback?.status, "PASS");
-      const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, now, bypassCache: true }); assert.equal(read.kind, "PROMOTED");
+      const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, now }); assert.equal(read.kind, "PROMOTED");
       if (read.kind !== "PROMOTED") continue;
       const ballot = Object.values(read.value.ballots)[0];
       assert.equal(ballot.measures[0].questionText, input.question); assert.equal(ballot.measures[0].officialNumber, "12");

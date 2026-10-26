@@ -193,8 +193,8 @@ async function currentProjection(store: RoutineDataStore, tenant: OutcomeTenant)
 }> {
   // Pima's own pointer keeps its reader; a door's outcomes are read from the door's own scope.
   const read = tenant.contractId === PIMA_OUTCOME_TENANT.contractId
-    ? await readDoorOutcomeProjection(tenant.scope, { store, bypassCache: true })
-    : await readPromotedCivicData<OutcomeSnapshot>(tenant.recordClass, tenant.scope, { store, bypassCache: true });
+    ? await readDoorOutcomeProjection(tenant.scope, { store })
+    : await readPromotedCivicData<OutcomeSnapshot>(tenant.recordClass, tenant.scope, { store });
   if (read.kind === "PROMOTED") return { snapshot: read.value, sourceThrough: read.metadata.sourceThrough, versionId: read.metadata.versionId };
   if (read.kind === "NOT_RECORDED") return { snapshot: EMPTY, sourceThrough: null, versionId: null };
   if (read.kind === "BOOTSTRAP") throw new Error("PIMA_OUTCOME_PRODUCTION_BOOTSTRAP_FORBIDDEN");

@@ -19,7 +19,7 @@ if (result.receipt) {
   assert.equal(await durableRoutineRunnerReceiptIssue(result.receipt,
     AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:TX")!, store, "SUCCESS"), null);
   console.log("RCD_RECEIPT=" + JSON.stringify(result.receipt));
-  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now, bypassCache: true });
+  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.equal((await readerBallotSourcesForDivisions(["ocd-division/country:us/state:tx"], { store, now })).length, 1);

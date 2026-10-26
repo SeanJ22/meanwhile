@@ -58,7 +58,7 @@ export async function refreshCongressDirectory(input: {
   try {
     const now = clock();
     for (const state of states) {
-      const prior = await readStateFederalDirectory(state, { store, now, bypassCache: true });
+      const prior = await readStateFederalDirectory(state, { store, now });
       if (prior.kind === "STORE_UNREACHABLE") throw Error(`CONGRESS_PRIOR_UNAVAILABLE:${state}`);
       priors.set(state, prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value : null);
     }

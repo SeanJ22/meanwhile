@@ -144,7 +144,7 @@ test("a Commons portrait publishes through the existing derived door without a c
   const outcome = await processRegisteredRoutineCandidate(store, stateBallotContractId("candidate-campaign-sites-derived", "OH"), candidate, NOW);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
   assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify(outcome.readerReadback));
-  const read = await readPromotedCivicData<DerivedCampaignSitesProjection>("CURATED_READER_RECORD", stateBallotScope("candidate-campaign-sites-derived", "OH"), { store, now: NOW, bypassCache: true });
+  const read = await readPromotedCivicData<DerivedCampaignSitesProjection>("CURATED_READER_RECORD", stateBallotScope("candidate-campaign-sites-derived", "OH"), { store, now: NOW });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.deepEqual(read.value.portraits, plan.portraits);
 });

@@ -363,7 +363,7 @@ test("(b) a GOOD Pima candidate promotes through the routine door and a later fa
   const pointer = await memory.readPromotion("MEETING_OUTCOME", SCOPE);
   assert.equal(pointer?.versionId, good.id);
   assert.equal(pointer?.lastKnownGoodVersionId, good.id);
-  const read = await readDoorOutcomeProjection(SCOPE, { store: memory, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store: memory });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.versionId, good.id);
 
@@ -421,7 +421,7 @@ test("body-first Pima acquisition promotes the exact native body's outcomes and 
   for (const path of ["/v1/pima/bodies", "/v1/pima/events", "/v1/pima/events/1825/eventitems", "/v1/pima/eventitems/329182/votes"]) {
     assert.ok(acquisitions.some(row => requestPath(row.requestedUrl) === path && row.source === CONTRACT_ID), `${path} remains attributed evidence`);
   }
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.ok(read.value.sittings.some(sitting => sitting.eventId === 1825 && sitting.rollCalls.some(row => row.eventItemId === 329182)));
@@ -492,7 +492,7 @@ test("a routine pass promotes every changed sitting, including one modified earl
 
   const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
   assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(read.metadata.versionId, verdict.candidateId);
@@ -579,7 +579,7 @@ test("a refused sitting holds the pass even when a later sitting promotes, and t
   const runRecord = await store.readCandidate(verdict.candidateId);
   assert.equal(runRecord?.state, "SOURCE_BLOCKED");
   assert.match(runRecord?.candidate.retrieval.failureDetail ?? "", /legistar:pima:1825/);
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(runRecord?.lastKnownGoodVersion, read.metadata.versionId, "the held receipt names the pointer as it now stands");
@@ -640,7 +640,7 @@ test("DB-07: outcomes older than the routine window stay published; a narrower w
     log: () => {},
   }));
   assert.equal(result.exitCode, 0);
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const held = new Set(read.value.sittings.map((sitting) => sitting.meetingId));

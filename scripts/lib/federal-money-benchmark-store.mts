@@ -3,7 +3,7 @@ import { once } from "node:events";
 import { channel } from "node:diagnostics_channel";
 import { resolve } from "node:path";
 import { createInterface } from "node:readline";
-import { neon, neonConfig } from "@neondatabase/serverless";
+import { neon, neonConfig } from "../../lib/db/client.ts";
 import { PostgresRoutineDataStore } from "../../lib/civic-data/store.ts";
 import type { SourceAuthorityId } from "../../lib/civic-data/source-authority.ts";
 import type { ReadOnlyQuery } from "../../lib/control-plane/admin-view/promoted-slices.ts";
@@ -83,6 +83,8 @@ export class FederalMoneyBenchmarkStore extends PostgresRoutineDataStore {
       const answer = await request(init.body);
       return new Response(answer.body, { status: answer.status, headers: { "content-type": "application/json" } });
     };
+    // This transport talks to the local emulator and already measures its simulated bytes.
+    Object.defineProperty(neonConfig.fetchFunction, Symbol.for("meanwhile.database.transfer.fetch"), { value: true });
     process.env.DATABASE_URL = "postgresql://benchmark:benchmark@ep-federal-benchmark.us-east-2.aws.neon.tech/benchmark";
     process.env.WTP_VITAL_SIGNS_REPORT = "1";
     process.env.WTP_RUNTIME_MODE = "staging";

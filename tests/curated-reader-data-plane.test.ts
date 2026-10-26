@@ -203,7 +203,7 @@ test("each mutable curated Reader family promotes and reads from its own canonic
       ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"],
       id,
     );
-    const read = await readFamily(id, { store, bypassCache: true, now: T0 });
+    const read = await readFamily(id, { store,  now: T0 });
     assert.equal(read.kind, "PROMOTED", id);
     if (read.kind === "PROMOTED") assert.equal(read.value.kind, id);
   }
@@ -219,7 +219,7 @@ test("every state's registration and polling links publish through its own navig
     const outcome = await processRegisteredManualCandidate(store, "ballot-navigation", candidate, T0);
     assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? undefined);
     assert.equal(outcome.readerReadback?.status, "PASS");
-    const read = await readBallotNavigationProjection(state, { store, now: T0, bypassCache: true });
+    const read = await readBallotNavigationProjection(state, { store, now: T0 });
     assert.equal(read.kind, "PROMOTED");
     const view = ballotNavigationFor(state, read.value!, read.metadata.versionId!, []);
     assert.ok(read.value!.records.some(record => record.kind === "POLLING_PLACE_LINK"), state);
@@ -289,7 +289,7 @@ test("store failure does not reopen any curated tracked first seed", async () =>
     async readCandidate() { candidateReads += 1; return null; },
   };
   const reads = await Promise.all(FAMILIES.map((id) =>
-    readFamily(id, { store: brokenStore, bypassCache: true })
+    readFamily(id, { store: brokenStore })
   ));
   assert.ok(reads.every((read) => read.kind === "STORE_UNREACHABLE"));
   assert.equal(candidateReads, 0);

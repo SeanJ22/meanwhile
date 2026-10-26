@@ -21,11 +21,11 @@ export async function refreshLegiscanVotes(input: Omit<Parameters<typeof acquire
   const started = performance.now(), before = processNeonBytes().reduce((sum,row) => ({ reader: sum.reader + row.bytes.reader,
     controlPlane: sum.controlPlane + row.bytes["control-plane"] }), { reader: 0, controlPlane: 0 });
   const state = legiscanState(input.state), now = input.now?.() ?? new Date().toISOString();
-  const roster = await readOpenStatesPeopleProjection(`US-${state}`, { store: input.civicStore, now, bypassCache: true });
+  const roster = await readOpenStatesPeopleProjection(`US-${state}`, { store: input.civicStore, now });
   if (roster.kind !== "PROMOTED" || !roster.metadata.versionId) throw new Error("LEGISCAN_OPENSTATES_IDENTITY_UNAVAILABLE");
   const vault = input.vault ?? input.store ?? rawCaptureVault();
   const initialized = await createVoteRefreshSink({ state, sourceId: "legiscan", scope: legiscanVotesScope(state), civicStore: input.civicStore,
-    vault, signal: input.signal, readPrior: () => readLegiscanVotesProjection(state, { store: input.civicStore, now, bypassCache: true }) });
+    vault, signal: input.signal, readPrior: () => readLegiscanVotesProjection(state, { store: input.civicStore, now }) });
   const sink = initialized.sink;
   let baseVersionId = initialized.baseVersionId;
   let projection = initialized.priorMetadata;

@@ -114,7 +114,7 @@ test("every member and the per-state marker promote GOOD at their own bounded sc
   assert.equal(await store.readPromotion("STATE_ROLL_CALL", JURISDICTION), null);
 
   for (const id of MEMBERS) {
-    const read = await readPromotedCivicData<StateLegislatorVotes>("STATE_LEGISLATOR_VOTES", id, { store, now: T0, bypassCache: true });
+    const read = await readPromotedCivicData<StateLegislatorVotes>("STATE_LEGISLATOR_VOTES", id, { store, now: T0 });
     assert.equal(read.kind, "PROMOTED", id);
     if (read.kind === "PROMOTED") {
       assert.equal(read.value.officeholderId, id);
@@ -125,7 +125,7 @@ test("every member and the per-state marker promote GOOD at their own bounded sc
     }
   }
 
-  const markerRead = await readPromotedCivicData<StateLegislatorVotesSessionMarker>("STATE_LEGISLATOR_VOTES", JURISDICTION, { store, now: T0, bypassCache: true });
+  const markerRead = await readPromotedCivicData<StateLegislatorVotesSessionMarker>("STATE_LEGISLATOR_VOTES", JURISDICTION, { store, now: T0 });
   assert.equal(markerRead.kind, "PROMOTED");
   if (markerRead.kind === "PROMOTED") {
     assert.equal(markerRead.value.legislatorCount, MEMBERS.length);
@@ -138,8 +138,8 @@ test("a member scope and the marker scope never collide", async () => {
   const store = new MemoryRoutineDataStore();
   await processRegisteredFanOutCandidate(store, CONTRACT_ID, member("nh-general-court:1", [pos(1)]), T0);
   await processRegisteredFanOutCandidate(store, CONTRACT_ID, marker(T0), T0);
-  const memberRead = await readPromotedCivicData<StateLegislatorVotes>("STATE_LEGISLATOR_VOTES", "nh-general-court:1", { store, now: T0, bypassCache: true });
-  const markerRead = await readPromotedCivicData<StateLegislatorVotesSessionMarker>("STATE_LEGISLATOR_VOTES", JURISDICTION, { store, now: T0, bypassCache: true });
+  const memberRead = await readPromotedCivicData<StateLegislatorVotes>("STATE_LEGISLATOR_VOTES", "nh-general-court:1", { store, now: T0 });
+  const markerRead = await readPromotedCivicData<StateLegislatorVotesSessionMarker>("STATE_LEGISLATOR_VOTES", JURISDICTION, { store, now: T0 });
   assert.equal(memberRead.kind, "PROMOTED");
   assert.equal(markerRead.kind, "PROMOTED");
   // The member payload carries its own positions; the marker payload is a
@@ -189,8 +189,8 @@ test("one acquired member renders exact roll metadata before the session marker 
     httpStatus: 200, retrievedAt: T0, identityAuthority: identityAuthority("v1") });
   assert.ok((await processRegisteredFanOutCandidate(store, CONTRACT_ID, candidate, T0)).promoted);
   assert.equal(await store.readPromotion("STATE_LEGISLATOR_VOTES", "US-NH"), null);
-  const read = await readStateMemberVoteSnapshot(MEMBERS[0], { store, now: T0, bypassCache: true });
+  const read = await readStateMemberVoteSnapshot(MEMBERS[0], { store, now: T0 });
   assert.equal(read?.snapshot.rollCalls[0].billTitle, "Official bill title");
   assert.equal(read?.snapshot.positions[0].publisherPosition, "Yea");
-  assert.equal(await readStateMemberVoteSnapshot(MEMBERS[1], { store, now: T0, bypassCache: true }), null);
+  assert.equal(await readStateMemberVoteSnapshot(MEMBERS[1], { store, now: T0 }), null);
 });

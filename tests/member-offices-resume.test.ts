@@ -13,6 +13,8 @@ import { requiredManualProductionContract } from "../lib/civic-data/manual-contr
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import { routineTaskNextDueMs } from "../lib/civic-data/runner.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
+import { installFactReader } from "../lib/facts/db.ts";
+import { versionedSelect } from "../lib/db/versioned-query.ts";
 
 const sha = "a".repeat(40), at = "2026-10-01T00:00:00.000Z";
 const yaml = (id: string) => `id: ocd-person/${id}
@@ -64,7 +66,7 @@ test("a member-office run cut off by its deadline saves the states it finished a
   assert.ok(rest.outcome?.promoted && !rest.outcome.confirmed, JSON.stringify(rest));
   assert.deepEqual(rest.pending, []);
   assert.equal(read.length, 1, "the finished state is not read again");
-  await refreshMemberOfficesFromPromoted({ store, now: at, bypassCache: true });
+  await refreshMemberOfficesFromPromoted({ store, now: at });
   assert.deepEqual(["plural:ca:ca-one", "plural:tx:tx-one"].map(id => currentMemberOffices(id).map(row => row.office.phone)), [["555-1000"], ["555-1000"]],
     "both states' offices are published, the first kept from the cut-off run");
   const settled = await store.clock(CONTRACT.sourceId, CONTRACT.recordClass, CONTRACT.scope);
@@ -74,8 +76,11 @@ test("a member-office run cut off by its deadline saves the states it finished a
 });
 
 test("on the production store the member-office progress, capture list and continuation are read without the records", async () => {
-  await withMigratedRoutineStore("openstates-people-ca", async (store, vault) => {
-    // The curated reader's pre-promotion read consults owner flags in the fact store, which the migrated store already holds.
+  await withMigratedRoutineStore("openstates-people-ca", async (store, vault, pg) => {
+    // The shared migrated store already holds the fact and owner-flag tables.
+    const checked=versionedSelect(process.env.DATABASE_URL!);
+    installFactReader((text,params=[])=>checked(async(text,params)=>(await pg.query<Record<string,unknown>>(text,[...params])).rows,text,params));
+    try {
     const as = (contract: string, capability = "ROUTINE_CONTRACT") => Object.assign(store as unknown as { writeAuthority: object }, {
       writeAuthority: { ...(store as unknown as { writeAuthority: object }).writeAuthority, contract, capability } });
     await publishState(store, "ca", vault);
@@ -95,9 +100,15 @@ test("on the production store the member-office progress, capture list and conti
     const held = await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["rosterDigests", "pending", "absent"]);
     assert.deepEqual(held, { rosterDigests: { "US-CA": digest!.digest }, pending: ["US-TX"] });
     assert.equal((await store.clock(CONTRACT.sourceId, CONTRACT.recordClass, CONTRACT.scope)).continuationPending, true);
+    const before=Number((await pg.query<{version:string}>("SELECT version::text FROM civic_data_clock_versions WHERE record_class=$1 AND scope=$2",
+      [CONTRACT.recordClass,CONTRACT.scope])).rows[0]!.version);
     const rest = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA", "US-TX"] });
     assert.ok(rest.outcome?.promoted, JSON.stringify(rest));
+    const after=Number((await pg.query<{version:string}>("SELECT version::text FROM civic_data_clock_versions WHERE record_class=$1 AND scope=$2",
+      [CONTRACT.recordClass,CONTRACT.scope])).rows[0]!.version);
+    assert.ok(after>before,"continuing a publication updates the same scope's stored version");
     assert.equal((await store.clock(CONTRACT.sourceId, CONTRACT.recordClass, CONTRACT.scope)).continuationPending, false);
     assert.equal((await memberOfficesRunNeeded(store, ["US-CA", "US-TX"])).needed, false);
+    } finally { installFactReader(undefined); }
   });
 });

@@ -68,7 +68,7 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
       const connection = env.WTP_CONTROL_PLANE_DATABASE_URL;
       if (!connection) throw new Error("CONTROL_PLANE_UNAVAILABLE");
       const [{ neon }, { pgAppendOnlyRepository }] = await Promise.all([
-        import("@neondatabase/serverless"), import("../lib/control-plane/repository/pg-store.ts"),
+        import("../lib/db/client.ts"), import("../lib/control-plane/repository/pg-store.ts"),
       ]);
       const sql = neon(connection);
       const history = pgAppendOnlyRepository<MigrationRecord>({

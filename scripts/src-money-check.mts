@@ -3,7 +3,7 @@ import {AsyncLocalStorage} from "node:async_hooks";
 import {spawnSync} from "node:child_process";
 import {readFile,writeFile} from "node:fs/promises";
 import {appendFileSync} from "node:fs";
-import {neon,neonConfig,Pool} from "@neondatabase/serverless";
+import {neon,neonConfig,Pool} from "../lib/db/client.ts";
 import {CAMPAIGN_FINANCE_SOURCES} from "../lib/funding/state-sources.ts";
 import {US_JURISDICTIONS} from "../lib/coverage/states.ts";
 import {CAMPAIGN_PEOPLE_SQL,readCampaignMoneyPeople} from "../lib/funding/state-people.ts";

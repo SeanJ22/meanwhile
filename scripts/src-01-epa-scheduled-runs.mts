@@ -4,7 +4,7 @@
 import assert from "node:assert/strict";
 import { mkdir, writeFile, readdir, stat } from "node:fs/promises";
 import { join } from "node:path";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
@@ -34,7 +34,7 @@ process.env.DATABASE_URL = connection; process.env.WTP_CIVIC_READ_CACHE_URL = ""
 const production = new PostgresRoutineDataStore();
 const joins = new Map<string, GovernmentJoin[]>(), registrations: Record<string, string> = {};
 for (const { usps } of US_JURISDICTIONS) {
-  const registration = await readRegistrationProjection(usps, { store: production, bypassCache: true });
+  const registration = await readRegistrationProjection(usps, { store: production });
   registrations[usps] = registration.kind;
   joins.set(usps, registration.kind === "PROMOTED" ? governmentJoinRows(registration.value.governments ?? []) : []);
 }
@@ -51,7 +51,7 @@ try {
     try { result = await refreshEchoNational({ store, vault, archive: openDataArchiveStore(archiveVault), spool, signal: AbortSignal.timeout(90 * 60_000), now: () => new Date().toISOString(), readStateJoins: async state => joins.get(state) ?? [], fetchImpl }); }
     finally { await spool.dispose(); }
     const elapsedMs = Math.round(performance.now() - started);
-    const projection = await readOpenDataProjection("epa-echo", "national", { store, bypassCache: true });
+    const projection = await readOpenDataProjection("epa-echo", "national", { store });
     assert.equal(projection.kind, "PROMOTED"); if (projection.kind !== "PROMOTED") throw Error("unpublished");
     const typed = await verifyRoutineReaderProjection(requiredRoutineContract("epa-echo"), { store, now: new Date().toISOString(), expectedVersionId: projection.metadata.versionId! });
     const run: Record<string, unknown> = { label, elapsedMs, requests, unchanged: result.unchanged, promoted: !!result.publication.outcome.promoted, confirmed: !!result.publication.outcome.confirmed,

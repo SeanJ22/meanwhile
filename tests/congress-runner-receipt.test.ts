@@ -90,7 +90,7 @@ test("one national acquisition publishes every due Congress state in one memory 
   assert.equal(interrupted.filter(member => member.run).length, 1);
   assert.equal(interrupted.filter(member => member.owed).length, 55, "unreached states remain due after a drain");
   for (const state of FEDERAL_DIRECTORY_STATES) {
-    const read = await readStateFederalDirectory(state, { store, now: NOW, bypassCache: true });
+    const read = await readStateFederalDirectory(state, { store, now: NOW });
     assert.equal(read.kind, "PROMOTED", state);
     if (read.kind === "PROMOTED") assert.ok(read.value.roster.officeholders.every(holder => holder.state === state), state);
   }
@@ -107,7 +107,7 @@ test("the Congress runner publishes core first, attaches chamber contacts, and e
   await refreshCongressDirectory({ state: "AZ", store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
     acquire: async options => {
       if (acquired++) {
-        const held = await readStateFederalDirectory("AZ", { store, now: NOW, bypassCache: true });
+        const held = await readStateFederalDirectory("AZ", { store, now: NOW });
         assert.equal(held.kind, "PROMOTED", "accepted people publish before the next optional acquisition starts");
       }
       const held = fixtureRelease(options); await options.validate?.(held.bytes, held); return held;
@@ -125,7 +125,7 @@ test("the Congress runner publishes core first, attaches chamber contacts, and e
   if (!parsed.ok) return;
   assert.equal(parsed.receipt.candidateId, stages.at(-1));
   assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt, expected, store, "SUCCESS"), null);
-  const read = await readStateFederalDirectory("AZ", { store, now: NOW, bypassCache: true });
+  const read = await readStateFederalDirectory("AZ", { store, now: NOW });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(read.value.roster.officeholders.map(row => row.id), ["congress:A000001"], "a place's record holds only that place's members");

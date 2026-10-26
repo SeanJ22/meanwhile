@@ -1,7 +1,8 @@
-import { neonConfig } from "@neondatabase/serverless";
+import { neonConfig } from "../db/client.ts";
 import { getDefaultAutoSelectFamilyAttemptTimeout } from "node:net";
 import { performance } from "node:perf_hooks";
 import { transferRead } from "../db/reader-route.ts";
+import { preserveDatabaseFetchAccounting } from "../db/transfer-by-caller.ts";
 
 /**
  * Canonical-store requests in a standing runtime must settle or abort. The
@@ -89,6 +90,7 @@ export function installNeonRequestDeadline(
 ): FetchLike {
   const underlying = (neonConfig.fetchFunction ?? fetch) as FetchLike;
   const guarded = neonRequestDeadlineFetch(underlying, timeoutMs);
+  preserveDatabaseFetchAccounting(guarded, underlying);
   neonConfig.fetchFunction = guarded;
   return guarded;
 }

@@ -23,7 +23,7 @@ export async function runTextTranslation(input: Omit<Parameters<typeof translate
     input.subject.kind === "AGENDA" || input.subject.kind === "MINUTES" ? "MEETING" : "OFFICIAL_BOARD_DIRECTORY", input.now);
     if (!verified.ok) throw new Error("Text translation source is stale or lacks official standing.");
     const hash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
-    const held = await readTranslations([input.subject.ocdId], { store: input.store, now: input.now, bypassCache: true });
+    const held = await readTranslations([input.subject.ocdId], { store: input.store, now: input.now });
     const current = held.find(row => row.kind === input.subject.kind && row.subjectId === input.subject.subjectId &&
       row.ocdId === input.subject.ocdId && row.sourceUrl === evidence.canonicalUrl && row.sourceHash === hash && row.sourceTextHash === translationHash(evidence.text) &&
       (!input.preservedText || row.text === input.preservedText.text && JSON.stringify(row.curatedOrigin) === JSON.stringify(input.preservedText.origin)));

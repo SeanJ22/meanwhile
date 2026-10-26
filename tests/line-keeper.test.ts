@@ -17,8 +17,9 @@ import { keeperRows } from "../lib/control-plane/line-keeper/admin.ts";
 import { readLineReport } from "../lib/control-plane/line-keeper/report.ts";
 import { keeperStatus } from "../lib/control-plane/line-keeper/model.ts";
 import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { countProblems, countWindow } from "../lib/counts/hour.ts";
+import { countProblems, countWindow, type CountProblem } from "../lib/counts/hour.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
+import { runnerReadProblems } from "../lib/db/runner-read-families.ts";
 import { groupCountProblems, compactKeeperProblems } from "../lib/counts/problem-groups.ts";
 import { BriefParts } from "../app/(admin)/_mw/admin-v6/brief-view.tsx";
 import { readVitalSigns } from "../lib/control-plane/admin-view/vital-signs-read.ts";
@@ -29,6 +30,7 @@ async function readerDatabase() {
   const db=new PGlite();
   await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,state text);
     CREATE TABLE rebuild_queue(place_id text PRIMARY KEY,queued_at timestamptz NOT NULL);
+    CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,reads jsonb);
     CREATE TABLE fact(id serial PRIMARY KEY,entity_id text REFERENCES entity(id),field text,status text,value jsonb);
     CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text);
     INSERT INTO entity VALUES('az:body','body','AZ'),('ny:person','person','NY');
@@ -68,7 +70,7 @@ test('688 state problems become one brief group, agree with direct state SQL, an
     const at=new Date().toISOString();
     const {hour}=await runLineKeeper(query(control),query(reader),at);
     assert.equal(hour.problems.length,688);
-    const groups=groupCountProblems(hour.problems);
+    const groups=groupCountProblems(hour.problems.filter((problem):problem is CountProblem=>"kind" in problem));
     assert.equal(groups.length,1);
     assert.equal(groups[0].group!.items,1372);
     assert.equal(groups[0].group!.states.length,57);
@@ -88,6 +90,30 @@ test('688 state problems become one brief group, agree with direct state SQL, an
     const old=hour.problems.map(p=>({key:`line-keeper:${p.key}`,what:p.says,owner:'diggers',next:p.next}));
     assert.deepEqual(compactKeeperProblems(old),groups,'saved snapshots compact immediately too');
   } finally {await Promise.all([control.close(),reader.close()]);}
+});
+
+test('grouped count problems and runner read growth keep their owned repairs and daily brief details together',()=>{
+  const at='2026-10-26T15:05:00Z',from='2026-10-26T14:00:00Z',through='2026-10-26T15:00:00Z';
+  const countProblem={kind:'waiting' as const,state:'AZ',items:3,key:'counts:AZ:MEETING:box:waiting',where:'AZ meetings',
+    says:'3 items have waited at least an hour.',owner:'The research team',next:'Finish the waiting meeting work.'};
+  const readProblems=runnerReadProblems([{database:'reader',job:'meetings:AZ',responseBytes:300_000_000,previousBytes:2_400_000_000,
+    previousHours:24,files:['lib/meetings/runtime.ts'],tables:['civic_data_payload_parts']}]);
+  assert.equal(readProblems.length,1);
+  const hour={from,through,measuredAt:at,problems:[countProblem,...readProblems],counts:[],waiting:[],own:{bytesRead:0}};
+  const initial=defaultAdminConfig(at),first=withKeeperFixes(initial,hour);
+  assert.equal(first.latestBrief!.lineKeeperOnly,true,'an hourly-only brief never pretends to be the full daily brief');
+  assert.equal(first.latestBrief!.problems.length,2);
+  assert.equal(first.latestBrief!.problems.find(p=>p.group)?.group!.items,3);
+  const growth=first.latestBrief!.problems.find(p=>p.key==='line-keeper:runner-reads:meetings')!;
+  assert.match(growth.what,/0\.300 GB.*0\.100 GB\/hour/);
+  assert.match(growth.next,/meetings:AZ.*lib\/meetings\/runtime\.ts/);
+  assert.equal(first.fixList!.length,2,'grouping never removes the individual owned repairs');
+  const daily={...first,latestBrief:{...first.latestBrief!,lineKeeperOnly:false,problems:[...first.latestBrief!.problems,
+    {key:'reader-fact',what:'A fact needs attention',owner:'The research team',next:'Read the source.'}]}};
+  const clear=withKeeperFixes(daily,{...hour,problems:[]});
+  assert.equal(clear.latestBrief!.lineKeeperOnly,false,'hourly checks retain the existing full daily brief status');
+  assert.deepEqual(clear.latestBrief!.problems.map(p=>p.key),['reader-fact'],'a quiet hour clears only current keeper findings');
+  assert.equal(clear.fixList!.length,2,'quiet counters do not close either repair');
 });
 
 test('Now agrees with SQL for three full hours and reports the completed check across the hour boundary',async()=>{

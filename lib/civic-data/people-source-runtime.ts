@@ -66,8 +66,8 @@ export interface PeopleSourceRuntimeDependencies {
 }
 
 async function readHeld(state: string, store: RoutineDataStore, now: string): Promise<OfficeholderSet | undefined> {
-  const held = state.toLowerCase() === "us" ? await readPeopleSourceProjection("US", "statewide-executive-sources", { store, now, bypassCache: true })
-    : await readStatePeopleProjection(`US-${state.toUpperCase()}`, { store, now, bypassCache: true });
+  const held = state.toLowerCase() === "us" ? await readPeopleSourceProjection("US", "statewide-executive-sources", { store, now })
+    : await readStatePeopleProjection(`US-${state.toUpperCase()}`, { store, now });
   if (held.kind === "STORE_UNREACHABLE") throw new Error("PEOPLE_SOURCE_HELD_STATE_UNAVAILABLE");
   return held.kind === "PROMOTED" || held.kind === "BOOTSTRAP" ? held.value.roster : undefined;
 }

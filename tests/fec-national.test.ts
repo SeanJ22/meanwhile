@@ -48,7 +48,7 @@ test("real FEC bulk files promote every 2026 congressional registration across a
   const candidate = fecFundingCandidate({ snapshot, rawBodies: [master, summary], finalUrl: fecBulkUrls(cycle).master, retrievedAt: NOW, excludedFacts: [] });
   const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", candidate, NOW);
   assert.ok(outcome.promoted, JSON.stringify(outcome.candidate.receipt));
-  await refreshFundingFromPromoted({ store, now: NOW, bypassCache: true });
+  await refreshFundingFromPromoted({ store, now: NOW });
   assert.equal((await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported"))?.payload.candidates.length, rows.length);
   assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify(outcome.readerReadback));
   console.log("FEC fixture registrations by state:", JSON.stringify(Object.fromEntries(Object.entries(counts).sort())));

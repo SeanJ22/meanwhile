@@ -11,7 +11,6 @@ import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
 import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, researchPlanningStates, honorStoppedHunts } from "../lib/control-plane/repository/pg-store.ts";
-import { CONTROL_PLANE_READS_DIR_ENV, readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import {
   assertDurableRepositories,
   type ControlPlaneRepositories,
@@ -48,12 +47,13 @@ import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/wor
 import { parseRoutineSupervisorFailureSummary } from "../lib/control-plane/routine-outcome-summary.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
-import { keepRunnerTransfer } from "../lib/db/transfer.ts";
+import { collectDatabaseTransferJournals, keepRunnerTransfer } from "../lib/db/transfer.ts";
+import { transferJournalDir } from "../lib/db/transfer-journal.ts";
 import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import { VITAL_COUNTERS, composeVitalSignsRow, formatVitalSignsLine, readHourCosts, writeVitalSignsRow,
   type HourCosts } from "../lib/control-plane/vital-signs.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
@@ -61,7 +61,7 @@ import {
   neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
+import { consoleInputReader, consolePublisher, consolePublishClock } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { auditPassClock } from "./audit-pass-clock.mts";
@@ -127,10 +127,10 @@ const STDERR_TAIL_LINES = 40;
 const ROOT = process.cwd();
 
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
+const DATABASE_TRANSFER_DIR = transferJournalDir();
+if (DATABASE_TRANSFER_DIR) process.env.WTP_DATABASE_TRANSFER_DIR = DATABASE_TRANSFER_DIR;
 process.env[VITAL_SIGNS_REPORT_ENV] = "1";
 
-process.env[CONTROL_PLANE_READS_DIR_ENV] = join(ROOT, ".runtime", "control-plane", "reads");
-readFromHeldCopies();
 
 keepNeonBytesInProcess();
 
@@ -141,6 +141,9 @@ function keepHourPart(part: NeonBytesHour): void {
 receiveChildVitalSigns(keepHourPart);
 
 function keepOwnNeonBytes(nowMs: number): void {
+  if (DATABASE_TRANSFER_DIR) {
+    for (const part of collectDatabaseTransferJournals(DATABASE_TRANSFER_DIR)) keepNeonBytesPart(VITAL_SIGNS_DIR, part);
+  }
   for (const part of takeNeonBytesHours(nowMs)) keepHourPart(part);
 }
 process.once("exit", () => { keepOwnNeonBytes(Date.now()); });
@@ -603,7 +606,10 @@ const publishChangedConsole = consolePublisher({
   publish: publishConsoleChildren,
 });
 
-async function publishConsole(): Promise<void> {
+const consoleClock=consolePublishClock(INTERVAL_MIN*60_000);
+async function publishConsole(onlyWhenDue=false): Promise<void> {
+  if(onlyWhenDue&&!consoleClock.due())return;
+  consoleClock.attempted();
   if (canary && STAGING) {
     console.log("  console publish: staging canary is scoped to research; billing and live-site readbacks are skipped");
     return;
@@ -1066,6 +1072,7 @@ const vitalSignsTimer = setInterval(() => {
       vitalSignsFinalHour = previous;
       await writeVitalSigns(previous, "last full hour", nowMs);
       pruneNeonBytes(VITAL_SIGNS_DIR, nowMs);
+      if (DATABASE_TRANSFER_DIR) pruneNeonBytes(DATABASE_TRANSFER_DIR, nowMs);
     }
     if (nowMs - vitalSignsPartialAt >= 600_000) {
       vitalSignsPartialAt = nowMs;
@@ -1853,6 +1860,7 @@ while (cycle < CYCLES) {
     const repos = await ownerRepositories();
     if (repos && !(await researchPlanningStates(repos, (await readRunnerControls(repos)).research)).length) {
       await honorStoppedHunts(repos,new Date().toISOString());
+      await publishConsole(true);
       // The parent's control clock still sees a new Send; there is no research child to read data while stopped.
       await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
       continue;

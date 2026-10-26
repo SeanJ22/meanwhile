@@ -16,7 +16,7 @@ import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { controlPlaneUrlFromEnv } from "../lib/control-plane/repository/pg-store.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { changedMeetingDoors } from "../lib/doors/changed-meeting-doors.ts";
 import { MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate } from "../lib/doors/meeting-doors.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";

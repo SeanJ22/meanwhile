@@ -3,7 +3,7 @@
  * Run with the repository's TypeScript/alias loader. An optional --output=PATH
  * saves the state summaries, failures and remaining data blanks for River.
  */
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 import { readStateAuthorityEntry, stateAuthorityPointers } from "../lib/civic-data/state-reader.ts";

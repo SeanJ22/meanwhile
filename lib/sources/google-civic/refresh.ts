@@ -99,7 +99,7 @@ export async function refreshGoogleCivic(input: {
     if (registration?.kind !== "PROMOTED") report.reason = "The held government inventory could not be read for this state.";
     else {
       const [siteRead, registryRead] = await Promise.allSettled([
-        input.votingSites ? input.votingSites(state) : readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store: input.store, bypassCache: true })
+        input.votingSites ? input.votingSites(state) : readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store: input.store })
           .then(held => held.kind === "PROMOTED" ? held.value : null),
         (input.reviewedRegistry ?? readRegistryRuntimePrior)(input.store, catalog.checkedAt, state),
       ]);

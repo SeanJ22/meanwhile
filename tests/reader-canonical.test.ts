@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { readCanonicalShelf } from "../lib/reader/canonical.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { stateContainersStatement } from "../lib/control-plane/admin-view/promoted-slices.ts";
+import { versionedSelect } from "../lib/db/versioned-query.ts";
 
 const entry = { recordClass: "FEDERAL_DIRECTORY" as const, scope: "US-AZ:current-congress-directory" };
 const payload = { people: [{ name: "An official", sourceUrl: "https://example.gov/member" }] };
@@ -33,7 +34,7 @@ test("canonical shelf answers an absent pointer without fabricating records", as
   assert.deepEqual(await store.readPromotedEntry!(entry.recordClass, entry.scope), { kind: "NOT_RECORDED", ...entry });
 });
 
-test("canonical shelf reads recursive parts with metadata in one round trip and retains the last verified payload after a failed refresh", async () => {
+test("canonical shelf version-checks recursive parts in one round trip and rejects unconfirmed prior bodies", async () => {
   const { PGlite } = await import("@electric-sql/pglite");
   const { partitionCivicPayload } = await import("../lib/civic-data/payload-codec.ts");
   const pg = new PGlite();
@@ -44,13 +45,18 @@ test("canonical shelf reads recursive parts with metadata in one round trip and 
   assert.ok(encoded.parts.length > 1, "the fixture requires recursive payload-part reads");
   const excluded = { key: "rejected-candidate", code: "EXCLUDED", detail: "This candidate was excluded from publication", record: { name: "Rejected candidate", biography: "Not a published fact. ".repeat(1000) } };
   const receipt = (version: string) => ({ decision: "GOOD", candidateId: version, sourceId: "official-source", recordClass: selection.recordClass, scope: selection.scope, excludedFacts: [excluded] });
-  let reads = 0;
+  let reads = 0, unavailable = false;
   const partCounts: number[] = [];
+  const selected = versionedSelect("postgres://fixture:fixture@canonical-recursive-parts.invalid/test");
   const query: import("../lib/control-plane/admin-view/promoted-slices.ts").ReadOnlyQuery = async statements => {
     reads++;
+    if (unavailable) throw new Error("current canonical read unavailable");
     assert.equal(statements.length, 1, "metadata and immutable parts travel in one SQL response");
-    const rows = (await pg.query<Record<string, unknown>>(statements[0].text,[...statements[0].params])).rows;
-    partCounts.push(rows.filter(row => row.row_kind === "part").length);
+    const rows = await selected(async (text, params) => {
+      const received = (await pg.query<Record<string, unknown>>(text,[...params])).rows;
+      partCounts.push(received.filter(row => row.row_kind === "part").length);
+      return received;
+    }, statements[0].text, statements[0].params);
     return [rows];
   };
   try {
@@ -95,7 +101,7 @@ test("canonical shelf reads recursive parts with metadata in one round trip and 
     assert.deepEqual(local.additionalRows[0].local_divisions, [city], "the same state query includes the selected local seat's sourced division even if Census is not held");
     assert.equal(local.additionalRows[0].version_id, null);
     await readCanonicalShelf([selection],query);
-    assert.equal(partCounts[1],0,"unchanged verified versions do not resend or decode payload parts");
+    assert.equal(partCounts.at(-1),0,"the shared version check suppresses unchanged recursive parts");
     const district = (type: string, geoid: string, zcta5 = "85701", state = "AZ") => ({ type, version: `${type}:fixture`, versionMeta: {},
       groupings: [{ geoid, ocdId: null, label: geoid, stateAbbr: state, stateFips: geoid.slice(0,2), overlaps: [{ zcta5, whole: true }] }] });
     await pg.query(`INSERT INTO civic_data_promotions(key,record_class,scope,payload,current_version_id)
@@ -185,11 +191,18 @@ test("canonical shelf reads recursive parts with metadata in one round trip and 
     await pg.query("UPDATE civic_data_payload_parts SET payload=$2 WHERE hash=$1",[encoded.parts[0].hash,JSON.stringify("Corrupt immutable part")]);
     await assert.rejects(readCanonicalShelf([selection],query),/PAYLOAD_HASH_MISMATCH|CIVIC_PAYLOAD_PART_ORDER_INVALID/);
     await promote("parts-version-1");
+    await assert.rejects(readCanonicalShelf([selection],query),/PAYLOAD_HASH_MISMATCH|CIVIC_PAYLOAD_PART_ORDER_INVALID/,
+      "restoring an earlier pointer cannot hide changed current part bytes");
+    await pg.query("UPDATE civic_data_payload_parts SET payload=$2 WHERE hash=$1",[encoded.parts[0].hash,JSON.stringify(encoded.parts[0].payload)]);
     const retained = await readCanonicalShelf([selection],query);
     const last = await retained.readPromotedEntry!(selection.recordClass,selection.scope);
     assert.equal(last.kind,"PROMOTED");
     if (last.kind === "PROMOTED") assert.deepEqual(last.projection.payload,expected);
-    assert.equal(partCounts.at(-1),0,"failed refreshes leave the prior verified payload available");
+    assert.equal(partCounts.at(-1),1,"the repaired part is downloaded after its current version changes");
+    unavailable = true;
+    await assert.rejects(readCanonicalShelf([selection],query),/current canonical read unavailable/,
+      "a failed version check never serves the previously verified payload");
+    unavailable = false;
     await pg.query("UPDATE civic_data_candidates SET source_id='wrong-source' WHERE id='parts-version-1'");
     await assert.rejects(readCanonicalShelf([selection],query),/POINTER_INVALID/);
   } finally { await pg.close(); }

@@ -3,6 +3,7 @@ import { withReaderSelection } from "../lib/db/reader-route.ts";
 import assert from "node:assert/strict";
 import { test, type TestContext } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
+import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
 
 import {
   bulkUrl,
@@ -46,6 +47,20 @@ function placeTasks(zips: readonly string[], state = "NH") {
   return [...new Set(zips)].map(zip => ({ id: `national-place:${zip}`, zip, state }));
 }
 
+/** Route the shared reader seam to this test's existing area-lookup transport. */
+function installPlaceReader(t: TestContext): void {
+  const previous = readerDatabaseQuery();
+  installReaderDatabaseQuery(async statements => {
+    const response = await neonConfig.fetchFunction!("https://fixture.invalid/sql", {
+      method: "POST", body: JSON.stringify({ queries: statements.map(statement => ({ query: statement.text, params: statement.params })) }),
+    });
+    const packet = await response.json() as { results: { fields: { name: string; dataTypeID: number }[]; rows: unknown[][] }[] };
+    return packet.results.map(result => result.rows.map(row => Object.fromEntries(result.fields.map((field, index) =>
+      [field.name, (field.dataTypeID === 114 || field.dataTypeID === 3802) && typeof row[index] === "string" ? JSON.parse(row[index] as string) : row[index]]))));
+  });
+  t.after(() => installReaderDatabaseQuery(previous));
+}
+
 function installPlaceLookup(t: TestContext): void {
   const previousUrl = process.env.DATABASE_URL, previousFetch = neonConfig.fetchFunction;
   process.env.DATABASE_URL = "postgresql://fixture:fixture@fixture.invalid/fixture";
@@ -77,6 +92,7 @@ function installPlaceLookup(t: TestContext): void {
     });
     return Response.json({ results });
   };
+  installPlaceReader(t);
 }
 
 await installRegistryAuthority();
@@ -276,6 +292,7 @@ test("the admitted worker rereads the saved Send and publishes once through its 
     return Response.json({ results: body.queries.map(() => ({ command: "SELECT", rowCount: 1, rowAsArray: true,
       fields: [{ name: "version_id", dataTypeID: 25 }, { name: "dataset", dataTypeID: 3802 }], rows: [["fixture:published", JSON.stringify(dataset)]] })) });
   };
+  installPlaceReader(t);
   t.mock.method(globalThis, "fetch", async () => { assert.fail("the injected source worker calls no external provider"); });
   assert.deepEqual(await dueNationalPlaceZips(repos, placeTasks(["03060", "03101"]), now), ["03060"], "process admission reads the actual saved Send");
   let acquired = 0, published = 0;
@@ -366,6 +383,7 @@ test("ranking one ZIP in a district reads its whole saved scope without admittin
     });
     return Response.json(body.queries ? { results } : results[0]);
   };
+  installPlaceReader(t);
   t.mock.method(globalThis, "fetch", async () => { assert.fail("scope ranking fetches no external source"); });
   const targetSelections: unknown[] = [];
   const readConfig = repos.adminConfig.read.bind(repos.adminConfig);
@@ -416,6 +434,7 @@ test("a national API completes its geography walk beyond ten requests and reuses
     });
     return Response.json(body.queries?{results}:results[0]);
   };
+  installPlaceReader(t);
   const repos = createMemoryRepositories();
   const store = new MemoryEvidenceStore();
 

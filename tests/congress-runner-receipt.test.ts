@@ -114,7 +114,7 @@ test("the Congress runner publishes core first, attaches chamber contacts, and e
     },
   });
   assert.equal(acquired, 7);
-  assert.equal(stages.length, 5, "core and each enrichment publish independently; unrelated chamber rows confirm without writing");
+  assert.equal(stages.length, 7, "each acquired source set publishes independently, including the final acquisition-complete state");
   for (const id of stages) {
     const held = await store.readCandidate(id);
     assert.equal(held?.state, "PROMOTED");
@@ -166,4 +166,44 @@ test("a Congress core-source failure emits one durable held receipt and never in
   assert.equal(parsed.receipt.promotedVersion, null);
   assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt, expected, store, "HELD"), null);
   assert.equal(await store.readPromotion("FEDERAL_DIRECTORY", expected.scope), null);
+});
+
+
+test("Congress confirms every unchanged source by hashes before held directory reads",async t=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore(),lines:string[]=[];
+  t.mock.method(console,"log",(line:string)=>{lines.push(line);});
+  const acquire:typeof import("../lib/sources/known-release.ts").acquireKnownRelease=async options=>{
+    const held=fixtureRelease(options);await options.validate?.(held.bytes,held);return held;
+  };
+  await refreshCongressDirectory({state:"AZ",store,vault,now:()=>NOW,revision,acquire});
+  const pointer=await store.readPromotionIdentity("FEDERAL_DIRECTORY",expected.scope);assert.ok(pointer);
+  lines.length=0;let sources=0,revisionRead=false;
+  for(const method of ["readPromotion","readCandidate","readCandidateProof","events"] as const)
+    Object.assign(store,{[method]:async()=>{throw Error(`unchanged Congress loaded ${method}`);}});
+  await refreshCongressDirectory({state:"AZ",store,vault,now:()=>NOW,revision:async()=>{revisionRead=true;return {...await revision(),sha:"c".repeat(40)};},
+    acquire:async options=>{assert.equal(revisionRead,true);sources++;return acquire(options);}});
+  assert.equal(sources,7,"live revision and both chamber feeds are still checked");
+  const parsed=parseRoutineRunnerReceipt(lines.join("\n"));assert.equal(parsed.ok,true,JSON.stringify(parsed));
+  if(parsed.ok){assert.equal(parsed.receipt.candidateId,pointer.versionId);assert.ok(parsed.receipt.confirmedAt);}
+});
+
+test("a changed Congress chamber feed opens held people only after its new bytes arrive",async t=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();t.mock.method(console,"log",()=>{});
+  const acquire:typeof import("../lib/sources/known-release.ts").acquireKnownRelease=async options=>{
+    const held=fixtureRelease(options);await options.validate?.(held.bytes,held);return held;
+  };
+  await refreshCongressDirectory({state:"AZ",store,vault,now:()=>NOW,revision,acquire});
+  const read=store.readPromotion.bind(store);let sources=0,heldReads=0;
+  store.readPromotion=(async(...args:Parameters<typeof read>)=>{assert.ok(sources>=6,"unchanged core/optional files never open the held directory");heldReads++;return read(...args);}) as typeof store.readPromotion;
+  await refreshCongressDirectory({state:"AZ",store,vault,now:()=>NOW,revision,acquire:async options=>{
+    sources++;let held=await acquire(options);
+    if(options.releaseId==="chamber-directory:house"){
+      const bytes=new TextEncoder().encode(new TextDecoder().decode(held.bytes).replace("202-225-1000","202-225-2000"));
+      held={...held,bytes,sha256:createHash("sha256").update(bytes).digest("hex")};await options.validate?.(bytes,held);
+    }
+    return held;
+  }});
+  assert.ok(heldReads>0);
+  const result=await readStateFederalDirectory("AZ",{store,now:NOW});assert.equal(result.kind,"PROMOTED");
+  if(result.kind==="PROMOTED")assert.equal(result.value.roster.officeholders[0].phone,"202-225-2000");
 });

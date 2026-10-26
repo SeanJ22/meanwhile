@@ -7,7 +7,7 @@ export interface FederalCapture {
   url: string;
   body: string;
   retrievedAt: string;
-  context?: { bioguideId?: string; billId?: string; packageId?: string; publishedAt?: string;
+  context?: { bioguideId?: string; billId?: string; packageId?: string; filingId?: string; publishedAt?: string;
     /** Immutable held roster evidence, referenced rather than copied into every filing. */
     honoreeRosterVersionId?: string; honoreeRosterFailure?: string };
 }

@@ -10,8 +10,23 @@ export interface FederalSourceInput {
   countsPrimary?: boolean;
 }
 
+function acquisitionAddress(input: FederalSourceInput, capture: FederalCapture): string {
+  const url = new URL(capture.url);
+  // These captures are exact native objects extracted from an already validated provider page.
+  // Moving that same object to another listing page or posting-date query does not change its content.
+  if (input.source === "senate-lda" && capture.kind === "contributions" &&
+    (input.partition.startsWith("filing:") || input.replaceFilingId || capture.context?.filingId)) return `${url.origin}${url.pathname}`;
+  if (input.source === "congress-api" && capture.kind === "members" && capture.context?.bioguideId) {
+    for (const key of [...url.searchParams.keys()]) if (/^(?:offset|limit|page|pageSize|page_size|page\[number\]|page\[size\])$/i.test(key)) url.searchParams.delete(key);
+    url.searchParams.sort();
+  }
+  return url.href;
+}
+
 export function federalSourceInputHash(input: FederalSourceInput) {
-  const captures = input.captures.map(capture => ({ url: capture.url, kind: capture.kind, context: capture.context ?? null,
+  const captures = input.captures.map(capture => ({ url: acquisitionAddress(input, capture), kind: capture.kind, context: capture.context
+    ? { ...Object.fromEntries(Object.entries(capture.context).filter(([key]) => key !== "honoreeRosterFailure")),
+      ...(capture.context.honoreeRosterFailure !== undefined ? { honoreeRosterUnavailable: true } : {}) } : null,
     bodyHash: sha256(capture.body) })).sort((a, b) => canonicalCivicDataHash(a).localeCompare(canonicalCivicDataHash(b)));
   const sourceKey = `federal-input:${canonicalCivicDataHash({ partition: input.partition,
     captures: captures.map(({ bodyHash: _bodyHash, context, ...capture }) => ({ ...capture,

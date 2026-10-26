@@ -280,7 +280,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
           // page in every filing and every checkpoint would multiply its storage by its page size.
           // The complete page is still saved at the page boundary; each filing keeps every source field.
           const capture: FederalCapture = { ...page.capture, body: JSON.stringify({ results: [filing] }), context: rosterVersionId
-            ? { honoreeRosterVersionId: rosterVersionId } : { honoreeRosterFailure: "No place holds a federal roster; no honoree identity link can be verified." } };
+            ? { filingId, honoreeRosterVersionId: rosterVersionId } : { filingId, honoreeRosterFailure: "No place holds a federal roster; no honoree identity link can be verified." } };
           const partition = filingId ? `filing:${filingId}` : "";
           const input = { source, partition, captures: [capture], completePartition: Boolean(filingId), dependencyHash: normalizedHash([rosterVersionId, []]) };
           const unchanged = filingId ? await unchangedFederalSourceInput(store, input) : null;
@@ -308,7 +308,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
             rosterFailure = error instanceof Error ? error.message : String(error);
             counts.joinReadFailures = (counts.joinReadFailures ?? 0) + 1;
           }
-          if (!roster) capture.context = { honoreeRosterFailure: rosterFailure };
+          if (!roster) capture.context = { filingId, honoreeRosterFailure: rosterFailure };
           const facts = normalizeFederalCaptureWithRoster(capture, roster);
           const previous = filingId ? await federalPartitionState(store, source, `filing:${filingId}`) : null;
           // Keep cleanup targets in the filing itself so a failed member write can resume safely.

@@ -16,6 +16,7 @@ import { FEDERAL_SOURCE_IDS, FEDERAL_SOURCES, type FederalSourceId } from "../li
 import type { FederalCapture, HeldFederalCapture } from "../lib/sources/congress/types.ts";
 import { holdRawCapture, readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import { federalCalendarDate, federalDeadlineDate } from "../lib/sources/congress/presentation.ts";
+import { federalSourceInputHash } from "../lib/sources/congress/source-hash.ts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -28,6 +29,20 @@ const bill = () => capture("congress-api", "bill", "congress-bill.json");
 
 test("Congress.gov and govinfo cursor timestamps use the seconds-only format their live APIs require", () => {
   assert.equal(federalApiTimestamp("2026-10-12T01:09:29.113Z"), "2026-10-12T01:09:29Z");
+});
+
+test("native federal hashes follow the selected object across listing pagination without treating join diagnostics as source changes", () => {
+  const filing = capture("senate-lda", "contributions", "lda-contribution.json", { filingId: "native-filing", honoreeRosterFailure: "temporary read A" });
+  const original = { source: "senate-lda" as const, partition: "filing:native-filing", captures: [filing], completePartition: true };
+  const first = federalSourceInputHash(original);
+  assert.deepEqual(federalSourceInputHash({ ...original, captures: [{ ...filing, url: `${filing.url}?page=3&filing_dt_posted_after=2026-10-25`,
+    context: { ...filing.context, honoreeRosterFailure: "temporary read B" } }] }), first);
+  assert.notEqual(federalSourceInputHash({ ...original, captures: [{ ...filing, body: `${filing.body}\n` }] }).rawHash, first.rawHash);
+  const member = capture("congress-api", "members", "congress-api-live.json", { bioguideId: "C001078" });
+  const input = { source: "congress-api" as const, partition: "congress:C001078", captures: [{ ...member,
+    url: "https://api.congress.gov/v3/member?currentMember=true&offset=0&limit=250" }] };
+  assert.deepEqual(federalSourceInputHash(input), federalSourceInputHash({ ...input, captures: [{ ...member,
+    url: "https://api.congress.gov/v3/member?limit=100&offset=500&currentMember=true" }] }));
 });
 
 test("resumed Congress and govinfo backfills catch updates from their original first page, even on a later day", async t => {

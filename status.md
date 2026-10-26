@@ -1430,3 +1430,6 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Place map (RT-01): 0 rows; starts when the runner adopts 127.
 - GB-01: census done through DC. New Orleans 70112 and Omaha 68102 still 0 governing.
 - DB-04: no READY (last commit 1:11 AM). Research cycle: no Send.
+
+### 7:20 AM EDT: release 128 live
+- Maryland cost fix live 7:17 AM (9352c8e14). Fixed set passes; 20/20 random ZIPs load and resolve. Maryland GB/h measured once the runner runs it.

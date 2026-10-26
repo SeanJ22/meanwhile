@@ -1,3 +1,4 @@
+import type { CampaignProviderClock } from "./state-cadence.ts";
 import type { SourceAuthorityContract } from "../civic-data/types.ts";
 import inventory from "../../data/campaign-finance/sources.json" with { type: "json" };
 import { jurisdictionFromOcdId, US_JURISDICTIONS } from "../coverage/states.ts";
@@ -184,8 +185,10 @@ export interface CampaignFinanceWorkCheck {
   readonly kind: "campaign-finance-work-check";
   readonly state: string;
   readonly resource: "people";
-  readonly records: readonly { readonly id:string;readonly state:string;readonly checkedAt:string;readonly startedAt?:string;readonly publishedPeople:number;readonly peopleWorked:number;readonly peopleWithMoney:number;readonly loaded:number;readonly unmatched:number;readonly reasons:Readonly<Record<string,number>>;readonly peakMemoryBytes:number;
-    readonly sourceHash?:string;readonly sourceComplete?:boolean;readonly sourceDescriptorHash?:string;readonly dependencyHash?:string }[];
+  /** Explicit unfinished work, never a provider outage or an unknown blank. */
+  readonly continuationPending?:boolean;
+  readonly records: readonly (CampaignProviderClock & { readonly completedAt?:string;readonly continuationPending?:boolean;readonly sourceFailedAt?:string; readonly id:string;readonly state:string;readonly checkedAt:string;readonly startedAt?:string;readonly publishedPeople:number;readonly peopleWorked:number;readonly peopleWithMoney:number;readonly loaded:number;readonly unmatched:number;readonly reasons:Readonly<Record<string,number>>;readonly peakMemoryBytes:number;
+    readonly sourceHash?:string;readonly sourceComplete?:boolean;readonly sourceDescriptorHash?:string;readonly dependencyHash?:string })[];
 }
 export type CampaignFinancePublication = CampaignFinanceWorkCheck;
 

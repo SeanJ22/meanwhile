@@ -26,13 +26,13 @@ export async function publishCampaignMoneyWork(store:RoutineDataStore,vault:Evid
     horizon:{kind:"OPEN_FACT_SET",query:scope,returnedRecords:1,declaredTotal:null,paginationComplete:true,claimsComplete:false},
     absence:{claimsAbsence:false,basis:"NONE",exactSubject:null,exactHorizon:null},dependentChecks:[{consumer:"Campaign refresh clock",passed:true,detail:"The saved state report records completed work and remaining gaps; it asserts no missing filing is absent."}],
     normalizedPayload:report,readModel:report};
-  if(report.records.every(row=>typeof row.sourceHash==="string"&&/^[a-f0-9]{64}$/.test(row.sourceHash))){
-    const manifest={state:report.state,sourceHashes:report.records.map(row=>[row.state,row.sourceHash])};
+  if(report.records.every(row=>row.providerHashBasis==="SOURCE_CONTENT_V1"&&typeof row.providerRawHash==="string"&&/^[a-f0-9]{64}$/.test(row.providerRawHash))){
+    const manifest={state:report.state,sourceHashes:report.records.map(row=>[row.state,row.providerRawHash])};
     const sourceText=canonicalCivicDataJson(manifest),sourceBytes=new TextEncoder().encode(sourceText),sourceHash=hash(sourceText),sourceArtifact=`project/meanwhile/campaign-money/source/${sourceHash}`;
     await vault.put(sourceArtifact,sourceBytes,{contentHash:`sha256-${sourceHash}`,contentType:"application/json",byteLength:sourceBytes.length});
     candidate=withDerivedSourceContent(candidate,[{kind:"VAULTED_EVIDENCE",artifactId:sourceArtifact,contentHash:`sha256-${sourceHash}`,tier:"SANITIZED_DERIVED",retrievedAt:at}]);
     candidate={...candidate,retrieval:{...candidate.retrieval,complete:report.records.every(row=>row.sourceComplete===true)}};
-  }
+  }else candidate={...candidate,retrieval:{...candidate.retrieval,complete:false}};
   const outcome=await processRegisteredRoutineCandidate(store,sourceId,candidate,at,undefined,{vault});
   if(!outcome.promoted&&!outcome.confirmed)throw new Error(outcome.candidate.failureDetail??"Campaign work check was refused");
   return {candidate,outcome};

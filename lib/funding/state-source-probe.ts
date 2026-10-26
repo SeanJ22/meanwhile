@@ -88,12 +88,12 @@ export async function campaignResourceInputs(query:Query,state:string):Promise<R
 }
 
 export async function probeCampaignResource(state:string,resource:CampaignFinanceResource,input:CampaignResourceInput|undefined,dependencyHash:string,options:{
-  readonly vault:EvidenceStore;readonly directory:string;readonly runId:string;readonly now:()=>string;readonly fetch?:typeof fetch;readonly signal?:AbortSignal;
+  readonly vault:EvidenceStore;readonly directory:string;readonly runId:string;readonly now:()=>string;readonly fetch?:typeof fetch;readonly signal?:AbortSignal;readonly releaseEveryMs?:number;
 }):Promise<CampaignResourceCheck|null> {
   const checks:{rawHash:string;checkedAt:string}[]=[];let complete=false;
   for await(const page of acquireCampaignFinanceResource(state,resource,{...options,signal:options.signal??new AbortController().signal,probeOnly:true,
     ...(input?.dependencyHash===dependencyHash?{acceptedPublicationId:input.publicationId}:{}),
-    releaseEveryMs:resource.kind==="SOCRATA"?60*60_000:24*60*60_000})){
+    releaseEveryMs:options.releaseEveryMs??24*60*60_000})){
     if(!page.unchanged)return null;
     checks.push(...page.checkedSources??[]);complete=page.complete;
   }

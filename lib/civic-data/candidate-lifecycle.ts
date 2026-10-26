@@ -54,6 +54,10 @@ function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate)
 
 function sameAcquisitionProgress(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
   if(candidate.retrieval.complete!==pointed.retrieval.complete)return false;
+  if(candidate.recordClass==="CAMPAIGN_FINANCE"){
+    const pending=(value:RoutineCandidate)=>(value.normalizedPayload as {continuationPending?:boolean}|null)?.continuationPending===true;
+    if(pending(candidate)!==pending(pointed))return false;
+  }
   if(candidate.sourceId==="plural-openstates" && candidate.recordClass==="STATE_LEGISLATOR"){
     const inputDigest=(value:RoutineCandidate)=>(value.normalizedPayload as {sourceInputDigest?:string}|null)?.sourceInputDigest;
     if(inputDigest(candidate)!==inputDigest(pointed))return false;

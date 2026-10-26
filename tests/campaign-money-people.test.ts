@@ -156,7 +156,7 @@ test("new campaign facts keep the provider's actual check time and their current
   }finally{await db.pg.close();}
 });
 
-test("a failed daily source check stays due for the next hour and keeps verified totals",async()=>{
+test("a failed source check keeps the money fact retry floor and verified totals",async()=>{
   const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-daily-retry-"));
   let now=at,unavailable=false;
   const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
@@ -166,7 +166,10 @@ test("a failed daily source check stays due for the next hour and keeps verified
     await publishPerson(db,person);await publishPerson(db,absent);await refreshCampaignMoneyState(options);
     now="2026-10-21T12:00:00.000Z";unavailable=true;
     await refreshCampaignMoneyState(options);
-    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T13:00:00.000Z")).length,1);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T13:00:00.000Z")).length,1,"missing local work remains open without admitting an early provider retry");
+    const failedClock=await readCampaignMoneyStateWork(db.query,"WA");
+    assert.equal(campaignMoneyStateDue(failedClock,"2026-10-21T13:00:00.000Z"),false);
+    assert.equal(campaignMoneyStateDue(failedClock,"2026-10-22T12:00:00.000Z"),true);
     const held=(await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records[0];
     assert.equal(held.totals.find(total=>total.label==="Contributions")?.amount,100);
     const guarded:typeof db.query=async(text,params=[])=>{
@@ -174,11 +177,11 @@ test("a failed daily source check stays due for the next hour and keeps verified
       assert.doesNotMatch(text,/WITH people AS MATERIALIZED|SELECT DISTINCT wanted.id,wanted.seat/);
       return db.query(text,params);
     };
-    unavailable=false;now="2026-10-21T13:00:00.000Z";
+    unavailable=false;now="2026-10-22T12:00:00.000Z";
     const recovered=await refreshCampaignMoneyState({...options,query:guarded,facts:{...db,query:guarded}});
     assert.equal(recovered.report.records[0].peopleWorked,0);
-    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T14:00:00.000Z")).length,0);
-    assert.equal((await campaignMoneyWork(db.query,"WA",[absent],"2026-10-21T14:00:00.000Z")).length,1);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-22T13:00:00.000Z")).length,0);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[absent],"2026-10-22T13:00:00.000Z")).length,1);
     const [missing]=await db.query("SELECT detail FROM blank WHERE entity_id=$1 AND field=$2",[absent.id,`campaign-money:${absent.seat}`]);
     assert.equal(missing.detail,CAMPAIGN_MONEY_MISSING_REASONS.absent,"source recovery preserves the person's own unmatched-filing reason");
     assert.equal((await db.query("SELECT 1 FROM blank WHERE entity_id=$1 AND field=$2",[person.id,`campaign-money:${person.seat}`])).length,0);
@@ -336,7 +339,7 @@ test("two ID-less filed committees remain distinct and a named committee never o
   }finally{await db.pg.close();}
 });
 
-test("hourly work picks up a newly published person from cached state bytes and skips a completed daily check",async()=>{
+test("held source bytes admit a new person while provider checks keep the money fact floor",async()=>{
   const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-next-person-"));
   let now=at,downloads=0;
   const first={...person,id:"another-published-person",name:"Another Person",seat:person.seat+"-another"};
@@ -352,7 +355,8 @@ test("hourly work picks up a newly published person from cached state bytes and 
     const stateClock=await readCampaignMoneyStateWork(query,"WA");
     assert.equal(stateClock?.startedAt,at);assert.equal(stateClock?.checkedAt,now);
     assert.equal(campaignMoneyStateDue(stateClock,"2026-10-20T00:59:59.999Z"),false);
-    assert.equal(campaignMoneyStateDue(stateClock,"2026-10-20T01:00:00.000Z"),true,"processing time must not move the next hourly scan");
+    assert.equal(campaignMoneyStateDue(stateClock,"2026-10-20T01:00:00.000Z"),false,"local materialization never accelerates the provider clock");
+    assert.equal(campaignMoneyStateDue(stateClock,"2026-10-21T00:20:00.000Z"),true,"the actual provider observation owns its fact retry floor");
     now="2026-10-20T01:00:00.000Z";
     await publishPerson(db,person);
     const next=await refreshCampaignMoneyState(options);assert.equal(next.report.records[0].peopleWithMoney,1);assert.equal(downloads,1);
@@ -423,17 +427,17 @@ test("the completed hourly pass uses the registered promotion door for its refre
 test("campaign work history hashes source content independently of run counts and observation times",async()=>{
   const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
   const row={id:"hourly",state:"US",checkedAt:at,publishedPeople:1,peopleWorked:1,peopleWithMoney:1,loaded:1,unmatched:0,reasons:{},peakMemoryBytes:1,
-    sourceHash:"a".repeat(64),sourceComplete:true};
+    sourceHash:"legacy-input-and-output-hash",providerRawHash:"a".repeat(64),providerHashBasis:"SOURCE_CONTENT_V1" as const,sourceComplete:true};
   const report={kind:"campaign-finance-work-check" as const,state:"US",resource:"people" as const,records:[row]};
   const first=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,report,at);
   assert.ok(first.outcome.promoted);assert.equal(first.candidate.retrieval.rawHashBasis,"SOURCE_CONTENT_V1");
   const later="2026-10-20T01:00:00.000Z";
-  const second=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,peopleWorked:0,loaded:0,peakMemoryBytes:100}]},later);
+  const second=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,peopleWorked:0,loaded:0,peakMemoryBytes:100,sourceHash:"changed-identity-inputs"}]},later);
   assert.ok(second.outcome.promoted||second.outcome.confirmed);
   assert.equal(second.candidate.retrieval.rawHash,first.candidate.retrieval.rawHash,"run activity never looks like a publisher change");
   const failed=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,sourceComplete:false}]},later);
   assert.equal(failed.candidate.retrieval.complete,false,"partial source work keeps its existing retry pace");
   assert.equal(failed.candidate.retrieval.rawHash,first.candidate.retrieval.rawHash);
-  const changed=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,sourceHash:"b".repeat(64)}]},later);
+  const changed=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,providerRawHash:"b".repeat(64)}]},later);
   assert.notEqual(changed.candidate.retrieval.rawHash,first.candidate.retrieval.rawHash);
 });

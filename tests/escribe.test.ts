@@ -73,6 +73,25 @@ test("eScribe rejects changed shapes and accounts for invalid dates and foreign 
   assert.equal(output.drops.notConfigured, 1);
 });
 
+test("a unique published council prefix variation retains the body's meetings without mixing named councils", () => {
+  const seed = parseEscribeMeetings(fixture("lamesa.json"))[0];
+  const w = wiring("lamesa", "Council Public Safety Committee");
+  const normalize = (types: string[]) => makeEscribeSource([w]).normalizeWithDrops([{
+    wiring: w, collectedAt: NOW, text: JSON.stringify({ d: types.map((MeetingType, i) => ({
+      ...seed, ID: `00000000-0000-0000-0000-${String(i).padStart(12, "0")}`, MeetingType,
+    })) }),
+  }], new Date(NOW));
+  for (const prefix of ["City", "Town", "Village", "Borough"]) {
+    assert.equal(normalize([`${prefix} Council Public Safety Committee`]).meetings.length, 1);
+  }
+  const ambiguous = normalize(["City Council Public Safety Committee", "Town Council Public Safety Committee"]);
+  assert.equal(ambiguous.meetings.length, 0);
+  assert.equal(ambiguous.drops.notConfigured, 2);
+  const exact = normalize(["Council Public Safety Committee", "City Council Public Safety Committee"]);
+  assert.equal(exact.meetings.length, 1);
+  assert.equal(exact.meetings[0].id.endsWith("000000000000"), true);
+});
+
 test("a census discovery walk automatically reviews the real tenant's governing body and commissions", async () => {
   const w = wiring("lamesa", "City Council"), route = escribeCalendarUrl(w.config.portalUrl);
   const bodies = new Map<string, HeldBytes>();

@@ -10,19 +10,20 @@ import {
   stagedReleaseDirectory,
   stagedReleaseIsReady,
   defaultAsyncRunCommand,
+  ReleaseStaging,
   type AsyncRunCommand,
 } from "../lib/ops/runtime-release-stage.ts";
 
 const TARGET = "3".repeat(40);
 
-function fakeRun(options: { failOn?: string } = {}): { run: AsyncRunCommand; calls: string[] } {
+function fakeRun(options: { failOn?: string; head?: string } = {}): { run: AsyncRunCommand; calls: string[] } {
   const calls: string[] = [];
   const run: AsyncRunCommand = async (executable, args, opts) => {
     const line = `${executable} ${args.join(" ")}`;
     calls.push(`${opts.cwd}::${line}`);
     if (options.failOn !== undefined && line.includes(options.failOn)) return { status: 1, stdout: "", stderr: "boom" };
     if (line.startsWith("git worktree add")) mkdirSync(args[3]!, { recursive: true });
-    if (line.startsWith("git rev-parse")) return { status: 0, stdout: `${TARGET}\n`, stderr: "" };
+    if (line.startsWith("git rev-parse")) return { status: 0, stdout: `${options.head ?? TARGET}\n`, stderr: "" };
     return { status: 0, stdout: "", stderr: "" };
   };
   return { run, calls };
@@ -95,4 +96,93 @@ test("a failed state carry leaves the older checkout and its evidence intact", a
   assert.equal(result.code, "STAGED_STATE_CARRY_FAILED");
   assert.equal(readFileSync(join(older, "evidence.txt"), "utf8"), "retained source bytes");
   assert.ok(!calls.some(call => call.includes("worktree remove")));
+});
+
+const A = "a".repeat(40);
+const B = "b".repeat(40);
+
+test("a staging that never settles cannot block a newer release: the newer target is staged on the pass that sees it", async () => {
+  const root = mkdtempSync(join(tmpdir(), "stage-supersede-"));
+  const started: string[] = [];
+  let abandonedA: AbortSignal | undefined;
+  const errors: string[] = [];
+  const staging = new ReleaseStaging({ root, error: line => errors.push(line), stage: input => {
+    started.push(input.targetSha);
+    if (input.targetSha === A) { abandonedA = input.signal; return new Promise(() => {}); }
+    return stageRuntimeRelease({ ...input, run: fakeRun({ head: B }).run });
+  } });
+  assert.equal(staging.advance(A), "STAGING");
+  assert.equal(staging.advance(A), "STAGING", "the same target is not started twice");
+  assert.equal(staging.advance(B), "STAGING", "release B starts on the pass that first sees it");
+  assert.deepEqual(started, [A, B]);
+  assert.equal(abandonedA?.aborted, true, "the stuck staging for A is abandoned and its commands killed");
+  assert.match(errors.join("\n"), /staging release aaaaaaaa was abandoned: newer release bbbbbbbb replaced it/);
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(staging.advance(B), "READY");
+  assert.equal(stagedReleaseIsReady(root, B), true);
+  assert.equal(staging.status()?.targetSha, B);
+  assert.equal(staging.status()?.state, "READY");
+});
+
+test("a stuck staging is abandoned after its lifetime and reported FAILED in the heartbeat status", () => {
+  const root = mkdtempSync(join(tmpdir(), "stage-stuck-"));
+  let now = Date.parse("2026-10-26T10:49:00Z");
+  let signal: AbortSignal | undefined;
+  let starts = 0;
+  const staging = new ReleaseStaging({ root, now: () => now, lifetimeMs: 15 * 60_000,
+    stage: input => { starts += 1; signal = input.signal; return new Promise(() => {}); } });
+  assert.equal(staging.advance(A), "STAGING");
+  assert.equal(staging.status()?.state, "INSTALLING");
+  now += 15 * 60_000 - 1;
+  assert.equal(staging.advance(A), "STAGING");
+  now += 1;
+  assert.equal(staging.advance(A), "FAILED", "past its lifetime the release goes to the drain-first path");
+  assert.equal(signal?.aborted, true);
+  assert.deepEqual({ ...staging.status(), detail: undefined }, { targetSha: A, state: "FAILED", code: "STAGING_TIMED_OUT", detail: undefined,
+    startedAt: "2026-10-26T10:49:00.000Z", at: "2026-10-26T11:04:00.000Z" });
+  assert.equal(staging.advance(A), "FAILED", "a failed target is not restaged");
+  assert.equal(starts, 1);
+});
+
+test("a failed staging is reported with its code and leaves the release to the drain-first path", async () => {
+  const root = mkdtempSync(join(tmpdir(), "stage-failed-"));
+  const staging = new ReleaseStaging({ root, stage: input => stageRuntimeRelease({ ...input, run: fakeRun({ failOn: "pnpm install" }).run }) });
+  assert.equal(staging.advance(TARGET), "STAGING");
+  await new Promise(resolve => setImmediate(resolve));
+  assert.equal(staging.advance(TARGET), "FAILED");
+  assert.equal(staging.status()?.state, "FAILED");
+  assert.equal(staging.status()?.code, "FROZEN_INSTALL_FAILED");
+});
+
+test("an abandoned staging writes nothing a newer staging owns", async () => {
+  const root = mkdtempSync(join(tmpdir(), "stage-abandon-"));
+  const controller = new AbortController();
+  let release: () => void = () => {};
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const calls: string[] = [];
+  const run: AsyncRunCommand = async (executable, args, opts) => {
+    calls.push(args.join(" "));
+    if (args[0] === "fetch") { await gate; return { status: opts.signal?.aborted ? null : 0, stdout: "", stderr: "" }; }
+    return { status: 0, stdout: "", stderr: "" };
+  };
+  const pending = stageRuntimeRelease({ root, targetSha: A, run, signal: controller.signal });
+  writeFileSync(join(root, ".runtime", "ops", "staged-release.json"), JSON.stringify({ state: "INSTALLING", targetSha: B, directory: "", code: null, detail: "", at: "" }));
+  controller.abort();
+  release();
+  const result = await pending;
+  assert.equal(result.code, "STAGING_ABANDONED");
+  assert.equal(readStagedRelease(root)?.targetSha, B);
+  assert.ok(!calls.some(call => call.startsWith("worktree add")), "nothing more runs after the abandon");
+});
+
+test("a timed-out command settles when it is killed, even if a grandchild keeps its pipe open", async () => {
+  const started = Date.now();
+  const result = await defaultAsyncRunCommand("sh", ["-c", "sleep 30 & sleep 30"], { cwd: process.cwd(), timeoutMs: 200 });
+  assert.equal(result.status, null);
+  assert.match(result.stderr, /COMMAND_TIMED_OUT/);
+  assert.ok(Date.now() - started < 5_000);
+  const controller = new AbortController();
+  const abandoned = defaultAsyncRunCommand("sh", ["-c", "sleep 30 & sleep 30"], { cwd: process.cwd(), timeoutMs: 60_000, signal: controller.signal });
+  controller.abort();
+  assert.match((await abandoned).stderr, /COMMAND_ABANDONED/);
 });

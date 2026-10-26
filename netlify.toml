@@ -29,10 +29,6 @@
 [functions."line-keeper-initialize"]
   node_bundler = "esbuild"
 
-[functions."rebuild-place-pages"]
-  node_bundler = "esbuild"
-  included_files = ["data/derived/zip-divisions/*.json", "lib/geo/zcta-centroids.json", "lib/geo/postal-zips.json", "data/derived/state-geometry.json", "!data/states/*/geo/**"]
-
 [functions."grounded-ask"]
   node_bundler = "esbuild"
   included_files = ["data/derived/zip-divisions/*.json", "data/derived/resolver-geometry.json", "data/derived/zip-coverage-tiers-runtime.json", "data/derived/state-geometry.json", "!data/states/*/geo/**", "public/geo/*.geojson", "!public/geo/reader-zips/**"]

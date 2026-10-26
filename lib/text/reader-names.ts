@@ -189,11 +189,17 @@ export function readerBodyName(raw: string): string {
  * School District".
  */
 export function readerGovernmentName(label: string, divisionType: string | null): string {
-  let name = capitaliseSuffix(readerText(label.replace(/\s+/g, " ").trim()));
+  let name = readerText(label.replace(/\s+/g, " ").trim());
+  name = name.replace(/\bcmty\b/gi, "Community").replace(/\bsch(?:l)?\b/gi, "School")
+    .replace(/\bdist\b\.?/gi, "District").replace(/\bcnty\b/gi, "County")
+    .replace(/\bcoll\b\.?/gi, "College").replace(/\b(\d+)([a-z]{1,2})\b/gi, (_all, number, letters) => `${number}${letters.toUpperCase()}`);
+  // Census uses both "County Of Multnomah" and "Multnomah county".
+  name = name.replace(/^(county|parish|borough) of (.+)$/i, (_all, kind, place) => `${place} ${titleCaseWord(kind)}`);
+  name = capitaliseSuffix(name);
   if (name === "") return name;
   if (divisionType === "county" && !/\b(county|parish|borough)$/i.test(name) && !/^(?:county|parish|borough) of\b/i.test(name)) {
     name = `${name} County`;
-  } else if (divisionType === "school_district" && /\sDistrict$/.test(name) && !/\bSchool\b/i.test(name)) {
+  } else if (divisionType === "school_district" && /\sDistrict$/.test(name) && !/\b(?:School|College|Education)\b/i.test(name)) {
     name = name.replace(/\sDistrict$/, " School District");
   }
   return name;
@@ -204,9 +210,10 @@ export function bodyDisplayName(body: {
   name: string | null;
   divisionLabel: string;
   divisionType: string | null;
+  bodyClass?: string;
 }): string {
   return body.name !== null && body.name.trim() !== ""
-    ? readerBodyName(body.name)
+    ? body.bodyClass === "MEETING_TYPE" ? readerGovernmentName(body.name, null) : readerBodyName(body.name)
     : readerGovernmentName(body.divisionLabel, body.divisionType);
 }
 
@@ -218,7 +225,7 @@ export function bodyDisplayName(body: {
 export function withReaderNames<
   R extends {
     meetings: ReadonlyArray<{ bodyName: string; jurisdiction?: string }>;
-    coverage: { bodies: ReadonlyArray<{ name: string | null; divisionLabel?: string; divisionType?: string | null }>; governments?: ReadonlyArray<{name:string}> } | null;
+    coverage: { bodies: ReadonlyArray<{ name: string | null; divisionLabel?: string; divisionType?: string | null; bodyClass?: string }>; governments?: ReadonlyArray<{name:string}> } | null;
   },
 >(result: R): R {
   return {
@@ -228,7 +235,7 @@ export function withReaderNames<
     coverage: result.coverage
       ? {
           ...result.coverage,
-          bodies: result.coverage.bodies.map((b) => ({ ...b, ...(b.name === null ? {} : { name: readerBodyName(b.name) }),
+          bodies: result.coverage.bodies.map((b) => ({ ...b, ...(b.name === null ? {} : { name: b.bodyClass === "MEETING_TYPE" ? readerGovernmentName(b.name, null) : readerBodyName(b.name) }),
             ...(b.divisionLabel ? { divisionLabel: readerGovernmentName(b.divisionLabel,b.divisionType ?? null) } : {}) })),
           ...(result.coverage.governments ? { governments:result.coverage.governments.map(g => ({...g,name:readerGovernmentName(g.name,null)})) } : {}),
         }

@@ -27,13 +27,16 @@ export function votingFetchSession(runtime: VotingSourceRuntime): VotingFetchSes
   const robots = new Map<string, { text: string | null; status: number | null; error: string | null; type: string | null }>();
   const recorded = new Set<string>();
   const readAt = () => runtime.now?.() ?? new Date().toISOString();
+  // The deadline timer can fire a millisecond before the wall clock reaches the deadline; once it has fired, the session is over.
+  let deadlinePassed = false;
   const send = async (url: string, init: RequestInit, route: "direct" | "browser-ua") => {
     const remaining = runtime.deadlineMs === undefined ? 20_000 : Math.min(20_000, runtime.deadlineMs - Date.now());
-    if (remaining <= 0) throw new Error("Voting source acquisition deadline reached");
+    if (deadlinePassed || remaining <= 0) throw new Error("Voting source acquisition deadline reached");
     const fetcher = route === "browser-ua" ? runtime.browserFetch : runtime.fetch;
     if (!fetcher) throw new Error("Browser-UA rung unavailable; follow the next official route");
     if (Object.keys(init.headers ?? {}).some(key => /^(?:authorization|cookie|proxy-authorization)$/i.test(key))) throw new Error("Authenticated election source requests are forbidden");
     const timeout = AbortSignal.timeout(Math.ceil(remaining));
+    if (runtime.deadlineMs !== undefined && remaining < 20_000) timeout.addEventListener("abort", () => { deadlinePassed = true; }, { once: true });
     const response = await fetcher(url, { ...init, redirect: "manual", credentials: "omit", signal: init.signal ? AbortSignal.any([init.signal, timeout]) : timeout, headers: { "user-agent": DEFAULT_USER_AGENT, ...init.headers } });
     attempts.push({ url, route, outcome: `HTTP ${response.status}` });
     return response;

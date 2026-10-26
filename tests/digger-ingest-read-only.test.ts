@@ -13,26 +13,19 @@ import { AgendaDocumentStore, contentHashOf } from "../lib/meetings/agenda-docum
 import { retrieveAgendas, retrieveHeldAgendas } from "../scripts/ingest.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { makeCivicPlusSource } from "../lib/sources/civicplus/index.ts";
-import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 
-test("the ordinary registered command reads one door, one body, and its own venue slice before acquisition", async () => {
+test("the ordinary registered command selects only its door before source acquisition", async () => {
   const row = FIXTURE_DOOR_ROWS.find(row => row.agendaSourceType === "ICAL")!, door = fixtureDoorRecords([row])[0]!;
-  const partition = meetingPartitionForRow("ical", row.bodyId), calls: string[] = [], at = new Date().toISOString();
-  const venue = requiredManualProductionContract("venue-resolutions");
+  const partition = meetingPartitionForRow("ical", row.bodyId), calls: string[] = [];
   try {
     const prepared = await readHeldMeetingCliOptions(["composite", "--promote", `--only-partition=${partition.id}`], {
       readDoor: async id => { calls.push(id); return door; },
-      query: async (sql, params) => {
-        assert.equal(params?.includes(row.bodyId) || params?.includes(row.ocdId), true);
-        if (sql.includes("registry_pointer")) return [{ registry_version_id: "held-body", registry_generated_at: at,
-          bodies: [{ id: row.bodyId, ocdId: row.ocdId, name: row.config.bodyName }], previous_pointer: null, previous: null, foreign_meetings: 0, foreign_documents: 0 }];
-        return [{ venue_pointer: { sourceId: venue.sourceId, recordClass: venue.recordClass, scope: venue.scope, versionId: "held-venues", kind: "venue-resolutions" }, venues: [] }];
-      },
+      query: async () => { throw new Error("HELD_INPUT_BEFORE_SOURCE_HASH"); },
     });
     assert.deepEqual(calls, [door.doorId]);
-    assert.equal(prepared.registry!.bodies.length, 1);
-    assert.equal(prepared.registry!.bodies[0]!.id, row.bodyId);
-    assert.deepEqual(prepared.venues, []);
+    assert.equal(prepared.registry, undefined);
+    assert.equal(prepared.previous, undefined);
+    assert.equal(prepared.venues, undefined);
     assert.equal(prepared.partition!.id, partition.id);
   } finally { installFixtureDoors(); }
 });

@@ -8,6 +8,7 @@ import {createRequire} from "node:module";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import { readerCanonicalEntry } from "../reader/canonical-context.ts";
+import { registrationRecipientNamesSql } from "../registration/recipient-names.ts";
 
 import type {
   CandidateEvent,
@@ -97,7 +98,7 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata" | "readVersioned" | "readPublicationBase" | "readLegiscanPersonParts">> & {
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata" | "readVersioned" | "readPublicationBase" | "readLegiscanPersonParts" | "readLegiscanStateCatalog">> & {
   /** Already published canonical database rows, read together for the reader shelf. */
   readonly readPromotedEntry?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry>;
 };
@@ -1228,10 +1229,11 @@ async function loadReaderProjection(recordClass: RoutineRecordClass, scope: stri
   const money = recordClass === "STATE_CAMPAIGN_FINANCE";
   const fec = exactKeys && recordClass === "FEC_FUNDING";
   const openData=recordClass==="CURATED_READER_RECORD"&&(scope==="epa-echo:national"||scope==="socrata-discovery:national");
-  const payload = fec ? BALLOT_FEC_MONEY_PAYLOAD : recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD
+  const selectedPayload = fec ? BALLOT_FEC_MONEY_PAYLOAD : recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD
     : money ? exactKeys ? BALLOT_STATE_MONEY_PAYLOAD : STATE_MONEY_READER_PAYLOAD
     : openData ? OPEN_DATA_READER_PAYLOAD
     : window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
+  const payload = recordClass === "REGISTRATION" ? registrationRecipientNamesSql("p.payload", selectedPayload) : selectedPayload;
   const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
     p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
     ${payload} payload,

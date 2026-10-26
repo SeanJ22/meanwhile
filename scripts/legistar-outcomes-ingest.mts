@@ -14,21 +14,20 @@
  * item votes remain named blanks beside independently verified agenda and
  * action records; prior verified votes retain their original evidence.
  * A later unaffected sitting may still promote. The run then prints
- * exactly one `RCD_RECEIPT`, naming the last candidate it wrote:
+ * exactly one `RCD_RECEIPT`, naming its last successful candidate when one exists:
  *
  * - exit 0 only when that candidate is the GOOD promoted pointer: the last
  *   changed sitting, or the validated no-change receipt written when every
  *   sitting in the window is held and unchanged;
- * - exit 2 when the events read failed, returned zero sittings, or any walked
- *   sitting was refused. A refusal followed by a later promotion writes one
- *   refused run record against the moved pointer, so the receipt still says
- *   HELD and the retry clock, not the cadence, owns the next attempt.
+ * - exit 2 when the events read failed, returned zero sittings, or no changed
+ *   sitting could publish. A refused sitting stays held on its own; other
+ *   independently verified sittings reach readers.
  *
  * The default window is rolling and bounded: the last
  * OUTCOME_ROUTINE_WINDOW_DAYS days through today in the body's own zone,
- * because outcomes exist only for sittings already held. `refreshDecision`
- * skips every held sitting whose publisher `EventLastModifiedUtc` is unchanged,
- * so an unchanged day costs one events request.
+ * because outcomes exist only for sittings already held. Exact events, items
+ * and votes response hashes are checked before opening the held tenant.
+ * Completed checks survive a pass cutoff and preserve each field's own read date.
  *
  * This command writes no tracked file and never invokes software CI or
  * release machinery.
@@ -66,7 +65,8 @@ import {
   PIMA_OUTCOME_TENANT,
   type OutcomeTenant,
 } from "../lib/outcomes/data-plane.ts";
-import { legistarOutcomesCandidate, retainVerifiedSittingRecords } from "./lib/held-legistar-outcomes.ts";
+import { legistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
+import { retainVerifiedSittingRecords } from "../lib/outcomes/ingest.ts";
 import { readDoorOutcomeProjection } from "../lib/outcomes/store.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
@@ -80,6 +80,11 @@ import { rollingOutcomeWindow, type OutcomeWindow } from "../lib/outcomes/window
 import { diggerMeasurement, type DiggerMeasurement } from "./lib/digger-measurement.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { bindOutcomeSourceHashes, outcomeSourcePlanHash, probeOutcomeSourcePlan, recordOutcomeSourceChecks,
+  type OutcomeSourcePlan, type OutcomeSourceRequest } from "../lib/outcomes/source-plan.ts";
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
+import { currentMeetingClock } from "../lib/civic-data/contracts.ts";
 
 /** Outcomes exist only for held sittings; the routine window looks back this far. */
 export const OUTCOME_ROUTINE_WINDOW_DAYS = 120;
@@ -241,11 +246,29 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
   const refusedSittings: string[] = [];
   let promotedSittings = 0;
 
-  const current = await currentProjection(store, tenant);
-  const dryBase = !writes && current.versionId ? await store.readCandidate(current.versionId) : null;
-  let snapshot = current.snapshot;
-  let sourceThrough = current.sourceThrough;
-  const heldById = new Map(snapshot.sittings.map((sitting) => [sitting.meetingId, sitting]));
+  const head=await store.readSourceHead(tenant.recordClass,tenant.scope);
+  const savedPlan=head?await store.readCandidatePath<OutcomeSourcePlan>(head.versionId,["normalizedPayload","sourceProbe"]):null;
+  const context=JSON.stringify([args.slug,args.bodyId,eventsWindow.from,eventsWindow.to,tenant.parserVersion]);
+  const requests=new Map((savedPlan?.formatVersion===1?savedPlan.requests:[]).filter(request=>request.meetingId!==null)
+    .map(request=>[request.requestedUrl,request]));
+  const pendingMeetings=new Set(savedPlan?.pendingMeetingIds??[]);
+  let snapshot=EMPTY,sourceThrough:string|null=null;
+  let current:Awaited<ReturnType<typeof currentProjection>>|null=null;
+  let dryBase:Awaited<ReturnType<NonNullable<RoutineDataStore["readCandidateProof"]>>>|null=null;
+  const heldById=new Map<string,PersistedSittingOutcomes>();
+  const sourcePlan=(complete:boolean):OutcomeSourcePlan=>({formatVersion:1,context,
+    pendingMeetingIds:[...pendingMeetings],
+    complete:complete&&!pendingMeetings.size&&[...requests.values()].filter(request=>request.meetingId!==null).every(request=>{
+      const sitting=heldById.get(request.meetingId!);
+      return sitting?.extraction==="RETRIEVED"&&!sitting.failedRollCallExtractions.length&&!sitting.voteRequestFailures.length;
+    }),requests:[...requests.values()]});
+  const initialize=async()=>{
+    if(current)return;
+    current=await currentProjection(store,tenant);snapshot=current.snapshot;sourceThrough=current.sourceThrough;
+    if(!writes&&current.versionId)dryBase=await store.readCandidateProof?.(current.versionId)??null;
+    for(const sitting of snapshot.sittings)heldById.set(sitting.meetingId,sitting);
+  };
+  const initialSnapshot=():OutcomeSnapshot=>current?.snapshot??EMPTY;
 
   const persist = (candidate: {
     readonly snapshot: OutcomeSnapshot;
@@ -253,11 +276,13 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
     readonly retrievedAt: string;
     readonly sourceThrough: string;
     readonly failureDetail?: string;
-  }): Promise<PromotionOutcome> => processRegisteredRoutineCandidate(
+  },complete=false): Promise<PromotionOutcome> => processRegisteredRoutineCandidate(
     store,
     tenant.contractId,
-    legistarOutcomesCandidate(candidate, tenant),
+    legistarOutcomesCandidate({...candidate,sourceProbe:sourcePlan(complete)}, tenant),
     candidate.retrievedAt,
+    undefined,
+    {confirmUnchanged:!complete},
   );
   const settle = (last: PromotionOutcome): PimaOutcomeIngestResult => ({
     receiptLine: pimaOutcomeRunnerReceiptLine(last, tenant.contractId),
@@ -286,6 +311,7 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
     measurement.fail(`events: ${detail}`);
     if (!writes) return { receiptLine: null, exitCode: 2, tally, promotedSittings, refusedSittings: [detail], measurement: measurement.result() };
     log(`${args.slug}: events acquisition failed — ${detail}`);
+    await initialize();
     return settle(await persist({
       snapshot,
       acquisitions: [],
@@ -295,6 +321,37 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
     }));
   }
   const eventsRetrievedAt = replayedObservationAt(input.initialResponse, eventEvidence, now());
+  const fresh=eventEvidence.map(row=>({...row,meetingId:null,checkedAt:eventsRetrievedAt}));
+  const currentMeetingIds=new Set(events.filter(event=>event.EventBodyId===client.eventBodyId)
+    .map(event=>legistarMeetingId(args.slug,event.EventId)));
+  for(const [url,request]of requests)if(request.meetingId&&!currentMeetingIds.has(request.meetingId))requests.delete(url);
+  for(const meetingId of pendingMeetings)if(!currentMeetingIds.has(meetingId))pendingMeetings.delete(meetingId);
+  for(const request of fresh)requests.set(request.requestedUrl,request);
+  const deadline=passDeadlineFromEnv();
+  const signal=Number.isFinite(deadline)?AbortSignal.timeout(Math.max(1,Math.min(2_147_483_647,deadline-Date.now()))):new AbortController().signal;
+  let changedMeetings:ReadonlySet<string>=new Set();
+  let probeFailed=false;
+  if(writes&&!args.force&&head&&savedPlan?.complete){
+    try{
+      const probed=await probeOutcomeSourcePlan({store,head,plan:savedPlan,context,fresh,now,signal,maxAgeMs:currentMeetingClock().hotEveryMs,
+        acquire:async request=>{
+          const result=await measurement.read(()=>captureSourceAcquisitions(run=>run(tenant.sourceId,async()=>{
+            const response=await fetch(request.requestedUrl,{signal:AbortSignal.any([signal,AbortSignal.timeout(60_000)])});
+            if(!response.ok)throw new Error(`OUTCOME_SOURCE_CHECK_HTTP_${response.status}`);
+            await response.arrayBuffer();
+          })));
+          const evidence=result.evidence.find(row=>row.requestedUrl===request.requestedUrl);
+          if(!evidence)throw new Error("OUTCOME_SOURCE_CHECK_MISSING_BYTES");
+          return evidence;
+        }});
+      changedMeetings=probed.changedMeetings;
+      for(const meetingId of changedMeetings)pendingMeetings.add(meetingId);
+      for(const request of probed.requests)if(request.meetingId===null||currentMeetingIds.has(request.meetingId))requests.set(request.requestedUrl,request);
+      if(probed.confirmed)return{receiptLine:"RCD_RECEIPT="+JSON.stringify({source:tenant.contractId,...sourceHashReceiptFields(probed.confirmed),
+        structuralReleaseContract:ZERO_RELEASE_EVENTS}),exitCode:0,tally,promotedSittings:0,refusedSittings,measurement:measurement.result()};
+    }catch(error){signal.throwIfAborted();probeFailed=true;measurement.fail(`source check: ${error instanceof Error?error.message:String(error)}`);}
+  }
+  await initialize();
 
   const sittings = events.filter((event) => event.EventBodyId === client.eventBodyId)
     .slice()
@@ -322,11 +379,14 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
   }
 
   let last: PromotionOutcome | null = null;
+  let lastGood: PromotionOutcome | null = null;
   let budgetExhausted = false;
   for (const event of sittings) {
+    signal.throwIfAborted();
     tally.sittingsSeen += 1;
     const meetingId = legistarMeetingId(args.slug, event.EventId);
-    const decision = args.force ? ({ walk: true, reason: "FORCED" } as const) : refreshDecision(event, heldById.get(meetingId));
+    const decision = args.force||probeFailed||pendingMeetings.has(meetingId)||(heldById.get(meetingId)?.failedRollCallExtractions.length??0)>0||![...requests.values()].some(request=>request.meetingId===meetingId)
+      ? ({ walk: true, reason: "FORCED" } as const) : refreshDecision(event, heldById.get(meetingId));
     if (!decision.walk) {
       tally.skippedUnchanged += 1;
       continue;
@@ -342,8 +402,8 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
         try {
           const collected = await collectEventOutcomes(args.slug, event.EventId, {
             sourceOrg: client.publishingOrg,
-            fetchItems: (slug, id) => fetchEventItems<LegistarEventItem>(slug, id),
-            fetchVotes: (slug, id) => fetchEventItemVotes<LegistarVote>(slug, id),
+            fetchItems: (slug, id) => fetchEventItems<LegistarEventItem>(slug, id,{signal}),
+            fetchVotes: (slug, id) => fetchEventItemVotes<LegistarVote>(slug, id,{signal}),
             now: () => new Date(now()),
           });
           return { collected, error: null as string | null };
@@ -364,7 +424,7 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
       }),
     ));
     const observedAt = now();
-    const fresh: PersistedSittingOutcomes = toPersistedSitting({
+    const capturedSitting: PersistedSittingOutcomes = toPersistedSitting({
       event,
       client,
       collected: detail.value.collected,
@@ -373,6 +433,9 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
       routesWalked: detail.value.error ? ["WEBAPI_EVENTS"] : ["WEBAPI_EVENTS", "WEBAPI_EVENTITEMS", "WEBAPI_EVENTITEM_VOTES"],
       ...(detail.value.error ? { requestError: detail.value.error } : {}),
     });
+    for(const [url,request]of requests)if(request.meetingId===meetingId)requests.delete(url);
+    for(const evidence of detail.evidence)requests.set(evidence.requestedUrl,{...evidence,meetingId,checkedAt:observedAt});
+    const fresh=bindOutcomeSourceHashes({...EMPTY,sittings:[capturedSitting]},[...requests.values()]).sittings[0];
     const persisted = retainVerifiedSittingRecords(fresh, heldById.get(meetingId));
     countSitting(tally, fresh);
     const proposed = mergeSnapshot(snapshot, [persisted], {
@@ -380,9 +443,10 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
       generatedAt: observedAt,
     });
     const checked = legistarOutcomesCandidate({ snapshot: proposed, acquisitions: [...eventEvidence, ...detail.evidence],
+      sourceProbe:sourcePlan(false),
       retrievedAt: observedAt, sourceThrough: outcomeSourceThrough(sourceThrough, legistarUtcInstant(event.EventLastModifiedUtc) ?? observedAt),
       ...(detail.value.error ? { failureDetail: `Sitting ${meetingId} acquisition failed: ${detail.value.error}` } : {}) }, tenant);
-    const validation = !writes ? validateRoutineCandidate({ ...checked, changeSet: candidateChangeSet(checked, current.snapshot) }, dryBase, observedAt) : null;
+    const validation = !writes ? validateRoutineCandidate({ ...checked, changeSet: candidateChangeSet(checked, initialSnapshot()) }, dryBase, observedAt) : null;
     const attachable = validation ? validation.receipt.decision === "GOOD" : checked.retrieval.succeeded && checked.semantics.violations.length === 0;
     measurement.sitting(fresh, heldById.get(meetingId), attachable);
     for (const item of fresh.failedRollCallExtractions) measurement.fail(`${meetingId}: item ${item} asserts a roll call but its votes response held no rows; any prior verified roll is retained with its original provenance.`);
@@ -394,12 +458,14 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
       log(`  ${meetingId} (${decision.reason}): read ${fresh.agenda.length} item(s), ${fresh.outcomes.length} action(s), ${fresh.rollCalls.length} roll call(s); ${attachable ? "would attach verified changes" : "held with failure"}`);
       continue;
     }
-    const outcome = await processRegisteredRoutineCandidate(store, tenant.contractId, checked, observedAt);
+    const outcome = await processRegisteredRoutineCandidate(store, tenant.contractId, checked, observedAt,undefined,{confirmUnchanged:false});
     last = outcome;
     if (outcome.promoted) {
+      lastGood = outcome;
       snapshot = proposed;
       sourceThrough = outcome.candidate.candidate.temporal.sourceThrough;
       heldById.set(meetingId, persisted);
+      pendingMeetings.delete(meetingId);
       promotedSittings += 1;
     } else {
       refusedSittings.push(`${meetingId} (${outcome.candidate.failureCode ?? outcome.candidate.state})`);
@@ -429,26 +495,17 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
       acquisitions: eventEvidence,
       retrievedAt: observedAt,
       sourceThrough: outcomeSourceThrough(sourceThrough, newestSourceStamp(events) ?? eventsRetrievedAt),
-    });
+    },!budgetExhausted&&!refusedSittings.length);
     log(`  no-change receipt: ${last.promoted ? "PROMOTED" : `HELD ${last.candidate.failureCode ?? last.candidate.state}`}`);
-  } else if ((refusedSittings.length > 0 || budgetExhausted) && last.promoted) {
-    // A refused sitting's durable candidate was followed by a promotion, so it
-    // no longer describes the live pointer. Record the run's held disposition
-    // against the pointer as it now stands; the refused sittings stay due.
-    const observedAt = now();
-    last = await persist({
-      snapshot,
-      acquisitions: eventEvidence,
-      retrievedAt: observedAt,
-      sourceThrough: sourceThrough ?? eventsRetrievedAt,
-      failureDetail:
-        (budgetExhausted ? `Explicit run limit ${args.maxSittings} left sittings unread. ` : "") +
-        `${refusedSittings.length} ${tenant.label} sitting acquisition(s) were refused in this run: ${refusedSittings.join("; ")}. ` +
-        "Every sitting that validated is live in the canonical pointer; the refused sittings stay due for the next attempt.",
-    });
-    log(`  run held: ${refusedSittings.length} refused sitting(s) recorded against the moved pointer`);
   }
-  return settle(last);
+  if(last.promoted&&!refusedSittings.length&&!budgetExhausted){
+    if(!(last.candidate.candidate.normalizedPayload as {sourceProbe?:OutcomeSourcePlan}).sourceProbe?.complete)
+      last=await persist({snapshot,acquisitions:eventEvidence,retrievedAt:now(),sourceThrough:sourceThrough??eventsRetrievedAt},true);
+    const currentHead=await store.readSourceHead(tenant.recordClass,tenant.scope);
+    if(currentHead?.rawHash===outcomeSourcePlanHash(sourcePlan(true)))await recordOutcomeSourceChecks(store,currentHead,sourcePlan(true));
+  }
+  if(last.promoted)lastGood=last;
+  return settle(lastGood??last);
 }
 
 async function main(): Promise<void> {

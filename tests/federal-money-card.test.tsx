@@ -71,13 +71,17 @@ test("a government card pages exact-place federal facts, deduplicates rows, and 
     assert.ok(requests.every(url => url.searchParams.get("division") === division && url.searchParams.get("body") === body));
     assert.equal(requests[1].searchParams.get("cursor"), "next-page");
     assert.equal(await browserPage.locator("[data-card-sources]").count(), 1);
-    assert.equal(await browserPage.locator("[data-card-gap]").count(), 1);
-    assert.match(await browserPage.locator("[data-card-gap]").innerText(), /federal grants, contracts and loans.*federal audit findings.*federal registration/);
-    assert.equal(await browserPage.locator("[data-card-gap]").evaluate(element => element.closest("[data-card-footer]") !== null), true);
+    const gaps = browserPage.locator('[aria-label="Federal money and records"] [data-card-gap]');
+    assert.equal(await gaps.count(), 3, "each missing source family says so beside the held records");
+    for (const gap of await gaps.all()) {
+      assert.match(await gap.innerText(), /working on getting this info/);
+      assert.equal(await gap.getByRole("link", { name: "Want us to get this sooner?" }).count(), 1);
+    }
+    assert.equal(await browserPage.locator("[data-card-footer] [data-card-gap]").count(), 0);
     assert.doesNotMatch(await browserPage.locator('[aria-label="Federal money and records"]').innerText(), /Published by|Last checked|Still gathering/);
     await browserPage.getByRole("button", { name: /^Sources/ }).click();
     await browserPage.locator(`[data-card-sources] a[href="${fact.provenance.sourceUrl}"]`).waitFor({ state: "visible" });
-    assert.match(await browserPage.locator("[data-card-sources]").innerText(), /published 2026-09-15/);
+    assert.match(await browserPage.locator("[data-card-sources]").innerText(), /Published\s*September 15, 2026/);
     assert.equal(await browserPage.locator("[data-card-footer]").evaluate(element => element.parentElement?.lastElementChild === element), true);
     await context.close();
   } finally {

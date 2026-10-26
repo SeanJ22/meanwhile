@@ -10,6 +10,8 @@ import { currentReaderAuthorityEdge, reportReaderStateFailure } from "./runtime-
 import { readStateRegistryRuntimeProjection } from "../civic-data/read-model.ts";
 import { combineStateRegistries, withStateRegistryFacts } from "./state-composition.ts";
 import { requireRegistryState, stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
+import { withRosterPeople } from "./roster-people.ts";
+import { personIdentityKeys } from "../officials/people-identity.ts";
 
 type Context = { bound?: true; states: readonly string[]; read?: CivicDataReadResult<RegistryRuntimeReadModel>; pending?: Promise<CivicDataReadResult<RegistryRuntimeReadModel>> };
 const requests = new WeakMap<object, Context>(), jobs = new AsyncLocalStorage<Context>();
@@ -94,7 +96,7 @@ export function registryRuntimeReadState(): CivicDataReadResult<RegistryRuntimeR
 
 export function getRegistryRuntimeReadModel(): RegistryRuntimeReadModel {
   const state = registryRuntimeReadState();
-  if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return state.value;
+  if (state.kind === "PROMOTED" || state.kind === "BOOTSTRAP") return withRosterPeople(state.value);
   throw new Error(`The requested registry records are ${state.kind}.`);
 }
 
@@ -113,4 +115,19 @@ export function currentStatewideExecutives(): readonly StatewideExecutive[] {
 
 export function currentRosterMemberReaderDisposition(id: string): RosterReaderDisposition | null {
   return getRegistryRuntimeReadModel().rosterReaderDispositions.find(row => row.sourceId === id) ?? null;
+}
+
+const rosterIdentities = new WeakMap<RegistryRuntimeReadModel, ReadonlyMap<string, readonly string[]>>();
+export function currentRosterPersonKeys(id: string): readonly string[] {
+  const model = getRegistryRuntimeReadModel();
+  let index = rosterIdentities.get(model);
+  if (!index) {
+    const built = new Map<string, readonly string[]>();
+    for (const roster of model.bodyRosters) for (const member of [...roster.members, ...roster.membershipHistory ?? []]) {
+      const keys = [...personIdentityKeys(member)];
+      for (const key of keys) built.set(key, [...new Set([...built.get(key) ?? [], ...keys])]);
+    }
+    index = built; rosterIdentities.set(model, index);
+  }
+  return index.get(id) ?? [];
 }

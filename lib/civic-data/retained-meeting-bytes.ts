@@ -1,14 +1,32 @@
 /** @freshness-reads-here: stamps only the successful fetch whose bytes were just read; replays keep the original time. */
 import { createHash } from "node:crypto";
+import { trackSourceTransport } from "../sources/host-transport.ts";
 import type { RoutineCandidate } from "./types.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
+import type { Meeting } from "../sources/types.ts";
 
 export interface RetainedSourceResponse {
   readonly source: string; readonly requestedUrl: string; readonly finalUrl: string;
   readonly httpStatus: number; readonly rawHash: string; readonly byteCount: number;
   readonly bytes: Uint8Array; readonly retrievedAt: string; readonly contentType: string;
+  readonly request?: { readonly method: string; readonly body?: string; readonly headers?: Readonly<Record<string, string>> };
 }
 type TracedFetch = Pick<RetainedSourceResponse, "requestedUrl" | "finalUrl" | "httpStatus" | "rawHash" | "byteCount">;
+
+/** Parsing a saved continuation is a new parse, never a new provider observation. */
+export function bindMeetingSourceObservations(meetings: readonly Meeting[], responses: readonly RetainedSourceResponse[]): Meeting[] {
+  const oldest=responses.map(page=>page.retrievedAt).sort()[0];
+  if (!oldest) return [...meetings];
+  return meetings.map(meeting=>{
+    if (meeting.carried) return meeting;
+    const own=responses.find(page=>page.requestedUrl===meeting.provenance.sourceUrl||page.finalUrl===meeting.provenance.sourceUrl);
+    return {...meeting,provenance:{...meeting.provenance,collectedAt:own?.retrievedAt??oldest},fieldSources:meeting.fieldSources&&Object.fromEntries(
+      Object.entries(meeting.fieldSources).map(([field,source])=>{
+        const captured=responses.find(page=>page.requestedUrl===source.sourceUrl||page.finalUrl===source.sourceUrl);
+        return [field,source.sourceOrg!=="Sean"?{...source,collectedAt:captured?.retrievedAt??oldest}:source];
+      }))};
+  });
+}
 export type RetainedMeetingCandidate = RoutineCandidate & {
   readonly retainedSourceResponses?: readonly (Omit<RetainedSourceResponse, "bytes"> & { readonly base64: string })[];
 };
@@ -17,7 +35,7 @@ export type RetainedMeetingCandidate = RoutineCandidate & {
 export function retainingFetch(base: typeof fetch, now: () => string = () => new Date().toISOString()) {
   const responses: RetainedSourceResponse[] = [], refusals: string[] = [];
   let retainedBytes = 0;
-  const fetch = (async (input, init) => {
+  const fetch = trackSourceTransport((async (input, init) => {
     const requestedUrl = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     const response = await base(input, init);
     const finalUrl = response.url || requestedUrl;
@@ -31,7 +49,7 @@ export function retainingFetch(base: typeof fetch, now: () => string = () => new
       } else refusals.push(`RESEARCH_CAPTURE_BOUND_EXCEEDED:${finalUrl}`);
     }
     return response;
-  }) as typeof globalThis.fetch;
+  }) as typeof globalThis.fetch, base);
   return { fetch, responses, refusals };
 }
 

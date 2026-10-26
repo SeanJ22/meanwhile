@@ -123,10 +123,10 @@ for (const direct of [true, false]) test(`BoardDocs discovery reads an attested 
   assert.ok("attestation" in attestationFor(attempt, find));
 });
 
-test("BoardDocs public form POST uses the shared same-identity alternate client on a refusal", async () => {
+test("BoardDocs public form POST keeps its fields through the same identified client after a challenge", async () => {
   let form: Readonly<Record<string, string>> | undefined;
   const response = await politeGetText("https://go.boarddocs.com/mi/grand/Board.nsf/BD-GetMeetingsList?open", {
-    form: { current_committee_id: "A4EP6J588C05" }, fetchImpl: (async () => new Response("refused", { status: 403 })) as typeof fetch,
+    form: { current_committee_id: "A4EP6J588C05" }, fetchImpl: (async () => new Response("<html><title>Just a moment...</title></html>", { status: 200 })) as typeof fetch,
     ladder: { curl: async (_url, _headers, _signal, submitted) => { form = submitted; return { status: 200, contentType: "application/json", text: LIST }; } },
   });
   assert.deepEqual(form, { current_committee_id: "A4EP6J588C05" });

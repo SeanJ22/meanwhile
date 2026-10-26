@@ -169,9 +169,9 @@ export type WiringVerification =
       /** The sittings the filter selected, as `startsAt|title`: two bodies selecting one sitting is a conflict. */
       readonly selected: readonly string[];
     }
-  /** The adapter could not be run on the bytes for a reason of ours: held, never a trigger. */
+  /** The adapter could not read the body or currently selected no meeting: held, never a trigger. */
   | { readonly refused: string }
-  /** The bytes no longer read as the calendar, or the filter selects nothing from them: CALENDAR_CHANGED. */
+  /** The bytes no longer read as the calendar: CALENDAR_CHANGED. */
   | { readonly changed: string }
   /** A selected sitting names another reviewed body and not this one: WRONG_ATTRIBUTION. */
   | { readonly wrongAttribution: string };

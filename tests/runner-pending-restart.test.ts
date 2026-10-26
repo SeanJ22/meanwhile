@@ -5,6 +5,10 @@ import { test } from "node:test";
 import { createContext, runInContext } from "node:vm";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
+import { mkdirSync, mkdtempSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { ReleaseStaging, stageRuntimeRelease, stagedReleaseDirectory, type AsyncRunCommand } from "../lib/ops/runtime-release-stage.ts";
 import { runRuntimeChildren, waitForRuntimeQuiescence } from "../scripts/pilot-runtime-child.mts";
 
 const source = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
@@ -33,6 +37,7 @@ test("a pending restart stops relaunching routine children and restarts within o
   const context = createContext({
     AUTO_RELEASE_HANDOFF: true, RELEASE_QUICK_SWITCH: false, ROOT: ".", CONTROL_WAKE_POLL_MS: 30_000, RUNTIME_NO_PROGRESS_MS: 600_000,
     pendingRestart: new PendingRestart(), releaseCheck: null, runtimeAdmissionsHeld: false, standingDrainFailed: false,
+    canary: false, standingBeat: async () => {},
     standingRuntimeTimer: null, ownerControlTimer: null, adminCopyTimer: null, activeControlRead: null,
     researchCycleActive: false, researchCycleChild: null, ownerWakePending: false, standingRuntimeScheduler: scheduler,
     inspectRuntimeRelease: async () => Date.now() < releaseAppearsAt ? { state: "CURRENT", targetSha: null }
@@ -88,4 +93,41 @@ test("a pending restart wakes every sleeper at once and clears for a later relea
   await pending.sleep(30_000);
   pending.clear();
   assert.equal(pending.target, null);
+});
+
+test("a staging stuck on an older release cannot hold a newer one: the newer one is staged at once and handed off on the next pass", async () => {
+  const a = "a".repeat(40), b = "b".repeat(40), running = "9".repeat(40);
+  for (const quick of [true, false]) {
+    const root = mkdtempSync(join(tmpdir(), "runner-stuck-stage-"));
+    const okRun: AsyncRunCommand = async (_executable, args) => {
+      if (args[0] === "worktree" && args[1] === "add") mkdirSync(args[3]!, { recursive: true });
+      return { status: 0, stdout: args[0] === "rev-parse" ? `${b}\n` : "", stderr: "" };
+    };
+    let deployed = a;
+    const context = createContext({
+      AUTO_RELEASE_HANDOFF: true, RELEASE_QUICK_SWITCH: quick, ROOT: root, CODE_ROOT: root, PARENT_CODE_SHA: running,
+      RUNNING_CODE_SHA: running, pendingRestart: new PendingRestart(), releaseCheck: null, runtimeAdmissionsHeld: false,
+      parentChangeReported: new Set(), researchCycleActive: false, researchCycleChild: null,
+      releaseStaging: new ReleaseStaging({ root, stage: input => input.targetSha === a ? new Promise(() => {})
+        : stageRuntimeRelease({ ...input, run: okRun }) }),
+      inspectRuntimeRelease: async () => ({ state: "UPDATE_REQUIRED", targetSha: deployed }),
+      parentCodeChanged: async () => ({ changed: false, why: [] }), defaultAsyncRunCommand: okRun, stagedReleaseDirectory,
+      runtimeContracts: { request: () => {} }, standingRuntimeScheduler: { inFlightIds: () => [] }, drainHunterLane: () => {},
+      console: { log: () => {}, error: () => {} },
+    });
+    runInContext(stripTypeScriptTypes(["advanceStagedRelease", "checkReleaseForRestart", "holdForRestart"].map(runnerFunction).join("\n")), context);
+    const pass = async () => { await runInContext("checkReleaseForRestart(); releaseCheck", context); };
+    await pass();
+    await pass();
+    assert.equal(context.pendingRestart.target, null, "a release still staging holds nothing yet");
+    deployed = b;
+    await pass();
+    assert.equal(context.releaseStaging.status().targetSha, b, "the pass that first sees B starts B's staging");
+    await new Promise(resolve => setImmediate(resolve));
+    await pass();
+    if (quick) {
+      assert.equal(context.RUNNING_CODE_SHA, b, "B is switched to on the next pass");
+      assert.equal(context.CODE_ROOT, stagedReleaseDirectory(root, b));
+    } else assert.equal(context.pendingRestart.target, b, "B is held for restart on the next pass");
+  }
 });

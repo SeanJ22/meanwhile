@@ -10,6 +10,10 @@ export const LEGISCAN_BULK_CONTRACT = "legiscan-bulk";
 export const LEGISCAN_API = "https://api.legiscan.com/";
 /** LegiScan state_id is its own identifier space, never Census FIPS. */
 const LEGISCAN_STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC US".split(" ");
+/** Inverse of the publisher's own state identifier space, including DC and US. */
+export function legiscanStateId(state:string):number|null {
+  const index=LEGISCAN_STATES.indexOf(state.toUpperCase());return index<0?null:index+1;
+}
 export interface Dataset {
   state_id: number; session_id: number; session_name: string; dataset_hash: string; dataset_date: string;
   access_key?: string;

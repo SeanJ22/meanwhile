@@ -3,6 +3,7 @@ import { districtIdentity } from "../ocd/fips.ts";
 import { registrationTarget } from "../registration/publication.ts";
 import { federalMoneyRecipientIds, type FederalMoneyHeldAudit, type FederalMoneyHeldRecipient, type FederalMoneyJoinInput } from "./join.ts";
 import type { FederalMoneyFact } from "./model.ts";
+import { federalGovernmentNameForms, federalMoneyRecipientName } from "./recipient.ts";
 import { sha256 } from "../civic-data/candidate-builders.ts";
 
 const unique = (values: readonly string[]) => [...new Set(values)].sort();
@@ -44,7 +45,9 @@ export async function readFederalMoneyJoinInputHash(state:string,facts:readonly 
 function recipient(row: Row): FederalMoneyHeldRecipient {
   return { uei: typeof row.uei === "string" ? row.uei : null,
     identifiers: row.identifiers as FederalMoneyHeldRecipient["identifiers"] ?? {},
-    bodyIds: row.body_ids as FederalMoneyHeldRecipient["bodyIds"] ?? [] };
+    bodyIds: row.body_ids as FederalMoneyHeldRecipient["bodyIds"] ?? [],
+    recipient: typeof row.recipient === "string" ? row.recipient : null,
+    recipientState: typeof row.recipient_state === "string" ? row.recipient_state : null };
 }
 
 // Match native keys before source filters so cold statistics cannot select the broad record-class index.
@@ -55,7 +58,7 @@ async function heldRecipients(state: string, facts: readonly FederalMoneyFact[],
     const [rows] = await query([{
       text: "SELECT reader_payload_node(r.value->'identifiers')->>'reportId' AS report_id,r.value->>'uei' AS uei," +
         " reader_payload_value(r.value->'identifiers') AS identifiers,reader_payload_value(r.value->'bodyIds') AS body_ids," +
-        " reader_payload_value(r.value->'divisionIds') AS division_ids FROM civic_data_rows r" +
+        " reader_payload_value(r.value->'divisionIds') AS division_ids,reader_payload_value(r.value->'recipient')#>>'{}' AS recipient,reader_payload_node(r.value->'details')->>'reportedState' AS recipient_state FROM civic_data_rows r" +
         " JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id" +
         " WHERE r.record_class='FEDERAL_MONEY' AND r.collection='federalMoney' AND r.state=$1 AND r.aliases&&$2::text[]" +
         " AND reader_payload_node(p.payload)->>'source'='federal-audit-clearinghouse'" +
@@ -69,7 +72,7 @@ async function heldRecipients(state: string, facts: readonly FederalMoneyFact[],
   if (ueis.length) {
     const [rows] = await query([{
       text: "SELECT r.value->>'uei' AS uei,reader_payload_value(r.value->'identifiers') AS identifiers," +
-        " reader_payload_value(r.value->'bodyIds') AS body_ids FROM civic_data_rows r" +
+        " reader_payload_value(r.value->'bodyIds') AS body_ids,reader_payload_value(r.value->'recipient')#>>'{}' AS recipient,reader_payload_node(r.value->'details')->>'state' AS recipient_state FROM civic_data_rows r" +
         " JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id" +
         " WHERE r.record_class='FEDERAL_MONEY' AND r.collection='federalMoney' AND r.state=$1 AND r.aliases&&$2::text[]" +
         " AND reader_payload_node(p.payload)->>'source'='sam-gov-entities' AND r.value->>'kind'='ENTITY'",
@@ -96,18 +99,24 @@ export async function readFederalMoneyJoinInput(state: string, facts: readonly F
   const recipientBodyIds = unique(recipients.flatMap(row => [...row.bodyIds]));
   const geographies = facts.flatMap(fact => fact.geography.map(geo => ({ type: geo.type, geoid: geo.geoid })));
   const ocdIds = unique([...native.filter(id => id.namespace === "ocd_id").map(id => id.value), ...held.auditReports.flatMap(report => [...report.divisionIds])]);
+  const names = unique([...facts.flatMap(fact => federalMoneyRecipientName(fact) && fact.recipient ? federalGovernmentNameForms(fact.recipient) : []), ...[...held.entities, ...held.auditReports].flatMap(row => row.recipientState === postal && row.recipient ? federalGovernmentNameForms(row.recipient) : [])]);
   const [governmentRows] = await query([{
-    text: "SELECT g->>'id' AS id,reader_payload_value(g->'nativeIds') AS native_ids,reader_payload_value(g->'associations') AS associations,reader_payload_value(g->'bodyIds') AS body_ids" +
+    text: "SELECT g->>'id' AS id,g->>'name' AS name,g->>'state' AS state,reader_payload_value(g->'aliases') AS aliases,reader_payload_value(g->'nativeIds') AS native_ids,reader_payload_value(g->'associations') AS associations,reader_payload_value(g->'bodyIds') AS body_ids" +
       " FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id" +
       " CROSS JOIN LATERAL (SELECT r.value AS g) picked" +
       ` WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.scope=$2 AND r.state=$1 AND (${recipientMatch}` +
-      " OR g->>'id' = ANY($4::text[]) OR EXISTS (SELECT 1 FROM reader_payload_members(g->'bodyIds') b WHERE b.item#>>'{}' = ANY($4::text[])))",
-    params: [postal, registrationTarget(postal).scope, JSON.stringify(native), recipientBodyIds],
+      " OR g->>'id' = ANY($4::text[]) OR EXISTS (SELECT 1 FROM reader_payload_members(g->'bodyIds') b WHERE b.item#>>'{}' = ANY($4::text[]))" +
+      " OR EXISTS (SELECT 1 FROM reader_payload_members(g->'aliases') a WHERE a.item#>>'{}' = ANY($4::text[]))" +
+      " OR trim(regexp_replace(upper(g->>'name'), '[^A-Z0-9]+', ' ', 'g')) = ANY($5::text[]))",
+    params: [postal, registrationTarget(postal).scope, JSON.stringify(native), recipientBodyIds, names],
   }]);
   const governments: FederalMoneyJoinInput["governments"] = (governmentRows ?? []).map(row => ({
     id: String(row.id), nativeIds: row.native_ids as Readonly<Record<string, string>> ?? {},
     associations: row.associations as FederalMoneyJoinInput["governments"][number]["associations"] ?? [],
     bodyIds: row.body_ids as readonly string[] ?? [],
+    aliases: row.aliases as readonly string[] ?? [],
+    name: typeof row.name === "string" ? row.name : undefined,
+    state: typeof row.state === "string" ? row.state : undefined,
   }));
   const bodyIds = unique([...recipientBodyIds, ...governments.flatMap(government => [...government.bodyIds])]);
   const censusIds = unique([...native.filter(id => id.namespace === "census_pid6").map(id => id.value), ...governments.flatMap(government => government.nativeIds.census_pid6 ? [government.nativeIds.census_pid6] : [])]);

@@ -7,15 +7,14 @@ export interface HeldMemberIdentity { readonly id: string; readonly name: string
 
 /** Exact body identities only. Contacts, biographies and the remainder of the state's registry stay in Postgres. */
 export const HELD_MEMBER_IDENTITIES_SQL = `WITH runtime AS MATERIALIZED (
-    SELECT reader_payload_node(payload) value FROM civic_data_promotions
+    SELECT key,current_version_id FROM civic_data_promotions
       WHERE key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
   ), native AS (
-    SELECT reader_payload_node(m.item) member FROM runtime root,
-      LATERAL reader_payload_members(root.value->'bodyRosters') r,
-      LATERAL reader_payload_members(reader_payload_node(r.item)->'members') m
-      WHERE reader_payload_node(r.item)->>'bodyId'=$2 AND EXISTS (
-        SELECT 1 FROM reader_payload_members(reader_payload_node(root.value->'registry')->'bodies') b
-          WHERE reader_payload_node(b.item)->>'id'=$2)
+    SELECT reader_payload_node(r.value->'member') member FROM runtime p JOIN civic_data_rows r
+      ON r.promotion_key=p.key AND r.version_id=p.current_version_id
+      WHERE r.collection='registry.rosterMembers' AND r.body_id=$2 AND EXISTS (
+        SELECT 1 FROM civic_data_rows b WHERE b.promotion_key=p.key AND b.version_id=p.current_version_id
+          AND b.collection='registry.bodies' AND b.row_id=$2)
   ) SELECT member->>'id' id,member->>'name' name,coalesce(nullif(member->>'personId',''),member->>'id') person_id FROM native
     UNION ALL SELECT coalesce((SELECT x.value FROM entity_external_id x
       WHERE x.entity_id=substr(f.field,8) AND x.scheme='roster-member' LIMIT 1),

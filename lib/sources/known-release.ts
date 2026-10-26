@@ -9,7 +9,7 @@ import { controlPlaneUrlFromEnv, createPgRepositories, readPlaceArtifacts } from
 import { researchVaultResolver } from "../control-plane/workers/vault-object.ts";
 import { SourceAcquisitionFailure, isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { readCompleteResponse } from "./source-bytes.ts";
-import { sourceUserAgent } from "./http.ts";
+import { sourceFetch, sourceUserAgent } from "./http.ts";
 import { SOURCE_CHECK_AFTER_ENV } from "./source-check-request.ts";
 export { SOURCE_CHECK_AFTER_ENV } from "./source-check-request.ts";
 
@@ -99,39 +99,13 @@ export async function resolveKnownReleaseCache(options: Pick<KnownReleaseOptions
   const defaults = options.store && options.locks ? null : await runtimeContext();
   return { store: options.store ?? defaults!.store, locks: options.locks ?? defaults!.locks };
 }
-function sourceRetryKey(sourceId: string, url: string) {
-  const identity = hash(new URL(url).origin);
-  return { identity, key: `project/freshness/source/${sourceId}/retry/${identity}.json` };
-}
-/** HEAD checks and large archives honor the same publisher cooldown as byte releases. */
-export async function checkKnownSourceRetry(store: EvidenceStore, sourceId: string, url: string, now: string): Promise<void> {
-  const object = await store.get(sourceRetryKey(sourceId, url).key);
-  if (object) {
-    const retry = JSON.parse(new TextDecoder().decode(object.bytes)) as { until?: string };
-    if (typeof retry.until === "string" && Date.parse(retry.until) > Date.parse(now)) {
-      throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `KNOWN_SOURCE_RETRY_AFTER:${retry.until}`);
-    }
-  }
-}
-export async function recordKnownSourceRetry(store: EvidenceStore, sourceId: string, url: string, response: Pick<Response, "status" | "headers">, checkedAt: string): Promise<void> {
-  const retry = response.headers.get("retry-after");
-  if (retry && (response.status === 429 || response.status >= 500 && response.status <= 599)) {
-    const untilMs = /^\d+$/.test(retry) ? Date.parse(checkedAt) + Number(retry) * 1000 : Date.parse(retry);
-    if (Number.isFinite(untilMs) && untilMs > Date.parse(checkedAt)) {
-      const { identity, key } = sourceRetryKey(sourceId, url);
-      const body = new TextEncoder().encode(JSON.stringify({ until: new Date(untilMs).toISOString(), status: response.status, checkedAt }));
-      await store.put(key, body, { contentType: "application/json", contentHash: `manifest:source-retry:${identity}`,
-        byteLength: body.byteLength, objectClass: "MUTABLE_INDEX" });
-    }
-  }
-}
 async function priorCapturedRelease(options: KnownReleaseOptions, repos: ControlPlaneRepositories, store: EvidenceStore): Promise<KnownRelease | null> {
   const now = options.now?.() ?? new Date().toISOString();
   const rows = (await readPlaceArtifacts(repos, options.url, "1970-01-01T00:00:00.000Z", now))
     .filter(row => row.tier === "RAW" && !row.partial && row.byteLength <= options.maxBytes)
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
   if (!rows.length) return null;
-  const resolve = researchVaultResolver({ ...repos, artifacts: { ...repos.artifacts, readAll: async () => rows } }, store, "freshness", { snapshot: true });
+  const resolve = researchVaultResolver(repos, store, "freshness", { records: rows });
   for (const row of rows) {
     try {
       const { artifact, bytes } = await resolve(row.artifactId);
@@ -263,9 +237,8 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
     headers.set("user-agent", sourceUserAgent());
     if (heldBytes && prior?.etag) headers.set("if-none-match", prior.etag);
     else if (heldBytes && prior?.lastModified) headers.set("if-modified-since", prior.lastModified);
-    await checkKnownSourceRetry(store, options.sourceId, options.url, now);
     const response = await requestPublisher(options.sourceId, () =>
-      (options.fetchImpl ?? fetch)(options.url, { headers, signal: options.signal, redirect: "follow" }));
+      sourceFetch(options.url, { headers, signal: options.signal, redirect: "follow" }, options.fetchImpl, options.sourceId));
     const finalUrl = response.url || options.url;
     let final: URL;
     try { final = publicUrl(finalUrl); }
@@ -289,7 +262,6 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
     if (response.status !== 200) {
       await response.body?.cancel().catch(() => {});
       const retry = response.headers.get("retry-after");
-      await recordKnownSourceRetry(store, options.sourceId, options.url, response, checkedAt);
       throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `KNOWN_SOURCE_HTTP_${response.status}${retry ? `:Retry-After=${retry}` : ""}`);
     }
     const bytes = await readPublisherBody(options.sourceId, async () => {

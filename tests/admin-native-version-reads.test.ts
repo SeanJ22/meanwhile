@@ -69,8 +69,9 @@ test("Admin shut doors reuse unchanged records and immediately observe an edit o
     assert.equal((await readShutDoorRecords(sql))[0].doorId,door.doorId);
     assert.equal((await readShutDoorRecords(sql))[0].doorId,door.doorId);
     assert.equal(bodies,1);
-    await pg.exec(`UPDATE cp_doors SET revision=revision+1,value=value||'{"notes":"Source moved"}'::jsonb`);
-    assert.equal((await readShutDoorRecords(sql))[0].notes,"Source moved");
+    // Admin reads only the bounded door fields it shows; an edit to one of them is seen at once.
+    await pg.exec(`UPDATE cp_doors SET revision=revision+1,value=value||'{"shutReason":"Source moved"}'::jsonb`);
+    assert.equal((await readShutDoorRecords(sql))[0].shutReason,"Source moved");
     assert.equal(bodies,2);
     await pg.exec(`UPDATE cp_doors SET revision=revision+1,value=value||'{"status":"OPEN"}'::jsonb`);
     assert.deepEqual(await readShutDoorRecords(sql),[]);

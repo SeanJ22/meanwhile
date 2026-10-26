@@ -1,3 +1,4 @@
+import { sourceFetch } from "../sources/http.ts";
 /** Large Census archives stay compressed in the existing evidence vault and
  * are restored to disk a chunk at a time. A complete ZIP must validate before
  * the source index advances, so a broken update cannot replace held evidence. */
@@ -9,7 +10,7 @@ import { join } from "node:path";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import { openZipFile } from "../sources/archive.ts";
-import { checkKnownSourceRetry, recordKnownSourceRetry, resolveKnownReleaseCache, withKnownReleaseLock } from "../sources/known-release.ts";
+import { resolveKnownReleaseCache, withKnownReleaseLock } from "../sources/known-release.ts";
 import type { Provenance } from "./contract.ts";
 import { censusGeographyUserAgent } from "./http.ts";
 import { recordCensusSourceCapture, type CensusSourceOptions } from "./source-release.ts";
@@ -166,12 +167,11 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
         if (!validIndex(parsed, url)) throw new Error("CENSUS_TIGER_INDEX_INVALID");
         prior = parsed;
       }
-      await checkKnownSourceRetry(store, SOURCE_ID, url, new Date().toISOString());
       const held = prior !== null && await stage(file => restore(file, prior, store, prefix, signal));
       const headers = new Headers({ "user-agent": censusGeographyUserAgent() });
       if (held && prior?.etag) headers.set("if-none-match", prior.etag);
       else if (held && prior?.lastModified) headers.set("if-modified-since", prior.lastModified);
-      const response = await requestPublisher("Census TIGER archive", () => (options.fetchImpl ?? fetch)(url, { headers, signal, redirect: "follow" }));
+      const response = await requestPublisher("Census TIGER archive", () => sourceFetch(url, { headers, signal, redirect: "follow" }, options.fetchImpl));
       const finalUrl = response.url || url;
       let final: URL;
       try { final = publicUrl(finalUrl); }
@@ -194,7 +194,6 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
       } else {
         if (response.status !== 200) {
           await response.body?.cancel().catch(() => {});
-          await recordKnownSourceRetry(store, SOURCE_ID, url, response, checkedAt);
           throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `Census TIGER archive returned HTTP ${response.status}`);
         }
         const downloaded = await stage(file => stageResponse(response, file, signal));
@@ -209,7 +208,7 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
       const bytes = new TextEncoder().encode(JSON.stringify(index));
       await store.put(indexKey, bytes, { contentType: "application/json", contentHash: `manifest:census-tiger:${identity}`,
         byteLength: bytes.byteLength, objectClass: "MUTABLE_INDEX" });
-      recordCensusSourceCapture(options, { requestedUrl: url, finalUrl: index.finalUrl, rawHash: index.sha256, checkedAt: index.checkedAt });
+      recordCensusSourceCapture(options, { requestedUrl: url, finalUrl: index.finalUrl, rawHash: index.sha256, checkedAt: index.checkedAt, httpStatus: response.status === 304 ? 304 : 200 });
       return { sha256: index.sha256, sourceValidator: { url, etag: index.etag, lastModified: index.lastModified, bytes: index.bytes }, retrievedAt: index.retrievedAt, reused };
     });
     return { path, ...result, dispose };

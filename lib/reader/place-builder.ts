@@ -1,3 +1,4 @@
+import { federalGovernmentNameSql } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import { MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
@@ -43,7 +44,7 @@ const agendaDocumentLinkSql = (row: string) => `jsonb_build_object(
 const agendaDocumentLinksSql = (owned = "true") => `coalesce((
   SELECT jsonb_agg(link ORDER BY ordinal_index) FROM (
     SELECT ${agendaDocumentLinkSql("d")} AS link,min(d.ordinal_index) AS ordinal_index
-      FROM reader_payload_members(p.header->'agendaDocuments') d
+      FROM (SELECT r.ordinal AS ordinal_index,r.value AS item FROM civic_data_rows r WHERE r.promotion_key='MEETING:'||p.scope AND r.version_id=p.current_version_id AND r.collection='agendaDocuments') d
       WHERE $7::boolean AND NOT ${fullAgendaDocumentSql("d")} AND (${owned})
         AND reader_payload_value(reader_payload_node(d.item)->'documentUrl') IN (SELECT value FROM agenda_full_urls)
       GROUP BY ${agendaDocumentLinkSql("d")}
@@ -59,15 +60,20 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), named_places AS MATERIALIZED (
   SELECT unnest($10::text[]) AS id
 ), registration AS MATERIALIZED (
-  SELECT payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
+  SELECT reader_payload_node(payload) AS payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), government_inventory AS MATERIALIZED (
-  SELECT g,${normalizedGovernmentSql("g->>'name'")} AS identity FROM registration,
-    LATERAL jsonb_array_elements(coalesce(payload->'governments','[]'::jsonb)) g
+  SELECT g,${normalizedGovernmentSql("g->>'name'")} AS identity,${federalGovernmentNameSql("g->>'name'")} AS recipient_identity FROM registration,
+    LATERAL reader_payload_members(payload->'governments') member,
+    LATERAL (SELECT reader_payload_node(member.item) AS original) header,
+    LATERAL (SELECT original || jsonb_build_object('name',reader_payload_value(original->'name')) AS g) named
 ), government_identities AS MATERIALIZED (
-  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities FROM government_inventory
+  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
+    count(*) OVER (PARTITION BY upper(g->>'state'),recipient_identity) AS recipient_names FROM government_inventory
 ), local_governments AS MATERIALIZED (
-  SELECT * FROM government_identities WHERE EXISTS (
-    SELECT 1 FROM jsonb_array_elements(coalesce(g->'associations','[]'::jsonb)) a WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
+  SELECT reader_payload_value(g) AS g,identity,identities,recipient_names FROM government_identities WHERE EXISTS (
+    SELECT 1 FROM reader_payload_members(g->'associations') member,
+      LATERAL (SELECT reader_payload_node(member.item) AS a) association
+    WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), dotgov AS MATERIALIZED (
   SELECT payload->'domains' AS domains,payload->'source' AS source FROM civic_data_promotions
     WHERE $8::text[] IS NULL AND key='DOTGOV_REFERENCE:US:current-full:domains' AND record_class='DOTGOV_REFERENCE'
@@ -198,9 +204,10 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     WHERE $8::text[] IS NULL AND (header.value->>'officeholderId' IN (SELECT id FROM runtime_people UNION SELECT holder->>'id' FROM runtime_candidacies)
       OR header.value->>'personId' IN (SELECT id FROM runtime_people))
 ), sittings AS MATERIALIZED (
-  SELECT b.id AS body_id,b.name AS body_name,m.id AS entity_id,f.field,f.value,f.quote,f.checked_at,s.url
+  SELECT b.id AS body_id,b.name AS body_name,m.id AS entity_id,f.field,f.value,f.quote,f.checked_at,f.status,s.url
     FROM bodies b CROSS JOIN LATERAL (SELECT id FROM entity WHERE parent_id=b.id AND kind='meeting' OFFSET 0) m
-    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=m.id AND status='live' OFFSET 0) f
+    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=m.id AND (status='live'
+      OR field='map_pin' AND status='pulled' AND held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED') OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
     WHERE $8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR substr(m.id,9) IN (SELECT id FROM agenda_fact_ids)
 ), encoded_bodies AS MATERIALIZED (
@@ -224,29 +231,31 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   JOIN civic_data_promotions p ON p.key='MEETING:source:derived:family:US-'||$1||suffix AND p.record_class='MEETING'
 ), family_meetings AS MATERIALIZED (
   SELECT p.scope,m.ordinal_index,m.item,header.value->>'id' AS id
-  FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'meetings') m,
+  FROM meeting_partitions p,LATERAL (SELECT r.ordinal AS ordinal_index,r.value AS item FROM civic_data_rows r WHERE r.promotion_key='MEETING:'||p.scope AND r.version_id=p.current_version_id AND r.collection='meetings') m,
     LATERAL (SELECT reader_payload_node(m.item) AS value) header
-  WHERE p.scope LIKE 'source:derived:family:%' AND (
+  WHERE p.scope LIKE 'source:derived:family:%' AND NOT (right(p.scope,8)<>':history' AND EXISTS(SELECT 1 FROM encoded_bodies held_body JOIN civic_data_promotions own
+      ON own.key='MEETING:source:derived~US-'||$1||':body:'||held_body.encoded_id AND own.record_class='MEETING'
+      WHERE held_body.id=header.value->>'bodyId')) AND (
     header.value->>'bodyId' IN (SELECT id FROM bodies)
     OR coalesce(header.value->>'bodyId','')='' AND header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), meeting_rows AS MATERIALIZED (
   SELECT p.scope,CASE WHEN p.scope LIKE 'source:derived:family:%' THEN
-    (p.header-'meetings'-'agendaDocuments'-'derivedMembers') || jsonb_build_object(
+    (p.header-'meetings'-'agendaDocuments'-'derivedMembers'-'sources') || jsonb_build_object('sources',coalesce((SELECT jsonb_agg(reader_payload_node(s.item)-'acquisitions' ORDER BY s.ordinal_index) FROM reader_payload_members(p.header->'sources') s),'[]'::jsonb),
       'meetings',coalesce((SELECT jsonb_agg(m.item ORDER BY m.ordinal_index) FROM family_meetings m WHERE m.scope=p.scope
         AND ($8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR m.id IN (SELECT id FROM agenda_relevant_ids))),'[]'::jsonb),
       'agendaDocuments',coalesce((SELECT jsonb_agg(${agendaDocumentSql("d")} ORDER BY d.ordinal_index)
-        FROM reader_payload_members(p.header->'agendaDocuments') d
+        FROM (SELECT r.ordinal AS ordinal_index,r.value AS item FROM civic_data_rows r WHERE r.promotion_key='MEETING:'||p.scope AND r.version_id=p.current_version_id AND r.collection='agendaDocuments') d
         WHERE $7::boolean AND ${fullAgendaDocumentSql("d")} AND reader_payload_node(d.item)->>'meetingId' IN (SELECT id FROM family_meetings m WHERE m.scope=p.scope)),'[]'::jsonb))
       || CASE WHEN $8::text[] IS NOT NULL THEN jsonb_build_object('agendaDocumentLinks',${agendaDocumentLinksSql("reader_payload_node(d.item)->>'meetingId' IN (SELECT id FROM family_meetings m WHERE m.scope=p.scope)")}) ELSE '{}'::jsonb END
       || CASE WHEN p.header ? 'derivedMembers' THEN jsonb_build_object('derivedMembers',coalesce((
         SELECT jsonb_agg(d.item ORDER BY d.ordinal_index) FROM reader_payload_members(p.header->'derivedMembers') d
-        WHERE reader_payload_node(d.item)->>'bodyId' IN (SELECT id FROM bodies)),'[]'::jsonb)) ELSE '{}'::jsonb END
+        WHERE reader_payload_node(d.item)->>'bodyId' IN (SELECT id FROM bodies) AND (right(p.scope,8)=':history' OR NOT EXISTS(SELECT 1 FROM encoded_bodies held_body JOIN civic_data_promotions own ON own.key='MEETING:source:derived~US-'||$1||':body:'||held_body.encoded_id AND own.record_class='MEETING' WHERE held_body.id=reader_payload_node(d.item)->>'bodyId'))),'[]'::jsonb)) ELSE '{}'::jsonb END
     ELSE (p.header-'agendaDocuments') || CASE WHEN $8::text[] IS NULL THEN '{}'::jsonb ELSE jsonb_build_object(
-      'meetings',coalesce((SELECT jsonb_agg(m.item ORDER BY m.ordinal_index) FROM reader_payload_members(p.header->'meetings') m
+      'meetings',coalesce((SELECT jsonb_agg(m.item ORDER BY m.ordinal_index) FROM (SELECT r.ordinal AS ordinal_index,r.value AS item FROM civic_data_rows r WHERE r.promotion_key='MEETING:'||p.scope AND r.version_id=p.current_version_id AND r.collection='meetings') m
         WHERE EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR reader_payload_node(m.item)->>'id' IN (SELECT id FROM agenda_relevant_ids)),'[]'::jsonb)) END
       || jsonb_build_object('agendaDocuments',CASE WHEN $7::boolean THEN
       coalesce((SELECT jsonb_agg(${agendaDocumentSql("d")} ORDER BY d.ordinal_index)
-        FROM reader_payload_members(p.header->'agendaDocuments') d WHERE ${fullAgendaDocumentSql("d")}
+        FROM (SELECT r.ordinal AS ordinal_index,r.value AS item FROM civic_data_rows r WHERE r.promotion_key='MEETING:'||p.scope AND r.version_id=p.current_version_id AND r.collection='agendaDocuments') d WHERE ${fullAgendaDocumentSql("d")}
           AND ($8::text[] IS NULL OR ${ownedAgendaDocumentSql("d")})), '[]'::jsonb) ELSE '[]'::jsonb END)
       || CASE WHEN $8::text[] IS NOT NULL THEN jsonb_build_object('agendaDocumentLinks',${agendaDocumentLinksSql()}) ELSE '{}'::jsonb END
     END AS payload,p.current_version_id,p.confirmation FROM meeting_partitions p
@@ -285,9 +294,11 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   SELECT DISTINCT ${agendaDocumentLinkSql("d")} AS item FROM archived_document_records d WHERE NOT ${fullAgendaDocumentSql("d")}
     AND reader_payload_value(reader_payload_node(d.item)->'documentUrl') IN (SELECT value FROM agenda_full_urls)
 ), agenda_current_headers AS MATERIALIZED (
-  SELECT p.scope,header.value FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'meetings') m,
+  SELECT p.scope,header.value FROM meeting_partitions p,LATERAL (SELECT r.ordinal AS ordinal_index,r.value AS item FROM civic_data_rows r WHERE r.promotion_key='MEETING:'||p.scope AND r.version_id=p.current_version_id AND r.collection='meetings') m,
     LATERAL (SELECT reader_payload_node(m.item) AS value) header
-    WHERE $8::text[] IS NOT NULL AND (header.value->>'bodyId' IN (SELECT id FROM bodies)
+    WHERE $8::text[] IS NOT NULL AND (p.scope NOT LIKE 'source:derived:family:%' OR NOT (right(p.scope,8)<>':history' AND EXISTS(SELECT 1 FROM encoded_bodies held_body JOIN civic_data_promotions own
+      ON own.key='MEETING:source:derived~US-'||$1||':body:'||held_body.encoded_id AND own.record_class='MEETING'
+      WHERE held_body.id=header.value->>'bodyId'))) AND (header.value->>'bodyId' IN (SELECT id FROM bodies)
       OR coalesce(header.value->>'bodyId','')='' AND header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), agenda_raw_headers AS MATERIALIZED (
   SELECT * FROM agenda_current_headers
@@ -325,7 +336,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
       OR m.body_key=target.body_key AND abs(extract(epoch FROM m.raw_at-target.raw_at))<=72*60*60)
 ), agenda_full_documents AS MATERIALIZED (
   SELECT header.value FROM (
-    SELECT d.item FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'agendaDocuments') d
+    SELECT d.item FROM meeting_partitions p,LATERAL (SELECT r.ordinal AS ordinal_index,r.value AS item FROM civic_data_rows r WHERE r.promotion_key='MEETING:'||p.scope AND r.version_id=p.current_version_id AND r.collection='agendaDocuments') d
       WHERE $7::boolean AND $8::text[] IS NOT NULL AND CASE WHEN p.scope LIKE 'source:derived:family:%'
         THEN reader_payload_node(d.item)->>'meetingId' IN (SELECT id FROM family_meetings m WHERE m.scope=p.scope)
         ELSE ${ownedAgendaDocumentSql("d")} END
@@ -343,7 +354,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     SELECT 1 FROM agenda_possible_times target WHERE target.value->>'id' IN (SELECT id FROM agenda_full_ids)
       AND m.body_key=target.body_key AND abs(extract(epoch FROM m.starts_at-target.starts_at))<=72*60*60)
   UNION SELECT reader_payload_node(d.item)->>'meetingId' FROM (
-    SELECT d.item FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'agendaDocuments') d
+    SELECT d.item FROM meeting_partitions p,LATERAL (SELECT r.ordinal AS ordinal_index,r.value AS item FROM civic_data_rows r WHERE r.promotion_key='MEETING:'||p.scope AND r.version_id=p.current_version_id AND r.collection='agendaDocuments') d
       WHERE $7::boolean AND $8::text[] IS NOT NULL
     UNION ALL SELECT item FROM archived_document_records WHERE $8::text[] IS NOT NULL
   ) d WHERE reader_payload_value(reader_payload_node(d.item)->'documentUrl') IN (SELECT value FROM agenda_full_urls)
@@ -395,10 +406,11 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
         FROM jsonb_each(reader_payload_node(root.value->'rosterPhotos')) photo
         WHERE photo.key IN (SELECT id FROM runtime_people UNION SELECT value->>'officeholderId' FROM runtime_photos)),'{}'::jsonb) ELSE '{}'::jsonb END)
     FROM runtime_root root CROSS JOIN runtime_registry r) END AS registry,
-  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('recipientNameUnique',g.recipient_names=1,'govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
     'domain',d->>'domain','website','https://'||(d->>'domain'),'sourceUrl',source->>'url','checkedAt',source->>'readAt'))
     FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) ELSE '[]'::jsonb END AS governments,
-  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(reader_payload_value(member.item)) FROM registration,LATERAL reader_payload_members(payload->'divisions') member,
+    LATERAL (SELECT reader_payload_node(member.item) AS d) division
     WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR d->>'ocdId' IN (SELECT id FROM named_places)),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
   coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('placed',b.id IN (SELECT id FROM linked_bodies)
     OR EXISTS (SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id)
@@ -409,8 +421,11 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
     split_part(b.id,'#',1)),'placement_basis',CASE WHEN EXISTS (
       SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id AND ep.placement_basis='HOST_COUNTY') THEN 'HOST_COUNTY' ELSE 'SERVICE_AREA' END,
-    'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government' AND g.id ~ '^[a-z]{2}:special:'))) FROM bodies b),'[]'::jsonb) AS entities,
-  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone')),'[]'::jsonb) AS fields,
+    'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),
+    'government_id',(SELECT g.id FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),
+    'government_class',(SELECT g->>'governmentClass' FROM government_inventory WHERE g->>'id'=b.parent_id OR g->>'jurisdictionId'=b.parent_id LIMIT 1),
+    'registered_name',(SELECT value->>'name' FROM runtime_bodies r WHERE r.value->>'id'=b.id LIMIT 1))) FROM bodies b),'[]'::jsonb) AS entities,
+  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone','office_email','mailing_address')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
   coalesce((SELECT jsonb_agg(to_jsonb(s)) FROM sittings s),'[]'::jsonb) AS sittings,
@@ -503,8 +518,6 @@ export interface RebuildOptions {
   readonly limit?: number;
   readonly concurrency?: number;
   readonly timeBudgetMs?: number;
-  /** Build data during deployment; later versions leave cache purges for the published worker. */
-  readonly initialBackfill?: boolean;
 }
 
 const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
@@ -513,9 +526,7 @@ const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
   ) ORDER BY n LIMIT 1
 ), next AS (
   SELECT q.place_id,slot.n FROM rebuild_queue q JOIN entity e ON e.id=q.place_id CROSS JOIN slot
-  WHERE (q.lease_until IS NULL OR q.lease_until<clock_timestamp() OR $2::boolean AND q.lease_token IS NULL)
-    AND (NOT $2::boolean OR q.built_generation IS DISTINCT FROM q.generation
-      OR NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id))
+  WHERE q.lease_until IS NULL OR q.lease_until<clock_timestamp()
   ORDER BY q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
 ) UPDATE rebuild_queue q SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes',lease_slot=next.n,next_queued_at=NULL
   FROM next,entity e WHERE q.place_id=next.place_id AND e.id=q.place_id
@@ -536,13 +547,12 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
         await query("SELECT pg_advisory_xact_lock(hashtextextended('place-page-rebuild-slots',0))");
         await query(`UPDATE rebuild_queue SET lease_token=NULL,lease_slot=NULL,lease_until=NULL
           WHERE lease_slot IS NOT NULL AND lease_until<clock_timestamp()`);
-        return (await query(CLAIM_PAGE_SQL,[token,options.initialBackfill ?? false]))[0];
+        return (await query(CLAIM_PAGE_SQL,[token]))[0];
       });
       if(!claim)return;
       const id=String(claim.place_id),state=String(claim.state ?? "US");
       let built=claim.has_page===true && claim.built_generation!=null && String(claim.built_generation)===String(claim.generation);
       try {
-        let firstVersion=false;
         if(!built) {
           const body=await db.transaction<StoredPlacePage>(async query=>{
             await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
@@ -550,16 +560,16 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
           });
           // Writers can queue a newer generation while the snapshot is being read.
           // Lock its lease only after leaving that snapshot, in this short transaction.
-          firstVersion=await db.transaction(async query=>{
+          await db.transaction(async query=>{
             // A worker whose lease expired cannot replace a newer worker's page.
             const [lease]=await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
             if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
             const {readyCurrent,readyHistory,territory,...rawContext}=body;
             const context=/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext);
-            const [stored]=await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context)
+            await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context)
               VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
               ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
-                body=excluded.body,history_body=excluded.history_body,context=excluded.context RETURNING version`,
+                body=excluded.body,history_body=excluded.history_body,context=excluded.context`,
             [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context)]);
             const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
               !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
@@ -576,18 +586,14 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
               SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
             await query("UPDATE rebuild_queue SET built_generation=$3::bigint WHERE place_id=$1 AND lease_token=$2",[id,token,claim.generation]);
             await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);
-            return Number(stored?.version)===1;
           });
           built=true;
           rebuilt++;
         }
-        if(!options.initialBackfill) {
-          const result=await purge(readerCacheTags({places:[id]}));
-          if(!result.purged)throw new Error(result.detail ?? "Place page cache purge failed");
-        }
+        const purged=await purge(readerCacheTags({places:[id]}));
+        if(!purged.purged)throw new Error(purged.detail ?? "Place page cache purge failed");
         await db.transaction(async query=>{
-          if(!options.initialBackfill || firstVersion)
-            await query("DELETE FROM rebuild_queue WHERE place_id=$1 AND generation=$2::bigint AND lease_token=$3",[id,claim.generation,token]);
+          await query("DELETE FROM rebuild_queue WHERE place_id=$1 AND generation=$2::bigint AND lease_token=$3",[id,claim.generation,token]);
           // A later generation waits from its own first arrival, so a hot place
           // cannot repeatedly take the oldest slot ahead of untouched places.
           await query(`UPDATE rebuild_queue SET queued_at=coalesce(next_queued_at,queued_at),
@@ -607,8 +613,6 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
     }
   };
   await Promise.all(Array.from({length:concurrency},work));
-  const [remaining]=await db.transaction(query=>query(`SELECT count(*)::int AS n FROM rebuild_queue q
-    WHERE NOT $1::boolean OR q.built_generation IS DISTINCT FROM q.generation
-      OR NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id)`,[options.initialBackfill ?? false]));
+  const [remaining]=await db.transaction(query=>query("SELECT count(*)::int AS n FROM rebuild_queue"));
   return {rebuilt,failed,remaining:Number(remaining?.n ?? 0)};
 }

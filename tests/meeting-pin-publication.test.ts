@@ -11,6 +11,7 @@ import {
 import { publishedOnlineAccess } from "../lib/meetings/published-online.ts";
 import { censusAddressQuery, repeatsPublishedVenue } from "../lib/geo/address-query.ts";
 import { verifiedCensusVenuePoint } from "../lib/geo/census-address-match.ts";
+import { CENSUS_BENCHMARK } from "../lib/geo/census-geocoder.ts";
 import { publishedMeetingPins } from "../lib/meetings/pin-location.ts";
 import { groupByVenue } from "../lib/meetings/venues.ts";
 import { normalizeWithDrops } from "../lib/sources/legistar/index.ts";
@@ -27,6 +28,12 @@ import {
   withSittingFacts,
 } from "../lib/facts/meeting-read.ts";
 import { mergeReaderSittings } from "../lib/meetings/sitting-merge.ts";
+
+test("a room label before a street cannot consume its house number, and a written state needs no comma",()=>{
+  assert.equal(censusAddressQuery("Sebago Meeting Room 27 Northport Dr, Portland, ME 04103"),"27 Northport Dr, Portland, ME 04103");
+  assert.equal(censusAddressQuery("1 Civic Center Square, Portland Maine 04101"),"1 Civic Center Square, Portland, ME 04101");
+  assert.equal(censusAddressQuery("301 S. 10th Street PO Box 248 Adel, IA 50003"),"301 S. 10th Street Adel, IA 50003");
+});
 
 const NOW = "2026-10-24T00:00:00.000Z",
   DIVISION = "ocd-division/country:us/state:az/place:tucson",
@@ -67,6 +74,26 @@ const geo = (
   },
 });
 const OWN_GEO = geo("1415", "MELODY", "BISBEE", "AZ", "85603", "LN", "W");
+
+test("an independently published government street reuses its already verified Census point",async()=>{
+  const first=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,
+    fetchImpl:async()=>new Response(JSON.stringify(OWN_GEO))});
+  const pin=first.meetings[0].mapPin!;
+  const target={...meeting(null),id:"other-body-meeting",bodyId:`${DIVISION}#body:finance`};
+  const offices:Map<string,MeetingPinBody>=new Map([[target.bodyId,{bodyId:target.bodyId,name:"Finance",governmentOffice:{name:"City",address:OWN,provenance:SOURCE,
+    verifiedPoint:{lat:pin.lat,lng:pin.lng,matchedAddress:pin.matchedAddress!,coordinateSourceUrl:pin.coordinateSourceUrl!,coordinateCheckedAt:pin.coordinateCheckedAt!}}}]]);
+  const placed=await placePublishedMeetingPins({meetings:[target],offices,fetchImpl:async()=>{throw Error("The checked point was geocoded again");}});
+  assert.deepEqual(placed.held,[]);
+  assert.equal(placed.responses.length,0);
+  assert.equal(placed.meetings[0].mapPin?.basis,"GOVERNMENT_OFFICE");
+  assert.equal(placed.meetings[0].mapPin?.lat,pin.lat);
+  assert.equal(placed.meetings[0].mapPin?.bodyId,target.bodyId);
+  assert.equal(placed.meetings[0].mapPin?.coordinateCheckedAt,NOW);
+  offices.get(target.bodyId)!.officeContact={address:OWN,phone:null,provenance:SOURCE};
+  const ownOffice=await placePublishedMeetingPins({meetings:[target],offices,fetchImpl:async()=>{throw Error("The same published street was geocoded again");}});
+  assert.equal(ownOffice.meetings[0].mapPin?.basis,"BODY_OFFICE");
+  assert.deepEqual(ownOffice.held,[]);
+});
 const BOARD_GEO = geo("5", "MAIN", "CONCORD", "NH", "03301"),
   GOVERNMENT_GEO = geo("55", "JOPPA", "WARNER", "NH", "03278", "RD", "W");
 const missing = { result: { addressMatches: [] } };
@@ -496,7 +523,7 @@ test("a temporary office lookup failure retains an unchanged sitting's saved poi
   assert.equal(next.held.length, 1);
 });
 
-test("a newer venue fact cannot inherit a stale saved pin or an older online-only fact", async () => {
+test("a newer venue fact keeps the earlier checked point as pending work and replaces an older online-only fact", async () => {
   const placed = await placePublishedMeetingPins({
     meetings: [meeting()],
     offices: new Map(),
@@ -524,7 +551,9 @@ test("a newer venue fact cannot inherit a stale saved pin or an older online-onl
     },
   ];
   const [read] = withSittingFacts(placed.meetings, facts);
-  assert.equal(read.mapPin, undefined);
+  assert.equal(read.mapPin?.address,placed.meetings[0].mapPin?.address);
+  assert.deepEqual(read.mapPin?.pendingReplacement,{publishedLocation:"New room",onlineOnly:false});
+  assert.equal(read.location,null,"the earlier address is not described as the newly stated room");
   assert.equal(read.online, undefined);
   assert.equal(read.venueGap?.publishedText, "New room");
 });
@@ -669,10 +698,11 @@ test("a newly published physical point replaces an older office-reference pin",a
 test("Census rejects unusable published text with 400 and publication tries the board office; service errors remain visible",async()=>{
   for(const status of [400,503]){
     let requests=0;
-    const placed=await placePublishedMeetingPins({meetings:[meeting()],offices,clock:()=>NOW,fetchImpl:async()=>{
-      return ++requests===1?new Response("address rejected",{status}):response(BOARD_GEO);
+    const placed=await placePublishedMeetingPins({meetings:[meeting()],offices,clock:()=>NOW,fetchImpl:async input=>{
+      requests++;
+      return new URL(String(input)).searchParams.get("address")===OWN ? new Response("address rejected",{status}) : response(BOARD_GEO);
     }});
-    assert.equal(placed.meetings[0].mapPin?.basis,"BODY_OFFICE");assert.equal(requests,2);
+    assert.equal(placed.meetings[0].mapPin?.basis,"BODY_OFFICE");assert.equal(requests,status===400?2:4);
     assert.equal(placed.held.length,status===400?0:1);
   }
 });
@@ -701,7 +731,7 @@ test("a room number on the line before a published street is never its house num
 test("a written house number uses the same published street in the Census query",()=>{
  const published="Metro Headquarters, One Gateway Plaza, 3rd Floor Gateway Plaza Conference Room, Los Angeles, CA 90012";
  const response=JSON.parse(readFileSync(new URL("./fixtures/mt01-gateway-census.json",import.meta.url),"utf8"));
- assert.equal(censusAddressQuery(published),"1 Gateway Plaza Gateway Plaza Conference Room, Los Angeles, CA 90012");
+ assert.equal(censusAddressQuery(published),"1 Gateway Plaza, Los Angeles, CA 90012");
  assert.ok(verifiedCensusVenuePoint(published,response));
  assert.equal(verifiedCensusVenuePoint("One Gateway Plaza, Los Angeles, NY 90012, Metro Board Room",response),null);
  assert.equal(verifiedCensusVenuePoint(published.replace("One","Two"),response),null);
@@ -839,4 +869,83 @@ test("an office-read failure keeps the saved reference point through changed att
  assert.deepEqual(next.meetings[0].online,current.online);
  assert.ok(next.held.some(detail=>detail.includes("Office read unavailable")));
  assert.ok(next.held.every(detail=>!detail.includes("requested Census")));
+});
+
+
+test("failed normalized address inputs remain standing work and are not geocoded unchanged on the next pass",async()=>{
+  let requests=0;
+  const first=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,
+    fetchImpl:async()=>{requests++;return response(missing);}});
+  assert.equal(requests,1);assert.equal(first.attempts.get(meeting().id)?.[0]?.outcome,"NO_MATCH");
+  assert.equal(first.responses.length,1,"the negative Census response is retained as evidence");
+  const unchanged=await placePublishedMeetingPins({meetings:[meeting(OWN.replace("Ln","Lane"))],offices:new Map(),clock:()=>NOW,
+    geocodeAttempts:first.attempts,fetchImpl:async()=>{throw Error("unchanged normalized failure requested Census");}});
+  assert.deepEqual(unchanged.held,[]);assert.equal(unchanged.meetings[0].mapPin,undefined);
+  assert.equal(unchanged.attempts.get(meeting().id)?.[0]?.checkedAt,NOW);
+  const corrected=await placePublishedMeetingPins({meetings:[meeting(BOARD)],offices:new Map(),clock:()=>NOW,
+    geocodeAttempts:first.attempts,fetchImpl:async()=>{requests++;return response(BOARD_GEO);}});
+  assert.equal(requests,2);assert.equal(corrected.meetings[0].mapPin?.address,BOARD);
+});
+
+test("a stored failure is read by meeting ID rather than reloading its promotion",async()=>{
+  const first=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,
+    fetchImpl:async()=>response(missing)});
+  const result=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,
+    query:async(sql,params)=>{
+      assert.ok(sql.includes("blank")||sql.includes("field='map_pin'"));
+      assert.deepEqual(params,[[`meeting:${meeting().id}`]]);
+      return sql.includes("blank") ? [{entity_id:`meeting:${meeting().id}`,detail:JSON.stringify({geocodeAttempts:first.attempts.get(meeting().id)})}] : [];
+    },fetchImpl:async()=>{throw Error("a saved negative result requested Census unchanged");}});
+  assert.deepEqual(result.held,[]);assert.equal(result.attempts.get(meeting().id)?.[0]?.outcome,"NO_MATCH");
+});
+
+test("rate limiting uses the shared host cooldown and stays retryable after its published delay",async()=>{
+  let requests=0;
+  const first=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,
+    fetchImpl:async()=>{requests++;return requests===1?new Response("slow down",{status:429,headers:{"retry-after":"0.001"}}):response(OWN_GEO);}});
+  // A 429 cools the shared census host instead of being re-sent at once; the meeting stays owed with its retry time.
+  assert.equal(requests,1);assert.equal(first.meetings[0].mapPin,undefined);
+  const cooled=first.attempts.get(meeting().id)?.[0];
+  assert.equal(cooled?.outcome,"TRANSIENT");assert.ok(Date.parse(cooled.retryAt!)>Date.parse(NOW));
+  const retryAt=new Date(Date.parse(NOW)+60000).toISOString();
+  const transient=new Map([[meeting().id,[{query:OWN,benchmark:CENSUS_BENCHMARK,outcome:"TRANSIENT" as const,checkedAt:NOW,retryAt}]]]);
+  const during=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,geocodeAttempts:transient,
+    fetchImpl:async()=>{throw Error("Retry-After was ignored");}});
+  assert.deepEqual(during.held,[]);assert.equal(during.attempts.get(meeting().id)?.[0]?.outcome,"TRANSIENT");
+  const after=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>retryAt,geocodeAttempts:transient,
+    fetchImpl:async()=>response(OWN_GEO)});
+  assert.equal(after.meetings[0].mapPin?.basis,"MEETING");
+});
+
+test("an address refresh cannot erase a meeting's last checked point",async()=>{
+  const first=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,fetchImpl:async()=>response(OWN_GEO)});
+  const after=await placePublishedMeetingPins({meetings:[meeting(BOARD)],previous:first.meetings,offices:new Map(),clock:()=>NOW,
+    fetchImpl:async()=>response(missing)});
+  const retained=after.meetings[0].mapPin!;
+  assert.deepEqual(retained,{...first.meetings[0].mapPin,pendingReplacement:{publishedLocation:BOARD,onlineOnly:false}});
+  assert.equal(after.meetings[0].venueGap?.publishedText,BOARD);
+  assert.equal(after.attempts.get(meeting().id)?.[0]?.outcome,"NO_MATCH");
+  for(const read of [
+    withSittingFacts(after.meetings,[{meetingId:meeting().id,field:"title",value:meeting().title,source:SOURCE}])[0],
+    withSittingFacts([meeting(BOARD)],[{meetingId:meeting().id,field:"mapPin",value:retained,source:SOURCE}])[0],
+  ]){
+    assert.deepEqual(read.mapPin,retained,"composing saved facts must preserve the checked point after this explicit replacement failure");
+    assert.equal(read.location,null,"an old point cannot become the new attendance location");
+    assert.equal(read.venueGap?.publishedText,BOARD);assert.equal(read.mapPin?.address,OWN);
+  }
+  const unrelated=withSittingFacts([meeting(GOVERNMENT)],[{meetingId:meeting().id,field:"mapPin",value:retained,source:SOURCE}])[0];
+  assert.equal(unrelated.mapPin,undefined,"the marker applies only to its exact pending venue");
+  const pending=await placePublishedMeetingPins({meetings:[meeting(BOARD)],previous:after.meetings,offices:new Map(),clock:()=>NOW,
+    query:async sql=>sql.includes("blank")?[{entity_id:`meeting:${meeting().id}`,detail:JSON.stringify({geocodeAttempts:after.attempts.get(meeting().id)})}]:[],
+    fetchImpl:async()=>{throw Error("The pending replacement repeated a saved negative query");}});
+  assert.deepEqual(pending.held,[]);assert.deepEqual(pending.meetings[0].mapPin,retained);
+  const later=await placePublishedMeetingPins({meetings:[meeting(GOVERNMENT)],previous:after.meetings,offices:new Map(),clock:()=>NOW,
+    fetchImpl:async()=>response(GOVERNMENT_GEO)});
+  assert.equal(later.meetings[0].mapPin?.address,GOVERNMENT);assert.equal(later.meetings[0].mapPin?.pendingReplacement,undefined);
+  assert.equal(later.meetings[0].location?.address,GOVERNMENT);
+});
+
+test("geocoding cleans named rooms, repeated separators and written state names without changing the published address",()=>{
+  assert.equal(censusAddressQuery("City Hall, 100 Main Street, Council Chambers, Lincoln, Nebraska 68508, USA"),"100 Main Street, Lincoln, NE 68508");
+  assert.equal(censusAddressQuery("100 Main Street, Room 300,, Lincoln, Nebraska 68508"),"100 Main Street, Lincoln, NE 68508");
 });

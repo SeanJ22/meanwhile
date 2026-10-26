@@ -20,8 +20,10 @@ import { factRefreshBounds, observedSourceEveryMs, readSourceChangeHistory, type
 import { publishBoxFindings, reviewPublishedBoxFacts } from "../lib/facts/box-publication.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
+import { receiptCapture } from "../lib/facts/capture.ts";
 import { withReaderRoute } from "../lib/db/reader-route.ts";
 import { withDatabaseJob } from "../lib/db/transfer-by-caller.ts";
+import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
 
 import { hostname } from "node:os";
@@ -54,6 +56,8 @@ import {
 import {
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineFailureDomainFrontier,
+  routineChildMemoryOrder,
+  routineWaitedFullPass,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   routineTaskFromContract,
@@ -499,13 +503,26 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
 
-  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async () => {
-    const report = await publishHeldMeetingPins({ facts:readerFactDb(), vault:new DurableEvidenceStore(join(ROOT,...VAULT_DIR)),
-      clocks:factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value??null), now:new Date().toISOString(),
+  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", () => withDatabaseJob("meeting-pins",()=>withReaderRoute("meeting-pins", async () => {
+    const vault=new DurableEvidenceStore(join(ROOT,...VAULT_DIR));
+    const sourceFetch=pacedProbeFetch({pacing:repos.websitePacing});
+    const sourceCopies=new Map<string,Promise<WorkerPublicationCapture>>();
+    const clocks=factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value??null);
+    const report = await publishHeldMeetingPins({ facts:readerFactDb(), vault,
+      clocks, now:new Date().toISOString(),
+      readCapture:url=>{
+        let copy=sourceCopies.get(url);
+        if(!copy){copy=(async()=>{
+          const read=await receiptCapture({url,repos,vault,fetch:sourceFetch,now:new Date().toISOString(),windowHours:clocks.windowHours("contact")});
+          if("error" in read)throw new Error(read.error);
+          return read.capture;
+        })();sourceCopies.set(url,copy);if(sourceCopies.size>32)sourceCopies.delete(sourceCopies.keys().next().value!);}
+        return copy;
+      },
       deadlineMs:Math.min(PASS_LAUNCH_DEADLINE_MS,Date.now()+Math.floor(PUBLISH_NOW_PASS_BUDGET_MS/3)) });
     console.log(`RCD_FACTS meeting pins: ${report.published} published; ${report.unplaced} still without a point`);
     if(report.failures.length)failures.push({taskId:"meeting-pins",code:"MEETING_PIN_PUBLICATION_FAILED",detail:safeFailure(report.failures.slice(0,8).join(" | "))});
-  });
+  })));
 
   // Publishing what is already found (Box findings, saved worker results, changed doors) is free: a pause never holds it.
   if (PUBLISH_NOW || (ONLY && WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) {
@@ -1182,6 +1199,7 @@ const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, cloc
   ),
 })), routineFailureDomainRotationSeed(RUN_STARTED_AT));
 const admittedIds = new Set(admitted.map(({ task }) => task.id));
+const waitedFullPass = new Set(admitted.filter(candidate => routineWaitedFullPass(candidate, admissionNowMs)).map(({ task }) => task.id));
 for (const { pending } of dueCandidates) {
   if (admittedIds.has(pending.id)) continue;
   recordLaunchDecision(pending.task, "DEFER", "Other calendars on this source have this pass's turns",
@@ -1203,7 +1221,8 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     failureDomain: pending.task.acquisitionFailureDomain,
     serialLane: routineSerialLane(pending.command),
     executable: process.execPath,
-    args: [...TS_CHILD, ...pending.command],
+    // The state map reservation was measured with a 1 GiB heap.
+    args: [...TS_CHILD, ...(pending.command[0] === "scripts/place-map-refresh.mts" ? ["--max-old-space-size=1024"] : []), ...pending.command],
     // A child told when the pass ends settles and exits with its receipt before the pass's wall stops it.
     env: withPassDeadline({
 
@@ -1295,9 +1314,9 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
-      // A memory wait returns the source turn immediately; later due tasks can fit in this same pass.
+      // A memory wait returns the source turn immediately, except for work that has waited a full pass: it takes the next memory that fits.
       try {
-        await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), { priority: index, wait: false });
+        await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), routineChildMemoryOrder(index, waitedFullPass.has(command.id)));
       } catch (error) {
         if (error instanceof Error && error.message.startsWith("WORKER_MEMORY_BUSY:")) return false;
         throw error;
@@ -1371,8 +1390,13 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
   }
   const singleMeeting = pending.kind === "MEETING_PARTITION" && run.status === 0 && run.termination === "EXITED"
     ? stateCalendarMemberResults(run, [pending.id], true)[0] : null;
+  const partition= pending.kind==="MEETING_PARTITION"?meetingPartitionContract(pending.task.id):null;
+  const bodyContinuation=partition?.derivedFamily&&!partition.derivedParentId&&run.stdout.split(/\r?\n/).some(line=>{
+    if(!line.startsWith("RCD_MEETING_PARTITION_DEFERRED="))return false;
+    try{return JSON.parse(line.slice("RCD_MEETING_PARTITION_DEFERRED=".length)).partitionId===pending.task.id;}catch{return false;}
+  });
   const deferral = routineDeferral(run, startedSourceChildren.has(run.id)) ??
-    (singleMeeting && "owed" in singleMeeting ? singleMeeting.owed : null);
+    (bodyContinuation?"the derived family's saved body cursor remains owed":singleMeeting && "owed" in singleMeeting ? singleMeeting.owed : null);
   if (deferral !== null) {
     attempted -= 1;
 
@@ -1407,6 +1431,34 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       const detail = executionFailure === null ? parsed.detail : `${executionFailure.detail}; ${parsed.code}: ${parsed.detail}`;
       supervisorFailures.push({ ...failure, detail });
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+      return;
+    }
+    const family=meetingPartitionContract(pending.task.id);
+    const children=parsed.receipts.map(receipt=>meetingPartitionContract(receipt.source));
+    if(family?.derivedFamily&&!family.derivedParentId&&children.every(child=>child?.derivedParentId===family.id)){
+      let good=0,held=0;
+      for(const [index,receipt] of parsed.receipts.entries()){
+        const child=children[index]!,task=routineTaskFromContract(child),promoted=successfulRoutineRunnerReceiptIssue(receipt)===null;
+        const issue=await durableRoutineRunnerReceiptIssue(receipt,task,store,promoted?"SUCCESS":"HELD");
+        if(issue!==null){
+          supervisorFailures.push({taskId:pending.task.id,code:"DURABLE_RECEIPT_INVALID",detail:issue});
+          console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${issue}`);
+          return;
+        }
+        if(promoted)good++;else held++;
+        captureTaskReceipt({...pending,id:task.id,task},receipt,promoted?"VERIFIED_SOURCE_SUCCESS":"VERIFIED_SOURCE_FAILURE");
+        console.log("RCD_RECEIPT="+JSON.stringify(receipt));
+      }
+      if(good){
+        verifiedSourceSuccesses++;
+        await recordTaskDoorOutcome(pending.task.id,"SUCCESS",null,()=>store.clock(pending.task.sourceId,pending.task.recordClass,pending.task.scope),pending.task);
+        console.log(`RCD_TASK ${pending.task.id}: GOOD (${good} body publications/checks, ${held} bodies held on their own retry clocks)`);
+      }else{
+        verifiedSourceFailures++;
+        await recordTaskDoorOutcome(pending.task.id,"FAILURE");
+        console.log(`RCD_TASK ${pending.task.id}: SOURCE_HELD_LKG (${held} body sources held)`);
+      }
+      if(executionFailure!==null)supervisorFailures.push(executionFailure);
       return;
     }
     if (parsed.receipts.length !== 1 || parsed.receipts[0]?.source !== pending.task.id) {

@@ -46,7 +46,7 @@ function websites(table: Record<string, { status: number; body?: string; retryAf
     return new Response(hit.body ?? "", { status: hit.status, headers: hit.retryAfter ? { "retry-after": hit.retryAfter } : {} });
   }) as typeof globalThis.fetch;
   const paced: ProbeFetch = pacedProbeFetch({ pacing: options.pacing ?? memoryWebsitePacing(), ...(options.sizeFor ? { sizeFor: options.sizeFor } : {}),
-    fetchImpl, sleep: async () => {}, clock: () => Date.parse(NOW) });
+    fetchImpl, clock: () => Date.parse(NOW) });
   return { fetch: paced, calls };
 }
 
@@ -119,7 +119,7 @@ test("a working method is tried by plain code at every matching place, and every
   assert.match((await at(MORRIS)).cause!, /answered 404 here/);
   assert.equal((await at(LA)).state, "UNTRIED");
   assert.equal((await at(LA)).attemptId, SPREAD_ATTEMPT.QUEUED);
-  assert.match((await at(LA)).cause!, /the website answered 503, so every reader leaves it alone for now/);
+  assert.match((await at(LA)).cause!, /the website asked to be left alone until/);
 
   const saved = (await repos.fieldManual.read(method.id))!.value;
   assert.deepEqual(saved.placeResults!.filter((r) => r.place.startsWith("ocd-division/") && r.place !== PIMA).map((r) => [r.place, r.outcome]).sort(), [[MARICOPA, "YIELDED"], [MORRIS, "FAILED"]].sort());

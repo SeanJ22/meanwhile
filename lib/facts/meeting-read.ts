@@ -1,15 +1,17 @@
 import type { Meeting, Provenance } from "../sources/types.ts";
 import type { Query } from "./publish.ts";
 import { repeatsPublishedVenue } from "../geo/address-query.ts";
-import { publishedVenueDescription, withPublishedPin } from "../meetings/pin-location.ts";
+import { hasPendingPinReplacement, publishedVenueDescription, withPublishedPin } from "../meetings/pin-location.ts";
 import { hasPublishedVenue } from "../meetings/venue-text.ts";
+import { isOnlineOnly } from "../meetings/online.ts";
 
 export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
 
-const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.field, f.value, f.quote, f.checked_at,
+const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.field, f.value, f.quote, f.checked_at,f.status,
   (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url
   FROM entity m JOIN fact f ON f.entity_id = m.id
-  WHERE m.parent_id = ANY($1::text[]) AND m.kind = 'meeting' AND f.status = 'live'`;
+  WHERE m.parent_id = ANY($1::text[]) AND m.kind = 'meeting' AND (f.status = 'live'
+    OR f.field='map_pin' AND f.status='pulled' AND f.held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED')`;
 
 const FIELD = { title: "title", starts_at: "startsAt", location: "location", map_pin:"mapPin", online_access:"online", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;
 
@@ -23,17 +25,26 @@ function publishedLocation(meeting: Meeting, value: unknown, source: Provenance,
   return { location:null,online:undefined,venueGap: { kind:"STATED_NOT_PLACED",publishedText:location.address || location.name,publisher:source.sourceOrg } };
 }
 
-/** One live fact about a sitting, citing the saved page it was found on. */
+/** A current sitting field or a withdrawn office claim, citing its saved source. */
 export interface SittingFact {
   readonly meetingId: string;
   readonly field: (typeof FIELD)[keyof typeof FIELD];
   readonly value: unknown;
   readonly source: Provenance;
+  readonly withdrawn?: boolean;
 }
 
-/** The live facts of each given body's sittings, by body. */
+/** The current fields and exact office withdrawals for each given body's sittings. */
 export async function readSittingFacts(query: Query, bodyIds: readonly string[]): Promise<Map<string, SittingFact[]>> {
   return sittingFactsFromRows(bodyIds.length ? await query(SITTING_FACTS_SQL, [bodyIds]) : []);
+}
+
+/** Pin repair needs only its admitted sittings, including their merged source identities. */
+export async function readMeetingFacts(query: Query, meetings: readonly Meeting[]): Promise<SittingFact[]> {
+  const ids = [...new Set(meetings.flatMap(meeting => [meeting.id, ...meeting.mergedMeetingIds ?? []]).map(meetingEntityId))];
+  if (!ids.length) return [];
+  const rows = await query(SITTING_FACTS_SQL.replace("m.parent_id = ANY($1::text[])", "m.id = ANY($1::text[])"), [ids]);
+  return [...sittingFactsFromRows(rows).values()].flat();
 }
 
 /** Sitting facts from already selected rows, grouped by their body. */
@@ -44,6 +55,7 @@ export function sittingFactsFromRows(rows: readonly Record<string, unknown>[]): 
     if (!field) continue;
     const at = new Date(row.checked_at as string).toISOString();
     const fact: SittingFact = { meetingId: String(row.entity_id).slice("meeting:".length), field, value: row.value,
+      ...(row.status === "pulled" ? {withdrawn:true} : {}),
       source: { sourceUrl: String(row.url), sourceOrg: new URL(String(row.url)).hostname, collectedAt: at, verifiedAt: at, quote: String(row.quote) } };
     const held = byBody.get(String(row.body_id));
     if (held) held.push(fact);
@@ -60,11 +72,21 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
   meetings.forEach((meeting, index) => { for (const id of [meeting.id, ...meeting.mergedMeetingIds ?? []]) owner.set(id, index); });
   const ordered=[...facts].sort((a,b)=>Date.parse(a.source.collectedAt)-Date.parse(b.source.collectedAt)
     || Number(a.field==="online")-Number(b.field==="online"));
-  for (const { meetingId, field, value, source } of ordered) {
+  for (const { meetingId, field, value, source, withdrawn } of ordered) {
     const index = owner.get(meetingId);
     if (index === undefined) continue;
     const meeting = out[index]!;
     const published = meetings[index]!;
+    if (withdrawn) {
+      const pin = value as NonNullable<Meeting["mapPin"]>, current = meeting.mapPin;
+      if (field === "mapPin" && current?.basis === "GOVERNMENT_OFFICE" && current.bodyId === pin.bodyId &&
+        current.address === pin.address && current.provenance?.sourceUrl === pin.provenance?.sourceUrl) {
+        const {mapPin:_withdrawn,...rest}=meeting;
+        if (rest.fieldSources?.mapPin) { const {mapPin:_source,...sources}=rest.fieldSources; rest.fieldSources=sources; }
+        out[index]=rest;
+      }
+      continue;
+    }
     if (field === "location" && !hasPublishedVenue((value as {address?:string;name?:string}).address || (value as {name?:string}).name)) continue;
     const factAt = Date.parse(source.collectedAt);
     const locationAt = Date.parse(published.fieldSources?.location?.collectedAt ?? published.provenance.collectedAt);
@@ -95,7 +117,10 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     if(!pin)return meeting;
     const agrees=meeting.location ? pin.basis==="MEETING"&&repeatsPublishedVenue(pin.address,meeting.location.name,meeting.location.address)
       :pin.publishedLocation===(meeting.venueGap?.publishedText??null);
-    if(agrees)return withPublishedPin(meeting,pin);
+    if(agrees||hasPendingPinReplacement(meeting,pin))return withPublishedPin(meeting,pin);
+    if(!meeting.location&&!pin.pendingReplacement&&pin.bodyId===meeting.bodyId)
+      return withPublishedPin(meeting,{...pin,pendingReplacement:{publishedLocation:meeting.venueGap?.publishedText??null,
+        onlineOnly:isOnlineOnly(meeting)}});
     const {mapPin:_stale,...rest}=meeting;return rest;
   });
 }

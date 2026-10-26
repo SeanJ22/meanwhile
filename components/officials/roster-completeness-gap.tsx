@@ -8,10 +8,10 @@ export function rosterCardGaps(gaps: readonly RosterReaderGap[]): CardGap[] {
     unit: "seat", subject: { type: "BODY", id: gap.bodyId } }));
 }
 
-/** Partial rosters keep their members; missing identities join the card's single gap line. */
+/** Partial rosters keep their members and show a request beside the missing names. */
 export function RosterCompletenessGaps({ gaps }: { gaps: readonly RosterReaderGap[] }) {
   return <>
     <CardGapsContribution id="roster-completeness" gaps={rosterCardGaps(gaps)} />
-    <CardSourcesContribution id="roster-completeness" sources={gaps.map(gap => ({ what: "Roster member identities", provenance: { sourceUrl: gap.sourceUrl, sourceOrg: gap.sourceOrg, collectedAt: gap.readAt, verifiedAt: null } }))} />
+    <CardSourcesContribution id="roster-completeness" sources={gaps.map(gap => ({ what: "Who sits on this board", provenance: { sourceUrl: gap.sourceUrl, sourceOrg: gap.sourceOrg, collectedAt: gap.readAt, verifiedAt: null } }))} />
   </>;
 }

@@ -1,5 +1,6 @@
 import { createHash } from "node:crypto";
 import { AsyncLocalStorage } from "node:async_hooks";
+import { trackSourceTransport } from "./host-transport.ts";
 
 export interface SourceAcquisitionEvidence {
   readonly source: string;
@@ -64,7 +65,7 @@ export async function captureSourceAcquisitions<T>(
   const originalFetch = globalThis.fetch;
   const evidence: SourceAcquisitionEvidence[] = [];
   activeEvidence = evidence;
-  globalThis.fetch = (async (input, init) => {
+  globalThis.fetch = trackSourceTransport((async (input, init) => {
     const response = await originalFetch(input, init);
     if (sourceContext.getStore() && response.ok) {
       const bytes = new Uint8Array(await response.clone().arrayBuffer());
@@ -76,7 +77,7 @@ export async function captureSourceAcquisitions<T>(
       });
     }
     return response;
-  }) as typeof fetch;
+  }) as typeof fetch, originalFetch);
   const runForSource: RunForSource = (source, child) => sourceContext.run(source, child);
   try {
     const value = await operation(runForSource);

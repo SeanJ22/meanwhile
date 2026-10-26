@@ -7,6 +7,7 @@ import { currentReaderSelection, withReaderSelection, type ReaderSelection } fro
 import { stateOfficesForDivisions } from "../../lib/reference/state-offices.ts";
 import { StateOfficeContacts } from "../../components/state-office-contacts.tsx";
 import { Card } from "@/components/ui/card";
+import { CardSection } from "@/components/officials/card-section";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { OfficialTermNote } from "@/components/officials/official-term-note";
@@ -130,7 +131,7 @@ import {
 } from "@/components/funding/funding-section";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { questionForTargetType } from "@/lib/signal/reactions";
-import { builtInElectionDatesFor, electionDatesFor } from "@/lib/ballot/election-dates";
+import { ballotDateText, builtInElectionDatesFor, electionDatesFor } from "@/lib/ballot/election-dates";
 import {
   calendarableSteps,
   isUpcoming,
@@ -834,7 +835,7 @@ export default readerRoute("/ballot", async function BallotPage({
         .filter(state => !navigation.has(state) && !(dates && set?.election.state === state)).map(state => {
           const registration = registrationLinkFor(state, registrationLinks);
           if (!registration) return null;
-          return <section key={state} aria-label={`${state} voting information`} className="my-6 space-y-2">
+        return <section key={state} aria-label={`${state} voting information`} className="my-6 space-y-2">
             <h2 className="text-lg font-semibold">{state} voting information</h2>
             {registration && <p><a href={registration.url}>{registration.label}</a></p>}
           </section>;
@@ -883,7 +884,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             title: `Voter registration deadline (${set.election.state})`,
                             allDayDate: regStep.date,
                             description:
-                              regStep.detail ??
+                              ballotDateText(regStep.detail) ??
                               `Last day to register to vote in ${set.election.state} for the November 3rd, 2026 general election. Your ballot, with sources: found via ${PRODUCT_NAME}.`,
                           }}
                         />
@@ -909,7 +910,7 @@ export default readerRoute("/ballot", async function BallotPage({
                               title: `${earlyStep.label} (${set.election.state})`,
                               allDayDate: w.start,
                               allDayEndDate: w.end ?? undefined,
-                              description: earlyStep.detail ?? undefined,
+                              description: ballotDateText(earlyStep.detail) ?? undefined,
                             }}
                           />
                         </>
@@ -958,16 +959,17 @@ export default readerRoute("/ballot", async function BallotPage({
           ...links.map(link => ({ what: link.label, provenance: { sourceUrl: link.sourceUrl, sourceOrg: link.sourceOrg, collectedAt: link.verifiedAt, verifiedAt: link.verifiedAt } })),
           ...(calendar?.steps ?? []).map(step => ({ what: step.label, provenance: { sourceUrl: step.sourceUrl, sourceOrg: step.sourceOrg, collectedAt: step.collectedAt, verifiedAt: step.verifiedAt } })),
         ];
-        return <section key={state} className="my-6 lg:max-w-3xl" aria-label={`${state} voting information`}>
-          <Card title={`${state} voting information`} attrs={{ "data-ballot-navigation": state }} sources={sources}
-            gaps={[
+          const missing = [
               ...(!offices.length ? [{ id: `election-office:${state}`, label: "election office" }] : []),
               ...(!links.some(link => link.purpose === "registration_page") ? [{ id: `registration-page:${state}`, label: "voter registration" }] : []),
               ...(registrationRequired && !links.some(link => link.purpose === "registration_lookup") ? [{ id: `registration-lookup:${state}`, label: "registration status" }] : []),
               ...(!links.some(link => link.purpose === "ballot_lookup") ? [{ id: `sample-ballot:${state}`, label: "sample-ballot lookup" }] : []),
               ...["Voter registration", "Mail-ballot request", "Early voting"].flatMap(label => calendar?.steps.some(step => step.label === label)
                 ? [] : [{ id: `election-dates:${state}:${label}`, label: `${label.toLowerCase()} deadlines` }]),
-            ]}>
+        ];
+
+        return <section key={state} className="my-6 lg:max-w-3xl" aria-label={`${state} voting information`}>
+          <Card title={`${state} voting information`} attrs={{ "data-ballot-navigation": state }} sources={sources}>
             {offices.map(office => <p key={`${office.divisionId}:${office.phone}`} className="mt-2" data-ballot-election-offices>
               <a href={office.navigationUrl ?? office.url}>{office.text}</a>
               {office.phone && <> · <a href={`tel:+1${office.phone.replace(/\D/g, "").slice(-10)}`}>{office.phone}</a></>}
@@ -990,15 +992,16 @@ export default readerRoute("/ballot", async function BallotPage({
                   {step.date && <p className="font-mono text-[0.875rem]" data-navigation-date>
                     {formatDateMDY(step.date.replaceAll(" – ", ", "))}
                   </p>}
-                  <p className="t-body">{step.detail}</p>
+                  {step.detail && <p className="t-body" data-navigation-detail>{ballotDateText(step.detail)}</p>}
                   {window && upcoming && !window.end && <AddToCalendar event={{
                     id: `ballot-${state}-${window.start}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
                     title: `${step.label} (${state})`, allDayDate: window.start,
-                    description: step.detail ?? undefined,
+                    description: ballotDateText(step.detail) ?? undefined,
                   }} />}
                 </li>)}
               </ul>
             </>}
+            {missing.map(gap => <CardSection key={gap.id} title={gap.label.charAt(0).toUpperCase() + gap.label.slice(1)}><CardGapContribution {...gap} /></CardSection>)}
           </Card>
         </section>;
       })}
@@ -1008,8 +1011,7 @@ export default readerRoute("/ballot", async function BallotPage({
           Open this page with a zip, e.g.{" "}
           <Link href="/ballot?zip=07866" className="underline decoration-dotted">
             /ballot?zip=07866
-          </Link>
-          .
+          </Link>.
         </p>
       )}
 
@@ -1018,8 +1020,7 @@ export default readerRoute("/ballot", async function BallotPage({
           We couldn&apos;t place that zip. Try another, or return to{" "}
           <Link href="/" className="underline decoration-dotted">
             the map
-          </Link>
-          .
+          </Link>.
         </p>
       )}
 
@@ -1064,7 +1065,7 @@ export default readerRoute("/ballot", async function BallotPage({
                           title: `${step.label} (${set?.election.state ?? ""})`,
                           allDayDate: window.start,
                           allDayEndDate: window.end ?? undefined,
-                          description: step.detail ?? undefined,
+                          description: ballotDateText(step.detail) ?? undefined,
                         }}
                       />
                     </>
@@ -1096,7 +1097,6 @@ export default readerRoute("/ballot", async function BallotPage({
                 ...(filingSources.get(contest.id) ?? []).map(provenance => ({ what: "Candidate filings", provenance })),
                 ...(lineup && set.generalLineup ? [{ what: "Primary election canvass", provenance: { sourceUrl: set.generalLineup.canvass.url, sourceOrg: set.generalLineup.canvass.issuedBy, collectedAt: set.generalLineup.canvass.readAt, verifiedAt: null } }] : []),
                 ...(lineup ? [...new Map(lineup.nominees.map(nominee => { const provenance = nomineeProvenance(nominee, contest, set!.election.state); return [provenance.sourceUrl, { what: "General-election candidates", provenance }] as const; })).values()] : [])]}
-              gaps={contest.voteFor === null ? [{ id: `contest-voting:${contest.id}`, label: "voting instructions" }] : []}
               className="ballot-office-card rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)] [&>.reader-card-header]:sr-only [&>.reader-card-body]:p-0"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
@@ -1114,6 +1114,8 @@ export default readerRoute("/ballot", async function BallotPage({
                   {[contest.voteFor !== null ? `Vote for ${contest.voteFor}` : null, contest.termYears ? `${contest.termYears}-year term` : null].filter(Boolean).join(" · ")}
                 </p>}
               </div>
+
+              {contest.voteFor === null && <CardSection title="Voting instructions"><CardGapContribution id={`contest-voting:${contest.id}`} label="voting instructions" /></CardSection>}
 
               {(() => {
                 const blurb = officeBlurbs.get(contest.id) ?? null;

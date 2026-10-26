@@ -1,3 +1,4 @@
+import { readCalendarRoute } from "../calendar-route.ts";
 // @freshness-reads-here
 import { createHash } from "node:crypto";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
@@ -7,10 +8,9 @@ import { accountedNormalize } from "../normalize-account.ts";
 import { parseDtStart, parseIcs, publisherPostedAt } from "../ical/index.ts";
 import { acquireKnownRelease, type KnownReleaseOptions } from "../known-release.ts";
 import { recordAcquiredResponse } from "../acquisition-trace.ts";
-import { readValidatedResponse, REQUEST_SPACING_MS } from "../http.ts";
-import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
+import { readValidatedResponse } from "../http.ts";
 import type { Meeting, MeetingQuery, MeetingStatus, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
-import { agendaCenterPages, agendaCenterRssUrl, parseAgendaCenter, parseAgendaCenterUpdates, type ArchivedSitting } from "./agenda-center.ts";
+import { agendaCenterPages, agendaCenterRssUrl, parseAgendaCenter, parseAgendaCenterCategories, parseAgendaCenterUpdates, type ArchivedSitting } from "./agenda-center.ts";
 
 export { parseAgendaCenter, parseAgendaCenterCategories } from "./agenda-center.ts";
 
@@ -84,7 +84,7 @@ export function makeCivicPlusSource(
       const common = { ocdId: wiring.ocdId, bodyId: wiring.bodyId, bodyName, timeZone: wiring.timeZone, jurisdiction: wiring.jurisdiction };
       for (const event of parseIcs(ical)) {
         logicalInput++;
-        if (!event.uid || !event.summary || (wiring.config.summaryMatch && !event.summary.includes(wiring.config.summaryMatch))) {
+        if (!event.uid || !event.summary || (wiring.config.summaryMatch && !event.summary.toLocaleLowerCase("en-US").includes(wiring.config.summaryMatch.toLocaleLowerCase("en-US")))) {
           drops.notConfigured++; continue;
         }
         const start = event.dtstart && clockAt(event.dtstart, wiring.timeZone);
@@ -104,7 +104,11 @@ export function makeCivicPlusSource(
         feedDates.set(day, [...(feedDates.get(day) ?? []), meeting]);
       }
       const categoryIds = wiring.config.agendaCenterCategoryId?.split(",").map(id => id.trim()) ?? [];
-      const archiveRows = agendaPages.flatMap(page => categoryIds.flatMap(categoryId => parseAgendaCenter(page.text, categoryId).map(sitting => ({ sitting, page }))));
+      const archiveRows = agendaPages.flatMap(page => {
+        const selected = categoryIds.length ? categoryIds : parseAgendaCenterCategories(page.text)
+          .filter(category => category.name.toLocaleLowerCase("en-US") === bodyName.toLocaleLowerCase("en-US")).map(category => category.id);
+        return selected.flatMap(categoryId => parseAgendaCenter(page.text, categoryId).map(sitting => ({ sitting, page })));
+      });
       const updates = new Map(parseAgendaCenterUpdates(rss?.text ?? "").map(update => [update.id, update]));
       const dateCounts = new Map<string, Set<string>>();
       for (const { sitting } of archiveRows) {
@@ -152,10 +156,10 @@ export function makeCivicPlusSource(
     async fetch(query?: MeetingQuery): Promise<CivicPlusRaw[]> {
       const collected: CivicPlusRaw[] = [];
       const responses = new Map<string, { text: string; collectedAt: string }>();
+      const pages = new Map<string, Promise<{ text: string }>>();
       const read = async (url: string, accept: string) => {
         const existing = responses.get(url);
         if (existing) return existing;
-        if (responses.size) await sourceAcquisitionSleep(REQUEST_SPACING_MS, query?.signal);
         const release = await acquireKnownRelease({
           ...cache, sourceId: SOURCE_NAME, releaseId: createHash("sha256").update(url).digest("hex"), url,
           parserVersion: "civicplus/2", signal: query?.signal ?? AbortSignal.timeout(120_000), maxBytes: 8 * 1024 * 1024,
@@ -193,9 +197,15 @@ export function makeCivicPlusSource(
             if (visited.has(url)) continue;
             visited.add(url);
             try {
-              const reply = await read(url, "text/html");
-              agendaPages.push({ url, ...reply }); collectedAt ||= reply.collectedAt;
-              pending.push(...agendaCenterPages(reply.text, url, wiring.config.agendaCenterCategoryId).filter(next => !visited.has(next)));
+              const learned = await readCalendarRoute({ url, read: next => read(next, "text/html"), fetchImpl, signal: query?.signal, store: cache.store, pages });
+              const reply = learned.value;
+              agendaPages.push({ url: learned.url, ...reply }); collectedAt ||= reply.collectedAt;
+              pending.push(...agendaCenterPages(reply.text, learned.url, wiring.config.agendaCenterCategoryId).filter(next => {
+                if (visited.has(next)) return false;
+                const page = new URL(next), start = page.searchParams.get("startDate"), end = page.searchParams.get("endDate");
+                return !(query?.startsAfter && end && Date.parse(end) < Date.parse(query.startsAfter) ||
+                  query?.startsBefore && start && Date.parse(start) > Date.parse(query.startsBefore));
+              }));
             } catch (error) {
               query?.signal?.throwIfAborted(); failure = error;
               partialScopes.push({ scope: "ARCHIVE", ocdIds: [wiring.ocdId], cause: String(error) });

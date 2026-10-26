@@ -146,16 +146,17 @@ test("a challenge served with HTTP 200 is the same wall", async () => {
   assert.match(child.error ?? "", /challenge page/i);
 });
 
-test("a calendar envelope holding no events is refused as the publisher's answer, not our extraction", async () => {
+test("a valid calendar envelope holding no events is a counted empty observation", async () => {
   const empty: typeof fetch = async () =>
     new Response("BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Test//EN\r\nEND:VCALENDAR\r\n", {
       status: 200,
       headers: { "content-type": "text/calendar" },
     });
   const { child } = await icalChildReport(empty);
-  assert.equal(child.ok, false);
-  assert.equal(child.failure, "WALL");
-  assert.match(child.error ?? "", /answered a calendar envelope holding no events/);
+  assert.equal(child.ok, true);
+  assert.equal(child.normalized, 0);
+  assert.equal(child.error, null);
+  assert.equal(child.accounting?.logicalInput, 0);
 });
 
 test("a real calendar we extract nothing from is still OUR zero-row JOB", async () => {

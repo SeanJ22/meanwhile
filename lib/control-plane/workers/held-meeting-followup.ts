@@ -30,7 +30,6 @@ import { canonicalJson, type ArtifactRecord, type ControlPlaneRepositories } fro
 import type { RouteTask } from "../route-task.ts";
 import type { DeclaredExecutor } from "../scheduler/dispatch.ts";
 import { askGapSourceUrl } from "../scheduler/providers/ask-gaps.ts";
-import { readHeldMeetingInput, type HeldMeetingInput } from "../scheduler/providers/held-meeting-input.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { AcquirerResult } from "./research-types.ts";
 import { enqueueWorkerTask, FLEET_POLICY_VERSION } from "./runtime.ts";
@@ -148,7 +147,6 @@ export interface HeldMeetingWorkerRuntime {
   readonly root: string; readonly repos: ControlPlaneRepositories; readonly vault: EvidenceStore;
   readonly query: Query; readonly store: DurableReceiptStore & Pick<RoutineDataStore, "clock">; readonly now: () => string;
   readonly environment?: NodeJS.ProcessEnv; readonly slots?: WorkerProcessSlots; readonly launcher?: BoundedChildLauncher;
-  readonly readInput?: (query: Query, partition: MeetingPartitionContract) => Promise<HeldMeetingInput>;
 }
 
 /** Production opens its own narrow reader only when the leased task actually runs. */
@@ -193,7 +191,7 @@ export async function runHeldMeetingNative(runtime: HeldMeetingWorkerRuntime, in
   let directory: string | undefined;
   try {
     input.assertLeaseHealthy?.();
-    const held = input.contract.recordClass === "MEETING" ? await (runtime.readInput ?? readHeldMeetingInput)(runtime.query, input.partition) : {};
+    const held = input.contract.recordClass === "MEETING" ? { partition: input.partition } : {};
     directory = await mkdtemp(join(tmpdir(), "held-meeting-"));
     const file = join(directory, "input.json");
     const replay = input.capture && { ...input.capture, bytes: undefined, base64: Buffer.from(input.capture.bytes).toString("base64") };

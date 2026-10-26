@@ -7,6 +7,8 @@ import {
 } from "../../civic-data/read-model.ts";
 import { PRL_CONTRACT } from "./data-plane.ts";
 import { shareSentence } from "./index.ts";
+import { readKeyedPrlProfile } from "./keyed-reader.ts";
+import { localPrlSnapshot, prlPersonQuery, type PrlPersonReadOptions } from "./reader-input.ts";
 import {
   PRL_CATEGORIES,
   PRL_RHETORIC_ATTRIBUTION,
@@ -134,6 +136,23 @@ export function prlProfileForSubject(subjectId: string): PrlReaderProfile | null
   const matches = held.profiles.filter((profile) => profile.bioguideId === bioguide);
   if (matches.length > 1) throw new Error(`Ambiguous normalized PRL identity ${bioguide}`);
   return matches[0] ? projectPrlProfile(matches[0], held) : null;
+}
+
+/** Person routes select the exact profile row; local Memory/edge snapshots need no database read. */
+export async function readPrlProfileForSubject(subjectId: string, options: PrlPersonReadOptions = {}): Promise<PrlReaderProfile | null> {
+  const bioguide = /^congress:([A-Z]\d{6})$/.exec(subjectId)?.[1];
+  if (!bioguide) return null;
+  const local = await localPrlSnapshot(PRL_CONTRACT.recordClass, PRL_CONTRACT.scope, options);
+  if (local) {
+    const held = await readPrlProjection(local);
+    if (held.kind !== "PROMOTED") return null;
+    const matches = held.value.profiles.filter(profile => profile.bioguideId === bioguide);
+    if (matches.length > 1) throw new Error(`Ambiguous normalized PRL identity ${bioguide}`);
+    return matches[0] ? projectPrlProfile(matches[0], held.value) : null;
+  }
+  const query = prlPersonQuery(options);
+  const held = query ? await readKeyedPrlProfile(query, bioguide) : null;
+  return held ? projectPrlProfile(held.profile, held.metadata) : null;
 }
 
 /** Test seam. Never called by a production render path. */

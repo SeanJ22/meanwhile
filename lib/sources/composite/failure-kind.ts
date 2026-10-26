@@ -14,6 +14,7 @@ import { isSourceAcquisitionFailure } from "../../civic-data/source-acquisition-
 export type FetchFailureKind = "WALL" | "JOB";
 
 const WALL_ERROR_NAMES = new Set([
+  "SourceReadDeferred",
   "SourceHttpError",
   "SourceAcquisitionFailure",
   "SourceAcquisitionDeadlineError",

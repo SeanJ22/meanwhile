@@ -66,7 +66,8 @@ import {
   PIMA_OUTCOME_TENANT,
   type OutcomeTenant,
 } from "../lib/outcomes/data-plane.ts";
-import { legistarOutcomesCandidate, retainVerifiedSittingRecords } from "./lib/held-legistar-outcomes.ts";
+import { legistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
+import { retainVerifiedSittingRecords } from "../lib/outcomes/ingest.ts";
 import { readDoorOutcomeProjection } from "../lib/outcomes/store.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
@@ -322,6 +323,7 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
   }
 
   let last: PromotionOutcome | null = null;
+  let lastGood: PromotionOutcome | null = null;
   let budgetExhausted = false;
   for (const event of sittings) {
     tally.sittingsSeen += 1;
@@ -397,6 +399,7 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
     const outcome = await processRegisteredRoutineCandidate(store, tenant.contractId, checked, observedAt);
     last = outcome;
     if (outcome.promoted) {
+      lastGood = outcome;
       snapshot = proposed;
       sourceThrough = outcome.candidate.candidate.temporal.sourceThrough;
       heldById.set(meetingId, persisted);
@@ -431,24 +434,8 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
       sourceThrough: outcomeSourceThrough(sourceThrough, newestSourceStamp(events) ?? eventsRetrievedAt),
     });
     log(`  no-change receipt: ${last.promoted ? "PROMOTED" : `HELD ${last.candidate.failureCode ?? last.candidate.state}`}`);
-  } else if ((refusedSittings.length > 0 || budgetExhausted) && last.promoted) {
-    // A refused sitting's durable candidate was followed by a promotion, so it
-    // no longer describes the live pointer. Record the run's held disposition
-    // against the pointer as it now stands; the refused sittings stay due.
-    const observedAt = now();
-    last = await persist({
-      snapshot,
-      acquisitions: eventEvidence,
-      retrievedAt: observedAt,
-      sourceThrough: sourceThrough ?? eventsRetrievedAt,
-      failureDetail:
-        (budgetExhausted ? `Explicit run limit ${args.maxSittings} left sittings unread. ` : "") +
-        `${refusedSittings.length} ${tenant.label} sitting acquisition(s) were refused in this run: ${refusedSittings.join("; ")}. ` +
-        "Every sitting that validated is live in the canonical pointer; the refused sittings stay due for the next attempt.",
-    });
-    log(`  run held: ${refusedSittings.length} refused sitting(s) recorded against the moved pointer`);
   }
-  return settle(last);
+  return settle(lastGood ?? last);
 }
 
 async function main(): Promise<void> {

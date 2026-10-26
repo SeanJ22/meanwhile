@@ -1,3 +1,4 @@
+import { sourceFetch } from "./http.ts";
 /**
  * Robots.txt read and RECORDED before an opted-in meeting adapter's first
  * request. Every verdict is recorded and none refuses
@@ -71,11 +72,11 @@ export function makePermissionGate(options: PermissionGateOptions = {}): Permiss
   async function readRobots(url: string): Promise<RobotsRead> {
     const robotsUrl = robotsUrlFor(url);
     try {
-      const response = await impl(robotsUrl, {
+      const response = await sourceFetch(robotsUrl, {
         headers: { "User-Agent": sourceUserAgent(), Accept: "text/plain,*/*" },
         redirect: "follow",
         signal: options.signal,
-      });
+      }, impl);
       const text = await response.text();
       return {
         robotsText: text,

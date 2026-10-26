@@ -1,3 +1,4 @@
+import { sourceFetch } from "../http.ts";
 import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
 import { civicElectionRows, civicLookupFromRaw, unavailableCivicLookup, type CivicLookup } from "./model.ts";
 import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
@@ -62,7 +63,7 @@ export async function readCivicApi(route: "elections" | "voterinfo", params: Rec
   // Provider-directed backoff; no small-government pacing applies to this national API.
   for (let attempt = 0; attempt < 3; attempt++) {
     let response: Response;
-    try { response = await (options.fetchImpl ?? fetch)(url, { signal, cache: "no-store", headers: { accept: "application/json" } }); }
+    try { response = await sourceFetch(url.href, { signal, cache: "no-store", headers: { accept: "application/json" } }, options.fetchImpl); }
     catch {
       logCivicCallFailure(route, null, "", params, options, "transport");
       throw new CivicSourceError(null, "Google Civic could not be reached.");

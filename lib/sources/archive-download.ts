@@ -1,3 +1,4 @@
+import { sourceFetch } from "./http.ts";
 import { createHash } from "node:crypto";
 import { createReadStream, createWriteStream } from "node:fs";
 import { mkdtemp, rm } from "node:fs/promises";
@@ -48,7 +49,7 @@ export async function openArchiveSource(dataset: ArchiveDownloadSpec, fetchImpl:
     else if (held?.lastModified) headers["if-modified-since"] = held.lastModified;
     let response: Response | null = null, outage: string | undefined;
     try {
-      response = await fetchImpl(dataset.url, { headers, redirect: "follow", signal: AbortSignal.timeout(180_000) });
+      response = await sourceFetch(dataset.url, { headers, redirect: "follow", signal: AbortSignal.timeout(180_000) }, fetchImpl);
       if (!response.ok && response.status !== 304) throw new Error(`PRL_SOURCE_HTTP_${response.status}`);
     } catch (error) {
       if (!held || !archive) throw error;

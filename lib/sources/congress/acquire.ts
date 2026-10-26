@@ -1,3 +1,4 @@
+import { sourceFetch } from "../http.ts";
 import { setTimeout as delay } from "node:timers/promises";
 import { FEDERAL_SOURCES, type FederalSourceId } from "./targets.ts";
 import { object, rows, string } from "./normalize.ts";
@@ -38,7 +39,7 @@ export function federalClient(options: FederalClientOptions) {
     for (let attempt = 0; ; attempt++) {
       const wait = nextAt - Date.parse(clock());
       if (wait > 0) await sleep(wait);
-      const response = await (options.fetchImpl ?? fetch)(url, { headers, signal: AbortSignal.timeout(30_000), redirect: "manual" });
+      const response = await sourceFetch(url, { headers, signal: AbortSignal.timeout(30_000), redirect: "manual" }, options.fetchImpl);
       nextAt = Date.parse(clock()) + pace;
       const limit = Number(response.headers.get("x-ratelimit-limit"));
       if (limit > 0 && Number.isFinite(limit) && options.source !== "senate-lda") pace = 3_600_000 / limit;

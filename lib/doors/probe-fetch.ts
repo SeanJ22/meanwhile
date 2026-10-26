@@ -9,10 +9,9 @@
 
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
 import { admitWebsiteRequest, holdWebsiteAfter, type WebsitePacing } from "../control-plane/website-pacing.ts";
-import { sourceUserAgent } from "../sources/http.ts";
+import { sourceFetch, sourceUserAgent } from "../sources/http.ts";
 import type { ProbeFetch } from "./probe.ts";
 
-export const PROBE_HOST_SPACING_MS = 400;
 export const PROBE_TIMEOUT_MS = 15_000;
 const MAX_BYTES = 1_048_576;
 
@@ -37,24 +36,16 @@ export function pacedProbeFetch(input: {
   readonly sleep?: (ms: number) => Promise<void>;
 }): ProbeFetch {
   const fetchImpl = input.fetchImpl ?? globalThis.fetch;
-  const sleep = input.sleep ?? ((ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms)));
   const clock = input.clock ?? Date.now;
-  const lastByHost = new Map<string, Promise<void>>();
   return async (url, headers) => {
-    const host = new URL(url).hostname.toLowerCase();
-    // One request at a time per host, spaced: each waits for the one before it and then for the spacing.
-    const before = lastByHost.get(host) ?? Promise.resolve();
-    const turn = before.then(() => sleep(PROBE_HOST_SPACING_MS));
-    lastByHost.set(host, turn);
-    await before;
     const admitted = await admitWebsiteRequest(input.pacing, url, websiteRequestLimit(input.sizeFor?.(url)), clock());
     if (!admitted.ok) throw new WebsiteWait(admitted.until, admitted.why);
-    const response = await fetchImpl(url, {
+    const response = await sourceFetch(url, {
       method: "GET",
       headers: { "User-Agent": sourceUserAgent(), Accept: "*/*", ...headers },
       signal: AbortSignal.timeout(PROBE_TIMEOUT_MS),
       redirect: "follow",
-    });
+    }, fetchImpl);
     await holdWebsiteAfter(input.pacing, url, response.status, response.headers.get("retry-after"), clock());
     return {
       status: response.status,

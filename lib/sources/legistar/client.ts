@@ -1,5 +1,4 @@
-import { sourceUserAgent } from "../http.ts";
-import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
+import { sourceFetch, sourceUserAgent } from "../http.ts";
 
 const API_ROOT = "https://webapi.legistar.com/v1";
 
@@ -8,11 +7,6 @@ const PAGE_SIZE = 1000;
 
 /** The runaway stop for `pageById`, named so the error that reports hitting it can name it. */
 const MAX_PAGES = 100;
-
-/** Between requests to the same tenant. Serialized, never concurrent. */
-const REQUEST_SPACING_MS = 350;
-
-const MAX_RETRIES = 4;
 
 export class LegistarError extends Error {
   // Written out rather than declared as constructor parameter properties: node
@@ -48,93 +42,19 @@ interface RequestOptions {
   onRead?: (reading: { url: string; text: string; retrievedAt: string; body: unknown }) => void | Promise<void>;
 }
 
-// Tenants share a vendor hostname, not a connection slot. Keep paging,
-// agenda and outcome reads for one tenant serialized across all callers.
-const clientSlots = new Map<string, Promise<void>>();
-
-export function legistarConnectionKey(slug: string): string {
-  if (!/^[a-z0-9_-]+$/i.test(slug)) throw new Error("Invalid Legistar client slug");
-  return `legistar:${slug.toLowerCase()}`;
-}
-
-async function inClientSlot<T>(slug: string, options: RequestOptions, read: () => Promise<T>): Promise<T> {
-  const key = legistarConnectionKey(slug);
-  const previous = clientSlots.get(key) ?? Promise.resolve();
-  let release!: () => void;
-  const current = new Promise<void>(resolve => { release = resolve; });
-  clientSlots.set(key, current);
-  await previous;
-  try {
-    options.signal?.throwIfAborted();
-    return await read();
-  } finally {
-    try { await sourceAcquisitionSleep(REQUEST_SPACING_MS, options.signal); }
-    finally {
-      release();
-      if (clientSlots.get(key) === current) clientSlots.delete(key);
-    }
-  }
-}
-
-async function requestOnce(
-  url: string,
-  options: RequestOptions,
-): Promise<Response> {
-  const impl = options.fetchImpl ?? fetch;
-  return impl(url, {
-    headers: {
-      "User-Agent": sourceUserAgent(),
-      Accept: "application/json",
-    },
-    signal: options.signal,
-  });
-}
 
 async function getJson<T>(path: string, options: RequestOptions): Promise<T> {
-  return inClientSlot(path.split("/")[0], options, () => getJsonInSlot<T>(path, options));
-}
-
-async function getJsonInSlot<T>(path: string, options: RequestOptions): Promise<T> {
   const url = `${API_ROOT}/${path}`;
-  let lastStatus = 0;
-
-  for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    const response = await requestOnce(url, options);
-    lastStatus = response.status;
-
-    if (response.ok) {
-      const text = await response.text();
-      const body = JSON.parse(text) as T;
-      await options.onRead?.({ url, text, retrievedAt: new Date().toISOString(), body });
-      options.signal?.throwIfAborted();
-      return body;
-    }
-
-    const retryable = response.status === 429 || response.status >= 500;
-
-    // A 500 here is "not a client", not a transient fault — see describeStatus.
-    // Retrying it is pointless, so only 429 and genuine 5xx above 500 back off.
-    if (!retryable || response.status === 500 || attempt === MAX_RETRIES) {
-      throw new LegistarError(
-        `${describeStatus(response.status)} for ${url}`,
-        response.status,
-        url,
-      );
-    }
-
-    const retryAfter = Number(response.headers.get("retry-after"));
-    const waitMs = Number.isFinite(retryAfter) && retryAfter > 0
-      ? retryAfter * 1000
-      : REQUEST_SPACING_MS * 2 ** attempt;
-
-    await sourceAcquisitionSleep(waitMs, options.signal);
+  const response = await sourceFetch(url, { headers: { "User-Agent": sourceUserAgent(), Accept: "application/json" }, signal: options.signal }, options.fetchImpl, "legistar");
+  if (!response.ok) {
+    await response.body?.cancel();
+    throw new LegistarError(`${describeStatus(response.status)} for ${url}`, response.status, url);
   }
-
-  throw new LegistarError(
-    `${describeStatus(lastStatus)} for ${url}`,
-    lastStatus,
-    url,
-  );
+  const text = await response.text();
+  const body = JSON.parse(text) as T;
+  await options.onRead?.({ url, text, retrievedAt: new Date().toISOString(), body });
+  options.signal?.throwIfAborted();
+  return body;
 }
 
 async function pageById<T>(
@@ -242,4 +162,4 @@ export async function fetchEventItemVotes<T>(
   );
 }
 
-export { REQUEST_SPACING_MS, PAGE_SIZE, sourceUserAgent as userAgent };
+export { PAGE_SIZE, sourceUserAgent as userAgent };

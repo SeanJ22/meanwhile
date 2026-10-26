@@ -1,4 +1,5 @@
 import { isSourceAcquisitionDeadlineError, runInSourceAcquisitionDomain } from "../sources/acquisition-deadline.ts";
+import { sourceReadDeferred } from "../sources/http.ts";
 
 export const SOURCE_ACQUISITION_FAILURE_CODES = [
   "PUBLISHER_UNAVAILABLE",
@@ -43,7 +44,7 @@ export async function requestPublisher<T>(
   try {
     return await request();
   } catch (error) {
-    if (isSourceAcquisitionFailure(error)) throw error;
+    if (isSourceAcquisitionFailure(error) || sourceReadDeferred(error)) throw error;
     throw sourceAcquisitionFailure(
       "PUBLISHER_UNAVAILABLE",
       `${sourceLabel}: the publisher request did not complete (${errorKind(error)}).`,

@@ -76,6 +76,7 @@ import {
 } from "./reader-readback.ts";
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
 import { freezeDurableJson } from "./durable-json.ts";
+import { readLegiscanPublicationBase } from "../sources/legiscan/publication-base.ts";
 import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,billScope,legiscanContinuationPending } from "../sources/legiscan/current-sessions.ts";
 import { projectionKey } from "./projection-key.ts";
 import { readPublishedSourceChecks, recordPublishedSourceCheck, validPublishedSourceCheck,
@@ -2644,6 +2645,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readPublicationBase(recordClass:RoutineRecordClass,scope:string):Promise<RoutinePublicationBase> {
     if(statePublicationScope(scope))return ownPublicationBase(this,recordClass,scope,await this.readStatePublicationBase(recordClass,scope));
+    if(recordClass==="STATE_BILL" && (scope===LEGISCAN_BULK_SCOPE || /^legiscan-bills:session:[1-9]\d*(?::|$)/.test(scope)))
+      return ownPublicationBase(this,recordClass,scope,await readLegiscanPublicationBase((text,params)=>this.readerRows(text,params),scope,value=>this.loadPayload(value,scope)));
     if(recordClass!=="FEDERAL_MONEY")throw new Error(`PUBLICATION_BASE_SCOPE_UNSUPPORTED:${recordClass}:${scope}`);
     return ownPublicationBase(this,recordClass,scope,await readFederalMoneyPublicationBase((text,params)=>this.readerRows(text,params),this.readCache,scope,
       value=>this.loadPayload(value,scope)));
@@ -3101,7 +3104,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const held = options.candidate;
     const partedManual = held !== undefined && isPartedManualCandidate(held);
     let record: CandidateVersionRecord | null;
-    if (held && (partedManual || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY" || held.recordClass === "FEDERAL_MONEY")) {
+    if (held && (partedManual || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY" || held.recordClass === "FEDERAL_MONEY" || held.recordClass === "STATE_BILL")) {
       const hash = partedManual || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
       const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,

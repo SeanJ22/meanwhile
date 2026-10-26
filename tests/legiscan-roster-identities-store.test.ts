@@ -39,10 +39,9 @@ test("production identity selectors keep current and immutable historical roster
     const current=await store.readSlimRosters("STATE_LEGISLATOR",[scope]);
     assert.equal(current[0]?.versionId,version);assert.equal(current[0]?.roster.officeholders.length,1);
     assert.equal(current[0]?.roster.officeholders[0]?.offices,undefined);
-    await assert.rejects(pg.query("UPDATE civic_data_candidates SET validation_receipt=jsonb_set(validation_receipt,'{sourceId}','\"other-source\"'::jsonb)WHERE id=$1",[version]),
-      (error:unknown)=>{const failure=error as {code?:string;constraint?:string};
-        return failure.code==="23514"&&failure.constraint==="civic_data_candidates_disposition_receipt_coherent";},
-      "the existing disposition constraint rejects a receipt for another source");
-    assert.deepEqual(await store.readHistoricalRosterIdentities(version),historical,"a refused receipt mutation cannot alter current or historical identity evidence");
+    // State and receipt columns can move; source bytes cannot. Exercise the actual
+    // historical selector's proof coupling with the schema's supported receipt mutation.
+    await pg.query("UPDATE civic_data_candidates SET validation_receipt=jsonb_set(validation_receipt,'{sourceId}','\"other-source\"'::jsonb)WHERE id=$1",[version]);
+    assert.equal(await store.readHistoricalRosterIdentities(version),null,"a receipt for another source cannot attest historical identity rows");
   });
 });

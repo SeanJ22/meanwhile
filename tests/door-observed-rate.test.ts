@@ -4,7 +4,7 @@ import test from "node:test";
 import { ROUTINE_SOURCE_TASKS, routineTaskDue, type RoutineTaskClock } from "../lib/civic-data/runner.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { STANDING_CHECK_MINUTES, coldCheckMinutes, overdueDoors } from "@/lib/doors/overdue.ts";
-import { MIN_OBSERVED_CHECK_MINUTES, checkEveryWithObserved, doorRateRow, observeChange, observedChangeMinutesByDoor, recordDoorChange } from "@/lib/doors/observed-rate.ts";
+import { MIN_OBSERVED_CHECK_MINUTES, checkEveryWithObserved, doorRateRow, observeChange, recordDoorChange } from "@/lib/doors/observed-rate.ts";
 import { recordDoorOutcome } from "@/lib/doors/outcome.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { seedMeetingDoors } from "@/lib/doors/seed-meetings.ts";
@@ -41,17 +41,17 @@ test("the average follows a habit that changes: recent gaps weigh most", () => {
   assert.ok(door.observedChangeMinutes! < 300, `eight 2-hour gaps pull a daily door to a few hours, got ${door.observedChangeMinutes}`);
 });
 
-test("the check is the faster of policy and observed rate, never under the hourly floor, never slower than policy, and a hand setting stands", () => {
+test("an actual source interval can slow its policy, the hourly floor holds, and a hand setting stands", () => {
   const door = (observed: number | null, own: number | null = null) => ({ checkEveryMinutes: own, observedChangeMinutes: observed });
   assert.deepEqual(checkEveryWithObserved(door(null), 1440), { minutes: 1440, basis: "POLICY" });
   assert.deepEqual(checkEveryWithObserved(door(240), 1440), { minutes: 240, basis: "OBSERVED" });
   assert.deepEqual(checkEveryWithObserved(door(5), 1440), { minutes: MIN_OBSERVED_CHECK_MINUTES, basis: "OBSERVED" });
-  assert.deepEqual(checkEveryWithObserved(door(5000), 1440), { minutes: 1440, basis: "POLICY" }, "a slow door is not read slower than its policy");
+  assert.deepEqual(checkEveryWithObserved(door(5000), 1440), { minutes: 5000, basis: "OBSERVED" }, "a slow source is read at its observed pace");
   assert.deepEqual(checkEveryWithObserved(door(240, 720), 1440), { minutes: 720, basis: "SET_ON_DOOR" });
-  assert.deepEqual(checkEveryWithObserved(door(240), 30), { minutes: 30, basis: "POLICY" }, "a policy already faster than the floor is kept");
+  assert.deepEqual(checkEveryWithObserved(door(240), 30, 30), { minutes: 30, basis: "POLICY" }, "a protected time-sensitive check keeps its pace");
 });
 
-test("a changed promotion is written onto its door in the same write as the success; an unchanged one is not a change", async () => {
+test("different source bytes are written onto a door with its success; an unchanged read is not a change", async () => {
   const { repos, door } = await oneDoor();
   await recordDoorOutcome(repos.doors, door.doorId, "SUCCESS", at(1), true);
   await recordDoorOutcome(repos.doors, door.doorId, "SUCCESS", at(2), false);
@@ -89,18 +89,29 @@ test("an observed door is overdue by the check it produces, and Admin's row says
   assert.equal(late[0]!.overdueByMinutes, 60);
   assert.deepEqual(doorRateRow(succeeded, coldCheckMinutes()), { doorId: door.doorId, observedChangeMinutes: 180, changesSeen: 3, lastChangedAt: at(0), checkEveryMinutes: 180, basis: "OBSERVED" });
   assert.equal(doorRateRow(plain, STANDING_CHECK_MINUTES).basis, "POLICY");
-  assert.equal(observedChangeMinutesByDoor([succeeded, plain]).get(door.doorId), 180);
-  assert.equal(observedChangeMinutesByDoor([{ ...succeeded, checkEveryMinutes: 600 }]).size, 0, "a door with a hand setting is not sped up");
 });
 
-test("the runner reads a changing non-meeting door as often as it changes, and leaves a meeting's sitting-window schedule alone", () => {
+test("the runner observes each source's changes while respecting its fact retry floor", () => {
   const task = ROUTINE_SOURCE_TASKS.find((t) => !t.ownerInvocation && !t.contract?.schedule && t.cadenceMs >= 20 * 3_600_000)!;
   assert.ok(task, "a daily non-meeting task exists");
   const now = Date.parse(AT) + 6 * 3_600_000;
   const clock: RoutineTaskClock = { lastAttemptedAt: AT, lastSucceededAt: AT, lastSucceededObservedAt: AT } as RoutineTaskClock;
   assert.equal(routineTaskDue(task, clock, now), false, "daily by policy: not due after six hours");
-  assert.equal(routineTaskDue(task, clock, now, undefined, 4 * 3_600_000), true, "a door that changes every four hours is due");
+  assert.equal(routineTaskDue(task, clock, now, undefined, 4 * 3_600_000), false, "a source changing every four hours still respects its daily fact retry");
   const halfHourOn = Date.parse(AT) + 30 * 60_000;
   assert.equal(routineTaskDue(task, clock, halfHourOn, undefined, 10 * 60_000), false, "the hourly floor holds: a door seen changing every ten minutes is still not read twice in an hour");
-  assert.equal(routineTaskDue(task, clock, Date.parse(AT) + 61 * 60_000, undefined, 10 * 60_000), true);
+  assert.equal(routineTaskDue(task, clock, Date.parse(AT) + 61 * 60_000, undefined, 10 * 60_000), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse(AT) + 24 * 60 * 60_000, undefined, 10 * 60_000), true);
+});
+
+test("routine source history replaces version-based door observations without counting an unchanged publication", async () => {
+  const { repos, door } = await oneDoor();
+  const history = { rawHash: "a".repeat(64), observedFrom: at(0), lastChangedAt: at(6), changes: 1, meanChangeMs: 6 * 3_600_000 };
+  await recordDoorOutcome(repos.doors, door.doorId, "SUCCESS", at(7), false, undefined, history);
+  await recordDoorOutcome(repos.doors, door.doorId, "SUCCESS", at(8), false, undefined, history);
+  const after = (await repos.doors.read(door.doorId))!.value;
+  assert.equal(after.lastSuccessAt, at(8));
+  assert.equal(after.lastChangedAt, at(6));
+  assert.equal(after.observedChanges, 1);
+  assert.equal(after.observedChangeMinutes, 360);
 });

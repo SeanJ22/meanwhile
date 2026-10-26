@@ -205,5 +205,10 @@ test("a changed Congress chamber feed opens held people only after its new bytes
   }});
   assert.ok(heldReads>0);
   const result=await readStateFederalDirectory("AZ",{store,now:NOW});assert.equal(result.kind,"PROMOTED");
-  if(result.kind==="PROMOTED")assert.equal(result.value.roster.officeholders[0].phone,"202-225-2000");
+  if(result.kind==="PROMOTED"){
+    const member=result.value.roster.officeholders[0];assert.equal(member.phone,"202-225-2000");
+    assert.equal(member.fieldSources?.phone?.sourceUrl,"https://clerk.house.gov/xml/lists/MemberData.xml");
+    assert.equal(member.offices?.find(office=>office.id==="capitol:A000001")?.phone,"202-225-2000");
+    assert.equal(result.value.directory.byMember.A000001.districtOffices[0].address,"1 Example Street");
+  }
 });

@@ -2468,8 +2468,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readPromotionPayloadFields(recordClass: RoutineRecordClass, scope: string, keys: readonly string[]): Promise<Readonly<Record<string, unknown>> | null> {
     return this.readVersioned(`promotion-fields:${JSON.stringify(keys)}`, recordClass, scope, async () => {
-      const [row] = (await this.db.execute(sql`select coalesce((select jsonb_object_agg(k, p.payload->k) from unnest(${`{${keys.map(key => `"${key}"`).join(",")}}`}::text[]) k
-        where jsonb_exists(p.payload, k)), '{}'::jsonb) as fields
+      const [row] = (await this.db.execute(sql`select coalesce((select jsonb_object_agg(k, reader_payload_value(reader_payload_node(p.payload)->k)) from unnest(${`{${keys.map(key => `"${key}"`).join(",")}}`}::text[]) k
+        where jsonb_exists(reader_payload_node(p.payload), k)), '{}'::jsonb) as fields
       from civic_data_promotions p where p.record_class = ${recordClass} and p.scope = ${scope}`)).rows as { fields: Record<string, unknown> }[];
       return row ? row.fields : null;
 

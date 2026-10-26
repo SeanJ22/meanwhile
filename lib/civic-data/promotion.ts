@@ -236,6 +236,7 @@ export async function processRegisteredFanOutCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
+  // A new source/progress envelope must be persisted even when its civic facts match the current version.
   options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");

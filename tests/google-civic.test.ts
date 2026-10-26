@@ -17,6 +17,7 @@ import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 import type { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { readRawCaptureText, type RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 
 const AT = "2026-10-12T23:13:00.000Z";
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/google-civic/${name}.json`, import.meta.url), "utf8");
@@ -261,4 +262,25 @@ test("a resumed national pass starts with states that have no completed source c
     fetchImpl: (async () => new Response(fixture("elections"))) as typeof fetch } });
   assert.equal(visited.at(-1), "AL");
   assert.deepEqual(visited.slice(0, -1), GOOGLE_CIVIC_STATES.filter(state => state !== "AL"));
+});
+
+test("the fanout publication option persists a new source probe when the held civic facts match", async () => {
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), raw = fixture("elections");
+  const rows = civicElectionRows(raw, AT, new Set(["ocd-division/country:us"]));
+  const initial = await civicCandidate(vault, civicStateScope("AL"), { formatVersion: 1, kind: "STATE", checkedAt: AT, rows, coverage: [] }, raw, "elections");
+  const first = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_SOURCE_ID, initial, AT);
+  assert.ok(first.promoted);
+  const later = "2026-10-13T00:13:00.000Z";
+  const fresh = await civicCandidate(vault, civicStateScope("AL"), { formatVersion: 1, kind: "STATE", checkedAt: later,
+    rows: civicElectionRows(raw, later, new Set(["ocd-division/country:us"])), coverage: [] }, raw, "elections");
+  const sourceProbe = { formatVersion: 1, complete: false, coverageComplete: false };
+  const normalizedPayload = { ...(fresh.normalizedPayload as object), sourceProbe };
+  const upgraded = { ...fresh, normalizedPayload, normalization: { ...fresh.normalization, normalizedPayloadHash: normalizedHash(normalizedPayload) } };
+  store.confirmUnchanged = async () => assert.fail("an explicit source-probe publication must not be replaced with a confirmation");
+  const result = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_SOURCE_ID, upgraded, later, first.promoted.versionId, { confirmUnchanged: false });
+  assert.equal(result.confirmed, undefined);
+  assert.equal(result.promoted?.versionId, upgraded.id);
+  assert.notEqual(result.promoted?.versionId, first.promoted.versionId);
+  const saved = await store.readCandidate(upgraded.id);
+  assert.deepEqual((saved?.candidate.normalizedPayload as { sourceProbe: unknown }).sourceProbe, sourceProbe);
 });

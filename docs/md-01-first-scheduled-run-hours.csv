@@ -1,3 +1,0 @@
-period_start,period_end_exclusive,observed_at,hour_et,all_translation_calls,measure_calls,measure_unpriced_calls,measure_known_usd,other_or_unattributed_calls,other_or_unattributed_unpriced_calls,other_or_unattributed_known_usd,published_completed,distinct_published_subjects,published_by_attempt_start,usd_per_published_completed,haiku_writer_calls,sonnet_writer_calls,opus_writer_calls,haiku_checker_calls,sonnet_checker_calls,opus_checker_calls,mean_writer_uncached_tokens,mean_writer_output_tokens
-2026-10-25T13:05:45.261Z,2026-10-25T13:30:36.239Z,2026-10-25T13:32:33.624Z,2026-10-25 09:00,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,0,0,,
-2026-10-25T13:05:45.261Z,2026-10-25T13:30:36.239Z,2026-10-25T13:32:33.624Z,WINDOW,0,0,0,0,0,0,0,0,0,0,,0,0,0,0,0,0,,

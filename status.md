@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 130 (main aaf371bc5) with /national 500, blank ballot pages and the runner's routine lane failing since 6:08 PM. Release 131 (fixes) = PR #843, auto-merge on, river f6d41b4e5. See the hand-off at the top
-worker: handing off
+build_state: LIVE FOR READERS: release 130 (main aaf371bc5). Release 131 = PR #843 (head aeec71324), auto-merge on, CI running; River watching it to merge and deploy
+worker: River
 provider: Claude
-run_id:
-lock:
-heartbeat: 2026-10-26T23:50:00Z
+run_id: session_01R8G1FdHA1LGMVbwp5wxrzN
+lock: session_01R8G1FdHA1LGMVbwp5wxrzN
+heartbeat: 2026-10-26T23:55:00Z
 
 ## Hand-off to the next River session (Oct 26, 7:50 PM EDT)
 

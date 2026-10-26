@@ -103,7 +103,7 @@ async function publishReviewedInput(config: BallotNavigationSourceConfig, store:
   const source = config.package;
   if (source.contractId !== "ballot-navigation" || !("kind" in source.payload) || source.payload.kind !== "ballot-navigation") throw new Error("NAVIGATION_REVIEWED_INPUT_INVALID");
   const head = await store.readSourceHead("CURATED_READER_RECORD", ballotNavigationScope(config.state));
-  const through = head ? await store.readCandidateField(head.versionId, ["temporal", "sourceThrough"]) : null;
+  const through = head?.sourceThrough;
   if (typeof through === "string" && Date.parse(through) >= Date.parse(source.sourceThrough)) return null;
   const result = await processNavigationCandidate(store, () => prepareNavigationSuccessor({ ...source, version: now,
     sourceReceipt: { ...source.sourceReceipt, reviewedAt: now, reviewedBy: "reviewed-ballot-navigation-input" } }, store), now);

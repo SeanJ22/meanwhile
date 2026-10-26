@@ -124,3 +124,15 @@ test("stored roster keys become descriptions while every linked source remains",
   assert.doesNotMatch(html, /termStart|Term start date|internal_record_id|Internal record id|officeEmail|>571</);
   for (const url of ["https://county.gov/roster", "https://county.gov/terms", "https://county.gov/person/571", "https://county.gov/contact"]) assert.ok(html.includes(`href="${url}"`));
 });
+
+
+test("encoded record versions never appear as source quotations", () => {
+  const quote = "Commissioner Vickie Adamson AAAAAACaASQ= AAAAAACaASY= AAAAAACaASA= AAAAAACaASI= Elected in 2024";
+  assert.deepEqual(readableSourceQuotes(quote), ["Commissioner Vickie Adamson", "Elected in 2024"]);
+  const html = renderToStaticMarkup(<CardSourcesList sources={[{ what: "Who sits on this board and their terms", provenance: {
+    sourceUrl: "https://wake.gov/board", sourceOrg: "Wake County", collectedAt: "2026-10-25", verifiedAt: null, quote,
+  } }]} />);
+  assert.match(html, /Commissioner Vickie Adamson/);
+  assert.match(html, /Elected in 2024/);
+  assert.doesNotMatch(html, /AAAAAACa/);
+});

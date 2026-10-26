@@ -14,7 +14,7 @@ export function CardGapContribution(gap: CardGap & { inline?: boolean }) {
   const subject = gap.subject === undefined ? inheritedSubject : gap.subject;
   if ((gap.count ?? 1) <= 0) return null;
   const Frame = gap.inline ? "span" : "div";
-  return <Frame data-card-gap={gap.id} className="my-2 t-detail leading-relaxed text-muted">
+  return <Frame data-card-gap={gap.id} className="my-2 t-detail leading-relaxed text-voice">
     <span>{gap.kind === "not-posted" ? `${gap.label.charAt(0).toUpperCase()}${gap.label.slice(1)} not posted yet.` : readerCopy("copy.working")}</span>{" "}
     {subject ? <DemandPill subjectType={subject.type} subjectId={subject.id} inline={gap.inline} />
       : <a className="text-link hover:underline" href={feedbackHref({ about: gap.label })}>Want us to get this sooner?</a>}

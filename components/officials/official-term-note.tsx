@@ -10,7 +10,7 @@ export function OfficialTermNote({ holder }: { holder: SeatHolder }) {
   return (
     <div data-official-term-note={holder.id} className="my-2 space-y-1 t-detail leading-relaxed text-paper-dim">
       <p>{sentence}</p>
-      {(holder.provenance || holder.sourceUrl) && <CardSourcesContribution id={`term:${holder.id}`} sources={[{ what: "Their term in office", provenance: holder.fieldSources?.termNote ?? (holder.provenance ? { ...holder.provenance, sourceUrl: holder.sourceUrl ?? holder.provenance.sourceUrl } : { sourceUrl: holder.sourceUrl, sourceOrg: "", collectedAt: "", verifiedAt: null }) }]} />}
+      {(holder.fieldSources?.termNote || holder.provenance || holder.sourceUrl) && <CardSourcesContribution id={`term:${holder.id}`} sources={[{ what: "Their term in office", provenance: holder.fieldSources?.termNote ?? (holder.provenance ? { ...holder.provenance, sourceUrl: holder.sourceUrl ?? holder.provenance.sourceUrl } : { sourceUrl: holder.sourceUrl, sourceOrg: "", collectedAt: "", verifiedAt: null }) }]} />}
     </div>
   );
 }

@@ -66,14 +66,15 @@ export function FederalMoneySection({ divisionId, bodyId, data }: { divisionId: 
   const visible = value.sources.map(source => ({ ...source, rows: federalMoneyRows(source.records, { divisionId, bodyId }) }));
   const sources = federalMoneySources(visible.flatMap(source => source.rows));
   return <section aria-label="Federal money and records" className="space-y-5">
-    {visible.map(source => source.rows.length ? <div key={source.source} data-federal-source={source.source}>
+    {visible.map(source => <div key={source.source} data-federal-source={source.source}>
       <h4 className="t-detail font-medium text-paper">{labels[source.source]}</h4>
-      <dl className="mt-2 space-y-3">{source.rows.map(row => <div key={row.fact.id} data-federal-record={row.fact.id}>
+      {source.rows.length ? <><dl className="mt-2 space-y-3">{source.rows.map(row => <div key={row.fact.id} data-federal-record={row.fact.id}>
         <dt className="t-body font-medium text-paper">{row.label}</dt>
         <dd className="mt-1 t-body leading-relaxed text-paper-dim">{row.text}</dd>
       </div>)}</dl>
       {source.coverageComplete === false && <CardGapContribution id={`federal-money:${identity}:${source.source}:more`} label="more records for this place" />}
-    </div> : <CardGapContribution key={source.source} id={`federal-money:${identity}:${source.source}`} label={labels[source.source].toLowerCase()} />)}
+      </> : <CardGapContribution id={`federal-money:${identity}:${source.source}`} label={labels[source.source].toLowerCase()} />}
+    </div>)}
     {value.nextCursor && <button type="button" className="t-caption text-link" disabled={loadingMore} onClick={() => void loadMore()}>{loadingMore ? "Loading records…" : pageFailed ? "Try loading more records again" : "Load more records"}</button>}
     <CardSourcesContribution id={`federal-money:${divisionId}:${bodyId ?? "place"}`} sources={sources} />
   </section>;

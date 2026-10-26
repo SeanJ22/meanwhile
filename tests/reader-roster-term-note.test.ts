@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
+import { installRegistryAuthority, registryFixtureForState } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
 
@@ -13,6 +13,8 @@ import type { SeatHolder } from "../lib/officials/lookup.ts";
 import { OfficialTermNote } from "../components/officials/official-term-note.tsx";
 import { Card } from "../components/ui/card.tsx";
 import { personCardSources } from "../lib/officials/card-sources.ts";
+import { getRegistryRuntimeReadModel, selectedRegistryStates, withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import { statesForRegistryDivisions } from "../lib/civic-data/state-scopes.ts";
 
 /** The actual term-note leaf inside its card, whose footer owns the source link. */
 function renderTermNotes(holders: readonly SeatHolder[]): string[] {
@@ -27,12 +29,25 @@ test("every eligible roster term note survives canonical holder lookup and the p
   const eligible = BODY_ROSTERS.flatMap(roster => roster.members).filter(member => member.termNote);
   const holders = BODY_ROSTERS.flatMap(roster => rosterHoldersForBody(roster.bodyId));
   const markupByHolder = new Map(renderTermNotes(holders).map((markup, index) => [holders[index].id, markup]));
+  const wholeRegistry = getRegistryRuntimeReadModel(), selectedStates = selectedRegistryStates();
+  const stateFixtures = new Map(selectedStates.map(state => [state, registryFixtureForState(state, wholeRegistry)]));
+  const canonicalHolder = async (holder: SeatHolder, bodyId: string) => {
+    const state = statesForRegistryDivisions([bodyId])[0];
+    assert.ok(state, `The roster must name its state: ${bodyId}`);
+    const fixture = stateFixtures.get(state);
+    assert.ok(fixture, `The held state fixture must exist: ${state}`);
+    try {
+      return await withRegistryRuntimeProjection(fixture, [state], () => seatHolderById(holder.id, state));
+    } finally {
+      withRegistryRuntimeProjection(wholeRegistry, selectedStates, () => undefined);
+    }
+  };
   let rendered = 0;
   for (const roster of BODY_ROSTERS) for (const holder of rosterHoldersForBody(roster.bodyId)) {
     const source = roster.members.find(member => member.id === holder.id)!;
     assert.equal(holder.termNote, source.termNote);
     assert.equal(holder.termEnd, null, "A published note never becomes an inferred end date");
-    assert.equal((await seatHolderById(holder.id))?.termNote, source.termNote);
+    assert.equal((await canonicalHolder(holder, roster.bodyId))?.termNote, source.termNote);
     const markup = markupByHolder.get(holder.id)!;
     if (!source.termNote) { assert.doesNotMatch(markup, /data-official-term-note/); continue; }
     const escaped = renderToStaticMarkup(createElement("span", null, source.termNote)).slice(6, -7);
@@ -72,6 +87,7 @@ test("roster-source link label never supplies a missing note, publisher or read 
   assert.doesNotMatch(markup, /Last checked|Verified|Published by|data-working-on-it/, "Missing metadata rows are omitted");
   assert.doesNotMatch(withoutNote, /data-official-term-note/);
   assert.ok(withoutUrl.includes(escapedNote.replace(/^Elected /, "Elected in ")));
-  assert.ok(!withoutUrl.includes("<a "));
+  assert.doesNotMatch(withoutUrl, /href="https?:/, "A missing source never gets an invented source link");
+  assert.match(withoutUrl, /Want us to get this sooner/, "The missing Sources section keeps its request link");
   assert.ok(!withoutUrl.includes("Published roster"), "No source link label substitutes for an absent URL");
 });

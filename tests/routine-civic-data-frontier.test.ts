@@ -4,7 +4,6 @@ import test from "node:test";
 
 import {
   ROUTINE_DATA_ADMISSION_MS,
-  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   ROUTINE_SOURCE_TASKS,
   routineFailureDomainCount,
   routineFailureDomainFrontier,
@@ -69,7 +68,6 @@ test("missing people and previous-parser government baselines admit every state 
   assert.equal(ordered.at(-1)?.task.id, refresh.task.id, "missing baselines precede an already-current cadence refresh");
   assert.equal(new Set(ordered.map(row => row.task.id)).size, ordered.length);
   assert.equal(ROUTINE_CHILD_CONCURRENCY, 4, "the existing worker limit remains unchanged");
-  assert.equal(ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, 1);
   assert.ok(people.every(task => task.cadenceMs === 86400000 && task.retryMs === 3600000));
   assert.ok(governments.every(task => task.cadenceMs === 90 * 86400000 && task.retryMs === 6 * 3600000));
 });

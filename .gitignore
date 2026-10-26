@@ -67,7 +67,6 @@ yarn-error.log*
 /data/ops/gate-runs/
 /data/control-plane/shadow-runs/
 /data/control-plane/vault/
-/data/control-plane/source-hosts/
 /docs/evidence/
 
 # fetched raw pages, documents and staged images

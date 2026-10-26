@@ -3,8 +3,27 @@ import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
-import { createSourceHostPacer, sourceHost, SourceReadDeferred } from "../lib/sources/http.ts";
+import { createSourceHostPacer, sourceFetch, sourceHost, SourceReadDeferred } from "../lib/sources/http.ts";
 import { fileHostState, memoryHostState } from "../lib/sources/host-state.ts";
+import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
+import { sourceTransportRoot, nativeSourceFetch, trackSourceTransport } from "../lib/sources/host-transport.ts";
+import { diggerMeasurement } from "../scripts/lib/digger-measurement.ts";
+import { retainMeetingFetchBytes } from "../lib/civic-data/retained-meeting-bytes.ts";
+
+test("capture and measurement wrappers retain the production transport and one cooldown across passes", async () => {
+  const wrapper = trackSourceTransport(async () => new Response("unused"), nativeSourceFetch);
+  assert.equal(sourceTransportRoot(wrapper), nativeSourceFetch);
+  const original = globalThis.fetch;
+  let calls = 0;
+  globalThis.fetch = async () => { calls++; return new Response(null, { status: 429, headers: { "retry-after": "180" } }); };
+  const pass = (url: string) => retainMeetingFetchBytes(() => diggerMeasurement("calendar", true).read(() =>
+    captureSourceAcquisitions(run => run("civicplus", () => sourceFetch(url)))));
+  try {
+    await assert.rejects(pass("https://one.gov/AgendaCenter"), SourceReadDeferred);
+    await assert.rejects(pass("https://two.gov/AgendaCenter"), SourceReadDeferred);
+    assert.equal(calls, 1, "a new capture pass must not create a new host clock");
+  } finally { globalThis.fetch = original; }
+});
 
 for (const vendor of ["civicplus", "legistar", "civicclerk", "granicus", "boarddocs"]) test(`${vendor} tenants share one server's pace`, async () => {
   let now = Date.parse("2026-10-26T05:00:00Z");

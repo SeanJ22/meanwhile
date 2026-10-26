@@ -1,7 +1,9 @@
 import { createHash } from "node:crypto";
-import { mkdir, readFile, realpath, rename, rm, stat, writeFile } from "node:fs/promises";
+import { mkdir, readFile, rename, rm, stat, writeFile } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { sourceAcquisitionSleep } from "./acquisition-deadline.ts";
+import { operationalStatePath } from "../ops/operational-state-path.ts";
 
 export interface HostState {
   nextAt: number;
@@ -34,11 +36,12 @@ export function memoryHostState(): HostStateStore {
 }
 
 /** All source children on the runner share these small files; pacing spends no database transfer. */
-export function fileHostState(root = join(process.cwd(), "data", "control-plane", "source-hosts")): HostStateStore {
+export function fileHostState(root = join(process.env.WTP_WORKER_MEMORY_DIRECTORY ??
+  (process.env.WTP_RUNTIME_MODE === "production" ? "/var/lib/meanwhile" : join(tmpdir(), "meanwhile-worker-memory")), "source-hosts")): HostStateStore {
   return { async withHost(host, signal, work) {
-    await mkdir(root, { recursive: true });
-    // Resolve the mutable directory at runtime; source state is never a bundled repository input.
-    const key = join(await realpath(root), createHash("sha256").update(host).digest("hex"));
+    const directory = operationalStatePath(root);
+    await mkdir(directory, { recursive: true });
+    const key = operationalStatePath(join(directory, createHash("sha256").update(host).digest("hex")));
     const lock = `${key}.lock`;
     for (;;) {
       signal?.throwIfAborted();

@@ -14,15 +14,14 @@
  * item votes remain named blanks beside independently verified agenda and
  * action records; prior verified votes retain their original evidence.
  * A later unaffected sitting may still promote. The run then prints
- * exactly one `RCD_RECEIPT`, naming the last candidate it wrote:
+ * exactly one `RCD_RECEIPT`, naming its last successful candidate when one exists:
  *
  * - exit 0 only when that candidate is the GOOD promoted pointer: the last
  *   changed sitting, or the validated no-change receipt written when every
  *   sitting in the window is held and unchanged;
- * - exit 2 when the events read failed, returned zero sittings, or any walked
- *   sitting was refused. A refusal followed by a later promotion writes one
- *   refused run record against the moved pointer, so the receipt still says
- *   HELD and the retry clock, not the cadence, owns the next attempt.
+ * - exit 2 when the events read failed, returned zero sittings, or no changed
+ *   sitting could publish. A refused sitting stays held on its own; other
+ *   independently verified sittings reach readers.
  *
  * The default window is rolling and bounded: the last
  * OUTCOME_ROUTINE_WINDOW_DAYS days through today in the body's own zone,

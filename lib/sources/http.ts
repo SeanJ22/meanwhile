@@ -12,6 +12,7 @@ import { recordAcquiredResponse } from "./acquisition-trace.ts";
 import { challengeIn } from "./challenge-signatures.ts";
 import type { HostStateStore } from "./host-state.ts";
 import { currentSourceVendor, withSourceVendor } from "./host-context.ts";
+import { nativeSourceFetch, sourceTransportRoot } from "./host-transport.ts";
 import {
   sourceAcquisitionSecondsRemaining,
   sourceAcquisitionSleep,
@@ -19,7 +20,6 @@ import {
 
 const REQUEST_SPACING_MS = 400;
 const MAX_RETRIES = 2;
-const nativeSourceFetch = globalThis.fetch;
 
 /** A publisher's capacity is shared by its tenants, including CivicPlus custom government domains. */
 export function sourceHost(url: string, vendor?: string): string {
@@ -109,13 +109,14 @@ const injectedPacers = new WeakMap<typeof fetch, Promise<SourceHostPacer>>();
 /** The only source fetch: production children share host state; an injected transport owns isolated test state. */
 export async function sourceFetch(url: string, init?: RequestInit, fetchImpl?: typeof fetch, vendor?: string, sharedTransport = false): Promise<Response> {
   const transport = fetchImpl ?? globalThis.fetch;
-  const injected = transport !== nativeSourceFetch && !sharedTransport;
-  let pacer = injected ? injectedPacers.get(transport) : sharedPacer;
+  const root = sourceTransportRoot(transport);
+  const injected = root !== nativeSourceFetch && !sharedTransport;
+  let pacer = injected ? injectedPacers.get(root) : sharedPacer;
   if (!pacer) {
     pacer = import("./host-state.ts").then(({ fileHostState, memoryHostState }) => createSourceHostPacer({
       store: injected ? memoryHostState() : fileHostState(), ...(injected ? { spacingMs: 0 } : {}),
     }));
-    if (injected) injectedPacers.set(transport, pacer); else sharedPacer = pacer;
+    if (injected) injectedPacers.set(root, pacer); else sharedPacer = pacer;
   }
   return (await pacer).fetch(url, init, transport, vendor ?? currentSourceVendor());
 }

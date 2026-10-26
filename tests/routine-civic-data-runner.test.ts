@@ -166,7 +166,7 @@ test("meeting pins and Box facts publish beside admission, so the first source l
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const read = functionSource(source, "readHuntSourceTasks");
   assert.doesNotMatch(read, /try \{\s*const (?:report|box) = await publish(?:HeldMeetingPins|BoxFindings)\(/, "admission no longer waits on either");
-  assert.match(read, /publishHeldBesideSources\(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async \(\) => \{\s*const report = await publishHeldMeetingPins\(/);
+  assert.match(read, /publishHeldBesideSources\(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", \(\) => withDatabaseJob\("meeting-pins",\s*\(\)\s*=>\s*withReaderRoute\("meeting-pins", async \(\) => \{[^]*?const report = await publishHeldMeetingPins\(/);
   assert.match(read, /publishHeldBesideSources\(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async \(\) => \{\s*const box = await publishBoxFindings\(/);
   const launch = source.indexOf("for (const { task } of electionLaunchOrder(");
   const awaited = [...source.matchAll(/await heldPublication;/g)].map(match => match.index!);

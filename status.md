@@ -18,7 +18,7 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 | DB-04 (not posted yet) | one read-only-what-changed path for every read | ships alone the moment it posts READY; preempts any gate |
 | 7dc32db25 (carries 04681516c) | DB-03 Admin (Admin's own screens), finished by River on stream/river-db03-admin; rides batch 2 | READY 10:50 PM EDT. Owed route kept as RB-A6 wrapped in adminRead; second conflict use-keeper-scoreboard.ts took Admin's version (drops AD-01's extra 60 s scoreboard fetch; Now still refreshes on the pulse); 3 tests fixed (2 test-only, path-separator in admin-read.ts); 734/734 focused, tsc, eslint, knip, preflight clean |
 
-**Improvement batch 1: gating now (AD-01, GB-01, MT-01, MD-01 merged on river e58835856 → d7dd06466)**
+**Improvement batch 1: re-gating on 526da8d5a (d7dd06466 + River's AD-01 fix). First gate failed 2 tests, both AD-01 (an `s` lambda shadowing the styles import in brief-view.tsx; hunt-stop bundle missing Next's process.env defines). Fixed on stream/river-ad01-fix, both tests pass**
 | READY | Lane | Note |
 |---|---|---|
 | 69806d306 | AD-01 | |
@@ -47,6 +47,7 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 
 **Superseded (a later READY of the same step is on main; not folding)**
 2769c614e DB-02 (re-cut as e0f14fe59, release 121) · 8b69f0cbf DB-03 reads (finished as de764a119, release 122) · bb948717e (inside 3e3f1ab33) · 14dd8beb0 BL-02 (c3fff3702 replaces it) · 8ad77b9d5 VS-07 (vs-07-fx f48331d9d folded Oct 23) · 04dfa4caf DG-01-FX (DG-01 folded with DG-02 e6745c664, Oct 23) · 027144fa1 BS-01 (folded with RS-02 adee07352, Oct 19) · 61f6d1449 SL-02 and f42bc19c6 NE-01 (folded with DS-01 512e65e03, Oct 22) · 6da1efc6b STEP-7 (Oct 15, 1,345 behind) · 91f23e059 DB-29 (Oct 6) · CH-23/CA salvage copies 544e20323, 3cbb51190e, 0fc6ef6d2, 48ef946cd and the Oct 5–6 salvage-river-next branches (those steps folded Oct 6–13).
+| 526da8d5a | AD-01 fix (River), rides batch 1 | READY 10:57 PM EDT: fixes the 2 batch 1 test failures; 4/4 in the two files |
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)

@@ -1322,3 +1322,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 1:20 AM EDT: no research cycle on 123, by Admin's stops
 - No research cycle has started since Sean's 12:10 AM restart. That's Admin's state, not a fault: all 56 states carry a stop-every-hunt order (latest Oct 25 1:03 AM EDT), and no expansion scope is funded, so the runner's planning-state check returns none and it starts no cycle. A research cycle starts on the next Send from Admin. River confirms its start and finish then.
 - The drain fix covers the path where no research cycle runs: the release is now checked on the standing clock every minute, whatever research is doing. To confirm tonight's exact stall path, River asks Sean for: `journalctl -u meanwhile-runner.service --since "2026-10-25 21:40" --until "2026-10-26 00:10" --no-pager | grep -E "release|drain|staging|quiescence|standing runtime tick" | tail -80`.
+
+### 1 AM EDT status
+- Runner: on 123 since Sean's 12:10 AM restart. No research cycle: every state's hunt is stopped in Admin and no scope is funded, so none starts until a Send.
+- GB-01 working: Oregon done, Alabama in progress. Portland 97204 now shows its city council, Multnomah County board and Portland Public Schools board (6 governing, was 0). Salem 5, Eugene 4, Birmingham 4. 20 random ZIPs: 9/20 show governing bodies; the rest are states not reached yet. LA and NE still 0. Details in releases/123.md.
+- Neon, both databases, midnight hour: 1,753 MB (11 PM: 2,933). Registry read 72 MB.
+- Drain fix gate: tests running. DB-04: branch active (last commit 12:25 AM), no READY yet.
+- rebuild_queue: 1,667.

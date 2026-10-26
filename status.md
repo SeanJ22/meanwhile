@@ -5,11 +5,11 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T00:49:00Z
+heartbeat: 2026-10-26T01:02:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 8:49 PM EDT)
+## Every READY not on main (updated 9:02 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
@@ -1212,4 +1212,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 8:49 PM EDT: owner snapshot reads returned; DB-03 Admin gating
 - a0cb7d1ef: preflight refused. The civic-data release firewall found an incremental-reads.ts filesystem writer made reachable from the routine (fetch-fec) and manual (promote-manual-civic-projection) paths. Returned (returns/db-03.md); River finishes it at 9:49 PM EDT if no new READY.
 - DB-03 Admin 04681516c is gating alone on river e58835856.
+
+### 9 PM EDT status
+- Release 121 (DB-02) has been live since 8:33 PM. cp_vital_signs shows the runner on 8664f367e from the 7 PM row (written 8:47 PM), so the registry read is measured on the 9 PM and 10 PM EDT hours.
+- Release 122 (DB-03 reads, PR #834): in PR checks. DB-03 Admin is gating alone on e58835856. Owner snapshot reads a0cb7d1ef is returned (firewall); River finishes it at 9:50 PM if no new READY.
+- RB-A4 catch-up: one pass reloaded DE, FL, GA, GU, HI, IA, ID and IL before its deadline. The cursor is at IL, and IN through VT (Oregon included) come next. HOST_COUNTY rows rose from 14,666 to 22,162. Oregon still has 25.
+- Neon, both databases, 8 PM EDT hour: 4,757 MB (7 PM: 5,476). Two hours ago the runner was on release 120.
 

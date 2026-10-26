@@ -196,6 +196,17 @@ test("the normal readerRoute filters a selected member after proving each comple
         current_version_id:pointer.versionId,last_known_good_version_id:pointer.lastKnownGoodVersionId,promoted_at:pointer.promotedAt,
         validation_receipt:pointer.receipt,payload:pointer.payload,normalized_hash:saved.candidate.normalization.normalizedHash,
         retrieved_at:saved.candidate.retrieval.retrievedAt,confirmation:null,published:true});
+      if(statement.text.includes("AS full_rows") || statement.text.includes("AS bills")){
+        const row=rows[rows.length-1],part=pointer.payload as import("../lib/sources/legiscan/bills.ts").BillPart;
+        const {bills,sponsors,...header}=part;
+        if(statement.text.includes("AS full_rows"))Object.assign(row,{payload:header,full_rows:bills.length,sponsors:sponsors.map((value,index)=>({index,value}))});
+        else{
+          const [wanted]=JSON.parse(String(statement.params![1])) as {scope:string;version:string;indices:number[]}[];
+          assert.equal(wanted.scope,scope);assert.equal(wanted.version,pointer.versionId);
+          const selected=bills.filter(bill=>bill.sponsorRefs.some(index=>wanted.indices.includes(index))),used=new Set(selected.flatMap(bill=>bill.sponsorRefs));
+          Object.assign(row,{payload:header,bills:selected,sponsors:sponsors.flatMap((value,index)=>used.has(index)?[{index,value}]:[])});
+        }
+      }
     }
     return structuredClone(rows);
   })));

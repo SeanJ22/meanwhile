@@ -97,7 +97,7 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata" | "readVersioned" | "readPublicationBase">> & {
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata" | "readVersioned" | "readPublicationBase" | "readLegiscanPersonParts">> & {
   /** Already published canonical database rows, read together for the reader shelf. */
   readonly readPromotedEntry?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry>;
 };

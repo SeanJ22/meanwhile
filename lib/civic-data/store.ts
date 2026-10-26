@@ -72,6 +72,7 @@ import {
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
 import { freezeDurableJson } from "./durable-json.ts";
 import { readLegiscanPublicationBase } from "../sources/legiscan/publication-base.ts";
+import {readPersonBillParts,type PersonBillPart} from "../sources/legiscan/person-reader.ts";
 import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,billScope,legiscanContinuationPending } from "../sources/legiscan/current-sessions.ts";
 import { projectionKey } from "./projection-key.ts";
 import { readPublishedSourceChecks, recordPublishedSourceCheck, validPublishedSourceCheck,
@@ -176,6 +177,7 @@ export interface RoutineDataStore {
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   /** Read only a named candidate field and its referenced parts. */
   readonly readCandidatePath: <T = unknown>(candidateId: string, path: readonly string[]) => Promise<T | null>;
+  readonly readLegiscanPersonParts?: (parts:readonly import("../sources/legiscan/bills.ts").BillPartPointer[],person:import("../sources/legiscan/bills.ts").HeldPerson)=>Promise<ReadonlyMap<string,PersonBillPart>>;
   readonly readCandidateSummary: (candidateId: string) => Promise<CandidateVersionSummary | null>;
   readonly readStateRetirementBaseline?: (recordClass: RoutineRecordClass, scope: string) => Promise<RoutineCandidate["normalization"]["stateRecordHashes"] | null>;
   readonly hasStateRetirementProof?: (contractId: string, origin: NonNullable<RoutineCandidate["stateRetirement"]>["origin"]) => Promise<boolean>;
@@ -2523,6 +2525,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (indexed) bindStatePublicationPrior(candidate, prior);
     const current = { ...postgresPromotionRowToProjection(prior ? clockReceipt(row.promotion) : row.promotion), payload: candidate.readModel };
     return { current, lkg: { ...rowToCandidate(candidateRow), candidate } };
+  }
+
+  async readLegiscanPersonParts(parts:readonly import("../sources/legiscan/bills.ts").BillPartPointer[],person:import("../sources/legiscan/bills.ts").HeldPerson):Promise<ReadonlyMap<string,PersonBillPart>> {
+    return readPersonBillParts((text,params)=>this.readerRows(text,params),parts,person);
   }
 
   async readPublicationBase(recordClass:RoutineRecordClass,scope:string):Promise<RoutinePublicationBase> {

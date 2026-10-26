@@ -1311,3 +1311,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - CS-01: a River builder is finishing it onto batch 2 (stream/river-cs-01).
 - Place map, one path: RT-01 in 124. Rows now: place_boundary 0, zip_place 0, zcta_place 0. Rows by state get reported 24 h after 124 is live.
 - rebuild_queue: 1,423 now (Oversight counted 1,234 earlier). Reported every status after 124 is live, until RB-A7 drains it.
+
+### 1:10 AM EDT: Idaho ballot pages, cause found (not release 123)
+- Every Idaho ZIP's ballot page has stopped at about 33 s since at least release 122, and probably since release 108 (PT-01 portraits, Oct 25). Release 122 code hangs the same way; the code involved is identical in 122 and 123.
+- Cause: the Oct 15 Idaho official-state-people promotion holds one record (Vito Barbieri) carrying 37 OpenStates people, because the publisher took the shared chamber membership page as everyone's profile URL. lib/photos/person.ts turns that into one 245-key identity and walks it for every officeholder and candidate card, about 1 to 2 s per walk, hundreds of times per Idaho page. It also gives Idaho legislators the wrong person's photo. Florida has one smaller collapsed record (Lori Berman, 9 ids).
+- Fix on stream/river-idaho 82310c3b0 (15 lines): a record naming several people of a one-ID-per-person publisher links only its own ids. Real ballot build for 83702 against production read-only: never finished before, 7.4 s after (Utah 84101: 5.3 s before, 5.7 s after). New test reproduces the wrong photo and passes with the fix; 50/50 portrait and roster tests pass.
+- Ships alone right after the drain fix (readers losing critical info). Its full gate starts when the drain gate finishes.
+- Still owed, needs an owner: the people publisher must treat chamber index pages as non-personal and republish the Idaho and Florida people shards. Proposed for the people-publication lane.

@@ -21,8 +21,9 @@ import { readFileSync } from "node:fs";
 
 import { acquireKnownRelease, knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
-import { nhMembersCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { nhMembersCandidate, expectedNhMembersTerm, sha256 } from "../lib/civic-data/candidate-builders.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { sourceContentHash, confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
@@ -222,6 +223,7 @@ async function main(): Promise<void> {
   let identityCrosswalk: NhCurrentMemberIdentityCrosswalk | null = null;
   let sourceCheck:import("../lib/civic-data/types.ts").SourceCheckEvidence|undefined;
   let extraction: MembersExtraction;
+  let documents:readonly NhOfficialDocument[]=[];
   try {
     if (local) {
       text = readFileSync(local, "utf8");
@@ -239,7 +241,7 @@ async function main(): Promise<void> {
               const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
               try {
                 const held=await acquireKnownRelease({sourceId:"nh-general-court",releaseId:url,url,parserVersion:"nh-general-court/3",maxBytes:64*1024*1024,checkAfterMs:86400000,signal:requestSignal,headers:{"user-agent":UA,accept:"text/plain,*/*"},validate:bytes=>{const body=decodeNhPublisherBytes(bytes);if(url===SOURCE_URL)parseMembers(body);else if(url===NH_LEGISLATORS_URL)parseNhLegislators(body);else parseNhRollCallHistory(body);}});
-                return {requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:decodeNhPublisherBytes(held.bytes),retrievedAt:held.retrievedAt,sourceCheck:knownReleaseSourceCheck(held)};
+                return {requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:decodeNhPublisherBytes(held.bytes),rawHash:held.sha256,retrievedAt:held.retrievedAt,sourceCheck:knownReleaseSourceCheck(held)};
               } catch(error) {
                 if(url!==NH_ROLL_HISTORY_URL)throw error;
                 console.error(`NH optional identity-history unavailable: ${error instanceof Error ? error.message : String(error)}`);
@@ -250,6 +252,7 @@ async function main(): Promise<void> {
           );
         },
       );
+      documents=acquired;
       const memberDocument = acquired[0]!;
       text = memberDocument.body;
       retrievedAt = memberDocument.retrievedAt ?? new Date().toISOString();
@@ -313,9 +316,20 @@ async function main(): Promise<void> {
       throw new Error("NH_OFFICIAL_PERSON_ID_CROSSWALK_NOT_INITIALIZED");
     }
     const now = new Date().toISOString();
+    const complete=extraction.counts.dropped===0 && documents.length===3 && documents.every(row=>row.httpStatus===200 && row.body.trim().length>0) &&
+      !(identityCrosswalk.unresolved??[]).length;
+    const rawHash=sourceContentHash(documents,{sourceId:"nh-general-court",scope:"US-NH",parserVersion:"nh-general-court/3",
+      expectedTerm:expectedNhMembersTerm(sourceCheck?.checkedAt??retrievedAt),identitySourceVersion:identityCrosswalk.sourceVersion});
+    const check=documents.flatMap(row=>row.sourceCheck?[row.sourceCheck]:[]).sort((a,b)=>a.checkedAt.localeCompare(b.checkedAt))[0]??sourceCheck;
+    const confirmed=await confirmSourceHashUnchanged({store,sourceId:"nh-general-court",recordClass:"STATE_LEGISLATOR",scope:"US-NH",
+      parserVersion:"nh-general-court/3",rawHash,now,complete,retrieval:{requestedUrl:SOURCE_URL,finalUrl,httpStatus,rawHash,retrievedAt,...(check?{sourceCheck:check}:{})}});
+    if(confirmed){
+      console.log("RCD_RECEIPT="+JSON.stringify({source:"nh-members",...sourceHashReceiptFields(confirmed),structuralReleaseContract:ZERO_RELEASE_EVENTS}));
+      return;
+    }
     const prior = await readNhMembers({store,now});
     if (prior.kind === "STORE_UNREACHABLE") throw Error("NH_PRIOR_UNAVAILABLE");
-    const candidate = nhMembersCandidate({
+    const built = nhMembersCandidate({
       prior: prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value : null,
       priorRetrievedAt: prior.metadata.retrievedAt ?? undefined,
       rawText: text,
@@ -325,10 +339,12 @@ async function main(): Promise<void> {
       httpStatus,
       identityHttpStatus,
       retrievedAt,
-      sourceCheck,
+      sourceCheck:check,
       extraction,
       identityCrosswalk,
     });
+    const candidate={...built,id:`cv-${sha256(`${built.id}:${rawHash}:${complete}`).slice(0,32)}`,
+      retrieval:{...built.retrieval,rawHash,rawHashBasis:"SOURCE_CONTENT_V1" as const,complete}};
     const outcome = await processRegisteredRoutineCandidate(store, "nh-members", candidate, now, undefined, { confirmUnchanged: true });
     console.log("RCD_RECEIPT=" + JSON.stringify({ source: "nh-members", ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
     if (!outcome.promoted && !outcome.confirmed) process.exitCode = 2;

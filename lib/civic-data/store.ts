@@ -105,6 +105,7 @@ export interface SourceHead {
   readonly candidateState: CandidateState;
   readonly acquisitionSucceeded: boolean;
   readonly acquisitionComplete?: boolean | null;
+  readonly sourceThrough?: string | null;
   readonly imported: boolean;
 }
 
@@ -1044,6 +1045,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       normalizedHash: row.candidate.normalization.normalizedHash, parserVersion: row.candidate.normalization.parserVersion,
       promotedAt: pointer.promotedAt, candidateState: row.state, acquisitionSucceeded: row.acquisitionSucceeded,
       acquisitionComplete: row.candidate.retrieval.complete ?? null,
+      sourceThrough: row.candidate.temporal.sourceThrough,
       imported: isImportOrStateMoveCandidate(row.candidate) || pointer.sourceId !== row.candidate.sourceId };
   }
 
@@ -2501,6 +2503,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       candidateState: civicDataCandidates.state, acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
       acquisitionComplete: sql<boolean | null>`case when jsonb_typeof(${civicDataCandidates.candidate}#>'{retrieval,complete}')='boolean'
         then (${civicDataCandidates.candidate}#>>'{retrieval,complete}')::boolean else null end`.as("acquisition_complete"),
+      sourceThrough: sql<string | null>`${civicDataCandidates.candidate}#>>'{temporal,sourceThrough}'`.as("source_through"),
       imported: sql<boolean>`(${civicDataCandidates.candidate} ? 'bootstrapImport')
         OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'
         OR ${civicDataPromotions.sourceId} <> ${civicDataCandidates.sourceId}`.as("imported"),

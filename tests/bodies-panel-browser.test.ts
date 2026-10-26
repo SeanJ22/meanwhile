@@ -61,9 +61,9 @@ test("Bodies stays compact and opens the correct body with next and last meeting
       const params=new URLSearchParams(location.search);
       let original=regions[params.get("zip")||"85701"];
       if(params.get("types")==="1"){
-        const parent=original.coverage.bodies.find(body=>body.bodyClass==="GOVERNING");
+        const parent=original.coverage.bodies.find(body=>body.bodyClass==="GOVERNING"&&body.divisionType==="place");
         const type={...parent,bodyId:parent.bodyId+":worksession",name:parent.name+" Worksession",bodyClass:"MEETING_TYPE",meetingBodyId:parent.bodyId};
-        const person={id:"held-current-member",name:"Current Member",officeTitle:"Member",officeJurisdictionOcdId:parent.ocdId,termNote:null,partyLabel:null,websiteUrl:null,sourceUrl:"https://fixture.example.gov/roster",provenance:{sourceUrl:"https://fixture.example.gov/roster",sourceOrg:"Fixture",collectedAt:"2026-09-23",verifiedAt:null},email:null,phone:null,contactFormUrl:null,photoUrl:null,campaignUrl:null,termEnd:null,birthDate:null};
+        const person={id:"held-current-member",name:"Current Member",officeTitle:"Mayor",officeJurisdictionOcdId:parent.ocdId,termNote:null,partyLabel:null,websiteUrl:null,sourceUrl:"https://fixture.example.gov/roster",provenance:{sourceUrl:"https://fixture.example.gov/roster",sourceOrg:"Fixture",collectedAt:"2026-09-23",verifiedAt:null},email:null,phone:null,contactFormUrl:null,photoUrl:null,campaignUrl:null,termEnd:null,birthDate:null};
         const next=original.meetings.find(meeting=>meeting.bodyId===parent.bodyId&&meeting.id.endsWith(":next"));
         original={...original,coverage:{...original.coverage,bodies:[{...parent,meetingTypes:[type],readerRoster:{members:[person],earlierMembers:[{...person,id:"held-earlier-member",name:"Earlier Member"}],gaps:[],officePhone:null}},type]},meetings:[...original.meetings,{...next,id:"held-worksession",bodyId:type.bodyId,startsAt:"2026-09-24T17:00:00Z"}]};
       }
@@ -171,6 +171,7 @@ test("Bodies stays compact and opens the correct body with next and last meeting
       await page.locator('[data-meeting-id="held-worksession"]').waitFor();
       await page.getByRole("button", { name: "Who sits on it 1", exact: true }).click();
       assert.equal(await page.locator("[data-roster-holder]").count(), 1);
+      assert.equal(await page.getByRole("button", { name: "Current Member", exact: true }).count(), 1, "the mayor appears once in the member list");
       assert.equal(await page.locator("[data-earlier-roster-holder]").count(), 1);
       await page.getByText("Earlier membership records (1)", { exact: true }).click();
       await page.getByRole("button", { name: "Earlier Member", exact: true }).click();

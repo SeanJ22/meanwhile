@@ -365,8 +365,8 @@ function BodySections({
               gaps={subject.rosterGaps}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
-              /* No "Who runs it" where nothing is run. */
-              showTopOffices={runsSomething(subject.divisionKind)}
+              /* Each member has one row, with their role beside their name. */
+              showTopOffices={false}
             />
             {card.earlierMembers && card.earlierMembers.length > 0 && <details className="mt-3">
               <summary className="cursor-pointer t-detail text-muted">Earlier membership records ({card.earlierMembers.length})</summary>

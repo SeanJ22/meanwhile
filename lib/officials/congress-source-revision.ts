@@ -19,5 +19,5 @@ export async function currentCongressSourceRevision(request?: typeof fetch):Prom
 
 export async function acquireCongressSourceRevision() {
   const held=await acquireKnownRelease({sourceId:"congress-directory-revision",releaseId:"current",url:URL,parserVersion:"congress-revision/1",maxBytes:1024*1024,checkAfterMs:86400000,signal:AbortSignal.timeout(30000),headers:{accept:"application/vnd.github+json"},validate:bytes=>{sourceSha(bytes);}});
-  return {sha:sourceSha(held.bytes),sourceCheck:knownReleaseSourceCheck(held)};
+  return {sha:sourceSha(held.bytes),sourceCheck:knownReleaseSourceCheck(held),...(held.outage?{outage:held.outage}:{})};
 }

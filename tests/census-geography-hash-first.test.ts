@@ -6,7 +6,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { refreshCensusGeography } from "../lib/census-geography/refresh.ts";
 import { GRF_ROOT } from "../lib/census-geography/grf.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
-import { censusProbeHash, censusSourceDependencies } from "../lib/census-geography/source-probe.ts";
+import { censusProbeHash, censusProbeRetrieval, censusSourceDependencies } from "../lib/census-geography/source-probe.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 
 function harness() {
@@ -73,9 +73,20 @@ test("bad changed source bytes retain the exact GOOD pointer and never confirm",
 
 test("geography source identity includes parser and selection dependencies but excludes observation times", () => {
   const dependencies = censusSourceDependencies({ states: ["04"] });
-  const source = { requestedUrl: GRF_ROOT, finalUrl: GRF_ROOT, rawHash: "a".repeat(64), checkedAt: "2026-10-26T00:00:00.000Z" };
+  const source = { requestedUrl: GRF_ROOT, finalUrl: GRF_ROOT, rawHash: "a".repeat(64), checkedAt: "2026-10-26T00:00:00.000Z", httpStatus: 200 as const };
   const probe = { formatVersion: 1 as const, dependencies, sources: [source], complete: true };
   assert.equal(censusProbeHash(probe), censusProbeHash({ ...probe, sources: [{ ...source, checkedAt: "2026-10-27T00:00:00.000Z" }] }));
   assert.notEqual(censusProbeHash(probe), censusProbeHash({ ...probe, dependencies: censusSourceDependencies({ states: ["06"] }) }));
   assert.notEqual(censusProbeHash(probe), censusProbeHash({ ...probe, dependencies: "b".repeat(64) }));
+});
+
+
+test("Census confirmation clocks retain the earliest actual provider receipt, including a 304", () => {
+  const source = { requestedUrl: GRF_ROOT, finalUrl: GRF_ROOT, rawHash: "a".repeat(64), checkedAt: "2026-10-26T01:00:00.000Z", httpStatus: 304 as const };
+  const probe = { formatVersion: 1 as const, dependencies: censusSourceDependencies(null), complete: true,
+    sources: [source, { ...source, requestedUrl: `${GRF_ROOT}2026/`, checkedAt: "2026-10-26T02:00:00.000Z" }] };
+  const retrieval = censusProbeRetrieval(probe);
+  assert.equal(retrieval.retrievedAt, source.checkedAt);
+  assert.deepEqual(retrieval.sourceCheck, source);
+  assert.notEqual(retrieval.rawHash, source.rawHash, "the package digest remains distinct from one actual response hash");
 });

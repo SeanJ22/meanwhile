@@ -19,6 +19,7 @@ import {
 } from "./runner-receipt.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
+import { meetingSourceContinuationPending } from "./meeting-source-probe.ts";
 
 /** A command never spawned because memory stayed full or the pass's time ran out, or ended at the pass deadline: still owed, not failed. */
 export function routineDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
@@ -520,9 +521,13 @@ export interface RoutineTaskClock {
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
+  /** Local successful processing event, separate from the source's actual check date. */
+  readonly lastCompletedAt?:string;
+  readonly nextWorkAt?:string;
+  readonly sourceComplete?:boolean;
   readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
-  /** A verified national federal source marker still holds unfinished state pages. */
+  /** A source's explicit successful cutoff still holds unfinished work. */
   readonly continuationPending?: boolean;
 }
 
@@ -545,7 +550,10 @@ export async function readRoutineTaskClocks(
   readClock: (task: RoutineSourceTask) => Promise<RoutineTaskClock | undefined>,
   concurrency: number = ROUTINE_CLOCK_READ_CONCURRENCY,
 ): Promise<readonly RoutineTaskClockRead[]> {
-  const reads = await runBoundedWorkPool(tasks, concurrency, readClock);
+  const reads = await runBoundedWorkPool(tasks, concurrency,async task=>{
+    const clock=await readClock(task);
+    return task.recordClass==="MEETING"&&await meetingSourceContinuationPending(task.scope)?{...clock,continuationPending:true}:clock;
+  });
   return reads.map((read) => read.ok
     ? { task: tasks[read.index]!, ok: true as const, clock: read.value, error: null }
     : { task: tasks[read.index]!, ok: false as const, clock: undefined, error: read.error });
@@ -583,7 +591,7 @@ export function routineTaskDeadlineMs(
   return sittingWindowObligation(
     schedule,
     failureRetryMs(task.retryMs, clock),
-    { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) },
+    { attemptedMs: attempted, succeededMs: succeeded,completedMs:successfulProcessingMs(clock),published: sittingTaskPublished(task, clock) },
     sittingHot,
   ).deadlineMs;
 }
@@ -647,6 +655,13 @@ export function routineCodeChangeRetryTaskIds(reads: readonly RoutineTaskClockRe
   ) ? [read.task.id] : []));
 }
 
+function successfulProcessingMs(clock:RoutineTaskClock|undefined):number{
+  const times=[clock?.lastCompletedAt,clock?.lastSucceededObservedAt].flatMap(value=>{
+    const at=Date.parse(value??"");return Number.isFinite(at)?[at]:[];
+  });
+  return times.length?Math.max(...times):Number.NaN;
+}
+
 export function routineTaskNextDueMs(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
@@ -662,12 +677,20 @@ export function routineTaskNextDueMs(
     : task.minimumRefreshMs ?? defaults.minimumRefreshMs;
   const retryDelayMs = sensitive ? failureRetryMs(task.retryMs, clock)
     : Math.max(minimumMs, failureRetryMs(task.retryMs, clock));
+  const sourceAttempted = Date.parse(clock?.lastAttemptedAt ?? "");
+  const sourceSucceeded = Date.parse(clock?.lastSucceededObservedAt ?? "");
+  // A successful replay may finish local work; only a newer provider check recovers a recorded source failure.
+  const sourceFailed = (clock?.failureStreak ?? 0) > 0 && Number.isFinite(sourceAttempted) &&
+    (!Number.isFinite(sourceSucceeded) || sourceAttempted > sourceSucceeded);
   if (task.ownerInvocation) {
     const requested = Date.parse(task.ownerInvocation.requestedAt);
     const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
+    const completed=successfulProcessingMs(clock);
+    if(sourceFailed && attempted >= requested)return attempted + retryDelayMs;
+    if(clock?.continuationPending===true&&Number.isFinite(attempted)&&Number.isFinite(completed)&&completed>=attempted&&completed<=nowMs)return nowMs;
     if (task.ownerInvocation.publicationPending) return !Number.isFinite(attempted) || attempted < requested ||
-      (Number.isFinite(succeeded) && succeeded >= attempted && succeeded <= nowMs) ? nowMs : attempted + retryDelayMs;
+      (Number.isFinite(completed) && completed >= attempted && completed <= nowMs) ? nowMs : attempted + retryDelayMs;
     if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return Number.POSITIVE_INFINITY;
     return !Number.isFinite(attempted) || attempted < requested ? nowMs : attempted + retryDelayMs;
   }
@@ -684,19 +707,22 @@ export function routineTaskNextDueMs(
   if (!clock?.lastAttemptedAt) return nowMs;
   const attempted = Date.parse(clock.lastAttemptedAt);
   const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
+  const completed=successfulProcessingMs(clock);
   if (!Number.isFinite(attempted)) return nowMs;
-  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return nowMs;
+  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)||(Number.isFinite(completed)&&completed>nowMs)) return nowMs;
+  if(sourceFailed)return attempted + retryDelayMs;
+  if(Number.isFinite(completed)&&attempted<=completed&&clock.continuationPending===true)return nowMs;
+  if(clock.sourceComplete===false)return Math.max(attempted,Number.isFinite(completed)?completed:attempted)+retryDelayMs;
+  const capWorkDue=(due:number)=>{
+    const next=Date.parse(clock.nextWorkAt??"");
+    return Number.isFinite(next)&&Number.isFinite(succeeded)?Math.min(due,Math.max(succeeded+minimumMs,next)):due;
+  };
   const schedule = task.contract?.schedule;
-  if (schedule?.kind === "SITTING_WINDOW") return sittingWindowObligation(schedule, retryDelayMs,
-    { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) }, sittingHot).eligibleAtMs;
+  if (schedule?.kind === "SITTING_WINDOW") return capWorkDue(sittingWindowObligation(schedule, retryDelayMs,
+    { attemptedMs: attempted, succeededMs: succeeded,completedMs:completed,published: sittingTaskPublished(task, clock) }, sittingHot).eligibleAtMs);
   if (!Number.isFinite(succeeded)) return attempted + retryDelayMs;
     // Once a due read fails, the source's retry clock owns the next attempt.
-  if (attempted > succeeded) return attempted + retryDelayMs;
-  if (clock.continuationPending === true && task.contract.fanOut === true && (
-      task.recordClass === "FEDERAL_MONEY" && task.scope === `${task.sourceId}:US` ||
-      task.recordClass === "STATE_BILL" && task.sourceId === "legiscan-bills" && task.scope === "US:legiscan-datasets")) return nowMs;
-  // A member-office run its deadline cut short continues on the next pass, not the next day.
-  if (task.id === "member-offices" && clock.continuationPending === true) return nowMs;
+  if (attempted > completed) return attempted + retryDelayMs;
   const boundaries = [...new Set((task.contract.cadence.phases ?? []).map(phase => Date.parse(phase.through))
     .filter(at => Number.isFinite(at) && at > nowMs))].sort((a, b) => a - b);
   const starts = [nowMs, ...boundaries];
@@ -706,7 +732,7 @@ export function routineTaskNextDueMs(
     const everyMs = timeSensitiveSource(task, start) ? Math.min(policyMs, Math.max(observed, Math.min(minimumMs, policyMs)))
       : Math.max(minimumMs, Math.min(task.freshnessWindowMs ?? defaults.freshnessWindowMs, observed));
     const due = index === 0 ? succeeded + everyMs : Math.max(start, succeeded + everyMs);
-    if (due < (starts[index + 1] ?? Number.POSITIVE_INFINITY)) return due;
+    if (due < (starts[index + 1] ?? Number.POSITIVE_INFINITY)) return capWorkDue(due);
   }
   return Number.POSITIVE_INFINITY;
 }

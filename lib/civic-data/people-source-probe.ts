@@ -21,8 +21,9 @@ import { factClocks } from "../facts/clocks.ts";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 import type { AdminConfig } from "../control-plane/gateway/admin-config.ts";
 import { recordPeopleSourceChecks } from "./people-source-checks.ts";
+import { readSourceProbeDependencies, type SourceProbeDependencies } from "./source-probe.ts";
 
-type SourceDependencies = Readonly<Record<string, readonly [string, string | null, string | null, string] | null>>;
+type SourceDependencies = SourceProbeDependencies;
 type SourceRequest = Pick<StatePeopleAcquisition, "requestedUrl" | "finalUrl" | "request">;
 export interface PeopleSourceProbe {
   readonly formatVersion: 1;
@@ -51,11 +52,7 @@ export async function readPeopleSourceDependencies(store: RoutineDataStore, stat
   const pointers: readonly { readonly recordClass: RoutineRecordClass; readonly scope: string }[] = [
     ...statePeopleSourcePointers(jurisdiction), { recordClass: CENSUS_GEO_RECORD_CLASS, scope: CENSUS_GEO_SCOPE },
   ];
-  const entries = await Promise.all(pointers.filter(pointer => `${pointer.recordClass}:${pointer.scope}` !== own).map(async pointer => {
-    const head = await store.readSourceHead(pointer.recordClass,pointer.scope);
-    return [`${pointer.recordClass}:${pointer.scope}`, head ? [head.versionId,head.rawHash,head.normalizedHash,head.parserVersion] as const : null] as const;
-  }));
-  return Object.fromEntries(entries);
+  return readSourceProbeDependencies(store,pointers.filter(pointer => `${pointer.recordClass}:${pointer.scope}` !== own));
 }
 
 export function peopleSourceProbe(input: {

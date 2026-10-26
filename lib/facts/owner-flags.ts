@@ -129,6 +129,11 @@ export async function readerRecordsWithOwnerChoices<T extends { readonly id: str
     FROM owner_flag WHERE reader_family=$1 AND reader_id=ANY($2::text[]) AND resolved IN ('REMOVE','TYPED_VALUE')
     ORDER BY reader_id,resolved_at DESC,id DESC`, [family, records.map(record => record.id)]) : [...edge].map(([id,choice])=>({reader_id:id,resolved:choice.choice,
       owner_values:choice.values,owner_source_url:choice.sourceUrl,resolved_at:choice.resolvedAt}));
+  return recordsWithOwnerChoiceRows(records, rows);
+}
+
+/** The same choice semantics apply to reader-edge copies and canonical producer inputs. No I/O occurs here. */
+export function recordsWithOwnerChoiceRows<T extends { readonly id: string }>(records: readonly T[], rows: readonly Readonly<Record<string, unknown>>[]): T[] {
   const choices = new Map(rows.map(row => [String(row.reader_id), row]));
   return records.flatMap(record => {
     const choice = choices.get(record.id);

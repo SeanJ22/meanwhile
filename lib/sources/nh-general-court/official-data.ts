@@ -18,6 +18,8 @@ export interface NhOfficialDocument {
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly body: string;
+  /** Exact acquired bytes, before the publisher encoding is decoded. */
+  readonly rawHash?:string;
   readonly retrievedAt?:string;
   readonly sourceCheck?:import("../../civic-data/types.ts").SourceCheckEvidence;
 }

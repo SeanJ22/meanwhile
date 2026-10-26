@@ -2,7 +2,7 @@ import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import type { BuiltDataset } from "./dataset.ts";
-import { censusProbeHash, type CensusSourceProbe } from "./source-probe.ts";
+import { censusProbeHash, censusProbeRetrieval, type CensusSourceProbe } from "./source-probe.ts";
 import {
   CENSUS_GEO_PARSER_VERSION,
   CENSUS_GEO_RECORD_CLASS,
@@ -74,7 +74,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset, scope: string = 
       httpStatus: 200,
       retrievedAt,
       rawHash,
-      ...(sourceProbe ? { rawHashBasis: "SOURCE_CONTENT_V1" as const, complete: sourceProbe.complete } : {}),
+      ...(sourceProbe ? { sourceCheck: censusProbeRetrieval(sourceProbe).sourceCheck, rawHashBasis: "SOURCE_CONTENT_V1" as const, complete: sourceProbe.complete } : {}),
     },
     normalization: {
       succeeded: true,

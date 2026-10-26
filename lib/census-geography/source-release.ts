@@ -23,7 +23,7 @@ export function* censusTextLines(bytes: Uint8Array): Generator<string> {
 }
 
 export interface CensusSourceCapture {
-  readonly requestedUrl: string; readonly finalUrl: string; readonly rawHash: string; readonly checkedAt: string;
+  readonly requestedUrl: string; readonly finalUrl: string; readonly rawHash: string; readonly checkedAt: string; readonly httpStatus: 200 | 304;
 }
 
 export interface CensusSourceOptions {
@@ -46,7 +46,7 @@ export function recordCensusSourceCapture(options: CensusSourceOptions, capture:
 export function censusSourceRelease(url: string, options: CensusSourceOptions, validate?: KnownReleaseOptions["validate"]): Promise<KnownRelease> {
   const held = options.releases?.get(url);
   if (held) return held.then(async release => { await validate?.(release.bytes, release);
-    recordCensusSourceCapture(options, { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, rawHash: release.sha256, checkedAt: release.checkedAt }); return release; });
+    recordCensusSourceCapture(options, { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, rawHash: release.sha256, checkedAt: release.checkedAt, httpStatus: release.lastCheckStatus === 304 ? 304 : 200 }); return release; });
   const pending = acquireKnownRelease({
     ...options.cache,
     sourceId: "census-geography-relationships",
@@ -68,7 +68,7 @@ export function censusSourceRelease(url: string, options: CensusSourceOptions, v
     } : undefined,
   });
   const observed = pending.then(release => {
-    recordCensusSourceCapture(options, { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, rawHash: release.sha256, checkedAt: release.checkedAt });
+    recordCensusSourceCapture(options, { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, rawHash: release.sha256, checkedAt: release.checkedAt, httpStatus: release.lastCheckStatus === 304 ? 304 : 200 });
     return release;
   });
   options.releases?.set(url, observed);

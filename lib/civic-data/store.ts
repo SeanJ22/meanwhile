@@ -1,3 +1,8 @@
+import { readRegistryPlaceRows, selectRegistryPlaceView, type RegistryPlaceSlice } from "./keyed-registry-place.ts";
+import { readRegistryPlanningRows, type RegistryPlanningView } from "./keyed-registry-planning.ts";
+import { readDerivedMeetingBodyRows, derivedBodyScope, selectDerivedMeetingBodySnapshot, derivedMeetingProgressName, type DerivedMeetingFamilyProgress, type DerivedMeetingBodySlice } from "./derived-meeting-body.ts";
+import { readDerivedInputHeads, readDerivedWiringRows, selectDerivedWiringRows, type DerivedInputHead, type DerivedWiringRow } from "./derived-input-rows.ts";
+import { readKeyedGovernmentLookup, type GovernmentRowLookup } from "./keyed-government-lookup.ts";
 import { readMemberOfficeMembers, readMemberOfficeRows, memberOfficeStateScope, memberOfficeScopeState, memberOfficeRecordState, MEMBER_OFFICE_CURSOR, type MemberOfficeProgress, type MemberOfficeSlice } from "../officials/member-office-data.ts";
 import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
 import { manualSourceUrls } from "./manual-source-urls.ts";
@@ -10,6 +15,7 @@ import {readFederalMoneyPublicationBase,readFederalMoneyPartitionKeys,readFedera
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
 import { sourceCheckedAt } from "./source-check.ts";
+import { sourceWorkClock,sourceWorkClockSql,type SourceWorkClock } from "./source-work-clock.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, statePublicationScope } from "./state-publication.ts";
@@ -33,7 +39,7 @@ import {
   type RoutineRecordClass,
   type ValidationReceipt,
 } from "./types.ts";
-import type { OfficeholderSet } from "../officials/types.ts";
+import type { Officeholder, OfficeholderSet } from "../officials/types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash, durableCivicDataHash } from "./canonical-hash.ts";
 import {
@@ -54,7 +60,7 @@ import {
 import { assertWriteAllowed } from "../db/write-guard.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
-import { MEETING_HISTORY_SOURCE_ID, MEETING_PARTITION_CONTRACTS, meetingHistoryContract, meetingPartitionForHistoryScope } from "./meeting-partitions.ts";
+import { MEETING_HISTORY_SOURCE_ID, MEETING_PARTITION_CONTRACTS, derivedMeetingBodyForScope, meetingHistoryContract, meetingPartitionForHistoryScope } from "./meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import {
   assertSanctionedRuntimeAuthority,
@@ -76,6 +82,8 @@ import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,billSco
 import { projectionKey } from "./projection-key.ts";
 import { readPublishedSourceChecks, recordPublishedSourceCheck, validPublishedSourceCheck,
   type PublishedSourceCheck, type RecordPublishedSourceCheck } from "./source-checks.ts";
+import { aggregateFederalCounts, readFederalCounts as readFederalSourceCounts } from "../sources/congress/counts.ts";
+import type { FederalCounts, FederalProjection } from "../sources/congress/types.ts";
 import { enqueueReaderPlaces, invalidateReaderCache, placePageConsumesPublication, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
 import { seedRuntimeBodyPageSubjects } from "../reader/page-subjects.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
@@ -114,7 +122,7 @@ export interface SourceHead {
   readonly acquisitionComplete?: boolean | null;
   readonly sourceThrough?: string | null;
   readonly imported: boolean;
-  /** Existing pointer/candidate proof equality, selected as a scalar instead of duplicate fact bodies. */
+  /** Existing GOOD pointer/candidate/receipt bindings, checked without returning their payloads. */
   readonly proofCoupled?:boolean;
 }
 
@@ -153,6 +161,13 @@ export function assertPublicationBaseOwner(store:object,base:RoutinePublicationB
     throw new Error(`PUBLICATION_BASE_READ_OWNER_MISMATCH:${recordClass}:${scope}`);
 }
 
+/** Reprocessing the identical provider receipt is no new source observation or progress. */
+function sameConfirmationSourceObservation(left: UnchangedConfirmation, right: UnchangedConfirmation): boolean {
+  return left.retrieval.sourceCheck !== undefined && right.retrieval.sourceCheck !== undefined &&
+    left.parserVersion === right.parserVersion && left.inputDigest === right.inputDigest &&
+    canonicalCivicDataJson(left.retrieval.sourceCheck) === canonicalCivicDataJson(right.retrieval.sourceCheck);
+}
+
 export interface RoutineDataStore {
   /** Reuse a proven read across runner passes until this scope's candidates, events or pointer change. */
   readonly readVersioned?: <T>(namespace: string, recordClass: RoutineRecordClass, scope: string, read: () => Promise<T>) => Promise<T>;
@@ -169,10 +184,18 @@ export interface RoutineDataStore {
   ) => Promise<CandidateVersionRecord>;
   readonly readMemberOfficeMembers: (members: readonly string[]) => Promise<readonly import("../officials/member-offices.ts").MemberOfficeRecord[]>;
   readonly readMemberOfficeSlice: (state: string, members?: readonly string[]) => Promise<MemberOfficeSlice | null>;
+  readonly readDerivedMeetingProgress?: (scope:string)=>Promise<DerivedMeetingFamilyProgress>;
+  readonly writeDerivedMeetingProgress?: (scope:string,progress:DerivedMeetingFamilyProgress)=>Promise<void>;
+  readonly readDerivedMeetingBody?: (state:import("./contracts.ts").DerivedMeetingFamilyState,bodyId:string,history?:boolean)=>Promise<DerivedMeetingBodySlice|null>;
   readonly readMemberOfficeProgress: () => Promise<MemberOfficeProgress>;
   readonly writeMemberOfficeProgress: (progress: MemberOfficeProgress) => Promise<void>;
+  readonly readRegistryPlaceView?: (state:string,divisionIds:readonly string[])=>Promise<RegistryPlaceSlice|null>;
+  readonly readRegistryPlanningView?: (state:string)=>Promise<RegistryPlanningView|null>;
+  readonly readGovernmentLookup?: (state:string,governmentIds:readonly string[],censusIds:readonly string[],bodyIds?:readonly string[],divisionIds?:readonly string[])=>Promise<GovernmentRowLookup>;
   readonly readRegistrySlice: (state: string, bodyIds: readonly string[], divisionIds: readonly string[]) => Promise<RegistryLookup | null>;
   readonly readRegistryDivisions: (state: string, labels: readonly string[]) => Promise<readonly RegistryDivisionMatch[]>;
+  readonly readDerivedInputHeads: (ids:readonly string[])=>Promise<readonly DerivedInputHead[]>;
+  readonly readDerivedWiringRows: (id:string,keys:readonly string[])=>Promise<readonly DerivedWiringRow[]>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   /** Read only a named candidate field and its referenced parts. */
   readonly readCandidatePath: <T = unknown>(candidateId: string, path: readonly string[]) => Promise<T | null>;
@@ -201,11 +224,14 @@ export interface RoutineDataStore {
   readonly readSourceHead: (recordClass: RoutineRecordClass, scope: string) => Promise<SourceHead | null>;
   readonly recordSourceCheck?: (input: RecordPublishedSourceCheck) => Promise<boolean>;
   readonly readSourceChecks?: (recordClass: RoutineRecordClass, scope: string, sourceKeys: readonly string[]) => Promise<readonly PublishedSourceCheck[]>;
+  readonly readFederalCounts?: (source: string) => Promise<{ readonly complete: boolean; readonly counts: FederalCounts }>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   /** The current portrait record's input versions and next due time, without the record itself. */
   readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
   /** Promoted rosters' people, slimmed to what a portrait list needs. */
   readonly readSlimRosters: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly SlimRoster[]>;
+  /** Exact promoted historical roster identity fields; unavailable adapters leave the join unresolved. */
+  readonly readHistoricalRosterIdentities?: (candidateId:string) => Promise<HistoricalRosterIdentities|null>;
   readonly readOfficeRoster: (scope: string) => Promise<SlimRoster | null>;
   /** Each promoted roster's people as a short digest of their ids, which moves only when someone joins or leaves. */
   readonly readRosterIdDigests: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly { readonly scope: string; readonly digest: string }[]>;
@@ -277,12 +303,35 @@ export interface SlimRoster {
   readonly roster: OfficeholderSet;
 }
 
+export type RosterIdentityPerson=Pick<Officeholder,"id"|"personId"|"nativeIds"|"level"|"websiteUrl"|"profileUrls">&{
+  readonly provenance:{readonly sourceUrl:string|null};
+};
+export interface HistoricalRosterIdentities {
+  readonly versionId:string;
+  readonly sourceId:string;
+  readonly recordClass:RoutineRecordClass;
+  readonly scope:string;
+  readonly jurisdiction:string;
+  readonly parserVersion:string;
+  readonly normalizedHash:string;
+  readonly officeholders:readonly RosterIdentityPerson[];
+}
+const ROSTER_IDENTITY_FIELDS=["id","personId","nativeIds","level","websiteUrl","profileUrls"]as const;
+function rosterIdentityPerson(person:Officeholder):RosterIdentityPerson{
+  return{...Object.fromEntries(ROSTER_IDENTITY_FIELDS.flatMap(key=>Object.hasOwn(person,key)?[[key,person[key]]]:[])),
+    provenance:{sourceUrl:person.provenance.sourceUrl}}as RosterIdentityPerson;
+}
+
 export interface RoutineStoreClock {
   readonly publishedScopeVersions?: readonly string[];
   readonly failureStreak?: number;
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
+  /** The store's successful processing event when retained provider evidence is older. Never source freshness. */
+  readonly lastCompletedAt?:string;
+  readonly nextWorkAt?:string;
+  readonly sourceComplete?:boolean;
   /** Returned for a parser-scoped clock; the prior GOOD keeps its original source timestamps. */
   readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
@@ -338,7 +387,11 @@ function registeredMutationContract(
     const partition = meetingPartitionForHistoryScope(candidate.scope);
     return partition === null
       ? null
-      : { id: partition.id, kind: "routine", readerProjectionId: meetingHistoryContract(partition).readerProjection!.id };
+      : { id: partition.derivedParentId??partition.id, kind: "routine", readerProjectionId: meetingHistoryContract(partition).readerProjection!.id };
+  }
+  if(candidate.recordClass==="MEETING"&&candidate.sourceId==="meetings-derived-routes"){
+    const body=derivedMeetingBodyForScope(candidate.scope);
+    if(body&&!body.historyOf&&body.derivedParentId)return {id:body.derivedParentId,kind:"routine",readerProjectionId:body.readerProjection?.id??null};
   }
   const routine = [...ROUTINE_SOURCE_CONTRACTS, ...RUNTIME_ROUTINE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS]
     .filter((contract) =>
@@ -737,12 +790,12 @@ interface PromotionPointerProof {
 /** The only candidate fields the routine clock reads. It runs for every task on every pass, so widening it is a cost decision. */
 export const ROUTINE_CLOCK_CANDIDATE_FIELDS = {
   top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport", "stateRetirement"],
-  retrieval: ["retrievedAt", "sourceCheck"],
+  retrieval: ["retrievedAt", "sourceCheck","complete"],
   normalization: ["parserVersion"],
 } as const;
 
-type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport" | "stateRetirement"> & {
-  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt" | "sourceCheck">;
+type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport" | "stateRetirement"> & SourceWorkClock & {
+  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt" | "sourceCheck"|"complete">;
   readonly normalization: Pick<RoutineCandidate["normalization"], "parserVersion">;
 };
 
@@ -768,6 +821,7 @@ export function routineClockCandidateView(candidate: RoutineCandidate): RoutineC
     ...Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.top.map((field) => [field, source[field] ?? null])),
     retrieval: Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval.map((field) => [field, retrieval[field] ?? null])),
     normalization: Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization.map((field) => [field, normalization[field] ?? null])),
+    ...sourceWorkClock(candidate),
   }) as RoutineClockCandidate;
 }
 
@@ -801,6 +855,20 @@ export function proofConsistentObservedSuccess(
 ): string | undefined {
   if (!proofConsistentPointedSuccess(record, pointer)) return undefined;
   return sourceCheckedAt(record.candidate.retrieval, observedAt);
+}
+
+/** Processing time decides continuation/failure; the provider observation still decides freshness. */
+function pointedSourceWorkClock(record:RoutineClockRecord|null,pointer:PromotionPointerProof|null|undefined,observedAt:string|undefined):Partial<RoutineStoreClock>{
+  // Rebuilding registration from held Census/NCES evidence does not recover either provider.
+  // Parser readiness has its own version field and leaves the source failure/retry clock intact.
+  if(!proofConsistentPointedSuccess(record,pointer)||record.candidate.recordClass==="REGISTRATION")return{};
+  const checked=proofConsistentObservedSuccess(record,pointer,observedAt);
+  const completed=observedAt&&checked&&Date.parse(observedAt)>Date.parse(checked)?observedAt:undefined;
+  const next=record.candidate.nextWorkAt;
+  return{...(completed?{lastCompletedAt:completed}:{}),
+    ...(next&&Number.isFinite(Date.parse(next))?{nextWorkAt:new Date(next).toISOString()}:{}),
+    ...(record.candidate.retrieval.complete===false?{sourceComplete:false}:{}),
+    ...(record.candidate.workPending===true?{continuationPending:true}:{})};
 }
 
 export function meetingPayloadSittingStarts(payload: unknown): readonly string[] {
@@ -887,6 +955,22 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     });
   }
 
+  async readHistoricalRosterIdentities(candidateId:string):Promise<HistoricalRosterIdentities|null>{
+    const record=this.candidates.get(candidateId),candidate=record?.candidate;
+    const receipt=record?.receipt&&parseValidationReceipt(record.receipt);
+    if(!record||!candidate||record.state!=="PROMOTED"||!record.acquisitionSucceeded||record.promotedVersion!==candidateId||record.lastKnownGoodVersion!==candidateId||
+      candidate.id!==candidateId||candidate.recordClass!=="STATE_LEGISLATOR"||isImportOrStateMoveCandidate(candidate)||!receipt||receipt.decision!=="GOOD"||
+      receipt.candidateId!==candidateId||receipt.sourceId!==candidate.sourceId||receipt.recordClass!==candidate.recordClass||receipt.scope!==candidate.scope||
+      !candidate.normalization.succeeded||!candidate.normalization.normalizedHash||!/^[a-f0-9]{64}$/.test(candidate.normalization.normalizedHash)||
+      !candidate.retrieval.succeeded||!/^[a-f0-9]{64}$/.test(candidate.retrieval.rawHash??""))return null;
+    const model=candidate.readModel as {sourceId?:string;jurisdiction?:string;roster?:OfficeholderSet};
+    if(model?.sourceId!==candidate.sourceId||typeof model.jurisdiction!=="string"||!Array.isArray(model.roster?.officeholders)||
+      canonicalCivicDataHash(model)!==candidate.normalization.normalizedHash)return null;
+    return{versionId:candidateId,sourceId:candidate.sourceId,recordClass:candidate.recordClass,scope:candidate.scope,jurisdiction:model.jurisdiction,
+      parserVersion:candidate.normalization.parserVersion,normalizedHash:candidate.normalization.normalizedHash,
+      officeholders:structuredClone(model.roster.officeholders.map(rosterIdentityPerson))};
+  }
+
   async readOfficeRoster(scope: string): Promise<SlimRoster | null> {
     const pointer = this.promotions.get(projectionKey("STATE_LEGISLATOR", scope));
     const record = pointer ? this.candidates.get(pointer.versionId) : undefined;
@@ -898,7 +982,23 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         officeholders: roster.officeholders.map(person => officeRosterPerson(person as unknown as Record<string, unknown>)) }) as unknown as OfficeholderSet };
   }
 
+  private derivedMeetingProgress=new Map<string,DerivedMeetingFamilyProgress>();
   private memberOfficeProgress: MemberOfficeProgress | undefined;
+  async readDerivedMeetingBody(state:import("./contracts.ts").DerivedMeetingFamilyState,bodyId:string,history=false):Promise<DerivedMeetingBodySlice|null>{
+    const own=derivedBodyScope(bodyId,history,state),family=`source:derived:family:${state}${history?":history":""}`;
+    const pointer=this.promotions.get(projectionKey("MEETING",own))??this.promotions.get(projectionKey("MEETING",family));
+    const record=pointer?this.candidates.get(pointer.versionId):null;
+    if(!pointer||!record)return null;
+    const hash=record.candidate.normalization.normalizedHash;
+    if(pointer.sourceId!==(history?"meetings-history":"meetings-derived-routes")||pointer.receipt.decision!=="GOOD"||!hash||record.state!=="PROMOTED")throw new Error("DERIVED_MEETING_BODY_POINTER_INVALID");
+    return {input:{kind:"PROMOTED_VERSION",recordClass:"MEETING",scope:pointer.scope,versionId:pointer.versionId,readModelSha256:hash,promotedAt:pointer.promotedAt},
+      expectedBaseVersionId:pointer.scope===own?pointer.versionId:null,
+      snapshot:structuredClone(selectDerivedMeetingBodySnapshot(pointer.payload as import("../meetings/snapshot.ts").MeetingsSnapshot,bodyId,pointer.scope!==own))};
+  }
+
+  async readDerivedMeetingProgress(scope:string):Promise<DerivedMeetingFamilyProgress>{return structuredClone(this.derivedMeetingProgress.get(scope)??{pending:[]});}
+  async writeDerivedMeetingProgress(scope:string,progress:DerivedMeetingFamilyProgress):Promise<void>{this.derivedMeetingProgress.set(scope,structuredClone(progress));}
+
   async readMemberOfficeProgress(): Promise<MemberOfficeProgress> {
     if (this.memberOfficeProgress) return structuredClone(this.memberOfficeProgress);
     const held = await this.readPromotionPayloadFields("CURATED_READER_RECORD", MEMBER_OFFICES_SCOPE, ["rosterDigests", "pending"]);
@@ -961,6 +1061,20 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     let value: unknown = this.candidates.get(candidateId)?.candidate;
     for (const key of path) value = value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined;
     return value === undefined ? undefined : structuredClone(value);
+  }
+
+  async readRegistryPlaceView(state:string,divisionIds:readonly string[]):Promise<RegistryPlaceSlice|null>{
+    const pointer=this.promotions.get(projectionKey("REGISTRY_RUNTIME_BINDING",stateRegistryRuntimeScope(requireRegistryState(state))));
+    if(!pointer||pointer.receipt.decision!=="GOOD")return null;
+    return {versionId:pointer.versionId,payload:structuredClone(selectRegistryPlaceView(pointer.payload as RegistryPlanningView,divisionIds))};
+  }
+
+  async readRegistryPlanningView(state:string):Promise<RegistryPlanningView|null>{
+    const pointer=this.promotions.get(projectionKey("REGISTRY_RUNTIME_BINDING",stateRegistryRuntimeScope(requireRegistryState(state))));
+    if(!pointer||pointer.receipt.decision!=="GOOD")return null;
+    const value=pointer.payload as import("../registry/runtime-data-plane.ts").RegistryRuntimeReadModel;
+    return structuredClone({registry:value.registry,bodyRosters:value.bodyRosters??[],rosterReaderDispositions:value.rosterReaderDispositions??[],
+      statewideExecutives:value.statewideExecutives,officialCandidacies:value.officialCandidacies});
   }
 
   async readRegistrySlice(state: string, bodyIds: readonly string[], divisionIds: readonly string[]): Promise<RegistryLookup | null> {
@@ -1031,6 +1145,15 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     history.push(event);
     this.history.set(candidateId, history);
     return heldRecord(next);
+  }
+
+  async readDerivedInputHeads(ids:readonly string[]):Promise<readonly DerivedInputHead[]>{
+    return ids.flatMap(id=>{const row=this.candidates.get(id);if(!row)return [];
+      return [{id,recordClass:row.candidate.recordClass,scope:row.candidate.scope,state:row.state,
+        readModelSha256:canonicalCivicDataHash(row.candidate.readModel),readModelKind:typeof (row.candidate.readModel as {kind?:unknown})?.kind==="string"?(row.candidate.readModel as {kind:string}).kind:null}];});
+  }
+  async readDerivedWiringRows(id:string,keys:readonly string[]):Promise<readonly DerivedWiringRow[]>{
+    return selectDerivedWiringRows(this.candidates.get(id)?.candidate.readModel,keys);
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
@@ -1149,10 +1272,13 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       normalizedHash: row.candidate.normalization.normalizedHash, parserVersion: row.candidate.normalization.parserVersion,
       promotedAt: pointer.promotedAt, candidateState: row.state, acquisitionSucceeded: row.acquisitionSucceeded,
       acquisitionComplete: row.candidate.retrieval.complete ?? null,
-      proofCoupled:canonicalCivicDataJson(pointer.receipt)===canonicalCivicDataJson(row.receipt)&&
-        canonicalCivicDataJson(pointer.payload)===canonicalCivicDataJson(row.candidate.readModel)&&
-        row.candidate.normalization.normalizedHash!==null,
       sourceThrough: row.candidate.temporal.sourceThrough,
+      proofCoupled:row.state==="PROMOTED"&&row.acquisitionSucceeded&&row.promotedVersion===row.candidate.id&&row.lastKnownGoodVersion===row.candidate.id&&
+        pointer.lastKnownGoodVersionId===row.candidate.id&&pointer.sourceId===row.candidate.sourceId&&pointer.recordClass===row.candidate.recordClass&&pointer.scope===row.candidate.scope&&
+        row.candidate.normalization.succeeded&&!!row.candidate.normalization.normalizedHash&&row.receipt?.decision==="GOOD"&&
+        row.receipt.candidateId===row.candidate.id&&row.receipt.sourceId===row.candidate.sourceId&&row.receipt.recordClass===row.candidate.recordClass&&row.receipt.scope===row.candidate.scope&&
+        canonicalCivicDataJson(pointer.receipt)===canonicalCivicDataJson(row.receipt)&&
+        canonicalCivicDataJson(pointer.payload)===canonicalCivicDataJson(row.candidate.readModel),
       imported: isImportOrStateMoveCandidate(row.candidate) || pointer.sourceId !== row.candidate.sourceId };
   }
 
@@ -1186,6 +1312,18 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         (check.sourceHash !== undefined ? check.sourceHash === head.rawHash : payload?.sourceManifestVersion === 1 && payload.sourceHashes?.[key] === check.rawHash)
         ? [structuredClone(check)] : [];
     });
+  }
+
+  async readFederalCounts(source: string): Promise<{ complete: boolean; counts: FederalCounts }> {
+    const rows: { scope: string; payload: FederalProjection }[] = [];
+    for (const pointer of this.promotions.values()) {
+      const record = this.candidates.get(pointer.versionId);
+      if (pointer.recordClass !== "FEDERAL_CIVIC_RECORD" || pointer.sourceId !== source || pointer.versionId !== pointer.lastKnownGoodVersionId ||
+        !record || record.state !== "PROMOTED" || !record.acquisitionSucceeded || record.receipt?.decision !== "GOOD" ||
+        record.candidate.sourceId !== source || isImportOrStateMoveCandidate(record.candidate)) continue;
+      rows.push({ scope: pointer.scope, payload: pointer.payload as FederalProjection });
+    }
+    return aggregateFederalCounts(rows, source);
   }
 
   async readPromotionIdentities(
@@ -1267,8 +1405,9 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       return { kind: "HASH_DIFFERS", detail: `${input.pointerVersionId}'s source bytes or parser changed.` };
     }
     const priorConfirmation = latestUnchangedConfirmation(this.history.get(input.pointerVersionId) ?? [], input.pointerVersionId);
-    if (priorConfirmation && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") >
-      Date.parse(sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt) ?? "")) {
+    if (priorConfirmation && (Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") >
+      Date.parse(sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt) ?? "") ||
+      sameConfirmationSourceObservation(priorConfirmation, built.confirmation))) {
       return { kind: "CONFIRMED", versionId: input.pointerVersionId, at: priorConfirmation.observedAt };
     }
     const { history, event } = this.nextEvent(input.pointerVersionId, "PROMOTED", at, serializeUnchangedConfirmation(built.confirmation));
@@ -1347,6 +1486,14 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
 
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const clock = await this.publishedClock(sourceId, recordClass, scope, parserVersion);
+    if(sourceId==="meetings-derived-routes"&&recordClass==="MEETING"&&/^source:derived:family:US-[A-Z]{2}$/.test(scope)){
+      const progress=await this.readDerivedMeetingProgress(scope);
+      return {...clock,...(progress.attemptedAt?{lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)}:{}),
+        ...(progress.completedAt?{lastCompletedAt:laterInstant(clock.lastCompletedAt,progress.completedAt)}:{}),
+        ...(progress.checkedAt?{lastSucceededAt:laterInstant(clock.lastSucceededAt,progress.checkedAt),lastSucceededObservedAt:laterInstant(clock.lastSucceededObservedAt,progress.checkedAt),
+          ...(parserVersion?{lastSucceededParserVersion:parserVersion}:{})}:{}),
+        ...(progress.nextWorkAt?{nextWorkAt:progress.nextWorkAt}:{}),continuationPending:progress.pending.length>0&&(!progress.nextWorkAt||Date.parse(progress.nextWorkAt)<=Date.now())};
+    }
     if (recordClass !== "CURATED_READER_RECORD" || scope !== MEMBER_OFFICES_SCOPE) return clock;
     const progress = await this.readMemberOfficeProgress();
     if (!progress.checkedAt) return { ...clock, ...(progress.attemptedAt ? {lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)} : {}), continuationPending: progress.pending.length > 0 };
@@ -1401,6 +1548,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         ? { continuationPending: legiscanContinuationPending(pointer?.payload,id=>this.promotions.get(projectionKey("STATE_BILL",billScope(id)))) } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
+      ...pointedSourceWorkClock(pointedRecord,pointer,pointedObservedAt),
     }, confirmation, sittings, parserVersion);
   }
 }
@@ -1438,9 +1586,10 @@ function routineClockCandidateStub() {
     sql`${sql.raw(`'${field}'`)}, ${column}#>${sql.raw(`'{retrieval,${field}}'`)}`);
   const normalization = ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization.map((field) =>
     sql`${sql.raw(`'${field}'`)}, ${column}#>${sql.raw(`'{normalization,${field}}'`)}`);
+  const work=sourceWorkClockSql(column);
   return sql`jsonb_strip_nulls(jsonb_build_object(${sql.join(
     [...top, sql`'retrieval', jsonb_build_object(${sql.join(retrieval, sql`, `)})`,
-      sql`'normalization', jsonb_build_object(${sql.join(normalization, sql`, `)})`],
+      sql`'normalization', jsonb_build_object(${sql.join(normalization, sql`, `)})`,sql`'nextWorkAt',${work.nextWorkAt}`,sql`'workPending',${work.workPending}`],
     sql`, `,
   )}))`.mapWith(civicDataCandidates.candidate);
 }
@@ -1548,12 +1697,21 @@ function confirmedClock(
   const lastSucceededObservedAt = clock.lastSucceededObservedAt === undefined
     ? undefined
     : laterInstant(clock.lastSucceededObservedAt, confirmedAt);
+  const newProviderCheck = clock.lastSucceededObservedAt !== undefined && confirmedAt !== undefined &&
+    Date.parse(confirmedAt) > Date.parse(clock.lastSucceededObservedAt) &&
+    (parserVersion === undefined || clock.lastSucceededParserVersion === parserVersion);
+  const completion=laterInstant(clock.lastCompletedAt??clock.lastSucceededObservedAt,
+    newProviderCheck ? confirmation?.observedAt : undefined);
+  const lastCompletedAt=completion&&lastSucceededObservedAt&&Date.parse(completion)>Date.parse(lastSucceededObservedAt)?completion:undefined;
   return {
     ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
     ...(clock.failureStreak && (!lastSucceededObservedAt || Date.parse(lastSucceededObservedAt) < Date.parse(lastAttemptedAt ?? ""))
       ? { failureStreak: clock.failureStreak } : {}),
     ...(lastSucceededAt ? { lastSucceededAt } : {}),
     ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
+    ...(lastCompletedAt?{lastCompletedAt}:{}),
+    ...(clock.nextWorkAt?{nextWorkAt:clock.nextWorkAt}:{}),
+    ...(clock.sourceComplete!==undefined?{sourceComplete:clock.sourceComplete}:{}),
     ...(clock.lastSucceededParserVersion ? { lastSucceededParserVersion: clock.lastSucceededParserVersion } : {}),
     ...(clock.continuationPending !== undefined ? { continuationPending: clock.continuationPending } : {}),
     ...(clock.publishedScopeVersions !== undefined ? { publishedScopeVersions: clock.publishedScopeVersions } : {}),
@@ -2125,6 +2283,18 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return projection;
   }
 
+  async readGovernmentLookup(state:string,governmentIds:readonly string[],censusIds:readonly string[],bodyIds:readonly string[]=[],divisionIds:readonly string[]=[]):Promise<GovernmentRowLookup>{
+    return readKeyedGovernmentLookup((text,params)=>this.readerRows(text,params),state,governmentIds,censusIds,bodyIds,divisionIds);
+  }
+
+  async readRegistryPlaceView(state:string,divisionIds:readonly string[]):Promise<RegistryPlaceSlice|null>{
+    return readRegistryPlaceRows((text,params)=>this.readerRows(text,params),state,divisionIds);
+  }
+
+  async readRegistryPlanningView(state:string):Promise<RegistryPlanningView|null>{
+    return readRegistryPlanningRows((text,params)=>this.readerRows(text,params),state);
+  }
+
   async readRegistrySlice(state: string, bodyIds: readonly string[], divisionIds: readonly string[]): Promise<RegistryLookup | null> {
     return readKeyedRegistry((text, params) => this.readerRows(text, params), state, bodyIds, divisionIds);
   }
@@ -2353,6 +2523,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       return await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate;
 
     })) ?? Promise.reject(new Error(`CANDIDATE_NOT_FOUND:${candidateId}`));
+  }
+
+  async readDerivedInputHeads(ids:readonly string[]):Promise<readonly DerivedInputHead[]>{
+    return readDerivedInputHeads((text,params)=>this.readerRows(text,params),ids);
+  }
+  async readDerivedWiringRows(id:string,keys:readonly string[]):Promise<readonly DerivedWiringRow[]>{
+    return readDerivedWiringRows((text,params)=>this.readerRows(text,params),id,keys);
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
@@ -2587,18 +2764,57 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       keyOf: row => row.scope, versions: async selected => this.promotionVersions(recordClass, selected),
       values: async selected => {
       const rows = (await this.db.execute(sql`select p.scope, p.current_version_id as version_id, p.promoted_at, c.normalized_hash,
-        (p.payload->'roster') - 'officeholders' - 'endedMemberships' || jsonb_build_object('officeholders',
-          (select coalesce(jsonb_agg(o - 'offices' - 'fieldSources' || jsonb_build_object('fieldSources', coalesce(jsonb_strip_nulls(jsonb_build_object(
-              'name', o#>'{fieldSources,name}', 'officeTitle', o#>'{fieldSources,officeTitle}', 'photo', o#>'{fieldSources,photo}')), '{}'::jsonb))), '[]'::jsonb)
-            from jsonb_array_elements(p.payload#>'{roster,officeholders}') o)) as roster
+        reader_payload_value(r - 'officeholders' - 'endedMemberships') || jsonb_build_object('officeholders',
+          (select coalesce(jsonb_agg(reader_payload_value(o - 'offices' - 'fieldSources') || jsonb_build_object('fieldSources',
+            jsonb_strip_nulls(jsonb_build_object('name',reader_payload_value(f->'name'),'officeTitle',reader_payload_value(f->'officeTitle'),
+              'photo',reader_payload_value(f->'photo')))) order by member.ordinal_index),'[]'::jsonb)
+            from reader_payload_members(r->'officeholders') member
+            cross join lateral(select reader_payload_node(member.item)as o) person
+            cross join lateral(select reader_payload_node(o->'fieldSources')as f) sources)) as roster
       from civic_data_promotions p join civic_data_candidates c on c.id = p.current_version_id
+      cross join lateral(select reader_payload_node(reader_payload_node(p.payload)->'roster')as r) roster
       where p.record_class = ${recordClass} and p.scope in (${sql.join(selected.map(scope => sql`${scope}`), sql`, `)})
-        and jsonb_typeof(p.payload#>'{roster,officeholders}') = 'array'`)).rows as RosterRow[];
+        and r ? 'officeholders'`)).rows as RosterRow[];
         return rows;
       },
     });
     return rows.map(row => ({ recordClass, scope: row.scope, versionId: row.version_id,
       promotedAt: new Date(row.promoted_at).toISOString(), readModelSha256: row.normalized_hash, roster: row.roster }));
+  }
+
+  async readHistoricalRosterIdentities(candidateId:string):Promise<HistoricalRosterIdentities|null>{
+    // The original immutable promotion and exact GOOD source receipt attest selected identity fields.
+    // Historical source models and their unrelated people fields stay inside Postgres.
+    const [row]=await this.candidateRows([candidateId],"historical-roster-identities",async()=>{
+      const result=await this.db.execute(sql`SELECT c.id,jsonb_build_object('versionId',c.id,'sourceId',c.source_id,
+        'recordClass',c.record_class,'scope',c.scope,'jurisdiction',m->'jurisdiction','parserVersion',c.parser_version,'normalizedHash',c.normalized_hash,
+        'officeholders',(SELECT coalesce(jsonb_agg(jsonb_build_object('id',o->'id','personId',o->'personId','level',o->'level',
+          'nativeIds',reader_payload_value(o->'nativeIds'),'websiteUrl',reader_payload_value(o->'websiteUrl'),
+          'profileUrls',reader_payload_value(o->'profileUrls'),'provenance',jsonb_build_object('sourceUrl',reader_payload_node(o->'provenance')->'sourceUrl'))
+          ORDER BY person.ordinal_index),'[]'::jsonb)FROM reader_payload_members(r->'officeholders')person
+          CROSS JOIN LATERAL(SELECT reader_payload_node(person.item)AS o)holder))AS identities
+        FROM civic_data_candidates c
+        CROSS JOIN LATERAL(SELECT reader_payload_node(c.candidate)AS root)envelope
+        CROSS JOIN LATERAL(SELECT reader_payload_node(root->'normalization')AS n,
+          reader_payload_node(root->'retrieval')AS retrieval,reader_payload_node(root->'readModel')AS m)fields
+        CROSS JOIN LATERAL(SELECT reader_payload_node(m->'roster')AS r)roster
+        WHERE c.id=${candidateId} AND c.record_class='STATE_LEGISLATOR'AND c.state='PROMOTED'AND c.acquisition_succeeded
+          AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
+          AND root->>'id'=c.id AND root->>'sourceId'=c.source_id AND root->>'recordClass'=c.record_class AND root->>'scope'=c.scope
+          AND n->>'succeeded'='true'AND n->>'parserVersion'=c.parser_version AND n->>'normalizedHash'=c.normalized_hash
+          AND retrieval->>'succeeded'='true'AND retrieval->>'rawHash'=c.raw_hash
+          AND c.raw_hash~'^[a-f0-9]{64}$'AND c.normalized_hash~'^[a-f0-9]{64}$'
+          AND NOT(root?'bootstrapImport')AND coalesce(root#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'
+          AND m->>'sourceId'=c.source_id AND m?'jurisdiction'AND r?'officeholders'
+          AND c.validation_receipt->>'decision'='GOOD'AND c.validation_receipt->>'candidateId'=c.id
+          AND c.validation_receipt->>'sourceId'=c.source_id AND c.validation_receipt->>'recordClass'=c.record_class AND c.validation_receipt->>'scope'=c.scope
+          AND EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(c.validation_receipt->'checks')='array'
+            THEN c.validation_receipt->'checks'ELSE'[]'::jsonb END)check_row WHERE check_row->>'check'='SOURCE_AUTHENTICITY'AND check_row->>'verdict'='PASS')
+          AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(c.validation_receipt->'checks')='array'
+            THEN c.validation_receipt->'checks'ELSE'[]'::jsonb END)check_row WHERE check_row->>'verdict'IS DISTINCT FROM'PASS')`);
+      return result.rows as {id:string;identities:HistoricalRosterIdentities}[];
+    });
+    return row?.identities??null;
   }
 
   async readOfficeRoster(scope: string): Promise<SlimRoster | null> {
@@ -2626,6 +2842,20 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async readMemberOfficeSlice(state: string, members: readonly string[] = []): Promise<MemberOfficeSlice | null> {
     return readMemberOfficeRows((text, params) => this.readerRows(text, params), state, members);
   }
+  async readDerivedMeetingBody(state:import("./contracts.ts").DerivedMeetingFamilyState,bodyId:string,history=false):Promise<DerivedMeetingBodySlice|null>{
+    return readDerivedMeetingBodyRows((text,params)=>this.readerRows(text,params),state,bodyId,history);
+  }
+
+  async readDerivedMeetingProgress(scope:string):Promise<DerivedMeetingFamilyProgress>{
+    const [row]=(await this.db.execute(sql`SELECT position FROM pass_cursor WHERE name=${derivedMeetingProgressName(scope)}`)).rows as {position:string}[];
+    return row?JSON.parse(row.position) as DerivedMeetingFamilyProgress:{pending:[]};
+  }
+  async writeDerivedMeetingProgress(scope:string,progress:DerivedMeetingFamilyProgress):Promise<void>{
+    this.assertCandidateMutationAuthority({id:derivedMeetingProgressName(scope),sourceId:"meetings-derived-routes",recordClass:"MEETING",scope});
+    await this.db.execute(sql`INSERT INTO pass_cursor(name,position) VALUES(${derivedMeetingProgressName(scope)},${JSON.stringify(progress)})
+      ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position`);
+  }
+
   async readMemberOfficeProgress(): Promise<MemberOfficeProgress> {
     const [row] = (await this.db.execute(sql`SELECT position FROM pass_cursor WHERE name=${MEMBER_OFFICE_CURSOR}`)).rows as { position: string }[];
     if (row) return JSON.parse(row.position) as MemberOfficeProgress;
@@ -2690,15 +2920,28 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       sourceId: civicDataCandidates.sourceId, recordClass: civicDataCandidates.recordClass, scope: civicDataCandidates.scope,
       versionId: civicDataPromotions.currentVersionId, lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
       rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
-      proofCoupled:sql<boolean>`${civicDataPromotions.validationReceipt}=${civicDataCandidates.validationReceipt}
-        AND ${civicDataPromotions.payload}=${civicDataCandidates.candidate}->'readModel'
-        AND ${civicDataCandidates.normalizedHash}=${civicDataCandidates.candidate}#>>'{normalization,normalizedHash}'`.as("proof_coupled"),
       rawHashBasis: sql<SourceHead["rawHashBasis"]>`${civicDataCandidates.candidate}#>>'{retrieval,rawHashBasis}'`.as("raw_hash_basis"),
       parserVersion: civicDataCandidates.parserVersion, promotedAt: civicDataPromotions.promotedAt,
       candidateState: civicDataCandidates.state, acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
       acquisitionComplete: sql<boolean | null>`case when jsonb_typeof(${civicDataCandidates.candidate}#>'{retrieval,complete}')='boolean'
         then (${civicDataCandidates.candidate}#>>'{retrieval,complete}')::boolean else null end`.as("acquisition_complete"),
       sourceThrough: sql<string | null>`${civicDataCandidates.candidate}#>>'{temporal,sourceThrough}'`.as("source_through"),
+      proofCoupled:sql<boolean>`coalesce(${civicDataCandidates.state}='PROMOTED' AND ${civicDataCandidates.acquisitionSucceeded}
+        AND ${civicDataCandidates.promotedVersionId}=${civicDataCandidates.id} AND ${civicDataCandidates.lastKnownGoodVersionId}=${civicDataCandidates.id}
+        AND ${civicDataPromotions.lastKnownGoodVersionId}=${civicDataCandidates.id} AND ${civicDataPromotions.sourceId}=${civicDataCandidates.sourceId}
+        AND ${civicDataPromotions.recordClass}=${civicDataCandidates.recordClass} AND ${civicDataPromotions.scope}=${civicDataCandidates.scope}
+        AND ${civicDataCandidates.candidate}#>'{normalization,succeeded}'='true'::jsonb
+        AND ${civicDataCandidates.normalizedHash} ~ '^[a-f0-9]{64}$'
+        AND ${civicDataCandidates.candidate}#>>'{normalization,normalizedHash}'=${civicDataCandidates.normalizedHash}
+        AND ${civicDataCandidates.candidate}#>>'{normalization,parserVersion}'=${civicDataCandidates.parserVersion}
+        AND ${civicDataCandidates.candidate}#>>'{retrieval,rawHash}'=${civicDataCandidates.rawHash}
+        AND ${civicDataPromotions.payload}=${civicDataCandidates.candidate}->'readModel'
+        AND ${civicDataPromotions.validationReceipt}=${civicDataCandidates.validationReceipt}
+        AND ${civicDataCandidates.validationReceipt}->>'decision'='GOOD'
+        AND ${civicDataCandidates.validationReceipt}->>'candidateId'=${civicDataCandidates.id}
+        AND ${civicDataCandidates.validationReceipt}->>'sourceId'=${civicDataCandidates.sourceId}
+        AND ${civicDataCandidates.validationReceipt}->>'recordClass'=${civicDataCandidates.recordClass}
+        AND ${civicDataCandidates.validationReceipt}->>'scope'=${civicDataCandidates.scope},false)`.as("proof_coupled"),
       imported: sql<boolean>`(${civicDataCandidates.candidate} ? 'bootstrapImport')
         OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'
         OR ${civicDataPromotions.sourceId} <> ${civicDataCandidates.sourceId}`.as("imported"),
@@ -2711,6 +2954,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async recordSourceCheck(input: RecordPublishedSourceCheck): Promise<boolean> {
     this.assertCandidateMutationAuthority({ id: input.pointerVersionId, sourceId: input.sourceId, recordClass: input.recordClass, scope: input.scope });
     return recordPublishedSourceCheck((text, params) => this.readerRows(text, params), input);
+  }
+
+  async readFederalCounts(source: string): Promise<{ complete: boolean; counts: FederalCounts }> {
+    return readFederalSourceCounts((text, params) => this.readerRows(text, params), source);
   }
 
   async readSourceChecks(recordClass: RoutineRecordClass, scope: string, sourceKeys: readonly string[]): Promise<readonly PublishedSourceCheck[]> {
@@ -2832,6 +3079,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const nextSequence = this.nextCandidateEventSequence(id);
     const checkedAt = sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt)!;
     // This receipt shares the existing candidate lock. A delayed parser replay cannot replace a newer real check.
+    const priorConfirmationValue = sql`case when left(prior_confirmation.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
+      then substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb end`;
     const priorCheckedAt = sql`case when left(prior_confirmation.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
       then coalesce(
         (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb #>> '{retrieval,sourceCheck,checkedAt}')::timestamptz,
@@ -2870,7 +3119,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           and not exists (
             select 1 from civic_data_candidate_events as prior_confirmation
             where prior_confirmation.candidate_id = ${id}
-              and ${priorCheckedAt} > ${checkedAt}::timestamptz
+              and (${priorCheckedAt} > ${checkedAt}::timestamptz OR (
+                ${built.confirmation.retrieval.sourceCheck !== undefined}
+                and (${priorConfirmationValue}) #> '{retrieval,sourceCheck}' = ${JSON.stringify(built.confirmation.retrieval.sourceCheck ?? null)}::jsonb
+                and (${priorConfirmationValue}) ->> 'parserVersion' = ${built.confirmation.parserVersion}
+                and (${priorConfirmationValue}) ->> 'inputDigest' IS NOT DISTINCT FROM ${built.confirmation.inputDigest ?? null}
+              ))
           )
       `).returning({ sequence: civicDataCandidateEvents.sequence }),
       ...(input.retainedSourceResponses?.length
@@ -2928,7 +3182,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (input.basis === "RAW_HASH_UNCHANGED" && (candidate.rawHash !== input.retrieval.rawHash || candidate.parserVersion !== input.parserVersion))
       return { kind: "HASH_DIFFERS", detail: `${id}'s source bytes or parser changed.` };
     const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
-    if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
+    if (priorConfirmation?.versionId === id && (Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt) ||
+      sameConfirmationSourceObservation(priorConfirmation, built.confirmation))) {
       return { kind: "CONFIRMED", versionId: id, at: priorConfirmation.observedAt };
     }
     throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);
@@ -3096,6 +3351,14 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const clock = await this.publishedClock(sourceId, recordClass, scope, parserVersion);
+    if(sourceId==="meetings-derived-routes"&&recordClass==="MEETING"&&/^source:derived:family:US-[A-Z]{2}$/.test(scope)){
+      const progress=await this.readDerivedMeetingProgress(scope);
+      return {...clock,...(progress.attemptedAt?{lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)}:{}),
+        ...(progress.completedAt?{lastCompletedAt:laterInstant(clock.lastCompletedAt,progress.completedAt)}:{}),
+        ...(progress.checkedAt?{lastSucceededAt:laterInstant(clock.lastSucceededAt,progress.checkedAt),lastSucceededObservedAt:laterInstant(clock.lastSucceededObservedAt,progress.checkedAt),
+          ...(parserVersion?{lastSucceededParserVersion:parserVersion}:{})}:{}),
+        ...(progress.nextWorkAt?{nextWorkAt:progress.nextWorkAt}:{}),continuationPending:progress.pending.length>0&&(!progress.nextWorkAt||Date.parse(progress.nextWorkAt)<=Date.now())};
+    }
     if (recordClass !== "CURATED_READER_RECORD" || scope !== MEMBER_OFFICES_SCOPE) return clock;
     const progress = await this.readMemberOfficeProgress();
     if (!progress.checkedAt) return { ...clock, ...(progress.attemptedAt ? {lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)} : {}), continuationPending: progress.pending.length > 0 };
@@ -3201,6 +3464,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         ? { continuationPending: pointer?.continuationPending !== false } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
+      ...pointedSourceWorkClock(pointedRecord,pointerProof,
+        observed===undefined?undefined:canonicalPostgresRoutineTimestamp(observed,"clock.lastCompletedAt")),
     }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings, parserVersion);
   }
 }

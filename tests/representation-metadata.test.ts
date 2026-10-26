@@ -32,7 +32,7 @@ test("exact registration metadata reads plain and partitioned divisions, ignores
       return invalidPublication ? rows.map(row=>({...row,published:false})) : rows;
     })));
     // Missing government bytes deliberately explode if a metadata read traverses that unrelated branch.
-    const payload = {divisions:[{ocdId:"other",label:"Other"},expected],governments:{$civicPayloadPart:"unavailable-government-part"}};
+    const payload = {divisions:[{ocdId:"other",label:"Other"},expected],governments:[{id:"unrelated-government",geometry:{$civicPayloadPart:"unavailable-government-geometry"}}]};
     await publish("plain",payload,"2026-10-19T12:00:00.000Z");
     assert.deepEqual(await readRegistrationDivision("al",ocdId),expected);
     assert.equal(await readRegistrationDivision("al",`${ocdId}/place:unknown`),undefined);

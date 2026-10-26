@@ -53,11 +53,11 @@ function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate)
 
 
 function sameAcquisitionProgress(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
-  if(candidate.retrieval.complete!==pointed.retrieval.complete)return false;
   if(candidate.sourceId==="plural-openstates" && candidate.recordClass==="STATE_LEGISLATOR"){
     const inputDigest=(value:RoutineCandidate)=>(value.normalizedPayload as {sourceInputDigest?:string}|null)?.sourceInputDigest;
     if(inputDigest(candidate)!==inputDigest(pointed))return false;
   }
+  if(candidate.retrieval.complete!==pointed.retrieval.complete)return false;
   if (candidate.recordClass === "MEETING_OUTCOME") {
     const checks = (value: RoutineCandidate) => canonicalCivicDataJson((value.readModel as {
       sittings?: { meetingId: string; minutesDocument?: { readAt?: string } }[]
@@ -80,7 +80,7 @@ export async function processRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"]; readonly inputDigest?: string; readonly publicationBase?:RoutinePublicationBase } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"]; readonly inputDigest?: string; readonly publicationBase?: RoutinePublicationBase } = {},
   navigation?: NavigationComparison,
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;

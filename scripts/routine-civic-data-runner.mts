@@ -1363,8 +1363,13 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
   }
   const singleMeeting = pending.kind === "MEETING_PARTITION" && run.status === 0 && run.termination === "EXITED"
     ? stateCalendarMemberResults(run, [pending.id], true)[0] : null;
+  const partition= pending.kind==="MEETING_PARTITION"?meetingPartitionContract(pending.task.id):null;
+  const bodyContinuation=partition?.derivedFamily&&!partition.derivedParentId&&run.stdout.split(/\r?\n/).some(line=>{
+    if(!line.startsWith("RCD_MEETING_PARTITION_DEFERRED="))return false;
+    try{return JSON.parse(line.slice("RCD_MEETING_PARTITION_DEFERRED=".length)).partitionId===pending.task.id;}catch{return false;}
+  });
   const deferral = routineDeferral(run, startedSourceChildren.has(run.id)) ??
-    (singleMeeting && "owed" in singleMeeting ? singleMeeting.owed : null);
+    (bodyContinuation?"the derived family's saved body cursor remains owed":singleMeeting && "owed" in singleMeeting ? singleMeeting.owed : null);
   if (deferral !== null) {
     attempted -= 1;
 
@@ -1399,6 +1404,34 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       const detail = executionFailure === null ? parsed.detail : `${executionFailure.detail}; ${parsed.code}: ${parsed.detail}`;
       supervisorFailures.push({ ...failure, detail });
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
+      return;
+    }
+    const family=meetingPartitionContract(pending.task.id);
+    const children=parsed.receipts.map(receipt=>meetingPartitionContract(receipt.source));
+    if(family?.derivedFamily&&!family.derivedParentId&&children.every(child=>child?.derivedParentId===family.id)){
+      let good=0,held=0;
+      for(const [index,receipt] of parsed.receipts.entries()){
+        const child=children[index]!,task=routineTaskFromContract(child),promoted=successfulRoutineRunnerReceiptIssue(receipt)===null;
+        const issue=await durableRoutineRunnerReceiptIssue(receipt,task,store,promoted?"SUCCESS":"HELD");
+        if(issue!==null){
+          supervisorFailures.push({taskId:pending.task.id,code:"DURABLE_RECEIPT_INVALID",detail:issue});
+          console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${issue}`);
+          return;
+        }
+        if(promoted)good++;else held++;
+        captureTaskReceipt({...pending,id:task.id,task},receipt,promoted?"VERIFIED_SOURCE_SUCCESS":"VERIFIED_SOURCE_FAILURE");
+        console.log("RCD_RECEIPT="+JSON.stringify(receipt));
+      }
+      if(good){
+        verifiedSourceSuccesses++;
+        await recordTaskDoorOutcome(pending.task.id,"SUCCESS",null,()=>store.clock(pending.task.sourceId,pending.task.recordClass,pending.task.scope),pending.task);
+        console.log(`RCD_TASK ${pending.task.id}: GOOD (${good} body publications/checks, ${held} bodies held on their own retry clocks)`);
+      }else{
+        verifiedSourceFailures++;
+        await recordTaskDoorOutcome(pending.task.id,"FAILURE");
+        console.log(`RCD_TASK ${pending.task.id}: SOURCE_HELD_LKG (${held} body sources held)`);
+      }
+      if(executionFailure!==null)supervisorFailures.push(executionFailure);
       return;
     }
     if (parsed.receipts.length !== 1 || parsed.receipts[0]?.source !== pending.task.id) {

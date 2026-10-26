@@ -9,18 +9,24 @@ import { FEDERAL_DIRECTORY_STATES, federalDirectoryContractId } from "../lib/off
 /** Congress refreshes itself daily, and no roll call falls in a gap between versions. */
 
 test("DB-08: the usual window is the latest twenty; a held version that ends earlier pulls the start back to the next roll", () => {
-  assert.deepEqual(windowStart({ latest: 300, previousNewest: null }), { start: 281, unreached: 0 });
-  assert.deepEqual(windowStart({ latest: 300, previousNewest: 299 }), { start: 281, unreached: 0 }, "a quiet day reads only the usual window");
-  assert.deepEqual(windowStart({ latest: 300, previousNewest: 300 }), { start: 281, unreached: 0 });
-  assert.deepEqual(windowStart({ latest: 300, previousNewest: 250 }), { start: 251, unreached: 0 }, "a busy day or a missed run reads every roll since");
-  assert.deepEqual(windowStart({ latest: 10, previousNewest: null }), { start: 1, unreached: 0 });
+  assert.deepEqual(windowStart({ latest: 300, previousNewest: null }), { start: 281,end:300, unreached: 0 });
+  assert.deepEqual(windowStart({ latest: 300, previousNewest: 299 }), { start: 281,end:300, unreached: 0 }, "a quiet day reads only the usual window");
+  assert.deepEqual(windowStart({ latest: 300, previousNewest: 300 }), { start: 281,end:300, unreached: 0 });
+  assert.deepEqual(windowStart({ latest: 300, previousNewest: 250 }), { start: 251,end:300, unreached: 0 }, "a busy day or a missed run reads every roll since");
+  assert.deepEqual(windowStart({ latest: 10, previousNewest: null }), { start: 1,end:10, unreached: 0 });
 });
 
-test("DB-08: a gap beyond the catch-up cap is reported, not silently shortened", () => {
-  const far = windowStart({ latest: 500, previousNewest: 100 });
-  assert.equal(far.start, 500 - ROLL_MAX_CATCH_UP + 1);
-  assert.equal(far.unreached, far.start - 101);
-  assert.ok(far.unreached > 0);
+test("a gap larger than one pass advances its published frontier until every intervening roll is held", () => {
+  const seen=new Set<number>();let previousNewest=100,passes=0;
+  while(previousNewest<500){
+    const next=windowStart({latest:500,previousNewest});
+    assert.ok(next.start<=previousNewest+1,"no intervening source roll is silently skipped");
+    assert.ok(next.end>previousNewest,"the next durable frontier makes progress");
+    assert.ok(next.end-next.start+1<=ROLL_MAX_CATCH_UP);
+    for(let roll=next.start;roll<=next.end;roll++)seen.add(roll);
+    assert.equal(next.unreached,500-next.end);previousNewest=next.end;passes++;
+  }
+  assert.equal(passes,3);assert.deepEqual([...seen],Array.from({length:400},(_,index)=>101+index));
 });
 
 test("DB-08: every place's roster, the roll calls and key votes are on the daily automatic refresh, with no Send", () => {

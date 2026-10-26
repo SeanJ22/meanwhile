@@ -10,8 +10,9 @@ export async function promoteDerivedCandidate(
   contractId: string,
   candidate: RoutineCandidate,
   now: string,
+  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
-  const outcome = await processRegisteredRoutineCandidate(store, contractId, candidate, now, undefined, { confirmUnchanged: true });
+  const outcome = await processRegisteredRoutineCandidate(store, contractId, candidate, now, undefined, { confirmUnchanged: options.confirmUnchanged ?? true });
   console.log("RCD_RECEIPT=" + JSON.stringify({
     source: contractId,
     ...routineReceiptFields(candidate, outcome),

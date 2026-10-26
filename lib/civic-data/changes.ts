@@ -92,6 +92,10 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
 
 /** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if(recordClass==="PRL_ARCHIVE" && member.key.startsWith("dataset:")){
+    const row=object(member.record);
+    if(row){const {rowsWritten:_written,newObjectKeys:_newKeys,fetchedAt:_fetched,...facts}=row;return facts;}
+  }
   if (recordClass === "FEDERAL_MONEY" && member.key === "federal-money-checkpoint") {
     const row = object(member.record);
     if (row) { const { lastCompleteAt: _at, refreshStartedAt: _started, ...progress } = row; return progress; }
@@ -128,6 +132,9 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
+  if (recordClass === "REGISTRATION" || recordClass === "REGISTRY_RUNTIME_BINDING") {
+    return withoutPeopleSourceCheckFields(withoutProvenanceStamps(member.record, ["rawHash", "checkedAt", "collectedAt", "verifiedAt"]));
+  }
   if ((recordClass === "STATE_LEGISLATOR" && member.key.startsWith("member:")) ||
     (recordClass === "FEDERAL_DIRECTORY" && member.key.startsWith("officeholder:"))) {
     return withoutPeopleSourceCheckFields(withoutProvenanceStamps(member.record, ["collectedAt", "verifiedAt", "rawHash"]));
@@ -136,6 +143,10 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
     const roll = object(member.record);
     if (roll === null) return member.record;
     const { retrievedAt: _retrievedAt, ...facts } = roll;
+    return facts;
+  }
+  if (recordClass === "FEDERAL_CIVIC_RECORD" && member.key.startsWith("federal:")) {
+    const { checkedAt: _checkedAt, sourceKey: _sourceKey, sourceHash: _sourceHash, ...facts } = object(member.record) ?? {};
     return facts;
   }
   if (recordClass === "VOTING_SITE" && member.key.startsWith("jurisdiction:")) {

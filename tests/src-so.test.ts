@@ -11,7 +11,7 @@ import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.t
 import { feedDoorDrafts } from "../lib/doors/seed-feeds.ts";
 import { normalizeSocrata, normalizeEcho, openDataReports, echoReaderArtifactRecord, type GovernmentJoin } from "../lib/sources/open-data/normalize.ts";
 import { parseCatalogPage, socrataPages, openDataFetch } from "../lib/sources/open-data/acquire.ts";
-import { openDataCandidate, publishOpenData, readOpenDataProjection } from "../lib/sources/open-data/publication.ts";
+import { openDataCandidate, openDataCaptures, publishOpenData, readOpenDataProjection } from "../lib/sources/open-data/publication.ts";
 import { readerOpenData } from "../lib/sources/open-data/reader.ts";
 import { openDataEvidence, openDataText } from "../lib/ask/open-data.ts";
 import { OPEN_DATA_CLOCKS, ECHO_EXPORT, openDataFactIssue, openDataReaderRecord, divisionPartition, zipPartition, type OpenDataFact } from "../lib/sources/open-data/model.ts";
@@ -206,20 +206,34 @@ test("EPA's next scheduled runs publish a new edition and then confirm it, with 
     if(at>=served.length)return etag==='"edition-1"'?new Response(null,{status:304}):new Response(served[1],{headers:{etag:'"edition-1"'}});
     return new Response(served[at],{headers:{etag:`"edition-${at}"`,"last-modified":"Sun, 18 Oct 2026 06:44:46 GMT"}});
   }) as typeof fetch;
+  const originalPromotion=store.readPromotion.bind(store),originalCandidate=store.readCandidate.bind(store),originalPath=store.readCandidatePath.bind(store);
   const runs=[];
   for(let run=0;run<3;run++) {
+    if(run===2) {
+      store.readCandidate=async()=>{throw Error("unchanged source must not load a held candidate");};
+      store.readPromotion=async()=>{throw Error("unchanged source must not load a national manifest");};
+      const readPath=store.readCandidatePath.bind(store);
+      store.readCandidatePath=async <T>(id:string,path:readonly string[])=>{
+        assert.deepEqual(path,["normalizedPayload","sourceProbe"],"unchanged sources load only their ordinary request plan");
+        return readPath<T>(id,path);
+      };
+    }
     const spool=await OpenDataSpool.create();
     try {runs.push(await refreshEchoNational({store,vault,archive:openDataArchiveStore(archiveVault),spool,signal:AbortSignal.timeout(30_000),now:()=>new Date().toISOString(),readStateJoins:async()=>[],fetchImpl}));}
     finally {await spool.dispose();}
   }
   assert.deepEqual(conditional,[null,'"edition-0"','"edition-1"'],"each next run checks the edition it holds");
+  assert.ok(runs[0].publication);assert.ok(runs[1].publication);
   assert.ok(runs[0].publication.outcome.promoted);
   assert.ok(runs[1].publication.outcome.promoted,"a changed edition publishes a clean new version");
   assert.notEqual(runs[1].publication.candidate.id,runs[0].publication.candidate.id);
-  assert.equal(runs[2].unchanged,true);assert.ok(runs[2].publication.outcome.confirmed,"an unchanged edition is confirmed, not rebuilt");
+  assert.equal(runs[2].unchanged,true);assert.ok(runs[2].confirmation,"an unchanged edition is confirmed without loading the held record");
+  assert.equal(runs[2].publication,null);
   const keys=await archiveVault.list("project/freshness/source/src-so/archive/");
   assert.equal(keys.filter(key=>key.includes("/epa-echo/sources/")).length,2,"one held copy of each edition's bytes");
   assert.ok(keys.includes("project/freshness/source/src-so/archive/index/epa-echo/source.json"));
+  // Reader verification uses the original adapter; the unchanged source above was denied every payload read.
+  store.readPromotion=originalPromotion;store.readCandidate=originalCandidate;store.readCandidatePath=originalPath;
   const read=await readOpenDataProjection("epa-echo","national",{store});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
   const loaded=read.value.reports.reduce((n,r)=>n+r.loaded,0);assert.equal(loaded,runs[1].reports.reduce((n,r)=>n+r.loaded,0));assert.ok(loaded>0);
@@ -316,7 +330,8 @@ test("EPA publishes mixed valid rows, records exact minimum gaps, and retains th
   await publishOpenData({store,...firstInput});
   const bad={...old.sourceRow,FAC_NAME:""},gap=echoMinimumGap(bad);assert.ok(gap);assert.equal(gap.id,old.id);
   const actualGap=echoMinimumGap(JSON.parse(fixture("echo-missing-name.json")));assert.match(actualGap!.fact.detail,/Publisher FAC_NAME is blank/);
-  const retained=await retainEchoMinimumGaps([gap],firstInput.partitions,firstInput.captures,vault);
+  const captures=openDataCaptures([...firstInput.captures,...firstInput.captures.map(capture=>({...capture,retrievedAt:LATER}))]);
+  const retained=await retainEchoMinimumGaps([gap],firstInput.partitions,captures,vault);
   const partition=mergeEchoRetainedPartition({partition:firstInput.partitions[0].id,rows:[valid],captures:[echoCapture([valid])]},retained);
   assert.equal(retained.size,1); // The retained source coordinates also retain its cell partition.
   assert.ok(partition.rows.some(row=>row.id===old.id&&row.title===old.title&&row.sourceRow.FAC_NAME===old.sourceRow.FAC_NAME));

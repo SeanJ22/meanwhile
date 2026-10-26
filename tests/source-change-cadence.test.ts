@@ -3,9 +3,10 @@ import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { measureTranslationRoutineTask } from "../lib/translate/routine-contract.ts";
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDue, routineTaskNextDueMs, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
-import { factRefreshBounds, observedSourceEveryMs, readSourceChangeHistory, routineFactKind } from "../lib/civic-data/source-change-cadence.ts";
+import { factRefreshBounds, observedSourceEveryMs, readSourceChangeHistory, routineFactKind, timeSensitiveSource } from "../lib/civic-data/source-change-cadence.ts";
 
 const HOUR = 3_600_000, DAY = 24 * HOUR;
 const AT = "2026-10-20T12:00:00.000Z";
@@ -58,6 +59,27 @@ test("voting and ballot checks keep their election pace, and meetings/outcomes k
   assert.ok(meeting, "the source registry carries a sitting-window meeting contract");
   const clock = { ...checked, sittingStarts: [new Date(start + DAY).toISOString()] };
   assert.equal(routineTaskNextDueMs(meeting, clock, start, true, 40 * DAY), routineTaskNextDueMs(meeting, clock, start, true));
+});
+
+test("election explainers and owed district plans keep their own ballot pace through November 3", () => {
+  const translation = measureTranslationRoutineTask("OH");
+  const geography = ROUTINE_SOURCE_TASKS.find(task => task.id === "census-geography-overlaps")!;
+  for (const task of [translation, geography]) {
+    assert.equal(routineFactKind(task), "ballot");
+    assert.equal(timeSensitiveSource(task, start), true);
+    const before = { lastAttemptedAt: AT };
+    assert.equal(routineTaskDue(task, before, start + task.retryMs - 1), false);
+    assert.equal(routineTaskDue(task, before, start + task.retryMs), true,
+      `${task.id} retains its installed election retry rather than an officeholder delay`);
+    const after = Date.parse("2026-11-05T12:00:00.000Z"), at = new Date(after).toISOString();
+    assert.equal(timeSensitiveSource(task, after), false);
+    const floor = factRefreshBounds(task).minimumRefreshMs;
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: at }, after + floor - 1), false,
+      "after the election the configured ballot retry floor applies");
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: at }, after + floor), true);
+  }
+  assert.equal(routineTaskDue(translation, checked, start + translation.cadenceMs - 1), false);
+  assert.equal(routineTaskDue(translation, checked, start + translation.cadenceMs), true);
 });
 
 test("an unfinished member-office pass continues before its daily retry floor", () => {

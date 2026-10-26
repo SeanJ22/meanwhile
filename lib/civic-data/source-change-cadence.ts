@@ -25,7 +25,9 @@ export function routineFactKind(task: Pick<RoutineSourceTask, "id" | "sourceId" 
   if (task.sourceId === "people-portraits") return "portrait";
   if (task.id === "member-offices") return "contact";
   if (task.sourceId === "candidate-campaign-site-chain") return "contact";
-  if (task.id.startsWith("ballot-navigation")) return "ballot";
+  // These derived records feed the ballot even though their storage class is shared with ordinary references.
+  if (task.id.startsWith("ballot-navigation") || task.id.startsWith("measure-translations:") ||
+      task.id === "census-geography-overlaps") return "ballot";
   return FACT_KIND[task.recordClass];
 }
 
@@ -39,7 +41,8 @@ export function timeSensitiveSource(task: Pick<RoutineSourceTask, "id" | "record
   return task.contract.schedule?.kind === "SITTING_WINDOW" || task.recordClass === "MEETING" || task.recordClass === "MEETING_OUTCOME" ||
     nowMs < Date.parse("2026-11-04T12:00:00.000Z") && (
       task.recordClass === "VOTING_SITE" || task.recordClass === "BALLOT_CANDIDACY" || task.recordClass === "GOOGLE_CIVIC_VOTERINFO" ||
-      task.id.startsWith("ballot-navigation"));
+      task.id.startsWith("ballot-navigation") || task.id.startsWith("measure-translations:") ||
+      task.id === "census-geography-overlaps" && Boolean(task.contract.cadence.requiredScopeVersions?.length));
 }
 
 export interface SourceChangeHistory {

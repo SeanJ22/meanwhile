@@ -40,7 +40,9 @@ test("production identity selectors keep current and immutable historical roster
     assert.equal(current[0]?.versionId,version);assert.equal(current[0]?.roster.officeholders.length,1);
     assert.equal(current[0]?.roster.officeholders[0]?.offices,undefined);
     await assert.rejects(pg.query("UPDATE civic_data_candidates SET validation_receipt=jsonb_set(validation_receipt,'{sourceId}','\"other-source\"'::jsonb)WHERE id=$1",[version]),
-      (error:unknown)=>(error as {code?:string}).code==="55000","a published source-authentication receipt remains immutable");
+      (error:unknown)=>{const failure=error as {code?:string;constraint?:string};
+        return failure.code==="23514"&&failure.constraint==="civic_data_candidates_disposition_receipt_coherent";},
+      "the existing disposition constraint rejects a receipt for another source");
     assert.deepEqual(await store.readHistoricalRosterIdentities(version),historical,"a refused receipt mutation cannot alter current or historical identity evidence");
   });
 });

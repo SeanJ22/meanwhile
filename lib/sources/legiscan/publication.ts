@@ -139,13 +139,14 @@ export async function bulkManifestIssue(candidate:RoutineCandidate,store?:Routin
     const counts:BillPart["counts"]={rows:0,joined:0,unjoined:0,sponsorsJoined:0,sponsorsUnjoined:0};
     let offset=0;
     for(const [index,pointer] of value.parts.entries()){
-      const [held,record,part]=await Promise.all([store.readPromotionIdentity("STATE_BILL",pointer.scope),
+      const [held,record,part]=await Promise.all([store.readSourceHead("STATE_BILL",pointer.scope),
         store.readPublishedCandidateMetadata(pointer.versionId),
         store.readCandidatePath<PartSourceMembers>(pointer.versionId,["normalizedPayload","partSourceMembers"])]);
       if(!held||held.versionId!==pointer.versionId||held.lastKnownGoodVersionId!==pointer.versionId||held.sourceId!=="legiscan-bills"||
         !record||record.state!=="PROMOTED"||!record.acquisitionSucceeded||record.receipt?.decision!=="GOOD"||
         record.promotedVersion!==pointer.versionId||record.lastKnownGoodVersion!==pointer.versionId||
-        canonicalCivicDataJson(held.receipt)!==canonicalCivicDataJson(record.receipt)||!part||part.formatVersion!==1)return "Session references an unavailable promoted part";
+        held.proofCoupled!==true||held.normalizedHash!==record.candidate.normalization.normalizedHash||
+        !part||part.formatVersion!==1)return "Session references an unavailable promoted part";
       if(record.candidate.scope!==pointer.scope||record.candidate.retrieval.rawHash!==pointer.rawHash||part.rawHash!==pointer.rawHash)return "Session part version or raw source hash differs";
       if(part.parentRawHash!==parent.rawHash||part.archiveHash!==inventory.archiveHash||part.partIndex!==index||part.memberOffset!==offset||
         !pointer.scope.startsWith(`${billScope(value.dataset.session_id)}:${value.dataset.dataset_hash}:part:${index}:`)||

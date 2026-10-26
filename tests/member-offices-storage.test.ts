@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
+import { freezeDurableJson } from "../lib/civic-data/durable-json.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { manualProjectionCandidate } from "../lib/civic-data/manual-projections.ts";
 import { civicPayloadBytes } from "../lib/civic-data/payload-codec.ts";
@@ -21,12 +22,12 @@ const records = Array.from({ length: 256 }, (_, index) => ({
 function candidate(now = at, phone = "602-555-0100"): RoutineCandidate {
   const payload = { kind: "member-offices", records: records.map((row, index) => index ? row : { ...row, office: { ...row.office, phone } }),
     rosterDigests: { "US-AZ": now }, pending: ["US-TX"] };
-  return { ...manualProjectionCandidate({ contractId: "member-offices", version: now, sourceThrough: now,
+  return freezeDurableJson({ ...manualProjectionCandidate({ contractId: "member-offices", version: now, sourceThrough: now,
     sourceReceipt: { contractVersion: 1, reviewedAt: now, reviewedBy: "test:member-office-storage", sources: [{ requestedUrl: sourceUrl,
       finalUrl: sourceUrl, publisher: "Open States (Plural, CC-0)", sourceClass: "REFERENCE_PUBLISHER", retrievedAt: now,
       httpStatus: 200, rawHash: (now === at ? "a" : "b").repeat(64), reviewedEvidence: "Exact acquired office evidence. ".repeat(3000) }] }, payload }),
     excludedFacts: payload.records.map(row => ({ key: row.id, code: "MANUAL_MEMBER_HELD_LKG", detail: "Exact earlier sourced office retained.", record: row })),
-  };
+  });
 }
 
 function goodReceipt(value: RoutineCandidate): ValidationReceipt {

@@ -1,15 +1,15 @@
 # River status
 
-build_state: LIVE FOR READERS: release 128 (main 9352c8e14; runner on it since 7:27 AM EDT). RIVER: 63d03105b (RT-01b + bills, gate 9/9). GATING: release 129 on river-next-129c 8fdf21bbf (+ RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, MT-02, CT-01). DB-04 replaced by DB-05. See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 128 (main 9352c8e14; runner on it since 7:27 AM EDT). RIVER: 63d03105b (RT-01b + bills, gate 9/9). GATING: release 129 on river-next-129c 8fdf21bbf (+ RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, MT-02, CT-01). DB-04 replaced by DB-05. NEXT: 130 = DB-05 3d4e87f62 (fold being resolved). See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T16:25:00Z
+heartbeat: 2026-10-26T17:10:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 12:25 PM EDT Oct 26)
+## Every READY not on main (updated 1:10 PM EDT Oct 26)
 Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates, 10,102 tests pass, promoted 12:15 PM).
 
 **Release rule (Sean, 10:25 AM EDT Oct 26):** an urgent fix goes first but does not ship alone; every other lane that is READY and passes its scan rides in the same release; nothing finished waits behind an urgent fix; no batch waits on a lane that isn't READY.
@@ -75,15 +75,19 @@ The CT-01 session is alive and posts READY itself, with the ballot date text fix
 FM-01's READY says its durable progress raises bytes per federal-money job by 101%. River keeps its fix (lib/federal-money/refresh.ts reads only normalizedPayload.captures) and measures usaspending and openfema for two full hours before and after 129; if they go up, it goes here and DB-05 owns the fix.
 Before (reader + control plane, from database_transfer_hourly): usaspending 143.6 MB (9 AM), 82.1 MB (10 AM); openfema 13.2 MB (9 AM), 7.5 MB (10 AM). Earlier hours for range: usaspending 71-159 MB/h, openfema 8.7-21.6 MB/h (3-8 AM).
 
-**Never pushed a branch: PP-01 and RB-A9**
-Recommendation: Sean restarts both sessions. River's capacity is on the place map, the batch, DB-04 and CT-01. RB-A9 can't prove itself until the place map has rows in every state, so its restart should wait for release 129's place-map check. River takes PP-01 only if Sean says so.
+**DB-05 (Sean's session): release 130, right behind 129**
+| READY | Lane | State |
+|---|---|---|
+| 3d4e87f62 (origin/stream/db-05, posted 12:39 PM) | DB-05 shared current-version reads: every runtime read checks current row versions before an unchanged body crosses the connection; all 525 bypassCache uses and the bypass API removed; folds DB-04 (39f637b67) and disposes of every held DB-03 step (folded or replaced; portrait duplicates stay out) | Scan clean (bypassCache removed, a test forbids it; no proof files; one additive migration expand, DB-03_process_transfer). Its READY says its own tsc and full suite were still running. 429 files; conflicts with the 129 tree in 4 files (lib/db/transfer-by-caller.ts, scripts/pilot-runner.mts, 2 tests). Folding it now would hold the place map and eight lanes about another hour, so it ships as 130 right after 129 (about 15 minutes' delay for DB-05). River's helper is resolving the fold on 8fdf21bbf now |
+
+**PP-01 and RB-A9 sessions are back**: origin/stream/pp-01 (merge of river, 12:05 PM) and origin/stream/rb-a9 (work in progress, 12:46 PM). No READY yet. River does not take them.
 
 **Waiting, with the reason**
 | READY | Lane | Why it waits |
 |---|---|---|
 | 7b5eacd03 | RB-A10 | place_boundary, zip_place, zcta_place have 0 rows in production. Ships when every state has rows (RT-01b) and 20 random ZIPs in 20 states resolve |
 | #822 (RB-A2) | Per-state place-map approach | Its approach is in RT-01b; River closes #822 once 129 is live |
-| e4305907d, 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed, a0cb7d1ef | DB-03 remaining steps | Held for DB-05 (Sean, 11:15 AM Oct 26; was DB-04). DB-05's READY says which it replaces |
+| e4305907d, 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed, a0cb7d1ef | DB-03 remaining steps | DB-05's READY 3d4e87f62 folds or replaces every one of them (see its message); none is folded separately |
 | be0bef2bf | RB-A3 follow-up | Not needed after RB-A8 unless Sean wants official/checked split in Admin |
 | 1307d4e03 | RN-03 handoff | No code |
 | 2cce7754c, 9c2b0c58a | DB-03 portraits / 118 integration | Not folded (one portrait path: release 120's) |
@@ -92,6 +96,14 @@ Recommendation: Sean restarts both sessions. River's capacity is on the place ma
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 1 PM EDT
+- Live for readers: release 128 (main 9352c8e14). River 63d03105b.
+- Release 129 gating on river-next-129c 8fdf21bbf (river + RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, MT-02, CT-01): visible-tree, firewall, preflight, lint, tsc, dead-code, browser pass; tests running.
+- Release 130: DB-05 3d4e87f62, fold being resolved.
+- Neon, 12 PM hour: reader 3.05 GB + control plane 0.27 GB = 3.32 GB (11 AM 3.89). Reader top: routine-civic-data 590 MB, publish-now 321, openstates-people-ga 284, campaign-money 187, measure-translations:MD 131, usaspending 116.
+- Federal money before 129: usaspending 143.6 / 82.1 / 83.3 / 116.5 MB and openfema 13.2 / 7.5 / 11.6 / 6.0 MB (9 AM to 12 PM).
+- rebuild_queue 160,228 (rising slowly), place_page 24,900, place_boundary 0.
 
 ### For Sean: production copies on Neon (read-only check, 12:35 PM EDT)
 The reader project (tiny-hill-13996172) has about 30 copies of production as branches, each 19-23 GB logical. Two were opened today after your "don't open a new copy of production" order: **pp-01-people-republish-20261026** (6:28 AM UTC, i.e. 2:28 AM EDT; PP-01 never pushed code but did open this) and **mp-01-validation-20261026** (2:33 AM EDT; MP-01's READY used it for its pin replay). Others date from Oct 20-24 (bl-02, db-01, db-02, rn-02, sl-01 x7, bp-01 x3, vs-01, rh01 x2, of-01, hn-01, ot-01, ui-03, src-mn, cal-01, mp-01 Oct 20, rs-01, codex-development, backup-before-b2-retention). River can't delete them (databases are read-only for River, and deleting is yours to decide). Recommendation: delete every *-2026102x copy except backup-before-b2-retention; DB-05 may want this for its 10 GB/day goal if Neon bills their storage.

@@ -198,7 +198,7 @@ export function heldDirectoryCandidate(input: {
   const sourceCheck = input.acquisitions.flatMap(row=>row.sourceCheck ? [row.sourceCheck] : []).sort((a,b)=>a.checkedAt.localeCompare(b.checkedAt))[0];
   const normalizedPayload = {
     sourceSha: input.projection.sourceSha,
-    ...(input.sourceInputHash?{sourceInputHash:input.sourceInputHash,workPending:input.sourceWorkPending??false}:{}),
+    ...(input.sourceInputHash?{sourceInputHash:input.sourceInputHash,continuationPending:input.sourceWorkPending??false}:{}),
     ...(input.excludedFacts?.length ? { excludedFacts: input.excludedFacts } : {}),
     ...(input.changes?.length ? { changes: input.changes } : {}),
     acquisitions: input.acquisitions.map(({ requestedUrl, finalUrl, httpStatus, raw, retrievedAt, sourceCheck }) => ({ requestedUrl, finalUrl, httpStatus, raw, ...(retrievedAt ? {retrievedAt} : {}),...(sourceCheck ? {sourceCheck} : {}) })),
@@ -212,7 +212,6 @@ export function heldDirectoryCandidate(input: {
     sourceId: FEDERAL_DIRECTORY_SOURCE_ID,
     recordClass: "FEDERAL_DIRECTORY",
     scope,
-    ...(input.sourceInputHash?{workPending:input.sourceWorkPending??false}:{}),
     retrieval: {
       succeeded: acquiredFiles.includes("legislators-current.yaml") && acquisitionProblems.length === 0,
       requestedUrl: input.acquisitions[0]?.requestedUrl ?? "",

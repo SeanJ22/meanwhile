@@ -111,6 +111,8 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
   ]) : [null, null];
   const held = prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null;
   const currentIds=new Set(input.roster.officeholders.map(row=>row.id));
+  const incomingPeople = new Map(input.roster.officeholders.map(row => [row.id, row]));
+  const sourcePath = (url: string) => url.replace(/(githubusercontent\.com\/openstates\/people\/)\b[a-f0-9]{40}\//, "$1");
   const explicitEnded = new Map((input.roster.endedMemberships ?? []).map(membership=>[membership.id,membership]));
   const priorPeople = held?.officeholders.filter(row=>!input.roster.currentMembershipComplete || currentIds.has(row.id)).flatMap(row=>{
     const memberships=row.memberships?.map(membership=>{
@@ -122,7 +124,16 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
     // independently retires that tenure, including a person's final office.
     if (!currentIds.has(row.id) && memberships?.length && memberships.every(membership=>membership.current === false) &&
       memberships.some(membership=>explicitEnded.get(membership.id)?.personId === membership.personId)) return [];
-    return [{...row,...(memberships ? {memberships} : {})}];
+    // A complete contact at the same office replaces that source's earlier
+    // contact. Partial reads and other publishers retain their earlier facts.
+    const incoming = incomingPeople.get(row.id)?.offices ?? [];
+    const offices = row.offices?.filter(old => !incoming.some(next =>
+      next.name === old.name && sourcePath(next.sourceUrl) === sourcePath(old.sourceUrl) &&
+      (next.address === old.address || incoming.filter(office => office.name === old.name && sourcePath(office.sourceUrl) === sourcePath(old.sourceUrl)).length === 1 &&
+        row.offices!.filter(office => office.name === old.name && sourcePath(office.sourceUrl) === sourcePath(old.sourceUrl)).length === 1) &&
+      Date.parse(next.collectedAt) >= Date.parse(old.collectedAt) &&
+      ["address", "phone", "email"].every(key => !old[key as "address" | "phone" | "email"] || Boolean(next[key as "address" | "phone" | "email"]))));
+    return [{...row,...(memberships ? {memberships} : {}), ...(offices ? { offices } : {})}];
   }) ?? [];
   const priorIds=new Set(priorPeople.map(row=>row.id));
   const priorFacts = held ? {...held,

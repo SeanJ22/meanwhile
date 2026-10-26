@@ -140,6 +140,7 @@ function candidateReadOnlyStore(
     readPromotionPayloadFields: readOnly,
     readCandidateField: readOnly,
     readSlimRosters: readOnly,
+    readOfficeRoster: readOnly,
     readRosterIdDigests: readOnly,
     readCandidateCaptures: readOnly,
     readPublishedCandidateMetadata: async (candidateId) => candidateId === candidate.id

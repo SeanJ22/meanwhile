@@ -1,12 +1,15 @@
 /**
  * The daily member-office refresh: each state's promoted Open States offices,
  * published in one package through the curated `member-offices` pointer with a receipt for each file's exact bytes.
- * Only states whose lawmaker list changed are read, and in them only members without published offices are joined;
- * offices already published are carried as they are and never read again.
+ * Source content hashes select changed states before any held office records are read.
+ * Changed contacts for existing members publish along with newly found offices.
  * A run its pass deadline cuts short saves the states it finished and names the rest, and the next pass continues.
  */
 
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
+import { createHash } from "node:crypto";
+import { confirmSourceHashUnchanged, type SourceHashConfirmation } from "../civic-data/source-hash.ts";
+import { derivedRequestedUrl } from "../civic-data/derived-door.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import type { CuratedReaderProjection } from "../civic-data/manual-projections.ts";
 import { prepareManualProjectionSuccessor } from "../civic-data/manual-successor.ts";
@@ -20,7 +23,7 @@ import { manualRecordSourceUrls } from "../civic-data/manual-source-isolation.ts
 
 import { STATE_PEOPLE_JURISDICTIONS, statePeopleScopeForId } from "./people-identity.ts";
 import { requiredRoutineContract } from "../civic-data/contracts.ts";
-import { readOpenStatesPeopleProjection, readOfficialStateLegislatorsProjection } from "../state-rollcalls/legislators.ts";
+import { readOfficialStateLegislatorsProjection } from "../state-rollcalls/legislators.ts";
 import { officialStateLegislatorTargetByScope } from "../state-rollcalls/authority.ts";
 import { sameNativePerson } from "./people-identity.ts";
 import { officeRecordsForHolder, OPEN_STATES_ORG, type MemberOfficeRecord } from "./member-offices.ts";
@@ -36,10 +39,11 @@ export interface MemberOfficeGap {
 }
 
 export interface MemberOfficePublication {
+  readonly confirmation?: SourceHashConfirmation;
   /** The candidate this pass wrote, or the pointed version it confirmed unchanged; null when nothing was publishable. */
   readonly candidateId: string | null;
   readonly promotedVersionId: string | null;
-  /** Offices this pass read and joined (the prior GOOD offices of a gap state are retained, not counted). */
+  /** Offices this pass read and joined; a gap state's prior offices are retained. */
   readonly records: number;
   readonly gaps: readonly MemberOfficeGap[];
   /** The door's outcome, for the runner receipt (a hold or an unchanged confirmation included). */
@@ -71,13 +75,18 @@ function rosterPointers(jurisdiction: `US-${string}`): readonly string[] {
   return [`${jurisdiction}:openstates-people:v1`, ...official ? [official] : []];
 }
 
-/** Each state's lawmaker list, as digests of its rosters' person ids: it moves only when someone joins or leaves. One small read for every state. */
+/** Source hashes include office/contact changes for existing members; fresh observation stamps do not decide work. */
 async function rosterDigests(store: RoutineDataStore, jurisdictions: readonly `US-${string}`[]): Promise<ReadonlyMap<string, string>> {
   const pointers = new Map(jurisdictions.map(jurisdiction => [jurisdiction, rosterPointers(jurisdiction)]));
-  const held = new Map((await store.readRosterIdDigests("STATE_LEGISLATOR", [...new Set([...pointers.values()].flat())]))
-    .map(row => [row.scope, row.digest]));
+  const held = new Map(await Promise.all([...new Set([...pointers.values()].flat())].map(async scope => {
+    const head = await store.readSourceHead("STATE_LEGISLATOR", scope);
+    return [scope, head ? canonicalCivicDataJson([head.sourceId, head.parserVersion, head.rawHash]) : "none"] as const;
+  })));
   return new Map([...pointers].map(([jurisdiction, scopes]) => [jurisdiction, scopes.map(scope => held.get(scope) ?? "none").join("|")]));
 }
+
+const inputHash = (digests: ReadonlyMap<string, string>) => createHash("sha256")
+  .update(canonicalCivicDataJson([...digests].sort(([a], [b]) => a.localeCompare(b)))).digest("hex");
 
 /** Whether a member-office run has a state to read, from the package's small progress fields and the rosters' id digests. */
 export async function memberOfficesRunNeeded(store: RoutineDataStore, jurisdictions: readonly `US-${string}`[] = STATE_PEOPLE_JURISDICTIONS):
@@ -89,7 +98,7 @@ export async function memberOfficesRunNeeded(store: RoutineDataStore, jurisdicti
   const digests = held.rosterDigests as Readonly<Record<string, string>>;
   const changed = [...await rosterDigests(store, jurisdictions)].filter(([jurisdiction, digest]) => digests[jurisdiction] !== digest).map(([jurisdiction]) => jurisdiction);
   return changed.length ? { needed: true, reason: `${changed.length} state lawmaker list(s) changed: ${changed.join(", ")}.` }
-    : { needed: false, reason: "No state's lawmaker list changed since the member-office package was built." };
+    : { needed: false, reason: "No state's office source content changed since the member-office package was built." };
 }
 
 /** Time a run its pass deadline will stop keeps for building and saving its package. */
@@ -107,9 +116,22 @@ export async function publishMemberOffices(input: {
   readonly clock?: () => number;
 }): Promise<MemberOfficePublication> {
   const clock = input.clock ?? Date.now;
-  const prior = await priorPackage(input.store, input.now);
   const jurisdictions = input.jurisdictions ?? STATE_PEOPLE_JURISDICTIONS;
   const current = await rosterDigests(input.store, jurisdictions);
+  const contract = requiredManualProductionContract(MEMBER_OFFICES_CONTRACT_ID);
+  const progress = await input.store.readPromotionPayloadFields(contract.recordClass, contract.scope, ["rosterDigests", "pending"]);
+  const rawHash = inputHash(current);
+  const same = progress?.rosterDigests && !(Array.isArray(progress.pending) && progress.pending.length) &&
+    jurisdictions.every(jurisdiction => (progress.rosterDigests as Record<string, string>)[jurisdiction] === current.get(jurisdiction));
+  if (same) {
+    const requestedUrl = derivedRequestedUrl(contract.sourceId, contract.scope);
+    const confirmation = await confirmSourceHashUnchanged({ store: input.store, sourceId: contract.sourceId,
+      recordClass: contract.recordClass, scope: contract.scope, parserVersion: contract.parserNormalizerVersion,
+      rawHash, retrieval: { requestedUrl, finalUrl: null, httpStatus: null, rawHash, retrievedAt: input.now }, now: input.now, complete: true });
+    if (confirmation) return { candidateId: confirmation.head.versionId, promotedVersionId: confirmation.head.versionId,
+      records: 0, gaps: [], pending: [], outcome: null, confirmation };
+  }
+  const prior = await priorPackage(input.store, input.now);
   // States whose lawmaker list changed, those a cut-off pass left owed first; every other state keeps its offices and is not read.
   const owed = new Set(prior.pending);
   const changed = jurisdictions.filter(jurisdiction => prior.rosters[jurisdiction] !== current.get(jurisdiction))
@@ -119,7 +141,7 @@ export async function publishMemberOffices(input: {
   const records: MemberOfficeRecord[] = [];
   const sources: ManualSourceReview[] = [];
   const gaps: MemberOfficeGap[] = [];
-  // Offices already published are carried as they are, with the source reviews that published them; they are never read again.
+  // Retained offices keep the source reviews that published them.
   let priorSources: readonly ManualSourceReview[] | null = null;
   const heldSources = async (rows: readonly MemberOfficeRecord[]) => {
     priorSources ??= prior.versionId ? (await input.store.readCandidateField(prior.versionId, ["retrieval", "manualSourceReceipt", "sources"]) as ManualSourceReview[] | undefined) ?? [] : [];
@@ -130,45 +152,51 @@ export async function publishMemberOffices(input: {
     if (clock() >= (input.deadlineMs ?? Number.POSITIVE_INFINITY) - MEMBER_OFFICES_SAVE_MARGIN_MS) { pending.push(jurisdiction); continue; }
     // A state that cannot be read keeps its offices and its old lawmaker list, so the next run reads it again.
     try {
-      const reference = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now});
-      if (reference.kind !== "PROMOTED") {
-        if (reference.kind === "STORE_UNREACHABLE") gaps.push({key:jurisdiction,detail:"ROSTER_UNAVAILABLE: prior offices retained"});
-        else rosters[jurisdiction] = current.get(jurisdiction)!;
+      const reference = await input.store.readOfficeRoster(`${jurisdiction}:openstates-people:v1`);
+      if (!reference) {
+        rosters[jurisdiction] = current.get(jurisdiction)!;
         continue;
       }
       const target = officialStateLegislatorTargetByScope(jurisdiction);
-      const official = target ? await readOfficialStateLegislatorsProjection(target.jurisdiction,{store:input.store,now:input.now})
+      const official = target ? await (jurisdiction === "US-NH"
+        ? readOfficialStateLegislatorsProjection(target.jurisdiction,{store:input.store,now:input.now})
+          .then(read => read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? { roster: read.value.roster } : null)
+        : input.store.readOfficeRoster(target.jurisdiction))
         .catch(error => { gaps.push({key:jurisdiction,detail:`OFFICIAL_ALIASES_UNREADABLE: ${message(error)}`}); return null; }) : null;
       const held = [...prior.offices.values()].filter(row => officeState(row) === jurisdiction);
-      const heldMembers = new Set(held.map(row => row.officeholderId));
       // The reference receipt supports its own office facts. Official contact overrides are applied
       // by the scoped people reader from that separately promoted source, never claimed by this archive.
-      // Only members without published offices are joined: someone new taking office.
-      const native = reference.value.roster.officeholders.flatMap(holder => {
-        const matches = official?.kind === "PROMOTED" || official?.kind === "BOOTSTRAP" ? official.value.roster.officeholders.filter(row => sameNativePerson(holder,row)) : [];
+      const native = reference.roster.officeholders.flatMap(holder => {
+        const matches = official?.roster.officeholders.filter(row => sameNativePerson(holder,row)) ?? [];
         return officeRecordsForHolder(matches.length === 1 ? {...holder,id:matches[0].id} : holder,{includePointEvidence:true});
-      }).filter(row => !heldMembers.has(row.officeholderId));
+      });
       const points = await publishDirectoryOfficePoints(native.map(row=>row.office), [...prior.offices.values()].map(row=>row.office), input.resolveOfficePoint);
       const stateSources: ManualSourceReview[] = [];
       for(const office of points)if(office.geocodedPoint){
         const review=officePointSourceReview(office.geocodedPoint);
         if(review)stateSources.push(review);
       }
-      const rows = native.map((record, index)=>({ ...record, office: points[index] }));
+      const sourcePath = (url: string) => url.replace(/(githubusercontent\.com\/openstates\/people\/)\b[a-f0-9]{40}\//, "$1");
+      const rows = native.map((record, index) => {
+        const peers = native.filter(row => row.officeholderId === record.officeholderId && row.officeKind === record.officeKind && sourcePath(row.sourceUrl) === sourcePath(record.sourceUrl));
+        const previous = held.filter(row => row.officeholderId === record.officeholderId && row.officeKind === record.officeKind && sourcePath(row.sourceUrl) === sourcePath(record.sourceUrl));
+        return { ...record, ...(peers.length === 1 && previous.length === 1 ? { id: previous[0].id } : {}), office: points[index] };
+      });
       if (rows.length) {
         // Derivation reuses the exact saved acquisition of these members' own files, rather than downloading them again;
         // neither the roster's other files nor its whole capture list leave the database.
         const urls = [...new Set(rows.map(row => row.sourceUrl))];
         const members = urls.flatMap(url => /^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/[a-f0-9]{40}\/(data\/.+)$/.exec(url)?.[1] ?? []);
-        const acquisitions = await input.store.readCandidateCaptures(reference.projection.versionId, urls, members) as readonly StatePeopleCapture[];
+        const acquisitions = await input.store.readCandidateCaptures(reference.versionId, urls, members) as readonly StatePeopleCapture[];
         if (!acquisitions.length) {gaps.push({key:jurisdiction,detail:"SOURCE_CAPTURE_UNAVAILABLE: prior offices retained"});continue;}
         records.push(...rows);
         sources.push(...stateSources,...acquisitions.map(row=>({requestedUrl:row.requestedUrl,finalUrl:row.finalUrl,publisher:OPEN_STATES_ORG,sourceClass:"REFERENCE_PUBLISHER" as const,retrievedAt:row.retrievedAt,httpStatus:row.httpStatus,rawHash:row.rawHash ?? row.capture.rawHash,
           ...(row.extractedFrom ? {extractedMembers:[{path:row.extractedFrom.member,sha256:row.capture.rawHash}]} : {}),
           reviewOutcome:"SUPPORTED" as const,reviewedEvidence:"Exact source-native person aliases join each held office; archive extraction retains the original archive capture and member digest."})));
       }
-      records.push(...held);
-      sources.push(...await heldSources(held));
+      const retained = held.filter(row => !rows.some(next => next.id === row.id));
+      records.push(...retained);
+      sources.push(...await heldSources(retained));
       rosters[jurisdiction] = current.get(jurisdiction)!;
     } catch (error) {gaps.push({key:jurisdiction,detail:`ROSTER_UNREADABLE: ${message(error)}`});}
   }
@@ -188,7 +216,8 @@ export async function publishMemberOffices(input: {
   }, input.store, input.now);
   // Unchanged offices with a moved roster version or owed list are still saved, so the next run knows where it stands.
   const progressMoved = canonicalCivicDataJson([prior.rosters, prior.pending]) !== canonicalCivicDataJson([rosters, pending]);
-  const outcome = await processRegisteredManualCandidate(input.store, MEMBER_OFFICES_CONTRACT_ID, candidate, publicationAt, expectedBaseVersionId,
+  const contentCandidate = { ...candidate, retrieval: { ...candidate.retrieval, rawHash, rawHashBasis: "SOURCE_CONTENT_V1" as const } };
+  const outcome = await processRegisteredManualCandidate(input.store, MEMBER_OFFICES_CONTRACT_ID, contentCandidate, publicationAt, expectedBaseVersionId,
     { confirmUnchanged: !progressMoved });
   return {
     candidateId: outcome.confirmed ? outcome.candidate.candidate.id : candidate.id,

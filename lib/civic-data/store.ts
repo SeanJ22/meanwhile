@@ -175,6 +175,7 @@ export interface RoutineDataStore {
   readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
   /** Promoted rosters' people, slimmed to what a portrait list needs. */
   readonly readSlimRosters: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly SlimRoster[]>;
+  readonly readOfficeRoster: (scope: string) => Promise<SlimRoster | null>;
   /** Each promoted roster's people as a short digest of their ids, which moves only when someone joins or leaves. */
   readonly readRosterIdDigests: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly { readonly scope: string; readonly digest: string }[]>;
   /** A stored candidate's saved captures whose address, or extracted archive member, is one of these. */
@@ -221,6 +222,14 @@ function portraitRunState(candidate: RoutineCandidate): PortraitRunState {
 }
 /** A person's fields a portrait list and its work need; offices, memberships' sources and most field receipts stay behind. */
 const ROSTER_PERSON_HEAVY_FIELDS = ["offices", "fieldSources"] as const;
+const OFFICE_PERSON_FIELDS = ["id", "name", "officeTitle", "personId", "nativeIds", "level", "state", "phone", "provenance", "offices"] as const;
+function officeRosterPerson(person: Record<string, unknown>): Record<string, unknown> {
+  const fields = person.fieldSources as Record<string, unknown> | undefined;
+  return { ...Object.fromEntries(OFFICE_PERSON_FIELDS.flatMap(key => Object.hasOwn(person, key) ? [[key, person[key]]] : [])),
+    provenance: { sourceOrg: (person.provenance as Record<string, unknown> | undefined)?.sourceOrg },
+    ...(fields ? { fieldSources: Object.fromEntries(["phone", "offices"].flatMap(key => Object.hasOwn(fields, key) ? [[key, fields[key]]] : [])) } : {}) };
+}
+
 function slimRosterPerson(person: Record<string, unknown>): Record<string, unknown> {
   const fieldSources = person.fieldSources as Record<string, unknown> | undefined;
   const kept = Object.fromEntries(["name", "officeTitle", "photo"].flatMap(field => fieldSources?.[field] ? [[field, fieldSources[field]]] : []));
@@ -845,6 +854,17 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         readModelSha256: record.candidate.normalization.normalizedHash ?? null,
         roster: structuredClone({ ...roster, officeholders: roster.officeholders.map(row => slimRosterPerson(row as unknown as Record<string, unknown>)) }) as unknown as OfficeholderSet }];
     });
+  }
+
+  async readOfficeRoster(scope: string): Promise<SlimRoster | null> {
+    const pointer = this.promotions.get(projectionKey("STATE_LEGISLATOR", scope));
+    const record = pointer ? this.candidates.get(pointer.versionId) : undefined;
+    const roster = (pointer?.payload as { roster?: OfficeholderSet } | undefined)?.roster;
+    if (!pointer || !record || !roster || !Array.isArray(roster.officeholders)) return null;
+    return { recordClass: "STATE_LEGISLATOR", scope, versionId: pointer.versionId, promotedAt: pointer.promotedAt,
+      readModelSha256: record.candidate.normalization.normalizedHash ?? null,
+      roster: structuredClone({ scope: roster.scope, generatedAt: roster.generatedAt, divisions: [], unmatched: [],
+        officeholders: roster.officeholders.map(person => officeRosterPerson(person as unknown as Record<string, unknown>)) }) as OfficeholderSet };
   }
 
   async readRosterIdDigests(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly { readonly scope: string; readonly digest: string }[]> {
@@ -2444,6 +2464,25 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     });
     return rows.map(row => ({ recordClass, scope: row.scope, versionId: row.version_id,
       promotedAt: new Date(row.promoted_at).toISOString(), readModelSha256: row.normalized_hash, roster: row.roster }));
+  }
+
+  async readOfficeRoster(scope: string): Promise<SlimRoster | null> {
+    const [row] = (await this.db.execute(sql`SELECT p.current_version_id AS version_id, p.promoted_at, c.normalized_hash,
+      jsonb_build_object('scope', r->'scope', 'generatedAt', r->'generatedAt', 'divisions', '[]'::jsonb, 'unmatched', '[]'::jsonb,
+        'officeholders', (SELECT coalesce(jsonb_agg((SELECT coalesce(jsonb_object_agg(f.key,
+          CASE WHEN f.key = 'provenance' THEN jsonb_build_object('sourceOrg', reader_payload_node(f.value)->'sourceOrg')
+            ELSE reader_payload_value(f.value) END), '{}'::jsonb)
+          FROM jsonb_each(reader_payload_node(member.item)) f WHERE f.key = ANY(${sql.param([...OFFICE_PERSON_FIELDS])}::text[])) ||
+          jsonb_build_object('fieldSources', jsonb_strip_nulls(jsonb_build_object(
+            'phone', reader_payload_value(reader_payload_node(reader_payload_node(member.item)->'fieldSources')->'phone'),
+            'offices', reader_payload_value(reader_payload_node(reader_payload_node(member.item)->'fieldSources')->'offices'))))
+          ORDER BY member.ordinal_index), '[]'::jsonb) FROM reader_payload_members(r->'officeholders') member)) AS roster
+      FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id = p.current_version_id
+      CROSS JOIN LATERAL (SELECT reader_payload_node(reader_payload_node(p.payload)->'roster') AS r) roster
+      WHERE p.record_class = 'STATE_LEGISLATOR' AND p.scope = ${scope} AND r IS NOT NULL`)).rows as {
+        version_id: string; promoted_at: string | Date; normalized_hash: string | null; roster: OfficeholderSet }[];
+    return row ? { recordClass: "STATE_LEGISLATOR", scope, versionId: row.version_id,
+      promotedAt: new Date(row.promoted_at).toISOString(), readModelSha256: row.normalized_hash, roster: row.roster } : null;
   }
 
   async readRosterIdDigests(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly { readonly scope: string; readonly digest: string }[]> {

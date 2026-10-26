@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 130 (main aaf371bc5, 5:36 PM EDT) WITH A READER BREAK: /national 500, ballot pages blank. URGENT hotfix 40d200fe4 gating as release 131 with RIVER-BILLS2 and RIVER-PP2 on river-next-131 4e47af70f. See the 6:00 PM entry
+build_state: LIVE FOR READERS: release 130 (main aaf371bc5, 5:36 PM EDT) WITH A READER BREAK: /national 500, ballot pages blank. URGENT release 131 (hotfix 40d200fe4 + test-import fix cfe665689, RIVER-BILLS2, RIVER-PP2) re-gating on river-next-131 2c9cd6b5b from 6:40 PM: the 6:00 PM gate passed all 10,285 tests but failed tsc and build on the hotfix test's import specifier (fixed; build now passes). See the 6:00 PM entry
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T22:08:00Z
+heartbeat: 2026-10-26T22:42:00Z
 
 
 <!-- READY-LIST -->

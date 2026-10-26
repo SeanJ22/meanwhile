@@ -11,6 +11,7 @@ import { withFederalMoneyVault, readFederalMoneyCapture } from "./vault.ts";
 import { parseFederalMoney } from "./parse.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { withFederalMoneyVerificationCache } from "./verify.ts";
+import { readFederalMoneyProgress } from "./progress.ts";
 
 interface FederalMoneyRefreshOptions {
   readonly source: FederalMoneySource; readonly store: RoutineDataStore;
@@ -40,9 +41,8 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
   for (let round = 0; round < (input.maxRounds ?? Infinity) && Date.now() - started < maxRunMs && finished.size < states.length; round++) {
     for (const state of order) {
       if (finished.has(state) || Date.now() - started >= maxRunMs) continue;
-      const scope = federalMoneyScope(input.source, state);
-      let prior = await input.store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", scope);
-      const savedCheckpoint = prior?.payload.checkpoint;
+      let prior = await readFederalMoneyProgress(input.store,input.source,state);
+      const savedCheckpoint = prior?.checkpoint;
       // Historical county-only OpenFEMA rows need one complete source pass. Keep
       // their published partitions while the new projection resumes page by page.
       const needsProjectionBackfill = input.source === "openfema" && savedCheckpoint?.projectionVersion !== OPENFEMA_STATE_PROJECTION_VERSION;
@@ -51,7 +51,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       const lastCompleteAt = savedCheckpoint?.complete ? prior?.latestConfirmation?.retrieval.retrievedAt ?? savedCheckpoint.lastCompleteAt : savedCheckpoint?.lastCompleteAt;
       if (round === 0 && checkpoint?.complete && lastCompleteAt &&
         Date.parse(now()) - Date.parse(lastCompleteAt) < FEDERAL_MONEY_CONFIG[input.source].everyMs) {
-        const row: FederalMoneyStateProgress = { state, status: "COMPLETE", counts: prior!.payload.counts, cursor: null, lastCompleteAt, reason: null };
+        const row: FederalMoneyStateProgress = { state, status: "COMPLETE", counts: prior!.counts, cursor: null, lastCompleteAt, reason: null };
         progress.set(state, row);
         await input.onProgress?.(row, lastCompleteAt);
         finished.add(state); continue;
@@ -74,7 +74,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       } catch (error) {
         const reason = sanitizedErrorDiagnostic(error);
         const at = now();
-        const row: FederalMoneyStateProgress = { state, status: "OUTAGE", counts: prior?.payload.counts ?? federalMoneyCounts([]),
+        const row: FederalMoneyStateProgress = { state, status: "OUTAGE", counts: prior?.counts ?? federalMoneyCounts([]),
           cursor: checkpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, reason };
         progress.set(state, row); finished.add(state); input.onState?.(row);
         await input.doorRead?.({ state, at, rows: row.counts.loaded, reason });
@@ -87,19 +87,20 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       if (!checkpoint?.pending && page.facts.length) {
         const { facts: _facts, ...savedPage } = page;
         const pending: FederalMoneyCheckpoint = { formatVersion: 2, source: input.source, state,
-          counts: prior?.payload.counts ?? federalMoneyCounts([]),
+          counts: prior?.counts ?? federalMoneyCounts([]),
           checkpoint: { ...projectionVersion, complete: false, cursor: checkpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, refreshStartedAt,
             pending: { page: savedPage, baselines, priorLocations } } };
         const staged = federalMoneyCandidate({ projection: pending, page: { facts: [], captures: [], complete: false, declaredTotal: null }, now: at });
         const saved = await processRegisteredFanOutCandidate(input.store, input.source, staged, at, prior?.versionId ?? null);
         if (!saved.promoted) throw new Error(saved.candidate.failureDetail ?? "Federal page checkpoint could not be saved.");
-        prior = saved.promoted as typeof prior;
+        prior = {versionId:saved.promoted.versionId,promotedAt:saved.promoted.promotedAt,
+          latestConfirmation:saved.promoted.latestConfirmation,counts:pending.counts,checkpoint:pending.checkpoint};
       }
       let identities: FederalMoneyJoinInput;
       try { identities = await input.identities(state, page.facts); }
       catch (error) {
         const reason = sanitizedErrorDiagnostic(error);
-        const row: FederalMoneyStateProgress = { state, status: "OUTAGE", counts: prior?.payload.counts ?? federalMoneyCounts([]),
+        const row: FederalMoneyStateProgress = { state, status: "OUTAGE", counts: prior?.counts ?? federalMoneyCounts([]),
           cursor: checkpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, reason };
         progress.set(state, row); finished.add(state); input.onState?.(row);
         await input.doorRead?.({ state, at, rows: page.facts.length, reason: null });
@@ -111,7 +112,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
         onPartition: input.onPartition, baselines, priorLocations }));
       const cursor = page.continuation ? JSON.parse(JSON.stringify(page.continuation)) as FederalMoneyCursor : null;
       const projection: FederalMoneyCheckpoint = { formatVersion: 2, source: input.source, state,
-        counts: addFederalMoneyCounts(prior?.payload.counts ?? federalMoneyCounts([]), delta),
+        counts: addFederalMoneyCounts(prior?.counts ?? federalMoneyCounts([]), delta),
         checkpoint: { ...projectionVersion, complete: page.complete, cursor,
           lastCompleteAt: page.complete ? at : savedCheckpoint?.lastCompleteAt ?? null, refreshStartedAt } };
       const candidate = federalMoneyCandidate({ projection, page: { ...page, facts: [], captures: [] }, now: at, predecessorVersionId: prior?.versionId });
@@ -129,9 +130,9 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
   for (const state of states) {
     const visited = progress.get(state);
     if (visited) { rows.push(visited); continue; }
-    const prior = await input.store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", federalMoneyScope(input.source, state));
-    const checkpoint = prior?.payload.checkpoint;
-    rows.push({ state, status: "BACKFILL", counts: prior?.payload.counts ?? federalMoneyCounts([]),
+    const prior = await readFederalMoneyProgress(input.store,input.source,state);
+    const checkpoint = prior?.checkpoint;
+    rows.push({ state, status: "BACKFILL", counts: prior?.counts ?? federalMoneyCounts([]),
       cursor: checkpoint?.cursor ?? null, lastCompleteAt: checkpoint?.lastCompleteAt ?? null, reason: null });
   }
   const counts = rows.reduce((total, row) => ({ loaded: total.loaded + row.counts.loaded, joined: total.joined + row.counts.joined, unjoined: total.unjoined + row.counts.unjoined }), federalMoneyCounts([]));
@@ -152,9 +153,9 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
  * never-served first, so no state waits behind the same large states pass after pass. Ties keep the configured order. */
 async function leastRecentlyServed(store: RoutineDataStore, source: FederalMoneySource, states: readonly string[]): Promise<readonly string[]> {
   const served = new Map<string, number>();
-  for (const state of states) {
-    const prior = await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", federalMoneyScope(source, state));
-    served.set(state, prior ? Math.max(Date.parse(prior.promotedAt), Date.parse(prior.latestConfirmation?.retrieval.retrievedAt ?? "") || 0) : -1);
-  }
+  const pointers = await store.readPromotionIdentities("FEDERAL_MONEY",states.map(state=>federalMoneyScope(source,state)));
+  const byScope=new Map(pointers.map(pointer=>[pointer.scope,pointer]));
+  for (const state of states) {const prior=byScope.get(federalMoneyScope(source,state));
+    served.set(state, prior ? Math.max(Date.parse(prior.promotedAt), Date.parse(prior.latestConfirmation?.retrieval.retrievedAt ?? "") || 0) : -1);}
   return [...states].sort((a, b) => served.get(a)! - served.get(b)!);
 }

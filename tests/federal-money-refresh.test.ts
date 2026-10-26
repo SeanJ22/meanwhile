@@ -22,6 +22,7 @@ import { FEDERAL_MONEY_STATES } from "../lib/federal-money/sources.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { recordFederalMoneyDoorRead } from "../lib/federal-money/doors.ts";
 import { feedDoorId } from "../lib/doors/registry.ts";
+import { readFederalMoneyProgress } from "../lib/federal-money/progress.ts";
 
 const now = "2026-10-12T23:45:00.000Z";
 beforeEach(context => { if ("mock" in context) context.mock.method(Date, "now", () => Date.parse("2026-10-13T03:00:00.000Z")); });
@@ -35,6 +36,21 @@ const identities: FederalMoneyJoinInput = { divisions: [{ ocdId: county, geoid: 
 const fullPage: FederalMoneyPage = { facts: native, captures: [capture], complete: true, declaredTotal: 1 };
 const leafScope = federalMoneyPartitionScope("openfema", "AR", federalMoneyPartitionOf(native[0]));
 const acquireOptions = { evidenceStore };
+
+test("federal source resumes its exact saved cursor without reading its held record, candidate, or events", async () => {
+  const store=new MemoryRoutineDataStore();
+  const projection:FederalMoneyCheckpoint={formatVersion:2,source:"usaspending",state:"AZ",counts:{loaded:7,joined:5,unjoined:2},
+    checkpoint:{complete:false,cursor:{source:"usaspending",phase:"download",year:2020,chunkIndex:4},lastCompleteAt:null,refreshStartedAt:now}};
+  const candidate=federalMoneyCandidate({projection,page:{facts:[],captures:[],complete:false,declaredTotal:null},now});
+  const published=await processRegisteredFanOutCandidate(store,"usaspending",candidate,now,null);
+  assert.ok(published.promoted);
+  Object.assign(store,{readPromotion:()=>{throw new Error("whole held progress read");},
+    readCandidate:()=>{throw new Error("whole held candidate read");},events:()=>{throw new Error("held event history read");}});
+  const actual=await readFederalMoneyProgress(store,"usaspending","AZ");
+  assert.equal(actual?.versionId,published.promoted.versionId);
+  assert.deepEqual(actual?.counts,projection.counts);
+  assert.deepEqual(actual?.checkpoint,projection.checkpoint);
+});
 
 test("saved evidence reads require the acquisition vault and release its context after work", async () => {
   await assert.rejects(readFederalMoneyCapture(capture), /acquisition vault context/);

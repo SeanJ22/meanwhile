@@ -7,6 +7,8 @@
  * when every validation check passes; a failure records its reason and leaves
  * the last GOOD version live.
  */
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { refreshCensusGeography } from "../lib/census-geography/refresh.ts";
 import { CENSUS_GEO_CONTRACT_ID } from "../lib/census-geography/publication.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -25,9 +27,13 @@ const store = new PostgresRoutineDataStore();
 
 async function main(): Promise<void> {
   try {
-    const { candidate, outcome } = await refreshCensusGeography(store);
-    printSourceRunnerReceipt(CENSUS_GEO_CONTRACT_ID, candidate, outcome);
-    if (!outcome.promoted) process.exitCode = 2;
+    const { candidate, outcome, confirmed } = await refreshCensusGeography(store);
+    if (confirmed) {
+      console.log("RCD_RECEIPT=" + JSON.stringify({ source: CENSUS_GEO_CONTRACT_ID, ...sourceHashReceiptFields(confirmed), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+      return;
+    }
+    printSourceRunnerReceipt(CENSUS_GEO_CONTRACT_ID, candidate!, outcome!);
+    if (!outcome!.promoted) process.exitCode = 2;
   } catch (error) {
     if (!isSourceAcquisitionFailure(error)) throw error;
     const failed = await recordRegisteredSourceAcquisitionFailure({

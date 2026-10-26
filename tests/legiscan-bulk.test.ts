@@ -183,19 +183,40 @@ test("the normal readerRoute filters a selected member after proving each comple
   const bodies=[...ak,JSON.stringify(other)],store=new MemoryRoutineDataStore(),input=source(datasets[0],bodies);
   const {access_key:_access,...dataset}=datasets[0];
   await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:[dataset]}),at,"getDatasetList"),datasets:[datasets[0]]},at);
-  await publishBulkCandidate(store,input,at);
+  const published=await publishBulkCandidate(store,input,at);
+  const session=published.candidate.readModel as import("../lib/sources/legiscan/bills.ts").BillSession;
+  const allowedScopes=new Set([LEGISCAN_BULK_SCOPE,billScope(dataset.session_id),...session.parts.map(part=>part.scope)]);
   const requestedScopes:string[]=[];
   installReaderDatabaseQuery(async statements=>Promise.all(statements.map(async statement=>{
     assert.doesNotMatch(statement.text,/reader_place_payload/);
-    const rows=[];
+    const rows=[],wantedParts=statement.text.includes("AS bills")
+      ? JSON.parse(String(statement.params![1])) as {scope:string;version:string;indices:number[]}[] : null;
+    for(const wanted of wantedParts??[])assert.ok(allowedScopes.has(wanted.scope),"selected bills use only source-owned session scopes");
     for(const key of statement.params![0] as readonly string[]){
+      assert.ok(key.startsWith("STATE_BILL:"));
       const scope=key.slice("STATE_BILL:".length);requestedScopes.push(scope);
-      const pointer=await store.readPromotion("STATE_BILL",scope);if(!pointer)continue;
+      assert.ok(allowedScopes.has(scope),"the reader never opens another session or source scope");
+      const wanted=wantedParts?.find(part=>part.scope===scope);
+      if(wantedParts&&!wanted)continue; // The actual SQL joins each scope to its own requested immutable version.
+      const pointer=await store.readPromotion("STATE_BILL",scope);assert.ok(pointer);
+      assert.equal(pointer.sourceId,"legiscan-bills");assert.equal(pointer.scope,scope);
       const saved=await store.readCandidate(pointer.versionId);assert.ok(saved);
       rows.push({row_kind:"promotion",key:pointer.key,record_class:pointer.recordClass,scope:pointer.scope,source_id:pointer.sourceId,
         current_version_id:pointer.versionId,last_known_good_version_id:pointer.lastKnownGoodVersionId,promoted_at:pointer.promotedAt,
         validation_receipt:pointer.receipt,payload:pointer.payload,normalized_hash:saved.candidate.normalization.normalizedHash,
         retrieved_at:saved.candidate.retrieval.retrievedAt,confirmation:null,published:true});
+      if(statement.text.includes("AS full_rows") || statement.text.includes("AS bills")){
+        const row=rows[rows.length-1],part=pointer.payload as import("../lib/sources/legiscan/bills.ts").BillPart;
+        const {bills,sponsors,...header}=part;
+        if(statement.text.includes("AS full_rows"))Object.assign(row,{payload:header,full_rows:bills.length,sponsors:sponsors.map((value,index)=>({index,value}))});
+        else{
+          assert.ok(wanted);assert.equal(wanted.scope,scope);assert.equal(wanted.version,pointer.versionId);
+          assert.ok(wanted.indices.every(index=>Number.isSafeInteger(index)&&index>=0&&index<sponsors.length));
+          assert.equal(bills.length,part.counts.rows,"the fixture keeps the source's complete row count");
+          const selected=bills.filter(bill=>bill.sponsorRefs.some(index=>wanted.indices.includes(index))),used=new Set(selected.flatMap(bill=>bill.sponsorRefs));
+          Object.assign(row,{payload:header,bills:selected,sponsors:sponsors.flatMap((value,index)=>used.has(index)?[{index,value}]:[])});
+        }
+      }
     }
     return structuredClone(rows);
   })));

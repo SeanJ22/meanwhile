@@ -1,5 +1,7 @@
 import { readPromotedCivicData,type PromotedCivicDataReadOptions,type PromotedEdgeEntry } from "../../civic-data/read-model.ts";
 import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
+import {readerDatabaseQuery} from "../../reader/database.ts";
+import {readPersonBillParts,type PersonBillPart} from "./person-reader.ts";
 import { bulkProjectionIssue } from "./publication.ts";
 import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,billScope,stateOfDataset,publicDatasetIndex,joinSponsors,hydrateBillPart,type BillSession,type BillPart,type BillIndex,type Bill,type HeldPerson } from "./bills.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
@@ -68,15 +70,30 @@ export async function readBillsForState(state:string,options:PromotedCivicDataRe
     const session=read.value;
     const batches=Array.from({length:Math.ceil(session.parts.length/READER_SCOPE_BATCH)},(_,index)=>session.parts.slice(index*READER_SCOPE_BATCH,(index+1)*READER_SCOPE_BATCH));
     const fetched=await runBoundedWorkPool(batches,2,async parts=>{
-      const partOptions=await exactBulkOptions(parts.map(part=>part.scope),options);
-      const members=await runBoundedWorkPool(parts,4,part=>readBulkProjection(part.scope,partOptions));
+      let selected:ReadonlyMap<string,PersonBillPart>|null=null;
+      if(options.person && !options.edge && !currentReaderAuthorityEdge()){
+        if(options.store?.readLegiscanPersonParts)selected=await options.store.readLegiscanPersonParts(parts,options.person);
+        else if(!options.store){
+          const needed=parts.filter(part=>!readerCanonicalEntry("STATE_BILL",part.scope));
+          if(needed.length){
+            const query=readerDatabaseQuery();if(!query)throw Error("READER_STORE_NOT_CONFIGURED");
+            selected=await readPersonBillParts(async(text,params)=>(await query([{text,params:params??[]}]))[0]??[],needed,options.person);
+          }
+        }
+      }
+      const partOptions=await exactBulkOptions(parts.filter(part=>!selected?.has(part.scope)).map(part=>part.scope),options);
+      const members=await runBoundedWorkPool(parts,4,part=>{
+        const selection=selected?.get(part.scope);
+        return readBulkProjection(part.scope,selection?{...options,edge:selection.entry}:partOptions);
+      });
       const values:Bill[]=[];let rows=0,completeBatch=true;
       for(const result of members){
       if(!result.ok)throw Error(`LEGISCAN_READER_PART_UNAVAILABLE:${result.error}`);
       const part=parts[result.index],member=result.value;
       if(member.kind!=="PROMOTED"||member.value.kind!=="PART"||member.metadata.versionId!==part.versionId){completeBatch=false;continue;}
-      if((session.sourceMemberFormat!==2&&member.value.dataset.dataset_hash!==session.dataset.dataset_hash)||member.value.dataset.session_id!==dataset.session_id||member.value.dataset.state_id!==session.dataset.state_id||member.value.bills.length!==part.rows||member.value.sourceRawHash!==part.rawHash)throw Error("LEGISCAN_READER_PART_MISMATCH");
-      values.push(...hydrateBillPart(member.value,options.person));rows+=member.value.bills.length;
+      const sourceRows=selected?.get(part.scope)?.rows??member.value.bills.length;
+      if((session.sourceMemberFormat!==2&&member.value.dataset.dataset_hash!==session.dataset.dataset_hash)||member.value.dataset.session_id!==dataset.session_id||member.value.dataset.state_id!==session.dataset.state_id||sourceRows!==part.rows||member.value.sourceRawHash!==part.rawHash)throw Error("LEGISCAN_READER_PART_MISMATCH");
+      values.push(...hydrateBillPart(member.value,options.person));rows+=sourceRows;
       }
       return {bills:values,rows,complete:completeBatch};
     });

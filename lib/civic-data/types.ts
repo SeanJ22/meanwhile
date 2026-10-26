@@ -198,6 +198,8 @@ export interface RetrievalEvidence {
   readonly rawHash: string | null;
   /** The digest covers source addresses and bytes, without observation stamps. */
   readonly rawHashBasis?: "SOURCE_CONTENT_V1";
+  /** False keeps incomplete source work on its normal publication path even when input bytes repeat. */
+  readonly complete?: boolean;
   /** Last actual provider check, retained unchanged on held-byte or parser replay. */
   readonly sourceCheck?: SourceCheckEvidence;
   readonly failureDetail?: string;

@@ -104,6 +104,7 @@ export interface SourceHead {
   readonly promotedAt: string;
   readonly candidateState: CandidateState;
   readonly acquisitionSucceeded: boolean;
+  readonly acquisitionComplete?: boolean | null;
   readonly imported: boolean;
 }
 
@@ -1042,6 +1043,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       rawHash: row.candidate.retrieval.rawHash, rawHashBasis: row.candidate.retrieval.rawHashBasis ?? null,
       normalizedHash: row.candidate.normalization.normalizedHash, parserVersion: row.candidate.normalization.parserVersion,
       promotedAt: pointer.promotedAt, candidateState: row.state, acquisitionSucceeded: row.acquisitionSucceeded,
+      acquisitionComplete: row.candidate.retrieval.complete ?? null,
       imported: isImportOrStateMoveCandidate(row.candidate) || pointer.sourceId !== row.candidate.sourceId };
   }
 
@@ -2115,7 +2117,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const meeting = record.candidate.recordClass === "MEETING";
     const candidate = stateAuthority || meetingDoors || meeting ? { ...(stateAuthority ? encodeStateCandidate(record.candidate) : record.candidate),
       retrieval: await this.payloadParts.store(record.candidate.retrieval,
-        ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "rawHashBasis", "sourceCheck", "failureDetail"]),
+        ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "rawHashBasis", "complete", "sourceCheck", "failureDetail"]),
     } : record.candidate;
     const navigationIndex = navigationCandidateIndex(record.candidate);
     const stored = stateAuthority || meetingDoors || meeting || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
@@ -2497,6 +2499,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       rawHashBasis: sql<SourceHead["rawHashBasis"]>`${civicDataCandidates.candidate}#>>'{retrieval,rawHashBasis}'`.as("raw_hash_basis"),
       parserVersion: civicDataCandidates.parserVersion, promotedAt: civicDataPromotions.promotedAt,
       candidateState: civicDataCandidates.state, acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
+      acquisitionComplete: sql<boolean | null>`case when jsonb_typeof(${civicDataCandidates.candidate}#>'{retrieval,complete}')='boolean'
+        then (${civicDataCandidates.candidate}#>>'{retrieval,complete}')::boolean else null end`.as("acquisition_complete"),
       imported: sql<boolean>`(${civicDataCandidates.candidate} ? 'bootstrapImport')
         OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'
         OR ${civicDataPromotions.sourceId} <> ${civicDataCandidates.sourceId}`.as("imported"),

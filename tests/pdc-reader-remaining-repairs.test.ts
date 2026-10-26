@@ -14,6 +14,8 @@ import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
 
 import { telHref } from "../lib/officials/phone-numbers.ts";
 
+import { readerText } from "../lib/text/reader-names.ts";
+
 import { currentReaderSelection, withReaderSelection } from "../lib/db/reader-route.ts";
 
 const compile = (source: string) => ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
@@ -33,7 +35,7 @@ test("contactless grounded bodies retain the routed topic and correctly attribut
   const predicate = all.find((node) => ts.isVariableDeclaration(node) && node.name.getText() === "preservedRoutedContact")!;
   const block = all.find((node) => ts.isJsxElement(node) && node.openingElement.attributes.properties.some((prop) => ts.isJsxAttribute(prop) && prop.name.getText() === "data-ask-preserved-contact"))!;
   assert.ok(cited && cards && predicate && block, "exercise the production card, URL guard and actual placement predicate");
-  const render = new Function("telHref", "React", "asked", "grounded", compile(`${cited.getText()} ${cards.getText()} const ${predicate.getText()}; return preservedRoutedContact ? (${block.getText()}) : null;`)).bind(null, telHref);
+  const render = new Function("telHref", "readerText", "React", "asked", "grounded", compile(`${cited.getText()} ${cards.getText()} const ${predicate.getText()}; return preservedRoutedContact ? (${block.getText()}) : null;`)).bind(null, telHref, readerText);
   const contact = { body: "Borough of Rockaway — Tax Collector", service: "Property tax payments", phone: "973-627-2000 ext 228", email: "taxcollector@rockawayborough.org", sourceOrg: "Borough of Rockaway", sourceUrl: "https://www.rockawayborough.org/departments/tax-collector/" };
   const asked = { answer: { kind: "ROUTED", topic: { label: "Property taxes" } }, contacts: [contact] };
   const grounded = { subject: { name: "Board of Assessment Commissioners" }, contacts: [] };

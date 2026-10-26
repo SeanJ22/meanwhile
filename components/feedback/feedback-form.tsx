@@ -87,7 +87,7 @@ export function FeedbackForm({
     >
       <label
         htmlFor="feedback-message"
-        className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-label"
+        className="font-mono text-[0.6875rem] trailing-space-trimmed-20 tracking-[0.2em] text-label"
       >
         Your message
       </label>
@@ -112,7 +112,7 @@ export function FeedbackForm({
       <div className="mt-5">
         <label
           htmlFor="feedback-reply-to"
-          className="font-mono text-[0.6875rem] uppercase trailing-space-trimmed-20 tracking-[0.2em] text-label"
+          className="font-mono text-[0.6875rem] trailing-space-trimmed-20 tracking-[0.2em] text-label"
         >
           Your email — optional
         </label>

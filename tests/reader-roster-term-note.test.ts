@@ -3,6 +3,7 @@ import { execFileSync } from "node:child_process";
 import { test } from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
+import { readerText } from "../lib/text/reader-names.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 await installRegistryAuthority();
@@ -48,7 +49,7 @@ test("every eligible roster term note survives canonical holder lookup and the s
     assert.ok(markup.includes(escaped), holder.id);
     assert.ok(markup.includes(`data-official-term-note="${holder.id}"`));
     assert.ok(markup.includes(roster.sourceUrl.replaceAll("&", "&amp;")));
-    assert.ok(markup.includes(renderToStaticMarkup(createElement("span", null, roster.sourceOrg)).slice(6, -7)));
+    assert.ok(markup.includes(renderToStaticMarkup(createElement("span", null, readerText(roster.sourceOrg, "title"))).slice(6, -7)));
     assert.equal((markup.match(/data-card-sources=/g) ?? []).length, 1);
     rendered++;
   }

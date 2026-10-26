@@ -66,5 +66,5 @@ test("SAM extract notices publish to cards on both daily admissions without dupl
   const held = data.sources.find(row => row.source === "sam-gov-entities")!;
   assert.equal(held.status, "HELD"); assert.equal(held.records.length, 1);
   const html = renderToStaticMarkup(createElement(FederalMoneySection, { divisionId, bodyId, data }));
-  assert.match(html, /Federal registration/); assert.match(html, /9TH CIRCUIT COURT OF APPEALS/);
+  assert.match(html, /Federal registration/); assert.match(html, /9th Circuit Court of Appeals/); assert.match(html, /State: CA/);
 });

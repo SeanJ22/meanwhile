@@ -20,7 +20,6 @@ import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts
 import { primeStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { withFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
 import { primeStateAuthorityProjection } from "../civic-data/state-reader.ts";
-import { bodyClassFromIdentity } from "../registry/kinds.ts";
 
 /** Place reads carry canonical local boards; the state still supplies its official people and portraits. */
 export function withPlaceRegistry<T extends { readonly registry: RegistryRuntimeReadModel }>(state: T, place: RegistryRuntimeReadModel): T {
@@ -86,8 +85,7 @@ export function stateCoverage(
   });
   const composed = withStateRegistryFacts({ ...state.registry, registry: { ...state.registry.registry,
     bodies: [...state.registry.registry.bodies, ...acquired] } }, bodyFacts);
-  const runtime = { ...composed,registry:{...composed.registry,bodies:composed.registry.bodies.map(body => ({...body,
-    bodyClass:bodyClassFromIdentity(body.id,body.bodyClass) ?? body.bodyClass}))} };
+  const runtime = composed;
   const divisions = new Map([...runtime.registry.divisions, ...extraDivisions].map(division => [division.ocdId, division]));
   const resolved = divisionIds.flatMap(id => divisions.get(id) ?? []);
   const bodies = runtime.registry.bodies;

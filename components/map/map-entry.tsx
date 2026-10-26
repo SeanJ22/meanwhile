@@ -2038,8 +2038,9 @@ export function bodySubject(
 
   const roster = [...projectedBodyRoster(body).members];
 
+  const meetingBodyIds = new Set([body.bodyId, ...(body.meetingTypes ?? []).map(type => type.bodyId)]);
   const meetings = allMeetings
-    .filter((m) => m.bodyId !== undefined && m.bodyId === body.bodyId)
+    .filter((m) => m.bodyId !== undefined && meetingBodyIds.has(m.bodyId))
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
   /* The superintendent is hired by the board, so is shown only under "Runs the district day to day". */
@@ -2060,7 +2061,7 @@ export function bodySubject(
     publicRecordsDivisionId: body.ocdId,
     subjectKind: "BODY" as const,
     title: bodyDisplayName(body),
-    subtitle: readerGovernmentName(body.divisionLabel, body.divisionType),
+    subtitle: body.governmentName ?? readerGovernmentName(body.divisionLabel, body.divisionType),
     tier: body.tier,
     // Decides whether the card carries "Who runs it".
     divisionKind: body.divisionType,

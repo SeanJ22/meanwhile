@@ -364,7 +364,7 @@ test("canonical state-family scopes preserve meetings and venue details independ
         stateLegislatorAuthority:{scope:`US-${state}`,kind:"NOT_RECORDED",metadata:peopleRead.metadata,code:null,detail:"fixture"},
       };
       const coverage = stateCoverage(statePackage,[division],0,0,result.meetings,result.bodies);
-      assert.deepEqual(coverage.bodies.map(b => [b.bodyId,b.name,b.agendaSourceRef]),[[bodyId,"Planning Board",SOURCE]],"the existing body-card model receives the independently sourced body");
+      assert.deepEqual(coverage.bodies.map(b => [b.bodyId,b.name,b.agendaSourceRef]),[[bodyId,"City of Example Planning Board",SOURCE]],"the body card carries its owning government and independently sourced body");
     }
   } finally { await db.pg.close(); }
 });
@@ -817,7 +817,7 @@ test("a special district's board on a city's territory reads under the district,
       provenance: { kind: "OFFICIAL", sourceUrl: "https://www2.census.gov/", sourceOrg: "Census", collectedAt: at, verifiedAt: at } }] }, bodyRosters: [], rosterReaderDispositions: [],
       statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {}, officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
     const coverage = stateCoverage({ state: "AL", registry: runtime, version: "fixture" }, [mobile], 0, 0, [], result.bodies);
-    assert.deepEqual(coverage.bodies.map(b => [b.name, b.divisionLabel]).sort(), [["Board of Commissioners", "Mobile Housing Authority"], ["City Council", "Mobile city"]]);
+    assert.deepEqual(coverage.bodies.map(b => [b.name, b.divisionLabel]).sort(), [["City of Mobile Council", "Mobile city"], ["Mobile Housing Authority Board of Commissioners", "Mobile Housing Authority"]]);
     assert.equal(coverage.bodies.find(b=>b.bodyId===board)?.bodyClass,"GOVERNING");
   } finally { await db.pg.close(); }
 });

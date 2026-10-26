@@ -109,7 +109,7 @@ function currentHolder(row: BridgeRow) {
   }
   if (row.holder.authority === "REGISTRY_BODY_ROSTER") {
     for (const r of currentBodyRosters()) {
-      const h = r.members.find(h => h.id === row.holder.id);
+      const h = r.members.flatMap(member => member.sourceMembers ?? [member]).find(h => h.id === row.holder.id);
       if (h) return { ...h, divisions: [r.bodyId.split("#")[0]] };
     }
     return null;

@@ -71,7 +71,7 @@ test("place reads preserve the migrated state type, use the existing one-shot cl
   }finally{release();installFactReader(undefined);installReaderDatabaseQuery(undefined);await pg.close();}
 });
 
-test("the ballot's body-facts projection preserves contacts and calendar-derived names while omitting unused packages",async()=>{
+test("the ballot's body-facts projection preserves contacts and registered body names while omitting unused packages",async()=>{
   const {pg,publish}=await migratedReaderDb();
   const legacy=BOOTSTRAP_DDL.find(ddl=>ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("));
   assert.ok(legacy);await pg.exec(legacy);
@@ -93,7 +93,7 @@ test("the ballot's body-facts projection preserves contacts and calendar-derived
     const full=await readPlacePackage(input,query),facts=await readPlacePackage({...input,bodyFactsOnly:true},query);
     assert.deepEqual(facts.bodies,full.bodies);
     assert.equal(facts.bodies[0]?.fields.officePhone,"520-555-0100");
-    assert.equal(facts.bodies[0]?.fields.name,"Official council name");
+    assert.equal(facts.bodies[0]?.fields.name,"Fixture council");
     assert.deepEqual(facts.meetings,full.meetings);assert.equal(facts.meetings.length,1);
     assert.equal(facts.registry,null);assert.ok(full.registry);
     assert.deepEqual(facts.governments,[]);assert.deepEqual(facts.publicationAttempts,[]);

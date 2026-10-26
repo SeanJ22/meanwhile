@@ -37,6 +37,7 @@ import { historyGapFor, type HistoryGap } from "../meetings/history-gaps.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
 import type { StateOfficeContact } from "../reference/state-offices.ts";
 import type { SeatVacancy } from "../officials/types.ts";
+import { prepareBodyIdentities, type GovernmentType } from "./body-identity.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
  * New control-plane attempts are not present in this historic audit yet, so
@@ -113,6 +114,12 @@ export interface CoveredBody {
    */
   name: string | null;
   divisionLabel: string;
+  governmentId?: string;
+  governmentName?: string;
+  governmentType?: GovernmentType;
+  /** A retained calendar category, filed under the body holding that meeting. */
+  meetingBodyId?: string;
+  meetingTypes?: CoveredBody[];
   placementBasis?: "SERVICE_AREA" | "HOST_COUNTY";
   /**
    * Null where the body has no division; never a placeholder type, which would attach a class
@@ -330,6 +337,7 @@ export function summarizeCoverage(
     territory,
   );
 
+  const identities = prepareBodyIdentities(bodies, divisionsById);
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;
     const held = heldMeetings.find(meeting => meeting.bodyId === body.id);
@@ -337,7 +345,7 @@ export function summarizeCoverage(
     return {
       bodyId: body.id,
       ocdId: body.ocdId,
-      name: body.name,
+      ...identities.get(body.id)!,
       // A body with no division: real, hyperlocal, and not a division.
       divisionLabel: body.governmentName ?? division?.label ?? "",
       ...(body.placementBasis ? {placementBasis:body.placementBasis} : {}),
@@ -345,7 +353,6 @@ export function summarizeCoverage(
       divisionType: division?.divisionType ?? null,
       lsad: division?.lsad ?? null,
       schoolDependency: schoolDependency(body.ocdId),
-      bodyClass: body.bodyClass,
       coverageStatus: held ? "LIVE" : body.coverageStatus,
       homepageUrl: body.homepageUrl,
       ...(body.fieldSources ? { fieldSources: body.fieldSources } : {}),
@@ -361,6 +368,10 @@ export function summarizeCoverage(
       tier: division?.tier ?? "local",
     };
   });
+  for (const parent of covered) {
+    const meetingTypes = covered.filter(body => body.meetingBodyId === parent.bodyId);
+    if (meetingTypes.length) parent.meetingTypes = meetingTypes;
+  }
 
   const rootLegislators = (d: Division) => stateOcdIdFrom(d.ocdId) === d.ocdId
     ? holdersFor(officials, d.ocdId).filter(holder => holder.chamber === "upper" || holder.chamber === "lower") : [];

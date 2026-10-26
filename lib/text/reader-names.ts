@@ -129,11 +129,16 @@ export function readerBodyName(raw: string): string {
 export function readerGovernmentName(label: string, divisionType: string | null): string {
   let name = label.replace(/\s+/g, " ").trim();
   if (isAllCaps(name)) name = titleCase(name);
+  name = name.replace(/\bcmty\b/gi, "Community").replace(/\bsch(?:l)?\b/gi, "School")
+    .replace(/\bdist\b\.?/gi, "District").replace(/\bcnty\b/gi, "County")
+    .replace(/\bcoll\b\.?/gi, "College").replace(/\b(\d+)([a-z]{1,2})\b/gi, (_all, number, letters) => `${number}${letters.toUpperCase()}`);
+  // Census uses both "County Of Multnomah" and "Multnomah county".
+  name = name.replace(/^(county|parish|borough) of (.+)$/i, (_all, kind, place) => `${place} ${titleCaseWord(kind)}`);
   name = capitaliseSuffix(name);
   if (name === "") return name;
   if (divisionType === "county" && !/\b(county|parish|borough)$/i.test(name) && !/^(?:county|parish|borough) of\b/i.test(name)) {
     name = `${name} County`;
-  } else if (divisionType === "school_district" && /\sDistrict$/.test(name) && !/\bSchool\b/i.test(name)) {
+  } else if (divisionType === "school_district" && /\sDistrict$/.test(name) && !/\b(?:School|College|Education)\b/i.test(name)) {
     name = name.replace(/\sDistrict$/, " School District");
   }
   return lowerSmallWords(name);

@@ -214,7 +214,7 @@ async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Lo
     for (const id of personIdentityKeys(holder)) officialsById.set(id, holder);
   }
   for (const roster of currentBodyRosters()) for (const holder of rosterHoldersForBody(roster.bodyId)) {
-    if (!officialsById.has(holder.id)) officialsById.set(holder.id, holder);
+    for (const id of personIdentityKeys(holder)) if (!officialsById.has(id)) officialsById.set(id, holder);
   }
   return {
     territory,
@@ -557,7 +557,7 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
     .find((holder) => personIdentityKeys(holder).has(canonicalId));
   if (statewide) return statewide;
   for (const roster of currentBodyRosters()) {
-    const holder = rosterHoldersForBody(roster.bodyId).find((row) => row.id === canonicalId);
+    const holder = rosterHoldersForBody(roster.bodyId).find((row) => personIdentityKeys(row).has(canonicalId));
     if (holder) return holder;
   }
   return null;

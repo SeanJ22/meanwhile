@@ -1,51 +1,51 @@
 # River status
 
-build_state: LIVE FOR READERS: release 122 (main 560cc2aa2, DB-03 reads), live 9:47 PM EDT; reader checks green. GATING: DB-03 owner snapshot reads 3e3f1ab33 alone on river e58835856. NEXT: improvement batch 1. See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 122 (main 560cc2aa2, DB-03 reads). GATING: improvement batch 1 (AD-01, GB-01, MT-01, MD-01) on river e58835856. HELD for DB-04: DB-03's remaining steps and owner snapshot reads. See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T01:50:00Z
+heartbeat: 2026-10-26T01:54:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 9:50 PM EDT)
-Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
+## Every READY not on main (updated 9:54 PM EDT)
+Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info); improvements merge several to a release (6:05 PM). One path per job: DB-03's remaining steps wait for DB-04 (10:00 PM).
 
-**Shipping / gating**
+**Urgent, ships alone**
 | READY | Lane | Slot |
 |---|---|---|
+| DB-04 (not posted yet) | one read-only-what-changed path for every read | ships alone the moment it posts READY; preempts any gate |
+| 04681516c | DB-03 Admin (Admin's own screens) | RETURNED 9:36 PM EDT: 3 tests (returns/db-03.md). River finishes it at 10:36 PM EDT if no new READY |
 
-**Next: urgent Neon fixes, each as soon as ready (in lane order)**
-| READY | Lane | Slot |
-|---|---|---|
-| 3e3f1ab33 (carries a0cb7d1ef, bb948717e) | DB-03 owner snapshot reads + firewall fix (stream/db-03-reads, on river e58835856) | gating alone now; urgent Neon. Improvement batch 1 waits behind it |
-| 04681516c | DB-03 Admin | RETURNED: 3 tests (returns/db-03.md). Low priority: costs Neon only while Admin is open (Sean) |
-| e4305907d | DB-03 state doors | blocked: stacked on Admin in the lane's line. Lane asked to re-cut the remaining steps on current river |
-| 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | next, through 11072d2ed. Member offices f81db4b37 overlaps release 120's member-offices change; River keeps one path when it folds and says which |
-
-**Improvement batch 1: next after owner snapshot reads (AD-01, GB-01, MT-01, MD-01; merge d7dd06466 on e58835856 is built; its gate was stopped for the Neon fix). RT-01, RB-A7 and BL-02 conflict with river and go to batch 2 (returns/improvement-batch.md)**
+**Improvement batch 1: gating now (AD-01, GB-01, MT-01, MD-01 merged on river e58835856 → d7dd06466)**
 | READY | Lane | Note |
 |---|---|---|
-| a13baecf8 | RT-01 (place-map jobs fill every state) | batch 2: test conflict with release 118; lane merges river. RB-A10 and RB-A9 wait on its map |
 | 69806d306 | AD-01 | |
-| 7996ae820 | RB-A7 | batch 2: conflicts with GB-01 in place.ts, store.ts and the journal; lane merges river |
-| 1636195c9 | GB-01 (Census governing bodies, LA Metro move) | adds Neon reads; waited one release at Sean's order |
+| 1636195c9 | GB-01 (Census governing bodies, LA Metro move) | |
 | f26ebab8d | MT-01 follow-up (carries the 3:22 and 5:49 AM READYs) | new work after release 108 |
 | f67ae6709 | MD-01 follow-up (cheapest ballot writers, measure-number sentence repair) | new work after release 115 |
-| c3fff3702 | BL-02 (stream/bl-02-bills) | batch 2: conflicts in 5 files; lane merges river |
+
+**Improvement batch 2: lanes must merge river first (returns/improvement-batch.md)**
+| READY | Lane | Why |
+|---|---|---|
+| a13baecf8 | RT-01 (place-map jobs fill every state) | test conflict with release 118's readback removal. RB-A10 and RB-A9 wait on its map |
+| 7996ae820 | RB-A7 | conflicts with GB-01 in reader/place.ts, store.ts and the migration journal |
+| c3fff3702 | BL-02 (stream/bl-02-bills) | conflicts in 5 files |
+| 39238a8be | CS-01 (reader-text capitals) | 645 commits behind; the lane must merge river and repost |
 
 **Waiting, with the reason**
 | READY | Lane | Why it waits |
 |---|---|---|
+| e4305907d, 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 state doors, research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | Held for DB-04 (Sean, 10:00 PM EDT): DB-04's single read-what-changed path replaces most of these. Not folded until DB-04's READY says which it replaces |
+| a0cb7d1ef (with its firewall fix 3e3f1ab33) | DB-03 owner snapshot reads | Held for DB-04, same reason. Its gate was stopped at 10:00 PM EDT |
 | 7b5eacd03 | RB-A10 | Held: place_boundary, zip_place and zcta_place have 0 rows in production (RT-01 fills them). Ships when every state has rows and 20 random ZIPs in 20 states resolve |
-| be0bef2bf | RB-A3 follow-up | Not needed after RB-A8. RB-A3's publisher is on main; this adds only an official/checked split of RB-A8's shared publication counter in Admin (migration RB-A3_lanes, one extra count write per live fact). Readers see nothing, and it adds database writes while Neon comes first. River won't fold it unless Sean wants that split |
-| 39238a8be | CS-01 (reader-text capitals) | Improvement, 645 commits behind; no fold yet. The lane must merge river and repost; River joins it to the next improvement batch |
-| 1307d4e03 | RN-03 handoff | No code: an acceptance note for RN-03 (release 103, live). River records the reader check in Chrome; nothing to fold |
+| be0bef2bf | RB-A3 follow-up | Not needed after RB-A8: it only splits RB-A8's shared publication counter into official and checked in Admin (one more count write per live fact; readers see nothing). Not folding unless Sean wants that split |
+| 1307d4e03 | RN-03 handoff | No code: an acceptance note for RN-03 (release 103, live). River records a reader check in Chrome; nothing to fold |
 | 2cce7754c, 9c2b0c58a | DB-03 portraits / release-118 integration | Not folded at Sean's order (one portrait path: release 120's) |
 
 **Superseded (a later READY of the same step is on main; not folding)**
-2769c614e DB-02 (re-cut as e0f14fe59) · 14dd8beb0 BL-02 (stream/bl-02; c3fff3702 replaces it) · 8ad77b9d5 VS-07 (vs-07-fx f48331d9d folded Oct 23) · 04dfa4caf DG-01-FX (DG-01 folded with DG-02 e6745c664, Oct 23) · 027144fa1 BS-01 (folded with RS-02 adee07352, Oct 19) · 61f6d1449 SL-02 and f42bc19c6 NE-01 (folded with DS-01 512e65e03, Oct 22) · 6da1efc6b STEP-7 (Oct 15, 1,345 behind) · 91f23e059 DB-29 (Oct 6) · CH-23/CA salvage copies 544e20323, 3cbb51190e, 0fc6ef6d2, 48ef946cd and the Oct 5–6 salvage-river-next branches (those steps folded Oct 6–13).
+2769c614e DB-02 (re-cut as e0f14fe59, release 121) · 8b69f0cbf DB-03 reads (finished as de764a119, release 122) · bb948717e (inside 3e3f1ab33) · 14dd8beb0 BL-02 (c3fff3702 replaces it) · 8ad77b9d5 VS-07 (vs-07-fx f48331d9d folded Oct 23) · 04dfa4caf DG-01-FX (DG-01 folded with DG-02 e6745c664, Oct 23) · 027144fa1 BS-01 (folded with RS-02 adee07352, Oct 19) · 61f6d1449 SL-02 and f42bc19c6 NE-01 (folded with DS-01 512e65e03, Oct 22) · 6da1efc6b STEP-7 (Oct 15, 1,345 behind) · 91f23e059 DB-29 (Oct 6) · CH-23/CA salvage copies 544e20323, 3cbb51190e, 0fc6ef6d2, 48ef946cd and the Oct 5–6 salvage-river-next branches (those steps folded Oct 6–13).
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
@@ -1235,4 +1235,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 9:50 PM EDT: owner snapshot reads fixed by its lane
 - The DB-03 lane posted 3e3f1ab33 on river e58835856. A read-clock constant moved into a pure module, so the routine and manual paths no longer import incremental-reads.ts's filesystem writer; the firewall itself is unchanged. It carries a0cb7d1ef and fixture fixes (bb948717e). No migration; 2cce7754c and 9c2b0c58a are not included.
 - Improvement batch 1's gate was stopped for it (Neon first); 3e3f1ab33 is gating alone. The 9:52 PM standing-order check was cancelled because the lane answered.
+
+### 9:54 PM EDT: Sean, hold DB-03's remaining steps for DB-04
+- DB-04 builds one read-only-what-changed path for every read and will replace most of DB-03's per-job fixes. Until DB-04's READY says which it replaces, River doesn't fold: state doors e4305907d, research reads 6f0652479, accounting 7e81c1452, research indexes 407e02a1d, member offices f81db4b37, people source fields 18df1421b, runner doors 2600aecdc, linking-page integration ef74ed82e, read-path connection 11072d2ed, or owner snapshot reads a0cb7d1ef (3e3f1ab33).
+- The owner snapshot gate was stopped; improvement batch 1 is gating again on d7dd06466.
+- DB-03 Admin 04681516c continues (it fixes Admin's own screens). It's returned with 3 tests; River finishes it at 10:36 PM EDT if no new READY. DB-04 ships alone the moment it posts READY.
 

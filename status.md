@@ -5,11 +5,11 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-25T23:53:00Z
+heartbeat: 2026-10-26T00:02:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 7:53 PM EDT)
+## Every READY not on main (updated 8:02 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
@@ -1190,4 +1190,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 7:53 PM EDT: River finishes DB-03 reads
 - No new READY on stream/db-03-reads within 60 minutes of the return (it still holds 8b69f0cbf and its child a0cb7d1ef). River is finishing it on stream/river-db03-reads (river a37ce95a7 + 8b69f0cbf).
 - The change: rewrite aggregate-list-pagination and admin-narrow-reads for the revision-first protocol (a bounded revision page, then values fetched by id). Each test keeps its promise, and a new check proves an unchanged table sends revisions only. No production code changes.
+
+### 8 PM EDT status
+- Release 121 (DB-02, PR #833): build, standalone build, verify and admission pass; test (affected) still running. Production is still release 120.
+- DB-03 Admin is gating on river a37ce95a7 (test step). DB-03 reads is being finished on stream/river-db03-reads (test rewrite); it ships next, alone, when it lands.
+- RB-A4 catch-up: cursor at CT. DC is next, then DE through VT in one pass. HOST_COUNTY rows: 14,666.
+- Neon, both databases, 7 PM EDT hour: 5,476 MB, the lowest hour today (5 AM to 6 PM EDT ran 7.2 to 13.9 GB). Release 120 went live at 6:09 PM; Oversight measures portraits and member offices once the runner adopts it.
 

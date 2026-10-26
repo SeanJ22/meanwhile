@@ -11,7 +11,9 @@ import { statewidePageText } from "../statewide/parse.ts";
 import { sourcePeople, sourcePersonIsDocument,sourcePersonIsNativeReference } from "../../officials/people-bindings.ts";
 import { acquisition, appendRoster, digest, emptyPerson, emptyRoster, gap, legislativeDivision, provenance, record, result, savedRead, sourced, stateIdentity, string, url, type PeopleAcquisitionOptions, type PeopleSourceRelease } from "./common.ts";
 
-const textOf = statewidePageText;
+/** A member's visible name can be in a page header rather than its contact block. */
+export const legislaturePageText = (html:string) => statewidePageText(html.replace(/<\/?header\b[^>]*>/gi," "));
+const textOf = legislaturePageText;
 const key = (value:string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 const memberAction=(value:string)=>/^(?:contact|sponsored bills|view|read more|learn more|full biography|details|website|email|subscribe|sign up|track)\b/i.test(key(value));
 const federalRoute=(value:string)=>/(?:^|\.)(?:house|senate|congress|whitehouse)\.gov$/i.test(new URL(value).hostname);
@@ -46,7 +48,7 @@ function samePublishedName(observed:string,expected:string):boolean {
     (a.every(token=>b.includes(token))||b.every(token=>a.includes(token)))));
 }
 export function legislaturePageNamesPerson(html: string, name: string): boolean {
-  const content=html.replace(/<(script|style|nav|footer|header)\b[^>]*>[\s\S]*?<\/\1\s*>/gi," ").replace(/<a\b[^>]*\/>/gi,"");
+  const content=html.replace(/<(script|style|nav|footer)\b[^>]*>[\s\S]*?<\/\1\s*>/gi," ").replace(/<a\b[^>]*\/>/gi,"");
   return key(textOf(content)).includes(key(name)) || [...content.matchAll(/<(a|strong|h[1-6])\b[^>]*>([\s\S]*?)<\/\1>/gi)]
     .some(anchor=>samePublishedName(anchorName(anchor[2]),name));
 }
@@ -55,7 +57,7 @@ export function legislaturePageNamesPerson(html: string, name: string): boolean 
 export function legislaturePageBindsPerson(html:string,pageUrl:string,person:Officeholder,collectedAt:string):boolean {
   if(!legislaturePageNamesPerson(html,person.name))return false;
   const parsed=normalizeOfficialLegislaturePage(html,pageUrl,{state:person.state!,sourceId:"official-state-people",asOf:collectedAt,
-    signal:new AbortController().signal,roster:{...emptyRoster(person.state!,collectedAt),officeholders:[person]}},collectedAt);
+    signal:new AbortController().signal,roster:{...emptyRoster(person.state!,collectedAt),officeholders:[{...person,sourceHolders:undefined}]}},collectedAt);
   return parsed.officeholders.some(row=>row.chamber===person.chamber&&sameNativePerson(row,person));
 }
 const governmentRoute = (value:unknown):value is string => {
@@ -227,7 +229,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
   }
   let held=[...seedByPerson.values()];
   // A roster's observed links bind its bounded member card to the individual's official page.
-  const content=html.replace(/<(script|style|nav|footer|header)\b[^>]*>[\s\S]*?<\/\1\s*>/gi," ");
+  const content=html.replace(/<(script|style|nav|footer)\b[^>]*>[\s\S]*?<\/\1\s*>/gi," ");
   const headers=[...content.matchAll(/<(?:h[1-3]|title)\b[^>]*>([\s\S]*?)<\/(?:h[1-3]|title)>/gi)].map(match=>textOf(match[1])).join(" ");
   // A native personal profile can mention other legislators in its news.
   // Its own named heading identifies the member entry; those mentions do not.
@@ -237,8 +239,18 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
       .map(match=>rosterLabelName(textOf(match[2])))
       .filter(value=>/^[\p{L}][\p{L}\p{M}.,'’\-]*(?:\s+["“]?[\p{L}][\p{L}\p{M}.,'’"“”\-]*){1,6}$/u.test(value)&&
         !/\b(?:the|our|your|senate|house|assembly|members|district|office|contact|committee|news|bills|search|printing)\b/i.test(value)):[];
-  if(new Set(profileNames.map(key)).size===1)held=held.filter(person=>samePublishedName(profileNames[0],person.name)&&
-    (!pageRoleFor(headers)||person.chamber===pageRoleFor(headers)));
+  if(new Set(profileNames.map(key)).size===1) {
+    held=held.filter(person=>samePublishedName(profileNames[0],person.name)&&(!pageRoleFor(headers)||person.chamber===pageRoleFor(headers)));
+    const address=new URL(pageUrl),references=held.filter(person=>sourcePersonIsNativeReference(person)&&[person.websiteUrl,...person.profileUrls??[]].some(value=>{
+      if(!value)return false;try{const other=new URL(value);return other.hostname.replace(/^www\./,"")===address.hostname.replace(/^www\./,"")&&
+        other.pathname.toLowerCase()===address.pathname.toLowerCase()&&other.search===address.search;}catch{return false;}
+    }));
+    if(new Set(references.flatMap(person=>person.nativeIds?.["ocd-person"]??[])).size===1&&references[0]&&
+      held.every(person=>!person.nativeIds?.["ocd-person"]?.length||person.nativeIds["ocd-person"][0]===references[0].nativeIds!["ocd-person"][0])) {
+      const reference=references[0];
+      held=[{...reference,name:profileNames[0],nativeIds:{...reference.nativeIds,reader:[...new Set(held.flatMap(person=>[...personIdentityKeys(person)]))]}}];
+    }
+  }
   const upperPattern=/\b(?:Senators?|Senate Members?)\b/i,lowerPattern=/\b(?:Representatives?|Assemblyman|Assemblywoman|Delegates?|House Members?|Assembly Members?)\b/i;
   const blocks=htmlEvidenceBlocks(content);
   const labeledNames=(card:string)=>[...card.matchAll(/<strong\b[^>]*>([^<]+)<\/strong>\s*\([DRI]\)/gi)].map(match=>rosterLabelName(textOf(match[1])));
@@ -304,6 +316,10 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     })[0];
     const entryUrl=personal?pageUrl:profile??`${pageUrl}#member=${encodeURIComponent(key(holder.name))}`;
     const parsed=personOnPage(holder,context,pageUrl,options,collectedAt,entryUrl,!personal);
+    if(parsed&&!parsed.portraitCandidate&&personalHeading&&pagePeople.length===1) {
+      const image=pickPortraits(holder.name,imagesIn(content,pageUrl))[0];
+      if(image)parsed.portraitCandidate={imageUrl:image.src,sourceUrl:pageUrl,collectedAt};
+    }
     if(parsed){parsed.websiteUrl=profile??pageUrl;parsed.provenance=provenance(pageUrl,"State legislature — official member entry",collectedAt,entryQuote(entry,parsed.name));parsed.provenance.kind="OFFICIAL";sourced(parsed,parsed.provenance);roster.officeholders.push(parsed);}
   }
   for(const block of blocks) {

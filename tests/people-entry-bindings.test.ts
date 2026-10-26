@@ -11,7 +11,7 @@ import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
 import { retainsPeopleBindings } from "../lib/officials/people-bindings.ts";
-import { verifyPortraitSources, portraitHash } from "../lib/photos/evidence.ts";
+import { verifyPortraitSources, portraitHash,profilePortraitImageUrls } from "../lib/photos/evidence.ts";
 
 const at="2026-10-26T06:00:00.000Z",page="https://legislature.example.gov/house/membership/";
 function reference(name:string,uuid:string,district:string) {
@@ -84,6 +84,23 @@ test("a member's full name in surname-first image filenames still identifies onl
   const parsed=parse(body);
   assert.equal(parsed.officeholders.length,1);
   assert.equal(parsed.officeholders[0].portraitCandidate?.imageUrl,"https://legislature.example.gov/Barbieri_Vito_123.jpg");
+});
+
+test("an explicitly named personal profile can label its portrait outside the contact block, while a list cannot",()=>{
+  const profile="https://legislature.example.gov/members/vito",image="https://legislature.example.gov/Barbieri_Vito_123.jpg";
+  const body='<header><h1>Representative Vito Barbieri</h1></header><div><p>Representative Vito Barbieri District 3</p></div><a href="/policy">Policy Updates</a><img src="/Barbieri_Vito_123.jpg"><img src="/Jane_Smith.jpg">';
+  const capture=(text:string)=>({transport:"REACHABLE" as const,partial:false,httpStatus:200,observedAt:at,evidence:{canonicalUrl:profile,sourceId:"official-state-people",retrievedAt:at,text,contentHash:portraitHash(new TextEncoder().encode(text))}});
+  const subject={personId:people[0].personId!,name:people[0].name,state:"ID",chamber:"lower",officeTitle:"State Representative",nativeIds:people[0].nativeIds,profileUrls:[profile]};
+  assert.deepEqual(profilePortraitImageUrls(subject,capture(body)),[image]);
+  assert.deepEqual(profilePortraitImageUrls(subject,capture(body.replace('Representative Vito Barbieri</h1>','House Members</h1>'))),[]);
+});
+
+test("normal publication retains a member's visible identity in the page header",async()=>{
+  const source="https://legislature.example.gov/members/vito",body='<header><h1>Representative Vito Barbieri</h1></header><p>District 3</p><img src="/Barbieri_Vito.jpg">';
+  const parsed=normalizeOfficialLegislaturePage(body,source,{state:"id",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([people[0]])},at);
+  const saved=await publishPeopleSource({store:new MemoryRoutineDataStore(),vault:new MemoryEvidenceStore(),state:"id",sourceId:"official-state-people",now:at,releaseId:"member-header",roster:parsed,
+    acquisitions:[{requestedUrl:source,finalUrl:source,body,httpStatus:200,retrievedAt:at}]});
+  assert.ok(saved.outcome.promoted,JSON.stringify(saved.outcome.candidate.receipt?.checks));
 });
 
 test("a newer bound official entry replaces an older official profile's value",()=>{
@@ -425,6 +442,26 @@ test("the member's explicitly quoted nickname still binds the whole entry and it
   const member=parsed.officeholders.find(person=>person.nativeIds?.["ocd-person"]?.includes("ocd-person/vito"))!;
   assert.equal(member.portraitCandidate?.imageUrl,"https://legislature.example.gov/vito.jpg");
   assert.equal(member.memberships?.[0].district,"3");
+});
+
+test("a named profile binds its quoted full name and old entry IDs to its linked native reference",()=>{
+  const profile="https://www.flsenate.gov/Senators/S7";
+  const native={...people[0],name:"Tom Leek",state:"FL",chamber:"upper",officeTitle:"State Senator",websiteUrl:profile,
+    memberships:people[0].memberships?.map(row=>({...row,chamber:"upper",district:"7"}))};
+  const old={...native,id:"old-leek-entry",personId:"old-leek-entry",name:'Thomas J. "Tom" Leek',nativeIds:{"official-legislature":["https://flsenate.gov/Senators/2024-2026/S7"]}};
+  const parsed=normalizeOfficialLegislaturePage('<h1>The Florida Senate</h1><div><h2>Senator Thomas J. &quot;Tom&quot; Leek</h2><p>District 7</p></div>',profile,
+    {state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([native,old])},at);
+  assert.equal(parsed.officeholders.length,1);
+  assert.deepEqual(parsed.officeholders[0].nativeIds?.["ocd-person"],["ocd-person/vito"]);
+  assert.ok(personIdentityKeys(parsed.officeholders[0]).has(old.id));
+});
+
+test("publication verifies the selected name and chamber against its entry while retaining historical snapshots",()=>{
+  const person={...people[0],name:"Thomas F. Patton",state:"OH",chamber:"upper",officeTitle:"State Senator",
+    sourceHolders:[{...people[0],name:"Tom Patton"}]};
+  const body='<h1>Senate Members</h1><div><a href="/members/thomas-f-patton">Thomas F. Patton</a><p>District 3 | R</p></div>';
+  assert.equal(legislaturePageBindsPerson(body,"https://ohiosenate.gov/members/directory",person,at),true);
+  assert.equal(person.sourceHolders[0].name,"Tom Patton");
 });
 
 test("a published leading initial does not turn one member entry into two people",()=>{

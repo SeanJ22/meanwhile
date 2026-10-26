@@ -16,7 +16,7 @@ import { statewidePageText, verifyStatewideOfficialPage } from "../sources/state
 import { verifiedWhiteHouseOfficial, ADMINISTRATION_URL } from "../sources/white-house/president.ts";
 import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 import { withExecutiveCompleteness, executiveEvidenceReferences } from "../officials/national-executive.ts";
-import { legislaturePageBindsPerson } from "../sources/people/legislature.ts";
+import { legislaturePageBindsPerson,legislaturePageText } from "../sources/people/legislature.ts";
 import { rosterChanges, type RosterChange } from "../officials/roster-changes.ts";
 import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
 
@@ -80,7 +80,7 @@ async function peopleSourceViolations(input:{state:string;sourceId:string;roster
       const page={url:row.finalUrl,html:await textOf(row)};
       if (isOfficialSource(capture.finalUrl,page)) { linkingPage=page; break; }
     }
-    const pageText = words(statewidePageText(body));
+    const pageText = words(input.sourceId==="official-state-people"?legislaturePageText(body):statewidePageText(body));
     if (!capture || !quote || !pageText.includes(words(quote)) || !isOfficialSource(capture.finalUrl,linkingPage) ||
       !(input.sourceId === "official-state-people" ? legislaturePageBindsPerson(body,capture.finalUrl,person,capture.retrievedAt) : pageText.includes(words(person.name)))
       || input.sourceId !== "official-state-people" && !(input.sourceId === "statewide-executive-sources" && !national) && !pageText.includes(words(person.officeTitle).replace(/^state /,""))) violations.push(`PEOPLE_OWN_OFFICIAL_PAGE_UNVERIFIED:${person.id}`);

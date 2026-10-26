@@ -21,7 +21,7 @@ export async function readLegiscanPublicationBase(query:Query,scope:string,decod
   return{current:{key:String(row.key),sourceId:String(row.source_id),recordClass:"STATE_BILL",scope,
     versionId:String(row.current_version_id),lastKnownGoodVersionId:String(row.last_known_good_version_id),
     promotedAt:new Date(row.promoted_at as string|Date).toISOString(),payload:candidate.readModel,receipt,
-    ...(confirmation?.versionId===row.current_version_id?{latestConfirmation:confirmation}:{})},
+    ...(confirmation&&confirmation.versionId===row.current_version_id?{latestConfirmation:confirmation}:{})},
     lkg:{candidate,state:row.state as CandidateState,acquisitionSucceeded:row.acquisition_succeeded===true,receipt,
       promotedVersion:row.promoted_version_id as string|null,lastKnownGoodVersion:row.candidate_lkg as string|null,
       failureCode:row.failure_code as string|null,failureDetail:row.failure_detail as string|null}};

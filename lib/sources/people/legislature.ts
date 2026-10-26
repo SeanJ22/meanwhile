@@ -127,7 +127,7 @@ function personOnPage(holder:Officeholder,html:string,sourceUrl:string,options:P
   if(!legislaturePageNamesPerson(html,holder.name)||!roleOnPage(text,holder))return null;
   const nameIndex=text.toLowerCase().indexOf(holder.name.toLowerCase());
   const excerpt=nameIndex>=0?text.slice(Math.max(0,nameIndex-160),nameIndex+holder.name.length+160):text;
-  const native=new URL(entryUrl).hash.startsWith("#member=")?null:nativePersonIdFromUrl(entryUrl);
+  const native=nativePersonIdFromUrl(entryUrl);
   // Some linked profiles name a seat (for example Florida's S33), not its occupant.
   // Without an explicit publisher person ID, the named entry supplies identity.
   const ownEntry=new URL(entryUrl);if(!native)ownEntry.hash=`member=${encodeURIComponent(key(holder.name))}`;
@@ -222,14 +222,24 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     if(prior&&(sourcePersonIsNativeReference(prior)&&!sourcePersonIsNativeReference(holder)||prior.memberships?.length&&!holder.memberships?.length))continue;
     seedByPerson.set(identity,holder);
   }
-  const held=[...seedByPerson.values()];
+  let held=[...seedByPerson.values()];
   // A roster's observed links bind its bounded member card to the individual's official page.
   const content=html.replace(/<(script|style|nav|footer|header)\b[^>]*>[\s\S]*?<\/\1\s*>/gi," ");
   const headers=[...content.matchAll(/<(?:h[1-3]|title)\b[^>]*>([\s\S]*?)<\/(?:h[1-3]|title)>/gi)].map(match=>textOf(match[1])).join(" ");
+  // A native personal profile can mention other legislators in its news.
+  // Its own named heading identifies the member entry; those mentions do not.
+  const personalRoute=Boolean(nativePersonIdFromUrl(pageUrl))||/^\/Senators\/(?:\d{4}-\d{4}\/)?S\d+(?:\/\d+)?\/?$/i.test(new URL(pageUrl).pathname);
+  const profileNames=personalRoute?[...content.matchAll(/<h([12])\b[^>]*>([\s\S]*?)<\/h\1>/gi)]
+      .filter(match=>match[1]==="1"||/^(?:State\s+)?(?:Senator|Sen\.|Representative|Rep\.|Delegate|Assemblyman|Assemblywoman)\s+/i.test(textOf(match[2])))
+      .map(match=>rosterLabelName(textOf(match[2])))
+      .filter(value=>/^[\p{L}][\p{L}\p{M}.,'’\-]*(?:\s+["“]?[\p{L}][\p{L}\p{M}.,'’"“”\-]*){1,6}$/u.test(value)&&
+        !/\b(?:the|our|your|senate|house|assembly|members|district|office|contact|committee|news|bills|search|printing)\b/i.test(value)):[];
+  if(new Set(profileNames.map(key)).size===1)held=held.filter(person=>samePublishedName(profileNames[0],person.name)&&
+    (!pageRoleFor(headers)||person.chamber===pageRoleFor(headers)));
   const upperPattern=/\b(?:Senators?|Senate Members?)\b/i,lowerPattern=/\b(?:Representatives?|Assemblyman|Assemblywoman|Delegates?|House Members?|Assembly Members?)\b/i;
   const blocks=htmlEvidenceBlocks(content);
   const labeledNames=(card:string)=>[...card.matchAll(/<strong\b[^>]*>([^<]+)<\/strong>\s*\([DRI]\)/gi)].map(match=>rosterLabelName(textOf(match[1])));
-  const discovered=[...new Set(labeledNames(content))];
+  const discovered=[...new Set([...labeledNames(content),...profileNames])];
   const knownNames=new Map(held.map(person=>[key(person.name),person]));
   for(const observed of discovered)if(!knownNames.has(key(observed))&&!held.some(person=>legislaturePageNamesPerson(observed,person.name))&&pageRoleFor(headers)) {
     const chamber=pageRoleFor(headers)!;

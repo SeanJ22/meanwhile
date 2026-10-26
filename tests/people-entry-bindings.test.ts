@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { normalizeOfficialLegislaturePage, legislatureRosterLinks } from "../lib/sources/people/legislature.ts";
+import { normalizeOfficialLegislaturePage, legislatureRosterLinks,legislaturePageBindsPerson } from "../lib/sources/people/legislature.ts";
 import { emptyPerson, emptyRoster, provenance } from "../lib/sources/people/common.ts";
 import { mergePeopleSets } from "../lib/officials/merge-people.ts";
 import { personIdentityKeys,nativePersonIdFromUrl,memberProfileSubpageParentUrl } from "../lib/officials/people-identity.ts";
@@ -60,6 +60,17 @@ test("successive occupants of a linked seat route have separate person identitie
   assert.equal(mergePeopleSets([roster([legacy]),corrected])!.officeholders.length,1);
 });
 
+test("a profile's current named office is acquired when the reference still lists an older chamber",()=>{
+  const profile="https://www.flsenate.gov/Senators/S7",former={...people[0],state:"FL"};
+  const parsed=normalizeOfficialLegislaturePage('<h1>The Florida Senate</h1><div><h2>Senator Vito Barbieri</h2><p>District 7</p></div>',profile,
+    {state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([former])},at);
+  assert.equal(parsed.officeholders.length,1);
+  assert.equal(parsed.officeholders[0].chamber,"upper");
+  assert.equal(parsed.officeholders[0].memberships?.[0].district,"7");
+  assert.equal(parsed.officeholders[0].nativeIds?.["ocd-person"],undefined);
+  assert.equal(mergePeopleSets([roster([former]),parsed])!.officeholders.length,2,"the new office does not borrow a reference ID from the older chamber");
+});
+
 test("a verified official roster entry supplies only that member's portrait",()=>{
   const capture={transport:"REACHABLE" as const,partial:false,httpStatus:200,observedAt:at,evidence:{canonicalUrl:page,sourceId:"official-state-people",
     retrievedAt:at,text:html,vaultKey:"project/freshness/source/official-state-people/raw/fixture",contentHash:portraitHash(new TextEncoder().encode(html))}};
@@ -82,6 +93,21 @@ test("a member's news and photo-album titles never become people or member-list 
     assert.equal(normalizeOfficialLegislaturePage('<title>Representative Vito Barbieri</title><p>Representative Vito Barbieri, District 3</p><img src="/vito.jpg">',`https://legislature.example.gov${path}`,
       {state:"id",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster(people)},at).officeholders.length,0);
   assert.deepEqual(legislatureRosterLinks(body,page),[]);
+});
+
+test("another legislator mentioned in a native member profile's news never owns that profile or its form",()=>{
+  const profile="https://ohiosenate.gov/members/vito-barbieri";
+  const members=people.map(person=>({...person,state:"OH",chamber:"upper",officeTitle:"State Senator"}));
+  const body='<h1>Vito Barbieri</h1><div><h2>Senator Vito Barbieri</h2><p>District 3</p></div><h2>Stay Connected</h2><article><h3>Jane Smith</h3><p>Senator Jane Smith spoke today. District 4</p></article>';
+  const options={state:"oh",sourceId:"official-state-people" as const,asOf:at,signal:new AbortController().signal,roster:roster(members)};
+  const parsed=normalizeOfficialLegislaturePage(body,profile,options,at);
+  assert.deepEqual(parsed.officeholders.map(person=>person.name),["Vito Barbieri"]);
+  assert.deepEqual(parsed.officeholders[0].nativeIds?.["oh-senate"],["vito-barbieri"]);
+  assert.equal(legislaturePageBindsPerson(body,profile,members[1],at),false);
+  const wrong={...members[1],websiteUrl:profile,nativeIds:{...members[1].nativeIds,"official-legislature":[`${profile}#member=jane%20smith`]}};
+  const form={...members[0],id:"profile-signup",personId:"profile-signup",name:"Sign Up",nativeIds:{"official-legislature":[`${profile}/newsletter-sign-up`]}};
+  const repaired=mergePeopleSets([roster([wrong,form]),parsed])!;
+  assert.equal(repaired.officeholders.find(person=>personIdentityKeys(person).has(form.id))?.name,"Vito Barbieri");
 });
 
 test("a profile's subordinate office headings, document links and email button never become people",()=>{

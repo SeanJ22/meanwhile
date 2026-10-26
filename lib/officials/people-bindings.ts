@@ -94,7 +94,9 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
       [source.websiteUrl,...source.profileUrls??[],...source.nativeIds?.["official-legislature"]??[]].some(url=>{
         const native=url?nativePersonIdFromUrl(url):null;return Boolean(native&&parents.has(`${native.source}:${native.id}`));
       })));
-    const nativeMatches=matches.filter(sourcePersonIsNativeReference),references=nativeMatches.length?nativeMatches:matches;
+    const nativeMatches=matches.filter(sourcePersonIsNativeReference);
+    const publisherMatches=matches.filter(source=>[...personIdentityKeys(source)].some(key=>parents.has(key)));
+    const references=publisherMatches.length?publisherMatches:nativeMatches.length?nativeMatches:matches;
     return new Set(references.map(nativeIdentity)).size===1?references[0]:undefined;
   };
   const needsBinding=(person:Officeholder)=>collapsed(person)||Boolean(documentReference(person))||[...personIdentityKeys(person)].some(key=>foreign(person,key));

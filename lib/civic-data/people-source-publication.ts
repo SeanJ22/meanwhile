@@ -21,6 +21,8 @@ import { publishRosterOfficePoints, type OfficePointResolver } from "../official
 import type { PeopleSourceProbe } from "./people-source-probe.ts";
 import { sourceContentHash } from "./source-hash.ts";
 import { bindPeopleSourceHashes, recordPeopleSourceChecks } from "./people-source-checks.ts";
+import type { PortraitSourceProbe } from "../photos/portrait-run.ts";
+import { withDerivedSourceContent } from "./derived-source-hash.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 export {  readPeopleSourceProjection,  } from "./people-source-read.ts";
@@ -38,11 +40,12 @@ interface PublishPeopleSourceInput {
   readonly gaps?: readonly {sourceUrl:string;detail:string}[];
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
   readonly derivedInputs?: readonly DerivedInputRef[];
+  readonly sourceContentInputs?: readonly DerivedInputRef[];
   readonly confirmUnchanged?: boolean;
   readonly resolveOfficePoint?: OfficePointResolver;
   /** A caller extending the record it just published passes it here instead of reading it again. */
   readonly held?: HeldPeopleSource;
-  readonly sourceProbe?: PeopleSourceProbe;
+  readonly sourceProbe?: PeopleSourceProbe | PortraitSourceProbe;
 }
 /** The published record a new version is built on. */
 export interface HeldPeopleSource {
@@ -246,8 +249,9 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const sourceRawHash = input.sourceProbe
     ? sourceContentHash(input.acquisitions,{normalizationInputHash:input.sourceProbe.normalizationInputHash})
     : peopleSourceContentHash(input.acquisitions,input.roster);
-  const candidate = peopleSourceCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,sourceRawHash,
+  let candidate = peopleSourceCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,sourceRawHash,
     violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
+  if(input.sourceContentInputs)candidate=withDerivedSourceContent(candidate,input.sourceContentInputs);
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"
     ? `people-portraits-${state}`

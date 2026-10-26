@@ -30,6 +30,7 @@ import type { CampaignSourceRecord } from "./state-source-records.ts";
 import { US_JURISDICTIONS } from "../coverage/states.ts";
 import { campaignMoneySourceResources, campaignFinanceSource, campaignFinanceNativeScope, type CampaignFinanceResource, type CampaignFinanceWorkCheck } from "./state-sources.ts";
 import {campaignMoneyDependencyHash,campaignResourceContentHash,campaignResourceCursor,campaignResourceInputs,campaignStateSourceHash,confirmCampaignResourceChecks,probeCampaignResource,readCampaignMoneyInputs,type CampaignResourceCheck} from "./state-source-probe.ts";
+import {passDeadlineFromEnv} from "../ops/independent-runtime-pass.ts";
 
 type AcquisitionOptions=Parameters<typeof acquireCampaignFinanceResource>[2];
 interface ResourceOptions extends AcquisitionOptions {
@@ -44,7 +45,7 @@ interface ResourceOptions extends AcquisitionOptions {
 async function publishCampaignFinanceResource(state:string,resource:CampaignFinanceResource,options:ResourceOptions){
   if(!resource.cycle?.length || !resource.office.length || !resource.candidate.length && !resource.candidateParts?.length)throw sourceAcquisitionFailure(
     "PUBLISHER_DOCUMENT_INVALID","The extract's committee, candidate, office and election-cycle links remain open work.");
-  let records=0,unjoined=0,complete=false,check:SourceCheckEvidence|null=null;
+  let records=0,seenRecords=0,unjoined=0,complete=false,check:SourceCheckEvidence|null=null;
   const publicationId=options.publicationId??randomUUID();
   const rawHashes=new Set<string>();
   const people=campaignMoneyPeopleIndex(options.people);
@@ -82,8 +83,12 @@ async function publishCampaignFinanceResource(state:string,resource:CampaignFina
     })){
       check=page.sourceCheck;
       const rows=page.records as CampaignSourceRecord[];
-      if(!rows.length)continue;
+      seenRecords+=rows.length;
       for(const row of rows)seen.run(row.id);
+      if(page.resumed){for(const row of rows)touched.run(row.person!.id);await page.saveProgress?.();continue;}
+      if(!rows.length){await page.saveProgress?.();continue;}
+      const checkedAt=page.checkedSources?.map(source=>source.checkedAt).sort()[0]??page.sourceCheck.checkedAt;
+      for(let index=0;index<rows.length;index++)rows[index]={...rows[index],provenance:{...rows[index].provenance,checkedAt}};
       const missing=rows.filter(row=>row.unavailableAmounts.length);
       const previous=missing.length?await readCampaignPredecessors(options.facts.query,state,missing):new Map<string,Pick<CampaignSourceRecord,"amounts"|"provenance"|"filingUrl">>();
       for(let index=0;index<rows.length;index++){
@@ -99,6 +104,7 @@ async function publishCampaignFinanceResource(state:string,resource:CampaignFina
         if(resource.aggregation==="CYCLE_TOTAL")for(let start=0;start<affected.length;start+=500)await options.onPublished?.({state,records:rows.length,people:affected.slice(start,start+500)});
         else for(const person of affected)touched.run(person);
       }
+      await page.saveProgress?.();
     }
     if(!check)throw new Error("The campaign source returned no check");
     let after=0;
@@ -110,7 +116,7 @@ async function publishCampaignFinanceResource(state:string,resource:CampaignFina
       if(!previous.length)break;
       const removed=previous.filter(row=>!active.get(String(row.record_id)));
       if(removed.length){
-        if(records===0)throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID","The source no longer returns this person's previously filed rows; the last verified money is preserved for investigation");
+        if(seenRecords===0)throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID","The source no longer returns this person's previously filed rows; the last verified money is preserved for investigation");
         const changed=await options.facts.transaction(async query=>{
           const moved=await query("UPDATE fact SET status='superseded' WHERE id=ANY($1::bigint[]) AND status='live' RETURNING entity_id",[removed.map(row=>Number(row.id))]);
           if(moved.length)await enqueueReaderPlaces({entities:[...new Set([...moved.map(row=>String(row.entity_id)),...removed.flatMap(row=>typeof row.parent_id==='string'?[row.parent_id]:[])])]},query);
@@ -218,27 +224,37 @@ async function moneyDoor(options:StateRefreshOptions,url:string,error:unknown,ro
 export async function refreshCampaignMoneyState(options:StateRefreshOptions){
   const {state,facts,vault}=options,clock=options.now??(()=>new Date().toISOString()),at=clock();
   campaignFinanceSource(state);
+  const deadline=passDeadlineFromEnv(),signal=Number.isFinite(deadline)?AbortSignal.timeout(Math.max(1,deadline-Date.now()-5_000)):new AbortController().signal;
   await facts.query(`INSERT INTO pass_cursor(name,position) VALUES($1,$2)
     ON CONFLICT(name) DO UPDATE SET position=jsonb_set(pass_cursor.position::jsonb,'{startedAt}',to_jsonb($3::text))::text`,
     [campaignFinanceNativeScope(state),JSON.stringify({state,startedAt:at}),at]);
+  const previousState=await readCampaignMoneyStateWork(facts.query,state);
+  const finishCutoff=async(loaded=0,unmatched=0,publishedPeople=previousState?.publishedPeople??0)=>{
+    const report:CampaignFinanceWorkCheck={kind:"campaign-finance-work-check",state,resource:"people",records:[{id:`${state}:people`,state,startedAt:at,checkedAt:clock(),
+      publishedPeople,peopleWorked:0,peopleWithMoney:previousState?.peopleWithMoney??0,loaded,unmatched,reasons:previousState?.reasons??{},peakMemoryBytes:process.resourceUsage().maxRSS*1024,
+      ...(previousState?.sourceHash?{sourceHash:previousState.sourceHash}:{}),sourceComplete:false}]};
+    await facts.query("INSERT INTO pass_cursor(name,position) VALUES($1,$2) ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position",[campaignFinanceNativeScope(state),JSON.stringify(report.records[0])]);
+    return {report};
+  };
+  if(signal.aborted)return finishCutoff();
   const profiles=campaignMoneySourceResources(state),resources:CampaignFinanceResource[]=[],runId=randomUUID();
   const discoveryFailures:{url:string;error:unknown}[]=[];
-  for await(const resource of campaignFinanceResources(state,{vault,profiles,signal:new AbortController().signal,fetch:options.fetch,
-    onFailure:async(_resource,url,error)=>{discoveryFailures.push({url,error});await moneyDoor(options,url,error,0,clock());}}))resources.push(resource);
+  for await(const resource of campaignFinanceResources(state,{vault,profiles,signal,fetch:options.fetch,
+    onFailure:async(_resource,url,error)=>{if(signal.aborted)return;discoveryFailures.push({url,error});await moneyDoor(options,url,error,0,clock());}}))resources.push(resource);
+  if(signal.aborted)return finishCutoff();
   let dependencyHash=await campaignMoneyDependencyHash(options.query,state);
   const sourceDescriptorHash=hash(JSON.stringify({profiles,resources:resources.map(resource=>resource.id)}));
-  const previousState=await readCampaignMoneyStateWork(facts.query,state);
   const accepted=await campaignResourceInputs(facts.query,state),checks=new Map<string,CampaignResourceCheck>(),probeFailures=new Map<string,unknown>();
   const probe=async(resource:CampaignFinanceResource)=>{
     const checked=await probeCampaignResource(state,resource,accepted.get(campaignResourceCursor(state,resource.id)),dependencyHash,
-      {vault,directory:options.directory,runId,now:clock,fetch:options.fetch});
+      {vault,directory:options.directory,runId,now:clock,fetch:options.fetch,signal});
     if(checked)checks.set(resource.id,checked);return checked;
   };
   let unchanged=discoveryFailures.length===0 && (resources.length>0 ||
     previousState?.sourceComplete===true && previousState.sourceDescriptorHash===sourceDescriptorHash && previousState.dependencyHash===dependencyHash);
   for(const resource of resources){
     try{if(!await probe(resource)){unchanged=false;break;}}
-    catch(error){probeFailures.set(resource.id,error);await moneyDoor(options,resource.url,error,0,clock());unchanged=false;break;}
+    catch(error){if(signal.aborted)return finishCutoff();probeFailures.set(resource.id,error);await moneyDoor(options,resource.url,error,0,clock());unchanged=false;break;}
   }
   if(unchanged && await campaignMoneyDependencyHash(options.query,state)===dependencyHash){
     await confirmCampaignResourceChecks(facts,state,[...checks.values()],options.purge);
@@ -303,6 +319,7 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
     const failedSource=(error:unknown)=>{const reason=isSourceAcquisitionFailure(error)&&error.code==="PUBLISHER_DOCUMENT_INVALID"?CAMPAIGN_MONEY_MISSING_REASONS.invalid:CAMPAIGN_MONEY_MISSING_REASONS.unavailable;for(const person of cohort){const key=campaignPersonKey(state,person);failedPeople.add(key);if(!personReasons.has(key))remember(person,reason);}};
     for(const failure of discoveryFailures){issue(sanitizedErrorDiagnostic(failure.error));failedSource(failure.error);}
     for(const resource of resources){
+      if(signal.aborted)return finishCutoff(loaded,unmatched,people.length);
       const progress=resourceRuns.get(resource.id)??{publicationId:"",completed:0,failed:false};resourceRuns.set(resource.id,progress);
       try{
         const failure=probeFailures.get(resource.id);if(failure)throw failure;
@@ -313,7 +330,8 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
           if(!sourceCheckedAt || checked.checkedAt<sourceCheckedAt)sourceCheckedAt=checked.checkedAt;
           continue;
         }
-        const result=await publishCampaignFinanceResource(state,resource,{people:cohort,publishedPeople:people,countUnmatched:!counted,facts,vault,directory:options.directory,runId,releaseEveryMs:resource.kind==="SOCRATA"?60*60_000:DAY,now:clock,fetch:options.fetch,signal:new AbortController().signal,
+        const result=await publishCampaignFinanceResource(state,resource,{people:cohort,publishedPeople:people,countUnmatched:!counted,facts,vault,directory:options.directory,runId,releaseEveryMs:resource.kind==="SOCRATA"?60*60_000:DAY,now:clock,fetch:options.fetch,signal,
+          materializationId:hash(JSON.stringify([dependencyHash,cohort])),
           purge:options.purge,onUnjoined:(row,reason)=>{const matches=campaignMoneyIdentityMatches(row,cohortIndex);if(matches.length===1)remember(matches[0],reason);},
           onPublished:async batch=>rebuildCampaignCycles(facts,state,batch.people,clock(),options.purge)});
         progress.publicationId=result.publicationId;progress.completed++;resourceHashes.set(resource.id,result.rawHash);
@@ -321,7 +339,7 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
         if(!sourceCheckedAt || result.sourceCheck.checkedAt<sourceCheckedAt)sourceCheckedAt=result.sourceCheck.checkedAt;
         for(const [reason,count]of Object.entries(result.reasons))reasons[reason]=(reasons[reason]??0)+count;
         await moneyDoor(options,resource.url,null,result.records,clock());
-      }catch(error){progress.failed=true;const reason=sanitizedErrorDiagnostic(error);issue(reason);failedSource(error);await moneyDoor(options,resource.url,error,0,clock());}
+      }catch(error){if(signal.aborted)return finishCutoff(loaded,unmatched,people.length);progress.failed=true;const reason=sanitizedErrorDiagnostic(error);issue(reason);failedSource(error);await moneyDoor(options,resource.url,error,0,clock());}
     }
     counted=true;
   }

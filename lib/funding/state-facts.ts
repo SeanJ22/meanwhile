@@ -9,6 +9,8 @@ import { enqueueReaderPlaces, invalidateReaderCache, type ReaderCachePurger } fr
 const FIELD = "campaign-money:";
 const SCHEME = "campaign-money-record";
 const digest = (value: string) => createHash("sha256").update(value).digest("hex");
+const checkedAt=(row:CampaignSourceRecord,at:string)=>[row.provenance.checkedAt??at,...row.amounts.flatMap(amount=>amount.provenance
+  ? [amount.provenance.checkedAt??amount.provenance.retrievedAt]:[])].sort()[0];
 function campaignStateDivision(state: string): string {
   const place = US_JURISDICTIONS.find(place => place.usps === state);
   if (!place) throw new Error("Campaign money requires a supported state.");
@@ -59,15 +61,16 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
       JOIN fact f ON f.entity_id=e.id AND f.field=$3||x.value AND f.status='live'
       WHERE x.scheme=$1 AND x.value=ANY($2::text[]) AND e.state=$4 FOR UPDATE OF f`, [SCHEME, records.map(row => row.id), FIELD, state]) as unknown as readonly HeldFact[];
     const byId = new Map(previous.map(row => [row.field.slice(FIELD.length), row]));
-    const changed: CampaignSourceRecord[] = [], confirmed: number[] = [], replaced: number[] = [];
+    const changed: CampaignSourceRecord[] = [], confirmed: {id:number;at:string}[] = [], replaced: number[] = [];
     for (const row of records) {
       const old = byId.get(row.id);
       if (old && (old.provenance_kind === "OWNER" || Date.parse(old.retrieved_at) > Date.parse(row.provenance.retrievedAt))) continue;
-      if (old && old.fingerprint === campaignSourceRecordHash(row) && old.entity_id === committeeId(row)) { confirmed.push(old.id); continue; }
+      if (old && old.fingerprint === campaignSourceRecordHash(row) && old.entity_id === committeeId(row)) { confirmed.push({id:old.id,at:checkedAt(row,at)}); continue; }
       changed.push(row);
       if (old) replaced.push(old.id);
     }
-    const restamped = confirmed.length ? await query("UPDATE fact SET checked_at=$2 WHERE id=ANY($1::bigint[]) AND checked_at<$2::timestamptz RETURNING entity_id", [confirmed, at]) : [];
+    const restamped = confirmed.length ? await query(`UPDATE fact f SET checked_at=c.at FROM unnest($1::bigint[],$2::timestamptz[]) c(id,at)
+      WHERE f.id=c.id AND f.checked_at<c.at RETURNING f.entity_id`, [confirmed.map(row=>row.id),confirmed.map(row=>row.at)]) : [];
     for (const row of restamped) affected.add(String(row.entity_id));
     if (!changed.length) {
       if (affected.size) await enqueueReaderPlaces({ entities: [...affected] }, query);
@@ -83,10 +86,10 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
     const sourceIds = new Map(copies.map(copy => [String(copy.blob_key), Number(copy.id)]));
     const superseded = replaced.length ? await query("UPDATE fact SET status='superseded' WHERE id=ANY($1::bigint[]) RETURNING entity_id", [replaced]) : [];
     const written = await query(`INSERT INTO fact (entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by,cost_usd)
-      SELECT entity,field,value::jsonb,text,'live','OFFICIAL',copy,'',$7::timestamptz,$7::timestamptz,producer,0
-      FROM unnest($1::text[],$2::text[],$3::text[],$4::text[],$5::bigint[],$6::text[]) r(entity,field,value,text,copy,producer) RETURNING entity_id`,
+      SELECT entity,field,value::jsonb,text,'live','OFFICIAL',copy,'',checked,$7::timestamptz,producer,0
+      FROM unnest($1::text[],$2::text[],$3::text[],$4::text[],$5::bigint[],$6::text[],$8::timestamptz[]) r(entity,field,value,text,copy,producer,checked) RETURNING entity_id`,
     [changed.map(committeeId), changed.map(row => FIELD + row.id), changed.map(row => JSON.stringify({...row,fingerprint:campaignSourceRecordHash(row)})), changed.map(row => row.nativeId ?? row.filerId ?? row.id),
-      changed.map(row => sourceIds.get(row.provenance.vaultKey)), changed.map(row => `campaign-person-money:${state}:${row.resource}`), at]);
+      changed.map(row => sourceIds.get(row.provenance.vaultKey)), changed.map(row => `campaign-person-money:${state}:${row.resource}`), at,changed.map(row=>checkedAt(row,at))]);
     await query(`INSERT INTO entity_external_id (entity_id,scheme,value) SELECT entity,$3,value FROM unnest($1::text[],$2::text[]) r(entity,value)
       ON CONFLICT (scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id`, [changed.map(committeeId), changed.map(row => row.id), SCHEME]);
     for (const row of [...superseded, ...written]) affected.add(String(row.entity_id));

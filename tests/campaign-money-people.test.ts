@@ -144,6 +144,17 @@ test("a partial source update retains the older amount's filing and capture in S
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 
+test("new campaign facts keep the provider's actual check time and their current delivery time",async()=>{
+  const db=await campaignDb();
+  try{
+    const checkedAt="2026-10-19T23:00:00.000Z",bound=bindCampaignMoney(row,[person])!;
+    await fileCampaignMoneyFacts(db,"WA",[{...bound,provenance:{...bound.provenance,retrievedAt:checkedAt,checkedAt}}],at);
+    const [held]=await db.query("SELECT checked_at,live_at FROM fact WHERE field LIKE 'campaign-money:%' AND status='live'");
+    assert.equal(new Date(held.checked_at as string).toISOString(),checkedAt);
+    assert.equal(new Date(held.live_at as string).toISOString(),at);
+  }finally{await db.pg.close();}
+});
+
 test("a failed daily source check stays due for the next hour and keeps verified totals",async()=>{
   const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-daily-retry-"));
   let now=at,unavailable=false;

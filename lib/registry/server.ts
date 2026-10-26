@@ -22,7 +22,7 @@ import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { readStateGeometryText } from "../geo/state-geometry.ts";
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
-import { earlierRosterHoldersForBody, rosterHoldersForBody } from "./body-rosters.ts";
+import { earlierRosterHoldersForBody, rosterHolderById, rosterHoldersForBody } from "./body-rosters.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition, currentStatewideExecutives } from "./runtime-read-model.ts";
 import { scopedHolders } from "../officials/scoped-holders.ts";
 import { readDivisionRepresentatives } from "./representation-server.ts";
@@ -556,11 +556,7 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
   const statewide = statewideExecutivesFor(currentStatewideExecutives().map((row) => row.stateOcdId))
     .find((holder) => personIdentityKeys(holder).has(canonicalId));
   if (statewide) return statewide;
-  for (const roster of currentBodyRosters()) {
-    const holder = [...rosterHoldersForBody(roster.bodyId), ...earlierRosterHoldersForBody(roster.bodyId)].find((row) => personIdentityKeys(row).has(canonicalId));
-    if (holder) return holder;
-  }
-  return null;
+  return rosterHolderById(canonicalId);
 }
 
 /** Optional exact photo evidence already supplied to this request must not acquire another authority. */

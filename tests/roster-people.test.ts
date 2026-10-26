@@ -55,6 +55,8 @@ test("six Pima source rows become five people, retaining both Heinz IDs, contact
     assert.ok(readerPersonKeys(fresh.id).keys.includes(old.id));
     assert.equal((await seatHolderById(fresh.id, "AZ"))?.id, old.id);
     assert.equal((await seatHolderById(old.id, "AZ"))?.id, old.id);
+    assert.equal((await seatHolderById(fresh.id, "AZ"))?.photoUrl, heinz.photoUrl);
+    assert.deepEqual((await seatHolderById(fresh.id, "AZ"))?.sourceHolders, heinz.sourceHolders);
     assert.equal(getRegistryRuntimeReadModel().bodyRosters[0].members.length, 5);
   });
   assert.equal(JSON.stringify(held), original);

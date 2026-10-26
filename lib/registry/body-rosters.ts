@@ -183,6 +183,16 @@ export function earlierRosterHoldersForBody(bodyId: string | null): RosterHolder
   return roster ? holdersFromRoster(roster, roster.membershipHistory ?? []) : [];
 }
 
+/** Select the exact source person before resolving their portrait and card fields. */
+export function rosterHolderById(id: string): RosterHolder | null {
+  for (const roster of currentBodyRosters()) {
+    const member = roster.members.find(row => personIdentityKeys(row).has(id))
+      ?? roster.membershipHistory?.find(row => personIdentityKeys(row).has(id));
+    if (member) return holdersFromRoster(roster, [member])[0];
+  }
+  return null;
+}
+
 function holdersFromRoster(roster: BodyRoster, members: readonly RosterMember[]): RosterHolder[] {
   const photos = getRegistryRuntimeReadModel().rosterPhotos;
   const holder = (member: RosterMember): RosterHolder => ({

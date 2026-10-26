@@ -142,11 +142,11 @@ test("golden case: the stopped library, at Tucson", async () => {
 
   const [cityStep, countyStep] = answer.steps;
   assert.ok(
-    cityStep.bodies.some((b) => b.label === "Tucson"),
+    cityStep.bodies.some((b) => b.label === "City of Tucson"),
     `city step must name Tucson, got ${JSON.stringify(cityStep.bodies)}`,
   );
   assert.ok(
-    countyStep.bodies.some((b) => b.label === "Pima"),
+    countyStep.bodies.some((b) => b.label === "Pima County"),
     `county step must name Pima, got ${JSON.stringify(countyStep.bodies)}`,
   );
   for (const step of answer.steps) {

@@ -118,10 +118,10 @@ const BODY_CLASS_NOUN = (bodyClass: CoveredBody["bodyClass"]): string =>
 /** Type labels are structural and render neutral; tier accents belong to section headers. */
 const TYPE_LABEL_CLASS = "text-label";
 
-function GovernmentBodyList<T extends CoveredBody>({ bodies, renderRow }: {
-  bodies: readonly T[];
-  renderRow: (body: T, meetingTypes: ReactNode) => ReactNode;
-}) {
+function groupedBodyList<T extends CoveredBody>(
+  bodies: readonly T[],
+  renderRow: (body: T, meetingTypes: ReactNode) => ReactNode,
+) {
   return <div className="mt-1 space-y-3">
     {groupBodiesByGovernment(bodies).map(section => <section key={section.type} data-body-section={section.type}>
       <h4 className="t-structure text-local">{section.label}</h4>
@@ -466,7 +466,7 @@ function CoverageBody({
           <summary className="cursor-pointer t-caption text-link">
             See the rest ({otherBodies.length})
           </summary>
-          <GovernmentBodyList bodies={otherBodies} renderRow={(body, meetingTypes) => (
+          {groupedBodyList(otherBodies, (body, meetingTypes) => (
               <li
                 key={body.bodyId}
                 data-other-body-row=""
@@ -482,7 +482,7 @@ function CoverageBody({
                 <span className={TYPE_LABEL_CLASS}>{bodyClassShort(body.bodyClass)}</span>
                 {meetingTypes}
               </li>
-            )} />
+            ))}
         </details>
       )}
 
@@ -509,7 +509,7 @@ function CoverageBody({
       )}
       {shown.length > 0 && (
         <>
-          <GovernmentBodyList bodies={[...shown, ...filedMeetings]} renderRow={(body, meetingTypes) => body.meetingBodyId ? (
+          {groupedBodyList([...shown, ...filedMeetings], (body, meetingTypes) => body.meetingBodyId ? (
             <li key={body.bodyId} data-meeting-type-row="" className="flex items-baseline justify-between gap-3 pb-1">
               <button type="button" onClick={onOpenBody ? () => onOpenBody(body) : undefined} className="text-left t-detail text-paper hover:underline">
                 {bodyDisplayName(body)}
@@ -556,7 +556,7 @@ function CoverageBody({
               </span>
               {meetingTypes}
             </li>
-          )} />
+          ))}
         <ul className="mt-1 space-y-1">
           {/* A town with no mayor gets its substitute office named and its members shown. */}
           {shown.flatMap((body) => {

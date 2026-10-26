@@ -3194,7 +3194,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const held = options.candidate;
     const partedManual = held !== undefined && isPartedManualCandidate(held);
     let record: CandidateVersionRecord | null;
-    if (held && (partedManual || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY" || held.recordClass === "FEDERAL_MONEY" || held.recordClass === "STATE_BILL")) {
+    // Any exact caller-owned candidate uses the same persisted envelope/hash proof.
+    if (held) {
       const hash = partedManual || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
       const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,

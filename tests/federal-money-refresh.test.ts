@@ -81,6 +81,28 @@ test("an unchanged federal provider page checks hashes before recipient, locatio
     federalMoneySourceKey("openfema","AR",{source:"openfema",phase:"declarations",offset:40}));
 });
 
+test("national federal raw_hash follows applied provider bytes rather than empty captures or observation clocks",async()=>{
+  const store=new MemoryRoutineDataStore();let clock=now,page=fullPage;
+  const input={source:"openfema" as const,store,states:["AR"],acquireOptions,maxRounds:1,
+    identities:async()=>identities,identityHash:async()=>"a".repeat(64),acquire:async()=>page,now:()=>clock};
+  const first=await refreshFederalMoney(input);assert.ok(first.candidate);
+  assert.equal(first.candidate.retrieval.rawHashBasis,"SOURCE_CONTENT_V1");
+  assert.equal(first.candidate.retrieval.complete,true);
+  assert.match(first.projection.sourceHashes?.AR??"",/^[a-f0-9]{64}$/);
+  clock="2026-10-14T23:45:00.000Z";
+  const repeated=await refreshFederalMoney(input);
+  assert.equal(repeated.candidate?.retrieval.rawHash,first.candidate.retrieval.rawHash);
+  clock="2026-10-16T23:45:00.000Z";
+  const changedBody=JSON.parse(sourceBody);changedBody.DisasterDeclarationsSummaries[0].declarationTitle="Changed source declaration";
+  const body=JSON.stringify(changedBody);
+  assert.notEqual(body,sourceBody);
+  const changed=await saveFederalMoneyCapture({url:capture.url,body,retrievedAt:clock,publicationDate:null},evidenceStore);
+  page={...fullPage,facts:parseFederalMoney("openfema",changed,"AR",body),captures:[changed]};
+  const next=await refreshFederalMoney(input);
+  assert.deepEqual(next.projection.counts,first.projection.counts);
+  assert.notEqual(next.candidate?.retrieval.rawHash,first.candidate.retrieval.rawHash,"same row counts cannot hide changed source facts");
+});
+
 test("saved evidence reads require the acquisition vault and release its context after work", async () => {
   await assert.rejects(readFederalMoneyCapture(capture), /acquisition vault context/);
   assert.equal(await withFederalMoneyVault(evidenceStore, () => readFederalMoneyCapture(capture)), sourceBody);

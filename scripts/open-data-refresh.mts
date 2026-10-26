@@ -56,7 +56,7 @@ type Spool=Awaited<ReturnType<typeof OpenDataSpool.create>>;
 type Publication=Awaited<ReturnType<typeof publishOpenData>>;
 /** One national run: the prior manifest, the partitions this run replaces, per-state reports and the registered publisher. */
 async function openDataRun(input:{source:OpenDataSource;store:RoutineDataStore;vault:EvidenceStore;now:()=>string}) {
-  const prior=await readOpenDataProjection(input.source,"national",{store:input.store,bypassCache:true});
+  const prior=await readOpenDataProjection(input.source,"national",{store:input.store});
   if(prior.kind==="STORE_UNREACHABLE")throw Error("Source manifest could not be read; the prior source stays live.");
   const partitions=new Map<string,OpenDataPartitionRef>((prior.kind==="PROMOTED"?prior.value.partitions??[]:[]).map(p=>[p.id,p]));
   const replacedLogicalPartitions=new Set<string>();
@@ -122,7 +122,7 @@ async function main() {
       const run=await openDataRun({source,store,vault,now});
       const states=async function*():AsyncGenerator<SocrataGovernmentState>{
         for(const state of US_JURISDICTIONS) {
-          const registration=await readRegistrationProjection(state.usps,{store,bypassCache:true});
+          const registration=await readRegistrationProjection(state.usps,{store});
           if(registration.kind!=="PROMOTED"){console.log(`SRC_SO_JOIN_GAP=${JSON.stringify({state:state.usps,reason:registration.kind})}`);continue;}
           yield {state:state.usps,fips:state.fips,governments:registration.value.governments??[],divisionId:socrataStateDivisionId(registration.value.divisions,state.usps)};
         }
@@ -133,7 +133,7 @@ async function main() {
       if(!publication)throw Error("Source produced no captured publication.");
       reports=[...run.reports.values()];
     } else ({publication,reports,gaps}=await refreshEchoNational({store,vault,archive:openDataArchiveStore(),spool,signal,now,readStateJoins:async state=>{
-      const registration=await readRegistrationProjection(state,{store,bypassCache:true});
+      const registration=await readRegistrationProjection(state,{store});
       if(registration.kind==="PROMOTED")return governmentJoinRows(registration.value.governments??[]);
       console.log(`SRC_SO_JOIN_GAP=${JSON.stringify({state,reason:registration.kind})}`);return [];
     }}));

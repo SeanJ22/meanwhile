@@ -22,7 +22,7 @@ export type CountyCivicCoverageMap = ReadonlyMap<string, CountyCivicCoverage>;
 /** Read one state's saved yes/no samples and counts; no voterinfo payload is ever held. */
 export async function readCountyCivicCoverage(store: CivicDataReadStore, state: string, electionDate = GOOGLE_CIVIC_ELECTION_DAY): Promise<CountyCivicCoverageMap> {
   if (electionDate !== GOOGLE_CIVIC_ELECTION_DAY) return new Map();
-  const held = await readPromotedCivicData<{ coverage: CountyCivicStateCoverage[] }>(GOOGLE_CIVIC_RECORD_CLASS, civicStateScope(state), { store, bypassCache: true });
+  const held = await readPromotedCivicData<{ coverage: CountyCivicStateCoverage[] }>(GOOGLE_CIVIC_RECORD_CLASS, civicStateScope(state), { store });
   if (held.kind !== "PROMOTED") return new Map();
   const report = held.value.coverage?.find(report => report.state === state.toUpperCase() && report.electionDate === electionDate);
   return new Map((report?.counties ?? []).filter(row => /^\d{5}$/.test(row.countyFips) && typeof row.available === "boolean" &&

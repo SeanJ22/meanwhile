@@ -5,7 +5,6 @@ import { readerDatabaseQuery } from "./database.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { registerIntegrityCheckedEdgeEntries, type CivicDataReadStore, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
-import { serverReaderValue } from "./memory.ts";
 import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
 
 type Pointer = { recordClass: RoutineRecordClass; scope: string };
@@ -72,7 +71,7 @@ const SHELF = `SELECT p.key,p.record_class,p.scope,p.source_id,p.current_version
  CASE WHEN jsonb_typeof(p.validation_receipt->'excludedFacts')='array' THEN
   jsonb_set(p.validation_receipt,'{excludedFacts}',coalesce((SELECT jsonb_agg(f.value-'record') FROM jsonb_array_elements(p.validation_receipt->'excludedFacts') f(value)),'[]'::jsonb))
   ELSE p.validation_receipt END AS validation_receipt,
- CASE WHEN p.current_version_id=ANY($2::text[]) THEN NULL ELSE p.payload END AS payload,
+ p.payload,
  c.normalized_hash,c.retrieved_at,
  (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY e.sequence DESC LIMIT 1) AS confirmation,
  (p.current_version_id=p.last_known_good_version_id AND c.id=p.current_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded
@@ -100,10 +99,8 @@ SELECT 'part',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,p
     SELECT hash,payload FROM civic_data_payload_parts WHERE hash=hashes.hash LIMIT 1
   ) part`;
 
-const cached = serverReaderValue("canonical", () => new Map<string, Extract<PromotedEdgeEntry, { kind: "PROMOTED" }>>());
-
 function canonicalStatement(keys: readonly string[], additional?: Additional): Statement {
-  const additionalSql = additional?.text.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + 2}`);
+  const additionalSql = additional?.text.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + 1}`);
   const shelfSql = additional?.canonicalKeys ? SHELF_WITH_PARTS
     .replace("WITH RECURSIVE shelf", () => `WITH RECURSIVE additional AS MATERIALIZED (${additionalSql}), shelf`)
     .replace("p.key=ANY($1::text[])", "p.key=ANY($1::text[] || ARRAY(SELECT DISTINCT unnest(canonical_keys) FROM additional))") : SHELF_WITH_PARTS;
@@ -111,9 +108,7 @@ function canonicalStatement(keys: readonly string[], additional?: Additional): S
     FROM (SELECT coalesce(jsonb_agg(to_jsonb(item)), '[]'::jsonb) AS rows FROM (
       ${additional.canonicalKeys ? "SELECT * FROM additional" : additionalSql}
     ) item) extra LEFT JOIN LATERAL (SELECT * FROM shelf LIMIT 0) empty ON true` : "";
-  const versions = additional?.canonicalKeys ? [...cached.values()].map(entry => entry.projection.versionId)
-    : keys.flatMap(key => cached.get(key)?.projection.versionId ?? []);
-  return {text:shelfSql+extra,params:[keys,versions,...additional?.params ?? []]};
+  return {text:shelfSql+extra,params:[keys,...additional?.params ?? []]};
 }
 
 /** Read canonical promotions once; source evidence was checked when each fact was published. */
@@ -127,13 +122,6 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   keys.push(...additionalEntries.map(entry => `${entry.recordClass}:${entry.scope}`));
   const rows = loaded.filter(row => row.row_kind === "promotion");
   const preloaded = Object.fromEntries(loaded.filter(row => row.row_kind === "part").map(row => [String(row.part_hash),row.part_payload]));
-  const reused = new Set<string>();
-  for (const row of rows) {
-    const previous = cached.get(String(row.key));
-    if (row.payload === null && previous && previous.projection.versionId === row.current_version_id && previous.attested.payloadSha256 === row.normalized_hash) {
-      Object.assign(row, { payload: previous.projection.payload }); reused.add(String(row.key));
-    }
-  }
   if (rows.some(row => row.published !== true)) throw new Error("READER_PUBLISHED_POINTER_INVALID");
   const parts = new CivicPayloadParts({
     async existing() { throw new Error("READER_IS_READ_ONLY"); },
@@ -156,8 +144,7 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   }
   const held = new Map(decoded.map(({ root }) => [root.kind === "PROMOTED" ? root.projection.key : `${root.recordClass}:${root.scope}`, root]));
   for (const entry of held.values()) if (entry.kind === "PROMOTED") {
-    if (!reused.has(entry.projection.key) && canonicalCivicDataHash(entry.projection.payload) !== entry.attested.payloadSha256) throw new Error("READER_PUBLISHED_PAYLOAD_HASH_MISMATCH");
-    cached.set(entry.projection.key, entry);
+    if (canonicalCivicDataHash(entry.projection.payload) !== entry.attested.payloadSha256) throw new Error("READER_PUBLISHED_PAYLOAD_HASH_MISMATCH");
   }
   registerIntegrityCheckedEdgeEntries([...held.values()]);
   return {

@@ -14,8 +14,6 @@ export interface HeldGeographyRow {
 }
 const types: Record<string, string> = { cd: "congressional_district", sldu: "state_leg_upper", sldl: "state_leg_lower",
   county: "county", place: "place", county_subdivision: "county_subdivision" };
-const cache = new Map<string, { version: string; capture: HeldPlaceCapture }>();
-const injectedCaches = new WeakMap<ReadOnlyQuery, typeof cache>();
 
 export function geographyKeys(ids: readonly string[], divisions: readonly Division[]): Map<string, string[]> {
   const wanted = new Set(ids), keys = new Map<string, string[]>();
@@ -66,15 +64,10 @@ export async function readHeldPlaceGeography(ids: readonly string[], divisions: 
   const query = injected ?? readerQuery();
   if (!query) throw new Error("HELD_GEOGRAPHY_READ_FAILED:STORE_UNCONFIGURED");
   const keys = geographyKeys(ids, divisions);
-  const selectedCache = injected ? injectedCaches.get(injected) ?? new Map<string, { version: string; capture: HeldPlaceCapture }>() : cache;
-  if (injected) injectedCaches.set(injected, selectedCache);
-  const cacheKey = JSON.stringify([injected ? "injected" : process.env.DATABASE_URL, [...ids].sort(), [...keys].sort()]);
   const [pointer] = await query([{ text: "SELECT current_version_id FROM civic_data_promotions WHERE record_class=$1 AND scope=$2",
     params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE] }]);
   const version = pointer[0]?.current_version_id;
   if (typeof version !== "string") return { subjects: [], held: [] };
-  const cached = selectedCache.get(cacheKey);
-  if (cached?.version === version) return cached.capture;
   const [rows] = await query([{ params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...ids], [...keys.keys()]], text: `
     WITH RECURSIVE walk(step,node,meta) AS (
       SELECT 0,payload,'{}'::jsonb FROM civic_data_promotions WHERE record_class=$1 AND scope=$2
@@ -112,7 +105,5 @@ export async function readHeldPlaceGeography(ids: readonly string[], divisions: 
       return found as unknown as { hash: string; payload: unknown }[];
     } });
   const capture = projectHeldGeography(ids, divisions, await parts.load(rows.filter(row => !(row.grouping as { $version?: string }).$version)) as HeldGeographyRow[]);
-  if (selectedCache.size >= 64) selectedCache.delete(selectedCache.keys().next().value!);
-  selectedCache.set(cacheKey, { version, capture });
   return capture;
 }

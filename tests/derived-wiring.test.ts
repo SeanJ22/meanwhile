@@ -231,7 +231,7 @@ test("HOLD BY NAME at the first check that fails: registration, walk, attestatio
   assert.equal(reason({ vaulted: () => null }), "EVIDENCE_NOT_VAULTED");
   assert.equal(reason({ vaultedBytes: () => null }), "EVIDENCE_NOT_VAULTED", "the government's page naming the body must be held too");
   assert.equal(reason({ verify: () => ({ refused: "the adapter could not run" }) }), "ADAPTER_REFUSED");
-  assert.equal(reason({ verify: () => ({ changed: "the filter selects nothing" }) }), "REVIEW_TRIGGERED", "a row never promoted waits for review, unpromoted");
+  assert.equal(reason({ verify: () => ({ changed: "the response no longer contains a calendar" }) }), "REVIEW_TRIGGERED", "a row never promoted waits for review, unpromoted");
   for (const over of [{ registration: () => ({ notRegistered: "x" }) }, { vaulted: () => null }] as Partial<DerivedWiringInputs>[]) {
     assert.deepEqual(planDerivedVersion([], deriveWiringDecisions(inputs(attempt, over))).refusals, []);
   }
@@ -242,7 +242,7 @@ test("C16 TRIGGERS SUSPEND A PROMOTED ROW; OUTAGES HOLD IT, CARRIED", async () =
   const cases: [Record<string, Reply>, Partial<DerivedWiringInputs>, string][] = [
     [{ ...SITE, [ROUTE]: { status: 404, body: "<html>Not Found</html>" } }, {}, "SUSPEND:ROUTE_GONE"],
     [{ ...SITE, [ROUTE]: { status: 410, body: "Gone" } }, {}, "SUSPEND:ROUTE_GONE"],
-    [SITE, { verify: () => ({ changed: "the reviewed filter selects none of the feed's 12 events" }) }, "SUSPEND:CALENDAR_CHANGED"],
+    [SITE, { verify: () => ({ changed: "the response no longer contains a calendar" }) }, "SUSPEND:CALENDAR_CHANGED"],
     [SITE, { verify: () => ({ wrongAttribution: "\"Planning Board\" is another reviewed body" }) }, "SUSPEND:WRONG_ATTRIBUTION"],
     [{ ...SITE, [ROUTE]: { status: 403, body: "Forbidden" } }, {}, "CHALLENGED"],
     [{ ...SITE, [ROUTE]: { status: 503, body: "Service Unavailable" } }, {}, "TRANSPORT_FAILED"],

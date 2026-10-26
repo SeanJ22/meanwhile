@@ -90,7 +90,7 @@ for (const scenario of [
   test(`empty fallback diagnostics distinguish ${scenario.name} without returning private input`, async () => {
     let requests = 0;
     const answer = await fillVotingSitesAnswer(empty, "private reader street", place, {
-      ...options, apiKey: scenario.apiKey ?? options.apiKey, sleep: async () => {},
+      ...options, apiKey: scenario.apiKey ?? options.apiKey,
       fetchImpl: (async (input: URL) => {
         requests++;
         return input.pathname.endsWith("elections") ? new Response(fixture("elections")) : scenario.response();

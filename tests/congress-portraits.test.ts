@@ -82,7 +82,7 @@ test("a member with a shown portrait is never read again, and a member without o
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "");
   const saved = await store.readCandidate(candidate.id);
   assert.deepEqual(saved?.candidate.excludedFacts ?? [], result.excludedFacts);
-  const read = await readFederalDirectoryProjection(["AZ"], { store, now: VERIFIED, bypassCache: true });
+  const read = await readFederalDirectoryProjection(["AZ"], { store, now: VERIFIED });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(read.value.roster.officeholders.length, 2);

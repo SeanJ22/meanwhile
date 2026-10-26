@@ -5,9 +5,9 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { pipeline } from "node:stream/promises";
 import { temporaryPath } from "../civic-data/temporary-path.ts";
-import { checkKnownSourceRetry, recordKnownSourceRetry, resolveKnownReleaseCache, withKnownReleaseLock,
+import { resolveKnownReleaseCache, withKnownReleaseLock,
   type KnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
-import { sourceUserAgent } from "../sources/http.ts";
+import { sourceFetch, sourceUserAgent } from "../sources/http.ts";
 
 type FileRelease = Omit<KnownRelease, "bytes"> & { path: string; capture(): Promise<void>; accept(): Promise<void>; dispose(): Promise<void> };
 interface Index extends Omit<KnownRelease, "bytes" | "reused"> { version: 1; byteLength: number; chunks: { key: string; sha256: string; size: number }[] }
@@ -36,16 +36,14 @@ export async function acquireVoteSourceFile(options: Omit<KnownReleaseOptions, "
           prior.chunks.some((chunk, index) => chunk.key !== `${prefix}/${prior!.sha256}/${index}.bin` || !/^[a-f0-9]{64}$/.test(chunk.sha256) || chunk.size <= 0 || chunk.size > CHUNK))) throw new Error("VOTE_SOURCE_INDEX_INVALID");
       let response: Response | null = null;
       if (!prior || options.refresh || Date.parse(now) - Date.parse(prior.checkedAt) >= options.checkAfterMs) {
-        await checkKnownSourceRetry(store, options.sourceId, options.url, now);
         const headers = new Headers(options.headers); headers.set("user-agent", sourceUserAgent());
         if (prior?.etag) headers.set("if-none-match", prior.etag);
         else if (prior?.lastModified) headers.set("if-modified-since", prior.lastModified);
-        response = await (options.fetchImpl ?? fetch)(options.url, { headers, signal: options.signal, redirect: "follow" });
+        response = await sourceFetch(options.url, { headers, signal: options.signal, redirect: "follow" }, options.fetchImpl, options.sourceId);
         const final = new URL(response.url || options.url);
         if (final.protocol !== "https:" || final.username || final.password || !(options.allowedHosts ?? [url.hostname]).includes(final.hostname)) {
           await response.body?.cancel(); throw new Error("VOTE_SOURCE_REDIRECT_REFUSED");
         }
-        await recordKnownSourceRetry(store, options.sourceId, options.url, response, now);
         if (response.status !== 200 && (response.status !== 304 || !prior)) {
           await response.body?.cancel(); throw new Error(`VOTE_SOURCE_HTTP_${response.status}`);
         }

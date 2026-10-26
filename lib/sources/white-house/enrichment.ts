@@ -1,3 +1,4 @@
+import { sourceFetch } from "../http.ts";
 import { createHash } from "node:crypto";
 import type { Officeholder, OfficeholderSet } from "../../officials/types.ts";
 import { withExecutiveCompleteness, mergeExecutiveFacts } from "../../officials/national-executive.ts";
@@ -71,7 +72,7 @@ export async function enrichNationalExecutives<T extends Acquired>(base: T, opti
     let pending = releases.get(cacheKey);
     if (!pending) {
       pending = acquire({ ...options, sourceId: "statewide-executive-sources", releaseId: `official:${url}${requestKey ? `:${requestKey}` : ""}`, url,
-        ...(request ? { fetchImpl: ((resource, init) => (options.fetchImpl ?? fetch)(resource, { ...init, method: request.method, body: JSON.stringify(request.body) })) as typeof fetch } : {}),
+        ...(request ? { fetchImpl: ((resource, init) => sourceFetch(String(resource), { ...init, method: request.method, body: JSON.stringify(request.body) }, options.fetchImpl)) as typeof fetch } : {}),
         parserVersion: "national-executive/1", maxBytes: 16 * 1024 * 1024, checkAfterMs: 86_400_000,
         allowedHosts: [new URL(url).hostname], headers: { accept: "text/html,application/json,application/xml",
           ...(request ? { "content-type": "application/json" } : {}),

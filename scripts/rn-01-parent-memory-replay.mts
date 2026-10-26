@@ -7,7 +7,7 @@ import ts from "typescript";
 const [lane, mode, readerFile, cpFile, importsFile] = process.argv.slice(2);
 if (!["routine", "publish-now"].includes(lane!) || !["before", "after"].includes(mode!) || !readerFile || !cpFile) throw Error("usage: routine|publish-now before|after reader-url-file cp-url-file [before-entry-source]");
 process.env.DATABASE_URL = readFileSync(readerFile, "utf8").trim();
-const { neon } = await import("@neondatabase/serverless");
+const { neon } = await import("../lib/db/client.ts");
 const reader = neon(process.env.DATABASE_URL), cp = neon(readFileSync(cpFile, "utf8").trim());
 // Both supplied credentials must be production read-only roles; enforce it independently for every statement.
 const query = (client: typeof reader) => async (text: string, params: readonly unknown[] = []) => {

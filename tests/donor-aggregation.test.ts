@@ -15,7 +15,7 @@ const org = { dataClass: "FEC_CONTRIBUTOR", kind: "COMMITTEE_OR_ORGANIZATION", c
 const individual: ContributionRow = { ...org, kind: "INDIVIDUAL", entityType: "IND", contributorName: privateName };
 
 test("API/card DTO and Ask strip donor identities and all extra address fields at both finance hops", async () => {
-  await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore(), bypassCache: true });
+  await refreshFundingFromPromoted({ store: new MemoryRoutineDataStore() });
   const snapshot = getFundingSnapshot(), candidate = snapshot.candidates[0];
   candidate.topContributions = [org, individual, { ...individual, kind: "COMMITTEE_OR_ORGANIZATION", entityType: "CAN" }];
   snapshot.secondHop = [{ dataClass: "FEC_CONTRIBUTOR", committeeId: "C00000001", name: "Filed PAC", committeeType: "N",

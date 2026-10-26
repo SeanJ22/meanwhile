@@ -106,14 +106,19 @@ test("the research idle guard kills its tree despite repeated beats and release 
 
 test("new completed phases and admissions keep a child alive beyond one quiet allowance and stream before exit", async () => {
   let streamed = false;
+  // Leave room for Node to start alongside the full suite. The actual phases
+  // still run beyond a whole quiet allowance, so renewal is required to finish.
+  const quietMs = 2_000, phaseMs = 250, phases = 12, startedAt = performance.now();
   const [result] = await runRuntimeChildren([{ id: "progressing", executable: process.execPath,
-    args: ["-e", `let n=0;const t=setInterval(()=>{console.log(n%2?'phase done '+n:'worker admitted '+n);if(++n===12){clearInterval(t);}},60)`] }], {
-    cwd: process.cwd(), env: process.env, maxBufferBytes: 4096, noProgressMs: 400,
+    args: ["-e", `let n=0;const t=setInterval(()=>{console.log(n%2?'phase done '+n:'worker admitted '+n);if(++n===${phases}){clearInterval(t);}},${phaseMs})`] }], {
+    cwd: process.cwd(), env: process.env, maxBufferBytes: 4096, noProgressMs: quietMs,
     onStdout: () => { streamed = true; }, onStarted: () => { assert.equal(streamed, false); },
   });
   assert.equal(result.termination, "EXITED");
   assert.equal(result.status, 0);
   assert.ok(streamed);
+  assert.ok(performance.now() - startedAt > quietMs,"the progress-renewed child outlives its first quiet allowance");
+  assert.equal(result.stdout.trim().split("\n").length, phases,"every admission and completed phase survives");
 });
 
 test("each coordination await in a drain is bounded even without a child", async () => {

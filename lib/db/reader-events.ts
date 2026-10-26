@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
 import { getStore } from "@netlify/blobs";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "./client.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
 import { redactSelfDisclosure } from "../speak/self-disclosure.ts";
 import { classifyReaderEventTopic, readerTopicInCode } from "./reader-event-topics.ts";

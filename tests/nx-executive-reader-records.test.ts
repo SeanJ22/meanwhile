@@ -3,12 +3,12 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
-import { serverReaderValue } from "../lib/reader/memory.ts";
+import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
+import { peopleSourceRecordClass, peopleSourceScope } from "../lib/officials/people-sources.ts";
+import { installCanonicalEntries, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
+import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 
-// Install the server's existing shared national shelf before importing routes;
-// every endpoint must use this resident value rather than fetch another source.
-const state = { roster: null as OfficeholderSet | null, reads: 0, unavailable: false };
-serverReaderValue("national-president", () => async () => { state.reads++; if (state.unavailable) throw new Error("planted national shelf failure"); return state.roster; });
+const state = { reads: 0, unavailable: false };
 const { verifiedWhiteHouseOfficial, ADMINISTRATION_URL } = await import("../lib/sources/white-house/president.ts");
 const { presidentialRegisterRecords, presidentialBillRecords, senateTieVoteLinks, senateTieVoteRecord, SENATE_TIE_VOTES_URL } = await import("../lib/sources/white-house/presidential-records.ts");
 const { cabinetDepartment, departmentRegisterActions } = await import("../lib/sources/white-house/cabinet-records.ts");
@@ -36,7 +36,13 @@ const roster: OfficeholderSet = { scope: "US", generatedAt: at,
   officeholders: [{ ...president, executive: { records: [...register, ...signed] } }, { ...vice, executive: { records: [tie], coverage: { tieBreakingVotes: true } } },
     { ...secretary, executive: { cabinet: { department: { name: own.name, sourceUrl: "https://www.state.gov/", collectedAt: at, actions: departmentActions }, priorOffices: [], sources: [], gaps: [], coverage: {} } } }],
   divisions: [...presidentSet.divisions, ...viceSet.divisions, ...secretarySet.divisions], unmatched: [] };
-state.roster = roster;
+function publishRoster(value: OfficeholderSet): void {
+  installCanonicalEntries([provenEdgeEntry({ recordClass: peopleSourceRecordClass("statewide-executive-sources"), scope: peopleSourceScope("US", "statewide-executive-sources"),
+    sourceId: "statewide-executive-sources", versionId: "test:executive-reader-records", retrievedAt: at,
+    value: { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", generatedAt: at, roster: value } })], "executive-reader-records");
+}
+publishRoster(roster);
+activateCanonicalFixture("executive-reader-records");
 
 test("President records fill the existing official-action response including every saved memorandum", () => {
   const answer = nationalExecutiveActions(president.id, roster);
@@ -82,8 +88,11 @@ test("Senate VP tie breaker uses existing roll-call fields, sourced position, re
   assert.equal(nationalExecutiveVotes(president.id, roster).count, 0);
 });
 
-test("real card endpoints use the same resident national roster without touching source websites", async () => {
+test("real card endpoints confirm current national rows without touching source websites", async () => {
   const originalFetch = globalThis.fetch;
+  const canonical = readerDatabaseQuery();
+  assert.ok(canonical);
+  installReaderDatabaseQuery(async statements => { state.reads++; if (state.unavailable) throw new Error("planted current national read failure"); return canonical(statements); });
   globalThis.fetch = async () => { throw new Error("Reader attempted an external or database fetch"); };
   const before = state.reads;
   try {
@@ -95,8 +104,17 @@ test("real card endpoints use the same resident national roster without touching
     assert.equal(votes.status, 200);
     const voteBody = await votes.json();
     assert.equal(voteBody.votes[0].id, tie.id);
-    assert.equal(state.reads - before, 2, "both endpoints consume the already-resident roster accessor");
-  } finally { globalThis.fetch = originalFetch; }
+    assert.equal(state.reads - before, 2, "both endpoints independently confirm the stored rows");
+    publishRoster({ ...roster, officeholders: roster.officeholders.map(person => person.id === president.id
+      ? { ...person, executive: { ...person.executive, records: person.executive!.records!.slice(1) } } : person) });
+    const updated = await actionsGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/official-actions/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ subject: president.id }) });
+    assert.equal(updated.status, 200);
+    assert.equal((await updated.json()).count, register.length + signed.length - 1, "same-pointer action changes reach the next read");
+    state.unavailable = true;
+    assert.equal((await actionsGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/official-actions/${encodeURIComponent(president.id)}`), { params: Promise.resolve({ subject: president.id }) })).status, 503);
+    assert.equal((await votesGET(new Request(`${PUBLIC_SITE_ORIGIN}/api/votes?member=${encodeURIComponent(vice.id)}`))).status, 503);
+    assert.equal(state.reads - before, 5, "failed current checks never reuse the earlier actions or votes");
+  } finally { state.unavailable = false; publishRoster(roster); installReaderDatabaseQuery(canonical); globalThis.fetch = originalFetch; }
 });
 
 test("source-store failure remains explicit and never becomes an empty successful record", async () => {

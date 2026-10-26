@@ -92,10 +92,10 @@ test("Source-native unjoined rows publish through the canonical manifest and rem
   const row=(await echoRows())[0], store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
   const published=await publishOpenData({store,...await echoManifest([row],vault)});
   assert.ok(published.outcome.promoted);assert.equal(published.outcome.readerReadback?.status,"PASS",published.outcome.readerReadback?.detail);
-  const reader=await readerOpenData({zip:row.zip},{store,vault,now:NOW,bypassCache:true});assert.equal(reader.records.length,1);
+  const reader=await readerOpenData({zip:row.zip},{store,vault,now:NOW});assert.equal(reader.records.length,1);
   assert.equal(reader.records[0].id,row.id);assert.deepEqual(reader.records[0].divisionIds,[]);
   const evidence=openDataEvidence(reader.records[0]);assert.equal(evidence.kind,"REGULATED_FACILITY");assert.equal(evidence.openData?.official,true);assert.equal(evidence.sourceUrl,row.sourceUrl);assert.match(evidence.text,/quarters with noncompliance: 1/);
-  const foreign=await readerOpenData({zip:"00000"},{store,vault,now:NOW,bypassCache:true});assert.equal(foreign.records.length,0);assert.deepEqual(foreign.notHeld,[]);
+  const foreign=await readerOpenData({zip:"00000"},{store,vault,now:NOW});assert.equal(foreign.records.length,0);assert.deepEqual(foreign.notHeld,[]);
   assert.equal(published.candidate.normalization.outputRecords,1);
 });
 test("Unchanged checks are successful confirmations, and a source outage keeps the last good native rows",async()=>{
@@ -105,7 +105,7 @@ test("Unchanged checks are successful confirmations, and a source outage keeps t
   assert.ok(first.outcome.promoted);assert.ok(second.outcome.confirmed);assert.equal(second.outcome.confirmed?.versionId,first.candidate.id);
   const failure=await recordRegisteredSourceAcquisitionFailure({store,contractId:"epa-echo",requestedUrl:ECHO_EXPORT,attemptedAt:LATER,failure:sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE","EPA proxy connection failed")});
   assert.equal(failure.outcome.candidate.state,"SOURCE_BLOCKED");assert.match(failure.outcome.candidate.failureDetail??"",/proxy connection failed/);
-  const held=await readOpenDataProjection("epa-echo","national",{store,now:LATER,bypassCache:true});assert.equal(held.kind,"PROMOTED");assert.equal(held.metadata.versionId,first.candidate.id);
+  const held=await readOpenDataProjection("epa-echo","national",{store,now:LATER});assert.equal(held.kind,"PROMOTED");assert.equal(held.metadata.versionId,first.candidate.id);
 });
 test("Equal state counts still publish changed source files, while unavailable accepted files are reported",async()=>{
   const row=(await echoRows())[0],store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
@@ -114,8 +114,8 @@ test("Equal state counts still publish changed source files, while unavailable a
   const updated=normalizeEcho(updatedSource,NOW,row.publishedAt);
   const second=await publishOpenData({store,...await echoManifest([updated],vault),now:LATER});
   assert.ok(second.outcome.promoted);assert.notEqual(second.candidate.id,first.candidate.id);
-  const held=await readerOpenData({zip:row.zip},{store,vault,now:LATER,bypassCache:true});assert.equal(held.records[0].fields.inspectionCount,"2");
-  const missing=await readerOpenData({zip:row.zip},{store,vault:new MemoryEvidenceStore(),now:LATER,bypassCache:true});
+  const held=await readerOpenData({zip:row.zip},{store,vault,now:LATER});assert.equal(held.records[0].fields.inspectionCount,"2");
+  const missing=await readerOpenData({zip:row.zip},{store,vault:new MemoryEvidenceStore(),now:LATER});
   assert.deepEqual(missing.unavailable,["epa-echo"]);assert.equal(missing.records.length,0);
 });
 test("Forged source values cannot move the canonical reader pointer",async()=>{
@@ -220,7 +220,7 @@ test("EPA's next scheduled runs publish a new edition and then confirm it, with 
   const keys=await archiveVault.list("project/freshness/source/src-so/archive/");
   assert.equal(keys.filter(key=>key.includes("/epa-echo/sources/")).length,2,"one held copy of each edition's bytes");
   assert.ok(keys.includes("project/freshness/source/src-so/archive/index/epa-echo/source.json"));
-  const read=await readOpenDataProjection("epa-echo","national",{store,bypassCache:true});
+  const read=await readOpenDataProjection("epa-echo","national",{store});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
   const loaded=read.value.reports.reduce((n,r)=>n+r.loaded,0);assert.equal(loaded,runs[1].reports.reduce((n,r)=>n+r.loaded,0));assert.ok(loaded>0);
   const facility=(await Promise.all((read.value.partitions??[]).map(reference=>readOpenDataPartition("epa-echo",reference,vault)))).flatMap(part=>part.records).find(row=>row.title.includes("TITAN CLEANERS"));
@@ -247,7 +247,7 @@ test("Socrata native facts reach the place reader before portal enrichment on co
       discover:async()=>{
         enrichmentReads++;
         assert.equal(nativePublications,enrichmentReads,"portal requests must follow native publication");
-        const read=await readerOpenData({divisionIds:[division]},{store,vault,now,bypassCache:true});
+        const read=await readerOpenData({divisionIds:[division]},{store,vault,now});
         assert.equal(read.records[0]?.nativeIds.socrata_id,(raw.resource as {id:string}).id);
         assert.equal(read.records[0].capturedAt,now);
         assert.match(openDataText(read.records[0]),/catalog entry/);
@@ -276,7 +276,7 @@ test("Portal enrichment moves unresolved catalog counts without deleting an open
   assert.equal(captured.length,2);
   assert.equal(captured[0].find(row=>row.state==="UNRESOLVED")?.loaded,1);
   assert.equal(captured[1].find(row=>row.state==="UNRESOLVED")?.loaded,0);
-  const read=await readerOpenData({divisionIds:[division]},{store,vault,now:NOW,bypassCache:true});assert.equal(read.records.length,1);
+  const read=await readerOpenData({divisionIds:[division]},{store,vault,now:NOW});assert.equal(read.records.length,1);
 });
 
 
@@ -292,7 +292,7 @@ test("Real program-only EPA rows retain their native ID and blank FRS through pu
     const publicRow=openDataReaderRecord(row);assert.equal(publicRow.sourceRow.REGISTRY_ID,"");assert.equal(openDataFactIssue(publicRow),null);
     assert.equal(publicRow.sourceRow.FAC_STREET,undefined);
     const published=await publishOpenData({store,...await echoManifest([row],vault)});assert.ok(published.outcome.promoted);
-    const read=await readerOpenData({zip:row.zip},{store,vault,now:NOW,bypassCache:true});assert.equal(read.records[0].id,row.id);
+    const read=await readerOpenData({zip:row.zip},{store,vault,now:NOW});assert.equal(read.records[0].id,row.id);
     assert.equal(openDataEvidence(read.records[0]).sourceUrl,row.sourceUrl);
     assert.ok(openDataFactIssue({...publicRow,nativeIds:{...publicRow.nativeIds,echo_fid:"forged"}}));
   }
@@ -330,9 +330,9 @@ test("EPA publishes mixed valid rows, records exact minimum gaps, and retains th
   const receipt=(await store.readCandidate(published.candidate.id))!.receipt;
   assert.equal(receipt!.excludedFacts[0].code,"EPA_FACILITY_MINIMUM_MISSING");
   assert.deepEqual((receipt!.excludedFacts[0].record as {sourceRow:unknown}).sourceRow,bad);
-  const reader=await readerOpenData({zip:old.zip},{store,vault,now:LATER,bypassCache:true});assert.ok(reader.records.some(row=>row.id===old.id&&row.title===old.title));
+  const reader=await readerOpenData({zip:old.zip},{store,vault,now:LATER});assert.ok(reader.records.some(row=>row.id===old.id&&row.title===old.title));
   const schema={FAC_NAME:"unrecognized header"};assert.throws(()=>echoMinimumGap(schema),/required facility columns/);
-  const held=await readOpenDataProjection("epa-echo","national",{store,bypassCache:true});assert.equal(held.metadata.versionId,published.candidate.id);
+  const held=await readOpenDataProjection("epa-echo","national",{store});assert.equal(held.metadata.versionId,published.candidate.id);
 });
 test("Compact EPA reader cells round-trip every interpreted fact and exact native identity, including program-only rows",async()=>{
   const rows=[...await echoRows(),...(JSON.parse(fixture("echo-program-identities.json")) as Record<string,unknown>[]).map(raw=>normalizeEcho(raw,NOW,null))];

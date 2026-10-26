@@ -113,7 +113,8 @@ import {
   STATE_FUNDING_NOTE,
   type FundingAnswer,
 } from "@/lib/funding/display";
-import { settleFundingRead } from "@/lib/funding/snapshot";
+import { settleFundingSnapshotRead } from "@/lib/funding/snapshot";
+import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
 import { officeIdentity } from "@/lib/officials/office-identity";
 import { settleFundingHoldingAnswer } from "@/lib/funding/holding-answer";
 
@@ -228,18 +229,22 @@ function withBallotReader<T>(selection: ReaderSelection | undefined, read: () =>
   return withReaderSelection(selection, read);
 }
 
+type FederalFundingRead = NonNullable<Parameters<typeof settleFundingHoldingAnswer>[2]>["federal"];
+
 async function CandidateFunding({
   divisions,
   targetKey,
   context,
   available,
   readerSelection,
+  fundingRead,
 }: {
   divisions: readonly string[];
   targetKey: string;
   context: { zip: string; lat: number; lng: number } | null;
   available: boolean;
   readerSelection: ReaderSelection | undefined;
+  fundingRead: FederalFundingRead;
 }) {
   if (!available) return unavailableHolding("federal campaign-finance");
   let answer: FundingAnswer;
@@ -250,7 +255,8 @@ async function CandidateFunding({
   }
   let partial = false;
   try {
-    const settled = await withBallotReader(readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined, undefined, divisions));
+    const settled = await withBallotReader(readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined,
+      fundingRead ? { federal: fundingRead } : undefined, divisions));
     partial = settled.kind !== "ANSWER" || settled.holdingStatus === "PARTIAL";
     if (settled.kind === "ANSWER" && (settled.answer?.kind === "funding" || settled.answer?.kind === "absence"))
       answer = settled.answer;
@@ -289,6 +295,7 @@ async function BallotBattlecard({
   context,
   authorityAvailability,
   readerSelection,
+  fundingRead,
   stanceTopics,
 }: {
   name: string;
@@ -316,6 +323,7 @@ async function BallotBattlecard({
   authorityAvailability: BallotAuthorityAvailability;
 
   readerSelection: ReaderSelection | undefined;
+  fundingRead: FederalFundingRead;
   stanceTopics: ReturnType<typeof readStanceTopics>;
 }) {
   const state = ocdStateCode(contestOcdId)!.toUpperCase();
@@ -403,7 +411,7 @@ async function BallotBattlecard({
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
         money: !has("money") ? null : <>
-          {(federal || heldFederal) && <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerSelection={readerSelection} />}
+          {(federal || heldFederal) && <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerSelection={readerSelection} fundingRead={fundingRead} />}
           {!federal && <StateCampaignSection divisionId={contestOcdId} personId={targetKey} bare context={context}/>}
         </>,
 
@@ -555,6 +563,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
   const officeBlurbsRead = readCuratedContestOfficeBlurbs(matched?.contests ?? []);
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
+  let fundingRead: FederalFundingRead;
   const preload = (family: BallotAuxiliaryFamily, read: () => Promise<unknown>) =>
     auxiliaryPreloads.set(family, startRead(family, read));
   const navigationStates = [...new Set(askOcdIds.map(electionFieldState).filter((state): state is string => state !== null))];
@@ -605,10 +614,16 @@ export default readerRoute("/ballot", async function BallotPage({
       preload("nh-members", settleNhSeatHolders);
     }
     if (matched.contests.some((contest) => isFederalContest(contest))) {
-      preload("federal-funding", async () => {
+      const snapshot = (async () => {
         if (readerData) await primeBallotFundingRead(set!, matched.contests.filter(isFederalContest));
-        return settleFundingRead();
+        return settleFundingSnapshotRead();
+      })();
+      fundingRead = snapshot.then(read => {
+        if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(read.detail);
+        return { kind: read.kind, metadata: read.metadata };
       });
+      void fundingRead.catch(() => undefined);
+      preload("federal-funding", async () => promotedVersionOrThrow(await snapshot));
     }
 
   }
@@ -1155,7 +1170,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(memberContest)}
                             resolvedStanding={personResolutions.get(candidate.id) ?? null} linkedHolder={holder}
                             context={context} authorityAvailability={authorityAvailability}
-                            readerSelection={readerSelection} stanceTopics={stanceTopics} />}
+                            readerSelection={readerSelection} fundingRead={fundingRead} stanceTopics={stanceTopics} />}
                         />
                       </div>;
                     })}
@@ -1185,7 +1200,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(contest)}
                             resolvedStanding={null} linkedHolder={resolvedHolder(candidate.id)}
                             context={centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null}
-                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} stanceTopics={stanceTopics} />}
+                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} fundingRead={fundingRead} stanceTopics={stanceTopics} />}
                         />
 
                       </li>;

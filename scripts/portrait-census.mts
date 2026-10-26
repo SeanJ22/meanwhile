@@ -1,5 +1,5 @@
 import { readFile, mkdir, writeFile } from "node:fs/promises";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { CivicPayloadParts } from "../lib/civic-data/payload-parts.ts";
 import { mergePeopleSets } from "../lib/officials/merge-people.ts";
 import { personIdentityKeys } from "../lib/officials/people-identity.ts";

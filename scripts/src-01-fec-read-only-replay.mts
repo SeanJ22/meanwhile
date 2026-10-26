@@ -93,7 +93,7 @@ try {
     const pointer = (await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported"))!;
     assert.equal(pointer.versionId, outcome.promoted.versionId);
     assert.equal(pointer.payload.candidates.length, projected.length);
-    await refreshFundingFromPromoted({ store, now: at, bypassCache: true });
+    await refreshFundingFromPromoted({ store, now: at });
     const read = getFundingSnapshot();
     assert.equal(read.candidates.length, projected.length);
     const htmlHashes = createHash("sha256"), preserved: unknown[] = [];

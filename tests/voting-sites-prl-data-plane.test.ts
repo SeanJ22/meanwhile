@@ -138,7 +138,7 @@ test("voting sites promote with exact source/class/scope evidence and the Reader
   const fixture = votingFixture();
   assert.equal(outcome.candidate.candidate.changeSet?.added.length,
     fixture.jurisdictions.length + fixture.jurisdictions.reduce((sum, row) => sum + row.sites.length, 0));
-  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store, bypassCache: true, now: T0 });
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.kind === "PROMOTED" && read.value.jurisdictions.length, votingFixture().jurisdictions.length);
 });
@@ -278,7 +278,7 @@ test("a globally empty voting candidate is refused and store failure never opens
     async readPromotion() { throw new Error("database unavailable"); },
     async readCandidate() { throw new Error("must not follow an absent pointer"); },
   };
-  const unavailable = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store: brokenStore, bypassCache: true, now: T1 });
+  const unavailable = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store: brokenStore,  now: T1 });
   assert.equal(unavailable.kind, "STORE_UNREACHABLE");
   assert.equal(unavailable.value, null);
 });
@@ -303,7 +303,7 @@ test("PRL promotes only its attributed allowlisted measurement and Reader joins 
   const outcome = await processRegisteredManualCandidate(store, "prl", candidate, T0);
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.equal(outcome.readerReadback?.status, "PASS");
-  const read = await readPrlProjection({ store, bypassCache: true, now: T0 });
+  const read = await readPrlProjection({ store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");
   const bioguide = snapshot.profiles[0].bioguideId;
   const profile = prlProfileForSubject(`congress:${bioguide}`);

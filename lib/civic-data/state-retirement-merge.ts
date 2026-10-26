@@ -318,7 +318,7 @@ async function withRetirementStateInput<T>(input: RetirementInput, accept: (prep
     let metadata: PublishedCandidateMetadata | null = null;
     const readStore = { readPromotion: input.store.readPromotion.bind(input.store), readCandidate: input.store.readCandidate.bind(input.store),
       readPublishedCandidateMetadata: async (id: string) => { metadata = await input.store.readPublishedCandidateMetadata!(id); return metadata; } };
-    let read: Awaited<ReturnType<typeof readPromotedCivicData>> | null = await readPromotedCivicData(contract.recordClass, contract.scope, { store: readStore, now: input.now, bypassCache: true });
+    let read: Awaited<ReturnType<typeof readPromotedCivicData>> | null = await readPromotedCivicData(contract.recordClass, contract.scope, { store: readStore, now: input.now });
     if (read.kind !== "PROMOTED" && read.kind !== "NOT_RECORDED" || read.kind === "PROMOTED" && !metadata)
       throw new Error(`STATE_RETIREMENT_STATE_BASE_INVALID:${unit.family}:${unit.state}`);
     let current: PromotedProjection | null = read.kind === "PROMOTED" ? read.projection : null;

@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
 import { recordDoorOutcome } from "../doors/outcome.ts";
 import { pageAddress, pageDoorId, checkEveryFor } from "../doors/page-doors.ts";
-import { upsertDerivedDoor, type DoorRepository } from "../doors/registry.ts";
+import { applyDerivedRow, checkDoorDraft, isDoorRecord, type DoorRepository } from "../doors/registry.ts";
 import type { VotingRawCapture } from "./voting-sites-data-plane.ts";
 import { mergeVotingSiteRows, type VotingJurisdiction, type VotingSitesFile, type VotingSource, type VotingSite } from "./voting-sites.ts";
 import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
@@ -16,24 +16,38 @@ export async function saveVotingSourceDoor(repo: DoorRepository, door: VotingSou
   door = sourceTextWithoutNuls(door);
   const address = pageAddress(door.url);
   if (!address) throw new Error("Voting source has no public URL");
-  const heldPages = await repo.listWhere(["config", "url"], address.url);
-  const matches = heldPages.filter(row => row.value.kind === VOTING_SOURCE_DOOR_KIND &&
-    pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
-  const prior = matches.find(row => row.value.status !== "SUSPENDED") ?? matches[0] ?? heldPages.find(row => row.value.status !== "SUSPENDED");
-  const mappings = [...new Map([...matches.flatMap(row => [JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor,
-    ...JSON.parse(String(row.value.config.votingMappings ?? "[]")) as VotingSourceDoor[]]), door].map(source => [source.id, source])).values()];
-  const primary = mappings[0]!;
-  const holds = mappings.flatMap(source => source.covers.map(kind => isVotingSiteKind(kind) ? "voting-sites" :
-    kind === "CANDIDATE_LIST" ? "ballot-contests" : "ballot-measures"));
-  await upsertDerivedDoor(repo, {
-    doorId: prior?.id ?? pageDoorId(address), kind: VOTING_SOURCE_DOOR_KIND, ocdId: primary.scope.ocdId,
-    hosts: [...new Set([address.host, ...mappings.flatMap(source => source.extraction?.dataUrl ? [new URL(source.extraction.dataUrl, source.url).hostname] : [])])],
-    config: { ...prior?.value.config, ...Object.fromEntries(mappings.map(source => [`votingState_${requireBallotState(source.scope.state)}`, true])), url: address.url, votingSource: JSON.stringify(primary), votingMappings: JSON.stringify(mappings.slice(1)) }, holds: [...new Set([...(prior?.value.holds ?? []), ...holds])],
-    checkEveryMinutes: checkEveryFor("VOTING_SITE"), notes: `${primary.publisher}: ${primary.shape}; ${primary.electionDate}`,
-  }, now, now);
-  for (const duplicate of matches.filter(row => row.id !== prior?.id && row.value.status !== "SUSPENDED")) {
-    await repo.compareAndSet(duplicate.id, duplicate.revision, { ...duplicate.value, status: "SUSPENDED", readNow: false,
-      notes: `Publishing source is read through ${prior!.id}`, updatedAt: now }, now);
+  for (let attempt = 0; attempt < 2; attempt += 1) {
+    try {
+      const heldPages = await repo.listWhere(["config", "url"], address.url);
+      const matches = heldPages.filter(row => row.value.kind === VOTING_SOURCE_DOOR_KIND &&
+        pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
+      const prior = matches.find(row => row.value.status !== "SUSPENDED") ?? matches[0] ?? heldPages.find(row => row.value.status !== "SUSPENDED");
+      const mappings = [...new Map([...matches.flatMap(row => [JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor,
+        ...JSON.parse(String(row.value.config.votingMappings ?? "[]")) as VotingSourceDoor[]]), door].map(source => [source.id, source])).values()];
+      const primary = mappings[0]!;
+      const holds = mappings.flatMap(source => source.covers.map(kind => isVotingSiteKind(kind) ? "voting-sites" :
+        kind === "CANDIDATE_LIST" ? "ballot-contests" : "ballot-measures"));
+      const draft = checkDoorDraft({
+        doorId: prior?.id ?? pageDoorId(address), kind: VOTING_SOURCE_DOOR_KIND, ocdId: primary.scope.ocdId,
+        hosts: [...new Set([address.host, ...mappings.flatMap(source => source.extraction?.dataUrl ? [new URL(source.extraction.dataUrl, source.url).hostname] : [])])],
+        config: { ...prior?.value.config, ...Object.fromEntries(mappings.map(source => [`votingState_${requireBallotState(source.scope.state)}`, true])), url: address.url, votingSource: JSON.stringify(primary), votingMappings: JSON.stringify(mappings.slice(1)) }, holds: [...new Set([...(prior?.value.holds ?? []), ...holds])],
+        checkEveryMinutes: checkEveryFor("VOTING_SITE"), notes: `${primary.publisher}: ${primary.shape}; ${primary.electionDate}`,
+      });
+      if (!draft.ok) throw new Error(`DOOR_DRAFT_INVALID: ${draft.why}`);
+      const existing = prior ?? await repo.read(draft.value.doorId);
+      const next = applyDerivedRow(existing && isDoorRecord(existing.value) ? existing.value : null, draft.value, now, now);
+      if (next !== null) {
+        if (existing) await repo.compareAndSet(existing.id, existing.revision, next, now);
+        else await repo.put(draft.value.doorId, next, now);
+      }
+      for (const duplicate of matches.filter(row => row.id !== prior?.id && row.value.status !== "SUSPENDED")) {
+        await repo.compareAndSet(duplicate.id, duplicate.revision, { ...duplicate.value, status: "SUSPENDED", readNow: false,
+          notes: `Publishing source is read through ${prior!.id}`, updatedAt: now }, now);
+      }
+      return;
+    } catch (error) {
+      if (attempt === 1) throw error;
+    }
   }
 }
 

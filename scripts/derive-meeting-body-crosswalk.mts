@@ -1,6 +1,6 @@
 import { join } from "node:path";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {
@@ -56,7 +56,7 @@ async function finish(candidate: RoutineCandidate): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  const lkg = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now });
+  const lkg = await readDerivedMeetingBodyCrosswalk({ store,  now });
   if (lkg.kind === "STORE_UNREACHABLE") {
     await finish(derivedCrosswalkFailedCandidate(now, `The previous automatic crosswalk could not be read (${lkg.code}): ${lkg.detail}`));
     return;
@@ -93,7 +93,7 @@ async function main(): Promise<void> {
   for (const state of new Set(walks.map((w) => w.attempt.stateCode.toUpperCase()))) {
     console.log(`RCD_PROGRESS meeting-body-crosswalk registration ${state}`);
     try {
-      const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
+      const read = await readRegistrationProjection(state, { store,  now });
       const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
       if (read.kind !== "PROMOTED" || input === null) {
         registrations.set(state, { unread: `${state} registration is ${read.kind}` });
@@ -113,7 +113,7 @@ async function main(): Promise<void> {
         bodies.set(body.jurisdictionId, { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? body.jurisdictionId,
           countyFips: body.censusId ? countyByPid.get(body.censusId) ?? census.byPid.get(body.censusId)?.countyFips ?? null : null, input });
       }
-      const reviewed = await readRegistryRuntimeProjection([state], { store, bypassCache: true, now });
+      const reviewed = await readRegistryRuntimeProjection([state], { store,  now });
       const reviewedInput = reviewed.kind === "PROMOTED"
         ? promotedInputRef("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), reviewed.metadata.versionId, reviewed.value, reviewed.metadata.promotedAt)
         : null;

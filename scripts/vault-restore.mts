@@ -1,6 +1,6 @@
 import { writeFileSync } from "node:fs";
 import { resolve } from "node:path";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";

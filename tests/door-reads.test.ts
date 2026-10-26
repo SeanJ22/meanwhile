@@ -37,13 +37,17 @@ async function seed(doors: number) {
 
 /** A Sql over PGlite that counts the bytes the database sends back and the statements it runs. */
 function metered(db: { query(text: string, params?: unknown[]): Promise<{ rows: unknown[] }> }) {
-  let bytes = 0, statements = 0;
+  let bytes = 0, statements = 0, versionBytes = 0;
   const sql: Sql = { query: async (text, params) => {
     const rows = (await db.query(text, params ? [...params] : [])).rows;
     bytes += Buffer.byteLength(JSON.stringify(rows)); statements += 1;
+    for (const row of rows) if (row && typeof row === "object") {
+      const version = (row as { etag?: unknown; __etag?: unknown }).etag ?? (row as { __etag?: unknown }).__etag;
+      if (typeof version === "string") versionBytes += Buffer.byteLength(version);
+    }
     return rows;
   } };
-  return { sql, measure: () => ({ bytes, statements }), reset: () => { bytes = 0; statements = 0; } };
+  return { sql, measure: () => ({ bytes, statements, versionBytes }), reset: () => { bytes = 0; statements = 0; versionBytes = 0; } };
 }
 
 async function observe(doors: number) {
@@ -125,7 +129,9 @@ test("DR-01: a capture reads the one artifact row it needs, however many capture
   }
   const [small, , large] = measured;
   assert.ok(large!.first.bytes - small!.first.bytes <= 8, "a first capture reads the same bytes at 64x the history; only the position number gains digits");
-  assert.ok(large!.again.bytes - small!.again.bytes <= 8, "a repeated capture reads the same bytes at 64x the history; only the position number gains digits");
+  const bodyBytes = (read: { bytes: number; versionBytes: number }) => read.bytes - read.versionBytes;
+  assert.ok(bodyBytes(large!.again) - bodyBytes(small!.again) <= 8,
+    "a repeated capture reads the same row bytes at 64x the history; only position digits vary, while physical row versions have their own bytes");
   assert.equal(large!.again.statements, small!.again.statements);
   assert.equal(large!.first.statements, small!.first.statements);
   assert.ok(large!.again.bytes < 2_000, `a repeated capture reads one row (${large!.again.bytes} bytes)`);

@@ -109,7 +109,7 @@ test("ICAL: a Z suffix is already UTC", () => {
   );
 });
 
-test("ICAL: a VCALENDAR with no VEVENT is refused, and does not empty the source", async () => {
+test("ICAL: a VCALENDAR with no VEVENT is an empty observation, never a refusal or an absence claim", async () => {
   /* A document with no VEVENT is refused for its row, which routes it into carry-forward instead of failing the whole source. */
   const EMPTY_FEED =
     "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Test//EN\r\nEND:VCALENDAR\r\n";
@@ -126,11 +126,11 @@ test("ICAL: a VCALENDAR with no VEVENT is refused, and does not empty the source
   const source = makeIcalSource(wiring, stub);
   const raw = await source.fetch(QUERY);
 
-  assert.equal(raw.length, wiring.length, "every row still reports, with its own wiring");
+  assert.equal(raw.length, wiring.length * 2, "upcoming and archive each report their own observation");
   assert.equal(
     raw.filter((r) => r.refused).length,
-    wiring.length,
-    "an eventless calendar refuses every row on that feed — it is one retrieval and one wall",
+    0,
+    "the source answered with a valid empty calendar",
   );
   const { meetings, drops } = source.normalizeWithDrops(raw, new Date("2026-08-19T12:00:00Z"));
   assert.equal(meetings.length, 0);
@@ -380,4 +380,18 @@ test("the Village Water District's commissioners sit at the treatment plant, nev
   }
   const upcoming = commissioners.filter((m) => Date.parse(m.startsAt) > Date.parse(readAt)).map((m) => new Date(m.startsAt).toISOString().slice(0, 10));
   assert.deepEqual(upcoming.slice(0, 3), ["2026-09-23", "2026-10-14", "2026-10-28"]);
+});
+
+test("ICAL reads the archive when upcoming fails, and the upcoming feed when the archive fails", async () => {
+  const wiring = rawFor()[0]!.wiring;
+  for (const broken of ["UPCOMING", "ARCHIVE"]) {
+    const source = makeIcalSource([wiring], async input => {
+      const past = String(input) === wiring.config.pastFeedUrl;
+      return past === (broken === "ARCHIVE") ? new Response("Unavailable", { status: 503 }) : new Response(FIXTURE);
+    });
+    const raw = await source.fetch(QUERY);
+    const report = source.normalizeWithDrops(raw, NOW);
+    assert.ok(report.meetings.length > 0);
+    assert.ok(report.partialScopes?.some(failure => failure.scope === broken));
+  }
 });

@@ -722,7 +722,7 @@ test("a pause holds paid work, never free work: hunts are not stopped while paus
 });
 
 test("candidate enrichment enumerates the tracked states and names one with no ballot authority", async () => {
-  const holdings = await readCandidateEnrichmentAuthorities("AZ", { store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
+  const holdings = await readCandidateEnrichmentAuthorities("AZ", { store: new MemoryRoutineDataStore(),  now: T0 });
   const y = candidateEnrichmentProvider({ holdings, trackedStates: trackedStatesFrom(["az", "co"], "a test coverage set") }).enumerate({ root: ROOT, nowIso: T0 });
   assert.match(y.readFailure ?? "", /CO is tracked \(a test coverage set\) and no canonical candidate ballot authority is registered for it/);
   assert.match(y.readFailure ?? "", /a dataset gap, never an election with no candidates/);

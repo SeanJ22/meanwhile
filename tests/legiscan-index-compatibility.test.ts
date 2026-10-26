@@ -55,12 +55,12 @@ test("a v2 catalogue shows independently published v4 bills while historical cov
   const edges=await published();
   edges.set(LEGISCAN_BULK_SCOPE,revised(edges.get(LEGISCAN_BULK_SCOPE)!,payload=>{delete payload.parserVersion;}));
   const store:CivicDataReadStore={async readCandidate(){throw Error("Not a candidate read");},async readPromotion(){throw Error("Not a pointer read");},async readPromotedEntry(recordClass,scope){return edges.get(scope)??{kind:"NOT_RECORDED" as const,recordClass,scope};}};
-  const read=await readBillsForState("AK",{store,now:at,bypassCache:true});
+  const read=await readBillsForState("AK",{store,now:at});
   assert.equal(read.complete,false);
   assert.deepEqual(read.bills.map(row=>row.billId),bodies.map(body=>JSON.parse(body).bill.bill_id));
   const part=[...edges.entries()].find(([,edge])=>edge.kind==="PROMOTED"&&(edge.projection.payload as {kind:string}).kind==="PART")!;
   edges.set(part[0],revised(part[1],payload=>{delete payload.parserVersion;}));
-  await assert.rejects(readBillsForState("AK",{store,now:at,bypassCache:true}),/LEGISCAN_BULK_SOURCE_INVALID/);
+  await assert.rejects(readBillsForState("AK",{store,now:at}),/LEGISCAN_BULK_SOURCE_INVALID/);
 });
 
 test("catalogue compatibility does not accept malformed data, another source or a legacy session",async()=>{

@@ -30,9 +30,7 @@ import { factAuditCatalog } from "../lib/facts/audit-catalog.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
-import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
-readFromHeldCopies();
 
 const now = new Date().toISOString();
 const url = controlPlaneUrlFromEnv();
@@ -47,7 +45,7 @@ const catalogs: LiveFactCatalog[] = [factAuditCatalog(factStore.query)];
 const unread: string[] = [];
 for (const id of CURATED_READER_CONTRACT_IDS) {
   try {
-    const read = await readCuratedReaderProjection(id, { bypassCache: true });
+    const read = await readCuratedReaderProjection(id, {  });
     if (read.kind === "PROMOTED") catalogs.push(curatedReaderCatalog(id, read.value.records));
     else unread.push(`${id} (${read.kind})`);
   } catch (error) {

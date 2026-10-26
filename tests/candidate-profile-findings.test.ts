@@ -58,7 +58,7 @@ async function setup(pages: Readonly<Record<string, string>>) {
     held: async id => [...artifacts.values()].find(row => row.id === id) ?? null, store, subjects: [JANE],
     campaignHosts: new Map([[JANE.candidacyId, ["janedoeforcouncil.com"]]]), clocks: factClocks(null), now: NOW, portrait, ...extra });
   const card = async () => {
-    const read = await readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, { store, now: NOW, bypassCache: true });
+    const read = await readPromotedCivicData<CandidateProfilesProjection>(PROFILES.recordClass, PROFILES.scope, { store, now: NOW });
     return read.kind === "PROMOTED" ? read.value.cards.cards[JANE.candidacyId] : undefined;
   };
   return { repos, report, run, card, stored, artifacts, store };

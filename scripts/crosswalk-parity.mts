@@ -14,8 +14,8 @@ import type { MeetingBodyCrosswalkRow } from "../lib/civic-data/meeting-body-cro
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
 installNeonRequestDeadline();
-const manual = await readCuratedReaderProjection("meeting-body-crosswalk", { bypassCache: true });
-const derived = await readDerivedMeetingBodyCrosswalk({ bypassCache: true });
+const manual = await readCuratedReaderProjection("meeting-body-crosswalk", {  });
+const derived = await readDerivedMeetingBodyCrosswalk({  });
 if (manual.kind !== "PROMOTED" && manual.kind !== "NOT_RECORDED") throw new Error(`manual crosswalk unreadable: ${manual.kind}`);
 if (derived.kind !== "PROMOTED") throw new Error(`automatic crosswalk unreadable: ${derived.kind}`);
 const manualRows = manual.kind === "PROMOTED" ? manual.value.records as unknown as MeetingBodyCrosswalkRow[] : [];

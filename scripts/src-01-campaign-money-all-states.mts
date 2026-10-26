@@ -9,7 +9,7 @@ import {pipeline} from "node:stream/promises";
 import {spawn} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import {createServer} from "node:http";
-import {neon} from "@neondatabase/serverless";
+import {neon} from "../lib/db/client.ts";
 import {CAMPAIGN_FINANCE_SOURCES,campaignMoneySourceResources,campaignFinanceNativeScope} from "../lib/funding/state-sources.ts";
 import {readCampaignMoneyPeople,CAMPAIGN_PEOPLE_SQL,bindCampaignMoney,campaignMoneyIdentityMatches,campaignMoneyPeopleIndex,campaignPersonKey,campaignRecordYear,CAMPAIGN_MONEY_MISSING_REASONS,campaignMoneyStateDue} from "../lib/funding/state-people.ts";
 import type {CampaignMoneyPerson} from "../lib/funding/state-people.ts";

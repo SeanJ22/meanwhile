@@ -57,7 +57,7 @@ export async function restoreRemovedMeetingHistory(input: {
     store: input.store,
     now: input.generatedAt,
     maxAgeMs: meetingPartitionFreshnessMs(input.generatedAt),
-    bypassCache: true,
+
   });
   if (current.kind !== "PROMOTED") return { ...EMPTY, detail: `the live partition is ${current.kind}; nothing restored` };
 
@@ -70,7 +70,7 @@ export async function restoreRemovedMeetingHistory(input: {
   let issue: string | null = null;
   while (versionsRead < cap) {
     const page: ProvenCivicDataHistory<MeetingsSnapshot> = await readPromotedCivicDataPredecessors<MeetingsSnapshot>("MEETING", input.partition.scope, current, {
-      cursor, pageSize: 16, store: input.store, bypassCache: true, now: input.generatedAt,
+      cursor, pageSize: 16, store: input.store,  now: input.generatedAt,
     });
     if (page.issue !== null) { issue = page.issue; break; }
     for (const version of page.versions) {

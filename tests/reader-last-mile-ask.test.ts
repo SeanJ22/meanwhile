@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
-import { neonConfig } from "@neondatabase/serverless";
+import { installReaderDatabaseQuery, readerDatabaseQuery } from "../lib/reader/database.ts";
 import { readFileSync } from "node:fs";
 import test from "./helpers/playbooks.ts";
 import type { CandidateDocument } from "../lib/candidates/corpus.ts";
@@ -489,23 +489,22 @@ test("unreadable state ballots are failed holdings, never empty civic population
   const base = promotedFixtureBundle();
   const states = ["AZ", "NJ"];
   const keys = new Set(states.map(state => `BALLOT_CANDIDACY:${stateBallotScope("ballot-contests", state)}`));
-  const originalFetch = neonConfig.fetchFunction;
+  const originalQuery = readerDatabaseQuery();
   const originalDatabaseUrl = process.env.DATABASE_URL;
   if (!originalDatabaseUrl?.trim()) process.env.DATABASE_URL = "postgresql://fixture:fixture@canonical-reader.invalid/fixture";
-  assert.ok(originalFetch, "the fixture canonical transport is installed");
-  t.after(() => { neonConfig.fetchFunction = originalFetch;
+  assert.ok(originalQuery, "the fixture canonical transport is installed");
+  t.after(() => { installReaderDatabaseQuery(originalQuery);
     if (originalDatabaseUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = originalDatabaseUrl;
   });
   let unreadableQueries = 0;
-  neonConfig.fetchFunction = async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
-    const request = JSON.parse(String(init?.body)) as { query?: string; params?: unknown[]; queries?: { query: string; params: unknown[] }[] };
-    if ((request.queries ?? [request]).some(statement => keys.has(String(statement.params?.[0])))) {
+  installReaderDatabaseQuery(async statements => {
+    if (statements.some(statement => keys.has(String(statement.params[0])))) {
       unreadableQueries++;
       throw new Error("PLANTED_CANONICAL_BALLOT_READ_FAILURE");
     }
-    return originalFetch(input, init);
-  };
+    return originalQuery(statements);
+  });
   const edge: ReaderAuthorityEdgeBundle = { ...base, promoted: new Map([...base.promoted!].filter(([key]) => !keys.has(key))),
     stateAuthorities: { families: base.stateAuthorities!.families, load: async (family, state) => {
       if (family === "ballot-contests" && states.includes(state)) return null;

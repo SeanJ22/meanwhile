@@ -129,7 +129,7 @@ test("a verified contact in a new scope publishes incrementally while unacquired
   const published = await processRegisteredManualCandidate(store, EVERYDAY_ROUTING_CONTRACT_ID, next.candidate, T1, next.expectedBaseVersionId);
   assert.ok(published.promoted, JSON.stringify({ state: published.candidate.state,
     code: published.candidate.failureCode, detail: published.candidate.failureDetail }));
-  const read = await readEverydayRoutingProjection({ store, now: T1, bypassCache: true });
+  const read = await readEverydayRoutingProjection({ store, now: T1 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("fixture publication absent");
   assert.equal(read.value.records.length, prior.records.length + 1);
@@ -164,7 +164,7 @@ test("the manual import candidate promotes and the strict read model returns the
   );
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.equal(outcome.candidate.receipt?.decision, "GOOD");
-  const read = await readEverydayRoutingProjection({ store, bypassCache: true, now: T0 });
+  const read = await readEverydayRoutingProjection({ store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.denominator, projection.denominator);
@@ -224,7 +224,7 @@ test("one blocked official source retains only its LKG while an unrelated contac
   );
   assert.equal(nextOutcome.candidate.state, "PROMOTED");
   assert.equal(nextOutcome.promoted?.versionId, nextCandidate.id);
-  const read = await readEverydayRoutingProjection({ store, bypassCache: true, now: T1 });
+  const read = await readEverydayRoutingProjection({ store,  now: T1 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.equal(contact(read.value, BLOCKED).contact.phone, "311");
@@ -318,7 +318,7 @@ test("a store failure cannot reopen the tracked seed in production", async () =>
     async readPromotion() { throw new Error("database unavailable"); },
     async readCandidate() { throw new Error("must not read a candidate without a pointer"); },
   };
-  const result = await readEverydayRoutingProjection({ store: brokenStore, bypassCache: true, now: T1 });
+  const result = await readEverydayRoutingProjection({ store: brokenStore,  now: T1 });
   assert.equal(result.kind, "STORE_UNREACHABLE");
   const previous = process.env.NODE_ENV;
   Object.defineProperty(process.env, "NODE_ENV", {

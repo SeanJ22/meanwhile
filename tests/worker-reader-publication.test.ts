@@ -261,7 +261,7 @@ test("independent candidate and committee filings automatically publish source f
       : { candidateName: "Fixture Candidate", office: "Town Board", documentUrl: FIXTURE_URL, filingStatus: "Filed" }, finance ? "CAMPAIGN_FINANCE_FILING" : undefined);
     const published = await publishWorkerReaderResults(f.input);
     assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-    const projection = await readCuratedReaderProjection("official-filings", { store: f.store, now: f.h.now(), bypassCache: true });
+    const projection = await readCuratedReaderProjection("official-filings", { store: f.store, now: f.h.now() });
     assert.equal(projection.kind, "PROMOTED");
     if (projection.kind !== "PROMOTED") throw Error("fixture reader");
     const rows = filingsForDivisions(projection.value.records as unknown as OfficialFiling[], [f.body.ocdId!]);
@@ -306,7 +306,7 @@ test("an unfamiliar source-worded kind publishes automatically to its exact plac
     sourceSentence: "The 2026 watershed notice is a watershed notice." });
   const published = await publishWorkerReaderResults(f.input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  const read = await readPublicRecords(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  const read = await readPublicRecords(f.body.ocdId!, { store: f.store, now: f.h.now() });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("Public record missing");
   assert.equal(read.value.records[0].kindLabel, "watershed notice");
@@ -329,7 +329,7 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   const f = await workerFixture("government-budgets", facts);
   const published = await publishWorkerReaderResults(f.input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now() });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("Budget missing");
   const money = governmentMoneyView(read.value.records, f.body.id, f.body.ocdId!);
@@ -337,7 +337,7 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   assert.equal(money.rows[0].text, facts.sourceSentence);
   assert.equal(money.sources[0].provenance.sourceUrl, FIXTURE_URL);
   assert.equal(governmentMoneyView(read.value.records, "other-body", f.body.ocdId!).rows.length, 0);
-  const evidence = await governmentFinanceEvidence(f.body.id, f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  const evidence = await governmentFinanceEvidence(f.body.id, f.body.ocdId!, { store: f.store, now: f.h.now() });
   const answer = composeGovernmentFinanceAnswer({subject:{kind:"BODY",id:f.body.id,name:f.body.name!},question:"What is this government's budget?",records:evidence});
   assert.equal(answer?.answer, facts.sourceSentence);
   const scope = scopedManualContractScope("government-budgets", f.body.ocdId!);
@@ -372,7 +372,7 @@ test("an adopted budget publishes from saved official document bytes; a proposal
   const proposal = await workerFixture("government-budgets", { ...facts, version: "proposal-v2", sourceSentence: "The proposed Operating budget for FY2027 is version proposal-v2." });
   const refused = await publishWorkerReaderResults({ ...proposal.input, store: f.store });
   assert.equal(refused[0].outcome.status, "HELD");
-  const retained = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  const retained = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now() });
   assert.equal(retained.metadata.versionId, read.metadata.versionId);
 });
 
@@ -393,7 +393,7 @@ test("source-worded legal budget roles and exact-version amendments fill the exi
     const result = await publishWorkerReaderResults({ ...amendment.input, store: f.store });
     assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
   }
-  const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now() });
   if (read.kind !== "PROMOTED") throw new Error("Budget missing");
   const facts = budgetChecklistEvidence(read.value.records, f.body.id, "2026-10-05");
   assert.equal(facts["FIN-04"].length, 4);
@@ -407,7 +407,7 @@ test("normal service workers publish verified applicability and channels while l
     service: "Report a damaged public road", serviceAreaEvidence: "The official service directory explicitly covers ZIP 12345.", phone: "555-0100" });
   const result = await publishWorkerReaderResults(input);
   assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
-  const read = await readEverydayRoutingProjection({ store, now: h.now(), bypassCache: true });
+  const read = await readEverydayRoutingProjection({ store, now: h.now() });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("reader missing");
   assert.equal(read.value.records.length, 1);
@@ -432,7 +432,7 @@ test("normal voter-access workers publish the independently verified statewide r
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." });
   const result = await publishWorkerReaderResults(input);
   assert.equal(result[0].outcome.status, "PUBLISHED", JSON.stringify(result));
-  const read = await readBallotNavigationProjection("AZ", { store, now: h.now(), bypassCache: true });
+  const read = await readBallotNavigationProjection("AZ", { store, now: h.now() });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("reader missing");
   assert.equal(read.value.records[0].kind, "REGISTRATION_LINK");
@@ -447,7 +447,7 @@ test("a BROKE audit flags the published reader member it challenges, and only Se
     coverage: "STATEWIDE", coverageEvidence: "The election authority identifies this lookup as serving the entire state." })));
   const published = await publishWorkerReaderResults(input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  const live = await readBallotNavigationProjection("AZ", { store, now: h.now(), bypassCache: true });
+  const live = await readBallotNavigationProjection("AZ", { store, now: h.now() });
   if (live.kind !== "PROMOTED") throw new Error("reader missing");
   assert.equal(live.value.records.length, 2);
   const parser = results.find(row => row.result.role === "PARSER")!;
@@ -468,7 +468,7 @@ test("a BROKE audit flags the published reader member it challenges, and only Se
   assert.equal(kept[0].outcome.status, "PUBLISHED", JSON.stringify(kept));
   const pulledId = `ballot-navigation:${parser.result.records[0].fields.kind}:AZ`;
   const read = async () => {
-    const reader = await readBallotNavigationProjection("AZ", { store, now: at, bypassCache: true });
+    const reader = await readBallotNavigationProjection("AZ", { store, now: at });
     if (reader.kind !== "PROMOTED") throw new Error("reader missing after audit");
     return reader.value.records.map(row => row.id);
   };
@@ -483,7 +483,7 @@ test("CP-09: an amountless filing reaches its reader as a document without manuf
   const f = await workerFixture("official-filings", { committeeName: "Fixture Committee", committeeId: "123", documentUrl: FIXTURE_URL }, "CAMPAIGN_FINANCE_FILING");
   const published = await publishWorkerReaderResults(f.input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  const projection = await readCuratedReaderProjection("official-filings", { store: f.store, now: f.h.now(), bypassCache: true });
+  const projection = await readCuratedReaderProjection("official-filings", { store: f.store, now: f.h.now() });
   assert.equal(projection.kind, "PROMOTED");
   if (projection.kind !== "PROMOTED") throw Error("fixture reader");
   const rows = filingsForDivisions(projection.value.records as unknown as OfficialFiling[], [f.body.ocdId!]);
@@ -501,7 +501,7 @@ test("local government finance runs through the existing worker publisher and sc
     units: "dollars", fiscalPeriod: "FY2027", fundScope: "General fund" }, "PUBLIC_RECORD");
   const published = await publishWorkerReaderResults(f.input);
   assert.equal(published[0].outcome.status, "PUBLISHED", JSON.stringify(published));
-  const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now(), bypassCache: true });
+  const read = await readGovernmentBudgets(f.body.ocdId!, { store: f.store, now: f.h.now() });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("Finance missing");
   const fact = read.value.records.find(row => row.kind === "GOVERNMENT_FINANCE");
@@ -532,7 +532,7 @@ test("completed polling workers publish every registered site through the existi
     autonomousPlan: { ...item.value.autonomousPlan!, sourceRegistryReferences: [...item.value.autonomousPlan!.sourceRegistryReferences, doorId] } }, f.h.now());
   const report = await publishWorkerReaderResults({ ...f.input, repos: withoutWholeResultLog(f.h.repos), vault: new MemoryEvidenceStore() });
   assert.equal(report.length, 1); assert.equal(report[0].outcome.status, "PUBLISHED", report[0].outcome.detail);
-  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", f.prior.payload.registry.divisions.find(row => row.ocdId === f.body.ocdId)!.state), { store: f.store, now: f.h.now(), bypassCache: true });
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", f.prior.payload.registry.divisions.find(row => row.ocdId === f.body.ocdId)!.state), { store: f.store, now: f.h.now() });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     const sites = read.value.jurisdictions.find(j => j.ocdId === f.body.ocdId)!.sites;
@@ -547,7 +547,7 @@ test("normal complete candidate workers publish their whole contest into general
   const f=await workerFixture("ballot-contests",facts);
   const published=await publishWorkerReaderResults({...f.input,repos:withoutWholeResultLog(f.h.repos)});
   assert.equal(published[0].outcome.status,"PUBLISHED",JSON.stringify(published));
-  const read=await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", f.prior.payload.registry.divisions.find(row => row.ocdId === f.body.ocdId)!.state), {store:f.store,now:f.h.now(),bypassCache:true});
+  const read=await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", f.prior.payload.registry.divisions.find(row => row.ocdId === f.body.ocdId)!.state), {store:f.store,now:f.h.now()});
   assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")throw new Error("General ballot missing");
   const ballot=Object.values(read.value.ballots)[0];
   assert.equal(ballot.candidacies.length,2);

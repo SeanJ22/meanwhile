@@ -623,7 +623,7 @@ export async function readManualProjectionPrior(
   const read = await readPromotedCivicData<ManualProjectionPayload>(contract.recordClass, scope ?? contract.scope, {
     store: readStore,
     now,
-    bypassCache: true,
+
   });
   if (read.kind === "NOT_RECORDED") return null;
   if (read.kind !== "PROMOTED") {

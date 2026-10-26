@@ -86,7 +86,7 @@ import { hostsOfConfig } from "../lib/doors/seed-meetings.ts";
 import { installMeetingPartitionSelection } from "../lib/civic-data/meeting-partition-selection.ts";
 import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
-import { sourceUserAgent } from "../lib/sources/http.ts";
+import { deferSourceRead, sourceFetch, sourceReadDeferred, sourceUserAgent } from "../lib/sources/http.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, withRegistryRuntimeStates } from "../lib/registry/runtime-read-model.ts";
 import { requireRegistryState, statesForRegistryDivisions } from "../lib/civic-data/state-scopes.ts";
@@ -236,7 +236,7 @@ export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
     const impl = base ?? globalThis.fetch;
     let url = String(input instanceof Request ? input.url : input);
     for (let hop = 0; ; hop++) {
-      const response = await impl(url, { ...init, redirect: "manual" });
+      const response = await sourceFetch(url, { ...init, redirect: "manual" }, impl);
       const location = response.status >= 300 && response.status < 400 ? response.headers.get("location") : null;
       if (!location) return response;
       await response.body?.cancel().catch(() => undefined);
@@ -569,7 +569,7 @@ export async function promoteDerivedMeetingFamily(
     printMeetingPartitionReceipt(partition, failed, outcome, detail, kind);
     return outcome;
   };
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: generatedAt });
+  const wiring = await readDerivedMeetingWiring({ store,  now: generatedAt });
   if (wiring.kind !== "PROMOTED") {
     return refuse(
       wiring.kind === "NOT_RECORDED"
@@ -1095,7 +1095,7 @@ export async function readPreviousMeetingPartition(
 ): Promise<MeetingsSnapshot | null> {
   const read = await readMeetingPartitionProjection(partition, {
     store,
-    bypassCache: true,
+
   });
   if (read.kind === "PROMOTED") {
     console.log(`partition LKG base: ${partition.id} at ${read.metadata.versionId}`);
@@ -1544,6 +1544,10 @@ export async function promoteMeetingPartitions(input: {
   for (const partition of input.partitions) {
     const report = input.reports.find((candidate) => candidate.source === partition.meetingSource);
     if (!report || !report.ok) {
+      if (report && sourceReadDeferred(report.error)) {
+        console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: partition.id, detail: report.error })}`);
+        continue;
+      }
       const failureKind = report ? (report.failure ?? "WALL") : "JOB";
       const failureDetail = report?.error
         ? failureKind === "JOB" ? jobFailureDetail(report.error) : report.error
@@ -1568,6 +1572,17 @@ export async function promoteMeetingPartitions(input: {
     );
     const freshRowIds = new Set(freshRows.map((meeting) => meeting.id));
     const freshDocuments = input.agendaDocuments.filter((document) => freshRowIds.has(document.meetingId));
+    if (freshRows.length === 0) {
+      // An empty read says nothing about meetings we already hold. Keep the pointer and revisit the route later.
+      // A body selecting nothing from a shared feed cannot defer the feed's other bodies.
+      if (report.accounting?.logicalInput === 0) {
+        for (const url of report.acquisitions?.map(row => row.requestedUrl) ?? []) await deferSourceRead(url, Date.parse(input.generatedAt) + 3_600_000);
+      }
+      console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: partition.id,
+        detail: "The calendar returned no matching meetings; held meetings remain live and the source will be checked again.",
+        fetched: report.fetched, normalized: report.normalized, drops: report.drops, accounting: report.accounting })}`);
+      continue;
+    }
     const previous = input.previousByContract?.has(partition.id)
       ? input.previousByContract.get(partition.id) ?? null
       : await readPreviousMeetingPartition(input.store, partition);
@@ -1590,14 +1605,7 @@ export async function promoteMeetingPartitions(input: {
       const census = await placePublishedMeetingPins({meetings:reconciled.meetings,previous:restoredPrevious?.meetings,
         query:input.facts?.db.query,fetchImpl:input.venueFetch});
       for (const hold of census.held) console.warn(`MEETING_PIN_UNRESOLVED ${hold}`);
-      const scopeFailures = [
-        ...(partition.ocdId !== null && report.unreachableOcdIds?.includes(partition.ocdId)
-          ? [`${partition.meetingSource} reported ${partition.ocdId} unreachable.`]
-          : []),
-        ...(report.partialScopes ?? [])
-          .filter((failure) => failure.ocdIds.includes(partition.ocdId))
-          .map((failure) => `${failure.scope} incomplete: ${failure.cause}`),
-      ];
+      const incomplete = (report.partialScopes ?? []).filter(failure => failure.ocdIds.includes(partition.ocdId));
       const snapshot: MeetingsSnapshot = {
         formatVersion: 1,
         generatedAt: input.generatedAt,
@@ -1621,10 +1629,10 @@ export async function promoteMeetingPartitions(input: {
         input.store,
         partition,
         snapshot,
-        scopeFailures,
+        [],
         reconciled.removalEvidence,
         [...input.retainedResponses??[],...census.responses],
-        recurrence.held,
+        [...recurrence.held, ...incomplete.map(failure => ({ key: `${partition.id}:${failure.scope}`, code: "MEETING_SCOPE_UNREAD", detail: `${failure.scope}: ${failure.cause}` }))],
         idSuffix,
         tracedResponses([{ source: partition.meetingSource, acquisitions: report.acquisitions }], input.facts?.responses ?? input.retainedResponses ?? [])
           .sort((a, b) => a.retrievedAt.localeCompare(b.retrievedAt))[0],

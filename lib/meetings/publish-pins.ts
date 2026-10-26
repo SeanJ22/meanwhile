@@ -12,7 +12,8 @@ import {
   CENSUS_GEOCODER_URL,
   CENSUS_BENCHMARK,
 } from "../geo/census-geocoder.ts";
-import { politeGetText, SourceHttpError } from "../sources/http.ts";
+import { politeGetText, SourceHttpError, SourceReadDeferred } from "../sources/http.ts";
+import { trackSourceTransport } from "../sources/host-transport.ts";
 import { isOfficeStreetAddress } from "../map/office-locator.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { RegistryProvenance } from "../registry/types.ts";
@@ -336,7 +337,8 @@ export async function placePublishedMeetingPins(input: {
         try {
           const read = await politeGetText(url.href, {
             signal: AbortSignal.timeout(8000), accept:"application/json",
-            fetchImpl: async (request, options) => {
+            // The census geocoder shares the production host clock, so a 429 cools every lookup, not only this one.
+            fetchImpl: trackSourceTransport(async (request, options) => {
               response = await fetchImpl(request,options);
               bytes = new Uint8Array(await response.clone().arrayBuffer());
               const retry = response.headers.get("retry-after");
@@ -353,7 +355,7 @@ export async function placePublishedMeetingPins(input: {
                 }
               }
               return response;
-            },
+            }, fetchImpl),
           });
           const finalUrl = response?.url || url.href;
           if (new URL(finalUrl).hostname !== "geocoding.geo.census.gov") return reject("TRANSIENT",retryAt);
@@ -368,6 +370,8 @@ export async function placePublishedMeetingPins(input: {
           failedQueries.delete(key);
           return {lat:point.lat, lng:point.lng, matchedAddress:point.address, url:finalUrl, at};
         } catch (error) {
+          // A shared-host cooldown is honored as this query's retry time; the lookup is never re-sent sooner.
+          if (error instanceof SourceReadDeferred && error.reason === "THROTTLED" && !(Date.parse(retryAt ?? "") >= error.until)) retryAt = new Date(error.until).toISOString();
           const rejected = error instanceof SourceHttpError && error.status === 400;
           if (!rejected) held.push(`${address.address}: ${error instanceof Error ? error.message : String(error)}`);
           return reject(rejected ? "REJECTED" : "TRANSIENT",retryAt,error instanceof SourceHttpError ? error.status : response?.status);

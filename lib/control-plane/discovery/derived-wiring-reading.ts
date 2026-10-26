@@ -4,7 +4,6 @@ import { bodySourceWiringFor, DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringKin
 import type { PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../../meetings/constants.ts";
 import { makeIcalSource, parseIcs } from "../../sources/ical/index.ts";
-import { ZeroRowExtractionError } from "../../sources/normalize-account.ts";
 import { makeOfficialPageEventsSource, officialLinkingPageFrom } from "../../sources/official-page-events/index.ts";
 import { makeDiligentSource } from "../../sources/diligent/index.ts";
 import { makeBoardBookSource } from "../../sources/boardbook/index.ts";
@@ -49,9 +48,7 @@ export type HeldCalendarReadings =
 const message = (error: unknown): string => (error instanceof Error ? error.message : String(error));
 
 export function adapterThrowVerification(error: unknown, route: string): WiringVerification {
-  return error instanceof ZeroRowExtractionError
-    ? { changed: `the reviewed filter selects none of ${route}'s events: ${error.message}` }
-    : { refused: `the adapter could not read ${route}: ${message(error)}` };
+  return { refused: `the adapter could not read ${route}: ${message(error)}` };
 }
 
 export async function readHeldCalendars(input: {
@@ -152,7 +149,7 @@ export async function readHeldCalendar(reading: HeldCalendarReading, now: string
   }
   const own = meetings.filter((m) => m.bodyId === row.bodyId);
   const emptyBody = total === 0 && ((row.kind === "LEGISTAR" && /^\d+$/.test(row.config.eventBodyId)) || (row.kind === "BOARDDOCS" && row.config.committeeId) || (row.kind === "CIVICCLERK" && row.config.bodyMatch && /eventCategoryId eq \d+/.test(new URL(row.route).searchParams.get("$filter") ?? "")));
-  if (own.length === 0 && !emptyBody) return { changed: `the reviewed filter selects none of ${row.route}'s ${total > 0 ? `${total} ` : ""}event(s)` };
+  if (own.length === 0 && !emptyBody) return { refused: `${row.route} currently lists no matching meeting for the reviewed body; keep its held calendar and check again later` };
   const name = row.bodyName.toLowerCase();
   // A native body selector owns the event even when its comment names a joint hearing's other committee.
   const nativeBody = row.kind === "LEGISTAR" && /^\d+$/.test(row.config.eventBodyId);

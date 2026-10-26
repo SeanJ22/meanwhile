@@ -240,7 +240,7 @@ test("THE DISCOVERY WALK honours a 429 at robots.txt (nothing more is asked) and
   assert.equal(walled.seen.filter((u) => u === "https://waftown.gov/").length, 1, "a 403 is asked once, never re-sent under another identity");
 });
 
-test("THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 or a challenge is a wall, and the one second ask is the same name through curl", async () => {
+test("THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 stops, and a challenge can use the same name through curl", async () => {
   const seen: { url: string; headers: Record<string, string> }[] = [];
   const answering = (status: number, body: string) =>
     (async (url: string | URL | Request, init?: RequestInit) => {
@@ -265,7 +265,7 @@ test("THE SHARED SOURCE CLIENT IS ONE HONEST IDENTITY: a 403 or a challenge is a
   const curled: Record<string, string>[] = [];
   await assert.rejects(
     politeGetText("https://waf.example.gov/d", {
-      fetchImpl: answering(403, "<html><title>Just a moment...</title></html>"),
+      fetchImpl: answering(200, "<html><title>Just a moment...</title></html>"),
       ladder: {
         curl: async (_url, headers) => {
           curled.push(headers);

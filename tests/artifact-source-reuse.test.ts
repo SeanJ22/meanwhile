@@ -9,13 +9,18 @@ import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION } from "../lib/control-plane/repositor
 import type { ArtifactRecord, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
 import { pgArtifactsByCanonicalUrl, pgEnsureArtifactSourceIndex, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 
-test("source capture reuse uses one bounded exact URL query across job keys", async () => {
+test("source capture reuse checks versions before bounded exact URL bodies across job keys", async () => {
   const calls: { text: string; params: readonly unknown[] }[] = [];
   const records = [{ artifactId: "older-job-capture", canonicalUrl: "https://www.fec.gov/directory", workItemId: "other-job" }];
-  const sql: Sql = { query: async (text, params = []) => { calls.push({ text, params }); return records.map(record => ({ record })); } };
+  const sql: Sql = { query: async (text, params = []) => {
+    calls.push({text,params});
+    return records.map((record,position)=>text.includes("SELECT picked")
+      ? {log_key:"other-job",position,etag:"1"}
+      : {log_key:"other-job",position,changed_at:"2026-10-01T00:00:00Z",__etag:"1",record});
+  } };
   assert.deepEqual(await pgArtifactsByCanonicalUrl(sql, "https://www.fec.gov/directory", 2), records);
-  assert.equal(calls.length, 1);
-  assert.deepEqual(calls[0].params, ["https://www.fec.gov/directory", 2]);
+  assert.equal(calls.length,2);
+  assert.deepEqual(calls[0].params,["https://www.fec.gov/directory",2]);
   assert.match(calls[0].text, /WHERE md5\(record->>'canonicalUrl'\) = md5\(\$1\) AND record->>'canonicalUrl' = \$1/);
   assert.match(calls[0].text, /ORDER BY record->>'recordedAt' DESC NULLS LAST, record->>'artifactId' ASC LIMIT \$2/);
   assert.doesNotMatch(calls[0].text, /LIKE|OFFSET/);

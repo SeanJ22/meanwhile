@@ -13,7 +13,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { config as loadEnv } from "dotenv";
 import { type Page } from "playwright";
 

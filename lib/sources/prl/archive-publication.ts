@@ -48,6 +48,6 @@ export async function readPrlArchiveProjection(options: PromotedCivicDataReadOpt
     if (read.kind === "PROMOTED" && (read.metadata.sourceId !== "prl" || prlArchiveProblems(read.value).length)) throw new Error("PRL_ARCHIVE_PROJECTION_INVALID");
     return read;
   };
-  if (options.store || options.edge || options.bypassCache) return readTyped(options);
+  if (options.store || options.edge) return readTyped(options);
   return readPromotedEdgeFirst("PRL_ARCHIVE", PRL_ARCHIVE_SCOPE, edgeOptions => readTyped({ ...options, ...edgeOptions }), "The PRL archive manifest");
 }

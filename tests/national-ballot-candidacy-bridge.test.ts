@@ -130,7 +130,7 @@ test("STATE_PEOPLE current-holder checks connect a national candidacy and refuse
   const bridge = reconcileOfficialCandidacies({ bridge: registry.officialCandidacies, ballots: [candidate], holders: statePeopleCandidacyHolders(roster) });
   const value = { ...registry, officialCandidacies: bridge };
   installManualValue("registry-runtime:MI", registryFixtureForState("MI", value), "state-person");
-  await readRegistryRuntimeProjection(["MI"], { bypassCache: true });
+  await readRegistryRuntimeProjection(["MI"], {  });
   primeStatePeopleProjection({ formatVersion: 1, sourceId: "plural-openstates", jurisdiction: "US-MI", term: "2026", generatedAt: now, roster });
   assert.deepEqual(officialIdsForCandidacy(candidate.candidacies[0].id), [person.id]);
   assert.deepEqual(resolvedCandidacyForOfficial(person.id), { candidacyId: candidate.candidacies[0].id, contestId: candidate.contests[0].id });
@@ -163,7 +163,7 @@ test("deduplicating statewide cards preserves the resolved ballot and funding co
     officialCandidacies: { ...value.officialCandidacies, rows: value.officialCandidacies.rows.map(row => row.holder.id === governor.holder.id
       ? { ...row, status: "NOT_CHECKED" as const, candidacy: null } : row).concat({ ...resolved, holder: { ...resolved.holder, id: alias } }) } };
   installManualValue("registry-runtime:AZ", selected, "statewide-alias-connections");
-  await readRegistryRuntimeProjection(["AZ"], { bypassCache: true });
+  await readRegistryRuntimeProjection(["AZ"], {  });
   const expected = { candidacyId: resolved.candidacy!.candidacyId, contestId: resolved.candidacy!.contestId };
   assert.deepEqual(resolvedCandidacyForOfficial(governor.holder.id), expected);
   assert.deepEqual(resolvedCandidacyForOfficial(alias), expected);
@@ -178,11 +178,11 @@ test("published national ballot rows are written to the promoted registry bridge
     sources: [{ requestedUrl: source, finalUrl: source, publisher: "State election authority", sourceClass: "OFFICIAL_PUBLISHER",
       retrievedAt: now, httpStatus: 200, rawHash: "a".repeat(64), reviewedEvidence: "Exact official candidate list and contest identities reviewed." }] };
   for (const row of ballots) await publishOfficialBallotCandidacies({ store, ballots: [row], sourceReceipt, now });
-  const read = await readRegistryRuntimeProjection(["OH", "MI"], { store, now, bypassCache: true });
+  const read = await readRegistryRuntimeProjection(["OH", "MI"], { store, now });
   assert.equal(read.kind, "BOOTSTRAP");
   if (read.kind !== "BOOTSTRAP") return;
   await installFederalDirectory(syntheticFederalDirectory(read.value));
-  await readRegistryRuntimeProjection(["OH", "MI"], { store, now, bypassCache: true });
+  await readRegistryRuntimeProjection(["OH", "MI"], { store, now });
   assert.deepEqual(officialIdsForCandidacy("ballot-candidacy:oh-incumbent"), ["congress:H001104"]);
   assert.deepEqual(officialIdsForCandidacy("ballot-candidacy:mi-incumbent"), ["congress:S001208"]);
   const held = read.value.officialCandidacies as OfficialCandidacyBridge;
@@ -190,7 +190,7 @@ test("published national ballot rows are written to the promoted registry bridge
   const removed = structuredClone(ballots[0]);
   removed.candidacies[0] = { ...removed.candidacies[0], id: "ballot-candidacy:oh-challenger", familyName: "Morgan Example" };
   await publishOfficialBallotCandidacies({ store, ballots: [removed], sourceReceipt, now: "2026-10-13T12:01:00.000Z" });
-  await readRegistryRuntimeProjection(["OH", "MI"], { store, now: "2026-10-13T12:01:00.000Z", bypassCache: true });
+  await readRegistryRuntimeProjection(["OH", "MI"], { store, now: "2026-10-13T12:01:00.000Z" });
   await installFederalDirectory(syntheticFederalDirectory());
   assert.equal(resolvedCandidacyForOfficial("congress:H001104"), null);
   assert.deepEqual(officialIdsForCandidacy("ballot-candidacy:oh-incumbent"), []);
@@ -200,7 +200,7 @@ test("published national ballot rows are written to the promoted registry bridge
   duplicate.candidacies.push({ ...duplicate.candidacies[0], id: "ballot-candidacy:oh-duplicate", personId: "person:two" });
   await publishOfficialBallotCandidacies({ store, ballots: [duplicate], sourceReceipt, now: "2026-10-13T12:02:00.000Z" });
   await installFederalDirectory(syntheticFederalDirectory());
-  const ambiguous = await readRegistryRuntimeProjection(["OH", "MI"], { store, now: "2026-10-13T12:02:00.000Z", bypassCache: true });
+  const ambiguous = await readRegistryRuntimeProjection(["OH", "MI"], { store, now: "2026-10-13T12:02:00.000Z" });
   assert.equal(ambiguous.kind, "BOOTSTRAP");
   if (ambiguous.kind === "BOOTSTRAP") assert.equal(ambiguous.value.officialCandidacies.rows.find(row => row.holder.id === "congress:H001104")?.status, "IDENTITY_UNRESOLVED");
   assert.deepEqual(officialIdsForCandidacy("ballot-candidacy:oh-incumbent"), []);

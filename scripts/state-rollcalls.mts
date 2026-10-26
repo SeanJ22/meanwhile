@@ -304,7 +304,7 @@ async function main(): Promise<void> {
       (await readPromotedCivicDataBatch<StateLegislatorVotes>(
         "STATE_LEGISLATOR_VOTES",
         memberEntries.map(({ officeholderId }) => officeholderId),
-        { store, now: retrievedAt, bypassCache: true },
+        { store, now: retrievedAt },
       )).map((result, index) => [memberEntries[index]!.officeholderId, result] as const),
     );
     const positionsFingerprint = (positions: readonly StateLegislatorVotePosition[]): string =>

@@ -204,7 +204,7 @@ export async function runNationalPlaceTask(input: {
           try {
             report = await (input.acquire ?? runPlaceSource)({ repos: tools.repos, store: input.store, zip, state, now, clock: tools.now, knowledge,
               readHeld: async ids => {
-                const capture = await readHeldPlaceCapture(ids, { store: input.store, now: tools.now(), bypassCache: true });
+                const capture = await readHeldPlaceCapture(ids, { store: input.store, now: tools.now() });
                 before ??= buildPlaceOwedList({ divisions: ids.map(id => ({ id, label: id })), zips: [zip], ...capture, now: tools.now() });
                 return capture;
               },

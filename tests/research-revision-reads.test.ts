@@ -4,7 +4,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { pgAggregateRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { archivedAggregateRepository } from "../lib/control-plane/repository/dispatch-state.ts";
-import { shareRevisionReads } from "../lib/control-plane/repository/revision-reads.ts";
+import { shareVersionedRows } from "../lib/db/versioned-rows.ts";
 import { isControlPlaneRequestTimeout } from "../lib/control-plane/repository/request-bounds.ts";
 
 const db = new PGlite();
@@ -34,7 +34,7 @@ async function fixture() {
       }
       return rows;
     } };
-    shareRevisionReads(sql, "postgres://test:test@db03.example/test", new CivicReadCache({
+    shareVersionedRows(sql, "postgres://test:test@db03.example/test", new CivicReadCache({
       read: async key => held.get(key) ?? null,
       write: async (key, value) => { held.set(key, value); },
     }));
@@ -101,7 +101,7 @@ test("a revision racing the value read is cached at its own revision, and outage
   await assert.rejects(repo.read("race"), /database unavailable/);
 });
 
-test("a cut-off selection resumes its saved page in a fresh repository and refreshes the completed prefix without fetching unchanged bodies", async t => {
+test("a cut-off selection restarts in a fresh repository without fetching unchanged bodies", async t => {
   const f = await fixture();
   for (let i=0;i<205;i++) await f.put("cp_obligations",{id:`item-${String(i).padStart(3,"0")}`,state:"az",active:true,text:"held"});
   const before=process.env.WTP_PASS_DEADLINE_AT;
@@ -121,7 +121,7 @@ test("a cut-off selection resumes its saved page in a fresh repository and refre
   const resumed=pgAggregateRepository<Value>(f.connection(),"StandingObligation","cp_obligations",{state:"az",activeOnly:true});
   const rows=await resumed.list();
   const firstVersions=f.statements.find(row=>row.text.startsWith("SELECT id,revision FROM"))!;
-  assert.match(firstVersions.text,/id > /);assert.equal(firstVersions.params.at(-1),"item-099");
+  assert.doesNotMatch(firstVersions.text,/id > /,"restart needs no continuation path; confirmed copies avoid unchanged bodies");
   assert.equal(rows.length,205);assert.ok(rows.some(row=>row.id==="before-cursor"));assert.ok(!rows.some(row=>row.id==="item-001"));
   const transferred=f.values().flatMap(row=>row.valueIds??[]);
   assert.ok(!transferred.includes("item-002"),"the completed prefix stays held, rather than rebuilding its history");

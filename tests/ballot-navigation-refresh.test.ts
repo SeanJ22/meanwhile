@@ -61,7 +61,7 @@ test("a failed state source retains its source dates while a sibling and DC publ
   assert.ok(sibling.promotedVersionId);
   assert.ok(second.gaps.some(gap => gap.divisionId === division("OH")));
   const read = await readElectionFieldsForDivisions([division("OH"), division("MI"), division("DC")], {
-    store: ctx.store, now: later, bypassCache: true });
+    store: ctx.store, now: later });
   assert.equal(read.fields.length, 6);
   assert.ok(read.fields.filter(field => field.value.state === "OH").every(field => field.value.collectedAt === now));
   assert.ok(read.fields.filter(field => field.value.state === "MI").every(field => field.value.collectedAt === later));
@@ -196,7 +196,7 @@ test("reviewed runner input publishes its original source dates before refresh, 
   assert.equal(first.fields.length, 2);
   assert.ok(first.promotedVersionId);
   assert.ok(first.gaps.length > 0);
-  const read = await readElectionFieldsForDivisions([division("OH")], { store: ctx.store, now: later, bypassCache: true });
+  const read = await readElectionFieldsForDivisions([division("OH")], { store: ctx.store, now: later });
   assert.ok(read.fields.every(field => field.value.collectedAt === now));
   assert.equal((await ctx.store.readCandidate(first.candidateId!))!.candidate.retrieval.manualSourceReceipt!.sources[0].retrievedAt, now);
   const updated = { ...report("OH"), facts: report("OH").facts.map(field => ({ ...field,
@@ -209,7 +209,7 @@ test("reviewed runner input publishes its original source dates before refresh, 
   const replay = await refreshBallotNavigation({ ...ctx, now: later, state: "OH", config, fetch: failed });
   assert.equal(replay.fields.length, 0);
   assert.equal(replay.promotedVersionId, null);
-  const final = await readElectionFieldsForDivisions([division("OH")], { store: ctx.store, now: later, bypassCache: true });
+  const final = await readElectionFieldsForDivisions([division("OH")], { store: ctx.store, now: later });
   assert.equal(final.fields.find(field => field.value.fieldKind === "registration_deadline")?.value.text,
     "Registration deadline October 20, 2026");
 });
@@ -285,14 +285,14 @@ test("a state's first own publication carries the verified records the national 
     versionId: id, lastKnownGoodVersionId: id, receipt: { ...ohio.receipt, scope: national.scope, candidateId: id } } as typeof ohio);
   into.candidates.set(id, { ...version, promotedVersion: id, lastKnownGoodVersion: id, candidate: { ...version.candidate, id, scope: national.scope },
     receipt: { ...version.receipt, scope: national.scope, candidateId: id } } as typeof version);
-  const nationalIds = (await readElectionFieldsForDivisions([division("OH")], { store: source.store, now, bypassCache: true })).fields.map(row => row.id).sort();
+  const nationalIds = (await readElectionFieldsForDivisions([division("OH")], { store: source.store, now })).fields.map(row => row.id).sort();
   assert.equal(nationalIds.length, 2);
   const later = "2026-10-14T19:00:00.000Z";
   const unavailable = (async () => new Response("Unavailable", { status: 503 })) as unknown as typeof fetch;
   const carried = await refreshBallotNavigation({ ...ctx, now: later, state: "OH", report: report("OH"), fetch: unavailable });
   assert.deepEqual([...carried.fields].sort(), nationalIds, "the verified national records are the state's first version");
   assert.ok(carried.promotedVersionId);
-  const read = await readElectionFieldsForDivisions([division("OH")], { store: ctx.store, now: later, bypassCache: true });
+  const read = await readElectionFieldsForDivisions([division("OH")], { store: ctx.store, now: later });
   assert.deepEqual(read.fields.map(row => row.id).sort(), nationalIds);
   const again = await refreshBallotNavigation({ ...ctx, now: "2026-10-15T19:00:00.000Z", state: "OH", report: report("OH"), fetch: unavailable });
   assert.deepEqual(again.fields, [], "the carry happens once, when the state has no pointer of its own");

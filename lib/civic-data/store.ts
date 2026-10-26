@@ -29,7 +29,7 @@ import {
   type RoutineRecordClass,
   type ValidationReceipt,
 } from "./types.ts";
-import type { OfficeholderSet } from "../officials/types.ts";
+import type { Officeholder, OfficeholderSet } from "../officials/types.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash, durableCivicDataHash } from "./canonical-hash.ts";
 import {
@@ -177,6 +177,8 @@ export interface RoutineDataStore {
   readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
   /** Promoted rosters' people, slimmed to what a portrait list needs. */
   readonly readSlimRosters: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly SlimRoster[]>;
+  /** Exact promoted historical roster identity fields; unavailable adapters leave the join unresolved. */
+  readonly readHistoricalRosterIdentities?: (candidateId:string) => Promise<HistoricalRosterIdentities|null>;
   readonly readOfficeRoster: (scope: string) => Promise<SlimRoster | null>;
   /** Each promoted roster's people as a short digest of their ids, which moves only when someone joins or leaves. */
   readonly readRosterIdDigests: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly { readonly scope: string; readonly digest: string }[]>;
@@ -246,6 +248,25 @@ export interface SlimRoster {
   readonly promotedAt: string;
   readonly readModelSha256: string | null;
   readonly roster: OfficeholderSet;
+}
+
+export type RosterIdentityPerson=Pick<Officeholder,"id"|"personId"|"nativeIds"|"level"|"websiteUrl"|"profileUrls">&{
+  readonly provenance:{readonly sourceUrl:string|null};
+};
+export interface HistoricalRosterIdentities {
+  readonly versionId:string;
+  readonly sourceId:string;
+  readonly recordClass:RoutineRecordClass;
+  readonly scope:string;
+  readonly jurisdiction:string;
+  readonly parserVersion:string;
+  readonly normalizedHash:string;
+  readonly officeholders:readonly RosterIdentityPerson[];
+}
+const ROSTER_IDENTITY_FIELDS=["id","personId","nativeIds","level","websiteUrl","profileUrls"]as const;
+function rosterIdentityPerson(person:Officeholder):RosterIdentityPerson{
+  return{...Object.fromEntries(ROSTER_IDENTITY_FIELDS.flatMap(key=>Object.hasOwn(person,key)?[[key,person[key]]]:[])),
+    provenance:{sourceUrl:person.provenance.sourceUrl}}as RosterIdentityPerson;
 }
 
 export interface RoutineStoreClock {
@@ -856,6 +877,22 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         readModelSha256: record.candidate.normalization.normalizedHash ?? null,
         roster: structuredClone({ ...roster, officeholders: roster.officeholders.map(row => slimRosterPerson(row as unknown as Record<string, unknown>)) }) as unknown as OfficeholderSet }];
     });
+  }
+
+  async readHistoricalRosterIdentities(candidateId:string):Promise<HistoricalRosterIdentities|null>{
+    const record=this.candidates.get(candidateId),candidate=record?.candidate;
+    const receipt=record?.receipt&&parseValidationReceipt(record.receipt);
+    if(!record||!candidate||record.state!=="PROMOTED"||!record.acquisitionSucceeded||record.promotedVersion!==candidateId||record.lastKnownGoodVersion!==candidateId||
+      candidate.id!==candidateId||candidate.recordClass!=="STATE_LEGISLATOR"||isImportOrStateMoveCandidate(candidate)||!receipt||receipt.decision!=="GOOD"||
+      receipt.candidateId!==candidateId||receipt.sourceId!==candidate.sourceId||receipt.recordClass!==candidate.recordClass||receipt.scope!==candidate.scope||
+      !candidate.normalization.succeeded||!candidate.normalization.normalizedHash||!/^[a-f0-9]{64}$/.test(candidate.normalization.normalizedHash)||
+      !candidate.retrieval.succeeded||!/^[a-f0-9]{64}$/.test(candidate.retrieval.rawHash??""))return null;
+    const model=candidate.readModel as {sourceId?:string;jurisdiction?:string;roster?:OfficeholderSet};
+    if(model?.sourceId!==candidate.sourceId||typeof model.jurisdiction!=="string"||!Array.isArray(model.roster?.officeholders)||
+      canonicalCivicDataHash(model)!==candidate.normalization.normalizedHash)return null;
+    return{versionId:candidateId,sourceId:candidate.sourceId,recordClass:candidate.recordClass,scope:candidate.scope,jurisdiction:model.jurisdiction,
+      parserVersion:candidate.normalization.parserVersion,normalizedHash:candidate.normalization.normalizedHash,
+      officeholders:structuredClone(model.roster.officeholders.map(rosterIdentityPerson))};
   }
 
   async readOfficeRoster(scope: string): Promise<SlimRoster | null> {
@@ -2456,18 +2493,57 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       keyOf: row => row.scope, versions: async selected => this.promotionVersions(recordClass, selected),
       values: async selected => {
       const rows = (await this.db.execute(sql`select p.scope, p.current_version_id as version_id, p.promoted_at, c.normalized_hash,
-        (p.payload->'roster') - 'officeholders' - 'endedMemberships' || jsonb_build_object('officeholders',
-          (select coalesce(jsonb_agg(o - 'offices' - 'fieldSources' || jsonb_build_object('fieldSources', coalesce(jsonb_strip_nulls(jsonb_build_object(
-              'name', o#>'{fieldSources,name}', 'officeTitle', o#>'{fieldSources,officeTitle}', 'photo', o#>'{fieldSources,photo}')), '{}'::jsonb))), '[]'::jsonb)
-            from jsonb_array_elements(p.payload#>'{roster,officeholders}') o)) as roster
+        reader_payload_value(r - 'officeholders' - 'endedMemberships') || jsonb_build_object('officeholders',
+          (select coalesce(jsonb_agg(reader_payload_value(o - 'offices' - 'fieldSources') || jsonb_build_object('fieldSources',
+            jsonb_strip_nulls(jsonb_build_object('name',reader_payload_value(f->'name'),'officeTitle',reader_payload_value(f->'officeTitle'),
+              'photo',reader_payload_value(f->'photo')))) order by member.ordinal_index),'[]'::jsonb)
+            from reader_payload_members(r->'officeholders') member
+            cross join lateral(select reader_payload_node(member.item)as o) person
+            cross join lateral(select reader_payload_node(o->'fieldSources')as f) sources)) as roster
       from civic_data_promotions p join civic_data_candidates c on c.id = p.current_version_id
+      cross join lateral(select reader_payload_node(reader_payload_node(p.payload)->'roster')as r) roster
       where p.record_class = ${recordClass} and p.scope in (${sql.join(selected.map(scope => sql`${scope}`), sql`, `)})
-        and jsonb_typeof(p.payload#>'{roster,officeholders}') = 'array'`)).rows as RosterRow[];
+        and r ? 'officeholders'`)).rows as RosterRow[];
         return rows;
       },
     });
     return rows.map(row => ({ recordClass, scope: row.scope, versionId: row.version_id,
       promotedAt: new Date(row.promoted_at).toISOString(), readModelSha256: row.normalized_hash, roster: row.roster }));
+  }
+
+  async readHistoricalRosterIdentities(candidateId:string):Promise<HistoricalRosterIdentities|null>{
+    // The original immutable promotion and exact GOOD source receipt attest selected identity fields.
+    // Historical source models and their unrelated people fields stay inside Postgres.
+    const [row]=await this.candidateRows([candidateId],"historical-roster-identities",async()=>{
+      const result=await this.db.execute(sql`SELECT c.id,jsonb_build_object('versionId',c.id,'sourceId',c.source_id,
+        'recordClass',c.record_class,'scope',c.scope,'jurisdiction',m->'jurisdiction','parserVersion',c.parser_version,'normalizedHash',c.normalized_hash,
+        'officeholders',(SELECT coalesce(jsonb_agg(jsonb_build_object('id',o->'id','personId',o->'personId','level',o->'level',
+          'nativeIds',reader_payload_value(o->'nativeIds'),'websiteUrl',reader_payload_value(o->'websiteUrl'),
+          'profileUrls',reader_payload_value(o->'profileUrls'),'provenance',jsonb_build_object('sourceUrl',reader_payload_node(o->'provenance')->'sourceUrl'))
+          ORDER BY person.ordinal_index),'[]'::jsonb)FROM reader_payload_members(r->'officeholders')person
+          CROSS JOIN LATERAL(SELECT reader_payload_node(person.item)AS o)holder))AS identities
+        FROM civic_data_candidates c
+        CROSS JOIN LATERAL(SELECT reader_payload_node(c.candidate)AS root)envelope
+        CROSS JOIN LATERAL(SELECT reader_payload_node(root->'normalization')AS n,
+          reader_payload_node(root->'retrieval')AS retrieval,reader_payload_node(root->'readModel')AS m)fields
+        CROSS JOIN LATERAL(SELECT reader_payload_node(m->'roster')AS r)roster
+        WHERE c.id=${candidateId} AND c.record_class='STATE_LEGISLATOR'AND c.state='PROMOTED'AND c.acquisition_succeeded
+          AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
+          AND root->>'id'=c.id AND root->>'sourceId'=c.source_id AND root->>'recordClass'=c.record_class AND root->>'scope'=c.scope
+          AND n->>'succeeded'='true'AND n->>'parserVersion'=c.parser_version AND n->>'normalizedHash'=c.normalized_hash
+          AND retrieval->>'succeeded'='true'AND retrieval->>'rawHash'=c.raw_hash
+          AND c.raw_hash~'^[a-f0-9]{64}$'AND c.normalized_hash~'^[a-f0-9]{64}$'
+          AND NOT(root?'bootstrapImport')AND coalesce(root#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'
+          AND m->>'sourceId'=c.source_id AND m?'jurisdiction'AND r?'officeholders'
+          AND c.validation_receipt->>'decision'='GOOD'AND c.validation_receipt->>'candidateId'=c.id
+          AND c.validation_receipt->>'sourceId'=c.source_id AND c.validation_receipt->>'recordClass'=c.record_class AND c.validation_receipt->>'scope'=c.scope
+          AND EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(c.validation_receipt->'checks')='array'
+            THEN c.validation_receipt->'checks'ELSE'[]'::jsonb END)check_row WHERE check_row->>'check'='SOURCE_AUTHENTICITY'AND check_row->>'verdict'='PASS')
+          AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(CASE WHEN jsonb_typeof(c.validation_receipt->'checks')='array'
+            THEN c.validation_receipt->'checks'ELSE'[]'::jsonb END)check_row WHERE check_row->>'verdict'IS DISTINCT FROM'PASS')`);
+      return result.rows as {id:string;identities:HistoricalRosterIdentities}[];
+    });
+    return row?.identities??null;
   }
 
   async readOfficeRoster(scope: string): Promise<SlimRoster | null> {

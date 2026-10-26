@@ -1,10 +1,9 @@
 import { votePagesIssue, type VoteMemberPage } from "../../state-rollcalls/vote-page-model.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
-import type { RoutineDataStore } from "../../civic-data/store.ts";
+import type { RoutineDataStore, RosterIdentityPerson } from "../../civic-data/store.ts";
 import type { SourceProbeDependencies } from "../../civic-data/source-probe.ts";
 import type { LegiscanCompletedDataset } from "./vote-acquisition.ts";
-import type { OfficialStateLegislatorReadModel } from "../../civic-data/candidate-builders.ts";
 import type { PluralVoteFact } from "../plural/votes.ts";
 import type { LegiscanDatasetRecord } from "./types.ts";
 import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, nativePersonId, profileUrl, sourcePersonIds, validDay,
@@ -72,30 +71,36 @@ export function legiscanVotesProjectionIssue(value: LegiscanVotesProjection): st
   return null;
 }
 /** Joins cite immutable promoted roster versions so departed members retain their verified history. */
-export async function legiscanVoteIdentityAuthorityIssue(store: Pick<RoutineDataStore, "readPromotion" | "readCandidate">, candidate: RoutineCandidate): Promise<string | null> {
+export async function legiscanVoteIdentityAuthorityIssue(store: Pick<RoutineDataStore,"readSourceHead"|"readSlimRosters"|"readHistoricalRosterIdentities">, candidate: RoutineCandidate): Promise<string | null> {
   const projection = candidate.readModel as LegiscanVotesProjection, issue = legiscanVotesProjectionIssue(projection);
   if (issue) return issue;
   const authority = projection.identityAuthority;
-  const pointer = await store.readPromotion<OfficialStateLegislatorReadModel>("STATE_LEGISLATOR", authority.scope);
-  if (!pointer || pointer.sourceId !== "plural-openstates" || pointer.versionId !== authority.versionId || pointer.lastKnownGoodVersionId !== authority.versionId) return "The vote crosswalk does not cite the canonical held OpenStates roster.";
-  const byVersion = new Map<string, OfficialStateLegislatorReadModel>([[pointer.versionId, pointer.payload]]);
+  const pointer = await store.readSourceHead("STATE_LEGISLATOR", authority.scope);
+  if (!pointer || pointer.sourceId !== "plural-openstates" || pointer.versionId !== authority.versionId || pointer.lastKnownGoodVersionId !== authority.versionId ||
+    pointer.candidateState!=="PROMOTED"||!pointer.acquisitionSucceeded||pointer.imported||!pointer.normalizedHash)
+    return "The vote crosswalk does not cite the canonical held OpenStates roster.";
+  const current=(await store.readSlimRosters("STATE_LEGISLATOR",[authority.scope])).find(row=>row.scope===authority.scope);
+  if(!current||current.versionId!==pointer.versionId||current.readModelSha256!==pointer.normalizedHash||current.roster.scope!==`US-${projection.state}`)
+    return "The vote crosswalk's current OpenStates identity fields do not match its canonical held version.";
+  const byVersion = new Map<string,{sourceId:string;jurisdiction:string;officeholders:readonly RosterIdentityPerson[]}>(
+    [[pointer.versionId,{sourceId:pointer.sourceId,jurisdiction:current.roster.scope,officeholders:current.roster.officeholders}]]);
   for (const join of authority.joins) {
     const versionId = join.sourceRosterVersionId!;
     if (!byVersion.has(versionId)) {
-      const captured = await store.readCandidate(versionId);
-      if (!captured || captured.state !== "PROMOTED" || captured.receipt?.decision !== "GOOD" || captured.candidate.sourceId !== "plural-openstates" ||
-        captured.candidate.recordClass !== "STATE_LEGISLATOR" || captured.candidate.scope !== authority.scope ||
-        captured.candidate.normalization.normalizedHash !== digest(captured.candidate.readModel)) return "The vote crosswalk's historical OpenStates roster is not a verified held source version.";
-      byVersion.set(versionId, captured.candidate.readModel as OfficialStateLegislatorReadModel);
+      const captured = await store.readHistoricalRosterIdentities?.(versionId);
+      if (!captured || captured.versionId!==versionId||captured.sourceId !== "plural-openstates" || captured.recordClass !== "STATE_LEGISLATOR" ||
+        captured.scope !== authority.scope||!captured.parserVersion||!/^[a-f0-9]{64}$/.test(captured.normalizedHash))
+        return "The vote crosswalk's historical OpenStates roster is not a verified held source version.";
+      byVersion.set(versionId,captured);
     }
     const roster = byVersion.get(versionId)!;
-    if (roster.sourceId !== "plural-openstates" || roster.jurisdiction !== `US-${projection.state}` || !Array.isArray(roster.roster?.officeholders)) return "The vote crosswalk cites a roster for another state or publisher.";
-    const candidates = roster.roster.officeholders.filter(holder => {
+    if (roster.sourceId !== "plural-openstates" || roster.jurisdiction !== `US-${projection.state}` || !Array.isArray(roster.officeholders)) return "The vote crosswalk cites a roster for another state or publisher.";
+    const candidates = roster.officeholders.filter(holder => {
       if (holder.level !== "STATE" || !sourcePersonIds(holder).includes(join.personId)) return false;
       if (join.basis === "NATIVE_ID") return Object.entries(holder.nativeIds ?? {}).filter(([scheme]) => /^legiscan$/i.test(scheme)).flatMap(([, ids]) => ids).includes(String(join.legiscanPeopleId));
       return [holder.websiteUrl, ...(holder.profileUrls ?? [])].map(profileUrl).includes(join.matchedUrl);
     });
-    const sharing = join.basis === "EXACT_MEMBER_PROFILE_URL" ? roster.roster.officeholders.filter(holder => [holder.websiteUrl, ...(holder.profileUrls ?? [])].map(profileUrl).includes(join.matchedUrl)) : candidates;
+    const sharing = join.basis === "EXACT_MEMBER_PROFILE_URL" ? roster.officeholders.filter(holder => [holder.websiteUrl, ...(holder.profileUrls ?? [])].map(profileUrl).includes(join.matchedUrl)) : candidates;
     if (candidates.length !== 1 || sharing.length !== 1 || candidates[0].provenance.sourceUrl !== join.sourceUrl) return "The vote crosswalk is not a unique exact identity in its independently held OpenStates roster.";
   }
   return null;

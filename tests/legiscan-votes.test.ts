@@ -129,7 +129,17 @@ test("actual source fixtures promote through the per-state routine contract and 
   assert.ok(republished.outcome.promoted);
   const historical = structuredClone(first.publication.candidate);
   (historical.readModel as Parameters<typeof legiscanVotesProjectionIssue>[0]).identityAuthority.versionId = republished.outcome.promoted.versionId;
-  assert.equal(await legiscanVoteIdentityAuthorityIssue(civicStore, historical), null);
+  const readPromotion=civicStore.readPromotion.bind(civicStore),readCandidate=civicStore.readCandidate.bind(civicStore);
+  civicStore.readPromotion=async()=>{throw Error("whole roster read");};civicStore.readCandidate=async()=>{throw Error("whole historical candidate read");};
+  try{
+    assert.equal(await legiscanVoteIdentityAuthorityIssue(civicStore,historical),null,"departed-member evidence survives without whole record reads");
+    const captured=await civicStore.readHistoricalRosterIdentities(published.outcome.promoted!.versionId);
+    assert.ok(captured);assert.ok(captured.officeholders.length);
+    assert.ok(captured.officeholders.every(person=>!("offices"in person)&&!("fieldSources"in person)&&Object.keys(person.provenance).length===1));
+    const withoutHistorical={readSourceHead:civicStore.readSourceHead.bind(civicStore),readSlimRosters:civicStore.readSlimRosters.bind(civicStore)};
+    assert.match((await legiscanVoteIdentityAuthorityIssue(withoutHistorical,historical))!,/historical OpenStates roster/,
+      "an unavailable narrow selector cannot fall back to a full candidate or self-certify a join");
+  }finally{civicStore.readPromotion=readPromotion;civicStore.readCandidate=readCandidate;}
 });
 test("a successful empty daily listing is a confirmed unchanged check and establishes no absent votes", async () => {
   const civicStore = new MemoryRoutineDataStore(), store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();

@@ -13,7 +13,7 @@ import { readOfficialRosterIds } from "./source-hash.ts";
  * scope. No tracked or vendor roster is inspected.
  */
 export async function officialStateRollIdentityAuthorityIssue(
-  store: Pick<RoutineDataStore, "readPromotion" | "readCandidate" | "readSourceHead" | "readCandidatePath">,
+  store: Pick<RoutineDataStore,"readSourceHead"|"readCandidatePath"|"readSlimRosters"|"readHistoricalRosterIdentities">,
   candidate: RoutineCandidate,
 ): Promise<string | null> {
   if (candidate.recordClass !== "STATE_ROLL_CALL") return null;

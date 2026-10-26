@@ -100,4 +100,7 @@ test("Postgres derives source movement from exact scope/parser/hash format; prom
   assert.deepEqual(history.get(task.id), { rawHash: "b".repeat(64), observedFrom: AT,
     lastChangedAt: new Date(start + 2 * DAY).toISOString(), changes: 1, meanChangeMs: 2 * DAY });
   assert.ok(bytes < 512, `history response is ${bytes} bytes despite megabytes of held bodies`);
+  await pg.query("UPDATE civic_data_promotions SET current_version_id=$1",["old-hash-format"]);
+  assert.equal((await readSourceChangeHistory(async(text,params)=>(await pg.query<Record<string,unknown>>(text,[...(params ?? [])])).rows,[task])).size,0,
+    "an untyped legacy hash cannot teach the scheduler that a changing native source is unchanged");
 });

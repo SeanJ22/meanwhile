@@ -43,7 +43,7 @@ import {
 } from "../lib/control-plane/fleet-safety.ts";
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
-import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
+import { liveCycleHeartbeat, standingHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { parseRoutineSupervisorFailureSummary } from "../lib/control-plane/routine-outcome-summary.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
@@ -99,7 +99,7 @@ import {
   writeRuntimeReleaseHold,
   type RuntimeReleaseInspection,
 } from "../lib/ops/runtime-release-handoff.ts";
-import { discardStagedReleases, defaultAsyncRunCommand, stageRuntimeRelease, stagedReleaseDirectory, stagedReleaseIsReady } from "../lib/ops/runtime-release-stage.ts";
+import { discardStagedReleases, defaultAsyncRunCommand, ReleaseStaging, stagedReleaseDirectory } from "../lib/ops/runtime-release-stage.ts";
 import { parentCodeChanged } from "../lib/ops/runtime-release-switch.ts";
 import { fetchServedCommit, PRODUCTION_BASE_URL } from "./post-deploy-observer.mts";
 import {
@@ -676,8 +676,7 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
     },
   );
 
-  const beat = boundedBeat(() => writeLiveCycleBeat(null), BEAT_BOUND_MS, lateBeat);
-  const beatTimer = setInterval(() => { if (!researchCycleActive) void beat(); }, 60_000);
+  const beatTimer = setInterval(() => { if (!researchCycleActive) void standingBeat(); }, 60_000);
   const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
     executable: process.execPath,
@@ -959,30 +958,15 @@ let researchCycleChild: ChildProcess | null = null;
 let researchStoppedByOwner = false;
 
 const RELEASE_QUICK_SWITCH = process.env.WTP_RELEASE_QUICK_SWITCH === "1";
-const stagingAttempted = new Set<string>();
-let stagingInFlight: string | null = null;
-function startReleaseStaging(targetSha: string): void {
-  if (stagingInFlight !== null) return;
-  stagingInFlight = targetSha;
-  stagingAttempted.add(targetSha);
-  console.log(`  release ${targetSha.slice(0, 8)} is installing in its own checkout; partition admissions continue`);
-  void stageRuntimeRelease({ root: ROOT, targetSha, keep: CODE_ROOT === ROOT ? [] : [CODE_ROOT] }).then(result => {
-    if (result.state === "READY") console.log(`  release ${targetSha.slice(0, 8)} is installed beside the running one; the switch can now be quick`);
-    else console.error(`  release ${targetSha.slice(0, 8)} could not be installed beside the running one (${result.code ?? "unknown"}); the drain-first path will apply it`);
-  }).catch(error => {
-    console.error(`  staging release ${targetSha.slice(0, 8)} failed (${error instanceof Error ? error.name : "error"}); the drain-first path will apply it`);
-  }).finally(() => { stagingInFlight = null; });
-}
+/** One bounded staging at a time, for the newest target only; its state rides on the standing heartbeat. */
+const releaseStaging = new ReleaseStaging({ root: ROOT, log: line => console.log(`  ${line}`), error: line => console.error(`  ${line}`) });
 
 type StagedReleaseStep = "STAGING" | "SWITCHED" | "DRAIN";
 const parentChangeReported = new Set<string>();
 async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseStep> {
-  if (!stagedReleaseIsReady(ROOT, targetSha)) {
-    if (!stagingAttempted.has(targetSha)) startReleaseStaging(targetSha);
-
-    return stagingInFlight !== null ? "STAGING" : "DRAIN";
-  }
-  if (!RELEASE_QUICK_SWITCH || PARENT_CODE_SHA === null) return "DRAIN";
+  const staged = releaseStaging.advance(targetSha, CODE_ROOT === ROOT ? [] : [CODE_ROOT]);
+  if (staged === "STAGING") return "STAGING";
+  if (staged === "FAILED" || !RELEASE_QUICK_SWITCH || PARENT_CODE_SHA === null) return "DRAIN";
   const parent = await parentCodeChanged({ root: ROOT, parentSha: PARENT_CODE_SHA, targetSha, run: defaultAsyncRunCommand });
   if (parent.changed) {
     if (!parentChangeReported.has(targetSha)) {
@@ -1098,14 +1082,19 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
     const memory = await hostMemoryReading().catch(() => null);
     let neonBytes: RunnerHeartbeat["neonBytes"] = null;
     try { neonBytes = neonBytesReading(); } catch {  }
+    let codeIdentity: RunnerHeartbeat["codeIdentity"] = null;
+    if (startedAt === null) {
+      try { codeIdentity = readCodeIdentity({ cwd: CODE_ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: new Date().toISOString(), fetch: false }); }
+      catch {  }
+    }
     for (let attempt = 0; attempt < 3; attempt++) {
       const at = new Date().toISOString();
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
-      if (startedAt === null && current === null) return;
 
       if (!exit && startedAt !== null && Date.parse(current?.value.lastCycleFinishedAt ?? "") >= Date.parse(startedAt)) return;
       const next = startedAt === null
-        ? { ...current!.value, beatAt: at, memory: memory ?? current!.value.memory ?? null, neonBytes: neonBytes ?? current!.value.neonBytes ?? null }
+        ? standingHeartbeat(current?.value ?? null, { at, testedSha: RUNNING_CODE_SHA, host: hostname(), codeIdentity,
+          releaseStaging: releaseStaging.status(), memory, neonBytes })
         : liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
           testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
           ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
@@ -1122,6 +1111,14 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
 
 const BEAT_BOUND_MS = 45_000;
 const lateBeat = () => console.error("  live cycle heartbeat did not answer in time; the next beat starts fresh");
+/** Startup and the standing clock write which code runs, at most once a minute, whether or not research runs. */
+const STANDING_BEAT_MS = 60_000;
+let standingBeatAt = 0;
+const standingBeat = boundedBeat(async () => {
+  if (Date.now() - standingBeatAt < STANDING_BEAT_MS) return;
+  standingBeatAt = Date.now();
+  await writeLiveCycleBeat(null);
+}, BEAT_BOUND_MS, lateBeat);
 
 const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
@@ -1335,6 +1332,7 @@ async function stopScheduledOrderClock(): Promise<void> {
 }
 
 function runStandingRuntimeTick(reason: string, force = false): void {
+  if (!canary) void standingBeat();
   checkReleaseForRestart();
   if (runtimeAdmissionsHeld) return;
   const launched = standingRuntimeScheduler.tick(Date.now(), force);

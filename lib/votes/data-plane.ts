@@ -20,6 +20,9 @@ export interface OfficialAcquisition {
   readonly httpStatus: number;
   /** Exact response bytes represented as a string before parsing. */
   readonly body: string;
+  readonly retrievedAt?:string;
+  readonly rawHash?:string;
+  readonly byteCount?:number;
 }
 
 /** An acquisition as candidates hold it: the response's hash and length, not its bytes. */
@@ -29,6 +32,7 @@ export interface HeldAcquisition {
   readonly httpStatus: number;
   readonly rawHash: string;
   readonly byteCount: number;
+  readonly retrievedAt?:string;
 }
 
 export type FederalRollCallWindow = Omit<VotesSnapshot, "positions">;
@@ -143,7 +147,16 @@ function memberAcquisitions(window:FederalRollCallWindow,voteIds:ReadonlySet<str
 }
 
 export function heldAcquisitions(acquisitions: readonly OfficialAcquisition[]): HeldAcquisition[] {
-  return acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body }) => ({ requestedUrl, finalUrl, httpStatus, rawHash: sha256(body), byteCount: Buffer.byteLength(body) }));
+  return acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body,rawHash,byteCount,retrievedAt }) => ({ requestedUrl, finalUrl, httpStatus,
+    rawHash:rawHash??sha256(body),byteCount:byteCount??Buffer.byteLength(body),...(retrievedAt?{retrievedAt}:{}) }));
+}
+
+/** Retained responses keep the actual oldest provider observation; processing time is separate. */
+export function federalVotesSourceObservation(acquisitions:readonly HeldAcquisition[],fallback:string){
+  const first=acquisitions.filter((row):row is HeldAcquisition&{retrievedAt:string}=>typeof row.retrievedAt==="string"&&
+    Number.isFinite(Date.parse(row.retrievedAt))).sort((a,b)=>Date.parse(a.retrievedAt)-Date.parse(b.retrievedAt))[0];
+  return first?{retrievedAt:first.retrievedAt,sourceCheck:{requestedUrl:first.requestedUrl,finalUrl:first.finalUrl,httpStatus:200 as const,
+    rawHash:first.rawHash,checkedAt:first.retrievedAt}}:{retrievedAt:fallback};
 }
 
 export function federalRollCallsCandidate(input: {
@@ -193,7 +206,7 @@ export function federalRollCallsCandidate(input: {
       requestedUrl: input.acquisitions[0]?.requestedUrl ?? "https://clerk.house.gov/",
       finalUrl: input.acquisitions[0]?.finalUrl ?? null,
       httpStatus: input.acquisitions[0]?.httpStatus ?? null,
-      retrievedAt: input.retrievedAt,
+      ...federalVotesSourceObservation(input.acquisitions,input.retrievedAt),
       rawHash: input.acquisitions.length > 0 ? rawHash : null,
       ...(input.complete!==undefined?{complete:input.complete}:{}),
       ...(input.identifierSourceHash ? { rawHashBasis: "SOURCE_CONTENT_V1" as const } : {}),
@@ -285,7 +298,7 @@ export function federalMemberVotesCandidate(input: {
       requestedUrl: acquisitions[0]?.requestedUrl ?? "https://clerk.house.gov/",
       finalUrl: acquisitions[0]?.finalUrl ?? null,
       httpStatus: acquisitions[0]?.httpStatus ?? null,
-      retrievedAt: input.retrievedAt,
+      ...federalVotesSourceObservation(acquisitions,input.retrievedAt),
       rawHash: acquisitions.length > 0 ? rawHash : null,
       ...(input.identifierSourceHash ? { rawHashBasis: "SOURCE_CONTENT_V1" as const } : {}),
       failureDetail: acquisitions.length > 0 ? undefined : "No official chamber response names this member's window.",

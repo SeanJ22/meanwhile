@@ -16,7 +16,7 @@ export async function settleFederalVoteSources(input:{
       recordClass:member.recordClass,scope:member.scope,parserVersion:member.normalization.parserVersion,rawHash:member.retrieval.rawHash,
       now:input.source.now,complete:member.retrieval.complete!==false,
       retrieval:{requestedUrl:member.retrieval.requestedUrl,finalUrl:member.retrieval.finalUrl,httpStatus:member.retrieval.httpStatus,
-        rawHash:member.retrieval.rawHash,retrievedAt:member.retrieval.retrievedAt}}):null;
+        rawHash:member.retrieval.rawHash,retrievedAt:member.retrieval.retrievedAt,...(member.retrieval.sourceCheck?{sourceCheck:member.retrieval.sourceCheck}:{})}}):null;
     if(confirmed)continue;
     const result=await(input.publish?input.publish(member):processRegisteredManualCandidate(input.store,"congress-rollcalls",member,input.source.now));
     if(!result.promoted&&!result.confirmed)refused.push(`${member.scope}:${result.candidate.failureCode??result.candidate.state}`);

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { acquireDataset, DEFAULT_SCOPES } from "../lib/census-geography/acquire.ts";
+import { acquireDataset, CENSUS_GEO_SOURCES, DEFAULT_SCOPES } from "../lib/census-geography/acquire.ts";
 import { acquireGrfScopes, GRF_2026_TARGETS, GRF_ROOT, grfTargetsFromNames } from "../lib/census-geography/grf.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -43,6 +43,32 @@ function harness(year = 2026, session = 120, legislativeYear = 2026) {
 
 test("routine defaults hold the three Census 2026 district plans", () => {
   assert.ok(GRF_KEYS.every(key => DEFAULT_SCOPES.includes(key)));
+});
+
+test("a state's next relationship check reads only changed source bytes and never lends its slice to another scope", async () => {
+  const url = CENSUS_GEO_SOURCES.county.url, requests: string[] = [];
+  let tag = '"one"';
+  const rows = "GEOID_COUNTY_20|NAMELSAD_COUNTY_20|AREALAND_COUNTY_20|GEOID_ZCTA5_20|AREALAND_ZCTA5_20|AREALAND_PART\n" +
+    "04019|Pima County|100|85701|100|100\n06001|Alameda County|100|94612|100|100\n";
+  const fetchImpl = (async (input, init) => {
+    assert.equal(String(input), url);
+    requests.push(init?.method ?? "GET");
+    const headers = { etag: tag, "content-length": String(Buffer.byteLength(rows)) };
+    if (new Headers(init?.headers).get("if-none-match") === tag) return new Response(null, { status: 304, headers });
+    return new Response(init?.method === "HEAD" ? null : rows, { headers });
+  }) as typeof fetch;
+  const options = { only: ["county"], discoverPlans: false, states: new Set(["04"]), cache: cache(), fetchImpl };
+  const first = await acquireDataset(options);
+  const second = await acquireDataset({ ...options, previousDataset: first });
+  assert.deepEqual(requests, ["GET", "HEAD"]);
+  assert.deepEqual(second.scopes, first.scopes);
+  tag = '"two"';
+  await acquireDataset({ ...options, previousDataset: second });
+  assert.deepEqual(requests, ["GET", "HEAD", "HEAD", "GET"]);
+  const national = await acquireDataset({ ...options, states: undefined, previousDataset: second });
+  assert.equal(national.scopes[0].groupings.length, 2);
+  const both = await acquireDataset({ ...options, states: new Set(["04", "06"]), previousDataset: second });
+  assert.equal(both.scopes[0].groupings.length, 2);
 });
 
 test("current GRFC plans come from GRFN vintage 90 even when decennial districts are also listed", () => {

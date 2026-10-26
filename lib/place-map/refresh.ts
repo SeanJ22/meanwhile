@@ -53,7 +53,8 @@ export async function knownPostalZips(root: string, requested: ReadonlySet<strin
 export async function heldStateDataset(query: Query, state: string): Promise<BuiltDataset | undefined> {
   const [row] = await query(`WITH held AS (
       SELECT reader_payload_node(payload) AS root FROM civic_data_promotions
-      WHERE record_class='CENSUS_GEOGRAPHY' AND scope='US:zcta-geography-overlaps'
+      WHERE record_class='CENSUS_GEOGRAPHY' AND scope IN ('US-' || $1 || ':place-map','US:zcta-geography-overlaps')
+      ORDER BY (scope='US-' || $1 || ':place-map') DESC LIMIT 1
     ) SELECT jsonb_build_object('formatVersion',1,'builtAt',h.root->>'builtAt','coverage',$1::text,
     'zctaUniverse','[]'::jsonb,'scopes',coalesce(jsonb_agg(s.scope),'[]'::jsonb)) AS dataset
     FROM held h CROSS JOIN LATERAL (

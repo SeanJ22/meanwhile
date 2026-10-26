@@ -132,9 +132,7 @@ onMeetingPartitionsRefreshed(() => {
   (ROUTINE_SOURCE_TASKS as RoutineSourceTask[]).splice(0, ROUTINE_SOURCE_TASKS.length, ...routineSourceTasks());
 });
 
-/** At most one child from any shared upstream per pass; the next pass rotates to the least-recently-considered task. */
-export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
-/** A sitting-window lane takes up to three reads a pass, run one after another with the same-host gap. Other lanes take one. */
+/** Sitting-window lanes retain their existing three-read turn so long passes keep their hourly catch-up. */
 export const SITTING_WINDOW_LANE_SLOTS_PER_PASS = 3;
 export { ROUTINE_DATA_ADMISSION_MS, ROUTINE_PASS_BUDGET_MS };
 export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
@@ -164,12 +162,8 @@ function consideredAtMs(candidate: Pick<RoutineTaskAdmissionCandidate, "lastCons
 
 export function routineFailureDomainFrontier(
   candidates: readonly RoutineTaskAdmissionCandidate[],
-  perDomain: number = ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   rotationSeed: number = 0,
 ): readonly RoutineTaskAdmissionCandidate[] {
-  if (!Number.isSafeInteger(perDomain) || perDomain <= 0) {
-    throw new Error(`ROUTINE_FAILURE_DOMAIN_FRONTIER_INVALID:${perDomain}`);
-  }
   if (!Number.isSafeInteger(rotationSeed) || rotationSeed < 0) {
     throw new Error(`ROUTINE_FAILURE_DOMAIN_FRONTIER_ROTATION_INVALID:${rotationSeed}`);
   }
@@ -195,8 +189,8 @@ export function routineFailureDomainFrontier(
     // These place projections share one national acquisition and one child, rather than 56 source reads.
     const slots = group.every(({ task }) => task.sourceId === "congress-directory-project" && task.recordClass === "FEDERAL_DIRECTORY") ? group.length
       : group.every(({ deadlineMs }) => deadlineMs !== undefined)
-      ? Math.max(perDomain, SITTING_WINDOW_LANE_SLOTS_PER_PASS)
-      : perDomain;
+      ? SITTING_WINDOW_LANE_SLOTS_PER_PASS
+      : group.length;
     group
       .sort((left, right) =>
         deadlineOrder(left) - deadlineOrder(right) ||
@@ -284,7 +278,7 @@ export function routineFrontierPassBound(
     lanes.set(task.acquisitionFailureDomain, { windowed: lane.windowed && windowed, size: lane.size + 1 });
   }
   const slots = [...lanes.values()].map(({ windowed, size }) =>
-    Math.min(size, windowed ? SITTING_WINDOW_LANE_SLOTS_PER_PASS : ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS));
+    Math.min(size, windowed ? SITTING_WINDOW_LANE_SLOTS_PER_PASS : size));
   return { commandCount: slots.reduce((sum, n) => sum + n, 0), largestFailureDomainSize: Math.max(...slots) };
 }
 

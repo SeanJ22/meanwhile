@@ -19,8 +19,8 @@ import { statesForRegistryDivisions } from "../lib/civic-data/state-scopes.ts";
 /** The actual term-note leaf inside its card, whose footer owns the source link. */
 function renderTermNotes(holders: readonly SeatHolder[]): string[] {
   return holders.map(holder => renderToStaticMarkup(createElement(Card, {
-    title: holder.name, sources: personCardSources(holder), children: createElement(OfficialTermNote, { holder }),
-  })));
+    title: holder.name, sources: personCardSources(holder),
+  }, createElement(OfficialTermNote, { holder }))));
 }
 
 test("every eligible roster term note survives canonical holder lookup and the plain-language reader sentence", async () => {

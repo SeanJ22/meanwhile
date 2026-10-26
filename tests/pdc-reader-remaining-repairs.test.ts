@@ -79,5 +79,9 @@ test("ballot leaves empty funding fields out and contributes partial holdings to
   assert.equal(gap.type, CardGapContribution);
   assert.equal(gap.props.label, "campaign money records");
   assert.equal(gap.props.id, "funding-holdings:congress:test");
-  assert.equal(renderToStaticMarkup(gap), "", "the card frame displays the gap once");
+  const markup = renderToStaticMarkup(gap);
+  assert.match(markup, /working on getting this info/, "partial holdings explain the gap inside the funding section");
+  assert.match(markup, /Want us to get this sooner\?/);
+  assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1);
+  assert.doesNotMatch(markup, /Still gathering|data-card-footer/);
 });

@@ -148,7 +148,11 @@ test("Bodies stays compact and opens the correct body with next and last meeting
         await openTusd();
         assert.equal(await nextRow.count(), calendar === "next" ? 1 : 0);
         assert.equal(await lastRow.count(), calendar === "last" ? 1 : 0);
-        await page.locator("[data-card-gap]").waitFor();
+        const gapId = calendar === "next" ? "body:last-meeting" : calendar === "last" ? "body:next-meeting" : `body:${tusd.bodyId}:meetings`;
+        const gap = page.locator(`[data-card-gap="${gapId}"]`);
+        await gap.waitFor({ state: "visible" });
+        assert.match(await gap.innerText(), /working on getting this info/);
+        assert.equal(await gap.locator("[data-demand-subject]").getAttribute("data-demand-subject"), tusd.bodyId);
       }
       assert.deepEqual(errors, []);
       await context.close();

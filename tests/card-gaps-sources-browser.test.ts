@@ -86,6 +86,7 @@ test("real held venue and congress cards keep missing info in sections and sourc
     // Freeze the source response's date so its upcoming and past sections stay reproducible.
     await page.clock.setFixedTime(new Date(recorded.generatedAt));
     for (const mode of ["venue", "official"] as const) {
+      const statementsResponse = mode === "official" ? page.waitForResponse(response => new URL(response.url()).pathname === `/api/profile/${encodeURIComponent(holder.id)}`) : null;
       await page.goto(`http://127.0.0.1:${address.port}/${mode}`);
       const card = page.locator("[data-reader-card]");
       await card.waitFor({ state: "visible" });
@@ -115,6 +116,13 @@ test("real held venue and congress cards keep missing info in sections and sourc
         assert.ok(await row.getByRole("button", { name: "Want us to get this sooner?", exact: true }).count() > 0);
       }
       if (mode === "official") {
+        assert.equal((await statementsResponse!).status(), 503, "exercise the failed public-statements response");
+        const statementsGap = card.locator(`[data-card-gap="statements:${holder.id}"]`);
+        await statementsGap.waitFor({ state: "visible" });
+        assert.equal(await card.getByRole("button", { name: "Public statements", exact: true }).count(), 1, "the section stays present after the request fails");
+        assert.equal(await statementsGap.evaluate(gap => gap.closest(".card-section")?.querySelector(".card-section-title")?.textContent), "Public statements", "the failed request belongs inside its section");
+        assert.match(await statementsGap.innerText(), /working on getting this info/);
+        assert.equal(await statementsGap.locator("[data-demand-subject]").getAttribute("data-demand-subject"), holder.id);
         for (const title of ["Committees", "Campaign money", "Voting record"]) {
           const header = card.getByRole("button", { name: title, exact: true });
           await header.waitFor({ state: "visible" });

@@ -17,7 +17,7 @@ export function Card({
   attrs?: Readonly<Record<`data-${string}`, string>>;
   eyebrow?: ReactNode;
   onClose?: () => void;
-  children: ReactNode;
+  children?: ReactNode;
   sources: CardSource[];
   className?: string;
   independent?: boolean;

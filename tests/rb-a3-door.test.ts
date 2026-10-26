@@ -55,8 +55,8 @@ test("both lanes reach the existing place card with their own saved field source
     assert.equal(card.name, "Example City Council");
     assert.equal(card.officeContact?.address, address);
     const sources = districtCardSources([], [], card.officeContact?.provenance, card.fieldSources);
-    assert.deepEqual(sources.filter(source => source.what === "Name" || source.what === "Office address").map(source => [source.what, source.provenance.sourceUrl]),
-      [["Name", "https://example.gov/council"], ["Office address", "https://news.example/council"]]);
+    assert.deepEqual(sources.filter(source => source.what === "This government's name and the area it serves" || source.what === "Where to find the office").map(source => [source.what, source.provenance.sourceUrl]),
+      [["This government's name and the area it serves", "https://example.gov/council"], ["Where to find the office", "https://news.example/council"]]);
   } finally { await db.pg.close(); }
 });
 

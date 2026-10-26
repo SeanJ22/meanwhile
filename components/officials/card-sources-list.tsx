@@ -35,7 +35,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
           </PopupRow>
 
           {[...new Set((entry.details ?? [entry]).flatMap(detail => readableSourceQuotes(detail.provenance.quote)))].map(quote => (
-            <p key={quote} className="t-body text-muted">“{quote}”</p>
+            <p key={quote} className="t-body text-voice">“{quote}”</p>
           ))}
 
           {[...new Set((entry.details ?? [entry]).map(detail => sourceDate(detail.publishedAt)).filter(Boolean))].map(date => <PopupRow key={`published:${date}`} label="Published">{date}</PopupRow>)}

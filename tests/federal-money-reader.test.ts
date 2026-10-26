@@ -85,7 +85,9 @@ test("real OpenFEMA declaration reaches the county card and Ask with the same da
     const rows = federalMoneyRows(held.records, { divisionId: COUNTY, bodyId: BODY });
     assert.equal(rows[0].relationship, "GEOGRAPHY");
     assert.equal(federalMoneySources(rows)[0].provenance.kind, "OFFICIAL");
-    assert.match(federalMoneySources(rows)[0].what, /published 2026-09-15/);
+    assert.match(federalMoneySources(rows)[0].what, /Disaster declaration.*BUNKER FIRE/);
+    assert.equal(federalMoneySources(rows)[0].publishedAt, "2026-09-15T00:00:00.000Z");
+    assert.equal(federalMoneySources(rows)[0].provenance.sourceUrl, CAPTURE.url);
     const markup = renderToStaticMarkup(createElement(FederalMoneySection, { divisionId: COUNTY, bodyId: BODY, data: read }));
     assert.match(markup, /BUNKER FIRE/);
     assert.match(markup, /Public assistance: Yes/i);

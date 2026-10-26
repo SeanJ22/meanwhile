@@ -60,7 +60,7 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
   switch (load.kind) {
     case "not-applicable":
     case "none":
-      return <CardGapContribution id={`statements:${subjectId}`} label="public statements" subject={{ type: "CANDIDATE", id: subjectId }} />;
+      return <CardSection title="Public statements" defaultOpen><CardGapContribution id={`statements:${subjectId}`} label="public statements" subject={{ type: "CANDIDATE", id: subjectId }} /></CardSection>;
     case "loading":
       return (
         <CardSection title="Public statements" defaultOpen>
@@ -68,7 +68,7 @@ function ProfileForIdentity({ subjectId, onProfile }: { subjectId: string; onPro
         </CardSection>
       );
     case "failed":
-      return <CardGapContribution id={`statements:${subjectId}`} label="public statements" subject={{ type: "CANDIDATE", id: subjectId }} />;
+      return <CardSection title="Public statements" defaultOpen><CardGapContribution id={`statements:${subjectId}`} label="public statements" subject={{ type: "CANDIDATE", id: subjectId }} /></CardSection>;
     case "held":
       return <CardSection title="Public statements" defaultOpen><PublicStatementsProfileContent profile={load.profile} /></CardSection>;
   }
@@ -118,9 +118,8 @@ export function PublicStatementsProfileContent({ profile, statementsHeld = false
           <>
             {/* One shared 0–100% scale. Categories overlap, so bars never sum to 100 and are never normalized. */}
             <p className="mw-chart-note">
-              The share of this member&apos;s tracked statements that PRL&apos;s
-              classifier placed in each category. Categories overlap, so they
-              don&apos;t add up to 100%.
+              The share of tracked statements in each category, as measured by the
+              Polarization Research Lab. A statement can fit more than one category.
             </p>
             <div className="mw-bars" role="group" aria-label="Public statements by category">
               {categories.map((category) => {
@@ -162,11 +161,6 @@ export function PublicStatementsProfileContent({ profile, statementsHeld = false
                 </p>
                 {definition && <p>{definition.explainer}</p>}
                 <p>{chosen.sentence}</p>
-                {definition && (
-                  <p className="mw-dim">
-                    PRL field <code>{definition.column}</code>
-                  </p>
-                )}
                 <button type="button" className="mw-link-btn" onClick={() => setSelected(null)}>
                   ← All categories
                 </button>

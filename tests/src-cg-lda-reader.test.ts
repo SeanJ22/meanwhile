@@ -52,7 +52,7 @@ test("a real joined LDA filing reaches the hydrated member card and its single S
     await page.getByText("Sources", { exact: true }).click();
     await page.getByText("U.S. Senate Office of Public Records — Lobbying Disclosure Act", { exact: true }).waitFor({ state: "visible" });
     await page.getByText("unitedstates/congress-legislators (community project)", { exact: true }).waitFor({ state: "visible" });
-    assert.match(await page.locator("body").innerText(), /The person named in this record: Sen\. John Cornyn \(R-TX\)/);
+    assert.match(await page.locator("body").innerText(), /The person named in this record, Sen\. John Cornyn \(R-TX\), is John Cornyn, who serves in the U\.S\. Senate for Texas/);
     await mkdir(".scratch/ci", { recursive: true });
     await page.screenshot({ path: ".scratch/ci/src-cg-lda-member.png", fullPage: true });
     await context.close();

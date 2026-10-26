@@ -15,6 +15,7 @@ import { routineTaskNextDueMs } from "../lib/civic-data/runner.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { versionedSelect } from "../lib/db/versioned-query.ts";
+import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 
 beforeEach(() => installFactReader(async () => []));
 afterEach(() => installFactReader(undefined));
@@ -36,12 +37,12 @@ links:
 const CONTRACT = requiredManualProductionContract("member-offices");
 const TASK = AUTOMATIC_REFRESH_TASKS.find(task => task.id === "member-offices")!;
 
-async function publishState(store: RoutineDataStore, state: string, vault = new MemoryEvidenceStore()) {
-  const archive = zip([{ name: `people-${sha}/data/${state}/legislature/One.yml`, data: Buffer.from(yaml(`${state}-one`)) }], "2026-10-01");
-  const acquired = await acquireStatePeople({ state, store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks, now: () => at,
+async function publishState(store: RoutineDataStore, state: string, vault = new MemoryEvidenceStore(), phone = "555-1000", revision = sha, now = at, address = "Room 1, State Capitol") {
+  const archive = zip([{ name: `people-${revision}/data/${state}/legislature/One.yml`, data: Buffer.from(yaml(`${state}-one`).replace("555-1000", phone).replace("Room 1, State Capitol", address)) }], now.slice(0, 10));
+  const acquired = await acquireStatePeople({ state, store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks, now: () => now,
     signal: AbortSignal.timeout(10_000), divisions: [],
-    fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha }]) : new Response(archive)) as typeof fetch });
-  const published = await publishStatePeople({ vault, store, ...acquired, now: at });
+    fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha: revision }]) : new Response(archive)) as typeof fetch });
+  const published = await publishStatePeople({ vault, store, ...acquired, now });
   assert.ok(published.outcome.promoted, JSON.stringify(published.outcome.candidate.receipt));
 }
 
@@ -94,14 +95,17 @@ test("on the production store the member-office progress, capture list and conti
     assert.ok(Array.isArray(captures) && captures.length === 1, JSON.stringify(captures));
     assert.equal(await store.readCandidateField(roster!.versionId, ["normalizedPayload", "absent"]), undefined);
     assert.equal(await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["rosterDigests"]), null);
-    const [digest] = await store.readRosterIdDigests("STATE_LEGISLATOR", ["US-CA:openstates-people:v1"]);
-    assert.match(digest!.digest, /^1:[a-f0-9]{32}$/);
+    const head = await store.readSourceHead("STATE_LEGISLATOR", "US-CA:openstates-people:v1");
+    const digest = canonicalCivicDataJson([head!.sourceId, head!.parserVersion, head!.rawHash]);
+    const officeInput = await store.readOfficeRoster("US-CA:openstates-people:v1");
+    assert.equal(officeInput?.roster.officeholders[0]?.offices?.[0]?.phone, "555-1000");
+    assert.deepEqual(officeInput?.roster.divisions, []);
     as("member-offices", "MANUAL_CONTRACT");
     let ticks = 0;
     const cut = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA", "US-TX"], deadlineMs: 1e12, clock: () => ticks++ === 0 ? 0 : 1e12 });
     assert.ok(cut.outcome?.promoted, JSON.stringify(cut));
     const held = await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["rosterDigests", "pending", "absent"]);
-    assert.deepEqual(held, { rosterDigests: { "US-CA": digest!.digest }, pending: ["US-TX"] });
+    assert.deepEqual(held, { rosterDigests: { "US-CA": digest }, pending: ["US-TX"] });
     assert.equal((await store.clock(CONTRACT.sourceId, CONTRACT.recordClass, CONTRACT.scope)).continuationPending, true);
     const before=Number((await pg.query<{version:string}>("SELECT version::text FROM civic_data_clock_versions WHERE record_class=$1 AND scope=$2",
       [CONTRACT.recordClass,CONTRACT.scope])).rows[0]!.version);
@@ -114,4 +118,35 @@ test("on the production store the member-office progress, capture list and conti
     assert.equal((await memberOfficesRunNeeded(store, ["US-CA", "US-TX"])).needed, false);
     } finally { installFactReader(undefined); }
   });
+});
+
+test("unchanged office source hashes confirm without held rosters, records, or event history", async () => {
+  const store = new MemoryRoutineDataStore();
+  await publishState(store, "ca");
+  const first = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA"] });
+  assert.ok(first.outcome?.promoted);
+  store.readCandidate = async () => { throw new Error("whole candidate read"); };
+  store.readPromotion = async () => { throw new Error("whole projection read"); };
+  store.events = async () => { throw new Error("event history read"); };
+  store.readOfficeRoster = async () => { throw new Error("held office roster read"); };
+  const unchanged = await publishMemberOffices({ store, now: "2026-10-02T00:00:00.000Z", jurisdictions: ["US-CA"] });
+  assert.equal(unchanged.confirmation?.head.versionId, first.promotedVersionId);
+  assert.equal(unchanged.records, 0);
+});
+
+test("an existing member's changed office phone and address publish even when the member ids stay the same", async () => {
+  const store = new MemoryRoutineDataStore();
+  await publishState(store, "ca");
+  assert.ok((await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA"] })).outcome?.promoted);
+  const first = await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["records"]);
+  const now = "2026-10-02T00:00:00.000Z";
+  await publishState(store, "ca", new MemoryEvidenceStore(), "555-2000", "b".repeat(40), now, "Room 2, State Capitol");
+  assert.equal((await memberOfficesRunNeeded(store, ["US-CA"])).needed, true);
+  const changed = await publishMemberOffices({ store, now, jurisdictions: ["US-CA"] });
+  assert.ok(changed.outcome?.promoted, JSON.stringify(changed));
+  const records = (await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["records"]))?.records as { id: string; office: { phone: string; address: string } }[];
+  assert.equal(records.length, 1);
+  assert.equal(records[0].id, (first!.records as { id: string }[])[0].id);
+  assert.equal(records[0].office.phone, "555-2000");
+  assert.equal(records[0].office.address, "Room 2, State Capitol");
 });

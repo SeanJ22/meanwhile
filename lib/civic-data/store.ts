@@ -83,6 +83,8 @@ export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate" |
 
 const isNavigationCandidate = (candidate: Pick<RoutineCandidate, "recordClass" | "scope">) =>
   candidate.recordClass === "CURATED_READER_RECORD" && ballotNavigationState(candidate.scope) !== null;
+const isPartedManualCandidate = (candidate: Pick<RoutineCandidate, "recordClass" | "scope">) =>
+  isNavigationCandidate(candidate) || candidate.recordClass === "CURATED_READER_RECORD" && candidate.scope === MEMBER_OFFICES_SCOPE;
 
 export type PublishedCandidateMetadata = Omit<CandidateVersionRecord, "candidate"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "retrieval" | "temporal"> & {
@@ -1374,7 +1376,8 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
         )` } : {}),
       // A member-office run its deadline cut short names the states it still owes.
       ...(recordClass === "CURATED_READER_RECORD" && scope === MEMBER_OFFICES_SCOPE ? { continuationPending: sql<boolean>`
-        jsonb_typeof(${civicDataPromotions.payload}->'pending') = 'array' and jsonb_array_length(${civicDataPromotions.payload}->'pending') > 0` } : {}),
+        (select case when jsonb_typeof(member_progress.pending) = 'array' then jsonb_array_length(member_progress.pending) > 0 else false end
+         from (select reader_payload_value(reader_payload_node(${civicDataPromotions.payload})->'pending') as pending) member_progress)` } : {}),
       ...(recordClass === "STATE_BILL" && scope === LEGISCAN_BULK_SCOPE ? { continuationPending: sql<boolean>`(
         with catalog as (
           select d, (d->>'state_id')::int state_id, (d->>'year_start')::int year_start,
@@ -1951,9 +1954,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return await resolve(loaded) as PublishedCandidateMetadata["candidate"];
   }
 
-  /** A navigation receipt keeps its held facts in payload parts; `readCandidate` loads them, reader paths carry the receipt without them. */
+  /** Large manual receipts share immutable held facts; full candidate reads hydrate them and reader proofs omit them. */
   private async storeReceipt(candidate: Pick<RoutineCandidate, "recordClass" | "scope">, receipt: ValidationReceipt | null): Promise<unknown> {
-    if (receipt === null || !isNavigationCandidate(candidate)) return receipt;
+    if (receipt === null || !isPartedManualCandidate(candidate)) return receipt;
     const { excludedFacts, ...rest } = receipt;
     return { ...await this.payloadParts.store(rest, Object.keys(rest)) as object, excludedFacts: await this.heldFactParts(excludedFacts) };
   }
@@ -2118,9 +2121,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   /** Each large section is encoded, written and released before the next, so the whole candidate is never encoded at once. */
-  private async storeNavigationCandidate(candidate: RoutineCandidate, navigationIndex: unknown): Promise<RoutineCandidate> {
+  private async storeSectionedCandidate(candidate: RoutineCandidate, navigationIndex?: unknown): Promise<RoutineCandidate> {
     const { readModel, normalizedPayload, civicRecords, identities, changeSet, excludedFacts, ...rest } = candidate;
-    const stored: Record<string, unknown> = await this.payloadParts.store({ ...rest, navigationIndex },
+    const stored: Record<string, unknown> = await this.payloadParts.store(navigationIndex ? { ...rest, navigationIndex } : rest,
       ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport", "navigationIndex"]) as Record<string, unknown>;
     stored.readModel = await this.payloadParts.store(readModel);
     stored.normalizedPayload = normalizedPayload === readModel ? stored.readModel : await this.payloadParts.store(normalizedPayload);
@@ -2137,7 +2140,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const stateAuthority = statePublicationScope(record.candidate.scope);
     const meetingDoors = record.candidate.sourceId === "meeting-doors";
     const meeting = record.candidate.recordClass === "MEETING";
-    const candidate = stateAuthority || meetingDoors || meeting ? { ...(stateAuthority ? encodeStateCandidate(record.candidate) : record.candidate),
+    const memberOffices = record.candidate.recordClass === "CURATED_READER_RECORD" && record.candidate.scope === MEMBER_OFFICES_SCOPE;
+    const candidate = stateAuthority || meetingDoors || meeting || memberOffices ? { ...(stateAuthority ? encodeStateCandidate(record.candidate) : record.candidate),
       retrieval: await this.payloadParts.store(record.candidate.retrieval,
         ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "rawHashBasis", "complete", "sourceCheck", "failureDetail"]),
     } : record.candidate;
@@ -2146,7 +2150,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ? await this.payloadParts.store(candidate,
         ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"],
         meetingDoors || meeting ? ["readModel", "normalizedPayload", "changeSet", "identities"] : stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
-      : navigationIndex ? await this.storeNavigationCandidate(record.candidate, navigationIndex) : record.candidate;
+      : navigationIndex || memberOffices ? await this.storeSectionedCandidate(candidate as RoutineCandidate, navigationIndex) : record.candidate;
     await this.db.batch([
       this.db.insert(civicDataCandidates).values({
         id: record.candidate.id,
@@ -2606,9 +2610,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     }).from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids]));
       return Promise.all(rows.map(async row => ({ ...row, candidate: await this.loadMetadataCandidate(row.candidate, row.id) })));
     });
+    const receipt = row?.receipt as ValidationReceipt | null | undefined;
+    const proofReceipt = receipt && isCivicPayloadPart(receipt.excludedFacts) ? { ...receipt, excludedFacts: [] } : receipt;
     return row ? { candidate: row.candidate,
       state: row.state as CandidateState, acquisitionSucceeded: row.acquisitionSucceeded,
-      receipt: row.receipt as ValidationReceipt | null, promotedVersion: row.promotedVersion,
+      receipt: proofReceipt as ValidationReceipt | null, promotedVersion: row.promotedVersion,
       lastKnownGoodVersion: row.lastKnownGoodVersion, failureCode: row.failureCode, failureDetail: row.failureDetail } : null;
   }
 
@@ -2778,17 +2784,17 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async promote(candidateId: string, receipt: ValidationReceipt, at: string, options: CandidateTransitionOptions = {}): Promise<PromotedProjection> {
     this.assertMutationAuthority();
     const held = options.candidate;
-    const navigation = held !== undefined && isNavigationCandidate(held);
+    const partedManual = held !== undefined && isPartedManualCandidate(held);
     let record: CandidateVersionRecord | null;
-    if (held && (navigation || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY")) {
-      const hash = navigation || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
+    if (held && (partedManual || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY")) {
+      const hash = partedManual || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
       const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
         normalizedPayloadHash: sql<string | null>`${civicDataCandidates.candidate}#>>'{normalization,normalizedPayloadHash}'`,
       }).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
       if (!row || !heldEnvelopeMatches(row, held) || hash(held.readModel) !== row.normalizedHash ||
           held.normalization.normalizedPayloadHash !== row.normalizedPayloadHash || hash(held.normalizedPayload) !== row.normalizedPayloadHash) throw new Error(`CANDIDATE_PROMOTION_ENVELOPE_MISMATCH:${candidateId}`);
-      record = { ...postgresCandidateSummary(row), ...(navigation ? { receipt } : {}), candidate: held } as CandidateVersionRecord;
+      record = { ...postgresCandidateSummary(row), ...(partedManual ? { receipt } : {}), candidate: held } as CandidateVersionRecord;
     } else {
       const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
       record = row ? { ...rowToCandidate(await this.withReceiptParts(row)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
@@ -2806,7 +2812,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       .where(eq(civicDataPromotions.key, key))
       .limit(1);
     const expectedVersionId = record.lastKnownGoodVersion;
-    const storedReceipt = navigation ? await this.storeReceipt(candidate, persistedReceipt) : persistedReceipt;
+    const manualParts = isPartedManualCandidate(candidate);
+    const storedReceipt = manualParts ? await this.storeReceipt(candidate, persistedReceipt) : persistedReceipt;
     const receiptJson = JSON.stringify(storedReceipt);
     const eligibility = sql`
       ${civicDataCandidates.id} = ${candidateId}
@@ -2895,7 +2902,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       payload: candidate.readModel,
-      receipt: navigation ? persistedReceipt : promotedRows[0].validationReceipt as ValidationReceipt,
+      receipt: manualParts ? persistedReceipt : promotedRows[0].validationReceipt as ValidationReceipt,
     };
   }
 

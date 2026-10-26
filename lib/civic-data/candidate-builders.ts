@@ -1,4 +1,5 @@
 import { DOTGOV_SCOPE, DOTGOV_PARSER_VERSION, dotGovSnapshotIssues, type DotGovSnapshot } from "./dotgov.ts";
+import { acsSourceContentHash } from "../sources/census-acs-population/source-hash.ts";
 import { mergeStatePeople } from "../state-rollcalls/legislators.ts";
 import { createHash } from "node:crypto";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
@@ -133,10 +134,10 @@ export function censusAcsCandidate(zctaFetch: AcsFetch, stateFetch: AcsFetch, na
   const state = national ? rows.filter(row => row.geography === "state") : normalizeAcs(stateFetch);
   const readModel: PromotedAcsPopulation = { formatVersion: 1, vintage, zcta, state,
     ...(national ? { geographies: rows.filter(row => !["zcta", "state"].includes(row.geography!)), counts: national.counts } : {}) };
-  const normalizedPayload = { product, table: "B01003", ...readModel };
+  const normalizedPayload = { product, table: "B01003", ...readModel,...(national?.sourceProbe?{sourceProbe:national.sourceProbe}:{}) };
   const captures = national?.captures ?? [zctaFetch, stateFetch];
-  const rawHash = sha256(captures.map(capture => sha256(capture.rawText ?? JSON.stringify(capture.rows))).join("\n"));
-  const retrievedAt = captures.map(capture => capture.fetchedAt).sort().at(-1)!;
+  const rawHash = national?.sourceProbe?acsSourceContentHash(national.sourceProbe):sha256(captures.map(capture => sha256(capture.rawText ?? JSON.stringify(capture.rows))).join("\n"));
+  const retrievedAt = captures.map(capture => capture.fetchedAt).sort()[0]!;
   const violations: string[] = [];
   const expectedStates = Object.entries(FIPS_TO_STATE).filter(([, value]) => value.prefix === "state" || ["DC", "PR"].includes(value.postal)).map(([fips]) => fips);
   if (expectedStates.some(fips => !state.some(row => row.code === fips))) violations.push("The ACS state table is missing a state, DC or Puerto Rico.");
@@ -147,7 +148,8 @@ export function censusAcsCandidate(zctaFetch: AcsFetch, stateFetch: AcsFetch, na
     sourceId: "census-data-api", recordClass: "CENSUS_REFERENCE", scope: "acs-population",
     sourceProjectionEvidence: sourceProjectionEvidence("census-data-api", "CENSUS_REFERENCE", "acs-population"),
     retrieval: { succeeded: true, requestedUrl: zctaFetch.url, finalUrl: zctaFetch.finalUrl ?? CENSUS_ACS_BASE,
-      httpStatus: captures.every(capture => capture.status === 200 || capture.status === 204) ? 200 : null, retrievedAt, rawHash },
+      httpStatus: captures.every(capture => capture.status === 200 || capture.status === 204) ? 200 : null, retrievedAt, rawHash,
+      ...(national?.sourceProbe?{rawHashBasis:"SOURCE_CONTENT_V1" as const,complete:national.sourceProbe.complete}:{}) },
     normalization: { succeeded: true, parserVersion: "census-data-api/3", schemaVersion: `${product}:B01003_001E+B01003_001M`,
       normalizedHash: acsPayloadHash(readModel), normalizedPayloadHash: acsPayloadHash(normalizedPayload),
       inputRecords: count, outputRecords: count, droppedRecords: 0, missingRequiredFields: [] },

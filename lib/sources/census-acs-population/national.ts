@@ -2,7 +2,8 @@
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import { stateBase } from "../../ocd/divisions.ts";
 import { readPublisherBody, sourceAcquisitionFailure } from "../../civic-data/source-acquisition-error.ts";
-import { censusRequest, fetch as fetchTable, normalize, ACS_GEOGRAPHIES, type AcsScope, type AcsFetch, type AcsPopulationRow } from "./index.ts";
+import { censusRequest, fetch as fetchTable, normalize, ACS_GEOGRAPHIES, type AcsScope, type AcsFetch, type AcsFetchOptions, type AcsPopulationRow } from "./index.ts";
+import type { AcsSourceProbe } from "./source-hash.ts";
 
 const ACS_CATALOG = "https://api.census.gov/data.json";
 interface AcsRelease { readonly vintage: number; readonly publishedAt: string | null; readonly publicationUrl?: string }
@@ -13,6 +14,11 @@ export interface AcsNationalLoad {
   readonly captures: readonly AcsFetch[];
   readonly rows: readonly AcsPopulationRow[];
   readonly counts: readonly AcsLoadCounts[];
+  readonly sourceProbe?:AcsSourceProbe;
+}
+export interface AcsNationalSources {
+  readonly release:AcsRelease;readonly captures:readonly AcsFetch[];
+  readonly states:readonly {readonly state:AcsPopulationRow;readonly captures:readonly AcsFetch[]}[];
 }
 
 /** Match the exact detailed five-year product, excluding profiles, one-year and supplemental datasets. */
@@ -79,39 +85,54 @@ export function acsLoadCounts(rows: readonly AcsPopulationRow[]): AcsLoadCounts[
 
 /** Bulk wildcard tables, never one request per government. Concurrency bounds memory;
  * provider Retry-After is the only request pacing. A failed table refuses replacement of the LKG. */
-export async function acquireNationalAcs(input: {
+export async function acquireNationalAcsSources(input: {
   readonly key: string | undefined;
   readonly fetcher?: typeof globalThis.fetch;
   readonly signal?: AbortSignal;
-  readonly targets: (stateFips: string, rows: readonly AcsPopulationRow[]) => Promise<readonly AcsJoinTarget[]>;
-}): Promise<AcsNationalLoad> {
+  readonly sourceDocument?:AcsFetchOptions["sourceDocument"];
+}): Promise<AcsNationalSources> {
   const fetcher = input.fetcher ?? globalThis.fetch;
   const release = await discoverAcsRelease(fetcher, input.signal);
-  const read = (scope: AcsScope, stateFips?: string) => fetchTable(scope, input.key, fetcher, input.signal, { ...release, stateFips });
+  const read = (scope: AcsScope, stateFips?: string) => fetchTable(scope, input.key, fetcher, input.signal, { ...release, stateFips,sourceDocument:input.sourceDocument });
   const initial = await Promise.allSettled([read("zcta"), read("state"), read("nation")]);
   const captures: AcsFetch[] = initial.map(result => { if (result.status === "rejected") throw result.reason; return result.value; });
   const stateRows = normalize(captures[1]);
-  const rows: AcsPopulationRow[] = [];
-  const zipTargets: AcsJoinTarget[] = [];
+  const states:{state:AcsPopulationRow;captures:AcsFetch[]}[]=[];
   const queue = [...stateRows];
   const worker = async () => {
     for (let state = queue.pop(); state; state = queue.pop()) {
       const scopes = (Object.keys(ACS_GEOGRAPHIES) as AcsScope[]).filter(scope => !["zcta", "state", "nation"].includes(scope));
       const settled = await Promise.allSettled(scopes.map(scope => read(scope, state.code)));
       const tables = settled.map(result => { if (result.status === "rejected") throw result.reason; return result.value; });
-      const normalized = tables.flatMap(normalize);
-      const held = await input.targets(state.code, normalized);
-      zipTargets.push(...held.filter(target => target.geography === "zcta"));
-      const base = stateBase(state.code)?.base;
-      const targets = [...held, ...(base ? [{ geography: "state" as const, geoid: state.code, divisionId: base }] : [])];
-      rows.push(...joinAcsRows([state, ...normalized], targets));
+      states.push({state,captures:tables});
       captures.push(...tables);
     }
   };
   const workers = await Promise.allSettled(Array.from({ length: Math.min(4, queue.length) }, worker));
   for (const result of workers) if (result.status === "rejected") throw result.reason;
-  rows.push(...joinAcsRows(normalize(captures[0]), zipTargets), ...joinAcsRows(normalize(captures[2]), [{ geography: "nation", geoid: "1", divisionId: "ocd-division/country:us" }]));
-  rows.sort((a, b) => `${a.geography}:${a.code}`.localeCompare(`${b.geography}:${b.code}`));
   captures.sort((a, b) => a.url.localeCompare(b.url));
-  return { release, captures, rows, counts: acsLoadCounts(rows) };
+  states.sort((a,b)=>a.state.code.localeCompare(b.state.code));
+  return {release,captures,states};
+}
+
+/** Held identity/geography reads start only after complete provider bytes have been compared. */
+export async function joinNationalAcsSources(sources:AcsNationalSources,
+  targets:(stateFips:string,rows:readonly AcsPopulationRow[])=>Promise<readonly AcsJoinTarget[]>):Promise<AcsNationalLoad> {
+  const rows:AcsPopulationRow[]=[],zipTargets:AcsJoinTarget[]=[];
+  for(const {state,captures}of sources.states){
+    const normalized=captures.flatMap(normalize),held=await targets(state.code,normalized);
+    zipTargets.push(...held.filter(target=>target.geography==="zcta"));
+    const base=stateBase(state.code)?.base;
+    rows.push(...joinAcsRows([state,...normalized],[...held,...(base?[{geography:"state" as const,geoid:state.code,divisionId:base}]:[])]));
+  }
+  const zcta=sources.captures.find(capture=>capture.scope==="zcta")!,nation=sources.captures.find(capture=>capture.scope==="nation")!;
+  rows.push(...joinAcsRows(normalize(zcta),zipTargets),...joinAcsRows(normalize(nation),[{geography:"nation",geoid:"1",divisionId:"ocd-division/country:us"}]));
+  rows.sort((a, b) => `${a.geography}:${a.code}`.localeCompare(`${b.geography}:${b.code}`));
+  return {release:sources.release,captures:sources.captures,rows,counts:acsLoadCounts(rows)};
+}
+
+export async function acquireNationalAcs(input:Parameters<typeof acquireNationalAcsSources>[0]&{
+  readonly targets:(stateFips:string,rows:readonly AcsPopulationRow[])=>Promise<readonly AcsJoinTarget[]>;
+}):Promise<AcsNationalLoad>{
+  return joinNationalAcsSources(await acquireNationalAcsSources(input),input.targets);
 }

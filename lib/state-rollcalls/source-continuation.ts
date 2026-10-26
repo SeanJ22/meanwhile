@@ -24,6 +24,8 @@ export async function continueOfficialVoteDocument(input:{
   readonly now?:()=>string;readonly maxAgeMs?:number;
   /** A small publisher index is checked on every pass before its detail continuation is used. */
   readonly reuse?:boolean;
+  /** Source families with an explicit successful no-content response may retain that exact response too. */
+  readonly acceptedStatuses?:readonly number[];
   readonly read:()=>Promise<OfficialVoteDocument>;
 }):Promise<OfficialVoteDocument>{
   input.signal.throwIfAborted();
@@ -31,7 +33,8 @@ export async function continueOfficialVoteDocument(input:{
   const key=JSON.stringify([input.sourceId,input.parserVersion,input.url]);
   const saved=await cache.readCheckpoint<SavedDocument>("official-vote-source",key);
   const checkedAfter=Date.parse(process.env[SOURCE_CHECK_AFTER_ENV]??"");
-  if(input.reuse!==false&&saved?.context===input.context&&saved.requestedUrl===input.url&&saved.httpStatus===200&&
+  const acceptedStatuses=input.acceptedStatuses??[200];
+  if(input.reuse!==false&&saved?.context===input.context&&saved.requestedUrl===input.url&&acceptedStatuses.includes(saved.httpStatus)&&
       Date.parse(saved.retrievedAt)>Date.parse(now())-(input.maxAgeMs??3_600_000)&&
       (!Number.isFinite(checkedAfter)||Date.parse(saved.retrievedAt)>=checkedAfter)){
     try{
@@ -42,7 +45,8 @@ export async function continueOfficialVoteDocument(input:{
   }
   input.signal.throwIfAborted();
   const document=await input.read();
-  if(document.requestedUrl!==input.url||document.httpStatus!==200||!document.bytes.length||!Number.isFinite(Date.parse(document.retrievedAt)))
+  if(document.requestedUrl!==input.url||!acceptedStatuses.includes(document.httpStatus)||
+      !document.bytes.length&&document.httpStatus!==204||!Number.isFinite(Date.parse(document.retrievedAt)))
     throw Error("OFFICIAL_VOTE_COMPLETED_SOURCE_INVALID");
   const raw=await holdRawCapture(input.vault,input.sourceId,document.bytes,"application/octet-stream");
   await cache.checkpoint<SavedDocument>("official-vote-source",key,{context:input.context,raw,requestedUrl:document.requestedUrl,

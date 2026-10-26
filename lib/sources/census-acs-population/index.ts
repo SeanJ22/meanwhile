@@ -86,6 +86,15 @@ export interface AcsFetch {
   readonly publicationUrl?: string;
 }
 
+export interface AcsSourceDocument {
+  readonly requestedUrl:string; readonly finalUrl:string; readonly httpStatus:number;
+  readonly bytes:Uint8Array; readonly retrievedAt:string;
+}
+export interface AcsFetchOptions {
+  readonly vintage?:number;readonly stateFips?:string;readonly publishedAt?:string|null;readonly publicationUrl?:string;
+  readonly sourceDocument?:(input:{readonly url:string;readonly read:()=>Promise<AcsSourceDocument>})=>Promise<AcsSourceDocument>;
+}
+
 function geography(scope: AcsScope): string {
   return `${ACS_GEOGRAPHIES[scope]}:*`;
 }
@@ -100,7 +109,7 @@ export async function fetch(
   key: string | undefined,
   fetcher: typeof globalThis.fetch = globalThis.fetch,
   signal?: AbortSignal,
-  options: { readonly vintage?: number; readonly stateFips?: string; readonly publishedAt?: string | null; readonly publicationUrl?: string } = {},
+  options: AcsFetchOptions = {},
 ): Promise<AcsFetch> {
   const trimmed = (key ?? "").trim();
   if (trimmed === "") throw new Error(`${KEY_VAR} is not set; the Census Data API redirects a keyless call to missing_key.html, so nothing can be acquired without it`);
@@ -112,17 +121,27 @@ export async function fetch(
   const sourceUrl = route.toString();
   route.searchParams.set("key", trimmed);
   const url = route.toString();
-  const fetchedAt = new Date().toISOString();
-  const response = await censusRequest(`Census ACS ${scope}`, url, fetcher, signal);
-  const text = await readPublisherBody(`Census ACS ${scope}`, () => response.text());
+  const read=async():Promise<AcsSourceDocument>=>{
+    const response = await censusRequest(`Census ACS ${scope}`, url, fetcher, signal);
+    const bytes = await readPublisherBody(`Census ACS ${scope}`, async () => new Uint8Array(await response.arrayBuffer()));
+    if(response.status!==200&&!(response.status===204&&options.stateFips))throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED",
+      `Census ACS ${scope} answered HTTP ${response.status} (${sourceUrl}).`);
+    const final = new URL(response.url || sourceUrl); final.searchParams.delete("key");
+    return {requestedUrl:sourceUrl,finalUrl:final.toString(),httpStatus:response.status,bytes,retrievedAt:new Date().toISOString()};
+  };
+  const document=options.sourceDocument?await options.sourceDocument({url:sourceUrl,read}):await read();
+  let text:string;
+  try{text=new TextDecoder("utf-8",{fatal:true}).decode(document.bytes);}
+  catch{throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID",`Census ACS ${scope} is not complete UTF-8 text.`);}
+  const fetchedAt=document.retrievedAt;
   signal?.throwIfAborted();
-  if (response.status === 204 && options.stateFips) return { scope, url: sourceUrl, status: 204, fetchedAt,
+  if (document.httpStatus === 204 && options.stateFips) return { scope, url: sourceUrl, status: 204, fetchedAt,
     rows: [["NAME", VARIABLE, MARGIN_VARIABLE, "state", ...(scope === "county_subdivision" ? ["county"] : []), ACS_GEOGRAPHIES[scope]]],
     rawText: text, finalUrl: sourceUrl, vintage, publishedAt: options.publishedAt ?? null };
-  if (response.status !== 200) {
+  if (document.httpStatus !== 200) {
     throw sourceAcquisitionFailure(
       "PUBLISHER_RESPONSE_REFUSED",
-      `Census ACS ${scope} answered HTTP ${response.status} (${sourceUrl}).`,
+      `Census ACS ${scope} answered HTTP ${document.httpStatus} (${sourceUrl}).`,
     );
   }
   let parsed: unknown;
@@ -140,9 +159,7 @@ export async function fetch(
       `Census ACS ${scope} answered 200 without the API's row array.`,
     );
   }
-  const final = new URL(response.url || BASE);
-  final.searchParams.delete("key");
-  return { scope, url: sourceUrl, status: response.status, fetchedAt, rows: parsed as (string | null)[][], rawText: text, finalUrl: final.toString(), vintage, publishedAt: options.publishedAt ?? null, publicationUrl: options.publicationUrl };
+  return { scope, url: sourceUrl, status: document.httpStatus, fetchedAt, rows: parsed as (string | null)[][], rawText: text, finalUrl: document.finalUrl, vintage, publishedAt: options.publishedAt ?? null, publicationUrl: options.publicationUrl };
 }
 
 /** Census publishes 500 keyless queries/day; keyed bulk queries need no local-site pacing.

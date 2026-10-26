@@ -18,7 +18,7 @@ import { DOOR_KIND_SPECS } from "./derived-door-kinds.ts";
 import { factReader } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
 import { meetingFactPublicationPending } from "./meeting-fact-progress.ts";
-import { recordAcquiredResponse } from "../sources/acquisition-trace.ts";
+import { recordAcquiredResponse, outsideSourceAcquisition } from "../sources/acquisition-trace.ts";
 
 type Request = NonNullable<RetainedSourceResponse["request"]>;
 export interface MeetingSourcePage {
@@ -43,6 +43,7 @@ interface ProgressPage { readonly response: Omit<RetainedSourceResponse, "bytes"
 interface MeetingSourceProgress { readonly context: string; readonly pages: Readonly<Record<string, ProgressPage>>; readonly deferred?: boolean }
 const PROGRESS = "meeting-source-probe:v1";
 const sourceIO = new AsyncLocalStorage<boolean>();
+const internalIO = <T>(operation:()=>T):T => sourceIO.run(true,()=>outsideSourceAcquisition(operation));
 const requestedInOperation = new AsyncLocalStorage<Set<string>>();
 const requestKey = (page: Pick<MeetingSourcePage, "requestedUrl" | "request">) => canonicalCivicDataHash([page.requestedUrl,
   page.request?.method ?? "GET", page.request?.body ?? null, Object.keys(page.request?.headers ?? {}).length ? page.request!.headers : null]);
@@ -97,7 +98,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
   let deferred = saved?.context === context && saved.deferred === true;
   let checkpointWrites=Promise.resolve(),finished=false;
   const checkpoint = (value:MeetingSourceProgress) => {
-    const write=checkpointWrites.then(()=>sourceIO.run(true,()=>cache.checkpoint(PROGRESS,partition.scope,value,context)));
+    const write=checkpointWrites.then(()=>internalIO(()=>cache.checkpoint(PROGRESS,partition.scope,value,context)));
     checkpointWrites=write.catch(()=>{});return write;
   };
   const save = () => checkpoint({context,pages:{...pages},deferred});
@@ -134,12 +135,12 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
     if (failed instanceof Error) throw failed;
     if (failed) return failed.clone();
     if (probeable && prior && Date.parse(prior.response.retrievedAt) > Date.parse(now) - freshForMs) {
-      const held = await sourceIO.run(true, () => vault.get(prior.vaultKey));
+      const held = await internalIO(() => vault.get(prior.vaultKey));
       if (held && createHash("sha256").update(held.bytes).digest("hex") === prior.response.rawHash) {
         responses.set(key, { ...prior.response, bytes: held.bytes });
         recordAcquiredResponse({requestedUrl,finalUrl:prior.response.finalUrl,httpStatus:prior.response.httpStatus,bytes:held.bytes});
         requestedInOperation.getStore()?.add(key);
-        await sourceIO.run(true, async () => onSource?.({ ...prior.response, bytes: held.bytes }));
+        await internalIO(async () => onSource?.({ ...prior.response, bytes: held.bytes }));
         const response = new Response(new Uint8Array(held.bytes), { status: prior.response.httpStatus, headers: { "content-type": prior.response.contentType } });
         Object.defineProperty(response, "url", { value: prior.response.finalUrl }); return response;
       }
@@ -173,7 +174,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       canonicalUrl: requestedUrl, retrievalUrl: finalUrl, retrievedAt, httpStatus: response.status, headers: {},
       sourceId: partition.sourceId, methodRouteId: partition.id, workItemId: `meeting-source:${partition.scope}:${canonicalCivicDataHash([key, finalUrl])}`,
       attemptId: `meeting-source:${context}:${retrievedAt}`, permission: "ALLOWED", transport: "REACHABLE", retentionPolicy: defaultRetention(tier) };
-    const stored = await sourceIO.run(true, async () => {
+    const stored = await internalIO(async () => {
       const key = objectKey("freshness", artifact), earlier = await vault.get(key);
       if (earlier?.meta.contentHash === contentHash && earlier.meta.custom?.canonicalUrl === requestedUrl &&
         earlier.meta.custom?.retrievalUrl === finalUrl && createHash("sha256").update(earlier.bytes).digest("hex") === rawHash) return { key };
@@ -184,12 +185,12 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
     responses.set(key, retained);
     requestedInOperation.getStore()?.add(key);
     await save();
-    await sourceIO.run(true, async () => onSource?.(retained));
+    await internalIO(async () => onSource?.(retained));
     return response;
   }) as typeof fetch;
   return { head, responses, fetch: fetchSource, get complete() { return complete && replayable; }, get acquisitionComplete() { return complete; },
     forgetGet: transport.forgetGet,
-    inputs<T>(operation: () => Promise<T>): Promise<T> { return sourceIO.run(true, operation); },
+    inputs<T>(operation: () => Promise<T>): Promise<T> { return internalIO(operation); },
     async collect<T>(operation: () => Promise<T>) {
       const keys = new Set<string>();
       const value = await requestedInOperation.run(keys, operation);
@@ -217,7 +218,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       try { return await operation(); } finally { globalThis.fetch = prior; networkTransport = priorTransport; }
     },
     async clear() {
-      if (await sourceIO.run(true,publicationPending)) { deferred=true; await save(); return; }
+      if (await internalIO(publicationPending)) { deferred=true; await save(); return; }
       deferred=false;finished=true;
       await checkpoint({context,pages:{},deferred:false});
     },

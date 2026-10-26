@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T19:15:00Z
+heartbeat: 2026-10-26T19:25:00Z
 
 
 <!-- READY-LIST -->
@@ -108,6 +108,16 @@ DB-05: fix on stream/db-05 and post a new READY; it rides the next release.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 3 PM EDT (3:25 PM)
+- **Live for readers: release 129** (main ccb676a7a, 2:40 PM). Runner loaded it by itself at 2:47:57 PM.
+- **Place map is filling:** first rows by 3:00 PM. Alaska 1,504 boundaries, DC 1, territories (Guam/Northern Marianas) 1,595; zip_place 8,285, zcta_place 7,052. Smallest states first, as built.
+- **Place pages:** place_page 24,900 -> 27,045 by 3:00 PM; rebuild_queue 160,755 -> 159,106.
+- **Bills:** Alabama 200 with 9 bills (was 503). The fan-out finished 5 sessions and is partway through 3 more (48 LegiScan promotions, 2:55-3:04 PM); MA, CA, TX, NY, OH, PA, FL, GA still 0 at 3:20 PM.
+- **NEON COST SPIKE (watching, likely one-time):** 2 PM hour reader 5.60 GB + control plane 0.79 GB = 6.39 GB (1 PM was 2.95). New jobs since 129: legiscan-bulk 1,991 MB in its first 13 minutes (2 PM hour) and 1,148 MB in 3:00-3:17; place-pages 337 MB (2 PM) then 47 MB. Of legiscan-bulk, 1.62 GB was civic_data_candidates in 390 requests (about 4 MB per read): each published part of a session re-reads the session's whole candidate. That is the catch-up of about 61 sessions River warned of in releases/129.md; it ends when they are published. Release 130 (gating now) carries DB-05's shared current-version reads, which send an unchanged candidate across the connection once instead of on every part. If legiscan-bulk is still above about 1 GB/h after 130 is live, River cuts a fix that reads the candidate once per session. member-offices also 851 MB in the 2 PM hour (DB-05's).
+- The control plane's 506 MB in the 2 PM hour is console-publish:owner snapshot, which runs at each deploy (also 4 PM, 7 AM and others yesterday and today); DB-05's area.
+- Federal money after 129: usaspending 119.5 MB and openfema 17.3 MB in the 2 PM hour (129 live for 20 min of it); the full after-hours are 3 PM and 4 PM.
+- Release 130 (MT-02 + DB-05 3d4e87f62) gating on river-next-130b b139d5f33 since 3:15 PM. DB-05's c1bf8151f and 0be79e9a5 turned away (12 failing tests on its own branch).
 
 ### 2 PM EDT
 - Live for readers: release 128 (main 9352c8e14). River 63d03105b.

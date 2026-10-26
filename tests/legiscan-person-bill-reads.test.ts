@@ -57,17 +57,42 @@ test("a real Postgres person bill read selects exact native bills and complete c
       const refusal=error as {code?:string;message?:string};
       return refusal.code==="23514" && refusal.message==="civic_data_promotions may only advance to a distinct, non-backdated version";
     },"the production trigger forbids detaching a published payload");
-    // This private, disposable PGlite instance injects one corrupt pointer to
-    // exercise defense in depth. Disable only its already-tested rewrite guard,
-    // restore that guard inside the same transaction, and leave every other
-    // trigger and all production source/store code intact.
-    await pg.transaction(async tx=>{
+    // Flushing deferred events proves the independent exact-payload guard also
+    // rejects this corruption. Transaction rollback restores the temporary DDL.
+    await assert.rejects(pg.transaction(async tx=>{
       await tx.exec("ALTER TABLE civic_data_promotions DISABLE TRIGGER civic_data_promotions_no_delete_or_rewrite");
-      try{await tx.query(detach,[pointer.scope]);}
-      finally{await tx.exec("ALTER TABLE civic_data_promotions ENABLE TRIGGER civic_data_promotions_no_delete_or_rewrite");}
-    });
+      await tx.query(detach,[pointer.scope]);
+      await tx.exec("SET CONSTRAINTS ALL IMMEDIATE");
+    }),(error:unknown)=>{
+      const refusal=error as {code?:string;message?:string};
+      return refusal.code==="23514" && refusal.message===`promotion STATE_BILL:${pointer.scope} is not the exact proof-consistent candidate payload, receipt, clock, and LKG`;
+    },"the deferred exact-source guard independently rejects detached bytes");
     const enabled=await pg.query<{tgenabled:string}>("SELECT tgenabled FROM pg_trigger WHERE tgrelid='civic_data_promotions'::regclass AND tgname='civic_data_promotions_no_delete_or_rewrite'");
-    assert.equal(enabled.rows[0]?.tgenabled,"O","the immutable pointer guard is restored before the reader runs");
-    await assert.rejects(readBillsForState("AK",{store,now:at,person}),/READER_PUBLISHED_POINTER_INVALID/,"a selected view cannot attest a payload detached from its immutable source");
+    assert.equal(enabled.rows[0]?.tgenabled,"O","rollback restores the immutable pointer guard before the reader runs");
+    // Inject one detached SELECT snapshot in the private transport. The real SQL
+    // still evaluates pointer/source coupling; no table or proof flag is changed.
+    type Statement={query:string;params?:unknown[]};
+    let injected=0;
+    neonConfig.fetchFunction=(async(...args:Parameters<typeof transport>)=>{
+      const init=args[1] as RequestInit,request=JSON.parse(String(init.body)) as Statement&{queries?:Statement[]};
+      for(const statement of request.queries??[request])if(statement.query.includes("AS full_rows")){
+        const parameter=`$${(statement.params?.length??0)+1}`;
+        const source="FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id";
+        assert.ok(statement.query.includes(source));
+        statement.query=statement.query.replace(source,`FROM (
+          SELECT key,source_id,record_class,scope,current_version_id,last_known_good_version_id,promoted_at,validation_receipt,
+            CASE WHEN scope=${parameter} THEN jsonb_set(payload,'{state}','"WA"'::jsonb) ELSE payload END AS payload
+          FROM civic_data_promotions
+        ) p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id`);
+        statement.params=[...statement.params??[],pointer.scope];injected++;
+      }
+      return transport(args[0],{...init,body:JSON.stringify(request)});
+    }) as typeof transport;
+    try{
+      const faultPerson={...person,id:"held:fault-injection"};
+      await assert.rejects(readBillsForState("AK",{store,now:at,person:faultPerson}),/READER_PUBLISHED_POINTER_INVALID/,
+        "a selected view cannot attest a payload detached from its immutable source");
+      assert.equal(injected,1,"only the exact person-part SELECT receives the local fault");
+    }finally{neonConfig.fetchFunction=transport;}
   });
 });

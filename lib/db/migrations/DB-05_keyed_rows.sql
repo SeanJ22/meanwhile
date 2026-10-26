@@ -27,6 +27,8 @@ CREATE INDEX civic_data_rows_lookup ON civic_data_rows (promotion_key, collectio
 --> statement-breakpoint
 CREATE INDEX civic_data_rows_body ON civic_data_rows (collection, body_id, promotion_key);
 --> statement-breakpoint
+CREATE INDEX civic_data_rows_government_body ON civic_data_rows (collection, (split_part(body_id,'#',1)));
+--> statement-breakpoint
 CREATE INDEX civic_data_rows_state ON civic_data_rows (collection, state, row_id);
 --> statement-breakpoint
 CREATE INDEX civic_data_rows_aliases ON civic_data_rows USING gin (aliases);

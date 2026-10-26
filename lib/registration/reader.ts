@@ -9,6 +9,7 @@ import { REGISTRATION_RECORD_CLASS, registrationTarget } from "./publication.ts"
 import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentRegistrationsEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import type { Division } from "../registry/types.ts";
+import { withPeopleSourceChecks } from "../civic-data/people-source-checks.ts";
 
 export type DivisionMetadata = Pick<Division, "ocdId" | "label" | "divisionType" | "tier">;
 
@@ -46,8 +47,10 @@ export async function readRegistrationProjection(
   options: PromotedCivicDataReadOptions = {},
 ): Promise<CivicDataReadResult<RegistrationReadModel>> {
   const target = registrationTarget(state);
-  return readPromotedCivicData<RegistrationReadModel>(REGISTRATION_RECORD_CLASS, target.scope, {
+  const read=await readPromotedCivicData<RegistrationReadModel>(REGISTRATION_RECORD_CLASS, target.scope, {
     ...options,
     maxAgeMs: options.maxAgeMs ?? REGISTRATION_MAX_AGE_MS,
   });
+  return read.kind==="PROMOTED"&&options.edge===undefined?
+    {...read,value:await withPeopleSourceChecks(read.value,REGISTRATION_RECORD_CLASS,target.scope,options.store)}:read;
 }

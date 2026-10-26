@@ -140,6 +140,8 @@ export interface RegistryProvenance {
   sourceOrg: string;
   collectedAt: string;
   verifiedAt: string | null;
+  /** Exact source-body binding; checked dates never carry across different bytes. */
+  rawHash?:string;
 }
 
 export interface Division {

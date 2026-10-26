@@ -15,7 +15,7 @@ import {
 import type { LoadedReference, ReferenceLayer } from "./reference.ts";
 import { referenceGovernmentListings, type RegistrationGovernmentListing } from "./listings.ts";
 import type { Body, Division, DivisionType } from "../registry/types.ts";
-import { registrationSourceContentHash,type RegistrationSourceProbe } from "./source-hash.ts";
+import { registrationSourceContentHash,registrationSourcesCover,type RegistrationSourceProbe } from "./source-hash.ts";
 
 
 export type RegistrationDivision = Division & {
@@ -261,7 +261,9 @@ export function registrationCandidate(input: {
   }
 
   const readModelHash = sha256(canonicalCivicDataJson(readModel));
-  const rawHash = input.sourceProbe?registrationSourceContentHash(input.sourceProbe):sha256(`${receipt.sha256}\n${loaded.sha256}\n${sha256(canonicalCivicDataJson(governmentListings))}`);
+  const coverageComplete=input.sourceProbe?registrationSourcesCover(readModel,input.sourceProbe):false;
+  const sourceProbe=input.sourceProbe?{...input.sourceProbe,coverageComplete,complete:input.sourceProbe.complete&&coverageComplete}:undefined;
+  const rawHash = sourceProbe?registrationSourceContentHash(sourceProbe):sha256(`${receipt.sha256}\n${loaded.sha256}\n${sha256(canonicalCivicDataJson(governmentListings))}`);
   const records = divisions.length + governmentListings.length + bodies.length;
   const considered = allDivisions.length + governmentListings.length + candidates.length;
   const normalizedPayload = {
@@ -274,7 +276,7 @@ export function registrationCandidate(input: {
     divisions: divisions.length,
     bodies: bodies.length,
     governments: governmentListings.length,
-    ...(input.sourceProbe?{sourceProbe:input.sourceProbe}:{}),
+    ...(sourceProbe?{sourceProbe}:{}),
     ...(receipt.replayedFromVersionId ? { replayedFromVersionId: receipt.replayedFromVersionId } : {}),
   };
   const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));

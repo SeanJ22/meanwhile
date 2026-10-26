@@ -36,7 +36,8 @@ test("changed federal leaves retain native facts through one owned base without 
   blockWholeReads(store);
   const nextAt="2026-10-26T02:00:00.000Z",incoming=await page(vault,"Added",nextAt,["base-two"]);
   const delta=await withFederalMoneyVault(vault,()=>writeFederalMoneyPartitions({source:"openfema",state:"AR",store,now:nextAt,page:incoming,baselines:{[scope]:federalMoneyCounts(first.facts)}}));
-  assert.equal(delta.loaded,1);
+  assert.equal(delta.delta.loaded,1);
+  assert.equal(delta.complete,true);
   const held=await store.readPublicationBase("FEDERAL_MONEY",scope);
   assert.deepEqual((held.current?.payload as FederalMoneyProjection).records.map(row=>row.id).sort(),[...first.facts,...incoming.facts].map(row=>row.id).sort());
   assert.notEqual(held.current?.versionId,original.current.versionId);

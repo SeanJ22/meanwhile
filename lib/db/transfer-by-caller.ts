@@ -94,9 +94,8 @@ export function withQueryCaller<T>(operation: string, run: () => T): T {
 
 export const countedFetchSlot = Symbol.for("meanwhile.database.transfer.fetch");
 export function preserveDatabaseFetchAccounting<T extends object>(wrapper: T, underlying: object): T {
-  for (const key of [countedFetchSlot, Symbol.for("meanwhile.database.admin-changes.fetch")]) {
-    if ((underlying as unknown as Record<symbol, unknown>)[key]) Object.defineProperty(wrapper, key, { value: true });
-  }
+  if ((underlying as unknown as Record<symbol, unknown>)[countedFetchSlot])
+    Object.defineProperty(wrapper, countedFetchSlot, { value: true });
   return wrapper;
 }
 const callerSocketSlot = Symbol.for("meanwhile.database.transfer.socket.context");

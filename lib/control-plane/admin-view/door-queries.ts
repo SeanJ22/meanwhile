@@ -5,13 +5,14 @@ import { deadLinkReadings } from "../../health/surface-speed.ts";
 import { DOORS_SHOWN, projectDoors, type DoorsView } from "./v6-doors-read.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { Sql } from "../repository/pg-store.ts";
+import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
 // The same validity test as isDoorRecord, evaluated before a row leaves PostgreSQL.
 export const VALID_DOOR_SQL = `value->'formatVersion'='1'::jsonb
   AND jsonb_typeof(value->'doorId')='string' AND jsonb_typeof(value->'kind')='string'
   AND jsonb_typeof(value->'bodyIds')='array' AND jsonb_typeof(value->'hosts')='array'
   AND value->>'status' IN ('OPEN','SHUT','SUSPENDED') AND jsonb_typeof(value->'updatedAt')='string'`;
-const DOOR_KEYS = ["doorId", "kind", "bodyIds", "hosts", "holds", "status", "updatedAt", "shutSince", "lastSuccessAt", "lastFailureAt", "shutReason", "lastFailureReason"];
+const DOOR_KEYS = ["doorId", "kind", "bodyIds", "hosts", "holds", "status", "updatedAt", "shutSince", "lastSuccessAt", "lastFailureAt", "shutReason", "lastFailureReason", "notes"];
 export const ADMIN_DOOR_VALUE_SQL = `jsonb_build_object('formatVersion',1,'config','{}'::jsonb,
   ${DOOR_KEYS.map(key => `'${key}',value->'${key}'`).join(",")},
   'meeting',CASE WHEN value->'meeting' IS NULL OR value->'meeting'='null'::jsonb THEN NULL ELSE
@@ -56,6 +57,7 @@ export async function readAdminDeadLinks(repos: ControlPlaneRepositories) {
 }
 
 export async function readAdminShutDoors(sql: Sql): Promise<readonly DoorRecord[]> {
-  const rows = await sql.query(`SELECT id,${ADMIN_DOOR_VALUE_SQL} AS value FROM cp_doors WHERE value->>'status'='SHUT' AND (${VALID_DOOR_SQL}) ORDER BY id`) as {value:unknown}[];
+  const rows = await versionedRowsFor(sql).rows((text,params)=>sql.query(text,[...params]), "cp_doors",
+    `value->>'status'='SHUT' AND (${VALID_DOOR_SQL})`, [], ADMIN_DOOR_VALUE_SQL);
   return rows.map(row=>typeof row.value==='string'?JSON.parse(row.value):row.value).filter(isDoorRecord);
 }

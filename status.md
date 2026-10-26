@@ -1468,3 +1468,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Busy-host test with the runner's real order and reservations: RT-01 as shipped starts 0 maps (reproduces production); RT-01b starts the first at 30 s and 7 in a 20-minute window; meeting reads 53 starts vs 58 without maps. 127/127 focused; tsc, eslint, knip, preflight clean. Scan: no bypassCache, no whole-record reads, no proof files.
 - Expected fill: all 56 states in about 3.5 to 4.5 hours of passes after deploy.
 - Gating on river-next-rt01b. Nothing else is READY, so it ships as release 129 (RB-A10 waits on it).
+
+### 10:50 AM EDT: Sean, place map fix at the cause (RT-01 fallback)
+- RT-01b's gate stopped; it goes back to its River builder for Sean's three points: (1) each state's reservation from its own measured peak (#822's measurements; unmeasured states sized from a fit on measured ones, no Texas number for American Samoa); (2) a map that waited a full pass gets the next freed memory instead of handing its turn back; (3) the old fixed 3,709 MiB reservation and old turn path deleted. RT-01b already has #822's per-state serial lane and 1 GiB heap.
+- Then: gate, ship alone if nothing else is READY, close #822, and check on the live runner that place_boundary, zip_place and zcta_place have rows in every state within two passes; 20 random ZIPs in 20 states (half from states under 1%) resolve through the map and keep every board, race and polling site; runner GB/h on both databases before and after; peak memory per state.
+- Before (both databases): 7 AM 3,289 MB, 8 AM 3,803 MB, 9 AM 2,385 MB.

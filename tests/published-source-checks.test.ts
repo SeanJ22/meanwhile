@@ -18,6 +18,9 @@ test("a keyed source check follows the same source hash across unrelated promoti
     await db.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,
       acquisition_succeeded boolean,parser_version text,candidate jsonb,raw_hash text);
       CREATE TABLE civic_data_promotions(record_class text,scope text,source_id text,current_version_id text,last_known_good_version_id text,payload jsonb);`);
+    await db.exec("CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)");
+    for (const sql of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8").split("--> statement-breakpoint")
+      .filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node)\(/.test(sql))) await db.exec(sql);
     await db.exec(readFileSync(new URL("../lib/db/migrations/DB-05_source_checks.sql", import.meta.url), "utf8"));
     const query = async (text: string, params: readonly unknown[]) => (await db.query<Record<string, unknown>>(text, [...params])).rows;
     await db.query("INSERT INTO civic_data_candidates VALUES('v1',$1,$2,$3,'PROMOTED',true,$4,$5::jsonb,$6)",
@@ -33,12 +36,19 @@ test("a keyed source check follows the same source hash across unrelated promoti
     }, check.recordClass, check.scope, keys);
     assert.equal((await read())[0]!.checkedAt, at);
     assert.deepEqual(selected.at(-1)?.[2], [key], "only the requested source key is read");
+    const rootPart = "1".repeat(64), hashesPart = "2".repeat(64);
+    await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2::jsonb),($3,$4::jsonb)", [rootPart,
+      JSON.stringify({ kind: "object", value: { sourceManifestVersion: 1, sourceHashes: { $civicPayloadPart: hashesPart } } }),
+      hashesPart, JSON.stringify({ kind: "object", value: { [key]: hash } })]);
+    await db.query("UPDATE civic_data_promotions SET payload=$1::jsonb", [JSON.stringify({ $civicPayloadPart: rootPart })]);
+    assert.equal((await read())[0]!.checkedAt, at, "large encoded package and hash-map parts keep the same exact source guard");
+    assert.equal(await recordPublishedSourceCheck(query, check), true);
     assert.deepEqual(await read(["another-source"]), []);
     await db.query("INSERT INTO civic_data_candidates SELECT 'v2',source_id,record_class,scope,state,acquisition_succeeded,parser_version,candidate,raw_hash FROM civic_data_candidates WHERE id='v1'");
     await db.query("UPDATE civic_data_promotions SET current_version_id='v2',last_known_good_version_id='v2'");
     assert.equal((await read())[0]!.checkedAt, at, "another source's publication does not erase a valid check");
     assert.equal(await recordPublishedSourceCheck(query, check), false, "an old pointer cannot write a check after publication moves");
-    await db.query("UPDATE civic_data_promotions SET payload=jsonb_set(payload,ARRAY['sourceHashes',$1],to_jsonb($2::text))", [key, "b".repeat(64)]);
+    await db.query("UPDATE civic_data_promotions SET payload=$1::jsonb", [JSON.stringify({ sourceManifestVersion: 1, sourceHashes: { [key]: "b".repeat(64) } })]);
     assert.deepEqual(await read(), [], "a changed source/configuration cannot inherit the previous check");
     assert.equal(await recordPublishedSourceCheck(query, { ...check, pointerVersionId: "v2", rawHash: "b".repeat(64) }), true);
     const page = { ...check, pointerVersionId: "v2", sourceKey: "own-page", rawHash: "d".repeat(64), sourceHash: "c".repeat(64) };

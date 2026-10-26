@@ -41,7 +41,7 @@ export async function recordPublishedSourceCheck(query: SourceChecksQuery, input
       AND p.last_known_good_version_id=p.current_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded
       AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope AND c.parser_version=$7
       AND c.candidate#>>'{retrieval,rawHashBasis}'='SOURCE_CONTENT_V1'
-      AND (($11::text IS NULL AND p.payload->>'sourceManifestVersion'='1' AND p.payload->'sourceHashes'->>$3=$6)
+      AND (($11::text IS NULL AND reader_payload_node(p.payload)->>'sourceManifestVersion'='1' AND reader_payload_node(reader_payload_node(p.payload)->'sourceHashes')->>$3=$6)
         OR ($11::text IS NOT NULL AND c.raw_hash=$11))
       AND NOT (c.candidate ? 'bootstrapImport')
       AND coalesce(c.candidate#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'
@@ -67,7 +67,7 @@ export async function readPublishedSourceChecks(query: SourceChecksQuery, record
       AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope
       AND c.state='PROMOTED' AND c.acquisition_succeeded AND c.parser_version=s.parser_version
       AND c.candidate#>>'{retrieval,rawHashBasis}'='SOURCE_CONTENT_V1'
-      AND ((s.source_raw_hash IS NULL AND p.payload->>'sourceManifestVersion'='1' AND p.payload->'sourceHashes'->>s.source_key=s.raw_hash)
+      AND ((s.source_raw_hash IS NULL AND reader_payload_node(p.payload)->>'sourceManifestVersion'='1' AND reader_payload_node(reader_payload_node(p.payload)->'sourceHashes')->>s.source_key=s.raw_hash)
         OR (s.source_raw_hash IS NOT NULL AND c.raw_hash=s.source_raw_hash))
       AND NOT (c.candidate ? 'bootstrapImport')
       AND coalesce(c.candidate#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'

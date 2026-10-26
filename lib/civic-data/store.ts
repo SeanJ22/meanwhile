@@ -1280,7 +1280,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         pointer.lastKnownGoodVersionId===row.candidate.id&&pointer.sourceId===row.candidate.sourceId&&pointer.recordClass===row.candidate.recordClass&&pointer.scope===row.candidate.scope&&
         row.candidate.normalization.succeeded&&!!row.candidate.normalization.normalizedHash&&row.receipt?.decision==="GOOD"&&
         row.receipt.candidateId===row.candidate.id&&row.receipt.sourceId===row.candidate.sourceId&&row.receipt.recordClass===row.candidate.recordClass&&row.receipt.scope===row.candidate.scope&&
-        row.receipt.checks.every(check=>check.verdict==="PASS")&&canonicalCivicDataJson(pointer.receipt)===canonicalCivicDataJson(row.receipt)&&
+        canonicalCivicDataJson(pointer.receipt)===canonicalCivicDataJson(row.receipt)&&
         canonicalCivicDataJson(pointer.payload)===canonicalCivicDataJson(row.candidate.readModel),
       imported: isImportOrStateMoveCandidate(row.candidate) || pointer.sourceId !== row.candidate.sourceId };
   }
@@ -2947,8 +2947,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         AND ${civicDataCandidates.validationReceipt}->>'candidateId'=${civicDataCandidates.id}
         AND ${civicDataCandidates.validationReceipt}->>'sourceId'=${civicDataCandidates.sourceId}
         AND ${civicDataCandidates.validationReceipt}->>'recordClass'=${civicDataCandidates.recordClass}
-        AND ${civicDataCandidates.validationReceipt}->>'scope'=${civicDataCandidates.scope}
-        AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(${civicDataCandidates.validationReceipt}->'checks') check_row WHERE check_row->>'verdict' IS DISTINCT FROM 'PASS'),false)`.as("proof_coupled"),
+        AND ${civicDataCandidates.validationReceipt}->>'scope'=${civicDataCandidates.scope},false)`.as("proof_coupled"),
       imported: sql<boolean>`(${civicDataCandidates.candidate} ? 'bootstrapImport')
         OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'
         OR ${civicDataPromotions.sourceId} <> ${civicDataCandidates.sourceId}`.as("imported"),

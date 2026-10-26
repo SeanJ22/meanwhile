@@ -11,6 +11,7 @@ import { discoverGovernmentPortals, governmentJoinRows, portalBindingsFromPage, 
 import type { OpenDataCapture } from "./publication.ts";
 import { OpenDataSpool } from "./spool.ts";
 import type { KnownRelease } from "../known-release.ts";
+import type { socrataDiscoveryProgress } from "./socrata-discovery-progress.ts";
 
 export interface SocrataGovernmentState {
   readonly state:string;
@@ -57,7 +58,10 @@ export async function refreshSocrata(input:{
   writePartition:(partition:Partition)=>Promise<void>;
   saveLeads:(rows:ReturnType<typeof normalizeSocrata>[])=>Promise<void>;
   publish:(reports:OpenDataReport[],capture:OpenDataCapture,captures?:readonly OpenDataCapture[])=>Promise<void>;
-  onDiscoveryComplete?:(input:{reports:OpenDataReport[];captures:readonly OpenDataCapture[];observations:readonly Omit<KnownRelease,"bytes">[];complete:boolean})=>Promise<void>;
+  onDiscoveryComplete?:(input:{reports:OpenDataReport[];captures:readonly OpenDataCapture[];observations:readonly Omit<KnownRelease,"bytes">[];
+    bindings:readonly PortalBinding[];basis?:OpenDataCapture;complete:boolean})=>Promise<void>;
+  sourceWork?:Awaited<ReturnType<typeof socrataDiscoveryProgress>>;
+  initialBindings?:readonly PortalBinding[];
   gap:(detail:unknown)=>void;
   discover?:typeof discoverGovernmentPortals;
   stateWebsite?:typeof readStateGovernmentWebsite;
@@ -65,7 +69,14 @@ export async function refreshSocrata(input:{
   const catalog=input.preparedCatalog??(input.pages?await prepareSocrataCatalog(input.pages,input.signal):null);
   if(!catalog)throw Error("Socrata has no source catalog.");
   const spool=catalog.spool,stateRoot=await mkdtemp(join(tmpdir(),"socrata-governments-"));
-  const domains=catalog.domains,held:GovernmentJoin[]=[],bindings:PortalBinding[]=[],states:string[]=[],observations=new Map<string,Omit<KnownRelease,"bytes">>();
+  const domains=catalog.domains,held:GovernmentJoin[]=[],bindings:PortalBinding[]=[...input.initialBindings??[]],states:string[]=[],observations=new Map<string,Omit<KnownRelease,"bytes">>();
+  const freshBindings=new Set<string>(),completedStates=new Set<string>();
+  const bindingKey=(row:PortalBinding)=>JSON.stringify([row.domain,row.divisionId]);
+  const addBindings=(rows:readonly PortalBinding[])=>{for(const row of rows){
+    freshBindings.add(bindingKey(row));const index=bindings.findIndex(prior=>bindingKey(prior)===bindingKey(row));
+    if(index<0)bindings.push(row);else bindings[index]=row;
+  }};
+  let stateObservations=new Map<string,Omit<KnownRelease,"bytes">>();
   let reports:OpenDataReport[]=[],complete=true;
   const gap=(detail:unknown)=>{complete=false;input.gap(detail);};
   const observe=(release:KnownRelease)=>{
@@ -73,6 +84,7 @@ export async function refreshSocrata(input:{
     const {bytes:_bytes,...metadata}=release;
     // Only scalar source metadata is needed after the normal parser has used these bytes.
     observations.set(JSON.stringify([release.sourceId,release.releaseId]),metadata);
+    stateObservations.set(JSON.stringify([release.sourceId,release.releaseId]),metadata);
   };
   const materialize=async()=>{
     const currentReports=new Map<string,OpenDataReport>([...US_JURISDICTIONS.map(state=>state.usps),"UNRESOLVED"]
@@ -107,25 +119,34 @@ export async function refreshSocrata(input:{
       held.push(...governmentJoinRows(state.governments));
       if(state.divisionId)held.push({divisionId:state.divisionId,bodyIds:[],nativeIds:{ocd_id:state.divisionId,geoid:state.fips,state_fips:state.fips}});
       for(const government of state.governments)if(government.website) {
-        bindings.push(...portalBindingsFromPage(government,government.website,"",domains));
+        addBindings(portalBindingsFromPage(government,government.website,"",domains));
       }
+      const completed=input.sourceWork?.completed(state.state);
+      if(completed){completedStates.add(state.state);addBindings(completed.bindings);
+        for(const row of completed.observations)observations.set(JSON.stringify([row.sourceId,row.releaseId]),row);}
     }
     await materialize();
     const nativeBindings=bindings.length;
     for(const postal of states) {
       if(input.signal.aborted)break;
+      if(completedStates.has(postal))continue;
+      stateObservations=new Map();let stateComplete=true;
       const state=JSON.parse(await readFile(join(stateRoot,`${postal}.json`),"utf8")) as SocrataGovernmentState;
       const governments=[...state.governments];
       if(state.divisionId)try {
-        const website=await (input.stateWebsite??readStateGovernmentWebsite)(state.state,input.signal,observe);
+        const website=await (input.stateWebsite??readStateGovernmentWebsite)(state.state,input.signal,observe,input.sourceWork?.acquire);
         if(website)governments.push({id:`usa-gov:${state.state}`,state:state.state,website,nativeIds:{usa_gov_state:state.state,state_fips:state.fips},bodyIds:[],
           associations:[{divisionId:state.divisionId,layer:"state",geoid:state.fips,basis:"SOURCE_CODE"}]} as unknown as RegistrationGovernmentListing);
-      } catch(error) {gap({state:state.state,reason:error instanceof Error?error.message:String(error)});}
-      const found=await (input.discover??discoverGovernmentPortals)(governments,domains,input.signal,observe);
-      for(const binding of found.bindings)if(!bindings.some(prior=>prior.domain===binding.domain && prior.divisionId===binding.divisionId))bindings.push(binding);
-      if(found.gaps.length)gap(found.gaps);
+      } catch(error) {stateComplete=false;gap({state:state.state,reason:error instanceof Error?error.message:String(error)});}
+      const found=await (input.discover??discoverGovernmentPortals)(governments,domains,input.signal,observe,input.sourceWork?.acquire);
+      addBindings(found.bindings);
+      if(found.gaps.length){stateComplete=false;gap(found.gaps);}
+      await input.sourceWork?.saveState({state:postal,bindings:found.bindings,observations:[...stateObservations.values()],
+        complete:stateComplete&&!input.signal.aborted&&[...stateObservations.values()].every(row=>!row.outage)});
     }
     if(bindings.length!==nativeBindings)await materialize();
-    await input.onDiscoveryComplete?.({reports,captures:catalog.captures,observations:[...observations.values()],complete:complete&&!input.signal.aborted});
+    const finished=complete&&!input.signal.aborted&&bindings.every(row=>freshBindings.has(bindingKey(row)));
+    await input.onDiscoveryComplete?.({reports,captures:catalog.captures,observations:[...observations.values()],bindings,basis:input.sourceWork?.basis,complete:finished});
+    if(finished)await input.sourceWork?.clear();
   } finally {await spool.dispose();await rm(temporaryPath(stateRoot),{recursive:true,force:true});}
 }

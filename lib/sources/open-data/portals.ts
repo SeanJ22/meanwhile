@@ -18,9 +18,10 @@ export function stateGovernmentWebsite(html:string):string|null {
   const section=/<h[1-6]\b[^>]*>\s*(?:State|District|Territory) government(?: website)?\s*<\/h[1-6]>([\s\S]*?)(?=<h[1-6]\b|$)/i.exec(html)?.[1];
   return section?/\bhref=["'](https:\/\/[^"']+)["']/i.exec(section)?.[1] ?? null:null;
 }
-export async function readStateGovernmentWebsite(postal:string,signal:AbortSignal,observe?:(release:KnownRelease)=>void):Promise<string|null> {
+export async function readStateGovernmentWebsite(postal:string,signal:AbortSignal,observe?:(release:KnownRelease)=>void,
+  sourceAcquire:typeof acquireKnownRelease=acquireKnownRelease):Promise<string|null> {
   const acquire=async(url:string)=>{
-    const release=await acquireKnownRelease({sourceId:"socrata-state-links",releaseId:url,url,parserVersion:"src-so/1",maxBytes:4*1024*1024,
+    const release=await sourceAcquire({sourceId:"socrata-state-links",releaseId:url,url,parserVersion:"src-so/1",maxBytes:4*1024*1024,
       checkAfterMs:86400000,signal,fetchImpl:(url,init)=>openDataFetch(url,init),allowedHosts:["www.usa.gov","usa.gov"],headers:{accept:"text/html"}});
     observe?.(release);return release;
   };
@@ -46,11 +47,11 @@ export function portalBindingsFromPage(government:RegistrationGovernmentListing,
     official:true,linkingUrl:url,linkingHtml})));
 }
 export async function discoverGovernmentPortals(governments:readonly RegistrationGovernmentListing[], domains:ReadonlySet<string>, signal:AbortSignal,
-  observe?:(release:KnownRelease)=>void) {
+  observe?:(release:KnownRelease)=>void,sourceAcquire:typeof acquireKnownRelease=acquireKnownRelease) {
   const results=await runBoundedWorkPool(governments.filter(g=>g.website && g.associations.length && isOfficialSource(g.website)),16,async government=>{
     try {
       const url=new URL(government.website!);if(url.protocol==="http:")url.protocol="https:";
-      const page=await acquireKnownRelease({sourceId:"socrata-government-links",releaseId:government.id,url:url.href,
+      const page=await sourceAcquire({sourceId:"socrata-government-links",releaseId:government.id,url:url.href,
         parserVersion:"src-so/1",maxBytes:4*1024*1024,checkAfterMs:86400000,signal,
         fetchImpl:(url,init)=>openDataFetch(url,init),headers:{accept:"text/html"}});
       observe?.(page);

@@ -7,6 +7,7 @@ import { REGISTRATION_RECORD_CLASS, registrationTarget } from "../../registratio
 import { OPEN_DATA_PARSER, type OpenDataSource } from "./model.ts";
 import type { OpenDataCapture } from "./publication.ts";
 import type { KnownRelease } from "../known-release.ts";
+import type { PortalBinding } from "./normalize.ts";
 
 type SourceRequest = Pick<OpenDataCapture,"url"|"rawHash"|"archive">;
 export interface SocrataDiscoveryRequest {
@@ -30,6 +31,8 @@ export interface OpenDataSourceProbe {
   readonly requests:readonly SourceRequest[];
   readonly discoveryVersion?:string;
   readonly discoveryRequests?:readonly SocrataDiscoveryRequest[];
+  readonly portalBindings?:readonly PortalBinding[];
+  readonly basis?:OpenDataCapture;
 }
 export function openDataSourceContentHash(captures:readonly SourceRequest[],inputs:unknown=null):string {
   const records=[...new Set(captures.map(capture=>canonicalCivicDataJson([capture.url,capture.rawHash,capture.archive??null])))].sort();
@@ -53,10 +56,11 @@ export function socrataDiscoveryRequest(release:Omit<KnownRelease,"bytes">):Socr
     finalUrl:release.finalUrl,rawHash:release.sha256,retrievedAt:release.retrievedAt,checkedAt:release.checkedAt,httpStatus:release.lastCheckStatus as 200|304};
 }
 export function openDataSourceProbe(input:{sourceId:OpenDataSource;captures:readonly OpenDataCapture[];dependencies:SourceProbeDependencies;complete:boolean;
-  observations?:readonly Omit<KnownRelease,"bytes">[]}):OpenDataSourceProbe {
+  observations?:readonly Omit<KnownRelease,"bytes">[];portalBindings?:readonly PortalBinding[];basis?:OpenDataCapture}):OpenDataSourceProbe {
   const discovery=input.observations?.map(socrataDiscoveryRequest),requests=discovery?.filter((row):row is SocrataDiscoveryRequest=>row!==null);
   return {formatVersion:1,sourceId:input.sourceId,parserVersion:OPEN_DATA_PARSER,complete:input.complete,dependencies:input.dependencies,
     requests:input.captures.map(({url,rawHash,archive})=>({url,rawHash,...(archive?{archive}:{})})),
     ...(input.sourceId==="socrata-discovery"?{discoveryVersion:SOCRATA_DISCOVERY_VERSION,discoveryRequests:requests??[],
+      portalBindings:input.portalBindings??[],...(input.basis?{basis:input.basis}:{}),
       complete:input.complete&&!!requests?.length&&requests.length===discovery?.length}:{})};
 }

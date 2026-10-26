@@ -76,8 +76,10 @@ export function openDataCandidate(input:{source:OpenDataSource;partition?:string
     input.sourceProbe.requests.some(request=>!captures.some(capture=>openDataSourceContentHash([capture])===openDataSourceContentHash([request])))))
     throw Error("Open-data source probe is not bound to captured source content.");
   const rawHash=input.sourceProbe?openDataProbeContentHash(input.sourceProbe):openDataSourceContentHash(captures), normalizedHash=hash(readModel);
-  const last=[...captures].sort((a,b)=>Date.parse(a.retrievedAt)-Date.parse(b.retrievedAt)||
+  const latest=[...captures].sort((a,b)=>Date.parse(a.retrievedAt)-Date.parse(b.retrievedAt)||
     Date.parse(a.sourceCheck?.checkedAt??a.retrievedAt)-Date.parse(b.sourceCheck?.checkedAt??b.retrievedAt)).at(-1);
+  const last=input.sourceProbe?.basis??latest;
+  if(last&&!captures.some(capture=>capture.url===last.url&&capture.rawHash===last.rawHash))throw Error("Open-data source check does not bind an acquired source page.");
   const bound=openDataRowsBound(input.rows,captures);
   return {id:`cv-${hash([input.source,scope,normalizedHash,rawHash,input.now]).slice(0,32)}`,sourceId:input.source,recordClass:"CURATED_READER_RECORD",scope,
     retrieval:{succeeded:!!last,requestedUrl:last?.url ?? "",finalUrl:last?.url ?? null,httpStatus:last?200:null,retrievedAt:last?.retrievedAt ?? input.now,rawHash,rawHashBasis:"SOURCE_CONTENT_V1",...(last?.sourceCheck?{sourceCheck:last.sourceCheck}:{})},

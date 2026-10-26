@@ -43,6 +43,7 @@ import { confirmSocrataSource } from "../lib/sources/open-data/socrata-source-pr
 import { factClocks } from "../lib/facts/clocks.ts";
 import type { AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import type { CatalogPage } from "../lib/sources/open-data/acquire.ts";
+import { socrataDiscoveryProgress } from "../lib/sources/open-data/socrata-discovery-progress.ts";
 
 export function parseOpenDataArguments(args:readonly string[]):OpenDataSource {
   if(args.length!==2 || !args.includes("--promote"))throw Error("SRC-SO requires --promote and one --source.");
@@ -168,11 +169,14 @@ export async function refreshSocrataNational(input:{store:RoutineDataStore;vault
   const plan=head?.parserVersion===OPEN_DATA_PARSER&&head.rawHashBasis==="SOURCE_CONTENT_V1"
     ?await input.store.readCandidatePath<OpenDataSourceProbe>(head.versionId,["normalizedPayload","sourceProbe"]):null;
   // Credentials remain runtime headers in the normal provider, never in a saved request plan.
-  const catalog=await prepareSocrataCatalog(input.pages??socrataPages({signal:input.signal,token:input.token}),input.signal);
+  const catalog=await prepareSocrataCatalog(input.pages??socrataPages({signal:input.signal,token:input.token,maxSourceAgeMs:input.maxSourceAgeMs}),input.signal);
   try {
     const confirmation=await confirmSocrataSource({store:input.store,plan,versionId:head?.versionId??null,captures:catalog.captures,
       dependencies,signal:input.signal,now:input.now(),maxAgeMs:input.maxSourceAgeMs});
     if(confirmation)return {publication:null,confirmation,reports:[],gaps:[],unchanged:true};
+    const context=createHash("sha256").update(canonicalCivicDataJson([OPEN_DATA_PARSER,dependencies,
+      catalog.captures.map(capture=>[capture.url,capture.rawHash])])).digest("hex");
+    const sourceWork=await socrataDiscoveryProgress({context,captures:catalog.captures,now:input.now(),maxAgeMs:input.maxSourceAgeMs});
     const run=await openDataRun({source:"socrata-discovery",store:input.store,vault:input.vault,now:input.now});
     let publication:Publication|undefined;
     const publish=async(reports:OpenDataReport[],captures:readonly OpenDataCapture[],sourceProbe:OpenDataSourceProbe)=>{
@@ -180,12 +184,13 @@ export async function refreshSocrataNational(input:{store:RoutineDataStore;vault
       for(const row of reports)run.reports.set(row.state,row);
       publication=await run.publish(captures.at(-1)!,[],sourceProbe,captures);
     };
-    await refreshSocrata({preparedCatalog:catalog,states:input.states,signal:input.signal,
+    await refreshSocrata({preparedCatalog:catalog,states:input.states,signal:input.signal,sourceWork,
+      initialBindings:plan&&canonicalCivicDataJson(plan.dependencies)===canonicalCivicDataJson(dependencies)?plan.portalBindings:undefined,
       writePartition:partition=>run.writePartition(partition),saveLeads:input.saveLeads,gap:input.gap,
       publish:async(reports,_capture,captures=catalog.captures)=>publish(reports,captures,
         openDataSourceProbe({sourceId:"socrata-discovery",captures,dependencies,complete:false})),
-      onDiscoveryComplete:async({reports,captures,observations,complete})=>publish(reports,captures,
-        openDataSourceProbe({sourceId:"socrata-discovery",captures,dependencies,observations,complete}))});
+      onDiscoveryComplete:async({reports,captures,observations,bindings,basis,complete})=>publish(reports,captures,
+        openDataSourceProbe({sourceId:"socrata-discovery",captures,dependencies,observations,portalBindings:bindings,basis,complete}))});
     if(!publication)throw Error("Socrata produced no captured publication.");
     return {publication,confirmation:null,reports:[...run.reports.values()],gaps:[],unchanged:false};
   } finally {await catalog.spool.dispose();}

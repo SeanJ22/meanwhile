@@ -6,6 +6,7 @@ import { confirmSocrataSource } from "../lib/sources/open-data/socrata-source-pr
 import type { RoutineDataStore,SourceHead } from "../lib/civic-data/store.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import type { acquireKnownRelease,KnownRelease } from "../lib/sources/known-release.ts";
+import { socrataDiscoveryProgress } from "../lib/sources/open-data/socrata-discovery-progress.ts";
 
 const at="2026-10-01T00:00:00.000Z",later="2026-10-02T00:00:00.000Z",url="https://echo.epa.gov/files/echodownloads/echo_exporter.zip";
 const first:OpenDataCapture={url,retrievedAt:at,rawHash:"a".repeat(64),sourceRows:[{id:"one",name:"One"}],archive:{sha256:"a".repeat(64),member:"ECHO_EXPORTER.csv",publishedAt:null}};
@@ -70,4 +71,18 @@ test("incomplete discovery and credential-bearing URLs never qualify for a saved
     observations:[{...discovery,requestedUrl:governmentUrl+"?api_key=never-save-this"}]});
   assert.equal(plan.complete,false);assert.equal(plan.discoveryRequests?.length,0);
   assert.equal(JSON.stringify(plan).includes("never-save-this"),false);
+});
+test("normal Socrata discovery resumes completed states and keeps the original provider dates",async()=>{
+  const progress=memoryProgress();let checkedAfter:string|undefined;
+  const acquire:typeof acquireKnownRelease=async options=>{checkedAfter=options.checkedAfter;return discovery;};
+  const input={context:"native-catalog-and-registration-inputs",captures:[native],now:later,maxAgeMs:30*86_400_000,progress,acquire};
+  const work=await socrataDiscoveryProgress(input);
+  await work.saveState({state:"AZ",bindings:[],observations:[discovery],complete:true});
+  const resumed=await socrataDiscoveryProgress(input);
+  assert.ok(resumed.completed("AZ"));assert.equal(resumed.basis.sourceCheck?.checkedAt,at);
+  await resumed.acquire({sourceId:discovery.sourceId,releaseId:discovery.releaseId,url:governmentUrl,parserVersion:"src-so/1",
+    maxBytes:1000,signal:new AbortController().signal,checkAfterMs:0});
+  assert.equal(checkedAfter,at,"unfinished roots may reuse only real provider checks from the same work slice");
+  const changed=await socrataDiscoveryProgress({...input,context:"changed-native-page"});
+  assert.equal(changed.completed("AZ"),null,"changed source/input content restarts independent discovery");
 });

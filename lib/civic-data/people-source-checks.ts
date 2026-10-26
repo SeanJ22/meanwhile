@@ -62,8 +62,9 @@ export async function recordPeopleSourceChecks(input: {
     if(!rawHash||page.httpStatus!==undefined&&(page.httpStatus<200||page.httpStatus>=300))return;
     const revision=page.extractedFrom?/^https:\/\/codeload\.github\.com\/openstates\/people\/zip\/([a-f0-9]{40})$/.exec(page.extractedFrom.requestedUrl)?.[1]:undefined;
     const aliases=revision&&page.extractedFrom?[`https://raw.githubusercontent.com/openstates/people/${revision}/${page.extractedFrom.member}`]:[];
-    await input.store.recordSourceCheck!({sourceId:input.head.sourceId,recordClass:input.head.recordClass,scope:input.head.scope,
-      pointerVersionId:input.head.versionId,sourceHash:input.head.rawHash!,rawHash,sourceKey:pageKey(pageAddress(page),rawHash),
+    const addresses=new Set([pageAddress(page),...(!page.extractedFrom?[logicalAddress(page.requestedUrl)]:[])]);
+    for(const address of addresses)await input.store.recordSourceCheck!({sourceId:input.head.sourceId,recordClass:input.head.recordClass,scope:input.head.scope,
+      pointerVersionId:input.head.versionId,sourceHash:input.head.rawHash!,rawHash,sourceKey:pageKey(address,rawHash),
       parserVersion:input.head.parserVersion,checkedAt:page.sourceCheck?.checkedAt??page.retrievedAt,
       sourceUrls:[...new Set([page.requestedUrl,page.finalUrl,...aliases])],jurisdictionIds:[input.head.scope.split(":")[0]]});
   }));

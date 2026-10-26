@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 130 (main aaf371bc5, 5:36 PM EDT) WITH A READER BREAK: /national 500, ballot pages blank. URGENT release 131 (hotfix 40d200fe4 + test-import fix cfe665689, RIVER-BILLS2, RIVER-PP2) re-gating on river-next-131 2c9cd6b5b from 6:40 PM: the 6:00 PM gate passed all 10,285 tests but failed tsc and build on the hotfix test's import specifier (fixed; build now passes). See the 6:00 PM entry
+build_state: LIVE FOR READERS: release 130 (main aaf371bc5, 5:36 PM EDT) WITH BREAKS: /national 500, ballot pages blank, runner routine data lane failing every pass since 6:08 PM. URGENT release 131 (two hotfixes + RIVER-BILLS2 + RIVER-PP2) gating on river-next-131 f6d41b4e5 from 7:10 PM. See the 7 PM entry
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T22:42:00Z
+heartbeat: 2026-10-26T23:11:00Z
 
 
 <!-- READY-LIST -->
@@ -119,6 +119,15 @@ DB-05: fix on stream/db-05 and post a new READY; it rides the next release.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 7 PM EDT: release 130 also broke the runner's routine data; second hotfix added to 131
+- **Runner:** since 6:08 PM the routine civic data child exits every pass (12 times by 7:02 PM): "reading the routine task clocks — error(42883): function row_to_json(text) does not exist". DB-05's checked-read wrapper hashed `row_to_json(source)` with the row aliased `source`; a query selecting a column named `source` (the task clock read) made Postgres resolve it to that column. Routine data publishing (place maps, meetings, everything on the routine lane) has stopped since 6 PM; publish-now also timed out 6 times attempting 0 tasks. Fix RIVER-HOTFIX-131b f6d41b4e5 names the row by its unique CTE alias; a PGlite test selecting a `source` column fails with the production error before and passes after.
+- **Release 131** = hotfix (reader pages) + hotfix-131b (runner routine data) + RIVER-BILLS2 + RIVER-PP2, gate restarted on river-next-131 f6d41b4e5 at 7:10 PM (about 50 min), then PR and deploy, then the runner loads it.
+- **Readers right now:** /national 500, ballot pages blank (since 5:36 PM).
+- **Neon, 6 PM hour: reader 2.31 GB + control plane 0.56 GB = 2.87 GB** (5 PM 10.69): the bill re-reads are gone. Reader functions (`index`) 1.23 GB, place-pages 0.74 GB.
+- **Place map:** stuck at 21 states since 5:50 PM (routine lane down, above).
+- **DB-05:** new READY 3ba6788b2 (reuse held owner snapshot revisions, 6:58 PM); scanned after 131 ships. Its tip still needs the state-binding-refresh test settled.
+- **For Sean:** two of release 130's DB-05 changes reached production broken (reader pages and the runner's routine lane) though 10,279 tests passed. River's fixes are in 131. Reverting main to 129 (your word only) would restore both sooner but bring back the LegiScan spike.
 
 ### 6 PM EDT
 - **Live: release 130** (main aaf371bc5, 5:36 PM) with the reader break above; hotfix release 131 gating (river-next-131 4e47af70f, from 6:00 PM). Runner loaded 130 by itself (heartbeat testedSha aaf371bc5, CONSISTENT, 6:03 PM).

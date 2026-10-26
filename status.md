@@ -5,11 +5,11 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T02:02:00Z
+heartbeat: 2026-10-26T02:21:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 10:02 PM EDT)
+## Every READY not on main (updated 10:21 PM EDT)
 Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info); improvements merge several to a release (6:05 PM). One path per job: DB-03's remaining steps wait for DB-04 (10:00 PM).
 
 **Urgent, ships alone**
@@ -26,13 +26,14 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 | f26ebab8d | MT-01 follow-up (carries the 3:22 and 5:49 AM READYs) | new work after release 108 |
 | f67ae6709 | MD-01 follow-up (cheapest ballot writers, measure-number sentence repair) | new work after release 115 |
 
-**Improvement batch 2: lanes must merge river first (returns/improvement-batch.md)**
-| READY | Lane | Why |
+**Improvement batch 2: River finishing all three now on batch 1's tree (d7dd06466); ships right after batch 1 unless DB-04 posts READY first**
+| READY | Lane | State |
 |---|---|---|
-| a13baecf8 | RT-01 (place-map jobs fill every state) | test conflict with release 118's readback removal. RB-A10 and RB-A9 wait on its map |
-| 7996ae820 | RB-A7 | conflicts with GB-01 in reader/place.ts, store.ts and the migration journal |
-| c3fff3702 | BL-02 (stream/bl-02-bills) | conflicts in 5 files |
-| 39238a8be | CS-01 (reader-text capitals) | 645 commits behind; the lane must merge river and repost |
+| c8734c5d8 (carries a13baecf8) | RT-01 (place-map jobs fill every state), finished by River on stream/river-rt-01 | READY. Dropped 5 tests for code release 118 deleted; 103/103 focused, tsc, knip, eslint and preflight clean. RB-A10, RB-A9 and every state with no place data wait on it |
+| 7996ae820 → stream/river-rb-a7 | RB-A7, River finishing | in progress: GB-01's held names must reach the ready pages; journal 58-60; docs/measurements/rb-a7 left out |
+| c3fff3702 → stream/river-bl-02 | BL-02, River finishing | in progress: 5 file conflicts; 3 bypassCache call sites become normal reads (DB-04 deletes bypassCache); 4 proof files left out |
+| 8daccccb3 | MD-01 docs out (stream/river-md01-docs) | READY: deletes MD-01's 14 docs files (982 lines) |
+| 39238a8be | CS-01 (reader-text capitals) | 645 commits behind; not running. River finishes it after batch 2 |
 
 **Waiting, with the reason**
 | READY | Lane | Why it waits |
@@ -1247,4 +1248,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Neon, both databases, 9 PM EDT hour: 5,525 MB.
 - RB-A4 catch-up: 30 states reloaded since 4:53 PM (DE through OH). The cursor is at OH, so OR is next. HOST_COUNTY rows: 35,824 (this morning: 1,400). Oregon still 25.
 - Gating: improvement batch 1. Held for DB-04: DB-03's remaining steps and owner snapshot reads.
+
+### 10:21 PM EDT: Sean, finish batch 2 yourself; keep proof files out
+- RT-01: READY c8734c5d8 on stream/river-rt-01 (batch 1's tree + a13baecf8). The conflict was only tests for code release 118 deleted: 5 dropped, the rest kept. 103/103 focused; tsc, knip, eslint and preflight clean.
+- MD-01 docs out: READY 8daccccb3 deletes the 14 docs files (982 lines) MD-01 brought into batch 1. Batch 1 itself is untouched, so its gate keeps running.
+- RB-A7 and BL-02: River's two builders are finishing them on stream/river-rb-a7 and stream/river-bl-02, leaving out RB-A7's docs/measurements/rb-a7 and BL-02's 4 proof files (including scripts/bl-02-bills-replay.mts), and turning BL-02's 3 bypassCache call sites into normal reads.
+- The disk filled up around 10:12 PM EDT. River removed 11 worktrees of finished, pushed work. The batch 1 gate log shows no disk errors.
 

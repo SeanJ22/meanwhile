@@ -1,15 +1,15 @@
 # River status
 
-build_state: LIVE FOR READERS: release 128 (main 9352c8e14; runner on it since 7:27 AM EDT). RIVER: 63d03105b (RT-01b + bills, gate 9/9). GATING: release 129 on river-next-129d 43783ed16 (+ RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01; MT-02 out, being fixed). DB-04 replaced by DB-05. NEXT: 130 = DB-05 3d4e87f62 (fold being resolved). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 128 (main 9352c8e14; runner on it since 7:27 AM EDT). RIVER: 63d03105b (RT-01b + bills, gate 9/9). GATING: release 129 on river-next-129d 43783ed16 (+ RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01; MT-02 out, being fixed). DB-04 replaced by DB-05. NEXT: 130 = MT-02 87577ea3a + DB-05 (3d4e87f62, c1bf8151f, 0be79e9a5), tree 3f914357a. See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T17:45:00Z
+heartbeat: 2026-10-26T18:08:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 1:58 PM EDT Oct 26)
+## Every READY not on main (updated 2:08 PM EDT Oct 26)
 Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates, 10,102 tests pass, promoted 12:15 PM).
 
 **Release rule (Sean, 10:25 AM EDT Oct 26):** an urgent fix goes first but does not ship alone; every other lane that is READY and passes its scan rides in the same release; nothing finished waits behind an urgent fix; no batch waits on a lane that isn't READY.
@@ -79,7 +79,7 @@ Before (reader + control plane, from database_transfer_hourly): usaspending 143.
 **Release 130: DB-05 + MT-02, right behind 129 (tree fold/130 b139d5f33 ready)**
 | READY | Lane | State |
 |---|---|---|
-| 3d4e87f62 (origin/stream/db-05, posted 12:39 PM) | DB-05 shared current-version reads: every runtime read checks current row versions before an unchanged body crosses the connection; all 525 bypassCache uses and the bypass API removed; folds DB-04 (39f637b67) and disposes of every held DB-03 step (folded or replaced; portrait duplicates stay out) | Scan clean (bypassCache removed, a test forbids it; no proof files; one additive migration expand, DB-03_process_transfer). Its READY says its own tsc and full suite were still running. 429 files; conflicts with the 129 tree in 4 files (lib/db/transfer-by-caller.ts, scripts/pilot-runner.mts, 2 tests). Folding it now would hold the place map and eight lanes about another hour, so it ships as 130 right after 129 (about 15 minutes' delay for DB-05). Fold resolved locally (fold/db-05 139d77c73 on the MT-02 tree; 4 conflicts; DB-05's own admin-native-version-reads test also fails at 3d4e87f62 and was fixed in a8029fc64 for DB-05 to confirm). Re-folded onto 129 + MT-02 as fold/130 b139d5f33 (same resolutions). Release 130 = MT-02 + DB-05, gated right after 129 ships |
+| 3d4e87f62 (origin/stream/db-05, posted 12:39 PM) | DB-05 shared current-version reads: every runtime read checks current row versions before an unchanged body crosses the connection; all 525 bypassCache uses and the bypass API removed; folds DB-04 (39f637b67) and disposes of every held DB-03 step (folded or replaced; portrait duplicates stay out) | Scan clean (bypassCache removed, a test forbids it; no proof files; one additive migration expand, DB-03_process_transfer). Its READY says its own tsc and full suite were still running. 429 files; conflicts with the 129 tree in 4 files (lib/db/transfer-by-caller.ts, scripts/pilot-runner.mts, 2 tests). Folding it now would hold the place map and eight lanes about another hour, so it ships as 130 right after 129 (about 15 minutes' delay for DB-05). Fold resolved locally (fold/db-05 139d77c73 on the MT-02 tree; 4 conflicts; DB-05's own admin-native-version-reads test also fails at 3d4e87f62 and was fixed in a8029fc64 for DB-05 to confirm). Re-folded onto 129 + MT-02 as fold/130 (same resolutions). DB-05's next READY pieces c1bf8151f (source hash heads, source-driven cadence) and 0be79e9a5 (adapter correction) also folded, scan clean; one conflict in Admin door-queries (DB-05 made the same shut-door fix on its own; River's version kept for river's request bounds). Tree 3f914357a. Release 130 = MT-02 + DB-05, gated right after 129 ships |
 
 **PP-01 and RB-A9 sessions are back**: origin/stream/pp-01 (merge of river, 12:05 PM) and origin/stream/rb-a9 (work in progress, 12:46 PM). No READY yet. River does not take them.
 
@@ -97,6 +97,15 @@ Before (reader + control plane, from database_transfer_hourly): usaspending 143.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 2 PM EDT
+- Live for readers: release 128 (main 9352c8e14). River 63d03105b.
+- Release 129 gating on river-next-129d 43783ed16 (RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01; MT-02 out): seven of nine checks pass, tests running.
+- Release 130 tree 3f914357a (129 + MT-02 87577ea3a + DB-05 3d4e87f62, c1bf8151f, 0be79e9a5) ready to gate after 129 ships.
+- Neon, 1 PM hour: reader 2.63 GB + control plane 0.32 GB = 2.95 GB (12 PM 3.32). Reader top: routine-civic-data 739 MB, publish-now 262, openstates-people-nh 188, campaign-money 158, usaspending 109, openstates-votes-md 97.
+- Federal money before 129: usaspending 143.6 / 82.1 / 83.3 / 116.5 / 109.0 MB and openfema 13.2 / 7.5 / 11.6 / 6.0 / 11.7 MB (9 AM to 1 PM).
+- rebuild_queue 160,755 (still rising slowly), place_page 24,900, place_boundary 0.
+- PP-01 pushed work (portrait retry), RB-A9 work in progress; no READY.
 
 ### 1 PM EDT
 - Live for readers: release 128 (main 9352c8e14). River 63d03105b.

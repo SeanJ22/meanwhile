@@ -204,7 +204,11 @@ export interface RetrievalEvidence {
   readonly sourceCheck?: SourceCheckEvidence;
   readonly failureDetail?: string;
   readonly manualSourceReceipt?: ManualSourceSetReceipt;
-  readonly derived?: { readonly inputs: readonly DerivedInputRef[] };
+  readonly derived?: {
+    readonly inputs: readonly DerivedInputRef[];
+    /** External source versions used by hash-first derivations; each also appears in inputs. */
+    readonly sourceContentInputs?: readonly DerivedInputRef[];
+  };
 }
 
 export interface NormalizationEvidence {

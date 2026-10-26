@@ -20,7 +20,7 @@ const records = Array.from({ length: 256 }, (_, index) => ({
 }));
 
 function candidate(now = at, phone = "602-555-0100"): RoutineCandidate {
-  const payload = { kind: "member-offices", records: records.map((row, index) => index ? row : { ...row, office: { ...row.office, phone } }),
+  const payload = { kind: "member-offices" as const, records: records.map((row, index) => index ? row : { ...row, office: { ...row.office, phone } }),
     rosterDigests: { "US-AZ": now }, pending: ["US-TX"] };
   return freezeDurableJson({ ...manualProjectionCandidate({ contractId: "member-offices", version: now, sourceThrough: now,
     sourceReceipt: { contractVersion: 1, reviewedAt: now, reviewedBy: "test:member-office-storage", sources: [{ requestedUrl: sourceUrl,
@@ -74,7 +74,7 @@ test("a member-office package exceeding 42 MiB uses bounded immutable writes, ex
         const published = await store.promote(first.id, receipt, at, { candidate: first });
         promoting = false;
         assert.deepEqual(published.payload, first.readModel);
-        assert.ok(promoteQueries.every(query => !/select[^;]*"candidate"\s*,[^;]*from "civic_data_candidates"/is.test(query)), "promotion uses held candidate and persisted scalar envelope");
+        assert.ok(promoteQueries.every(query => !/select[^;]*"candidate"\s*,[^;]*from "civic_data_candidates"/i.test(query)), "promotion uses held candidate and persisted scalar envelope");
         const stored = (await pg.query<{ bytes: number; model: unknown; facts: unknown; identity: unknown }>(
           "SELECT octet_length(candidate::text) AS bytes, candidate->'readModel' AS model, validation_receipt->'excludedFacts' AS facts, identity FROM civic_data_candidates WHERE id=$1", [first.id])).rows[0]!;
         assert.ok(stored.bytes < 32 * 1024);

@@ -5,6 +5,8 @@ import { deadLinkReadings } from "../../health/surface-speed.ts";
 import { DOORS_SHOWN, projectDoors, type DoorsView } from "./v6-doors-read.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { Sql } from "../repository/pg-store.ts";
+import { boundedQuery } from "../repository/request-bounds.ts";
+import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
 // The same validity test as isDoorRecord, evaluated before a row leaves PostgreSQL.
 export const VALID_DOOR_SQL = `value->'formatVersion'='1'::jsonb
@@ -55,7 +57,9 @@ export async function readAdminDeadLinks(repos: ControlPlaneRepositories) {
   return deadLinkReadings(rows.map(row=>row.value as Pick<DoorRecord,"kind"|"config">));
 }
 
+/** A shut door is already live and readers are affected; unchanged door rows are confirmed by revision, not re-sent. */
 export async function readAdminShutDoors(sql: Sql): Promise<readonly DoorRecord[]> {
-  const rows = await sql.query(`SELECT id,${ADMIN_DOOR_VALUE_SQL} AS value FROM cp_doors WHERE value->>'status'='SHUT' AND (${VALID_DOOR_SQL}) ORDER BY id`) as {value:unknown}[];
+  const rows = await versionedRowsFor(sql).rows(async(text,params)=>await boundedQuery(sql,
+    {operation:"cp_doors.shut",callClass:"PAGE"},text,params),"cp_doors",`value->>'status'='SHUT' AND (${VALID_DOOR_SQL})`,[],ADMIN_DOOR_VALUE_SQL);
   return rows.map(row=>typeof row.value==='string'?JSON.parse(row.value):row.value).filter(isDoorRecord);
 }

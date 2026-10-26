@@ -2,13 +2,14 @@ import { sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { processRegisteredFanOutCandidate } from "../civic-data/promotion.ts";
 import type { FederalRepartitionRemovalEvidence } from "../civic-data/types.ts";
-import type { RoutineDataStore } from "../civic-data/store.ts";
+import type { RoutineDataStore, RoutinePublicationBase } from "../civic-data/store.ts";
 import { federalMoneyCandidate, federalMoneyCounts, mergeFederalMoneyRecords, type FederalMoneyEvidence } from "./candidate.ts";
 import { federalMoneyPartitionWithinBounds, federalMoneyPartitionOf, federalMoneyLookupKeys, federalMoneyPartitionScope, type FederalMoneyFact, type FederalMoneyPage, type FederalMoneyPartition, type FederalMoneyProjection, type FederalMoneyCounts, type FederalMoneySource, type FederalMoneyCapture } from "./model.ts";
 
 export interface FederalMoneyPartitionChange {
   readonly projection: FederalMoneyProjection;
   readonly previous: FederalMoneyProjection | null;
+  readonly previousPlaces?:readonly string[];
   readonly versionId: string;
   readonly checkedAt: string;
 }
@@ -59,8 +60,10 @@ export async function writeFederalMoneyPartitions(input: {
 
   async function update(partition: FederalMoneyPartition, incoming: readonly FederalMoneyFact[], captures: readonly FederalMoneyCapture[], remove: readonly string[] = []): Promise<FederalMoneyCounts> {
     const scope = federalMoneyPartitionScope(input.source, input.state, partition);
-    const prior = await input.store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", scope);
-    const previous = prior?.payload ?? null;
+    if(!input.store.readPublicationBase)throw new Error("FEDERAL_PUBLICATION_BASE_READER_REQUIRED");
+    const base=await input.store.readPublicationBase("FEDERAL_MONEY",scope);
+    const prior=base.current;
+    const previous=prior?.payload as FederalMoneyProjection|null??null;
     if (previous?.children?.length) {
       const byChild = new Map<string, FederalMoneyFact[]>();
       for (const fact of incoming) {
@@ -77,12 +80,12 @@ export async function writeFederalMoneyPartitions(input: {
       for (const [shard, rows] of byChild) childCounts[shard] = await update({ ...partition, shard }, rows, captures, removed.get(shard));
       const subtreeCounts = Object.values(childCounts).reduce((a, b) => addFederalMoneyCounts(a, b), federalMoneyCounts([]));
       const next = { ...previous, children: Object.keys(childCounts).sort(), subtreeCounts, childCounts };
-      await publish(next, [], [], prior?.versionId ?? null, previous);
+      await publish(next, [], [], base, previous);
       return subtreeCounts;
     }
     const records = mergeFederalMoneyRecords((previous?.records ?? []).filter(row => !remove.includes(row.id)), incoming);
     const counts = federalMoneyCounts(records);
-    const retained = prior ? await input.store.readCandidatePath<FederalMoneyEvidence["captures"]>(prior.versionId,["normalizedPayload","captures"]) ?? [] : [];
+    const retained = (base.lkg?.candidate.normalizedPayload as FederalMoneyEvidence|undefined)?.captures??[];
     if (!federalMoneyPartitionWithinBounds(records)) {
       if (partition.shard.length >= 64) throw new Error("Federal native identifiers exceed a full hash partition.");
       const byChild = new Map<string, FederalMoneyFact[]>();
@@ -93,18 +96,20 @@ export async function writeFederalMoneyPartitions(input: {
       const childCounts: Record<string, FederalMoneyCounts> = {};
       for (const [shard, rows] of byChild) childCounts[shard] = await update({ ...partition, shard }, rows, [...retained, ...captures]);
       await publish({ formatVersion: 2, source: input.source, state: input.state, partition, records: [], lookupKeys: [], counts: federalMoneyCounts([]),
-        children: [...byChild.keys()].sort(), subtreeCounts: counts, childCounts }, [], [], prior?.versionId ?? null, previous);
+        children: [...byChild.keys()].sort(), subtreeCounts: counts, childCounts }, [], [], base, previous);
     } else {
-      await publish({ formatVersion: 2, source: input.source, state: input.state, partition, records, counts, lookupKeys: federalMoneyLookupKeys(records) }, incoming, [...retained, ...captures], prior?.versionId ?? null, previous);
+      await publish({ formatVersion: 2, source: input.source, state: input.state, partition, records, counts, lookupKeys: federalMoneyLookupKeys(records) }, incoming, [...retained, ...captures], base, previous);
     }
     return counts;
   }
-  async function publish(projection: FederalMoneyProjection, incoming: readonly FederalMoneyFact[], captures: readonly FederalMoneyCapture[], version: string | null, previous: FederalMoneyProjection | null) {
+  async function publish(projection: FederalMoneyProjection, incoming: readonly FederalMoneyFact[], captures: readonly FederalMoneyCapture[], base:RoutinePublicationBase, previous: FederalMoneyProjection | null) {
+    const version=base.current?.versionId??null;
     if (previous && stableRows(previous) === stableRows(projection)) {
       if (input.onPartition) {
-        const predecessorId = await input.store.readCandidatePath<string>(version!,["normalizedPayload","predecessorVersionId"]);
-        const predecessor = predecessorId ? await input.store.readCandidatePath<FederalMoneyProjection>(predecessorId,["readModel"]) : null;
-        await input.onPartition({ projection: previous, previous: predecessor, versionId: version!, checkedAt: input.now });
+        const predecessorId=(base.lkg?.candidate.normalizedPayload as FederalMoneyEvidence|undefined)?.predecessorVersionId;
+        if(predecessorId && !input.store.readFederalMoneyPriorPlaces)throw new Error("FEDERAL_PRIOR_PLACES_READER_REQUIRED");
+        const previousPlaces=predecessorId?await input.store.readFederalMoneyPriorPlaces!(predecessorId):[];
+        await input.onPartition({ projection: previous, previous:null, previousPlaces, versionId: version!, checkedAt: input.now });
       }
       return;
     }
@@ -123,10 +128,11 @@ export async function writeFederalMoneyPartitions(input: {
     async function proveDestination(partition: FederalMoneyPartition, rows: readonly FederalMoneyFact[]): Promise<void> {
       const scope = federalMoneyPartitionScope(input.source, input.state, partition);
       if (scope === built.scope) throw new Error("Federal record removal has no destination partition.");
-      const target = await input.store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", scope);
+      if(!input.store.readFederalMoneyPartitionKeys)throw new Error("FEDERAL_PARTITION_KEYS_READER_REQUIRED");
+      const target = await input.store.readFederalMoneyPartitionKeys(scope,rows.map(row=>row.id));
       if (!target) throw new Error("Federal repartition destination has not published.");
-      if (!target.payload.children?.length) {
-        const ids = new Set(target.payload.records.map(fact => fact.id));
+      if (!target.children.length) {
+        const ids = new Set(target.records.map(fact => fact.id));
         for (const row of rows) {
           if (!ids.has(row.id)) throw new Error("Federal repartition destination does not contain the moved record.");
           removalEvidence.push({ key: `federal-money:${row.id}`, code: "FEDERAL_RECORD_REPARTITIONED", targetScope: scope, targetVersionId: target.versionId });
@@ -142,7 +148,7 @@ export async function writeFederalMoneyPartitions(input: {
     }
     for (const { partition, rows } of destinations.values()) await proveDestination(partition, rows);
     const candidate = { ...built, ...(removalEvidence.length ? { removalEvidence } : {}) };
-    const outcome = await processRegisteredFanOutCandidate(input.store, input.source, candidate, input.now, version);
+    const outcome = await processRegisteredFanOutCandidate(input.store, input.source, candidate, input.now, version,{publicationBase:base});
     if (!outcome.promoted) throw new Error(outcome.candidate.failureDetail ?? `Federal partition ${candidate.scope} did not publish.`);
     await input.onPartition?.({ projection, previous, versionId: outcome.promoted.versionId, checkedAt: input.now });
   }

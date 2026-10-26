@@ -9,6 +9,7 @@ export async function publishFederalMoneyPartition(input: {
   readonly store: ReaderArtifactStore;
   readonly projection: FederalMoneyProjection;
   readonly previous: FederalMoneyProjection | null;
+  readonly previousPlaces?:readonly string[];
   readonly versionId: string;
   readonly checkedAt: string;
 }): Promise<{ places: number; bytesWritten: number }> {
@@ -19,6 +20,7 @@ export async function publishFederalMoneyPartition(input: {
   const places = new Set<string>();
   for (const fact of projection.records) for (const place of federalMoneyFactPlaces(fact)) places.add(place);
   for (const fact of input.previous?.records ?? []) for (const place of federalMoneyFactPlaces(fact)) places.add(place);
+  for(const place of input.previousPlaces??[])places.add(place);
   let bytesWritten = 0;
   const saved = (bytes: number) => { bytesWritten += bytes; };
   async function immutable(value: unknown): Promise<string> {

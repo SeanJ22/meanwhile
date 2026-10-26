@@ -27,7 +27,7 @@ import { withDerivedSourceContent, derivedSourceContentHash } from "../lib/civic
 import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
 import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
+import { meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
 import { readSourceProbeDependencies } from "../lib/civic-data/source-probe.ts";
 import { statesForRegistryDivisions, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
@@ -92,7 +92,7 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
     withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
     DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue, sourceHashReceiptFields, ZERO_RELEASE_EVENTS,
     statesForRegistryDivisions, stateRegistryRuntimeScope, requiredManualProductionContract, readSourceProbeDependencies,
-    meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable, meetingVenueChoiceHash,
+    meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable, meetingVenueChoiceHash,
     AgendaDocumentStore, retrieveHeldAgendas, seedHeldAgendaDocuments, bindAgendaSourceObservations, linkedMeetingSourceInputs,
     meetingSourceSession: async (_partition: unknown, _hash: unknown, store: MemoryRoutineDataStore, _now: string, _vault: unknown,
       onSource?: (response: unknown) => Promise<void>) => {
@@ -104,7 +104,7 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
         await onSource?.(responses.get(route));
         return new Response(feed, { headers: { "content-type": "text/calendar" } });
       };
-      return { head: await store.readSourceHead("MEETING", partition.scope), responses, fetch, complete: true,
+      return { head: await store.readSourceHead("MEETING", partition.scope), responses, fetch, complete: true, acquisitionComplete: true,
         probe: async () => { await fetch(); return true; }, clear: async () => {},
         run: (operation: () => Promise<unknown>) => operation(), collect: async (operation: () => Promise<unknown>) => ({ value: await operation(), responses: [] }),
         inputs: (operation: () => Promise<unknown>) => operation(),

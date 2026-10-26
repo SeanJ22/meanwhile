@@ -22,9 +22,6 @@ const fact: FederalMoneyFact = { id: "synthetic:findings:1", source: "federal-au
   identifiers: { reportId: "2025-AR-001" }, geography: [], bodyIds: [], divisionIds: [], joinStatus: "UNJOINED", joinReason: "Not joined",
   details: { table: "findings" }, provenance: { sourceUrl: "https://api.fac.gov/findings", sourceOrg: "Federal Audit Clearinghouse", publicationDate: "2025-10-01", retrievedAt: "2026-10-15T00:00:00.000Z", official: true, rawHash: "synthetic" } };
 
-test(statement)) await db.exec(statement);
-}
-
 test("FAC source-reported state locates audits on the state card and never assigns its recipient government", () => {
   const state = "ocd-division/country:us/state:ar";
   const general = { ...fact, id: "synthetic:general", details: { table: "general", reportedState: "AR" } };

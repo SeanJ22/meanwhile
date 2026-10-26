@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {PGlite} from "@electric-sql/pglite";
-import {readDerivedMeetingBodyRows,derivedBodyScope} from "../lib/civic-data/derived-meeting-body.ts";
+import {readDerivedMeetingBodyRows,derivedBodyScope,retainUnwiredDerivedBodyFacts} from "../lib/civic-data/derived-meeting-body.ts";
 import {derivedMeetingBodyContract,derivedMeetingBodyForScope,requiredMeetingPartitionContract} from "../lib/civic-data/meeting-partitions.ts";
 import {canonicalCivicDataHash} from "../lib/civic-data/canonical-hash.ts";
 import {partitionCivicPayload} from "../lib/civic-data/payload-codec.ts";
@@ -78,4 +78,16 @@ test("family continuation clocks use saved processing progress without inventing
   const next=await store.clock("meetings-derived-routes","MEETING",scope,"meetings-composite/2");
   assert.equal(next.continuationPending,false);assert.equal(next.nextWorkAt,later);assert.equal(next.lastSucceededObservedAt,checked);
   assert.deepEqual(await store.readDerivedMeetingProgress("source:derived:family:US-NH"),{pending:[]});
+});
+
+test("a removed sibling route keeps every exact held agenda and its original source date, marked held",()=>{
+  const provenance={sourceUrl:"https://sample.gov/old-calendar",collectedAt:AT};
+  const held={id:"ical:kept",bodyId:BODY,ocdId:BODY.split("#")[0],provenance};
+  const old={formatVersion:1,generatedAt:AT,meetings:[held],agendaDocuments:[{id:"held-agenda",meetingId:held.id,text:"Every original agenda word"}],sources:[],counts:{fresh:1,carried:0,total:1},
+    derivedMembers:[{id:"old-source-route",source:"ical",bodyId:BODY,status:"ACTIVE",outcome:"FRESH"}]};
+  const current={...old,meetings:[],agendaDocuments:[],derivedMembers:[{id:"new-route",source:"diligent",bodyId:BODY,status:"ACTIVE",outcome:"FRESH"}],counts:{fresh:0,carried:0,total:0}};
+  const next=retainUnwiredDerivedBodyFacts(current as unknown as import("../lib/meetings/snapshot.ts").MeetingsSnapshot,old as unknown as import("../lib/meetings/snapshot.ts").MeetingsSnapshot);
+  assert.deepEqual(next.meetings[0].provenance,provenance);assert.equal(next.meetings[0].carried?.lastFreshAt,AT);
+  assert.deepEqual(next.agendaDocuments,old.agendaDocuments);assert.equal(next.derivedMembers?.[1].outcome,"HELD");
+  assert.equal(next.sources[0].ok,false);assert.deepEqual(next.counts,{fresh:0,carried:1,total:1});
 });

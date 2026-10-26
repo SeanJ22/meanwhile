@@ -1,7 +1,7 @@
 import type {Query} from "../facts/publish.ts";
 import type {DerivedInputRef} from "./derived-authority.ts";
 import type {MeetingsSnapshot,SnapshotSourceReport} from "../meetings/snapshot.ts";
-import {carriedFromAnswer} from "../meetings/carry-forward.ts";
+import {carriedFromAnswer,mark} from "../meetings/carry-forward.ts";
 import {derivedMeetingFamilyScope,meetingHistoryScope,meetingPartitionScope} from "./meeting-partitions.ts";
 import type {DerivedMeetingFamilyState} from "./contracts.ts";
 import {statesForRegistryDivisions} from "./state-scopes.ts";
@@ -87,8 +87,25 @@ export async function readDerivedMeetingBodyRows(query:Query,state:DerivedMeetin
   return {input,expectedBaseVersionId:isLegacy?null:input.versionId,snapshot:selectDerivedMeetingBodySnapshot(value,bodyId,isLegacy)};
 }
 
+/** A route removed from wiring cannot silently erase facts already sourced for this body. */
+export function retainUnwiredDerivedBodyFacts(current:MeetingsSnapshot,previous:MeetingsSnapshot|null):MeetingsSnapshot{
+  if(!previous)return current;
+  const currentMembers=current.derivedMembers??[];
+  const oldMembers=(previous.derivedMembers??[]).filter(member=>!currentMembers.some(next=>next.id===member.id)&&!currentMembers.some(next=>next.source===member.source));
+  const retained=previous.meetings.filter(meeting=>oldMembers.some(member=>meeting.id.startsWith(`${member.source}:`))&&!current.meetings.some(next=>next.id===meeting.id))
+    .map(meeting=>mark(meeting,oldMembers.find(member=>meeting.id.startsWith(`${member.source}:`))!.source,previous.generatedAt));
+  if(!retained.length)return current;
+  const ids=new Set(retained.map(meeting=>meeting.id)),meetings=[...current.meetings,...retained];
+  const heldMembers=oldMembers.map(member=>({...member,outcome:"HELD" as const,detail:"The held source route is absent from the current wiring; its exact facts remain retained."}));
+  const heldSources=derivedBodySources({meetings:retained,derivedMembers:heldMembers,sources:previous.sources},retained[0]!.bodyId!);
+  return {...current,meetings,agendaDocuments:[...current.agendaDocuments,...previous.agendaDocuments.filter(document=>ids.has(document.meetingId))],
+    derivedMembers:[...currentMembers,...heldMembers],sources:[...current.sources,...heldSources],
+    counts:{...current.counts,fresh:meetings.filter(meeting=>!meeting.carried).length,carried:meetings.filter(meeting=>meeting.carried).length,total:meetings.length}};
+}
+
 export interface DerivedMeetingFamilyProgress {
   readonly pending:readonly string[];
+  readonly startedVersions?:Readonly<Record<string,string|null>>;
   readonly attemptedAt?:string;
   readonly completedAt?:string;
   readonly checkedAt?:string;

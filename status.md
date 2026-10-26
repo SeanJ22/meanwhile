@@ -1403,3 +1403,12 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 6:03 AM EDT: release 127 opened (deploy unblock alone); Maryland fix gating on it
 - Bounded-pages gate 9/9 on 527ed53d4 (10,095 pass). river moved there. [#839](https://github.com/SeanJ22/meanwhile/pull/839), auto-merge on. Report: releases/127.md.
 - Maryland cost fix re-folded on 527ed53d4 (river-next-mdreads) and gating; ships alone as 128 once 127 is live.
+
+### 6 AM EDT status
+- Release 127 (deploy unblock alone, [#839](https://github.com/SeanJ22/meanwhile/pull/839)) waiting on CI; the site is still on 125 (e12d76968). Maryland cost fix gating on 127's river as 128.
+- Neon, both databases, 5 AM EDT hour: 4,768 MB (reader 4,608, control plane 160).
+  - measure-translations:MD 698 MB (2,103 at 3 AM, 2,121 at 4 AM); still unfixed until 128 is live.
+  - openstates-people 2,393 MB: the people refresh ran across every state, 15 to 23 whole-candidate reads per state at 3 to 9 MB each (NH 159 MB at 9.4 MB a read, PA 150, GA 109). A periodic refresh, not a loop. It's the publisher's prior-version read that DB-04 narrows; DB-04's READY must show this family's GB/h before and after.
+- rebuild_queue 162,420; place_page 15,685 (no new pages since 4:19 AM; nothing drains until 127 is live).
+- GB-01: census done through CO. LA and NE not reached.
+- DB-04: no READY (last commit 1:11 AM). Research cycle: no Send.

@@ -209,7 +209,7 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
       const bytes = new TextEncoder().encode(JSON.stringify(index));
       await store.put(indexKey, bytes, { contentType: "application/json", contentHash: `manifest:census-tiger:${identity}`,
         byteLength: bytes.byteLength, objectClass: "MUTABLE_INDEX" });
-      recordCensusSourceCapture(options, { requestedUrl: url, finalUrl: index.finalUrl, rawHash: index.sha256, checkedAt: index.checkedAt });
+      recordCensusSourceCapture(options, { requestedUrl: url, finalUrl: index.finalUrl, rawHash: index.sha256, checkedAt: index.checkedAt, httpStatus: response.status === 304 ? 304 : 200 });
       return { sha256: index.sha256, sourceValidator: { url, etag: index.etag, lastModified: index.lastModified, bytes: index.bytes }, retrievedAt: index.retrievedAt, reused };
     });
     return { path, ...result, dispose };

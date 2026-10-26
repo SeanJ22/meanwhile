@@ -34,11 +34,16 @@ export const PIN_OFFICES_SQL = `WITH selected AS MATERIALIZED (
   SELECT id,name,state,parent_id FROM entity WHERE id=ANY($1::text[]) AND kind='body'
 ), owners AS MATERIALIZED (
   SELECT b.id,b.parent_id,g FROM selected b LEFT JOIN LATERAL (
-    SELECT reader_payload_value(r.value) AS g FROM civic_data_rows r
-    WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.state=b.state
-      AND r.promotion_key='REGISTRATION:US-'||b.state||':registration:v1'
-      AND r.aliases && ARRAY[b.parent_id,b.id,b.parent_id||'#governing',b.parent_id||'#board']
-    ORDER BY (r.value->>'jurisdictionId'=b.parent_id) DESC,r.value->>'id' LIMIT 1
+    SELECT reader_payload_value(value) AS g FROM (
+      SELECT r.value,count(*) OVER() AS matches FROM civic_data_rows r
+      JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+      WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.state=b.state
+        AND r.promotion_key='REGISTRATION:US-'||b.state||':registration:v1'
+        AND r.aliases && ARRAY[b.id,
+          CASE WHEN b.id NOT LIKE 'ocd-division/%' THEN split_part(b.id,'#',1) END,
+          (SELECT e.id FROM entity e WHERE e.id=b.parent_id AND e.kind='government')]
+        AND ((SELECT e.kind FROM entity e WHERE e.id=b.parent_id) IS DISTINCT FROM 'government' OR r.aliases @> ARRAY[b.parent_id])
+    ) matched WHERE matches=1
   ) owned ON true
 )
 SELECT b.id,b.name,office.value#>>'{}' AS board_address,office.checked_at AS board_checked,office_source.url AS board_source,
@@ -380,13 +385,6 @@ export async function placePublishedMeetingPins(input: {
           meetingId: meeting.id,
         });
       }
-      // A calendar omitting an earlier hall citation does not retract its saved office point.
-      // Try current addresses first; an explicit government office still supersedes it.
-      const governmentOffice=offices.get(meeting.bodyId??"")?.governmentOffice?.address;
-      if (repeated?.basis === "GOVERNMENT_OFFICE" && repeated.bodyId === meeting.bodyId &&
-        (!governmentOffice || !isOfficeStreetAddress(governmentOffice)) &&
-        !candidates.some(address => address.basis === repeated.basis && address.address === repeated.address))
-        candidates.push(repeated);
       for (const address of candidates.flatMap(address=>[address,...postalAddressAliases(address,offices.get(meeting.bodyId??""))])) {
         if(address.basis==="BODY_OFFICE"&&repeated?.basis==="GOVERNMENT_OFFICE"&&
           (repeated.boardAddressQuery??null)===bodyQuery){bodyTried=true;continue;}

@@ -13,9 +13,15 @@ import { meetingStateOf } from "../meetings/body-scope.ts";
 import type { MeetingPinAddress, MeetingPinBody } from "../meetings/pin-location.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 
+const withdrawnPin = (value: string) => `(reader_payload_node(${value}->'mapPin')->>'basis'='GOVERNMENT_OFFICE' AND EXISTS (
+    SELECT 1 FROM fact retired WHERE retired.entity_id='meeting:'||p.row_id AND retired.field='map_pin'
+      AND retired.status='pulled' AND retired.held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED'
+      AND retired.value->>'bodyId'=p.body_id AND retired.value->>'address'=reader_payload_node(${value}->'mapPin')->>'address'
+      AND retired.value#>>'{provenance,sourceUrl}'=reader_payload_value(reader_payload_node(${value}->'mapPin')->'provenance')->>'sourceUrl'))`;
+
 const heldRows = `WHERE p.record_class='MEETING' AND p.collection='meetings' AND p.body_id IS NOT NULL
     AND coalesce(sitting.value->'location','null'::jsonb)='null'::jsonb
-    AND coalesce(sitting.value->'mapPin','null'::jsonb)='null'::jsonb
+    AND (coalesce(sitting.value->'mapPin','null'::jsonb)='null'::jsonb OR ${withdrawnPin("sitting.value")})
     AND (sitting.value->>'startsAt')::timestamptz BETWEEN $1::timestamptz-interval '90 days' AND $1::timestamptz+interval '90 days'`;
 
 /** Previously promoted points keep the address already verified for this exact source sitting. */
@@ -33,13 +39,15 @@ const dependencyScope = `(
   changed.body_id=p.body_id AND changed.collection IN ('agendaDocuments','registry.bodies')
   OR changed.collection='meetings' AND split_part(changed.body_id,'#',1)=split_part(p.body_id,'#',1)
   OR changed.collection='governments' AND changed.state=p.state AND EXISTS(
-    SELECT 1 FROM entity e WHERE e.id=p.body_id AND changed.aliases && ARRAY[e.id,e.parent_id,e.parent_id||'#governing',e.parent_id||'#board'])
+    SELECT 1 FROM entity e LEFT JOIN entity owner ON owner.id=e.parent_id AND owner.kind='government'
+      WHERE e.id=p.body_id AND changed.aliases && ARRAY[e.id,owner.id])
 )`;
 const retryKey = `jsonb_build_array(p.promotion_key,p.row_id)::text`;
 const markerName = `'held-meeting-pins:row:'||md5(${retryKey})`;
 const position = `(CASE WHEN jsonb_typeof(sitting.value->'online')='object' THEN 0 ELSE 1 END,p.promotion_key,p.ordinal)`;
 const afterPosition = `($2::int,$3::text,$4::bigint)`;
-const pinInputHash = `encode(sha256(convert_to(jsonb_build_array(p.content_hash,
+const pinInputHash = `encode(sha256(convert_to(jsonb_build_array('ENTITY_OWNERSHIP_V2',p.content_hash,
+  (SELECT parent_id FROM entity WHERE id=p.body_id),
   coalesce((SELECT jsonb_agg(jsonb_build_array(changed.promotion_key,changed.collection,changed.row_id,changed.content_hash)
     ORDER BY changed.promotion_key,changed.collection,changed.ordinal) FROM civic_data_rows changed WHERE ${dependencyScope}),'[]'::jsonb),
   coalesce((SELECT jsonb_agg(jsonb_build_array(f.entity_id,f.value,f.checked_at) ORDER BY f.entity_id,f.id)
@@ -99,7 +107,8 @@ export async function publishHeldMeetingPins(input: {
     if (!rows.length) {
       const pending=progress.pending.length ? (await facts.query(`SELECT jsonb_build_array(p.promotion_key,p.row_id)::text AS retry_key
         FROM civic_data_rows p WHERE p.collection='meetings' AND jsonb_build_array(p.promotion_key,p.row_id)::text=ANY($1::text[])
-          AND coalesce(p.value->'location','null'::jsonb)='null'::jsonb AND coalesce(p.value->'mapPin','null'::jsonb)='null'::jsonb
+          AND coalesce(p.value->'location','null'::jsonb)='null'::jsonb
+          AND (coalesce(p.value->'mapPin','null'::jsonb)='null'::jsonb OR ${withdrawnPin("p.value")})
           AND NOT EXISTS(SELECT 1 FROM fact f WHERE f.entity_id='meeting:'||p.row_id AND f.field='map_pin' AND f.status='live'
             AND f.value->>'bodyId'=p.body_id AND f.value->>'publishedLocation' IS NOT DISTINCT FROM p.value#>>'{venueGap,publishedText}')
           AND NOT EXISTS(SELECT 1 FROM blank b WHERE b.entity_id='meeting:'||p.row_id AND b.field='map_pin' AND b.next_try_at>$2::timestamptz)`,
@@ -115,6 +124,7 @@ export async function publishHeldMeetingPins(input: {
     // Admission is durable before reading offices or opening Census. A crash keeps every unfinished row owed.
     await writePassCursor(facts.query,PIN_CURSOR,JSON.stringify(progress));
     const meetings=rows.map(row=>row.value as Meeting);
+    const withdrawn = new Set(meetings.filter(meeting=>meeting.mapPin?.basis==="GOVERNMENT_OFFICE").map(meeting=>meeting.id));
     const bodyIds=[...new Set(meetings.flatMap(meeting=>meeting.bodyId??[]))].filter(id=>!offices.has(id)&&!officeFailures.has(id));
     const byState=new Map<string,string[]>();
     for (const id of bodyIds) { const state=meetingStateOf(id),ids=byState.get(state)??[];ids.push(id);byState.set(state,ids); }
@@ -127,14 +137,15 @@ export async function publishHeldMeetingPins(input: {
     }
     const eligible = (meeting: Meeting) => {
       const id=meeting.bodyId??"",body=offices.get(id);
-      return Boolean(meeting.venueGap?.publishedText?.match(/[0-9]/)) || /^ocd-division\/country:us\/state:[a-z]{2}\/place:[^/#]+#/.test(id)
+      return withdrawn.has(meeting.id) || Boolean(meeting.venueGap?.publishedText?.match(/[0-9]/)) || /^ocd-division\/country:us\/state:[a-z]{2}\/place:[^/#]+#/.test(id)
         || [body?.officeContact?.address,body?.governmentOffice?.address].some(address=>address&&isOfficeStreetAddress(censusAddressQuery(address)))
         || Boolean(body?.meetingAddresses?.length);
     };
-    const settled=new Set(rows.filter(row=>!eligible(row.value as Meeting)&&!officeFailures.has((row.value as Meeting).bodyId??"")).map(row=>String(row.retry_key)));
     const missing=[...new Set(meetings.flatMap(meeting=>meeting.bodyId && !knownFacts.has(meeting.bodyId)?[meeting.bodyId]:[]))];
     const read=await readSittingFacts(facts.query,missing);
     for(const id of missing)knownFacts.set(id,read.get(id)??[]);
+    for (const facts of knownFacts.values()) for (const fact of facts) if (fact.field==="mapPin" && fact.withdrawn) withdrawn.add(fact.meetingId);
+    const settled=new Set(rows.filter(row=>!eligible(row.value as Meeting)&&!officeFailures.has((row.value as Meeting).bodyId??"")).map(row=>String(row.retry_key)));
     const current=withSittingFacts(meetings,[...new Set(meetings.flatMap(meeting=>meeting.bodyId??[]))].flatMap(id=>knownFacts.get(id)??[]))
       .filter(meeting=>!meeting.location&&!meeting.mapPin&&eligible(meeting));
     for (const row of rows) if (!current.some(meeting=>meeting.id===(row.value as Meeting).id)&&!officeFailures.has((row.value as Meeting).bodyId??"")) settled.add(String(row.retry_key));

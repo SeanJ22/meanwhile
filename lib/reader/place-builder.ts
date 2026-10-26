@@ -198,9 +198,10 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     WHERE $8::text[] IS NULL AND (header.value->>'officeholderId' IN (SELECT id FROM runtime_people UNION SELECT holder->>'id' FROM runtime_candidacies)
       OR header.value->>'personId' IN (SELECT id FROM runtime_people))
 ), sittings AS MATERIALIZED (
-  SELECT b.id AS body_id,b.name AS body_name,m.id AS entity_id,f.field,f.value,f.quote,f.checked_at,s.url
+  SELECT b.id AS body_id,b.name AS body_name,m.id AS entity_id,f.field,f.value,f.quote,f.checked_at,f.status,s.url
     FROM bodies b CROSS JOIN LATERAL (SELECT id FROM entity WHERE parent_id=b.id AND kind='meeting' OFFSET 0) m
-    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=m.id AND status='live' OFFSET 0) f
+    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=m.id AND (status='live'
+      OR field='map_pin' AND status='pulled' AND held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED') OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
     WHERE $8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR substr(m.id,9) IN (SELECT id FROM agenda_fact_ids)
 ), encoded_bodies AS MATERIALIZED (

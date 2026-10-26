@@ -10,7 +10,7 @@ import { assertProductionDatabaseTarget } from "./pilot-runtime-config.mjs";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
-import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
+import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, researchPlanningStates, honorStoppedHunts } from "../lib/control-plane/repository/pg-store.ts";
 import { CONTROL_PLANE_READS_DIR_ENV, readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import {
   assertDurableRepositories,
@@ -61,7 +61,7 @@ import {
   neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
+import { consoleInputReader, consolePublisher, consolePublishClock } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { auditPassClock } from "./audit-pass-clock.mts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
@@ -349,6 +349,9 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     onStarted: (_id, child) => { researchCycleChild = child; },
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
+  // An owner's stop is neither a provider outage nor a failed research pass.
+  if (researchStoppedByOwner) return { ok:false, recordPath:null, stdout:run.stdout ?? "",
+    stderrTail:"", signal:run.signal ?? null, exitCode:run.status, circuit:null };
   const failedAtMs = Date.now();
   let supervisorRecordPath: string | null = null;
   if (run.termination === "TIMED_OUT") {
@@ -599,7 +602,10 @@ const publishChangedConsole = consolePublisher({
   publish: publishConsoleChildren,
 });
 
-async function publishConsole(): Promise<void> {
+const consoleClock=consolePublishClock(INTERVAL_MIN*60_000);
+async function publishConsole(onlyWhenDue=false): Promise<void> {
+  if(onlyWhenDue&&!consoleClock.due())return;
+  consoleClock.attempted();
   if (canary && STAGING) {
     console.log("  console publish: staging canary is scoped to research; billing and live-site readbacks are skipped");
     return;
@@ -951,6 +957,7 @@ let currentCycleErrors = "";
 
 let currentCycleOutput = "";
 let researchCycleChild: ChildProcess | null = null;
+let researchStoppedByOwner = false;
 
 const RELEASE_QUICK_SWITCH = process.env.WTP_RELEASE_QUICK_SWITCH === "1";
 const stagingAttempted = new Set<string>();
@@ -1301,8 +1308,14 @@ function startStandingRuntimeClock(): void {
 
   ownerControlTimer = setInterval(() => {
     if (researchCycleActive && !canary && activeControlRead === null) {
-      activeControlRead = ownerSays().then(says => {
+      activeControlRead = ownerSays().then(async says => {
         if (says === "START_NOW") ownerWakePending = true;
+        const repos = await ownerRepositories(), child = researchCycleChild;
+        if (repos && child && !(await researchPlanningStates(repos,(await readRunnerControls(repos)).research)).length) {
+          researchStoppedByOwner = true;
+          await endOwnedProcessTree(child);
+          await honorStoppedHunts(repos,new Date().toISOString());
+        }
       }).catch(error => {
         console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
       }).finally(() => { activeControlRead = null; });
@@ -1818,11 +1831,24 @@ while (cycle < CYCLES) {
 
   const owner = await holdWhilePaused();
 
+
   const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary();
   if (wakeReleaseExit !== null) {
     handoffExitCode = wakeReleaseExit;
     break;
   }
+  if (provider === "postgres" && !canary && !STAGING) {
+    const repos = await ownerRepositories();
+    if (repos && !(await researchPlanningStates(repos, (await readRunnerControls(repos)).research)).length) {
+      await honorStoppedHunts(repos,new Date().toISOString());
+      await publishConsole(true);
+      // The parent's control clock still sees a new Send; there is no research child to read data while stopped.
+      await sleep(CONTROL_WAKE_POLL_MS);
+      continue;
+    }
+  }
+
+
   cycle += 1;
   const startedAt = new Date().toISOString();
   console.log(
@@ -1858,8 +1884,16 @@ while (cycle < CYCLES) {
     await lastBeat({ code: null, signal: null });
     throw error;
   });
-  await lastBeat({ code: result.exitCode, signal: result.signal });
   await activeControlRead;
+  if (researchStoppedByOwner) {
+    researchStoppedByOwner = false;
+    const repos = await ownerRepositories(), current = await repos?.runnerHeartbeat.read(RUNNER_ID);
+    if (repos && current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,current.revision,
+      {...current.value,lastCycleFinishedAt:new Date().toISOString(),lastCycleOk:null},new Date().toISOString());
+    console.log("Research stopped by the owner's Stop every hunt order; the next Send resumes retained work.");
+    continue;
+  }
+  await lastBeat({ code: result.exitCode, signal: result.signal });
   if (result.circuit) {
     const c = result.circuit;
     const headline = `${new Date().toISOString()} - cycle ${cycle} - CIRCUIT BROKEN - ${c.provider} latched until ${c.eligibleAt}`;

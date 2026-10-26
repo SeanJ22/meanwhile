@@ -1,7 +1,6 @@
 /**
- * `pgAggregateRepository.list()` reads through its changed-since read, which pages by key so it never
- * exceeds the Neon HTTP driver's 64 MiB response cap. The fake `Sql` throws on any scan without a
- * `LIMIT` (the one-row read clock aside), and the paged concatenation must equal the whole table in id order.
+ * Aggregate membership pages contain ids and revisions. Only missing or changed bodies are read,
+ * in batches bounded by those page ids. Both paths must preserve the whole answer in id order.
  */
 
 import assert from "node:assert/strict";
@@ -20,40 +19,48 @@ interface Row {
   readonly value: Record<string, unknown>;
 }
 
-/** A minimal stand-in that understands the paged `list()` shapes and refuses
- *  any scan without a `LIMIT`, so an unbounded regression is caught here. */
+/** Refuse unbounded membership scans and body requests larger than one page. */
 function fakeAggregateSql(rows: readonly Row[]) {
   const calls: string[] = [];
   const byId = (a: Row, b: Row) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
   const sql = {
     async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
       calls.push(text);
-      if (/^SELECT now\(\) AS read_at$/.test(text)) return [{ read_at: "2026-09-17T00:00:00.000Z" }];
+      assert.match(text, /ORDER BY id(?: ASC)?(?:\s+LIMIT \d+)?\s*$/);
+      const requested = /id=ANY\(\$(\d+)::text\[\]\)/.exec(text);
       const litLimit = /LIMIT\s+(\d+)/.exec(text);
-      if (litLimit === null) {
+      if (litLimit === null && requested === null) {
         throw new Error(`unbounded scan would risk the 64 MiB cap: ${text.replace(/\s+/g, " ").trim()}`);
       }
-      const limit = Number(litLimit[1]);
-      const project = (r: Row) => ({ id: r.id, revision: r.revision, updated_at: r.updated_at, value: r.value });
-      // listWhere(): WHERE value #>> '{path}' = $1, next pages add AND id > $2
-      const filter = /value #>> '\{([^}]*)\}' = \$1/.exec(text);
+      const limit = litLimit ? Number(litLimit[1]) : AGGREGATE_LIST_READ_PAGE;
+      assert.ok(limit <= AGGREGATE_LIST_READ_PAGE);
+      const versionsOnly = /^SELECT id,revision FROM/.test(text);
+      const keys = requested ? params[Number(requested[1]) - 1] as string[] : null;
+      if (keys) assert.ok(keys.length <= AGGREGATE_LIST_READ_PAGE);
+      const kept = /WHERE t\.key IN \(([^)]+)\)/.exec(text);
+      const projection = kept ? Object.fromEntries([...kept[1].matchAll(/'([^']+)'/g)].map(match => [match[1], true as const])) : null;
+      const project = (r: Row) => versionsOnly ? { id: r.id, revision: r.revision }
+        : { id: r.id, revision: r.revision, updated_at: r.updated_at,
+          value: projection ? projectAggregate(r.value, projection) : r.value };
+      const filter = /value #>> '\{([^}]*)\}'\s*=\s*\$1/.exec(text);
       if (filter !== null) {
         const [value, after] = params as [string, string | undefined];
         const path = filter[1].split(",");
         const paged = /AND\s+id\s*>\s*\$2/i.test(text);
         return rows
-          .filter((r) => jsonTextAtPath(r.value, path) === value && (!paged || r.id > String(after)))
+          .filter((r) => jsonTextAtPath(r.value, path) === value && (!paged || r.id > String(after)) && (!keys || keys.includes(r.id)))
           .sort(byId)
           .slice(0, limit)
           .map(project);
       }
+      if (keys) return rows.filter(row => keys.includes(row.id)).sort(byId).map(project);
       // list() next page: WHERE id > $1
       if (/WHERE\s+id\s*>\s*\$1/i.test(text)) {
         const [after] = params as [string];
         return rows.filter((r) => r.id > after).sort(byId).slice(0, limit).map(project);
       }
       // list() first page: ORDER BY id ASC, no WHERE cursor
-      if (/ORDER BY\s+id ASC/i.test(text) && !/WHERE\s+id\s*>/i.test(text)) {
+      if (/ORDER BY\s+id(?: ASC)?\s+LIMIT/i.test(text) && !/WHERE\s+id\s*>/i.test(text)) {
         return rows.slice().sort(byId).slice(0, limit).map(project);
       }
       throw new Error(`fake Sql did not recognize query: ${text.replace(/\s+/g, " ").trim()}`);
@@ -79,16 +86,17 @@ test("list() pages an aggregate larger than one response and returns every row i
   const out = await repo.list();
   assert.equal(out.length, n);
   assert.deepEqual(out.map((r) => r.value.seq), Array.from({ length: n }, (_, i) => i));
-  assert.ok(calls.length >= 4, `expected the read clock and multiple bounded pages, saw ${calls.length}`);
-  assert.match(calls[0]!, /SELECT now\(\) AS read_at/);
-  assert.ok(calls.slice(1).every((c) => /LIMIT/i.test(c)), "every list statement must carry LIMIT");
+  assert.equal(calls.filter(c => c.startsWith("SELECT id,revision FROM")).length, 3);
+  assert.equal(calls.filter(c => c.includes("id=ANY")).length, 3);
+  assert.ok(calls.every(c => /LIMIT/i.test(c) || c.includes("id=ANY")), "every scan or body batch is bounded");
 });
 
-test("list() of an empty table is the read clock and one empty bounded page", async () => {
+test("list() of an empty table is one empty bounded revision page and no body read", async () => {
   const { sql, calls } = fakeAggregateSql([]);
   const repo = pgAggregateRepository<{ seq: number }>(sql, "WorkItem", "cp_work_items");
   assert.deepEqual(await repo.list(), []);
-  assert.equal(calls.length, 2);
+  assert.equal(calls.length, 1);
+  assert.match(calls[0], /^SELECT id,revision FROM[\s\S]*LIMIT 100$/);
 });
 
 test("listNarrowed reads the same bounded pages and projects each row exactly as the database projection would", async () => {
@@ -100,7 +108,7 @@ test("listNarrowed reads the same bounded pages and projects each row exactly as
   assert.deepEqual(out.map(row => row.id), rows.map(row => row.id));
   assert.deepEqual(out.map(row => row.value), rows.map(row => projectAggregate(row.value, projection)));
   assert.deepEqual(out[0]!.value, { seq: 0, nested: { kept: 1 } });
-  assert.equal(calls.length, 4, "the read clock and three bounded pages");
+  assert.equal(calls.length, 6, "three revision pages and their missing body batches");
   assert.match(calls[2]!, /WHERE id > \$1/);
   const empty = fakeAggregateSql(seq(2));
   assert.deepEqual((await pgAggregateRepository(empty.sql, "WorkItem", "cp_work_items").listNarrowed({})).map(row => row.value), [{}, {}]);
@@ -111,8 +119,9 @@ test("listWhereNarrowed() pages like listWhere() and has the database project ea
   const repo = pgAggregateRepository<{ seq: number; routeTaskId: string }>(sql, "WorkItem", "cp_work_items");
   const out = await repo.listWhereNarrowed(["routeTaskId"], "rt-want", { seq: true });
   assert.equal(out.length, AGGREGATE_LIST_READ_PAGE + 3);
-  assert.equal(calls.length, 2, "two bounded pages");
-  for (const statement of calls) {
+  assert.equal(calls.length, 4, "two revision pages and two bounded body batches");
+  assert.deepEqual(out.map(row => row.value), Array.from({ length: out.length }, (_, seq) => ({ seq })));
+  for (const statement of calls.filter(statement => statement.includes(" AS value"))) {
     assert.match(statement, /jsonb_each\(cp_work_items\.value\)/, "the projection is computed in the database");
     assert.doesNotMatch(statement, /updated_at, value AS value FROM/);
   }
@@ -125,7 +134,7 @@ test("list() of exactly one full page still terminates on the short second page"
   assert.equal(out.length, AGGREGATE_LIST_READ_PAGE);
   // One full page forces a second (empty) page to confirm the end.
   assert.equal(calls.length, 3);
-  assert.ok(calls.slice(1).every((c) => /LIMIT/i.test(c)));
+  assert.ok(calls.every(c => /LIMIT/i.test(c) || c.includes("id=ANY")));
 });
 
 /* `listWhere()` is `list()` filtered by the database, bounded, with the value as a parameter. */
@@ -144,18 +153,22 @@ test("listWhere() pages a large match set and equals list() filtered, row for ro
   assert.deepEqual(out, expected);
   assert.equal(statements.length, 2, "two bounded pages for 103 matches");
   assert.ok(
-    statements.every((c) => /LIMIT/i.test(c) && /value #>> '\{routeTaskId\}' = \$1/.test(c)),
+    statements.every((c) => /LIMIT/i.test(c) && /value #>> '\{routeTaskId\}'\s*=\s*\$1/.test(c)),
     "every statement is bounded and filtered in the database",
   );
   assert.ok(statements.every((c) => !c.includes("rt-want")), "the value is a parameter, never SQL text");
 });
 
-test("listWhere() of a selective filter is ONE bounded statement where list() pages the whole table", async () => {
+test("listWhere() selects only matching revisions and bodies, then needs ONE bounded statement while unchanged", async () => {
   const { sql, calls } = fakeAggregateSql(tagged(AGGREGATE_LIST_READ_PAGE * 4, (i) => i === 7 || i === 391));
   const repo = pgAggregateRepository<{ seq: number; routeTaskId: string }>(sql, "Attempt", "cp_attempts");
   const out = await repo.listWhere(["routeTaskId"], "rt-want");
   assert.deepEqual(out.map((r) => r.value.seq), [7, 391], "a match near the start and one near the end");
-  assert.equal(calls.length, 1, "one round trip");
+  assert.equal(calls.length, 2, "one selective revision page and one batch containing only its two missing bodies");
+  calls.length = 0;
+  assert.deepEqual(await repo.listWhere(["routeTaskId"], "rt-want"), out);
+  assert.equal(calls.length, 1, "one round trip when the matching bodies are held");
+  assert.match(calls[0], /^SELECT id,revision FROM/);
   assert.deepEqual(await repo.listWhere(["routeTaskId"], "rt-absent"), [], "no match is an empty answer");
 });
 

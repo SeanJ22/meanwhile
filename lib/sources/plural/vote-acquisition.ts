@@ -2,11 +2,14 @@ import { acquireKnownRelease, knownReleaseSourceCheck, type KnownRelease, type K
 import { pluralVoteJurisdiction, pluralVoteState, PLURAL_VOTES_PARSER, PLURAL_VOTES_SOURCE, parsePluralBill, type PluralBillEvidence } from "./votes.ts";
 import { parsePluralBulkSessionFile } from "./vote-bulk.ts";
 import { acquireVoteSourceFile } from "../../state-rollcalls/source-file.ts";
+import { canonicalCivicDataHash } from "../../civic-data/changes.ts";
 
 export const PLURAL_SESSION_CATALOG = "https://openstates.org/data/session-csv/";
 const DAY = 86_400_000;
 type SharedOptions = Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" | "now">;
-type PluralBillResult = ReturnType<typeof parsePluralBill> & { evidence: PluralBillEvidence; session?: string };
+export interface PluralVoteSourcePosition { hash: string; position: number; complete: boolean; page?: number }
+export type PluralVoteProgress = Readonly<Record<string, PluralVoteSourcePosition>>;
+type PluralBillResult = ReturnType<typeof parsePluralBill> & { evidence: PluralBillEvidence; session?: string; checkpoints?: PluralVoteProgress };
 const object = (value: unknown): Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
 const decode = (bytes: Uint8Array) => new TextDecoder("utf-8", { fatal: true }).decode(bytes);
 const nativeBillId = (value: unknown): value is string => typeof value === "string" && /^ocd-bill\/[0-9a-f-]{36}$/.test(value);
@@ -54,6 +57,8 @@ function evidence(release: Omit<KnownRelease, "bytes"> & { bytes?: Uint8Array },
 export async function acquireStateVotes(input: SharedOptions & {
   state: string; signal: AbortSignal; apiKey?: string;
   onBill?: (result: PluralBillResult) => Promise<void>;
+  resume?: PluralVoteProgress;
+  onCheckpoint?: (progress: PluralVoteProgress) => Promise<void>;
 }) {
   const state = pluralVoteState(input.state), apiKey = input.apiKey ?? process.env.PLURAL_API_KEY;
   const now = input.now?.() ?? new Date().toISOString();
@@ -63,8 +68,9 @@ export async function acquireStateVotes(input: SharedOptions & {
   const held: { key: string; detail: string }[] = [], acquisitions: PluralBillEvidence[] = [];
   const completedBulkSessions = new Set<string>(), resolvedBulkUrls = new Set<string>();
   let bills = 0;
-  const publish = async (result: PluralBillResult) => {
-    bills++; held.push(...result.held);
+  const publish = async (result: PluralBillResult, countBill = true) => {
+    if (countBill) bills++;
+    held.push(...result.held);
     await input.onBill?.(result);
   };
   const readBulk = async (session: string, url: string) => {
@@ -77,17 +83,23 @@ export async function acquireStateVotes(input: SharedOptions & {
       // Raw source evidence is durable before any reader publication. The cache
       // index is accepted only after the complete archive validates.
       await release.capture();
+      acquisitions.push(source);
+      const previous = input.resume?.[url];
+      let position = previous?.hash === release.sha256 ? previous.position : 0;
       let batch: import("./votes.ts").PluralVoteFact[] = [];
-      const deliver = async (held: { key: string; detail: string }[] = []) => {
+      const deliver = async (held: { key: string; detail: string }[] = [], complete = false) => {
         const votes = batch; batch = [];
-        try { await publish({ votes, held, evidence: source, session }); }
+        try { await publish({ votes, held, evidence: source, session,
+          checkpoints: { [url]: { hash: release!.sha256, position, complete } } }, votes.length > 0 || held.length > 0); }
         catch (error) { consumerFailed = true; throw error; }
       };
-      const parsed = await parsePluralBulkSessionFile(state, session, release.path, source, {
-        signal: input.signal,
-        onVote: async vote => { batch.push(vote); if (batch.length >= 128) await deliver(); },
-      });
-      if (batch.length || !parsed.rollCalls || parsed.held.length) await deliver(parsed.held);
+      if (!(previous?.hash === release.sha256 && previous.complete)) {
+        const parsed = await parsePluralBulkSessionFile(state, session, release.path, source, {
+          signal: input.signal, afterPosition: position,
+          onVote: async (vote, at) => { position = at; batch.push(vote); if (batch.length >= 128) await deliver(); },
+        });
+        await deliver(parsed.held, true);
+      }
       await release.accept();
     } catch (error) {
       if (consumerFailed) throw error;
@@ -135,7 +147,9 @@ export async function acquireStateVotes(input: SharedOptions & {
   for (const session of currentPluralSessions(new TextEncoder().encode(JSON.stringify(jurisdiction)), state, now)) {
     if (completedBulkSessions.has(session.identifier)) continue;
     if (session.bulkUrl && await readBulk(session.identifier, session.bulkUrl)) continue;
-    for (let page = 1; ; page++) {
+    const sessionKey = `api-session:${state}:${session.identifier}`;
+    const previous = input.resume?.[sessionKey];
+    for (let page = previous && !previous.complete && Number.isSafeInteger(previous.page) ? previous.page! : 1; ; page++) {
       input.signal.throwIfAborted();
       const url = new URL("https://v3.openstates.org/bills");
       url.searchParams.set("jurisdiction", pluralVoteJurisdiction(state)); url.searchParams.set("session", session.identifier);
@@ -144,19 +158,29 @@ export async function acquireStateVotes(input: SharedOptions & {
         validate: bytes => { const root = object(JSON.parse(decode(bytes))); if (!Array.isArray(root.results) || !Number.isSafeInteger(object(root.pagination).max_page) || Number(object(root.pagination).max_page) < 0) throw new Error("PLURAL_BILL_LIST_INVALID"); } });
       acquisitions.push(evidence(listing, ""));
       const root = object(JSON.parse(decode(listing.bytes))), bills = root.results as unknown[];
-      for (const raw of bills) {
+      const start = previous?.page === page && previous.hash === listing.sha256 ? previous.position : 0;
+      for (let index = start; index < bills.length; index++) {
+        const raw = bills[index];
         const bill = object(raw);
         if (!nativeBillId(bill.id) || object(bill.jurisdiction).id !== pluralVoteJurisdiction(state)) throw new Error("PLURAL_BILL_LIST_IDENTITY_INVALID");
         const billUrl = `https://v3.openstates.org/bills/${bill.id}?include=votes`;
+        const revision = canonicalCivicDataHash(bill);
+        if (input.resume?.[billUrl]?.hash === revision && input.resume[billUrl].complete) continue;
         let result: PluralBillResult;
         try {
           const release = await acquireKnownRelease({ ...apiShared, releaseId: `${state}:bill:${bill.id}`, url: billUrl, maxBytes: 16 * 1024 * 1024,
             validate: (bytes, release) => { parsePluralBill(state, evidence({ ...release, bytes } as KnownRelease)); } });
           const source = evidence(release); result = { ...parsePluralBill(state, source), evidence: source };
         } catch (error) { input.signal.throwIfAborted(); held.push({ key: String(bill.id), detail: error instanceof Error ? error.message : String(error) }); continue; }
-        await publish(result);
+        await publish({ ...result, checkpoints: {
+          [billUrl]: { hash: revision, position: 0, complete: true },
+          [sessionKey]: { hash: listing.sha256, position: index + 1, page, complete: false },
+        } });
       }
-      if (page >= Number(object(root.pagination).max_page)) break;
+      if (page >= Number(object(root.pagination).max_page)) {
+        await input.onCheckpoint?.({ [sessionKey]: { hash: listing.sha256, position: 0, page: 1, complete: true } });
+        break;
+      }
     }
     if (session.bulkUrl) resolvedBulkUrls.add(session.bulkUrl);
   }

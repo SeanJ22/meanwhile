@@ -68,7 +68,7 @@ interface SqlStatement {
 }
 interface SqlDatabase { exec(sql: string): void; prepare(sql: string): SqlStatement; close(): void }
 const { DatabaseSync } = createRequire(import.meta.url)("node:sqlite") as { DatabaseSync: new (path: string) => SqlDatabase };
-export interface PluralBulkParseOptions { onVote?: (vote: PluralVoteFact) => Promise<void>; signal?: AbortSignal }
+export interface PluralBulkParseOptions { onVote?: (vote: PluralVoteFact, position: number) => Promise<void>; signal?: AbortSignal; afterPosition?: number }
 export interface PluralBulkSessionResult {
   votes: PluralVoteFact[]; held: { key: string; detail: string }[]; members: string[];
   rollCalls: number; memberVotes: number; unmatchedPositions: number;
@@ -79,6 +79,8 @@ export interface PluralBulkSessionResult {
 export async function parsePluralBulkSessionFile(state: string, session: string, path: string, evidence: PluralBillEvidence,
   options: PluralBulkParseOptions = {}): Promise<PluralBulkSessionResult> {
   const normalizedState = pluralVoteState(state), stateCode = normalizedState.toUpperCase();
+  const afterPosition = options.afterPosition ?? 0;
+  if (!Number.isSafeInteger(afterPosition) || afterPosition < 0) throw new Error("PLURAL_BULK_CURSOR_INVALID");
   if (!session.trim() || /[\/\\\u0000-\u001f\u007f]/.test(session) || session === "." || session === "..") throw new Error("PLURAL_BULK_SESSION_INVALID");
   const source = new URL(evidence.finalUrl);
   let sourcePath: string;
@@ -191,7 +193,7 @@ export async function parsePluralBulkSessionFile(state: string, session: string,
     const counts = query("SELECT option,value FROM counts WHERE vote_id=? ORDER BY rowid"), sources = query("SELECT url FROM sources WHERE vote_id=? ORDER BY rowid");
     const votes: PluralVoteFact[] = [];
     let rollCalls = 0, memberVotes = 0, unmatchedPositions = 0;
-    for (const row of query("SELECT id,data,unresolved FROM votes WHERE rejected=0 ORDER BY rowid").iterate()) {
+    for (const row of query(`SELECT rowid AS source_position,id,data,unresolved FROM votes WHERE rejected=0 AND rowid>${afterPosition} ORDER BY rowid`).iterate()) {
       options.signal?.throwIfAborted();
       const vote = { ...JSON.parse(String(row.data)), unresolvedPositions: Number(row.unresolved),
         positions: positions.all(String(row.id)).map(position => ({ personId: String(position.person_id), option: String(position.option), retrievedAt: evidence.retrievedAt })),
@@ -200,7 +202,7 @@ export async function parsePluralBulkSessionFile(state: string, session: string,
       unmatchedPositions += vote.unresolvedPositions;
       if (!vote.positions.length) { hold(vote.id, "no exact native person position was acquired"); continue; }
       rollCalls++; memberVotes += vote.positions.length;
-      if (options.onVote) await options.onVote(vote); else votes.push(vote);
+      if (options.onVote) await options.onVote(vote, Number(row.source_position)); else votes.push(vote);
     }
     const held = query("SELECT key,detail FROM held ORDER BY sequence").all().map(row => ({ key: String(row.key), detail: String(row.detail) }));
     return { votes, held, members: selected, rollCalls, memberVotes, unmatchedPositions };

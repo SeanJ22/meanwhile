@@ -115,6 +115,12 @@ function candidateReadOnlyStore(
     readCandidate: async (candidateId) => candidateId === candidate.id
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,
+    readCandidatePath: async <T>(candidateId: string, path: readonly string[]) => {
+      let value: unknown = candidateId === candidate.id ? record.candidate
+        : predecessor?.candidate.id === candidateId ? predecessor.candidate : null;
+      for (const key of path) value = (value as Record<string, unknown> | null)?.[key];
+      return value === undefined ? null : value as T;
+    },
     readRegistryDivisions: async () => [],
     readPortraitRunState: readOnly,
     readPromotionPayloadFields: readOnly,

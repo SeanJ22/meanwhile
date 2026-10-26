@@ -88,7 +88,8 @@ test("archived publication work is selected when its result or saved body page c
   assert.ok(opened);
   await closeOccurrence(f.repos, { occurrenceId: opened.occurrence.id, disposition: "INGESTED", unresolvedReason: null, now: NOW });
   const before = "2026-10-01T11:00:00.000Z", after = "2026-10-01T13:00:00.000Z";
-  await f.db.query("UPDATE cp_work_items_archive SET value = value || $2::jsonb, changed_at = $3 WHERE id = $1", [opened.workItem.id,
+  // This fixture changes a body, so it advances the aggregate revision as the write contract does.
+  await f.db.query("UPDATE cp_work_items_archive SET revision = revision + 1, value = value || $2::jsonb, changed_at = $3 WHERE id = $1", [opened.workItem.id,
     JSON.stringify({ subject: "place", autonomousPlan: { publication: { contractId: "ballot-navigation", bodyId: "body" }, contract: { recordClass: "VOTER_ACCESS_ROUTE" } } }), before]);
   const read = async (sharedInputsMoved = false) => (await readWorkerPublicationItems(f.sql.query, ["ballot-navigation"], { at: NOW, until: "2026-10-01T14:00:00.000Z", sharedInputsMoved })).items;
   const ids = async (shared = false) => (await read(shared)).map(row => row.id);
@@ -317,7 +318,11 @@ test("a planner's owed work is decided once, however many pages of values it rea
   // Release 95 re-ran the whole candidate query for every 100 rows: the system planner's 37 pages took five minutes.
   assert.equal(f.statements.filter(statement => statement.includes("FROM cp_log_scout_results pending")).length, 1);
   assert.ok(f.statements.every(statement => !/FROM cp_route_tasks\s+WHERE value->>'state' IN/.test(statement)), "never every pending route task");
-  assert.equal(f.statements.filter(statement => /id = ANY\(\$1::text\[\]\)/.test(statement)).length, 3);
+  assert.equal(f.statements.filter(statement => /SELECT id,revision,updated_at,value AS value/.test(statement)).length, 3);
+  f.statements.length = 0;
+  assert.deepEqual((await pgCoordinatorWorkItems(f.sql)).map(row => row.id), ids);
+  assert.equal(f.statements.filter(statement => /SELECT id,revision,updated_at,value AS value/.test(statement)).length, 0,
+    "an unchanged wave fetches revisions without any work-item values");
   await f.db.exec("CREATE TABLE cp_obligations (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL)");
   const hunt: WorkItem = { ...item, id: "owed-hunt", subject: "place-hunt", createdAt: NOW, autonomousPlan: { ...item.autonomousPlan!, capability: "hunt-packet" } };
   await f.db.query("INSERT INTO cp_work_items (id, revision, updated_at, value) VALUES ($1,1,$2,$3::jsonb)", [hunt.id, NOW, JSON.stringify(hunt)]);

@@ -68,20 +68,26 @@ test("readNarrowed in Postgres narrows in the database, reads no value for a rev
   const sql = {
     async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
       calls.push({ text, params });
-      return [{ id: params[0], revision: 7, updated_at: NOW, value: { decisionCards: [] } }];
+      const unchanged = params[1] === "7";
+      return [{ id: params[0], revision: 7, updated_at: NOW, __unchanged: unchanged,
+        value: unchanged ? null : text.includes("ELSE '{}'::jsonb") ? {} : { decisionCards: [] } }];
     },
   };
   const snapshots = pgAggregateRepository<OwnerSnapshot>(sql, "OwnerSnapshot", "cp_owner_snapshots");
   const row = await snapshots.readNarrowed(SNAPSHOT_ID, { decisionCards: true });
   assert.deepEqual(row, { id: SNAPSHOT_ID, revision: 7, updatedAt: NOW, value: { decisionCards: [] } });
   const [narrow] = calls;
-  assert.match(narrow.text, /^SELECT id, revision, updated_at, CASE WHEN jsonb_typeof\(cp_owner_snapshots\.value\) = 'object' THEN /);
-  assert.match(narrow.text, /FROM jsonb_each\(cp_owner_snapshots\.value\) AS t WHERE t\.key IN \('decisionCards'\)\) ELSE cp_owner_snapshots\.value END AS value FROM cp_owner_snapshots WHERE id = \$1$/);
-  assert.deepEqual(narrow.params, [SNAPSHOT_ID]);
+  assert.match(narrow.text, /^SELECT id,revision,updated_at,revision::text=\$2::text AS __unchanged,/);
+  assert.match(narrow.text, /CASE WHEN revision::text=\$2::text THEN NULL ELSE CASE WHEN jsonb_typeof\(cp_owner_snapshots\.value\) = 'object' THEN /);
+  assert.match(narrow.text, /FROM jsonb_each\(cp_owner_snapshots\.value\) AS t WHERE t\.key IN \('decisionCards'\)\) ELSE cp_owner_snapshots\.value END END AS value FROM cp_owner_snapshots WHERE id=\$1$/);
+  assert.deepEqual(narrow.params, [SNAPSHOT_ID, null]);
+  assert.deepEqual(await snapshots.readNarrowed(SNAPSHOT_ID, { decisionCards: true }), row);
+  assert.deepEqual(calls[1].params, [SNAPSHOT_ID, "7"], "the next read confirms the revision without transferring the held value");
 
   const research = pgAggregateRepository(sql, "ResearchState", "cp_research_state");
-  await research.readNarrowed(RESEARCH_STATE_ID, {});
-  assert.equal(calls[1].text, "SELECT id, revision, updated_at, '{}'::jsonb AS value FROM cp_research_state WHERE id = $1");
+  assert.deepEqual((await research.readNarrowed(RESEARCH_STATE_ID, {}))?.value, {});
+  assert.match(calls[2].text, /CASE WHEN revision::text=\$2::text THEN NULL ELSE '\{\}'::jsonb END AS value FROM cp_research_state WHERE id=\$1$/);
+  assert.doesNotMatch(calls[2].text, /jsonb_each|cp_research_state\.value/);
 
   await assert.rejects(() => snapshots.readNarrowed(SNAPSHOT_ID, { "decisionCards') --": true }), /unsafe projection key/);
 });

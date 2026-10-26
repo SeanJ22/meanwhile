@@ -1,3 +1,4 @@
+import { revisionReadsFor } from "./revision-reads.ts";
 import { createHash } from "node:crypto";
 import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import { boundedQuery, CONTROL_PLANE_REQUEST_BOUNDS_MS, type ControlPlaneRequestBounds } from "./request-bounds.ts";
@@ -113,16 +114,14 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
   const run = (operation: string, text: string, params: readonly unknown[] = [], page = false) =>
     boundedQuery(sql, { operation: `cp_dispatch.${operation}`, callClass: page ? "PAGE" : "POINT" }, text, params, { bounds });
   async function rows<T>(table: string, predicate: string, params: readonly unknown[]): Promise<Persisted<T>[]> {
-    const out: Persisted<T>[] = [];
-    let after = "";
-    for (;;) {
-      const page = await run(`readOpen:${table}`, `SELECT id, revision, updated_at, value FROM ${table}
-        WHERE ${predicate} ${state ? table === 'cp_route_tasks' ? `AND EXISTS (SELECT 1 FROM cp_work_items_history w WHERE w.id=${table}.value->>'workItemId' AND cp_control_state(w.value)='${state}')` : `AND cp_control_state(value)='${state}'` : ""} AND id > $${params.length + 1} ORDER BY id LIMIT 100`, [...params, after], true) as Record<string, unknown>[];
-      out.push(...page.map(row => persisted<T>(row)));
-      if (page.length < 100) return out;
-      after = String(page[page.length - 1].id);
-    }
+    const scoped = state ? table === 'cp_route_tasks'
+      ? `EXISTS (SELECT 1 FROM cp_work_items_history w WHERE w.id=${table}.value->>'workItemId' AND cp_control_state(w.value)='${state}')`
+      : `cp_control_state(value)='${state}'` : "";
+    const found = await revisionReadsFor(sql).rows((text, args) => run(`readOpen:${table}`, text, args, true),
+      table, [predicate, scoped].filter(Boolean).map(filter => `(${filter})`).join(" AND "), params);
+    return found.map(row => persisted<T>(row));
   }
+
   const lineageCache=new Map<string,{stamp:string;value:StandingLineage[];dirty:boolean;generation:number}>();
   return {
     async readOpen(input = {}) {

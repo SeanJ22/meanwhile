@@ -119,6 +119,8 @@ export interface RoutineDataStore {
   ) => Promise<CandidateVersionRecord>;
   readonly readRegistryDivisions: (state: string, labels: readonly string[]) => Promise<readonly RegistryDivisionMatch[]>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
+  /** Read only a named candidate field and its referenced parts. */
+  readonly readCandidatePath: <T = unknown>(candidateId: string, path: readonly string[]) => Promise<T | null>;
   readonly readCandidateSummary: (candidateId: string) => Promise<CandidateVersionSummary | null>;
   readonly readStateRetirementBaseline?: (recordClass: RoutineRecordClass, scope: string) => Promise<RoutineCandidate["normalization"]["stateRecordHashes"] | null>;
   readonly hasStateRetirementProof?: (contractId: string, origin: NonNullable<RoutineCandidate["stateRetirement"]>["origin"]) => Promise<boolean>;
@@ -912,6 +914,12 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
     const row = this.candidates.get(candidateId);
     return row ? heldRecord(row) : null;
+  }
+
+  async readCandidatePath<T = unknown>(candidateId: string, path: readonly string[]): Promise<T | null> {
+    let value: unknown = this.candidates.get(candidateId)?.candidate;
+    for (const key of path) value = (value as Record<string, unknown> | null)?.[key];
+    return value === undefined ? null : structuredClone(value) as T;
   }
 
   async readCandidateSummary(candidateId: string): Promise<CandidateVersionSummary | null> {
@@ -2047,6 +2055,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const [row] = await this.candidateRows([candidateId], "candidate", async ids =>
       this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
     return row ? { ...rowToCandidate(await this.withReceiptParts(row)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
+  }
+
+  async readCandidatePath<T = unknown>(candidateId: string, path: readonly string[]): Promise<T | null> {
+    if (!path.length) throw new Error("CANDIDATE_FIELD_PATH_REQUIRED");
+    const [row] = await this.db.select({ value: sql<unknown>`${civicDataCandidates.candidate}->${path[0]}` })
+      .from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
+    if (!row) return null;
+    const value = await this.payloadParts.load(await this.payloadParts.path(row.value, path.slice(1)));
+    return value === undefined ? null : value as T;
   }
 
   async readNavigationPublicationBase(scope: string): Promise<NavigationPublicationBase | null> {

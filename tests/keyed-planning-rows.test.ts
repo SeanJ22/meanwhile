@@ -4,6 +4,9 @@ import {readFileSync} from "node:fs";
 import {PGlite} from "@electric-sql/pglite";
 import {partitionCivicPayload} from "../lib/civic-data/payload-codec.ts";
 import {canonicalCivicDataHash} from "../lib/civic-data/canonical-hash.ts";
+import {readRegistryPlaceRows,selectRegistryPlaceView} from "../lib/civic-data/keyed-registry-place.ts";
+import {readPlaceRegistry} from "../lib/civic-data/place-registry-read.ts";
+import {projectHeldPlaceCapture} from "../lib/civic-data/held-place-projection.ts";
 import {readRegistryPlanningRows} from "../lib/civic-data/keyed-registry-planning.ts";
 import {readOwnershipLookup,readOwnershipWiring,readStateWiringRows} from "../lib/civic-data/keyed-government-lookup.ts";
 import {heldSubjectDetails} from "../lib/control-plane/scheduler/providers/held-subject-enrichment.ts";
@@ -65,6 +68,22 @@ test("keyed planning preserves held facts, source aliases and state routes throu
   assert.equal(routes?.input.readModelSha256,canonicalCivicDataHash(wiring),"a selected state still cites the complete immutable wiring source");
   assert.ok(bytes<2_000);
   assert.deepEqual((await readOwnershipWiring(query)).value?.records,[{row:{state:"US-AZ",bodyId:BODY,jurisdictionId:"az:city:sample"}},{row:{state:"US-NH",bodyId:"nh-body",jurisdictionId:"nh:city:one"}}]);
+  const elsewhere=`${STATE}/place:elsewhere`;
+  const placeRuntime={...runtime,registry:{...runtime.registry,divisions:[...runtime.registry.divisions,{...runtime.registry.divisions[0],ocdId:elsewhere,label:"Elsewhere",unusedGeometry:"q".repeat(200_000)}],
+    bodies:[...runtime.registry.bodies,{...runtime.registry.bodies[0],id:`${elsewhere}#governing`,ocdId:elsewhere,evidence:"z".repeat(200_000)}]},
+    bodyRosters:[...runtime.bodyRosters,{...runtime.bodyRosters[0],bodyId:`${elsewhere}#governing`,members:[{...runtime.bodyRosters[0].members[0],id:"foreign-member",biography:"b".repeat(200_000)}]}]};
+  await put("REGISTRY_RUNTIME_BINDING","US-AZ:reader-registry-runtime",placeRuntime);
+  bytes=0;const place=await readRegistryPlaceRows(query,"AZ",[DIVISION]);
+  assert.deepEqual(place?.payload,selectRegistryPlaceView(placeRuntime,[DIVISION]));
+  const keyedStore={readPromotion:async()=>{throw new Error("WHOLE_POINTER_FORBIDDEN");},readCandidate:async()=>{throw new Error("WHOLE_CANDIDATE_FORBIDDEN");},
+    readRegistryPlaceView:async(state:string,ids:readonly string[])=>{assert.equal(state,"AZ");assert.deepEqual(ids,[DIVISION]);return place;}};
+  const placeRead=await readPlaceRegistry("AZ",[DIVISION],{store:keyedStore});
+  assert.equal(placeRead.metadata.versionId,place?.versionId);
+  assert.deepEqual(placeRead.value,place?.payload,"the normal place reader uses the keyed adapter without any whole pointer/candidate callback");
+  const metadata={recordClass:"REGISTRY_RUNTIME_BINDING" as const,scope:"US-AZ:reader-registry-runtime"};
+  assert.deepEqual(projectHeldPlaceCapture([DIVISION],{kind:"PROMOTED",metadata,value:place!.payload},[],AT),
+    projectHeldPlaceCapture([DIVISION],{kind:"PROMOTED",metadata,value:placeRuntime},[],AT),"selected-place subjects, held values and source clocks match the original complete registry");
+  assert.ok(bytes<10_000,"other held governments, geometry and members never leave the store for this place");
   const before=(await pg.query("SELECT collection,row_id,value FROM civic_data_rows ORDER BY promotion_key,collection,ordinal")).rows;
   await assert.rejects(pg.transaction(async tx=>{await tx.query("UPDATE civic_data_promotions SET payload='{}'::jsonb WHERE record_class='REGISTRY_RUNTIME_BINDING'");throw new Error("ROLLBACK_LOOKUP_UPDATE");}),/ROLLBACK_LOOKUP_UPDATE/);
   assert.deepEqual((await pg.query("SELECT collection,row_id,value FROM civic_data_rows ORDER BY promotion_key,collection,ordinal")).rows,before,"pointer and keyed values roll back together");

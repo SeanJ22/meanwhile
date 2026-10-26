@@ -1,3 +1,4 @@
+import { readRegistryPlaceRows, selectRegistryPlaceView, type RegistryPlaceSlice } from "./keyed-registry-place.ts";
 import { readRegistryPlanningRows, type RegistryPlanningView } from "./keyed-registry-planning.ts";
 import { readDerivedInputHeads, readDerivedWiringRows, selectDerivedWiringRows, type DerivedInputHead, type DerivedWiringRow } from "./derived-input-rows.ts";
 import { readKeyedGovernmentLookup, type GovernmentRowLookup } from "./keyed-government-lookup.ts";
@@ -158,6 +159,7 @@ export interface RoutineDataStore {
   readonly readMemberOfficeSlice: (state: string, members?: readonly string[]) => Promise<MemberOfficeSlice | null>;
   readonly readMemberOfficeProgress: () => Promise<MemberOfficeProgress>;
   readonly writeMemberOfficeProgress: (progress: MemberOfficeProgress) => Promise<void>;
+  readonly readRegistryPlaceView?: (state:string,divisionIds:readonly string[])=>Promise<RegistryPlaceSlice|null>;
   readonly readRegistryPlanningView?: (state:string)=>Promise<RegistryPlanningView|null>;
   readonly readGovernmentLookup?: (state:string,governmentIds:readonly string[],censusIds:readonly string[],bodyIds?:readonly string[],divisionIds?:readonly string[])=>Promise<GovernmentRowLookup>;
   readonly readRegistrySlice: (state: string, bodyIds: readonly string[], divisionIds: readonly string[]) => Promise<RegistryLookup | null>;
@@ -1004,6 +1006,12 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     let value: unknown = this.candidates.get(candidateId)?.candidate;
     for (const key of path) value = value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined;
     return value === undefined ? undefined : structuredClone(value);
+  }
+
+  async readRegistryPlaceView(state:string,divisionIds:readonly string[]):Promise<RegistryPlaceSlice|null>{
+    const pointer=this.promotions.get(projectionKey("REGISTRY_RUNTIME_BINDING",stateRegistryRuntimeScope(requireRegistryState(state))));
+    if(!pointer||pointer.receipt.decision!=="GOOD")return null;
+    return {versionId:pointer.versionId,payload:structuredClone(selectRegistryPlaceView(pointer.payload as RegistryPlanningView,divisionIds))};
   }
 
   async readRegistryPlanningView(state:string):Promise<RegistryPlanningView|null>{
@@ -2171,6 +2179,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readGovernmentLookup(state:string,governmentIds:readonly string[],censusIds:readonly string[],bodyIds:readonly string[]=[],divisionIds:readonly string[]=[]):Promise<GovernmentRowLookup>{
     return readKeyedGovernmentLookup((text,params)=>this.readerRows(text,params),state,governmentIds,censusIds,bodyIds,divisionIds);
+  }
+
+  async readRegistryPlaceView(state:string,divisionIds:readonly string[]):Promise<RegistryPlaceSlice|null>{
+    return readRegistryPlaceRows((text,params)=>this.readerRows(text,params),state,divisionIds);
   }
 
   async readRegistryPlanningView(state:string):Promise<RegistryPlanningView|null>{

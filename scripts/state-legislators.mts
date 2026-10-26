@@ -14,8 +14,10 @@ import { readCompleteResponse } from "../lib/sources/source-bytes.ts";
  */
 
 import {
-  officialStateLegislatorsCandidate,
+  officialStateLegislatorsCandidate, sha256,
 } from "../lib/civic-data/candidate-builders.ts";
+import { sourceContentHash, confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { peopleNormalizationInputHash } from "../lib/civic-data/people-source-hash.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
@@ -79,6 +81,7 @@ async function main(): Promise<void> {
   let response: Response;
   let body: string;
   let retrievedAt: string;
+  let sourceBytesHash: string;
   let parsed: ReturnType<typeof parseAzLegislatureRoster> | ReturnType<typeof parseNjLegislatureRoster>;
   try {
     const acquired = await withPublisherAcquisitionDeadline(
@@ -102,20 +105,24 @@ async function main(): Promise<void> {
         }
         const raw = await readPublisherBody(
           `${target.publisher} current legislative roster`,
-          async () => new TextDecoder("utf-8",{fatal:true}).decode(await readCompleteResponse(result,16*1024*1024)),
+          async () => {
+            const bytes=await readCompleteResponse(result,16*1024*1024);
+            return {body:new TextDecoder("utf-8",{fatal:true}).decode(bytes),rawHash:sha256(bytes)};
+          },
         );
         requestSignal.throwIfAborted();
-        if (raw.trim() === "") {
+        if (raw.body.trim() === "") {
           throw sourceAcquisitionFailure(
             "PUBLISHER_DOCUMENT_INVALID",
             `${target.publisher} current legislative roster returned an empty document.`,
           );
         }
-        return { response: result, body: raw };
+        return { response: result, ...raw };
       },
     );
     response = acquired.response;
     body = acquired.body;
+    sourceBytesHash=acquired.rawHash;
     retrievedAt = new Date().toISOString();
     if (state === "AZ") {
       if (target.probeUrl !== AZ_LEGISLATURE_ROSTER_SOURCE_CONTRACT.requestedUrl) {
@@ -143,11 +150,22 @@ async function main(): Promise<void> {
     return;
   }
 
+  const rawHash=sourceContentHash([{requestedUrl:target.probeUrl,finalUrl:response.url||target.probeUrl,rawHash:sourceBytesHash}],
+    {sourceId:target.sourceId,scope:target.jurisdiction,parserVersion:`${target.sourceId}/2`,term:parsed.term,
+      normalizationInputHash:peopleNormalizationInputHash(parsed.roster)});
+  const confirmed=await confirmSourceHashUnchanged({store,sourceId:target.sourceId,recordClass:"STATE_LEGISLATOR",scope:target.jurisdiction,
+    parserVersion:`${target.sourceId}/2`,rawHash,now:retrievedAt,complete:true,
+    retrieval:{requestedUrl:target.probeUrl,finalUrl:response.url||target.probeUrl,httpStatus:response.status,rawHash,retrievedAt}});
+  if(confirmed){
+    console.log("RCD_RECEIPT="+JSON.stringify({source:target.contractId,...sourceHashReceiptFields(confirmed),structuralReleaseContract:ZERO_RELEASE_EVENTS}));
+    return;
+  }
+
   const prior = await readOfficialStateLegislatorsProjection(target.jurisdiction,{store,now:retrievedAt});
   if (prior.kind === "STORE_UNREACHABLE") throw Error("STATE_PEOPLE_PRIOR_UNAVAILABLE");
   const {publishRosterOfficePoints} = await import("../lib/officials/office-points-publication.ts");
   const roster = await publishRosterOfficePoints(parsed.roster, prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null);
-  const candidate = officialStateLegislatorsCandidate({
+  const built = officialStateLegislatorsCandidate({
     priorRoster: prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null,
     sourceId: target.sourceId,
     jurisdiction: target.jurisdiction,
@@ -174,6 +192,8 @@ async function main(): Promise<void> {
       session: "session" in parsed ? parsed.session : null,
     },
   });
+  const candidate={...built,id:`cv-${sha256(`${built.id}:${rawHash}`).slice(0,32)}`,
+    retrieval:{...built.retrieval,rawHash,rawHashBasis:"SOURCE_CONTENT_V1" as const,complete:true}};
   const outcome = await processRegisteredRoutineCandidate(
     store,
     target.contractId,

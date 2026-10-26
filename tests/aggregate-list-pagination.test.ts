@@ -228,6 +228,9 @@ test("listWhere() of a selective filter is one bounded revision statement and a 
   assert.deepEqual(out.map((r) => r.value.seq), [7, 391], "a match near the start and one near the end");
   assert.deepEqual(shapes(calls), ["revisions", "values"], "two round trips");
   assert.deepEqual(calls[1]!.params, ["rt-want", ["wi-000007", "wi-000391"]], "values for the matching ids only");
+  const warm = calls.length;
+  assert.deepEqual(await repo.listWhere(["routeTaskId"], "rt-want"), out);
+  assert.deepEqual(shapes(calls.slice(warm)), ["revisions"], "an unchanged selective read needs one bounded revision statement and no bodies");
   const before = calls.length;
   assert.deepEqual(await repo.listWhere(["routeTaskId"], "rt-absent"), [], "no match is an empty answer");
   assert.deepEqual(shapes(calls.slice(before)), ["revisions"], "and needs no value fetch");

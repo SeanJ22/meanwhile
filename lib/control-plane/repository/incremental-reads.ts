@@ -18,9 +18,9 @@ import { finished } from "node:stream/promises";
 import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import { installHeldCopies } from "./pg-store.ts";
 import type { ChangedRecord, ChangedRecords, ChangedRows, HeldSlots, Persisted } from "./types.ts";
+import { INCREMENTAL_READS_SLACK_MS } from "./incremental-read-clock.ts";
 
-/** How far before a copy's read clock the next read reaches back; every control-plane write is one bounded statement shorter than this. */
-export const INCREMENTAL_READS_SLACK_MS = 120_000;
+export { INCREMENTAL_READS_SLACK_MS } from "./incremental-read-clock.ts";
 
 /** Where the runner keeps the held copies. The standing runner sets it for itself and every child it starts. */
 export const CONTROL_PLANE_READS_DIR_ENV = "WTP_CONTROL_PLANE_READS_DIR";

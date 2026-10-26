@@ -72,7 +72,8 @@ test("readNarrowed in Postgres narrows in the database, reads no value for an un
       calls.push({ text, params });
       assert.match(flat(text), /^SELECT id,revision,updated_at,revision::text=\$2::text AS __unchanged, CASE WHEN revision::text=\$2::text THEN NULL ELSE .* END AS value FROM \w+ WHERE id=\$1$/);
       const unchanged = params[1] === "7";
-      return [{ id: params[0], revision: 7, updated_at: NOW, __unchanged: unchanged, value: unchanged ? null : { decisionCards: [] } }];
+      return [{ id: params[0], revision: 7, updated_at: NOW, __unchanged: unchanged,
+        value: unchanged ? null : text.includes("ELSE '{}'::jsonb") ? {} : { decisionCards: [] } }];
     },
   };
   const snapshots = pgAggregateRepository<OwnerSnapshot>(sql, "OwnerSnapshot", "cp_owner_snapshots");
@@ -88,7 +89,7 @@ test("readNarrowed in Postgres narrows in the database, reads no value for an un
   assert.deepEqual(calls[1].params, [SNAPSHOT_ID, "7"], "the second read names the held revision, so the database sends no value");
 
   const research = pgAggregateRepository(sql, "ResearchState", "cp_research_state");
-  await research.readNarrowed(RESEARCH_STATE_ID, {});
+  assert.deepEqual((await research.readNarrowed(RESEARCH_STATE_ID, {}))?.value, {});
   assert.equal(flat(calls[2].text),
     "SELECT id,revision,updated_at,revision::text=$2::text AS __unchanged, CASE WHEN revision::text=$2::text THEN NULL ELSE '{}'::jsonb END AS value FROM cp_research_state WHERE id=$1");
 

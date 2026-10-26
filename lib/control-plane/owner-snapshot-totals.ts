@@ -60,7 +60,7 @@ import {
 import { foldSearch, type SearchLedger } from "./provider-billing-collector.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import { countsAsScoutAttempt } from "./research-metrics.ts";
-import { INCREMENTAL_READS_SLACK_MS } from "./repository/incremental-reads.ts";
+import { INCREMENTAL_READS_SLACK_MS } from "./repository/incremental-read-clock.ts";
 import { jsonTextAtPath, readByKeys, type AggregateRepository, type AppendOnlyRepository, type ChangedRecord, type ControlPlaneRepositories, type Persisted, type RecordProjection } from "./repository/types.ts";
 import type { SnapshotStampedRead } from "./repository/pg-store.ts";
 import { unitCarriesState } from "./scheduler/dispatch-target.ts";

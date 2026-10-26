@@ -88,7 +88,8 @@ test("archived publication work is selected when its result or saved body page c
   assert.ok(opened);
   await closeOccurrence(f.repos, { occurrenceId: opened.occurrence.id, disposition: "INGESTED", unresolvedReason: null, now: NOW });
   const before = "2026-10-01T11:00:00.000Z", after = "2026-10-01T13:00:00.000Z";
-  await f.db.query("UPDATE cp_work_items_archive SET value = value || $2::jsonb, changed_at = $3 WHERE id = $1", [opened.workItem.id,
+  // This fixture changes a body, so it advances the aggregate revision as the write contract does.
+  await f.db.query("UPDATE cp_work_items_archive SET revision = revision + 1, value = value || $2::jsonb, changed_at = $3 WHERE id = $1", [opened.workItem.id,
     JSON.stringify({ subject: "place", autonomousPlan: { publication: { contractId: "ballot-navigation", bodyId: "body" }, contract: { recordClass: "VOTER_ACCESS_ROUTE" } } }), before]);
   const read = async (sharedInputsMoved = false) => (await readWorkerPublicationItems(f.sql.query, ["ballot-navigation"], { at: NOW, until: "2026-10-01T14:00:00.000Z", sharedInputsMoved })).items;
   const ids = async (shared = false) => (await read(shared)).map(row => row.id);

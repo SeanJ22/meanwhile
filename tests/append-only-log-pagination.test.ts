@@ -118,6 +118,15 @@ function fakeLogSql(rows: readonly Row[]) {
         throw new Error(`unbounded scan would risk the 64 MiB cap: ${text.replace(/\s+/g, " ").trim()}`);
       }
       const limit = Number(litLimit[1]);
+      if (/JOIN unnest\(\$1::text\[\],\$2::timestamptz\[\]\)/.test(text)) {
+        const [keys,since,encoded,afterKey,afterPosition]=params as [string[],(string|null)[],string,string|undefined,number|undefined];
+        const held=new Set((JSON.parse(encoded) as {log_key:string;position:number}[]).map(row=>`${row.log_key}\n${row.position}`));
+        return rows.filter(row=>keys.includes(row.log_key)&&
+          (since[keys.indexOf(row.log_key)]===null||"2026-09-16T00:00:00.000Z">=since[keys.indexOf(row.log_key)]!)&&
+          !held.has(`${row.log_key}\n${row.position}`)&&
+          (afterKey===undefined||row.log_key>afterKey||row.log_key===afterKey&&row.position>afterPosition!))
+          .sort(byKeyPos).slice(0,limit).map(changedRow);
+      }
       // readWhere: WHERE log_key=$1 AND position > $2 AND record #>> '{path}' = $3
       const where = /record #>> '\{([^}]*)\}' = \$3/.exec(text);
       if (where !== null) {
@@ -169,7 +178,7 @@ test("read() pages a log larger than one response and returns every record in po
   assert.equal(out.length, n);
   assert.deepEqual(out.map((r) => r.seq), Array.from({ length: n }, (_, i) => i));
   assert.ok(calls.length >= 3, `expected multiple bounded pages, saw ${calls.length}`);
-  assert.ok(calls.every((c) => /LIMIT/i.test(c)), "every read statement must carry LIMIT");
+  assert.ok(calls.filter(c=>!/SELECT now/.test(c)).every((c) => /LIMIT/i.test(c)), "every data read must carry LIMIT");
 });
 
 test("recent cycle projection retains the complete time window with late finishes and more than a fixed tail", async () => {
@@ -209,18 +218,18 @@ test("readKeys() answers read() for every named key in a few bounded pages, neve
   const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "promotion_pipeline");
   const out = await repo.readKeys!([...keys, keys[0]!, "absent"]);
   assert.deepEqual([...out.keys()], keys, "every named key with records, in key order; an absent key is left out");
+  const batched=calls.filter(c=>c.includes("JOIN unnest")).length;
   for (const key of keys) assert.deepEqual(out.get(key), await repo.read(key), `${key} is exactly read(${key})`);
-  const batched = calls.filter((c) => /ANY\(\$1::text\[\]\)/.test(c)).length;
   const records = keys.reduce((n, _, i) => n + i % 7 + 1, 0);
-  assert.equal(batched, Math.floor(records / APPEND_ONLY_LOG_READ_PAGE) + 1, "one statement per page of records");
+  assert.ok(batched<=Math.ceil(records/APPEND_ONLY_LOG_READ_PAGE)+Math.ceil((keys.length+1)/APPEND_ONLY_LOG_READ_PAGE),"only bounded record pages and final empty pages are transferred");
   assert.ok(batched < keys.length / 10);
 });
 
-test("read() of an absent key is one empty bounded page", async () => {
+test("read() of an absent key is one empty bounded page after its database clock", async () => {
   const { sql, calls } = fakeLogSql([]);
   const repo = pgAppendOnlyRepository<{ seq: number }>(sql, "owner_digests");
   assert.deepEqual(await repo.read("nothing-here"), []);
-  assert.equal(calls.length, 1);
+  assert.equal(calls.filter(c=>c.includes("JOIN unnest")).length,1);
 });
 
 test("readAll() pages the whole table in (log_key, position) order after its read clock", async () => {

@@ -34,4 +34,11 @@ test("unchanged civic facts retain upgraded and newly changed source fingerprint
   assert.ok(changed.outcome.promoted);
   assert.equal(changed.outcome.confirmed, undefined);
   assert.notEqual((await store.readSourceHead("STATE_LEGISLATOR", fresh.scope))?.rawHash, before?.rawHash);
+  const partial={...changed.candidate,id:"partial-source-same-bytes",retrieval:{...changed.candidate.retrieval,complete:false}};
+  assert.ok((await processRegisteredRoutineCandidate(store,"openstates-people-az",partial,changedAt,undefined,{confirmUnchanged:false})).promoted);
+  const complete={...partial,id:"complete-source-same-bytes",retrieval:{...partial.retrieval,complete:true}};
+  const completed=await processRegisteredRoutineCandidate(store,"openstates-people-az",complete,changedAt);
+  assert.ok(completed.promoted);
+  assert.equal(completed.confirmed,undefined,"an unchanged fact set cannot discard completed acquisition progress");
+  assert.equal((await store.readSourceHead("STATE_LEGISLATOR",fresh.scope))?.acquisitionComplete,true);
 });

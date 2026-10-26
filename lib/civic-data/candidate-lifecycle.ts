@@ -53,6 +53,7 @@ function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate)
 
 
 function sameAcquisitionProgress(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
+  if(candidate.retrieval.complete!==pointed.retrieval.complete)return false;
   if (candidate.recordClass === "MEETING_OUTCOME") {
     const checks = (value: RoutineCandidate) => canonicalCivicDataJson((value.readModel as {
       sittings?: { meetingId: string; minutesDocument?: { readAt?: string } }[]

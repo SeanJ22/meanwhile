@@ -26,7 +26,7 @@ test("meeting hash comparison includes independently changing agendas before any
   const first = await meetingSourceSession(partition, "normalization:one", store, now, vault, undefined, undefined, { checkpoint, fetchImpl });
   await first.fetch(calendar); await first.fetch(agenda);
   const candidate = withMeetingSourceProbe(meetingsCandidate({ snapshot: { formatVersion: 1, generatedAt: now, counts: { fresh: 0, carried: 0, total: 0 },
-    sources: [{ source: "ical", ok: true, fetched: 0, normalized: 0, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }], meetings: [], agendaDocuments: [] },
+    sources: [{ source: "ical", ok: true, fetched: 0, normalized: 0 }], meetings: [], agendaDocuments: [] },
     partition: { sourceName: "ical", bodyId: partition.bodyId, scope: partition.scope }, requestedUrl: calendar, finalUrl: calendar, retrievedAt: now }),
     partition, "normalization:one", [...first.responses.values()], true);
   heldPlan = (candidate.normalizedPayload as { sourceProbe: unknown }).sourceProbe;
@@ -91,7 +91,7 @@ test("an ephemeral calendar session compares acquired hashes before held output 
   };
   const first = await acquire();
   const candidate = withMeetingSourceProbe(meetingsCandidate({ snapshot: { formatVersion: 1, generatedAt: now, counts: { fresh: 0, carried: 0, total: 0 },
-    sources: [{ source: "ical", ok: true, fetched: 0, normalized: 0, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }], meetings: [], agendaDocuments: [] },
+    sources: [{ source: "ical", ok: true, fetched: 0, normalized: 0 }], meetings: [], agendaDocuments: [] },
     partition: { sourceName: "ical", bodyId: partition.bodyId, scope: partition.scope }, requestedUrl: calendar, finalUrl: calendar, retrievedAt: now }),
     partition, "session-input", [...first.responses.values()], false, true);
   plan = (candidate.normalizedPayload as {sourceProbe:unknown}).sourceProbe;

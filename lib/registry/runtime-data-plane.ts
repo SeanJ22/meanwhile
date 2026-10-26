@@ -771,6 +771,26 @@ export async function readRegistryRuntimePrior(
   state: string,
 ): Promise<RegistryRuntimePrior | null> {
   const contract = requiredManualProductionContract(stateRegistryRuntimeContractId(state));
+  const load = () => readRegistryRuntimeSnapshot(store, now, contract);
+  const snapshot = await (store.readVersioned
+    ? store.readVersioned("registry-runtime-prior-v1", contract.recordClass, contract.scope, load)
+    : load());
+  if (!snapshot) return null;
+  // A shared copy is plain JSON. Restore immutable records, but give each
+  // reconciliation its own consumable proof registration.
+  const saved = immutableStateValue(snapshot);
+  const prior = { ...saved.prior };
+  if (immutableStateHash(prior.payload) !== prior.readModelSha256)
+    throw new Error("REGISTRY_RUNTIME_BASE_PROOF_INVALID:PAYLOAD_HASH_MISMATCH");
+  priorStores.set(prior, { store, normalization: saved.normalization });
+  return prior;
+}
+
+async function readRegistryRuntimeSnapshot(
+  store: CivicDataReadStore,
+  now: string,
+  contract: ReturnType<typeof requiredManualProductionContract>,
+): Promise<{ prior: RegistryRuntimePrior; normalization: PublishedCandidateMetadata["candidate"]["normalization"] } | null> {
   const captured = { candidate: null as PublishedCandidateMetadata | null };
   const observedStore = {
     readPromotion: store.readPromotion.bind(store),
@@ -796,8 +816,7 @@ export async function readRegistryRuntimePrior(
   const readModelSha256 = candidate.candidate.normalization.normalizedHash!;
   const prior = { versionId: read.projection.versionId, payload: read.value,
     sourceReceipt: registryPublishedReceipt(candidate), readModelSha256 };
-  priorStores.set(prior, { store, normalization: candidate.candidate.normalization });
-  return prior;
+  return { prior, normalization: candidate.candidate.normalization };
 }
 
 function registryPublishedReceipt(row: Pick<PublishedCandidateMetadata, "candidate" | "receipt">): ManualSourceSetReceipt | undefined {

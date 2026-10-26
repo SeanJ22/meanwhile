@@ -1,4 +1,4 @@
-import type { RoutineDataStore } from "../../civic-data/store.ts";
+import { PostgresRoutineDataStore,type RoutineDataStore } from "../../civic-data/store.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { processRegisteredFanOutCandidate, processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts";
 import { civicCandidate } from "./publication.ts";
@@ -11,17 +11,17 @@ import { routineTaskFromContract } from "../../civic-data/runner.ts";
 import { readPromotedCivicData } from "../../civic-data/read-model.ts";
 import { stateBallotScope } from "../../civic-data/state-scopes.ts";
 import { readRegistryRuntimePrior } from "../../registry/runtime-data-plane.ts";
-import type { Body } from "../../registry/types.ts";
-import type { RegistrationReadModel } from "../../registration/candidate.ts";
 import type { VotingSitesFile } from "../../ballot/voting-sites.ts";
 import type { CountyCivicCoverage, CountyCivicStateCoverage } from "./coverage.ts";
+import { readCountyCivicContactInputs,type CountyCivicContactInputs } from "./county-inputs.ts";
+import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
 
 const electionOffice = /\b(?:elections?|voter registration|registrar of voters|supervisor of elections)\b/i;
 export interface CountyCivicProbeTarget { countyFips: string; address: string }
 
 /** A county hall or a school's contact is not evidence of an election-office address. */
-export function countyCivicProbeTargets(registration: Pick<RegistrationReadModel, "divisions" | "bodies" | "governments">,
-  votingSites: VotingSitesFile | null, reviewedBodies: readonly Body[] = []): { counties: number; targets: CountyCivicProbeTarget[] } {
+export function countyCivicProbeTargets(registration: NonNullable<CountyCivicContactInputs["registration"]>,
+  votingSites: CountyCivicContactInputs["votingSites"],reviewedBodies:CountyCivicContactInputs["reviewedBodies"] = []): { counties: number; targets: CountyCivicProbeTarget[] } {
   const counties = registration.divisions.filter(division => division.divisionType === "county" && /^\d{5}$/.test(division.geoid ?? ""));
   const byDivision = new Map<string, string>(counties.map(division => [division.ocdId, division.geoid]));
   const targets = new Map<string, CountyCivicProbeTarget>();
@@ -93,12 +93,20 @@ export async function refreshGoogleCivic(input: {
   for (const { state } of stateClocks) {
     options.signal?.throwIfAborted();
     const report: CountyCivicStateCoverage = { state, electionDate: GOOGLE_CIVIC_ELECTION_DAY, counties: [], governments: 0, addresses: 0, checked: 0, unavailable: 0, withoutAddress: 0, loaded: 0, joined: 0, unjoined: 0, reason: null };
-    let registration;
+    let registration: {kind:string;value?:NonNullable<CountyCivicContactInputs["registration"]>|null}|null|undefined;
+    let selected:CountyCivicContactInputs|undefined;
+    if(input.store instanceof PostgresRoutineDataStore) {
+      const query=readerQuery();if(!query)throw Error("Google Civic office inputs have no reader connection.");
+      try {selected=await readCountyCivicContactInputs(query,state);
+        registration=selected.registration?{kind:"PROMOTED",value:selected.registration}:null;}
+      catch {registration=null;}
+    } else {
     try { registration = await (input.registration ?? readRegistrationProjection)(state, { store: input.store }); }
     catch { registration = null; }
-    if (registration?.kind !== "PROMOTED") report.reason = "The held government inventory could not be read for this state.";
+    }
+    if (registration?.kind !== "PROMOTED"||!registration.value) report.reason = "The held government inventory could not be read for this state.";
     else {
-      const [siteRead, registryRead] = await Promise.allSettled([
+      const [siteRead, registryRead] = selected?await Promise.allSettled([Promise.resolve(selected.votingSites),Promise.resolve({payload:{registry:{bodies:selected.reviewedBodies}}})]):await Promise.allSettled([
         input.votingSites ? input.votingSites(state) : readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store: input.store })
           .then(held => held.kind === "PROMOTED" ? held.value : null),
         (input.reviewedRegistry ?? readRegistryRuntimePrior)(input.store, catalog.checkedAt, state),

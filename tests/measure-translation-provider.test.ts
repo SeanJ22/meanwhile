@@ -188,3 +188,26 @@ test("the production routine supervisor registers every state's independent tran
     assert.equal(actual.ownerInvocation, undefined, "standing explainers do not depend on a research Send to keep their source clock");
   }
 });
+
+test("a pass reads each division's checked explainers once, never again for every missing measure", async () => {
+  const f = fixture();
+  const send = f.input.guardedTransportFor();
+  const refused = (contests: readonly string[]) => () => async (request: ModelRequest) => {
+    if (contests.includes(measureRequestContext(request).subject.contestId)) throw new Error("SendBudgetRefusal(SCOPE_BUDGET): fixture budget is spent");
+    return send(request);
+  };
+  const first = await runMeasureTranslationPass({ ...f.input, guardedTransportFor: refused(["measure:13"]) });
+  assert.deepEqual(first.outcomes.map(row => [row.subjectId, row.status]), [["measure:12", "PUBLISHED"], ["measure:13", "HELD"]]);
+  // Two more measures cite the same held text; the division's projection now carries a full source copy per record.
+  const ballot = { ...f.ballot, contests: [...f.ballot.contests, ...[14, 15].map(number => ({ id: `measure:${number}`, title: `Proposition ${number}`,
+    type: "MEASURE", ocdId: division, measureTextUrl: sourceUrl, provenance: { sourceUrl } }))] } as unknown as BallotSet;
+  const store = f.input.store, reads = { promotion: 0, candidate: 0 };
+  const readPromotion = store.readPromotion.bind(store), readCandidateProof = store.readCandidateProof.bind(store), readCandidate = store.readCandidate.bind(store);
+  store.readPromotion = (async (...args: Parameters<typeof readPromotion>) => { reads.promotion++; return readPromotion(...args); }) as typeof store.readPromotion;
+  store.readCandidateProof = async id => { reads.candidate++; return readCandidateProof(id); };
+  store.readCandidate = async id => { reads.candidate++; return readCandidate(id); };
+  const second = await runMeasureTranslationPass({ ...f.input, now: "2026-10-20T18:15:00.000Z", loadBallotsForState: async () => [ballot],
+    paidWorkerCapacity: () => 3, guardedTransportFor: refused(["measure:13", "measure:14", "measure:15"]) });
+  assert.deepEqual(second.outcomes.map(row => row.status), ["HELD", "HELD", "HELD"], JSON.stringify(second));
+  assert.deepEqual(reads, { promotion: 1, candidate: 1 }, "three refused measures add no whole-projection reads to the pass's one");
+});

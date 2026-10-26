@@ -6,7 +6,7 @@ import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { measureLabels, pageNamesMeasure } from "./routine-measure-pages.ts";
-import { translationHash, translationScope } from "./records.ts";
+import { translationHash, translationScope, type TranslationRecord } from "./records.ts";
 import { runMeasureTranslation } from "./runtime.ts";
 import { runTextTranslation } from "./text-runtime.ts";
 
@@ -24,6 +24,9 @@ export interface TranslationAttempt {
   readonly versionId: string | null;
   readonly detail?: string;
 }
+
+/** Neon's answer to a single request over its 64 MiB limit. */
+const PUBLICATION_TOO_LARGE = /\bHTTP status 413\b|request is too large/;
 
 /** The parent leased worker names source-backed subjects; no global document sweep. */
 export async function runHeldTextTranslations(input: Pick<Parameters<typeof runTextTranslation>[0], "repos" | "store" | "transportFor" | "now"> & {
@@ -97,6 +100,8 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
   readonly saveAttempt: (attempt: TranslationAttempt) => Promise<void>;
   /** Pages found on the election office's own site for measures whose cited pages never name them, by contest. */
   readonly foundSources?: ReadonlyMap<string, readonly string[]>;
+  /** Checked records the pass already read for these divisions; see runMeasureTranslation. */
+  readonly held?: readonly TranslationRecord[];
 }) {
   const nowMs = Date.parse(input.now);
   if (!Number.isFinite(nowMs)) throw new Error("Translation admission requires a clock.");
@@ -155,6 +160,11 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         deferred.push({ subjectId: contest.id, reason: "The existing attempt's retry clock is unreadable." }); continue;
       }
       const last = matchingAttempts.reverse().sort((a, b) => Date.parse(b.at) - Date.parse(a.at))[0];
+      // The routine's trigger is a changed held source. The database refused this exact source's
+      // publication as one oversized write; repeating it buys both paid calls and fails the same way.
+      if (last?.status === "HELD" && PUBLICATION_TOO_LARGE.test(last.detail ?? "")) {
+        deferred.push({ subjectId: contest.id, reason: "The checked explainer for this exact source is larger than one database write; it waits for changed source bytes." }); continue;
+      }
       if (last && ["RUNNING", "HELD"].includes(last.status) &&
           nowMs - Date.parse(last.at) < PLAIN_ENGLISH_TRANSLATION_ROUTINE.retryAfterMs) {
         deferred.push({ subjectId: contest.id, reason: "The existing attempt is running or its retry is not due." }); continue;

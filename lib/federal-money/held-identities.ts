@@ -3,11 +3,10 @@ import { districtIdentity } from "../ocd/fips.ts";
 import { registrationTarget } from "../registration/publication.ts";
 import { federalMoneyRecipientIds, type FederalMoneyHeldAudit, type FederalMoneyHeldRecipient, type FederalMoneyJoinInput } from "./join.ts";
 import type { FederalMoneyFact } from "./model.ts";
-import { federalMoneyLookupPath } from "./lookups.ts";
 
 const unique = (values: readonly string[]) => [...new Set(values)].sort();
 const canonicalNamespace = "CASE n.key WHEN 'entity_uei' THEN 'uei' WHEN 'nces_id' THEN 'nces_leaid' WHEN 'leaid' THEN 'nces_leaid' WHEN 'census_id' THEN 'census_pid6' ELSE n.key END";
-const recipientMatch = `EXISTS (SELECT 1 FROM jsonb_each_text(COALESCE(g->'nativeIds', '{}'::jsonb)) n JOIN jsonb_to_recordset($3::jsonb) wanted(namespace text, value text) ON ${canonicalNamespace} = wanted.namespace AND n.value = wanted.value)`;
+const recipientMatch = `EXISTS (SELECT 1 FROM jsonb_each_text(COALESCE(reader_payload_value(g->'nativeIds'), '{}'::jsonb)) n JOIN jsonb_to_recordset($3::jsonb) wanted(namespace text, value text) ON ${canonicalNamespace} = wanted.namespace AND n.value = wanted.value)`;
 
 function recipient(row: Row): FederalMoneyHeldRecipient {
   return { uei: typeof row.uei === "string" ? row.uei : null,
@@ -21,15 +20,14 @@ async function heldRecipients(state: string, facts: readonly FederalMoneyFact[],
   let auditReports: FederalMoneyHeldAudit[] = [];
   if (reportIds.length) {
     const [rows] = await query([{
-      text: "WITH matched AS MATERIALIZED (SELECT p.key FROM civic_data_promotions p WHERE p.payload ? 'lookupKeys'" +
-        " AND (p.payload->'lookupKeys') @? $3::jsonpath)" +
-        " SELECT f->'identifiers'->>'reportId' AS report_id, f->>'uei' AS uei, f->'identifiers' AS identifiers, f->'bodyIds' AS body_ids, f->'divisionIds' AS division_ids" +
-        " FROM matched CROSS JOIN LATERAL (SELECT record_class, payload FROM civic_data_promotions WHERE key = matched.key OFFSET 0) p" +
-        " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'records') f" +
-        " WHERE p.record_class = 'FEDERAL_MONEY' AND p.payload->>'formatVersion' = '2'" +
-        " AND p.payload->>'source' = 'federal-audit-clearinghouse' AND p.payload->>'state' = $1" +
-        " AND f->'identifiers'->>'reportId' = ANY($2::text[]) AND f->'details'->>'table' = 'general'",
-      params: [state, reportIds, federalMoneyLookupPath("report", reportIds)],
+      text: "SELECT reader_payload_node(r.value->'identifiers')->>'reportId' AS report_id,r.value->>'uei' AS uei," +
+        " reader_payload_value(r.value->'identifiers') AS identifiers,reader_payload_value(r.value->'bodyIds') AS body_ids," +
+        " reader_payload_value(r.value->'divisionIds') AS division_ids FROM civic_data_rows r" +
+        " JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id" +
+        " WHERE r.record_class='FEDERAL_MONEY' AND r.collection='federalMoney' AND r.state=$1 AND r.aliases&&$2::text[]" +
+        " AND reader_payload_node(p.payload)->>'source'='federal-audit-clearinghouse'" +
+        " AND reader_payload_node(r.value->'details')->>'table'='general'",
+      params: [state, reportIds.map(id=>`report:${id}`)],
     }]);
     auditReports = (rows ?? []).map(row => ({ ...recipient(row), reportId: String(row.report_id), divisionIds: row.division_ids as readonly string[] ?? [] }));
   }
@@ -37,15 +35,12 @@ async function heldRecipients(state: string, facts: readonly FederalMoneyFact[],
   let entities: FederalMoneyHeldRecipient[] = [];
   if (ueis.length) {
     const [rows] = await query([{
-      text: "WITH matched AS MATERIALIZED (SELECT p.key FROM civic_data_promotions p WHERE p.payload ? 'lookupKeys'" +
-        " AND (p.payload->'lookupKeys') @? $3::jsonpath)" +
-        " SELECT f->>'uei' AS uei, f->'identifiers' AS identifiers, f->'bodyIds' AS body_ids" +
-        " FROM matched CROSS JOIN LATERAL (SELECT record_class, payload FROM civic_data_promotions WHERE key = matched.key OFFSET 0) p" +
-        " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'records') f" +
-        " WHERE p.record_class = 'FEDERAL_MONEY' AND p.payload->>'formatVersion' = '2'" +
-        " AND p.payload->>'source' = 'sam-gov-entities' AND p.payload->>'state' = $1" +
-        " AND f->>'uei' = ANY($2::text[]) AND f->>'kind' = 'ENTITY'",
-      params: [state, ueis, federalMoneyLookupPath("uei", ueis)],
+      text: "SELECT r.value->>'uei' AS uei,reader_payload_value(r.value->'identifiers') AS identifiers," +
+        " reader_payload_value(r.value->'bodyIds') AS body_ids FROM civic_data_rows r" +
+        " JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id" +
+        " WHERE r.record_class='FEDERAL_MONEY' AND r.collection='federalMoney' AND r.state=$1 AND r.aliases&&$2::text[]" +
+        " AND reader_payload_node(p.payload)->>'source'='sam-gov-entities' AND r.value->>'kind'='ENTITY'",
+      params: [state, ueis.map(uei=>`uei:${uei}`)],
     }]);
     entities = (rows ?? []).map(recipient);
   }
@@ -69,10 +64,11 @@ export async function readFederalMoneyJoinInput(state: string, facts: readonly F
   const geographies = facts.flatMap(fact => fact.geography.map(geo => ({ type: geo.type, geoid: geo.geoid })));
   const ocdIds = unique([...native.filter(id => id.namespace === "ocd_id").map(id => id.value), ...held.auditReports.flatMap(report => [...report.divisionIds])]);
   const [governmentRows] = await query([{
-    text: "SELECT g->>'id' AS id, g->'nativeIds' AS native_ids, g->'associations' AS associations, g->'bodyIds' AS body_ids" +
-      " FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'governments') g" +
-      ` WHERE p.record_class = 'REGISTRATION' AND p.scope = $2 AND upper(g->>'state') = $1 AND (${recipientMatch}` +
-      " OR g->>'id' = ANY($4::text[]) OR EXISTS (SELECT 1 FROM jsonb_array_elements_text(g->'bodyIds') b WHERE b = ANY($4::text[])))",
+    text: "SELECT g->>'id' AS id,reader_payload_value(g->'nativeIds') AS native_ids,reader_payload_value(g->'associations') AS associations,reader_payload_value(g->'bodyIds') AS body_ids" +
+      " FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id" +
+      " CROSS JOIN LATERAL (SELECT r.value AS g) picked" +
+      ` WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.scope=$2 AND r.state=$1 AND (${recipientMatch}` +
+      " OR g->>'id' = ANY($4::text[]) OR EXISTS (SELECT 1 FROM reader_payload_members(g->'bodyIds') b WHERE b.item#>>'{}' = ANY($4::text[])))",
     params: [postal, registrationTarget(postal).scope, JSON.stringify(native), recipientBodyIds],
   }]);
   const governments: FederalMoneyJoinInput["governments"] = (governmentRows ?? []).map(row => ({
@@ -85,13 +81,15 @@ export async function readFederalMoneyJoinInput(state: string, facts: readonly F
   const divisionIds = unique([...ocdIds, ...governments.flatMap(government => government.associations.map(link => link.divisionId))]);
   const geography = JSON.stringify(geographies);
   const [bodyRows, divisionRows] = await query([{
-    text: "WITH bodies AS (SELECT b FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'bodies') b WHERE p.record_class = 'REGISTRATION' AND p.scope = $2)" +
+    text: "WITH bodies AS (SELECT r.value AS b FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id" +
+      " WHERE r.record_class='REGISTRATION' AND r.collection='registration.bodies' AND r.scope=$2)" +
       " SELECT b->>'id' AS id, b->>'ocdId' AS ocd_id, b->>'censusId' AS census_id FROM bodies" +
       " WHERE b->>'id' = ANY($3::text[]) OR ((b->>'censusId' = ANY($4::text[]) OR b->>'ocdId' = ANY($5::text[]))" +
       " AND (upper(b->>'state') = $1 OR b->>'ocdId' ~ ('/(state|district|territory):' || lower($1) || '(/|$)') OR b->>'id' ~ ('/(state|district|territory):' || lower($1) || '(/|#|$)')))",
     params: [postal, registrationTarget(postal).scope, bodyIds, censusIds, divisionIds],
   }, {
-    text: "WITH divisions AS (SELECT d FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'divisions') d WHERE p.record_class = 'REGISTRATION' AND p.scope = $2)" +
+    text: "WITH divisions AS (SELECT r.value AS d FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id" +
+      " WHERE r.record_class='REGISTRATION' AND r.collection='registration.divisions' AND r.scope=$2)" +
       " SELECT d->>'ocdId' AS ocd_id, d->>'geoid' AS geoid, d->>'divisionType' AS division_type FROM divisions" +
       " WHERE (upper(d->>'state') = $1 OR d->>'ocdId' ~ ('/(state|district|territory):' || lower($1) || '(/|$)'))" +
       " AND (d->>'ocdId' = ANY($3::text[]) OR EXISTS (SELECT 1 FROM jsonb_to_recordset($4::jsonb) geo(type text, geoid text)" +

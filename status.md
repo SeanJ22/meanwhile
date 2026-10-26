@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T22:00:00Z
+heartbeat: 2026-10-26T22:08:00Z
 
 
 <!-- READY-LIST -->
@@ -119,6 +119,13 @@ DB-05: fix on stream/db-05 and post a new READY; it rides the next release.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 6 PM EDT
+- **Live: release 130** (main aaf371bc5, 5:36 PM) with the reader break above; hotfix release 131 gating (river-next-131 4e47af70f, from 6:00 PM). Runner loaded 130 by itself (heartbeat testedSha aaf371bc5, CONSISTENT, 6:03 PM).
+- **Neon, 5 PM hour: reader 10.20 GB + control plane 0.49 GB = 10.69 GB** (4 PM 12.15). legiscan-bulk 4.96 GB (before the runner took 130); 6 PM so far: legiscan-bulk not among the top jobs, so LS1 is working. New in the 5 PM hour: job key `index` (the reader functions) 1.42 GB, almost all civic_data_promotions (1.07 GB) in the ~24 minutes after 130 went live; 6 PM so far 47 MB. DB-05's checked reads in the reader functions; River watches it after the hotfix (the double wrap may have forced full reads).
+- **Place map:** 21 states/areas, 26,546 boundaries (19 at 4:40 PM).
+- **Place pages:** place_page 54,746; rebuild_queue 135,433.
+- **DB-05:** no new READY since 4caea8f2b; its state-binding-refresh test still fails there; River's fold (fold/131 a56fefc1a) waits for it.
 
 ### 6:00 PM EDT: URGENT, release 130 broke reader pages; hotfix gating
 - **What readers see now:** /national returns 500 and ballot pages (checked 85701, 03255) render nothing (React error #441) since 130 went live at 5:36 PM. Meetings and bills APIs answer.

@@ -10,6 +10,7 @@ import { repeatedFailureStreak } from "./failure-backoff.ts";
 import { readRetirementProgress, retirementProofTarget } from "./state-retirement-progress.ts";
 import type { Division, Registry } from "../registry/types.ts";
 import { readKeyedRegistry, readKeyedRegistryDivisions, selectRegistryLookup, type RegistryLookup } from "./keyed-rows.ts";
+import {readFederalMoneyPublicationBase,readFederalMoneyPartitionKeys,readFederalMoneyPriorPlaces,type FederalMoneyPartitionKeys} from "../federal-money/publication-base.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
 import { sourceCheckedAt } from "./source-check.ts";
@@ -141,6 +142,21 @@ export interface CandidateTransitionOptions {
   readonly candidate?: RoutineCandidate;
 }
 
+/** An already read exact merge base, reused by the existing source proof and promotion CAS. */
+export interface RoutinePublicationBase {
+  readonly current:PromotedProjection|null;
+  readonly lkg:CandidateVersionRecord|null;
+}
+const publicationBaseOwners=new WeakMap<object,{readonly store:object;readonly recordClass:RoutineRecordClass;readonly scope:string}>();
+function ownPublicationBase(store:object,recordClass:RoutineRecordClass,scope:string,base:RoutinePublicationBase):RoutinePublicationBase {
+  const held=freezeDurableJson(base);publicationBaseOwners.set(held,{store,recordClass,scope});return held;
+}
+export function assertPublicationBaseOwner(store:object,base:RoutinePublicationBase,recordClass:RoutineRecordClass,scope:string):void {
+  const owner=publicationBaseOwners.get(base);
+  if(owner?.store!==store || owner.recordClass!==recordClass || owner.scope!==scope || base.current && (base.current.recordClass!==recordClass || base.current.scope!==scope))
+    throw new Error(`PUBLICATION_BASE_READ_OWNER_MISMATCH:${recordClass}:${scope}`);
+}
+
 export interface RoutineDataStore {
   /** Reuse a proven read across runner passes until this scope's candidates, events or pointer change. */
   readonly readVersioned?: <T>(namespace: string, recordClass: RoutineRecordClass, scope: string, read: () => Promise<T>) => Promise<T>;
@@ -178,6 +194,9 @@ export interface RoutineDataStore {
     readonly promoted: boolean; readonly sourceAuthenticity: string | null;
   } | null>;
   readonly readStatePublicationBase?: (recordClass: RoutineRecordClass, scope: string) => Promise<{ readonly current: PromotedProjection | null; readonly lkg: CandidateVersionRecord | null }>;
+  readonly readPublicationBase?: (recordClass:RoutineRecordClass,scope:string)=>Promise<RoutinePublicationBase>;
+  readonly readFederalMoneyPartitionKeys?: (scope:string,ids:readonly string[])=>Promise<FederalMoneyPartitionKeys|null>;
+  readonly readFederalMoneyPriorPlaces?: (candidateId:string)=>Promise<readonly string[]>;
   readonly readPromotion: <T = unknown>(recordClass: RoutineRecordClass, scope: string) => Promise<PromotedProjection<T> | null>;
   readonly readCandidates: (candidateIds: readonly string[]) => Promise<readonly CandidateVersionReadback[]>;
   readonly readPublishedCandidateMetadata: (candidateId: string) => Promise<PublishedCandidateMetadata | null>;
@@ -1127,6 +1146,25 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const row = this.pointerRead(recordClass, scope);
     return row ? heldProjection(row) as PromotedProjection<T> : null;
+  }
+
+  async readPublicationBase(recordClass:RoutineRecordClass,scope:string):Promise<RoutinePublicationBase> {
+    const pointer=this.pointerRead(recordClass,scope),row=pointer?this.candidates.get(pointer.lastKnownGoodVersionId):null;
+    return ownPublicationBase(this,recordClass,scope,{current:pointer?heldProjection(pointer):null,
+      lkg:row?{...heldRecord(row),candidate:candidateProofView(row.candidate)}:null});
+  }
+
+  async readFederalMoneyPriorPlaces(candidateId:string):Promise<readonly string[]> {
+    const row=this.candidates.get(candidateId);if(row?.candidate.recordClass!=="FEDERAL_MONEY")return [];
+    const model=row.candidate.readModel as import("../federal-money/model.ts").FederalMoneyProjection;
+    return [...new Set((model.records??[]).flatMap(fact=>[...fact.bodyIds.map(id=>`body:${id}`),...fact.divisionIds.map(id=>`division:${id}`)]))].sort();
+  }
+
+  async readFederalMoneyPartitionKeys(scope:string,ids:readonly string[]):Promise<FederalMoneyPartitionKeys|null> {
+    const held=this.pointerRead("FEDERAL_MONEY",scope);if(!held)return null;
+    const projection=held.payload as import("../federal-money/model.ts").FederalMoneyProjection;
+    return {versionId:held.versionId,sourceId:held.sourceId,state:projection.state,children:[...projection.children??[]],
+      records:(projection.records??[]).filter(row=>ids.includes(row.id)).map(({id,sourceId})=>({id,sourceId}))};
   }
 
   async readPromotions<T = unknown>(
@@ -2591,6 +2629,21 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return { current, lkg: { ...rowToCandidate(candidateRow), candidate } };
   }
 
+  async readPublicationBase(recordClass:RoutineRecordClass,scope:string):Promise<RoutinePublicationBase> {
+    if(statePublicationScope(scope))return ownPublicationBase(this,recordClass,scope,await this.readStatePublicationBase(recordClass,scope));
+    if(recordClass!=="FEDERAL_MONEY")throw new Error(`PUBLICATION_BASE_SCOPE_UNSUPPORTED:${recordClass}:${scope}`);
+    return ownPublicationBase(this,recordClass,scope,await readFederalMoneyPublicationBase((text,params)=>this.readerRows(text,params),this.readCache,scope,
+      value=>this.loadPayload(value,scope)));
+  }
+
+  async readFederalMoneyPriorPlaces(candidateId:string):Promise<readonly string[]> {
+    return readFederalMoneyPriorPlaces((text,params)=>this.readerRows(text,params),candidateId);
+  }
+
+  async readFederalMoneyPartitionKeys(scope:string,ids:readonly string[]):Promise<FederalMoneyPartitionKeys|null> {
+    return readFederalMoneyPartitionKeys((text,params)=>this.readerRows(text,params),scope,ids);
+  }
+
   async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     if (statePublicationScope(scope)) return this.readStatePromotion<T>(recordClass, scope);
     const [row] = await this.promotionRows(recordClass, [scope]);
@@ -3027,7 +3080,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const held = options.candidate;
     const partedManual = held !== undefined && isPartedManualCandidate(held);
     let record: CandidateVersionRecord | null;
-    if (held && (partedManual || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY")) {
+    if (held && (partedManual || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY" || held.recordClass === "FEDERAL_MONEY")) {
       const hash = partedManual || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
       const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,

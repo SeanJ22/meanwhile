@@ -78,11 +78,12 @@ export async function federalMoneySavedSourceIssue(candidate: RoutineCandidate, 
       const rows = grouped.get(proof.targetScope) ?? []; rows.push(fact); grouped.set(proof.targetScope, rows);
     }
     for (const [scope, rows] of grouped) {
-      const target = await store!.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", scope);
-      if (!target || target.sourceId !== source || target.payload.state !== projection.state) return "Federal repartition destination is not held for this source and state.";
+      if(!store!.readFederalMoneyPartitionKeys)return "Federal repartition destination index is unavailable.";
+      const target = await store!.readFederalMoneyPartitionKeys(scope,rows.map(row=>row.id));
+      if (!target || target.sourceId !== source || target.state !== projection.state) return "Federal repartition destination is not held for this source and state.";
       for (const row of rows) {
         const proof = relocations.find(item => item.key === `federal-money:${row.id}`)!;
-        if (proof.code !== "FEDERAL_RECORD_REPARTITIONED" || target.versionId !== proof.targetVersionId || !target.payload.records.some(held => held.id === row.id && held.sourceId === row.sourceId)) return "A moved federal record is missing from its verified destination.";
+        if (proof.code !== "FEDERAL_RECORD_REPARTITIONED" || target.versionId !== proof.targetVersionId || !target.records.some(held => held.id === row.id && held.sourceId === row.sourceId)) return "A moved federal record is missing from its verified destination.";
       }
     }
   }

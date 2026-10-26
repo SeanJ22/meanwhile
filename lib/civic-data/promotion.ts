@@ -1,7 +1,7 @@
 import { rememberStatePublicationHashes, withStateRecordHashes } from "./state-publication.ts";
 import { processRoutineCandidate } from "./candidate-lifecycle.ts";
 import type { CandidateVersionRecord, PromotedPointerIdentity, PromotedProjection, RoutineCandidate } from "./types.ts";
-import { PostgresRoutineDataStore, promotedPointerIdentity, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
+import { PostgresRoutineDataStore, promotedPointerIdentity, routineEventObservedAt, assertPublicationBaseOwner, type RoutineDataStore, type RoutinePublicationBase } from "./store.ts";
 import { canonicalCivicDataJson, heldCivicRecords } from "./changes.ts";
 import { validateRoutineCandidate } from "./validate.ts";
 import type { NavigationComparison } from "./navigation-successor.ts";
@@ -139,7 +139,7 @@ export async function processRegisteredRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   // Rechecks keep the held version by default. Explicit false is reserved for
   // callers that need a distinct candidate even when its facts are unchanged.
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly inputDigest?: string } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly inputDigest?: string; readonly publicationBase?: RoutinePublicationBase } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
@@ -237,7 +237,7 @@ export async function processRegisteredFanOutCandidate(
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
   // A new source/progress envelope must be persisted even when its civic facts match the current version.
-  options: { readonly confirmUnchanged?: boolean } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly inputDigest?: string; readonly publicationBase?: RoutinePublicationBase } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
@@ -249,13 +249,14 @@ export async function processRegisteredFanOutCandidate(
   }
   const issue = routineCandidateFanOutContractIssue(contract, boundedCandidate);
   if (issue !== null) throw new Error(`FANOUT_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);
-  const federalPrior = boundedCandidate.recordClass === "FEDERAL_MONEY"
-    ? await store.readPromotion(boundedCandidate.recordClass, boundedCandidate.scope) : null;
+  const publicationBase=options.publicationBase??(boundedCandidate.recordClass === "FEDERAL_MONEY"
+    ? await (store.readPublicationBase?.(boundedCandidate.recordClass,boundedCandidate.scope)??Promise.reject(new Error("FEDERAL_PUBLICATION_BASE_READER_REQUIRED"))) : undefined);
+  if(publicationBase)assertPublicationBaseOwner(store,publicationBase,boundedCandidate.recordClass,boundedCandidate.scope);
   const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
     contract,
     boundedCandidate,
     sourceProjectionObservedAt(store, now),
-    federalPrior ? await store.readCandidate(federalPrior.versionId) : null,
+    publicationBase?.lkg??null,
     store,
   );
   return appendTypedReaderProjectionReadback(
@@ -268,7 +269,7 @@ export async function processRegisteredFanOutCandidate(
       expectedBaseVersionId,
       REGISTERED_PRODUCTION_DOOR,
       sourceProjectionVerification,
-      options,
+      {...options,...(publicationBase?{publicationBase}:{})},
     ),
     now,
   );

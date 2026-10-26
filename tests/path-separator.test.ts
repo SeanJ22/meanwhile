@@ -142,6 +142,8 @@ test("no file URL is used as a path without fileURLToPath", () => {
     ["lib/sources/white-house/president.ts", [[["new URL(page.url)", "pathname"].join("."), 1]]],
     // Source hashes normalize an HTTP archive member address; this never becomes a filesystem path.
     ["lib/civic-data/source-hash.ts", [[["new URL(page.extractedFrom.requestedUrl)", "pathname"].join("."), 1]]],
+    // Voting hashes distinguish source HTTP pages from robots.txt without touching the filesystem.
+    ["lib/ballot/voting-source-hash.ts", [[["new URL(body.url)", "pathname"].join("."), 2]]],
     // Browser resource paths check HTTP request counts and scope, never filesystem paths.
     ["scripts/rs-02-browser-check.mjs", [[["new URL(resource.name)", "pathname"].join("."), 3]]],
   ]);

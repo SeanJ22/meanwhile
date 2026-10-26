@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 129 (main ccb676a7a, 2:40 PM EDT; runner on it since 2:47 PM). RIVER: c96b5849e (gate 9/9, 10,279 pass). SHIPPING: release 130 PR #842 (auto-merge on 4:24 PM): URGENT RIVER-LS1 + MT-02 + DB-05 piece 1. BUILDING: RIVER-PP2 (place pages read shared data once per turn). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 130 (main aaf371bc5, 5:36 PM EDT) WITH A READER BREAK: /national 500, ballot pages blank. URGENT hotfix 40d200fe4 gating as release 131 with RIVER-BILLS2 and RIVER-PP2 on river-next-131 4e47af70f. See the 6:00 PM entry
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T21:20:00Z
+heartbeat: 2026-10-26T22:00:00Z
 
 
 <!-- READY-LIST -->
@@ -119,6 +119,14 @@ DB-05: fix on stream/db-05 and post a new READY; it rides the next release.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 6:00 PM EDT: URGENT, release 130 broke reader pages; hotfix gating
+- **What readers see now:** /national returns 500 and ballot pages (checked 85701, 03255) render nothing (React error #441) since 130 went live at 5:36 PM. Meetings and bills APIs answer.
+- **Cause (reproduced on the 130 production build against the production reader, read-only):** Next.js copies lib/db/versioned-query.ts (DB-05's checked reads) into 5 server chunks. The reader pool is a process-wide memo; once another route created it, its driver used a different copy whose set of "already checked" statements didn't hold the reader's statement, so it wrapped it again and stripped the row-version columns: "A SQL read returned no database row version". Local runs passed because /national ran first in a fresh process.
+- **Fix RIVER-HOTFIX-131 40d200fe4:** one process-wide set (globalThis, Symbol.for). On the production build: /national, /ballot 85701 and 03255 return 200 with 0 server error digests (live: 2 each). New test with two module copies fails before, passes after.
+- **Release 131 = hotfix (urgent) + RIVER-BILLS2 0be9a075f + RIVER-PP2 929ab8524**, gate on river-next-131 4e47af70f from 6:00 PM (about 50 min), then PR + deploy.
+- **For Sean:** reverting main to 129 (ccb676a7a) would restore pages sooner but also brings back the LegiScan read spike; River does not revert without your word.
+- **RIVER-BILLS2 (READY 0be9a075f):** why no bill session finished after 3:24 PM: CA, GA, HI and IL held all four lanes every pass (MA, NY, OH, TX never started); every pass hit its deadline re-reading saved parts whole (11-24 MB each; 6.52 GB for 9 new parts in the 4 PM hour); GA's final check failed at 5:16 PM; the job ignored its pass deadline so cutoffs landed mid-write. Fix: parts keep only the roster fields the sponsor match reads (3-4x smaller), saved parts proven from metadata or republished (never read whole), and the job stops before writes it can't finish and resumes next pass.
 
 ### 5 PM EDT
 - **Neon, 4 PM hour: reader 11.85 GB + control plane 0.30 GB = 12.15 GB** (3 PM 15.26, 2 PM 6.39). legiscan-bulk 6.52 GB, place-pages 1.45 GB, routine-civic-data 0.92, member-offices 0.80. 5 PM so far (7 min): legiscan-bulk not among the top jobs.

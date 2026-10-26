@@ -157,6 +157,13 @@ export function assertPublicationBaseOwner(store:object,base:RoutinePublicationB
     throw new Error(`PUBLICATION_BASE_READ_OWNER_MISMATCH:${recordClass}:${scope}`);
 }
 
+/** Reprocessing the identical provider receipt is no new source observation or progress. */
+function sameConfirmationSourceObservation(left: UnchangedConfirmation, right: UnchangedConfirmation): boolean {
+  return left.retrieval.sourceCheck !== undefined && right.retrieval.sourceCheck !== undefined &&
+    left.parserVersion === right.parserVersion && left.inputDigest === right.inputDigest &&
+    canonicalCivicDataJson(left.retrieval.sourceCheck) === canonicalCivicDataJson(right.retrieval.sourceCheck);
+}
+
 export interface RoutineDataStore {
   /** Reuse a proven read across runner passes until this scope's candidates, events or pointer change. */
   readonly readVersioned?: <T>(namespace: string, recordClass: RoutineRecordClass, scope: string, read: () => Promise<T>) => Promise<T>;
@@ -1365,8 +1372,9 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       return { kind: "HASH_DIFFERS", detail: `${input.pointerVersionId}'s source bytes or parser changed.` };
     }
     const priorConfirmation = latestUnchangedConfirmation(this.history.get(input.pointerVersionId) ?? [], input.pointerVersionId);
-    if (priorConfirmation && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") >
-      Date.parse(sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt) ?? "")) {
+    if (priorConfirmation && (Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") >
+      Date.parse(sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt) ?? "") ||
+      sameConfirmationSourceObservation(priorConfirmation, built.confirmation))) {
       return { kind: "CONFIRMED", versionId: input.pointerVersionId, at: priorConfirmation.observedAt };
     }
     const { history, event } = this.nextEvent(input.pointerVersionId, "PROMOTED", at, serializeUnchangedConfirmation(built.confirmation));
@@ -1648,8 +1656,11 @@ function confirmedClock(
   const lastSucceededObservedAt = clock.lastSucceededObservedAt === undefined
     ? undefined
     : laterInstant(clock.lastSucceededObservedAt, confirmedAt);
+  const newProviderCheck = clock.lastSucceededObservedAt !== undefined && confirmedAt !== undefined &&
+    Date.parse(confirmedAt) > Date.parse(clock.lastSucceededObservedAt) &&
+    (parserVersion === undefined || clock.lastSucceededParserVersion === parserVersion);
   const completion=laterInstant(clock.lastCompletedAt??clock.lastSucceededObservedAt,
-    clock.lastSucceededObservedAt===undefined||parserVersion!==undefined&&clock.lastSucceededParserVersion!==parserVersion?undefined:confirmation?.observedAt);
+    newProviderCheck ? confirmation?.observedAt : undefined);
   const lastCompletedAt=completion&&lastSucceededObservedAt&&Date.parse(completion)>Date.parse(lastSucceededObservedAt)?completion:undefined;
   return {
     ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
@@ -2975,6 +2986,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const nextSequence = this.nextCandidateEventSequence(id);
     const checkedAt = sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt)!;
     // This receipt shares the existing candidate lock. A delayed parser replay cannot replace a newer real check.
+    const priorConfirmationValue = sql`case when left(prior_confirmation.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
+      then substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb end`;
     const priorCheckedAt = sql`case when left(prior_confirmation.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
       then coalesce(
         (substring(prior_confirmation.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb #>> '{retrieval,sourceCheck,checkedAt}')::timestamptz,
@@ -3013,7 +3026,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           and not exists (
             select 1 from civic_data_candidate_events as prior_confirmation
             where prior_confirmation.candidate_id = ${id}
-              and ${priorCheckedAt} > ${checkedAt}::timestamptz
+              and (${priorCheckedAt} > ${checkedAt}::timestamptz OR (
+                ${built.confirmation.retrieval.sourceCheck !== undefined}
+                and (${priorConfirmationValue}) #> '{retrieval,sourceCheck}' = ${JSON.stringify(built.confirmation.retrieval.sourceCheck ?? null)}::jsonb
+                and (${priorConfirmationValue}) ->> 'parserVersion' = ${built.confirmation.parserVersion}
+                and (${priorConfirmationValue}) ->> 'inputDigest' IS NOT DISTINCT FROM ${built.confirmation.inputDigest ?? null}
+              ))
           )
       `).returning({ sequence: civicDataCandidateEvents.sequence }),
       ...(input.retainedSourceResponses?.length
@@ -3071,7 +3089,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (input.basis === "RAW_HASH_UNCHANGED" && (candidate.rawHash !== input.retrieval.rawHash || candidate.parserVersion !== input.parserVersion))
       return { kind: "HASH_DIFFERS", detail: `${id}'s source bytes or parser changed.` };
     const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
-    if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
+    if (priorConfirmation?.versionId === id && (Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt) ||
+      sameConfirmationSourceObservation(priorConfirmation, built.confirmation))) {
       return { kind: "CONFIRMED", versionId: id, at: priorConfirmation.observedAt };
     }
     throw new Error(`CANDIDATE_EVENT_TIME_INVALID:${id}:PROMOTED`);

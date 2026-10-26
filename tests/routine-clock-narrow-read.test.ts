@@ -494,9 +494,13 @@ test("a real 304 advances the source clock while held replay preserves both chec
   assert.equal(upgradedParser.lastAttemptedAt, undefined, "an older parser's confirmation cannot postpone the upgraded parser's first attempt");
   assert.equal(upgradedParser.lastSucceededParserVersion, "fec-funding/4");
   assert.equal(upgradedParser.lastSucceededObservedAt, checkedAt, "the real source check remains true for the prior GOOD");
-  assert.equal((await store.confirmUnchanged(input, "2026-09-09T18:00:00.000Z")).kind, "CONFIRMED");
-  assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope),{...checked,lastCompletedAt:"2026-09-09T18:00:00.000Z"},
-    "retained-byte processing records completion without advancing either provider date");
+  const eventsBeforeReplay = (await store.events(value.id)).length;
+  assert.deepEqual(await store.confirmUnchanged(input, "2026-09-09T18:00:00.000Z"), {
+    kind: "CONFIRMED", versionId: value.id, at: "2026-09-09T12:00:03.000Z",
+  });
+  assert.equal((await store.events(value.id)).length, eventsBeforeReplay, "the identical provider receipt adds no new completion event");
+  assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked,
+    "retained-byte processing alone changes no source or completion clock");
   const read = await readPromotedCivicData(value.recordClass, value.scope, { store, now: "2026-09-09T18:00:00.000Z", maxAgeMs: 86400000 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.retrievedAt, value.retrieval.retrievedAt);
@@ -505,7 +509,7 @@ test("a real 304 advances the source clock while held replay preserves both chec
   const beforeDelayedReplay = (await store.events(value.id)).length;
   assert.deepEqual(await store.confirmUnchanged({ ...input, retrieval: { ...input.retrieval,
     sourceCheck: value.retrieval.sourceCheck } }, "2026-09-09T19:00:00.000Z"), {
-    kind: "CONFIRMED", versionId: value.id, at: "2026-09-09T18:00:00.000Z",
+    kind: "CONFIRMED", versionId: value.id, at: "2026-09-09T12:00:03.000Z",
   });
   assert.equal((await store.events(value.id)).length, beforeDelayedReplay, "a delayed older check cannot replace the newest provider receipt");
   assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked);

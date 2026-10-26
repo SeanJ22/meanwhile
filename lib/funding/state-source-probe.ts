@@ -16,15 +16,41 @@ export const campaignResourceContentHash=(resource:CampaignFinanceResource,rawHa
 export const campaignStateSourceHash=(state:string,descriptorHash:string,dependencyHash:string,resources:ReadonlyMap<string,string>)=>
   hash(JSON.stringify({state,parser:CAMPAIGN_FINANCE_PARSER,descriptorHash,dependencyHash,resources:[...resources].sort(([a],[b])=>a.localeCompare(b))}));
 
-/** Native roster hashes and body bindings are source inputs; financial outputs never feed their own change clock. */
-const campaignDependencySql=`WITH dependencies AS (
+/** Native roster hashes and the actual body/place/person bindings are source inputs.
+ * Resolve the same division choices as CAMPAIGN_PEOPLE_SQL; unrelated places created
+ * while filing money cannot change this digest. No financial output enters the clock. */
+const campaignDependencySql=`WITH RECURSIVE state_place AS MATERIALIZED (
+    SELECT id AS division FROM entity WHERE kind='place' AND state=$2
+      AND id ~ '^ocd-division/country:us/(state|district|territory):[^/]+$' ORDER BY id LIMIT 1
+  ), body_parents(body_id,id,depth) AS (
+    SELECT id,id,0 FROM entity WHERE kind='body' AND state=$2
+    UNION ALL SELECT p.body_id,e.parent_id,p.depth+1 FROM body_parents p JOIN entity e ON e.id=p.id
+      WHERE e.parent_id IS NOT NULL AND p.depth<8
+  ), body_places AS MATERIALIZED (
+    SELECT DISTINCT ON(body_id) body_id,division FROM (
+      SELECT p.body_id,p.depth,ep.place_id AS division FROM body_parents p JOIN entity_place ep ON ep.entity_id=p.id
+      UNION ALL SELECT p.body_id,p.depth,e.id FROM body_parents p JOIN entity e ON e.id=p.id WHERE e.kind='place'
+    ) places WHERE division LIKE 'ocd-division/%' ORDER BY body_id,depth,division
+  ), binding_bodies AS (
+    SELECT DISTINCT 'registry' AS origin,r.body_id FROM civic_data_rows r JOIN civic_data_promotions p
+      ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+      WHERE p.record_class='REGISTRY_RUNTIME_BINDING' AND (p.scope=$1 OR p.scope LIKE $1||':%')
+        AND r.collection='bodyRosters' AND r.body_id IS NOT NULL
+        AND EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(r.value)->'members'))
+    UNION SELECT 'fact',e.id FROM entity e JOIN fact f ON f.entity_id=e.id
+      JOIN entity person ON person.id=substr(f.field,8) JOIN source_copy s ON s.id=f.source_copy_id
+      WHERE e.state=$2 AND e.kind='body' AND f.field LIKE 'member:%' AND f.status='live' AND s.url IS NOT NULL
+  ), dependencies AS (
     SELECT jsonb_build_array('promotion',p.record_class,p.scope,c.parser_version,c.raw_hash,c.normalized_hash) AS value
       FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
       WHERE (p.scope=$1 OR p.scope LIKE $1||':%') AND (p.record_class IN ('STATE_LEGISLATOR','FEDERAL_DIRECTORY','REGISTRY_RUNTIME_BINDING','BALLOT_CANDIDACY','STATE_CAMPAIGN_FINANCE')
         OR p.record_class='CURATED_READER_RECORD' AND p.scope=$1||':campaign-finance')
-    UNION ALL SELECT jsonb_build_array('body',e.id,e.parent_id,e.name) FROM entity e WHERE e.state=$2 AND e.kind IN ('body','place')
-    UNION ALL SELECT jsonb_build_array('body-place',ep.entity_id,ep.place_id) FROM entity_place ep JOIN entity e ON e.id=ep.entity_id WHERE e.state=$2 AND e.kind='body'
-    UNION ALL SELECT jsonb_build_array('member',f.entity_id,f.field,f.value,p.name,s.url) FROM entity e JOIN fact f ON f.entity_id=e.id
+    UNION ALL SELECT jsonb_build_array('body-place',b.origin,b.body_id,
+      coalesce((SELECT division FROM body_places WHERE body_id=b.body_id),
+        CASE WHEN b.origin='registry' AND b.body_id LIKE 'ocd-division/%' THEN split_part(b.body_id,'#',1) END,
+        (SELECT division FROM state_place))) FROM binding_bodies b
+    UNION ALL SELECT jsonb_build_array('member',f.entity_id,f.field,f.value,p.name,s.url,
+      (SELECT value FROM entity_external_id WHERE entity_id=p.id AND scheme='roster-member' LIMIT 1)) FROM entity e JOIN fact f ON f.entity_id=e.id
       LEFT JOIN entity p ON p.id=substr(f.field,8) LEFT JOIN source_copy s ON s.id=f.source_copy_id
       WHERE e.state=$2 AND e.kind='body' AND f.field LIKE 'member:%' AND f.status='live'
   ) SELECT encode(sha256(convert_to(coalesce(jsonb_agg(value ORDER BY value::text),'[]'::jsonb)::text,'UTF8')),'hex') AS hash FROM dependencies`;

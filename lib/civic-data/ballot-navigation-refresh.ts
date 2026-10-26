@@ -5,11 +5,11 @@ import { votingFetchSession } from "../ballot/voting-source-fetch.ts";
 import { artifactId, classifyAcquisition, defaultRetention, deriveSanitized, extractionSourceDocument, type Artifact } from "../control-plane/evidence/artifact.ts";
 import type { CycleVault } from "../control-plane/scheduler/vault.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
-import { section3Record } from "../control-plane/promotion/section3.ts";
+import { section3Page, section3Record } from "../control-plane/promotion/section3.ts";
 import { readPublicationSourcePolicy } from "../control-plane/promotion/source-settings.ts";
 import { extractEmbeddedHtml, extractTextLayer } from "../extract/text-layer.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { ballotNavigationScope, ballotNavigationDivision } from "./ballot-navigation-scope.ts";
+import { ballotNavigationScope, ballotNavigationDivision, ballotNavigationTaskId } from "./ballot-navigation-scope.ts";
 import { BALLOT_NAVIGATION_INPUT_DIRECTORY } from "./ballot-navigation-input.ts";
 import { publishElectionFields } from "./election-field-publication.ts";
 import { electionFieldState, type ElectionFieldInput } from "./election-fields.ts";
@@ -23,6 +23,12 @@ import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { readManualProjectionPrior } from "./manual-projections.ts";
 import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
 import type { ManualSourceReview } from "./types.ts";
+import type { PublishedSourceCheck } from "./source-checks.ts";
+import { ballotNavigationSourceKey } from "./ballot-navigation-source-checks.ts";
+import { sourceContentHash } from "./source-hash.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import type { RoutineRunnerReceipt } from "./runner-receipt.ts";
+import { ZERO_RELEASE_EVENTS } from "./release.ts";
 
 export interface BallotNavigationSourceReport {
   readonly requestedUrl: string;
@@ -68,6 +74,9 @@ export interface BallotNavigationSourceConfig {
 }
 
 const digest = (value: string | Uint8Array) => createHash("sha256").update(value).digest("hex");
+const sourceInputs = (value: unknown): unknown => Array.isArray(value) ? value.map(sourceInputs)
+  : value && typeof value === "object" ? Object.fromEntries(Object.entries(value).filter(([key]) =>
+    !["checkedAt", "retrievedAt", "collectedAt", "observedAt"].includes(key)).map(([key, row]) => [key, sourceInputs(row)])) : value;
 const decode = (bytes: Uint8Array, contentType = "") => {
   const header = `${contentType}\n${new TextDecoder("latin1").decode(bytes.slice(0, 4096))}`;
   const encoding = /charset\s*=\s*["']?([\w-]+)/i.exec(header)?.[1] ?? "utf-8";
@@ -143,6 +152,7 @@ async function sourceArtifact(input: {
   readonly repos: Pick<ControlPlaneRepositories, "artifacts">;
   readonly recorded: Set<string>;
   readonly methodRouteId?: string;
+  readonly deferred?: (() => Promise<void>)[];
 }) {
   const contentHash = `sha256-${digest(input.bytes)}`;
   const pdf = /pdf/i.test(input.contentType) || new TextDecoder("latin1").decode(input.bytes.slice(0, 5)) === "%PDF-";
@@ -155,6 +165,10 @@ async function sourceArtifact(input: {
     workItemId, attemptId: `ballot-navigation:${input.state}:${input.observedAt}`, permission: "ALLOWED",
     transport: "REACHABLE", retentionPolicy: defaultRetention(tier) };
   const save = async (row: Artifact, bytes: Uint8Array) => {
+    if (input.deferred) { input.deferred.push(() => persist(row, bytes)); return; }
+    await persist(row, bytes);
+  };
+  const persist = async (row: Artifact, bytes: Uint8Array) => {
     const written = await input.vault.putBytes(row, bytes);
     if (!written.stored) throw new Error(written.why);
     const observationId = `${row.id}:${row.retrievedAt}`;
@@ -234,6 +248,29 @@ export async function refreshBallotNavigation(input: {
   if (report.state !== input.state) throw new Error("NAVIGATION_INPUT_CROSSES_STATE");
   const gaps: { divisionId: string; kind: string; detail: string }[] = [];
   const sourcePolicy = await readPublicationSourcePolicy(input.repos);
+  const scope = ballotNavigationScope(input.state), contract = requiredManualProductionContract("ballot-navigation");
+  let head = await input.store.readSourceHead("CURATED_READER_RECORD", scope);
+  const sourceKeys = [...new Set((Array.isArray(report.sources) ? report.sources : []).flatMap(source => {
+    try { return [ballotNavigationSourceKey(scope, source.requestedUrl)]; } catch { return []; }
+  }))];
+  const priorChecks = head && head.sourceId === contract.sourceId && !head.imported && head.candidateState === "PROMOTED" &&
+    head.acquisitionSucceeded && head.versionId === head.lastKnownGoodVersionId && head.parserVersion === contract.parserNormalizerVersion &&
+    head.rawHashBasis === "SOURCE_CONTENT_V1" && input.store.readSourceChecks
+    ? await input.store.readSourceChecks("CURATED_READER_RECORD", scope, sourceKeys) : [];
+  const checks = new Map(priorChecks.map(check => [check.sourceKey, check]));
+  const pending = new Map<string, { check: PublishedSourceCheck; expected: number; valid: number; failed: boolean }>();
+  let confirmedSources = 0;
+  const saveChecks = async (rows: Iterable<PublishedSourceCheck>) => {
+    if (!head || head.sourceId !== contract.sourceId || !head.rawHash || head.rawHashBasis !== "SOURCE_CONTENT_V1" ||
+      head.parserVersion !== contract.parserNormalizerVersion || !input.store.recordSourceCheck) return;
+    for (const check of rows) try {
+      const saved = await input.store.recordSourceCheck({ ...check, sourceHash: head.rawHash, sourceId: head.sourceId,
+        recordClass: "CURATED_READER_RECORD", scope, pointerVersionId: head.versionId });
+      if (!saved) gaps.push({ divisionId: ballotNavigationDivision(report.state), kind: "source", detail: `NAVIGATION_SOURCE_POINTER_MOVED:${check.sourceKey}` });
+    } catch (error) {
+      gaps.push({ divisionId: ballotNavigationDivision(report.state), kind: "source", detail: `NAVIGATION_SOURCE_CHECK_FAILED:${sanitizedErrorDiagnostic(error)}` });
+    }
+  };
   const fields = async function* (): AsyncGenerator<ElectionFieldInput> {
     const divisionId = ballotNavigationDivision(report.state);
     if (!electionFieldState(divisionId) || !/^\d{4}-\d{2}-\d{2}$/.test(report.electionDate) ||
@@ -253,11 +290,16 @@ export async function refreshBallotNavigation(input: {
     }
     const recorded = new Set<string>();
     const directAuthority = (source: BallotNavigationSourceReport) => Boolean(source && typeof source.finalUrl === "string" && isOfficialSource(source.finalUrl));
-    for (const source of [...report.sources].sort((a, b) => Number(directAuthority(b)) - Number(directAuthority(a)))) {
+    const checkedAt = (source: BallotNavigationSourceReport) => {
+      try { return Date.parse(checks.get(ballotNavigationSourceKey(scope, source.requestedUrl))?.checkedAt ?? "") || Number.MIN_SAFE_INTEGER; }
+      catch { return Number.MIN_SAFE_INTEGER; }
+    };
+    for (const source of [...report.sources].sort((a, b) => Number(directAuthority(b)) - Number(directAuthority(a)) || checkedAt(a) - checkedAt(b))) {
       if (!source || typeof source.requestedUrl !== "string") {
         gaps.push({ divisionId, kind: "source", detail: "NAVIGATION_SOURCE_URL_INVALID" }); continue;
       }
       try {
+        const deferred: (() => Promise<void>)[] = [];
         let bytes: Uint8Array, url: string, contentType: string, observedAt: string;
         if (source.rawPath) {
           bytes = new Uint8Array(await readFile(source.rawPath));
@@ -276,7 +318,7 @@ export async function refreshBallotNavigation(input: {
           indexAuthorityLinks(authorities, official.url, decode(official.bytes, official.contentType).text);
           linkingPage = authorities.get(new URL(url).hostname);
           await sourceArtifact({ bytes: official.bytes, url: official.url, contentType: official.contentType,
-            observedAt: input.now, publisher: source.publisher, state: report.state, vault: input.vault, repos: input.repos, recorded });
+            observedAt: input.now, publisher: source.publisher, state: report.state, vault: input.vault, repos: input.repos, recorded, deferred });
         }
         let websiteDelegation: GovernmentWebsiteDelegation | undefined;
         if (source.websiteDelegation) {
@@ -295,11 +337,40 @@ export async function refreshBallotNavigation(input: {
           }
           const dns = await sourceArtifact({ bytes: dnsBytes, url: dnsUrl, contentType: dnsType, observedAt: dnsAt,
             publisher: dnsSource.publisher, state: report.state, vault: input.vault, repos: input.repos, recorded,
-            methodRouteId: "ballot-navigation:government-dns" });
+            methodRouteId: "ballot-navigation:government-dns", deferred });
           websiteDelegation = { governmentUrl: source.websiteDelegation.governmentUrl, html: decode(bytes, contentType).text,
             dns: { url: dnsUrl, text: dns.text, artifactId: dns.artifact.id, contentHash: dns.artifact.contentHash, retrievedAt: dnsAt } };
         }
         if (!isOfficialSource(url, linkingPage, websiteDelegation)) throw new Error("NAVIGATION_SOURCE_NOT_OFFICIAL");
+        const facts = new Set([source.requestedUrl, source.finalUrl, url].flatMap(key => bySource.get(key) ?? []));
+        const sourceKey = ballotNavigationSourceKey(scope, source.requestedUrl);
+        const rawHash = sourceContentHash([{ requestedUrl: source.requestedUrl, finalUrl: url, capture: { rawHash: digest(bytes) } }],
+          sourceInputs({ state: input.state, electionDate: report.electionDate, facts: [...facts], publisher: source.publisher,
+            contentType, linkingPage, websiteDelegation, sourcePolicy, parserVersion: contract.parserNormalizerVersion }));
+        const check: PublishedSourceCheck = { sourceKey, rawHash, parserVersion: contract.parserNormalizerVersion, checkedAt: observedAt,
+          sourceUrls: [...new Set([source.requestedUrl, source.finalUrl, url])],
+          jurisdictionIds: [...new Set([...facts].map(fact => fact.divisionId ?? divisionId))] };
+        if (facts.size && checks.get(sourceKey)?.rawHash === rawHash) {
+          for (const fact of facts) {
+            const kind = fact.kind === "election_office" ? "SERVICE_CONTACT" : fact.kind.endsWith("_lookup") || fact.kind === "registration_page" ? "VOTER_ACCESS_ROUTE" : "BALLOT_CONTEST";
+            const page = section3Page({ url, text: "", retrievedAt: observedAt, linkingPage, websiteDelegation, sourcePolicy }, kind, input.now);
+            if (!page.ok) throw new Error(page.reason ?? "NAVIGATION_SOURCE_CHECK_INVALID");
+          }
+          checks.set(sourceKey, check); confirmedSources++;
+          await saveChecks([check]);
+          for (const key of [source.requestedUrl, source.finalUrl, url]) bySource.delete(key);
+          if (!/pdf/i.test(contentType) && new TextDecoder("latin1").decode(bytes.slice(0, 5)) !== "%PDF-") {
+            const decoded = decode(bytes, contentType).text;
+            indexAuthorityLinks(authorities, url, extractEmbeddedHtml(decoded)?.text ?? decoded, linkingPage);
+          } else {
+            const extracted = await extractTextLayer(bytes, url);
+            if (extracted.outcome === "EXTRACTED") for (const page of extracted.items) indexAuthorityLinks(authorities, url,
+              [page.text, ...(page.links ?? []).map(link => `<a href="${link.replace(/&/g, "&amp;").replace(/"/g, "&quot;")}"></a>`)].join("\n"), linkingPage);
+          }
+          console.log("BALLOT_NAVIGATION_CONFIRMED_UNCHANGED=" + JSON.stringify({ state: input.state, sourceKey, checkedAt: observedAt }));
+          continue;
+        }
+        for (const save of deferred) await save();
         const saved = await sourceArtifact({ bytes, url, contentType, observedAt, publisher: source.publisher,
           state: report.state, vault: input.vault, repos: input.repos, recorded });
         const capture: WorkerPublicationCapture = { observedAt, httpStatus: 200, transport: "REACHABLE", partial: false, sourcePolicy,
@@ -308,11 +379,12 @@ export async function refreshBallotNavigation(input: {
             canonicalUrl: url, retrievedAt: observedAt, sourceId: source.publisher,
             acquiredByAttemptId: saved.artifact.attemptId, methodRouteId: saved.artifact.methodRouteId,
             ...(saved.sourceDocument ? { sourceDocument: saved.sourceDocument } : {}) } };
-        const facts = new Set([source.requestedUrl, source.finalUrl, url].flatMap(key => bySource.get(key) ?? []));
+        if (facts.size) pending.set(sourceKey, { check, expected: facts.size, valid: 0, failed: false });
         for (const key of [source.requestedUrl, source.finalUrl, url]) bySource.delete(key);
-        for (const fact of facts) yield { divisionId: fact.divisionId ?? divisionId, kind: fact.kind, value: fact.value, quote: fact.quote, dates: fact.dates,
+        for (const [index, fact] of [...facts].entries()) yield { divisionId: fact.divisionId ?? divisionId, kind: fact.kind, value: fact.value, quote: fact.quote, dates: fact.dates,
           electionDate: report.electionDate, phone: fact.phone, navigationUrl: fact.navigationUrl,
           sourceUrl: url, linkingPage, websiteDelegation,
+          sourceKey, sourceHash: rawHash, sourceComplete: index === facts.size - 1,
           document: { url, text: capture.evidence.text, collectedAt: observedAt, capture } };
         indexAuthorityLinks(authorities, url, capture.evidence.text, linkingPage);
       } catch (error) { gaps.push({ divisionId, kind: "source", detail: `${source.requestedUrl}:${sanitizedErrorDiagnostic(error)}` }); }
@@ -323,8 +395,37 @@ export async function refreshBallotNavigation(input: {
     }
     gaps.push(...(report.gaps ?? []).map(gap => typeof gap === "string" ? { divisionId, kind: "source", detail: gap } : { divisionId, ...gap }));
   };
-  const published = await publishElectionFields({ store: input.store, now: input.now, fields: fields(), verify: section3Record });
-  return { candidateId: published.candidateId ?? carried?.candidateId ?? reviewed?.candidateId ?? null,
-    promotedVersionId: published.promotedVersionId ?? carried?.promotedVersionId ?? reviewed?.promotedVersionId ?? null,
+  const published = await publishElectionFields({ store: input.store, now: input.now, fields: fields(), verify: section3Record, flushCompletedSources: true,
+    onPublished: async outcome => {
+      const current = await input.store.readSourceHead("CURATED_READER_RECORD", scope);
+      // A concurrent publisher cannot inherit checks derived for a different canonical version.
+      if (current?.versionId !== outcome.promotedVersionId) return;
+      head = current;
+      await saveChecks(checks.values());
+    },
+    onFieldResult: (field, valid) => {
+      const source = field.sourceKey ? pending.get(field.sourceKey) : undefined;
+      if (!source) return;
+      if (valid) source.valid++; else source.failed = true;
+      if (!source.failed && source.valid === source.expected) checks.set(source.check.sourceKey, source.check);
+    },
+    sourceContentHash: () => canonicalCivicDataHash({ parserVersion: contract.parserNormalizerVersion,
+      sources: sourceKeys.map(key => [key, checks.get(key)?.rawHash ?? null]).sort((a, b) => String(a[0]).localeCompare(String(b[0]))) }),
+  });
+  let receipt: RoutineRunnerReceipt | null = null;
+  if (!published.promotedVersionId && confirmedSources) {
+    const current = await input.store.readSourceHead("CURATED_READER_RECORD", scope);
+    if (!current || current.versionId !== head?.versionId || current.rawHash !== head?.rawHash || current.parserVersion !== head?.parserVersion) head = null;
+  }
+  if (!published.promotedVersionId && confirmedSources && head && !head.imported && head.candidateState === "PROMOTED" &&
+    head.acquisitionSucceeded && head.versionId === head.lastKnownGoodVersionId && head.sourceId === contract.sourceId &&
+    head.parserVersion === contract.parserNormalizerVersion && head.rawHashBasis === "SOURCE_CONTENT_V1") receipt = {
+      source: ballotNavigationTaskId(input.state), candidateId: head.versionId, acquisitionSucceeded: true,
+      state: "PROMOTED", decision: "GOOD", promotedVersion: head.versionId, lastKnownGoodVersion: head.lastKnownGoodVersionId,
+      structuralReleaseContract: ZERO_RELEASE_EVENTS,
+    };
+  return { candidateId: published.candidateId ?? carried?.candidateId ?? reviewed?.candidateId ?? receipt?.candidateId ?? null,
+    promotedVersionId: published.promotedVersionId ?? carried?.promotedVersionId ?? reviewed?.promotedVersionId ?? receipt?.promotedVersion ?? null,
+    receipt, confirmedSources,
     fields: [...new Set([...(reviewed?.fields ?? []), ...(carried?.fields ?? []), ...published.fields])], gaps: [...gaps, ...published.gaps] };
 }

@@ -17,6 +17,11 @@ import { ballotNavigationFor } from "../ballot/navigation.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { readerRecordsWithOwnerChoices } from "../facts/owner-flags.ts";
 import { factReader } from "../facts/db.ts";
+import { ballotNavigationSourceCheckOverlay } from "./ballot-navigation-source-checks.ts";
+import { readPublishedSourceChecks } from "./source-checks.ts";
+import { readerQuery } from "./promoted-reader-query.ts";
+import type { RoutineDataStore } from "./store.ts";
+import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 export const CURATED_READER_CONTRACT_IDS = [
   "official-filings",
@@ -95,7 +100,21 @@ export async function readBallotNavigationProjection(state: string, options: Pro
   if (result.kind !== "PROMOTED") return result;
   // Validate the government's own version, which may become empty after an owner removal.
   ballotNavigationFor(state, result.value, result.metadata.versionId!, []);
-  return { ...result, value: { ...result.value, records: await readerRecordsWithOwnerChoices(factReader(), "ballot-navigation", result.value.records) } };
+  let value = result.value;
+  const keys = [...new Set(value.records.flatMap(record => {
+    const field = record.value as { sourceKey?: unknown } | undefined;
+    return record.kind === "ELECTION_FIELD" && typeof field?.sourceKey === "string" ? [field.sourceKey] : [];
+  }))];
+  if (keys.length) try {
+    const store = options.store as Partial<Pick<RoutineDataStore, "readSourceChecks">> | undefined;
+    const query = !Object.keys(options).length ? readerQuery() : null;
+    const checks = store?.readSourceChecks ? await store.readSourceChecks("CURATED_READER_RECORD", scope, keys)
+      : query ? await readPublishedSourceChecks(async (text, params) => (await query([{ text, params }]))[0] ?? [], "CURATED_READER_RECORD", scope, keys) : [];
+    value = ballotNavigationSourceCheckOverlay(value, checks);
+  } catch (error) {
+    console.error("BALLOT_NAVIGATION_SOURCE_CHECK_ERROR=" + JSON.stringify({ state, detail: sanitizedErrorDiagnostic(error) }));
+  }
+  return { ...result, value: { ...value, records: await readerRecordsWithOwnerChoices(factReader(), "ballot-navigation", value.records) } };
 }
 
 export async function refreshCuratedReaderProjection(

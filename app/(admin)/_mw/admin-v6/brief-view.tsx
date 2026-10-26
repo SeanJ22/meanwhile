@@ -17,7 +17,7 @@ export function BriefParts({brief}:{readonly brief:BriefSnapshot}){
   <Card title="Wins and updates">{brief.updates.length?<ul>{brief.updates.slice(0,3).map(u=><li key={u.id}><p>{plainWords(u.what)} <Pill tone={u.isWin?"good":"neutral"}>{u.label}</Pill></p><p className={s.meta}>{u.when}</p></li>)}</ul>:<Empty>No updates in this reading.</Empty>}{brief.updates.length>3&&<a href="/admin?view=history">All {brief.updates.length} updates →</a>}</Card>
   <Card title="Problems">{brief.problems.length?<ul className={s.briefProblems}>{shown.map(p=><li key={p.key}>
     <strong>{plainWords(p.what)}</strong>
-    {p.group&&<p>{p.group.items?.toLocaleString("en-US")??"—"} items · {p.group.states.filter(s=>s.state!=="US").length} states and territories{p.group.states.some(s=>s.state==="US")?" · national work":""}</p>}
+    {p.group&&<p>{p.group.items?.toLocaleString("en-US")??"—"} items · {p.group.states.filter(row=>row.state!=="US").length} states and territories{p.group.states.some(row=>row.state==="US")?" · national work":""}</p>}
     {p.group&&<p className={s.meta}>{p.group.items===null?"Includes":"Largest"}: {p.group.states.slice(0,3).map((row,index)=><span key={row.state}>{index?" · ":""}<a href={`/admin?view=queue&scope=${row.state.toLowerCase()}&filter=waiting`}>{row.state==="US"?"National":stateName(row.state)??row.state} {row.items?.toLocaleString("en-US")??"—"}</a></span>)}</p>}
     <p className={s.meta}>{countOwner(plainWords(p.owner))} · {plainWords(p.next)}</p>
   </li>)}</ul>:<Empty>No problems in the parts read.</Empty>}

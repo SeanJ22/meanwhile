@@ -11,6 +11,8 @@ import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { pluralVotesProjectionIssue, type PluralVoteFact } from "../sources/plural/votes.ts";
 import type { VotePageProjection } from "./vote-page-model.ts";
+import { canonicalCivicDataHash } from "../civic-data/changes.ts";
+import { runtimeCivicReadCache, type CivicReadCache } from "../db/civic-read-cache.ts";
 
 const CACHE_BYTES = 64 * 1024 * 1024;
 const SHA = /^[a-f0-9]{64}$/;
@@ -21,7 +23,9 @@ const object = (value: unknown): Record<string, unknown> => {
 
 /** Read the encoded source projection only. Candidate payloads and their other
  * evidence graphs stay in Postgres; the boolean couples the exact published proof. */
-const POINTER = `SELECT p.payload,p.current_version_id AS version_id,p.validation_receipt AS receipt,c.normalized_hash,
+const POINTER = `SELECT CASE WHEN p.current_version_id||':'||c.normalized_hash=$3 THEN NULL ELSE p.payload END AS payload,
+  p.current_version_id||':'||c.normalized_hash=$3 AS unchanged,
+  p.current_version_id AS version_id,p.validation_receipt AS receipt,c.normalized_hash,
   (c.id=p.current_version_id AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope
     AND p.current_version_id=p.last_known_good_version_id AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
     AND c.state='PROMOTED' AND c.acquisition_succeeded AND c.candidate#>'{normalization,succeeded}'='true'::jsonb
@@ -42,6 +46,8 @@ export async function createVoteRefreshSink<T extends VotePageProjection>(input:
   readPrior: () => Promise<CivicDataReadResult<T>>;
   /** The same read-only query interface permits deterministic storage-codec tests. */
   query?: ReadOnlyQuery;
+  cache?: CivicReadCache | null;
+  partsCache?: CivicReadCache | null;
 }): Promise<{ sink: Awaited<ReturnType<typeof createVotePageSink>>; baseVersionId: string | null; priorMetadata: Metadata<T> | null }> {
   const empty = () => createVotePageSink({ state: input.state, sourceId: input.sourceId, vault: input.vault, prior: null, signal: input.signal });
   const ordinary = async () => {
@@ -54,7 +60,29 @@ export async function createVoteRefreshSink<T extends VotePageProjection>(input:
   if (!input.query && !(input.civicStore instanceof PostgresRoutineDataStore)) return ordinary();
   const query = input.query ?? readerQuery();
   if (!query) throw new Error("VOTE_PREDECESSOR_READER_UNAVAILABLE");
-  const [rows] = await query([{ text: POINTER, params: [input.scope, input.sourceId] }]);
+  const shared = (input.cache === undefined ? runtimeCivicReadCache() : input.cache)?.jobState();
+  if (shared) {
+    const saved = await shared.row<{ projection: T; versionId: string }>({ namespace: `vote-predecessor:${input.sourceId}`, key: input.scope,
+      current: async etag => {
+        const [rows] = await query([{ text: POINTER, params: [input.scope, input.sourceId, etag] }]);
+        if (!rows.length) return null;
+        const row = rows[0];
+        const receipt = parseValidationReceipt(row.receipt);
+        if (rows.length !== 1 || row.proof_valid !== true || !receipt || receipt.decision !== "GOOD" ||
+          receipt.candidateId !== row.version_id || receipt.sourceId !== input.sourceId || receipt.recordClass !== "STATE_ROLL_CALL" ||
+          receipt.scope !== input.scope || typeof row.normalized_hash !== "string" || !SHA.test(row.normalized_hash)) throw new Error("VOTE_PREDECESSOR_PROOF_INVALID");
+        const version = `${row.version_id}:${row.normalized_hash}`;
+        if (row.unchanged === true) return { etag: version, unchanged: true };
+        const seeded = await createVoteRefreshSink({ ...input, cache: null, partsCache: shared,
+          query: async statements => statements[0]?.text === POINTER ? [rows] : query(statements) });
+        try { return { etag: version, value: { projection: { ...seeded.priorMetadata, ...await seeded.sink.snapshot() } as T, versionId: seeded.baseVersionId! } }; }
+        finally { await seeded.sink.close(); }
+      } });
+    if (!saved) return { sink: await empty(), baseVersionId: null, priorMetadata: null };
+    return { sink: await createVotePageSink({ state: input.state, sourceId: input.sourceId, vault: input.vault, prior: saved.projection, signal: input.signal }),
+      baseVersionId: saved.versionId, priorMetadata: { ...saved.projection, rollCalls: [] } as Metadata<T> };
+  }
+  const [rows] = await query([{ text: POINTER, params: [input.scope, input.sourceId, null] }]);
   if (!rows.length) return { sink: await empty(), baseVersionId: null, priorMetadata: null };
   const pointer = rows[0], versionId = pointer.version_id;
   const receipt = parseValidationReceipt(pointer.receipt);
@@ -71,7 +99,10 @@ export async function createVoteRefreshSink<T extends VotePageProjection>(input:
     const missing = [...new Set(hashes.filter(hash => !cache.has(hash)))];
     const fetched = new Map<string, unknown>();
     if (missing.length) {
-      const [parts] = await query([{ text: "SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", params: [missing] }]);
+      const values = async (keys: readonly string[]) => (await query([{ text: "SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", params: [keys] }]))[0];
+      const heldParts = input.partsCache ?? runtimeCivicReadCache()?.jobState();
+      const parts = heldParts ? await heldParts.rows({ namespace: "payload-part", keys: missing,
+        versions: async keys => keys.map(key => ({ key, etag: key })), values, keyOf: row => String(row.hash) }) : await values(missing);
       for (const part of parts) {
         if (typeof part.hash !== "string" || !missing.includes(part.hash) || fetched.has(part.hash)) throw new Error("VOTE_PREDECESSOR_PART_ID_INVALID");
         fetched.set(part.hash, part.payload);
@@ -104,7 +135,12 @@ export async function createVoteRefreshSink<T extends VotePageProjection>(input:
   let root = object(await raw(pointer.payload));
   if (root.kind === "object") root = object(await raw(root.value));
   const format = await parts.load(root.formatVersion), state = await parts.load(root.state);
-  if (format === 2) return ordinary();
+  if (format === 2) {
+    const value = await parts.load(root) as T;
+    if (canonicalCivicDataHash(value) !== pointer.normalized_hash) throw new Error("VOTE_PREDECESSOR_HASH_MISMATCH");
+    return { sink: await createVotePageSink({ state: input.state, sourceId: input.sourceId, vault: input.vault, prior: value, signal: input.signal }),
+      baseVersionId: versionId, priorMetadata: { ...value, rollCalls: [] } as Metadata<T> };
+  }
   if (format !== 1 || state !== input.state || !Object.hasOwn(root, "rollCalls")) throw new Error("VOTE_PREDECESSOR_SHAPE_INVALID");
 
   async function* encodedVotes(): AsyncIterable<unknown> {
@@ -157,4 +193,10 @@ export async function createVoteRefreshSink<T extends VotePageProjection>(input:
     return { sink, baseVersionId: versionId, priorMetadata: { ...metadata, rollCalls: [] } as Metadata<T> };
   } catch (error) { await sink.close(); throw error; }
   finally { cache.clear(); }
+}
+
+/** The existing publication outcome supplies the new base; no inventory readback. */
+export async function rememberVotePublication(sourceId: string, scope: string, versionId: string, hash: string, projection: VotePageProjection, cache = runtimeCivicReadCache()): Promise<void> {
+  await cache?.jobState().row({namespace:`vote-predecessor:${sourceId}`,key:scope,
+    current:async()=>({etag:`${versionId}:${hash}`,value:{projection,versionId}})});
 }

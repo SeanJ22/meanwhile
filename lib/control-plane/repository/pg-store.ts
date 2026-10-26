@@ -1,7 +1,9 @@
+import { revisionReadsFor, shareRevisionReads } from "./revision-reads.ts";
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
 import {MANUAL_METHOD_POOL_SQL} from "./manual-method-index.ts";
 import { PLANNING_STATES, PLANNING_SUMMARY_SQL, PLANNING_FINISHED_TIMES_SQL, planningStateOf, planningStateOrder } from "../scheduler/state-planning.ts";
-import type { HuntOrder, HuntOrderRepository } from "../hunt-orders.ts";
+import { applyHuntOrders, type HuntOrder, type HuntOrderRepository } from "../hunt-orders.ts";
+import { parseDispatchTarget } from "../scheduler/dispatch-target.ts";
 import { pgAdminConfigRepository } from "./admin-config.ts";
 import { archivedAggregateRepository, createPgDispatchState } from "./dispatch-state.ts";
 import { pgSpendRepository } from "./model-charges.ts";
@@ -293,7 +295,7 @@ export function pgAggregateRepository<T>(
   options: PgRepositoryBounds = {},
 ): AggregateRepository<T> {
   if (options.state && !/^(?:[a-z]{2}|system)$/.test(options.state)) throw new Error("One planning state is required");
-  const statePredicate = table === "cp_route_tasks" || table === "cp_route_tasks_history" || table === "cp_attempts"
+  const statePredicate = ["cp_route_tasks", "cp_route_tasks_history", "cp_route_tasks_archive", "cp_attempts"].includes(table)
     ? `EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=${table}.value->>'workItemId' AND cp_control_state(w.value)='${options.state}')`
     : table === "cp_leases"
       ? `EXISTS(SELECT 1 FROM cp_route_tasks_history t JOIN cp_work_items_history w ON w.id=t.value->>'workItemId' WHERE t.id=${table}.value->>'routeTaskId' AND cp_control_state(w.value)='${options.state}')`
@@ -304,24 +306,13 @@ export function pgAggregateRepository<T>(
   const where = `${table} in the control-plane database`;
   const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rowClass = options.rowClass ?? (DOCUMENT_ROW_TABLES.has(table) ? "DOCUMENT" : "POINT");
-  const references = new Map<string, Persisted<unknown>>();
-  const referenceTable = ["cp_admin_config", "cp_research_state", "cp_field_manual_entries"].includes(table);
+  const revisions = revisionReadsFor(sql);
+  const currentRows = (caller: string, predicate: string, params: readonly unknown[], selected = "value", callClass: ControlPlaneCallClass = "PAGE") =>
+    revisions.rows((text, args) => run(caller, callClass, text, args), table, predicate, params, selected);
 
   async function read(id: string): Promise<Persisted<T> | null> {
-    const rows = (await run(
-      "read",
-      rowClass,
-      `SELECT id, revision, updated_at, value FROM ${table} WHERE id = $1`,
-      [id],
-    )) as Record<string, unknown>[];
-    if (rows.length === 0) return null;
-    const row = rows[0];
-    return {
-      id: String(row.id),
-      revision: Number(row.revision),
-      updatedAt: new Date(row.updated_at as string).toISOString(),
-      value: parseValue<T>(row.value, `${where} id ${id}`),
-    };
+    const row = await revisions.one((text, params) => run("read", rowClass, text, params), table, id);
+    return row ? persistedRow<T>(row) : null;
   }
 
   async function listChangedSince(since: string | null, held?: HeldSlots, read: ChangedReadOptions<Persisted<T>> = {}, includeChangedAt = true): Promise<ChangedRows<T>> {
@@ -363,94 +354,29 @@ export function pgAggregateRepository<T>(
     };
   }
 
-  /* Primary-key batches of one page each, so no response nears the driver cap. */
   async function readManyAs<O>(ids: readonly string[], selected: string, caller: string): Promise<Persisted<O>[]> {
-    const unique = [...new Set(ids)].sort();
-    const out: Persisted<O>[] = [];
-    for (let at = 0; at < unique.length; at += AGGREGATE_LIST_READ_PAGE) {
-      const rows = (await run(
-        caller,
-        "PAGE",
-        `SELECT id, revision, updated_at, ${selected} AS value FROM ${table} WHERE id = ANY($1::text[]) ORDER BY id ASC`,
-        [unique.slice(at, at + AGGREGATE_LIST_READ_PAGE)],
-      )) as Record<string, unknown>[];
-      out.push(...rows.map(row => persistedRow<O>(row)));
-    }
-    return out;
+    if (!ids.length) return [];
+    return (await currentRows(caller, "id=ANY($1::text[])", [[...new Set(ids)]], selected)).map(row => persistedRow<O>(row));
   }
 
   const copies = options.copies ?? null;
   const listingSource = (since: string | null, held?: HeldSlots) => listChangedSince(since, held, {}, false);
   const held = <O>(out: (row: Persisted<T>) => O): Promise<O[]> => copies === null
-    ? listingSource(null).then(changed => changed.rows.map(out))
+    ? currentRows("list", scopeFilter.slice(5), []).then(rows => rows.map(row => out(persistedRow<T>(row))))
     : copies.aggregateList(`${table}:${options.state ?? "all"}:${options.activeOnly ?? false}`, listingSource, out);
 
   async function listWhereAs<O>(path: readonly string[], value: string, selected: string, caller: string): Promise<Persisted<O>[]> {
     const jsonPath = jsonPathLiteral(table, path);
-    const out: Persisted<O>[] = [];
-    let afterId: string | null = null;
-    for (;;) {
-      const rows = (afterId === null
-        ? await run(
-            caller,
-            "PAGE",
-            `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
-             WHERE value #>> '${jsonPath}' = $1${scopeFilter}
-             ORDER BY id ASC
-             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-            [value],
-          )
-        : await run(
-            caller,
-            "PAGE",
-            `SELECT id, revision, updated_at, ${selected} AS value FROM ${table}
-             WHERE value #>> '${jsonPath}' = $1${scopeFilter} AND id > $2
-             ORDER BY id ASC
-             LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-            [value, afterId],
-          )) as Record<string, unknown>[];
-      for (const row of rows) {
-        out.push({
-          id: String(row.id),
-          revision: Number(row.revision),
-          updatedAt: new Date(row.updated_at as string).toISOString(),
-          value: parseValue<O>(row.value, `${where} id ${String(row.id)}`),
-        });
-      }
-      if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
-      afterId = String(rows[rows.length - 1].id);
-    }
-    return out;
+    return (await currentRows(caller, `value #>> '${jsonPath}'=$1${scopeFilter}`, [value], selected)).map(row => persistedRow<O>(row));
   }
 
   return callerPinned({
     read,
 
     async readNarrowed(id, projection) {
-
-      const narrowed = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
-      const key = `${id}\n${JSON.stringify(projection)}`;
-      const prior = references.get(key);
-      const rows = (await run(
-        "readNarrowed",
-        "POINT",
-        `SELECT id, revision, updated_at, ${prior ? `CASE WHEN revision = $2 THEN NULL ELSE ${narrowed} END` : narrowed} AS value FROM ${table} WHERE id = $1`,
-        prior ? [id, prior.revision] : [id],
-      )) as Record<string, unknown>[];
-      if (rows.length === 0) { references.delete(key); return null; }
-      const row = rows[0];
-      if (prior && Number(row.revision) === prior.revision) return structuredClone(prior);
-      const next = {
-        id: String(row.id),
-        revision: Number(row.revision),
-        updatedAt: new Date(row.updated_at as string).toISOString(),
-        value: parseValue<unknown>(row.value, `${where} id ${id}`),
-      };
-      if (referenceTable && Buffer.byteLength(JSON.stringify(next)) <= 65_536) {
-        if (references.size >= 16) references.delete(references.keys().next().value!);
-        references.set(key, structuredClone(next));
-      } else references.delete(key);
-      return next;
+      const selected = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
+      const row = await revisions.one((text, params) => run("readNarrowed", "POINT", text, params), table, id, selected);
+      return row ? persistedRow<unknown>(row) : null;
     },
 
     async mustRead(id) {
@@ -530,28 +456,12 @@ export function pgAggregateRepository<T>(
       Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value"), "readManyNarrowed"),
 
     async listWhereIn(path, values, projection) {
-      /* Keyset-paged like `list()`; an expression index on the path serves `= ANY`. */
-      const jsonPath = jsonPathLiteral(table, path);
-      const narrowed = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
       const wanted = [...new Set(values)];
-      const out: Persisted<unknown>[] = [];
-      if (wanted.length === 0) return out;
-      let afterId: string | null = null;
-      for (;;) {
-        const rows = (await run(
-          "listWhereIn",
-          "PAGE",
-          `SELECT id, revision, updated_at, ${narrowed} AS value FROM ${table}
-           WHERE value #>> '${jsonPath}' = ANY($1::text[])${scopeFilter}${afterId === null ? "" : " AND id > $2"}
-           ORDER BY id ASC
-           LIMIT ${AGGREGATE_LIST_READ_PAGE}`,
-          afterId === null ? [wanted] : [wanted, afterId],
-        )) as Record<string, unknown>[];
-        out.push(...rows.map(row => persistedRow<unknown>(row)));
-        if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
-        afterId = String(rows[rows.length - 1].id);
-      }
-      return out;
+      if (!wanted.length) return [];
+      const jsonPath = jsonPathLiteral(table, path);
+      const selected = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
+      return (await currentRows("listWhereIn", `value #>> '${jsonPath}'=ANY($1::text[])${scopeFilter}`, [wanted], selected))
+        .map(row => persistedRow<unknown>(row));
     },
 
     list: () => held(row => row),
@@ -1146,7 +1056,7 @@ async function migrateVotingDoorScopes(sql: Sql, nowIso: string,
   }
 }
 
-const FIELD_MANUAL_MATCHES_SQL = `SELECT id,value FROM cp_field_manual_entries
+const FIELD_MANUAL_MATCHES_SQL = `SELECT id,revision FROM cp_field_manual_entries
   WHERE ($1::text[] IS NULL OR value->>'role'=ANY($1::text[]))
     AND ($2::text[] IS NULL OR value->>'kind'=ANY($2::text[]))
     AND ($3::text IS NULL OR jsonb_array_length(coalesce(value->'recordClasses','[]'::jsonb))=0 OR value->'recordClasses' ? $3)
@@ -1252,7 +1162,7 @@ export const FIELD_MANUAL_SLICE_SQL = `WITH eligible AS NOT MATERIALIZED (
   ORDER BY preferred,tier,any_class,exhausted DESC,outcome,observed COLLATE "C" DESC,id COLLATE "C"
   LIMIT $8::int
 )
-SELECT e.id,e.value
+SELECT e.id,e.revision
 FROM chosen JOIN cp_field_manual_entries e ON e.id=chosen.id
 ORDER BY chosen.preferred,chosen.tier,chosen.any_class,chosen.exhausted DESC,chosen.outcome,chosen.observed COLLATE "C" DESC,chosen.id COLLATE "C"`;
 
@@ -1301,7 +1211,10 @@ export function pgFieldManualRepository(sql:Sql,options:PgRepositoryBounds,fixMa
       for(;;) {
         const rows=await run("select","PAGE",query.limit===undefined?FIELD_MANUAL_MATCHES_SQL:FIELD_MANUAL_SLICE_SQL,
           query.limit===undefined?[...params.slice(0,7),params[12],afterId,params[13]]:params) as Record<string,unknown>[];
-        for(const row of rows)if(row.id!==null)entries.push(parseValue<FieldManualEntry>(row.value,`cp_field_manual_entries ${String(row.id)}`));
+        const notes = await revisionReadsFor(sql).known("cp_field_manual_entries", rows.filter(row => row.id !== null) as {id:string;revision:number}[], "value",
+          async ids => await run("selectValues", "PAGE", "SELECT id,revision,updated_at,value FROM cp_field_manual_entries WHERE id=ANY($1::text[]) ORDER BY id", [ids]) as {id:string;revision:number;value:unknown}[],
+          row => row.id, row => String(row.revision));
+        for (const row of notes) entries.push(parseValue<FieldManualEntry>(row.value, `cp_field_manual_entries ${row.id}`));
         if(query.limit!==undefined || rows.length<AGGREGATE_LIST_READ_PAGE)break;
         afterId=String(rows.at(-1)!.id);
       }
@@ -1413,6 +1326,45 @@ export async function readPlanningIntents(repos:ControlPlaneRepositories,state:s
   const sql=placeReadConnection(repos);
   if(!sql)return (await repos.researchIntents.read("level-1")).filter(record=>record.kind!=="INTENT" || record.action!=="DISPATCH" || stoppedAt===null || record.requestedAt>stoppedAt);
   return pgPlanningIntents(sql,state,stoppedAt);
+}
+
+/** Honor the existing Stop every hunt order before loading any research history. */
+export async function researchPlanningStates(repos: ControlPlaneRepositories, intents: readonly ResearchIntent[], states: readonly string[] = PLANNING_STATES): Promise<string[]> {
+  const sql = placeReadConnection(repos);
+  let stops: Record<string, string>;
+  let scopes: { state: string; at: string }[];
+  if (sql) {
+    const [row] = await boundedRunner(sql, "cp_hunt_orders", CONTROL_PLANE_REQUEST_BOUNDS_MS)("researchStopControls", "POINT", `SELECT
+      coalesce((SELECT jsonb_object_agg(state,at) FROM (SELECT DISTINCT ON(value->>'state') value->>'state' AS state,value->>'requestedAt' AS at
+        FROM cp_hunt_orders WHERE value->>'scopeKey' IS NULL ORDER BY value->>'state',value->>'requestedAt' DESC,id DESC) latest),'{}'::jsonb) AS stops,
+      coalesce((SELECT jsonb_agg(jsonb_build_object('state',lower(value#>>'{geography,stateAbbr}'),'at',value->>'decidedAt'))
+        FROM cp_admin_expansion_scopes WHERE config_id='current' AND (value->>'budgetUsd')::numeric>0),'[]'::jsonb) AS scopes`) as { stops: Record<string,string>; scopes: {state:string;at:string}[] }[];
+    ({stops,scopes}=row);
+  } else {
+    stops = {};
+    for (const row of await repos.huntOrders.list()) if (row.value.scopeKey === null && row.value.requestedAt > (stops[row.value.state] ?? "")) stops[row.value.state] = row.value.requestedAt;
+    scopes = (await repos.adminConfig.read("current", { expansionScopes: true }))?.value.expansionScopes
+      ?.filter(scope => scope.budgetUsd > 0).map(scope => ({ state: scope.geography.stateAbbr.toLowerCase(), at: scope.decidedAt })) ?? [];
+  }
+  const cancelled = new Set(intents.flatMap(row => row.kind === "INTENT" && row.action === "CANCEL_DISPATCH" && row.note ? [row.note] : []));
+  const dispatches = intents.filter((row): row is Extract<ResearchIntent,{kind:"INTENT"}> => row.kind === "INTENT")
+    .filter(row=>row.action === "DISPATCH" && !cancelled.has(row.intentId));
+  const active = states.filter(state => state !== "system" && (!stops[state] || scopes.some(scope => scope.state === state && scope.at > stops[state]) ||
+    dispatches.some(row => { const target = parseDispatchTarget(row.note ?? ""); return row.requestedAt > stops[state] && (!target.states.length || target.states.includes(state)); })));
+  if (states.includes("system") && (active.length > 0 || !Object.keys(stops).length)) active.push("system");
+  return active;
+}
+
+/** Apply an already-requested stop once in the parent, without launching a research cycle to acknowledge it. */
+export async function honorStoppedHunts(repos: ControlPlaneRepositories, now: string): Promise<void> {
+  const sql = placeReadConnection(repos), connection = controlPlaneUrlFromEnv();
+  const states = sql ? (await boundedRunner(sql,"cp_hunt_orders",CONTROL_PLANE_REQUEST_BOUNDS_MS)("pendingStopStates","PAGE",
+    "SELECT DISTINCT value->>'state' AS state FROM cp_hunt_orders WHERE value->>'confirmedAt' IS NULL ORDER BY state") as {state:string}[]).map(row=>row.state)
+    : [...new Set((await repos.huntOrders.list()).filter(row=>row.value.confirmedAt===null).map(row=>row.value.state))];
+  for (const state of states) {
+    const scoped = sql && connection ? await createPgRepositories(connection,now,{skipBootstrap:true,planningState:state}) : repos;
+    await applyHuntOrders(scoped,state,now);
+  }
 }
 
 export async function readPlanningStateOrder(repos: ControlPlaneRepositories, states: readonly string[]): Promise<string[]> {
@@ -1586,13 +1538,9 @@ export async function pgCoordinatorWorkItems(sql: Sql, exaAgentLane = false, sta
       SELECT 1 FROM cp_occurrences_history own JOIN cp_obligations o ON o.id=own.value->>'obligationId'
       WHERE own.value #>> '{workItemId}'=w.id AND o.value->>'active'='true' OFFSET 0) END` : ""}
     ORDER BY w.id`, state ? [state] : []) as Record<string, unknown>[]).map(row => String(row.id));
-  const selected: WorkItem[] = [];
-  for (let start = 0; start < ids.length; start += 100) {
-    const rows = await run("coordinatorItemValues", "PAGE", `SELECT id, value FROM cp_work_items_history
-      WHERE id = ANY($1::text[]) AND value->'autonomousPlan' IS NOT NULL ORDER BY id`, [ids.slice(start, start + 100)]) as Record<string, unknown>[];
-    selected.push(...rows.map(row => parseValue<WorkItem>(row.value, `coordinator work item ${String(row.id)}`)));
-  }
-  return selected;
+  const rows = await revisionReadsFor(sql).rows((text, params) => run("coordinatorItemValues", "PAGE", text, params),
+    "cp_work_items_history", "id=ANY($1::text[]) AND value->'autonomousPlan' IS NOT NULL", [ids]);
+  return rows.map(row => parseValue<WorkItem>(row.value, `coordinator work item ${row.id}`));
 }
 
 export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
@@ -1605,8 +1553,8 @@ export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjec
     return rows.sort((a, b) => a.id.localeCompare(b.id));
   }
   const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
-  const rows = await run("placeSubjects", "PAGE", `SELECT id, revision, updated_at, value
-    FROM cp_work_items_history WHERE value #>> '{subject}'=ANY($1::text[]) ORDER BY id`, [ids]) as Record<string, unknown>[];
+  const rows = await revisionReadsFor(sql).rows((text,params)=>run("placeSubjects","PAGE",text,params),
+    "cp_work_items_history","value #>> '{subject}'=ANY($1::text[])",[ids]);
   return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
     updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<WorkItem>(row.value, `place work item ${String(row.id)}`) }));
 }
@@ -1674,6 +1622,7 @@ export async function createPgRepositories(
       } finally { await pool.end(); }
     },
   });
+  shareRevisionReads(sql, connectionString);
   const bounded: PgRepositoryBounds = { bounds, copies: heldCopiesFor?.(connectionString, BOOTSTRAP_VERSION) ?? null };
   if (!options.skipBootstrap) {
 

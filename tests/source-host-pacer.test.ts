@@ -64,6 +64,32 @@ test("a named refusal stops that website; one refused Legistar sitting does not 
   await pacer.fetch("https://webapi.legistar.com/v1/elpasotexas/events/2563/eventitems", {}, fetchImpl);
   await pacer.fetch("https://webapi.legistar.com/v1/elpasotexas/events/2564/eventitems", {}, fetchImpl);
   assert.equal(calls, 2);
+  calls = 0;
+  await pacer.fetch("https://city.gov/calendar/day/20260917", {}, fetchImpl);
+  await pacer.fetch("https://city.gov/calendar/day/20261012", {}, fetchImpl);
+  assert.equal(calls, 2, "a refused dated sitting is not a refusal of the whole calendar");
+});
+
+test("documented provider quotas use the same host clock and never enter the HTTP request", async () => {
+  let now = 0;
+  const sent: number[] = [];
+  const pacer = createSourceHostPacer({ store: memoryHostState(), clock: () => now, sleep: async ms => { now += ms; } });
+  const read: typeof fetch = async (_url, init) => {
+    assert.equal('minimumSpacingMs' in (init ?? {}), false);
+    sent.push(now); return new Response("calendar");
+  };
+  await pacer.fetch("https://api.govinfo.gov/one", { minimumSpacingMs: 3600 }, read);
+  await pacer.fetch("https://api.govinfo.gov/two", { minimumSpacingMs: 3600 }, read);
+  await pacer.fetch("https://api.govinfo.gov/three", { minimumSpacingMs: 720 }, read);
+  assert.deepEqual(sent, [0, 3600, 4320]);
+});
+
+test("a transport failure still spaces the next tenant's request", async () => {
+  let now = 0;
+  const pacer = createSourceHostPacer({ store: memoryHostState(), clock: () => now, sleep: async ms => { now += ms; } });
+  await assert.rejects(pacer.fetch("https://one.civicplus.com/", {}, async () => { throw new TypeError("connection closed"); }));
+  await pacer.fetch("https://two.civicplus.com/", {}, async () => new Response("calendar"));
+  assert.equal(now, 2000);
 });
 
 test("host cooldown and named refusals survive a reader restart without database requests", async () => {

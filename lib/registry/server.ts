@@ -557,7 +557,8 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
     .find((holder) => personIdentityKeys(holder).has(canonicalId));
   if (statewide) return statewide;
   for (const roster of currentBodyRosters()) {
-    const holder = rosterHoldersForBody(roster.bodyId).find((row) => row.id === canonicalId);
+    if (!roster.members.some(member => member.id === canonicalId)) continue;
+    const holder = rosterHoldersForBody(roster.bodyId, canonicalId).find((row) => row.id === canonicalId);
     if (holder) return holder;
   }
   return null;

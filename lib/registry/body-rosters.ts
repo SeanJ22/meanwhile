@@ -163,11 +163,12 @@ export interface RosterHolder {
  * members with the same machinery as federal and state ones. A member with no
  * photo renders initials; body-page portraits of unknown license are not used.
  */
-export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
+export function rosterHoldersForBody(bodyId: string | null, memberId?: string): RosterHolder[] {
   const roster = rosterForBody(bodyId);
   if (!roster) return [];
   const photos = getRegistryRuntimeReadModel().rosterPhotos;
-  return roster.members.map((member) => ({
+  const members = memberId === undefined ? roster.members : roster.members.filter(member => member.id === memberId);
+  return members.map((member) => ({
     id: member.id,
     name: member.name,
     officeTitle: member.officeTitle,

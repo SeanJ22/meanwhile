@@ -114,11 +114,14 @@ function agendaDocument(row: Meeting, retrievedAt: string): AgendaDocument {
   };
 }
 
-test("an empty calendar leaves the pointer unchanged and writes no failed or absence candidate", async () => {
+test("an empty calendar keeps its pointer without loading the held payload or writing a failed candidate", async t => {
   const store = new MemoryRoutineDataStore();
+  const heldRead = t.mock.method(store, "readPromotion");
   const result = await promoteMeetingPartitions({ store, partitions: [legistar], meetings: [], agendaDocuments: [],
     reports: [{ ...report(legistar.meetingSource, FIRST), fetched: 0, normalized: 0 }], generatedAt: FIRST });
   assert.deepEqual(result, []);
+  assert.equal(heldRead.mock.callCount(), 0, "retaining the pointer requires no download of its held meeting payload");
+  heldRead.mock.restore();
   assert.equal(await store.readPromotion("MEETING", legistar.scope), null);
 });
 

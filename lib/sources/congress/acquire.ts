@@ -1,5 +1,4 @@
 import { sourceFetch } from "../http.ts";
-import { setTimeout as delay } from "node:timers/promises";
 import { FEDERAL_SOURCES, type FederalSourceId } from "./targets.ts";
 import { object, rows, string } from "./normalize.ts";
 import type { FederalCapture } from "./types.ts";
@@ -19,49 +18,34 @@ export interface FederalClientOptions {
   source: FederalSourceId;
   env?: Record<string, string | undefined>;
   fetchImpl?: typeof fetch;
-  sleep?: (ms: number) => Promise<unknown>;
   now?: () => string;
 }
 
-/** Provider quotas alone pace national APIs. No local-government request cap applies. */
+/** Provider quotas enter the shared host clock. No local-government request cap applies. */
 export function federalClient(options: FederalClientOptions) {
   const config = FEDERAL_SOURCES[options.source], env = options.env ?? process.env;
   const key = config.key ? env[config.key] : undefined;
-  const sleep = options.sleep ?? delay;
   const clock = options.now ?? (() => new Date().toISOString());
-  let nextAt = 0, pace: number = options.source === "senate-lda" && !key ? 4000 : config.paceMs;
+  let pace: number = options.source === "senate-lda" && !key ? 4000 : config.paceMs;
   async function get(urlValue: string, kind: FederalCapture["kind"], context?: FederalCapture["context"]): Promise<FederalCapture> {
     const url = publicFederalUrl(urlValue);
     if (!sourceUrlAllowed(options.source, url)) throw new Error(`Refused a page outside ${config.publisher}: ${url}`);
     if (config.key && !key && options.source !== "senate-lda") throw new Error(`${config.key} is unavailable in this workspace.`);
     const headers = new Headers({ Accept: kind === "bill-text" ? "text/plain, text/html" : "application/json", "User-Agent": `Meanwhile/1.0 (+${PUBLIC_SITE_ORIGIN})` });
     if (key) headers.set(options.source === "senate-lda" ? "Authorization" : "X-Api-Key", options.source === "senate-lda" ? `Token ${key}` : key);
-    for (let attempt = 0; ; attempt++) {
-      const wait = nextAt - Date.parse(clock());
-      if (wait > 0) await sleep(wait);
-      const response = await sourceFetch(url, { headers, signal: AbortSignal.timeout(30_000), redirect: "manual" }, options.fetchImpl);
-      nextAt = Date.parse(clock()) + pace;
-      const limit = Number(response.headers.get("x-ratelimit-limit"));
-      if (limit > 0 && Number.isFinite(limit) && options.source !== "senate-lda") pace = 3_600_000 / limit;
-      if (response.status === 429 || response.status >= 500) {
-        const retry = response.headers.get("retry-after"), seconds = retry === null ? NaN : Number(retry);
-        const waitMs = Number.isFinite(seconds) ? seconds * 1000 : retry ? Date.parse(retry) - Date.parse(clock()) : 1000 * 2 ** attempt;
-        if (attempt >= 2) throw new Error(`${url} answered HTTP ${response.status}; Retry-After: ${retry ?? "not supplied"}.`);
-        await response.body?.cancel();
-        nextAt = Date.parse(clock()) + Math.max(pace, waitMs);
-        continue;
-      }
-      if (!response.ok) {
-        let diagnostic = await response.text();
-        if (key) diagnostic = diagnostic.split(key).join("[redacted]");
-        throw new Error(`${url} answered HTTP ${response.status}: ${diagnostic.slice(0, 1000)}`);
-      }
-      let body = await response.text();
-      // Request metadata may echo a key. Saved evidence excludes only those secret values.
-      if (key) body = body.split(key).join("[redacted]");
-      if (!body.trim()) throw new Error(`${url} returned an empty source document.`);
-      return { source: options.source, kind, url, body, retrievedAt: clock(), ...(context ? { context } : {}) };
+    const response = await sourceFetch(url, { headers, signal: AbortSignal.timeout(30_000), redirect: "manual", minimumSpacingMs: pace }, options.fetchImpl);
+    const limit = Number(response.headers.get("x-ratelimit-limit"));
+    if (limit > 0 && Number.isFinite(limit) && options.source !== "senate-lda") pace = 3_600_000 / limit;
+    if (!response.ok) {
+      let diagnostic = await response.text();
+      if (key) diagnostic = diagnostic.split(key).join("[redacted]");
+      throw new Error(`${url} answered HTTP ${response.status}: ${diagnostic.slice(0, 1000)}`);
     }
+    let body = await response.text();
+    // Request metadata may echo a key. Saved evidence excludes only those secret values.
+    if (key) body = body.split(key).join("[redacted]");
+    if (!body.trim()) throw new Error(`${url} returned an empty source document.`);
+    return { source: options.source, kind, url, body, retrievedAt: clock(), ...(context ? { context } : {}) };
   }
   return { get };
 }

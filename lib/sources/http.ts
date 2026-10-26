@@ -52,8 +52,13 @@ export function sourceReadDeferred(error: unknown): boolean {
   return error instanceof SourceReadDeferred || /SOURCE_READ_DEFERRED:/.test(error instanceof Error ? error.message : String(error));
 }
 
+export interface SourceRequestInit extends RequestInit {
+  /** A publisher's documented quota, applied by the same shared host clock. Never sent as an HTTP field. */
+  minimumSpacingMs?: number;
+}
+
 export interface SourceHostPacer {
-  fetch(url: string | URL, init?: RequestInit, fetchImpl?: typeof fetch, vendor?: string): Promise<Response>;
+  fetch(url: string | URL, init?: SourceRequestInit, fetchImpl?: typeof fetch, vendor?: string): Promise<Response>;
   defer(url: string, until: number, vendor?: string): Promise<void>;
 }
 
@@ -66,23 +71,33 @@ export function createSourceHostPacer(options: {
     await options.store.withHost(sourceHost(url, vendor), undefined, async state => { state.routes[url] = Math.max(state.routes[url] ?? 0, until); });
   }, async fetch(target, init, fetchImpl = globalThis.fetch, vendor) {
     const url = String(target), address = new URL(url), host = sourceHost(url, vendor), origin = address.origin;
-    const base = options.spacingMs ?? (["civicplus", "legistar"].includes(host) ? 2_000 : REQUEST_SPACING_MS);
+    const { minimumSpacingMs = 0, ...request } = init ?? {};
+    const base = options.spacingMs ?? Math.max(["civicplus", "legistar"].includes(host) ? 2_000 : REQUEST_SPACING_MS,
+      Number.isFinite(minimumSpacingMs) ? minimumSpacingMs : 0);
     return options.store.withHost(host, init?.signal ?? undefined, async state => {
       init?.signal?.throwIfAborted();
       for (const [route, until] of Object.entries(state.routes)) if (until <= clock()) delete state.routes[route];
-      const refusalKey = address.hostname === "webapi.legistar.com" || address.pathname === "/robots.txt"
+      const refusalKey = address.hostname === "webapi.legistar.com" || address.pathname === "/robots.txt" || /\/day\/\d{8}\/?$/.test(address.pathname)
         ? `${origin}${address.pathname}` : origin;
-      if (state.refused[refusalKey]) throw new SourceReadDeferred(url, Date.parse("9999-12-31T00:00:00Z"), "REFUSED");
+      if (state.refused[origin] || state.refused[refusalKey]) throw new SourceReadDeferred(url, Date.parse("9999-12-31T00:00:00Z"), "REFUSED");
       if (state.until > clock()) throw new SourceReadDeferred(url, state.until, "THROTTLED");
       if (state.routes[url] > clock()) throw new SourceReadDeferred(url, state.routes[url], "EMPTY");
+      state.intervalMs = state.intervalMs > (state.baseMs ?? base) ? Math.max(base, state.intervalMs) : base;
+      state.baseMs = base;
+      if (state.lastAt !== undefined) state.nextAt = Math.max(state.until, state.lastAt + state.intervalMs);
       const wait = state.nextAt - clock();
       if (wait > 0) await sleep(wait, init?.signal ?? undefined);
       init?.signal?.throwIfAborted();
       const headers = new Headers(init?.headers);
       if (!headers.has("user-agent")) headers.set("user-agent", sourceUserAgent());
       // Keep the caller's header shape for transports that inspect their options.
-      const response = await withSourceVendor(vendor ?? currentSourceVendor(), () => fetchImpl(typeof target === "string" ? target : address, { ...init, headers: init?.headers && new Headers(init.headers).has("user-agent") ? init.headers : Object.fromEntries(headers) }));
+      const response = await withSourceVendor(vendor ?? currentSourceVendor(), () => fetchImpl(typeof target === "string" ? target : address, { ...request, headers: init?.headers && new Headers(init.headers).has("user-agent") ? init.headers : Object.fromEntries(headers) }))
+        .catch(error => {
+          state.lastAt = clock(); state.nextAt = state.lastAt + state.intervalMs;
+          throw error;
+        });
       const now = clock();
+      state.lastAt = now;
       state.intervalMs = Math.max(base, state.intervalMs);
       state.nextAt = now + state.intervalMs;
       if (response.status === 429 || response.status >= 500 && response.headers.get("retry-after")) {
@@ -108,7 +123,7 @@ let sharedPacer: Promise<SourceHostPacer> | undefined;
 const injectedPacers = new WeakMap<typeof fetch, Promise<SourceHostPacer>>();
 
 /** The only source fetch: production children share host state; an injected transport owns isolated test state. */
-export async function sourceFetch(url: string | URL, init?: RequestInit, fetchImpl?: typeof fetch, vendor?: string, sharedTransport = false): Promise<Response> {
+export async function sourceFetch(url: string | URL, init?: SourceRequestInit, fetchImpl?: typeof fetch, vendor?: string, sharedTransport = false): Promise<Response> {
   const transport = fetchImpl ?? globalThis.fetch;
   const root = sourceTransportRoot(transport);
   const injected = root !== nativeSourceFetch && !sharedTransport;

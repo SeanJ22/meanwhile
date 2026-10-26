@@ -8,6 +8,8 @@ import { operationalStatePath } from "../ops/operational-state-path.ts";
 export interface HostState {
   nextAt: number;
   intervalMs: number;
+  baseMs?: number;
+  lastAt?: number;
   healthy: number;
   until: number;
   refused: Record<string, string>;

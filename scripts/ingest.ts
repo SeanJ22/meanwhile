@@ -1570,17 +1570,20 @@ export async function promoteMeetingPartitions(input: {
     );
     const freshRowIds = new Set(freshRows.map((meeting) => meeting.id));
     const freshDocuments = input.agendaDocuments.filter((document) => freshRowIds.has(document.meetingId));
-    const previous = input.previousByContract?.has(partition.id)
-      ? input.previousByContract.get(partition.id) ?? null
-      : await readPreviousMeetingPartition(input.store, partition);
     if (freshRows.length === 0) {
       // An empty read says nothing about meetings we already hold. Keep the pointer and revisit the route later.
-      for (const url of report.acquisitions?.map(row => row.requestedUrl) ?? []) await deferSourceRead(url, Date.parse(input.generatedAt) + 3_600_000);
+      // A body selecting nothing from a shared feed cannot defer the feed's other bodies.
+      if (report.accounting?.logicalInput === 0) {
+        for (const url of report.acquisitions?.map(row => row.requestedUrl) ?? []) await deferSourceRead(url, Date.parse(input.generatedAt) + 3_600_000);
+      }
       console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: partition.id,
         detail: "The calendar returned no matching meetings; held meetings remain live and the source will be checked again.",
         fetched: report.fetched, normalized: report.normalized, drops: report.drops, accounting: report.accounting })}`);
       continue;
     }
+    const previous = input.previousByContract?.has(partition.id)
+      ? input.previousByContract.get(partition.id) ?? null
+      : await readPreviousMeetingPartition(input.store, partition);
     const recurrence = recurrenceHeldFacts(report.recurrence, partition.bodyId);
     for (const fact of recurrence.held) {
       if (fact.code !== "MEETING_EXCLUDED_BY_PUBLISHER") console.warn(`  ${partition.id}: ${fact.code}: ${fact.detail}`);

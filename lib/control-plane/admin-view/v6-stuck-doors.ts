@@ -1,16 +1,8 @@
-import type { Sql } from "../repository/pg-store.ts";
-import { boundedQuery } from "../repository/request-bounds.ts";
-import { isDoorRecord, type DoorRecord } from "../../doors/registry.ts";
+import { type DoorRecord } from "../../doors/registry.ts";
 import { hoursBetween, shutDoorFixWords } from "../../doors/shut-repair.ts";
 import type { AdminV6StuckItem } from "./v6-stuck-read.ts";
-import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
-/** A shut door is already live and readers are affected, so it ranks first in every scope. */
-export async function readShutDoorRecords(sql: Sql): Promise<readonly DoorRecord[]> {
-  const raw = await versionedRowsFor(sql).rows(async(text,params)=>await boundedQuery(sql,
-    {operation:"cp_doors.shut",callClass:"PAGE"},text,params),"cp_doors","value->>'status' = 'SHUT'",[]);
-  return raw.map((r) => (typeof r.value === "string" ? JSON.parse(r.value) : r.value)).filter(isDoorRecord);
-}
+export { readAdminShutDoors as readShutDoorRecords } from "./door-queries.ts";
 
 const DAY_HOURS = 24;
 

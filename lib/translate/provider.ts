@@ -96,7 +96,7 @@ export async function runMeasureTranslationPass(input: MeasureTranslationProvide
           const run = (async () => {
             try {
               const result = await runHeldMeasureTranslations({ ...input, transportFor: input.guardedTransportFor,
-                divisions: [row.division], captures, attempts,
+                divisions: [row.division], captures, attempts, held: checked,
                 ballots: ballots.map(ballot => ({ ...ballot, contests: ballot.contests.filter(contest =>
                   contest.id === row.subjectId && contest.ocdId === row.division) })),
               });

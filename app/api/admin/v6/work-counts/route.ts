@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { neon } from "@/lib/db/client.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
@@ -8,7 +9,7 @@ import { workCounts } from "@/lib/core/work-counts.ts";
 export const dynamic = "force-dynamic";
 const headers = { "cache-control": "no-store" };
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });
   if (!guard.ok) return guard.status === 404 ? new NextResponse(null, { status: 404 })
@@ -27,3 +28,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       { status: error instanceof Error && error.message === "WORK_INVALID_STATE" ? 400 : 503, headers });
   }
 }
+
+export const GET = adminRead(get);

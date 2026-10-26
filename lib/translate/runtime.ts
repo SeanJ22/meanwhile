@@ -3,7 +3,7 @@ import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { captureIntact } from "../civic-data/worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { translationHash } from "./records.ts";
+import { translationHash, type TranslationRecord } from "./records.ts";
 import { translateMeasure, translationModelUsage, type MeasureTranslationRepos } from "./worker.ts";
 import { publishTranslation, readTranslations } from "./publication.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
@@ -18,6 +18,9 @@ export async function runMeasureTranslation(input: {
   readonly captures: readonly WorkerPublicationCapture[];
   readonly transportFor: (subject: { subjectId: string; state: string }) => ModelTransport;
   readonly now: string;
+  /** The division's checked records this pass already read. Each measure otherwise
+   * re-reads the whole projection, which holds every record's full source text. */
+  readonly held?: readonly TranslationRecord[];
 }) {
   const usage: Awaited<ReturnType<typeof translateMeasure>>["usage"] = [];
   try {
@@ -28,7 +31,7 @@ export async function runMeasureTranslation(input: {
       sourcePolicy: input.primary.sourcePolicy }, "BALLOT_MEASURE", input.now);
     if (!admitted.ok) throw new Error(admitted.reason ?? "Translation source is not admitted.");
     const hash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
-    const held = await readTranslations([input.subject.ocdId], { store: input.store, now: input.now });
+    const held = input.held ?? await readTranslations([input.subject.ocdId], { store: input.store, now: input.now });
     const current = held.find(row => row.kind === "MEASURE" && row.subjectId === input.subject.contestId && row.ocdId === input.subject.ocdId &&
       row.sourceUrl === evidence.canonicalUrl && row.sourceHash === hash && row.sourceTextHash === translationHash(evidence.text));
     if (current) return { status: "REUSED" as const, record: current, usage: [], versionId: null };

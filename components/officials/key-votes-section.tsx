@@ -1,3 +1,4 @@
+import { ReaderText } from "@/components/ui/reader-text";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 import {
   APRIL_2024_SENATE_NOTE,
@@ -157,9 +158,9 @@ export function KeyVoteGroupBlock({
             className="border-b border-[var(--panel-border)] py-2 last:border-0"
           >
             <p className="t-body font-medium leading-snug text-paper">
-              {row.entry.title}
+              <ReaderText text={row.entry.title} />
               {row.entry.pending && (
-                <span className="ml-1.5 rounded-full border border-[var(--panel-border)] px-1.5 py-0.5 t-caption font-semibold uppercase trailing-space-trimmed-6 tracking-[0.06em] text-muted">
+                <span className="ml-1.5 rounded-full border border-[var(--panel-border)] px-1.5 py-0.5 t-caption font-semibold trailing-space-trimmed-6 tracking-[0.06em] text-muted">
                   not law yet
                 </span>
               )}

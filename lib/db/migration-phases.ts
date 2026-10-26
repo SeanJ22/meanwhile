@@ -173,6 +173,11 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "GB-01_la_metro_boards": { phase: "expand", why: "Moves LA Metro's boards filed under Oregon to their California government and its places, keeping their ids and facts; no table or column changes." },
   "RB-A4_entity_places": { phase: "expand", why: "Adds the host-county filing marker after RB-A1 supplies boundary-year identity." },
   "RB-A2_place_boundaries": { phase: "contract", why: "Extends RB-A1's year-aware place tables after they exist, allows source-unknown shares and indexes source polygons without changing readers." },
+  "RB-A7_bootstrap_expand": { phase: "expand", why: "Retains changes from the preceding deployment while the first ready pages are built.", lockFirst: ["fact", "civic_data_promotions", "entity", "entity_place", "entity_host", "entity_external_id", "civic_data_candidate_events", "rebuild_queue"] },
+  "RB-A7_bootstrap_contract": { phase: "contract", why: "Removes temporary compatibility hooks after writers queue pages directly.", lockFirst: ["fact", "civic_data_promotions", "entity", "entity_place", "entity_host", "entity_external_id", "civic_data_candidate_events", "rebuild_queue"] },
+  "RB-A7_expand": { phase: "expand", why: "Leases queued page rebuilds and indexes the entities each saved reader page uses.",
+    // Dependency foreign keys also lock entity; take it before queue DDL while publishers write both.
+    lockFirst: ["entity", "rebuild_queue"] },
   "RB-A3_expand": { phase: "expand", why: "Adds place rebuild requests and hourly fact counts alongside the live fact table before the shared door writes them." },
   "0051_rb_a1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy.",
     contractStatementTimeoutMs: 10_000 },

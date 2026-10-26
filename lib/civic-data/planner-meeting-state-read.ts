@@ -1,5 +1,5 @@
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
-import { readPlacePackage } from "../reader/place.ts";
+import { buildPlacePackage } from "../reader/place-builder.ts";
 import { readReaderMeetingSettings } from "../meetings/reader-settings.ts";
 import { snapshotCounts } from "../meetings/snapshot.ts";
 import { readPlannerMeetingArchives, plannerCurrentMeetingSql } from "./planner-archive-state-read.ts";
@@ -20,7 +20,7 @@ export async function* readPlannerMeetingBodies(state: string, query: ReadOnlyQu
   ]);
   let archives: ReturnType<typeof readPlannerMeetingArchives> | undefined;
   for (let first = 0; first < bodies.length; first += 16) {
-    const held = await readPlacePackage({ state, divisionIds: [], bodyIds: bodies.slice(first, first + 16).map(body => String(body.id)),
+    const held = await buildPlacePackage({ state, divisionIds: [], bodyIds: bodies.slice(first, first + 16).map(body => String(body.id)),
       includeHistory: true, includeAgenda: true }, async (text, params) => {
       const [archive, [current]] = await Promise.all([archives ??= readPlannerMeetingArchives(text,
         [...params!.slice(0, 2), bodies.map(body => String(body.id)), ...params!.slice(3)], query),

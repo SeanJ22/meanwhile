@@ -22,8 +22,8 @@ test("VS-01 voting reader renders held records without invoking the Google adapt
     assert.equal(answer.googleFallback, undefined);
     const html = await renderCardWithSources({ modulePath: "./components/map/voting-sites-panel.tsx", exportName: "VotingJurisdictionRecords",
       props: { answer, selectedSiteId: null }, sourceUrls: [answer.jurisdictions[0].sourceUrl] });
-    assert.match(html, /FIRST PRESBYTERIAN CHURCH/);
-    assert.match(html, /510 W OTTAWA ST/);
+    assert.match(html, /First Presbyterian Church/);
+    assert.match(html, /510 W Ottawa St/);
     assert.match(html, /7 am - 8 pm/);
     assert.ok(!JSON.stringify(answer).includes("private address"));
   } finally { globalThis.fetch = previous; }

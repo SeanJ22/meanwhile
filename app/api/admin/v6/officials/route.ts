@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
@@ -12,7 +13,7 @@ export const runtime = "nodejs";
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 
 /** `admin-v6/officials@1`: the last officials check for a place, each people source's result, and the seats it changed. Read-only. */
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });
   if (!guard.ok) return guard.status === 404 ? new NextResponse(null, { status: 404 }) : NextResponse.json({ says: guard.says }, { status: guard.status, headers: NO_STORE });
@@ -29,3 +30,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ contract: OFFICIALS_RESULTS_CONTRACT, scope, revision, asOf: now, data: result, missingParts: [] }, { headers: NO_STORE });
   } catch { return NextResponse.json({ says: "The officials check results could not be read." }, { status: 503, headers: NO_STORE }); }
 }
+
+export const GET = adminRead(get);

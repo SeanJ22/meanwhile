@@ -16,14 +16,22 @@ export async function readOldest(sql: Sql,at=new Date().toISOString()): Promise<
   return rows.map(r=>({state:String(r.state),family:String(r.family),stage:String(r.stage),count:Number(r.count),
     oldestAt:r.oldest_at?countTimestamp(r.oldest_at):null,owner:String(r.owner)}));
 }
+/** The page queue is held on the reader database; only grouped ages leave it. */
+export async function readRebuildWaiting(sql: Sql): Promise<OldestWaiting[]> {
+  const rows = await query(sql,"oldest-place-pages",`SELECT coalesce(e.state,'US') AS state,
+    count(*)::int AS count,min(q.queued_at) AS oldest_at FROM rebuild_queue q
+    JOIN entity e ON e.id=q.place_id GROUP BY coalesce(e.state,'US') ORDER BY state`);
+  return rows.map(r=>({state:String(r.state),family:"Place pages",stage:"rebuilt",count:Number(r.count),
+    oldestAt:r.oldest_at?countTimestamp(r.oldest_at):null,owner:"the page builder"}));
+}
 export async function readHour(control: Sql, reader: Sql, at: string) {
   const window = countWindow(at);
   const before = countWindow(window.from);
-  const [currentControl,currentReader,previousControl,previousReader,waiting] = await Promise.all([
+  const [currentControl,currentReader,previousControl,previousReader,waiting,rebuilds] = await Promise.all([
     readCounts(control,window.from,window.through,at),readCounts(reader,window.from,window.through,at),
-    readCounts(control,before.from,before.through,at),readCounts(reader,before.from,before.through,at),readOldest(control,at),
+    readCounts(control,before.from,before.through,at),readCounts(reader,before.from,before.through,at),readOldest(control,at),readRebuildWaiting(reader),
   ]);
-  return {window,counts:[...currentControl,...currentReader],previous:[...previousControl,...previousReader],waiting};
+  return {window,counts:[...currentControl,...currentReader],previous:[...previousControl,...previousReader],waiting:[...waiting,...rebuilds]};
 }
 
 /** Aggregate beside the accounting rows; their large read maps never cross the wire. */

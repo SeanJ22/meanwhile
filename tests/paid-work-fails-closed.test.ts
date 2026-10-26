@@ -181,7 +181,7 @@ function checkRunnerFailsClosed(src: string): void {
 
   const hold = src.match(/async function holdWhilePaused\(\): Promise<\{ readonly ownerIntentsUnreadable: boolean \}> \{[\s\S]*?\n\}/);
   assert.ok(hold, "no holdWhilePaused() returning the unreadable fact");
-  assert.match(hold[0], /while \(says === "HOLD"\)/, "the pause no longer holds");
+  assert.match(hold[0], /while \(says === "HOLD" && pendingRestart\.target === null\)/, "the pause no longer holds");
   assert.match(hold[0], /return \{ ownerIntentsUnreadable: says === "UNREADABLE" \};/);
   assert.match(src, /const owner = await holdWhilePaused\(\);[\s\S]*?const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary\(\);[\s\S]*?if \(wakeReleaseExit !== null\) \{[\s\S]*?break;[\s\S]*?cycle \+= 1;[\s\S]*?const result = await runOneCycle\(owner\)/,
     "the owner pause is read before release reconciliation and the normal child inherits its unreadable state");

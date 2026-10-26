@@ -14,6 +14,8 @@ import { readPopulationFacts, statePopulationId } from "../../reference/populati
 import { databaseReadOnlySql } from "../../reader/database.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { readCountryScores } from "../line-keeper/country.ts";
+import { readDistrictStuckCounts } from "./stuck-summary.ts";
+import { STUCK_INDEX_SQL } from "./v6-stuck-read.ts";
 
 const NO_STORE = { "cache-control": "private, no-store, no-cache, must-revalidate" };
 
@@ -47,13 +49,16 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
   const [config,snapshot,stuck,country]=await Promise.all([
     quick(opened.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true})),
     quick(opened.repos.ownerSnapshots.readNarrowed('current',{billingAttribution:true})),
-    quick(population()).then(read=>read?.rows??null),
+    quick(population(query.scopeKey)),
     query.scope.kind==='country'&&!options.deps&&controlPlaneUrlFromEnv()?quick(readCountryScores(databaseReadOnlySql(controlPlaneUrlFromEnv()!))):null,
   ]);
   const scopes=expansionScopesOf(config?.value??null);
   const attribution=(snapshot?.value as Pick<OwnerSnapshot,'billingAttribution'>|undefined)?.billingAttribution;
   const out = await v6NationalSection({ scopeKey: query.scopeKey, scope: query.scope,
-    sources: { hunts: { scopes:config?scopes.scopes:null, malformedScopes:scopes.malformed, attribution }, stuck }, deps,
+    sources: { hunts: { scopes:config?scopes.scopes:null, malformedScopes:scopes.malformed, attribution }, stuck:stuck?.rows??null,
+      stuckCounts:stuck?.summary?.counts,
+      ...(controlPlaneUrlFromEnv()?{countDistrictStuck:(districts:readonly import('./v6-national-geography.ts').DistrictInfo[])=>
+        readDistrictStuckCounts(databaseReadOnlySql(controlPlaneUrlFromEnv()!),STUCK_INDEX_SQL,districts)}:{}) }, deps,
     ...(!options.deps && query.scope.kind==='country'?{publishedScores:new Map((country??[]).map(s=>[`st:${s.state}`,s.score]))}:{}) });
   if ("kind" in out) return NextResponse.json({ code: out.code, says: out.says }, { status: out.status, headers: NO_STORE });
   const keys = out.data.map(row => row.kind === "State" ? statePopulationId(row.code) : row.kind === "ZIP" ? `zcta:${row.code}` : `congressional_district:${row.placeKey.split(".").at(-1)}`);

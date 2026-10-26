@@ -8,6 +8,7 @@ import { smallDonorSentence } from "@/lib/funding/small-donors";
 import type { CampaignFinancePlaceRead } from "@/lib/funding/state-reader";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import type { ReactionViewContext } from "@/lib/reactions/client";
+import { readerText } from "@/lib/text/reader-names";
 
 const money=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:2});
 interface Props {divisionId:string;personId?:string;data?:CampaignFinancePlaceRead;bare?:boolean;context?:ReactionViewContext|null}
@@ -43,11 +44,11 @@ function CampaignSection({divisionId,personId,data,bare=false,context=null}:Prop
     {value.records.map(row=>{
       const small=smallDonorSentence(row.individualLarge??null,row.individualSmall??null);
       return <div key={row.id} data-campaign-record={row.id} className="space-y-2">
-        <p className="t-body text-paper">{row.person.name} · {row.cycle} cycle</p>
-        <p className="t-detail text-voice">{row.committees?.map(committee=>`${committee.name}${committee.office?` · ${committee.office}`:""}`).join("; ")??row.committee}</p>
-        <dl>{row.totals.map(total=><div key={total.label} className="flex justify-between gap-4 t-detail"><dt>{total.label}</dt><dd>{money.format(total.amount)}</dd></div>)}</dl>
+        <p className="t-body text-paper">{readerText(row.person.name, "name")} · {row.cycle} cycle</p>
+        <p className="t-detail text-voice">{row.committees?.map(committee=>`${readerText(committee.name, "name")}${committee.office?` · ${readerText(committee.office, "title")}`:""}`).join("; ")??readerText(row.committee, "name")}</p>
+        <dl>{row.totals.map(total=><div key={total.label} className="flex justify-between gap-4 t-detail"><dt>{readerText(total.label, "title")}</dt><dd>{money.format(total.amount)}</dd></div>)}</dl>
         {small?<p className="t-detail text-voice">{small}</p>:<CardGapContribution id={`small-donors:${row.id}`} label="small-donor share"/>}
-        {!!row.donors?.length&&<dl>{row.donors.filter(donor=>donor.kind==="COMMITTEE_OR_ORGANIZATION" || donor.kind==="INDIVIDUAL"&&donor.amount>200).map((donor,index)=><div key={`${donor.filedName}:${index}`} className="flex justify-between gap-4 t-detail"><dt>{donor.filedName}</dt><dd>{money.format(donor.amount)}</dd></div>)}</dl>}
+        {!!row.donors?.length&&<dl>{row.donors.filter(donor=>donor.kind==="COMMITTEE_OR_ORGANIZATION" || donor.kind==="INDIVIDUAL"&&donor.amount>200).map((donor,index)=><div key={`${donor.filedName}:${index}`} className="flex justify-between gap-4 t-detail"><dt>{readerText(donor.filedName, "name")}</dt><dd>{money.format(donor.amount)}</dd></div>)}</dl>}
         {!row.donors?.length&&<CardGapContribution id={`campaign-contributors:${row.id}`} label="campaign contributors"/>}
       </div>;
     })}

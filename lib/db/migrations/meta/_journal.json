@@ -412,6 +412,27 @@
       "idx": 58,
       "version": "7",
       "when": 1792834200006,
+      "tag": "RB-A7_expand",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1792834200007,
+      "tag": "RB-A7_bootstrap_expand",
+      "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1792834200008,
+      "tag": "RB-A7_bootstrap_contract",
+      "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1792834200009,
       "tag": "DB-03_process_transfer",
       "breakpoints": true
     }

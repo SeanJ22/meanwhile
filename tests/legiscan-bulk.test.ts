@@ -8,6 +8,7 @@ import { bulkCandidate,publishBulkCandidate,LEGISCAN_PART_ROWS } from "../lib/so
 import { readBulkProjection,readBillsForState,billsForPerson } from "../lib/sources/legiscan/reader.ts";
 import { refreshLegiscan,bulkDatasetOrder } from "../scripts/legiscan-bulk.mts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
+import { routineTaskFromContract,routineTaskDue } from "../lib/civic-data/runner.ts";
 import { legiscanBillEvidence } from "../lib/ask/legiscan-bills.ts";
 import { recordRegisteredSourceAcquisitionFailure,sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
@@ -73,6 +74,51 @@ test("person filters preserve previously ambiguous and committee sponsors",()=>{
   const committee=normalizeSession(datasets[1],ar,at),committeePerson={id:"committee-is-not-a-person",nativeIds:{legiscan:[String(committee.sponsors[0].peopleId)]}};
   assert.deepEqual(hydrateBillPart(committee,committeePerson),[]);
   assert.deepEqual(billsForPerson(hydrateBillPart(committee),committeePerson),[]);
+});
+test("Gonzales joins the official card by the source's full name and Senate district",()=>{
+  const body=fixture("AZ-Gonzales-2026"),dataset=catalog(body);
+  const holder={id:"az-legislature:2381",name:"Sally Ann Gonzales",state:"AZ",chamber:"upper",level:"STATE" as const,
+    nativeIds:{"az-legislature":["2381"]},memberships:[{id:"senate20",personId:"az-legislature:2381",officeId:"US-AZ:upper:20",jurisdiction:"US-AZ",chamber:"upper",district:"20",sourceUrl:"https://www.azleg.gov/"}]};
+  const part=normalizeSession(dataset,[body],at,[holder]),sponsor=part.sponsors.find(row=>row.peopleId===10704)!;
+  assert.equal(sponsor.name,"Sally Gonzales");assert.equal(sponsor.fullName,"Sally Ann Gonzales");
+  assert.equal(sponsor.officeholderId,holder.id);
+  assert.equal(hydrateBillPart(part,holder).length,1);
+  const {level:_level,...card}=holder;
+  assert.equal(billsForPerson(hydrateBillPart(part),card).length,1,"the normal SeatHolder card omits level");
+  for(const mismatch of [{state:"NM"},{chamber:"lower",memberships:holder.memberships.map(row=>({...row,chamber:"lower"}))},
+    {memberships:holder.memberships.map(row=>({...row,district:"21"}))},{nativeIds:{legiscan:["99999"]}}]) {
+    assert.equal(billsForPerson(hydrateBillPart(part),{...holder,...mismatch}).length,0,"do not guess across a conflicting native ID or seat");
+  }
+  const native={...holder,id:"legiscan:az:10704",name:"A different display name",nativeIds:{legiscan:["10704"]}};
+  assert.equal(joinSponsors([holder,native])(sponsor).officeholderId,native.id,"LegiScan's own ID takes precedence over a fallback name");
+  const ambiguous=normalizeSession(dataset,[body],at,[holder,{...holder,id:"different-person"}]);
+  assert.equal(billsForPerson(hydrateBillPart(ambiguous),holder).length,0,"the reader cannot resolve a saved ambiguity from a one-person query");
+});
+test("name and district fallback covers every state and DC with punctuation and omitted middle names",()=>{
+  for(let state_id=1;state_id<=51;state_id++){
+    const dataset={...datasets[0],state_id},state=stateOfDataset(dataset),raw=JSON.parse(ak[0]);
+    Object.assign(raw.bill,{state,state_id,url:`https://legiscan.com/${state}/bill/HB1/2026`});
+    const sponsor=raw.bill.sponsors[0];
+    Object.assign(sponsor,{name:"Jose Garcia",first_name:"José",middle_name:"Luis",last_name:"García",district:"SD-020",role_id:2});
+    raw.bill.sponsors=[sponsor];
+    const chamber=state==="DC"||state==="NE"?"legislature":"upper";
+    const holder={id:`official:${state}:1`,name:"Jose Garcia",state,level:"STATE" as const,chamber,
+      memberships:[{id:"20",personId:"official",officeId:"20",jurisdiction:`US-${state}`,chamber,district:"20",sourceUrl:"https://example.gov/"}]};
+    const part=normalizeSession(dataset,[JSON.stringify(raw)],at,[holder]);
+    assert.equal(part.sponsors[0].officeholderId,holder.id,state);
+    assert.equal(hydrateBillPart(part,holder).length,1,state);
+  }
+});
+test("a sponsor cannot bind to different names or districts across session parts",async()=>{
+  const first=JSON.parse(ak[0]),second=structuredClone(first);second.bill.bill_id++;
+  first.bill.sponsors=[first.bill.sponsors[0]];second.bill.sponsors=[{...first.bill.sponsors[0],name:"Another Person",first_name:"Another",middle_name:"",last_name:"Person",district:"HD-014"}];
+  const holders=[{id:"one",name:"Carl Gatto",district:"13"},{id:"two",name:"Another Person",district:"14"}].map(row=>({
+    id:row.id,name:row.name,state:"AK",level:"STATE" as const,chamber:"lower",memberships:[{id:row.id,personId:row.id,officeId:row.id,jurisdiction:"US-AK",chamber:"lower",district:row.district,sourceUrl:"https://example.gov/"}]}));
+  const bodies=[JSON.stringify(first),JSON.stringify(second)];
+  const {sessionSponsorEvidence}=await import("../lib/sources/legiscan/bills.ts");
+  const part=normalizeSession(datasets[0],[bodies[0]],at,holders,sessionSponsorEvidence(bodies));
+  assert.equal(part.sponsors[0].officeholderId,null);
+  assert.equal(hydrateBillPart(part,holders[0]).length,0);
 });
 test("one national routine uses the publisher weekly clock and installs a keyed source door",()=>{
   const contract=requiredRoutineContract("legiscan-bulk");assert.equal(contract.cadence.defaultEveryMs,7*86400000);
@@ -244,6 +290,31 @@ test("bulk refresh downloads archives once and unchanged hashes confirm success 
   assert.equal(failed.outcome.candidate.state,"SOURCE_BLOCKED");assert.equal(failed.outcome.promoted,null);
   assert.equal((await store.readPromotion("STATE_BILL",LEGISCAN_BULK_SCOPE))?.versionId,held?.versionId);
 });
+test("a fresh index cannot postpone unfinished sessions for the weekly cadence",async()=>{
+  const store=new MemoryRoutineDataStore(),index=datasets.map(({access_key:_access,...row})=>row);
+  const marker=await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:index}),at,"getDatasetList"),datasets},at);
+  const current=datasets.map(row=>({...row,year_start:2026,year_end:2026}));let refuseArkansas=true;
+  const task=routineTaskFromContract(requiredRoutineContract("legiscan-bulk"));
+  const readClock=()=>store.clock("legiscan-bills","STATE_BILL",LEGISCAN_BULK_SCOPE,task.parserVersion);
+  assert.equal((await readClock()).continuationPending,true,"an old index with no completed fan-out is still owed");
+  assert.equal(routineTaskDue(task,await readClock(),Date.parse(at)+5*60_000),true);
+  const fetchImpl:typeof fetch=async value=>{
+    const url=new URL(String(value));if(url.searchParams.get("op")==="getDatasetList")return Response.json({status:"OK",datasetlist:current});
+    const dataset=current.find(row=>row.session_id===Number(url.searchParams.get("id")))!;
+    if(dataset.state_id===4&&refuseArkansas)return new Response("unavailable",{status:403});
+    const bodies=dataset.state_id===2?ak:ar;
+    const archive=zip(bodies.map((body,index)=>({name:`${dataset.session_id}/bill/${index}.json`,data:Buffer.from(body)})),"2026-10-12");
+    return Response.json({status:"OK",dataset:{...dataset,mime_type:"application/zip",zip:archive.toString("base64")}});
+  };
+  await refreshLegiscan(store,AbortSignal.timeout(10000),{key:"fixture",fetchImpl,now:()=>later,peopleForState:async()=>[person]});
+  assert.equal((await readClock()).continuationPending,true);
+  assert.equal(routineTaskDue(task,await readClock(),Date.parse(later)+5*60_000),true,"unfinished states remain owed even after a fresh index");
+  refuseArkansas=false;
+  await refreshLegiscan(store,AbortSignal.timeout(10000),{key:"fixture",fetchImpl,now:()=>later,peopleForState:async()=>[person]});
+  assert.equal((await readClock()).continuationPending,false);
+  assert.equal(routineTaskDue(task,await readClock(),Date.parse(later)+5*60_000),false);
+  assert.ok(marker.outcome.promoted);
+});
 test("later publisher editions promote when the archive hash sorts before the held hash",async()=>{
   const store=new MemoryRoutineDataStore();
   for(const [i,dataset_hash] of ["ffffffffffffffffffffffffffffffff","00000000000000000000000000000000"].entries()) {
@@ -260,15 +331,18 @@ test("later publisher editions promote when the archive hash sorts before the he
   assert.equal(read.kind,"PROMOTED");
   if(read.kind==="PROMOTED"&&read.value.kind==="SESSION") assert.equal(read.value.dataset.dataset_hash,"00000000000000000000000000000000");
 });
-test("a bounded pass publishes each state's current session before history and resumes every older session",async()=>{
+test("a cycle reaches each current state, oldest checks first, and preserves serving history",async()=>{
   const oldAk={...datasets[0],session_id:datasets[0].session_id-1,dataset_hash:"older-alaska"};
   const oldAr={...datasets[1],session_id:datasets[1].session_id-1,dataset_hash:"older-arkansas"};
   const grouped=[datasets[0],oldAk,datasets[1],oldAr];
-  assert.deepEqual(bulkDatasetOrder(grouped).map(row=>row.session_id),[datasets[0].session_id,datasets[1].session_id,oldAk.session_id,oldAr.session_id]);
+  assert.deepEqual(bulkDatasetOrder(grouped).map(row=>row.session_id),[datasets[0].session_id,datasets[1].session_id]);
+  assert.deepEqual(bulkDatasetOrder(grouped,new Map([["AK",later],["AR",at]])).map(stateOfDataset),["AR","AK"]);
+  assert.deepEqual(bulkDatasetOrder(grouped,new Map([["AK",at]])).map(stateOfDataset),["AR","AK"]);
   const bodies=new Map(grouped.map((dataset,index)=>[dataset.session_id,(dataset.state_id===2?ak:ar).map(body=>{
     const value=JSON.parse(body);value.bill.session_id=dataset.session_id;value.bill.bill_id+=index*1_000_000;return JSON.stringify(value);
   })]));
-  const store=new MemoryRoutineDataStore(),calls:number[]=[],controller=new AbortController();let count=0,now=at;
+  const store=new MemoryRoutineDataStore(),calls:number[]=[];let now=at;
+  for(const dataset of [oldAk,oldAr])await publishBulkCandidate(store,source(dataset,bodies.get(dataset.session_id)!),at);
   const fetchImpl:typeof fetch=async value=>{
     const url=new URL(String(value));
     if(url.searchParams.get("op")==="getDatasetList")return Response.json({status:"OK",datasetlist:grouped});
@@ -276,16 +350,97 @@ test("a bounded pass publishes each state's current session before history and r
     const archive=zip(bodies.get(id)!.map((body,index)=>({name:`${id}/bill/${index}.json`,data:Buffer.from(body)})),"2026-10-12");
     return Response.json({status:"OK",dataset:{...dataset,mime_type:"application/zip",zip:archive.toString("base64")}});
   };
-  await assert.rejects(refreshLegiscan(store,controller.signal,{key:"fixture-key",fetchImpl,now:()=>now,peopleForState:async()=>{
-    if(++count===2)controller.abort(Error("controlled source budget"));return [person];
-  }}),/controlled source budget/);
+  await refreshLegiscan(store,AbortSignal.timeout(10000),{key:"fixture-key",fetchImpl,now:()=>now,peopleForState:async()=>[person]});
   assert.deepEqual(calls,[datasets[0].session_id,datasets[1].session_id]);
   for(const dataset of [datasets[0],datasets[1]])assert.ok(await store.readPromotion("STATE_BILL",billScope(dataset.session_id)));
   now=later;
   const resumed=await refreshLegiscan(store,AbortSignal.timeout(10000),{key:"fixture-key",fetchImpl,now:()=>now,peopleForState:async()=>[person]});
-  assert.deepEqual(calls,[datasets[0].session_id,datasets[1].session_id,oldAk.session_id,oldAr.session_id]);
+  assert.deepEqual(calls,[datasets[0].session_id,datasets[1].session_id]);
   assert.equal(resumed.counts.AK.unchanged,1);assert.equal(resumed.counts.AR.unchanged,1);
   for(const dataset of grouped)assert.ok(await store.readPromotion("STATE_BILL",billScope(dataset.session_id)));
+  assert.equal((await readBillsForState("AK",{store,now:later})).bills.length,4);
+});
+test("publisher years select current regular and special sessions instead of the largest ID",async()=>{
+  const regular={...datasets[0],state_id:23,session_id:2151,year_start:2025,year_end:2026,special:0};
+  const oldSpecial={...regular,session_id:2217,year_end:2025,special:1};
+  const currentSpecial={...regular,session_id:2265,year_start:2026,special:1};
+  const future={...regular,session_id:2400,year_start:2027,year_end:2028,prefile:1};
+  const catalog=[oldSpecial,regular,currentSpecial,future];
+  assert.deepEqual(bulkDatasetOrder(catalog,undefined,at).map(row=>row.session_id),[2151,2265]);
+  const parsed=parseDatasetList({status:"OK",datasetlist:catalog});assert.equal(parsed[0].year_end,2025);
+  assert.throws(()=>parseDatasetList({status:"OK",datasetlist:[{...regular,year_end:2024}]}),/SESSION_YEARS_INVALID/);
+  const calls:number[]=[],store=new MemoryRoutineDataStore();
+  const fetchImpl:typeof fetch=async value=>{
+    const url=new URL(String(value));
+    if(url.searchParams.get("op")==="getDatasetList")return Response.json({status:"OK",datasetlist:catalog});
+    const id=Number(url.searchParams.get("id")),dataset=catalog.find(row=>row.session_id===id)!;calls.push(id);
+    const raw=JSON.parse(ak[0]);Object.assign(raw.bill,{state:"MN",state_id:23,session_id:id,bill_id:id,url:`https://legiscan.com/MN/bill/HB1/${id}`});
+    const archive=zip([{name:`${id}/bill/HB1.json`,data:Buffer.from(JSON.stringify(raw))}],"2026-10-12");
+    return Response.json({status:"OK",dataset:{...dataset,mime_type:"application/zip",zip:archive.toString("base64")}});
+  };
+  const result=await refreshLegiscan(store,AbortSignal.timeout(10000),{key:"fixture",fetchImpl,now:()=>at,peopleForState:async()=>[person]});
+  assert.deepEqual(calls,[2151,2265]);assert.equal(result.counts.MN.datasets,2);assert.deepEqual(result.counts.MN.failures,[]);
+  assert.equal((await readBillsForState("MN",{store,now:at})).bills.length,2);
+});
+test("a thousand-session catalog reaches every jurisdiction in one cycle despite an early state failure",async()=>{
+  const catalog=Array.from({length:52},(_,state)=>Array.from({length:20},(_,age)=>({...datasets[0],state_id:state+1,session_id:10_000+state*20-age,dataset_hash:`state-${state}-age-${age}`}))).flat();
+  const requested:number[]=[],store=new MemoryRoutineDataStore();
+  const fetchImpl:typeof fetch=async value=>{
+    const url=new URL(String(value));
+    if(url.searchParams.get("op")==="getDatasetList")return Response.json({status:"OK",datasetlist:catalog});
+    const id=Number(url.searchParams.get("id")),dataset=catalog.find(row=>row.session_id===id)!;
+    requested.push(dataset.state_id);
+    if(dataset.state_id===1)return new Response("unavailable",{status:403});
+    const raw=JSON.parse(ak[0]),state=stateOfDataset(dataset);
+    Object.assign(raw.bill,{bill_id:id,state,state_id:dataset.state_id,session_id:id,url:`https://legiscan.com/${state}/bill/HB1/2026`});
+    const archive=zip([{name:`${id}/bill/HB1.json`,data:Buffer.from(JSON.stringify(raw))}],"2026-10-12");
+    return Response.json({status:"OK",dataset:{...dataset,mime_type:"application/zip",zip:archive.toString("base64")}});
+  };
+  const result=await refreshLegiscan(store,AbortSignal.timeout(15000),{key:"fixture",fetchImpl,now:()=>at,peopleForState:async()=>[]});
+  assert.deepEqual([...requested].sort((a,b)=>a-b),Array.from({length:52},(_,i)=>i+1));
+  assert.equal(result.counts.AL.failures.length,1);
+  assert.equal(Object.values(result.counts).filter(row=>row.datasets===1).length,51);
+});
+test("an empty newer session cannot prevent the state's latest nonempty session from publishing",async()=>{
+  const empty={...datasets[0],session_id:datasets[0].session_id+1,dataset_hash:"empty-prefile"},calls:number[]=[];
+  const fetchImpl:typeof fetch=async value=>{
+    const url=new URL(String(value));
+    if(url.searchParams.get("op")==="getDatasetList")return Response.json({status:"OK",datasetlist:[empty,datasets[0]]});
+    const id=Number(url.searchParams.get("id")),dataset=id===empty.session_id?empty:datasets[0];calls.push(id);
+    const archive=zip(id===empty.session_id?[]:ak.map((body,index)=>({name:`${id}/bill/${index}.json`,data:Buffer.from(body)})),"2026-10-12");
+    return Response.json({status:"OK",dataset:{...dataset,mime_type:"application/zip",zip:archive.toString("base64")}});
+  };
+  const store=new MemoryRoutineDataStore(),result=await refreshLegiscan(store,AbortSignal.timeout(10000),{key:"fixture",fetchImpl,now:()=>at,peopleForState:async()=>[person]});
+  assert.deepEqual(calls,[empty.session_id,datasets[0].session_id]);
+  assert.equal(result.counts.AK.datasets,1);assert.deepEqual(result.counts.AK.failures,[]);
+  assert.equal((await readBillsForState("AK",{store,now:at})).bills.length,2);
+});
+test("an interrupted session reuses verified parts but recomputes changed sponsor joins",async()=>{
+  class PartFailureStore extends MemoryRoutineDataStore {
+    fail=true;createdParts=0;
+    override async create(record:Parameters<MemoryRoutineDataStore["create"]>[0],event:Parameters<MemoryRoutineDataStore["create"]>[1]){
+      if((record.candidate.readModel as {kind:string}).kind==="PART"){
+        if(this.fail&&(record.candidate.normalizedPayload as {partIndex:number}).partIndex===2)throw Error("controlled part interruption");
+        this.createdParts++;
+      }
+      return super.create(record,event);
+    }
+  }
+  const bodies=Array.from({length:LEGISCAN_PART_ROWS*2+1},(_,index)=>{
+    const raw=JSON.parse(ak[0]);raw.bill.bill_id+=index;return JSON.stringify(raw);
+  });
+  const store=new PartFailureStore(),input=source(datasets[0],bodies);
+  const index=datasets.map(({access_key:_access,...row})=>row);
+  await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:index}),at,"getDatasetList"),datasets},at);
+  await assert.rejects(publishBulkCandidate(store,input,at),/controlled part interruption/);
+  assert.equal(store.createdParts,2);
+  store.fail=false;
+  const next={...input,capture:{...input.capture,retrievedAt:later}};
+  const complete=await publishBulkCandidate(store,next,later);assert.ok(complete.outcome.promoted);
+  assert.equal(store.createdParts,3,"only the unfinished part is newly published");
+  assert.equal((await readBillsForState("AK",{store,now:later})).bills.length,bodies.length);
+  const changed=await publishBulkCandidate(store,{...next,people:[]},later);
+  assert.ok(changed.outcome.promoted);assert.equal(store.createdParts,6,"changed joins cannot reuse old sponsor assignments");
 });
 test("bounded parts preserve cross-bill ambiguity, reject a truncated archive inventory, and keep the serving session after an interrupted replacement",async()=>{
   class InterruptedStore extends MemoryRoutineDataStore {
@@ -324,7 +479,9 @@ test("bounded parts preserve cross-bill ambiguity, reject a truncated archive in
   const refused=await processRegisteredFanOutCandidate(store,"legiscan-bulk",forged,later);
   assert.equal(refused.promoted,null);assert.match(JSON.stringify(refused.candidate.receipt),/source|archive|part/i);
   store.refuseSession=true;
-  await assert.rejects(publishBulkCandidate(store,{...input,capture:{...input.capture,retrievedAt:later}},later),/controlled manifest failure/);
+  const revised=bodies.map((body,index)=>{const value=JSON.parse(body);if(index===0)value.bill.title="Publisher's revised title";return JSON.stringify(value);});
+  const replacement={...source(datasets[0],revised),people:holders};replacement.capture.retrievedAt=later;
+  await assert.rejects(publishBulkCandidate(store,replacement,later),/controlled manifest failure/);
   const after=await readBillsForState("AK",{store,now:later});
   assert.deepEqual(after.bills.map(bill=>bill.id).sort(),read.bills.map(bill=>bill.id).sort());assert.equal(after.complete,true);
   assert.equal((await store.readPromotion("STATE_BILL",billScope(datasets[0].session_id)))?.versionId,published.candidate.id);

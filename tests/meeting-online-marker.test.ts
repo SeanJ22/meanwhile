@@ -33,6 +33,7 @@ import type { Meeting } from "../lib/sources/types.ts";
 import { EntityModal, type ModalSubject } from "../components/map/popup/entity-modal.tsx";
 import { DataProvider, type ShellData } from "../lib/state/data.tsx";
 import { rowMarkup } from "./helpers/reader-markup.ts";
+import { readerText } from "../lib/text/reader-names.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p: string): string => readFileSync(join(ROOT, p), "utf8");
@@ -123,7 +124,7 @@ test("MTG-14: meeting lists and body cards show the held online label without a 
   t.mock.timers.enable({ apis: ["Date"], now: 0 });
   for (const meeting of [NAMED, CONTROL]) {
     const markup = renderToStaticMarkup(createElement(MeetingRow, { meeting }));
-    const label = renderToStaticMarkup(createElement("span", null, meeting.online!.label)).slice(6, -7);
+    const label = renderToStaticMarkup(createElement("span", null, readerText(meeting.online!.label))).slice(6, -7);
     assert.ok(markup.includes(`data-meeting-where="online">Online · ${label}</div>`), meeting.id);
     assert.doesNotMatch(markup, /data-working-on-it|working on getting this info|Want us|Join online/);
     const subject: ModalSubject = {

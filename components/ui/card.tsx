@@ -8,6 +8,8 @@ import { CardFooter } from "./card-footer";
 import { CardGapContext, useCardGapRegistry } from "./card-gap-context";
 import type { CardGap } from "@/lib/design/card-gaps";
 import { CardSectionGroup } from "@/components/officials/card-section";
+import { ReaderNamesProvider } from "./reader-names-context";
+import { readerText } from "@/lib/text/reader-names";
 
 /** Shared reader frame. Sources are required even when the list is empty. */
 export function Card({
@@ -31,11 +33,11 @@ export function Card({
   const { register, sources: allSources, insideCard } = useCardSourceRegistry(sources, title);
   const { register: registerGaps, gaps: allGaps } = useCardGapRegistry(gaps, title);
   return (
-    <CardSourceContext.Provider value={register}><CardGapContext.Provider value={registerGaps}><article {...attrs} className={`reader-card ${className}`} aria-labelledby={titleId}>
+    <ReaderNamesProvider names={[title]}><CardSourceContext.Provider value={register}><CardGapContext.Provider value={registerGaps}><article {...attrs} className={`reader-card ${className}`} aria-labelledby={titleId}>
       <header className="reader-card-header">
         <div>
-          {eyebrow && <div className="t-caption text-label">{eyebrow}</div>}
-          <h2 id={titleId} className={titleVisible ? "t-title font-semibold text-paper" : "sr-only"}>{title}{titleAfter && <> {titleAfter}</>}</h2>
+          {eyebrow && <div className="t-caption text-label">{typeof eyebrow === "string" ? readerText(eyebrow) : eyebrow}</div>}
+          <h2 id={titleId} className={titleVisible ? "t-title font-semibold text-paper" : "sr-only"}>{readerText(title)}{titleAfter && <> {titleAfter}</>}</h2>
         </div>
         {onClose && (
           <button type="button" className="reader-card-close" onClick={onClose} aria-label={`Close ${title}`}>
@@ -49,6 +51,6 @@ export function Card({
           {!insideCard && <CardFooter gaps={allGaps} sources={allSources} />}
         </CardSectionGroup>
       </div>
-    </article></CardGapContext.Provider></CardSourceContext.Provider>
+    </article></CardGapContext.Provider></CardSourceContext.Provider></ReaderNamesProvider>
   );
 }

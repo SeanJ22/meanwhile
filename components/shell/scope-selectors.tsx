@@ -3,7 +3,7 @@
 import { useMemo } from "react";
 
 import { bodyScopeKey, type BodyScopeKey } from "@/lib/state/body-scope";
-import { readerBodyName } from "@/lib/text/reader-names";
+import { readerBodyName, readerText } from "@/lib/text/reader-names";
 import { tierForMeeting } from "@/lib/state/derive";
 import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
@@ -104,7 +104,7 @@ export function ScopeSelectors({
           <option value="">All jurisdictions</option>
           {jurisdictions.map(([ocdId, label]) => (
             <option key={ocdId} value={ocdId}>
-              {label}
+              {readerText(label)}
             </option>
           ))}
         </select>
@@ -132,7 +132,7 @@ export function ScopeSelectors({
           <option value="">All bodies</option>
           {bodies.map(([key, label]) => (
             <option key={key} value={key}>
-              {label}
+              {readerText(label)}
             </option>
           ))}
         </select>

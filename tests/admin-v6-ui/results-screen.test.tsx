@@ -83,7 +83,7 @@ test("the announced results section is fetched for the page's scope and fills th
   const calls: string[] = [];
   const body = { contract: ADMIN_V6_RESULTS_CONTRACT, scope: "st:az", revision: "results:671:st:az", asOf: "2026-10-01T21:50:44.205Z", data: pipelineResults(pipeline, "st:az", { kind: "state", state: "az" }) };
   const fetch: SyncFetch = async (url) => { calls.push(url); return { status: 200, json: async () => body }; };
-  const sync = new LiveSync({ scope: "st:az", fetch, schedule: () => () => {} });
+  const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: "st:az", fetch, schedule: () => () => {} });
   const caps = adminV6ReadCapabilities({ configRevision: null, snapshotRevision: 671, researchRevision: null, workerAgeBucket: 1 });
   sync.onPulse({ revision: "p1", v6: caps });
   await new Promise((resolve) => setTimeout(resolve, 0));

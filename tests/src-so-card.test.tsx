@@ -13,7 +13,7 @@ test("Actual open-data card renders official attribution, dates and one bottom S
   const raw=parseCatalogPage(readFileSync(new URL("./fixtures/src-so/socrata-ny.json",import.meta.url),"utf8")).rows[0];records.push(normalizeSocrata(raw,"2026-10-12T23:24:00.000Z"));
   // The facts only contribute citations; the card frame renders the one Sources list, so the card carries them as it does in the reader.
   const html=renderToStaticMarkup(<Card title="Open data" sources={openDataSources(records)}><OpenDataFacts records={records} /></Card>);
-  assert.match(html,/TITAN CLEANERS/);assert.match(html,/Quarters with noncompliance: 1/);assert.match(html,/Published 2026-10-11/);
+  assert.match(html,/Titan Cleaners/);assert.match(html,/Quarters with noncompliance: 1/);assert.match(html,/Published 2026-10-11/);
   assert.match(html.replace(/<[^>]+>/g," ").replace(/\s+/g," "),/Published by U\.S\. Environmental Protection Agency/);
   // The shared footer names the publisher and dates; whether a source is official stays on the citation itself.
   assert.deepEqual(openDataSources(records).map(source=>source.provenance.kind),["OFFICIAL","OFFICIAL"]);

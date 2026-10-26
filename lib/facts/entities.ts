@@ -12,6 +12,7 @@ import { governingBoardName, type GoverningContext } from "../civic-data/governi
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
 import { fileEntityPlaces, type EntityPlace } from "./entity-places.ts";
 import type { Entity } from "../core/shapes.ts";
+import { enqueueReaderPlaces } from "../reader/cache.ts";
 import { registeredPlaceIds } from "../place-map/build.ts";
 
 interface EntityRow extends Entity {
@@ -228,16 +229,42 @@ export async function resolvePerson(db: FactDb, person: PersonIds): Promise<stri
       ON x.scheme = w.scheme AND x.value = w.value ORDER BY entity_id`, [schemes, values]);
     const openStates = person.externalIds.find(([scheme]) => scheme === "openstates")?.[1];
     const id = held.length ? String(held[0]!.entity_id) : openStates ?? `ocd-person/${randomUUID()}`;
-    if (!held.length) await query("INSERT INTO entity (id, kind, name, state) VALUES ($1, 'person', $2, $3) ON CONFLICT (id) DO NOTHING", [id, person.name, person.state]);
-    await query(`INSERT INTO entity_external_id (entity_id, scheme, value) SELECT $1, * FROM unnest($2::text[], $3::text[])
-      ON CONFLICT (scheme, value) DO NOTHING`, [id, schemes, values]);
-    if (person.placeId) await query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, $2 WHERE EXISTS (SELECT 1 FROM entity WHERE id = $2) ON CONFLICT DO NOTHING", [id, person.placeId]);
-    if (person.places?.length) await fileEntityPlaces(query,id,person.places);
+    const added = !held.length ? await query("INSERT INTO entity (id, kind, name, state) VALUES ($1, 'person', $2, $3) ON CONFLICT (id) DO NOTHING RETURNING id", [id, person.name, person.state]) : [];
+    const aliases = await query(`INSERT INTO entity_external_id (entity_id, scheme, value) SELECT $1, * FROM unnest($2::text[], $3::text[])
+      ON CONFLICT (scheme, value) DO NOTHING RETURNING entity_id`, [id, schemes, values]);
+    const places:EntityPlace[]=[...person.places ?? [],...(person.placeId?[{placeId:person.placeId,boundaryYear:0,basis:"SERVICE_AREA" as const}]:[])];
+    await fileEntityPlaces(query,id,places,undefined,added.length || aliases.length?[id]:[]);
     return id;
   });
 }
 
 const sha256 = (bytes: Buffer | string) => createHash("sha256").update(bytes).digest("hex");
+
+/** Native Census IDs can be filed under the wrong state. Retain only the requested
+ * governments while reading each source state separately; never hold a national map. */
+function censusFactsForIds(root:string,ids:ReadonlySet<string>,currentState:string,current:ReadonlyMap<string,CensusGovernmentFacts>):ReadonlyMap<string,CensusGovernmentFacts> {
+  const found=new Map<string,CensusGovernmentFacts>();
+  for(const state of registeredStates(root)) {
+    const facts=state===currentState?current:readCensusGovernmentFacts(root,[state]).byPid;
+    for(const id of ids) {
+      const row=facts.get(id);
+      if(row)found.set(id,row);
+    }
+  }
+  return found;
+}
+
+/** A source correction can move a government, its boards and their held service
+ * links across a state line. Read both footprints before publishing that batch. */
+async function batchStates(query:Query,batch:EntityBatch):Promise<string[]> {
+  const rows=await query(`WITH affected AS MATERIALIZED (
+    SELECT id,state,parent_id FROM entity WHERE id=ANY($1::text[]) OR parent_id=ANY($2::text[])
+  ) SELECT state FROM affected WHERE state IS NOT NULL
+    UNION SELECT p.state FROM affected a JOIN entity_place ep ON ep.entity_id=a.id JOIN entity p ON p.id=ep.place_id WHERE p.state IS NOT NULL
+    UNION SELECT p.state FROM affected a JOIN entity p ON p.id=a.parent_id WHERE p.state IS NOT NULL`,
+  [batch.entities.map(row=>row.id),batch.entities.filter(row=>row.kind==='government').map(row=>row.id)]);
+  return rows.map(row=>String(row.state));
+}
 
 /** Loads each state whose inputs changed since its last load; an unchanged state costs one read. */
 export async function ensureFactEntities(db: FactDb & { readonly query: Query }, root: string, states: readonly string[]): Promise<readonly string[]> {
@@ -248,9 +275,9 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
   const [idAt, nameAt, stateAt] = [column("ocd_person_id"), column("name"), column("jurisdiction")];
   const loaded = new Map((await db.query("SELECT source, sha256 FROM fact_store_load")).map(r => [String(r.source), String(r.sha256)]));
   const registrationHeld = (await db.query("SELECT to_regclass('civic_data_promotions') IS NOT NULL AS held"))[0]?.held === true;
+  const country = await db.query(`INSERT INTO entity (id, kind, name, state) VALUES ($1, 'place', 'United States', NULL) ON CONFLICT (id) DO NOTHING RETURNING id`, [COUNTRY]);
+  if (country.length) await enqueueReaderPlaces({ places: [COUNTRY] }, db.query);
   const mapHeld = (await db.query("SELECT to_regclass('place_boundary') IS NOT NULL AS held"))[0]?.held === true;
-  let allCensus: ReadonlyMap<string,CensusGovernmentFacts> | undefined;
-  await db.query(`INSERT INTO entity (id, kind, name, state) VALUES ($1, 'place', 'United States', NULL) ON CONFLICT (id) DO NOTHING`, [COUNTRY]);
   const done: string[] = [];
   for (const st of states) {
     const file = readFileSync(join(root, "data", "derived", "registration", `${st}.json`));
@@ -270,9 +297,9 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       [`REGISTRATION:US-${st.toUpperCase()}:registration:v1`, `${COUNTRY}/state:${st.toLowerCase()}/%`])] : [];
     const misplaced = registration.governments.filter(g => g[3] === 'SPECIAL DISTRICT' && !census.has(g[0]));
     if (misplaced.length) {
-      allCensus ??= readCensusGovernmentFacts(root,registeredStates(root)).byPid;
+      const located=censusFactsForIds(root,new Set(misplaced.map(g=>g[0])),st,census);
       const counties = misplaced.flatMap(g => {
-        const county = allCensus!.get(g[0])?.countyFips;
+        const county = located.get(g[0])?.countyFips;
         return county ? [{id:g[1],county}] : [];
       });
       associations.push(...await db.query(`SELECT r.id,r.id AS native_id,c.state,true AS held_place,
@@ -315,9 +342,11 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       }
     }
     await db.transaction(async query => {
-      await insertEntities(query, await canonicalBodies(query, batch));
+      const canonical=await canonicalBodies(query,batch),before=await batchStates(query,canonical);
+      await insertEntities(query,canonical);
       await query(`INSERT INTO fact_store_load (source, sha256) VALUES ($1, $2)
         ON CONFLICT (source) DO UPDATE SET sha256 = EXCLUDED.sha256, loaded_at = now()`, [`registration:${st}`, hash]);
+      await enqueueReaderPlaces({ states: [...new Set([st,...before,...await batchStates(query,canonical)])] }, query);
     });
     done.push(st);
   }
@@ -371,14 +400,19 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<string
     return id;
   }
   const parentId = row.kind === "body" ? await bodyGovernment(query, id, row.government) ?? row.parentId : row.parentId;
-  await query(`INSERT INTO entity (id, kind, name, state, parent_id)
+  const changed = await query(`WITH held AS MATERIALIZED (SELECT parent_id FROM entity WHERE id=$1), changed AS (
+    INSERT INTO entity (id, kind, name, state, parent_id)
     SELECT $1, $2, $3, $4, (SELECT id FROM entity WHERE id = coalesce(
       (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $5), $5))
     ON CONFLICT (id) DO UPDATE SET parent_id = EXCLUDED.parent_id
       WHERE entity.kind = 'body' AND EXCLUDED.kind = 'body' AND entity.state IS NOT DISTINCT FROM EXCLUDED.state
-        AND entity.parent_id ~ '${BARE_ROOT}' AND EXCLUDED.parent_id !~ '${BARE_ROOT}'`,
+        AND entity.parent_id ~ '${BARE_ROOT}' AND EXCLUDED.parent_id !~ '${BARE_ROOT}'
+    RETURNING id
+  ) SELECT id,(SELECT parent_id FROM held) AS old_parent FROM changed`,
   [id, row.kind, row.name, row.state, parentId]);
-  if (["body","government","meeting"].includes(row.kind)) await fileEntityPlaces(query,id,row.places ?? [],parentId);
+  const changedEntities=changed.length?[id,...changed.flatMap(row=>typeof row.old_parent==="string"?[row.old_parent]:[])]:[];
+  if (["body","government","meeting"].includes(row.kind)) await fileEntityPlaces(query,id,row.places ?? [],parentId,changedEntities);
+  else if(changedEntities.length)await enqueueReaderPlaces({entities:changedEntities},query);
   return id;
 }
 
@@ -397,9 +431,11 @@ export async function governmentAt(query: Query, ids: readonly (string | null)[]
     const [place] = candidates.length ? await query("SELECT id, name, state FROM entity WHERE id = ANY($1::text[]) AND kind = 'place' ORDER BY array_position($1::text[], id) LIMIT 1", [candidates]) : [];
     if (place) {
       await ensureEntity(query, { id, kind: "government", name: String(place.name), state: place.state as string | null, parentId: String(place.id) });
-      await query("UPDATE entity SET parent_id = $2 WHERE id = $1 AND parent_id IS DISTINCT FROM $2", [id, place.id]);
-      await query("DELETE FROM entity_place WHERE entity_id = $1 AND place_id <> $2", [id, place.id]);
-      await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING", [id, place.id]);
+      const moved = await query("UPDATE entity SET parent_id = $2 WHERE id = $1 AND parent_id IS DISTINCT FROM $2 RETURNING id", [id, place.id]);
+      const removed = await query("DELETE FROM entity_place WHERE entity_id = $1 AND place_id <> $2 RETURNING place_id", [id, place.id]);
+      const added = await query("INSERT INTO entity_place (entity_id, place_id) VALUES ($1, $2) ON CONFLICT DO NOTHING RETURNING place_id", [id, place.id]);
+      if (moved.length || removed.length || added.length) await enqueueReaderPlaces({ entities: [id],
+        places: [...removed.map(row => String(row.place_id)), ...(government ? [String(government.parent_id)] : [])] }, query);
       return { id, state: place.state as string | null, placeId: String(place.id), name: government ? String(government.name) : String(place.name) };
     }
     if (government) return { id, state: government.state as string | null, placeId: String(government.parent_id), name: String(government.name) };
@@ -516,6 +552,8 @@ export async function learnDoorChannel(query: Query, entityId: string, url: stri
   await learnSite(query, entityId, `${hostOf(url)}${pathname.slice(0, pathname.lastIndexOf("/")) || ""}`);
 }
 
-const learnSite = (query: Query, entityId: string, site: string) =>
-  query(`INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = coalesce(
-    (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $1), $1) ON CONFLICT DO NOTHING`, [entityId, site]);
+async function learnSite(query: Query, entityId: string, site: string): Promise<void> {
+  const changed = await query(`INSERT INTO entity_host (entity_id, host) SELECT id, $2 FROM entity WHERE id = coalesce(
+    (SELECT entity_id FROM entity_external_id WHERE scheme = 'body-alias' AND value = $1), $1) ON CONFLICT DO NOTHING RETURNING entity_id`, [entityId, site]);
+  if (changed.length) await enqueueReaderPlaces({ entities: changed.map(row => String(row.entity_id)) }, query);
+}

@@ -71,6 +71,10 @@ function classify(body: Body, government: string, type: GovernmentType): string 
   const raw = body.name?.trim() ?? "";
   const supplied = kindFromSource(DEFAULT_KINDS, "body", body.bodyClass);
   if (MEETING.test(raw)) return "MEETING_TYPE";
+  // A school committee is the school system's governing board in New England.
+  // Its statutory name must not fall through to the generic committee class.
+  if (type === "school_district" && /\bschool committee$/i.test(raw) && governingBoardName(raw, {name:government,school:true})) return "GOVERNING";
+  if (type === "city" && /^town of\b/i.test(government) && /^(?:the )?town meeting$/i.test(raw)) return "GOVERNING";
   if (ADVISORY.test(raw)) return "ADVISORY";
   if (ADMIN.test(raw)) return "EXECUTIVE_AGENCY";
   if (COURT.test(raw) && !/\b(?:fiscal|quorum|levy|commissioners) court\b/i.test(raw)) return "COURT";

@@ -99,3 +99,12 @@ test("a governing body's own roster prevents a misparsed court title from taking
   const assessing=prepareBodyIdentities([body("Joint Assessing Board","assessing",city,{bodyClass:"ADVISORY"})],divisions);
   assert.equal(assessing.get("assessing")?.bodyClass,"ADVISORY");
 });
+
+test("school committees and a town meeting retain their actual governing function",()=>{
+  const rows=[body("School Committee","schools",school),body("Town Meeting","town",city,{governmentName:"Town of Example"}),
+    body("School Committee Budget Subcommittee","budget",school)];
+  const ids=prepareBodyIdentities(rows,divisions);
+  assert.equal(ids.get("schools")?.bodyClass,"GOVERNING");
+  assert.equal(ids.get("town")?.bodyClass,"GOVERNING");
+  assert.equal(ids.get("budget")?.bodyClass,"ADVISORY");
+});

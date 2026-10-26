@@ -258,8 +258,8 @@ export async function refreshVotingSources(input: {
       ? Object.fromEntries(Object.entries(fields.sourceHashes).filter((row): row is [string, string | null] => row[1] === null || typeof row[1] === "string" && /^[a-f0-9]{64}$/.test(row[1]))) : {};
     let held: VotingSitesFile | null = null, heldLoaded = false, version: string | null = initialHead?.versionId ?? null;
     let publishedMappings: readonly VotingSourceDoor[] = [];
-    const loadHeld = async () => {
-      if (heldLoaded) return;
+    const loadHeld = async (): Promise<VotingSitesFile | null> => {
+      if (heldLoaded) return held;
       const prior = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, { store });
       if (prior.kind !== "PROMOTED" && prior.kind !== "NOT_RECORDED") throw new Error("Voting-source holding is unavailable; preserve its last verified facts.");
       if (prior.kind === "PROMOTED" && prior.metadata.sourceId !== contract.sourceId) throw new Error("Voting-source holding names a different publisher.");
@@ -268,6 +268,7 @@ export async function refreshVotingSources(input: {
       version = prior.kind === "PROMOTED" ? prior.metadata.versionId : null;
       sourceHashes = votingSourceManifest(held, publishedMappings);
       heldLoaded = true;
+      return held;
     };
     const registration = input.registration ?? await readRegistrationProjection(state, { store });
     const savedDoors = await registeredVotingSourceDoors(context.repos.doors, state);
@@ -529,13 +530,13 @@ export async function refreshVotingSources(input: {
       if (!scope) throw new Error(`No registered voting source for ${state}.`);
       // Unchanged sources keep their existing open work. A changed or failed read replans from the preserved state.
       if (heldLoaded || unmatchedSourceReads) {
-      await loadHeld();
+      const currentHeld = await loadHeld();
       const delegation = stateDoors.find(door => door.delegation)?.delegation ?? "county";
       const coverage = await readCountyCivicCoverage(store, state, election.electionDate);
       const populations = await votingSourcePopulations({ state, bodies, divisions, coverage });
       const places = votingSourcePlaces({ state: scope, divisions, delegation, populations, coverage });
       const sourceDoors = [...doors.values(), ...evidenceSources.values()];
-      const jurisdictions = held?.jurisdictions.filter(jurisdiction => jurisdiction.state === state) ?? [];
+      const jurisdictions = currentHeld?.jurisdictions.filter(jurisdiction => jurisdiction.state === state) ?? [];
       const blanks = [...planVotingSourceBlanks({ electionDate: election.electionDate, places, doors: sourceDoors, reads: [...reads.values()], jurisdictions, coverage }),
         ...votingBoundaryBlanks(places, jurisdictions, sourceDoors)];
       await persistVotingSourceBlanks({ repos: context.repos, blanks, electionDate: election.electionDate, now: now(), coverage });

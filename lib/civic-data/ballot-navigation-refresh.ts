@@ -127,7 +127,7 @@ async function carryNationalRecords(state: string, store: RoutineDataStore, now:
       if (source.reviewOutcome !== "SUPPORTED" || !url) continue;
       sources.set(url, source); owed.delete(source.requestedUrl); owed.delete(source.finalUrl);
     }
-    const previous = await store.readCandidatePath<string>(versionId, ["manualPriorAuthority", "versionId"]);
+    const previous: string | null = await store.readCandidatePath<string>(versionId, ["manualPriorAuthority", "versionId"]);
     versionId = typeof previous === "string" ? previous : undefined;
   }
   const result = await processNavigationCandidate(store, () => prepareNavigationSuccessor({ contractId: "ballot-navigation", version: now,

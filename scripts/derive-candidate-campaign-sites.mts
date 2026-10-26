@@ -192,8 +192,9 @@ async function main(): Promise<void> {
     const sql = neon(controlPlane);
     sourceInputs = await readCampaignSourceInputs(store, state, async (text, params = []) => await sql.query(text, [...params]));
     const [config] = await sql.query("SELECT value #> '{settings,facts.retryMinutes}' AS retry FROM cp_admin_config WHERE id=$1", [ADMIN_CONFIG_ID]);
-    if (settingDefinition("facts.retryMinutes")?.validate(config?.retry)) retryMinutes = factClocks({
-      ...defaultAdminConfig(), settings: { "facts.retryMinutes": config!.retry },
+    const heldRetry = config?.retry;
+    if (settingDefinition("facts.retryMinutes")?.validate(heldRetry)) retryMinutes = factClocks({
+      ...defaultAdminConfig(), settings: { "facts.retryMinutes": heldRetry },
     }).retryMinutes("portrait");
     const head = await store.readSourceHead(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state));
     progress = head ? await store.readCandidateField(head.versionId, ["normalizedPayload", "portraitWork"]) as CampaignPortraitWork | undefined : undefined;

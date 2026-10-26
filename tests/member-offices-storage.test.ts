@@ -88,7 +88,15 @@ test("a member-office package exceeding 42 MiB uses bounded immutable writes, ex
         const next = candidate("2026-10-02T00:00:00.000Z", "602-555-0200");
         writingReplacement = true;
         const interruptedAt = requests.length;
-        await assert.rejects(create(next, first.id), /TEST_PART_WRITE_INTERRUPTED/);
+        await assert.rejects(create(next, first.id), (error:unknown) => {
+          const pending=[error],seen=new Set<unknown>();
+          while(pending.length){
+            const cause=pending.pop();if(!(cause instanceof Error)||seen.has(cause))continue;
+            seen.add(cause);if(cause.message.includes("TEST_PART_WRITE_INTERRUPTED"))return true;
+            pending.push(cause.cause,(cause as Error&{sourceError?:unknown}).sourceError);
+          }
+          return false;
+        });
         writingReplacement = false;
         assert.equal((await pg.query("SELECT id FROM civic_data_candidates WHERE id=$1", [next.id])).rows.length, 0);
         assert.equal((await store.readPromotionIdentity("CURATED_READER_RECORD", MEMBER_OFFICES_SCOPE))?.versionId, first.id);

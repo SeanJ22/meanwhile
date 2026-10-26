@@ -37,7 +37,7 @@ export async function stageMeetingFactPublication(input: {
   readonly facts: FactDb & {readonly query:Query}; readonly vault: EvidenceStore; readonly scope: string;
   readonly candidateId: string; readonly meetings: readonly Meeting[]; readonly responses: readonly RetainedSourceResponse[];
 }): Promise<void> {
-  if (await readCursor(input.facts.query, input.candidateId)) return;
+  if ((await input.facts.query("SELECT EXISTS(SELECT 1 FROM pass_cursor WHERE name=$1) AS held",[cursorKey(input.candidateId)]))[0]?.held===true) return;
   const refs = [...new Map(input.responses.map(page => [`${page.finalUrl}:${page.rawHash}`, page])).values()];
   const sources: SourceRef[] = [];
   for (const response of refs) {
@@ -66,8 +66,10 @@ export async function continueMeetingFactPublication(input: {
   readonly facts: FactDb & {readonly query:Query}; readonly vault: EvidenceStore; readonly candidateId:string; readonly clocks:Clocks; readonly now:Date;
   readonly meetings?:readonly Meeting[]; readonly observations?:readonly RetainedSourceResponse[]; readonly deadlineMs?:number;
 }):Promise<{readonly complete:boolean;readonly live:number;readonly confirmed:number;readonly held:number;readonly blanks:number}> {
-  let cursor = await readCursor(input.facts.query,input.candidateId);
   const tally = {live:0,confirmed:0,held:0,blanks:0};
+  const [summary]=await input.facts.query("SELECT position::jsonb->>'complete' AS complete FROM pass_cursor WHERE name=$1",[cursorKey(input.candidateId)]);
+  if (!summary || summary.complete==="true") return {...tally,complete:true};
+  let cursor = await readCursor(input.facts.query,input.candidateId);
   if (!cursor || cursor.complete) return {...tally,complete:true};
   if (cursor.index===cursor.meetingIds.length) {
     await writePassCursor(input.facts.query,cursorKey(cursor.candidateId),JSON.stringify({...cursor,complete:true}));

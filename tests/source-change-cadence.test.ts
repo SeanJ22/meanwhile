@@ -65,6 +65,8 @@ test("an unfinished member-office pass continues before its daily retry floor", 
   assert.equal(routineTaskDue(task, { ...checked, continuationPending: true }, start + 1, undefined, 40 * DAY), true);
   assert.equal(routineTaskDue(task, { ...checked, lastAttemptedAt: new Date(start + HOUR).toISOString(), continuationPending: true }, start + 2 * HOUR), false,
     "a real failed source attempt keeps its configured retry");
+  assert.equal(routineTaskDue(task,{...checked,lastCompletedAt:new Date(start-DAY).toISOString(),continuationPending:true},start+1),true,
+    "a state cursor's newer successful source check supersedes an older inherited national processing event");
 });
 
 test("explicit successful cutoffs resume every source family using processing time, while later real failures retain retry",()=>{

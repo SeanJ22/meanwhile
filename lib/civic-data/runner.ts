@@ -656,8 +656,10 @@ export function routineCodeChangeRetryTaskIds(reads: readonly RoutineTaskClockRe
 }
 
 function successfulProcessingMs(clock:RoutineTaskClock|undefined):number{
-  const completed=Date.parse(clock?.lastCompletedAt??"");
-  return Number.isFinite(completed)?completed:Date.parse(clock?.lastSucceededObservedAt??"");
+  const times=[clock?.lastCompletedAt,clock?.lastSucceededObservedAt].flatMap(value=>{
+    const at=Date.parse(value??"");return Number.isFinite(at)?[at]:[];
+  });
+  return times.length?Math.max(...times):Number.NaN;
 }
 
 export function routineTaskNextDueMs(

@@ -256,7 +256,7 @@ export function withMeetingSourceProbe(candidate: RoutineCandidate, partition: M
   const normalizedPayload = { ...(candidate.normalizedPayload as Record<string, unknown>), sourceProbe };
   const normalizedPayloadHash = canonicalCivicDataHash(normalizedPayload);
   return { ...candidate, id: `cv-${canonicalCivicDataHash([candidate.id, sourceRawHash, normalizedPayloadHash]).slice(0, 32)}`,
-    retrieval: { ...candidate.retrieval, rawHash: sourceRawHash, rawHashBasis: "SOURCE_CONTENT_V1" }, normalizedPayload,
+    retrieval: { ...candidate.retrieval, rawHash: sourceRawHash, rawHashBasis: "SOURCE_CONTENT_V1", complete: acquisitionComplete }, normalizedPayload,
     normalization: { ...candidate.normalization, normalizedPayloadHash } };
 }
 

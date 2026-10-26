@@ -22,8 +22,10 @@ test("pin publication bytes stay separate from another concurrent standing job",
     withDatabaseJob("box-publication",async()=>{await Promise.resolve();countNeonBytes("reader",9876,at,{requests:1,bytes:78},undefined,"fact");}),
   ]);
   const hour=processNeonBytes().find(row=>row.hour===hourStart(at))!;
-  assert.deepEqual(hour.reads?.["reader\tmeeting-pins\tfact"],[1,56,1234]);
-  assert.deepEqual(hour.reads?.["reader\tbox-publication\tfact"],[1,78,9876]);
+  // Each read key is database, job, table, then the calling file (DB-05).
+  const byJob=(job:string)=>Object.entries(hour.reads??{}).filter(([key])=>key.split("\t").slice(0,3).join("\t")===`reader\t${job}\tfact`).map(([,read])=>read);
+  assert.deepEqual(byJob("meeting-pins"),[[1,56,1234]]);
+  assert.deepEqual(byJob("box-publication"),[[1,78,9876]]);
 });
 import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import { mayCountAsProgress } from "../lib/control-plane/scheduler/round-progress.ts";

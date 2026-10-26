@@ -118,6 +118,10 @@ import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
 import { runtimeContractRetry, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
+import { evaluateJobBreaker, JOB_TRANSFER_SQL, jobTransfers, JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB,
+  readJobBreakerStates, writeJobBreakerEvents, type JobBreakerSnapshot } from "../lib/control-plane/job-transfer-breaker.ts";
+import { admitJobLaunch, JOB_BREAKER_PATH_ENV, registeredJobIdentity, saveBreakerSnapshot } from "../lib/control-plane/job-breaker-local.ts";
+import { withDatabaseJob, processNeonBytes } from "../lib/db/transfer-by-caller.ts";
 
 installConnectAttemptWindow();
 
@@ -197,6 +201,63 @@ const PARENT_CODE_SHA = headSha(ROOT);
 
 let RUNNING_CODE_SHA = PARENT_CODE_SHA;
 let CODE_ROOT = ROOT;
+const jobBreakerPath = process.env[JOB_BREAKER_PATH_ENV] ?? join(ROOT, ".mirror", "job-transfer-breaker.json");
+if (provider === "postgres" && !STAGING) process.env[JOB_BREAKER_PATH_ENV] = jobBreakerPath;
+let jobBreakerSnapshot: JobBreakerSnapshot | null = null;
+let jobBreakerWork: Promise<void> | null = null;
+let jobBreakerTimer: ReturnType<typeof setInterval> | null = null;
+function breakerOwnBytes() {
+  return processNeonBytes().map(part => ({ hour: part.hour, counts: Object.entries(part.reads ?? {})
+    .filter(([key]) => key.split("\t")[1] === JOB_BREAKER_JOB).map(([,counts]) => counts) }))
+    .map(part => ({ hour: part.hour, requests: part.counts.reduce((n,c)=>n+c[0],0),
+      bytes: part.counts.reduce((n,c)=>n+c[1]+c[2],0) }));
+}
+async function checkJobTransfers(): Promise<void> {
+  if (provider !== "postgres" || STAGING || canary) return;
+  const controlUrl = controlPlaneUrlFromEnv(), readerUrl = process.env.DATABASE_URL;
+  if (!controlUrl || !readerUrl) throw new Error("Job transfer breaker requires both databases");
+  await withDatabaseJob(JOB_BREAKER_JOB, async () => {
+    const control = neon(controlUrl), reader = neon(readerUrl), now = Date.now();
+    if (!jobBreakerSnapshot) {
+      let cached: JobBreakerSnapshot | null = null;
+      try { cached = JSON.parse(readFileSync(jobBreakerPath,"utf8")); } catch { /* The control plane is authoritative on a new host. */ }
+      jobBreakerSnapshot = cached?.pendingEvents?.length ? cached : {
+        checkedAt: new Date(now).toISOString(), states: await readJobBreakerStates(control),
+      };
+    }
+    const before = breakerOwnBytes();
+    const rows = jobTransfers(await reader.query(JOB_TRANSFER_SQL,[hourStart(now)],{ fetchOptions: { signal: AbortSignal.timeout(10_000) } }));
+    const result = evaluateJobBreaker({ now, rows, states: jobBreakerSnapshot.states,
+      code: job => registeredJobIdentity(jobBreakerPath,CODE_ROOT,job) });
+    const own = breakerOwnBytes(), currentOwn = own.find(part=>part.hour === hourStart(now));
+    const pending: JobBreakerSnapshot = { ...result.snapshot, pendingEvents: [...jobBreakerSnapshot.pendingEvents ?? [], ...result.events, {
+      id: `check:${new Date(now).toISOString()}`, checked_at: new Date(now).toISOString(), hour: hourStart(now), action: "CHECK",
+      job: null, gb: (currentOwn?.bytes ?? 0)/1e9, top_table: "database_transfer_hourly",
+      bytes_per_request: currentOwn?.requests ? currentOwn.bytes/currentOwn.requests : null, state: null,
+      detail: { jobs: rows.length, before, throughRead: own, release: RUNNING_CODE_SHA,
+        pauses: result.events.filter(event=>event.action === "PAUSE").map(event=>event.job) },
+    }] };
+    // Persist the decision and its outbox together before enforcing it. A control-log failure cannot lose a pause.
+    saveBreakerSnapshot(jobBreakerPath,pending);
+    jobBreakerSnapshot = pending;
+    await writeJobBreakerEvents(control,pending.pendingEvents!);
+    jobBreakerSnapshot = result.snapshot;
+    saveBreakerSnapshot(jobBreakerPath,result.snapshot);
+    for (const event of result.events) console.log(`  job transfer breaker: ${event.action} ${event.job}; ${event.gb.toFixed(3)} GB; ${event.detail.reason}`);
+  });
+}
+function jobTransferTick(): Promise<void> {
+  if (jobBreakerWork) return jobBreakerWork;
+  jobBreakerWork = checkJobTransfers().catch(error => {
+    console.error(`  job transfer breaker check failed; existing job holds stay in place: ${error instanceof Error ? error.message : String(error)}`);
+  }).finally(() => { jobBreakerWork = null; });
+  return jobBreakerWork;
+}
+function jobLaunchAllowed(job: string, entry: string, everyMs: number): boolean {
+  const admitted = admitJobLaunch({ id: job, args: [entry], launchEveryMs: everyMs },CODE_ROOT);
+  if (!admitted) console.log(`  job transfer breaker: ${job} remains owed; new launch held`);
+  return admitted;
+}
 const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
 const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinity;
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
@@ -632,6 +693,7 @@ async function publishConsole(onlyWhenDue=false): Promise<void> {
 async function publishConsoleChildren(): Promise<boolean> {
   let succeeded = true;
   for (const publisher of CONSOLE_PUBLISHERS) {
+    if (!jobLaunchAllowed(`console-publish:${publisher.name}`,publisher.args[0]!,INTERVAL_MIN*60_000)) { succeeded = false; continue; }
     const started = Date.now();
     const [run] = await runRuntimeChildren([{
       id: `console-publish:${publisher.name}`,
@@ -669,6 +731,7 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
     console.log("  routine civic data: skipped — only the standing production runner owns this data plane");
     return;
   }
+  if (!jobLaunchAllowed("routine-civic-data","scripts/routine-civic-data-runner.mts",ROUTINE_DATA_ADMISSION_MS)) return;
   const startedAt = new Date().toISOString();
   const cycleId = routineSupervisorCycleId(hostname(), startedAt);
   const refreshRepos = await ownerRepositories();
@@ -735,6 +798,7 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
 
 async function runPublishNow(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary) return;
+  if (!jobLaunchAllowed("publish-now","scripts/publish-now-runner.mts",60_000)) return;
   const startedAt = new Date().toISOString();
   const [run] = await runRuntimeChildren([{
     id: "publish-now",
@@ -825,6 +889,7 @@ async function persistOuterRoutineChildFailure(
 }
 
 async function runIntakeRuntime(deadlineMs: number): Promise<void> {
+  if (!jobLaunchAllowed("intake-runtime","scripts/intake-tripwire.mts",INTAKE_RUNTIME_TICK_MS)) return;
   if (provider !== "postgres" || canary) {
     console.log("  intake runtime: skipped — only the standing production runner owns this observation");
     return;
@@ -1158,6 +1223,7 @@ const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
 let hunterLaneChild: ChildProcess | null = null;
 async function runHunterLane(deadlineMs: number): Promise<void> {
   if (!CONTINUOUS_HUNTERS || canary || runtimeAdmissionsHeld) return;
+  if (!jobLaunchAllowed("hunter-lane","scripts/hunter-lane.mts",60_000)) return;
   const [run] = await runRuntimeChildren([{
     id: "hunter-lane",
     executable: process.execPath,
@@ -1194,6 +1260,7 @@ const auditPasses = auditPassClock({
 const censusMemory = routineProcessSlots();
 async function runPlatformCensus(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary || runtimeAdmissionsHeld) return;
+  if (!jobLaunchAllowed("platform-census","scripts/platform-census-runner.mts",CENSUS_LANE_INTERVAL_MS)) return;
   const release = await censusMemory.acquire("platform-census-runner.mts", Date.now() + 60_000);
   try {
     const [run] = await runRuntimeChildren([{
@@ -1242,6 +1309,7 @@ async function runPlacePageTurn(deadlineMs: number): Promise<PlacePageTurn> {
 
 async function runPlacePages(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary) return;
+  if (!jobLaunchAllowed("place-pages","scripts/rebuild-place-pages.mts",60_000)) return;
   await drainPlacePageQueue({ deadlineMs, admitted: placePagesAdmitted, turn: runPlacePageTurn, log: line => console.log(line) });
 }
 
@@ -1880,6 +1948,9 @@ console.log(
 
 console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
 
+await jobTransferTick();
+jobBreakerTimer = setInterval(() => { void jobTransferTick(); },JOB_BREAKER_INTERVAL_MS);
+jobBreakerTimer.unref();
 startStandingRuntimeClock();
 startAdminCopyClock();
 await publishConsole();
@@ -1906,6 +1977,10 @@ while (cycle < CYCLES) {
   }
 
 
+  if (!jobLaunchAllowed("research-cycle","scripts/freshness-shadow.mts",INTERVAL_MIN*60_000)) {
+    await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
+    continue;
+  }
   cycle += 1;
   const startedAt = new Date().toISOString();
   console.log(
@@ -2052,6 +2127,8 @@ while (cycle < CYCLES) {
 }
 }
 
+if (jobBreakerTimer !== null) clearInterval(jobBreakerTimer);
+await jobBreakerWork;
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
 if (ownerControlTimer !== null) clearInterval(ownerControlTimer);
 await runtimeContracts.stop();

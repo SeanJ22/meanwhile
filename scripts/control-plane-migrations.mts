@@ -17,6 +17,7 @@ import { buildResearchRevisionIndexes, researchRevisionIndexesMigrationDefinitio
 import { boxDueIndexesMigrationDefinition, buildBoxDueIndexes } from "../lib/control-plane/repository/migrations/RV-BOX.ts";
 import { LINKING_SEEDS, linkingPagesMigrationDefinition, migrateLinkingPages } from "../lib/control-plane/repository/migrations/DB-03A.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
+import { installJobBreaker, jobBreakerMigrationDefinition } from "../lib/control-plane/repository/migrations/BB-01.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 const MIGRATIONS = [
@@ -45,6 +46,8 @@ const MIGRATIONS = [
         throw Error("db:apply: REFUSED — saved linking pages require the production reader database");
       return connect(reader.connection, async readerSql => migrateLinkingPages(sql, readerSql));
     } },
+  { id: "BB-01_expand", source: "lib/control-plane/repository/migrations/BB-01.ts", declarations: [] as readonly string[],
+    definition: jobBreakerMigrationDefinition, apply: installJobBreaker },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand"; readonly hash: string }
 interface Dependencies {

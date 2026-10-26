@@ -23,6 +23,7 @@ import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
 import { receiptCapture } from "../lib/facts/capture.ts";
 import { withReaderRoute } from "../lib/db/reader-route.ts";
 import { withDatabaseJob } from "../lib/db/transfer-by-caller.ts";
+import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
 
@@ -77,6 +78,7 @@ import {
   routineSerialLane,
   routineSerialLanesFirst,
   ROUTINE_PASS_BUDGET_MS,
+  ROUTINE_DATA_ADMISSION_MS,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
@@ -503,7 +505,14 @@ const BOX_FINDINGS_PER_PASS = 1000;
  */
 let heldPublication: Promise<void> = Promise.resolve();
 function publishHeldBesideSources(failures: SupervisorFailure[], taskId: string, code: string, publish: () => Promise<void>): void {
-  heldPublication = heldPublication.then(publish).catch((error: unknown) => {
+  heldPublication = heldPublication.then(async () => {
+    if (!admitJobLaunch({ id: taskId, args: [taskId === "meeting-pins" ? "lib/civic-data/held-meeting-pins.ts" : "scripts/routine-civic-data-runner.mts"],
+      launchEveryMs: ROUTINE_DATA_ADMISSION_MS }, ROOT)) {
+      console.log(`RCD_DEFER ${taskId}: job transfer breaker holds new launches; work remains owed`);
+      return;
+    }
+    await publish();
+  }).catch((error: unknown) => {
     failures.push({ taskId, code, detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   });
 }
@@ -1229,6 +1238,7 @@ attempted = pendingRuns.length;
 function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
   return {
     id: pending.id,
+    launchEveryMs: pending.task.cadenceMs,
 
     failureDomain: pending.task.acquisitionFailureDomain,
     serialLane: routineSerialLane(pending.command),

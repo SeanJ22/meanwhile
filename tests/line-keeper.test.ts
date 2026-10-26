@@ -24,6 +24,7 @@ import { groupCountProblems, compactKeeperProblems } from "../lib/counts/problem
 import { BriefParts } from "../app/(admin)/_mw/admin-v6/brief-view.tsx";
 import { readVitalSigns } from "../lib/control-plane/admin-view/vital-signs-read.ts";
 import { config as schedule } from "../netlify/functions/line-keeper.mts";
+import { JOB_BREAKER_DDL } from "../lib/control-plane/repository/migrations/BB-01.ts";
 const migration=readFileSync(COUNT_SCHEMA_SOURCE,'utf8');
 const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])=> (await db.query<Record<string,unknown>>(text,[...params])).rows});
 async function readerDatabase() {
@@ -41,6 +42,7 @@ async function readerDatabase() {
 }
 async function controlDatabase(withLeasedWork = false) {
   const db=new PGlite();
+  await db.exec(JOB_BREAKER_DDL);
   for(const table of ['cp_work_items','cp_work_items_archive','cp_doors','cp_box_findings','cp_owner_snapshots'])
     await db.exec(`CREATE TABLE ${table}(id text PRIMARY KEY,revision integer NOT NULL DEFAULT 1,updated_at timestamptz NOT NULL DEFAULT now(),value jsonb NOT NULL)`);
   await db.exec(`CREATE VIEW cp_work_items_history AS SELECT * FROM cp_work_items UNION ALL SELECT * FROM cp_work_items_archive;

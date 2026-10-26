@@ -2,6 +2,7 @@ import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { COUNT_HOUR_SQL, countWindow, type HourCount, type OldestWaiting } from "../../counts/hour.ts";
 import { runnerReadProblems } from "../../db/runner-read-families.ts";
+import type { JobBreakerEvent } from "../job-transfer-breaker.ts";
 
 export const query = (sql: Sql, operation: string, text: string, args: readonly unknown[] = []) =>
   boundedQuery(sql,{operation:`line-keeper.${operation}`,callClass:"PAGE"},text,args) as Promise<Record<string,unknown>[]>;
@@ -32,6 +33,13 @@ export async function readHour(control: Sql, reader: Sql, at: string) {
     readCounts(control,before.from,before.through,at),readCounts(reader,before.from,before.through,at),readOldest(control,at),readRebuildWaiting(reader),
   ]);
   return {window,counts:[...currentControl,...currentReader],previous:[...previousControl,...previousReader],waiting:[...waiting,...rebuilds]};
+}
+
+/** Oversight reads the breaker's bounded event window; it never reopens transfer read maps. */
+export async function readJobBreakerEvents(control: Sql, from: string, through: string): Promise<JobBreakerEvent[]> {
+  return await query(control,"job-transfer-breaker",`SELECT id,checked_at,hour,action,job,gb,top_table,bytes_per_request,state,detail
+    FROM cp_job_transfer_breaker WHERE checked_at >= $1::timestamptz AND checked_at < $2::timestamptz
+    AND action IN ('PAUSE','RESUME') ORDER BY checked_at,id`,[from,through]) as unknown as JobBreakerEvent[];
 }
 
 /** Aggregate beside the accounting rows; their large read maps never cross the wire. */

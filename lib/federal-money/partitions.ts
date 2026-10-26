@@ -82,8 +82,7 @@ export async function writeFederalMoneyPartitions(input: {
     }
     const records = mergeFederalMoneyRecords((previous?.records ?? []).filter(row => !remove.includes(row.id)), incoming);
     const counts = federalMoneyCounts(records);
-    const priorCandidate = prior ? await input.store.readCandidate(prior.versionId) : null;
-    const retained = (priorCandidate?.candidate.normalizedPayload as FederalMoneyEvidence | undefined)?.captures ?? [];
+    const retained = prior ? await input.store.readCandidatePath<FederalMoneyEvidence["captures"]>(prior.versionId,["normalizedPayload","captures"]) ?? [] : [];
     if (!federalMoneyPartitionWithinBounds(records)) {
       if (partition.shard.length >= 64) throw new Error("Federal native identifiers exceed a full hash partition.");
       const byChild = new Map<string, FederalMoneyFact[]>();
@@ -103,10 +102,9 @@ export async function writeFederalMoneyPartitions(input: {
   async function publish(projection: FederalMoneyProjection, incoming: readonly FederalMoneyFact[], captures: readonly FederalMoneyCapture[], version: string | null, previous: FederalMoneyProjection | null) {
     if (previous && stableRows(previous) === stableRows(projection)) {
       if (input.onPartition) {
-        const held = await input.store.readCandidate(version!);
-        const predecessorId = (held?.candidate.normalizedPayload as FederalMoneyEvidence | undefined)?.predecessorVersionId;
-        const predecessor = predecessorId ? await input.store.readCandidate(predecessorId) : null;
-        await input.onPartition({ projection: previous, previous: predecessor?.candidate.readModel as FederalMoneyProjection ?? null, versionId: version!, checkedAt: input.now });
+        const predecessorId = await input.store.readCandidatePath<string>(version!,["normalizedPayload","predecessorVersionId"]);
+        const predecessor = predecessorId ? await input.store.readCandidatePath<FederalMoneyProjection>(predecessorId,["readModel"]) : null;
+        await input.onPartition({ projection: previous, previous: predecessor, versionId: version!, checkedAt: input.now });
       }
       return;
     }
@@ -155,8 +153,8 @@ export async function federalMoneyPartitionBaselines(store: RoutineDataStore, so
   for (const partition of [...facts.map(federalMoneyPartitionOf), ...locations.map(row => ({ ...row.partition, shard: "" }))]) {
     const scope = federalMoneyPartitionScope(source, state, partition);
     if (result[scope]) continue;
-    const prior = await store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", scope);
-    result[scope] = prior?.payload.subtreeCounts ?? prior?.payload.counts ?? federalMoneyCounts([]);
+    const prior = await store.readPromotionPayloadFields("FEDERAL_MONEY", scope,["subtreeCounts","counts"]);
+    result[scope] = (prior?.subtreeCounts ?? prior?.counts ?? federalMoneyCounts([])) as FederalMoneyCounts;
   }
   return result;
 }

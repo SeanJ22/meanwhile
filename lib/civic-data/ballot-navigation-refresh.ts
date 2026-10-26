@@ -17,12 +17,11 @@ import { isOfficialSource, type GovernmentWebsiteDelegation, type OfficialLinkin
 import type { RoutineDataStore } from "./store.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import type { CuratedReaderProjection, ManualProjectionPackage } from "./manual-projections.ts";
-import { prepareNavigationSuccessor, readNavigationBase } from "./navigation-successor.ts";
+import { prepareNavigationSuccessor } from "./navigation-successor.ts";
 import { processNavigationCandidate } from "./promotion.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { readManualProjectionPrior } from "./manual-projections.ts";
 import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
-import type { ManualSuccessorCandidate } from "./manual-prior-authority.ts";
 import type { ManualSourceReview } from "./types.ts";
 
 export interface BallotNavigationSourceReport {
@@ -94,8 +93,9 @@ function indexAuthorityLinks(pages: Map<string, OfficialLinkingPage>, url: strin
 async function publishReviewedInput(config: BallotNavigationSourceConfig, store: RoutineDataStore, now: string) {
   const source = config.package;
   if (source.contractId !== "ballot-navigation" || !("kind" in source.payload) || source.payload.kind !== "ballot-navigation") throw new Error("NAVIGATION_REVIEWED_INPUT_INVALID");
-  const base = await readNavigationBase(store, ballotNavigationScope(config.state));
-  if (base && Date.parse(base.record.candidate.temporal.sourceThrough) >= Date.parse(source.sourceThrough)) return null;
+  const head = await store.readSourceHead("CURATED_READER_RECORD", ballotNavigationScope(config.state));
+  const through = head ? await store.readCandidateField(head.versionId, ["temporal", "sourceThrough"]) : null;
+  if (typeof through === "string" && Date.parse(through) >= Date.parse(source.sourceThrough)) return null;
   const result = await processNavigationCandidate(store, () => prepareNavigationSuccessor({ ...source, version: now,
     sourceReceipt: { ...source.sourceReceipt, reviewedAt: now, reviewedBy: "reviewed-ballot-navigation-input" } }, store), now);
   return { ...result, fields: source.payload.records.map(record => record.id) };
@@ -112,13 +112,14 @@ async function carryNationalRecords(state: string, store: RoutineDataStore, now:
   const owed = new Set(records.flatMap(manualRecordSourceUrls)), sources = new Map<string, ManualSourceReview>();
   let versionId: string | undefined = prior.versionId;
   for (let depth = 0; versionId && owed.size && depth < 64; depth++) {
-    const version: Awaited<ReturnType<RoutineDataStore["readCandidate"]>> = await store.readCandidate(versionId);
-    for (const source of version?.candidate.retrieval.manualSourceReceipt?.sources ?? []) {
+    const reviews = await store.readCandidatePath<readonly ManualSourceReview[]>(versionId, ["retrieval", "manualSourceReceipt", "sources"]);
+    for (const source of reviews ?? []) {
       const url = [source.requestedUrl, source.finalUrl].find(row => owed.has(row));
       if (source.reviewOutcome !== "SUPPORTED" || !url) continue;
       sources.set(url, source); owed.delete(source.requestedUrl); owed.delete(source.finalUrl);
     }
-    versionId = (version?.candidate as ManualSuccessorCandidate | undefined)?.manualPriorAuthority?.versionId;
+    const previous = await store.readCandidatePath<string>(versionId, ["manualPriorAuthority", "versionId"]);
+    versionId = typeof previous === "string" ? previous : undefined;
   }
   const result = await processNavigationCandidate(store, () => prepareNavigationSuccessor({ contractId: "ballot-navigation", version: now,
     sourceThrough: prior.temporal?.sourceThrough ?? now, sourceReceipt: { ...prior.sourceReceipt!, sources: [...new Set(sources.values())] },
@@ -226,7 +227,7 @@ export async function refreshBallotNavigation(input: {
   const config = input.config ?? (!input.report && !input.directory
     ? JSON.parse(await readFile(join(BALLOT_NAVIGATION_INPUT_DIRECTORY, `${input.state.toLowerCase()}.json`), "utf8")) as BallotNavigationSourceConfig : null);
   if (config && config.state !== input.state) throw new Error("NAVIGATION_INPUT_CROSSES_STATE");
-  const carried = await readNavigationBase(input.store, ballotNavigationScope(input.state)) === null
+  const carried = await input.store.readSourceHead("CURATED_READER_RECORD", ballotNavigationScope(input.state)) === null
     ? await carryNationalRecords(input.state, input.store, input.now) : null;
   const reviewed = config ? await publishReviewedInput(config, input.store, input.now) : null;
   const report = input.report ?? (input.directory ? await readBallotNavigationReport(input.directory, input.state) : configuredReport(config!));

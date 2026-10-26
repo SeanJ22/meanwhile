@@ -24,7 +24,7 @@ import { durableRoutineRunnerReceiptIssue } from "../lib/civic-data/runner-recei
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { ballotPublicationDue } from "../lib/civic-data/ballot-publication.ts";
-import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
+import { ballotInputStamp, ballotInputHash } from "../lib/civic-data/ballot-input.ts";
 import { ballotCandidateAliases, withCandidateTickets } from "../lib/ballot/tickets.ts";
 import { reconcileOfficialCandidacies, type OfficialCandidacyBridgeRow } from "../lib/registry/runtime-data-plane.ts";
 
@@ -54,6 +54,63 @@ async function publishBallotState(options: Parameters<typeof runBallotPublicatio
 type BallotStateFile = Awaited<ReturnType<typeof import("../lib/civic-data/ballot-input.ts").readBallotStateFile>>;
 
 const now = "2026-10-13T12:00:00.000Z";
+
+test("an unchanged complete ballot file reads only its source head and keeps the actual provider check time", async (t) => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-hash-first-"));
+  try {
+    const store = new MemoryRoutineDataStore(), input = await fixture();
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(input));
+    const first = await runBallotState({ state: "TX", directory, store, now });
+    assert.equal(first.report.status, "PUBLISHED", first.report.reason ?? "");
+    const head = await store.readSourceHead("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"));
+    assert.equal(head?.acquisitionComplete, true);
+    assert.equal(head?.rawHash, await ballotInputHash(directory, "TX"));
+    const before = await readPromotedCivicData("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now });
+    assert.equal(before.kind, "PROMOTED");
+    const mocks = ["readPromotion", "readCandidate", "readCandidatePath", "readCandidateField", "readPublishedCandidateMetadata", "events", "confirmUnchanged", "create"] as const;
+    const blocked = mocks.map(method => t.mock.method(store, method, () => assert.fail(`unchanged complete ballot input read ${method}`)));
+    const reused = await runBallotState({ state: "TX", directory, store, now: "2026-10-14T12:00:00.000Z" });
+    assert.equal(reused.report.status, "PUBLISHED", reused.report.reason ?? "");
+    assert.equal(reused.report.versionId, first.report.versionId);
+    assert.match(reused.report.reason ?? "", /CONFIRMED_UNCHANGED/);
+    assert.equal(reused.receipt?.confirmedAt, undefined, "local replay never claims another HTTP source check");
+    for (const mock of blocked) mock.mock.restore();
+    const after = await readPromotedCivicData("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now: "2026-10-14T12:00:00.000Z" });
+    assert.equal(after.kind, "PROMOTED");
+    assert.equal(after.metadata.checkedAt, before.metadata.checkedAt);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("an unchanged partial ballot input keeps its held contests on the merge path", async () => {
+  const directory = await mkdtemp(resolve(tmpdir(), "ballot-hash-partial-"));
+  try {
+    const store = new MemoryRoutineDataStore(), input = await fixture();
+    ballotOf(input).contests[0]!.candidateListComplete = false;
+    await writeFile(resolve(directory, "tx.json"), JSON.stringify(input));
+    const first = await runBallotState({ state: "TX", directory, store, now });
+    assert.equal(first.report.status, "PUBLISHED", first.report.reason ?? "");
+    assert.equal((await store.readSourceHead("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX")))?.acquisitionComplete, false);
+    const stages: string[] = [];
+    const next = await runBallotState({ state: "TX", directory, store, now: "2026-10-14T12:00:00.000Z",
+      onStage: (stage, phase) => { if (phase === "start") stages.push(stage); } });
+    assert.equal(next.report.status, "PUBLISHED", next.report.reason ?? "");
+    assert.ok(stages.includes("prior-state"));
+    assert.equal(next.report.heldContests?.length, first.report.heldContests?.length);
+  } finally { await rm(directory, { recursive: true, force: true }); }
+});
+
+test("a manual source check must name the exact captured source URL, body hash and time", async () => {
+  const candidate = manualProjectionCandidate(packageFor(await fixture()));
+  const source = candidate.retrieval.manualSourceReceipt!.sources[0]!;
+  const check = { requestedUrl: source.requestedUrl, finalUrl: source.finalUrl, httpStatus: 200 as const, rawHash: source.rawHash, checkedAt: source.retrievedAt };
+  const verified = { ...candidate, retrieval: { ...candidate.retrieval, sourceCheck: check } };
+  assert.equal(validateRoutineCandidate(verified, null, now).receipt.decision, "GOOD");
+  for (const changed of [{ ...check, finalUrl: "https://other.example.gov/source" }, { ...check, rawHash: "f".repeat(64) },
+    { ...check, checkedAt: new Date(Date.parse(check.checkedAt) - 1000).toISOString() }]) {
+    const receipt = validateRoutineCandidate({ ...verified, retrieval: { ...verified.retrieval, sourceCheck: changed } }, null, now).receipt;
+    assert.equal(receipt.checks.find(row => row.check === "SOURCE_AUTHENTICITY")?.verdict, "FAIL");
+  }
+});
 
 test("the automatic next ballot refresh preserves old person targets when a source rotates its candidate ids", async () => {
   const directory = await mkdtemp(resolve(tmpdir(), "cl01-scheduled-ballot-"));

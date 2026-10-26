@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T21:05:00Z
+heartbeat: 2026-10-26T21:16:00Z
 
 
 <!-- READY-LIST -->
@@ -76,7 +76,7 @@ The CT-01 session is alive and posts READY itself, with the ballot date text fix
 FM-01's READY says its durable progress raises bytes per federal-money job by 101%. River keeps its fix (lib/federal-money/refresh.ts reads only normalizedPayload.captures) and measures usaspending and openfema for two full hours before and after 129; if they go up, it goes here and DB-05 owns the fix.
 Before (reader + control plane, from database_transfer_hourly): usaspending 143.6 MB (9 AM), 82.1 MB (10 AM); openfema 13.2 MB (9 AM), 7.5 MB (10 AM). Earlier hours for range: usaspending 71-159 MB/h, openfema 8.7-21.6 MB/h (3-8 AM).
 
-**Release 130 (URGENT cost fix first): RIVER-LS1 + MT-02 + DB-05's first piece. PR #842; CI shard 1/4 failed legiscan-fanout-reads on a test-harness race (the fake Neon served two requests at once on one PGlite session; one returned 0 rows). Fix 823cd07bb pushed 5:00 PM (test helper only); auto-merge on**
+**Release 130 (URGENT cost fix first): RIVER-LS1 + MT-02 + DB-05's first piece. PR #842; CI shard 1/4 failed legiscan-fanout-reads on a test-harness race (the fake Neon served two requests at once on one PGlite session; one returned 0 rows). Fix 823cd07bb pushed 5:00 PM (test helper only). Shard 3/4 also failed voting-job-boundary on a timing race that predates 130 (the robots read's deadline timer can fire a millisecond before the clock check, so one late source request launched; about 1 in 12 local runs): fixed at the root in f7003c318, 5:15 PM (the session starts no request once its deadline timer fired; 30/30 runs). Auto-merge on**
 | READY | Lane | State |
 |---|---|---|
 | 84db3f3f0 (stream/river-legiscan-once) | RIVER-LS1: the LegiScan fan-out stops reading each new bill part back whole about six times (promote re-selected the row; the reader check read payload, proof and candidate; publish read the part back for a hash it had; the session manifest check and resume re-read every part). Rows the run just wrote are checked by their small metadata row instead; any mismatch reads as before; no check skipped | URGENT, scan clean. Test (real store, 751-bill session in 4 parts): full publish 86.9 MB / 19 whole reads -> 0.31 MB / 0; with DB-05 alone still 77.4 MB. Expected legiscan-bulk reads 2.6+ GB/h -> 0.02-0.05 GB/h during fan-out hours |

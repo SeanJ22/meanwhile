@@ -314,7 +314,7 @@ export async function processRoutineCandidate(
   let promoted: PromotedProjection;
   try {
     promoted = await store.promote(candidate.id, validated.receipt, transitionAt,
-      scoped || navigation || candidate.recordClass === "MEETING" || candidate.recordClass === "CENSUS_GEOGRAPHY" || candidate.recordClass === "FEDERAL_MONEY" ? held : undefined);
+      scoped || navigation || candidate.recordClass === "MEETING" || candidate.recordClass === "CENSUS_GEOGRAPHY" || candidate.recordClass === "FEDERAL_MONEY" || candidate.recordClass === "STATE_BILL" ? held : undefined);
   } catch (error) {
     if (!(error instanceof PromotionBaseChangedError)) throw error;
     const code = "PROMOTION_BASE_CHANGED";

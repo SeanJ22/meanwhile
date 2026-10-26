@@ -301,7 +301,7 @@ function PublicRecordSection({ subject, zip }: { subject: ModalSubject; zip?: st
 }
 
 function MoneyRecordSection({ subject }: { subject: ModalSubject }) {
-  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
+  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId ?? subject.bodyCard?.moneyDivisionId;
   if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):|\/(?:state|district|territory):[a-z]{2}$/.test(divisionId)) return null;
   return <CardSection title="Money and records">
     <StateCampaignSection key={`campaign:${divisionId}`} divisionId={divisionId} />

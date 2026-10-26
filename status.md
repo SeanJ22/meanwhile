@@ -18,6 +18,8 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 | DB-04 (not posted yet) | one read-only-what-changed path for every read | ships alone the moment it posts READY; preempts any gate |
 | 7dc32db25 (carries 04681516c) | DB-03 Admin (Admin's own screens), finished by River on stream/river-db03-admin; rides batch 2 | READY 10:50 PM EDT. Owed route kept as RB-A6 wrapped in adminRead; second conflict use-keeper-scoreboard.ts took Admin's version (drops AD-01's extra 60 s scoreboard fetch; Now still refreshes on the pulse); 3 tests fixed (2 test-only, path-separator in admin-read.ts); 734/734 focused, tsc, eslint, knip, preflight clean |
 
+**Batch 2 assembled (c8d3983b8 on top of batch 1 fix 526da8d5a: RT-01 c8734c5d8, MD-01 docs out 8daccccb3, BL-02 5f28a6871, DB-03 Admin 7dc32db25, RB-A7 f856197dd; all merge cleanly, journal 0-60 no duplicates). Gates the moment batch 1 ships.**
+
 **Improvement batch 1: re-gating on 526da8d5a (d7dd06466 + River's AD-01 fix). First gate failed 2 tests, both AD-01 (an `s` lambda shadowing the styles import in brief-view.tsx; hunt-stop bundle missing Next's process.env defines). Fixed on stream/river-ad01-fix, both tests pass**
 | READY | Lane | Note |
 |---|---|---|
@@ -30,7 +32,7 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 | READY | Lane | State |
 |---|---|---|
 | c8734c5d8 (carries a13baecf8) | RT-01 (place-map jobs fill every state), finished by River on stream/river-rt-01 | READY. Dropped 5 tests for code release 118 deleted; 103/103 focused, tsc, knip, eslint and preflight clean. RB-A10, RB-A9 and every state with no place data wait on it |
-| 7996ae820 → stream/river-rb-a7 | RB-A7, River finishing | in progress: GB-01's held names must reach the ready pages; journal 58-60; docs/measurements/rb-a7 left out |
+| f856197dd (carries 0f8d6154c, 7996ae820) | RB-A7 (ready place pages; GB-01's held board names reach them), finished by River on stream/river-rb-a7 | READY 11:00 PM EDT. Journal 58-60 after GB-01 57; DB-02 readVersioned kept beside readerRows; counts/hour.ts typed for the new problem fields; GB-01 tests now build pages as production does; docs/measurements/rb-a7 and docs/rb-a7.md left out; Node 22 isolation flag fixed in the territory test; 789/791 focused + territory test pass, tsc, eslint, knip, preflight clean |
 | 5f28a6871 (carries c3fff3702) | BL-02 (current LegiScan session per state, sponsors matched to held legislators), finished by River on stream/river-bl-02 | READY 10:41 PM EDT. 5 conflicts resolved keeping every base change; the resume read in publication.ts is a normal read, the other 2 bypassCache sites left with the replay script; 4 proof files out; tsc, eslint, knip, preflight clean; focused tests pass (12 files that first failed for a missing generated place-reference folder pass once it is built) |
 | 8daccccb3 | MD-01 docs out (stream/river-md01-docs) | READY: deletes MD-01's 14 docs files (982 lines) |
 | 39238a8be | CS-01 (reader-text capitals) | 645 commits behind; not running. River finishes it after batch 2 |

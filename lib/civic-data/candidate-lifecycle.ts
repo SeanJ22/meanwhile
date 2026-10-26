@@ -1,7 +1,7 @@
 import { statePublicationPriorOf } from "./state-publication.ts";
 import { randomUUID } from "node:crypto";
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
-import { PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
+import { assertPublicationBaseOwner, PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore, type RoutinePublicationBase } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
 import { canonicalCivicDataJson, candidateChangeSet, heldCivicRecords } from "./changes.ts";
 import { promotionProofIssue } from "./read-model.ts";
@@ -80,7 +80,7 @@ export async function processRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"]; readonly inputDigest?: string } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"]; readonly inputDigest?: string; readonly publicationBase?:RoutinePublicationBase } = {},
   navigation?: NavigationComparison,
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;
@@ -92,8 +92,12 @@ export async function processRoutineCandidate(
   }
   if (inputCandidate.stateRetirement && inputCandidate.stateRetirement !== options.retirementAuthority)
     throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
+  if(options.publicationBase){
+    assertPublicationBaseOwner(store,options.publicationBase,inputCandidate.recordClass,inputCandidate.scope);
+    if(expectedBaseVersionId===undefined)expectedBaseVersionId=options.publicationBase.current?.versionId??null;
+  }
   const scoped = statePublicationScope(inputCandidate.scope);
-  let base = scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope) : null;
+  let base = options.publicationBase??(scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope) : null);
   let current = navigation ? navigation.base ? navigationBaseProjection(navigation.base) : null
     : base ? base.current : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
   // Geography needs the prior payload and its proof, without rereading the
@@ -101,7 +105,7 @@ export async function processRoutineCandidate(
   let lkg = navigation ? navigation.base?.record ?? null : base ? base.lkg : current ? await (inputCandidate.recordClass === "CENSUS_GEOGRAPHY" && store.readCandidateProof
     ? store.readCandidateProof(current.lastKnownGoodVersionId) : store.readCandidate(current.lastKnownGoodVersionId)) : null;
   let indexedPrior = lkg ? statePublicationPriorOf(lkg.candidate) : undefined;
-  const observedBaseVersionId = navigation
+  const observedBaseVersionId = navigation || options.publicationBase
     ? (await store.readPromotionIdentity(inputCandidate.recordClass, inputCandidate.scope))?.versionId ?? null
     : current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
@@ -112,7 +116,7 @@ export async function processRoutineCandidate(
     ? null
     : await store.readCandidate(lkgPredecessorVersionId);
   let declaredBase = !scoped && preloadedBaseChanged && expectedBaseVersionId !== null && expectedBaseVersionId !== undefined
-    ? navigation?.base?.record ?? await store.readCandidate(expectedBaseVersionId)
+    ? options.publicationBase ? options.publicationBase.lkg : navigation?.base?.record ?? await store.readCandidate(expectedBaseVersionId)
     : null;
   let exactDeclaredBase = declaredBase &&
       declaredBase.candidate.id === expectedBaseVersionId &&
@@ -310,7 +314,7 @@ export async function processRoutineCandidate(
   let promoted: PromotedProjection;
   try {
     promoted = await store.promote(candidate.id, validated.receipt, transitionAt,
-      scoped || navigation || candidate.recordClass === "MEETING" || candidate.recordClass === "CENSUS_GEOGRAPHY" ? held : undefined);
+      scoped || navigation || candidate.recordClass === "MEETING" || candidate.recordClass === "CENSUS_GEOGRAPHY" || candidate.recordClass === "FEDERAL_MONEY" ? held : undefined);
   } catch (error) {
     if (!(error instanceof PromotionBaseChangedError)) throw error;
     const code = "PROMOTION_BASE_CHANGED";

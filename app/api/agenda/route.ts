@@ -110,7 +110,8 @@ export const GET = readerRoute("/api/agenda", async function GET(request: Reques
     unavailableAuthorities: support.unavailableAuthorities,
     records: support.records, publication,
     listingIdentity: support.listingIdentity }, { headers: {
-      ...readerCacheHeaders({ states: registry?.states ?? statesForRegistryDivisions([bodyId]), places: [bodyId] }),
+      ...readerCacheHeaders({ states: registry?.states ?? statesForRegistryDivisions([bodyId]),
+        places: [bodyId, ...(meeting?.bodyId ? [meeting.bodyId] : [])] }),
       "Netlify-Vary": "query=meetingId|bodyId",
     } });
 });

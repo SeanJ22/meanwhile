@@ -1,6 +1,7 @@
 import { ensureEntity } from "../../../facts/entities.ts";
 import { nameKey } from "../../../facts/roster-facts.ts";
 import type { FactDb, Query } from "../../../facts/publish.ts";
+import { enqueueReaderPlaces } from "../../../reader/cache.ts";
 
 export interface HeldMemberIdentity { readonly id: string; readonly name: string; readonly personId: string }
 
@@ -53,9 +54,10 @@ export async function bindHeldMemberIdentity(db: FactDb, input: { readonly ident
       if ((await read(query)).some(row => row.entity_id !== identity.personId)) return false;
       await ensureEntity(query, { id: identity.personId, kind: "person", name: identity.name, state, parentId: bodyId });
       if ((await query("SELECT kind FROM entity WHERE id=$1", [identity.personId]))[0]?.kind !== "person") return false;
-      await query(`INSERT INTO entity_external_id (entity_id,scheme,value)
-        SELECT $1,* FROM unnest($2::text[],$3::text[]) ON CONFLICT (scheme,value) DO NOTHING`, [identity.personId, schemes, values]);
+      const aliases = await query(`INSERT INTO entity_external_id (entity_id,scheme,value)
+        SELECT $1,* FROM unnest($2::text[],$3::text[]) ON CONFLICT (scheme,value) DO NOTHING RETURNING entity_id`, [identity.personId, schemes, values]);
       if ((await read(query)).some(row => row.entity_id !== identity.personId)) throw new Error("HELD_MEMBER_IDENTITY_CONFLICT");
+      if (aliases.length) await enqueueReaderPlaces({ entities: [identity.personId, bodyId] }, query);
       return true;
     });
   } catch (error) {

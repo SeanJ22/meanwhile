@@ -1,7 +1,7 @@
 import { normalizeText, type Claim, type FieldKind, type SavedCopy } from "./check.ts";
 import type { Decision } from "../core/door.ts";
 import { door } from "../core/door.ts";
-import type { ReaderCachePurger } from "../reader/cache.ts";
+import { enqueueReaderPlaces, type ReaderCachePurger } from "../reader/cache.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 
@@ -53,7 +53,9 @@ export async function publishClaim(db: FactDb, input: PublishInput, clocks: Cloc
 async function restamp(query: Query, fact: { readonly id: unknown; readonly entityId: string; readonly field: string }, at: Date,
   receipt: { readonly copyId: number; readonly quoteStart: number | null }): Promise<boolean> {
   if (!(await query(`UPDATE fact SET checked_at = greatest(checked_at, $2::timestamptz), source_copy_id = $3, quote_start = $4
-    WHERE id = $1 AND status = 'live' RETURNING id`, [fact.id, at.toISOString(), receipt.copyId, receipt.quoteStart])).length) return false;
+    WHERE id = $1 AND status = 'live' AND (checked_at < $2::timestamptz
+      OR source_copy_id IS DISTINCT FROM $3::bigint OR quote_start IS DISTINCT FROM $4::integer)
+    RETURNING id`, [fact.id, at.toISOString(), receipt.copyId, receipt.quoteStart])).length) return false;
   await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [fact.entityId, fact.field]);
   return true;
 }
@@ -65,11 +67,14 @@ export async function restampFacts(db: FactDb, facts: readonly { readonly id: nu
   const page = normalizeText(copy.text);
   return db.transaction(async query => {
     let count = 0;
+    const changed = new Set<string>();
     for (const fact of facts) {
       const start = fact.quote ? page.indexOf(normalizeText(fact.quote)) : -1;
       if (!await restamp(query, fact, copy.fetchedAt, { copyId: copy.id, quoteStart: start < 0 ? null : start })) continue;
       count++;
+      changed.add(fact.entityId);
     }
+    if (changed.size) await enqueueReaderPlaces({ entities: [...changed] }, query);
     return count;
   });
 }

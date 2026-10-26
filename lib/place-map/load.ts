@@ -2,6 +2,7 @@ import type { FactDb, Query } from "../facts/publish.ts";
 import { boundingBoxOf } from "../registry/resolve.ts";
 import type { PlaceBoundary } from "./types.ts";
 import type { EntityPlace } from "../core/shapes.ts";
+import { enqueueReaderPlaces } from "../reader/cache.ts";
 
 export interface MapPlace {
   readonly id: string;
@@ -69,6 +70,12 @@ export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise
         ON CONFLICT(entity_id,place_id,boundary_year) DO NOTHING`,
       [JSON.stringify(rows.map(row => ({ entity_id: row.entityId, place_id: row.placeId, boundary_year: row.boundaryYear })))]);
     });
+    await enqueueReaderPlaces({
+      states: [...new Set(map.places.flatMap(place => place.state ?? []))],
+      places: [...new Set([...map.places.map(place => place.id), ...map.boundaries.map(boundary => boundary.placeId),
+        ...map.zipEdges.map(edge => edge.placeId), ...map.zctaEdges.map(edge => edge.placeId)])],
+      entities: [...new Set(map.entityPlaces?.map(link => link.entityId) ?? [])],
+    }, query);
   });
   await refreshAdminCounts(db);
 }

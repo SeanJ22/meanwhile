@@ -6,7 +6,7 @@ import type { FactDb, Query } from "../../lib/facts/publish.ts";
 import { readerIdentityMigration } from "./reader-identity-db.ts";
 import { COUNT_SCHEMA_SOURCE } from "../../lib/control-plane/repository/migrations/RB-A8.ts";
 
-const MIGRATIONS = ["0035_r1_fact_store.sql", "0037_r1_fact_scale.sql", "0044_rs01_retire_copies.sql", "0048_r3_legistar_members.sql", "0049_r3_legistar_members_retire_index.sql", "0046_ck01_audit_flags.sql", "0047_ck01_flag_target.sql", "RB-A3_expand.sql"].map(file => join(import.meta.dirname, "..", "..", "lib", "db", "migrations", file));
+const MIGRATIONS = ["0035_r1_fact_store.sql", "0037_r1_fact_scale.sql", "0044_rs01_retire_copies.sql", "0048_r3_legistar_members.sql", "0049_r3_legistar_members_retire_index.sql", "0046_ck01_audit_flags.sql", "0047_ck01_flag_target.sql", "RB-A3_expand.sql", "RB-A7_expand.sql"].map(file => join(import.meta.dirname, "..", "..", "lib", "db", "migrations", file));
 /** The retirement migration also edits meeting tables this store does not have; only its fact trigger and queue drop apply here. */
 const factStatement = (migration: string, statement: string) => !migration.includes("0044_") || /fact_changed|rebuild_queue/.test(statement);
 
@@ -44,10 +44,12 @@ function leasedEngine(): PGlite {
 }
 
 /** A real Postgres with the fact store migration applied. */
-export async function factDb(options: { readonly withResolver?: boolean; readonly withHourlyCounts?: boolean } = {}): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {
+export async function factDb(options: { readonly withResolver?: boolean; readonly withHourlyCounts?: boolean; readonly withPlacePages?: boolean } = {}): Promise<FactDb & { readonly query: Query; readonly pg: PGlite }> {
   const pg = process.env.NODE_TEST_CONTEXT ? leasedEngine() : new PGlite();
-  for (const migration of MIGRATIONS) for (const statement of readFileSync(migration, "utf8").split("--> statement-breakpoint")) if (factStatement(migration, statement)) await pg.exec(statement);
-  if (options.withResolver !== false) for (const sql of readerIdentityMigration().split("--> statement-breakpoint").filter(sql => /^\s*ALTER TABLE entity_place/.test(sql))) await pg.exec(sql);
+  // Identity-migration tests start before RB-A1 creates place_page, then apply its full SQL themselves.
+  for (const migration of MIGRATIONS.filter(path=>options.withPlacePages!==false || !path.endsWith("RB-A7_expand.sql")))
+    for (const statement of readFileSync(migration, "utf8").split("--> statement-breakpoint")) if (factStatement(migration, statement)) await pg.exec(statement);
+  if (options.withPlacePages !== false) for (const sql of readerIdentityMigration().split("--> statement-breakpoint").filter(sql => /^\s*ALTER TABLE entity_place/.test(sql))) await pg.exec(sql);
   await pg.exec(migration("_entity_places.sql"));
   if (options.withHourlyCounts) {
     await pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");

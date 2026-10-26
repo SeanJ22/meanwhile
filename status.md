@@ -1,22 +1,21 @@
 # River status
 
-build_state: LIVE FOR READERS: release 120 (main 4687f6a00). SHIPPING: release 121 (DB-02 re-cut e0f14fe59, gates 9 of 9) PR #833, auto-merge on. GATING: DB-03 Admin 04681516c on river a37ce95a7. RETURNED: DB-03 reads 8b69f0cbf (River finishes at 7:50 PM EDT if no fix). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 121 (main 8664f367e, DB-02), live 8:33 PM EDT; reader checks green. GATING: DB-03 reads (River) de764a119 alone on river a37ce95a7. See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T00:03:00Z
+heartbeat: 2026-10-26T00:36:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 8:03 PM EDT)
+## Every READY not on main (updated 8:36 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
 | READY | Lane | Slot |
 |---|---|---|
 | de764a119 (carries 8b69f0cbf) | DB-03 reads, finished by River (stream/river-db03-reads) | gating alone now on river a37ce95a7; ships right after release 121 is live. Urgent Neon |
-| e0f14fe59 | DB-02 re-cut by River (registry prior reuse; replaces 2769c614e) | release 121 (PR #833, auto-merge on): gates 9 of 9 on a37ce95a7; urgent Neon |
 
 **Next: urgent Neon fixes, each as soon as ready (in lane order)**
 | READY | Lane | Slot |
@@ -1200,4 +1199,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 8:03 PM EDT: DB-03 reads finished
 - READY de764a119 "DB-03 reads (River)" on stream/river-db03-reads (river a37ce95a7 + 8b69f0cbf + test fix). Only two test files changed, aggregate-list-pagination and admin-narrow-reads, now written for the revision-first reads. Each test keeps its promise, and a new test proves an unchanged table sends revisions only. 16/16 in those files; all 37 files that import pg-store or revision-reads 402/402; tsc, eslint and knip clean.
 - Gating alone now. DB-03 Admin's gate was stopped for it.
+
+### Release 121 live, 8:33 PM EDT (main 8664f367e: DB-02)
+- Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
+- Random ZIPs, seed 1121: 20/20 load, 20/20 resolve to county and city, across MA, DC, AK, MI, AR, ND, MT, UT, MS, SC, AZ, NV, WY, OH, NM, NJ, VT, CA, WA and ME.
+- Registry read GB/h is measured on the first two full hours after the runner adopts 121 (cp_vital_signs release_sha), against 756 / 806 / 787 / 1,168 MB for 2 PM to 5 PM EDT.
 

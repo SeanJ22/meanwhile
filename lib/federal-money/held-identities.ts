@@ -3,10 +3,43 @@ import { districtIdentity } from "../ocd/fips.ts";
 import { registrationTarget } from "../registration/publication.ts";
 import { federalMoneyRecipientIds, type FederalMoneyHeldAudit, type FederalMoneyHeldRecipient, type FederalMoneyJoinInput } from "./join.ts";
 import type { FederalMoneyFact } from "./model.ts";
+import { sha256 } from "../civic-data/candidate-builders.ts";
 
 const unique = (values: readonly string[]) => [...new Set(values)].sort();
 const canonicalNamespace = "CASE n.key WHEN 'entity_uei' THEN 'uei' WHEN 'nces_id' THEN 'nces_leaid' WHEN 'leaid' THEN 'nces_leaid' WHEN 'census_id' THEN 'census_pid6' ELSE n.key END";
 const recipientMatch = `EXISTS (SELECT 1 FROM jsonb_each_text(COALESCE(reader_payload_value(g->'nativeIds'), '{}'::jsonb)) n JOIN jsonb_to_recordset($3::jsonb) wanted(namespace text, value text) ON ${canonicalNamespace} = wanted.namespace AND n.value = wanted.value)`;
+
+/** Only a digest leaves Neon while an unchanged provider page checks its current recipient dependencies. */
+export async function readFederalMoneyJoinInputHash(state:string,facts:readonly FederalMoneyFact[],query:ReadOnlyQuery|null):Promise<string> {
+  const postal=state.toUpperCase();
+  if(!/^[A-Z]{2}$/.test(postal)||facts.some(fact=>fact.state.toUpperCase()!==postal))throw new Error("Federal money identity lookup requires one state");
+  if(!facts.length||postal==="ZZ")return sha256("NO_FEDERAL_RECIPIENT_INPUTS");
+  if(!query)throw new Error("The federal recipient identity index is unavailable.");
+  const [rows]=await query([{text:`WITH native AS MATERIALIZED (
+    SELECT * FROM jsonb_to_recordset($2::jsonb) n(source text,uei text,identifiers jsonb)
+  ), reports AS MATERIALIZED (
+    SELECT r.* FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+    WHERE r.record_class='FEDERAL_MONEY' AND r.collection='federalMoney' AND r.state=$1
+      AND reader_payload_node(p.payload)->>'source'='federal-audit-clearinghouse'
+      AND r.aliases&&ARRAY(SELECT 'report:'||(identifiers->>'reportId') FROM native WHERE source='federal-audit-clearinghouse' AND identifiers->>'reportId' IS NOT NULL)
+      AND reader_payload_node(r.value->'details')->>'table'='general'
+  ), entities AS MATERIALIZED (
+    SELECT r.* FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+    WHERE r.record_class='FEDERAL_MONEY' AND r.collection='federalMoney' AND r.state=$1
+      AND reader_payload_node(p.payload)->>'source'='sam-gov-entities' AND r.value->>'kind'='ENTITY'
+      AND r.aliases&&ARRAY(SELECT 'uei:'||uei FROM native WHERE uei IS NOT NULL UNION SELECT 'uei:'||(value->>'uei') FROM reports WHERE value->>'uei' IS NOT NULL)
+  ), dependencies AS (
+    SELECT jsonb_build_array(r.collection,r.scope,r.row_id,r.content_hash) AS identity FROM civic_data_rows r
+      JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+      WHERE r.record_class='REGISTRATION' AND r.scope=$3 AND r.collection IN ('governments','registration.bodies','registration.divisions')
+    UNION ALL SELECT jsonb_build_array(collection,scope,row_id,content_hash) FROM reports
+    UNION ALL SELECT jsonb_build_array(collection,scope,row_id,content_hash) FROM entities
+  ) SELECT encode(sha256(convert_to(coalesce(jsonb_agg(identity ORDER BY identity::text),'[]'::jsonb)::text,'UTF8')),'hex') AS hash FROM dependencies`,
+    params:[postal,JSON.stringify(facts.map(fact=>({source:fact.source,uei:fact.uei,identifiers:fact.identifiers}))),registrationTarget(postal).scope]}]);
+  const hash=rows?.[0]?.hash;
+  if(typeof hash!=="string"||!/^[a-f0-9]{64}$/.test(hash))throw new Error("The federal recipient identity hash is unavailable.");
+  return hash;
+}
 
 function recipient(row: Row): FederalMoneyHeldRecipient {
   return { uei: typeof row.uei === "string" ? row.uei : null,

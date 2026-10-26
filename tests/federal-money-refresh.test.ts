@@ -23,6 +23,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { recordFederalMoneyDoorRead } from "../lib/federal-money/doors.ts";
 import { feedDoorId } from "../lib/doors/registry.ts";
 import { readFederalMoneyProgress } from "../lib/federal-money/progress.ts";
+import { federalMoneySourceHash, federalMoneySourceKey } from "../lib/federal-money/source-hash.ts";
 
 const now = "2026-10-12T23:45:00.000Z";
 beforeEach(context => { if ("mock" in context) context.mock.method(Date, "now", () => Date.parse("2026-10-13T03:00:00.000Z")); });
@@ -50,6 +51,34 @@ test("federal source resumes its exact saved cursor without reading its held rec
   assert.equal(actual?.versionId,published.promoted.versionId);
   assert.deepEqual(actual?.counts,projection.counts);
   assert.deepEqual(actual?.checkpoint,projection.checkpoint);
+});
+
+test("an unchanged federal provider page checks hashes before recipient, location and held partition reads", async () => {
+  const store=new MemoryRoutineDataStore();let reads=0,clock=now;
+  const input={source:"openfema" as const,store,states:["AR"],acquireOptions,maxRounds:1,
+    acquire:async()=>fullPage,now:()=>clock,identityHash:async()=>"a".repeat(64),
+    identities:async()=>{reads++;return identities;}};
+  const first=await refreshFederalMoney(input);assert.ok(first.outcome.promoted);assert.equal(reads,1);
+  const leaf=await store.readPromotion("FEDERAL_MONEY",leafScope);assert.ok(leaf);
+  const readPromotion=store.readPromotion.bind(store),readCandidate=store.readCandidate.bind(store);
+  Object.assign(store,{readPromotion:async(...args:Parameters<MemoryRoutineDataStore["readPromotion"]>)=>{
+    assert.notEqual(args[1],leafScope,"same native bytes never reread the held geography partition");return readPromotion(...args);},
+    readCandidate:async(id:string)=>{assert.notEqual(id,leaf.versionId);return readCandidate(id);}});
+  clock="2026-10-14T23:45:00.000Z";
+  const repeated=await refreshFederalMoney({...input,identities:async()=>{assert.fail("unchanged source read recipient facts");},
+    locate:async()=>{assert.fail("unchanged source read prior locations");},onPartition:async()=>{assert.fail("unchanged source rebuilt its published partition");}});
+  assert.deepEqual(repeated.projection.counts,first.projection.counts);
+  assert.equal(reads,1);
+  Object.assign(store,{readPromotion,readCandidate});
+  clock="2026-10-16T23:45:00.000Z";
+  await refreshFederalMoney({...input,identityHash:async()=>"b".repeat(64)});
+  assert.equal(reads,2,"changed native recipient dependencies rerun the joins even against identical provider bytes");
+  assert.equal(federalMoneySourceHash("openfema","AR",fullPage),federalMoneySourceHash("openfema","AR",{
+    ...fullPage,captures:fullPage.captures.map(capture=>({...capture,retrievedAt:clock}))}));
+  assert.equal(federalMoneySourceKey("openfema","AR",{source:"openfema",phase:"declarations",offset:20,since:now}),
+    federalMoneySourceKey("openfema","AR",{source:"openfema",phase:"declarations",offset:20,since:clock}));
+  assert.notEqual(federalMoneySourceKey("openfema","AR",{source:"openfema",phase:"declarations",offset:20}),
+    federalMoneySourceKey("openfema","AR",{source:"openfema",phase:"declarations",offset:40}));
 });
 
 test("saved evidence reads require the acquisition vault and release its context after work", async () => {

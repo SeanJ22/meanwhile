@@ -50,7 +50,7 @@ test("resumed Congress and govinfo backfills catch updates from their original f
   const through = "2026-10-10T12:00:00.000Z";
   for (const source of ["congress-api", "govinfo"] as const) {
     const store = new MemoryRoutineDataStore();
-    const c = source === "congress-api" ? capture(source, "members", "congress-api-live.json") : capture(source, "govinfo-summary", "govinfo-collection.json");
+    const c: FederalCapture = { ...(source === "congress-api" ? capture(source, "members", "congress-api-live.json") : capture(source, "govinfo-summary", "govinfo-collection.json")), retrievedAt: through };
     const url = source === "congress-api" ? "https://api.congress.gov/v3/member?limit=1&currentMember=true" : "https://api.govinfo.gov/collections/BILLS/1993-01-01T00:00:00Z?pageSize=100&offsetMark=next";
     const root = JSON.parse(c.body);
     // Controlled completed-page envelopes keep the source's member record unchanged.

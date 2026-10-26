@@ -157,7 +157,7 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
     }
     const value = object(row?.value);
     if (row?.kind === "ELECTION_FIELD" && value) {
-      const { verifiedAt: _verifiedAt, collectedAt: _collectedAt, ...facts } = value;
+      const { verifiedAt: _verifiedAt, collectedAt: _collectedAt, sourceKey: _sourceKey, sourceHash: _sourceHash, ...facts } = value;
       return { ...row, value: facts };
     }
   }

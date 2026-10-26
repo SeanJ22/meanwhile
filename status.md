@@ -50,6 +50,23 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 **Superseded (a later READY of the same step is on main; not folding)**
 2769c614e DB-02 (re-cut as e0f14fe59, release 121) · 8b69f0cbf DB-03 reads (finished as de764a119, release 122) · bb948717e (inside 3e3f1ab33) · 14dd8beb0 BL-02 (c3fff3702 replaces it) · 8ad77b9d5 VS-07 (vs-07-fx f48331d9d folded Oct 23) · 04dfa4caf DG-01-FX (DG-01 folded with DG-02 e6745c664, Oct 23) · 027144fa1 BS-01 (folded with RS-02 adee07352, Oct 19) · 61f6d1449 SL-02 and f42bc19c6 NE-01 (folded with DS-01 512e65e03, Oct 22) · 6da1efc6b STEP-7 (Oct 15, 1,345 behind) · 91f23e059 DB-29 (Oct 6) · CH-23/CA salvage copies 544e20323, 3cbb51190e, 0fc6ef6d2, 48ef946cd and the Oct 5–6 salvage-river-next branches (those steps folded Oct 6–13).
 | 526da8d5a | AD-01 fix (River), rides batch 1 | READY 10:57 PM EDT: fixes the 2 batch 1 test failures; 4/4 in the two files |
+
+**Not folding (each with its disposition; Oversight's branch audit, 12:55 AM EDT Oct 26)**
+
+| Branch / commit | What it is | Disposition |
+|---|---|---|
+| stream/ba-02 7f7cf6bd8 (Oct 23, 5 commits, no READY) | Ballot questions, voting limits, election absences for 16 states and territories | Mostly already on main: contest, candidacy, measure and vote-for counts match main in 14 of 16 files (CL-01, BA-01 and MD-01 carried them). Still missing from main: Guam's 2026 ballot (6 contests, 48 candidates; Guam 96913 shows a near-empty ballot page today), Puerto Rico's election-absence note, and a source citation behind each vote-for limit (298 SC contests and the rest). Proposed future lane BA-03: re-cut just those three onto river, evidence files out. Sean decides. |
+| stream/eo-01 5a0dcb21f (Oct 23, WIP) | Local election offices and county/town lookup | Kept for the Concord polling-place fix (Concord 03301 still shows New London's polling place). That fix never started because its prompt was named VS-05, a name an Oct 21 lane already used. Needs a new lane name to start. |
+| stream/nb-02 7b6a7f9f8 (Oct 23, WIP) | Narrower routine control reads | DB-04 reads it; not folded on its own. |
+| stream/pb-01 f5e5f8a38 (Oct 23) | Nationwide replay; readiness blocked | RB-A9 reads it; not folded on its own. |
+| CS-01 39238a8be (READY, lane not running) | Reader text casing (no forced capitals, given names, PND party labels) | River finishing it onto batch 2 on stream/river-cs-01, docs/cs-01.md left out. Rides the next improvement batch. |
+| RB-A2 draft PR #822 | Per-state place-map turns | Same fix as RT-01. One path: RT-01 ships in 124; #822 stays unfolded. 24 h after 124 is live, River reports place_boundary, zip_place and zcta_place rows by state. Any state still empty: River says why and re-cuts RT-01 with #822's per-state turn approach. Now: 0 / 0 / 0 rows. |
+| stream/runner-headroom a4cee564a (RH-01, Oct 20 WIP) | Installer and FEC memory floors | Replaced by the rebuild. Not folding. |
+| stream/steps-2-6 3bfabfa8a (PL-01, Oct 17 WIP) | Per-state publisher sizes | Replaced by the rebuild. Not folding. |
+| stream/hunter-v2 af8acfe29 (H-01, Oct 17 WIP) | Hunter scale fixes | Replaced by the rebuild. Not folding. |
+| stream/meetings-place fd48ea86b (Oct 16 WIP) | Meetings place body scope draft | Replaced by the rebuild (MT-01 shipped in 123). Not folding. |
+| stream/fetcher 805c46b83 (R4, Oct 16) | Unified source fetcher | Replaced by the rebuild. Not folding. |
+| stream/measures 0c1325a5e (MS-01, Oct 16 WIP) | Measures evidence wrappers | Replaced by the rebuild. Not folding. |
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
@@ -1297,3 +1314,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Real-case test (tests/runner-pending-restart.test.ts): real lane scheduler and real child processes. Routine children finish and relaunch every 40 ms tick; publish-now's child would run 60 s past its 1.5 s deadline. After the release appears: 0 new launches, the main loop's sleep woke within 400 ms, and the runner exited to restart 943 ms later (within the 1.5 s pass deadline). With the standing-clock check removed, the test fails. Focused runner tests 150/150; tsc, eslint, knip clean.
 - Runner GB/h before (database_transfer_hourly, both databases): 7 PM 5,476 MB, 8 PM 4,757, 9 PM 5,526 (normal hours). 10 PM 1,792 and 11 PM 2,933 were low because research wasn't running.
 - Release 124 (batch 2, gate 9/9 on d941c6a89) is held: the drain fix ships alone first, and Idaho's ballot timeout is being diagnosed.
+
+### 1:00 AM EDT: Sean, every unfolded branch accounted for
+- "Not folding" table added to the READY list (BA-02, EO-01, NB-02, PB-01, CS-01, RB-A2 #822, and the six Oct 16 to 20 WIP branches replaced by the rebuild).
+- CS-01: a River builder is finishing it onto batch 2 (stream/river-cs-01).
+- Place map, one path: RT-01 in 124. Rows now: place_boundary 0, zip_place 0, zcta_place 0. Rows by state get reported 24 h after 124 is live.
+- rebuild_queue: 1,423 now (Oversight counted 1,234 earlier). Reported every status after 124 is live, until RB-A7 drains it.

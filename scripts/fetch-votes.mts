@@ -35,7 +35,8 @@ import { createHash } from "node:crypto";
 import { federalMemberVotesCandidate, federalPartyBreakdowns, federalRollCallsCandidate, heldAcquisitions, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID,
   federalVotesSourceHash, type FederalRollCallWindow, type OfficialAcquisition } from "../lib/votes/data-plane.ts";
 import type { BillSummariesFile } from "../lib/votes/bill-summaries.ts";
-import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { settleFederalVoteSources } from "../lib/votes/source-fanout.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { windowStart } from "../lib/votes/catch-up.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
@@ -375,35 +376,28 @@ const snapshot: VotesSnapshot = {
 
 const attemptedAt = new Date().toISOString(), held = heldAcquisitions(acquisitions);
 const rawHash = federalVotesSourceHash(held, identifierSourceHash);
-const unchanged = await confirmSourceHashUnchanged({ store, sourceId: FEDERAL_VOTES_SOURCE_ID, recordClass: "FEDERAL_ROLL_CALL",
+const { positions: _positions, ...window } = snapshot;
+// A member with no recorded roll in this window keeps their last recorded window.
+const byMember=new Map<string,MemberVote[]>();
+for(const position of positions)byMember.set(position.officeholderId,[...byMember.get(position.officeholderId)??[],position]);
+function* memberCandidates(){
+  for(const[officeholderId,recorded]of byMember)yield federalMemberVotesCandidate({acquisitions:held,identifierSourceHash,retrievedAt:attemptedAt,
+    expectedCongress:CONGRESS,expectedSession:SESSION,snapshot:window,officeholderId,positions:recorded});
+}
+const {confirmed:unchanged,refused}=await settleFederalVoteSources({store,members:memberCandidates(),source:{sourceId: FEDERAL_VOTES_SOURCE_ID, recordClass: "FEDERAL_ROLL_CALL",
   scope: FEDERAL_ROLLCALL_SCOPE, parserVersion: FEDERAL_VOTES_PARSER_VERSION, rawHash, now: attemptedAt,
   complete: houseWindow.unreached === 0 && senateStart.unreached === 0 && positions.length > 0,
   retrieval: { requestedUrl: held[0]?.requestedUrl ?? "", finalUrl: held[0]?.finalUrl ?? null,
-    httpStatus: held[0]?.httpStatus ?? null, rawHash, retrievedAt: attemptedAt } });
+    httpStatus: held[0]?.httpStatus ?? null, rawHash, retrievedAt: attemptedAt } }});
+if (refused.length) {
+  await recordFailure(acquisitions[0]?.requestedUrl ?? "https://www.senate.gov/legislative/", `Member positions refused: ${refused.join(", ")}`);
+  throw new Error(`FEDERAL_MEMBER_POSITIONS_REFUSED:${refused.join(",")}`);
+}
 if (unchanged) {
   console.log("RCD_RECEIPT=" + JSON.stringify({ source: "congress-rollcalls", ...sourceHashReceiptFields(unchanged), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
 } else {
 const billSummaries = await store.readCandidatePath<BillSummariesFile>(head.versionId, ["readModel", "billSummaries"]);
 if (!billSummaries || !billSummaries.summaries || !Array.isArray(billSummaries.pending)) throw new Error("FEDERAL_ROLLCALL_BILL_SUMMARIES_UNAVAILABLE");
-const { positions: _positions, ...window } = snapshot;
-// A member no roll in this window records keeps the record from the last window that did.
-const byMember = new Map<string, MemberVote[]>();
-for (const position of positions) byMember.set(position.officeholderId, [...byMember.get(position.officeholderId) ?? [], position]);
-const refused: string[] = [];
-for (const [officeholderId, recorded] of byMember) {
-  const member = federalMemberVotesCandidate({ acquisitions: held, identifierSourceHash, retrievedAt: attemptedAt, expectedCongress: CONGRESS, expectedSession: SESSION, snapshot: window, officeholderId, positions: recorded });
-  const confirmed = await confirmSourceHashUnchanged({store, sourceId:member.sourceId, recordClass:member.recordClass, scope:member.scope,
-    parserVersion:member.normalization.parserVersion, rawHash:member.retrieval.rawHash!, now:attemptedAt, complete:true,
-    retrieval:{requestedUrl:member.retrieval.requestedUrl,finalUrl:member.retrieval.finalUrl,httpStatus:member.retrieval.httpStatus,
-      rawHash:member.retrieval.rawHash!,retrievedAt:attemptedAt}});
-  if (confirmed) continue;
-  const result = await processRegisteredManualCandidate(store, "congress-rollcalls", member, attemptedAt);
-  if (!result.promoted && !result.confirmed) refused.push(`${officeholderId}:${result.candidate.failureCode ?? result.candidate.state}`);
-}
-if (refused.length) {
-  await recordFailure(acquisitions[0]?.requestedUrl ?? "https://www.senate.gov/legislative/", `Member positions refused: ${refused.join(", ")}`);
-  throw new Error(`FEDERAL_MEMBER_POSITIONS_REFUSED:${refused.join(",")}`);
-}
 const candidate = federalRollCallsCandidate({
   identifierSourceHash,
   acquisitions: held,

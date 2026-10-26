@@ -132,6 +132,16 @@ function rollAcquisitions(window: FederalRollCallWindow, voteIds: ReadonlySet<st
   return acquisitions.filter(acquisition => urls.some(url => acquisitionNames(acquisition, url)));
 }
 
+/** A displayed official bill title is another source input to the members who voted on that bill. */
+function memberAcquisitions(window:FederalRollCallWindow,voteIds:ReadonlySet<string>,acquisitions:readonly HeldAcquisition[]):HeldAcquisition[]{
+  const rolls=new Set(rollAcquisitions(window,voteIds,acquisitions));
+  const titles=new Set(window.votes.filter(vote=>voteIds.has(vote.id)&&vote.titleSource==="BILL_TITLE").flatMap(vote=>{
+    const bill=/^(hr|hres|hjres|hconres|s|sres|sjres|sconres)([1-9]\d*)$/.exec((vote.legisNum??"").replace(/[.\s]/g,"").toLowerCase());
+    return bill?[`https://api.congress.gov/v3/bill/${vote.congress}/${bill[1]}/${bill[2]}`]:[];
+  }));
+  return acquisitions.filter(acquisition=>rolls.has(acquisition)||titles.has(acquisition.requestedUrl)||titles.has(acquisition.finalUrl));
+}
+
 export function heldAcquisitions(acquisitions: readonly OfficialAcquisition[]): HeldAcquisition[] {
   return acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body }) => ({ requestedUrl, finalUrl, httpStatus, rawHash: sha256(body), byteCount: Buffer.byteLength(body) }));
 }
@@ -249,7 +259,7 @@ export function federalMemberVotesCandidate(input: {
 }): RoutineCandidate {
   const { snapshot, officeholderId, positions } = input, scope = federalMemberVotesScope(officeholderId);
   const named = new Set(positions.map(row => row.voteId)), votes = snapshot.votes.filter(vote => named.has(vote.id));
-  const acquisitions = rollAcquisitions(snapshot, named, input.acquisitions);
+  const acquisitions = memberAcquisitions(snapshot, named, input.acquisitions);
   const issues = acquisitionIssues("FEDERAL_ROLL_CALL", acquisitions);
   if (federalMemberOfScope(scope) !== officeholderId) issues.push("MEMBER_ID_INVALID");
   if (positions.length === 0) issues.push("MEMBER_HAS_NO_RECORDED_POSITION");

@@ -6,6 +6,7 @@ import test from "node:test";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { settleFederalVoteSources } from "../lib/votes/source-fanout.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { sourceProjectionEvidence } from "../lib/civic-data/types.ts";
 import {
@@ -295,6 +296,38 @@ test("each member's positions publish under that member alone, carrying only the
   assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:C000003", positions: [] }).semantics.violations.includes("MEMBER_HAS_NO_RECORDED_POSITION"));
   assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:A000001", positions: [...mine, { officeholderId: "congress:A000001", voteId: "house:119-2:9", position: "YES" }] })
     .semantics.violations.includes("POSITION_POINTS_OUTSIDE_ROLL_WINDOW"));
+});
+
+test("a matching national hash repairs an interrupted member fanout before confirming, without reopening unchanged held records",async()=>{
+  const seed=await rollCallSeed(),store=new MemoryRoutineDataStore();
+  const common={acquisitions:acquisitionsForRollCalls(seed.snapshot),identifierSourceHash:"a".repeat(64),retrievedAt:T0,
+    expectedCongress:119,expectedSession:2,snapshot:seed.snapshot};
+  const national=federalRollCallsCandidate({...common,partyBreakdowns:{},billSummaries:seed.billSummaries});
+  assert.ok((await processRegisteredManualCandidate(store,"congress-rollcalls",national,T0)).promoted);
+  const members=["congress:A000001","congress:B000002"].map(officeholderId=>federalMemberVotesCandidate({...common,officeholderId,
+    positions:seed.positions.filter(position=>position.officeholderId===officeholderId)}));
+  assert.ok((await processRegisteredManualCandidate(store,"congress-rollcalls",members[0]!,T0)).promoted);
+  const source={sourceId:national.sourceId,recordClass:national.recordClass,scope:national.scope,parserVersion:national.normalization.parserVersion,
+    rawHash:national.retrieval.rawHash!,now:T1,complete:true,retrieval:{requestedUrl:national.retrieval.requestedUrl,finalUrl:national.retrieval.finalUrl,
+      httpStatus:national.retrieval.httpStatus,rawHash:national.retrieval.rawHash!,retrievedAt:T1}};
+  const published:string[]=[];
+  const first=await settleFederalVoteSources({store,members,source,publish:async candidate=>{
+    published.push(candidate.scope);return processRegisteredManualCandidate(store,"congress-rollcalls",candidate,T1);
+  }});
+  assert.ok(first.confirmed);assert.deepEqual(first.refused,[]);assert.deepEqual(published,[members[1]!.scope]);
+  assert.ok(await store.readSourceHead(members[1]!.recordClass,members[1]!.scope),"the interrupted member is live before the national confirmation");
+  store.readPromotion=async()=>{throw Error("unchanged fanout opened a held payload");};store.readCandidate=async()=>{throw Error("unchanged fanout opened a held candidate");};
+  const repeated=await settleFederalVoteSources({store,members,source,publish:async()=>{throw Error("unchanged member republished");}});
+  assert.ok(repeated.confirmed);assert.deepEqual(repeated.refused,[]);
+});
+
+test("a member's source hash follows its displayed bill-title body without inheriting unrelated members' titles",async()=>{
+  const seed=await rollCallSeed(),acquisitions=acquisitionsForRollCalls(seed.snapshot);
+  const title=(body:string)=>heldAcquisitions([{requestedUrl:"https://api.congress.gov/v3/bill/119/hr/1",finalUrl:"https://api.congress.gov/v3/bill/119/hr/1",httpStatus:200,body}])[0]!;
+  const member=(officeholderId:string,body:string)=>federalMemberVotesCandidate({acquisitions:[...acquisitions,title(body)],retrievedAt:T0,
+    expectedCongress:119,expectedSession:2,snapshot:seed.snapshot,officeholderId,positions:seed.positions.filter(position=>position.officeholderId===officeholderId)});
+  assert.notEqual(member("congress:A000001","old official title").retrieval.rawHash,member("congress:A000001","changed official title").retrieval.rawHash);
+  assert.equal(member("congress:B000002","old official title").retrieval.rawHash,member("congress:B000002","changed official title").retrieval.rawHash);
 });
 
 test("federal-key-votes binds mutable official facts to the exact reviewed v1 selection", async () => {

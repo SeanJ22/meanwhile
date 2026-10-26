@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE FOR READERS: release 122 (main 560cc2aa2, DB-03 reads). GATING: improvement batch 1 (AD-01, GB-01, MT-01, MD-01) on river e58835856. HELD for DB-04: DB-03's remaining steps and owner snapshot reads. See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 124 (main 2424528c6, drain fix; live 1:56 AM EDT Oct 26). Runner on 2424528c6 (vital signs written 2:11 AM, pid 4001083, after Sean's hand restart). GATING: release 125, Idaho ballot fix alone (river-next-idaho). NEXT: 126 = batch 2 (RT-01, BL-02, RB-A7, DB-03 Admin, MD-01 docs out, CS-01 if READY) re-gated on 125. HELD for DB-04: DB-03's remaining steps and owner snapshot reads. See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -1342,3 +1342,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - GB-01: census step done with OR, AL, AK; now in AR. New Orleans 70112 and Omaha 68102 still 0 governing (LA and NE not reached).
 - rebuild_queue: 2,789 (was 1,667 at 1 AM). It grows as GB-01 adds boards and nothing drains it until RB-A7 ships with batch 2.
 - DB-04: still building (last commit "absorb NB-02 narrowing through the shared read path"); no READY.
+
+### 2:15 AM EDT: Sean's hand restart onto 124; Idaho next; DB-04 openstates-people
+- Runner: Sean restarted meanwhile-runner.service after 2:06 AM. New pilot-runner pid 4001083. cp_vital_signs rows written at 2:11 AM carry release_sha 2424528c6 (RUNNING_CODE_SHA), so the runner is on 124. Correction to River's 2:01 AM note: the pid change then (3693993 → 3840085) did not prove 124 was loaded; no row from that process records its code.
+- The heartbeat's testedSha and codeIdentity stay at 8664f367 / 9:54 PM because only a research cycle writes them. No research cycle can start: all 56 states carry a stop-every-hunt order and no scope is funded. A research cycle (and the memory check on it) starts only after a Send in Admin. Proposed for a later lane, not built: write testedSha at runner startup so Admin doesn't show a stale "behind" while hunts are stopped.
+- Release 125 (Idaho fix alone): gate tests running on river-next-idaho; opens on 9/9. It changes lib/photos/person.ts only. Proof of the drain fix: cp_vital_signs.release_sha must move to 125's commit within one pass deadline (about 30 min) with no hand restart.
+- DB-04 and openstates-people: 1 AM hour, the openstates-people family read 1.32 GB of the reader database's 2.72 GB (rows still settling); New Hampshire 407 MB in 70 reads, all civic_data_candidates. DB-04's branch changes the publisher's prior read (lib/civic-data/state-people-publication.ts) from a whole-candidate read plus bypassCache to two path reads (normalizedPayload.captures and excludedFacts). The captures path may still carry most of each read, so DB-04 covers part of it at most. Its READY must show openstates-people GB/h before and after; if it doesn't drop, River says so here.
+- build_state fixed (it said 122).

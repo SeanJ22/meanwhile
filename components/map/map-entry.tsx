@@ -2120,6 +2120,10 @@ export function bodySubject(
     sources: [...districtCardSources([...roster, ...earlierMembers], meetings, body.officeContact?.provenance, body.fieldSources), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
     // Every section renders for every body: content, or its own absence line.
     bodyCard: {
+      recipientIds: body.recipientIds,
+      recipientNames: body.recipientNames,
+      recipientState: body.recipientState,
+      moneyDivisionId: body.moneyDivisionId,
       /* A body with no division has a null `divisionType` and gets no class definition. */
       whatItDoes:
         body.divisionType === null

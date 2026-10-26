@@ -1,3 +1,4 @@
+import { federalGovernmentNameSql } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import { MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
@@ -59,15 +60,20 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), named_places AS MATERIALIZED (
   SELECT unnest($10::text[]) AS id
 ), registration AS MATERIALIZED (
-  SELECT payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
+  SELECT reader_payload_node(payload) AS payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), government_inventory AS MATERIALIZED (
-  SELECT g,${normalizedGovernmentSql("g->>'name'")} AS identity FROM registration,
-    LATERAL jsonb_array_elements(coalesce(payload->'governments','[]'::jsonb)) g
+  SELECT g,${normalizedGovernmentSql("g->>'name'")} AS identity,${federalGovernmentNameSql("g->>'name'")} AS recipient_identity FROM registration,
+    LATERAL reader_payload_members(payload->'governments') member,
+    LATERAL (SELECT reader_payload_node(member.item) AS original) header,
+    LATERAL (SELECT original || jsonb_build_object('name',reader_payload_value(original->'name')) AS g) named
 ), government_identities AS MATERIALIZED (
-  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities FROM government_inventory
+  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
+    count(*) OVER (PARTITION BY upper(g->>'state'),recipient_identity) AS recipient_names FROM government_inventory
 ), local_governments AS MATERIALIZED (
-  SELECT * FROM government_identities WHERE EXISTS (
-    SELECT 1 FROM jsonb_array_elements(coalesce(g->'associations','[]'::jsonb)) a WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
+  SELECT reader_payload_value(g) AS g,identity,identities,recipient_names FROM government_identities WHERE EXISTS (
+    SELECT 1 FROM reader_payload_members(g->'associations') member,
+      LATERAL (SELECT reader_payload_node(member.item) AS a) association
+    WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), dotgov AS MATERIALIZED (
   SELECT payload->'domains' AS domains,payload->'source' AS source FROM civic_data_promotions
     WHERE $8::text[] IS NULL AND key='DOTGOV_REFERENCE:US:current-full:domains' AND record_class='DOTGOV_REFERENCE'
@@ -395,10 +401,11 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
         FROM jsonb_each(reader_payload_node(root.value->'rosterPhotos')) photo
         WHERE photo.key IN (SELECT id FROM runtime_people UNION SELECT value->>'officeholderId' FROM runtime_photos)),'{}'::jsonb) ELSE '{}'::jsonb END)
     FROM runtime_root root CROSS JOIN runtime_registry r) END AS registry,
-  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('recipientNameUnique',g.recipient_names=1,'govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
     'domain',d->>'domain','website','https://'||(d->>'domain'),'sourceUrl',source->>'url','checkedAt',source->>'readAt'))
     FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) ELSE '[]'::jsonb END AS governments,
-  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(reader_payload_value(member.item)) FROM registration,LATERAL reader_payload_members(payload->'divisions') member,
+    LATERAL (SELECT reader_payload_node(member.item) AS d) division
     WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR d->>'ocdId' IN (SELECT id FROM named_places)),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
   coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('placed',b.id IN (SELECT id FROM linked_bodies)
     OR EXISTS (SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id)

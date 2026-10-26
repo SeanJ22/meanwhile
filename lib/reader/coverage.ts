@@ -116,8 +116,12 @@ export function stateCoverage(
       bodies: coverage.bodies.map(body => {
         const gap = rosterGapForBody(body.bodyId);
         const earlierMembers = earlierMembersOfBody(body.bodyId);
-        return { ...body, readerRoster: { members: membersOfBody(body.bodyId).members, ...(earlierMembers.length ? { earlierMembers } : {}),
-          gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };
+        const fact = bodyFacts.find(fact => fact.id === body.bodyId);
+        return { ...body, ...(fact?.recipientIds?.length ? { recipientIds: fact.recipientIds,
+          recipientNames: fact.recipientNames, recipientState: fact.recipientState,
+          ...(fact.moneyDivisionId ? { moneyDivisionId: fact.moneyDivisionId } : {}) } : {}),
+          readerRoster: { members: membersOfBody(body.bodyId).members, ...(earlierMembers.length ? { earlierMembers } : {}),
+            gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };
       }),
     };
   }))));

@@ -20,6 +20,10 @@ import { factClocks } from "../lib/facts/clocks.ts";
 import { publishBoxFindings, reviewPublishedBoxFacts } from "../lib/facts/box-publication.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
+import { receiptCapture } from "../lib/facts/capture.ts";
+import { withReaderRoute } from "../lib/db/reader-route.ts";
+import { withDatabaseJob } from "../lib/db/transfer-by-caller.ts";
+import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
 
 import { hostname } from "node:os";
@@ -513,13 +517,26 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
 
-  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async () => {
-    const report = await publishHeldMeetingPins({ facts:readerFactDb(), vault:new DurableEvidenceStore(join(ROOT,...VAULT_DIR)),
-      clocks:factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value??null), now:new Date().toISOString(),
+  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", () => withDatabaseJob("meeting-pins",()=>withReaderRoute("meeting-pins", async () => {
+    const vault=new DurableEvidenceStore(join(ROOT,...VAULT_DIR));
+    const sourceFetch=pacedProbeFetch({pacing:repos.websitePacing});
+    const sourceCopies=new Map<string,Promise<WorkerPublicationCapture>>();
+    const clocks=factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value??null);
+    const report = await publishHeldMeetingPins({ facts:readerFactDb(), vault,
+      clocks, now:new Date().toISOString(),
+      readCapture:url=>{
+        let copy=sourceCopies.get(url);
+        if(!copy){copy=(async()=>{
+          const read=await receiptCapture({url,repos,vault,fetch:sourceFetch,now:new Date().toISOString(),windowHours:clocks.windowHours("contact")});
+          if("error" in read)throw new Error(read.error);
+          return read.capture;
+        })();sourceCopies.set(url,copy);if(sourceCopies.size>32)sourceCopies.delete(sourceCopies.keys().next().value!);}
+        return copy;
+      },
       deadlineMs:Math.min(PASS_LAUNCH_DEADLINE_MS,Date.now()+Math.floor(PUBLISH_NOW_PASS_BUDGET_MS/3)) });
     console.log(`RCD_FACTS meeting pins: ${report.published} published; ${report.unplaced} still without a point`);
     if(report.failures.length)failures.push({taskId:"meeting-pins",code:"MEETING_PIN_PUBLICATION_FAILED",detail:safeFailure(report.failures.slice(0,8).join(" | "))});
-  });
+  })));
 
   // Publishing what is already found (Box findings, saved worker results, changed doors) is free: a pause never holds it.
   if (PUBLISH_NOW || (ONLY && WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) {

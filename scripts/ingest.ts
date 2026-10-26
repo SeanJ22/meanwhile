@@ -639,7 +639,7 @@ export async function promoteDerivedMeetingFamily(
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
   if (outcome.promoted || outcome.confirmed) {
     for (const read of facts ? reads.filter(row => row.ok) : []) {
-      await publishPartitionFacts({ ...facts!, responses: [...retaining.responses,...census.responses] }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
+      await publishPartitionFacts({ ...facts!, responses: [...retaining.responses,...census.responses],geocodeAttempts:census.attempts }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
         census.meetings.filter(meeting=>read.freshMeetings.some(fresh=>fresh.id===meeting.id)), read.acquisitions, outcome.candidate.candidate.id, generatedAt);
     }
   }
@@ -1508,7 +1508,8 @@ async function publishPartitionFacts(facts: MeetingFactsTarget, label: string, s
   meetings: readonly Meeting[], acquisitions: Parameters<typeof tracedResponses>[0][number]["acquisitions"], producedBy: string, at: string): Promise<void> {
   try {
     const responses = [...tracedResponses([{ source, acquisitions }], facts.responses),...facts.responses.filter(response=>response.source==="census-geocoder")];
-    const report = await publishReadMeetingFacts({ facts: facts.db, vault: facts.vault, meetings, responses, producedBy, clocks: factClocks(null), now: new Date(at) });
+    const report = await publishReadMeetingFacts({ facts: facts.db, vault: facts.vault, meetings, responses,
+      geocodeAttempts:facts.geocodeAttempts,producedBy, clocks: factClocks(null), now: new Date(at) });
     console.log(`  ${label}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.unsaved.length ? `; unsaved ${report.unsaved.join("; ")}` : ""}`);
   } catch (error) {
     console.error(`MEETING_FACTS_FAILED ${label}: ${error instanceof Error ? error.message : String(error)}`);
@@ -1516,7 +1517,8 @@ async function publishPartitionFacts(facts: MeetingFactsTarget, label: string, s
 }
 
 /** Where the sittings each door read become facts, on every response the read made. */
-interface MeetingFactsTarget { readonly db: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly responses: readonly RetainedSourceResponse[] }
+interface MeetingFactsTarget { readonly db: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly responses: readonly RetainedSourceResponse[];
+  readonly geocodeAttempts?: import("../lib/meetings/publish-pins.ts").PublishedPinResult["attempts"] }
 
 export interface MeetingPartitionPromotionResult {
   readonly partition: MeetingPartitionContract;
@@ -1645,7 +1647,7 @@ export async function promoteMeetingPartitions(input: {
       outcome.promoted ? null : outcome.candidate.failureDetail,
     );
     if (outcome.promoted || outcome.confirmed) {
-      if (input.facts) await publishPartitionFacts({...input.facts,responses:[...input.facts.responses,...attempted.census.responses]}, partition.id, partition.meetingSource, attempted.census.meetings.filter(meeting=>freshRowIds.has(meeting.id)), report.acquisitions ?? [], outcome.candidate.candidate.id, input.generatedAt);
+      if (input.facts) await publishPartitionFacts({...input.facts,responses:[...input.facts.responses,...attempted.census.responses],geocodeAttempts:attempted.census.attempts}, partition.id, partition.meetingSource, attempted.census.meetings.filter(meeting=>freshRowIds.has(meeting.id)), report.acquisitions ?? [], outcome.candidate.candidate.id, input.generatedAt);
     }
     results.push({ partition, candidate, outcome });
   }

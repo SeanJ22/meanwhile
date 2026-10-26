@@ -1,6 +1,8 @@
 import { addressWords, HOUSE_NUMBER_WORDS } from "./address-words.ts";
+import { stateName } from "../facts/entity-read.ts";
+import { US_JURISDICTIONS } from "../coverage/states.ts";
 
-const STREET_ADDRESS = new RegExp(String.raw`\b(?:\d+[a-z]?(?:-\d+)?|${Object.keys(HOUSE_NUMBER_WORDS).join("|")})\s+(?:[a-z0-9][\w.'’-]*\s+){0,8}(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|circle|cir|place|pl|parkway|pkwy|highway|hwy|terrace|ter|trail|trl|square|sq|way|expressway|expy|plaza|center|ctr|broadway)\b\.?`, "i");
+const STREET_ADDRESS = new RegExp(String.raw`\b(?:\d+[a-z]?(?:-\d+)?|${Object.keys(HOUSE_NUMBER_WORDS).join("|")})\s+(?:[a-z0-9][\w.'’-]*\s+){0,8}?(?:street|st|avenue|ave|road|rd|drive|dr|lane|ln|boulevard|blvd|court|ct|circle|cir|place|pl|parkway|pkwy|highway|hwy|terrace|ter|trail|trl|square|sq|way|expressway|expy|plaza|center|ctr|broadway)\b\.?`, "i");
 
 /** Extract the published street address from a venue heading and attendance instructions. */
 export function censusAddressQuery(published: string): string {
@@ -10,12 +12,21 @@ export function censusAddressQuery(published: string): string {
     .replace(/&nbsp;|&#160;/gi, " ")
     .replace(/&amp;/gi, "&")
     .replace(/Hawai[‘’']i/gi, "Hawaii")
-    .replace(/,?\s*\b(?:(?:conference\s+)?(?:room|rm\.?|suite|ste\.?)\s*#?\s*[\w-]+|(?:first|second|third|fourth|\d+(?:st|nd|rd|th))\s+(?:floor|flr\.?))\b/gi, " ");
+    .replace(/\b(?:room|rm\.?|suite|ste\.?)\s*#?\s*[\w-]+(?![\w-])(?=\s*[,\r\n]?\s*\d+[a-z]?(?:-\d+)?\s+[a-z])/gi," ");
   const street = STREET_ADDRESS.exec(text);
   const bare = /(?:^|[\r\n,;:]|\bat\s+)\s*(\d+\s+[a-z][\s\S]*)/i.exec(
     text,
   )?.[1];
   let address = street ? text.slice(street.index) : (bare ?? text);
+  // Extract the street first: in "Meeting Room 27 Northport Dr", 27 belongs to the street.
+  const withoutUnits=(value:string)=>value.replace(/,?\s*\b(?:(?:conference\s+)?(?:room|rm\.?|suite|ste\.?)\s*#?\s*[\w-]+|(?:first|second|third|fourth|\d+(?:st|nd|rd|th))\s+(?:floor|flr\.?))\b/gi," ");
+  if (street) {
+    const end = street[0].length;
+    const tail = withoutUnits(address.slice(end))
+      .replace(/\b(?:p[\s.]*o[\s.]*box|post\s+office\s+box)\s*#?\s*[\w-]+\b[\s,]*/gi," ")
+      .replace(/^[\s,]*(?:[^,\r\n]*\b(?:conference room|council chambers?|meeting room|board room)\b)[^,\r\n]*(?:,|\r?\n)/i, ", ");
+    address = address.slice(0,end) + tail;
+  }else address=withoutUnits(address);
   address = address.replace(/^[a-z]+\b/i, word => HOUSE_NUMBER_WORDS[word.toLowerCase()] ?? word);
   address = address.split(
     /https?:\/\/|\b(?:join\s+(?:zoom|the)|meeting\s+id|pass\s*code|virtual\s*\(?online|or\s+(?:by\s+zoom|virtually)|this\s+meeting\s+is)/i,
@@ -24,9 +35,14 @@ export function censusAddressQuery(published: string): string {
   address = address
     .replace(/\s*\([^)]*\)\s*$/, "")
     .replace(/[\r\n]+/g, ", ")
-    .replace(/\s*,\s*/g, ", ")
+    .replace(/(?:\s*,)+\s*/g, ", ")
     .replace(/\s+/g, " ")
     .replace(/[\s,;.]+$/, "");
+  address = address.replace(/,?\s*\b(?:USA|United States(?: of America)?)\s*$/i, "");
+  for (const state of US_JURISDICTIONS) {
+    const name = stateName(state.usps);
+    if (name) address = address.replace(new RegExp(`(?:,\\s*|\\s+)${name.replaceAll(".","\\.")}(?=\\s+\\d{5}(?:-\\d{4})?\\b|$)`,"i"), `, ${state.usps}`);
+  }
   return address.trim();
 }
 

@@ -5,11 +5,11 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T14:20:00Z
+heartbeat: 2026-10-26T15:05:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 10:20 AM EDT Oct 26)
+## Every READY not on main (updated 11:05 AM EDT Oct 26)
 Live: release 128 (main 9352c8e14). River: 90348edd4.
 
 **Release rule (Sean, 10:25 AM EDT Oct 26; replaces the old one):** an urgent fix (Neon cost, runner crash, cost spike, readers losing critical info) goes first but does not ship alone. Every other lane that is READY and passes its scan rides in the same release. Nothing finished waits behind an urgent fix; no batch waits on a lane that isn't READY. So: release 129 = RT-01b plus every lane READY and scanned when 129 folds. DB-04 no longer ships alone; it rides the release that is folding when it posts READY. Sean's latest order: ship the place map, merge the finished lanes in one batch, take over the quiet lanes.
@@ -57,6 +57,15 @@ Recommendation: Sean restarts both sessions. River's capacity is on the place ma
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 11 AM EDT
+- Live for readers: release 128 (main 9352c8e14). Runner on 9352c8e14 (vital signs 10:08 AM).
+- Release 129 (RT-01b place map + bills c0ddd0e46) gating on river-next-129 since 10:50 AM: visible-tree, firewall, preflight pass; lint, tsc, tests to go. Builders asked to hold heavy runs until 11:25 so tsc gets memory (the first RT-01b gate's tsc was killed by memory, not a code error).
+- Neon, 10 AM hour: reader 3.14 GB + control plane 0.21 GB = 3.35 GB (8 AM 4.81, 9 AM 3.19). Reader top: member-offices 636 MB, routine-civic-data 589, publish-now 322, campaign-money 138, measure-translations:MD 118 (was 35 at 9 AM; watching), openstates-people-fl 109.
+- Place pages: rebuild_queue 159,833 (159,634 at 10:35), place_page 24,900, unchanged. Nothing drains it until the runner worker (stream/river-place-pages) ships; Netlify gets no write address (Sean).
+- Place map: place_boundary, zip_place, zcta_place 0 rows (fills after 129).
+- GB-01: New Orleans 70112 and Omaha 68102 still show 0 bodies (2 and 3 governments listed).
+- DB-04: not READY yet (River finishing). No research Send this hour; no research cycle to report.
 
 Sean's orders (4:40 AM EDT): Job 1 fix the meeting-outcome repairs release 95 broke; Job 2 publish key-like official pages from a cleaned copy (never hold, never ask); fold order: RV-REPAIR, RIVER-KEYS, MT-01, RN-03, DB-01, SO-01, CL-01, PT-01, MD-01, RB-A1, then RB-A2/A3/A5/A8, RB-A6/A4/A10, RB-A7, RB-A9, RB-A11. Standing order (Oct 24 ~4:50 AM EDT): a lane sent back with no new READY in 60 minutes, or silent for 2 hours, River finishes it on its own branch, marks it READY with the lane's id and folds it; what was fixed and why goes here.
 

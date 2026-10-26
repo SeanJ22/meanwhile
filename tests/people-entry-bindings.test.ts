@@ -288,6 +288,44 @@ test("an official's fuller name and stable publisher ID keep their own identity"
   assert.equal(bound.name,official.name);
 });
 
+test("a named list entry keeps its own facts when a foreign publisher reader alias is returned",()=>{
+  const urls=people.map((_,i)=>`https://www.flhouse.gov/Sections/Representatives/details.aspx?MemberId=${i?202:101}`);
+  const members=people.map((person,i)=>({...person,state:"FL",websiteUrl:urls[i]}));
+  const entry={...members[1],id:"jane-own-list-entry",personId:"jane-own-list-entry",phone:"208-555-0004",
+    nativeIds:{...members[1].nativeIds,reader:["fl-house:101"]},provenance:{...members[1].provenance,sourceUrl:urls[0],kind:"OFFICIAL" as const}};
+  const repaired=mergePeopleSets([roster([entry]),roster(members)])!;
+  const jane=repaired.officeholders.find(person=>person.name==="Jane Member")!;
+  assert.equal(jane.phone,entry.phone);
+  assert.ok(personIdentityKeys(jane).has(entry.id));
+  assert.ok(!personIdentityKeys(jane).has("fl-house:101"));
+  assert.ok(personIdentityKeys(repaired.officeholders.find(person=>person.name==="Vito Barbieri")!).has("fl-house:101"));
+});
+
+test("normal publication repairs a falsely bound named entry from that person's own verified publisher entry",async()=>{
+  const urls=["https://www.flsenate.gov/Senators/2024-2026/S1/101","https://www.flsenate.gov/Senators/2024-2026/S2/202"];
+  const bodies=people.map(person=>`<h1>Senator ${person.name}</h1><p>District ${person===people[0]?3:4}</p>`);
+  bodies[1]+='<article><h3>Vito Barbieri</h3><p>Senator Vito Barbieri spoke today. District 3</p></article>';
+  const options={state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([])};
+  const incoming=mergePeopleSets(bodies.map((body,i)=>normalizeOfficialLegislaturePage(body,urls[i],options,at)))!;
+  assert.equal(incoming.officeholders.length,2);
+  const member=incoming.officeholders.find(person=>person.name==="Vito Barbieri")!;
+  const namedUrl=`${urls[1]}#member=vito%20barbieri`;
+  const oldId=`official-legislature:fl:${createHash("sha256").update(namedUrl).digest("hex").slice(0,24)}`;
+  const wrong={...member,id:oldId,personId:oldId,phone:"foreign-phone",nativeIds:{"official-legislature":[namedUrl]},
+    provenance:provenance(urls[1],"State legislature",at,"Senator Vito Barbieri spoke today. District 3")};
+  const publication=await publishPeopleSource({store:new MemoryRoutineDataStore(),vault:new MemoryEvidenceStore(),state:"fl",sourceId:"official-state-people",now:at,
+    releaseId:"repair-named-entry",roster:incoming,held:{versionId:null,normalizedPayload:{},roster:roster([wrong])},
+    acquisitions:bodies.map((body,i)=>({requestedUrl:urls[i],finalUrl:urls[i],body,httpStatus:200,retrievedAt:at}))});
+  assert.ok(publication.outcome.promoted,JSON.stringify(publication.outcome.candidate.receipt?.checks));
+  const after=(publication.candidate.readModel as {roster:OfficeholderSet}).roster.officeholders;
+  assert.equal(after.length,2);
+  const owner=after.find(person=>personIdentityKeys(person).has(oldId))!;
+  assert.equal(owner.name,"Vito Barbieri");
+  assert.equal(owner.provenance.sourceUrl,urls[0]);
+  assert.notEqual(owner.phone,"foreign-phone");
+  assert.ok(retainsPeopleBindings([wrong],after));
+});
+
 test("an official text replay uses held identities while a newer companion portrait stays in its own source",async()=>{
   const future="2026-10-27T06:00:00.000Z",imageHash=`sha256-${"a".repeat(64)}`,imageUrl="https://legislature.example.gov/vito.jpg";
   const photographed={...people[0],photo:{url:`/api/portraits/officials/${imageHash.slice(7)}.webp`,sourceUrl:imageUrl,attribution:null,license:null,collectedAt:future,

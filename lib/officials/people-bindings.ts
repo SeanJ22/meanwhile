@@ -9,7 +9,7 @@ const actionName = (value:string) => /^(?:sign up|subscribe|contact|email|sponso
 const publisherIdentity=(person:Officeholder)=>{
   const native=person.provenance.sourceUrl?nativePersonIdFromUrl(person.provenance.sourceUrl):null;
   const key=native?`${native.source}:${native.id}`:undefined;
-  return key&&personIdentityKeys(person).has(key)?key:undefined;
+  return native&&key&&(person.nativeIds?.[native.source]?.includes(native.id)||[person.id,person.personId].includes(key))?key:undefined;
 };
 const collapsed = (person: Officeholder) => (person.nativeIds?.["ocd-person"]?.length ?? 0) > 1 || (person.nativeIds?.plural?.length ?? 0) > 1;
 export function sourcePeople(person: Officeholder): readonly Officeholder[] {
@@ -45,7 +45,7 @@ export function retainsPeopleBindings(before:readonly Officeholder[],after:reado
  * Rebind earlier directory collapses from the independently held source people.
  * Their original reader IDs stay with the named entry; native aliases return to
  * the source person that owns them. No reader or candidate is read here. */
-export function bindPeopleSources(sets: readonly OfficeholderSet[]): OfficeholderSet[] {
+export function bindPeopleSources(sets: readonly OfficeholderSet[], invalidBindings:ReadonlySet<string>=new Set()): OfficeholderSet[] {
   const sources = sets.flatMap(set => set.officeholders.flatMap(sourcePeople)).filter(person => !collapsed(person)&&!sourcePersonIsDocument(person)&&
     (person.nativeIds?.["ocd-person"]?.length||!(person.nativeIds?.["official-legislature"]??[]).some(url=>{
       const parent=memberProfileSubpageParentUrl(url);return Boolean(parent&&nativePersonIdFromUrl(parent));
@@ -129,10 +129,10 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
     const references=publisherMatches.length?publisherMatches:nativeMatches.length?nativeMatches:owned;
     return new Set(references.map(identityOf)).size===1?references[0]:undefined;
   };
-  const needsBinding=(person:Officeholder)=>collapsed(person)||Boolean(documentReference(person))||[...personIdentityKeys(person)].some(key=>foreign(person,key));
+  const needsBinding=(person:Officeholder)=>invalidBindings.has(person.id)||collapsed(person)||Boolean(documentReference(person))||[...personIdentityKeys(person)].some(key=>foreign(person,key));
   if(!sets.some(set=>set.officeholders.some(needsBinding)))return [...sets];
   const referenceFor = (identity:string):Officeholder|undefined => {
-    const matches=(byIdentity.get(identity)??[]).filter(row=>[row.id,row.personId??row.id].every(key=>!ownerOf(key)||ownerOf(key)===identity));
+    const matches=(byIdentity.get(identity)??[]).filter(row=>(!invalidBindings.has(row.id)||sourcePersonIsNativeReference(row))&&[row.id,row.personId??row.id].every(key=>!ownerOf(key)||ownerOf(key)===identity));
     const primaries=new Set(matches.flatMap(row=>row.nativeIds?.["ocd-person"]??[]));
     return primaries.size===1?matches.find(sourcePersonIsNativeReference)??matches.find(row=>row.nativeIds?.["ocd-person"]?.length===1)
       : primaries.size===0?matches.find(row=>Boolean(publisherIdentity(row))):undefined;
@@ -176,9 +176,7 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
       const personId=foreignKey(person.personId??person.id)?reference.personId??reference.id:person.personId??person.id;
       const aliases=[...personIdentityKeys(person)].filter(key=>!foreignKey(key));
       const cleanReference={...reference,nativeIds:{...reference.nativeIds,reader:(reference.nativeIds?.reader??[]).filter(key=>!foreignKey(key))}};
-      const page=person.provenance.sourceUrl?nativePersonIdFromUrl(person.provenance.sourceUrl):null;
-      const pageOwner=page?ownerOf(`${page.source}:${page.id}`):undefined;
-      const base=collapsed(person)||document||pageOwner&&pageOwner!==identity?cleanReference:person;
+      const base=collapsed(person)||document||invalidBindings.has(person.id)||foreignKey(person.id)?cleanReference:person;
       const rebound={...base,id,personId,
         nativeIds:{...cleanReference.nativeIds,reader:[...new Set([...cleanReference.nativeIds.reader??[],...aliases,id,personId])]},
         memberships:base.memberships?.map(row=>({...row,personId})),sourceHolders:[cleanReference]};

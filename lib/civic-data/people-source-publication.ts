@@ -58,10 +58,11 @@ type PeopleCandidateInput = Omit<PublishPeopleSourceInput,"store"|"vault"|"acqui
 const words = (text:string) => text.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 
 /* Each person must be named, with office and quote, on an official page this source saved; pages not read this run come from the vault. */
-async function peopleSourceViolations(input:{state:string;sourceId:string;roster:OfficeholderSet;captures:readonly StatePeopleCapture[];read:readonly StatePeopleAcquisition[];vault:EvidenceStore;verifyNationalCurrent?:boolean}):Promise<string[]> {
+async function peopleSourceViolations(input:{state:string;sourceId:string;roster:OfficeholderSet;captures:readonly StatePeopleCapture[];read:readonly StatePeopleAcquisition[];vault:EvidenceStore;verifyNationalCurrent?:boolean;capturedTexts?:Map<string,string>}):Promise<string[]> {
   if (!["official-state-people", "statewide-executive-sources"].includes(input.sourceId)) return [];
   const captureKey = (row: Pick<StatePeopleCapture,"finalUrl"|"retrievedAt">) => `${row.finalUrl}|${row.retrievedAt}`;
-  const texts=new Map(input.read.map(row=>[captureKey(row),row.body]));
+  const texts=input.capturedTexts??new Map<string,string>();
+  for(const row of input.read)texts.set(captureKey(row),row.body);
   const textOf=async (row:StatePeopleCapture)=>{
     const key = captureKey(row);
     if (!texts.has(key)) texts.set(key,await capturedText(input.vault,row));
@@ -240,7 +241,16 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
       comparisonFacts.push({key:`${jurisdiction}:source-comparison`,code:"PEOPLE_SOURCE_COMPARISON_PENDING",detail:"Another held source could not be read for comparison. This source's verified people publish; comparison remains standing work.",record:{state:jurisdiction,owner:"BL-01",status:"OPEN"}});
     }
   }
-  const violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,verifyNationalCurrent:!national});
+  const capturedTexts=new Map<string,string>();
+  let violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,verifyNationalCurrent:!national,capturedTexts});
+  if(input.sourceId==="official-state-people") {
+    const invalid=new Set(violations.flatMap(value=>/^PEOPLE_OWN_OFFICIAL_PAGE_UNVERIFIED:(.+)$/.exec(value)?.[1]??[]));
+    if(invalid.size) {
+      const references={...incoming,officeholders:[...incoming.officeholders,...input.bindingPeople??[]],divisions:[],unmatched:[]};
+      roster=mergePeopleSets([bindPeopleSources([roster,references],invalid)[0]])!;
+      violations=await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,capturedTexts});
+    }
+  }
   if (national && !roster.officeholders.length) violations.push("NATIONAL_OFFICIAL_NONE_VERIFIED");
   roster = await publishRosterOfficePoints(roster, held, input.resolveOfficePoint);
   const candidate = peopleSourceCandidate({...input,roster,captures,violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});

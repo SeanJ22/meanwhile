@@ -31,7 +31,7 @@ import { facilityPoint,facilityCell } from "../lib/sources/open-data/geography.t
 import { saveOpenDataPartition,openDataVault } from "../lib/sources/open-data/artifacts.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { refreshSocrata, socrataStateDivisionId, type SocrataGovernmentState } from "../lib/sources/open-data/socrata.ts";
+import { prepareSocrataCatalog,refreshSocrata, socrataStateDivisionId, type SocrataGovernmentState } from "../lib/sources/open-data/socrata.ts";
 import { retainEchoMinimumGaps, mergeEchoRetainedPartition, type EchoMinimumGap } from "../lib/sources/open-data/echo-gaps.ts";
 import { materializeEchoPartitions } from "../lib/sources/open-data/echo-materialization.ts";
 import { echoSourceProgress,type EchoProjectionProgress } from "../lib/sources/open-data/echo-progress.ts";
@@ -39,6 +39,10 @@ import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { confirmSourceHashUnchanged,sourceHashReceiptFields,type SourceHashConfirmation } from "../lib/civic-data/source-hash.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { openDataProbeContentHash,openDataSourceProbe,readOpenDataSourceDependencies,type OpenDataSourceProbe } from "../lib/sources/open-data/source-probe.ts";
+import { confirmSocrataSource } from "../lib/sources/open-data/socrata-source-probe.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import type { AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import type { CatalogPage } from "../lib/sources/open-data/acquire.ts";
 
 export function parseOpenDataArguments(args:readonly string[]):OpenDataSource {
   if(args.length!==2 || !args.includes("--promote"))throw Error("SRC-SO requires --promote and one --source.");
@@ -71,6 +75,7 @@ async function openDataRun(input:{source:OpenDataSource;store:RoutineDataStore;v
   const replacedLogicalPartitions=new Set<string>(input.projection?.replaced??[]);
   const reports=new Map<string,OpenDataReport>(US_JURISDICTIONS.map(s=>[s.usps,{id:`state:${s.usps}`,state:s.usps,loaded:0,joined:0,unjoined:0}]));
   for(const report of input.projection?.reports??[])reports.set(report.state,report);
+  let baseVersionId=prior.kind==="PROMOTED"?prior.metadata.versionId:null,priorCaptures:readonly OpenDataCapture[]|undefined;
   return {prior,reports,
     projection:(context:string,position:number):EchoProjectionProgress=>({context,position,
       partitions:[...partitions.values()],replaced:[...replacedLogicalPartitions],reports:[...reports.values()]}),
@@ -82,8 +87,13 @@ async function openDataRun(input:{source:OpenDataSource;store:RoutineDataStore;v
       }
       const reference=await saveOpenDataPartition({source:input.source,...partition,now:input.now()},input.vault);partitions.set(reference.id,reference);
     },
-    publish:(capture:OpenDataCapture,excludedFacts:RoutineCandidate["excludedFacts"]=[],sourceProbe?:OpenDataSourceProbe)=>publishOpenData({store:input.store,source:input.source,rows:[],reports:[...reports.values()],
-      partitions:[...partitions.values()].sort((a,b)=>a.id.localeCompare(b.id)),captures:[capture],excludedFacts,sourceProbe,now:input.now(),replace:true,prior}),
+    async publish(capture:OpenDataCapture,excludedFacts:RoutineCandidate["excludedFacts"]=[],sourceProbe?:OpenDataSourceProbe,captures:readonly OpenDataCapture[]=[capture]) {
+      const result=await publishOpenData({store:input.store,source:input.source,rows:[],reports:[...reports.values()],
+        partitions:[...partitions.values()].sort((a,b)=>a.id.localeCompare(b.id)),captures,excludedFacts,sourceProbe,now:input.now(),replace:true,prior,baseVersionId,priorCaptures});
+      baseVersionId=result.outcome.promoted?.versionId??result.outcome.confirmed?.versionId??baseVersionId;
+      priorCaptures=(result.candidate.normalizedPayload as {captures:readonly OpenDataCapture[]}).captures;
+      return result;
+    },
   };
 }
 type EchoRefreshResult={publication:Publication;confirmation:null;reports:OpenDataReport[];gaps:EchoMinimumGap[];unchanged:boolean}|
@@ -149,6 +159,37 @@ export async function refreshEchoNational(input:{store:RoutineDataStore;vault:Ev
   return {publication,confirmation:null,reports:[...run.reports.values()],gaps,unchanged:plan?.requests[0]?.rawHash===archive.sourceSha256};
   } finally {await archive.dispose();}
 }
+/** Acquire the native current scroll and every discovery root before deciding whether any held projection is needed. */
+export async function refreshSocrataNational(input:{store:RoutineDataStore;vault:EvidenceStore;signal:AbortSignal;now:()=>string;
+  states:AsyncIterable<SocrataGovernmentState>;saveLeads:Parameters<typeof refreshSocrata>[0]["saveLeads"];
+  gap:Parameters<typeof refreshSocrata>[0]["gap"];maxSourceAgeMs:number;pages?:AsyncIterable<CatalogPage>;token?:string}):Promise<EchoRefreshResult> {
+  const scope=openDataScope("socrata-discovery","national");
+  const [head,dependencies]=await Promise.all([input.store.readSourceHead("CURATED_READER_RECORD",scope),readOpenDataSourceDependencies(input.store)]);
+  const plan=head?.parserVersion===OPEN_DATA_PARSER&&head.rawHashBasis==="SOURCE_CONTENT_V1"
+    ?await input.store.readCandidatePath<OpenDataSourceProbe>(head.versionId,["normalizedPayload","sourceProbe"]):null;
+  // Credentials remain runtime headers in the normal provider, never in a saved request plan.
+  const catalog=await prepareSocrataCatalog(input.pages??socrataPages({signal:input.signal,token:input.token}),input.signal);
+  try {
+    const confirmation=await confirmSocrataSource({store:input.store,plan,versionId:head?.versionId??null,captures:catalog.captures,
+      dependencies,signal:input.signal,now:input.now(),maxAgeMs:input.maxSourceAgeMs});
+    if(confirmation)return {publication:null,confirmation,reports:[],gaps:[],unchanged:true};
+    const run=await openDataRun({source:"socrata-discovery",store:input.store,vault:input.vault,now:input.now});
+    let publication:Publication|undefined;
+    const publish=async(reports:OpenDataReport[],captures:readonly OpenDataCapture[],sourceProbe:OpenDataSourceProbe)=>{
+      for(const [state,row]of run.reports)run.reports.set(state,{...row,loaded:0,joined:0,unjoined:0});
+      for(const row of reports)run.reports.set(row.state,row);
+      publication=await run.publish(captures.at(-1)!,[],sourceProbe,captures);
+    };
+    await refreshSocrata({preparedCatalog:catalog,states:input.states,signal:input.signal,
+      writePartition:partition=>run.writePartition(partition),saveLeads:input.saveLeads,gap:input.gap,
+      publish:async(reports,_capture,captures=catalog.captures)=>publish(reports,captures,
+        openDataSourceProbe({sourceId:"socrata-discovery",captures,dependencies,complete:false})),
+      onDiscoveryComplete:async({reports,captures,observations,complete})=>publish(reports,captures,
+        openDataSourceProbe({sourceId:"socrata-discovery",captures,dependencies,observations,complete}))});
+    if(!publication)throw Error("Socrata produced no captured publication.");
+    return {publication,confirmation:null,reports:[...run.reports.values()],gaps:[],unchanged:false};
+  } finally {await catalog.spool.dispose();}
+}
 async function main() {
   const source=parseOpenDataArguments(process.argv.slice(2));installNeonRequestDeadline();prepareProductionCivicDataWrite();
   const store=new PostgresRoutineDataStore(), now=()=>new Date().toISOString();
@@ -160,19 +201,18 @@ async function main() {
     const vault=openDataVault();
     let publication:Publication|null|undefined,confirmation:SourceHashConfirmation|null=null,reports:OpenDataReport[]=[],gaps:EchoMinimumGap[]=[];
     if(source==="socrata-discovery") {
-      const run=await openDataRun({source,store,vault,now});
       const states=async function*():AsyncGenerator<SocrataGovernmentState>{
         for(const state of US_JURISDICTIONS) {
           const registration=await readRegistrationProjection(state.usps,{store});
+          if(registration.kind==="STORE_UNREACHABLE")throw Error(`Socrata registration joins are unavailable for ${state.usps}; prior facts remain live.`);
           if(registration.kind!=="PROMOTED"){console.log(`SRC_SO_JOIN_GAP=${JSON.stringify({state:state.usps,reason:registration.kind})}`);continue;}
           yield {state:state.usps,fips:state.fips,governments:registration.value.governments??[],divisionId:socrataStateDivisionId(registration.value.divisions,state.usps)};
         }
       };
-      await refreshSocrata({pages:socrataPages({signal,token:process.env.SOCRATA_APP_TOKEN}),states:states(),signal,writePartition:partition=>run.writePartition(partition),
-        saveLeads:rows=>saveSocrataLeads(repos,rows,now()).then(()=>{}),gap:detail=>console.log(`SRC_SO_PORTAL_GAPS=${JSON.stringify(detail)}`),
-        publish:async(rows,capture)=>{for(const [state,row]of run.reports)run.reports.set(state,{...row,loaded:0,joined:0,unjoined:0});for(const row of rows)run.reports.set(row.state,row);publication=await run.publish(capture);}});
-      if(!publication)throw Error("Source produced no captured publication.");
-      reports=[...run.reports.values()];
+      const config=(await repos.adminConfig.readNarrowed("current",{settings:["facts.freshnessHours"]}))?.value as AdminConfig|null??null;
+      ({publication,confirmation,reports}=await refreshSocrataNational({store,vault,now,signal,states:states(),token:process.env.SOCRATA_APP_TOKEN,
+        maxSourceAgeMs:factClocks(config).windowHours("officeholder")*3_600_000,
+        saveLeads:rows=>saveSocrataLeads(repos,rows,now()).then(()=>{}),gap:detail=>console.log(`SRC_SO_PORTAL_GAPS=${JSON.stringify(detail)}`)}));
     } else ({publication,confirmation,reports,gaps}=await refreshEchoNational({store,vault,archive:openDataArchiveStore(),spool,signal,now,readStateJoins:async state=>{
       const registration=await readRegistrationProjection(state,{store});
       if(registration.kind==="PROMOTED")return governmentJoinRows(registration.value.governments??[]);

@@ -93,12 +93,13 @@ export function openDataCandidate(input:{source:OpenDataSource;partition?:string
     excludedFacts:input.excludedFacts,normalizedPayload,readModel};
 }
 export async function publishOpenData(input:Parameters<typeof openDataCandidate>[0]&{store:RoutineDataStore;replace?:boolean;
-  prior?:Awaited<ReturnType<typeof readOpenDataProjection>>}) {
+  prior?:Awaited<ReturnType<typeof readOpenDataProjection>>;baseVersionId?:string|null;priorCaptures?:readonly OpenDataCapture[]}) {
   if(input.partition && input.partition!=="national")throw Error("SRC-SO publishes one canonical national manifest per source.");
   const prior=input.prior??await readOpenDataProjection(input.source,input.partition,{store:input.store,now:input.now});
   if(prior.kind==="STORE_UNREACHABLE")throw Error("Open-data prior could not be read; prior facts remain live.");
-  const priorCaptures=prior.kind==="PROMOTED"?
-    await input.store.readCandidatePath<readonly OpenDataCapture[]>(prior.metadata.versionId!,["normalizedPayload","captures"])??[]:[];
+  if(input.baseVersionId!==undefined&&!input.replace)throw Error("A repeated source publication must replace its explicitly assembled rows.");
+  const priorCaptures=input.priorCaptures??(prior.kind==="PROMOTED"?
+    await input.store.readCandidatePath<readonly OpenDataCapture[]>(prior.metadata.versionId!,["normalizedPayload","captures"])??[]:[]);
   const rows=[...new Map([...(input.replace?[]:prior.kind==="PROMOTED"?prior.value.records:[]),...input.rows].map(r=>[r.id,r])).values()].sort((a,b)=>a.id.localeCompare(b.id));
   const referenced=new Set(rows.map(r=>hash(r.sourceRow)));
   const captures=openDataCaptures([...priorCaptures,...input.captures].map(c=>{
@@ -106,7 +107,8 @@ export async function publishOpenData(input:Parameters<typeof openDataCandidate>
     return filtered;
   }).filter(c=>c.sourceRows.length || !rows.length));
   const candidate=openDataCandidate({...input,rows,captures});
-  const outcome=await processRegisteredRoutineCandidate(input.store,input.source,candidate,input.now,prior.kind==="PROMOTED"?prior.metadata.versionId:null);
+  const outcome=await processRegisteredRoutineCandidate(input.store,input.source,candidate,input.now,
+    input.baseVersionId!==undefined?input.baseVersionId:prior.kind==="PROMOTED"?prior.metadata.versionId:null);
   if(!outcome.promoted && !outcome.confirmed)throw Error(`Open-data publication held: ${outcome.candidate.failureDetail ?? outcome.candidate.state}`);
   return {candidate,outcome};
 }

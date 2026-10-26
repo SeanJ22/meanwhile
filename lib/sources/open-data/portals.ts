@@ -1,4 +1,4 @@
-import { acquireKnownRelease } from "../known-release.ts";
+import { acquireKnownRelease,type KnownRelease } from "../known-release.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
 import type { RegistrationGovernmentListing } from "../../registration/listings.ts";
 import type { GovernmentJoin, PortalBinding } from "./normalize.ts";
@@ -18,9 +18,12 @@ export function stateGovernmentWebsite(html:string):string|null {
   const section=/<h[1-6]\b[^>]*>\s*(?:State|District|Territory) government(?: website)?\s*<\/h[1-6]>([\s\S]*?)(?=<h[1-6]\b|$)/i.exec(html)?.[1];
   return section?/\bhref=["'](https:\/\/[^"']+)["']/i.exec(section)?.[1] ?? null:null;
 }
-export async function readStateGovernmentWebsite(postal:string,signal:AbortSignal):Promise<string|null> {
-  const acquire=async(url:string)=>acquireKnownRelease({sourceId:"socrata-state-links",releaseId:url,url,parserVersion:"src-so/1",maxBytes:4*1024*1024,
-    checkAfterMs:86400000,signal,fetchImpl:(url,init)=>openDataFetch(url,init),allowedHosts:["www.usa.gov","usa.gov"],headers:{accept:"text/html"}});
+export async function readStateGovernmentWebsite(postal:string,signal:AbortSignal,observe?:(release:KnownRelease)=>void):Promise<string|null> {
+  const acquire=async(url:string)=>{
+    const release=await acquireKnownRelease({sourceId:"socrata-state-links",releaseId:url,url,parserVersion:"src-so/1",maxBytes:4*1024*1024,
+      checkAfterMs:86400000,signal,fetchImpl:(url,init)=>openDataFetch(url,init),allowedHosts:["www.usa.gov","usa.gov"],headers:{accept:"text/html"}});
+    observe?.(release);return release;
+  };
   const directory=await acquire(STATE_DIRECTORY_URL);
   const url=stateDirectoryPage(new TextDecoder().decode(directory.bytes),postal);if(!url)return null;
   const page=await acquire(url);return stateGovernmentWebsite(new TextDecoder().decode(page.bytes));
@@ -42,13 +45,15 @@ export function portalBindingsFromPage(government:RegistrationGovernmentListing,
     bodyIds:government.bodyIds,nativeIds:{...government.nativeIds,ocd_id:association.divisionId,geoid:association.geoid},
     official:true,linkingUrl:url,linkingHtml})));
 }
-export async function discoverGovernmentPortals(governments:readonly RegistrationGovernmentListing[], domains:ReadonlySet<string>, signal:AbortSignal) {
+export async function discoverGovernmentPortals(governments:readonly RegistrationGovernmentListing[], domains:ReadonlySet<string>, signal:AbortSignal,
+  observe?:(release:KnownRelease)=>void) {
   const results=await runBoundedWorkPool(governments.filter(g=>g.website && g.associations.length && isOfficialSource(g.website)),16,async government=>{
     try {
       const url=new URL(government.website!);if(url.protocol==="http:")url.protocol="https:";
       const page=await acquireKnownRelease({sourceId:"socrata-government-links",releaseId:government.id,url:url.href,
         parserVersion:"src-so/1",maxBytes:4*1024*1024,checkAfterMs:86400000,signal,
         fetchImpl:(url,init)=>openDataFetch(url,init),headers:{accept:"text/html"}});
+      observe?.(page);
       return {bindings:portalBindingsFromPage(government,page.finalUrl,new TextDecoder().decode(page.bytes),domains),gap:null};
     } catch(error) { return {bindings:[],gap:{governmentId:government.id,url:government.website,reason:error instanceof Error?error.message:String(error)}}; }
   });

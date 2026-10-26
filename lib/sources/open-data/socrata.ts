@@ -10,6 +10,7 @@ import { normalizeSocrata, openDataReports, type GovernmentJoin, type PortalBind
 import { discoverGovernmentPortals, governmentJoinRows, portalBindingsFromPage, readStateGovernmentWebsite } from "./portals.ts";
 import type { OpenDataCapture } from "./publication.ts";
 import { OpenDataSpool } from "./spool.ts";
+import type { KnownRelease } from "../known-release.ts";
 
 export interface SocrataGovernmentState {
   readonly state:string;
@@ -23,31 +24,65 @@ export function socrataStateDivisionId(divisions:readonly {ocdId:string;parentOc
     /^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})$/.exec(id)?.[1]===postal.toLowerCase());
 }
 type Partition = {partition:string;rows:ReturnType<typeof normalizeSocrata>[];captures:readonly OpenDataCapture[]};
+export interface PreparedSocrataCatalog {
+  readonly spool:Awaited<ReturnType<typeof OpenDataSpool.create>>;
+  readonly domains:ReadonlySet<string>;
+  readonly captures:readonly OpenDataCapture[];
+}
+/** Follow the current native scroll before any held manifest or government inventory is read. */
+export async function prepareSocrataCatalog(pages:AsyncIterable<CatalogPage>,signal:AbortSignal):Promise<PreparedSocrataCatalog> {
+  const spool=await OpenDataSpool.create(),domains=new Set<string>(),captures:OpenDataCapture[]=[];
+  let rows=0;
+  try {
+    for await(const page of pages) {
+      signal.throwIfAborted();
+      const capture:OpenDataCapture={url:page.url,retrievedAt:page.retrievedAt,rawHash:page.sha256,sourceRows:[],sourceCheck:page.sourceCheck};
+      captures.push(capture);
+      for(const raw of page.rows) {
+        const row=normalizeSocrata(raw,page.retrievedAt);domains.add(row.nativeIds.domain);rows++;
+        await spool.append(`domain:${row.nativeIds.domain}`,row,capture);
+      }
+    }
+    if(!captures.length||!rows)throw Error("Socrata produced no captured source rows; prior facts remain live.");
+    return {spool,domains,captures};
+  } catch(error) {await spool.dispose();throw error;}
+}
 
 /** Native catalog facts publish before visiting government websites for additional portal links. */
 export async function refreshSocrata(input:{
-  pages:AsyncIterable<CatalogPage>;
+  pages?:AsyncIterable<CatalogPage>;
+  preparedCatalog?:PreparedSocrataCatalog;
   states:AsyncIterable<SocrataGovernmentState>;
   signal:AbortSignal;
   writePartition:(partition:Partition)=>Promise<void>;
   saveLeads:(rows:ReturnType<typeof normalizeSocrata>[])=>Promise<void>;
-  publish:(reports:OpenDataReport[],capture:OpenDataCapture)=>Promise<void>;
+  publish:(reports:OpenDataReport[],capture:OpenDataCapture,captures?:readonly OpenDataCapture[])=>Promise<void>;
+  onDiscoveryComplete?:(input:{reports:OpenDataReport[];captures:readonly OpenDataCapture[];observations:readonly Omit<KnownRelease,"bytes">[];complete:boolean})=>Promise<void>;
   gap:(detail:unknown)=>void;
   discover?:typeof discoverGovernmentPortals;
   stateWebsite?:typeof readStateGovernmentWebsite;
 }) {
-  const spool=await OpenDataSpool.create(),stateRoot=await mkdtemp(join(tmpdir(),"socrata-governments-"));
-  const domains=new Set<string>(),held:GovernmentJoin[]=[],bindings:PortalBinding[]=[],states:string[]=[];
-  let capture:OpenDataCapture|undefined;
+  const catalog=input.preparedCatalog??(input.pages?await prepareSocrataCatalog(input.pages,input.signal):null);
+  if(!catalog)throw Error("Socrata has no source catalog.");
+  const spool=catalog.spool,stateRoot=await mkdtemp(join(tmpdir(),"socrata-governments-"));
+  const domains=catalog.domains,held:GovernmentJoin[]=[],bindings:PortalBinding[]=[],states:string[]=[],observations=new Map<string,Omit<KnownRelease,"bytes">>();
+  let reports:OpenDataReport[]=[],complete=true;
+  const gap=(detail:unknown)=>{complete=false;input.gap(detail);};
+  const observe=(release:KnownRelease)=>{
+    if(release.outage)complete=false;
+    const {bytes:_bytes,...metadata}=release;
+    // Only scalar source metadata is needed after the normal parser has used these bytes.
+    observations.set(JSON.stringify([release.sourceId,release.releaseId]),metadata);
+  };
   const materialize=async()=>{
-    const reports=new Map<string,OpenDataReport>([...US_JURISDICTIONS.map(state=>state.usps),"UNRESOLVED"]
+    const currentReports=new Map<string,OpenDataReport>([...US_JURISDICTIONS.map(state=>state.usps),"UNRESOLVED"]
       .map(state=>[state,{id:`state:${state}`,state,loaded:0,joined:0,unjoined:0}])),divisions=await OpenDataSpool.create();
     try {
       for await(const partition of spool.partitions()) {
         const rows=partition.rows.map(row=>normalizeSocrata(row.sourceRow,row.capturedAt,held,bindings));
         for(const report of openDataReports(rows)) {
-          const previous=reports.get(report.state);
-          reports.set(report.state,{...report,loaded:report.loaded+(previous?.loaded??0),joined:report.joined+(previous?.joined??0),unjoined:report.unjoined+(previous?.unjoined??0)});
+          const previous=currentReports.get(report.state);
+          currentReports.set(report.state,{...report,loaded:report.loaded+(previous?.loaded??0),joined:report.joined+(previous?.joined??0),unjoined:report.unjoined+(previous?.unjoined??0)});
         }
         await input.writePartition({...partition,rows});
         for(const row of rows)for(const id of row.divisionIds) {
@@ -57,22 +92,14 @@ export async function refreshSocrata(input:{
       }
       for await(const partition of divisions.partitions())await input.writePartition(partition);
     } finally {await divisions.dispose();}
-    await input.publish([...reports.values()],capture!);
+    reports=[...currentReports.values()];await input.publish(reports,catalog.captures.at(-1)!,catalog.captures);
     for await(const partition of spool.partitions()) {
       const rows=partition.rows.map(row=>normalizeSocrata(row.sourceRow,row.capturedAt,held,bindings));
       try {await input.saveLeads(rows);}
-      catch(error) {input.gap({partition:partition.partition,reason:error instanceof Error?error.message:String(error),work:"Save catalog source leads"});}
+      catch(error) {gap({partition:partition.partition,reason:error instanceof Error?error.message:String(error),work:"Save catalog source leads"});}
     }
   };
   try {
-    for await(const page of input.pages) {
-      capture={url:page.url,retrievedAt:page.retrievedAt,rawHash:page.sha256,sourceRows:[],sourceCheck:page.sourceCheck};
-      for(const raw of page.rows) {
-        const row=normalizeSocrata(raw,page.retrievedAt);domains.add(row.nativeIds.domain);
-        await spool.append(`domain:${row.nativeIds.domain}`,row,capture);
-      }
-    }
-    if(!capture)throw Error("Socrata produced no captured publication.");
     // Keep only native join identifiers across states; directory records remain in state files.
     for await(const state of input.states) {
       input.signal.throwIfAborted();
@@ -90,14 +117,15 @@ export async function refreshSocrata(input:{
       const state=JSON.parse(await readFile(join(stateRoot,`${postal}.json`),"utf8")) as SocrataGovernmentState;
       const governments=[...state.governments];
       if(state.divisionId)try {
-        const website=await (input.stateWebsite??readStateGovernmentWebsite)(state.state,input.signal);
+        const website=await (input.stateWebsite??readStateGovernmentWebsite)(state.state,input.signal,observe);
         if(website)governments.push({id:`usa-gov:${state.state}`,state:state.state,website,nativeIds:{usa_gov_state:state.state,state_fips:state.fips},bodyIds:[],
           associations:[{divisionId:state.divisionId,layer:"state",geoid:state.fips,basis:"SOURCE_CODE"}]} as unknown as RegistrationGovernmentListing);
-      } catch(error) {input.gap({state:state.state,reason:error instanceof Error?error.message:String(error)});}
-      const found=await (input.discover??discoverGovernmentPortals)(governments,domains,input.signal);
+      } catch(error) {gap({state:state.state,reason:error instanceof Error?error.message:String(error)});}
+      const found=await (input.discover??discoverGovernmentPortals)(governments,domains,input.signal,observe);
       for(const binding of found.bindings)if(!bindings.some(prior=>prior.domain===binding.domain && prior.divisionId===binding.divisionId))bindings.push(binding);
-      if(found.gaps.length)input.gap(found.gaps);
+      if(found.gaps.length)gap(found.gaps);
     }
     if(bindings.length!==nativeBindings)await materialize();
+    await input.onDiscoveryComplete?.({reports,captures:catalog.captures,observations:[...observations.values()],complete:complete&&!input.signal.aborted});
   } finally {await spool.dispose();await rm(temporaryPath(stateRoot),{recursive:true,force:true});}
 }

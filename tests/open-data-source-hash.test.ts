@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { openDataCaptures,openDataSourceContentHash,type OpenDataCapture } from "../lib/sources/open-data/publication.ts";
+import { openDataProbeContentHash,openDataSourceProbe } from "../lib/sources/open-data/source-probe.ts";
+import { confirmSocrataSource } from "../lib/sources/open-data/socrata-source-probe.ts";
+import type { RoutineDataStore,SourceHead } from "../lib/civic-data/store.ts";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
+import type { acquireKnownRelease,KnownRelease } from "../lib/sources/known-release.ts";
 
 const at="2026-10-01T00:00:00.000Z",later="2026-10-02T00:00:00.000Z",url="https://echo.epa.gov/files/echodownloads/echo_exporter.zip";
 const first:OpenDataCapture={url,retrievedAt:at,rawHash:"a".repeat(64),sourceRows:[{id:"one",name:"One"}],archive:{sha256:"a".repeat(64),member:"ECHO_EXPORTER.csv",publishedAt:null}};
@@ -21,4 +26,48 @@ test("changed source bytes and different native archive members remain independe
   assert.notEqual(openDataSourceContentHash([first]),openDataSourceContentHash([changed]));
   assert.notEqual(openDataSourceContentHash([first]),openDataSourceContentHash([member]));
   assert.equal(openDataSourceContentHash([first,changed,member]),openDataSourceContentHash([member,first,changed]));
+});
+
+const catalogUrl="https://api.us.socrata.com/api/catalog/v1?limit=1000&scroll_id=",governmentUrl="https://www.usa.gov/state-governments";
+const native:OpenDataCapture={url:catalogUrl,rawHash:"c".repeat(64),retrievedAt:at,sourceRows:[],
+  sourceCheck:{requestedUrl:catalogUrl,finalUrl:catalogUrl,httpStatus:200,checkedAt:at,rawHash:"c".repeat(64)}};
+const discovery:KnownRelease={sourceId:"socrata-state-links",releaseId:governmentUrl,requestedUrl:governmentUrl,finalUrl:governmentUrl,
+  sha256:"d".repeat(64),bytes:new Uint8Array([1]),httpStatus:200,retrievedAt:at,sourceObservedAt:at,checkedAt:at,lastCheckStatus:200,
+  etag:null,lastModified:null,contentType:"text/html",reused:false};
+function memoryProgress(){const values=new Map<string,string>();return new CivicReadCache({read:async key=>values.get(key)??null,
+  write:async(key,value)=>{values.set(key,value);}});}
+function sourceStore(rawHash:string) {
+  let confirmations=0;
+  const head:SourceHead={sourceId:"socrata-discovery",recordClass:"CURATED_READER_RECORD",scope:"socrata-discovery:national",
+    versionId:"source-version",lastKnownGoodVersionId:"source-version",rawHash,rawHashBasis:"SOURCE_CONTENT_V1",normalizedHash:"f".repeat(64),
+    parserVersion:"src-so/1",promotedAt:at,candidateState:"PROMOTED",acquisitionSucceeded:true,imported:false};
+  return {confirmations:()=>confirmations,store:{readSourceHead:async()=>head,
+    readCandidate:async()=>{throw Error("held candidate payload is forbidden");},readPromotion:async()=>{throw Error("held national manifest is forbidden");},
+    confirmUnchanged:async(input:{retrieval:{rawHash:string}})=>{assert.equal(input.retrieval.rawHash,rawHash);confirmations++;return {kind:"CONFIRMED",versionId:head.versionId,at:later};},
+  } as unknown as RoutineDataStore};
+}
+test("Socrata compares every catalog page and independent discovery root before any held payload",async()=>{
+  const plan=openDataSourceProbe({sourceId:"socrata-discovery",captures:[native],dependencies:{},observations:[discovery],complete:true});
+  const held=sourceStore(openDataProbeContentHash(plan));let requests=0;
+  const acquire:typeof acquireKnownRelease=async options=>{requests++;assert.equal(options.url,governmentUrl);
+    assert.equal(options.refresh,true);assert.equal(new Headers(options.headers).has("X-App-Token"),false);return {...discovery,checkedAt:later};};
+  const input={store:held.store,plan,versionId:"source-version",captures:[native],dependencies:{},signal:new AbortController().signal,
+    now:later,maxAgeMs:30*86_400_000,acquire,progress:memoryProgress()};
+  assert.ok(await confirmSocrataSource(input));assert.equal(held.confirmations(),1);assert.equal(requests,1);
+  const moved=sourceStore(openDataProbeContentHash(plan));
+  assert.equal(await confirmSocrataSource({...input,store:moved.store,progress:memoryProgress(),
+    acquire:async()=>({...discovery,sha256:"e".repeat(64),checkedAt:later})}),null,"a changed directory may reveal new government links");
+  assert.equal(moved.confirmations(),0);
+  assert.equal(await confirmSocrataSource({...input,dependencies:{"REGISTRATION:US-AZ:registration:v1":null},progress:memoryProgress()}),null,
+    "new or changed upstream registrations must revisit independent discovery");
+  const firstPage={...native,url:catalogUrl+"aaaa-aaaa",rawHash:"1".repeat(64)};
+  assert.notEqual(openDataProbeContentHash(openDataSourceProbe({sourceId:"socrata-discovery",captures:[firstPage,native],dependencies:{},observations:[discovery],complete:true})),
+    openDataProbeContentHash(openDataSourceProbe({sourceId:"socrata-discovery",captures:[{...firstPage,rawHash:"2".repeat(64)},native],dependencies:{},observations:[discovery],complete:true})),
+    "a changed earlier page cannot hide behind an equal final page");
+});
+test("incomplete discovery and credential-bearing URLs never qualify for a saved complete probe",()=>{
+  const plan=openDataSourceProbe({sourceId:"socrata-discovery",captures:[native],dependencies:{},complete:true,
+    observations:[{...discovery,requestedUrl:governmentUrl+"?api_key=never-save-this"}]});
+  assert.equal(plan.complete,false);assert.equal(plan.discoveryRequests?.length,0);
+  assert.equal(JSON.stringify(plan).includes("never-save-this"),false);
 });

@@ -31,7 +31,7 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 |---|---|---|
 | c8734c5d8 (carries a13baecf8) | RT-01 (place-map jobs fill every state), finished by River on stream/river-rt-01 | READY. Dropped 5 tests for code release 118 deleted; 103/103 focused, tsc, knip, eslint and preflight clean. RB-A10, RB-A9 and every state with no place data wait on it |
 | 7996ae820 → stream/river-rb-a7 | RB-A7, River finishing | in progress: GB-01's held names must reach the ready pages; journal 58-60; docs/measurements/rb-a7 left out |
-| c3fff3702 → stream/river-bl-02 | BL-02, River finishing | in progress: 5 file conflicts; 3 bypassCache call sites become normal reads (DB-04 deletes bypassCache); 4 proof files left out |
+| 5f28a6871 (carries c3fff3702) | BL-02 (current LegiScan session per state, sponsors matched to held legislators), finished by River on stream/river-bl-02 | READY 10:41 PM EDT. 5 conflicts resolved keeping every base change; the resume read in publication.ts is a normal read, the other 2 bypassCache sites left with the replay script; 4 proof files out; tsc, eslint, knip, preflight clean; focused tests pass (12 files that first failed for a missing generated place-reference folder pass once it is built) |
 | 8daccccb3 | MD-01 docs out (stream/river-md01-docs) | READY: deletes MD-01's 14 docs files (982 lines) |
 | 39238a8be | CS-01 (reader-text capitals) | 645 commits behind; not running. River finishes it after batch 2 |
 

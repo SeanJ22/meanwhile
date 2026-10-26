@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T17:58:00Z
+heartbeat: 2026-10-26T17:45:00Z
 
 
 <!-- READY-LIST -->
@@ -26,7 +26,7 @@ Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates,
 | b3f623480 (merges f4f1e47ab) | GV-01, Tucson hand-added roster record dropped; MT-02's duplicate roster lookup deleted, GV-01's rosterHolderById kept | Scan clean. In gate |
 | e60bfa7d8 (merges f98622201) | FM-01, lib/federal-money/refresh.ts reads only normalizedPayload.captures | Scan clean. In gate |
 | 459a51bc7 (only f4039045f) | MP-01 | Scan clean. In gate |
-| ff864c7d1 (merges aab119580) | MT-02, its roster lookup left out; host-state writes through operationalStatePath (firewall) | OUT of 129: fails legiscan-bulk (2 tests) on its own branch and a meeting-pin rate-limit test with MP-01. River fixing on stream/river-mt-02-fix; next release |
+| 87577ea3a (stream/river-mt-02-fix; was ff864c7d1) | MT-02 | Out of 129. Fixed and READY 1:35 PM, scan clean, goes in 130. Root cause: MT-02's shared pacer treated any 403 from an unrecognized URL as a site wall for the whole origin until 9999, so one refused LegiScan getDataset blocked every later LegiScan call (bills in every state, permanently) and exposed keyed APIs like Congress and Google Civic the same way. Now a keyed API's 403 goes back to the caller without holding the origin; Cloudflare challenges still wall the origin. MP-01's census geocoder now shares the host clock; MP-01's test updated to MT-02's 429 cooldown. 834/834 focused, tsc, eslint, knip, preflight clean |
 
 *Runner release fix, what happened 4:02-7:06 AM (from production, read-only):* the runner was not stuck. It moved to 125 (e12d76968) at 3:40 AM; 126's Netlify build failed so 125 stayed live; 127 went live at 6:49 and the runner closed new publish-now starts within about 2 minutes, then waited for the routine run already in progress (6:44:31-7:06:03, the usual ~22 minutes) and came up on 127 at 7:06:39, so it likely did not need the hand restart. 128 went the same way on its own (7:27:12 run end, 7:27:47 on 9352c8e14). The heartbeat misled: testedSha and codeIdentity were written only when a research cycle finished, so with hunts stopped they have read 8664f367 ("runner behind") since 9:54 PM. The separate staging bug (marker cleared only when a staging finished; a leftover child could hold it forever) did not cause Oct 26 but is fixed.
 *Follow-up, not urgent:* while hunts are stopped the main loop runs every second (CONTROL_WAKE_POLL_MS = 1 s), and each pass inspects the release (fetches /api/build and GitHub check runs: about 3,600 GitHub calls an hour against a 5,000 limit) and reads owner controls. River will cut this to once a minute in the next release.
@@ -76,10 +76,10 @@ The CT-01 session is alive and posts READY itself, with the ballot date text fix
 FM-01's READY says its durable progress raises bytes per federal-money job by 101%. River keeps its fix (lib/federal-money/refresh.ts reads only normalizedPayload.captures) and measures usaspending and openfema for two full hours before and after 129; if they go up, it goes here and DB-05 owns the fix.
 Before (reader + control plane, from database_transfer_hourly): usaspending 143.6 MB (9 AM), 82.1 MB (10 AM); openfema 13.2 MB (9 AM), 7.5 MB (10 AM). Earlier hours for range: usaspending 71-159 MB/h, openfema 8.7-21.6 MB/h (3-8 AM).
 
-**DB-05 (Sean's session): release 130, right behind 129**
+**Release 130: DB-05 + MT-02, right behind 129 (tree fold/130 b139d5f33 ready)**
 | READY | Lane | State |
 |---|---|---|
-| 3d4e87f62 (origin/stream/db-05, posted 12:39 PM) | DB-05 shared current-version reads: every runtime read checks current row versions before an unchanged body crosses the connection; all 525 bypassCache uses and the bypass API removed; folds DB-04 (39f637b67) and disposes of every held DB-03 step (folded or replaced; portrait duplicates stay out) | Scan clean (bypassCache removed, a test forbids it; no proof files; one additive migration expand, DB-03_process_transfer). Its READY says its own tsc and full suite were still running. 429 files; conflicts with the 129 tree in 4 files (lib/db/transfer-by-caller.ts, scripts/pilot-runner.mts, 2 tests). Folding it now would hold the place map and eight lanes about another hour, so it ships as 130 right after 129 (about 15 minutes' delay for DB-05). Fold resolved locally (fold/db-05 139d77c73 on the MT-02 tree; 4 conflicts; DB-05's own admin-native-version-reads test also fails at 3d4e87f62 and was fixed in a8029fc64 for DB-05 to confirm). It is re-based onto the final 129 tree once 129 ships |
+| 3d4e87f62 (origin/stream/db-05, posted 12:39 PM) | DB-05 shared current-version reads: every runtime read checks current row versions before an unchanged body crosses the connection; all 525 bypassCache uses and the bypass API removed; folds DB-04 (39f637b67) and disposes of every held DB-03 step (folded or replaced; portrait duplicates stay out) | Scan clean (bypassCache removed, a test forbids it; no proof files; one additive migration expand, DB-03_process_transfer). Its READY says its own tsc and full suite were still running. 429 files; conflicts with the 129 tree in 4 files (lib/db/transfer-by-caller.ts, scripts/pilot-runner.mts, 2 tests). Folding it now would hold the place map and eight lanes about another hour, so it ships as 130 right after 129 (about 15 minutes' delay for DB-05). Fold resolved locally (fold/db-05 139d77c73 on the MT-02 tree; 4 conflicts; DB-05's own admin-native-version-reads test also fails at 3d4e87f62 and was fixed in a8029fc64 for DB-05 to confirm). Re-folded onto 129 + MT-02 as fold/130 b139d5f33 (same resolutions). Release 130 = MT-02 + DB-05, gated right after 129 ships |
 
 **PP-01 and RB-A9 sessions are back**: origin/stream/pp-01 (merge of river, 12:05 PM) and origin/stream/rb-a9 (work in progress, 12:46 PM). No READY yet. River does not take them.
 

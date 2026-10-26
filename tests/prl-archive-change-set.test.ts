@@ -7,6 +7,7 @@ import { PRL_RHETORIC_ATTRIBUTION } from "../lib/sources/prl/types.ts";
 import type { PrlIngestReceipt } from "../lib/sources/prl/receipt.ts";
 
 const dataset=PRL_ARCHIVES[0]!,at="2026-10-01T00:00:00.000Z",later="2026-10-02T00:00:00.000Z";
+assert.ok(dataset.scope, "the archive inventory supplies its native scope");
 const receipt:PrlIngestReceipt={formatVersion:1,datasetId:dataset.id,scope:dataset.scope,title:dataset.title,target:dataset.target,
   sourceUrl:dataset.url,sourceSha256:"a".repeat(64),member:null,cursorField:null,fetchedAt:at,highWaterMark:null,previousMark:null,
   rowsSeen:3,rowsWritten:3,rowsAfterNow:0,rowsUnparseableCursor:0,coverageFrom:null,coverageThrough:null,objectStore:"local-file",

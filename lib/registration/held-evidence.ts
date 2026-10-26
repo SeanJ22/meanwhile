@@ -12,7 +12,7 @@ const object = (value: unknown): Record<string, unknown> | null =>
   value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 export type RegistrationHeldPrior=Pick<CandidateVersionRecord,"state"|"acquisitionSucceeded"|"promotedVersion"|"lastKnownGoodVersion"|"receipt">&{
-  readonly candidate:Pick<RoutineCandidate,"id"|"sourceId"|"recordClass"|"scope"|"retrieval"|"readModel"|"normalizedPayload">&{
+  readonly candidate:Pick<RoutineCandidate,"id"|"sourceId"|"recordClass"|"scope"|"retrieval"|"temporal"|"readModel"|"normalizedPayload">&{
     readonly normalization:Pick<RoutineCandidate["normalization"],"parserVersion">;
   };
 };

@@ -25,7 +25,7 @@ test("retained older and independently held registration evidence cannot refresh
   const probe=registrationSourceProbe({referenceSha256:"c".repeat(64),receipt:heldRegistrationReceipt(),schools:new Map([["lea-directory",lea]]),complete:true});
   const provenance={sourceUrl:lea.requestedUrl,sourceOrg:"NCES",collectedAt:at,verifiedAt:null,rawHash:lea.sha256};
   const government={id:"government:US-AZ:nces:0400001",provenance};
-  const model=(row:unknown)=>({governments:[row]}) as RegistrationReadModel;
+  const model=(row:unknown)=>({governments:[row]}) as unknown as RegistrationReadModel;
   assert.equal(registrationSourcesCover(model(government),probe),true);
   assert.equal(registrationSourcesCover(model({...government,provenance:{...provenance,rawHash:"f".repeat(64)}}),probe),false,
     "a missing government carried from an older release keeps its original body and date");

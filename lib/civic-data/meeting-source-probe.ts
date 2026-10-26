@@ -1,4 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
+import { readFileSync, existsSync, readdirSync } from "node:fs";
+import { dirname, join, resolve } from "node:path";
 import { runtimeCivicReadCache, type CivicReadCache } from "../db/civic-read-cache.ts";
 import { currentMeetingClock } from "./contracts.ts";
 import { createHash } from "node:crypto";
@@ -11,6 +13,8 @@ import { sourceContentHash, confirmSourceHashUnchanged } from "./source-hash.ts"
 import type { RoutineDataStore } from "./store.ts";
 import type { RoutineCandidate } from "./types.ts";
 import type { RetainedSourceResponse } from "./retained-meeting-bytes.ts";
+import { meetingFetchPass } from "../meetings/shared-fetch.ts";
+import { DOOR_KIND_SPECS } from "./derived-door-kinds.ts";
 
 type Request = NonNullable<RetainedSourceResponse["request"]>;
 export interface MeetingSourcePage {
@@ -33,15 +37,42 @@ interface ProgressPage { readonly response: Omit<RetainedSourceResponse, "bytes"
 interface MeetingSourceProgress { readonly context: string; readonly pages: Readonly<Record<string, ProgressPage>>; readonly deferred?: boolean }
 const PROGRESS = "meeting-source-probe:v1";
 const sourceIO = new AsyncLocalStorage<boolean>();
+const requestedInOperation = new AsyncLocalStorage<Set<string>>();
 const requestKey = (page: Pick<MeetingSourcePage, "requestedUrl" | "request">) => canonicalCivicDataHash([page.requestedUrl,
   page.request?.method ?? "GET", page.request?.body ?? null, Object.keys(page.request?.headers ?? {}).length ? page.request!.headers : null]);
 
 /** Door content, dependencies and the rolling day are inputs; observations of the same source are not. */
+const implementationHashes = new Map<string, string>();
+/** The executing adapter and agenda parser, including their local runtime imports, are normalization inputs. */
+export function meetingSourceImplementationHash(partition: MeetingPartitionContract): string {
+  const sourceNames = partition.derivedFamily ? ["ical", "official-page-events", "diligent", ...Object.values(DOOR_KIND_SPECS).map(spec => spec.sourceName)] : [partition.meetingSource];
+  const key = [...new Set(sourceNames)].sort().join(",");
+  const held = implementationHashes.get(key); if (held) return held;
+  const root = process.cwd(), seen = new Map<string, string>();
+  const visit = (path: string) => {
+    if (seen.has(path)) return;
+    const text = readFileSync(join(root, path), "utf8"); seen.set(path, text);
+    for (const match of text.matchAll(/(?:\b(?:import|export)\s+(?:[^;]*?\s+from\s*)?|\bimport\s*\()\s*["'](\.[^"']+)["']/g)) {
+      const base = resolve(root, dirname(path), match[1]);
+      const target = [base, `${base}.ts`, `${base}.mts`, `${base}.json`, join(base, "index.ts")].find(file => existsSync(file) && /\.(?:[cm]?ts|json)$/.test(file));
+      if (target) visit(target.slice(root.length + 1));
+    }
+  };
+  for (const path of ["scripts/ingest.ts", "pnpm-lock.yaml"]) seen.set(path, readFileSync(join(root, path), "utf8"));
+  for (const path of ["lib/civic-data/meeting-source-probe.ts", "lib/civic-data/derived-meeting-acquisition.ts", "lib/civic-data/derived-meeting-family.ts",
+    "lib/civic-data/meeting-fact-publication.ts", "lib/civic-data/candidate-builders.ts", "lib/meetings/agenda-documents.ts", "lib/meetings/snapshot.ts",
+    "lib/sources/feed-kinds.ts", ...sourceNames.map(source => `lib/sources/${source}/index.ts`).filter(path => existsSync(join(root, path)))]) visit(path);
+  const installed = join(root, "lib/sources/platform-adapters");
+  if (existsSync(installed)) for (const name of readdirSync(installed).filter(name => name.endsWith(".ts"))) visit(`lib/sources/platform-adapters/${name}`);
+  const hash = canonicalCivicDataHash([...seen].sort(([a], [b]) => a.localeCompare(b)));
+  implementationHashes.set(key, hash); return hash;
+}
+
 export function meetingSourceInputHash(partition: MeetingPartitionContract, now: string, dependencies: unknown = null): string {
   const wiring = partition.wiring;
   return canonicalCivicDataHash(["MEETING_SOURCE_PLAN_V1", partition.sourceId, partition.scope, partition.meetingSource, partition.bodyId, partition.ocdId,
-    wiring ? [wiring.agendaSourceType, wiring.config, wiring.noticeUrl, wiring.publishingOrg] : null, dependencies, now.slice(0, 10),
-    currentMeetingClock()]);
+    wiring ? [wiring.agendaSourceType, wiring.config, wiring.noticeUrl, wiring.publishingOrg, wiring.timeZone, wiring.jurisdiction, wiring.ocdId] : null, dependencies, now.slice(0, 10),
+    currentMeetingClock(), meetingSourceImplementationHash(partition)]);
 }
 
 export function meetingSourceBudgetAvailable(): boolean { return Date.now() + 45_000 < passDeadlineFromEnv(); }
@@ -60,6 +91,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
   const freshForMs = currentMeetingClock().hotEveryMs;
   const original = dependencies.fetchImpl ?? globalThis.fetch;
   let networkTransport = original;
+  const transport = meetingFetchPass({ fetchImpl: (input, init) => networkTransport(input, init) });
   let complete = true;
   const fetchSource = (async (input, init) => {
     if (sourceIO.getStore()) return original(input, init);
@@ -87,6 +119,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       const held = await sourceIO.run(true, () => vault.get(prior.vaultKey));
       if (held && createHash("sha256").update(held.bytes).digest("hex") === prior.response.rawHash) {
         responses.set(key, { ...prior.response, bytes: held.bytes });
+        requestedInOperation.getStore()?.add(key);
         await sourceIO.run(true, async () => onSource?.({ ...prior.response, bytes: held.bytes }));
         const response = new Response(new Uint8Array(held.bytes), { status: prior.response.httpStatus, headers: { "content-type": prior.response.contentType } });
         Object.defineProperty(response, "url", { value: prior.response.finalUrl }); return response;
@@ -95,7 +128,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
     const deadline = AbortSignal.timeout(Math.max(1, Math.min(30_000, passDeadlineFromEnv() - Date.now() - 40_000)));
     const sourceSignal = init?.signal ?? (input instanceof globalThis.Request ? input.signal : undefined);
     let response: Response;
-    try { response = await networkTransport(input, { ...init, signal: sourceSignal ? AbortSignal.any([sourceSignal, deadline]) : deadline }); }
+    try { response = await transport(input, { ...init, signal: sourceSignal ? AbortSignal.any([sourceSignal, deadline]) : deadline }); }
     catch (error) {
       complete = false; failures.set(key, error instanceof Error ? error : new Error(String(error)));
       await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages, deferred: !meetingSourceBudgetAvailable() }, context));
@@ -127,11 +160,18 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
     });
     const { bytes: _bytes, ...metadata } = retained;
     pages[key] = { response: metadata, vaultKey: stored.key }; responses.set(key, retained);
+    requestedInOperation.getStore()?.add(key);
     await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages }, context));
     await sourceIO.run(true, async () => onSource?.(retained));
     return response;
   }) as typeof fetch;
   return { head, responses, fetch: fetchSource, get complete() { return complete; },
+    forgetGet: transport.forgetGet,
+    async collect<T>(operation: () => Promise<T>) {
+      const keys = new Set<string>();
+      const value = await requestedInOperation.run(keys, operation);
+      return { value, responses: [...keys].flatMap(key => responses.has(key) ? [responses.get(key)!] : []) };
+    },
     async probe(plan: MeetingSourceProbe) {
       for (const page of plan.requests) {
         const response = await fetchSource(page.requestedUrl, { method: page.request?.method ?? "GET", body: page.request?.body, headers: page.request?.headers });

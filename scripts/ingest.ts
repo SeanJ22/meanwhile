@@ -623,7 +623,10 @@ export async function promoteDerivedMeetingFamily(
     const acquired = await readDerivedFamilyMembers(group, fetchImpl);
     for (const read of acquired) console.log(`  ${read.member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
     reads.push(...acquired);
-    if (group[0].row.kind === "MUNICODE") pass.forgetGet(acquired.flatMap(read => read.acquisitions.map(row => row.requestedUrl)));
+    if (group[0].row.kind === "MUNICODE") {
+      const urls = acquired.flatMap(read => read.acquisitions.map(row => row.requestedUrl));
+      pass.forgetGet(urls); sourceSession?.forgetGet(urls);
+    }
   }
   await recordFamilyMemberOutcomes(reads);
   const versionId = wiring.metadata.versionId;

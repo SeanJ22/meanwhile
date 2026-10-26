@@ -7,6 +7,7 @@ export interface RetainedSourceResponse {
   readonly source: string; readonly requestedUrl: string; readonly finalUrl: string;
   readonly httpStatus: number; readonly rawHash: string; readonly byteCount: number;
   readonly bytes: Uint8Array; readonly retrievedAt: string; readonly contentType: string;
+  readonly request?: { readonly method: string; readonly body?: string; readonly headers?: Readonly<Record<string, string>> };
 }
 type TracedFetch = Pick<RetainedSourceResponse, "requestedUrl" | "finalUrl" | "httpStatus" | "rawHash" | "byteCount">;
 export type RetainedMeetingCandidate = RoutineCandidate & {

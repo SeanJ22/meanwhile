@@ -82,12 +82,13 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
   const foreign=(person:Officeholder,key:string)=>Boolean(ownerOf(key)&&ownerOf(key)!==identityOf(person));
   const documentReference=(person:Officeholder)=>{
     if(person.nativeIds?.["ocd-person"]?.length)return undefined;
-    const parents=new Set((person.nativeIds?.["official-legislature"]??[]).flatMap(url=>{
-      const parent=memberProfileSubpageParentUrl(url),action=/^(?:sign up|subscribe|contact|sponsored bills|read more|view)(?: |$)/.test(name(person.name));
+    const action=/^(?:sign up|subscribe|contact|email|sponsored bills|read more|view)(?: |$)/.test(name(person.name));
+    const parents=new Set([...person.nativeIds?.["official-legislature"]??[],...(action&&person.provenance.sourceUrl?[person.provenance.sourceUrl]:[])].flatMap(url=>{
+      const parent=memberProfileSubpageParentUrl(url);
       const native=parent||action?nativePersonIdFromUrl(parent??url):null;
       return native?[`${native.source}:${native.id}`]:[];
     }));
-    if(!sourcePersonIsDocument(person)&&!parents.size)return undefined;
+    if(!sourcePersonIsDocument(person)&&!parents.size&&!action)return undefined;
     const matches=sources.filter(source=>source.nativeIds?.["ocd-person"]?.length===1&&(personIdentityKeys(source).has(person.id)||
       [source.websiteUrl,...source.profileUrls??[]].some(url=>{
         const native=url?nativePersonIdFromUrl(url):null;return Boolean(native&&parents.has(`${native.source}:${native.id}`));

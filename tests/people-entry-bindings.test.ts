@@ -95,6 +95,10 @@ test("a profile's subordinate office headings, document links and email button n
   assert.deepEqual(parsed.officeholders.map(person=>person.name),[member.name]);
   assert.equal(parsed.officeholders[0].portraitCandidate?.imageUrl,"https://www.flsenate.gov/vito.jpg");
   for(const old of [doc,action])assert.ok(personIdentityKeys(parsed.officeholders[0]).has(old.id));
+  const repaired=mergePeopleSets([roster([{...action,provenance:{...action.provenance,sourceUrl:profile}}]),parsed])!;
+  assert.equal(repaired.officeholders.length,1);
+  assert.equal(repaired.officeholders[0].name,member.name);
+  assert.ok(personIdentityKeys(repaired.officeholders[0]).has(action.id));
 });
 
 test("an own directory link's district and party label are not part of the member's name",()=>{
@@ -127,6 +131,12 @@ test("a member's old form-page IDs resolve to the person owning its explicit pub
   assert.deepEqual(repaired.officeholders[0].nativeIds?.["ocd-person"],["ocd-person/vito"]);
   assert.ok(retainsPeopleBindings([form],repaired.officeholders));
   }
+  const form={...member,id:"old-vanity-form",personId:"old-vanity-form",name:"Sign Up",nativeIds:{"official-legislature":["https://ohiosenate.gov/vito-barbieri"]},
+    provenance:{...member.provenance,sourceUrl:member.websiteUrl},memberships:[]};
+  const repaired=mergePeopleSets([roster([form]),roster([member])])!;
+  assert.equal(repaired.officeholders.length,1);
+  assert.equal(repaired.officeholders[0].name,member.name);
+  assert.ok(retainsPeopleBindings([form],repaired.officeholders));
 });
 
 test("profile routes keep their own identity without treating a term or directory as a person",()=>{

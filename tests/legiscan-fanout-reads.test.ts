@@ -95,3 +95,87 @@ test("a multi-part LegiScan session publish never reads a part back whole, and a
     assert.equal(republished.wholeReads,0);
   });
 });
+
+test("a session the pass deadline cuts resumes on later passes, survives a held-card edit, and publishes without reading a part back",async()=>{
+  const {zip}=await import("../scripts/xlsx.mjs");
+  const {refreshLegiscan,LEGISCAN_PART_WRITE_RESERVE_MS,LEGISCAN_SESSION_START_RESERVE_MS}=await import("../scripts/legiscan-bulk.mts");
+  const {readBillsForState}=await import("../lib/sources/legiscan/reader.ts");
+  await withMigratedRoutineStore("legiscan-bulk",async store=>{
+    const current={...dataset,year_start:2026,year_end:2026},members=Array.from({length:LEGISCAN_PART_ROWS*4+1},(_,index)=>{const raw=JSON.parse(ak);raw.bill.bill_id+=index;return JSON.stringify(raw);});
+    const fetchImpl:typeof fetch=async value=>{
+      const op=new URL(String(value)).searchParams.get("op");
+      if(op==="getDatasetList")return Response.json({status:"OK",datasetlist:[current]});
+      const archive=zip(members.map((data,index)=>({name:`${dataset.session_id}/bill/${index}.json`,data:Buffer.from(data)})),"2026-10-26");
+      return Response.json({status:"OK",dataset:{...dataset,mime_type:"application/zip",zip:archive.toString("base64")}});
+    };
+    // A held card carries far more than its identity: production parts embedded every office and source copy.
+    let card={...person,level:"STATE" as const,state:"AK",offices:[{name:"capitol",address:"Room 410, State Capitol, Juneau"}]};
+    // Each part write takes a minute of the pass; the standing pass stops the child at its deadline.
+    let clock=Date.parse("2026-10-26T19:36:00.000Z");const written:number[]=[],partIds=new Set<string>();
+    const create=store.create.bind(store);
+    store.create=async(record,event)=>{
+      const created=await create(record,event);
+      if((record.candidate.readModel as {kind:string}).kind==="PART"){written.push((record.candidate.normalizedPayload as {partIndex:number}).partIndex);partIds.add(record.candidate.id);clock+=60_000;}
+      return created;
+    };
+    // Production's whole part reads (11-24 MB) ran past the 30 s Neon request deadline: the 21:16Z Georgia session check
+    // failed "Saved session archive parts cannot be verified". Here any whole read of a part fails the same way.
+    const whole={readCandidate:store.readCandidate.bind(store),readCandidateProof:store.readCandidateProof.bind(store)};
+    const refuse=(id:string)=>{if(partIds.has(id))throw Error("NEON_REQUEST_DEADLINE: whole bill part read");};
+    store.readCandidate=async id=>{refuse(id);return whole.readCandidate(id);};
+    store.readCandidateProof=async id=>{refuse(id);return whole.readCandidateProof(id);};
+    const passes:{written:number[];deferred:number[]}[]=[];
+    const all=await counted(async()=>{
+      for(let pass=0;pass<6&&!(await store.readPromotion("STATE_BILL",billScope(dataset.session_id)));pass++){
+        const start=written.length,now=new Date(clock).toISOString();
+        const result=await refreshLegiscan(store,AbortSignal.timeout(60_000),{key:"fixture",fetchImpl,now:()=>now,peopleForState:async()=>[card],
+          clock:()=>clock,deadlineMs:clock+LEGISCAN_PART_WRITE_RESERVE_MS+2*60_000});
+        assert.deepEqual(result.counts.AK.failures,[]);
+        passes.push({written:written.slice(start),deferred:result.counts.AK.deferred});
+        // Between passes the held card's office moves; no identity field changes.
+        card={...card,offices:[{name:"capitol",address:`Room ${500+pass}, State Capitol, Juneau`}]};
+      }
+    });
+    console.log(`LEGISCAN_PASSES=${JSON.stringify(passes)}`);
+    assert.ok(passes.length>=2,"the deadline cut the session at least once");
+    for(const pass of passes.slice(0,-1)){assert.ok(pass.written.length>0,"each cut pass still saved parts");assert.deepEqual(pass.deferred,[dataset.session_id]);}
+    assert.deepEqual(passes.at(-1)!.deferred,[]);
+    assert.deepEqual([...written].sort((a,b)=>a-b),[0,1,2,3,4],"each part was written exactly once: every pass resumed after the saved parts");
+    assert.equal(summary(all.reads,1_000_000).wholeReads,0,"no pass read a saved part back whole");
+    const session=(await store.readPromotion<Session>("STATE_BILL",billScope(dataset.session_id)))!;
+    assert.equal(session.payload.parts.length,5);assert.equal(session.payload.counts.rows,members.length);
+    store.readCandidate=whole.readCandidate;store.readCandidateProof=whole.readCandidateProof;
+    const read=await readBillsForState("AK",{store,now:new Date(clock).toISOString()});
+    assert.equal(read.complete,true);assert.equal(read.bills.length,members.length);
+    const part=(await store.readCandidate(session.payload.parts[0].versionId))!.candidate.normalizedPayload as {people:Record<string,unknown>[]};
+    assert.deepEqual(part.people.map(row=>Object.keys(row).sort()),[["id","level","nativeIds","state"]],"bill evidence keeps only the join's identity fields");
+    assert.ok(LEGISCAN_SESSION_START_RESERVE_MS<LEGISCAN_PART_WRITE_RESERVE_MS+2*60_000);
+  });
+});
+
+test("an edited held card between passes cannot strand a session behind whole part reads",async()=>{
+  // Production 21:16Z: a resumed session's check read its saved parts whole, ran past the Neon request deadline and
+  // failed "Saved session archive parts cannot be verified"; Hawaii's held cards had changed between its passes.
+  await withMigratedRoutineStore("legiscan-bulk",async store=>{
+    const index=[(({access_key:_access,...row})=>row)(dataset)];
+    await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:index}),at,"getDatasetList"),datasets:[dataset]},at);
+    const partIds=new Set<string>(),create=store.create.bind(store);let interrupt=true;
+    store.create=async(record,event)=>{
+      if(interrupt&&(record.candidate.normalizedPayload as {partIndex?:number}).partIndex===2)throw Error("pass deadline");
+      const created=await create(record,event);
+      if((record.candidate.readModel as {kind:string}).kind==="PART")partIds.add(record.candidate.id);
+      return created;
+    };
+    const card={...person,level:"STATE" as const,offices:[{name:"capitol",address:"Room 410"}]};
+    await assert.rejects(publishBulkCandidate(store,{...source(at),people:[card]},at),/pass deadline/);
+    const saved=new Set(partIds),whole={readCandidate:store.readCandidate.bind(store),readCandidateProof:store.readCandidateProof.bind(store)};
+    store.readCandidate=async id=>{if(partIds.has(id))throw Error("NEON_REQUEST_DEADLINE: whole bill part read");return whole.readCandidate(id);};
+    store.readCandidateProof=async id=>{if(partIds.has(id))throw Error("NEON_REQUEST_DEADLINE: whole bill part read");return whole.readCandidateProof(id);};
+    interrupt=false;partIds.clear();for(const id of saved)partIds.add(id);
+    const moved={...card,offices:[{name:"capitol",address:"Room 500"}]};
+    const resumed=await publishBulkCandidate(store,{...source(later),people:[moved]},later);
+    assert.ok(resumed.outcome.promoted,JSON.stringify(resumed.outcome.candidate.receipt?.checks.filter(check=>check.verdict!=="PASS")));
+    const session=resumed.candidate.readModel as Session;
+    assert.equal(session.parts.filter(part=>saved.has(part.versionId)).length,saved.size,"the parts saved before the edit are kept");
+  });
+});

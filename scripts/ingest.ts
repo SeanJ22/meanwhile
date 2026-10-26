@@ -118,8 +118,8 @@ import {
   familyMemberReadIssue,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";
-import { retainingFetch, retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
-import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
+import { retainingFetch, retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, bindMeetingSourceObservations, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
+import { stageMeetingFactPublication, continueMeetingFactPublication, meetingFactsAfterSourceCheck } from "../lib/civic-data/meeting-fact-progress.ts";
 import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
 import { withDerivedSourceContent } from "../lib/civic-data/derived-source-hash.ts";
 import { sourceHashReceiptFields, type SourceHashConfirmation } from "../lib/civic-data/source-hash.ts";
@@ -689,7 +689,8 @@ async function promoteDerivedMeetingBody(
         vault: facts.vault, bodyIds: heldBodies, responses: [response] }).then(() => {}) : undefined);
     stopWatch=sourceSession.watchTermination();
     const confirmed = await probeMeetingSource({ store, partition, normalizationInputHash: sourceInputHash, now: generatedAt, session: sourceSession,
-      workRemains: plan => facts ? meetingFactWorkRemains(facts.db.query, plan.meetingIds, plan.bodyIds, generatedAt) : Promise.resolve(false) });
+      workRemains: plan => facts ? meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
+        clocks:factClocks(null),at:generatedAt,meetingIds:plan.meetingIds,bodyIds:plan.bodyIds}) : Promise.resolve(false) });
     if (confirmed) {
       console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
         bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(confirmed), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
@@ -733,7 +734,8 @@ async function promoteDerivedMeetingBody(
   let complete = reads.length === members.filter(member => member.status === "ACTIVE").length && reads.every(read => familyMemberReadIssue(read) === null);
   const acquiredConfirmation = complete && sourceSession && sourceInputHash ? await confirmAcquiredMeetingSource({ store, partition, session: sourceSession,
     normalizationInputHash: sourceInputHash, now: new Date().toISOString(), workRemains: plan => facts
-      ? meetingFactWorkRemains(facts.db.query, plan.meetingIds, plan.bodyIds, new Date().toISOString()) : Promise.resolve(true) }) : null;
+      ? meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
+        clocks:factClocks(null),at:new Date().toISOString(),meetingIds:plan.meetingIds,bodyIds:plan.bodyIds}) : Promise.resolve(true) }) : null;
   if (acquiredConfirmation && sourceSession) {
     console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
       bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(acquiredConfirmation), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
@@ -1071,7 +1073,8 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
       const measurement = diggerMeasurement(partition.bodyId, dryRun);
       measurement.worked();
       const confirmed = sourceSession ? await measurement.read(() => sourceSession.run(() => probeMeetingSource({ store, partition, normalizationInputHash: sourceInputHash, now: at, session: sourceSession,
-        workRemains: plan => meetingFactWorkRemains(facts.db.query, plan.meetingIds, [...new Set(plan.bodyIds ?? [partition.bodyId])], at) }))) : null;
+        workRemains: plan => sourceSession.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession.head,
+          observations:[...sourceSession.responses.values()],clocks:factClocks(null),at,meetingIds:plan.meetingIds,bodyIds:[...new Set(plan.bodyIds ?? [partition.bodyId])]})) }))) : null;
       if (confirmed && sourceSession) {
         console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
           bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(confirmed), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
@@ -1079,7 +1082,7 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
         results.push({ measurement: measurement.result(), partitions: [], confirmations: [{ partition, confirmation: confirmed }], succeeded: true, sourceSucceeded: true, exitCode: 0,
           sourceReads: [...sourceSession.responses.values()].map(({ bytes: _bytes, ...response }) => response) });
       } else {
-        results.push(await readMeetingPartition(partition, store, { ...options, sourceSession, sourceInputHash, ownerChoiceHash, measurement }, dryRun));
+        results.push(await readMeetingPartition(partition, store, { ...options, facts, sourceSession, sourceInputHash, ownerChoiceHash, measurement }, dryRun));
       }
     } catch (error) {
       if (error instanceof Error && error.message.startsWith("MEETING_VENUE_OWNER_INPUT_CHANGED")) await sourceSessionForInputs?.defer();
@@ -1162,7 +1165,9 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
     const session = options.sourceSession, partition = partitions[0]!, query = options.facts?.db.query ?? factReader();
     const compare = () => session.run(() => confirmAcquiredMeetingSource({ store: promotionStore, partition, session,
       normalizationInputHash: options.sourceInputHash!, now: new Date().toISOString(), workRemains: plan => query
-        ? meetingFactWorkRemains(query, plan.meetingIds, plan.bodyIds, new Date().toISOString()) : Promise.resolve(true) }));
+        ? options.facts ? session.inputs(()=>meetingFactsAfterSourceCheck({facts:options.facts!.db,vault:options.facts!.vault,head:session.head,
+          observations:[...session.responses.values()],clocks:factClocks(null),at:new Date().toISOString(),meetingIds:plan.meetingIds,bodyIds:plan.bodyIds}))
+          : meetingFactWorkRemains(query, plan.meetingIds, plan.bodyIds, new Date().toISOString()) : Promise.resolve(true) }));
     const confirmed = measurement ? await measurement.read(compare) : await compare();
     if (confirmed) {
       console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
@@ -1189,7 +1194,8 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
   if (previous && partitions.length === 1 && previous.meetings.some(meeting => meeting.bodyId !== partitions[0]!.bodyId)) throw new Error("INGEST_PREVIOUS_NOT_ONE_BODY");
   const raw = retained.value;
   const normalize = () => (source as MeetingSource<unknown>).normalize(raw as unknown[]);
-  const normalized = options.venues ? withVenueEntries(options.venues, normalize) : normalize();
+  const normalizedRows = options.venues ? withVenueEntries(options.venues, normalize) : normalize();
+  const normalized = options.sourceSession ? bindMeetingSourceObservations(normalizedRows,[...options.sourceSession.responses.values()]) : normalizedRows;
 
   const meetings: Meeting[] = resolveAttribution(
     [...retainPreviouslyVerifiedVenuePoints(normalized, previous?.meetings ?? [])]
@@ -1791,11 +1797,14 @@ export function printMeetingPartitionReceipt(
 
 /** The fresh sittings a promoted partition read become facts; a failure here never holds the partition. */
 async function publishPartitionFacts(facts: MeetingFactsTarget, label: string, source: string,
-  meetings: readonly Meeting[], acquisitions: Parameters<typeof tracedResponses>[0][number]["acquisitions"], producedBy: string, at: string): Promise<void> {
+  meetings: readonly Meeting[], acquisitions: Parameters<typeof tracedResponses>[0][number]["acquisitions"], producedBy: string, at: string,
+  scope=meetingPartitionContract(label)?.scope??label): Promise<void> {
   try {
     const responses = [...tracedResponses([{ source, acquisitions }], facts.responses),...facts.responses.filter(response=>response.source==="census-geocoder")];
-    const report = await publishReadMeetingFacts({ facts: facts.db, vault: facts.vault, meetings, responses, producedBy, clocks: factClocks(null), now: new Date(at) });
-    console.log(`  ${label}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.unsaved.length ? `; unsaved ${report.unsaved.join("; ")}` : ""}`);
+    // The native promoter stages before pointer movement; direct held-reader callers also retain their admitted work.
+    await stageMeetingFactPublication({facts:facts.db,vault:facts.vault,scope,candidateId:producedBy,meetings,responses});
+    const report = await continueMeetingFactPublication({facts:facts.db,vault:facts.vault,candidateId:producedBy,meetings,observations:responses,clocks:factClocks(null),now:new Date(at)});
+    console.log(`  ${label}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.complete ? "" : "; remaining fields continue from the existing cursor"}`);
   } catch (error) {
     console.error(`MEETING_FACTS_FAILED ${label}: ${error instanceof Error ? error.message : String(error)}`);
   }

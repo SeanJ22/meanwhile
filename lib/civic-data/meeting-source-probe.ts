@@ -15,6 +15,10 @@ import type { RoutineCandidate } from "./types.ts";
 import type { RetainedSourceResponse } from "./retained-meeting-bytes.ts";
 import { meetingFetchPass } from "../meetings/shared-fetch.ts";
 import { DOOR_KIND_SPECS } from "./derived-door-kinds.ts";
+import { factReader } from "../facts/db.ts";
+import type { Query } from "../facts/publish.ts";
+import { meetingFactPublicationPending } from "./meeting-fact-progress.ts";
+import { recordAcquiredResponse } from "../sources/acquisition-trace.ts";
 
 type Request = NonNullable<RetainedSourceResponse["request"]>;
 export interface MeetingSourcePage {
@@ -83,11 +87,19 @@ export function meetingSourceBudgetAvailable(): boolean { return Date.now() + 45
 export async function meetingSourceSession(partition: MeetingPartitionContract, normalizationInputHash: string,
   store: Pick<RoutineDataStore, "readSourceHead">, now: string, vault: EvidenceStore,
   onSource?: (response: RetainedSourceResponse) => Promise<void>, initial?: RetainedSourceResponse,
-  dependencies: { readonly checkpoint?: Pick<CivicReadCache, "readCheckpoint" | "checkpoint">; readonly fetchImpl?: typeof fetch } = {}) {
+  dependencies: { readonly checkpoint?: Pick<CivicReadCache, "readCheckpoint" | "checkpoint">; readonly fetchImpl?: typeof fetch;
+    readonly publicationPending?: () => Promise<boolean> } = {}) {
   const head = await store.readSourceHead("MEETING", partition.scope);
   const cache = dependencies.checkpoint ?? runtimeCivicReadCache().jobState(), context = canonicalCivicDataHash([partition.sourceId, partition.scope, normalizationInputHash]);
   const saved = await cache.readCheckpoint<MeetingSourceProgress>(PROGRESS, partition.scope);
   const pages: Record<string, ProgressPage> = saved?.context === context ? { ...saved.pages } : {};
+  let deferred = saved?.context === context && saved.deferred === true;
+  let checkpointWrites=Promise.resolve(),finished=false;
+  const checkpoint = (value:MeetingSourceProgress) => {
+    const write=checkpointWrites.then(()=>sourceIO.run(true,()=>cache.checkpoint(PROGRESS,partition.scope,value,context)));
+    checkpointWrites=write.catch(()=>{});return write;
+  };
+  const save = () => checkpoint({context,pages:{...pages},deferred});
   const responses = new Map<string, RetainedSourceResponse>();
   const failures = new Map<string, Response | Error>();
   const freshForMs = currentMeetingClock().hotEveryMs;
@@ -103,7 +115,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       requestedUrl.startsWith(process.env.WTP_CIVIC_READ_CACHE_URL ?? "\u0000")) return original(input, init);
     if (url.protocol !== "https:") { complete = false; return networkTransport(input, init); }
     if (!meetingSourceBudgetAvailable()) {
-      await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages, deferred: true }, context));
+      deferred = true; await save();
       throw new Error("MEETING_SOURCE_CONTINUATION_PENDING");
     }
     const method = (init?.method ?? (input instanceof globalThis.Request ? input.method : "GET")).toUpperCase();
@@ -124,6 +136,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       const held = await sourceIO.run(true, () => vault.get(prior.vaultKey));
       if (held && createHash("sha256").update(held.bytes).digest("hex") === prior.response.rawHash) {
         responses.set(key, { ...prior.response, bytes: held.bytes });
+        recordAcquiredResponse({requestedUrl,finalUrl:prior.response.finalUrl,httpStatus:prior.response.httpStatus,bytes:held.bytes});
         requestedInOperation.getStore()?.add(key);
         await sourceIO.run(true, async () => onSource?.({ ...prior.response, bytes: held.bytes }));
         const response = new Response(new Uint8Array(held.bytes), { status: prior.response.httpStatus, headers: { "content-type": prior.response.contentType } });
@@ -136,13 +149,13 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
     try { response = await transport(input, { ...init, signal: sourceSignal ? AbortSignal.any([sourceSignal, deadline]) : deadline }); }
     catch (error) {
       complete = false; failures.set(key, error instanceof Error ? error : new Error(String(error)));
-      await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages, deferred: !meetingSourceBudgetAvailable() }, context));
+      deferred ||= !meetingSourceBudgetAvailable(); await save();
       throw error;
     }
     const finalUrl = response.url || requestedUrl;
     if (!response.ok || response.status === 206 || !finalUrl.startsWith("https://")) {
       complete = false; failures.set(key, response.clone());
-      await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages, deferred: false }, context));
+      await save();
       return response;
     }
     const bytes = new Uint8Array(await response.clone().arrayBuffer()), rawHash = createHash("sha256").update(bytes).digest("hex");
@@ -169,7 +182,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
     if (saveRequest) pages[key] = { response: metadata, vaultKey: stored.key };
     responses.set(key, retained);
     requestedInOperation.getStore()?.add(key);
-    await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages }, context));
+    await save();
     await sourceIO.run(true, async () => onSource?.(retained));
     return response;
   }) as typeof fetch;
@@ -201,15 +214,20 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       globalThis.fetch = fetchSource;
       try { return await operation(); } finally { globalThis.fetch = prior; networkTransport = priorTransport; }
     },
-    async clear() { await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages: {} }, context)); },
-    async defer() { await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages, deferred: true }, context)); },
+    async clear() {
+      const pending = dependencies.publicationPending ?? (async () => { const query = factReader(); return query ? meetingFactPublicationPending(query, partition.scope) : false; });
+      if (await sourceIO.run(true, pending)) { deferred=true; await save(); return; }
+      deferred=false;finished=true;
+      await checkpoint({context,pages:{},deferred:false});
+    },
+    async defer() { deferred=true; await save(); },
     watchTermination() {
-      const save = () => { void sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages, deferred: true }, context)); };
-      process.once("SIGTERM", save);
+      const savePending = () => { if(finished)return;deferred=true;void save(); };
+      process.once("SIGTERM", savePending);
       const delay = passDeadlineFromEnv() - Date.now() - 40_000;
-      const timer = Number.isFinite(delay) ? setTimeout(save, Math.max(0, delay)) : undefined;
+      const timer = Number.isFinite(delay) ? setTimeout(savePending, Math.max(0, delay)) : undefined;
       timer?.unref();
-      return () => { if (timer) clearTimeout(timer); process.removeListener("SIGTERM", save); };
+      return () => { if (timer) clearTimeout(timer); process.removeListener("SIGTERM", savePending); };
     },
   };
 }
@@ -290,7 +308,7 @@ export async function confirmAcquiredMeetingSource(input: Parameters<typeof prob
 
 /** A cut-off acquisition remains the same owed job, with its already captured pages held in the ordinary vault. */
 export async function meetingSourceContinuationPending(scope: string,
-  checkpoint: Pick<CivicReadCache, "readCheckpoint"> = runtimeCivicReadCache().jobState()): Promise<boolean> {
+  checkpoint: Pick<CivicReadCache, "readCheckpoint"> = runtimeCivicReadCache().jobState(), query:Query|null=factReader()): Promise<boolean> {
   const progress = await checkpoint.readCheckpoint<MeetingSourceProgress>(PROGRESS, scope);
-  return progress?.deferred === true;
+  return progress?.deferred === true || (query ? await meetingFactPublicationPending(query,scope) : false);
 }

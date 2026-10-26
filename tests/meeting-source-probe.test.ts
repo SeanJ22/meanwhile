@@ -9,6 +9,7 @@ import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { MeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
+import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
 
 const row = FIXTURE_DOOR_ROWS.find(row => row.agendaSourceType === "ICAL")!;
 const partition: MeetingPartitionContract = meetingPartitionForRow("ical", row.bodyId);
@@ -23,7 +24,7 @@ test("meeting hash comparison includes independently changing agendas before any
   const store = Object.assign(new MemoryRoutineDataStore(), { async readSourceHead() { return head; }, async readCandidatePath<T>(_id: string, path: readonly string[]) {
     assert.deepEqual(path, ["normalizedPayload", "sourceProbe"]); return heldPlan as T;
   }, async confirmUnchanged() { confirmations++; return { kind: "CONFIRMED" as const, versionId: head!.versionId, at: now }; } });
-  const first = await meetingSourceSession(partition, "normalization:one", store, now, vault, undefined, undefined, { checkpoint, fetchImpl });
+  const first = await meetingSourceSession(partition, "normalization:one", store, now, vault, undefined, undefined, { checkpoint, fetchImpl, publicationPending:async()=>false });
   await first.fetch(calendar); await first.fetch(agenda);
   const candidate = withMeetingSourceProbe(meetingsCandidate({ snapshot: { formatVersion: 1, generatedAt: now, counts: { fresh: 0, carried: 0, total: 0 },
     sources: [{ source: "ical", ok: true, fetched: 0, normalized: 0 }], meetings: [], agendaDocuments: [] },
@@ -35,7 +36,7 @@ test("meeting hash comparison includes independently changing agendas before any
     parserVersion: "meetings-composite/2", promotedAt: now, candidateState: "PROMOTED", acquisitionSucceeded: true, imported: false };
   await first.clear();
   const probe = async () => {
-    const session = await meetingSourceSession(partition, "normalization:one", store, now, vault, undefined, undefined, { checkpoint, fetchImpl });
+    const session = await meetingSourceSession(partition, "normalization:one", store, now, vault, undefined, undefined, { checkpoint, fetchImpl, publicationPending:async()=>false });
     const result = await probeMeetingSource({ store, partition, session, normalizationInputHash: "normalization:one", now, workRemains: async () => false });
     await session.clear(); return result;
   };
@@ -52,22 +53,35 @@ test("a deadline resumes completed page hashes from the ordinary vault and prese
   const store = { async readSourceHead() { return null; } };
   try {
     delete process.env.WTP_PASS_DEADLINE_AT;
-    const first = await meetingSourceSession(partition, "normalization:resume", store, now, vault, undefined, undefined, { checkpoint, fetchImpl });
+    const first = await meetingSourceSession(partition, "normalization:resume", store, now, vault, undefined, undefined, { checkpoint, fetchImpl, publicationPending:async()=>false });
     await first.fetch(calendar);
     const observedAt = [...first.responses.values()][0]!.retrievedAt;
     process.env.WTP_PASS_DEADLINE_AT = new Date(Date.now() + 44_000).toISOString();
     await assert.rejects(first.fetch(agenda), /MEETING_SOURCE_CONTINUATION_PENDING/);
-    assert.equal(await meetingSourceContinuationPending(partition.scope, checkpoint), true);
+    assert.equal(await meetingSourceContinuationPending(partition.scope, checkpoint, null), true);
     delete process.env.WTP_PASS_DEADLINE_AT;
-    const next = await meetingSourceSession(partition, "normalization:resume", store, now, vault, undefined, undefined, { checkpoint, fetchImpl });
-    await next.fetch(calendar); await next.fetch(agenda);
+    const next = await meetingSourceSession(partition, "normalization:resume", store, now, vault, undefined, undefined, { checkpoint, fetchImpl, publicationPending:async()=>false });
+    const replay=await captureSourceAcquisitions(run=>run("ical",()=>next.fetch(calendar)));
+    assert.equal(replay.evidence.length,1,"a resumed adapter still has exact acquired-byte authority");
+    await next.fetch(agenda);
     assert.equal(calls, 2, "the completed calendar is not fetched again during a continuation");
     assert.equal([...next.responses.values()][0]!.retrievedAt, observedAt);
     await next.clear();
-    assert.equal(await meetingSourceContinuationPending(partition.scope, checkpoint), false);
+    assert.equal(await meetingSourceContinuationPending(partition.scope, checkpoint, null), false);
   } finally {
     if (previous === undefined) delete process.env.WTP_PASS_DEADLINE_AT; else process.env.WTP_PASS_DEADLINE_AT = previous;
   }
+});
+
+test("later page saves and source cleanup cannot erase unfinished field publication",async()=>{
+  const checkpoint=cache(),vault=new MemoryEvidenceStore(),now=new Date().toISOString();
+  let pending=true;
+  const session=await meetingSourceSession(partition,"pending-fields",{readSourceHead:async()=>null},now,vault,undefined,undefined,
+    {checkpoint,fetchImpl:async()=>new Response("Source bytes"),publicationPending:async()=>pending});
+  await session.fetch(calendar);await session.defer();await session.fetch(agenda);await session.clear();
+  assert.equal(await meetingSourceContinuationPending(partition.scope,checkpoint,null),true);
+  pending=false;await session.clear();
+  assert.equal(await meetingSourceContinuationPending(partition.scope,checkpoint,null),false);
 });
 
 test("an ephemeral calendar session compares acquired hashes before held output without saving cookies", async () => {
@@ -83,7 +97,7 @@ test("an ephemeral calendar session compares acquired hashes before held output 
     assert.deepEqual(path, ["normalizedPayload", "sourceProbe"]); return plan as T;
   }, async confirmUnchanged() { confirmations++; return { kind: "CONFIRMED" as const, versionId: head!.versionId, at: now }; } });
   const acquire = async () => {
-    const session = await meetingSourceSession(partition, "session-input", store, now, vault, undefined, undefined, { checkpoint, fetchImpl });
+    const session = await meetingSourceSession(partition, "session-input", store, now, vault, undefined, undefined, { checkpoint, fetchImpl, publicationPending:async()=>false });
     await session.fetch(calendar);
     await session.fetch(eventList, { method: "POST", body: "body=one", headers: { cookie: "session=private", "content-type": "application/x-www-form-urlencoded" } });
     assert.equal(session.complete, false); assert.equal(session.acquisitionComplete, true);

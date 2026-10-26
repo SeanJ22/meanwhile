@@ -51,26 +51,30 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
       if (!listed.has(prefix)) listed.set(prefix, store.list(prefix).catch(() => []));
       const key = (await listed.get(prefix)!).find(k => k.startsWith(`${prefix}${record.contentHash}.`) && !k.endsWith(".meta.json"));
       if (!key) continue;
-      const object = await store.get(key);
-      const m = object?.meta.custom;
-      if (!object || !m || object.meta.contentHash !== record.contentHash) return null;
-      if (m.tier !== record.tier || m.canonicalUrl !== record.canonicalUrl || record.partial) return null;
-      const artifact: Artifact = { id: record.artifactId, tier: record.tier, contentHash: record.contentHash, byteLength: record.byteLength,
-        contentType: record.contentType, canonicalUrl: record.canonicalUrl, retrievalUrl: m.retrievalUrl ?? record.canonicalUrl,
-        retrievedAt: m.retrievedAt ?? record.recordedAt, httpStatus: Number(m.httpStatus), headers: {}, sourceId: m.sourceId,
-        methodRouteId: m.methodRouteId, workItemId: m.workItemId, attemptId: m.attemptId,
-        permission: m.permission as Artifact["permission"], transport: m.transport as Artifact["transport"],
-        retentionPolicy: m.retentionPolicy as Artifact["retentionPolicy"],
-        ...(m.extraction ? { extraction: JSON.parse(m.extraction) as Artifact["extraction"] } : {}) };
-      try {
-        const { input } = await readForParser(store, project, artifact);
-        return { evidence: evidenceProjection(input), observedAt: artifact.retrievedAt,
-          httpStatus: artifact.httpStatus, transport: artifact.transport,
-          partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
-      } catch { return null; }
+      return heldCaptureAtKey(store, record, key, project);
     }
     return null;
   };
+}
+
+/** A job that already holds an exact vault key does not list the source's artifact inventory again. */
+export async function heldCaptureAtKey(store: EvidenceStore, record: ArtifactRecord, key: string, project = "freshness"): Promise<WorkerPublicationCapture | null> {
+  const meta = await store.head(key), m = meta?.custom;
+  if (!meta || !m || meta.contentHash !== record.contentHash) return null;
+  if (m.tier !== record.tier || m.canonicalUrl !== record.canonicalUrl || record.partial) return null;
+  const artifact: Artifact = { id: record.artifactId, tier: record.tier, contentHash: record.contentHash, byteLength: record.byteLength,
+    contentType: record.contentType, canonicalUrl: record.canonicalUrl, retrievalUrl: m.retrievalUrl ?? record.canonicalUrl,
+    retrievedAt: m.retrievedAt ?? record.recordedAt, httpStatus: Number(m.httpStatus), headers: {}, sourceId: m.sourceId,
+    methodRouteId: m.methodRouteId, workItemId: m.workItemId, attemptId: m.attemptId,
+    permission: m.permission as Artifact["permission"], transport: m.transport as Artifact["transport"],
+    retentionPolicy: m.retentionPolicy as Artifact["retentionPolicy"],
+    ...(m.extraction ? { extraction: JSON.parse(m.extraction) as Artifact["extraction"] } : {}) };
+  try {
+    const { input } = await readForParser(store, project, artifact);
+    return { evidence: evidenceProjection(input), observedAt: artifact.retrievedAt,
+      httpStatus: artifact.httpStatus, transport: artifact.transport,
+      partial: artifact.httpStatus === 206 || artifact.retentionPolicy === "DIAGNOSTIC" || artifact.extraction?.complete === false };
+  } catch { return null; }
 }
 
 export function localHeldCaptureReader() {

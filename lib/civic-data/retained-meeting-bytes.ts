@@ -2,6 +2,7 @@
 import { createHash } from "node:crypto";
 import type { RoutineCandidate } from "./types.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
+import type { Meeting } from "../sources/types.ts";
 
 export interface RetainedSourceResponse {
   readonly source: string; readonly requestedUrl: string; readonly finalUrl: string;
@@ -10,6 +11,21 @@ export interface RetainedSourceResponse {
   readonly request?: { readonly method: string; readonly body?: string; readonly headers?: Readonly<Record<string, string>> };
 }
 type TracedFetch = Pick<RetainedSourceResponse, "requestedUrl" | "finalUrl" | "httpStatus" | "rawHash" | "byteCount">;
+
+/** Parsing a saved continuation is a new parse, never a new provider observation. */
+export function bindMeetingSourceObservations(meetings: readonly Meeting[], responses: readonly RetainedSourceResponse[]): Meeting[] {
+  const oldest=responses.map(page=>page.retrievedAt).sort()[0];
+  if (!oldest) return [...meetings];
+  return meetings.map(meeting=>{
+    if (meeting.carried) return meeting;
+    const own=responses.find(page=>page.requestedUrl===meeting.provenance.sourceUrl||page.finalUrl===meeting.provenance.sourceUrl);
+    return {...meeting,provenance:{...meeting.provenance,collectedAt:own?.retrievedAt??oldest},fieldSources:meeting.fieldSources&&Object.fromEntries(
+      Object.entries(meeting.fieldSources).map(([field,source])=>{
+        const captured=responses.find(page=>page.requestedUrl===source.sourceUrl||page.finalUrl===source.sourceUrl);
+        return [field,source.sourceOrg!=="Sean"?{...source,collectedAt:captured?.retrievedAt??oldest}:source];
+      }))};
+  });
+}
 export type RetainedMeetingCandidate = RoutineCandidate & {
   readonly retainedSourceResponses?: readonly (Omit<RetainedSourceResponse, "bytes"> & { readonly base64: string })[];
 };

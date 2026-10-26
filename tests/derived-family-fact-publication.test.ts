@@ -9,8 +9,9 @@ import { readDerivedFamilyMembers, derivedFamilyReadGroups } from "../lib/civic-
 import { buildDerivedFamily, derivedFamilyCandidate, DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue } from "../lib/civic-data/derived-meeting-family.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, derivedWiringKey, familyMembers, type DerivedWiringRecord } from "../lib/civic-data/derived-meeting-wiring.ts";
-import { derivedMeetingFamilyId,derivedMeetingBodyContract, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
+import { derivedMeetingFamilyId,derivedMeetingBodyContract,requiredMeetingPartitionContract,meetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
+import { stageMeetingFactPublication, continueMeetingFactPublication, meetingFactsAfterSourceCheck } from "../lib/civic-data/meeting-fact-progress.ts";
 import { retainingFetch, tracedResponses, retainMeetingCandidateEvidence } from "../lib/civic-data/retained-meeting-bytes.ts";
 import {retainUnwiredDerivedBodyFacts} from "../lib/civic-data/derived-meeting-body.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -91,6 +92,7 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
       candidate: { candidate: { ...candidate, id: acceptedCandidateId }, receipt: { decision: "GOOD" }, failureDetail: null },
     }); },
     printMeetingPartitionReceipt: () => {}, tracedResponses, publishReadMeetingFacts, factClocks,
+    stageMeetingFactPublication, continueMeetingFactPublication, meetingFactsAfterSourceCheck, meetingPartitionContract,
     withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
     DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue, sourceHashReceiptFields, ZERO_RELEASE_EVENTS,
     statesForRegistryDivisions, stateRegistryRuntimeScope, requiredManualProductionContract, readSourceProbeDependencies,

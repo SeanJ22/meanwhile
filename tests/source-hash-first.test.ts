@@ -22,6 +22,18 @@ test("source digests ignore observations and archive revisions but retain bytes,
   assert.notEqual(sourceContentHash([archive("a")]), sourceContentHash([{ ...archive("a"), body: body.replace("Member One", "Member Two") }]));
   assert.equal(peopleSourceContentHash(acquisitions, roster), peopleSourceContentHash(acquisitions.map(row => ({ ...row, retrievedAt: later })), { ...roster, generatedAt: later }));
   assert.notEqual(peopleSourceContentHash(acquisitions, roster), peopleSourceContentHash(acquisitions, { ...roster, officeholders: roster.officeholders.map(row => ({ ...row, termEnd: "2026-10-01" })) }));
+  assert.notEqual(peopleSourceContentHash(acquisitions,roster),peopleSourceContentHash(acquisitions,{...roster,currentMembershipComplete:false}));
+  assert.notEqual(peopleSourceContentHash(acquisitions,roster),peopleSourceContentHash(acquisitions,roster,{gaps:[{sourceUrl:url,detail:"geography unresolved"}]}));
+});
+
+test("resolved parse gaps cannot confirm the old incomplete source from identical bytes",async()=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
+  assert.ok((await publishStatePeople({store,vault,state:"az",roster,acquisitions,releaseId:"a".repeat(40),now:at,
+    gaps:[{sourceUrl:url,detail:"GEOGRAPHY_UNRESOLVED: district evidence remains owed"}]})).outcome.promoted);
+  for(const method of ["readCandidate","readCandidatePath","readCandidateField","readPromotion","events"] as const)
+    Object.assign(store,{[method]:async()=>{throw new Error(`resolved gap read ${method}`);}});
+  assert.equal(await confirmStatePeopleSource({store,state:"az",roster,acquisitions,gaps:[],now:later}),null,
+    "changed coverage must publish its resolution rather than retain the old gap");
 });
 
 test("an unchanged complete state source confirms using its head and no held payload, metadata or event read", async () => {

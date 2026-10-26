@@ -1,3 +1,4 @@
+import { memberOfficeScopeState } from "../officials/member-office-data.ts";
 import { types } from "node:util";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { STATE_BALLOT_FAMILIES, stateFromBallotScope, stateFromRegistryRuntimeScope } from "./state-scopes.ts";
@@ -9,7 +10,7 @@ import type { PromotedProjection, RoutineCandidate, NormalizationEvidence } from
 
 export function statePublicationScope(scope: string): boolean {
   return STATE_BALLOT_FAMILIES.some(family => stateFromBallotScope(scope, family) !== null) ||
-    stateFromRegistryRuntimeScope(scope) !== null;
+    stateFromRegistryRuntimeScope(scope) !== null || memberOfficeScopeState(scope) !== null;
 }
 
 /** Payloads of this size are hashed once, incrementally, and are never round-tripped through JSON strings. */

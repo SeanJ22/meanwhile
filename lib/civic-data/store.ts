@@ -1,3 +1,7 @@
+import { readMemberOfficeMembers, readMemberOfficeRows, memberOfficeStateScope, memberOfficeScopeState, MEMBER_OFFICE_CURSOR, type MemberOfficeProgress, type MemberOfficeSlice } from "../officials/member-office-data.ts";
+import { statePeopleScopeForId } from "../officials/people-identity.ts";
+import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
+import { manualSourceUrls } from "./manual-source-urls.ts";
 import { createHash } from "node:crypto";
 import { repeatedFailureStreak } from "./failure-backoff.ts";
 import { readRetirementProgress, retirementProofTarget } from "./state-retirement-progress.ts";
@@ -84,7 +88,7 @@ export type CandidateVersionSummary = Omit<CandidateVersionRecord, "candidate" |
 const isNavigationCandidate = (candidate: Pick<RoutineCandidate, "recordClass" | "scope">) =>
   candidate.recordClass === "CURATED_READER_RECORD" && ballotNavigationState(candidate.scope) !== null;
 const isPartedManualCandidate = (candidate: Pick<RoutineCandidate, "recordClass" | "scope">) =>
-  isNavigationCandidate(candidate) || candidate.recordClass === "CURATED_READER_RECORD" && candidate.scope === MEMBER_OFFICES_SCOPE;
+  isNavigationCandidate(candidate) || candidate.recordClass === "CURATED_READER_RECORD" && (candidate.scope === MEMBER_OFFICES_SCOPE || memberOfficeScopeState(candidate.scope) !== null);
 
 export type PublishedCandidateMetadata = Omit<CandidateVersionRecord, "candidate"> & {
   readonly candidate: Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "retrieval" | "temporal"> & {
@@ -145,6 +149,10 @@ export interface RoutineDataStore {
     failure?: { code: string; detail: string },
     options?: CandidateTransitionOptions,
   ) => Promise<CandidateVersionRecord>;
+  readonly readMemberOfficeMembers: (members: readonly string[]) => Promise<readonly import("../officials/member-offices.ts").MemberOfficeRecord[]>;
+  readonly readMemberOfficeSlice: (state: string, members?: readonly string[]) => Promise<MemberOfficeSlice | null>;
+  readonly readMemberOfficeProgress: () => Promise<MemberOfficeProgress>;
+  readonly writeMemberOfficeProgress: (progress: MemberOfficeProgress) => Promise<void>;
   readonly readRegistrySlice: (state: string, bodyIds: readonly string[], divisionIds: readonly string[]) => Promise<RegistryLookup | null>;
   readonly readRegistryDivisions: (state: string, labels: readonly string[]) => Promise<readonly RegistryDivisionMatch[]>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
@@ -869,6 +877,40 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         officeholders: roster.officeholders.map(person => officeRosterPerson(person as unknown as Record<string, unknown>)) }) as unknown as OfficeholderSet };
   }
 
+  private memberOfficeProgress: MemberOfficeProgress | undefined;
+  async readMemberOfficeProgress(): Promise<MemberOfficeProgress> {
+    if (this.memberOfficeProgress) return structuredClone(this.memberOfficeProgress);
+    const held = await this.readPromotionPayloadFields("CURATED_READER_RECORD", MEMBER_OFFICES_SCOPE, ["rosterDigests", "pending"]);
+    return { rosterDigests: (held?.rosterDigests ?? {}) as Record<string,string>, pending: (held?.pending ?? []) as string[] };
+  }
+  async writeMemberOfficeProgress(progress: MemberOfficeProgress): Promise<void> { this.memberOfficeProgress = structuredClone(progress); }
+  async readMemberOfficeMembers(members: readonly string[]): Promise<readonly import("../officials/member-offices.ts").MemberOfficeRecord[]> {
+    const records=await Promise.all([...new Set([...this.promotions.values()].filter(pointer=>memberOfficeScopeState(pointer.scope)).map(pointer=>memberOfficeScopeState(pointer.scope)!))]
+      .map(state=>this.readMemberOfficeSlice(state,members)));
+    const overridden=new Set(records.filter(Boolean).map(slice=>memberOfficeScopeState(slice!.scope)));
+    const legacy=this.promotions.get(projectionKey("CURATED_READER_RECORD",MEMBER_OFFICES_SCOPE));
+    const old=((legacy?.payload as {records?:readonly import("../officials/member-offices.ts").MemberOfficeRecord[]})?.records??[])
+      .filter(row=>members.includes(row.officeholderId)&&!overridden.has(statePeopleScopeForId(row.officeholderId,row.office.state??undefined)?.slice(3)??null));
+    return structuredClone([...records.flatMap(slice=>slice?.records??[]),...old]);
+  }
+  async readMemberOfficeSlice(state: string, members: readonly string[] = []): Promise<MemberOfficeSlice | null> {
+    const scope = memberOfficeStateScope(state), postal = memberOfficeScopeState(scope)!;
+    const pointer = this.promotions.get(projectionKey("CURATED_READER_RECORD", scope)) ?? this.promotions.get(projectionKey("CURATED_READER_RECORD", MEMBER_OFFICES_SCOPE));
+    const record = pointer ? this.candidates.get(pointer.versionId) : null;
+    if (!pointer || !record) return null;
+    if (record.state !== "PROMOTED" || pointer.receipt.decision !== "GOOD") throw new Error(`MEMBER_OFFICE_POINTER_INVALID:${pointer.scope}`);
+    const records = ((pointer.payload as { records?: readonly import("../officials/member-offices.ts").MemberOfficeRecord[] }).records ?? []).filter(row =>
+      statePeopleScopeForId(row.officeholderId, row.office.state ?? undefined) === `US-${postal}` && (!members.length || members.includes(row.officeholderId)));
+    const urls = new Set(records.flatMap(manualRecordSourceUrls));
+    const sources = (record.candidate.retrieval.manualSourceReceipt?.sources ?? []).filter(source => source.reviewOutcome !== "BLOCKED" && manualSourceUrls(source).some(url => urls.has(url)))
+      .map(source => source.extractedMembers ? { ...source, extractedMembers: source.extractedMembers.filter(member => member.path.startsWith(`data/${postal.toLowerCase()}/`)) } : source);
+    return structuredClone({ scope: pointer.scope, versionId: pointer.versionId, sourceId: pointer.sourceId, promotedAt: pointer.promotedAt,
+      retrievedAt: record.candidate.retrieval.retrievedAt, sourceThrough: record.candidate.temporal.sourceThrough, version: record.candidate.temporal.version, staleAtRetrieval: record.candidate.temporal.staleAtRetrieval,
+      receipt: { ...pointer.receipt, excludedFacts: [] }, ...(latestUnchangedConfirmation(this.history.get(pointer.versionId)??[],pointer.versionId) ? {latestConfirmation:latestUnchangedConfirmation(this.history.get(pointer.versionId)??[],pointer.versionId)!}: {}), records, sources,
+      header: Object.fromEntries(Object.entries(pointer.payload as Record<string,unknown>).filter(([key]) => key !== "records")),
+      normalization: { normalizedHash: record.candidate.normalization.normalizedHash, stateRecordHashes: record.candidate.normalization.stateRecordHashes } });
+  }
+
   async readRosterIdDigests(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly { readonly scope: string; readonly digest: string }[]> {
     return scopes.flatMap(scope => {
       const officeholders = (this.promotions.get(projectionKey(recordClass, scope))?.payload as { roster?: OfficeholderSet } | undefined)?.roster?.officeholders;
@@ -1261,6 +1303,16 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   }
 
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
+    const clock = await this.publishedClock(sourceId, recordClass, scope, parserVersion);
+    if (recordClass !== "CURATED_READER_RECORD" || scope !== MEMBER_OFFICES_SCOPE) return clock;
+    const progress = await this.readMemberOfficeProgress();
+    if (!progress.checkedAt) return { ...clock, ...(progress.attemptedAt ? {lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)} : {}), continuationPending: progress.pending.length > 0 };
+    const at = laterInstant(clock.lastSucceededObservedAt, progress.checkedAt);
+    return { ...clock, lastAttemptedAt: laterInstant(clock.lastAttemptedAt, progress.attemptedAt??progress.checkedAt), lastSucceededAt: at,
+      lastSucceededObservedAt: at, ...(parserVersion ? { lastSucceededParserVersion: parserVersion } : {}), continuationPending: progress.pending.length > 0 };
+  }
+
+  private async publishedClock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const attempts = [...this.candidates.values()]
       .filter((row) =>
         row.candidate.sourceId === sourceId &&
@@ -2140,7 +2192,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const stateAuthority = statePublicationScope(record.candidate.scope);
     const meetingDoors = record.candidate.sourceId === "meeting-doors";
     const meeting = record.candidate.recordClass === "MEETING";
-    const memberOffices = record.candidate.recordClass === "CURATED_READER_RECORD" && record.candidate.scope === MEMBER_OFFICES_SCOPE;
+    const memberOffices = record.candidate.recordClass === "CURATED_READER_RECORD" && (record.candidate.scope === MEMBER_OFFICES_SCOPE || memberOfficeScopeState(record.candidate.scope) !== null);
     const candidate = stateAuthority || meetingDoors || meeting || memberOffices ? { ...(stateAuthority ? encodeStateCandidate(record.candidate) : record.candidate),
       retrieval: await this.payloadParts.store(record.candidate.retrieval,
         ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "rawHashBasis", "complete", "sourceCheck", "failureDetail"]),
@@ -2393,7 +2445,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (!row) return { current: null, lkg: null };
     if (!row.candidate) return { current: { ...postgresPromotionRowToProjection(row.promotion), payload: null }, lkg: null };
     if (prior && row.receiptsCoupled !== true) throw new Error(`STATE_PUBLICATION_POINTER_RECEIPT_MISMATCH:${row.promotion.key}`);
-    const candidateRow = prior ? { ...row.candidate, validationReceipt: row.promotion.validationReceipt } : row.candidate;
+    const candidateRow = prior ? { ...row.candidate, validationReceipt: clockReceipt(row.promotion).validationReceipt } : row.candidate;
     const encoded = candidateRow.candidate as RoutineCandidate;
     const encodedHash = durableStateHash(row.promotion.payload);
     if (encodedHash !== durableStateHash(encoded.readModel))
@@ -2407,7 +2459,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const loaded = await this.loadPayload(prior ? metadata : encoded, scope) as RoutineCandidate;
     const candidate = indexed ? { ...loaded, normalization: { ...loaded.normalization, stateRecordHashes: prior.recordHashes } } : loaded;
     if (indexed) bindStatePublicationPrior(candidate, prior);
-    const current = { ...postgresPromotionRowToProjection(row.promotion), payload: candidate.readModel };
+    const current = { ...postgresPromotionRowToProjection(prior ? clockReceipt(row.promotion) : row.promotion), payload: candidate.readModel };
     return { current, lkg: { ...rowToCandidate(candidateRow), candidate } };
   }
 
@@ -2487,6 +2539,24 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         version_id: string; promoted_at: string | Date; normalized_hash: string | null; roster: OfficeholderSet }[];
     return row ? { recordClass: "STATE_LEGISLATOR", scope, versionId: row.version_id,
       promotedAt: new Date(row.promoted_at).toISOString(), readModelSha256: row.normalized_hash, roster: row.roster } : null;
+  }
+
+  async readMemberOfficeMembers(members: readonly string[]): Promise<readonly import("../officials/member-offices.ts").MemberOfficeRecord[]> {
+    return readMemberOfficeMembers((text,params)=>this.readerRows(text,params),members);
+  }
+  async readMemberOfficeSlice(state: string, members: readonly string[] = []): Promise<MemberOfficeSlice | null> {
+    return readMemberOfficeRows((text, params) => this.readerRows(text, params), state, members);
+  }
+  async readMemberOfficeProgress(): Promise<MemberOfficeProgress> {
+    const [row] = (await this.db.execute(sql`SELECT position FROM pass_cursor WHERE name=${MEMBER_OFFICE_CURSOR}`)).rows as { position: string }[];
+    if (row) return JSON.parse(row.position) as MemberOfficeProgress;
+    const held = await this.readPromotionPayloadFields("CURATED_READER_RECORD", MEMBER_OFFICES_SCOPE, ["rosterDigests", "pending"]);
+    return { rosterDigests: (held?.rosterDigests ?? {}) as Record<string,string>, pending: (held?.pending ?? []) as string[] };
+  }
+  async writeMemberOfficeProgress(progress: MemberOfficeProgress): Promise<void> {
+    this.assertCandidateMutationAuthority({ id: MEMBER_OFFICE_CURSOR, sourceId: "curated-reader-primary-sources", recordClass: "CURATED_READER_RECORD", scope: MEMBER_OFFICES_SCOPE });
+    await this.db.execute(sql`INSERT INTO pass_cursor(name,position) VALUES(${MEMBER_OFFICE_CURSOR},${JSON.stringify(progress)})
+      ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position`);
   }
 
   async readRosterIdDigests(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly { readonly scope: string; readonly digest: string }[]> {
@@ -2942,6 +3012,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
+    const clock = await this.publishedClock(sourceId, recordClass, scope, parserVersion);
+    if (recordClass !== "CURATED_READER_RECORD" || scope !== MEMBER_OFFICES_SCOPE) return clock;
+    const progress = await this.readMemberOfficeProgress();
+    if (!progress.checkedAt) return { ...clock, ...(progress.attemptedAt ? {lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)} : {}), continuationPending: progress.pending.length > 0 };
+    const at = laterInstant(clock.lastSucceededObservedAt, progress.checkedAt);
+    return { ...clock, lastAttemptedAt: laterInstant(clock.lastAttemptedAt, progress.attemptedAt??progress.checkedAt), lastSucceededAt: at,
+      lastSucceededObservedAt: at, ...(parserVersion ? { lastSucceededParserVersion: parserVersion } : {}), continuationPending: progress.pending.length > 0 };
+  }
+
+  private async publishedClock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const key = [sourceId, recordClass, scope, parserVersion ?? ""].join("\u0000");
     const [held] = await this.readCache.rows({ namespace: "routine-clock-v2", keys: [key], keyOf: row => row.key,
       values: async () => [{ key, clock: await this.readClock(sourceId, recordClass, scope, parserVersion) }],

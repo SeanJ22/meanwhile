@@ -5,7 +5,7 @@
  * lawmaker list changed, joins them and promotes the offices through the curated
  * `member-offices` door (lib/officials/member-offices-publication.ts). It stops
  * reading before the pass deadline and saves the states it finished; the
- * package names the rest and the runner continues on its next pass.
+ * existing pass cursor names the rest and the runner continues on its next pass.
  * Writes no repository file. Prints exactly one RCD_RECEIPT line when the door
  * answered; a pass with nothing publishable prints none and exits non-zero.
  */

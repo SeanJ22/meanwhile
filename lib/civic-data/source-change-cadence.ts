@@ -82,7 +82,8 @@ export async function readSourceChangeHistory(query: Query, tasks: readonly Pick
         SELECT c.id,c.scope,c.raw_hash FROM civic_data_candidates c
         WHERE c.source_id=t.source_id AND c.record_class=t.record_class AND c.scope=s.scope
           AND c.parser_version=t.parser_version AND c.state='PROMOTED' AND c.acquisition_succeeded=true
-          AND c.raw_hash ~ '^[a-f0-9]{64}$' AND NOT (c.candidate ? 'bootstrapImport')
+          AND c.raw_hash ~ '^[a-f0-9]{64}$' AND c.candidate#>>'{retrieval,rawHashBasis}'='SOURCE_CONTENT_V1'
+          AND NOT (c.candidate ? 'bootstrapImport')
           AND coalesce(c.candidate#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'
           AND coalesce(c.candidate#>>'{retrieval,rawHashBasis}','')=s.hash_basis
         ORDER BY c.retrieved_at DESC,c.id DESC LIMIT 64

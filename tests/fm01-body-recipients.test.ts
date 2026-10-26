@@ -1,6 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readPlacePackage } from "../lib/reader/place.ts";
+import { buildPlacePackage } from "../lib/reader/place-builder.ts";
+import { packReadyPlace } from "../lib/reader/place-ready.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
@@ -44,7 +46,7 @@ test("a place's existing parent and native ids carry recipient aliases to its bo
       parent_id: body.id === BOARD ? GOVERNMENT : COUNTY })), fields: [], rosters: [], comments: [], sittings: [],
     meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} };
   let reads = 0;
-  const place = await readPlacePackage({ state: "WI", divisionIds: [COUNTY] }, async () => {
+  const place = await buildPlacePackage({ state: "WI", divisionIds: [COUNTY] }, async () => {
     reads++;
     return [row];
   });
@@ -63,7 +65,14 @@ test("a place's existing parent and native ids carry recipient aliases to its bo
   assert.equal(coverage.bodies.find(body => body.bodyId === BOARD)?.recipientState, "WI");
   assert.equal(coverage.bodies.find(body => body.bodyId === similarBoard)?.recipientIds, undefined);
   assert.equal(reads, 1);
-  const ambiguous = await readPlacePackage({ state: "WI", divisionIds: [COUNTY] }, async () => [{ ...row,
+  let pageReads = 0;
+  const saved = await readPlacePackage({ state: "WI", placeId: "zip:53202", divisionIds: [COUNTY] }, async () => {
+    pageReads++;
+    return [{ page: packReadyPlace(place) }];
+  });
+  assert.equal(pageReads, 1);
+  assert.deepEqual(saved.bodies, place.bodies, "the saved ZIP page retains recipient identities and source service areas");
+  const ambiguous = await buildPlacePackage({ state: "WI", divisionIds: [COUNTY] }, async () => [{ ...row,
     governments: [government, { ...government, id: "different-government", nativeIds: {}, bodyIds: [] }] }]);
   assert.equal(ambiguous.bodies.find(body => body.id === BOARD)?.recipientNames, undefined,
     "a parent alias claimed by two governments cannot identify either as the recipient");
@@ -87,7 +96,7 @@ test("a nested city board reads its own source-coded city area, including receip
   const row = { registration_held: true, registry: runtime, governments: [government], divisions: [],
     entities: [{ id: bodyId, name: definition.name, placed: true, division: nested, parent_id: governmentAlias }],
     fields: [], rosters: [], comments: [], sittings: [], meeting_rows: [], archived_meetings: [], archived_documents: [], parts: {} };
-  const place = await readPlacePackage({ state: "WI", divisionIds: [nested] }, async () => [row]);
+  const place = await buildPlacePackage({ state: "WI", divisionIds: [nested] }, async () => [row]);
   const coverage = stateCoverage({ state: "WI", registry: runtime, version: "city" }, [nested], 0, 0, [], place.bodies);
   const city = coverage.bodies[0];
   assert.equal(city.moneyDivisionId, canonical);
@@ -109,10 +118,10 @@ test("a nested city board reads its own source-coded city area, including receip
   const read = await readFederalMoneyForPlace(target, { artifactStore });
   const rows = federalMoneyRows(read.sources[0].records, target);
   assert.deepEqual(rows.map(row => row.relationship), ["BOTH", "GEOGRAPHY"]);
-  const multiple = await readPlacePackage({ state: "WI", divisionIds: [nested] }, async () => [{ ...row,
+  const multiple = await buildPlacePackage({ state: "WI", divisionIds: [nested] }, async () => [{ ...row,
     governments: [{ ...government, associations: [...government.associations, { ...government.associations[0], divisionId: `${STATE}/place:other` }] }] }]);
   assert.equal(multiple.bodies[0].moneyDivisionId, undefined, "multiple source areas never select one for the reader");
-  const hostCounty = await readPlacePackage({ state: "WI", divisionIds: [nested] }, async () => [{ ...row,
+  const hostCounty = await buildPlacePackage({ state: "WI", divisionIds: [nested] }, async () => [{ ...row,
     governments: [{ ...government, governmentClass: "SPECIAL DISTRICT", associations: [{ ...government.associations[0], divisionId: COUNTY, layer: "county" }] }] }]);
   assert.equal(hostCounty.bodies[0].moneyDivisionId, undefined, "a district's host county never substitutes for its spending area");
 });

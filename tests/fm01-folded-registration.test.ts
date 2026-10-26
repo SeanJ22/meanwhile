@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { isCivicPayloadPart, partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
-import { readPlacePackage } from "../lib/reader/place.ts";
+import { buildPlacePackage } from "../lib/reader/place-builder.ts";
 import { registrationRecipientNamesSql } from "../lib/registration/recipient-names.ts";
 import type { RegistrationGovernmentListing } from "../lib/registration/listings.ts";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
@@ -12,7 +12,7 @@ const NATIVE = "government:US-WI:cog:510410", GOVERNMENT = "wi:county:county-of-
 const AT = "2026-10-26T00:00:00.000Z";
 const provenance = { sourceUrl: "https://example.gov/census", sourceOrg: "Census", collectedAt: AT, verifiedAt: AT };
 
-test("folded state registration carries a county's source fields and recipient metadata through one place read", async () => {
+test("folded state registration carries a county's source fields and recipient metadata through one place-page build", async () => {
   const { pg, publish } = await migratedReaderDb();
   try {
     await pg.exec(BOOTSTRAP_DDL.find(ddl => ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("))!);
@@ -55,7 +55,7 @@ test("folded state registration carries a county's source fields and recipient m
       return (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
     };
     const folded = await storeRegistration("folded-registration-unique", "County of Elsewhere");
-    const place = await readPlacePackage({ state: "WI", divisionIds: [COUNTY] }, query);
+    const place = await buildPlacePackage({ state: "WI", divisionIds: [COUNTY] }, query);
     assert.equal(reads, 1);
     assert.equal(place.registrationHeld, true);
     assert.deepEqual(place.divisions, [division]);
@@ -79,8 +79,8 @@ test("folded state registration carries a county's source fields and recipient m
       "a nonwindow government-id read receives the unique-name marker from the folded full-state source");
 
     const ambiguousFolded = await storeRegistration("folded-registration-ambiguous", "Milwaukee County");
-    const ambiguous = await readPlacePackage({ state: "WI", divisionIds: [COUNTY] }, query);
-    assert.equal(reads, 2, "each place request still issues exactly one statement");
+    const ambiguous = await buildPlacePackage({ state: "WI", divisionIds: [COUNTY] }, query);
+    assert.equal(reads, 2, "each place-page build still issues exactly one statement");
     assert.equal(ambiguous.governments[0].recipientNameUnique, false);
     assert.deepEqual(ambiguous.bodies.find(row => row.id === BOARD)?.recipientNames, [],
       "an equivalent legal name outside the selected county blocks name-only attribution");

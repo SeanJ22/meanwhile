@@ -97,6 +97,7 @@ export function writeFederalMoneyCard(fact: FederalMoneyFact): string {
 /** A single contribution lets the enclosing card retain its one Sources list. */
 export function federalMoneySources(rows: readonly FederalMoneyRow[]): CardSource[] {
   return rows.map(({ fact, label, relationship }) => ({
+    verbatim: true,
     what: [
       `${label} — ${fact.title}${fact.provenance.publicationDate ? ` · published ${fact.provenance.publicationDate.slice(0, 10)}` : " · publication date not provided"}`,
       `Recipient: ${fact.recipient ?? "Not supplied"}`, `Relationship: ${relationship === "GEOGRAPHY" ? "Federal money or records for this area" : "This government is the recipient"}`,

@@ -6,6 +6,7 @@ import { FederalMoneySection } from "../components/funding/federal-money-section
 import { CardSourcesList } from "../components/officials/card-sources-list.tsx";
 import { federalMoneyRows, federalMoneySources, writeFederalMoneyCard } from "../lib/federal-money/view.ts";
 import { composeFederalMoneyAnswer } from "../lib/ask/federal-money.ts";
+import { mergeSources } from "../lib/officials/card-sources.ts";
 import { FEDERAL_MONEY_SOURCES, type FederalMoneyFact } from "../lib/federal-money/model.ts";
 
 const county = "ocd-division/country:us/state:az/county:pima";
@@ -25,7 +26,10 @@ test("an old reduction names its actual recipient, while exact filing facts and 
   assert.equal(row.text, "United Housing and had $85,912 taken back from a federal grant from the Department of Agriculture for rural self-help housing technical assistance, on Aug 14, 2003.");
   assert.doesNotMatch(row.text, /-\$|;|Recipient:|Period:|UEI|Award type|Refresh|Pima County got/);
   const sources = federalMoneySources([row]);
-  const markup = renderToStaticMarkup(createElement(CardSourcesList, { sources }));
+  const grouped = mergeSources([...sources, ...federalMoneySources(federalMoneyRows([{ ...grant, id: "another", uei: "EXACTUEI" }], { divisionId: county, bodyId: body }))]);
+  assert.equal(grouped.length, 1);
+  const markup = renderToStaticMarkup(createElement(CardSourcesList, { sources: grouped }));
+  assert.ok(markup.includes("EXACTUEI"));
   for (const fact of ["SOURCEUEI", "AWARD-1", "04", "07", "2026-10-24T00:12:34Z", "2003-08-14", grant.title, grant.recipient!, grant.provenance.sourceUrl]) assert.ok(markup.includes(fact), fact);
 });
 

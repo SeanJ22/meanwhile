@@ -1280,3 +1280,7 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Release 123 ([#835](https://github.com/SeanJ22/meanwhile/pull/835)): CI tests 4/4, builds, verify and admission green; final gates job running. Auto-merge on.
 - Batch 2 gate: lint, tsc, dead-code, preflight pass; tests running.
 - DB-04: no branch yet.
+
+### 12:10 AM EDT: Sean, every release gets a plain report
+- Each release PR now comes with a report on the board (releases/<n>.md) and to Sean. It covers every lane with its READY commit, what it does and the prompt it came from; what Sean will see and where, before and after; expected Neon GB/h, measured over the two full hours after; and what could go wrong and how River will know. When the release goes live, River reports back against the same list.
+- Written now: releases/123.md and releases/124.md.

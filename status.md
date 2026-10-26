@@ -1449,3 +1449,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Neon, both databases, 8 AM hour: 3,803 MB (reader 3,650, control plane 153); openstates-people 1,281 MB.
 - RT-01: place map still 0 rows and no place-map job read anything in the 8 AM hour. A River agent is finding why (read-only); if a change is needed it uses #822's per-state turns.
 - GB-01: census done through FL. DB-04: no READY. Research: no Send.
+
+### 9:50 AM EDT: why the place map is empty; RT-01 re-cut started
+- No place-map child has ever started. All 56 place-map tasks are admitted every pass, each needs a 3,709 MiB reservation (worker-slots.ts), and they come last in the pass order. RT-01 changed the runner's memory request to `wait: false`, which removed the old queue hold, so each time about 1.4 GiB frees a waiting meeting read or campaign-sites run takes it. Free memory never reaches 4.4 GiB within the 20-minute launch window. Control plane: every place-map launch decision ever recorded is DEFER (PASS_TIME_BUDGET or WORKER_MEMORY_DEADLINE); no attempt, so no retry clock: it won't fix itself.
+- Per Sean (one path for the place map, use #822's per-state turns in a re-cut): a River builder is re-cutting RT-01 as stream/river-rt-01b with #822's approach: map turns ahead of long reads and the measured 1,672 MiB reservation. A prototype queue-hold fix (local branch river-place-map) is not used: it holds meeting reads up to 5 minutes a pass in election week and would take about 20 hours to fill all states.
+- RB-A10 keeps waiting on the place map.
+- Same starving risk noted for other big single reservations: Open States votes (3,574 MiB) and ACS population (3,928 MiB); not checked yet.

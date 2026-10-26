@@ -287,7 +287,7 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
     await confirmCampaignResourceChecks(facts,state,[...checks.values()],options.purge);
     for(const resource of resources)await moneyDoor(options,resource.url,null,0,checks.get(resource.id)!.checkedAt);
     const checkedAt=[...checks.values()].map(check=>check.checkedAt).sort()[0]??at;
-    if(checks.size)await settleCampaignSourceFailures(facts.query,state,dependencyHash,checkedAt);
+    if(checks.size&&!heldOnly)await settleCampaignSourceFailures(facts.query,state,dependencyHash,checkedAt);
     const sourceHash=campaignStateSourceHash(state,sourceDescriptorHash,dependencyHash,new Map([...checks].map(([id,check])=>[id,check.rawHash])));
     const recovered=!previousState?.sourceFailedAt||Date.parse(checkedAt)>Date.parse(previousState.sourceFailedAt);
     const report:CampaignFinanceWorkCheck={kind:"campaign-finance-work-check",state,resource:"people",records:[{id:`${state}:people`,state,startedAt:at,checkedAt,

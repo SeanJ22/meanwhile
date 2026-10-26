@@ -28,6 +28,7 @@ test("canonical federal counts sum keyed count fields, including encoded payload
     await seed("member", "congress:C001078", { $civicPayloadPart: root });
     await seed("bill-fanout", "bill:117:hr:21", { countsPrimary: false, records: [], counts: counts(2, 2, "VA") });
     await seed("legacy-primary", "bill:117:hr:22", { records: [{ kind: "BILL" }], counts: counts(1, 0) });
+    await db.query("UPDATE civic_data_candidates SET parser_version='src-cg/1' WHERE id='legacy-primary'");
     await seed("legacy-fanout", "bill:117:hr:23", { records: [{ kind: "BILL", bioguideId: "C001078" }], counts: counts(99, 99) });
     await seed("national", "national", { records: [], counts: counts(999, 999) });
     await seed("other-source", "bill:117:hr:21", { records: [], counts: counts(37, 37) }, "govinfo");

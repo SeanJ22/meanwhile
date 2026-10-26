@@ -1,6 +1,5 @@
 import type { SourceChecksQuery } from "../../civic-data/source-checks.ts";
 import type { FederalCounts, FederalProjection } from "./types.ts";
-import { FEDERAL_PARSER_VERSION } from "./targets.ts";
 
 /** Native primary partitions count once; member fanouts and national summaries never count again. */
 export function primaryFederalCounts(source: string, scope: string, payload: FederalProjection): boolean {
@@ -39,7 +38,7 @@ export async function readFederalCounts(query: SourceChecksQuery, source: string
     SELECT p.scope,reader_payload_node(p.payload) AS payload
     FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
     WHERE p.record_class='FEDERAL_CIVIC_RECORD' AND p.source_id=$1 AND c.source_id=p.source_id
-      AND c.record_class=p.record_class AND c.scope=p.scope AND c.parser_version=$2
+      AND c.record_class=p.record_class AND c.scope=p.scope
       AND p.current_version_id=p.last_known_good_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded
       AND NOT(c.candidate ? 'bootstrapImport')
       AND coalesce(c.candidate#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'
@@ -66,7 +65,7 @@ export async function readFederalCounts(query: SourceChecksQuery, source: string
     'joined',coalesce((SELECT sum((counts->>'joined')::bigint) FROM valid),0),
     'unjoined',coalesce((SELECT sum((counts->>'unjoined')::bigint) FROM valid),0),
     'byState',coalesce((SELECT jsonb_object_agg(key,jsonb_build_object('loaded',loaded,'joined',joined,'unjoined',unjoined)) FROM states),'{}'::jsonb))
-    || CASE WHEN EXISTS(SELECT 1 FROM reasons) THEN jsonb_build_object('unjoinedReasons',(SELECT jsonb_object_agg(key,total) FROM reasons)) ELSE '{}'::jsonb END AS counts`, [source, FEDERAL_PARSER_VERSION]);
+    || CASE WHEN EXISTS(SELECT 1 FROM reasons) THEN jsonb_build_object('unjoinedReasons',(SELECT jsonb_object_agg(key,total) FROM reasons)) ELSE '{}'::jsonb END AS counts`, [source]);
   if (!result || typeof result.counts !== "object" || !result.counts) throw new Error("FEDERAL_COUNTS_UNAVAILABLE");
   return { complete: result.complete === true, counts: result.counts as FederalCounts };
 }

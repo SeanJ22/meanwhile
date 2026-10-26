@@ -54,6 +54,7 @@ interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; sent: 
 
 interface CallerState {
   scope: AsyncLocalStorage<string>;
+  job: AsyncLocalStorage<string>;
   pinnedSite: AsyncLocalStorage<string>;
   queryRoute: AsyncLocalStorage<string>;
   socketScope: AsyncLocalStorage<SocketRead>;
@@ -65,6 +66,7 @@ interface CallerState {
 }
 interface SocketRead {
   caller: string | undefined;
+  job: string | undefined;
   route: string;
   listeners: WeakMap<EventListenerOrEventListenerObject, EventListener>;
 }
@@ -72,9 +74,16 @@ interface SocketRead {
 const callerSlot = Symbol.for("meanwhile.database.transfer.callers");
 const host = globalThis as typeof globalThis & { [callerSlot]?: CallerState };
 const callerState = host[callerSlot] ??= { scope: new AsyncLocalStorage<string>(), pinnedSite: new AsyncLocalStorage<string>(),
+  job:new AsyncLocalStorage<string>(),
   queryRoute: new AsyncLocalStorage<string>(), socketScope: new AsyncLocalStorage<SocketRead>(), sockets: new WeakMap(),
   buckets: new Map(), siteCache: new Map(), reportInstalled: false, keptInProcess: false };
 const { scope, pinnedSite, buckets, siteCache } = callerState;
+callerState.job??=new AsyncLocalStorage<string>();
+
+/** Independent jobs sharing a process keep their existing hourly transfer attribution. */
+export function withDatabaseJob<T>(name:string,run:()=>T):T {
+  return callerState.job.run(name,run);
+}
 /* Stack strings run to a few KB; a small cache keeps the per-process memory under 1 MB. */
 const SITE_CACHE_LIMIT = 256;
 
@@ -99,7 +108,7 @@ export function installDatabaseClientAccounting(config: typeof neonConfig, insta
   const held = (socket: WebSocket): SocketRead => {
     let read = callerState.sockets.get(socket);
     if (!read) {
-      read = { caller: scope.getStore(), route: callerState.queryRoute.getStore() ?? currentReaderRoute(), listeners: new WeakMap() };
+      read = { caller: scope.getStore(),job:callerState.job.getStore(), route: callerState.queryRoute.getStore() ?? currentReaderRoute(), listeners: new WeakMap() };
       callerState.sockets.set(socket, read);
     }
     return read;
@@ -110,6 +119,7 @@ export function installDatabaseClientAccounting(config: typeof neonConfig, insta
       const read = held(this), send = this.send.bind(this);
       this.send = data => {
         read.caller = scope.getStore() ?? read.caller;
+        read.job = callerState.job.getStore();
         read.route = callerState.queryRoute.getStore() ?? read.route;
         callerState.socketScope.run(read, () => send(data));
       };
@@ -202,7 +212,7 @@ export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: num
     bucket.sent[database] = { requests: bucket.sent[database].requests + sent.requests, bytes: bucket.sent[database].bytes + sent.bytes };
     bucket.bytes[database] += bytes;
     bucket.byCaller.set(key, (bucket.byCaller.get(key) ?? 0) + bytes);
-    const job = process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
+    const job = socket?.job ?? callerState.job.getStore() ?? process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
     const read = `${database}\t${job}\t${table ?? /(?:^|\s)query:([^ ←]+)/.exec(site)?.[1] ?? site.split(/[. ]/)[0]}`;
     const held = bucket.reads.get(read) ?? [0, 0, 0];
     bucket.reads.set(read, [held[0] + sent.requests, held[1] + sent.bytes, held[2] + bytes]);

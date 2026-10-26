@@ -79,7 +79,7 @@ test("one Oregon pass makes Portland's city, county and school boards through th
     assert.deepEqual(await db.query(`SELECT f.entity_id,f.field,f.value,f.provenance_kind,s.url FROM fact f JOIN source_copy s ON s.id=f.source_copy_id
       WHERE f.entity_id='or:county:county-of-multnomah#governing' ORDER BY f.field`), [
       { entity_id: "or:county:county-of-multnomah#governing", field: "homepage", value: "http://www.multco.us/", provenance_kind: "OFFICIAL", url: CENSUS },
-      { entity_id: "or:county:county-of-multnomah#governing", field: "office_address", value: "501 SE HAWTHORNE BLVD, STE 600, PORTLAND, OR, 97214-3588", provenance_kind: "OFFICIAL", url: CENSUS },
+      { entity_id: "or:county:county-of-multnomah#governing", field: "mailing_address", value: "501 SE HAWTHORNE BLVD, STE 600, PORTLAND, OR, 97214-3588", provenance_kind: "OFFICIAL", url: CENSUS },
     ]);
     const ids = [PORTLAND, MULTNOMAH, SCHOOL];
     const place = await readPlacePackage({ state: "OR", divisionIds: ids }, db.query);
@@ -99,8 +99,7 @@ test("one Oregon pass makes Portland's city, county and school boards through th
       ["or:school:portland-sch-dist-1j#board", "Portland Sch Dist 1j school board", "GOVERNING"],
     ]);
     const city = coverage.bodies.find(body => body.bodyId === "or:city:city-of-portland#governing")!;
-    assert.equal(city.officeContact?.address, "1120 SW 5TH AVE, ROOM 1250, PORTLAND, OR, 97204-1912");
-    assert.equal(city.officeContact?.provenance.sourceUrl, CENSUS);
+    assert.equal(city.officeContact?.address, undefined, "a published mailing address alone does not establish a physical office");
   } finally { await pg.close(); }
 });
 

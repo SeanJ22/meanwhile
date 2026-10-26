@@ -24,6 +24,8 @@ export interface PublishInput extends Claim {
   readonly costUsd: number;
   /** Findings from a hunter or walker carry claims to check against the saved page. */
   readonly acquisition?: "loader" | "hunter" | "walker";
+  /** A parsed field of an official source already held by its ordinary loader. */
+  readonly sourceField?: { readonly record: Readonly<Record<string, unknown>>; readonly key: string };
 }
 
 export type PublishOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly blank: string };

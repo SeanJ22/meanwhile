@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { flushDatabaseTransfer, installDatabaseTransferCounter, keepRunnerTransfer, pendingDatabaseTransfer, pendingRunnerDatabaseTransfer, runnerDatabaseTransferView } from "../lib/db/transfer.ts";
-import { VITAL_SIGNS_REPORT_ENV, processNeonBytes, takeNeonBytesHours } from "../lib/db/transfer-by-caller.ts";
+import { VITAL_SIGNS_REPORT_ENV, processNeonBytes, takeNeonBytesHours,withDatabaseJob,installDatabaseClientAccounting } from "../lib/db/transfer-by-caller.ts";
 import { formatVitalSignsReport, parseVitalSignsReport } from "../lib/db/transfer-by-caller.ts";
 import { neonTransferOf } from "../lib/control-plane/admin-view/v6-spend-read.ts";
 
@@ -98,4 +98,18 @@ test("a database socket's bytes count under the database it reaches and the code
   const elsewhere = new Socket("wss://example.invalid/v2");
   elsewhere.dispatchEvent(Object.assign(new Event("message"), { data: "not ours" }));
   assert.equal(pendingDatabaseTransfer().find(row => row.database === "reader")?.responseBytes, 300, "another host is not a civic database");
+});
+
+test("a pooled socket attributes each borrower to its own standing job",()=>{
+  installDatabaseClientAccounting(neonConfig,installDatabaseTransferCounter);
+  const Socket=neonConfig.webSocketConstructor as unknown as new(url:string)=>FakeSocket;
+  const socket=new Socket("wss://ep-reader-runner-transfer.us-east-2.aws.neon.tech/v2");
+  withDatabaseJob("pin-socket",()=>socket.send("pin query"));
+  socket.dispatchEvent(Object.assign(new Event("message"),{data:new ArrayBuffer(300)}));
+  withDatabaseJob("box-socket",()=>socket.send("box query"));
+  socket.dispatchEvent(Object.assign(new Event("message"),{data:new ArrayBuffer(700)}));
+  const reads=processNeonBytes().flatMap(hour=>Object.entries(hour.reads??{}));
+  const bytes=(job:string)=>reads.filter(([key])=>key.split("\t")[1]===job).reduce((sum,[,value])=>sum+value[2],0);
+  assert.equal(bytes("pin-socket"),300);
+  assert.equal(bytes("box-socket"),700);
 });

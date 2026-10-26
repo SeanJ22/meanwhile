@@ -58,6 +58,7 @@ export function pacedProbeFetch(input: {
     await holdWebsiteAfter(input.pacing, url, response.status, response.headers.get("retry-after"), clock());
     return {
       status: response.status,
+      finalUrl:response.url||url,
       headers: response.headers,
       bytes: async () => new Uint8Array((await response.arrayBuffer()).slice(0, MAX_BYTES)),
     };

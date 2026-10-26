@@ -1272,9 +1272,6 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       normalizedHash: row.candidate.normalization.normalizedHash, parserVersion: row.candidate.normalization.parserVersion,
       promotedAt: pointer.promotedAt, candidateState: row.state, acquisitionSucceeded: row.acquisitionSucceeded,
       acquisitionComplete: row.candidate.retrieval.complete ?? null,
-      proofCoupled:canonicalCivicDataJson(pointer.receipt)===canonicalCivicDataJson(row.receipt)&&
-        canonicalCivicDataJson(pointer.payload)===canonicalCivicDataJson(row.candidate.readModel)&&
-        row.candidate.normalization.normalizedHash!==null,
       sourceThrough: row.candidate.temporal.sourceThrough,
       proofCoupled:row.state==="PROMOTED"&&row.acquisitionSucceeded&&row.promotedVersion===row.candidate.id&&row.lastKnownGoodVersion===row.candidate.id&&
         pointer.lastKnownGoodVersionId===row.candidate.id&&pointer.sourceId===row.candidate.sourceId&&pointer.recordClass===row.candidate.recordClass&&pointer.scope===row.candidate.scope&&
@@ -2923,9 +2920,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       sourceId: civicDataCandidates.sourceId, recordClass: civicDataCandidates.recordClass, scope: civicDataCandidates.scope,
       versionId: civicDataPromotions.currentVersionId, lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
       rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
-      proofCoupled:sql<boolean>`${civicDataPromotions.validationReceipt}=${civicDataCandidates.validationReceipt}
-        AND ${civicDataPromotions.payload}=${civicDataCandidates.candidate}->'readModel'
-        AND ${civicDataCandidates.normalizedHash}=${civicDataCandidates.candidate}#>>'{normalization,normalizedHash}'`.as("proof_coupled"),
       rawHashBasis: sql<SourceHead["rawHashBasis"]>`${civicDataCandidates.candidate}#>>'{retrieval,rawHashBasis}'`.as("raw_hash_basis"),
       parserVersion: civicDataCandidates.parserVersion, promotedAt: civicDataPromotions.promotedAt,
       candidateState: civicDataCandidates.state, acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,

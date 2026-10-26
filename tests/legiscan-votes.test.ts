@@ -106,6 +106,7 @@ test("actual source fixtures promote through the per-state routine contract and 
   assert.ok(published.outcome.promoted);
   const input = { state: "tx", civicStore, store, locks, fetchImpl, apiKey: "private-test-api-key", now: () => at, signal: AbortSignal.timeout(10_000) };
   const first = await refreshLegiscanVotes(input); assert.equal(first.rollCalls, 1); assert.equal(first.positions, 1);
+  assert.ok(first.publication);
   assert.equal((first.publication.candidate.readModel as { formatVersion: number }).formatVersion, 2);
   assert.equal(legiscanVotesProjectionIssue(first.publication.candidate.readModel as Parameters<typeof legiscanVotesProjectionIssue>[0]), null);
   const unboundPages = structuredClone(first.publication.candidate.readModel) as Parameters<typeof legiscanVotesProjectionIssue>[0];
@@ -114,8 +115,9 @@ test("actual source fixtures promote through the per-state routine contract and 
   assert.equal(legiscanVotesProjectionIssue(unboundPages), "LEGISCAN_VOTE_NATIVE_FACT_INVALID");
   const votes = await readLegiscanVotesForPerson("tx", personId, { store: civicStore, now: at });
   assert.equal(votes.length, 1); assert.equal(votes[0].position, "Yea");
-  const second = await refreshLegiscanVotes(input); assert.ok(second.publication.outcome.confirmed);
-  assert.equal(second.publication.outcome.confirmed.versionId, first.publication.outcome.promoted?.versionId);
+  const second = await refreshLegiscanVotes(input); assert.ok(second.confirmation);
+  assert.equal(second.publication,null,"an unchanged catalog never reads the held vote package");
+  assert.equal(second.confirmation.head.versionId, first.publication.outcome.promoted?.versionId);
   const forged = structuredClone(first.publication.candidate);
   (forged.readModel as Parameters<typeof legiscanVotesProjectionIssue>[0]).identityAuthority.versionId = "unheld-roster";
   assert.match((await legiscanVoteIdentityAuthorityIssue(civicStore, forged))!, /canonical held OpenStates roster/);
@@ -137,7 +139,8 @@ test("a successful empty daily listing is a confirmed unchanged check and establ
   const input = { state: "tx", civicStore, store, locks, apiKey: "private-test-api-key", now: () => at, signal: AbortSignal.timeout(10_000),
     fetchImpl: (async () => new Response(JSON.stringify({ status: "OK", datasetlist: [] }))) as typeof fetch };
   const first = await refreshLegiscanVotes(input), second = await refreshLegiscanVotes(input);
+  assert.ok(first.publication);
   assert.equal(first.rollCalls, 0); assert.equal(first.positions, 0);
   assert.equal(first.publication.candidate.absence.claimsAbsence, false);
-  assert.ok(second.publication.outcome.confirmed);
+  assert.ok(second.confirmation);
 });

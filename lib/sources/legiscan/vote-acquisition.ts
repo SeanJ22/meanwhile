@@ -77,7 +77,10 @@ const evidence = (release: Omit<KnownRelease, "bytes">): LegiscanDatasetEvidence
   retrievedAt: release.retrievedAt, sha256: release.sha256, ...(release.vaultKey ? { vaultKey: release.vaultKey } : {}), sourceCheck: knownReleaseSourceCheck(release) });
 
 /** Every request is state bounded; a missing session leaves other verified sessions publishable. */
-export async function acquireLegiscanVotes(input: SharedOptions & { state: string; signal: AbortSignal; apiKey?: string; holders: readonly Officeholder[];
+export async function acquireLegiscanVotes(input: SharedOptions & { state: string; signal: AbortSignal; apiKey?: string;
+  holders: readonly Officeholder[] | (() => Promise<readonly Officeholder[]>);
+  /** A matching immutable dataset catalog needs no roster, held votes or dataset parse. */
+  onListing?: (listing: LegiscanDatasetEvidence, sessions: readonly LegiscanSession[]) => Promise<boolean>;
   onDataset?: (result: LegiscanDatasetResult) => Promise<void>;
   onVote?: (vote: PluralVoteFact) => Promise<void> }) {
   const state = legiscanState(input.state), url = legiscanDatasetListUrl(state), fetchImpl = privateTransport(state, input.apiKey ?? process.env.LEGISCAN_API_KEY, input.fetchImpl ?? fetch);
@@ -87,6 +90,9 @@ export async function acquireLegiscanVotes(input: SharedOptions & { state: strin
     validate: bytes => { parseLegiscanDatasetList(new TextDecoder("utf-8", { fatal: true }).decode(bytes), state); } });
   const sessions = currentLegiscanSessions(parseLegiscanDatasetList(new TextDecoder("utf-8", { fatal: true }).decode(listing.bytes), state), input.now?.() ?? new Date().toISOString());
   const results: LegiscanDatasetResult[] = [], completed: LegiscanCompletedDataset[] = [], held: { key: string; detail: string }[] = [];
+  if (input.onListing && !await input.onListing(evidence(listing), sessions))
+    return { state, results, completed, held, listing: evidence(listing), listingHash: digest(listing.sha256), unchanged: true };
+  const holders = typeof input.holders === "function" ? await input.holders() : input.holders;
   for (const session of sessions) {
     input.signal.throwIfAborted();
     let result: LegiscanDatasetResult, consumerFailed = false;
@@ -98,7 +104,7 @@ export async function acquireLegiscanVotes(input: SharedOptions & { state: strin
         const source = evidence(release), archivePath = `${release.path}.zip`;
         await decodeLegiscanDatasetEnvelope({ path: release.path, archivePath, session, signal: input.signal });
         await release.capture();
-        const facts = await parseLegiscanDatasetFile({ state, session, path: archivePath, evidence: source, holders: input.holders, signal: input.signal,
+        const facts = await parseLegiscanDatasetFile({ state, session, path: archivePath, evidence: source, holders, signal: input.signal,
           onVote: input.onVote ? async vote => { try { await input.onVote!(vote); } catch (error) { consumerFailed = true; throw error; } } : undefined });
         await release.accept();
         result = { ...facts, evidence: { ...facts.evidence, ...source, members: facts.evidence.members }, session };
@@ -115,5 +121,5 @@ export async function acquireLegiscanVotes(input: SharedOptions & { state: strin
     held.push(...result.held);
     await input.onDataset?.(result);
   }
-  return { state, results, completed, held, listing: evidence(listing), listingHash: digest(listing.sha256) };
+  return { state, results, completed, held, listing: evidence(listing), listingHash: digest(listing.sha256), unchanged: false };
 }

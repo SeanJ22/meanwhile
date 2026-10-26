@@ -2,6 +2,7 @@ import { votePagesIssue, type VoteMemberPage } from "../../state-rollcalls/vote-
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
+import type { SourceProbeDependencies } from "../../civic-data/source-probe.ts";
 import type { OfficialStateLegislatorReadModel } from "../../civic-data/candidate-builders.ts";
 import type { PluralVoteFact } from "../plural/votes.ts";
 import type { LegiscanDatasetRecord } from "./types.ts";
@@ -10,6 +11,12 @@ import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, na
 
 export const legiscanVotesScope = (state: string) => `US-${legiscanState(state)}:legiscan-votes:v1`;
 export const legiscanVotesContract = (state: string) => `legiscan-votes-${legiscanState(state).toLowerCase()}`;
+export interface LegiscanVoteSourceProbe {
+  readonly formatVersion: 1;
+  readonly listingHash: string;
+  readonly dependencies: SourceProbeDependencies;
+  readonly complete: boolean;
+}
 export interface LegiscanVotesProjection {
   formatVersion: 1 | 2; memberPages?: VoteMemberPage[]; state: string; rollCalls: PluralVoteFact[]; datasets: LegiscanDatasetRecord[];
   identityAuthority: LegiscanIdentityAuthority;
@@ -92,19 +99,21 @@ export async function legiscanVoteIdentityAuthorityIssue(store: Pick<RoutineData
   return null;
 }
 export function legiscanVotesCandidate(input: { projection: LegiscanVotesProjection; acquired: readonly LegiscanDatasetEvidence[];
-  held: readonly { key: string; detail: string }[]; checkedAt: string }): RoutineCandidate {
+  held: readonly { key: string; detail: string }[]; checkedAt: string; sourceProbe?: LegiscanVoteSourceProbe }): RoutineCandidate {
   const projection = input.projection, scope = legiscanVotesScope(projection.state), jurisdiction = `US-${projection.state}`, issue = legiscanVotesProjectionIssue(projection);
   const acquisition = [...input.acquired].sort((a, b) => b.retrievedAt.localeCompare(a.retrievedAt))[0];
   const sourceThrough = [...input.acquired.map(row => row.retrievedAt), ...projection.datasets.flatMap(dataset => dataset.downloadedAt ? [dataset.downloadedAt] : []),
     ...projection.rollCalls.map(vote => vote.retrievedAt)].sort().at(-1) ?? input.checkedAt;
   const sourceCheck = input.acquired.flatMap(row => row.sourceCheck ? [row.sourceCheck] : []).sort((a, b) => b.checkedAt.localeCompare(a.checkedAt))[0];
-  const payload = { acquisitions: input.acquired.map(({ members, sourceCheck: _sourceCheck, ...row }) => ({ ...row,
+  const payload = { ...(input.sourceProbe ? { sourceProbe: input.sourceProbe } : {}), acquisitions: input.acquired.map(({ members, sourceCheck: _sourceCheck, ...row }) => ({ ...row,
     ...(members ? { members: members.map(({ name, sha256 }) => ({ name, sha256 })) } : {}) })), held: input.held };
   return { id: `cv-${digest([LEGISCAN_VOTES_SOURCE, scope, digest(projection), digest(payload), sourceCheck ?? null]).slice(0, 32)}`,
     sourceId: LEGISCAN_VOTES_SOURCE, recordClass: "STATE_ROLL_CALL", scope,
     sourceProjectionEvidence: sourceProjectionEvidence(LEGISCAN_VOTES_SOURCE, "STATE_ROLL_CALL", scope),
     retrieval: { succeeded: input.acquired.length > 0, requestedUrl: acquisition?.requestedUrl ?? `https://api.legiscan.com/?op=getDatasetList&state=${projection.state}`,
-      finalUrl: acquisition?.finalUrl ?? null, httpStatus: 200, retrievedAt: sourceThrough, rawHash: digest(input.acquired.map(row => row.sha256).sort()), ...(sourceCheck ? { sourceCheck } : {}) },
+      finalUrl: acquisition?.finalUrl ?? null, httpStatus: 200, retrievedAt: sourceThrough,
+      rawHash: digest(input.sourceProbe ? { source: input.acquired.map(row => row.sha256).sort(), dependencies: input.sourceProbe.dependencies } : input.acquired.map(row => row.sha256).sort()),
+      ...(input.sourceProbe ? { rawHashBasis: "SOURCE_CONTENT_V1" as const } : {}), ...(sourceCheck ? { sourceCheck } : {}) },
     normalization: { succeeded: !issue, parserVersion: LEGISCAN_VOTES_PARSER, schemaVersion: projection.formatVersion === 2 ? "legiscan-person-votes/2" : "legiscan-person-votes/1", normalizedHash: digest(projection), normalizedPayloadHash: digest(payload),
       inputRecords: projection.rollCalls.length, outputRecords: projection.rollCalls.length, droppedRecords: 0, missingRequiredFields: [] },
     identities: projection.rollCalls.map(vote => ({ subjectId: vote.id, jurisdiction, chamber: vote.chamber, term: vote.session, session: vote.session,

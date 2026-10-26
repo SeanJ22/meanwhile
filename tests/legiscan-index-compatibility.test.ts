@@ -9,6 +9,7 @@ import { LEGISCAN_BULK_SCOPE, publicDatasetIndex, type Dataset } from "../lib/so
 import { bulkCandidate, publishBulkCandidate } from "../lib/sources/legiscan/publication.ts";
 import { readBillsForState, readBulkProjection } from "../lib/sources/legiscan/reader.ts";
 import {provenEdgeEntry} from "./helpers/promoted-edge-entry.ts";
+import { projectionKey } from "../lib/civic-data/projection-key.ts";
 
 const at="2026-10-12T12:00:00.000Z";
 const hash=(body:string)=>createHash("sha256").update(body).digest("hex");
@@ -88,4 +89,28 @@ test("saved-source verification uses the same public index facts across v2 and v
   assert.equal((await readBulkProjection(LEGISCAN_BULK_SCOPE,{store,edge,verifySavedSource:true,now:at})).kind,"PROMOTED");
   const changed=revised(edge,value=>{(value.datasets as Dataset[])[0].session_name="Different source session";});
   await assert.rejects(readBulkProjection(LEGISCAN_BULK_SCOPE,{store,edge:changed,verifySavedSource:true,now:at}),/LEGISCAN_BULK_PROJECTION_INVALID/);
+});
+
+test("Alabama: a current session an earlier parser still holds is a gap, and older sessions are never opened",async()=>{
+  // Production on 2026-10-26: Alabama's 2026 regular session and nine older sessions were held without a parser
+  // version, beside a published 2026 special session; /api/bills?state=AL answered 503.
+  const edges=await published();
+  const special={...dataset,year_start:2026,year_end:2026,special:1};
+  const regular={...dataset,session_id:dataset.session_id-1,session_name:"2026 Regular Session",year_start:2026,year_end:2026,special:0};
+  const older={...dataset,session_id:dataset.session_id-2,session_name:"2025 Regular Session",year_start:2025,year_end:2025,special:0};
+  edges.set(LEGISCAN_BULK_SCOPE,revised(edges.get(LEGISCAN_BULK_SCOPE)!,payload=>{payload.datasets=[special,regular,older];}));
+  const current=edges.get(`legiscan-bills:session:${dataset.session_id}`)!;
+  for(const held of [regular,older]){
+    const scope=`legiscan-bills:session:${held.session_id}`,legacy=revised(current,payload=>{delete payload.parserVersion;payload.dataset=held;});
+    if(legacy.kind!=="PROMOTED")throw Error("Expected published fixture");
+    const receipt={...legacy.projection.receipt!,scope};
+    edges.set(scope,{...legacy,projection:{...legacy.projection,key:projectionKey("STATE_BILL",scope),scope,receipt},attested:{...legacy.attested,scope}});
+  }
+  const opened:string[]=[];
+  const store:CivicDataReadStore={async readCandidate(){throw Error("Not a candidate read");},async readPromotion(){throw Error("Not a pointer read");},
+    async readPromotedEntry(recordClass,scope){opened.push(scope);return edges.get(scope)??{kind:"NOT_RECORDED" as const,recordClass,scope};}};
+  const read=await readBillsForState("AK",{store,now:at});
+  assert.deepEqual(read.bills.map(row=>row.billId),bodies.map(body=>JSON.parse(body).bill.bill_id),"the published special session renders");
+  assert.equal(read.complete,false,"the regular session stays owed until the fan-out republishes it");
+  assert.ok(!opened.includes(`legiscan-bills:session:${older.session_id}`),"a session outside the current years is not read");
 });

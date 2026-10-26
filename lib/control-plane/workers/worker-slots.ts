@@ -33,10 +33,11 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "federal-money-refresh.mts": 768,
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
-  // RB-A2: complete Texas source acquisition, native map import and
-  // Census publication on a production-data copy peaked at 3,703,468,032
-  // bytes (2026-10-24, Node 24.19), plus 5%, rounded up to MiB.
-  "place-map-refresh.mts": 3709,
+  // RB-A2: complete Texas acquisition, map import and Census publication
+  // with the runner's 1 GiB child heap, 32-geometry batches and released
+  // source bodies peaked at 1,669,304,320 bytes (2026-10-25, Node 24.19),
+  // plus 5%, rounded up to MiB. A 768 MiB heap ran out on Texas.
+  "place-map-refresh.mts": 1672,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,

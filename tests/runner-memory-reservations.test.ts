@@ -110,7 +110,7 @@ test("small-state observations cannot lower complete native vote or ACS reservat
   const host = workerMemoryHost({ processes: () => [] });
   host.transact(state => { state.peaks = { "openstates-votes-refresh.mts": [100 * mib], "legiscan-votes-refresh.mts": [100 * mib], "legiscan-bulk.mts": [100 * mib] }; }, false);
   const slots = routineProcessSlots({ host, availableBytes: () => 10000 * mib });
-  for (const [entry, expected] of [["openstates-votes-refresh.mts", 3574], ["legiscan-votes-refresh.mts", 1312], ["legiscan-bulk.mts", 2130], ["acs-population-promote.mts", 3928]] as const) {
+  for (const [entry, expected] of [["openstates-votes-refresh.mts", 3574], ["legiscan-votes-refresh.mts", 1312], ["legiscan-bulk.mts", 2130], ["acs-population-promote.mts", 3928], ["place-map-refresh.mts", 1672]] as const) {
     const release = await slots.acquire(entry);
     host.transact(state => assert.equal(state.reservations[0].peak, expected * mib), false);
     release();

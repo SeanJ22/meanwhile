@@ -333,7 +333,7 @@ test("an explicitly ended final office retires during a partial refresh while ma
   const endedId=initial.roster.officeholders.find(row=>row.personId === "plural:ended")!.memberships![0].id;
   const malformed=await acquire(1),malformedPublication=await publishStatePeople({ vault, store:canonical,...malformed,now:at});
   assert.ok(malformedPublication.outcome.promoted);
-  const held=(malformedPublication.candidate.normalizedPayload as {captures:StatePeopleCapture[]}).captures.filter(row=>row.requestedUrl.endsWith(sha));
+  const held=(malformedPublication.candidate.normalizedPayload as {sourceInputDigest:string;captures:StatePeopleCapture[]}).captures.filter(row=>row.requestedUrl.endsWith(sha));
   assert.ok((await Promise.all(held.map(row=>capturedText(vault,row)))).some(text=>text.includes("id: ocd-person/ended")),"partial refresh retains the original capture behind the still-serving prior tenure");
   const partial=await acquire(2);
   assert.equal(partial.roster.currentMembershipComplete,false);
@@ -359,7 +359,7 @@ test("an explicitly ended final office retires during a partial refresh while ma
   const history=read.value.roster.endedMemberships?.find(row=>row.id === endedId);
   assert.equal(history?.current,false); assert.equal(history?.termEnd,"2026-09-01");
   assert.match(history?.sourceUrl ?? "",/\/municipalities\/Ended\.yml$/);
-  const texts=await Promise.all((publication.candidate.normalizedPayload as {captures:StatePeopleCapture[]}).captures.map(row=>capturedText(vault,row)));
+  const texts=await Promise.all((publication.candidate.normalizedPayload as {sourceInputDigest:string;captures:StatePeopleCapture[]}).captures.map(row=>capturedText(vault,row)));
   assert.ok(texts.some(text=>text.includes("id: ocd-person/ended") && text.includes("2026-09-01")));
   assert.ok(JSON.stringify(publication.candidate).length < 64 * 1024 && !JSON.stringify(publication.candidate.normalizedPayload).includes("ocd-person/ended"),
     "the candidate holds references; the native YAML stays in the vault");
@@ -391,7 +391,7 @@ test("an explicitly ended final office retires during a partial refresh while ma
   await reject(candidate=>{(candidate.normalizedPayload as {endedMemberships:unknown[]}).endedMemberships=[];},"a reader-only end claim is not captured normalization evidence","INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED");
   for (const replacement of ["", "    end_date: '2026-08-01'\n"]) {
     const unproved=structuredClone(publication.candidate);
-    for (const row of (unproved.normalizedPayload as {captures:{capture:RawCaptureRef}[]}).captures) {
+    for (const row of (unproved.normalizedPayload as {sourceInputDigest:string;captures:{capture:RawCaptureRef}[]}).captures) {
       const text=await capturedText(vault,row as StatePeopleCapture);
       if (text.includes("id: ocd-person/ended")) row.capture=await holdRawCapture(vault,"plural-openstates",text.replace("    end_date: '2026-09-01'\n",replacement),"text/plain");
     }

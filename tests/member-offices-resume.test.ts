@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { afterEach, beforeEach } from "node:test";
 import { zip } from "../scripts/xlsx.mjs";
 import { acquireStatePeople } from "../lib/sources/plural/acquisition.ts";
 import { PLURAL_REVISION_URL } from "../lib/sources/plural/targets.ts";
@@ -15,6 +15,9 @@ import { routineTaskNextDueMs } from "../lib/civic-data/runner.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { versionedSelect } from "../lib/db/versioned-query.ts";
+
+beforeEach(() => installFactReader(async () => []));
+afterEach(() => installFactReader(undefined));
 
 const sha = "a".repeat(40), at = "2026-10-01T00:00:00.000Z";
 const yaml = (id: string) => `id: ocd-person/${id}

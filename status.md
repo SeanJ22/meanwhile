@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE FOR READERS: release 128 (main 9352c8e14, Maryland 413 loop fix; runner on 9352c8e14 since 7:27 AM EDT, no hand restart). GATING: release 129, RT-01b place map (river-next-rt01b, merge of 92b527e93 onto river 90348edd4). READY to fold: bills c0ddd0e46 (in the 129 gate), RIVER-PP 338a7b418. BUILDING: batch 3 (GV-01, FM-01, MP-01, MT-02), runner-release fix, CT-01 + ballot date text, RT-01c. DB-04 stopped (replaced by DB-05). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 128 (main 9352c8e14, Maryland 413 loop fix; runner on 9352c8e14 since 7:27 AM EDT, no hand restart). GATING: release 129 on river-next-129 (RT-01b 92b527e93 + bills c0ddd0e46 onto river 90348edd4). READY to fold: bills c0ddd0e46 (in the 129 gate), RIVER-PP 338a7b418. BUILDING: batch 3 (GV-01, FM-01, MP-01, MT-02), runner-release fix, CT-01 + ballot date text, RT-01c. DB-04 stopped (replaced by DB-05). See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3

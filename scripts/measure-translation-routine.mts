@@ -57,18 +57,19 @@ if (!process.argv.includes("--manual-child")) {
       messages, batch: backgroundBatchTransport({ apiKey: key }), credentialConfigured: Boolean(key),
       credentialVar: WORKER_CREDENTIAL_VAR, providerQueue: queue,
       onCondition: reason => console.log(`MEASURE_TRANSLATION_HOLD ${reason}`) });
-    // Publisher reads remain free while Admin holds paid work.
-    // A measure whose cited pages never name it gets its own page found on the election office's site:
-    // free links first, then the Admin-allowed paid search.
-    const sources = await loadRoutineMeasureSources({ repos, root: process.cwd(), state, ballots, now,
+    const attempts = routineTranslationAttempts(repos, state), priorAttempts = await attempts.read();
+    // Free acquisition only writes source attempts, so reuse this state's
+    // translation snapshot for source feedback and the existing retry clocks.
+    // Publisher reads remain free while Admin holds paid work; free links lead
+    // the same Admin-allowed search when the held page did not answer the measure.
+    const sources = await loadRoutineMeasureSources({ repos, root: process.cwd(), state, ballots, priorAttempts, now,
       open: routineMeasureSourceOpener({ repos, state, root: process.cwd(), now }), finds: routineMeasureFinds(repos, state),
       search: armed.measurePageSearch({ braveKey: process.env.BRAVE_SEARCH_API_KEY, exaKey: process.env.EXA_API_KEY }) });
-    const attempts = routineTranslationAttempts(repos, state);
     const result = await runMeasureTranslationPass({ states: [state], repos, store, now: now(),
       modelLaneEnabled: armed.closed === null, modelLaneReason: armed.closed?.reason,
       paidWorkerCapacity: () => armed.paidWorkerCapacity(), guardedTransportFor: armed.guardedTransportFor,
       loadBallotsForState: async () => ballots, loadCapturesForState: async () => sources.captures,
-      readAttemptsForState: async () => attempts.read(), saveAttempt: attempts.save, foundSources: sources.discovered });
+      readAttemptsForState: async () => priorAttempts, saveAttempt: attempts.save, foundSources: sources.discovered });
     console.log("MEASURE_TRANSLATION_RESULT=" + JSON.stringify({ state, ...result, sourceFailures: sources.failures, foundSources: Object.fromEntries(sources.discovered) }));
     // A failed save or an unreadable state ballot holds the run. A measure without saved official text
     // stays an open blank (listed in the result line above); every other measure and state continues.

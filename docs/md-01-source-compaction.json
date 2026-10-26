@@ -1,0 +1,33 @@
+{
+  "at": "2026-10-24T18:36:24.565Z",
+  "proof": [
+    {
+      "subjectId": "md-county-questions-2026-annearundel-b",
+      "sourceCharacters": 1940537,
+      "originalSourceJsonBytes": 1941342,
+      "encodedSourceJsonBytes": 480663,
+      "byteReductionPercent": 75.24,
+      "passages": 5477,
+      "copies": 4571,
+      "allCitationSpansMatch": true,
+      "sourceHashUnchanged": true,
+      "ms": 98,
+      "sourceUrl": "https://www.elections.maryland.gov/elections/2026/general_ballots/AnneArundel.pdf",
+      "sourceTextHash": "4c41e5dcc8ec3fbf1b07f4eaf6a0a7df5b408ee20d8046fecbf45ca5d9307921"
+    },
+    {
+      "subjectId": "wv-kanawha-2026-school-levy-renewal",
+      "sourceCharacters": 2091108,
+      "originalSourceJsonBytes": 2094897,
+      "encodedSourceJsonBytes": 439679,
+      "byteReductionPercent": 79.01,
+      "passages": 4926,
+      "copies": 4293,
+      "allCitationSpansMatch": true,
+      "sourceHashUnchanged": true,
+      "ms": 88,
+      "sourceUrl": "https://apps.sos.wv.gov/elections/2026GeneralSampleBallots/SAMPLE%20-%20WV%20Kanawha%20261103%20General%20-%2017inch.pdf",
+      "sourceTextHash": "956bad51bf6bbc4504df97686b9ff5cfa5006efb56b09ea41d24acb4fe2c5f5b"
+    }
+  ]
+}

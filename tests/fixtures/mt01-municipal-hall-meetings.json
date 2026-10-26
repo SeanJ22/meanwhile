@@ -1,0 +1,52 @@
+{
+  "source": {
+    "id": "iqm2:derived-state-id-place-boise-city-body-planning-and-zoning-commission:5568",
+    "bodyId": "ocd-division/country:us/state:id/place:boise_city#body:planning-and-zoning-commission",
+    "ocdId": "ocd-division/country:us/state:id/place:boise_city",
+    "bodyName": "Planning and Zoning Commission",
+    "jurisdiction": "CITY OF BOISE",
+    "title": "Planning and Zoning Commission - Work Session",
+    "startsAt": "2026-08-03T17:30:00-06:00",
+    "timeZone": "America/Denver",
+    "location": {
+      "lat": 43.615387122768,
+      "lng": -116.201864471479,
+      "name": "City Hall - 3rd Floor Tablerock Room, 150 N. Capitol Blvd, Boise, ID  83702",
+      "address": "City Hall - 3rd Floor Tablerock Room, 150 N. Capitol Blvd, Boise, ID  83702"
+    },
+    "agendaUrl": "https://boisecityid.iqm2.com/Citizens/FileOpen.aspx?Type=14&ID=5996&Inline=True",
+    "status": "CONCLUDED",
+    "provenance": {
+      "sourceOrg": "CITY OF BOISE",
+      "sourceUrl": "https://boisecityid.iqm2.com/Citizens/Detail_Meeting.aspx?ID=5568",
+      "verifiedAt": null,
+      "collectedAt": "2026-10-24T08:19:36.166Z",
+      "doorId": "meetings:iqm2:ocd-division%2Fcountry%3Aus%2Fstate%3Aid%2Fplace%3Aboise_city%23body%3Aplanning-and-zoning-commission:route:abba39fcf2597170"
+    }
+  },
+  "target": {
+    "id": "iqm2:derived-state-id-place-boise-city-governing:5445",
+    "bodyId": "ocd-division/country:us/state:id/place:boise_city#governing",
+    "ocdId": "ocd-division/country:us/state:id/place:boise_city",
+    "bodyName": "City Council",
+    "jurisdiction": "CITY OF BOISE",
+    "title": "City Council - Work Session",
+    "startsAt": "2026-07-28T15:30:00-06:00",
+    "timeZone": "America/Denver",
+    "location": null,
+    "venueGap": {
+      "kind": "STATED_NOT_PLACED",
+      "publisher": "CITY OF BOISE",
+      "publishedText": "City Hall - Maryanne Jordan City Council Chambers, 150 Capitol Blvd, Boise, ID  83702"
+    },
+    "agendaUrl": null,
+    "status": "CANCELED",
+    "provenance": {
+      "sourceOrg": "CITY OF BOISE",
+      "sourceUrl": "https://boisecityid.iqm2.com/Citizens/Detail_Meeting.aspx?ID=5445",
+      "verifiedAt": null,
+      "collectedAt": "2026-10-24T07:10:24.949Z",
+      "doorId": "meetings:iqm2:ocd-division%2Fcountry%3Aus%2Fstate%3Aid%2Fplace%3Aboise_city%23governing:route:2e5e7f30de0491e0"
+    }
+  }
+}

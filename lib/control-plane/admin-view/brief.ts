@@ -18,6 +18,7 @@ import { projectDoors } from "./v6-doors-read.ts";
 import { scheduledView } from "./v6-scheduled-read.ts";
 import { plainWords } from "./plain-words.ts";
 import { TERMINAL_WORK_ITEM_STATES, type WorkItem } from "../work-item.ts";
+import { compactKeeperProblems, type BriefProblem } from "../../counts/problem-groups.ts";
 
 /** Unanswered organic Ask questions stay visible while their sourced answer is owed. */
 export async function readerQuestionRows(repos: Pick<ControlPlaneRepositories, "workItems">): Promise<readonly QueueRow[]> {
@@ -39,7 +40,7 @@ export interface BriefSnapshot {
   /** Hourly findings may arrive before the scheduled daily snapshot. */
   readonly lineKeeperOnly?:boolean;
   readonly updates: readonly UpdateLine[];
-  readonly problems: readonly {key:string;what:string;owner:string;next:string}[];
+  readonly problems: readonly BriefProblem[];
   readonly decisions: readonly {key:string;what:string;next:string}[];
   readonly alerts: readonly {key:string;what:string;next:string}[];
   readonly unread: readonly string[];
@@ -82,11 +83,12 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   if(reports?.sites.some(s=>s.kind==="READ"&&s.total>s.rows.length))unread.push("older reader problems outside the current page");
   const projected=projectBrief(config,[...rows,...(reports?readerProblemRows(reports):[]),...questions],at,unread);
   const keeperFixKeys=new Set(fixItems(config).filter(f=>f.addedBy==='The line keeper').map(f=>`fix:${f.id}`));
-  const keeperProblems=config.latestBrief?.problems.filter(p=>p.key.startsWith('line-keeper:'))??[];
+  const keeperProblems=compactKeeperProblems(config.latestBrief?.problems.filter(p=>p.key.startsWith('line-keeper:'))??[]);
   const fresh={...projected,problems:[...projected.problems.filter(p=>!keeperFixKeys.has(p.key)),...keeperProblems]};
 
-  return {fresh,latest:config.latestBrief??null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
+  return {fresh,latest:config.latestBrief?compactBrief(config.latestBrief):null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
 }
+export const compactBrief=(brief:BriefSnapshot):BriefSnapshot=>({...brief,problems:compactKeeperProblems(brief.problems)});
 function dailySnapshotSaved(config:AdminConfig,day:string):boolean{
  const saved=config.latestBrief;return !!saved&&(saved.day>day||saved.day===day&&saved.lineKeeperOnly!==true);
 }

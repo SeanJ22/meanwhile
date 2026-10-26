@@ -5,6 +5,7 @@ import { ADMIN_CONFIG_ID, defaultAdminConfig, type AdminConfig } from "../gatewa
 import { projectBrief, easternBriefClock } from "../admin-view/brief.ts";
 import { processNeonBytes } from "../../db/transfer-by-caller.ts";
 import { countProblems } from "../../counts/hour.ts";
+import { groupCountProblems } from "../../counts/problem-groups.ts";
 import { readHour, query } from "./read.ts";
 import { LINE_KEEPER_BY, type LineHour } from "./model.ts";
 
@@ -22,12 +23,10 @@ export function withKeeperFixes(config: AdminConfig, hour: LineHour): AdminConfi
   })};
   const day=easternBriefClock(hour.measuredAt).day;
   const latest=next.latestBrief?.day===day?next.latestBrief:projectBrief(next,[],hour.measuredAt);
-  const problems=new Map(latest.problems.map(p=>[p.key,p]));
-  for(const p of hour.problems)problems.set(`line-keeper:${p.key}`,{key:`line-keeper:${p.key}`,what:p.says,owner:p.owner,next:p.next});
-  return {...next,latestBrief:{...latest,lineKeeperOnly:next.latestBrief?.day===day?next.latestBrief.lineKeeperOnly:true,createdAt:hour.measuredAt,problems:[...problems.values()]},updatedAt:hour.measuredAt};
+  const problems=[...latest.problems.filter(p=>!p.key.startsWith("line-keeper:")),...groupCountProblems(hour.problems)];
+  return {...next,latestBrief:{...latest,lineKeeperOnly:next.latestBrief?.day===day?next.latestBrief.lineKeeperOnly:true,createdAt:hour.measuredAt,problems},updatedAt:hour.measuredAt};
 }
 async function writeFixes(sql:Sql,hour:LineHour) {
-  if(!hour.problems.length)return;
   const keys=hour.problems.map(p=>`line-keeper:${p.key}`);
   for(let attempt=0;attempt<4;attempt++) {
     const [row]=await query(sql,"fix-settings",`SELECT revision,value->'latestBrief' AS brief FROM cp_admin_config WHERE id=$1`,[ADMIN_CONFIG_ID]);

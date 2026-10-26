@@ -24,6 +24,7 @@
   max-width: none;
   padding: 0;
 }
+.root.rootBrief { max-width: 76rem; }
 
 .root :where(button, input, select, textarea) {
   font-family: inherit;
@@ -2340,3 +2341,10 @@
 details[open] > summary .caret {
   transform: rotate(90deg);
 }
+.briefGrid { display: grid; grid-template-columns: minmax(160px, .8fr) minmax(340px, 1.8fr) minmax(150px, .8fr); gap: 12px; align-items: start; }
+.briefGrid > section { padding: 16px; gap: 10px; }
+.briefProblems { margin: 0; padding: 0; list-style: none; }
+.briefProblems li { padding: 6px 0; border-bottom: 1px solid var(--panel-border); }
+.briefProblems li:last-child { border-bottom: 0; }
+.briefProblems p { margin: 3px 0; }
+@media (max-width: 1000px) { .briefGrid { grid-template-columns: 1fr; } }

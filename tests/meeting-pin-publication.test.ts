@@ -11,6 +11,7 @@ import { publishedOnlineAccess } from "../lib/meetings/published-online.ts";
 import { censusAddressQuery, repeatsPublishedVenue } from "../lib/geo/address-query.ts";
 import { verifiedCensusVenuePoint } from "../lib/geo/census-address-match.ts";
 import { publishedMeetingPins } from "../lib/meetings/pin-location.ts";
+import { groupByVenue } from "../lib/meetings/venues.ts";
 import { normalizeWithDrops } from "../lib/sources/legistar/index.ts";
 import type { LegistarClient } from "../lib/sources/legistar/client-registry.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -198,7 +199,12 @@ test("publication tries source text, board office, then government office and sa
     },
   });
   assert.deepEqual(next.meetings[0].mapPin, result.meetings[0].mapPin);
+  assert.deepEqual(next.held,[]);
   assert.equal(next.responses.length, 0);
+  const changed=await placePublishedMeetingPins({meetings:[meeting("Room 302")],previous:next.meetings,offices,
+    fetchImpl:async()=>{throw Error("Changed attendance repeated a failed office lookup");}});
+  assert.deepEqual(changed.held,[]);assert.equal(changed.meetings[0].mapPin?.publishedLocation,"Room 302");
+  assert.equal(changed.meetings[0].mapPin?.coordinateCheckedAt,result.meetings[0].mapPin?.coordinateCheckedAt);
 });
 
 test("a changed source address gets its own point before either office; online-only stays online", async () => {
@@ -544,6 +550,30 @@ test("online-only source text retains a published join link while hybrid street 
     ),
     null,
   );
+  for(const label of ["Remote","REMOTE","Online","Online-only meeting"])
+    assert.deepEqual(publishedOnlineAccess(label),{label,joinUrl:null});
+  const generic="Online only: https://example.gov/join";
+  assert.deepEqual(publishedOnlineAccess(generic),{label:generic,joinUrl:"https://example.gov/join"});
+  for(const physical of ["Remote Access Center","Online Library","Remote meeting at 1415 W Melody Ln, Bisbee, AZ 85603"])
+    assert.equal(publishedOnlineAccess(physical),null);
+});
+
+test("a retained Remote source label becomes online only while its saved office point is reused without Census",async()=>{
+  const original=meeting("Remote");
+  const first=await placePublishedMeetingPins({meetings:[original],offices,clock:()=>NOW,fetchImpl:async()=>response(BOARD_GEO)});
+  const access=publishedOnlineAccess("Remote");assert.ok(access);
+  const later=new Date(Date.parse(NOW)+3600000).toISOString();
+  const current={...meeting(null),online:access,venueGap:undefined,provenance:{...SOURCE,collectedAt:later}};
+  const next=await placePublishedMeetingPins({meetings:[current],previous:first.meetings,offices,clock:()=>later,
+    fetchImpl:async()=>{throw Error("A saved Remote office point requested Census again");}});
+  assert.deepEqual(next.held,[]);assert.equal(next.responses.length,0);
+  assert.equal(next.meetings[0].mapPin?.basis,"BODY_OFFICE");assert.equal(next.meetings[0].mapPin?.publishedLocation,null);
+  assert.equal(next.meetings[0].mapPin?.coordinateCheckedAt,first.meetings[0].mapPin?.coordinateCheckedAt);
+  assert.equal(original.venueGap?.publishedText,"Remote");
+  const [read]=withSittingFacts(next.meetings,[{meetingId:current.id,field:"mapPin",value:first.meetings[0].mapPin,source:SOURCE},
+    {meetingId:current.id,field:"location",value:{name:"Remote",address:null},source:SOURCE}]);
+  assert.deepEqual(read.online,{label:"Remote",joinUrl:null});assert.equal(read.venueGap,undefined);
+  const [venue]=groupByVenue([read]);assert.equal(venue.kind,"ONLINE_ONLY");assert.equal(venue.pinBasis,"BODY_OFFICE");
 });
 
 test("a room number before a street address is excluded from the Census query", () => {
@@ -690,10 +720,11 @@ test("a street-only municipal address uses its published city and state without 
  const next=await placePublishedMeetingPins({meetings:[source],previous:first.meetings,offices:new Map(),fetchImpl:async()=>{throw Error("A saved point must not request Census again");}});
  assert.deepEqual(next.held,[]);assert.deepEqual(next.meetings[0].mapPin,first.meetings[0].mapPin);
  const county=await placePublishedMeetingPins({meetings:[{...source,jurisdiction:"COUNTY OF DENVER"}],offices:new Map(),fetchImpl:async input=>{
-   assert.equal(new URL(String(input)).searchParams.get("address"),"1437 Bannock Street");
+   assert.equal(new URL(String(input)).searchParams.get("address"),"1437 Bannock Street, CO");
    return response(geo("1437","BANNOCK","DENVER","CO","80202"));
  }});
- assert.equal(county.meetings[0].mapPin,undefined,"a county name cannot invent the meeting city");
+ assert.deepEqual(county.held,[]);
+ assert.equal(county.meetings[0].mapPin,undefined,"a county name cannot invent the meeting city without a confirmed unique point");
 });
 
 
@@ -728,4 +759,82 @@ test("native Census postal city and missing suffix forms retain the same publish
     query.replace("WI","CA"),query.replace("Milwaukee","Other City").replace("53110","99999")])
     assert.equal(verifiedCensusVenuePoint(changed,response),null,changed);
  }
+});
+
+
+test("a published street intersection uses its unique native Census point without inventing a house number",()=>{
+ const published="Jackson Park – Pickle Ball Courts, S. 43rd St. and Kinnickinnic River Parkway, Milwaukee, WI 53215";
+ const response=JSON.parse(readFileSync(new URL("./fixtures/mt01-intersection-census.json",import.meta.url),"utf8"));
+ assert.ok(verifiedCensusVenuePoint(published,response));
+ for(const changed of [published.replace("43rd","44th"),published.replace("Kinnickinnic","Different"),
+  published.replace("S. 43rd","N. 43rd"),published.replace("and Kinnickinnic","and E Kinnickinnic"),
+  published.replace("WI","CA"),published.replace("Milwaukee","Other City")]){
+   const conflict=structuredClone(response);conflict.result.input.address.address=censusAddressQuery(changed);
+   assert.equal(verifiedCensusVenuePoint(changed,conflict),null,changed);
+ }
+ const unbound=structuredClone(response);delete unbound.result.input;assert.equal(verifiedCensusVenuePoint(published,unbound),null);
+});
+
+
+test("a county's complete street-only address queries its known state and keeps the original source text",async()=>{
+ const source={...meeting("1230 W. Cherry St"),jurisdiction:"COUNTY OF MILWAUKEE",
+  bodyId:"ocd-division/country:us/state:wi/county:milwaukee#body:health",ocdId:"ocd-division/country:us/state:wi/county:milwaukee"};
+ const census=JSON.parse(readFileSync(new URL("./fixtures/mt01-state-qualified-census.json",import.meta.url),"utf8"));
+ const first=await placePublishedMeetingPins({meetings:[source],offices:new Map(),fetchImpl:async input=>{
+  assert.equal(new URL(String(input)).searchParams.get("address"),"1230 W. Cherry St, WI");return response(census);
+ }});
+ assert.deepEqual(first.held,[]);assert.equal(first.meetings[0].mapPin?.basis,"MEETING");
+ assert.equal(first.meetings[0].mapPin?.address,"1230 W. Cherry St");
+ assert.equal(source.venueGap?.publishedText,"1230 W. Cherry St");
+ const next=await placePublishedMeetingPins({meetings:[source],previous:first.meetings,offices:new Map(),fetchImpl:async()=>{throw Error("Saved point requested Census again");}});
+ assert.deepEqual(next.held,[]);assert.deepEqual(next.meetings[0].mapPin,first.meetings[0].mapPin);
+ const conflict=structuredClone(census);conflict.result.addressMatches[0].addressComponents.state="GA";
+ assert.equal(verifiedCensusVenuePoint("1230 W. Cherry St, WI",conflict),null);
+});
+
+test("a board's own published agenda address precedes its government's separate office",async()=>{
+ const division="ocd-division/country:us/state:nc/county:wake",body=`${division}#governing`;
+ const header=readFileSync(new URL("./fixtures/mt01-wake-agenda-header.txt",import.meta.url),"utf8");let reads=0;
+ const offices=await publishedPinOffices(async()=>++reads===1?[{id:body,name:"Board of Commissioners",government_name:"County of Wake",
+  government_address:"1 Government Plaza, Raleigh, NC",government_source:SOURCE}]:[{body_id:body,meeting_id:"legistar:wake:6264",
+  jurisdiction:"COUNTY OF WAKE",url:"https://wake.legistar1.com/wake/meeting-agenda.pdf",source_org:"Wake County",collected_at:NOW,header}],[body]);
+ assert.equal(offices.get(body)?.officeContact?.address,"301 South McDowell Street, Raleigh, NC");
+ assert.equal(offices.get(body)?.governmentOffice?.address,"1 Government Plaza, Raleigh, NC");
+ const census=JSON.parse(readFileSync(new URL("./fixtures/mt01-wake-office-census.json",import.meta.url),"utf8"));
+ const source={...meeting("Wake County Justice Center"),id:"legistar:wake:6264",bodyId:body,ocdId:division,jurisdiction:"COUNTY OF WAKE"};
+ const prior:Meeting={...source,mapPin:{meetingId:source.id,bodyId:body,name:"County of Wake",address:"1 Government Plaza, Raleigh, NC",
+  basis:"GOVERNMENT_OFFICE",provenance:SOURCE,lat:35.78,lng:-78.64,publishedLocation:source.venueGap!.publishedText}};
+ const requests:string[]=[];const result=await placePublishedMeetingPins({meetings:[source],previous:[prior],offices,fetchImpl:async input=>{
+  requests.push(new URL(String(input)).searchParams.get("address")!);return response(census);
+ }});
+ assert.deepEqual(requests,["301 South McDowell Street, Raleigh, NC"]);assert.equal(result.meetings[0].mapPin?.basis,"BODY_OFFICE");
+ const next=await placePublishedMeetingPins({meetings:[source],previous:result.meetings,offices,fetchImpl:async()=>{throw Error("Saved board point requested Census again");}});
+ assert.deepEqual(next.held,[]);assert.deepEqual(next.meetings[0].mapPin,result.meetings[0].mapPin);
+});
+
+
+test("a temporary board-address service failure preserves the government point and retries the higher address",async()=>{
+ const govOnly=new Map([[BODY,{...offices.get(BODY)!,officeContact:undefined}]]);
+ const first=await placePublishedMeetingPins({meetings:[meeting("Room 301")],offices:govOnly,clock:()=>NOW,fetchImpl:async()=>response(GOVERNMENT_GEO)});
+ const failed=await placePublishedMeetingPins({meetings:[meeting("Room 301")],previous:first.meetings,offices,fetchImpl:async()=>new Response("Unavailable",{status:503})});
+ assert.equal(failed.meetings[0].mapPin?.basis,"GOVERNMENT_OFFICE");
+ assert.equal(failed.meetings[0].mapPin?.coordinateCheckedAt,first.meetings[0].mapPin?.coordinateCheckedAt);
+ assert.ok(failed.held.some(detail=>detail.includes("503")));
+ const next=await placePublishedMeetingPins({meetings:[meeting("Room 301")],previous:failed.meetings,offices,fetchImpl:async input=>{
+  assert.equal(new URL(String(input)).searchParams.get("address"),BOARD);return response(BOARD_GEO);
+ }});
+ assert.deepEqual(next.held,[]);assert.equal(next.meetings[0].mapPin?.basis,"BODY_OFFICE");
+});
+
+test("an office-read failure keeps the saved reference point through changed attendance text",async()=>{
+ const govOnly=new Map([[BODY,{...offices.get(BODY)!,officeContact:undefined}]]);
+ const first=await placePublishedMeetingPins({meetings:[meeting("Old venue")],offices:govOnly,clock:()=>NOW,fetchImpl:async()=>response(GOVERNMENT_GEO)});
+ const current={...meeting("New venue"),online:{label:"Online only",joinUrl:"https://example.gov/join"}};
+ const next=await placePublishedMeetingPins({meetings:[current],previous:first.meetings,query:async()=>{throw Error("Office read unavailable");},fetchImpl:async()=>{throw Error("A reference point requested Census again");}});
+ assert.equal(next.meetings[0].mapPin?.basis,"GOVERNMENT_OFFICE");
+ assert.equal(next.meetings[0].mapPin?.publishedLocation,"New venue");
+ assert.equal(next.meetings[0].mapPin?.coordinateCheckedAt,first.meetings[0].mapPin?.coordinateCheckedAt);
+ assert.deepEqual(next.meetings[0].online,current.online);
+ assert.ok(next.held.some(detail=>detail.includes("Office read unavailable")));
+ assert.ok(next.held.every(detail=>!detail.includes("requested Census")));
 });

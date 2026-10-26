@@ -79,13 +79,14 @@ async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
   const pin = input.meeting.mapPin!;
   const copy = await db.transaction(query => saveCaptureCopy(query, input.capture));
-  for(;;)try{
+  for(let attempt=0;;attempt++)try{
     return await publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
       valueText:pin.matchedAddress!, quote:pin.matchedAddress!, copy, producedBy:input.producedBy, costUsd:0}, clocks, now);
   }catch(error){
     const conflict=error as {code?:string;constraint?:string}|null;
-    // A competing first publication won. Decide again against its committed point without geocoding again.
-    if(conflict?.code!=="23505"||conflict.constraint!=="fact_one_live")throw error;
+    // Re-read after a rolled-back deadlock or competing first publication, using the same saved Census copy.
+    const retryable=conflict?.code==="40P01"||(conflict?.code==="23505"&&conflict.constraint==="fact_one_live");
+    if(!retryable||attempt>=2)throw error;
   }
 }
 

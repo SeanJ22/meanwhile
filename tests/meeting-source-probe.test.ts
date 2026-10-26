@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
-import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { MemoryEvidenceStore, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { meetingsCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { meetingSourceSession, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceContinuationPending } from "../lib/civic-data/meeting-source-probe.ts";
 import type { SourceHead } from "../lib/civic-data/store.ts";
@@ -10,6 +10,7 @@ import type { MeetingPartitionContract } from "../lib/civic-data/meeting-partiti
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { captureSourceAcquisitions } from "../lib/sources/acquisition-trace.ts";
+import { withFetch } from "./helpers/with-fetch.ts";
 
 const row = FIXTURE_DOOR_ROWS.find(row => row.agendaSourceType === "ICAL")!;
 const partition: MeetingPartitionContract = meetingPartitionForRow("ical", row.bodyId);
@@ -82,6 +83,23 @@ test("later page saves and source cleanup cannot erase unfinished field publicat
   assert.equal(await meetingSourceContinuationPending(partition.scope,checkpoint,null),true);
   pending=false;await session.clear();
   assert.equal(await meetingSourceContinuationPending(partition.scope,checkpoint,null),false);
+});
+
+test("internal evidence HTTP copies do not become off-host adapter acquisitions",async()=>{
+  const saved=new MemoryEvidenceStore(),checkpoint=cache(),internalUrl="https://storage.example.net/evidence";
+  let internalReads=0;
+  const io=async()=>{await fetch(internalUrl);};
+  const vault:EvidenceStore={
+    put:async(key,bytes,meta)=>{await io();await saved.put(key,bytes,meta);},
+    get:async key=>{await io();return saved.get(key);},head:async key=>{await io();return saved.head(key);},list:async prefix=>saved.list(prefix),
+  };
+  await withFetch(async resource=>{assert.equal(String(resource),internalUrl);internalReads++;return new Response("internal copy");},async()=>{
+    const session=await meetingSourceSession(partition,"internal-io",{readSourceHead:async()=>null},new Date().toISOString(),vault,undefined,undefined,
+      {checkpoint,fetchImpl:async()=>new Response("public calendar"),publicationPending:async()=>false});
+    const trace=await captureSourceAcquisitions(run=>run("ical",()=>session.fetch(calendar)));
+    assert.ok(internalReads>0,"the vault really used HTTP while an adapter was in scope");
+    assert.deepEqual(trace.evidence.map(page=>page.requestedUrl),[calendar],"only the actual public provider belongs to its acquisition evidence");
+  });
 });
 
 test("an ephemeral calendar session compares acquired hashes before held output without saving cookies", async () => {

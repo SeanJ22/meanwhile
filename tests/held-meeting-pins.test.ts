@@ -8,7 +8,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { readSittingFacts,withSittingFacts } from "../lib/facts/meeting-read.ts";
 import type { Meeting } from "../lib/sources/types.ts";
-import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
+import { placePublishedMeetingPins, publishedPinOffices } from "../lib/meetings/publish-pins.ts";
 import { agendaLetterheadOffice } from "../lib/meetings/agenda-address.ts";
 
 const NOW="2026-10-24T18:00:00.000Z",OLD="2026-10-13T01:48:06.116Z";
@@ -419,6 +419,11 @@ test("Galveston's published office uses the Census directory's explicit postal a
         documentUrl:"https://galvestoncountytx.legistar.com/regular-agenda.pdf",sourceOrg:"COUNTY OF GALVESTON",collectedAt:OLD};
       const payload={meetings:[meeting],agendaDocuments:[document]};
       await db.query("UPDATE civic_data_promotions SET payload=$1 WHERE key='MEETING:held'",[JSON.stringify(payload)]);
+      if(variant==="child"){
+        const office=(await publishedPinOffices(db.query,[body])).get(body);
+        assert.equal(office?.governmentOffice,undefined,"an inherited postal spelling does not establish government ownership or supply an office");
+        assert.equal(office?.postalAliases?.[0]?.address,mailing);
+      }
       const args={facts:db,vault,clocks:factClocks(null),now:NOW,clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000};
       const result=await publishHeldMeetingPins({...args,fetchImpl:async input=>{
         requests++;const row=responses.find(row=>row.url===String(input));assert.ok(row,`unrecorded lookup: ${String(input)}`);return new Response(row.text,{status:row.status});

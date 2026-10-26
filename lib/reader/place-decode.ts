@@ -38,6 +38,7 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     const served = local.length ? local : divisions;
     const division = served.find(id => divisionIds.includes(id)) ?? served[0] ?? String(e.division);
     return { id, division, fields: fields[id] || e.placed === true ? {...fields[id],ocdId:division.startsWith("ocd-division/") ? division : null,
+      ...(typeof e.government==="string" && typeof e.parent_id==="string" ? {governmentName:e.government,governmentId:e.parent_id} : {}),
       ...(served.some(id => id !== division) ? {alsoServesOcdIds:served.filter(id => id !== division)} : {}),
       ...(e.placement_basis === "HOST_COUNTY" ? {placementBasis:"HOST_COUNTY" as const} : {})} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [],

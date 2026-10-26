@@ -7,6 +7,8 @@ import { readSittingFacts, withSittingFacts } from "../lib/facts/meeting-read.ts
 import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
 import { publishedPinOffices } from "../lib/meetings/publish-pins.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
+import { withRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
+import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import type { Registry } from "../lib/registry/types.ts";
@@ -107,6 +109,12 @@ test("a division's label stays geographic when a held body carries a different g
   const division=registry.divisions.find(row=>row.ocdId===COUNTY)!;
   const body=registry.bodies.find(row=>row.id===BODY)!;
   assert.ok(division);assert.ok(body);
-  const summary=summarizeCoverage([-111,32],[],new Map([[COUNTY,division]]),[{...body,governmentName:foreignSource.sourceOrg}],0,new Map(),[division]);
+  const runtime:RegistryRuntimeReadModel={formatVersion:1,registry:{...registry,divisions:[division],bodies:[body]},bodyRosters:[],rosterReaderDispositions:[],
+    statewideExecutives:[],officialPhotos:{photos:[]},rosterPhotos:{},officialCandidacies:{formatVersion:1,rule:"EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE",rows:[]}};
+  const summary=withRegistryRuntimeProjection(runtime,["AZ"],()=>summarizeCoverage([-111,32],[],new Map([[COUNTY,division]]),
+    [{...body,governmentName:foreignSource.sourceOrg}],0,new Map(),[division]));
   assert.equal(summary.bodies.find(row=>row.bodyId===BODY)?.divisionLabel,division.label);
+  const owned=withRegistryRuntimeProjection(runtime,["AZ"],()=>summarizeCoverage([-111,32],[],new Map([[COUNTY,division]]),
+    [{...body,governmentId:"az:special:water-district",governmentName:ownSource.sourceOrg}],0,new Map(),[division]));
+  assert.equal(owned.bodies.find(row=>row.bodyId===BODY)?.divisionLabel,ownSource.sourceOrg,"an exact named district owner stays distinct from its county territory");
 });

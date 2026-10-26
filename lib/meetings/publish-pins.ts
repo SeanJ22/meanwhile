@@ -47,7 +47,14 @@ export const PIN_OFFICES_SQL = `WITH selected AS MATERIALIZED (
   ) owned ON true
 )
 SELECT b.id,b.name,office.value#>>'{}' AS board_address,office.checked_at AS board_checked,office_source.url AS board_source,
-  o.g->>'mailingAddress' AS postal_alias,o.g->'provenance' AS postal_alias_source,
+  coalesce((SELECT jsonb_agg(jsonb_build_object('address',reader_payload_value(r.value->'mailingAddress')#>>'{}',
+      'provenance',reader_payload_value(r.value->'provenance')) ORDER BY r.ordinal)
+    FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+    WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.state=b.state
+      AND r.promotion_key='REGISTRATION:US-'||b.state||':registration:v1'
+      AND r.aliases && ARRAY[b.id,b.parent_id,b.parent_id||'#governing',b.parent_id||'#board',
+        CASE WHEN b.id NOT LIKE 'ocd-division/%' THEN split_part(b.id,'#',1) END]
+      AND r.value->'mailingAddress' IS NOT NULL),'[]'::jsonb) AS postal_aliases,
   coalesce(government.name,o.g->>'name') AS government_name,
   coalesce(government.value#>>'{}',o.g->>'officeAddress') AS government_address,
   coalesce(CASE WHEN government.value IS NOT NULL THEN jsonb_build_object('sourceUrl',government.url,
@@ -95,7 +102,8 @@ export async function publishedPinOffices(
         {
           bodyId: String(row.id),
           name: String(row.name),
-          ...(typeof row.postal_alias==="string"&&row.postal_alias_source?{postalAliases:[{address:row.postal_alias,provenance:row.postal_alias_source as RegistryProvenance}]}:{}),
+          ...(Array.isArray(row.postal_aliases) ? {postalAliases:row.postal_aliases.filter((alias): alias is {address:string;provenance:RegistryProvenance} =>
+            Boolean(alias && typeof alias.address==="string" && alias.provenance?.sourceUrl))} : {}),
           ...(boardSource && row.board_address
             ? {
                 officeContact: {

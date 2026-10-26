@@ -40,7 +40,8 @@ const dependencyScope = `(
   OR changed.collection='meetings' AND split_part(changed.body_id,'#',1)=split_part(p.body_id,'#',1)
   OR changed.collection='governments' AND changed.state=p.state AND EXISTS(
     SELECT 1 FROM entity e LEFT JOIN entity owner ON owner.id=e.parent_id AND owner.kind='government'
-      WHERE e.id=p.body_id AND changed.aliases && ARRAY[e.id,owner.id])
+      WHERE e.id=p.body_id AND changed.aliases && ARRAY[e.id,owner.id,e.parent_id||'#governing',e.parent_id||'#board',
+        CASE WHEN e.id NOT LIKE 'ocd-division/%' THEN split_part(e.id,'#',1) END])
 )`;
 const retryKey = `jsonb_build_array(p.promotion_key,p.row_id)::text`;
 const markerName = `'held-meeting-pins:row:'||md5(${retryKey})`;

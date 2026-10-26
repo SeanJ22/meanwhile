@@ -48,12 +48,13 @@ test("a reused federal base still rejects a racing pointer and caller-fabricated
   const first=candidate(await page(vault,"Original",at),at);
   const published=await withFederalMoneyVault(vault,()=>processRegisteredFanOutCandidate(store,"openfema",first,at));
   assert.ok(published.promoted);
+  const promotedVersionId=published.promoted.versionId;
   const base=await store.readPublicationBase("FEDERAL_MONEY",first.scope);
-  const nextAt="2026-10-26T02:00:00.000Z",second=candidate(await page(vault,"Current",nextAt),nextAt,published.promoted.versionId);
+  const nextAt="2026-10-26T02:00:00.000Z",second=candidate(await page(vault,"Current",nextAt),nextAt,promotedVersionId);
   const current=await withFederalMoneyVault(vault,()=>processRegisteredFanOutCandidate(store,"openfema",second,nextAt));assert.ok(current.promoted);
   blockWholeReads(store);
-  const staleAt="2026-10-26T03:00:00.000Z",stale=candidate(await page(vault,"Stale",staleAt),staleAt,published.promoted.versionId);
-  const refused=await withFederalMoneyVault(vault,()=>processRegisteredFanOutCandidate(store,"openfema",stale,staleAt,published.promoted.versionId,{publicationBase:base}));
+  const staleAt="2026-10-26T03:00:00.000Z",stale=candidate(await page(vault,"Stale",staleAt),staleAt,promotedVersionId);
+  const refused=await withFederalMoneyVault(vault,()=>processRegisteredFanOutCandidate(store,"openfema",stale,staleAt,promotedVersionId,{publicationBase:base}));
   assert.equal(refused.promoted,null);assert.equal(refused.candidate.failureCode,"PROMOTION_BASE_CHANGED");
   assert.equal((await store.readPromotionIdentity("FEDERAL_MONEY",first.scope))?.versionId,current.promoted.versionId);
   await assert.rejects(withFederalMoneyVault(vault,()=>processRegisteredFanOutCandidate(store,"openfema",stale,staleAt,undefined,{publicationBase:structuredClone(base)})),/PUBLICATION_BASE_READ_OWNER_MISMATCH/);

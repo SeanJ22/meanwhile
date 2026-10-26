@@ -20,6 +20,8 @@ import { factRefreshBounds, observedSourceEveryMs, readSourceChangeHistory, type
 import { publishBoxFindings, reviewPublishedBoxFacts } from "../lib/facts/box-publication.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
+import { withReaderRoute } from "../lib/db/reader-route.ts";
+import { withDatabaseJob } from "../lib/db/transfer-by-caller.ts";
 import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
 
 import { hostname } from "node:os";
@@ -485,7 +487,7 @@ const BOX_FINDINGS_PER_PASS = 1000;
  */
 let heldPublication: Promise<void> = Promise.resolve();
 function publishHeldBesideSources(failures: SupervisorFailure[], taskId: string, code: string, publish: () => Promise<void>): void {
-  heldPublication = heldPublication.then(publish).catch((error: unknown) => {
+  heldPublication = heldPublication.then(() => withDatabaseJob(taskId, () => withReaderRoute(taskId, publish))).catch((error: unknown) => {
     failures.push({ taskId, code, detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   });
 }

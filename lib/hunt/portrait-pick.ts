@@ -128,12 +128,14 @@ export function pickPortraits(name: string, all: readonly PageImage[]): PickedPo
     .toLocaleLowerCase("en-US").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const want = normalized(name);
   if (!want) return [];
+  const tokens = want.split(" ");
+  const names = new Set([want, [tokens.at(-1), ...tokens.slice(0, -1)].join(" ")]);
   const out: PickedPortrait[] = [];
   const seen = new Set<string>();
   for (const img of all) {
     if (looksLikeFurniture(img)) continue;
     const haystack = imageHaystack(img);
-    if (` ${normalized(haystack)} `.includes(` ${want} `)) {
+    if ([...names].some(value => ` ${normalized(haystack)} `.includes(` ${value} `))) {
       if (seen.has(img.src)) continue;
       seen.add(img.src);
       out.push({ src: img.src, alt: img.alt, why: "Publisher labels this image with the full source name" });

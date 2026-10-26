@@ -36,6 +36,7 @@ function entryQuote(html:string,name:string):string {
   return text.slice(start,start+420);
 }
 function samePublishedName(observed:string,expected:string):boolean {
+  if(!key(observed)||!key(expected))return false;
   const forms=(value:string)=>{
     const tokens=key(value).split(" ");
     return [tokens,...(tokens.length>2&&tokens[0].length===1?[tokens.slice(1)]:[]),
@@ -95,6 +96,7 @@ function pageRoleFor(headers:string):"upper"|"lower"|null {
   return upper===lower?null:upper?"upper":"lower";
 }
 function entryPerson(name:string,card:string,people:readonly Officeholder[],chamber:"upper"|"lower"|null,pageUrl:string):Officeholder|undefined {
+  if(!key(name))return undefined;
   const namedHeading=[...card.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)].some(heading=>samePublishedName(rosterLabelName(textOf(heading[1])),name));
   const native=new Set([...card.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)].flatMap(anchor=>{
     if(!namedHeading&&!samePublishedName(anchorName(anchor[2]),name))return [];
@@ -123,6 +125,7 @@ function entryPerson(name:string,card:string,people:readonly Officeholder[],cham
   return matches.length===1?matches[0]:undefined;
 }
 function personOnPage(holder:Officeholder,html:string,sourceUrl:string,options:PeopleAcquisitionOptions,collectedAt:string,entryUrl=sourceUrl,boundedEntry=false):Officeholder|null {
+  if(!key(holder.name))return null;
   const text=textOf(html), normalized=key(text);
   if(!legislaturePageNamesPerson(html,holder.name)||!roleOnPage(text,holder))return null;
   const nameIndex=text.toLowerCase().indexOf(holder.name.toLowerCase());
@@ -211,7 +214,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
   const roster=emptyRoster(options.state,options.asOf);
   if(federalRoute(pageUrl)||memberContentRoute(pageUrl))return roster;
   const seeds=(options.roster?.officeholders??[]).flatMap(sourcePeople)
-    .filter(holder=>holder.level==="STATE"&&["upper","lower","legislature"].includes(holder.chamber??"")&&holder.state?.toLowerCase()===options.state.toLowerCase()
+    .filter(holder=>key(holder.name)&&holder.level==="STATE"&&["upper","lower","legislature"].includes(holder.chamber??"")&&holder.state?.toLowerCase()===options.state.toLowerCase()
       &&(holder.nativeIds?.["ocd-person"]?.length??0)<=1&&(holder.nativeIds?.plural?.length??0)<=1&&!sourcePersonIsDocument(holder)&&!memberAction(holder.name))
     .map(holder=>({...holder,name:rosterLabelName(holder.name)}));
   // The reference person's native membership corroborates its named entry.
@@ -320,7 +323,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
       let profile:string;try{profile=url(new URL(href,pageUrl).href)!;if(!profile)continue;}catch{continue;}
       if(memberContentRoute(profile)||documentRoute(profile))continue;
       if(new URL(profile).hostname!==new URL(pageUrl).hostname&&!isOfficialSource(profile,{url:pageUrl,html}))continue;
-      const name=anchorName(anchor[2]);if(memberAction(name))continue;
+      const name=anchorName(anchor[2]);if(!name||memberAction(name))continue;
       const known=entryPerson(name,card,held,pageRoleFor(headers),pageUrl);
       let holder=known?{...known,name}:undefined;
       if(!holder) {

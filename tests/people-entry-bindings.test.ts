@@ -79,6 +79,13 @@ test("a verified official roster entry supplies only that member's portrait",()=
   assert.throws(()=>verifyPortraitSources(subject.personId,{subject,imageUrl:"https://legislature.example.gov/jane.jpg",captures:[capture]},at),/PORTRAIT_SECOND_SOURCE_MISSING/);
 });
 
+test("a member's full name in surname-first image filenames still identifies only their own portrait",()=>{
+  const body='<h1>House Members</h1><div><h2>Representative Vito Barbieri</h2><p>District 3</p><img src="/Barbieri_Vito_123.jpg"><img src="/Jane_Smith.jpg"><img src="/district-map.jpg" alt="district map"></div>';
+  const parsed=parse(body);
+  assert.equal(parsed.officeholders.length,1);
+  assert.equal(parsed.officeholders[0].portraitCandidate?.imageUrl,"https://legislature.example.gov/Barbieri_Vito_123.jpg");
+});
+
 test("a newer bound official entry replaces an older official profile's value",()=>{
   const source={...people[0].provenance,kind:"OFFICIAL" as const,sourceUrl:"https://legislature.example.gov/members/vito",collectedAt:"2026-10-20T00:00:00.000Z"};
   const old={...people[0],phone:"208-555-9999",websiteUrl:source.sourceUrl,provenance:source};
@@ -98,7 +105,7 @@ test("a member's news and photo-album titles never become people or member-list 
 test("another legislator mentioned in a native member profile's news never owns that profile or its form",()=>{
   const profile="https://ohiosenate.gov/members/vito-barbieri";
   const members=people.map(person=>({...person,state:"OH",chamber:"upper",officeTitle:"State Senator"}));
-  const body='<h1>Vito Barbieri</h1><div><h2>Senator Vito Barbieri</h2><p>District 3</p></div><h2>Stay Connected</h2><article><h3>Jane Smith</h3><p>Senator Jane Smith spoke today. District 4</p></article>';
+  const body=`<h1>Vito Barbieri</h1><div><h2>Senator Vito Barbieri</h2><p>District 3</p><a href="${profile}/contact"><svg></svg></a><a href="https://twitter.com/OhioSenateDems"><svg></svg></a></div><h2>Stay Connected</h2><article><h3>Jane Smith</h3><p>Senator Jane Smith spoke today. District 4</p></article>`;
   const options={state:"oh",sourceId:"official-state-people" as const,asOf:at,signal:new AbortController().signal,roster:roster(members)};
   const parsed=normalizeOfficialLegislaturePage(body,profile,options,at);
   assert.deepEqual(parsed.officeholders.map(person=>person.name),["Vito Barbieri"]);

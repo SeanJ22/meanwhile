@@ -158,7 +158,7 @@ test("a ZIP-loaded state primes absent district pointers and satisfies later raw
     const statement = statements[0], keys = Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
     if (!statement.text.includes("AS zip_registry") && !keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
     reads++;
-    const rows = stateRows(`zip-request:${statement.params[7]}`,[]);
+    const rows = stateRows(`zip-request:${statement.params[6]}`,[]);
     return [[rows[0],{ row_kind:"additional",part_payload:[{version_id:"zip-geography",geography:[],local_divisions:[],zip_registry:rows[0],canonical_keys:[`CURATED_READER_RECORD:${scope}`]}] }]];
   });
   try {
@@ -199,7 +199,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
       const row=stateRows("priority-state",[],true).find(row=>"part_payload" in row);
       assert.ok(row&&"part_payload" in row);return [[row.part_payload[0]]];
     }
-    if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
+    if (keys.length && keys.every(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     const family=statement.text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices") ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
     order.push(family);
     if (family === "auxiliary") auxiliaryKeys.push(...keys);
@@ -239,7 +239,7 @@ test("an unavailable local territory file leaves the ballot's canonical families
     const keys=statements[0].params[0] as string[];
     assert.ok(Array.isArray(keys),"a failed territory read cannot submit a local place query");
     if (statements[0].text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices")) return [stateRows("territory-failure-state",[],statements[0].text.includes("AS zip_registry"))];
-    if (keys.some(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
+    if (keys.length && keys.every(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     auxiliaries++;
     return [[]];
   });

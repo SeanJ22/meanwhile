@@ -356,7 +356,9 @@ test("Postgres published metadata reads only metadata and resolves encoded evide
       await pg.query("UPDATE civic_data_candidates SET candidate=$1 WHERE id='az-a'",[candidate]);
       queries.length=0;
       const read=await new PostgresRoutineDataStore().readPublishedCandidateMetadata("az-a");
-      assert.deepEqual(read,metadata);
+      const expected = encoded ? metadata : { ...metadata, candidate: { ...metadata.candidate,
+        normalization: { ...metadata.candidate.normalization, stateRecordHashes: null } } };
+      assert.deepEqual(read,expected,"inline SQL represents an absent state index as JSON null; encoded metadata retains its stored shape");
       assert.match(queries[0],/xmin::text/,"the version is checked before the metadata body");
       const bodyReads=queries.filter(query=>query.includes("jsonb_build_object"));
       assert.equal(bodyReads.length,1);

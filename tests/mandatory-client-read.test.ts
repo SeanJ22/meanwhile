@@ -25,7 +25,7 @@ async function fixture(t: { after(fn: () => unknown): void }) {
     const result = await db.query<unknown[]>(text, [...params], { rowMode: "array" });
     const rows = result.rows.map(row => row.map((value, index) => wire(value, result.fields[index])));
     calls.push({ text, rows });
-    return { fields: result.fields, rows, rowCount: /^\s*(SELECT|WITH)\b/i.test(text) ? rows.length : result.affectedRows,
+    return { fields: result.fields, rows, rowCount: /^\s*(SELECT|WITH)\b/i.test(text) ? rows.length : result.affectedRows ?? null,
       command: /^\s*(\w+)/.exec(text)?.[1].toUpperCase() ?? "SELECT", rowAsArray: true };
   };
   neonConfig.fetchFunction = async (_url: RequestInfo | URL, init?: RequestInit) => {

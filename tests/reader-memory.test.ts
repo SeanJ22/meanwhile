@@ -1,37 +1,12 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { readerMemory, readZipPlaces, stateForZip, readNationalPresident, readNationalShelf, readStateZipPlaces } from "../lib/reader/national.ts";
+import { readZipPlaces, stateForZip, readNationalPresident, readNationalShelf, readStateZipPlaces } from "../lib/reader/national.ts";
 import { Pool } from "@neondatabase/serverless";
+import { PGlite } from "@electric-sql/pglite";
+import { unwrapVersionedStatement } from "./helpers/versioned-neon-fixture.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
-
-test("cold readers share one load and refresh keeps already verified information usable", async () => {
-  let loads = 0, complete: ((value: string) => void) | undefined;
-  const read = readerMemory(() => { loads++; return new Promise<string>(resolve => { complete = resolve; }); }, 0);
-  const first = read(), second = read();
-  await Promise.resolve();
-  assert.equal(loads, 1);
-  complete!("first verified version");
-  assert.deepEqual(await Promise.all([first, second]), ["first verified version", "first verified version"]);
-  assert.equal(await read(), "first verified version");
-  await Promise.resolve();
-  assert.equal(loads, 2);
-  complete!("newly published version");
-  await new Promise(resolve => setImmediate(resolve));
-  assert.equal(await read(), "newly published version");
-  complete!("newly published version");
-});
-
-test("a failed refresh retains the last verified publication", async () => {
-  let fail = false;
-  const read = readerMemory(async () => { if (fail) throw new Error("store offline"); return "verified"; }, 0);
-  assert.equal(await read(), "verified");
-  fail = true;
-  assert.equal(await read(), "verified");
-  await new Promise(resolve => setImmediate(resolve));
-  assert.equal(await read(), "verified");
-});
 
 test("the national ZIP shelf is shared and identifies place and state without waiting on people", async () => {
   assert.equal(stateForZip("85701"), "AZ");
@@ -62,56 +37,79 @@ test("every state ZIP index exactly preserves the national shelf's touching ZIPs
   assert.equal((await readStateZipPlaces("US-AZ")).get("85001"),places.get("85001"),"mail-only aliases reuse their filtered town and county facts");
 });
 
-test("separately loaded server module contexts share the same shelf and pending read", async () => {
+test("separately loaded server module contexts share resource containers", async () => {
   const firstUrl = new URL("../lib/reader/memory.ts?context=page", import.meta.url).href;
   const secondUrl = new URL("../lib/reader/memory.ts?context=api", import.meta.url).href;
   const first = await import(firstUrl) as typeof import("../lib/reader/memory.ts");
   const second = await import(secondUrl) as typeof import("../lib/reader/memory.ts");
   let loads = 0;
   const key = "test:separate-server-contexts";
-  const a = first.serverReaderValue(key, () => first.readerMemory(async () => { loads++; return { verified: true }; }));
-  const b = second.serverReaderValue(key, () => second.readerMemory(async () => { loads++; return { verified: false }; }));
+  const a = first.serverReaderValue(key, () => { loads++; return { localFile: Promise.resolve("immutable build data") }; });
+  const b = second.serverReaderValue(key, () => { loads++; return { localFile: Promise.resolve("incorrect duplicate") }; });
   assert.equal(a, b);
-  const [page, api] = await Promise.all([a(), b()]);
-  assert.equal(page, api); assert.equal(loads, 1); assert.equal(api.verified, true);
+  assert.equal(await a.localFile, "immutable build data");
+  assert.equal(loads, 1);
 });
 
-test("a cold President read shares its national source load without waiting for Congress", async () => {
-  const priorUrl = process.env.DATABASE_URL, priorQuery = Pool.prototype.query;
+test("President reads stay current and independent of a blocked Congress read, including a changed row under the same pointer", async () => {
+  const priorUrl = process.env.DATABASE_URL, priorConnect = Pool.prototype.connect;
   process.env.DATABASE_URL = "postgresql://fixture:fixture@national-reader.invalid/fixture";
+  const pg = new PGlite();
   const at = "2026-10-18T00:00:00.000Z", scope = "US:people:statewide-executive-sources:v1";
   const holder = { id: "white-house:current-president", name: "An Official President", officeTitle: "President of the United States",
     level: "FEDERAL", provenance: { sourceUrl: "https://www.whitehouse.gov/administration/current-president/", sourceOrg: "The White House", collectedAt: at, verifiedAt: at } };
   const payload = { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", generatedAt: at,
     roster: { scope: "us", generatedAt: at, officeholders: [holder], divisions: [{ officeholderId: holder.id, ocdId: "ocd-division/country:us", bodyId: null }], unmatched: [] } };
+  const receipt = { contractVersion: 2, decision: "GOOD", candidateId: "president-version", sourceId: "statewide-executive-sources", recordClass: "STATE_LEGISLATOR", scope,
+    validatedAt: at, checks: VALIDATION_CHECKS.map(check => ({ check, verdict: "PASS", code: "FIXTURE", detail: "Published source fixture" })), excludedFacts: [] };
+  await pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,source_id text,
+    current_version_id text,last_known_good_version_id text,promoted_at timestamptz,validation_receipt jsonb,payload jsonb);
+    CREATE TABLE civic_data_candidates(id text PRIMARY KEY,record_class text,scope text,source_id text,state text,
+    acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,normalized_hash text,retrieved_at timestamptz);
+    CREATE TABLE civic_data_candidate_events(candidate_id text,sequence integer,detail text);
+    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);`);
+  await pg.query("INSERT INTO civic_data_promotions VALUES($1,'STATE_LEGISLATOR',$2,'statewide-executive-sources','president-version','president-version',$3,$4,$5)",
+    [`STATE_LEGISLATOR:${scope}`, scope, at, receipt, payload]);
+  await pg.query("INSERT INTO civic_data_candidates VALUES('president-version','STATE_LEGISLATOR',$1,'statewide-executive-sources','PROMOTED',true,'president-version','president-version',$2,$3)",
+    [scope, canonicalCivicDataHash(payload), at]);
   const calls: string[][] = [];
-  let releaseCongress: (() => void) | undefined, congressComplete = false;
+  let releaseCongress: (() => void) | undefined, congressComplete = false, unavailable = false;
   const blocked = new Promise<void>(resolve => { releaseCongress = resolve; });
-  Pool.prototype.query = (async (_text: string, params: unknown[]) => {
-    const keys = params[0] as string[];
+  Pool.prototype.connect = (async () => ({ release() {}, query: async (text: string, params: unknown[]) => {
+    const native = unwrapVersionedStatement(text, params);
+    const keys = native.params[0] as string[];
     calls.push(keys);
     const congress = keys.some(key => key.startsWith("FEDERAL_DIRECTORY:"));
     if (congress) { await blocked; congressComplete = true; }
-    const rows = congress ? [] : [{ row_kind: "promotion", key: `STATE_LEGISLATOR:${scope}`, record_class: "STATE_LEGISLATOR", scope, source_id: "statewide-executive-sources",
-      current_version_id: "president-version", last_known_good_version_id: "president-version", promoted_at: at, retrieved_at: at,
-      validation_receipt: { contractVersion: 2, decision: "GOOD", candidateId: "president-version", sourceId: "statewide-executive-sources", recordClass: "STATE_LEGISLATOR", scope,
-        validatedAt: at, checks: VALIDATION_CHECKS.map(check => ({ check, verdict: "PASS", code: "FIXTURE", detail: "Published source fixture" })), excludedFacts: [] },
-      normalized_hash: canonicalCivicDataHash(payload), payload, published: true }];
-    return { rows };
-  }) as unknown as typeof Pool.prototype.query;
+    else if (unavailable) throw new Error("national version read unavailable");
+    return { rows: (await pg.query<Record<string, unknown>>(text, params)).rows };
+  } })) as unknown as typeof Pool.prototype.connect;
   let national: Promise<unknown> | undefined;
+  const presidentReads = () => calls.filter(keys => keys.every(key => !key.startsWith("FEDERAL_DIRECTORY:"))).length;
   try {
     national = readNationalShelf().catch(error => error);
     const [first, second] = await Promise.all([readNationalPresident(), readNationalPresident()]);
-    assert.equal(first, second);
+    assert.deepEqual(first, second);
     assert.equal(first?.officeholders[0].name, holder.name);
     assert.equal(congressComplete, false, "the President is usable while the national Congress read is still blocked");
-    assert.equal(calls.filter(keys => keys.every(key => !key.startsWith("FEDERAL_DIRECTORY:"))).length, 1);
+    assert.equal(presidentReads(), 3, "the national composition and two independent readers each confirm stored versions");
     assert.ok(calls.find(keys => keys.some(key => key.startsWith("FEDERAL_DIRECTORY:")))?.every(key => key.startsWith("FEDERAL_DIRECTORY:")), "the Congress query carries no President source dependency");
+    holder.name = "Newly Published President";
+    await pg.query("UPDATE civic_data_promotions SET payload=$1 WHERE key=$2", [payload, `STATE_LEGISLATOR:${scope}`]);
+    await pg.query("UPDATE civic_data_candidates SET normalized_hash=$1 WHERE id='president-version'", [canonicalCivicDataHash(payload)]);
+    assert.equal((await readNationalPresident())?.officeholders[0].name, holder.name, "the next read sees changes without waiting for a TTL or a new pointer id");
+    assert.equal(presidentReads(), 4);
+    await pg.query("UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{roster,officeholders,0,name}','\"Unverified mutation\"') WHERE key=$1", [`STATE_LEGISLATOR:${scope}`]);
+    await assert.rejects(readNationalPresident(), /READER_PUBLISHED_PAYLOAD_HASH_MISMATCH/, "changed payload bytes with an unchanged proof cannot reuse the earlier verified body");
+    await pg.query("UPDATE civic_data_promotions SET payload=$1 WHERE key=$2", [payload, `STATE_LEGISLATOR:${scope}`]);
+    unavailable = true;
+    await assert.rejects(readNationalPresident(), /national version read unavailable/, "a failed version read cannot serve the previous national body");
+    assert.equal(presidentReads(), 6);
   } finally {
     releaseCongress!();
     await national;
-    Pool.prototype.query = priorQuery;
+    Pool.prototype.connect = priorConnect;
     if (priorUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = priorUrl;
+    await pg.close();
   }
 });

@@ -21,6 +21,7 @@ test("hourly job totals persist atomically, tolerate replay and recover a failed
   await pg.exec(readFileSync(new URL("../lib/db/migrations/DB-03_process_transfer.sql", import.meta.url), "utf8").replaceAll("--> statement-breakpoint", ""));
   let fail = true;
   const bodies = { database_transfer_hourly: 0, database_transfer_daily: 0 };
+  let totalBodies = 0;
   let versions = 0;
   process.env.DATABASE_URL = "postgresql://local:local@ep-hourly-test.us-east-2.aws.neon.tech/neondb";
   neonConfig.fetchFunction = async (_input: RequestInfo | URL, init?: RequestInit) => {
@@ -29,6 +30,7 @@ test("hourly job totals persist atomically, tolerate replay and recover a failed
     const execute = async (sql: Pick<PGlite, "query">, statement: { query: string; params: unknown[] }) => {
       if (/^SELECT\b/.test(statement.query.trim())) {
         if (/AS etag/.test(statement.query) && !/\breads\b/.test(statement.query)) versions++;
+        if (/\bresponse_bytes\b/.test(statement.query) && !/\breads\b/.test(statement.query)) totalBodies++;
         for (const table of Object.keys(bodies) as (keyof typeof bodies)[])
           if (statement.query.includes(`FROM ${table}`) && /\breads\b/.test(statement.query)) bodies[table]++;
       }
@@ -60,14 +62,16 @@ test("hourly job totals persist atomically, tolerate replay and recover a failed
   const view = await readRunnerDatabaseTransfer(hour);
   assert.deepEqual(view.hours, [{ hour,readerBytes: 200,controlPlaneBytes: 0 }]);
   assert.deepEqual(view.reads.filter(row => row.job === "fema"), [{ hour,database: "reader",job: "fema",table: "civic_data_payload_parts",requests: 2,requestBytes: 20,responseBytes: 200 }]);
-  const initialBodies = bodies.database_transfer_hourly, initialVersions = versions;
+  const initialBodies = bodies.database_transfer_hourly, initialVersions = versions, initialTotalBodies = totalBodies;
   assert.deepEqual(await readRunnerDatabaseTransfer(hour), view);
   assert.equal(bodies.database_transfer_hourly, initialBodies, "an unchanged hour's stored read map does not cross again");
+  assert.equal(totalBodies, initialTotalBodies, "unchanged hour totals also require only fresh versions");
   assert.ok(versions > initialVersions, "every use still checks the database row version");
   await pg.query("UPDATE database_transfer_hourly SET response_bytes=300,reads=$1::jsonb", [JSON.stringify({ "fema\tcivic_data_payload_parts": [3,30,300] })]);
   const changed = await readRunnerDatabaseTransfer(hour);
   assert.equal(changed.reads.find(row => row.job === "fema")!.responseBytes, 300, "the next read observes an update with no application timestamp change");
   assert.equal(changed.hours[0].readerBytes, 300);
+  assert.equal(totalBodies, initialTotalBodies + 1, "the changed total has its own projection copy");
   assert.equal(bodies.database_transfer_hourly, initialBodies + 1);
 
   const daily = await readDailyDatabaseTransfer(1);

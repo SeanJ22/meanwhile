@@ -1,3 +1,4 @@
+import { unwrapVersionedStatement } from "./helpers/versioned-neon-fixture.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -29,10 +30,13 @@ test("a real control-plane read counts its response bytes under the operation an
   const response = JSON.stringify({ command: "SELECT", rowCount: 1, rowAsArray: true,
     fields: ["id", "revision", "updated_at", "value"].map(name => ({ name, dataTypeID: 25 })),
     rows: [["admin", "1", "2026-10-02T00:00:00.000Z", "{\"padding\":\"" + "x".repeat(5000) + "\"}"]] });
+  const responses:string[]=[];
   neonConfig.fetchFunction = async (_url: string | URL | Request, init?: RequestInit) => {
     const body = JSON.parse(String(init?.body));
     if (body.queries) return new Response(JSON.stringify({ results: body.queries.map(() => ({ command: "INSERT", rowCount: 1, rowAsArray: true, fields: [], rows: [] })) }));
-    return new Response(response);
+    const checked=unwrapVersionedStatement(body.query,body.params);
+    const encoded=JSON.stringify(checked.wrap(JSON.parse(response)));responses.push(encoded);
+    return new Response(encoded);
   };
   try {
     const repos = await createPgRepositories(process.env.WTP_CONTROL_PLANE_DATABASE_URL!, undefined, { skipBootstrap: true });
@@ -41,7 +45,7 @@ test("a real control-plane read counts its response bytes under the operation an
     assert.equal(counted.length, 1, `one caller key, got ${JSON.stringify(counted)}`);
     const [caller, bytes] = counted[0]!;
     assert.match(caller, /^cp_admin_config\.\w+ ← tests\/neon-bytes-by-caller\.test\.ts:\d+$/);
-    assert.equal(bytes, 2 * Buffer.byteLength(response));
+    assert.equal(bytes,responses.reduce((sum,response)=>sum+Buffer.byteLength(response),0));
   } finally {
     neonConfig.fetchFunction = saved.fetch;
     for (const key of Object.keys(process.env)) if (!(key in saved.env)) delete process.env[key];

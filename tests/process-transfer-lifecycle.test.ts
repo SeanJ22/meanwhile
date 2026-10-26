@@ -45,13 +45,16 @@ test("SIGKILL after the first chunk preserves its bytes before any response comp
 
 test("an unmodified readonly-session client counts its response even when the metric database refuses its writes", () => {
   const dir = mkdtempSync(join(tmpdir(), "db03-readonly-meter-"));
-  const body = JSON.stringify({ command: "SELECT", rowCount: 1, fields: [{ name: "value", dataTypeID: 25 }], rows: [["é"]] });
   const script = `
     import {neon,neonConfig} from './lib/db/client.ts';
+    import {unwrapVersionedStatement} from './tests/helpers/versioned-neon-fixture.ts';
     neonConfig.fetchFunction=async(_input,init)=>{
       const request=JSON.parse(init.body);
       if(request.queries)return Response.json({message:'permission denied',code:'42501'},{status:403});
-      return new Response(${JSON.stringify(body)});
+      const checked=unwrapVersionedStatement(request.query,request.params);
+      const body=JSON.stringify(checked.wrap({command:'SELECT',rowCount:1,fields:[{name:'value',dataTypeID:25}],rows:[['é']]}));
+      console.log('WIRE_BYTES='+Buffer.byteLength(body));
+      return new Response(body);
     };
     console.log(JSON.stringify(await neon(process.env.DATABASE_URL).query('select 1')));
   `;
@@ -63,7 +66,9 @@ test("an unmodified readonly-session client counts its response even when the me
     assert.match(run.stdout, /é/);
     const parts = collectProcessTransfers(dir);
     assert.equal(parts.length, 1);
-    assert.equal(parts[0].bytes.reader, Buffer.byteLength(body));
+    const bytes = /^WIRE_BYTES=(\d+)$/m.exec(run.stdout);
+    assert.ok(bytes, "the transport reports the exact response bytes it returned");
+    assert.equal(parts[0].bytes.reader, Number(bytes[1]));
     assert.equal(parts[0].sent!.reader.requests, 1);
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });

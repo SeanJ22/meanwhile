@@ -1,3 +1,4 @@
+import { unwrapVersionedStatement } from "./helpers/versioned-neon-fixture.ts";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
@@ -101,7 +102,7 @@ test("answered control-plane reads finish while accounting is held, and a failed
   const result = { command: "SELECT", rowCount: 1, rowAsArray: true,
     fields: ["id", "revision", "updated_at", "value"].map(name => ({ name, dataTypeID: 25 })),
     rows: [["admin", "1", "2026-10-02T00:00:00.000Z", "{}"]] };
-  const response = JSON.stringify(result);
+  const responses:string[]=[];
   let failWriter!: () => void;
   const writerHeld = new Promise<void>((_resolve, reject) => {
     failWriter = () => reject(new Error("reader database accounting write failed"));
@@ -119,6 +120,8 @@ test("answered control-plane reads finish while accounting is held, and a failed
     }
     assert.equal(new Headers(init?.headers).get("neon-connection-string"), process.env.WTP_CONTROL_PLANE_DATABASE_URL);
     reads.push(String(init?.body));
+    const checked=unwrapVersionedStatement(body.query,body.params);
+    const response=JSON.stringify(checked.wrap(result));responses.push(response);
     return new Response(response);
   };
   try {
@@ -136,13 +139,14 @@ test("answered control-plane reads finish while accounting is held, and a failed
     assert.equal(retained[0]!.requests, 2, "failed in-flight bytes merge with the next answered read");
     const requestBytes = reads.reduce((total, body) => total + Buffer.byteLength(body), 0);
     assert.equal(retained[0]!.requestBytes, requestBytes);
-    assert.equal(retained[0]!.responseBytes, 2 * Buffer.byteLength(response));
+    const responseBytes=responses.reduce((total,response)=>total+Buffer.byteLength(response),0);
+    assert.equal(retained[0]!.responseBytes,responseBytes);
     assert.equal(await flushDatabaseTransfer(), true);
     assert.equal(writes.length, 2);
     assert.match(writes[1]![0]!.query, /INSERT INTO database_transfer_daily/);
-    assert.deepEqual(writes[1]![0]!.params.slice(3, 6).map(Number), [2, requestBytes, 2 * Buffer.byteLength(response)]);
+    assert.deepEqual(writes[1]![0]!.params.slice(3, 6).map(Number), [2, requestBytes, responseBytes]);
     const detail = JSON.parse(writes[1]![0]!.params[6] as string) as Record<string, number[]>;
-    assert.equal(Object.values(detail).reduce((sum, counts) => sum + counts[2], 0), 2 * Buffer.byteLength(response));
+    assert.equal(Object.values(detail).reduce((sum, counts) => sum + counts[2], 0), responseBytes);
     assert.deepEqual(pendingDatabaseTransfer(), [], "the successful accounting write is not itself counted");
   } finally {
     failWriter();

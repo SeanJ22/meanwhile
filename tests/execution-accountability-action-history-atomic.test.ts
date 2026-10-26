@@ -100,7 +100,7 @@ test("native receipt joins reuse unchanged bodies and observe changes in every j
     let readbackBodies=0,pageBodies=0;
     const sql:Sql={query:async(text,params=[])=>{
       if(/SELECT a\.position, a\.recorded_at, a\.record,/.test(text))readbackBodies++;
-      if(/SELECT log_key,position,changed_at,record AS record/.test(text))pageBodies++;
+      if(/\brecord AS record\b/.test(text))pageBodies++;
       return (await pg.query<Record<string,unknown>>(text,[...params])).rows;
     }};
     assert.equal((await appendActionReceiptWithHistoryAtomic({sql,receipt,sourceRecordedAt:at,validatedAction})).state,"APPENDED");
@@ -110,6 +110,9 @@ test("native receipt joins reuse unchanged bodies and observe changes in every j
     await pg.query(`UPDATE cp_admin_action_history_scope_ref SET scope_key='st:az',scope_kind='INSTRUCTION',instruction_receipt_id=$1`,[receipt.receiptId]);
     await assert.rejects(appendActionReceiptWithHistoryAtomic({sql,receipt,sourceRecordedAt:at,validatedAction}),AtomicActionHistoryUnconfirmed);
     assert.equal(readbackBodies,2,"a changed scope invalidates the joined readback while the receipt row itself is unchanged");
+    await pg.query("UPDATE cp_admin_action_history_projection SET target_label='Changed stored projection'");
+    await assert.rejects(appendActionReceiptWithHistoryAtomic({sql,receipt,sourceRecordedAt:at,validatedAction}),AtomicActionHistoryUnconfirmed);
+    assert.equal(readbackBodies,3,"a changed projection invalidates the joined readback while receipt and scope rows are unchanged");
     const page=await readActionHistoryPage(sql,{scope:"us",limit:10});
     assert.equal(page[0].receipt.says,receipt.says);
     assert.deepEqual(await readActionHistoryPage(sql,{scope:"us",limit:10}),page);

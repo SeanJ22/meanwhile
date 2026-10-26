@@ -1,3 +1,4 @@
+import { unwrapVersionedStatement } from "./helpers/versioned-neon-fixture.ts";
 import { ADMIT_SPEND_HOLD_FUNCTION_DDL, BOOTSTRAP_DDL, BOOTSTRAP_VERSION, SCOPED_HISTORY_INDEXES, SPEND_HOLDS_MOVE_DDL, SPEND_HOLDS_TABLE_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import assert from "node:assert/strict";
 import test, { mock } from "node:test";
@@ -618,18 +619,25 @@ test("BL-30 migrates existing voting doors to exact state and canonical URL quer
 
 async function openFixturePgRepositories(sql: Sql, now: string) {
   const originalFetch = neonConfig.fetchFunction;
-  const client = { query: async (text: string, params: readonly unknown[] = []) => ({ rows: await sql.query(text, params) }), release: () => {} };
+  const execute=async(text:string,params:readonly unknown[]=[])=>{
+    const checked=unwrapVersionedStatement(text,params);
+    const rows=await sql.query(checked.query,checked.params) as Record<string,unknown>[];
+    const names=Object.keys(rows[0]??{}),fields=names.map(name=>({name,dataTypeID:114}));
+    return checked.wrap({fields,rows:rows.map(row=>names.map(name=>JSON.stringify(row[name]))),rowCount:rows.length,command:"SELECT",rowAsArray:true});
+  };
+  const client={query:async(statement:string|{text:string;values?:readonly unknown[];rowMode?:string},params?:readonly unknown[])=>{
+    const config:{text:string;values?:readonly unknown[];rowMode?:string}=typeof statement==="string"?{text:statement}:statement;
+    const result=await execute(config.text,params??config.values??[]);
+    return config.rowMode==="array"?result:{...result,rows:result.rows.map(row=>Object.fromEntries(result.fields.map((field,index)=>
+      [field.name,row[index]===null?null:field.dataTypeID===114?JSON.parse(String(row[index])):row[index]])))};
+  },release:()=>{}};
   const connect = mock.method(Pool.prototype, "connect", async () => client as unknown as PoolClient);
   try {
     neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
       type Statement={query:string;params?:readonly unknown[]};
       const request=JSON.parse(init?.body??"{}") as Statement&{queries?:Statement[]};
-      const execute=async(statement:Statement)=>{
-        const rows=await sql.query(statement.query,statement.params) as Record<string,unknown>[];
-        const names=Object.keys(rows[0]??{}),fields=names.map(name=>({name,dataTypeID:114}));
-        return {fields,rows:rows.map(row=>names.map(name=>JSON.stringify(row[name]))),rowCount:rows.length,command:"SELECT",rowAsArray:true};
-      };
-      return Response.json(request.queries?await Promise.all(request.queries.map(execute)):await execute(request));
+
+      return Response.json(request.queries?await Promise.all(request.queries.map(statement=>execute(statement.query,statement.params))):await execute(request.query,request.params));
     }) as typeof neonConfig.fetchFunction;
     return await createPgRepositories("postgresql://fixture:fixture@ep-bootstrap-fixture.us-east-2.aws.neon.tech/test", now);
   } finally { neonConfig.fetchFunction = originalFetch; connect.mock.restore(); }

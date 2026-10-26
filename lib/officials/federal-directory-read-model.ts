@@ -109,11 +109,14 @@ export async function readFederalDirectoryProjection(states: readonly string[], 
   if (!selected.length) throw new Error("FEDERAL_DIRECTORY_PLACES_NOT_SELECTED");
   const key = contextKey(), existing = current();
   const sameStates = existing && selected.join() === existing.states.join();
-  if (!options.store && sameStates && existing.bound && (existing.read || existing.pending)) return selectMembers(existing.read ?? await existing.pending!);
+  if (!options.store && sameStates && (existing.pending || existing.bound && existing.read))
+    return selectMembers(existing.pending ? await existing.pending : existing.read!);
   const context: Context = sameStates ? existing : { states: selected };
   if (key) requests.set(key, context); else if (context !== existing) jobs.enterWith(context);
-  context.pending = Promise.all(selected.map(state => loadState ? loadState(state) : readPlace(state, options))).then(reads => context.read = combine(reads, selected));
-  return selectMembers(await context.pending);
+  const pending = Promise.all(selected.map(state => loadState ? loadState(state) : readPlace(state, options))).then(reads => context.read = combine(reads, selected));
+  context.pending = pending;
+  try { return selectMembers(await pending); }
+  finally { if (context.pending === pending) context.pending = undefined; }
 }
 
 export async function refreshFederalDirectoryFromPromoted(states: readonly string[], options: PromotedCivicDataReadOptions = {}, loadState?: Parameters<typeof readFederalDirectoryProjection>[2]): Promise<string | null> {

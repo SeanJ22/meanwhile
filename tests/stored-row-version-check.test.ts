@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import { readFile, readdir } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import test, { after } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { pgAggregateRepository, pgAppendOnlyRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { shareVersionedRows } from "../lib/db/versioned-rows.ts";
+import { posixRelative } from "../scripts/repo-path.mjs";
 
 const db=new PGlite();
 after(()=>db.close());
@@ -59,22 +61,27 @@ test("every aggregate and log read checks database versions before a stored body
 });
 
 test("runtime sources expose no flag that can skip the shared version path",async()=>{
+  const root = fileURLToPath(new URL("../", import.meta.url));
   const visit=async(directory:URL):Promise<void>=>{
     for(const entry of await readdir(directory,{withFileTypes:true})){
       const path=new URL(entry.name+(entry.isDirectory()?"/":""),directory);
       if(entry.isDirectory())await visit(path);
       else if(/\.(?:ts|tsx|mts|mjs)$/.test(entry.name)){
         const source=await readFile(path,"utf8");
-        assert.ok(!/\bbypassCache\b/.test(source),`${path.pathname} can skip the version check`);
+        assert.ok(!/\bbypassCache\b/.test(source),`${fileURLToPath(path)} can skip the version check`);
         // The accounting implementation needs the raw driver to record its own
         // traffic without recursively counting the recording query. Runtime
         // callers must enter through the shared database client.
         const rawDriverOwners = new Set(["lib/db/client.ts", "lib/db/transfer.ts"]);
-        for (const match of source.matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*|\brequire\s*\(\s*)["']@neondatabase\/serverless["']/g)) {
+        const isolatedReplayDrivers = new Set(["scripts/rb-a5-production-copy.mts", "scripts/rb-a5-connection-copy.mts",
+          "scripts/lib/rb-a2-copy.ts", "scripts/lib/local-postgres-replay.mts", "scripts/lib/local-postgres-reader.mts",
+          "scripts/legistar-members-scale.mts"]);
+        for (const match of source.matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*|\brequire\s*\(\s*)["'](@neondatabase\/serverless|pg|postgres)["']/g)) {
           const statement = source.slice(source.lastIndexOf(";", match.index) + 1, match.index);
           if (/\b(?:import|export)\s+type\b/.test(statement)) continue;
-          const relative = path.pathname.slice(new URL("../",import.meta.url).pathname.length);
-          assert.ok(rawDriverOwners.has(relative), `${relative} imports the Neon driver outside the shared database client`);
+          const relative = posixRelative(root, fileURLToPath(path));
+          assert.ok(match[1] === "@neondatabase/serverless" ? rawDriverOwners.has(relative) : isolatedReplayDrivers.has(relative),
+            `${relative} imports a database driver outside the shared version path`);
         }
       }
     }
@@ -83,4 +90,9 @@ test("runtime sources expose no flag that can skip the shared version path",asyn
   const adapter=await readFile(new URL("../lib/db/versioned-rows.ts",import.meta.url),"utf8");
   assert.doesNotMatch(adapter,/currentReaderRoute|readCheckpoint|jobState|new Map<string,\s*string>/,
     "all SQL adapters use the same body store, including Admin and fresh processes");
+  const accounting=await readFile(new URL("../lib/db/transfer.ts",import.meta.url),"utf8");
+  assert.equal([...accounting.matchAll(/\bneon\(url\)/g)].length,2,
+    "only the counter writer and version-checked row adapter may own raw accounting clients");
+  assert.equal([...accounting.matchAll(/\bsql\.query\(\s*[`"']SELECT\b/g)].length,2,
+    "raw accounting SELECTs belong to the adapter's version and changed-body queries");
 });

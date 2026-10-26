@@ -238,7 +238,7 @@ async function readTransferRows(url: string, table: "database_transfer_daily" | 
   const initial = await versions();
   let first = true;
   const rows = await runtimeCivicReadCache(url).rows<Record<string, unknown>, CivicRowVersion>({
-    namespace: table, keys: initial.map(row => row.key),
+    namespace: `${table}:${columns}`, keys: initial.map(row => row.key),
     versions: async keys => { if (first) { first = false; return initial; } return versions(keys); },
     values: keys => sql.query(`SELECT ${columns},${key} AS key,${etag} AS etag FROM ${table}
       WHERE ${where} AND ${key}=ANY($${args.length + 1}::text[])`, [...args, keys]),
@@ -289,11 +289,12 @@ export async function readRunnerDatabaseTransfer(selectedHour?: string): Promise
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not configured");
   assertDatabaseReadTarget(url);
-  const sql = neon(url);
-  const totals = (await sql.query(`SELECT hour::text,database_name AS database,response_bytes::text
-    FROM database_transfer_hourly WHERE hour >= now()-interval '31 days' ORDER BY hour DESC`)).map(row => ({
-      hour: new Date(row.hour).toISOString(),database: row.database,responseBytes: Number(row.response_bytes),requests: 0,requestBytes: 0,
+  const totals = (await readTransferRows(url, "database_transfer_hourly",
+    "hour::text,database_name AS database,response_bytes::text",
+    "hour >= now()-interval '31 days'", [], "hour::text || E'\\t' || database_name")).map(row => ({
+      hour: new Date(String(row.hour)).toISOString(),database: row.database,responseBytes: Number(row.response_bytes),requests: 0,requestBytes: 0,
     })) as HourlyDatabaseTransfer[];
+  totals.sort((a,b) => b.hour.localeCompare(a.hour));
   const hour = selectedHour ?? totals[0]?.hour;
   if (!hour) return { hours: [], reads: [] };
   const rows = await readTransferRows(url, "database_transfer_hourly",

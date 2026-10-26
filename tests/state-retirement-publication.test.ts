@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import test from "node:test";
 import { stateRetirementCandidate } from "../lib/civic-data/state-retirement-publication.ts";
 import { sealStateRetirementUnit, verifyStateRetirementUnitSeal, STATE_RETIREMENT_KEY_ENV } from "../lib/civic-data/state-retirement-proof.ts";
@@ -10,6 +11,7 @@ import { processRegisteredManualCandidate, processRegisteredRoutineCandidate, pr
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 
 const T0 = "2026-10-14T12:00:00.000Z", T1 = "2026-10-15T12:00:00.000Z";
 const hash = (text: string) => createHash("sha256").update(text).digest("hex");
@@ -144,17 +146,23 @@ test("Postgres retirement guards read exact scalar origin proof and only the sel
     await client.exec(`CREATE TABLE civic_data_candidates (id text PRIMARY KEY,source_id text,record_class text,scope text,
       normalized_hash text,state text,acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,
       validation_receipt jsonb,candidate jsonb);
-      CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,current_version_id text,last_known_good_version_id text,validation_receipt jsonb);
+      CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,record_class text,scope text,current_version_id text,last_known_good_version_id text,validation_receipt jsonb);
       CREATE TABLE civic_data_candidate_events(candidate_id text,sequence integer,at timestamptz,detail text);`);
+    const clocks=readFileSync(new URL("../lib/db/migrations/DB-01_read_versions.sql",import.meta.url),"utf8");
+    for(const statement of clocks.split("--> statement-breakpoint"))
+      if(/^CREATE (?:TABLE civic_data_clock_versions|FUNCTION civic_data_clock_changed|TRIGGER civic_data_)/.test(statement.trim()))await client.exec(statement);
     const receipt = { decision: "GOOD", checks: [{ check: "SOURCE_AUTHENTICITY", verdict: "PASS", code: "AUTHORITY_AND_RAW_PROVENANCE_VALID" }] };
     const hashes = { readModelHash: hash("state"), members: [{ key: "site:held", sha256: hash("row"), factsHash: hash("row") }] };
     await client.query("INSERT INTO civic_data_candidates VALUES($1,$2,$3,$4,$5,'PROMOTED',true,$1,$1,$6,$7)",
       ["restored", "voting-sites", "VOTING_SITE", "US-AZ:voting-sites", hashes.readModelHash, receipt,
         { normalization: { stateRecordHashes: hashes }, readModel: { unselectedPayload: ["must stay in storage"] } }]);
-    await client.query("INSERT INTO civic_data_promotions VALUES($1,'voting-sites','restored','restored',$2)", ["VOTING_SITE:US-AZ:voting-sites", receipt]);
+    await client.query("INSERT INTO civic_data_promotions VALUES($1,'voting-sites','VOTING_SITE','US-AZ:voting-sites','restored','restored',$2)", ["VOTING_SITE:US-AZ:voting-sites", receipt]);
     await client.query("INSERT INTO civic_data_candidate_events VALUES('restored',1,$1,'STATE_BUCKET_RESTORE_V1 held-source')", [T0]);
     const queries: string[] = [], store = Object.create(PostgresRoutineDataStore.prototype) as InstanceType<typeof PostgresRoutineDataStore>;
     Object.defineProperty(store, "db", { value: drizzle(client, { logger: { logQuery: query => { queries.push(query); } } }) });
+    const copies=new Map<string,string>();
+    Object.defineProperty(store,"readCache",{value:new CivicReadCache({read:async key=>copies.get(key)??null,
+      write:async(key,value)=>{copies.set(key,value);}})});
     Object.defineProperty(store, "ownedPayloadParts", { value: new CivicPayloadParts({ existing: async () => [], write: async () => {},
       read: async () => { throw new Error("inline restore hashes should not read payload parts"); } }) });
     const origin = await store.readStateRetirementOrigin("VOTING_SITE", "US-AZ:voting-sites");

@@ -5,6 +5,7 @@ import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateVotes, currentPluralSessions, PLURAL_SESSION_CATALOG, pluralJurisdictionsUrl } from "../lib/sources/plural/vote-acquisition.ts";
@@ -27,6 +28,7 @@ const sourceEvidence = (sample: Sample, bytes: Uint8Array): PluralBillEvidence =
  * Native IDs, labels, public archive URL and every CSV field remain sourced. */
 async function harness(sample: Sample) {
   const store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories(), civicStore = new MemoryRoutineDataStore();
+  const copies=new Map<string,string>(),cache=new CivicReadCache({read:async key=>copies.get(key)??null,write:async(key,value)=>{copies.set(key,value);}});
   const zip = await readFile(new URL(sample.fixtureArchive, ROOT));
   const metadata = JSON.parse(await readFile(new URL(sample.metadataFixture, ROOT), "utf8")) as { legislative_sessions: { identifier: string }[] };
   const body = JSON.stringify({ results: [{ ...metadata, legislative_sessions: metadata.legislative_sessions.filter(session => session.identifier === sample.session) }], pagination: { max_page: 1 } });
@@ -51,7 +53,7 @@ async function harness(sample: Sample) {
     throw new Error(`unexpected fixture request: ${url}`);
   };
   return { zip, civicStore, requests,
-    input: { state: sample.state, store, locks, civicStore, vault: new MemoryEvidenceStore(), apiKey: "fixture-key", fetchImpl, signal: AbortSignal.timeout(10_000), now: () => checkedAt },
+    input: { state: sample.state, store, locks, civicStore, cache, vault: new MemoryEvidenceStore(), apiKey: "fixture-key", fetchImpl, signal: AbortSignal.timeout(10_000), now: () => checkedAt },
     nextCheck: () => { checkedAt = new Date(Date.parse(checkedAt) + 86_400_001).toISOString(); },
   };
 }

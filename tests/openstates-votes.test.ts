@@ -48,6 +48,7 @@ test("repeated native vote or person IDs cannot silently overwrite acquired evid
 });
 function harness() {
   const store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
+  const copies=new Map<string,string>(),cache=new CivicReadCache({read:async key=>copies.get(key)??null,write:async(key,value)=>{copies.set(key,value);}});
   const requested: string[] = [];
   let failFirst = false;
   const fetchImpl: typeof fetch = async (raw, init) => {
@@ -62,7 +63,7 @@ function harness() {
     if (failFirst && value === 1) return new Response("unavailable", { status: 503 });
     return new Response(evidence(value).body);
   };
-  return { input: { state: "az", store, locks, vault: new MemoryEvidenceStore(), fetchImpl, apiKey: "held-test-key", now: () => AT, signal: AbortSignal.timeout(10_000) }, requested, failFirst: () => { failFirst = true; } };
+  return { input: { state: "az", store, locks, cache, vault: new MemoryEvidenceStore(), fetchImpl, apiKey: "held-test-key", now: () => AT, signal: AbortSignal.timeout(10_000) }, requested, failFirst: () => { failFirst = true; } };
 }
 test("known cached bill evidence reuses original source observations and one bad bill leaves the next fact available", async () => {
   const h = harness(); h.failFirst();

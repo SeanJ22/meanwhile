@@ -108,11 +108,19 @@ export const neon: typeof rawNeon = new Proxy(rawNeon, {
 
 const connectionOf = (config: unknown): string | undefined => typeof config === "string" ? config
   : config && typeof config === "object" && "connectionString" in config ? String(config.connectionString) : undefined;
+interface ConnectionRuntimeParameters {
+  readonly host?: unknown;
+  readonly database?: unknown;
+  readonly user?: unknown;
+  readonly port?: unknown;
+  readonly types?: DriverParsers;
+  readonly binary?: unknown;
+}
 const accounted = new WeakSet<object>();
 function accountedInstance<T extends object>(instance: T, connection: string | undefined, isPool = false): T {
   if (accounted.has(instance)) return instance;
   accounted.add(instance);
-  const parameters = Reflect.get(instance, "connectionParameters") ?? Reflect.get(instance, "options") ?? {};
+  const parameters = (Reflect.get(instance, "connectionParameters") ?? Reflect.get(instance, "options") ?? {}) as ConnectionRuntimeParameters;
   const address = connection ?? JSON.stringify({ host: parameters.host ?? process.env.PGHOST,
     database: parameters.database ?? process.env.PGDATABASE, user: parameters.user ?? process.env.PGUSER, port: parameters.port });
   const finish = () => { void afterResponse(async () => {
@@ -128,7 +136,7 @@ function accountedInstance<T extends object>(instance: T, connection: string | u
     return { wait, release };
   };
   const inheritedParsers: DriverParsers | undefined = typeof Reflect.get(instance, "getTypeParser") === "function"
-    ? { getTypeParser: (oid, format) => Reflect.apply(Reflect.get(instance, "getTypeParser"), instance, [oid, format]) }
+    ? { getTypeParser: (oid, format) => Reflect.apply(Reflect.get(instance, "getTypeParser") as DriverParsers["getTypeParser"], instance, [oid, format]) }
     : parameters.types;
   const query = Reflect.get(instance, "query");
   if (typeof query === "function") Reflect.set(instance, "query", (...args: unknown[]) => {

@@ -2,7 +2,7 @@ import { retirementMemberKey } from "../lib/civic-data/state-retirement-proof.ts
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
-import { mkdtemp, readFile, rm } from "node:fs/promises";
+import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { prepareRetirementStateInputs, withRetirementSourceSnapshot, type StateRetirementOrigin } from "../lib/civic-data/state-retirement-inputs.ts";
@@ -28,8 +28,13 @@ test("retirement transfer accounting keeps Eastern calendar boundaries across da
 });
 
 async function preparedInput(state: string, candidate: Row, origin: StateRetirementOrigin,
-  parts: readonly { hash: string; payload: unknown }[] = [], partCalls = new Map<string, number>()) {
+  parts: readonly { hash: string; payload: unknown }[] = [], partCalls = new Map<string, number>(),
+  retainedParts: readonly { hash: string; payload: unknown }[] = []) {
   const directory = await mkdtemp(join(tmpdir(), "state-retirement-fixture-"));
+  if (retainedParts.length) {
+    await mkdir(join(directory, "parts"));
+    for (const part of retainedParts) await writeFile(join(directory, "parts", `${part.hash}.json`), JSON.stringify(part.payload));
+  }
   const at = (params: readonly unknown[], omit: boolean): unknown => {
     let value: unknown = candidate;
     for (const key of params.slice(1, omit ? -1 : undefined)) value = (value as Row | undefined)?.[String(key)];
@@ -226,7 +231,7 @@ test("inline retirement records reach the spool with their owned containers inta
   for (const container of containers) assert.ok(observed.has(container), "serialization must use the original owned record and nested containers");
 });
 
-test("encoded retirement records reuse source parts without retaining the whole array", async () => {
+test("encoded retirement records read current source parts despite an older same-ID part file", async () => {
   const source = Array.from({ length: 16 }, (_, i) => ({ id: `held-${i}`, candidateKey: "az:held", text: "saved source ".repeat(1400),
     evidence: { url: `https://official.example/record/${i}`, names: ["Held Candidate"] } }));
   const encoded = partitionCivicPayload(source), calls = new Map<string, number>();
@@ -238,11 +243,11 @@ test("encoded retirement records reuse source parts without retaining the whole 
   };
   encoded.parts.forEach(part => freeze(part.payload));
   const origin: StateRetirementOrigin = { family: "candidate-corpus", recordClass: "CANDIDATE_PUBLICATION", scope: "US:candidate-publications", versionId: "corpus-origin", promotedAt: "2026-10-01", hash: "corpus-hash" };
-  const { unit } = await preparedInput("AZ", { id: origin.versionId, scope: origin.scope, readModel: { documents: encoded.value, failures: [] }, identities: [], excludedFacts: [] }, origin, encoded.parts, calls);
+  const { unit } = await preparedInput("AZ", { id: origin.versionId, scope: origin.scope, readModel: { documents: encoded.value, failures: [] }, identities: [], excludedFacts: [] },
+    origin, encoded.parts, calls, encoded.parts.map(part => ({ hash: part.hash, payload: [] })));
   assert.deepEqual(unit.members.map(row => row.value), source);
   assert.equal(JSON.stringify(encoded.parts), before);
   assert.ok(calls.size > 0);
-  assert.ok([...calls.values()].every(count => count === 1));
 });
 
 test("terminal preparation refuses a source whose pinned hash no longer matches its GOOD pointer", async () => {

@@ -17,6 +17,7 @@ import type { StatePeopleAcquisition } from "./state-people-publication.ts";
 import { statePeopleDivisions } from "../sources/plural/acquisition.ts";
 import type { RegistryDivisionLite } from "../sources/plural/index.ts";
 import type { Slice } from "../control-plane/admin-view/promoted-slices.ts";
+import { sourcePeople } from "../officials/people-bindings.ts";
 
 interface PeopleSourceAcquired {
   readonly state: string;
@@ -109,7 +110,8 @@ export async function runPeopleSourceRefresh(input: {
           return [];
         }) : Promise.resolve([]),
     ]);
-    if(input.sourceId==="official-state-people")bindingPeople=roster?.officeholders;
+    if(input.sourceId==="official-state-people")bindingPeople=roster?.officeholders.flatMap(sourcePeople).map(person=>({...person,photo:null,
+      fieldSources:person.fieldSources?Object.fromEntries(Object.entries(person.fieldSources).filter(([field])=>field!=="photo")):undefined}));
     const options = { state: input.state, sourceId: input.sourceId, asOf, signal, roster, divisions, now };
     acquired = dependencies.acquire ? await dependencies.acquire(options)
       : input.state.toLowerCase() === "us" && input.sourceId === "statewide-executive-sources"

@@ -6,6 +6,7 @@ import { emptyPerson, emptyRoster, provenance } from "../lib/sources/people/comm
 import { mergePeopleSets } from "../lib/officials/merge-people.ts";
 import { personIdentityKeys,nativePersonIdFromUrl,memberProfileSubpageParentUrl } from "../lib/officials/people-identity.ts";
 import { publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
+import { runPeopleSourceRefresh } from "../lib/civic-data/people-source-runtime.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
@@ -268,6 +269,26 @@ test("an official's fuller name and stable publisher ID keep their own identity"
   const bound=bindPeopleSources([roster([official]),roster([native])])[0].officeholders[0];
   assert.equal(bound.id,official.id);
   assert.equal(bound.name,official.name);
+});
+
+test("an official text replay uses held identities while a newer companion portrait stays in its own source",async()=>{
+  const future="2026-10-27T06:00:00.000Z",imageHash=`sha256-${"a".repeat(64)}`,imageUrl="https://legislature.example.gov/vito.jpg";
+  const photographed={...people[0],photo:{url:`/api/portraits/officials/${imageHash.slice(7)}.webp`,sourceUrl:imageUrl,attribution:null,license:null,collectedAt:future,
+    verification:{personId:people[0].personId!,name:people[0].name,imageUrl,checkedAt:future,imageHash,sourceImageHash:imageHash,basis:"OWN_PAGE" as const,ownPageUrl:page,
+      attribution:{sourceUrl:page,name:people[0].name},sources:[{url:page,contentHash:imageHash,retrievedAt:future,vaultKey:"project/freshness/source/portrait/raw/fixture"}]}},
+    fieldSources:{photo:{...people[0].provenance,collectedAt:future}}};
+  const held=roster([photographed,people[1]]),bad={...people[0],nativeIds:{"ocd-person":["ocd-person/vito","ocd-person/jane"]}};
+  let reads=0;
+  const outcome=await runPeopleSourceRefresh({state:"id",sourceId:"official-state-people",store:new MemoryRoutineDataStore(),vault:new MemoryEvidenceStore()},{
+    now:()=>at,readHeld:async()=>{reads++;return held;},readDivisions:async()=>[],writeLine:()=>{},
+    acquire:async options=>({state:"id",releaseId:at,roster:normalizeOfficialLegislaturePage(html,page,{...options,sourceId:"official-state-people"},at),gaps:[],
+      acquisitions:[{requestedUrl:page,finalUrl:page,body:html,httpStatus:200,retrievedAt:at}]}),
+    publish:input=>{assert.ok(input.bindingPeople?.every(person=>!person.photo&&!person.fieldSources?.photo));
+      return publishPeopleSource({...input,held:{versionId:null,roster:roster([bad]),normalizedPayload:{}}});},
+  });
+  assert.equal(outcome.succeeded,true);
+  assert.equal(reads,1);
+  assert.equal(held.officeholders[0].photo?.collectedAt,future);
 });
 
 test("rechecking one person's same source entry keeps facts and every old ID without multiplying snapshots",()=>{

@@ -545,9 +545,9 @@ export function legistarMinutesOutcomesCandidate(input: {
   const scopeIssue = minutesOutcomeScopeIssue(snapshot, tenant);
   if (scopeIssue) violations.push(scopeIssue);
   /*
-   * A failed request refuses the candidate and the prior GOOD pointer stays live. A document whose extraction failed on
-   * its bytes is admitted as that failed extraction, with no record, so the unchanged document is not re-downloaded and
-   * failed again on every retry.
+   * A failed request holds its sitting while independently verified records publish. A document whose extraction
+   * failed on its bytes is kept as that failed extraction, with no record, so the unchanged document is not
+   * re-downloaded and failed again on every retry.
    */
   const failed = snapshot.sittings.filter((sitting) =>
     sitting.extraction === "REQUEST_FAILED" || (sitting.extraction === "ZERO_ROWS_FAILED" && sitting.failedMinutesRead === undefined));

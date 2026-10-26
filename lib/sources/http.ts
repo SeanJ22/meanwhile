@@ -38,12 +38,13 @@ export class SourceReadDeferred extends Error {
   readonly until: number;
   readonly url: string;
   readonly reason: "THROTTLED" | "REFUSED" | "EMPTY";
-  constructor(url: string, until: number, reason: "THROTTLED" | "REFUSED" | "EMPTY") {
+  readonly attempted: boolean;
+  constructor(url: string, until: number, reason: "THROTTLED" | "REFUSED" | "EMPTY", attempted = false) {
     const visible = new URL(url);
     visible.username = ""; visible.password = "";
-    for (const key of [...visible.searchParams.keys()]) if (/key|token|secret|password/i.test(key)) visible.searchParams.set(key, "redacted");
+    for (const key of [...visible.searchParams.keys()]) if (/key|token|secret|password|address/i.test(key)) visible.searchParams.set(key, "redacted");
     super(`SOURCE_READ_DEFERRED:${new Date(until).toISOString()}:${reason}:${visible.href}`);
-    this.name = "SourceReadDeferred"; this.url = visible.href; this.until = until; this.reason = reason;
+    this.name = "SourceReadDeferred"; this.url = visible.href; this.until = until; this.reason = reason; this.attempted = attempted;
   }
 }
 
@@ -52,7 +53,7 @@ export function sourceReadDeferred(error: unknown): boolean {
 }
 
 export interface SourceHostPacer {
-  fetch(url: string, init?: RequestInit, fetchImpl?: typeof fetch, vendor?: string): Promise<Response>;
+  fetch(url: string | URL, init?: RequestInit, fetchImpl?: typeof fetch, vendor?: string): Promise<Response>;
   defer(url: string, until: number, vendor?: string): Promise<void>;
 }
 
@@ -63,14 +64,14 @@ export function createSourceHostPacer(options: {
   const clock = options.clock ?? Date.now, sleep = options.sleep ?? sourceAcquisitionSleep;
   return { async defer(url, until, vendor) {
     await options.store.withHost(sourceHost(url, vendor), undefined, async state => { state.routes[url] = Math.max(state.routes[url] ?? 0, until); });
-  }, async fetch(url, init, fetchImpl = globalThis.fetch, vendor) {
-    const host = sourceHost(url, vendor), origin = new URL(url).origin;
+  }, async fetch(target, init, fetchImpl = globalThis.fetch, vendor) {
+    const url = String(target), address = new URL(url), host = sourceHost(url, vendor), origin = address.origin;
     const base = options.spacingMs ?? (["civicplus", "legistar"].includes(host) ? 2_000 : REQUEST_SPACING_MS);
     return options.store.withHost(host, init?.signal ?? undefined, async state => {
       init?.signal?.throwIfAborted();
       for (const [route, until] of Object.entries(state.routes)) if (until <= clock()) delete state.routes[route];
-      const refusalKey = new URL(url).hostname === "webapi.legistar.com" || new URL(url).pathname === "/robots.txt"
-        ? `${origin}${new URL(url).pathname}` : origin;
+      const refusalKey = address.hostname === "webapi.legistar.com" || address.pathname === "/robots.txt"
+        ? `${origin}${address.pathname}` : origin;
       if (state.refused[refusalKey]) throw new SourceReadDeferred(url, Date.parse("9999-12-31T00:00:00Z"), "REFUSED");
       if (state.until > clock()) throw new SourceReadDeferred(url, state.until, "THROTTLED");
       if (state.routes[url] > clock()) throw new SourceReadDeferred(url, state.routes[url], "EMPTY");
@@ -80,7 +81,7 @@ export function createSourceHostPacer(options: {
       const headers = new Headers(init?.headers);
       if (!headers.has("user-agent")) headers.set("user-agent", sourceUserAgent());
       // Keep the caller's header shape for transports that inspect their options.
-      const response = await withSourceVendor(vendor ?? currentSourceVendor(), () => fetchImpl(url, { ...init, headers: init?.headers && new Headers(init.headers).has("user-agent") ? init.headers : Object.fromEntries(headers) }));
+      const response = await withSourceVendor(vendor ?? currentSourceVendor(), () => fetchImpl(typeof target === "string" ? target : address, { ...init, headers: init?.headers && new Headers(init.headers).has("user-agent") ? init.headers : Object.fromEntries(headers) }));
       const now = clock();
       state.intervalMs = Math.max(base, state.intervalMs);
       state.nextAt = now + state.intervalMs;
@@ -92,7 +93,7 @@ export function createSourceHostPacer(options: {
         state.until = Math.max(now + 60_000, Number.isFinite(requested) ? requested : 0);
         state.nextAt = Math.max(state.nextAt, state.until);
         await response.body?.cancel().catch(() => {});
-        throw new SourceReadDeferred(url, state.until, "THROTTLED");
+        throw new SourceReadDeferred(url, state.until, "THROTTLED", true);
       }
       if (response.status === 403) state.refused[refusalKey] = new Date(now).toISOString();
       if (response.ok || response.status === 304) {
@@ -107,7 +108,7 @@ let sharedPacer: Promise<SourceHostPacer> | undefined;
 const injectedPacers = new WeakMap<typeof fetch, Promise<SourceHostPacer>>();
 
 /** The only source fetch: production children share host state; an injected transport owns isolated test state. */
-export async function sourceFetch(url: string, init?: RequestInit, fetchImpl?: typeof fetch, vendor?: string, sharedTransport = false): Promise<Response> {
+export async function sourceFetch(url: string | URL, init?: RequestInit, fetchImpl?: typeof fetch, vendor?: string, sharedTransport = false): Promise<Response> {
   const transport = fetchImpl ?? globalThis.fetch;
   const root = sourceTransportRoot(transport);
   const injected = root !== nativeSourceFetch && !sharedTransport;

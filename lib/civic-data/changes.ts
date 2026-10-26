@@ -92,6 +92,10 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
 
 /** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if(recordClass==="PRL_ARCHIVE" && member.key.startsWith("dataset:")){
+    const row=object(member.record);
+    if(row){const {rowsWritten:_written,newObjectKeys:_newKeys,fetchedAt:_fetched,...facts}=row;return facts;}
+  }
   if (recordClass === "FEDERAL_MONEY" && member.key === "federal-money-checkpoint") {
     const row = object(member.record);
     if (row) { const { lastCompleteAt: _at, refreshStartedAt: _started, ...progress } = row; return progress; }

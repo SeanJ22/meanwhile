@@ -120,9 +120,10 @@ export function createSourceHostPacer(options: {
         await response.body?.cancel().catch(() => {});
         throw new SourceReadDeferred(url, state.until, "THROTTLED", true);
       }
-      if (response.status === 403) {
+      const challenged = address.pathname !== "/robots.txt" && response.headers.get("cf-mitigated") === "challenge";
+      if (response.status === 403 && (challenged || !keyedApiRequest(address, init?.headers))) {
         // A document can become public later. A named site wall stays open for separate work.
-        const siteWall = refusalKey === origin || address.pathname !== "/robots.txt" && response.headers.get("cf-mitigated") === "challenge";
+        const siteWall = refusalKey === origin || challenged;
         state.refused[siteWall ? origin : refusalKey] = new Date(siteWall ? now : Math.max(now + 3_600_000, retryAt)).toISOString();
       }
       if (response.ok || response.status === 304) {
@@ -131,6 +132,17 @@ export function createSourceHostPacer(options: {
       return response;
     });
   } };
+}
+
+/**
+ * A keyed publisher API (LegiScan, Congress, Google Civic) answers a 403 for that key and record, not as a
+ * website refusing our identified reader. Its caller records the failure and asks again on its own schedule,
+ * so one refused dataset never holds every other record, or the whole API, behind a permanent site wall.
+ */
+function keyedApiRequest(address: URL, headers: HeadersInit | undefined): boolean {
+  const sent = new Headers(headers);
+  return sent.has("authorization") || sent.has("x-api-key") ||
+    [...address.searchParams.keys()].some(name => /^(?:key|api_?key|access_?key|access_?token|token)$/i.test(name));
 }
 
 let sharedPacer: Promise<SourceHostPacer> | undefined;

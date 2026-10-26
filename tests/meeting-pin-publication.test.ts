@@ -897,11 +897,14 @@ test("a stored failure is read by meeting ID rather than reloading its promotion
   assert.deepEqual(result.held,[]);assert.equal(result.attempts.get(meeting().id)?.[0]?.outcome,"NO_MATCH");
 });
 
-test("rate limiting uses shared HTTP retries and stays retryable after its published delay",async()=>{
+test("rate limiting uses the shared host cooldown and stays retryable after its published delay",async()=>{
   let requests=0;
   const first=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,
     fetchImpl:async()=>{requests++;return requests===1?new Response("slow down",{status:429,headers:{"retry-after":"0.001"}}):response(OWN_GEO);}});
-  assert.equal(requests,2);assert.equal(first.meetings[0].mapPin?.basis,"MEETING");assert.equal(first.attempts.size,0);
+  // A 429 cools the shared census host instead of being re-sent at once; the meeting stays owed with its retry time.
+  assert.equal(requests,1);assert.equal(first.meetings[0].mapPin,undefined);
+  const cooled=first.attempts.get(meeting().id)?.[0];
+  assert.equal(cooled?.outcome,"TRANSIENT");assert.ok(Date.parse(cooled.retryAt!)>Date.parse(NOW));
   const retryAt=new Date(Date.parse(NOW)+60000).toISOString();
   const transient=new Map([[meeting().id,[{query:OWN,benchmark:CENSUS_BENCHMARK,outcome:"TRANSIENT" as const,checkedAt:NOW,retryAt}]]]);
   const during=await placePublishedMeetingPins({meetings:[meeting()],offices:new Map(),clock:()=>NOW,geocodeAttempts:transient,

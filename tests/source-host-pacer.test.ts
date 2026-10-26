@@ -94,6 +94,27 @@ test("a private document can be checked later; an explicit site challenge stops 
   assert.equal(calls, 2);
 });
 
+test("a keyed API's 403 stays with its caller; other records and later cycles still read", async () => {
+  const pacer = createSourceHostPacer({ store: memoryHostState(), spacingMs: 0 });
+  let calls = 0, refuse = true;
+  const read: typeof fetch = async resource => {
+    calls++;
+    return new Response(null, { status: refuse && new URL(String(resource)).searchParams.get("id") === "957" ? 403 : 200 });
+  };
+  assert.equal((await pacer.fetch("https://api.legiscan.com/?key=k&op=getDataset&id=957&access_key=a", {}, read)).status, 403);
+  assert.equal((await pacer.fetch("https://api.legiscan.com/?key=k&op=getDataset&id=122&access_key=b", {}, read)).status, 200);
+  assert.equal((await pacer.fetch("https://api.legiscan.com/?key=k&op=getDatasetList", {}, read)).status, 200);
+  refuse = false;
+  assert.equal((await pacer.fetch("https://api.legiscan.com/?key=k&op=getDataset&id=957&access_key=a", {}, read)).status, 200);
+  assert.equal((await pacer.fetch("https://api.congress.gov/v3/member/A000001", { headers: { "x-api-key": "k" } },
+    async () => { calls++; return new Response(null, { status: 403 }); })).status, 403);
+  assert.equal((await pacer.fetch("https://api.congress.gov/v3/member/B000002", { headers: { "x-api-key": "k" } }, read)).status, 200);
+  assert.equal(calls, 6);
+  await pacer.fetch("https://api.blocked.gov/?key=k&id=1", {}, async () => new Response(null, { status: 403, headers: { "cf-mitigated": "challenge" } }));
+  await assert.rejects(pacer.fetch("https://api.blocked.gov/?key=k&id=2", {}, read), e => e instanceof SourceReadDeferred && e.reason === "REFUSED");
+  assert.equal(calls, 6, "an explicit site challenge still stops a keyed API's whole origin");
+});
+
 test("documented provider quotas use the same host clock and never enter the HTTP request", async () => {
   let now = 0;
   const sent: number[] = [];

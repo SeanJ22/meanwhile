@@ -120,6 +120,10 @@ test("a pass interrupted after one publication resumes at the next bill with its
     controller.abort(Error("pass deadline"));throw controller.signal.reason;
   }}),/pass deadline/);
   assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,1);
+  const partialHead=await civicStore.readSourceHead("STATE_ROLL_CALL",pluralVotesScope("az"));
+  assert.equal(partialHead?.acquisitionComplete,false);
+  assert.equal((await civicStore.readCandidatePath<{continuationPending:boolean}>(partialHead!.versionId,["normalizedPayload","sourceProbe"]))?.continuationPending,true,
+    "a successful publication cut short remains immediate work for the generic clock");
   const cursor=await cache().readCheckpoint<Record<string,{position:number;complete:boolean}>>("openstates-vote-progress",pluralVotesScope("az"));
   assert.equal(cursor?.["api-session:az:57th-2nd-regular"].position,1);
   const resumed:string[]=[];
@@ -129,6 +133,7 @@ test("a pass interrupted after one publication resumes at the next bill with its
   assert.equal(shown.length,2);assert.ok(shown.some(row=>row.id===native("vote",1)));
   const pointer=await civicStore.readPromotion("STATE_ROLL_CALL",pluralVotesScope("az"));
   const saved=await civicStore.readCandidate(pointer!.versionId);
+  assert.equal(saved?.candidate.retrieval.complete,true,"the source clock sees completed acquisition after the final existing bill publication");
   assert.equal((saved!.candidate.normalizedPayload as {acquisitions:unknown[]}).acquisitions.length,2);
 });
 

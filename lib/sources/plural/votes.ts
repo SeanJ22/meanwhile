@@ -134,7 +134,7 @@ export function pluralVotesProjectionIssue(value: PluralVotesProjection): string
 }
 
 export function pluralVotesCandidate(input: { projection: PluralVotesProjection; acquired: readonly PluralVoteAcquisition[]; held: readonly { key: string; detail: string }[];
-  checkedAt: string; sourceProbe?: { readonly formatVersion: 1; readonly rawHash: string; readonly complete: boolean } }): RoutineCandidate {
+  checkedAt: string; sourceProbe?: { readonly formatVersion: 1; readonly rawHash: string; readonly complete: boolean;readonly continuationPending?:boolean } }): RoutineCandidate {
   const { projection } = input, issue = pluralVotesProjectionIssue(projection);
   const sourceThrough = input.acquired.map(row => row.retrievedAt).sort().at(-1) ?? input.checkedAt;
   const evidence = [...input.acquired].sort((left, right) => left.retrievedAt.localeCompare(right.retrievedAt)).at(-1);
@@ -144,7 +144,7 @@ export function pluralVotesCandidate(input: { projection: PluralVotesProjection;
     sourceProjectionEvidence: sourceProjectionEvidence(PLURAL_VOTES_SOURCE, "STATE_ROLL_CALL", pluralVotesScope(projection.state)),
     retrieval: { succeeded: input.acquired.length > 0, requestedUrl: evidence?.requestedUrl ?? "https://v3.openstates.org/bills",
       finalUrl: evidence?.finalUrl ?? null, httpStatus: 200, retrievedAt: sourceThrough, rawHash: input.sourceProbe?.rawHash ?? evidence?.sha256 ?? hash(input.acquired.map(row => row.sha256).sort()),
-      ...(input.sourceProbe ? { rawHashBasis: "SOURCE_CONTENT_V1" as const } : {}),
+      ...(input.sourceProbe ? { rawHashBasis: "SOURCE_CONTENT_V1" as const,complete:input.sourceProbe.complete } : {}),
       ...(evidence?.sourceCheck ? { sourceCheck: evidence.sourceCheck } : {}) },
     normalization: { succeeded: !issue, parserVersion: PLURAL_VOTES_PARSER, schemaVersion: projection.formatVersion === 2 ? "plural-native-votes/2" : "plural-native-votes/1",
       normalizedHash: hash(projection), normalizedPayloadHash: hash(payload), inputRecords: projection.rollCalls.length, outputRecords: projection.rollCalls.length,

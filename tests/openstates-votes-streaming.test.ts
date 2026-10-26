@@ -9,6 +9,9 @@ import { toCsv, zip } from "../scripts/xlsx.mjs";
 import { parseCsv } from "../lib/reference/csv.ts";
 import { readZipEntries } from "../lib/sources/archive.ts";
 import { parsePluralBulkSessionFile } from "../lib/sources/plural/vote-bulk.ts";
+import { acquireStateVotes,PLURAL_SESSION_CATALOG } from "../lib/sources/plural/vote-acquisition.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import type { PluralBillEvidence, PluralVoteFact } from "../lib/sources/plural/votes.ts";
 
 const root = new URL("./fixtures/state-votes/openstates/", import.meta.url);
@@ -28,6 +31,22 @@ function changedArchive(change: (suffix: string, rows: string[][]) => void): Buf
     return { name: entry.name, data: Buffer.from(toCsv(data[0], data.slice(1))) };
   }), manifest.capturedAt.slice(0, 10));
 }
+
+test("a full final Open States batch carries completion without a duplicate empty publication",async()=>{
+  const ids=Array.from({length:128},(_,index)=>`ocd-vote/00000000-0000-4000-8000-${String(index+1).padStart(12,"0")}`);
+  const archive=changedArchive((suffix,rows)=>{
+    const column=rows[0]!.indexOf(suffix==="votes"?"id":"vote_event_id");if(column<0)return;
+    const originals=rows.slice(1);rows.splice(1,rows.length-1,...ids.flatMap(id=>originals.map(row=>{const next=[...row];next[column]=id;return next;})));
+  });
+  const {locks}=createMemoryRepositories(),batches:{count:number;complete:boolean|undefined;pending:boolean|undefined;position:number|undefined}[]=[];
+  await acquireStateVotes({state:sample.state,apiKey:"",store:new MemoryEvidenceStore(),locks,now:()=>manifest.capturedAt,signal:new AbortController().signal,
+    fetchImpl:(async raw=>String(raw)===PLURAL_SESSION_CATALOG?
+      new Response(`<html>Session<li><a href="${sample.sourceUrl}">source</a>updated ${manifest.capturedAt.slice(0,10)}</li></html>`):
+      new Response(archive))as typeof fetch,
+    onBill:async result=>{batches.push({count:result.votes.length,complete:result.sourceProbe?.complete,
+      pending:result.sourceProbe?.continuationPending,position:result.checkpoints?.[sample.sourceUrl]?.position});}});
+  assert.deepEqual(batches,[{count:128,complete:true,pending:false,position:128}],"the last real batch carries its own finished source plan");
+});
 
 test("file-backed Open States joins return the same sourced facts one roll at a time", async () => {
   const retained = await parsePluralBulkSession(sample.state, sample.session, original, evidence(original));

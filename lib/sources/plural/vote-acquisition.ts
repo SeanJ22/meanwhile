@@ -10,7 +10,7 @@ type SharedOptions = Pick<KnownReleaseOptions, "store" | "locks" | "fetchImpl" |
 export interface PluralVoteSourcePosition { hash: string; position: number; complete: boolean; page?: number }
 export type PluralVoteProgress = Readonly<Record<string, PluralVoteSourcePosition>>;
 type PluralBillResult = ReturnType<typeof parsePluralBill> & { evidence: PluralBillEvidence; session?: string; checkpoints?: PluralVoteProgress;
-  sourceProbe?: {formatVersion:1;rawHash:string;complete:boolean} };
+  sourceProbe?: {formatVersion:1;rawHash:string;complete:boolean;continuationPending:boolean} };
 export const pluralVoteSourceHash = (acquisitions: readonly Pick<PluralBillEvidence,"requestedUrl"|"finalUrl"|"sha256">[]): string =>
   canonicalCivicDataHash(acquisitions.map(row=>[row.requestedUrl,row.finalUrl,row.sha256])
     .sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b))));
@@ -72,8 +72,10 @@ export async function acquireStateVotes(input: SharedOptions & {
   const held: { key: string; detail: string }[] = [], acquisitions: PluralBillEvidence[] = [];
   const completedBulkSessions = new Set<string>(), resolvedBulkUrls = new Set<string>();
   let bills = 0;
-  const sourceProbe=(complete:boolean)=>({formatVersion:1 as const,rawHash:pluralVoteSourceHash(acquisitions),
-    complete:complete&&!held.some(row=>row.key!==PLURAL_SESSION_CATALOG&&!resolvedBulkUrls.has(row.key)&&/^https?:\/\/|^ocd-bill\//.test(row.key))});
+  const sourceProbe=(complete:boolean)=>{
+    const failed=held.some(row=>row.key!==PLURAL_SESSION_CATALOG&&!resolvedBulkUrls.has(row.key)&&/^https?:\/\/|^ocd-bill\//.test(row.key));
+    return{formatVersion:1 as const,rawHash:pluralVoteSourceHash(acquisitions),complete:complete&&!failed,continuationPending:!complete&&!failed};
+  };
   const publish = async (result: PluralBillResult, countBill = true) => {
     if (countBill) bills++;
     held.push(...result.held);
@@ -103,7 +105,7 @@ export async function acquireStateVotes(input: SharedOptions & {
       if (!(previous?.hash === release.sha256 && previous.complete)) {
         const parsed = await parsePluralBulkSessionFile(state, session, release.path, source, {
           signal: input.signal, afterPosition: position,
-          onVote: async (vote, at) => { position = at; batch.push(vote); if (batch.length >= 128) await deliver(); },
+          onVote: async (vote, at) => { if(batch.length>=128)await deliver();position = at; batch.push(vote); },
         });
         await deliver(parsed.held, true);
       }

@@ -47,7 +47,7 @@ export async function refreshStateVotes(input: Parameters<typeof acquireStateVot
   let publication = null as { candidate: RoutineCandidate; outcome: PromotionOutcome } | null;
   const identityHeld: { key: string; detail: string }[] = [];
   const publish = async (acquired: readonly PluralVoteAcquisition[], held: readonly { key: string; detail: string }[], checkpoints: PluralVoteProgress = {},
-    probe?: {formatVersion:1;rawHash:string;complete:boolean}) => {
+    probe?: {formatVersion:1;rawHash:string;complete:boolean;continuationPending?:boolean}) => {
     const activeSink=await initialize();
     acquisitions = [...new Map([...acquisitions,...acquired].map(row=>[`${row.finalUrl}\n${row.sha256}`,row])).values()];
     const candidate = pluralVotesCandidate({ projection: await activeSink.snapshot(), acquired:acquisitions, held, checkedAt: input.now?.() ?? new Date().toISOString(),
@@ -89,7 +89,7 @@ export async function refreshStateVotes(input: Parameters<typeof acquireStateVot
     await initialize();
     const held = publication ? [...acquisition.held, ...identityHeld] : priorHeld;
     if(!publication)await publish(await Promise.all(acquisition.acquisitions.map(row => holdPluralVoteEvidence(input.vault, row))), held,{},
-      {formatVersion:1,rawHash,complete:!acquisition.held.some(row=>/^https?:\/\/|^ocd-bill\//.test(row.key))});
+      {formatVersion:1,rawHash,complete:!acquisition.held.some(row=>/^https?:\/\/|^ocd-bill\//.test(row.key)),continuationPending:false});
     const after = processNeonBytes().reduce((sum,row) => ({ reader: sum.reader + row.bytes.reader,
       controlPlane: sum.controlPlane + row.bytes["control-plane"] }), { reader: 0, controlPlane: 0 });
     const readerDatabaseBytes = after.reader - before.reader, controlPlaneDatabaseBytes = after.controlPlane - before.controlPlane;

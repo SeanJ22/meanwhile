@@ -8,7 +8,7 @@ import { authorityFor } from "./source-authority.ts";
 export const UNCHANGED_CONFIRMATION_PREFIX = "UNCHANGED_CONFIRMATION_V1 ";
 
 /** Only observation stamps may differ between a confirmed re-check and the pointed version; they never decide a change. */
-export type UnchangedBasis = "READ_MODEL_RECOMPUTED" | "CHANGE_SET_UNCHANGED" | "PUBLISHER_STAMPS_UNCHANGED";
+export type UnchangedBasis = "READ_MODEL_RECOMPUTED" | "CHANGE_SET_UNCHANGED" | "PUBLISHER_STAMPS_UNCHANGED" | "RAW_HASH_UNCHANGED";
 
 /** A derived version fetched nothing: null status, and its own `derived:<sourceId>:<scope>` route as the requested URL. */
 export interface UnchangedConfirmationRetrieval {
@@ -81,7 +81,7 @@ export function unchangedConfirmationShapeIssue(value: unknown): string | null {
     if (typeof row[field] !== "string" || !(row[field] as string).trim()) return `${field} is missing`;
   }
   if (typeof row.readModelHash !== "string" || !SHA256.test(row.readModelHash)) return "readModelHash is not a SHA-256";
-  if (row.basis !== "READ_MODEL_RECOMPUTED" && row.basis !== "CHANGE_SET_UNCHANGED" && row.basis !== "PUBLISHER_STAMPS_UNCHANGED") return "unknown basis";
+  if (row.basis !== "READ_MODEL_RECOMPUTED" && row.basis !== "CHANGE_SET_UNCHANGED" && row.basis !== "PUBLISHER_STAMPS_UNCHANGED" && row.basis !== "RAW_HASH_UNCHANGED") return "unknown basis";
   if (!isInstant(row.observedAt)) return "observedAt is not an instant";
   const retrieval = row.retrieval as Record<string, unknown> | null | undefined;
   const fetched = (value: Record<string, unknown>): boolean =>

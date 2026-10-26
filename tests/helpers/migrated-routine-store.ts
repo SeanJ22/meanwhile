@@ -15,7 +15,7 @@ export async function withMigratedRoutineStore(
   run: (store: PostgresRoutineDataStore, vault: MemoryEvidenceStore, pg: PGlite) => Promise<void>,
 ): Promise<void> {
   const { pg } = await factDb();
-  for (const file of ["0025_typical_fixer.sql", "0026_lame_sunset_bain.sql", "0027_pdc_candidate_history_shape.sql", "0028_wise_ikaris.sql", "0029_unchanged_confirmation_receipts.sql", "0031_civic_payload_parts.sql"]) {
+  for (const file of ["0025_typical_fixer.sql", "0026_lame_sunset_bain.sql", "0027_pdc_candidate_history_shape.sql", "0028_wise_ikaris.sql", "0029_unchanged_confirmation_receipts.sql", "DB-05_source_hash.sql", "0031_civic_payload_parts.sql"]) {
     await pg.exec(readFileSync(new URL(`../../lib/db/migrations/${file}`, import.meta.url), "utf8"));
   }
   const readerFunctions = readFileSync(new URL("../../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8")

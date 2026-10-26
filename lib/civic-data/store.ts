@@ -87,6 +87,23 @@ export type PublishedCandidateMetadata = Omit<CandidateVersionRecord, "candidate
   };
 };
 
+/** The source comparison reads no held record, receipt or event history. */
+export interface SourceHead {
+  readonly sourceId: string;
+  readonly recordClass: RoutineRecordClass;
+  readonly scope: string;
+  readonly versionId: string;
+  readonly lastKnownGoodVersionId: string;
+  readonly rawHash: string | null;
+  readonly rawHashBasis: RoutineCandidate["retrieval"]["rawHashBasis"] | null;
+  readonly normalizedHash: string | null;
+  readonly parserVersion: string;
+  readonly promotedAt: string;
+  readonly candidateState: CandidateState;
+  readonly acquisitionSucceeded: boolean;
+  readonly imported: boolean;
+}
+
 export function publishedCandidateMetadata(row: CandidateVersionRecord): PublishedCandidateMetadata {
   const { id, sourceId, recordClass, scope, retrieval, temporal, normalization } = row.candidate;
   const publishedRetrieval = { ...retrieval };
@@ -144,6 +161,7 @@ export interface RoutineDataStore {
   readonly confirmUnchanged?: (input: ConfirmUnchangedInput, at: string) => Promise<ConfirmUnchangedOutcome>;
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
+  readonly readSourceHead: (recordClass: RoutineRecordClass, scope: string) => Promise<SourceHead | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   /** The current portrait record's input versions and next due time, without the record itself. */
   readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
@@ -1002,6 +1020,18 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return row ? promotedPointerIdentity(row) : null;
   }
 
+  async readSourceHead(recordClass: RoutineRecordClass, scope: string): Promise<SourceHead | null> {
+    const pointer = this.promotions.get(projectionKey(recordClass, scope));
+    const row = pointer ? this.candidates.get(pointer.versionId) : null;
+    if (!pointer || !row) return null;
+    return { sourceId: row.candidate.sourceId, recordClass: row.candidate.recordClass, scope: row.candidate.scope,
+      versionId: pointer.versionId, lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
+      rawHash: row.candidate.retrieval.rawHash, rawHashBasis: row.candidate.retrieval.rawHashBasis ?? null,
+      normalizedHash: row.candidate.normalization.normalizedHash, parserVersion: row.candidate.normalization.parserVersion,
+      promotedAt: pointer.promotedAt, candidateState: row.state, acquisitionSucceeded: row.acquisitionSucceeded,
+      imported: isImportOrStateMoveCandidate(row.candidate) || pointer.sourceId !== row.candidate.sourceId };
+  }
+
   async readPromotionIdentities(
     recordClass: RoutineRecordClass,
     scopes: readonly string[],
@@ -1075,6 +1105,10 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     }
     if (row.candidate.normalization.normalizedHash !== input.readModelHash) {
       return { kind: "HASH_DIFFERS", detail: `${input.pointerVersionId}'s read model is not ${input.readModelHash}.` };
+    }
+    if (input.basis === "RAW_HASH_UNCHANGED" &&
+      (row.candidate.retrieval.rawHash !== input.retrieval.rawHash || row.candidate.normalization.parserVersion !== input.parserVersion)) {
+      return { kind: "HASH_DIFFERS", detail: `${input.pointerVersionId}'s source bytes or parser changed.` };
     }
     const priorConfirmation = latestUnchangedConfirmation(this.history.get(input.pointerVersionId) ?? [], input.pointerVersionId);
     if (priorConfirmation && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") >
@@ -2034,7 +2068,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const meeting = record.candidate.recordClass === "MEETING";
     const candidate = stateAuthority || meetingDoors || meeting ? { ...(stateAuthority ? encodeStateCandidate(record.candidate) : record.candidate),
       retrieval: await this.payloadParts.store(record.candidate.retrieval,
-        ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "sourceCheck", "failureDetail"]),
+        ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "rawHashBasis", "sourceCheck", "failureDetail"]),
     } : record.candidate;
     const navigationIndex = navigationCandidateIndex(record.candidate);
     const stored = stateAuthority || meetingDoors || meeting || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
@@ -2408,6 +2442,23 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return identity ?? null;
   }
 
+  async readSourceHead(recordClass: RoutineRecordClass, scope: string): Promise<SourceHead | null> {
+    const [head] = await this.db.select({
+      sourceId: civicDataCandidates.sourceId, recordClass: civicDataCandidates.recordClass, scope: civicDataCandidates.scope,
+      versionId: civicDataPromotions.currentVersionId, lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
+      rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
+      rawHashBasis: sql<SourceHead["rawHashBasis"]>`${civicDataCandidates.candidate}#>>'{retrieval,rawHashBasis}'`.as("raw_hash_basis"),
+      parserVersion: civicDataCandidates.parserVersion, promotedAt: civicDataPromotions.promotedAt,
+      candidateState: civicDataCandidates.state, acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
+      imported: sql<boolean>`(${civicDataCandidates.candidate} ? 'bootstrapImport')
+        OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'
+        OR ${civicDataPromotions.sourceId} <> ${civicDataCandidates.sourceId}`.as("imported"),
+    }).from(civicDataPromotions).innerJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.currentVersionId))
+      .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope))).limit(1);
+    return head ? { ...head, recordClass: head.recordClass as RoutineRecordClass,
+      candidateState: head.candidateState as CandidateState, promotedAt: canonicalPostgresRoutineTimestamp(head.promotedAt, "sourceHead.promotedAt") } : null;
+  }
+
   async readPromotionIdentities(
     recordClass: RoutineRecordClass,
     scopes: readonly string[],
@@ -2538,6 +2589,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           and ${civicDataCandidates.recordClass} = ${input.recordClass}
           and ${civicDataCandidates.scope} = ${input.scope}
           and ${civicDataCandidates.normalizedHash} = ${input.readModelHash}
+          and (${input.basis} <> 'RAW_HASH_UNCHANGED' OR
+            (${civicDataCandidates.rawHash} = ${input.retrieval.rawHash} AND ${civicDataCandidates.parserVersion} = ${input.parserVersion}))
           and not (${civicDataCandidates.candidate} ? 'bootstrapImport')
           and coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') <> 'STATE_AUTHORITY_RETIREMENT'
           and exists (
@@ -2595,6 +2648,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       this.db.select({
         state: civicDataCandidates.state,
         normalizedHash: civicDataCandidates.normalizedHash,
+        rawHash: civicDataCandidates.rawHash,
+        parserVersion: civicDataCandidates.parserVersion,
         imported: sql<boolean>`(${civicDataCandidates.candidate} ? 'bootstrapImport')
           OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'`,
       }).from(civicDataCandidates).where(eq(civicDataCandidates.id, id)).limit(1),
@@ -2609,6 +2664,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     }
     if (candidate.imported) return { kind: "POINTER_IS_IMPORT", detail: `${id} retains published facts without a source read; a live read of it promotes.` };
     if (candidate.normalizedHash !== input.readModelHash) return { kind: "HASH_DIFFERS", detail: `${id}'s read model is not ${input.readModelHash}.` };
+    if (input.basis === "RAW_HASH_UNCHANGED" && (candidate.rawHash !== input.retrieval.rawHash || candidate.parserVersion !== input.parserVersion))
+      return { kind: "HASH_DIFFERS", detail: `${id}'s source bytes or parser changed.` };
     const priorConfirmation = pointer.latestConfirmation ? parseUnchangedConfirmation(pointer.latestConfirmation) : null;
     if (priorConfirmation?.versionId === id && Date.parse(sourceCheckedAt(priorConfirmation.retrieval, priorConfirmation.observedAt) ?? "") > Date.parse(checkedAt)) {
       return { kind: "CONFIRMED", versionId: id, at: priorConfirmation.observedAt };

@@ -631,7 +631,8 @@ export async function promoteDerivedMeetingFamily(
   const fetchImpl = sourceSession?.fetch ?? retaining.fetch;
   for (const group of derivedFamilyReadGroups(members)) {
     if (!meetingSourceBudgetAvailable()) { await sourceSession?.defer(); break; }
-    const acquire = () => readDerivedFamilyMembers(group, fetchImpl, undefined, undefined, () => prepare(members));
+    const acquire = () => readDerivedFamilyMembers(group, fetchImpl, undefined, undefined,
+      () => sourceSession ? sourceSession.inputs(() => prepare(members)) : prepare(members));
     const acquired = sourceSession ? await sourceSession.run(acquire) : await acquire();
     for (const read of acquired) console.log(`  ${read.member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
     reads.push(...acquired);

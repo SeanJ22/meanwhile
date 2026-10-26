@@ -171,6 +171,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
   }) as typeof fetch;
   return { head, responses, fetch: fetchSource, get complete() { return complete; },
     forgetGet: transport.forgetGet,
+    inputs<T>(operation: () => Promise<T>): Promise<T> { return sourceIO.run(true, operation); },
     async collect<T>(operation: () => Promise<T>) {
       const keys = new Set<string>();
       const value = await requestedInOperation.run(keys, operation);

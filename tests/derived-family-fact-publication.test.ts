@@ -107,6 +107,7 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
       return { head: await store.readSourceHead("MEETING", partition.scope), responses, fetch, complete: true,
         probe: async () => { await fetch(); return true; }, clear: async () => {},
         run: (operation: () => Promise<unknown>) => operation(), collect: async (operation: () => Promise<unknown>) => ({ value: await operation(), responses: [] }),
+        inputs: (operation: () => Promise<unknown>) => operation(),
         forgetGet: () => {}, defer: async () => {} };
     },
   });

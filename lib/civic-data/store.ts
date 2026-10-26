@@ -1,5 +1,6 @@
 import { readRegistryPlaceRows, selectRegistryPlaceView, type RegistryPlaceSlice } from "./keyed-registry-place.ts";
 import { readRegistryPlanningRows, type RegistryPlanningView } from "./keyed-registry-planning.ts";
+import { readDerivedMeetingBodyRows, derivedBodyScope, selectDerivedMeetingBodySnapshot, type DerivedMeetingBodySlice } from "./derived-meeting-body.ts";
 import { readDerivedInputHeads, readDerivedWiringRows, selectDerivedWiringRows, type DerivedInputHead, type DerivedWiringRow } from "./derived-input-rows.ts";
 import { readKeyedGovernmentLookup, type GovernmentRowLookup } from "./keyed-government-lookup.ts";
 import { readMemberOfficeMembers, readMemberOfficeRows, memberOfficeStateScope, memberOfficeScopeState, memberOfficeRecordState, MEMBER_OFFICE_CURSOR, type MemberOfficeProgress, type MemberOfficeSlice } from "../officials/member-office-data.ts";
@@ -59,7 +60,7 @@ import {
 import { assertWriteAllowed } from "../db/write-guard.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "./contracts.ts";
 import { RUNTIME_ROUTINE_CONTRACTS } from "./runtime-routine-contracts.ts";
-import { MEETING_HISTORY_SOURCE_ID, MEETING_PARTITION_CONTRACTS, meetingHistoryContract, meetingPartitionForHistoryScope } from "./meeting-partitions.ts";
+import { MEETING_HISTORY_SOURCE_ID, MEETING_PARTITION_CONTRACTS, derivedMeetingBodyForScope, meetingHistoryContract, meetingPartitionForHistoryScope } from "./meeting-partitions.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import {
   assertSanctionedRuntimeAuthority,
@@ -183,6 +184,7 @@ export interface RoutineDataStore {
   ) => Promise<CandidateVersionRecord>;
   readonly readMemberOfficeMembers: (members: readonly string[]) => Promise<readonly import("../officials/member-offices.ts").MemberOfficeRecord[]>;
   readonly readMemberOfficeSlice: (state: string, members?: readonly string[]) => Promise<MemberOfficeSlice | null>;
+  readonly readDerivedMeetingBody?: (state:import("./contracts.ts").DerivedMeetingFamilyState,bodyId:string,history?:boolean)=>Promise<DerivedMeetingBodySlice|null>;
   readonly readMemberOfficeProgress: () => Promise<MemberOfficeProgress>;
   readonly writeMemberOfficeProgress: (progress: MemberOfficeProgress) => Promise<void>;
   readonly readRegistryPlaceView?: (state:string,divisionIds:readonly string[])=>Promise<RegistryPlaceSlice|null>;
@@ -383,7 +385,11 @@ function registeredMutationContract(
     const partition = meetingPartitionForHistoryScope(candidate.scope);
     return partition === null
       ? null
-      : { id: partition.id, kind: "routine", readerProjectionId: meetingHistoryContract(partition).readerProjection!.id };
+      : { id: partition.derivedParentId??partition.id, kind: "routine", readerProjectionId: meetingHistoryContract(partition).readerProjection!.id };
+  }
+  if(candidate.recordClass==="MEETING"&&candidate.sourceId==="meetings-derived-routes"){
+    const body=derivedMeetingBodyForScope(candidate.scope);
+    if(body&&!body.historyOf&&body.derivedParentId)return {id:body.derivedParentId,kind:"routine",readerProjectionId:body.readerProjection?.id??null};
   }
   const routine = [...ROUTINE_SOURCE_CONTRACTS, ...RUNTIME_ROUTINE_CONTRACTS, ...MEETING_PARTITION_CONTRACTS]
     .filter((contract) =>
@@ -975,6 +981,18 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   }
 
   private memberOfficeProgress: MemberOfficeProgress | undefined;
+  async readDerivedMeetingBody(state:import("./contracts.ts").DerivedMeetingFamilyState,bodyId:string,history=false):Promise<DerivedMeetingBodySlice|null>{
+    const own=derivedBodyScope(bodyId,history),family=`source:derived:family:${state}${history?":history":""}`;
+    const pointer=this.promotions.get(projectionKey("MEETING",own))??this.promotions.get(projectionKey("MEETING",family));
+    const record=pointer?this.candidates.get(pointer.versionId):null;
+    if(!pointer||!record)return null;
+    const hash=record.candidate.normalization.normalizedHash;
+    if(pointer.receipt.decision!=="GOOD"||!hash||record.state!=="PROMOTED")throw new Error("DERIVED_MEETING_BODY_POINTER_INVALID");
+    return {input:{kind:"PROMOTED_VERSION",recordClass:"MEETING",scope:pointer.scope,versionId:pointer.versionId,readModelSha256:hash,promotedAt:pointer.promotedAt},
+      expectedBaseVersionId:pointer.scope===own?pointer.versionId:null,
+      snapshot:structuredClone(selectDerivedMeetingBodySnapshot(pointer.payload as import("../meetings/snapshot.ts").MeetingsSnapshot,bodyId,pointer.scope!==own))};
+  }
+
   async readMemberOfficeProgress(): Promise<MemberOfficeProgress> {
     if (this.memberOfficeProgress) return structuredClone(this.memberOfficeProgress);
     const held = await this.readPromotionPayloadFields("CURATED_READER_RECORD", MEMBER_OFFICES_SCOPE, ["rosterDigests", "pending"]);
@@ -2807,6 +2825,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async readMemberOfficeSlice(state: string, members: readonly string[] = []): Promise<MemberOfficeSlice | null> {
     return readMemberOfficeRows((text, params) => this.readerRows(text, params), state, members);
   }
+  async readDerivedMeetingBody(state:import("./contracts.ts").DerivedMeetingFamilyState,bodyId:string,history=false):Promise<DerivedMeetingBodySlice|null>{
+    return readDerivedMeetingBodyRows((text,params)=>this.readerRows(text,params),state,bodyId,history);
+  }
+
   async readMemberOfficeProgress(): Promise<MemberOfficeProgress> {
     const [row] = (await this.db.execute(sql`SELECT position FROM pass_cursor WHERE name=${MEMBER_OFFICE_CURSOR}`)).rows as { position: string }[];
     if (row) return JSON.parse(row.position) as MemberOfficeProgress;

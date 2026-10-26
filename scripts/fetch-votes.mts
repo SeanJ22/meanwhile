@@ -31,12 +31,12 @@ import type {
   VotePosition,
   VotesSnapshot,
 } from "../lib/votes/types.ts";
+import { createHash } from "node:crypto";
 import { federalMemberVotesCandidate, federalPartyBreakdowns, federalRollCallsCandidate, heldAcquisitions, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID,
-  type OfficialAcquisition } from "../lib/votes/data-plane.ts";
-import {
-  billSummariesForRollCallAcquisition,
-  readFederalRollCallsProjection,
-} from "../lib/votes/snapshot.ts";
+  federalVotesSourceHash, type FederalRollCallWindow, type OfficialAcquisition } from "../lib/votes/data-plane.ts";
+import type { BillSummariesFile } from "../lib/votes/bill-summaries.ts";
+import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { windowStart } from "../lib/votes/catch-up.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -55,8 +55,10 @@ if (!process.argv.includes("--promote")) throw new Error("PASS_--promote: this c
 prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
-const previous = await readFederalRollCallsProjection({ store });
-const billSummaries = billSummariesForRollCallAcquisition(previous);
+const head = await store.readSourceHead("FEDERAL_ROLL_CALL", FEDERAL_ROLLCALL_SCOPE);
+if (!head) throw new Error("FEDERAL_ROLLCALL_PRIOR_NOT_RECORDED");
+// Only the request's continuation bounds are needed before acquiring its current bytes.
+const heldWindow = await store.readCandidatePath<FederalRollCallWindow["window"]>(head.versionId, ["readModel", "snapshot", "window"]);
 const acquisitions: OfficialAcquisition[] = [];
 let failureRecorded = false;
 
@@ -109,12 +111,12 @@ function mapPosition(raw: string): VotePosition | null {
 }
 
 // ---- The wired federal members and the LIS bridge --------------------------
-const legislators = JSON.parse(
-  await get(
+const legislatorsRaw = await get(
     "https://unitedstates.github.io/congress-legislators/legislators-current.json",
     false,
-  ),
-) as { id: { bioguide: string; lis?: string }; terms?: { party?: string }[] }[];
+  );
+const identifierSourceHash = createHash("sha256").update(legislatorsRaw).digest("hex");
+const legislators = JSON.parse(legislatorsRaw) as { id: { bioguide: string; lis?: string }; terms?: { party?: string }[] }[];
 const lisToBioguide = new Map<string, string>();
 const bioguides = new Set<string>();
 const parties = new Map<string, string | null>();
@@ -153,7 +155,6 @@ let houseMatched = 0;
 let houseTotal = 0;
 
 // Each window reaches back to the roll after the previous version's newest, so none is skipped between versions.
-const heldWindow = previous.kind === "PROMOTED" || previous.kind === "BOOTSTRAP" ? previous.value.snapshot.window : null;
 const newestHeld = (rolls: readonly number[] | undefined): number | null => rolls !== undefined && rolls.length > 0 ? Math.max(...rolls) : null;
 const latestHouse = await latestHouseRoll();
 const houseWindow = windowStart({ latest: latestHouse, previousNewest: newestHeld(heldWindow?.houseRolls), window: WINDOW });
@@ -351,14 +352,6 @@ if (apiKey) {
           titled++;
         }
       }
-      if (
-        !billSummaries.summaries[billUrl] &&
-        !billSummaries.pending.some((pending) => pending.billUrl === billUrl)
-      ) {
-        console.warn(
-          `  UNSUMMARIZED: ${legis} (${billUrl}) has no reviewed explanation in the current canonical projection`,
-        );
-      }
     } catch {
       // A missing title leaves the chamber's own words — honest either way.
     }
@@ -381,13 +374,29 @@ const snapshot: VotesSnapshot = {
 };
 
 const attemptedAt = new Date().toISOString(), held = heldAcquisitions(acquisitions);
+const rawHash = federalVotesSourceHash(held, identifierSourceHash);
+const unchanged = await confirmSourceHashUnchanged({ store, sourceId: FEDERAL_VOTES_SOURCE_ID, recordClass: "FEDERAL_ROLL_CALL",
+  scope: FEDERAL_ROLLCALL_SCOPE, parserVersion: FEDERAL_VOTES_PARSER_VERSION, rawHash, now: attemptedAt,
+  complete: houseWindow.unreached === 0 && senateStart.unreached === 0 && positions.length > 0,
+  retrieval: { requestedUrl: held[0]?.requestedUrl ?? "", finalUrl: held[0]?.finalUrl ?? null,
+    httpStatus: held[0]?.httpStatus ?? null, rawHash, retrievedAt: attemptedAt } });
+if (unchanged) {
+  console.log("RCD_RECEIPT=" + JSON.stringify({ source: "congress-rollcalls", ...sourceHashReceiptFields(unchanged), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+} else {
+const billSummaries = await store.readCandidatePath<BillSummariesFile>(head.versionId, ["readModel", "billSummaries"]);
+if (!billSummaries || !billSummaries.summaries || !Array.isArray(billSummaries.pending)) throw new Error("FEDERAL_ROLLCALL_BILL_SUMMARIES_UNAVAILABLE");
 const { positions: _positions, ...window } = snapshot;
 // A member no roll in this window records keeps the record from the last window that did.
 const byMember = new Map<string, MemberVote[]>();
 for (const position of positions) byMember.set(position.officeholderId, [...byMember.get(position.officeholderId) ?? [], position]);
 const refused: string[] = [];
 for (const [officeholderId, recorded] of byMember) {
-  const member = federalMemberVotesCandidate({ acquisitions: held, retrievedAt: attemptedAt, expectedCongress: CONGRESS, expectedSession: SESSION, snapshot: window, officeholderId, positions: recorded });
+  const member = federalMemberVotesCandidate({ acquisitions: held, identifierSourceHash, retrievedAt: attemptedAt, expectedCongress: CONGRESS, expectedSession: SESSION, snapshot: window, officeholderId, positions: recorded });
+  const confirmed = await confirmSourceHashUnchanged({store, sourceId:member.sourceId, recordClass:member.recordClass, scope:member.scope,
+    parserVersion:member.normalization.parserVersion, rawHash:member.retrieval.rawHash!, now:attemptedAt, complete:true,
+    retrieval:{requestedUrl:member.retrieval.requestedUrl,finalUrl:member.retrieval.finalUrl,httpStatus:member.retrieval.httpStatus,
+      rawHash:member.retrieval.rawHash!,retrievedAt:attemptedAt}});
+  if (confirmed) continue;
   const result = await processRegisteredManualCandidate(store, "congress-rollcalls", member, attemptedAt);
   if (!result.promoted && !result.confirmed) refused.push(`${officeholderId}:${result.candidate.failureCode ?? result.candidate.state}`);
 }
@@ -396,6 +405,7 @@ if (refused.length) {
   throw new Error(`FEDERAL_MEMBER_POSITIONS_REFUSED:${refused.join(",")}`);
 }
 const candidate = federalRollCallsCandidate({
+  identifierSourceHash,
   acquisitions: held,
   retrievedAt: attemptedAt,
   expectedCongress: CONGRESS,
@@ -428,6 +438,7 @@ if (senateTotal > 0 && senateMatched / senateTotal < 0.95) {
 if (positions.length === 0) {
   console.error("zero positions extracted — that is a finding, not a success");
   process.exit(1);
+}
 }
 if (outcome.candidate.state !== "PROMOTED") {
   throw new Error(`FEDERAL_ROLLCALL_PROMOTION_REFUSED:${outcome.candidate.failureCode ?? outcome.candidate.state}`);

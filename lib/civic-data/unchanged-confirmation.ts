@@ -46,6 +46,8 @@ export interface UnchangedConfirmation {
   readonly retrieval: UnchangedConfirmationRetrieval;
   readonly stamps: readonly PublisherStampComparison[] | null;
   readonly observedAt: string;
+  /** Exact parser inputs already checked against this pointed version. */
+  readonly inputDigest?: string;
 }
 
 const SHA256 = /^[a-f0-9]{64}$/;
@@ -83,6 +85,7 @@ export function unchangedConfirmationShapeIssue(value: unknown): string | null {
   if (typeof row.readModelHash !== "string" || !SHA256.test(row.readModelHash)) return "readModelHash is not a SHA-256";
   if (row.basis !== "READ_MODEL_RECOMPUTED" && row.basis !== "CHANGE_SET_UNCHANGED" && row.basis !== "PUBLISHER_STAMPS_UNCHANGED" && row.basis !== "RAW_HASH_UNCHANGED") return "unknown basis";
   if (!isInstant(row.observedAt)) return "observedAt is not an instant";
+  if (row.inputDigest !== undefined && (typeof row.inputDigest !== "string" || !SHA256.test(row.inputDigest))) return "inputDigest is not a SHA-256";
   const retrieval = row.retrieval as Record<string, unknown> | null | undefined;
   const fetched = (value: Record<string, unknown>): boolean =>
     typeof value.finalUrl === "string" &&
@@ -130,6 +133,7 @@ export interface ConfirmUnchangedInput {
   readonly retrieval: UnchangedConfirmationRetrieval;
   readonly stamps?: readonly PublisherStampComparison[] | null;
   readonly retainedSourceResponses?: readonly unknown[] | null;
+  readonly inputDigest?: string;
 }
 
 export type ConfirmUnchangedOutcome =
@@ -165,6 +169,7 @@ export function buildUnchangedConfirmation(
     },
     stamps: input.stamps ?? null,
     observedAt,
+    ...(input.inputDigest ? {inputDigest: input.inputDigest} : {}),
   };
   const issue = unchangedConfirmationShapeIssue(confirmation);
   return issue === null ? { ok: true, confirmation } : { ok: false, detail: issue };

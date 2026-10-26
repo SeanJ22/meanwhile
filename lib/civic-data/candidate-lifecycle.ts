@@ -76,7 +76,7 @@ export async function processRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"] } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"]; readonly inputDigest?: string } = {},
   navigation?: NavigationComparison,
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;
@@ -216,6 +216,7 @@ export async function processRoutineCandidate(
         ...(candidate.retrieval.sourceCheck ? { sourceCheck: candidate.retrieval.sourceCheck } : {}),
       },
       retainedSourceResponses: retained ?? null,
+      ...(options.inputDigest ? {inputDigest: options.inputDigest} : {}),
     }, transitionAt);
     if (confirmed.kind === "CONFIRMED") {
       return {

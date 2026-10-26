@@ -181,7 +181,7 @@ function withoutPeopleSourceCheckFields(value:unknown):unknown {
   if(Array.isArray(value))return value.map(withoutPeopleSourceCheckFields);
   const row=object(value);if(!row)return value;
   const source=typeof row.sourceUrl==="string"&&typeof row.collectedAt==="string";
-  return Object.fromEntries(Object.entries(row).filter(([key])=>!source||key!=="rawHash"&&key!=="checkedAt")
+  return Object.fromEntries(Object.entries(row).filter(([key])=>!source||!["rawHash","checkedAt","collectedAt","verifiedAt"].includes(key))
     .map(([key,child])=>[key,withoutPeopleSourceCheckFields(child)]));
 }
 

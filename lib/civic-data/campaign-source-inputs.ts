@@ -57,8 +57,8 @@ export async function readCampaignProfileLinks(store: Pick<RoutineDataStore, "re
   const head = await store.readSourceHead(profiles.recordClass, profiles.scope);
   if (!head) return null;
   if (head.candidateState !== "PROMOTED" || !head.normalizedHash) return { unreadable: "The current candidate-profile source has no promoted content hash." };
-  const links = await store.readCandidatePath<{ readonly links?: Readonly<Record<string, CandidateLinksShape>> }>(head.versionId, ["readModel", "links"]);
+  const links = await store.readCandidatePath<Readonly<Record<string, CandidateLinksShape>>>(head.versionId, ["readModel", "links"]);
   return { input: { kind: "PROMOTED_VERSION" as const, recordClass: head.recordClass, scope: head.scope,
-    versionId: head.versionId, readModelSha256: head.normalizedHash, promotedAt: head.promotedAt }, links: links?.links ?? {} };
+    versionId: head.versionId, readModelSha256: head.normalizedHash, promotedAt: head.promotedAt }, links: links ?? {} };
   } catch (error) { return { unreadable: error instanceof Error ? error.message : String(error) }; }
 }

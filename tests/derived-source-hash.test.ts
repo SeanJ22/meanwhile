@@ -86,7 +86,7 @@ test("a changed campaign derivation reads profile links by immutable version and
   let paths = 0;
   const links = { candidate: { campaign: { url: "https://candidate.example/", verification: "held", attemptedAt: at }, official: null } };
   const read = await readCampaignProfileLinks({ async readSourceHead() { return head; }, async readCandidatePath<T>(version: string, path: readonly string[]) {
-    paths++; assert.equal(version, head.versionId); assert.deepEqual(path, ["readModel", "links"]); return { links } as T;
+    paths++; assert.equal(version, head.versionId); assert.deepEqual(path, ["readModel", "links"]); return links as T;
   } }, "AZ");
   assert.ok(read && !("unreadable" in read));
   assert.deepEqual(read.links, links); assert.equal(paths, 1);

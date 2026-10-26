@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { trackSourceTransport } from "../../lib/sources/host-transport.ts";
 import type { RetainedSourceResponse } from "../../lib/civic-data/retained-meeting-bytes.ts";
 import type { SourceAcquisitionEvidence } from "../../lib/sources/acquisition-trace.ts";
 
@@ -29,7 +30,7 @@ export async function withRetainedSourceResponse<T>(initial: RetainedSourceRespo
   if (initial) validateRetainedSourceResponse(initial);
   const original = globalThis.fetch;
   let reused = false;
-  if (initial) globalThis.fetch = (async (input, init) => {
+  if (initial) globalThis.fetch = trackSourceTransport((async (input, init) => {
     const requested = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     const method = init?.method ?? (input instanceof Request ? input.method : "GET");
     if (!reused && method.toUpperCase() === "GET" && requested === initial.requestedUrl) {
@@ -40,7 +41,7 @@ export async function withRetainedSourceResponse<T>(initial: RetainedSourceRespo
       return response;
     }
     return original(input, init);
-  }) as typeof fetch;
+  }) as typeof fetch, original);
   try { return { value: await operation(), reused }; }
   finally { globalThis.fetch = original; }
 }

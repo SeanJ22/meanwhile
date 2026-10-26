@@ -200,7 +200,7 @@ export function accountedNormalize<R extends NormalizeAccountInput>(
 
   // Zero-row check, at the document layer.
   const documentsInHand = input.length - unretrieved;
-  if (isZeroRowExtraction({ documentsInHand, produced: result.meetings.length, dropped, outOfWindow })) {
+  if (options.logicalInput !== 0 && isZeroRowExtraction({ documentsInHand, produced: result.meetings.length, dropped, outOfWindow })) {
     throw new ZeroRowExtractionError(source, documentsInHand);
   }
 

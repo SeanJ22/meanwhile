@@ -8,7 +8,7 @@ import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.
 import { planProbes, runHourlyProbes } from "@/lib/doors/hourly-check.ts";
 import { pacedProbeFetch } from "@/lib/doors/probe-fetch.ts";
 import { memoryWebsitePacing } from "@/lib/control-plane/website-pacing.ts";
-import type { ProbeFetch } from "@/lib/doors/probe.ts";
+import { firstLook, type ProbeFetch } from "@/lib/doors/probe.ts";
 import { applyManualEdit, checkDoorDraft, type DoorRecord } from "@/lib/doors/registry.ts";
 
 const AT = (minutes: number) => new Date(Date.parse("2026-10-06T12:00:00.000Z") + minutes * 60_000).toISOString();
@@ -36,7 +36,7 @@ function pacedSite(pacing = memoryWebsitePacing(), small = (_url: string) => tru
   const asked: string[] = [];
   let clock = Date.parse(AT(0));
   const fetchImpl = (async (url: string) => { asked.push(url); return new Response("ok", { status }); }) as unknown as typeof fetch;
-  const fetchFn = pacedProbeFetch({ pacing, fetchImpl, sleep: async () => {}, clock: () => clock,
+  const fetchFn = pacedProbeFetch({ pacing, fetchImpl, clock: () => clock,
     sizeFor: (url) => (small(url) ? { kind: "local-government", population: 4_000 } : { kind: "local-government", population: 500_000 }) });
   return { fetchFn, asked, at: (minutes: number) => { clock = Date.parse(AT(minutes)); return AT(minutes); } };
 }
@@ -122,19 +122,29 @@ test("DB-26: a look that fails stores nothing and the door is looked at again", 
   assert.equal(planProbes([d], HOT, AT(1)).doors.length, 1);
 });
 
-test("DB-26: the paced fetch identifies itself, waits between looks at one host, and probes always run", async () => {
+test("DB-26: the shared paced fetch identifies itself and probes always run", async () => {
   const seen: { url: string; ua: string | null }[] = [];
-  const slept: number[] = [];
   const fetchImpl = (async (url: string, init?: RequestInit) => {
     seen.push({ url, ua: (init?.headers as Record<string, string>)["User-Agent"] ?? null });
     return new Response("ok", { status: 200 });
   }) as unknown as typeof fetch;
-  const paced = pacedProbeFetch({ pacing: memoryWebsitePacing(), fetchImpl, sleep: async (ms) => { slept.push(ms); } });
+  const paced = pacedProbeFetch({ pacing: memoryWebsitePacing(), fetchImpl });
   await Promise.all([paced("https://a.example.gov/1", {}), paced("https://a.example.gov/2", {}), paced("https://b.example.gov/1", {})]);
   assert.equal(seen.length, 3);
   assert.ok(seen.every((s) => /we-the-people civic meeting index/.test(s.ua ?? "")));
-  assert.equal(slept.length, 3);
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /runHourlyProbes\([\s\S]*pacedProbeFetch\(\{ pacing: repos\.websitePacing/);
   assert.doesNotMatch(runner, /WTP_DOOR_PROBES|doorProbesOn/);
+});
+
+test("a shared host's 429 leaves probes waiting instead of failed and counts only the actual request", async () => {
+  let calls = 0;
+  const fetchFn = pacedProbeFetch({ pacing: memoryWebsitePacing(), fetchImpl: async () => {
+    calls++; return new Response(null, { status: 429, headers: { "retry-after": "180" } });
+  } });
+  const first = await firstLook("https://one.gov/AgendaCenter", null, fetchFn, AT(0));
+  const next = await firstLook("https://two.gov/AgendaCenter", null, fetchFn, AT(0));
+  assert.deepEqual([first.verdict, next.verdict], ["WAITING", "WAITING"]);
+  assert.deepEqual([first.requests, next.requests], [1, 0]);
+  assert.equal(calls, 1);
 });

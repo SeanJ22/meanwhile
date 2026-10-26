@@ -1,7 +1,7 @@
 /**
- * Every request carries the project's identified `User-Agent`. When a filter refuses Node's own client, the
- * same identity is asked once more through `curl` with purpose and contact beside it (rung 4). A refusal or a
- * challenge there is a WALL naming rung 4; no browser identity is borrowed and no challenge is answered.
+ * Every request carries the project's identified `User-Agent`. A 403 leaves the website alone. A transport
+ * challenge at HTTP 200 can use the same identity through curl; no browser identity is borrowed and no
+ * challenge is answered.
  * No test here touches the network.
  */
 
@@ -10,6 +10,7 @@ import test from "node:test";
 
 import {
   SourceHttpError,
+  SourceReadDeferred,
   curlRequestHeaders,
   politeGetText,
   sourceRequestHeaders,
@@ -49,8 +50,9 @@ test("the identification travels in the User-Agent of every request, on both cli
 
 test("a host that refuses our name is a WALL named as an access control, and nothing is re-sent under another identity", async () => {
   const calls: Call[] = [];
+  const fetchImpl = nhStyleWall(calls);
   await assert.rejects(
-    politeGetText("https://www.nh.gov/", { fetchImpl: nhStyleWall(calls) }),
+    politeGetText("https://www.nh.gov/", { fetchImpl }),
     (error: unknown) => {
       assert.ok(error instanceof SourceHttpError);
       assert.equal(error.status, 403);
@@ -67,7 +69,7 @@ test("a host that refuses our name is a WALL named as an access control, and not
   const curled: Record<string, string>[] = [];
   await assert.rejects(
     politeGetText("https://www.nh.gov/", {
-      fetchImpl: nhStyleWall([]),
+      fetchImpl,
       ladder: {
         curl: async (url, headers) => {
           curled.push(headers);
@@ -75,17 +77,17 @@ test("a host that refuses our name is a WALL named as an access control, and not
         },
       },
     }),
-    (error: unknown) => error instanceof SourceHttpError && error.rung === 4 && /WALL/.test(error.message),
+    (error: unknown) => error instanceof SourceReadDeferred && error.reason === "REFUSED",
   );
-  assert.equal(curled.length, 1, "rung 4 asks once, with the same identity");
-  assert.equal(curled[0]["User-Agent"], sourceUserAgent());
+  assert.equal(curled.length, 0, "a named refusal is never re-sent through another client");
+  assert.equal(calls.length, 1);
 });
 
 /* Rung 4: the other client, with our own name only. */
 
 const FEED = "BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Select Board Meeting\nEND:VEVENT\nEND:VCALENDAR";
 const CHALLENGE = "<html><head><title>Just a moment...</title></head><body>…</body></html>";
-const challenged403 = (async () => new Response(CHALLENGE, { status: 403 })) as unknown as typeof fetch;
+const challenged200 = (async () => new Response(CHALLENGE, { status: 200 })) as unknown as typeof fetch;
 
 test("rung 4 is one request: our own name in the User-Agent, purpose and contact beside it, never a browser's", () => {
   const own = curlRequestHeaders();
@@ -100,7 +102,7 @@ test("rung 4 is one request: our own name in the User-Agent, purpose and contact
 test("a Cloudflare-style host that challenges Node is read with our own name through curl", async () => {
   const sent: Record<string, string>[] = [];
   const res = await politeGetText("https://www.suttonnh.gov/calendar/ical/calendar.ics", {
-    fetchImpl: challenged403,
+    fetchImpl: challenged200,
     expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
     ladder: {
       curl: async (url, headers) => {
@@ -121,7 +123,7 @@ test("a challenge from the curl request is a WALL on rung 4 — never answered, 
   const sent: Record<string, string>[] = [];
   await assert.rejects(
     politeGetText("https://www.kearsarge.org/district/school-board-mbc/pages/school-board-meeting-schedule", {
-      fetchImpl: challenged403,
+      fetchImpl: challenged200,
       ladder: {
         curl: async (_url, headers) => {
           sent.push(headers);
@@ -139,7 +141,7 @@ test("a refusal on rung 4 is a WALL naming rung 4, and a 404 there is the answer
   let calls = 0;
   await assert.rejects(
     politeGetText("https://town.example/export.ics", {
-      fetchImpl: challenged403,
+      fetchImpl: challenged200,
       ladder: {
         curl: async (url) => {
           calls += 1;
@@ -161,7 +163,7 @@ test("a refusal on rung 4 is a WALL naming rung 4, and a 404 there is the answer
   let asked = 0;
   await assert.rejects(
     politeGetText("https://town.example/gone.ics", {
-      fetchImpl: challenged403,
+      fetchImpl: challenged200,
       ladder: {
         curl: async (url) => {
           asked += 1;

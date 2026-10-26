@@ -525,7 +525,7 @@ test("a failure over verified minutes keeps the verified reading and remembers t
   assert.equal(sittingAfterRead(strategic, verified, null).failedMinutesRead, undefined, "a read that succeeds clears the remembered failure");
 });
 
-test("the Mesa candidate admits a held failed extraction, names it, and still refuses a failure with no document identity", () => {
+test("the Mesa candidate names held failures individually and refuses invented extraction records", () => {
   const held = heldStrategicFailure();
   const snapshot = snapshotOf([held]);
   const candidate = mesaLegistarMinutesOutcomesCandidate({ snapshot, acquisitions: [], retrievedAt: FAILED_AT, sourceThrough: FAILED_AT });
@@ -536,8 +536,10 @@ test("the Mesa candidate admits a held failed extraction, names it, and still re
   assert.match(named.detail, /18779714 bytes, sha256 82be9aab1e9df353…, parser 2026-09-25\.motion-clauses/);
 
   const unremembered = { ...held, failedMinutesRead: undefined };
-  const refused = mesaLegistarMinutesOutcomesCandidate({ snapshot: snapshotOf([unremembered]), acquisitions: [], retrievedAt: FAILED_AT, sourceThrough: FAILED_AT });
-  assert.match(refused.semantics.violations.join(" "), /1 minutes read\(s\) failed \(legistar-insite:mesa:1343166\)/);
+  const waiting = mesaLegistarMinutesOutcomesCandidate({ snapshot: snapshotOf([unremembered]), acquisitions: [], retrievedAt: FAILED_AT, sourceThrough: FAILED_AT });
+  assert.deepEqual(waiting.semantics.violations, []);
+  assert.ok(waiting.excludedFacts?.some(fact => fact.code === "SITTING_READ_HELD" && fact.key === held.meetingId),
+    "a refused sitting remains open without blocking the set");
   const withRecords = { ...held, outcomes: sittingFrom("1336059", textDocument("1336059")).outcomes };
   const invented = mesaLegistarMinutesOutcomesCandidate({ snapshot: snapshotOf([withRecords]), acquisitions: [], retrievedAt: FAILED_AT, sourceThrough: FAILED_AT });
   assert.match(invented.semantics.violations.join(" "), /is a failed extraction and carries records/);

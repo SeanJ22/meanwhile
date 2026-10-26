@@ -557,7 +557,11 @@ test("a roll-call acquisition with an answered absent pointer refuses rather tha
 
 test("the two live federal acquisition commands have no circular canonical-pointer prerequisite", () => {
   const rollCalls = readFileSync("scripts/fetch-votes.mts", "utf8");
-  assert.match(rollCalls, /billSummariesForRollCallAcquisition\(previous\)/);
+  const sourceComparison=rollCalls.indexOf("settleFederalVoteSources({");
+  const summariesRead=rollCalls.indexOf('readCandidatePath<BillSummariesFile>');
+  assert.ok(sourceComparison>=0&&summariesRead>sourceComparison,"held title summaries are read only after current native bytes and member fan-out were compared");
+  assert.match(rollCalls, /\["readModel", "billSummaries"\]/);
+  assert.doesNotMatch(rollCalls, /readFederalRollCallsProjection\(/);
   assert.doesNotMatch(rollCalls, /previous\.kind\s*!==\s*"PROMOTED"/);
 
   const keyVotes = readFileSync("scripts/fetch-key-vote-positions.mts", "utf8");

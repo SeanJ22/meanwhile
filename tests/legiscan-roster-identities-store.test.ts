@@ -13,16 +13,20 @@ const body=readFileSync(new URL("./fixtures/legiscan/openstates-alma-allen.yml",
 
 test("production identity selectors keep current and immutable historical roster fields narrow across payload parts",async()=>{
   await withMigratedRoutineStore("openstates-people-tx",async(store,vault,pg)=>{
+    const create=store.create.bind(store);
+    store.create=async(record,event)=>{
+      if(record.candidate.scope!==scope)return create(record,event);
+      // Persist the source in its legal initial representation. Candidate source fields
+      // become immutable at creation, so an UPDATE cannot manufacture a parts fixture.
+      const plan=partitionCivicPayload({readModel:record.candidate.readModel},[],["readModel"]);
+      for(const part of plan.parts)await pg.query("INSERT INTO civic_data_payload_parts(hash,payload)VALUES($1,$2::jsonb)ON CONFLICT(hash)DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
+      return create({...record,candidate:{...record.candidate,readModel:(plan.value as {readModel:unknown}).readModel}},event);
+    };
     const roster=normalize(yamlToPeople(body,"tx",url,at),indexDivisions([]),at,"US-TX");
     const published=await publishStatePeople({store,vault,state:"tx",roster,releaseId:"fixture-historical-identity",now:at,
       acquisitions:[{requestedUrl:url,finalUrl:url,body,rawHash:digest(body),httpStatus:200,retrievedAt:at}]});
     assert.ok(published.outcome.promoted);
     const version=published.outcome.promoted.versionId;
-    const plan=partitionCivicPayload({readModel:published.candidate.readModel},[],["readModel"]);
-    for(const part of plan.parts)await pg.query("INSERT INTO civic_data_payload_parts(hash,payload)VALUES($1,$2::jsonb)ON CONFLICT(hash)DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
-    const reference=(plan.value as {readModel:unknown}).readModel;
-    await pg.query("UPDATE civic_data_candidates SET candidate=jsonb_set(candidate,'{readModel}',$2::jsonb)WHERE id=$1",[version,JSON.stringify(reference)]);
-    await pg.query("UPDATE civic_data_promotions SET payload=$2::jsonb WHERE current_version_id=$1",[version,JSON.stringify(reference)]);
     store.readPromotion=async()=>{throw Error("whole roster read");};store.readCandidate=async()=>{throw Error("whole candidate read");};
     const historical=await store.readHistoricalRosterIdentities(version);
     assert.ok(historical);assert.equal(historical.scope,scope);assert.equal(historical.jurisdiction,"US-TX");
@@ -35,7 +39,8 @@ test("production identity selectors keep current and immutable historical roster
     const current=await store.readSlimRosters("STATE_LEGISLATOR",[scope]);
     assert.equal(current[0]?.versionId,version);assert.equal(current[0]?.roster.officeholders.length,1);
     assert.equal(current[0]?.roster.officeholders[0]?.offices,undefined);
-    await pg.query("UPDATE civic_data_candidates SET validation_receipt=jsonb_set(validation_receipt,'{sourceId}','\"other-source\"'::jsonb)WHERE id=$1",[version]);
-    assert.equal(await store.readHistoricalRosterIdentities(version),null,"a mismatched source-authentication receipt cannot attest historical identity rows");
+    await assert.rejects(pg.query("UPDATE civic_data_candidates SET validation_receipt=jsonb_set(validation_receipt,'{sourceId}','\"other-source\"'::jsonb)WHERE id=$1",[version]),
+      (error:unknown)=>(error as {code?:string}).code==="55000","a published source-authentication receipt remains immutable");
+    assert.deepEqual(await store.readHistoricalRosterIdentities(version),historical,"a refused receipt mutation cannot alter current or historical identity evidence");
   });
 });

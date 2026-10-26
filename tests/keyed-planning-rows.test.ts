@@ -8,7 +8,7 @@ import {readRegistryPlaceRows,selectRegistryPlaceView} from "../lib/civic-data/k
 import {readPlaceRegistry} from "../lib/civic-data/place-registry-read.ts";
 import {projectHeldPlaceCapture} from "../lib/civic-data/held-place-projection.ts";
 import {readRegistryPlanningRows} from "../lib/civic-data/keyed-registry-planning.ts";
-import {readOwnershipLookup,readOwnershipWiring,readStateWiringRows} from "../lib/civic-data/keyed-government-lookup.ts";
+import {readOwnershipLookup,readOwnershipWiring,readStateWiringRows,readStateWiringBodyIds} from "../lib/civic-data/keyed-government-lookup.ts";
 import {heldSubjectDetails} from "../lib/control-plane/scheduler/providers/held-subject-enrichment.ts";
 import {readHeldCommitteeIdentities} from "../lib/control-plane/scheduler/providers/held-subject-loader.ts";
 import type {RegistryRuntimeReadModel} from "../lib/registry/runtime-data-plane.ts";
@@ -65,6 +65,8 @@ test("keyed planning preserves held facts, source aliases and state routes throu
   await put("CURATED_READER_RECORD","US:meeting-source-wiring",wiring);
   bytes=0;const routes=await readStateWiringRows(query,"US-AZ");
   assert.deepEqual(routes?.value,{kind:"meeting-source-wiring",formatVersion:1,records:[own]});
+  assert.deepEqual(await readStateWiringBodyIds(query,"AZ"),[BODY]);
+  assert.deepEqual((await readStateWiringRows(query,"AZ",["absent-body"]))?.value.records,[]);
   assert.equal(routes?.input.readModelSha256,canonicalCivicDataHash(wiring),"a selected state still cites the complete immutable wiring source");
   assert.ok(bytes<2_000);
   assert.deepEqual((await readOwnershipWiring(query)).value?.records,[{row:{state:"US-AZ",bodyId:BODY,jurisdictionId:"az:city:sample"}},{row:{state:"US-NH",bodyId:"nh-body",jurisdictionId:"nh:city:one"}}]);

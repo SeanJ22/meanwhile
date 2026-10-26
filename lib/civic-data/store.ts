@@ -1,6 +1,6 @@
 import { readRegistryPlaceRows, selectRegistryPlaceView, type RegistryPlaceSlice } from "./keyed-registry-place.ts";
 import { readRegistryPlanningRows, type RegistryPlanningView } from "./keyed-registry-planning.ts";
-import { readDerivedMeetingBodyRows, derivedBodyScope, selectDerivedMeetingBodySnapshot, type DerivedMeetingBodySlice } from "./derived-meeting-body.ts";
+import { readDerivedMeetingBodyRows, derivedBodyScope, selectDerivedMeetingBodySnapshot, derivedMeetingProgressName, type DerivedMeetingFamilyProgress, type DerivedMeetingBodySlice } from "./derived-meeting-body.ts";
 import { readDerivedInputHeads, readDerivedWiringRows, selectDerivedWiringRows, type DerivedInputHead, type DerivedWiringRow } from "./derived-input-rows.ts";
 import { readKeyedGovernmentLookup, type GovernmentRowLookup } from "./keyed-government-lookup.ts";
 import { readMemberOfficeMembers, readMemberOfficeRows, memberOfficeStateScope, memberOfficeScopeState, memberOfficeRecordState, MEMBER_OFFICE_CURSOR, type MemberOfficeProgress, type MemberOfficeSlice } from "../officials/member-office-data.ts";
@@ -184,6 +184,8 @@ export interface RoutineDataStore {
   ) => Promise<CandidateVersionRecord>;
   readonly readMemberOfficeMembers: (members: readonly string[]) => Promise<readonly import("../officials/member-offices.ts").MemberOfficeRecord[]>;
   readonly readMemberOfficeSlice: (state: string, members?: readonly string[]) => Promise<MemberOfficeSlice | null>;
+  readonly readDerivedMeetingProgress?: (scope:string)=>Promise<DerivedMeetingFamilyProgress>;
+  readonly writeDerivedMeetingProgress?: (scope:string,progress:DerivedMeetingFamilyProgress)=>Promise<void>;
   readonly readDerivedMeetingBody?: (state:import("./contracts.ts").DerivedMeetingFamilyState,bodyId:string,history?:boolean)=>Promise<DerivedMeetingBodySlice|null>;
   readonly readMemberOfficeProgress: () => Promise<MemberOfficeProgress>;
   readonly writeMemberOfficeProgress: (progress: MemberOfficeProgress) => Promise<void>;
@@ -980,6 +982,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         officeholders: roster.officeholders.map(person => officeRosterPerson(person as unknown as Record<string, unknown>)) }) as unknown as OfficeholderSet };
   }
 
+  private derivedMeetingProgress=new Map<string,DerivedMeetingFamilyProgress>();
   private memberOfficeProgress: MemberOfficeProgress | undefined;
   async readDerivedMeetingBody(state:import("./contracts.ts").DerivedMeetingFamilyState,bodyId:string,history=false):Promise<DerivedMeetingBodySlice|null>{
     const own=derivedBodyScope(bodyId,history),family=`source:derived:family:${state}${history?":history":""}`;
@@ -987,11 +990,14 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const record=pointer?this.candidates.get(pointer.versionId):null;
     if(!pointer||!record)return null;
     const hash=record.candidate.normalization.normalizedHash;
-    if(pointer.receipt.decision!=="GOOD"||!hash||record.state!=="PROMOTED")throw new Error("DERIVED_MEETING_BODY_POINTER_INVALID");
+    if(pointer.sourceId!==(history?"meetings-history":"meetings-derived-routes")||pointer.receipt.decision!=="GOOD"||!hash||record.state!=="PROMOTED")throw new Error("DERIVED_MEETING_BODY_POINTER_INVALID");
     return {input:{kind:"PROMOTED_VERSION",recordClass:"MEETING",scope:pointer.scope,versionId:pointer.versionId,readModelSha256:hash,promotedAt:pointer.promotedAt},
       expectedBaseVersionId:pointer.scope===own?pointer.versionId:null,
       snapshot:structuredClone(selectDerivedMeetingBodySnapshot(pointer.payload as import("../meetings/snapshot.ts").MeetingsSnapshot,bodyId,pointer.scope!==own))};
   }
+
+  async readDerivedMeetingProgress(scope:string):Promise<DerivedMeetingFamilyProgress>{return structuredClone(this.derivedMeetingProgress.get(scope)??{pending:[]});}
+  async writeDerivedMeetingProgress(scope:string,progress:DerivedMeetingFamilyProgress):Promise<void>{this.derivedMeetingProgress.set(scope,structuredClone(progress));}
 
   async readMemberOfficeProgress(): Promise<MemberOfficeProgress> {
     if (this.memberOfficeProgress) return structuredClone(this.memberOfficeProgress);
@@ -1477,6 +1483,14 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
 
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const clock = await this.publishedClock(sourceId, recordClass, scope, parserVersion);
+    if(sourceId==="meetings-derived-routes"&&recordClass==="MEETING"&&/^source:derived:family:US-[A-Z]{2}$/.test(scope)){
+      const progress=await this.readDerivedMeetingProgress(scope);
+      return {...clock,...(progress.attemptedAt?{lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)}:{}),
+        ...(progress.completedAt?{lastCompletedAt:laterInstant(clock.lastCompletedAt,progress.completedAt)}:{}),
+        ...(progress.checkedAt?{lastSucceededAt:laterInstant(clock.lastSucceededAt,progress.checkedAt),lastSucceededObservedAt:laterInstant(clock.lastSucceededObservedAt,progress.checkedAt),
+          ...(parserVersion?{lastSucceededParserVersion:parserVersion}:{})}:{}),
+        ...(progress.nextWorkAt?{nextWorkAt:progress.nextWorkAt}:{}),continuationPending:progress.pending.length>0&&(!progress.nextWorkAt||Date.parse(progress.nextWorkAt)<=Date.now())};
+    }
     if (recordClass !== "CURATED_READER_RECORD" || scope !== MEMBER_OFFICES_SCOPE) return clock;
     const progress = await this.readMemberOfficeProgress();
     if (!progress.checkedAt) return { ...clock, ...(progress.attemptedAt ? {lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)} : {}), continuationPending: progress.pending.length > 0 };
@@ -2829,6 +2843,16 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return readDerivedMeetingBodyRows((text,params)=>this.readerRows(text,params),state,bodyId,history);
   }
 
+  async readDerivedMeetingProgress(scope:string):Promise<DerivedMeetingFamilyProgress>{
+    const [row]=(await this.db.execute(sql`SELECT position FROM pass_cursor WHERE name=${derivedMeetingProgressName(scope)}`)).rows as {position:string}[];
+    return row?JSON.parse(row.position) as DerivedMeetingFamilyProgress:{pending:[]};
+  }
+  async writeDerivedMeetingProgress(scope:string,progress:DerivedMeetingFamilyProgress):Promise<void>{
+    this.assertCandidateMutationAuthority({id:derivedMeetingProgressName(scope),sourceId:"meetings-derived-routes",recordClass:"MEETING",scope});
+    await this.db.execute(sql`INSERT INTO pass_cursor(name,position) VALUES(${derivedMeetingProgressName(scope)},${JSON.stringify(progress)})
+      ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position`);
+  }
+
   async readMemberOfficeProgress(): Promise<MemberOfficeProgress> {
     const [row] = (await this.db.execute(sql`SELECT position FROM pass_cursor WHERE name=${MEMBER_OFFICE_CURSOR}`)).rows as { position: string }[];
     if (row) return JSON.parse(row.position) as MemberOfficeProgress;
@@ -3311,6 +3335,14 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */
   async clock(sourceId: string, recordClass: RoutineRecordClass, scope: string, parserVersion?: string): Promise<RoutineStoreClock> {
     const clock = await this.publishedClock(sourceId, recordClass, scope, parserVersion);
+    if(sourceId==="meetings-derived-routes"&&recordClass==="MEETING"&&/^source:derived:family:US-[A-Z]{2}$/.test(scope)){
+      const progress=await this.readDerivedMeetingProgress(scope);
+      return {...clock,...(progress.attemptedAt?{lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)}:{}),
+        ...(progress.completedAt?{lastCompletedAt:laterInstant(clock.lastCompletedAt,progress.completedAt)}:{}),
+        ...(progress.checkedAt?{lastSucceededAt:laterInstant(clock.lastSucceededAt,progress.checkedAt),lastSucceededObservedAt:laterInstant(clock.lastSucceededObservedAt,progress.checkedAt),
+          ...(parserVersion?{lastSucceededParserVersion:parserVersion}:{})}:{}),
+        ...(progress.nextWorkAt?{nextWorkAt:progress.nextWorkAt}:{}),continuationPending:progress.pending.length>0&&(!progress.nextWorkAt||Date.parse(progress.nextWorkAt)<=Date.now())};
+    }
     if (recordClass !== "CURATED_READER_RECORD" || scope !== MEMBER_OFFICES_SCOPE) return clock;
     const progress = await this.readMemberOfficeProgress();
     if (!progress.checkedAt) return { ...clock, ...(progress.attemptedAt ? {lastAttemptedAt:laterInstant(clock.lastAttemptedAt,progress.attemptedAt)} : {}), continuationPending: progress.pending.length > 0 };

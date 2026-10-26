@@ -5,7 +5,7 @@ import {readDerivedMeetingBodyRows,derivedBodyScope} from "../lib/civic-data/der
 import {derivedMeetingBodyContract,derivedMeetingBodyForScope,requiredMeetingPartitionContract} from "../lib/civic-data/meeting-partitions.ts";
 import {canonicalCivicDataHash} from "../lib/civic-data/canonical-hash.ts";
 import {partitionCivicPayload} from "../lib/civic-data/payload-codec.ts";
-import {routineDataStoreCandidateAuthorityIssue} from "../lib/civic-data/store.ts";
+import {MemoryRoutineDataStore,routineDataStoreCandidateAuthorityIssue} from "../lib/civic-data/store.ts";
 import {installKeyedRows} from "./helpers/keyed-rows.ts";
 
 const BODY="ocd-division/country:us/state:az/place:sample#governing",OTHER="ocd-division/country:us/state:az/place:other#governing",AT="2026-10-20T00:00:00Z";
@@ -62,4 +62,16 @@ test("one body's existing family authority remains scoped to that same state, in
   assert.match(routineDataStoreCandidateAuthorityIssue(candidate,{...authority,contract:"meetings:derived:US-NH"},"candidate")!,/cannot mutate/);
   assert.equal(routineDataStoreCandidateAuthorityIssue({...candidate,sourceId:"meetings-history",scope:`${body.scope}:history`},authority,"candidate"),null);
   assert.throws(()=>derivedMeetingBodyContract(family,"ocd-division/country:us/state:nh/place:elsewhere#governing"),/STATE_MISMATCH/);
+});
+
+test("family continuation clocks use saved processing progress without inventing a newer provider check",async()=>{
+  const store=new MemoryRoutineDataStore(),scope="source:derived:family:US-AZ",at=new Date().toISOString();
+  const checked=new Date(Date.parse(at)-30_000).toISOString(),later=new Date(Date.parse(at)+60_000).toISOString();
+  await store.writeDerivedMeetingProgress(scope,{pending:[BODY],attemptedAt:at,completedAt:at,checkedAt:checked});
+  const first=await store.clock("meetings-derived-routes","MEETING",scope,"meetings-composite/2");
+  assert.equal(first.continuationPending,true);assert.equal(first.lastCompletedAt,at);assert.equal(first.lastSucceededObservedAt,checked);
+  await store.writeDerivedMeetingProgress(scope,{pending:[],attemptedAt:at,completedAt:at,checkedAt:checked,nextWorkAt:later});
+  const next=await store.clock("meetings-derived-routes","MEETING",scope,"meetings-composite/2");
+  assert.equal(next.continuationPending,false);assert.equal(next.nextWorkAt,later);assert.equal(next.lastSucceededObservedAt,checked);
+  assert.deepEqual(await store.readDerivedMeetingProgress("source:derived:family:US-NH"),{pending:[]});
 });

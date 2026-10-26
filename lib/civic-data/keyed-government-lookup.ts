@@ -99,7 +99,7 @@ export async function readOwnershipWiring(query:Query):Promise<{kind:string;valu
 }
 
 /** A changed meeting family needs its state's exact routes plus the immutable whole-wiring input reference. */
-export async function readStateWiringRows(query:Query,state:string):Promise<{
+export async function readStateWiringRows(query:Query,state:string,bodyIds:readonly string[]=[]):Promise<{
   readonly input:Extract<DerivedInputRef,{kind:"PROMOTED_VERSION"}>;readonly value:DerivedWiringProjection;
 }|null>{
   const postal=requireRegistryState(state.replace(/^US-/i,""));
@@ -108,12 +108,24 @@ export async function readStateWiringRows(query:Query,state:string):Promise<{
       jsonb_build_object('kind',p.header->'kind','formatVersion',p.header->'formatVersion') AS value,0 AS sort_group,0::bigint AS ordinal FROM pointer p
     UNION ALL SELECT 'row',NULL,NULL,NULL,NULL,NULL,r.row_id,reader_payload_value(r.value),1,r.ordinal
       FROM pointer p JOIN civic_data_rows r ON r.promotion_key=p.key AND r.version_id=p.version_id
-      WHERE p.valid AND r.collection='derivedWiring' AND r.state=$2
+      WHERE p.valid AND r.collection='derivedWiring' AND r.state=$2 AND (cardinality($3::text[])=0 OR r.body_id=ANY($3::text[]))
     ) SELECT kind,scope,version_id,promoted_at,normalized_hash,valid,row_id,value FROM selected ORDER BY sort_group,ordinal`,
-    ["CURATED_READER_RECORD:US:meeting-source-wiring",postal]);
+    ["CURATED_READER_RECORD:US:meeting-source-wiring",postal,[...new Set(bodyIds)]]);
   const metadata=rows.find(row=>row.kind==="metadata");
   if(!metadata)return null;
   const input=keyedSourceInput(metadata,"CURATED_READER_RECORD"),header=metadata.value as Pick<DerivedWiringProjection,"kind"|"formatVersion">;
   if(header.kind!=="meeting-source-wiring"||header.formatVersion!==1)throw new Error("KEYED_WIRING_PROJECTION_INVALID");
   return {input,value:{...header,records:rows.filter(row=>row.kind==="row").map(row=>row.value as DerivedWiringProjection["records"][number])}};
+}
+
+/** Routing identities only; source/wiring records wait until a body's new bytes differ. */
+export async function readStateWiringBodyIds(query:Query,state:string):Promise<readonly string[]>{
+  const postal=requireRegistryState(state.replace(/^US-/i,""));
+  const rows=await query(`WITH pointer AS MATERIALIZED (${pointer}) SELECT p.scope,p.version_id,p.promoted_at,p.normalized_hash,p.valid,
+    coalesce((SELECT jsonb_agg(DISTINCT r.body_id ORDER BY r.body_id) FROM civic_data_rows r WHERE p.valid AND r.promotion_key=p.key AND r.version_id=p.version_id
+      AND r.collection='derivedWiring' AND r.state=$2 AND r.body_id IS NOT NULL),'[]'::jsonb) AS body_ids FROM pointer p`,
+    ["CURATED_READER_RECORD:US:meeting-source-wiring",postal]);
+  if(!rows[0])return [];
+  keyedSourceInput(rows[0],"CURATED_READER_RECORD");
+  return rows[0].body_ids as string[];
 }

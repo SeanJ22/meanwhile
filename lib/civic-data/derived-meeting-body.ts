@@ -56,7 +56,7 @@ export async function readDerivedMeetingBodyRows(query:Query,state:DerivedMeetin
   const own=derivedBodyScope(bodyId,history),legacy=history?meetingHistoryScope(derivedMeetingFamilyScope(state)):derivedMeetingFamilyScope(state);
   const [row]=await query(`WITH pointer AS MATERIALIZED (
     SELECT p.key,p.scope,p.current_version_id AS version_id,p.promoted_at,c.normalized_hash,reader_payload_node(p.payload) AS root,
-      (p.current_version_id=p.last_known_good_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded
+      (p.source_id=$4 AND p.current_version_id=p.last_known_good_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded
        AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id AND c.source_id=p.source_id
        AND c.record_class=p.record_class AND c.scope=p.scope AND c.candidate->'readModel'=p.payload
        AND c.validation_receipt=p.validation_receipt AND p.validation_receipt->>'decision'='GOOD'
@@ -77,9 +77,18 @@ export async function readDerivedMeetingBodyRows(query:Query,state:DerivedMeetin
     coalesce((SELECT jsonb_agg(reader_payload_value(r.value) ORDER BY r.ordinal) FROM civic_data_rows r WHERE p.valid
       AND r.promotion_key=p.key AND r.version_id=p.version_id AND r.collection='agendaDocuments'
       AND (p.scope=$2 OR r.value->>'meetingId' IN (SELECT row_id FROM meetings))),'[]'::jsonb) AS documents
-    FROM pointer p`,[[own,legacy],own,bodyId]);
+    FROM pointer p`,[[own,legacy],own,bodyId,history?"meetings-history":"meetings-derived-routes"]);
   if(!row)return null;
   const input=keyedSourceInput(row,"MEETING"),isLegacy=row.scope!==own;
   const value={...(row.header as object),meetings:row.meetings,agendaDocuments:row.documents} as MeetingsSnapshot;
   return {input,expectedBaseVersionId:isLegacy?null:input.versionId,snapshot:selectDerivedMeetingBodySnapshot(value,bodyId,isLegacy)};
 }
+
+export interface DerivedMeetingFamilyProgress {
+  readonly pending:readonly string[];
+  readonly attemptedAt?:string;
+  readonly completedAt?:string;
+  readonly checkedAt?:string;
+  readonly nextWorkAt?:string;
+}
+export const derivedMeetingProgressName=(scope:string)=>`derived-meeting-bodies:${scope}`;

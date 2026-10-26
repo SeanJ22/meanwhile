@@ -19,6 +19,11 @@ const exists = await db.query<{ relation: string | null }>("SELECT to_regclass('
 if (!exists.rows[0]?.relation) for (const migration of ["0025_typical_fixer", "0026_lame_sunset_bain", "0027_pdc_candidate_history_shape", "0028_wise_ikaris", "0029_unchanged_confirmation_receipts", "0031_civic_payload_parts", "0038_src_mn_federal_money_lookup"]) {
   await db.exec(readFileSync(join(process.cwd(), "lib", "db", "migrations", `${migration}.sql`), "utf8"));
 }
+const payloadReaders = await db.query<{ reader: string | null }>("SELECT to_regprocedure('public.reader_payload_node(jsonb)')::text AS reader");
+if (!payloadReaders.rows[0]?.reader) {
+  const migration = readFileSync(join(process.cwd(), "lib", "db", "migrations", "0036_ne01.sql"), "utf8");
+  for (const statement of migration.split("--> statement-breakpoint")) if (/^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(statement)) await db.exec(statement);
+}
 const serializers = Object.fromEntries(Object.entries(db.serializers).map(([oid, serialize]) => [oid, (value: unknown) => typeof value === "string" ? value : serialize(value)]));
 const send = (value: unknown) => process.stdout.write(`${JSON.stringify(value)}\n`);
 send({ type: "ready" });

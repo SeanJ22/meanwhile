@@ -91,14 +91,14 @@ async function bulkPage(ctx: Context, state: string, cursor: FederalMoneyCursor,
   return { facts: parseFederalMoney(cursor.source, capture, state, body), captures: [capture], complete: continuation === null, declaredTotal: metadata.total, continuation };
 }
 async function fema(ctx: Context, state: string, cursor: FederalMoneyCursor): Promise<FederalMoneyPage> {
-  const offset = cursor.offset ?? 0, url = new URL(FEMA);
+  const offset = cursor.declarationOrder === "DATE_DESC" ? cursor.offset ?? 0 : 0, url = new URL(FEMA);
   url.searchParams.set("$filter", `state eq '${state}'${cursor.since ? ` and lastRefresh ge '${cursor.since}'` : ""}`);
-  url.searchParams.set("$orderby", "id"); url.searchParams.set("$top", String(FEDERAL_MONEY_CHUNK_ROWS)); url.searchParams.set("$skip", String(offset)); url.searchParams.set("$inlinecount", "allpages");
+  url.searchParams.set("$orderby", "declarationDate desc,id asc"); url.searchParams.set("$top", String(FEDERAL_MONEY_CHUNK_ROWS)); url.searchParams.set("$skip", String(offset)); url.searchParams.set("$inlinecount", "allpages");
   const result = await control(ctx, "openfema", url.href), body = json(result.body), rows = body.DisasterDeclarationsSummaries;
   if (!Array.isArray(rows)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "OpenFEMA: the declaration array is missing.");
   const metadata = body.metadata && typeof body.metadata === "object" ? body.metadata as Record<string, unknown> : {}, total = typeof metadata.count === "number" && metadata.count >= rows.length ? metadata.count : null;
   const nextOffset = offset + rows.length, done = total === null ? rows.length < FEDERAL_MONEY_CHUNK_ROWS : nextOffset >= total;
-  return sourcePage(ctx, "openfema", state, result, done ? null : { ...cursor, offset: nextOffset }, total);
+  return sourcePage(ctx, "openfema", state, result, done ? null : { ...cursor, declarationOrder: "DATE_DESC", offset: nextOffset }, total);
 }
 async function fac(ctx: Context, state: string, cursor: FederalMoneyCursor): Promise<FederalMoneyPage> {
   if (cursor.phase === "historic") return historicAudits(ctx, state, cursor);
@@ -184,7 +184,13 @@ async function historicAudits(ctx: Context, state: string, cursor: FederalMoneyC
   return bulkPage(ctx, state, { ...cursor, bulkId: id }, year === 2015 ? null : { source: cursor.source, phase: "historic", year: year + 1 });
 }
 function nextSpending(cursor: FederalMoneyCursor, now: string): FederalMoneyCursor | null {
-  if (!cursor.since && cursor.year !== undefined && cursor.year < new Date(now).getUTCFullYear()) return { source: "usaspending", phase: "download", category: cursor.category, location: cursor.location, year: cursor.year + 1, since: cursor.since };
+  if (!cursor.since && cursor.year !== undefined) {
+    const latest = new Date(now).getUTCFullYear();
+    // Finish an in-flight historical extract, then put the remaining recent
+    // years first. Earlier completed extracts never need to be downloaded again.
+    if (cursor.yearOrder !== "DESC" && cursor.year < latest) return { source: "usaspending", phase: "download", category: cursor.category, location: cursor.location, year: latest, yearOrder: "DESC", yearFloor: cursor.year + 1 };
+    if (cursor.yearOrder === "DESC" && cursor.year > (cursor.yearFloor ?? 2000)) return { source: "usaspending", phase: "download", category: cursor.category, location: cursor.location, year: cursor.year - 1, yearOrder: "DESC", yearFloor: cursor.yearFloor ?? 2000 };
+  }
   const category = cursor.category ?? 0;
   return cursor.location !== "recipient" ? { source: "usaspending", phase: "download", category, location: "recipient", since: cursor.since } : category + 1 < awardCategories.length ? { source: "usaspending", phase: "download", category: category + 1, location: "performance", since: cursor.since } : null;
 }
@@ -193,7 +199,7 @@ async function spending(ctx: Context, state: string, cursor: FederalMoneyCursor)
   if (current.bulkId) return bulkPage(ctx, state, current, nextSpending(current, ctx.now()));
   const category = awardCategories[current.category ?? 0]; if (!category) throw new Error("Invalid USAspending category continuation.");
   const locationFilter = current.location === "recipient" ? "recipient_locations" : "place_of_performance_locations";
-  if (current.year === undefined) current = { ...current, year: 2000 };
+  if (current.year === undefined) current = { ...current, year: new Date(ctx.now()).getUTCFullYear(), yearOrder: "DESC", yearFloor: 2000 };
   if (!current.statusUrl || !current.fileUrl) {
     const filters = { agencies: [{ type: "awarding", tier: "toptier", name: "all" }], prime_award_types: category, [locationFilter]: [{ country: "USA", state }],
       date_type: current.since ? "last_modified_date" : "action_date",

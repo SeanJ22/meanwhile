@@ -13,6 +13,8 @@ export interface CardSource {
   dataAttrs?: Readonly<Record<`data-${string}`, string | number | undefined>>;
   /** Which facts on this card this source is behind. */
   what: string;
+  /** Filed identifiers and original source fields retain their exact spelling. */
+  verbatim?: true;
   provenance: Provenance;
   /** A listing status (for example, when a carried sitting was last reached). */
   status?: true;
@@ -60,6 +62,7 @@ export function mergeSources(entries: CardSource[]): CardSource[] {
         collectedAt: details.map(detail => detail.provenance.collectedAt).filter(Boolean).sort().at(-1) ?? "",
         verifiedAt: details.map(detail => detail.provenance.verifiedAt).filter(Boolean).sort().at(-1) ?? null,
       },
+      ...(details.some(detail => detail.verbatim) ? { verbatim: true as const } : {}),
       details,
     };
   });

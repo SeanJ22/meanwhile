@@ -50,6 +50,7 @@ import { composeRegistration, type RegistrationLayer } from "../registration/com
 import { REGISTRATION_TARGETS } from "../registration/publication.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import { bindGovernmentBodies, governmentStateOf, type RegistrationGovernmentListing } from "../registration/listings.ts";
+import { markUniqueGovernmentRecipientNames } from "../registration/recipient-names.ts";
 import { attachGovernmentDomains, readDotGovProjection } from "../civic-data/dotgov.ts";
 import { readRegistrationProjection, readRegistrationDivision, type DivisionMetadata } from "../registration/reader.ts";
 import jurisdictionLabels from "../../data/reference/us-jurisdiction-labels.json" with { type: "json" };
@@ -325,7 +326,8 @@ async function registrationModelFor(state: string): Promise<{ value: Registratio
   // The edge first: an ordinary visitor never wakes the database for registration. A state with no pointer yet,
   // or whose bytes could not be read, is read from the database on this request only.
   const served = await currentRegistrationsEdge()?.load(state).catch(() => null);
-  if (served) return served.value === null ? null : { value: served.value, versionId: served.versionId };
+  if (served) return served.value === null ? null : { value: { ...served.value,
+    ...(served.value.governments ? { governments: markUniqueGovernmentRecipientNames(served.value.governments) } : {}) }, versionId: served.versionId };
   refuseDatabaseInEdgeOnlyContext(`The ${state} registration`);
   const read = await readRegistrationProjection(state);
   // No store at all (tests, the census gate, local work) has no registration to compose: registration has

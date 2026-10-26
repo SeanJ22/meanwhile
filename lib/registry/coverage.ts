@@ -106,6 +106,12 @@ export function stateLegislatorCoverageAuthority(
  */
 export interface CoveredBody {
   bodyId: string;
+  /** Exact held government and body aliases for this government's records. */
+  recipientIds?: readonly string[];
+  recipientNames?: readonly string[];
+  recipientState?: string;
+  /** This same government's exact source-coded county, city or school area. */
+  moneyDivisionId?: string;
   ocdId: string | null;
   /**
    * The body's own name, non-null only when read off a cited page. Derived rows render their division's

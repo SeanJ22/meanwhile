@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
+import { readFileSync } from "node:fs";
 import type { ReadOnlyQuery, Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
@@ -21,6 +22,12 @@ const fact: FederalMoneyFact = { id: "synthetic:findings:1", source: "federal-au
   identifiers: { reportId: "2025-AR-001" }, geography: [], bodyIds: [], divisionIds: [], joinStatus: "UNJOINED", joinReason: "Not joined",
   details: { table: "findings" }, provenance: { sourceUrl: "https://api.fac.gov/findings", sourceOrg: "Federal Audit Clearinghouse", publicationDate: "2025-10-01", retrievedAt: "2026-10-15T00:00:00.000Z", official: true, rawHash: "synthetic" } };
 
+async function installPayloadReaders(db: PGlite) {
+  await db.exec("CREATE TABLE civic_data_payload_parts (hash text PRIMARY KEY, payload jsonb)");
+  const migration = readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8");
+  for (const statement of migration.split("--> statement-breakpoint")) if (/^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(statement)) await db.exec(statement);
+}
+
 test("FAC source-reported state locates audits on the state card and never assigns its recipient government", () => {
   const state = "ocd-division/country:us/state:ar";
   const general = { ...fact, id: "synthetic:general", details: { table: "general", reportedState: "AR" } };
@@ -32,7 +39,8 @@ test("FAC source-reported state locates audits on the state card and never assig
     assert.deepEqual(joined.bodyIds, []);
     const rows = federalMoneyRows([joined], { divisionId: state });
     assert.equal(rows.length, 1);
-    assert.match(rows[0].text, /Auditee location: AR/);
+    assert.match(rows[0].text, /audit/);
+    assert.doesNotMatch(rows[0].text, /Auditee location:/);
     assert.deepEqual(federalMoneyRows([joined], { divisionId: state, bodyId: governmentId }), []);
     assert.deepEqual(federalMoneyRows([joined], { divisionId: county }), []);
   }
@@ -48,6 +56,7 @@ test("FAC source-reported state locates audits on the state card and never assig
 test("federal identity SQL reads only each page's exact native recipients and geography", async t => {
   const db = new PGlite();
   try {
+    await installPayloadReaders(db);
     await db.exec("CREATE TABLE civic_data_promotions (record_class text, scope text, payload jsonb, key text GENERATED ALWAYS AS (record_class || ':' || scope) STORED UNIQUE, PRIMARY KEY (record_class, scope)); CREATE INDEX money_identity ON civic_data_promotions USING gin ((payload->'lookupKeys') jsonb_path_ops) WHERE payload ? 'lookupKeys'");
     const insert = (recordClass: string, scope: string, payload: unknown) => db.query("INSERT INTO civic_data_promotions VALUES ($1,$2,$3::jsonb)", [recordClass, scope, JSON.stringify(payload)]);
     await insert("REGISTRATION", "US-AR:registration:v1", { governments: [government, { ...government, id: "unrelated-government", nativeIds: { census_pid6: "999" } },
@@ -155,9 +164,30 @@ test("federal identity SQL reads only each page's exact native recipients and ge
       assert.deepEqual(joined[1].bodyIds, [body, "synthetic-ocd"].sort());
       assert.ok(joined.every(row => row.joinStatus === "JOINED"));
     });
+    await t.test("source legal recipient names resolve through the official state inventory", async () => {
+      await db.query("UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{governments,0,name}',to_jsonb('COUNTY OF OUACHITA'::text)) WHERE key='REGISTRATION:US-AR:registration:v1'");
+      const receipt = { ...fact, source: "usaspending" as const, kind: "GRANT" as const, recipient: "OUACHITA, COUNTY OF", identifiers: {}, details: { recipientState: "AR" } };
+      const identities = await readFederalMoneyJoinInput("AR", [receipt], query);
+      assert.deepEqual(identities.governments.map(row => row.id), [governmentId]);
+      assert.deepEqual(joinFederalMoneyFacts([receipt], identities)[0].bodyIds, [governmentId, body].sort());
+      assert.equal((await readFederalMoneyJoinInput("AR", [{ ...receipt, details: { recipientState: "CA" } }], query)).governments.length, 0);
+      await db.query("INSERT INTO civic_data_payload_parts VALUES ($1,$2::jsonb)", ["legal-report", JSON.stringify({ kind: "object", value: { ...fact, recipient: "OUACHITA COUNTY", identifiers: { reportId: "LEGAL-ONLY" }, details: { table: "general", reportedState: "AR" } } })]);
+      await insert("FEDERAL_MONEY", "synthetic-legal-audit", { formatVersion: 2, source: "federal-audit-clearinghouse", state: "AR", lookupKeys: ["report:LEGAL-ONLY"], records: [{ $civicPayloadPart: "legal-report" }] });
+      const finding = { ...fact, identifiers: { reportId: "LEGAL-ONLY" } };
+      const inherited = await readFederalMoneyJoinInput("AR", [finding], query);
+      assert.deepEqual(joinFederalMoneyFacts([finding], inherited)[0].bodyIds, [governmentId, body].sort(), "a finding inherits its report's exact legal recipient on another page");
+    });
     await t.test("both exact recipient lookups use the partition key index", () => {
       assert.equal(plans.size, 2);
       for (const plan of plans.values()) assert.match(plan, /money_identity/);
+    });
+    await t.test("referenced registration roots and government members retain exact native identities", async () => {
+      await db.query("INSERT INTO civic_data_payload_parts VALUES ($1,$2::jsonb),($3,$4::jsonb)", ["registration-root", JSON.stringify({ kind: "object", value: { governments: [{ $civicPayloadPart: "registration-government" }], bodies: [], divisions: [] } }), "registration-government", JSON.stringify({ kind: "object", value: { ...government, aliases: [body] } })]);
+      await db.query("UPDATE civic_data_promotions SET payload=$1::jsonb WHERE key='REGISTRATION:US-AR:registration:v1'", [JSON.stringify({ $civicPayloadPart: "registration-root" })]);
+      const award = { ...fact, source: "usaspending" as const, kind: "GRANT" as const, identifiers: { census_pid6: "001" } };
+      const identities = await readFederalMoneyJoinInput("AR", [award], query);
+      assert.equal(identities.governments.length, 1);
+      assert.deepEqual(joinFederalMoneyFacts([award], identities)[0].bodyIds, [governmentId, body].sort());
     });
   } finally { await db.close(); }
 });
@@ -186,6 +216,7 @@ test("one funded recipient's UEI index excludes its award history and keeps its 
 test("cold native lookup plans select one partition among 100,000 facts and expand it once", async () => {
   const db = new PGlite();
   try {
+    await installPayloadReaders(db);
     await db.exec("CREATE TABLE civic_data_promotions (key text PRIMARY KEY, record_class text, scope text, payload jsonb);" +
       " CREATE UNIQUE INDEX promotion_scope ON civic_data_promotions (record_class, scope);" +
       " CREATE INDEX money_native ON civic_data_promotions USING gin ((payload->'lookupKeys') jsonb_path_ops) WHERE payload ? 'lookupKeys';" +

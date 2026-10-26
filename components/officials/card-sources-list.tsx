@@ -17,7 +17,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
     <div data-source-list>
       {sources.map((entry, i) => (
         <div key={`${entry.what}-${i}`} className="account-modal-person" {...entry.dataAttrs}>
-          <p className="t-body text-paper">{readerText(entry.what, "title")}</p>
+          <p className="t-body text-paper">{entry.verbatim ? entry.what : readerText(entry.what, "title")}</p>
           {entry.provenance.secondHand && <p className="t-caption text-muted">Second-hand listing</p>}
 
           <PopupRow label="Published by">
@@ -48,7 +48,7 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
           <PopupRow label="Verified" mono>{entry.provenance.verifiedAt?.slice(0, 10)}</PopupRow>
           {entry.details?.filter(detail => detail.dataAttrs || detail.status).map((detail, index) => (
             <div key={index} {...detail.dataAttrs}>
-              <p className="t-caption text-muted">{readerText(detail.what, "title")}</p>
+              <p className="t-caption text-muted">{detail.verbatim ? detail.what : readerText(detail.what, "title")}</p>
               {detail.provenance.collectedAt !== entry.provenance.collectedAt && (
                 <PopupRow label="Last checked" mono>{detail.provenance.collectedAt?.slice(0, 10)}</PopupRow>
               )}

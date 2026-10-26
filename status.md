@@ -1258,3 +1258,12 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - RB-A7 and BL-02: River's two builders are finishing them on stream/river-rb-a7 and stream/river-bl-02, leaving out RB-A7's docs/measurements/rb-a7 and BL-02's 4 proof files (including scripts/bl-02-bills-replay.mts), and turning BL-02's 3 bypassCache call sites into normal reads.
 - The disk filled up around 10:12 PM EDT. River removed 11 worktrees of finished, pushed work. The batch 1 gate log shows no disk errors.
 
+
+### 11 PM EDT status
+- DB-02 saving confirmed on a second full hour: registry read (worker-publication / civic_data_candidate_events) was 85 MB in the 10 PM hour and 76 MB in the 9 PM hour, against 756 / 806 / 787 / 1,168 MB per hour before (2 PM to 5 PM). About 0.7 to 1.1 GB/h less.
+- Neon, both databases, 10 PM EDT hour: 1,792 MB (9 PM: 5,525). Part of that drop is the research cycle not running (below), so it is not all saving.
+- Release 122 not yet adopted by the runner. Its heartbeat still reports tested sha 8664f367 (121), verdict RUNNER_BEHIND_EXECUTABLE. 122 changes scripts/pilot-runner.mts, so the runner takes the drain-and-restart path. It starts no research cycle while routine-civic-data and publish-now finish. Last research cycle: 8:47 to 9:54 PM, ended with exit 1 (a JavaScript heap out-of-memory in a child, plus Neon 30 s request deadlines on civic_data_promotions). No research cycle since, so research cycle and Open States votes read 0 MB in the 10 PM hour. The 122 measurement starts on the first two full hours after the heartbeat shows 560cc2aa2. River rechecks the heartbeat each status. If the drain hasn't finished by midnight, it goes to Sean as a stalled runner.
+- RB-A4 catch-up: cursor at WV, so OR has been reloaded. HOST_COUNTY rows: 44,217 (10 PM: 35,824). Portland's bodies get checked after batch 1 ships.
+- Batch 1: first gate failed 2 AD-01 tests, fixed on 526da8d5a, re-gating since 10:58 PM.
+- Batch 2 is assembled on c8d3983b8 with all five lanes READY (RT-01, MD-01 docs out, BL-02, DB-03 Admin, RB-A7). It gates as soon as batch 1 ships.
+- DB-04: no branch yet.

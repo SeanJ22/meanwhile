@@ -39,9 +39,14 @@ test("production identity selectors keep current and immutable historical roster
     const current=await store.readSlimRosters("STATE_LEGISLATOR",[scope]);
     assert.equal(current[0]?.versionId,version);assert.equal(current[0]?.roster.officeholders.length,1);
     assert.equal(current[0]?.roster.officeholders[0]?.offices,undefined);
-    // State and receipt columns can move; source bytes cannot. Exercise the actual
-    // historical selector's proof coupling with the schema's supported receipt mutation.
-    await pg.query("UPDATE civic_data_candidates SET validation_receipt=jsonb_set(validation_receipt,'{sourceId}','\"other-source\"'::jsonb)WHERE id=$1",[version]);
-    assert.equal(await store.readHistoricalRosterIdentities(version),null,"a receipt for another source cannot attest historical identity rows");
+    await assert.rejects(pg.query("UPDATE civic_data_candidates SET validation_receipt=jsonb_set(validation_receipt,'{sourceId}','\"other-source\"'::jsonb)WHERE id=$1",[version]),
+      (error:unknown)=>{const failure=error as {code?:string;message?:string};return failure.code==="23514"&&
+        failure.message==="civic_data_candidates disposition transition PROMOTED -> PROMOTED is forbidden";},
+      "the existing disposition trigger rejects rewriting a published receipt");
+    assert.deepEqual(await store.readHistoricalRosterIdentities(version),historical,"the refused mutation cannot change native identity evidence");
+    const unpromoted={...published.candidate,id:`cv-${digest("unpromoted historical identity fixture").slice(0,32)}`};
+    await store.create({candidate:unpromoted,state:"FETCHED",acquisitionSucceeded:true,receipt:null,promotedVersion:null,
+      lastKnownGoodVersion:version,failureCode:null,failureDetail:null},{candidateId:unpromoted.id,sequence:1,state:"FETCHED",at,detail:"Captured native source before its independent validation."});
+    assert.equal(await store.readHistoricalRosterIdentities(unpromoted.id),null,"captured source identity rows cannot pose as independently GOOD historical identities");
   });
 });

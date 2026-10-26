@@ -1,3 +1,4 @@
+import { SECTION_IDS } from '../app/(admin)/_mw/admin-v6/contract.ts';
 import assert from "node:assert/strict";
 import test from "node:test";
 import { NextRequest } from "next/server";
@@ -561,7 +562,7 @@ test("an open v6 page picks up the Workers section through LiveSync and shows ev
       return { status: res.status, json: async () => res.json() };
     };
     for (const [scope, mw] of [[Z85635, { kind: "geo", type: "zcta", geoid: "85635", state: "az" }], ["st:az", { kind: "state", state: "az" }], ["us", { kind: "us" }]] as const) {
-      const sync = new LiveSync({ scope, fetch, schedule: () => () => {} });
+      const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope, fetch, schedule: () => () => {} });
       sync.onPulse({ revision: "r1", at: NOW, v6: { version: 1, actions: {}, sections: {
         workers: { contract: "admin-v6/workers@1", href: "/api/admin/v6/workers", revision: "w1" } } } });
       for (let i = 0; i < 20 && sync.snapshot().workers.phase !== "live"; i++) await new Promise(r => setTimeout(r, 5));

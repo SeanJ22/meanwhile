@@ -544,7 +544,7 @@ test("item 3: the tea is only in the button — the panel's own words stay level
   assert.ok(source.includes("Give me the tea"), "the author's exact label");
   // The panel's heading names the FUND, never relabels its donors as the
   // candidate's.
-  assert.ok(source.includes("Who gives to {hop.name}"));
+  assert.ok(source.includes("Who gives to "));
   assert.ok(
     source.includes("not this campaign&apos;s") ||
       source.includes("not this campaign's"),

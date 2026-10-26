@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { drizzle } from "drizzle-orm/neon-http";
+import { PgDialect } from "drizzle-orm/pg-core";
 import { buildUnchangedConfirmation, serializeUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import { saveWorkerPublicationOutcome } from "../lib/civic-data/publication-flow.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -13,10 +14,12 @@ import { factClocks } from "../lib/facts/clocks.ts";
 import { publishClaim, type FactDb, type PublishInput } from "../lib/facts/publish.ts";
 import { publishRosterFacts } from "../lib/facts/roster-facts.ts";
 import { fileCampaignMoneyFacts } from "../lib/funding/state-facts.ts";
+import { rebuildCampaignCycles } from "../lib/funding/state-cycles.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { campaignFinanceSource } from "../lib/funding/state-sources.ts";
-import { invalidateReaderCache, purgeReaderCacheTags, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
-import { campaignDb as factDb } from "./helpers/campaign-money-db.ts";
+import { invalidateReaderCache, placePageConsumesPublication, purgeReaderCacheTags, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
+import { campaignDb as factDb, publishMoneyFixture } from "./helpers/campaign-money-db.ts";
 
 const PLACE = "ocd-division/country:us/state:az/place:tucson";
 const BODY = `${PLACE}#example-council`;
@@ -74,13 +77,52 @@ test("reader answers keep national people, state and place tags with a fifteen-m
 });
 
 test("publication tags follow state scopes and encoded body partitions", () => {
-  for (const scope of ["US-AZ:reader-registry-runtime", "source:derived:family:AZ", `source:ical:body:${encodeURIComponent(BODY)}`]) {
+  for(const recordClass of ["REGISTRATION","REGISTRY_RUNTIME_BINDING","MEETING","DOTGOV_REFERENCE"])
+    assert.equal(placePageConsumesPublication("US-AZ:reader",recordClass),true,recordClass);
+  for(const recordClass of ["FEDERAL_MONEY","STATE_CAMPAIGN_FINANCE","FEDERAL_DIRECTORY","CURATED_READER_RECORD"])
+    assert.equal(placePageConsumesPublication("US-AZ:other-reader",recordClass),false,recordClass);
+  const routing=requiredManualProductionContract("everyday-routing");
+  assert.equal(placePageConsumesPublication(routing.scope,routing.recordClass),true);
+  for (const scope of ["US-AZ:reader-registry-runtime", "source:derived:family:AZ"]) {
     assert.deepEqual(readerCacheScopeForPublication(scope), { states: ["AZ"] }, scope);
   }
+  for (const suffix of ["",":history",":route:0123456789abcdef",":route:0123456789abcdef:history"])
+    assert.deepEqual(readerCacheScopeForPublication(`source:ical:body:${encodeURIComponent(BODY)}${suffix}`), { states: ["AZ"], entities: [BODY] });
   assert.deepEqual(readerCacheScopeForPublication("US:current-congress-directory"), { nationalPeople: true });
   assert.deepEqual(readerCacheScopeForPublication("US:state-legislator-member-offices", {readModels:[{records:[{office:{state:"NJ"}}]}]}), {states:["NJ"]});
   assert.deepEqual(readerCacheScopeForPublication("US:state-legislator-member-offices", {readModels:[{records:[{officeholderId:"plural:ca:one",office:{state:null,address:"State Capitol"}}]}]}), {states:["CA"]});
   assert.deepEqual(readerCacheScopeForPublication("federal-supported"), {});
+  assert.deepEqual(readerCacheScopeForPublication("US:official-government-domains", {recordClass:"DOTGOV_REFERENCE"}), {national:true});
+});
+
+test("a body calendar queues its actual place consumers while retaining its state's other saved pages", async t => {
+  const db = await factDb();
+  t.after(() => db.pg.close());
+  const root = "ocd-division/country:us/state:az", other = "zip:85001", own = "zip:85701";
+  await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),
+    ($2,'place','Tucson','AZ',$1),($3,'body','Council','AZ',$2),($4,'place','Own ZIP','AZ',$1),($5,'place','Other ZIP','AZ',$1)`,
+    [root,PLACE,BODY,own,other]);
+  await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2)",[BODY,PLACE]);
+  await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias','legacy-council')",[BODY]);
+  await db.query("INSERT INTO place_page(place_id,body) SELECT id,'{}'::jsonb FROM unnest($1::text[]) id",[[own,other]]);
+  await db.query("INSERT INTO place_page_dependency(page_id,entity_id) VALUES($1,$3),($2,$3),($1,$4),($1,$5)",[own,other,root,PLACE,BODY]);
+  const purge = async (tags: readonly string[]) => {assert.deepEqual(tags,["reader-state:AZ"]);return{purged:true};};
+  for(const id of [BODY,"legacy-council"]){
+    const scope=readerCacheScopeForPublication(`source:ical:body:${encodeURIComponent(id)}`,{readModels:[{bodyId:BODY}]});
+    await invalidateReaderCache(scope,purge,db.query);
+    const pages=(await db.query("SELECT place_id FROM rebuild_queue WHERE place_id=ANY($1::text[]) ORDER BY place_id",[[own,other]])).map(row=>row.place_id);
+    assert.deepEqual(pages,[own],"a state tag and a body alias do not fan out to unrelated ZIP pages");
+    await db.query("DELETE FROM rebuild_queue");
+  }
+});
+
+test("national people updates keep endpoint tags current without rebuilding place packages that do not consume them",async()=>{
+  let queries=0,purges=0;
+  await invalidateReaderCache({nationalPeople:true},async tags=>{
+    assert.deepEqual(tags,["reader-national-people"]);purges++;return{purged:true};
+  },async()=>{queries++;return[];});
+  assert.equal(queries,0);
+  assert.equal(purges,1);
 });
 
 test("shared shelves purge only their actual current and removed geography; unknown scopes never mean every state", () => {
@@ -157,6 +199,45 @@ test("both Postgres nothing-changed paths purge nothing today and on tomorrow's 
     assert.deepEqual(await store.confirmUnchanged(check, at), { kind: "CONFIRMED", versionId: input.pointerVersionId, at: alreadyConfirmed ? newerAt : at });
     assert.equal(calls, alreadyConfirmed ? 2 : 1);
   }
+});
+
+test("an empty calendar's new source check queues its consuming place without rereading payloads", async () => {
+  const db = await factDb();
+  try {
+    const root = "ocd-division/country:us/state:az", own = "zip:85701", unrelated = "zip:85001";
+    await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),
+      ($2,'place','Tucson','AZ',$1),($3,'body','Council','AZ',$2),($4,'place','Own ZIP','AZ',$1),($5,'place','Other ZIP','AZ',$1)`,
+      [root,PLACE,BODY,own,unrelated]);
+    await db.query("INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2)",[BODY,PLACE]);
+    await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias','legacy-empty-council')",[BODY]);
+    await db.query("INSERT INTO place_page(place_id,body) SELECT id,'{}'::jsonb FROM unnest($1::text[]) id",[[own,unrelated]]);
+    await db.query("INSERT INTO place_page_dependency(page_id,entity_id) VALUES($1,$3),($2,$3),($1,$4),($1,$5)",[own,unrelated,root,PLACE,BODY]);
+    const scope = "source:ical:body:legacy-empty-council", id = "empty-calendar-version";
+    await publishMoneyFixture(db, { sourceId: "empty-calendar", recordClass: "MEETING", scope, id,
+      payload: {formatVersion:1,generatedAt:NOW.toISOString(),meetings:[],agendaDocuments:[],sources:[],counts:{fresh:0,carried:0,total:0}} });
+    const store = Object.create(PostgresRoutineDataStore.prototype) as PostgresRoutineDataStore;
+    const dialect = new PgDialect(), statements: string[] = [];
+    Object.assign(store, { assertCandidateMutationAuthority: () => {}, cacheOptions: { purge: async () => { assert.fail("unchanged checks do not purge"); } },
+      db: Object.assign(drizzle.mock(), { batch: async () => [[], [{ sequence: 1 }]], execute: async (statement: Parameters<PgDialect["sqlToQuery"]>[0]) => {
+        const query = dialect.sqlToQuery(statement);
+        statements.push(query.sql);
+        return { rows: await db.query(query.sql, query.params) };
+      } }),
+    });
+    const input = { sourceId: "empty-calendar", recordClass: "MEETING" as const, scope, parserVersion: "calendar/1",
+      pointerVersionId: id, readModelHash: "a".repeat(64), basis: "READ_MODEL_RECOMPUTED" as const,
+      retrieval: { requestedUrl: "https://example.gov/", finalUrl: "https://example.gov/", httpStatus: 200,
+        rawHash: "b".repeat(64), retrievedAt: NOW.toISOString() } };
+    const observedAt = new Date(NOW.getTime() + 1_000).toISOString();
+    assert.equal((await store.confirmUnchanged(input,observedAt)).kind,"CONFIRMED");
+    assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue WHERE place_id=ANY($1::text[])",[[own,unrelated]])).map(row=>row.place_id),[own]);
+    assert.ok(statements.every(text=>!text.includes("reader_payload_node")&&!text.includes("civic_data_payload_parts")),
+      "the canonical body alias supplies the queue footprint even when the confirmed calendar is empty");
+    await db.query("DELETE FROM rebuild_queue");
+    for(const recordClass of ["CURATED_READER_RECORD","REGISTRATION","FEDERAL_MONEY"] as const)
+      assert.equal((await store.confirmUnchanged({...input,recordClass},observedAt)).kind,"CONFIRMED");
+    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"),[],"other source confirmations do not change place-package metadata");
+  } finally { await db.pg.close(); }
 });
 
 test("purge refusal and transport failure stay visible without reversing publication", async t => {
@@ -303,4 +384,39 @@ test("native campaign-money changes clear their state after commit; unchanged co
   assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [record], NOW.toISOString(), { purge }), { written: 0, confirmed: 1 });
   assert.deepEqual(await fileCampaignMoneyFacts(db, "MN", [{ ...record, title: "Updated report" }], NOW.toISOString(), { purge }), { written: 1, confirmed: 0 });
   assert.equal(purges, 2);
+});
+
+test("one committee's funding changes queue its consuming roster pages and preserve unrelated state pages", async t => {
+  const db = await factDb();
+  t.after(() => db.pg.close());
+  const root = "ocd-division/country:us/state:wa";
+  const oldPerson = "funded-old-person", newPerson = "funded-new-person";
+  const oldPage = "zip:98101", newPage = "zip:98402", unrelated = "zip:99201";
+  await db.query(`INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Washington','WA'),
+    ($2,'place','Old roster','WA'),($3,'place','New roster','WA'),($4,'place','Unrelated','WA'),
+    ($5,'person','Anita Crawford-Willis','WA'),($6,'person','Anita Crawford-Willis','WA')`, [root,oldPage,newPage,unrelated,oldPerson,newPerson]);
+  await db.query(`INSERT INTO place_page(place_id,body) SELECT id,'{}'::jsonb FROM unnest($1::text[]) id`, [[oldPage,newPage,unrelated]]);
+  await db.query(`INSERT INTO place_page_dependency(page_id,entity_id) VALUES($1,$4),($2,$4),($3,$4),($1,$5),($2,$6)`,
+    [oldPage,newPage,unrelated,root,oldPerson,newPerson]);
+  const resource = campaignFinanceSource("WA").resources[0];
+  const [raw] = JSON.parse(readFileSync(new URL("./fixtures/campaign-finance/wa-native-excerpt.json", import.meta.url), "utf8"));
+  const record = { ...campaignSourceRecord("WA", resource, raw, { url: resource.url, rawHash: "b".repeat(64), vaultKey: "test:wa-bounded",
+    byteLength: 100, retrievedAt: NOW.toISOString(), publicationDate: null }),
+    person: { id: oldPerson, name: "Anita Crawford-Willis", seat: "test-house-seat", sourceUrl: "https://www.seattle.gov/courts" } };
+  const purge = async (tags: readonly string[]) => { assert.deepEqual(tags,["reader-state:WA"]);return {purged:true}; };
+  const queued = async () => (await db.query("SELECT place_id FROM rebuild_queue WHERE place_id=ANY($1::text[]) ORDER BY place_id", [[oldPage,newPage,unrelated]])).map(row => row.place_id);
+  await fileCampaignMoneyFacts(db,"WA",[record],NOW.toISOString(),{purge});
+  assert.deepEqual(await queued(),[oldPage],"one raw committee queues its actual roster consumer, without the other Washington ZIPs");
+  await db.query("DELETE FROM rebuild_queue");
+  await rebuildCampaignCycles(db,"WA",[oldPerson],NOW.toISOString(),purge);
+  assert.ok((await db.query("SELECT id FROM fact WHERE entity_id=$1 AND field LIKE 'campaign-cycle:%' AND status='live'",[oldPerson])).length);
+  assert.deepEqual(await queued(),[oldPage],"cycle and donor changes retain the same bounded footprint");
+  await db.query("DELETE FROM rebuild_queue");
+  await rebuildCampaignCycles(db,"WA",[oldPerson],NOW.toISOString(),purge);
+  assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"),[],"an unchanged cycle queues nothing");
+  await fileCampaignMoneyFacts(db,"WA",[{...record,person:{...record.person,id:newPerson}}],NOW.toISOString(),{purge});
+  assert.deepEqual(await queued(),[newPage,oldPage].sort(),"a moved committee refreshes both old and new person's consumers");
+  await db.query("DELETE FROM rebuild_queue");
+  await rebuildCampaignCycles(db,"WA",[oldPerson,newPerson],NOW.toISOString(),purge);
+  assert.deepEqual(await queued(),[newPage,oldPage].sort(),"removing the old cycle and adding the new one queues both consumers");
 });

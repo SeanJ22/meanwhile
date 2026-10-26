@@ -1,3 +1,4 @@
+import { SECTION_IDS } from '../../app/(admin)/_mw/admin-v6/contract.ts';
 import assert from "node:assert/strict";
 import test from "node:test";
 
@@ -19,7 +20,7 @@ function harness() {
     calls.push({ url, resolve: reply => reply === "network" ? reject(new Error("OFFLINE"))
       : resolve({ status: reply.status, json: async () => reply.body }) });
   });
-  const sync = new LiveSync({ scope: "st:az", fetch, schedule: () => () => {} });
+  const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: "st:az", fetch, schedule: () => () => {} });
   const view = () => buildLiveBundle(sync.snapshot(), ref, pulseStatus).workers;
   const announce = (revision: string, contract = "admin-v6/workers@1") => sync.onPulse({
     revision, v6: { version: 1, sections: { workers: { contract, href: "/api/admin/v6/workers", revision } }, actions: {} },

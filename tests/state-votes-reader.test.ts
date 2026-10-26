@@ -25,6 +25,7 @@ import type { StateVotesSnapshot } from "../lib/sources/legiscan/types.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { installAbsent, installPromotedValue, installRegistryAuthority, installFederalVotes } from "./helpers/promoted-fixtures.ts";
 import { readerText } from "./helpers/reader-markup.ts";
+import { readerText as displayText } from "../lib/text/reader-names.ts";
 import type { ReaderAuthorityEdgeBundle } from "../lib/registry/runtime-edge.ts";
 import { currentReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 
@@ -129,7 +130,7 @@ test("real retained roll calls reach API, popup rows and Ask by exact native peo
       assert.equal(payload.votes[0].date, source.date);
       const props = { votes: payload.votes, attribution: payload.attribution, failed: false, reactionContext: null };
       const markup = readerText(renderToStaticMarkup(createElement(RecentVoteRecords, props)));
-      assert.ok(markup.includes(source.billTitle), sample.state);
+      assert.ok(markup.includes(displayText(source.billTitle, "sentence")), sample.state);
       assert.match(markup, /Voted yes|Voted no|Recorded/);
       const sources = contributedSources(RecentVoteRecords(props));
       const sourcesMarkup = readerText(renderToStaticMarkup(createElement(CardSourcesList, { sources })));

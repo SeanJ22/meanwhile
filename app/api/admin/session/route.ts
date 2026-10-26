@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * POST is the break-glass:
  *
@@ -45,7 +46,7 @@ function backToLogin(request: NextRequest, why: string): NextResponse {
   return NextResponse.redirect(new URL(loginPathFor(why), ADMIN_ORIGIN), 303);
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function post(request: NextRequest): Promise<NextResponse> {
   if (!isAdminHostRequest(request.headers, ADMIN_ORIGIN)) {
     return new NextResponse(null, { status: 404 });
   }
@@ -122,7 +123,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 }
 
 /** Sign out. Clears the cookie by expiring it; there is no server-side state. */
-export async function DELETE(request: NextRequest): Promise<NextResponse> {
+async function removeSession(request: NextRequest): Promise<NextResponse> {
   if (!isAdminHostRequest(request.headers, ADMIN_ORIGIN)) return new NextResponse(null, { status: 404 });
   if (!originAllowed(request.headers.get("origin"), ADMIN_ORIGIN)) {
     return new NextResponse(null, { status: 403 });
@@ -134,3 +135,7 @@ export async function DELETE(request: NextRequest): Promise<NextResponse> {
   );
   return response;
 }
+
+export const POST = adminRead(post);
+
+export const DELETE = adminRead(removeSession);

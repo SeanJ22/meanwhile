@@ -1,3 +1,4 @@
+import { ReaderText } from "@/components/ui/reader-text";
 import { CardGapsContribution } from "@/components/ui/card-gap-context";
 import type { PickedKeyVote } from "@/lib/votes/key-vote-picks";
 import type { VotePosition } from "@/lib/votes/types";
@@ -29,7 +30,7 @@ export function PickedKeyVotesSection({ picks }: { picks: readonly PickedKeyVote
         <div key={pick.rollId} data-picked-vote-id={pick.rollId} className="mt-2 border-b border-[var(--panel-border)] pb-2 last:border-0">
           {pick.roll ? (
             <>
-              <p className="t-detail leading-snug">{pick.roll.title}</p>
+              <p className="t-detail leading-snug"><ReaderText text={pick.roll.title} /></p>
               <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 t-caption">
                 {pick.position ? (
                   <VotePill tone={POSITION[pick.position].tone}>{POSITION[pick.position].label}</VotePill>

@@ -50,6 +50,11 @@ test("the held Census connection reads one state's inline or partitioned groupin
       assert.deepEqual(held?.scopes[0].groupings, [az]);
       assert.deepEqual(held?.scopes[0].versionMeta, scope.versionMeta);
     }
+    const statePayload = { ...dataset, scopes: [{ ...scope, groupings: [{ ...az, label: "State refresh" }] }] };
+    await pg.query(`INSERT INTO civic_data_promotions(key,record_class,scope,payload)
+      VALUES('state-map','CENSUS_GEOGRAPHY','US-AZ:place-map',$1::jsonb)`, [JSON.stringify(statePayload)]);
+    assert.equal((await heldStateDataset(query, "AZ"))?.scopes[0].groupings[0].label, "State refresh");
+    assert.deepEqual((await heldStateDataset(query, "CA"))?.scopes[0].groupings, [ca]);
   } finally { await pg.close(); }
 });
 
@@ -86,6 +91,7 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
     await identityEventTables(db);
     await db.exec(readerIdentityMigration());
     await db.exec(placeBoundaryMigration());
+    await db.exec(readFileSync("lib/db/migrations/RB-A7_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
     let calls = 0;
     const query: Query = async (sql, params = []) => { calls++; return (await db.query(sql, [...params])).rows as Record<string, unknown>[]; };
     const map: StatePlaceMap = {
@@ -116,10 +122,13 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
     assert.equal(calls - start, 1);
     assert.deepEqual(point.states, ["AZ"]);
     assert.ok(point.memberships.some(m => m.countyAttachment && m.hostCountyId === county));
+    await db.query("DELETE FROM rebuild_queue");
     await loadStatePlaceMap({ transaction }, { places: [], zipEdges: [], zctaEdges: [], boundaries: [{
       placeId: county, layer: "county", boundaryYear: 2026, version: "county:2026", geometry: square(-110, -109),
       countyAttachment: false, hostCountyId: null, sourceUrls: ["https://www.census.gov/"], checkedAt: date,
     }] });
+    assert.ok((await db.query("SELECT place_id FROM rebuild_queue WHERE place_id=$1", [county])).rows.length,
+      "a boundary-only refresh rebuilds the held place even when it adds no entity");
     const moved = await placesAtPoint(query, [-111, 32.5]);
     assert.ok(!moved.memberships.some(m => m.placeId === county || m.countyAttachment));
     await loadStatePlaceMap({ transaction }, { places: [], boundaries: [],
@@ -135,6 +144,8 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
 test("every state's place job is due on its next monthly cycle without routineTaskDue throwing", () => {
   const jobs = ROUTINE_SOURCE_TASKS.filter(task => task.id.startsWith("place-map-"));
   assert.equal(jobs.length, 56);
+  assert.equal(new Set(jobs.map(job => job.acquisitionFailureDomain)).size, jobs.length,
+    "independent state maps share the source cache without sharing a worker turn");
   for (const job of jobs) {
     assert.equal(routineTaskDue(job, undefined, Date.parse(date)), true);
     const clock = { lastAttemptedAt: date, lastSucceededAt: date, lastSucceededObservedAt: date, lastSucceededParserVersion: job.parserVersion };

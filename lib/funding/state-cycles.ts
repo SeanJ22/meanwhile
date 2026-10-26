@@ -1,12 +1,12 @@
 import type {FactDb,Query} from "../facts/publish.ts";
-import {invalidateReaderCache,type ReaderCachePurger} from "../reader/cache.ts";
+import {enqueueReaderPlaces,invalidateReaderCache,type ReaderCachePurger} from "../reader/cache.ts";
 import {campaignFinanceSource} from "./state-sources.ts";
 
 export async function rebuildCampaignCycles(db:FactDb,state:string,people:readonly string[],at:string,purge?:ReaderCachePurger):Promise<void> {
   if(people.length>500)throw new Error("Campaign cycle work exceeds one people batch");
   if(!people.length)return;
   const rules=campaignFinanceSource(state).resources.map(resource=>({id:resource.id,aggregation:resource.aggregation??null}));
-  await db.transaction(async query=>{
+  const changed=await db.transaction(async query=>{
     await query(`CREATE TEMP TABLE money_rows ON COMMIT DROP AS SELECT * FROM (
       SELECT f.entity_id,e.parent_id,f.value->>'filerName' AS committee,f.value,f.source_copy_id,f.checked_at,
         CASE WHEN value->>'transactionDate' ~ '^\\d{4}-' THEN substr(value->>'transactionDate',1,4)::int
@@ -55,11 +55,11 @@ export async function rebuildCampaignCycles(db:FactDb,state:string,people:readon
         'individualLarge',(SELECT (r.value#>>'{individualLines,large}')::numeric FROM money_rows r WHERE r.entity_id=m.entity_id AND (value->>'cycle')::int=m.cycle AND r.value?'individualLines' ORDER BY r.checked_at DESC LIMIT 1)) AS value
       FROM metadata m JOIN totals t ON t.entity_id=m.entity_id AND t.cycle=m.cycle JOIN sources s ON s.entity_id=m.entity_id AND s.cycle=m.cycle
       GROUP BY m.parent_id,m.entity_id,m.cycle,m.source_copy_id,m.person,m.committee,s.sources`);
-    await replaceCycles(query,at);
-    await query(`UPDATE fact f SET status='superseded' WHERE f.entity_id=ANY($1::text[]) AND f.field LIKE 'campaign-cycle:%' AND f.status='live'
+    const cycles=await replaceCycles(query,at);
+    const removedCycles=await query(`UPDATE fact f SET status='superseded' WHERE f.entity_id=ANY($1::text[]) AND f.field LIKE 'campaign-cycle:%' AND f.status='live'
       AND EXISTS(SELECT 1 FROM entity c JOIN fact raw ON raw.entity_id=c.id AND raw.field LIKE 'campaign-money:%' AND raw.produced_by LIKE 'campaign-person-money:'||$2||':%'
         WHERE c.parent_id=f.entity_id AND raw.value->>'cycle'=f.value->>'cycle' AND f.field LIKE 'campaign-cycle:'||c.id||':%')
-      AND NOT EXISTS(SELECT 1 FROM money_cycles n WHERE n.entity_id=f.entity_id AND n.field=f.field)`,[people,state]);
+      AND NOT EXISTS(SELECT 1 FROM money_cycles n WHERE n.entity_id=f.entity_id AND n.field=f.field) RETURNING f.entity_id`,[people,state]);
     await query(`CREATE TEMP TABLE money_donors ON COMMIT DROP AS WITH totals AS (
       SELECT parent_id,(value->>'cycle')::int AS cycle,value#>>'{donor,key}' AS key,sum((value#>>'{donor,amount}')::numeric) AS amount
       FROM money_rows WHERE year>=2020 AND (value->>'cycle')::int>=2020 AND aggregation='TRANSACTION' AND value?'donor'
@@ -72,19 +72,23 @@ export async function rebuildCampaignCycles(db:FactDb,state:string,people:readon
           AND r.value#>>'{donor,key}'=t.key AND r.year>=2020 AND r.aggregation='TRANSACTION'
         ORDER BY r.checked_at DESC LIMIT 1
       ) m WHERE m.value#>>'{donor,kind}'='COMMITTEE_OR_ORGANIZATION' OR t.amount>200`);
-    await query(`UPDATE fact f SET status='superseded' WHERE entity_id=ANY($1::text[]) AND field LIKE 'campaign-donor:%' AND status='live'
-      AND NOT EXISTS(SELECT 1 FROM money_donors n WHERE n.entity_id=f.entity_id AND n.field=f.field AND n.value=f.value)`,[people]);
-    await query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by,cost_usd)
+    const removedDonors=await query(`UPDATE fact f SET status='superseded' WHERE entity_id=ANY($1::text[]) AND field LIKE 'campaign-donor:%' AND status='live'
+      AND NOT EXISTS(SELECT 1 FROM money_donors n WHERE n.entity_id=f.entity_id AND n.field=f.field AND n.value=f.value) RETURNING entity_id`,[people]);
+    const addedDonors=await query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by,cost_usd)
       SELECT n.entity_id,n.field,n.value,n.value->>'filedName','live','OFFICIAL',n.source_copy_id,'',$1,$1,'campaign-money',0 FROM money_donors n
-      WHERE NOT EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=n.entity_id AND f.field=n.field AND f.status='live' AND f.value=n.value)`,[at]);
+      WHERE NOT EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=n.entity_id AND f.field=n.field AND f.status='live' AND f.value=n.value) RETURNING entity_id`,[at]);
+    const affected=[...new Set([...cycles,...[...removedCycles,...removedDonors,...addedDonors].map(row=>String(row.entity_id))])];
+    if(affected.length)await enqueueReaderPlaces({entities:affected},query);
+    return affected.length>0;
   });
-  await invalidateReaderCache({states:[state]},purge);
+  if(changed)await invalidateReaderCache({states:[state]},purge,null);
 }
 
-export async function replaceCycles(query:Query,at:string):Promise<void> {
-  await query(`UPDATE fact f SET checked_at=n.checked_at FROM money_cycles n WHERE f.entity_id=n.entity_id AND f.field=n.field AND f.status='live' AND f.value=n.value AND n.checked_at>=f.checked_at`);
-  await query(`UPDATE fact f SET status='superseded' FROM money_cycles n WHERE f.entity_id=n.entity_id AND f.field=n.field AND f.status='live' AND f.value<>n.value AND n.checked_at>=f.checked_at`);
-  await query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by,cost_usd)
+export async function replaceCycles(query:Query,at:string):Promise<readonly string[]> {
+  const restamped=await query(`UPDATE fact f SET checked_at=n.checked_at FROM money_cycles n WHERE f.entity_id=n.entity_id AND f.field=n.field AND f.status='live' AND f.value=n.value AND n.checked_at>f.checked_at RETURNING f.entity_id`);
+  const removed=await query(`UPDATE fact f SET status='superseded' FROM money_cycles n WHERE f.entity_id=n.entity_id AND f.field=n.field AND f.status='live' AND f.value<>n.value AND n.checked_at>=f.checked_at RETURNING f.entity_id`);
+  const added=await query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by,cost_usd)
     SELECT n.entity_id,n.field,n.value,n.value->>'committee','live','OFFICIAL',n.source_copy_id,'',n.checked_at,$1,'campaign-money',0 FROM money_cycles n
-    WHERE NOT EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=n.entity_id AND f.field=n.field AND f.status='live')`,[at]);
+    WHERE NOT EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=n.entity_id AND f.field=n.field AND f.status='live') RETURNING entity_id`,[at]);
+  return [...new Set([...restamped,...removed,...added].map(row=>String(row.entity_id)))];
 }

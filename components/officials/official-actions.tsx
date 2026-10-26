@@ -1,5 +1,6 @@
 "use client";
 
+import { ReaderText } from "@/components/ui/reader-text";
 import { useEffect, useState } from "react";
 import type { ReaderOfficialActions } from "@/lib/officials/reader-actions";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
@@ -41,7 +42,7 @@ export function OfficialActionsContent({ answer }: { answer: ReaderOfficialActio
     {answer.count > 0 && <p>{answer.count} published action records held.</p>}
     <ol className="max-h-96 space-y-4 overflow-y-auto overscroll-contain">
       {answer.records.map(record => <li key={record.id} data-official-action-id={record.id} data-official-id={record.officialId}>
-        <p>{record.text}</p>
+        <p><ReaderText text={record.text} /></p>
 
       </li>)}
     </ol>

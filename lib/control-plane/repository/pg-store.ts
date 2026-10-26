@@ -1298,7 +1298,7 @@ export function pgSpendHoldRepository(sql: Sql, bounds: ControlPlaneRequestBound
 }
 
 const connectionForReads = Symbol("control-plane-read-connection");
-const placeReadConnection = (repos: ControlPlaneRepositories): Sql | undefined =>
+export const placeReadConnection = (repos: ControlPlaneRepositories): Sql | undefined =>
   (repos as ControlPlaneRepositories & { [connectionForReads]?: () => Sql })[connectionForReads]?.();
 
 export function pgHuntOrderRepository(sql:Sql,bounds:ControlPlaneRequestBounds=CONTROL_PLANE_REQUEST_BOUNDS_MS):HuntOrderRepository {

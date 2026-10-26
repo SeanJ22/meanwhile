@@ -1,5 +1,6 @@
 "use client";
 
+import { readerText } from "@/lib/text/reader-names";
 import { useEffect, useState } from "react";
 import { CheckedLink } from "@/components/ui/checked-link";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
@@ -22,11 +23,11 @@ export function FederalCommentRules() {
     return <CardGapContribution id="federal-comment-periods" label="federal comment periods" />;
   }
   return <details className="how-to-be-heard mt-3 pl-4">
-    <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono t-caption uppercase tracking-[0.14em] text-paper-dim">Make your voice heard</summary>
+    <summary className="trailing-space-trimmed-14 how-to-be-heard-summary font-mono t-caption  tracking-[0.14em] text-paper-dim">Make your voice heard</summary>
     <p className="mt-2 t-detail">Federal rules open for public comment</p>
     {!held.rules.length ? <p className="t-detail text-muted">No open comment periods in the federal records last checked.</p>
       : <ul className="mt-2 space-y-3">{held.rules.map(({ rule, sources }) => <li key={rule.id} className="t-detail">
-        <CheckedLink href={rule.sourceUrl} target="_blank" rel="noreferrer" className="text-link hover:underline">{rule.title}</CheckedLink>
+        <CheckedLink href={rule.sourceUrl} target="_blank" rel="noreferrer" className="text-link hover:underline">{readerText(rule.title)}</CheckedLink>
         <p>Comments close {federalDeadlineDate(rule)}</p>
         {sources.filter(row => row.closesAt && federalDeadlineDate(row) !== federalDeadlineDate(rule)).map(row => <p key={row.id} className="text-muted">{row.publisher} lists {federalDeadlineDate(row)}.</p>)}
         {rule.commentUrl && <CheckedLink href={rule.commentUrl} target="_blank" rel="noreferrer" className="text-link hover:underline">{rule.commentUrl.includes("regulations.gov/commenton/") ? "Submit a comment" : "How to comment"}</CheckedLink>}

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { door, decide } from "../lib/core/door.ts";
 import { resolveId } from "../lib/core/resolve.ts";
-import { publishClaim, type PublishInput } from "../lib/facts/publish.ts";
+import { publishClaim, restampFacts, type PublishInput } from "../lib/facts/publish.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { readFactStore } from "../lib/facts/admin-read.ts";
@@ -33,6 +33,41 @@ async function seeded(withHourlyCounts = false) {
     (2,'https://news.example/council','https://news.example/council',$1,$2,'second')`, [now.toISOString(), "a".repeat(64)]);
   return db;
 }
+
+test("a newer source for an unchanged value rebuilds its pages and an exact replay queues nothing", async () => {
+  const db = await seeded();
+  try {
+    await door(db, input(), clocks, now, { purge });
+    await db.query("DELETE FROM rebuild_queue");
+    const next = new Date(now.getTime() + 3_600_000);
+    await db.query(`INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key)
+      VALUES(3,'https://example.gov/council','https://example.gov/council',$1,$2,'confirmation')`, [next.toISOString(), "b".repeat(64)]);
+    const claim = input({ copy: { ...input().copy, id: 3, fetchedAt: next } });
+    assert.equal((await door(db, claim, clocks, next, { purge }) as { decision: string }).decision, "CONFIRM");
+    assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id")).map(row => row.place_id), [input().entity.id, "place-one", "place-two"]);
+    assert.equal(Number((await db.query("SELECT source_copy_id FROM fact WHERE status='live'"))[0]!.source_copy_id), 3);
+    await db.query("DELETE FROM rebuild_queue");
+    await door(db, claim, clocks, next, { purge });
+    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), []);
+  } finally { await db.pg.close(); }
+});
+
+test("scheduled source restamps queue the body and served places without queuing an unchanged repeat", async () => {
+  const db = await seeded();
+  try {
+    const result = await door(db, input(), clocks, now, { purge });
+    assert.ok("factId" in result && result.factId !== null);
+    await db.query("DELETE FROM rebuild_queue");
+    const next = new Date(now.getTime() + 3_600_000);
+    const facts = [{ id: result.factId, entityId: input().entity.id, field: "office_phone", quote: "520-555-0100" }];
+    const copy = { id: 1, text: "Call 520-555-0100", fetchedAt: next };
+    assert.equal(await restampFacts(db, facts, copy), 1);
+    assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id")).map(row => row.place_id), [input().entity.id, "place-one", "place-two"]);
+    await db.query("DELETE FROM rebuild_queue");
+    assert.equal(await restampFacts(db, facts, copy), 0);
+    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), []);
+  } finally { await db.pg.close(); }
+});
 
 test("both lanes reach the existing place card with their own saved field sources", async () => {
   const db = await seeded();
@@ -97,7 +132,7 @@ test("an official field publishes without reading or searching the page text, an
     assert.deepEqual(await door(db, claim, clocks, new Date(now.getTime() + 3_600_000), { purge }), { decision: "CONFIRM", factId: 1 });
     assert.deepEqual(await snapshot(), before);
     assert.equal((await db.query("SELECT quote_start FROM fact"))[0]!.quote_start, null);
-    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id"), [{ place_id: "place-one" }, { place_id: "place-two" }]);
+    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id"), [{ place_id: input().entity.id }, { place_id: "place-one" }, { place_id: "place-two" }]);
     assert.deepEqual(await db.query(`SELECT state,sum(n)::int AS n FROM count_hour
       WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
         AND substring(step FROM 4)::jsonb->>2='in' GROUP BY state`), [{ state: "AZ", n: 1 }]);

@@ -3,21 +3,23 @@ import { US_JURISDICTIONS } from "../../coverage/states.ts";
 import type { Provenance } from "../types.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
 import { legiscanIdentityJoins,type LegiscanIdentityHolder } from "./dataset.ts";
+import { LEGISCAN_BULK_PARSER,billScope } from "./current-sessions.ts";
+export { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,billScope } from "./current-sessions.ts";
 
 export const LEGISCAN_BULK_CONTRACT = "legiscan-bulk";
-export const LEGISCAN_BULK_SCOPE = "US:legiscan-datasets";
-export const LEGISCAN_BULK_PARSER = "legiscan-bulk/4";
 export const LEGISCAN_API = "https://api.legiscan.com/";
 /** LegiScan state_id is its own identifier space, never Census FIPS. */
 const LEGISCAN_STATES = "AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY DC US".split(" ");
 export interface Dataset {
   state_id: number; session_id: number; session_name: string; dataset_hash: string; dataset_date: string;
   access_key?: string;
+  year_start?: number; year_end?: number; special?: number; prefile?: number;
 }
 export type HeldPerson = LegiscanIdentityHolder;
 interface BillSponsor {
   peopleId: number; name: string; committee: boolean; nativeIds: Record<string,string[]>;
   officeholderId: string | null; joinReason: string | null;
+  state?: string; chamber?: string | null; district?: string | null; fullName?: string;
 }
 export interface Bill {
   id: string; billId: number; state: string; sessionId: number; sessionName: string; ocdId: string; fips: string | null;
@@ -36,9 +38,9 @@ export interface BillPart {
 export interface BillPartPointer { scope:string; versionId:string; rawHash:string; rows:number; }
 export interface BillSession {
   kind:"SESSION";parserVersion:typeof LEGISCAN_BULK_PARSER;dataset:Dataset;state:string;capturedAt:string;parts:BillPartPointer[];counts:BillPart["counts"];
+  sponsorMatchVersion?: string;
 }
 export interface BillIndex { kind:"INDEX";parserVersion?:typeof LEGISCAN_BULK_PARSER|"legiscan-bulk/2"; capturedAt:string; datasets:Dataset[]; }
-export const billScope = (sessionId:number) => `legiscan-bills:session:${sessionId}`;
 export const billPartScope = (dataset:Dataset,index:number,evidenceHash:string) => `${billScope(dataset.session_id)}:${dataset.dataset_hash}:part:${index}:${evidenceHash}`;
 export const stateOfDataset = (row:Dataset):string => {
   const state=LEGISCAN_STATES[row.state_id-1];
@@ -65,8 +67,11 @@ function publicDatasets(values:readonly unknown[]):Dataset[] {
   const rows=values.map(value=>{
     const row=object(value);
     const result={state_id:positive(row.state_id),session_id:positive(row.session_id),session_name:text(row.session_name),
-      dataset_hash:text(row.dataset_hash),dataset_date:date(row.dataset_date)!};
+      dataset_hash:text(row.dataset_hash),dataset_date:date(row.dataset_date)!,
+      ...(row.year_start!==undefined?{year_start:positive(row.year_start),year_end:positive(row.year_end)}:{}),
+      ...(row.special!==undefined?{special:Number(row.special)}:{}),...(row.prefile!==undefined?{prefile:Number(row.prefile)}:{})};
     if(!result.dataset_date) throw Error("LEGISCAN_DATASET_DATE_REQUIRED");
+    if(result.year_start!==undefined&&result.year_end!<result.year_start||result.special!==undefined&&![0,1].includes(result.special)||result.prefile!==undefined&&![0,1].includes(result.prefile))throw Error("LEGISCAN_SESSION_YEARS_INVALID");
     stateOfDataset(result); return result;
   });
   if(new Set(rows.map(row=>row.session_id)).size!==rows.length) throw Error("LEGISCAN_DUPLICATE_SESSION");
@@ -86,22 +91,48 @@ export function publicDatasetIndex(value:unknown):BillIndex {
   const datasets=publicDatasets(index.datasets);
   return {kind:"INDEX",...(index.parserVersion?{parserVersion:index.parserVersion as BillIndex["parserVersion"]}:{}),capturedAt:index.capturedAt,datasets};
 }
-type PersonJoinIndex=ReadonlyMap<string,ReadonlySet<string>>;
+type PersonJoinIndex={native:ReadonlyMap<string,ReadonlySet<string>>;seats:ReadonlyMap<string,readonly HeldPerson[]>};
 function personJoinIndex(people:readonly HeldPerson[]):PersonJoinIndex {
-  const index=new Map<string,Set<string>>();
+  const index=new Map<string,Set<string>>(),seats=new Map<string,HeldPerson[]>();
   for(const person of people) for(const key of personIdentityKeys(person)) {
     const ids=index.get(key)??new Set<string>();ids.add(person.id);index.set(key,ids);
   }
-  return index;
+  for(const person of people)for(const row of person.memberships??[]){
+    if(row.current===false||!row.district||!person.state)continue;
+    const key=`${person.state.toUpperCase()}:${row.chamber??person.chamber}:${districtKey(row.district)}`,holders=seats.get(key)??[];
+    if(!holders.some(row=>row.id===person.id))holders.push(person);seats.set(key,holders);
+  }
+  return {native:index,seats};
+}
+const normalizedName=(value:string)=>value.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^\p{L}\p{N}]+/gu," ").trim();
+const districtKey=(value:string)=>normalizedName(value).replace(/^(?:sd|hd|ad|wd|district|ward)\s*/,"").replace(/\bat large\b/g,"al").replace(/\b0+(?=\d)/g,"");
+function sameName(left:string,right:string):boolean {
+  const a=normalizedName(left).split(" "),b=normalizedName(right).split(" ");
+  if(a.join(" ")===b.join(" "))return true;
+  // The source often omits a middle name in `name` but supplies it in its components.
+  return a.length>=2&&b.length>=2&&a[0]===b[0]&&a.at(-1)===b.at(-1)&&(a.length===2||b.length===2);
+}
+function matchesNameAndDistrict(sponsor:BillSponsor,person:HeldPerson):boolean {
+  if(!sponsor.state||!sponsor.chamber||!sponsor.district||!person.name||person.level&&person.level!=="STATE"||person.state?.toUpperCase()!==sponsor.state)return false;
+  if(!sameName(sponsor.fullName??sponsor.name,person.name)&&!sameName(sponsor.name,person.name))return false;
+  // A held LegiScan ID is authoritative, including when it disagrees with a name.
+  const native=[...personIdentityKeys(person)].filter(key=>key.startsWith("legiscan:"));
+  if(native.length&&!native.includes(`legiscan:${sponsor.peopleId}`))return false;
+  return (person.memberships??[]).some(row=>row.current!==false&&(row.chamber??person.chamber)===sponsor.chamber&&row.district&&districtKey(row.district)===districtKey(sponsor.district!));
 }
 function joinSponsorWithIndex(sponsor:BillSponsor, index:PersonJoinIndex):BillSponsor {
   if(sponsor.committee) return {...sponsor,officeholderId:null,joinReason:"Committee sponsor"};
-  if(sponsor.joinReason==="Ambiguous source identifiers")return {...sponsor,officeholderId:null};
+  if(sponsor.joinReason?.startsWith("Ambiguous"))return {...sponsor,officeholderId:null};
+  const native=[...(index.native.get(`legiscan:${sponsor.peopleId}`)??[])];
+  if(native.length)return {...sponsor,officeholderId:native.length===1?native[0]:null,joinReason:native.length===1?null:"Ambiguous source identifiers"};
   const keys=new Set(Object.entries(sponsor.nativeIds).flatMap(([source,ids])=>ids.map(id=>`${source}:${id}`)));
-  const ids=[...new Set([...keys].flatMap(key=>[...(index.get(key)??[])]))];
-  return {...sponsor,officeholderId:ids.length===1?ids[0]:null,joinReason:ids.length===1?null:ids.length?"Ambiguous source identifiers":"No held source identifier"};
+  const ids=[...new Set([...keys].flatMap(key=>[...(index.native.get(key)??[])]))];
+  if(ids.length)return {...sponsor,officeholderId:ids.length===1?ids[0]:null,joinReason:ids.length===1?null:"Ambiguous source identifiers"};
+  const seat=`${sponsor.state}:${sponsor.chamber}:${districtKey(sponsor.district??"")}`;
+  const matches=(index.seats.get(seat)??[]).filter(person=>matchesNameAndDistrict(sponsor,person));
+  return {...sponsor,officeholderId:matches.length===1?matches[0].id:null,joinReason:matches.length===1?null:matches.length?"Ambiguous name and district":"No held source identifier or name and district"};
 }
-/** Exact identifiers only. Ambiguous or absent matches stay in the published source row. */
+/** Publisher ID first, then other exact IDs, then the source name and legislative seat. */
 export function joinSponsors(people:readonly HeldPerson[]):(sponsor:BillSponsor)=>BillSponsor {
   const index=personJoinIndex(people);return sponsor=>joinSponsorWithIndex(sponsor,index);
 }
@@ -123,7 +154,12 @@ export function hydrateBillPart(part:BillPart,person?:HeldPerson):Bill[] {
     return [{...bill,sponsors:sponsorRefs.map(index=>part.sponsors[index]),facts:billFacts(bill,part.dataset.dataset_date,part.capturedAt)}];
   });
 }
-function normalizeBill(value:unknown, dataset:Dataset, people:PersonJoinIndex,identityJoins:ReadonlyMap<number,string>):Omit<Bill,"facts"> {
+function sponsorSeat(row:Record<string,unknown>,state:string){
+  const chamber=state==="DC"||state==="NE"?"legislature":Number(row.role_id)===2?"upper":Number(row.role_id)===1?"lower":null;
+  const fullName=[row.first_name,row.middle_name,row.last_name,row.suffix].filter(value=>typeof value==="string"&&value.trim()).join(" ");
+  return {state,chamber,fullName:fullName||text(row.name),district:typeof row.district==="string"&&row.district.trim()?row.district:null};
+}
+function normalizeBill(value:unknown, dataset:Dataset, people:PersonJoinIndex,identityJoins:ReadonlyMap<number,string>,ambiguous:ReadonlyMap<number,string>):Omit<Bill,"facts"> {
   const raw=object(object(value).bill), state=stateOfDataset(dataset);
   if(raw.state!==state||positive(raw.state_id)!==dataset.state_id||positive(raw.session_id)!==dataset.session_id) throw Error("LEGISCAN_BILL_SCOPE_MISMATCH");
   const billId=positive(raw.bill_id), sourceUrl=url(raw.url)!;
@@ -140,7 +176,8 @@ function normalizeBill(value:unknown, dataset:Dataset, people:PersonJoinIndex,id
     for(const [field,source] of [["bioguide_id","congress"],["openstates_id","openstates"],["votesmart_id","votesmart"]]) {
       const id=row[field]; if((typeof id==="string"||typeof id==="number")&&String(id)!=="0"&&String(id)) nativeIds[source]=[String(id)];
     }
-    return joinSponsorWithIndex({peopleId,name:text(row.name),committee:Number(row.committee_sponsor)===1,nativeIds,officeholderId:null,joinReason:null},people);
+    return joinSponsorWithIndex({peopleId,name:text(row.name),...sponsorSeat(row,state),committee:Number(row.committee_sponsor)===1,nativeIds,officeholderId:null,
+      joinReason:ambiguous.get(peopleId)??null},people);
   });
   const texts=raw.texts.map(value=>{
     const row=object(value), governmentUrl=url(row.state_link), link=url(row.url);
@@ -163,7 +200,9 @@ export function sessionSponsorEvidence(bodies:readonly string[]):Record<string,u
     for(const sponsor of raw.sponsors) {
       const row=object(sponsor);
       const bio=row.bio&&typeof row.bio==="object"?row.bio as Record<string,unknown>:{};
-      const identity={people_id:row.people_id,bio:{social:bio.social,links:bio.links},ballotpedia:row.ballotpedia,votesmart_id:row.votesmart_id};
+      const identity={people_id:row.people_id,bio:{social:bio.social,links:bio.links},ballotpedia:row.ballotpedia,votesmart_id:row.votesmart_id,
+        name:row.name,first_name:row.first_name,middle_name:row.middle_name,last_name:row.last_name,suffix:row.suffix,
+        district:row.district,role_id:row.role_id,state_id:row.state_id,committee_sponsor:row.committee_sponsor};
       uniqueSourceSponsors.set(JSON.stringify(identity),identity);
     }
   }
@@ -171,9 +210,20 @@ export function sessionSponsorEvidence(bodies:readonly string[]):Record<string,u
 }
 export function normalizeSession(dataset:Dataset,bodies:readonly string[],capturedAt:string,people:readonly HeldPerson[]=[],sessionSponsors?:readonly Record<string,unknown>[]):BillPart {
   const values=bodies.map(body=>JSON.parse(body) as unknown);
-  const identityJoins=new Map(legiscanIdentityJoins(people,sessionSponsors??sessionSponsorEvidence(bodies)).map(row=>[row.legiscanPeopleId,row.personId]));
+  const evidence=sessionSponsors??sessionSponsorEvidence(bodies);
+  const identityJoins=new Map(legiscanIdentityJoins(people,evidence).map(row=>[row.legiscanPeopleId,row.personId]));
   const nativeJoins=personJoinIndex(people);
-  const bills=values.map(value=>normalizeBill(value,dataset,nativeJoins,identityJoins));
+  const matches=new Map<number,Set<string>>(),ambiguous=new Map<number,string>();
+  for(const row of evidence){
+    // Older saved profile-only evidence has no name/seat and supplies no fallback.
+    if(typeof row.name!=="string")continue;
+    const peopleId=positive(row.people_id),personId=identityJoins.get(peopleId);
+    const joined=joinSponsorWithIndex({peopleId,name:row.name,...sponsorSeat(row,stateOfDataset(dataset)),committee:Number(row.committee_sponsor)===1,
+      nativeIds:{legiscan:[String(peopleId)],...(personId?{"ocd-person":[personId]}:{})},officeholderId:null,joinReason:null},nativeJoins);
+    if(joined.joinReason?.startsWith("Ambiguous"))ambiguous.set(peopleId,joined.joinReason);
+    if(joined.officeholderId){const ids=matches.get(peopleId)??new Set<string>();ids.add(joined.officeholderId);matches.set(peopleId,ids);if(ids.size>1)ambiguous.set(peopleId,"Ambiguous name and district");}
+  }
+  const bills=values.map(value=>normalizeBill(value,dataset,nativeJoins,identityJoins,ambiguous));
   if(new Set(bills.map(row=>row.id)).size!==bills.length) throw Error("LEGISCAN_DUPLICATE_BILL");
   const joined=bills.filter(row=>row.sponsors.some(sponsor=>sponsor.officeholderId)).length;
   const sourceSponsors=bills.flatMap(row=>row.sponsors),sponsors:BillSponsor[]=[],sponsorIndex=new Map<string,number>();

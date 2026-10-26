@@ -88,7 +88,7 @@ export function withQueryCaller<T>(operation: string, run: () => T): T {
     () => scope.run(`${operation} ← ${namedSite()}`, run));
 }
 
-const countedFetchSlot = Symbol.for("meanwhile.database.transfer.fetch");
+export const countedFetchSlot = Symbol.for("meanwhile.database.transfer.fetch");
 const callerSocketSlot = Symbol.for("meanwhile.database.transfer.socket.context");
 
 /** Keep the requesting client with a pooled socket, without changing its query or transport. */

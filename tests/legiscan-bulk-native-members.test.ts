@@ -32,7 +32,8 @@ test("a changed source edition reuses native bill groups whose bytes and sponsor
   assert.ok(next.outcome.promoted,JSON.stringify(next.outcome.candidate.receipt));assert.equal(store.parts,3,"only the changed native group publishes again");
   assert.deepEqual(pointers(next.candidate)[1],pointers(old.candidate)[1]);
   const indexBody=JSON.stringify({status:"OK",datasetlist:[edition]});
-  await publishBulkCandidate(store,{capture:{...source(edition,bodies,later).capture,body:indexBody,rawHash:hash(indexBody)},datasets:[edition]},later);
+  await publishBulkCandidate(store,{capture:{...source(edition,bodies,later).capture,body:indexBody,rawHash:hash(indexBody),
+    requestedUrl:"https://api.legiscan.com/?op=getDatasetList",finalUrl:"https://api.legiscan.com/?op=getDatasetList"},datasets:[edition]},later);
   const read=await readBillsForState("AK",{store,now:later});
   assert.equal(read.complete,true);assert.equal(read.bills.length,2);
   assert.equal(read.bills.find(row=>row.billId===first.bill.bill_id)?.title,changed.bill.title);

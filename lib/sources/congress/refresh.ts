@@ -1,9 +1,9 @@
 import type { RoutineDataStore } from "../../civic-data/store.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
-import { failedAcquisitionCandidate, normalizedHash } from "../../civic-data/candidate-builders.ts";
+import { failedAcquisitionCandidate, normalizedHash, sha256 } from "../../civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate } from "../../civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../../civic-data/runner-receipt.ts";
-import { federalClient, federalPages, regulationPages, type FederalClientOptions, type FederalPage } from "./acquire.ts";
+import { federalClient, federalPages, regulationPages, type FederalClientOptions, type FederalPage, type RegulationPageWork } from "./acquire.ts";
 import { billIdentity, object, string, normalizeFederalCapture, normalizeFederalCaptureWithRoster } from "./normalize.ts";
 import { countFederalFacts, publishFederalPartition, saveFederalSourceCheck } from "./publication.ts";
 import { FEDERAL_PARSER_VERSION, FEDERAL_RECORD_CLASS, FEDERAL_SOURCES, federalScope } from "./targets.ts";
@@ -147,29 +147,32 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
     const cursor = prior?.cursor;
     if (source === "congress-api") {
       if (!cursor || cursor.startsWith("bootstrap:")) {
-        const checkpointData = cursor?.startsWith("bootstrap:") ? JSON.parse(cursor.slice(10)) as { url: string; index: number; sponsoredUrl?: string; billIndex?: number; through?: string } : null;
+        const checkpointData = cursor?.startsWith("bootstrap:") ? JSON.parse(cursor.slice(10)) as { url: string; index: number; pageHash?: string; sponsoredUrl?: string; sponsoredHash?: string; billIndex?: number; through?: string } : null;
         const through = checkpointData?.through ?? startedAt;
         const start = checkpointData?.url ?? `${config.url}member?currentMember=true&limit=250`;
         for await (const page of federalPages(client, source, start, "members")) {
-          if (!checkpointData) await checkpoint(`bootstrap:${JSON.stringify({ url: page.capture.url, index: 0, through })}`, page.capture);
-          for (let index = page.capture.url === checkpointData?.url ? checkpointData.index : 0; index < page.items.length; index++) {
+          const pageHash = sha256(page.capture.body), samePage = page.capture.url === checkpointData?.url && checkpointData?.pageHash === pageHash;
+          if (!samePage) await checkpoint(`bootstrap:${JSON.stringify({ url: page.capture.url, pageHash, index: 0, through })}`, page.capture);
+          for (let index = samePage ? checkpointData!.index : 0; index < page.items.length; index++) {
             const member = page.items[index], bioguide = string(member.bioguideId);
-            const memberFacts = normalizeFederalCapture(page.capture).filter(row => row.bioguideId === bioguide);
+            const memberCapture: FederalCapture = { ...page.capture, body: JSON.stringify({ members: [member] }), context: { bioguideId: bioguide } };
+            const memberFacts = normalizeFederalCapture(memberCapture);
             if (!/^[A-Z]\d{6}$/.test(bioguide)) {
-              const invalid = normalizeFederalCapture({ ...page.capture, body: JSON.stringify({ members: [member] }) });
-              await publish(`unjoined:member:${invalid[0].nativeId}`, [page.capture], invalid); continue;
+              await publish(`unjoined:member:${memberFacts[0].nativeId}`, [memberCapture], memberFacts); continue;
             }
-            await publish(`congress:${bioguide}`, [page.capture], memberFacts);
-            const resume = page.capture.url === checkpointData?.url && index === checkpointData.index ? checkpointData : null;
+            await publish(`congress:${bioguide}`, [memberCapture], memberFacts);
+            const resume = samePage && index === checkpointData!.index ? checkpointData : null;
             for await (const bills of federalPages(client, source, resume?.sponsoredUrl ?? `${config.url}member/${bioguide}/sponsored-legislation?limit=250`, "sponsored", { bioguideId: bioguide })) {
               await publish(`congress:${bioguide}`, [bills.capture], normalizeFederalCapture(bills.capture));
-              for (let billIndex = bills.capture.url === resume?.sponsoredUrl ? resume.billIndex ?? 0 : 0; billIndex < bills.items.length; billIndex++) {
+              const sponsoredHash = sha256(bills.capture.body);
+              for (let billIndex = bills.capture.url === resume?.sponsoredUrl && resume?.sponsoredHash === sponsoredHash ? resume?.billIndex ?? 0 : 0; billIndex < bills.items.length; billIndex++) {
                 await congressBill(bills.items[billIndex], bills.capture, bioguide);
-                await checkpoint(`bootstrap:${JSON.stringify({ url: page.capture.url, index, sponsoredUrl: bills.capture.url, billIndex: billIndex + 1, through })}`, bills.capture);
+                await checkpoint(`bootstrap:${JSON.stringify({ url: page.capture.url, pageHash, index, sponsoredUrl: bills.capture.url, sponsoredHash, billIndex: billIndex + 1, through })}`, bills.capture);
               }
             }
-            await publishFederalPartition({ source, partition: `congress:${bioguide}`, captures: [page.capture], records: [], store, vault, now: now(), cursor: "sponsored-complete" });
-            await checkpoint(`bootstrap:${JSON.stringify({ url: page.capture.url, index: index + 1, through })}`, page.capture);
+            await publishFederalPartition({ source, partition: `congress:${bioguide}`, captures: [memberCapture], records: [], store, vault, now: now(), cursor: "sponsored-complete",
+              countsPrimary: true, dependencyHash: normalizedHash([rosterVersionId, []]) });
+            await checkpoint(`bootstrap:${JSON.stringify({ url: page.capture.url, pageHash, index: index + 1, through })}`, page.capture);
           }
           if (page.next) await checkpoint(`bootstrap:${JSON.stringify({ url: page.next, index: 0, through })}`, page.capture);
           listing = page.capture;
@@ -182,40 +185,44 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
         for await (const page of federalPages(client, source, `${config.url}member?currentMember=true&limit=250`, "members")) {
           for (const member of page.items) {
             const bioguide = string(member.bioguideId), partition = `congress:${bioguide}`;
+            const memberCapture: FederalCapture = { ...page.capture, body: JSON.stringify({ members: [member] }), context: { bioguideId: bioguide } };
             if (!/^[A-Z]\d{6}$/.test(bioguide)) {
-              const invalid = normalizeFederalCapture({ ...page.capture, body: JSON.stringify({ members: [member] }) });
-              await publish(`unjoined:member:${invalid[0].nativeId}`, [page.capture], invalid);
+              const invalid = normalizeFederalCapture(memberCapture);
+              await publish(`unjoined:member:${invalid[0].nativeId}`, [memberCapture], invalid);
               continue;
             }
-            await publish(partition, [page.capture], normalizeFederalCapture(page.capture).filter(row => row.bioguideId === bioguide));
+            await publish(partition, [memberCapture], normalizeFederalCapture(memberCapture));
             const held = await federalPartitionState(store, source, partition);
             if (held?.cursor === "sponsored-complete") continue;
             for await (const bills of federalPages(client, source, `${config.url}member/${bioguide}/sponsored-legislation?limit=250`, "sponsored", { bioguideId: bioguide })) {
               await publish(partition, [bills.capture], normalizeFederalCapture(bills.capture));
               for (const bill of bills.items) await congressBill(bill, bills.capture, bioguide);
             }
-            await publishFederalPartition({ source, partition, captures: [page.capture], records: [], store, vault, now: now(), cursor: "sponsored-complete" });
+            await publishFederalPartition({ source, partition, captures: [memberCapture], records: [], store, vault, now: now(), cursor: "sponsored-complete",
+              countsPrimary: true, dependencyHash: normalizedHash([rosterVersionId, []]) });
           }
         }
-        const resume = cursor.startsWith("updatesPage:") ? JSON.parse(cursor.slice(12)) as { url: string; index: number; through: string } : null;
+        const resume = cursor.startsWith("updatesPage:") ? JSON.parse(cursor.slice(12)) as { url: string; index: number; pageHash?: string; through: string } : null;
         const from = federalApiTimestamp(cursor.startsWith("updates:") ? cursor.slice(8) : startedAt);
         const url = resume?.url ?? `${config.url}bill?limit=250&fromDateTime=${encodeURIComponent(from)}&toDateTime=${encodeURIComponent(federalApiTimestamp(startedAt))}&sort=updateDate+asc`;
         for await (const page of federalPages(client, source, url, "bill")) {
-          for (let index = page.capture.url === resume?.url ? resume.index : 0; index < page.items.length; index++) {
+          const pageHash = sha256(page.capture.body);
+          for (let index = page.capture.url === resume?.url && resume?.pageHash === pageHash ? resume!.index : 0; index < page.items.length; index++) {
             await congressBill(page.items[index]);
-            await checkpoint(`updatesPage:${JSON.stringify({ url: page.capture.url, index: index + 1, through: resume?.through ?? startedAt })}`, page.capture);
+            await checkpoint(`updatesPage:${JSON.stringify({ url: page.capture.url, pageHash, index: index + 1, through: resume?.through ?? startedAt })}`, page.capture);
           }
           listing = page.capture;
         }
         if (listing) await checkpoint(`updates:${new Date(Date.parse(resume?.through ?? startedAt) - 1000).toISOString()}`, listing);
       }
     } else if (source === "govinfo") {
-      const resume = cursor?.startsWith("govinfoPage:") ? JSON.parse(cursor.slice(12)) as { url: string; through: string; index?: number } : null;
+      const resume = cursor?.startsWith("govinfoPage:") ? JSON.parse(cursor.slice(12)) as { url: string; through: string; pageHash?: string; index?: number } : null;
       const through = resume?.through ?? startedAt;
       const start = resume?.url ?? (cursor?.startsWith("https:") ? cursor : `${config.url}collections/BILLS/${federalApiTimestamp(cursor || "1993-01-01T00:00:00Z")}?pageSize=100&offsetMark=*`);
       for await (const page of federalPages(client, source, start, "govinfo-summary")) {
-        const firstIndex = page.capture.url === resume?.url ? resume.index ?? 0 : 0;
-        await checkpoint(`govinfoPage:${JSON.stringify({ url: page.capture.url, through, index: firstIndex })}`, page.capture);
+        const pageHash = sha256(page.capture.body);
+        const firstIndex = page.capture.url === resume?.url && resume?.pageHash === pageHash ? resume?.index ?? 0 : 0;
+        await checkpoint(`govinfoPage:${JSON.stringify({ url: page.capture.url, pageHash, through, index: firstIndex })}`, page.capture);
         for (let index = firstIndex; index < page.items.length; index++) {
           const item = page.items[index];
           const packageId = string(item.packageId), summary = await client.get(string(item.packageLink), "govinfo-summary");
@@ -227,39 +234,48 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
             const text = await client.get(textUrl, "bill-text", { packageId, billId, publishedAt: string(data.dateIssued) });
             await publish(partition, [summary, text], [...facts, ...normalizeFederalCapture(text)]);
           }
-          await checkpoint(`govinfoPage:${JSON.stringify({ url: page.capture.url, through, index: index + 1 })}`, page.capture);
+          await checkpoint(`govinfoPage:${JSON.stringify({ url: page.capture.url, pageHash, through, index: index + 1 })}`, page.capture);
         }
         // Overlap the completed pass by one second to include equal lastModified timestamps.
         // Catch changes made during a long backfill; the watermark belongs to its first page.
         await checkpoint(page.next ? `govinfoPage:${JSON.stringify({ url: page.next, through })}` : new Date(Date.parse(through) - 1000).toISOString(), page.capture);
       }
     } else if (source === "regulations-gov" || source === "federal-register") {
-      const today = federalCalendarDate(startedAt);
-      const pages: AsyncIterable<FederalPage> = source === "regulations-gov" ? regulationPages(client, today) : federalPages(client, source,
-        `${config.url}documents.json?per_page=1000&conditions[comment_date][gte]=${today}&order=oldest&fields[]=document_number&fields[]=title&fields[]=publication_date&fields[]=html_url&fields[]=abstract&fields[]=comments_close_on&fields[]=regulations_dot_gov_info&fields[]=docket_ids`, "rules");
+      const resume = cursor?.startsWith("rulesPage:") ? JSON.parse(cursor.slice(10)) as { today: string; url?: string; pending?: RegulationPageWork[] } : null;
+      const today = resume?.today ?? federalCalendarDate(startedAt);
+      const pages: AsyncIterable<FederalPage> = source === "regulations-gov" ? regulationPages(client, today, "1900-01-01", today, resume?.pending) : federalPages(client, source,
+        resume?.url ?? `${config.url}documents.json?per_page=1000&conditions[comment_date][gte]=${today}&order=oldest&fields[]=document_number&fields[]=title&fields[]=publication_date&fields[]=html_url&fields[]=abstract&fields[]=comments_close_on&fields[]=regulations_dot_gov_info&fields[]=docket_ids`, "rules");
       for await (const page of pages) {
+        const current = new URL(page.capture.url);
+        const pending = page.continuation ? [{ from: current.searchParams.get("filter[postedDate][ge]")!,
+          through: current.searchParams.get("filter[postedDate][le]")!, url: page.capture.url },
+          ...page.continuation.pending.slice(page.next ? 1 : 0)] : undefined;
+        await checkpoint(`rulesPage:${JSON.stringify({ today, ...(pending ? { pending } : { url: page.capture.url }) })}`, page.capture);
         const facts = normalizeFederalCapture(page.capture);
         // Rule partitions retain expired and withdrawn records for Ask; the reader filters the current clock.
         await publish("rules", [page.capture], facts);
-        await checkpoint(today, page.capture);
+        const remaining = page.continuation?.pending;
+        await checkpoint(remaining ? remaining.length ? `rulesPage:${JSON.stringify({ today, pending: remaining })}` : today
+          : page.next ? `rulesPage:${JSON.stringify({ today, url: page.next })}` : today, page.capture);
       }
     } else {
       // Posting-date ranges include amended reports; the provider's next links page the full national LD-203 query.
       // Changing people/aliases reopens historical joins; an unchanged directory refresh does not.
       const rosterHash = rosterVersionId ? normalizedHash(rosterVersionId) : null;
-      const saved = cursor?.startsWith("lda2:") ? JSON.parse(cursor.slice(5)) as { rosterHash: string | null; url?: string; index?: number; memberIndex?: number; after?: string; through?: string } : null;
+      const saved = cursor?.startsWith("lda2:") ? JSON.parse(cursor.slice(5)) as { rosterHash: string | null; url?: string; index?: number; pageHash?: string; filingHash?: string; memberIndex?: number; after?: string; through?: string } : null;
       const resume = saved?.rosterHash === rosterHash ? saved : null;
       const through = resume?.through ?? startedAt;
       // The published maximum is 25. A date filter is required to paginate beyond page one.
       const start = resume?.url ?? `${config.url}contributions/?page_size=25&ordering=dt_posted&filing_dt_posted_after=${encodeURIComponent(resume?.after ?? "2008-01-01T00:00:00Z")}`;
       for await (const page of federalPages(client, source, start, "contributions")) {
-        for (let index = page.capture.url === resume?.url ? resume.index ?? 0 : 0; index < page.items.length; index++) {
+        const pageHash = sha256(page.capture.body), samePage = page.capture.url === resume?.url && resume?.pageHash === pageHash;
+        for (let index = samePage ? resume!.index ?? 0 : 0; index < page.items.length; index++) {
           const filing = page.items[index];
           const filingId = string(filing.filing_uuid);
-          const resuming = page.capture.url === resume?.url && index === resume.index;
-          const memberIndex = resuming ? resume.memberIndex ?? 0 : 0;
+          const filingHash = sha256(JSON.stringify(filing));
+          const memberIndex = samePage && index === resume!.index && resume!.filingHash === filingHash ? resume!.memberIndex ?? 0 : 0;
           // Save the outstanding filing before its first write; an interrupted fanout remains owed.
-          await checkpoint(`lda2:${JSON.stringify({ rosterHash, url: page.capture.url, index, memberIndex, through })}`, page.capture);
+          await checkpoint(`lda2:${JSON.stringify({ rosterHash, url: page.capture.url, pageHash, filingHash, index, memberIndex, through })}`, page.capture);
           // Disaggregate the acquired page into its unchanged filing objects. Keeping the entire
           // page in every filing and every checkpoint would multiply its storage by its page size.
           // The complete page is still saved at the page boundary; each filing keeps every source field.
@@ -267,7 +283,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
             ? { honoreeRosterVersionId: rosterVersionId } : { honoreeRosterFailure: "No place holds a federal roster; no honoree identity link can be verified." } };
           const partition = filingId ? `filing:${filingId}` : "";
           const input = { source, partition, captures: [capture], completePartition: Boolean(filingId), dependencyHash: normalizedHash([rosterVersionId, []]) };
-          const unchanged = filingId && !resuming ? await unchangedFederalSourceInput(store, input) : null;
+          const unchanged = filingId ? await unchangedFederalSourceInput(store, input) : null;
           let membersConfirmed = Boolean(unchanged);
           if (unchanged) {
             const state = await federalPartitionState(store, source, partition);
@@ -281,7 +297,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
           }
           if (unchanged && membersConfirmed && await saveFederalSourceCheck(store, input, unchanged.head.versionId, unchanged.sourceUrls)) {
             console.log("FEDERAL_SOURCE_CONFIRMED_UNCHANGED=" + JSON.stringify({ source, partition, sourceKey: unchanged.hash.sourceKey }));
-            await checkpoint(`lda2:${JSON.stringify({ rosterHash, url: page.capture.url, index: index + 1, through })}`, page.capture);
+            await checkpoint(`lda2:${JSON.stringify({ rosterHash, url: page.capture.url, pageHash, index: index + 1, through })}`, page.capture);
             continue;
           }
           let roster, rosterFailure;
@@ -309,9 +325,9 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
           for (let member = memberIndex; member < members.length; member++) {
             const bioguide = members[member];
             await publish(`congress:${bioguide}`, [capture], facts.filter(row => row.bioguideId === bioguide), false, false, { replaceFilingId: filingId });
-            await checkpoint(`lda2:${JSON.stringify({ rosterHash, url: page.capture.url, index, memberIndex: member + 1, through })}`, capture);
+            await checkpoint(`lda2:${JSON.stringify({ rosterHash, url: page.capture.url, pageHash, filingHash, index, memberIndex: member + 1, through })}`, capture);
           }
-          await checkpoint(`lda2:${JSON.stringify({ rosterHash, url: page.capture.url, index: index + 1, through })}`, capture);
+          await checkpoint(`lda2:${JSON.stringify({ rosterHash, url: page.capture.url, pageHash, index: index + 1, through })}`, capture);
         }
         await checkpoint(`lda2:${JSON.stringify(page.next ? { rosterHash, url: page.next, index: 0, through }
           : { rosterHash, after: new Date(Date.parse(through) - 1000).toISOString() })}`, page.capture);

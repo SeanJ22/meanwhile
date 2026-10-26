@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -36,11 +37,12 @@ test("resumed Congress and govinfo backfills catch updates from their original f
     const store = new MemoryRoutineDataStore();
     const c = source === "congress-api" ? capture(source, "members", "congress-api-live.json") : capture(source, "govinfo-summary", "govinfo-collection.json");
     const url = source === "congress-api" ? "https://api.congress.gov/v3/member?limit=1&currentMember=true" : "https://api.govinfo.gov/collections/BILLS/1993-01-01T00:00:00Z?pageSize=100&offsetMark=next";
-    const cursor = source === "congress-api" ? `bootstrap:${JSON.stringify({ url, index: 1, through })}` : `govinfoPage:${JSON.stringify({ url, through })}`;
-    await publishFederalPartition({ vault, source, partition: "national", captures: [c], records: [], cursor, store, now: through });
     const root = JSON.parse(c.body);
     // Controlled completed-page envelopes keep the source's member record unchanged.
     const response = source === "congress-api" ? { ...root, pagination: { count: root.members.length } } : { ...root, packages: [], count: 0, nextPage: null };
+    const pageHash = createHash("sha256").update(JSON.stringify(response)).digest("hex");
+    const cursor = source === "congress-api" ? `bootstrap:${JSON.stringify({ url, index: 1, through, pageHash })}` : `govinfoPage:${JSON.stringify({ url, through, pageHash })}`;
+    await publishFederalPartition({ vault, source, partition: "national", captures: [c], records: [], cursor, store, now: through });
     const result = await refreshFederalSource({ vault, source, store, env: { CONGRESS_API_KEY: "fixture", DATA_GOV_API_KEY: "fixture" },
       fetchImpl: (async () => Response.json(response)) as typeof fetch, sleep: async () => {}, now: () => NOW });
     assert.equal(result.ok, true);
@@ -48,6 +50,34 @@ test("resumed Congress and govinfo backfills catch updates from their original f
     assert.equal(held.kind, "PROMOTED");
     if (held.kind === "PROMOTED") assert.equal(held.value.cursor, source === "congress-api" ? `updates:${through}` : "2026-10-10T11:59:59.000Z");
   }
+});
+
+test("a changed govinfo page cannot reuse a completed item index from different source bytes", async t => {
+  t.mock.method(console, "log", () => {});
+  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore();
+  const url = "https://api.govinfo.gov/collections/BILLS/2018-01-01T00:00:00Z?pageSize=100&offsetMark=*";
+  const original = JSON.parse(fixture("govinfo-collection.json"));
+  const oldBody = JSON.stringify({ ...original, packages: original.packages.slice(0, 1), count: 1, nextPage: null });
+  const pageHash = createHash("sha256").update(oldBody).digest("hex");
+  const cursor = `govinfoPage:${JSON.stringify({ url, through: NOW, pageHash, index: 1 })}`;
+  await publishFederalPartition({ source: "govinfo", partition: "national", captures: [{ source: "govinfo", kind: "govinfo-summary", url, body: oldBody, retrievedAt: NOW }],
+    records: [], store, vault: own, now: NOW, cursor });
+  const summary = JSON.parse(fixture("govinfo-summary.json")), packageLink = `https://api.govinfo.gov/packages/${summary.packageId}/summary`;
+  const changed = { packages: [{ packageId: summary.packageId, packageLink }], count: 1, nextPage: null };
+  const requests: string[] = [];
+  const result = await refreshFederalSource({ source: "govinfo", store, vault: own, env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW, sleep: async () => {},
+    fetchImpl: (async input => {
+      const requested = String(input); requests.push(requested);
+      if (requested === url) return Response.json(changed);
+      if (requested === packageLink) return Response.json(summary);
+      if (requested === summary.download.txtLink) return new Response(fixture("govinfo-bill-text.txt"));
+      throw new Error(`Unexpected source request ${requested}`);
+    }) as typeof fetch });
+  assert.equal(result.ok, true);
+  assert.ok(requests.includes(packageLink), "the replacement native edition must be acquired from item zero");
+  const held = await readFederalSourceProjection("govinfo", "bill:115:hr:1625", { store, now: NOW });
+  assert.ok(held.kind === "PROMOTED");
+  assert.ok(held.value.records.some(row => row.kind === "BILL_TEXT"));
 });
 
 test("fresh real responses from all five source APIs preserve their native records and publication fields", () => {
@@ -253,7 +283,9 @@ test("an unchanged primary source repairs a national count snapshot stranded aft
   const originalCreate = store.create.bind(store);
   let interrupt = true;
   store.create = async (...args: Parameters<typeof originalCreate>) => {
-    if (interrupt && args[0].candidate.scope === `${source}:national`) { interrupt = false; throw new Error("hard cutoff after native publication"); }
+    const native = interrupt && args[0].candidate.scope === `${source}:national`
+      ? (await store.readPromotionPayloadFields("FEDERAL_CIVIC_RECORD", `${source}:rules`, ["counts"]))?.counts as { loaded?: number } | undefined : undefined;
+    if (native?.loaded === 2) { interrupt = false; throw new Error("hard cutoff after native publication"); }
     return originalCreate(...args);
   };
   rows = [...rows, { ...rows[0], document_number: "2026-99999", title: `${rows[0].title} additional native document` }];
@@ -311,6 +343,30 @@ test("Regulations.gov partitions national results rather than silently stopping 
     }) as typeof fetch });
   let pages = 0; for await (const _page of regulationPages(client, "2026-10-12", "2026-10-10", "2026-10-12")) pages++;
   assert.equal(pages, 2); assert.equal(urls.length, 3);
+});
+
+test("Regulations.gov resumes the next page and every remaining date range after a cutoff", async () => {
+  const urls: string[] = [];
+  const client = federalClient({ source: "regulations-gov", env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW, sleep: async () => {},
+    fetchImpl: (async input => {
+      const u = new URL(String(input)); urls.push(u.href);
+      const from = u.searchParams.get("filter[postedDate][ge]"), through = u.searchParams.get("filter[postedDate][le]"), page = Number(u.searchParams.get("page[number]"));
+      const full = from === "2026-10-10" && through === "2026-10-12", lower = from === "2026-10-10" && through === "2026-10-11";
+      return Response.json({ meta: { totalElements: full ? 6000 : lower ? 2 : 1, hasNextPage: lower && page === 1 },
+        data: [{ id: `${from}:${page}`, attributes: { title: "Transport fixture" } }] });
+    }) as typeof fetch });
+  const firstPass = regulationPages(client, "2026-10-12", "2026-10-10", "2026-10-12");
+  const first = await firstPass.next();
+  assert.ok(!first.done && first.value.continuation);
+  const progress = first.value.continuation;
+  assert.equal(progress.pending.length, 2);
+  assert.equal(new URL(progress.pending[0].url!).searchParams.get("page[number]"), "2");
+  await firstPass.return(undefined);
+  urls.length = 0;
+  const resumed: string[] = [];
+  for await (const page of regulationPages(client, progress.today, "2026-10-10", "2026-10-12", progress.pending)) resumed.push(String(page.items[0].id));
+  assert.deepEqual(resumed, ["2026-10-10:2", "2026-10-12:1"]);
+  assert.equal(urls.length, 2, "completed ranges and pages are not reacquired before outstanding work");
 });
 
 test("Congress acquisition runs through its real bill samples and persists state counts and incremental cursors", async t => {

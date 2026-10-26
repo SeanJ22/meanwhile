@@ -2,6 +2,7 @@ import { statePeopleVersion } from "../officials/people-version.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { type StatePeopleJurisdiction } from "../officials/people-identity.ts";
 import { mergePeopleSets } from "../officials/merge-people.ts";
+import { withPeopleSourceChecks } from "../civic-data/people-source-checks.ts";
 import { PEOPLE_SOURCE_IDS } from "../officials/people-sources.ts";
 import { readPeopleSourceProjection } from "../civic-data/people-source-read.ts";
 import { toSeatHolder, type SeatHolder } from "../officials/lookup.ts";
@@ -208,6 +209,8 @@ export async function readOpenStatesPeopleProjection(jurisdiction: StatePeopleJu
     const ids = new Set(value.roster.officeholders.map(row=>row.id));
     if (value.roster.divisions.some(row=>!ids.has(row.officeholderId))) throw new Error("STATE_PEOPLE_DIVISION_ID_UNRESOLVED");
   }
+  if(result.kind==="PROMOTED"&&options.edge===undefined)return {...result,value:{...result.value,
+    roster:await withPeopleSourceChecks(result.value.roster,"STATE_LEGISLATOR",`${jurisdiction}:openstates-people:v1`,options.store)}};
   return result;
 }
 

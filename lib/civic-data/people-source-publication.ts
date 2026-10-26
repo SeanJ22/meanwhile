@@ -19,6 +19,8 @@ import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 import { rosterChanges, type RosterChange } from "../officials/roster-changes.ts";
 import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
 import type { PeopleSourceProbe } from "./people-source-probe.ts";
+import { sourceContentHash } from "./source-hash.ts";
+import { bindPeopleSourceHashes, recordPeopleSourceChecks } from "./people-source-checks.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 export {  readPeopleSourceProjection,  } from "./people-source-read.ts";
@@ -241,11 +243,17 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,verifyNationalCurrent:!national});
   if (national && !roster.officeholders.length) violations.push("NATIONAL_OFFICIAL_NONE_VERIFIED");
   roster = await publishRosterOfficePoints(roster, held, input.resolveOfficePoint);
-  const candidate = peopleSourceCandidate({...input,roster,captures,sourceRawHash:peopleSourceContentHash(input.acquisitions,input.roster),violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
+  const sourceRawHash = input.sourceProbe
+    ? sourceContentHash(input.acquisitions,{normalizationInputHash:input.sourceProbe.normalizationInputHash})
+    : peopleSourceContentHash(input.acquisitions,input.roster);
+  const candidate = peopleSourceCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,sourceRawHash,
+    violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"
     ? `people-portraits-${state}`
     : `people-${input.sourceId}-${state}`);
   const outcome = await processRegisteredRoutineCandidate(input.store,contractId,candidate,input.now,base.versionId,{confirmUnchanged:input.confirmUnchanged});
+  if(outcome.promoted){const head=await input.store.readSourceHead(candidate.recordClass,candidate.scope);
+    if(head?.versionId===outcome.promoted.versionId)await recordPeopleSourceChecks({store:input.store,head,pages:input.acquisitions});}
   return {candidate,outcome};
 }

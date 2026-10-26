@@ -15,6 +15,14 @@ interface SourceBytes {
 }
 const digest = (text: string) => createHash("sha256").update(text).digest("hex");
 
+/** A current-office SPARQL query keeps its identity as its observation date advances. */
+export function sourceContentAddress(address: string): string {
+  const url = new URL(address);
+  if (url.hostname === "query.wikidata.org" && url.pathname === "/sparql" && url.searchParams.has("query"))
+    url.searchParams.set("query", url.searchParams.get("query")!.replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?Z/g, "SOURCE_CHECK_TIME"));
+  return url.href;
+}
+
 /** A source's bytes and logical addresses decide change; observation and archive release stamps do not. */
 export function sourceContentHash(pages: readonly SourceBytes[], inputs: unknown = null): string {
   const records = pages.map(page => {
@@ -22,7 +30,7 @@ export function sourceContentHash(pages: readonly SourceBytes[], inputs: unknown
     if (!content || !/^[a-f0-9]{64}$/.test(content)) throw new Error("SOURCE_CONTENT_HASH_MISSING_BYTES");
     const address = page.extractedFrom
       ? `${new URL(page.extractedFrom.requestedUrl).origin}${new URL(page.extractedFrom.requestedUrl).pathname.replace(/\/(?:zip|archive)\/[a-f0-9]{40}(?:\.zip)?$/, "")}/${page.extractedFrom.member}`
-      : page.finalUrl;
+      : sourceContentAddress(page.finalUrl);
     return canonicalCivicDataJson([address, page.request ?? null, content]);
   });
   return digest(canonicalCivicDataJson({ inputs, records: [...new Set(records)].sort() }));

@@ -14,7 +14,9 @@ import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { holdRawCapture, readRawCaptureText, type RawCaptureRef } from "./raw-capture-vault.ts";
-import { confirmSourceHashUnchanged, sourceContentHash } from "./source-hash.ts";
+import { confirmSourceHashUnchanged } from "./source-hash.ts";
+import { peopleSourceContentHash } from "./people-source-hash.ts";
+export { peopleSourceContentHash } from "./people-source-hash.ts";
 
 /** One page as read, its text in memory for parsing and verification. */
 export interface StatePeopleAcquisition {
@@ -34,15 +36,6 @@ export async function holdPeopleCaptures(vault:EvidenceStore,sourceId:string,pag
   return held;
 }
 export const capturedText = (vault:EvidenceStore,row:StatePeopleCapture):Promise<string> => readRawCaptureText(vault,row.capture);
-
-/** Source bytes plus the identities and divisions this parse selects; no check or release timestamps. */
-export function peopleSourceContentHash(pages: readonly (StatePeopleAcquisition | StatePeopleCapture)[], roster: OfficeholderSet): string {
-  const members = roster.officeholders.map(person => [person.id, person.officeTitle, person.termStart, person.termEnd,
-    person.memberships?.map(row => [row.id, row.current, row.divisionId]).sort((a,b) => canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b))) ?? []]);
-  return sourceContentHash(pages, { members: members.sort((a,b) => canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b))),
-    divisions: roster.divisions.map(row => [row.officeholderId, row.membershipId ?? null, row.ocdId, row.bodyId]).sort((a,b) => canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b))),
-    vacancies: (roster.vacancies ?? []).map(row => [row.ocdId, row.reason, row.since ?? null]).sort((a,b) => canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b))) });
-}
 
 /** A complete unchanged state acquisition confirms its current version before any held roster is read. */
 export async function confirmStatePeopleSource(input: {

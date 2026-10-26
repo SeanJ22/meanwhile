@@ -63,6 +63,7 @@ import {
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
 import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
+import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { auditPassClock } from "./audit-pass-clock.mts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import {
@@ -999,18 +1000,31 @@ async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseSte
   return "SWITCHED";
 }
 
-async function requestQueuedReleaseDrain(): Promise<void> {
-  if (!AUTO_RELEASE_HANDOFF || !researchCycleActive || !researchCycleChild?.connected) return;
-  const release = await inspectRuntimeRelease();
-  if (release.state !== "UPDATE_REQUIRED") return;
+const pendingRestart = new PendingRestart();
+let releaseCheck: Promise<void> | null = null;
+/** The standing clock looks for a new release every minute, whether or not a research cycle is running. */
+function checkReleaseForRestart(): void {
+  if (!AUTO_RELEASE_HANDOFF || pendingRestart.target !== null || releaseCheck !== null) return;
+  releaseCheck = (async () => {
+    const release = await inspectRuntimeRelease();
+    if (release.state !== "UPDATE_REQUIRED" || release.targetSha === null) return;
+    if (await advanceStagedRelease(release.targetSha) !== "DRAIN") return;
+    holdForRestart(release.targetSha);
+  })().catch(error => {
+    console.error(`  runtime release inspection failed (${error instanceof Error ? error.name : "error"}); standing work continues and the next minute looks again`);
+  }).finally(() => { releaseCheck = null; });
+}
 
-  if (release.targetSha !== null && await advanceStagedRelease(release.targetSha) !== "DRAIN") return;
-  if (!researchCycleChild?.connected) return;
-
+/** No new standing run starts; the runs already started end by their deadlines, research ends its current wave, and the main loop wakes to restart. */
+function holdForRestart(targetSha: string): void {
+  if (!pendingRestart.mark(targetSha)) return;
   runtimeAdmissionsHeld = true;
+  const running = standingRuntimeScheduler.inFlightIds();
+  console.log(`  release ${targetSha.slice(0, 8)} loads by restart: no new standing run starts; ` +
+    `${running.length ? `${running.join(", ")} end by their deadlines` : "nothing is running"}, then the runner restarts`);
   drainHunterLane();
-  researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
-    if (error) console.error("  runtime release drain message could not be delivered; existing cycle continues");
+  if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
+    if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
   });
 }
 
@@ -1107,8 +1121,6 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
 
 const BEAT_BOUND_MS = 45_000;
 const lateBeat = () => console.error("  live cycle heartbeat did not answer in time; the next beat starts fresh");
-
-const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
 
 const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
@@ -1283,6 +1295,7 @@ async function stopScheduledOrderClock(): Promise<void> {
 }
 
 function runStandingRuntimeTick(reason: string, force = false): void {
+  checkReleaseForRestart();
   if (runtimeAdmissionsHeld) return;
   const launched = standingRuntimeScheduler.tick(Date.now(), force);
   if (launched.length > 0) {
@@ -1444,6 +1457,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   }
   const first = await inspectRuntimeRelease();
   if (first.state === "CURRENT") {
+    pendingRestart.clear();
     runtimeAdmissionsHeld = false;
     startStandingRuntimeClock();
     startAdminCopyClock();
@@ -1475,7 +1489,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     return 2;
   }
   if (final.state === "CURRENT") {
-
+    pendingRestart.clear();
     runtimeAdmissionsHeld = false;
     if (reopenStandingClock) startStandingRuntimeClock();
     if (reopenAdminCopyClock) startAdminCopyClock();
@@ -1742,7 +1756,8 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   if (ownerWakePending) { ownerWakePending = false; return; }
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
-    await sleep(Math.min(CONTROL_WAKE_POLL_MS, until - Date.now()));
+    await pendingRestart.sleep(Math.min(CONTROL_WAKE_POLL_MS, until - Date.now()));
+    if (pendingRestart.target !== null) return;
 
     const says = await ownerSays();
     if (says === "START_NOW") return;
@@ -1800,8 +1815,8 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
 async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boolean }> {
   if (canary) return { ownerIntentsUnreadable: false };
   let says = await ownerSays();
-  while (says === "HOLD") {
-    await sleep(CONTROL_WAKE_POLL_MS);
+  while (says === "HOLD" && pendingRestart.target === null) {
+    await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
     says = await ownerSays();
   }
   return { ownerIntentsUnreadable: says === "UNREADABLE" };
@@ -1839,7 +1854,7 @@ while (cycle < CYCLES) {
     if (repos && !(await researchPlanningStates(repos, (await readRunnerControls(repos)).research)).length) {
       await honorStoppedHunts(repos,new Date().toISOString());
       // The parent's control clock still sees a new Send; there is no research child to read data while stopped.
-      await sleep(CONTROL_WAKE_POLL_MS);
+      await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
       continue;
     }
   }
@@ -1861,20 +1876,15 @@ while (cycle < CYCLES) {
     boundedBeat(() => writeLiveCycleBeat(startedAt, exit), BEAT_BOUND_MS, lateBeat)();
   await beat();
   let cycleBeat = Promise.resolve();
-
-  let releaseDrain: Promise<void> | null = null;
   const cycleBeatTimer = setInterval(() => {
     if (!researchCycleActive) return;
     cycleBeat = beat();
-    releaseDrain ??= requestQueuedReleaseDrain().catch(error => {
-      console.error(`  runtime release inspection during work failed (${error instanceof Error ? error.name : "error"}); active work continues`);
-    }).finally(() => { releaseDrain = null; });
   }, 60_000);
   const result = await runOneCycle(owner).finally(async () => {
     researchCycleActive = false;
     researchCycleChild = null;
     clearInterval(cycleBeatTimer);
-    await Promise.all([cycleBeat, releaseDrain]);
+    await cycleBeat;
   }).catch(async error => {
     currentCycleErrors = error instanceof Error ? error.message : "research child launch failed";
     await lastBeat({ code: null, signal: null });

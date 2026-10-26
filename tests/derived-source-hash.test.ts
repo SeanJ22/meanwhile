@@ -10,14 +10,14 @@ import { CAMPAIGN_SOURCE_INPUTS_SQL, readCampaignProfileLinks } from "../lib/civ
 
 const at = "2026-10-01T00:00:00.000Z", later = "2026-10-02T00:00:00.000Z";
 const scope = "US-AZ:candidate-campaign-sites-derived";
-const upstream: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "CANDIDATE_PROFILE", scope: "US-AZ:candidate-profiles",
+const upstream: Extract<DerivedInputRef, { kind: "PROMOTED_VERSION" }> = { kind: "PROMOTED_VERSION", recordClass: "CANDIDATE_PROFILE", scope: "US-AZ:candidate-profiles",
   versionId: "profiles:one", readModelSha256: "a".repeat(64), promotedAt: at };
 const approval: DerivedInputRef = { kind: "PIPELINE_APPROVAL", itemId: "item:one", recordId: "approval:one", approvedAt: at };
 const evidence: DerivedInputRef = { kind: "VAULTED_EVIDENCE", artifactId: "artifact:one", contentHash: `sha256-${"b".repeat(64)}`, tier: "RAW", retrievedAt: at };
 const inputs = [upstream, approval, evidence];
 
 test("derived source hashes keep external content, approval and attempt revisions while excluding checks and the prior output", () => {
-  const own = { ...upstream, recordClass: "CURATED_READER_RECORD", scope, versionId: "prior:one" } as DerivedInputRef;
+  const own: Extract<DerivedInputRef, { kind: "PROMOTED_VERSION" }> = { ...upstream, recordClass: "CURATED_READER_RECORD", scope, versionId: "prior:one" };
   const first = externalDerivedSourceInputs([...inputs, own], { recordClass: "CURATED_READER_RECORD", scope });
   const checked = inputs.map(input => ({ ...input, promotedAt: later, retrievedAt: later, approvedAt: later }));
   assert.equal(derivedSourceContentHash(first), derivedSourceContentHash(checked));

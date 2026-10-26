@@ -17,7 +17,8 @@ import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
-import { ADMIN_CONFIG_ID, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { settingDefinition } from "../lib/control-plane/settings.ts";
 import { derivedCampaignSitesContractId, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope,
   type DerivedCampaignSitesProjection } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
@@ -191,7 +192,9 @@ async function main(): Promise<void> {
     const sql = neon(controlPlane);
     sourceInputs = await readCampaignSourceInputs(store, state, async (text, params = []) => await sql.query(text, [...params]));
     const [config] = await sql.query("SELECT value #> '{settings,facts.retryMinutes}' AS retry FROM cp_admin_config WHERE id=$1", [ADMIN_CONFIG_ID]);
-    if (config?.retry) retryMinutes = factClocks({ settings: { "facts.retryMinutes": config.retry } } as AdminConfig).retryMinutes("portrait");
+    if (settingDefinition("facts.retryMinutes")?.validate(config?.retry)) retryMinutes = factClocks({
+      ...defaultAdminConfig(), settings: { "facts.retryMinutes": config!.retry },
+    }).retryMinutes("portrait");
     const head = await store.readSourceHead(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state));
     progress = head ? await store.readCandidateField(head.versionId, ["normalizedPayload", "portraitWork"]) as CampaignPortraitWork | undefined : undefined;
     const confirmed = await confirmDerivedSourceUnchanged({ store, sourceId: "candidate-campaign-site-chain",

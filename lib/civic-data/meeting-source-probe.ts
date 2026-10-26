@@ -90,6 +90,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
   dependencies: { readonly checkpoint?: Pick<CivicReadCache, "readCheckpoint" | "checkpoint">; readonly fetchImpl?: typeof fetch;
     readonly publicationPending?: () => Promise<boolean> } = {}) {
   const head = await store.readSourceHead("MEETING", partition.scope);
+  const publicationPending=dependencies.publicationPending??(async()=>{const query=factReader();return query?meetingFactPublicationPending(query,partition.scope):false;});
   const cache = dependencies.checkpoint ?? runtimeCivicReadCache().jobState(), context = canonicalCivicDataHash([partition.sourceId, partition.scope, normalizationInputHash]);
   const saved = await cache.readCheckpoint<MeetingSourceProgress>(PROGRESS, partition.scope);
   const pages: Record<string, ProgressPage> = saved?.context === context ? { ...saved.pages } : {};
@@ -195,13 +196,14 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       return { value, responses: [...keys].flatMap(key => responses.has(key) ? [responses.get(key)!] : []) };
     },
     async probe(plan: MeetingSourceProbe) {
+      const retainForPublication=await sourceIO.run(true,publicationPending);
       for (const page of plan.requests) {
         const response = await fetchSource(page.requestedUrl, { method: page.request?.method ?? "GET", body: page.request?.body, headers: page.request?.headers });
         if (!response.ok) return false;
         transport.forgetGet([page.requestedUrl]);
         // A hash-only pass does not accumulate a state's agenda bytes after their exact source checks.
         const captured = responses.get(requestKey(page));
-        if (onSource && captured) responses.set(requestKey(page), { ...captured, bytes: new Uint8Array() });
+        if (onSource && captured && !retainForPublication) responses.set(requestKey(page), { ...captured, bytes: new Uint8Array() });
       }
       return plan.requests.every(page => responses.get(requestKey(page))?.rawHash === page.rawHash &&
         responses.get(requestKey(page))?.finalUrl === page.finalUrl);
@@ -215,8 +217,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       try { return await operation(); } finally { globalThis.fetch = prior; networkTransport = priorTransport; }
     },
     async clear() {
-      const pending = dependencies.publicationPending ?? (async () => { const query = factReader(); return query ? meetingFactPublicationPending(query, partition.scope) : false; });
-      if (await sourceIO.run(true, pending)) { deferred=true; await save(); return; }
+      if (await sourceIO.run(true,publicationPending)) { deferred=true; await save(); return; }
       deferred=false;finished=true;
       await checkpoint({context,pages:{},deferred:false});
     },

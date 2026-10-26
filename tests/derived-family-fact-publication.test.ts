@@ -12,7 +12,7 @@ import { DERIVED_WIRING_SOURCE_NAMES, derivedWiringKey, familyMembers, type Deri
 import { derivedMeetingFamilyId,derivedMeetingBodyContract,requiredMeetingPartitionContract,meetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
 import { stageMeetingFactPublication, continueMeetingFactPublication, meetingFactsAfterSourceCheck } from "../lib/civic-data/meeting-fact-progress.ts";
-import { retainingFetch, tracedResponses, retainMeetingCandidateEvidence } from "../lib/civic-data/retained-meeting-bytes.ts";
+import { retainingFetch, tracedResponses, retainMeetingCandidateEvidence,bindMeetingSourceObservations } from "../lib/civic-data/retained-meeting-bytes.ts";
 import {retainUnwiredDerivedBodyFacts} from "../lib/civic-data/derived-meeting-body.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
@@ -91,7 +91,7 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
       promoted: disposition === "promoted" ? { versionId: acceptedCandidateId } : null, confirmed: disposition === "confirmed" ? { at: new Date().toISOString() } : null,
       candidate: { candidate: { ...candidate, id: acceptedCandidateId }, receipt: { decision: "GOOD" }, failureDetail: null },
     }); },
-    printMeetingPartitionReceipt: () => {}, tracedResponses, publishReadMeetingFacts, factClocks,
+    printMeetingPartitionReceipt: () => {}, tracedResponses,bindMeetingSourceObservations, publishReadMeetingFacts, factClocks,
     stageMeetingFactPublication, continueMeetingFactPublication, meetingFactsAfterSourceCheck, meetingPartitionContract,
     withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
     DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue, sourceHashReceiptFields, ZERO_RELEASE_EVENTS,

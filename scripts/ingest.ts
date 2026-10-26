@@ -625,7 +625,8 @@ export async function promoteDerivedMeetingFamily(
       const succeeded="head" in outcome||!!outcome.promoted||!!outcome.confirmed;
       if("head" in outcome)confirmations.push({partition:body,confirmation:outcome});
       else results.push({partition:body,candidate:outcome.candidate.candidate,outcome});
-      const complete="head" in outcome||outcome.candidate.candidate.retrieval.complete!==false;
+      const publicationPending=await meetingSourceContinuationPending(body.scope);
+      const complete=("head" in outcome||outcome.candidate.candidate.retrieval.complete!==false)&&!publicationPending;
       if(succeeded&&complete){
         pending.delete(bodyId);
         const bodyClock=await store.clock(body.sourceId,"MEETING",body.scope,task.parserVersion),checked=bodyClock.lastSucceededObservedAt;
@@ -639,7 +640,7 @@ export async function promoteDerivedMeetingFamily(
       }
     }catch(error){
       passSucceeded=false;
-      const continuation=error instanceof Error&&/^(MEETING_SOURCE_CONTINUATION_PENDING|MEETING_VENUE_OWNER_INPUT_CHANGED)/.test(error.message);
+      const continuation=error instanceof Error&&/^(MEETING_SOURCE_CONTINUATION_PENDING|MEETING_FACT_PUBLICATION_CONTINUATION_PENDING|MEETING_VENUE_OWNER_INPUT_CHANGED)/.test(error.message);
       if(continuation)nextDue.push(Date.now());
       else{
         pending.delete(bodyId);
@@ -689,8 +690,8 @@ async function promoteDerivedMeetingBody(
         vault: facts.vault, bodyIds: heldBodies, responses: [response] }).then(() => {}) : undefined);
     stopWatch=sourceSession.watchTermination();
     const confirmed = await probeMeetingSource({ store, partition, normalizationInputHash: sourceInputHash, now: generatedAt, session: sourceSession,
-      workRemains: plan => facts ? meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
-        clocks:factClocks(null),at:generatedAt,meetingIds:plan.meetingIds,bodyIds:plan.bodyIds}) : Promise.resolve(false) });
+      workRemains: plan => facts ? sourceSession!.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
+        clocks:factClocks(null),at:generatedAt,meetingIds:plan.meetingIds,bodyIds:[partition.bodyId]})) : Promise.resolve(false) });
     if (confirmed) {
       console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
         bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(confirmed), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
@@ -718,8 +719,13 @@ async function promoteDerivedMeetingBody(
     const acquire = () => readDerivedFamilyMembers(group, fetchImpl, undefined, undefined,
       () => sourceSession ? sourceSession.inputs(() => prepare(members)) : prepare(members));
     const acquired = sourceSession ? await sourceSession.run(acquire) : await acquire();
-    for (const read of acquired) console.log(`  ${read.member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
-    reads.push(...acquired);
+    const pages=sourceSession?[...sourceSession.responses.values()]:retaining.responses;
+    const observed=acquired.map(read=>{
+      const own=pages.filter(page=>read.acquisitions.some(acquisition=>acquisition.requestedUrl===page.requestedUrl&&acquisition.finalUrl===page.finalUrl&&acquisition.rawHash===page.rawHash));
+      return {...read,freshMeetings:bindMeetingSourceObservations(read.freshMeetings,own),retrievedAt:own.map(page=>page.retrievedAt).sort()[0]??read.retrievedAt};
+    });
+    for (const read of observed) console.log(`  ${read.member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
+    reads.push(...observed);
     if (group[0].row.kind === "MUNICODE") {
       const urls = acquired.flatMap(read => read.acquisitions.map(row => row.requestedUrl));
       pass.forgetGet(urls); sourceSession?.forgetGet(urls);
@@ -734,8 +740,8 @@ async function promoteDerivedMeetingBody(
   let complete = reads.length === members.filter(member => member.status === "ACTIVE").length && reads.every(read => familyMemberReadIssue(read) === null);
   const acquiredConfirmation = complete && sourceSession && sourceInputHash ? await confirmAcquiredMeetingSource({ store, partition, session: sourceSession,
     normalizationInputHash: sourceInputHash, now: new Date().toISOString(), workRemains: plan => facts
-      ? meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
-        clocks:factClocks(null),at:new Date().toISOString(),meetingIds:plan.meetingIds,bodyIds:plan.bodyIds}) : Promise.resolve(true) }) : null;
+      ? sourceSession!.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
+        clocks:factClocks(null),at:new Date().toISOString(),meetingIds:plan.meetingIds,bodyIds:[partition.bodyId]})) : Promise.resolve(true) }) : null;
   if (acquiredConfirmation && sourceSession) {
     console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
       bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(acquiredConfirmation), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
@@ -809,19 +815,26 @@ async function promoteDerivedMeetingBody(
   const planned = sourceSession && sourceInputHash ? withMeetingSourceProbe(sourced, partition, sourceInputHash, captured, complete && sourceSession.complete,
     complete && sourceSession.acquisitionComplete) : sourced;
   const candidate = retainMeetingCandidateEvidence(planned,finalBuild.snapshot,[...captured,...agendaSources.map(page => page.response),...census.responses]);
+  if(facts){
+    const freshIds=new Set(reads.filter(read=>familyMemberReadIssue(read)===null).flatMap(read=>read.freshMeetings.map(meeting=>meeting.id)));
+    const stage=()=>stageMeetingFactPublication({facts:facts.db,vault:facts.vault,scope:partition.scope,candidateId:candidate.id,
+      meetings:finalBuild.snapshot.meetings.filter(meeting=>freshIds.has(meeting.id)&&!meeting.carried),
+      responses:[...tracedResponses(finalBuild.snapshot.sources,[...captured,...agendaSources.map(page=>page.response),...census.responses]),...census.responses]});
+    if(sourceSession)await sourceSession.inputs(stage);else await stage();
+  }
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate,new Date().toISOString(),base?.expectedBaseVersionId??null,{confirmUnchanged:false});
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
   if (outcome.promoted || outcome.confirmed) {
     for (const read of facts ? reads.filter(row => row.ok) : []) {
       await publishPartitionFacts({ ...facts!, responses: [...captured,...census.responses] }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
-        census.meetings.filter(meeting=>read.freshMeetings.some(fresh=>fresh.id===meeting.id)), read.acquisitions, outcome.candidate.candidate.id, generatedAt);
+        census.meetings.filter(meeting=>read.freshMeetings.some(fresh=>fresh.id===meeting.id)), read.acquisitions,outcome.candidate.candidate.id,generatedAt,partition.scope);
     }
   }
   console.log(`Meeting pins: ${census.placedCount} placed, ${census.responses.length} new Census reads, ${census.held.length} unresolved`);
   if ((outcome.promoted || outcome.confirmed) && sourceSession && complete && sourceSession.acquisitionComplete) await sourceSession.clear();
   return outcome;
   }catch(error){
-    if(error instanceof Error&&/^(MEETING_SOURCE_CONTINUATION_PENDING|MEETING_VENUE_OWNER_INPUT_CHANGED)/.test(error.message))await sourceSession?.defer();
+    if(error instanceof Error&&/^(MEETING_SOURCE_CONTINUATION_PENDING|MEETING_FACT_PUBLICATION_CONTINUATION_PENDING|MEETING_VENUE_OWNER_INPUT_CHANGED)/.test(error.message))await sourceSession?.defer();
     throw error;
   }finally{stopWatch?.();}
 }
@@ -1741,6 +1754,7 @@ export async function promoteMeetingPartition(
   idSuffix = "",
   sourceResponse?: Omit<RetainedSourceResponse, "bytes">,
   sourcePlan?: MeetingSourcePlan,
+  facts?:Omit<MeetingFactsTarget,"responses">,
 ): Promise<{
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
@@ -1759,6 +1773,9 @@ export async function promoteMeetingPartition(
   // A second attempt on the same readings needs its own candidate id.
   const planned = sourcePlan ? withMeetingSourceProbe(built, partition, sourcePlan.inputHash, sourcePlan.responses, sourcePlan.complete, sourcePlan.acquisitionComplete) : built;
   const candidate = idSuffix === "" ? planned : { ...planned, id: `${planned.id}${idSuffix}` };
+  if(facts)await stageMeetingFactPublication({facts:facts.db,vault:facts.vault,scope:partition.scope,candidateId:candidate.id,
+    meetings:snapshot.meetings.filter(meeting=>!meeting.carried),responses:[...tracedResponses(snapshot.sources,retainedResponses),
+      ...retainedResponses.filter(response=>response.source==="census-geocoder")]});
   // An ordinary routine re-check that found nothing new is confirmed on the
   // pointed version, not republished.
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt, undefined, { confirmUnchanged: sourcePlan === undefined });
@@ -1923,6 +1940,7 @@ export async function promoteMeetingPartitions(input: {
         tracedResponses([{ source: partition.meetingSource, acquisitions: report.acquisitions }], input.facts?.responses ?? input.retainedResponses ?? [])
           .sort((a, b) => a.retrievedAt.localeCompare(b.retrievedAt))[0],
         input.sourcePlan,
+        input.facts,
       );
       return { reconciled, candidate, outcome, census };
     };

@@ -118,3 +118,18 @@ test("an ephemeral calendar session compares acquired hashes before held output 
   assert.ok(await confirmAcquiredMeetingSource({ store, partition, session: next, normalizationInputHash: "session-input", now, workRemains: async () => false }));
   assert.equal(confirmations, 1); assert.equal(calls, 4, "each pass acquires its own session before comparing source content");
 });
+
+
+test("hash-matched source bytes remain available to repair the accepted candidate's unfinished fact evidence",async()=>{
+  const checkpoint=cache(),vault=new MemoryEvidenceStore(),now=new Date().toISOString();let pending=true;
+  const session=await meetingSourceSession(partition,"retained-field-evidence",{readSourceHead:async()=>null},now,vault,async()=>{},undefined,
+    {checkpoint,fetchImpl:async()=>new Response("Exact official source bytes"),publicationPending:async()=>pending});
+  await session.fetch(calendar);
+  const page=[...session.responses.values()][0]!;
+  const plan={formatVersion:1 as const,complete:true,normalizationInputHash:"retained-field-evidence",sourceRawHash:page.rawHash,sourceHashKind:"REQUESTS" as const,
+    requests:[{requestedUrl:page.requestedUrl,finalUrl:page.finalUrl,rawHash:page.rawHash}],meetingIds:[],bodyIds:[partition.bodyId]};
+  assert.equal(await session.probe(plan),true);
+  assert.ok([...session.responses.values()][0]!.bytes.length>0,"an unchanged source can repair staged evidence without loading the held body snapshot");
+  pending=false;assert.equal(await session.probe(plan),true);
+  assert.equal([...session.responses.values()][0]!.bytes.length,0,"completed hash-only passes release their source buffers");
+});

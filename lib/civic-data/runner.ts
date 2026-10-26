@@ -28,24 +28,36 @@ export function routineDeferral(run: BoundedChildResult, childStarted: boolean):
   return unsent || cut ? run.errorMessage : null;
 }
 
-/** One national people child, one state place map, or the national bill fan-out holds gigabytes, so each family runs one child at a time in its own lane. */
-const PLACE_MAP_SCRIPT = "scripts/place-map-refresh.mts";
-const LEGISCAN_BULK_SCRIPT = "scripts/legiscan-bulk.mts";
-const ROUTINE_SERIAL_SCRIPTS: ReadonlySet<string> = new Set(["scripts/national-people-refresh.mts", PLACE_MAP_SCRIPT, LEGISCAN_BULK_SCRIPT]);
-/** Lanes whose one child reserves more than a finishing read frees: they keep their place in the memory queue. */
-const ROUTINE_HELD_LANES: ReadonlySet<string> = new Set([PLACE_MAP_SCRIPT, LEGISCAN_BULK_SCRIPT].map(script => `serial:${script}`));
+/** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane, as does
+ * the national bill fan-out. Census work shares one worker: the national overlap child and each state's map child run
+ * one at a time in the Census lane. */
+const ROUTINE_SERIAL_SCRIPTS: ReadonlyMap<string, string> = new Map([
+  ["scripts/national-people-refresh.mts", "serial:scripts/national-people-refresh.mts"],
+  ["scripts/legiscan-bulk.mts", "serial:scripts/legiscan-bulk.mts"],
+  ["scripts/census-geography-refresh.mts", "serial:census-geography"],
+  ["scripts/place-map-refresh.mts", "serial:census-geography"],
+]);
 export function routineSerialLane(command: readonly string[]): string | undefined {
-  return ROUTINE_SERIAL_SCRIPTS.has(command[0] ?? "") ? `serial:${command[0]}` : undefined;
+  return ROUTINE_SERIAL_SCRIPTS.get(command[0] ?? "");
 }
 
 /**
- * A state map (1,672 MiB) or the national bill fan-out (2,130 MiB) reserves more memory than one finishing read frees,
- * so with every child taking a free turn the reads refill the host first and it never starts. A held lane's one waiting
- * child keeps its place in the memory queue and holds later starts for MEMORY_HOLD_MS until it fits; every other child
- * takes a free turn and stays queued if it does not fit.
+ * Work whose one child reserves more than a finishing read frees, and that has waited a full pass, goes first for memory.
+ * A state map has waited when it was owed at least one pass budget before admission, or has never run: its clock moves
+ * only when it runs, so a map still owed after a whole pass did not start in it. The national bill fan-out (2,130 MiB)
+ * continues from pass to pass with no owed instant, so whenever it is admitted it has waited.
  */
-export function routineChildMemoryOrder(serialLane: string | undefined, priority: number): WorkerMemoryOrder {
-  return serialLane !== undefined && ROUTINE_HELD_LANES.has(serialLane) ? { priority, hold: true } : { priority, wait: false };
+export function routineWaitedFullPass(candidate: Pick<RoutineTaskAdmissionCandidate, "task" | "owedAtMs" | "baselineOwed" | "lastConsideredAt">, nowMs: number): boolean {
+  if (candidate.task.command[0] === "scripts/legiscan-bulk.mts") return true;
+  if (!candidate.task.id.startsWith("place-map-")) return false;
+  if (candidate.baselineOwed && !candidate.lastConsideredAt) return true;
+  return candidate.owedAtMs !== undefined && candidate.owedAtMs <= nowMs - ROUTINE_PASS_BUDGET_MS;
+}
+
+/** Waited work goes to the front and takes the next freed memory that fits its own reservation; every other child
+ * takes a free turn and stays queued if it does not fit. */
+export function routineChildMemoryOrder(priority: number, waited: boolean): WorkerMemoryOrder {
+  return waited ? { priority, first: true } : { priority, wait: false };
 }
 
 export const ROUTINE_SUPERVISOR_STARTED_AT_ENV = "WTP_ROUTINE_SUPERVISOR_STARTED_AT";

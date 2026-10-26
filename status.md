@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE FOR READERS: release 128 (main 9352c8e14, Maryland 413 loop fix; runner on 9352c8e14 since 7:27 AM EDT, no hand restart). GATING: release 129, RT-01b place map (river-next-rt01b, merge of 92b527e93 onto river 90348edd4). BUILDING: batch 3 (GV-01, FM-01, MP-01, MT-02, runner-release fix, bills), DB-04 (ships alone), CT-01 + ballot date text, RT-01c. See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 128 (main 9352c8e14, Maryland 413 loop fix; runner on 9352c8e14 since 7:27 AM EDT, no hand restart). GATING: release 129, RT-01b place map (river-next-rt01b, merge of 92b527e93 onto river 90348edd4). READY to fold: bills c0ddd0e46 (in the 129 gate), RIVER-PP 338a7b418. BUILDING: batch 3 (GV-01, FM-01, MP-01, MT-02), runner-release fix, CT-01 + ballot date text, RT-01c. DB-04 stopped (replaced by DB-05). See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -30,10 +30,13 @@ Live: release 128 (main 9352c8e14). River: 90348edd4.
 | aab119580, re-cut on stream/river-mt-02 | MT-02 | One single-person roster lookup kept, GV-01's duplicate deleted |
 | stream/river-runner-release | Runner release fix | A stuck staging can't block later releases; stuck/failed staging shows in heartbeat and Admin; testedSha and codeIdentity written at startup and on the standing clock |
 
-**Rides the next release when READY (no longer alone)**
+**DB-04 is replaced by DB-05 (Sean, 11:15 AM EDT)**
+DB-05 is Sean's new session to take Neon down to 10 GB a day. River stopped DB-04 and is pushing what it has to stream/river-db-04 (handoff notes below when it lands). Nothing from stream/db-04 or stream/river-db-04 is folded or shipped. DB-05's READY pieces are scanned like any lane and ride the next release with everything else READY.
+
+**RIVER-PP: place pages on the runner**
 | READY | Lane | State |
 |---|---|---|
-| stream/river-db-04 | DB-04 (taken over; silent since 1:11 AM) | River finishing. READY will show openstates-people (1.28 GB) and member-offices (0.64 GB, 8 AM hour) GB/h before and after |
+| 338a7b418 (stream/river-place-pages) | The runner's new place-pages lane drains rebuild_queue with rebuildPlacePages (concurrency 4, 240 s turns, 424 MiB reservation = 403 MiB peak + 5%); stops at a pending restart or Admin pause; failed turns leave rows queued. Deleted: netlify/functions/rebuild-place-pages.mts, its netlify.toml block, the deploy-time 6-minute drain and the deploy-only initialBackfill mode. The deploy step keeps only seeding ZIP/body page entries and queuing unbuilt places | READY 11:20 AM. Scan clean (no bypassCache, no proof files). tsc clean (River fixed one test type), runner-place-pages 4/4, 87/87 place-page and write-path tests, 182/182 runner tests, eslint and knip clean. Folds onto river right after the 129 gate (with every other READY lane); 129 ships river + it |
 
 **Taken over, finishing**
 | READY | Lane | State |
@@ -48,7 +51,7 @@ Recommendation: Sean restarts both sessions. River's capacity is on the place ma
 |---|---|---|
 | 7b5eacd03 | RB-A10 | place_boundary, zip_place, zcta_place have 0 rows in production. Ships when every state has rows (RT-01b) and 20 random ZIPs in 20 states resolve |
 | #822 (RB-A2) | Per-state place-map approach | Its approach is in RT-01b; River closes #822 once 129 is live |
-| e4305907d, 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed, a0cb7d1ef | DB-03 remaining steps | Held for DB-04 (Sean, 10:00 PM Oct 25). DB-04's READY says which it replaces |
+| e4305907d, 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed, a0cb7d1ef | DB-03 remaining steps | Held for DB-05 (Sean, 11:15 AM Oct 26; was DB-04). DB-05's READY says which it replaces |
 | be0bef2bf | RB-A3 follow-up | Not needed after RB-A8 unless Sean wants official/checked split in Admin |
 | 1307d4e03 | RN-03 handoff | No code |
 | 2cce7754c, 9c2b0c58a | DB-03 portraits / 118 integration | Not folded (one portrait path: release 120's) |

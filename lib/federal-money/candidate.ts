@@ -49,7 +49,10 @@ export function federalMoneyCandidate(input: {
   const captures = [...new Map([...input.retainedCaptures ?? [], ...page.captures].filter(row => hashes.has(row.rawHash)).map(row => [row.rawHash, row])).values()];
   const normalizedPayload: FederalMoneyEvidence = freezeDurableJson({ captures, predecessorVersionId: input.predecessorVersionId ?? null,
     incomingIds: page.facts.map(row => row.id), readModelHash });
-  const rawHash = sha256(captures.map(row => row.rawHash).join("\n"));
+  const sourcePages="checkpoint" in projection ? projection.checkpoint.sourcePages : undefined;
+  const rawHash = sourcePages ? sha256(canonicalCivicDataJson({source,state:projection.state,
+    pages:Object.entries(sourcePages).map(([key,page])=>[key,page.rawHash]).sort((a,b)=>a[0].localeCompare(b[0]))}))
+    : sha256([...new Set(captures.map(row => row.rawHash))].sort().join("\n"));
   const route = FEDERAL_MONEY_CONFIG[source].route;
   const records = "records" in projection ? [...projection.records, { state: projection.state }]
     : "states" in projection ? projection.states : [{ state: projection.state }];
@@ -58,7 +61,8 @@ export function federalMoneyCandidate(input: {
   return {
     id: `cv-${sha256(`${source}:${scope}:${readModelHash}:${rawHash}:${now}`).slice(0, 32)}`,
     sourceId: source, recordClass: "FEDERAL_MONEY", scope,
-    retrieval: { succeeded: true, requestedUrl: route, finalUrl: route, httpStatus: 200, retrievedAt: now, rawHash },
+    retrieval: { succeeded: true, requestedUrl: route, finalUrl: route, httpStatus: 200, retrievedAt: now, rawHash,
+      ...(sourcePages || "partition" in projection ? {rawHashBasis:"SOURCE_CONTENT_V1" as const} : {}) },
     normalization: { succeeded: true, parserVersion: FEDERAL_MONEY_PARSER, schemaVersion: FEDERAL_MONEY_PARSER,
       normalizedHash: readModelHash, normalizedPayloadHash: sha256(canonicalCivicDataJson(normalizedPayload)),
       inputRecords: records.length, outputRecords: records.length, droppedRecords: 0, missingRequiredFields: [] },

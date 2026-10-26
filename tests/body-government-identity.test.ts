@@ -66,7 +66,7 @@ test("Census labels are readable and unknown boards do not gain authority from s
 });
 
 test("all historical body addresses survive and every displayed row has a unique government-qualified name",()=>{
-  const rows=[body("Board of Supervisors","original"),body("Board of Supervisors","second"),body("Joint","joint-one"),body("Joint","joint-two")];
+  const rows=[body("Board of Supervisors","original"),body("Board of Supervisors","second"),body("Board of Supervisors — 2","already-numbered"),body("Joint","joint-one"),body("Joint","joint-two")];
   const ids=prepareBodyIdentities(rows,divisions);
   assert.deepEqual([...ids.keys()],rows.map(row=>row.id));
   assert.equal(new Set([...ids.values()].map(row=>row.name)).size,rows.length);

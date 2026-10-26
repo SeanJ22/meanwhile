@@ -132,13 +132,21 @@ export function prepareBodyIdentities(bodies: readonly Body[], divisions: Readon
   }
   // Distinct retained source records must remain addressable and distinguishable.
   const names = new Map<string, string[]>();
+  const nameKey = (name: string) => words(readerBodyName(name)).replace(/\band\b/g, "").replace(/\s+/g, " ");
   for (const [id, row] of result) {
-    const key = words(readerBodyName(row.name)).replace(/\band\b/g, "").replace(/\s+/g, " ");
+    const key = nameKey(row.name);
     const ids = names.get(key) ?? []; ids.push(id); names.set(key, ids);
   }
+  const reserved = new Set(names.keys());
   for (const ids of names.values()) if (ids.length > 1) {
     ids.sort();
-    ids.forEach((id, index) => { if (index) result.get(id)!.name += ` — ${index + 1}`; });
+    for (const id of ids.slice(1)) {
+      const row = result.get(id)!, base = row.name;
+      let number = 2;
+      while (reserved.has(nameKey(`${base} — ${number}`))) number++;
+      row.name = `${base} — ${number}`;
+      reserved.add(nameKey(row.name));
+    }
   }
   return result;
 }

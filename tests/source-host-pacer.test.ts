@@ -59,6 +59,7 @@ test("a named refusal stops that website; one refused Legistar sitting does not 
   const fetchImpl: typeof fetch = async () => new Response(String(++calls), { status: calls === 1 ? 403 : 200 });
   await pacer.fetch("https://kearsarge.org/schedule", {}, fetchImpl);
   await assert.rejects(pacer.fetch("https://kearsarge.org/other-page", {}, fetchImpl), SourceReadDeferred);
+  await assert.rejects(pacer.fetch("https://kearsarge.org/other-document.pdf", {}, fetchImpl), SourceReadDeferred);
   assert.equal(calls, 1);
   calls = 0;
   await pacer.fetch("https://webapi.legistar.com/v1/elpasotexas/events/2563/eventitems", {}, fetchImpl);
@@ -68,6 +69,29 @@ test("a named refusal stops that website; one refused Legistar sitting does not 
   await pacer.fetch("https://city.gov/calendar/day/20260917", {}, fetchImpl);
   await pacer.fetch("https://city.gov/calendar/day/20261012", {}, fetchImpl);
   assert.equal(calls, 2, "a refused dated sitting is not a refusal of the whole calendar");
+  calls = 0;
+  await pacer.fetch("https://town.legistar1.com/View.ashx?M=M&ID=2563", {}, fetchImpl);
+  await pacer.fetch("https://town.legistar1.com/View.ashx?M=M&ID=2564", {}, fetchImpl);
+  assert.equal(calls, 2, "an InSite document refusal holds only that document");
+  calls = 0;
+  await pacer.fetch("https://legistar.granicus.com/one/private.pdf", {}, fetchImpl);
+  await pacer.fetch("https://legistar.granicus.com/two/public.pdf", {}, fetchImpl);
+  assert.equal(calls, 2, "one tenant's private PDF never blocks another tenant on the shared origin");
+});
+
+test("a private document can be checked later; an explicit site challenge stops the whole origin", async () => {
+  let now = 0, calls = 0;
+  const pacer = createSourceHostPacer({ store: memoryHostState(), clock: () => now, spacingMs: 0 });
+  const read: typeof fetch = async () => { calls++; return new Response(null, { status: 403 }); };
+  await pacer.fetch("https://documents.gov/minutes.pdf", {}, read);
+  await assert.rejects(pacer.fetch("https://documents.gov/minutes.pdf", {}, read), e => e instanceof SourceReadDeferred && e.reason === "RESOURCE_REFUSED");
+  assert.equal(calls, 1);
+  now += 3_600_000;
+  await pacer.fetch("https://documents.gov/minutes.pdf", {}, read);
+  assert.equal(calls, 2);
+  await pacer.fetch("https://blocked.gov/minutes.pdf", {}, async () => new Response(null, { status: 403, headers: { 'cf-mitigated': 'challenge' } }));
+  await assert.rejects(pacer.fetch("https://blocked.gov/calendar", {}, read), e => e instanceof SourceReadDeferred && e.reason === "REFUSED");
+  assert.equal(calls, 2);
 });
 
 test("documented provider quotas use the same host clock and never enter the HTTP request", async () => {

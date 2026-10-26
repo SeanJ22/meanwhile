@@ -7,6 +7,7 @@
  */
 
 import { readCompleteResponse } from "./source-bytes.ts";
+import { createHash } from "node:crypto";
 import { decodeHTMLStrict } from "entities";
 import { recordAcquiredResponse } from "./acquisition-trace.ts";
 import { challengeIn } from "./challenge-signatures.ts";
@@ -37,9 +38,9 @@ export function sourceHost(url: string, vendor?: string): string {
 export class SourceReadDeferred extends Error {
   readonly until: number;
   readonly url: string;
-  readonly reason: "THROTTLED" | "REFUSED" | "EMPTY";
+  readonly reason: "THROTTLED" | "REFUSED" | "RESOURCE_REFUSED" | "EMPTY";
   readonly attempted: boolean;
-  constructor(url: string, until: number, reason: "THROTTLED" | "REFUSED" | "EMPTY", attempted = false) {
+  constructor(url: string, until: number, reason: "THROTTLED" | "REFUSED" | "RESOURCE_REFUSED" | "EMPTY", attempted = false) {
     const visible = new URL(url);
     visible.username = ""; visible.password = "";
     for (const key of [...visible.searchParams.keys()]) if (/key|token|secret|password|address/i.test(key)) visible.searchParams.set(key, "redacted");
@@ -77,9 +78,17 @@ export function createSourceHostPacer(options: {
     return options.store.withHost(host, init?.signal ?? undefined, async state => {
       init?.signal?.throwIfAborted();
       for (const [route, until] of Object.entries(state.routes)) if (until <= clock()) delete state.routes[route];
-      const refusalKey = address.hostname === "webapi.legistar.com" || address.pathname === "/robots.txt" || /\/day\/\d{8}\/?$/.test(address.pathname)
-        ? `${origin}${address.pathname}` : origin;
-      if (state.refused[origin] || state.refused[refusalKey]) throw new SourceReadDeferred(url, Date.parse("9999-12-31T00:00:00Z"), "REFUSED");
+      const nativeResource = address.hostname === "webapi.legistar.com" || address.pathname === "/robots.txt" || /\/day\/\d{8}\/?$/.test(address.pathname);
+      const document = /\.(?:pdf|docx?|xlsx?|pptx?|csv|ics|jpe?g|png|gif|webp|svg)$/i.test(address.pathname)
+        || /\/(?:View\.ashx|FileStream\.ashx|MeetingDetail\.aspx)$|\/ImageRepository\/Document\b|\/AgendaCenter\/ViewFile\/(?:Agenda|Minutes)\b/i.test(address.pathname);
+      const refusalKey = nativeResource ? `${origin}${address.pathname}`
+        : document ? `${origin}#resource:${createHash("sha256").update(url).digest("hex")}` : origin;
+      if (state.refused[origin]) throw new SourceReadDeferred(url, Date.parse("9999-12-31T00:00:00Z"), "REFUSED");
+      if (refusalKey !== origin && state.refused[refusalKey]) {
+        const until = Date.parse(state.refused[refusalKey]);
+        if (until > clock()) throw new SourceReadDeferred(url, until, "RESOURCE_REFUSED");
+        delete state.refused[refusalKey];
+      }
       if (state.until > clock()) throw new SourceReadDeferred(url, state.until, "THROTTLED");
       if (state.routes[url] > clock()) throw new SourceReadDeferred(url, state.routes[url], "EMPTY");
       state.intervalMs = state.intervalMs > (state.baseMs ?? base) ? Math.max(base, state.intervalMs) : base;
@@ -100,17 +109,22 @@ export function createSourceHostPacer(options: {
       state.lastAt = now;
       state.intervalMs = Math.max(base, state.intervalMs);
       state.nextAt = now + state.intervalMs;
+      const retry = response.headers.get("retry-after")?.trim();
+      const requested = retry && /^\d+(?:\.\d+)?$/.test(retry) ? now + Number(retry) * 1000 : retry ? Date.parse(retry) : 0;
+      const retryAt = Number.isFinite(requested) ? requested : 0;
       if (response.status === 429 || response.status >= 500 && response.headers.get("retry-after")) {
-        const retry = response.headers.get("retry-after")?.trim();
-        const requested = retry && /^\d+(?:\.\d+)?$/.test(retry) ? now + Number(retry) * 1000 : retry ? Date.parse(retry) : 0;
         state.intervalMs = Math.min(60_000, Math.max(base, state.intervalMs) * 2);
         state.healthy = 0;
-        state.until = Math.max(now + 60_000, Number.isFinite(requested) ? requested : 0);
+        state.until = Math.max(now + 60_000, retryAt);
         state.nextAt = Math.max(state.nextAt, state.until);
         await response.body?.cancel().catch(() => {});
         throw new SourceReadDeferred(url, state.until, "THROTTLED", true);
       }
-      if (response.status === 403) state.refused[refusalKey] = new Date(now).toISOString();
+      if (response.status === 403) {
+        // A document can become public later. A named site wall stays open for separate work.
+        const siteWall = refusalKey === origin || address.pathname !== "/robots.txt" && response.headers.get("cf-mitigated") === "challenge";
+        state.refused[siteWall ? origin : refusalKey] = new Date(siteWall ? now : Math.max(now + 3_600_000, retryAt)).toISOString();
+      }
       if (response.ok || response.status === 304) {
         if (++state.healthy >= 32) { state.intervalMs = Math.max(base, state.intervalMs / 2); state.healthy = 0; }
       }

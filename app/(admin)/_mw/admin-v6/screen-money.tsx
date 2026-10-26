@@ -33,7 +33,7 @@ const roleWords = (role: string) => ({ ADVERSARIAL_AUDITOR: "Auditor", PARSER: "
 export function RunnerFamilyReads({ rows }: { rows: readonly RunnerRead[] }) {
   const families = runnerReadFamilies(rows);
   if (!families.length) return null;
-  return <div className={s.tableWrap}><table className={s.table}>
+  return <div className={s.tableWrap}><table className={cx(s.table,s.runnerFamilyTable)}>
     <caption>Job families · GB per hour</caption>
     <thead><tr>{["Job family", "Reader database", "Control plane", "Total"].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
     <tbody>{families.map(row => <tr key={row.family}>

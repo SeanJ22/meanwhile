@@ -30,7 +30,7 @@ function postgresOver(ds: BuiltDataset | null, seen: Statement[] = []): ReadOnly
       const atomicCode = s.text.startsWith("SELECT concat");
       if (s.text.includes("zctaUniverse") && !atomicCode) return [{ known: ds.zctaUniverse.includes(String(s.params[2])) }];
       const [, , types, arg] = s.params as [string, string, string[], string];
-      const withOverlaps = s.text.includes("g->'memberStates', g->'overlaps'");
+      const withOverlaps = s.text.includes("g->'memberStates', g->'overlaps'") || s.text.includes("jsonb_array_elements(g->'overlaps')");
       const rows: Row[] = ds.scopes.map((scope) => ({ row_kind: "scope", type: scope.type, version: scope.version, plan: scope.versionMeta.plan }));
       for (const scope of ds.scopes) {
         if (!types.includes(scope.type)) continue;

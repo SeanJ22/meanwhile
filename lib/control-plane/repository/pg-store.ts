@@ -1425,22 +1425,6 @@ export async function pgCoordinatorWorkItems(sql: Sql, exaAgentLane = false, sta
   return rows.map(row => parseValue<WorkItem>(row.value, `coordinator work item ${row.id}`));
 }
 
-export async function readPlaceWorkItems(repos: ControlPlaneRepositories, subjects: readonly string[]): Promise<Persisted<WorkItem>[]> {
-  if (!subjects.length) return [];
-  const ids = [...new Set(subjects)];
-  const sql = placeReadConnection(repos);
-  if (!sql) {
-    const rows: Persisted<WorkItem>[] = [];
-    for (const subject of ids) rows.push(...await repos.workItems.listWhere(["subject"], subject));
-    return rows.sort((a, b) => a.id.localeCompare(b.id));
-  }
-  const run = boundedRunner(sql, "cp_work_items", CONTROL_PLANE_REQUEST_BOUNDS_MS);
-  const rows = await versionedRowsFor(sql).rows((text,params)=>run("placeSubjects","PAGE",text,params),
-    "cp_work_items_history","value #>> '{subject}'=ANY($1::text[])",[ids]);
-  return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
-    updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<WorkItem>(row.value, `place work item ${String(row.id)}`) }));
-}
-
 export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {
   const sql = placeReadConnection(repos);
   if (!sql) return (await repos.artifacts.readAll()).filter(row => row.canonicalUrl === url && !row.partial &&

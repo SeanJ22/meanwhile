@@ -45,6 +45,7 @@ function groupingsQuery(withOverlaps: boolean, where: string, overlapZipParam?: 
   // state), so the national payload is never collected into a spilled tuplestore. A scope's type and version are
   // read from the scope itself, never from its versionMeta copy; one shared filter keeps the three lists aligned.
   const stateFilter = stateParam ? " ? (@.stateAbbr == $state || @.memberStates[*] == $state)" : "";
+  const zipFilter = overlapZipParam ? " ? (@.overlaps[*].zcta5 == $zip)" : "";
   const scope = "$.scopes[*] ? (exists(@.type) && exists(@.version) && exists(@.versionMeta))";
   return `WITH scopes AS MATERIALIZED (
     SELECT jsonb_build_object('type', s.type, 'version', s.version, 'versionMeta', s.meta) AS scope FROM civic_data_promotions p
@@ -56,8 +57,8 @@ function groupingsQuery(withOverlaps: boolean, where: string, overlapZipParam?: 
     NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, scope->'versionMeta' AS version_meta FROM scopes
   UNION ALL SELECT 'grouping', scope->>'type', scope->>'version', scope->'versionMeta'->>'plan', ${grouping}, NULL::jsonb FROM scopes CROSS JOIN LATERAL jsonb_path_query(
       (SELECT held.payload FROM civic_data_promotions held WHERE held.record_class = $1 AND held.scope = $2),
-      '$.scopes[*] ? (@.type == $type && @.version == $version).groupings[*]${stateFilter}',
-      jsonb_build_object('type', scope->'type', 'version', scope->'version'${stateParam ? `, 'state', $${stateParam}::text` : ""})) g
+      '$.scopes[*] ? (@.type == $type && @.version == $version).groupings[*]${stateFilter}${zipFilter}',
+      jsonb_build_object('type', scope->'type', 'version', scope->'version'${stateParam ? `, 'state', $${stateParam}::text` : ""}${overlapZipParam ? `, 'zip', $${overlapZipParam}::text` : ""})) g
     WHERE scope->>'type' = ANY($3::text[]) AND ${where}`;
 }
 
@@ -214,7 +215,7 @@ export interface CodeSlice extends GeographySlice {
 /** One source-row revision and its selected ZIP facts share one database snapshot. */
 export function codeSliceStatement(zcta5: string, types: readonly GeographyType[], heldVersion: string | null = null): Statement {
   const version = "concat(p.xmin::text,'/',p.ctid::text)";
-  const geography = groupingsQuery(true, "g->'overlaps' @> jsonb_build_array(jsonb_build_object('zcta5', $4::text))");
+  const geography = groupingsQuery(true, "g->'overlaps' @> jsonb_build_array(jsonb_build_object('zcta5', $4::text))", 4);
   return { text: `SELECT ${version} AS etag, ${version}=$5::text AS unchanged,
     CASE WHEN ${version}=$5::text THEN NULL ELSE jsonb_build_object(
       'version_id',p.current_version_id,

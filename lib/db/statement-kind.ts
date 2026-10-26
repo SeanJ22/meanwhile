@@ -34,7 +34,6 @@ function scan(sql: string): readonly Token[] {
   }
   return tokens;
 }
-export function statementTokens(sql: string): readonly string[] { return scan(sql).map(token => token.word); }
 
 /** Strip a terminal delimiter without interpreting semicolons in quoted SQL. */
 export function singleStatementText(sql: string): string {

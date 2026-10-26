@@ -321,52 +321,52 @@ test("state publication metadata and the one loaded payload must still agree", a
 });
 
 test("Postgres published metadata reads only metadata and resolves encoded evidence fields", async () => {
-  const { neonConfig } = await import("@neondatabase/serverless");
+  const { PGlite } = await import("@electric-sql/pglite");
+  const { neonConfig } = await import("../lib/db/client.ts");
   const { PostgresRoutineDataStore } = await import("../lib/civic-data/store.ts");
+  const pg = new PGlite();
   const metadata = publishedCandidateMetadata(version(STATE_SCOPE, "az-a", { answer: 1 }, STATE_CLASS).candidate);
-  const oldFetch = neonConfig.fetchFunction, oldUrl = process.env.DATABASE_URL;
+  const oldFetch = neonConfig.fetchFunction, oldUrl = process.env.DATABASE_URL, oldReport = process.env.WTP_VITAL_SIGNS_REPORT;
+  process.env.WTP_VITAL_SIGNS_REPORT = "1";
   const queries: string[] = [];
-  let encoded = false;
   const fields = ["retrieval", "temporal", "normalization"] as const;
-  const parts = new Map(fields.map((field, index) => [String(index + 1).repeat(64), { kind: "object", value: metadata.candidate[field] }]));
-  const result = (columns: readonly (readonly [string, number])[], rows: readonly unknown[][]) => ({
-    command: "SELECT", rowCount: rows.length, rowAsArray: true,
-    fields: columns.map(([name, dataTypeID]) => ({ name, dataTypeID })),
-    rows: rows.map(row => row.map(value => value === null ? null : typeof value === "object" ? JSON.stringify(value) : value)),
-  });
-  neonConfig.fetchFunction = (async (_url: unknown, init: { body: string }) => {
-    const body = JSON.parse(init.body) as { query?: string; queries?: unknown[] };
-    if (body.queries) return new Response(JSON.stringify({ results: body.queries.map(() => result([], [])) }));
-    const query = body.query!;
-    queries.push(query);
-    if (query.includes('"civic_data_candidates"') && query.includes('.xmin::text')) return new Response(JSON.stringify(result(
-      [["key", 25], ["etag", 25]], [["az-a", encoded ? "2/(0,1)" : "1/(0,1)"]],
-    )));
-    if (query.includes('from "civic_data_payload_parts"')) return new Response(JSON.stringify(result(
-      [["hash", 25], ["payload", 3802]], [...parts].map(([hash, payload]) => [hash, payload]),
-    )));
-    const candidate = encoded ? { ...metadata.candidate, ...Object.fromEntries(fields.map((field, index) =>
-      [field, { $civicPayloadPart: String(index + 1).repeat(64) }])) } : metadata.candidate;
-    return new Response(JSON.stringify(result(
-      [["id", 25], ["candidate", 3802], ["state", 25], ["acquisition_succeeded", 16], ["receipt", 3802],
-        ["promoted_version_id", 25], ["last_known_good_version_id", 25], ["failure_code", 25], ["failure_detail", 25]],
-      [["az-a", candidate, "PROMOTED", "t", metadata.receipt, "az-a", "az-a", null, null]],
-    )));
-  }) as typeof neonConfig.fetchFunction;
+  await pg.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,candidate jsonb,state text,acquisition_succeeded boolean,
+    validation_receipt jsonb,promoted_version_id text,last_known_good_version_id text,failure_code text,failure_detail text);
+    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);`);
+  for (const [index, field] of fields.entries()) await pg.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",
+    [String(index+1).repeat(64),{kind:"object",value:metadata.candidate[field]}]);
+  await pg.query("INSERT INTO civic_data_candidates VALUES('az-a',$1,'PROMOTED',true,$2,'az-a','az-a',null,null)",
+    [metadata.candidate,metadata.receipt]);
+  neonConfig.fetchFunction = async (_url: RequestInfo | URL, init?: RequestInit) => {
+    const body = JSON.parse(String(init?.body));
+    assert.ok(!body.queries,"metadata reads never flush accounting or write a fixture");
+    queries.push(body.query);
+    const result=await pg.query<Record<string,unknown>>(body.query,body.params);
+    return new Response(JSON.stringify({command:"SELECT",rowCount:result.rows.length,rowAsArray:true,fields:result.fields,
+      rows:result.rows.map(row=>result.fields.map(field=>{
+        const value=row[field.name];
+        return value===null?null:typeof value==="object"?JSON.stringify(value):typeof value==="boolean"?(value?"t":"f"):String(value);
+      }))}));
+  };
   process.env.DATABASE_URL = "postgresql://fixture:fixture@ep-state-metadata.us-east-2.aws.neon.tech/neondb";
   try {
-    for (encoded of [false, true]) {
-      queries.length = 0;
-      const read = await new PostgresRoutineDataStore().readPublishedCandidateMetadata("az-a");
-      assert.deepEqual(read, metadata);
-      assert.match(queries[0], /xmin::text/, "the version is checked before the metadata body");
-      const bodyReads = queries.filter(query => query.includes("jsonb_build_object"));
-      assert.equal(bodyReads.length, 1);
-      assert.doesNotMatch(bodyReads[0], /->\s*'(?:readModel|normalizedPayload|identities|civicRecords|changeSet)'/);
-      assert.deepEqual(Object.keys(read!.candidate).sort(), ["id", "normalization", "recordClass", "retrieval", "scope", "sourceId", "temporal"]);
+    for (const encoded of [false,true]) {
+      const candidate=encoded?{...metadata.candidate,...Object.fromEntries(fields.map((field,index)=>
+        [field,{$civicPayloadPart:String(index+1).repeat(64)}]))}:metadata.candidate;
+      await pg.query("UPDATE civic_data_candidates SET candidate=$1 WHERE id='az-a'",[candidate]);
+      queries.length=0;
+      const read=await new PostgresRoutineDataStore().readPublishedCandidateMetadata("az-a");
+      assert.deepEqual(read,metadata);
+      assert.match(queries[0],/xmin::text/,"the version is checked before the metadata body");
+      const bodyReads=queries.filter(query=>query.includes("jsonb_build_object"));
+      assert.equal(bodyReads.length,1);
+      assert.doesNotMatch(bodyReads[0],/->\s*'(?:readModel|normalizedPayload|identities|civicRecords|changeSet)'/);
+      assert.deepEqual(Object.keys(read!.candidate).sort(),["id","normalization","recordClass","retrieval","scope","sourceId","temporal"]);
     }
   } finally {
-    neonConfig.fetchFunction = oldFetch;
-    if (oldUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = oldUrl;
+    neonConfig.fetchFunction=oldFetch;
+    if(oldUrl===undefined)delete process.env.DATABASE_URL;else process.env.DATABASE_URL=oldUrl;
+    if(oldReport===undefined)delete process.env.WTP_VITAL_SIGNS_REPORT;else process.env.WTP_VITAL_SIGNS_REPORT=oldReport;
+    await pg.close();
   }
 });

@@ -60,7 +60,7 @@ test("NH sponsor inputs pin the existing official identities and their original 
   store.readSlimRosters=async()=>[];
   store.readCandidate=async()=>{throw Error("whole NH source candidate");};
   store.readPromotion=async()=>{throw Error("whole NH source projection");};
-  store.readCandidatePath=async<T>(id,path)=>{
+  store.readCandidatePath=async<T>(id:string,path:readonly string[])=>{
     assert.equal(id,versionId);fields.push(path.join("."));
     assert.ok(path[0]==="readModel"||path.join(".")==="retrieval.retrievedAt");
     const value=path[0]==="readModel"?model[path[1] as keyof NhMemberReadModel]:at;

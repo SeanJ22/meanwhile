@@ -344,12 +344,14 @@ const derivedBodies=new Map<string,MeetingPartitionContract>();
 /** A state family's existing authority is partitioned by its exact held body, never by a display label. */
 export function derivedMeetingBodyContract(family:MeetingPartitionContract,bodyId:string,ocdId:string|null=null):MeetingPartitionContract{
   if(!family.derivedFamily||family.derivedParentId)throw new Error("DERIVED_MEETING_PARENT_REQUIRED");
+  const readerProjection=family.readerProjection;
+  if(!readerProjection)throw new Error("DERIVED_MEETING_PARENT_READER_REQUIRED");
   const states=statesForRegistryDivisions([bodyId,ocdId??""]);
   if(states.length>1||states.length===1&&`US-${states[0]}`!==family.derivedFamily)throw new Error(`DERIVED_MEETING_BODY_STATE_MISMATCH:${bodyId}`);
   const source=`${DERIVED_FAMILY_SOURCE}~${family.derivedFamily}`;
   const id=meetingPartitionId(source,bodyId),scope=meetingPartitionScope(source,bodyId);
-  const contract={...family,id,scope,bodyId,ocdId,derivedParentId:family.id,acquisitionFailureDomain:`derived-body:${bodyId}`,
-    readerProjection:{...family.readerProjection,id:`meetings-partition:${DERIVED_FAMILY_SOURCE}:${bodyId}`}};
+  const contract:MeetingPartitionContract={...family,id,scope,bodyId,ocdId,derivedParentId:family.id,acquisitionFailureDomain:`derived-body:${bodyId}`,
+    readerProjection:{...readerProjection,id:`meetings-partition:${DERIVED_FAMILY_SOURCE}:${bodyId}`}};
   derivedBodies.set(id,contract);
   return contract;
 }

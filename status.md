@@ -1,26 +1,26 @@
 # River status
 
-build_state: LIVE FOR READERS: release 121 (main 8664f367e, DB-02), live 8:33 PM EDT; reader checks green. GATING: DB-03 reads (River) de764a119 alone on river a37ce95a7. See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 121 (main 8664f367e, DB-02). SHIPPING: release 122 (DB-03 reads de764a119) PR #834, auto-merge on. GATING: DB-03 owner snapshot reads a0cb7d1ef on river e58835856. See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T00:36:00Z
+heartbeat: 2026-10-26T00:48:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 8:36 PM EDT)
+## Every READY not on main (updated 8:48 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
 | READY | Lane | Slot |
 |---|---|---|
-| de764a119 (carries 8b69f0cbf) | DB-03 reads, finished by River (stream/river-db03-reads) | gating alone now on river a37ce95a7; ships right after release 121 is live. Urgent Neon |
+| de764a119 (carries 8b69f0cbf) | DB-03 reads, finished by River (stream/river-db03-reads) | release 122 (PR #834, auto-merge on): gates 9 of 9 on e58835856; urgent Neon |
 
 **Next: urgent Neon fixes, each as soon as ready (in lane order)**
 | READY | Lane | Slot |
 |---|---|---|
-| a0cb7d1ef | DB-03 owner snapshot reads (stream/db-03-reads, child of 8b69f0cbf; owner snapshot read 0.81 GB in the 4 PM EDT hour) | urgent Neon; after 8b69f0cbf ships. Doesn't fix 8b69's failing tests |
+| a0cb7d1ef | DB-03 owner snapshot reads (stream/db-03-reads, child of 8b69f0cbf; owner snapshot read 0.81 GB in the 4 PM EDT hour) | gating alone now on river e58835856 (3913f5da8, clean merge); urgent Neon |
 | 04681516c | DB-03 Admin | after DB-03 reads; its gate was stopped for DB-03 reads (merge def634abb is built; owed-route conflict resolved) |
 | e4305907d | DB-03 state doors | after Admin |
 | 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | next, through 11072d2ed. Member offices f81db4b37 overlaps release 120's member-offices change; River keeps one path when it folds and says which |
@@ -1204,4 +1204,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
 - Random ZIPs, seed 1121: 20/20 load, 20/20 resolve to county and city, across MA, DC, AK, MI, AR, ND, MT, UT, MS, SC, AZ, NV, WY, OH, NM, NJ, VT, CA, WA and ME.
 - Registry read GB/h is measured on the first two full hours after the runner adopts 121 (cp_vital_signs release_sha), against 756 / 806 / 787 / 1,168 MB for 2 PM to 5 PM EDT.
+
+### 8:48 PM EDT: release 122 = DB-03 reads
+- de764a119 passed alone: 9 of 9 gates on e58835856, 9,934 tests, 0 failing. River moved to e58835856; release 122 is PR #834 with auto-merge on.
+- Next Neon fix: DB-03 owner snapshot reads a0cb7d1ef (owner snapshot read 0.81 GB in the 4 PM EDT hour). Clean merge onto river; gating alone.
 

@@ -4673,5 +4673,18 @@
     "gates": "pass (9 of 9, 9,922 tests)",
     "at": "2026-10-25T23:34:00Z",
     "live": "release 121 main 8664f367e at 2026-10-26T00:33:42Z"
+  },
+  {
+    "lane": "river-db03-reads",
+    "steps": [
+      "DB-03 reads"
+    ],
+    "ready_sha": "de764a119",
+    "source_ready": "8b69f0cbf (stream/db-03-reads, finished by River)",
+    "merge_sha": "e58835856",
+    "river_sha": "e58835856",
+    "tested_sha": "e58835856",
+    "gates": "pass (9 of 9, 9,934 tests)",
+    "at": "2026-10-26T00:48:00Z"
   }
 ]

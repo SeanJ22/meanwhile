@@ -5,9 +5,8 @@ import type { Registry } from "../registry/types.ts";
 import { selectRegistryLookup } from "./keyed-rows.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { selectDerivedWiringRows } from "./derived-input-rows.ts";
-import { MEMBER_OFFICE_NATIONAL_SCOPE, memberOfficeStateScope, type MemberOfficeSlice } from "../officials/member-office-data.ts";
+import { MEMBER_OFFICE_NATIONAL_SCOPE, memberOfficeStateScope, memberOfficeRecordState, type MemberOfficeSlice } from "../officials/member-office-data.ts";
 import type { MemberOfficeRecord } from "../officials/member-offices.ts";
-import { statePeopleScopeForId } from "../officials/people-identity.ts";
 import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
 import { manualSourceUrls } from "./manual-source-urls.ts";
 import { VOTING_SOURCE_REPLACEMENT_VERIFIER, votingSourceReplacement, votingSourceReplacementVerifier } from "../ballot/voting-source-replacement-contract.ts";
@@ -143,11 +142,12 @@ function candidateReadOnlyStore(
         ?? ownedRecords.find(row => row.candidate.scope === MEMBER_OFFICE_NATIONAL_SCOPE && officeModel(row));
       const value = row ? officeModel(row) : null;
       if (!row?.receipt || !value) return null;
-      const records = (value.records ?? []).filter(row => statePeopleScopeForId(row.officeholderId, row.office.state ?? undefined) === `US-${postal}` &&
-        (!members.length || members.includes(row.officeholderId)));
+      const records = (value.records ?? []).filter(office => memberOfficeRecordState(office, row.candidate.scope) === postal &&
+        (!members.length || members.includes(office.officeholderId)));
       const urls = new Set(records.flatMap(manualRecordSourceUrls));
       const sources = (row.candidate.retrieval.manualSourceReceipt?.sources ?? []).filter(source => source.reviewOutcome !== "BLOCKED" &&
-        manualSourceUrls(source).some(url => urls.has(url)));
+        manualSourceUrls(source).some(url => urls.has(url))).map(source => source.extractedMembers
+        ? { ...source, extractedMembers: source.extractedMembers.filter(member => member.path.startsWith(`data/${postal.toLowerCase()}/`)) } : source);
       return { scope: row.candidate.scope, versionId: row.candidate.id, sourceId: row.candidate.sourceId,
         promotedAt: row === record ? observedAt : row.receipt.validatedAt, retrievedAt: row.candidate.retrieval.retrievedAt,
         sourceThrough: row.candidate.temporal.sourceThrough, version: row.candidate.temporal.version,

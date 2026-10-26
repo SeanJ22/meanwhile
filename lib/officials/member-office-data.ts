@@ -16,6 +16,14 @@ export function memberOfficeScopeState(scope: string): string | null {
   const state = /^US-([A-Z]{2}):state-legislator-member-offices$/.exec(scope)?.[1];
   return state && STATE_PEOPLE_JURISDICTIONS.includes(`US-${state}`) ? state : null;
 }
+/** Matches the keyed row's state: native id, office state, owned state scope, then saved source path. */
+export function memberOfficeRecordState(record: MemberOfficeRecord, scope: string): string | null {
+  const state = /^(?:plural|statewide|legiscan|official-legislature|wikidata|congress-api|govinfo):([a-z]{2}):/.exec(record.officeholderId)?.[1]
+    ?? /^([a-z]{2})-(?:legislature|general-court):/.exec(record.officeholderId)?.[1]
+    ?? record.office.state ?? memberOfficeScopeState(scope)
+    ?? /\/data\/([a-z]{2})\//.exec(record.sourceUrl)?.[1] ?? /\/current\/([a-z]{2})\.csv/.exec(record.sourceUrl)?.[1];
+  return state?.toUpperCase() ?? null;
+}
 export interface MemberOfficeProgress {
   readonly rosterDigests: Readonly<Record<string, string>>;
   readonly pending: readonly string[];

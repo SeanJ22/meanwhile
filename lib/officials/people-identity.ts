@@ -64,14 +64,19 @@ export function nativePersonIdFromUrl(value: string): { source: string; id: stri
   let url: URL;
   try { url = new URL(value); } catch { return null; }
   if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) return null;
+  if(/^#member=/i.test(url.hash))return null;
   const host = url.hostname.toLowerCase().replace(/^www\./, "");
   if(["ohiohouse.gov","ohiosenate.gov"].includes(host)&&!url.search) {
     const slug=/^\/(?:members|senators|representatives)\/([a-z]+(?:-[a-z]+)+)(?:\/(?:bio|biography|about|contact))?\/?$/i.exec(url.pathname)?.[1];
     if(slug&&!/(?:^|-)(?:directory|leadership|committee|district)(?:-|$)/i.test(slug))return {source:host==="ohiohouse.gov"?"oh-house":"oh-senate",id:slug.toLowerCase()};
   }
-  if (["flhouse.gov","myfloridahouse.gov"].includes(host) && /^\/Sections\/Representatives\/(?:custom\/)?details\.aspx$/i.test(url.pathname)) {
+  if (["flhouse.gov","myfloridahouse.gov"].includes(host) && /^\/Sections\/Representatives\/(?:custom\/)?(?:details|contactmember)\.aspx$/i.test(url.pathname)) {
     const ids=[...url.searchParams].filter(([name])=>/^memberid$/i.test(name));
     if(ids.length===1&&/^\d+$/.test(ids[0][1]))return {source:"fl-house",id:ids[0][1]};
+  }
+  if(host==="flsenate.gov") {
+    const id=/^\/Senators\/(?:\d{4}-\d{4}\/)?S\d+\/(\d+)\/?$/i.exec(url.pathname)?.[1];
+    if(id)return {source:"fl-senate",id};
   }
   if (host === "azleg.gov" && /^\/(?:House\/House-member|Senate\/Senate-member|house-member|senate-member)\/?$/i.test(url.pathname)) {
     const id = url.searchParams.getAll("legislator").length === 1 ? url.searchParams.get("legislator") : null;

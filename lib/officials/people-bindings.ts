@@ -6,6 +6,11 @@ import { portraitBindingMatches } from "../photos/binding.ts";
 const name = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const subject = (person: Officeholder) => `${person.state?.toUpperCase()}|${person.level}|${name(person.name)}`;
 const actionName = (value:string) => /^(?:sign up|subscribe|contact|email|sponsored bills|read more|view)(?: |$)/.test(name(value));
+const publisherIdentity=(person:Officeholder)=>{
+  const native=person.provenance.sourceUrl?nativePersonIdFromUrl(person.provenance.sourceUrl):null;
+  const key=native?`${native.source}:${native.id}`:undefined;
+  return key&&personIdentityKeys(person).has(key)?key:undefined;
+};
 const collapsed = (person: Officeholder) => (person.nativeIds?.["ocd-person"]?.length ?? 0) > 1 || (person.nativeIds?.plural?.length ?? 0) > 1;
 export function sourcePeople(person: Officeholder): readonly Officeholder[] {
   return person.sourceHolders?.length ? person.sourceHolders.flatMap(sourcePeople) : [person];
@@ -48,8 +53,22 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
   const nativeIdentity=(person:Officeholder)=>person.nativeIds?.["ocd-person"]?.length===1
     ? `${person.state?.toUpperCase()}|${person.level}|${person.nativeIds["ocd-person"][0]}`:subject(person);
   const bySubject = new Map<string, Officeholder[]>(), byIdentity = new Map<string, Officeholder[]>(), owners = new Map<string, Set<string>>(), nativeOwners = new Map<string, Set<string>>();
+  const publisherOwners=new Map<string,Set<string>>(),publisherKeys=new Map<string,Set<string>>();
+  for(const person of sources.filter(sourcePersonIsNativeReference))for(const url of [person.websiteUrl,...person.profileUrls??[]]) {
+    const native=url?nativePersonIdFromUrl(url):null;if(!native)continue;
+    const key=`${native.source}:${native.id}`,held=publisherOwners.get(key)??new Set<string>();held.add(nativeIdentity(person));publisherOwners.set(key,held);
+  }
+  const referencePublishers=new Set(publisherOwners.keys());
+  for(const person of sources) {
+    const key=publisherIdentity(person);if(!key||referencePublishers.has(key))continue;
+    const held=publisherOwners.get(key)??new Set<string>();held.add(nativeIdentity(person));publisherOwners.set(key,held);
+  }
+  const sourceIdentity=(person:Officeholder)=>{
+    const key=person.nativeIds?.["ocd-person"]?.length?undefined:publisherIdentity(person),matches=key?publisherOwners.get(key):undefined;
+    return matches?.size===1?[...matches][0]:nativeIdentity(person);
+  };
   for (const person of sources) {
-    const identity = nativeIdentity(person), rows = bySubject.get(subject(person)) ?? [], nativeRows=byIdentity.get(identity)??[];
+    const identity = sourceIdentity(person), rows = bySubject.get(subject(person)) ?? [], nativeRows=byIdentity.get(identity)??[];
     rows.push(person); bySubject.set(subject(person), rows);
     nativeRows.push(person);byIdentity.set(identity,nativeRows);
     for(const id of [...person.nativeIds?.["ocd-person"]??[],...person.nativeIds?.openstates??[]]) {
@@ -68,17 +87,26 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
       const held = owners.get(key) ?? new Set<string>(); held.add(identity); owners.set(key, held);
     }
   }
+  for(const person of [...sources,...sets.flatMap(set=>set.officeholders)])for(const url of [...person.nativeIds?.["official-legislature"]??[],
+    ...person.nativeIds?.reader?.flatMap(key=>key.startsWith("official-legislature:http")?[key.slice("official-legislature:".length)]:[])??[],person.websiteUrl,...person.profileUrls??[]]) {
+    const native=url?nativePersonIdFromUrl(url):null,owner=native?publisherOwners.get(`${native.source}:${native.id}`):undefined;
+    if(!url||!owner)continue;
+    const digest=createHash("sha256").update(url).digest("hex").slice(0,24);
+    for(const key of [`official-legislature:${url}`,`official-legislature:${digest}`,`official-legislature:${person.state?.toLowerCase()}:${digest}`]) {
+      const held=publisherKeys.get(key)??new Set<string>();owner.forEach(identity=>held.add(identity));publisherKeys.set(key,held);
+    }
+  }
   const namedIdentity=(named:string)=>{
-    const matches=bySubject.get(named)??[],identities=new Set(matches.map(nativeIdentity));
+    const matches=bySubject.get(named)??[],identities=new Set(matches.map(sourceIdentity));
     return identities.size===1?[...identities][0]:named;
   };
-  const identityOf=(person:Officeholder)=>person.nativeIds?.["ocd-person"]?.length===1?nativeIdentity(person):namedIdentity(subject(person));
+  const identityOf=(person:Officeholder)=>sourceIdentity(person)!==subject(person)?sourceIdentity(person):namedIdentity(subject(person));
   const ownerOf = (key:string):string|undefined => {
     // Old reader aliases also contain the state-scoped Plural form, even when
     // the independently held source uses the global form of that same UUID.
     const uuid=/^(?:plural:(?:[a-z]{2}:)?|ocd-person[/:](?:ocd-person\/)?|openstates:(?:ocd-person\/)?)([a-f0-9-]{36})$/i.exec(key)?.[1];
     const native=uuid?nativeOwners.get(uuid):undefined;
-    const matches=native??owners.get(key);return matches?.size===1?[...matches][0]:undefined;
+    const matches=native??publisherKeys.get(key)??publisherOwners.get(key)??owners.get(key);return matches?.size===1?[...matches][0]:undefined;
   };
   const foreign=(person:Officeholder,key:string)=>Boolean(ownerOf(key)&&ownerOf(key)!==identityOf(person));
   const documentReference=(person:Officeholder)=>{
@@ -90,21 +118,24 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
       return native?[`${native.source}:${native.id}`]:[];
     }));
     if(!sourcePersonIsDocument(person)&&!parents.size&&!action)return undefined;
-    const matches=sources.filter(source=>!actionName(source.name)&&(personIdentityKeys(source).has(person.id)||
+    const matches=sources.filter(source=>!actionName(source.name)&&(personIdentityKeys(source).has(person.id)||[...personIdentityKeys(source)].some(key=>parents.has(key))||
       [source.websiteUrl,...source.profileUrls??[],...source.nativeIds?.["official-legislature"]??[]].some(url=>{
         const native=url?nativePersonIdFromUrl(url):null;return Boolean(native&&parents.has(`${native.source}:${native.id}`));
       })));
-    const nativeMatches=matches.filter(sourcePersonIsNativeReference);
-    const publisherMatches=matches.filter(source=>[...personIdentityKeys(source)].some(key=>parents.has(key)));
-    const references=publisherMatches.length?publisherMatches:nativeMatches.length?nativeMatches:matches;
-    return new Set(references.map(nativeIdentity)).size===1?references[0]:undefined;
+    const expected=new Set([...parents].flatMap(key=>ownerOf(key)??[]));
+    const owned=expected.size?matches.filter(source=>expected.has(identityOf(source))):matches;
+    const nativeMatches=owned.filter(sourcePersonIsNativeReference);
+    const publisherMatches=owned.filter(source=>[...personIdentityKeys(source)].some(key=>parents.has(key)));
+    const references=publisherMatches.length?publisherMatches:nativeMatches.length?nativeMatches:owned;
+    return new Set(references.map(identityOf)).size===1?references[0]:undefined;
   };
   const needsBinding=(person:Officeholder)=>collapsed(person)||Boolean(documentReference(person))||[...personIdentityKeys(person)].some(key=>foreign(person,key));
   if(!sets.some(set=>set.officeholders.some(needsBinding)))return [...sets];
   const referenceFor = (identity:string):Officeholder|undefined => {
     const matches=(byIdentity.get(identity)??[]).filter(row=>[row.id,row.personId??row.id].every(key=>!ownerOf(key)||ownerOf(key)===identity));
-    return new Set(matches.flatMap(row=>row.nativeIds?.["ocd-person"]??[])).size===1
-      ? matches.find(sourcePersonIsNativeReference)??matches.find(row=>row.nativeIds?.["ocd-person"]?.length===1):undefined;
+    const primaries=new Set(matches.flatMap(row=>row.nativeIds?.["ocd-person"]??[]));
+    return primaries.size===1?matches.find(sourcePersonIsNativeReference)??matches.find(row=>row.nativeIds?.["ocd-person"]?.length===1)
+      : primaries.size===0?matches.find(row=>Boolean(publisherIdentity(row))):undefined;
   };
   const returnedAliases=new Map<string,Set<string>>();
   for(const set of sets)for(const person of set.officeholders)if(needsBinding(person))for(const key of personIdentityKeys(person)){
@@ -145,7 +176,9 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
       const personId=foreignKey(person.personId??person.id)?reference.personId??reference.id:person.personId??person.id;
       const aliases=[...personIdentityKeys(person)].filter(key=>!foreignKey(key));
       const cleanReference={...reference,nativeIds:{...reference.nativeIds,reader:(reference.nativeIds?.reader??[]).filter(key=>!foreignKey(key))}};
-      const base=collapsed(person)||document?cleanReference:person;
+      const page=person.provenance.sourceUrl?nativePersonIdFromUrl(person.provenance.sourceUrl):null;
+      const pageOwner=page?ownerOf(`${page.source}:${page.id}`):undefined;
+      const base=collapsed(person)||document||pageOwner&&pageOwner!==identity?cleanReference:person;
       const rebound={...base,id,personId,
         nativeIds:{...cleanReference.nativeIds,reader:[...new Set([...cleanReference.nativeIds.reader??[],...aliases,id,personId])]},
         memberships:base.memberships?.map(row=>({...row,personId})),sourceHolders:[cleanReference]};

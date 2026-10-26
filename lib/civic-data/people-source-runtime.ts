@@ -81,11 +81,12 @@ export async function runPeopleSourceRefresh(input: {
   const writeLine = dependencies.writeLine ?? console.log;
   const contractId = peopleSourceContractId(input.state, input.sourceId);
   const signal = input.signal ?? new AbortController().signal;
+  let bindingPeople: OfficeholderSet["officeholders"] | undefined;
   let acquired: PeopleSourceAcquired;
   const geographyGaps: {sourceUrl:string;detail:string}[] = [];
   const publish = (release: PeopleSourceAcquired) => (dependencies.publish ?? publishPeopleSource)({ store: input.store, vault: input.vault,
     state: input.state, sourceId: input.sourceId, contractId, roster: release.roster,
-    acquisitions: release.acquisitions, releaseId: release.releaseId, gaps: [...release.gaps,...geographyGaps], now: now(),
+    acquisitions: release.acquisitions, releaseId: release.releaseId, gaps: [...release.gaps,...geographyGaps], now: now(),bindingPeople,
   });
   try {
     // State readers never request another state's source partitions.
@@ -108,6 +109,7 @@ export async function runPeopleSourceRefresh(input: {
           return [];
         }) : Promise.resolve([]),
     ]);
+    if(input.sourceId==="official-state-people")bindingPeople=roster?.officeholders;
     const options = { state: input.state, sourceId: input.sourceId, asOf, signal, roster, divisions, now };
     acquired = dependencies.acquire ? await dependencies.acquire(options)
       : input.state.toLowerCase() === "us" && input.sourceId === "statewide-executive-sources"

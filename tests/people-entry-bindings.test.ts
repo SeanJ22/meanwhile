@@ -1,4 +1,5 @@
 import test from "node:test";
+import {createHash} from "node:crypto";
 import assert from "node:assert/strict";
 import { normalizeOfficialLegislaturePage, legislatureRosterLinks,legislaturePageBindsPerson } from "../lib/sources/people/legislature.ts";
 import { emptyPerson, emptyRoster, provenance } from "../lib/sources/people/common.ts";
@@ -10,7 +11,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
-import { retainsPeopleBindings } from "../lib/officials/people-bindings.ts";
+import { retainsPeopleBindings,bindPeopleSources } from "../lib/officials/people-bindings.ts";
 import { verifyPortraitSources, portraitHash,profilePortraitImageUrls } from "../lib/photos/evidence.ts";
 
 const at="2026-10-26T06:00:00.000Z",page="https://legislature.example.gov/house/membership/";
@@ -58,6 +59,15 @@ test("successive occupants of a linked seat route have separate person identitie
   const corrected=parseOccupant(legacy);
   assert.ok(personIdentityKeys(corrected.officeholders[0]).has("old-seat-reader"));
   assert.equal(mergePeopleSets([roster([legacy]),corrected])!.officeholders.length,1);
+});
+
+test("a directory at a member-shaped URL cannot give its query's publisher ID to every listed member",()=>{
+  const members=people.map(person=>({...person,state:"FL"})),source="https://www.flhouse.gov/Sections/Representatives/details.aspx?MemberId=101";
+  const body='<h1>House Members</h1><div><h2>Representative Vito Barbieri</h2><p>District 3</p></div><div><h2>Representative Jane Member</h2><p>District 4</p></div>';
+  const parsed=normalizeOfficialLegislaturePage(body,source,{state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster(members)},at);
+  assert.equal(parsed.officeholders.length,2);
+  assert.ok(parsed.officeholders.every(person=>!person.nativeIds?.["fl-house"]?.length));
+  assert.equal(mergePeopleSets([roster(members),parsed])!.officeholders.length,2);
 });
 
 test("a profile's current named office is acquired when the reference still lists an older chamber",()=>{
@@ -205,7 +215,7 @@ test("a member's old form-page IDs resolve to the person owning its explicit pub
   assert.equal(repaired.officeholders[0].name,member.name);
   assert.ok(retainsPeopleBindings([form],repaired.officeholders));
   const directoryMember={...member,websiteUrl:"https://ohiosenate.gov/members/directory",profileUrls:[],
-    nativeIds:{...member.nativeIds,"official-legislature":[`${member.websiteUrl}#member=vito%20barbieri`]}};
+    nativeIds:{...member.nativeIds,"oh-senate":["vito-barbieri"],"official-legislature":[`${member.websiteUrl}#member=vito%20barbieri`]}};
   const fromDirectory=mergePeopleSets([roster([form]),roster([directoryMember])])!;
   assert.equal(fromDirectory.officeholders.length,1);
   assert.equal(fromDirectory.officeholders[0].name,member.name);
@@ -218,6 +228,46 @@ test("profile routes keep their own identity without treating a term or director
   assert.equal(nativePersonIdFromUrl("https://ohiosenate.gov/members/al-landis/newsletter-sign-up"),null);
   assert.equal(memberProfileSubpageParentUrl("https://flsenate.gov/Senators/2024-2026/S39"),null);
   assert.equal(memberProfileSubpageParentUrl("https://legislature.idaho.gov/legislators/membership/2026/id6687/"),null);
+  assert.deepEqual(nativePersonIdFromUrl("https://www.flhouse.gov/Sections/Representatives/contactmember.aspx?MemberId=4754"),{source:"fl-house",id:"4754"});
+  assert.deepEqual(nativePersonIdFromUrl("https://www.flsenate.gov/Senators/2024-2026/S39/5459"),{source:"fl-senate",id:"5459"});
+  assert.equal(nativePersonIdFromUrl("https://www.flsenate.gov/Senators/S39"),null);
+  assert.equal(nativePersonIdFromUrl("https://ohiosenate.gov/members/vito-barbieri#member=jane%20member"),null);
+  assert.equal(nativePersonIdFromUrl("https://www.flhouse.gov/Sections/Representatives/details.aspx?MemberId=101#member=jane%20member"),null);
+});
+
+test("a foreign member-contact URL and its old hash resolve to the publisher person who owns that ID",()=>{
+  const members=people.map((p,i)=>({...p,state:"FL",websiteUrl:`https://www.flhouse.gov/Sections/Representatives/details.aspx?MemberId=${i?202:101}`}));
+  const contact="https://www.flhouse.gov/Sections/Representatives/contactmember.aspx?MemberId=202";
+  const digest=createHash("sha256").update(contact).digest("hex").slice(0,24),oldId=`official-legislature:fl:${digest}`;
+  const wrong={...members[0],id:oldId,personId:oldId,phone:"foreign-phone",nativeIds:{...members[0].nativeIds,"official-legislature":[contact]},
+    provenance:{...members[0].provenance,sourceUrl:contact,kind:"OFFICIAL" as const}};
+  const repaired=mergePeopleSets([roster([wrong]),roster(members)])!;
+  assert.equal(repaired.officeholders.length,2);
+  assert.equal(repaired.officeholders.find(p=>personIdentityKeys(p).has(oldId))?.name,members[1].name);
+  assert.equal(repaired.officeholders.find(p=>p.name===members[0].name)?.phone,members[0].phone);
+  assert.ok(retainsPeopleBindings([wrong],repaired.officeholders));
+});
+
+test("a foreign numbered Senate profile is rebound without requiring an Open States ID",()=>{
+  const urls=["https://www.flsenate.gov/Senators/2024-2026/S1/101","https://www.flsenate.gov/Senators/2024-2026/S2/202"];
+  const members=people.map((p,i)=>({...p,state:"FL",nativeIds:{"fl-senate":[String(i?202:101)],"official-legislature":[urls[i]]},
+    provenance:{...p.provenance,sourceUrl:urls[i],kind:"OFFICIAL" as const}}));
+  const oldId=`official-legislature:fl:${createHash("sha256").update(urls[1]).digest("hex").slice(0,24)}`;
+  const wrong={...members[0],id:oldId,personId:oldId,nativeIds:{"official-legislature":[urls[1]]},provenance:{...members[0].provenance,sourceUrl:urls[1]}};
+  const repaired=mergePeopleSets([roster([wrong]),roster(members)])!;
+  assert.equal(repaired.officeholders.length,2);
+  assert.equal(repaired.officeholders.find(p=>personIdentityKeys(p).has(oldId))?.name,members[1].name);
+  assert.ok(retainsPeopleBindings([wrong],repaired.officeholders));
+});
+
+test("an official's fuller name and stable publisher ID keep their own identity",()=>{
+  const profile="https://www.njleg.state.nj.us/legislative-roster/738";
+  const native={...people[0],state:"NJ",name:"Carmen Amato",websiteUrl:profile};
+  const official={...native,id:"nj-legislature:738",personId:"nj-legislature:738",name:"Carmen F. Amato Jr.",nativeIds:{"nj-legislature":["738"]},
+    provenance:{...native.provenance,sourceUrl:profile,kind:"OFFICIAL" as const}};
+  const bound=bindPeopleSources([roster([official]),roster([native])])[0].officeholders[0];
+  assert.equal(bound.id,official.id);
+  assert.equal(bound.name,official.name);
 });
 
 test("rechecking one person's same source entry keeps facts and every old ID without multiplying snapshots",()=>{
@@ -449,7 +499,7 @@ test("a named profile binds its quoted full name and old entry IDs to its linked
   const native={...people[0],name:"Tom Leek",state:"FL",chamber:"upper",officeTitle:"State Senator",websiteUrl:profile,
     memberships:people[0].memberships?.map(row=>({...row,chamber:"upper",district:"7"}))};
   const old={...native,id:"old-leek-entry",personId:"old-leek-entry",name:'Thomas J. "Tom" Leek',nativeIds:{"official-legislature":["https://flsenate.gov/Senators/2024-2026/S7"]}};
-  const parsed=normalizeOfficialLegislaturePage('<h1>The Florida Senate</h1><div><h2>Senator Thomas J. &quot;Tom&quot; Leek</h2><p>District 7</p></div>',profile,
+  const parsed=normalizeOfficialLegislaturePage('<h1>The Florida Senate</h1><div><h2>Senator Thomas J. &quot;Tom&quot; Leek</h2><p>District 7</p></div>',"https://www.flsenate.gov/Senators/2024-2026/S7/5420",
     {state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([native,old])},at);
   assert.equal(parsed.officeholders.length,1);
   assert.deepEqual(parsed.officeholders[0].nativeIds?.["ocd-person"],["ocd-person/vito"]);

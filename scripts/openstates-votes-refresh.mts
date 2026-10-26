@@ -1,5 +1,5 @@
 import { pathToFileURL } from "node:url";
-import { acquireStateVotes, pluralJurisdictionUrl, type PluralVoteProgress } from "../lib/sources/plural/vote-acquisition.ts";
+import { acquireStateVotes, pluralJurisdictionUrl, pluralVoteSourceHash, type PluralVoteProgress } from "../lib/sources/plural/vote-acquisition.ts";
 import { holdPluralVoteEvidence, pluralVotesCandidate, pluralVotesContract, pluralVotesScope, readPluralVotesProjection, pluralVoteState, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { processRegisteredRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
@@ -15,7 +15,6 @@ import { createVoteRefreshSink } from "../lib/state-rollcalls/vote-predecessor.t
 import { runtimeCivicReadCache, type CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { processNeonBytes } from "../lib/db/transfer-by-caller.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
-import { canonicalCivicDataHash } from "../lib/civic-data/changes.ts";
 import { confirmSourceHashUnchanged, sourceHashReceiptFields, type SourceHashConfirmation } from "../lib/civic-data/source-hash.ts";
 import { PLURAL_VOTES_PARSER, PLURAL_VOTES_SOURCE, type PluralVotesProjection } from "../lib/sources/plural/votes.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
@@ -73,11 +72,10 @@ export async function refreshStateVotes(input: Parameters<typeof acquireStateVot
         if (issue) { const detail = { key: vote.id, detail: issue }; held.push(detail); identityHeld.push(detail); }
       }
       // Publish and save the source position before requesting the next bounded batch.
-      await publish([await holdPluralVoteEvidence(input.vault, result.evidence)],held,result.checkpoints);
+      await publish([await holdPluralVoteEvidence(input.vault, result.evidence)],held,result.checkpoints,result.sourceProbe);
       await input.onBill?.(result);
     } });
-    const rawHash=canonicalCivicDataHash({sources:acquisition.acquisitions.filter(row=>!/^https:\/\/v3\.openstates\.org\/bills\/ocd-bill\//.test(row.requestedUrl))
-      .map(row=>[row.requestedUrl,row.finalUrl,row.sha256]).sort((a,b)=>JSON.stringify(a).localeCompare(JSON.stringify(b))),progress});
+    const rawHash=pluralVoteSourceHash(acquisition.acquisitions);
     let confirmation: SourceHashConfirmation | null = null;
     const fresh=acquisition.acquisitions.at(-1);
     if (!publication && fresh && !acquisition.held.length && sourceProbe?.formatVersion===1 && sourceProbe.complete && sourceProbe.rawHash===rawHash)
@@ -89,7 +87,7 @@ export async function refreshStateVotes(input: Parameters<typeof acquireStateVot
     if (!publication && acquisition.held.length) throw new Error(`PLURAL_VOTES_ACQUISITION_INCOMPLETE:${acquisition.held.map(row => row.detail).join(";")}`);
     await initialize();
     const held = publication ? [...acquisition.held, ...identityHeld] : priorHeld;
-    await publish(await Promise.all(acquisition.acquisitions.map(row => holdPluralVoteEvidence(input.vault, row))), held,{},
+    if(!publication)await publish(await Promise.all(acquisition.acquisitions.map(row => holdPluralVoteEvidence(input.vault, row))), held,{},
       {formatVersion:1,rawHash,complete:!acquisition.held.some(row=>/^https?:\/\/|^ocd-bill\//.test(row.key))});
     const after = processNeonBytes().reduce((sum,row) => ({ reader: sum.reader + row.bytes.reader,
       controlPlane: sum.controlPlane + row.bytes["control-plane"] }), { reader: 0, controlPlane: 0 });

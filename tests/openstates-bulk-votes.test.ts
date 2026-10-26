@@ -108,7 +108,7 @@ test("NJ: the actual current archive omits vote files and checks successfully wi
   h.nextCheck();
   const next = await refreshStateVotes(h.input);
   assert.ok(next.confirmation);
-  assert.deepEqual(next.held, []);
+  assert.equal(next.held, null, "an unchanged empty archive does not read or invent held rows");
 });
 
 test("real API v3 fallback resolves nested voter IDs and counts-only responses publish no person positions", async () => {

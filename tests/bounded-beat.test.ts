@@ -32,7 +32,6 @@ test("the runner beats every minute through bounded beats, and a routine pass be
   const runner = readFileSync("scripts/pilot-runner.mts", "utf8");
   assert.doesNotMatch(runner, /cycleBeat = cycleBeat\.then/, "no beat waits on the one before it");
   assert.match(runner, /const beat = boundedBeat\(\(\) => writeLiveCycleBeat\(startedAt\), BEAT_BOUND_MS, lateBeat\);/);
-  assert.match(runner, /releaseDrain \?\?= requestQueuedReleaseDrain\(\)/);
   assert.match(runner, /boundedBeat\(\(\) => writeLiveCycleBeat\(null\), BEAT_BOUND_MS, lateBeat\);\s+const beatTimer = setInterval\(\(\) => \{ if \(!researchCycleActive\) void beat\(\); \}, 60_000\);/);
   assert.match(runner, /const BEAT_BOUND_MS = 45_000;/);
 });

@@ -123,3 +123,21 @@ export async function confirmCampaignResourceChecks(db:FactDb&{readonly query:Qu
   const ids=[...people];const at=checks.map(check=>check.checkedAt).sort()[0];
   for(let start=0;start<ids.length;start+=500)await rebuildCampaignCycles(db,state,ids.slice(start,start+500),at,purge);
 }
+
+/** A complete exact-byte check resolves only failed work for the same identity inputs.
+ * Failure metadata is saved only for an exact person/seat already found by the ordinary
+ * held-cycle query. Settlement uses that existing work, without reading people or facts. */
+export async function settleCampaignSourceFailures(query:Query,state:string,dependencyHash:string,checkedAt:string):Promise<void> {
+  await query(`WITH eligible AS MATERIALIZED (
+      SELECT c.name,c.position::jsonb AS saved FROM pass_cursor c
+      WHERE c.name LIKE $1 AND c.position::jsonb#>>'{sourceFailure,dependencyHash}'=$2
+        AND $3::timestamptz>(c.position::jsonb#>>'{sourceFailure,failedAt}')::timestamptz
+    ), recovered AS (
+      UPDATE pass_cursor c SET position=((eligible.saved-'sourceFailure')||jsonb_build_object('checkedAt',$3::text,'found',true))::text
+      FROM eligible WHERE c.name=eligible.name AND c.position::jsonb=eligible.saved
+      RETURNING eligible.saved#>>'{sourceFailure,personId}' AS person_id,
+        eligible.saved#>>'{sourceFailure,seat}' AS seat,eligible.saved#>>'{sourceFailure,reason}' AS reason
+    ) DELETE FROM blank b USING recovered r WHERE b.entity_id=r.person_id AND b.field='campaign-money:'||r.seat
+      AND b.stage='ACQUIRE' AND b.reason='MONEY_NOT_YET_JOINED' AND b.detail=r.reason`,
+    [`campaign-money:person:${state}:%`,dependencyHash,checkedAt]);
+}

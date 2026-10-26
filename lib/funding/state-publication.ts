@@ -29,7 +29,7 @@ import type { StateMoneyRecord } from "./state-money.ts";
 import type { CampaignSourceRecord } from "./state-source-records.ts";
 import { US_JURISDICTIONS } from "../coverage/states.ts";
 import { campaignMoneySourceResources, campaignFinanceSource, campaignFinanceNativeScope, type CampaignFinanceResource, type CampaignFinanceWorkCheck } from "./state-sources.ts";
-import {campaignMoneyDependencyHash,campaignResourceContentHash,campaignResourceCursor,campaignResourceInputs,campaignStateSourceHash,confirmCampaignResourceChecks,probeCampaignResource,readCampaignMoneyInputs,type CampaignResourceCheck} from "./state-source-probe.ts";
+import {campaignMoneyDependencyHash,campaignResourceContentHash,campaignResourceCursor,campaignResourceInputs,campaignStateSourceHash,confirmCampaignResourceChecks,probeCampaignResource,readCampaignMoneyInputs,settleCampaignSourceFailures,type CampaignResourceCheck} from "./state-source-probe.ts";
 import {passDeadlineFromEnv} from "../ops/independent-runtime-pass.ts";
 
 type AcquisitionOptions=Parameters<typeof acquireCampaignFinanceResource>[2];
@@ -260,6 +260,7 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
     await confirmCampaignResourceChecks(facts,state,[...checks.values()],options.purge);
     for(const resource of resources)await moneyDoor(options,resource.url,null,0,checks.get(resource.id)!.checkedAt);
     const checkedAt=[...checks.values()].map(check=>check.checkedAt).sort()[0]??at;
+    if(checks.size)await settleCampaignSourceFailures(facts.query,state,dependencyHash,checkedAt);
     const sourceHash=campaignStateSourceHash(state,sourceDescriptorHash,dependencyHash,new Map([...checks].map(([id,check])=>[id,check.rawHash])));
     const report:CampaignFinanceWorkCheck={kind:"campaign-finance-work-check",state,resource:"people",records:[{id:`${state}:people`,state,startedAt:at,checkedAt,
       publishedPeople:previousState?.publishedPeople??0,peopleWorked:0,peopleWithMoney:previousState?.peopleWithMoney??0,loaded:0,unmatched:0,
@@ -345,16 +346,25 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
   }
   let found=0;
   for(let start=0;start<due.length;start+=500){
-    const batch=due.slice(start,start+500),held=await facts.query("SELECT DISTINCT f.entity_id FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.entity_id=ANY($1::text[]) AND f.field LIKE 'campaign-cycle:%' AND f.status='live' AND f.value#>>'{person,name}'=e.name",[batch.map(person=>person.id)]);
-    const withMoney=new Set(held.map(row=>String(row.entity_id)));found+=withMoney.size;
+    const batch=due.slice(start,start+500),held=await facts.query("SELECT DISTINCT f.entity_id,f.value#>>'{person,seat}' AS seat FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.entity_id=ANY($1::text[]) AND f.field LIKE 'campaign-cycle:%' AND f.status='live' AND f.value#>>'{person,name}'=e.name",[batch.map(person=>person.id)]);
+    const withMoney=new Set(held.map(row=>campaignPersonKey(state,{id:String(row.entity_id),seat:String(row.seat)})));found+=withMoney.size;
     await facts.query(`INSERT INTO pass_cursor(name,position) SELECT name,position FROM unnest($1::text[],$2::text[]) checks(name,position)
-      ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position`,[batch.map(person=>campaignPersonKey(state,person)),batch.map(person=>JSON.stringify({checkedAt:sourceCheckedAt??clock(),found:!failedPeople.has(campaignPersonKey(state,person)) && withMoney.has(person.id)}))]);
-    const missing=batch.filter(person=>failedPeople.has(campaignPersonKey(state,person)) || !withMoney.has(person.id)),matched=batch.filter(person=>!failedPeople.has(campaignPersonKey(state,person)) && withMoney.has(person.id));
+      ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position`,[batch.map(person=>campaignPersonKey(state,person)),batch.map(person=>{
+        const key=campaignPersonKey(state,person),reason=personReasons.get(key);
+        const sourceFailed=failedPeople.has(key) && withMoney.has(key) &&
+          (reason===CAMPAIGN_MONEY_MISSING_REASONS.unavailable || reason===CAMPAIGN_MONEY_MISSING_REASONS.invalid);
+        return JSON.stringify({checkedAt:sourceCheckedAt??clock(),found:!failedPeople.has(key) && withMoney.has(key),
+          ...(sourceFailed?{sourceFailure:{dependencyHash,failedAt:at,personId:person.id,personName:person.name,seat:person.seat,reason}}:{})});
+      })]);
+    const missing=batch.filter(person=>failedPeople.has(campaignPersonKey(state,person)) || !withMoney.has(campaignPersonKey(state,person))),matched=batch.filter(person=>!failedPeople.has(campaignPersonKey(state,person)) && withMoney.has(campaignPersonKey(state,person)));
     if(matched.length)await facts.query(`DELETE FROM blank b USING unnest($1::text[],$2::text[]) p(id,field) WHERE b.entity_id=p.id AND b.field=p.field`,[matched.map(person=>person.id),matched.map(person=>`campaign-money:${person.seat}`)]);
     if(missing.length)await facts.query(`INSERT INTO blank(entity_id,field,stage,reason,detail,next_try_at,attempts)
       SELECT id,field,'ACQUIRE','MONEY_NOT_YET_JOINED',detail,now()+interval '1 hour',1 FROM unnest($1::text[],$2::text[],$3::text[]) p(id,field,detail)
-      ON CONFLICT(entity_id,field) DO UPDATE SET detail=EXCLUDED.detail,next_try_at=EXCLUDED.next_try_at,attempts=blank.attempts+1,updated_at=now()`,
-      [missing.map(person=>person.id),missing.map(person=>`campaign-money:${person.seat}`),missing.map(person=>personReasons.get(campaignPersonKey(state,person))??CAMPAIGN_MONEY_MISSING_REASONS.absent)]);
+      ON CONFLICT(entity_id,field) DO UPDATE SET detail=CASE
+        WHEN EXCLUDED.detail=ANY($4::text[]) AND NOT blank.detail=ANY($4::text[]) THEN blank.detail ELSE EXCLUDED.detail END,
+        next_try_at=EXCLUDED.next_try_at,attempts=blank.attempts+1,updated_at=now()`,
+      [missing.map(person=>person.id),missing.map(person=>`campaign-money:${person.seat}`),missing.map(person=>personReasons.get(campaignPersonKey(state,person))??CAMPAIGN_MONEY_MISSING_REASONS.absent),
+        [CAMPAIGN_MONEY_MISSING_REASONS.unavailable,CAMPAIGN_MONEY_MISSING_REASONS.invalid]]);
   }
   found=0;
   const publishedIds=[...new Set(people.map(person=>person.id))];

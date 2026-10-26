@@ -162,14 +162,26 @@ test("a failed daily source check stays due for the next hour and keeps verified
   const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
     fetch:async(url:RequestInfo|URL)=>unavailable?new Response("Unavailable",{status:404}):Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:1792454400}:[{...raw,contributions_amount:"100"}])};
   try{
-    await publishPerson(db,person);await refreshCampaignMoneyState(options);
+    const absent={...person,id:"failure-still-unmatched",name:"No Filing",seat:person.seat+"-unmatched"};
+    await publishPerson(db,person);await publishPerson(db,absent);await refreshCampaignMoneyState(options);
     now="2026-10-21T12:00:00.000Z";unavailable=true;
     await refreshCampaignMoneyState(options);
     assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T13:00:00.000Z")).length,1);
     const held=(await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records[0];
     assert.equal(held.totals.find(total=>total.label==="Contributions")?.amount,100);
-    unavailable=false;now="2026-10-21T13:00:00.000Z";await refreshCampaignMoneyState(options);
+    const guarded:typeof db.query=async(text,params=[])=>{
+      assert.notEqual(text,CAMPAIGN_PEOPLE_SQL,"exact-byte recovery does not reread held people");
+      assert.doesNotMatch(text,/WITH people AS MATERIALIZED|SELECT DISTINCT wanted.id,wanted.seat/);
+      return db.query(text,params);
+    };
+    unavailable=false;now="2026-10-21T13:00:00.000Z";
+    const recovered=await refreshCampaignMoneyState({...options,query:guarded,facts:{...db,query:guarded}});
+    assert.equal(recovered.report.records[0].peopleWorked,0);
     assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T14:00:00.000Z")).length,0);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[absent],"2026-10-21T14:00:00.000Z")).length,1);
+    const [missing]=await db.query("SELECT detail FROM blank WHERE entity_id=$1 AND field=$2",[absent.id,`campaign-money:${absent.seat}`]);
+    assert.equal(missing.detail,CAMPAIGN_MONEY_MISSING_REASONS.absent,"source recovery preserves the person's own unmatched-filing reason");
+    assert.equal((await db.query("SELECT 1 FROM blank WHERE entity_id=$1 AND field=$2",[person.id,`campaign-money:${person.seat}`])).length,0);
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 

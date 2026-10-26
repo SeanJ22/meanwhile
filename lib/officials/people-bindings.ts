@@ -96,7 +96,7 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
   const needsBinding=(person:Officeholder)=>collapsed(person)||Boolean(documentReference(person))||[...personIdentityKeys(person)].some(key=>foreign(person,key));
   if(!sets.some(set=>set.officeholders.some(needsBinding)))return [...sets];
   const referenceFor = (identity:string):Officeholder|undefined => {
-    const matches=byIdentity.get(identity)??[];
+    const matches=(byIdentity.get(identity)??[]).filter(row=>[row.id,row.personId??row.id].every(key=>!ownerOf(key)||ownerOf(key)===identity));
     return new Set(matches.flatMap(row=>row.nativeIds?.["ocd-person"]??[])).size===1
       ? matches.find(sourcePersonIsNativeReference)??matches.find(row=>row.nativeIds?.["ocd-person"]?.length===1):undefined;
   };

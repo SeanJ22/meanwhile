@@ -93,6 +93,16 @@ test("an own directory link's district and party label are not part of the membe
   assert.deepEqual(parsed.officeholders[0].nativeIds?.["ocd-person"],["ocd-person/vito"]);
 });
 
+test("normal publication binds a directory's member to its stated chamber",async()=>{
+  const source="https://ohiosenate.gov/members/directory",body='<h1>Senate Members</h1><div><a href="/members/vito-barbieri"><div>Vito Barbieri</div><div>District 3 | R</div></a></div>';
+  const member={...people[0],state:"OH",chamber:"upper",officeTitle:"State Senator",websiteUrl:"https://ohiosenate.gov/members/vito-barbieri",
+    memberships:people[0].memberships?.map(row=>({...row,chamber:"upper"}))};
+  const parsed=normalizeOfficialLegislaturePage(body,source,{state:"oh",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([member])},at);
+  const saved=await publishPeopleSource({store:new MemoryRoutineDataStore(),vault:new MemoryEvidenceStore(),state:"oh",sourceId:"official-state-people",now:at,releaseId:"own-directory-entry",roster:parsed,
+    acquisitions:[{requestedUrl:source,finalUrl:source,body,httpStatus:200,retrievedAt:at}]});
+  assert.ok(saved.outcome.promoted,JSON.stringify(saved.outcome.candidate.receipt?.checks));
+});
+
 test("a member's old form-page IDs resolve to the person owning its explicit publisher profile",()=>{
   const member={...people[0],state:"OH",websiteUrl:"https://ohiosenate.gov/members/vito-barbieri",profileUrls:["https://ohiosenate.gov/senators/vito-barbieri"]};
   const form={...member,id:"old-form",personId:"old-form",name:"Sign Up",nativeIds:{"official-legislature":["https://www.ohiosenate.gov/members/vito-barbieri/newsletter-sign-up"]},memberships:[]};
@@ -230,9 +240,10 @@ test("a held document entry is repaired by normal publication and an empty portr
   const member={...people[0],websiteUrl:profile,provenance:provenance(profile,"State legislature",at,"Vito Barbieri")};
   const body='<h1>Legislature</h1><div><h2>State Representative Vito Barbieri</h2><p>District 3</p><img src="/vito.jpg"></div><article><a href="/policy-roundtable.pdf">Policy Roundtable</a></article>';
   const base={store,vault,state:"id",sourceId:"official-state-people",now:at,releaseId:"old-doc",acquisitions:[{requestedUrl:profile,finalUrl:profile,body,httpStatus:200,retrievedAt:at}]};
-  const held=await publishPeopleSource({...base,roster:roster([member,old])});assert.ok(held.outcome.promoted);
+  const held=await publishPeopleSource({...base,roster:roster([member])});assert.ok(held.outcome.promoted);
   const parsed=normalizeOfficialLegislaturePage(body,profile,{sourceId:"official-state-people",state:"id",asOf:at,signal:new AbortController().signal,roster:roster([member,old])},at);
-  const publication=await publishPeopleSource({...base,releaseId:"doc-owner",now:"2026-10-26T06:01:00.000Z",roster:parsed});
+  const publication=await publishPeopleSource({...base,releaseId:"doc-owner",now:"2026-10-26T06:01:00.000Z",roster:parsed,
+    held:{versionId:held.candidate.id,normalizedPayload:held.candidate.normalizedPayload,roster:roster([member,old])}});
   assert.ok(publication.outcome.promoted,JSON.stringify(publication.outcome.candidate.receipt?.checks));
   assert.equal((publication.candidate.readModel as {roster:OfficeholderSet}).roster.officeholders.length,1);
   const ref=promotedInputRef("STATE_LEGISLATOR",publication.candidate.scope,publication.outcome.promoted.versionId,publication.candidate.readModel,at)!;
@@ -385,7 +396,7 @@ test("a changed display ID retains every reader reference and refuses a missing 
 test("normal publication accepts an ID correction only while every old reference still resolves",async()=>{
   const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
   const a=reference("Vito Barbieri","11111111-1111-4111-8111-111111111111","3"),b=reference("Jane Member","22222222-2222-4222-8222-222222222222","4");
-  const bad={...collapsed(),id:b.id,personId:b.personId,nativeIds:{plural:[...a.nativeIds!.plural,...b.nativeIds!.plural],"ocd-person":[...a.nativeIds!["ocd-person"],...b.nativeIds!["ocd-person"]],reader:[a.id,a.personId!,b.id,b.personId!]}};
+  const bad={...collapsed(),id:b.id,personId:b.personId,nativeIds:{...a.nativeIds,reader:[a.id,a.personId!,b.id,b.personId!,...b.nativeIds!["ocd-person"]]}};
   const body=`<h2>State Representative</h2>${html}`;
   const input={store,vault,state:"id",sourceId:"official-state-people",now:at,releaseId:"old",acquisitions:[{requestedUrl:page,finalUrl:page,body,httpStatus:200,retrievedAt:at}]};
   const old=await publishPeopleSource({...input,roster:roster([bad])});assert.ok(old.outcome.promoted,JSON.stringify(old.outcome.candidate.receipt?.checks));

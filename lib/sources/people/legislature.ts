@@ -45,6 +45,14 @@ export function legislaturePageNamesPerson(html: string, name: string): boolean 
   return key(textOf(content)).includes(key(name)) || [...content.matchAll(/<(a|strong|h[1-6])\b[^>]*>([\s\S]*?)<\/\1>/gi)]
     .some(anchor=>samePublishedName(anchorName(anchor[2]),name));
 }
+/** Verify against the same bounded entry that supplies the published person.
+ * A chamber heading can name the office without repeating "Senator" on every card. */
+export function legislaturePageBindsPerson(html:string,pageUrl:string,person:Officeholder,collectedAt:string):boolean {
+  if(!legislaturePageNamesPerson(html,person.name))return false;
+  const parsed=normalizeOfficialLegislaturePage(html,pageUrl,{state:person.state!,sourceId:"official-state-people",asOf:collectedAt,
+    signal:new AbortController().signal,roster:{...emptyRoster(person.state!,collectedAt),officeholders:[person]}},collectedAt);
+  return parsed.officeholders.some(row=>row.chamber===person.chamber&&sameNativePerson(row,person));
+}
 const governmentRoute = (value:unknown):value is string => {
   const observed=url(value);if(!observed)return false;
   if(federalRoute(observed))return false;

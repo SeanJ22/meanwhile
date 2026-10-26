@@ -8,7 +8,7 @@ import type { Query } from "./publish.ts";
 import { readFactRosters } from "./roster-read.ts";
 
 const SCHEDULE_SQL = `SELECT f.entity_id, f.field, f.value, f.checked_at, (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url FROM fact f
-  WHERE f.status = 'live' AND f.field IN ('name', 'homepage', 'meeting_cadence', 'agenda_url', 'office_address', 'office_phone') AND f.entity_id = ANY($1::text[])`;
+  WHERE f.status = 'live' AND f.field IN ('name', 'homepage', 'meeting_cadence', 'agenda_url', 'office_address', 'office_phone', 'mailing_address') AND f.entity_id = ANY($1::text[])`;
 
 /** One body's live facts as readers see them: its own fields, its members, its comment rules and its sittings. */
 export interface BodyFacts {
@@ -41,7 +41,8 @@ export function bodyFieldsFromRows(rows: readonly Record<string, unknown>[]): Re
     else if (row.field === "office_address" || row.field === "office_phone" || row.field === "homepage") {
       const key = row.field === "office_address" ? "officeAddress" : row.field === "office_phone" ? "officePhone" : "homepageUrl";
       Object.assign(held, { [key]: String(row.value), fieldSources: { ...held.fieldSources, [key]: source } });
-    } else if (row.field === "meeting_cadence") Object.assign(held, { meetingCadence: String(row.value), meetingCadenceSource: { sourceUrl: source.sourceUrl, collectedAt: at } });
+    } else if (row.field === "mailing_address") held.provenance ??= source;
+    else if (row.field === "meeting_cadence") Object.assign(held, { meetingCadence: String(row.value), meetingCadenceSource: { sourceUrl: source.sourceUrl, collectedAt: at } });
     else held.agendaSourceRef = String(row.value);
   }
   return byBody;

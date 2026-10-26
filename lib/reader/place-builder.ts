@@ -410,7 +410,7 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     split_part(b.id,'#',1)),'placement_basis',CASE WHEN EXISTS (
       SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id AND ep.placement_basis='HOST_COUNTY') THEN 'HOST_COUNTY' ELSE 'SERVICE_AREA' END,
     'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government' AND g.id ~ '^[a-z]{2}:special:'))) FROM bodies b),'[]'::jsonb) AS entities,
-  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone')),'[]'::jsonb) AS fields,
+  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone','mailing_address')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
   coalesce((SELECT jsonb_agg(to_jsonb(s)) FROM sittings s),'[]'::jsonb) AS sittings,

@@ -534,6 +534,7 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
       ...(served.some(id => id !== division) ? {alsoServesOcdIds:served.filter(id => id !== division)} : {}),
       ...(e.placement_basis === "HOST_COUNTY" ? {placementBasis:"HOST_COUNTY" as const} : {})} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [],
+      ...(typeof e.name === "string" && e.name !== id ? { name: e.name } : {}),
       ...(typeof e.government === "string" ? { government: e.government } : {}) };
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });

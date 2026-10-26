@@ -76,10 +76,12 @@ export function stateCoverage(
   const known = new Set(state.registry.registry.bodies.map(body => body.id));
   const acquired = bodyFacts.flatMap((fact): Body[] => {
     const fields = fact.fields;
-    if (known.has(fact.id) || !fields.name || !fields.provenance?.sourceUrl) return [];
-    return [{ id: fact.id, ocdId: fact.division, name: fields.name, bodyClass: fields.bodyClass ?? "body", bodyOrigin: "SOURCED",
+    // A board no source names yet (one made from its government's Census record) shows under its held name, sourced by that record.
+    const name = fields.name ?? fact.name, provenance = fields.provenance ?? Object.values(fields.fieldSources ?? {})[0];
+    if (known.has(fact.id) || !name || !provenance?.sourceUrl) return [];
+    return [{ id: fact.id, ocdId: fact.division, bodyClass: fields.bodyClass ?? "body", bodyOrigin: "SOURCED",
       coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE", agendaSourceRef: null, meetingCadence: null,
-      homepageUrl: null, demandCount: 0, sourceDataset: "GOV_DIRECTORY", ...fields, provenance: fields.provenance,
+      homepageUrl: null, demandCount: 0, sourceDataset: "GOV_DIRECTORY", ...fields, name, provenance,
       ...(fact.government ? { governmentName: fact.government } : {}) }];
   });
   const composed = withStateRegistryFacts({ ...state.registry, registry: { ...state.registry.registry,

@@ -45,6 +45,83 @@ function geocode(house:string,street:string,suffix:string,direction:string,city:
       preDirection:direction,city,state:"AZ",zip}}]}};
 }
 
+test("a cutoff saves its admitted batch, resumes the rest, and a later run reads only a changed sitting",async()=>{
+  const meetings=Array.from({length:70},(_,index)=>({...online,id:`fixture:cutoff:${index}`}));
+  const db=await setup(meetings),vault=new MemoryEvidenceStore();
+  const selected:string[][]=[];
+  let officeReads=0,cutoff=false;
+  const facts={...db,query:async(text:string,params:readonly unknown[]=[])=>{
+    const rows=await db.query(text,params);
+    if(text.includes("AS retry_key")&&text.includes("AS advances"))selected.push(rows.map(row=>(row.value as Meeting).id));
+    if(text.includes("SELECT id,name,state,parent_id FROM entity"))officeReads++;
+    return rows;
+  }};
+  const fetchImpl:typeof fetch=async()=>{cutoff=true;return new Response(JSON.stringify(geocode("2238","GINTER","RD","E","TUCSON","85706")));};
+  try{
+    const first=await publishHeldMeetingPins({facts,vault,clocks:factClocks(null),now:NOW,
+      deadlineMs:Date.parse(NOW)+60_000,clock:()=>Date.parse(NOW)+(cutoff?60_001:0),fetchImpl});
+    assert.equal(first.published,32);assert.deepEqual(first.failures,[]);
+    const [held]=await db.query("SELECT position FROM pass_cursor WHERE name='held-meeting-pins'");
+    const progress=JSON.parse(String(held.position));
+    assert.equal(progress.after[2],32);assert.deepEqual(progress.pending,[]);
+    selected.length=0;
+    const nextAt=new Date(Date.parse(NOW)+120_000).toISOString();
+    const second=await publishHeldMeetingPins({facts,vault,clocks:factClocks(null),now:nextAt,
+      deadlineMs:Date.parse(nextAt)+60_000,clock:()=>Date.parse(nextAt),fetchImpl});
+    assert.equal(second.published,38);assert.deepEqual(second.failures,[]);
+    assert.deepEqual(selected.flat(),meetings.slice(32).map(meeting=>meeting.id),"the completed batch is not read again after restart");
+    selected.length=0;officeReads=0;
+    const quiet=await publishHeldMeetingPins({facts,vault,clocks:factClocks(null),now:nextAt,
+      deadlineMs:Date.parse(nextAt)+60_000,clock:()=>Date.parse(nextAt),fetchImpl:async()=>{throw Error("unchanged sitting fetched");}});
+    assert.equal(quiet.considered,0);assert.deepEqual(selected.flat(),[]);assert.equal(officeReads,0);
+
+    const changed={...meetings[0],online:undefined,venueGap:{kind:"STATED_NOT_PLACED" as const,publishedText:OWN,publisher:"District"}};
+    await db.query("UPDATE civic_data_promotions SET payload=$1 WHERE key='MEETING:held'",[JSON.stringify({meetings:[changed,...meetings.slice(1)]})]);
+    selected.length=0;
+    const moved=await publishHeldMeetingPins({facts,vault,clocks:factClocks(null),now:nextAt,
+      deadlineMs:Date.parse(nextAt)+60_000,clock:()=>Date.parse(nextAt),fetchImpl:async()=>new Response(JSON.stringify(geocode("1415","MELODY","LN","W","BISBEE","85603")))});
+    assert.equal(moved.published,1);assert.deepEqual(moved.failures,[]);
+    assert.deepEqual(selected.flat(),[changed.id]);
+    assert.equal(Number((await db.query("SELECT count(*) AS n FROM fact WHERE field='map_pin' AND status='live'"))[0].n),70);
+  }finally{await db.pg.close();}
+});
+
+test("a crash after admission leaves the unfinished pin owed without a new source version",async()=>{
+  const db=await setup([online]),vault=new MemoryEvidenceStore();
+  const put=vault.put.bind(vault);
+  let fail=true;
+  vault.put=async(...args)=>{if(fail)throw Error("fixture vault crash");return put(...args);};
+  const input={facts:db,vault,clocks:factClocks(null),now:NOW,deadlineMs:Date.parse(NOW)+60_000,clock:()=>Date.parse(NOW),
+    fetchImpl:async()=>new Response(JSON.stringify(geocode("2238","GINTER","RD","E","TUCSON","85706")))};
+  try{
+    await assert.rejects(publishHeldMeetingPins(input),/fixture vault crash/);
+    const saved=JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='held-meeting-pins'"))[0].position));
+    assert.equal(saved.pending.length,1);
+    fail=false;
+    const recovered=await publishHeldMeetingPins(input);
+    assert.equal(recovered.published,1);assert.deepEqual(recovered.failures,[]);
+    const following=await publishHeldMeetingPins({...input,fetchImpl:async()=>{throw Error("settled pin read again");}});
+    assert.equal(following.considered,0);
+  }finally{await db.pg.close();}
+});
+
+test("a source row that becomes visible with an older allocation number still publishes on the next pass",async()=>{
+  const db=await setup([online]),vault=new MemoryEvidenceStore();
+  const input={facts:db,vault,clocks:factClocks(null),now:NOW,deadlineMs:Date.parse(NOW)+60_000,clock:()=>Date.parse(NOW),
+    fetchImpl:async()=>new Response(JSON.stringify(geocode("2238","GINTER","RD","E","TUCSON","85706")))};
+  try{
+    assert.equal((await publishHeldMeetingPins(input)).published,1);
+    const later={...online,id:"fixture:late-commit"};
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,current_version_id,promoted_at,payload) VALUES('MEETING:earlier','MEETING','source:earlier','later',$1,$2)",
+      [OLD,JSON.stringify({meetings:[later]})]);
+    // Sequence allocation order is not transaction commit order. Reproduce that visibility order directly.
+    await db.query("UPDATE civic_data_rows SET change_id=0 WHERE promotion_key='MEETING:earlier'");
+    const report=await publishHeldMeetingPins(input);
+    assert.equal(report.published,1);assert.deepEqual(report.failures,[]);
+    assert.equal(Number((await db.query("SELECT count(*) AS n FROM fact WHERE field='map_pin' AND status='live'"))[0].n),2);
+  }finally{await db.pg.close();}
+});
+
 test("the scheduled held pass places a municipal meeting with no stated venue at its own published City Hall",async()=>{
   const {source,target}=JSON.parse(readFileSync(new URL("./fixtures/mt01-municipal-hall-meetings.json",import.meta.url),"utf8")) as {source:Meeting;target:Meeting};
   const missing:Meeting={...target,id:"iqm2:municipal:no-stated-venue",venueGap:{kind:"NOT_STATED_BY_PUBLISHER",publishedText:null,publisher:target.jurisdiction}};

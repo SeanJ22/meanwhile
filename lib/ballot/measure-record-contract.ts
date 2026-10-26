@@ -2,7 +2,14 @@
  * promoted records retain their keys when Admin later changes that table. */
 export type ProvisionKind = string;
 
-export interface MeasureRecord {
+interface MeasureSource {
+  readonly sourceUrl: string;
+  readonly sourceHash: string;
+  readonly sourceHashKind?: "CAPTURE_BYTES" | "HELD_TEXT";
+  readonly writtenAt: string;
+}
+
+export interface MeasureRecord extends MeasureSource {
   readonly contestId: string;
   readonly whatItDoes: string;
   readonly yesMeans: string | null;
@@ -15,10 +22,8 @@ export interface MeasureRecord {
     readonly label: string;
     readonly what: string;
   }[];
-  readonly sourceUrl: string;
-  readonly sourceHash: string;
-  readonly sourceHashKind?: "CAPTURE_BYTES" | "HELD_TEXT";
-  readonly writtenAt: string;
+  /** Retained reader parts keep the source and date of the record that supplied them. */
+  readonly partSources?: Readonly<Record<string, MeasureSource>>;
   readonly citation?: "azleg-analysis" | "measure-source";
 }
 
@@ -39,5 +44,9 @@ export function measureRecordIssue(record: MeasureRecord): string | null {
     }
     ids.add(part.id);
   }
+  if (record.partSources !== undefined && (!record.partSources || typeof record.partSources !== "object" || Array.isArray(record.partSources) ||
+      Object.entries(record.partSources).some(([id, source]) => !ids.has(id) || !source ||
+        !/^https:\/\//.test(source.sourceUrl) || !/^[a-f0-9]{64}$/.test(source.sourceHash) ||
+        !Number.isFinite(Date.parse(source.writtenAt))))) return "A retained measure part lost its original source identity.";
   return null;
 }

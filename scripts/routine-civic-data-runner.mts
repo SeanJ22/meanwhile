@@ -13,6 +13,7 @@ import { routineTasksWithoutClocks } from "../lib/civic-data/clock-presence.ts";
 import { writeContractHandoff } from "../lib/civic-data/contract-handoff-parent.ts";
 import { savePublishNowFailure } from "../lib/civic-data/publish-now-failure.ts";
 import { ensureFactEntities, loadChangedStates, registeredStates } from "../lib/facts/entities.ts";
+import { makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
 import { syncReaderIds } from "../lib/core/resolve.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -770,6 +771,17 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   } catch (error) {
     supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
+  // Free national work: every Census government's governing board, a state at a time, beside the steps below.
+  // It gets its own ten minutes: about 81,000 board facts would otherwise take two days of one-minute maintenance budgets.
+  const governingDeadlineMs = Math.min(PASS_MAINTENANCE_DEADLINE_MS, Date.now() + 10 * 60_000);
+  const governingBoards = makeCensusGoverningBodies({ db: facts, root: ROOT, states, clocks: factClocks(null), more: () => Date.now() < governingDeadlineMs })
+    .then(report => {
+      if (report.states.length) console.log(`RCD_TASK census-governing-bodies: ${report.states.join(", ")}: ${report.live} board facts live, ` +
+        `${report.confirmed} confirmed, ${report.held} held, ${report.unheld} governments not yet held on a place` +
+        (Object.keys(report.refused).length ? `; refused ${JSON.stringify(report.refused)}` : ""));
+    }, error => {
+      supervisorFailures.push({ taskId: "census-governing-bodies", code: "CENSUS_GOVERNING_BODIES_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+    });
   if (controlPlaneUrlFromEnv() && Date.now() < deadlineMs) {
     step = "splitting the held national people records into place and member records, once";
     try {
@@ -839,6 +851,7 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   } catch (error) {
     console.log(`RCD_PAGE_REFRESH CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; pages past their refresh date are read again next pass`);
   }
+  await governingBoards;
   await writePassCursor(facts.query, "routine-fact-maintenance-state", state);
 }
 const admissionNowMs = Date.now();

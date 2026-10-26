@@ -5,6 +5,7 @@ import { formatDateLong } from "../text/format-date.ts";
 import { candidacyDisplayName, measureDesignations, type AskNominee } from "./ballot-inventory.ts";
 import type { EvidenceRecord } from "./evidence.ts";
 import { overLengthBudget } from "./length-contract.ts";
+import { stateName } from "../facts/entity-read.ts";
 
 /**
  * "What is on my ballot?" and "Who is running for state senate in my
@@ -86,10 +87,13 @@ export function contestsForOfficePhrase(contests: readonly Contest[], phrase: st
   return contests.filter(contest => {
     if (contest.type !== "CANDIDACY") return false;
     const title = words(contest.title).split(" ");
-    // A publisher can omit the place from an office title. The contest's
-    // division supplies that place, without accepting a different county.
-    const place = [...contest.ocdId.matchAll(/\/(county|place|school_district|special_district):([^/]+)/g)]
-      .flatMap(match => words(`${match[2].replaceAll("_", " ")} ${match[1].replaceAll("_", " ")}`).split(" "));
+    // A publisher can omit the place from an office title. Use that contest's
+    // own division, including its state, without accepting another place.
+    const place = [...contest.ocdId.matchAll(/\/(state|district|territory|county|place|school_district|special_district):([^/]+)/g)]
+      .flatMap(match => {
+        const name = ["state", "district", "territory"].includes(match[1]) ? stateName(match[2]) : null;
+        return words(`${match[2].replaceAll("_", " ")} ${match[1].replaceAll("_", " ")} ${name ?? ""}`).split(" ");
+      });
     return tokens.some(token => title.includes(token)) && tokens.every(token => title.includes(token) || place.includes(token));
   });
 }

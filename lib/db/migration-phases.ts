@@ -170,6 +170,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "RB-A8_count_hour": { phase: "expand", why: "Adds hourly counters and their writer hooks before the compact observer is deployed.",
     // Its trigger on fact, then a 1M-row backfill, then triggers on civic_data_promotions and entity deadlocked with the runner at the 9:47 PM EDT Oct 24 build.
     lockFirst: ["fact", "civic_data_promotions", "entity"] },
+  "GB-01_la_metro_boards": { phase: "expand", why: "Moves LA Metro's boards filed under Oregon to their California government and its places, keeping their ids and facts; no table or column changes." },
   "RB-A4_entity_places": { phase: "expand", why: "Adds the host-county filing marker after RB-A1 supplies boundary-year identity." },
   "RB-A2_place_boundaries": { phase: "contract", why: "Extends RB-A1's year-aware place tables after they exist, allows source-unknown shares and indexes source polygons without changing readers." },
   "RB-A3_expand": { phase: "expand", why: "Adds place rebuild requests and hourly fact counts alongside the live fact table before the shared door writes them." },

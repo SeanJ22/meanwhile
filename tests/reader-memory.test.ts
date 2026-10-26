@@ -7,6 +7,8 @@ import { unwrapVersionedStatement } from "./helpers/versioned-neon-fixture.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
+import { readerOfficeholders } from "../lib/ask/server-sources.ts";
+import { composeReaderOfficials, readerOfficialsQuestion } from "../lib/ask/reader-officials.ts";
 
 test("the national ZIP shelf is shared and identifies place and state without waiting on people", async () => {
   assert.equal(stateForZip("85701"), "AZ");
@@ -58,8 +60,10 @@ test("President reads stay current and independent of a blocked Congress read, i
   const at = "2026-10-18T00:00:00.000Z", scope = "US:people:statewide-executive-sources:v1";
   const holder = { id: "white-house:current-president", name: "An Official President", officeTitle: "President of the United States",
     level: "FEDERAL", provenance: { sourceUrl: "https://www.whitehouse.gov/administration/current-president/", sourceOrg: "The White House", collectedAt: at, verifiedAt: at } };
+  const vice = { ...holder, id: "white-house:current-vice-president", name: "An Official Vice President", officeTitle: "Vice President of the United States" };
   const payload = { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", generatedAt: at,
-    roster: { scope: "us", generatedAt: at, officeholders: [holder], divisions: [{ officeholderId: holder.id, ocdId: "ocd-division/country:us", bodyId: null }], unmatched: [] } };
+    roster: { scope: "us", generatedAt: at, officeholders: [holder, vice],
+      divisions: [holder, vice].map(person => ({ officeholderId: person.id, ocdId: "ocd-division/country:us", bodyId: null })), unmatched: [] } };
   const receipt = { contractVersion: 2, decision: "GOOD", candidateId: "president-version", sourceId: "statewide-executive-sources", recordClass: "STATE_LEGISLATOR", scope,
     validatedAt: at, checks: VALIDATION_CHECKS.map(check => ({ check, verdict: "PASS", code: "FIXTURE", detail: "Published source fixture" })), excludedFacts: [] };
   await pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,source_id text,
@@ -88,23 +92,32 @@ test("President reads stay current and independent of a blocked Congress read, i
   const presidentReads = () => calls.filter(keys => keys.every(key => !key.startsWith("FEDERAL_DIRECTORY:"))).length;
   try {
     national = readNationalShelf().catch(error => error);
-    const [first, second] = await Promise.all([readNationalPresident(), readNationalPresident()]);
+    const [first, second, officials] = await Promise.all([readNationalPresident(), readNationalPresident(),
+      readerOfficeholders(["ocd-division/country:us/state:az"], [], ["us_president", "us_vice_president"])]);
     assert.deepEqual(first, second);
     assert.equal(first?.officeholders[0].name, holder.name);
+    assert.equal(officials.loaderFailures, 0);
+    for (const [office, person] of [["president", holder], ["vice president", vice]] as const) {
+      const ask = readerOfficialsQuestion(`Who is the ${office} of the United States?`)!;
+      const answer = composeReaderOfficials({ ask, held: officials.held, holdingFailed: false });
+      assert.ok(answer?.answer.includes(person.name));
+      assert.notEqual(answer?.missingAnswer, true);
+      assert.deepEqual(answer?.named.map(row => row.seat.id), [person.id]);
+    }
     assert.equal(congressComplete, false, "the President is usable while the national Congress read is still blocked");
-    assert.equal(presidentReads(), 3, "the national composition and two independent readers each confirm stored versions");
+    assert.equal(presidentReads(), 4, "the national composition, two independent readers, and Ask each confirm stored versions");
     assert.ok(calls.find(keys => keys.some(key => key.startsWith("FEDERAL_DIRECTORY:")))?.every(key => key.startsWith("FEDERAL_DIRECTORY:")), "the Congress query carries no President source dependency");
     holder.name = "Newly Published President";
     await pg.query("UPDATE civic_data_promotions SET payload=$1 WHERE key=$2", [payload, `STATE_LEGISLATOR:${scope}`]);
     await pg.query("UPDATE civic_data_candidates SET normalized_hash=$1 WHERE id='president-version'", [canonicalCivicDataHash(payload)]);
     assert.equal((await readNationalPresident())?.officeholders[0].name, holder.name, "the next read sees changes without waiting for a TTL or a new pointer id");
-    assert.equal(presidentReads(), 4);
+    assert.equal(presidentReads(), 5);
     await pg.query("UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{roster,officeholders,0,name}','\"Unverified mutation\"') WHERE key=$1", [`STATE_LEGISLATOR:${scope}`]);
     await assert.rejects(readNationalPresident(), /READER_PUBLISHED_PAYLOAD_HASH_MISMATCH/, "changed payload bytes with an unchanged proof cannot reuse the earlier verified body");
     await pg.query("UPDATE civic_data_promotions SET payload=$1 WHERE key=$2", [payload, `STATE_LEGISLATOR:${scope}`]);
     unavailable = true;
     await assert.rejects(readNationalPresident(), /national version read unavailable/, "a failed version read cannot serve the previous national body");
-    assert.equal(presidentReads(), 6);
+    assert.equal(presidentReads(), 7);
   } finally {
     releaseCongress!();
     await national;

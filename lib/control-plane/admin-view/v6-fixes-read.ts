@@ -8,6 +8,7 @@ import { formatEastern } from "../eastern-time.ts";
 const formatEasternDay = (iso: string): string => new Date(iso).toLocaleDateString("en-US", { timeZone: "America/New_York", month: "short", day: "numeric" });
 import type { FixItem } from "../fix-list.ts";
 import { fixEpisodes, fixHistoryLine, type FixItemWithHistory } from "../fix-history.ts";
+import { countOwner } from "../../counts/hour.ts";
 
 export const FIXES_MISSING_HISTORY = "Fixed and checked, and Came back: only fixes recorded on the fix list";
 
@@ -44,11 +45,13 @@ function openFix(item: FixQueueItem): OpenFix {
 }
 
 function listOpen(item: FixItem): OpenFix {
+  const stateCode=item.addedBy==="The line keeper"?/^([A-Z]{2}) · /.exec(item.where)?.[1]:undefined;
   return {
+    ...(stateCode?{stateCode}:{}),
     id: item.id,
     title: titleOf(item.says),
     tab: item.state === "OPEN" ? "attention" : "fixing",
-    owner: item.owner ?? "River",
+    owner: countOwner(item.owner ?? "River"),
     problem: item.says,
     helps: item.where,
     placeInLine: item.dispatch ? (item.dispatch.honoredAt ? "Agents sent" : "Waiting for the runner") : item.state === "OPEN" ? `Added ${formatEastern(item.addedAt)}` : `Started ${formatEastern(item.startedAt ?? item.addedAt)}`,

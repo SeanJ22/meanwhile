@@ -47,7 +47,11 @@ export function withMeasureTranslations(ballot: BallotSet, records: readonly Tra
     // Legacy reaction targets remain available while the summary and vote
     // meanings acquire independent sentence checks.
     const parts = prior?.parts.filter(part => !translation.measure.parts.some(row => row.id === part.id)) ?? [];
-    const record = parts.length ? { ...translation.measure, parts: [...translation.measure.parts, ...parts] } : translation.measure;
+    const record = parts.length ? { ...translation.measure, parts: [...translation.measure.parts, ...parts],
+      partSources: { ...translation.measure.partSources, ...Object.fromEntries(parts.map(part => [part.id, prior!.partSources?.[part.id] ?? {
+        sourceUrl: prior!.sourceUrl, sourceHash: prior!.sourceHash, writtenAt: prior!.writtenAt,
+        ...(prior!.sourceHashKind ? { sourceHashKind: prior!.sourceHashKind } : {}),
+      }])) } } : translation.measure;
     if (at < 0) translated.push(record);
     else translated[at] = record;
   }

@@ -668,6 +668,7 @@ export interface ScoreboardMissionRow {
 export interface ScoreboardVitalHour {
   readonly hour: string;
   readonly factsLive: number | null;
+  readonly factsLiveAtLeast?: boolean;
   readonly factsLiveConfirmed?:boolean;
   readonly costPerFactUsd: number | null;
   readonly neonGb: number | null;
@@ -696,6 +697,7 @@ export interface ScoreboardView {
 export const TASK_STAGES = ["Task created", "Engineer accepted", "Implemented", "Tested", "Released", "Workers using it", "Checked on the public page"] as const;
 
 export interface OpenFix {
+  readonly stateCode?: string;
   readonly id: string;
   readonly title: string;
   readonly tab: "attention" | "fixing" | "update";

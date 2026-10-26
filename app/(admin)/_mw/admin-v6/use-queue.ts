@@ -7,6 +7,7 @@ import type { ScheduledView } from "@/lib/control-plane/admin-view/v6-scheduled-
 import { useV6 } from "./context.tsx";
 import { buildQueue, type QueueRow } from "./queue.ts";
 import { useReading } from "./use-reading.ts";
+import { stateKeyOf } from "./places.ts";
 
 export function useQueueRows(): { readonly rows: readonly QueueRow[]; readonly unread: readonly string[] } {
   const v = useV6();
@@ -27,5 +28,7 @@ export function useQueueRows(): { readonly rows: readonly QueueRow[]; readonly u
     ["reader problems",problems.kind!=="ready" || problems.data.unread], ["orders", v.data.history.data === null], ["instructions sent to the fleet", v.data.sends.data === null], ["hunts", v.data.hunts.data === null],
     ["stuck cases", v.data.stuck.data === null], ["fixes", v.data.fixes.data === null], ["shut doors", doors.kind !== "ready"], ["scheduled orders", scheduled.kind !== "ready"],
   ] as const).filter(([, missing]) => missing).map(([name]) => name);
-  return { rows, unread };
+  const state=stateKeyOf(v.scopeKey)?.slice(3).toUpperCase();
+  const included=new Set([undefined,state]);
+  return { rows:state?rows.filter(row=>included.has(row.stateCode)):rows, unread };
 }

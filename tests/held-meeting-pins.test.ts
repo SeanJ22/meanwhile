@@ -43,6 +43,31 @@ function geocode(house:string,street:string,suffix:string,direction:string,city:
       preDirection:direction,city,state:"AZ",zip}}]}};
 }
 
+test("the scheduled held pass places a municipal meeting with no stated venue at its own published City Hall",async()=>{
+  const {source,target}=JSON.parse(readFileSync(new URL("./fixtures/mt01-municipal-hall-meetings.json",import.meta.url),"utf8")) as {source:Meeting;target:Meeting};
+  const missing:Meeting={...target,id:"iqm2:municipal:no-stated-venue",venueGap:{kind:"NOT_STATED_BY_PUBLISHER",publishedText:null,publisher:target.jurisdiction}};
+  const db=await setup([missing,source]),vault=new MemoryEvidenceStore();
+  const census=JSON.parse(readFileSync(new URL("./fixtures/mt01-municipal-hall-census.json",import.meta.url),"utf8"));
+  try{
+    const division=target.ocdId!,body=target.bodyId!;
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Boise','ID',NULL),($2,'body','Council','ID',$1)",[division,body]);
+    await db.query("UPDATE civic_data_promotions SET key='MEETING:source:derived:family:US-ID',scope='source:derived:family:US-ID' WHERE key='MEETING:held'");
+    let requests=0;
+    const first=await publishHeldMeetingPins({facts:db,vault,clocks:factClocks(null),now:NOW,clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000,
+      fetchImpl:async input=>{requests++;assert.equal(new URL(String(input)).searchParams.get('address'),'150 N. Capitol Blvd, Boise, ID 83702');return new Response(JSON.stringify(census));}});
+    assert.deepEqual(first,{considered:1,published:1,unplaced:0,failures:[]});assert.equal(requests,1);
+    const read=withSittingFacts([missing],(await readSittingFacts(db.query,[body])).get(body)!)[0];
+    assert.equal(read.id,missing.id);assert.equal(read.location,null);assert.equal(read.mapPin?.basis,'GOVERNMENT_OFFICE');
+    assert.equal(read.mapPin?.lat,43.615387122768);assert.equal(read.mapPin?.address,'150 N. Capitol Blvd, Boise, ID 83702');
+    const nextAt=new Date(Date.parse(NOW)+3600000).toISOString();
+    const next=await publishHeldMeetingPins({facts:db,vault,clocks:factClocks(null),now:nextAt,clock:()=>Date.parse(nextAt),deadlineMs:Date.parse(nextAt)+60000,
+      fetchImpl:async()=>{throw Error('The following scheduled pass geocoded an existing point');}});
+    assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});
+    assert.deepEqual((await db.query("SELECT payload FROM civic_data_promotions WHERE key='MEETING:source:derived:family:US-ID'"))[0].payload,
+      JSON.parse(JSON.stringify({meetings:[missing,source]})),'Source meeting facts remain unchanged');
+  }finally{await db.pg.close();}
+});
+
 test("the automatic fact pass restores a carried online office pin, places a held address, and the following pass makes no Census request",async()=>{
   const physical:Meeting={...online,id:"legistar:held:1",online:undefined,carried:undefined,title:"Regular Meeting",
     venueGap:{kind:"STATED_NOT_PLACED",publisher:"District",publishedText:OWN}};
@@ -203,6 +228,37 @@ test("an overlapping pin publisher keeps the winning live point and the followin
       fetchImpl:async()=>{throw Error("the concurrent winner must be reused");}});
     assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});assert.equal(requests,1);
   }finally{await db.pg.close();}
+});
+
+test("pin deadlocks retry fresh transactions with one saved Census response, while persistent and unrelated errors remain failures",async()=>{
+  for(const scenario of [{code:"40P01",failures:2,attempts:3,published:1},{code:"40P01",failures:Infinity,attempts:3,published:0},
+    {code:"23503",failures:1,attempts:1,published:0}]){
+    const db=await setup([online]);let attempts=0,requests=0;
+    const failure=Object.assign(new Error(scenario.code==="40P01"?"deadlock detected":"foreign key violation"),{code:scenario.code});
+    const facts={...db,transaction:async<T>(work:Parameters<typeof db.transaction<T>>[0])=>db.transaction(query=>work(async(sql,params=[])=>{
+      if(!sql.startsWith("INSERT INTO fact "))return query(sql,params);
+      attempts++;
+      assert.equal((await query("SELECT id FROM fact WHERE field='map_pin'")).length,0,"the failed transaction rolled back");
+      const result=await query(sql,params);
+      if(attempts<=scenario.failures)throw failure;
+      return result;
+    }))};
+    try{
+      const args={facts,vault:new MemoryEvidenceStore(),clocks:factClocks(null),now:NOW,clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000};
+      const first=await publishHeldMeetingPins({...args,fetchImpl:async()=>{requests++;return new Response(JSON.stringify(geocode("2238","GINTER","RD","E","TUCSON","85706")));}});
+      assert.equal(attempts,scenario.attempts);assert.equal(requests,1);assert.equal(first.published,scenario.published);
+      assert.equal(first.failures.length,Number(!scenario.published));
+      if(!scenario.published)assert.equal(first.failures[0],`${online.id}: ${failure.message}`);
+      assert.equal((await db.query("SELECT id FROM fact WHERE field='map_pin' AND status='live'")).length,scenario.published);
+      assert.equal((await db.query("SELECT id FROM source_copy WHERE final_url LIKE 'https://geocoding.geo.census.gov/%'")).length,1);
+      if(scenario.published){
+        const [read]=withSittingFacts([online],(await readSittingFacts(db.query,[BODY])).get(BODY)!);
+        assert.equal(read.mapPin?.basis,"BODY_OFFICE");assert.equal(read.mapPin?.coordinateCheckedAt,NOW);
+        const next=await publishHeldMeetingPins({...args,fetchImpl:async()=>{throw Error("the committed point must not be geocoded again");}});
+        assert.deepEqual(next,{considered:0,published:0,unplaced:0,failures:[]});
+      }
+    }finally{await db.pg.close();}
+  }
 });
 
 test("Raleigh's own saved agenda letterhead supplies a board-office pin without a venue list or any changed source fact",async()=>{

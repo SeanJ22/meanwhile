@@ -19,6 +19,8 @@ export interface BodyFacts {
   readonly dispositions: readonly RosterReaderDisposition[];
   readonly comment: CommentAccess | null;
   readonly sittings: readonly SittingFact[];
+  /** The name the fact store holds for the board, shown when no source names it but a source establishes it. */
+  readonly name?: string;
   /** The special district a board belongs to, when it is not the general government of the place it serves. */
   readonly government?: string;
 }

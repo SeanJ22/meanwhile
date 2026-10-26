@@ -17,6 +17,7 @@ export interface MeetingPinBody {
     address: string;
     provenance: RegistryProvenance;
   };
+  governmentOfficeAlternatives?: NonNullable<MeetingPinBody["governmentOffice"]>[];
   meetingAddresses?: MeetingPinAddress[];
   postalAliases?: {address:string;provenance:RegistryProvenance}[];
 }
@@ -40,6 +41,8 @@ export interface MeetingPinLocation extends MeetingPinAddress {
   matchedAddress?: string;
   /** The source text tried before this saved point, including an absent venue. */
   publishedLocation?: string | null;
+  /** Normalized board-address inputs tried before a government-office fallback. */
+  boardAddressQuery?: string | null;
 }
 
 /** Keep the current attendance text while reusing a checked point and any still-needed street address. */
@@ -96,15 +99,17 @@ export function meetingPinAddresses(
       basis: "BODY_OFFICE",
       provenance: body.officeContact.provenance,
     });
-  if (body?.governmentOffice)
+  for (const office of [body?.governmentOffice, ...body?.governmentOfficeAlternatives ?? []]) {
+    if (!office) continue;
     addresses.push({
       meetingId: meeting.id,
       bodyId: meeting.bodyId,
-      name: readerGovernmentName(body.governmentOffice.name, null),
-      address: body.governmentOffice.address,
+      name: readerGovernmentName(office.name, null),
+      address: office.address,
       basis: "GOVERNMENT_OFFICE",
-      provenance: body.governmentOffice.provenance,
+      provenance: office.provenance,
     });
+  }
   return addresses;
 }
 

@@ -17,8 +17,12 @@ import { keeperRows } from "../lib/control-plane/line-keeper/admin.ts";
 import { readLineReport } from "../lib/control-plane/line-keeper/report.ts";
 import { keeperStatus } from "../lib/control-plane/line-keeper/model.ts";
 import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
-import { countProblems, countWindow } from "../lib/counts/hour.ts";
+import { countProblems, countWindow, type CountProblem } from "../lib/counts/hour.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
+import { runnerReadProblems } from "../lib/db/runner-read-families.ts";
+import { groupCountProblems, compactKeeperProblems } from "../lib/counts/problem-groups.ts";
+import { BriefParts } from "../app/(admin)/_mw/admin-v6/brief-view.tsx";
+import { readVitalSigns } from "../lib/control-plane/admin-view/vital-signs-read.ts";
 import { config as schedule } from "../netlify/functions/line-keeper.mts";
 const migration=readFileSync(COUNT_SCHEMA_SOURCE,'utf8');
 const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])=> (await db.query<Record<string,unknown>>(text,[...params])).rows});
@@ -51,6 +55,106 @@ async function controlDatabase(withLeasedWork = false) {
   await db.query(`INSERT INTO cp_admin_config VALUES('current',1,now(),$1::jsonb)`,[JSON.stringify(defaultAdminConfig(new Date().toISOString()))]);
   return db;
 }
+
+test('688 state problems become one brief group, agree with direct state SQL, and keep every repair in Queue',async()=>{
+  const [control,reader]=await Promise.all([controlDatabase(),readerDatabase()]);
+  try {
+    const states=[...REGISTRY_STATES,'US'];
+    const since=new Date(Date.now()-2*3_600_000).toISOString();
+    for(const [index,state] of states.entries()) {
+      const allRowsIndex=Array.from({length:index<4?13:12},(_,family)=>Array.from({length:family%3+1},(_,item)=>({id:`${state}-${family}-${item}`,state:'WAITING',
+        lane:`Family ${family}`,stateCode:state,waitingSince:since,owner:'FLEET'}))).flat();
+      await control.query('INSERT INTO cp_owner_snapshots(id,value) VALUES($1,$2::jsonb)',[`current:${state.toLowerCase()}`,JSON.stringify({allRowsIndex})]);
+    }
+    const at=new Date().toISOString();
+    const {hour}=await runLineKeeper(query(control),query(reader),at);
+    assert.equal(hour.problems.length,688);
+    const groups=groupCountProblems(hour.problems.filter((problem):problem is CountProblem=>"kind" in problem));
+    assert.equal(groups.length,1);
+    assert.equal(groups[0].group!.items,1372);
+    assert.equal(groups[0].group!.states.length,57);
+    const direct=(await control.query<{state:string;n:number}>(`SELECT r->>'stateCode' AS state,count(*)::int AS n
+      FROM cp_owner_snapshots s CROSS JOIN LATERAL jsonb_array_elements(s.value->'allRowsIndex') r
+      WHERE s.id LIKE 'current:%' GROUP BY 1 ORDER BY 1`)).rows;
+    for(const row of direct)assert.equal(groups[0].group!.states.find(s=>s.state===row.state)!.items,row.n,row.state);
+    assert.equal((await control.query<{n:number}>('SELECT count(*)::int AS n FROM cp_admin_fix_list')).rows[0].n,688);
+    const config=withKeeperFixes(defaultAdminConfig(at),hour);
+    const brief=config.latestBrief!;
+    const html=renderToStaticMarkup(createElement(BriefParts,{brief}));
+    assert.ok(html.length<6000);
+    assert.match(html,/Alaska/);assert.match(html,/scope=ak/);assert.doesNotMatch(html,/diggers/);
+    const clear=withKeeperFixes(config,{...hour,problems:[]});
+    assert.equal(clear.latestBrief!.problems.length,0,'the brief does not retain stale hourly findings');
+    assert.equal(clear.fixList!.length,688,'a quiet hour never closes owned repair work');
+    const old=hour.problems.map(p=>({key:`line-keeper:${p.key}`,what:p.says,owner:'diggers',next:p.next}));
+    assert.deepEqual(compactKeeperProblems(old),groups,'saved snapshots compact immediately too');
+  } finally {await Promise.all([control.close(),reader.close()]);}
+});
+
+test('grouped count problems and runner read growth keep their owned repairs and daily brief details together',()=>{
+  const at='2026-10-26T15:05:00Z',from='2026-10-26T14:00:00Z',through='2026-10-26T15:00:00Z';
+  const countProblem={kind:'waiting' as const,state:'AZ',items:3,key:'counts:AZ:MEETING:box:waiting',where:'AZ meetings',
+    says:'3 items have waited at least an hour.',owner:'The research team',next:'Finish the waiting meeting work.'};
+  const readProblems=runnerReadProblems([{database:'reader',job:'meetings:AZ',responseBytes:300_000_000,previousBytes:2_400_000_000,
+    previousHours:24,files:['lib/meetings/runtime.ts'],tables:['civic_data_payload_parts']}]);
+  assert.equal(readProblems.length,1);
+  const hour={from,through,measuredAt:at,problems:[countProblem,...readProblems],counts:[],waiting:[],own:{bytesRead:0}};
+  const initial=defaultAdminConfig(at),first=withKeeperFixes(initial,hour);
+  assert.equal(first.latestBrief!.lineKeeperOnly,true,'an hourly-only brief never pretends to be the full daily brief');
+  assert.equal(first.latestBrief!.problems.length,2);
+  assert.equal(first.latestBrief!.problems.find(p=>p.group)?.group!.items,3);
+  const growth=first.latestBrief!.problems.find(p=>p.key==='line-keeper:runner-reads:meetings')!;
+  assert.match(growth.what,/0\.300 GB.*0\.100 GB\/hour/);
+  assert.match(growth.next,/meetings:AZ.*lib\/meetings\/runtime\.ts/);
+  assert.equal(first.fixList!.length,2,'grouping never removes the individual owned repairs');
+  const daily={...first,latestBrief:{...first.latestBrief!,lineKeeperOnly:false,problems:[...first.latestBrief!.problems,
+    {key:'reader-fact',what:'A fact needs attention',owner:'The research team',next:'Read the source.'}]}};
+  const clear=withKeeperFixes(daily,{...hour,problems:[]});
+  assert.equal(clear.latestBrief!.lineKeeperOnly,false,'hourly checks retain the existing full daily brief status');
+  assert.deepEqual(clear.latestBrief!.problems.map(p=>p.key),['reader-fact'],'a quiet hour clears only current keeper findings');
+  assert.equal(clear.fixList!.length,2,'quiet counters do not close either repair');
+});
+
+test('Now agrees with SQL for three full hours and reports the completed check across the hour boundary',async()=>{
+  const [control,reader]=await Promise.all([controlDatabase(),readerDatabase()]);
+  try {
+    await control.exec(`CREATE TABLE cp_vital_signs(hour timestamptz,facts_live bigint,spend_usd numeric,
+      neon_bytes_read bigint,rounds_finished int,rounds_killed int,paid_jobs_ended_empty int,paid_jobs_ended int);`);
+    const first=countWindow(new Date().toISOString()).from;
+    // Controlled hour keys avoid waiting three hours. The counters and Admin use their real SQL.
+    await reader.query("UPDATE count_hour SET hour=$1::timestamptz - interval '1 hour' WHERE step='counter start'",[first]);
+    for(let index=0;index<3;index++) {
+      const from=new Date(Date.parse(first)+index*3_600_000).toISOString();
+      const at=new Date(Date.parse(from)+3_600_000+9*60_000).toISOString();
+      const amount=[0,229,1878][index];
+      if(amount)await reader.query("SELECT count_hour_at('AZ','Officials','fact:live',$1::timestamptz,$2,$2,0,0)",[from,amount]);
+      await control.query('INSERT INTO cp_vital_signs VALUES($1,NULL,1,100,0,0,0,0)',[from]);
+      await runLineKeeper(query(control),query(reader),at);
+      const report=await readLineReport(query(control),query(reader));
+      assert.equal(keeperStatus(report,at),'The line keeper is checking every hour.');
+      const numbers=await readVitalSigns(query(control),at,query(reader));
+      const direct=(await reader.query<{n:number}>(`SELECT coalesce(sum(n),0)::int AS n FROM count_hour
+        WHERE hour=$1::timestamptz AND step LIKE 'v1:%' AND substring(step FROM 4)::jsonb->>1='fact:live'
+        AND substring(step FROM 4)::jsonb->>2 IN ('in','changed')`,[from])).rows[0].n;
+      assert.equal(numbers[0].factsLive,direct);
+      assert.equal(numbers[0].factsLive,amount);
+      assert.equal(numbers[0].costPerFactUsd,amount?Math.round(1/amount*1e6)/1e6:null);
+      const boundary=new Date(Date.parse(at)+51*60_000).toISOString();
+      assert.match(keeperStatus(report,boundary),/last reported.*next full-hour report is pending/);
+    }
+  }finally{await Promise.all([control.close(),reader.close()]);}
+});
+
+test('Now shows observed facts from the installation hour as a lower bound and earlier hours as unknown',async()=>{
+  const reader=await readerDatabase();
+  try {
+    await reader.exec("UPDATE count_hour SET hour='2026-10-25T03:26:46.189Z' WHERE step='counter start'; DELETE FROM count_hour WHERE step<>'counter start';");
+    await reader.query("SELECT count_hour_at('AZ','Officials','fact:live','2026-10-25T03:00:00Z',229,229,0,0)");
+    const empty={query:async()=>[]};
+    const rows=await readVitalSigns(empty,'2026-10-25T04:09:00Z',query(reader));
+    assert.deepEqual(rows.map(r=>[r.factsLive,r.factsLiveAtLeast,r.costPerFactUsd]),[[229,true,null],[null,false,null]]);
+  }finally{await reader.close();}
+});
 
 test('the merged work list counts completed work as done and delayed retries as scheduled',async()=>{
   const db=await controlDatabase(true);
@@ -138,14 +242,14 @@ test('a waiting pile becomes owned Admin work and a brief item on the next hourl
       INSERT INTO cp_box_findings(id,value) VALUES('AZ:pile','{"subjectId":"AZ:body","state":"waiting","origins":[{"recordedAt":"2026-10-20T07:00:00Z"}],"fact":{"recordClass":"MEETING"}}');`);
     const first=new Date(Date.now()+3_600_000).toISOString();
     const result=await runLineKeeper(query(control),query(reader),first);
-    assert.ok(result.hour.problems.some(p=>p.owner==='diggers'&&p.key==='counts:AZ:MEETING:box:waiting'));
+    assert.ok(result.hour.problems.some(p=>p.owner==='The research team'&&p.key==='counts:AZ:MEETING:box:waiting'));
     assert.equal((await control.query<{n:number}>("SELECT count(*)::int AS n FROM cp_owner_snapshots")).rows[0].n,0);
     await control.exec(`INSERT INTO cp_owner_snapshots(id,value) VALUES('other-owner','{}');`);
     await assert.rejects(()=>control.exec(`DELETE FROM cp_owner_snapshots WHERE id='other-owner'`),/only the retired/);
     const fixes=(await control.query<{value:{owner:string}}>('SELECT value FROM cp_admin_fix_list')).rows;
-    assert.ok(fixes.some(r=>(r.value as {owner:string}).owner==='diggers'));
+    assert.ok(fixes.some(r=>(r.value as {owner:string}).owner==='The research team'));
     const [config]=(await control.query<{value:{latestBrief:{problems:{owner:string}[]}}}>(`SELECT value FROM cp_admin_config WHERE id='current'`)).rows;
-    assert.ok((config.value as {latestBrief:{problems:{owner:string}[]}}).latestBrief.problems.some(p=>p.owner==='diggers'));
+    assert.ok((config.value as {latestBrief:{problems:{owner:string}[]}}).latestBrief.problems.some(p=>p.owner==='The research team'));
     // Exercise the same scheduled path at its next hourly time, retaining the waiting repair.
     const next=new Date(Date.parse(first)+3_600_000).toISOString();
     await runLineKeeper(query(control),query(reader),next);
@@ -195,7 +299,7 @@ test('the two Eastern fall-back hours remain separate and a growing pile keeps i
   const cache={...current,family:'Reader cache',stage:'cache',total:0,closedTotal:0,incoming:null,outgoing:null,observedIn:2,observedOut:1};
   const failed=countProblems([cache],[],[],h.measuredAt);
   assert.equal(failed[0].owner,'the runner');
-  assert.match(failed[0].says,/1 reader cache refresh failed/);
+  assert.match(failed[0].says,/1 reader update failed/);
   assert.equal(countProblems([{...cache,observedOut:2}],[],[],h.measuredAt).length,0);
 });
 
@@ -206,7 +310,7 @@ test('a pile arriving after the hour closes is caught on the first tick while in
   const waiting={state:'AZ',family:'read',stage:'work list:WAITING',count:1,oldestAt:'2026-10-24T17:02:00Z',owner:'diggers'};
   const problems=countProblems([current],[previous],[waiting],'2026-10-24T17:05:00Z');
   assert.equal(problems.length,1);
-  assert.equal(problems[0].owner,'diggers');
+  assert.equal(problems[0].owner,'The research team');
   assert.match(problems[0].says,/pile grew/);
 });
 
@@ -219,6 +323,9 @@ test('growth uses the whole counted pile when waiting ages are split between own
   assert.equal(problems.length,1);
   assert.equal(problems[0].owner,'Sean');
   assert.match(problems[0].says,/3 items are waiting; the pile grew/);
+  const both=countProblems([current],[previous],[waiting,{...waiting,count:2,owner:'diggers'}],'2026-10-24T17:05:00Z');
+  assert.equal(both.length,1,'one pile split across owners is counted once');
+  assert.equal(both[0].items,3);
 });
 
 test('clearing an older large pile cannot hide new work arriving after the latest hour closes',()=>{
@@ -228,7 +335,7 @@ test('clearing an older large pile cannot hide new work arriving after the lates
   const waiting={state:'AZ',family:'read',stage:'work list:WAITING',count:1,oldestAt:'2026-10-24T17:02:00Z',owner:'diggers'};
   const problems=countProblems([current],[previous],[waiting],'2026-10-24T17:05:00Z');
   assert.equal(problems.length,1);
-  assert.equal(problems[0].owner,'diggers');
+  assert.equal(problems[0].owner,'The research team');
   assert.match(problems[0].says,/1 items are waiting; the pile grew/);
 });
 

@@ -4,9 +4,8 @@ import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publi
 import { captureIntact } from "../civic-data/worker-publication-evidence.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { translationHash } from "./records.ts";
-import { translateMeasure, type MeasureTranslationRepos } from "./worker.ts";
+import { translateMeasure, translationModelUsage, type MeasureTranslationRepos } from "./worker.ts";
 import { publishTranslation, readTranslations } from "./publication.ts";
-import { priceMeteredUsage, readMeteredUsage } from "../control-plane/model-cost.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 
 /** Called inside an admitted worker with that worker's Fleet/area transport. */
@@ -39,8 +38,7 @@ export async function runMeasureTranslation(input: {
         const send = input.transportFor(subject);
         return async request => {
           const response = await send(request);
-          const metered = readMeteredUsage(response.usage, response.batch === true);
-          usage.push({ model: response.model, usage: metered, usd: priceMeteredUsage(response.model, metered, "1h").usd });
+          usage.push(translationModelUsage(request, response));
           return response;
         };
       } });

@@ -142,3 +142,51 @@ test("voting sites and the overdue backlog take turns for memory, so neither hol
   assert.equal(votingAcquisitionDeadline(now, passDeadlineFromEnv({})), wall);
   assert.ok(votingAcquisitionDeadline(now, passDeadlineFromEnv(withPassDeadline({ NODE_ENV: "test" }, wall))) <= wall - 6 * 60_000);
 });
+
+test("due explainers, voting sites and meetings each obtain memory before another family holds the pass to its deadline", async () => {
+  // AZ, CA and WA were deferred at 2026-10-24T21:53:43Z before a single translation model call.
+  const translations = ["AZ", "CA", "WA"].map(state => ({ task: ROUTINE_SOURCE_TASKS.find(task => task.id === `measure-translations:${state}`)! }));
+  assert.ok(translations.every(job => job.task));
+  const voting = { task: AUTOMATIC_REFRESH_TASKS.find(task => task.id === "voting-sites:IL")! };
+  const calendars = Array.from({ length: 4 }, (_, index) => ({ task: { ...meeting, id: `meetings:fixture:${index}` } }));
+  const before = [voting, ...calendars, ...translations];
+  const after = electionLaunchOrder([...calendars, ...translations, voting]);
+  assert.equal(after[0].task.id, voting.task.id, "voting keeps its first turn");
+  assert.deepEqual(after.map(job => job.task.id).sort(), before.map(job => job.task.id).sort(), "every admitted job remains in the pool");
+  const admitted = async (jobs: typeof before, availableMiB = 3072) => {
+    let open = true;
+    const slots = routineProcessSlots({ admissionsOpen: () => open, host: workerMemoryHost({ processes: () => [] }),
+      availableBytes: () => availableMiB * mib,
+      peakBytes: entry => (entry.startsWith("voting-sites:") ? 512 : entry.startsWith("measure-translations:") ? 342 : 1447) * mib });
+    const started: string[] = [], releases: (() => void)[] = [];
+    const pending = jobs.map(({ task }, priority) => slots.acquire(task.id, Date.now() + 10_000, { priority }).then(release => {
+      started.push(task.id); releases.push(release);
+    }));
+    await new Promise(resolve => setImmediate(resolve));
+    // Observe only the initial allocation, with no child releasing its memory. Close and drain every waiter afterward.
+    open = false;
+    for (const release of releases) release();
+    await Promise.allSettled(pending);
+    return started;
+  };
+  const oldStarted = await admitted(before), newStarted = await admitted(after);
+  assert.equal(oldStarted.filter(id => id.startsWith("measure-translations:")).length, 1);
+  assert.deepEqual(newStarted.map(id => id.split(":")[0]), ["voting-sites", "measure-translations", "meetings"],
+    "three GiB admits all three families while preserving the existing 768 MiB margin");
+
+  // The observed production headroom was 20,244 MiB. A long calendar backlog previously left every translator waiting.
+  const crowdedVoting = AUTOMATIC_REFRESH_TASKS.filter(task => /^voting-sites:[A-Z]{2}$/.test(task.id)).slice(0, 30).map(task => ({ task }));
+  const crowdedTranslations = ROUTINE_SOURCE_TASKS.filter(task => /^measure-translations:[A-Z]{2}$/.test(task.id)).slice(0, 30).map(task => ({ task }));
+  const crowdedCalendars = Array.from({ length: 30 }, (_, index) => ({ task: { ...meeting, id: `meetings:fixture:${index}` } }));
+  assert.equal(crowdedVoting.length, 30);
+  assert.equal(crowdedTranslations.length, 30);
+  const crowdedBefore = crowdedVoting.flatMap((job, index) => [job, crowdedCalendars[index]]).concat(crowdedTranslations);
+  const crowdedAfter = electionLaunchOrder(crowdedBefore);
+  assert.deepEqual(crowdedAfter.map(job => job.task.id).sort(), crowdedBefore.map(job => job.task.id).sort());
+  const oldCrowdedStarted = await admitted(crowdedBefore, 20_244), balancedStarted = await admitted(crowdedAfter, 20_244);
+  assert.equal(oldCrowdedStarted.filter(id => id.startsWith("measure-translations:")).length, 0);
+  const count = (prefix: string) => balancedStarted.filter(id => id.startsWith(prefix)).length;
+  assert.deepEqual([count("voting-sites:"), count("measure-translations:"), count("meetings:")], [9, 9, 8]);
+  assert.equal(balancedStarted.length, 26);
+  assert.ok(20_244 - (count("voting-sites:") * 512 + count("measure-translations:") * 342 + count("meetings:") * 1447) >= 768);
+});

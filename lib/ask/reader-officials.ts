@@ -3,6 +3,7 @@ import { officeIdentity, type OfficeKey } from "../officials/office-identity.ts"
 import { stateOcdIdFrom, type SeatHolder } from "../officials/lookup.ts";
 import type { EvidenceGap } from "./evidence.ts";
 import { proseName } from "./sitting-answer.ts";
+import { whiteHouseOffice } from "../officials/white-house-offices.ts";
 
 export interface ReaderOfficialsAsk {
   readonly keys: readonly OfficeKey[];
@@ -20,7 +21,13 @@ interface OfficePhrase {
 const ELECTED_OFFICIALS: readonly OfficeKey[] = ["us_senator", "us_representative", "governor", "state_senator", "state_lower_house"];
 const STATE_LEGISLATORS: readonly OfficeKey[] = ["state_senator", "state_lower_house"];
 
+const NATIONAL_OFFICE_PHRASES: readonly OfficePhrase[] = [
+  { pattern: /^(?:president of (?:the )?(?:united states|u s|us)|(?:united states|u s|us) president)$/, keys: ["us_president"] },
+  { pattern: /^(?:vice president of (?:the )?(?:united states|u s|us)|(?:united states|u s|us) vice president)$/, keys: ["us_vice_president"] },
+];
+
 const OFFICE_PHRASES: readonly OfficePhrase[] = [
+  ...NATIONAL_OFFICE_PHRASES,
   { pattern: /^(?:u s |us |united states |federal )senators?$/, keys: ["us_senator"] },
   { pattern: /^state senators?$/, keys: ["state_senator"] },
   { pattern: /^senators?$/, keys: ["us_senator", "state_senator"] },
@@ -134,6 +141,9 @@ function namedPlaceOffice(normalized: string, readerPlaces: readonly string[]): 
 export function readerOfficialsQuestion(question: string, readerStates: readonly string[] = [], readerPlaces: readonly string[] = []): ReaderOfficialsAsk | null {
   const normalized = normalizeName(question);
   if (!normalized || normalized.length > 90) return null;
+  const nationalPhrase = /^who (?:is|s|are) (?:the )?(.+)$/.exec(normalized)?.[1];
+  const national = nationalPhrase && NATIONAL_OFFICE_PHRASES.find(entry => entry.pattern.test(nationalPhrase));
+  if (national) return { keys: national.keys, phrase: nationalPhrase! };
   if (/^who governs /.test(normalized) && readerPlaces.some(place => normalized.includes(place))) {
     return { keys: [...ELECTED_OFFICIALS, "mayor", "municipal_council", "county_supervisor", "county_commissioner"], phrase: "who governs this place" };
   }
@@ -186,7 +196,12 @@ export interface HeldOfficial {
   readonly bodyName: string | null;
 }
 
-function officeKeyOf(held: HeldOfficial): OfficeKey | null {
+export function readerOfficialKey(held: HeldOfficial): OfficeKey | null {
+  if (held.seat.id.startsWith("white-house:") || held.seat.officeJurisdictionOcdId === "ocd-division/country:us") {
+    const national = whiteHouseOffice(held.seat.officeTitle);
+    if (national === "president") return "us_president";
+    if (national === "vice-president") return "us_vice_president";
+  }
   const title = held.seat.officeTitle.replace(/\s*\([^)]*\)\s*$/, "");
   const key = officeIdentity(title);
   if (key) return key;
@@ -195,6 +210,8 @@ function officeKeyOf(held: HeldOfficial): OfficeKey | null {
 }
 
 const LABELS: Readonly<Record<string, readonly [string, string]>> = {
+  us_president: ["President of the United States", "Presidents of the United States"],
+  us_vice_president: ["Vice President of the United States", "Vice Presidents of the United States"],
   us_senator: ["United States Senator", "United States Senators"],
   us_representative: ["United States Representative", "United States Representatives"],
   governor: ["governor", "governors"],
@@ -292,7 +309,7 @@ export function composeReaderOfficials(input: {
     const [singular, plural] = LABELS[key] ?? [key.replace(/_/g, " "), key.replace(/_/g, " ")];
     const seats = new Map<string, HeldOfficial>();
     for (const held of input.held) {
-      if (officeKeyOf(held) !== key) continue;
+      if (readerOfficialKey(held) !== key) continue;
       if (input.ask.place && !inPlace(held, input.ask.place)) continue;
       // A state has one holder of these offices. Two sourced IDs naming that
       // same holder in the same office are complementary records of one seat.

@@ -56,7 +56,7 @@ export interface RunnerReadComparison {
 }
 const gb = (bytes: number) => (bytes / 1e9).toFixed(3);
 /** An hourly report creates repair work, using the preceding 24 complete hours. */
-export function runnerReadProblems(rows: readonly RunnerReadComparison[]): CountProblem[] {
+export function runnerReadProblems(rows: readonly RunnerReadComparison[]): Omit<CountProblem,"kind"|"state"|"items">[] {
   const current = runnerReadFamilies(rows.map(row => ({ ...row, hour: "", table: "" })));
   return current.flatMap(family => {
     const sources = rows.filter(row => runnerReadFamily(row.job) === family.family);

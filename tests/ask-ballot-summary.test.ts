@@ -108,3 +108,38 @@ test("a local office's division supplies a county omitted by its publisher's tit
   assert.equal(ballotQuestionShape("Who is running for Essex County Board of County Commissioners?", held), null);
   assert.equal(ballotQuestionShape("Who is running for Morris County sheriff?", held), null);
 });
+
+test("a state named in a candidate question selects only that state's held office and keeps its candidates and sources", () => {
+  const held = [contest("az-gov", "Governor"),
+    contest("nv-gov", "Governor", "ocd-division/country:us/state:nv"),
+    contest("az-ag", "Attorney General"), contest("az-sos", "Secretary of State")];
+  for (const [office, id] of [["governor", "az-gov"], ["attorney general", "az-ag"], ["secretary of state", "az-sos"]]) {
+    const question = `Who is running for ${office} of Arizona?`;
+    const shape = ballotQuestionShape(question, held);
+    assert.ok(shape?.kind === "OFFICE", question);
+    const names = [candidacy(`${id}:one`, id, "Avery", "Example", "Republican"),
+      candidacy(`${id}:two`, id, "Morgan", "Sample", "Democratic"),
+      candidacy("nv:one", "nv-gov", "Other", "State", "Republican")];
+    const composed = composeOfficeField({ ...shape, contests: held, election: ELECTION,
+      nominees: () => [], candidacies: names, removedCandidacyIds: new Set() });
+    assert.ok(composed);
+    assert.deepEqual(composed.records.filter(row => row.kind === "CONTEST").map(row => row.id), [id]);
+    assert.deepEqual(composed.records.filter(row => row.kind === "CANDIDACY").map(row => row.id), [`${id}|Avery Example`, `${id}|Morgan Sample`]);
+    assert.equal(composed.answer.includes("Other State"), false);
+    assert.ok(composed.citedUrls.includes(`https://example.gov/${id}`));
+    const pack: EvidencePack = { question, intent: "UNKNOWN", temporal: { kind: "NONE" }, subject: null,
+      records: composed.records, gaps: [], denominators: {}, today: "2026-09-30" };
+    assert.equal(validateAnswer(composed.answer, composed.citedUrls, pack).kind, "PASSED");
+  }
+  for (const question of ["Who is running for governor of Utah?", "Who is running for governor of Arizona against Katie Hobbs?",
+    "Who is running for governor of Arizona next year?", "Who is running for attorney general of Nevada?"]) {
+    assert.equal(ballotQuestionShape(question, held), null, question);
+  }
+});
+
+test("a contest's place also resolves multiword state names and territories", () => {
+  for (const [place, division] of [["New Hampshire", "state:nh"], ["Puerto Rico", "territory:pr"], ["District of Columbia", "district:dc"]]) {
+    const held = [contest("one", "Governor", `ocd-division/country:us/${division}`)];
+    assert.ok(ballotQuestionShape(`Who is running for governor of ${place}?`, held));
+  }
+});

@@ -18,9 +18,9 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 | DB-04 (not posted yet) | one read-only-what-changed path for every read | ships alone the moment it posts READY; preempts any gate |
 | 7dc32db25 (carries 04681516c) | DB-03 Admin (Admin's own screens), finished by River on stream/river-db03-admin; rides batch 2 | READY 10:50 PM EDT. Owed route kept as RB-A6 wrapped in adminRead; second conflict use-keeper-scoreboard.ts took Admin's version (drops AD-01's extra 60 s scoreboard fetch; Now still refreshes on the pulse); 3 tests fixed (2 test-only, path-separator in admin-read.ts); 734/734 focused, tsc, eslint, knip, preflight clean |
 
-**Batch 2 assembled (c8d3983b8 on top of batch 1 fix 526da8d5a: RT-01 c8734c5d8, MD-01 docs out 8daccccb3, BL-02 5f28a6871, DB-03 Admin 7dc32db25, RB-A7 f856197dd; all merge cleanly, journal 0-60 no duplicates). Gates the moment batch 1 ships.**
+**Batch 2 gating since 11:42 PM EDT on river-next-batch2 d941c6a89 (river 526da8d5a + RT-01 c8734c5d8, MD-01 docs out 8daccccb3, BL-02 5f28a6871, DB-03 Admin 7dc32db25, RB-A7 f856197dd). Ships as release 124 right after 123 unless DB-04 posts READY first.**
 
-**Improvement batch 1: re-gating on 526da8d5a (d7dd06466 + River's AD-01 fix). First gate failed 2 tests, both AD-01 (an `s` lambda shadowing the styles import in brief-view.tsx; hunt-stop bundle missing Next's process.env defines). Fixed on stream/river-ad01-fix, both tests pass**
+**Release 123 (PR #835, auto-merge on): improvement batch 1 = AD-01 69806d306 + GB-01 1636195c9 + MT-01 f26ebab8d + MD-01 f67ae6709 + River's AD-01 fix 526da8d5a. Gate 9/9 on 526da8d5a (9,990 pass, 0 fail); river moved there 11:38 PM EDT.**
 | READY | Lane | Note |
 |---|---|---|
 | 69806d306 | AD-01 | |
@@ -1267,3 +1267,7 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Batch 1: first gate failed 2 AD-01 tests, fixed on 526da8d5a, re-gating since 10:58 PM.
 - Batch 2 is assembled on c8d3983b8 with all five lanes READY (RT-01, MD-01 docs out, BL-02, DB-03 Admin, RB-A7). It gates as soon as batch 1 ships.
 - DB-04: no branch yet.
+
+### 11:42 PM EDT: release 123 opened
+- Batch 1 re-gate passed 9/9 on 526da8d5a (9,995 tests, 9,990 pass, 0 fail, 5 skipped). river and river-next moved to 526da8d5a. release/123 (253c926c8, same tree as river) is [SeanJ22/meanwhile#835](https://github.com/SeanJ22/meanwhile/pull/835), auto-merge on. Live checks plus GB-01 checks (Portland 97204 and 20 random ZIPs in 20 states) run once /api/build shows it.
+- Batch 2 gating on d941c6a89.

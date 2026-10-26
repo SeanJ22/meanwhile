@@ -18,9 +18,10 @@ test("Google Civic reads only county-office contact fields from encoded and keye
       CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)`);
     await installKeyedRows(pg);
     const save=async(recordClass:string,scope:string,payload:unknown)=>{
-      const id=recordClass,sourceId=`source-${recordClass}`,receipt={decision:"GOOD",candidateId:id,sourceId,recordClass,scope};
+      const id=recordClass,sourceId=recordClass==="REGISTRATION"?"census-governments-registration":recordClass==="VOTING_SITE"?"voting-sites":"registry-reviewed-bindings",
+        receipt={decision:"GOOD",candidateId:id,sourceId,recordClass,scope};
       await pg.query("INSERT INTO civic_data_candidates VALUES($1,$2,$3,$4,'PROMOTED',$5,$6,$7,$7,'parser',true,$1,$1)",
-        [id,recordClass,scope,sourceId,JSON.stringify({normalization:{succeeded:true},readModel:payload}),JSON.stringify(receipt),"a".repeat(64)]);
+        [id,recordClass,scope,sourceId,JSON.stringify({normalization:{succeeded:true,normalizedHash:"a".repeat(64)},readModel:payload}),JSON.stringify(receipt),"a".repeat(64)]);
       await pg.query("INSERT INTO civic_data_promotions(key,record_class,scope,current_version_id,last_known_good_version_id,source_id,payload,validation_receipt) VALUES($1,$2,$3,$4,$4,$5,$6,$7)",
         [`${recordClass}:${scope}`,recordClass,scope,id,sourceId,JSON.stringify(payload),JSON.stringify(receipt)]);
     };

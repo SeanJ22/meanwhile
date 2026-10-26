@@ -165,6 +165,7 @@ test("national refresh visits every state, records missing inventories and publi
   const registration = (async (state: string) => { visited.push(state); return { kind: "NOT_RECORDED" }; }) as unknown as typeof readRegistrationProjection;
   const result = await refreshGoogleCivic({ store, vault, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
     fetchImpl: (async () => new Response(fixture("elections"))) as typeof fetch } });
+  assert.ok(result.coverage&&result.outcome&&result.candidate);
   assert.deepEqual(visited, GOOGLE_CIVIC_STATES);
   assert.equal(result.coverage.length, GOOGLE_CIVIC_STATES.length);
   assert.ok(result.coverage.every(row => row.reason?.includes("inventory")));
@@ -174,7 +175,7 @@ test("national refresh visits every state, records missing inventories and publi
   assert.equal(await readRawCaptureText(vault, rawCapture), fixture("elections"));
   const next = await processRegisteredRoutineCandidate(store, GOOGLE_CIVIC_SOURCE_ID, await civicCandidate(vault, GOOGLE_CIVIC_SCOPE,
     { formatVersion: 1, kind: "CATALOG", checkedAt: AT, rows: civicElectionRows(fixture("elections"), AT, new Set(["ocd-division/country:us"])), coverage: result.coverage }, fixture("elections"), "elections"), AT);
-  assert.ok(next.confirmed);
+  assert.ok(next.promoted||next.confirmed,"a caller supplying a different source-input basis must publish that basis");
 });
 
 test("county refresh probes each public election office once and saves only yes/no and counts", async () => {
@@ -193,6 +194,7 @@ test("county refresh probes each public election office once and saves only yes/
       return url.pathname.endsWith("elections") ? new Response(fixture("elections")) : url.searchParams.get("address")!.endsWith("A")
         ? new Response(rawMi) : new Response("provider address echo must not be held", { status: 404 });
     }) as unknown as typeof fetch } });
+  assert.ok(result.coverage&&result.outcome&&result.candidate);
   assert.ok(result.outcome.promoted);
   const probes = requests.filter(url => url.pathname.endsWith("voterinfo"));
   assert.equal(probes.length, 2);
@@ -216,6 +218,7 @@ test("county refresh probes each public election office once and saves only yes/
     readOptions: { apiKey: "private-test-key", now: () => tomorrow, fetchImpl: (async (url: URL) => {
       tomorrowRequests.push(url); return new Response(url.pathname.endsWith("elections") ? fixture("elections") : rawMi);
     }) as unknown as typeof fetch } });
+  assert.ok(next.outcome);
   assert.ok(next.outcome.promoted || next.outcome.confirmed);
   assert.equal(tomorrowRequests.filter(url => url.pathname.endsWith("voterinfo")).length, 2, "the following daily pass remeasures every available county office");
   assert.equal((await readCountyCivicCoverage(store, "MI")).get("26161")?.available, true, "the following pass updates the existing no-site sample");

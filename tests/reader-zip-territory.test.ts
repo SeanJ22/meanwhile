@@ -70,10 +70,13 @@ test("a preselected territory preserves complete coverage for inside, outside, o
   assert.deepEqual(bodyIdsWithTerritory(selectBodyTerritory(point,{...file,features:[]})),new Set());
 });
 
+// Node 23.6 renamed --experimental-test-isolation to --test-isolation; CI runs 24, local checkouts may run 22.
+const isolationNone=Number(process.versions.node.split(".")[0])>=23?"--test-isolation=none":"--experimental-test-isolation=none";
+
 test("a canonical ZIP uses its private ready selection with one SQL read and no geometry load; legacy and custom points retain geometry",async t=>{
   // A fresh process proves a cold geometry cache and cannot leave fixture polygons in other tests.
   if(process.env.WTP_TEST_ZIP_TERRITORY_CHILD!=="1") {
-    const child=spawnSync(process.execPath,["--test","--test-isolation=none","--test-name-pattern=^a canonical ZIP","--experimental-strip-types","--import","./scripts/register-test-loader.mjs","--import","./tests/helpers/install-fixture-doors.ts",fileURLToPath(import.meta.url)],
+    const child=spawnSync(process.execPath,["--test",isolationNone,"--test-name-pattern=^a canonical ZIP","--experimental-strip-types","--import","./scripts/register-test-loader.mjs","--import","./tests/helpers/install-fixture-doors.ts",fileURLToPath(import.meta.url)],
       {cwd:process.cwd(),env:{...process.env,WTP_TEST_ZIP_TERRITORY_CHILD:"1"},encoding:"utf8",timeout:120_000,maxBuffer:2*1024*1024});
     assert.ifError(child.error);assert.equal(child.status,0,child.stdout+child.stderr);
     t.diagnostic("Fresh-process proof: one READY SELECT, zero geometry loads/fetches; private scope, legacy/custom behavior and worker persistence preserved.");

@@ -323,9 +323,10 @@ export async function refreshNhMembers(input:{
     const now = clock();
     const complete=extraction.counts.dropped===0 && documents.length===3 && documents.every(row=>row.httpStatus===200 && row.body.trim().length>0) &&
       !(identityCrosswalk.unresolved??[]).length;
+    const expectedTerm=expectedNhMembersTerm(sourceCheck?.checkedAt??retrievedAt);
     const rawHash=sourceContentHash(documents.map(row=>({requestedUrl:row.requestedUrl,finalUrl:row.finalUrl,
       capture:{rawHash:row.rawHash??sha256(row.body)}})),{sourceId:"nh-general-court",scope:"US-NH",parserVersion:"nh-general-court/3",
-      expectedTerm:expectedNhMembersTerm(sourceCheck?.checkedAt??retrievedAt),identitySourceVersion:identityCrosswalk.sourceVersion});
+      expectedTerm,identitySourceVersion:identityCrosswalk.sourceVersion});
     const check=documents.flatMap(row=>row.sourceCheck?[row.sourceCheck]:[]).sort((a,b)=>a.checkedAt.localeCompare(b.checkedAt))[0]??sourceCheck;
     const confirmed=await confirmSourceHashUnchanged({store,sourceId:"nh-general-court",recordClass:"STATE_LEGISLATOR",scope:"US-NH",
       parserVersion:"nh-general-court/3",rawHash,now,complete,retrieval:{requestedUrl:SOURCE_URL,finalUrl,httpStatus,rawHash,retrievedAt,...(check?{sourceCheck:check}:{})}});
@@ -350,7 +351,8 @@ export async function refreshNhMembers(input:{
       identityCrosswalk,
     });
     const candidate={...built,id:`cv-${sha256(`${built.id}:${rawHash}:${complete}`).slice(0,32)}`,
-      retrieval:{...built.retrieval,rawHash,rawHashBasis:"SOURCE_CONTENT_V1" as const,complete}};
+      retrieval:{...built.retrieval,rawHash,rawHashBasis:"SOURCE_CONTENT_V1" as const,complete},
+      temporal:{...built.temporal,expectedVersion:expectedTerm,staleAtRetrieval:built.temporal.version!==expectedTerm}};
     const outcome = await processRegisteredRoutineCandidate(store, "nh-members", candidate, now, undefined, { confirmUnchanged: true });
     console.log("RCD_RECEIPT=" + JSON.stringify({ source: "nh-members", ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
     if (!outcome.promoted && !outcome.confirmed) process.exitCode = 2;

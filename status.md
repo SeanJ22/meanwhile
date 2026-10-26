@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T21:16:00Z
+heartbeat: 2026-10-26T21:20:00Z
 
 
 <!-- READY-LIST -->
@@ -119,6 +119,14 @@ DB-05: fix on stream/db-05 and post a new READY; it rides the next release.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 5 PM EDT
+- **Neon, 4 PM hour: reader 11.85 GB + control plane 0.30 GB = 12.15 GB** (3 PM 15.26, 2 PM 6.39). legiscan-bulk 6.52 GB, place-pages 1.45 GB, routine-civic-data 0.92, member-offices 0.80. 5 PM so far (7 min): legiscan-bulk not among the top jobs.
+- **Bills:** MA, CA, TX, NY, OH still 0 after about 18.8 GB of legiscan-bulk reads since 2:47 PM. River looks at why the big states never finish once 130 stops the re-reads.
+- **Release 130** (urgent LegiScan fix): PR #842 CI rerunning on f7003c318 after two CI-only fixes (fake-Neon test race; a voting deadline timing race that predates 130). Auto-merge on.
+- **Place map:** 19 states/areas, 21,838 boundaries, 116,378 ZIP links, unchanged 4:40 to 5:00 PM. River checks for WORKER_MEMORY_DEADLINE deferrals next.
+- **Place pages:** place_page 48,823; rebuild_queue 140,460 (falling about 1,900 per 10 minutes).
+- **FM-01 federal money, two full hours after 129 (3 PM, 4 PM):** usaspending 32.4 and 23.3 MB (before 82-144 MB/h: down); **openfema 18.4 and 18.1 MB, up about 60% from its 9 AM-2 PM average of about 11 MB/h** (range 6-17). Small in bytes; recorded for DB-05, which owns the fix.
 
 ### 4 PM EDT
 - **NEON, 3 PM hour: reader 14.94 GB + control plane 0.32 GB = 15.26 GB** (1 PM 2.95, 2 PM 6.39). legiscan-bulk 10.26 GB; place-pages 1.53 GB; routine-civic-data 0.74; publish-now 0.23. 4 PM so far (3 minutes): legiscan-bulk 130 MB.

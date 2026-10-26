@@ -67,7 +67,8 @@ import {
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
 import { freezeDurableJson } from "./durable-json.ts";
 import { projectionKey } from "./projection-key.ts";
-import { invalidateReaderCache, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
+import { enqueueReaderPlaces, invalidateReaderCache, placePageConsumesPublication, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
+import { seedRuntimeBodyPageSubjects } from "../reader/page-subjects.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
 export { projectionKey } from "./projection-key.ts";
 
@@ -1753,6 +1754,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     });
     return held!.value;
   }
+
+  private async readerRows(text: string, params: readonly unknown[] = []): Promise<readonly Record<string, unknown>[]> {
+    const statement = sql.join(text.split(/(\$\d+)/).map(part => /^\$\d+$/.test(part)
+      ? sql`${sql.param(params[Number(part.slice(1)) - 1])}` : sql.raw(part)), sql``);
+    return (await this.db.execute(statement)).rows as Record<string, unknown>[];
+  }
   private stateReadMetadata: PublishedCandidateMetadata | null = null;
   private async readPayloadParts(hashes: readonly string[]) {
     return this.db.select().from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...hashes]));
@@ -2163,10 +2170,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async hasStateRetirementProof(contractId: string, origin: NonNullable<RoutineCandidate["stateRetirement"]>["origin"]): Promise<boolean> {
     const target = retirementProofTarget(contractId, origin);
-    const progress = await readRetirementProgress(async (text, params) => {
-      const [before, after] = text.split("$1");
-      return (await this.db.execute(sql`${sql.raw(before)}${params[0]}${sql.raw(after)}`)).rows as Record<string, unknown>[];
-    }, [target]);
+    const progress = await readRetirementProgress((text, params) => this.readerRows(text, params), [target]);
     return progress.get(origin.versionId)?.has(target.state) === true;
   }
 
@@ -2479,6 +2483,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw error;
     }
     if (eventRows[0]) {
+      if (input.recordClass === "MEETING") await enqueueReaderPlaces(readerCacheScopeForPublication(input.scope, { recordClass: input.recordClass }),
+        (text, params) => this.readerRows(text, params));
       return { kind: "CONFIRMED", versionId: id, at };
     }
     const [pointerRows, candidateRows] = await this.db.batch([
@@ -2624,9 +2630,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     }
     const previousModel = needsGeography && prior?.payload ? await this.loadPayload(prior.payload, candidate.scope) : null;
-    await invalidateReaderCache(readerCacheScopeForPublication(candidate.scope, {
+    const publicationScope = readerCacheScopeForPublication(candidate.scope, {
       recordClass: candidate.recordClass, readModels: [candidate.readModel, previousModel],
-    }), this.cacheOptions.purge);
+    });
+    if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") await seedRuntimeBodyPageSubjects(
+      (text, params) => this.readerRows(text, params), publicationScope.states ?? []);
+    await invalidateReaderCache(publicationScope, this.cacheOptions.purge, placePageConsumesPublication(candidate.scope, candidate.recordClass)
+      ? (text, params) => this.readerRows(text, params) : null);
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
       payload: candidate.readModel,

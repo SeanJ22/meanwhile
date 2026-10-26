@@ -129,7 +129,7 @@ export async function publishLegistarMembers(input: {
           AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.entity_id = substr(own.field, 8) AND x.scheme = $3 AND x.value = ANY($4::text[])) RETURNING f.id`,
       [roster.bodyId, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords?`, `legistar:${input.raw.slug}`,
         roster.members.map(member => member.nativeIds![`legistar:${input.raw.slug}`][0])]);
-      if (departed.length) await invalidateReaderCache(await readerCacheScopeForEntity(input.facts.query, roster.bodyId), input.purge);
+      if (departed.length) await invalidateReaderCache(await readerCacheScopeForEntity(input.facts.query, roster.bodyId), input.purge, input.facts.query);
       records += departed.length;
     }
   }

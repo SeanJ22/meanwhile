@@ -6,6 +6,7 @@ import {saveCaptureCopy} from '../facts/source-copy.ts';
 import {canonicalSubject} from '../facts/entities.ts';
 import type {FactDb,Query,Clocks} from '../facts/publish.ts';
 import type {WorkerPublicationCapture} from '../civic-data/worker-roster-publication.ts';
+import {enqueueReaderPlaces} from '../reader/cache.ts';
 
 /** The type stated in the sourced name, rather than an invented board. */
 const bodyTypeWord=(name:string):string|null=>/\b(?:agency|council|commission|assembly|board|committee|selectboard|selectmen|trustees)\b/i.exec(name)?.[0]??null;
@@ -30,11 +31,12 @@ export async function ensureHuntBodyTarget(input:{facts:FactDb&{query:Query};sub
  if(other.length)return null;
  const existing=await input.facts.query('SELECT id,name,state,parent_id,kind FROM entity WHERE id=$1',[id]);
  if(existing.length && (existing[0].kind!=='body' || existing[0].state!==government.state || existing[0].parent_id!==government.id))return null;
- if(!existing.length)await input.facts.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'body',$2,$3,$4) ON CONFLICT DO NOTHING`,[id,input.name,government.state,government.id]);
+ const added=!existing.length?await input.facts.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'body',$2,$3,$4) ON CONFLICT DO NOTHING RETURNING id`,[id,input.name,government.state,government.id]):[];
  // Preserve the government's held division relation, including registrations
  // whose parent is their place but which have no separate entity_place row.
- await input.facts.query(`INSERT INTO entity_place(entity_id,place_id)
+ const placed=await input.facts.query(`INSERT INTO entity_place(entity_id,place_id)
    SELECT $1,place_id FROM entity_place WHERE entity_id=$2
-   UNION SELECT $1,p.id FROM entity p WHERE p.id=$3 AND p.kind='place' ON CONFLICT DO NOTHING`,[id,government.id,government.parent_id]);
+   UNION SELECT $1,p.id FROM entity p WHERE p.id=$3 AND p.kind='place' ON CONFLICT DO NOTHING RETURNING place_id`,[id,government.id,government.parent_id]);
+ if(added.length||placed.length)await enqueueReaderPlaces({entities:[id]},input.facts.query);
  return existing.length?{id:String(existing[0].id),name:String(existing[0].name),state:existing[0].state as string|null,parentId:existing[0].parent_id as string|null}:{id,name:input.name,state:government.state as string|null,parentId:String(government.id)};
 }

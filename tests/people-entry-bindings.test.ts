@@ -95,6 +95,13 @@ test("an observed publisher person ID binds an expanded name and its own current
   assert.equal(person.memberships?.[0].divisionId,"ocd-division/country:us/state:fl/sldl:85");
 });
 
+test("a member's publisher ID cannot turn its contact or sponsored-bills links into the member's name",()=>{
+  const held={...people[0],state:"FL",websiteUrl:"https://www.myfloridahouse.gov/Sections/Representatives/details.aspx?MemberId=111"};
+  const body='<h1>Representatives</h1><div><a href="/Sections/Representatives/details.aspx?MemberId=111"><h5>Barbieri, Vito</h5><p>District: 3</p><img data-src="/111.jpg"></a><a href="/Sections/Representatives/contactmember.aspx?MemberId=111">Contact Member</a><a href="/Sections/Representatives/sponsoredbills.aspx?MemberId=111">Sponsored Bills</a></div>';
+  const parsed=normalizeOfficialLegislaturePage(body,"https://www.flhouse.gov/Representatives",{sourceId:"official-state-people",state:"fl",asOf:at,signal:new AbortController().signal,roster:roster([held])},at);
+  assert.equal(parsed.officeholders.length,1);assert.equal(parsed.officeholders[0].name,"Vito Barbieri");
+});
+
 test("a list header and a different member's entry cannot lend fields to a profile route",()=>{
   const parsed=parse(html.replace(/<div class="member"><img src="\/vito.jpg">[\s\S]*?<\/div><\/div>/,""));
   assert.deepEqual(parsed.officeholders.map(person=>person.name),["Jane Member"]);
@@ -106,6 +113,41 @@ test("two named entries in different districts cannot lend one held person's ID 
   const parsed=parse(body,roster([people[0]]));assert.equal(parsed.officeholders.length,2);
   const native=parsed.officeholders.filter(person=>person.nativeIds?.["ocd-person"]?.includes("ocd-person/vito"));
   assert.equal(native.length,1);assert.equal(native[0].memberships?.[0].district,"3");
+});
+
+test("an old document-link record returns its IDs to the explicitly headed member, never a whole chamber",()=>{
+  const profile="https://legislature.example.gov/members/vito";
+  const old=emptyPerson("old-news-link","Policy Roundtable","State Representative","ID",provenance(profile,"State legislature",at));old.chamber="lower";
+  old.nativeIds={"official-legislature":["https://legislature.example.gov/policy-roundtable.pdf"],reader:["old-news-alias"]};
+  const member={...people[0],websiteUrl:profile};
+  const body='<h1>Legislature</h1><div><h2>Representative Vito Barbieri</h2><p>District 3</p><img src="/vito.jpg"></div><article><a href="/policy-roundtable.pdf">Policy Roundtable</a></article>';
+  const parsed=normalizeOfficialLegislaturePage(body,profile,{sourceId:"official-state-people",state:"id",asOf:at,signal:new AbortController().signal,roster:roster([member,old])},at);
+  assert.equal(parsed.officeholders.length,1);assert.ok(personIdentityKeys(parsed.officeholders[0]).has(old.id));
+  const merged=mergePeopleSets([roster([member,old]),parsed])!;
+  assert.equal(merged.officeholders.length,1);assert.equal(merged.officeholders[0].name,member.name);
+  assert.ok(personIdentityKeys(merged.officeholders[0]).has("old-news-alias"));
+  const shared=parse(html,{...roster([...people,old]),officeholders:[...people,{...old,provenance:{...old.provenance,sourceUrl:page}}]});
+  assert.ok(shared.officeholders.every(person=>!personIdentityKeys(person).has(old.id)));
+});
+
+test("a held document entry is repaired by normal publication and an empty portrait save",async()=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore(),profile="https://legislature.example.gov/members/vito";
+  const old=emptyPerson("old-news-link","Policy Roundtable","State Representative","ID",provenance(profile,"State legislature",at,"Policy Roundtable"));old.chamber="lower";
+  old.nativeIds={"official-legislature":["https://legislature.example.gov/policy-roundtable.pdf"]};
+  const member={...people[0],websiteUrl:profile,provenance:provenance(profile,"State legislature",at,"Vito Barbieri")};
+  const body='<h1>Legislature</h1><div><h2>State Representative Vito Barbieri</h2><p>District 3</p><img src="/vito.jpg"></div><article><a href="/policy-roundtable.pdf">Policy Roundtable</a></article>';
+  const base={store,vault,state:"id",sourceId:"official-state-people",now:at,releaseId:"old-doc",acquisitions:[{requestedUrl:profile,finalUrl:profile,body,httpStatus:200,retrievedAt:at}]};
+  const held=await publishPeopleSource({...base,roster:roster([member,old])});assert.ok(held.outcome.promoted);
+  const parsed=normalizeOfficialLegislaturePage(body,profile,{sourceId:"official-state-people",state:"id",asOf:at,signal:new AbortController().signal,roster:roster([member,old])},at);
+  const publication=await publishPeopleSource({...base,releaseId:"doc-owner",now:"2026-10-26T06:01:00.000Z",roster:parsed});
+  assert.ok(publication.outcome.promoted,JSON.stringify(publication.outcome.candidate.receipt?.checks));
+  assert.equal((publication.candidate.readModel as {roster:OfficeholderSet}).roster.officeholders.length,1);
+  const ref=promotedInputRef("STATE_LEGISLATOR",publication.candidate.scope,publication.outcome.promoted.versionId,publication.candidate.readModel,at)!;
+  const portraits=await publishPeopleSource({store,vault,state:"id",sourceId:"people-portraits",now:at,releaseId:"doc-portrait",roster:roster([]),bindingPeople:parsed.officeholders,
+    held:{versionId:null,normalizedPayload:{},roster:roster([old])},derivedInputs:[ref],acquisitions:[]});
+  assert.ok(portraits.outcome.promoted,JSON.stringify(portraits.outcome.candidate.receipt?.checks));
+  const person=(portraits.candidate.readModel as {roster:OfficeholderSet}).roster.officeholders[0];
+  assert.equal(person.name,"Vito Barbieri");assert.ok(personIdentityKeys(person).has(old.id));
 });
 
 function collapsed():Officeholder {
@@ -189,6 +231,15 @@ test("a derived portrait copy cannot erase the membership used to bind an expand
   assert.equal(parsed.officeholders.length,2);
   const vito=parsed.officeholders.find(person=>person.name.includes("Barbieri"))!;
   assert.deepEqual(vito.nativeIds?.["ocd-person"],["ocd-person/vito"]);assert.equal(vito.memberships?.[0].district,"3");
+});
+
+test("the member's explicitly quoted nickname still binds the whole entry and its portrait",()=>{
+  const ali={...people[0],name:"Ali Rabe"};
+  const body=html.replaceAll("Vito Barbieri",'Alison “Ali” Rabe');
+  const parsed=parse(body,roster([ali,people[1]]));assert.equal(parsed.officeholders.length,2);
+  const member=parsed.officeholders.find(person=>person.nativeIds?.["ocd-person"]?.includes("ocd-person/vito"))!;
+  assert.equal(member.portraitCandidate?.imageUrl,"https://legislature.example.gov/vito.jpg");
+  assert.equal(member.memberships?.[0].district,"3");
 });
 
 test("a state-scoped borrowed alias cannot join members on the next publication",()=>{

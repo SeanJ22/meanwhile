@@ -200,7 +200,7 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
         person.photo = await storePortrait(person.personId ?? person.id, {subject:{personId:person.personId ?? person.id,
           name:person.name,nativeIds:person.nativeIds,state:person.state,chamber:person.chamber,officeTitle:person.officeTitle,
           profileUrls:person.profileUrls ?? []},imageUrl:lead.imageUrl,captures},clock(),sourceSignal);
-        person.fieldSources = {...person.fieldSources,photo:{sourceUrl:lead.sourceUrl,sourceOrg:"Open States",
+        person.fieldSources = {...person.fieldSources,photo:{sourceUrl:lead.sourceUrl,sourceOrg:official(lead.sourceUrl)?new URL(lead.sourceUrl).hostname:"Open States",
           collectedAt:lead.collectedAt,verifiedAt:clock()}};
         await recordPerson(person); return;
       } catch (error) {

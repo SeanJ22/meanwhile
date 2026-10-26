@@ -8,14 +8,15 @@ import { htmlEvidenceBlocks } from "../html-evidence.ts";
 import { pacedPortraitAcquire } from "../../photos/portrait-work.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
 import { statewidePageText } from "../statewide/parse.ts";
-import { sourcePeople } from "../../officials/people-bindings.ts";
+import { sourcePeople, sourcePersonIsDocument } from "../../officials/people-bindings.ts";
 import { acquisition, appendRoster, digest, emptyPerson, emptyRoster, gap, legislativeDivision, provenance, record, result, savedRead, sourced, stateIdentity, string, url, type PeopleAcquisitionOptions, type PeopleSourceRelease } from "./common.ts";
 
 const textOf = statewidePageText;
 const key = (value:string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
+const memberAction=(value:string)=>/^(?:contact|sponsored bills|view|read more|learn more|full biography|details|website|email|subscribe|track)\b/i.test(key(value));
 const federalRoute=(value:string)=>/(?:^|\.)(?:house|senate|congress|whitehouse)\.gov$/i.test(new URL(value).hostname);
 function rosterLabelName(label: string): string {
-  const observed=label.replace(/\s*--[\s\S]*$/,"").replace(/^(?:Senator|Sen\.|Representative|Rep\.|Delegate|Assemblyman|Assemblywoman|Hon\.)\s+/i,"").trim();
+  const observed=label.replace(/\s*--[\s\S]*$/,"").replace(/^(?:State\s+)?(?:Senator|Sen\.|Representative|Rep\.|Delegate|Assemblyman|Assemblywoman|Hon\.)\s+/i,"").trim();
   const reversed=/,\s*(?:Jr\.?|Sr\.?|II|III|IV)$/i.test(observed)?null:/^([^,]+),\s*([^,]+)$/.exec(observed);
   return reversed?`${reversed[2]} ${reversed[1]}`:observed;
 }
@@ -23,9 +24,18 @@ function anchorName(html:string):string {
   const heading=/<(?:h[1-6]|strong)\b[^>]*>([\s\S]*?)<\/(?:h[1-6]|strong)>/i.exec(html)?.[1];
   return rosterLabelName(textOf((heading??html).replace(/<img\b[^>]*>/gi,"")));
 }
+function entryQuote(html:string,name:string):string {
+  const text=textOf(html),index=text.toLowerCase().indexOf(name.toLowerCase());
+  const start=index<0?0:Math.max(0,index-120);
+  return text.slice(start,start+420);
+}
 function samePublishedName(observed:string,expected:string):boolean {
-  const a=key(observed).split(" "),b=key(expected).split(" ");
-  return a[0]===b[0]&&a.at(-1)===b.at(-1)&&(a.every(token=>b.includes(token))||b.every(token=>a.includes(token)));
+  const forms=(value:string)=>{
+    const tokens=key(value).split(" ");
+    return [tokens,...[...value.matchAll(/["“]([^"”]+)["”]/g)].map(match=>[...key(match[1]).split(" "),tokens.at(-1)!])];
+  };
+  return forms(observed).some(a=>forms(expected).some(b=>a[0]===b[0]&&a.at(-1)===b.at(-1)&&
+    (a.every(token=>b.includes(token))||b.every(token=>a.includes(token)))));
 }
 export function legislaturePageNamesPerson(html: string, name: string): boolean {
   const content=html.replace(/<(script|style|nav|footer|header)\b[^>]*>[\s\S]*?<\/\1\s*>/gi," ").replace(/<a\b[^>]*\/>/gi,"");
@@ -70,7 +80,9 @@ function pageRoleFor(headers:string):"upper"|"lower"|null {
   return upper===lower?null:upper?"upper":"lower";
 }
 function entryPerson(name:string,card:string,people:readonly Officeholder[],chamber:"upper"|"lower"|null,pageUrl:string):Officeholder|undefined {
-  const native=new Set([...card.matchAll(/<a\b([^>]*)>/gi)].flatMap(anchor=>{
+  const namedHeading=[...card.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)].some(heading=>samePublishedName(rosterLabelName(textOf(heading[1])),name));
+  const native=new Set([...card.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)].flatMap(anchor=>{
+    if(!namedHeading&&!samePublishedName(anchorName(anchor[2]),name))return [];
     try{const href=attributes(anchor[1]).href,binding=href?nativePersonIdFromUrl(new URL(href,pageUrl).href):null;
       return binding?[`${binding.source}:${binding.id}`]:[];}catch{return [];}
   }));
@@ -89,7 +101,7 @@ function entryPerson(name:string,card:string,people:readonly Officeholder[],cham
     const other=key(person.name).split(" ");
     if(tokens.at(-1)!==other.at(-1))return false;
     const email=Boolean(person.email&&emails.has(person.email.toLowerCase()));
-    const sameName=tokens[0]===other[0]&&(tokens.every(token=>other.includes(token))||other.every(token=>tokens.includes(token)));
+    const sameName=samePublishedName(name,person.name);
     const seat=seatFor(person);
     return email||sameName&&seat;
   });
@@ -180,7 +192,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
   if(federalRoute(pageUrl))return roster;
   const seeds=(options.roster?.officeholders??[]).flatMap(sourcePeople)
     .filter(holder=>holder.level==="STATE"&&["upper","lower","legislature"].includes(holder.chamber??"")&&holder.state?.toLowerCase()===options.state.toLowerCase()
-      &&(holder.nativeIds?.["ocd-person"]?.length??0)<=1&&(holder.nativeIds?.plural?.length??0)<=1);
+      &&(holder.nativeIds?.["ocd-person"]?.length??0)<=1&&(holder.nativeIds?.plural?.length??0)<=1&&!sourcePersonIsDocument(holder)&&!memberAction(holder.name));
   // The reference person's native membership corroborates its named entry.
   // A derived portrait copy carries no membership and cannot replace it.
   const seedByPerson=new Map<string,Officeholder>();
@@ -255,7 +267,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     })[0];
     const entryUrl=personal?pageUrl:profile??`${pageUrl}#member=${encodeURIComponent(key(holder.name))}`;
     const parsed=personOnPage(holder,context,pageUrl,options,collectedAt,entryUrl,!personal);
-    if(parsed){parsed.websiteUrl=profile??pageUrl;parsed.provenance=provenance(pageUrl,"State legislature — official member entry",collectedAt,textOf(entry));parsed.provenance.kind="OFFICIAL";sourced(parsed,parsed.provenance);roster.officeholders.push(parsed);}
+    if(parsed){parsed.websiteUrl=profile??pageUrl;parsed.provenance=provenance(pageUrl,"State legislature — official member entry",collectedAt,entryQuote(entry,parsed.name));parsed.provenance.kind="OFFICIAL";sourced(parsed,parsed.provenance);roster.officeholders.push(parsed);}
   }
   for(const block of blocks) {
     const card=block.html.replace(/<a\b[^>]*\/>/gi,""),text=textOf(card);
@@ -272,7 +284,8 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
       const href=attributes(anchor[1]).href;if(!href)continue;
       let profile:string;try{profile=url(new URL(href,pageUrl).href)!;if(!profile)continue;}catch{continue;}
       if(new URL(profile).hostname!==new URL(pageUrl).hostname&&!isOfficialSource(profile,{url:pageUrl,html}))continue;
-      const name=anchorName(anchor[2]),known=entryPerson(name,card,held,pageRoleFor(headers),pageUrl);
+      const name=anchorName(anchor[2]);if(memberAction(name))continue;
+      const known=entryPerson(name,card,held,pageRoleFor(headers),pageUrl);
       let holder=known?{...known,name}:undefined;
       if(!holder) {
         if(!/^[\p{L}][\p{L}\p{M}.,'’\-]*(?:\s+["“]?[\p{L}][\p{L}\p{M}.,'’"“”\-]*){1,6}$/u.test(name)
@@ -301,7 +314,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
       const shared=profile===url(pageUrl)||held.some(other=>key(other.name)!==key(holder!.name)&&[other.websiteUrl,...other.profileUrls??[]].some(value=>url(value)===profile));
       const parsed=personOnPage(holder,context,profile,options,collectedAt,shared?`${pageUrl}#member=${encodeURIComponent(key(holder.name))}`:profile,true);if(!parsed)continue;
       // Contacts on the roster cite the roster; the member URL remains the observed profile route.
-      parsed.provenance=provenance(pageUrl,"State legislature — official member roster",collectedAt,text);parsed.provenance.kind="OFFICIAL";sourced(parsed,parsed.provenance);
+      parsed.provenance=provenance(pageUrl,"State legislature — official member roster",collectedAt,entryQuote(card,parsed.name));parsed.provenance.kind="OFFICIAL";sourced(parsed,parsed.provenance);
       if(!roster.officeholders.some(row=>row.id===parsed.id))roster.officeholders.push(parsed);
     }
   }
@@ -320,7 +333,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
           const entry=blocks.filter(block=>legislaturePageNamesPerson(block.html,seed.name)&&namesIn(block.html).every(person=>key(person.name)===key(seed.name)))
             .sort((a,b)=>b.html.length-a.html.length)[0]?.html;
           const parsed=entry&&oneMember(entry)?personOnPage(seed,entry,profile,options,collectedAt,profile===url(pageUrl)?`${pageUrl}#member=${encodeURIComponent(key(seed.name))}`:profile,true):null;
-          if(parsed&&!roster.officeholders.some(holder=>holder.id===parsed.id)){parsed.phone=string(row.telephone)??parsed.phone;parsed.email=string(row.email)??parsed.email;parsed.provenance=provenance(pageUrl,"State legislature — published Person data",collectedAt,textOf(html));parsed.provenance.kind="OFFICIAL";sourced(parsed,parsed.provenance);roster.officeholders.push(parsed);}
+          if(parsed&&!roster.officeholders.some(holder=>holder.id===parsed.id)){parsed.phone=string(row.telephone)??parsed.phone;parsed.email=string(row.email)??parsed.email;parsed.provenance=provenance(pageUrl,"State legislature — published Person data",collectedAt,entryQuote(entry,parsed.name));parsed.provenance.kind="OFFICIAL";sourced(parsed,parsed.provenance);roster.officeholders.push(parsed);}
         }
       }
       for(const [field,child]of Object.entries(row))if(field!=="@context"&&child&&typeof child==="object")visit(child);
@@ -331,6 +344,16 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
   for(const holder of roster.officeholders) {
     for(const membership of holder.memberships??[])if(membership.divisionId)roster.divisions.push({officeholderId:holder.id,membershipId:membership.id,ocdId:membership.divisionId,bodyId:null});
     if(!roster.divisions.some(row=>row.officeholderId===holder.id))roster.unmatched.push({officeholderId:holder.id,reason:"OFFICIAL_LEGISLATURE_DISTRICT_UNRESOLVED"});
+  }
+  // A document link on a member's own profile is not another person. Return
+  // those older reader IDs only when the saved page explicitly heads one
+  // independently identified member; a chamber list has several headings.
+  const headed=roster.officeholders.filter(person=>person.nativeIds?.["ocd-person"]?.length===1&&
+    [...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)].some(heading=>samePublishedName(rosterLabelName(textOf(heading[1])),person.name)));
+  const owners=new Set(headed.map(person=>person.nativeIds!["ocd-person"][0]));
+  if(owners.size===1&&headed[0]) {
+    const person=headed[0],old=(options.roster?.officeholders??[]).filter(source=>sourcePersonIsDocument(source)&&source.provenance.sourceUrl===pageUrl);
+    if(old.length)person.nativeIds={...person.nativeIds,reader:[...new Set([...person.nativeIds?.reader??[],...old.flatMap(source=>[...personIdentityKeys(source)])])]};
   }
   return roster;
 }
@@ -344,8 +367,9 @@ export async function acquireLegislatureRosters(input:PeopleAcquisitionOptions):
   const profiles=[...new Set(profilePeople.flatMap(holder=>[holder.websiteUrl,...(holder.profileUrls??[])]).filter(governmentRoute).map(value=>url(value)!))];
   // Each legislature's own roster pages, kept as data, are read with the member pages already held.
   const rosters=officialLegislatureRosterRoutes(stateIdentity(options.state).state).flatMap(value=>url(value)??[]);
+  const documentPages=[...new Set(held.filter(sourcePersonIsDocument).map(person=>person.provenance.sourceUrl).filter(governmentRoute))];
   if(!profiles.length&&!rosters.length)gaps.push({sourceUrl:"https://v3.openstates.org/jurisdictions",detail:"OFFICIAL_LEGISLATURE_ROSTER_ROUTE_OWED:No observed official member or roster route is held for this state; source discovery remains standing work."});
-  const queue=[...new Set([...rosters,...profiles])],seen=new Set<string>(),linkingPages=[...(options.linkingPages??[])];
+  const queue=[...new Set([...rosters,...profiles,...documentPages])],seen=new Set<string>(),linkingPages=[...(options.linkingPages??[])];
   // Official state pages already held for other officers can establish their legislature's vendor or .us route.
   const stateLinks=[...new Set((options.roster?.officeholders??[]).filter(holder=>holder.state?.toLowerCase()===options.state.toLowerCase()&&holder.level==="STATE")
     .flatMap(holder=>[holder.websiteUrl,...(holder.profileUrls??[])]).filter(governmentRoute).filter(value=>isOfficialSource(value)))];
@@ -365,7 +389,7 @@ export async function acquireLegislatureRosters(input:PeopleAcquisitionOptions):
       .filter(person=>[person.websiteUrl,...person.profileUrls??[]].some(profile=>url(profile)===url(sourceUrl)));
     // A roster entry already supplied this person's official facts. Its old
     // profile aliases remain held; rereading every historical route adds none.
-    if(!rosters.includes(sourceUrl)&&owners.length&&owners.every(person=>roster.officeholders.some(known=>sameNativePerson(person,known))))continue;
+    if(!rosters.includes(sourceUrl)&&!documentPages.includes(sourceUrl)&&owners.length&&owners.every(person=>roster.officeholders.some(known=>sameNativePerson(person,known))))continue;
     try {
       const page=await savedRead(options,sourceUrl,`legislature-page:${digest(sourceUrl).slice(0,24)}`);acquisitions.push(acquisition(page));
       const html=acquisition(page).body,linkingPage=linkingPages.find(link=>isOfficialSource(page.finalUrl,link));

@@ -42,6 +42,20 @@ test("standing portrait commands require exactly one data-backed state",()=>{
     assert.throws(()=>parsePeoplePortraitArguments(args),/PEOPLE_PORTRAITS_EXACT_SCOPE_REQUIRED/);
 });
 
+test("a saved archive member binds its own portrait to its own source URL",async()=>{
+  const store=new MemoryRoutineDataStore(),sourceUrl=`https://raw.githubusercontent.com/openstates/people/${SHA}/data/az/legislature/jane.yml`,archive=`https://codeload.github.com/openstates/people/zip/${SHA}`;
+  const body="id: ocd-person/jane\nname: Jane Example\nimage: https://legislature.example.gov/jane.jpg\nroles:\n- type: upper\n  district: '7'\n";
+  const roster=normalize(yamlToPeople(body,"az",sourceUrl,NOW),new Map(),NOW,"US-AZ");
+  const seed=await publishStatePeople({vault,store,state:"az",roster,releaseId:SHA,now:NOW,acquisitions:[{requestedUrl:archive,finalUrl:archive,httpStatus:200,retrievedAt:NOW,body,
+    extractedFrom:{requestedUrl:archive,finalUrl:archive,sha256:"b".repeat(64),member:"data/az/legislature/jane.yml"}}]});
+  assert.ok(seed.outcome.promoted);
+  const result=await refreshPeoplePortraits({vault,store,state:"az",query:null,options:{now:()=>NOW,storePortrait:await images(),acquire:async()=>{throw Error("The saved member already names its own portrait");}}});
+  assert.ok(result.outcome.promoted);
+  const reader=await readStatePeopleProjection("US-AZ",{store,now:NOW,bypassCache:true});assert.equal(reader.kind,"PROMOTED");if(reader.kind!=="PROMOTED")return;
+  const photo=reader.value.roster.officeholders[0].photo;assert.ok(photo);assert.equal(photo.verification?.basis,"SOURCE_FEED");
+  assert.equal(photo.verification?.sources[0].url,sourceUrl);
+});
+
 test("a scheduled portrait pass reads held people without refreshing their roster and publishes through the composite reader",async t=>{
   const store=new MemoryRoutineDataStore(),sourceUrl=`https://raw.githubusercontent.com/openstates/people/${SHA}/data/az/legislature/jane.yml`;
   const body="id: ocd-person/jane\nname: Jane Example\nroles:\n- type: upper\n  district: '7'\nlinks:\n- url: https://legislature.example.gov/jane\n";

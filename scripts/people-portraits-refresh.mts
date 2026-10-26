@@ -54,12 +54,18 @@ function personSources(person:Officeholder):{urls:string[];members:string[]} {
 async function personCaptures(store:RoutineDataStore,vault:EvidenceStore,list:PortraitList,people:readonly Officeholder[]):Promise<PortraitCapture[]> {
   if(!people.length)return [];
   const wanted=people.map(personSources),urls=[...new Set(wanted.flatMap(row=>row.urls))],members=[...new Set(wanted.flatMap(row=>row.members))];
+  const memberUrls=new Map(urls.flatMap(url=>{
+    const member=/^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/([a-f0-9]{40})\/(data\/.+)$/.exec(url);
+    return member?[[`${member[1]}/${member[2]}`,url] as const]:[];
+  }));
   const captures:PortraitCapture[]=[],sourceIds=new Map(portraitInputScopes(list.state).map(row=>[row.scope,row.sourceId]));
   for(const roster of list.rosters){
     for(const row of await store.readCandidateCaptures(roster.versionId,urls,members) as StatePeopleCapture[]){
       const text=await capturedText(vault,row);
+      const sha=/^https:\/\/codeload\.github\.com\/openstates\/people\/zip\/([a-f0-9]{40})$/.exec(row.extractedFrom?.requestedUrl??"")?.[1];
+      const sourceUrl=row.extractedFrom?memberUrls.get(`${sha}/${row.extractedFrom.member}`)??row.finalUrl:row.finalUrl;
       captures.push({transport:"REACHABLE",partial:false,httpStatus:row.httpStatus,
-        observedAt:row.sourceCheck?.checkedAt ?? row.retrievedAt,evidence:{canonicalUrl:row.finalUrl,sourceId:sourceIds.get(roster.scope) ?? roster.scope,
+        observedAt:row.sourceCheck?.checkedAt ?? row.retrievedAt,evidence:{canonicalUrl:sourceUrl,sourceId:sourceIds.get(roster.scope) ?? roster.scope,
           contentHash:portraitHash(new TextEncoder().encode(text)),text,retrievedAt:row.retrievedAt,vaultKey:row.capture.vaultKey}});
     }
   }

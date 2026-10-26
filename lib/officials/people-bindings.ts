@@ -9,6 +9,12 @@ const collapsed = (person: Officeholder) => (person.nativeIds?.["ocd-person"]?.l
 export function sourcePeople(person: Officeholder): readonly Officeholder[] {
   return person.sourceHolders?.length ? person.sourceHolders.flatMap(sourcePeople) : [person];
 }
+export function sourcePersonIsDocument(person:Officeholder):boolean {
+  const urls=person.nativeIds?.["official-legislature"]??[];
+  return !person.nativeIds?.["ocd-person"]?.length&&urls.length>0&&urls.every(value=>{
+    try{return /\.(?:pdf|docx?|xlsx?)$/i.test(new URL(value).pathname);}catch{return false;}
+  });
+}
 
 /** Changing a record's display ID removes no person when all previous IDs
  * still resolve once, and every native person is present under its own ID. */
@@ -67,7 +73,12 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
     const matches=native??owners.get(key);return matches?.size===1?[...matches][0]:undefined;
   };
   const foreign=(person:Officeholder,key:string)=>Boolean(ownerOf(key)&&ownerOf(key)!==identityOf(person));
-  const needsBinding=(person:Officeholder)=>collapsed(person)||[...personIdentityKeys(person)].some(key=>foreign(person,key));
+  const documentReference=(person:Officeholder)=>{
+    if(!sourcePersonIsDocument(person))return undefined;
+    const matches=sources.filter(source=>source.nativeIds?.["ocd-person"]?.length===1&&personIdentityKeys(source).has(person.id));
+    return new Set(matches.map(nativeIdentity)).size===1?matches[0]:undefined;
+  };
+  const needsBinding=(person:Officeholder)=>collapsed(person)||Boolean(documentReference(person))||[...personIdentityKeys(person)].some(key=>foreign(person,key));
   if(!sets.some(set=>set.officeholders.some(needsBinding)))return [...sets];
   const referenceFor = (identity:string):Officeholder|undefined => {
     const matches=byIdentity.get(identity)??[];
@@ -100,7 +111,7 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
     const restored = new Map<string, Officeholder>();
     const officeholders = set.officeholders.map(person => {
       if (!needsBinding(person)) return withOwnedFacts(person);
-      const identity=identityOf(person),reference=referenceFor(identity);
+      const document=documentReference(person),identity=document?identityOf(document):identityOf(person),reference=document??referenceFor(identity);
       // An unavailable source never causes the last held person to disappear.
       if (!reference) return person;
       for(const key of personIdentityKeys(person)){
@@ -108,11 +119,12 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
         if(source&&owner!==identity)restored.set(owner!,source);
       }
       // A portrait collapse can even carry another member's canonical ID.
-      const id=foreign(person,person.id)?reference.id:person.id;
-      const personId=foreign(person,person.personId??person.id)?reference.personId??reference.id:person.personId??person.id;
-      const aliases=[...personIdentityKeys(person)].filter(key=>!foreign(person,key));
-      const cleanReference={...reference,nativeIds:{...reference.nativeIds,reader:(reference.nativeIds?.reader??[]).filter(key=>!foreign(person,key))}};
-      const base=collapsed(person)?cleanReference:person;
+      const foreignKey=(key:string)=>document?Boolean(ownerOf(key)&&ownerOf(key)!==identity):foreign(person,key);
+      const id=foreignKey(person.id)?reference.id:person.id;
+      const personId=foreignKey(person.personId??person.id)?reference.personId??reference.id:person.personId??person.id;
+      const aliases=[...personIdentityKeys(person)].filter(key=>!foreignKey(key));
+      const cleanReference={...reference,nativeIds:{...reference.nativeIds,reader:(reference.nativeIds?.reader??[]).filter(key=>!foreignKey(key))}};
+      const base=collapsed(person)||document?cleanReference:person;
       const rebound={...base,id,personId,
         nativeIds:{...cleanReference.nativeIds,reader:[...new Set([...cleanReference.nativeIds.reader??[],...aliases,id,personId])]},
         memberships:base.memberships?.map(row=>({...row,personId})),sourceHolders:[cleanReference]};

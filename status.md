@@ -1,63 +1,57 @@
 # River status
 
-build_state: LIVE FOR READERS: release 124 (main 2424528c6, drain fix; live 1:56 AM EDT Oct 26). Runner on 2424528c6 (vital signs written 2:11 AM, pid 4001083, after Sean's hand restart). GATING: release 125, Idaho ballot fix alone (river-next-idaho). NEXT: 126 = batch 2 (RT-01, BL-02, RB-A7, DB-03 Admin, MD-01 docs out, CS-01 if READY) re-gated on 125. HELD for DB-04: DB-03's remaining steps and owner snapshot reads. See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 128 (main 9352c8e14, Maryland 413 loop fix; runner on 9352c8e14 since 7:27 AM EDT, no hand restart). GATING: release 129, RT-01b place map (river-next-rt01b, merge of 92b527e93 onto river 90348edd4). BUILDING: batch 3 (GV-01, FM-01, MP-01, MT-02, runner-release fix, bills), DB-04 (ships alone), CT-01 + ballot date text, RT-01c. See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T02:21:00Z
+heartbeat: 2026-10-26T14:20:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 1:00 AM EDT Oct 26)
-Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info); improvements merge several to a release (6:05 PM). One path per job: DB-03's remaining steps wait for DB-04 (10:00 PM). The drain fix ships alone, ahead of DB-04 if both are ready (12:40 AM).
+## Every READY not on main (updated 10:20 AM EDT Oct 26)
+Live: release 128 (main 9352c8e14). River: 90348edd4. Sean's 9:40 AM order: ship the place map, merge the finished lanes in one batch, take over the quiet lanes.
 
-**Urgent, ships alone**
-| READY | Lane | Slot |
-|---|---|---|
-| f27aff5a8 (stream/river-drain; READY commit after the full gate) | Drain fix: a pending restart closes standing admissions on the standing clock | Full gate running (river-next-drain). Ships alone first, as release 124; batch 2 becomes 125 |
-| DB-04 (not posted yet) | One read-only-what-changed path for every read | Ships alone the moment it posts READY, after the drain fix |
-
-**Improvement batch 2: gate 9/9 on river-next-batch2 d941c6a89 (10,080 pass, 0 fail). Held behind the drain fix and the Idaho diagnosis; re-folds onto river after the drain fix ships**
+**Place map (ships with the batch, or alone if the batch isn't ready within the hour)**
 | READY | Lane | State |
 |---|---|---|
-| c8734c5d8 (carries a13baecf8) | RT-01 (place-map jobs fill every state) | READY, River. Dropped 5 tests for code release 118 deleted |
-| 8daccccb3 | MD-01 docs out | READY, deletes MD-01's 14 docs files |
-| 5f28a6871 (carries c3fff3702) | BL-02 (current LegiScan session per state, sponsors matched to held legislators) | READY, River. No new bypassCache; 4 proof files out |
-| 7dc32db25 (carries 04681516c) | DB-03 Admin (Admin's own screens) | READY, River. 734/734 focused |
-| f856197dd (carries 0f8d6154c, 7996ae820) | RB-A7 (ready place pages; GB-01's held names reach them) | READY, River. Proof files out; Node 22 isolation flag fixed |
-| fdff22df1 (carries 39238a8be) | CS-01 (reader-text capitals), finished by River on stream/river-cs-01 | READY 2:45 AM. 12 conflicts resolved keeping base code; formatter bugs fixed (postal codes, R-Tx, ID, SD abbreviations, given names); 5 proof files out (docs/cs-01.md, 3 scripts, the scan test); 890/890 focused + 7,658 related tests pass; tsc, eslint, knip, preflight clean. In batch 2 (126) |
+| 92b527e93 | RT-01b: a place-map turn per state, one shared Census worker, bounded heap (#822's approach) | Full gate running on river-next-rt01b (started 9:50 AM). Becomes release 129 |
+| (pushing to stream/river-rt-01c) | RT-01c: each state's reservation from its own measured peak; a map that waited a full pass gets the next freed memory; old fixed reservation and old turn path deleted | River helper building. Follow-up release |
+
+**Improvement batch 3 (River finishing each lane on its own branch)**
+| READY | Lane | State |
+|---|---|---|
+| f4f1e47ab, re-cut on stream/river-gv-01 | GV-01 | Dropping the hand-added Tucson roster record (data/states/az/officials/body-compositions.json). No longer held for CT-01 |
+| f98622201, re-cut on stream/river-fm-01 | FM-01 | lib/federal-money/refresh.ts reads only normalizedPayload.captures |
+| f4039045f only | MP-01 | Folding only f4039045f |
+| aab119580, re-cut on stream/river-mt-02 | MT-02 | One single-person roster lookup kept, GV-01's duplicate deleted |
+| stream/river-runner-release | Runner release fix | A stuck staging can't block later releases; stuck/failed staging shows in heartbeat and Admin; testedSha and codeIdentity written at startup and on the standing clock |
+| stream/river-bills | Bills | Only Arizona shows; AL 503, MA/CA/TX/NY/OH 0; LegiScan promoted 3 sessions at 7:25 AM, nothing since. Cause being found |
+
+**Ships alone**
+| READY | Lane | State |
+|---|---|---|
+| stream/river-db-04 | DB-04 (taken over; silent since 1:11 AM) | River finishing. READY will show openstates-people (1.28 GB) and member-offices (0.64 GB, 8 AM hour) GB/h before and after |
+
+**Taken over, finishing**
+| READY | Lane | State |
+|---|---|---|
+| stream/river-ct-01 | CT-01 (silent since 2:49 AM) + ballot date text in every state | Boise 83702 reads "voter pre-registration ends on october 23 ." Fix covers every state |
+
+**Never pushed a branch: PP-01 and RB-A9**
+Recommendation: Sean restarts both sessions. River's capacity is on the place map, the batch, DB-04 and CT-01. RB-A9 can't prove itself until the place map has rows in every state, so its restart should wait for release 129's place-map check. River takes PP-01 only if Sean says so.
 
 **Waiting, with the reason**
 | READY | Lane | Why it waits |
 |---|---|---|
-| e4305907d, 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 state doors, research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | Held for DB-04 (Sean, 10:00 PM EDT): DB-04's single read-what-changed path replaces most of these. Not folded until DB-04's READY says which it replaces |
-| a0cb7d1ef (with its firewall fix 3e3f1ab33) | DB-03 owner snapshot reads | Held for DB-04, same reason. Its gate was stopped at 10:00 PM EDT |
-| 7b5eacd03 | RB-A10 | Held: place_boundary, zip_place and zcta_place have 0 rows in production (RT-01 fills them). Ships when every state has rows and 20 random ZIPs in 20 states resolve |
-| be0bef2bf | RB-A3 follow-up | Not needed after RB-A8: it only splits RB-A8's shared publication counter into official and checked in Admin (one more count write per live fact; readers see nothing). Not folding unless Sean wants that split |
-| 1307d4e03 | RN-03 handoff | No code: an acceptance note for RN-03 (release 103, live). River records a reader check in Chrome; nothing to fold |
-| 2cce7754c, 9c2b0c58a | DB-03 portraits / release-118 integration | Not folded at Sean's order (one portrait path: release 120's) |
+| 7b5eacd03 | RB-A10 | place_boundary, zip_place, zcta_place have 0 rows in production. Ships when every state has rows (RT-01b) and 20 random ZIPs in 20 states resolve |
+| #822 (RB-A2) | Per-state place-map approach | Its approach is in RT-01b; River closes #822 once 129 is live |
+| e4305907d, 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed, a0cb7d1ef | DB-03 remaining steps | Held for DB-04 (Sean, 10:00 PM Oct 25). DB-04's READY says which it replaces |
+| be0bef2bf | RB-A3 follow-up | Not needed after RB-A8 unless Sean wants official/checked split in Admin |
+| 1307d4e03 | RN-03 handoff | No code |
+| 2cce7754c, 9c2b0c58a | DB-03 portraits / 118 integration | Not folded (one portrait path: release 120's) |
 
-**Superseded (a later READY of the same step is on main; not folding)**
-2769c614e DB-02 (re-cut as e0f14fe59, release 121) · 8b69f0cbf DB-03 reads (finished as de764a119, release 122) · bb948717e (inside 3e3f1ab33) · 14dd8beb0 BL-02 (c3fff3702 replaces it) · 8ad77b9d5 VS-07 (vs-07-fx f48331d9d folded Oct 23) · 04dfa4caf DG-01-FX (DG-01 folded with DG-02 e6745c664, Oct 23) · 027144fa1 BS-01 (folded with RS-02 adee07352, Oct 19) · 61f6d1449 SL-02 and f42bc19c6 NE-01 (folded with DS-01 512e65e03, Oct 22) · 6da1efc6b STEP-7 (Oct 15, 1,345 behind) · 91f23e059 DB-29 (Oct 6) · CH-23/CA salvage copies 544e20323, 3cbb51190e, 0fc6ef6d2, 48ef946cd and the Oct 5–6 salvage-river-next branches (those steps folded Oct 6–13).
-| 526da8d5a | AD-01 fix (River), rides batch 1 | READY 10:57 PM EDT: fixes the 2 batch 1 test failures; 4/4 in the two files |
-
-**Not folding (each with its disposition; Oversight's branch audit, 12:55 AM EDT Oct 26)**
-
-| Branch / commit | What it is | Disposition |
-|---|---|---|
-| stream/ba-02 7f7cf6bd8 (Oct 23, 5 commits, no READY) | Ballot questions, voting limits, election absences for 16 states and territories | Mostly already on main: contest, candidacy, measure and vote-for counts match main in 14 of 16 files (CL-01, BA-01 and MD-01 carried them). Still missing from main: Guam's 2026 ballot (6 contests, 48 candidates; Guam 96913 shows a near-empty ballot page today), Puerto Rico's election-absence note, and a source citation behind each vote-for limit (298 SC contests and the rest). Proposed future lane BA-03: re-cut just those three onto river, evidence files out. Sean decides. |
-| stream/eo-01 5a0dcb21f (Oct 23, WIP) | Local election offices and county/town lookup | Kept for the Concord polling-place fix (Concord 03301 still shows New London's polling place). That fix never started because its prompt was named VS-05, a name an Oct 21 lane already used. Needs a new lane name to start. |
-| stream/nb-02 7b6a7f9f8 (Oct 23, WIP) | Narrower routine control reads | DB-04 reads it; not folded on its own. |
-| stream/pb-01 f5e5f8a38 (Oct 23) | Nationwide replay; readiness blocked | RB-A9 reads it; not folded on its own. |
-| CS-01 39238a8be (READY, lane not running) | Reader text casing (no forced capitals, given names, PND party labels) | River finishing it onto batch 2 on stream/river-cs-01, docs/cs-01.md left out. Rides the next improvement batch. |
-| RB-A2 draft PR #822 | Per-state place-map turns | Same fix as RT-01. One path: RT-01 ships in 124; #822 stays unfolded. 24 h after 124 is live, River reports place_boundary, zip_place and zcta_place rows by state. Any state still empty: River says why and re-cuts RT-01 with #822's per-state turn approach. Now: 0 / 0 / 0 rows. |
-| stream/runner-headroom a4cee564a (RH-01, Oct 20 WIP) | Installer and FEC memory floors | Replaced by the rebuild. Not folding. |
-| stream/steps-2-6 3bfabfa8a (PL-01, Oct 17 WIP) | Per-state publisher sizes | Replaced by the rebuild. Not folding. |
-| stream/hunter-v2 af8acfe29 (H-01, Oct 17 WIP) | Hunter scale fixes | Replaced by the rebuild. Not folding. |
-| stream/meetings-place fd48ea86b (Oct 16 WIP) | Meetings place body scope draft | Replaced by the rebuild (MT-01 shipped in 123). Not folding. |
-| stream/fetcher 805c46b83 (R4, Oct 16) | Unified source fetcher | Replaced by the rebuild. Not folding. |
-| stream/measures 0c1325a5e (MS-01, Oct 16 WIP) | Measures evidence wrappers | Replaced by the rebuild. Not folding. |
+**Sean's step**: rebuild-place-pages fails every minute with "WTP_PRODUCTION_DATABASE_URL_WRITE is not set". Add that variable with the Functions scope in Netlify and redeploy; the place-page drain then runs.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)

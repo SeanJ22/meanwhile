@@ -1,31 +1,30 @@
 # River status
 
-build_state: LIVE FOR READERS: release 121 (main 8664f367e, DB-02). SHIPPING: release 122 (DB-03 reads) PR #834. RETURNED: DB-03 Admin 04681516c (3 tests; blocks the rest of stream/db-03), owner snapshot reads a0cb7d1ef (firewall; River finishes 9:50 PM). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 122 (main 560cc2aa2, DB-03 reads), live 9:47 PM EDT; reader checks green. GATING: DB-03 owner snapshot reads 3e3f1ab33 alone on river e58835856. NEXT: improvement batch 1. See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T01:39:00Z
+heartbeat: 2026-10-26T01:50:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 9:39 PM EDT)
+## Every READY not on main (updated 9:50 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
 | READY | Lane | Slot |
 |---|---|---|
-| de764a119 (carries 8b69f0cbf) | DB-03 reads, finished by River (stream/river-db03-reads) | release 122 (PR #834, auto-merge on): gates 9 of 9 on e58835856; urgent Neon |
 
 **Next: urgent Neon fixes, each as soon as ready (in lane order)**
 | READY | Lane | Slot |
 |---|---|---|
-| a0cb7d1ef | DB-03 owner snapshot reads (stream/db-03-reads, child of 8b69f0cbf; owner snapshot read 0.81 GB in the 4 PM EDT hour) | RETURNED: release firewall, 2 findings (returns/db-03.md). River finishes it if no new READY in 60 min; urgent Neon |
+| 3e3f1ab33 (carries a0cb7d1ef, bb948717e) | DB-03 owner snapshot reads + firewall fix (stream/db-03-reads, on river e58835856) | gating alone now; urgent Neon. Improvement batch 1 waits behind it |
 | 04681516c | DB-03 Admin | RETURNED: 3 tests (returns/db-03.md). Low priority: costs Neon only while Admin is open (Sean) |
 | e4305907d | DB-03 state doors | blocked: stacked on Admin in the lane's line. Lane asked to re-cut the remaining steps on current river |
 | 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | next, through 11072d2ed. Member offices f81db4b37 overlaps release 120's member-offices change; River keeps one path when it folds and says which |
 
-**Improvement batch 1: gating now (AD-01, GB-01, MT-01, MD-01 on river e58835856 → d7dd06466). RT-01, RB-A7 and BL-02 conflict with river and go to batch 2 (returns/improvement-batch.md)**
+**Improvement batch 1: next after owner snapshot reads (AD-01, GB-01, MT-01, MD-01; merge d7dd06466 on e58835856 is built; its gate was stopped for the Neon fix). RT-01, RB-A7 and BL-02 conflict with river and go to batch 2 (returns/improvement-batch.md)**
 | READY | Lane | Note |
 |---|---|---|
 | a13baecf8 | RT-01 (place-map jobs fill every state) | batch 2: test conflict with release 118; lane merges river. RB-A10 and RB-A9 wait on its map |
@@ -1227,4 +1226,13 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - No Neon fix is ready: owner snapshot reads is with its lane until 9:50, and the rest of DB-03 needs a re-cut. So the build machine starts the improvement batch, and a Neon fix that lands takes it first.
 - Batch 1 = AD-01 69806d306 + GB-01 1636195c9 + MT-01 f26ebab8d + MD-01 f67ae6709, merged cleanly on river e58835856 (d7dd06466), gating together.
 - RT-01, RB-A7 and BL-02 conflict with river and go to batch 2 (returns/improvement-batch.md).
+
+### Release 122 live, 9:47 PM EDT (main 560cc2aa2: DB-03 reads)
+- Fixed set: /ballot 85701 and 03255 at 200, loaded, 0 console errors; Ask on 85701 at 200; /api/meetings 85701 and 60602 at 200; /national at 200, 0 console errors.
+- Random ZIPs, seed 1122: 20/20 load, 20/20 resolve to county and city, across TN, WA, AK, WI, IN, DE, PR, MS, NH, KY, MO, NM, SD, NY, GA, IL, HI, NE, MN and MA.
+- Research cycle and Open States votes GB/h are measured on the first two full hours after the runner adopts 122.
+
+### 9:50 PM EDT: owner snapshot reads fixed by its lane
+- The DB-03 lane posted 3e3f1ab33 on river e58835856. A read-clock constant moved into a pure module, so the routine and manual paths no longer import incremental-reads.ts's filesystem writer; the firewall itself is unchanged. It carries a0cb7d1ef and fixture fixes (bb948717e). No migration; 2cce7754c and 9c2b0c58a are not included.
+- Improvement batch 1's gate was stopped for it (Neon first); 3e3f1ab33 is gating alone. The 9:52 PM standing-order check was cancelled because the lane answered.
 

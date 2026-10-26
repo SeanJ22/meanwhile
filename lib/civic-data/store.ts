@@ -114,6 +114,8 @@ export interface SourceHead {
   readonly acquisitionComplete?: boolean | null;
   readonly sourceThrough?: string | null;
   readonly imported: boolean;
+  /** Existing pointer/candidate proof equality, selected as a scalar instead of duplicate fact bodies. */
+  readonly proofCoupled?:boolean;
 }
 
 export function publishedCandidateMetadata(row: CandidateVersionRecord): PublishedCandidateMetadata {
@@ -1147,6 +1149,9 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       normalizedHash: row.candidate.normalization.normalizedHash, parserVersion: row.candidate.normalization.parserVersion,
       promotedAt: pointer.promotedAt, candidateState: row.state, acquisitionSucceeded: row.acquisitionSucceeded,
       acquisitionComplete: row.candidate.retrieval.complete ?? null,
+      proofCoupled:canonicalCivicDataJson(pointer.receipt)===canonicalCivicDataJson(row.receipt)&&
+        canonicalCivicDataJson(pointer.payload)===canonicalCivicDataJson(row.candidate.readModel)&&
+        row.candidate.normalization.normalizedHash!==null,
       sourceThrough: row.candidate.temporal.sourceThrough,
       imported: isImportOrStateMoveCandidate(row.candidate) || pointer.sourceId !== row.candidate.sourceId };
   }
@@ -2685,6 +2690,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       sourceId: civicDataCandidates.sourceId, recordClass: civicDataCandidates.recordClass, scope: civicDataCandidates.scope,
       versionId: civicDataPromotions.currentVersionId, lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
       rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
+      proofCoupled:sql<boolean>`${civicDataPromotions.validationReceipt}=${civicDataCandidates.validationReceipt}
+        AND ${civicDataPromotions.payload}=${civicDataCandidates.candidate}->'readModel'
+        AND ${civicDataCandidates.normalizedHash}=${civicDataCandidates.candidate}#>>'{normalization,normalizedHash}'`.as("proof_coupled"),
       rawHashBasis: sql<SourceHead["rawHashBasis"]>`${civicDataCandidates.candidate}#>>'{retrieval,rawHashBasis}'`.as("raw_hash_basis"),
       parserVersion: civicDataCandidates.parserVersion, promotedAt: civicDataPromotions.promotedAt,
       candidateState: civicDataCandidates.state, acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,

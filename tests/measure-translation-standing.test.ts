@@ -170,3 +170,25 @@ test("a durable attempt must exist before spending; final persistence failure re
   assert.equal(result.outcomes[0].usage.length, 2);
   assert.equal(result.outcomes[0].status, "PUBLISHED");
 });
+
+test("a publication the database refuses as one oversized write waits for changed source bytes instead of buying both calls again", async () => {
+  const f = fixture();
+  f.input.store.create = async () => {
+    throw new Error("NeonDbError: Server error (HTTP status 413): {\"message\":\"request is too large (max is 67108864 bytes)\"}");
+  };
+  const failed = await runHeldMeasureTranslations(f.input);
+  assert.equal(failed.outcomes[0].status, "HELD");
+  assert.match(failed.outcomes[0].detail ?? "", /request is too large/);
+  assert.equal(f.requests.length, 2);
+  f.input.now = "2026-10-05T20:00:00Z";
+  const later = await runHeldMeasureTranslations({ ...f.input, attempts: failed.outcomes });
+  assert.equal(later.outcomes.length, 0);
+  assert.match(later.deferred[0].reason, /larger than one database write/);
+  assert.equal(f.requests.length, 2, "the same source bytes buy no second writer or checker call");
+  const changed = `${text} The election office published a shorter text.`;
+  f.input.captures = [{ ...capture, observedAt: f.input.now, evidence: { ...capture.evidence, text: changed,
+    contentHash: `sha256-${translationHash(changed)}`, retrievedAt: f.input.now } }];
+  const retried = await runHeldMeasureTranslations({ ...f.input, attempts: failed.outcomes });
+  assert.equal(retried.outcomes.length, 1);
+  assert.equal(f.requests.length, 4, "changed source bytes are written and checked again");
+});

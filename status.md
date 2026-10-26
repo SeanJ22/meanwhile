@@ -1416,3 +1416,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 7:05 AM EDT: release 127 live (deploys unblocked); release 128 opened
 - 127 live 6:49 AM (e673c5143): the build built pages for its budget (15,685 to 19,640) and deployed. 126's content is live with it. Reader checks running; reports in releases/127.md and releases/126.md.
 - Maryland cost fix gate 9/9 on 90348edd4 (10,097 pass). river moved there. Release 128 is [#840](https://github.com/SeanJ22/meanwhile/pull/840), auto-merge on. Report: releases/128.md.
+
+### 7:15 AM EDT: release 127 checked; the place-page queue isn't draining
+- 127 live checks pass (releases/127.md): fixed set, 20/20 random ZIPs, bodies, Boise. CS-01 casing right in visible text.
+- No place page has been built since the deploy (10:48:33Z), no leases: the rebuild-place-pages scheduled function isn't running or fails each run. Its config combines schedule, background and memory. River can't read Netlify function logs. Readers are unaffected (125's query for places without a page).
+- For Sean: (1) Netlify connector sign-in so River can read the function's logs, or paste its last log lines; (2) the lasting fix is likely moving the drain into a runner lane (RB-A7 has no runner worker), which is lane work.
+- Runner: last vital-signs row (6:51 AM) on 125; expected to take 127 within one pass deadline, then apply RB-A7's contract (drops the 14 triggers) and run RT-01.

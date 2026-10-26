@@ -62,10 +62,10 @@ export async function campaignResourceInputs(query:Query,state:string):Promise<R
 }
 
 export async function probeCampaignResource(state:string,resource:CampaignFinanceResource,input:CampaignResourceInput|undefined,dependencyHash:string,options:{
-  readonly vault:EvidenceStore;readonly directory:string;readonly runId:string;readonly now:()=>string;readonly fetch?:typeof fetch;
+  readonly vault:EvidenceStore;readonly directory:string;readonly runId:string;readonly now:()=>string;readonly fetch?:typeof fetch;readonly signal?:AbortSignal;
 }):Promise<CampaignResourceCheck|null> {
   const checks:{rawHash:string;checkedAt:string}[]=[];let complete=false;
-  for await(const page of acquireCampaignFinanceResource(state,resource,{...options,signal:new AbortController().signal,probeOnly:true,
+  for await(const page of acquireCampaignFinanceResource(state,resource,{...options,signal:options.signal??new AbortController().signal,probeOnly:true,
     ...(input?.dependencyHash===dependencyHash?{acceptedPublicationId:input.publicationId}:{}),
     releaseEveryMs:resource.kind==="SOCRATA"?60*60_000:24*60*60_000})){
     if(!page.unchanged)return null;
@@ -82,7 +82,9 @@ export async function confirmCampaignResourceChecks(db:FactDb&{readonly query:Qu
   for(const check of checks){
     const rows=await db.query(`UPDATE fact f SET checked_at=$4 FROM source_copy s,entity e WHERE f.source_copy_id=s.id AND f.entity_id=e.id
       AND e.state=$1 AND f.field LIKE 'campaign-money:%' AND f.status='live' AND f.provenance_kind<>'OWNER'
-      AND f.value->>'resource'=$2 AND s.sha256=ANY($3::text[]) AND f.checked_at<$4::timestamptz RETURNING e.parent_id`,
+      AND f.value->>'resource'=$2 AND s.sha256=ANY($3::text[]) AND f.checked_at<$4::timestamptz
+      AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(f.value->'amounts') a(amount)
+        WHERE amount?'provenance' AND NOT $3::text[] @> ARRAY[amount#>>'{provenance,rawHash}']) RETURNING e.parent_id`,
       [state,check.resourceId,check.rawHashes,check.checkedAt]);
     for(const row of rows)if(typeof row.parent_id==="string")people.add(row.parent_id);
     const missing=await db.query(`SELECT DISTINCT e.parent_id FROM entity e JOIN fact f ON f.entity_id=e.id JOIN source_copy s ON s.id=f.source_copy_id

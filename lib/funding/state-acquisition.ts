@@ -14,10 +14,12 @@ import { campaignSourceRecord, type CampaignSourceCapture, type CampaignSourceRe
 import { CAMPAIGN_FINANCE_PARSER, campaignFinanceSource, type CampaignFinanceResource } from "./state-sources.ts";
 import { campaignSession } from "./state-request.ts";
 import { joinedCampaignSourceRows } from "./state-source-join.ts";
+import {runtimeCivicReadCache} from "../db/civic-read-cache.ts";
 
 interface DownloadCheckpoint { readonly etag: string | null; readonly modified: string | null; readonly archiveId: string; readonly rawHash: string; readonly path: string; readonly byteLength: number; readonly retrievedAt: string }
 interface Download extends DownloadCheckpoint { readonly sourceCheck: SourceCheckEvidence; readonly runId: string | null;readonly releaseVersion?:string }
 interface ResourceCheckpoint { readonly rawHash: string; readonly rows: number; readonly total: number | null; readonly retrievedAt: string; readonly publicationId: string | null }
+interface MaterializationProgress {readonly rawHash:string;readonly inputHash:string;readonly rows:number}
 interface CampaignSourcePage {
   readonly records: readonly CampaignSourceRecord[];
   readonly inputRecords:number;
@@ -28,6 +30,8 @@ interface CampaignSourcePage {
   readonly sourceCheck: SourceCheckEvidence;
   readonly observedAt: string;
   readonly checkedSources?: readonly {readonly rawHash:string;readonly checkedAt:string}[];
+  readonly resumed?:boolean;
+  readonly saveProgress?:()=>Promise<void>;
 }
 interface Options {
   readonly vault: EvidenceStore;
@@ -44,6 +48,8 @@ interface Options {
   readonly onCapture?:(capture:CampaignSourceCapture)=>Promise<void>;
   /** Compare completed native source slices without parsing or accepting a new publication. */
   readonly probeOnly?:boolean;
+  /** A native cursor belongs to the exact currently selected people and parser inputs. */
+  readonly materializationId?:string;
 }
 const digest = (value: string) => createHash("sha256").update(value).digest("hex");
 function requestIdentity(url: string, body: Record<string, unknown> | null, resource: CampaignFinanceResource): string {
@@ -122,7 +128,7 @@ async function* capturedRows(state: string, resource: CampaignFinanceResource, i
       continue;
     }
     const length = Buffer.byteLength(raw);
-    if (records.length && (records.length >= 500 || bytes + length > 2 * 1024 * 1024)) {
+    if (inputRecords>=500 || records.length && (records.length >= 500 || bytes + length > 2 * 1024 * 1024)) {
       if (federalBulkMemory.hasSubscribers) federalBulkMemory.publish({ stage: "campaign-project", item: metadata.url, itemBytes: bytes, retainedRows: records.length });
       yield { records, capture,inputRecords }; records = []; bytes = 0; inputRecords=0;
     }
@@ -159,7 +165,7 @@ async function* filePages(state: string, resource: CampaignFinanceResource, path
     } : {}) };
     let records: CampaignSourceRecord[] = [], ordinal = 0,inputRecords=0,bytes=0;
     for await (const raw of federalJsonRecords(joinedCampaignSourceRows(path, resource, `${path}.join`, options.signal, lookup?.path), "", envelope)) {
-      if(records.length && (records.length>=500 || bytes+Buffer.byteLength(raw)>2*1024*1024)){
+      if(inputRecords>=500 || records.length && (records.length>=500 || bytes+Buffer.byteLength(raw)>2*1024*1024)){
         yield {records,capture,inputRecords};records=[];inputRecords=0;bytes=0;
       }
       inputRecords++;
@@ -271,6 +277,8 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
 export async function* acquireCampaignFinanceResource(state: string, resource: CampaignFinanceResource, options: Options): AsyncGenerator<CampaignSourcePage> {
   campaignFinanceSource(state);
   const descriptorHash = digest(`${CAMPAIGN_FINANCE_PARSER}:${JSON.stringify(resource)}`);
+  const materializationId=options.materializationId;
+  const continuation=runtimeCivicReadCache().jobState();
   resource = await campaignSession(resource, options.vault, url => campaignSourceResponse(url, {}, options));
   const pageSize = resource.pageSize ?? (resource.kind === "SOCRATA" ? 50_000 : 500);
   let offset = resource.firstOffset ?? 0;
@@ -313,7 +321,8 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
     const directory = join(options.directory, state, resource.id);
     await mkdir(temporaryPath(directory), { recursive: true });
     const checkpointPath = join(directory, digest(requestIdentity(url.href, body, resource)) + ".json");
-    const prior = await checkpoint<ResourceCheckpoint>(checkpointPath);
+    const continuationKey=digest(JSON.stringify([options.directory,state,resource.id,requestIdentity(url.href,body,resource)]));
+    const prior = await checkpoint<ResourceCheckpoint>(checkpointPath)??await continuation.readCheckpoint<ResourceCheckpoint>("campaign-source-page",continuationKey);
     const raw = await download(state, url.href, resource, body, options);
     const lookupUrl = resource.lookup?.relativeUrl ? new URL(resource.lookup.relativeUrl, url).href : resource.lookup?.url;
     if (resource.lookup?.publicationResource && !campaignFinanceSource(state).resources.some(row => row.id === resource.lookup!.publicationResource)) throw new Error("The shared native cover file has no registered publication resource.");
@@ -325,6 +334,10 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
     if(lookup)await options.onCapture?.({url:lookup.sourceCheck.requestedUrl,retrievedAt:lookup.retrievedAt,publicationDate:null,
       rawHash:lookup.rawHash,byteLength:lookup.byteLength,vaultKey:lookup.archiveId});
     const projectionHash = digest(`${descriptorHash}:${raw.rawHash}:${lookup?.rawHash ?? ""}`);
+    const progressPath=checkpointPath+".materialized";
+    const progressKey=digest(JSON.stringify([continuationKey,projectionHash,materializationId]));
+    const savedProgress=materializationId?await checkpoint<MaterializationProgress>(progressPath)??await continuation.readCheckpoint<MaterializationProgress>("campaign-source-materialization",progressKey):null;
+    const completedRows=savedProgress?.rawHash===projectionHash && savedProgress.inputHash===materializationId?savedProgress.rows:0;
     const unchanged = prior?.rawHash === projectionHash;
     if(options.probeOnly && !(unchanged && options.acceptedPublicationId && prior?.publicationId===options.acceptedPublicationId)) {
       yield {records:[],inputRecords:0,capture:null,offset,complete:false,unchanged:false,sourceCheck:raw.sourceCheck,observedAt:raw.retrievedAt};
@@ -342,13 +355,21 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
     let count = 0;
     for await (const page of filePages(state, resource, raw.path, metadata, options, envelope, lookup)) {
       count += page.inputRecords;
-      yield { ...page, offset: offset + count, complete: false, unchanged, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
+      const rows=count;
+      yield { ...page, offset: offset + count, complete: false, unchanged, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt,
+        checkedSources:[{rawHash:raw.rawHash,checkedAt:raw.sourceCheck.checkedAt},...(lookup?[{rawHash:lookup.rawHash,checkedAt:lookup.sourceCheck.checkedAt}]:[])],
+        resumed:completedRows>0 && count<=completedRows,
+        ...(materializationId?{saveProgress:async()=>{
+          const progress={rawHash:projectionHash,inputHash:materializationId,rows} satisfies MaterializationProgress;
+          await saveCheckpoint(progressPath,progress);await continuation.checkpoint("campaign-source-materialization",progressKey,progress);
+        }}:{}) };
     }
     const total = resource.totalPath ? property(envelope.value, resource.totalPath) as number : null;
     const errors = resource.errorsPath ? property(envelope.value, resource.errorsPath) : null;
     if (errors && (!Array.isArray(errors) || errors.length)) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "The campaign API reports incomplete or failed source results.");
     const complete = completed(count, total, paged);
-    await saveCheckpoint(checkpointPath, { rawHash: projectionHash, rows: count, total, retrievedAt: raw.retrievedAt, publicationId: options.publicationId ?? null } satisfies ResourceCheckpoint);
+    const finished={ rawHash: projectionHash, rows: count, total, retrievedAt: raw.retrievedAt, publicationId: options.publicationId ?? null } satisfies ResourceCheckpoint;
+    await saveCheckpoint(checkpointPath,finished);await continuation.checkpoint("campaign-source-page",continuationKey,finished);
     yield { records: [],inputRecords:0, capture: null, offset: offset + count, complete, unchanged, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
     if (complete) return;
     offset += resource.offsetUnit === "PAGE" ? 1 : count;

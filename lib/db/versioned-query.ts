@@ -40,9 +40,9 @@ export function versionedSelect(connection: string, cache: CivicReadCache = runt
         const version = `db04_version_${token}`, retained = `db04_retained_${token}`;
         const checked = `${parts.prefix ? parts.prefix + "," : "WITH"} ${source} AS MATERIALIZED (${parts.query}
         ), ${tagged} AS MATERIALIZED (
-          SELECT source.*, row_number() OVER () AS ${ordinal},
-            encode(sha256(convert_to(row_to_json(source)::text, 'UTF8') || record_send(source)), 'hex') AS ${etag}
-          FROM ${source} source
+          SELECT ${source}.*, row_number() OVER () AS ${ordinal},
+            encode(sha256(convert_to(row_to_json(${source})::text, 'UTF8') || record_send(${source})), 'hex') AS ${etag}
+          FROM ${source}
         ), ${selected} AS MATERIALIZED (
           SELECT *, (${etag}=ANY($${params.length + 1}::text[]) OR ${ordinal}<>min(${ordinal}) OVER (PARTITION BY ${etag})) AS ${unchanged}
           FROM ${tagged}

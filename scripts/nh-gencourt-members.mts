@@ -22,7 +22,7 @@ import { readFileSync } from "node:fs";
 import { acquireKnownRelease, knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
 import { readNhMembers } from "../lib/civic-data/state-members.ts";
 import { nhMembersCandidate, expectedNhMembersTerm, sha256 } from "../lib/civic-data/candidate-builders.ts";
-import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { sourceContentHash, confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
@@ -189,7 +189,11 @@ function arg(name: string): string | undefined {
 
 const invokedDirectly = (process.argv[1] ?? "").replace(/\\/g, "/").endsWith("scripts/nh-gencourt-members.mts");
 
-async function main(): Promise<void> {
+export async function refreshNhMembers(input:{
+  readonly store?:RoutineDataStore;readonly now?:()=>string;readonly acquire?:typeof acquireKnownRelease;
+  readonly sleep?:NonNullable<Parameters<typeof readNhOfficialDocumentsSerially>[2]>["sleep"];
+}={}):Promise<void> {
+  const clock=input.now??(()=>new Date().toISOString()),acquire=input.acquire??acquireKnownRelease;
   installNeonRequestDeadline();
   if (process.argv.includes("--write")) {
     throw new Error(
@@ -198,22 +202,22 @@ async function main(): Promise<void> {
     );
   }
   const local = arg("from");
-  const promote = process.argv.includes("--promote");
+  const promote = input.store!==undefined || process.argv.includes("--promote");
   if (promote && local) {
     throw new Error(
       "The registered nh-members production contract refuses local --from input: a local " +
         "copy is not a live authoritative retrieval.",
     );
   }
-  let store: PostgresRoutineDataStore | null = null;
-  if (promote) {
+  let store: RoutineDataStore | null = input.store??null;
+  if (promote && store===null) {
     prepareProductionCivicDataWrite();
     store = new PostgresRoutineDataStore();
   }
 
   let text: string;
   let readOn: string;
-  let retrievedAt = new Date().toISOString();
+  let retrievedAt = clock();
   let finalUrl = SOURCE_URL;
   let httpStatus = 200;
   let identityText: string | null = null;
@@ -240,7 +244,7 @@ async function main(): Promise<void> {
             async (url): Promise<NhOfficialDocument> => {
               const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
               try {
-                const held=await acquireKnownRelease({sourceId:"nh-general-court",releaseId:url,url,parserVersion:"nh-general-court/3",maxBytes:64*1024*1024,checkAfterMs:86400000,signal:requestSignal,headers:{"user-agent":UA,accept:"text/plain,*/*"},validate:bytes=>{const body=decodeNhPublisherBytes(bytes);if(url===SOURCE_URL)parseMembers(body);else if(url===NH_LEGISLATORS_URL)parseNhLegislators(body);else parseNhRollCallHistory(body);}});
+                const held=await acquire({sourceId:"nh-general-court",releaseId:url,url,parserVersion:"nh-general-court/3",maxBytes:64*1024*1024,checkAfterMs:86400000,signal:requestSignal,headers:{"user-agent":UA,accept:"text/plain,*/*"},validate:bytes=>{const body=decodeNhPublisherBytes(bytes);if(url===SOURCE_URL)parseMembers(body);else if(url===NH_LEGISLATORS_URL)parseNhLegislators(body);else parseNhRollCallHistory(body);}});
                 return {requestedUrl:held.requestedUrl,finalUrl:held.finalUrl,httpStatus:held.httpStatus,body:decodeNhPublisherBytes(held.bytes),rawHash:held.sha256,retrievedAt:held.retrievedAt,sourceCheck:knownReleaseSourceCheck(held)};
               } catch(error) {
                 if(url!==NH_ROLL_HISTORY_URL)throw error;
@@ -248,14 +252,14 @@ async function main(): Promise<void> {
                 return {requestedUrl:url,finalUrl:url,httpStatus:0,body:""};
               }
             },
-            { signal },
+            { signal,...(input.sleep?{sleep:input.sleep}:{}) },
           );
         },
       );
       documents=acquired;
       const memberDocument = acquired[0]!;
       text = memberDocument.body;
-      retrievedAt = memberDocument.retrievedAt ?? new Date().toISOString();
+      retrievedAt = memberDocument.retrievedAt ?? clock();
       sourceCheck = memberDocument.sourceCheck;
       finalUrl = memberDocument.finalUrl;
       httpStatus = memberDocument.httpStatus;
@@ -315,10 +319,11 @@ async function main(): Promise<void> {
     if (identityText === null || identityHistoryText === null || identityFinalUrl === null || identityHttpStatus === null || identityCrosswalk === null) {
       throw new Error("NH_OFFICIAL_PERSON_ID_CROSSWALK_NOT_INITIALIZED");
     }
-    const now = new Date().toISOString();
+    const now = clock();
     const complete=extraction.counts.dropped===0 && documents.length===3 && documents.every(row=>row.httpStatus===200 && row.body.trim().length>0) &&
       !(identityCrosswalk.unresolved??[]).length;
-    const rawHash=sourceContentHash(documents,{sourceId:"nh-general-court",scope:"US-NH",parserVersion:"nh-general-court/3",
+    const rawHash=sourceContentHash(documents.map(row=>({requestedUrl:row.requestedUrl,finalUrl:row.finalUrl,
+      capture:{rawHash:row.rawHash??sha256(row.body)}})),{sourceId:"nh-general-court",scope:"US-NH",parserVersion:"nh-general-court/3",
       expectedTerm:expectedNhMembersTerm(sourceCheck?.checkedAt??retrievedAt),identitySourceVersion:identityCrosswalk.sourceVersion});
     const check=documents.flatMap(row=>row.sourceCheck?[row.sourceCheck]:[]).sort((a,b)=>a.checkedAt.localeCompare(b.checkedAt))[0]??sourceCheck;
     const confirmed=await confirmSourceHashUnchanged({store,sourceId:"nh-general-court",recordClass:"STATE_LEGISLATOR",scope:"US-NH",
@@ -351,4 +356,4 @@ async function main(): Promise<void> {
   }
 }
 
-if (invokedDirectly) await main();
+if (invokedDirectly) await refreshNhMembers();

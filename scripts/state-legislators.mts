@@ -30,7 +30,7 @@ import {
   sourceAcquisitionFailure,
   withPublisherAcquisitionDeadline,
 } from "../lib/civic-data/source-acquisition-failure.ts";
-import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import {
@@ -69,14 +69,13 @@ export function parseStateLegislatorArguments(args: readonly string[]): StateLeg
   return { state: target.state };
 }
 
-async function main(): Promise<void> {
-  const { state } = parseStateLegislatorArguments(process.argv.slice(2));
+export async function refreshOfficialStateLegislators(input:{
+  readonly state:StateLegislatorArguments["state"];readonly store:RoutineDataStore;readonly now?:()=>string;readonly fetch?:typeof fetch;
+  readonly officePoints?:typeof import("../lib/officials/office-points-publication.ts").publishRosterOfficePoints;
+}):Promise<void> {
+  const {state,store}=input,clock=input.now??(()=>new Date().toISOString()),request=input.fetch??fetch;
   const target = officialStateLegislatorTargetByState(state);
   if (!target || target.state === "NH") throw new Error(`STATE_LEGISLATOR_TARGET_MISSING:${state}`);
-
-  installNeonRequestDeadline();
-  prepareProductionCivicDataWrite();
-  const store = new PostgresRoutineDataStore();
 
   let response: Response;
   let body: string;
@@ -91,7 +90,7 @@ async function main(): Promise<void> {
         const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
         const result = await requestPublisher(
           `${target.publisher} current legislative roster`,
-          () => fetch(target.probeUrl, {
+          () => request(target.probeUrl, {
             headers: { "user-agent": UA, accept: "text/html,text/plain;q=0.9,*/*;q=0.5" },
             redirect: "follow",
             signal: requestSignal,
@@ -123,7 +122,7 @@ async function main(): Promise<void> {
     response = acquired.response;
     body = acquired.body;
     sourceBytesHash=acquired.rawHash;
-    retrievedAt = new Date().toISOString();
+    retrievedAt = clock();
     if (state === "AZ") {
       if (target.probeUrl !== AZ_LEGISLATURE_ROSTER_SOURCE_CONTRACT.requestedUrl) {
         throw new Error("AZ_STATE_LEGISLATOR_REGISTERED_ROUTE_MISMATCH");
@@ -150,7 +149,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const rawHash=sourceContentHash([{requestedUrl:target.probeUrl,finalUrl:response.url||target.probeUrl,rawHash:sourceBytesHash}],
+  const rawHash=sourceContentHash([{requestedUrl:target.probeUrl,finalUrl:response.url||target.probeUrl,capture:{rawHash:sourceBytesHash}}],
     {sourceId:target.sourceId,scope:target.jurisdiction,parserVersion:`${target.sourceId}/2`,term:parsed.term,
       normalizationInputHash:peopleNormalizationInputHash(parsed.roster)});
   const confirmed=await confirmSourceHashUnchanged({store,sourceId:target.sourceId,recordClass:"STATE_LEGISLATOR",scope:target.jurisdiction,
@@ -164,7 +163,7 @@ async function main(): Promise<void> {
   const prior = await readOfficialStateLegislatorsProjection(target.jurisdiction,{store,now:retrievedAt});
   if (prior.kind === "STORE_UNREACHABLE") throw Error("STATE_PEOPLE_PRIOR_UNAVAILABLE");
   const {publishRosterOfficePoints} = await import("../lib/officials/office-points-publication.ts");
-  const roster = await publishRosterOfficePoints(parsed.roster, prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null);
+  const roster = await (input.officePoints??publishRosterOfficePoints)(parsed.roster, prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null);
   const built = officialStateLegislatorsCandidate({
     priorRoster: prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null,
     sourceId: target.sourceId,
@@ -208,6 +207,12 @@ async function main(): Promise<void> {
     structuralReleaseContract: ZERO_RELEASE_EVENTS,
   }));
   if (!outcome.promoted && !outcome.confirmed) process.exitCode = 2;
+}
+
+async function main():Promise<void>{
+  const {state}=parseStateLegislatorArguments(process.argv.slice(2));
+  installNeonRequestDeadline();prepareProductionCivicDataWrite();
+  await refreshOfficialStateLegislators({state,store:new PostgresRoutineDataStore()});
 }
 
 const invokedDirectly = (process.argv[1] ?? "").replace(/\\/g, "/").endsWith("scripts/state-legislators.mts");

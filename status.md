@@ -1,15 +1,15 @@
 # River status
 
-build_state: LIVE FOR READERS: release 121 (main 8664f367e, DB-02). SHIPPING: release 122 (DB-03 reads de764a119) PR #834. GATING: DB-03 Admin 04681516c on river e58835856. RETURNED: DB-03 owner snapshot reads a0cb7d1ef (release firewall). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 121 (main 8664f367e, DB-02). SHIPPING: release 122 (DB-03 reads) PR #834. RETURNED: DB-03 Admin 04681516c (3 tests; blocks the rest of stream/db-03), owner snapshot reads a0cb7d1ef (firewall; River finishes 9:50 PM). See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T01:02:00Z
+heartbeat: 2026-10-26T01:37:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 9:02 PM EDT)
+## Every READY not on main (updated 9:37 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
@@ -21,8 +21,8 @@ Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon
 | READY | Lane | Slot |
 |---|---|---|
 | a0cb7d1ef | DB-03 owner snapshot reads (stream/db-03-reads, child of 8b69f0cbf; owner snapshot read 0.81 GB in the 4 PM EDT hour) | RETURNED: release firewall, 2 findings (returns/db-03.md). River finishes it if no new READY in 60 min; urgent Neon |
-| 04681516c | DB-03 Admin | gating now on river e58835856 (6a7e031b6; owed-route conflict resolved) |
-| e4305907d | DB-03 state doors | after Admin |
+| 04681516c | DB-03 Admin | RETURNED: 3 tests (returns/db-03.md). Low priority: costs Neon only while Admin is open (Sean) |
+| e4305907d | DB-03 state doors | blocked: stacked on Admin in the lane's line. Lane asked to re-cut the remaining steps on current river |
 | 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | next, through 11072d2ed. Member offices f81db4b37 overlaps release 120's member-offices change; River keeps one path when it folds and says which |
 
 **Improvement batch: one release, all together (drop any lane that breaks the combined gate, ship the rest)**
@@ -1218,4 +1218,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Release 122 (DB-03 reads, PR #834): in PR checks. DB-03 Admin is gating alone on e58835856. Owner snapshot reads a0cb7d1ef is returned (firewall); River finishes it at 9:50 PM if no new READY.
 - RB-A4 catch-up: one pass reloaded DE, FL, GA, GU, HI, IA, ID and IL before its deadline. The cursor is at IL, and IN through VT (Oregon included) come next. HOST_COUNTY rows rose from 14,666 to 22,162. Oregon still has 25.
 - Neon, both databases, 8 PM EDT hour: 4,757 MB (7 PM: 5,476). Two hours ago the runner was on release 120.
+
+### 9:37 PM EDT: DB-03 Admin returned
+- 04681516c failed alone on e58835856: 3 tests (admin-google-signin break-glass order, hunt-stop pending controls, path-separator in admin-read.ts). Returned (returns/db-03.md).
+- The rest of stream/db-03 is stacked on Admin and on readback (already shipped), so it can't fold step by step as-is. The lane is asked to re-cut the remaining Neon steps on current river.
 

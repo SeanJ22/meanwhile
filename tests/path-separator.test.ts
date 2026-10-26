@@ -144,6 +144,11 @@ test("no file URL is used as a path without fileURLToPath", () => {
     ["lib/civic-data/source-hash.ts", [[["new URL(page.extractedFrom.requestedUrl)", "pathname"].join("."), 1]]],
     // Voting hashes distinguish source HTTP pages from robots.txt without touching the filesystem.
     ["lib/ballot/voting-source-hash.ts", [[["new URL(body.url)", "pathname"].join("."), 2]]],
+    // Census source manifests distinguish HTTPS archive paths from text/listing paths.
+    ["lib/census-geography/source-probe.ts", [
+      [["new URL(source.requestedUrl)", "pathname"].join("."), 1],
+      [["new URL(url)", "pathname"].join("."), 1],
+    ]],
     // Browser resource paths check HTTP request counts and scope, never filesystem paths.
     ["scripts/rs-02-browser-check.mjs", [[["new URL(resource.name)", "pathname"].join("."), 3]]],
   ]);

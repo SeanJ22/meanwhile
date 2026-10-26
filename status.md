@@ -1,20 +1,21 @@
 # River status
 
-build_state: LIVE FOR READERS: release 128 (main 9352c8e14; runner on it since 7:27 AM EDT). RIVER: 63d03105b (RT-01b + bills, gate 9/9). GATING: release 129 on river-next-129c 8fdf21bbf (+ RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, MT-02, CT-01). DB-04 replaced by DB-05. NEXT: 130 = DB-05 3d4e87f62 (fold being resolved). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 128 (main 9352c8e14; runner on it since 7:27 AM EDT). RIVER: 63d03105b (RT-01b + bills, gate 9/9). GATING: release 129 on river-next-129d 43783ed16 (+ RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01; MT-02 out, being fixed). DB-04 replaced by DB-05. NEXT: 130 = DB-05 3d4e87f62 (fold being resolved). See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T17:10:00Z
+heartbeat: 2026-10-26T17:58:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 1:10 PM EDT Oct 26)
+## Every READY not on main (updated 1:58 PM EDT Oct 26)
 Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates, 10,102 tests pass, promoted 12:15 PM).
 
 **Release rule (Sean, 10:25 AM EDT Oct 26):** an urgent fix goes first but does not ship alone; every other lane that is READY and passes its scan rides in the same release; nothing finished waits behind an urgent fix; no batch waits on a lane that isn't READY.
 
-**Release 129: river 63d03105b + eight lanes, full gate running on river-next-129c 8fdf21bbf (from 12:40 PM)**
+**Release 129: river 63d03105b + seven lanes + CT-01, full gate running on river-next-129d 43783ed16 (from 1:55 PM)**
+*Why a third gate:* the 129c gate (8fdf21bbf) failed 10 tests. Seven were real: MT-02's own branch fails 2 LegiScan tests (they pass on river), and MT-02 combined with MP-01 fails a meeting-pin rate-limit test, so MT-02 is out of 129 and River is fixing it on stream/river-mt-02-fix for the next release. Three were tests the merges left behind (place-page runner test lacked standingBeat; the meeting-pins admission test didn't allow MP-01's database-job wrapper; the worker-slots sandbox test didn't map RT-01c's memory table): fixed in 641f66173 and 43783ed16. All 10 pass alone on 43783ed16 and tsc is clean.
 | READY | Lane | State |
 |---|---|---|
 | 92b527e93 | RT-01b: a place-map turn per state, one shared Census worker, bounded heap (#822's approach) | On river (gate 9/9) |
@@ -25,7 +26,7 @@ Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates,
 | b3f623480 (merges f4f1e47ab) | GV-01, Tucson hand-added roster record dropped; MT-02's duplicate roster lookup deleted, GV-01's rosterHolderById kept | Scan clean. In gate |
 | e60bfa7d8 (merges f98622201) | FM-01, lib/federal-money/refresh.ts reads only normalizedPayload.captures | Scan clean. In gate |
 | 459a51bc7 (only f4039045f) | MP-01 | Scan clean. In gate |
-| ff864c7d1 (merges aab119580) | MT-02, its roster lookup left out; host-state writes through operationalStatePath (firewall) | Scan clean. In gate |
+| ff864c7d1 (merges aab119580) | MT-02, its roster lookup left out; host-state writes through operationalStatePath (firewall) | OUT of 129: fails legiscan-bulk (2 tests) on its own branch and a meeting-pin rate-limit test with MP-01. River fixing on stream/river-mt-02-fix; next release |
 
 *Runner release fix, what happened 4:02-7:06 AM (from production, read-only):* the runner was not stuck. It moved to 125 (e12d76968) at 3:40 AM; 126's Netlify build failed so 125 stayed live; 127 went live at 6:49 and the runner closed new publish-now starts within about 2 minutes, then waited for the routine run already in progress (6:44:31-7:06:03, the usual ~22 minutes) and came up on 127 at 7:06:39, so it likely did not need the hand restart. 128 went the same way on its own (7:27:12 run end, 7:27:47 on 9352c8e14). The heartbeat misled: testedSha and codeIdentity were written only when a research cycle finished, so with hunts stopped they have read 8664f367 ("runner behind") since 9:54 PM. The separate staging bug (marker cleared only when a staging finished; a leftover child could hold it forever) did not cause Oct 26 but is fixed.
 *Follow-up, not urgent:* while hunts are stopped the main loop runs every second (CONTROL_WAKE_POLL_MS = 1 s), and each pass inspects the release (fetches /api/build and GitHub check runs: about 3,600 GitHub calls an hour against a 5,000 limit) and reads owner controls. River will cut this to once a minute in the next release.
@@ -34,7 +35,7 @@ Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates,
 **CT-01 joins release 129 (fold resolved 12:37 PM)**
 | READY | Lane | State |
 |---|---|---|
-| 812ba1da8 (origin/stream/ct-01) | CT-01: missing information inside each card section, readable source quotes, plain term sentences, every held body contact; ballot date text cleaned in every state (Boise 83702: "Voter pre-registration ends on October 23.") | Scan clean. River resolved its 18 conflicts with river locally (fold/ct-01 8fdf21bbf: merge 17f70b0ab + one fix so a term note with no held holder name doesn't crash). One display path per job kept: office_email in place-builder next to MP-01's mailing_address; body contact in the Contact section; FM-01's grouped plain-language federal money kept (no second writer); CT-01's ballotDateText is the only ballot date cleanup. Focused 347 + 9 browser + 154 tests pass; tsc, eslint (84 files), knip, preflight clean. Full gate restarted on river-next-129c 8fdf21bbf at 12:40 PM. Nothing pushed to stream/ct-01 or stream/river-ct-01 |
+| 812ba1da8 (origin/stream/ct-01) | CT-01: missing information inside each card section, readable source quotes, plain term sentences, every held body contact; ballot date text cleaned in every state (Boise 83702: "Voter pre-registration ends on October 23.") | Scan clean. River resolved its 18 conflicts with river locally (fold/ct-01 8fdf21bbf: merge 17f70b0ab + one fix so a term note with no held holder name doesn't crash). One display path per job kept: office_email in place-builder next to MP-01's mailing_address; body contact in the Contact section; FM-01's grouped plain-language federal money kept (no second writer); CT-01's ballotDateText is the only ballot date cleanup. Focused 347 + 9 browser + 154 tests pass; tsc, eslint (84 files), knip, preflight clean. Folded again without MT-02 as 842235187 (same resolutions). Nothing pushed to stream/ct-01 or stream/river-ct-01 |
 
 *Open calls for Sean or the CT-01 session (not blocking):* federal money keeps FM-01's grouping by relationship, not CT-01's one heading per source family; federal money Sources still carry FM-01's full original fields (UEI, GEOIDs, source record, match reason) because FM-01 requires every original field in Sources, while CT-01 removes technical labels elsewhere.
 
@@ -78,7 +79,7 @@ Before (reader + control plane, from database_transfer_hourly): usaspending 143.
 **DB-05 (Sean's session): release 130, right behind 129**
 | READY | Lane | State |
 |---|---|---|
-| 3d4e87f62 (origin/stream/db-05, posted 12:39 PM) | DB-05 shared current-version reads: every runtime read checks current row versions before an unchanged body crosses the connection; all 525 bypassCache uses and the bypass API removed; folds DB-04 (39f637b67) and disposes of every held DB-03 step (folded or replaced; portrait duplicates stay out) | Scan clean (bypassCache removed, a test forbids it; no proof files; one additive migration expand, DB-03_process_transfer). Its READY says its own tsc and full suite were still running. 429 files; conflicts with the 129 tree in 4 files (lib/db/transfer-by-caller.ts, scripts/pilot-runner.mts, 2 tests). Folding it now would hold the place map and eight lanes about another hour, so it ships as 130 right after 129 (about 15 minutes' delay for DB-05). River's helper is resolving the fold on 8fdf21bbf now |
+| 3d4e87f62 (origin/stream/db-05, posted 12:39 PM) | DB-05 shared current-version reads: every runtime read checks current row versions before an unchanged body crosses the connection; all 525 bypassCache uses and the bypass API removed; folds DB-04 (39f637b67) and disposes of every held DB-03 step (folded or replaced; portrait duplicates stay out) | Scan clean (bypassCache removed, a test forbids it; no proof files; one additive migration expand, DB-03_process_transfer). Its READY says its own tsc and full suite were still running. 429 files; conflicts with the 129 tree in 4 files (lib/db/transfer-by-caller.ts, scripts/pilot-runner.mts, 2 tests). Folding it now would hold the place map and eight lanes about another hour, so it ships as 130 right after 129 (about 15 minutes' delay for DB-05). Fold resolved locally (fold/db-05 139d77c73 on the MT-02 tree; 4 conflicts; DB-05's own admin-native-version-reads test also fails at 3d4e87f62 and was fixed in a8029fc64 for DB-05 to confirm). It is re-based onto the final 129 tree once 129 ships |
 
 **PP-01 and RB-A9 sessions are back**: origin/stream/pp-01 (merge of river, 12:05 PM) and origin/stream/rb-a9 (work in progress, 12:46 PM). No READY yet. River does not take them.
 

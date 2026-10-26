@@ -12,7 +12,7 @@ import { mergePeopleSets } from "../../officials/merge-people.ts";
 
 export const PEOPLE_SOURCE_DEFINITIONS = [
   { id: "legiscan-api", parserVersion: "legiscan-people/1", url: "https://api.legiscan.com/?op=getSessionList" },
-  { id: "official-state-people", parserVersion: "official-legislature-people/1", url: "https://v3.openstates.org/jurisdictions" },
+  { id: "official-state-people", parserVersion: "official-legislature-people/2", url: "https://v3.openstates.org/jurisdictions" },
   { id: "congress-api", parserVersion: "congress-members/2", url: "https://api.congress.gov/v3/member?currentMember=true&format=json" },
   { id: "govinfo", parserVersion: "govinfo-cdir-people/1", url: "https://api.govinfo.gov/collections/CDIR" },
   { id: "wikidata-people", parserVersion: "wikidata-people/1", url: "https://query.wikidata.org/sparql" },

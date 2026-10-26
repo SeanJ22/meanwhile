@@ -134,6 +134,7 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
       const news=batch.some(row=>row.facts.length>0) || Boolean(end && (end.continuation.length>0 ||
         canonicalCivicDataJson(heldSchedule?.record ?? null) !== canonicalCivicDataJson(end.schedule.record)));
       const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",
+        bindingPeople:list.everyone,
         roster:{scope:state,generatedAt:clock(),officeholders,divisions:[],unmatched:[]},acquisitions:[],releaseId:clock(),now:clock(),
         derivedInputs:[...sources(batch.length ? batch.map(row=>row.person) : held.versionId ? [] : list.everyone),...batch.flatMap(row=>portraitInputs(row.person,row.facts))],
         excludedFacts:[...kept,...batch.flatMap(row=>row.facts),...end ? [...end.continuation,end.schedule] : []],confirmUnchanged:!news,held});

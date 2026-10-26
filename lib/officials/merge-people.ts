@@ -8,6 +8,7 @@ import { nativePersonIdFromUrl, personIdentityKeys } from "./people-identity.ts"
 import { portraitBindingMatches } from "../photos/binding.ts";
 import { mergeExecutiveFacts } from "./national-executive.ts";
 import { heldPersonSources } from "./held-sources.ts";
+import { bindPeopleSources } from "./people-bindings.ts";
 import type { Officeholder, OfficeholderSet, PersonFieldDisagreement } from "./types.ts";
 
 const normalized = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -15,7 +16,7 @@ const present = (value: unknown) => value !== null && value !== undefined && val
 const sourceFor = (person: Officeholder, field: string): Provenance => person.fieldSources?.[field] ?? person.provenance;
 /** Shared identifiers first; a unique full name, office and state is the second binding. */
 export function mergePeopleSets(input: readonly OfficeholderSet[]): OfficeholderSet | null {
-  const sets = input.map(withoutInvalidStatewidePeople);
+  const sets = bindPeopleSources(input.map(withoutInvalidStatewidePeople));
   if (!sets.length) return null;
   const people: Officeholder[] = [], aliases = new Map<string, string>();
   const originalSources = new WeakMap<Officeholder, readonly Officeholder[]>();

@@ -37,7 +37,7 @@ export function personIdentityKeys(person: Pick<Officeholder, "id" | "personId" 
 
       const canonical = PERSON_ID_NAMESPACES[namespace];
       if (canonical) keys.add(`${canonical}:${canonical === "ocd-person" ? id.replace(/^ocd-person\//, "") : id}`);
-      if (source === "ocd-person" && id.startsWith("ocd-person/")) keys.add(id);
+      if (canonical === "ocd-person") keys.add(`ocd-person/${id.replace(/^ocd-person\//, "")}`);
     }
   }
   return keys;

@@ -39,5 +39,5 @@ export function peopleIdentityKeysSql(value:string):string {
   return `ARRAY[${value}->>'id',coalesce(${value}->>'personId',${value}->>'id')] || ARRAY(
     SELECT CASE WHEN key='reader' THEN id ELSE key||':'||id END FROM (${aliases}) aliases
     UNION SELECT canonical||':'||CASE WHEN canonical='ocd-person' THEN regexp_replace(id,'^ocd-person/','') ELSE id END FROM (${aliases}) aliases WHERE canonical IS NOT NULL
-    UNION SELECT id FROM (${aliases}) aliases WHERE key='ocd-person' AND id LIKE 'ocd-person/%')`;
+    UNION SELECT 'ocd-person/'||regexp_replace(id,'^ocd-person/','') FROM (${aliases}) aliases WHERE canonical='ocd-person')`;
 }

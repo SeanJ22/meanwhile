@@ -9,6 +9,7 @@ import { capturedText, holdPeopleCaptures, priorPeopleCaptures, type StatePeople
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { mergePeopleSets } from "../officials/merge-people.ts";
+import { bindPeopleSources } from "../officials/people-bindings.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedRequestedUrl } from "./derived-door.ts";
 import { statewidePageText, verifyStatewideOfficialPage } from "../sources/statewide/parse.ts";
@@ -39,6 +40,8 @@ interface PublishPeopleSourceInput {
   readonly resolveOfficePoint?: OfficePointResolver;
   /** A caller extending the record it just published passes it here instead of reading it again. */
   readonly held?: HeldPeopleSource;
+  /** Source people already held by a caller making a partial portrait save. */
+  readonly bindingPeople?: readonly Officeholder[];
 }
 /** The published record a new version is built on. */
 export interface HeldPeopleSource {
@@ -207,7 +210,10 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
     }),endedMemberships:[...(held.endedMemberships ?? []),...endedMemberships] } : held;
   // A reread page's newer read replaces its earlier statement that a seat is empty.
   const carriedPrior = priorRoster ? { ...priorRoster, vacancies: (priorRoster.vacancies ?? []).filter(row=>!reread.has(row.sourceUrl)) } : null;
-  let roster = mergePeopleSets([...(carriedPrior ? [carriedPrior] : []),incoming])!;
+  const parts = [...(carriedPrior ? [carriedPrior] : []),incoming];
+  const bound = input.bindingPeople?.length ? bindPeopleSources([...parts,
+    {...incoming,officeholders:[...input.bindingPeople],divisions:[],unmatched:[]}]).slice(0,parts.length) : parts;
+  let roster = mergePeopleSets(bound)!;
   if (national) {
     roster = { ...roster, officeholders: roster.officeholders.map(withExecutiveCompleteness) };
     const referenced = new Set(roster.officeholders.flatMap(person=>[person.provenance,...Object.values(person.fieldSources ?? {})])

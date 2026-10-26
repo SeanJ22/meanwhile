@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 129 (main ccb676a7a, live 2:40 PM EDT Oct 26): RT-01b, bills, RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01. Runner loaded 129 by itself at 2:47:57 PM (heartbeat testedSha ccb676a7a, codeIdentity CONSISTENT; no restart asked). RIVER: 43783ed16. GATING: release 130 on river-next-130 3f914357a (MT-02 87577ea3a + DB-05 3d4e87f62, c1bf8151f, 0be79e9a5). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 129 (main ccb676a7a, live 2:40 PM EDT Oct 26): RT-01b, bills, RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01. Runner loaded 129 by itself at 2:47:57 PM (heartbeat testedSha ccb676a7a, codeIdentity CONSISTENT; no restart asked). RIVER: 43783ed16. GATING: release 130 on river-next-130b b139d5f33 (MT-02 87577ea3a + DB-05 3d4e87f62; DB-05's c1bf8151f and 0be79e9a5 turned away: 12 failing tests on DB-05's own branch). See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T18:55:00Z
+heartbeat: 2026-10-26T19:15:00Z
 
 
 <!-- READY-LIST -->
@@ -76,10 +76,21 @@ The CT-01 session is alive and posts READY itself, with the ballot date text fix
 FM-01's READY says its durable progress raises bytes per federal-money job by 101%. River keeps its fix (lib/federal-money/refresh.ts reads only normalizedPayload.captures) and measures usaspending and openfema for two full hours before and after 129; if they go up, it goes here and DB-05 owns the fix.
 Before (reader + control plane, from database_transfer_hourly): usaspending 143.6 MB (9 AM), 82.1 MB (10 AM); openfema 13.2 MB (9 AM), 7.5 MB (10 AM). Earlier hours for range: usaspending 71-159 MB/h, openfema 8.7-21.6 MB/h (3-8 AM).
 
-**Release 130: DB-05 + MT-02, right behind 129 (tree fold/130 b139d5f33 ready)**
+**Release 130: MT-02 + DB-05's first piece (3d4e87f62), gating on river-next-130b b139d5f33 from 3:15 PM**
 | READY | Lane | State |
 |---|---|---|
 | 3d4e87f62 (origin/stream/db-05, posted 12:39 PM) | DB-05 shared current-version reads: every runtime read checks current row versions before an unchanged body crosses the connection; all 525 bypassCache uses and the bypass API removed; folds DB-04 (39f637b67) and disposes of every held DB-03 step (folded or replaced; portrait duplicates stay out) | Scan clean (bypassCache removed, a test forbids it; no proof files; one additive migration expand, DB-03_process_transfer). Its READY says its own tsc and full suite were still running. 429 files; conflicts with the 129 tree in 4 files (lib/db/transfer-by-caller.ts, scripts/pilot-runner.mts, 2 tests). Folding it now would hold the place map and eight lanes about another hour, so it ships as 130 right after 129 (about 15 minutes' delay for DB-05). Fold resolved locally (fold/db-05 139d77c73 on the MT-02 tree; 4 conflicts; DB-05's own admin-native-version-reads test also fails at 3d4e87f62 and was fixed in a8029fc64 for DB-05 to confirm). Re-folded onto 129 + MT-02 as fold/130 (same resolutions). DB-05's next READY pieces c1bf8151f (source hash heads, source-driven cadence) and 0be79e9a5 (adapter correction) also folded, scan clean; one conflict in Admin door-queries (DB-05 made the same shut-door fix on its own; River's version kept for river's request bounds). Tree 3f914357a. Release 130 = MT-02 + DB-05, gated right after 129 ships |
+
+**Turned away, back to DB-05 (3:15 PM): c1bf8151f (source hash heads, source-driven cadence) and 0be79e9a5 (adapter correction).** The 130 gate on 3f914357a failed 10 tests, and DB-05's own branch at 0be79e9a5 fails the same 12 tests run file by file (they all pass with only DB-05's first piece, b139d5f33):
+- census-geography-promotion: "missing election plans remain owed tomorrow, with one attempt per retry window, until all three publish"
+- hunt-source-tasks (2): "source admission resumes from durable failure/success clocks rather than rerunning each pass or restart"; "a pending publication is not hidden by another body's later success and keeps failure backoff"
+- measure-translation-provider: "each state has an independent routine translation clock and an exact manual-publication scope"
+- measure-translation-standing: "failed checks retain both calls' usage and wait for the existing retry before spending again"
+- openfema-state-reader: "CT source bytes publish through artifacts and the real card on initial, next20minute, and tomorrow replays"
+- path-separator: "no file URL is used as a path without fileURLToPath" (lib/civic-data/source-hash.ts uses a file URL component as a filesystem path)
+- people-portrait-runner: "the national hourly portrait job reaches National cards and the next run retains its photo"
+- registration-contract (4 here, 2 in the gate run): "the current registration parser replays held evidence after registration/3 GOOD, then keeps the 90-day source clock"; "a failed current-parser registration attempt keeps the prior GOOD and its existing six-hour retry"; and two more.
+DB-05: fix on stream/db-05 and post a new READY; it rides the next release.
 
 **PP-01 and RB-A9 sessions are back**: origin/stream/pp-01 (merge of river, 12:05 PM) and origin/stream/rb-a9 (work in progress, 12:46 PM). No READY yet. River does not take them.
 

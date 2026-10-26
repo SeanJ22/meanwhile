@@ -52,7 +52,7 @@ test("both lanes reach the existing place card with their own saved field source
       officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
     const facts = await readBodyFacts(db.query, [input().entity.id], true);
     const card = stateCoverage({ state: "AZ", registry: runtime, version: "test" }, ["place-one"], 0, 0, [], facts).bodies[0]!;
-    assert.equal(card.name, "Example City Council");
+    assert.equal(card.name, "City of Example City Council");
     assert.equal(card.officeContact?.address, address);
     const sources = districtCardSources([], [], card.officeContact?.provenance, card.fieldSources);
     assert.deepEqual(sources.filter(source => source.what === "Name" || source.what === "Office address").map(source => [source.what, source.provenance.sourceUrl]),

@@ -9,13 +9,15 @@ import { modelAuditReasoner } from "./model-audit.ts";
 import { modelParseReasoner } from "./model-parser.ts";
 import { createModelAuditSampler } from "./audit-sampling.ts";
 import { workerVaultResolver } from "./vault.ts";
-import { enqueueWorkerTask, evidenceProjection, type FleetRuntime } from "./runtime.ts";
+import { enqueueWorkerTask, evidenceProjection, FLEET_IMPLEMENTATION_VERSION, type FleetRuntime } from "./runtime.ts";
 import type { GeneralizedCivicExtractionContract, IndependentAuditContext, OfficialRouteExpectation } from "./types.ts";
 import type { WorkItem } from "../work-item.ts";
 import type { MethodKnowledge } from "../../method/knowledge.ts";
 import { computeRouteFloor } from "../preflight.ts";
 import { fingerprint } from "../ids.ts";
-import { workerTaskAdmission } from "./scheduling.ts";
+import { readWorkerRetryHistory, workerTaskAdmission } from "./scheduling.ts";
+import { readHeldWorkerInputs, readHeldWorkerWorkIds, type HeldWorkerWorkItem } from "./held-worker-inputs.ts";
+import { passDeadlineFromEnv } from "../../ops/independent-runtime-pass.ts";
 import type { WorkerEvidence } from "./types.ts";
 import { requiredOperationalJurisdictionRegistry } from "../../civic-data/operational-references.ts";
 import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
@@ -98,7 +100,7 @@ async function registryScope(contract: GeneralizedCivicExtractionContract) {
   return { subject: { id: body.id, govClass: jurisdiction?.govClass ?? body.bodyClass, ownWebAddress: body.homepageUrl, sourceIds: jurisdiction?.sourceIds ?? [] }, knownUrls };
 }
 
-async function heldGeneralizedContract(artifact: ArtifactRecord, item: WorkItem): Promise<GeneralizedCivicExtractionContract | null> {
+async function heldGeneralizedContract(artifact: ArtifactRecord, item: HeldWorkerWorkItem): Promise<GeneralizedCivicExtractionContract | null> {
   const contract = item.autonomousPlan?.contract;
   if (!contract || contract.schemaVersion !== 2 || artifact.partial || item.subject !== contract.subjectId || artifact.workItemId !== item.id ||
       !contract.sourceScope.canonicalUrls.includes(artifact.canonicalUrl)) return null;
@@ -310,42 +312,44 @@ export function standingFleetRuntime(input: { root: string;  method: MethodKnowl
 export async function advanceHeldWorkerFleet(_root: string, runtime: FleetRuntime, maximumArtifacts = Infinity, legacyOnly = false): Promise<void> {
   if (maximumArtifacts <= 0) return;
   if (legacyOnly) { await planHeldDiggers(runtime); return; }
-  const records = await runtime.repos.workerResults.readAll();
-  const attempts = (await runtime.repos.attempts.list()).map(a => a.value);
   let admitted = 0;
-  const items = new Map((await runtime.repos.workItems.list()).map(row => [row.id, row.value]));
-  const successfulAcquisitions = new Map(records.flatMap(record => record.result.role === "ACQUIRER" && record.result.verdict === "ACQUIRED" &&
-    record.completion.closedAttempt.outcome === "COMPLETED" && record.completion.closedAttempt.id === record.attemptId && record.result.source.subjectId === items.get(record.workItemId)?.subject
-    ? record.result.artifacts.filter(artifact => artifact.completeness === "COMPLETE" && artifact.byteCount > 0).map(artifact => [`${record.workItemId}\u0000${artifact.artifactId}`, artifact] as const) : []));
-  for (const artifact of [...await runtime.repos.artifacts.readAll()].sort((a, b) => a.recordedAt.localeCompare(b.recordedAt))) {
-    const item = items.get(artifact.workItemId);
+  const workItemIds = await readHeldWorkerWorkIds(runtime.repos, FLEET_IMPLEMENTATION_VERSION);
+  for (const workItemId of workItemIds) {
+    if (Date.now() + 30_000 >= passDeadlineFromEnv()) return;
+    const { item, records, artifacts } = await readHeldWorkerInputs(runtime.repos, workItemId);
     if (!item || item.autonomousPlan?.contract.recordClass === "HELD_MEETING_DETAILS" ||
         item.autonomousPlan?.contract.recordClass === "HELD_SUBJECT_DETAILS") continue;
-    const acquired = successfulAcquisitions.get(`${item.id}\u0000${artifact.artifactId}`);
-    const acquisitionMatches = acquired && acquired.contentHash === artifact.contentHash && acquired.canonicalUrl === artifact.canonicalUrl &&
-      acquired.byteCount === artifact.byteLength && acquired.acquisitionAttemptId === artifact.attemptId;
-    const generalized = acquisitionMatches ? await heldGeneralizedContract(artifact, item) : null;
-    const contract = generalized;
-    if (!contract) continue;
-    if (item.subject !== contract.subjectId) continue;
-    const now = (runtime.now ?? (() => new Date().toISOString()))();
-    const common = { workItemId: item.id, artifactId: artifact.artifactId, contract, now };
-    let task = await enqueueWorkerTask(runtime.repos, { ...common, role: "PARSER" });
-    const parser = records.find(r => r.routeTaskId === task.id && r.result.role === "PARSER");
-    if (parser) {
-      if (parser.result.verdict !== "EXTRACTED") continue;
-      task = await enqueueWorkerTask(runtime.repos, { ...common, role: "VALIDATOR", producerResultId: parser.id });
-      const validator = records.find(r => r.routeTaskId === task.id && r.result.role === "VALIDATOR");
-      if (validator) {
-        if (validator.result.verdict !== "PASS" && !(contract.schemaVersion === 2 && validator.result.role === "VALIDATOR" && validator.result.extractionVerdict === "PASS")) continue;
-        task = await enqueueWorkerTask(runtime.repos, { ...common, role: "ADVERSARIAL_AUDITOR", producerResultId: parser.id, validatorResultId: validator.id });
-        if (records.some(r => r.routeTaskId === task.id && r.result.role === "ADVERSARIAL_AUDITOR")) continue;
+    const successfulAcquisitions = new Map(records.flatMap(record => record.result.role === "ACQUIRER" && record.result.verdict === "ACQUIRED" &&
+      record.completion.closedAttempt.outcome === "COMPLETED" && record.completion.closedAttempt.id === record.attemptId && record.result.source?.subjectId === item.subject
+      ? (record.result.artifacts ?? []).filter(artifact => artifact.completeness === "COMPLETE" && artifact.byteCount > 0).map(artifact => [`${record.workItemId}\u0000${artifact.artifactId}`, artifact] as const) : []));
+    for (const artifact of artifacts) {
+      const acquired = successfulAcquisitions.get(`${item.id}\u0000${artifact.artifactId}`);
+      const acquisitionMatches = acquired && acquired.contentHash === artifact.contentHash && acquired.canonicalUrl === artifact.canonicalUrl &&
+        acquired.byteCount === artifact.byteLength && acquired.acquisitionAttemptId === artifact.attemptId;
+      const generalized = acquisitionMatches ? await heldGeneralizedContract(artifact, item) : null;
+      const contract = generalized;
+      if (!contract) continue;
+      if (item.subject !== contract.subjectId) continue;
+      const now = (runtime.now ?? (() => new Date().toISOString()))();
+      const common = { workItemId: item.id, artifactId: artifact.artifactId, contract, now };
+      let task = await enqueueWorkerTask(runtime.repos, { ...common, role: "PARSER" });
+      const parser = records.find(r => r.routeTaskId === task.id && r.result.role === "PARSER");
+      if (parser) {
+        if (parser.result.verdict !== "EXTRACTED") continue;
+        task = await enqueueWorkerTask(runtime.repos, { ...common, role: "VALIDATOR", producerResultId: parser.id });
+        const validator = records.find(r => r.routeTaskId === task.id && r.result.role === "VALIDATOR");
+        if (validator) {
+          if (validator.result.verdict !== "PASS" && !(contract.schemaVersion === 2 && validator.result.role === "VALIDATOR" && validator.result.extractionVerdict === "PASS")) continue;
+          task = await enqueueWorkerTask(runtime.repos, { ...common, role: "ADVERSARIAL_AUDITOR", producerResultId: parser.id, validatorResultId: validator.id });
+          if (records.some(r => r.routeTaskId === task.id && r.result.role === "ADVERSARIAL_AUDITOR")) continue;
+        }
       }
+      const attempts = await readWorkerRetryHistory(runtime.repos.attempts, [task.id]);
+      const admission = workerTaskAdmission(task, attempts, now);
+  
+      if (!admission.due || admission.requiresPolicyRecheck) continue;
+      if (++admitted >= maximumArtifacts) return;
     }
-    const admission = workerTaskAdmission(task, attempts, now);
-
-    if (!admission.due || admission.requiresPolicyRecheck) continue;
-    if (++admitted >= maximumArtifacts) break;
   }
 }
 

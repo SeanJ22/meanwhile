@@ -2,12 +2,14 @@ import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "./changes.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
+import { derivedSourceContentIssue } from "./derived-source-hash.ts";
 import { sourceAuthority } from "./source-authority.ts";
 import type { CandidateVersionRecord, RoutineCandidate, SourceAuthorityContract } from "./types.ts";
 
 /**
  * A derived candidate has no route of its own; it is authentic only as its exact inputs. Pure check: every input is
- * well formed, and the raw hash and retrieval time equal `derivedRetrieval` of them. At the door: every named version
+ * well formed, with an exact raw hash and retrieval time. SOURCE_CONTENT_V1 hashes the explicitly named external
+ * subset without observation times; the original authority references still bind every fact. At the door: every named version
  * exists and holds the hashed read model, and every member read is on the host its wiring row attests.
  */
 export const DERIVED_WIRING_RECORD_CLASS = "CURATED_READER_RECORD" as const;
@@ -44,7 +46,10 @@ export function derivedInputIssue(input: DerivedInputRef): string | null {
         ? null
         : `a vaulted-evidence input lacks its artifact, content hash, tier or retrieval time`;
     case "DISCOVERY_ATTEMPT":
-      return text(input.attemptId) && text(input.recordId) && instant(input.recordedAt) ? null : `a discovery-attempt input lacks its ids or time`;
+      return text(input.attemptId) && text(input.recordId) && instant(input.recordedAt) &&
+        (input.revision === undefined || Number.isSafeInteger(input.revision) && input.revision > 0) &&
+        (input.workItemRevision === undefined || Number.isSafeInteger(input.workItemRevision) && input.workItemRevision > 0)
+        ? null : `a discovery-attempt input lacks its ids, time or valid revisions`;
     case "COMMITTED_ROUTE_HINT":
       return text(input.fingerprint) ? null : `a route-hint input has no fingerprint`;
     case "CROSSWALK_VERSION":
@@ -96,8 +101,9 @@ export function derivedAuthorityFor(candidate: RoutineCandidate): DerivedAuthori
     return { ok: false, code: "DERIVED_REQUEST_MISMATCH", detail: `A derived candidate requests ${derivedRequestedUrl(candidate.sourceId, candidate.scope)} and has no final URL.` };
   }
   const recomputed = derivedRetrieval(inputs);
-  if (candidate.retrieval.rawHash !== recomputed.rawHash) {
-    return { ok: false, code: "DERIVED_RAW_HASH_MISMATCH", detail: "The raw hash is not the canonical hash of the named inputs." };
+  const sourceContentIssue = candidate.retrieval.rawHashBasis === "SOURCE_CONTENT_V1" ? derivedSourceContentIssue(candidate) : null;
+  if (sourceContentIssue || candidate.retrieval.rawHashBasis !== "SOURCE_CONTENT_V1" && candidate.retrieval.rawHash !== recomputed.rawHash) {
+    return { ok: false, code: "DERIVED_RAW_HASH_MISMATCH", detail: sourceContentIssue ?? "The raw hash is not the canonical hash of the named inputs." };
   }
   if (recomputed.retrievedAt === null || candidate.retrieval.retrievedAt !== recomputed.retrievedAt) {
     return { ok: false, code: "DERIVED_RETRIEVAL_TIME_MISMATCH", detail: `The version claims ${candidate.retrieval.retrievedAt}; its newest input is ${recomputed.retrievedAt ?? "untimed"}.` };

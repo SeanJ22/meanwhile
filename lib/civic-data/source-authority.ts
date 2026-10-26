@@ -761,7 +761,7 @@ const AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
     derivedPromotion: {
-      inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE", "PIPELINE_APPROVAL"],
+      inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE", "PIPELINE_APPROVAL", "DISCOVERY_ATTEMPT"],
       authorization: "Sean, 2026-09-21: \"You may enable automatic promotion for qualifying results. Fix the gap, recover value already paid for.\"",
     },
   },

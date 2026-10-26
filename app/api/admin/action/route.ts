@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * Form posts, client fetches and chat tool calls all reach the same `submit()`.
  *
@@ -98,7 +99,7 @@ async function readBody(
   }
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function post(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({
     headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
@@ -186,3 +187,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     303,
   );
 }
+
+export const POST = adminRead(post);

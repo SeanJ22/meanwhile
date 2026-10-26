@@ -31,6 +31,18 @@ export interface BodyTerritoryFile {
   features: TerritoryFeature[];
 }
 
+/** The exact result for one already selected point, including bodies excluded there. */
+export interface BodyTerritorySelection {
+  readonly type: "BodyTerritorySelection";
+  readonly inside: readonly string[];
+  readonly known: readonly string[];
+}
+export type BodyTerritory = BodyTerritoryFile | BodyTerritorySelection;
+
+export function selectBodyTerritory(point:[number,number],territory:BodyTerritoryFile|null):BodyTerritorySelection|null {
+  return territory ? {type:"BodyTerritorySelection",inside:[...bodyIdsAtPoint(point,territory)],known:[...bodyIdsWithTerritory(territory)]} : null;
+}
+
 /** Repo-relative, so the generator, the loader and the guard agree on one spelling. */
 export const BODY_TERRITORY_FILE = "data/states/az/geo/body-territories.geojson";
 
@@ -47,10 +59,11 @@ export const BODY_TERRITORY_FILE = "data/states/az/geo/body-territories.geojson"
  */
 export function bodyIdsAtPoint(
   point: [number, number],
-  territory: BodyTerritoryFile | null,
+  territory: BodyTerritory | null,
 ): Set<string> {
   const hits = new Set<string>();
   if (!territory) return hits;
+  if (territory.type === "BodyTerritorySelection") return new Set(territory.inside);
   for (const f of territory.features) {
     // `polygonContains` directly: `resolve.ts` imports this module, so `contains` would close a cycle.
     if (polygonContains(point, f.geometry.coordinates as [number, number][][])) {
@@ -61,6 +74,7 @@ export function bodyIdsAtPoint(
 }
 
 /** Every body id the territory file speaks for, for guards and reconciliation. */
-export function bodyIdsWithTerritory(territory: BodyTerritoryFile | null): Set<string> {
+export function bodyIdsWithTerritory(territory: BodyTerritory | null): Set<string> {
+  if (territory?.type === "BodyTerritorySelection") return new Set(territory.known);
   return new Set((territory?.features ?? []).map((f) => f.properties.bodyId));
 }

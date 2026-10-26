@@ -75,7 +75,11 @@ export interface AcquireOptions extends CensusSourceOptions {
 }
 
 async function buildScope(src: Source, options: AcquireOptions): Promise<BuiltScope> {
-  const held = options.previousDataset?.coverage.startsWith("national") ? options.previousDataset.scopes.find(scope =>
+  // A state job may reuse its own complete parsed state, but never another state's slice for a national read.
+  const previous = options.previousDataset;
+  const heldStates = new Set(previous?.scopes.flatMap(scope => scope.groupings.map(group => group.stateFips)));
+  const held = previous && (previous.coverage.startsWith("national") || options.states &&
+    heldStates.size === options.states.size && [...heldStates].every(state => options.states!.has(state))) ? previous.scopes.find(scope =>
     scope.version === src.version && scope.type === src.type && scope.versionMeta.retrievalComplete !== false &&
     scope.versionMeta.provenance.sourceDataset === "CENSUS_TAB20_REL2020" && scope.versionMeta.provenance.sourceUrls.includes(src.url)) : undefined;
   if (held && await heldSourcesUnchanged(held.versionMeta.provenance, [src.url], options)) return held;

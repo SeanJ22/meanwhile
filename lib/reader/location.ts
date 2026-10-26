@@ -2,7 +2,7 @@ import { readStateGeometryText } from "../geo/state-geometry.ts";
 import { nearestZcta } from "../geo/zcta.ts";
 import { postalArea } from "../geo/postal.ts";
 import { readZipPlace } from "./national.ts";
-import type { BodyTerritoryFile } from "../registry/body-territory.ts";
+import type { BodyTerritory, BodyTerritoryFile } from "../registry/body-territory.ts";
 import { bodyIdsAtPoint } from "../registry/body-territory.ts";
 import { haversineKm } from "../geo/distance.ts";
 
@@ -23,6 +23,6 @@ export async function readerLocation(lat: number, lng: number, zip?: string | nu
   return { state, zip: near, divisionIds: entry?.ids ?? [], partial: entry?.partial ?? [], fringe: entry?.fringe ?? [] };
 }
 
-export function territoryBodies(lat: number, lng: number, territory: BodyTerritoryFile | null): readonly string[] {
+export function territoryBodies(lat: number, lng: number, territory: BodyTerritory | null): readonly string[] {
   return [...bodyIdsAtPoint([lng, lat], territory)];
 }

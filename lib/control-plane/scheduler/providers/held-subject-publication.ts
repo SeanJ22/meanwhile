@@ -5,7 +5,7 @@ import { readCheckEntity } from "../../../facts/entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "../../../facts/publish.ts";
 import { nameKey, publishRosterFacts, type RosterFactsReport } from "../../../facts/roster-facts.ts";
 import { saveHeldCaptureCopy } from "./held-subject-copy.ts";
-import { withBatchedReaderInvalidation, type ReaderCachePurger } from "../../../reader/cache.ts";
+import { enqueueReaderPlaces, withBatchedReaderInvalidation, type ReaderCachePurger } from "../../../reader/cache.ts";
 import { fingerprint } from "../../ids.ts";
 import type { OfficeholderPhoto } from "../../../officials/types.ts";
 import type { PortraitSources } from "../../../photos/evidence.ts";
@@ -63,10 +63,11 @@ async function publishDetails(input: HeldSubjectPublicationInput): Promise<HeldS
     state, parentId: subject.bodyId === id || subject.subjectKind === "government" ? subject.divisionIds[0] ?? null : subject.bodyId });
   await learnOfficialHost(db.query, id, capture.evidence.canonicalUrl);
   const nativeId = /^congress:([A-Z]\d{6})$/.exec(subject.subjectId)?.[1] ?? /^congress:([A-Z]\d{6})$/.exec(id)?.[1];
-  if (nativeId) await db.query(`INSERT INTO entity_external_id (entity_id, scheme, value) VALUES ($1, 'bioguide', $2)
-    ON CONFLICT (scheme, value) DO NOTHING`, [id, nativeId]);
-  await db.query(`INSERT INTO entity_place (entity_id, place_id) SELECT $1, id FROM entity
-    WHERE kind='place' AND id=ANY($2::text[]) ON CONFLICT DO NOTHING`, [id, subject.divisionIds]);
+  const aliases = nativeId ? await db.query(`INSERT INTO entity_external_id (entity_id, scheme, value) VALUES ($1, 'bioguide', $2)
+    ON CONFLICT (scheme, value) DO NOTHING RETURNING entity_id`, [id, nativeId]) : [];
+  const placed = await db.query(`INSERT INTO entity_place (entity_id, place_id) SELECT $1, id FROM entity
+    WHERE kind='place' AND id=ANY($2::text[]) ON CONFLICT DO NOTHING RETURNING place_id`, [id, subject.divisionIds]);
+  if (aliases.length || placed.length) await enqueueReaderPlaces({ entities: [id] }, db.query);
   const entity = await readCheckEntity(db.query, id);
   if (!entity) return refuse("HELD_DETAIL_ENTITY_UNAVAILABLE");
   const copy = await db.transaction(query => saveHeldCaptureCopy(query, capture));

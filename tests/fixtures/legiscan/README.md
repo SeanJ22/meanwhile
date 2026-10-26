@@ -15,3 +15,10 @@ their hash and capture clocks are controlled test values, not claims about a liv
 
 Bulk API shape and weekly clock: https://api.legiscan.com/dl/LegiScan_API_User_Manual.pdf
 (`getDatasetList`, `getDataset`) and https://api.legiscan.com/docs/class-LegiScan_Import.html.
+
+`bill/AZ-Gonzales-2026.json` is the exact HB2316 bill member from LegiScan's
+Arizona 2026 dataset (session 2235), acquired through `getDataset` on 2026-10-24.
+The public bill is https://legiscan.com/AZ/bill/HB2316/2026 (bill 2078606).
+It carries sponsor people ID 10704, display name `Sally Gonzales`, full name
+components `Sally Ann Gonzales`, and district `SD-020`. The fixture
+retains these source fields; no legislator-specific alias is installed.

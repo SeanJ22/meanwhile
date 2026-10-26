@@ -27,6 +27,9 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // 1,249 MiB LegiScan, each with 5% and rounded up to a whole MiB.
   "openstates-votes-refresh.mts": 3574,
   "legiscan-votes-refresh.mts": 1312,
+  // BL-02 production-copy fan-out (four states, two parts each):
+  // 2,127,003,648-byte /proc VmHWM plus 5%, rounded up to MiB.
+  "legiscan-bulk.mts": 2130,
   "federal-money-refresh.mts": 768,
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
@@ -305,6 +308,8 @@ export interface WorkerMemoryOrder {
   readonly priority: number;
   readonly hold?: boolean;
   readonly stillNeeded?: () => boolean;
+  /** Offer this slot once; the caller keeps the work queued if it does not fit. */
+  readonly wait?: false;
 }
 export const MEMORY_HOLD_MS = 5 * 60_000;
 
@@ -321,7 +326,7 @@ function routineMinimumPeakBytes(entry: string): number {
   if (entry.startsWith("national-place:")) return Math.ceil(1.2 * 1024) * MIB;
   if (workerJobType(entry) === CALENDAR_READ_JOB) return CALENDAR_READ_PEAK_MIB * MIB;
   const script = entry.split(/[\\/]/).at(-1)!;
-  return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "acs-population-promote.mts", "place-map-refresh.mts"].includes(script)
+  return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "legiscan-bulk.mts", "acs-population-promote.mts", "place-map-refresh.mts"].includes(script)
     ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0);
 }
 
@@ -345,7 +350,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     const kind = /(?:^|\/|\\)(route|scout|lease|national)-worker[.]ts$/.exec(entry)?.[1] ?? "lease";
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
-  const waiting: { entry: string; deadline: number; priority: number; holdUntil: number; stillNeeded?: () => boolean; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
+  const waiting: { entry: string; deadline: number; priority: number; holdUntil: number; stillNeeded?: () => boolean; wait?: false; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
   const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
     try {
       void Promise.resolve(host.transact(operation, false)).then(applied => {
@@ -374,6 +379,11 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     clearTimeout(wake); wake = undefined;
     if (waiting.length) wake = setTimeout(() => { void drain(); }, Math.max(1, Math.min(1000, ...waiting.map(item => item.deadline - Date.now()))));
   };
+  const returnUnready = (): void => {
+    for (let index = waiting.length - 1; index >= 0; index--) if (waiting[index]!.wait === false) {
+      waiting.splice(index, 1)[0]!.reject(new Error("WORKER_MEMORY_BUSY: work remains queued"));
+    }
+  };
   const drain = async (): Promise<void> => {
     expire();
     const maximum = capacity();
@@ -382,7 +392,10 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
       scheduleWake();
       return;
     }
-    if (draining || !waiting.length || active >= maximum) { scheduleWake(); return; }
+    if (draining || !waiting.length || active >= maximum) {
+      if (!draining) returnUnready();
+      scheduleWake(); return;
+    }
     draining = true;
     scheduleWake();
     try { await host.transact((state, rows) => {
@@ -462,7 +475,10 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         }
       }); } catch (error) {
         console.warn(`Host memory admission unavailable; queued work keeps its deadline: ${error instanceof Error ? error.message : String(error)}`);
-    } finally { draining = false; scheduleWake(); }
+    } finally {
+      returnUnready();
+      draining = false; scheduleWake();
+    }
   };
   const requestDrain = (): void => {
     if (drainScheduled) return;
@@ -475,7 +491,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
       const priority = order?.priority ?? Number.POSITIVE_INFINITY;
       const at = waiting.findIndex(item => item.priority > priority);
       waiting.splice(at < 0 ? waiting.length : at, 0,
-        { entry, deadline: deadlineMs, priority, holdUntil: order?.hold ? Date.now() + MEMORY_HOLD_MS : 0, stillNeeded: order?.stillNeeded, resolve, reject });
+        { entry, deadline: deadlineMs, priority, holdUntil: order?.hold ? Date.now() + MEMORY_HOLD_MS : 0, stillNeeded: order?.stillNeeded, wait: order?.wait, resolve, reject });
       requestDrain();
     }) };
 }

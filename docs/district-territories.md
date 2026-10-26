@@ -40,8 +40,9 @@ county, so its boards never show to the whole county.
   whole ZIP and carries no "could govern you" pill.
 - A mail-only ZIP that is its own Census ZCTA (Bethel, 99559) keeps its residents' districts; only a ZIP borrowing
   another ZCTA's area is reduced to its town and county (`postalAreaNeedsAddress`).
-- The registration candidate turns the reference rows into government listings with associations, so the ZIP page's
-  government listings and board list read them through `lib/reader/place.ts`.
+- The registration candidate turns the reference rows into government listings with associations. `lib/reader/place-builder.ts`
+  composes the listings and boards into ready pages; `lib/reader/place.ts` reads those pages. Canonical ZIP pages also carry
+  the precomputed body-territory selection, so their first request does not load territory polygons.
 - An address or map point adds the special districts and tribal areas whose polygons hold it (`territoryDivisionsAt`).
 
 ## Running it

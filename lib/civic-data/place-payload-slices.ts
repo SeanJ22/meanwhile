@@ -5,7 +5,7 @@ const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[]
 
 function collections(recordClass: string): Record<string, string> {
   if (recordClass === "CENSUS_REFERENCE") {
-    const population = "(x->>'geography' || ':' || x->>'code')=ANY($3::text[]) OR x->'divisionIds' ?| $3::text[]";
+    const population = "((x->>'geography') || ':' || (x->>'code'))=ANY($3::text[]) OR x->'divisionIds' ?| $3::text[]";
     return { state: population, zcta: population, geographies: population };
   }
   if (recordClass === "MEETING") return { meetings: `(${division}) OR x->>'bodyId'=ANY($4::text[])` };

@@ -82,12 +82,15 @@ test("real OpenFEMA declaration reaches the county card and Ask with the same da
     const held = read.sources.find(source => source.source === "openfema")!;
     assert.equal(held.status, "HELD");
     assert.equal(held.records.length, 1);
+    const storedFact = structuredClone(held.records[0]);
     const rows = federalMoneyRows(held.records, { divisionId: COUNTY, bodyId: BODY });
     assert.equal(rows[0].relationship, "GEOGRAPHY");
     assert.equal(federalMoneySources(rows)[0].provenance.kind, "OFFICIAL");
     assert.match(federalMoneySources(rows)[0].what, /published 2026-09-15/);
     const markup = renderToStaticMarkup(createElement(FederalMoneySection, { divisionId: COUNTY, bodyId: BODY, data: read }));
     assert.match(markup, /Bunker Fire/);
+    assert.match(held.records[0].title, /BUNKER FIRE/);
+    assert.deepEqual(held.records[0], storedFact);
     assert.match(markup, /with public assistance/);
     assert.match(markup, /September 2026/);
     assert.doesNotMatch(markup, /Period:|Last refresh:|UEI:/);

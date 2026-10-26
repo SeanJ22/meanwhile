@@ -286,6 +286,7 @@ test("production-capable composite ingest has no non-promotion file door", () =>
     ["--experimental-strip-types", "scripts/ingest.ts", "composite"],
     { cwd: process.cwd(), encoding: "utf8" },
   );
+  assert.ifError(run.error);
   assert.equal(run.status, 1);
   assert.match(run.stderr, /requires --promote/);
 });

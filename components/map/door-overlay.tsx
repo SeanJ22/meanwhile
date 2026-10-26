@@ -21,7 +21,7 @@ import {
   type TierGroup,
 } from "@/lib/officials/tier-grouping";
 
-import { bodyDisplayName } from "@/lib/text/reader-names";
+import { bodyDisplayName, readerText } from "@/lib/text/reader-names";
 
 
 
@@ -103,7 +103,7 @@ export function DoorOverlay({
         onClick={(e) => e.stopPropagation()}
       >
         <div className={embedded ? "sr-only" : "flex items-center justify-between"}>
-          <h2 className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
+          <h2 className="font-mono t-caption trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             {title}
           </h2>
           <button
@@ -179,7 +179,7 @@ function BodiesDoor({
               className="flex w-full cursor-pointer items-baseline justify-between gap-3 text-left t-body leading-snug hover:text-link"
             >
               <span>{label}</span>
-              <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
+              <span className="trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em] text-muted">
                 {bodyClassShort(body.bodyClass)}
               </span>
             </button>
@@ -298,7 +298,7 @@ function DoorSection({
   return (
     <section className="mt-3">
       <div className="flex items-baseline gap-2">
-        <h3 className="trailing-space-trimmed-16 font-mono t-caption uppercase tracking-[0.16em] text-paper-dim">
+        <h3 className="trailing-space-trimmed-16 font-mono t-caption  tracking-[0.16em] text-paper-dim">
           {heading}
         </h3>
         {count !== null && (
@@ -339,8 +339,8 @@ function DistrictRows({
           className="border-b border-[var(--panel-border)] pb-2 last:border-0"
         >
           <div className="flex items-baseline justify-between gap-3">
-            <p className="t-body">{row.label}</p>
-            <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
+            <p className="t-body">{readerText(row.label)}</p>
+            <span className="trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em] text-muted">
               {row.typeLabel}
             </span>
           </div>
@@ -366,7 +366,7 @@ function DistrictRows({
               }
               className="mt-0.5 mr-3 cursor-pointer t-detail text-signal underline decoration-dotted"
             >
-              {holder.name} →
+              {readerText(holder.name, "name")} →
             </button>
           ))}
           <RosterCompletenessGaps gaps={projectedRosterGapsForDivision(coverage, row.ocdId)} />
@@ -421,7 +421,7 @@ function OfficialsDoor({
                     onClick={() => onOpenOfficial(holder, seatLabel, tier)}
                     className="cursor-pointer t-body text-signal underline decoration-dotted"
                   >
-                    {holder.name} →
+                    {readerText(holder.name, "name")} →
                   </button>
                   <span className="shrink-0 text-right t-caption text-muted">
                     {seatLabel}

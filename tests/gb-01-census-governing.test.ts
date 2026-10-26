@@ -9,6 +9,8 @@ import { canonicalBodyId } from "../lib/facts/entities.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
+import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
+import { preparePlacePages } from "../scripts/prepare-place-pages.mts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { Division } from "../lib/registry/types.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -81,8 +83,15 @@ test("one Oregon pass makes Portland's city, county and school boards through th
       { entity_id: "or:county:county-of-multnomah#governing", field: "homepage", value: "http://www.multco.us/", provenance_kind: "OFFICIAL", url: CENSUS },
       { entity_id: "or:county:county-of-multnomah#governing", field: "office_address", value: "501 SE HAWTHORNE BLVD, STE 600, PORTLAND, OR, 97214-3588", provenance_kind: "OFFICIAL", url: CENSUS },
     ]);
+    // The door queued each board's places; the scheduled page worker builds their ready pages before a reader opens them.
+    const pages = await rebuildPlacePages({ db, purge, concurrency: 1 });
+    assert.equal(pages.failed, 0);
+    assert.equal(pages.remaining, 0);
     const ids = [PORTLAND, MULTNOMAH, SCHOOL];
     const place = await readPlacePackage({ state: "OR", divisionIds: ids }, db.query);
+    const ready = await readPlacePackage({ state: "OR", divisionIds: [PORTLAND], placeId: PORTLAND }, db.query);
+    assert.equal(ready.bodies.find(body => body.id === "or:city:city-of-portland#governing")?.name, "City Of Portland governing board",
+      "Portland's ready page carries the board's held name");
     assert.deepEqual(place.bodies.map(body => body.id).sort(), ["or:city:city-of-portland#governing", "or:county:county-of-multnomah#governing", "or:school:portland-sch-dist-1j#board"]);
     const at = "2026-10-25T00:00:00.000Z";
     const provenance = { sourceUrl: CENSUS, sourceOrg: "U.S. Census Bureau", collectedAt: at, verifiedAt: at };
@@ -175,6 +184,8 @@ test("LA Metro's boards filed under Oregon move to California with their ids and
     assert.equal(await canonicalBodyId(db.query, `${metro}#body:la-metro-board-7`), la[7]);
     assert.equal(await canonicalBodyId(db.query, `${LA}#body:la-metro-board-7`), la[7]);
     assert.equal(await canonicalBodyId(db.query, `${metro}#body:oregon-metro-board-1`), `${metro}#body:oregon-metro-board-1`);
+    // The deployment builds every place's ready page after its migrations, before the reader that reads them is published.
+    await preparePlacePages({ db });
     const county = await readPlacePackage({ state: "CA", divisionIds: [LA] }, db.query);
     assert.equal(county.bodies.filter(body => la.includes(body.id)).length, 66, "Los Angeles County shows LA Metro's boards");
     const state = await readPlacePackage({ state: "OR", divisionIds: [OR] }, db.query);

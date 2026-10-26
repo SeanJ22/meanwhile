@@ -1,3 +1,4 @@
+import { SECTION_IDS } from '../../app/(admin)/_mw/admin-v6/contract.ts';
 /**
  * Admin v6 automatic pickup:
  * backend unavailable → backend available → the SAME open page displays real
@@ -10,8 +11,29 @@ import { test } from "node:test";
 
 import { LiveSync, RETRY_DELAYS_MS, toSourced, type SyncFetch } from "../../app/(admin)/_mw/admin-v6/live-sync.ts";
 import { SECTION_DEP } from "../../app/(admin)/_mw/admin-v6/dependencies.ts";
+import { VIEW_SECTIONS } from "../../app/(admin)/_mw/admin-v6/view-sections.ts";
 
 type Reply = { status: number; body: unknown } | "network";
+
+test("only the visible screen checks for changes, including changes outside its announcement revision",async()=>{
+  const calls:{url:string;screen:string}[]=[];
+  const sync=new LiveSync({scope:'us',screen:'money',sections:VIEW_SECTIONS.money,schedule:()=>()=>{},
+    fetch:async(url,init)=>{calls.push({url,screen:init.headers['x-admin-screen']});const id=url.includes('/money?')?'money':'workers';
+      return {status:200,json:async()=>({contract:`admin-v6/${id}@1`,scope:'us',revision:'one',asOf:'2026-10-25T05:00:00Z',data:[]})};}});
+  const announcement={revision:'one',at:'2026-10-25T05:00:00Z',v6:{version:1,sections:{
+    money:{contract:'admin-v6/money@1',href:'/api/admin/v6/money',revision:'one'},
+    workers:{contract:'admin-v6/workers@1',href:'/api/admin/v6/workers',revision:'one'}},actions:{}}};
+  sync.onPulse(announcement);await new Promise(resolve=>setTimeout(resolve,0));
+  assert.equal(calls.length,1);assert.equal(calls[0].screen,'money');assert.match(calls[0].url,/\/money\?/);
+  sync.onPulse({...announcement,at:'2026-10-25T05:00:08Z'});assert.equal(calls.length,1);
+  sync.onPulse({...announcement,at:'2026-10-25T05:00:40Z'});await new Promise(resolve=>setTimeout(resolve,0));
+  assert.equal(calls.length,2,'a coarse revision cannot leave a screen stale for more than a minute');
+  sync.setScreen('workers',VIEW_SECTIONS.workers);await new Promise(resolve=>setTimeout(resolve,0));
+  assert.equal(calls.length,3);assert.equal(calls[2].screen,'workers');assert.match(calls[2].url,/\/workers\?/);
+  sync.onPulse({...announcement,at:'2026-10-25T05:00:48Z',v6:{...announcement.v6,sections:{...announcement.v6.sections,
+    money:{...announcement.v6.sections.money,revision:'two'}}}});
+  assert.equal(calls.length,3,'a hidden screen does not refetch when its source changes');sync.dispose();
+});
 
 function harness() {
   const calls: { url: string; resolve: (r: Reply) => void }[] = [];
@@ -19,7 +41,7 @@ function harness() {
   const fetch: SyncFetch = (url) => new Promise((resolve, reject) => {
     calls.push({ url, resolve: (r) => (r === "network" ? reject(new Error("offline")) : resolve({ status: r.status, json: async () => r.body })) });
   });
-  const sync = new LiveSync({
+  const sync = new LiveSync({ screen: "now", sections: SECTION_IDS,
     scope: "st:az",
     fetch,
     schedule: (fn, ms) => { const t = { fn, ms, cancelled: false }; timers.push(t); return () => { t.cancelled = true; }; },

@@ -1,6 +1,7 @@
 "use client";
 
 import { useHydrated } from "@/hooks/use-hydrated";
+import { readerText } from "@/lib/text/reader-names";
 
 import { useState } from "react";
 
@@ -37,7 +38,7 @@ export function IncumbentNameLink({
         onClick={() => setOpen(true)}
         className="cursor-pointer disabled:cursor-wait disabled:opacity-60 text-left t-heading font-semibold tracking-tight underline decoration-dotted underline-offset-2 hover:text-link hover:decoration-solid"
       >
-        {name}
+        {readerText(name, "name")}
       </button>
       {open && (
         <CardSourceContext.Provider value={null}><CardGapContext.Provider value={null}><OfficialModal

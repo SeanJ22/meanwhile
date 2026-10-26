@@ -20,7 +20,10 @@ const NOW="2026-10-23T09:06:56.174Z";
 test("The actual open-data GET uses normal selected SQL and reads native ZIP/cell chunks and blank-FRS identities",async()=>{
   await withMigratedRoutineStore("epa-echo",async(store,vault,pg)=>{
     await pg.exec(readFileSync(new URL("../lib/db/migrations/0030_database_transfer_daily.sql",import.meta.url),"utf8"));
-    await pg.exec(readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8"));
+    // The shared store already installs the payload decoder used by publication;
+    // this route also needs the remaining selected-read functions from the migration.
+    await pg.exec(readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8")
+      .replace(/CREATE FUNCTION (reader_payload_(?:value|node|members))\(/g,"CREATE OR REPLACE FUNCTION $1("));
     const rows:OpenDataFact[]=[];
     for await(const raw of streamCsvObjects((async function*(){yield sample("echo-exporter-sample.csv");})()))rows.push(normalizeEcho(raw,NOW,null));
     rows.push(...(JSON.parse(sample("echo-program-identities.json")) as Record<string,unknown>[]).map(raw=>normalizeEcho(raw,NOW,null)));

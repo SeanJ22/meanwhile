@@ -20,7 +20,7 @@ import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ballot/incumbency";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { partyColorVar } from "@/lib/officials/party-color";
-import { readerPartyLabel } from "@/lib/text/reader-names";
+import { readerPartyLabel, readerText } from "@/lib/text/reader-names";
 import type { Tier } from "@/lib/ocd/tiers";
 import { PositionsSection } from "@/components/officials/positions-section";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
@@ -112,13 +112,13 @@ export function CandidateBattlecard({
           className="account-modal-overlay" data-candidate-battlecard data-candidate-subject={subjectId} data-tier={tier ?? undefined}
           role="dialog"
           aria-modal="true"
-          aria-label={name}
+          aria-label={readerText(name, "name")}
           onClick={(event) => {
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
           <CardSourceContext.Provider value={null}><CardGapContext.Provider value={null}><PersonCard
-            title={name}
+            title={readerText(name, "name")}
             className="account-modal"
             onClose={() => setOpen(false)}
             subject={{ type: "CANDIDATE", id: subjectId }}
@@ -138,7 +138,7 @@ export function CandidateBattlecard({
                     Candidate
                   </p>
                   <p className="truncate t-title font-semibold tracking-tight">
-                    {name}
+                    {readerText(name, "name")}
                   </p>
 
                   <div className="id-chip-row">

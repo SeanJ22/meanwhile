@@ -2,9 +2,9 @@ import { readSetting, type SettingValue } from "../settings.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import { openControlPlane } from "../admin-data.ts";
 import { readLatestSpeedPass } from "../live-audit-log.ts";
-import { listDoors } from "../../doors/registry.ts";
+import { readAdminDeadLinks } from "./door-queries.ts";
 import {
-  deadLinkItems, deadLinkReadings, DEAD_LINKS_SURFACE_DEFAULT, DEAD_LINKS_SURFACE_SETTING, SLOW_SURFACE_SHARE_DEFAULT, SLOW_SURFACE_SHARE_SETTING, slowSurfaceItems,
+  deadLinkItems, DEAD_LINKS_SURFACE_DEFAULT, DEAD_LINKS_SURFACE_SETTING, SLOW_SURFACE_SHARE_DEFAULT, SLOW_SURFACE_SHARE_SETTING, slowSurfaceItems,
 } from "../../health/surface-speed.ts";
 import type { AdminV6StuckItem } from "./v6-stuck-read.ts";
 
@@ -18,7 +18,7 @@ export async function readSurfaceItems(nowIso: string): Promise<{ readonly items
   const limit = <T extends SettingValue>(key: string, fallback: T): T => readSetting(config, key, fallback);
   const [pass, links] = await Promise.all([
     readLatestSpeedPass(repos, nowIso).catch(() => { unread = true; return null; }),
-    listDoors(repos.doors).then((l) => deadLinkReadings(l.doors), () => { unread = true; return []; }),
+    readAdminDeadLinks(repos).then((links) => links, () => { unread = true; return []; }),
   ]);
   return {
     items: [

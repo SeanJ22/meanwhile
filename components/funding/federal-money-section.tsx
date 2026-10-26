@@ -6,6 +6,8 @@ import { CardSourcesContribution } from "@/components/ui/card-sources-contributi
 import { FEDERAL_MONEY_SOURCES } from "@/lib/federal-money/model";
 import { federalMoneyRows, federalMoneySources } from "@/lib/federal-money/view";
 import type { FederalMoneyPlaceRead } from "@/lib/federal-money/reader";
+import { readerText } from "@/lib/text/reader-names";
+import { useReaderNames } from "@/components/ui/reader-names-context";
 
 const requests = new Map<string, Promise<FederalMoneyPlaceRead>>();
 const labels = {
@@ -34,6 +36,7 @@ function load(divisionId: string, bodyId?: string, cursor?: string | null, recip
 }
 
 export function FederalMoneySection({ divisionId, bodyId, recipientIds = [], recipientNames = [], recipientState, data }: { divisionId: string; bodyId?: string; recipientIds?: readonly string[]; recipientNames?: readonly string[]; recipientState?: string; data?: FederalMoneyPlaceRead }) {
+  const knownNames = useReaderNames();
   const [read, setRead] = useState<{ identity: string; value: FederalMoneyPlaceRead } | null>(null);
   const recipients = [...new Set(recipientIds)].sort().join("|");
   const names = JSON.stringify([...new Set(recipientNames)].sort());
@@ -81,7 +84,7 @@ export function FederalMoneySection({ divisionId, bodyId, recipientIds = [], rec
   return <section aria-label="Federal money and records" className="space-y-5">
     {groups.filter(group => group.rows.length).map(group => <div key={group.label} aria-label={group.label}>
       <h4 className="t-detail font-medium text-paper">{group.label}</h4>
-      <ul className="mt-2 space-y-3">{group.rows.map(row => <li key={row.fact.id} data-federal-source={row.fact.source} data-federal-record={row.fact.id} className="t-body leading-relaxed text-paper-dim">{row.text}</li>)}</ul>
+      <ul className="mt-2 space-y-3">{group.rows.map(row => <li key={row.fact.id} data-federal-source={row.fact.source} data-federal-record={row.fact.id} className="t-body leading-relaxed text-paper-dim">{readerText(row.text, "sentence", knownNames)}</li>)}</ul>
     </div>)}
     {value.sources.map(source => !rows.some(row => row.fact.source === source.source)
       ? <CardGapContribution key={source.source} id={`federal-money:${identity}:${source.source}`} label={labels[source.source].toLowerCase()} />

@@ -70,7 +70,7 @@ export async function refreshCongressDirectory(input: {
       // Office points found while publishing are saved with the state's directory and reused by its next publication.
       const pointed = await publishFederalDirectoryOfficePoints(projection, latest.get(state) ?? priors.get(state) ?? null);
       const candidate = heldDirectoryCandidate({ state, acquisitions, retrievedAt, projection: pointed, changes: changesFrom(priors.get(state) ?? null, pointed),
-        sourceInputHash,sourceComplete:sourceComplete() });
+        sourceInputHash,sourceComplete:sourceComplete(),sourceWorkPending:!sourceComplete()&&optionalFailures===0 });
       const outcome = await processRegisteredManualCandidate(store, federalDirectoryContractId(state), candidate, clock(),baseVersions.get(state));
       receipts.set(state, { candidate, outcome });
       if (!outcome.promoted && !outcome.confirmed) throw Error(`Federal directory held as ${outcome.candidate.state}: ${outcome.candidate.failureDetail ?? "validation refused"}`);

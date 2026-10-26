@@ -57,6 +57,7 @@ function sameAcquisitionProgress(candidate: RoutineCandidate, pointed: RoutineCa
     const inputDigest=(value:RoutineCandidate)=>(value.normalizedPayload as {sourceInputDigest?:string}|null)?.sourceInputDigest;
     if(inputDigest(candidate)!==inputDigest(pointed))return false;
   }
+  if(candidate.retrieval.complete!==pointed.retrieval.complete)return false;
   if (candidate.recordClass === "MEETING_OUTCOME") {
     const checks = (value: RoutineCandidate) => canonicalCivicDataJson((value.readModel as {
       sittings?: { meetingId: string; minutesDocument?: { readAt?: string } }[]

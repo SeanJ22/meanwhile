@@ -17,6 +17,7 @@ import { holdRawCapture, readRawCaptureText, type RawCaptureRef } from "./raw-ca
 import { confirmSourceHashUnchanged } from "./source-hash.ts";
 import { peopleSourceContentHash } from "./people-source-hash.ts";
 export { peopleSourceContentHash } from "./people-source-hash.ts";
+import { bindPeopleSourceHashes, recordPeopleSourceChecks } from "./people-source-checks.ts";
 
 /** One page as read, its text in memory for parsing and verification. */
 export interface StatePeopleAcquisition {
@@ -46,12 +47,14 @@ export async function confirmStatePeopleSource(input: {
   const acquiredAt = input.acquisitions.map(row => row.retrievedAt).sort().at(-1) ?? input.now;
   const first = input.acquisitions[0];
   const sourceCheck = input.acquisitions.flatMap(row => row.sourceCheck ? [row.sourceCheck] : []).sort((a,b) => b.checkedAt.localeCompare(a.checkedAt))[0];
-  return confirmSourceHashUnchanged({ store: input.store, sourceId: "plural-openstates", recordClass: "STATE_LEGISLATOR",
+  const confirmed = await confirmSourceHashUnchanged({ store: input.store, sourceId: "plural-openstates", recordClass: "STATE_LEGISLATOR",
     scope: `US-${input.state.toUpperCase()}:openstates-people:v1`, parserVersion: PLURAL_PARSER_VERSION, rawHash, now: input.now,
     complete: input.roster.currentMembershipComplete === true && !input.gaps?.length && input.acquisitions.length > 0 &&
       input.acquisitions.every(row => row.httpStatus >= 200 && row.httpStatus < 300 && row.body.length > 0),
     retrieval: { requestedUrl: first?.requestedUrl ?? "", finalUrl: first?.finalUrl ?? null, httpStatus: first?.httpStatus ?? null,
       rawHash, retrievedAt: acquiredAt, ...(sourceCheck ? { sourceCheck } : {}) } });
+  if(confirmed)await recordPeopleSourceChecks({store:input.store,head:confirmed.head,pages:input.acquisitions});
+  return confirmed;
 }
 /** A held candidate's captures, newest per page. */
 export function priorPeopleCaptures(payload:unknown):StatePeopleCapture[] {
@@ -147,9 +150,12 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
     captured.add(url); return true;
   })];
   const carriedPortraitFacts = heldExcluded?.filter(fact=>fact.code.startsWith("STATE_PORTRAIT_")) ?? [];
-  const candidate = statePeopleCandidate({...input,roster,captures,sourceRawHash:peopleSourceContentHash(input.acquisitions,input.roster),excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
+  const candidate = statePeopleCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,
+    sourceRawHash:peopleSourceContentHash(input.acquisitions,input.roster),excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
     prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault});
+  if(outcome.promoted){const head=await input.store.readSourceHead(candidate.recordClass,candidate.scope);
+    if(head?.versionId===outcome.promoted.versionId)await recordPeopleSourceChecks({store:input.store,head,pages:input.acquisitions});}
   if (outcome.promoted) {
     const ballotPrior = await readManualProjectionPrior(stateBallotContractId("ballot-contests", input.state), input.store, input.now);
     const ballots = Object.values((ballotPrior?.payload as GenericBallotProjection | undefined)?.ballots ?? {})

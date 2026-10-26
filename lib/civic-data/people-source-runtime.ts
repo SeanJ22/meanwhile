@@ -23,6 +23,7 @@ import { peopleJurisdiction } from "./people-source-read.ts";
 import { sourceAuthority } from "./source-authority.ts";
 import { acquirePeopleSourceProbe, peopleSourceProbe, probePeopleSource, readPeopleSourceDependencies,
   reuseProbedPeopleSources, type PeopleSourceProbeAcquire } from "./people-source-probe.ts";
+import { recordPeopleSourceChecks } from "./people-source-checks.ts";
 
 interface PeopleSourceAcquired {
   readonly state: string;
@@ -166,6 +167,7 @@ export async function runPeopleSourceRefresh(input: {
     retrieval: { requestedUrl: first?.requestedUrl ?? "", finalUrl: first?.finalUrl ?? null, httpStatus: first?.httpStatus ?? null,
       rawHash, retrievedAt: acquiredAt, ...(sourceCheck ? { sourceCheck } : {}) } });
   if (confirmed) {
+    await recordPeopleSourceChecks({store:input.store,head:confirmed.head,pages:acquired.acquisitions});
     const coverage = { sourceCoverage: acquired.coverage ?? null, peopleHeld: acquired.roster.officeholders.length,
       legislatorsHeld: acquired.roster.officeholders.filter(person => person.level === "STATE" && ["upper", "lower"].includes(person.chamber ?? "")).length,
       disagreements: acquired.roster.disagreements?.length ?? 0 };

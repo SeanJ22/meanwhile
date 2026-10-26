@@ -16,6 +16,11 @@ import { pacedPortraitAcquire } from "../photos/portrait-work.ts";
 import { knownReleaseSourceCheck, type KnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
 import type { ExecutiveSourceCredentials } from "../sources/white-house/presidential-records.ts";
 import type { StatePeopleAcquisition } from "./state-people-publication.ts";
+import { runtimeCivicReadCache, type CivicReadCache } from "../db/civic-read-cache.ts";
+import { factClocks } from "../facts/clocks.ts";
+import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
+import type { AdminConfig } from "../control-plane/gateway/admin-config.ts";
+import { recordPeopleSourceChecks } from "./people-source-checks.ts";
 
 type SourceDependencies = Readonly<Record<string, readonly [string, string | null, string | null, string] | null>>;
 type SourceRequest = Pick<StatePeopleAcquisition, "requestedUrl" | "finalUrl" | "request">;
@@ -25,7 +30,7 @@ export interface PeopleSourceProbe {
   readonly sourceId: string;
   readonly state: string;
   readonly normalizationInputHash: string;
-  readonly requests: readonly SourceRequest[];
+  readonly requests: readonly (SourceRequest & {readonly rawHash: string})[];
   readonly dependencies: SourceDependencies;
   readonly discovery: string;
   readonly nextTermAt: string | null;
@@ -62,13 +67,15 @@ export function peopleSourceProbe(input: {
     ...(person.memberships ?? []).flatMap(membership => [membership.termStart,membership.termEnd])])
     .filter((value): value is string => typeof value === "string" && Number.isFinite(Date.parse(value)) && Date.parse(value) > Date.parse(input.now))
     .map(value => new Date(value).toISOString()).sort();
+  const discovery = discoveryInputs(input.state,input.sourceId,input.now), nextTermAt = terms[0] ?? null;
   return { formatVersion: 1, sourceId: input.sourceId, state: input.state,
     complete: input.complete && input.acquisitions.length > 0 && !input.gaps.length &&
       input.acquisitions.every(page => page.httpStatus >= 200 && page.httpStatus < 300 && page.body.length > 0),
-    normalizationInputHash: peopleNormalizationInputHash(input.roster),
-    requests: [...new Map(input.acquisitions.map(({ requestedUrl,finalUrl,request }) =>
-      [canonicalCivicDataJson([requestedUrl,request ?? null]),{requestedUrl,finalUrl,...(request ? {request} : {})}])).values()],
-    dependencies: input.dependencies, discovery: discoveryInputs(input.state,input.sourceId,input.now), nextTermAt: terms[0] ?? null };
+    normalizationInputHash: hash([peopleNormalizationInputHash(input.roster),input.dependencies,discovery,nextTermAt]),
+    requests: [...new Map(input.acquisitions.map(({ requestedUrl,finalUrl,request,body }) =>
+      [canonicalCivicDataJson([requestedUrl,request ?? null]),{requestedUrl,finalUrl,...(request ? {request} : {}),
+        rawHash:createHash("sha256").update(body).digest("hex")}])).values()],
+    dependencies: input.dependencies, discovery, nextTermAt };
 }
 
 function currentRequest(request: SourceRequest, at: string): SourceRequest {
@@ -78,7 +85,22 @@ function currentRequest(request: SourceRequest, at: string): SourceRequest {
   return { ...request,requestedUrl:requested.href,finalUrl:final.href };
 }
 
-export interface ProbedSource { readonly request: SourceRequest; readonly release: KnownRelease }
+interface ProbedSource { readonly request: SourceRequest; readonly release: KnownRelease }
+interface ProbeProgressRecord { readonly request: SourceRequest; readonly release: Omit<KnownRelease,"bytes"> }
+interface ProbeProgress { readonly context: string; readonly records: readonly ProbeProgressRecord[] }
+const PROBE_PROGRESS = "people-source-probe:v1";
+async function probeFreshnessMs(now: string): Promise<number> {
+  const connection = controlPlaneUrlFromEnv();
+  let config: AdminConfig | null = null;
+  if (connection) {
+    try {
+      const repositories = await createPgRepositories(connection,now,{skipBootstrap:true});
+      config = (await repositories.adminConfig.readNarrowed("current",{settings:["facts.freshnessHours"]}))?.value as AdminConfig | null ?? null;
+    } catch { return 0; }
+  }
+  const clocks = factClocks(config);
+  return Math.min(...(["officeholder","contact","portrait","money","outcome","vote","statement"] as const).map(kind => clocks.windowHours(kind))) * 3_600_000;
+}
 export type PeopleSourceProbeAcquire = (request: SourceRequest, signal: AbortSignal, now: string) => Promise<KnownRelease>;
 export async function acquirePeopleSourceProbe(input: {
   readonly request: SourceRequest; readonly state: string; readonly sourceId: string;
@@ -108,6 +130,8 @@ export async function acquirePeopleSourceProbe(input: {
 export async function probePeopleSource(input: {
   readonly store: RoutineDataStore; readonly sourceId: string; readonly state: string; readonly now: string;
   readonly signal: AbortSignal; readonly dependencies: SourceDependencies; readonly acquire: PeopleSourceProbeAcquire;
+  readonly checkpoint?: Pick<CivicReadCache,"readCheckpoint" | "checkpoint">;
+  readonly maxSourceAgeMs?: number;
 }): Promise<{ readonly confirmed: SourceHashConfirmation | null; readonly sources: readonly ProbedSource[] }> {
   const jurisdiction = peopleJurisdiction(input.state), recordClass = peopleSourceRecordClass(input.sourceId), scope = peopleSourceScope(jurisdiction,input.sourceId);
   const head = await input.store.readSourceHead(recordClass,scope);
@@ -117,24 +141,42 @@ export async function probePeopleSource(input: {
     !plan.requests.length || plan.discovery !== discoveryInputs(input.state,input.sourceId,input.now) ||
     canonicalCivicDataJson(plan.dependencies) !== canonicalCivicDataJson(input.dependencies) ||
     plan.nextTermAt && Date.parse(plan.nextTermAt) <= Date.parse(input.now)) return {confirmed:null,sources:[]};
-  const sources: ProbedSource[] = [], pages: StatePeopleAcquisition[] = [];
-  for (const priorRequest of plan.requests) {
+  const cache = input.checkpoint ?? runtimeCivicReadCache().jobState(), progressKey = `${input.sourceId}:${input.state}`;
+  const context = hash([head.versionId,plan,input.dependencies]);
+  const progress = await cache.readCheckpoint<ProbeProgress>(PROBE_PROGRESS,progressKey);
+  const maxAgeMs = input.maxSourceAgeMs ?? await probeFreshnessMs(input.now);
+  const priorRecords = progress?.context === context ? progress.records : [];
+  const records: ProbeProgressRecord[] = [], sources: ProbedSource[] = [];
+  for (let index = 0; index < plan.requests.length; index++) {
+    const priorRequest = plan.requests[index];
     input.signal.throwIfAborted();
     const request = currentRequest(priorRequest,input.now);
+    const saved = priorRecords[index];
+    if (saved && canonicalCivicDataJson(saved.request) === canonicalCivicDataJson(request) &&
+      Date.parse(saved.release.checkedAt) > Date.parse(input.now) - maxAgeMs && saved.release.sha256 === priorRequest.rawHash) {
+      records.push(saved); continue;
+    }
     try {
       const release = await input.acquire(request,input.signal,input.now);
       if (release.outage || release.httpStatus < 200 || release.httpStatus >= 300 || !release.bytes.length) return {confirmed:null,sources};
-      sources.push({request,release});
-      pages.push({ ...request,requestedUrl:release.requestedUrl,finalUrl:release.finalUrl,httpStatus:release.httpStatus,
-        body: new TextDecoder("utf-8",{fatal:true}).decode(release.bytes),retrievedAt:release.retrievedAt,rawHash:release.sha256,sourceCheck:knownReleaseSourceCheck(release) });
+      if (release.sha256 !== priorRequest.rawHash) sources.push({request,release});
+      const {bytes:_bytes,...metadata} = release;
+      records.push({request,release:metadata});
+      await cache.checkpoint(PROBE_PROGRESS,progressKey,{context,records},context);
     } catch { input.signal.throwIfAborted(); return {confirmed:null,sources}; }
   }
+  const pages = records.map(({request,release}) => ({...request,requestedUrl:release.requestedUrl,finalUrl:release.finalUrl,
+    httpStatus:release.httpStatus,retrievedAt:release.retrievedAt,capture:{rawHash:release.sha256},sourceCheck:knownReleaseSourceCheck(release)}));
   const rawHash = sourceContentHash(pages,{normalizationInputHash:plan.normalizationInputHash});
   const first = pages[0], check = pages.map(page => page.sourceCheck!).sort((a,b) => a.checkedAt.localeCompare(b.checkedAt))[0];
   const confirmed = await confirmSourceHashUnchanged({store:input.store,sourceId:input.sourceId,recordClass,scope,
     parserVersion:sourceAuthority(input.sourceId)?.parserVersion ?? "people-sources/1",rawHash,now:input.now,complete:true,
     retrieval:{requestedUrl:first.requestedUrl,finalUrl:first.finalUrl,httpStatus:first.httpStatus,rawHash,
       retrievedAt:pages.map(page=>page.retrievedAt).sort().at(-1)!,sourceCheck:check} });
+  if (confirmed) {
+    await recordPeopleSourceChecks({store:input.store,head:confirmed.head,pages});
+    await cache.checkpoint(PROBE_PROGRESS,progressKey,{context,records:[]},context);
+  }
   return {confirmed,sources};
 }
 

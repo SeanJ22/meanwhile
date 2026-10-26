@@ -91,7 +91,7 @@ import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, withRegistryRuntimeStates } from "../lib/registry/runtime-read-model.ts";
 import { requireRegistryState, statesForRegistryDivisions } from "../lib/civic-data/state-scopes.ts";
 import { normalizeFamilyMeetingCitations, placePublishedMeetingPins, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/publish-pins.ts";
-import { currentVenueCache, type VenueEntry } from "../lib/meetings/venue-cache.ts";
+import { currentVenueCache, withVenueEntries, type VenueEntry } from "../lib/meetings/venue-cache.ts";
 import { scopedMeetingSource } from "./lib/scoped-meeting-source.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
@@ -102,8 +102,11 @@ import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-
 import {
   DERIVED_WIRING_SOURCE_NAMES,
   familyMembers,
+  type DerivedWiringRecord,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { readStateWiringRows } from "../lib/civic-data/keyed-government-lookup.ts";
+import { readMeetingFamilyDependencies } from "../lib/civic-data/meeting-family-dependencies.ts";
+import { meetingVenueChoiceHash } from "../lib/civic-data/meeting-venue-inputs.ts";
 import {
   buildDerivedFamily,
   derivedFamilyCandidate,
@@ -580,7 +583,7 @@ export async function promoteDerivedMeetingFamily(
   store: RoutineDataStore,
   partition: MeetingPartitionContract,
   /* The registry and venue preload, run only once the family has a member: a family with none reads nothing else. */
-  prepare: () => Promise<void> = async () => {},
+  prepare: (members?: readonly DerivedWiringRecord[]) => Promise<readonly VenueEntry[] | void> = async () => {},
   facts?: Omit<MeetingFactsTarget, "responses">,
   sourceSession?: Awaited<ReturnType<typeof meetingSourceSession>>,
   sourceInputHash?: string,
@@ -589,12 +592,12 @@ export async function promoteDerivedMeetingFamily(
   if (!sourceSession) {
     const state = statesForRegistryDivisions([partition.derivedFamily ?? partition.bodyId])[0]!;
     const venue = requiredManualProductionContract("venue-resolutions");
-    const dependencies = await readSourceProbeDependencies(store, [
+    const sourceDependencies = await readSourceProbeDependencies(store, [
       { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
       { recordClass: venue.recordClass, scope: venue.scope },
       { recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE },
     ]);
-    sourceInputHash = meetingSourceInputHash(partition, generatedAt, dependencies);
+    sourceInputHash = meetingSourceInputHash(partition, generatedAt, { sources: sourceDependencies, venueChoices: await meetingVenueChoiceHash(facts?.db.query ?? factReader()) });
     const heldHead = facts ? await store.readSourceHead("MEETING", partition.scope) : null;
     const heldBodies = heldHead ? await store.readCandidatePath<string[]>(heldHead.versionId, ["normalizedPayload", "sourceProbe", "bodyIds"]) ?? [] : [];
     sourceSession = await meetingSourceSession(partition, sourceInputHash, store, generatedAt,
@@ -628,7 +631,7 @@ export async function promoteDerivedMeetingFamily(
   const fetchImpl = sourceSession?.fetch ?? retaining.fetch;
   for (const group of derivedFamilyReadGroups(members)) {
     if (!meetingSourceBudgetAvailable()) { await sourceSession?.defer(); break; }
-    const acquire = () => readDerivedFamilyMembers(group, fetchImpl);
+    const acquire = () => readDerivedFamilyMembers(group, fetchImpl, undefined, undefined, () => prepare(members));
     const acquired = sourceSession ? await sourceSession.run(acquire) : await acquire();
     for (const read of acquired) console.log(`  ${read.member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
     reads.push(...acquired);
@@ -644,7 +647,8 @@ export async function promoteDerivedMeetingFamily(
     httpStatus: acquisition.httpStatus, rawHash: acquisition.rawHash, retrievedAt: read.retrievedAt, horizonDay: read.horizonDay ?? generatedAt.slice(0, 10),
   })))];
   let complete = reads.length === members.filter(member => member.status === "ACTIVE").length && reads.every(read => familyMemberReadIssue(read) === null);
-  await prepare();
+  if (!reads.some(read => familyMemberReadIssue(read) === null)) return refuse(jobFailureDetail("No member source completed; held meeting rows remain pointed without a payload read."), "JOB");
+  await prepare(members);
   reads = reads.map(read => read.ok ? { ...read, freshMeetings: resolveAttribution([...read.freshMeetings]) } : read);
   const previous = await readPreviousMeetingPartition(store, partition);
   const history = await moveConcludedMeetingsForPartition(store, partition, previous, generatedAt);
@@ -891,18 +895,24 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
   options: MeetingIngestOptions, dryRun: boolean): Promise<MeetingIngestResult> {
   const store = options.store ?? new PostgresRoutineDataStore();
   let prepared = false;
-  const prepare = async () => {
-    if (prepared) return;
+  let preparedVenues: readonly VenueEntry[] | undefined;
+  const prepare = async (members?: readonly DerivedWiringRecord[]) => {
+    if (prepared) return preparedVenues;
     if (options.registry) {
       if (partitions.length !== 1 || options.registry.bodies.length !== 1 || options.registry.bodies[0]!.id !== partitions[0]!.bodyId) {
         throw new Error("INGEST_PREPARED_REGISTRY_NOT_ONE_BODY");
       }
       REGISTRY = options.registry;
+      preparedVenues = options.venues;
     } else {
-      await preloadCanonicalMeetingDependencies({ sourceName: "composite", state });
-      REGISTRY = getRegistryRuntimeReadModel().registry;
+      const query = options.facts?.db.query ?? factReader();
+      if (!query || !members) throw new Error("INGEST_MEETING_FAMILY_DEPENDENCIES_UNAVAILABLE");
+      const held = await readMeetingFamilyDependencies(query, state, members, new Date().toISOString());
+      REGISTRY = held.registry;
+      preparedVenues = held.venues;
     }
     prepared = true;
+    return preparedVenues;
   };
   const results: MeetingIngestResult[] = [];
   const lastStartMs = passDeadlineFromEnv() - 45_000;
@@ -921,13 +931,13 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
         continue;
       }
       const at = new Date().toISOString(), venue = requiredManualProductionContract("venue-resolutions");
-      const dependencies = await readSourceProbeDependencies(store, [
+      const facts = options.facts ?? { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) };
+      const sourceDependencies = await readSourceProbeDependencies(store, [
         { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
         { recordClass: venue.recordClass, scope: venue.scope },
         ...(partition.derivedFamily ? [{ recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE }] : []),
       ]);
-      const sourceInputHash = meetingSourceInputHash(partition, at, dependencies);
-      const facts = options.facts ?? { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) };
+      const sourceInputHash = meetingSourceInputHash(partition, at, { sources: sourceDependencies, venueChoices: await meetingVenueChoiceHash(facts.db.query) });
       const sourceHead = partition.derivedFamily ? await store.readSourceHead("MEETING", partition.scope) : null;
       const sourceBodies = partition.derivedFamily ? sourceHead ? await store.readCandidatePath<string[]>(sourceHead.versionId, ["normalizedPayload", "sourceProbe", "bodyIds"]) ?? [] : [] : [partition.bodyId];
       const sourceSession = dryRun ? undefined : await meetingSourceSession(partition, sourceInputHash, store, at, facts.vault,
@@ -1043,9 +1053,11 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
     : null;
   if (previous && partitions.length === 1 && previous.meetings.some(meeting => meeting.bodyId !== partitions[0]!.bodyId)) throw new Error("INGEST_PREVIOUS_NOT_ONE_BODY");
   const raw = retained.value;
+  const normalize = () => (source as MeetingSource<unknown>).normalize(raw as unknown[]);
+  const normalized = options.venues ? withVenueEntries(options.venues, normalize) : normalize();
 
   const meetings: Meeting[] = resolveAttribution(
-    [...retainPreviouslyVerifiedVenuePoints((source as MeetingSource<unknown>).normalize(raw as unknown[]), previous?.meetings ?? [])]
+    [...retainPreviouslyVerifiedVenuePoints(normalized, previous?.meetings ?? [])]
       .map(meeting => {
         const prior = previous?.meetings.find(row => row.id === meeting.id);
         return prior?.location && meeting.location === prior.location ? { ...meeting,

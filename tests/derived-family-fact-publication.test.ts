@@ -21,6 +21,7 @@ import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { reconcileSuccessfulMeetingPartition, retrieveHeldAgendas, seedHeldAgendaDocuments, bindAgendaSourceObservations } from "../scripts/ingest.ts";
 import { AgendaDocumentStore } from "../lib/meetings/agenda-documents.ts";
 import { linkedMeetingSourceInputs } from "../lib/civic-data/meeting-linked-source.ts";
+import { meetingVenueChoiceHash } from "../lib/civic-data/meeting-venue-inputs.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { withDerivedSourceContent, derivedSourceContentHash } from "../lib/civic-data/derived-source-hash.ts";
 import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
@@ -91,7 +92,7 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
     withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
     DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue, sourceHashReceiptFields, ZERO_RELEASE_EVENTS,
     statesForRegistryDivisions, stateRegistryRuntimeScope, requiredManualProductionContract, readSourceProbeDependencies,
-    meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable,
+    meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable, meetingVenueChoiceHash,
     AgendaDocumentStore, retrieveHeldAgendas, seedHeldAgendaDocuments, bindAgendaSourceObservations, linkedMeetingSourceInputs,
     meetingSourceSession: async (_partition: unknown, _hash: unknown, store: MemoryRoutineDataStore, _now: string, _vault: unknown,
       onSource?: (response: unknown) => Promise<void>) => {

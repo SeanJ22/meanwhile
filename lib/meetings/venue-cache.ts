@@ -2,6 +2,7 @@ import { CURATED_PREFIX } from "../ocd/curated.ts";
 import type { MeetingVenueGap, OcdId } from "../sources/types.ts";
 import { currentCuratedReaderRecords } from "../civic-data/curated-reader-read-model.ts";
 import { exactVenueMatchContentKey } from "./venue-record-identity.ts";
+import { AsyncLocalStorage } from "node:async_hooks";
 
 /**
  * Venue resolutions keyed on `(sourceId, bodyScope, rawLocationString)`. An unknown venue never places a meeting and
@@ -1021,8 +1022,16 @@ export const VENUE_CACHE: VenueEntry[] = [
   },
 ];
 
+const selectedVenues = new AsyncLocalStorage<readonly VenueEntry[]>();
+/** A native source normalizer holds only its selected body/tenant venues. */
+export function withVenueEntries<T>(entries: readonly VenueEntry[], operation: () => T): T {
+  return selectedVenues.run(entries, operation);
+}
+
 /** The exact currently promoted venue-resolution projection. */
 export function currentVenueCache(): readonly VenueEntry[] {
+  const selected = selectedVenues.getStore();
+  if (selected) return selected;
   const seed = VENUE_CACHE.map((value) => ({
     id: venueResolutionRecordId(value),
     ...value,

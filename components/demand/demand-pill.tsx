@@ -4,7 +4,7 @@ import { useState } from "react";
 import { getOrCreateBrowserKey, mintBrowserKey } from "@/lib/state/browser-key";
 
 /**
- * "Ask us to find this" One tap records one ask; there is no
+ * "Want us to get this sooner?" One tap records one ask; there is no
  * undo, since rows carry no identifier to retract. It never shows a count or
  * anything about other readers' taps, and has no read path to do so. A failed
  * write says so.
@@ -20,13 +20,16 @@ export function DemandPill({
   lat = null,
   lng = null,
   className,
+  inline = false,
 }: {
   subjectType: DemandSubjectType;
   subjectId: string;
   lat?: number | null;
   lng?: number | null;
   className?: string;
+  inline?: boolean;
 }) {
+  const Frame = inline ? "span" : "p";
   const [phase, setPhase] = useState<Phase>("IDLE");
 
   const send = async () => {
@@ -57,18 +60,18 @@ export function DemandPill({
 
   if (phase === "NOTED") {
     return (
-      <p
+      <Frame
         data-demand-pill={subjectType}
         data-demand-state="NOTED"
         className={`text-[0.6875rem] leading-relaxed text-muted ${className ?? ""}`}
       >
         Noted.
-      </p>
+      </Frame>
     );
   }
 
   return (
-    <p className={className}>
+    <Frame className={className}>
       <button
         type="button"
         data-demand-pill={subjectType}
@@ -78,13 +81,13 @@ export function DemandPill({
         onClick={() => void send()}
         className="cursor-pointer text-[0.6875rem] text-link hover:underline disabled:cursor-default disabled:text-muted"
       >
-        {phase === "SENDING" ? "Noting…" : "Ask us to find this"}
+        {phase === "SENDING" ? "Noting…" : "Want us to get this sooner?"}
       </button>
       {phase === "FAILED" && (
         <span className="ml-1.5 text-[0.625rem] text-muted">
           We couldn&apos;t note that just now.
         </span>
       )}
-    </p>
+    </Frame>
   );
 }

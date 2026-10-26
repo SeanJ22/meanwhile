@@ -26,14 +26,12 @@ interface RowOptions {
   children?: ReactNode;
   /** A containing card/list assembles these exact rows once in its Sources. */
   sourcesInParent?: boolean;
-  /** A containing list assembles these rows' missing facts once per group. */
-  gapsInParent?: boolean;
 }
 type RowProps = RowOptions & ({ meeting: Meeting; record?: never } | { record: EvidenceRecord; meeting?: never });
 
 /** One meeting row on map, popup, doors and Ask; missing facts are never inferred. */
 export function MeetingRow(props: RowProps) {
-  const { compact = false, children, sourcesInParent = false, gapsInParent = false } = props;
+  const { compact = false, children, sourcesInParent = false } = props;
   if (props.record) {
     const record = props.record;
     return <div data-meeting-row data-meeting-id={record.meetingId ?? record.id} className="t-detail leading-relaxed">
@@ -53,7 +51,6 @@ export function MeetingRow(props: RowProps) {
   const agendaLink = meeting.agendaUrl ?? meeting.provenance.sourceUrl;
   const recording = meeting.status === "CONCLUDED" ? meeting.videoUrl : null;
   return <article data-meeting-row data-meeting-id={meeting.id} className={compact ? "py-2 t-detail leading-relaxed" : "px-5 pb-5 pt-4 t-body leading-relaxed"}>
-    {!gapsInParent && <CardGapsContribution id={`meeting:${meeting.id}`} gaps={meetingCardGaps(meeting)} />}
     <h3 className="font-display t-heading font-semibold text-paper">
       {onOpen ? <button type="button" className="text-left hover:text-signal" onClick={() => onOpen(meeting)}>{readerText(title)}</button> : readerText(title)}
     </h3>
@@ -77,6 +74,7 @@ export function MeetingRow(props: RowProps) {
     </div>}
     {!compact && meeting.status === "SCHEDULED" && <CalendarLinks meeting={meeting} />}
     {!sourcesInParent && <CardSourcesContribution id={`meeting:${meeting.id}`} sources={meetingCardSources(meeting, [])} />}
+    <CardGapsContribution id={`meeting:${meeting.id}`} gaps={meetingCardGaps(meeting)} />
     {children}
   </article>;
 }

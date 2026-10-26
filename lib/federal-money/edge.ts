@@ -12,6 +12,9 @@ interface FederalMoneyPlaceSegment {
   readonly contentHash: string;
   readonly checkedAt: string;
   readonly latestPublication: string | null;
+  readonly latestActionDate?: string | null;
+  readonly latestActionId?: string;
+  readonly actionOrderVersion?: 2;
   readonly pages: readonly FederalMoneyPageRef[];
 }
 export interface FederalMoneyPlaceIndex {
@@ -26,6 +29,8 @@ export interface FederalMoneyPlaceSnapshot {
   readonly place: string;
   segments: string | null;
   order: string | null;
+  /** Zero once every held segment is ordered by its actual action date. */
+  legacyActionSegments?: number;
 }
 export interface FederalMoneySegmentArtifact extends FederalMoneyPlaceSegment {
   readonly formatVersion: 3;
@@ -33,8 +38,15 @@ export interface FederalMoneySegmentArtifact extends FederalMoneyPlaceSegment {
   readonly place: string;
   readonly segmentId: string;
 }
+export const FEDERAL_MONEY_ACTION_ORDER_BASE = 8_000_000_000_000_000;
 export function federalMoneySegmentOrder(segment: FederalMoneySegmentArtifact): string {
-  const time = segment.latestPublication ? Date.parse(segment.latestPublication) : 0;
+  const date = segment.latestActionDate ?? segment.latestPublication;
+  if (segment.actionOrderVersion === 2) {
+    const time = segment.latestActionDate ? Date.parse(segment.latestActionDate) : null;
+    const ordered = time !== null && Number.isFinite(time) ? String(FEDERAL_MONEY_ACTION_ORDER_BASE - time).padStart(16, "0") : "9999999999999999";
+    return `${ordered}:${encodeURIComponent(segment.latestActionId ?? "")}:${segment.segmentId}`;
+  }
+  const time = date ? Date.parse(date) : 0;
   return `${String(999999999999999 - time).padStart(15, "0")}:${segment.segmentId}`;
 }
 export interface FederalMoneyPlacePage {
@@ -64,7 +76,7 @@ export function federalMoneyFactPlaces(fact: FederalMoneyFact): string[] {
 }
 export function federalMoneyTargetPlaces(target: FederalMoneyTarget): string[] {
   const county = /^(.+\/county:[^/]+)(?:\/|$)/.exec(target.divisionId)?.[1];
-  return [...new Set([`division:${target.divisionId}`, ...(target.bodyId ? [`body:${target.bodyId}`] : []), ...(county ? [`division:${county}`] : [])])];
+  return [...new Set([`division:${target.divisionId}`, ...(target.bodyId ? [target.bodyId, ...(target.bodyIds ?? [])].map(id => `body:${id}`) : []), ...(county ? [`division:${county}`] : [])])];
 }
 
 const FEDERAL_MONEY_INDEX_PAGE_SIZE = 64;

@@ -1,9 +1,8 @@
 import { pathToFileURL } from "node:url";
 import { readerFactDb } from "../lib/facts/db.ts";
-import type { FactDb, Query } from "../lib/facts/publish.ts";
+import type { Query } from "../lib/facts/publish.ts";
 import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
 import { productionBuildCanApply } from "./db-apply.mts";
-import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 import { seedRuntimeBodyPageSubjects } from "../lib/reader/page-subjects.ts";
 export { seedRuntimeBodyPageSubjects } from "../lib/reader/page-subjects.ts";
@@ -12,13 +11,6 @@ import { lookupZcta } from "../lib/geo/zcta.ts";
 import { readZipPlace } from "../lib/reader/national.ts";
 import { stateOcdIdFrom } from "../lib/ocd/state-division.ts";
 import { readerTerritory,territoryBodies } from "../lib/reader/location.ts";
-
-type PageDatabase = FactDb & { readonly query: Query };
-interface PreparationOptions {
-  readonly db: PageDatabase;
-  readonly rebuild?: typeof rebuildPlacePages;
-  readonly budgetMs?: number;
-}
 
 interface ZipSeedOptions {
   readonly states?: readonly string[];
@@ -69,47 +61,28 @@ export async function seedZipPagePlaces(query: Query, options: ZipSeedOptions = 
   return zips;
 }
 
-/** The deployment builds pages for a fixed time; the published worker builds the rest while readers compose unbuilt places. */
-export const PREPARE_BUDGET_MS = 6 * 60_000;
-
-export async function preparePlacePages({ db, rebuild = rebuildPlacePages, budgetMs = PREPARE_BUDGET_MS }: PreparationOptions) {
-  await db.query(`INSERT INTO rebuild_queue(place_id,queued_at)
+/** Every place and body without a ready page joins the queue the standing runner's place-page lane drains. */
+export async function queueUnbuiltPlacePages(query: Query): Promise<number> {
+  const [queued] = await query(`WITH queued AS (INSERT INTO rebuild_queue(place_id,queued_at)
     SELECT e.id,statement_timestamp() FROM entity e LEFT JOIN place_page p ON p.place_id=e.id
     WHERE e.kind IN ('place','body') AND p.place_id IS NULL
-    ON CONFLICT(place_id) DO NOTHING`);
-  const deadline = Date.now() + budgetMs;
-  let rebuilt = 0, failed = 0, remaining = 0;
-  while (Date.now() < deadline) {
-    const result = await rebuild({ db, limit: 512, concurrency: 4, timeBudgetMs: Math.min(240_000, deadline - Date.now()), initialBackfill: true });
-    rebuilt += result.rebuilt;
-    failed += result.failed;
-    remaining = result.remaining;
-    console.log(JSON.stringify({ placePages: "before deployment", rebuilt, remaining, failed }));
-    // Leased, failed and remaining pages stay queued for the published worker.
-    if (!remaining || !result.rebuilt) break;
-  }
-  const [population] = await db.query(`SELECT
-    count(*) FILTER (WHERE e.kind='place')::int AS places,
-    count(*) FILTER (WHERE e.kind='body')::int AS bodies,
-    count(*) FILTER (WHERE p.place_id IS NULL)::int AS missing
-    FROM entity e LEFT JOIN place_page p ON p.place_id=e.id WHERE e.kind IN ('place','body')`);
-  return { rebuilt, failed, remaining, places: Number(population?.places ?? 0), bodies: Number(population?.bodies ?? 0),
-    missing: Number(population?.missing ?? 0) };
+    ON CONFLICT(place_id) DO NOTHING RETURNING 1) SELECT count(*)::int AS n FROM queued`);
+  return Number(queued?.n ?? 0);
 }
 
 export async function prepareProductionPlacePages(env: Record<string,string|undefined> = process.env): Promise<void> {
   if (!productionBuildCanApply(env)) {
-    console.log("place pages: initial publication skipped outside the Netlify production main build; writes=0");
+    console.log("place pages: identities and queue skipped outside the Netlify production main build; writes=0");
     return;
   }
   const handle = resolveProductionWriteHandle(env);
   if (handle.host.replace(/-pooler(?=\.)/, "").split(".")[0] !== "ep-dry-river-axwtolzc" || !handle.host.endsWith(".neon.tech"))
-    throw new Error("Initial place pages require the production reader database");
-  const db=readerFactDb(handle.connection);
-  const runtimeBodies=await seedRuntimeBodyPageSubjects(db.query);
-  const zips=await seedZipPagePlaces(db.query);
-  const result = await preparePlacePages({ db });
-  console.log(JSON.stringify({ placePages: "ready for deployment", zips, runtimeBodies, ...result }));
+    throw new Error("Place page identities require the production reader database");
+  const {query}=readerFactDb(handle.connection);
+  const runtimeBodies=await seedRuntimeBodyPageSubjects(query);
+  const zips=await seedZipPagePlaces(query);
+  const queued = await queueUnbuiltPlacePages(query);
+  console.log(JSON.stringify({ placePages: "queued for the runner", zips, runtimeBodies, queued }));
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

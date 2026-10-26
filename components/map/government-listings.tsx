@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import type { CardSource } from "@/lib/officials/card-sources";
 import type { RegistrationGovernmentListing } from "@/lib/registration/listings";
 import { governmentStateOf } from "@/lib/registration/listings";
 import { StateCampaignSection } from "@/components/funding/state-campaign-section";
@@ -11,10 +11,21 @@ import { CardFooter } from "@/components/ui/card-footer";
 import { federalMoneyStateDivision } from "@/lib/federal-money/view";
 import { readerGovernmentName, readerText } from "@/lib/text/reader-names";
 
+/** The saved inventory and contact pages behind this government's listing. */
+function listingSources(row: RegistrationGovernmentListing): CardSource[] {
+  const year = /^cog-(\d{4})$/.exec(row.sourceVintage)?.[1];
+  return [
+    { what: year ? `Government name, type and contact information from the ${year} Census of Governments` : "Government name, type and contact information", provenance: row.provenance },
+    ...(row.additionalSources ?? []).map(provenance => ({ what: "Government name and contact information", provenance })),
+    ...Object.values(row.contactProvenance ?? {}).filter((source): source is NonNullable<typeof source> => Boolean(source)).map(provenance => ({ what: "How to contact this government", provenance })),
+    ...(row.govDomains ?? []).map(link => ({ what: "This government's official website", provenance: { sourceUrl: link.sourceUrl, sourceOrg: "Cybersecurity and Infrastructure Security Agency", collectedAt: link.checkedAt, verifiedAt: null } })),
+  ];
+}
+
 function Listing({ row }: { row: RegistrationGovernmentListing }) {
   const [open, setOpen] = useState(false);
   const divisionId = row.associations.length === 1 ? row.associations[0].divisionId : federalMoneyStateDivision(typeof row.state === "string" ? row.state : governmentStateOf(row.id));
-  const { register, sources, insideCard } = useCardSourceRegistry([{ what: `Government inventory, ${row.sourceVintage}`, provenance: { kind: "OFFICIAL", sourceOrg: row.provenance.sourceOrg, sourceUrl: row.provenance.sourceUrl, collectedAt: row.provenance.collectedAt, verifiedAt: null } }], row.id);
+  const { register, sources, insideCard } = useCardSourceRegistry(listingSources(row), row.id);
   return <CardSourceContext value={register}><details className="mt-2" data-government-listing={row.id} onToggle={event => setOpen(event.currentTarget.open)}>
     <summary className="cursor-pointer t-body text-paper">{readerGovernmentName(row.name, null)}</summary>
     <div className="mt-1 space-y-1 t-detail text-voice">
@@ -27,15 +38,10 @@ function Listing({ row }: { row: RegistrationGovernmentListing }) {
       {row.officePhone && <p>Office phone: <a href={`tel:${row.officePhone}`} className="text-link">{row.officePhone}</a></p>}
       {row.website && <p><a href={row.website} target="_blank" rel="noopener noreferrer" className="text-link">Official website</a></p>}
       {row.govDomains?.map(link => <p key={link.domain}><a href={link.website} target="_blank" rel="noopener noreferrer" className="text-link">{link.domain}</a></p>)}
-      <CardSourcesContribution id={`government-listing:${row.id}`} sources={[
-        { what: `${row.name} · ${row.sourceVintage}`, provenance: row.provenance },
-        ...(row.additionalSources ?? []).map(source => ({ what: `${row.name} · additional listing`, provenance: source })),
-        ...(row.govDomains ?? []).map(link => ({ what: `${link.domain} · CISA .gov registry`,
-          provenance: { sourceUrl: link.sourceUrl, sourceOrg: "CISA .gov registry", collectedAt: link.checkedAt, verifiedAt: null } })),
-      ]} />
-      {open && divisionId && <div className="pt-3"><h4 className="t-detail font-medium text-paper">Federal money and records</h4><FederalMoneySection divisionId={divisionId} bodyId={row.id} /></div>}
+      {open && divisionId && <div className="pt-3"><h4 className="t-detail font-medium text-paper">Federal money and records</h4><FederalMoneySection divisionId={divisionId} bodyId={row.id}
+        recipientIds={[row.id, ...(row.bodyIds ?? []), ...(row.aliases ?? [])]} recipientNames={row.recipientNameUnique === true ? [row.name] : undefined} recipientState={row.state} /></div>}
       {open && row.associations.length === 1 && <StateCampaignSection divisionId={row.associations[0].divisionId} />}
-      {!insideCard && <CardFooter gaps={[]} sources={sources} />}
+      {!insideCard && <CardFooter sources={sources} />}
     </div>
   </details></CardSourceContext>;
 }

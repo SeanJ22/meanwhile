@@ -5,6 +5,7 @@ import { isDoorRecord, type DoorRecord, type DoorRepository, type DoorValidators
 
 export interface ProbeResponse {
   readonly status: number;
+  readonly finalUrl?: string;
   readonly headers: { get(name: string): string | null };
   /** Only called when the response carries a body worth hashing. */
   bytes(): Promise<Uint8Array>;

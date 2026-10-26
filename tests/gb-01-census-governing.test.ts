@@ -10,7 +10,7 @@ import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
 import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { preparePlacePages } from "../scripts/prepare-place-pages.mts";
+import { queueUnbuiltPlacePages } from "../scripts/prepare-place-pages.mts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { Division } from "../lib/registry/types.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -81,7 +81,7 @@ test("one Oregon pass makes Portland's city, county and school boards through th
     assert.deepEqual(await db.query(`SELECT f.entity_id,f.field,f.value,f.provenance_kind,s.url FROM fact f JOIN source_copy s ON s.id=f.source_copy_id
       WHERE f.entity_id='or:county:county-of-multnomah#governing' ORDER BY f.field`), [
       { entity_id: "or:county:county-of-multnomah#governing", field: "homepage", value: "http://www.multco.us/", provenance_kind: "OFFICIAL", url: CENSUS },
-      { entity_id: "or:county:county-of-multnomah#governing", field: "office_address", value: "501 SE HAWTHORNE BLVD, STE 600, PORTLAND, OR, 97214-3588", provenance_kind: "OFFICIAL", url: CENSUS },
+      { entity_id: "or:county:county-of-multnomah#governing", field: "mailing_address", value: "501 SE HAWTHORNE BLVD, STE 600, PORTLAND, OR, 97214-3588", provenance_kind: "OFFICIAL", url: CENSUS },
     ]);
     // The door queued each board's places; the scheduled page worker builds their ready pages before a reader opens them.
     const pages = await rebuildPlacePages({ db, purge, concurrency: 1 });
@@ -103,13 +103,12 @@ test("one Oregon pass makes Portland's city, county and school boards through th
     const coverage = stateCoverage({ state: "OR", registry: runtime, version: "gb-01" }, ids, 0, 0, [], place.bodies,
       [division(PORTLAND, "place", "Portland city"), division(MULTNOMAH, "county", "Multnomah County"), division(SCHOOL, "school_district", "Portland School District 1J")]);
     assert.deepEqual(coverage.bodies.map(body => [body.bodyId, body.name, body.bodyClass]).sort(), [
-      ["or:city:city-of-portland#governing", "City Of Portland governing board", "GOVERNING"],
-      ["or:county:county-of-multnomah#governing", "County Of Multnomah governing board", "GOVERNING"],
-      ["or:school:portland-sch-dist-1j#board", "Portland Sch Dist 1j school board", "GOVERNING"],
+      ["or:city:city-of-portland#governing", "City of Portland", "GOVERNING"],
+      ["or:county:county-of-multnomah#governing", "Multnomah County", "GOVERNING"],
+      ["or:school:portland-sch-dist-1j#board", "Portland School District 1J", "GOVERNING"],
     ]);
     const city = coverage.bodies.find(body => body.bodyId === "or:city:city-of-portland#governing")!;
-    assert.equal(city.officeContact?.address, "1120 SW 5TH AVE, ROOM 1250, PORTLAND, OR, 97204-1912");
-    assert.equal(city.officeContact?.provenance.sourceUrl, CENSUS);
+    assert.equal(city.officeContact?.address, undefined, "a published mailing address alone does not establish a physical office");
   } finally { await pg.close(); }
 });
 
@@ -184,8 +183,9 @@ test("LA Metro's boards filed under Oregon move to California with their ids and
     assert.equal(await canonicalBodyId(db.query, `${metro}#body:la-metro-board-7`), la[7]);
     assert.equal(await canonicalBodyId(db.query, `${LA}#body:la-metro-board-7`), la[7]);
     assert.equal(await canonicalBodyId(db.query, `${metro}#body:oregon-metro-board-1`), `${metro}#body:oregon-metro-board-1`);
-    // The deployment builds every place's ready page after its migrations, before the reader that reads them is published.
-    await preparePlacePages({ db });
+    // The deployment queues every unbuilt place after its migrations; the runner's turn builds them.
+    await queueUnbuiltPlacePages(db.query);
+    await rebuildPlacePages({ db, purge, limit: Number.MAX_SAFE_INTEGER });
     const county = await readPlacePackage({ state: "CA", divisionIds: [LA] }, db.query);
     assert.equal(county.bodies.filter(body => la.includes(body.id)).length, 66, "Los Angeles County shows LA Metro's boards");
     const state = await readPlacePackage({ state: "OR", divisionIds: [OR] }, db.query);

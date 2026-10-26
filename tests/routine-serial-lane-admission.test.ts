@@ -8,6 +8,7 @@ import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts"
 import { electionLaunchOrder } from "../lib/civic-data/ballot-publication.ts";
 import { placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
 import { routineProcessSlots, workerMemoryHost, workerProcessSlots, type WorkerMemoryOrder } from "../lib/control-plane/workers/worker-slots.ts";
+import { placeMapReservationMiB } from "../lib/place-map/memory.ts";
 import { votingAcquisitionDeadline } from "../scripts/fetch-voting-sites.mts";
 import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 
@@ -31,7 +32,7 @@ test("overdue meetings retain first turn after serial-lane tie ordering, then fi
   assert.deepEqual(routineSerialLanesFirst([jobs[0]!]), [jobs[0]], "a pass with no serial lane keeps its order");
 });
 
-test("memory goes in launch order, and a held waiter is not overtaken by smaller work queued behind it", async () => {
+test("memory goes in launch order, and work that waited a full pass is not overtaken by smaller work queued behind it", async () => {
   const host = workerMemoryHost({ processes: () => [] });
   const peaks: Record<string, number> = { big: 1500 * mib, small: 300 * mib };
   const slots = workerProcessSlots(() => 10, { host, availableBytes: () => 2500 * mib, peakBytes: entry => peaks[entry.split("#")[0]!]! });
@@ -39,9 +40,9 @@ test("memory goes in launch order, and a held waiter is not overtaken by smaller
   const admitted: string[] = [];
   const wait = (entry: string, order?: WorkerMemoryOrder) => slots.acquire(entry, Date.now() + 10_000, order).then(release => { admitted.push(entry); return release; });
   const later = wait("small#later", { priority: 2 });
-  const lane = wait("big#lane", { priority: 1, hold: true });
+  const lane = wait("big#lane", { priority: 1, first: true });
   await new Promise(resolve => setTimeout(resolve, 50));
-  assert.deepEqual(admitted, [], "768 headroom + 300 running + 1500 does not fit 2500; the held lane read keeps the small read out");
+  assert.deepEqual(admitted, [], "768 headroom + 300 running + 1500 does not fit 2500; the waited read keeps the small read out");
   running();
   const laneRelease = await lane;
   assert.deepEqual(admitted, ["big#lane"]);
@@ -54,7 +55,7 @@ test("memory goes in launch order, and a held waiter is not overtaken by smaller
   const bigPlain = slots.acquire("big#plain", Date.now() + 10_000, { priority: 1 }).then(release => { order.push("big#plain"); return release; });
   const smallPlain = slots.acquire("small#plain", Date.now() + 10_000, { priority: 2 }).then(release => { order.push("small#plain"); return release; });
   (await smallPlain)();
-  assert.deepEqual(order, ["small#plain"], "without a hold, work that fits still starts");
+  assert.deepEqual(order, ["small#plain"], "work that has not waited a pass does not hold the queue");
   unheld();
   (await bigPlain)();
 });
@@ -74,7 +75,7 @@ test("a pass whose meeting programs fill memory still runs every read of the peo
   const ordered = routineSerialLanesFirst([...calendars, ...small, ...peopleReads].map(c => ({ task: { command: c.serialLane ? ["scripts/national-people-refresh.mts"] : ["x"] }, c }))).map(({ c }) => c);
   const results = await runBoundedChildPass(ordered, {
     cwd: ".", env: process.env, concurrency: ordered.length,
-    onStarting: async (c, index) => { releases.set(c.id, await slots.acquire(`${c.id}/x.mts`, deadline, { priority: index, hold: c.serialLane !== undefined })); },
+    onStarting: async (c, index) => { releases.set(c.id, await slots.acquire(`${c.id}/x.mts`, deadline, { priority: index, ...c.serialLane ? { first: true as const } : {} })); },
     onSettled: async run => { releases.get(run.id)?.(); },
   }, async (c): Promise<BoundedChildResult> => {
     ran.push(c.id);
@@ -189,4 +190,19 @@ test("due explainers, voting sites and meetings each obtain memory before anothe
   assert.deepEqual([count("voting-sites:"), count("measure-translations:"), count("meetings:")], [9, 9, 8]);
   assert.equal(balancedStarted.length, 26);
   assert.ok(20_244 - (count("voting-sites:") * 512 + count("measure-translations:") * 342 + count("meetings:") * 1447) >= 768);
+});
+
+test("state place maps take an early turn after held ballot files, smallest first, ahead of voting sites and long reads", () => {
+  const maps = ROUTINE_SOURCE_TASKS.filter(task => task.id.startsWith("place-map-")).map(task => ({ task }));
+  assert.equal(maps.length, 56);
+  const ballot = { task: AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:AZ")! };
+  const voting = { task: AUTOMATIC_REFRESH_TASKS.find(task => task.id === "voting-sites:AZ")! };
+  const calendars = Array.from({ length: 3 }, (_, index) => ({ task: { ...meeting, id: `meetings:fixture:${index}` } }));
+  const order = electionLaunchOrder([...calendars, voting, ...maps, ballot]).map(job => job.task.id);
+  assert.equal(order[0], ballot.task.id, "already-held ballot files still publish first");
+  assert.deepEqual(order.slice(1, 57), [...maps].sort((left, right) => placeMapReservationMiB(left.task.id.slice(10)) -
+    placeMapReservationMiB(right.task.id.slice(10))).map(job => job.task.id), "the smallest reservation goes first");
+  assert.equal(order[1], "place-map-as");
+  assert.equal(order[56], "place-map-tx");
+  assert.deepEqual(order.slice(57), [voting.task.id, ...calendars.map(job => job.task.id)]);
 });

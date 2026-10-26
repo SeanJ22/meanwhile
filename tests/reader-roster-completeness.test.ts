@@ -15,17 +15,17 @@ function renderRepresentation(payload: { holders: ReturnType<typeof rosterHolder
     import { renderToStaticMarkup } from 'react-dom/server';
     import { Representation } from './components/map/popup/entity-modal.tsx';
     import { Card } from './components/ui/card.tsx';
-    import { rosterCardGaps } from './components/officials/roster-completeness-gap.tsx';
+    import { CardSection } from './components/officials/card-section.tsx';
     const payload = JSON.parse(readFileSync(0, 'utf8'));
-    const sources = payload.rosterGaps.map(gap => ({ what: 'Roster member identities', provenance: { sourceUrl: gap.sourceUrl, sourceOrg: gap.sourceOrg, collectedAt: gap.readAt, verifiedAt: null } }));
-    console.log(JSON.stringify(renderToStaticMarkup(createElement(Card, { title: 'Members', sources, gaps: rosterCardGaps(payload.rosterGaps), children: createElement(Representation, { holders: payload.holders, gaps: payload.rosterGaps }) }))));
+    const sources = payload.rosterGaps.map(gap => ({ what: 'Who sits on this board', provenance: { sourceUrl: gap.sourceUrl, sourceOrg: gap.sourceOrg, collectedAt: gap.readAt, verifiedAt: null } }));
+    console.log(JSON.stringify(renderToStaticMarkup(createElement(Card, { title: 'Members', sources, children: createElement(CardSection, { title: 'Members', children: createElement(Representation, { holders: payload.holders, gaps: payload.rosterGaps }) }) }))));
   `], { cwd: process.cwd(), input: JSON.stringify(payload), encoding: "utf8", timeout: 120_000, maxBuffer: 4_000_000 });
   const result: unknown = JSON.parse(output);
   assert.ok(typeof result === "string");
   return result;
 }
 
-test("every partial verified roster keeps its members and one counted gap at the card foot", async () => {
+test("every partial verified roster keeps its members and one request inside its Members section", async () => {
   const incomplete = BODY_ROSTERS.flatMap(roster => { const gap = rosterGapForBody(roster.bodyId); return gap ? [{ roster, gap }] : []; });
   assert.ok(incomplete.length > 0);
   for (const { roster, gap } of incomplete) {
@@ -43,9 +43,14 @@ test("every partial verified roster keeps its members and one counted gap at the
     const markup = renderRepresentation(payload);
     assert.equal((markup.match(/data-roster-holder=/g) ?? []).length, holders.length);
     assert.ok(!markup.includes(gap.statement), "the section does not repeat the missing-data paragraph");
-    assert.ok(markup.includes(`member names for ${gap.unresolvedSlots} seat${gap.unresolvedSlots === 1 ? "" : "s"}`));
-    assert.equal((markup.match(/data-card-gap/g) ?? []).length, 1);
-    assert.ok(markup.lastIndexOf("Sources") > markup.indexOf("member names for"));
+    const members = markup.slice(0, markup.indexOf("data-card-footer"));
+    assert.match(members, /data-card-gap="roster-completeness"/);
+    assert.match(members, /working on getting this info/);
+    assert.match(members, /Want us to get this sooner\?/);
+    assert.ok(members.includes(`data-demand-subject="${roster.bodyId}"`));
+    assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1);
+    assert.doesNotMatch(markup, /Still gathering|member names for \d+ seats?/);
+    assert.ok(markup.lastIndexOf("Sources") > markup.indexOf("data-card-gap"));
     assert.ok(markup.includes(gap.sourceUrl));
     assert.ok(!markup.includes("Unused empty-roster note"));
     for (const holder of holders) assert.ok(markup.includes(`data-roster-holder="${holder.id}"`));

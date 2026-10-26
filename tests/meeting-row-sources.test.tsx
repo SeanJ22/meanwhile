@@ -27,17 +27,20 @@ test("only a fresh first-party empty-slot observation contributes a not-posted a
   assert.equal(meetingCardGaps(observed).find(gap => gap.label === "agendas")?.kind, "not-posted");
   for (const meeting of [base, { ...observed, provenance: { ...base.provenance, sourceUrl: null } }, { ...observed, provenance: { ...base.provenance, secondHand: true } }, { ...observed, provenance: { ...base.provenance, collectedAt: "2000-01-01" } }, { ...observed, carried: { source: "calendar", lastFreshAt: "2000-01-01" } }]) {
     assert.equal(meetingCardGaps(meeting).find(gap => gap.label === "agendas")?.kind, "not-held");
-    assert.doesNotMatch(render(meeting), /not posted yet|data-working-on-it|working on getting this info|Want us to get/);
+    assert.doesNotMatch(render(meeting), /not posted yet|Still gathering/);
+    assert.match(render(meeting), /working on getting this info/);
+    assert.match(render(meeting), /Want us to get this sooner\?/);
   }
 });
 
 
-test("a second-hand meeting retains its classification only within Sources", () => {
+test("a second-hand meeting retains its source link and publisher", () => {
   const html = renderToStaticMarkup(<MeetingCard meeting={{ ...base, provenance: { ...base.provenance, secondHand: true } }} />);
   const sourcesAt = html.indexOf('data-card-sources');
   assert.ok(sourcesAt > 0);
   assert.doesNotMatch(html.slice(0, sourcesAt), /Second-hand listing/);
-  assert.match(html.slice(sourcesAt), /Second-hand listing/);
+  assert.match(html.slice(sourcesAt), /Example Clerk/);
+  assert.match(html.slice(sourcesAt), /href="https:\/\/clerk\.example\.gov\/calendar"/);
   assert.doesNotMatch(render(base), /Second-hand listing/);
 });
 
@@ -50,7 +53,9 @@ test("a held meeting page remains available without an agenda or online join lin
   const html = render(meeting);
   assert.match(html, /Online · Via Zoom Webinar<\/div>/);
   assert.match(html, /href="https:\/\/tusd1-schooldesk\.community\.diligentoneplatform\.com\/Portal\/MeetingInformation\.aspx\?Org=Cal&amp;Id=503"[^>]*>Meeting page/);
-  assert.doesNotMatch(html, /Join online|Read the agenda|working on|Want us|Not posted/);
+  assert.doesNotMatch(html, /Join online|Read the agenda|Still gathering/);
+  assert.match(html, /working on getting this info/);
+  assert.match(html, /Want us to get this sooner\?/);
   assert.deepEqual(meetingCardGaps(meeting).map(gap => gap.label), ["agendas", "online join links"]);
 });
 
@@ -61,7 +66,9 @@ test("a missing comment-period field preserves the body's held participation ins
   const html = renderToStaticMarkup(<DataProvider value={data}><HowToBeHeard bodyId={access.bodyId} ocdId={access.ocdId} bodyName="Planning Commission" /></DataProvider>);
   assert.match(html, /Make your voice heard/);
   assert.match(html, /PlanningCommission@tucsonaz.gov/);
-  assert.doesNotMatch(html, /data-card-sources|working on|Want us|UNKNOWN/);
+  assert.doesNotMatch(html, /data-card-sources|UNKNOWN|Still gathering/);
+  assert.match(html, /working on getting this info/);
+  assert.match(html, /Want us to get this sooner\?/);
 });
 
 test("a missing place is omitted while a publisher's held place is shown verbatim", () => {

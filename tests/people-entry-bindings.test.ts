@@ -114,6 +114,23 @@ test("normal publication retains a member's visible identity in the page header"
   assert.ok(saved.outcome.promoted,JSON.stringify(saved.outcome.candidate.receipt?.checks));
 });
 
+test("binding change records retain live identities and a history digest while the people record keeps every snapshot",async()=>{
+  const source="https://legislature.example.gov/members/vito",body='<h1>Representative Vito Barbieri</h1><p>District 3</p>';
+  const history=Array.from({length:20},(_,i)=>({...people[0],id:`old-entry-${i}`,phone:`208-555-${String(i).padStart(4,"0")}`}));
+  const parsed=normalizeOfficialLegislaturePage(body,source,{state:"id",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([people[0]])},at);
+  const person={...parsed.officeholders[0],sourceHolders:history};
+  const saved=await publishPeopleSource({store:new MemoryRoutineDataStore(),vault:new MemoryEvidenceStore(),state:"id",sourceId:"official-state-people",now:at,releaseId:"person-history",roster:roster([person]),
+    acquisitions:[{requestedUrl:source,finalUrl:source,body,httpStatus:200,retrievedAt:at}]});
+  assert.ok(saved.outcome.promoted,JSON.stringify(saved.outcome.candidate.receipt?.checks));
+  const delta=saved.outcome.candidate.candidate.changeSet!.added.find(row=>row.key===`member:${person.id}`)!.after as Record<string,unknown>;
+  assert.equal(delta.sourceHolders,undefined);
+  assert.match(delta.sourceHoldersHash as string,/^[a-f0-9]{64}$/);
+  assert.deepEqual(delta.nativeIds,person.nativeIds);
+  const read=saved.outcome.candidate.candidate.readModel as {roster:OfficeholderSet};
+  assert.equal(read.roster.officeholders[0].sourceHolders?.length,history.length);
+  assert.deepEqual(read.roster.officeholders[0].sourceHolders?.map(row=>row.phone),history.map(row=>row.phone));
+});
+
 test("a newer bound official entry replaces an older official profile's value",()=>{
   const source={...people[0].provenance,kind:"OFFICIAL" as const,sourceUrl:"https://legislature.example.gov/members/vito",collectedAt:"2026-10-20T00:00:00.000Z"};
   const old={...people[0],phone:"208-555-9999",websiteUrl:source.sourceUrl,provenance:source};

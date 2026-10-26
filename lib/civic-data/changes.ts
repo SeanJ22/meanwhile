@@ -621,7 +621,7 @@ export function candidateChangeSet(
   const added = next
     .filter((member) => !priorByKey.has(member.key))
     .map((member) => ({ key: member.key, before: null, after: member.record }));
-  // The persisted before/after stay the exact records; only facts decide.
+  // Compare complete records before compacting retained people history for storage.
   const changed = next
     .filter((member) => priorByKey.has(member.key) && (priorIndex?.members.get(member.key)?.factsHash ?? facts(priorByKey.get(member.key)!)) !== facts(member))
     .map((member) => ({ key: member.key, before: priorByKey.get(member.key)?.record ?? null, after: member.record }));
@@ -637,11 +637,21 @@ export function candidateChangeSet(
     for (const member of priorIndex.members.values()) delete member.record;
   }
   const held = heldCivicRecords(candidate);
+  // People keep their complete source history in the read model. Binding
+  // corrections need the live identities and facts in each delta, plus the
+  // history's digest, rather than another full copy of every source snapshot.
+  const recordForDelta=(record:unknown):unknown=>{
+    const row=object(record);
+    if(candidate.recordClass!=="STATE_LEGISLATOR"||!["official-state-people","people-portraits"].includes(candidate.sourceId)||!row||!Object.hasOwn(row,"sourceHolders"))return record;
+    const {sourceHolders,...fields}=row;
+    return {...fields,sourceHoldersHash:canonicalCivicDataHash(withoutProvenanceStamps(sourceHolders,["collectedAt","verifiedAt"]))};
+  };
+  const deltas=(rows:RoutineChangeSet["changed"])=>rows.map(row=>({...row,before:recordForDelta(row.before),after:recordForDelta(row.after)}));
   return {
     outcome: added.length + changed.length + removed.length > 0 ? "CHANGED" : "UNCHANGED",
-    added,
-    changed,
-    removed,
+    added:deltas(added),
+    changed:deltas(changed),
+    removed:deltas(removed),
     held,
   };
 }

@@ -50,13 +50,12 @@ import {
   ROUTINE_SUPERVISOR_HISTORY_WINDOW,
 } from "../lib/civic-data/supervisor-history.ts";
 import {
-  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
+  routineFailureDomainFrontier,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   routineTaskFromContract,
   readRoutineTaskClocks,
-  routineFailureDomainFrontier,
   routineFailureDomainRotationSeed,
   routineSupervisorCycleId,
   routinePassLaunchOrder,
@@ -1193,21 +1192,20 @@ const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, cloc
     routineTaskDeadlineMs(pending.task, clock, sittingSignals.get(pending.task.id)),
     honouredDueRequests.get(pending.task.id) ?? null,
   ),
-})), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, routineFailureDomainRotationSeed(RUN_STARTED_AT));
+})), routineFailureDomainRotationSeed(RUN_STARTED_AT));
 const admittedIds = new Set(admitted.map(({ task }) => task.id));
-for (const candidate of dueCandidates) {
-  if (admittedIds.has(candidate.pending.id)) continue;
-  recordLaunchDecision(candidate.pending.task, "DEFER", "Another task from this source has this pass's turn",
-    `provider frontier (domain=${candidate.pending.task.acquisitionFailureDomain}; per-pass=${ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS}, meeting lanes ${SITTING_WINDOW_LANE_SLOTS_PER_PASS})`);
+for (const { pending } of dueCandidates) {
+  if (admittedIds.has(pending.id)) continue;
+  recordLaunchDecision(pending.task, "DEFER", "Other calendars on this source have this pass's turns",
+    `sitting-window lane ${pending.task.acquisitionFailureDomain}; ${SITTING_WINDOW_LANE_SLOTS_PER_PASS} reads per pass`);
 }
-
 await flushLaunchDecisions();
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
 for (const { task } of electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), admissionNowMs))) pendingRuns.push(pendingByTaskId.get(task.id)!);
 await recordHuntSourceProgressEach(pendingRuns.map(pending => pending.task), "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
-  : `Owner due request ${request.id}: ${taskId} was due but deferred by the provider frontier; the next pass offers it again.`).concat(publicationInputLines);
+  : `Owner due request ${request.id}: ${taskId} was due but deferred by the calendar lane; the next pass offers it again.`).concat(publicationInputLines);
 attempted = pendingRuns.length;
 
 function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
@@ -1309,8 +1307,13 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
-      // Memory goes in launch order; the next read of a serial lane is not overtaken by work queued behind it.
-      await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), { priority: index, hold: command.serialLane !== undefined });
+      // A memory wait returns the source turn immediately; later due tasks can fit in this same pass.
+      try {
+        await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), { priority: index, wait: false });
+      } catch (error) {
+        if (error instanceof Error && error.message.startsWith("WORKER_MEMORY_BUSY:")) return false;
+        throw error;
+      }
       await recordHuntSourceProgressEach(unitMembers(units[index]!).map(member => member.task), "COLLECTING_AND_VERIFYING",
         "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
     },

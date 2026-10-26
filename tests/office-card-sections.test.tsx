@@ -10,26 +10,26 @@ const vicePresident = { id: "white-house:jd-vance", officeTitle: "Vice President
 const secretary = { id: "white-house:marco-rubio", officeTitle: "Secretary of State", officeJurisdictionOcdId: COUNTRY };
 const statewideSecretary = { id: "statewide:az/secretary-of-state", officeTitle: "Secretary of State", officeJurisdictionOcdId: "ocd-division/country:us/state:az" };
 
-const gapLine = (holder: Parameters<typeof officeCardSections>[0]) => {
+const sectionTitles = (holder: Parameters<typeof officeCardSections>[0]) => {
   const html = renderToStaticMarkup(<PersonCard title="Person" identity={<p>Person</p>} contact={<p>Contact</p>}
     sectionIds={officeCardSections(holder)} sections={{}} subject={{ type: "CANDIDATE", id: holder.id }} />);
-  return /Still gathering: ([^<]*?)\./.exec(html)?.[1] ?? "";
+  return [...html.matchAll(/class="card-section-title"[^>]*>(.*?)<\/span>/g)].map(match => match[1]).join(", ");
 };
 
 test("the President and Vice President have no voting record, committees or offices near you", () => {
   for (const holder of [president, vicePresident]) {
     assert.equal(officeFamily(holder), "president");
-    const gap = gapLine(holder);
-    assert.doesNotMatch(gap, /voting record|committees|offices near you|confirmation/);
-    assert.match(gap, /what this office does/);
-    assert.match(gap, /campaign money/);
+    const titles = sectionTitles(holder);
+    assert.doesNotMatch(titles, /Voting record|Committees|Offices near you|Confirmation/);
+    assert.match(titles, /What this office does/);
+    assert.match(titles, /Campaign money/);
   }
 });
 
 test("a Cabinet secretary has a department, a confirmation and official actions, and nothing else to gather", () => {
   assert.equal(officeFamily(secretary), "cabinet");
   assert.deepEqual(officeCardSections(secretary), ["office", "confirmation", "sources"]);
-  assert.equal(gapLine(secretary), "what this office does, confirmation");
+  assert.equal(sectionTitles(secretary), "Contact, What this office does, Confirmation, Sources");
   assert.equal(officeHasActions(secretary), true);
 });
 
@@ -42,7 +42,7 @@ test("governors, mayors and sheriffs have no voting record, committees or office
   for (const officeTitle of ["Governor", "Mayor", "County Sheriff", "Attorney General", "Lieutenant Governor", "County Clerk"]) {
     const holder = { id: `local:${officeTitle}`, officeTitle };
     assert.equal(officeFamily(holder), "executive", officeTitle);
-    assert.doesNotMatch(gapLine(holder), /voting record|committees|offices near you|confirmation/, officeTitle);
+    assert.doesNotMatch(sectionTitles(holder), /Voting record|Committees|Offices near you|Confirmation/, officeTitle);
   }
 });
 
@@ -51,12 +51,12 @@ test("every legislative office keeps voting record, committees and offices near 
     ["plural:az-2", "State Representative"], ["local:1", "City Council"], ["local:2", "County Commissioner"], ["local:3", "Board of Education"]]) {
     const holder = { id, officeTitle };
     assert.equal(officeFamily(holder), "legislative", officeTitle);
-    assert.match(gapLine(holder), /committees, offices near you, campaign money, voting record/, officeTitle);
+    assert.match(sectionTitles(holder), /Committees, Offices near you, Campaign money, Voting record/, officeTitle);
     assert.equal(officeHasActions(holder), false, officeTitle);
   }
 });
 
-test("an office this guide cannot classify keeps the usual seven, so 'still gathering' is never hidden by a guess", () => {
+test("an office this guide cannot classify keeps the usual seven, so missing sections are never hidden by a guess", () => {
   const holder = { id: "local:judge", officeTitle: "Municipal Court Judge" };
   assert.equal(officeFamily(holder), "other");
   assert.deepEqual(officeCardSections(holder), ["office", "positions", "committees", "offices", "money", "record", "sources"]);
@@ -64,7 +64,8 @@ test("an office this guide cannot classify keeps the usual seven, so 'still gath
 
 test("a card without sectionIds keeps its usual seven sections and no confirmation", () => {
   const html = renderToStaticMarkup(<PersonCard title="Person" identity={<p>Person</p>} contact={<p>c</p>} sections={{}} subject={{ type: "CANDIDATE", id: "x" }} />);
-  assert.match(html, /Still gathering: what this office does, positions, committees, offices near you, campaign money, voting record\./);
+  assert.deepEqual([...html.matchAll(/class="card-section-title"[^>]*>(.*?)<\/span>/g)].map(match => match[1]), ["Contact", "What this office does", "Positions", "Committees", "Offices near you", "Campaign money", "Voting record", "Sources"]);
+  assert.doesNotMatch(html, /Still gathering|Confirmation/);
 });
 
 test("a held section for a Cabinet office still renders when its data arrives", () => {

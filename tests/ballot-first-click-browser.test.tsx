@@ -52,7 +52,7 @@ for (const surface of ["battlecard", "person"] as const) test(`the ${surface} op
     if (request.url === "/fixture.js") response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
     else if (request.url === "/fixture.css") response.writeHead(200, { "content-type": "text/css" }).end(css);
     else if (request.url?.startsWith("/api/")) response.writeHead(503, { "content-type": "application/json" }).end("{}");
-    else response.writeHead(200, { "content-type": "text/html" }).end(`<!doctype html><html lang="en"><link rel="stylesheet" href="/fixture.css"><body class="mw-reader"><main id="root">${rendered}</main><script defer src="/fixture.js"></script></body></html>`);
+    else response.writeHead(200, { "content-type": "text/html; charset=utf-8" }).end(`<!doctype html><html lang="en"><meta charset="utf-8"><link rel="stylesheet" href="/fixture.css"><body class="mw-reader"><main id="root">${rendered}</main><script defer src="/fixture.js"></script></body></html>`);
   });
   await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
   const address = server.address();assert.ok(address && typeof address !== "string");

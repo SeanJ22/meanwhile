@@ -420,7 +420,7 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     'government_id',(SELECT g.id FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),
     'government_class',(SELECT g->>'governmentClass' FROM government_inventory WHERE g->>'id'=b.parent_id OR g->>'jurisdictionId'=b.parent_id LIMIT 1),
     'registered_name',(SELECT value->>'name' FROM runtime_bodies r WHERE r.value->>'id'=b.id LIMIT 1))) FROM bodies b),'[]'::jsonb) AS entities,
-  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone','mailing_address')),'[]'::jsonb) AS fields,
+  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone','office_email','mailing_address')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
   coalesce((SELECT jsonb_agg(to_jsonb(s)) FROM sittings s),'[]'::jsonb) AS sittings,

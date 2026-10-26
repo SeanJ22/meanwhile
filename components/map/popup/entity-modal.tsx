@@ -6,7 +6,7 @@ import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-s
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { StateCampaignSection } from "@/components/funding/state-campaign-section";
 import { FederalMoneySection } from "@/components/funding/federal-money-section";
-import { CardGapContext, CardGapContribution, useCardGapRegistry } from "@/components/ui/card-gap-context";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { CardFooter } from "@/components/ui/card-footer";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
@@ -70,7 +70,7 @@ export type ModalTab =
 
 
 /**
- * One held section of a body's card. Missing sections contribute to its footer.
+ * One section of a body's card, including its own missing-information message.
  */
 export interface BodyCardSection {
   id: string;
@@ -469,9 +469,11 @@ function BodySections({
 
       {/* One group, one open pill. */}
       <CardSectionGroup>
-        {sections.map((section) => section.content ? (
-          <CardSection key={section.id} title={section.title} meta={section.meta} defaultOpen={section.id === "meetings"}>{section.content}</CardSection>
-        ) : <CardGapContribution key={section.id} id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />)}
+        {sections.map((section) => (
+          <CardSection key={section.id} title={section.title} meta={section.meta} defaultOpen={section.id === "meetings"}>
+            {section.content || <CardGapContribution id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />}
+          </CardSection>
+        ))}
         <PublicRecordSection subject={subject} zip={homeZip} />
         <MoneyRecordSection subject={subject} />
       </CardSectionGroup>
@@ -495,7 +497,6 @@ export function EntityModal({
   const tab = initialTab;
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   const { register, sources: allSources, insideCard } = useCardSourceRegistry(subject.sources, `${subject.subjectKind}:${subject.subjectId}`);
-  const { register: registerGaps, gaps: allGaps } = useCardGapRegistry([], `${subject.subjectKind}:${subject.subjectId}`);
 
   useEffect(() => {
     if (embedded) return;
@@ -613,7 +614,7 @@ export function EntityModal({
   </div>;
 
   return (
-    <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><CardGapContext.Provider value={registerGaps}><div
+    <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><div
       ref={cardRef}
       className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
       role={embedded ? undefined : "dialog"}
@@ -714,9 +715,9 @@ export function EntityModal({
             />
           </div>
         )}
-        {!insideCard && <CardFooter gaps={allGaps} sources={allSources} />}
+        {!insideCard && <CardFooter sources={allSources} />}
       </div>
-    </div></CardGapContext.Provider></CardSourceContext.Provider></CardSubjectContext.Provider>
+    </div></CardSourceContext.Provider></CardSubjectContext.Provider>
   );
 }
 
@@ -775,9 +776,6 @@ export function Representation({
             </p>
           ))}
         </div>
-      )}
-      {showTopOffices && topOffices.length === 0 && (
-        <CardGapContribution id="top-offices" label="who runs it" />
       )}
       {ordered.map((holder) => (
         <div key={holder.id} data-roster-holder={earlier ? undefined : holder.id} data-earlier-roster-holder={earlier ? holder.id : undefined} className="account-modal-person flex items-start gap-3">

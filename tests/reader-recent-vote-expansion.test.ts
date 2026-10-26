@@ -96,10 +96,12 @@ test("vote cards show the held tail and omit empty views while retaining indepen
       await surface.getByRole("button", { name: "Show latest 20", exact: true }).click();
       assert.equal(await surface.locator("[data-recent-vote-id]").count(), 20);
     }
-    for (const scenario of ["failed", "empty"]) {
+    for (const [scenario, id] of [["failed", "congress:Z999997"], ["empty", "congress:Z999996"]]) {
       const surface = page.locator(`#${scenario}`);
-      await surface.locator("[data-card-gap]").waitFor({ state: "visible" });
-      assert.match(await surface.locator("[data-card-gap]").innerText(), /voting record/);
+      const gap = surface.locator(`[data-card-gap="votes:${id}"]`);
+      await gap.waitFor({ state: "visible" });
+      assert.match(await gap.innerText(), /We[’']re working on getting this info/);
+      assert.equal(await gap.getByRole("button", { name: "Want us to get this sooner?", exact: true }).count(), 1);
       assert.equal(await surface.locator(".vote-view-switch").count(), 0, `${scenario} has no empty view selector`);
       assert.equal(await surface.getByRole("button", { name: "Voting Record", exact: true }).count(), 0);
     }

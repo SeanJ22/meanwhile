@@ -3,7 +3,7 @@ import type { CardGap } from "../design/card-gaps.ts";
 import type { Meeting } from "../sources/types.ts";
 import { onlineAccessFor, statedVenueText, venueGapOf } from "./online.ts";
 
-/** Missing meeting facts collect once at the foot of the containing card. */
+/** Missing meeting facts stay in the meeting’s own section. */
 export function meetingCardGaps(meeting: Meeting): CardGap[] {
   const subject = meeting.bodyId ? { type: "BODY" as const, id: meeting.bodyId } : null;
   const gaps: CardGap[] = [];

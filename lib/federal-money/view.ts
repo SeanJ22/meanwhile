@@ -99,7 +99,7 @@ export function federalMoneySources(rows: readonly FederalMoneyRow[]): CardSourc
   return rows.map(({ fact, label, relationship }) => ({
     verbatim: true,
     what: [
-      `${label} — ${fact.title}${fact.provenance.publicationDate ? ` · published ${fact.provenance.publicationDate.slice(0, 10)}` : " · publication date not provided"}`,
+      `${label} — ${fact.title}`,
       `Recipient: ${fact.recipient ?? "Not supplied"}`, `Relationship: ${relationship === "GEOGRAPHY" ? "Federal money or records for this area" : "This government is the recipient"}`,
       ...(fact.amount !== null ? [`${fact.amountLabel ?? "Amount"}: ${fact.amount < 0 ? `${cardAmount(fact.amount)} taken back` : cardAmount(fact.amount)}`] : []),
       ...(fact.period ? [`Period: ${fact.period}`] : []), ...(fact.uei ? [`UEI: ${fact.uei}`] : []),
@@ -108,6 +108,7 @@ export function federalMoneySources(rows: readonly FederalMoneyRow[]): CardSourc
       ...fact.geography.map(geo => `${words(geo.type)} GEOID: ${geo.geoid}`),
       `Source record: ${fact.sourceId}`, `State: ${fact.state}`, `Match: ${fact.joinReason}`,
     ].join("; "),
+    publishedAt: fact.provenance.publicationDate ?? undefined,
     provenance: {
       kind: "OFFICIAL", sourceOrg: fact.provenance.sourceOrg, sourceUrl: fact.provenance.sourceUrl,
       collectedAt: fact.provenance.retrievedAt, verifiedAt: null,

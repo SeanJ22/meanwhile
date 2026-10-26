@@ -16,6 +16,9 @@ export interface CardSource {
   /** Filed identifiers and original source fields retain their exact spelling. */
   verbatim?: true;
   provenance: Provenance;
+  /** Publisher-stated dates, displayed separately from what the source supports. */
+  publishedAt?: string | null;
+  updatedAt?: string | null;
   /** A listing status (for example, when a carried sitting was last reached). */
   status?: true;
   /** Captured facts and native identities sharing this publisher page. */
@@ -25,7 +28,7 @@ export interface CardSource {
 /** Where district and place boundaries come from: the endpoint and vintage the boundary fetch pins. */
 export const BOUNDARY_PROVENANCE: Provenance = {
   sourceUrl: "https://www2.census.gov/geo/tiger/",
-  sourceOrg: "U.S. Census Bureau (TIGER/Line and Cartographic Boundary files)",
+  sourceOrg: "U.S. Census Bureau",
   collectedAt: "2026-08-10",
   verifiedAt: null,
 };
@@ -69,23 +72,26 @@ export function mergeSources(entries: CardSource[]): CardSource[] {
 }
 
 export const FIELD_SOURCE_LABELS: Readonly<Record<string, string>> = {
-  name: "Name", officeTitle: "Office", partyLabel: "Party", birthDate: "Birth date",
-  termNote: "Term wording", termStart: "Term start date", termEnd: "Term end date",
-  email: "Office email", phone: "Office phone", websiteUrl: "Official page", contactFormUrl: "Contact form",
-  homepageUrl: "Official site", officeAddress: "Office address", officePhone: "Office phone",
-  campaignUrl: "Campaign website", photoUrl: "Portrait", portraitImage: "Portrait image", sourcePortraitImage: "Portrait image", social: "Social accounts",
-  districtOffices: "District offices", committees: "Committees", memberships: "Offices held",
-  officeJurisdictionOcdId: "Area served", contactScope: "Who the office serves", state: "State", chamber: "Chamber",
-  selectionMethod: "How they took office", selectionMethodSourceUrl: "How they took office", executive: "National executive record",
-  title: "Meeting title", bodyName: "Public body", startsAt: "Meeting date and time", endsAt: "Meeting end time",
-  timeZone: "Time zone", status: "Meeting status", location: "Meeting place", online: "Online attendance",mapPin:"Map coordinates",
-  agendaUrl: "Agenda", videoUrl: "Meeting recording", minutesUrl: "Meeting minutes",
-  commentPeriod: "Public comment", commentPeriodDetail: "Public comment details", signup: "How to sign up",
-  writtenComment: "Written comments", attend: "How to attend", timeLimit: "Speaking time limit",
+  name: "The name shown on this card", officeTitle: "The office they hold", partyLabel: "Their political party", birthDate: "Their date of birth",
+  termNote: "Their term in office", termStart: "Their term in office", termEnd: "Their term in office",
+  email: "How to email the office", phone: "How to call the office", websiteUrl: "The official website", contactFormUrl: "How to contact the office online",
+  homepageUrl: "The official website", officeAddress: "Where to find the office", officePhone: "How to call the office", officeEmail: "How to email the office",
+  campaignUrl: "Their campaign website", photoUrl: "Their portrait", portraitImage: "Their portrait", sourcePortraitImage: "Their portrait", social: "Their public social accounts",
+  districtOffices: "District offices and how to reach them", committees: "The committees they serve on", memberships: "The offices they hold",
+  officeJurisdictionOcdId: "The area they serve", contactScope: "Who the office serves", state: "The state they serve", chamber: "Where they serve",
+  ocdId: "The area this government serves", personId: "Who holds this office", bodyId: "The government holding this meeting",
+  selectionMethod: "How they took office", selectionMethodSourceUrl: "How they took office", executive: "Their work in national government",
+  title: "What this meeting is called", bodyName: "Who holds this meeting", startsAt: "When this meeting takes place", endsAt: "When this meeting ends",
+  timeZone: "The meeting's local time", status: "Whether this meeting is going ahead", location: "Where this meeting takes place", online: "How to attend online", mapPin: "Where to find the meeting on the map",
+  agendaUrl: "What this meeting is about", videoUrl: "The meeting recording", minutesUrl: "What happened at this meeting",
+  commentPeriod: "How to speak at the meeting", commentPeriodDetail: "How to speak at the meeting", signup: "How to sign up to speak",
+  writtenComment: "How to send written comments", attend: "How to attend", timeLimit: "How long you can speak",
+  officialActions: "Their official actions", termEndDescription: "Their term in office", biography: "Their background",
 };
 
+/** A new stored field keeps its citation without exposing its database name. */
 export function fieldSourceLabel(field: string): string {
-  return FIELD_SOURCE_LABELS[field] ?? field.replace(/([a-z])([A-Z])/g, "$1 $2").replace(/[_-]/g, " ").replace(/^./, letter => letter.toUpperCase());
+  return FIELD_SOURCE_LABELS[field] ?? "The facts shown on this card";
 }
 
 /** A person row's own record, when the row carries one. */
@@ -106,12 +112,15 @@ function holderSource(holder: SeatHolder, what: string): CardSource | null {
   return null;
 }
 
-function fieldHolderSources(holder: SeatHolder): CardSource[] {
-  const entries = Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({ what: `${holder.name} — ${fieldSourceLabel(field)}`, provenance }));
+function fieldHolderSources(holder: SeatHolder, board = false): CardSource[] {
+  const identityFields = new Set(["name", "officeTitle", "personId", "memberships", "termNote", "termStart", "termEnd", "selectionMethod", "selectionMethodSourceUrl"]);
+  const entries = Object.entries(holder.fieldSources ?? {}).map(([field, provenance]) => ({
+    what: identityFields.has(field) ? board ? "Who sits on this board and their terms" : "Their name, office and term" : fieldSourceLabel(field), provenance,
+  }));
   for (const sourceHolder of holder.sourceHolders ?? []) {
-    const source = holderSource(sourceHolder, "Who they are, their office and how to reach them");
+    const source = holderSource(sourceHolder, board ? "Who sits on this board and their terms" : "Their name, office and how to reach them");
     if (source) entries.push(source);
-    entries.push(...fieldHolderSources(sourceHolder));
+    entries.push(...fieldHolderSources(sourceHolder, board));
   }
   return entries;
 }
@@ -125,15 +134,15 @@ export function districtCardSources(
   fields?: Readonly<Record<string, Provenance>>,
 ): CardSource[] {
   const entries: CardSource[] = [
-    { what: "This district's boundary, type and label", provenance: BOUNDARY_PROVENANCE },
+    { what: "The area this district covers", provenance: BOUNDARY_PROVENANCE },
   ];
   if (officeContact && !fields?.officeAddress && !fields?.officePhone) entries.push({ what: "The body's office address and phone", provenance: officeContact });
-  for (const [field, provenance] of Object.entries(fields ?? {})) entries.push({ what: fieldSourceLabel(field), provenance });
+  for (const [field, provenance] of Object.entries(fields ?? {})) entries.push({ what: ["name", "ocdId"].includes(field) ? "This government's name and the area it serves" : fieldSourceLabel(field), provenance });
 
   for (const holder of representation) {
-    const source = holderSource(holder, `Who represents it — ${holder.name}`);
+    const source = holderSource(holder, "Who sits on this board and their terms");
     if (source) entries.push(source);
-    entries.push(...fieldHolderSources(holder));
+    entries.push(...fieldHolderSources(holder, true));
   }
 
   for (const meeting of meetings) {
@@ -150,12 +159,12 @@ export function meetingCardSources(
   evidence: MeetingCardEvidence = {},
 ): CardSource[] {
   const entries: CardSource[] = [
-    { what: `This sitting — ${meeting.title}${meeting.venueGap ? ` · ${meeting.venueGap.kind === "NOT_STATED_BY_PUBLISHER" ? "Meeting place not stated by" : "Published meeting place from"} ${meeting.venueGap.publisher}` : ""}`, provenance: meeting.provenance },
+    { what: `This meeting — ${meeting.title}${meeting.venueGap ? ` · ${meeting.venueGap.kind === "NOT_STATED_BY_PUBLISHER" ? "Meeting place not stated by" : "Published meeting place from"} ${meeting.venueGap.publisher}` : ""}`, provenance: meeting.provenance },
   ];
-  for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This sitting — ${fieldSourceLabel(field)}`, provenance });
+  for (const [field, provenance] of Object.entries(meeting.fieldSources ?? {})) entries.push({ what: `This meeting — ${fieldSourceLabel(field)}`, provenance });
   if(meeting.mapPin){
     entries.push({what:pinBasisLabel(meeting.mapPin.basis),provenance:meeting.mapPin.provenance});
-    if(meeting.mapPin.coordinateSourceUrl)entries.push({what:"Map coordinates",provenance:{sourceUrl:meeting.mapPin.coordinateSourceUrl,
+    if(meeting.mapPin.coordinateSourceUrl)entries.push({what:"Where the meeting is on the map",provenance:{sourceUrl:meeting.mapPin.coordinateSourceUrl,
       sourceOrg:"U.S. Census Bureau",collectedAt:meeting.mapPin.coordinateCheckedAt??meeting.fieldSources?.mapPin?.collectedAt??meeting.mapPin.provenance.collectedAt,verifiedAt:null}});
   }
   if (meeting.carried) {
@@ -167,12 +176,12 @@ export function meetingCardSources(
     for (const provenance of evidence[kind as keyof MeetingCardEvidence] ?? []) entries.push({ what: label, provenance });
   }
   // The recording is linked from the publisher's own record of the sitting, so that record is its source.
-  if (meeting.videoUrl) entries.push({ what: "The recording of this sitting", provenance: meeting.provenance });
+  if (meeting.videoUrl) entries.push({ what: "The recording of this meeting", provenance: meeting.provenance });
 
   for (const holder of representation) {
-    const source = holderSource(holder, `Who sits on this body — ${holder.name}`);
+    const source = holderSource(holder, "Who sits on this board and their terms");
     if (source) entries.push(source);
-    entries.push(...fieldHolderSources(holder));
+    entries.push(...fieldHolderSources(holder, true));
   }
 
   return mergeSources(entries);
@@ -186,7 +195,7 @@ export function personCardSources(
 ): CardSource[] {
   const entries: CardSource[] = [];
 
-  const spine = holderSource(holder, `Who they are, their office and how to reach them`);
+  const spine = holderSource(holder, "Their name, office and how to reach them");
   if (spine) entries.push(spine);
 
   entries.push(...fieldHolderSources(holder));
@@ -220,7 +229,7 @@ export function executiveCardSources(data: NonNullable<SeatHolder["executive"]>)
 /** Polarization Research Lab measurements, credited to the lab; never a score or label of the person. */
 export function prlCardSource(profile: { attribution: { text: string; url: string }; sourceUrl: string; readAt: string }): CardSource {
   return {
-    what: "The shares of their public statements about policy, criticism and more — measured by the Polarization Research Lab, not by Meanwhile",
+    what: "The shares of their public statements about policy, criticism and more — measured by the Polarization Research Lab",
     provenance: {
       sourceUrl: profile.sourceUrl || profile.attribution.url,
       sourceOrg: profile.attribution.text,

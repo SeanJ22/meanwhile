@@ -145,12 +145,14 @@ export interface CoveredBody {
   bodyClass: BodyClass;
   coverageStatus: CoverageStatus;
   homepageUrl: string | null;
+  /** The body's own source page when a contact has no more specific field source. */
+  provenance?: RegistryProvenance;
   /** Saved sources for each published body field shown on its card. */
   fieldSources?: Body["fieldSources"];
   /** Where this body's agendas live, when a hunt found them. */
   agendaSourceRef: string | null;
-  /** The body's office address and phone, with the saved page that states them. */
-  officeContact?: { address: string | null; phone: string | null; provenance: RegistryProvenance } | null;
+  /** The body's published office contacts, with the saved page that states them. */
+  officeContact?: { address: string | null; phone: string | null; email?: string | null; provenance: RegistryProvenance } | null;
   /** When the body regularly meets, in its official page's words, with that page. */
   meetingCadence?: { text: string; sourceUrl: string | null } | null;
   /**
@@ -363,13 +365,15 @@ export function summarizeCoverage(
       schoolDependency: schoolDependency(body.ocdId),
       coverageStatus: held ? "LIVE" : body.coverageStatus,
       homepageUrl: body.homepageUrl,
+      ...(body.homepageUrl && !body.fieldSources?.homepageUrl ? { provenance: body.provenance } : {}),
       ...(body.fieldSources ? { fieldSources: body.fieldSources } : {}),
       agendaSourceRef: held?.provenance.sourceUrl ?? body.agendaSourceRef,
       meetingCadence: body.meetingCadence
         ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
         : null,
-      ...(body.officeAddress || body.officePhone
-        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.fieldSources?.officeAddress ?? body.fieldSources?.officePhone ?? body.provenance } }
+      ...(body.officeAddress || body.officePhone || body.officeEmail
+        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, email: body.officeEmail ?? null,
+          provenance: body.fieldSources?.officeAddress ?? body.fieldSources?.officePhone ?? body.fieldSources?.officeEmail ?? body.provenance } }
         : {}),
       lookedAt: held !== undefined || DOCUMENTED_SEARCHES.has(body.id),
       ...(historyGap ? { historyGap } : {}),

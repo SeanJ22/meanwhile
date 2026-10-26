@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T19:41:00Z
+heartbeat: 2026-10-26T20:06:00Z
 
 
 <!-- READY-LIST -->
@@ -111,6 +111,15 @@ DB-05: fix on stream/db-05 and post a new READY; it rides the next release.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 4 PM EDT
+- **NEON, 3 PM hour: reader 14.94 GB + control plane 0.32 GB = 15.26 GB** (1 PM 2.95, 2 PM 6.39). legiscan-bulk 10.26 GB; place-pages 1.53 GB; routine-civic-data 0.74; publish-now 0.23. 4 PM so far (3 minutes): legiscan-bulk 130 MB.
+- **legiscan-bulk:** the urgent fix RIVER-LS1 heads release 130 (gate on river-next-130c c96b5849e since 3:40 PM; through dead-code and browser, tests running; ship about 4:30 PM, live about 4:55 PM, runner on it shortly after). Until then the fan-out keeps re-reading each part whole. Despite 10 GB of reads, MA, CA, TX, NY and OH still show 0 bills at 4:03 PM.
+- **For Sean:** if you want the spend stopped before 130 lands, the only immediate lever is Admin (pause the runner or its routine data work); River leaves Admin as it is.
+- **place-pages:** 1.53 GB for about 10,300 pages built in the hour (about 150 KB read per page). Draining the remaining 150,032 at that rate is about 22 GB in total. DB-05's shared current-version reads (in 130) may cut repeated body reads; River measures place-pages per page after 130 and will cut a fix if it stays near 150 KB.
+- **Place map:** 11 states/areas with boundaries by 3:50 PM: 16,595 boundaries, zip_place 73,364, zcta_place 63,920 (smallest states first). 
+- **Place pages:** place_page 37,337 (24,900 at 2:40 PM); rebuild_queue 150,032 (160,755).
+- **Federal money, first full hour after 129 (3 PM):** usaspending 32.4 MB, openfema 18.4 MB (before, 9 AM-1 PM: usaspending 82-144 MB/h, openfema 6-13 MB/h). No rise in usaspending; openfema at the top of its range. The 4 PM hour completes the two-hour window.
 
 ### 3:40 PM EDT: Neon cost spike, urgent fix gating
 The 3 PM hour already reads 8.64 GB on the reader database at 3:36 PM, 6.21 GB of it legiscan-bulk (2 PM hour: 5.60 GB reader, 1.99 GB legiscan-bulk). Cause: release 129's bill fan-out writes each session part once and reads it back whole about six times (19:00Z: 2.60 GB read in 489 requests vs 761 MB written in 35). Fix RIVER-LS1 84db3f3f0 is READY and gating as the head of release 130, with MT-02 and DB-05's first piece riding along (gate restarted 3:40 PM; about 50 minutes, then deploy).

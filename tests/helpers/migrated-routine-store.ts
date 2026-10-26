@@ -41,7 +41,7 @@ export async function withMigratedRoutineStore(
   process.env.WTP_CONTROL_PLANE_DATABASE_URL = "postgresql://local:local@localhost/control-test";
   process.env.WTP_VITAL_SIGNS_REPORT = "1";
   type Statement = { query: string; params?: unknown[] };
-  neonConfig.fetchFunction = (async (_url: unknown, init: { body: string }) => {
+  const serveRequest = async (_url: unknown, init: { body: string }) => {
     const request = JSON.parse(init.body) as Statement & { queries?: Statement[] };
     // Descriptions share PostgreSQL's unnamed prepared statement and must be
     // read sequentially, just like the transaction's dependent statements.
@@ -67,6 +67,15 @@ export async function withMigratedRoutineStore(
       return { results: values };
     }) : await execute(pg, request);
     return new Response(JSON.stringify(results), { headers: { "content-type": "application/json" } });
+  };
+  // PGlite has one connection. describeQuery uses the unnamed statement without
+  // query()'s mutex, so a concurrent description can interrupt another request's
+  // Parse/Bind/Execute sequence. Keep each complete HTTP request on that session.
+  let requests: Promise<unknown> = Promise.resolve();
+  neonConfig.fetchFunction = ((_url: unknown, init: { body: string }) => {
+    const response = requests.then(() => serveRequest(_url, init));
+    requests = response.catch(() => undefined);
+    return response;
   }) as typeof neonConfig.fetchFunction;
   try {
     const store = new PostgresRoutineDataStore({ purge: async () => ({purged:true}) });

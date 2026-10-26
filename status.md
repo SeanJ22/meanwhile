@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 128 (main 9352c8e14). RIVER: 43783ed16 (gate 9/9). SHIPPING: release 129 PR #841 (auto-merge), RT-01b, bills, RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01. NEXT: 130 = MT-02 87577ea3a + DB-05 (3d4e87f62, c1bf8151f, 0be79e9a5), tree 3f914357a, gating now. See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 129 (main ccb676a7a, live 2:40 PM EDT Oct 26): RT-01b, bills, RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01. Runner still on 9352c8e14 at 2:42 PM (watching for it to load 129 by itself). RIVER: 43783ed16. GATING: release 130 on river-next-130 3f914357a (MT-02 87577ea3a + DB-05 3d4e87f62, c1bf8151f, 0be79e9a5). See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T18:14:00Z
+heartbeat: 2026-10-26T18:46:00Z
 
 
 <!-- READY-LIST -->
@@ -14,7 +14,7 @@ Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates,
 
 **Release rule (Sean, 10:25 AM EDT Oct 26):** an urgent fix goes first but does not ship alone; every other lane that is READY and passes its scan rides in the same release; nothing finished waits behind an urgent fix; no batch waits on a lane that isn't READY.
 
-**Release 129: SHIPPING. Gate 9/9 on 43783ed16 (10,234 pass, 0 fail); river = 43783ed16; release/129 412c58ea8 = https://github.com/SeanJ22/meanwhile/pull/841 (auto-merge on, 2:13 PM)**
+**Release 129: LIVE 2:40 PM EDT (main ccb676a7a, #841). First look in releases/129.md: Alabama bills 200 (was 503), Boise date text fixed, Tucson governing 89 to 23**
 *Why a third gate:* the 129c gate (8fdf21bbf) failed 10 tests. Seven were real: MT-02's own branch fails 2 LegiScan tests (they pass on river), and MT-02 combined with MP-01 fails a meeting-pin rate-limit test, so MT-02 is out of 129 and River is fixing it on stream/river-mt-02-fix for the next release. Three were tests the merges left behind (place-page runner test lacked standingBeat; the meeting-pins admission test didn't allow MP-01's database-job wrapper; the worker-slots sandbox test didn't map RT-01c's memory table): fixed in 641f66173 and 43783ed16. All 10 pass alone on 43783ed16 and tsc is clean.
 | READY | Lane | State |
 |---|---|---|

@@ -1,3 +1,4 @@
+import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -311,8 +312,9 @@ test("publication reads only the exact body's and owning government's live addre
   const db = await factDb();
   try {
     await db.pg.exec(
-      "CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,payload jsonb)",
+      "CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,payload jsonb,scope text DEFAULT 'US-AZ:registration:v1',current_version_id text DEFAULT 'fixture',promoted_at timestamptz DEFAULT now())",
     );
+    await installKeyedRows(db.pg);
     await db.query(
       `INSERT INTO entity(id,kind,name,state,parent_id) VALUES('az:special:own','government','Own Government','AZ',NULL),
       ($1,'body','Own Board','AZ','az:special:own'),('body:neighbour','body','Neighbour','AZ',NULL)`,
@@ -328,7 +330,7 @@ test("publication reads only the exact body's and owning government's live addre
       [BODY, JSON.stringify(BOARD), BOARD, NOW],
     );
     await db.query(
-      `INSERT INTO civic_data_promotions VALUES('REGISTRATION:US-AZ:registration:v1','REGISTRATION',$1)`,
+      `INSERT INTO civic_data_promotions(key,record_class,payload) VALUES('REGISTRATION:US-AZ:registration:v1','REGISTRATION',$1)`,
       [
         JSON.stringify({
           governments: [

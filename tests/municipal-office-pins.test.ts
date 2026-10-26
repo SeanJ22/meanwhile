@@ -1,3 +1,4 @@
+import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -18,14 +19,15 @@ const reply = (value: unknown) => new Response(JSON.stringify(value));
 test("the same municipality's published hall address supplies a saved government-office fallback", async () => {
   const db = await factDb();
   try {
-    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb);
+    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,current_version_id text DEFAULT 'fixture',promoted_at timestamptz DEFAULT now());
       CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)`);
     for (const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8").split("--> statement-breakpoint"))
       if (/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement)) await db.pg.exec(statement);
+    await installKeyedRows(db.pg);
     const scope = `source:iqm2:body:${encodeURIComponent(source.bodyId!)}`;
     const repeated = Array.from({length:100},(_,index)=>({...source,id:`fixture:repeated-hall:${index}`,
       startsAt:new Date(Date.parse(source.startsAt)+index*60000).toISOString()}));
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3)", [`MEETING:${scope}`, scope, JSON.stringify({ meetings: [source,...repeated] })]);
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES($1,'MEETING',$2,$3)", [`MEETING:${scope}`, scope, JSON.stringify({ meetings: [source,...repeated] })]);
     const requests: string[] = [];
     const hallRows:number[]=[];
     const query:typeof db.query=async(sql,params)=>{const rows=await db.query(sql,params);if(sql.includes('halls AS ('))hallRows.push(rows.length);return rows;};

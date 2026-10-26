@@ -1,7 +1,8 @@
 import { createHash } from "node:crypto";
 import { repeatedFailureStreak } from "./failure-backoff.ts";
 import { readRetirementProgress, retirementProofTarget } from "./state-retirement-progress.ts";
-import type { Division } from "../registry/types.ts";
+import type { Division, Registry } from "../registry/types.ts";
+import { readKeyedRegistry, selectRegistryLookup, type RegistryLookup } from "./keyed-rows.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
 import { sourceCheckedAt } from "./source-check.ts";
@@ -138,6 +139,7 @@ export interface RoutineDataStore {
     failure?: { code: string; detail: string },
     options?: CandidateTransitionOptions,
   ) => Promise<CandidateVersionRecord>;
+  readonly readRegistrySlice: (state: string, bodyIds: readonly string[], divisionIds: readonly string[]) => Promise<RegistryLookup | null>;
   readonly readRegistryDivisions: (state: string, labels: readonly string[]) => Promise<readonly RegistryDivisionMatch[]>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   /** Read only a named candidate field and its referenced parts. */
@@ -867,6 +869,12 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     let value: unknown = this.candidates.get(candidateId)?.candidate;
     for (const key of path) value = value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined;
     return value === undefined ? undefined : structuredClone(value);
+  }
+
+  async readRegistrySlice(state: string, bodyIds: readonly string[], divisionIds: readonly string[]): Promise<RegistryLookup | null> {
+    const pointer = this.promotions.get(projectionKey("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state)));
+    if (!pointer || pointer.receipt.decision !== "GOOD") return null;
+    return selectRegistryLookup(pointer.versionId, (pointer.payload as { registry: Registry }).registry, bodyIds, divisionIds);
   }
 
   async readRegistryDivisions(state: string, labels: readonly string[]): Promise<readonly RegistryDivisionMatch[]> {
@@ -1944,10 +1952,21 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return projection;
   }
 
+  async readRegistrySlice(state: string, bodyIds: readonly string[], divisionIds: readonly string[]): Promise<RegistryLookup | null> {
+    return readKeyedRegistry((text, params) => this.readerRows(text, params), state, bodyIds, divisionIds);
+  }
+
   async readRegistryDivisions(state: string, labels: readonly string[]): Promise<readonly RegistryDivisionMatch[]> {
     if (!labels.length) return [];
-    const pointer = await this.readPromotion("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state));
-    return pointer?.receipt.decision === "GOOD" ? registryDivisionMatches(pointer.payload, state, labels) : [];
+    const jurisdiction = requireRegistryState(state), scope = stateRegistryRuntimeScope(jurisdiction);
+    const rows = await this.readerRows(`SELECT r.value->>'ocdId' AS "ocdId",r.value->>'label' AS label,
+      r.value->>'state' AS state,r.value->>'sourceDataset' AS "sourceDataset"
+      FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+      WHERE r.record_class='REGISTRY_RUNTIME_BINDING' AND r.scope=$1 AND r.collection='registry.divisions'
+        AND upper(r.value->>'state')=$2 AND p.validation_receipt->>'decision'='GOOD'
+        AND trim(regexp_replace(lower(r.value->>'label'),'[^[:alnum:]]+',' ','g'))=ANY($3::text[])
+      ORDER BY r.ordinal`, [scope, jurisdiction, labels.map(registryDivisionLabel)]);
+    return rows as unknown as readonly RegistryDivisionMatch[];
   }
 
   private async candidateRows<T extends { readonly id: string }>(

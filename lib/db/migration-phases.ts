@@ -401,6 +401,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0039_sb01b_state_pointer_retirement": { phase: "expand", why: "Permits retiring replaced national pointers only after every exact state replacement is GOOD; existing writers retain their mutation rules." },
   "DB-01_read_versions": { phase: "expand", why: "Adds hourly runner transfer aggregates, per-scope clock versions and targeted open-flag indexes; existing readers and writers keep working." },
   "DB-05_source_hash": { phase: "expand", why: "Extends the unchanged source confirmation with an atomic raw-hash and parser comparison; every existing event shape remains valid." },
+  "DB-05_keyed_rows": { phase: "expand", why: "Materializes government, registry and meeting members as keyed rows in the same transaction as their published pointer; existing payload readers remain valid.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
   "DB-03_process_transfer": { phase: "expand", why: "Adds defaulted process counters to the existing daily and hourly transfer tables before the accounting writer uses them; existing readers and writers keep working." },
 };
 

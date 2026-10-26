@@ -12,20 +12,13 @@ function municipality(jurisdiction: string): string | null {
 }
 
 // Only published municipal-hall venue/address fields leave Postgres, in bounded pages.
-const HALL_ADDRESSES_SQL = `WITH partitions AS MATERIALIZED (
-  SELECT payload FROM civic_data_promotions WHERE record_class='MEETING' AND (
+const HALL_ADDRESSES_SQL = `WITH venues AS (
+  SELECT body_id,value->>'ocdId' AS ocd_id,value->>'jurisdiction' AS jurisdiction,value->>'startsAt' AS starts_at,
+    value->'location' AS location,value->'venueGap' AS venue_gap,value->'provenance' AS provenance
+  FROM civic_data_rows WHERE record_class='MEETING' AND collection='meetings' AND split_part(body_id,'#',1)=$1 AND (
     left(split_part(scope,':',4),length($2))=$2 AND left(scope,7)='source:' AND split_part(scope,':',3)='body' AND right(scope,8)<>':history'
-    OR key='MEETING:source:derived:family:US-'||$3
+    OR promotion_key='MEETING:source:derived:family:US-'||$3
   )
-), venues AS (
-  SELECT s.value->>'bodyId' AS body_id,s.value->>'ocdId' AS ocd_id,
-    s.value->>'jurisdiction' AS jurisdiction,s.value->>'startsAt' AS starts_at,
-    reader_payload_value(s.value->'location') AS location,
-    reader_payload_value(s.value->'venueGap') AS venue_gap,
-    reader_payload_value(s.value->'provenance') AS provenance
-  FROM partitions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
-    LATERAL (SELECT reader_payload_node(m.item) AS value) s
-  WHERE split_part(s.value->>'bodyId','#',1)=$1
 ), halls AS (
 SELECT DISTINCT ON (coalesce(location->>'address',location->>'name',venue_gap->>'publishedText'),ocd_id,jurisdiction)
   body_id,ocd_id,jurisdiction,starts_at,location,venue_gap,provenance FROM venues

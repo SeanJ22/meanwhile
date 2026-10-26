@@ -12,10 +12,9 @@ import { meetingStateOf } from "../meetings/body-scope.ts";
 import type { MeetingPinAddress, MeetingPinBody } from "../meetings/pin-location.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 
-const heldRows = `FROM civic_data_promotions p,
-  LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
-  LATERAL (SELECT reader_payload_node(m.item) AS value) sitting
-  WHERE p.record_class='MEETING' AND sitting.value->>'bodyId' IS NOT NULL
+const heldRows = `FROM civic_data_rows p,
+  LATERAL (SELECT p.value) sitting
+  WHERE p.record_class='MEETING' AND p.collection='meetings' AND p.body_id IS NOT NULL
     AND coalesce(sitting.value->'location','null'::jsonb)='null'::jsonb
     AND coalesce(sitting.value->'mapPin','null'::jsonb)='null'::jsonb
     AND (sitting.value->>'startsAt')::timestamptz BETWEEN $1::timestamptz-interval '90 days' AND $1::timestamptz+interval '90 days'`;
@@ -34,11 +33,11 @@ export const HELD_PIN_PRIOR_VENUES_SQL = `SELECT DISTINCT ON (sitting.value->>'i
   ORDER BY sitting.value->>'id',c.retrieved_at DESC,c.id`;
 
 /** Only already-promoted sittings participate. Existing points and unchanged retry blanks stay out. */
-export const HELD_PIN_ROWS_SQL = `SELECT p.key,p.current_version_id,m.ordinal_index,reader_payload_value(sitting.value) AS value,
+export const HELD_PIN_ROWS_SQL = `SELECT p.promotion_key AS key,p.version_id AS current_version_id,p.ordinal AS ordinal_index,reader_payload_value(sitting.value) AS value,
   CASE WHEN jsonb_typeof(sitting.value->'online')='object' THEN 0 ELSE 1 END AS online_order
   ${heldRows}
     AND (sitting.value->>'bodyId'=ANY($2::text[]) OR sitting.value#>>'{venueGap,publishedText}' ~ '[0-9]')
-    AND (CASE WHEN jsonb_typeof(sitting.value->'online')='object' THEN 0 ELSE 1 END,p.key,m.ordinal_index)>($3::int,$4::text,$5::int)
+    AND (CASE WHEN jsonb_typeof(sitting.value->'online')='object' THEN 0 ELSE 1 END,p.promotion_key,p.ordinal)>($3::int,$4::text,$5::int)
     AND NOT EXISTS(SELECT 1 FROM fact f WHERE f.entity_id='meeting:'||(sitting.value->>'id') AND f.field='map_pin' AND f.status='live'
       AND f.value->>'bodyId'=sitting.value->>'bodyId' AND f.value->>'publishedLocation' IS NOT DISTINCT FROM sitting.value#>>'{venueGap,publishedText}')
     AND NOT EXISTS(SELECT 1 FROM blank b WHERE b.entity_id='meeting:'||(sitting.value->>'id') AND b.field='map_pin'
@@ -47,7 +46,7 @@ export const HELD_PIN_ROWS_SQL = `SELECT p.key,p.current_version_id,m.ordinal_in
         WHERE f.entity_id IN(e.id,e.parent_id) AND f.field='office_address' AND f.status='live'),'-infinity'::timestamptz)
       AND b.updated_at>=coalesce((SELECT max(r.promoted_at) FROM civic_data_promotions r WHERE r.record_class='REGISTRATION'
         AND r.scope LIKE 'US-'||upper(substring(sitting.value->>'bodyId' FROM '/state:([a-z]{2})'))||'%'),'-infinity'::timestamptz))
-  ORDER BY online_order,p.key,m.ordinal_index LIMIT 32`;
+  ORDER BY online_order,p.promotion_key,p.ordinal LIMIT 32`;
 
 /** Free field publication also fills old and carried sittings; calendar freshness is left at its original time. */
 export async function publishHeldMeetingPins(input: {

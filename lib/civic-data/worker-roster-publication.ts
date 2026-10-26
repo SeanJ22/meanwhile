@@ -8,6 +8,7 @@ import { canonicalJson } from "../control-plane/repository/types.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkerEvidence, WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { RegistryRuntimeCarton, RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
+import type { RegistryLookup } from "./keyed-rows.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, acceptedRegistryPrior } from "../registry/runtime-data-plane.ts";
 import type { RoutineDataStore } from "./store.ts";
@@ -111,7 +112,7 @@ function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkIte
 }
 
 export async function heldRosterReading(input: {
-  readonly bodyId: string; readonly prior: RegistryRuntimePrior; readonly now: string;
+  readonly bodyId: string; readonly prior: RegistryLookup; readonly now: string;
   readonly artifacts: readonly ArtifactRecord[];
   readonly readHeld: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
   readonly limit?: number;
@@ -195,7 +196,7 @@ export async function publishOwedRosterFacts(input: {
     const plan = item.autonomousPlan;
     if (!plan?.publication || !stateFromRegistryRuntimeContractId(plan.publication.contractId) || plan.contract.schemaVersion !== 2 || plan.contract.recordClass !== "OFFICIAL_ROSTER") continue;
     const bodyId = plan.publication.bodyId;
-    const prior = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
+    const prior = await input.store.readRegistrySlice(plan.contract.jurisdiction.state, [bodyId], [plan.contract.jurisdiction.canonicalId]);
     const body = prior?.payload.registry.bodies.find(row => row.id === bodyId);
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let reading: RosterReading | null = null;

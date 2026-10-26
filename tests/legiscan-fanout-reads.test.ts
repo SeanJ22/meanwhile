@@ -16,7 +16,8 @@ const bill=JSON.parse(ak).bill;
 const dataset:Dataset={state_id:bill.state_id,session_id:bill.session_id,session_name:bill.session.session_name,dataset_hash:hash(ak),dataset_date:"2012-12-30",access_key:"fixture-access"};
 const person={id:"held:ak-gatto",nativeIds:{legiscan:["6033"]}};
 const capture=(body:string,now:string,op="getDataset")=>({body,requestedUrl:`https://api.legiscan.com/?op=${op}`,finalUrl:`https://api.legiscan.com/?op=${op}`,httpStatus:200,retrievedAt:now,rawHash:hash(body)});
-const bodies=Array.from({length:LEGISCAN_PART_ROWS*3+1},(_,index)=>{const raw=JSON.parse(ak);raw.bill.bill_id+=index;return JSON.stringify(raw);});
+const firstBillId=Math.floor(bill.bill_id/LEGISCAN_PART_ROWS)*LEGISCAN_PART_ROWS;
+const bodies=Array.from({length:LEGISCAN_PART_ROWS*3+1},(_,index)=>{const raw=JSON.parse(ak);raw.bill.bill_id=firstBillId+index;return JSON.stringify(raw);});
 function source(now:string){
   const {access_key:_access,...publicDataset}=dataset;
   return {capture:capture(JSON.stringify({dataset:publicDataset,archiveHash:hash(bodies.join("")),memberHashes:bodies.map(hash)}),now),dataset,bodies,people:[person],archiveHash:hash(bodies.join(""))};

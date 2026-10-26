@@ -5,24 +5,24 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T00:02:00Z
+heartbeat: 2026-10-26T00:03:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 8:02 PM EDT)
+## Every READY not on main (updated 8:03 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
 | READY | Lane | Slot |
 |---|---|---|
-| 8b69f0cbf | DB-03 reads (research cycle, Open States votes) | River finishing it (standing order: no fix within 60 min of the 6:50 PM return): tests updated on stream/river-db03-reads, cut from river a37ce95a7. Ships next, alone; urgent Neon |
+| de764a119 (carries 8b69f0cbf) | DB-03 reads, finished by River (stream/river-db03-reads) | gating alone now on river a37ce95a7; ships right after release 121 is live. Urgent Neon |
 | e0f14fe59 | DB-02 re-cut by River (registry prior reuse; replaces 2769c614e) | release 121 (PR #833, auto-merge on): gates 9 of 9 on a37ce95a7; urgent Neon |
 
 **Next: urgent Neon fixes, each as soon as ready (in lane order)**
 | READY | Lane | Slot |
 |---|---|---|
 | a0cb7d1ef | DB-03 owner snapshot reads (stream/db-03-reads, child of 8b69f0cbf; owner snapshot read 0.81 GB in the 4 PM EDT hour) | urgent Neon; after 8b69f0cbf ships. Doesn't fix 8b69's failing tests |
-| 04681516c | DB-03 Admin | gating now on river a37ce95a7 (def634abb); owed-route conflict resolved |
+| 04681516c | DB-03 Admin | after DB-03 reads; its gate was stopped for DB-03 reads (merge def634abb is built; owed-route conflict resolved) |
 | e4305907d | DB-03 state doors | after Admin |
 | 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | next, through 11072d2ed. Member offices f81db4b37 overlaps release 120's member-offices change; River keeps one path when it folds and says which |
 
@@ -1196,4 +1196,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - DB-03 Admin is gating on river a37ce95a7 (test step). DB-03 reads is being finished on stream/river-db03-reads (test rewrite); it ships next, alone, when it lands.
 - RB-A4 catch-up: cursor at CT. DC is next, then DE through VT in one pass. HOST_COUNTY rows: 14,666.
 - Neon, both databases, 7 PM EDT hour: 5,476 MB, the lowest hour today (5 AM to 6 PM EDT ran 7.2 to 13.9 GB). Release 120 went live at 6:09 PM; Oversight measures portraits and member offices once the runner adopts it.
+
+### 8:03 PM EDT: DB-03 reads finished
+- READY de764a119 "DB-03 reads (River)" on stream/river-db03-reads (river a37ce95a7 + 8b69f0cbf + test fix). Only two test files changed, aggregate-list-pagination and admin-narrow-reads, now written for the revision-first reads. Each test keeps its promise, and a new test proves an unchanged table sends revisions only. 16/16 in those files; all 37 files that import pg-store or revision-reads 402/402; tsc, eslint and knip clean.
+- Gating alone now. DB-03 Admin's gate was stopped for it.
 

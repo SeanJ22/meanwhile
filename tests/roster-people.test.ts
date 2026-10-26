@@ -4,7 +4,7 @@ import { gunzipSync } from "node:zlib";
 import test from "node:test";
 import { namesAgree, nameParts } from "../lib/ballot/incumbency.ts";
 import { rosterPeople, sameRosterPerson, withRosterPeople } from "../lib/registry/roster-people.ts";
-import { rosterHoldersForBody, divisionOcdIdForRosterHolder, type BodyRoster, type RosterMember } from "../lib/registry/body-rosters.ts";
+import { earlierRosterHoldersForBody, rosterHoldersForBody, divisionOcdIdForRosterHolder, type BodyRoster, type RosterMember } from "../lib/registry/body-rosters.ts";
 import { getRegistryRuntimeReadModel, withRegistryRuntimeProjection, currentRosterMemberReaderDisposition } from "../lib/registry/runtime-read-model.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { seatHolderById } from "../lib/registry/server.ts";
@@ -114,4 +114,32 @@ test("earlier reverse aliases cannot form a cycle after person merging", () => {
   const projected = withRosterPeople(source);
   assert.equal(projected.rosterReaderDispositions.find(row => row.sourceId === "a")?.state, "READER_ELIGIBLE");
   assert.equal(projected.rosterReaderDispositions.find(row => row.sourceId === "b")?.canonicalId, "a");
+});
+
+test("a complete newer official roster keeps older generic memberships as accessible history", async () => {
+  const current = Array.from({ length: 7 }, (_, index) => ({ ...member(`current:${index}`, `Current Person${index}`, `Ward ${index + 1} Council Member`),
+    membershipSource: { sourceUrl: "https://www.tucsonaz.gov/Government/Mayor-Council-and-City-Manager", sourceOrg: "City of Tucson", collectedAt: "2026-10-24" } }));
+  const old = { ...member("earlier:person", "Earlier Member", "Member"), membershipSource: {
+    sourceUrl: "https://www.tucsonaz.gov/Government/City-Information/City-Contacts", sourceOrg: "City of Tucson", collectedAt: "2026-10-22",
+  } };
+  const bodyId = "ocd-division/country:us/state:az/place:tucson#governing";
+  const held = runtime([{ ...roster([...current, old]), bodyId }]);
+  await withRegistryRuntimeProjection(held, ["AZ"], async () => {
+    assert.equal(rosterHoldersForBody(bodyId).length, 7);
+    assert.deepEqual(earlierRosterHoldersForBody(bodyId).map(row => row.id), [old.id]);
+    assert.equal((await seatHolderById(old.id, "AZ"))?.name, old.name);
+    assert.ok(readerPersonKeys(old.id).keys.includes(old.id));
+  });
+  assert.equal(held.bodyRosters[0].members.length, 8, "original source membership remains held");
+});
+
+test("a partial new roster or explicit older seat cannot be suppressed to fit a denominator", () => {
+  const current = [member("a", "First Person", "District 1 Member"), member("b", "Second Person", "District 2 Member")]
+    .map(row => ({ ...row, membershipSource: { sourceUrl: "https://example.gov/board", sourceOrg: "Official board", collectedAt: "2026-10-24" } }));
+  const old = { ...member("old", "Earlier Person", "Member"), membershipSource: {
+    sourceUrl: "https://example.gov/directory", sourceOrg: "Official board", collectedAt: "2026-10-22" } };
+  assert.equal(rosterPeople(roster([...current, old]), 3).members.length, 3);
+  assert.equal(rosterPeople(roster([...current, { ...old, officeTitle: "District 3 Member" }]), 2).members.length, 3);
+  assert.equal(rosterPeople(roster([...current.map(row => ({ ...row, membershipSource: { ...row.membershipSource,
+    sourceUrl: "https://unverified.example/board" } })), old]), 2).members.length, 3);
 });

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { prepareBodyIdentities } from "../lib/registry/body-identity.ts";
-import { readerGovernmentName } from "../lib/text/reader-names.ts";
+import { bodyDisplayName, readerGovernmentName, withReaderNames } from "../lib/text/reader-names.ts";
 import type { Body, Division } from "../lib/registry/types.ts";
 
 const county = "ocd-division/country:us/state:az/county:pima";
@@ -54,6 +54,16 @@ test("the government class and complete governing phrase distinguish school boar
   for(const key of ["addendum","joint","joint-council"])assert.equal(ids.get(key)?.bodyClass,"MEETING_TYPE");
 });
 
+test("district board names retain their number once and identify a local housing authority",()=>{
+  const rows=[body("Business Improvement District Board #10 (Avenues West)","bid",city),
+    body("Public Housing Authority Board of Commissioners","housing",city)];
+  const ids=prepareBodyIdentities(rows,divisions);
+  assert.equal(ids.get("bid")?.name,"Business Improvement District #10 (Avenues West) Board");
+  assert.equal(ids.get("housing")?.name,"Milwaukee Public Housing Authority Board of Commissioners");
+  const committees=prepareBodyIdentities([body("Water Authority, Social Services, and Parks Committee","committee",county,{governmentName:"Pima County",governmentType:"county"})],divisions);
+  assert.equal(committees.get("committee")?.governmentType,"county");
+});
+
 test("Census labels are readable and unknown boards do not gain authority from suffixes",()=>{
   assert.equal(readerGovernmentName("County Of Multnomah","county"),"Multnomah County");
   assert.equal(readerGovernmentName("PORTLAND CMTY COLLEGE",null),"Portland Community College");
@@ -71,4 +81,21 @@ test("all historical body addresses survive and every displayed row has a unique
   assert.deepEqual([...ids.keys()],rows.map(row=>row.id));
   assert.equal(new Set([...ids.values()].map(row=>row.name)).size,rows.length);
   assert.ok([...ids.values()].every(row=>row.name.includes(row.governmentName)));
+});
+
+test("meeting-type display and response formatting retain the kind of sitting",()=>{
+  const body={name:"Metro Executive Session",bodyClass:"MEETING_TYPE",divisionLabel:"Metro",divisionType:"special_district"};
+  assert.equal(bodyDisplayName(body),body.name);
+  assert.equal(withReaderNames({meetings:[],coverage:{bodies:[body]}}).coverage?.bodies[0].name,body.name);
+});
+
+test("a governing body's own roster prevents a misparsed court title from taking its members",()=>{
+  const rows=[body("City Court","council",city),body("Judiciary and Legislation Committee","committee",city),body("Pay-to-Park Workgroup","workgroup",city)];
+  const ids=prepareBodyIdentities(rows,divisions,new Map([["council","Milwaukee Mayor and Council"]]));
+  assert.equal(ids.get("council")?.bodyClass,"GOVERNING");
+  assert.equal(ids.get("council")?.name,"City of Milwaukee Mayor and Council");
+  assert.equal(ids.get("committee")?.bodyClass,"ADVISORY");
+  assert.equal(ids.get("workgroup")?.bodyClass,"ADVISORY");
+  const assessing=prepareBodyIdentities([body("Joint Assessing Board","assessing",city,{bodyClass:"ADVISORY"})],divisions);
+  assert.equal(assessing.get("assessing")?.bodyClass,"ADVISORY");
 });

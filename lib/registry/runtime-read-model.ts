@@ -123,7 +123,7 @@ export function currentRosterPersonKeys(id: string): readonly string[] {
   let index = rosterIdentities.get(model);
   if (!index) {
     const built = new Map<string, readonly string[]>();
-    for (const roster of model.bodyRosters) for (const member of roster.members) {
+    for (const roster of model.bodyRosters) for (const member of [...roster.members, ...roster.membershipHistory ?? []]) {
       const keys = [...personIdentityKeys(member)];
       for (const key of keys) built.set(key, [...new Set([...built.get(key) ?? [], ...keys])]);
     }

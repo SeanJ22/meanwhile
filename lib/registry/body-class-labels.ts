@@ -35,6 +35,8 @@ export const BODY_CLASS_LABELS: Readonly<Record<BodyClass, BodyClassLabel>> = {
     why: "Hears cases and administers justice." },
   BODY: { short: "Body", long: "Body", governVerbMayAttach: false,
     why: "Its governing authority has not been established." },
+  INFORMATION: { short: "Information", long: "Government information", governVerbMayAttach: false,
+    why: "Published information about the government." },
   GOVERNING: {
     short: "Governing",
     long: "Governing body",

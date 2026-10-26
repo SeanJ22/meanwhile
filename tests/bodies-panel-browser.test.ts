@@ -63,16 +63,19 @@ test("Bodies stays compact and opens the correct body with next and last meeting
       if(params.get("types")==="1"){
         const parent=original.coverage.bodies.find(body=>body.bodyClass==="GOVERNING");
         const type={...parent,bodyId:parent.bodyId+":worksession",name:parent.name+" Worksession",bodyClass:"MEETING_TYPE",meetingBodyId:parent.bodyId};
+        const person={id:"held-current-member",name:"Current Member",officeTitle:"Member",officeJurisdictionOcdId:parent.ocdId,termNote:null,partyLabel:null,websiteUrl:null,sourceUrl:"https://fixture.example.gov/roster",provenance:{sourceUrl:"https://fixture.example.gov/roster",sourceOrg:"Fixture",collectedAt:"2026-09-23",verifiedAt:null},email:null,phone:null,contactFormUrl:null,photoUrl:null,campaignUrl:null,termEnd:null,birthDate:null};
         const next=original.meetings.find(meeting=>meeting.bodyId===parent.bodyId&&meeting.id.endsWith(":next"));
-        original={...original,coverage:{...original.coverage,bodies:[{...parent,meetingTypes:[type]},type]},meetings:[...original.meetings,{...next,id:"held-worksession",bodyId:type.bodyId,startsAt:"2026-09-24T17:00:00Z"}]};
+        original={...original,coverage:{...original.coverage,bodies:[{...parent,meetingTypes:[type],readerRoster:{members:[person],earlierMembers:[{...person,id:"held-earlier-member",name:"Earlier Member"}],gaps:[],officePhone:null}},type]},meetings:[...original.meetings,{...next,id:"held-worksession",bodyId:type.bodyId,startsAt:"2026-09-24T17:00:00Z"}]};
       }
       const calendar=params.get("calendar");
       const region={...original,meetings:calendar==="recorded"?recorded:calendar==="none"?[]:calendar?original.meetings.filter(meeting=>meeting.id.endsWith(":"+calendar)):original.meetings};
       const [body,setBody]=useState(null);
+      const [openedHolder,setOpenedHolder]=useState(null);
       const subject=body?bodySubject(body,region.meetings):null;
       const data={allMeetings:region.meetings,meetings:region.meetings,venues:[],result:null,location:null,drawnDistricts:[],dropped:0,searchFailed:false,atAddress:false,governing:null,zipPartial:null,basis:"ZIP"};
       return <DataProvider value={data}><ReaderCard key={body?.bodyId||"bodies"} viewKey={body?.bodyId||"bodies"} kicker={subject?.title||"Bodies"} backLabel={body?"Bodies":null} onBack={()=>setBody(null)} onClose={()=>setBody(null)}>
-        {subject?<EntityModal subject={subject} embedded onClose={()=>setBody(null)}/>:<DoorOverlay door="bodies" coverage={region.coverage} meetings={region.meetings} drawnDistricts={[]} districtOverlayOn={false} atAddress={false} onShowDistricts={noop} onOpenOfficial={noop} onOpenMeeting={noop} onOpenBody={setBody} onClose={noop} embedded/>}
+        {subject?<EntityModal subject={subject} embedded onClose={()=>setBody(null)} onOpenHolder={setOpenedHolder}/>:<DoorOverlay door="bodies" coverage={region.coverage} meetings={region.meetings} drawnDistricts={[]} districtOverlayOn={false} atAddress={false} onShowDistricts={noop} onOpenOfficial={noop} onOpenMeeting={noop} onOpenBody={setBody} onClose={noop} embedded/>}
+        {openedHolder&&<output data-opened-holder={openedHolder.id}>{openedHolder.name}</output>}
       </ReaderCard></DataProvider>;
     }
     createRoot(document.getElementById("root")).render(<Reader/>);`, sourcefile: "ui-02-bodies.tsx", resolveDir: process.cwd(), loader: "tsx" },
@@ -166,6 +169,12 @@ test("Bodies stays compact and opens the correct body with next and last meeting
       assert.equal(await parentRow.locator("[data-meeting-type-row]").count(), 1);
       await parentRow.locator(":scope > button").click();
       await page.locator('[data-meeting-id="held-worksession"]').waitFor();
+      await page.getByRole("button", { name: "Who sits on it 1", exact: true }).click();
+      assert.equal(await page.locator("[data-roster-holder]").count(), 1);
+      assert.equal(await page.locator("[data-earlier-roster-holder]").count(), 1);
+      await page.getByText("Earlier membership records (1)", { exact: true }).click();
+      await page.getByRole("button", { name: "Earlier Member", exact: true }).click();
+      await page.locator('[data-opened-holder="held-earlier-member"]').waitFor();
       await page.getByRole("button", { name: "Back to Bodies", exact: true }).click();
       await page.locator("[data-meeting-type-row] > button").click();
       await page.locator('[data-meeting-id="held-worksession"]').waitFor();

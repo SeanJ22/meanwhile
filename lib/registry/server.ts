@@ -22,7 +22,7 @@ import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { readStateGeometryText } from "../geo/state-geometry.ts";
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
-import { rosterHoldersForBody } from "./body-rosters.ts";
+import { earlierRosterHoldersForBody, rosterHoldersForBody } from "./body-rosters.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition, currentStatewideExecutives } from "./runtime-read-model.ts";
 import { scopedHolders } from "../officials/scoped-holders.ts";
 import { readDivisionRepresentatives } from "./representation-server.ts";
@@ -213,7 +213,7 @@ async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Lo
   for (const holder of statewideExecutivesFor(currentStatewideExecutives().map((executive) => executive.stateOcdId))) {
     for (const id of personIdentityKeys(holder)) officialsById.set(id, holder);
   }
-  for (const roster of currentBodyRosters()) for (const holder of rosterHoldersForBody(roster.bodyId)) {
+  for (const roster of currentBodyRosters()) for (const holder of [...rosterHoldersForBody(roster.bodyId), ...earlierRosterHoldersForBody(roster.bodyId)]) {
     for (const id of personIdentityKeys(holder)) if (!officialsById.has(id)) officialsById.set(id, holder);
   }
   return {
@@ -557,7 +557,7 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
     .find((holder) => personIdentityKeys(holder).has(canonicalId));
   if (statewide) return statewide;
   for (const roster of currentBodyRosters()) {
-    const holder = rosterHoldersForBody(roster.bodyId).find((row) => personIdentityKeys(row).has(canonicalId));
+    const holder = [...rosterHoldersForBody(roster.bodyId), ...earlierRosterHoldersForBody(roster.bodyId)].find((row) => personIdentityKeys(row).has(canonicalId));
     if (holder) return holder;
   }
   return null;

@@ -149,9 +149,10 @@ export function bodyDisplayName(body: {
   name: string | null;
   divisionLabel: string;
   divisionType: string | null;
+  bodyClass?: string;
 }): string {
   return body.name !== null && body.name.trim() !== ""
-    ? readerBodyName(body.name)
+    ? body.bodyClass === "MEETING_TYPE" ? readerGovernmentName(body.name, null) : readerBodyName(body.name)
     : readerGovernmentName(body.divisionLabel, body.divisionType);
 }
 
@@ -163,7 +164,7 @@ export function bodyDisplayName(body: {
 export function withReaderNames<
   R extends {
     meetings: ReadonlyArray<{ bodyName: string; jurisdiction?: string }>;
-    coverage: { bodies: ReadonlyArray<{ name: string | null; divisionLabel?: string; divisionType?: string | null }>; governments?: ReadonlyArray<{name:string}> } | null;
+    coverage: { bodies: ReadonlyArray<{ name: string | null; divisionLabel?: string; divisionType?: string | null; bodyClass?: string }>; governments?: ReadonlyArray<{name:string}> } | null;
   },
 >(result: R): R {
   return {
@@ -173,7 +174,7 @@ export function withReaderNames<
     coverage: result.coverage
       ? {
           ...result.coverage,
-          bodies: result.coverage.bodies.map((b) => ({ ...b, ...(b.name === null ? {} : { name: readerBodyName(b.name) }),
+          bodies: result.coverage.bodies.map((b) => ({ ...b, ...(b.name === null ? {} : { name: b.bodyClass === "MEETING_TYPE" ? readerGovernmentName(b.name, null) : readerBodyName(b.name) }),
             ...(b.divisionLabel ? { divisionLabel: readerGovernmentName(b.divisionLabel,b.divisionType ?? null) } : {}) })),
           ...(result.coverage.governments ? { governments:result.coverage.governments.map(g => ({...g,name:readerGovernmentName(g.name,null)})) } : {}),
         }

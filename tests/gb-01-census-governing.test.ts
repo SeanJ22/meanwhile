@@ -94,9 +94,9 @@ test("one Oregon pass makes Portland's city, county and school boards through th
     const coverage = stateCoverage({ state: "OR", registry: runtime, version: "gb-01" }, ids, 0, 0, [], place.bodies,
       [division(PORTLAND, "place", "Portland city"), division(MULTNOMAH, "county", "Multnomah County"), division(SCHOOL, "school_district", "Portland School District 1J")]);
     assert.deepEqual(coverage.bodies.map(body => [body.bodyId, body.name, body.bodyClass]).sort(), [
-      ["or:city:city-of-portland#governing", "City Of Portland governing board", "GOVERNING"],
-      ["or:county:county-of-multnomah#governing", "County Of Multnomah governing board", "GOVERNING"],
-      ["or:school:portland-sch-dist-1j#board", "Portland Sch Dist 1j school board", "GOVERNING"],
+      ["or:city:city-of-portland#governing", "City of Portland", "GOVERNING"],
+      ["or:county:county-of-multnomah#governing", "Multnomah County", "GOVERNING"],
+      ["or:school:portland-sch-dist-1j#board", "Portland School District 1J", "GOVERNING"],
     ]);
     const city = coverage.bodies.find(body => body.bodyId === "or:city:city-of-portland#governing")!;
     assert.equal(city.officeContact?.address, "1120 SW 5TH AVE, ROOM 1250, PORTLAND, OR, 97204-1912");

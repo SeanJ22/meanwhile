@@ -6,6 +6,8 @@ import { personIdentityKeys } from "../officials/people-identity.ts";
 import type { BodyRoster, RosterMember, RosterReaderDisposition } from "./body-rosters.ts";
 import type { RegistryRuntimeReadModel } from "./runtime-data-plane.ts";
 import { mergeRosterMemberSources } from "./state-composition.ts";
+import { compositionFor } from "./body-membership.ts";
+import { isOfficialSource } from "../civic-data/source-authority.ts";
 
 const comparable = (name: string) => {
   const parts = splitDisplayName(nameTokens(name).join(" "));
@@ -35,7 +37,7 @@ export function sameRosterPerson(left: RosterMember, right: RosterMember, divisi
   return !a || !b || a === b;
 }
 
-export function rosterPeople(roster: BodyRoster): BodyRoster {
+function mergeRosterPeople(roster: BodyRoster): BodyRoster {
   const groups: RosterMember[][] = [];
   for (const member of roster.members) {
     const originals = member.sourceMembers ?? [member];
@@ -61,18 +63,35 @@ export function rosterPeople(roster: BodyRoster): BodyRoster {
   }) };
 }
 
+/** A complete newer sourced roster supersedes older unspecified memberships.
+ * Missing seats or explicit older seats remain present; no count is guessed. */
+export function rosterPeople(roster: BodyRoster, expectedSeats = compositionFor(roster.bodyId)?.expectedSeats): BodyRoster {
+  const merged = mergeRosterPeople(roster);
+  if (!expectedSeats || merged.members.length <= expectedSeats) return merged;
+  const membershipDate = (member: RosterMember) => Date.parse(member.membershipSource?.collectedAt ?? roster.collectedAt) || 0;
+  const latest = Math.max(...merged.members.map(membershipDate));
+  const current = merged.members.filter(member => membershipDate(member) === latest);
+  if (current.length !== expectedSeats || !current.every(member => member.fieldSources?.name?.kind === "OFFICIAL" ||
+    roster.kind === "OFFICIAL" || isOfficialSource(member.membershipSource?.sourceUrl ?? roster.sourceUrl))) return merged;
+  const earlier = merged.members.filter(member => membershipDate(member) < latest && /^(?:(?:board|council) )?member$/i.test(member.officeTitle.trim()));
+  if (!earlier.length) return merged;
+  const prior = new Set(earlier);
+  return { ...merged, members: merged.members.filter(member => !prior.has(member)),
+    membershipHistory: [...new Map([...(merged.membershipHistory ?? []), ...earlier].map(member => [member.id, member])).values()] };
+}
+
 const projections = new WeakMap<RegistryRuntimeReadModel, RegistryRuntimeReadModel>();
 
 /** A derived reader view; source publications and every old identity stay held. */
 export function withRosterPeople(value: RegistryRuntimeReadModel): RegistryRuntimeReadModel {
   const cached = projections.get(value);
   if (cached) return cached;
-  const bodyRosters = value.bodyRosters.map(rosterPeople);
+  const bodyRosters = value.bodyRosters.map(roster => rosterPeople(roster));
   if (bodyRosters.every((roster, index) => roster === value.bodyRosters[index])) {
     projections.set(value, value); return value;
   }
   const dispositions = new Map(value.rosterReaderDispositions.map(row => [row.sourceId, row]));
-  for (const roster of bodyRosters) for (const member of roster.members) if (member.sourceMembers) {
+  for (const roster of bodyRosters) for (const member of [...roster.members, ...roster.membershipHistory ?? []]) if (member.sourceMembers) {
     const canonical = dispositions.get(member.id);
     if (canonical?.state === "EXACT_DUPLICATE" && member.nativeIds?.reader?.includes(canonical.canonicalId!)) {
       dispositions.set(member.id, { sourceId: member.id, canonicalId: member.id, state: "READER_ELIGIBLE",

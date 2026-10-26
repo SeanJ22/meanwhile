@@ -16,13 +16,16 @@ export interface BodyIdentity {
 const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const SPECIAL = /\b(?:(?:fire|water|irrigation|library|flood|sanitation|sewer|transit|stadium|hospital|health|park|recreation|conservation|utility|utilities|improvement|drainage|mosquito|cemetery|port|airport|lighting|service|community facilities)[\w\s-]*(?:district|authority)|community college|housing authority|district board)\b/i;
 const MEETING = /\b(?:work\s*sessions?|briefings?|roundtables?|workshops?|retreats?|study sessions?|joint (?:meetings?|sessions?)|(?:special|regular)(?: board)? meetings?|executive sessions?|addend(?:um|a)|recessed sessions?|public hearings?)\b|^joint$|^meetings?$/i;
-const ADMIN = /\b(?:clerk|department|staff|office of|business parks|developable|properties|administration|administrator|manager|attorney|sheriff|treasurer|assessor|recorder|register of deeds)\b/i;
+const ADMIN = /\b(?:clerk|department|division|bureau|staff|office of|business parks|developable|properties|administration|administrator|manager|attorney|sheriff|treasurer|assessor|recorder|register of deeds|comptroller|corporation counsel|medical examiner|child support services)\b/i;
 const COURT = /\b(?:court|judiciary|judicial|judge)\b/i;
-const ADVISORY = /\b(?:advisory|(?:sub)?committee|task force|work(?:ing)? group|roundtable|board of (?:adjustment|appeals|review)|plan(?:ning)? commission|zoning|historic preservation|ethics|civil service|arts commission|human rights|council (?:on|for))\b/i;
+const ADVISORY = /\b(?:advisory|(?:sub)?committ?ee|task\s*force|work(?:ing)?\s*group|roundtable|board of (?:adjustment|appeals|review)|plan(?:ning)? commission|zoning|historic preservation|ethics|civil service|arts commission|human rights|council (?:on|for))\b/i;
 const DERIVED = new Set(["DERIVED_FROM_DIVISION_TYPE", "REGISTERED_FROM_CENSUS_OF_GOVERNMENTS", "REGISTERED_FROM_TIGER_FUNCSTAT", "PROMOTED_FROM_CENSUS_OF_GOVERNMENTS"]);
 
 function governmentType(body: Body, division?: Division): GovernmentType {
   const registered = body.registeredName ?? body.name ?? "";
+  if (ADVISORY.test(registered) && body.governmentType) return body.governmentType;
+  if (ADVISORY.test(registered) && !SPECIAL.test(body.governmentName ?? "") && division?.divisionType === "county") return "county";
+  if (ADVISORY.test(registered) && !SPECIAL.test(body.governmentName ?? "") && division?.divisionType === "place") return "city";
   if (/\bgoverning board$/i.test(registered) && /\b(?:board of (?:county commissioners|supervisors)|county board)\b/i.test(body.name ?? "")) return "county";
   if (/\b(?:school district|(?:community|cmty) college|education service district)\b/i.test(registered) || /school/i.test(body.censusUnitType ?? "")) return "school_district";
   if (SPECIAL.test(registered) && body.governmentType !== "school_district") return "special_district";
@@ -45,13 +48,15 @@ function governmentType(body: Body, division?: Division): GovernmentType {
 
 function ownGovernment(body: Body, division: Division | undefined, type: GovernmentType): string {
   const registered = body.registeredName ?? body.name;
-  const specialName = type === "special_district" && SPECIAL.test(registered ?? "")
+  const specialName = type === "special_district" && !ADVISORY.test(registered ?? "") && SPECIAL.test(registered ?? "")
     ? registered!.replace(/\s+(?:governing board|board of (?:directors|trustees|supervisors|commissioners)|board)(?=\s*(?:#\d|\(|,|$))/i, "")
       .replace(/\s+(?:advisory (?:board|committee)|commission|committee)$/i, "") : null;
-  const schoolName = type === "school_district" && /\b(?:school district|(?:community|cmty) college|education service district)\b/i.test(registered ?? "")
+  const schoolName = type === "school_district" && !ADVISORY.test(registered ?? "") && /\b(?:school district|(?:community|cmty) college|education service district)\b/i.test(registered ?? "")
     ? registered!.replace(/\s+(?:(?:governing|school) board|board of (?:education|directors|trustees)|board)$/i, "") : null;
   const foreignParent = type === "county" && /\b(?:district|authority)\b/i.test(body.governmentName ?? "");
-  const label = specialName ?? schoolName ?? (foreignParent ? division?.label : body.governmentName) ?? division?.label;
+  const localDistrict = specialName && /^(?:public )?housing authority$/i.test(specialName) && division?.divisionType === "place"
+    ? `${division.label.replace(/\s+(?:city|town|village|borough)$/i, "")} ${specialName}` : specialName;
+  const label = localDistrict ?? schoolName ?? (foreignParent ? division?.label : body.governmentName) ?? division?.label;
   // A retained body with no geographic record still has its own sourced identity.
   let name = readerGovernmentName(label ?? body.name ?? "Government", type === "city" ? "place" : type);
   if (type === "city") {
@@ -66,11 +71,12 @@ function classify(body: Body, government: string, type: GovernmentType): string 
   const raw = body.name?.trim() ?? "";
   const supplied = kindFromSource(DEFAULT_KINDS, "body", body.bodyClass);
   if (MEETING.test(raw)) return "MEETING_TYPE";
+  if (ADVISORY.test(raw)) return "ADVISORY";
   if (ADMIN.test(raw)) return "EXECUTIVE_AGENCY";
   if (COURT.test(raw) && !/\b(?:fiscal|quorum|levy|commissioners) court\b/i.test(raw)) return "COURT";
-  if (ADVISORY.test(raw)) return "ADVISORY";
-  if ((type === "city" || type === "county") && /\bjoint\b/i.test(raw) && /\b(?:council|board|commissioners)\b/i.test(raw)) return "MEETING_TYPE";
+  if (/\b(?:demographics|myths|facts about|address guide|information guide)\b/i.test(raw)) return "INFORMATION";
   if (supplied === "ADVISORY" || supplied === "PRIVATE_ASSOCIATION" || supplied === "SOVEREIGN_TRIBAL" || supplied === "EXECUTIVE_AGENCY") return supplied;
+  if ((type === "city" || type === "county") && /\bjoint\b/i.test(raw) && /\b(?:(?:city|town|county|common) council|board of (?:supervisors|commissioners|education)|county board)\b/i.test(raw)) return "MEETING_TYPE";
   if (type === "special_district" && (words(raw) === words(`${government} Council`) || /^(?:the )?council(?: meeting)?$/i.test(raw))) return "GOVERNING";
   const governing = raw && governingBoardName(raw, { name: government, county: type === "county", school: type === "school_district", special: type === "special_district" });
   if (governing) {
@@ -90,13 +96,18 @@ function classify(body: Body, government: string, type: GovernmentType): string 
 
 function qualifiedName(raw: string | null, government: string, type: GovernmentType, bodyClass: string): string {
   if (!raw?.trim()) return government;
-  if (bodyClass === "GOVERNING" && /\bgoverning board$/i.test(raw)) return government;
+  if (bodyClass === "GOVERNING" && /\bgoverning board$|\s+school board$/i.test(raw)) return government;
   const county = /^(.*?) (County|Parish|Borough)$/i.exec(government);
   const prefix = county ? `${county[2]} of ${county[1]}` : null;
   const expanded = prefix && raw.toLowerCase().startsWith(prefix.toLowerCase()) ? `${government}${raw.slice(prefix.length)}` : raw;
   const name = bodyClass === "MEETING_TYPE" ? readerGovernmentName(expanded, null) : readerBodyName(readerGovernmentName(expanded, null));
   const normalized = words(name), parent = words(government);
   if (normalized === parent || normalized.startsWith(`${parent} `)) return name;
+  const board = /\b(?:governing board|board of (?:directors|trustees|supervisors|commissioners)|board)\b/i.exec(name);
+  if (board) {
+    const withoutBoard = words(`${name.slice(0, board.index)} ${name.slice(board.index + board[0].length)}`);
+    if (withoutBoard === parent || parent.endsWith(` ${withoutBoard}`)) return `${government} ${board[0]}`;
+  }
   const place = words(government.replace(/^(?:city|town|village|borough|township) of /i, ""));
   if (type === "city" && normalized.startsWith(`${place} `)) return `${government}${name.slice(government.replace(/^(?:city|town|village|borough|township) of /i, "").length)}`;
   if (type === "city" && /^(?:city|town|village|borough|township) council$/i.test(name)) return `${government} ${name.replace(/^\w+ /, "")}`;
@@ -105,11 +116,18 @@ function qualifiedName(raw: string | null, government: string, type: GovernmentT
 }
 
 /** One classification and government identity path. Body ids remain addresses, never evidence of authority. */
-export function prepareBodyIdentities(bodies: readonly Body[], divisions: ReadonlyMap<string, Division>): Map<string, BodyIdentity> {
+export function prepareBodyIdentities(bodies: readonly Body[], divisions: ReadonlyMap<string, Division>, rosterNames: ReadonlyMap<string, string> = new Map()): Map<string, BodyIdentity> {
   const result = new Map<string, BodyIdentity>();
   const byGovernment = new Map<string, Body[]>();
-  for (const body of bodies) {
-    const division = body.ocdId ? divisions.get(body.ocdId) : undefined;
+  for (const original of bodies) {
+    const rosterName = rosterNames.get(original.id);
+    const division = original.ocdId ? divisions.get(original.ocdId) : undefined;
+    // A direct governing roster identifies its own body. A later extraction of
+    // a court, department or sitting label cannot turn that roster into another body's members.
+    const rosterGovernment = rosterName && governingBoardName(rosterName, {name:original.governmentName ?? division?.label,
+      county:division?.divisionType === "county",school:division?.divisionType === "school_district"});
+    const body = rosterGovernment && (COURT.test(original.name ?? "") || ADMIN.test(original.name ?? "") || MEETING.test(original.name ?? ""))
+      ? {...original,name:rosterName!} : original;
     const type = governmentType(body, division), government = ownGovernment(body, division, type);
     const matchesDivision = division && words(readerGovernmentName(division.label, division.divisionType)).replace(/^city of | city$/g, "") === words(government).replace(/^city of | city$/g, "");
     const governmentId = type === "special_district" ? `district:${words(government)}` : matchesDivision ? division.ocdId : body.governmentId ?? body.ocdId ?? `government:${words(government)}`;
@@ -132,9 +150,9 @@ export function prepareBodyIdentities(bodies: readonly Body[], divisions: Readon
   }
   // Distinct retained source records must remain addressable and distinguishable.
   const names = new Map<string, string[]>();
-  const nameKey = (name: string) => words(readerBodyName(name)).replace(/\band\b/g, "").replace(/\s+/g, " ");
+  const nameKey = (name: string, bodyClass: string) => words(bodyClass === "MEETING_TYPE" ? name : readerBodyName(name)).replace(/\band\b/g, "").replace(/\s+/g, " ");
   for (const [id, row] of result) {
-    const key = nameKey(row.name);
+    const key = nameKey(row.name, row.bodyClass);
     const ids = names.get(key) ?? []; ids.push(id); names.set(key, ids);
   }
   const reserved = new Set(names.keys());
@@ -143,9 +161,9 @@ export function prepareBodyIdentities(bodies: readonly Body[], divisions: Readon
     for (const id of ids.slice(1)) {
       const row = result.get(id)!, base = row.name;
       let number = 2;
-      while (reserved.has(nameKey(`${base} — ${number}`))) number++;
+      while (reserved.has(nameKey(`${base} — ${number}`, row.bodyClass))) number++;
       row.name = `${base} — ${number}`;
-      reserved.add(nameKey(row.name));
+      reserved.add(nameKey(row.name, row.bodyClass));
     }
   }
   return result;

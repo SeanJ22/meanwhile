@@ -65,6 +65,8 @@ export type Partisanship =
   | "UNDETERMINED";
 
 export interface BodyRoster {
+  /** Earlier sourced memberships superseded by a complete newer roster. */
+  membershipHistory?: readonly RosterMember[];
   kind?: import("../control-plane/promotion/source-kinds.ts").SourceKind;
   /** Matches `BodySourceWiring.bodyId` exactly. */
   bodyId: string;
@@ -173,6 +175,15 @@ export interface RosterHolder {
 export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
   const roster = rosterForBody(bodyId);
   if (!roster) return [];
+  return holdersFromRoster(roster, roster.members);
+}
+
+export function earlierRosterHoldersForBody(bodyId: string | null): RosterHolder[] {
+  const roster = rosterForBody(bodyId);
+  return roster ? holdersFromRoster(roster, roster.membershipHistory ?? []) : [];
+}
+
+function holdersFromRoster(roster: BodyRoster, members: readonly RosterMember[]): RosterHolder[] {
   const photos = getRegistryRuntimeReadModel().rosterPhotos;
   const holder = (member: RosterMember): RosterHolder => ({
     id: member.id,
@@ -204,7 +215,7 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     termEnd: member.termEnd ?? null,
     birthDate: null,
   });
-  return roster.members.map(member => {
+  return members.map(member => {
     const direct = holder(member);
     if (!member.sourceMembers) return direct;
     const merged = mergeBallotPersonHolders(member.sourceMembers.map(holder));
@@ -226,7 +237,7 @@ export function divisionOcdIdForRosterHolder(
   holderId: string,
 ): string | null {
   for (const roster of currentBodyRosters()) {
-    if (roster.members.some((member) => personIdentityKeys(member).has(holderId))) {
+    if ([...roster.members, ...roster.membershipHistory ?? []].some((member) => personIdentityKeys(member).has(holderId))) {
       return roster.bodyId.split("#")[0];
     }
   }

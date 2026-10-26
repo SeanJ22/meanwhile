@@ -178,6 +178,7 @@ export interface CoveredBody {
    */
   readerRoster?: {
     members: SeatHolder[];
+    earlierMembers?: SeatHolder[];
     gaps: RosterReaderGap[];
     officePhone: {
       phone: string;
@@ -327,6 +328,7 @@ export function summarizeCoverage(
   /** Exact per-scope state-roster read dispositions settled by the caller. */
   stateLegislatorAuthorities: StateLegislatorCoverageAuthority[] = [],
   heldMeetings: readonly Meeting[] = [],
+  rosterNames: ReadonlyMap<string, string> = new Map(),
 ): CoverageSummary {
   const { divisions, bodies } = bodiesAt(
     point,
@@ -337,7 +339,7 @@ export function summarizeCoverage(
     territory,
   );
 
-  const identities = prepareBodyIdentities(bodies, divisionsById);
+  const identities = prepareBodyIdentities(bodies, divisionsById, rosterNames);
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;
     const held = heldMeetings.find(meeting => meeting.bodyId === body.id);

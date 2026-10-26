@@ -38,10 +38,10 @@ test("the shared formatter fixes case, small words and abbreviations", () => {
 });
 
 test("a derived body is named for the government it is", () => {
-  assert.equal(readerGovernmentName("COUNTY OF WAKE", "county"), "County of Wake");
+  assert.equal(readerGovernmentName("COUNTY OF WAKE", "county"), "Wake County");
   const stored = {meetings:[{id:"same",bodyName:"BOARD OF COMMISSIONERS",jurisdiction:"COUNTY OF WAKE"}],coverage:{bodies:[],governments:[{id:"same-government",name:"COUNTY OF WAKE"}]}};
-  assert.equal(withReaderNames(stored).meetings[0].jurisdiction,"County of Wake");
-  assert.equal(withReaderNames(stored).coverage?.governments[0].name,"County of Wake");
+  assert.equal(withReaderNames(stored).meetings[0].jurisdiction,"Wake County");
+  assert.equal(withReaderNames(stored).coverage?.governments[0].name,"Wake County");
   assert.equal(stored.meetings[0].jurisdiction,"COUNTY OF WAKE");
   assert.equal(readerGovernmentName("Pima", "county"), "Pima County");
   assert.equal(readerGovernmentName("Cochise County", "county"), "Cochise County");

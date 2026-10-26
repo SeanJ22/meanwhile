@@ -19,7 +19,7 @@ const exists = await db.query<{ relation: string | null }>("SELECT to_regclass('
 if (!exists.rows[0]?.relation) for (const migration of ["0025_typical_fixer", "0026_lame_sunset_bain", "0027_pdc_candidate_history_shape", "0028_wise_ikaris", "0029_unchanged_confirmation_receipts", "0031_civic_payload_parts", "0038_src_mn_federal_money_lookup"]) {
   await db.exec(readFileSync(join(process.cwd(), "lib", "db", "migrations", `${migration}.sql`), "utf8"));
 }
-if (!(await db.query("SELECT to_regclass('public.civic_data_rows') AS relation")).rows[0]?.relation) {
+if (!(await db.query<{relation:string|null}>("SELECT to_regclass('public.civic_data_rows')::text AS relation")).rows[0]?.relation) {
   const readerFunctions=readFileSync(join(process.cwd(),"lib/db/migrations/0036_ne01.sql"),"utf8").split("--> statement-breakpoint")
     .filter(statement=>/^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(statement));
   for(const statement of readerFunctions)await db.exec(statement);

@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE FOR READERS: release 128 (main 9352c8e14; runner on it since 7:27 AM EDT). RIVER: 63d03105b (RT-01b + bills, gate 9/9). GATING: release 129 on river-next-129b 11890bcfd (+ RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, MT-02). NEXT: 130 = CT-01 812ba1da8 (fold being resolved). DB-04 replaced by DB-05. See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 128 (main 9352c8e14; runner on it since 7:27 AM EDT). RIVER: 63d03105b (RT-01b + bills, gate 9/9). GATING: release 129 on river-next-129c 8fdf21bbf (+ RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, MT-02, CT-01). DB-04 replaced by DB-05. See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
@@ -14,7 +14,7 @@ Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates,
 
 **Release rule (Sean, 10:25 AM EDT Oct 26):** an urgent fix goes first but does not ship alone; every other lane that is READY and passes its scan rides in the same release; nothing finished waits behind an urgent fix; no batch waits on a lane that isn't READY.
 
-**Release 129: river 63d03105b + seven lanes, full gate running on river-next-129b 11890bcfd (from 12:20 PM)**
+**Release 129: river 63d03105b + eight lanes, full gate running on river-next-129c 8fdf21bbf (from 12:40 PM)**
 | READY | Lane | State |
 |---|---|---|
 | 92b527e93 | RT-01b: a place-map turn per state, one shared Census worker, bounded heap (#822's approach) | On river (gate 9/9) |
@@ -31,10 +31,12 @@ Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates,
 *Follow-up, not urgent:* while hunts are stopped the main loop runs every second (CONTROL_WAKE_POLL_MS = 1 s), and each pass inspects the release (fetches /api/build and GitHub check runs: about 3,600 GitHub calls an hour against a 5,000 limit) and reads owner controls. River will cut this to once a minute in the next release.
 
 
-**Release 130: CT-01**
+**CT-01 joins release 129 (fold resolved 12:37 PM)**
 | READY | Lane | State |
 |---|---|---|
-| 812ba1da8 (origin/stream/ct-01, posted 11:35 AM) | CT-01: missing information inside each card section, readable source quotes, plain term sentences, every held body contact; ballot date text cleaned in every state (Boise 83702: "Voter pre-registration ends on October 23.") | Scan clean (no bypassCache, no proof files). Conflicts with river in 15 files (it merged river at 1d1ed9300). River is resolving the fold locally (not pushing stream/ct-01 or stream/river-ct-01); it ships as 130 right after 129 so 129's place map doesn't wait |
+| 812ba1da8 (origin/stream/ct-01) | CT-01: missing information inside each card section, readable source quotes, plain term sentences, every held body contact; ballot date text cleaned in every state (Boise 83702: "Voter pre-registration ends on October 23.") | Scan clean. River resolved its 18 conflicts with river locally (fold/ct-01 8fdf21bbf: merge 17f70b0ab + one fix so a term note with no held holder name doesn't crash). One display path per job kept: office_email in place-builder next to MP-01's mailing_address; body contact in the Contact section; FM-01's grouped plain-language federal money kept (no second writer); CT-01's ballotDateText is the only ballot date cleanup. Focused 347 + 9 browser + 154 tests pass; tsc, eslint (84 files), knip, preflight clean. Full gate restarted on river-next-129c 8fdf21bbf at 12:40 PM. Nothing pushed to stream/ct-01 or stream/river-ct-01 |
+
+*Open calls for Sean or the CT-01 session (not blocking):* federal money keeps FM-01's grouping by relationship, not CT-01's one heading per source family; federal money Sources still carry FM-01's full original fields (UEI, GEOIDs, source record, match reason) because FM-01 requires every original field in Sources, while CT-01 removes technical labels elsewhere.
 
 **DB-04 is replaced by DB-05 (Sean, 11:15 AM EDT)**
 DB-05 is Sean's new session to take Neon down to 10 GB a day. River stopped DB-04 at 11:15 AM EDT.

@@ -3,8 +3,7 @@ import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { resolveVenue, soleVenueForBody, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../../meetings/constants.ts";
-import { decodeEntities, politeGetText, REQUEST_SPACING_MS } from "../http.ts";
-import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
+import { decodeEntities, politeGetText } from "../http.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 import type { Meeting, MeetingQuery, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
 
@@ -128,7 +127,6 @@ export function makeBoardDocsSource(rows: BodySourceWiring[], fetchImpl?: typeof
         for (const meeting of parseBoardDocsMeetings(list.text)) {
           const day = Date.parse(`${meeting.date}T00:00:00Z`);
           if (day < now - MEETING_HELD_LOOKBACK_DAYS * 86_400_000 || day > now + MEETING_HELD_HORIZON_DAYS * 86_400_000) continue;
-          await sourceAcquisitionSleep(REQUEST_SPACING_MS, query?.signal);
           try {
             details[meeting.id] = (await politeGetText(`${base}/BD-GetMeeting?open&id=${encodeURIComponent(meeting.id)}`, {
               fetchImpl, form: { current_committee_id: committeeId, id: meeting.id }, accept: "text/html", signal: query?.signal,

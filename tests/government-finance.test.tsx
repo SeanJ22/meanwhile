@@ -107,5 +107,9 @@ test("card and Ask select audit fiscal periods without treating capture order as
   assert.equal(composeGovernmentFinanceAnswer({subject,question:"What is its latest audit?",records:evidence})?.answer,records[1].sourceSentence);
   assert.equal(composeGovernmentFinanceAnswer({subject,question:"What is its FY2024 audit?",records:evidence})?.answer,records[0].sourceSentence);
   assert.equal(composeGovernmentFinanceAnswer({subject,question:"How much is its debt?",records:evidence}),null);
-  assert.equal(renderToStaticMarkup(createElement(GovernmentMoneySection,{bodyId,divisionId:ocdId,records:[]})), "", "missing government money contributes only to the card gap");
+  const missingMarkup=renderToStaticMarkup(createElement(GovernmentMoneySection,{bodyId,divisionId:ocdId,records:[]}));
+  assert.match(missingMarkup,/data-card-gap="government-money:fixture-county#governing"/);
+  assert.match(missingMarkup,/working on getting this info/);
+  assert.match(missingMarkup,/Want us to get this sooner\?/);
+  assert.doesNotMatch(missingMarkup,/Still gathering/);
 });

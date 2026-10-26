@@ -7,19 +7,19 @@ import { FundingDisplay } from "../components/funding/funding-section.tsx";
 import { AgendaDocuments } from "../components/map/popup/agenda-section.tsx";
 import { MeetingRecords } from "../components/map/popup/meeting-records.tsx";
 import { ReaderNamesProvider } from "../components/ui/reader-names-context.tsx";
-import { CardFooter } from "../components/ui/card-footer.tsx";
+import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
 import type { FundingDisplayData } from "../lib/funding/display.ts";
 import { groupContributions } from "../lib/funding/grouping.ts";
 import type { ContributionRow } from "../lib/funding/types.ts";
 import type { MeetingReaderRecords } from "../lib/meetings/reader-records.ts";
 
-test("a voting gap's held place name is cased before the shared footer prints it", () => {
-  const gaps = [{ id: "census-place", label: "Census coordinates for SOUTH BOSTON YMCA" }];
-  const stored = structuredClone(gaps);
-  const html = renderToStaticMarkup(createElement(CardFooter, { gaps, sources: [] }));
-  assert.match(html, /Census coordinates for South Boston YMCA/);
+test("a voting gap's held place name is cased where its own section says it is missing", () => {
+  const gap = { id: "census-place", label: "Census coordinates for SOUTH BOSTON YMCA", kind: "not-posted" as const };
+  const stored = structuredClone(gap);
+  const html = renderToStaticMarkup(createElement(CardGapContribution, gap));
+  assert.match(html, /Census coordinates for South Boston YMCA not posted yet\./);
   assert.doesNotMatch(html, /SOUTH BOSTON/);
-  assert.deepEqual(gaps, stored);
+  assert.deepEqual(gap, stored);
 });
 
 test("money reaches its reader in normal case while the filed names and sentences stay intact", () => {

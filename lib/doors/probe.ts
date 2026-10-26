@@ -5,6 +5,7 @@ import { isDoorRecord, type DoorRecord, type DoorRepository, type DoorValidators
 
 export interface ProbeResponse {
   readonly status: number;
+  readonly finalUrl?: string;
   readonly headers: { get(name: string): string | null };
   /** Only called when the response carries a body worth hashing. */
   bytes(): Promise<Uint8Array>;
@@ -23,7 +24,7 @@ export function probeUrlFor(door: DoorRecord): string | null {
   return null;
 }
 
-/** WAITING: the website could not be asked now (it asked every reader to wait, or a small publisher's hour is used). */
+/** WAITING: the website asked readers to wait, or could not yet be asked. */
 export type ProbeVerdict = "CHANGED" | "UNCHANGED" | "FAILED" | "WAITING" | "NOT_PROBEABLE";
 
 export interface ProbeResult {
@@ -46,7 +47,7 @@ export async function firstLook(url: string, previous: DoorValidators | null | u
   try {
     response = await fetchFn(url, headers);
   } catch (error) {
-    if (error instanceof WebsiteWait) return { url, verdict: "WAITING", validators: null, requests: 0, detail: error.message };
+    if (error instanceof WebsiteWait) return { url, verdict: "WAITING", validators: null, requests: error.requests, detail: error.message };
     return { url, verdict: "FAILED", validators: null, requests: 1, detail: `the first look could not reach the page (${(error as Error)?.name ?? "error"})` };
   }
   if (response.status === 304) {

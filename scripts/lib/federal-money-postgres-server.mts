@@ -19,10 +19,13 @@ const exists = await db.query<{ relation: string | null }>("SELECT to_regclass('
 if (!exists.rows[0]?.relation) for (const migration of ["0025_typical_fixer", "0026_lame_sunset_bain", "0027_pdc_candidate_history_shape", "0028_wise_ikaris", "0029_unchanged_confirmation_receipts", "0031_civic_payload_parts", "0038_src_mn_federal_money_lookup"]) {
   await db.exec(readFileSync(join(process.cwd(), "lib", "db", "migrations", `${migration}.sql`), "utf8"));
 }
-if (!(await db.query<{relation:string|null}>("SELECT to_regclass('public.civic_data_rows')::text AS relation")).rows[0]?.relation) {
+const payloadReaders=await db.query<{reader:string|null}>("SELECT to_regprocedure('public.reader_payload_node(jsonb)')::text AS reader");
+if(!payloadReaders.rows[0]?.reader){
   const readerFunctions=readFileSync(join(process.cwd(),"lib/db/migrations/0036_ne01.sql"),"utf8").split("--> statement-breakpoint")
     .filter(statement=>/^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(statement));
   for(const statement of readerFunctions)await db.exec(statement);
+}
+if (!(await db.query<{relation:string|null}>("SELECT to_regclass('public.civic_data_rows')::text AS relation")).rows[0]?.relation) {
   for(const migration of ["DB-05_keyed_rows","DB-05_federal_money_rows"])
     await db.exec(readFileSync(join(process.cwd(),"lib/db/migrations",`${migration}.sql`),"utf8").replaceAll("--> statement-breakpoint",""));
 }

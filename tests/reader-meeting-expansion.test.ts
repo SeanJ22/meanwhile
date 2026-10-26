@@ -75,9 +75,13 @@ test("Show more reveals added meetings inside closed groups across ZIPs and grou
         const addedIds = (await rowIds()).filter(id => !initialIds.has(id));
         assert.equal(addedIds.length, zip === "85701" ? 43 : 200, `${zip}/${group}: all newly added meetings are visible`);
         const visibleCount = (await rowIds()).length;
-        const gaps = await page.locator("[data-card-gap]").innerText();
-        assert.match(gaps, new RegExp(`agendas for ${visibleCount} meetings\\b`), `${zip}/${group}: every visible meeting's agenda gap reaches the footer`);
-        assert.match(gaps, new RegExp(`meeting places for ${visibleCount} meetings\\b`), `${zip}/${group}: every visible meeting's place gap reaches the footer`);
+        const gaps = await page.locator(".al-row [data-card-gap]").allTextContents();
+        assert.equal(gaps.length, visibleCount, `${zip}/${group}: each visible meeting keeps its own missing-info message`);
+        assert.ok(gaps.every(text => /We[’']re working on getting this info/.test(text) && text.includes("Want us to get this sooner?")));
+        assert.ok((await page.locator(".al-row").evaluateAll(rows => rows.map(row => {
+          const id = row.querySelector("[data-meeting-id]")?.getAttribute("data-meeting-id");
+          return row.querySelector("[data-card-gap]")?.getAttribute("data-card-gap") === `meeting:${id}`;
+        }))).every(Boolean), `${zip}/${group}: each missing-info message belongs to that row's meeting`);
         // Every opened group still collapses and reopens, including with the keyboard.
         for (const head of await heads.all()) {
           const rows = head.locator("..").locator(".al-row");

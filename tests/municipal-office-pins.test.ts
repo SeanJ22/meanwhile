@@ -2,7 +2,7 @@ import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-import { withMunicipalHallOffices } from "../lib/meetings/municipal-office.ts";
+import { readOfficeContexts, withMunicipalHallOffices } from "../lib/meetings/municipal-office.ts";
 import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
 import type { MeetingPinBody } from "../lib/meetings/pin-location.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -84,8 +84,8 @@ test("a hall cannot borrow a neighboring city, a county, a school district or a 
     assert.deepEqual(result.get(BODY)?.governmentOfficeAlternatives, [], JSON.stringify(changed));
   }
   const county = { ...target, bodyId: "ocd-division/country:us/state:id/county:ada#governing", jurisdiction: "County of Ada" };
-  const result = await withMunicipalHallOffices(async () => { throw Error("A county scanned municipal sources"); }, [county, source], new Map(), () => assert.fail());
-  assert.equal(result.size, 0);
+  const result = await withMunicipalHallOffices(async () => [], [county, source], new Map(), () => assert.fail());
+  assert.deepEqual(result.get(county.bodyId)?.governmentOfficeAlternatives??[],[],"a county can acquire its own courthouse but cannot borrow a city hall");
 });
 
 test("a valid hall after a bounded page is still available to publication", async () => {
@@ -127,4 +127,146 @@ test("a board's own address and an explicit government office retain priority ov
     assert.equal(result.meetings[0].mapPin?.basis, basis);
     assert.deepEqual(result.meetings[1], source, "Existing meeting location remains visible");
   }
+});
+
+
+const COUNTY="ocd-division/country:us/state:wi/county:milwaukee",COUNTY_BODY=`${COUNTY}#body:finance`;
+const COURTHOUSE="901 N. 9th Street, Milwaukee, WI";
+const countySource:Meeting={...source,id:"legistar:milwaukeecounty:7080",bodyId:`${COUNTY}#body:election-commission`,ocdId:COUNTY,
+  jurisdiction:"County of Milwaukee",location:{name:"Courthouse Rm G10 / Cafeteria",address:COURTHOUSE,lat:43.040887236474,lng:-87.923149040346},
+  provenance:{...source.provenance,sourceUrl:"https://county.example.gov/calendar",sourceOrg:"Milwaukee County"},
+  fieldSources:{location:{sourceUrl:"https://county.example.gov/elections/agenda.pdf",sourceOrg:"Milwaukee County",collectedAt:NOW,verifiedAt:null,
+    quote:COURTHOUSE}},mapPin:{meetingId:"legistar:milwaukeecounty:7080",bodyId:`${COUNTY}#body:election-commission`,name:"Courthouse Rm G10 / Cafeteria",
+    address:COURTHOUSE,basis:"MEETING",provenance:source.provenance,lat:43.040887236474,lng:-87.923149040346,
+    matchedAddress:"901 N 9TH ST, MILWAUKEE, WI, 53233",coordinateSourceUrl:"https://geocoding.geo.census.gov/geocoder/locations/onelineaddress?address=901+N+9th+Street%2C+Milwaukee%2C+WI&benchmark=Public_AR_Current&format=json",
+    coordinateCheckedAt:NOW}};
+const countyTarget:Meeting={...target,id:"legistar:milwaukeecounty:unplaced",bodyId:COUNTY_BODY,ocdId:COUNTY,jurisdiction:"Milwaukee County",location:null,
+  venueGap:{kind:"NOT_STATED_BY_PUBLISHER",publishedText:null,publisher:"Milwaukee County"}};
+
+test("the exact county's published courthouse supplies its government office and retains its verified point metadata",async()=>{
+  const result=await withMunicipalHallOffices(undefined,[countyTarget,countySource],new Map(),()=>assert.fail());
+  const office=result.get(COUNTY_BODY)?.governmentOfficeAlternatives?.[0];
+  assert.equal(office?.address,COURTHOUSE);
+  assert.equal(office?.provenance.sourceUrl,countySource.fieldSources?.location?.sourceUrl,"the published physical address cites its own source rather than the calendar's room label");
+  assert.equal(office?.quote,COURTHOUSE);
+  assert.deepEqual(office?.verifiedPoint,{lat:43.040887236474,lng:-87.923149040346,matchedAddress:countySource.mapPin!.matchedAddress,
+    coordinateSourceUrl:countySource.mapPin!.coordinateSourceUrl,coordinateCheckedAt:NOW});
+  assert.deepEqual(countySource.location,{name:"Courthouse Rm G10 / Cafeteria",address:COURTHOUSE,lat:43.040887236474,lng:-87.923149040346});
+});
+
+test("county courthouse fallback rejects federal, neighboring, municipal and school ownership",async()=>{
+  for(const changed of [
+    {jurisdiction:"County of Waukesha"},
+    {ocdId:"ocd-division/country:us/state:wi/county:waukesha"},
+    {bodyId:"ocd-division/country:us/state:wi/county:waukesha#body:elections"},
+    {jurisdiction:"City of Milwaukee"},
+    {jurisdiction:"Milwaukee County School District"},
+    {location:{...countySource.location!,name:"Federal Courthouse"}},
+    {location:{...countySource.location!,name:"U.S. Courthouse"}},
+    {location:{...countySource.location!,name:"Waukesha County Courthouse"}},
+    {location:{...countySource.location!,name:"City Hall"}},
+    {location:{...countySource.location!,address:"PO Box 100, Milwaukee, WI"}},
+    {location:{...countySource.location!,address:"901 N. 9th Street, Milwaukee, MN"}},
+    {bodyId:"government:US-MN:cog:other#governing"},
+  ]){
+    const result=await withMunicipalHallOffices(undefined,[countyTarget,{...countySource,...changed}],new Map(),()=>assert.fail());
+    assert.deepEqual(result.get(COUNTY_BODY)?.governmentOfficeAlternatives,[],JSON.stringify(changed));
+  }
+});
+
+test("native government body identities recover only their exact published county or municipal office",async()=>{
+  const nativeCounty={...countyTarget,bodyId:"government:US-WI:cog:county#body:finance"};
+  const nativeCity:Meeting={...target,bodyId:"government:US-ID:cog:boise#body:finance",ocdId:DIVISION,jurisdiction:"City of Boise",location:null,
+    venueGap:{kind:"NOT_STATED_BY_PUBLISHER",publishedText:null,publisher:"City of Boise"}};
+  for(const [missing,existing] of [[nativeCounty,countySource],[nativeCounty,{...countySource,bodyId:"government:US-WI:cog:county#body:elections",
+    mapPin:undefined}],[nativeCity,source],[nativeCity,{...source,bodyId:"government:US-ID:cog:boise#governing"}]] as const){
+    const result=await withMunicipalHallOffices(undefined,[missing,existing],new Map(),()=>assert.fail());
+    assert.equal(result.get(missing.bodyId!)?.governmentOfficeAlternatives?.[0]?.address,missing===nativeCounty?COURTHOUSE:HALL_ADDRESS);
+  }
+  const wrongNative={...nativeCity,bodyId:"government:US-WI:cog:boise#body:finance"};
+  assert.equal((await withMunicipalHallOffices(undefined,[wrongNative,source],new Map(),()=>assert.fail())).size,0);
+});
+
+test("the bounded courthouse read includes exact-location provenance and point metadata from a native partition",async()=>{
+  const db=await factDb();
+  try{
+    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,current_version_id text DEFAULT 'fixture',promoted_at timestamptz DEFAULT now());
+      CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)`);
+    for(const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint"))
+      if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement))await db.pg.exec(statement);
+    await installKeyedRows(db.pg);
+    const body="government:US-WI:cog:county#body:elections",physical={...countySource,bodyId:body,
+      mapPin:{...countySource.mapPin!,bodyId:body}};
+    const scope=`source:legistar:body:${encodeURIComponent(body)}`;
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES($1,'MEETING',$2,$3)",[`MEETING:${scope}`,scope,JSON.stringify({meetings:[{...physical,id:"legistar:milwaukeecounty:newer-same-address",mapPin:undefined,
+      startsAt:new Date(Date.parse(physical.startsAt)+60000).toISOString()},physical]})]);
+    const result=await withMunicipalHallOffices(db.query,[countyTarget],new Map(),()=>assert.fail());
+    assert.equal(result.get(COUNTY_BODY)?.governmentOfficeAlternatives?.[0]?.address,COURTHOUSE);
+    assert.equal(result.get(COUNTY_BODY)?.governmentOfficeAlternatives?.[0]?.provenance.sourceUrl,physical.fieldSources!.location!.sourceUrl);
+    assert.equal(result.get(COUNTY_BODY)?.governmentOfficeAlternatives?.[0]?.verifiedPoint?.lat,physical.location!.lat);
+  }finally{await db.pg.close();}
+});
+
+test("another body's verified courthouse point reaches the county's unplaced meeting without another Census request",async()=>{
+  const result=await placePublishedMeetingPins({meetings:[countyTarget,countySource],offices:new Map(),clock:()=>NOW,
+    fetchImpl:async()=>{throw Error("A saved courthouse point was geocoded unchanged");}});
+  assert.deepEqual(result.held,[]);assert.equal(result.responses.length,0);
+  const meeting=result.meetings[0];
+  assert.equal(meeting.mapPin?.basis,"GOVERNMENT_OFFICE");assert.equal(meeting.mapPin?.address,COURTHOUSE);
+  assert.equal(meeting.mapPin?.lat,countySource.location!.lat);assert.equal(meeting.mapPin?.lng,countySource.location!.lng);
+  assert.equal(meeting.mapPin?.coordinateSourceUrl,countySource.mapPin!.coordinateSourceUrl);
+  assert.equal(meeting.mapPin?.coordinateCheckedAt,NOW);assert.equal(meeting.location,null);
+  assert.deepEqual(result.meetings[1],countySource,"the source body's own meeting and pin remain visible");
+  const named={...countyTarget,venueGap:{kind:"STATED_NOT_PLACED" as const,publishedText:`Courthouse, ${COURTHOUSE}`,publisher:"Milwaukee County"}};
+  const duplicate=await withMunicipalHallOffices(undefined,[named,countySource],new Map(),()=>assert.fail());
+  assert.equal(duplicate.get(COUNTY_BODY)?.governmentOfficeAlternatives?.length,1);
+  assert.equal(duplicate.get(COUNTY_BODY)?.governmentOfficeAlternatives?.[0]?.verifiedPoint?.lat,countySource.location!.lat,
+    "an earlier repeated address without coordinates cannot discard a later saved point");
+  let requests=0;
+  const conflict={...countySource,mapPin:{...countySource.mapPin!,lat:countySource.mapPin!.lat+1}};
+  const mismatched=await placePublishedMeetingPins({meetings:[countyTarget,conflict],offices:new Map(),clock:()=>NOW,
+    fetchImpl:async()=>{requests++;return reply({result:{addressMatches:[]}});}});
+  assert.equal(requests,1);assert.equal(mismatched.meetings[0].mapPin,undefined,"mismatched saved coordinate metadata cannot supply a point");
+});
+
+
+test("office acquisition reads one actual owner context per body without waiting on a pin or loading complete meetings",async()=>{
+  const db=await factDb();
+  try{
+    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,current_version_id text DEFAULT 'fixture',promoted_at timestamptz DEFAULT now());
+      CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)`);
+    for(const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint"))
+      if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement))await db.pg.exec(statement);
+    await installKeyedRows(db.pg);
+    const wanted={...countyTarget,id:"legistar:milwaukeecounty:current",startsAt:NOW};
+    const older={...wanted,id:"legistar:milwaukeecounty:older",startsAt:new Date(Date.parse(NOW)-60000).toISOString()};
+    const scope=`source:legistar:body:${encodeURIComponent(COUNTY_BODY)}`;
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES($1,'MEETING',$2,$3)",[`MEETING:${scope}`,scope,
+      JSON.stringify({meetings:[older,wanted],agendaDocuments:[{text:"Unrelated document contents".repeat(10000)}]})]);
+    const sourceScope=`source:legistar:body:${encodeURIComponent(countySource.bodyId!)}`;
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES($1,'MEETING',$2,$3)",[`MEETING:${sourceScope}`,sourceScope,JSON.stringify({meetings:[countySource]})]);
+    const native="government:US-WI:cog:county#body:planning",derived={...wanted,id:"derived:planning",bodyId:native,bodyName:"Planning Commission"};
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES('MEETING:source:derived:family:US-WI','MEETING','source:derived:family:US-WI',$1)",
+      [JSON.stringify({meetings:[derived,{...derived,id:"derived:unrequested",bodyId:"government:US-WI:cog:other#governing"}]})]);
+    const contexts=await readOfficeContexts(db.query,[COUNTY_BODY,native,COUNTY_BODY]);
+    assert.equal(contexts.length,2);
+    const held=contexts.find(context=>context.bodyId===COUNTY_BODY)!;
+    assert.deepEqual(held,{id:wanted.id,bodyId:COUNTY_BODY,ocdId:COUNTY,bodyName:wanted.bodyName,jurisdiction:wanted.jurisdiction,provenance:wanted.provenance});
+    assert.deepEqual(Object.keys(held).sort(),["id","bodyId","ocdId","bodyName","jurisdiction","provenance"].sort());
+    assert.ok(!JSON.stringify(contexts).includes("Unrelated document contents"));
+    const offices=await withMunicipalHallOffices(db.query,contexts,new Map(),()=>assert.fail());
+    for(const body of [COUNTY_BODY,native]){
+      assert.equal(offices.get(body)?.governmentOfficeAlternatives?.[0]?.address,COURTHOUSE);
+      assert.equal(offices.get(body)?.governmentOfficeAlternatives?.[0]?.verifiedPoint?.lat,countySource.location!.lat);
+    }
+    assert.deepEqual(await readOfficeContexts(async()=>{throw Error("An empty body set must not query any source");},[]),[]);
+  }finally{await db.pg.close();}
+});
+
+
+test("a corrected explicit school owner cannot inherit a neighboring county courthouse from its old calendar label",async()=>{
+  const offices=new Map([[COUNTY_BODY,{bodyId:COUNTY_BODY,name:"Governing Board",
+    governmentOwner:{id:"government:US-WI:nces:school",name:"Independent School District"}}]]);
+  const selected=await withMunicipalHallOffices(undefined,[countyTarget,countySource],offices,()=>assert.fail());
+  assert.equal(selected.get(COUNTY_BODY)?.governmentOfficeAlternatives,undefined);
 });

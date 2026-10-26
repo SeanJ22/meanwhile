@@ -14,15 +14,14 @@
  * item votes remain named blanks beside independently verified agenda and
  * action records; prior verified votes retain their original evidence.
  * A later unaffected sitting may still promote. The run then prints
- * exactly one `RCD_RECEIPT`, naming the last candidate it wrote:
+ * exactly one `RCD_RECEIPT`, naming its last successful candidate when one exists:
  *
  * - exit 0 only when that candidate is the GOOD promoted pointer: the last
  *   changed sitting, or the validated no-change receipt written when every
  *   sitting in the window is held and unchanged;
- * - exit 2 when the events read failed, returned zero sittings, or any walked
- *   sitting was refused. A refusal followed by a later promotion writes one
- *   refused run record against the moved pointer, so the receipt still says
- *   HELD and the retry clock, not the cadence, owns the next attempt.
+ * - exit 2 when the events read failed, returned zero sittings, or no changed
+ *   sitting could publish. A refused sitting stays held on its own; other
+ *   independently verified sittings reach readers.
  *
  * The default window is rolling and bounded: the last
  * OUTCOME_ROUTINE_WINDOW_DAYS days through today in the body's own zone,
@@ -66,7 +65,8 @@ import {
   PIMA_OUTCOME_TENANT,
   type OutcomeTenant,
 } from "../lib/outcomes/data-plane.ts";
-import { legistarOutcomesCandidate, retainVerifiedSittingRecords } from "./lib/held-legistar-outcomes.ts";
+import { legistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
+import { retainVerifiedSittingRecords } from "../lib/outcomes/ingest.ts";
 import { readDoorOutcomeProjection } from "../lib/outcomes/store.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
@@ -379,6 +379,7 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
   }
 
   let last: PromotionOutcome | null = null;
+  let lastGood: PromotionOutcome | null = null;
   let budgetExhausted = false;
   for (const event of sittings) {
     signal.throwIfAborted();
@@ -460,6 +461,7 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
     const outcome = await processRegisteredRoutineCandidate(store, tenant.contractId, checked, observedAt,undefined,{confirmUnchanged:false});
     last = outcome;
     if (outcome.promoted) {
+      lastGood = outcome;
       snapshot = proposed;
       sourceThrough = outcome.candidate.candidate.temporal.sourceThrough;
       heldById.set(meetingId, persisted);
@@ -495,22 +497,6 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
       sourceThrough: outcomeSourceThrough(sourceThrough, newestSourceStamp(events) ?? eventsRetrievedAt),
     },!budgetExhausted&&!refusedSittings.length);
     log(`  no-change receipt: ${last.promoted ? "PROMOTED" : `HELD ${last.candidate.failureCode ?? last.candidate.state}`}`);
-  } else if ((refusedSittings.length > 0 || budgetExhausted) && last.promoted) {
-    // A refused sitting's durable candidate was followed by a promotion, so it
-    // no longer describes the live pointer. Record the run's held disposition
-    // against the pointer as it now stands; the refused sittings stay due.
-    const observedAt = now();
-    last = await persist({
-      snapshot,
-      acquisitions: eventEvidence,
-      retrievedAt: observedAt,
-      sourceThrough: sourceThrough ?? eventsRetrievedAt,
-      failureDetail:
-        (budgetExhausted ? `Explicit run limit ${args.maxSittings} left sittings unread. ` : "") +
-        `${refusedSittings.length} ${tenant.label} sitting acquisition(s) were refused in this run: ${refusedSittings.join("; ")}. ` +
-        "Every sitting that validated is live in the canonical pointer; the refused sittings stay due for the next attempt.",
-    });
-    log(`  run held: ${refusedSittings.length} refused sitting(s) recorded against the moved pointer`);
   }
   if(last.promoted&&!refusedSittings.length&&!budgetExhausted){
     if(!(last.candidate.candidate.normalizedPayload as {sourceProbe?:OutcomeSourcePlan}).sourceProbe?.complete)
@@ -518,7 +504,8 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
     const currentHead=await store.readSourceHead(tenant.recordClass,tenant.scope);
     if(currentHead?.rawHash===outcomeSourcePlanHash(sourcePlan(true)))await recordOutcomeSourceChecks(store,currentHead,sourcePlan(true));
   }
-  return settle(last);
+  if(last.promoted)lastGood=last;
+  return settle(lastGood??last);
 }
 
 async function main(): Promise<void> {

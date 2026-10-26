@@ -3,8 +3,7 @@ import { soleVenueForBody, unplacedVenueGap } from "../../meetings/venue-cache.t
 import { toZonedIso } from "../../time/zoned.ts";
 import { printedNames, tokenize } from "../../meetings/printed-body-names.ts";
 import { MEETING_HELD_LOOKBACK_DAYS, meetingHeldWindowAt } from "../../meetings/constants.ts";
-import { decodeEntities, politeGetText, REQUEST_SPACING_MS, SourceHttpError } from "../http.ts";
-import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
+import { decodeEntities, politeGetText, SourceHttpError } from "../http.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 import type { Meeting, MeetingQuery, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
 
@@ -183,7 +182,6 @@ export function makeSwagitSource(rows: BodySourceWiring[], fetchImpl?: typeof fe
             })) break;
             url = nextPage(response.text, url);
             if (url !== null && pagesRead >= SWAGIT_MAX_PAGES_PER_TENANT) throw new Error(`SWAGIT_PAGE_LIMIT:${SWAGIT_MAX_PAGES_PER_TENANT}`);
-            if (url !== null) await sourceAcquisitionSleep(REQUEST_SPACING_MS, query?.signal);
           }
         } catch (error) {
           query?.signal?.throwIfAborted();

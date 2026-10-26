@@ -29,11 +29,19 @@ export interface BodyClassLabel {
 }
 
 export const BODY_CLASS_LABELS: Readonly<Record<BodyClass, BodyClassLabel>> = {
+  MEETING_TYPE: { short: "Meeting type", long: "Meeting type", governVerbMayAttach: false,
+    why: "A kind of meeting held by a body." },
+  COURT: { short: "Court", long: "Court", governVerbMayAttach: false,
+    why: "Hears cases and administers justice." },
+  BODY: { short: "Body", long: "Body", governVerbMayAttach: false,
+    why: "Its governing authority has not been established." },
+  INFORMATION: { short: "Information", long: "Government information", governVerbMayAttach: false,
+    why: "Published information about the government." },
   GOVERNING: {
     short: "Governing",
     long: "Governing body",
     governVerbMayAttach: true,
-    why: "Elected to govern a territory the reader can be inside of.",
+    why: "Makes decisions for this government and the area it serves.",
   },
   ADVISORY: {
     short: "Advisory",

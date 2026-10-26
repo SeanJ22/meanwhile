@@ -52,6 +52,26 @@ export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
   };
 }
 
+/** The standing clock's beat: which code runs and how its newest release staging stands, without touching cycle fields. */
+export function standingHeartbeat(previous: RunnerHeartbeat | null, input: {
+  readonly at: string; readonly testedSha: string | null; readonly host: string;
+  readonly codeIdentity: RunnerHeartbeat["codeIdentity"];
+  readonly releaseStaging: RunnerHeartbeat["releaseStaging"];
+  readonly memory?: RunnerHeartbeat["memory"];
+  readonly neonBytes?: RunnerHeartbeat["neonBytes"];
+}): RunnerHeartbeat {
+  return {
+    formatVersion: 1, lastCycleStartedAt: null, lastCycleFinishedAt: null, nextCycleDueAt: null, lastCycleOk: null,
+    ...previous,
+    beatAt: input.at, testedSha: input.testedSha, host: input.host,
+    // An identity read for older code would mislead; an unreadable one is shown as unknown.
+    codeIdentity: input.codeIdentity,
+    releaseStaging: input.releaseStaging,
+    memory: input.memory ?? previous?.memory ?? null,
+    neonBytes: input.neonBytes ?? previous?.neonBytes ?? null,
+  };
+}
+
 export type RunnerStandingState = RunnerLiveness | "ACTIVE" | "PAUSED" | "CIRCUIT BROKEN";
 
 export interface RunnerStanding {

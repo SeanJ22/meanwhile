@@ -6,12 +6,14 @@ import type { Clocks, FactDb, Query } from "../facts/publish.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { RetainedSourceResponse } from "./retained-meeting-bytes.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
+import type { PinGeocodeAttempt } from "../meetings/publish-pins.ts";
 
 /** The sittings a door just read become facts on the bytes it read, each copy saved to the vault first. */
 export async function publishReadMeetingFacts(input: {
   readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore;
   readonly meetings: readonly Meeting[]; readonly responses: readonly RetainedSourceResponse[];
   readonly producedBy: string; readonly clocks: Clocks; readonly now: Date;
+  readonly geocodeAttempts?: ReadonlyMap<string,readonly PinGeocodeAttempt[]>;
 }): Promise<MeetingFactsReport & { readonly unsaved: readonly string[] }> {
   const captures: WorkerPublicationCapture[] = [], unsaved: string[] = [];
   for (const response of input.responses) {
@@ -27,6 +29,7 @@ export async function publishReadMeetingFacts(input: {
 export async function publishCapturedMeetingFacts(input: {
   readonly facts: FactDb & { readonly query: Query }; readonly meetings: readonly Meeting[];
   readonly captures: readonly WorkerPublicationCapture[]; readonly producedBy: string; readonly clocks: Clocks; readonly now: Date;
+  readonly geocodeAttempts?: ReadonlyMap<string,readonly PinGeocodeAttempt[]>;
   readonly deadlineMs?: number; readonly onMeetingComplete?: (meeting: Meeting) => Promise<void>;
 }): Promise<MeetingFactsReport & { readonly complete: boolean }> {
   const { captures } = input;
@@ -42,7 +45,8 @@ export async function publishCapturedMeetingFacts(input: {
     if(!calendarCaptures.length)return { ...tally, complete: false };
     const capture = calendarCaptures.find(c => states(c) && sittingOnPage(c.evidence.text, meeting)) ?? calendarCaptures.find(states) ?? calendarCaptures[0]!;
     const pinCapture=captures.find(c=>c.evidence.canonicalUrl===meeting.mapPin?.coordinateSourceUrl);
-    const report = await publishMeetingFacts(input.facts, { meeting, capture,pinCapture, producedBy: input.producedBy }, input.clocks, now);
+    const report = await publishMeetingFacts(input.facts, { meeting, capture,pinCapture,
+      geocodeAttempts:input.geocodeAttempts?.get(meeting.id),producedBy: input.producedBy }, input.clocks, now);
     tally.live += report.live; tally.confirmed += report.confirmed; tally.held += report.held; tally.blanks += report.blanks;
     await input.onMeetingComplete?.(meeting);
   }

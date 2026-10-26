@@ -38,7 +38,7 @@ test("family members share a calendar response while each keeps its acquisition,
 test("shared meeting reads retain the identified curl fallback, its destination and both request costs", async () => {
   let fetched = 0, curled = 0;
   const fetchImpl = meetingFetchPass({ websiteSize: () => ({kind: "school-district", students: 4_999}),
-    fetchImpl: async () => { fetched++; return new Response("refused", { status: 403 }); },
+    fetchImpl: async () => { fetched++; return new Response("<title>Just a moment...</title>"); },
     curl: async url => { curled++; return { status: 200, contentType: "text/calendar", text: "calendar",
       bytes: new TextEncoder().encode("calendar"), finalUrl: `${url}?final=1` }; } });
   const url = "https://county.example.gov/calendar.ics";

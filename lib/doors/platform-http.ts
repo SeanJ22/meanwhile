@@ -1,3 +1,4 @@
+import { sourceFetch } from "../sources/http.ts";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { FLEET_SAFETY_BOUNDS } from "../control-plane/fleet-safety.ts";
@@ -10,20 +11,23 @@ const running = new Set<number>();
 export const platformFetch: typeof fetch = async (input, init) => {
   const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
   assertPublicUrl(url);
-  const args = ["--silent", "--show-error", "--http1.1", "--suppress-connect-headers", "--include", "--compressed",
-    "--max-time", "30", "--request", init?.method ?? "GET"];
-  for (const [key, value] of new Headers(init?.headers)) args.push("--header", `${key}: ${value}`);
-  if (init?.body !== undefined && init.body !== null) args.push("--data-binary", "@-");
-  args.push("--url", url);
-  const result = execute("curl", args, { encoding: "buffer", maxBuffer: FLEET_SAFETY_BOUNDS.maxDownloadBytes + 64 * 1024,
-    signal: init?.signal ?? undefined, windowsHide: true });
-  if (result.child.pid) running.add(result.child.pid);
-  result.child.stdin?.end(typeof init?.body === "string" ? init.body : init?.body instanceof Uint8Array ? init.body : undefined);
-  const { stdout } = await result.catch(error => { throw new Error(`Platform HTTP read failed (${init?.signal?.aborted ? "request timed out" : `curl exit ${error.code ?? "unknown"}`})`); })
-    .finally(() => { if (result.child.pid) running.delete(result.child.pid); });
-  const response = platformHttpResponse(stdout);
-  Object.defineProperty(response, "url", { value: url });
-  return response;
+  return sourceFetch(url, init, async (_input, paced) => {
+    const request = paced;
+    const args = ["--silent", "--show-error", "--http1.1", "--suppress-connect-headers", "--include", "--compressed",
+      "--max-time", "30", "--request", request?.method ?? "GET"];
+    for (const [key, value] of new Headers(request?.headers)) args.push("--header", `${key}: ${value}`);
+    if (request?.body !== undefined && request.body !== null) args.push("--data-binary", "@-");
+    args.push("--url", url);
+    const result = execute("curl", args, { encoding: "buffer", maxBuffer: FLEET_SAFETY_BOUNDS.maxDownloadBytes + 64 * 1024,
+      signal: request?.signal ?? undefined, windowsHide: true });
+    if (result.child.pid) running.add(result.child.pid);
+    result.child.stdin?.end(typeof request?.body === "string" ? request.body : request?.body instanceof Uint8Array ? request.body : undefined);
+    const { stdout } = await result.catch(error => { throw new Error(`Platform HTTP read failed (${request?.signal?.aborted ? "request timed out" : `curl exit ${error.code ?? "unknown"}`})`); })
+      .finally(() => { if (result.child.pid) running.delete(result.child.pid); });
+    const response = platformHttpResponse(stdout);
+    Object.defineProperty(response, "url", { value: url });
+    return response;
+  }, undefined, true);
 };
 
 /** Curl emits the HTTP headers before the exact response body; interim 1xx headers do not belong to the document. */

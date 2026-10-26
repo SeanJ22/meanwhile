@@ -127,7 +127,7 @@ test("a failed daily source check stays due for the next hour and keeps verified
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 
-test("missing people keep their own filing reason through tomorrow's refresh and the reader card",async()=>{
+test("missing people keep their filing reason for the work and a plain request on the reader card",async()=>{
   const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-person-reasons-"));
   const unreadable={...person,id:"unreadable-period",name:"Unreadable Period",seat:person.seat+"-unreadable"};
   const absent={...person,id:"no-filing",name:"No Filing",seat:person.seat+"-absent"};
@@ -155,7 +155,9 @@ test("missing people keep their own filing reason through tomorrow's refresh and
       assert.equal(response.status,200);const data=await response.json();assert.deepEqual(data,read);
       const markup=await renderCardWithSources({modulePath:"./components/funding/state-campaign-section.tsx",exportName:"StateCampaignSection",
         props:{divisionId:unreadable.division,personId:unreadable.id,data},sourceUrls:[]});
-      assert.match(markup,/The source has no readable filing period/);assert.doesNotMatch(markup,/The filing predates January 1, 2020/);
+      assert.match(markup,/working on getting this info/);
+      assert.match(markup,/Want us to get this sooner\?/);
+      assert.doesNotMatch(markup,/The source has no readable filing period|The filing predates January 1, 2020/);
     }
     await db.query("UPDATE blank SET detail='SourceAcquisitionFailure(PUBLISHER_UNAVAILABLE): raw technical failure' WHERE entity_id=$1",[unreadable.id]);
     assert.equal((await readCampaignFinanceForPlace(unreadable.division,{query:db.query,personId:unreadable.id})).missingReason,undefined);

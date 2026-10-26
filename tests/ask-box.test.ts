@@ -24,8 +24,8 @@ test("golden, live at 85701: the library question routes to Tucson and Pima", as
   assert.equal(match?.topicId, "libraries");
   assert.equal(answer.kind, "ROUTED");
   const [cityStep, countyStep] = answer.steps;
-  assert.ok(cityStep.bodies.some((b) => b.label === "Tucson"));
-  assert.ok(countyStep.bodies.some((b) => b.label === "Pima"));
+  assert.ok(cityStep.bodies.some((b) => b.label === "City of Tucson"));
+  assert.ok(countyStep.bodies.some((b) => b.label === "Pima County"));
   assert.equal(answer.grounding.totalSteps, 2);
   assert.equal(answer.grounding.stepsWithSomeone, 2);
 });

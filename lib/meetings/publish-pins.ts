@@ -12,14 +12,16 @@ import {
   CENSUS_GEOCODER_URL,
   CENSUS_BENCHMARK,
 } from "../geo/census-geocoder.ts";
-import { OUTBOUND_USER_AGENT } from "../geo/outbound-agent.ts";
+import { politeGetText, SourceHttpError, SourceReadDeferred } from "../sources/http.ts";
+import { trackSourceTransport } from "../sources/host-transport.ts";
 import { isOfficeStreetAddress } from "../map/office-locator.ts";
 import type { Meeting } from "../sources/types.ts";
 import type { RegistryProvenance } from "../registry/types.ts";
-import { agendaLetterheadOffice, agendaMeetingAddress, streetKeyOf } from "./agenda-address.ts";
+import { agendaLetterheadOfficeEvidence, agendaMeetingAddress, streetKeyOf } from "./agenda-address.ts";
 import { meetingStateOf } from "./body-scope.ts";
 import { addressWords } from "../geo/address-words.ts";
 import { withMunicipalHallOffices } from "./municipal-office.ts";
+import { isOnlineOnly } from "./online.ts";
 import {
   meetingPinAddresses,
   withPublishedPin,
@@ -46,7 +48,10 @@ export const PIN_OFFICES_SQL = `WITH selected AS MATERIALIZED (
     ) matched WHERE matches=1
   ) owned ON true
 )
-SELECT b.id,b.name,office.value#>>'{}' AS board_address,office.checked_at AS board_checked,office_source.url AS board_source,
+SELECT b.id,b.name,
+  coalesce((SELECT id FROM entity WHERE id=b.parent_id AND kind='government'),o.g->>'id') AS owner_id,
+  coalesce((SELECT name FROM entity WHERE id=b.parent_id AND kind='government'),o.g->>'name') AS owner_name,
+  office.value#>>'{}' AS board_address,office.checked_at AS board_checked,office_source.url AS board_source,
   coalesce((SELECT jsonb_agg(jsonb_build_object('address',reader_payload_value(r.value->'mailingAddress')#>>'{}',
       'provenance',reader_payload_value(r.value->'provenance')) ORDER BY r.ordinal)
     FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
@@ -69,7 +74,8 @@ LEFT JOIN LATERAL (
       AND e.id IN (b.parent_id,o.g->>'jurisdictionId',o.g->>'id') ORDER BY f.checked_at DESC,e.id LIMIT 1
 ) government ON true`;
 
-const AGENDA_PIN_OFFICES_SQL = `SELECT m.body_id,m.row_id AS meeting_id,m.value->>'jurisdiction' AS jurisdiction,
+const AGENDA_PIN_OFFICES_SQL = `SELECT m.body_id,m.row_id AS meeting_id,m.value->>'jurisdiction' AS jurisdiction,m.version_id AS current_version_id,
+  reader_payload_value(d.value->'contentHash')#>>'{}' AS content_hash,
   reader_payload_value(d.value->'documentUrl')#>>'{}' AS url,reader_payload_value(d.value->'sourceOrg')#>>'{}' AS source_org,
   reader_payload_value(d.value->'collectedAt')#>>'{}' AS collected_at,
   left(reader_payload_value(d.value->'text')#>>'{}',700) AS header
@@ -102,6 +108,7 @@ export async function publishedPinOffices(
         {
           bodyId: String(row.id),
           name: String(row.name),
+          ...(typeof row.owner_id==="string"&&typeof row.owner_name==="string"?{governmentOwner:{id:row.owner_id,name:row.owner_name}}:{}),
           ...(Array.isArray(row.postal_aliases) ? {postalAliases:row.postal_aliases.filter((alias): alias is {address:string;provenance:RegistryProvenance} =>
             Boolean(alias && typeof alias.address==="string" && alias.provenance?.sourceUrl))} : {}),
           ...(boardSource && row.board_address
@@ -135,13 +142,25 @@ export async function publishedPinOffices(
       const venue=agendaMeetingAddress(row.header,state);
       if(venue&&typeof row.meeting_id==="string"&&!body.meetingAddresses?.some(address=>address.meetingId===row.meeting_id))
         (body.meetingAddresses??=[]).push({meetingId:row.meeting_id,bodyId:id,name:venue,address:venue,basis:"MEETING",provenance});
-      if(!body.officeContact?.address){
-        const address=agendaLetterheadOffice(row.header,String(row.jurisdiction),state);
-        if(address)body.officeContact={address,phone:null,provenance};
+      if(!body.officeContact?.address||!isOfficeStreetAddress(censusAddressQuery(body.officeContact.address))){
+        const office=agendaLetterheadOfficeEvidence(row.header,String(row.jurisdiction),state);
+        if(office)body.officeContact={address:office.address,quote:office.quote,phone:null,provenance,
+          ...(typeof row.current_version_id==="string"&&typeof row.content_hash==="string"&&/^[a-f0-9]{64}$/.test(row.content_hash)
+            ?{savedSource:{versionId:row.current_version_id,sha256:row.content_hash,text:row.header}}:{})};
       }
     }
   }catch(error){onFailure?.(`Published agenda office addresses could not be read: ${error instanceof Error?error.message:String(error)}`);}
   return bodies;
+}
+
+/** Failed normalized inputs stay with the open map-pin blank, so the next pass seeks new evidence. */
+export interface PinGeocodeAttempt {
+  readonly query: string;
+  readonly benchmark: string;
+  readonly outcome: "NO_MATCH" | "REJECTED" | "TRANSIENT";
+  readonly checkedAt: string;
+  readonly retryAt?: string;
+  readonly httpStatus?: number;
 }
 
 export interface PublishedPinResult {
@@ -149,6 +168,7 @@ export interface PublishedPinResult {
   readonly placedCount: number;
   readonly held: readonly string[];
   readonly responses: readonly RetainedSourceResponse[];
+  readonly attempts: ReadonlyMap<string, readonly PinGeocodeAttempt[]>;
 }
 
 /** A published physical address can use a postal alias explicitly printed beside its own street in the same government's directory. */
@@ -183,6 +203,7 @@ export async function placePublishedMeetingPins(input: {
   readonly query?: Query;
   readonly offices?: ReadonlyMap<string, MeetingPinBody>;
   readonly retainedAddresses?: ReadonlyMap<string, MeetingPinAddress>;
+  readonly geocodeAttempts?: ReadonlyMap<string, readonly PinGeocodeAttempt[]>;
   readonly fetchImpl?: typeof fetch;
   readonly clock?: () => string;
 }): Promise<PublishedPinResult> {
@@ -212,6 +233,38 @@ export async function placePublishedMeetingPins(input: {
   const previous = new Map(
     (input.previous ?? []).map((meeting) => [meeting.id, meeting]),
   );
+  const priorAttempts = new Map(input.geocodeAttempts);
+  const unpinned = input.meetings.filter(meeting => {
+    const pin=meeting.mapPin??previous.get(meeting.id)?.mapPin;
+    return !meeting.location&&(!pin||Boolean(pin.pendingReplacement));
+  });
+  if (input.query && unpinned.length && !input.geocodeAttempts) try {
+    const rows = await input.query("SELECT entity_id,detail FROM blank WHERE field='map_pin' AND entity_id=ANY($1::text[])",
+      [unpinned.map(meeting => meetingEntityId(meeting.id))]);
+    for (const row of rows) {
+      if (typeof row.detail !== "string") continue;
+      try {
+        const detail = JSON.parse(row.detail) as { geocodeAttempts?: PinGeocodeAttempt[] };
+        if (Array.isArray(detail.geocodeAttempts)) priorAttempts.set(String(row.entity_id).slice("meeting:".length),
+          detail.geocodeAttempts.filter(attempt => typeof attempt.query === "string" && typeof attempt.checkedAt === "string" &&
+            attempt.benchmark === CENSUS_BENCHMARK && ["NO_MATCH", "REJECTED", "TRANSIENT"].includes(attempt.outcome)));
+      } catch { /* Older blanks carry their published venue as plain text. */ }
+    }
+  } catch (error) { held.push(`Earlier geocoding failures could not be read: ${error instanceof Error ? error.message : String(error)}`); }
+  const attempts = new Map<string, PinGeocodeAttempt[]>([...priorAttempts].map(([id,rows])=>[id,[...rows]]));
+  const failedQueries = new Map<string, PinGeocodeAttempt>();
+  const queryKey = (query: string) => addressWords(query);
+  for (const saved of priorAttempts.values()) for (const attempt of saved) {
+    if (attempt.benchmark !== CENSUS_BENCHMARK) continue;
+    const prior = failedQueries.get(queryKey(attempt.query));
+    if (!prior || Date.parse(attempt.checkedAt) > Date.parse(prior.checkedAt)) failedQueries.set(queryKey(attempt.query), attempt);
+  }
+  const remember = (meetingId: string, attempt: PinGeocodeAttempt) => {
+    const rows = attempts.get(meetingId) ?? [];
+    const index=rows.findIndex(row => queryKey(row.query) === queryKey(attempt.query));
+    if(index<0)rows.push(attempt);else rows[index]=attempt;
+    attempts.set(meetingId, rows);
+  };
   const saved = new Map<string, MeetingPinLocation>();
   const unresolved=input.meetings.filter(meeting=>{
     if(meeting.location||meeting.mapPin)return false;
@@ -260,67 +313,80 @@ export async function placePublishedMeetingPins(input: {
     url: string;
     at: string;
   } | null | undefined> => {
-    const query=publishedAddressQuery(address,meeting);
-    if (
-      !isOfficeStreetAddress(query) ||
-      query.length < 3 ||
-      query.length > 200 ||
-      !/[0-9]/.test(query)
-    )
+    const query = publishedAddressQuery(address,meeting), key = queryKey(query);
+    const attempted = failedQueries.get(key);
+    if (attempted && (attempted.outcome !== "TRANSIENT" || attempted.retryAt && Date.parse(attempted.retryAt) > Date.parse(clock()))) {
+      remember(meeting.id, attempted);
+      return Promise.resolve(attempted.outcome === "TRANSIENT" ? undefined : null);
+    }
+    const reject = (outcome: PinGeocodeAttempt["outcome"], retryAt?: string, httpStatus?: number) => {
+      const attempt: PinGeocodeAttempt = {query, benchmark:CENSUS_BENCHMARK, outcome, checkedAt:clock(), ...(retryAt ? {retryAt} : {}), ...(httpStatus ? {httpStatus} : {})};
+      failedQueries.set(key,attempt);
+      return outcome === "TRANSIENT" ? undefined : null;
+    };
+    if (!isOfficeStreetAddress(query) || query.length < 3 || query.length > 200 || !/[0-9]/.test(query)) {
+      reject("REJECTED");
+      remember(meeting.id,failedQueries.get(key)!);
       return Promise.resolve(null);
-    const prior = lookups.get(query);
-    if (prior) return prior;
-    const pending = (async () => {
-      const url = new URL(CENSUS_GEOCODER_URL);
-      url.searchParams.set("address", query);
-      url.searchParams.set("benchmark", CENSUS_BENCHMARK);
-      url.searchParams.set("format", "json");
-      try {
-        const response = await fetchImpl(url, {
-          signal: AbortSignal.timeout(8000),
-          headers: { "user-agent": OUTBOUND_USER_AGENT },
-        });
-        const bytes = new Uint8Array(await response.arrayBuffer());
-        if (!response.ok) {
-          if(response.status!==400)held.push(`${address.address}: Census HTTP ${response.status}`);
-          return response.status===400?null:undefined;
+    }
+    let pending = lookups.get(key);
+    if (!pending) {
+      pending = (async () => {
+        const url = new URL(CENSUS_GEOCODER_URL);
+        url.searchParams.set("address", query);
+        url.searchParams.set("benchmark", CENSUS_BENCHMARK);
+        url.searchParams.set("format", "json");
+        let response: Response | undefined, bytes: Uint8Array | undefined, retryAt: string | undefined;
+        try {
+          const read = await politeGetText(url.href, {
+            signal: AbortSignal.timeout(8000), accept:"application/json",
+            // The census geocoder shares the production host clock, so a 429 cools every lookup, not only this one.
+            fetchImpl: trackSourceTransport(async (request, options) => {
+              response = await fetchImpl(request,options);
+              bytes = new Uint8Array(await response.clone().arrayBuffer());
+              const retry = response.headers.get("retry-after");
+              if (retry && (response.status === 429 || response.status >= 500)) {
+                const seconds = Number(retry), at = Number.isFinite(seconds) ? Date.parse(clock()) + seconds*1000 : Date.parse(retry);
+                if (Number.isFinite(at)) {
+                  retryAt = new Date(at).toISOString();
+                  // The shared reader accepts seconds; preserve an HTTP-date's full delay there too.
+                  if (!Number.isFinite(seconds)) {
+                    const headers = new Headers(response.headers);
+                    headers.set("retry-after",String(Math.max(0,(at-Date.parse(clock()))/1000)));
+                    return new Response(new Uint8Array(bytes),{status:response.status,headers});
+                  }
+                }
+              }
+              return response;
+            }, fetchImpl),
+          });
+          const finalUrl = response?.url || url.href;
+          if (new URL(finalUrl).hostname !== "geocoding.geo.census.gov") return reject("TRANSIENT",retryAt);
+          const payload = JSON.parse(read.text) as {result?: {addressMatches?: unknown}};
+          if (!Array.isArray(payload.result?.addressMatches)) throw new Error("Census returned no address-matching result");
+          const point = verifiedCensusVenuePoint(query,payload);
+          const at = clock();
+          responses.push({source:"census-geocoder", requestedUrl:url.href, finalUrl, httpStatus:response!.status,
+            rawHash:createHash("sha256").update(bytes!).digest("hex"), byteCount:bytes!.length, bytes:bytes!,
+            retrievedAt:at, contentType:response!.headers.get("content-type") ?? "application/json"});
+          if (!point) return reject("NO_MATCH",undefined,response?.status);
+          failedQueries.delete(key);
+          return {lat:point.lat, lng:point.lng, matchedAddress:point.address, url:finalUrl, at};
+        } catch (error) {
+          // A shared-host cooldown is honored as this query's retry time; the lookup is never re-sent sooner.
+          if (error instanceof SourceReadDeferred && error.reason === "THROTTLED" && !(Date.parse(retryAt ?? "") >= error.until)) retryAt = new Date(error.until).toISOString();
+          const rejected = error instanceof SourceHttpError && error.status === 400;
+          if (!rejected) held.push(`${address.address}: ${error instanceof Error ? error.message : String(error)}`);
+          return reject(rejected ? "REJECTED" : "TRANSIENT",retryAt,error instanceof SourceHttpError ? error.status : response?.status);
         }
-        const finalUrl = response.url || url.href;
-        if (new URL(finalUrl).hostname !== "geocoding.geo.census.gov")
-          return undefined;
-        const point = verifiedCensusVenuePoint(
-          query,
-          JSON.parse(new TextDecoder().decode(bytes)),
-        );
-        if (!point) return null;
-        const at = clock();
-        responses.push({
-          source: "census-geocoder",
-          requestedUrl: url.href,
-          finalUrl,
-          httpStatus: response.status,
-          rawHash: createHash("sha256").update(bytes).digest("hex"),
-          byteCount: bytes.length,
-          bytes,
-          retrievedAt: at,
-          contentType: "application/json",
-        });
-        return {
-          lat: point.lat,
-          lng: point.lng,
-          matchedAddress: point.address,
-          url: finalUrl,
-          at,
-        };
-      } catch (error) {
-        held.push(
-          `${address.address}: ${error instanceof Error ? error.message : String(error)}`,
-        );
-        return undefined;
-      }
-    })();
-    lookups.set(query, pending);
-    return pending;
+      })();
+      lookups.set(key,pending);
+    }
+    return pending.then(point => {
+      const attempt = failedQueries.get(key);
+      if (attempt) remember(meeting.id,attempt);
+      return point;
+    });
   };
   let placedCount = 0;
   const retainedMeetings = retainPreviouslyVerifiedVenuePoints(
@@ -388,15 +454,13 @@ export async function placePublishedMeetingPins(input: {
         )
       ) {
         placedCount++;
-        return withPublishedPin(meeting, {
-          ...repeated,
-          meetingId: meeting.id,
-        });
+        const {pendingReplacement:_pending,...checked}=repeated;
+        return withPublishedPin(meeting, {...checked,meetingId:meeting.id});
       }
       for (const address of candidates.flatMap(address=>[address,...postalAddressAliases(address,offices.get(meeting.bodyId??""))])) {
         if(address.basis==="BODY_OFFICE"&&repeated?.basis==="GOVERNMENT_OFFICE"&&
           (repeated.boardAddressQuery??null)===bodyQuery){bodyTried=true;continue;}
-        const {geocodingAddress:_query,...publishedAddress}=address;
+        const {geocodingAddress:_query,verifiedPoint,...publishedAddress}=address;
         const cached = saved.get(
           `${address.basis}:${meeting.bodyId}:${address.address}`,
         );
@@ -409,9 +473,17 @@ export async function placePublishedMeetingPins(input: {
             publishedLocation,
           };
           placedCount++;
-          return withPublishedPin(meeting, pin);
+          const {pendingReplacement:_pending,...checked}=pin;
+          return withPublishedPin(meeting,checked);
         }
-        const point = await locate(address,meeting);
+        const coordinateUrl=verifiedPoint&&URL.canParse(verifiedPoint.coordinateSourceUrl)?new URL(verifiedPoint.coordinateSourceUrl):null;
+        const knownPoint=verifiedPoint&&coordinateUrl?.protocol==="https:"&&coordinateUrl.hostname==="geocoding.geo.census.gov"
+          &&Number.isFinite(verifiedPoint.lat)&&Math.abs(verifiedPoint.lat)<=90&&Number.isFinite(verifiedPoint.lng)&&Math.abs(verifiedPoint.lng)<=180
+          &&Boolean(verifiedPoint.matchedAddress)&&Number.isFinite(Date.parse(verifiedPoint.coordinateCheckedAt))
+          &&addressWords(censusAddressQuery(coordinateUrl.searchParams.get("address")??""))===addressWords(publishedAddressQuery(address,meeting))
+          ?{lat:verifiedPoint.lat,lng:verifiedPoint.lng,matchedAddress:verifiedPoint.matchedAddress,
+            url:verifiedPoint.coordinateSourceUrl,at:verifiedPoint.coordinateCheckedAt}:null;
+        const point = knownPoint??await locate(address,meeting);
         if(address.basis==="BODY_OFFICE"){bodyTried=true;if(point===undefined)bodyTransient=true;}
         if (!point) continue;
         const pin: MeetingPinLocation = {
@@ -429,6 +501,9 @@ export async function placePublishedMeetingPins(input: {
         placedCount++;
         return withPublishedPin(meeting, pin);
       }
+      // A failed refresh keeps the last checked point while acquisition continues for the new address.
+      if (repeated?.bodyId === meeting.bodyId) return {...meeting,mapPin:{...repeated,meetingId:meeting.id,
+        pendingReplacement:{publishedLocation,onlineOnly:isOnlineOnly(meeting)}}};
       const { mapPin: _old, ...rest } = meeting;
       return rest;
     },
@@ -438,7 +513,7 @@ export async function placePublishedMeetingPins(input: {
     held.push(`${input.meetings[row.index].id}: ${row.error}`);
     return input.meetings[row.index];
   });
-  return { meetings, placedCount, held, responses };
+  return { meetings, placedCount, held, responses, attempts };
 }
 
 /** Resolve a relative event citation against the exact promoted publisher route. */

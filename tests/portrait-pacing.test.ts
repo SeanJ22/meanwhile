@@ -32,7 +32,7 @@ test("standing profile and image readers share one host reader, spacing, holds a
   const held=await pacedPortraitAcquire(first,runtime);
   assert.ok(held.reused);assert.equal(starts.length,3,"held bytes make no publisher request");
   const refused=request("official-person-profile","https://refused.example.gov/jane");
-  await assert.rejects(pacedPortraitAcquire({...refused,fetchImpl:async()=>new Response("wait",{status:429,headers:{"retry-after":"120"}})},runtime),/KNOWN_SOURCE_HTTP_429/);
+  await assert.rejects(pacedPortraitAcquire({...refused,fetchImpl:async()=>new Response("wait",{status:429,headers:{"retry-after":"120"}})},runtime),/SOURCE_READ_DEFERRED/);
   let sent=false;
   await assert.rejects(pacedPortraitAcquire({...request("person-portrait","https://refused.example.gov/jane.png"),fetchImpl:async()=>{sent=true;return new Response("image");}},runtime),/PORTRAIT_WEBSITE_WAIT/);
   assert.equal(sent,false,"a publisher hold is shared by page and image source identities");

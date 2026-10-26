@@ -1,0 +1,306 @@
+{
+  "rule": "A state's map reservation is its own measured whole-process peak plus 5%, rounded up to MiB. A state with no measurement uses interceptBytes + slope x its Census block-file bytes, plus 5%, rounded up. The 768 MiB host headroom is added at admission as for every child.",
+  "blockFile": "https://www2.census.gov/geo/docs/maps-data/data/grf/2026/public_grfc_cur26_<fips>.txt",
+  "blockFileBytesCheckedAt": "2026-10-26",
+  "measured": {
+    "AK": {
+      "peakBytes": 504762368,
+      "run": "RB-A2 2026-10-25: public Census inputs and the actual loader SQL encoding with a stub database, 1 GiB heap"
+    },
+    "CA": {
+      "peakBytes": 1448923136,
+      "run": "RB-A2 2026-10-25: complete source acquisition and map import, 1 GiB heap"
+    },
+    "TX": {
+      "peakBytes": 1669304320,
+      "run": "RB-A2 2026-10-25: complete acquisition, map import and Census publication, 1 GiB heap"
+    }
+  },
+  "fit": {
+    "method": "Least-squares slope of measured peak on block-file bytes; the intercept is raised so no measured state lies above the line, then rounded up to a byte.",
+    "slope": 5.213879815547253,
+    "interceptBytes": 499587575
+  },
+  "states": {
+    "AL": {
+      "fips": "01",
+      "blockFileBytes": 66571349,
+      "reservationMiB": 848
+    },
+    "AK": {
+      "fips": "02",
+      "blockFileBytes": 10089149,
+      "reservationMiB": 506
+    },
+    "AZ": {
+      "fips": "04",
+      "blockFileBytes": 55637948,
+      "reservationMiB": 791
+    },
+    "AR": {
+      "fips": "05",
+      "blockFileBytes": 48776022,
+      "reservationMiB": 755
+    },
+    "CA": {
+      "fips": "06",
+      "blockFileBytes": 182078528,
+      "reservationMiB": 1451
+    },
+    "CO": {
+      "fips": "08",
+      "blockFileBytes": 49817679,
+      "reservationMiB": 761
+    },
+    "CT": {
+      "fips": "09",
+      "blockFileBytes": 17420786,
+      "reservationMiB": 592
+    },
+    "DE": {
+      "fips": "10",
+      "blockFileBytes": 7131943,
+      "reservationMiB": 538
+    },
+    "DC": {
+      "fips": "11",
+      "blockFileBytes": 2092554,
+      "reservationMiB": 512
+    },
+    "FL": {
+      "fips": "12",
+      "blockFileBytes": 138039927,
+      "reservationMiB": 1221
+    },
+    "GA": {
+      "fips": "13",
+      "blockFileBytes": 83244525,
+      "reservationMiB": 935
+    },
+    "HI": {
+      "fips": "15",
+      "blockFileBytes": 5141494,
+      "reservationMiB": 528
+    },
+    "ID": {
+      "fips": "16",
+      "blockFileBytes": 29203719,
+      "reservationMiB": 653
+    },
+    "IL": {
+      "fips": "17",
+      "blockFileBytes": 130889758,
+      "reservationMiB": 1184
+    },
+    "IN": {
+      "fips": "18",
+      "blockFileBytes": 72723751,
+      "reservationMiB": 880
+    },
+    "IA": {
+      "fips": "19",
+      "blockFileBytes": 61620580,
+      "reservationMiB": 822
+    },
+    "KS": {
+      "fips": "20",
+      "blockFileBytes": 60692982,
+      "reservationMiB": 818
+    },
+    "KY": {
+      "fips": "21",
+      "blockFileBytes": 46992550,
+      "reservationMiB": 746
+    },
+    "LA": {
+      "fips": "22",
+      "blockFileBytes": 50302719,
+      "reservationMiB": 763
+    },
+    "ME": {
+      "fips": "23",
+      "blockFileBytes": 16537703,
+      "reservationMiB": 587
+    },
+    "MD": {
+      "fips": "24",
+      "blockFileBytes": 29574875,
+      "reservationMiB": 655
+    },
+    "MA": {
+      "fips": "25",
+      "blockFileBytes": 37495471,
+      "reservationMiB": 697
+    },
+    "MI": {
+      "fips": "26",
+      "blockFileBytes": 89276354,
+      "reservationMiB": 967
+    },
+    "MN": {
+      "fips": "27",
+      "blockFileBytes": 72458345,
+      "reservationMiB": 879
+    },
+    "MS": {
+      "fips": "28",
+      "blockFileBytes": 39436519,
+      "reservationMiB": 707
+    },
+    "MO": {
+      "fips": "29",
+      "blockFileBytes": 89670728,
+      "reservationMiB": 969
+    },
+    "MT": {
+      "fips": "30",
+      "blockFileBytes": 31204799,
+      "reservationMiB": 664
+    },
+    "NE": {
+      "fips": "31",
+      "blockFileBytes": 43265696,
+      "reservationMiB": 727
+    },
+    "NV": {
+      "fips": "32",
+      "blockFileBytes": 20119731,
+      "reservationMiB": 606
+    },
+    "NH": {
+      "fips": "33",
+      "blockFileBytes": 11162540,
+      "reservationMiB": 559
+    },
+    "NJ": {
+      "fips": "34",
+      "blockFileBytes": 48127528,
+      "reservationMiB": 752
+    },
+    "NM": {
+      "fips": "35",
+      "blockFileBytes": 38412583,
+      "reservationMiB": 701
+    },
+    "NY": {
+      "fips": "36",
+      "blockFileBytes": 100999718,
+      "reservationMiB": 1028
+    },
+    "NC": {
+      "fips": "37",
+      "blockFileBytes": 86046870,
+      "reservationMiB": 950
+    },
+    "ND": {
+      "fips": "38",
+      "blockFileBytes": 29874441,
+      "reservationMiB": 657
+    },
+    "OH": {
+      "fips": "39",
+      "blockFileBytes": 98249511,
+      "reservationMiB": 1014
+    },
+    "OK": {
+      "fips": "40",
+      "blockFileBytes": 63801500,
+      "reservationMiB": 834
+    },
+    "OR": {
+      "fips": "41",
+      "blockFileBytes": 46323821,
+      "reservationMiB": 743
+    },
+    "PA": {
+      "fips": "42",
+      "blockFileBytes": 118188439,
+      "reservationMiB": 1118
+    },
+    "RI": {
+      "fips": "44",
+      "blockFileBytes": 8947236,
+      "reservationMiB": 547
+    },
+    "SC": {
+      "fips": "45",
+      "blockFileBytes": 54604329,
+      "reservationMiB": 786
+    },
+    "SD": {
+      "fips": "46",
+      "blockFileBytes": 25518651,
+      "reservationMiB": 634
+    },
+    "TN": {
+      "fips": "47",
+      "blockFileBytes": 63495297,
+      "reservationMiB": 832
+    },
+    "TX": {
+      "fips": "48",
+      "blockFileBytes": 237209561,
+      "reservationMiB": 1672
+    },
+    "UT": {
+      "fips": "49",
+      "blockFileBytes": 25431013,
+      "reservationMiB": 634
+    },
+    "VT": {
+      "fips": "50",
+      "blockFileBytes": 8976176,
+      "reservationMiB": 548
+    },
+    "VA": {
+      "fips": "51",
+      "blockFileBytes": 57362642,
+      "reservationMiB": 800
+    },
+    "WA": {
+      "fips": "53",
+      "blockFileBytes": 55378385,
+      "reservationMiB": 790
+    },
+    "WV": {
+      "fips": "54",
+      "blockFileBytes": 25945407,
+      "reservationMiB": 636
+    },
+    "WI": {
+      "fips": "55",
+      "blockFileBytes": 72044928,
+      "reservationMiB": 877
+    },
+    "WY": {
+      "fips": "56",
+      "blockFileBytes": 18994605,
+      "reservationMiB": 600
+    },
+    "AS": {
+      "fips": "60",
+      "blockFileBytes": 198554,
+      "reservationMiB": 502
+    },
+    "GU": {
+      "fips": "66",
+      "blockFileBytes": 633468,
+      "reservationMiB": 504
+    },
+    "MP": {
+      "fips": "69",
+      "blockFileBytes": 305167,
+      "reservationMiB": 502
+    },
+    "PR": {
+      "fips": "72",
+      "blockFileBytes": 15362996,
+      "reservationMiB": 581
+    },
+    "VI": {
+      "fips": "78",
+      "blockFileBytes": 927662,
+      "reservationMiB": 506
+    }
+  }
+}

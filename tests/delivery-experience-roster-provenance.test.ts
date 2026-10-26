@@ -14,7 +14,7 @@ test("a registry roster retains its own source and each member's exact fact sour
   assert.deepEqual(registryMemberCitedUrls(`body-roster:${roster.bodyId}`, roster), [newUrl, oldUrl]);
 });
 
-test("a reader's source panel names each fact's own page beside the member's seat", () => {
+test("a reader's source panel describes the fact and keeps its own page and checked date", () => {
   const holder = { id: "member-1", name: "A Person", officeTitle: "Council Member", sourceUrl: newUrl,
     provenance: { sourceUrl: newUrl, sourceOrg: "City Council", collectedAt: "2026-09-28", verifiedAt: null },
     fieldSources: { email: source } } as unknown as SeatHolder;
@@ -22,5 +22,6 @@ test("a reader's source panel names each fact's own page beside the member's sea
   assert.equal(sources.length, 2);
   assert.equal(sources[0]?.provenance.sourceUrl, newUrl);
   assert.equal(sources[1]?.provenance.sourceUrl, oldUrl);
-  assert.match(sources[1]?.what ?? "", /A Person — /);
+  assert.equal(sources[1]?.what, "How to email the office");
+  assert.deepEqual(sources[1]?.provenance, source);
 });

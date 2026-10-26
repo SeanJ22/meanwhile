@@ -144,15 +144,15 @@ test("archive Retry-After on 429 or 503 blocks later archive, byte, and HEAD req
     await first.dispose();
     const prior = await manifest(h.store);
     h.response(() => new Response(null, { status, headers: { "retry-after": "3600" } }));
-    await assert.rejects(censusTigerArchive(url, h.options, validateShapes), new RegExp(`HTTP ${status}`));
+    await assert.rejects(censusTigerArchive(url, h.options, validateShapes), /SOURCE_READ_DEFERRED/);
     assert.deepEqual(await manifest(h.store), prior);
     const requests = h.requests();
-    await assert.rejects(censusTigerArchive(url, h.options, validateShapes), /KNOWN_SOURCE_RETRY_AFTER/);
-    await assert.rejects(censusSourceRelease("https://www2.census.gov/geo/tiger/", h.options), /KNOWN_SOURCE_RETRY_AFTER/);
+    await assert.rejects(censusTigerArchive(url, h.options, validateShapes), /SOURCE_READ_DEFERRED/);
+    await assert.rejects(censusSourceRelease("https://www2.census.gov/geo/tiger/", h.options), /SOURCE_READ_DEFERRED/);
     await assert.rejects(heldSourcesUnchanged({
       sourceUrls: [url], sourceDataset: "TIGER sample", sourceFiles: ["sample.zip"], sourceChecksums: [first.sha256],
       sourceValidators: [first.sourceValidator], parserVersion: CENSUS_ACQUISITION_PARSER, method: "Sample polygons", computedAt: first.retrievedAt,
-    }, [url], h.options), /KNOWN_SOURCE_RETRY_AFTER/);
+    }, [url], h.options), /SOURCE_READ_DEFERRED/);
     assert.equal(h.requests(), requests); assert.deepEqual(await manifest(h.store), prior);
   }
 });
@@ -164,9 +164,9 @@ test("a HEAD Retry-After shares the source cooldown with the archive download pa
   await assert.rejects(heldSourcesUnchanged({
     sourceUrls: [url], sourceDataset: "TIGER sample", sourceFiles: ["sample.zip"], sourceChecksums: [first.sha256],
     sourceValidators: [first.sourceValidator], parserVersion: CENSUS_ACQUISITION_PARSER, method: "Sample polygons", computedAt: first.retrievedAt,
-  }, [url], h.options), /HTTP 503/);
+  }, [url], h.options), /SOURCE_READ_DEFERRED/);
   const requests = h.requests();
-  await assert.rejects(censusTigerArchive(url, h.options, validateShapes), /KNOWN_SOURCE_RETRY_AFTER/);
+  await assert.rejects(censusTigerArchive(url, h.options, validateShapes), /SOURCE_READ_DEFERRED/);
   assert.equal(h.requests(), requests); assert.deepEqual(await manifest(h.store), prior);
 });
 

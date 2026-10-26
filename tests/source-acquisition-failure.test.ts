@@ -23,7 +23,7 @@ import {
   runInSourceAcquisitionDomain,
   sourceAcquisitionSleep,
 } from "../lib/sources/acquisition-deadline.ts";
-import { curlGetText, politeGetText } from "../lib/sources/http.ts";
+import { curlGetText, politeGetText, SourceReadDeferred } from "../lib/sources/http.ts";
 import { ROUTINE_CHILD_TIMEOUT_MS } from "../lib/civic-data/bounded-child-pass.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
 import {
@@ -327,7 +327,7 @@ test("the source deadline leaves a bounded durable-settlement window inside the 
   );
 });
 
-test("the shared meeting client cancels hung request/body work and its real retry sleep", async () => {
+test("the shared meeting client cancels hung request/body work and defers Retry-After without sleeping in the read", async () => {
   for (const kind of ["request", "body"] as const) {
     let active = 0;
     const fetchImpl = ((_input: URL | RequestInfo, init?: RequestInit) => {
@@ -382,10 +382,10 @@ test("the shared meeting client cancels hung request/body work and its real retr
         },
       }),
     ),
-    /acquisition deadline/,
+    SourceReadDeferred,
   );
-  assert.equal(attempts, 1, "the aborted retry sleep never launches another publisher request");
-  assert.ok(Date.now() - started < 1_000, "Retry-After was interrupted by the source deadline");
+  assert.equal(attempts, 1, "the shared cooldown never launches an immediate second publisher request");
+  assert.ok(Date.now() - started < 1_000, "Retry-After is scheduled for later instead of sleeping inside the read");
 });
 
 test("a real acquisition deadline persists one exact source failure while retaining LKG", async () => {

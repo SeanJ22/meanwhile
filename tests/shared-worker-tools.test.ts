@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { sharedScoutBrowser, browseWithPlaywright } from "../scripts/scout-browse.mts";
 import { operationalStatePath } from "../lib/ops/operational-state-path.ts";
+import { placeMapReservationMiB } from "../lib/place-map/memory.ts";
 import type { GuardedBrowser } from "../scripts/browser.mts";
 import { startWorkerToolsHost } from "../lib/control-plane/workers/process-pool.ts";
 import { newFieldManualEntry, readFieldManual, readFieldManualSourceHints, readLearnedManualRoutes, writeFieldManual } from "../lib/control-plane/field-manual.ts";
@@ -43,6 +44,7 @@ test("Windows and Linux process probes leave timers and the host lock available"
     const loaded: Record<string, unknown> = {};
     runInNewContext(source, { exports: loaded, require: (name: string) => {
       if (name === "../../ops/operational-state-path.ts") return { operationalStatePath };
+      if (name === "../../place-map/memory.ts") return { placeMapReservationMiB };
       if (name === "node:os") return { ...nativeRequire(name), platform: () => operatingSystem, tmpdir: () => root };
       if (name === "node:child_process") return { ...nativeRequire(name),
         execFileSync: () => { syncProbe(); return rows; },

@@ -1,3 +1,4 @@
+import { federalGovernmentNameSql } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
 import { MEETING_HELD_LOOKBACK_DAYS } from "../meetings/constants.ts";
@@ -59,15 +60,20 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), named_places AS MATERIALIZED (
   SELECT unnest($10::text[]) AS id
 ), registration AS MATERIALIZED (
-  SELECT payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
+  SELECT reader_payload_node(payload) AS payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), government_inventory AS MATERIALIZED (
-  SELECT g,${normalizedGovernmentSql("g->>'name'")} AS identity FROM registration,
-    LATERAL jsonb_array_elements(coalesce(payload->'governments','[]'::jsonb)) g
+  SELECT g,${normalizedGovernmentSql("g->>'name'")} AS identity,${federalGovernmentNameSql("g->>'name'")} AS recipient_identity FROM registration,
+    LATERAL reader_payload_members(payload->'governments') member,
+    LATERAL (SELECT reader_payload_node(member.item) AS original) header,
+    LATERAL (SELECT original || jsonb_build_object('name',reader_payload_value(original->'name')) AS g) named
 ), government_identities AS MATERIALIZED (
-  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities FROM government_inventory
+  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
+    count(*) OVER (PARTITION BY upper(g->>'state'),recipient_identity) AS recipient_names FROM government_inventory
 ), local_governments AS MATERIALIZED (
-  SELECT * FROM government_identities WHERE EXISTS (
-    SELECT 1 FROM jsonb_array_elements(coalesce(g->'associations','[]'::jsonb)) a WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
+  SELECT reader_payload_value(g) AS g,identity,identities,recipient_names FROM government_identities WHERE EXISTS (
+    SELECT 1 FROM reader_payload_members(g->'associations') member,
+      LATERAL (SELECT reader_payload_node(member.item) AS a) association
+    WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), dotgov AS MATERIALIZED (
   SELECT payload->'domains' AS domains,payload->'source' AS source FROM civic_data_promotions
     WHERE $8::text[] IS NULL AND key='DOTGOV_REFERENCE:US:current-full:domains' AND record_class='DOTGOV_REFERENCE'
@@ -400,10 +406,11 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
         FROM jsonb_each(reader_payload_node(root.value->'rosterPhotos')) photo
         WHERE photo.key IN (SELECT id FROM runtime_people UNION SELECT value->>'officeholderId' FROM runtime_photos)),'{}'::jsonb) ELSE '{}'::jsonb END)
     FROM runtime_root root CROSS JOIN runtime_registry r) END AS registry,
-  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('recipientNameUnique',g.recipient_names=1,'govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
     'domain',d->>'domain','website','https://'||(d->>'domain'),'sourceUrl',source->>'url','checkedAt',source->>'readAt'))
     FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) ELSE '[]'::jsonb END AS governments,
-  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(reader_payload_value(member.item)) FROM registration,LATERAL reader_payload_members(payload->'divisions') member,
+    LATERAL (SELECT reader_payload_node(member.item) AS d) division
     WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR d->>'ocdId' IN (SELECT id FROM named_places)),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
   coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('placed',b.id IN (SELECT id FROM linked_bodies)
     OR EXISTS (SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id)
@@ -414,8 +421,11 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
     split_part(b.id,'#',1)),'placement_basis',CASE WHEN EXISTS (
       SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id AND ep.placement_basis='HOST_COUNTY') THEN 'HOST_COUNTY' ELSE 'SERVICE_AREA' END,
-    'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government' AND g.id ~ '^[a-z]{2}:special:'))) FROM bodies b),'[]'::jsonb) AS entities,
-  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone')),'[]'::jsonb) AS fields,
+    'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),
+    'government_id',(SELECT g.id FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),
+    'government_class',(SELECT g->>'governmentClass' FROM government_inventory WHERE g->>'id'=b.parent_id OR g->>'jurisdictionId'=b.parent_id LIMIT 1),
+    'registered_name',(SELECT value->>'name' FROM runtime_bodies r WHERE r.value->>'id'=b.id LIMIT 1))) FROM bodies b),'[]'::jsonb) AS entities,
+  coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone','office_email','mailing_address')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
   coalesce((SELECT jsonb_agg(to_jsonb(s)) FROM sittings s),'[]'::jsonb) AS sittings,
@@ -508,8 +518,6 @@ export interface RebuildOptions {
   readonly limit?: number;
   readonly concurrency?: number;
   readonly timeBudgetMs?: number;
-  /** Build data during deployment; later versions leave cache purges for the published worker. */
-  readonly initialBackfill?: boolean;
 }
 
 const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
@@ -518,9 +526,7 @@ const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
   ) ORDER BY n LIMIT 1
 ), next AS (
   SELECT q.place_id,slot.n FROM rebuild_queue q JOIN entity e ON e.id=q.place_id CROSS JOIN slot
-  WHERE (q.lease_until IS NULL OR q.lease_until<clock_timestamp() OR $2::boolean AND q.lease_token IS NULL)
-    AND (NOT $2::boolean OR q.built_generation IS DISTINCT FROM q.generation
-      OR NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id))
+  WHERE q.lease_until IS NULL OR q.lease_until<clock_timestamp()
   ORDER BY q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
 ) UPDATE rebuild_queue q SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes',lease_slot=next.n,next_queued_at=NULL
   FROM next,entity e WHERE q.place_id=next.place_id AND e.id=q.place_id
@@ -541,13 +547,12 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
         await query("SELECT pg_advisory_xact_lock(hashtextextended('place-page-rebuild-slots',0))");
         await query(`UPDATE rebuild_queue SET lease_token=NULL,lease_slot=NULL,lease_until=NULL
           WHERE lease_slot IS NOT NULL AND lease_until<clock_timestamp()`);
-        return (await query(CLAIM_PAGE_SQL,[token,options.initialBackfill ?? false]))[0];
+        return (await query(CLAIM_PAGE_SQL,[token]))[0];
       });
       if(!claim)return;
       const id=String(claim.place_id),state=String(claim.state ?? "US");
       let built=claim.has_page===true && claim.built_generation!=null && String(claim.built_generation)===String(claim.generation);
       try {
-        let firstVersion=false;
         if(!built) {
           const body=await db.transaction<StoredPlacePage>(async query=>{
             await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
@@ -555,16 +560,16 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
           });
           // Writers can queue a newer generation while the snapshot is being read.
           // Lock its lease only after leaving that snapshot, in this short transaction.
-          firstVersion=await db.transaction(async query=>{
+          await db.transaction(async query=>{
             // A worker whose lease expired cannot replace a newer worker's page.
             const [lease]=await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
             if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
             const {readyCurrent,readyHistory,territory,...rawContext}=body;
             const context=/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext);
-            const [stored]=await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context)
+            await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context)
               VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
               ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
-                body=excluded.body,history_body=excluded.history_body,context=excluded.context RETURNING version`,
+                body=excluded.body,history_body=excluded.history_body,context=excluded.context`,
             [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context)]);
             const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
               !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
@@ -581,18 +586,14 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
               SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
             await query("UPDATE rebuild_queue SET built_generation=$3::bigint WHERE place_id=$1 AND lease_token=$2",[id,token,claim.generation]);
             await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);
-            return Number(stored?.version)===1;
           });
           built=true;
           rebuilt++;
         }
-        if(!options.initialBackfill) {
-          const result=await purge(readerCacheTags({places:[id]}));
-          if(!result.purged)throw new Error(result.detail ?? "Place page cache purge failed");
-        }
+        const purged=await purge(readerCacheTags({places:[id]}));
+        if(!purged.purged)throw new Error(purged.detail ?? "Place page cache purge failed");
         await db.transaction(async query=>{
-          if(!options.initialBackfill || firstVersion)
-            await query("DELETE FROM rebuild_queue WHERE place_id=$1 AND generation=$2::bigint AND lease_token=$3",[id,claim.generation,token]);
+          await query("DELETE FROM rebuild_queue WHERE place_id=$1 AND generation=$2::bigint AND lease_token=$3",[id,claim.generation,token]);
           // A later generation waits from its own first arrival, so a hot place
           // cannot repeatedly take the oldest slot ahead of untouched places.
           await query(`UPDATE rebuild_queue SET queued_at=coalesce(next_queued_at,queued_at),
@@ -612,8 +613,6 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
     }
   };
   await Promise.all(Array.from({length:concurrency},work));
-  const [remaining]=await db.transaction(query=>query(`SELECT count(*)::int AS n FROM rebuild_queue q
-    WHERE NOT $1::boolean OR q.built_generation IS DISTINCT FROM q.generation
-      OR NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id)`,[options.initialBackfill ?? false]));
+  const [remaining]=await db.transaction(query=>query("SELECT count(*)::int AS n FROM rebuild_queue"));
   return {rebuilt,failed,remaining:Number(remaining?.n ?? 0)};
 }

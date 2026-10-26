@@ -109,7 +109,7 @@ test("an independent place request sees a rebuilt current page while an older qu
   } finally {release();installFactReader(undefined);await pg.close();}
 });
 
-test("the ballot's body-facts projection preserves contacts and calendar-derived names while omitting unused packages",async()=>{
+test("the ballot's body-facts projection preserves contacts and registered body names while omitting unused packages",async()=>{
   const {pg,publish}=await migratedReaderDb();
   const division="ocd-division/country:us/state:az/place:fixture",body=`${division}#council`,at="2026-10-21T00:00:00.000Z";
   const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
@@ -129,7 +129,7 @@ test("the ballot's body-facts projection preserves contacts and calendar-derived
     const full=await buildPlacePackage(input,query),facts=await buildPlacePackage({...input,bodyFactsOnly:true},query);
     assert.deepEqual(facts.bodies,full.bodies);
     assert.equal(facts.bodies[0]?.fields.officePhone,"520-555-0100");
-    assert.equal(facts.bodies[0]?.fields.name,"Official council name");
+    assert.equal(facts.bodies[0]?.fields.name,"Fixture council");
     assert.deepEqual(facts.meetings,full.meetings);assert.equal(facts.meetings.length,1);
     assert.equal(facts.registry,null);assert.ok(full.registry);
     assert.deepEqual(facts.governments,[]);assert.deepEqual(facts.publicationAttempts,[]);

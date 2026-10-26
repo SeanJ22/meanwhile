@@ -3,8 +3,7 @@ import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { toZonedIso } from "../../time/zoned.ts";
 import { isPlacelessLocation, resolveVenue, unplacedVenueGap } from "../../meetings/venue-cache.ts";
 import { MEETING_HELD_HORIZON_DAYS, MEETING_HELD_LOOKBACK_DAYS } from "../../meetings/constants.ts";
-import { decodeEntities, politeGetText, REQUEST_SPACING_MS, SourceHttpError } from "../http.ts";
-import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
+import { decodeEntities, politeGetText, SourceHttpError } from "../http.ts";
 import { accountedNormalize } from "../normalize-account.ts";
 import type { Meeting, MeetingQuery, NormalizeDropCounts, PartialScopeFailure, ReportingMeetingSource } from "../types.ts";
 
@@ -188,7 +187,6 @@ export function makeNovusAgendaSource(rows: BodySourceWiring[], fetchImpl?: type
                 form[search] = "Search";
                 form.__EVENTTARGET = "";
                 form.__EVENTARGUMENT = "";
-                await sourceAcquisitionSleep(REQUEST_SPACING_MS, query.signal);
                 got = await politeGetText(next.url, { fetchImpl, signal: query.signal, form, accept: "text/html" });
               }
               const parsed = parseNovusMeetings(got.text, next.url);
@@ -197,7 +195,6 @@ export function makeNovusAgendaSource(rows: BodySourceWiring[], fetchImpl?: type
               identities.add(signature);
               pages.push({ url: next.url, html: got.text });
               next = nextNovusPage(got.text, next.url);
-              if (next) await sourceAcquisitionSleep(REQUEST_SPACING_MS, query.signal);
             }
             heldPages.set(url.toString(), pages);
           }
@@ -205,7 +202,6 @@ export function makeNovusAgendaSource(rows: BodySourceWiring[], fetchImpl?: type
           const partialScopes: PartialScopeFailure[] = [];
           for (const page of pages) for (const row of parseNovusMeetings(page.html, page.url)) {
             if (!selects(wiring, row) || !row.agendaUrl || !/MeetingView\.aspx/i.test(row.agendaUrl)) continue;
-            await sourceAcquisitionSleep(REQUEST_SPACING_MS, query.signal);
             try { details[row.id] = (await politeGetText(row.agendaUrl, { fetchImpl, signal: query.signal, accept: "text/html" })).text; }
             catch (error) {
               query.signal?.throwIfAborted();

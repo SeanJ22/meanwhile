@@ -1284,3 +1284,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 12:10 AM EDT: Sean, every release gets a plain report
 - Each release PR now comes with a report on the board (releases/<n>.md) and to Sean. It covers every lane with its READY commit, what it does and the prompt it came from; what Sean will see and where, before and after; expected Neon GB/h, measured over the two full hours after; and what could go wrong and how River will know. When the release goes live, River reports back against the same list.
 - Written now: releases/123.md and releases/124.md.
+
+### 12:20 AM EDT: release 123 live; Idaho ballot pages broken
+- Live 12:06 AM EDT (d206ba79a). Fixed set passes. 20 random ZIPs in 20 states: 20/20 resolve, 19/20 load.
+- Every Idaho ZIP's ballot page stops at about 33 s before its contests render (7 ZIPs tested; neighboring states fine). Not yet known whether 123 caused it. An agent is timing 122 vs 123 against production read-only. No revert without Sean's word.
+- GB-01 shows nothing yet: the runner is still on 121 and the census step hasn't run. Restart still needed.
+- Full report: releases/123.md.

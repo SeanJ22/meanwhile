@@ -18,6 +18,7 @@ import {campaignDb,publishMoneyFixture} from "./helpers/campaign-money-db.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import {publishCampaignMoneyWork} from "../lib/funding/work-publication.ts";
 import {runCampaignMoneyStates} from "../lib/funding/state-sources.ts";
+import {CAMPAIGN_PEOPLE_SQL} from "../lib/funding/state-people.ts";
 import { renderCardWithSources } from "./helpers/render-card.ts";
 
 const bindCampaignMoney=(row:Parameters<typeof bindIndexedMoney>[0],people:readonly CampaignMoneyPerson[])=>bindIndexedMoney(row,campaignMoneyPeopleIndex(people));
@@ -38,6 +39,39 @@ async function publishPerson(db:Awaited<ReturnType<typeof campaignDb>>,person:Ca
   if(!retained.includes(body))retained.push(body);
   await publishMoneyFixture(db,{recordClass:"REGISTRY_RUNTIME_BINDING",scope,payload:{bodyRosters:retained}});
 }
+
+test("campaign source hashes skip held people and preserve newly changed filings inside the daily person window",async()=>{
+  const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-source-first-"));
+  let now=at,revision=1792454400,filed={...raw,contributions_amount:"100"};
+  const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
+    fetch:async(url:RequestInfo|URL)=>Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:revision}:[filed])};
+  const read=()=>readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id});
+  try{
+    await publishPerson(db,person);await refreshCampaignMoneyState(options);
+    assert.equal((await read()).records[0].totals.find(total=>total.label==="Contributions")?.amount,100);
+    // First publication also creates its place entities; their input revision is saved by the next ordinary pass.
+    now="2026-10-20T01:00:00.000Z";await refreshCampaignMoneyState(options);
+    const guarded:typeof db.query=async(text,params=[])=>{
+      assert.notEqual(text,CAMPAIGN_PEOPLE_SQL,"unchanged native sources do not read held people");
+      assert.doesNotMatch(text,/WITH people AS MATERIALIZED/);
+      assert.doesNotMatch(text,/SELECT DISTINCT wanted.id,wanted.seat/);
+      return db.query(text,params);
+    };
+    now="2026-10-20T03:00:00.000Z";
+    const checked=await refreshCampaignMoneyState({...options,query:guarded,facts:{...db,query:guarded}});
+    assert.equal(checked.report.records[0].peopleWorked,0);
+    assert.equal((await read()).records[0].sources[0].checkedAt,now);
+    assert.equal(Number((await db.query("SELECT count(*) AS n FROM fact WHERE field LIKE 'campaign-cycle:%'"))[0].n),1);
+    now="2026-10-20T04:00:00.000Z";revision++;filed={...filed,contributions_amount:"200"};
+    await refreshCampaignMoneyState(options);
+    assert.equal((await read()).records[0].totals.find(total=>total.label==="Contributions")?.amount,200,
+      "the new official filing reaches the reader while the person's previous daily check is still fresh");
+    await db.query("DELETE FROM fact WHERE entity_id=$1 AND field LIKE 'campaign-cycle:%'",[person.id]);
+    now="2026-10-20T04:05:00.000Z";
+    await refreshCampaignMoneyState({...options,query:guarded,facts:{...db,query:guarded}});
+    assert.equal((await read()).records.length,1,"an unchanged native source can repair a missing derived cycle without rereading people");
+  }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
+});
 
 test("money requires a published person, exact seat and a filed period from 2020 onward",()=>{
   assert.ok(CAMPAIGN_FINANCE_SOURCES.every(source => source.minimumYear === 2020));

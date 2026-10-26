@@ -27,6 +27,7 @@ interface CampaignSourcePage {
   readonly unchanged: boolean;
   readonly sourceCheck: SourceCheckEvidence;
   readonly observedAt: string;
+  readonly checkedSources?: readonly {readonly rawHash:string;readonly checkedAt:string}[];
 }
 interface Options {
   readonly vault: EvidenceStore;
@@ -41,6 +42,8 @@ interface Options {
   readonly releaseEveryMs?: number;
   readonly selectRecord?:(row:CampaignSourceRecord)=>CampaignSourceRecord|null;
   readonly onCapture?:(capture:CampaignSourceCapture)=>Promise<void>;
+  /** Compare completed native source slices without parsing or accepting a new publication. */
+  readonly probeOnly?:boolean;
 }
 const digest = (value: string) => createHash("sha256").update(value).digest("hex");
 function requestIdentity(url: string, body: Record<string, unknown> | null, resource: CampaignFinanceResource): string {
@@ -323,10 +326,15 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
       rawHash:lookup.rawHash,byteLength:lookup.byteLength,vaultKey:lookup.archiveId});
     const projectionHash = digest(`${descriptorHash}:${raw.rawHash}:${lookup?.rawHash ?? ""}`);
     const unchanged = prior?.rawHash === projectionHash;
+    if(options.probeOnly && !(unchanged && options.acceptedPublicationId && prior?.publicationId===options.acceptedPublicationId)) {
+      yield {records:[],inputRecords:0,capture:null,offset,complete:false,unchanged:false,sourceCheck:raw.sourceCheck,observedAt:raw.retrievedAt};
+      return;
+    }
     if (unchanged && options.acceptedPublicationId && prior.publicationId === options.acceptedPublicationId) {
-      await saveCheckpoint(checkpointPath, { ...prior, publicationId: options.publicationId ?? null });
+      if(!options.probeOnly)await saveCheckpoint(checkpointPath, { ...prior, publicationId: options.publicationId ?? null });
       const complete = completed(prior.rows, prior.total, paged);
-      yield { records: [],inputRecords:0, capture: null, offset, complete, unchanged: true, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt };
+      yield { records: [],inputRecords:0, capture: null, offset, complete, unchanged: true, sourceCheck: raw.sourceCheck, observedAt: raw.retrievedAt,
+        checkedSources:[{rawHash:raw.rawHash,checkedAt:raw.sourceCheck.checkedAt},...(lookup?[{rawHash:lookup.rawHash,checkedAt:lookup.sourceCheck.checkedAt}]:[])] };
       if (complete) return;
       offset += resource.offsetUnit === "PAGE" ? 1 : prior.rows; continue;
     }

@@ -252,9 +252,11 @@ export async function refreshVotingSources(input: {
   try {
     // This manifest is a few hashes, never the held sites or their candidate/event bodies.
     const fields = await store.readPromotionPayloadFields(contract.recordClass, contract.scope, ["sourceHashes", "sourceManifestVersion", "supersededSources"]);
+    const initialHead = await store.readSourceHead(contract.recordClass, contract.scope);
+    if (initialHead && initialHead.sourceId !== contract.sourceId) throw new Error("Voting-source holding names a different publisher.");
     let sourceHashes: Record<string, string | null> = fields?.sourceHashes && typeof fields.sourceHashes === "object" && !Array.isArray(fields.sourceHashes)
       ? Object.fromEntries(Object.entries(fields.sourceHashes).filter((row): row is [string, string | null] => row[1] === null || typeof row[1] === "string" && /^[a-f0-9]{64}$/.test(row[1]))) : {};
-    let held: VotingSitesFile | null = null, heldLoaded = false, version: string | null = null;
+    let held: VotingSitesFile | null = null, heldLoaded = false, version: string | null = initialHead?.versionId ?? null;
     let publishedMappings: readonly VotingSourceDoor[] = [];
     const loadHeld = async () => {
       if (heldLoaded) return;
@@ -319,6 +321,19 @@ export async function refreshVotingSources(input: {
           geocodes.set(key, point); return point;
       });
       const publishedReads = new Map<string, { door: VotingSourceDoor; read: VotingSourceRead; acquisition: VotingRawCapture[]; mappings: VotingSourceDoor[] }>();
+      const sourceCheck = async (door: VotingSourceDoor, read: VotingSourceRead, rawHash: string, at: string) => {
+        if (!store.recordSourceCheck || !version || !votingSourceReadComplete(read)) return;
+        const check = { sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+          pointerVersionId: version, sourceKey: votingSourceHashKey(door), rawHash, parserVersion: contract.parserVersion, checkedAt: at,
+          sourceUrls: [...new Set([door.url, ...read.sources.map(source => source.url), ...read.rawBodies.filter(isVotingSourceContent).map(body => body.url)])].sort(),
+          jurisdictionIds: [...new Set([door.scope.ocdId, ...(read.contacts ?? []).map(contact => contact.scope.ocdId)])].sort() };
+        try {
+          if (await store.recordSourceCheck(check)) return;
+          const current = await store.readSourceHead(contract.recordClass, contract.scope);
+          if (current?.sourceId === contract.sourceId && await store.recordSourceCheck({ ...check, pointerVersionId: current.versionId })) return;
+          recordVotingFailure({ stage: "source-check", state }, new Error(`The published source changed while ${door.url} was checked; its earlier check is retained.`));
+        } catch (error) { recordVotingFailure({ stage: "source-check", state }, error); }
+      };
       const publishRead = async (door: VotingSourceDoor, read: VotingSourceRead, acquisition: VotingRawCapture[], at: string, mappings: VotingSourceDoor[]) => {
         await loadHeld();
         for (const [key, point] of heldVotingSiteCoordinates(held)) if (!geocodes.has(key)) geocodes.set(key, point);
@@ -415,12 +430,16 @@ export async function refreshVotingSources(input: {
         successfulSourceReads++;
         if (votingSourceReadComplete(read) && sourceHashes[hashKey] === contentHash) {
           checkedHashes.set(hashKey, contentHash); checkedAt.set(hashKey, at); confirmedSources++;
+          await sourceCheck(publicationDoor, read, contentHash, at);
           console.info(JSON.stringify({ event: "voting_source_read", state, source: door.url, at, result: "CONFIRMED_UNCHANGED" }));
           return;
         }
         unmatchedSourceReads = true;
         const acquisition = await votingSourceEvidence(door, read, captures);
-        if (await publishRead(publicationDoor, read, acquisition, at, mappings)) publishedReads.set(door.id, { door: publicationDoor, read, acquisition, mappings });
+        if (await publishRead(publicationDoor, read, acquisition, at, mappings)) {
+          publishedReads.set(door.id, { door: publicationDoor, read, acquisition, mappings });
+          await sourceCheck(publicationDoor, read, contentHash, at);
+        }
       };
       runtime.onDiscoveredDoor = async (found, captures) => {
         if (callbackFailure) throw callbackFailure;

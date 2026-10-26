@@ -1,0 +1,386 @@
+diff --git a/components/map/voting-sites-panel.tsx b/components/map/voting-sites-panel.tsx
+index c5408931a..2828eb38a 100644
+--- a/components/map/voting-sites-panel.tsx
++++ b/components/map/voting-sites-panel.tsx
+@@ -8,6 +8,9 @@ import { feedbackHref } from "@/lib/feedback/shape";
+ import { useReaderCopy } from "@/hooks/use-reader-copy";
+ import { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
+ import { MapPin } from "lucide-react";
++import { readerText } from "@/lib/text/reader-names";
++import { formatDateLong, readerDatedText } from "@/lib/text/format-date";
++import { useReaderNames } from "@/components/ui/reader-names-context";
+ 
+ import { PLACEHOLDER_ADDRESS } from "@/lib/ballot/placeholder-address";
+ import { recordVotingFailure } from "@/lib/ballot/voting-errors";
+@@ -138,7 +141,7 @@ export function VotingSitesPanel({
+       state.answer.jurisdictions
+         .flatMap((j) => j.sites)
+         .filter(isPinnable)
+-        .map((s) => ({ id: s.id, name: s.name, lat: s.lat, lng: s.lng })),
++        .map((s) => ({ id: s.id, name: readerText(s.name, "title"), lat: s.lat, lng: s.lng })),
+     );
+   }, [state]);
+ 
+@@ -190,7 +193,7 @@ export function VotingSitesPanel({
+         <h3 className="voting-jurisdiction-name">{office.name}</h3>
+         {office.address && <p>{office.address}</p>}
+         {office.phone && <OfficePhone phone={office.phone} />}
+-        {office.hours && <p className="whitespace-pre-line">Hours: {office.hours}</p>}
++        {office.hours && <p className="whitespace-pre-line">Hours: {readerDatedText(readerText(office.hours, "sentence"))}</p>}
+         {office.url && <p><a className="voting-site-directions" href={office.url} target="_blank" rel="noreferrer noopener">Find your polling place</a></p>}
+         <CardSourcesContribution id={`voting-office:${index}`} sources={office.sources.map(source => ({ what: source.title ?? "Election office", provenance: {
+           sourceUrl: source.url, sourceOrg: source.publisher, collectedAt: source.checkedAt, verifiedAt: null,
+@@ -223,18 +226,19 @@ export function VotingSitesPanel({
+ /** The actual answered jurisdiction/site body shared by both panel entry paths. */
+ export const VotingJurisdictionRecords = memo(function VotingJurisdictionRecords({ answer, selectedSiteId, onSelectSite }: { answer: VotingSitesAnswer; selectedSiteId: string | null; onSelectSite: (id: string | null) => void }) {
+   const gaps = useMemo(() => votingAnswerGaps(answer), [answer]);
++  const knownNames = useReaderNames();
+   return <>
+       <CardGapsContribution id="voting-answer" gaps={gaps} />
+       {answer.jurisdictions.map((j) => (
+           <article key={j.ocdId} className="voting-jurisdiction" data-voting-jurisdiction={j.ocdId}>
+-            <h3 className="voting-jurisdiction-name">{j.name}</h3>
+-            <p className="voting-model">{j.modelSentence}</p>
++            <h3 className="voting-jurisdiction-name">{readerText(j.name, "title")}</h3>
++            <p className="voting-model">{readerText(j.modelSentence, "sentence", [...knownNames, j.name])}</p>
+             {/* Which site is yours, or the refusal with its rungs; never a best guess. */}
+             <p
+               className="voting-narrowing"
+               data-kind={j.narrowing.kind.toLowerCase()}
+             >
+-              {j.narrowing.sentence}
++              {readerText(j.narrowing.sentence, "sentence", [...knownNames, j.name])}
+             </p>
+             {j.narrowing.kind === "REFUSED" && j.narrowing.rungs.length > 0 && (
+               <details className="voting-narrowing-rungs">
+@@ -242,39 +246,39 @@ export const VotingJurisdictionRecords = memo(function VotingJurisdictionRecords
+                 <ol className="voting-rungs">
+                   {j.narrowing.rungs.map((r, i) => (
+                     <li key={`${r.rung}-${i}`}>
+-                      <span className="voting-rung-what">{r.what}</span>
+-                      <span className="voting-rung-result">{r.result}</span>
++                      <span className="voting-rung-what">{readerText(r.what, "sentence", [...knownNames, j.name])}</span>
++                      <span className="voting-rung-result">{readerText(r.result, "sentence", [...knownNames, j.name])}</span>
+                       <span className="voting-rung-when">{r.attemptedAt}</span>
+                     </li>
+                   ))}
+                 </ol>
+               </details>
+             )}
+-            {j.publication?.status === "POSTED_LATER" && <p className="voting-panel-status">{j.publication.text}</p>}
+-            {j.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
++            {j.publication?.status === "POSTED_LATER" && <p className="voting-panel-status">{readerText(j.publication.text, "sentence", [...knownNames, j.name])}</p>}
++            {j.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{readerText(rule.text, "sentence", [...knownNames, j.name])}</p>)}
+             {j.office && <div className="voting-office">
+-              <h4>Local election office: {j.office.name}</h4>
++              <h4>Local election office: {readerText(j.office.name, "title")}</h4>
+               {j.office.phone && <OfficePhone phone={j.office.phone} />}
+               {j.office.email && <p>Email: <a href={`mailto:${j.office.email}`}>{j.office.email}</a></p>}
+-              {j.office.address && <p>{j.office.address}</p>}
++              {j.office.address && <p>{readerText(j.office.address, "address")}</p>}
+             </div>}
+             {j.election && j.publication?.status !== "NO_GENERAL_ELECTION" && (
+               <p className="voting-election">
+-                Published for the {j.election}.
++                Published for the {readerText(j.election, "title")}.
+               </p>
+             )}
+ 
+             {j.refusal && (
+               <div className="voting-refusal">
+-                <p>{j.refusalLine}</p>
+-                <p className="voting-refusal-wall">{j.refusal.wall}</p>
++                <p>{j.refusalLine && readerText(j.refusalLine, "sentence", [...knownNames, j.name])}</p>
++                <p className="voting-refusal-wall">{readerText(j.refusal.wall, "sentence", [...knownNames, j.name])}</p>
+                 <details>
+                   <summary>What we tried</summary>
+                   <ol className="voting-rungs">
+                     {j.refusal.rungs.map((r, i) => (
+                       <li key={`${r.rung}-${i}`}>
+-                        <span className="voting-rung-what">{r.what}</span>
+-                        <span className="voting-rung-result">{r.result}</span>
++                        <span className="voting-rung-what">{readerText(r.what, "sentence", [...knownNames, j.name])}</span>
++                        <span className="voting-rung-result">{readerText(r.result, "sentence", [...knownNames, j.name])}</span>
+                         <span className="voting-rung-when">{r.attemptedAt}</span>
+                       </li>
+                     ))}
+@@ -365,6 +369,7 @@ function SiteRow({
+   selected: boolean;
+   onSelect: () => void;
+ }) {
++  const knownNames = useReaderNames();
+   const row = useRef<HTMLLIElement>(null);
+   useEffect(() => {
+     if (selected) row.current?.scrollIntoView({ block: "nearest" });
+@@ -374,27 +379,27 @@ function SiteRow({
+     <li ref={row} className="voting-site" data-selected={selected} data-voting-site={site.id} data-aiannh={site.aiannhGeoid}>
+       <button type="button" className="voting-site-head" onClick={onSelect}>
+         <MapPin aria-hidden size={14} className="voting-site-icon" />
+-        <span className="voting-site-name">{site.name}</span>
++        <span className="voting-site-name">{readerText(site.name, "title")}</span>
+       </button>
+-      {site.address && <p className="voting-site-address">{site.address}</p>}
++      {site.address && <p className="voting-site-address">{readerText(site.address, "address")}</p>}
+       {/* A null distance renders nothing; missing map information stays here. */}
+       {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
+-      {site.room && <p className="voting-site-room">{site.room}</p>}
++      {site.room && <p className="voting-site-room">{readerText(site.room, "title")}</p>}
+       <p className="voting-site-kind">{(site.kinds ?? [site.kind]).map(kind => KIND_LABEL[kind]).join(" · ")}</p>
+-      {site.election && <p className="voting-site-election">Publisher&rsquo;s election label: {site.election}</p>}
+-      {site.electionDate && <p className="voting-site-election">Election date: {site.electionDate}</p>}
+-      {(site.precincts?.length || site.precinct) && <p className="voting-site-serves">Precinct: {(site.precincts ?? [site.precinct]).join(", ")}</p>}
+-      {site.serves && <p className="voting-site-serves">{site.serves}</p>}
++      {site.election && <p className="voting-site-election">Publisher&rsquo;s election label: {readerText(site.election, "title")}</p>}
++      {site.electionDate && <p className="voting-site-election">Election date: {formatDateLong(site.electionDate) ?? site.electionDate}</p>}
++      {(site.precincts?.length || site.precinct) && <p className="voting-site-serves">Precinct: {readerText((site.precincts ?? [site.precinct]).join(", "), "title")}</p>}
++      {site.serves && <p className="voting-site-serves">{readerText(site.serves, "sentence", [...knownNames, site.name])}</p>}
+       {site.schedules?.length ? site.schedules.map((schedule, index) => <p className="voting-site-hours whitespace-pre-line" key={index}>
+-        {KIND_LABEL[schedule.kind]}{schedule.electionDate ? ` · ${schedule.electionDate}` : ""}{schedule.days ? ` · ${schedule.days}` : ""}{schedule.hours ? `: ${schedule.hours}` : ""}
++        {KIND_LABEL[schedule.kind]}{schedule.electionDate ? ` · ${formatDateLong(schedule.electionDate) ?? schedule.electionDate}` : ""}{schedule.days ? ` · ${readerDatedText(readerText(schedule.days, "title"))}` : ""}{schedule.hours ? `: ${readerDatedText(readerText(schedule.hours, "sentence"))}` : ""}
+       </p>) : <>
+-        {site.days && <p className="voting-site-days">Days: {site.days}</p>}
+-        {site.hours && <p className="voting-site-hours whitespace-pre-line">Hours: {site.hours}</p>}
++        {site.days && <p className="voting-site-days">Days: {readerDatedText(readerText(site.days, "title"))}</p>}
++        {site.hours && <p className="voting-site-hours whitespace-pre-line">Hours: {readerDatedText(readerText(site.hours, "sentence"))}</p>}
+       </>}
+-      {site.locationNotes && <p className="voting-site-notes">{site.locationNotes}</p>}
+-      {site.accessibilityNotes && <p className="voting-site-accessibility">Accessibility: {site.accessibilityNotes}</p>}
+-      {site.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{rule.text}</p>)}
+-      {site.office && <p className="voting-site-office">{site.office.name}{site.office.phone ? ` — ${site.office.phone}` : ""}{site.office.email ? ` — ${site.office.email}` : ""}</p>}
++      {site.locationNotes && <p className="voting-site-notes">{readerText(site.locationNotes, "sentence", [...knownNames, site.name])}</p>}
++      {site.accessibilityNotes && <p className="voting-site-accessibility">Accessibility: {readerText(site.accessibilityNotes, "sentence", [...knownNames, site.name])}</p>}
++      {site.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{readerDatedText(readerText(rule.text, "sentence", [...knownNames, site.name]))}</p>)}
++      {site.office && <p className="voting-site-office">{readerText(site.office.name, "title")}{site.office.phone ? ` — ${site.office.phone}` : ""}{site.office.email ? ` — ${site.office.email}` : ""}</p>}
+       <p className="voting-site-checked">Last checked: <time dateTime={lastChecked}>{lastChecked.slice(0, 10)}</time></p>
+       {site.address && <a
+         className="voting-site-directions"
+diff --git a/lib/ask/election-information.ts b/lib/ask/election-information.ts
+index aac1156ee..960712408 100644
+--- a/lib/ask/election-information.ts
++++ b/lib/ask/election-information.ts
+@@ -4,7 +4,7 @@ import { normalizeName } from "../routing/exact-name.ts";
+ import { readBallotNavigationProjection } from "../civic-data/curated-reader-read-model.ts";
+ import { electionFieldIssue, sourcedElectionDate, type PublishedElectionField } from "../civic-data/election-fields.ts";
+ import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+-import { formatDateLong } from "../text/format-date.ts";
++import { formatDateLong, readerDatedText } from "../text/format-date.ts";
+ import { composeBallotSummary, type BallotComposition } from "./ballot-summary.ts";
+ import type { BallotForDivisions } from "./server-sources.ts";
+ import type { EvidencePack, EvidenceRecord } from "./evidence.ts";
+@@ -75,7 +75,7 @@ export function composeElectionInformation(input: {
+     sourceUrl: row.value.url, sourceOrg: row.value.sourceOrg, retrievedAt: row.value.collectedAt }));
+   const text = input.ask.field === "election_office"
+     ? fields.map(row => `${row.value.text}: ${row.value.phone}.`).join(" ")
+-    : fields.map(row => `${row.value.fieldKind === "early_voting" ? "Early voting" : "Voter registration"} for the ${formatDateLong(row.value.electionDate!)} election: ${row.value.quote}`).join("\n\n");
++    : fields.map(row => `${row.value.fieldKind === "early_voting" ? "Early voting" : "Voter registration"} for the ${formatDateLong(row.value.electionDate!)} election: ${readerDatedText(row.value.quote)}`).join("\n\n");
+   return answer(input, { answer: text, records, citedUrls: [...new Set(records.map(row => row.sourceUrl!))], gaps: [] });
+ }
+ 
+diff --git a/lib/ballot/navigation.ts b/lib/ballot/navigation.ts
+index 6212e6f28..0477392a2 100644
+--- a/lib/ballot/navigation.ts
++++ b/lib/ballot/navigation.ts
+@@ -2,6 +2,7 @@ import type { CuratedReaderProjection } from "../civic-data/manual-projections.t
+ import { electionFieldIssue, type PublishedElectionField } from "../civic-data/election-fields.ts";
+ import { ballotNavigationScope, ballotNavigationDivision } from "../civic-data/ballot-navigation-scope.ts";
+ import type { ElectionDates } from "./election-dates.ts";
++import { readerDatedText } from "../text/format-date.ts";
+ 
+ export interface NavigationLink {
+   state: string; label: string; url: string; sourceUrl: string; sourceOrg: string; verification: string; verifiedAt: string;
+@@ -61,7 +62,7 @@ export function ballotNavigationFor(state: string, projection: CuratedReaderProj
+         url: value.navigationUrl!, sourceUrl: value.url, sourceOrg: value.sourceOrg, verification: value.quote, verifiedAt: value.verifiedAt,
+       });
+       else if (LABELS[value.fieldKind] && value.electionDate) entry.dates.push({ state, electionDay: value.electionDate,
+-        steps: [{ label: LABELS[value.fieldKind]!, date: value.dates.join(" – "), detail: value.quote, sourceUrl: value.url,
++        steps: [{ label: LABELS[value.fieldKind]!, date: value.dates.join(" – "), detail: readerDatedText(value.quote), sourceUrl: value.url,
+           sourceOrg: value.sourceOrg, collectedAt: value.collectedAt, verifiedAt: value.verifiedAt }] });
+     }
+     index = { version, state, divisions: byDivision };
+diff --git a/lib/registry/body-contact.ts b/lib/registry/body-contact.ts
+index c93ec66cc..cac67ac6c 100644
+--- a/lib/registry/body-contact.ts
++++ b/lib/registry/body-contact.ts
+@@ -1,4 +1,5 @@
+ import { telHref } from "../officials/phone-numbers.ts";
++import { readerText } from "../text/reader-names.ts";
+ import type { CardSource } from "../officials/card-sources.ts";
+ import type { CoveredBody } from "./coverage.ts";
+ 
+@@ -17,7 +18,7 @@ export function bodyContactRows(body: CoveredBody): BodyContactRow[] {
+   if (sharedPhone && (!contact?.phone || telHref(contact.phone) !== telHref(sharedPhone.phone))) {
+     rows.push({ label: contact?.phone ? "Board office phone" : "Phone", value: sharedPhone.phone, href: telHref(sharedPhone.phone) });
+   }
+-  if (contact?.address) rows.push({ label: "Office address", value: contact.address, href: null });
++  if (contact?.address) rows.push({ label: "Office address", value: readerText(contact.address, "address"), href: null });
+   if (contact?.email) rows.push({ label: "Email", value: contact.email, href: `mailto:${contact.email}` });
+   if (body.homepageUrl) {
+     rows.push({ label: "Website", value: new URL(body.homepageUrl).hostname.replace(/^www\./, ""), href: body.homepageUrl });
+diff --git a/lib/text/format-date.ts b/lib/text/format-date.ts
+index f4102e395..1b7b4c929 100644
+--- a/lib/text/format-date.ts
++++ b/lib/text/format-date.ts
+@@ -9,6 +9,8 @@
+  * meeting's own zone first, as `lib/map/format.ts` does.
+  */
+ 
++import { readerText } from "./reader-names.ts";
++
+ const MONTHS = [
+   "January",
+   "February",
+@@ -71,3 +73,33 @@ export function spellOutDates(text: string): string {
+       formatDateLong(`${y}-${m}-${d}`) ?? whole,
+   );
+ }
++
++const MONTH_MENTION = /\b([A-Za-z]{3,9}\.?)([ \t]+)0?(\d{1,2})(?=(?:st|nd|rd|th)?\b)/g;
++/** Month and weekday names standing alone; "may" is left alone, since it is usually the verb. */
++const NAMED_DAY = /\b(?:january|february|march|april|june|july|august|september|october|november|december|monday|tuesday|wednesday|thursday|friday|saturday|sunday|election day)\b/gi;
++const SHOUTING_RUN = /\b[A-Z][A-Z'’]+\b(?:[ \t,&/–—-]+\b[A-Z][A-Z'’]+\b)+/g;
++
++function isMonth(word: string): boolean {
++  const key = word.toLowerCase().replace(/\.$/, "");
++  return MONTHS.some(name => key === name.toLowerCase() || key === name.slice(0, 3).toLowerCase() || (name === "September" && key === "sept"));
++}
++
++const capitalised = (words: string) => words.replace(/\b\p{L}/gu, letter => letter.toUpperCase());
++
++/**
++ * A source's own sentence about dates, ready for a reader: the source's words,
++ * order and dates, with month and weekday names capitalised, a shouting heading
++ * cased, and no stray space before punctuation.
++ * "voter pre-registration ends on october 23 ." → "Voter pre-registration ends on October 23."
++ */
++export function readerDatedText(text: string): string {
++  return text.replace(SHOUTING_RUN, run => readerText(run, "sentence"))
++    .replace(MONTH_MENTION, (whole, word: string, space: string, day: string) =>
++      isMonth(word) ? `${capitalised(word.toLowerCase())}${space}${Number(day)}` : whole)
++    .replace(NAMED_DAY, name => capitalised(name.toLowerCase()))
++    .replace(/[ \t]+([.,;:!?)])(?=[\s.,;:)]|$)/g, "$1")
++    .replace(/\([ \t]+/g, "(")
++    .replace(/[ \t]{2,}/g, " ")
++    .trim()
++    .replace(/^\p{Ll}/u, letter => letter.toUpperCase());
++}
+diff --git a/tests/ballot-navigation-reader.test.ts b/tests/ballot-navigation-reader.test.ts
+index 0908154e7..b9ad00f27 100644
+--- a/tests/ballot-navigation-reader.test.ts
++++ b/tests/ballot-navigation-reader.test.ts
+@@ -13,6 +13,7 @@ import type { CuratedReaderProjection, ManualProjectionPackage } from "../lib/ci
+ import { electionDatesFor } from "../lib/ballot/election-dates.ts";
+ import { electionFieldIssue, type PublishedElectionField } from "../lib/civic-data/election-fields.ts";
+ import { formatDateMDY } from "../lib/map/format.ts";
++import { readerDatedText } from "../lib/text/format-date.ts";
+ import { absentEdgeEntry, manualEdgeEntry, promotedFamily, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
+ import { registryFixtureForState, registryTransferImport, syntheticFederalDirectory } from "./helpers/promoted-fixtures.ts";
+ import { stateBallotScope, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+@@ -73,7 +74,7 @@ test("sourced no-date rules remain text and primary deadlines cannot stand in fo
+   assert.equal(electionFieldIssue(rule), null);
+   const calendar = electionDatesFor(rule.value.state, ballotNavigationFor(rule.value.state, { ...projection, records: [{ ...rule }] }, "BL-20:no-date-rule", []).dates)!;
+   assert.equal(calendar.steps[0].date, "");
+-  assert.equal(calendar.steps[0].detail, rule.value.quote);
++  assert.equal(calendar.steps[0].detail, readerDatedText(rule.value.quote));
+   const primary = { ...rule, id: "test:primary-rule", value: { ...rule.value, electionDate: "2026-08-04" } };
+   assert.equal(electionDatesFor(rule.value.state, ballotNavigationFor(rule.value.state, { ...projection, records: [primary] }, "BL-20:primary-rule", []).dates), null);
+ });
+@@ -131,7 +132,9 @@ test("a ZIP in every state and DC renders acquired official navigation and deadl
+         assert.ok(deadlines.length, `${state}: no acquired ${kind}`);
+         for (const { value } of deadlines) {
+           for (const date of value.dates) assert.ok(displayedDates.some(rendered => rendered.includes(formatDateMDY(date))), `${state}: missing displayed ${date}`);
+-          assert.ok(text.replace(/\s+/g, " ").includes(value.quote.replace(/\s+/g, " ")), `${state}: deadline clock or method disappeared`);
++          const sentence = readerDatedText(value.quote);
++          assert.ok(text.replace(/\s+/g, " ").includes(sentence.replace(/\s+/g, " ")), `${state}: deadline clock or method disappeared`);
++          assert.doesNotMatch(sentence, /\b(?:january|february|march|april|june|july|august|september|october|november|december)\b|\s[.,;:)]|^\p{Ll}/u, `${state}: deadline sentence is not reader-cased`);
+           assert.ok(card.props.sources.some(source => source.provenance.sourceUrl === value.url && source.provenance.collectedAt === value.collectedAt), `${state}: original deadline provenance missing`);
+         }
+       }
+diff --git a/tests/body-contact-reader.test.ts b/tests/body-contact-reader.test.ts
+index a938e5c5c..1790f5829 100644
+--- a/tests/body-contact-reader.test.ts
++++ b/tests/body-contact-reader.test.ts
+@@ -86,3 +86,8 @@ test("distinct published board phones stay visible and a repeated number appears
+   body.readerRoster!.officePhone!.phone = "919-555-0200";
+   assert.deepEqual(bodyContactRows(body).map(row => row.value), ["919-555-0100", "919-555-0200"]);
+ });
++
++test("a shouting office address reads in normal case in Contact", () => {
++  const body = bodyFixture({ officeContact: { phone: null, address: "301 S MCDOWELL STREET, RALEIGH, NC 27601", provenance: source } });
++  assert.deepEqual(bodyContactRows(body), [{ label: "Office address", value: "301 S McDowell Street, Raleigh, NC 27601", href: null }]);
++});
+diff --git a/tests/reader-dated-text.test.ts b/tests/reader-dated-text.test.ts
+new file mode 100644
+index 000000000..f9aa77158
+--- /dev/null
++++ b/tests/reader-dated-text.test.ts
+@@ -0,0 +1,70 @@
++import assert from "node:assert/strict";
++import { readdirSync, readFileSync } from "node:fs";
++import { test } from "node:test";
++import { readerDatedText } from "../lib/text/format-date.ts";
++
++const DIR = "data/ballot/2026-navigation";
++const DATED = new Set(["registration_deadline", "mail_ballot_request_deadline", "early_voting"]);
++
++function quotes(): { state: string; quote: string }[] {
++  const found: { state: string; quote: string }[] = [];
++  const walk = (node: unknown, state: string): void => {
++    if (Array.isArray(node)) { node.forEach(item => walk(item, state)); return; }
++    if (!node || typeof node !== "object") return;
++    const value = node as { fieldKind?: string; quote?: unknown };
++    if (typeof value.fieldKind === "string" && typeof value.quote === "string") {
++      if (DATED.has(value.fieldKind)) found.push({ state, quote: value.quote });
++      return;
++    }
++    Object.values(node).forEach(child => walk(child, state));
++  };
++  for (const file of readdirSync(DIR).filter(name => name.endsWith(".json"))) {
++    walk(JSON.parse(readFileSync(`${DIR}/${file}`, "utf8")), file.slice(0, 2).toUpperCase());
++  }
++  return found;
++}
++
++test("held deadline sentences read with capitalised dates and clean punctuation", () => {
++  const samples: Record<string, [string, string]> = {
++    ID: ["voter pre-registration ends on october 23 .", "Voter pre-registration ends on October 23."],
++    "ID early": ["visit an early voting or in-person absentee location from october 13 to october 30 .",
++      "Visit an early voting or in-person absentee location from October 13 to October 30."],
++    MA: ["in-person early voting will begin on saturday, october 17 and end on friday, october 30 .",
++      "In-person early voting will begin on Saturday, October 17 and end on Friday, October 30."],
++    MD: ["in person the deadline is november 03, 2026 by 8:00 pm .", "In person the deadline is November 3, 2026 by 8:00 pm."],
++    "MD colon": ["on election day : go to the polling place assigned for your residence.",
++      "On Election Day: go to the polling place assigned for your residence."],
++    DE: ["The deadline to register to vote if you are not yet registered is Saturday, October 10, 2026 .",
++      "The deadline to register to vote if you are not yet registered is Saturday, October 10, 2026."],
++    GA: ["October 23, 2026 DEADLINE TO REQUEST ABSENTEE BALLOT FOR NOVEMBER GENERAL ELECTION Last day to request absentee by mail ballot.",
++      "October 23, 2026 Deadline to request absentee ballot for November general election Last day to request absentee by mail ballot."],
++    IL: ["after oct. 18, voters can register at the office of their local election authority under the guidelines of grace period registration .",
++      "After Oct. 18, voters can register at the office of their local election authority under the guidelines of grace period registration."],
++    DC: ["TUESDAY, NOVEMBER 3, 2026 – GENERAL ELECTION DAY\nqualified electors may register to vote and cast full ballots in person at Vote Centers.",
++      "Tuesday, November 3, 2026 – General Election Day\nqualified electors may register to vote and cast full ballots in person at Vote Centers."],
++    "SC excerpt": ["Register online at scVOTES.gov (must be received by Sunday, October 4 ). Download a voter registration form from scVOTES.gov .",
++      "Register online at scVOTES.gov (must be received by Sunday, October 4). Download a voter registration form from scVOTES.gov."],
++    OR: ["Voter registration deadline : October 13", "Voter registration deadline: October 13"],
++    "already clean": ["Mail-in ballots can be requested until Oct. 29.", "Mail-in ballots can be requested until Oct. 29."],
++  };
++  for (const [label, [quote, expected]] of Object.entries(samples)) assert.equal(readerDatedText(quote), expected, label);
++  const held = new Set(quotes().map(row => row.quote));
++  for (const [label, [quote]] of Object.entries(samples)) if (!/ /.test(label)) assert.ok(held.has(quote), `${label}: sample is not a held quote`);
++});
++
++test("every state's held deadline sentence keeps its words and dates and reads cleanly", () => {
++  const rows = quotes();
++  const states = new Set(rows.map(row => row.state));
++  assert.ok(states.size >= 50, `only ${states.size} states hold deadline sentences`);
++  for (const { state, quote } of rows) {
++    const sentence = readerDatedText(quote);
++    const letters = (text: string) => text.toLowerCase().replace(/[^\p{L}]/gu, "");
++    const numbers = (text: string) => (text.match(/\d+/g) ?? []).map(Number);
++    assert.equal(letters(sentence), letters(quote), `${state}: words changed in ${quote}`);
++    assert.deepEqual(numbers(sentence), numbers(quote), `${state}: dates changed in ${quote}`);
++    assert.doesNotMatch(sentence, /\b(?:january|february|march|april|june|july|august|september|october|november|december|monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/,
++      `${state}: lower-case month or weekday in ${sentence}`);
++    assert.doesNotMatch(sentence, /[ \t][.,;:)](?=\s|$)/, `${state}: space before punctuation in ${sentence}`);
++    assert.doesNotMatch(sentence, /^\p{Ll}/u, `${state}: sentence starts in lower case: ${sentence}`);
++  }
++});

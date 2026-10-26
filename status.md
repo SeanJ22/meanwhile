@@ -51,6 +51,12 @@ DB-05 is Sean's new session to take Neon down to 10 GB a day. River stopped DB-0
 
 **CT-01 stays with its session (Sean, 11:25 AM EDT)**
 The CT-01 session is alive and posts READY itself, with the ballot date text fix. River stopped its takeover; stream/river-ct-01 is not pushed. CT-01's READY folds into the first release after it lands. Latest on origin/stream/ct-01: ed15f95fb (merge of river, 6:49 AM), no new READY yet.
+*Notes for the CT-01 session from River's stopped takeover (nothing pushed; uncommitted diff at board/river notes/ct01-datetext.patch):*
+- Cause: the ballot page prints the held source quote as is (lib/ballot/navigation.ts `detail: value.quote`, shown by app/ballot/page.tsx and used as the AddToCalendar description); Ask does the same (lib/ask/election-information.ts ~line 78). Idaho holds `quote: "voter pre-registration ends on october 23 ."`.
+- Bad quotes among all 207 registration, mail-ballot and early-voting quotes: lowercase with a space before punctuation in ID (all three), MA, MD, MS, IN, IL, MN, MT, ME, WI; all capitals in GA, DC, AL, AR, NM; stray spaces before colons/periods or inside brackets in DE, OH, OR, SC, VA, NV.
+- The stopped fix: a render-time `readerDatedText` (lib/text/format-date.ts) using CS-01's readerText on runs of 2+ capitalised words (keeps UOCAVA, BMV), capitalising months, weekdays and "Election Day", dropping leading zeros, removing space before punctuation, capitalising the first letter; applied to navigation step detail, the Ask answer, and voting-sites-panel hours/days/rules. A test over every state's held quote kept words and numbers identical.
+- Also: voting-sites-panel.tsx prints site.electionDate and schedule.electionDate as raw ISO ("Election date: 2026-11-03"); use formatDateLong. tests/ballot-navigation-reader.test.ts expects the raw quote and needs the formatted sentence.
+- Merging current river into CT-01: 15 conflicts; afterwards tests/reader-money-meetings.test.tsx still passes `gaps` to CardFooter; lib/registry/body-contact.ts office address needs `readerText(..., "address")`; `office_email` must be added to the body facts query now in lib/reader/place-builder.ts (moved out of place.ts).
 
 **FM-01 bytes (Sean, 11:25 AM EDT)**
 FM-01's READY says its durable progress raises bytes per federal-money job by 101%. River keeps its fix (lib/federal-money/refresh.ts reads only normalizedPayload.captures) and measures usaspending and openfema for two full hours before and after 129; if they go up, it goes here and DB-05 owns the fix.

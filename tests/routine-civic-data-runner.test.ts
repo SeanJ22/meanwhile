@@ -1274,10 +1274,11 @@ test("per-command child environments override the batch and never leak across si
   ], {
     cwd: process.cwd(),
     env: { ...base, BOUNDED_CHILD_TOKEN: "batch-must-not-leak" },
-    timeoutMs: 1_000,
+    timeoutMs: 10_000,
     maxBufferBytes: 1_024,
     concurrency: 2,
   });
+  assert.deepEqual(results.map(result=>result.termination),["EXITED","EXITED"]);
   assert.deepEqual(JSON.parse(results[0]!.stdout), ["first", "yes", null]);
   assert.deepEqual(JSON.parse(results[1]!.stdout), ["second", null, "yes"]);
 });

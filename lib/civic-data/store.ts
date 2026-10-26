@@ -866,7 +866,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return { recordClass: "STATE_LEGISLATOR", scope, versionId: pointer.versionId, promotedAt: pointer.promotedAt,
       readModelSha256: record.candidate.normalization.normalizedHash ?? null,
       roster: structuredClone({ scope: roster.scope, generatedAt: roster.generatedAt, divisions: [], unmatched: [],
-        officeholders: roster.officeholders.map(person => officeRosterPerson(person as unknown as Record<string, unknown>)) }) as OfficeholderSet };
+        officeholders: roster.officeholders.map(person => officeRosterPerson(person as unknown as Record<string, unknown>)) }) as unknown as OfficeholderSet };
   }
 
   async readRosterIdDigests(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly { readonly scope: string; readonly digest: string }[]> {

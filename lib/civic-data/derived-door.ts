@@ -3,6 +3,8 @@ import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedSourceContentIssue } from "./derived-source-hash.ts";
 import { sourceAuthority } from "./source-authority.ts";
 import type { RoutineCandidate, SourceAuthorityContract } from "./types.ts";
+import { linkedMeetingSourceIssue } from "./meeting-linked-source.ts";
+import type { RetainedMeetingCandidate } from "./retained-meeting-bytes.ts";
 
 /**
  * A derived candidate has no route of its own; it is authentic only as its exact inputs. Pure check: every input is
@@ -58,6 +60,7 @@ export function derivedInputIssue(input: DerivedInputRef): string | null {
       return text(input.memberKey) && httpsHost(input.requestedUrl) !== null && httpsHost(input.finalUrl) !== null &&
           Number.isInteger(input.httpStatus) && input.httpStatus >= 200 && input.httpStatus < 300 &&
           SHA256.test(input.rawHash) && instant(input.retrievedAt) &&
+          (input.linkedFrom === undefined || httpsHost(input.linkedFrom.requestedUrl) !== null && httpsHost(input.linkedFrom.finalUrl) !== null && SHA256.test(input.linkedFrom.rawHash)) &&
           (input.horizonDay === undefined || /^\d{4}-\d{2}-\d{2}$/.test(input.horizonDay) && instant(input.horizonDay))
         ? null
         : `a member read lacks its member, https URLs, a 2xx status, its sha256 or its time`;
@@ -115,8 +118,6 @@ export interface DerivedDoorStore {
   readDerivedWiringRows(id:string,keys:readonly string[]):Promise<readonly DerivedWiringRow[]>;
 }
 
-const bare = (host: string): string => host.toLowerCase().replace(/^www\./, "");
-
 /**
  * **(2), the door.** Why a derived candidate's inputs are not what they claim, or null. Run in the promotion door
  * with the store before validation; an issue refuses the candidate by name.
@@ -147,10 +148,8 @@ export async function derivedInputAuthorityIssue(store: DerivedDoorStore, candid
   for (const member of members) {
     const row = rows.find((r) => r.key === member.memberKey);
     if (row === undefined || row.status !== "ACTIVE") return `DERIVED_MEMBER_NOT_ACTIVE: ${member.memberKey} is not an active row of the named wiring version`;
-    for (const url of [member.requestedUrl, member.finalUrl]) {
-      const host = httpsHost(url);
-      if (host === null || bare(host) !== bare(row.officialHost)) return `DERIVED_MEMBER_HOST_NOT_ATTESTED: ${url} is not on ${row.officialHost}`;
-    }
+    const linkedIssue = linkedMeetingSourceIssue(member, row.officialHost, members, (candidate as RetainedMeetingCandidate).retainedSourceResponses ?? []);
+    if (linkedIssue) return linkedIssue;
   }
   return null;
 }

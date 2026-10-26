@@ -105,12 +105,15 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       throw new Error("MEETING_SOURCE_CONTINUATION_PENDING");
     }
     const method = (init?.method ?? (input instanceof globalThis.Request ? input.method : "GET")).toUpperCase();
-    const body = typeof init?.body === "string" ? init.body : init?.body instanceof URLSearchParams ? init.body.toString() : undefined;
+    const body = typeof init?.body === "string" ? init.body : init?.body instanceof URLSearchParams ? init.body.toString()
+      : input instanceof globalThis.Request && !["GET", "HEAD"].includes(method) && init?.body === undefined ? await input.clone().text() : undefined;
     const headers = new Headers(init?.headers ?? (input instanceof globalThis.Request ? input.headers : undefined));
-    const probeable = (!init?.body || body !== undefined) && !["authorization", "cookie", "x-api-key"].some(key => headers.has(key));
+    const publicHeaders = ["accept", "accept-language", "content-type", "referer", "origin", "user-agent", "x-requested-with", "prefer", "odata-version"];
+    const probeable = (!init?.body || body !== undefined) && [...headers.keys()].every(key => publicHeaders.includes(key)) &&
+      (body === undefined || body.length <= 1024 * 1024 && !/["']?(?:password|secret|access[_-]?token|api[_-]?key)["']?\s*[:=]/i.test(body));
     if (!probeable) complete = false;
     const request: Request = { method, ...(body === undefined ? {} : { body }),
-      headers: Object.fromEntries(["accept", "content-type", "referer", "origin"].flatMap(key => headers.has(key) ? [[key, headers.get(key)!]] : [])) };
+      headers: Object.fromEntries(publicHeaders.flatMap(key => headers.has(key) ? [[key, headers.get(key)!]] : [])) };
     const key = requestKey({ requestedUrl, request }), prior = pages[key];
     const failed = failures.get(key);
     if (failed instanceof Error) throw failed;
@@ -146,7 +149,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       ? initial.retrievedAt : new Date().toISOString();
     const contentType = response.headers.get("content-type") ?? "application/octet-stream";
     const retained: RetainedSourceResponse = { source: partition.meetingSource, requestedUrl, finalUrl, httpStatus: response.status,
-      rawHash, byteCount: bytes.length, bytes, retrievedAt, contentType, request };
+      rawHash, byteCount: bytes.length, bytes, retrievedAt, contentType, ...(probeable ? { request } : {}) };
     const contentHash = `sha256-${rawHash}`, tier = classifyAcquisition(new TextDecoder().decode(bytes)).tier;
     const artifact: Artifact = { id: artifactId(tier, contentHash), tier, contentHash, byteLength: bytes.length, contentType,
       canonicalUrl: requestedUrl, retrievalUrl: finalUrl, retrievedAt, httpStatus: response.status, headers: {},
@@ -159,7 +162,8 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       return putArtifact(vault, "freshness", artifact, bytes);
     });
     const { bytes: _bytes, ...metadata } = retained;
-    pages[key] = { response: metadata, vaultKey: stored.key }; responses.set(key, retained);
+    if (probeable) pages[key] = { response: metadata, vaultKey: stored.key };
+    responses.set(key, retained);
     requestedInOperation.getStore()?.add(key);
     await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages }, context));
     await sourceIO.run(true, async () => onSource?.(retained));
@@ -176,6 +180,10 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
       for (const page of plan.requests) {
         const response = await fetchSource(page.requestedUrl, { method: page.request?.method ?? "GET", body: page.request?.body, headers: page.request?.headers });
         if (!response.ok) return false;
+        transport.forgetGet([page.requestedUrl]);
+        // A hash-only pass does not accumulate a state's agenda bytes after their exact source checks.
+        const captured = responses.get(requestKey(page));
+        if (onSource && captured) responses.set(requestKey(page), { ...captured, bytes: new Uint8Array() });
       }
       return plan.requests.every(page => responses.get(requestKey(page))?.rawHash === page.rawHash &&
         responses.get(requestKey(page))?.finalUrl === page.finalUrl);
@@ -214,15 +222,18 @@ export async function probeMeetingSource(input: {
   if (!head || head.rawHashBasis !== "SOURCE_CONTENT_V1" || !plan || plan.formatVersion !== 1 || !plan.complete || !plan.requests.length ||
     !["REQUESTS", "DERIVED_INPUTS"].includes(plan.sourceHashKind) ||
     plan.normalizationInputHash !== input.normalizationInputHash || plan.sourceRawHash !== head.rawHash) return null;
-  try { if (!await input.session.probe(plan) || await input.workRemains(plan)) return null; }
-  catch (error) { if (!meetingSourceBudgetAvailable()) throw error; return null; }
+  try {
+    if (!await input.session.probe(plan) || await input.workRemains(plan)) { input.session.responses.clear(); return null; }
+  } catch (error) { if (!meetingSourceBudgetAvailable()) throw error; input.session.responses.clear(); return null; }
   const pages = [...input.session.responses.values()], first = pages[0]!;
   const rawHash = plan.sourceHashKind === "REQUESTS" ? sourceContentHash(pages.map(page => ({ ...page, capture: { rawHash: page.rawHash } })),
     { normalizationInputHash: input.normalizationInputHash }) : plan.sourceRawHash;
-  return confirmSourceHashUnchanged({ store: input.store, sourceId: input.partition.sourceId, recordClass: "MEETING", scope: input.partition.scope,
+  const confirmed = await confirmSourceHashUnchanged({ store: input.store, sourceId: input.partition.sourceId, recordClass: "MEETING", scope: input.partition.scope,
     parserVersion: "meetings-composite/2", rawHash, now: input.now, complete: true,
     retrieval: { requestedUrl: first.requestedUrl, finalUrl: first.finalUrl, httpStatus: first.httpStatus,
       retrievedAt: pages.map(page => page.retrievedAt).sort()[0]!, rawHash } });
+  if (!confirmed) input.session.responses.clear();
+  return confirmed;
 }
 
 export function withMeetingSourceProbe(candidate: RoutineCandidate, partition: MeetingPartitionContract, normalizationInputHash: string,

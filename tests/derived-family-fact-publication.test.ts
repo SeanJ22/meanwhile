@@ -18,13 +18,15 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
-import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
+import { reconcileSuccessfulMeetingPartition, retrieveHeldAgendas, seedHeldAgendaDocuments, bindAgendaSourceObservations } from "../scripts/ingest.ts";
+import { AgendaDocumentStore } from "../lib/meetings/agenda-documents.ts";
+import { linkedMeetingSourceInputs } from "../lib/civic-data/meeting-linked-source.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { withDerivedSourceContent, derivedSourceContentHash } from "../lib/civic-data/derived-source-hash.ts";
 import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
 import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe } from "../lib/civic-data/meeting-source-probe.ts";
+import { meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
 import { readSourceProbeDependencies } from "../lib/civic-data/source-probe.ts";
 import { statesForRegistryDivisions, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
@@ -86,17 +88,22 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
     withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
     DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue, sourceHashReceiptFields, ZERO_RELEASE_EVENTS,
     statesForRegistryDivisions, stateRegistryRuntimeScope, requiredManualProductionContract, readSourceProbeDependencies,
-    meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe,
-    meetingSourceSession: async (_partition: unknown, _hash: unknown, store: MemoryRoutineDataStore) => {
+    meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable,
+    AgendaDocumentStore, retrieveHeldAgendas, seedHeldAgendaDocuments, bindAgendaSourceObservations, linkedMeetingSourceInputs,
+    meetingSourceSession: async (_partition: unknown, _hash: unknown, store: MemoryRoutineDataStore, _now: string, _vault: unknown,
+      onSource?: (response: unknown) => Promise<void>) => {
       const responses = new Map();
       const fetch = async () => {
         fetched++; t.mock.timers.setTime(Date.now() + 30_000);
         responses.set(route, { source: "ical", requestedUrl: route, finalUrl: route, httpStatus: 200, rawHash: sha256(feed),
           byteCount: Buffer.byteLength(feed), bytes: new TextEncoder().encode(feed), retrievedAt: new Date().toISOString(), contentType: "text/calendar" });
+        await onSource?.(responses.get(route));
         return new Response(feed, { headers: { "content-type": "text/calendar" } });
       };
       return { head: await store.readSourceHead("MEETING", partition.scope), responses, fetch, complete: true,
-        probe: async () => { await fetch(); return true; }, clear: async () => {} };
+        probe: async () => { await fetch(); return true; }, clear: async () => {},
+        run: (operation: () => Promise<unknown>) => operation(), collect: async (operation: () => Promise<unknown>) => ({ value: await operation(), responses: [] }),
+        forgetGet: () => {}, defer: async () => {} };
     },
   });
   const store = new MemoryRoutineDataStore(), partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));

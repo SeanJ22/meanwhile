@@ -1455,3 +1455,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Per Sean (one path for the place map, use #822's per-state turns in a re-cut): a River builder is re-cutting RT-01 as stream/river-rt-01b with #822's approach: map turns ahead of long reads and the measured 1,672 MiB reservation. A prototype queue-hold fix (local branch river-place-map) is not used: it holds meeting reads up to 5 minutes a pass in election week and would take about 20 hours to fill all states.
 - RB-A10 keeps waiting on the place map.
 - Same starving risk noted for other big single reservations: Open States votes (3,574 MiB) and ACS population (3,928 MiB); not checked yet.
+
+### 10 AM EDT status
+- Neon, both databases, 9 AM hour: 2,385 MB (reader 2,215, control plane 170), the lowest hour since yesterday evening. Maryland translations 35 MB; openstates-people 487 MB.
+- Place-page drain: still waiting on Sean's Netlify setting (functions lack WTP_PRODUCTION_DATABASE_URL_WRITE). place_page 24,900; rebuild_queue 159,437.
+- RT-01b re-cut (#822 approach) being built. Place map 0 rows.
+- GB-01: census in GA. New Orleans and Omaha still 0 governing.
+- DB-04: no READY (last commit 1:11 AM). Research: no Send.

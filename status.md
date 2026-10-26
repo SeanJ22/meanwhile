@@ -1,11 +1,61 @@
 # River status
 
-build_state: LIVE FOR READERS: release 130 (main aaf371bc5, 5:36 PM EDT) WITH BREAKS: /national 500, ballot pages blank, runner routine data lane failing every pass since 6:08 PM. URGENT release 131 (two hotfixes + RIVER-BILLS2 + RIVER-PP2) gating on river-next-131 f6d41b4e5 from 7:10 PM. See the 7 PM entry
-worker: claude-river
+build_state: LIVE FOR READERS: release 130 (main aaf371bc5) with /national 500, blank ballot pages and the runner's routine lane failing since 6:08 PM. Release 131 (fixes) = PR #843, auto-merge on, river f6d41b4e5. See the hand-off at the top
+worker: handing off
 provider: Claude
-run_id: session_01KQeVtrq9c4dWXSpaNnogn3
-lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T23:11:00Z
+run_id:
+lock:
+heartbeat: 2026-10-26T23:50:00Z
+
+## Hand-off to the next River session (Oct 26, 7:50 PM EDT)
+
+**Live on main:** release 130, main **aaf371bc5** (merge of #842), live 5:36 PM. https://meanwhileusa.com/api/build shows commit aaf371bc5c308a73ff03961599637c6d868d3401. Runner loaded it at about 6:00 PM (heartbeat testedSha aaf371bc5, verdict CONSISTENT).
+
+**Branches:** river = river-next = river-next-131 = **f6d41b4e5** (gate 9/9, 10,286 pass, 0 fail, 7:47 PM). **Release 131 = https://github.com/SeanJ22/meanwhile/pull/843**, head release/131 **aeec71324** (= f6d41b4e5 merged with main, same tree), opened 7:47 PM with auto-merge on; GitHub CI was not finished at hand-off. Nobody is subscribed to #843 now: the next River should watch it, then the deploy.
+
+**Broken right now (until 131 is live and the runner loads it):**
+- Readers: **/national returns 500** and **ballot pages render nothing** (85701, 03255 checked; React #441, 2 server error digests each) since 5:36 PM. Cause: Next.js copies lib/db/versioned-query.ts (DB-05's checked reads) into 5 server chunks; once another route created the shared reader pool, its driver's copy didn't know the reader's checked statement, wrapped it again and stripped the version columns ("A SQL read returned no database row version"). Fixed in 131 by RIVER-HOTFIX-131 (40d200fe4 + cfe665689). Reproduced and fixed on a local production build against the production reader (read-only).
+- Runner: **routine civic data lane fails every pass since 6:08 PM** (ROUTINE_CHILD_EXITED: "reading the routine task clocks, error(42883): function row_to_json(text) does not exist"), 24+ times; **publish-now times out** with 0 tasks attempted (6 since 6 PM; none in the 8 hours before 130). Fixed in 131 by RIVER-HOTFIX-131b f6d41b4e5 (likely publish-now too; confirm after deploy). So the place map has been stuck at 21 states (26,546 boundaries, 154,766 zip_place rows) since 5:50 PM, and no routine source publishes. Place pages still build (place_page 61,225; rebuild_queue 128,952 at 7:30 PM).
+
+**Every READY not on main:**
+| READY | Lane | State |
+|---|---|---|
+| 40d200fe4 + cfe665689 | RIVER-HOTFIX-131: one process-wide checked-statement set (reader pages) | In 131 (#843) |
+| f6d41b4e5 | RIVER-HOTFIX-131b: checked reads name their row by its unique CTE alias (runner routine lane) | In 131 (#843) |
+| 0be9a075f | RIVER-BILLS2: bill sessions resume across passes; CA/GA/HI/IL no longer hold every lane; saved parts never read back whole; parts keep only sponsor-match roster fields; the job honors its pass deadline | In 131 (#843) |
+| 929ab8524 | RIVER-PP2: place pages read the 25,974-byte national routing record once per turn (about 0.27 GB/h less received) | In 131 (#843) |
+| 4caea8f2b | DB-05 people probes and keyed member offices (tip of the set River folded) | NOT shipped. 2 state-binding-refresh tests fail on DB-05's own branch here (DB-05 made a failed attempt wait at least the fact kind's minimum refresh time; the test expects the binding's retryMs). River's fold of DB-05 through 4caea8f2b onto the 130 tree is local only: branch fold/131 **a56fefc1a** in /home/user/wt-fold131 (5 conflicts resolved incl. a hand merge of MP-01's and DB-05's publishHeldMeetingPins); NOT on river, NOT gated, and built on the 130 tree, not on f6d41b4e5 |
+| 1705e84a4 | DB-05 bill-part and federal funding reads | NOT scanned or folded |
+| e47e287ca | DB-05 unchanged directory reads and family byte attribution | NOT scanned or folded |
+| fbbe8a05b | DB-05 native bill reuse across changed archives | NOT scanned or folded |
+| 2ff0e94e8 | DB-05 exact person bill rows | NOT scanned or folded |
+| 3ba6788b2 | DB-05 reuse held owner snapshot revisions | NOT scanned or folded |
+| 568b9aa61 | DB-05 URGENT restore source admission clocks (current origin/stream/db-05 tip; fix in 49276fb1c) | NOT folded; duplicate of hotfix-131b (below) |
+
+**Duplicate:** DB-05's 568b9aa61 (row_to_json(source.*) and record_send(source.*)) and River's hotfix-131b f6d41b4e5 (refer to the row by its unique CTE name) both fix the same row_to_json(source) break. **Ship f6d41b4e5**: it is already in the gated 131 tree on #843, so it reaches production soonest, and it removes the ambiguous `source` alias altogether instead of qualifying it. When folding DB-05's tip, keep one of the two lines (they conflict on the same line in lib/db/versioned-query.ts) and keep both tests (DB-05's runs the real legistarMemberClocks read).
+
+**DB-05 caution for the next fold:** release 130 shipped two DB-05 bugs to production that 10,279 tests didn't catch (bundle-duplicated module state; alias collision). Before folding more DB-05 pieces, run a local production build and request several routes in one process (e.g. /api/meetings, /api/bills, then /national and /ballot) against the production reader, and run the runner's routine task clock read through the versioned client. DB-05's 568b9aa61 READY says its own acceptance FAILS: 106.2 GB over the rolling 24 hours, and acquisition stalled (not a saving).
+
+**Lanes working but not READY:** PP-01 (origin/stream/pp-01 1317b26f8, 7:20 PM: portrait entry repairs; it also opened Neon copy pp-01-people-republish-20261026). RB-A9 (origin/stream/rb-a9 7b107cc4e, 1:04 PM: work in progress; needs the place map in every state). RB-A10 7b5eacd03 stays held until the place map has rows in every state and 20 random ZIPs in 20 states resolve.
+
+**Sean's standing orders and open calls:**
+- Urgent fixes (Neon cost, runner crash, cost spike, readers losing critical info) go first but never alone: every other READY lane that passes its scan rides the same release; no batch waits on a lane that isn't READY.
+- No revert without Sean's word. (Reverting main to 129, ccb676a7a, was offered at 6 PM and 7 PM and not taken.)
+- Neon fixes ship first.
+- **Sean said yes to storing the routing record by reference** (CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:everyday-service-routing:v1 is stored in up to six compressed copies in every place page; by reference cuts the page write and what readers fetch). Not started.
+- Scan every READY for added bypassCache, whole-record re-reads, and new proof files in docs/ or scripts/; no new gate, approval, readback, receipt or score; databases read-only except through shipped migrations; no new Neon copies of production; prove releases on random ZIPs across the country; measure runner GB/h on both databases for two full hours after each release; leave Admin pauses and spending limits as they are; never edit docs/rulings.md.
+
+**What I'd do next (not written elsewhere):**
+1. Watch #843 to merge and deploy; then check.cjs 6/6 (/national 200, ballots render), confirm the runner loads 131 by itself, routine-civic-data digests stop saying ROUTINE_CHILD_EXITED, publish-now stops timing out, the place map moves past 21 states, and run the 54-ZIP comparison (/var/tmp/live/snapshot.cjs against snap-before.json and snap-after-129.json).
+2. Measure the reader functions' new cost: job key `index` (the Netlify reader functions) read 1.42 GB in the 24 minutes after 130 went live and 1.23 GB in the 6 PM hour, almost all civic_data_promotions. The double-wrap bug may be the cause; if it stays near 1 GB/h after 131, it's a Neon fix to ship first.
+3. Bills: after 131, watch for new legiscan-bills session promotions beyond the 10 finished today and for MA, CA, TX, NY, OH turning nonzero (all 0 at hand-off; AL 9, AZ 2,190).
+4. Write the live sections of releases/130.md and releases/131.md (130's live report is not written; 129's is in releases/129.md).
+5. Close #822 (its per-state place-map approach shipped in 129: RT-01b and RT-01c).
+6. The runner checks for a new release once a second while hunts are stopped (CONTROL_WAKE_POLL_MS = 1 s; about 3,600 GitHub calls an hour against a 5,000 limit); cut to once a minute.
+7. Production copies on Neon (about 30 branches; two opened today) await Sean's delete decision; see the 12 PM entry.
+8. Federal money after 129: usaspending fell (32.4 and 23.3 MB in the 3 and 4 PM hours vs 82-144 MB/h before); openfema rose about 60% (18.4 and 18.1 MB vs about 11 MB/h): recorded for DB-05.
+9. Local worktrees left on this container (not branches anyone else needs): /home/user/wt-fold131 (fold/131 a56fefc1a), /home/user/wt-fix129, /home/user/wt-probe, /home/user/wt-probe2, /home/user/wt-build (river-next-131 checked out), /home/user/wt-mt02fix, /home/user/wt-lsonce, /home/user/wt-ppreads, /home/user/wt-billstall, /home/user/wt-ctfold, /home/user/wt-db05fold.
+
 
 
 <!-- READY-LIST -->

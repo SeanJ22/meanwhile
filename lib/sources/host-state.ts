@@ -38,10 +38,16 @@ export function memoryHostState(): HostStateStore {
 /** All source children on the runner share these small files; pacing spends no database transfer. */
 export function fileHostState(root = join(process.env.WTP_WORKER_MEMORY_DIRECTORY ??
   (process.env.WTP_RUNTIME_MODE === "production" ? "/var/lib/meanwhile" : join(tmpdir(), "meanwhile-worker-memory")), "source-hosts")): HostStateStore {
-  return { async withHost(host, signal, work) {
-    const directory = operationalStatePath(root);
-    await mkdir(directory, { recursive: true });
-    const key = operationalStatePath(join(directory, createHash("sha256").update(host).digest("hex")));
+  return new FileHostState(root);
+}
+
+class FileHostState implements HostStateStore {
+  private readonly root: string;
+  constructor(root: string) { this.root = operationalStatePath(root); }
+  private key(host: string): string { return join(this.root, createHash("sha256").update(host).digest("hex")); }
+  async withHost<T>(host: string, signal: AbortSignal | undefined, work: (state: HostState) => Promise<T>): Promise<T> {
+    await mkdir(this.root, { recursive: true });
+    const key = this.key(host);
     const lock = `${key}.lock`;
     for (;;) {
       signal?.throwIfAborted();
@@ -69,5 +75,5 @@ export function fileHostState(root = join(process.env.WTP_WORKER_MEMORY_DIRECTOR
         await rename(temporary, `${key}.json`);
       }
     } finally { await rm(lock, { recursive: true, force: true }); }
-  } };
+  }
 }

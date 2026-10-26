@@ -345,8 +345,9 @@ const derivedBodies=new Map<string,MeetingPartitionContract>();
 export function derivedMeetingBodyContract(family:MeetingPartitionContract,bodyId:string,ocdId:string|null=null):MeetingPartitionContract{
   if(!family.derivedFamily||family.derivedParentId)throw new Error("DERIVED_MEETING_PARENT_REQUIRED");
   const states=statesForRegistryDivisions([bodyId,ocdId??""]);
-  if(states.length!==1||`US-${states[0]}`!==family.derivedFamily)throw new Error(`DERIVED_MEETING_BODY_STATE_MISMATCH:${bodyId}`);
-  const id=meetingPartitionId(DERIVED_FAMILY_SOURCE,bodyId),scope=meetingPartitionScope(DERIVED_FAMILY_SOURCE,bodyId);
+  if(states.length>1||states.length===1&&`US-${states[0]}`!==family.derivedFamily)throw new Error(`DERIVED_MEETING_BODY_STATE_MISMATCH:${bodyId}`);
+  const source=`${DERIVED_FAMILY_SOURCE}~${family.derivedFamily}`;
+  const id=meetingPartitionId(source,bodyId),scope=meetingPartitionScope(source,bodyId);
   const contract={...family,id,scope,bodyId,ocdId,derivedParentId:family.id,acquisitionFailureDomain:`derived-body:${bodyId}`,
     readerProjection:{...family.readerProjection,id:`meetings-partition:${DERIVED_FAMILY_SOURCE}:${bodyId}`}};
   derivedBodies.set(id,contract);
@@ -357,19 +358,19 @@ export function meetingPartitionContract(id: string): MeetingPartitionContract |
   const held=MEETING_PARTITION_CONTRACTS.find((partition)=>partition.id===id)??derivedBodies.get(id);
   if(held)return held;
   const identity=meetingPartitionIdentity(id);
-  if(identity?.source!==DERIVED_FAMILY_SOURCE||identity.route||/^US-[A-Z]{2}$/.test(identity.bodyId))return null;
-  const states=statesForRegistryDivisions([identity.bodyId]);
-  const family=states.length===1?MEETING_PARTITION_CONTRACTS.find(partition=>partition.derivedFamily===`US-${states[0]}`&&!partition.derivedParentId):null;
+  const named=identity&&/^derived~(US-[A-Z]{2})$/.exec(identity.source);
+  if(!identity||identity.route||!named)return null;
+  const family=MEETING_PARTITION_CONTRACTS.find(partition=>partition.derivedFamily===named[1]&&!partition.derivedParentId);
   return family?derivedMeetingBodyContract(family,identity.bodyId):null;
 }
 
 /** Existing body scope syntax, with the same registered state-family authority. */
 export function derivedMeetingBodyForScope(scope:string):MeetingPartitionContract|null{
-  const matched=/^source:derived:body:([^:]+)(:history)?$/.exec(scope);
+  const matched=/^source:(derived~US-[A-Z]{2}):body:([^:]+)(:history)?$/.exec(scope);
   if(!matched)return null;
-  let bodyId:string;try{bodyId=decodeURIComponent(matched[1]!);}catch{return null;}
-  const partition=meetingPartitionContract(meetingPartitionId(DERIVED_FAMILY_SOURCE,bodyId));
-  return partition?.derivedParentId?(matched[2]?meetingHistoryContract(partition):partition):null;
+  let bodyId:string;try{bodyId=decodeURIComponent(matched[2]!);}catch{return null;}
+  const partition=meetingPartitionContract(meetingPartitionId(matched[1]!,bodyId));
+  return partition?.derivedParentId?(matched[3]?meetingHistoryContract(partition):partition):null;
 }
 
 export function requiredMeetingPartitionContract(id: string): MeetingPartitionContract {

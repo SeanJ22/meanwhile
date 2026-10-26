@@ -79,7 +79,7 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     const scope = /^source:([^:]+):body:([^:]+)(:route:[a-f0-9]{16})?(?::history)?$/.exec(r.scope);
     const sources = family ? familySources(r.payload,owned,selected) : r.payload.sources;
     const own = {...r.payload,sources,meetings:owned,agendaDocuments:r.payload.agendaDocuments.filter(d => ids.has(d.meetingId))};
-    const stamped = stampMeetingDoor({id:scope ? `meetings:${decodeURIComponent(scope[1]!)}:${scope[2]}${scope[3] ?? ""}` : r.scope,derivedFamily:family ? state : null},applyPartitionFreshCheck(own,checked));
+    const stamped = stampMeetingDoor({id:scope ? `meetings:${decodeURIComponent(scope[1]!)}:${scope[2]}${scope[3] ?? ""}` : r.scope,derivedFamily:family||scope?.[1]?.startsWith("derived~") ? state : null},applyPartitionFreshCheck(own,checked));
     const owners = family ? [...new Set([...owned.flatMap(m => m.bodyId ?? []),...r.payload.derivedMembers?.filter(m => selected.has(m.bodyId)).map(m => m.bodyId) ?? []])]
       : scope ? [decodeURIComponent(scope[2]!)] : [];
     for (const bodyId of owners) {

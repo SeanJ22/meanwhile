@@ -985,7 +985,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   private derivedMeetingProgress=new Map<string,DerivedMeetingFamilyProgress>();
   private memberOfficeProgress: MemberOfficeProgress | undefined;
   async readDerivedMeetingBody(state:import("./contracts.ts").DerivedMeetingFamilyState,bodyId:string,history=false):Promise<DerivedMeetingBodySlice|null>{
-    const own=derivedBodyScope(bodyId,history),family=`source:derived:family:${state}${history?":history":""}`;
+    const own=derivedBodyScope(bodyId,history,state),family=`source:derived:family:${state}${history?":history":""}`;
     const pointer=this.promotions.get(projectionKey("MEETING",own))??this.promotions.get(projectionKey("MEETING",family));
     const record=pointer?this.candidates.get(pointer.versionId):null;
     if(!pointer||!record)return null;

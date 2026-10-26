@@ -4,6 +4,7 @@ import type {MeetingsSnapshot,SnapshotSourceReport} from "../meetings/snapshot.t
 import {carriedFromAnswer} from "../meetings/carry-forward.ts";
 import {derivedMeetingFamilyScope,meetingHistoryScope,meetingPartitionScope} from "./meeting-partitions.ts";
 import type {DerivedMeetingFamilyState} from "./contracts.ts";
+import {statesForRegistryDivisions} from "./state-scopes.ts";
 import {keyedSourceInput} from "./keyed-government-lookup.ts";
 
 export interface DerivedMeetingBodySlice {
@@ -13,8 +14,10 @@ export interface DerivedMeetingBodySlice {
   readonly snapshot:MeetingsSnapshot;
 }
 
-export function derivedBodyScope(bodyId:string,history=false):string{
-  const scope=meetingPartitionScope("derived",bodyId);
+export function derivedBodyScope(bodyId:string,history=false,state?:DerivedMeetingFamilyState):string{
+  const selected=state??`US-${statesForRegistryDivisions([bodyId])[0]??""}`;
+  if(!/^US-[A-Z]{2}$/.test(selected))throw new Error(`DERIVED_MEETING_BODY_STATE_REQUIRED:${bodyId}`);
+  const scope=meetingPartitionScope(`derived~${selected}`,bodyId);
   return history?meetingHistoryScope(scope):scope;
 }
 
@@ -53,7 +56,7 @@ export function selectDerivedMeetingBodySnapshot(value:MeetingsSnapshot,bodyId:s
 
 /** Native body pointer wins atomically. Before its first write, only that body's legacy rows are decoded. */
 export async function readDerivedMeetingBodyRows(query:Query,state:DerivedMeetingFamilyState,bodyId:string,history=false):Promise<DerivedMeetingBodySlice|null>{
-  const own=derivedBodyScope(bodyId,history),legacy=history?meetingHistoryScope(derivedMeetingFamilyScope(state)):derivedMeetingFamilyScope(state);
+  const own=derivedBodyScope(bodyId,history,state),legacy=history?meetingHistoryScope(derivedMeetingFamilyScope(state)):derivedMeetingFamilyScope(state);
   const [row]=await query(`WITH pointer AS MATERIALIZED (
     SELECT p.key,p.scope,p.current_version_id AS version_id,p.promoted_at,c.normalized_hash,reader_payload_node(p.payload) AS root,
       (p.source_id=$4 AND p.current_version_id=p.last_known_good_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded

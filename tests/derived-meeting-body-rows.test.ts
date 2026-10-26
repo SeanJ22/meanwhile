@@ -6,6 +6,7 @@ import {derivedMeetingBodyContract,derivedMeetingBodyForScope,requiredMeetingPar
 import {canonicalCivicDataHash} from "../lib/civic-data/canonical-hash.ts";
 import {partitionCivicPayload} from "../lib/civic-data/payload-codec.ts";
 import {MemoryRoutineDataStore,routineDataStoreCandidateAuthorityIssue} from "../lib/civic-data/store.ts";
+import {readerCacheScopeForPublication} from "../lib/reader/cache.ts";
 import {installKeyedRows} from "./helpers/keyed-rows.ts";
 
 const BODY="ocd-division/country:us/state:az/place:sample#governing",OTHER="ocd-division/country:us/state:az/place:other#governing",AT="2026-10-20T00:00:00Z";
@@ -61,6 +62,9 @@ test("one body's existing family authority remains scoped to that same state, in
   assert.equal(routineDataStoreCandidateAuthorityIssue(candidate,authority,"candidate"),null);
   assert.match(routineDataStoreCandidateAuthorityIssue(candidate,{...authority,contract:"meetings:derived:US-NH"},"candidate")!,/cannot mutate/);
   assert.equal(routineDataStoreCandidateAuthorityIssue({...candidate,sourceId:"meetings-history",scope:`${body.scope}:history`},authority,"candidate"),null);
+  const unscoped=derivedMeetingBodyContract(family,"native-government-board");
+  assert.deepEqual(readerCacheScopeForPublication(unscoped.scope,{recordClass:"MEETING"}),{states:["AZ"],entities:["native-government-board"]});
+  assert.equal(derivedMeetingBodyForScope(unscoped.scope)?.derivedParentId,family.id,"the existing source/body syntax also carries exact state ownership for a native body id without a state token");
   assert.throws(()=>derivedMeetingBodyContract(family,"ocd-division/country:us/state:nh/place:elsewhere#governing"),/STATE_MISMATCH/);
 });
 

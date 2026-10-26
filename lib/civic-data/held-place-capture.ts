@@ -10,6 +10,9 @@ import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import { heldPlaceValue as published, readPlacePointerSlices } from "./held-place-slices.ts";
 import { statesForRegistryDivisions } from "./state-scopes.ts";
 import { readHeldPlaceGeography } from "./held-place-geography.ts";
+import { readDerivedMeetingBodyRows,derivedBodyScope } from "./derived-meeting-body.ts";
+import { readerQuery } from "./promoted-reader-query.ts";
+import type { RoutineDataStore } from "./store.ts";
 import { PostgresRoutineDataStore } from "./store.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 
@@ -33,15 +36,28 @@ async function readStatePlaceCapture(state: string | null, divisionIds: readonly
       partitions.some(known => known.bodyId === partition.bodyId))).map(contract => contract.scope);
   const slicesFor=<T>(recordClass:'MEETING'|'MEETING_OUTCOME',scopes:readonly string[])=>
     readPlacePointerSlices<T>(recordClass,scopes,divisionIds,[...bodies]);
-  const [meetings, families, outcomes, geography] = await Promise.all([
-    sliced ? slicesFor<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope)) :
-      readPromotedCivicDataBatch<MeetingsSnapshot>("MEETING", partitions.map(partition => partition.scope), options),
+  const ordinary=partitions.filter(partition=>partition.derivedFamily===null);
+  const derived=async()=>{
+    if(!state||!bodies.size)return [];
+    const store=options.store as Partial<Pick<RoutineDataStore,"readDerivedMeetingBody">>|undefined,query=store?null:readerQuery();
+    if(store&&!store.readDerivedMeetingBody)throw new Error("DERIVED_MEETING_KEYED_STORE_UNAVAILABLE");
+    if(!store&&!query)throw new Error("DERIVED_MEETING_READER_STORE_UNAVAILABLE");
+    return Promise.all([...bodies].map(async body=>{
+      const slice=store?await store.readDerivedMeetingBody!(`US-${state}`,body):await readDerivedMeetingBodyRows(async(text,params)=>{
+        const [rows]=await query!([{text,params:params??[]}]);return rows;},`US-${state}`,body);
+      return {kind:slice?"PROMOTED" as const:"NOT_RECORDED" as const,value:slice?.snapshot??null,
+        metadata:{recordClass:"MEETING" as const,scope:slice?.input.scope??derivedBodyScope(body,false,`US-${state}`),versionId:slice?.input.versionId??null}};
+    }));
+  };
+  const [meetingParts, families, outcomes, geography] = await Promise.all([
+    Promise.all([sliced?slicesFor<MeetingsSnapshot>("MEETING",ordinary.map(partition=>partition.scope)):
+      readPromotedCivicDataBatch<MeetingsSnapshot>("MEETING",ordinary.map(partition=>partition.scope),options),derived()]),
     readHeldPlaceFamilies(divisionIds, options, sliced ? value : undefined),
     sliced ? slicesFor<OutcomeSnapshot>("MEETING_OUTCOME", outcomeScopes) :
       readPromotedCivicDataBatch<OutcomeSnapshot>("MEETING_OUTCOME", outcomeScopes, options),
     sliced ? readHeldPlaceGeography(divisionIds, value?.registry.divisions ?? []) : Promise.resolve({ subjects: [], held: [] }),
   ]);
-  const capture = projectHeldPlaceCapture(divisionIds, registry, meetings, options.now ?? new Date().toISOString(), families, outcomes);
+  const capture = projectHeldPlaceCapture(divisionIds, registry, meetingParts.flat(), options.now ?? new Date().toISOString(), families, outcomes);
   return { subjects: [...capture.subjects, ...geography.subjects], held: [...capture.held, ...geography.held] };
 }
 

@@ -130,7 +130,7 @@ import {
 } from "@/components/funding/funding-section";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { questionForTargetType } from "@/lib/signal/reactions";
-import { builtInElectionDatesFor, electionDatesFor } from "@/lib/ballot/election-dates";
+import { ballotDateText, builtInElectionDatesFor, electionDatesFor } from "@/lib/ballot/election-dates";
 import {
   calendarableSteps,
   isUpcoming,
@@ -869,7 +869,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             title: `Voter registration deadline (${set.election.state})`,
                             allDayDate: regStep.date,
                             description:
-                              regStep.detail ??
+                              ballotDateText(regStep.detail) ??
                               `Last day to register to vote in ${set.election.state} for the November 3rd, 2026 general election. Your ballot, with sources: found via ${PRODUCT_NAME}.`,
                           }}
                         />
@@ -895,7 +895,7 @@ export default readerRoute("/ballot", async function BallotPage({
                               title: `${earlyStep.label} (${set.election.state})`,
                               allDayDate: w.start,
                               allDayEndDate: w.end ?? undefined,
-                              description: earlyStep.detail ?? undefined,
+                              description: ballotDateText(earlyStep.detail) ?? undefined,
                             }}
                           />
                         </>
@@ -977,11 +977,11 @@ export default readerRoute("/ballot", async function BallotPage({
                   {step.date && <p className="font-mono text-[0.875rem]" data-navigation-date>
                     {formatDateMDY(step.date.replaceAll(" – ", ", "))}
                   </p>}
-                  <p className="t-body">{step.detail}</p>
+                  {step.detail && <p className="t-body" data-navigation-detail>{ballotDateText(step.detail)}</p>}
                   {window && upcoming && !window.end && <AddToCalendar event={{
                     id: `ballot-${state}-${window.start}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
                     title: `${step.label} (${state})`, allDayDate: window.start,
-                    description: step.detail ?? undefined,
+                    description: ballotDateText(step.detail) ?? undefined,
                   }} />}
                 </li>)}
               </ul>
@@ -996,8 +996,7 @@ export default readerRoute("/ballot", async function BallotPage({
           Open this page with a zip, e.g.{" "}
           <Link href="/ballot?zip=07866" className="underline decoration-dotted">
             /ballot?zip=07866
-          </Link>
-          .
+          </Link>.
         </p>
       )}
 
@@ -1006,8 +1005,7 @@ export default readerRoute("/ballot", async function BallotPage({
           We couldn&apos;t place that zip. Try another, or return to{" "}
           <Link href="/" className="underline decoration-dotted">
             the map
-          </Link>
-          .
+          </Link>.
         </p>
       )}
 
@@ -1052,7 +1050,7 @@ export default readerRoute("/ballot", async function BallotPage({
                           title: `${step.label} (${set?.election.state ?? ""})`,
                           allDayDate: window.start,
                           allDayEndDate: window.end ?? undefined,
-                          description: step.detail ?? undefined,
+                          description: ballotDateText(step.detail) ?? undefined,
                         }}
                       />
                     </>

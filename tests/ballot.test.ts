@@ -4,7 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { contestsForDivisions } from "../lib/ballot/contests.ts";
-import { builtInElectionDatesFor, electionDatesFor, type ElectionDates } from "../lib/ballot/election-dates.ts";
+import { ballotDateText, builtInElectionDatesFor, electionDatesFor, type ElectionDates } from "../lib/ballot/election-dates.ts";
 import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
 import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 import type { BallotSet, Contest } from "../lib/ballot/types.ts";
@@ -14,6 +14,19 @@ const COUNTY = `${STATE}/county:example`;
 const TOWN = `${COUNTY}/place:town_a`;
 const OTHER_TOWN = `${COUNTY}/place:town_b`;
 const OTHER_STATE = "ocd-division/country:us/state:yy";
+
+test("ballot date sentences retain times, abbreviations, links and every condition", () => {
+  assert.equal(ballotDateText("request an absentee ballot by 5:00 p.m. local time on october 23 ."),
+    "Request an absentee ballot by 5:00 p.m. local time on October 23.");
+  assert.equal(ballotDateText("after oct. 18, voters can register in person. bring two forms of ID ."),
+    "After Oct. 18, voters can register in person. Bring two forms of ID.");
+  assert.equal(ballotDateText("monday, october 5: apply at indianavoters.com .."),
+    "Monday, October 5: apply at indianavoters.com.");
+  assert.equal(ballotDateText("Voters may register under N.J.S.A. 19:31-6.\nregistration ends at 11:59 p.m."),
+    "Voters may register under N.J.S.A. 19:31-6. Registration ends at 11:59 p.m.");
+  assert.equal(ballotDateText(null), null);
+  assert.equal(ballotDateText(" \n "), null);
+});
 const provenance = { sourceUrl: "https://elections.example.gov/list.pdf", sourceOrg: "Example County Clerk", collectedAt: "2026-09-01", secondHand: false } as Contest["provenance"];
 const contest = (id: string, ocdId: string): Contest => ({
   id, electionId: "xx-2026-11-03", ocdId, divisionVintage: "2025", title: id, type: "CANDIDACY", voteFor: 1, termYears: 4, scopeNote: null, provenance,

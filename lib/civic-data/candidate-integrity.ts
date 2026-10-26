@@ -1,6 +1,7 @@
 import { durableCivicDataHash } from "./canonical-hash.ts";
 import { durableStateHash, largePayloadScope } from "./state-publication.ts";
 import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
+import type { FederalMoneyProjection } from "../federal-money/model.ts";
 import type { Registry } from "../registry/types.ts";
 import { selectRegistryLookup } from "./keyed-rows.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
@@ -18,6 +19,7 @@ import { readMeetingPartitionProjection } from "../meetings/snapshot.ts";
 import { verifyRoutineReaderProjection, type RoutineReaderVerification } from "./reader-verification.ts";
 import {
   candidateVersionSummary,
+  candidateProofView,
   publishedCandidateMetadata,
   projectionKey,
   promotedPointerIdentity,
@@ -115,6 +117,8 @@ function candidateReadOnlyStore(
     throw new Error("SOURCE_SCOPED_PREFLIGHT_STORE_IS_READ_ONLY");
   };
   const ownedRecords = [record, ...(predecessor ? [predecessor] : [])];
+  const ownedScope = (recordClass: RoutineRecordClass, scope: string) =>
+    ownedRecords.find(row => row.candidate.recordClass === recordClass && row.candidate.scope === scope) ?? null;
   const officeModel = (row: CandidateVersionRecord | null) => {
     const value = row?.candidate.readModel as { kind?: string; records?: readonly MemberOfficeRecord[];
       rosterDigests?: Readonly<Record<string, string>>; pending?: readonly string[] } | null;
@@ -161,6 +165,25 @@ function candidateReadOnlyStore(
         : predecessor?.candidate.id === candidateId ? predecessor.candidate : null;
       for (const key of path) value = (value as Record<string, unknown> | null)?.[key];
       return value === undefined ? null : value as T;
+    },
+    // Preflight exposes only the actual proposal/predecessor already owned by this adapter.
+    readPublicationBase: async (recordClass, scope) => recordClass === candidate.recordClass && scope === candidate.scope
+      ? { current: projection, lkg: { ...record, candidate: candidateProofView(record.candidate) } }
+      : { current: null, lkg: null },
+    readFederalMoneyPartitionKeys: async (scope, ids) => {
+      const row = ownedScope("FEDERAL_MONEY", scope);
+      if (!row) return null;
+      const model = row.candidate.readModel as FederalMoneyProjection;
+      return { versionId: row.candidate.id, sourceId: row.candidate.sourceId, state: model.state,
+        children: [...model.children ?? []], records: (model.records ?? []).filter(fact => ids.includes(fact.id))
+          .map(({ id, sourceId }) => ({ id, sourceId })) };
+    },
+    readFederalMoneyPriorPlaces: async id => {
+      const row = ownedRecords.find(row => row.candidate.id === id);
+      if (row?.candidate.recordClass !== "FEDERAL_MONEY") return [];
+      const model = row.candidate.readModel as FederalMoneyProjection;
+      return [...new Set((model.records ?? []).flatMap(fact => [...fact.bodyIds.map(id => `body:${id}`),
+        ...fact.divisionIds.map(id => `division:${id}`)]))].sort();
     },
     readRegistryDivisions: async () => [],
     readRegistrySlice: async (state,bodyIds,divisionIds) => {

@@ -91,6 +91,9 @@ Recommendation: Sean restarts both sessions. River's capacity is on the place ma
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
 
+### For Sean: production copies on Neon (read-only check, 12:35 PM EDT)
+The reader project (tiny-hill-13996172) has about 30 copies of production as branches, each 19-23 GB logical. Two were opened today after your "don't open a new copy of production" order: **pp-01-people-republish-20261026** (6:28 AM UTC, i.e. 2:28 AM EDT; PP-01 never pushed code but did open this) and **mp-01-validation-20261026** (2:33 AM EDT; MP-01's READY used it for its pin replay). Others date from Oct 20-24 (bl-02, db-01, db-02, rn-02, sl-01 x7, bp-01 x3, vs-01, rh01 x2, of-01, hn-01, ot-01, ui-03, src-mn, cal-01, mp-01 Oct 20, rs-01, codex-development, backup-before-b2-retention). River can't delete them (databases are read-only for River, and deleting is yours to decide). Recommendation: delete every *-2026102x copy except backup-before-b2-retention; DB-05 may want this for its 10 GB/day goal if Neon bills their storage.
+
 ### 12 PM EDT
 - Live for readers: release 128 (main 9352c8e14). River moved to 63d03105b (RT-01b + bills) after 9/9 gates (10,102 pass, 0 fail).
 - Release 129 gating: river + RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, MT-02 (river-next-129b 11890bcfd). CT-01 READY 812ba1da8 needs its merge with river resolved; ships as 130.

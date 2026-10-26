@@ -7,7 +7,8 @@ type Row = Record<string, unknown>;
 export type VersionedSelectQuery = (text: string, params: readonly unknown[]) => Promise<readonly Row[]>;
 interface SavedRow { readonly etag: string; readonly body: string }
 const hash = (value: Uint8Array) => createHash("sha256").update(value).digest("hex");
-const activeStatements = new Set<string>();
+// The bundler can copy this module into several server chunks; the driver and the reader must share one set.
+const activeStatements: Set<string> = ((globalThis as { [key: symbol]: Set<string> | undefined })[Symbol.for("meanwhile.versionedSelectStatements")] ??= new Set<string>());
 /** Transport adapters recognize only the exact checked statement currently executing. */
 export const isVersionedSelectStatement = (text: string): boolean => activeStatements.has(text);
 

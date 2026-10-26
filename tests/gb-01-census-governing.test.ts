@@ -10,7 +10,7 @@ import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { readPlacePackage } from "../lib/reader/place.ts";
 import { rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { preparePlacePages } from "../scripts/prepare-place-pages.mts";
+import { queueUnbuiltPlacePages } from "../scripts/prepare-place-pages.mts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
 import type { Division } from "../lib/registry/types.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
@@ -184,8 +184,9 @@ test("LA Metro's boards filed under Oregon move to California with their ids and
     assert.equal(await canonicalBodyId(db.query, `${metro}#body:la-metro-board-7`), la[7]);
     assert.equal(await canonicalBodyId(db.query, `${LA}#body:la-metro-board-7`), la[7]);
     assert.equal(await canonicalBodyId(db.query, `${metro}#body:oregon-metro-board-1`), `${metro}#body:oregon-metro-board-1`);
-    // The deployment builds every place's ready page after its migrations, before the reader that reads them is published.
-    await preparePlacePages({ db });
+    // The deployment queues every unbuilt place after its migrations; the runner's turn builds them.
+    await queueUnbuiltPlacePages(db.query);
+    await rebuildPlacePages({ db, purge, limit: Number.MAX_SAFE_INTEGER });
     const county = await readPlacePackage({ state: "CA", divisionIds: [LA] }, db.query);
     assert.equal(county.bodies.filter(body => la.includes(body.id)).length, 66, "Los Angeles County shows LA Metro's boards");
     const state = await readPlacePackage({ state: "OR", divisionIds: [OR] }, db.query);

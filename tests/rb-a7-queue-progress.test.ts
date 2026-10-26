@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
-import { enqueueReaderPlaces, readerCacheTags } from "../lib/reader/cache.ts";
+import { enqueueReaderPlaces } from "../lib/reader/cache.ts";
 import type { FactDb } from "../lib/facts/publish.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
@@ -63,31 +63,6 @@ test("a source arrival after storage keeps its first waiting time and forces a n
   } finally { await db.pg.close(); }
 });
 
-test("deployment builds later versions without cache credentials and leaves only the published worker's purge", async () => {
-  const { db, wrapped, sourceReads } = await queuedPlace();
-  try {
-    let buildPurges = 0;
-    const initial = { db: wrapped, limit: 4, concurrency: 1, initialBackfill: true,
-      purge: async () => { buildPurges++; throw Error("Build hosts have no cache credentials"); } };
-    assert.deepEqual(await rebuildPlacePages(initial), { rebuilt: 1, failed: 0, remaining: 0 });
-    assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), [], "a first version has no previous ready cache to purge");
-    await enqueueReaderPlaces({ places: [PLACE] }, db.query);
-    assert.deepEqual(await rebuildPlacePages(initial), { rebuilt: 1, failed: 0, remaining: 0 });
-    assert.deepEqual(await db.query("SELECT generation::int,built_generation::int,lease_token,lease_slot,lease_until FROM rebuild_queue WHERE place_id=$1", [PLACE]),
-      [{ generation: 1, built_generation: 1, lease_token: null, lease_slot: null, lease_until: null }]);
-    assert.deepEqual(await rebuildPlacePages(initial), { rebuilt: 0, failed: 0, remaining: 0 }, "already built purge work cannot stall deployment");
-    assert.equal(buildPurges, 0);
-    assert.equal(sourceReads(), 2);
-    const tags: string[][] = [];
-    assert.deepEqual(await rebuildPlacePages({ db: wrapped, limit: 1, concurrency: 1, purge: async next => { tags.push([...next]); return { purged: true }; } }),
-      { rebuilt: 0, failed: 0, remaining: 0 });
-    assert.deepEqual(tags, [readerCacheTags({ places: [PLACE] })]);
-    assert.equal(sourceReads(), 2, "the scheduled worker only purges the saved later version");
-    assert.equal(Number((await db.query("SELECT version FROM place_page WHERE place_id=$1", [PLACE]))[0]!.version), 2);
-    assert.deepEqual(await db.query("SELECT n::int AS n FROM count_hour WHERE state='AZ' AND step='v1:'||jsonb_build_array('Place pages','rebuilt','in')::text"), [{ n: 2 }]);
-  } finally { await db.pg.close(); }
-});
-
 test("a missing stored page is rebuilt even when the queue remembers its built generation", async t => {
   t.mock.method(console, "error", () => {});
   const { db, wrapped, sourceReads } = await queuedPlace();
@@ -102,32 +77,7 @@ test("a missing stored page is rebuilt even when the queue remembers its built g
   } finally { await db.pg.close(); }
 });
 
-test("deployment drains a new unleased generation during purge backoff while scheduled retries retain their cooldown", async t => {
-  t.mock.method(console, "error", () => {});
-  const { db, wrapped, sourceReads } = await queuedPlace();
-  try {
-    await rebuildPlacePages({ db: wrapped, limit: 1, concurrency: 1, purge: async () => ({ purged: false }) });
-    await enqueueReaderPlaces({ places: [PLACE] }, db.query);
-    assert.deepEqual(await rebuildPlacePages({ db: wrapped, limit: 1, concurrency: 1, purge: async () => { throw Error("The scheduled retry must retain its cooldown"); } }),
-      { rebuilt: 0, failed: 0, remaining: 1 });
-    assert.equal(sourceReads(), 1);
-    const initial = { db: wrapped, limit: 4, concurrency: 1, initialBackfill: true,
-      purge: async () => { throw Error("Deployment cannot purge caches"); } };
-    assert.deepEqual(await rebuildPlacePages(initial), { rebuilt: 1, failed: 0, remaining: 0 });
-    assert.deepEqual(await db.query("SELECT generation::int,built_generation::int,lease_token,lease_slot,lease_until FROM rebuild_queue WHERE place_id=$1", [PLACE]),
-      [{ generation: 2, built_generation: 2, lease_token: null, lease_slot: null, lease_until: null }]);
-    assert.deepEqual(await rebuildPlacePages(initial), { rebuilt: 0, failed: 0, remaining: 0 });
-    assert.equal(sourceReads(), 2, "the old generation is never queried again");
-    let purges = 0;
-    assert.deepEqual(await rebuildPlacePages({ db: wrapped, limit: 1, concurrency: 1, purge: async () => { purges++; return { purged: true }; } }),
-      { rebuilt: 0, failed: 0, remaining: 0 });
-    assert.equal(sourceReads(), 2);
-    assert.equal(purges, 1);
-    assert.equal(Number((await db.query("SELECT version FROM place_page WHERE place_id=$1", [PLACE]))[0]!.version), 2);
-  } finally { await db.pg.close(); }
-});
-
-test("deployment cannot bypass active leases or the shared four-worker limit", async () => {
+test("a turn cannot bypass active leases or the shared four-worker limit", async () => {
   const { db, wrapped, sourceReads } = await queuedPlace();
   try {
     for (let slot = 1; slot <= 4; slot++) {
@@ -136,7 +86,7 @@ test("deployment cannot bypass active leases or the shared four-worker limit", a
       await db.query("INSERT INTO rebuild_queue(place_id,lease_token,lease_slot,lease_until) VALUES($1,$2,$3,clock_timestamp()+interval '5 minutes')", [id, `running-${slot}`, slot]);
     }
     const before = await db.query("SELECT place_id,lease_token,lease_slot,lease_until FROM rebuild_queue ORDER BY place_id");
-    assert.deepEqual(await rebuildPlacePages({ db: wrapped, limit: 4, concurrency: 4, initialBackfill: true, purge: async () => { throw Error("Deployment cannot purge caches"); } }),
+    assert.deepEqual(await rebuildPlacePages({ db: wrapped, limit: 4, concurrency: 4, purge: async () => { throw Error("No page was claimed to purge"); } }),
       { rebuilt: 0, failed: 0, remaining: 5 });
     assert.equal(sourceReads(), 0);
     assert.deepEqual(await db.query("SELECT place_id,lease_token,lease_slot,lease_until FROM rebuild_queue ORDER BY place_id"), before);

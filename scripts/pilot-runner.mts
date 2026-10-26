@@ -10,7 +10,7 @@ import { assertProductionDatabaseTarget } from "./pilot-runtime-config.mjs";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
-import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, researchPlanningStates, honorStoppedHunts } from "../lib/control-plane/repository/pg-store.ts";
+import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, readRunnerPauseIntents, researchPlanningStates, honorStoppedHunts } from "../lib/control-plane/repository/pg-store.ts";
 import { CONTROL_PLANE_READS_DIR_ENV, readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import {
   assertDurableRepositories,
@@ -80,6 +80,7 @@ import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane
 import { IndependentRuntimeLaneScheduler, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
+import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, type PlacePageTurn } from "../lib/reader/place-page-worker.ts";
 import {
   appendIntakeRuntimeObservationDigest,
   appendRoutineCivicDataSupervisorDigest,
@@ -1202,12 +1203,51 @@ async function runPlatformCensus(deadlineMs: number): Promise<void> {
   } finally { release(); }
 }
 
+/** Place pages are built by the runner, the one process holding the production write address. */
+const placePageMemory = routineProcessSlots({ admissionsOpen: () => !runtimeAdmissionsHeld });
+let placePagePauseUnread = false;
+async function placePagesAdmitted(): Promise<boolean> {
+  if (runtimeAdmissionsHeld) return false;
+  try {
+    const repos = await ownerRepositories();
+    if (repos && readIntents([...await readRunnerPauseIntents(repos)]).runnerPause.paused) return false;
+    placePagePauseUnread = false;
+  } catch (error) {
+    if (!placePagePauseUnread) console.error(`  place pages: the owner's pause could not be read (${error instanceof Error ? error.message : String(error)}); no turn starts until it reads`);
+    placePagePauseUnread = true;
+    return false;
+  }
+  return !runtimeAdmissionsHeld;
+}
+
+async function runPlacePageTurn(deadlineMs: number): Promise<PlacePageTurn> {
+  const release = await placePageMemory.acquire("rebuild-place-pages.mts", Math.min(deadlineMs, Date.now() + 60_000));
+  try {
+    const [run] = await runRuntimeChildren([{
+      id: "place-pages", executable: process.execPath,
+      args: [...TS_CHILD, "scripts/rebuild-place-pages.mts"],
+      env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
+    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs: deadlineMs + PLACE_PAGE_TURN_GRACE_MS,
+      onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
+      onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
+    const result = run?.status === 0 ? placePageTurnResult(run.stdout ?? "") : null;
+    if (!result) throw new Error(`PLACE_PAGE_TURN_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}`);
+    return result;
+  } finally { release(); }
+}
+
+async function runPlacePages(deadlineMs: number): Promise<void> {
+  if (provider !== "postgres" || canary) return;
+  await drainPlacePageQueue({ deadlineMs, admitted: placePagesAdmitted, turn: runPlacePageTurn, log: line => console.log(line) });
+}
+
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, budgetMs: CENSUS_LANE_BUDGET_MS, run: runPlatformCensus },
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, budgetMs: INTAKE_RUNTIME_BUDGET_MS, run: runIntakeRuntime },
   // The lane retires at its life; the wall covers the last task a worker still holds.
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
+  placePagesLane(runPlacePages),
   publishNowLane(runPublishNow),
 ], (outcome) => {
   if (outcome.state === "FAILED") {

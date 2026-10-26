@@ -1,78 +1,24 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
-import { preparePlacePages, prepareProductionPlacePages, seedZipPagePlaces, seedRuntimeBodyPageSubjects } from "../scripts/prepare-place-pages.mts";
-import { config } from "../netlify/functions/rebuild-place-pages.mts";
+import { queueUnbuiltPlacePages, prepareProductionPlacePages, seedZipPagePlaces, seedRuntimeBodyPageSubjects } from "../scripts/prepare-place-pages.mts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { buildPageBody,PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
 import { unpackReadyPlace, unpackReadyTerritory } from "../lib/reader/place-ready.ts";
 import { readerCacheTags,enqueueReaderPlaces } from "../lib/reader/cache.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
-test("the rebuild worker runs every minute without a public HTTP route", () => {
-  assert.deepEqual(config, { schedule: "* * * * *", background: true, memory: 2048 });
-});
-
-test("initial page publication resumes missing places and bodies before the reader is deployed", async () => {
-  const queries: string[] = [];
-  const query: Query = async text => {
-    queries.push(text);
-    if (text.startsWith("SELECT")) return [{ places: 3, bodies: 2, missing: 0 }];
-    return [];
-  };
-  const db = { query, transaction: async <T>(run: (query: Query) => Promise<T>) => run(query) };
-  let passes = 0;
-  const result = await preparePlacePages({ db, rebuild: async options => {
-    assert.equal(options?.db, db);
-    assert.equal(options?.concurrency, 4);
-    passes++;
-    return { rebuilt: passes === 1 ? 3 : 2, failed: 0, remaining: passes === 1 ? 2 : 0 };
-  } });
-  assert.deepEqual(result, { rebuilt: 5, failed: 0, remaining: 0, places: 3, bodies: 2, missing: 0 });
-  assert.equal(passes, 2);
-  assert.match(queries[0], /e.kind IN \('place','body'\)/);
-  assert.match(queries[0], /p.place_id IS NULL/);
-  assert.match(queries[0], /ON CONFLICT\(place_id\) DO NOTHING/);
-});
-
-test("the deployment builds pages only within its budget and leaves the rest queued without failing the build", async () => {
-  const query: Query = async text => text.startsWith("SELECT") ? [{ places: 3, bodies: 2, missing: 900 }] : [];
-  const db = { query, transaction: async <T>(run: (query: Query) => Promise<T>) => run(query) };
-  const budgets: number[] = [];
-  const started = Date.now();
-  const result = await preparePlacePages({ db, budgetMs: 200, rebuild: async options => {
-    budgets.push(options!.timeBudgetMs!);
-    await new Promise(resolve => setTimeout(resolve, 30));
-    return { rebuilt: 2, failed: 1, remaining: 1000 };
-  } });
-  assert.ok(Date.now() - started < 400, "the step returns at its budget");
-  assert.ok(budgets.length > 1 && budgets.every(ms => ms > 0 && ms <= 200), "no pass runs past the deployment budget");
-  assert.equal(result.remaining, 1000);
-  assert.equal(result.missing, 900, "unbuilt pages are reported, not fatal");
-  assert.ok(result.failed > 0, "failed pages stay queued for the published worker");
-  let calls = 0;
-  const idle = await preparePlacePages({ db, rebuild: async () => { calls++; return { rebuilt: 0, failed: 0, remaining: 5 }; } });
-  assert.equal(calls, 1, "pages leased elsewhere are left to the published worker");
-  assert.equal(idle.remaining, 5);
-});
-
-test("the real worker stops at the deployment budget with pages still queued", async () => {
-  const db = await factDb({ withHourlyCounts: true });
+test("the deployment queues every place and body that has no ready page for the runner", async () => {
+  const db = await factDb();
   try {
-    for (let n = 0; n < 40; n++)
-      await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,'AZ')", [`ocd-division/country:us/state:az/county:test${n}`]);
-    const wrapped = { query: db.query, transaction: <T>(run: (query: Query) => Promise<T>) => db.transaction(query => run(async (text, args) => {
-      if (text !== PLACE_PACKAGE_SQL) return query(text, args);
-      await new Promise(resolve => setTimeout(resolve, 40));
-      return [rawPage(String((args?.[1] as string[])[0]))];
-    })) };
-    const started = Date.now();
-    const result = await preparePlacePages({ db: wrapped, budgetMs: 250 });
-    assert.ok(Date.now() - started < 2_000, "the build continues after the budget instead of draining the queue");
-    assert.ok(result.rebuilt > 0 && result.remaining > 0 && result.missing > 0, JSON.stringify(result));
-    assert.equal(result.missing, 40 - result.rebuilt);
-    const [queued] = await db.query("SELECT count(*)::int AS n FROM rebuild_queue");
-    assert.equal(queued!.n, result.remaining, "every unbuilt page stays queued for the published worker");
+    const built = "ocd-division/country:us/state:az/county:built", unbuilt = "ocd-division/country:us/state:az/county:unbuilt";
+    for (const [id, kind] of [[built, "place"], [unbuilt, "place"], [`${unbuilt}#board`, "body"], ["ocd-person/one", "person"]])
+      await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,$2,$1,'AZ')", [id, kind]);
+    await db.query("INSERT INTO place_page(place_id,version,built_at,body) VALUES($1,1,now(),'{}'::jsonb)", [built]);
+    assert.equal(await queueUnbuiltPlacePages(db.query), 2);
+    assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id")).map(row => row.place_id),
+      [unbuilt, `${unbuilt}#board`]);
+    assert.equal(await queueUnbuiltPlacePages(db.query), 0, "a page already queued keeps its place in line");
   } finally { await db.pg.close(); }
 });
 

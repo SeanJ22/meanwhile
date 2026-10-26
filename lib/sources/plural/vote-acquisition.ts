@@ -73,7 +73,7 @@ export async function acquireStateVotes(input: SharedOptions & {
   const completedBulkSessions = new Set<string>(), resolvedBulkUrls = new Set<string>();
   let bills = 0;
   const sourceProbe=(complete:boolean)=>({formatVersion:1 as const,rawHash:pluralVoteSourceHash(acquisitions),
-    complete:complete&&!held.some(row=>/^https?:\/\/|^ocd-bill\//.test(row.key))});
+    complete:complete&&!held.some(row=>row.key!==PLURAL_SESSION_CATALOG&&!resolvedBulkUrls.has(row.key)&&/^https?:\/\/|^ocd-bill\//.test(row.key))});
   const publish = async (result: PluralBillResult, countBill = true) => {
     if (countBill) bills++;
     held.push(...result.held);

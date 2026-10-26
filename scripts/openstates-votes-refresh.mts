@@ -84,7 +84,8 @@ export async function refreshStateVotes(input: Parameters<typeof acquireStateVot
         retrieval:{requestedUrl:fresh.requestedUrl,finalUrl:fresh.finalUrl,httpStatus:200,rawHash,retrievedAt:fresh.retrievedAt,
           ...(fresh.sourceCheck?{sourceCheck:fresh.sourceCheck}:{})}});
     if (confirmation) return {confirmation,publication:null,held:null,resources:null};
-    if (!publication && acquisition.held.length) throw new Error(`PLURAL_VOTES_ACQUISITION_INCOMPLETE:${acquisition.held.map(row => row.detail).join(";")}`);
+    const sourceFailures=acquisition.held.filter(row=>/^https?:\/\/|^ocd-bill\//.test(row.key));
+    if(sourceFailures.length)throw new Error(`PLURAL_VOTES_ACQUISITION_INCOMPLETE:${sourceFailures.map(row=>row.detail).join(";")}`);
     await initialize();
     const held = publication ? [...acquisition.held, ...identityHeld] : priorHeld;
     if(!publication)await publish(await Promise.all(acquisition.acquisitions.map(row => holdPluralVoteEvidence(input.vault, row))), held,{},

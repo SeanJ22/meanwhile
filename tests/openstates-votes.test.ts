@@ -63,7 +63,8 @@ function harness() {
     if (failFirst && value === 1) return new Response("unavailable", { status: 503 });
     return new Response(evidence(value).body);
   };
-  return { input: { state: "az", store, locks, cache, vault: new MemoryEvidenceStore(), fetchImpl, apiKey: "held-test-key", now: () => AT, signal: AbortSignal.timeout(10_000) }, requested, failFirst: () => { failFirst = true; } };
+  return { input: { state: "az", store, locks, cache, vault: new MemoryEvidenceStore(), fetchImpl, apiKey: "held-test-key", now: () => AT, signal: AbortSignal.timeout(10_000) }, requested,
+    failFirst: () => { failFirst = true; },restoreFirst:()=>{failFirst=false;} };
 }
 test("known cached bill evidence reuses original source observations and one bad bill leaves the next fact available", async () => {
   const h = harness(); h.failFirst();
@@ -87,6 +88,16 @@ test("each bill publishes and checkpoints before the next one, and the typed rea
   const rows = await readPluralVotesForPerson("az", person, { store: civicStore,  now: AT });
   assert.equal(rows.length, 2); assert.equal(rows[0].position, "yes");
   assert.deepEqual(await readPluralVotesForPerson("az", "az-legislature:1", { store: civicStore, now: AT }), []);
+});
+
+test("a failed bill stays due while another bill's independently published positions remain live",async()=>{
+  const h=harness(),civicStore=new MemoryRoutineDataStore();h.failFirst();
+  await assert.rejects(refreshStateVotes({...h.input,civicStore}),/PLURAL_VOTES_ACQUISITION_INCOMPLETE/);
+  assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,1);
+  h.restoreFirst();const resumed:string[]=[];
+  await refreshStateVotes({...h.input,civicStore,onBill:async result=>{resumed.push(...result.votes.map(vote=>vote.id));}});
+  assert.deepEqual(resumed,[native("vote",1)],"the completed bill is not replayed to recover the failed bill");
+  assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,2);
 });
 
 test("each vote candidate holds a raw-capture reference, never the bill bytes, and the vault returns them exactly", async () => {

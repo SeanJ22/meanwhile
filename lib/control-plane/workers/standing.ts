@@ -341,7 +341,7 @@ export async function advanceHeldWorkerFleet(_root: string, runtime: FleetRuntim
       }
       const attempts = await readWorkerRetryHistory(runtime.repos.attempts, [task.id]);
       const admission = workerTaskAdmission(task, attempts, now);
-  
+
       if (!admission.due || admission.requiresPolicyRecheck) continue;
       if (++admitted >= maximumArtifacts) return;
     }

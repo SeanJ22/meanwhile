@@ -20,6 +20,7 @@ import { publishPeopleSource } from "../lib/civic-data/people-source-publication
 import { liveNationalExecutiveRoster, readNationalPresident } from "../lib/reader/national.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -93,7 +94,7 @@ test("a place's portrait run also enriches its members of Congress, on the place
   if(next.kind==="PROMOTED")assert.equal(next.value.roster.officeholders[0].photo?.url,portrait?.url);
 });
 
-test("the national hourly portrait job reaches National cards and the next run retains its photo",async t=>{
+test("the national portrait job reaches National cards and its next admitted run retains the photo",async t=>{
   const store=new MemoryRoutineDataStore(),sourceUrl=`${ADMINISTRATION_URL}jordan-example/`;
   const index=`<a href="${sourceUrl}">President Jordan Example</a>`;
   const body='<main><h1>Jordan Example</h1><p>President of the United States</p></main>';
@@ -115,7 +116,9 @@ test("the national hourly portrait job reaches National cards and the next run r
   const task=routineTaskFromContract(PEOPLE_SOURCE_CONTRACTS.find(contract=>contract.id === 'people-portraits-us')!);
   const clock={lastAttemptedAt:NOW,lastSucceededAt:NOW,lastSucceededObservedAt:NOW,lastSucceededParserVersion:task.parserVersion};
   assert.equal(routineTaskDue(task,clock,Date.parse(NOW)),false);
-  const nextAt=new Date(Date.parse(NOW)+task.cadenceMs).toISOString();
+  const minimumMs=factClocks(null).retryMinutes("portrait")*60_000;
+  assert.equal(routineTaskDue(task,clock,Date.parse(NOW)+task.cadenceMs),false,"portrait sources obey their fact retry setting");
+  const nextAt=new Date(Date.parse(NOW)+Math.max(task.cadenceMs,minimumMs)).toISOString();
   assert.equal(routineTaskDue(task,clock,Date.parse(nextAt)),true);
   await refreshPeoplePortraits({store,vault,state:"us",options:{now:()=>nextAt,acquire:async()=>{throw Error("A fresh portrait is not due");}}});
   const next=await readPeopleSourceProjection("US","people-portraits",{store,now:nextAt});

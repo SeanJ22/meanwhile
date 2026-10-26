@@ -30,6 +30,7 @@ export async function withMigratedRoutineStore(
     .filter(statement=>/^CREATE (?:TABLE civic_data_clock_versions\b|FUNCTION civic_data_clock_changed\b|TRIGGER civic_data_(?:candidate|event|pointer)_clock_changed\b)/.test(statement));
   for(const statement of readVersions)await pg.exec(statement);
   await installKeyedRows(pg);
+  await pg.exec(readFileSync(new URL("../../lib/db/migrations/DB-05_federal_money_rows.sql",import.meta.url),"utf8").replaceAll("--> statement-breakpoint",""));
   const priorFetch = neonConfig.fetchFunction;
   const names = ["DATABASE_URL", "WTP_DB_ROLE", "WTP_VITAL_SIGNS_REPORT", "WTP_RUNTIME_MODE", "WTP_CONTROL_PLANE_DATABASE_URL"];
   const priorEnvironment = new Map(names.map(name => [name, process.env[name]]));

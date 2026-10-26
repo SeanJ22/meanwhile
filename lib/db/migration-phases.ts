@@ -403,6 +403,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "DB-05_source_hash": { phase: "expand", why: "Extends the unchanged source confirmation with an atomic raw-hash and parser comparison; every existing event shape remains valid." },
   "DB-05_keyed_rows": { phase: "expand", why: "Materializes government, registry and meeting members as keyed rows in the same transaction as their published pointer; existing payload readers remain valid.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
   "DB-05_source_checks": { phase: "expand", why: "Adds one source check row per independently refreshed source, so current check times can reach readers without reading or rewriting the containing package." },
+  "DB-05_federal_money_rows": { phase: "expand", why: "Extends the same transactional keyed rows to source-native federal facts and registration bodies/divisions, with an exact native recipient index; existing payload readers stay valid.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
   "DB-03_process_transfer": { phase: "expand", why: "Adds defaulted process counters to the existing daily and hourly transfer tables before the accounting writer uses them; existing readers and writers keep working." },
 };
 

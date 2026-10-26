@@ -177,26 +177,36 @@ export async function publishMemberOffices(input: {
         if(review)stateSources.push(review);
       }
       const sourcePath = (url: string) => url.replace(/(githubusercontent\.com\/openstates\/people\/)\b[a-f0-9]{40}\//, "$1");
+      const officeFacts = ({ id: _id, collectedAt: _at, sourceUrl, fieldSources, ...facts }: MemberOfficeRecord) => ({
+        ...facts, sourceUrl: sourcePath(sourceUrl),
+        ...(fieldSources ? { fieldSources: Object.fromEntries(Object.entries(fieldSources).map(([key, source]) => {
+          const { collectedAt: _collected, verifiedAt: _verified, ...provenance } = source;
+          return [key, { ...provenance, sourceUrl: sourcePath(source.sourceUrl) }];
+        })) } : {}),
+      });
       const rows = native.map((record, index) => {
         const peers = native.filter(row => row.officeholderId === record.officeholderId && row.officeKind === record.officeKind && sourcePath(row.sourceUrl) === sourcePath(record.sourceUrl));
         const previous = held.filter(row => row.officeholderId === record.officeholderId && row.officeKind === record.officeKind && sourcePath(row.sourceUrl) === sourcePath(record.sourceUrl));
-        return { ...record, ...(peers.length === 1 && previous.length === 1 ? { id: previous[0].id } : {}), office: points[index] };
+        const old = previous.find(row => row.id === record.id) ?? (peers.length === 1 && previous.length === 1 ? previous[0] : undefined);
+        const next = { ...record, ...(old ? { id: old.id } : {}), office: points[index] };
+        return old && canonicalCivicDataJson(officeFacts(old)) === canonicalCivicDataJson(officeFacts(next)) ? old : next;
       });
-      if (rows.length) {
+      const reused = rows.filter(row => prior.offices.get(row.id) === row);
+      const acquiredRows = rows.filter(row => prior.offices.get(row.id) !== row);
+      if (acquiredRows.length) {
         // Derivation reuses the exact saved acquisition of these members' own files, rather than downloading them again;
         // neither the roster's other files nor its whole capture list leave the database.
-        const urls = [...new Set(rows.map(row => row.sourceUrl))];
+        const urls = [...new Set(acquiredRows.map(row => row.sourceUrl))];
         const members = urls.flatMap(url => /^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/[a-f0-9]{40}\/(data\/.+)$/.exec(url)?.[1] ?? []);
         const acquisitions = await input.store.readCandidateCaptures(reference.versionId, urls, members) as readonly StatePeopleCapture[];
         if (!acquisitions.length) {gaps.push({key:jurisdiction,detail:"SOURCE_CAPTURE_UNAVAILABLE: prior offices retained"});continue;}
-        records.push(...rows);
         sources.push(...stateSources,...acquisitions.map(row=>({requestedUrl:row.requestedUrl,finalUrl:row.finalUrl,publisher:OPEN_STATES_ORG,sourceClass:"REFERENCE_PUBLISHER" as const,retrievedAt:row.retrievedAt,httpStatus:row.httpStatus,rawHash:row.rawHash ?? row.capture.rawHash,
           ...(row.extractedFrom ? {extractedMembers:[{path:row.extractedFrom.member,sha256:row.capture.rawHash}]} : {}),
           reviewOutcome:"SUPPORTED" as const,reviewedEvidence:"Exact source-native person aliases join each held office; archive extraction retains the original archive capture and member digest."})));
       }
       const retained = held.filter(row => !rows.some(next => next.id === row.id));
-      records.push(...retained);
-      sources.push(...await heldSources(retained));
+      records.push(...rows, ...retained);
+      sources.push(...await heldSources([...reused, ...retained]));
       rosters[jurisdiction] = current.get(jurisdiction)!;
     } catch (error) {gaps.push({key:jurisdiction,detail:`ROSTER_UNREADABLE: ${message(error)}`});}
   }

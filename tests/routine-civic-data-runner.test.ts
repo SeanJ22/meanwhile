@@ -55,6 +55,7 @@ import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggre
 import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
 import { HOT_READ_CATCH_UP_READ_BUDGET_MS } from "../lib/civic-data/hot-read-catch-up.ts";
 import { stateCalendarMemberResults } from "../lib/civic-data/state-calendars.ts";
+import { meetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import {
   withPassDeadline,
 } from "../lib/ops/independent-runtime-pass.ts";
@@ -87,6 +88,13 @@ function functionSource(source:string,name:string):string {
   return declaration.getText(tree);
 }
 
+function regularMeetingTask() {
+  const task=ROUTINE_SOURCE_TASKS.find(task=>meetingPartitionContract(task.id)?.derivedFamily===null);
+  assert.ok(task,"the fixture needs an actual ordinary meeting partition");
+  assert.equal(meetingPartitionContract(task.id)?.derivedFamily,null);
+  return task;
+}
+
 test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure or a rewritten progress row", async t => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const progressStart = source.indexOf("let sourceProgressRepos");
@@ -102,11 +110,12 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
     safeFailure: (message: string) => message,
     boundedExecutionFailure: () => ({ taskId: "deferred", code: "CHILD_SPAWN_FAILED", detail: "WORKER_MEMORY_DEADLINE: work remains owed" }),
-    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routineDeferral,
+    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routineDeferral, meetingPartitionContract,
     controlPlaneUrlFromEnv: () => "postgres://memory", createPgRepositories: async () => repos,
     RUN_STARTED_AT: "2026-10-13T12:00:00.000Z", SUPERVISOR_CYCLE_ID: "publish-now-supervisor:host:2026-10-13T12:00:00.000Z",
     RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
   };
+  const meetingTask=regularMeetingTask();
   const { recordHuntSourceProgress, settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + functionSource(source,"settlePendingRunResult"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\n({ recordHuntSourceProgress, settle: settlePendingRunResult });", context) as {
@@ -114,8 +123,9 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     settle: (pending: unknown, run: unknown) => Promise<void>;
   };
   for (const kind of ["SINGLE", "MEETING_PARTITION"]) {
-    const id = `worker-publication:ballot-navigation:${kind}`;
-    const task = { id, sourceId: "source", scope: "US", acquisitionFailureDomain: id, contract: {},
+    const base=kind==="MEETING_PARTITION"?meetingTask:{id:`worker-publication:ballot-navigation:${kind}`,sourceId:"source",scope:"US",acquisitionFailureDomain:`worker-publication:ballot-navigation:${kind}`,contract:{}};
+    const id=base.id;
+    const task = { ...base,
       ownerInvocation: { publicationPending: true, requestedAt: context.RUN_STARTED_AT, instructions: ["section3-publication"] } };
     context.attempted = 1; lines.length = 0; context.unsettledSourceRuns.add(id);
     await recordHuntSourceProgress(task, "QUEUED", "Admitted to the existing source worker pool.");
@@ -200,20 +210,20 @@ test("meeting pins and Box facts publish beside admission, so the first source l
 
 test("a single calendar child explicitly deferred before acquisition stays owed without a missing-receipt failure", async () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const id = "meeting-partition:deferred-calendar";
+  const task=regularMeetingTask(),id=task.id;
   const failures: unknown[] = [], lines: string[] = [];
   const context = {
     recordLaunchDecision: (task: { id: string }, action: string, reason: string, detail = reason) => lines.push(`RCD_${action} ${task.id}: ${detail}`),
     laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([id]), startedSourceChildren: new Set([id]),
     notStarted: [] as string[],
-    routineDeferral, stateCalendarMemberResults, attempted: 1, supervisorFailures: failures,
+    routineDeferral, stateCalendarMemberResults, meetingPartitionContract, attempted: 1, supervisorFailures: failures,
     safeFailure: String, console: { log: (line: string) => lines.push(line) },
     parseMeetingPartitionRunnerReceipts: () => { throw Error("deferred work must not need a receipt"); },
   };
   const settle = runInNewContext(transpileModule(functionSource(source, "settlePendingRunResult"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\nsettlePendingRunResult", context);
-  await settle({ id, kind: "MEETING_PARTITION", task: { id, acquisitionFailureDomain: id } }, {
+  await settle({ id, kind: "MEETING_PARTITION", task }, {
     id, termination: "EXITED", status: 0, signal: null, errorMessage: null, stderr: "",
     stdout: "RCD_MEETING_PARTITION_DEFERRED=" + JSON.stringify({ partitionId: id }),
   });

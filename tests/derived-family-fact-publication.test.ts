@@ -6,11 +6,10 @@ import { createSourceFile, isFunctionDeclaration, ModuleKind, ScriptTarget, tran
 import { sha256 } from "../lib/civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { readDerivedFamilyMembers, derivedFamilyReadGroups } from "../lib/civic-data/derived-meeting-acquisition.ts";
-import { buildDerivedFamily, derivedFamilyCandidate, DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue } from "../lib/civic-data/derived-meeting-family.ts";
+import { buildDerivedFamily, derivedFamilyCandidate, derivedFamilyFailedCandidate, DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue } from "../lib/civic-data/derived-meeting-family.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, derivedWiringKey, familyMembers, type DerivedWiringRecord } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { derivedMeetingFamilyId,derivedMeetingBodyContract,requiredMeetingPartitionContract,meetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
-import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
 import { stageMeetingFactPublication, continueMeetingFactPublication, meetingFactsAfterSourceCheck } from "../lib/civic-data/meeting-fact-progress.ts";
 import { retainingFetch, tracedResponses, retainMeetingCandidateEvidence,bindMeetingSourceObservations } from "../lib/civic-data/retained-meeting-bytes.ts";
 import {retainUnwiredDerivedBodyFacts} from "../lib/civic-data/derived-meeting-body.ts";
@@ -20,6 +19,8 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
+import { jobFailureDetail } from "../lib/sources/composite/failure-kind.ts";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { reconcileSuccessfulMeetingPartition, retrieveHeldAgendas, seedHeldAgendaDocuments, bindAgendaSourceObservations } from "../scripts/ingest.ts";
 import { AgendaDocumentStore } from "../lib/meetings/agenda-documents.ts";
 import { linkedMeetingSourceInputs } from "../lib/civic-data/meeting-linked-source.ts";
@@ -29,10 +30,9 @@ import { withDerivedSourceContent, derivedSourceContentHash } from "../lib/civic
 import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
 import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
+import { meetingSourceSession, meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
 import { readSourceProbeDependencies } from "../lib/civic-data/source-probe.ts";
 import { statesForRegistryDivisions, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
-import {routineTaskFromContract,routineTaskNextDueMs} from "../lib/civic-data/runner.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 
 const program = readFileSync("scripts/ingest.ts", "utf8");
@@ -43,7 +43,7 @@ function controllerFunction(name: string): string {
   return declaration.getText(tree).replace(/^export /, "");
 }
 
-for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposition} family's fresh copies publish after acquisition while its snapshot window stays anchored`, async t => {
+for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposition} derived body's fresh copies publish after acquisition while its snapshot window stays anchored`, async t => {
   const db = await factDb();
   t.after(() => db.pg.close());
   const anchor = "2026-10-04T08:30:00.000Z";
@@ -62,23 +62,25 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
   const acceptedCandidateId = `family:immutable-attempt:${disposition}`;
   let fetched = 0, hashPass = false;
   let lastCandidate: RoutineCandidate;
-  // Run the production controller and fact-publication helper; isolate unrelated wiring, promotion and venue services.
-  const run = runInNewContext(transpileModule(`${controllerFunction("publishPartitionFacts")}\n${controllerFunction("promoteDerivedMeetingFamily")}\n${controllerFunction("promoteDerivedMeetingBody")}`, {
+  const wiringValue={kind:"meeting-source-wiring" as const,formatVersion:1 as const,records:[member]};
+  const savedCheckpoints=new Map<string,string>();
+  const checkpoint=new CivicReadCache({read:async key=>savedCheckpoints.get(key)??null,write:async(key,value)=>{savedCheckpoints.set(key,value);}}).jobState();
+  const loadWiring=async()=>{
+    assert.equal(hashPass,false,"an equal source does not reread the wiring payload");
+    return {value:wiringValue,input:{kind:"PROMOTED_VERSION" as const,
+      recordClass:DERIVED_WIRING_RECORD_CLASS,scope:DERIVED_WIRING_SCOPE,versionId:"wiring",
+      readModelSha256:sha256(canonicalCivicDataJson(wiringValue)),promotedAt:anchor}};
+  };
+  // Exercise the native body directly so the family scheduler cannot hide its original exception.
+  const run = runInNewContext(transpileModule(`${controllerFunction("publishPartitionFacts")}\n${controllerFunction("promoteDerivedMeetingBody")}`, {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
-  }).outputText + "\npromoteDerivedMeetingFamily", {
+  }).outputText + "\npromoteDerivedMeetingBody", {
     Date, console: { log: () => {}, warn: () => {}, error: (message: string) => errors.push(message) },
-    readStateWiringRows: async () => { assert.equal(hashPass, false, "an equal source does not reread the wiring payload"); return { value: { records: [member] },
-      input: { kind: "PROMOTED_VERSION", recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE,
-        versionId: "wiring", readModelSha256: sha256(canonicalCivicDataJson({ records: [member] })), promotedAt: anchor } }; },
-    factReader: () => null,readStateWiringBodyIds:async()=>[bodyId],derivedMeetingBodyContract,routineTaskFromContract,routineTaskNextDueMs,
-    familyMembers, readPreviousMeetingPartition: async () => { assert.equal(hashPass, false, "an equal source hash never reads the held family"); return null; },
-    meetingFetchPass: () => meetingFetchPass({ fetchImpl: (async input => {
-      assert.equal(String(input), route); fetched++;
-      t.mock.timers.setTime(Date.now() + 30_000);
-      return new Response(feed, { headers: { "content-type": "text/calendar" } });
-    }) as typeof fetch }),
+    factReader:()=>null,familyMembers,meetingFetchPass,jobFailureDetail,derivedFamilyFailedCandidate,
     retainingFetch, derivedFamilyReadGroups, readDerivedFamilyMembers, resolveAttribution: (meetings: unknown[]) => meetings,
-    recordFamilyMemberOutcomes: async () => {}, moveConcludedMeetingsForPartition: async () => ({ moved: [] }),
+    recordFamilyMemberOutcomes:async(reads:Parameters<typeof buildDerivedFamily>[0]["reads"])=>{
+      for(const read of reads)assert.equal(familyMemberReadIssue(read),null,read.error??"the native source must retain its acquired-byte evidence");
+    },moveConcludedMeetingsForPartition:async()=>({moved:[]}),
     restoreRemovedHistoryForPartition: async () => null,
     retainUnwiredDerivedBodyFacts,buildDerivedFamily: (input: Parameters<typeof buildDerivedFamily>[0]) => {
       const built = buildDerivedFamily(input); snapshots.push(built.snapshot); return built;
@@ -87,38 +89,38 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
     reconcileSuccessfulMeetingPartition, retainMeetingCandidateEvidence,
     normalizeFamilyMeetingCitations: (meetings: unknown[]) => meetings,
     placePublishedMeetingPins: (input: Parameters<typeof placePublishedMeetingPins>[0]) => placePublishedMeetingPins({...input,offices:new Map()}),
-    derivedFamilyCandidate, processRegisteredMeetingPartitionCandidate: async (_store: MemoryRoutineDataStore, _partition: string, candidate: RoutineCandidate) => { lastCandidate = candidate; return ({
+    derivedFamilyCandidate, processRegisteredMeetingPartitionCandidate: async (_store: MemoryRoutineDataStore, _partition: string, candidate: RoutineCandidate) => {
+      assert.equal(candidate.retrieval.succeeded,true,candidate.retrieval.failureDetail);
+      assert.equal(candidate.normalization.succeeded,true,candidate.normalization.failureDetail);
+      assert.deepEqual(candidate.semantics.violations,[]);
+      lastCandidate=candidate;return ({
       promoted: disposition === "promoted" ? { versionId: acceptedCandidateId } : null, confirmed: disposition === "confirmed" ? { at: new Date().toISOString() } : null,
       candidate: { candidate: { ...candidate, id: acceptedCandidateId }, receipt: { decision: "GOOD" }, failureDetail: null },
     }); },
-    printMeetingPartitionReceipt: () => {}, tracedResponses,bindMeetingSourceObservations, publishReadMeetingFacts, factClocks,
+    printMeetingPartitionReceipt: () => {}, tracedResponses,bindMeetingSourceObservations,factClocks,
     stageMeetingFactPublication, continueMeetingFactPublication, meetingFactsAfterSourceCheck, meetingPartitionContract,
     withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
     DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue, sourceHashReceiptFields, ZERO_RELEASE_EVENTS,
     statesForRegistryDivisions, stateRegistryRuntimeScope, requiredManualProductionContract, readSourceProbeDependencies,
     meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable, meetingVenueChoiceHash,
-    meetingSourceContinuationPending:async()=>false,AgendaDocumentStore, retrieveHeldAgendas, seedHeldAgendaDocuments, bindAgendaSourceObservations, linkedMeetingSourceInputs,
-    meetingSourceSession: async (bodyPartition: {scope:string}, _hash: unknown, store: MemoryRoutineDataStore, _now: string, _vault: unknown,
-      onSource?: (response: unknown) => Promise<void>) => {
-      const responses = new Map();
-      const fetch = async () => {
-        fetched++; t.mock.timers.setTime(Date.now() + 30_000);
-        responses.set(route, { source: "ical", requestedUrl: route, finalUrl: route, httpStatus: 200, rawHash: sha256(feed),
-          byteCount: Buffer.byteLength(feed), bytes: new TextEncoder().encode(feed), retrievedAt: new Date().toISOString(), contentType: "text/calendar" });
-        await onSource?.(responses.get(route));
-        return new Response(feed, { headers: { "content-type": "text/calendar" } });
-      };
-      return { head: await store.readSourceHead("MEETING", bodyPartition.scope), responses, fetch, complete: true, acquisitionComplete: true,
-        probe: async () => { await fetch(); return true; }, clear: async () => {},
-        run: (operation: () => Promise<unknown>) => operation(), collect: async (operation: () => Promise<unknown>) => ({ value: await operation(), responses: [] }),
-        inputs: (operation: () => Promise<unknown>) => operation(),
-        forgetGet: () => {}, defer: async () => {},watchTermination:()=>()=>{} };
-    },
+    AgendaDocumentStore,retrieveHeldAgendas,seedHeldAgendaDocuments,bindAgendaSourceObservations,linkedMeetingSourceInputs,
+    meetingSourceSession:(...args:Parameters<typeof meetingSourceSession>)=>meetingSourceSession(args[0],args[1],args[2],args[3],args[4],args[5],args[6],{
+      checkpoint,publicationPending:async()=>false,fetchImpl:async input=>{
+        assert.equal(String(input),route);fetched++;t.mock.timers.setTime(Date.now()+30_000);
+        return new Response(feed,{headers:{"content-type":"text/calendar"}});
+      },
+    }),
   });
   const store = new MemoryRoutineDataStore(), partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));
   const bodyPartition=derivedMeetingBodyContract(partition,bodyId);
+  const readBody=store.readDerivedMeetingBody.bind(store);let bodyReads=0;
+  store.readDerivedMeetingBody=async(state,id)=>{
+    assert.equal(hashPass,false,"an equal source hash never reads the held native body");
+    assert.equal(state,"US-AZ");assert.equal(id,bodyId);bodyReads++;return readBody(state,id);
+  };
   const vault = new MemoryEvidenceStore();
-  await run(store, partition, async () => {}, { db, vault });
+  await run(store,bodyPartition,async()=>{},{db,vault},loadWiring);
+  assert.equal(bodyReads,1);
   assert.equal(fetched, 1);
   assert.deepEqual(snapshots.map(snapshot => [snapshot.generatedAt, snapshot.meetings.length]), [[anchor, 1]], "acquisition does not move the snapshot's reconciliation window");
   assert.deepEqual(errors, []);
@@ -130,18 +132,20 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
   assert.deepEqual(await db.query("SELECT reason FROM blank"), []);
   hashPass = true;
   const rawHash = derivedSourceContentHash([{ kind: "PROMOTED_VERSION", recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE,
-    versionId: "wiring", readModelSha256: sha256(canonicalCivicDataJson({ records: [member] })), promotedAt: anchor },
+    versionId: "wiring", readModelSha256: sha256(canonicalCivicDataJson(wiringValue)), promotedAt: anchor },
     { kind: "MEMBER_ACQUISITION", memberKey: member.id, requestedUrl: route, finalUrl: route, httpStatus: 200,
       rawHash: sha256(feed), retrievedAt: anchor, horizonDay: anchor.slice(0, 10) }]);
+  assert.equal(lastCandidate!.retrieval.rawHash,rawHash,"the actual acquired source is the native controller's digest");
   Object.assign(store, { readSourceHead: async (recordClass: string, scope: string) => recordClass === "MEETING" && scope === bodyPartition.scope ? ({ sourceId: DERIVED_FAMILY_SOURCE_ID, recordClass: "MEETING", scope: bodyPartition.scope,
-    versionId: acceptedCandidateId, lastKnownGoodVersionId: acceptedCandidateId, rawHash, rawHashBasis: "SOURCE_CONTENT_V1", normalizedHash: "a".repeat(64),
+    versionId:acceptedCandidateId,lastKnownGoodVersionId:acceptedCandidateId,rawHash,rawHashBasis:"SOURCE_CONTENT_V1",normalizedHash:lastCandidate!.normalization.normalizedHash,acquisitionComplete:true,
     parserVersion: "meetings-composite/2", promotedAt: anchor, candidateState: "PROMOTED", acquisitionSucceeded: true, imported: false }) : null,
     readCandidatePath: async (_id: string, path: string[]) => path.at(-1) === "bodyIds"
       ? (lastCandidate!.normalizedPayload as {sourceProbe:{bodyIds:string[]}}).sourceProbe.bodyIds
       : (lastCandidate!.normalizedPayload as {sourceProbe:unknown}).sourceProbe,
     confirmUnchanged: async () => ({ kind: "CONFIRMED", versionId: acceptedCandidateId, at: new Date().toISOString() }) });
-  const confirmed = await run(store, partition, async () => { assert.fail("an equal source does not preload registry and venue records"); }, { db, vault });
-  assert.ok(confirmed.confirmations?.[0]?.confirmation.head, "the next run returns the confirmed source header, with no fabricated candidate body");
+  const confirmed=await run(store,bodyPartition,async()=>{assert.fail("an equal source does not preload registry and venue records");},{db,vault},loadWiring);
+  assert.ok(confirmed.head,"the next run returns the confirmed source header, with no fabricated candidate body");
+  assert.equal(bodyReads,1);
   assert.equal(fetched, 2, "time-sensitive source acquisition still runs on the next scheduled pass");
   assert.equal(snapshots.length, 1, "the unchanged pass does not rebuild or re-read its held snapshot");
   assert.ok((await db.query("SELECT checked_at FROM fact WHERE status='live'")).every(row => Date.parse(String(row.checked_at)) === Date.now()),

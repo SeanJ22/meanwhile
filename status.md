@@ -26,7 +26,7 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 | 5f28a6871 (carries c3fff3702) | BL-02 (current LegiScan session per state, sponsors matched to held legislators) | READY, River. No new bypassCache; 4 proof files out |
 | 7dc32db25 (carries 04681516c) | DB-03 Admin (Admin's own screens) | READY, River. 734/734 focused |
 | f856197dd (carries 0f8d6154c, 7996ae820) | RB-A7 (ready place pages; GB-01's held names reach them) | READY, River. Proof files out; Node 22 isolation flag fixed |
-| stream/river-cs-01 (in progress) | CS-01 (reader-text capitals), 39238a8be | River's builder finishing it onto batch 2; joins batch 2 if READY before batch 2 re-gates, else the next batch |
+| fdff22df1 (carries 39238a8be) | CS-01 (reader-text capitals), finished by River on stream/river-cs-01 | READY 2:45 AM. 12 conflicts resolved keeping base code; formatter bugs fixed (postal codes, R-Tx, ID, SD abbreviations, given names); 5 proof files out (docs/cs-01.md, 3 scripts, the scan test); 890/890 focused + 7,658 related tests pass; tsc, eslint, knip, preflight clean. In batch 2 (126) |
 
 **Waiting, with the reason**
 | READY | Lane | Why it waits |
@@ -1353,3 +1353,6 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 2:32 AM EDT: release 125 (Idaho alone) opened; batch 2 re-gating as 126
 - Idaho READY 5a18354d6; river moved to 1d1ed9300. release/125 is [#837](https://github.com/SeanJ22/meanwhile/pull/837), auto-merge on. River's gate was 8 of 9: tests/box-publication.test.ts exited mid-file in the combined run (9,995/9,999 passed); alone on the same tree it passes 37/37; no shared code; it passed in 124's gate. Report: releases/125.md.
 - Batch 2 re-folded on 125 as river-next-batch2 47e090404 (RT-01, MD-01 docs out, BL-02, DB-03 Admin, RB-A7) and gating. CS-01 not READY yet; it joins the next batch. Scan of the combined diff: no added bypassCache, no added whole-candidate reads, no proof files (scripts/prepare-place-pages.mts is a deploy step netlify.toml runs).
+
+### 2:55 AM EDT: CS-01 READY; batch 2 (126) re-gating with it
+- CS-01 READY fdff22df1 (River). Merges cleanly onto batch 2 on 125; scan: no added bypassCache, no whole-candidate reads, no proof files (5 left out). Batch 2 gate restarted with it on river-next-batch2 7291d406a (RT-01, MD-01 docs out, BL-02, DB-03 Admin, RB-A7, CS-01). After 126 is live River runs CS-01's 20-state capitals scan on meanwhileusa.com.

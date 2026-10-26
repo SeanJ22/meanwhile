@@ -19,6 +19,7 @@ import type { RegistryProvenance } from "../registry/types.ts";
 import { agendaLetterheadOffice, agendaMeetingAddress, streetKeyOf } from "./agenda-address.ts";
 import { meetingStateOf } from "./body-scope.ts";
 import { addressWords } from "../geo/address-words.ts";
+import { withMunicipalHallOffices } from "./municipal-office.ts";
 import {
   meetingPinAddresses,
   withPublishedPin,
@@ -130,7 +131,7 @@ export async function publishedPinOffices(
       const venue=agendaMeetingAddress(row.header,state);
       if(venue&&typeof row.meeting_id==="string"&&!body.meetingAddresses?.some(address=>address.meetingId===row.meeting_id))
         (body.meetingAddresses??=[]).push({meetingId:row.meeting_id,bodyId:id,name:venue,address:venue,basis:"MEETING",provenance});
-      if(!body.officeContact?.address&&!body.governmentOffice?.address){
+      if(!body.officeContact?.address){
         const address=agendaLetterheadOffice(row.header,String(row.jurisdiction),state);
         if(address)body.officeContact={address,phone:null,provenance};
       }
@@ -162,6 +163,13 @@ function postalAddressAliases(address:MeetingPinAddress,body:MeetingPinBody|unde
     return[{...address,geocodingAddress:`${alias}, ${address.address.slice(comma+1).trim()}`,
       addressAlias:{sourceAddress:source.address,provenance:source.provenance}}];
   });
+}
+
+function publishedAddressQuery(address:MeetingPinAddress,meeting:Meeting):string {
+  const published=censusAddressQuery(address.geocodingAddress??address.address),street=streetKeyOf(published);
+  const city=/^(?:city|town|village|borough|municipality)(?:\s+(?:and|&)\s+county)?\s+of\s+(.+)$/i.exec(meeting.jurisdiction)?.[1];
+  const state=meetingStateOf(meeting.bodyId)||meetingStateOf(meeting.ocdId);
+  return state&&street?.index===0&&street.length===published.length?`${published}, ${city?`${city}, `:""}${state}`:published;
 }
 
 /** Geocode at publication, then keep the point with the meeting. A fresh visit only reads saved points. */
@@ -226,6 +234,8 @@ export async function placePublishedMeetingPins(input: {
         `${meeting.mapPin.basis}:${meeting.bodyId}:${meeting.mapPin.address}`,
         meeting.mapPin,
       );
+  offices = await withMunicipalHallOffices(input.query, input.meetings, offices,
+    detail => { officesUnavailable = true; held.push(detail); }, previous);
   const lookups = new Map<
     string,
     Promise<{
@@ -234,7 +244,7 @@ export async function placePublishedMeetingPins(input: {
       matchedAddress: string;
       url: string;
       at: string;
-    } | null>
+    } | null | undefined>
   >();
   const locate = (
     address: MeetingPinAddress,
@@ -245,14 +255,8 @@ export async function placePublishedMeetingPins(input: {
     matchedAddress: string;
     url: string;
     at: string;
-  } | null> => {
-    const publishedQuery = censusAddressQuery(address.geocodingAddress??address.address);
-    const street = streetKeyOf(publishedQuery);
-    const city = /^(?:city|town|village|borough|municipality)(?:\s+(?:and|&)\s+county)?\s+of\s+(.+)$/i.exec(meeting.jurisdiction)?.[1];
-    const state = meetingStateOf(meeting.bodyId??meeting.ocdId);
-    // A source's municipal name supplies locality for a street-only address; a county name does not name a city.
-    const query = city&&state&&street?.index===0&&street.length===publishedQuery.length
-      ? `${publishedQuery}, ${city}, ${state}` : publishedQuery;
+  } | null | undefined> => {
+    const query=publishedAddressQuery(address,meeting);
     if (
       !isOfficeStreetAddress(query) ||
       query.length < 3 ||
@@ -275,11 +279,11 @@ export async function placePublishedMeetingPins(input: {
         const bytes = new Uint8Array(await response.arrayBuffer());
         if (!response.ok) {
           if(response.status!==400)held.push(`${address.address}: Census HTTP ${response.status}`);
-          return null;
+          return response.status===400?null:undefined;
         }
         const finalUrl = response.url || url.href;
         if (new URL(finalUrl).hostname !== "geocoding.geo.census.gov")
-          return null;
+          return undefined;
         const point = verifiedCensusVenuePoint(
           query,
           JSON.parse(new TextDecoder().decode(bytes)),
@@ -308,7 +312,7 @@ export async function placePublishedMeetingPins(input: {
         held.push(
           `${address.address}: ${error instanceof Error ? error.message : String(error)}`,
         );
-        return null;
+        return undefined;
       }
     })();
     lookups.set(query, pending);
@@ -346,6 +350,13 @@ export async function placePublishedMeetingPins(input: {
       const prior = previous.get(meeting.id);
       const publishedLocation = meeting.venueGap?.publishedText ?? null;
       const repeated = prior?.mapPin ?? meeting.mapPin;
+      const bodyAddress=candidates.find(address=>address.basis==="BODY_OFFICE");
+      const bodyQuery=bodyAddress?[bodyAddress,...postalAddressAliases(bodyAddress,offices.get(meeting.bodyId??""))]
+        .map(address=>addressWords(publishedAddressQuery(address,meeting))).join(" | "):null;
+      let bodyTried=false,bodyTransient=false;
+      const referenceContext=(known:MeetingPinLocation|undefined)=>({boardAddressQuery:bodyAddress
+        ? bodyTried&&!bodyTransient?bodyQuery:known?.boardAddressQuery??null
+        : officesUnavailable?known?.boardAddressQuery??null:null});
       const agendaReplacesPoint=Boolean(agenda&&repeated&&
         (repeated.basis!=="MEETING"||Date.parse(agenda.provenance.collectedAt)>Date.parse(repeated.provenance.collectedAt)&&
         !repeatsPublishedVenue(agenda.address,repeated.name,repeated.address)));
@@ -353,19 +364,17 @@ export async function placePublishedMeetingPins(input: {
         repeated.publishedLocation === publishedLocation && !meeting.online && !agendaReplacesPoint&&
         repeatsPublishedVenue(publishedLocation ?? "",repeated.name,repeated.address))
         candidates.splice(candidates[0]?.basis === "MEETING" ? 1 : 0,0,repeated);
-      const expanded=candidates.flatMap(address=>[address,...postalAddressAliases(address,offices.get(meeting.bodyId??""))]);
       // An unavailable office read cannot erase a point already published for this unchanged sitting.
       if (
         officesUnavailable &&
         repeated &&
         repeated.basis !== "MEETING" &&
-        repeated.bodyId === meeting.bodyId &&
-        repeated.publishedLocation === publishedLocation &&
-        Boolean(meeting.online) === Boolean(prior?.online ?? meeting.online)
+        repeated.bodyId === meeting.bodyId
       )
         candidates.push(repeated);
       if (
         repeated && !agendaReplacesPoint&&
+        (repeated.basis!=="GOVERNMENT_OFFICE"||(repeated.boardAddressQuery??null)===bodyQuery||officesUnavailable&&!bodyAddress)&&
         repeated.publishedLocation === publishedLocation &&
         Boolean(meeting.online) === Boolean(prior?.online ?? meeting.online) &&
         candidates.some(
@@ -380,7 +389,16 @@ export async function placePublishedMeetingPins(input: {
           meetingId: meeting.id,
         });
       }
-      for (const address of expanded) {
+      // A calendar omitting an earlier hall citation does not retract its saved office point.
+      // Try current addresses first; an explicit government office still supersedes it.
+      const governmentOffice=offices.get(meeting.bodyId??"")?.governmentOffice?.address;
+      if (repeated?.basis === "GOVERNMENT_OFFICE" && repeated.bodyId === meeting.bodyId &&
+        (!governmentOffice || !isOfficeStreetAddress(governmentOffice)) &&
+        !candidates.some(address => address.basis === repeated.basis && address.address === repeated.address))
+        candidates.push(repeated);
+      for (const address of candidates.flatMap(address=>[address,...postalAddressAliases(address,offices.get(meeting.bodyId??""))])) {
+        if(address.basis==="BODY_OFFICE"&&repeated?.basis==="GOVERNMENT_OFFICE"&&
+          (repeated.boardAddressQuery??null)===bodyQuery){bodyTried=true;continue;}
         const {geocodingAddress:_query,...publishedAddress}=address;
         const cached = saved.get(
           `${address.basis}:${meeting.bodyId}:${address.address}`,
@@ -389,6 +407,7 @@ export async function placePublishedMeetingPins(input: {
           const pin = {
             ...cached,
             ...publishedAddress,
+            ...(address.basis==="GOVERNMENT_OFFICE"?referenceContext(cached):{}),
             meetingId: meeting.id,
             publishedLocation,
           };
@@ -396,9 +415,11 @@ export async function placePublishedMeetingPins(input: {
           return withPublishedPin(meeting, pin);
         }
         const point = await locate(address,meeting);
+        if(address.basis==="BODY_OFFICE"){bodyTried=true;if(point===undefined)bodyTransient=true;}
         if (!point) continue;
         const pin: MeetingPinLocation = {
           ...publishedAddress,
+          ...(address.basis==="GOVERNMENT_OFFICE"?referenceContext(repeated):{}),
           meetingId: meeting.id,
           lat: point.lat,
           lng: point.lng,

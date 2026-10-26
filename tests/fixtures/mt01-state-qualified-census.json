@@ -1,0 +1,42 @@
+{
+  "result": {
+    "input": {
+      "address": {
+        "address": "1230 W. Cherry St, WI"
+      },
+      "benchmark": {
+        "isDefault": true,
+        "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+        "id": "4",
+        "benchmarkName": "Public_AR_Current"
+      }
+    },
+    "addressMatches": [
+      {
+        "tigerLine": {
+          "side": "R",
+          "tigerLineId": "77741142"
+        },
+        "coordinates": {
+          "x": -87.927922441075,
+          "y": 43.049986307397
+        },
+        "addressComponents": {
+          "zip": "53205",
+          "streetName": "CHERRY",
+          "preType": "",
+          "city": "MILWAUKEE",
+          "preDirection": "W",
+          "suffixDirection": "",
+          "fromAddress": "1230",
+          "state": "WI",
+          "suffixType": "ST",
+          "toAddress": "1298",
+          "suffixQualifier": "",
+          "preQualifier": ""
+        },
+        "matchedAddress": "1230 W CHERRY ST, MILWAUKEE, WI, 53205"
+      }
+    ]
+  }
+}

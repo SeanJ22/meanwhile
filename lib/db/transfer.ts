@@ -3,6 +3,7 @@ import { neon, neonConfig } from "@neondatabase/serverless";
 import { countNeonBytes, databaseTransferFetch, easternDay, installNeonBytesReport, runnerClient, socketCaller, VITAL_SIGNS_REPORT_ENV, type NeonBytesHour } from "./transfer-by-caller.ts";
 
 import { currentReaderRoute } from "./reader-route.ts";
+import { adminChangesFetch } from "./admin-changes.ts";
 
 type FetchLike = typeof fetch;
 export interface DatabaseTransfer {
@@ -160,7 +161,7 @@ export function installDatabaseTransferCounter(): void {
   if (installed) return;
   installed = true;
   installNeonBytesReport();
-  neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); }, () => internal.getStore() === true);
+  neonConfig.fetchFunction = adminChangesFetch(databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); }, () => internal.getStore() === true));
   const Socket = (neonConfig.webSocketConstructor ?? globalThis.WebSocket) as typeof WebSocket | undefined;
   if (Socket) neonConfig.webSocketConstructor = countedWebSocket(Socket);
   // Long-running processes flush once a minute. The supervisor also awaits a flush before it exits.

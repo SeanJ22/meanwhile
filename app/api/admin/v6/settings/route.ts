@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane, RUNNER_ID } from "@/lib/control-plane/admin-data.ts";
@@ -24,7 +25,7 @@ async function publishedValues(): Promise<Readonly<Record<string, SettingValue>>
 }
 
 /** Every registered setting with its value, when it changed, its log, its undo and whether it is in force. Read-only. */
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });
   if (!guard.ok) return guard.status === 404 ? new NextResponse(null, { status: 404 })
@@ -44,3 +45,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ says: UNREAD }, { status: 503, headers: NO_STORE });
   }
 }
+
+export const GET = adminRead(get);

@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { matching, rejectUnknown } from "@/lib/api/params";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
@@ -10,7 +11,7 @@ export const runtime = "nodejs";
 
 const privateHeaders = { "cache-control": "no-store, no-cache, must-revalidate" };
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value, checkOrigin: false,
     nowSeconds: Math.floor(Date.now() / 1000) });
@@ -30,3 +31,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ says: "The search could not be run just now." }, { status: 503, headers: privateHeaders });
   }
 }
+
+export const GET = adminRead(get);

@@ -1,4 +1,5 @@
 import { scoreTargets, type ScoreTarget, type ScoreDeps } from "./place-target-scores.ts";
+import type { StuckCounts } from "./stuck-summary.ts";
 /** A figure this read does not have is null ("—"), never zero. Held data is read once for the whole list, never once per row. */
 import type { ExpansionScopeDecision } from "../expansion/scopes.ts";
 import type { BillingAttribution } from "../provider-billing-attribution.ts";
@@ -85,6 +86,8 @@ export interface NationalInputs {
   readonly scope: V6PlaceScope;
   readonly hunts: NationalHuntSources;
   readonly stuck: readonly StuckRowLike[] | null;
+  readonly stuckCounts?: StuckCounts;
+  readonly districtStuck?: ReadonlyMap<string,number> | null;
   readonly zipCounts: ReadonlyMap<string, number> | null;
   readonly districts: readonly DistrictInfo[] | null;
   /** Place score by place key; a key absent or null is "—". */
@@ -108,7 +111,7 @@ export function nationalRows(inputs: NationalInputs): readonly AdminV6NationalRo
         zipsTotal: inputs.zipCounts?.get(s.code) ?? null,
         zipsWorked: inState === null ? null : zipsWorkedOf(inState.filter((h) => h.type === "zcta")),
         score: score(`st:${s.code}`),
-        stuck: stuck === null ? null : stuck.byState.get(s.code)?.size ?? 0 };
+        stuck: inputs.stuckCounts ? inputs.stuckCounts.states[s.code]??0 : stuck === null ? null : stuck.byState.get(s.code)?.size ?? 0 };
     });
   }
 
@@ -124,7 +127,7 @@ export function nationalRows(inputs: NationalInputs): readonly AdminV6NationalRo
         zipsTotal: d.zips.length,
         zipsWorked: inDistrict === null ? null : zipsWorkedOf(inDistrict.filter((h) => h.type === "zcta")),
         score: score(d.placeKey),
-        stuck: stuck === null ? null : stuckIds.size };
+        stuck: inputs.districtStuck===null ? null : inputs.districtStuck ? inputs.districtStuck.get(d.placeKey)??0 : stuck === null ? null : stuckIds.size };
     });
   }
 
@@ -139,7 +142,7 @@ export function nationalRows(inputs: NationalInputs): readonly AdminV6NationalRo
       zipsTotal: 1,
       zipsWorked: own === null ? null : zipsWorkedOf(own),
       score: score(key),
-      stuck: stuck === null ? null : stuck.byPlace.get(key)?.size ?? 0 };
+      stuck: inputs.stuckCounts ? inputs.stuckCounts.places[key]??0 : stuck === null ? null : stuck.byPlace.get(key)?.size ?? 0 };
   });
 }
 
@@ -199,6 +202,8 @@ export interface NationalDeps extends ScoreDeps {
 export interface NationalSources {
   readonly hunts: NationalHuntSources;
   readonly stuck: readonly StuckRowLike[] | null;
+  readonly stuckCounts?: StuckCounts;
+  readonly countDistrictStuck?: (districts:readonly DistrictInfo[])=>Promise<ReadonlyMap<string,number>>;
 }
 
 async function targetsOf(scope: V6PlaceScope, districts: readonly DistrictInfo[] | null, deps: NationalDeps): Promise<readonly ScoreTarget[]> {
@@ -234,7 +239,8 @@ export async function v6NationalSection(input: { readonly scopeKey: string; read
     input.publishedScores ? Promise.resolve({scores:input.publishedScores,ready:true}) : wantsScores ? scoresWithin(input.scopeKey, () => targetsOf(scope, districts, deps), deps, deps.scoreBudgetMs)
       : Promise.resolve({ scores: new Map<string, number | null>() as ReadonlyMap<string, number | null>, ready: true }),
   ]);
-  const data = nationalRows({ scope, hunts: sources.hunts, stuck: sources.stuck, zipCounts, districts, scores: scored.scores });
+  const districtStuck=scope.kind==='state'&&districts&&sources.countDistrictStuck?await sources.countDistrictStuck(districts).catch(()=>null):undefined;
+  const data = nationalRows({ scope, hunts: sources.hunts, stuck: sources.stuck, stuckCounts:sources.stuckCounts,districtStuck,zipCounts, districts, scores: scored.scores });
   const missingParts = [
     ...(sources.hunts.scopes === null ? ["The saved hunt list could not be read, so hunts and ZIPs worked are unknown."]
       : sources.hunts.malformedScopes > 0 ? ["Some saved scope entries could not be read, so hunts and ZIPs worked are unknown."] : []),

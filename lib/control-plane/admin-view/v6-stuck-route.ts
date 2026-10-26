@@ -20,14 +20,14 @@ export async function v6StuckGet(request: NextRequest, which: "stuck" | "sameCau
   const query = validateV6Query(request.nextUrl.searchParams);
   if (!query.ok) return NextResponse.json({ code: query.code }, { status: 400, headers: NO_STORE });
   let read: Awaited<ReturnType<typeof population>>;
-  try { read = await population(); }
+  try { read = await population(query.scopeKey); }
   catch { return NextResponse.json({ state: "UNREAD", says: "The published work index could not be read just now, so stuck items are unknown, not zero." }, { status: 503, headers: NO_STORE }); }
   if (read === null) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so stuck items were not read." }, { status: 503, headers: NO_STORE });
   const now = new Date().toISOString();
   let doorsUnread = false;
   const shut = await (async () => { const url = controlPlaneUrlFromEnv(); try { return url ? shutDoorItems(await readShutDoorRecords(neon(url)), now) : []; } catch { doorsUnread = true; return []; } })();
   const surfaces = await readSurfaceItems(now);
-  const views = stuckViews(read.rows, query.scopeKey, now, [...shut, ...surfaces.items]);
+  const views = stuckViews(read.rows, query.scopeKey, now, [...shut, ...surfaces.items],read.summary);
   const base = { scope: query.scopeKey, revision: `${which}:${read.publishedAt ?? "unpublished"}:${query.scopeKey}`, asOf: read.publishedAt ?? now };
   const capped = views.total > STUCK_ITEM_LIMIT;
   const missingParts = [

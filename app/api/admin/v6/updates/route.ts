@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
@@ -15,7 +16,7 @@ export const runtime = "nodejs";
  * once. Merged-and-live changes from the Changes feed are folded in first; when GitHub cannot be read they are skipped
  * and the fix completions still show.
  */
-export async function GET(request: NextRequest) {
+async function get(request: NextRequest) {
   return adminGet(request, async (observedAt) => {
     const opened = await openControlPlane();
     if (!opened.ok) throw new Error(opened.detail);
@@ -34,3 +35,5 @@ export async function GET(request: NextRequest) {
     };
   });
 }
+
+export const GET = adminRead(get);

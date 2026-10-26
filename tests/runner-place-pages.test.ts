@@ -60,7 +60,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
       assert.equal(command!.env.CAPABILITY, "ROUTINE_SUPERVISOR", "the turn writes through the runner's routine write admission");
       const deadline = passDeadlineFromEnv(command!.env);
       assert.equal(run.deadlineMs, deadline + PLACE_PAGE_TURN_GRACE_MS);
-      const turn = { at: Date.now(), deadline };
+      const turn: { at: number; deadline: number; ended?: number } = { at: Date.now(), deadline };
       turns.push(turn);
       onTurn(turns.length);
       if (childStatus) return [{ status: childStatus, stdout: "", errorMessage: null }];

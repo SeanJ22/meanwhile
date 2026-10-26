@@ -102,8 +102,8 @@ import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-
 import {
   DERIVED_WIRING_SOURCE_NAMES,
   familyMembers,
-  readDerivedMeetingWiring,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { readStateWiringRows } from "../lib/civic-data/keyed-government-lookup.ts";
 import {
   buildDerivedFamily,
   derivedFamilyCandidate,
@@ -614,15 +614,10 @@ export async function promoteDerivedMeetingFamily(
     printMeetingPartitionReceipt(partition, failed, outcome, detail, kind);
     return outcome;
   };
-  const wiring = await readDerivedMeetingWiring({ store,  now: generatedAt });
-  if (wiring.kind !== "PROMOTED") {
-    return refuse(
-      wiring.kind === "NOT_RECORDED"
-        ? "No meeting-source wiring version is promoted yet, so this family has no member to read."
-        : jobFailureDetail(`The meeting-source wiring could not be read (${wiring.kind}): ${"detail" in wiring ? wiring.detail : ""}`),
-      "JOB",
-    );
-  }
+  const query = facts?.db.query ?? factReader();
+  if (!query) return refuse(jobFailureDetail("The reader connection for this state's meeting routes is unavailable."), "JOB");
+  const wiring = await readStateWiringRows(query, partition.derivedFamily!);
+  if (!wiring) return refuse("No meeting-source wiring version is promoted yet, so this family has no member to read.", "JOB");
   const members = familyMembers(wiring.value, partition.derivedFamily!);
   if (members.length === 0) {
     return refuse(`No reviewed calendar is connected in ${partition.derivedFamily} yet, so this family has no member to read.`, "JOB");
@@ -643,13 +638,7 @@ export async function promoteDerivedMeetingFamily(
     }
   }
   await recordFamilyMemberOutcomes(reads);
-  const versionId = wiring.metadata.versionId;
-  const promotedAt = wiring.metadata.promotedAt;
-  if (versionId === null || promotedAt === null) {
-    return refuse(jobFailureDetail("The promoted meeting-source wiring carries no version id or promotion time."), "JOB");
-  }
-  const wiringInput = { kind: "PROMOTED_VERSION" as const, recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE,
-    versionId, readModelSha256: sha256(canonicalCivicDataJson(wiring.value)), promotedAt };
+  const wiringInput = wiring.input;
   const sourceContentInputs: DerivedInputRef[] = [wiringInput, ...reads.flatMap(read => read.acquisitions.map(acquisition => ({
     kind: "MEMBER_ACQUISITION" as const, memberKey: read.member.id, requestedUrl: acquisition.requestedUrl, finalUrl: acquisition.finalUrl,
     httpStatus: acquisition.httpStatus, rawHash: acquisition.rawHash, retrievedAt: read.retrievedAt, horizonDay: read.horizonDay ?? generatedAt.slice(0, 10),

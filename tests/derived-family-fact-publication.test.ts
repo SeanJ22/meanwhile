@@ -63,7 +63,10 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\npromoteDerivedMeetingFamily", {
     Date, console: { log: () => {}, warn: () => {}, error: (message: string) => errors.push(message) },
-    readDerivedMeetingWiring: async () => { assert.equal(hashPass, false, "an equal source does not reread the wiring payload"); return { kind: "PROMOTED", value: { records: [member] }, metadata: { versionId: "wiring", promotedAt: anchor } }; },
+    readStateWiringRows: async () => { assert.equal(hashPass, false, "an equal source does not reread the wiring payload"); return { value: { records: [member] },
+      input: { kind: "PROMOTED_VERSION", recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE,
+        versionId: "wiring", readModelSha256: sha256(canonicalCivicDataJson({ records: [member] })), promotedAt: anchor } }; },
+    factReader: () => null,
     familyMembers, readPreviousMeetingPartition: async () => { assert.equal(hashPass, false, "an equal source hash never reads the held family"); return null; },
     meetingFetchPass: () => meetingFetchPass({ fetchImpl: (async input => {
       assert.equal(String(input), route); fetched++;

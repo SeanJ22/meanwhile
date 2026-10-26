@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 129 (main ccb676a7a, live 2:40 PM EDT Oct 26): RT-01b, bills, RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01. Runner loaded 129 by itself at 2:47:57 PM (heartbeat testedSha ccb676a7a, codeIdentity CONSISTENT; no restart asked). RIVER: 43783ed16. GATING: release 130 on river-next-130b b139d5f33 (MT-02 87577ea3a + DB-05 3d4e87f62; DB-05's c1bf8151f and 0be79e9a5 turned away: 12 failing tests on DB-05's own branch). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 129 (main ccb676a7a, live 2:40 PM EDT Oct 26): RT-01b, bills, RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01. Runner loaded 129 by itself at 2:47:57 PM (heartbeat testedSha ccb676a7a, codeIdentity CONSISTENT; no restart asked). RIVER: 43783ed16. GATING: release 130 on river-next-130c c96b5849e (URGENT RIVER-LS1 84db3f3f0 + MT-02 87577ea3a + DB-05 3d4e87f62; DB-05's c1bf8151f and 0be79e9a5 turned away: 12 failing tests on DB-05's own branch). See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T19:25:00Z
+heartbeat: 2026-10-26T19:41:00Z
 
 
 <!-- READY-LIST -->
@@ -76,7 +76,10 @@ The CT-01 session is alive and posts READY itself, with the ballot date text fix
 FM-01's READY says its durable progress raises bytes per federal-money job by 101%. River keeps its fix (lib/federal-money/refresh.ts reads only normalizedPayload.captures) and measures usaspending and openfema for two full hours before and after 129; if they go up, it goes here and DB-05 owns the fix.
 Before (reader + control plane, from database_transfer_hourly): usaspending 143.6 MB (9 AM), 82.1 MB (10 AM); openfema 13.2 MB (9 AM), 7.5 MB (10 AM). Earlier hours for range: usaspending 71-159 MB/h, openfema 8.7-21.6 MB/h (3-8 AM).
 
-**Release 130: MT-02 + DB-05's first piece (3d4e87f62), gating on river-next-130b b139d5f33 from 3:15 PM**
+**Release 130 (URGENT cost fix first): RIVER-LS1 + MT-02 + DB-05's first piece, gating on river-next-130c c96b5849e from 3:40 PM**
+| READY | Lane | State |
+|---|---|---|
+| 84db3f3f0 (stream/river-legiscan-once) | RIVER-LS1: the LegiScan fan-out stops reading each new bill part back whole about six times (promote re-selected the row; the reader check read payload, proof and candidate; publish read the part back for a hash it had; the session manifest check and resume re-read every part). Rows the run just wrote are checked by their small metadata row instead; any mismatch reads as before; no check skipped | URGENT, scan clean. Test (real store, 751-bill session in 4 parts): full publish 86.9 MB / 19 whole reads -> 0.31 MB / 0; with DB-05 alone still 77.4 MB. Expected legiscan-bulk reads 2.6+ GB/h -> 0.02-0.05 GB/h during fan-out hours |
 | READY | Lane | State |
 |---|---|---|
 | 3d4e87f62 (origin/stream/db-05, posted 12:39 PM) | DB-05 shared current-version reads: every runtime read checks current row versions before an unchanged body crosses the connection; all 525 bypassCache uses and the bypass API removed; folds DB-04 (39f637b67) and disposes of every held DB-03 step (folded or replaced; portrait duplicates stay out) | Scan clean (bypassCache removed, a test forbids it; no proof files; one additive migration expand, DB-03_process_transfer). Its READY says its own tsc and full suite were still running. 429 files; conflicts with the 129 tree in 4 files (lib/db/transfer-by-caller.ts, scripts/pilot-runner.mts, 2 tests). Folding it now would hold the place map and eight lanes about another hour, so it ships as 130 right after 129 (about 15 minutes' delay for DB-05). Fold resolved locally (fold/db-05 139d77c73 on the MT-02 tree; 4 conflicts; DB-05's own admin-native-version-reads test also fails at 3d4e87f62 and was fixed in a8029fc64 for DB-05 to confirm). Re-folded onto 129 + MT-02 as fold/130 (same resolutions). DB-05's next READY pieces c1bf8151f (source hash heads, source-driven cadence) and 0be79e9a5 (adapter correction) also folded, scan clean; one conflict in Admin door-queries (DB-05 made the same shut-door fix on its own; River's version kept for river's request bounds). Tree 3f914357a. Release 130 = MT-02 + DB-05, gated right after 129 ships |
@@ -108,6 +111,9 @@ DB-05: fix on stream/db-05 and post a new READY; it rides the next release.
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 3:40 PM EDT: Neon cost spike, urgent fix gating
+The 3 PM hour already reads 8.64 GB on the reader database at 3:36 PM, 6.21 GB of it legiscan-bulk (2 PM hour: 5.60 GB reader, 1.99 GB legiscan-bulk). Cause: release 129's bill fan-out writes each session part once and reads it back whole about six times (19:00Z: 2.60 GB read in 489 requests vs 761 MB written in 35). Fix RIVER-LS1 84db3f3f0 is READY and gating as the head of release 130, with MT-02 and DB-05's first piece riding along (gate restarted 3:40 PM; about 50 minutes, then deploy).
 
 ### 3 PM EDT (3:25 PM)
 - **Live for readers: release 129** (main ccb676a7a, 2:40 PM). Runner loaded it by itself at 2:47:57 PM.

@@ -10,6 +10,7 @@ import { federalMoneyRows } from "../lib/federal-money/view.ts";
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
 import { locateFederalMoneyFacts } from "../lib/federal-money/locations.ts";
 import { federalMoneyLookupKeys, federalMoneyPartitionOf, federalMoneyPartitionScope, type FederalMoneyFact } from "../lib/federal-money/model.ts";
+import { installFederalMoneyRows } from "./helpers/federal-money-rows.ts";
 
 const county = "ocd-division/country:us/state:ar/county:ouachita";
 const body = `${county}#governing`;
@@ -48,7 +49,7 @@ test("FAC source-reported state locates audits on the state card and never assig
 test("federal identity SQL reads only each page's exact native recipients and geography", async t => {
   const db = new PGlite();
   try {
-    await db.exec("CREATE TABLE civic_data_promotions (record_class text, scope text, payload jsonb, key text GENERATED ALWAYS AS (record_class || ':' || scope) STORED UNIQUE, PRIMARY KEY (record_class, scope)); CREATE INDEX money_identity ON civic_data_promotions USING gin ((payload->'lookupKeys') jsonb_path_ops) WHERE payload ? 'lookupKeys'");
+    await db.exec("CREATE TABLE civic_data_promotions (record_class text, scope text, payload jsonb, key text GENERATED ALWAYS AS (record_class || ':' || scope) STORED UNIQUE, PRIMARY KEY (record_class, scope))");
     const insert = (recordClass: string, scope: string, payload: unknown) => db.query("INSERT INTO civic_data_promotions VALUES ($1,$2,$3::jsonb)", [recordClass, scope, JSON.stringify(payload)]);
     await insert("REGISTRATION", "US-AR:registration:v1", { governments: [government, { ...government, id: "unrelated-government", nativeIds: { census_pid6: "999" } },
       { ...government, id: "synthetic-school", nativeIds: { nces_leaid: "0500001" } }, { ...government, id: "synthetic-ocd", nativeIds: { ocd_id: county } }],
@@ -72,13 +73,14 @@ test("federal identity SQL reads only each page's exact native recipients and ge
     await insert("FEDERAL_MONEY", "synthetic-foreign-entity-partition", { formatVersion: 2, source: "sam-gov-entities", state: "CA", lookupKeys: ["uei:SYNTHETICUEI"], records: [
       { ...fact, id: "synthetic:foreign-entity", kind: "ENTITY", state: "CA", uei: "SYNTHETICUEI", identifiers: { census_pid6: "999" } }] });
     await db.exec("INSERT INTO civic_data_promotions (record_class, scope, payload) SELECT 'FEDERAL_MONEY', 'synthetic-noise-' || n, jsonb_build_object('formatVersion', 2, 'source', CASE WHEN n % 2 = 0 THEN 'sam-gov-entities' ELSE 'federal-audit-clearinghouse' END, 'state', 'AR', 'lookupKeys', jsonb_build_array('uei:NOISE-' || n, 'report:NOISE-' || n), 'records', '[]'::jsonb) FROM generate_series(1,4096) n");
+    await installFederalMoneyRows(db);
     let returnedBytes = 0;
     const plans = new Map<string, string>();
     const query: ReadOnlyQuery = async statements => {
       const result: Row[][] = [];
       for (const statement of statements) {
         assert.doesNotMatch(statement.text, /REGISTRY_RUNTIME_BINDING|CENSUS_GEOGRAPHY/);
-        if (statement.text.includes("p.payload->'lookupKeys'")) {
+        if (statement.text.includes("r.aliases&&")) {
           const plan = await db.query(`EXPLAIN (FORMAT JSON) ${statement.text}`, [...statement.params]);
           plans.set(statement.text, JSON.stringify(plan.rows));
         }
@@ -155,9 +157,9 @@ test("federal identity SQL reads only each page's exact native recipients and ge
       assert.deepEqual(joined[1].bodyIds, [body, "synthetic-ocd"].sort());
       assert.ok(joined.every(row => row.joinStatus === "JOINED"));
     });
-    await t.test("both exact recipient lookups use the partition key index", () => {
+    await t.test("both exact recipient lookups use the native row index", () => {
       assert.equal(plans.size, 2);
-      for (const plan of plans.values()) assert.match(plan, /money_identity/);
+      for (const plan of plans.values()) assert.match(plan, /civic_data_rows_federal_native/);
     });
   } finally { await db.close(); }
 });
@@ -183,24 +185,24 @@ test("one funded recipient's UEI index excludes its award history and keeps its 
   assert.ok(partitions[2].includes(`id:${registration.id}`));
 });
 
-test("cold native lookup plans select one partition among 100,000 facts and expand it once", async () => {
+test("cold native lookup plans select exact rows among 100,000 facts without expanding a partition", async () => {
   const db = new PGlite();
   try {
     await db.exec("CREATE TABLE civic_data_promotions (key text PRIMARY KEY, record_class text, scope text, payload jsonb);" +
       " CREATE UNIQUE INDEX promotion_scope ON civic_data_promotions (record_class, scope);" +
-      " CREATE INDEX money_native ON civic_data_promotions USING gin ((payload->'lookupKeys') jsonb_path_ops) WHERE payload ? 'lookupKeys';" +
       " INSERT INTO civic_data_promotions SELECT 'partition:' || part, 'FEDERAL_MONEY', 'partition:' || part," +
       " jsonb_build_object('formatVersion',2,'source','sam-gov-entities','state','AR','partition',jsonb_build_object('year','registration','place','fixture:' || part,'shard','')," +
       " 'lookupKeys',jsonb_agg('id:sam-gov-entities:' || n) || jsonb_agg('uei:UEI' || n)," +
       " 'records',jsonb_agg(jsonb_build_object('id','sam-gov-entities:' || n,'uei','UEI' || n,'kind','ENTITY','identifiers','{}'::jsonb,'bodyIds','[]'::jsonb,'title',repeat(md5(n::text),8))))" +
       " FROM (SELECT n, (n-1)/500 AS part FROM generate_series(1,100000) n) native GROUP BY part");
+    await installFederalMoneyRows(db);
     const stats = await db.query("SELECT last_analyze, last_autoanalyze FROM pg_stat_user_tables WHERE relname = 'civic_data_promotions'");
     assert.deepEqual(stats.rows, [{ last_analyze: null, last_autoanalyze: null }]);
     const plans: Record<string, unknown>[] = [];
     const query: ReadOnlyQuery = async statements => {
       const rows: Row[][] = [];
       for (const statement of statements) {
-        if (statement.text.startsWith("WITH matched")) {
+        if (statement.text.includes("FROM civic_data_rows r")) {
           const plan = await db.query(`EXPLAIN (ANALYZE, FORMAT JSON) ${statement.text}`, [...statement.params]);
           plans.push(((plan.rows[0] as Record<string, unknown>)["QUERY PLAN"] as { Plan: Record<string, unknown> }[])[0].Plan);
         }
@@ -219,8 +221,8 @@ test("cold native lookup plans select one partition among 100,000 facts and expa
     const nodes = (plan: Record<string, unknown>): Record<string, unknown>[] => [plan, ...(plan.Plans as Record<string, unknown>[] ?? []).flatMap(nodes)];
     for (const plan of plans) {
       const all = nodes(plan);
-      assert.ok(all.some(node => node["Index Name"] === "money_native"));
-      assert.ok(all.every(node => node["Relation Name"] !== "civic_data_promotions" || node["Node Type"] !== "Seq Scan"));
+      assert.ok(all.some(node => String(node["Index Name"]??"").startsWith("civic_data_rows_")));
+      assert.ok(all.every(node => node["Relation Name"] !== "civic_data_rows" || node["Node Type"] !== "Seq Scan"));
       for (const node of all.filter(node => node["Node Type"] === "Function Scan")) assert.ok(Number(node["Actual Loops"]) <= 1);
     }
   } finally { await db.close(); }

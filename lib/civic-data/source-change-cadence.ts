@@ -69,31 +69,42 @@ export async function readSourceChangeHistory(query: Query, tasks: readonly Pick
   const rows = await query(`WITH tasks AS (
     SELECT id,source_id,record_class,scope,parser_version FROM jsonb_to_recordset($1::jsonb) AS t(id text, source_id text, record_class text, scope text, parser_version text)
   ) SELECT t.id,h.raw_hash,h.observed_from,h.last_changed_at,h.changes,h.mean_change_ms FROM tasks t CROSS JOIN LATERAL (
-    WITH recent_candidates AS (
-      SELECT c.id,c.raw_hash
-      FROM civic_data_candidates c
-      WHERE c.source_id=t.source_id AND c.record_class=t.record_class AND c.scope=t.scope
-        AND c.parser_version=t.parser_version AND c.state='PROMOTED' AND c.acquisition_succeeded=true
-        AND c.raw_hash ~ '^[a-f0-9]{64}$'
-        AND NOT (c.candidate ? 'bootstrapImport')
-        AND coalesce(c.candidate#>>'{stateRetirement,kind}','') <> 'STATE_AUTHORITY_RETIREMENT'
-        AND coalesce(c.candidate#>>'{retrieval,rawHashBasis}','') = coalesce((
-          SELECT head.candidate#>>'{retrieval,rawHashBasis}' FROM civic_data_promotions p
-          JOIN civic_data_candidates head ON head.id=p.current_version_id
-          WHERE p.record_class=t.record_class AND p.scope=t.scope AND p.source_id=t.source_id), '')
-      ORDER BY c.retrieved_at DESC,c.id DESC LIMIT 64
+    WITH matched_scopes AS (
+      SELECT p.scope,coalesce(head.candidate#>>'{retrieval,rawHashBasis}','') AS hash_basis
+      FROM civic_data_promotions p JOIN civic_data_candidates head ON head.id=p.current_version_id
+      WHERE p.record_class=t.record_class AND p.source_id=t.source_id
+        AND (p.scope=t.scope OR t.id='member-offices' AND p.scope ~ '^US-[A-Z]{2}:state-legislator-member-offices$')
+        AND (t.id<>'member-offices' OR p.scope<>t.scope OR NOT EXISTS(
+          SELECT 1 FROM civic_data_promotions s WHERE s.record_class=t.record_class AND s.source_id=t.source_id
+            AND s.scope ~ '^US-[A-Z]{2}:state-legislator-member-offices$'))
+    ), recent_candidates AS (
+      SELECT edition.id,edition.scope,edition.raw_hash FROM matched_scopes s CROSS JOIN LATERAL (
+        SELECT c.id,c.scope,c.raw_hash FROM civic_data_candidates c
+        WHERE c.source_id=t.source_id AND c.record_class=t.record_class AND c.scope=s.scope
+          AND c.parser_version=t.parser_version AND c.state='PROMOTED' AND c.acquisition_succeeded=true
+          AND c.raw_hash ~ '^[a-f0-9]{64}$' AND NOT (c.candidate ? 'bootstrapImport')
+          AND coalesce(c.candidate#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'
+          AND coalesce(c.candidate#>>'{retrieval,rawHashBasis}','')=s.hash_basis
+        ORDER BY c.retrieved_at DESC,c.id DESC LIMIT 64
+      ) edition
     ), recent AS (
-      SELECT c.id,c.raw_hash,e.at AS observed_at FROM recent_candidates c
+      SELECT c.id,c.scope,c.raw_hash,e.at AS observed_at FROM recent_candidates c
       JOIN civic_data_candidate_events e ON e.candidate_id=c.id AND e.sequence=1
     ), ordered AS (
-      SELECT id,raw_hash,observed_at, lag(raw_hash) OVER (ORDER BY observed_at,id) AS previous_hash FROM recent
+      SELECT id,scope,raw_hash,observed_at,lag(raw_hash) OVER (PARTITION BY scope ORDER BY observed_at,id) AS previous_hash FROM recent
     ), changes AS (
-      SELECT id,raw_hash,observed_at FROM ordered WHERE previous_hash IS NULL OR raw_hash <> previous_hash
-    ) SELECT (array_agg(raw_hash ORDER BY observed_at DESC,id DESC))[1] AS raw_hash,
-      min(observed_at)::text AS observed_from, max(observed_at)::text AS last_changed_at,
-      (count(*)-1)::int AS changes,
-      CASE WHEN count(*)>1 THEN extract(epoch FROM max(observed_at)-min(observed_at))*1000/(count(*)-1) END AS mean_change_ms
-      FROM changes HAVING count(*)>0
+      SELECT id,scope,raw_hash,observed_at FROM ordered WHERE previous_hash IS NULL OR raw_hash<>previous_hash
+    ), per_scope AS (
+      SELECT scope,(array_agg(raw_hash ORDER BY observed_at DESC,id DESC))[1] AS raw_hash,
+        min(observed_at) AS observed_from,max(observed_at) AS last_changed_at,(count(*)-1)::int AS changes,
+        CASE WHEN count(*)>1 THEN extract(epoch FROM max(observed_at)-min(observed_at))*1000/(count(*)-1) END AS mean_change_ms
+      FROM changes GROUP BY scope
+    ) SELECT CASE WHEN t.id='member-offices'
+        THEN encode(sha256(convert_to(string_agg(scope||':'||raw_hash,',' ORDER BY scope),'UTF8')),'hex')
+        ELSE max(raw_hash) END AS raw_hash,
+      min(observed_from)::text AS observed_from,max(last_changed_at)::text AS last_changed_at,
+      sum(changes)::int AS changes,min(mean_change_ms) AS mean_change_ms
+      FROM per_scope HAVING count(*)>0
   ) h`, [JSON.stringify(tasks.map(task => ({ id: task.id, source_id: task.sourceId, record_class: task.recordClass,
     scope: task.scope, parser_version: task.parserVersion })))]);
   return new Map(rows.map(row => [String(row.id), {

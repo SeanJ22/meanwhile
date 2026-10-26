@@ -101,3 +101,31 @@ test("Postgres derives source movement from exact scope/parser/hash format; prom
     lastChangedAt: new Date(start + 2 * DAY).toISOString(), changes: 1, meanChangeMs: 2 * DAY });
   assert.ok(bytes < 512, `history response is ${bytes} bytes despite megabytes of held bodies`);
 });
+
+test("state member-office histories count changes within each state and retire the national clock",async t=>{
+  const pg=new PGlite();t.after(()=>pg.close());
+  await pg.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,
+    parser_version text,state text,acquisition_succeeded boolean,raw_hash text,candidate jsonb,retrieved_at timestamptz);
+    CREATE TABLE civic_data_candidate_events(candidate_id text,sequence int,at timestamptz);
+    CREATE TABLE civic_data_promotions(source_id text,record_class text,scope text,current_version_id text);`);
+  const task=AUTOMATIC_REFRESH_TASKS.find(row=>row.id==="member-offices")!;
+  const add=async(id:string,scope:string,day:number,hash:string)=>{
+    const at=new Date(start+day*DAY).toISOString();
+    await pg.query("INSERT INTO civic_data_candidates VALUES($1,$2,$3,$4,$5,'PROMOTED',true,$6,$7::jsonb,$8)",
+      [id,task.sourceId,task.recordClass,scope,task.parserVersion,hash.repeat(64),JSON.stringify({retrieval:{rawHashBasis:"SOURCE_CONTENT_V1"},readModel:"unread office source evidence".repeat(20_000)}),at]);
+    await pg.query("INSERT INTO civic_data_candidate_events VALUES($1,1,$2)",[id,at]);
+  };
+  const ca="US-CA:state-legislator-member-offices",tx="US-TX:state-legislator-member-offices";
+  await add("old-national",task.scope,-20,"f");await add("ca-first",ca,0,"a");await add("ca-unchanged",ca,1,"a");
+  await add("ca-changed",ca,2,"b");await add("tx-first",tx,.5,"c");await add("tx-unchanged",tx,3,"c");
+  for(const [scope,id]of [[task.scope,"old-national"],[ca,"ca-changed"],[tx,"tx-unchanged"]])
+    await pg.query("INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4)",[task.sourceId,task.recordClass,scope,id]);
+  let bytes=0;
+  const history=(await readSourceChangeHistory(async(text,params)=>{const rows=(await pg.query<Record<string,unknown>>(text,[...(params??[])])).rows;bytes+=JSON.stringify(rows).length;return rows;},[task])).get(task.id)!;
+  assert.match(history.rawHash,/^[a-f0-9]{64}$/);
+  assert.equal(history.observedFrom,AT);
+  assert.equal(history.lastChangedAt,new Date(start+2*DAY).toISOString());
+  assert.equal(history.changes,1,"two states' different hashes are not a source change");
+  assert.equal(history.meanChangeMs,2*DAY);
+  assert.ok(bytes<600,"source bodies and event histories stay inside Postgres");
+});

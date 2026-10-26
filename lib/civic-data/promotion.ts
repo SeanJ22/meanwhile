@@ -28,6 +28,7 @@ import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { freezeDurableJson } from "./durable-json.ts";
 import { immutableStateCandidate, largePayloadScope, statePublicationScope } from "./state-publication.ts";
+import type { SourceHashConfirmation } from "./source-hash.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -138,7 +139,7 @@ export async function processRegisteredRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   // Rechecks keep the held version by default. Explicit false is reserved for
   // callers that need a distinct candidate even when its facts are unchanged.
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly inputDigest?: string } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
@@ -186,6 +187,27 @@ export async function processRegisteredRoutineCandidate(
     ),
     now,
   );
+}
+
+/** River's repeated-input shortcut also covers a deterministic partial source pass.
+ * Reuse its original retrieval: checking a partial input again cannot refresh facts it did not read. */
+export async function confirmRepeatedRoutineInputs(store: RoutineDataStore, contractId: string, inputDigest: string,
+  now: string): Promise<SourceHashConfirmation | null> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
+  if (!store.confirmUnchanged) return null;
+  const contract = requiredRoutineContract(contractId), task = routineTaskFromContract(contract);
+  const pointer = await store.readPromotionIdentity(contract.recordClass, contract.scope), held = pointer?.latestConfirmation;
+  if (!pointer || !held || held.inputDigest !== inputDigest || held.versionId !== pointer.versionId ||
+    pointer.lastKnownGoodVersionId !== pointer.versionId || pointer.sourceId !== contract.sourceId ||
+    held.sourceId !== contract.sourceId || held.parserVersion !== task.parserVersion) return null;
+  const head = await store.readSourceHead(contract.recordClass, contract.scope);
+  if (!head || head.versionId !== pointer.versionId || head.candidateState !== "PROMOTED" || !head.acquisitionSucceeded ||
+    head.imported || head.normalizedHash !== held.readModelHash || head.parserVersion !== held.parserVersion) return null;
+  const at = await routineEventObservedAt(store, contract.recordClass, contract.scope, now);
+  const result = await store.confirmUnchanged({sourceId: held.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+    parserVersion: held.parserVersion, pointerVersionId: head.versionId, readModelHash: held.readModelHash, basis: held.basis,
+    retrieval: held.retrieval, stamps: held.stamps, inputDigest}, at);
+  return result.kind === "CONFIRMED" ? {head, at: result.at} : null;
 }
 
 /** A fan-out contract owns a scope family: its per-state marker plus one candidate per `<sourceId>:<officeholderId>`. */

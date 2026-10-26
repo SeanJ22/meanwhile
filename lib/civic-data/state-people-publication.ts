@@ -4,7 +4,7 @@ import type { OfficeholderSet } from "../officials/types.ts";
 import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { readOpenStatesPeopleProjection, mergeStatePeople } from "../state-rollcalls/legislators.ts";
-import { processRegisteredRoutineCandidate } from "./promotion.ts";
+import { confirmRepeatedRoutineInputs, processRegisteredRoutineCandidate } from "./promotion.ts";
 import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
@@ -70,6 +70,22 @@ const hash = (value:unknown) => createHash("sha256").update(typeof value === "st
 interface StatePeopleEvidence {
   readonly gaps?: readonly {sourceUrl:string;detail:string}[];
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
+}
+
+type StatePeopleInputs = {state:string;roster:OfficeholderSet;acquisitions:readonly StatePeopleAcquisition[];releaseId:string} & StatePeopleEvidence;
+/** Source bytes and parsed inputs, independent of the time this pass observed them. */
+export function statePeopleInputDigest(input: StatePeopleInputs): string {
+  const observations = new Set(["generatedAt","collectedAt","checkedAt","retrievedAt"]);
+  const roster = JSON.parse(JSON.stringify(input.roster,(key,value)=>observations.has(key)?undefined:value));
+  return hash({kind:"state-people-inputs/2",parserVersion:PLURAL_PARSER_VERSION,state:input.state.toLowerCase(),
+    releaseId:input.releaseId,roster,rawHash:peopleSourceContentHash(input.acquisitions,input.roster),
+    gaps:input.gaps ?? [],excludedFacts:input.excludedFacts ?? null});
+}
+
+export async function confirmRepeatedStatePeopleInputs(input: StatePeopleInputs & {store:RoutineDataStore;now:string}) {
+  const result = await confirmRepeatedRoutineInputs(input.store,`openstates-people-${input.state.toLowerCase()}`,statePeopleInputDigest(input),input.now);
+  if(result)await recordPeopleSourceChecks({store:input.store,head:result.head,pages:input.acquisitions});
+  return result;
 }
 
 export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet;captures:readonly StatePeopleCapture[];releaseId:string;now:string;sourceRawHash?:string} & StatePeopleEvidence): RoutineCandidate {
@@ -164,7 +180,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
   const candidate = statePeopleCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,
     sourceRawHash:peopleSourceContentHash(input.acquisitions,input.roster),excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
-    prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault});
+    prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault,inputDigest:statePeopleInputDigest(input)});
   if(outcome.promoted){const head=await input.store.readSourceHead(candidate.recordClass,candidate.scope);
     if(head?.versionId===outcome.promoted.versionId)await recordPeopleSourceChecks({store:input.store,head,pages:input.acquisitions});}
   if (outcome.promoted) {

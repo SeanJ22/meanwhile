@@ -40,6 +40,8 @@ export function bindPeopleSourceHashes<T>(value:T,captures:readonly StatePeopleC
     set.add(page.capture.rawHash);hashes.set(key,set);
   }
   return mapSourceRows(value,row=>{
+    if(Array.isArray(row.sourceHolders))row={...row,sourceHolders:[...new Map(row.sourceHolders.map(source=>[
+      canonicalCivicDataJson(JSON.parse(JSON.stringify(source,(key,value)=>["collectedAt","checkedAt","verifiedAt"].includes(key)?undefined:value))),source])).values()]};
     if(typeof row.sourceUrl!=="string"||typeof row.collectedAt!=="string")return row;
     const evidenceUrl=typeof row.evidenceSourceUrl==="string"?row.evidenceSourceUrl:row.sourceUrl;
     const matches=hashes.get(canonicalCivicDataJson([logicalAddress(evidenceUrl),Date.parse(row.collectedAt)]));

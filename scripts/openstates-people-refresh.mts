@@ -5,7 +5,7 @@ import { PLURAL_REVISION_URL, PLURAL_STATES } from "../lib/sources/plural/target
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { confirmStatePeopleSource, publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
+import { confirmRepeatedStatePeopleInputs, confirmStatePeopleSource, publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
 import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure, withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
@@ -35,7 +35,8 @@ async function main() {
     console.log(failed.line); process.exitCode = 2; return;
   }
   const now = new Date().toISOString();
-  const confirmed = await confirmStatePeopleSource({ store, ...acquired, now });
+  const confirmed = await confirmStatePeopleSource({ store, ...acquired, now }) ??
+    await confirmRepeatedStatePeopleInputs({store,...acquired,now});
   if (confirmed) {
     console.log(`RCD_RECEIPT=${JSON.stringify({ source: contractId, ...sourceHashReceiptFields(confirmed), structuralReleaseContract: ZERO_RELEASE_EVENTS })}`);
     return;

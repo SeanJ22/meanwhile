@@ -3,7 +3,7 @@ import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { confirmSourceHashUnchanged, sourceContentHash, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
-import { confirmStatePeopleSource, peopleSourceContentHash, publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
+import { confirmRepeatedStatePeopleInputs, confirmStatePeopleSource, peopleSourceContentHash, publishStatePeople, statePeopleInputDigest } from "../lib/civic-data/state-people-publication.ts";
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
 import { PLURAL_PARSER_VERSION } from "../lib/sources/plural/targets.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
@@ -65,4 +65,29 @@ test("the real source-head selector and unchanged event rule compare current sou
       retrieval: { requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash: "f".repeat(64), retrievedAt: at } };
     assert.equal((await store.confirmUnchanged!(bad, new Date().toISOString())).kind, "HASH_DIFFERS");
   });
+});
+
+test("repeated partial inputs skip held people without refreshing unread facts", async () => {
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore();
+  const input = {store,vault,state:"az",roster:{...roster,currentMembershipComplete:false},acquisitions,
+    releaseId:"a".repeat(40),gaps:[{sourceUrl:url,detail:"SOURCE_PARTIAL: another publisher is unavailable"}],now:at};
+  const first=await publishStatePeople(input);assert.ok(first.outcome.promoted);
+  // The first merge records native aliases and original source holders once.
+  await publishStatePeople({...input,now:later});
+  const replay=await publishStatePeople({...input,now:later});
+  assert.ok(replay.outcome.confirmed,JSON.stringify(replay.outcome.candidate.candidate.changeSet));
+  const pointer = await store.readPromotionIdentity("STATE_LEGISLATOR",scope);
+  assert.equal(pointer?.latestConfirmation?.inputDigest,statePeopleInputDigest(input));
+  for(const method of ["readCandidate","readCandidatePath","readCandidateField","readPromotion","readPublishedCandidateMetadata","events"] as const)
+    Object.assign(store,{[method]:async()=>{throw new Error(`partial confirmation read ${method}`);}});
+  const checkedAt="2026-10-01T02:00:00.000Z";
+  const rechecked={...input,now:checkedAt,roster:{...input.roster,generatedAt:checkedAt},
+    acquisitions:input.acquisitions.map(row=>({...row,retrievedAt:checkedAt}))};
+  assert.equal(statePeopleInputDigest(rechecked),statePeopleInputDigest(input));
+  assert.ok(await confirmRepeatedStatePeopleInputs(rechecked));
+  const latest=await store.readPromotionIdentity("STATE_LEGISLATOR",scope);
+  assert.equal(latest?.latestConfirmation?.retrieval.retrievedAt,at,"partial confirmation preserves the original aggregate freshness");
+  assert.equal(latest?.latestConfirmation?.observedAt,checkedAt);
+  assert.equal(await confirmRepeatedStatePeopleInputs({...rechecked,gaps:[]}),null,"changed parse coverage must be checked normally");
+  assert.equal(await confirmRepeatedStatePeopleInputs({...rechecked,acquisitions:rechecked.acquisitions.map(row=>({...row,body:row.body+"# new bytes\n"}))}),null);
 });

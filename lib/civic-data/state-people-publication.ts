@@ -146,7 +146,7 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
   options:import("../photos/portrait-work.ts").StandingPortraitOptions = {}) {
   const clock = options.now ?? (()=>new Date().toISOString());
   const now = input.now ?? clock();
-  const { isOfficialSource } = await import("./source-authority.ts");
+  const { isOfficialSource,sourceAuthority } = await import("./source-authority.ts");
   const { imagesIn } = await import("../hunt/portrait-pick.ts");
   const { portraitHash,profilePortraitImageUrls } = await import("../photos/evidence.ts");
   const { portraitBindingMatches } = await import("../photos/binding.ts");
@@ -185,6 +185,7 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
     if (sourceSignal.aborted) { code="STATE_PORTRAIT_INTERRUPTED"; detail="The pass deadline interrupted this attempt; it continues on the next pass."; }
     excludedFacts.push({key:`${person.personId ?? person.id}:portrait`,code,detail,
       record:{personId:person.personId ?? person.id,sourceUrl:page?.finalUrl ?? person.websiteUrl,attemptedAt:clock(),profiles:portraitProfileLinks(person),
+        entryParserVersion:sourceAuthority("official-state-people")?.parserVersion,
         ...(person.portraitCandidate ? {portraitEntry:person.portraitCandidate} : {}),
         ...(profileAttempts ? {profileAttempts} : {}),...(sourceSignal.aborted ? {interrupted:true} : {}),
         ...(page ? {sourceRetrievedAt:page.retrievedAt,sourceCheckedAt:page.checkedAt,rawHash:page.sha256,vaultKey:page.vaultKey} : {}),

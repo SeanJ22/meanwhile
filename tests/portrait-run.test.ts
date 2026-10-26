@@ -13,6 +13,7 @@ import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
 import { portraitDueAt, portraitProfileLinks, PORTRAIT_RETRY_MS } from "../lib/photos/portrait-work.ts";
 import { MemoryEvidenceStore, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
+import { sourceAuthority } from "../lib/civic-data/source-authority.ts";
 
 const vault = new MemoryEvidenceStore();
 const SOURCE_DATE = "2026-10-08T12:00:00.000Z", START = "2026-10-09T21:00:00.000Z", VERIFIED = "2026-10-09T21:00:06.000Z";
@@ -53,9 +54,11 @@ test("a changed portrait entry is due even when the image URL stays the same", a
   const person = { ...list.everyone[0], profileUrls:["https://legislature.example.gov/old-entry","https://legislature.example.gov/new-entry"],
     portraitCandidate: { imageUrl: "https://legislature.example.gov/jane.png", sourceUrl: "https://legislature.example.gov/old-entry", collectedAt: SOURCE_DATE } };
   const attemptedAt = START;
-  const attempt = { key: "attempt", code: "STATE_PORTRAIT_NOT_FOUND", detail: "No portrait", record: { attemptedAt, profiles: portraitProfileLinks(person),portraitEntry:person.portraitCandidate } };
+  const attempt = { key: "attempt", code: "STATE_PORTRAIT_NOT_FOUND", detail: "No portrait", record: { attemptedAt, profiles: portraitProfileLinks(person),portraitEntry:person.portraitCandidate,
+    entryParserVersion:sourceAuthority("official-state-people")?.parserVersion } };
   assert.equal(portraitDueAt(person, attempt, () => false), Date.parse(attemptedAt) + PORTRAIT_RETRY_MS);
   assert.equal(portraitDueAt(person, { ...attempt, record: { attemptedAt } }, () => false), 0, "an old attempt without an entry binding cannot defer the current entry");
+  assert.equal(portraitDueAt(person, { ...attempt, record: { ...attempt.record,entryParserVersion:"official-legislature-people/1" } }, () => false), 0);
   assert.equal(portraitDueAt({ ...person, portraitCandidate: { ...person.portraitCandidate, sourceUrl: "https://legislature.example.gov/new-entry" } }, attempt, () => false), 0);
 });
 

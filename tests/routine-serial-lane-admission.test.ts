@@ -190,3 +190,15 @@ test("due explainers, voting sites and meetings each obtain memory before anothe
   assert.equal(balancedStarted.length, 26);
   assert.ok(20_244 - (count("voting-sites:") * 512 + count("measure-translations:") * 342 + count("meetings:") * 1447) >= 768);
 });
+
+test("state place maps take one early turn after held ballot files, ahead of voting sites and long reads", () => {
+  const maps = ROUTINE_SOURCE_TASKS.filter(task => task.id.startsWith("place-map-")).map(task => ({ task }));
+  assert.equal(maps.length, 56);
+  const ballot = { task: AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:AZ")! };
+  const voting = { task: AUTOMATIC_REFRESH_TASKS.find(task => task.id === "voting-sites:AZ")! };
+  const calendars = Array.from({ length: 3 }, (_, index) => ({ task: { ...meeting, id: `meetings:fixture:${index}` } }));
+  const order = electionLaunchOrder([...calendars, voting, ...maps, ballot]).map(job => job.task.id);
+  assert.equal(order[0], ballot.task.id, "already-held ballot files still publish first");
+  assert.deepEqual(order.slice(1, 57), maps.map(job => job.task.id), "the map lane's states keep their order");
+  assert.deepEqual(order.slice(57), [voting.task.id, ...calendars.map(job => job.task.id)]);
+});

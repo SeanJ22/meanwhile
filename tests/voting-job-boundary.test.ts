@@ -153,12 +153,17 @@ test("a cutoff records only its completed unchanged sources, resumes the other s
   try {
     const initial = await run(now);
     const firstConfirmation = (await store.readPromotionIdentity(contract.recordClass, contract.scope))!.latestConfirmation!.observedAt;
+    let forbidHeld = true;
     const originalRead = store.readPromotion.bind(store);
     t.mock.method(store, "readPromotion", async (recordClass: Parameters<typeof originalRead>[0], scope: string) => {
-      assert.notEqual(recordClass, "VOTING_SITE", "matching sources never load the held state, including after a cutoff");
+      if (forbidHeld) assert.notEqual(recordClass, "VOTING_SITE", "matching sources never load the held state, including after a cutoff");
       return originalRead(recordClass, scope);
     });
-    t.mock.method(store, "readCandidate", () => assert.fail("matching sources never read a held candidate body"));
+    const originalCandidate = store.readCandidate.bind(store);
+    t.mock.method(store, "readCandidate", async (id: string) => {
+      assert.equal(forbidHeld, false, "matching sources never read a held candidate body");
+      return originalCandidate(id);
+    });
     const compareAndSet = repos.doors.compareAndSet.bind(repos.doors);
     t.mock.method(repos.doors, "compareAndSet", async (id, revision, value, at) => {
       const saved = await compareAndSet(id, revision, value, at);
@@ -172,6 +177,17 @@ test("a cutoff records only its completed unchanged sources, resumes the other s
     assert.equal(partial.confirmedSources, 1);
     assert.equal(partial.terminal?.confirmedAt, undefined);
     assert.equal((await store.readPromotionIdentity(contract.recordClass, contract.scope))!.latestConfirmation!.observedAt, firstConfirmation);
+    forbidHeld = false;
+    const { readVotingSitesProjection } = await import("../lib/ballot/voting-sites-server.ts");
+    const reader = await readVotingSitesProjection("ND", { store, now: "2026-10-24T08:00:00.000Z" });
+    assert.equal(reader.kind, "PROMOTED");
+    if (reader.kind !== "PROMOTED") return;
+    const checkedUrl = partial.attemptedSourceIds[0] === source.id ? source.url : second.url;
+    const sourceRows = reader.value.jurisdictions.flatMap(row => [...row.sources ?? [], ...row.sites.flatMap(site => site.sources ?? [])]);
+    assert.ok(sourceRows.some(row => row.url === checkedUrl && row.checkedAt === "2026-10-24T08:00:00.000Z"), "the completed source's actual check reaches Sources");
+    assert.ok(sourceRows.filter(row => row.url !== checkedUrl).every(row => row.checkedAt === now), "the unread sibling keeps its earlier check");
+    assert.equal(reader.metadata.retrievedAt, now, "a partial source check does not freshen the whole state");
+    forbidHeld = true;
     clock = Date.parse("2026-10-25T08:00:00.000Z");
     const resumed = await run("2026-10-25T08:00:00.000Z");
     assert.notEqual(resumed.attemptedSourceIds[0], partial.attemptedSourceIds[0], "the unread source keeps its earlier persisted attempt time");

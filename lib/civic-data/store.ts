@@ -69,6 +69,8 @@ import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda
 import { freezeDurableJson } from "./durable-json.ts";
 import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,billScope,legiscanContinuationPending } from "../sources/legiscan/current-sessions.ts";
 import { projectionKey } from "./projection-key.ts";
+import { readPublishedSourceChecks, recordPublishedSourceCheck, validPublishedSourceCheck,
+  type PublishedSourceCheck, type RecordPublishedSourceCheck } from "./source-checks.ts";
 import { enqueueReaderPlaces, invalidateReaderCache, placePageConsumesPublication, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
 import { seedRuntimeBodyPageSubjects } from "../reader/page-subjects.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
@@ -164,6 +166,8 @@ export interface RoutineDataStore {
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readSourceHead: (recordClass: RoutineRecordClass, scope: string) => Promise<SourceHead | null>;
+  readonly recordSourceCheck?: (input: RecordPublishedSourceCheck) => Promise<boolean>;
+  readonly readSourceChecks?: (recordClass: RoutineRecordClass, scope: string, sourceKeys: readonly string[]) => Promise<readonly PublishedSourceCheck[]>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   /** The current portrait record's input versions and next due time, without the record itself. */
   readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
@@ -822,6 +826,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
   private readonly candidates = new Map<string, CandidateVersionRecord>();
   private readonly history = new Map<string, CandidateEvent[]>();
   private readonly promotions = new Map<string, PromotedProjection>();
+  private readonly sourceChecks = new Map<string, RecordPublishedSourceCheck>();
   async readPortraitRunState(scope: string): Promise<PortraitRunState | null> {
     const pointer = this.promotions.get(projectionKey("STATE_LEGISLATOR", scope));
     const record = pointer ? this.candidates.get(pointer.versionId) : undefined;
@@ -1038,6 +1043,38 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       normalizedHash: row.candidate.normalization.normalizedHash, parserVersion: row.candidate.normalization.parserVersion,
       promotedAt: pointer.promotedAt, candidateState: row.state, acquisitionSucceeded: row.acquisitionSucceeded,
       imported: isImportOrStateMoveCandidate(row.candidate) || pointer.sourceId !== row.candidate.sourceId };
+  }
+
+  async recordSourceCheck(input: RecordPublishedSourceCheck): Promise<boolean> {
+    if (!validPublishedSourceCheck(input)) throw new Error("SOURCE_CHECK_INVALID");
+    const head = await this.readSourceHead(input.recordClass, input.scope);
+    const pointer = this.promotions.get(projectionKey(input.recordClass, input.scope));
+    const payload = pointer?.payload as { sourceManifestVersion?: number; sourceHashes?: Readonly<Record<string, string | null>> } | undefined;
+    if (!head || !pointer || pointer.versionId !== input.pointerVersionId || head.imported || head.sourceId !== input.sourceId || head.versionId !== input.pointerVersionId ||
+      head.lastKnownGoodVersionId !== head.versionId || head.candidateState !== "PROMOTED" || !head.acquisitionSucceeded ||
+      head.parserVersion !== input.parserVersion || head.rawHashBasis !== "SOURCE_CONTENT_V1" ||
+      (input.sourceHash !== undefined ? head.rawHash !== input.sourceHash
+        : payload?.sourceManifestVersion !== 1 || payload.sourceHashes?.[input.sourceKey] !== input.rawHash)) return false;
+    const key = `${projectionKey(input.recordClass, input.scope)}:${input.sourceKey}`;
+    const prior = this.sourceChecks.get(key);
+    const checkedAt = prior?.rawHash === input.rawHash && prior.parserVersion === input.parserVersion && Date.parse(prior.checkedAt) > Date.parse(input.checkedAt)
+      ? prior.checkedAt : input.checkedAt;
+    this.sourceChecks.set(key, structuredClone({ ...input, checkedAt }));
+    return true;
+  }
+
+  async readSourceChecks(recordClass: RoutineRecordClass, scope: string, sourceKeys: readonly string[]): Promise<readonly PublishedSourceCheck[]> {
+    const head = await this.readSourceHead(recordClass, scope);
+    const pointer = this.promotions.get(projectionKey(recordClass, scope));
+    const payload = pointer?.payload as { sourceManifestVersion?: number; sourceHashes?: Readonly<Record<string, string | null>> } | undefined;
+    if (!head || pointer?.versionId !== head.versionId || head.imported || head.versionId !== head.lastKnownGoodVersionId ||
+      head.candidateState !== "PROMOTED" || !head.acquisitionSucceeded || head.rawHashBasis !== "SOURCE_CONTENT_V1") return [];
+    return [...new Set(sourceKeys)].flatMap(key => {
+      const check = this.sourceChecks.get(`${projectionKey(recordClass, scope)}:${key}`);
+      return check && check.sourceId === head.sourceId && check.parserVersion === head.parserVersion &&
+        (check.sourceHash !== undefined ? check.sourceHash === head.rawHash : payload?.sourceManifestVersion === 1 && payload.sourceHashes?.[key] === check.rawHash)
+        ? [structuredClone(check)] : [];
+    });
   }
 
   async readPromotionIdentities(
@@ -2467,6 +2504,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope))).limit(1);
     return head ? { ...head, recordClass: head.recordClass as RoutineRecordClass,
       candidateState: head.candidateState as CandidateState, promotedAt: canonicalPostgresRoutineTimestamp(head.promotedAt, "sourceHead.promotedAt") } : null;
+  }
+
+  async recordSourceCheck(input: RecordPublishedSourceCheck): Promise<boolean> {
+    this.assertCandidateMutationAuthority({ id: input.pointerVersionId, sourceId: input.sourceId, recordClass: input.recordClass, scope: input.scope });
+    return recordPublishedSourceCheck((text, params) => this.readerRows(text, params), input);
+  }
+
+  async readSourceChecks(recordClass: RoutineRecordClass, scope: string, sourceKeys: readonly string[]): Promise<readonly PublishedSourceCheck[]> {
+    return readPublishedSourceChecks((text, params) => this.readerRows(text, params), recordClass, scope, sourceKeys);
   }
 
   async readPromotionIdentities(

@@ -52,6 +52,7 @@ import {
 import {
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineFailureDomainFrontier,
+  routineChildMemoryOrder,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   routineTaskFromContract,
@@ -1215,7 +1216,8 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     failureDomain: pending.task.acquisitionFailureDomain,
     serialLane: routineSerialLane(pending.command),
     executable: process.execPath,
-    args: [...TS_CHILD, ...pending.command],
+    // The state map reservation was measured with a 1 GiB heap.
+    args: [...TS_CHILD, ...(pending.command[0] === "scripts/place-map-refresh.mts" ? ["--max-old-space-size=1024"] : []), ...pending.command],
     // A child told when the pass ends settles and exits with its receipt before the pass's wall stops it.
     env: withPassDeadline({
 
@@ -1307,9 +1309,9 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
-      // A memory wait returns the source turn immediately; later due tasks can fit in this same pass.
+      // A memory wait returns the source turn immediately, except the state map's, which keeps its place until it fits.
       try {
-        await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), { priority: index, wait: false });
+        await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), routineChildMemoryOrder(command.serialLane, index));
       } catch (error) {
         if (error instanceof Error && error.message.startsWith("WORKER_MEMORY_BUSY:")) return false;
         throw error;

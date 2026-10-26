@@ -2179,7 +2179,7 @@ test("national people children share one serial lane: one at a time, back to bac
   assert.equal(new Set(people.map(task => task.acquisitionFailureDomain)).size, people.length);
   assert.equal(routinePassLaunchOrder(people.map(task => ({ task, lastConsideredAt: null }))).length, people.length,
     "admission still offers every due source and state each pass");
-  const others = ROUTINE_SOURCE_TASKS.filter(task => task.command[0] !== "scripts/national-people-refresh.mts");
+  const others = ROUTINE_SOURCE_TASKS.filter(task => !["scripts/national-people-refresh.mts", "scripts/place-map-refresh.mts"].includes(task.command[0]!));
   assert.ok(others.every(task => routineSerialLane(task.command) === undefined));
 
   const [first, second] = [people.find(task => task.id.endsWith("-ca"))!, people.find(task => task.id.endsWith("-ny"))!];
@@ -2264,7 +2264,10 @@ test("every routine task's real child command runs a scripts/ script right after
   assert.ok(tasks.length > 100);
   const offenders = tasks.filter(task => {
     const child = commandFor({ id: task.id, kind: "SOURCE", task, command: task.command });
-    return child.args[0] !== "--experimental-strip-types" || child.args[1] !== "--import" || child.args[2] !== "./scripts/register-test-loader.mjs" || !/^scripts\/[A-Za-z0-9._-]+\.m?ts$/.test(String(child.args[3]));
+    // A state map's reservation was measured with a 1 GiB heap.
+    const heap = task.command[0] === "scripts/place-map-refresh.mts" ? ["--max-old-space-size=1024"] : [];
+    return child.args[0] !== "--experimental-strip-types" || child.args[1] !== "--import" || child.args[2] !== "./scripts/register-test-loader.mjs" ||
+      JSON.stringify(child.args.slice(3, 3 + heap.length)) !== JSON.stringify(heap) || !/^scripts\/[A-Za-z0-9._-]+\.m?ts$/.test(String(child.args[3 + heap.length]));
   }).map(task => `${task.id}: ${task.command.slice(0, 2).join(" ")}`);
   assert.deepEqual(offenders, [], "the runner already supplies node and --experimental-strip-types");
   const legistar = commandFor({ id: "legistar-members:pima", kind: "SOURCE", task: legistarMemberTasks(["pima"])[0], command: legistarMemberTasks(["pima"])[0].command });

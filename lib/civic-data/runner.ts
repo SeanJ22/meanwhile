@@ -18,6 +18,7 @@ import {
 } from "./runner-receipt.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
+import type { WorkerMemoryOrder } from "../control-plane/workers/worker-slots.ts";
 
 /** A command never spawned because memory stayed full or the pass's time ran out, or ended at the pass deadline: still owed, not failed. */
 export function routineDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
@@ -27,10 +28,20 @@ export function routineDeferral(run: BoundedChildResult, childStarted: boolean):
   return unsent || cut ? run.errorMessage : null;
 }
 
-/** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane. */
-const ROUTINE_SERIAL_SCRIPTS: ReadonlySet<string> = new Set(["scripts/national-people-refresh.mts"]);
+/** One national people child, or one state place map, holds gigabytes, so each family runs one child at a time in its own lane. */
+const PLACE_MAP_SCRIPT = "scripts/place-map-refresh.mts";
+const ROUTINE_SERIAL_SCRIPTS: ReadonlySet<string> = new Set(["scripts/national-people-refresh.mts", PLACE_MAP_SCRIPT]);
 export function routineSerialLane(command: readonly string[]): string | undefined {
   return ROUTINE_SERIAL_SCRIPTS.has(command[0] ?? "") ? `serial:${command[0]}` : undefined;
+}
+
+/**
+ * A state map reserves more memory than one finishing read frees, so with every child taking a free turn the reads
+ * refill the host first and no map starts. The map lane's one waiting state keeps its place in the memory queue and
+ * holds later starts for MEMORY_HOLD_MS until it fits; every other child takes a free turn and stays queued if it does not fit.
+ */
+export function routineChildMemoryOrder(serialLane: string | undefined, priority: number): WorkerMemoryOrder {
+  return serialLane === `serial:${PLACE_MAP_SCRIPT}` ? { priority, hold: true } : { priority, wait: false };
 }
 
 export const ROUTINE_SUPERVISOR_STARTED_AT_ENV = "WTP_ROUTINE_SUPERVISOR_STARTED_AT";

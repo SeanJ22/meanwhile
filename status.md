@@ -1433,3 +1433,12 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 
 ### 7:20 AM EDT: release 128 live
 - Maryland cost fix live 7:17 AM (9352c8e14). Fixed set passes; 20/20 random ZIPs load and resolve. Maryland GB/h measured once the runner runs it.
+
+### 8:10 AM EDT: place-page drain cause found; one Netlify setting for Sean
+- Netlify function logs (now readable): rebuild-place-pages runs every minute and every run fails at once with "WTP_PRODUCTION_DATABASE_URL_WRITE is not set. This is the one sanctioned write path to production". The variable reaches the build (that's how the deploy step wrote pages) but not the functions runtime.
+- Step for Sean: Netlify → sparkwtp → Site configuration → Environment variables → WTP_PRODUCTION_DATABASE_URL_WRITE → Edit → scopes: add Functions (production context) → Save; then Deploys → Trigger deploy → Deploy site (or the next release does it). This gives one scheduled function the production write URL, which is RB-A7's design; Sean's call.
+- Runner on 128 (9352c8e14) by 7:28 AM, 11 minutes after it went live, no hand restart.
+- RB-A7 contract applied: 0 bootstrap triggers (were 14). rebuild_queue 158,144 and no longer growing. place_page 24,900 (128's build step added 5,260).
+- Maryland: measure-translations:MD 919 MB (6 AM hour) → 3 MB (7 AM hour). Neon both databases 7 AM hour 3,289 MB (6 AM 4,590). openstates-people 629 MB.
+- RT-01: place_boundary, zip_place, zcta_place still 0 rows with the runner on 128 code for 35 minutes. Checked again at 9 AM; the 24-hour clock runs from 7:28 AM.
+- GB-01: census done through DE.

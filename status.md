@@ -1422,3 +1422,11 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - No place page has been built since the deploy (10:48:33Z), no leases: the rebuild-place-pages scheduled function isn't running or fails each run. Its config combines schedule, background and memory. River can't read Netlify function logs. Readers are unaffected (125's query for places without a page).
 - For Sean: (1) Netlify connector sign-in so River can read the function's logs, or paste its last log lines; (2) the lasting fix is likely moving the drain into a runner lane (RB-A7 has no runner worker), which is lane work.
 - Runner: last vital-signs row (6:51 AM) on 125; expected to take 127 within one pass deadline, then apply RB-A7's contract (drops the 14 triggers) and run RT-01.
+
+### 7 AM EDT status
+- Live: release 127 (e673c5143), 126's content with it. Release 128 (Maryland cost fix alone, [#840](https://github.com/SeanJ22/meanwhile/pull/840)) waiting on CI.
+- Neon, both databases, 6 AM EDT hour: 4,590 MB (reader 4,392, control plane 198). measure-translations:MD 919 MB (until 128 is live); openstates-people 1,391 MB (DB-04's job).
+- Place pages: 19,640, none built since the deploy; rebuild_queue 162,706; 14 bootstrap triggers still in. Asked Sean for Netlify function logs.
+- Place map (RT-01): 0 rows; starts when the runner adopts 127.
+- GB-01: census done through DC. New Orleans 70112 and Omaha 68102 still 0 governing.
+- DB-04: no READY (last commit 1:11 AM). Research cycle: no Send.

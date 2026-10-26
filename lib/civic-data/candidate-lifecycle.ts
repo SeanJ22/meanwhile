@@ -53,6 +53,10 @@ function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate)
 
 
 function sameAcquisitionProgress(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
+  if(candidate.sourceId==="plural-openstates" && candidate.recordClass==="STATE_LEGISLATOR"){
+    const inputDigest=(value:RoutineCandidate)=>(value.normalizedPayload as {sourceInputDigest?:string}|null)?.sourceInputDigest;
+    if(inputDigest(candidate)!==inputDigest(pointed))return false;
+  }
   if (candidate.recordClass === "MEETING_OUTCOME") {
     const checks = (value: RoutineCandidate) => canonicalCivicDataJson((value.readModel as {
       sittings?: { meetingId: string; minutesDocument?: { readAt?: string } }[]

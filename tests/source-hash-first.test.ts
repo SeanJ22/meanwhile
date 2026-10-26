@@ -72,19 +72,24 @@ test("repeated partial inputs skip held people without refreshing unread facts",
   const input = {store,vault,state:"az",roster:{...roster,currentMembershipComplete:false},acquisitions,
     releaseId:"a".repeat(40),gaps:[{sourceUrl:url,detail:"SOURCE_PARTIAL: another publisher is unavailable"}],now:at};
   const first=await publishStatePeople(input);assert.ok(first.outcome.promoted);
-  // The first merge records native aliases and original source holders once.
-  await publishStatePeople({...input,now:later});
-  const replay=await publishStatePeople({...input,now:later});
-  assert.ok(replay.outcome.confirmed,JSON.stringify(replay.outcome.candidate.candidate.changeSet));
-  const pointer = await store.readPromotionIdentity("STATE_LEGISLATOR",scope);
-  assert.equal(pointer?.latestConfirmation?.inputDigest,statePeopleInputDigest(input));
-  for(const method of ["readCandidate","readCandidatePath","readCandidateField","readPromotion","readPublishedCandidateMetadata","events"] as const)
+  const readPath=store.readCandidatePath.bind(store),metadataReads:string[]=[];
+  store.readCandidatePath=async<T>(id:string,path:readonly string[])=>{
+    const key=path.join(".");
+    assert.ok(["normalizedPayload.sourceInputDigest","retrieval"].includes(key),`partial confirmation attempted held ${key}`);
+    metadataReads.push(key);return readPath<T>(id,path);
+  };
+  for(const method of ["readCandidate","readCandidateField","readPromotion","readPublishedCandidateMetadata","events"] as const)
     Object.assign(store,{[method]:async()=>{throw new Error(`partial confirmation read ${method}`);}});
+  assert.ok(await confirmRepeatedStatePeopleInputs({...input,now:later}));
+  assert.deepEqual(metadataReads,["normalizedPayload.sourceInputDigest","retrieval"],"the first unchanged pass reads stored hashes and retrieval metadata only");
+  const pointer=await store.readPromotionIdentity("STATE_LEGISLATOR",scope);
+  assert.equal(pointer?.latestConfirmation?.inputDigest,statePeopleInputDigest(input));
   const checkedAt="2026-10-01T02:00:00.000Z";
   const rechecked={...input,now:checkedAt,roster:{...input.roster,generatedAt:checkedAt},
     acquisitions:input.acquisitions.map(row=>({...row,retrievedAt:checkedAt}))};
   assert.equal(statePeopleInputDigest(rechecked),statePeopleInputDigest(input));
   assert.ok(await confirmRepeatedStatePeopleInputs(rechecked));
+  assert.equal(metadataReads.length,2,"subsequent confirmations read no candidate fields at all");
   const latest=await store.readPromotionIdentity("STATE_LEGISLATOR",scope);
   assert.equal(latest?.latestConfirmation?.retrieval.retrievedAt,at,"partial confirmation preserves the original aggregate freshness");
   assert.equal(latest?.latestConfirmation?.observedAt,checkedAt);

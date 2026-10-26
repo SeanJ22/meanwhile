@@ -52,7 +52,22 @@ test("a real Postgres person bill read selects exact native bills and complete c
     context.diagnostic(JSON.stringify({personReadBytes:responses.reduce((total,response)=>total+Buffer.byteLength(response),0),requests:responses.length,
       unrelatedDescriptionBytes:Buffer.byteLength(unrelated.bill.description)}));
     const pointer=(published.candidate.readModel as BillSession).parts[0];
-    await pg.query("UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{state}','\"WA\"'::jsonb) WHERE record_class='STATE_BILL' AND scope=$1",[pointer.scope]);
+    const detach="UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{state}','\"WA\"'::jsonb) WHERE record_class='STATE_BILL' AND scope=$1";
+    await assert.rejects(pg.query(detach,[pointer.scope]),(error:unknown)=>{
+      const refusal=error as {code?:string;message?:string};
+      return refusal.code==="23514" && refusal.message==="civic_data_promotions may only advance to a distinct, non-backdated version";
+    },"the production trigger forbids detaching a published payload");
+    // This private, disposable PGlite instance injects one corrupt pointer to
+    // exercise defense in depth. Disable only its already-tested rewrite guard,
+    // restore that guard inside the same transaction, and leave every other
+    // trigger and all production source/store code intact.
+    await pg.transaction(async tx=>{
+      await tx.exec("ALTER TABLE civic_data_promotions DISABLE TRIGGER civic_data_promotions_no_delete_or_rewrite");
+      try{await tx.query(detach,[pointer.scope]);}
+      finally{await tx.exec("ALTER TABLE civic_data_promotions ENABLE TRIGGER civic_data_promotions_no_delete_or_rewrite");}
+    });
+    const enabled=await pg.query<{tgenabled:string}>("SELECT tgenabled FROM pg_trigger WHERE tgrelid='civic_data_promotions'::regclass AND tgname='civic_data_promotions_no_delete_or_rewrite'");
+    assert.equal(enabled.rows[0]?.tgenabled,"O","the immutable pointer guard is restored before the reader runs");
     await assert.rejects(readBillsForState("AK",{store,now:at,person}),/READER_PUBLISHED_POINTER_INVALID/,"a selected view cannot attest a payload detached from its immutable source");
   });
 });

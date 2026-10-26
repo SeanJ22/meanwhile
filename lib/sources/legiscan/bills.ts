@@ -39,6 +39,8 @@ export interface BillPartPointer { scope:string; versionId:string; rawHash:strin
 export interface BillSession {
   kind:"SESSION";parserVersion:typeof LEGISCAN_BULK_PARSER;dataset:Dataset;state:string;capturedAt:string;parts:BillPartPointer[];counts:BillPart["counts"];
   sponsorMatchVersion?: string;
+  /** Parts retain their own source edition; this manifest proves their exact native members in this archive. */
+  sourceMemberFormat?:2;
 }
 export interface BillIndex { kind:"INDEX";parserVersion?:typeof LEGISCAN_BULK_PARSER|"legiscan-bulk/2"; capturedAt:string; datasets:Dataset[]; }
 export const billPartScope = (dataset:Dataset,index:number,evidenceHash:string) => `${billScope(dataset.session_id)}:${dataset.dataset_hash}:part:${index}:${evidenceHash}`;

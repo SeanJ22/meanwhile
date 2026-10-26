@@ -75,7 +75,7 @@ export async function readBillsForState(state:string,options:PromotedCivicDataRe
       if(!result.ok)throw Error(`LEGISCAN_READER_PART_UNAVAILABLE:${result.error}`);
       const part=parts[result.index],member=result.value;
       if(member.kind!=="PROMOTED"||member.value.kind!=="PART"||member.metadata.versionId!==part.versionId){completeBatch=false;continue;}
-      if(member.value.dataset.dataset_hash!==session.dataset.dataset_hash||member.value.dataset.session_id!==dataset.session_id||member.value.bills.length!==part.rows||member.value.sourceRawHash!==part.rawHash)throw Error("LEGISCAN_READER_PART_MISMATCH");
+      if((session.sourceMemberFormat!==2&&member.value.dataset.dataset_hash!==session.dataset.dataset_hash)||member.value.dataset.session_id!==dataset.session_id||member.value.dataset.state_id!==session.dataset.state_id||member.value.bills.length!==part.rows||member.value.sourceRawHash!==part.rawHash)throw Error("LEGISCAN_READER_PART_MISMATCH");
       values.push(...hydrateBillPart(member.value,options.person));rows+=member.value.bills.length;
       }
       return {bills:values,rows,complete:completeBatch};

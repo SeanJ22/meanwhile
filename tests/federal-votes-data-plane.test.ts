@@ -564,7 +564,7 @@ test("the two live federal acquisition commands have no circular canonical-point
   assert.doesNotMatch(rollCalls, /readFederalRollCallsProjection\(/);
   assert.doesNotMatch(rollCalls, /previous\.kind\s*!==\s*"PROMOTED"/);
 
-  const keyVotes = readFileSync("scripts/fetch-key-vote-positions.mts", "utf8");
+  const keyVotes = [readFileSync("scripts/fetch-key-vote-positions.mts", "utf8"),readFileSync("lib/votes/key-vote-refresh.ts", "utf8")].join("\n");
   assert.doesNotMatch(keyVotes, /readFederalKeyVotesProjection/);
   assert.doesNotMatch(keyVotes, /current\.kind\s*!==\s*"PROMOTED"/);
   assert.match(keyVotes, /federalKeyVoteSelectionV1Snapshot/);

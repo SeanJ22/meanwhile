@@ -7,6 +7,7 @@ import type { BillSummariesFile } from "./bill-summaries.ts";
 import type { KeyVoteEntry } from "./key-votes.ts";
 import { federalKeyVoteSelectionV1Issue } from "./key-vote-selection-v1.ts";
 import { partyBreakdownFor, type PartyTally } from "./party-breakdown.ts";
+import { federalKeyVoteSourceHash,type FederalKeyVoteSourceProbe } from "./key-vote-source-hash.ts";
 import type { MemberVote, RollCallVote, VotePosition, VotesSnapshot } from "./types.ts";
 
 export const FEDERAL_VOTES_SOURCE_ID = "federal-legislative-records" as const;
@@ -348,6 +349,7 @@ export function federalKeyVotesCandidate(input: {
   readonly retrievedAt: string;
   readonly snapshot: FederalKeyVotesSnapshot;
   readonly positions: FederalKeyVotePositions;
+  readonly sourceProbe?:FederalKeyVoteSourceProbe;
 }): RoutineCandidate {
   const acquisitions = heldAcquisitions(input.acquisitions);
   const refs = input.snapshot.entries.flatMap((entry) => ([
@@ -384,10 +386,12 @@ export function federalKeyVotesCandidate(input: {
   const normalizedPayload = {
     selectionVersion: "v1",
     acquisitions,
+    ...(input.sourceProbe?{sourceProbe:input.sourceProbe}:{}),
   };
-  const rawHash = federalVotesSourceHash(acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
+  const rawHash = input.sourceProbe?federalKeyVoteSourceHash(acquisitions,input.sourceProbe):federalVotesSourceHash(acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
   return {
-    id: candidateId(FEDERAL_KEY_VOTE_SCOPE, acquisitions, input.retrievedAt, normalizedHash),
+    id: input.sourceProbe?`cv-${sha256(`${candidateId(FEDERAL_KEY_VOTE_SCOPE,acquisitions,input.retrievedAt,normalizedHash)}\u001f${rawHash}`).slice(0,32)}`:
+      candidateId(FEDERAL_KEY_VOTE_SCOPE, acquisitions, input.retrievedAt, normalizedHash),
     sourceId: FEDERAL_VOTES_SOURCE_ID,
     recordClass: "FEDERAL_KEY_VOTE",
     scope: FEDERAL_KEY_VOTE_SCOPE,
@@ -398,6 +402,7 @@ export function federalKeyVotesCandidate(input: {
       httpStatus: acquisitions[0]?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash: acquisitions.length > 0 ? rawHash : null,
+      ...(input.sourceProbe?{rawHashBasis:"SOURCE_CONTENT_V1" as const,complete:input.sourceProbe.complete}:{}),
       failureDetail: acquisitions.length > 0 ? undefined : "No selected official roll-call response was acquired.",
     },
     normalization: {

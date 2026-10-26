@@ -82,7 +82,14 @@ test("the migrated federal base reads native row revisions and keeps pointer/GOO
       assert.deepEqual(target?.records,[{id:first.facts[0].id,sourceId:first.facts[0].sourceId}]);
       assert.deepEqual(await store.readFederalMoneyPriorPlaces(cold.current.versionId),[]);
     } finally {neonConfig.fetchFunction=originalFetch;}
-    await pg.query("UPDATE civic_data_candidates SET normalized_hash=$2 WHERE id=$1",[cold.current.versionId,"0".repeat(64)]);
-    await assert.rejects(store.readPublicationBase("FEDERAL_MONEY",scope),/FEDERAL_PUBLICATION_POINTER_PROOF_INVALID/);
+    await assert.rejects(pg.query("UPDATE civic_data_candidates SET normalized_hash=$2 WHERE id=$1",[cold.current.versionId,"0".repeat(64)]),
+      (error:unknown)=>(error as {code?:string}).code==="55000","immutable source evidence cannot be rewritten");
+    const nextAt=new Date().toISOString(),next=candidate(await page(vault,"Current",nextAt,["base-one","base-two"]),nextAt,cold.current.versionId);
+    const moved=await withFederalMoneyVault(vault,()=>processRegisteredFanOutCandidate(store,"openfema",next,nextAt,cold.current!.versionId,{publicationBase:cold}));
+    assert.ok(moved.promoted,JSON.stringify(moved.candidate.receipt));
+    const staleAt=new Date().toISOString(),stale=candidate(await page(vault,"Stale",staleAt,["base-one","base-two"]),staleAt,cold.current.versionId);
+    const refused=await withFederalMoneyVault(vault,()=>processRegisteredFanOutCandidate(store,"openfema",stale,staleAt,cold.current!.versionId,{publicationBase:cold}));
+    assert.equal(refused.promoted,null);assert.equal(refused.candidate.failureCode,"PROMOTION_BASE_CHANGED");
+    assert.equal((await store.readPromotionIdentity("FEDERAL_MONEY",scope))?.versionId,moved.promoted.versionId);
   });
 });

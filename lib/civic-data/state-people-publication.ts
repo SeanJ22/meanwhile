@@ -7,7 +7,7 @@ import { readOpenStatesPeopleProjection, mergeStatePeople } from "../state-rollc
 import { confirmRepeatedRoutineInputs, processRegisteredRoutineCandidate } from "./promotion.ts";
 import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
-import type { RoutineDataStore } from "./store.ts";
+import { routineEventObservedAt, type RoutineDataStore } from "./store.ts";
 import { PLURAL_PARSER_VERSION } from "../sources/plural/targets.ts";
 import { readManualProjectionPrior } from "./manual-projections.ts";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
@@ -83,7 +83,28 @@ export function statePeopleInputDigest(input: StatePeopleInputs): string {
 }
 
 export async function confirmRepeatedStatePeopleInputs(input: StatePeopleInputs & {store:RoutineDataStore;now:string}) {
-  const result = await confirmRepeatedRoutineInputs(input.store,`openstates-people-${input.state.toLowerCase()}`,statePeopleInputDigest(input),input.now);
+  const inputDigest=statePeopleInputDigest(input);
+  let result = await confirmRepeatedRoutineInputs(input.store,`openstates-people-${input.state.toLowerCase()}`,inputDigest,input.now);
+  // A newly promoted partial pass already owns these exact parser inputs. Read its hash and retrieval
+  // metadata only, so its very first unchanged pass also avoids the held roster and captures.
+  if(!result && input.store.confirmUnchanged){
+    const scope=`US-${input.state.toUpperCase()}:openstates-people:v1`;
+    const head=await input.store.readSourceHead("STATE_LEGISLATOR",scope);
+    if(head?.sourceId==="plural-openstates" && head.versionId===head.lastKnownGoodVersionId && !head.imported &&
+      head.candidateState==="PROMOTED" && head.acquisitionSucceeded && head.parserVersion===PLURAL_PARSER_VERSION &&
+      head.rawHashBasis==="SOURCE_CONTENT_V1" && head.rawHash===peopleSourceContentHash(input.acquisitions,input.roster) && head.normalizedHash &&
+      await input.store.readCandidatePath<string>(head.versionId,["normalizedPayload","sourceInputDigest"])===inputDigest){
+      const retrieval=await input.store.readCandidatePath<RoutineCandidate["retrieval"]>(head.versionId,["retrieval"]);
+      if(retrieval?.rawHash===head.rawHash){
+        const at=await routineEventObservedAt(input.store,"STATE_LEGISLATOR",scope,input.now);
+        const confirmed=await input.store.confirmUnchanged({sourceId:head.sourceId,recordClass:head.recordClass,scope,parserVersion:head.parserVersion,
+          pointerVersionId:head.versionId,readModelHash:head.normalizedHash,basis:"RAW_HASH_UNCHANGED",inputDigest,
+          retrieval:{requestedUrl:retrieval.requestedUrl,finalUrl:retrieval.finalUrl,httpStatus:retrieval.httpStatus,
+            rawHash:head.rawHash,retrievedAt:retrieval.retrievedAt,...(retrieval.sourceCheck?{sourceCheck:retrieval.sourceCheck}:{})}},at);
+        if(confirmed.kind==="CONFIRMED")result={head,at:confirmed.at};
+      }
+    }
+  }
   if(result)await recordPeopleSourceChecks({store:input.store,head:result.head,pages:input.acquisitions});
   return result;
 }
@@ -177,10 +198,13 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
     captured.add(url); return true;
   })];
   const carriedPortraitFacts = heldExcluded?.filter(fact=>fact.code.startsWith("STATE_PORTRAIT_")) ?? [];
-  const candidate = statePeopleCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,
+  const built = statePeopleCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,
     sourceRawHash:peopleSourceContentHash(input.acquisitions,input.roster),excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
+  const inputDigest=statePeopleInputDigest(input),normalizedPayload={...(built.normalizedPayload as object),sourceInputDigest:inputDigest};
+  const candidate={...built,id:`cv-${hash([built.id,inputDigest]).slice(0,32)}`,normalizedPayload,
+    normalization:{...built.normalization,normalizedPayloadHash:hash(normalizedPayload)}};
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
-    prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault,inputDigest:statePeopleInputDigest(input)});
+    prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault,inputDigest});
   if(outcome.promoted){const head=await input.store.readSourceHead(candidate.recordClass,candidate.scope);
     if(head?.versionId===outcome.promoted.versionId)await recordPeopleSourceChecks({store:input.store,head,pages:input.acquisitions});}
   if (outcome.promoted) {

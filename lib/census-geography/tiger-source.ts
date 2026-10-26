@@ -12,7 +12,7 @@ import { openZipFile } from "../sources/archive.ts";
 import { checkKnownSourceRetry, recordKnownSourceRetry, resolveKnownReleaseCache, withKnownReleaseLock } from "../sources/known-release.ts";
 import type { Provenance } from "./contract.ts";
 import { censusGeographyUserAgent } from "./http.ts";
-import type { CensusSourceOptions } from "./source-release.ts";
+import { recordCensusSourceCapture, type CensusSourceOptions } from "./source-release.ts";
 
 const SOURCE_ID = "census-geography-relationships";
 const TIGER_ARCHIVE_PARSER = "census-tiger-archive/BD-02";
@@ -209,6 +209,7 @@ export async function censusTigerArchive(url: string, options: CensusSourceOptio
       const bytes = new TextEncoder().encode(JSON.stringify(index));
       await store.put(indexKey, bytes, { contentType: "application/json", contentHash: `manifest:census-tiger:${identity}`,
         byteLength: bytes.byteLength, objectClass: "MUTABLE_INDEX" });
+      recordCensusSourceCapture(options, { requestedUrl: url, finalUrl: index.finalUrl, rawHash: index.sha256, checkedAt: index.checkedAt });
       return { sha256: index.sha256, sourceValidator: { url, etag: index.etag, lastModified: index.lastModified, bytes: index.bytes }, retrievedAt: index.retrievedAt, reused };
     });
     return { path, ...result, dispose };

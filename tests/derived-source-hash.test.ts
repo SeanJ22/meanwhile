@@ -16,7 +16,7 @@ const inputs = [upstream, approval, evidence];
 const parserVersion = derivedCampaignSitesCandidate("AZ", { records: [], inputs, held: [], published: [] }, at).normalization.parserVersion;
 
 test("derived source hashes keep external content, approval and attempt revisions while excluding checks and the prior output", () => {
-  const own = { ...upstream, recordClass: "CURATED_READER_RECORD", scope, versionId: "prior:one" } as DerivedInputRef;
+  const own = { ...upstream, recordClass: "CURATED_READER_RECORD", scope, versionId: "prior:one" } satisfies DerivedInputRef;
   const first = externalDerivedSourceInputs([...inputs, own], { recordClass: "CURATED_READER_RECORD", scope });
   const checked = inputs.map(input => ({ ...input, promotedAt: later, retrievedAt: later, approvedAt: later }));
   assert.equal(derivedSourceContentHash(first), derivedSourceContentHash(checked));

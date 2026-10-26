@@ -409,7 +409,10 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     (SELECT CASE WHEN p.kind='place' THEN p.id WHEN gp.kind='place' THEN gp.id END FROM entity p LEFT JOIN entity gp ON gp.id=p.parent_id WHERE p.id=b.parent_id),
     split_part(b.id,'#',1)),'placement_basis',CASE WHEN EXISTS (
       SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id AND ep.placement_basis='HOST_COUNTY') THEN 'HOST_COUNTY' ELSE 'SERVICE_AREA' END,
-    'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government' AND g.id ~ '^[a-z]{2}:special:'))) FROM bodies b),'[]'::jsonb) AS entities,
+    'government',(SELECT g.name FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),
+    'government_id',(SELECT g.id FROM entity g WHERE g.id=b.parent_id AND g.kind='government'),
+    'government_class',(SELECT g->>'governmentClass' FROM government_inventory WHERE g->>'id'=b.parent_id OR g->>'jurisdictionId'=b.parent_id LIMIT 1),
+    'registered_name',(SELECT value->>'name' FROM runtime_bodies r WHERE r.value->>'id'=b.id LIMIT 1))) FROM bodies b),'[]'::jsonb) AS entities,
   coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,

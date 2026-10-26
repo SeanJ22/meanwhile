@@ -5,11 +5,11 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T01:54:00Z
+heartbeat: 2026-10-26T02:02:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 9:54 PM EDT)
+## Every READY not on main (updated 10:02 PM EDT)
 Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info); improvements merge several to a release (6:05 PM). One path per job: DB-03's remaining steps wait for DB-04 (10:00 PM).
 
 **Urgent, ships alone**
@@ -1240,4 +1240,11 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - DB-04 builds one read-only-what-changed path for every read and will replace most of DB-03's per-job fixes. Until DB-04's READY says which it replaces, River doesn't fold: state doors e4305907d, research reads 6f0652479, accounting 7e81c1452, research indexes 407e02a1d, member offices f81db4b37, people source fields 18df1421b, runner doors 2600aecdc, linking-page integration ef74ed82e, read-path connection 11072d2ed, or owner snapshot reads a0cb7d1ef (3e3f1ab33).
 - The owner snapshot gate was stopped; improvement batch 1 is gating again on d7dd06466.
 - DB-03 Admin 04681516c continues (it fixes Admin's own screens). It's returned with 3 tests; River finishes it at 10:36 PM EDT if no new READY. DB-04 ships alone the moment it posts READY.
+
+### 10 PM EDT status
+- DB-02 (release 121) saving, first full hour on the runner (9 PM EDT): the registry read (worker-publication / civic_data_candidate_events, the line-784 read) was 76 MB, against 756 / 806 / 787 / 1,168 MB per hour before (2 PM to 5 PM EDT). That's about 0.7 to 1.1 GB/h less. The 8 PM hour was already 252 MB, since the runner switched at 8:47. The 10 PM hour confirms at 11 PM.
+- Release 122 (DB-03 reads) has been live since 9:47 PM. Research cycle and Open States votes are measured on the 11 PM and midnight hours, once the runner adopts it.
+- Neon, both databases, 9 PM EDT hour: 5,525 MB.
+- RB-A4 catch-up: 30 states reloaded since 4:53 PM (DE through OH). The cursor is at OH, so OR is next. HOST_COUNTY rows: 35,824 (this morning: 1,400). Oregon still 25.
+- Gating: improvement batch 1. Held for DB-04: DB-03's remaining steps and owner snapshot reads.
 

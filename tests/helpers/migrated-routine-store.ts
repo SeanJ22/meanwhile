@@ -1,3 +1,4 @@
+import { installKeyedRows } from "./keyed-rows.ts";
 import { readFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { execFileSync } from "node:child_process";
@@ -28,6 +29,7 @@ export async function withMigratedRoutineStore(
     .split("--> statement-breakpoint").map(statement=>statement.trim())
     .filter(statement=>/^CREATE (?:TABLE civic_data_clock_versions\b|FUNCTION civic_data_clock_changed\b|TRIGGER civic_data_(?:candidate|event|pointer)_clock_changed\b)/.test(statement));
   for(const statement of readVersions)await pg.exec(statement);
+  await installKeyedRows(pg);
   const priorFetch = neonConfig.fetchFunction;
   const names = ["DATABASE_URL", "WTP_DB_ROLE", "WTP_VITAL_SIGNS_REPORT", "WTP_RUNTIME_MODE", "WTP_CONTROL_PLANE_DATABASE_URL"];
   const priorEnvironment = new Map(names.map(name => [name, process.env[name]]));

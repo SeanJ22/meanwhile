@@ -442,6 +442,13 @@
       "when": 1792834200010,
       "tag": "DB-05_source_hash",
       "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1792834200011,
+      "tag": "DB-05_keyed_rows",
+      "breakpoints": true
     }
   ]
 }

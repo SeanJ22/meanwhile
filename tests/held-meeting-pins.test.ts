@@ -1,3 +1,4 @@
+import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -27,6 +28,7 @@ async function setup(meetings:readonly Meeting[],office=OFFICE){
     CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,retrieved_at timestamptz,candidate jsonb)`);
   for(const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint"))
     if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement))await db.pg.exec(statement);
+  await installKeyedRows(db.pg);
   await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Sunnyside Unified School District','AZ',NULL),($2,'body','Governing Board','AZ',$1)",[DIVISION,BODY]);
   const [copy]=await db.query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key)
     VALUES('https://www.susd12.org/office','https://www.susd12.org/office',$1,$2,'office') RETURNING id`,[OLD,"a".repeat(64)]);

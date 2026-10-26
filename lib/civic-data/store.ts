@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { repeatedFailureStreak } from "./failure-backoff.ts";
 import { readRetirementProgress, retirementProofTarget } from "./state-retirement-progress.ts";
 import type { Division, Registry } from "../registry/types.ts";
-import { readKeyedRegistry, selectRegistryLookup, type RegistryLookup } from "./keyed-rows.ts";
+import { readKeyedRegistry, readKeyedRegistryDivisions, selectRegistryLookup, type RegistryLookup } from "./keyed-rows.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
 import { sourceCheckedAt } from "./source-check.ts";
@@ -1957,16 +1957,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readRegistryDivisions(state: string, labels: readonly string[]): Promise<readonly RegistryDivisionMatch[]> {
-    if (!labels.length) return [];
-    const jurisdiction = requireRegistryState(state), scope = stateRegistryRuntimeScope(jurisdiction);
-    const rows = await this.readerRows(`SELECT r.value->>'ocdId' AS "ocdId",r.value->>'label' AS label,
-      r.value->>'state' AS state,r.value->>'sourceDataset' AS "sourceDataset"
-      FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
-      WHERE r.record_class='REGISTRY_RUNTIME_BINDING' AND r.scope=$1 AND r.collection='registry.divisions'
-        AND upper(r.value->>'state')=$2 AND p.validation_receipt->>'decision'='GOOD'
-        AND trim(regexp_replace(lower(r.value->>'label'),'[^[:alnum:]]+',' ','g'))=ANY($3::text[])
-      ORDER BY r.ordinal`, [scope, jurisdiction, labels.map(registryDivisionLabel)]);
-    return rows as unknown as readonly RegistryDivisionMatch[];
+    return readKeyedRegistryDivisions((text, params) => this.readerRows(text, params),state,labels.map(registryDivisionLabel));
   }
 
   private async candidateRows<T extends { readonly id: string }>(

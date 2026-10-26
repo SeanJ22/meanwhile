@@ -34,7 +34,7 @@ export const PIN_OFFICES_SQL = `WITH selected AS MATERIALIZED (
   SELECT id,name,state,parent_id FROM entity WHERE id=ANY($1::text[]) AND kind='body'
 ), owners AS MATERIALIZED (
   SELECT b.id,b.parent_id,g FROM selected b LEFT JOIN LATERAL (
-    SELECT r.value AS g FROM civic_data_rows r
+    SELECT reader_payload_value(r.value) AS g FROM civic_data_rows r
     WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.state=b.state
       AND r.promotion_key='REGISTRATION:US-'||b.state||':registration:v1'
       AND r.aliases && ARRAY[b.parent_id,b.id,b.parent_id||'#governing',b.parent_id||'#board']
@@ -58,13 +58,14 @@ LEFT JOIN LATERAL (
 ) government ON true`;
 
 const AGENDA_PIN_OFFICES_SQL = `SELECT m.body_id,m.row_id AS meeting_id,m.value->>'jurisdiction' AS jurisdiction,
-  d.value->>'documentUrl' AS url,d.value->>'sourceOrg' AS source_org,d.value->>'collectedAt' AS collected_at,
-  left(d.value->>'text',700) AS header
+  reader_payload_value(d.value->'documentUrl')#>>'{}' AS url,reader_payload_value(d.value->'sourceOrg')#>>'{}' AS source_org,
+  reader_payload_value(d.value->'collectedAt')#>>'{}' AS collected_at,
+  left(reader_payload_value(d.value->'text')#>>'{}',700) AS header
 FROM civic_data_rows m JOIN civic_data_rows d ON d.promotion_key=m.promotion_key AND d.collection='agendaDocuments'
   AND d.value->>'meetingId'=m.row_id AND d.value->>'ocdId' IS NOT DISTINCT FROM m.value->>'ocdId'
 WHERE m.record_class='MEETING' AND m.collection='meetings' AND m.body_id=ANY($1::text[])
   AND d.value->>'extraction' IN ('pdf','html')
-ORDER BY m.body_id,m.value->>'startsAt' DESC,d.value->>'collectedAt' DESC`;
+ORDER BY m.body_id,m.value->>'startsAt' DESC,reader_payload_value(d.value->'collectedAt')#>>'{}' DESC`;
 
 export async function publishedPinOffices(
   query: Query | undefined,

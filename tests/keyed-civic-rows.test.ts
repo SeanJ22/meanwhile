@@ -45,6 +45,7 @@ test("migration backfills compressed registry rows and a one-body read returns o
       [{ ocdId: division, state: "AZ", label: "Tucson", sourceDataset: "GOV_DIRECTORY" }]);
     await pg.query("UPDATE civic_data_candidates SET candidate='{}'");
     await assert.rejects(readKeyedRegistry(query, "AZ", [bodyId], []), /INVALID_PUBLISHED_POINTER/);
+    await assert.rejects(PostgresRoutineDataStore.prototype.readRegistryDivisions.call(reader, "AZ", ["Tucson"]), /INVALID_PUBLISHED_POINTER/);
   } finally { await pg.close(); }
 });
 
@@ -85,7 +86,9 @@ test("meeting and agenda rows retain complete text, native IDs and body bindings
     await pg.query("INSERT INTO civic_data_promotions(key,record_class,scope,current_version_id,payload) VALUES('MEETING:one','MEETING','source:one','m1',$1)",
       [JSON.stringify({ meetings: [meeting], agendaDocuments: [doc] })]);
     await installKeyedRows(pg);
-    const rows = await query("SELECT collection,body_id,value FROM civic_data_rows WHERE promotion_key='MEETING:one' ORDER BY collection");
+    const rows = await query("SELECT collection,body_id,reader_payload_value(value) AS value FROM civic_data_rows WHERE promotion_key='MEETING:one' ORDER BY collection");
+    assert.deepEqual(await query("SELECT value #>> '{text,$civicPayloadPart}' AS part FROM civic_data_rows WHERE collection='agendaDocuments'"), [{ part: "agenda" }],
+      "keyed rows keep the shared text part rather than copying the whole agenda again");
     assert.deepEqual(rows, [{ collection: "agendaDocuments", body_id: bodyId, value: { ...doc, text } }, { collection: "meetings", body_id: bodyId, value: meeting }]);
     await pg.query("UPDATE civic_data_promotions SET payload=$1 WHERE key='MEETING:one'", [JSON.stringify({ meetings: [meeting], agendaDocuments: [] })]);
     assert.deepEqual(await query("SELECT collection FROM civic_data_rows WHERE promotion_key='MEETING:one'"), [{ collection: "meetings" }]);

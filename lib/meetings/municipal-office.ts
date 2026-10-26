@@ -14,7 +14,7 @@ function municipality(jurisdiction: string): string | null {
 // Only published municipal-hall venue/address fields leave Postgres, in bounded pages.
 const HALL_ADDRESSES_SQL = `WITH venues AS (
   SELECT body_id,value->>'ocdId' AS ocd_id,value->>'jurisdiction' AS jurisdiction,value->>'startsAt' AS starts_at,
-    value->'location' AS location,value->'venueGap' AS venue_gap,value->'provenance' AS provenance
+    reader_payload_value(value->'location') AS location,reader_payload_value(value->'venueGap') AS venue_gap,reader_payload_value(value->'provenance') AS provenance
   FROM civic_data_rows WHERE record_class='MEETING' AND collection='meetings' AND split_part(body_id,'#',1)=$1 AND (
     left(split_part(scope,':',4),length($2))=$2 AND left(scope,7)='source:' AND split_part(scope,':',3)='body' AND right(scope,8)<>':history'
     OR promotion_key='MEETING:source:derived:family:US-'||$3

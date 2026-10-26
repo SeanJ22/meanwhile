@@ -11,6 +11,7 @@ CREATE TABLE civic_data_rows (
   row_id text NOT NULL,
   body_id text,
   state text,
+  label_key text,
   aliases text[] NOT NULL DEFAULT '{}',
   value jsonb NOT NULL,
   content_hash text NOT NULL,
@@ -19,6 +20,10 @@ CREATE TABLE civic_data_rows (
 );
 --> statement-breakpoint
 CREATE INDEX civic_data_rows_identity ON civic_data_rows (record_class, scope, collection, row_id);
+--> statement-breakpoint
+CREATE INDEX civic_data_rows_label ON civic_data_rows (record_class, scope, collection, label_key);
+--> statement-breakpoint
+CREATE INDEX civic_data_rows_lookup ON civic_data_rows (promotion_key, collection, row_id);
 --> statement-breakpoint
 CREATE INDEX civic_data_rows_body ON civic_data_rows (collection, body_id, promotion_key);
 --> statement-breakpoint
@@ -42,7 +47,7 @@ BEGIN
       WHEN 'registry.divisions' THEN registry->'divisions' ELSE root->collection_name END;
     last_ordinal:=0;
     FOR member IN SELECT ordinal_index,item FROM reader_payload_members(list) ORDER BY ordinal_index LOOP
-      document:=reader_payload_value(member.item);
+      document:=reader_payload_node(member.item);
       identity:=coalesce(document->>'id',document->>'ocdId',document->>'bodyId',member.ordinal_index::text);
       body:=CASE collection_name WHEN 'registry.bodies' THEN document->>'id'
         WHEN 'agendaDocuments' THEN (SELECT r.body_id FROM civic_data_rows r WHERE r.promotion_key=p_key
@@ -52,14 +57,15 @@ BEGIN
       row_state:=upper(coalesce(document->>'state',substring(p_scope FROM '^US-([A-Z]{2})'),substring(body FROM '/state:([a-z]{2})')));
       SELECT coalesce(array_agg(DISTINCT name) FILTER (WHERE name IS NOT NULL),'{}'::text[]) INTO names
         FROM (SELECT identity AS name UNION ALL SELECT document->>'jurisdictionId'
-          UNION ALL SELECT jsonb_array_elements_text(coalesce(document->'aliases','[]'::jsonb))
-          UNION ALL SELECT jsonb_array_elements_text(coalesce(document->'bodyIds','[]'::jsonb))) identifiers;
-      INSERT INTO civic_data_rows(promotion_key,record_class,scope,version_id,promoted_at,collection,ordinal,row_id,body_id,state,aliases,value,content_hash)
-        VALUES(p_key,p_class,p_scope,p_version,p_at,collection_name,member.ordinal_index,identity,body,row_state,names,document,
+          UNION ALL SELECT jsonb_array_elements_text(coalesce(reader_payload_value(document->'aliases'),'[]'::jsonb))
+          UNION ALL SELECT jsonb_array_elements_text(coalesce(reader_payload_value(document->'bodyIds'),'[]'::jsonb))) identifiers;
+      INSERT INTO civic_data_rows(promotion_key,record_class,scope,version_id,promoted_at,collection,ordinal,row_id,body_id,state,label_key,aliases,value,content_hash)
+        VALUES(p_key,p_class,p_scope,p_version,p_at,collection_name,member.ordinal_index,identity,body,row_state,
+          trim(regexp_replace(lower(reader_payload_value(document->'label')#>>'{}'),'[^[:alnum:]]+',' ','g')),names,document,
           encode(sha256(convert_to(document::text,'UTF8')),'hex'))
         ON CONFLICT(promotion_key,collection,ordinal) DO UPDATE SET record_class=excluded.record_class,scope=excluded.scope,
           version_id=excluded.version_id,promoted_at=excluded.promoted_at,row_id=excluded.row_id,body_id=excluded.body_id,
-          state=excluded.state,aliases=excluded.aliases,value=excluded.value,content_hash=excluded.content_hash,
+          state=excluded.state,label_key=excluded.label_key,aliases=excluded.aliases,value=excluded.value,content_hash=excluded.content_hash,
           change_id=CASE WHEN (civic_data_rows.row_id,civic_data_rows.body_id,civic_data_rows.value,civic_data_rows.scope)
             IS DISTINCT FROM (excluded.row_id,excluded.body_id,excluded.value,excluded.scope)
             THEN nextval('civic_data_row_change') ELSE civic_data_rows.change_id END;

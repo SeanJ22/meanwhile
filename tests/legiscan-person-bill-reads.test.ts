@@ -24,7 +24,7 @@ const capture={body,requestedUrl:"https://api.legiscan.com/?op=getDataset",final
 
 test("a real Postgres person bill read selects exact native bills and complete co-sponsors before transfer",async context=>{
   await withMigratedRoutineStore("legiscan-bulk",async(store,_vault,pg)=>{
-    await publishBulkCandidate(store,{capture:{...capture,body:JSON.stringify({status:"OK",datasetlist:[dataset]}),
+    await publishBulkCandidate(store,{capture:{...capture,requestedUrl:"https://api.legiscan.com/?op=getDatasetList",finalUrl:"https://api.legiscan.com/?op=getDatasetList",body:JSON.stringify({status:"OK",datasetlist:[dataset]}),
       rawHash:hash(JSON.stringify({status:"OK",datasetlist:[dataset]}))},datasets:[dataset]},at);
     const published=await publishBulkCandidate(store,{capture,dataset,bodies,people:[person],archiveHash},at);
     assert.ok(published.outcome.promoted);

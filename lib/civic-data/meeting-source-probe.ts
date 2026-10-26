@@ -24,6 +24,7 @@ export interface MeetingSourceProbe {
   readonly complete: boolean;
   readonly normalizationInputHash: string;
   readonly sourceRawHash: string;
+  readonly sourceHashKind: "REQUESTS" | "DERIVED_INPUTS";
   readonly requests: readonly MeetingSourcePage[];
   readonly meetingIds: readonly string[];
   readonly bodyIds: readonly string[];
@@ -169,10 +170,12 @@ export async function probeMeetingSource(input: {
   try { if (!await input.session.probe(plan) || await input.workRemains(plan)) return null; }
   catch (error) { if (!meetingSourceBudgetAvailable()) throw error; return null; }
   const pages = [...input.session.responses.values()], first = pages[0]!;
+  const rawHash = plan.sourceHashKind === "REQUESTS" ? sourceContentHash(pages.map(page => ({ ...page, capture: { rawHash: page.rawHash } })),
+    { normalizationInputHash: input.normalizationInputHash }) : plan.sourceRawHash;
   return confirmSourceHashUnchanged({ store: input.store, sourceId: input.partition.sourceId, recordClass: "MEETING", scope: input.partition.scope,
-    parserVersion: "meetings-composite/2", rawHash: plan.sourceRawHash, now: input.now, complete: true,
+    parserVersion: "meetings-composite/2", rawHash, now: input.now, complete: true,
     retrieval: { requestedUrl: first.requestedUrl, finalUrl: first.finalUrl, httpStatus: first.httpStatus,
-      retrievedAt: pages.map(page => page.retrievedAt).sort()[0]!, rawHash: plan.sourceRawHash } });
+      retrievedAt: pages.map(page => page.retrievedAt).sort()[0]!, rawHash } });
 }
 
 export function withMeetingSourceProbe(candidate: RoutineCandidate, partition: MeetingPartitionContract, normalizationInputHash: string,
@@ -182,6 +185,7 @@ export function withMeetingSourceProbe(candidate: RoutineCandidate, partition: M
   const sourceRawHash = candidate.retrieval.derived ? candidate.retrieval.rawHash!
     : sourceContentHash(unique.map(page => ({ ...page, capture: { rawHash: page.rawHash } })), { normalizationInputHash });
   const sourceProbe: MeetingSourceProbe = { formatVersion: 1, complete, normalizationInputHash, sourceRawHash,
+    sourceHashKind: candidate.retrieval.derived ? "DERIVED_INPUTS" : "REQUESTS",
     requests: unique.map(({ requestedUrl, finalUrl, rawHash, request }) => ({ requestedUrl, finalUrl, rawHash, request })),
     meetingIds: (candidate.readModel as { meetings: { id: string }[] }).meetings.map(meeting => meeting.id),
     bodyIds: [...new Set([...(partition.derivedFamily ? [] : [partition.bodyId]),

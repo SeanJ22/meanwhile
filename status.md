@@ -1334,3 +1334,11 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Drain fix gate 9/9 (9,995 pass, 0 fail). READY 6f44f6a3a on stream/river-drain; river and river-next moved there. release/124 is [#836](https://github.com/SeanJ22/meanwhile/pull/836), auto-merge on. Report: releases/124.md.
 - Idaho fix gating now on river 6f44f6a3a + stream/river-idaho (river-next-idaho). Ships alone next as 125.
 - Batch 2 (gate 9/9 on the old river) re-folds onto river after the Idaho fix and becomes 126. Its report moved to releases/batch-2.md.
+
+### 2 AM EDT status
+- Release 124 (drain fix) live 1:57 AM; the runner restarted onto it by itself at 2:01 AM (new pilot-runner pid 3840085). Live checks pass; 20/20 random ZIPs load and resolve. releases/124.md.
+- Idaho fix (125) gating on river-next-idaho (tests running). Boise 83702 and Conda 83230 still stop at 33 s until it ships.
+- Neon, both databases, 1 AM EDT hour (first full hour on 123, GB-01 running): 2,852 MB total. Census-named jobs 32 MB, registry read 73 MB. Before GB-01 (normal hours 7 to 9 PM): 4,757 to 5,526 MB. The runner's GB/h for the two full hours after 124 is read at 3 and 4 AM.
+- GB-01: census step done with OR, AL, AK; now in AR. New Orleans 70112 and Omaha 68102 still 0 governing (LA and NE not reached).
+- rebuild_queue: 2,789 (was 1,667 at 1 AM). It grows as GB-01 adds boards and nothing drains it until RB-A7 ships with batch 2.
+- DB-04: still building (last commit "absorb NB-02 narrowing through the shared read path"); no READY.

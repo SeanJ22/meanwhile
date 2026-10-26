@@ -6,7 +6,8 @@ import { immutableStateCandidate, statePublicationScope, withStateRecordHashes }
 import { VALIDATION_CHECKS, type RoutineCandidate, type ValidationReceipt } from "../lib/civic-data/types.ts";
 import { manualSourceUrls } from "../lib/civic-data/manual-source-urls.ts";
 import { readMemberOfficeStateProjection } from "../lib/civic-data/curated-reader-read-model.ts";
-import { memberOfficeStateScope } from "../lib/officials/member-office-data.ts";
+import { memberOfficeStateScope, memberOfficeRecordState, MEMBER_OFFICE_NATIONAL_SCOPE } from "../lib/officials/member-office-data.ts";
+import type { MemberOfficeRecord } from "../lib/officials/member-offices.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 
@@ -18,6 +19,14 @@ const office=(state:string,phone="555-1000")=>({id:`member-office:plural:${state
   sourceUrl:url(state),sourceOrg:"Open States (Plural, CC-0)",official:false,collectedAt:at});
 const source={requestedUrl:archive,finalUrl:archive,publisher:"Open States (Plural, CC-0)",sourceClass:"REFERENCE_PUBLISHER" as const,retrievedAt:at,httpStatus:200,
   rawHash:"b".repeat(64),extractedMembers:[{path:"data/ca/legislature/one.yml",sha256:"c".repeat(64)},{path:"data/tx/legislature/one.yml",sha256:"d".repeat(64)}],reviewedEvidence:"The exact archive and each extracted member are retained."};
+
+test("phone-only global member ids keep the owned state and legacy source state without hiding a different native state", () => {
+  const base = office("ca") as MemberOfficeRecord;
+  const phoneOnly = { ...base, officeholderId: "ocd-person/12345678-1234-1234-1234-123456789012", office: { ...base.office, address: null, state: null } };
+  assert.equal(memberOfficeRecordState(phoneOnly, memberOfficeStateScope("CA")), "CA");
+  assert.equal(memberOfficeRecordState(phoneOnly, MEMBER_OFFICE_NATIONAL_SCOPE), "CA");
+  assert.equal(memberOfficeRecordState({ ...phoneOnly, officeholderId: "plural:tx:one" }, memberOfficeStateScope("CA")), "TX");
+});
 
 test("legacy office rows and extracted-member evidence cut over one state at a time without national reads",async()=>{
   installFactReader(async()=>[]);

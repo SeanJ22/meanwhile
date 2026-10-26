@@ -4,6 +4,10 @@ import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
 import type { Registry } from "../registry/types.ts";
 import { selectRegistryLookup } from "./keyed-rows.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
+import { MEMBER_OFFICE_NATIONAL_SCOPE, memberOfficeStateScope, memberOfficeRecordState, type MemberOfficeSlice } from "../officials/member-office-data.ts";
+import type { MemberOfficeRecord } from "../officials/member-offices.ts";
+import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
+import { manualSourceUrls } from "./manual-source-urls.ts";
 import { VOTING_SOURCE_REPLACEMENT_VERIFIER, votingSourceReplacement, votingSourceReplacementVerifier } from "../ballot/voting-source-replacement-contract.ts";
 
 import { candidateChangeSet } from "./changes.ts";
@@ -110,11 +114,45 @@ function candidateReadOnlyStore(
   const readOnly = async (): Promise<never> => {
     throw new Error("SOURCE_SCOPED_PREFLIGHT_STORE_IS_READ_ONLY");
   };
+  const ownedRecords = [record, ...(predecessor ? [predecessor] : [])];
+  const officeModel = (row: CandidateVersionRecord | null) => {
+    const value = row?.candidate.readModel as { kind?: string; records?: readonly MemberOfficeRecord[];
+      rosterDigests?: Readonly<Record<string, string>>; pending?: readonly string[] } | null;
+    return row?.candidate.recordClass === "CURATED_READER_RECORD" && value?.kind === "member-offices" ? value : null;
+  };
   return {
     create: readOnly,
     transition: readOnly,
     promote: readOnly,
     appendEvidence: readOnly,
+    writeMemberOfficeProgress: readOnly,
+    readMemberOfficeProgress: async () => {
+      const value = officeModel(record) ?? officeModel(predecessor);
+      return { rosterDigests: value?.rosterDigests ?? {}, pending: value?.pending ?? [] };
+    },
+    readMemberOfficeMembers: async members => {
+      const value = officeModel(record) ?? officeModel(predecessor);
+      return (value?.records ?? []).filter(row => members.includes(row.officeholderId));
+    },
+    readMemberOfficeSlice: async (state, members = []): Promise<MemberOfficeSlice | null> => {
+      const scope = memberOfficeStateScope(state), postal = scope.slice(3, 5);
+      const row = ownedRecords.find(row => row.candidate.scope === scope && officeModel(row))
+        ?? ownedRecords.find(row => row.candidate.scope === MEMBER_OFFICE_NATIONAL_SCOPE && officeModel(row));
+      const value = row ? officeModel(row) : null;
+      if (!row?.receipt || !value) return null;
+      const records = (value.records ?? []).filter(office => memberOfficeRecordState(office, row.candidate.scope) === postal &&
+        (!members.length || members.includes(office.officeholderId)));
+      const urls = new Set(records.flatMap(manualRecordSourceUrls));
+      const sources = (row.candidate.retrieval.manualSourceReceipt?.sources ?? []).filter(source => source.reviewOutcome !== "BLOCKED" &&
+        manualSourceUrls(source).some(url => urls.has(url))).map(source => source.extractedMembers
+        ? { ...source, extractedMembers: source.extractedMembers.filter(member => member.path.startsWith(`data/${postal.toLowerCase()}/`)) } : source);
+      return { scope: row.candidate.scope, versionId: row.candidate.id, sourceId: row.candidate.sourceId,
+        promotedAt: row === record ? observedAt : row.receipt.validatedAt, retrievedAt: row.candidate.retrieval.retrievedAt,
+        sourceThrough: row.candidate.temporal.sourceThrough, version: row.candidate.temporal.version,
+        staleAtRetrieval: row.candidate.temporal.staleAtRetrieval, receipt: row.receipt, records, sources,
+        header: Object.fromEntries(Object.entries(value).filter(([key]) => key !== "records")),
+        normalization: { normalizedHash: row.candidate.normalization.normalizedHash, stateRecordHashes: row.candidate.normalization.stateRecordHashes } };
+    },
     readCandidate: async (candidateId) => candidateId === candidate.id
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,

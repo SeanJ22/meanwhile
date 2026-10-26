@@ -1,5 +1,4 @@
-import { readMemberOfficeMembers, readMemberOfficeRows, memberOfficeStateScope, memberOfficeScopeState, MEMBER_OFFICE_CURSOR, type MemberOfficeProgress, type MemberOfficeSlice } from "../officials/member-office-data.ts";
-import { statePeopleScopeForId } from "../officials/people-identity.ts";
+import { readMemberOfficeMembers, readMemberOfficeRows, memberOfficeStateScope, memberOfficeScopeState, memberOfficeRecordState, MEMBER_OFFICE_CURSOR, type MemberOfficeProgress, type MemberOfficeSlice } from "../officials/member-office-data.ts";
 import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
 import { manualSourceUrls } from "./manual-source-urls.ts";
 import { createHash } from "node:crypto";
@@ -890,7 +889,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const overridden=new Set(records.filter(Boolean).map(slice=>memberOfficeScopeState(slice!.scope)));
     const legacy=this.promotions.get(projectionKey("CURATED_READER_RECORD",MEMBER_OFFICES_SCOPE));
     const old=((legacy?.payload as {records?:readonly import("../officials/member-offices.ts").MemberOfficeRecord[]})?.records??[])
-      .filter(row=>members.includes(row.officeholderId)&&!overridden.has(statePeopleScopeForId(row.officeholderId,row.office.state??undefined)?.slice(3)??null));
+      .filter(row=>members.includes(row.officeholderId)&&!overridden.has(memberOfficeRecordState(row,MEMBER_OFFICES_SCOPE)));
     return structuredClone([...records.flatMap(slice=>slice?.records??[]),...old]);
   }
   async readMemberOfficeSlice(state: string, members: readonly string[] = []): Promise<MemberOfficeSlice | null> {
@@ -900,7 +899,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     if (!pointer || !record) return null;
     if (record.state !== "PROMOTED" || pointer.receipt.decision !== "GOOD") throw new Error(`MEMBER_OFFICE_POINTER_INVALID:${pointer.scope}`);
     const records = ((pointer.payload as { records?: readonly import("../officials/member-offices.ts").MemberOfficeRecord[] }).records ?? []).filter(row =>
-      statePeopleScopeForId(row.officeholderId, row.office.state ?? undefined) === `US-${postal}` && (!members.length || members.includes(row.officeholderId)));
+      memberOfficeRecordState(row, pointer.scope) === postal && (!members.length || members.includes(row.officeholderId)));
     const urls = new Set(records.flatMap(manualRecordSourceUrls));
     const sources = (record.candidate.retrieval.manualSourceReceipt?.sources ?? []).filter(source => source.reviewOutcome !== "BLOCKED" && manualSourceUrls(source).some(url => urls.has(url)))
       .map(source => source.extractedMembers ? { ...source, extractedMembers: source.extractedMembers.filter(member => member.path.startsWith(`data/${postal.toLowerCase()}/`)) } : source);

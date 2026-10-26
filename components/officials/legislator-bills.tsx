@@ -1,4 +1,5 @@
 "use client";
+import { ReaderText } from "@/components/ui/reader-text";
 import { useEffect,useState } from "react";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Bill } from "@/lib/sources/legiscan/bills";
@@ -27,7 +28,7 @@ export function LegislatorBills({holder}:{holder:SeatHolder}) {
     <h3 className="t-eyebrow text-muted">Sponsored bills</h3>
     <>
       <ul className="mt-2 space-y-3">{bills.map(bill=><li key={bill.id} data-bill-id={bill.id} className="t-detail">
-        <a href={bill.sourceUrl} target="_blank" rel="noreferrer noopener" className="text-link">{bill.number} · {bill.title}</a>
+        <a href={bill.sourceUrl} target="_blank" rel="noreferrer noopener" className="text-link">{bill.number} · <ReaderText text={bill.title} names={[holder.name]} /></a>
         <p>{bill.statusLabel}{bill.statusDate?` · ${bill.statusDate}`:""} · {bill.sessionName}</p>
         <p>Sponsors: {bill.sponsors.map(row=>row.name).join(", ")}</p>
         <p>{bill.texts.map((row,index)=><span key={row.id}>{index>0?" · ":""}<a href={row.governmentUrl??row.url} target="_blank" rel="noreferrer noopener" className="text-link">{row.type}{row.date?` (${row.date})`:""}</a></span>)}</p>

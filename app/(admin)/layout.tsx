@@ -123,7 +123,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin a { color: var(--ce-lumen); text-decoration-color: var(--ce-alpha-hairline-strong); }
 .admin table { width: 100%; border-collapse: collapse; margin: .5rem 0 1rem; font-size: .9rem; }
 .admin th, .admin td { text-align: left; padding: .4rem .55rem; border-bottom: 1px solid var(--ce-alpha-hairline); vertical-align: top; }
-.admin th { color: var(--ce-muted); font-weight: 500; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; }
+.admin th { color: var(--ce-muted); font-weight: 500; font-size: .78rem; letter-spacing: .04em; }
 .admin tbody th { color: var(--ce-fg); font-weight: 600; font-size: inherit; letter-spacing: 0; text-transform: none; }
 .admin td.n, .admin th.n { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .admin pre { overflow-x: auto; padding: .75rem; background: var(--ce-panel); box-shadow: var(--ce-rim); border-radius: var(--ce-radius-md); font-size: .85rem; }
@@ -203,7 +203,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin textarea:focus, .admin input:focus { background: var(--ce-panel-raised); }
 .admin input[type="password"] { width: 100%; max-width: 28rem; }
 /* The console header's own controls: the label is a caption, the select is the recipe one size down. */
-.console-nav label { display: flex; flex-direction: column; gap: .2rem; margin: 0; font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-muted); }
+.console-nav label { display: flex; flex-direction: column; gap: .2rem; margin: 0; font-size: .72rem; letter-spacing: .05em; color: var(--ce-muted); }
 .console-nav select { font-size: .95rem; text-transform: none; letter-spacing: normal; padding: .35rem .5rem; min-width: 11rem; }
 }
 
@@ -212,11 +212,11 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin small.note { display: inline; }
 .admin .denom { color: var(--ce-muted); font-weight: 400; }
 .admin .gap { font-style: italic; color: var(--ce-muted); }
-.admin .gap-whose { text-transform: uppercase; font-size: .68rem; letter-spacing: .06em; color: var(--ce-muted); font-style: normal; }
+.admin .gap-whose { font-size: .68rem; letter-spacing: .06em; color: var(--ce-muted); font-style: normal; }
 /* ---- MAP PROVIDER (MAPQ-6): the bill, and the row that must be visible when it is not zero. ---- */
 .admin .mt-panel .mt-what { color: var(--ce-muted); font-size: .85rem; margin: .1rem 0 .4rem; }
 .admin .mt-panel .mt-status { margin: .2rem 0 .8rem; }
-.admin .mt-panel h3 { font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-muted); margin: 1rem 0 .2rem; font-weight: 500; }
+.admin .mt-panel h3 { font-size: .78rem; letter-spacing: .05em; color: var(--ce-muted); margin: 1rem 0 .2rem; font-weight: 500; }
 .admin .mt-panel .mt-tiles { margin-bottom: 1rem; }
 .admin .mt-panel table th[scope="row"] { color: var(--ce-fg); text-transform: none; letter-spacing: 0; font-size: .85rem; font-weight: 500; }
 .admin .mt-panel .mt-next { font-size: .85rem; margin: .25rem 0; }
@@ -224,7 +224,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 /* An undeclared key with traffic is the finding, so it is not a subtle row. */
 .admin .mt-panel tr.mt-unexpected th, .admin .mt-panel tr.mt-unexpected td { box-shadow: inset 3px 0 0 0 #b3261e; }
 .admin .mt-panel tr.mt-unexpected td.n { color: var(--ce-text-bad); font-weight: 600; }
-.admin .mt-panel .mt-flag { display: block; font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-text-bad); font-weight: 500; }
+.admin .mt-panel .mt-flag { display: block; font-size: .7rem; letter-spacing: .05em; color: var(--ce-text-bad); font-weight: 500; }
 .admin .refusal { padding: .75rem 1rem; box-shadow: inset 0 0 0 2px #b3261e, var(--ce-shadow-card); border-radius: var(--ce-radius-md); background: var(--ce-panel); }
 .admin .state-green { color: var(--ce-text-ok); font-weight: 600; }
 .admin .state-red { color: var(--ce-text-bad); font-weight: 600; }
@@ -240,7 +240,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .op-badge {
   display: inline-flex; align-items: center; gap: .3rem;
   padding: .12rem .5rem; border-radius: var(--ce-radius-md);
-  font-size: .66rem; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+  font-size: .66rem; font-weight: 600; letter-spacing: .08em;
   font-family: inherit; white-space: nowrap; border: 1px solid transparent;
 }
 /* fresh / confirmed → FILLED in the foreground ink (the GOVERNS move). */
@@ -262,7 +262,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .when { font-variant-numeric: tabular-nums; }
 .admin details.ph-evidence { margin: .5rem 0 1rem; }
 .admin details.raw-ids { margin-top: .2rem; }
-.admin details.raw-ids summary { font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; }
+.admin details.raw-ids summary { font-size: .72rem; letter-spacing: .04em; }
 .admin .outcome { text-transform: capitalize; }
 .admin .outcome-completed { color: var(--ce-text-ok); }
 .admin .outcome-aborted, .admin .outcome-failed { color: var(--ce-text-bad); }
@@ -288,7 +288,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 /* ============================================================ pilot health */
 .admin .ph-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr)); gap: .75rem; margin: .5rem 0 1.25rem; }
 .admin .ph-card h3 { display: flex; justify-content: space-between; align-items: baseline; gap: .5rem; margin: 0 0 .25rem; font-size: .95rem; }
-.admin .ph-chip { font-size: .68rem; text-transform: uppercase; letter-spacing: .04em; padding: 0 .35rem; border-radius: .25rem; box-shadow: inset 0 0 0 1px currentColor; white-space: nowrap; }
+.admin .ph-chip { font-size: .68rem; letter-spacing: .04em; padding: 0 .35rem; border-radius: .25rem; box-shadow: inset 0 0 0 1px currentColor; white-space: nowrap; }
 .admin .ph-num { font-size: 1.25rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 .admin .ph-meta { font-size: .72rem; color: var(--ce-muted); margin: .1rem 0 0; }
 .admin .ph-reason { font-size: .82rem; margin: .35rem 0 0; }
@@ -366,7 +366,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .where .lvl-dot { margin-right: 0; width: .45rem; height: .45rem; }
 .admin .fleet-latest { font-size: .78rem; color: var(--ce-muted); margin: .35rem 0 0; padding-left: 1rem; }
 .admin .fleet-latest .name { color: var(--ce-fg); }
-.admin .fleet-roles { font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-muted); font-weight: 400; }
+.admin .fleet-roles { font-size: .7rem; letter-spacing: .05em; color: var(--ce-muted); font-weight: 400; }
 .admin .deploy {
   position: relative; border-radius: var(--ce-radius-lg); padding: .9rem 1.1rem; margin: .75rem 0 1rem;
   background: var(--ce-surface-gradient); box-shadow: var(--ce-rim), var(--ce-shadow-raised); isolation: isolate; overflow: hidden;
@@ -394,7 +394,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .queue-card .queue-head h3, .admin .fix-queue .queue-head h3 { margin: 0; font-size: 1rem; }
 .admin .queue-card .queue-id { font-family: var(--font-jetbrains-mono), ui-monospace, monospace; font-size: .8rem; color: var(--ce-muted); }
 .admin .queue-card .queue-meta { font-size: .78rem; color: var(--ce-muted); margin: 0 0 .45rem; }
-.admin .chip { text-transform: uppercase; font-size: .66rem; letter-spacing: .05em; }
+.admin .chip { font-size: .66rem; letter-spacing: .05em; }
 .admin .chip.receipt-done { color: var(--ce-text-ok); }
 .admin .chip.receipt-waiting { color: var(--ce-lumen); }
 .admin .chip.receipt-refused { color: var(--ce-text-bad); }
@@ -432,7 +432,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 
 /* ---- Charts (ADM-11/13/17): lit bars, hue only by level. ---- */
 .admin .chart { margin: .6rem 0 1rem; }
-.admin .chart figcaption { font-size: .78rem; color: var(--ce-muted); letter-spacing: .03em; text-transform: uppercase; margin-bottom: .35rem; }
+.admin .chart figcaption { font-size: .78rem; color: var(--ce-muted); letter-spacing: .03em; margin-bottom: .35rem; }
 .admin .chart-row { display: flex; flex-wrap: wrap; gap: 1rem 2rem; align-items: flex-start; }
 .admin .chart-row .chart { flex: 1 1 18rem; margin: .5rem 0; }
 .admin .chart ul, .admin .chart ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .3rem; }
@@ -504,11 +504,11 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
  * A definition list, because that is what it is: a question and its answer.
  */
 .admin .rr-plain { display: grid; grid-template-columns: minmax(9rem, max-content) 1fr; gap: .35rem 1rem; margin: .75rem 0; }
-.admin .rr-plain dt { font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
+.admin .rr-plain dt { font-size: .78rem; letter-spacing: .04em; color: var(--ce-muted); }
 .admin .rr-plain dd { margin: 0; }
 @media (max-width: 34rem) { .admin .rr-plain { grid-template-columns: 1fr; } .admin .rr-plain dd { margin-bottom: .4rem; } }
 .admin details.rr-build-identity { margin: .75rem 0; }
-.admin details.rr-build-identity > summary { cursor: pointer; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
+.admin details.rr-build-identity > summary { cursor: pointer; font-size: .78rem; letter-spacing: .04em; color: var(--ce-muted); }
 .admin .rr-sha { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: .3rem; }
 .admin .rr-sha code { overflow-wrap: anywhere; }
 .admin .rr-sections { display: grid; gap: .8rem; margin: .5rem 0 1rem; }
@@ -736,7 +736,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .ft-group-header { display: grid; grid-template-columns: 11px auto 1fr; gap: .5rem; align-items: center; margin: .5rem 0 .1rem; }
 .admin .ft-chip { width: 11px; height: 11px; border-radius: 3px; background: #4c9a5a; }
 .admin .ft-chip-dashed { background: transparent; border: 1.5px dashed #6fa8a5; }
-.admin .ft-group-label { font-family: var(--ft-mono); font-size: .78rem; text-transform: uppercase; letter-spacing: .05em; color: var(--ce-muted); }
+.admin .ft-group-label { font-family: var(--ft-mono); font-size: .78rem; letter-spacing: .05em; color: var(--ce-muted); }
 .admin .ft-rule { height: 1px; background: var(--ce-hairline); }
 
 .admin .ft-lede { font-size: .95rem; color: var(--ce-fg); margin: 0; }
@@ -745,7 +745,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .ft-finding-red { box-shadow: inset 0 0 0 1px rgba(204,75,75,.45), 0 0 0 1px rgba(204,75,75,.16), var(--ce-shadow-card); }
 .admin .ft-finding-main { display: grid; gap: .5rem; align-content: start; }
 .admin .ft-badge-row { display: flex; flex-wrap: wrap; gap: .5rem; align-items: baseline; }
-.admin .ft-kind-badge { font-family: var(--ft-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .06em; padding: .15rem .45rem; border-radius: 4px; background: color-mix(in srgb, #cc4b4b 18%, transparent); color: #ff8a8a; }
+.admin .ft-kind-badge { font-family: var(--ft-mono); font-size: .68rem; letter-spacing: .06em; padding: .15rem .45rem; border-radius: 4px; background: color-mix(in srgb, #cc4b4b 18%, transparent); color: #ff8a8a; }
 .admin .ft-verdict { font-size: 1.05rem; font-weight: 600; margin: 0; }
 .admin .ft-explain { max-width: 74ch; }
 .admin .ft-arith dl { display: grid; gap: .1rem; margin: .3rem 0 0; }
@@ -787,7 +787,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .ft-exceptions .ft-finding { grid-template-columns: minmax(0,1fr); }
 .admin .ft-fieldrows { display: grid; gap: .2rem; margin: 0; }
 .admin .ft-fieldrows > div { display: grid; grid-template-columns: 130px 1fr; gap: .5rem; }
-.admin .ft-fieldrows dt { font-family: var(--ft-mono); font-size: .74rem; text-transform: uppercase; color: var(--ce-muted); }
+.admin .ft-fieldrows dt { font-family: var(--ft-mono); font-size: .74rem; color: var(--ce-muted); }
 .admin .ft-fieldrows dd { margin: 0; }
 .admin .ft-subhead { font-size: 1rem; margin: 0 0 .3rem; }
 .admin .ft-shape { display: grid; gap: .4rem; }
@@ -832,7 +832,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 /* ============================================================ Admin C — the shipping and integration view (ADM-C2) */
 .admin .st-identity-grid { display: grid; gap: .5rem; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); margin: .5rem 0 1rem; }
 .admin .st-identity-cell { display: grid; gap: .2rem; padding: .55rem .65rem; border-radius: .4rem; background: var(--ce-panel); box-shadow: var(--ce-rim); }
-.admin .st-identity-label { font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
+.admin .st-identity-label { font-size: .72rem; letter-spacing: .04em; color: var(--ce-muted); }
 .admin .st-identity-means { font-size: .78rem; color: var(--ce-fg-66); }
 .admin code.st-commit, .admin .st-commit { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .82rem; white-space: nowrap; padding: .05rem .3rem; border-radius: .2rem; background: var(--ce-panel-raised); }
 .admin .st-check { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .78rem; white-space: nowrap; padding: .05rem .3rem; border-radius: .2rem; background: var(--ce-panel-raised); margin-inline-end: .35rem; }
@@ -850,7 +850,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .st-stage-label { color: var(--ce-fg); }
 .admin .st-stage-state { grid-column: 2; font-size: .74rem; color: var(--ce-muted); }
 .admin .st-facts, .admin .st-detail { display: grid; grid-template-columns: max-content 1fr; gap: .2rem .6rem; margin: .5rem 0; font-size: .86rem; }
-.admin .st-facts dt, .admin .st-detail dt { font-size: .74rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
+.admin .st-facts dt, .admin .st-detail dt { font-size: .74rem; letter-spacing: .04em; color: var(--ce-muted); }
 .admin .st-facts dd, .admin .st-detail dd { margin: 0; }
 .admin .st-blocked { color: var(--ce-text-warn); }
 .admin .st-responsible { color: var(--ce-muted); }
@@ -883,10 +883,10 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .fi-item { padding: .7rem .8rem; border-radius: .45rem; background: var(--ce-panel); box-shadow: var(--ce-rim); }
 .admin .fi-head { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; font-size: .8rem; }
 .admin .fi-head .when { margin-inline-start: auto; }
-.admin .fi-badge { font-size: .68rem; letter-spacing: .05em; text-transform: uppercase; padding: .05rem .35rem; border-radius: .25rem; box-shadow: inset 0 0 0 1px currentColor; }
+.admin .fi-badge { font-size: .68rem; letter-spacing: .05em; padding: .05rem .35rem; border-radius: .25rem; box-shadow: inset 0 0 0 1px currentColor; }
 .admin .fi-badge-production { color: var(--ce-text-ok); }
 .admin .fi-badge-staging { color: var(--ce-lumen); }
-.admin .fi-state { font-size: .68rem; letter-spacing: .05em; text-transform: uppercase; padding: .05rem .35rem; border-radius: .25rem; }
+.admin .fi-state { font-size: .68rem; letter-spacing: .05em; padding: .05rem .35rem; border-radius: .25rem; }
 .admin .fi-state-ok { color: var(--ce-text-ok); }
 .admin .fi-state-warn { color: var(--ce-text-warn); }
 .admin .fi-state-bad { color: var(--ce-text-bad); }
@@ -910,8 +910,8 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .fi-empty { color: var(--ce-muted); }
 
 /* ============================================================ Admin C — cost classes and role colours (ADM-33, ADM-36) */
-.admin table.cost tr.group-head th { font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); padding-top: .6rem; border-bottom: 0; text-align: left; }
-.admin .cost-class { display: inline-block; font-size: .68rem; letter-spacing: .04em; text-transform: uppercase; padding: 0 .35rem; border-radius: .25rem; box-shadow: inset 0 0 0 1px currentColor; white-space: nowrap; }
+.admin table.cost tr.group-head th { font-size: .72rem; letter-spacing: .04em; color: var(--ce-muted); padding-top: .6rem; border-bottom: 0; text-align: left; }
+.admin .cost-class { display: inline-block; font-size: .68rem; letter-spacing: .04em; padding: 0 .35rem; border-radius: .25rem; box-shadow: inset 0 0 0 1px currentColor; white-space: nowrap; }
 .admin .cost-class-paid-model { color: var(--ce-lumen); }
 .admin .cost-class-plain-code { color: var(--ce-text-ok); }
 .admin .cost-class-subscription-job { color: var(--ce-text-ok); }
@@ -950,7 +950,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .src-table-scroll { overflow-x: auto; }
 .admin table.src-table { width: 100%; border-collapse: collapse; font-size: .82rem; }
 .admin table.src-table th, .admin table.src-table td { text-align: left; vertical-align: top; padding: .35rem .5rem; border-bottom: 1px solid var(--ce-hairline); }
-.admin table.src-table thead th { position: sticky; top: 0; background: var(--ce-void); font-size: .72rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); font-weight: 500; }
+.admin table.src-table thead th { position: sticky; top: 0; background: var(--ce-void); font-size: .72rem; letter-spacing: .04em; color: var(--ce-muted); font-weight: 500; }
 .admin .src-row { border-inline-start: 3px solid transparent; }
 .admin .src-ok { border-inline-start-color: var(--ce-text-ok); }
 .admin .src-warn { border-inline-start-color: var(--ce-text-warn); }
@@ -974,7 +974,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .src-last, .admin .src-next, .admin .src-health, .admin .src-coverage { white-space: nowrap; }
 .admin .src-gap { color: var(--ce-muted); font-style: italic; border-bottom: 1px dotted var(--ce-hairline); }
 .admin .src-blocker { font-size: .76rem; padding-inline-start: .6rem; margin: .2rem 0; }
-.admin .src-blocker-whose { font-size: .7rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); margin-inline-end: .3rem; }
+.admin .src-blocker-whose { font-size: .7rem; letter-spacing: .04em; color: var(--ce-muted); margin-inline-end: .3rem; }
 .admin .src-needs-list, .admin .src-legacy { list-style: none; margin: .4rem 0; padding: 0; display: grid; gap: .25rem; }
 .admin .src-legacy code { font-size: .76rem; }
 .admin .src-disagreements { line-height: 1.6; }
@@ -1061,7 +1061,7 @@ body:has(main.admin) { background: var(--bg, #1b1c22); }
 .admin .deploy { margin: .75rem 0; display: grid; gap: .4rem; }
 .admin .deploy-preview { padding: .8rem 1rem; border-radius: var(--ce-radius-md); background: var(--ce-panel); box-shadow: var(--ce-rim); }
 .admin .deploy-preview h4 { margin: 0 0 .4rem; }
-.admin .deploy-preview h5 { margin: .7rem 0 .2rem; font-size: .78rem; letter-spacing: .04em; text-transform: uppercase; color: var(--ce-muted); }
+.admin .deploy-preview h5 { margin: .7rem 0 .2rem; font-size: .78rem; letter-spacing: .04em; color: var(--ce-muted); }
 .admin .dp-means { margin: .2rem 0 .5rem; font-weight: 600; }
 .admin .dp-list, .admin .dp-after { margin: .2rem 0; padding-inline-start: 1.1rem; font-size: .88rem; line-height: 1.5; }
 .admin .dp-list { list-style: disc; }

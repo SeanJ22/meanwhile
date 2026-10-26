@@ -1,5 +1,6 @@
 "use client";
 
+import { ReaderText } from "@/components/ui/reader-text";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { useEffect, useState } from "react";
 import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
@@ -153,7 +154,7 @@ export function PublicStatementsProfileContent({ profile, statementsHeld = false
             {/* The same figures in PRL's own sentences, for screen readers; collapsed by default. */}
             <details className="mw-chart-words">
               <summary>The same figures in words</summary>
-              {categories.map(category => <p key={category.id}>{category.sentence}</p>)}
+              {categories.map(category => <p key={category.id}><ReaderText text={category.sentence} /></p>)}
             </details>
             {chosen && (
               <div className="mw-definition" role="status">
@@ -161,7 +162,7 @@ export function PublicStatementsProfileContent({ profile, statementsHeld = false
                   {CATEGORY_NAME[chosen.id] ?? chosen.id} · {Math.round(shareOf(chosen) ?? 0)}%
                 </p>
                 {definition && <p>{definition.explainer}</p>}
-                <p>{chosen.sentence}</p>
+                <p><ReaderText text={chosen.sentence} /></p>
                 {definition && (
                   <p className="mw-dim">
                     PRL field <code>{definition.column}</code>
@@ -176,7 +177,7 @@ export function PublicStatementsProfileContent({ profile, statementsHeld = false
         ) : (
           <>
             <CardGapContribution id={`statement-shares:${profile.subjectId}`} label="public statement category shares" />
-            {categories.map(category => <p key={category.id}>{category.sentence}</p>)}
+            {categories.map(category => <p key={category.id}><ReaderText text={category.sentence} /></p>)}
           </>
         )}
         {!statementsHeld && <CardGapContribution id={`individual-statements:${profile.subjectId}`} label="individual public statements" />}
@@ -184,8 +185,8 @@ export function PublicStatementsProfileContent({ profile, statementsHeld = false
           {profile.statementCount.toLocaleString("en-US")} statements tracked. Measured {formatDateLong(profile.measuredAt)}. Read {formatDateLong(profile.readAt.slice(0, 10))}.
         </p>
         <p className="break-words t-detail text-muted-foreground">
-          <a className="underline underline-offset-2" href={profile.attribution.url} target="_blank" rel="noreferrer">{profile.attribution.citation}</a>
-          {" · "}<a className="underline underline-offset-2" href={profile.attribution.licenceUrl} target="_blank" rel="noreferrer">{profile.attribution.licence}</a>
+          <a className="underline underline-offset-2" href={profile.attribution.url} target="_blank" rel="noreferrer"><ReaderText text={profile.attribution.citation} mode="title" /></a>
+          {" · "}<a className="underline underline-offset-2" href={profile.attribution.licenceUrl} target="_blank" rel="noreferrer"><ReaderText text={profile.attribution.licence} mode="title" /></a>
         </p>
       </div>
   );
@@ -196,7 +197,7 @@ export function ArchivedStatementsContent({ archive }: { archive: PrlPersonRead 
   return <div className="mt-3 space-y-3 t-body" data-statement-feed="held">
     {archive.summaries.map(summary => <details key={summary.kind}>
       <summary className="cursor-pointer text-link">{summary.kind === "state" ? "State legislator statement measurements" : "Primary campaign statement measurements"}</summary>
-      <p>{summary.profile.statementCount.toLocaleString("en-US")} statements classified by {summary.attribution.text}.</p>
+      <p>{summary.profile.statementCount.toLocaleString("en-US")} statements classified by <ReaderText text={summary.attribution.text} mode="title" />.</p>
       {PRL_CATEGORIES.map(category => {
         const share = summary.profile.shares[category.key];
         return share === null ? null : <p key={category.key}>{category.label}: {share.toFixed(1)}%.</p>;
@@ -205,9 +206,9 @@ export function ArchivedStatementsContent({ archive }: { archive: PrlPersonRead 
       <p className="t-detail"><a href={summary.sourceUrl} target="_blank" rel="noreferrer" className="text-link">Source</a>{" · "}Retrieved {summary.retrievedAt.slice(0, 10)}.</p>
     </details>)}
     {archive.statements.map(statement => <details key={statement.id}>
-      <summary className="cursor-pointer text-link">{formatDateLong(statement.date.slice(0, 10))} · {statement.sourceLabel}</summary>
-      <blockquote className="mt-2 whitespace-pre-wrap">{statement.text}</blockquote>
-      <p className="mt-1 t-detail">Attributed by {statement.attribution.text}. <a href={statement.sourceUrl} target="_blank" rel="noreferrer" className="text-link">Original source</a>{" · "}Retrieved {statement.retrievedAt.slice(0, 10)}.</p>
+      <summary className="cursor-pointer text-link">{formatDateLong(statement.date.slice(0, 10))} · <ReaderText text={statement.sourceLabel} mode="title" /></summary>
+      <blockquote className="mt-2 whitespace-pre-wrap"><ReaderText text={statement.text} /></blockquote>
+      <p className="mt-1 t-detail">Attributed by <ReaderText text={statement.attribution.text} mode="title" />. <a href={statement.sourceUrl} target="_blank" rel="noreferrer" className="text-link">Original source</a>{" · "}Retrieved {statement.retrievedAt.slice(0, 10)}.</p>
     </details>)}
     {archive.gaps.length > 0 && <CardGapContribution id="statement-archive-gaps" label="public statement records" />}
     <p className="t-detail"><a href="https://americaspoliticalpulse.com/elites/data" target="_blank" rel="noreferrer" className="text-link">America’s Political Pulse — Congressional Rhetoric Dataset</a>{" · "}<a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noreferrer" className="text-link">CC BY</a></p>

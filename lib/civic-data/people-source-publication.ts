@@ -249,8 +249,9 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const sourceRawHash = input.sourceProbe
     ? sourceContentHash(input.acquisitions,{normalizationInputHash:input.sourceProbe.normalizationInputHash})
     : peopleSourceContentHash(input.acquisitions,input.roster);
-  let candidate = peopleSourceCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,sourceRawHash,
+  const built = peopleSourceCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,sourceRawHash,
     violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
+  let candidate:RoutineCandidate={...built,retrieval:{...built.retrieval,complete:input.sourceProbe?.complete ?? !input.gaps?.length}};
   if(input.sourceContentInputs)candidate=withDerivedSourceContent(candidate,input.sourceContentInputs);
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"

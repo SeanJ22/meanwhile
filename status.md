@@ -1412,3 +1412,7 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - rebuild_queue 162,420; place_page 15,685 (no new pages since 4:19 AM; nothing drains until 127 is live).
 - GB-01: census done through CO. LA and NE not reached.
 - DB-04: no READY (last commit 1:11 AM). Research cycle: no Send.
+
+### 7:05 AM EDT: release 127 live (deploys unblocked); release 128 opened
+- 127 live 6:49 AM (e673c5143): the build built pages for its budget (15,685 to 19,640) and deployed. 126's content is live with it. Reader checks running; reports in releases/127.md and releases/126.md.
+- Maryland cost fix gate 9/9 on 90348edd4 (10,097 pass). river moved there. Release 128 is [#840](https://github.com/SeanJ22/meanwhile/pull/840), auto-merge on. Report: releases/128.md.

@@ -232,12 +232,13 @@ const houstonFixtures = await Promise.all([false, true].map(async withSuccessor 
 
 /** One cold render: the page, then every async component it returned, called from outside the page. */
 async function renderBallot(place: string | Record<string, string>): Promise<{ components: Map<string, number>; text: string; contestIds: Set<string>; candidateIds: Set<string>; filingCandidateIds: Set<string>; sourceUrls: Set<string>; candidateSources: Map<string, string[]>; candidateAliases: Map<string, Set<string>>; choiceOccurrences: Map<string, number>; ticketLabels: Map<string, string>; readerSelection: ReaderSelection | undefined;
-  datedEvents: number; navigationCards: Set<string>; stateElectionOffices: Set<string> }> {
+  datedEvents: number; navigationCards: Set<string>; stateElectionOffices: Set<string>; fundingReads: Set<Promise<unknown>> }> {
   activateCanonicalFixture(activeFixture!);
   clearPromotedReadModelCache();
   const { default: BallotPage } = await import("../app/ballot/page.tsx");
   const tree = await BallotPage({ searchParams: Promise.resolve(typeof place === "string" ? { zip: place } : place) });
   const components = new Map<string, number>();
+  const fundingReads = new Set<Promise<unknown>>();
   const text: string[] = [];
   const contestIds = new Set<string>();
   const candidateIds = new Set<string>();
@@ -270,6 +271,10 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
       return;
     }
     if (element.props?.readerSelection) readerSelection = element.props.readerSelection as ReaderSelection;
+    if (typeof element.type === "function" && element.type.name === "CandidateFunding" && element.props?.available) {
+      assert.ok(element.props.fundingRead instanceof Promise, "funding cards receive their ballot's acquired source read");
+      fundingReads.add(element.props.fundingRead);
+    }
     if (element.props && "data-dated-event" in element.props) datedEvents++;
     const navigationCard = (element.props?.attrs as Record<string, unknown> | undefined)?.["data-ballot-navigation"];
     if (typeof navigationCard === "string") navigationCards.add(navigationCard);
@@ -318,7 +323,7 @@ async function renderBallot(place: string | Record<string, string>): Promise<{ c
     for (const value of Object.values(element.props ?? {})) await walk(value);
   };
   await walk(tree);
-  return { components, text: text.join(" "), contestIds, candidateIds, filingCandidateIds, sourceUrls, candidateSources, candidateAliases, choiceOccurrences, ticketLabels, readerSelection, datedEvents, navigationCards, stateElectionOffices };
+  return { components, text: text.join(" "), contestIds, candidateIds, filingCandidateIds, sourceUrls, candidateSources, candidateAliases, choiceOccurrences, ticketLabels, readerSelection, datedEvents, navigationCards, stateElectionOffices, fundingReads };
 }
 
 test("React async cards retain the page's supplied place selection", () => {
@@ -360,7 +365,7 @@ test("React async cards retain the page's supplied place selection", () => {
 
 test("a cold /ballot?zip=85701 reads one state registry and all ballot families from canonical state holdings", async () => {
   activeFixture = ballotFixture;
-  const { components, text, contestIds, readerSelection } = await renderBallot("85701");
+  const { components, text, contestIds, readerSelection, fundingReads } = await renderBallot("85701");
   for (const id of ["state-senate-20", "state-house-20", "us-house-7"]) {
     assert.ok([...contestIds].some(contestId => contestId.endsWith(`:${id}`)), `the page omitted ${id}`);
   }
@@ -371,6 +376,7 @@ test("a cold /ballot?zip=85701 reads one state registry and all ballot families 
   assert.ok((components.get("BallotBattlecard") ?? 0) >= 10, `the render reached the cards: ${JSON.stringify([...components])}`);
   assert.ok((components.get("IncumbentName") ?? 0) >= 10, `the render reached the names: ${JSON.stringify([...components])}`);
   assert.ok((components.get("CandidateFunding") ?? 0) >= 1, `the render reached the funding cards: ${JSON.stringify([...components])}`);
+  assert.equal(fundingReads.size, 1, "every funding card composes from this ballot's one acquired funding preload");
 
   assert.deepEqual(readerSelection?.states, ["AZ"]);
   const registry = withReaderSelection(readerSelection, () => registryRuntimeReadState());

@@ -4,11 +4,19 @@ import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { NationalCard } from "../lib/national/section.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
-import { serverReaderValue } from "../lib/reader/memory.ts";
+import { peopleSourceRecordClass, peopleSourceScope } from "../lib/officials/people-sources.ts";
+import { installCanonicalEntries, activateCanonicalFixture } from "./helpers/canonical-reader-fixtures.ts";
+import { absentEdgeEntry, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import { NATIONAL_LINK_LABEL, NATIONAL_PATH } from "../lib/national/link.ts";
 
-const resident = { roster: null as OfficeholderSet | null };
-serverReaderValue("national-president", () => async () => resident.roster);
+function publishNationalRoster(roster: OfficeholderSet | null): void {
+  const pointer = { recordClass: peopleSourceRecordClass("statewide-executive-sources"), scope: peopleSourceScope("US", "statewide-executive-sources") };
+  installCanonicalEntries([roster ? provenEdgeEntry({ ...pointer, sourceId: "statewide-executive-sources", versionId: "test:national-section", retrievedAt: roster.generatedAt,
+    value: { formatVersion: 1, sourceId: "statewide-executive-sources", jurisdiction: "US", generatedAt: roster.generatedAt, roster } })
+    : absentEdgeEntry(pointer.recordClass, pointer.scope)], "national-section");
+  activateCanonicalFixture("national-section");
+}
+publishNationalRoster(null);
 const { NationalLink } = await import("../components/shell/national-link.tsx");
 const { NationalSection } = await import("../components/national/national-section.tsx");
 const { default: NationalPage } = await import("../app/national/page.tsx");
@@ -70,7 +78,7 @@ test("a current executive with seat, name and source page reaches the page; the 
   };
   const roster: OfficeholderSet = { scope: "US", generatedAt: at, officeholders: [person], unmatched: [],
     divisions: [{ officeholderId: person.id, ocdId: "ocd-division/country:us", bodyId: null }] };
-  resident.roster = roster;
+  publishNationalRoster(roster);
   try {
     const cards = await readNationalCards();
     assert.equal(cards.length, 1);
@@ -84,15 +92,17 @@ test("a current executive with seat, name and source page reaches the page; the 
     assert.match(html, /data-national-cards/);
     // The production shape on Oct 23: seat, name and the White House page, with no portrait, biography, term or votes yet.
     const minimum: Officeholder = { ...person, photo: null, partyLabel: null, termStart: "", termEnd: "", contactFormUrl: null, social: [], fieldSources: {}, executive: undefined };
-    resident.roster = { ...roster, officeholders: [minimum] };
+    publishNationalRoster({ ...roster, officeholders: [minimum] });
     assert.deepEqual((await readNationalCards()).map(row => [row.holder, row.title]), [["JD Vance", "Vice President of the United States"]]);
     assert.match(renderToStaticMarkup(await NationalPage()), /JD Vance/);
-    resident.roster = { ...roster, officeholders: [{ ...minimum, provenance: { ...provenance, sourceUrl: "" } }] };
+    publishNationalRoster({ ...roster, officeholders: [{ ...minimum, provenance: { ...provenance, sourceUrl: "" } }] });
+    await assert.rejects(readNationalCards(), /PEOPLE_SOURCE_PROJECTION_INVALID/, "an unsourced person cannot become a valid publication");
+    publishNationalRoster(null);
     assert.deepEqual(await readNationalCards(), [], "without the page it came from, the holder is not published");
     assert.match(renderToStaticMarkup(await NationalPage()), /data-national-gap/);
-    resident.roster = { ...roster, officeholders: [{ ...person, memberships: [{ id: "former-vp", personId: person.id,
+    publishNationalRoster({ ...roster, officeholders: [{ ...person, memberships: [{ id: "former-vp", personId: person.id,
       officeId: "vice-president", jurisdiction: "US", sourceUrl, officeTitle: person.officeTitle,
-      divisionId: "ocd-division/country:us", current: false }] }], divisions: [{ ...roster.divisions[0], membershipId: "former-vp" }] };
+      divisionId: "ocd-division/country:us", current: false }] }], divisions: [{ ...roster.divisions[0], membershipId: "former-vp" }] });
     assert.deepEqual(await readNationalCards(), [], "a former holder is never listed");
-  } finally { resident.roster = null; }
+  } finally { publishNationalRoster(null); }
 });

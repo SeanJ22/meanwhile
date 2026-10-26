@@ -43,7 +43,7 @@ test("every aggregate and log read checks database versions before a stored body
     ()=>aggregate.read("a"),()=>aggregate.readNarrowed("a",{status:true}),()=>aggregate.list(),
     ()=>aggregate.listNarrowed({status:true}),()=>aggregate.readMany!(["a"]),
     ()=>aggregate.listWhere(["status"],"OPEN"),()=>aggregate.listWhereNarrowed(["status"],"OPEN",{status:true}),
-    ()=>aggregate.listChangedSince!(null),()=>log.read("work"),()=>log.readWhere("work",["kind"],"found"),
+    ()=>aggregate.listChangedSince!(null),()=>log.read("work"),()=>log.readEntry!("work","r"),()=>log.readWhere("work",["kind"],"found"),
     ()=>log.readRecentWhere("work",["kind"],"found",3,{kind:true}),()=>log.readSince("2000-01-01T00:00:00Z"),
     ()=>log.readStampedBetween!("2000-01-01T00:00:00Z","2100-01-01T00:00:00Z",()=>{}),
     ()=>log.readAll(),()=>log.readAllNarrowed({kind:true}),()=>log.readRecent("work",3),

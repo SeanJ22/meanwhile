@@ -86,6 +86,17 @@ test("partitioned federal ballot money keeps full selected filings and committee
       assert.equal(reads,2,"later card aliases check the selected holding's current version");
       assert.equal(bodies,1,"later card aliases reuse the same complete selected holding without transferring it again");
     });
+    const nextCandidates=[{...candidates[0],totals:{...candidates[0].totals,receipts:54321}},...candidates.slice(1)];
+    await publish({id:"ballot-fec-slice-next",sourceId:contract.sourceId,recordClass:"FEC_FUNDING",scope:contract.scope,at:AT,
+      value:{...payload,candidates:nextCandidates}});
+    await withReaderSelection({states:["NJ"],keys:new Set([contest.ocdId,"state:NJ","07005"])},async()=>{
+      await Promise.all([readFederalDirectoryProjection(["NJ"],{},()=>directoryRead("NJ")),primeBallotFundingRead(set,[contest])]);
+      const next=await readPromotedCivicData<typeof payload>("FEC_FUNDING",contract.scope);
+      assert.equal(next.kind,"PROMOTED");
+      if(next.kind==="PROMOTED")assert.deepEqual(next.value,{...payload,candidates:nextCandidates.slice(0,2),secondHop:secondHop.slice(0,2),absences:absences.slice(0,1)});
+    });
+    assert.equal(reads,4,"the next ballot request checks the newly published holding");
+    assert.equal(bodies,2,"only the changed selected holding crosses again");
   }finally{installReaderDatabaseQuery(undefined);if(previousUrl===undefined)delete process.env.DATABASE_URL;else process.env.DATABASE_URL=previousUrl;await pg.close();}
 });
 

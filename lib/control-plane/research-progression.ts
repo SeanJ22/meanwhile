@@ -1,4 +1,4 @@
-import type { MethodCandidate } from "../method/candidate.ts";
+import type { CandidateSummary } from "../method/candidate.ts";
 import type { ConclusionRecord } from "../method/conclusions.ts";
 import type { MethodKnowledge, MethodRoute } from "../method/knowledge.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
@@ -77,7 +77,7 @@ export function projectResearchProgression(input: {
   readonly since: string; readonly through: string;
   readonly activities: readonly AutonomousObligationActivity[];
   readonly excludedUnclassifiedWorkItems: number;
-  readonly candidates: readonly MethodCandidate[];
+  readonly candidates: readonly CandidateSummary[];
   readonly knowledge: MethodKnowledge;
   readonly conclusions: readonly ConclusionRecord[];
 }): ResearchWindowProgression {
@@ -204,7 +204,7 @@ export function projectResearchProgression(input: {
 
 /** Uses completed window boundaries and canonical research logs. No new store. */
 export async function readResearchProgression(repos: ControlPlaneRepositories, input: {
-  readonly windowId: string; readonly through: string; readonly candidates: readonly MethodCandidate[];
+  readonly windowId: string; readonly through: string; readonly candidates: readonly CandidateSummary[];
   readonly knowledge: MethodKnowledge; readonly conclusions: readonly ConclusionRecord[];
   /** A completed research cycle supplies its own canonical boundary; it is not a promotion window. */
   readonly researchBoundary?: { readonly since: string; readonly previousCompletedWindowId: string | null };

@@ -191,7 +191,8 @@ import {
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
-import { candidateCounts as countMethodCandidates, emptyCandidateStore } from "../lib/method/candidate.ts";
+import { readMethodCandidateSummary } from "../lib/control-plane/repository/pg-store.ts";
+import { candidateCounts as countMethodCandidates } from "../lib/method/candidate.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -2583,7 +2584,7 @@ const finalizationReads = canary ? null : Promise.allSettled([
   repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
     Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] },
     new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
-  repos.methodCandidates.read("live").then(row => row?.value ?? emptyCandidateStore()),
+  readMethodCandidateSummary(repos),
   dry ? Promise.resolve(null) : readMethodKnowledge(repos),
 ] as const);
 async function computeMetrics(): Promise<ResearchMetrics | null> {
@@ -2620,7 +2621,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   }
   let counts: ReturnType<typeof countMethodCandidates> | null = null;
   if (candidatesRead.status === "fulfilled") {
-    try { counts = countMethodCandidates(candidatesRead.value); } catch {  }
+    try { counts = countMethodCandidates({ candidates: candidatesRead.value }); } catch {  }
   }
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
@@ -2666,7 +2667,7 @@ if (!dry && !canary) {
     if (scoutsRead.status === "rejected") throw scoutsRead.reason;
     researchProgression = await readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt,
-      candidates: candidatesRead.value.candidates,
+      candidates: candidatesRead.value,
       knowledge: knowledgeRead.value,
       scouts: scoutsRead.value,
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),

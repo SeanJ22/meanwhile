@@ -14,7 +14,7 @@ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import { installDatabaseClientAccounting, withCallerSite } from "../../db/transfer-by-caller.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
-import type { DoorRecord } from "../../doors/registry.ts";
+import type { DoorRecord, DoorRepository } from "../../doors/registry.ts";
 import { pageAddress } from "../../doors/page-doors.ts";
 import { requireBallotState } from "../../civic-data/state-scopes.ts";
 import type { VotingSourceDoor } from "../../ballot/voting-source-types.ts";
@@ -46,7 +46,7 @@ import { appendActionReceiptWithHistoryAtomic, readActionHistoryPage } from "./a
 import type { AgentJobRecord } from "../gateway/agent-job.ts";
 import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discovery.ts";
 import type { AdminConfig } from "../gateway/admin-config.ts";
-import type { CandidateStore } from "../../method/candidate.ts";
+import type { CandidateStore, CandidateSummary } from "../../method/candidate.ts";
 import type { FreshnessDebt } from "../scheduler/debt.ts";
 import type { FreshnessOccurrence, StandingObligation } from "../scheduler/durable.ts";
 import type { ResearchIntent, ResearchState } from "../scheduler/research-policy.ts";
@@ -375,7 +375,7 @@ export function pgAggregateRepository<T>(
     },
 
     async put(id, value, now): Promise<PutOutcome<T>> {
-
+      const submitted = JSON.stringify(value);
       const inserted = (await run(
         "put",
         rowClass,
@@ -383,10 +383,10 @@ export function pgAggregateRepository<T>(
          VALUES ($1, 1, $2, $3::jsonb)
          ON CONFLICT (id) DO NOTHING
          RETURNING id`,
-        [id, now, JSON.stringify(value)],
+        [id, now, submitted],
       )) as unknown[];
 
-      if(inserted.length)await revisions.remember(table,{id,revision:1,updated_at:now,value:JSON.parse(JSON.stringify(value))});
+      if(inserted.length)await revisions.remember(table,{id,revision:1,updated_at:now,value:JSON.parse(submitted)});
       const persisted = await read(id);
       if (persisted === null) {
         throw new CorruptPersistedState(
@@ -466,6 +466,25 @@ export function pgAggregateRepository<T>(
 }
 
 export const APPEND_ONLY_LOG_READ_PAGE = 100;
+
+export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): DoorRepository {
+  const table = "cp_doors", repo = pgAggregateRepository<DoorRecord>(sql, "Door", table, options);
+  const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const scope = (options.state ? " AND cp_control_state(cp_doors.value)=$1::text" : "")
+    + (options.activeOnly ? " AND value->>'active'='true'" : "");
+  const params = options.state ? [options.state] : [];
+  return { ...repo,
+    async meetingMatches(census, projection) {
+      const predicate = `value->>'status' IN ('OPEN','SHUT') AND value->'meeting' IS NOT NULL AND value->'meeting'<>'null'::jsonb
+        AND ${census ? "(value->'config' ? 'crosswalkRowId')" : "NOT (coalesce(value->'config','{}'::jsonb) ? 'crosswalkRowId') AND coalesce(value #> '{meeting,family}','null'::jsonb)='null'::jsonb"}${scope}`;
+      const selected = recordProjectionSql(table, projection, "value");
+      const rows = await versionedRowsFor(sql).rows((text, params) => run("meetingMatches", "PAGE", text, params),
+        table, predicate, params, selected);
+      return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
+        updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<DoorRecord>(row.value, `${table} id ${row.id}`) }));
+    },
+  };
+}
 
 function pgArchivedAggregateRepository<T>(sql: Sql, entity: string, table: string, bounds: PgRepositoryBounds): AggregateRepository<T> {
   const options = bounds;
@@ -561,6 +580,10 @@ export function pgAppendOnlyRepository<T>(
     readChangedSince(null).then(changed=>changed.records.map(entry=>out(entry.record)));
 
   return callerPinned({
+    async readEntry(key, recordId) {
+      const rows = await logRows("readEntry", "log_key=$1 AND record_id=$2", [key, recordId]);
+      return rows.length ? { position: Number(rows[0].position), record: parseValue<T>(rows[0].record, `${table} ${key}/${recordId}`) } : null;
+    },
     async append(key, recordId, record, now): Promise<AppendOutcome<T>> {
 
       const already = await logRows("append:probe","log_key=$1 AND record_id=$2",[key,recordId],"record","ORDER BY log_key,position","",recordClass);
@@ -1182,6 +1205,28 @@ const connectionForReads = Symbol("control-plane-read-connection");
 const placeReadConnection = (repos: ControlPlaneRepositories): Sql | undefined =>
   (repos as ControlPlaneRepositories & { [connectionForReads]?: () => Sql })[connectionForReads]?.();
 
+function methodSummary(value: unknown): { candidates: CandidateSummary[] } {
+  return { candidates: ((value as CandidateStore).candidates ?? []).map(({ id, lifecycle, submittedAt, admission }) =>
+    ({ id, lifecycle, submittedAt, ...(admission === undefined ? {} : { admission }) })) };
+}
+
+/** One atomic document read: membership and summary fields belong to the same stored revision. */
+export async function pgMethodCandidateSummary(sql: Sql): Promise<readonly CandidateSummary[]> {
+  const table = "cp_method_candidates", run = boundedRunner(sql, table, CONTROL_PLANE_REQUEST_BOUNDS_MS);
+  const selected = `jsonb_build_object('candidates',coalesce((SELECT jsonb_agg(
+    (SELECT coalesce(jsonb_object_agg(f.key,f.value),'{}'::jsonb) FROM jsonb_each(c.value) f
+      WHERE f.key IN ('id','lifecycle','submittedAt','admission')) ORDER BY c.position)
+    FROM jsonb_array_elements(${table}.value->'candidates') WITH ORDINALITY c(value,position)),'[]'::jsonb))`;
+  const row = await versionedRowsFor(sql).one((text, params) => run("summary", "DOCUMENT", text, params),
+    table, "live", selected, methodSummary);
+  return row ? parseValue<{ candidates: CandidateSummary[] }>(row.value, `${table} live summary`).candidates : [];
+}
+
+export async function readMethodCandidateSummary(repos: ControlPlaneRepositories): Promise<readonly CandidateSummary[]> {
+  const sql = placeReadConnection(repos);
+  return sql ? pgMethodCandidateSummary(sql) : methodSummary((await repos.methodCandidates.read("live"))?.value ?? { candidates: [] }).candidates;
+}
+
 export function pgHuntOrderRepository(sql:Sql,bounds:ControlPlaneRequestBounds=CONTROL_PLANE_REQUEST_BOUNDS_MS):HuntOrderRepository {
   const run=boundedRunner(sql,"cp_hunt_orders",bounds);
   return {
@@ -1616,7 +1661,7 @@ export async function createPgRepositories(
     adminConfig: callerPinned(pgAdminConfigRepository(pgAggregateRepository<AdminConfig>(sql, "AdminConfig", "cp_admin_config", bounded), async (text, params) =>
       (await adminRun("adminConfig", "PAGE", text, params)) as readonly Record<string, unknown>[], versionedRowsFor(sql))),
     askGapObservations: pgAggregateRepository<AskGapObservation>(sql, "AskGapObservation", "cp_ask_gap_observations", bounded),
-    doors: pgAggregateRepository<DoorRecord>(sql, "Door", "cp_doors", bounded),
+    doors: pgDoorRepository(sql, bounded),
     leadOrders: pgAggregateRepository<LeadOrder>(sql, "LeadOrder", "cp_lead_orders", bounded),
     budget,
     spendHolds: pgSpendHoldRepository(sql, bounds),
@@ -1654,7 +1699,7 @@ export async function createPgRepositories(
       leases: pgAggregateRepository<ExecutionLease>(sql,"ExecutionLease","cp_leases",scoped),
       debts: pgAggregateRepository<FreshnessDebt>(sql,"FreshnessDebt","cp_debts",scoped),
       askGapObservations: pgAggregateRepository<AskGapObservation>(sql,"AskGapObservation","cp_ask_gap_observations",scoped),
-      doors: pgAggregateRepository<DoorRecord>(sql,"Door","cp_doors",scoped),
+      doors: pgDoorRepository(sql, scoped),
       artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql,"artifacts",scoped),
       workerResults: pgAppendOnlyRepository<WorkerResultRecord>(sql,"worker_results",scoped),
       promotionPipeline:pgAppendOnlyRepository<PromotionPipelineRecord>(sql,"promotion_pipeline",scoped),

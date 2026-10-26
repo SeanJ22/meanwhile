@@ -97,7 +97,7 @@ async function promoteCrosswalk(store: MemoryRoutineDataStore, names: readonly s
     payload: { kind: "meeting-body-crosswalk", records: rows as unknown as CuratedReaderProjection["records"] },
   }), T_CROSSWALK);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
-  const read = await readCuratedReaderProjection("meeting-body-crosswalk", { store, bypassCache: true, now: T_CROSSWALK });
+  const read = await readCuratedReaderProjection("meeting-body-crosswalk", { store,  now: T_CROSSWALK });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("crosswalk not promoted");
   const contract = requiredManualProductionContract("meeting-body-crosswalk");
@@ -132,7 +132,7 @@ async function walk(feed: string, feedStatus = 200) {
 
 async function deriveWiring(store: MemoryRoutineDataStore, crosswalkInput: DerivedInputRef, feed: string, now: string, feedStatus = 200, options: { readonly confirmUnchanged?: boolean } = {}, names: readonly string[] = [BODY_NAME]) {
   const attempt = await walk(feed, feedStatus);
-  const previousRead = await readDerivedMeetingWiring({ store, bypassCache: true, now });
+  const previousRead = await readDerivedMeetingWiring({ store,  now });
   const previous = previousRead.kind === "PROMOTED" ? derivedWiringEntries(previousRead.value) : [];
   const vaulted = (artifactId: string) => ({ kind: "VAULTED_EVIDENCE" as const, artifactId, contentHash: `sha256-${sha256(feed)}`, tier: "RAW" as const, retrievedAt: T_WALK });
   const decisions = deriveWiringDecisions({
@@ -179,7 +179,7 @@ function readFeed(feed: string, now: string, name = BODY_NAME): Meeting[] {
 }
 
 async function promoteFamily(store: MemoryRoutineDataStore, now: string, feed: string | null, host = HOST, options: { readonly confirmUnchanged?: boolean } = {}, alter?: (read: FamilyMemberRead) => FamilyMemberRead) {
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now });
+  const wiring = await readDerivedMeetingWiring({ store,  now });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") throw new Error("no wiring");
   const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));
@@ -214,7 +214,7 @@ test("two calendars combine distinct dates and repeated IDs; a failed sibling ca
   const store = new MemoryRoutineDataStore();
   const crosswalk = await promoteCrosswalk(store);
   await deriveWiring(store, crosswalk, FEED, T_WIRING);
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_FAMILY });
+  const wiring = await readDerivedMeetingWiring({ store,  now: T_FAMILY });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") return;
   const [one] = familyMembers(wiring.value, "US-AZ");
@@ -367,7 +367,7 @@ test("C16: a suspended connection publishes nothing new and keeps its previously
   const suspended = await deriveWiring(store, crosswalkInput, "Not Found", "2026-09-24T21:00:00.000Z", 404);
   assert.equal(suspended.decisions[0]?.disposition, "SUSPEND");
   assert.equal(suspended.outcome.candidate.state, "PROMOTED", suspended.outcome.candidate.failureDetail ?? "");
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_SECOND });
+  const wiring = await readDerivedMeetingWiring({ store,  now: T_SECOND });
   assert.equal(wiring.kind === "PROMOTED" ? wiring.value.records[0]?.status : null, "SUSPENDED");
 
   const held = await promoteFamily(store, T_SECOND, FEED);
@@ -386,7 +386,7 @@ test("C16: a wiring version that drops a row is refused by the door, and the las
   const dropped = derivedWiringCandidate({ ...first.plan, rows: [], promoted: [], carried: [] }, [crosswalkInput], "2026-09-24T21:10:00.000Z");
   const outcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", dropped, "2026-09-24T21:10:00.000Z");
   assert.equal(outcome.promoted, null, "a connection never disappears without its own evidence");
-  const live = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_SECOND });
+  const live = await readDerivedMeetingWiring({ store,  now: T_SECOND });
   assert.equal(live.kind === "PROMOTED" ? live.value.records.length : 0, 1);
 });
 

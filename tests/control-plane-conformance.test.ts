@@ -557,7 +557,7 @@ test("SB-01 bootstraps territory voting doors and reports an unmigratable row wi
     }
     const sql = { query: async (text: string, params?: readonly unknown[]) => {
       if (text.includes("indisvalid")) return [{ valid: true, building: false }];
-      if (text.startsWith("SELECT id, revision, value->'config'") || text.startsWith("UPDATE cp_doors SET") ||
+      if ((text.includes("JOIN cp_doors source")||text.startsWith("SELECT id,revision,updated_at,value->'config'")) || text.startsWith("UPDATE cp_doors SET") ||
           text.startsWith("SELECT version FROM cp_schema_version") || text.startsWith("INSERT INTO cp_schema_version"))
         return (await db.query(text, params ? [...params] : [])).rows;
       return [];
@@ -592,8 +592,8 @@ test("BL-30 migrates existing voting doors to exact state and canonical URL quer
     let scans = 0;
     const sql = { query: async (text: string, params?: readonly unknown[]) => {
       if (text.includes("indisvalid")) return [{ valid: true, building: false }];
-      if (text.startsWith("SELECT id, revision, value->'config'")) scans++;
-      if (text.startsWith("SELECT id, revision, value->'config'") || text.startsWith("UPDATE cp_doors SET") ||
+      if(text.includes("JOIN cp_doors source"))scans++;
+      if ((text.includes("JOIN cp_doors source")||text.startsWith("SELECT id,revision,updated_at,value->'config'")) || text.startsWith("UPDATE cp_doors SET") ||
           text.startsWith("SELECT version FROM cp_schema_version") || text.startsWith("INSERT INTO cp_schema_version"))
         return (await db.query(text, params ? [...params] : [])).rows;
       return [];
@@ -622,12 +622,14 @@ async function openFixturePgRepositories(sql: Sql, now: string) {
   const connect = mock.method(Pool.prototype, "connect", async () => client as unknown as PoolClient);
   try {
     neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
-      const request = JSON.parse(init?.body ?? "{}") as { query: string; params?: readonly unknown[] };
-      const rows = await sql.query(request.query, request.params) as Record<string, unknown>[];
-      const names = Object.keys(rows[0] ?? {});
-      const fields = names.map(name => ({ name, dataTypeID: 114 }));
-      return Response.json({ fields, rows: rows.map(row => names.map(name => JSON.stringify(row[name]))),
-        rowCount: rows.length, command: "SELECT", rowAsArray: true });
+      type Statement={query:string;params?:readonly unknown[]};
+      const request=JSON.parse(init?.body??"{}") as Statement&{queries?:Statement[]};
+      const execute=async(statement:Statement)=>{
+        const rows=await sql.query(statement.query,statement.params) as Record<string,unknown>[];
+        const names=Object.keys(rows[0]??{}),fields=names.map(name=>({name,dataTypeID:114}));
+        return {fields,rows:rows.map(row=>names.map(name=>JSON.stringify(row[name]))),rowCount:rows.length,command:"SELECT",rowAsArray:true};
+      };
+      return Response.json(request.queries?await Promise.all(request.queries.map(execute)):await execute(request));
     }) as typeof neonConfig.fetchFunction;
     return await createPgRepositories("postgresql://fixture:fixture@ep-bootstrap-fixture.us-east-2.aws.neon.tech/test", now);
   } finally { neonConfig.fetchFunction = originalFetch; connect.mock.restore(); }

@@ -12,7 +12,7 @@ type MeasureWork = { readonly subjectId: string; readonly division: string };
 
 /** Read the same current, promoted state ballot authority used by readers. */
 export async function loadPromotedMeasureBallots(state: string, options: Pick<HeldInput, "store" | "now">): Promise<readonly BallotSet[]> {
-  const read = await readGenericBallotProjection(state, { ...options, bypassCache: true });
+  const read = await readGenericBallotProjection(state, { ...options });
   if (read.kind !== "PROMOTED") throw new Error(`The held ballot for ${state.toUpperCase()} is ${read.kind}.`);
   return Object.values(read.value.ballots);
 }
@@ -68,7 +68,7 @@ export async function runMeasureTranslationPass(input: MeasureTranslationProvide
         }
       }
       const checked = await readTranslations([...new Set([...work.values()].map(row => row.division))], {
-        store: input.store, now: input.now, bypassCache: true,
+        store: input.store, now: input.now,
       });
       const missing = [...work.values()].filter(row => !ballots.some(ballot =>
         ballot.contests.some(contest => contest.id === row.subjectId && contest.ocdId === row.division) && isCheckedMeasureTranslation(ballot, row, checked)));

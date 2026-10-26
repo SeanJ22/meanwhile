@@ -1,4 +1,4 @@
-import { revisionReadsFor } from "./revision-reads.ts";
+import { versionedRowsFor } from "../../db/versioned-rows.ts";
 import { createHash } from "node:crypto";
 import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import { boundedQuery, CONTROL_PLANE_REQUEST_BOUNDS_MS, type ControlPlaneRequestBounds } from "./request-bounds.ts";
@@ -117,12 +117,21 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
     const scoped = state ? table === 'cp_route_tasks'
       ? `EXISTS (SELECT 1 FROM cp_work_items_history w WHERE w.id=${table}.value->>'workItemId' AND cp_control_state(w.value)='${state}')`
       : `cp_control_state(value)='${state}'` : "";
-    const found = await revisionReadsFor(sql).rows((text, args) => run(`readOpen:${table}`, text, args, true),
+    const found = await versionedRowsFor(sql).rows((text, args) => run(`readOpen:${table}`, text, args, true),
       table, [predicate, scoped].filter(Boolean).map(filter => `(${filter})`).join(" AND "), params);
     return found.map(row => persisted<T>(row));
   }
 
-  const lineageCache=new Map<string,{stamp:string;value:StandingLineage[];dirty:boolean;generation:number}>();
+  type LineageRow={id:string;stamp:string;value:StandingLineage[];dirty:boolean;generation:number;__etag:string};
+  async function currentLineages(ids:readonly string[]):Promise<readonly LineageRow[]> {
+    if(!ids.length)return [];
+    const versions=await run("lineages:versions",`SELECT id,concat(xmin::text,'/',ctid::text) AS revision
+      FROM cp_lineage_cache WHERE id=ANY($1::text[])`,[ids],true) as {id:string;revision:string}[];
+    return versionedRowsFor(sql).known("cp_lineage_cache",versions,"lineage",async selected=>
+      await run("lineages:values",`SELECT id,stamp,value,dirty,generation,concat(xmin::text,'/',ctid::text) AS __etag
+        FROM cp_lineage_cache WHERE id=ANY($1::text[])`,[selected],true) as LineageRow[],row=>row.id,row=>row.__etag);
+  }
+
   return {
     async readOpen(input = {}) {
       return withCallerSite(async () => {
@@ -150,28 +159,18 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
     },
     async archiveOccurrence(id) { await withCallerSite(() => run("archiveOccurrence", "SELECT cp_archive_occurrences(ARRAY[$1]::text[])", [id])); },
     async prepareLineages(ids) {
-      lineageCache.clear();
-      for(let at=0;at<ids.length;at+=100) {
-        const rows=await run("lineages:prepare","SELECT id,stamp,value,dirty,generation FROM cp_lineage_cache WHERE id=ANY($1::text[])",[ids.slice(at,at+100)],true) as {id:string;stamp:string;value:StandingLineage[];dirty:boolean;generation:number}[];
-        for(const row of rows)lineageCache.set(row.id,{...row,generation:Number(row.generation)});
-      }
+      for(let at=0;at<ids.length;at+=100)await currentLineages(ids.slice(at,at+100));
     },
     async lineages(obligationId,load,stamp) {
       return withCallerSite(async()=>{
-        let held=lineageCache.get(obligationId);
-        if(stamp===undefined) {
-          const rows=await run("lineages:revision","SELECT dirty,generation FROM cp_lineage_cache WHERE id=$1",[obligationId]) as {dirty:boolean;generation:number}[];
-          if(rows[0])held=held?{...held,dirty:rows[0].dirty || Number(rows[0].generation)!==held.generation,generation:Number(rows[0].generation)}
-            :{stamp:"",value:[],dirty:true,generation:Number(rows[0].generation)};
-        }
+        const [held]=await currentLineages([obligationId]);
         const currentStamp=stamp??held?.stamp??"";
-        if(held && !held.dirty && held.stamp===currentStamp)return held.value;
+        if(held&&!held.dirty&&held.stamp===currentStamp)return held.value;
         const value=await load();
-        const rows=await run("lineages:save",held
+        await run("lineages:save",held
           ? "UPDATE cp_lineage_cache SET stamp=$2,value=$3::jsonb,dirty=false WHERE id=$1 AND generation=$4 RETURNING generation"
           : "INSERT INTO cp_lineage_cache(id,stamp,value,dirty,generation) VALUES($1,$2,$3::jsonb,false,$4) ON CONFLICT(id) DO NOTHING RETURNING generation",
-        [obligationId,currentStamp,JSON.stringify(value),held?.generation??1],true) as {generation:number}[];
-        if(rows.length)lineageCache.set(obligationId,{stamp:currentStamp,value:[...value],dirty:false,generation:Number(rows[0].generation)});
+        [obligationId,currentStamp,JSON.stringify(value),held?Number(held.generation):1],true);
         return value;
       });
     },

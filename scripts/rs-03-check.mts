@@ -7,7 +7,7 @@ import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { lookupZcta } from "../lib/geo/zcta.ts";
 import { readerMeetingsPath, warmAfterDeploy } from "../lib/ops/post-deploy-warm.ts";
 

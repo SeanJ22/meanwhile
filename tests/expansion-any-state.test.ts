@@ -192,7 +192,7 @@ async function runnerCycle(
     obligations: [],
     loadLookup: lookupOf(counties),
     beforeTerritory: async (states) =>
-      [...(await preloadRegistrationJurisdictions({ root: ROOT, states, options: { store, bypassCache: true, now } })).refused].map(([s, why]) => `${s}: ${why}`),
+      [...(await preloadRegistrationJurisdictions({ root: ROOT, states, options: { store,  now } })).refused].map(([s, why]) => `${s}: ${why}`),
     loadTerritory: (states, zips, places) => {
       const promoted = promotedRegistries();
       assert.ok("registries" in promoted);
@@ -259,7 +259,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   await repos.adminConfig.put(ADMIN_CONFIG_ID, defaultAdminConfig(T_REGISTRATION), T_REGISTRATION);
   await promoteRegistration(store, "OH");
   await promoteVenues(store);
-  const reg = await readRegistrationProjection("OH", { store, bypassCache: true, now: T_SEND });
+  const reg = await readRegistrationProjection("OH", { store,  now: T_SEND });
   assert.equal(reg.kind, "PROMOTED");
   if (reg.kind !== "PROMOTED") return;
   const model = reg.value as RegistrationReadModel;
@@ -401,7 +401,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const crosswalkOutcome = await processRegisteredRoutineCandidate(store, "meeting-body-crosswalk-derived", derivedCrosswalkCandidate(planDerivedCrosswalk({ previous: [], reviews: [review] }), [], T_CROSSWALK), T_CROSSWALK);
   assert.equal(crosswalkOutcome.candidate.state, "PROMOTED", `${crosswalkOutcome.candidate.failureCode ?? ""} ${crosswalkOutcome.candidate.failureDetail ?? ""}`);
 
-  const automatic = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now: T_WIRING });
+  const automatic = await readDerivedMeetingBodyCrosswalk({ store,  now: T_WIRING });
   assert.equal(automatic.kind, "PROMOTED");
   if (automatic.kind !== "PROMOTED") return;
   const automaticInput: DerivedInputRef = {
@@ -413,7 +413,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
     const artifactId = attempt!.found.find((f) => f.url === row.route)!.artifactId!;
     return { key: `${row.id}\u0000${artifactId}`, row: wiringRowFor(row), held: { text: vault.get(artifactId)!.text, contentType: "text/calendar" }, evidence: vault.get(artifactId)!.evidence, others: [] };
   });
-  const read = await readHeldCalendars({ options: { store, bypassCache: true, now: T_WIRING }, now: T_WIRING, adapterDigest: () => "ical@0123456789ab", readings });
+  const read = await readHeldCalendars({ options: { store,  now: T_WIRING }, now: T_WIRING, adapterDigest: () => "ical@0123456789ab", readings });
   assert.equal(read.kind, "READ", read.kind === "UNREADABLE" ? read.detail : "");
   if (read.kind !== "READ") return;
   const decisions = deriveWiringDecisions({
@@ -433,7 +433,7 @@ test("A SEND FOR FRANKLIN COUNTY, OHIO: the preview's count is what the runner c
   const wiringOutcome = await processRegisteredRoutineCandidate(store, "meeting-source-wiring", derivedWiringCandidate(wiringPlan, [automaticInput], T_WIRING), T_WIRING);
   assert.equal(wiringOutcome.candidate.state, "PROMOTED", `${wiringOutcome.candidate.failureCode ?? ""} ${wiringOutcome.candidate.failureDetail ?? ""}`);
 
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_FAMILY });
+  const wiring = await readDerivedMeetingWiring({ store,  now: T_FAMILY });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") return;
   const members = familyMembers(wiring.value, "US-OH");
@@ -480,7 +480,7 @@ test("A SEND FOR A PUERTO RICO MUNICIPIO creates its discovery needs from regist
   const repos = createMemoryRepositories();
   await repos.adminConfig.put(ADMIN_CONFIG_ID, defaultAdminConfig(T_REGISTRATION), T_REGISTRATION);
   await promoteRegistration(store, "PR");
-  const reg = await readRegistrationProjection("PR", { store, bypassCache: true, now: T_SEND });
+  const reg = await readRegistrationProjection("PR", { store,  now: T_SEND });
   assert.equal(reg.kind, "PROMOTED");
   if (reg.kind !== "PROMOTED") return;
   const versionId = reg.metadata.versionId!;

@@ -88,7 +88,7 @@ test("an unreachable store is reported as unreachable", async () => {
       },
     },
     now: GENERATED_AT,
-    bypassCache: true,
+
   });
   assert.equal(read.kind, "STORE_UNREACHABLE");
   if (read.kind === "STORE_UNREACHABLE") assert.equal(read.code, "STORE_READ_FAILED");

@@ -7,6 +7,7 @@ import { dailyRows, moneySummary } from "@/lib/control-plane/admin-view/spend-pe
 import type { ModelSpendView } from "@/lib/control-plane/admin-view/model-spend.ts";
 import type { HuntCostView } from "@/lib/hunt/cost-per-fact.ts";
 import { activeModelTierFor, MODELS } from "@/lib/models.ts";
+import { runnerReadFamilies, runnerFamilyLabel, type RunnerRead } from "@/lib/db/runner-read-families.ts";
 
 import { useV6 } from "./context.tsx";
 import { mst, usd, type Hunt, type SpendView } from "./model.ts";
@@ -28,6 +29,20 @@ const modelWords = (model: string | null) => {
 };
 const roleWords = (role: string) => ({ ADVERSARIAL_AUDITOR: "Auditor", PARSER: "Page reader", MEASURE_WRITER: "Translator", MEASURE_CHECKER: "Translation checker", ASK: "Ask" }[role]
   ?? role.toLowerCase().replaceAll("_", " ").replace(/^./, char => char.toUpperCase()));
+
+export function RunnerFamilyReads({ rows }: { rows: readonly RunnerRead[] }) {
+  const families = runnerReadFamilies(rows);
+  if (!families.length) return null;
+  return <div className={s.tableWrap}><table className={s.table}>
+    <caption>Job families · GB per hour</caption>
+    <thead><tr>{["Job family", "Reader database", "Control plane", "Total"].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
+    <tbody>{families.map(row => <tr key={row.family}>
+      <th scope="row">{runnerFamilyLabel(row.family)}<Technical lines={[`Jobs: ${row.jobs.join(", ")}`, `Files: ${row.files.join(", ") || DASH}`, `Data: ${row.tables.join(", ") || DASH}`]} /></th>
+      <td className={s.num}>{gigabytes(row.readerBytes)}</td><td className={s.num}>{gigabytes(row.controlPlaneBytes)}</td>
+      <td className={s.num}>{gigabytes(row.readerBytes + row.controlPlaneBytes)}</td>
+    </tr>)}</tbody>
+  </table></div>;
+}
 
 function RunnerReadsPanel({ reads, totals, span }: { reads: SpendView["neon"]["runnerReads"]; totals: SpendView["neon"]["runnerHours"]; span: ReturnType<typeof periodDays> }) {
   const [all, setAll] = useState(false);
@@ -69,15 +84,16 @@ function RunnerReadsPanel({ reads, totals, span }: { reads: SpendView["neon"]["r
       </select></label>
       <Facts rows={[["Reader database", gigabytes(total?.readerBytes ?? null)], ["Control plane", gigabytes(total?.controlPlaneBytes ?? null)]]} />
       {!inHour.length && <p className={cx(s.p, s.small)}>{fetched ? fetched.failed ? "This hour could not be read just now." : DASH : "Reading this hour…"}</p>}
+      <RunnerFamilyReads rows={inHour} />
       <div className={s.tableWrap}><table className={s.table}>
         <thead><tr>{["Job", "Data", "Database", "Received", "Sent"].map(label => <th scope="col" key={label}>{label}</th>)}</tr></thead>
-        <tbody>{shown.map(row => <tr key={`${row.database}:${row.job}:${row.table}`}>
+        <tbody>{shown.map(row => <tr key={`${row.database}:${row.job}:${row.table}:${row.file ?? ""}`}>
           <th scope="row">{jobWords(row.job)}</th><td>{tableWords(row.table)}</td><td>{row.database === "reader" ? "Reader" : "Control plane"}</td>
           <td className={s.num}>{dataSize(row.responseBytes)}</td><td className={s.num}>{dataSize(row.requestBytes)}</td>
         </tr>)}</tbody>
       </table></div>
       {inHour.length > TOP && <button type="button" className={s.btn} onClick={() => setAll(!all)}>{all ? `Show the top ${TOP}` : `Show all ${inHour.length}`}</button>}
-      <Technical lines={inHour.map(row => `${row.hour} · ${row.job} · ${row.database} · ${row.table}: ${row.requests} HTTP requests, ${row.responseBytes} bytes received, ${row.requestBytes} sent`)} />
+      <Technical lines={inHour.map(row => `${row.hour} · ${row.job} · ${row.database} · ${row.table}${row.file ? ` · ${row.file}` : ""}: ${row.requests} HTTP requests, ${row.responseBytes} bytes received, ${row.requestBytes} sent`)} />
     </>}
   </Card>;
 }

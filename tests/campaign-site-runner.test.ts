@@ -160,7 +160,7 @@ async function readStateDerived(state: string, options: Parameters<typeof readPr
 }
 
 async function stateCampaignHoldings(store: MemoryRoutineDataStore, state: string, now: string) {
-  const options = { store, now, bypassCache: true };
+  const options = { store, now };
   const [profiles, corpus, derived] = await Promise.all([
     readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", state), options),
     readPromotedCivicData<CandidateCorpus>("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", state), options),
@@ -250,7 +250,7 @@ test("a persisted facts-only Scout with no parser reaches the existing campaign-
   const published = await processRegisteredRoutineCandidate(store, stateBallotContractId("candidate-campaign-sites-derived", "NH"), pass.candidate, publishNow);
   assert.equal(published.candidate.state, "PROMOTED", published.candidate.failureDetail ?? undefined);
   assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
-  const reader = await readStateDerived("NH", { store, bypassCache: true, now: publishNow });
+  const reader = await readStateDerived("NH", { store,  now: publishNow });
   assert.equal(reader.kind, "PROMOTED");
   if (reader.kind === "PROMOTED") {
     assert.deepEqual(reader.value.records[0]!.campaign.evidence.cycleSource, approval.campaignSite.evidence.cycleSource,
@@ -425,7 +425,7 @@ async function profilesStore() {
       links: { curatedAt: T0, note: "No reviewed links", links: {}, hunts: [] } } };
   const nhOutcome = await processRegisteredManualCandidate(store, stateBallotContractId("candidate-profiles", "NH"), manualProjectionCandidate(nhPackage), T0, null);
   assert.equal(nhOutcome.candidate.state, "PROMOTED", nhOutcome.candidate.failureDetail ?? undefined);
-  const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", "NH"), { store, bypassCache: true, now: T2 });
+  const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", "NH"), { store,  now: T2 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("unreachable");
   const input = promotedInputRef("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", "NH"), read.metadata.versionId, read.value, read.metadata.promotedAt);
@@ -783,7 +783,7 @@ test("a refused lead publishes nothing and keeps its typed reason where Admin re
   assert.match(pass.candidate.retrieval.failureDetail ?? "", /^NO_APPROVED_SITE_YET/);
   const outcome = await processRegisteredRoutineCandidate(store, stateBallotContractId("candidate-campaign-sites-derived", "NH"), pass.candidate, T2);
   assert.equal(outcome.promoted, null);
-  assert.equal((await readStateDerived("NH", { store, bypassCache: true, now: T2 })).kind, "NOT_RECORDED");
+  assert.equal((await readStateDerived("NH", { store,  now: T2 })).kind, "NOT_RECORDED");
 });
 
 test("a year-less site stays refused however often it is read: judged again from its vaulted read, re-read after the recheck, never approved", async (t) => {
@@ -1239,7 +1239,7 @@ test("new campaign facts publish without dropping prior GOOD links or quoted his
   const first = await processRegisteredRoutineCandidate(store, stateBallotContractId("candidate-campaign-sites-derived", "NH"), initial.candidate, T1);
   assert.equal(first.candidate.state, "PROMOTED", first.candidate.failureDetail ?? undefined);
   const priorAt = async (now: string) => {
-    const reader = await readStateDerived("NH", { store, bypassCache: true, now });
+    const reader = await readStateDerived("NH", { store,  now });
     assert.equal(reader.kind, "PROMOTED");
     if (reader.kind !== "PROMOTED") throw new Error("No promoted campaign prior");
     const reference = promotedInputRef("CURATED_READER_RECORD", stateBallotScope("candidate-campaign-sites-derived", "NH"),
@@ -1267,7 +1267,7 @@ test("new campaign facts publish without dropping prior GOOD links or quoted his
   const refreshed = await priorAt(PUBLISH);
   assert.deepEqual(refreshed.projection.records.find(row => row.id === oldRecord.id), oldRecord);
   assert.ok(!refreshed.projection.records.some(row => row.candidacyId === DUARTE));
-  const newJersey = await readStateDerived("NJ", { store, bypassCache: true, now: PUBLISH });
+  const newJersey = await readStateDerived("NJ", { store,  now: PUBLISH });
   assert.equal(newJersey.kind, "PROMOTED");
   if (newJersey.kind === "PROMOTED") {
     assert.ok(newJersey.value.records.some(row => row.candidacyId === DUARTE));
@@ -1404,7 +1404,7 @@ test("national authority website URLs reach the verifier and publish candidate p
     const result = await processRegisteredRoutineCandidate(store, stateBallotContractId("candidate-campaign-sites-derived", state), candidate, PUBLISH);
     assert.equal(result.candidate.state, "PROMOTED", result.candidate.failureDetail ?? undefined);
     assert.equal(result.readerReadback?.status, "PASS", JSON.stringify(result.readerReadback));
-    const reader = await readStateDerived(state, { store, bypassCache: true, now: PUBLISH });
+    const reader = await readStateDerived(state, { store,  now: PUBLISH });
     assert.equal(reader.kind, "PROMOTED");
     if (reader.kind === "PROMOTED") assert.ok(reader.value.records.every(row => row.id.startsWith(`state-election:${state}:`)));
     for (const record of portraits.portraits!) {

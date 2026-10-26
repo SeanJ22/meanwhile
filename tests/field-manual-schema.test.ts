@@ -2,12 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import { BOOTSTRAP_DDL, BOOTSTRAP_VERSION, DECLARED_TABLES, FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL } from "../lib/control-plane/repository/pg-schema.ts";
-import { mkdtemp, readdir } from "node:fs/promises";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
 
 import { entryInSlice, newFieldManualEntry, normalizeEntry, type FieldManualQuery } from "../lib/control-plane/field-manual.ts";
-import { openHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { FIELD_MANUAL_SLICE_SQL, fieldManualSliceParams, pgFieldManualRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { createFixMapRepository, FIX_MAP_DDL, methodWorksOf, stateOfPlace, type FixMapRow } from "../lib/method/fix-map.ts";
 import { MANUAL_SOURCE_INDEX_DDL } from "../lib/control-plane/repository/manual-source-index.ts";
@@ -55,21 +51,18 @@ test("where a method works is read per method, never the whole map", async () =>
   assert.equal(stateOfPlace("ocd-division/country:us/state:tx/county:harris#governing"), "tx");
 });
 
-test("a runner slice reads scoped SQL and never opens or rewrites a national held copy", async () => {
+test("a runner slice reads scoped versions and transfers only changed notes", async () => {
   const NOW = "2026-10-08T12:00:00.000Z";
   const entry = normalizeEntry(newFieldManualEntry("t", "az-lesson", { role: "SCOUT", kind: "LESSON", title: "AZ lesson", summary: "s", outcome: "YIELDED", states: ["az"] }));
   const seen: string[] = [];
   const sql: Sql = { query: async text => { seen.push(text); return [{ id: entry.id, revision: 1, updated_at: NOW, value: entry }]; } };
-  const dir = await mkdtemp(join(tmpdir(), "manual-copies-"));
-  const copies = openHeldCopies(dir, { log: line => assert.fail(line) });
-  const held = pgFieldManualRepository(sql,{copies},()=>createFixMapRepository(async()=>[]));
+  const held = pgFieldManualRepository(sql,{},()=>createFixMapRepository(async()=>[]));
   assert.deepEqual((await held.select({ role: "SCOUT", state: "az",limit:12 })).store.entries, [entry]);
   assert.equal(seen[0], FIELD_MANUAL_SLICE_SQL);
   assert.match(seen[1], /^SELECT id,revision,updated_at,value FROM cp_field_manual_entries/);
   seen.length = 0;
   assert.deepEqual((await held.select({ role: "SCOUT", state: "az", limit:12 })).store.entries, [entry]);
   assert.deepEqual(seen, [FIELD_MANUAL_SLICE_SQL], "unchanged notes need only their IDs and revisions");
-  assert.deepEqual(await readdir(dir), []);
 });
 
 test("SQL manual slices exclude other places and source routes while preserving transferable methods and ranking", async () => {

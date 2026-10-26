@@ -52,7 +52,7 @@ async function productionActorCounts(
 ): Promise<MapTilerActorCounts | null> {
   const url = env.WTP_PRODUCTION_DATABASE_URL_READONLY?.trim();
   if (!url) return null;
-  const { neon } = await import("@neondatabase/serverless");
+  const { neon } = await import("../../db/client.ts");
   const sql = neon(url);
   const rows = (await sql.query(RUN_CLASS_CENSUS_WINDOW_SQL, [
     `${since}T00:00:00Z`,

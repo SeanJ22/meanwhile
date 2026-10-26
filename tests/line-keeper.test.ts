@@ -25,6 +25,7 @@ const query=(db:PGlite)=>({query:async(text:string,params:readonly unknown[]=[])
 async function readerDatabase() {
   const db=new PGlite();
   await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,state text);
+    CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,reads jsonb);
     CREATE TABLE fact(id serial PRIMARY KEY,entity_id text REFERENCES entity(id),field text,status text,value jsonb);
     CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text);
     INSERT INTO entity VALUES('az:body','body','AZ'),('ny:person','person','NY');

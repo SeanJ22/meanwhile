@@ -100,7 +100,7 @@ test("officeholder statements use the canonical candidate/event/promotion pointe
   assert.equal(promoted.readerReadback?.status, "PASS");
   assert.deepEqual((await store.events(candidate.id)).map(({ state }) => state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
 
-  const read = await readOfficeholderStatementsProjection({ store, bypassCache: true, now: T0 });
+  const read = await readOfficeholderStatementsProjection({ store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.versionId, candidate.id);
   assert.deepEqual(read.value?.snapshots, [firstSnapshot]);
@@ -135,7 +135,7 @@ test("a new statement version reports the exact append while an invalid successo
     (await store.readPromotion("OFFICEHOLDER_STATEMENT", "US:covered-officeholders:primary-publications"))?.versionId,
     second.id,
   );
-  const read = await readOfficeholderStatementsProjection({ store, bypassCache: true, now: T2 });
+  const read = await readOfficeholderStatementsProjection({ store,  now: T2 });
   assert.equal(read.kind, "PROMOTED");
   assert.deepEqual(read.value?.snapshots, [firstSnapshot, secondSnapshot]);
 
@@ -206,7 +206,7 @@ test("store failure and an unseeded production store never reopen tracked statem
     async readPromotion() { throw new Error("database unavailable"); },
     async readCandidate() { candidateReads += 1; return null; },
   };
-  const failed = await readOfficeholderStatementsProjection({ store: brokenStore, bypassCache: true });
+  const failed = await readOfficeholderStatementsProjection({ store: brokenStore });
   assert.equal(failed.kind, "STORE_UNREACHABLE");
   assert.equal(candidateReads, 0);
 
@@ -214,11 +214,11 @@ test("store failure and an unseeded production store never reopen tracked statem
   const priorNodeEnv = mutableEnv.NODE_ENV;
   mutableEnv.NODE_ENV = "production";
   try {
-    const absent = await readOfficeholderStatementsProjection({ store: new MemoryRoutineDataStore(), bypassCache: true });
+    const absent = await readOfficeholderStatementsProjection({ store: new MemoryRoutineDataStore() });
     assert.equal(absent.kind, "NOT_RECORDED");
     assert.equal(absent.value, null);
     await assert.rejects(
-      refreshOfficeholderStatementsFromPromoted({ store: new MemoryRoutineDataStore(), bypassCache: true }),
+      refreshOfficeholderStatementsFromPromoted({ store: new MemoryRoutineDataStore() }),
       /without a canonical promoted projection/,
     );
   } finally {
@@ -237,7 +237,7 @@ test("officeholder statement ownership is manual and visible in the existing Adm
 });
 
 test("standing candidate enrichment derives all three state denominators from promoted projections", async () => {
-  const holdings = await readCandidateEnrichmentAuthorities("AZ", { store: new MemoryRoutineDataStore(), bypassCache: true, now: T0 });
+  const holdings = await readCandidateEnrichmentAuthorities("AZ", { store: new MemoryRoutineDataStore(),  now: T0 });
   const unavailable = candidateEnrichmentProvider({ holdings }).enumerate({ root: ROOT, nowIso: T0 });
   assert.equal(unavailable.obligations.length, 0);
   assert.match(unavailable.readFailure ?? "", /canonical projection is NOT_RECORDED/,

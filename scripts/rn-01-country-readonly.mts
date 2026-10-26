@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { readFileSync, writeFileSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { PLANNING_STATES, PLANNING_FINISHED_TIMES_SQL, planningStateOrder } from "../lib/control-plane/scheduler/state-planning.ts";
 import { RUNNER_PAUSE_INTENTS_SQL, SOURCE_WORK_STATES_SQL } from "../lib/control-plane/repository/pg-store.ts";
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";

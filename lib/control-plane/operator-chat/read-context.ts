@@ -13,7 +13,7 @@ import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import { readPlaceStuck } from "./place-stuck.ts";
 import { readResearchIntents } from "../research-view.ts";
 import { readPulse } from "../gateway/pulse-read.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { yesterdayWindow } from "../admin-view/cost-reporting-view.ts";
 import { readFlowWeek, type FlowWeek } from "../admin-view/flow-read.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";

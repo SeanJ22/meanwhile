@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
-import test from "node:test";
+import test,{after} from "node:test";
+import { keepNeonBytesInProcess,VITAL_SIGNS_REPORT_ENV } from "../lib/db/transfer-by-caller.ts";
 
 import { neon, neonConfig } from "@neondatabase/serverless";
 import { createLedger } from "../lib/control-plane/budget.ts";
@@ -22,6 +23,13 @@ import {
 } from "../lib/control-plane/repository/request-bounds.ts";
 import { retryStartupRead } from "../lib/control-plane/startup-read-retry.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
+
+// A scheduler child reports transfer to its supervisor; accounting writes have
+// their own lifecycle tests and must not compete with the mocked bound request.
+const reportBefore=process.env[VITAL_SIGNS_REPORT_ENV];
+process.env[VITAL_SIGNS_REPORT_ENV]="1";
+keepNeonBytesInProcess();
+after(()=>{if(reportBefore===undefined)delete process.env[VITAL_SIGNS_REPORT_ENV];else process.env[VITAL_SIGNS_REPORT_ENV]=reportBefore;});
 
 const URL = "postgresql://user:pass@ep-request-bounds-proof.us-east-2.aws.neon.tech/neondb";
 const TINY = { POINT: 60, DOCUMENT: 90, PAGE: 120 } as const;

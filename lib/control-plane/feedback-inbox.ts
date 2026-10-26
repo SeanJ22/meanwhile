@@ -20,7 +20,7 @@
  * The two `open*` functions are server-side; everything else is pure.
  */
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../db/client.ts";
 
 import type { ReadOutcome } from "./admin-data.ts";
 import { collapseDecisionLog } from "./decision-log.ts";

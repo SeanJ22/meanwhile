@@ -231,7 +231,7 @@ export async function ensureMeetingDoors(options: PromotedCivicDataReadOptions &
   if (installed !== null && now - installed.at < MEETING_DOORS_REFRESH_MS) return current();
   pending ??= (async (): Promise<MeetingDoorsReady> => {
     try {
-      const read = await readMeetingDoors({ ...options, bypassCache: true });
+      const read = await readMeetingDoors({ ...options });
       if (read.kind !== "PROMOTED") throw new Error(`${read.kind}${"detail" in read && read.detail ? `: ${read.detail}` : ""}`);
       const versionId = read.metadata.versionId ?? "unnamed";
       const done = installDoorRecords(read.value.doors.map((door) => asRecord(door, read.metadata.promotedAt ?? new Date(now).toISOString())), versionId, now);

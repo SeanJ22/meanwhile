@@ -1,6 +1,7 @@
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { COUNT_HOUR_SQL, countWindow, type HourCount, type OldestWaiting } from "../../counts/hour.ts";
+import { runnerReadProblems } from "../../db/runner-read-families.ts";
 
 export const query = (sql: Sql, operation: string, text: string, args: readonly unknown[] = []) =>
   boundedQuery(sql,{operation:`line-keeper.${operation}`,callClass:"PAGE"},text,args) as Promise<Record<string,unknown>[]>;
@@ -23,4 +24,28 @@ export async function readHour(control: Sql, reader: Sql, at: string) {
     readCounts(control,before.from,before.through,at),readCounts(reader,before.from,before.through,at),readOldest(control,at),
   ]);
   return {window,counts:[...currentControl,...currentReader],previous:[...previousControl,...previousReader],waiting};
+}
+
+/** Aggregate beside the accounting rows; their large read maps never cross the wire. */
+export async function readRunnerReadProblems(reader: Sql, from: string, through: string) {
+  const rows = await query(reader, "runner-read-growth", `WITH hours AS (
+    SELECT hour,database_name,reads FROM database_transfer_hourly
+    WHERE hour >= $1::timestamptz - interval '24 hours' AND hour < $2::timestamptz
+  ), coverage AS (
+    SELECT count(DISTINCT hour)::int AS previous_hours FROM hours WHERE hour < $1::timestamptz
+  ), reads AS (
+    SELECT hour,database_name,split_part(item.key,E'\\t',1) AS job,
+      split_part(item.key,E'\\t',2) AS data,split_part(item.key,E'\\t',3) AS file,
+      coalesce((item.value->>2)::bigint,0) AS bytes
+    FROM hours CROSS JOIN LATERAL jsonb_each(reads) item
+  ) SELECT database_name AS database,job,
+    coalesce(sum(bytes) FILTER (WHERE hour >= $1::timestamptz),0)::text AS response_bytes,
+    coalesce(sum(bytes) FILTER (WHERE hour < $1::timestamptz),0)::text AS previous_bytes,
+    (SELECT previous_hours FROM coverage) AS previous_hours,
+    coalesce(array_agg(DISTINCT file) FILTER (WHERE hour >= $1::timestamptz AND file<>''),ARRAY[]::text[]) AS files,
+    coalesce(array_agg(DISTINCT data) FILTER (WHERE hour >= $1::timestamptz AND data<>''),ARRAY[]::text[]) AS tables
+    FROM reads GROUP BY database_name,job`, [from, through]);
+  return runnerReadProblems(rows.map(row => ({ database: String(row.database), job: String(row.job),
+    responseBytes: Number(row.response_bytes), previousBytes: Number(row.previous_bytes), previousHours: Number(row.previous_hours),
+    files: row.files as string[], tables: row.tables as string[] })));
 }

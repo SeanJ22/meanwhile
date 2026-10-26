@@ -1,4 +1,5 @@
 import { seedLineKeeper } from "../../lib/control-plane/line-keeper/runtime.ts";
+import { flushDatabaseTransfer } from "../../lib/db/transfer.ts";
 export const config={background:true};
 /** Take the first compact reading after a production deploy; the hourly schedule keeps it current. */
 export function isPublishedProductionDeploy(event:{deploy:{context?:string;publishedAt?:string|null}}):boolean {
@@ -8,6 +9,7 @@ const initializer={
   async deploySucceeded(event:{deploy:{context?:string;publishedAt?:string|null}}):Promise<void> {
     if(!isPublishedProductionDeploy(event)) return;
     await seedLineKeeper();
+    await flushDatabaseTransfer();
   },
 };
 export default initializer;

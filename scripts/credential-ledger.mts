@@ -22,7 +22,7 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { resolveBasemap } from "../lib/map/style.ts";
 import { today } from "./doc-dates.mjs";

@@ -39,7 +39,7 @@ export async function publishOfficialBallotCandidacies(input: {
   const stateReads = await Promise.allSettled(scopes.map(async scope => {
     const supplied = input.statePeople?.get(scope);
     if (supplied) return supplied;
-    const read = await readStatePeopleProjection(scope, { store: input.store, now: input.now, bypassCache: true });
+    const read = await readStatePeopleProjection(scope, { store: input.store, now: input.now });
     return read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value.roster : null;
   }));
   const holders = stateReads.flatMap(read => read.status === "fulfilled" && read.value ? statePeopleCandidacyHolders(read.value) : []);
@@ -62,7 +62,7 @@ export async function publishOfficialBallotCandidacies(input: {
     return office === "us_senator" || office === "us_representative";
   }));
   if (federalContests) {
-    const federal = await readFederalDirectoryProjection([state], { store: input.store, now: input.now, bypassCache: true }).catch(() => null);
+    const federal = await readFederalDirectoryProjection([state], { store: input.store, now: input.now }).catch(() => null);
     if (federal && (federal.kind === "PROMOTED" || federal.kind === "BOOTSTRAP")) {
       holders.push(...statePeopleCandidacyHolders(federal.value.roster).map(holder => ({ ...holder, authority: "FEDERAL_DIRECTORY" as const })));
     }

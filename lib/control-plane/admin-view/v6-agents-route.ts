@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "../../reader/database.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
@@ -7,8 +7,6 @@ import { ADMIN_V6_AGENTS_CONTRACT, readAgentRuns, type AdminV6AgentRun } from ".
 import { parseV6PlaceKey, validateV6Query } from "./v6-hunts-read.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
-const MEMO_MS = 20_000;
-let memo: { at: number; runs: readonly AdminV6AgentRun[] } | null = null;
 
 export async function v6AgentsGet(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
@@ -20,14 +18,15 @@ export async function v6AgentsGet(request: NextRequest): Promise<NextResponse> {
   const url = controlPlaneUrlFromEnv();
   if (!url) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so agent runs were not read." }, { status: 503, headers: NO_STORE });
   const now = new Date().toISOString();
+  let current: readonly AdminV6AgentRun[];
   try {
-    if (!memo || Date.now() - memo.at > MEMO_MS) memo = { at: Date.now(), runs: await readAgentRuns(neon(url), now) };
+    current=await readAgentRuns(databaseReadOnlySql(url),now);
   } catch {
     return NextResponse.json({ state: "UNREAD", says: "The agent records could not be read just now, so what agents did is unknown, not nothing." }, { status: 503, headers: NO_STORE });
   }
   const scope = parseV6PlaceKey(query.scopeKey);
   const state = scope !== null && scope.kind !== "country" ? scope.state : null;
-  const runs = state === null ? memo.runs : memo.runs.filter((r) => r.placeKey === `st:${state}` || r.placeKey === "us");
-  return NextResponse.json({ contract: ADMIN_V6_AGENTS_CONTRACT, scope: query.scopeKey, revision: `agents:${memo.runs[0]?.startedAt ?? "none"}:${memo.runs.length}:${query.scopeKey}`, asOf: now,
+  const runs = state === null ? current : current.filter((r) => r.placeKey === `st:${state}` || r.placeKey === "us");
+  return NextResponse.json({ contract: ADMIN_V6_AGENTS_CONTRACT, scope: query.scopeKey, revision: `agents:${current[0]?.startedAt ?? "none"}:${current.length}:${query.scopeKey}`, asOf: now,
     data: runs, missingParts: [] }, { headers: NO_STORE });
 }

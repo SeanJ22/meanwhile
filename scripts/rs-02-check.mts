@@ -273,7 +273,7 @@ if (arg("child")) {
   await new Promise<void>(resolve => process.stdout.write(MARKER + JSON.stringify(result) + "\n", () => resolve()));
   process.exit(0);
 } else {
-  const { neon } = await import("@neondatabase/serverless");
+  const { neon } = await import("../lib/db/client.ts");
   const sql = neon(connection);
   const rows = await sql.transaction([sql.query(`SELECT current_user AS role,
     bool_and(has_table_privilege(current_user,tablename,'SELECT')) AS can_read,

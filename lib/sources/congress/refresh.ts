@@ -44,7 +44,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
       console.error(JSON.stringify({ source, doorOutcomeFailure: error instanceof Error ? error.message : String(error) }));
     }
   }
-  const prior = await readFederalSourceProjection(source, "national", { store, bypassCache: true, now: startedAt });
+  const prior = await readFederalSourceProjection(source, "national", { store,  now: startedAt });
   if (prior.kind === "STORE_UNREACHABLE") throw new Error(prior.detail);
   const counts: FederalCounts = prior.kind === "PROMOTED" ? structuredClone(prior.value.counts ?? emptyCounts()) : emptyCounts();
   let last: Awaited<ReturnType<typeof publishFederalPartition>> | undefined;
@@ -61,7 +61,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
   };
   async function publish(partition: string, captures: FederalCapture[], facts: FederalFact[], primary = true, completePartition = false,
     replacement: { replaceFilingId?: string; cursor?: string } = {}) {
-    const held = await readFederalSourceProjection(source, partition, { store, bypassCache: true, now: now() });
+    const held = await readFederalSourceProjection(source, partition, { store,  now: now() });
     if (held.kind === "STORE_UNREACHABLE") throw new Error(held.detail);
     const retained = new Map((!completePartition && held.kind === "PROMOTED" ? held.value.records.filter(row => !replacement.replaceFilingId || row.filingId !== replacement.replaceFilingId) : []).map(row => [row.id, row]));
     for (const row of facts) retained.set(row.id, row);
@@ -77,7 +77,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
       }
       else if (row.kind === "RULE") joined.add(row.id); // Federal jurisdiction covers every state and territory.
       else if (row.billId) {
-        const bill = await readFederalSourceProjection("congress-api", `bill:${row.billId}`, { store, now: now(), bypassCache: true });
+        const bill = await readFederalSourceProjection("congress-api", `bill:${row.billId}`, { store, now: now() });
         if (bill.kind === "PROMOTED" && bill.value.records.some(fact => fact.billId === row.billId)) {
           joined.add(row.id);
           const state = bill.value.records.find(fact => fact.billId === row.billId && fact.state)?.state;
@@ -165,7 +165,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
               await publish(`unjoined:member:${invalid[0].nativeId}`, [page.capture], invalid);
               continue;
             }
-            const held = await readFederalSourceProjection(source, partition, { store, now: now(), bypassCache: true });
+            const held = await readFederalSourceProjection(source, partition, { store, now: now() });
             if (held.kind === "STORE_UNREACHABLE") throw new Error(held.detail);
             await publish(partition, [page.capture], normalizeFederalCapture(page.capture).filter(row => row.bioguideId === bioguide));
             if (held.kind === "PROMOTED" && held.value.cursor === "sponsored-complete") continue;
@@ -246,7 +246,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
           const capture: FederalCapture = { ...page.capture, body: JSON.stringify({ results: [filing] }), context: roster
             ? { honoreeRosterVersionId: roster.versionId } : { honoreeRosterFailure: rosterFailure } };
           const facts = normalizeFederalCaptureWithRoster(capture, roster);
-          const previous = filingId ? await readFederalSourceProjection(source, `filing:${filingId}`, { store, now: now(), bypassCache: true }) : null;
+          const previous = filingId ? await readFederalSourceProjection(source, `filing:${filingId}`, { store, now: now() }) : null;
           if (previous?.kind === "STORE_UNREACHABLE") throw new Error(previous.detail);
           // Keep cleanup targets in the filing itself so a failed member write can resume safely.
           const priorMembers: string[] = previous?.kind === "PROMOTED" && previous.value.cursor?.startsWith("honorees:") ? JSON.parse(previous.value.cursor.slice(9)) : [];

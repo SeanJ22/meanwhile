@@ -1,5 +1,4 @@
 import { types } from "node:util";
-import { AsyncLocalStorage } from "node:async_hooks";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { STATE_BALLOT_FAMILIES, stateFromBallotScope, stateFromRegistryRuntimeScope } from "./state-scopes.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
@@ -7,17 +6,6 @@ import { selectStatewideExecutives } from "../officials/statewide-selection.ts";
 import type { StatewideExecutive } from "../officials/statewide-executives.ts";
 import { ballotNavigationState } from "./ballot-navigation-scope.ts";
 import type { PromotedProjection, RoutineCandidate, NormalizationEvidence } from "./types.ts";
-
-const publicationRead = new AsyncLocalStorage<PromotedProjection>();
-
-export function withStatePublicationRead<T>(projection: PromotedProjection, read: () => Promise<T>): Promise<T> {
-  return publicationRead.run(projection, read);
-}
-
-export function heldStatePublication(recordClass: string, scope: string): PromotedProjection | null {
-  const held = publicationRead.getStore();
-  return held?.recordClass === recordClass && held.scope === scope ? held : null;
-}
 
 export function statePublicationScope(scope: string): boolean {
   return STATE_BALLOT_FAMILIES.some(family => stateFromBallotScope(scope, family) !== null) ||
@@ -212,10 +200,6 @@ export function rememberStatePublicationHashes(projection: Pick<PromotedProjecti
   const issue = stateRecordHashesIssue(normalization.stateRecordHashes, normalization.normalizedHash);
   if (issue) throw new Error(issue);
   provenHashes.set(projection, immutableStateValue(normalization.stateRecordHashes!));
-}
-
-export function heldStatePublicationHashes(projection: PromotedProjection): RecordHashes | undefined {
-  return provenHashes.get(projection);
 }
 
 const priors = new WeakMap<object, Map<string, StatePublicationPrior>>();

@@ -82,7 +82,7 @@ test("an initial empty source check records progress without publishing an absen
   assert.deepEqual(result.projection.counts, { loaded: 0, joined: 0, unjoined: 0 });
   assert.equal(result.projection.states[0].status, "COMPLETE");
   assert.equal(result.candidate?.absence.claimsAbsence, false);
-  const read = await readFederalMoneyCheckpoint("openfema", "AS", { store, now, bypassCache: true });
+  const read = await readFederalMoneyCheckpoint("openfema", "AS", { store, now });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.equal("records" in read.value, false);
 });
@@ -94,10 +94,10 @@ test("real OpenFEMA sample publishes through registered fanout, native join and 
   assert.equal(result.outcome.candidate.state, "PROMOTED", result.outcome.candidate.failureDetail ?? "not published");
   assert.equal(result.outcome.readerReadback?.status, "PASS", result.outcome.readerReadback?.detail);
   assert.deepEqual(result.projection.counts, { loaded: 1, joined: 1, unjoined: 0 });
-  const read = await readFederalMoneyPartition("openfema", leafScope, { store, now, bypassCache: true });
+  const read = await readFederalMoneyPartition("openfema", leafScope, { store, now });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.deepEqual(read.value.records[0].divisionIds, ["ocd-division/country:us/state:ar", county]);
-  const checkpoint = await readFederalMoneyCheckpoint("openfema", "AR", { store, now, bypassCache: true });
+  const checkpoint = await readFederalMoneyCheckpoint("openfema", "AR", { store, now });
   assert.equal(checkpoint.kind, "PROMOTED");
   if (checkpoint.kind === "PROMOTED") assert.equal("records" in checkpoint.value, false);
 });
@@ -202,7 +202,7 @@ test("an empty incremental source page succeeds without erasing earlier proven r
     acquire: async () => ({ facts: [], captures: [emptyCapture], complete: true, declaredTotal: 0 }) });
   assert.ok(result.outcome.promoted);
   assert.deepEqual(result.projection.counts, { loaded: 1, joined: 1, unjoined: 0 });
-  const read = await readFederalMoneyPartition("openfema", leafScope, { store, now: "2026-10-13T01:00:00.000Z", bypassCache: true });
+  const read = await readFederalMoneyPartition("openfema", leafScope, { store, now: "2026-10-13T01:00:00.000Z" });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.equal(read.value.records[0].id, native[0].id);
 });

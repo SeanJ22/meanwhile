@@ -55,7 +55,7 @@ if (!process.argv.includes("--promote")) throw new Error("PASS_--promote: this c
 prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
-const previous = await readFederalRollCallsProjection({ store, bypassCache: true });
+const previous = await readFederalRollCallsProjection({ store });
 const billSummaries = billSummariesForRollCallAcquisition(previous);
 const acquisitions: OfficialAcquisition[] = [];
 let failureRecorded = false;

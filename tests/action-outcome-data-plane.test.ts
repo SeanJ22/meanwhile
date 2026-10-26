@@ -241,7 +241,7 @@ test("an unreceipted official action is held alone while its prior member and su
   ));
   assert.deepEqual((refused.promoted!.payload as ExecutiveActionStore).actions, first.store.actions);
 
-  const read = await readExecutiveActionsProjection({ store: memory, bypassCache: true });
+  const read = await readExecutiveActionsProjection({ store: memory });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(executiveActionStore()?.actions[0]?.id, first.store.actions[0]?.id);
   resetExecutiveActionCache();
@@ -327,7 +327,7 @@ test("a failed Legistar sitting is durable, cannot replace LKG, and cannot affec
   assert.equal((await memory.events(failed.id)).at(-1)?.state, "SOURCE_BLOCKED");
   assert.equal((await memory.readPromotion("MEETING_OUTCOME", "US-AZ:county:pima:legistar-outcomes"))?.versionId, good.id);
 
-  const read = await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: memory, bypassCache: true });
+  const read = await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: memory });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(getOutcomeSnapshot().sittings[0]?.meetingId, snapshot.sittings[0]?.meetingId);
   resetOutcomeSnapshotCache();
@@ -338,8 +338,8 @@ test("store failure never reopens tracked action or outcome snapshots", async ()
     readPromotion: async () => { throw new Error("seeded database outage"); },
     readCandidate: async () => null,
   };
-  const actionRead = await readExecutiveActionsProjection({ store: failedStore, bypassCache: true });
-  const outcomeRead = await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: failedStore, bypassCache: true });
+  const actionRead = await readExecutiveActionsProjection({ store: failedStore });
+  const outcomeRead = await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: failedStore });
   assert.equal(actionRead.kind, "STORE_UNREACHABLE");
   assert.equal(outcomeRead.kind, "STORE_UNREACHABLE");
   assert.equal(executiveActionStore(), null);

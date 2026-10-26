@@ -5,7 +5,7 @@ import { createHash } from "node:crypto";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { prepareRetirementStateInputs, withRetirementSourceCursor, type StateRetirementOrigin } from "../lib/civic-data/state-retirement-inputs.ts";
+import { prepareRetirementStateInputs, withRetirementSourceSnapshot, type StateRetirementOrigin } from "../lib/civic-data/state-retirement-inputs.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { STATE_RETIREMENT_KEY_ENV, verifyStateRetirementUnitSeal } from "../lib/civic-data/state-retirement-proof.ts";
 import { easternDay } from "../lib/db/transfer-by-caller.ts";
@@ -183,12 +183,28 @@ test("AZ filing aliases remain exact and identity-only nominees become patches r
   assert.equal(retirementMemberKey(["officialCandidacies", "rows"], { holder: { id: "source-person" }, canonicalId: "canonical" }), "source-person");
 });
 
-test("retirement cursor fetches bounded pages and rolls back its read-only transaction", async () => {
-  const calls: string[] = [], seen: number[] = []; let fetches = 0;
-  await withRetirementSourceCursor({ query: async sql => { calls.push(sql); return { rows: sql.startsWith("FETCH") && fetches++ < 2 ? [{ value: fetches * 2 - 1 }, { value: fetches * 2 }] : [] }; } },
-    async source => { await source.streamRows("SELECT value FROM held", [], async row => { seen.push(Number(row.value)); }); });
-  assert.deepEqual(seen, [1, 2, 3, 4]); assert.equal(calls[0], "BEGIN READ ONLY"); assert.equal(calls.at(-1), "ROLLBACK");
-  assert.ok(calls.filter(sql => sql.startsWith("FETCH")).every(sql => sql.startsWith("FETCH FORWARD 128 ")));
+test("retirement snapshot checks versions on bounded pages and rolls back its read-only transaction",async()=>{
+  const {PGlite}=await import("@electric-sql/pglite");
+  const db=new PGlite(),calls:string[]=[],received:Record<string,unknown>[]=[];
+  try{
+    await db.exec("CREATE TABLE held(value integer);INSERT INTO held SELECT generate_series(1,260)");
+    const client={query:async(text:string,params:unknown[]=[])=>{
+      calls.push(text);const result=await db.query<Record<string,unknown>>(text,params);received.push(...result.rows);return result;
+    }};
+    await withRetirementSourceSnapshot(client,async source=>{
+      const seen:number[]=[];
+      await source.streamRows("SELECT value FROM held ORDER BY value",[],async row=>{seen.push(Number(row.value));});
+      assert.deepEqual(seen,Array.from({length:260},(_,index)=>index+1));
+      received.length=0;
+      const again:number[]=[];
+      await source.streamRows("SELECT value FROM held ORDER BY value",[],async row=>{again.push(Number(row.value));});
+      assert.deepEqual(again,seen);
+      assert.ok(received.every(row=>row.value===null||!Object.hasOwn(row,"value")),"an unchanged second stream transfers only row versions");
+    },"postgres://fixture:fixture@retirement-snapshot.invalid/neondb");
+    assert.equal(calls[0],"BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
+    assert.equal(calls.at(-1),"ROLLBACK");
+    assert.ok(calls.filter(text=>text.startsWith("WITH ")).every(text=>text.includes("LIMIT 128")));
+  }finally{await db.close();}
 });
 
 test("inline retirement records reach the spool with their owned containers intact", async () => {

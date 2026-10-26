@@ -313,7 +313,7 @@ async function main(): Promise<void> {
       throw new Error("NH_OFFICIAL_PERSON_ID_CROSSWALK_NOT_INITIALIZED");
     }
     const now = new Date().toISOString();
-    const prior = await readNhMembers({store,now,bypassCache:true});
+    const prior = await readNhMembers({store,now});
     if (prior.kind === "STORE_UNREACHABLE") throw Error("NH_PRIOR_UNAVAILABLE");
     const candidate = nhMembersCandidate({
       prior: prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value : null,

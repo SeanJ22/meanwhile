@@ -74,9 +74,9 @@ for (const sample of manifest.states.filter(sample => sample.readerExample)) {
     assert.equal("body" in archive, false); assert.equal(archive.sha256, sample.fixtureArchiveSha256);
     if (sample.state === "GA") {
       assert.deepEqual(first.held, [{ key: `${example.voteId}:ocd-person/546d682f-b256-4060-8fd3-084d7f118d43`, detail: "the native person has conflicting publisher positions" }]);
-      assert.deepEqual(await readPluralVotesForPerson(sample.state, "ocd-person/546d682f-b256-4060-8fd3-084d7f118d43", { store: h.civicStore, bypassCache: true, now: h.input.now() }), []);
+      assert.deepEqual(await readPluralVotesForPerson(sample.state, "ocd-person/546d682f-b256-4060-8fd3-084d7f118d43", { store: h.civicStore,  now: h.input.now() }), []);
     } else assert.deepEqual(first.held, []);
-    const rows = await readPluralVotesForPerson(sample.state, example.personId, { store: h.civicStore, bypassCache: true, now: h.input.now() });
+    const rows = await readPluralVotesForPerson(sample.state, example.personId, { store: h.civicStore,  now: h.input.now() });
     assert.equal(rows.length, 1);
     assert.equal(rows[0].id, example.voteId);
     assert.equal(rows[0].position, example.position);
@@ -93,7 +93,7 @@ for (const sample of manifest.states.filter(sample => sample.readerExample)) {
     assert.ok(unchanged.publication.outcome.confirmed, "no new votes is a successful unchanged check");
     assert.equal(unchanged.publication.outcome.confirmed!.versionId, version);
     assert.deepEqual(unchanged.held, first.held);
-    assert.deepEqual(await readPluralVotesForPerson(sample.state, example.personId, { store: h.civicStore, bypassCache: true, now: h.input.now() }), rows);
+    assert.deepEqual(await readPluralVotesForPerson(sample.state, example.personId, { store: h.civicStore,  now: h.input.now() }), rows);
   });
 }
 

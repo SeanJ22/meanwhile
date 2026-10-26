@@ -37,7 +37,7 @@ test("official district polygons publish on the existing scoped Slide and attach
     const published = await publishSpecialDistrictBoundary(store,input);
     assert.ok(published.promoted, published.candidate.failureDetail ?? "boundary held");
     assert.equal(published.readerReadback?.status,"PASS");
-    const read = await readSpecialDistrictBoundaries(county,{store,now,bypassCache:true});
+    const read = await readSpecialDistrictBoundaries(county,{store,now});
     assert.equal(read.kind,"PROMOTED");
     if(read.kind !== "PROMOTED") throw new Error("Missing boundary");
     const records = read.value.records;
@@ -52,7 +52,7 @@ test("official district polygons publish on the existing scoped Slide and attach
     await assert.rejects(publishSpecialDistrictBoundary(store,{...input,capture:{...input.capture,httpStatus:206}}));
     const paged = JSON.stringify({...JSON.parse(text),exceededTransferLimit:true});
     await assert.rejects(publishSpecialDistrictBoundary(store,{...input,capture:saved(paged,state)}),/additional unread features/);
-    assert.equal((await readSpecialDistrictBoundaries(county,{store,now,bypassCache:true})).kind,"PROMOTED");
+    assert.equal((await readSpecialDistrictBoundaries(county,{store,now})).kind,"PROMOTED");
     const repos=createMemoryRepositories();
     const item=createWorkItem({project:"fixture",subject:district.bodyId,obligation:"district boundary",why:"Admitted GIS",now});
     const plan={contract:{schemaVersion:2,recordClass:"PUBLIC_RECORD",jurisdiction:{canonicalId:county}},sourceRegistryReferences:[door.doorId],

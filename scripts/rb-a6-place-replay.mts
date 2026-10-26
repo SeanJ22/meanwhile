@@ -1,7 +1,7 @@
 /** Real held ZIP references and production facts through RB-A2 into the hunter call; writes only to disposable Postgres. */
 import assert from "node:assert/strict";
 import { readFileSync, writeFileSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { PGlite } from "@electric-sql/pglite";
 import { placeBoundaryMigration } from "../tests/helpers/reader-identity-db.ts";
 import { indexedZipDivisionEntry } from "../lib/geo/zip-division-index.ts";

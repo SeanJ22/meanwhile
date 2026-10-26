@@ -97,9 +97,9 @@ const corpus = syntheticCandidateCorpus();
 const federal = syntheticFederalDirectory();
 const stateMoneyFixtureEntries = (version: (state: string) => string) => (Object.keys(STATE_CAMPAIGN_FINANCE_SOURCES) as StateCampaignFinanceJurisdiction[]).map((state) =>
   provenEdgeEntry({ recordClass: "STATE_CAMPAIGN_FINANCE", scope: STATE_CAMPAIGN_FINANCE_SOURCES[state].scope, sourceId: STATE_CAMPAIGN_FINANCE_SOURCES[state].sourceId, versionId: version(state), value: stateMoneyFixture(state) }));
-const funding = servedValue(await readFundingSnapshot({ store: seedStore, bypassCache: true }));
-const nhMembers = servedValue(await readNhMembers({ store: seedStore, bypassCache: true }));
-const nhLegislators = servedValue(await readOfficialStateLegislatorsProjection("US-NH", { store: seedStore, bypassCache: true }));
+const funding = servedValue(await readFundingSnapshot({ store: seedStore }));
+const nhMembers = servedValue(await readNhMembers({ store: seedStore }));
+const nhLegislators = servedValue(await readOfficialStateLegislatorsProjection("US-NH", { store: seedStore }));
 // The published Census edge resolves 07960 into both NJ congressional districts.
 const njDistricts: CensusDistrictEdge["containers"] = [7, 11].map(district => ({
   ref: { type: "congressional_district", version: "cd:119", geoid: `34${String(district).padStart(2, "0")}`, ocdId: null,
@@ -453,7 +453,7 @@ test("BL-10: assembly through promotion and the canonical reader shows complete 
       const publication = await runBallotPublication({ state: "TX", directory, store, now });
       assert.deepEqual(publication.report.skipped, []);
       assert.equal(publication.report.status, "PUBLISHED", publication.report.reason ?? "");
-      const read = await readGenericBallotProjection("TX", { store, now, bypassCache: true });
+      const read = await readGenericBallotProjection("TX", { store, now });
       assert.equal(read.kind, "PROMOTED");
       if (read.kind !== "PROMOTED") throw new Error("The assembled ballot was not published.");
       const versionId = read.metadata.versionId!;

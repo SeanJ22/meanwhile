@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "../../reader/database.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
@@ -25,7 +25,7 @@ export async function v6StuckGet(request: NextRequest, which: "stuck" | "sameCau
   if (read === null) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so stuck items were not read." }, { status: 503, headers: NO_STORE });
   const now = new Date().toISOString();
   let doorsUnread = false;
-  const shut = await (async () => { const url = controlPlaneUrlFromEnv(); try { return url ? shutDoorItems(await readShutDoorRecords(neon(url)), now) : []; } catch { doorsUnread = true; return []; } })();
+  const shut = await (async () => { const url = controlPlaneUrlFromEnv(); try { return url ? shutDoorItems(await readShutDoorRecords(databaseReadOnlySql(url)), now) : []; } catch { doorsUnread = true; return []; } })();
   const surfaces = await readSurfaceItems(now);
   const views = stuckViews(read.rows, query.scopeKey, now, [...shut, ...surfaces.items]);
   const base = { scope: query.scopeKey, revision: `${which}:${read.publishedAt ?? "unpublished"}:${query.scopeKey}`, asOf: read.publishedAt ?? now };

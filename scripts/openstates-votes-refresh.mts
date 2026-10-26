@@ -23,7 +23,7 @@ export async function refreshStateVotes(input: Parameters<typeof acquireStateVot
     controlPlane: sum.controlPlane + row.bytes["control-plane"] }), { reader: 0, controlPlane: 0 });
   const initialized = await createVoteRefreshSink({ state: pluralVoteState(input.state).toUpperCase(), sourceId: "plural-openstates-votes",
     scope: pluralVotesScope(input.state), civicStore: input.civicStore, vault: input.vault, signal: input.signal, cache: input.cache,
-    readPrior: () => readPluralVotesProjection(input.state, { store: input.civicStore, bypassCache: true, now: input.now?.() }) });
+    readPrior: () => readPluralVotesProjection(input.state, { store: input.civicStore,  now: input.now?.() }) });
   const sink = initialized.sink;
   const copies = (input.cache === undefined ? runtimeCivicReadCache() : input.cache)?.jobState(), progressKey = pluralVotesScope(input.state);
   let progress: PluralVoteProgress = input.resume ?? await copies?.readCheckpoint<PluralVoteProgress>("openstates-vote-progress", progressKey) ?? {};

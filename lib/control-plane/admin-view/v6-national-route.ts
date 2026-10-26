@@ -11,7 +11,7 @@ import { expansionScopesOf } from "../expansion/scopes.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import type { OwnerSnapshot } from "../owner-surface.ts";
 import { readPopulationFacts, statePopulationId } from "../../reference/population-facts.ts";
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "../../reader/database.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { readCountryScores } from "../line-keeper/country.ts";
 
@@ -48,7 +48,7 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
     quick(opened.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true})),
     quick(opened.repos.ownerSnapshots.readNarrowed('current',{billingAttribution:true})),
     quick(population()).then(read=>read?.rows??null),
-    query.scope.kind==='country'&&!options.deps&&controlPlaneUrlFromEnv()?quick(readCountryScores(neon(controlPlaneUrlFromEnv()!))):null,
+    query.scope.kind==='country'&&!options.deps&&controlPlaneUrlFromEnv()?quick(readCountryScores(databaseReadOnlySql(controlPlaneUrlFromEnv()!))):null,
   ]);
   const scopes=expansionScopesOf(config?.value??null);
   const attribution=(snapshot?.value as Pick<OwnerSnapshot,'billingAttribution'>|undefined)?.billingAttribution;

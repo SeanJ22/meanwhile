@@ -403,13 +403,13 @@ test("an official roster promotes to its exact typed Reader and horizon refusal 
   const rosterTarget = officialStateLegislatorTargetByScope(target.jurisdiction)!;
   const store = new MemoryRoutineDataStore();
   const roster = await seedOfficialRoster(store, target, "reader");
-  const read = await readOfficialStateLegislatorsProjection(target.jurisdiction, { store, now: T0, bypassCache: true });
+  const read = await readOfficialStateLegislatorsProjection(target.jurisdiction, { store, now: T0 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.equal(read.metadata.versionId, roster.versionId);
     assert.deepEqual(read.value.roster.officeholders.map(({ id }) => id), roster.officeholderIds);
   }
-  const held = await heldOfficialStateLegislators(target.jurisdiction, { store, now: T0, bypassCache: true });
+  const held = await heldOfficialStateLegislators(target.jurisdiction, { store, now: T0 });
   assert.equal(held?.versionId, roster.versionId);
   assert.equal(held?.seats.length, roster.officeholderIds.length);
   const pointer = await store.readPromotion("STATE_LEGISLATOR", target.jurisdiction);
@@ -541,12 +541,12 @@ test("one state's absent roster cannot hide an independently promoted sibling ro
   const azRead = await readOfficialStateLegislatorsProjection(az.jurisdiction, {
     store,
     now: T0,
-    bypassCache: true,
+
   });
   const njRead = await readOfficialStateLegislatorsProjection(nj.jurisdiction, {
     store,
     now: T0,
-    bypassCache: true,
+
   });
   assert.equal(azRead.kind, "PROMOTED");
   if (azRead.kind === "PROMOTED") assert.equal(azRead.metadata.versionId, azRoster.versionId);
@@ -568,7 +568,7 @@ test("grounded Ask reaches an exact official state identity without a Plural ros
   const candidate = goodCandidate(target, "ask", roster);
   const outcome = await processRegisteredRoutineCandidate(store, target.contractId, candidate, T0);
   assert.equal(outcome.candidate.state, "PROMOTED");
-  await refreshStateVotesFromPromoted(target.jurisdiction, { store, now: T0, bypassCache: true });
+  await refreshStateVotesFromPromoted(target.jurisdiction, { store, now: T0 });
   const member = roster.officeholderIds[0]!;
   const evidence = voteEvidenceFor("Official NJ Member", { officeholderId: member, withinStates: [target.state] });
   assert.equal(evidence.identity.kind, "JOINED");

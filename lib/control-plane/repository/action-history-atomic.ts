@@ -4,11 +4,12 @@ import { prepareActionHistoryProjection, type ValidatedActionEvidence } from "..
 import { canonicalJson } from "./types.ts";
 import { boundedQuery, type ControlPlaneRequestBounds } from "./request-bounds.ts";
 import type { Sql } from "./pg-store.ts";
+import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
 export interface ActionHistoryReadQuery { readonly scope: string; readonly beforePosition?: number | null; readonly limit: number; }
 export interface ActionHistoryReadRow { readonly position: number; readonly receipt: ActionReceipt; }
 export const ACTION_HISTORY_PAGE_SQL = `
-SELECT p.source_position AS position, a.record
+SELECT a.log_key,p.source_position AS position
 FROM cp_admin_action_history_projection p
 JOIN cp_log_admin_receipts a ON a.log_key = p.gateway_log_key AND a.record_id = p.gateway_receipt_id
 WHERE ($1 = 'us'
@@ -23,8 +24,9 @@ LIMIT $3`;
 export async function readActionHistoryPage(sql: Sql, query: ActionHistoryReadQuery, bounds?: ControlPlaneRequestBounds): Promise<readonly ActionHistoryReadRow[]> {
   if (!query.scope || query.scope.length > 256 || !Number.isSafeInteger(query.limit) || query.limit < 1 || query.limit > 51 ||
     query.beforePosition != null && (!Number.isSafeInteger(query.beforePosition) || query.beforePosition < 0)) throw new Error("INVALID_HISTORY_QUERY");
-  const result = await boundedQuery(sql, { operation: "cp_admin_action_history.page", callClass: "PAGE" },
-    ACTION_HISTORY_PAGE_SQL, [query.scope, query.beforePosition ?? null, query.limit], bounds ? { bounds } : {});
+  const result = await versionedRowsFor(sql).selectedLogs(async(text,params)=>await boundedQuery(sql,
+    {operation:"cp_admin_action_history.page",callClass:"PAGE"},text,params,bounds?{bounds}:{}),"cp_log_admin_receipts",
+    ACTION_HISTORY_PAGE_SQL,[query.scope,query.beforePosition??null,query.limit]);
   return rows(result).map(row => ({ position: integer(row.position),
     receipt: (typeof row.record === "string" ? JSON.parse(row.record) : row.record) as ActionReceipt }));
 }
@@ -64,16 +66,20 @@ SELECT r.position, (SELECT count(*) FROM projected) AS projected_count,
        (SELECT count(*) FROM scoped) AS scoped_count
 FROM receipt_insert r`;
 
+const READBACK_FROM = `FROM cp_log_admin_receipts a
+LEFT JOIN cp_admin_action_history_projection p ON p.gateway_receipt_id = a.record_id
+LEFT JOIN cp_admin_action_history_scope_ref s ON s.gateway_receipt_id = p.gateway_receipt_id
+WHERE a.log_key = 'admin-action' AND a.record_id = $1`;
+const READBACK_KEY = "jsonb_build_array(a.position,s.scope_key)::text";
+const READBACK_REVISION = "concat(a.xmin::text,'/',a.ctid::text,'/',p.xmin::text,'/',p.ctid::text,'/',s.xmin::text,'/',s.ctid::text)";
 export const ATOMIC_ACTION_HISTORY_READBACK_SQL = `
 SELECT a.position, a.recorded_at, a.record,
        p.projection_version, p.gateway_type, p.idempotency_key,
        p.source_position, p.source_recorded_at, p.source_hash,
        p.mapping_state, p.action_kind, p.unmapped_reason, p.target_ref, p.target_label,
-       s.scope_key, s.instruction_receipt_id, s.scope_kind
-FROM cp_log_admin_receipts a
-LEFT JOIN cp_admin_action_history_projection p ON p.gateway_receipt_id = a.record_id
-LEFT JOIN cp_admin_action_history_scope_ref s ON s.gateway_receipt_id = p.gateway_receipt_id
-WHERE a.log_key = 'admin-action' AND a.record_id = $1`;
+       s.scope_key, s.instruction_receipt_id, s.scope_kind,
+       ${READBACK_KEY} AS __key,${READBACK_REVISION} AS __revision
+${READBACK_FROM}`;
 
 export type AtomicActionHistoryOutcome = { readonly state: "APPENDED" | "REPLAYED" | "LEGACY_UNPROJECTED";
   readonly position: number };
@@ -133,7 +139,13 @@ export async function appendActionReceiptWithHistoryAtomic(input: {
     insertError = true;
   }
   let held: readonly Record<string, unknown>[];
-  try { held = rows(await run("readback", ATOMIC_ACTION_HISTORY_READBACK_SQL, [input.receipt.receiptId])); }
+  try {
+    const versions = rows(await run("readback-versions",`SELECT ${READBACK_KEY} AS id,${READBACK_REVISION} AS revision ${READBACK_FROM}`,
+      [input.receipt.receiptId])) as {id:string;revision:string}[];
+    held = await versionedRowsFor(input.sql).known("cp_log_admin_receipts",versions,"action-history-readback",
+      async keys=>rows(await run("readback",`${ATOMIC_ACTION_HISTORY_READBACK_SQL} AND ${READBACK_KEY}=ANY($2::text[])`,[input.receipt.receiptId,keys])),
+      row=>String(row.__key),row=>String(row.__revision));
+  }
   catch { throw new AtomicActionHistoryUnconfirmed(); }
   if (held.length === 0) throw new AtomicActionHistoryUnconfirmed();
   const first = held[0];

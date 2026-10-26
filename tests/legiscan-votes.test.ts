@@ -112,7 +112,7 @@ test("actual source fixtures promote through the per-state routine contract and 
   unboundPages.identityAuthority.joins = [];
   unboundPages.identityAuthority.crosswalkSha256 = digest([]);
   assert.equal(legiscanVotesProjectionIssue(unboundPages), "LEGISCAN_VOTE_NATIVE_FACT_INVALID");
-  const votes = await readLegiscanVotesForPerson("tx", personId, { store: civicStore, now: at, bypassCache: true });
+  const votes = await readLegiscanVotesForPerson("tx", personId, { store: civicStore, now: at });
   assert.equal(votes.length, 1); assert.equal(votes[0].position, "Yea");
   const second = await refreshLegiscanVotes(input); assert.ok(second.publication.outcome.confirmed);
   assert.equal(second.publication.outcome.confirmed.versionId, first.publication.outcome.promoted?.versionId);

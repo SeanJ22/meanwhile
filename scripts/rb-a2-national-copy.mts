@@ -1,57 +1,20 @@
+import { CD_REDRAWN_FOR_2026 } from "../lib/census-geography/selection.ts";
 /** Compose the state imports in one disposable database, as the standing jobs do. */
 import assert from "node:assert/strict";
 import { readFile, writeFile } from "node:fs/promises";
 import { gunzipSync } from "node:zlib";
-import { neon } from "@neondatabase/serverless";
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
 import { placesForCode } from "../lib/place-map/read.ts";
 import { placeMapCounts } from "../lib/place-map/counts.ts";
-import { readLegacyStateMemberships, heldStateDataset } from "../lib/place-map/refresh.ts";
-import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
-import { CD_REDRAWN_FOR_2026 } from "../lib/census-geography/selection.ts";
-import { isUnassignedZcta } from "../lib/census-geography/contract.ts";
+import { readLegacyStateMemberships } from "../lib/place-map/refresh.ts";
 import { openMapCopy } from "./lib/rb-a2-copy.ts";
 
-const verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases"), shapesOnly = process.argv.includes("--shapes"), reporting = process.argv.includes("--report"), productionBaseline = process.argv.includes("--production-baseline"), zipLinksOnly = process.argv.includes("--zip-links");
+const verifying = process.argv.includes("--verify"), aliasesOnly = process.argv.includes("--aliases"), shapesOnly = process.argv.includes("--shapes"), reporting = process.argv.includes("--report"), zipLinksOnly = process.argv.includes("--zip-links");
 const states = Object.values(FIPS_TO_STATE).map(state => state.postal).sort();
-const db = await openMapCopy("national", !verifying && !aliasesOnly && !shapesOnly && !reporting && !productionBaseline && !zipLinksOnly);
+const db = await openMapCopy("national", false);
 try {
-  if (productionBaseline) {
-    const url = process.env.RB_A2_READER_URL;
-    if (!url || new URL(url).username !== "readonly") throw new Error("Production read-only role is required");
-    const sql = neon(url), results = [];
-    for (const state of states) {
-      const dataset = await heldStateDataset(async (text, params = []) => (await sql.transaction([sql.query(text, [...params])], { readOnly: true }))[0], state);
-      if (!dataset) throw new Error(`No production Census baseline for ${state}`);
-      const byPurpose = new Map<"representation" | "election", Map<string, Set<string>>>([
-        ["representation", new Map()], ["election", new Map()],
-      ]);
-      for (const scope of dataset.scopes) if (["congressional_district", "state_leg_upper", "state_leg_lower"].includes(scope.type)) {
-        const purpose = ["cd:120", "sldu:2026", "sldl:2026"].includes(scope.version) ? "election" : "representation";
-        const byZip = byPurpose.get(purpose)!;
-        for (const group of scope.groupings) {
-          const id = censusWorkDivision({ ...group, type: scope.type, version: scope.version });
-          if (!id) continue;
-          for (const edge of group.overlaps) {
-            if (isUnassignedZcta(edge.zcta5)) continue;
-            const found = byZip.get(edge.zcta5) ?? new Set<string>(); found.add(id); byZip.set(edge.zcta5, found);
-          }
-        }
-      }
-      const missing = [];
-      for (const [purpose, byZip] of byPurpose) for (const [zip, previous] of byZip) {
-        const current = await placesForCode(db.query, "zip", zip, { purpose, asOf: "2026-10-24", electionDate: "2026-11-03" });
-        const ids = new Set(current.memberships.map(row => row.placeId));
-        for (const id of previous) if (!ids.has(id)) missing.push({ zip, id, purpose });
-      }
-      const checkedZips = byPurpose.get("representation")!.size, checkedElectionZips = byPurpose.get("election")!.size;
-      results.push({ state, checkedZips, checkedElectionZips, missing });
-      console.log(JSON.stringify({ state, checkedZips, checkedElectionZips, missing: missing.length, examples: missing.slice(0, 3) }));
-    }
-    await writeFile("/tmp/rb-a2-replay/production-membership-preservation.json", JSON.stringify(results, null, 2));
-    if (results.some(row => row.missing.length)) process.exitCode = 1;
-  } else if (reporting) {
+  if (reporting) {
     const counts = await placeMapCounts(db.query), rows = [];
     await db.exec("CREATE TEMP TABLE baseline_zip_place(zip text,place_id text,PRIMARY KEY(zip,place_id))");
     for (const row of counts) {
@@ -111,26 +74,6 @@ try {
       console.log(`${state}: ${zipLinksOnly ? "ZIP links" : shapesOnly ? "source shapes" : "source aliases"} loaded`);
     }
   } else {
-    const url = process.env.RB_A2_READER_URL;
-    if (!url || new URL(url).username !== "readonly") throw new Error("Production read-only role is required");
-    const sql = neon(url);
-    for (const state of states) {
-      const map = JSON.parse(gunzipSync(await readFile(`/tmp/rb-a2-replay/${state.toLowerCase()}-map.json.gz`)).toString("utf8")) as StatePlaceMap;
-      // Seed one state's real production identities under SELECT-only access.
-      // A national entity payload never crosses into worker memory.
-      const held = (await sql.transaction([sql.query(`SELECT id,kind,name,state FROM entity WHERE (kind='place' AND state=$1) OR id='ocd-division/country:us' OR id=ANY($2::text[])`,
-        [state, map.entityPlaces?.map(row => row.entityId) ?? []])], { readOnly: true }))[0];
-      await db.query(`INSERT INTO entity(id,kind,name,state) SELECT id,kind,name,state FROM jsonb_to_recordset($1::jsonb) AS e(id text,kind text,name text,state char(2)) ON CONFLICT DO NOTHING`, [JSON.stringify(held)]);
-      const unplaced = map.boundaries.filter(boundary => boundary.layer === "district" && !boundary.geometry && !boundary.countyAttachment);
-      assert.equal(unplaced.length, 0, `${state}: special districts without shape or host county: ${unplaced.slice(0, 3).map(row => row.placeId).join(", ")}`);
-      await loadStatePlaceMap(db, map);
-      const [preserved] = await db.query("SELECT count(*)::int n FROM entity WHERE id=ANY($1::text[])", [held.map(row => row.id)]);
-      assert.equal(preserved.n, held.length, `${state}: held production IDs`);
-      console.log(`${state}: composed ${map.places.length} places and ${map.zipEdges.length} ZIP memberships`);
-    }
-    await db.exec("ANALYZE entity; ANALYZE entity_external_id; ANALYZE entity_place; ANALYZE place_boundary; ANALYZE zip_place; ANALYZE zcta_place");
-    const counts = await placeMapCounts(db.query);
-    await writeFile("/tmp/rb-a2-replay/national-counts.json", JSON.stringify(counts, null, 2));
-    console.log("All 56 state imports composed; measure and verify in separate reader processes.");
+    console.log(JSON.stringify(await placeMapCounts(db.query), null, 2));
   }
 } finally { await db.close(); }

@@ -101,10 +101,10 @@ test("bulk sponsors reuse the saved-profile identity join used by state votes",a
   const input={...source(datasets[0],ak),people:[holder]};
   const store=new MemoryRoutineDataStore(),published=await publishBulkCandidate(store,input,at);
   assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
-  const read=await readBulkProjection(billScope(datasets[0].session_id),{store,now:at,bypassCache:true});
+  const read=await readBulkProjection(billScope(datasets[0].session_id),{store,now:at});
   assert.equal(read.kind,"PROMOTED");
   if(read.kind!=="PROMOTED"||read.value.kind!=="SESSION")throw Error("Session manifest was not published");
-  const part=await readBulkProjection(read.value.parts[0].scope,{store,now:at,bypassCache:true});
+  const part=await readBulkProjection(read.value.parts[0].scope,{store,now:at});
   if(part.kind!=="PROMOTED"||part.value.kind!=="PART")throw Error("Bill part was not published");
   assert.equal(billsForPerson(hydrateBillPart(part.value),holder).length,2);
   assert.equal(hydrateBillPart(part.value)[0].sponsors[0].officeholderId,holder.id);
@@ -124,11 +124,11 @@ test("real DC bill retains its native ID and reaches the canonical Council body 
   const {access_key:_access,...publicDataset}=dataset;
   await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:[publicDataset]}),dcAt,"getDatasetList"),datasets:[dataset]},dcAt);
   const published=await publishBulkCandidate(store,input,dcAt);assert.ok(published.outcome.promoted);
-  const read=await readBillsForState("DC",{store,now:dcAt,bypassCache:true});
+  const read=await readBillsForState("DC",{store,now:dcAt});
   assert.equal(read.bills[0].id,"legiscan:bill:1905130");assert.equal(read.bills[0].number,"B26-0008");
   assert.equal(read.bills[0].ocdId,"ocd-division/country:us/district:dc");assert.equal(read.bills[0].fips,"11");
   const ask=await legiscanBillEvidence({question:"What legislation is published by the Council?",states:["DC"],
-    subject:{kind:"BODY",id:"ocd-division/country:us/district:dc#legislature",name:"Council of the District of Columbia"}},{store,now:dcAt,bypassCache:true});
+    subject:{kind:"BODY",id:"ocd-division/country:us/district:dc#legislature",name:"Council of the District of Columbia"}},{store,now:dcAt});
   assert.equal(ask.denominators.legiscanBillsMatched,1);
   assert.equal(ask.records.find(row=>row.kind==="STATE_BILL")?.id,"legiscan:bill:1905130");
 });
@@ -183,12 +183,12 @@ test("saved source bytes publish to state readers and Ask; a forged title cannot
     assert.ok(!JSON.stringify(published.candidate).includes("fixture-access"));
     assert.equal(Object.hasOwn(published.candidate.normalizedPayload as object,"bodies"),false,"exact bill bytes are saved once in capture.body");
   }
-  assert.equal((await readBillsForState("AK",{store,now:at,bypassCache:true})).bills.length,2);
-  assert.equal((await readBillsForState("AR",{store,now:at,bypassCache:true})).bills.length,1);
-  const evidence=await legiscanBillEvidence({question:"Which bills did Carl Gatto sponsor?",states:["AK"],subject:{kind:"PERSON",id:person.id,name:"Carl Gatto"},person},{store,now:at,bypassCache:true});
+  assert.equal((await readBillsForState("AK",{store,now:at})).bills.length,2);
+  assert.equal((await readBillsForState("AR",{store,now:at})).bills.length,1);
+  const evidence=await legiscanBillEvidence({question:"Which bills did Carl Gatto sponsor?",states:["AK"],subject:{kind:"PERSON",id:person.id,name:"Carl Gatto"},person},{store,now:at});
   assert.equal(evidence.denominators.legiscanBillsMatched,2);assert.equal(evidence.records.filter(row=>row.kind==="STATE_BILL").length,2);
   assert.ok(evidence.records.every(row=>row.sourceUrl&&row.retrievedAt));
-  const unresolved=await legiscanBillEvidence({question:"Which bills did Carl Gatto sponsor?",states:["AK"],subject:{kind:"PERSON",id:person.id,name:"Carl Gatto"}},{store,now:at,bypassCache:true});
+  const unresolved=await legiscanBillEvidence({question:"Which bills did Carl Gatto sponsor?",states:["AK"],subject:{kind:"PERSON",id:person.id,name:"Carl Gatto"}},{store,now:at});
   assert.equal(unresolved.records.length,0);assert.equal(unresolved.gaps.length,1);
   const {processRegisteredFanOutCandidate}=await import("../lib/civic-data/promotion.ts");
   const session=await store.readPromotion<import("../lib/sources/legiscan/bills.ts").BillSession>("STATE_BILL",billScope(datasets[0].session_id));
@@ -217,7 +217,7 @@ test("saved source bytes publish to state readers and Ask; a forged title cannot
       if(held&&scope===session.payload.parts[0].scope){const value=structuredClone(held.payload) as {bills:{title:string}[]};value.bills[0].title="Corrupt stored title";return {...held,payload:value as T};}
       return held;
     }};
-  const corrupt=await readBulkProjection(session.payload.parts[0].scope,{store:corruptStore,now:at,bypassCache:true});
+  const corrupt=await readBulkProjection(session.payload.parts[0].scope,{store:corruptStore,now:at});
   assert.equal(corrupt.kind,"STORE_UNREACHABLE","the normal reader still enforces its canonical read-model hash");
 });
 test("bulk refresh downloads archives once and unchanged hashes confirm success without per-bill calls",async()=>{
@@ -238,7 +238,7 @@ test("bulk refresh downloads archives once and unchanged hashes confirm success 
   now=later;const second=await refreshLegiscan(store,AbortSignal.timeout(10000),options);
   assert.deepEqual(calls,["getDatasetList","getDataset","getDataset","getDatasetList"]);
   assert.equal(second.counts.AK.unchanged,1);assert.equal(second.counts.AR.unchanged,1);
-  assert.equal((await readBulkProjection(billScope(datasets[0].session_id),{store,now:later,bypassCache:true})).metadata.retrievedAt,later);
+  assert.equal((await readBulkProjection(billScope(datasets[0].session_id),{store,now:later})).metadata.retrievedAt,later);
   const held=await store.readPromotion("STATE_BILL",LEGISCAN_BULK_SCOPE);
   const failed=await recordRegisteredSourceAcquisitionFailure({store,contractId:"legiscan-bulk",failure:sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE","LegiScan HTTP 403"),attemptedAt:later});
   assert.equal(failed.outcome.candidate.state,"SOURCE_BLOCKED");assert.equal(failed.outcome.promoted,null);
@@ -256,7 +256,7 @@ test("later publisher editions promote when the archive hash sorts before the he
     assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
     assert.equal(published.candidate.temporal.version,dataset.dataset_date);
   }
-  const read=await readBulkProjection(billScope(datasets[0].session_id),{store,now:later,bypassCache:true});
+  const read=await readBulkProjection(billScope(datasets[0].session_id),{store,now:later});
   assert.equal(read.kind,"PROMOTED");
   if(read.kind==="PROMOTED"&&read.value.kind==="SESSION") assert.equal(read.value.dataset.dataset_hash,"00000000000000000000000000000000");
 });
@@ -311,7 +311,7 @@ test("bounded parts preserve cross-bill ambiguity, reject a truncated archive in
   assert.ok(published.outcome.promoted);
   const session=published.candidate.readModel as import("../lib/sources/legiscan/bills.ts").BillSession;
   assert.ok(session.parts.length>=2);
-  const read=await readBillsForState("AK",{store,now:at,bypassCache:true});
+  const read=await readBillsForState("AK",{store,now:at});
   assert.equal(read.bills.length,bodies.length);assert.equal(read.complete,true);
   assert.ok(read.bills.every(bill=>bill.sponsors.filter(sponsor=>sponsor.peopleId===6033).every(sponsor=>sponsor.officeholderId===null)));
   for(const pointer of session.parts){const held=await store.readCandidate(pointer.versionId);assert.ok(held);assert.ok(pointer.rows<=LEGISCAN_PART_ROWS);assert.equal(Object.hasOwn(held.candidate.normalizedPayload as object,"bodies"),false);}
@@ -325,7 +325,7 @@ test("bounded parts preserve cross-bill ambiguity, reject a truncated archive in
   assert.equal(refused.promoted,null);assert.match(JSON.stringify(refused.candidate.receipt),/source|archive|part/i);
   store.refuseSession=true;
   await assert.rejects(publishBulkCandidate(store,{...input,capture:{...input.capture,retrievedAt:later}},later),/controlled manifest failure/);
-  const after=await readBillsForState("AK",{store,now:later,bypassCache:true});
+  const after=await readBillsForState("AK",{store,now:later});
   assert.deepEqual(after.bills.map(bill=>bill.id).sort(),read.bills.map(bill=>bill.id).sort());assert.equal(after.complete,true);
   assert.equal((await store.readPromotion("STATE_BILL",billScope(datasets[0].session_id)))?.versionId,published.candidate.id);
 });

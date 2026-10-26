@@ -58,7 +58,7 @@ function provenFundingCandidate() {
   });
 }
 
-test("a proven read in a fresh process still runs the full proof; later reads share it instead of re-downloading", async () => {
+test("every verification operation checks the current stored rows", async () => {
   class CountingStore extends MemoryRoutineDataStore {
     readonly reads = { promotion: 0, candidate: 0 };
     tamper = false;
@@ -88,24 +88,19 @@ test("a proven read in a fresh process still runs the full proof; later reads sh
   };
 
   // The first read of a fresh read model is the full proof: a payload its
-  // candidate does not back is refused exactly as a bypassing read refuses it.
+  // candidate does not back is refused on every read.
   const tampered = await promotedStore();
   tampered.tamper = true;
   await assert.rejects(refreshFundingFromPromoted({ store: tampered }), /PROMOTION_PROOF_INVALID|proof|not the exact/i);
-  await assert.rejects(refreshFundingFromPromoted({ store: tampered, bypassCache: true }), /PROMOTION_PROOF_INVALID|proof|not the exact/i);
+  await assert.rejects(refreshFundingFromPromoted({ store: tampered }), /PROMOTION_PROOF_INVALID|proof|not the exact/i);
 
-  // Concurrent loaders share one read and one proof; a later read of the
-  // unmoved pointer asks its identity only.
+  // Concurrent and later reads all check the store for its current rows.
+  // The store owns reuse of bodies after checking their database versions.
   const store = await promotedStore();
   const [first, second] = await Promise.all([refreshFundingFromPromoted({ store }), refreshFundingFromPromoted({ store })]);
   assert.equal(first, second);
-  assert.deepEqual(store.reads, { promotion: 1, candidate: 1 }, "one read and one proof for concurrent loaders");
+  assert.deepEqual(store.reads, { promotion: 2, candidate: 2 }, "each loader checks current rows");
   assert.equal(await refreshFundingFromPromoted({ store }), first);
-  assert.deepEqual(store.reads, { promotion: 1, candidate: 1 }, "an unmoved pointer is served from this process's proof");
+  assert.deepEqual(store.reads, { promotion: 3, candidate: 3 }, "a later read rechecks current rows");
 
-  // Bypassing skipped both: every loader downloaded and proved the family again.
-  const bypassing = await promotedStore();
-  await Promise.all([refreshFundingFromPromoted({ store: bypassing, bypassCache: true }), refreshFundingFromPromoted({ store: bypassing, bypassCache: true })]);
-  await refreshFundingFromPromoted({ store: bypassing, bypassCache: true });
-  assert.deepEqual(bypassing.reads, { promotion: 3, candidate: 3 });
 });

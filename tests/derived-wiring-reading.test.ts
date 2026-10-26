@@ -126,7 +126,7 @@ for (const tenant of [
   const store = await storeWithVenues();
   const calendar = reading(crosswalkRow({ kind: tenant.kind, route: tenant.route, bodyName: tenant.bodyName, filter: tenant.filter }),
     readFileSync(new URL(`./fixtures/${tenant.fixture}`, import.meta.url), "utf8"));
-  const read = await asProduction(() => readHeldCalendars({ options: { store, bypassCache: true, now: tenant.now },
+  const read = await asProduction(() => readHeldCalendars({ options: { store,  now: tenant.now },
     now: tenant.now, adapterDigest: () => `${tenant.kind.toLowerCase()}@0123456789ab`, readings: [calendar] }));
   assert.equal(read.kind, "READ");
   if (read.kind !== "READ") return;
@@ -134,7 +134,7 @@ for (const tenant of [
   assert.ok("verified" in verification, JSON.stringify(verification));
   assert.equal(verification.verified.sittings, tenant.expected);
   if (tenant.kind === "SWAGIT") {
-    const expired = await asProduction(() => readHeldCalendars({ options: { store, bypassCache: true, now: NOW },
+    const expired = await asProduction(() => readHeldCalendars({ options: { store,  now: NOW },
       now: NOW, adapterDigest: () => "swagit@0123456789ab", readings: [calendar] }));
     assert.equal(expired.kind, "READ");
     if (expired.kind === "READ") assert.ok("changed" in expired.verifications.get(calendar.key)!);
@@ -151,10 +151,10 @@ test("C16: the derive reads venue resolutions before any adapter reading, with n
    * The promotion's own readback read the projection into this process. A derive child starts with it unread, so
    * forget it here: read an empty store, which leaves the selector with nothing it may answer from in production.
    */
-  await readCuratedReaderProjection("venue-resolutions", { store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW });
+  await readCuratedReaderProjection("venue-resolutions", { store: new MemoryRoutineDataStore(),  now: NOW });
   assert.throws(() => asProductionSync(() => currentVenueResolutionRecords()), /venue-resolutions projection is NOT_RECORDED/);
   const read = await asProduction(() => readHeldCalendars({
-    options: { store, bypassCache: true, now: NOW },
+    options: { store,  now: NOW },
     now: NOW,
     adapterDigest: () => "ical@0123456789ab",
     readings: [reading()],
@@ -169,7 +169,7 @@ test("C16: the derive reads venue resolutions before any adapter reading, with n
 
 test("C16: a store with no promoted venue resolutions refuses the whole reading by name, before any adapter runs", async () => {
   const read = await asProduction(() => readHeldCalendars({
-    options: { store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW },
+    options: { store: new MemoryRoutineDataStore(),  now: NOW },
     now: NOW,
     adapterDigest: () => "ical@0123456789ab",
     readings: [reading()],
@@ -215,7 +215,7 @@ async function decisionFor(verification: WiringVerification) {
 
 test("C16: an adapter throw of ours is ADAPTER_REFUSED, never CALENDAR_CHANGED: the unread-projection throw itself", async () => {
   /* The venue selector asked before its projection was read. */
-  await readCuratedReaderProjection("venue-resolutions", { store: new MemoryRoutineDataStore(), bypassCache: true, now: NOW });
+  await readCuratedReaderProjection("venue-resolutions", { store: new MemoryRoutineDataStore(),  now: NOW });
   let thrown: unknown = null;
   try {
     asProductionSync(() => currentVenueResolutionRecords());
@@ -237,7 +237,7 @@ test("C16: the adapter's zero-row extraction stays CALENDAR_CHANGED: the held ca
   const page = crosswalkRow({ kind: "OFFICIAL_PAGE_EVENTS", route: "https://www.example.gov/council", filter: { nameTerms: "Town Council" } });
   const empty = reading(page, "<html><body><h1>Town Council</h1></body></html>");
   const read = await asProduction(() => readHeldCalendars({
-    options: { store, bypassCache: true, now: NOW },
+    options: { store,  now: NOW },
     now: NOW,
     adapterDigest: () => "official-page-events@0123456789ab",
     readings: [empty],

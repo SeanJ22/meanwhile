@@ -1,6 +1,6 @@
 import { join } from "node:path";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { readCuratedReaderProjection } from "../lib/civic-data/curated-reader-read-model.ts";
@@ -81,7 +81,7 @@ async function heldText(held: HeldVaultArtifact): Promise<HeldCalendarReading["h
 }
 
 async function main(): Promise<void> {
-  const lkg = await readDerivedMeetingWiring({ store, bypassCache: true, now });
+  const lkg = await readDerivedMeetingWiring({ store,  now });
   if (lkg.kind === "STORE_UNREACHABLE") {
     await finish(derivedWiringFailedCandidate(now, `The previous wiring version could not be read (${lkg.code}): ${lkg.detail}`));
     return;
@@ -93,8 +93,8 @@ async function main(): Promise<void> {
 
 
   const crosswalkContract = requiredManualProductionContract("meeting-body-crosswalk");
-  const crosswalk = await readCuratedReaderProjection("meeting-body-crosswalk", { store, bypassCache: true, now });
-  const automaticRead = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now });
+  const crosswalk = await readCuratedReaderProjection("meeting-body-crosswalk", { store,  now });
+  const automaticRead = await readDerivedMeetingBodyCrosswalk({ store,  now });
   for (const read of [crosswalk, automaticRead]) {
     if (read.kind !== "PROMOTED" && read.kind !== "NOT_RECORDED") {
       await finish(derivedWiringFailedCandidate(now, `A meeting-body crosswalk could not be read (${read.kind}): ${"detail" in read ? read.detail : ""}`));
@@ -135,7 +135,7 @@ async function main(): Promise<void> {
   for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
     console.log(`RCD_PROGRESS meeting-source-wiring registration ${state}`);
     try {
-      const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
+      const read = await readRegistrationProjection(state, { store,  now });
       const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
       if (read.kind !== "PROMOTED" || input === null) {
         registrations.set(state, { unread: `${state} registration is ${read.kind}` });
@@ -143,7 +143,7 @@ async function main(): Promise<void> {
       }
       registrations.set(state, { input,
         bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })) });
-      const reviewed = await readRegistryRuntimeProjection([state], { store, bypassCache: true, now });
+      const reviewed = await readRegistryRuntimeProjection([state], { store,  now });
       const reviewedInput = reviewed.kind === "PROMOTED"
         ? promotedInputRef("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), reviewed.metadata.versionId, reviewed.value, reviewed.metadata.promotedAt)
         : null;
@@ -226,7 +226,7 @@ async function main(): Promise<void> {
     }
   }
   /* The Reader projections the adapters resolve through are read before any reading; an unreadable one refuses the pass. */
-  const read = await readHeldCalendars({ options: { store, bypassCache: true, now }, now, adapterDigest, readings: pending });
+  const read = await readHeldCalendars({ options: { store,  now }, now, adapterDigest, readings: pending });
   if (read.kind === "UNREADABLE") {
     await finish(derivedWiringFailedCandidate(now, read.detail));
     return;

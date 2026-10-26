@@ -1,4 +1,5 @@
 import { temporaryPath } from "./temporary-path.ts";
+import { versionedSelect } from "../db/versioned-query.ts";
 import { createHash } from "node:crypto";
 import { mkdir, open, readFile, rename, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -212,29 +213,25 @@ interface CursorClient {
   query(text: string, params?: unknown[]): Promise<{ readonly rows: readonly Row[] }>;
 }
 
-export async function withRetirementSourceCursor<T>(client: CursorClient, read: (source: {
+export async function withRetirementSourceSnapshot<T>(client: CursorClient, read: (source: {
   query: (text: string, params: readonly unknown[]) => Promise<readonly Row[]>;
   streamRows: (text: string, params: readonly unknown[], onRow: (row: Row) => Promise<void>) => Promise<void>;
-}) => Promise<T>): Promise<T> {
-  await client.query("BEGIN READ ONLY");
-  let sequence = 0;
+}) => Promise<T>, connection=process.env.DATABASE_URL??"retirement-source"): Promise<T> {
+  await client.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
+  const selected=versionedSelect(connection);
+  const query=(text:string,params:readonly unknown[])=>selected(async(text,params)=>(await client.query(text,[...params])).rows,text,params);
   try {
-    return await read({
-      query: async (text, params) => (await client.query(text, [...params])).rows,
-      streamRows: async (text, params, onRow) => {
-        const cursor = `state_retirement_${++sequence}`;
-        await client.query(`DECLARE ${cursor} NO SCROLL CURSOR FOR ${text}`, [...params]);
-        try {
-          while (true) {
-            const { rows } = await client.query(`FETCH FORWARD 128 FROM ${cursor}`);
-            if (!rows.length) break;
-            if (rows.length > 128) throw new Error("STATE_RETIREMENT_CURSOR_ROW_COUNT_INVALID");
-            for (const row of rows) await onRow(row);
-          }
-        } finally { await client.query(`CLOSE ${cursor}`); }
+    return await read({query,
+      streamRows:async(text,params,onRow)=>{
+        for(let offset=0;;offset+=128){
+          const statement=text.trim().replace(/;\s*$/,"");
+          const rows=await query(`SELECT * FROM (${statement}) retirement_rows OFFSET $${params.length+1} LIMIT 128`,[...params,offset]);
+          for(const row of rows)await onRow(row);
+          if(rows.length<128)break;
+        }
       },
     });
-  } finally { await client.query("ROLLBACK"); }
+  } finally {await client.query("ROLLBACK");}
 }
 
 class Spool {

@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "./client.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
 import type { PicksFile } from "../ballot/picks-file.ts";
 

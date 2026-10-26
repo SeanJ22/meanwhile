@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "@/lib/reader/database.ts";
 import type { NextRequest } from "next/server";
 
 import { loadLearningTrends } from "@/app/(admin)/_mw/data/learning-trends.ts";
@@ -55,7 +55,7 @@ export async function GET(request: NextRequest) {
     const now = new Date(observedAt);
     if(request.nextUrl.searchParams.get('reading')==='hourly'){
       const url=controlPlaneUrlFromEnv();
-      const [keeper,pipeline,vital,factStore,heartbeat]=await Promise.all([url?attempt(()=>readLineReport(neon(url))):null,url?attempt(()=>readPipeline(neon(url),observedAt)):null,url?attempt(()=>readVitalSigns(neon(url),observedAt)):null,
+      const [keeper,pipeline,vital,factStore,heartbeat]=await Promise.all([url?attempt(()=>readLineReport(databaseReadOnlySql(url))):null,url?attempt(()=>readPipeline(databaseReadOnlySql(url),observedAt)):null,url?attempt(()=>readVitalSigns(databaseReadOnlySql(url),observedAt)):null,
         attempt(async()=>{const query=readerQuery(5_000);return query?readFactStore(query):null;}),
         attempt(async()=>{const opened=await openControlPlane();return opened.ok?(await opened.repos.runnerHeartbeat.read(RUNNER_ID))?.value??null:null;})]);
       return {contract:'admin-v6/scoreboard@1',scope:request.nextUrl.searchParams.get('scope')??'us',revision:`line-keeper:${keeper?.checkedAt??'unavailable'}`,asOf:observedAt,
@@ -71,14 +71,14 @@ export async function GET(request: NextRequest) {
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
     let doorUnreadable=0;
     const doorList = opened ? await attempt(async () => await listDoors(opened.doors).then(r=>{doorUnreadable=r.unreadable;return r.doors;})) : null;
-    const keeperRead=attempt(async()=>url?readLineReport(neon(url)):null);
+    const keeperRead=attempt(async()=>url?readLineReport(databaseReadOnlySql(url)):null);
     const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, keeper, deadLinks, looks, vital] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? projectDoors({ doors:doorList??[], unreadable:doorUnreadable, saves: [], observedAt }).counts : null)),
       attempt(async () => (opened ? (await opened.runnerHeartbeat.read(RUNNER_ID))?.value ?? null : null)),
       attempt(async () => readDoorNumbers({ now: observedAt, doors: doorList, config, keeper:await keeperRead })),
-      attempt(async () => { if (!url) return null; const r = await readPipeline(neon(url), observedAt); return r.state === "READ" ? r : null; }),
+      attempt(async () => { if (!url) return null; const r = await readPipeline(databaseReadOnlySql(url), observedAt); return r.state === "READ" ? r : null; }),
       attempt(async () => { const r = await readRoutinePublicationStatus(); if (r.kind !== "HELD") return null; const v = publicationView(r.view); return { readBack: v.counts.find((c) => c.verdict === "READER_VISIBLE")?.count ?? 0, total: v.total }; }),
       attempt(async () => {
         const config = opened ? await readSwitchConfig(opened) : null;
@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
       // The sent places' owed lists and history, as Admin's place view reads them; places not read in time are counted, not zeroed.
       attempt(async () => (config === null ? { places: [], unread: 0 } : readScoreboardPlaces(config, coreIds, {
         readOwed: (placeKey) => readPlaceOwed(placeKey),
-        readHistory: async (placeKey) => (url ? readPlaceHistory(neon(url), placeKey) : []),
+        readHistory: async (placeKey) => (url ? readPlaceHistory(databaseReadOnlySql(url), placeKey) : []),
         budgetMs: 10_000,
       }))),
       // The week's live audits, read by day key (seven keys), never the whole log.
@@ -100,7 +100,7 @@ export async function GET(request: NextRequest) {
       attempt(async () => (opened ? provenFixesReading(config, observedAt) : null)),
       // The latest weekly claim check, this week's and last week's keys.
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
-      attempt(async () => (url ? readFlowWeek({control:neon(url),through:observedAt}) : null)),
+      attempt(async () => (url ? readFlowWeek({control:databaseReadOnlySql(url),through:observedAt}) : null)),
       // Keep the existing blank reasons. Reader delivery comes from the hourly report.
       attempt(async () => { const query = readerQuery(5_000); return query ? readFactStore(query) : null; }),
       // One compact, independently maintained checkpoint supplies all hourly numbers.
@@ -109,7 +109,7 @@ export async function GET(request: NextRequest) {
       attempt(async () => (doorList === null ? null : deadLinkReadings(doorList))),
       // The last deploys' look passes (a week's worth), for the look row.
       attempt(async () => (opened ? readLatestLookPasses(opened, 20) : null)),
-      attempt(async () => (url ? readVitalSigns(neon(url), observedAt) : null)),
+      attempt(async () => (url ? readVitalSigns(databaseReadOnlySql(url), observedAt) : null)),
     ]);
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {

@@ -268,7 +268,7 @@ test("each checklist id goes where its record publishes: body links, the agenda 
     ["Tucson Convention Center Commission", "https://www.tucsonaz.gov/", TCCC_URL], "readers see the body's sourced name and home page");
   assert.deepEqual(await live("meeting:tccc-2026-10-01", "video_url"), ["https://www.youtube.com/user/CityofTucson"]);
   assert.ok((await facts.query("SELECT host FROM entity_host WHERE host LIKE 'clerksboards.tucsonaz.gov%'")).length > 0, "the government's official host is learned");
-  const navigation = await readElectionFieldsForDivisions([TUCSON], { store, now: NOW, bypassCache: true });
+  const navigation = await readElectionFieldsForDivisions([TUCSON], { store, now: NOW });
   assert.deepEqual(navigation.fields.map(field => [field.value.fieldKind, field.value.navigationUrl]), [["registration_lookup", "https://my.arizona.vote/"]]);
   const reasons = (await repos.boxFindings.listWhere(["state"], "waiting")).map(row => row.value.waitingFor?.reason).sort();
   assert.deepEqual(reasons, ["CAMPAIGN_SITE_CHAIN_TAKES_IT", "LOOKUP_KIND_NOT_STATED", "SITE_WALK_TAKES_IT", "TAKES_WHOLE_RECORDS_ONLY"]);

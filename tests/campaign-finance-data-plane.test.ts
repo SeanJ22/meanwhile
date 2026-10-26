@@ -161,7 +161,7 @@ test("state Reader follows promoted pointers and never selects a tracked fixture
   const store = new MemoryRoutineDataStore();
   const good = stateCandidate("AZ");
   await processRegisteredManualCandidate(store, "az-sos-campaign-finance", good, T0);
-  const reads = await readStateMoneyProjections({ store, bypassCache: true, now: T0 });
+  const reads = await readStateMoneyProjections({ store,  now: T0 });
   assert.equal(reads.get("AZ")?.kind, "PROMOTED");
   const target = (good.readModel as StateMoneySnapshot).records[0].targetKeys[0];
   assert.ok(target);
@@ -173,7 +173,7 @@ test("state Reader follows promoted pointers and never selects a tracked fixture
     async readPromotion() { throw new Error("database unavailable"); },
     async readCandidate() { throw new Error("must not follow a missing pointer"); },
   };
-  const failedReads = await readStateMoneyProjections({ store: brokenStore, bypassCache: true, now: T1 });
+  const failedReads = await readStateMoneyProjections({ store: brokenStore,  now: T1 });
   assert.ok([...failedReads.values()].every((read) => read.kind === "STORE_UNREACHABLE"));
   assert.equal(stateMoneyReadState("AZ").kind, "STORE_UNREACHABLE");
 });
@@ -189,7 +189,7 @@ test("documentary state-money proof inventory binds every promoted authority and
     const contract = STATE_CAMPAIGN_FINANCE_SOURCES[(candidate.readModel as StateMoneySnapshot).records[0]!.jurisdiction as StateCampaignFinanceJurisdiction];
     await processRegisteredManualCandidate(store, contract.contractId, candidate, T0);
   }
-  await readStateMoneyProjections({ store, bypassCache: true, now: T0 });
+  await readStateMoneyProjections({ store,  now: T0 });
   const inventory = stateMoneyProofInventory();
   assert.deepEqual(
     inventory.targetKeys,
@@ -209,7 +209,7 @@ test("documentary state-money proof inventory binds every promoted authority and
   const onlyAz = new MemoryRoutineDataStore();
   const az = stateCandidate("AZ");
   await processRegisteredManualCandidate(onlyAz, STATE_CAMPAIGN_FINANCE_SOURCES.AZ.contractId, az, T0);
-  await readStateMoneyProjections({ store: onlyAz, bypassCache: true, now: T0 });
+  await readStateMoneyProjections({ store: onlyAz,  now: T0 });
   assert.throws(() => stateMoneyProofInventory(), /NH state campaign-finance Reader proof authority is NOT_RECORDED/);
 });
 
@@ -250,11 +250,11 @@ test("one invalid state projection cannot suppress or erase another state's Read
     },
   };
 
-  const azRead = await readStateMoneyProjection("AZ", { store: corruptAzStore, bypassCache: true, now: T1 });
+  const azRead = await readStateMoneyProjection("AZ", { store: corruptAzStore,  now: T1 });
   assert.equal(azRead.kind, "PROJECTION_INVALID");
   if (azRead.kind === "PROJECTION_INVALID") assert.equal(azRead.code, "PROJECTION_CONTRACT_INVALID");
 
-  const versions = await refreshStateMoneyFromPromoted({ store: corruptAzStore, bypassCache: true, now: T1 });
+  const versions = await refreshStateMoneyFromPromoted({ store: corruptAzStore,  now: T1 });
   assert.match(versions ?? "", new RegExp(nh.id.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")));
   const nhTarget = (nh.readModel as StateMoneySnapshot).records[0]?.targetKeys[0];
   const azTarget = (az.readModel as StateMoneySnapshot).records[0]?.targetKeys[0];

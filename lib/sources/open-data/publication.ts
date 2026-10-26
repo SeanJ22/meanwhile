@@ -69,7 +69,7 @@ export function openDataCandidate(input:{source:OpenDataSource;partition?:string
 }
 export async function publishOpenData(input:Parameters<typeof openDataCandidate>[0]&{store:RoutineDataStore;replace?:boolean}) {
   if(input.partition && input.partition!=="national")throw Error("SRC-SO publishes one canonical national manifest per source.");
-  const prior=await readOpenDataProjection(input.source,input.partition,{store:input.store,now:input.now,bypassCache:true});
+  const prior=await readOpenDataProjection(input.source,input.partition,{store:input.store,now:input.now});
   if(prior.kind==="STORE_UNREACHABLE")throw Error("Open-data prior could not be read; prior facts remain live.");
   const priorCandidate=prior.kind==="PROMOTED"?await input.store.readCandidate(prior.metadata.versionId!):null;
   const priorCaptures=(priorCandidate?.candidate.normalizedPayload as {captures?:OpenDataCapture[]}|null)?.captures ?? [];

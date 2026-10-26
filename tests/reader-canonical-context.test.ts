@@ -255,7 +255,7 @@ test("an unavailable local territory file leaves the ballot's canonical families
   } finally { installReaderDatabaseQuery(undefined); }
 });
 
-test("the selected funding slice survives later official aliases without another data read", async () => {
+test("the selected funding slice stays scoped after aliases and sees the next current database answer", async () => {
   const { neonConfig } = await import("@neondatabase/serverless");
   const { primeReaderProjection } = await import("../lib/civic-data/read-model.ts");
   const { provenEdgeEntry } = await import("./helpers/promoted-edge-entry.ts");
@@ -275,11 +275,11 @@ test("the selected funding slice survives later official aliases without another
   process.env.WTP_VITAL_SIGNS_REPORT = "1";
   neonConfig.fetchFunction = async () => { throw new Error("Selected projections must not fall back to HTTP"); };
   installReaderDatabaseQuery(async statements => {
-    reads++;
     assert.equal(statements.length, 1);
     const keys = statements[0].params[2] as readonly string[];
     assert.ok(keys.includes("ballot-az-federal-candidate"));
     assert.ok(!keys.includes("ballot-nh-candidate"));
+    reads++;
     return [[structuredClone(row)]];
   });
   try {
@@ -288,7 +288,12 @@ test("the selected funding slice survives later official aliases without another
       await primeReaderProjection("FEC_FUNDING", contract.scope, ["ballot-az-federal-candidate"]);
       place.keys.add("congress:an-official-alias");
       assert.equal((await readPromotedCivicData("FEC_FUNDING", contract.scope)).kind, "PROMOTED");
-      assert.equal(reads, 1);
+      assert.equal(reads, 2, "the next operation goes through the shared database query path again");
+      Object.assign(row, { payload: { candidates: [{ targetKeys: ["ballot-az-federal-candidate"], updated: true }] } });
+      const changed = await readPromotedCivicData<{ candidates: { updated?: true }[] }>("FEC_FUNDING", contract.scope);
+      assert.equal(changed.kind, "PROMOTED");
+      if (changed.kind === "PROMOTED") assert.equal(changed.value.candidates[0]?.updated, true);
+      assert.equal(reads, 3, "the next operation sees a changed row without a request snapshot bypass");
     });
   } finally {
     if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl;

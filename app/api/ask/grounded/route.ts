@@ -1402,7 +1402,7 @@ async function answerWithSettings(request: Request, started: number) {
         // The reader's own division was already selected by the first read.
         // Only an explicitly named body elsewhere needs a wider registry read.
         if (!bound?.ocdId || !ocdIds.includes(bound.ocdId)) {
-          await timed("boundRegistry", () => readRegistryRuntimeProjection([...new Set([...registryStates, ...statesOf(bound?.ocdId ? [bound.ocdId] : [])])], { bypassCache: true }))();
+          await timed("boundRegistry", () => readRegistryRuntimeProjection([...new Set([...registryStates, ...statesOf(bound?.ocdId ? [bound.ocdId] : [])])], {  }))();
         }
       }
     }

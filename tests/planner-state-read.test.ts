@@ -46,8 +46,8 @@ test("planner reads state registration identities without geometry on the real s
   assert.deepEqual(first.value.divisions, []);
   assert.equal(first.metadata.versionId, "il-version");
   assert.ok(observations[0].bytes < JSON.stringify(registration).length / 10);
-  assert.equal(await reads.registration("il"), first, "identity and ownership share one state read");
-  assert.equal(calls, 4, "one publication header and three ordered bounded identity pages");
+  assert.deepEqual(await reads.registration("il"), first, "identity and ownership see the same stored registration");
+  assert.equal(calls, 8, "each read checks the current publication header and bounded identity pages");
   assert.throws(() => reads.registration("nh"), /PLANNER_STATE_BOUNDARY/);
   assert.throws(() => plannerStateReads("all", query), /PLANNER_STATE_INVALID/);
   assert.equal((await plannerStateReads("nh", query).registration("nh")).kind, "NOT_RECORDED");
@@ -62,7 +62,7 @@ test("planner reads state registration identities without geometry on the real s
   assert.equal(own.kind, "PROMOTED");
   if (own.kind === "PROMOTED") assert.deepEqual(own.value.records, [wiring.records[0]]);
   await pg.exec("UPDATE civic_data_candidates SET acquisition_succeeded=false WHERE id='il-version'");
-  await assert.rejects(plannerStateReads("il", query).registration("il"), /PLANNER_PUBLICATION_INVALID/);
+  await assert.rejects(reads.registration("il"), /PLANNER_PUBLICATION_INVALID/, "the existing planner sees a changed row on its next read");
   await assert.rejects(plannerStateReads("il", async () => { throw new Error("transport failed"); }).registration("il"), /transport failed/);
   await pg.exec("DELETE FROM civic_data_payload_parts");
   await assert.rejects(plannerStateReads("il", query).registration("il"), /CIVIC_PAYLOAD_PART_MISSING/);

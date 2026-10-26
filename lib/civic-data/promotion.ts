@@ -27,7 +27,7 @@ import { derivedInputAuthorityIssue } from "./derived-door.ts";
 import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual-contracts.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { freezeDurableJson } from "./durable-json.ts";
-import { immutableStateCandidate, largePayloadScope, statePublicationScope, withStatePublicationRead } from "./state-publication.ts";
+import { immutableStateCandidate, largePayloadScope, statePublicationScope } from "./state-publication.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -81,8 +81,7 @@ async function appendTypedReaderProjectionReadback(
   if (outcome.promoted && statePublicationScope(outcome.promoted.scope))
     rememberStatePublicationHashes(outcome.promoted, outcome.candidate.candidate.normalization);
   if (outcome.promoted === null || outcome.confirmed || contract.readerProjection === null) return outcome;
-  const read = () => recordRoutineReaderProjectionReadback(store, contract, outcome.promoted!, requestedAt);
-  const receipt = await (statePublicationScope(outcome.promoted.scope) ? withStatePublicationRead(outcome.promoted, read) : read());
+  const receipt = await recordRoutineReaderProjectionReadback(store, contract, outcome.promoted, requestedAt);
   return { ...outcome, readerReadback: receipt };
 }
 

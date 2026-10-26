@@ -79,11 +79,11 @@ test("each bill publishes and checkpoints before the next one, and the typed rea
   let published=0;
   const result = await refreshStateVotes({ ...h.input, civicStore, onBill: async () => {
     published++;
-    assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,bypassCache:true,now:AT})).length,published);
+    assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,published);
   } });
   assert.ok(result.publication.outcome.promoted);
   assert.equal(candidateCount(civicStore), 2, "a pass cut between bills has already published the first one");
-  const rows = await readPluralVotesForPerson("az", person, { store: civicStore, bypassCache: true, now: AT });
+  const rows = await readPluralVotesForPerson("az", person, { store: civicStore,  now: AT });
   assert.equal(rows.length, 2); assert.equal(rows[0].position, "yes");
   assert.deepEqual(await readPluralVotesForPerson("az", "az-legislature:1", { store: civicStore, now: AT }), []);
 });
@@ -107,13 +107,13 @@ test("a pass interrupted after one publication resumes at the next bill with its
   await assert.rejects(refreshStateVotes({...h.input,civicStore,cache:cache(),signal:controller.signal,onBill:async()=>{
     controller.abort(Error("pass deadline"));throw controller.signal.reason;
   }}),/pass deadline/);
-  assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,bypassCache:true,now:AT})).length,1);
+  assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,1);
   const cursor=await cache().readCheckpoint<Record<string,{position:number;complete:boolean}>>("openstates-vote-progress",pluralVotesScope("az"));
   assert.equal(cursor?.["api-session:az:57th-2nd-regular"].position,1);
   const resumed:string[]=[];
   await refreshStateVotes({...h.input,civicStore,cache:cache(),signal:new AbortController().signal,onBill:async result=>{resumed.push(...result.votes.map(row=>row.id));}});
   assert.deepEqual(resumed,[native("vote",2)]);
-  const shown=await readPluralVotesForPerson("az",person,{store:civicStore,bypassCache:true,now:AT});
+  const shown=await readPluralVotesForPerson("az",person,{store:civicStore,now:AT});
   assert.equal(shown.length,2);assert.ok(shown.some(row=>row.id===native("vote",1)));
   const pointer=await civicStore.readPromotion("STATE_ROLL_CALL",pluralVotesScope("az"));
   const saved=await civicStore.readCandidate(pointer!.versionId);

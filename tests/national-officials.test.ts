@@ -57,7 +57,7 @@ test("national publication isolates invalid offices, retains missing VP facts an
     const publish = (release: Awaited<ReturnType<typeof acquire>>, now: string) => publishPeopleSource({ store, vault, state: "us", sourceId: SOURCE,
       roster: release.roster, acquisitions: release.acquisitions, gaps: release.gaps, releaseId: release.releaseId, now });
     const current = async () => {
-      const read = await readPeopleSourceProjection("US", SOURCE, { store, bypassCache: true });
+      const read = await readPeopleSourceProjection("US", SOURCE, { store });
       assert.equal(read.kind, "PROMOTED");
       if (read.kind !== "PROMOTED") throw new Error(JSON.stringify(read));
       const ids = new Set(read.value.roster.divisions.map(link => link.officeholderId));

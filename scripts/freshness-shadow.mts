@@ -289,9 +289,7 @@ import { today } from "./doc-dates.mjs";
 import { admittedRuntimeChildEnvironment, assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { countVitalSign } from "../lib/db/transfer-by-caller.ts";
 import { VITAL_COUNTERS } from "../lib/control-plane/vital-signs.ts";
-import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
-readFromHeldCopies();
 
 let releaseDrainRequested=false;
 process.on("message", message => {
@@ -797,7 +795,7 @@ const heldRouteRead = retirementOutside === null ? null : await (async () => {
     const bodyIdFor = (id: string): string | null => meetingPartitions.bodyIdFor?.(id) ?? null;
     const divisions = [...new Set(heldRouteCandidates.flatMap((id) => bodyIdFor(id)?.split("#")[0] ?? []))];
     if (divisions.length === 0) return { bodyIdFor, held: new Set<string>() };
-    const capture = await readHeldPlaceCapture(divisions, { now: NOW, bypassCache: true });
+    const capture = await readHeldPlaceCapture(divisions, { now: NOW });
     const rows = buildPlaceOwedList({ divisions: divisions.map((id) => ({ id, label: id })), subjects: capture.subjects, held: capture.held, now: NOW });
     const held = heldCalendarRouteBodies(rows);
     console.log(`  retirement evidence: ${heldRouteCandidates.length} government(s) with an old meetings row, ${held.size} body(ies) with a held calendar route`);
@@ -1108,7 +1106,7 @@ async function refreshPlaceOrder(): Promise<void> {
       [...new Set([...scope.members].map(subject => subject.split("#")[0]).filter(id => id.startsWith("ocd-division/")))]]));
     const divisionIds = [...new Set([...divisionsByReceipt.values()].flat())];
     const [row, capture] = await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID,planningSections),
-      readHeldPlaceCapture(divisionIds, { now: nowIso(), bypassCache: true })]);
+      readHeldPlaceCapture(divisionIds, { now: nowIso() })]);
     const shortType: Readonly<Record<string, string>> = { zcta: "zcta", county: "county", congressional_district: "cd",
       cbsa: "cbsa", state_leg_upper: "sldu", state_leg_lower: "sldl", state: "state" };
     const places = scopes.map(scope => ({

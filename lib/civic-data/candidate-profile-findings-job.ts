@@ -48,7 +48,7 @@ export async function runCandidateProfileFindingsJob(input: {
   return { report, receipt };
 
   async function findingSubjects(): Promise<CandidateFindingSubject[]> {
-    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store: input.store, now: input.now, bypassCache: true });
+    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store: input.store, now: input.now });
     if (read.kind !== "PROMOTED") throw new Error(`CANDIDATE_FINDINGS_BALLOT_UNAVAILABLE:${state}:${read.kind}`);
     const found = new Map<string, CandidateFindingSubject>();
     for (const ballot of Object.values(read.value.ballots)) {

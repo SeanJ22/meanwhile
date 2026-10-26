@@ -79,7 +79,7 @@ export function createMeetingPartitionOwnership(input: {
       if (!wiringRead) {
         wiringRead = true;
         try {
-          const read = await (input.readWiring ?? (() => readDerivedMeetingWiring({ bypassCache: true })))();
+          const read = await (input.readWiring ?? (() => readDerivedMeetingWiring({  })))();
           wiringKnown = read.kind === "PROMOTED" || read.kind === "NOT_RECORDED";
           if (read.kind === "PROMOTED") {
             for (const { row } of read.value.records) {
@@ -109,7 +109,7 @@ export function createMeetingPartitionOwnership(input: {
           }
         }
         try {
-          const read = await (input.readRegistration ?? ((s) => readRegistrationProjection(s, { bypassCache: true })))(state);
+          const read = await (input.readRegistration ?? ((s) => readRegistrationProjection(s, {  })))(state);
           if (read.kind !== "PROMOTED") {
             failures.set(state, `${state.toUpperCase()} registration is ${read.kind}; unpaired governments remain UNKNOWN`);
             continue;

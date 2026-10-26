@@ -4,7 +4,7 @@ import { join } from "node:path";
 import { tmpdir } from "node:os";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { FederalMoneySection } from "../components/funding/federal-money-section.tsx";

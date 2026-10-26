@@ -46,7 +46,7 @@ async function setup(failure?: "proof" | "hash") {
     return (statement.params[0] as string[]).map(hash => {fetched.push(hash);return { hash, payload: parts.get(hash) };});
   }));
   return { input: { state: "WA", sourceId: "plural-openstates-votes", scope: "US-WA:openstates-votes:v1", civicStore: store, vault, query,
-    readPrior: () => readPluralVotesProjection("WA", { store, bypassCache: true, now: source.retrievedAt }) }, vault, projection, candidate, requests: () => requests, fetched,
+    readPrior: () => readPluralVotesProjection("WA", { store,  now: source.retrievedAt }) }, vault, projection, candidate, requests: () => requests, fetched,
     change:()=>{projection={...projection,rollCalls:projection.rollCalls.map((row,index)=>index===0?{...row,motion:"Corrected source motion"}:row)};
       encoded=partitionCivicPayload(projection);for(const part of encoded.parts)parts.set(part.hash,part.payload);versionId="cv-changed-source";} };
 }

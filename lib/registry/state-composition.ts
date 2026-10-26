@@ -96,7 +96,7 @@ function mergeBody(prior: Body, incoming: Partial<Body>): Body {
   return { ...result, fieldSources };
 }
 
-export function withStateRegistryFacts(carton: RegistryRuntimeCarton & Partial<RegistryRuntimeReadModel>, facts: readonly BodyFacts[]): RegistryRuntimeReadModel {
+export function withStateRegistryFacts<T extends Pick<RegistryRuntimeCarton,"registry"|"bodyRosters"|"rosterReaderDispositions">>(carton: T, facts: readonly BodyFacts[]): T & Required<Pick<RegistryRuntimeReadModel,"bodyRosters"|"rosterReaderDispositions">> {
   const rosters = new Map((carton.bodyRosters ?? []).map(roster => [roster.bodyId, roster]));
   const dispositions = new Map((carton.rosterReaderDispositions ?? []).map(row => [row.sourceId, row]));
   const byBody = new Map(facts.map(body => [body.id, body.fields]));

@@ -1,6 +1,6 @@
 import { buildPlaceOwedList, missingPlaceWork, type HeldPlaceField, type PlaceSubject } from "../../../coverage/place-owed.ts";
 import { FRESHNESS_HOURS } from "../../../coverage/checklist-map.ts";
-import type { RegistryRuntimeReadModel } from "../../../registry/runtime-data-plane.ts";
+import type { RegistryPlanningView } from "../../../civic-data/keyed-registry-planning.ts";
 import type { Jurisdiction } from "../../../hunt/jurisdiction-universe.ts";
 import { sourceRequestHeaders } from "../../../sources/http.ts";
 import type { ProvidedObligation } from "../registry.ts";
@@ -47,7 +47,7 @@ const rank = (id: string) => { const at = FIRST.indexOf(id); return at < 0 ? FIR
 const byItem = (a: string, b: string) => rank(a) - rank(b) || a.localeCompare(b);
 
 /** The normal owed list supplies every missing family. Known URLs are re-read; this never discovers a new subject or place. */
-export function heldSubjectDetails(registry: RegistryRuntimeReadModel, state: string, now: string,
+export function heldSubjectDetails(registry: RegistryPlanningView, state: string, now: string,
   governments: readonly HeldGovernmentDetails[] = [], heldPeople: readonly Officeholder[] = [], liveFields: readonly HeldPlaceField[] = []): readonly HeldSubjectDetails[] {
   const own = state.toLowerCase();
   const divisions = registry.registry.divisions.filter(division => stateOf(division.ocdId) === own);

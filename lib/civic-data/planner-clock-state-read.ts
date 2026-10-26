@@ -32,10 +32,10 @@ const ATTEMPT_METADATA_SQL = `SELECT c.candidate#>>'{bootstrapImport,kind}' AS i
     THEN c.candidate#>>'{retrieval,sourceCheck,checkedAt}' END AS checked_at
   FROM civic_data_candidates c WHERE c.id=$1 AND c.source_id=$2 AND c.record_class=$3 AND c.scope=$4`;
 
-const STARTS_SQL = `SELECT COALESCE(jsonb_agg(h.value->'startsAt' ORDER BY m.ordinal_index)
-    FILTER (WHERE jsonb_typeof(h.value->'startsAt')='string'),'[]'::jsonb) AS starts
-  FROM civic_data_promotions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
-    LATERAL (SELECT reader_payload_node(m.item) AS value) h WHERE p.key=$1`;
+const STARTS_SQL = `SELECT COALESCE(jsonb_agg(r.value->'startsAt' ORDER BY r.ordinal)
+    FILTER (WHERE jsonb_typeof(r.value->'startsAt')='string'),'[]'::jsonb) AS starts
+  FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+  WHERE p.key=$1 AND r.collection='meetings'`;
 
 function instant(value: unknown): string | undefined {
   if (value === null || value === undefined) return undefined;

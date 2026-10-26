@@ -10,7 +10,7 @@ import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-sli
 test("planner reads state registration identities without geometry on the real schema", async t => {
   const pg = new PGlite();
   t.after(() => pg.close());
-  for (const name of ["0025_typical_fixer", "0030_database_transfer_daily", "0031_civic_payload_parts", "0036_ne01"]) {
+  for (const name of ["0025_typical_fixer", "0030_database_transfer_daily", "0031_civic_payload_parts", "0036_ne01", "DB-05_keyed_rows", "DB-05_federal_money_rows", "DB-05_lookup_rows"]) {
     await pg.exec(readFileSync(`lib/db/migrations/${name}.sql`, "utf8"));
   }
   const put = async (recordClass: string, scope: string, version: string, payload: unknown) => {
@@ -24,7 +24,7 @@ test("planner reads state registration identities without geometry on the real s
       [`${recordClass}:${scope}`, recordClass, scope, version, JSON.stringify(encoded.value), JSON.stringify(receipt)]);
   };
   const bodies = Array.from({ length: 1150 }, (_, n) => ({ id: `il-body-${n}`, jurisdictionId: `il:city:${n}`, censusId: `${n}`, ocdId: `il-${n}` }));
-  const registration = { formatVersion: 1, state: "IL", scope: "US-IL:registration:v1", vintage: { referenceSha256: "held-reference" },
+  const registration = { formatVersion: 1, state: "IL", scope: "US-IL:registration:v1", vintage: { referenceSha256: "held-reference", sourceNotes:"s".repeat(40_000) },
     reviewedRegistryVersionId: null, counts: { governments: 1150 }, bodies,
     governments: [{ id: "il-government", jurisdictionId: null, name: "Held government", governmentClass: "MUNICIPAL",
       nativeIds: { census_pid6: "1" }, website: null, countyFips: null, associations: [] }],

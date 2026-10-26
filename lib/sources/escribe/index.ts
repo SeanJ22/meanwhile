@@ -28,6 +28,8 @@ interface EscribeMeeting {
 interface EscribeRaw { wiring: BodySourceWiring; text: string; collectedAt: string }
 
 const plain = (html: string) => decodeEntities(html.replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
+const typeName = (value: string) => plain(value).toLowerCase();
+const councilName = (value: string) => value.replace(/^(?:city|town|village|borough)\s+(?=council\b)/, "");
 
 export function escribeCalendarUrl(portalUrl: string): string {
   const url = new URL(portalUrl);
@@ -71,9 +73,21 @@ export function makeEscribeSource(rows: BodySourceWiring[], fetchImpl?: typeof f
       const base = new URL(escribeCalendarUrl(wiring.config.portalUrl)).origin;
       const types = wiring.config.meetingTypes?.split("|").map(s => s.trim());
       if (!types?.length || types.some(s => !s)) throw new Error(`ESCRIBE_BODY_FILTER_MISSING:${wiring.bodyId}`);
-      for (const row of parseEscribeMeetings(text)) {
+      const parsed = parseEscribeMeetings(text);
+      const publishedTypes = [...new Set(parsed.map(row => row.MeetingType))];
+      const acceptedTypes = new Set(types.flatMap(expected => {
+        if (publishedTypes.includes(expected)) return [expected];
+        const name = typeName(expected);
+        const matches = publishedTypes.filter(published => {
+          const candidate = typeName(published);
+          return candidate === name || candidate === councilName(name) || councilName(candidate) === name;
+        });
+        // A missing municipal prefix can be a publisher spelling change only when one listed type matches.
+        return matches.length === 1 ? matches : [];
+      }));
+      for (const row of parsed) {
         logicalInput++;
-        if (!types.includes(row.MeetingType)) { drops.notConfigured++; continue; }
+        if (!acceptedTypes.has(row.MeetingType)) { drops.notConfigured++; continue; }
         const startsAt = localDate(row.StartDate, wiring.timeZone);
         if (!startsAt) { drops.unplaceableInTime++; continue; }
         const id = `escribe:${wiring.config.slug}:${row.ID}`;

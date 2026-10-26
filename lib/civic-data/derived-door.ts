@@ -1,10 +1,10 @@
-import { createHash } from "node:crypto";
-
-import { canonicalCivicDataJson } from "./changes.ts";
+import type { DerivedInputHead, DerivedWiringRow } from "./derived-input-rows.ts";
 import { derivedRetrieval, type DerivedInputRef } from "./derived-authority.ts";
 import { derivedSourceContentIssue } from "./derived-source-hash.ts";
 import { sourceAuthority } from "./source-authority.ts";
-import type { CandidateVersionRecord, RoutineCandidate, SourceAuthorityContract } from "./types.ts";
+import type { RoutineCandidate, SourceAuthorityContract } from "./types.ts";
+import { linkedMeetingSourceIssue } from "./meeting-linked-source.ts";
+import type { RetainedMeetingCandidate } from "./retained-meeting-bytes.ts";
 
 /**
  * A derived candidate has no route of its own; it is authentic only as its exact inputs. Pure check: every input is
@@ -59,7 +59,9 @@ export function derivedInputIssue(input: DerivedInputRef): string | null {
     case "MEMBER_ACQUISITION":
       return text(input.memberKey) && httpsHost(input.requestedUrl) !== null && httpsHost(input.finalUrl) !== null &&
           Number.isInteger(input.httpStatus) && input.httpStatus >= 200 && input.httpStatus < 300 &&
-          SHA256.test(input.rawHash) && instant(input.retrievedAt)
+          SHA256.test(input.rawHash) && instant(input.retrievedAt) &&
+          (input.linkedFrom === undefined || httpsHost(input.linkedFrom.requestedUrl) !== null && httpsHost(input.linkedFrom.finalUrl) !== null && SHA256.test(input.linkedFrom.rawHash)) &&
+          (input.horizonDay === undefined || /^\d{4}-\d{2}-\d{2}$/.test(input.horizonDay) && instant(input.horizonDay))
         ? null
         : `a member read lacks its member, https URLs, a 2xx status, its sha256 or its time`;
     case "DOOR_RECORD":
@@ -112,31 +114,9 @@ export function derivedAuthorityFor(candidate: RoutineCandidate): DerivedAuthori
 }
 
 export interface DerivedDoorStore {
-  readCandidate(candidateId: string): Promise<CandidateVersionRecord | null>;
+  readDerivedInputHeads(ids:readonly string[]):Promise<readonly DerivedInputHead[]>;
+  readDerivedWiringRows(id:string,keys:readonly string[]):Promise<readonly DerivedWiringRow[]>;
 }
-
-const readModelSha256 = (record: CandidateVersionRecord): string =>
-  createHash("sha256").update(canonicalCivicDataJson(record.candidate.readModel)).digest("hex");
-
-interface WiringRowForDoor {
-  readonly key: string;
-  readonly status: string;
-  readonly officialHost: string;
-  readonly route: string;
-}
-
-function wiringRows(readModel: unknown): readonly WiringRowForDoor[] | null {
-  const records = (readModel as { kind?: unknown; records?: unknown } | null);
-  if (records?.kind !== "meeting-source-wiring" || !Array.isArray(records.records)) return null;
-  return records.records.flatMap((entry): WiringRowForDoor[] => {
-    const e = entry as { id?: unknown; status?: unknown; row?: { officialHost?: unknown; route?: unknown } } | null;
-    return e && text(e.id) && text(e.status) && text(e.row?.officialHost) && text(e.row?.route)
-      ? [{ key: e.id, status: e.status, officialHost: e.row.officialHost.toLowerCase(), route: e.row.route }]
-      : [];
-  });
-}
-
-const bare = (host: string): string => host.toLowerCase().replace(/^www\./, "");
 
 /**
  * **(2), the door.** Why a derived candidate's inputs are not what they claim, or null. Run in the promotion door
@@ -144,32 +124,32 @@ const bare = (host: string): string => host.toLowerCase().replace(/^www\./, "");
  */
 export async function derivedInputAuthorityIssue(store: DerivedDoorStore, candidate: RoutineCandidate): Promise<string | null> {
   const inputs = candidate.retrieval.derived?.inputs ?? [];
-  const promoted = new Map<string, CandidateVersionRecord>();
+  const promoted = new Map<string, DerivedInputHead>();
+  const ids=[...new Set(inputs.flatMap(input=>input.kind==="PROMOTED_VERSION"?[input.versionId]:[]))];
+  const heads=new Map((ids.length ? await store.readDerivedInputHeads(ids) : []).map(head=>[head.id,head]));
   for (const input of inputs) {
     if (input.kind !== "PROMOTED_VERSION") continue;
-    const record = await store.readCandidate(input.versionId);
-    if (record === null) return `DERIVED_INPUT_NOT_DURABLE: ${input.versionId} is not a stored version`;
-    if (record.candidate.recordClass !== input.recordClass || record.candidate.scope !== input.scope) {
-      return `DERIVED_INPUT_IDENTITY_MISMATCH: ${input.versionId} is ${record.candidate.recordClass}:${record.candidate.scope}`;
+    const record = heads.get(input.versionId);
+    if (record === undefined) return `DERIVED_INPUT_NOT_DURABLE: ${input.versionId} is not a stored version`;
+    if (record.recordClass !== input.recordClass || record.scope !== input.scope) {
+      return `DERIVED_INPUT_IDENTITY_MISMATCH: ${input.versionId} is ${record.recordClass}:${record.scope}`;
     }
     if (record.state !== "PROMOTED") return `DERIVED_INPUT_NOT_PROMOTED: ${input.versionId} is ${record.state}`;
-    if (readModelSha256(record) !== input.readModelSha256) return `DERIVED_INPUT_READ_MODEL_MISMATCH: ${input.versionId}`;
+    if (record.readModelSha256 !== input.readModelSha256) return `DERIVED_INPUT_READ_MODEL_MISMATCH: ${input.versionId}`;
     promoted.set(input.versionId, record);
   }
   const members = inputs.filter((input): input is Extract<DerivedInputRef, { kind: "MEMBER_ACQUISITION" }> => input.kind === "MEMBER_ACQUISITION");
   if (members.length === 0) return null;
   const wiring = [...promoted.values()].filter((record) =>
-    record.candidate.recordClass === DERIVED_WIRING_RECORD_CLASS && record.candidate.scope === DERIVED_WIRING_SCOPE);
+    record.recordClass === DERIVED_WIRING_RECORD_CLASS && record.scope === DERIVED_WIRING_SCOPE);
   if (wiring.length !== 1) return "DERIVED_MEMBERS_WITHOUT_ONE_WIRING_VERSION: a member read is authorized only by exactly one named wiring version";
-  const rows = wiringRows(wiring[0]!.candidate.readModel);
-  if (rows === null) return "DERIVED_WIRING_UNREADABLE: the named wiring version has no rows";
+  if(wiring[0]!.readModelKind!=="meeting-source-wiring")return "DERIVED_WIRING_UNREADABLE: the named wiring version has no rows";
+  const rows=await store.readDerivedWiringRows(wiring[0]!.id,members.map(member=>member.memberKey));
   for (const member of members) {
     const row = rows.find((r) => r.key === member.memberKey);
     if (row === undefined || row.status !== "ACTIVE") return `DERIVED_MEMBER_NOT_ACTIVE: ${member.memberKey} is not an active row of the named wiring version`;
-    for (const url of [member.requestedUrl, member.finalUrl]) {
-      const host = httpsHost(url);
-      if (host === null || bare(host) !== bare(row.officialHost)) return `DERIVED_MEMBER_HOST_NOT_ATTESTED: ${url} is not on ${row.officialHost}`;
-    }
+    const linkedIssue = linkedMeetingSourceIssue(member, row.officialHost, members, (candidate as RetainedMeetingCandidate).retainedSourceResponses ?? []);
+    if (linkedIssue) return linkedIssue;
   }
   return null;
 }

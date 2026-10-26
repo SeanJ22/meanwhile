@@ -76,8 +76,7 @@ export async function placeSourceReader(input: {
     // ID can have many observations; resolve it only once in this pass.
     const candidates = [...await readPlaceArtifacts(tools.repos, url, new Date(cutoff).toISOString(), at)]
       .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
-    const heldRepos = { ...tools.repos, artifacts: { ...tools.repos.artifacts, readAll: async () => candidates } };
-    const readObject = researchVaultResolver(heldRepos, tools.store, project, { snapshot: true });
+    const readObject = researchVaultResolver(tools.repos, tools.store, project, { records: candidates });
     const tried = new Set<string>();
     for (const row of candidates) {
       if (tried.has(row.artifactId)) continue;

@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { civicElectionRows, civicLookupFromRaw } from "../lib/sources/google-civic/model.ts";
 import { civicCandidate } from "../lib/sources/google-civic/publication.ts";
 import { lookupCivicAddress, readCivicApi } from "../lib/sources/google-civic/acquisition.ts";
+import { SourceReadDeferred } from "../lib/sources/http.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, civicStateScope, GOOGLE_CIVIC_STATES } from "../lib/sources/google-civic/targets.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -17,6 +18,7 @@ import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 import type { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { readRawCaptureText, type RawCaptureRef } from "../lib/civic-data/raw-capture-vault.ts";
+import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 
 const AT = "2026-10-12T23:13:00.000Z";
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/google-civic/${name}.json`, import.meta.url), "utf8");
@@ -103,26 +105,29 @@ test("a request-local public catalog prefetch is consumed once before sending th
   assert.equal(requests[0].searchParams.get("electionId"), "12000");
 });
 
-test("provider Retry-After is honored on 429 and 5xx without small-government pacing", async () => {
-  let requests = 0;
-  const pauses: number[] = [];
-  const result = await readCivicApi("elections", {}, { apiKey: "private-test-key", now: () => AT,
-    sleep: async ms => { pauses.push(ms); },
-    fetchImpl: (async () => ++requests === 1 ? new Response("", { status: 429, headers: { "retry-after": "7" } })
-      : requests === 2 ? new Response("", { status: 503, headers: { "retry-after": "2" } }) : new Response(fixture("elections"))) as typeof fetch });
-  assert.deepEqual(pauses, [7000, 2000]);
-  assert.equal(result.checkedAt, AT);
+test("provider Retry-After defers the shared host instead of retrying 429 or 5xx inside the lookup", async () => {
+  for (const status of [429, 503]) {
+    let requests = 0;
+    const options = { apiKey: "private-test-key", now: () => AT,
+      fetchImpl: (async () => { requests++; return new Response("", { status, headers: { "retry-after": "180" } }); }) as typeof fetch };
+    await assert.rejects(readCivicApi("elections", {}, options), SourceReadDeferred);
+    await assert.rejects(readCivicApi("voterinfo", { address: "private reader street" }, options), (error: unknown) => {
+      assert.ok(error instanceof SourceReadDeferred);
+      assert.doesNotMatch(error.message, /private-test-key|private reader street|private\+reader/);
+      return true;
+    });
+    assert.equal(requests, 1, "a second route observes the same provider cooldown without a request");
+  }
 });
 
 test("every HTTP failure logs its status and at most 300 body characters only on the server", async t => {
   const logs: string[] = [];
   t.mock.method(console, "error", (line: string) => logs.push(line));
-  let attempt = 0;
-  const statuses = [429, 503, 403];
-  await assert.rejects(readCivicApi("voterinfo", { address: "private reader street" }, {
-    apiKey: "private-test-key", sleep: async () => {},
-    fetchImpl: async () => new Response(`provider failure private-test-key private reader street ${"x".repeat(500)}`, { status: statuses[attempt++] }),
-  }), /HTTP 403/);
+  const statuses = [500, 503, 403];
+  for (const status of statuses) await assert.rejects(readCivicApi("voterinfo", { address: "private reader street" }, {
+    apiKey: "private-test-key",
+    fetchImpl: async () => new Response(`provider failure private-test-key private reader street ${"x".repeat(500)}`, { status }),
+  }), new RegExp(`HTTP ${status}`));
   const calls = logs.map(line => JSON.parse(line));
   assert.deepEqual(calls.map(row => row.httpStatus), statuses);
   assert.ok(calls.every(row => row.event === "google_civic_call_failed" && row.route === "voterinfo" && row.stage === "http" && row.body.length === 300));
@@ -164,6 +169,7 @@ test("national refresh visits every state, records missing inventories and publi
   const registration = (async (state: string) => { visited.push(state); return { kind: "NOT_RECORDED" }; }) as unknown as typeof readRegistrationProjection;
   const result = await refreshGoogleCivic({ store, vault, registration, readOptions: { apiKey: "private-test-key", now: () => AT,
     fetchImpl: (async () => new Response(fixture("elections"))) as typeof fetch } });
+  assert.ok(result.coverage&&result.outcome&&result.candidate);
   assert.deepEqual(visited, GOOGLE_CIVIC_STATES);
   assert.equal(result.coverage.length, GOOGLE_CIVIC_STATES.length);
   assert.ok(result.coverage.every(row => row.reason?.includes("inventory")));
@@ -173,7 +179,7 @@ test("national refresh visits every state, records missing inventories and publi
   assert.equal(await readRawCaptureText(vault, rawCapture), fixture("elections"));
   const next = await processRegisteredRoutineCandidate(store, GOOGLE_CIVIC_SOURCE_ID, await civicCandidate(vault, GOOGLE_CIVIC_SCOPE,
     { formatVersion: 1, kind: "CATALOG", checkedAt: AT, rows: civicElectionRows(fixture("elections"), AT, new Set(["ocd-division/country:us"])), coverage: result.coverage }, fixture("elections"), "elections"), AT);
-  assert.ok(next.confirmed);
+  assert.ok(next.promoted||next.confirmed,"a caller supplying a different source-input basis must publish that basis");
 });
 
 test("county refresh probes each public election office once and saves only yes/no and counts", async () => {
@@ -192,6 +198,7 @@ test("county refresh probes each public election office once and saves only yes/
       return url.pathname.endsWith("elections") ? new Response(fixture("elections")) : url.searchParams.get("address")!.endsWith("A")
         ? new Response(rawMi) : new Response("provider address echo must not be held", { status: 404 });
     }) as unknown as typeof fetch } });
+  assert.ok(result.coverage&&result.outcome&&result.candidate);
   assert.ok(result.outcome.promoted);
   const probes = requests.filter(url => url.pathname.endsWith("voterinfo"));
   assert.equal(probes.length, 2);
@@ -215,6 +222,7 @@ test("county refresh probes each public election office once and saves only yes/
     readOptions: { apiKey: "private-test-key", now: () => tomorrow, fetchImpl: (async (url: URL) => {
       tomorrowRequests.push(url); return new Response(url.pathname.endsWith("elections") ? fixture("elections") : rawMi);
     }) as unknown as typeof fetch } });
+  assert.ok(next.outcome);
   assert.ok(next.outcome.promoted || next.outcome.confirmed);
   assert.equal(tomorrowRequests.filter(url => url.pathname.endsWith("voterinfo")).length, 2, "the following daily pass remeasures every available county office");
   assert.equal((await readCountyCivicCoverage(store, "MI")).get("26161")?.available, true, "the following pass updates the existing no-site sample");
@@ -261,4 +269,25 @@ test("a resumed national pass starts with states that have no completed source c
     fetchImpl: (async () => new Response(fixture("elections"))) as typeof fetch } });
   assert.equal(visited.at(-1), "AL");
   assert.deepEqual(visited.slice(0, -1), GOOGLE_CIVIC_STATES.filter(state => state !== "AL"));
+});
+
+test("the fanout publication option persists a new source probe when the held civic facts match", async () => {
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore(), raw = fixture("elections");
+  const rows = civicElectionRows(raw, AT, new Set(["ocd-division/country:us"]));
+  const initial = await civicCandidate(vault, civicStateScope("AL"), { formatVersion: 1, kind: "STATE", checkedAt: AT, rows, coverage: [] }, raw, "elections");
+  const first = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_SOURCE_ID, initial, AT);
+  assert.ok(first.promoted);
+  const later = "2026-10-13T00:13:00.000Z";
+  const fresh = await civicCandidate(vault, civicStateScope("AL"), { formatVersion: 1, kind: "STATE", checkedAt: later,
+    rows: civicElectionRows(raw, later, new Set(["ocd-division/country:us"])), coverage: [] }, raw, "elections");
+  const sourceProbe = { formatVersion: 1, complete: false, coverageComplete: false };
+  const normalizedPayload = { ...(fresh.normalizedPayload as object), sourceProbe };
+  const upgraded = { ...fresh, normalizedPayload, normalization: { ...fresh.normalization, normalizedPayloadHash: normalizedHash(normalizedPayload) } };
+  store.confirmUnchanged = async () => assert.fail("an explicit source-probe publication must not be replaced with a confirmation");
+  const result = await processRegisteredFanOutCandidate(store, GOOGLE_CIVIC_SOURCE_ID, upgraded, later, first.promoted.versionId, { confirmUnchanged: false });
+  assert.equal(result.confirmed, undefined);
+  assert.equal(result.promoted?.versionId, upgraded.id);
+  assert.notEqual(result.promoted?.versionId, first.promoted.versionId);
+  const saved = await store.readCandidate(upgraded.id);
+  assert.deepEqual((saved?.candidate.normalizedPayload as { sourceProbe: unknown }).sourceProbe, sourceProbe);
 });

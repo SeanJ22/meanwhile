@@ -5,6 +5,7 @@ import test from "node:test";
 
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
+import { factRefreshBounds, timeSensitiveSource } from "../lib/civic-data/source-change-cadence.ts";
 import {
   durableRoutineRunnerReceiptIssue,
   parseRoutineRunnerReceipt,
@@ -23,7 +24,7 @@ import {
   runInSourceAcquisitionDomain,
   sourceAcquisitionSleep,
 } from "../lib/sources/acquisition-deadline.ts";
-import { curlGetText, politeGetText } from "../lib/sources/http.ts";
+import { curlGetText, politeGetText, SourceReadDeferred } from "../lib/sources/http.ts";
 import { ROUTINE_CHILD_TIMEOUT_MS } from "../lib/civic-data/bounded-child-pass.ts";
 import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
 import {
@@ -136,8 +137,10 @@ test("a registered source failure is one durable attempt with retry clock and un
     lastSucceededAt: GOOD_AT,
     lastSucceededObservedAt: GOOD_AT,
   });
-  assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), Date.parse(FAILED_AT) + task.retryMs - 1), false);
-  assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), Date.parse(FAILED_AT) + task.retryMs), true);
+  const failedAt = Date.parse(FAILED_AT);
+  const retryMs = timeSensitiveSource(task, failedAt) ? task.retryMs : Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+  assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), failedAt + retryMs - 1), false);
+  assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), failedAt + retryMs), true);
 });
 
 test("all five registered adapters can persist a well-formed source-scoped failure receipt", async () => {
@@ -164,8 +167,10 @@ test("all five registered adapters can persist a well-formed source-scoped failu
     assert.equal((await store.events(parsed.receipt.candidateId)).length, 1, `${contractId} must write exactly one attempt event`);
     const clock = await store.clock(task.sourceId, task.recordClass, task.scope);
     assert.deepEqual(clock, { lastAttemptedAt: FAILED_AT, failureStreak: 1 });
-    assert.equal(routineTaskDue(task, clock, Date.parse(FAILED_AT) + task.retryMs - 1), false, contractId);
-    assert.equal(routineTaskDue(task, clock, Date.parse(FAILED_AT) + task.retryMs), true, contractId);
+    const failedAt = Date.parse(FAILED_AT);
+    const retryMs = timeSensitiveSource(task, failedAt) ? task.retryMs : Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+    assert.equal(routineTaskDue(task, clock, failedAt + retryMs - 1), false, contractId);
+    assert.equal(routineTaskDue(task, clock, failedAt + retryMs), true, contractId);
   }
 });
 
@@ -327,7 +332,7 @@ test("the source deadline leaves a bounded durable-settlement window inside the 
   );
 });
 
-test("the shared meeting client cancels hung request/body work and its real retry sleep", async () => {
+test("the shared meeting client cancels hung request/body work and defers Retry-After without sleeping in the read", async () => {
   for (const kind of ["request", "body"] as const) {
     let active = 0;
     const fetchImpl = ((_input: URL | RequestInfo, init?: RequestInit) => {
@@ -382,10 +387,10 @@ test("the shared meeting client cancels hung request/body work and its real retr
         },
       }),
     ),
-    /acquisition deadline/,
+    SourceReadDeferred,
   );
-  assert.equal(attempts, 1, "the aborted retry sleep never launches another publisher request");
-  assert.ok(Date.now() - started < 1_000, "Retry-After was interrupted by the source deadline");
+  assert.equal(attempts, 1, "the shared cooldown never launches an immediate second publisher request");
+  assert.ok(Date.now() - started < 1_000, "Retry-After is scheduled for later instead of sleeping inside the read");
 });
 
 test("a real acquisition deadline persists one exact source failure while retaining LKG", async () => {

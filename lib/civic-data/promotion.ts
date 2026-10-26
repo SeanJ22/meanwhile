@@ -139,7 +139,7 @@ export async function processRegisteredRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   // Rechecks keep the held version by default. Explicit false is reserved for
   // callers that need a distinct candidate even when its facts are unchanged.
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly inputDigest?: string; readonly publicationBase?:RoutinePublicationBase } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly inputDigest?: string; readonly publicationBase?: RoutinePublicationBase } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
@@ -236,7 +236,8 @@ export async function processRegisteredFanOutCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options:{readonly confirmUnchanged?:boolean;readonly publicationBase?:RoutinePublicationBase}={},
+  // A new source/progress envelope must be persisted even when its civic facts match the current version.
+  options: { readonly confirmUnchanged?: boolean; readonly inputDigest?: string; readonly publicationBase?: RoutinePublicationBase } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");

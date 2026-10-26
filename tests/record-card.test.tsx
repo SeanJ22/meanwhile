@@ -16,7 +16,8 @@ test("plain records use the shared Card; read dates and URLs only occur in Sourc
   assert.ok(!face.includes(record.sourceUrl));
   assert.ok(!face.includes("2026-10-05"));
   assert.ok(sources.includes(record.sourceUrl));
-  assert.match(sources, /2026-10-05/);
+  assert.match(sources, /October 5, 2026/);
+  assert.doesNotMatch(sources, /2026-10-05T/);
 });
 test("a place never shows another jurisdiction's record or claims another body's record", () => {
   const records = [record, { ...record, id: "fixture:elsewhere", ocdId: `${division}_other` }, { ...record, id: "fixture:body", bodyId: "fixture:body" }];

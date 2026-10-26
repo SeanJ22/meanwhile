@@ -194,6 +194,18 @@ test("every reader surface renders the upcoming sittings with held fields and ma
     check(!/data-status="canceled"/.test(rowMarkup(html("list"), id)), `meeting list: ${id} is marked canceled — cancellation was inferred`);
   }
 
+  // A list spanning bodies keeps each missing-information request with its own meeting.
+  const missingBodies = new Set<string>();
+  for (const meeting of fixture.meetings.filter(meeting => !meeting.agendaUrl && meeting.bodyId && listIds.includes(meeting.id))) {
+    missingBodies.add(meeting.bodyId!);
+    const row = rowMarkup(html("list"), meeting.id).split("</article>")[0];
+    const subjects = [...row.matchAll(/data-demand-subject="([^"]+)"/g)].map(match => text(match[1]));
+    check(subjects.length > 0, `meeting list: ${meeting.id} has no local request for its missing agenda`);
+    check(subjects.every(subject => subject === meeting.bodyId), `meeting list: ${meeting.id} sends its request to another body`);
+  }
+  check(missingBodies.size > 1, "meeting list: the regression must exercise missing information for several bodies");
+  check(!html("list").includes('data-card-gap="meeting-list:'), "meeting list: requests are still aggregated across bodies");
+
   // ── The panel behind the Duffy pin: the body's upcoming sittings, marked. ──
   const duffy = text(html("duffy"));
   const duffyIds = rowIds(html("duffy"));
@@ -207,7 +219,9 @@ test("every reader surface renders the upcoming sittings with held fields and ma
     const row = text(rowMarkup(html("duffy"), id));
     // The body's own published words, per row ("Via Zoom Webinar", "Via Zoom").
     const label = byId.get(id)?.online?.label;
-    check(!/data-working-on-it=|working on getting this info|Want us/.test(row), `Duffy panel: ${id} renders a missing-field placeholder`);
+    check(!/Still gathering/.test(row), `Duffy panel: ${id} renders the removed footer list`);
+    check(/working on getting this info/.test(row), `Duffy panel: ${id} omits its local missing-information message`);
+    check(/Want us to get this sooner/.test(row), `Duffy panel: ${id} omits its local request`);
     check(/data-meeting-where="online"/.test(rowMarkup(html("duffy"), id)), `Duffy panel: ${id} carries no online label`);
     check(Boolean(label) && row.includes(`Online · ${label}`), `Duffy panel: ${id} does not quote "${label}"`);
     check(/>Meeting page<\//.test(row), `Duffy panel: ${id} omits its held meeting page`);

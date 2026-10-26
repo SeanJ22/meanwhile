@@ -218,6 +218,8 @@ export interface NormalizationEvidence {
   readonly normalizedHash: string | null;
     /** Required by every promotable production candidate; only fixtures that cannot reach a production door may omit it. */
   readonly normalizedPayloadHash?: string | null;
+  /** Exact parser package and configuration already applied to this pointed output; a replay never changes source freshness. */
+  readonly sourceInputDigest?:string;
   readonly stateRecordHashes?: {
     readonly readModelHash: string;
     readonly members: readonly { readonly key: string; readonly factsHash: string; readonly sha256: string }[];

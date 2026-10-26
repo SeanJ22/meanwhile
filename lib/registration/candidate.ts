@@ -15,6 +15,7 @@ import {
 import type { LoadedReference, ReferenceLayer } from "./reference.ts";
 import { referenceGovernmentListings, type RegistrationGovernmentListing } from "./listings.ts";
 import type { Body, Division, DivisionType } from "../registry/types.ts";
+import { registrationSourceContentHash,registrationSourcesCover,type RegistrationSourceProbe } from "./source-hash.ts";
 
 
 export type RegistrationDivision = Division & {
@@ -134,6 +135,7 @@ export function registrationCandidate(input: {
   /** Accepted for older callers; registration does not use it. */
   readonly reviewed?: ReviewedRegistryIds;
   readonly previous?: RegistrationReadModel | null;
+  readonly sourceProbe?:RegistrationSourceProbe;
 }): RoutineCandidate {
   const { target, reference: loaded, receipt } = input;
   const ref = loaded.reference;
@@ -259,7 +261,9 @@ export function registrationCandidate(input: {
   }
 
   const readModelHash = sha256(canonicalCivicDataJson(readModel));
-  const rawHash = sha256(`${receipt.sha256}\n${loaded.sha256}\n${sha256(canonicalCivicDataJson(governmentListings))}`);
+  const coverageComplete=input.sourceProbe?registrationSourcesCover(readModel,input.sourceProbe):false;
+  const sourceProbe=input.sourceProbe?{...input.sourceProbe,coverageComplete,complete:input.sourceProbe.complete&&coverageComplete}:undefined;
+  const rawHash = sourceProbe?registrationSourceContentHash(sourceProbe):sha256(`${receipt.sha256}\n${loaded.sha256}\n${sha256(canonicalCivicDataJson(governmentListings))}`);
   const records = divisions.length + governmentListings.length + bodies.length;
   const considered = allDivisions.length + governmentListings.length + candidates.length;
   const normalizedPayload = {
@@ -272,6 +276,7 @@ export function registrationCandidate(input: {
     divisions: divisions.length,
     bodies: bodies.length,
     governments: governmentListings.length,
+    ...(sourceProbe?{sourceProbe}:{}),
     ...(receipt.replayedFromVersionId ? { replayedFromVersionId: receipt.replayedFromVersionId } : {}),
   };
   const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));
@@ -289,6 +294,7 @@ export function registrationCandidate(input: {
       httpStatus: receipt.httpStatus,
       retrievedAt: receipt.retrievedAt,
       rawHash,
+      ...(input.sourceProbe?{rawHashBasis:"SOURCE_CONTENT_V1" as const}:{}),
       sourceCheck: registrationSourceCheck(receipt),
     },
     normalization: {

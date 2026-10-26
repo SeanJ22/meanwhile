@@ -38,7 +38,7 @@ export async function refreshCensusGeography(store: RoutineDataStore, options: A
     const missing = CENSUS_GEO_REQUIRED_VERSIONS.filter(version => !built.scopes.some(scope => scope.version === version));
     if (missing.length) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `Census geography is missing required election plans: ${missing.join(", ")}`);
     await verifyCensusScopeSources(built.scopes, options);
-    return { confirmed: null, dataset: built, probe: censusSourceProbe(options, dependencies, true) };
+    return { confirmed: null, dataset: { ...built, builtAt: new Date().toISOString() }, probe: censusSourceProbe(options, dependencies, true) };
   });
   if (acquired.confirmed) return { candidate: null, outcome: null, confirmed: acquired.confirmed };
   const candidate = censusGeographyCandidate(acquired.dataset!, CENSUS_GEO_SCOPE, acquired.probe);

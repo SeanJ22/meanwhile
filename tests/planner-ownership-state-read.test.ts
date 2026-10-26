@@ -21,7 +21,7 @@ test("planner ownership reuses exact state reads and refuses unproved reviewed p
     clearRegistrationJurisdictionRegistries();
     await pg.close();
   });
-  for (const name of ["0025_typical_fixer", "0030_database_transfer_daily", "0031_civic_payload_parts", "0036_ne01"])
+  for (const name of ["0025_typical_fixer", "0030_database_transfer_daily", "0031_civic_payload_parts", "0036_ne01", "DB-05_keyed_rows", "DB-05_federal_money_rows", "DB-05_lookup_rows"])
     await pg.exec(readFileSync(`lib/db/migrations/${name}.sql`, "utf8"));
   const put = async (recordClass: string, scope: string, version: string, payload: unknown) => {
     const encoded = partitionCivicPayload(payload);

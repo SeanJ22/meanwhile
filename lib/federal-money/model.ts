@@ -3,6 +3,7 @@ export type FederalMoneySource = typeof FEDERAL_MONEY_SOURCES[number];
 export const FEDERAL_MONEY_RECORD_CLASS = "FEDERAL_MONEY" as const;
 export const FEDERAL_MONEY_PARSER = "federal-money/2";
 export const OPENFEMA_STATE_PROJECTION_VERSION = "openfema-state/1";
+export const FEDERAL_MONEY_JOIN_VERSION = "federal-money-joins/2";
 export function federalMoneyScope(source: FederalMoneySource, state: string) { return `${source}:${state.toUpperCase()}`; }
 
 export interface FederalMoneyFact {
@@ -25,6 +26,24 @@ export interface FederalMoneyFact {
   readonly joinReason: string;
   readonly details: Readonly<Record<string, string | number | boolean | null>>;
   readonly provenance: { readonly sourceUrl: string; readonly sourceOrg: string; readonly publicationDate: string | null; readonly retrievedAt: string; readonly official: true; readonly rawHash: string };
+}
+
+/** The action belongs on the timeline when it happened, even if an old filing
+ * was refreshed or published again years later. Missing dates sort last. */
+export function federalMoneyActionDate(fact: FederalMoneyFact): string {
+  for (const value of [fact.details.actionDate, fact.period]) {
+    if (typeof value !== "string" || !/^\d{4}(?:-\d{2}(?:-\d{2})?)?(?:T.*)?$/.test(value)) continue;
+    const full = /^\d{4}$/.test(value) ? `${value}-01-01` : /^\d{4}-\d{2}$/.test(value) ? `${value}-01` : value;
+    const timestamp = Date.parse(full);
+    if (Number.isFinite(timestamp)) return new Date(timestamp).toISOString();
+  }
+  return "";
+}
+
+export function compareFederalMoneyActions(left: FederalMoneyFact, right: FederalMoneyFact): number {
+  const time = federalMoneyActionDate(right).localeCompare(federalMoneyActionDate(left));
+  const leftId = encodeURIComponent(left.id), rightId = encodeURIComponent(right.id);
+  return time || (leftId < rightId ? -1 : leftId > rightId ? 1 : 0);
 }
 export interface FederalMoneyCapture {
   readonly url: string;
@@ -57,6 +76,9 @@ export interface FederalMoneyCursor {
   readonly since?: string;
   readonly registered?: boolean;
   readonly year?: number;
+  readonly yearOrder?: "DESC";
+  readonly yearFloor?: number;
+  readonly declarationOrder?: "DATE_DESC";
   readonly bulkId?: string;
   readonly chunkIndex?: number;
 }
@@ -89,6 +111,9 @@ export interface FederalMoneyCheckpoint {
   readonly counts: FederalMoneyCounts;
   readonly checkpoint: {
     readonly projectionVersion?: string;
+    readonly joinVersion?: string;
+    readonly joinCursor?: string | null;
+    readonly joinPending?: { readonly scope: string; readonly baselines: Readonly<Record<string, FederalMoneyCounts>> };
     readonly cursor: FederalMoneyCursor | null;
     readonly complete: boolean;
     readonly lastCompleteAt: string | null;
@@ -99,6 +124,8 @@ export interface FederalMoneyCheckpoint {
       readonly page: Omit<FederalMoneyPage, "facts">;
       readonly baselines: Readonly<Record<string, FederalMoneyCounts>>;
       readonly priorLocations: readonly { readonly id: string; readonly partition: FederalMoneyPartition }[];
+      readonly startingCounts?: FederalMoneyCounts;
+      readonly partitionProgress?: { readonly through: string | null; readonly delta: FederalMoneyCounts; readonly corrections?: Readonly<Record<string, FederalMoneyCounts>> };
     };
   };
 }

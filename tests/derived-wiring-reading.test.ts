@@ -137,7 +137,8 @@ for (const tenant of [
     const expired = await asProduction(() => readHeldCalendars({ options: { store,  now: NOW },
       now: NOW, adapterDigest: () => "swagit@0123456789ab", readings: [calendar] }));
     assert.equal(expired.kind, "READ");
-    if (expired.kind === "READ") assert.ok("changed" in expired.verifications.get(calendar.key)!);
+    if (expired.kind === "READ") assert.ok("refused" in expired.verifications.get(calendar.key)!,
+      "an old held response aging out of the window never suspends its calendar connection");
   }
 });
 
@@ -231,7 +232,7 @@ test("C16: an adapter throw of ours is ADAPTER_REFUSED, never CALENDAR_CHANGED: 
   assert.match(decision.detail, /venue-resolutions projection is NOT_RECORDED/);
 });
 
-test("C16: the adapter's zero-row extraction stays CALENDAR_CHANGED: the held calendar selects nothing for the reviewed filter", async () => {
+test("an empty calendar or parser miss keeps the held connection without a calendar-change suspension", async () => {
   const store = await storeWithVenues();
   /* The body's events page, held, now lists no event at all: the adapter's zero-row extraction. */
   const page = crosswalkRow({ kind: "OFFICIAL_PAGE_EVENTS", route: "https://www.example.gov/council", filter: { nameTerms: "Town Council" } });
@@ -245,10 +246,10 @@ test("C16: the adapter's zero-row extraction stays CALENDAR_CHANGED: the held ca
   assert.equal(read.kind, "READ", read.kind === "UNREADABLE" ? read.detail : "");
   if (read.kind !== "READ") return;
   const verification = read.verifications.get(empty.key)!;
-  assert.ok("changed" in verification, JSON.stringify(verification));
-  assert.match(verification.changed, /extracted 0 meeting/);
-  assert.ok("changed" in adapterThrowVerification(new ZeroRowExtractionError("ical", 1), ROUTE));
+  assert.ok("refused" in verification, JSON.stringify(verification));
+  assert.match(verification.refused, /keep its held calendar and check again later/);
+  assert.ok("refused" in adapterThrowVerification(new ZeroRowExtractionError("ical", 1), ROUTE));
   const decision = await decisionFor(verification);
   assert.ok(decision !== undefined && decision.disposition === "HOLD", JSON.stringify(decision));
-  assert.equal(decision.reason, "REVIEW_TRIGGERED", "a row never promoted waits for review, unpromoted; a promoted one is suspended");
+  assert.equal(decision.reason, "ADAPTER_REFUSED", "zero matching meetings never suspend the held connection");
 });

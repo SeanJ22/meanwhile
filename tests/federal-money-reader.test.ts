@@ -86,13 +86,16 @@ test("real OpenFEMA declaration reaches the county card and Ask with the same da
     const rows = federalMoneyRows(held.records, { divisionId: COUNTY, bodyId: BODY });
     assert.equal(rows[0].relationship, "GEOGRAPHY");
     assert.equal(federalMoneySources(rows)[0].provenance.kind, "OFFICIAL");
-    assert.match(federalMoneySources(rows)[0].what, /published 2026-09-15/);
+    assert.match(federalMoneySources(rows)[0].what, /Disaster declaration.*BUNKER FIRE/);
+    assert.equal(federalMoneySources(rows)[0].publishedAt, "2026-09-15T00:00:00.000Z");
+    assert.equal(federalMoneySources(rows)[0].provenance.sourceUrl, CAPTURE.url);
     const markup = renderToStaticMarkup(createElement(FederalMoneySection, { divisionId: COUNTY, bodyId: BODY, data: read }));
-    assert.match(markup, /Bunker fire/);
+    assert.match(markup, /Bunker Fire/);
     assert.match(held.records[0].title, /BUNKER FIRE/);
     assert.deepEqual(held.records[0], storedFact);
-    assert.match(markup, /Public assistance: Yes/i);
-    assert.match(markup, /Period: 2026-09-15/);
+    assert.match(markup, /with public assistance/);
+    assert.match(markup, /September 2026/);
+    assert.doesNotMatch(markup, /Period:|Last refresh:|UEI:/);
     assert.equal(read.sources.filter(source => source.status === "NOT_HELD").length, 3);
     const evidence = await federalMoneyEvidence([{ divisionId: COUNTY, bodyId: BODY }], BODY, { artifactStore });
     const subject = { kind: "BODY" as const, id: BODY, name: "Ouachita County" };
@@ -104,7 +107,7 @@ test("real OpenFEMA declaration reaches the county card and Ask with the same da
     const question = "What disaster declarations cover this county?";
     const composed = composeFederalMoneyAnswer({ subject, question, records: relevant });
     assert.ok(composed);
-    assert.match(composed.answer, /BUNKER FIRE/);
+    assert.match(composed.answer, /Bunker Fire/);
     assert.deepEqual(composed.citedUrls, [CAPTURE.url]);
     assert.equal(validateAnswer(composed.answer, composed.citedUrls, { question, subject, records: relevant, gaps: evidence.gaps, denominators: evidence.denominators, intent: "CIVICS", temporal: { kind: "NONE" }, today: NOW.slice(0, 10) }).kind, "PASSED");
   }
@@ -139,10 +142,11 @@ test("geographic awards never become government receipts; audit and registration
   const ownEntity: FederalMoneyFact = { ...native, id: "synthetic:entity", source: "sam-gov-entities", kind: "ENTITY", title: "Synthetic government registration", bodyIds: [BODY], uei: "TESTUEI12345" };
   const rows = federalMoneyRows([grant, countyGrant, otherAudit, ownEntity], { divisionId: COUNTY, bodyId: BODY });
   assert.equal(rows.length, 3);
-  assert.match(rows.find(row => row.fact.id === grant.id)!.text, /Reaching this place/);
-  assert.doesNotMatch(rows.find(row => row.fact.id === grant.id)!.text, /Received by this government/);
-  assert.match(rows.find(row => row.fact.id === countyGrant.id)!.text, /Received by this government/);
-  assert.match(rows.find(row => row.fact.id === ownEntity.id)!.text, /UEI: TESTUEI12345/);
+  assert.equal(rows.find(row => row.fact.id === grant.id)!.relationship, "GEOGRAPHY");
+  assert.match(rows.find(row => row.fact.id === grant.id)!.text, /Synthetic recipient got a \$125 federal grant/);
+  assert.equal(rows.find(row => row.fact.id === countyGrant.id)!.relationship, "RECIPIENT");
+  assert.doesNotMatch(rows.find(row => row.fact.id === ownEntity.id)!.text, /UEI:/);
+  assert.match(federalMoneySources(rows)[0].what + federalMoneySources(rows)[1].what + federalMoneySources(rows)[2].what, /UEI: TESTUEI12345/);
   assert.ok(!rows.some(row => row.fact.id === otherAudit.id));
 });
 
@@ -190,7 +194,7 @@ test("the public federal-money route serves the real place artifact on its first
     }));
     assert.equal(ask.status, 200);
     const answer = await ask.json();
-    assert.match(answer.answer, /BUNKER FIRE/);
+    assert.match(answer.answer, /Bunker Fire/);
     assert.equal(answer.records.find((record: { kind: string }) => record.kind === "FEDERAL_MONEY").sourceUrl, CAPTURE.url);
     assert.equal(answer.trace.interpretation.ran, false, "a direct place question needs no model reader");
     assert.ok(performance.now() - askStarted < 3000, "the first sourced Ask answer is usable within three seconds");

@@ -9,27 +9,25 @@ import { statesForRegistryDivisions } from "../../../civic-data/state-scopes.ts"
 
 const VENUE_CONTRACT = requiredManualProductionContract("venue-resolutions");
 
-/** Resolve immutable array membership before materializing only the selected body's values. */
+/** The pointer selects materialized body rows; source payload arrays never cross this read. */
 export const HELD_MEETING_INPUT_SQL = `WITH registry_pointer AS MATERIALIZED (
-  SELECT current_version_id,reader_payload_node(payload) AS root FROM civic_data_promotions
+  SELECT key,current_version_id,reader_payload_node(payload) AS root FROM civic_data_promotions
     WHERE key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
       AND record_class='REGISTRY_RUNTIME_BINDING'
 ), registry AS MATERIALIZED (
-  SELECT current_version_id,reader_payload_node(root->'registry') AS value FROM registry_pointer
+  SELECT key,current_version_id,reader_payload_node(root->'registry') AS value FROM registry_pointer
 ), bodies AS MATERIALIZED (
-  SELECT b.item FROM registry r,LATERAL reader_payload_members(r.value->'bodies') b,
-    LATERAL (SELECT reader_payload_node(b.item) AS value) header WHERE header.value->>'id'=$2
+  SELECT b.value AS item FROM registry r JOIN civic_data_rows b ON b.promotion_key=r.key AND b.version_id=r.current_version_id
+    WHERE b.collection='registry.bodies' AND b.row_id=$2
 ), previous_pointer AS MATERIALIZED (
-  SELECT source_id,record_class,scope,current_version_id,reader_payload_node(payload) AS value
+  SELECT key,source_id,record_class,scope,current_version_id,reader_payload_node(payload) AS value
     FROM civic_data_promotions WHERE key='MEETING:'||$3 AND record_class='MEETING'
 ), previous_meetings AS MATERIALIZED (
-  SELECT m.ordinal_index,m.item,header.value->>'id' AS id,header.value->>'bodyId' AS body_id
-    FROM previous_pointer p,LATERAL reader_payload_members(p.value->'meetings') m,
-      LATERAL (SELECT reader_payload_node(m.item) AS value) header
+  SELECT m.ordinal AS ordinal_index,m.value AS item,m.row_id AS id,m.body_id
+    FROM previous_pointer p JOIN civic_data_rows m ON m.promotion_key=p.key AND m.version_id=p.current_version_id WHERE m.collection='meetings'
 ), previous_documents AS MATERIALIZED (
-  SELECT d.ordinal_index,d.item,header.value->>'meetingId' AS meeting_id
-    FROM previous_pointer p,LATERAL reader_payload_members(p.value->'agendaDocuments') d,
-      LATERAL (SELECT reader_payload_node(d.item) AS value) header
+  SELECT d.ordinal AS ordinal_index,d.value AS item,d.value->>'meetingId' AS meeting_id
+    FROM previous_pointer p JOIN civic_data_rows d ON d.promotion_key=p.key AND d.version_id=p.current_version_id WHERE d.collection='agendaDocuments'
 )
 SELECT (SELECT current_version_id FROM registry) AS registry_version_id,
   (SELECT reader_payload_value(value->'generatedAt') FROM registry) AS registry_generated_at,
@@ -48,14 +46,14 @@ SELECT (SELECT current_version_id FROM registry) AS registry_version_id,
 
 /** Optional placement is read separately: unreadable venues never suppress a verified calendar. */
 export const HELD_MEETING_VENUES_SQL = `WITH venue_pointer AS MATERIALIZED (
-  SELECT source_id,record_class,scope,current_version_id,reader_payload_node(payload) AS value
+  SELECT key,source_id,record_class,scope,current_version_id,reader_payload_node(payload) AS value
     FROM civic_data_promotions WHERE key='CURATED_READER_RECORD:'||$1 AND record_class='CURATED_READER_RECORD'
 ), venues AS MATERIALIZED (
-  SELECT v.ordinal_index,v.item FROM venue_pointer p,LATERAL reader_payload_members(p.value->'records') v,
-    LATERAL (SELECT reader_payload_node(v.item) AS value) header
-    WHERE header.value->>'sourceId'=ANY($2::text[])
-      AND (header.value->>'bodyOcdId') IS NOT DISTINCT FROM $3::text
-      AND ($3::text IS NOT NULL OR (header.value->>'tenant') IS NOT DISTINCT FROM $4::text)
+  SELECT v.ordinal AS ordinal_index,v.value AS item FROM venue_pointer p JOIN civic_data_rows v
+    ON v.promotion_key=p.key AND v.version_id=p.current_version_id
+    WHERE v.collection='venues' AND v.value->>'sourceId'=ANY($2::text[])
+      AND v.body_id IS NOT DISTINCT FROM $3::text
+      AND ($3::text IS NOT NULL OR (v.value->>'tenant') IS NOT DISTINCT FROM $4::text)
 )
 SELECT (SELECT jsonb_build_object('sourceId',source_id,'recordClass',record_class,'scope',scope,
     'versionId',current_version_id,'kind',value->>'kind') FROM venue_pointer) AS venue_pointer,

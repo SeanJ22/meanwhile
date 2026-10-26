@@ -185,6 +185,17 @@ export interface DerivedCampaignSitesPlan {
   readonly held: readonly { readonly key: string; readonly code: DerivedCampaignSiteHoldCode; readonly detail: string }[];
   readonly inputs: readonly DerivedInputRef[];
   readonly prior?: { readonly input: PromotedCampaignSites["input"] };
+  readonly portraitWork?: CampaignPortraitWork;
+}
+
+export interface CampaignPortraitWork {
+  readonly inputsComplete: boolean;
+  readonly retryMinutes: number;
+  /** A stopped pass resumes these people before opening more work. */
+  readonly pending: readonly string[];
+  readonly attempts: Readonly<Record<string, { readonly inputHash: string; readonly attemptedAt: string }>>;
+  /** Earliest retry or portrait refresh; no payload needs to be read before then. */
+  readonly nextDueAt: string | null;
 }
 
 export interface PromotedCampaignSites {
@@ -461,7 +472,7 @@ function planCampaignSiteRecords(input: CampaignSitePlanInput, initial: readonly
   };
 }
 
-const DERIVED_CAMPAIGN_SITES_PARSER = "candidate-campaign-site-chain/1" as const;
+export const DERIVED_CAMPAIGN_SITES_PARSER = "candidate-campaign-site-chain/1" as const;
 const sha256Hex = (value: string): string => createHash("sha256").update(value).digest("hex");
 const FACT_KIND = "2026 candidates' campaign sites, each read robots-first by our own Attempt, verified on vaulted bytes and approved by the campaign-site chain";
 
@@ -514,6 +525,7 @@ export function derivedCampaignSitesCandidate(state: string, plan: DerivedCampai
   const normalizedPayload = {
     readModel,
     decisions: { published: plan.published.map((p) => p.key), held: plan.held.map((h) => `${h.code}:${h.key}`) },
+    ...(plan.portraitWork ? { portraitWork: plan.portraitWork } : {}),
   };
   const identities: RoutineCandidate["identities"][number][] = [];
   for (const records of [readModel.records, readModel.portraits ?? []]) for (const record of records) identities.push({
@@ -575,7 +587,7 @@ export function derivedCampaignSitesCandidate(state: string, plan: DerivedCampai
   };
 }
 
-function derivedCampaignSitesFailedCandidate(state: string, attemptedAt: string, failureDetail: string): RoutineCandidate {
+export function derivedCampaignSitesFailedCandidate(state: string, attemptedAt: string, failureDetail: string): RoutineCandidate {
   return {
     id: `cv-${sha256Hex(`${derivedCampaignSitesContractId(state)}\u001f${derivedCampaignSitesScope(state)}\u001ffailed\u001f${attemptedAt}`).slice(0, 32)}`,
     sourceId: DERIVED_CAMPAIGN_SITES_SOURCE_ID,

@@ -2,7 +2,8 @@ import { candidateEnrichmentProvider, readCandidateEnrichmentAuthorities } from 
 import type { PromotedCivicDataReadOptions } from "../../../civic-data/read-model.ts";
 import type { TrackedStatesSource } from "../provider-inputs.ts";
 import type { ObligationProvider, ProvidedObligation, ProviderContext } from "../registry.ts";
-import { readRegistryRuntimeProjection } from "../../../registry/runtime-read-model.ts";
+import { readRegistryPlanningRows } from "../../../civic-data/keyed-registry-planning.ts";
+import type { RoutineDataStore } from "../../../civic-data/store.ts";
 import { heldSubjectDetails, heldSubjectEnrichmentObligations, type HeldGovernmentDetails } from "./held-subject-enrichment.ts";
 import { requiredJurisdictionRegistry } from "../../../civic-data/operational-references.ts";
 import { readStateFederalDirectory } from "../../../officials/federal-directory-read-model.ts";
@@ -37,8 +38,9 @@ export async function loadCandidateEnrichmentProvider(trackedStates: TrackedStat
     obligations.push(...yielded.obligations);
     if (yielded.readFailure) failures.push(yielded.readFailure);
     try {
-      const registry = await readRegistryRuntimeProjection([state], options);
-      if (registry.kind === "PROMOTED") {
+      const selectedStore=options.store as Partial<Pick<RoutineDataStore,"readRegistryPlanningView">>|undefined;
+      const registry=selectedStore?.readRegistryPlanningView?await selectedStore.readRegistryPlanningView(state):factQuery?await readRegistryPlanningRows(factQuery,state):null;
+      if (registry) {
         let governments: HeldGovernmentDetails[] = [];
         let people: readonly Officeholder[] = [];
         try {
@@ -54,7 +56,7 @@ export async function loadCandidateEnrichmentProvider(trackedStates: TrackedStat
         } catch (error) {
           failures.push(`${state.toUpperCase()} held governments could not be read (${error instanceof Error ? error.message : String(error)}); held officials and bodies continue.`);
         }
-        let heldRegistry = registry.value;
+        let heldRegistry = registry;
         let subjects = heldSubjectDetails(heldRegistry, state, context.nowIso, governments, people);
         if (factQuery) {
           try {
@@ -71,7 +73,7 @@ export async function loadCandidateEnrichmentProvider(trackedStates: TrackedStat
         }
         obligations.push(...heldSubjectEnrichmentObligations(subjects));
       }
-      else failures.push(`${state.toUpperCase()} held bodies could not be read (${registry.kind}); their enrichment stays owed.`);
+      else failures.push(`${state.toUpperCase()} held bodies could not be read (NOT_RECORDED); their enrichment stays owed.`);
     } catch (error) {
       failures.push(`${state.toUpperCase()} held bodies could not be read (${error instanceof Error ? error.message : String(error)}); their enrichment stays owed.`);
     }

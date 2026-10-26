@@ -1,4 +1,5 @@
 import { canonicalCivicDataJson } from "../../lib/civic-data/changes.ts";
+import { trackSourceTransport } from "../../lib/sources/host-transport.ts";
 import type { PersistedSittingOutcomes } from "../../lib/outcomes/types.ts";
 import { isRetainedSourceReplayResponse } from "./retained-source-replay.ts";
 
@@ -36,7 +37,7 @@ export function diggerMeasurement(subjectId: string, readOnly: boolean) {
     /** Scope the fetch counter to source acquisition; database reads are excluded. */
     async read<T>(operation: () => Promise<T>): Promise<T> {
       const original = globalThis.fetch;
-      globalThis.fetch = (async (url, init) => {
+      globalThis.fetch = trackSourceTransport((async (url, init) => {
         requests++;
         const response = await original(url, init);
         if (isRetainedSourceReplayResponse(response)) { requests--; return response; }
@@ -47,7 +48,7 @@ export function diggerMeasurement(subjectId: string, readOnly: boolean) {
         const measured = new Response(body, { status: response.status, statusText: response.statusText, headers: response.headers });
         Object.defineProperties(measured, { url: { value: response.url }, redirected: { value: response.redirected }, type: { value: response.type } });
         return measured;
-      }) as typeof fetch;
+      }) as typeof fetch, original);
       try { return await operation(); } finally { globalThis.fetch = original; }
     },
     worked() { subjects++; },

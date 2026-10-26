@@ -2,21 +2,9 @@ import { normalizedHash } from "../civic-data/candidate-builders.ts";
 import { candidateHasIntrinsicHorizonRefusal } from "../civic-data/candidate-integrity.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import type { RoutineCandidate } from "../civic-data/types.ts";
-import type { NhMemberReadModel, OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
 import type { StateVotesSnapshot } from "../sources/legiscan/types.ts";
 import { officialStateLegislatorTargetByScope } from "./authority.ts";
-
-function rosterOfficeholderIds(payload: unknown): readonly string[] | null {
-  if (!payload || typeof payload !== "object") return null;
-  const value = payload as Partial<OfficialStateLegislatorReadModel & NhMemberReadModel>;
-  if (Array.isArray(value.roster?.officeholders)) {
-    return value.roster.officeholders.map((row) => row.id);
-  }
-  if (Array.isArray(value.identities)) {
-    return value.identities.map((row) => row.officeholderId);
-  }
-  return null;
-}
+import { readOfficialRosterIds } from "./source-hash.ts";
 
 /**
  * Cross-pointer admission for an official roll candidate. The candidate may
@@ -25,7 +13,7 @@ function rosterOfficeholderIds(payload: unknown): readonly string[] | null {
  * scope. No tracked or vendor roster is inspected.
  */
 export async function officialStateRollIdentityAuthorityIssue(
-  store: Pick<RoutineDataStore, "readPromotion" | "readCandidate">,
+  store: Pick<RoutineDataStore,"readSourceHead"|"readCandidatePath"|"readSlimRosters"|"readHistoricalRosterIdentities">,
   candidate: RoutineCandidate,
 ): Promise<string | null> {
   if (candidate.recordClass !== "STATE_ROLL_CALL") return null;
@@ -57,20 +45,20 @@ export async function officialStateRollIdentityAuthorityIssue(
     cited.scope !== target.jurisdiction
   ) return "The roll candidate cites a different official state-legislator authority.";
 
-  const pointer = await store.readPromotion("STATE_LEGISLATOR", target.jurisdiction);
+  const pointer = await store.readSourceHead("STATE_LEGISLATOR", target.jurisdiction);
   if (!pointer) return `No canonical ${target.contractId} pointer exists for the member join.`;
   if (pointer.sourceId !== target.sourceId) return `The canonical roster pointer is owned by ${pointer.sourceId}, not ${target.sourceId}.`;
   if (
     target.contractId === "nh-members" &&
-    !(pointer.payload as Partial<NhMemberReadModel>).officialIdentityAuthority
+    !await store.readCandidatePath(pointer.versionId,["readModel","officialIdentityAuthority"])
   ) {
     return "The canonical NH roster is an import-only identity projection, not a source-authenticated official PersonID authority.";
   }
   if (pointer.versionId !== cited.versionId || pointer.lastKnownGoodVersionId !== cited.versionId) {
     return `The roll candidate cites roster ${cited.versionId}, but canonical pointer/LKG is ${pointer.versionId}/${pointer.lastKnownGoodVersionId}.`;
   }
-  const ids = rosterOfficeholderIds(pointer.payload);
-  if (!ids) return "The canonical roster pointer does not expose an exact official officeholder set.";
+  const ids = await readOfficialRosterIds(store,pointer);
+  if (!ids.length) return "The canonical roster pointer does not expose an exact official officeholder set.";
   if (new Set(ids).size !== ids.length) return "The canonical roster pointer repeats an officeholder identifier.";
   const digest = normalizedHash([...ids].sort());
   if (digest !== cited.currentOfficeholderIdsSha256) {

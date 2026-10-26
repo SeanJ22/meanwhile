@@ -50,6 +50,10 @@ export type DerivedInputRef =
       readonly httpStatus: number;
       readonly rawHash: string;
       readonly retrievedAt: string;
+      /** The rolling calendar query is an input even when a recurring feed's bytes do not change. */
+      readonly horizonDay?: string;
+      /** An agenda or detail URL explicitly linked by this exact acquired member page. */
+      readonly linkedFrom?: { readonly requestedUrl: string; readonly finalUrl: string; readonly rawHash: string };
     }
   | {
       /** One door of the door registry as it stood: its id, its record's revision and when it was written, and the sha256 of what it says. */

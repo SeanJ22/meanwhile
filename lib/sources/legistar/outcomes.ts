@@ -194,6 +194,10 @@ export function rollCallGap(state: RollCallState): string | null {
  * ------------------------------------------------------------------ */
 
 export interface LegistarRecordProvenance {
+  readonly rawHash?: string;
+  readonly byteCount?: number;
+  /** Exact paginated bodies carrying this field; an index check cannot refresh it. */
+  readonly sourcePages?: readonly { readonly url: string; readonly rawHash: string; readonly byteCount: number }[];
   /** The exact endpoint this record was read from. Observed, never built. */
   readonly endpoint: string;
   /** The public body that published it. Never Granicus. */

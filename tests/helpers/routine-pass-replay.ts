@@ -69,8 +69,10 @@ export class ControlledClock {
   readonly sleepUntil = (atMs: number): Promise<void> =>
     new Promise<void>((resolve) => { this.schedule(atMs, resolve); });
 
-  private schedule(atMs: number, fire: () => void): void {
-    this.timers.push({ at: Math.max(atMs, this.nowMs), seq: this.seq++, fire });
+  private schedule(atMs: number, fire: () => void): { readonly at: number; readonly seq: number; readonly fire: () => void } {
+    const timer = { at: Math.max(atMs, this.nowMs), seq: this.seq++, fire };
+    this.timers.push(timer);
+    return timer;
   }
 
   private next(): { readonly at: number; readonly fire: () => void } | undefined {
@@ -83,16 +85,25 @@ export class ControlledClock {
     return best < 0 ? undefined : this.timers.splice(best, 1)[0];
   }
 
-  /** Run `work` to completion with `Date.now` and `setTimeout` on this clock. */
+  /** Run `work` to completion with `Date.now`, `setTimeout` and `clearTimeout` on this clock. */
   async run<T>(work: () => Promise<T>): Promise<T> {
     const realNow = Date.now;
     const realSetTimeout = globalThis.setTimeout;
+    const realClearTimeout = globalThis.clearTimeout;
+    const scheduled = new WeakMap<object, { readonly at: number; readonly seq: number; readonly fire: () => void }>();
     Date.now = () => this.nowMs;
     globalThis.setTimeout = ((callback: (...args: unknown[]) => void, ms?: number, ...args: unknown[]) => {
-      this.schedule(this.nowMs + Math.max(0, ms ?? 0), () => callback(...args));
+      const timer = this.schedule(this.nowMs + Math.max(0, ms ?? 0), () => callback(...args));
       const handle = { ref: () => handle, unref: () => handle, hasRef: () => false, refresh: () => handle };
+      scheduled.set(handle, timer);
       return handle;
     }) as unknown as typeof setTimeout;
+    globalThis.clearTimeout = ((handle?: object) => {
+      const timer = handle ? scheduled.get(handle) : undefined;
+      if (!timer) return realClearTimeout(handle as Parameters<typeof clearTimeout>[0]);
+      const at = this.timers.indexOf(timer);
+      if (at >= 0) this.timers.splice(at, 1);
+    }) as typeof clearTimeout;
     try {
       let settled = false;
       const promise = work();
@@ -109,6 +120,7 @@ export class ControlledClock {
     } finally {
       Date.now = realNow;
       globalThis.setTimeout = realSetTimeout;
+      globalThis.clearTimeout = realClearTimeout;
     }
   }
 }

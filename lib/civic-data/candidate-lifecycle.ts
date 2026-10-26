@@ -84,7 +84,7 @@ export async function processRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"]; readonly inputDigest?: string; readonly publicationBase?:RoutinePublicationBase } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"]; readonly inputDigest?: string; readonly publicationBase?: RoutinePublicationBase } = {},
   navigation?: NavigationComparison,
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;

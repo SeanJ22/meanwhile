@@ -65,11 +65,12 @@ test("unpaired government evidence reaches state inventory and named Ask without
   await withReaderAuthorityEdge({ edgeOnly: true, registrations: { load: async state => {
     loaded.push(state); return { value, versionId: "oh-listings" };
   } } }, async () => {
+    const displayed = { ...listing, recipientNameUnique: true };
     const page = await governmentListingsForState("OH", 0, 1);
-    assert.deepEqual(page.records, [listing]); assert.equal(page.nextOffset, null);
-    assert.deepEqual(await governmentListingById(listing.id), listing);
+    assert.deepEqual(page.records, [displayed]); assert.equal(page.nextOffset, null);
+    assert.deepEqual(await governmentListingById(listing.id), displayed);
     assert.deepEqual((await governmentListingsForDivisions([DIVISION])).records, []);
-    assert.deepEqual((await readerGovernmentListings("What is Example Education Agency?", [DIVISION], [])).records, [listing]);
+    assert.deepEqual((await readerGovernmentListings("What is Example Education Agency?", [DIVISION], [])).records, [displayed]);
     const evidence = governmentListingEvidence(listing);
     assert.equal(evidence.sourceUrl, listing.provenance.sourceUrl);
     assert.match(evidence.text, /service area has not been verified/);

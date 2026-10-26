@@ -1,4 +1,5 @@
 import { sourceContentHash, type SourceHashConfirmation, confirmSourceHashUnchanged } from "../civic-data/source-hash.ts";
+import type { UnchangedConfirmationRetrieval } from "../civic-data/unchanged-confirmation.ts";
 import type { RoutineDataStore } from "../civic-data/store.ts";
 import { CENSUS_GEO_PARSER_VERSION, CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_REQUIRED_VERSIONS, CENSUS_GEO_SOURCE_ID, CENSUS_GEO_SOURCE_ROUTE } from "./publication.ts";
 import { CENSUS_ACQUISITION_PARSER, censusSourceRelease, type CensusSourceCapture, type CensusSourceOptions } from "./source-release.ts";
@@ -32,6 +33,7 @@ export function validCensusSourceProbe(value: unknown): value is CensusSourcePro
     typeof probe.complete === "boolean" && Array.isArray(probe.sources) && probe.sources.length > 0 &&
     probe.sources.every(source => typeof source?.requestedUrl === "string" && typeof source.finalUrl === "string" &&
       /^[a-f0-9]{64}$/.test(source.rawHash) && Number.isFinite(Date.parse(source.checkedAt)) &&
+      (source.httpStatus === 200 || source.httpStatus === 304) &&
       [source.requestedUrl, source.finalUrl].every(address => { try { const url = new URL(address); return url.protocol === "https:" &&
         url.hostname === "www2.census.gov" && !url.username && !url.password; } catch { return false; } }));
 }
@@ -46,14 +48,20 @@ export async function recheckCensusProbe(probe: CensusSourceProbe, options: Cens
     } else await censusSourceRelease(source.requestedUrl, options);
   }
 }
+export function censusProbeRetrieval(probe: CensusSourceProbe): UnchangedConfirmationRetrieval {
+  const source = [...probe.sources].sort((a, b) => a.checkedAt.localeCompare(b.checkedAt))[0];
+  if (!source) throw new Error("CENSUS_SOURCE_CHECK_MISSING");
+  return { requestedUrl: CENSUS_GEO_SOURCE_ROUTE, finalUrl: CENSUS_GEO_SOURCE_ROUTE, httpStatus: 200,
+    rawHash: censusProbeHash(probe), retrievedAt: source.checkedAt,
+    sourceCheck: { requestedUrl: source.requestedUrl, finalUrl: source.finalUrl, rawHash: source.rawHash,
+      httpStatus: source.httpStatus, checkedAt: source.checkedAt } };
+}
 export async function confirmCensusProbe(store: RoutineDataStore, scope: string, probe: CensusSourceProbe,
   now: string): Promise<SourceHashConfirmation | null> {
   if (!probe.sources.length) return null;
-  const rawHash = censusProbeHash(probe), checkedAt = probe.sources.map(source => source.checkedAt).sort()[0]!;
   return confirmSourceHashUnchanged({ store, sourceId: CENSUS_GEO_SOURCE_ID, recordClass: CENSUS_GEO_RECORD_CLASS, scope,
-    parserVersion: CENSUS_GEO_PARSER_VERSION, rawHash, complete: probe.complete, now,
-    retrieval: { requestedUrl: CENSUS_GEO_SOURCE_ROUTE, finalUrl: CENSUS_GEO_SOURCE_ROUTE, httpStatus: 200, rawHash,
-      retrievedAt: checkedAt } });
+    parserVersion: CENSUS_GEO_PARSER_VERSION, rawHash: censusProbeHash(probe), complete: probe.complete, now,
+    retrieval: censusProbeRetrieval(probe) });
 }
 
 /** Retained historical/state rows remain bound to the exact source bytes they were parsed from. */

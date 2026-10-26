@@ -345,12 +345,13 @@ test("85701 keeps the City of Tucson and is not called unincorporated", () => {
   );
 
   const municipal = coverage.bodies.filter(
-    (b) => b.divisionType === "place" && b.name === null,
+    (b) => b.bodyId === "ocd-division/country:us/state:az/place:tucson#governing",
   );
   assert.equal(municipal.length, 1, `expected the city, got ${municipal.length}`);
+  assert.equal(municipal[0].bodyClass, "GOVERNING");
   assert.match(municipal[0].divisionLabel, /tucson/i);
   assert.ok(
-    coverage.bodies.some((b) => b.name === "Planning Commission (PC)"),
+    coverage.bodies.some((b) => b.name === "City of Tucson Planning Commission"),
     "the curated boards should surface alongside the city",
   );
 });

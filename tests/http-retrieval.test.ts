@@ -4,6 +4,7 @@ import test from "node:test";
 import {
   REQUEST_SPACING_MS,
   SourceHttpError,
+  SourceReadDeferred,
   decodeEntities,
   politeGetJson,
   politeGetText,
@@ -54,26 +55,12 @@ test("http: no request carries a borrowed browser identity or browser-only navig
   }
 });
 
-test("http: a 429 is retried, and Retry-After is honoured rather than the default backoff", async () => {
+test("http: a 429 leaves the host alone and returns to the scheduler without an immediate retry", async () => {
   const calls: Call[] = [];
-  const started = Date.now();
-  const text = await politeGetText("https://example.gov/a", {
-    fetchImpl: fakeFetch(
-      [
-        { status: 429, headers: { "retry-after": "1" } },
-        { status: 200, body: "the document" },
-      ],
-      calls,
-    ),
-  });
-  const elapsed = Date.now() - started;
-
-  assert.equal(text.text, "the document");
-  assert.equal(calls.length, 2, "the 429 was not retried");
-  assert.ok(
-    elapsed >= 1000,
-    `Retry-After said 1 second and the client waited ${elapsed}ms — a server asking us to slow down is not advisory`,
-  );
+  const fetchImpl = fakeFetch([{ status: 429, headers: { "retry-after": "180" } }, { status: 200, body: "the document" }], calls);
+  await assert.rejects(politeGetText("https://example.gov/a", { fetchImpl }), SourceReadDeferred);
+  await assert.rejects(politeGetText("https://example.gov/b", { fetchImpl }), SourceReadDeferred);
+  assert.equal(calls.length, 1);
 });
 
 test("http: a 500 is retried on exponential backoff when no Retry-After is given", async () => {

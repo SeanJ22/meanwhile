@@ -1,3 +1,4 @@
+import { sourceFetch } from "../http.ts";
 import { mkdtemp,writeFile,rm } from "node:fs/promises";
 import { join } from "node:path";
 import { tmpdir } from "node:os";
@@ -25,7 +26,7 @@ async function request(op:"getDatasetList"|"getDataset",params:Record<string,str
   const requestedUrl=new URL(url); requestedUrl.searchParams.delete("access_key"); url.searchParams.set("key",key);
   let response:Response;
   for(let attempt=0;;attempt++) {
-    try {response=await (options.fetchImpl??fetch)(url,{signal:options.signal,redirect:"error"});}
+    try {response=await sourceFetch(url.href,{signal:options.signal,redirect:"error"}, options.fetchImpl);}
     catch {throw Error(`LegiScan ${op} transport unavailable`);}
     if((response.status===429||response.status>=500)&&attempt<3) {
       const retry=response.headers.get("retry-after"), seconds=Number(retry);

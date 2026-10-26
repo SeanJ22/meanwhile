@@ -254,7 +254,7 @@ test("both held portraits and their exact image sources stay accessible through 
       assert.deepEqual(new Set(sources.map(source => source.photoUrl)), new Set([prior.photo!.url, current.photo!.url]));
       assert.deepEqual(new Set(sources.map(source => source.fieldSources?.portraitImage.sourceUrl)), new Set([oldImage, newImage]));
       const cardSources = personCardSources(merged).flatMap(source => source.details ?? [source]);
-      for (const image of [oldImage, newImage]) assert.ok(cardSources.some(source => source.provenance.sourceUrl === image && source.what.includes("Portrait image")), image);
+      for (const image of [oldImage, newImage]) assert.ok(cardSources.some(source => source.provenance.sourceUrl === image && source.what === "Their portrait"), image);
       const again = scopedHolders([merged], [first, second, merged]);
       assert.equal(again.length, 1);
       merged = again[0];
@@ -268,7 +268,7 @@ test("both held portraits and their exact image sources stay accessible through 
     assert.ok(shared.every(holder=>holder.photoUrl === current.photo!.url),"every card uses the person's selected photo");
     const merged=scopedHolders([shared[0]],[shared[1]])[0];
     const sources=personCardSources(merged).flatMap(source=>source.details ?? [source]);
-    for(const image of [oldImage,newImage])assert.ok(sources.some(source=>source.provenance.sourceUrl === image && source.what.includes("Portrait image")),image);
+    for(const image of [oldImage,newImage])assert.ok(sources.some(source=>source.provenance.sourceUrl === image && source.what === "Their portrait"),image);
     assert.ok(sources.some(source=>source.provenance.sourceUrl === oldImage && source.provenance.sourceOrg.includes(prior.photo!.attribution!)));
   }));
 });

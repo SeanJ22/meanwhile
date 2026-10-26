@@ -1,6 +1,6 @@
 import { websiteRequestLimit, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
 import { recordAcquiredResponse } from "../sources/acquisition-trace.ts";
-import { challengeIn, curlGetText, curlRequestHeaders } from "../sources/http.ts";
+import { challengeIn, curlGetText, curlRequestHeaders, sourceFetch } from "../sources/http.ts";
 
 export type MeetingFetchPass = typeof fetch & { forgetGet: (urls: readonly string[]) => void };
 
@@ -32,10 +32,10 @@ export function meetingFetchPass(options: {
     if (!pending) {
       pending = (async () => {
         take(url);
-        let response = await (options.fetchImpl ?? globalThis.fetch)(input, init);
+        let response = await sourceFetch(url, init, options.fetchImpl);
         // Retain the adapter's existing identified curl fallback. Both
         // transports spend from the same website allowance.
-        if (response.status === 403 || (response.ok && challengeIn(await response.clone().text()) !== null)) {
+        if (response.ok && challengeIn(await response.clone().text()) !== null) {
           take(url);
           const headers = new Headers(init?.headers ?? (input instanceof Request ? input.headers : undefined));
           const result = await (options.curl ?? curlGetText)(url, curlRequestHeaders(headers.get("accept") ?? undefined), signal ?? undefined);

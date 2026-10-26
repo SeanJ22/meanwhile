@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { meetingPinAddresses } from "../lib/meetings/pin-location.ts";
-import { bodyClassFromIdentity } from "../lib/registry/kinds.ts";
+import { prepareBodyIdentities } from "../lib/registry/body-identity.ts";
+import type { Body, Division } from "../lib/registry/types.ts";
 import { badgeFor } from "../lib/meetings/jurisdiction-badge.ts";
 import { withSittingFacts } from "../lib/facts/meeting-read.ts";
 import { groupByVenue } from "../lib/meetings/venues.ts";
@@ -14,15 +15,17 @@ const body={bodyId:`${division}#governing`,name:"Board",officeContact:{address:"
   governmentOffice:{name:"County",address:"2 Government Street, Raleigh, NC 27601",provenance:source}} as MeetingPinBody;
 const meeting={id:"existing:meeting:id",bodyId:body.bodyId,bodyName:"Board",location:null,ocdId:division,provenance:source} as Meeting;
 
-test("canonical governing and school board identities count as governing; source kinds retain their class",()=>{
-  for(const suffix of ["governing","board"]) assert.equal(badgeFor(meeting,new Set([division]),"ADDRESS",null,bodyClassFromIdentity(`${division}#${suffix}`)),"GOVERNS");
-  for(const suffix of ["body:board-of-legislators","body:board-of-directors-regular-board-meeting","body:city-council"])
-    assert.equal(bodyClassFromIdentity(`${division}#${suffix}`,"body"),"GOVERNING");
-  assert.equal(bodyClassFromIdentity(`${division}#body:board-of-legislators-budget-committee`),"ADVISORY");
-  assert.equal(bodyClassFromIdentity(`${division}#body:board-of-health`,"body"),"body");
-  assert.equal(bodyClassFromIdentity("body:one","executive agency"),"EXECUTIVE_AGENCY");
-  assert.equal(bodyClassFromIdentity(`${division}#body:planning-commission`),"COMMISSION");
-  assert.equal(bodyClassFromIdentity(`${division}#body:finance-committee`),"ADVISORY");
+test("governing badges follow sourced authority, never a body id suffix",()=>{
+  const bodies = [
+    { id:`${division}#governing`,ocdId:division,name:"City Court",bodyClass:"GOVERNING" },
+    { id:`${division}#board`,ocdId:division,name:"Clerk of the Board",bodyClass:"GOVERNING" },
+    { id:`${division}#actual`,ocdId:division,name:"Board of Commissioners",bodyClass:"body" },
+  ] as Body[];
+  const classified = prepareBodyIdentities(bodies,new Map([[division,{ocdId:division,label:"Wake County",divisionType:"county"} as Division]]));
+  assert.equal(classified.get(bodies[0].id)?.bodyClass,"COURT");
+  assert.equal(classified.get(bodies[1].id)?.bodyClass,"EXECUTIVE_AGENCY");
+  assert.equal(badgeFor(meeting,new Set([division]),"ADDRESS",null,classified.get(bodies[0].id)!.bodyClass),"NOT_GOVERNING");
+  assert.equal(badgeFor(meeting,new Set([division]),"ADDRESS",null,classified.get(bodies[2].id)!.bodyClass),"GOVERNS");
 });
 
 test("published venue, board office, then owning government office retain exact addresses and sources",()=>{

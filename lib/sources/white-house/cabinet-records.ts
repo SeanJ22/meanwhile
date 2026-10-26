@@ -1,3 +1,4 @@
+import { sourceFetch } from "../http.ts";
 import { createHash } from "node:crypto";
 import { parquetMetadataAsync, parquetRead, type AsyncBuffer, type ColumnData } from "hyparquet";
 import { compressors } from "hyparquet-compressors";
@@ -289,7 +290,7 @@ export async function acquireOpmHeadcounts(input: { readonly read: CabinetReader
   const coverageRead = input.read(OPM_COVERAGE_URL).then(opmEmploymentCoverage)
     .then(coverage => ({ coverage, coverageGap: undefined as string | undefined }))
     .catch((error: unknown) => ({ coverage: undefined, coverageGap: error instanceof Error ? error.message : "OPM employment coverage has not yet been acquired." }));
-  const fetcher = input.fetchImpl ?? fetch, retrievedAt = (input.now ?? (() => new Date().toISOString()))();
+  const fetcher: typeof fetch = (resource, init) => sourceFetch(String(resource), init, input.fetchImpl), retrievedAt = (input.now ?? (() => new Date().toISOString()))();
   const rawSourceRefs: OpmRangeReference[] = [];
   const head = await fetcher(release.url, { method: "HEAD", signal: input.signal });
   const byteLength = Number(head.headers.get("content-length"));

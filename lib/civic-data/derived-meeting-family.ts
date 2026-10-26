@@ -63,6 +63,7 @@ function combineMeetings(rows: readonly Meeting[]): { meetings: Meeting[]; dropp
 }
 
 export interface FamilyMemberRead {
+  readonly horizonDay?: string;
   readonly member: DerivedWiringRecord;
   readonly acquisitions: readonly {
     readonly requestedUrl: string;
@@ -218,7 +219,8 @@ export function buildDerivedFamily(input: {
     t.normalized += usable.length;
     for (const a of read.acquisitions) {
       t.acquisitions.push({ source, requestedUrl: a.requestedUrl, finalUrl: a.finalUrl, httpStatus: a.httpStatus, rawHash: a.rawHash, byteCount: a.byteCount });
-      inputs.push({ kind: "MEMBER_ACQUISITION", memberKey: member.id, requestedUrl: a.requestedUrl, finalUrl: a.finalUrl, httpStatus: a.httpStatus, rawHash: a.rawHash, retrievedAt: read.retrievedAt });
+      inputs.push({ kind: "MEMBER_ACQUISITION", memberKey: member.id, requestedUrl: a.requestedUrl, finalUrl: a.finalUrl, httpStatus: a.httpStatus, rawHash: a.rawHash, retrievedAt: read.retrievedAt,
+        horizonDay: read.horizonDay ?? input.generatedAt.slice(0, 10) });
     }
     reports.push({ id: member.id, source, bodyId: member.row.bodyId, status: member.status, outcome: "FRESH" });
   }

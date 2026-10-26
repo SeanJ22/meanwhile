@@ -60,12 +60,24 @@ test("GSA's redacted example retains its published UEI without turning address i
 });
 test("OpenFEMA state pagination resumes beyond the first bounded page and accepts unchanged empty pass", async () => {
   const source = JSON.parse(fixture("openfema-live.json"));
-  const first = await acquireFederalMoney("openfema", "AR", { now, fetch: async url => { const request = new URL(String(url)); assert.equal(request.searchParams.get("$filter"), "state eq 'AR'"); return json({ metadata: { count: 501 }, DisasterDeclarationsSummaries: Array.from({ length: 500 }, (_, i) => ({ ...source.DisasterDeclarationsSummaries[0], id: `synthetic-${i}` })) }); } });
+  const first = await acquireFederalMoney("openfema", "AR", { now, fetch: async url => { const request = new URL(String(url)); assert.equal(request.searchParams.get("$filter"), "state eq 'AR'"); assert.equal(request.searchParams.get("$orderby"), "declarationDate desc,id asc"); return json({ metadata: { count: 501 }, DisasterDeclarationsSummaries: Array.from({ length: 500 }, (_, i) => ({ ...source.DisasterDeclarationsSummaries[0], id: `synthetic-${i}` })) }); } });
   assert.equal(first.complete, false); assert.equal(first.continuation?.offset, 500);
   const second = await acquireFederalMoney("openfema", "AR", { now, cursor: first.continuation, fetch: async url => { assert.equal(new URL(String(url)).searchParams.get("$skip"), "500"); return json({ metadata: { count: 501 }, DisasterDeclarationsSummaries: [{ ...source.DisasterDeclarationsSummaries[0], id: "synthetic-500" }] }); } });
   assert.equal(second.complete, true); assert.equal(second.facts.length, 1);
   const empty = await acquireFederalMoney("openfema", "AR", { fetch: async () => json({ metadata: { count: 0 }, DisasterDeclarationsSummaries: [] }) });
   assert.equal(empty.complete, true); assert.equal(empty.facts.length, 0);
+});
+test("a previous FEMA ID-order offset restarts the ordered source pass without skipping declarations", async () => {
+  const source = JSON.parse(fixture("openfema-live.json"));
+  let requestedOffset = "";
+  const resumed = await acquireFederalMoney("openfema", "AR", { now, cursor: { source: "openfema", phase: "declarations", offset: 500 }, fetch: async url => {
+    const request = new URL(String(url)); requestedOffset = request.searchParams.get("$skip")!;
+    return json({ metadata: { count: 501 }, DisasterDeclarationsSummaries: [{ ...source.DisasterDeclarationsSummaries[0], id: "synthetic-newest" }] });
+  } });
+  assert.equal(requestedOffset, "0");
+  assert.equal(resumed.facts[0].id, "openfema:synthetic-newest");
+  assert.equal(resumed.continuation?.declarationOrder, "DATE_DESC");
+  assert.equal(resumed.continuation?.offset, 1);
 });
 test("provider Retry-After and transient errors back off without applying local-government request caps", async () => {
   const waits: number[] = []; let calls = 0;
@@ -93,13 +105,26 @@ test("USAspending uses full custom bulk history and resumes annual extracts with
   let requestCalls = 0;
   const first = await acquireFederalMoney("usaspending", "AZ", { now, fetch: async (url, init) => {
     requestCalls++;
-    if (String(url).endsWith("/bulk_download/awards/")) { const request = JSON.parse(String(init?.body)); assert.equal(request.limit, undefined); assert.equal(request.filters.date_type, "action_date"); assert.deepEqual(request.filters.prime_award_types, ["02", "03", "04", "05"]); assert.equal(request.filters.date_range.start_date, "2000-10-01"); return json({ status_url: "https://api.usaspending.gov/api/v2/download/status?file_name=synthetic.zip", file_url: "https://files.usaspending.gov/generated_downloads/synthetic.zip" }); }
+    if (String(url).endsWith("/bulk_download/awards/")) { const request = JSON.parse(String(init?.body)); assert.equal(request.limit, undefined); assert.equal(request.filters.date_type, "action_date"); assert.deepEqual(request.filters.prime_award_types, ["02", "03", "04", "05"]); assert.equal(request.filters.date_range.start_date, "2026-01-01"); return json({ status_url: "https://api.usaspending.gov/api/v2/download/status?file_name=synthetic.zip", file_url: "https://files.usaspending.gov/generated_downloads/synthetic.zip" }); }
     return json({ status: "running" });
   } });
-  assert.equal(first.complete, false); assert.equal(first.facts.length, 0); assert.equal(first.continuation?.year, 2000); assert.equal(requestCalls, 2);
+  assert.equal(first.complete, false); assert.equal(first.facts.length, 0); assert.equal(first.continuation?.year, 2026); assert.equal(requestCalls, 2);
   const csv = "assistance_transaction_unique_key,assistance_award_unique_key,assistance_type,recipient_uei,recipient_name,action_date,federal_action_obligation,primary_place_of_performance_state_code,primary_place_of_performance_county_code,primary_place_of_performance_congressional_district,last_modified_date\nSYNTHETIC-TX,SYNTHETIC-AWARD,04,SYNTHETICUEI,SYNTHETIC GOVERNMENT,2008-07-17,123.5,AZ,013,04,2026-10-10\n";
   const second = await acquireFederalMoney("usaspending", "AZ", { now, cursor: first.continuation, fetch: async url => String(url).includes("/status?") ? json({ status: "finished" }) : new Response(Buffer.from(zip("Assistance_Transactions.csv", csv))) });
-  assert.equal(second.facts[0].sourceId, "SYNTHETIC-TX"); assert.equal(second.facts[0].kind, "GRANT"); assert.equal(second.facts[0].uei, "SYNTHETICUEI"); assert.deepEqual(second.facts[0].geography, [{ type: "county", geoid: "04013" }, { type: "congressional", geoid: "0404" }]); assert.equal(second.continuation?.year, 2001);
+  assert.equal(second.facts[0].sourceId, "SYNTHETIC-TX"); assert.equal(second.facts[0].kind, "GRANT"); assert.equal(second.facts[0].uei, "SYNTHETICUEI"); assert.deepEqual(second.facts[0].geography, [{ type: "county", geoid: "04013" }, { type: "congressional", geoid: "0404" }]); assert.equal(second.continuation?.year, 2025);
+});
+
+test("an older in-flight spending extract finishes before newer years and preserves its completed history", async () => {
+  const csv = "assistance_transaction_unique_key,assistance_award_unique_key,assistance_type,recipient_name,action_date,federal_action_obligation\nSYNTHETIC-OLD,SYNTHETIC-AWARD,04,SYNTHETIC GOVERNMENT,2006-07-17,12\n";
+  const fetch: typeof globalThis.fetch = async url => String(url).includes("/status?") ? json({ status: "finished" }) : new Response(Buffer.from(zip("Assistance_Transactions.csv", csv)));
+  const resumed = await acquireFederalMoney("usaspending", "AZ", { now, fetch, cursor: { source: "usaspending", phase: "download", year: 2006, category: 0, location: "performance", statusUrl: "https://api.usaspending.gov/status?old=1", fileUrl: "https://files.usaspending.gov/old.zip" } });
+  assert.equal(resumed.facts[0].period, "2006-07-17");
+  assert.equal(resumed.continuation?.year, 2026);
+  assert.equal(resumed.continuation?.yearFloor, 2007);
+  assert.equal(resumed.continuation?.yearOrder, "DESC");
+  const last = await acquireFederalMoney("usaspending", "AZ", { now, fetch, cursor: { ...resumed.continuation!, year: 2007, statusUrl: "https://api.usaspending.gov/status?old=2", fileUrl: "https://files.usaspending.gov/last.zip" } });
+  assert.equal(last.continuation?.location, "recipient");
+  assert.equal(last.continuation?.year, undefined, "completed years 2000–2006 stay complete");
 });
 test("SAM public GET authenticates state and download requests and keeps saved evidence credential-free", async () => {
   let calls = 0; const body = JSON.stringify({ entityData: [JSON.parse(fixture("sam-official-example.json"))] });

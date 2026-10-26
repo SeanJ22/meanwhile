@@ -103,6 +103,6 @@ export async function withOutcomeSourceChecks(snapshot:OutcomeSnapshot,scope:str
       const checked=pages.map(page=>checks.get(pageKey(page.url,page.rawHash)));
       const oldest=checked.length&&checked.every(check=>check!==undefined)?checked.map(check=>check!.checkedAt).sort()[0]:null;
       const day=oldest?runStamp(new Date(oldest)):null;
-      return day&&source.byteCount&&(source.readOn==="UNKNOWN"||day>source.readOn)?{...record,provenance:{...source,
+      return day&&source.byteCount&&(source.readOn==="UNKNOWN"||String(day)>String(source.readOn))?{...record,provenance:{...source,
         readOn:stampFromRead({source:source.endpoint,ok:true,bytes:source.byteCount,on:day})}}:record;})]))}))};
 }

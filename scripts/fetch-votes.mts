@@ -462,7 +462,7 @@ if (positions.length === 0) {
   console.error("zero positions extracted — that is a finding, not a success");
   process.exit(1);
 }
-}
 if (outcome.candidate.state !== "PROMOTED") {
   throw new Error(`FEDERAL_ROLLCALL_PROMOTION_REFUSED:${outcome.candidate.failureCode ?? outcome.candidate.state}`);
+}
 }

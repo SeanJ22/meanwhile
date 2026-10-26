@@ -42,7 +42,7 @@ test("a full final Open States batch carries completion without a duplicate empt
   await acquireStateVotes({state:sample.state,apiKey:"",store:new MemoryEvidenceStore(),locks,now:()=>manifest.capturedAt,signal:new AbortController().signal,
     fetchImpl:(async raw=>String(raw)===PLURAL_SESSION_CATALOG?
       new Response(`<html>Session<li><a href="${sample.sourceUrl}">source</a>updated ${manifest.capturedAt.slice(0,10)}</li></html>`):
-      new Response(archive))as typeof fetch,
+      new Response(new Uint8Array(archive)))as typeof fetch,
     onBill:async result=>{batches.push({count:result.votes.length,complete:result.sourceProbe?.complete,
       pending:result.sourceProbe?.continuationPending,position:result.checkpoints?.[sample.sourceUrl]?.position});}});
   assert.deepEqual(batches,[{count:128,complete:true,pending:false,position:128}],"the last real batch carries its own finished source plan");

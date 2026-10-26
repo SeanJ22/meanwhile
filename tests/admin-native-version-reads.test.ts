@@ -8,6 +8,8 @@ import { applyManualEdit,checkDoorDraft } from "../lib/doors/registry.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { readdirSync,readFileSync } from "node:fs";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
+import { versionedSelect } from "../lib/db/versioned-query.ts";
 
 test("Admin read routes cannot bypass row-version checks with a raw SQL client or time-only response memo",()=>{
   const files=[...readdirSync("lib/control-plane/admin-view").filter(file=>file.endsWith("route.ts")).map(file=>`lib/control-plane/admin-view/${file}`),"lib/control-plane/admin-view/v6-stuck-population.ts",
@@ -58,17 +60,20 @@ test("Admin shut doors reuse unchanged records and immediately observe an edit o
     assert.ok(draft.ok);
     const door=applyManualEdit(null,draft.value,"2026-10-25T12:00:00Z");
     await pg.query("INSERT INTO cp_doors VALUES($1,1,now(),$2::jsonb)",[door.doorId,JSON.stringify(door)]);
+    // Admin's shared connection checks every result row's version; only changed door bodies cross it.
+    const copies=new Map<string,string>();
+    const checked=versionedSelect("admin-shut-doors",new CivicReadCache({read:async key=>copies.get(key)??null,write:async(key,value)=>{copies.set(key,value);}}));
     let bodies=0;
-    const sql={query:async(text:string,params:readonly unknown[]=[])=>{
+    const sql={query:(text:string,params:readonly unknown[]=[])=>checked(async(text,params)=>{
       const result=await pg.query<Record<string,unknown>>(text,[...params]);
-      bodies+=result.rows.filter(row=>Object.hasOwn(row,"value")).length;
+      bodies+=result.rows.filter(row=>row.value!==null&&row.value!==undefined).length;
       return result.rows;
-    }};
+    },text,params)};
     assert.equal((await readShutDoorRecords(sql))[0].doorId,door.doorId);
     assert.equal((await readShutDoorRecords(sql))[0].doorId,door.doorId);
     assert.equal(bodies,1);
-    await pg.exec(`UPDATE cp_doors SET revision=revision+1,value=value||'{"notes":"Source moved"}'::jsonb`);
-    assert.equal((await readShutDoorRecords(sql))[0].notes,"Source moved");
+    await pg.exec(`UPDATE cp_doors SET revision=revision+1,value=value||'{"shutReason":"Source moved"}'::jsonb`);
+    assert.equal((await readShutDoorRecords(sql))[0].shutReason,"Source moved");
     assert.equal(bodies,2);
     await pg.exec(`UPDATE cp_doors SET revision=revision+1,value=value||'{"status":"OPEN"}'::jsonb`);
     assert.deepEqual(await readShutDoorRecords(sql),[]);

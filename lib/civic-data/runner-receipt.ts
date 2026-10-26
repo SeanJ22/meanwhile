@@ -10,7 +10,7 @@ import { readPromotedCivicData, type CivicDataReadStore } from "./read-model.ts"
 import { parseValidationReceipt } from "./receipt.ts";
 import type { RoutineRecordClass } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
-import type { PromotionOutcome } from "./promotion.ts";
+import type { PromotionOutcome, RepeatedInputConfirmation } from "./promotion.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
@@ -31,10 +31,10 @@ export interface RoutineRunnerReceipt {
 
 export function routineReceiptFields(
   candidate: { readonly id: string },
-  outcome: PromotionOutcome,
+  outcome: PromotionOutcome | RepeatedInputConfirmation,
 ): Omit<RoutineRunnerReceipt, "source" | "structuralReleaseContract"> {
   if (!outcome.confirmed && candidate.id !== outcome.candidate.candidate.id &&
-    candidate.id !== outcome.candidate.candidate.retryOfCandidateId) throw new Error("ROUTINE_RECEIPT_CANDIDATE_MISMATCH");
+    candidate.id !== (outcome.candidate.candidate as { readonly retryOfCandidateId?: string }).retryOfCandidateId) throw new Error("ROUTINE_RECEIPT_CANDIDATE_MISMATCH");
   return {
     candidateId: outcome.candidate.candidate.id,
     acquisitionSucceeded: outcome.candidate.acquisitionSucceeded,
@@ -46,7 +46,7 @@ export function routineReceiptFields(
   };
 }
 
-export function printSourceRunnerReceipt(source: string, candidate: { readonly id: string }, outcome: PromotionOutcome): void {
+export function printSourceRunnerReceipt(source: string, candidate: { readonly id: string }, outcome: PromotionOutcome | RepeatedInputConfirmation): void {
   console.log("RCD_RECEIPT=" + JSON.stringify({ source, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
 }
 

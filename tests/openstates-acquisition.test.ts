@@ -11,7 +11,7 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { collectNationalPlaceSources } from "../lib/sources/plural/place.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import { capturedText, publishStatePeople, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
+import { capturedText, publishStatePeople, statePeopleInputDigest, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 import { keyRefFor } from "../lib/doors/seed-feeds.ts";
 import { memberOfficesRunNeeded, publishMemberOffices } from "../lib/officials/member-offices-publication.ts";
@@ -22,7 +22,7 @@ import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { candidateChangeSet, canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import type { CandidateVersionRecord, RoutineCandidate } from "../lib/civic-data/types.ts";
 import { statePeopleRetirementSourceCheck } from "../lib/sources/plural/retirement.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { confirmRepeatedRoutineInputs, processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import {censusGeocodeUrl} from "../lib/geo/census-geocoder.ts";
 
 const vault = new MemoryEvidenceStore();
@@ -123,6 +123,26 @@ test("two states use one validated archive and keep complete native identity, co
     "unchanged geographic gaps do not accumulate on every source replay");
   assert.equal(requests.length, 3); assert.equal((await clock()).lastSucceededObservedAt, checkedAt,
     "replaying held source bytes cannot manufacture a newer publisher check");
+  // The confirmed replay recorded its inputs; the same inputs confirm again without reading the held people or captures.
+  const contract = "openstates-people-az", digest = statePeopleInputDigest(replayed);
+  const pointerBefore = await canonical.readPromotionIdentity("STATE_LEGISLATOR", "US-AZ:openstates-people:v1");
+  assert.equal(pointerBefore?.latestConfirmation?.inputDigest, digest);
+  const trapped = Object.assign(Object.create(canonical) as MemoryRoutineDataStore, {
+    readPromotion: () => { throw new Error("whole held people read"); },
+    readCandidate: () => { throw new Error("whole held candidate read"); },
+    readCandidatePath: () => { throw new Error("held capture read"); },
+    readCandidateField: () => { throw new Error("held field read"); },
+  });
+  now = "2026-10-03T02:00:00.000Z";
+  const repeated = await confirmRepeatedRoutineInputs(trapped, contract, digest, now);
+  assert.equal(repeated?.confirmed.versionId, pointerBefore?.versionId);
+  assert.equal((await canonical.readPromotionIdentity("STATE_LEGISLATOR", "US-AZ:openstates-people:v1"))?.latestConfirmation?.observedAt, now,
+    "the repeated check is recorded as a new confirmation of the same version");
+  const changedRoster = {...replayed,roster:{...replayed.roster,officeholders:replayed.roster.officeholders.map(row=>({...row,phone:"602-555-0199"}))}};
+  assert.equal(await confirmRepeatedRoutineInputs(trapped, contract, statePeopleInputDigest(changedRoster), now), null,
+    "changed source inputs take the full candidate path");
+  assert.notEqual(statePeopleInputDigest({...replayed,acquisitions:replayed.acquisitions.map(row=>({...row,body:row.body+" "}))}), digest,
+    "page bytes are part of the inputs");
 });
 test("native role dates select the current legislative membership without mayor or future-role guessing", () => {
   const text = yaml("same", "Changed Name");

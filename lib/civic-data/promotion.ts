@@ -1,7 +1,7 @@
 import { rememberStatePublicationHashes, withStateRecordHashes } from "./state-publication.ts";
 import { processRoutineCandidate } from "./candidate-lifecycle.ts";
 import type { CandidateVersionRecord, PromotedPointerIdentity, PromotedProjection, RoutineCandidate } from "./types.ts";
-import { PostgresRoutineDataStore, promotedPointerIdentity, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
+import { PostgresRoutineDataStore, promotedPointerIdentity, routineEventObservedAt, type PublishedCandidateMetadata, type RoutineDataStore } from "./store.ts";
 import { canonicalCivicDataJson, heldCivicRecords } from "./changes.ts";
 import { validateRoutineCandidate } from "./validate.ts";
 import type { NavigationComparison } from "./navigation-successor.ts";
@@ -138,7 +138,7 @@ export async function processRegisteredRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   // Rechecks keep the held version by default. Explicit false is reserved for
   // callers that need a distinct candidate even when its facts are unchanged.
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly inputDigest?: string } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
@@ -186,6 +186,35 @@ export async function processRegisteredRoutineCandidate(
     ),
     now,
   );
+}
+
+/** A re-check confirmed from its inputs alone: the pointed version's row metadata, never its facts. */
+export interface RepeatedInputConfirmation {
+  readonly candidate: PublishedCandidateMetadata;
+  readonly promoted: PromotedPointerIdentity;
+  readonly confirmed: { readonly versionId: string; readonly at: string };
+}
+
+/** When the pointed version's latest unchanged confirmation read exactly these source inputs, the same
+ * inputs on the same version confirm it again. Only the pointer, its confirmation and the version's row
+ * metadata are read; any difference returns null and the caller builds and checks a full candidate. */
+export async function confirmRepeatedRoutineInputs(store: RoutineDataStore, contractId: string, inputDigest: string,
+  now: string): Promise<RepeatedInputConfirmation | null> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
+  const contract = requiredRoutineContract(contractId), task = routineTaskFromContract(contract);
+  if (!store.confirmUnchanged) return null;
+  const pointer = await store.readPromotionIdentity(contract.recordClass, contract.scope);
+  const held = pointer?.latestConfirmation;
+  if (!pointer || !held || held.inputDigest !== inputDigest || held.versionId !== pointer.versionId ||
+    pointer.lastKnownGoodVersionId !== pointer.versionId || pointer.sourceId !== contract.sourceId ||
+    held.sourceId !== contract.sourceId || held.parserVersion !== task.parserVersion) return null;
+  const metadata = await store.readPublishedCandidateMetadata(pointer.versionId);
+  if (!metadata || metadata.state !== "PROMOTED") return null;
+  const at = await routineEventObservedAt(store, contract.recordClass, contract.scope, now);
+  const confirmed = await store.confirmUnchanged({ sourceId: held.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+    parserVersion: held.parserVersion, pointerVersionId: pointer.versionId, readModelHash: held.readModelHash, basis: held.basis,
+    retrieval: held.retrieval, stamps: held.stamps, inputDigest }, at);
+  return confirmed.kind === "CONFIRMED" ? { candidate: metadata, promoted: pointer, confirmed: { versionId: confirmed.versionId, at: confirmed.at } } : null;
 }
 
 /** A fan-out contract owns a scope family: its per-state marker plus one candidate per `<sourceId>:<officeholderId>`. */

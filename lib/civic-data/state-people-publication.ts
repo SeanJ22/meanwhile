@@ -79,6 +79,15 @@ export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet
     excludedFacts,normalizedPayload:payload,readModel};
 }
 
+type StatePeopleInputs = {state:string;roster:OfficeholderSet;acquisitions:readonly StatePeopleAcquisition[];sourceId?:string;releaseId:string} & StatePeopleEvidence;
+/** Everything one pass reads from the source, page bytes by their hash. A pass with these same inputs on a version they
+ * already confirmed unchanged produces that version again, so it is confirmed without reading the held people or captures. */
+export function statePeopleInputDigest(input: StatePeopleInputs): string {
+  return hash({kind:"state-people-inputs/1",parserVersion:PLURAL_PARSER_VERSION,state:input.state.toLowerCase(),sourceId:input.sourceId ?? "plural-openstates",
+    releaseId:input.releaseId,roster:input.roster,gaps:input.gaps ?? [],excludedFacts:input.excludedFacts ?? null,
+    acquisitions:input.acquisitions.map(({body,...page})=>({...page,bodySha256:hash(body)}))});
+}
+
 export async function publishStatePeople(input: {store:RoutineDataStore;vault:EvidenceStore;state:string;roster:OfficeholderSet;acquisitions:readonly StatePeopleAcquisition[];sourceId?:string;releaseId:string;now:string;confirmUnchanged?:boolean;resolveOfficePoint?:OfficePointResolver} & StatePeopleEvidence) {
   const jurisdiction = `US-${input.state.toUpperCase()}` as const;
   const prior = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now});
@@ -130,7 +139,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
   const carriedPortraitFacts = heldExcluded?.filter(fact=>fact.code.startsWith("STATE_PORTRAIT_")) ?? [];
   const candidate = statePeopleCandidate({...input,roster,captures,excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
-    prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault});
+    prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault,inputDigest:statePeopleInputDigest(input)});
   if (outcome.promoted) {
     const ballotPrior = await readManualProjectionPrior(stateBallotContractId("ballot-contests", input.state), input.store, input.now);
     const ballots = Object.values((ballotPrior?.payload as GenericBallotProjection | undefined)?.ballots ?? {})

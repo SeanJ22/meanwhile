@@ -5,7 +5,8 @@ import { PLURAL_REVISION_URL, PLURAL_STATES } from "../lib/sources/plural/target
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
+import { publishStatePeople, statePeopleInputDigest } from "../lib/civic-data/state-people-publication.ts";
+import { confirmRepeatedRoutineInputs } from "../lib/civic-data/promotion.ts";
 import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure, withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
@@ -32,8 +33,12 @@ async function main() {
     const failed = await recordRegisteredSourceAcquisitionFailure({ store, contractId, requestedUrl: PLURAL_REVISION_URL, failure });
     console.log(failed.line); process.exitCode = 2; return;
   }
-  const publication = await publishStatePeople({ store, vault: rawCaptureVault(), ...acquired, now: new Date().toISOString() });
+  const now = new Date().toISOString();
   if (acquired.gaps.length) console.log(`OPENSTATES_SOURCE_GAPS=${JSON.stringify(acquired.gaps)}`);
+  // Inputs already confirmed on the pointed version need only a new confirmation, not a reread of its people and captures.
+  const repeated = await confirmRepeatedRoutineInputs(store, contractId, statePeopleInputDigest(acquired), now);
+  if (repeated) { printSourceRunnerReceipt(contractId, repeated.candidate.candidate, repeated); return; }
+  const publication = await publishStatePeople({ store, vault: rawCaptureVault(), ...acquired, now });
   printSourceRunnerReceipt(contractId, publication.candidate, publication.outcome);
   if (!publication.outcome.promoted && !publication.outcome.confirmed) process.exitCode = 2;
 }

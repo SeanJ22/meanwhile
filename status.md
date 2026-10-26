@@ -1399,3 +1399,7 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Fix READY cea9618fe on stream/river-pages-bounded (forward fix, option (a); not a revert): the build step builds pages for 6 minutes then lets the deploy go on; a reader on a place with no page gets the pre-RB-A7 query and composer, which is what 125 runs on every visit today (0.25 to 1.9 s per ZIP, timed read-only). Tests reproduce 126's "didn't load" and pass with the fix (16/16; related 102/102).
 - Gating alone on river-next-pages 527ed53d4. Ships as release 127; then the Maryland cost fix (READY 271900f72) as 128.
 - Risks: the queue may take hours to drain and keeps refilling while the bootstrap triggers stand (they're dropped by the contract migration after 126's code is live); about 147k CDN purge calls during the drain could hit Netlify's rate limits (a failed purge only re-queues the page).
+
+### 6:03 AM EDT: release 127 opened (deploy unblock alone); Maryland fix gating on it
+- Bounded-pages gate 9/9 on 527ed53d4 (10,095 pass). river moved there. [#839](https://github.com/SeanJ22/meanwhile/pull/839), auto-merge on. Report: releases/127.md.
+- Maryland cost fix re-folded on 527ed53d4 (river-next-mdreads) and gating; ships alone as 128 once 127 is live.

@@ -125,6 +125,7 @@ export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet
   const people = input.roster.officeholders;
   return {id:`cv-${hash(`${sourceId}|${scope}|${rawHash}|${normalizedHash}|${hash(sourceCheck ?? null)}`).slice(0,32)}`,sourceId,recordClass:"STATE_LEGISLATOR",scope,
     retrieval:{succeeded:input.captures.length>0 && input.captures.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.capture.byteLength>0),
+      complete:input.roster.currentMembershipComplete===true && !input.gaps?.length,
       requestedUrl:input.captures[0]?.requestedUrl ?? "",finalUrl:input.captures[0]?.finalUrl ?? null,httpStatus:input.captures[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash,rawHashBasis:"SOURCE_CONTENT_V1",...(sourceCheck ? {sourceCheck} : {})},
     normalization:{succeeded:true,parserVersion:PLURAL_PARSER_VERSION,schemaVersion:"state-people/3",normalizedHash,normalizedPayloadHash:hash(payload),
       inputRecords:people.length,outputRecords:people.length,droppedRecords:0,missingRequiredFields:people.some(row=>!row.id || !row.name || !row.officeTitle || !row.provenance?.sourceUrl)?["person/office/source"]:[]},

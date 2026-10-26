@@ -42,6 +42,7 @@ test("an unchanged complete state source confirms using its head and no held pay
   assert.ok(first.outcome.promoted, JSON.stringify(first.outcome.candidate.receipt));
   const head = await store.readSourceHead("STATE_LEGISLATOR", scope);
   assert.equal(head?.rawHashBasis, "SOURCE_CONTENT_V1");
+  assert.equal(head?.acquisitionComplete,true);
   for (const method of ["readCandidate", "readCandidatePath", "readPromotion", "readPublishedCandidateMetadata", "events", "readPromotionIdentity"] as const)
     Object.assign(store, { [method]: async () => { throw new Error(`unchanged source read ${method}`); } });
   const confirmed = await confirmStatePeopleSource({ store, state: "az", roster: { ...roster, generatedAt: later },
@@ -84,6 +85,7 @@ test("repeated partial inputs skip held people without refreshing unread facts",
   const input = {store,vault,state:"az",roster:{...roster,currentMembershipComplete:false},acquisitions,
     releaseId:"a".repeat(40),gaps:[{sourceUrl:url,detail:"SOURCE_PARTIAL: another publisher is unavailable"}],now:at};
   const first=await publishStatePeople(input);assert.ok(first.outcome.promoted);
+  assert.equal((await store.readSourceHead("STATE_LEGISLATOR",scope))?.acquisitionComplete,false);
   const readPath=store.readCandidatePath.bind(store),metadataReads:string[]=[];
   store.readCandidatePath=async<T>(id:string,path:readonly string[])=>{
     const key=path.join(".");

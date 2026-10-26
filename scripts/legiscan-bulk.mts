@@ -12,6 +12,7 @@ import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure,sourceAcquisitionFailure,withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
+import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 
 /** Publisher years identify current sessions; numeric IDs also include older special sessions. */
 export function bulkDatasetOrder(datasets:readonly Dataset[],checkedAt:ReadonlyMap<string,string>=new Map(),asOf=new Date().toISOString()):Dataset[] {
@@ -23,13 +24,13 @@ export function bulkDatasetOrder(datasets:readonly Dataset[],checkedAt:ReadonlyM
 export async function refreshLegiscan(store:RoutineDataStore,signal:AbortSignal,options:Omit<import("../lib/sources/legiscan/acquisition.ts").BulkRequestOptions,"signal"> & {peopleForState?:(state:string)=>Promise<readonly HeldPerson[]>}={}) {
   const list=await withPublisherAcquisitionDeadline("LegiScan dataset index",ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,child=>acquireDatasetList({...options,signal:AbortSignal.any([signal,child])}));
   // Publish the source index first: prior sessions remain available during the bulk pass.
-  const marker=await publishBulkCandidate(store,{capture:list.capture,datasets:list.datasets},options.now?.()??new Date().toISOString());
+  let marker=await publishBulkCandidate(store,{capture:list.capture,datasets:list.datasets,complete:false},options.now?.()??new Date().toISOString());
   if(!marker.outcome.promoted) throw Error("LegiScan dataset index publication failed");
   const counts:Record<string,{rows:number;joined:number;unjoined:number;sponsorsJoined:number;sponsorsUnjoined:number;datasets:number;unchanged:number;emptySessions:number[];failures:string[]}>= {};
   const current=bulkDatasetOrder(list.datasets,undefined,list.capture.retrievedAt),checkedAt=new Map<string,string>();
   await runBoundedWorkPool(current,4,async dataset=>{
-    const prior=await store.readPromotion<BillSession>("STATE_BILL",billScope(dataset.session_id));
-    const state=stateOfDataset(dataset),age=prior?.latestConfirmation?.retrieval.retrievedAt??prior?.promotedAt??"";
+    const prior=await store.readSourceHead("STATE_BILL",billScope(dataset.session_id));
+    const state=stateOfDataset(dataset),age=prior?.promotedAt??"";
     if(!checkedAt.has(state)||age<checkedAt.get(state)!)checkedAt.set(state,age);
   });
   const groups=new Map<string,Dataset[]>();
@@ -43,21 +44,24 @@ export async function refreshLegiscan(store:RoutineDataStore,signal:AbortSignal,
     // Scheduling fields stay in the source index; archive parts retain their existing evidence shape.
     const {year_start:_start,year_end:_end,special:_special,prefile:_prefile,...dataset}=scheduled;
     try {
-      const prior=await store.readPromotion<BillSession>("STATE_BILL",billScope(dataset.session_id));
-      if(prior?.payload.kind==="SESSION"&&prior.payload.parserVersion===LEGISCAN_BULK_PARSER&&prior.payload.sponsorMatchVersion===LEGISCAN_SPONSOR_MATCH&&Array.isArray(prior.payload.parts)&&prior.payload.dataset.dataset_hash===dataset.dataset_hash&&prior.payload.dataset.dataset_date===dataset.dataset_date) {
-        await confirmBulkSession(store,prior.payload,prior.versionId,list.capture,list.capture.retrievedAt);
-        for(const key of ["rows","joined","unjoined","sponsorsJoined","sponsorsUnjoined"] as const) row[key]+=prior.payload.counts[key];
+      const head=await store.readSourceHead("STATE_BILL",billScope(dataset.session_id));
+      const prior=head?.sourceId==="legiscan-bills"&&head.candidateState==="PROMOTED"&&head.acquisitionSucceeded&&head.versionId===head.lastKnownGoodVersionId?
+        await store.readCandidatePath<BillSession>(head.versionId,["readModel"]):null;
+      if(prior?.kind==="SESSION"&&prior.parserVersion===LEGISCAN_BULK_PARSER&&prior.sponsorMatchVersion===LEGISCAN_SPONSOR_MATCH&&Array.isArray(prior.parts)&&prior.dataset.dataset_hash===dataset.dataset_hash&&prior.dataset.dataset_date===dataset.dataset_date) {
+        await confirmBulkSession(store,prior,head!.versionId,list.capture,list.capture.retrievedAt);
+        for(const key of ["rows","joined","unjoined","sponsorsJoined","sponsorsUnjoined"] as const) row[key]+=prior.counts[key];
         row.datasets++;row.unchanged++;if(!dated)return;continue;
       }
       const acquired=await withPublisherAcquisitionDeadline(`LegiScan ${state}`,ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,child=>acquireDataset(dataset,{...options,signal:AbortSignal.any([signal,child])}));
       const people=options.peopleForState?await options.peopleForState(state):state==="US"?[]:await readStatePeopleProjection(`US-${state}`,{store,now:acquired.capture.retrievedAt}).then(read=>read.kind==="PROMOTED"?read.value.roster.officeholders:[]);
-      const published=await publishBulkCandidate(store,{capture:acquired.capture,dataset,bodies:acquired.bodies,people,archiveHash:acquired.archiveHash},options.now?.()??new Date().toISOString());
+      const published=await publishBulkCandidate(store,{capture:acquired.capture,dataset,bodies:acquired.bodies,people,archiveHash:acquired.archiveHash},options.now?.()??new Date().toISOString(),{signal});
       if(!published.outcome.promoted) throw Error("LegiScan session publication failed");
       const session=published.candidate.readModel as BillSession;
       for(const key of ["rows","joined","unjoined","sponsorsJoined","sponsorsUnjoined"] as const) row[key]+=session.counts[key];
       row.datasets++;
       if(!dated)return;
     } catch(error) {
+      if(signal.aborted)break;
       if(error instanceof Error&&error.message==="LEGISCAN_ARCHIVE_BILLS_MISSING"){row.emptySessions.push(dataset.session_id);continue;}
       const detail=`Session ${dataset.session_id}: ${error instanceof Error?error.message:"unavailable"}`;
       row.failures.push(detail);console.error(`LEGISCAN_STATE_FAILURE=${JSON.stringify({state,detail})}`);if(!dated)return;
@@ -65,23 +69,34 @@ export async function refreshLegiscan(store:RoutineDataStore,signal:AbortSignal,
     }
     if(!row.datasets&&!row.failures.length)row.failures.push("No nonempty publisher session is available");
   });
+  if(signal.aborted)return{marker,counts,deferred:true};
   for(const result of work)if(!result.ok)throw Error(result.error);
-  return {marker,counts};
+  if(Object.values(counts).every(row=>row.failures.length===0)&&!signal.aborted){
+    marker=await publishBulkCandidate(store,{capture:list.capture,datasets:list.datasets,complete:true},options.now?.()??new Date().toISOString());
+    if(!marker.outcome.promoted)throw Error("LegiScan completed dataset index publication failed");
+  }
+  return {marker,counts,deferred:false};
 }
 async function main() {
   if(process.argv.slice(2).join(" ")!=="--promote") throw Error("LEGISCAN_PROMOTE_REQUIRED");
   installNeonRequestDeadline();prepareProductionCivicDataWrite();const store=new PostgresRoutineDataStore();
+  const stop=new AbortController(),deadline=passDeadlineFromEnv();
+  const defer=()=>stop.abort(Error("PASS_TIME_BUDGET"));
+  const timer=Number.isFinite(deadline)?setTimeout(defer,Math.max(0,deadline-40_000-Date.now())):undefined;
+  timer?.unref();process.once("SIGTERM",defer);
   try {
     // Each acquisition has its own deadline. The standing parent's pass wall still applies.
-    const {marker,counts}=await refreshLegiscan(store,new AbortController().signal);
+    const {marker,counts,deferred}=await refreshLegiscan(store,stop.signal);
     console.log(`LEGISCAN_ROWS_BY_STATE=${JSON.stringify(counts)}`);
     const failures=Object.values(counts).flatMap(row=>row.failures);
-    if(failures.length) throw Error(failures.join("; "));
+    if(failures.length&&!deferred) throw Error(failures.join("; "));
     printSourceRunnerReceipt(LEGISCAN_BULK_CONTRACT,marker.candidate,marker.outcome);
   } catch(error) {
     const failure=sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE",error instanceof Error?error.message:"LegiScan bulk unavailable");
     const failed=await recordRegisteredSourceAcquisitionFailure({store,contractId:LEGISCAN_BULK_CONTRACT,failure});
     console.log(failed.line);process.exitCode=2;
+  } finally {
+    if(timer)clearTimeout(timer);process.removeListener("SIGTERM",defer);
   }
 }
 if(process.argv[1]&&import.meta.url===pathToFileURL(process.argv[1]).href) await main();

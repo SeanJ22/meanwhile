@@ -6,6 +6,7 @@ import { bindCampaignMoney as bindIndexedMoney,campaignMoneyPeopleIndex, campaig
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { CAMPAIGN_MONEY_SCOPE,CAMPAIGN_FINANCE_SOURCES, campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { refreshCampaignMoneyState } from "../lib/funding/state-publication.ts";
+import {campaignMoneyDependencyHash} from "../lib/funding/state-source-probe.ts";
 import {rebuildCampaignCycles} from "../lib/funding/state-cycles.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -240,6 +241,16 @@ test("a special-district member's money reason uses its government's held canoni
     const [copy]=await db.query("INSERT INTO source_copy(url,final_url,fetched_at,http_status,sha256,blob_key) VALUES($1,$1,$2,200,$3,'body-place-fixture') RETURNING id",[url,at,"a".repeat(64)]);
     await db.query("INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by) VALUES($1,$2,$3,$4,'live','OFFICIAL',$5,'',$6,$6,'fixture')",[body,`member:${id}`,JSON.stringify({name,office:""}),name,copy.id,at]);
     const [person]=await readCampaignMoneyPeople(db.query,"AL");assert.equal(person.id,id);assert.equal(person.seat,body);assert.equal(person.division,division);
+    const originalInputs=await campaignMoneyDependencyHash(db.query,"AL"),otherDivision=division+"/county:unrelated";
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','An unrelated place','AL')",[otherDivision]);
+    assert.equal(await campaignMoneyDependencyHash(db.query,"AL"),originalInputs,"unreferenced places are not identity inputs");
+    await db.query("UPDATE entity_place SET place_id=$2 WHERE entity_id=$1",[government,otherDivision]);
+    assert.notEqual(await campaignMoneyDependencyHash(db.query,"AL"),originalInputs,"a government's resolved place changes its member bindings");
+    assert.equal((await readCampaignMoneyPeople(db.query,"AL"))[0].division,otherDivision);
+    await db.query("UPDATE entity_place SET place_id=$2 WHERE entity_id=$1",[government,division]);
+    assert.equal(await campaignMoneyDependencyHash(db.query,"AL"),originalInputs);
+    await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'roster-member','native-member-alias')",[id]);
+    assert.notEqual(await campaignMoneyDependencyHash(db.query,"AL"),originalInputs,"a native person alias changes the identity inputs");
     await refreshCampaignMoneyState({state:"AL",query:db.query,facts:db,vault,directory,now:()=>at,fetch:async()=>{throw new Error("An unsupported profile must not fetch");}});
     installFactReader(db.query);const {GET}=await import("../app/api/campaign-finance/route.ts");
     const response=await GET(new Request(`${PUBLIC_SITE_ORIGIN}/api/campaign-finance?${new URLSearchParams({division:person.division,person:id})}`));

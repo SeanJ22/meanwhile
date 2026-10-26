@@ -3,9 +3,9 @@ import type { FederalCounts, FederalProjection } from "./types.ts";
 
 /** Native primary partitions count once; member fanouts and national summaries never count again. */
 export function primaryFederalCounts(source: string, scope: string, payload: FederalProjection): boolean {
-  if (typeof payload.countsPrimary === "boolean") return payload.countsPrimary;
   const partition = scope.slice(source.length + 1);
   if (partition === "national") return false;
+  if (typeof payload.countsPrimary === "boolean") return payload.countsPrimary;
   if (source === "senate-lda") return partition.startsWith("filing:") || partition.startsWith("unjoined:");
   if (source === "congress-api") return partition.startsWith("congress:") || partition.startsWith("unjoined:") ||
     partition.startsWith("bill:") && !payload.records.some(row => row.kind === "BILL" && row.bioguideId);
@@ -44,8 +44,8 @@ export async function readFederalCounts(query: SourceChecksQuery, source: string
       AND coalesce(c.candidate#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'
   ), primary_rows AS (
     SELECT reader_payload_value(payload->'counts') AS counts FROM current
-    WHERE CASE WHEN jsonb_typeof(payload->'countsPrimary')='boolean' THEN (payload->>'countsPrimary')::boolean
-      WHEN scope=$1||':national' THEN false
+    WHERE CASE WHEN scope=$1||':national' THEN false
+      WHEN jsonb_typeof(payload->'countsPrimary')='boolean' THEN (payload->>'countsPrimary')::boolean
       WHEN $1='senate-lda' THEN scope LIKE $1||':filing:%' OR scope LIKE $1||':unjoined:%'
       WHEN $1='congress-api' THEN scope LIKE $1||':congress:%' OR scope LIKE $1||':unjoined:%' OR
         (scope LIKE $1||':bill:%' AND NOT EXISTS(SELECT 1 FROM reader_payload_members(payload->'records') r

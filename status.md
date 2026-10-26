@@ -5,11 +5,11 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T01:37:00Z
+heartbeat: 2026-10-26T01:39:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 9:37 PM EDT)
+## Every READY not on main (updated 9:39 PM EDT)
 Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon cost, runner crash, another cost spike, readers losing critical info). Improvements merge with other lanes, several to a release. A follow-up READY on a lane that already shipped is new work.
 
 **Shipping / gating**
@@ -25,16 +25,16 @@ Rule (Sean, 6:05 PM EDT): a release carries one lane only when it's urgent (Neon
 | e4305907d | DB-03 state doors | blocked: stacked on Admin in the lane's line. Lane asked to re-cut the remaining steps on current river |
 | 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e, 11072d2ed | DB-03 research reads, accounting, research indexes, member offices, people source fields, runner doors, linking-page integration, read-path connection | next, through 11072d2ed. Member offices f81db4b37 overlaps release 120's member-offices change; River keeps one path when it folds and says which |
 
-**Improvement batch: one release, all together (drop any lane that breaks the combined gate, ship the rest)**
+**Improvement batch 1: gating now (AD-01, GB-01, MT-01, MD-01 on river e58835856 → d7dd06466). RT-01, RB-A7 and BL-02 conflict with river and go to batch 2 (returns/improvement-batch.md)**
 | READY | Lane | Note |
 |---|---|---|
-| a13baecf8 | RT-01 (place-map jobs fill every state) | RB-A10 and RB-A9 wait on its map |
+| a13baecf8 | RT-01 (place-map jobs fill every state) | batch 2: test conflict with release 118; lane merges river. RB-A10 and RB-A9 wait on its map |
 | 69806d306 | AD-01 | |
-| 7996ae820 | RB-A7 | after RB-A4 (on main) |
+| 7996ae820 | RB-A7 | batch 2: conflicts with GB-01 in place.ts, store.ts and the journal; lane merges river |
 | 1636195c9 | GB-01 (Census governing bodies, LA Metro move) | adds Neon reads; waited one release at Sean's order |
 | f26ebab8d | MT-01 follow-up (carries the 3:22 and 5:49 AM READYs) | new work after release 108 |
 | f67ae6709 | MD-01 follow-up (cheapest ballot writers, measure-number sentence repair) | new work after release 115 |
-| c3fff3702 | BL-02 (stream/bl-02-bills) | the only BL-02 to fold (Sean); 14dd8beb0 on stream/bl-02 is stale |
+| c3fff3702 | BL-02 (stream/bl-02-bills) | batch 2: conflicts in 5 files; lane merges river |
 
 **Waiting, with the reason**
 | READY | Lane | Why it waits |
@@ -1222,4 +1222,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 9:37 PM EDT: DB-03 Admin returned
 - 04681516c failed alone on e58835856: 3 tests (admin-google-signin break-glass order, hunt-stop pending controls, path-separator in admin-read.ts). Returned (returns/db-03.md).
 - The rest of stream/db-03 is stacked on Admin and on readback (already shipped), so it can't fold step by step as-is. The lane is asked to re-cut the remaining Neon steps on current river.
+
+### 9:39 PM EDT: improvement batch 1 gating
+- No Neon fix is ready: owner snapshot reads is with its lane until 9:50, and the rest of DB-03 needs a re-cut. So the build machine starts the improvement batch, and a Neon fix that lands takes it first.
+- Batch 1 = AD-01 69806d306 + GB-01 1636195c9 + MT-01 f26ebab8d + MD-01 f67ae6709, merged cleanly on river e58835856 (d7dd06466), gating together.
+- RT-01, RB-A7 and BL-02 conflict with river and go to batch 2 (returns/improvement-batch.md).
 

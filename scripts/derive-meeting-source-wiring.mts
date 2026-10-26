@@ -33,10 +33,7 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
-import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { activeWiring } from "../lib/registry/source-wiring.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 import { confirmMeetingDerivationSource, meetingDerivationCanContinue, meetingDerivationConfig, meetingDerivationPending, readMeetingDerivationSource, readMeetingDerivationWalks, withMeetingDerivationProbe } from "../lib/civic-data/meeting-derivation-source.ts";
@@ -172,25 +169,20 @@ async function main(): Promise<void> {
     if (registrations.has(state)) return;
     console.log(`RCD_PROGRESS meeting-source-wiring registration ${state}`);
     try {
-      const read = await readRegistrationProjection(state, { store,  now });
-      const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
-      if (read.kind !== "PROMOTED" || input === null) {
-        registrations.set(state, { unread: `${state} registration is ${read.kind}` });
-        return;
-      }
-      registrations.set(state, { input,
-        bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })) });
-      const reviewed = await readRegistryRuntimeProjection([state], { store,  now });
-      const reviewedInput = reviewed.kind === "PROMOTED"
-        ? promotedInputRef("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), reviewed.metadata.versionId, reviewed.value, reviewed.metadata.promotedAt)
-        : null;
       const reference = loadRegistrationReference(process.cwd(), state);
-      for (const row of allRows.filter(row => stateOf(row.ocdId) === state)) {
-        if (reviewed.kind !== "PROMOTED" || !reviewedInput) reviewedBodies.set(row.id, { unread: `${state} reviewed registry is ${reviewed.kind}` });
-        else if (reference.sha256 !== read.value.vintage.referenceSha256) reviewedBodies.set(row.id, { unread: `${state} registration does not name the committed Census government pairing` });
-        else {
-          const resolved = reviewedBodyForGovernment(reference, row.jurisdictionId, reviewed.value.registry.bodies);
-          reviewedBodies.set(row.id, resolved ? { resolved, input: reviewedInput } : { unread: `${state} reviewed registry does not pair ${row.jurisdictionId} with one exact governing body` });
+      const selected=allRows.filter(row=>stateOf(row.ocdId)===state && remaining.has(row.jurisdictionId));
+      const wanted=[...new Set(selected.map(row=>row.jurisdictionId))],ids=new Set(wanted);
+      const lookup=await store.readGovernmentLookup(state,wanted,reference.reference.governments.filter(row=>ids.has(row[1])).map(row=>row[0]),selected.map(row=>row.bodyId));
+      const read=lookup.registration,reviewed=lookup.reviewed;
+      if(!read){registrations.set(state,{unread:`${state} registration is NOT_RECORDED`});return;}
+      const input=read.input;
+      registrations.set(state,{input,bodies:read.value.bodies.map(body=>({id:body.id,ocdId:body.ocdId,jurisdictionId:body.jurisdictionId}))});
+      for(const row of selected){
+        if(!reviewed)reviewedBodies.set(row.id,{unread:`${state} reviewed registry is NOT_RECORDED`});
+        else if(reference.sha256!==read.value.vintage.referenceSha256)reviewedBodies.set(row.id,{unread:`${state} registration does not name the committed Census government pairing`});
+        else{
+          const resolved=reviewedBodyForGovernment(reference,row.jurisdictionId,reviewed.bodies);
+          reviewedBodies.set(row.id,resolved?{resolved,input:reviewed.input}:{unread:`${state} reviewed registry does not pair ${row.jurisdictionId} with one exact governing body`});
         }
       }
     } catch (error) {

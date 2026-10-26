@@ -1,3 +1,4 @@
+import { readKeyedGovernmentLookup, type GovernmentRowLookup } from "./keyed-government-lookup.ts";
 import { readMemberOfficeMembers, readMemberOfficeRows, memberOfficeStateScope, memberOfficeScopeState, MEMBER_OFFICE_CURSOR, type MemberOfficeProgress, type MemberOfficeSlice } from "../officials/member-office-data.ts";
 import { statePeopleScopeForId } from "../officials/people-identity.ts";
 import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
@@ -155,6 +156,7 @@ export interface RoutineDataStore {
   readonly readMemberOfficeSlice: (state: string, members?: readonly string[]) => Promise<MemberOfficeSlice | null>;
   readonly readMemberOfficeProgress: () => Promise<MemberOfficeProgress>;
   readonly writeMemberOfficeProgress: (progress: MemberOfficeProgress) => Promise<void>;
+  readonly readGovernmentLookup?: (state:string,governmentIds:readonly string[],censusIds:readonly string[],bodyIds?:readonly string[],divisionIds?:readonly string[])=>Promise<GovernmentRowLookup>;
   readonly readRegistrySlice: (state: string, bodyIds: readonly string[], divisionIds: readonly string[]) => Promise<RegistryLookup | null>;
   readonly readRegistryDivisions: (state: string, labels: readonly string[]) => Promise<readonly RegistryDivisionMatch[]>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
@@ -2118,6 +2120,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const confirmation = row.confirmation ? parseUnchangedConfirmation(row.confirmation) : null;
     if (confirmation?.versionId === projection.versionId) Object.assign(projection, { latestConfirmation: confirmation });
     return projection;
+  }
+
+  async readGovernmentLookup(state:string,governmentIds:readonly string[],censusIds:readonly string[],bodyIds:readonly string[]=[],divisionIds:readonly string[]=[]):Promise<GovernmentRowLookup>{
+    return readKeyedGovernmentLookup((text,params)=>this.readerRows(text,params),state,governmentIds,censusIds,bodyIds,divisionIds);
   }
 
   async readRegistrySlice(state: string, bodyIds: readonly string[], divisionIds: readonly string[]): Promise<RegistryLookup | null> {

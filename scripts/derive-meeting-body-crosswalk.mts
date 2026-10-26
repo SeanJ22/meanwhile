@@ -29,10 +29,7 @@ import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.t
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
-import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { activeWiring } from "../lib/registry/source-wiring.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 
@@ -106,13 +103,13 @@ async function main(): Promise<void> {
     if (registrations.has(state)) return;
     console.log(`RCD_PROGRESS meeting-body-crosswalk registration ${state}`);
     try {
-      const read = await readRegistrationProjection(state, { store,  now });
-      const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
-      if (read.kind !== "PROMOTED" || input === null) {
-        registrations.set(state, { unread: `${state} registration is ${read.kind}` });
-        return;
-      }
       const reference = loadRegistrationReference(process.cwd(), state);
+      const wanted = source.walks.filter(walk => walk.state === state && pending.has(walk.jurisdiction)).map(walk => walk.jurisdiction);
+      const ids = new Set(wanted), censusIds = reference.reference.governments.filter(row => ids.has(row[1])).map(row => row[0]);
+      const lookup = await store.readGovernmentLookup(state,wanted,censusIds);
+      const read=lookup.registration, reviewed=lookup.reviewed;
+      if (!read) { registrations.set(state,{unread:`${state} registration is NOT_RECORDED`});return; }
+      const input=read.input;
       if (reference.sha256 !== read.value.vintage.referenceSha256) {
         registrations.set(state, { unread: `${state} registration does not name the committed Census government pairing` });
         return;
@@ -126,18 +123,14 @@ async function main(): Promise<void> {
         bodies.set(body.jurisdictionId, { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? body.jurisdictionId,
           countyFips: body.censusId ? countyByPid.get(body.censusId) ?? census.byPid.get(body.censusId)?.countyFips ?? null : null, input });
       }
-      const reviewed = await readRegistryRuntimeProjection([state], { store,  now });
-      const reviewedInput = reviewed.kind === "PROMOTED"
-        ? promotedInputRef("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), reviewed.metadata.versionId, reviewed.value, reviewed.metadata.promotedAt)
-        : null;
-      if (reviewed.kind === "PROMOTED" && reviewedInput) {
-        for (const walk of source.walks.filter(row => row.state === state)) {
-          if (bodies.has(walk.jurisdiction)) continue;
-          const resolved = reviewedBodyForGovernment(reference, walk.jurisdiction, reviewed.value.registry.bodies);
-          if (resolved) bodies.set(walk.jurisdiction, { ...resolved, input: reviewedInput });
+      if (reviewed) {
+        for (const jurisdiction of wanted) {
+          if (bodies.has(jurisdiction)) continue;
+          const resolved = reviewedBodyForGovernment(reference, jurisdiction, reviewed.bodies);
+          if (resolved) bodies.set(jurisdiction, { ...resolved, input: reviewed.input });
         }
       }
-      registrations.set(state, { input, bodies, reviewedStatus: reviewed.kind });
+      registrations.set(state, { input, bodies, reviewedStatus: reviewed ? "PROMOTED" : "NOT_RECORDED" });
     } catch (error) {
       registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
     }

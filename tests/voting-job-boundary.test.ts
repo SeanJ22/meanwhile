@@ -165,7 +165,7 @@ test("a cutoff records only its completed unchanged sources, resumes the other s
       return originalCandidate(id);
     });
     const compareAndSet = repos.doors.compareAndSet.bind(repos.doors);
-    t.mock.method(repos.doors, "compareAndSet", async (id, revision, value, at) => {
+    t.mock.method(repos.doors, "compareAndSet", async (...[id, revision, value, at]: Parameters<typeof compareAndSet>) => {
       const saved = await compareAndSet(id, revision, value, at);
       if (cut && value.validators?.checkedAt === "2026-10-24T08:00:00.000Z") { cut = false; clock = deadline; }
       return saved;

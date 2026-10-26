@@ -326,7 +326,8 @@ async function registrationModelFor(state: string): Promise<{ value: Registratio
   // The edge first: an ordinary visitor never wakes the database for registration. A state with no pointer yet,
   // or whose bytes could not be read, is read from the database on this request only.
   const served = await currentRegistrationsEdge()?.load(state).catch(() => null);
-  if (served) return served.value === null ? null : { value: served.value, versionId: served.versionId };
+  if (served) return served.value === null ? null : { value: { ...served.value,
+    ...(served.value.governments ? { governments: markUniqueGovernmentRecipientNames(served.value.governments) } : {}) }, versionId: served.versionId };
   refuseDatabaseInEdgeOnlyContext(`The ${state} registration`);
   const read = await readRegistrationProjection(state);
   // No store at all (tests, the census gate, local work) has no registration to compose: registration has
@@ -359,10 +360,7 @@ export async function governmentListingsForState(state: string, offset = 0, limi
   const code = state.replace(/^US-/i, "").toLowerCase();
   if (!REGISTRATION_STATES.has(code)) throw new Error("A US state or territory is required");
   const held = await registrationModelFor(code);
-  const complete = held?.value.governments ?? [];
-  const named = held?.value.governmentCount === undefined || held.value.governmentCount === complete.length
-    ? markUniqueGovernmentRecipientNames(complete) : complete;
-  const records = await governmentDomainsFor(named);
+  const records = await governmentDomainsFor(held?.value.governments ?? []);
   const start = Math.max(0, Math.floor(offset));
   const size = Math.min(100, Math.max(1, Math.floor(limit)));
   const window = currentReaderSelection()?.governmentWindow;

@@ -4,7 +4,7 @@ import type { Provenance } from "../sources/types.ts";
 
 import { campaignSiteFor } from "./campaign-sites.ts";
 import { socialAccountsOf } from "./social-platforms.ts";
-import { personIdentityKeys, sameNativePerson } from "./people-identity.ts";
+import { personIdentityKeys } from "./people-identity.ts";
 import { executiveCardProfile } from "./national-executive.ts";
 import { photoForPerson } from "../photos/person.ts";
 import type {
@@ -152,7 +152,7 @@ export function indexByDivision(
 
       const existing = index.get(link.ocdId);
       if (existing) {
-        if (!existing.some(prior=>sameNativePerson(prior,holder))) existing.push(holder);
+        if (!existing.some(prior=>prior.id===holder.id)) existing.push(holder);
       } else index.set(link.ocdId, [holder]);
     }
   }

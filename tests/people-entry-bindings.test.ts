@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { normalizeOfficialLegislaturePage } from "../lib/sources/people/legislature.ts";
+import { normalizeOfficialLegislaturePage, legislatureRosterLinks } from "../lib/sources/people/legislature.ts";
 import { emptyPerson, emptyRoster, provenance } from "../lib/sources/people/common.ts";
 import { mergePeopleSets } from "../lib/officials/merge-people.ts";
 import { personIdentityKeys } from "../lib/officials/people-identity.ts";
@@ -10,6 +10,8 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
+import { retainsPeopleBindings } from "../lib/officials/people-bindings.ts";
+import { verifyPortraitSources, portraitHash } from "../lib/photos/evidence.ts";
 
 const at="2026-10-26T06:00:00.000Z",page="https://legislature.example.gov/house/membership/";
 function reference(name:string,uuid:string,district:string) {
@@ -41,15 +43,69 @@ test("a shared member-list route binds each entry's identity, district, contact 
   assert.equal(mergePeopleSets([roster(people),parsed])!.officeholders.length,2);
 });
 
+test("a verified official roster entry supplies only that member's portrait",()=>{
+  const capture={transport:"REACHABLE" as const,partial:false,httpStatus:200,observedAt:at,evidence:{canonicalUrl:page,sourceId:"official-state-people",
+    retrievedAt:at,text:html,vaultKey:"project/freshness/source/official-state-people/raw/fixture",contentHash:portraitHash(new TextEncoder().encode(html))}};
+  const subject={personId:people[0].personId!,name:people[0].name,nativeIds:people[0].nativeIds,state:"ID",chamber:"lower",officeTitle:people[0].officeTitle,profileUrls:[page]};
+  assert.equal(verifyPortraitSources(subject.personId,{subject,imageUrl:"https://legislature.example.gov/vito.jpg",captures:[capture]},at).basis,"OWN_PAGE");
+  assert.throws(()=>verifyPortraitSources(subject.personId,{subject,imageUrl:"https://legislature.example.gov/jane.jpg",captures:[capture]},at),/PORTRAIT_SECOND_SOURCE_MISSING/);
+});
+
+test("a newer bound official entry replaces an older official profile's value",()=>{
+  const source={...people[0].provenance,kind:"OFFICIAL" as const,sourceUrl:"https://legislature.example.gov/members/vito",collectedAt:"2026-10-20T00:00:00.000Z"};
+  const old={...people[0],phone:"208-555-9999",websiteUrl:source.sourceUrl,provenance:source};
+  assert.equal(mergePeopleSets([roster([old]),parse()])!.officeholders.find(person=>person.name==="Vito Barbieri")?.phone,"208-555-0003");
+});
+
 test("a list discovers every named entry even without an aggregator or linked name",()=>{
   const parsed=parse(html,roster([]));assert.deepEqual(parsed.officeholders.map(person=>person.name),["Vito Barbieri","Jane Member"]);
   assert.equal(mergePeopleSets([parsed])!.officeholders.length,2);
+});
+
+test("a linked card uses its own name heading rather than its party, district or action links",()=>{
+  const card=(id:string,name:string,district:string)=>`<div class="team-box"><a href="/Sections/Representatives/details.aspx?MemberId=${id}"><img data-src="/${id}.jpg"><div><h5>${name}</h5><p>Republican — District: ${district}</p></div></a><a href="/Sections/Representatives/contactmember.aspx?MemberId=${id}">Contact Member</a><a href="/Sections/Representatives/sponsoredbills.aspx?MemberId=${id}">Sponsored Bills</a></div>`;
+  const parsed=parse(`<h1>Representatives Of The House</h1>${card("1","Barbieri, Vito","3")}${card("2","Member, Jane","4")}`);
+  assert.equal(parsed.officeholders.length,2);
+  for(const [i,person]of parsed.officeholders.entries()) {
+    assert.equal(person.name,i?"Jane Member":"Vito Barbieri");
+    assert.deepEqual(person.nativeIds?.["ocd-person"],[`ocd-person/${i?"jane":"vito"}`]);
+    assert.equal(person.portraitCandidate?.imageUrl,`https://legislature.example.gov/${i?2:1}.jpg`);
+    assert.equal(person.memberships?.[0].district,i?"4":"3");
+  }
+  const fresh=parse(`<h1>Representatives Of The House</h1>${card("1","Barbieri, Vito","3")}${card("2","Member, Jane","4")}`,roster([]));
+  assert.deepEqual(fresh.officeholders.map(person=>person.name),["Vito Barbieri","Jane Member"]);
+  assert.deepEqual(fresh.officeholders.map(person=>person.portraitCandidate?.imageUrl),["https://legislature.example.gov/1.jpg","https://legislature.example.gov/2.jpg"]);
+});
+
+test("roster discovery keeps a list's pagination while ignoring profile actions and sort duplicates",()=>{
+  const links=legislatureRosterLinks(`<a href="/Senators?page=2&SortField=name&SortDirection=asc">Senators</a><a href="/Senators?page=2&SortField=district">Senators</a><a href="/Senators/S1">Senator Jane Member</a><a href="/Senators/subscribe">Subscribe to Senators</a><a href="/Senators/members.pdf">Members</a>`,page);
+  assert.deepEqual(links,["https://legislature.example.gov/Senators?page=2"]);
+  assert.equal(parse(html,roster(people)).officeholders.length,2);
+  assert.equal(normalizeOfficialLegislaturePage(html,"https://www.house.gov/representatives",{sourceId:"official-state-people",state:"id",asOf:at,signal:new AbortController().signal},at).officeholders.length,0);
+});
+
+test("an observed publisher person ID binds an expanded name and its own current district",()=>{
+  const held=reference("Toby Overdorf","11111111-1111-4111-8111-111111111111","4");
+  held.state="FL";held.websiteUrl="https://www.myfloridahouse.gov/Sections/Representatives/details.aspx?MemberId=4666&LegislativeTermId=90";
+  const body='<h1>Representatives</h1><div><a href="/Sections/Representatives/details.aspx?MemberId=4666&LegislativeTermId=91"><img data-src="/4666.jpg"><h5>Overdorf, Tobin Rogers "Toby"</h5><p>District: 85</p></a></div>';
+  const parsed=normalizeOfficialLegislaturePage(body,"https://www.flhouse.gov/Representatives",{sourceId:"official-state-people",state:"fl",asOf:at,signal:new AbortController().signal,roster:roster([held]),divisions:[{ocdId:"ocd-division/country:us/state:fl/sldl:85",label:"District 85",divisionType:"sldl"}]},at);
+  assert.equal(parsed.officeholders.length,1);
+  const person=parsed.officeholders[0];assert.deepEqual(person.nativeIds?.["ocd-person"],held.nativeIds!["ocd-person"]);
+  assert.deepEqual(person.nativeIds?.["fl-house"],["4666"]);assert.equal(person.memberships?.[0].district,"85");
+  assert.equal(person.memberships?.[0].divisionId,"ocd-division/country:us/state:fl/sldl:85");
 });
 
 test("a list header and a different member's entry cannot lend fields to a profile route",()=>{
   const parsed=parse(html.replace(/<div class="member"><img src="\/vito.jpg">[\s\S]*?<\/div><\/div>/,""));
   assert.deepEqual(parsed.officeholders.map(person=>person.name),["Jane Member"]);
   assert.equal(parsed.officeholders[0].phone,"208-555-0004");
+});
+
+test("two named entries in different districts cannot lend one held person's ID to each other",()=>{
+  const body='<h1>Representatives</h1><article><a href="/members/one">Vito Barbieri</a><p>District 3</p><img alt="Vito Barbieri" src="/one.jpg"></article><article><a href="/members/two">Vito Barbieri</a><p>District 4</p><img alt="Vito Barbieri" src="/two.jpg"></article>';
+  const parsed=parse(body,roster([people[0]]));assert.equal(parsed.officeholders.length,2);
+  const native=parsed.officeholders.filter(person=>person.nativeIds?.["ocd-person"]?.includes("ocd-person/vito"));
+  assert.equal(native.length,1);assert.equal(native[0].memberships?.[0].district,"3");
 });
 
 function collapsed():Officeholder {
@@ -160,4 +216,29 @@ test("an exact native ID keeps a person's expanded published name from looking l
   const held={...a,id:expanded.id,personId:expanded.personId,sourceHolders:[expanded]};
   const merged=mergePeopleSets([roster([held]),roster([a])])!;
   assert.equal(merged.officeholders.length,1);assert.equal(merged.officeholders[0].id,held.id);
+});
+
+test("a changed display ID retains every reader reference and refuses a missing or ambiguously bound person",()=>{
+  const a=reference("Vito Barbieri","11111111-1111-4111-8111-111111111111","3"),b=reference("Jane Member","22222222-2222-4222-8222-222222222222","4");
+  const old={...a,id:b.id,personId:b.personId,nativeIds:{"ocd-person":[...a.nativeIds!["ocd-person"],...b.nativeIds!["ocd-person"]],reader:[a.id,a.personId!,b.id,b.personId!]}};
+  const next=[a,b];
+  assert.ok(retainsPeopleBindings([old],next));
+  assert.ok(!retainsPeopleBindings([old],[a]));
+  assert.ok(!retainsPeopleBindings([old],[a,b,{...b,id:"duplicate"}]));
+  assert.ok(!retainsPeopleBindings([old],[old]));
+  assert.ok(!retainsPeopleBindings([old],[{...a,nativeIds:{...a.nativeIds,reader:[b.id,b.personId!,...b.nativeIds!["ocd-person"]]}}]));
+});
+
+test("normal publication accepts an ID correction only while every old reference still resolves",async()=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
+  const a=reference("Vito Barbieri","11111111-1111-4111-8111-111111111111","3"),b=reference("Jane Member","22222222-2222-4222-8222-222222222222","4");
+  const bad={...collapsed(),id:b.id,personId:b.personId,nativeIds:{plural:[...a.nativeIds!.plural,...b.nativeIds!.plural],"ocd-person":[...a.nativeIds!["ocd-person"],...b.nativeIds!["ocd-person"]],reader:[a.id,a.personId!,b.id,b.personId!]}};
+  const body=`<h2>State Representative</h2>${html}`;
+  const input={store,vault,state:"id",sourceId:"official-state-people",now:at,releaseId:"old",acquisitions:[{requestedUrl:page,finalUrl:page,body,httpStatus:200,retrievedAt:at}]};
+  const old=await publishPeopleSource({...input,roster:roster([bad])});assert.ok(old.outcome.promoted,JSON.stringify(old.outcome.candidate.receipt?.checks));
+  const next=await publishPeopleSource({...input,releaseId:"repaired",now:"2026-10-26T06:01:00.000Z",roster:parse(html,roster([a,b]))});
+  assert.ok(next.outcome.promoted,JSON.stringify(next.outcome.candidate.receipt?.checks));
+  const current=(next.candidate.readModel as {roster:OfficeholderSet}).roster;
+  assert.equal(current.officeholders.length,2);
+  assert.ok(retainsPeopleBindings([bad],current.officeholders));
 });

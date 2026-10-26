@@ -55,6 +55,10 @@ export function nativePersonIdFromUrl(value: string): { source: string; id: stri
   try { url = new URL(value); } catch { return null; }
   if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) return null;
   const host = url.hostname.toLowerCase().replace(/^www\./, "");
+  if (["flhouse.gov","myfloridahouse.gov"].includes(host) && /^\/Sections\/Representatives\/(?:custom\/)?details\.aspx$/i.test(url.pathname)) {
+    const ids=[...url.searchParams].filter(([name])=>/^memberid$/i.test(name));
+    if(ids.length===1&&/^\d+$/.test(ids[0][1]))return {source:"fl-house",id:ids[0][1]};
+  }
   if (host === "azleg.gov" && /^\/(?:House\/House-member|Senate\/Senate-member|house-member|senate-member)\/?$/i.test(url.pathname)) {
     const id = url.searchParams.getAll("legislator").length === 1 ? url.searchParams.get("legislator") : null;
     if (id && /^\d+$/.test(id)) return { source: "az-legislature", id };

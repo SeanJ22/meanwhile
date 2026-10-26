@@ -9,6 +9,8 @@ import { captureProblem } from "../civic-data/worker-publication-evidence.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import { campaignSiteHostRefusal, type CampaignSiteIdentity, type CampaignSiteSupportingRead } from "../candidates/campaign-site-verifier.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
+import { normalizeOfficialLegislaturePage } from "../sources/people/legislature.ts";
+import { emptyPerson, emptyRoster, provenance } from "../sources/people/common.ts";
 
 /** A portrait can cite either a worker artifact or an immutable known-source vault object. */
 export interface PortraitCapture extends Pick<WorkerPublicationCapture,"observedAt"|"httpStatus"|"transport"|"partial"> {
@@ -27,6 +29,9 @@ export interface PortraitSubject {
   readonly personId: string;
   readonly name: string;
   readonly nativeIds?: Readonly<Record<string,readonly string[]>>;
+  readonly state?: string;
+  readonly chamber?: string;
+  readonly officeTitle?: string;
   /** Verified source profile URLs for this exact subject. */
   readonly profileUrls: readonly string[];
 }
@@ -61,6 +66,15 @@ function namesImage(subject: PortraitSubject, imageUrl: string, capture: Portrai
       const row = JSON.parse(text).member;
       return Boolean(row?.bioguideId && (ids.has(row.bioguideId) || ids.has(`congress:${row.bioguideId}`)) && row.depiction?.imageUrl === imageUrl);
     } catch { return false; }
+  }
+  if(subject.state&&subject.officeTitle&&["upper","lower"].includes(subject.chamber??"")) {
+    const person={...emptyPerson(subject.personId,subject.name,subject.officeTitle,subject.state,
+      provenance(canonicalUrl,capture.evidence.sourceId,capture.evidence.retrievedAt)),nativeIds:subject.nativeIds,chamber:subject.chamber,profileUrls:[...subject.profileUrls]};
+    const roster={...emptyRoster(subject.state,capture.evidence.retrievedAt),officeholders:[person]};
+    const parsed=normalizeOfficialLegislaturePage(text,canonicalUrl,{state:subject.state,sourceId:"official-state-people",asOf:capture.evidence.retrievedAt,
+      signal:new AbortController().signal,roster},capture.evidence.retrievedAt);
+    if(parsed.officeholders.some(row=>row.portraitCandidate?.imageUrl===imageUrl&&
+      (sameName(row.name,subject.name)||Boolean(subject.nativeIds?.["ocd-person"]?.length&&row.nativeIds?.["ocd-person"]?.some(id=>subject.nativeIds!["ocd-person"].includes(id))))))return true;
   }
   return subject.profileUrls.includes(canonicalUrl) && pageWords(text).includes(pageWords(subject.name)) &&
     pickPortraits(subject.name,imagesIn(text,canonicalUrl)).some(image=>image.src === imageUrl);

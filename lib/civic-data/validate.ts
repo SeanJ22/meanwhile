@@ -6,6 +6,8 @@ import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { pluralRetirementCheckConsumer } from "../sources/plural/targets.ts";
 import { sameOffice } from "../officials/office-identity.ts";
 import { personName } from "../officials/person-name.ts";
+import { retainsPeopleBindings } from "../officials/people-bindings.ts";
+import type { Officeholder } from "../officials/types.ts";
 import { meetingDoorRemovalCheck } from "../doors/meeting-door-removal.ts";
 
 import { authorityFor, authorityForManualReceipt, sourceAuthority } from "./source-authority.ts";
@@ -340,6 +342,18 @@ function incompleteHorizonRemovalCheck(candidate: RoutineCandidate, prior: Candi
 
   const auditPull = auditPullRemovalCheck(candidate, removed, evidence);
   if (auditPull !== null) return auditPull;
+
+  // A corrected source binding can move a former display ID to its actual
+  // person. The existing source check still verifies every named entry; the
+  // old IDs and native people must all remain uniquely resolvable.
+  if(candidate.recordClass==="STATE_LEGISLATOR"&&["official-state-people","people-portraits"].includes(candidate.sourceId)&&
+    sourceChecks.some(check=>check.passed&&check.consumer==="lib/civic-data/people-source-publication.ts#readPeopleSourceProjection (source-scoped pre-promotion)")) {
+    const people=object(object(candidate.readModel)?.roster)?.officeholders;
+    if(Array.isArray(people)&&removed.every(delta=>delta.key===`member:${object(delta.before)?.id}`)&&
+      retainsPeopleBindings(removed.map(delta=>delta.before as Officeholder),people as Officeholder[]))
+      return result("COMPLETENESS_HORIZON_VALIDITY","PASS","PERSON_BINDINGS_RETAINED",
+        "Every previous reader ID still resolves once and every native person remains held under their own identity.");
+  }
 
   const statePeopleRetirement=statePeopleRetirementCheck(candidate,prior,validatedAt,sourceChecks);
   if (statePeopleRetirement !== null) return statePeopleRetirement;

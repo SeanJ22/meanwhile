@@ -198,7 +198,8 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
       const captures = linkingCaptures.filter(row => row.evidence.canonicalUrl === lead.sourceUrl);
       if (captures.length) try {
         person.photo = await storePortrait(person.personId ?? person.id, {subject:{personId:person.personId ?? person.id,
-          name:person.name,nativeIds:person.nativeIds,profileUrls:person.profileUrls ?? []},imageUrl:lead.imageUrl,captures},clock(),sourceSignal);
+          name:person.name,nativeIds:person.nativeIds,state:person.state,chamber:person.chamber,officeTitle:person.officeTitle,
+          profileUrls:person.profileUrls ?? []},imageUrl:lead.imageUrl,captures},clock(),sourceSignal);
         person.fieldSources = {...person.fieldSources,photo:{sourceUrl:lead.sourceUrl,sourceOrg:"Open States",
           collectedAt:lead.collectedAt,verifiedAt:clock()}};
         await recordPerson(person); return;
@@ -249,7 +250,8 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
           signal.throwIfAborted();
           try {
             // Verify after capture while preserving the source's original vintage.
-            person.photo=await storePortrait(person.personId ?? person.id,{subject:{personId:person.personId ?? person.id,name:person.name,nativeIds:person.nativeIds,profileUrls:[page.finalUrl]},imageUrl:selected.src,captures:[capture,...linkingCaptures]},clock(),signal);
+            person.photo=await storePortrait(person.personId ?? person.id,{subject:{personId:person.personId ?? person.id,name:person.name,nativeIds:person.nativeIds,
+              state:person.state,chamber:person.chamber,officeTitle:person.officeTitle,profileUrls:[page.finalUrl]},imageUrl:selected.src,captures:[capture,...linkingCaptures]},clock(),signal);
             person.profileUrls=[...new Set([...(person.profileUrls ?? []),page.finalUrl])];
             person.fieldSources={...person.fieldSources,photo:{sourceUrl:page.finalUrl,sourceOrg:new URL(page.finalUrl).hostname,collectedAt:page.retrievedAt,verifiedAt:clock()}};
             await recordPerson(person); return;

@@ -78,7 +78,7 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     if (new Set(bindings.values()).size === 1) profileKeys.set(person, new Set(bindings.keys()));
   }
   const offices = new Map<string, string>(), officialUrls = new Map<string, boolean>();
-  const info = new WeakMap<Officeholder, { office: string; name: string; state: string; fallback: string; nameKey: string; keys: ReadonlySet<string>; ownUrls: Set<string> }>();
+  const info = new WeakMap<Officeholder, { office: string; name: string; state: string; fallback: string; nameKey: string; keys: ReadonlySet<string> }>();
   const infoOf = (person: Officeholder) => {
     let held = info.get(person);
     if (!held) {
@@ -87,8 +87,7 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
       if (person.level === "STATE" && ["upper", "lower"].includes(person.chamber ?? "")) office = person.chamber === "upper" ? "state_senator" : "state_lower_house";
       const name = normalized(person.name), state = normalized(person.state ?? "");
       held = { office, name, state, fallback: `${person.state?.toUpperCase()}|${person.level}|${office}|${name}`,
-        nameKey: `${state}|${person.level}|${office}|${name}`, keys: new Set([...personIdentityKeys(person), ...(profileKeys.get(person) ?? [])]),
-        ownUrls: new Set([person.websiteUrl, ...person.profileUrls ?? []].filter((url): url is string => Boolean(url))) };
+        nameKey: `${state}|${person.level}|${office}|${name}`, keys: new Set([...personIdentityKeys(person), ...(profileKeys.get(person) ?? [])]) };
       info.set(person, held);
     }
     return held;
@@ -102,11 +101,11 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
   };
   const prefers = (right: Officeholder, left: Officeholder, field: string) => {
     const r = sourceFor(right, field), l = sourceFor(left, field);
-    const rank = (person: Officeholder, source: Provenance) => {
+    const rank = (source: Provenance) => {
       const authoritative = source.kind === "OFFICIAL" || Boolean(source.sourceUrl && official(source.sourceUrl));
-      return authoritative ? source.sourceUrl && infoOf(person).ownUrls.has(source.sourceUrl) ? 2 : 1 : 0;
+      return authoritative ? 1 : 0;
     };
-    const rightRank = rank(right, r), leftRank = rank(left, l);
+    const rightRank = rank(r), leftRank = rank(l);
     return rightRank > leftRank || rightRank === leftRank && r.collectedAt >= l.collectedAt;
   };
   const ambiguousNames = new Set<string>();

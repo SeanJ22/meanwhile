@@ -10,6 +10,21 @@ export function sourcePeople(person: Officeholder): readonly Officeholder[] {
   return person.sourceHolders?.length ? person.sourceHolders.flatMap(sourcePeople) : [person];
 }
 
+/** Changing a record's display ID removes no person when all previous IDs
+ * still resolve once, and every native person is present under its own ID. */
+export function retainsPeopleBindings(before:readonly Officeholder[],after:readonly Officeholder[]):boolean {
+  const owners=new Map<string,Officeholder[]>();
+  for(const person of after)for(const id of personIdentityKeys(person)) {
+    const matches=owners.get(id)??[];matches.push(person);owners.set(id,matches);
+  }
+  return before.every(person=>[...personIdentityKeys(person)].every(id=>{
+    const matches=owners.get(id);
+    if(matches?.length!==1||(matches[0].nativeIds?.["ocd-person"]?.length??0)>1)return false;
+    const uuid=/^(?:plural:(?:[a-z]{2}:)?|ocd-person[/:](?:ocd-person\/)?|openstates:(?:ocd-person\/)?)([a-f0-9-]{36})$/i.exec(id)?.[1];
+    return !uuid||[...matches[0].nativeIds?.["ocd-person"]??[],...matches[0].nativeIds?.openstates??[]].some(native=>native.replace(/^ocd-person\//,"")===uuid);
+  })&&(person.nativeIds?.["ocd-person"]??[]).every(id=>after.some(current=>current.nativeIds?.["ocd-person"]?.includes(id))));
+}
+
 /** A directory URL is evidence shared by its entries, never a shared person ID.
  * Rebind earlier directory collapses from the independently held source people.
  * Their original reader IDs stay with the named entry; native aliases return to

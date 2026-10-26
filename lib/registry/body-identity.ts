@@ -123,15 +123,21 @@ function qualifiedName(raw: string | null, government: string, type: GovernmentT
 export function prepareBodyIdentities(bodies: readonly Body[], divisions: ReadonlyMap<string, Division>, rosterNames: ReadonlyMap<string, string> = new Map()): Map<string, BodyIdentity> {
   const result = new Map<string, BodyIdentity>();
   const byGovernment = new Map<string, Body[]>();
+  const owners = new Map<string, Division>();
+  for (const division of divisions.values()) if (["county", "place", "school_district"].includes(division.divisionType)) {
+    const key = words(readerGovernmentName(division.label, division.divisionType));
+    if (!owners.has(key)) owners.set(key, division);
+  }
   for (const original of bodies) {
     const rosterName = rosterNames.get(original.id);
     const filedDivision = original.ocdId ? divisions.get(original.ocdId) : undefined;
     // A county office can serve a school system without becoming that school
     // government's department. Keep the served division and use its named owner.
-    const namedOwners = ADMIN.test(original.name ?? "") && !ADVISORY.test(original.name ?? "")
-      ? [...divisions.values()].filter(candidate => ["county", "place", "school_district"].includes(candidate.divisionType) &&
-        words(original.name ?? "").startsWith(`${words(readerGovernmentName(candidate.label, candidate.divisionType))} `)) : [];
-    const owner = namedOwners.sort((a,b) => b.label.length - a.label.length)[0];
+    let owner: Division | undefined;
+    if (ADMIN.test(original.name ?? "") && !ADVISORY.test(original.name ?? "")) {
+      const tokens = words(original.name ?? "").split(" ");
+      for (let length = tokens.length - 1; length > 0 && !owner; length--) owner = owners.get(tokens.slice(0,length).join(" "));
+    }
     const division = owner ?? filedDivision;
     const owned = owner ? {...original,governmentName:owner.label,governmentId:owner.ocdId,
       governmentType:owner.divisionType === "place" ? "city" as const : owner.divisionType as GovernmentType} : original;

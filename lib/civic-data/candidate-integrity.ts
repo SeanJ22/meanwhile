@@ -122,6 +122,12 @@ function candidateReadOnlyStore(
       return value === undefined ? null : value as T;
     },
     readRegistryDivisions: async () => [],
+    readSourceHead: async (recordClass, scope) => recordClass === candidate.recordClass && scope === candidate.scope
+      ? {sourceId:candidate.sourceId,recordClass:candidate.recordClass,scope:candidate.scope,versionId:candidate.id,
+        lastKnownGoodVersionId:candidate.id,rawHash:candidate.retrieval.rawHash,rawHashBasis:candidate.retrieval.rawHashBasis ?? null,
+        normalizedHash:candidate.normalization.normalizedHash,parserVersion:candidate.normalization.parserVersion,
+        promotedAt:observedAt,candidateState:"PROMOTED",acquisitionSucceeded:candidate.retrieval.succeeded,imported:Boolean(candidate.bootstrapImport)}
+      : null,
     readPortraitRunState: readOnly,
     readPromotionPayloadFields: readOnly,
     readCandidateField: readOnly,

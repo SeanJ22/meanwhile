@@ -5,7 +5,7 @@ import { processRegisteredRoutineCandidate } from "./promotion.ts";
 import { sourceAuthority, isOfficialSource } from "./source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { capturedText, holdPeopleCaptures, priorPeopleCaptures, type StatePeopleAcquisition, type StatePeopleCapture } from "./state-people-publication.ts";
+import { capturedText, holdPeopleCaptures, peopleSourceContentHash, priorPeopleCaptures, type StatePeopleAcquisition, type StatePeopleCapture } from "./state-people-publication.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { mergePeopleSets } from "../officials/merge-people.ts";
@@ -51,6 +51,7 @@ type PeopleCandidateInput = Omit<PublishPeopleSourceInput,"store"|"vault"|"acqui
   readonly violations: readonly string[];
   /** Seats this read changed against the source's last published read, for Admin's officials check. */
   readonly changes?: readonly RosterChange[];
+  readonly sourceRawHash?: string;
 };
 const words = (text:string) => text.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 
@@ -120,14 +121,14 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
   const excludedFacts = [...(input.excludedFacts ?? []), ...(input.gaps ?? []).map(gap=>({key:gap.sourceUrl,code:"PEOPLE_SOURCE_GAP",detail:gap.detail,record:gap})),
     ...(input.roster.disagreements ?? []).map(row=>({key:row.key,code:"PEOPLE_FIELD_DISAGREEMENT",detail:`${row.field} has conflicting source values; the preferred value is published and BL-01 is owed the disagreement.`,record:row}))];
   const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,excludedFacts,...(input.changes?.length ? {changes:input.changes} : {})}));
-  const rawHash = hash(payload), normalizedHash = hash(readModel);
+  const rawHash = input.sourceRawHash ?? peopleSourceContentHash(input.captures,input.roster), normalizedHash = hash(readModel);
   const derived = input.derivedInputs?.length ? derivedRetrieval(input.derivedInputs) : null;
   // The read's own instant orders versions; the "read:" prefix sorts after any content-hash version.
   const version = `read:${input.now}`;
   return {id:`cv-${hash([input.sourceId, scope, rawHash, normalizedHash]).slice(0,32)}`, sourceId:input.sourceId,recordClass,scope,
     retrieval: derived ? {succeeded:true,requestedUrl:derivedRequestedUrl(input.sourceId,scope),finalUrl:null,httpStatus:null,retrievedAt:derived.retrievedAt!,rawHash:derived.rawHash,derived:{inputs:input.derivedInputs!}}
-      : {succeeded:input.captures.length>0 && input.captures.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.capture.byteLength>0),requestedUrl:input.captures[0]?.requestedUrl ?? "",finalUrl:input.captures[0]?.finalUrl ?? null,httpStatus:input.captures[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash},
-    normalization:{succeeded:input.violations.length===0,parserVersion,schemaVersion:"people-sources/1",normalizedHash,normalizedPayloadHash:rawHash,inputRecords:records,outputRecords:records,droppedRecords:0,
+      : {succeeded:input.captures.length>0 && input.captures.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.capture.byteLength>0),requestedUrl:input.captures[0]?.requestedUrl ?? "",finalUrl:input.captures[0]?.finalUrl ?? null,httpStatus:input.captures[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash,rawHashBasis:"SOURCE_CONTENT_V1"},
+    normalization:{succeeded:input.violations.length===0,parserVersion,schemaVersion:"people-sources/1",normalizedHash,normalizedPayloadHash:hash(payload),inputRecords:records,outputRecords:records,droppedRecords:0,
       missingRequiredFields:people.some(row=>!row.id || !row.name || !row.officeTitle || !row.provenance.sourceUrl) ? ["person/office/source"] : []},
     identities:[...people.map(row=>({subjectId:row.id,jurisdiction,identifiers:{person_id:row.personId ?? row.id},matchBasis:"OFFICIAL_ID" as const,ambiguous:false,office:row.officeTitle,chamber:row.chamber})),
       ...vacancies.map(row=>({subjectId:row.ocdId,jurisdiction,identifiers:{office_id:row.ocdId},matchBasis:"OFFICIAL_ID" as const,ambiguous:false,...(row.officeTitle ? {office:row.officeTitle} : {})}))],
@@ -237,7 +238,7 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,verifyNationalCurrent:!national});
   if (national && !roster.officeholders.length) violations.push("NATIONAL_OFFICIAL_NONE_VERIFIED");
   roster = await publishRosterOfficePoints(roster, held, input.resolveOfficePoint);
-  const candidate = peopleSourceCandidate({...input,roster,captures,violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
+  const candidate = peopleSourceCandidate({...input,roster,captures,sourceRawHash:peopleSourceContentHash(input.acquisitions,input.roster),violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"
     ? `people-portraits-${state}`

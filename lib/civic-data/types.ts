@@ -196,6 +196,8 @@ export interface RetrievalEvidence {
   readonly retrievedAt: string;
   /** SHA-256, lowercase hex. Null when no response body was acquired. */
   readonly rawHash: string | null;
+  /** The digest covers source addresses and bytes, without observation stamps. */
+  readonly rawHashBasis?: "SOURCE_CONTENT_V1";
   /** Last actual provider check, retained unchanged on held-byte or parser replay. */
   readonly sourceCheck?: SourceCheckEvidence;
   readonly failureDetail?: string;

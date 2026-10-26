@@ -14,6 +14,7 @@ import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { publishOfficialBallotCandidacies } from "./official-candidacy-publication.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { holdRawCapture, readRawCaptureText, type RawCaptureRef } from "./raw-capture-vault.ts";
+import { confirmSourceHashUnchanged, sourceContentHash } from "./source-hash.ts";
 
 /** One page as read, its text in memory for parsing and verification. */
 export interface StatePeopleAcquisition {
@@ -33,6 +34,32 @@ export async function holdPeopleCaptures(vault:EvidenceStore,sourceId:string,pag
   return held;
 }
 export const capturedText = (vault:EvidenceStore,row:StatePeopleCapture):Promise<string> => readRawCaptureText(vault,row.capture);
+
+/** Source bytes plus the identities and divisions this parse selects; no check or release timestamps. */
+export function peopleSourceContentHash(pages: readonly (StatePeopleAcquisition | StatePeopleCapture)[], roster: OfficeholderSet): string {
+  const members = roster.officeholders.map(person => [person.id, person.officeTitle, person.termStart, person.termEnd,
+    person.memberships?.map(row => [row.id, row.current, row.divisionId]).sort((a,b) => canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b))) ?? []]);
+  return sourceContentHash(pages, { members: members.sort((a,b) => canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b))),
+    divisions: roster.divisions.map(row => [row.officeholderId, row.membershipId ?? null, row.ocdId, row.bodyId]).sort((a,b) => canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b))),
+    vacancies: (roster.vacancies ?? []).map(row => [row.ocdId, row.reason, row.since ?? null]).sort((a,b) => canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b))) });
+}
+
+/** A complete unchanged state acquisition confirms its current version before any held roster is read. */
+export async function confirmStatePeopleSource(input: {
+  readonly store: RoutineDataStore; readonly state: string; readonly roster: OfficeholderSet;
+  readonly acquisitions: readonly StatePeopleAcquisition[]; readonly gaps?: readonly unknown[]; readonly now: string;
+}) {
+  const rawHash = peopleSourceContentHash(input.acquisitions, input.roster);
+  const acquiredAt = input.acquisitions.map(row => row.retrievedAt).sort().at(-1) ?? input.now;
+  const first = input.acquisitions[0];
+  const sourceCheck = input.acquisitions.flatMap(row => row.sourceCheck ? [row.sourceCheck] : []).sort((a,b) => b.checkedAt.localeCompare(a.checkedAt))[0];
+  return confirmSourceHashUnchanged({ store: input.store, sourceId: "plural-openstates", recordClass: "STATE_LEGISLATOR",
+    scope: `US-${input.state.toUpperCase()}:openstates-people:v1`, parserVersion: PLURAL_PARSER_VERSION, rawHash, now: input.now,
+    complete: input.roster.currentMembershipComplete === true && !input.gaps?.length && input.acquisitions.length > 0 &&
+      input.acquisitions.every(row => row.httpStatus >= 200 && row.httpStatus < 300 && row.body.length > 0),
+    retrieval: { requestedUrl: first?.requestedUrl ?? "", finalUrl: first?.finalUrl ?? null, httpStatus: first?.httpStatus ?? null,
+      rawHash, retrievedAt: acquiredAt, ...(sourceCheck ? { sourceCheck } : {}) } });
+}
 /** A held candidate's captures, newest per page. */
 export function priorPeopleCaptures(payload:unknown):StatePeopleCapture[] {
   const captures=(payload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? [];
@@ -49,7 +76,7 @@ interface StatePeopleEvidence {
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
 }
 
-export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet;captures:readonly StatePeopleCapture[];releaseId:string;now:string} & StatePeopleEvidence): RoutineCandidate {
+export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet;captures:readonly StatePeopleCapture[];releaseId:string;now:string;sourceRawHash?:string} & StatePeopleEvidence): RoutineCandidate {
   const jurisdiction = `US-${input.state.toUpperCase()}` as const;
   const scope = `${jurisdiction}:openstates-people:v1`, sourceId = "plural-openstates";
   const acquiredAt = input.captures.map(row=>row.retrievedAt).sort().at(-1) ?? input.now;
@@ -58,15 +85,14 @@ export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet
   const excludedFacts = [...(input.excludedFacts ?? []),...(input.gaps ?? []).map(gap=>({
     key:`${gap.sourceUrl}:native-record:${hash(gap.detail).slice(0,16)}`,code:gap.detail.split(":")[0],detail:gap.detail,record:{sourceUrl:gap.sourceUrl},
   }))];
-  const normalizedPayload = {releaseId:input.releaseId,captures:input.captures.map(({sourceCheck:_sourceCheck,...row})=>row),excludedFacts};
   // The exact saved bytes stay in the vault, so parser changes can replay them.
   const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,
     endedMemberships:input.roster.endedMemberships ?? [],gaps:input.gaps ?? [],excludedFacts}));
-  const rawHash = hash(normalizedPayload), normalizedHash = hash(readModel);
+  const rawHash = input.sourceRawHash ?? peopleSourceContentHash(input.captures, input.roster), normalizedHash = hash(readModel);
   const people = input.roster.officeholders;
   return {id:`cv-${hash(`${sourceId}|${scope}|${rawHash}|${normalizedHash}|${hash(sourceCheck ?? null)}`).slice(0,32)}`,sourceId,recordClass:"STATE_LEGISLATOR",scope,
     retrieval:{succeeded:input.captures.length>0 && input.captures.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.capture.byteLength>0),
-      requestedUrl:input.captures[0]?.requestedUrl ?? "",finalUrl:input.captures[0]?.finalUrl ?? null,httpStatus:input.captures[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash,...(sourceCheck ? {sourceCheck} : {})},
+      requestedUrl:input.captures[0]?.requestedUrl ?? "",finalUrl:input.captures[0]?.finalUrl ?? null,httpStatus:input.captures[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash,rawHashBasis:"SOURCE_CONTENT_V1",...(sourceCheck ? {sourceCheck} : {})},
     normalization:{succeeded:true,parserVersion:PLURAL_PARSER_VERSION,schemaVersion:"state-people/3",normalizedHash,normalizedPayloadHash:hash(payload),
       inputRecords:people.length,outputRecords:people.length,droppedRecords:0,missingRequiredFields:people.some(row=>!row.id || !row.name || !row.officeTitle || !row.provenance?.sourceUrl)?["person/office/source"]:[]},
     identities:people.map(row=>({subjectId:row.id,jurisdiction,identifiers:{person_id:row.personId ?? row.id},matchBasis:"OFFICIAL_ID" as const,ambiguous:false,office:row.officeTitle,chamber:row.chamber})),
@@ -128,7 +154,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
     captured.add(url); return true;
   })];
   const carriedPortraitFacts = heldExcluded?.filter(fact=>fact.code.startsWith("STATE_PORTRAIT_")) ?? [];
-  const candidate = statePeopleCandidate({...input,roster,captures,excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
+  const candidate = statePeopleCandidate({...input,roster,captures,sourceRawHash:peopleSourceContentHash(input.acquisitions,input.roster),excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
     prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault});
   if (outcome.promoted) {

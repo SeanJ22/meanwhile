@@ -13,10 +13,14 @@ import { routineReceiptFields } from "./runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "./release.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import type { StatePeopleAcquisition } from "./state-people-publication.ts";
+import { peopleSourceContentHash, type StatePeopleAcquisition } from "./state-people-publication.ts";
 import { statePeopleDivisions } from "../sources/plural/acquisition.ts";
 import type { RegistryDivisionLite } from "../sources/plural/index.ts";
 import type { Slice } from "../control-plane/admin-view/promoted-slices.ts";
+import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "./source-hash.ts";
+import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
+import { peopleJurisdiction } from "./people-source-read.ts";
+import { sourceAuthority } from "./source-authority.ts";
 
 interface PeopleSourceAcquired {
   readonly state: string;
@@ -82,6 +86,7 @@ export async function runPeopleSourceRefresh(input: {
   const contractId = peopleSourceContractId(input.state, input.sourceId);
   const signal = input.signal ?? new AbortController().signal;
   let acquired: PeopleSourceAcquired;
+  const requiresHeldInputs = ["official-state-people", "wikidata-people", "statewide-executive-sources"].includes(input.sourceId);
   const geographyGaps: {sourceUrl:string;detail:string}[] = [];
   const publish = (release: PeopleSourceAcquired) => (dependencies.publish ?? publishPeopleSource)({ store: input.store, vault: input.vault,
     state: input.state, sourceId: input.sourceId, contractId, roster: release.roster,
@@ -100,7 +105,7 @@ export async function runPeopleSourceRefresh(input: {
       return [];
     };
     const [roster,divisions] = await Promise.all([
-      (dependencies.readHeld ?? readHeld)(input.state, input.store, now()),
+      requiresHeldInputs ? (dependencies.readHeld ?? readHeld)(input.state, input.store, now()) : Promise.resolve(undefined),
       ["legiscan-api","official-state-people","wikidata-people"].includes(input.sourceId)
         ? (dependencies.readDivisions ?? statePeopleDivisions)(input.state,asOf).then(divisionsFrom).catch(()=>{
           geographyGaps.push({sourceUrl:"https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
@@ -128,6 +133,24 @@ export async function runPeopleSourceRefresh(input: {
     });
     writeLine(failed.line);
     return { succeeded: false };
+  }
+  const jurisdiction = peopleJurisdiction(input.state), rawHash = peopleSourceContentHash(acquired.acquisitions, acquired.roster);
+  const first = acquired.acquisitions[0], acquiredAt = acquired.acquisitions.map(row => row.retrievedAt).sort().at(-1) ?? now();
+  const sourceCheck = acquired.acquisitions.flatMap(row => row.sourceCheck ? [row.sourceCheck] : []).sort((a,b) => b.checkedAt.localeCompare(a.checkedAt))[0];
+  const confirmed = await confirmSourceHashUnchanged({ store: input.store, sourceId: input.sourceId,
+    recordClass: peopleSourceRecordClass(input.sourceId), scope: peopleSourceScope(jurisdiction,input.sourceId),
+    parserVersion: sourceAuthority(input.sourceId)?.parserVersion ?? "people-sources/1", rawHash, now: now(),
+    complete: !requiresHeldInputs && acquired.acquisitions.length > 0 && !acquired.gaps.length && !geographyGaps.length &&
+      acquired.acquisitions.every(row => row.httpStatus >= 200 && row.httpStatus < 300 && row.body.length > 0),
+    retrieval: { requestedUrl: first?.requestedUrl ?? "", finalUrl: first?.finalUrl ?? null, httpStatus: first?.httpStatus ?? null,
+      rawHash, retrievedAt: acquiredAt, ...(sourceCheck ? { sourceCheck } : {}) } });
+  if (confirmed) {
+    const coverage = { sourceCoverage: acquired.coverage ?? null, peopleHeld: acquired.roster.officeholders.length,
+      legislatorsHeld: acquired.roster.officeholders.filter(person => person.level === "STATE" && ["upper", "lower"].includes(person.chamber ?? "")).length,
+      disagreements: acquired.roster.disagreements?.length ?? 0 };
+    writeLine(`PEOPLE_SOURCE_COVERAGE=${JSON.stringify({state:input.state,sourceId:input.sourceId,coverage})}`);
+    writeLine(`RCD_RECEIPT=${JSON.stringify({source:contractId,...sourceHashReceiptFields(confirmed),structuralReleaseContract:ZERO_RELEASE_EVENTS})}`);
+    return { succeeded: true, coverage };
   }
   const publication = await publish(acquired);
   const publishedRoster=(publication.candidate.readModel as {roster:OfficeholderSet}).roster;

@@ -12,7 +12,9 @@ import { parseFederalMoney } from "./parse.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { withFederalMoneyVerificationCache } from "./verify.ts";
 import { readFederalMoneyProgress } from "./progress.ts";
-import { federalMoneySourceHash, federalMoneySourceKey } from "./source-hash.ts";
+import { federalMoneyAppliedSourceHash, federalMoneySourceHash, federalMoneySourceKey } from "./source-hash.ts";
+import { sha256 } from "../civic-data/candidate-builders.ts";
+import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 
 interface FederalMoneyRefreshOptions {
   readonly source: FederalMoneySource; readonly store: RoutineDataStore;
@@ -39,6 +41,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
   const order = input.maxRounds === 0 ? states : await leastRecentlyServed(input.store, input.source, states);
   const acquire = input.acquire ?? acquireFederalMoney;
   const progress = new Map<string, FederalMoneyStateProgress>();
+  const sourceHashes=new Map<string,string|null>(states.map(state=>[state,null]));
   const finished = new Set<string>();
   const maxRunMs = input.maxRunMs ?? 25 * 60_000;
   for (let round = 0; round < (input.maxRounds ?? Infinity) && Date.now() - started < maxRunMs && finished.size < states.length; round++) {
@@ -46,6 +49,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       if (finished.has(state) || Date.now() - started >= maxRunMs) continue;
       let prior = await readFederalMoneyProgress(input.store,input.source,state);
       const savedCheckpoint = prior?.checkpoint;
+      sourceHashes.set(state,federalMoneyAppliedSourceHash(input.source,state,savedCheckpoint?.sourcePages));
       // Historical county-only OpenFEMA rows need one complete source pass. Keep
       // their published partitions while the new projection resumes page by page.
       const needsProjectionBackfill = input.source === "openfema" && savedCheckpoint?.projectionVersion !== OPENFEMA_STATE_PROJECTION_VERSION;
@@ -88,7 +92,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       const sourceKey=federalMoneySourceKey(input.source,state,checkpoint?.complete?null:checkpoint?.cursor);
       const rawHash=federalMoneySourceHash(input.source,state,page);
       // A refused metadata read falls back to the ordinary current identity read.
-      const dependencyHash=rawHash && input.identityHash ? await input.identityHash(state,page.facts).catch(()=>null) : null;
+      let dependencyHash=rawHash && input.identityHash ? await input.identityHash(state,page.facts).catch(()=>null) : null;
       const heldSource=savedCheckpoint?.sourcePages?.[sourceKey];
       const unchanged=!checkpoint?.pending && rawHash!==null && dependencyHash!==null &&
         heldSource?.rawHash===rawHash && heldSource.dependencyHash===dependencyHash;
@@ -120,6 +124,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
           await input.onProgress?.(row, at);
           continue;
         }
+        dependencyHash??=sha256(canonicalCivicDataJson(identities));
         const records = joinFederalMoneyFacts(page.facts, identities);
         delta = await withFederalMoneyVerificationCache(() => writeFederalMoneyPartitions({ source: input.source, state, page: { ...page, facts: records }, store: input.store, now: at,
           onPartition: input.onPartition, baselines, priorLocations }));
@@ -134,6 +139,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       const candidate = federalMoneyCandidate({ projection, page: { ...page, facts: [], captures: [] }, now: at, predecessorVersionId: prior?.versionId });
       const outcome = await processRegisteredFanOutCandidate(input.store, input.source, candidate, at, prior?.versionId ?? null);
       if (!outcome.promoted) throw new Error(outcome.candidate.failureDetail ?? `${input.source}:${state} did not publish its source facts.`);
+      sourceHashes.set(state,federalMoneyAppliedSourceHash(input.source,state,projection.checkpoint.sourcePages));
       const row: FederalMoneyStateProgress = { state, status: page.complete ? "COMPLETE" : "BACKFILL", counts: projection.counts,
         cursor: projection.checkpoint!.cursor, lastCompleteAt: projection.checkpoint!.lastCompleteAt, reason: null };
       progress.set(state, row); input.onState?.(row);
@@ -148,11 +154,13 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
     if (visited) { rows.push(visited); continue; }
     const prior = await readFederalMoneyProgress(input.store,input.source,state);
     const checkpoint = prior?.checkpoint;
+    sourceHashes.set(state,federalMoneyAppliedSourceHash(input.source,state,checkpoint?.sourcePages));
     rows.push({ state, status: "BACKFILL", counts: prior?.counts ?? federalMoneyCounts([]),
       cursor: checkpoint?.cursor ?? null, lastCompleteAt: checkpoint?.lastCompleteAt ?? null, reason: null });
   }
   const counts = rows.reduce((total, row) => ({ loaded: total.loaded + row.counts.loaded, joined: total.joined + row.counts.joined, unjoined: total.unjoined + row.counts.unjoined }), federalMoneyCounts([]));
-  const projection: FederalMoneyNationalProjection = { formatVersion: 2, source: input.source, state: "US", states: rows, counts };
+  const projection: FederalMoneyNationalProjection = { formatVersion: 2, source: input.source, state: "US", states: rows, counts,
+    sourceHashes:Object.fromEntries(sourceHashes) };
   const at = now();
   const outages = rows.filter(row => row.status === "OUTAGE");
   if (outages.length) {

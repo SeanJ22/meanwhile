@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { derivedSourceContentHash, externalDerivedSourceInputs, withDerivedSourceContent, confirmDerivedSourceUnchanged } from "../lib/civic-data/derived-source-hash.ts";
 import { derivedAuthorityFor } from "../lib/civic-data/derived-door.ts";
-import { derivedCampaignSitesCandidate, DERIVED_CAMPAIGN_SITES_PARSER } from "../lib/civic-data/derived-campaign-site-writer.ts";
+import { derivedCampaignSitesCandidate } from "../lib/civic-data/derived-campaign-site-writer.ts";
 import type { DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import type { SourceHead } from "../lib/civic-data/store.ts";
 
@@ -13,6 +13,7 @@ const upstream: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "CAND
 const approval: DerivedInputRef = { kind: "PIPELINE_APPROVAL", itemId: "item:one", recordId: "approval:one", approvedAt: at };
 const evidence: DerivedInputRef = { kind: "VAULTED_EVIDENCE", artifactId: "artifact:one", contentHash: `sha256-${"b".repeat(64)}`, tier: "RAW", retrievedAt: at };
 const inputs = [upstream, approval, evidence];
+const parserVersion = derivedCampaignSitesCandidate("AZ", { records: [], inputs, held: [], published: [] }, at).normalization.parserVersion;
 
 test("derived source hashes keep external content, approval and attempt revisions while excluding checks and the prior output", () => {
   const own = { ...upstream, recordClass: "CURATED_READER_RECORD", scope, versionId: "prior:one" } as DerivedInputRef;
@@ -42,7 +43,7 @@ test("the derived authority binds SOURCE_CONTENT_V1 to its explicitly named auth
 test("an unchanged complete derivation confirms through a scalar head without loading profiles, prior output or events", async () => {
   const head: SourceHead = { sourceId: "candidate-campaign-site-chain", recordClass: "CURATED_READER_RECORD", scope,
     versionId: "derived:one", lastKnownGoodVersionId: "derived:one", rawHash: derivedSourceContentHash(inputs), rawHashBasis: "SOURCE_CONTENT_V1",
-    normalizedHash: "d".repeat(64), parserVersion: DERIVED_CAMPAIGN_SITES_PARSER, promotedAt: at, candidateState: "PROMOTED", acquisitionSucceeded: true, imported: false };
+    normalizedHash: "d".repeat(64), parserVersion, promotedAt: at, candidateState: "PROMOTED", acquisitionSucceeded: true, imported: false };
   let confirmations = 0;
   const store = { async readSourceHead() { return head; }, async confirmUnchanged(input: { pointerVersionId: string }, now: string) {
     confirmations++; assert.equal(input.pointerVersionId, head.versionId); return { kind: "CONFIRMED" as const, versionId: head.versionId, at: now };

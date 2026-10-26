@@ -20,6 +20,9 @@ interface BulkInput {capture:BulkCapture;dataset?:Dataset;bodies?:readonly strin
 const orderedSponsors=(bodies:readonly string[])=>sessionSponsorEvidence(bodies).sort((a,b)=>canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b)));
 const nativeMembersHash=(dataset:Dataset,bodies:readonly string[])=>hash({source:"legiscan-bills",state_id:dataset.state_id,session_id:dataset.session_id,
   members:bodies.map(body=>[JSON.parse(body).bill.bill_id,hash(body)])});
+const sponsorPeople=(people:readonly HeldPerson[]|undefined)=>people?.map(person=>Object.fromEntries(
+  ["id","personId","nativeIds","name","state","chamber","level","officeTitle","websiteUrl","profileUrls","memberships","provenance"]
+    .flatMap(key=>Object.hasOwn(person,key)?[[key,person[key as keyof HeldPerson]]]:[])) as unknown as HeldPerson);
 function partSourceMembers(input:BulkInput,value:BillPart,rawHash:string):PartSourceMembers{
   const source=JSON.parse(input.capture.body);
   return{formatVersion:input.sourceMemberFormat??1,parentRawHash:source.parentRawHash,archiveHash:source.archiveHash,partIndex:source.partIndex,memberOffset:source.memberOffset,
@@ -30,13 +33,14 @@ export function bulkCandidate(input:BulkInput):RoutineCandidate {
   const {capture}=input;
   const datasets=input.datasets?.map(({access_key:_access,...row})=>row) ?? [];
   const {access_key:_access,...dataset}=input.dataset??{};
-  const {bodies:_duplicateBodies,sessionSponsors:_duplicateSponsors,...evidence}=input;
+  const {bodies:_duplicateBodies,sessionSponsors:_duplicateSponsors,people:_unrelatedPeopleFields,...evidence}=input;
+  const people=sponsorPeople(input.people);
   const rawHash=input.dataset&&!input.parts&&input.sourceMemberFormat===2?nativeMembersHash(input.dataset,input.bodies??[]):capture.rawHash;
   const sourceId="legiscan-bills", recordClass="STATE_BILL";
   const readModel:BillPart|BillSession|BillIndex=!input.dataset?publicDatasetIndex({kind:"INDEX",parserVersion:LEGISCAN_BULK_PARSER,capturedAt:capture.retrievedAt,datasets}):
     input.parts?{kind:"SESSION",parserVersion:LEGISCAN_BULK_PARSER,sponsorMatchVersion:LEGISCAN_SPONSOR_MATCH,dataset:dataset as Dataset,state:stateOfDataset(input.dataset),capturedAt:capture.retrievedAt,parts:input.parts,counts:input.counts!,...(input.sourceMemberFormat?{sourceMemberFormat:input.sourceMemberFormat}:{})}:
-    {...normalizeSession(input.dataset,input.bodies??[],capture.retrievedAt,input.people,input.sessionSponsors),sourceRawHash:rawHash};
-  const payload=JSON.parse(JSON.stringify({...evidence,...(input.dataset?{dataset}:{}),...(input.datasets?{datasets}:{}),
+    {...normalizeSession(input.dataset,input.bodies??[],capture.retrievedAt,people,input.sessionSponsors),sourceRawHash:rawHash};
+  const payload=JSON.parse(JSON.stringify({...evidence,...(people?{people}:{}),...(input.dataset?{dataset}:{}),...(input.datasets?{datasets}:{}),
     ...(readModel.kind==="PART"?{partSourceMembers:partSourceMembers(input,readModel,rawHash)}:{}),
     sourceProbe:{formatVersion:1,complete:input.complete!==false,continuationPending:input.complete===false}}));
   // Exact bytes and recomputed sponsor joins identify a part across interrupted observations.

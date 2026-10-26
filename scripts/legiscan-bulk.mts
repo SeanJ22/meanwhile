@@ -6,7 +6,7 @@ import { publishBulkCandidate,confirmBulkSession } from "../lib/sources/legiscan
 import { PostgresRoutineDataStore,type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { currentLegiscanDatasets } from "../lib/sources/legiscan/current-sessions.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
+import { readBillSponsorPeople } from "../lib/sources/legiscan/people.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure,sourceAcquisitionFailure,withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
@@ -53,7 +53,7 @@ export async function refreshLegiscan(store:RoutineDataStore,signal:AbortSignal,
         row.datasets++;row.unchanged++;if(!dated)return;continue;
       }
       const acquired=await withPublisherAcquisitionDeadline(`LegiScan ${state}`,ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,child=>acquireDataset(dataset,{...options,signal:AbortSignal.any([signal,child])}));
-      const people=options.peopleForState?await options.peopleForState(state):state==="US"?[]:await readStatePeopleProjection(`US-${state}`,{store,now:acquired.capture.retrievedAt}).then(read=>read.kind==="PROMOTED"?read.value.roster.officeholders:[]);
+      const people=options.peopleForState?await options.peopleForState(state):await readBillSponsorPeople(store,state);
       const published=await publishBulkCandidate(store,{capture:acquired.capture,dataset,bodies:acquired.bodies,people,archiveHash:acquired.archiveHash},options.now?.()??new Date().toISOString(),{signal});
       if(!published.outcome.promoted) throw Error("LegiScan session publication failed");
       const session=published.candidate.readModel as BillSession;

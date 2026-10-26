@@ -16,7 +16,7 @@ import {
 import {
   readNhMembers,
 } from "../civic-data/state-members.ts";
-import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
+import type { OfficialStateLegislatorReadModel, NhMemberReadModel } from "../civic-data/candidate-builders.ts";
 import {
   officialStateLegislatorTargetByScope,
   type OfficialStateVoteScope,
@@ -64,11 +64,16 @@ function nhHouseDivision(county: string, district: string): string | null {
 function nhReadModel(
   result: Extract<Awaited<ReturnType<typeof readNhMembers>>, { kind: "PROMOTED" | "BOOTSTRAP" }>,
 ): OfficialStateLegislatorReadModel {
-  const identityByComposite = new Map(result.value.identities.map((identity) => [
+  return nhMembersReadModel(result.value,result.metadata);
+}
+
+/** The same official NH member projection can use pinned, named source fields. */
+export function nhMembersReadModel(value:NhMemberReadModel,metadata:{retrievedAt:string|null;sourceThrough:string|null}):OfficialStateLegislatorReadModel {
+  const identityByComposite = new Map(value.identities.map((identity) => [
     `${identity.chamber}\u0000${identity.seatNo}\u0000${identity.district}`,
     identity,
   ]));
-  const officeholders = result.value.members.flatMap((member) => {
+  const officeholders = value.members.flatMap((member) => {
     const identity = identityByComposite.get(`${member.chamber}\u0000${member.seatNo}\u0000${member.district}`);
     if (!identity) return [];
     return [{
@@ -93,12 +98,12 @@ function nhReadModel(
       provenance: {
         sourceUrl: "https://gc.nh.gov/downloads/Members.txt",
         sourceOrg: "New Hampshire General Court",
-        collectedAt: result.value.memberSourceDates?.[identity.officeholderId] ?? result.metadata.retrievedAt ?? result.metadata.sourceThrough ?? result.value.term,
-        verifiedAt: result.metadata.retrievedAt ?? null,
+        collectedAt: value.memberSourceDates?.[identity.officeholderId] ?? metadata.retrievedAt ?? metadata.sourceThrough ?? value.term,
+        verifiedAt: metadata.retrievedAt ?? null,
       },
     }];
   });
-  const divisions = result.value.members.flatMap((member) => {
+  const divisions = value.members.flatMap((member) => {
     const identity = identityByComposite.get(`${member.chamber}\u0000${member.seatNo}\u0000${member.district}`);
     if (!identity) return [];
     const division = member.chamber === "S"
@@ -109,7 +114,7 @@ function nhReadModel(
   const linked = new Set(divisions.map((row) => row.officeholderId));
   const roster: OfficeholderSet = {
     scope: "33",
-    generatedAt: result.metadata.retrievedAt ?? result.metadata.sourceThrough ?? result.value.term,
+    generatedAt: metadata.retrievedAt ?? metadata.sourceThrough ?? value.term,
     officeholders,
     divisions,
     unmatched: officeholders
@@ -120,7 +125,7 @@ function nhReadModel(
     formatVersion: 1,
     sourceId: "nh-general-court",
     jurisdiction: "US-NH",
-    term: result.value.term,
+    term: value.term,
     generatedAt: roster.generatedAt,
     roster,
   };

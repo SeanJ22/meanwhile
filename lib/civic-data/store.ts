@@ -122,7 +122,7 @@ export interface SourceHead {
   readonly acquisitionComplete?: boolean | null;
   readonly sourceThrough?: string | null;
   readonly imported: boolean;
-  /** Existing pointer/candidate proof equality, selected as a scalar instead of duplicate fact bodies. */
+  /** Existing GOOD pointer/candidate/receipt bindings, checked without returning their payloads. */
   readonly proofCoupled?:boolean;
 }
 
@@ -1276,6 +1276,12 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         canonicalCivicDataJson(pointer.payload)===canonicalCivicDataJson(row.candidate.readModel)&&
         row.candidate.normalization.normalizedHash!==null,
       sourceThrough: row.candidate.temporal.sourceThrough,
+      proofCoupled:row.state==="PROMOTED"&&row.acquisitionSucceeded&&row.promotedVersion===row.candidate.id&&row.lastKnownGoodVersion===row.candidate.id&&
+        pointer.lastKnownGoodVersionId===row.candidate.id&&pointer.sourceId===row.candidate.sourceId&&pointer.recordClass===row.candidate.recordClass&&pointer.scope===row.candidate.scope&&
+        row.candidate.normalization.succeeded&&!!row.candidate.normalization.normalizedHash&&row.receipt?.decision==="GOOD"&&
+        row.receipt.candidateId===row.candidate.id&&row.receipt.sourceId===row.candidate.sourceId&&row.receipt.recordClass===row.candidate.recordClass&&row.receipt.scope===row.candidate.scope&&
+        row.receipt.checks.every(check=>check.verdict==="PASS")&&canonicalCivicDataJson(pointer.receipt)===canonicalCivicDataJson(row.receipt)&&
+        canonicalCivicDataJson(pointer.payload)===canonicalCivicDataJson(row.candidate.readModel),
       imported: isImportOrStateMoveCandidate(row.candidate) || pointer.sourceId !== row.candidate.sourceId };
   }
 
@@ -2926,6 +2932,23 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       acquisitionComplete: sql<boolean | null>`case when jsonb_typeof(${civicDataCandidates.candidate}#>'{retrieval,complete}')='boolean'
         then (${civicDataCandidates.candidate}#>>'{retrieval,complete}')::boolean else null end`.as("acquisition_complete"),
       sourceThrough: sql<string | null>`${civicDataCandidates.candidate}#>>'{temporal,sourceThrough}'`.as("source_through"),
+      proofCoupled:sql<boolean>`coalesce(${civicDataCandidates.state}='PROMOTED' AND ${civicDataCandidates.acquisitionSucceeded}
+        AND ${civicDataCandidates.promotedVersionId}=${civicDataCandidates.id} AND ${civicDataCandidates.lastKnownGoodVersionId}=${civicDataCandidates.id}
+        AND ${civicDataPromotions.lastKnownGoodVersionId}=${civicDataCandidates.id} AND ${civicDataPromotions.sourceId}=${civicDataCandidates.sourceId}
+        AND ${civicDataPromotions.recordClass}=${civicDataCandidates.recordClass} AND ${civicDataPromotions.scope}=${civicDataCandidates.scope}
+        AND ${civicDataCandidates.candidate}#>'{normalization,succeeded}'='true'::jsonb
+        AND ${civicDataCandidates.normalizedHash} ~ '^[a-f0-9]{64}$'
+        AND ${civicDataCandidates.candidate}#>>'{normalization,normalizedHash}'=${civicDataCandidates.normalizedHash}
+        AND ${civicDataCandidates.candidate}#>>'{normalization,parserVersion}'=${civicDataCandidates.parserVersion}
+        AND ${civicDataCandidates.candidate}#>>'{retrieval,rawHash}'=${civicDataCandidates.rawHash}
+        AND ${civicDataPromotions.payload}=${civicDataCandidates.candidate}->'readModel'
+        AND ${civicDataPromotions.validationReceipt}=${civicDataCandidates.validationReceipt}
+        AND ${civicDataCandidates.validationReceipt}->>'decision'='GOOD'
+        AND ${civicDataCandidates.validationReceipt}->>'candidateId'=${civicDataCandidates.id}
+        AND ${civicDataCandidates.validationReceipt}->>'sourceId'=${civicDataCandidates.sourceId}
+        AND ${civicDataCandidates.validationReceipt}->>'recordClass'=${civicDataCandidates.recordClass}
+        AND ${civicDataCandidates.validationReceipt}->>'scope'=${civicDataCandidates.scope}
+        AND NOT EXISTS(SELECT 1 FROM jsonb_array_elements(${civicDataCandidates.validationReceipt}->'checks') check_row WHERE check_row->>'verdict' IS DISTINCT FROM 'PASS'),false)`.as("proof_coupled"),
       imported: sql<boolean>`(${civicDataCandidates.candidate} ? 'bootstrapImport')
         OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'
         OR ${civicDataPromotions.sourceId} <> ${civicDataCandidates.sourceId}`.as("imported"),

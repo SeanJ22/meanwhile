@@ -407,6 +407,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "DB-05_member_office_rows": { phase: "expand", why: "Materializes exact member offices and cited source reviews by state from the current GOOD editions; existing inline and payload-part readers remain valid.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
   "DB-05_source_checks": { phase: "expand", why: "Adds one source check row per independently refreshed source, so current check times can reach readers without reading or rewriting the containing package." },
   "DB-05_federal_money_rows": { phase: "expand", why: "Extends the same transactional keyed rows to source-native federal facts and registration bodies/divisions, with an exact native recipient index; existing payload readers stay valid.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
+  "DB-05_prl_rows": { phase: "expand", why: "Adds exact PRL person/profile rows and small dataset headers alongside existing published payloads before person readers select them.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts", "civic_data_rows"] },
   "DB-03_process_transfer": { phase: "expand", why: "Adds defaulted process counters to the existing daily and hourly transfer tables before the accounting writer uses them; existing readers and writers keep working." },
 };
 

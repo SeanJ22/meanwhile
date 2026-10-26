@@ -49,10 +49,12 @@ DB-05 is Sean's new session to take Neon down to 10 GB a day. River stopped DB-0
 |---|---|---|
 | 338a7b418 (stream/river-place-pages) | The runner's new place-pages lane drains rebuild_queue with rebuildPlacePages (concurrency 4, 240 s turns, 424 MiB reservation = 403 MiB peak + 5%); stops at a pending restart or Admin pause; failed turns leave rows queued. Deleted: netlify/functions/rebuild-place-pages.mts, its netlify.toml block, the deploy-time 6-minute drain and the deploy-only initialBackfill mode. The deploy step keeps only seeding ZIP/body page entries and queuing unbuilt places | READY 11:20 AM. Scan clean (no bypassCache, no proof files). tsc clean (River fixed one test type), runner-place-pages 4/4, 87/87 place-page and write-path tests, 182/182 runner tests, eslint and knip clean. Folds onto river right after the 129 gate (with every other READY lane); 129 ships river + it |
 
-**Taken over, finishing**
-| READY | Lane | State |
-|---|---|---|
-| stream/river-ct-01 | CT-01 (silent since 2:49 AM) + ballot date text in every state | Boise 83702 reads "voter pre-registration ends on october 23 ." Fix covers every state |
+**CT-01 stays with its session (Sean, 11:25 AM EDT)**
+The CT-01 session is alive and posts READY itself, with the ballot date text fix. River stopped its takeover; stream/river-ct-01 is not pushed. CT-01's READY folds into the first release after it lands. Latest on origin/stream/ct-01: ed15f95fb (merge of river, 6:49 AM), no new READY yet.
+
+**FM-01 bytes (Sean, 11:25 AM EDT)**
+FM-01's READY says its durable progress raises bytes per federal-money job by 101%. River keeps its fix (lib/federal-money/refresh.ts reads only normalizedPayload.captures) and measures usaspending and openfema for two full hours before and after 129; if they go up, it goes here and DB-05 owns the fix.
+Before (reader + control plane, from database_transfer_hourly): usaspending 143.6 MB (9 AM), 82.1 MB (10 AM); openfema 13.2 MB (9 AM), 7.5 MB (10 AM). Earlier hours for range: usaspending 71-159 MB/h, openfema 8.7-21.6 MB/h (3-8 AM).
 
 **Never pushed a branch: PP-01 and RB-A9**
 Recommendation: Sean restarts both sessions. River's capacity is on the place map, the batch, DB-04 and CT-01. RB-A9 can't prove itself until the place map has rows in every state, so its restart should wait for release 129's place-map check. River takes PP-01 only if Sean says so.

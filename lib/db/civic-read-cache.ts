@@ -5,6 +5,8 @@ interface Entry<T> { readonly etag: string; readonly value: T }
 interface CacheIO {
   readonly read: (key: string) => Promise<string | null>;
   readonly write: (key: string, saved: string) => Promise<void>;
+  readonly readCheckpoint?: (key: string) => Promise<string | null>;
+  readonly writeCheckpoint?: (key: string, saved: string) => Promise<void>;
 }
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
@@ -13,9 +15,16 @@ export class CivicReadCache {
   private readonly io: CacheIO;
   constructor(io: CacheIO) { this.io = io; }
 
-  private async read<T>(key: string): Promise<Entry<T> | null> {
+  /** Rows already owned by a standing job must not be evicted by unrelated source copies. */
+  jobState(): CivicReadCache {
+    return new CivicReadCache({ ...this.io,
+      read: this.io.readCheckpoint ?? this.io.read,
+      write: this.io.writeCheckpoint ?? this.io.write });
+  }
+
+  private async read<T>(key: string, checkpoint = false): Promise<Entry<T> | null> {
     try {
-      const raw = await this.io.read(hash(key));
+      const raw = await (checkpoint ? this.io.readCheckpoint ?? this.io.read : this.io.read)(hash(key));
       if (raw === null) return null;
       const saved = JSON.parse(raw);
       if (typeof saved.body !== "string" || hash(saved.body) !== saved.digest) return null;
@@ -24,11 +33,35 @@ export class CivicReadCache {
     } catch { return null; }
   }
 
-  private async save<T>(key: string, entry: Entry<T>): Promise<void> {
+  private async save<T>(key: string, entry: Entry<T>, checkpoint = false): Promise<void> {
     try {
       const body = JSON.stringify(entry);
-      await this.io.write(hash(key), JSON.stringify({ digest: hash(body), body }));
+      await (checkpoint ? this.io.writeCheckpoint ?? this.io.write : this.io.write)(hash(key), JSON.stringify({ digest: hash(body), body }));
     } catch { /* A failed disposable copy never changes the actual read. */ }
+  }
+
+  /** A job's own continuation, never reader truth. Source hashes decide whether it still applies. */
+  async readCheckpoint<T>(namespace: string, key: string): Promise<T | null> {
+    return (await this.read<T>(namespace + ":" + key, true))?.value ?? null;
+  }
+
+  async checkpoint<T>(namespace: string, key: string, value: T, etag = hash(JSON.stringify(value))): Promise<void> {
+    await this.save(namespace + ":" + key, { etag, value }, true);
+  }
+
+  /** One statement can return either the changed value or confirmation of the held revision. */
+  async row<T>(input: { readonly namespace: string; readonly key: string;
+    readonly current: (etag: string | null) => Promise<{ readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null> }): Promise<T | null> {
+    const key = input.namespace + ":" + input.key;
+    const held = await this.read<T>(key);
+    const current = await input.current(held?.etag ?? null);
+    if (current === null) return null;
+    if ("unchanged" in current) {
+      if (held?.etag !== current.etag) throw new Error("A changed-row read confirmed an unavailable revision");
+      return held.value;
+    }
+    await this.save(key, current);
+    return current.value;
   }
 
   /** Read only rows whose database etag differs from the held copy. */
@@ -38,6 +71,7 @@ export class CivicReadCache {
     readonly versions: (keys: readonly string[]) => Promise<readonly V[]>;
     readonly values: (keys: readonly string[]) => Promise<readonly T[]>;
     readonly keyOf: (value: T) => string;
+    readonly etagOf?: (value: T) => string;
     /** Event-derived fields are fresh even while the owning row is unchanged. */
     readonly freshen?: (value: T, version: V) => T;
   }): Promise<readonly T[]> {
@@ -61,8 +95,8 @@ export class CivicReadCache {
       await Promise.all(values.map(async value => {
         const key = input.keyOf(value);
         result.set(key, value);
-        if (before.get(key) !== undefined && before.get(key) === after.get(key)) {
-          await this.save(input.namespace + ":" + key, { etag: before.get(key)!, value });
+        if (input.etagOf || before.get(key) !== undefined && before.get(key) === after.get(key)) {
+          await this.save(input.namespace + ":" + key, { etag: input.etagOf?.(value) ?? before.get(key)!, value });
         }
       }));
     }
@@ -85,6 +119,16 @@ export function runtimeCivicReadCache(): CivicReadCache | null {
     write: async (key, saved) => {
       await fetch(endpoint + "/" + key, { method: "PUT", body: saved,
         headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
+    },
+    readCheckpoint: async key => {
+      const response = await fetch(endpoint + "/checkpoint/" + key,
+        { headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
+      return response.ok ? response.text() : null;
+    },
+    writeCheckpoint: async (key, saved) => {
+      const response = await fetch(endpoint + "/checkpoint/" + key, { method: "PUT", body: saved,
+        headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
+      if (!response.ok) throw new Error("The job continuation could not be saved");
     },
   });
 }

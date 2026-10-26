@@ -1,5 +1,5 @@
 import { pathToFileURL } from "node:url";
-import { acquireStateVotes, pluralJurisdictionUrl } from "../lib/sources/plural/vote-acquisition.ts";
+import { acquireStateVotes, pluralJurisdictionUrl, type PluralVoteProgress } from "../lib/sources/plural/vote-acquisition.ts";
 import { holdPluralVoteEvidence, pluralVotesCandidate, pluralVotesContract, pluralVotesScope, readPluralVotesProjection, pluralVoteState, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { processRegisteredRoutineCandidate, type PromotionOutcome } from "../lib/civic-data/promotion.ts";
@@ -11,56 +11,57 @@ import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure, withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
 import { bindVotePageVault } from "../lib/state-rollcalls/vote-pages.ts";
-import { createVoteRefreshSink } from "../lib/state-rollcalls/vote-predecessor.ts";
+import { createVoteRefreshSink, rememberVotePublication } from "../lib/state-rollcalls/vote-predecessor.ts";
+import { runtimeCivicReadCache, type CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { processNeonBytes } from "../lib/db/transfer-by-caller.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 
-/** A source session checkpoints while it streams and when the next session starts. */
-const VOTE_PUBLISH_SLICE_MS = 60_000;
-
 /** Manual invocation and the standing source task share this sole writer. */
-export async function refreshStateVotes(input: Parameters<typeof acquireStateVotes>[0] & { civicStore: RoutineDataStore; vault: EvidenceStore }) {
+export async function refreshStateVotes(input: Parameters<typeof acquireStateVotes>[0] & { civicStore: RoutineDataStore; vault: EvidenceStore; cache?: CivicReadCache | null }) {
   const started = performance.now();
   const before = processNeonBytes().reduce((sum,row) => ({ reader: sum.reader + row.bytes.reader,
     controlPlane: sum.controlPlane + row.bytes["control-plane"] }), { reader: 0, controlPlane: 0 });
   const initialized = await createVoteRefreshSink({ state: pluralVoteState(input.state).toUpperCase(), sourceId: "plural-openstates-votes",
-    scope: pluralVotesScope(input.state), civicStore: input.civicStore, vault: input.vault, signal: input.signal,
+    scope: pluralVotesScope(input.state), civicStore: input.civicStore, vault: input.vault, signal: input.signal, cache: input.cache,
     readPrior: () => readPluralVotesProjection(input.state, { store: input.civicStore, bypassCache: true, now: input.now?.() }) });
   const sink = initialized.sink;
+  const copies = (input.cache === undefined ? runtimeCivicReadCache() : input.cache)?.jobState(), progressKey = pluralVotesScope(input.state);
+  let progress: PluralVoteProgress = input.resume ?? await copies?.readCheckpoint<PluralVoteProgress>("openstates-vote-progress", progressKey) ?? {};
   let baseVersionId = initialized.baseVersionId;
+  const priorAcquisitions = async () => baseVersionId ? await input.civicStore.readCandidatePath<PluralVoteAcquisition[]>(baseVersionId,["normalizedPayload","acquisitions"]) ?? [] : [];
+  let acquisitions = copies && baseVersionId ? await copies.row<PluralVoteAcquisition[]>({ namespace:"vote-acquisitions",key:progressKey,
+    current:async etag=>etag===baseVersionId ? {etag:baseVersionId!,unchanged:true} : {etag:baseVersionId!,value:await priorAcquisitions()} }) ?? [] : await priorAcquisitions();
   bindVotePageVault(input.civicStore, input.vault);
   let publication = null as { candidate: RoutineCandidate; outcome: PromotionOutcome } | null;
   const identityHeld: { key: string; detail: string }[] = [];
-  let batch = { session: null as string | null, since: 0, acquired: [] as PluralVoteAcquisition[], held: [] as { key: string; detail: string }[] };
-  const publish = async (acquired: readonly PluralVoteAcquisition[], held: readonly { key: string; detail: string }[]) => {
-    const candidate = pluralVotesCandidate({ projection: await sink.snapshot(), acquired, held, checkedAt: input.now?.() ?? new Date().toISOString() });
+  const publish = async (acquired: readonly PluralVoteAcquisition[], held: readonly { key: string; detail: string }[], checkpoints: PluralVoteProgress = {}) => {
+    acquisitions = [...new Map([...acquisitions,...acquired].map(row=>[`${row.finalUrl}\n${row.sha256}`,row])).values()];
+    const candidate = pluralVotesCandidate({ projection: await sink.snapshot(), acquired:acquisitions, held, checkedAt: input.now?.() ?? new Date().toISOString() });
     const outcome = await processRegisteredRoutineCandidate(input.civicStore, pluralVotesContract(input.state), candidate,
       input.now?.() ?? new Date().toISOString(), baseVersionId);
     if (!outcome.promoted && !outcome.confirmed) throw new Error(`PLURAL_VOTES_PUBLICATION_REFUSED:${outcome.candidate.failureCode}`);
     baseVersionId = outcome.promoted?.versionId ?? outcome.confirmed!.versionId;
     publication = { candidate, outcome };
-  };
-  const flush = async () => {
-    if (!batch.acquired.length) return;
-    const { acquired, held } = batch;
-    batch = { session: null, since: 0, acquired: [], held: [] };
-    await publish(acquired, held);
+    await rememberVotePublication("plural-openstates-votes", progressKey, baseVersionId, candidate.normalization.normalizedHash!, candidate.readModel as import("../lib/state-rollcalls/vote-page-model.ts").VotePageProjection,copies);
+    await copies?.row({namespace:"vote-acquisitions",key:progressKey,current:async()=>({etag:baseVersionId!,value:acquisitions})});
+    progress = { ...progress, ...checkpoints };
+    await copies?.checkpoint("openstates-vote-progress", progressKey, progress);
   };
   try {
-    const acquisition = await acquireStateVotes({ ...input, onBill: async result => {
-      const session = result.session ?? result.votes[0]?.session ?? batch.session;
-      if (batch.acquired.length && (session !== batch.session || Date.now() - batch.since >= VOTE_PUBLISH_SLICE_MS)) await flush();
-      if (!batch.acquired.length) batch.since = Date.now();
-      batch.session = session; batch.held.push(...result.held);
+    const acquisition = await acquireStateVotes({ ...input, resume: progress, onCheckpoint: async checkpoints => {
+      progress = { ...progress, ...checkpoints };
+      await copies?.checkpoint("openstates-vote-progress", progressKey, progress);
+      await input.onCheckpoint?.(checkpoints);
+    }, onBill: async result => {
+      const held = [...result.held];
       for (const vote of result.votes) {
         const issue = await sink.put(vote);
-        if (issue) { const held = { key: vote.id, detail: issue }; batch.held.push(held); identityHeld.push(held); }
+        if (issue) { const detail = { key: vote.id, detail: issue }; held.push(detail); identityHeld.push(detail); }
       }
-      // Bulk callbacks cite the same immutable source; keep one evidence row.
-      if (!batch.acquired.some(row => row.sha256 === result.evidence.sha256)) batch.acquired.push(await holdPluralVoteEvidence(input.vault, result.evidence));
+      // Publish and save the source position before requesting the next bounded batch.
+      await publish([await holdPluralVoteEvidence(input.vault, result.evidence)],held,result.checkpoints);
       await input.onBill?.(result);
     } });
-    await flush();
     if (!publication) {
       if (acquisition.held.length) throw new Error(`PLURAL_VOTES_ACQUISITION_INCOMPLETE:${acquisition.held.map(row => row.detail).join(";")}`);
       await publish(await Promise.all(acquisition.acquisitions.map(row => holdPluralVoteEvidence(input.vault, row))), []);

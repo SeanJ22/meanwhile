@@ -18,6 +18,7 @@ import { withExecutiveCompleteness, executiveEvidenceReferences } from "../offic
 import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 import { rosterChanges, type RosterChange } from "../officials/roster-changes.ts";
 import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
+import type { PeopleSourceProbe } from "./people-source-probe.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 export {  readPeopleSourceProjection,  } from "./people-source-read.ts";
@@ -39,6 +40,7 @@ interface PublishPeopleSourceInput {
   readonly resolveOfficePoint?: OfficePointResolver;
   /** A caller extending the record it just published passes it here instead of reading it again. */
   readonly held?: HeldPeopleSource;
+  readonly sourceProbe?: PeopleSourceProbe;
 }
 /** The published record a new version is built on. */
 export interface HeldPeopleSource {
@@ -120,7 +122,8 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
   const records = people.length + vacancies.length;
   const excludedFacts = [...(input.excludedFacts ?? []), ...(input.gaps ?? []).map(gap=>({key:gap.sourceUrl,code:"PEOPLE_SOURCE_GAP",detail:gap.detail,record:gap})),
     ...(input.roster.disagreements ?? []).map(row=>({key:row.key,code:"PEOPLE_FIELD_DISAGREEMENT",detail:`${row.field} has conflicting source values; the preferred value is published and BL-01 is owed the disagreement.`,record:row}))];
-  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,excludedFacts,...(input.changes?.length ? {changes:input.changes} : {})}));
+  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,excludedFacts,
+    ...(input.sourceProbe ? {sourceProbe:input.sourceProbe} : {}),...(input.changes?.length ? {changes:input.changes} : {})}));
   const rawHash = input.sourceRawHash ?? peopleSourceContentHash(input.captures,input.roster), normalizedHash = hash(readModel);
   const derived = input.derivedInputs?.length ? derivedRetrieval(input.derivedInputs) : null;
   // The read's own instant orders versions; the "read:" prefix sorts after any content-hash version.

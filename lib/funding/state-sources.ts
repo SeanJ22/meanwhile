@@ -184,7 +184,8 @@ export interface CampaignFinanceWorkCheck {
   readonly kind: "campaign-finance-work-check";
   readonly state: string;
   readonly resource: "people";
-  readonly records: readonly { readonly id:string;readonly state:string;readonly checkedAt:string;readonly startedAt?:string;readonly publishedPeople:number;readonly peopleWorked:number;readonly peopleWithMoney:number;readonly loaded:number;readonly unmatched:number;readonly reasons:Readonly<Record<string,number>>;readonly peakMemoryBytes:number }[];
+  readonly records: readonly { readonly id:string;readonly state:string;readonly checkedAt:string;readonly startedAt?:string;readonly publishedPeople:number;readonly peopleWorked:number;readonly peopleWithMoney:number;readonly loaded:number;readonly unmatched:number;readonly reasons:Readonly<Record<string,number>>;readonly peakMemoryBytes:number;
+    readonly sourceHash?:string;readonly sourceComplete?:boolean;readonly sourceDescriptorHash?:string;readonly dependencyHash?:string }[];
 }
 export type CampaignFinancePublication = CampaignFinanceWorkCheck;
 

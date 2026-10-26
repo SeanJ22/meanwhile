@@ -112,6 +112,8 @@ export interface BodyCardData {
   };
   /** A school district's superintendent, who is neither on the board nor elected. */
   superintendent: SeatHolder | null;
+  /** Earlier sourced memberships remain available apart from the current seats. */
+  earlierMembers?: SeatHolder[];
   /** Whether this body is a school district; decides section 3's line. */
   isSchoolDistrict: boolean;
   /** Section 5. Empty means no contact route has been sourced. */
@@ -356,16 +358,20 @@ function BodySections({
           ? `${subject.representation.length}`
           : undefined,
       content:
-        subject.representation.length > 0 || card.superintendent ? (
+        subject.representation.length > 0 || card.superintendent || card.earlierMembers?.length ? (
           <>
             <Representation
               holders={subject.representation}
               gaps={subject.rosterGaps}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
-              /* No "Who runs it" where nothing is run. */
-              showTopOffices={runsSomething(subject.divisionKind)}
+              /* Each member has one row, with their role beside their name. */
+              showTopOffices={false}
             />
+            {card.earlierMembers && card.earlierMembers.length > 0 && <details className="mt-3">
+              <summary className="cursor-pointer t-detail text-muted">Earlier membership records ({card.earlierMembers.length})</summary>
+              <Representation holders={card.earlierMembers} note="" showTopOffices={false} earlier onOpenHolder={onOpenHolder} />
+            </details>}
             {/* Rendered only for school districts. */}
             {card.isSchoolDistrict && (
               <div className="mt-2 border-t border-[var(--panel-border)] pt-2">
@@ -715,6 +721,7 @@ export function Representation({
   onOpenHolder,
   /** Lead with the top offices. False only where the list already is the top office. */
   showTopOffices = true,
+  earlier = false,
 }: {
   holders: SeatHolder[];
   vacancy?: import("@/lib/officials/types").SeatVacancy;
@@ -722,6 +729,7 @@ export function Representation({
   gaps?: readonly RosterReaderGap[];
   onOpenHolder?: (holder: SeatHolder) => void;
   showTopOffices?: boolean;
+  earlier?: boolean;
 }) {
   if (holders.length === 0 && vacancy) return <p className="t-detail leading-relaxed">This seat is vacant.</p>;
   if (holders.length === 0) return <><RosterCompletenessGaps gaps={gaps} /><CardGapContribution id="representation" label="who sits on it" /></>;
@@ -766,7 +774,7 @@ export function Representation({
         <CardGapContribution id="top-offices" label="who runs it" />
       )}
       {ordered.map((holder) => (
-        <div key={holder.id} data-roster-holder={holder.id} className="account-modal-person flex items-start gap-3">
+        <div key={holder.id} data-roster-holder={earlier ? undefined : holder.id} data-earlier-roster-holder={earlier ? holder.id : undefined} className="account-modal-person flex items-start gap-3">
           {/* `IdentityPortrait` renders initials where no portrait exists. */}
           <IdentityPortrait name={readerText(holder.name, "name")} photoUrl={holder.photoUrl} />
 

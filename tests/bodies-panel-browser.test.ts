@@ -13,6 +13,7 @@ import type { GeoFeature } from "../lib/registry/resolve.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { bodyDisplayName } from "../lib/text/reader-names.ts";
+import { groupBodiesByGovernment } from "../lib/registry/body-groups.ts";
 import { installRegistryAuthority } from "./helpers/promoted-fixtures.ts";
 
 test("Bodies stays compact and opens the correct body with next and last meetings in AZ, NH and NJ", async () => {
@@ -29,7 +30,7 @@ test("Bodies stays compact and opens the correct body with next and last meeting
     const coverage = summarizeCoverage([resolved.centroid.lng, resolved.centroid.lat], features, divisions, registry.bodies, 0);
     assert.ok(coverage.bodies.some(body => body.bodyClass === "GOVERNING"), zip);
     if (zip !== "07960") assert.ok(coverage.bodies.some(body => body.bodyClass !== "GOVERNING"), zip);
-    // Deliberately reverse the server order so the panel must put governments first.
+    // Deliberately reverse the server order to exercise the government's grouping.
     coverage.bodies.reverse();
     // Controlled calendar rows exercise selection, cancellation, stale SCHEDULED
     // statuses and exact body identity for every real body resolved from each ZIP.
@@ -58,14 +59,23 @@ test("Bodies stays compact and opens the correct body with next and last meeting
     const noop=()=>{};
     function Reader(){
       const params=new URLSearchParams(location.search);
-      const original=regions[params.get("zip")||"85701"];
+      let original=regions[params.get("zip")||"85701"];
+      if(params.get("types")==="1"){
+        const parent=original.coverage.bodies.find(body=>body.bodyClass==="GOVERNING"&&body.divisionType==="place");
+        const type={...parent,bodyId:parent.bodyId+":worksession",name:parent.name+" Worksession",bodyClass:"MEETING_TYPE",meetingBodyId:parent.bodyId};
+        const person={id:"held-current-member",name:"Current Member",officeTitle:"Mayor",officeJurisdictionOcdId:parent.ocdId,termNote:null,partyLabel:null,websiteUrl:null,sourceUrl:"https://fixture.example.gov/roster",provenance:{sourceUrl:"https://fixture.example.gov/roster",sourceOrg:"Fixture",collectedAt:"2026-09-23",verifiedAt:null},email:null,phone:null,contactFormUrl:null,photoUrl:null,campaignUrl:null,termEnd:null,birthDate:null};
+        const next=original.meetings.find(meeting=>meeting.bodyId===parent.bodyId&&meeting.id.endsWith(":next"));
+        original={...original,coverage:{...original.coverage,bodies:[{...parent,meetingTypes:[type],readerRoster:{members:[person],earlierMembers:[{...person,id:"held-earlier-member",name:"Earlier Member"}],gaps:[],officePhone:null}},type]},meetings:[...original.meetings,{...next,id:"held-worksession",bodyId:type.bodyId,startsAt:"2026-09-24T17:00:00Z"}]};
+      }
       const calendar=params.get("calendar");
       const region={...original,meetings:calendar==="recorded"?recorded:calendar==="none"?[]:calendar?original.meetings.filter(meeting=>meeting.id.endsWith(":"+calendar)):original.meetings};
       const [body,setBody]=useState(null);
+      const [openedHolder,setOpenedHolder]=useState(null);
       const subject=body?bodySubject(body,region.meetings):null;
       const data={allMeetings:region.meetings,meetings:region.meetings,venues:[],result:null,location:null,drawnDistricts:[],dropped:0,searchFailed:false,atAddress:false,governing:null,zipPartial:null,basis:"ZIP"};
       return <DataProvider value={data}><ReaderCard key={body?.bodyId||"bodies"} viewKey={body?.bodyId||"bodies"} kicker={subject?.title||"Bodies"} backLabel={body?"Bodies":null} onBack={()=>setBody(null)} onClose={()=>setBody(null)}>
-        {subject?<EntityModal subject={subject} embedded onClose={()=>setBody(null)}/>:<DoorOverlay door="bodies" coverage={region.coverage} meetings={region.meetings} drawnDistricts={[]} districtOverlayOn={false} atAddress={false} onShowDistricts={noop} onOpenOfficial={noop} onOpenMeeting={noop} onOpenBody={setBody} onClose={noop} embedded/>}
+        {subject?<EntityModal subject={subject} embedded onClose={()=>setBody(null)} onOpenHolder={setOpenedHolder}/>:<DoorOverlay door="bodies" coverage={region.coverage} meetings={region.meetings} drawnDistricts={[]} districtOverlayOn={false} atAddress={false} onShowDistricts={noop} onOpenOfficial={noop} onOpenMeeting={noop} onOpenBody={setBody} onClose={noop} embedded/>}
+        {openedHolder&&<output data-opened-holder={openedHolder.id}>{openedHolder.name}</output>}
       </ReaderCard></DataProvider>;
     }
     createRoot(document.getElementById("root")).render(<Reader/>);`, sourcefile: "ui-02-bodies.tsx", resolveDir: process.cwd(), loader: "tsx" },
@@ -100,17 +110,19 @@ test("Bodies stays compact and opens the correct body with next and last meeting
         assert.ok(Date.now() - start < 3000, `${zip}: first usable list`);
         assert.equal(await rows.count(), region.coverage.bodies.length);
         assert.equal(await rows.locator("[data-meeting-row], article, details, a").count(), 0);
-        const expected = [...region.coverage.bodies].sort((a, b) => Number(b.bodyClass === "GOVERNING") - Number(a.bodyClass === "GOVERNING"));
-        const labels = await rows.locator("button > span:first-child").allTextContents();
+        const groups = groupBodiesByGovernment(region.coverage.bodies);
+        const expected = groups.flatMap(section => section.governments.flatMap(government => government.rows.flatMap(row => [row.body, ...row.meetingTypes])));
+        const labels = await page.locator("[data-body-row] > button > span:first-child").allTextContents();
         assert.deepEqual(labels, expected.map(bodyDisplayName));
+        assert.deepEqual(await page.locator(".door-panel h3").allTextContents(), groups.map(section => section.label));
+        assert.deepEqual(await page.locator(".door-panel h4").allTextContents(), groups.flatMap(section => section.governments.map(government => government.name)));
         await page.screenshot({ path: `.scratch/ci/ui-02-${zip}-${width}-list.png` });
         // Click every resolved body's row on desktop; repeat government and
         // advisory click-through on the narrow layout.
         const selected = width === 1024 ? expected : [expected[0], expected.at(-1)!];
         for (const body of selected) {
-          const row = rows.nth(expected.indexOf(body));
           const opened = Date.now();
-          await row.getByRole("button").click();
+          await page.locator(`[data-body-id=${JSON.stringify(body.bodyId)}] > button`).click();
           const next = page.locator('[data-meeting-row]').filter({ has: page.getByRole("heading", { name: "Next meeting", exact: true }) });
           const last = page.locator('[data-meeting-row]').filter({ has: page.getByRole("heading", { name: "Last meeting", exact: true }) });
           await next.waitFor({ state: "visible" }); await last.waitFor({ state: "visible" });
@@ -150,6 +162,23 @@ test("Bodies stays compact and opens the correct body with next and last meeting
         assert.equal(await lastRow.count(), calendar === "last" ? 1 : 0);
         await page.locator("[data-card-gap]").waitFor();
       }
+      await page.goto(`http://127.0.0.1:${address.port}/?zip=85701&types=1`);
+      const parentRow = page.locator("[data-body-row]").filter({ has: page.locator("[data-meeting-type-row]") });
+      await parentRow.waitFor();
+      assert.equal(await page.locator("[data-body-row]").count(), 2, "the held meeting-type id appears exactly once");
+      assert.equal(await parentRow.locator("[data-meeting-type-row]").count(), 1);
+      await parentRow.locator(":scope > button").click();
+      await page.locator('[data-meeting-id="held-worksession"]').waitFor();
+      await page.getByRole("button", { name: "Who sits on it 1", exact: true }).click();
+      assert.equal(await page.locator("[data-roster-holder]").count(), 1);
+      assert.equal(await page.getByRole("button", { name: "Current Member", exact: true }).count(), 1, "the mayor appears once in the member list");
+      assert.equal(await page.locator("[data-earlier-roster-holder]").count(), 1);
+      await page.getByText("Earlier membership records (1)", { exact: true }).click();
+      await page.getByRole("button", { name: "Earlier Member", exact: true }).click();
+      await page.locator('[data-opened-holder="held-earlier-member"]').waitFor();
+      await page.getByRole("button", { name: "Back to Bodies", exact: true }).click();
+      await page.locator("[data-meeting-type-row] > button").click();
+      await page.locator('[data-meeting-id="held-worksession"]').waitFor();
       assert.deepEqual(errors, []);
       await context.close();
     }

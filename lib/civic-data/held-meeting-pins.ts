@@ -49,7 +49,7 @@ const markerName = `'held-meeting-pins:row:'||md5(${retryKey})`;
 const position = `(CASE WHEN jsonb_typeof(sitting.value->'online')='object' THEN 0 ELSE 1 END,p.promotion_key,p.ordinal)`;
 const afterPosition = `($2::int,$3::text,$4::bigint)`;
 const pinInputHash = `encode(sha256(convert_to(jsonb_build_array('ENTITY_OWNERSHIP_MP01_V3',p.content_hash,
-  (SELECT parent_id FROM entity WHERE id=p.body_id),
+  (SELECT jsonb_build_array(e.parent_id,owner.kind,owner.name) FROM entity e LEFT JOIN entity owner ON owner.id=e.parent_id WHERE e.id=p.body_id),
   coalesce((SELECT jsonb_agg(jsonb_build_array(changed.promotion_key,changed.collection,changed.row_id,changed.content_hash)
     ORDER BY changed.promotion_key,changed.collection,changed.ordinal) FROM civic_data_rows changed WHERE ${dependencyScope}),'[]'::jsonb),
   coalesce((SELECT jsonb_agg(jsonb_build_array(f.entity_id,f.value,f.checked_at) ORDER BY f.entity_id,f.id)

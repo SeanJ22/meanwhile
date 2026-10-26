@@ -1,3 +1,4 @@
+import { readDerivedInputHeads, readDerivedWiringRows, selectDerivedWiringRows, type DerivedInputHead, type DerivedWiringRow } from "./derived-input-rows.ts";
 import { readKeyedGovernmentLookup, type GovernmentRowLookup } from "./keyed-government-lookup.ts";
 import { readMemberOfficeMembers, readMemberOfficeRows, memberOfficeStateScope, memberOfficeScopeState, MEMBER_OFFICE_CURSOR, type MemberOfficeProgress, type MemberOfficeSlice } from "../officials/member-office-data.ts";
 import { statePeopleScopeForId } from "../officials/people-identity.ts";
@@ -159,6 +160,8 @@ export interface RoutineDataStore {
   readonly readGovernmentLookup?: (state:string,governmentIds:readonly string[],censusIds:readonly string[],bodyIds?:readonly string[],divisionIds?:readonly string[])=>Promise<GovernmentRowLookup>;
   readonly readRegistrySlice: (state: string, bodyIds: readonly string[], divisionIds: readonly string[]) => Promise<RegistryLookup | null>;
   readonly readRegistryDivisions: (state: string, labels: readonly string[]) => Promise<readonly RegistryDivisionMatch[]>;
+  readonly readDerivedInputHeads: (ids:readonly string[])=>Promise<readonly DerivedInputHead[]>;
+  readonly readDerivedWiringRows: (id:string,keys:readonly string[])=>Promise<readonly DerivedWiringRow[]>;
   readonly readCandidate: (candidateId: string) => Promise<CandidateVersionRecord | null>;
   /** Read only a named candidate field and its referenced parts. */
   readonly readCandidatePath: <T = unknown>(candidateId: string, path: readonly string[]) => Promise<T | null>;
@@ -1052,6 +1055,15 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     history.push(event);
     this.history.set(candidateId, history);
     return heldRecord(next);
+  }
+
+  async readDerivedInputHeads(ids:readonly string[]):Promise<readonly DerivedInputHead[]>{
+    return ids.flatMap(id=>{const row=this.candidates.get(id);if(!row)return [];
+      return [{id,recordClass:row.candidate.recordClass,scope:row.candidate.scope,state:row.state,
+        readModelSha256:canonicalCivicDataHash(row.candidate.readModel),readModelKind:typeof (row.candidate.readModel as {kind?:unknown})?.kind==="string"?(row.candidate.readModel as {kind:string}).kind:null}];});
+  }
+  async readDerivedWiringRows(id:string,keys:readonly string[]):Promise<readonly DerivedWiringRow[]>{
+    return selectDerivedWiringRows(this.candidates.get(id)?.candidate.readModel,keys);
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
@@ -2350,6 +2362,13 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       return await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate;
 
     })) ?? Promise.reject(new Error(`CANDIDATE_NOT_FOUND:${candidateId}`));
+  }
+
+  async readDerivedInputHeads(ids:readonly string[]):Promise<readonly DerivedInputHead[]>{
+    return readDerivedInputHeads((text,params)=>this.readerRows(text,params),ids);
+  }
+  async readDerivedWiringRows(id:string,keys:readonly string[]):Promise<readonly DerivedWiringRow[]>{
+    return readDerivedWiringRows((text,params)=>this.readerRows(text,params),id,keys);
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {

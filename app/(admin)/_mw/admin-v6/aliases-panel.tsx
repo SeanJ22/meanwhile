@@ -5,9 +5,10 @@ import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
 
 export function AliasesPanel() {
-  const { reading } = useReading<{ counts: readonly AliasCount[] | null }>("/api/admin/v6/data/aliases", 60_000);
+  const { reading, status } = useReading<{ counts: readonly AliasCount[] | null }>("/api/admin/v6/data/aliases");
   const counts = reading.kind === "ready" ? reading.data.counts : null;
   return <Card id="record-aliases" title="Record aliases by state">
+      {status}
     {reading.kind === "loading" ? <Loading what="record aliases" /> : counts === null ? <Empty>—</Empty> :
       <div className={s.tableWrap}><table className={s.table}>
         <thead><tr><th scope="col">State</th><th scope="col">Aliases</th></tr></thead>

@@ -101,10 +101,11 @@ export function motionRows(rows: readonly QueueRow[]): MotionRow[] {
 
 function OrdersInMotion() {
   const v = useV6();
-  const { rows, unread } = useQueueRows();
+  const { rows, unread, status } = useQueueRows();
   const motion = motionRows(rows).slice(0, 5);
   return (
     <Card title="Orders in motion" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>
+      {status}
       {motion.length === 0 && <Empty>{unread.length > 0 ? "—" : "Nothing in motion."}</Empty>}
       <div className={s.stack}>
         {motion.map((r) => (
@@ -120,10 +121,11 @@ function OrdersInMotion() {
 
 function NeedsMe() {
   const v = useV6();
-  const { rows, unread } = useQueueRows();
+  const { rows, unread, status } = useQueueRows();
   const needs = rows.filter((r) => r.filter === "needs-me");
   return (
     <Card title="Needs me" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>
+      {status}
       <div><span className={cx(s.big, needs.length > 0 && s.textWarn)}>{unread.includes("stuck cases") && unread.includes("orders") ? "—" : needs.length}</span></div>
       <p className={s.small}>{unread.length > 0 ? `Counted without ${unread.join(", ")}, which could not be read.` : needs.length === 0 ? "Good: nothing is waiting on you." : `Not good until they are cleared: ${needs.length === 1 ? "one thing is" : `${needs.length} things are`} waiting on you.`}</p>
       <div className={s.stack}>

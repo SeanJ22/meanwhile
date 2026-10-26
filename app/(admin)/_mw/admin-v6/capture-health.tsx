@@ -18,11 +18,12 @@ function Unread() {
 }
 
 export function CaptureHealthPanel() {
-  const { reading, reload } = useReading<CaptureHealthView | { readonly says: string }>("/api/admin/v6/data/capture", 60_000);
+  const { reading, reload, status } = useReading<CaptureHealthView | { readonly says: string }>("/api/admin/v6/data/capture");
   const v = reading.kind === "ready" && "headline" in reading.data ? reading.data : null;
   const tone = v === null ? "neutral" : v.headline.state === "recording" ? "good" : v.headline.state === "unknown" ? "neutral" : "warn";
   return (
     <Card title="Is capture working?" id="capture-health">
+      {status}
       {reading.kind === "loading" && <Loading what="capture health" />}
       {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
       {v && (

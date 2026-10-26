@@ -1442,3 +1442,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - Maryland: measure-translations:MD 919 MB (6 AM hour) → 3 MB (7 AM hour). Neon both databases 7 AM hour 3,289 MB (6 AM 4,590). openstates-people 629 MB.
 - RT-01: place_boundary, zip_place, zcta_place still 0 rows with the runner on 128 code for 35 minutes. Checked again at 9 AM; the 24-hour clock runs from 7:28 AM.
 - GB-01: census done through DE.
+
+### 9:25 AM EDT status
+- Place-page drain: still failing every minute on the missing WTP_PRODUCTION_DATABASE_URL_WRITE in the functions runtime; waiting on Sean's Netlify setting. place_page 24,900; rebuild_queue 159,068 (new changes still queue through code; no triggers). Readers unaffected.
+- Maryland: measure-translations:MD 151 MB in the 8 AM hour (2 AM 1,592, 3 AM 2,103, 4 AM 2,121 whole job, 5 AM 698, 6 AM 919, 7 AM 3). Fix confirmed over the two full hours after.
+- Neon, both databases, 8 AM hour: 3,803 MB (reader 3,650, control plane 153); openstates-people 1,281 MB.
+- RT-01: place map still 0 rows and no place-map job read anything in the 8 AM hour. A River agent is finding why (read-only); if a change is needed it uses #822's per-state turns.
+- GB-01: census done through FL. DB-04: no READY. Research: no Send.

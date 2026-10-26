@@ -1271,3 +1271,12 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 ### 11:42 PM EDT: release 123 opened
 - Batch 1 re-gate passed 9/9 on 526da8d5a (9,995 tests, 9,990 pass, 0 fail, 5 skipped). river and river-next moved to 526da8d5a. release/123 (253c926c8, same tree as river) is [SeanJ22/meanwhile#835](https://github.com/SeanJ22/meanwhile/pull/835), auto-merge on. Live checks plus GB-01 checks (Portland 97204 and 20 random ZIPs in 20 states) run once /api/build shows it.
 - Batch 2 gating on d941c6a89.
+
+### Midnight EDT status
+- Runner stuck on release 121, for Sean. The pilot-runner heartbeat (beat 12:01 AM) still shows tested sha 8664f367 (121), verdict RUNNER_BEHIND_EXECUTABLE. Last research cycle: 8:47 to 9:54 PM, exit 1, JavaScript heap out of memory plus Neon 30 s deadlines on civic_data_promotions. Its next cycle was due at 10:04 PM and never started: no research cycle for 2 hours. It isn't draining either. routine-civic-data and publish-now restarted under new pids between 11:03 PM and midnight (3433459 → 3601808, 3445215 → 3651207), so the runner never reaches the quiet point its drain-and-restart path waits for. pause is null. Routine work still runs.
+- Why it matters: 122's research reads and GB-01's census step (release 123) both run on the runner. Until it restarts on new code, neither does anything for readers, and River can't measure either.
+- Step for Sean, on meanwhile-runner after release 123 merges (minutes away, CI finishing): `sudo systemctl restart meanwhile-runner.service`, then `journalctl -u meanwhile-runner.service -n 60 --no-pager`. River confirms in the heartbeat that tested sha moves to 123's main commit and a research cycle starts.
+- Neon, both databases, 11 PM EDT hour: 2,933 MB (10 PM: 1,792). Registry read 44 MB (10 PM: 85; before DB-02: 756 to 1,168). Research cycle and Open States votes: 0, not running.
+- Release 123 ([#835](https://github.com/SeanJ22/meanwhile/pull/835)): CI tests 4/4, builds, verify and admission green; final gates job running. Auto-merge on.
+- Batch 2 gate: lint, tsc, dead-code, preflight pass; tests running.
+- DB-04: no branch yet.

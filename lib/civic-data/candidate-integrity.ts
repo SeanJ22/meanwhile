@@ -1,6 +1,9 @@
 import { durableCivicDataHash } from "./canonical-hash.ts";
 import { durableStateHash, largePayloadScope } from "./state-publication.ts";
 import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
+import type { Registry } from "../registry/types.ts";
+import { selectRegistryLookup } from "./keyed-rows.ts";
+import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { VOTING_SOURCE_REPLACEMENT_VERIFIER, votingSourceReplacement, votingSourceReplacementVerifier } from "../ballot/voting-source-replacement-contract.ts";
 
 import { candidateChangeSet } from "./changes.ts";
@@ -122,6 +125,11 @@ function candidateReadOnlyStore(
       return value === undefined ? null : value as T;
     },
     readRegistryDivisions: async () => [],
+    readRegistrySlice: async (state,bodyIds,divisionIds) => {
+      if(candidate.recordClass !== "REGISTRY_RUNTIME_BINDING" || candidate.scope !== stateRegistryRuntimeScope(state))return null;
+      const registry=(candidate.readModel as {registry?:Registry} | null)?.registry;
+      return registry ? selectRegistryLookup(candidate.id,registry,bodyIds,divisionIds) : null;
+    },
     readSourceHead: async (recordClass, scope) => recordClass === candidate.recordClass && scope === candidate.scope
       ? {sourceId:candidate.sourceId,recordClass:candidate.recordClass,scope:candidate.scope,versionId:candidate.id,
         lastKnownGoodVersionId:candidate.id,rawHash:candidate.retrieval.rawHash,rawHashBasis:candidate.retrieval.rawHashBasis ?? null,

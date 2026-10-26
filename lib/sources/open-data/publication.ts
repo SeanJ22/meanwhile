@@ -6,6 +6,8 @@ import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../
 import type { RoutineDataStore } from "../../civic-data/store.ts";
 import { OPEN_DATA_PARSER, openDataScope, openDataFactIssue, type OpenDataFact, type OpenDataSource, type OpenDataProjection, type OpenDataReport,type OpenDataPartitionRef } from "./model.ts";
 import { openDataReports,normalizeEcho,normalizeSocrata } from "./normalize.ts";
+import { openDataProbeContentHash,openDataSourceContentHash,type OpenDataSourceProbe } from "./source-probe.ts";
+export { openDataSourceContentHash } from "./source-probe.ts";
 
 const hash = (value:unknown) => createHash("sha256").update(canonicalCivicDataJson(value)).digest("hex");
 export function assertOpenDataProjection(value:OpenDataProjection, source:OpenDataSource) {
@@ -22,6 +24,8 @@ export async function readOpenDataProjection(source:OpenDataSource, partition="n
 }
 export interface OpenDataCapture {
   readonly url:string; readonly retrievedAt:string; readonly rawHash:string;
+  /** Original acquisition dates still referenced by immutable reader partitions of these same bytes. */
+  readonly captureDates?:readonly string[];
   readonly sourceRows:readonly Record<string,unknown>[];
   readonly sourceCheck?: import("../../civic-data/types.ts").SourceCheckEvidence;
   /** Full bytes are in the shared immutable vault. This row list is an exact excerpt. */
@@ -32,19 +36,17 @@ export function openDataCaptures(captures:readonly OpenDataCapture[]):readonly O
   const bySource=new Map<string,OpenDataCapture>();
   for(const capture of captures){
     const key=hash([capture.url,capture.rawHash,capture.archive??null]),prior=bySource.get(key);
-    if(!prior){bySource.set(key,capture);continue;}
+    if(!prior){bySource.set(key,{...capture,captureDates:[...new Set([capture.retrievedAt,...capture.captureDates??[]])].sort()});continue;}
     const rows=[...new Map([...prior.sourceRows,...capture.sourceRows].map(row=>[hash(row),row])).entries()]
       .sort(([a],[b])=>a.localeCompare(b)).map(([,row])=>row);
     const time=(row:OpenDataCapture)=>Date.parse(row.sourceCheck?.checkedAt??row.retrievedAt);
     const current=time(capture)>=time(prior)?capture:prior;
-    bySource.set(key,{...current,sourceRows:rows});
+    bySource.set(key,{...current,sourceRows:rows,
+      captureDates:[...new Set([prior.retrievedAt,capture.retrievedAt,...prior.captureDates??[],...capture.captureDates??[]])].sort()});
   }
   return [...bySource].sort(([a],[b])=>a.localeCompare(b)).map(([,capture])=>capture);
 }
 
-export function openDataSourceContentHash(captures:readonly OpenDataCapture[]):string {
-  return hash([...new Set(captures.map(capture=>canonicalCivicDataJson([capture.url,capture.rawHash,capture.archive??null])))].sort());
-}
 /** Shared by the registered candidate and immutable slices, without building unused candidate digests. */
 export function openDataRowsBound(rows:readonly OpenDataFact[],captures:readonly OpenDataCapture[]):boolean {
   const sourceObjects=new Set(captures.flatMap(capture=>capture.sourceRows));
@@ -64,12 +66,16 @@ export function openDataRowsBound(rows:readonly OpenDataFact[],captures:readonly
   })&&new Set(rows.map(row=>row.id)).size===rows.length;
 }
 export function openDataCandidate(input:{source:OpenDataSource;partition?:string;rows:readonly OpenDataFact[];
-  reports?:readonly OpenDataReport[];partitions?:readonly OpenDataPartitionRef[];captures:readonly OpenDataCapture[];excludedFacts?:RoutineCandidate["excludedFacts"];now:string}):RoutineCandidate {
+  reports?:readonly OpenDataReport[];partitions?:readonly OpenDataPartitionRef[];captures:readonly OpenDataCapture[];excludedFacts?:RoutineCandidate["excludedFacts"];now:string;
+  sourceProbe?:OpenDataSourceProbe}):RoutineCandidate {
   const scope=openDataScope(input.source,input.partition), reports=input.reports ?? openDataReports(input.rows);
   const records=input.partitions?reports.reduce((n,r)=>n+r.loaded,0):input.rows.length;
   const readModel:OpenDataProjection={kind:"open-data",sourceId:input.source,records:input.rows,reports,...(input.partitions?{partitions:input.partitions}: {})};
-  const captures=openDataCaptures(input.captures),normalizedPayload={captures};
-  const rawHash=openDataSourceContentHash(captures), normalizedHash=hash(readModel);
+  const captures=openDataCaptures(input.captures),normalizedPayload={captures,...(input.sourceProbe?{sourceProbe:input.sourceProbe}:{})};
+  if(input.sourceProbe&&(input.sourceProbe.sourceId!==input.source||input.sourceProbe.parserVersion!==OPEN_DATA_PARSER||
+    input.sourceProbe.requests.some(request=>!captures.some(capture=>openDataSourceContentHash([capture])===openDataSourceContentHash([request])))))
+    throw Error("Open-data source probe is not bound to captured source content.");
+  const rawHash=input.sourceProbe?openDataProbeContentHash(input.sourceProbe):openDataSourceContentHash(captures), normalizedHash=hash(readModel);
   const last=[...captures].sort((a,b)=>Date.parse(a.retrievedAt)-Date.parse(b.retrievedAt)||
     Date.parse(a.sourceCheck?.checkedAt??a.retrievedAt)-Date.parse(b.sourceCheck?.checkedAt??b.retrievedAt)).at(-1);
   const bound=openDataRowsBound(input.rows,captures);
@@ -86,9 +92,10 @@ export function openDataCandidate(input:{source:OpenDataSource;partition?:string
     dependentChecks:[{consumer:"Government and place cards and Ask",passed:bound && new Set(input.rows.map(r=>r.id)).size===input.rows.length,detail:"Every projected row binds an exact saved source row; unjoined rows remain held."}],
     excludedFacts:input.excludedFacts,normalizedPayload,readModel};
 }
-export async function publishOpenData(input:Parameters<typeof openDataCandidate>[0]&{store:RoutineDataStore;replace?:boolean}) {
+export async function publishOpenData(input:Parameters<typeof openDataCandidate>[0]&{store:RoutineDataStore;replace?:boolean;
+  prior?:Awaited<ReturnType<typeof readOpenDataProjection>>}) {
   if(input.partition && input.partition!=="national")throw Error("SRC-SO publishes one canonical national manifest per source.");
-  const prior=await readOpenDataProjection(input.source,input.partition,{store:input.store,now:input.now});
+  const prior=input.prior??await readOpenDataProjection(input.source,input.partition,{store:input.store,now:input.now});
   if(prior.kind==="STORE_UNREACHABLE")throw Error("Open-data prior could not be read; prior facts remain live.");
   const priorCaptures=prior.kind==="PROMOTED"?
     await input.store.readCandidatePath<readonly OpenDataCapture[]>(prior.metadata.versionId!,["normalizedPayload","captures"])??[]:[];

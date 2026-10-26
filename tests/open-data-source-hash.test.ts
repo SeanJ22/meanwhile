@@ -11,6 +11,7 @@ test("identical source checks stay one capture and one source digest while retai
   const held=openDataCaptures([first,next,next]);
   assert.equal(held.length,1);assert.equal(held[0].retrievedAt,later);assert.equal(held[0].sourceCheck?.checkedAt,later);
   assert.deepEqual(held[0].sourceRows.map(row=>row.id).sort(),["one","two"]);
+  assert.deepEqual(held[0].captureDates,[at,later],"old immutable rows keep their exact acquisition binding");
   assert.equal(openDataSourceContentHash([first]),openDataSourceContentHash([first,next,next]));
 });
 

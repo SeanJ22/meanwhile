@@ -12,7 +12,7 @@ import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-stor
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
-import { openArchiveSource, type ArchiveObjectStore } from "../lib/sources/archive-download.ts";
+import { openArchiveSource, type ArchiveObjectStore, type ArchiveSourceOpen } from "../lib/sources/archive-download.ts";
 import { streamCsvObjects } from "../lib/sources/prl/streaming.ts";
 import { recordDoorEvidence } from "../lib/doors/shut.ts";
 import { feedDoorId } from "../lib/doors/registry.ts";
@@ -21,7 +21,7 @@ import { readSourceChangeHistory } from "../lib/civic-data/source-change-cadence
 import { routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { readerFactDb } from "../lib/facts/db.ts";
-import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, SOCRATA_CATALOG, ECHO_EXPORT, zipPartition, type OpenDataSource, type OpenDataReport,type OpenDataPartitionRef } from "../lib/sources/open-data/model.ts";
+import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, SOCRATA_CATALOG, ECHO_EXPORT, zipPartition, openDataScope, type OpenDataSource, type OpenDataReport,type OpenDataPartitionRef } from "../lib/sources/open-data/model.ts";
 import { normalizeEcho, openDataReports, type GovernmentJoin } from "../lib/sources/open-data/normalize.ts";
 import { openDataFetch, socrataPages } from "../lib/sources/open-data/acquire.ts";
 import { OpenDataSpool } from "../lib/sources/open-data/spool.ts";
@@ -35,6 +35,10 @@ import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { refreshSocrata, socrataStateDivisionId, type SocrataGovernmentState } from "../lib/sources/open-data/socrata.ts";
 import { echoMinimumGap, retainEchoMinimumGaps, mergeEchoRetainedPartition, type EchoMinimumGap } from "../lib/sources/open-data/echo-gaps.ts";
 import { materializeEchoPartitions } from "../lib/sources/open-data/echo-materialization.ts";
+import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import { confirmSourceHashUnchanged,sourceHashReceiptFields,type SourceHashConfirmation } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { openDataProbeContentHash,openDataSourceProbe,readOpenDataSourceDependencies,type OpenDataSourceProbe } from "../lib/sources/open-data/source-probe.ts";
 
 export function parseOpenDataArguments(args:readonly string[]):OpenDataSource {
   if(args.length!==2 || !args.includes("--promote"))throw Error("SRC-SO requires --promote and one --source.");
@@ -74,26 +78,45 @@ async function openDataRun(input:{source:OpenDataSource;store:RoutineDataStore;v
       }
       const reference=await saveOpenDataPartition({source:input.source,...partition,now:input.now()},input.vault);partitions.set(reference.id,reference);
     },
-    publish:(capture:OpenDataCapture,excludedFacts:RoutineCandidate["excludedFacts"]=[])=>publishOpenData({store:input.store,source:input.source,rows:[],reports:[...reports.values()],
-      partitions:[...partitions.values()].sort((a,b)=>a.id.localeCompare(b.id)),captures:[capture],excludedFacts,now:input.now(),replace:true}),
+    publish:(capture:OpenDataCapture,excludedFacts:RoutineCandidate["excludedFacts"]=[],sourceProbe?:OpenDataSourceProbe)=>publishOpenData({store:input.store,source:input.source,rows:[],reports:[...reports.values()],
+      partitions:[...partitions.values()].sort((a,b)=>a.id.localeCompare(b.id)),captures:[capture],excludedFacts,sourceProbe,now:input.now(),replace:true,prior}),
   };
+}
+type EchoRefreshResult={publication:Publication;confirmation:null;reports:OpenDataReport[];gaps:EchoMinimumGap[];unchanged:boolean}|
+  {publication:null;confirmation:SourceHashConfirmation;reports:OpenDataReport[];gaps:EchoMinimumGap[];unchanged:true};
+function echoCapture(archive:ArchiveSourceOpen):OpenDataCapture {
+  return {url:ECHO_EXPORT,retrievedAt:archive.retrievedAt,rawHash:archive.sourceSha256,sourceRows:[],
+    ...(!archive.outage?{sourceCheck:{requestedUrl:ECHO_EXPORT,finalUrl:archive.finalUrl,httpStatus:archive.lastCheckStatus as 200|304,checkedAt:archive.checkedAt,rawHash:archive.sourceSha256}}:{}),
+    archive:{sha256:archive.sourceSha256,member:archive.member,publishedAt:archive.publishedAt}};
 }
 /** The scheduled EPA ECHO run: conditional check from the held source, minimum-fact gaps, bounded reader partitions, registered publication. */
 export async function refreshEchoNational(input:{store:RoutineDataStore;vault:EvidenceStore;archive:ArchiveObjectStore;spool:Spool;signal:AbortSignal;now:()=>string;
-  readStateJoins:(state:string)=>Promise<GovernmentJoin[]>;fetchImpl?:typeof fetch}):Promise<{publication:Publication;reports:OpenDataReport[];gaps:EchoMinimumGap[];unchanged:boolean}> {
-  const {store,vault,spool,signal}=input,run=await openDataRun({source:"epa-echo",store,vault,now:input.now}),prior=run.prior;
-  const candidate=prior.kind==="PROMOTED"?await store.readCandidate(prior.metadata.versionId!):null;
-  const priorCaptures=(candidate?.candidate.normalizedPayload as {captures?:OpenDataCapture[]}|null)?.captures??[];
-  const archive=await openArchiveSource({id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv-zip"},
+  readStateJoins:(state:string)=>Promise<GovernmentJoin[]>;fetchImpl?:typeof fetch}):Promise<EchoRefreshResult> {
+  const {store,vault,spool,signal}=input,scope=openDataScope("epa-echo","national");
+  const [head,dependencies]=await Promise.all([store.readSourceHead("CURATED_READER_RECORD",scope),readOpenDataSourceDependencies(store)]);
+  const plan=head?.parserVersion===OPEN_DATA_PARSER&&head.rawHashBasis==="SOURCE_CONTENT_V1"
+    ?await store.readCandidatePath<OpenDataSourceProbe>(head.versionId,["normalizedPayload","sourceProbe"]):null;
+  const canReuse=plan?.formatVersion===1&&plan.sourceId==="epa-echo"&&plan.parserVersion===OPEN_DATA_PARSER&&plan.complete&&
+    plan.requests.length===1&&plan.requests[0].url===ECHO_EXPORT&&canonicalCivicDataJson(plan.dependencies)===canonicalCivicDataJson(dependencies);
+  const acquire=(reuse?:string)=>openArchiveSource({id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv-zip"},
     (url,init)=>openDataFetch(url,{...init,signal:AbortSignal.any([signal,...(init?.signal?[init.signal]:[])])},input.fetchImpl),input.archive,
-    candidate?.candidate.normalization.parserVersion===OPEN_DATA_PARSER?priorCaptures.at(-1)?.archive?.sha256:undefined);
-  const gaps:EchoMinimumGap[]=[];let excluded:RoutineCandidate["excludedFacts"]=[];
-  const capture:OpenDataCapture={url:ECHO_EXPORT,retrievedAt:archive.retrievedAt,rawHash:archive.sourceSha256,sourceRows:[],
-    sourceCheck:{requestedUrl:ECHO_EXPORT,finalUrl:archive.finalUrl,httpStatus:archive.lastCheckStatus as 200|304,checkedAt:archive.checkedAt,rawHash:archive.sourceSha256},
-    archive:{sha256:archive.sourceSha256,member:archive.member,publishedAt:archive.publishedAt}};
+    reuse);
+  let archive=await acquire(canReuse?plan.requests[0].archive?.sha256:undefined),capture=echoCapture(archive);
   try {
-    if(archive.unchanged){excluded=candidate?.candidate.excludedFacts??[];for(const row of prior.kind==="PROMOTED"?prior.value.reports:[])run.reports.set(row.state,row);}
-    else {
+  const observed=openDataSourceProbe({sourceId:"epa-echo",captures:[capture],dependencies,complete:canReuse===true&&!archive.outage});
+  if(observed.complete) {
+    const rawHash=openDataProbeContentHash(observed);
+    const confirmation=await confirmSourceHashUnchanged({store,sourceId:"epa-echo",recordClass:"CURATED_READER_RECORD",scope,
+      parserVersion:OPEN_DATA_PARSER,rawHash,complete:true,now:input.now(),retrieval:{requestedUrl:ECHO_EXPORT,finalUrl:archive.finalUrl,
+        httpStatus:200,retrievedAt:archive.retrievedAt,rawHash,sourceCheck:capture.sourceCheck}});
+    if(confirmation)return {publication:null,confirmation,reports:[],gaps:[],unchanged:true};
+  }
+  // A moved pointer or changed normalization input still needs the exact source bytes for a new parse.
+  if(archive.unchanged){await archive.dispose();archive=await acquire();capture=echoCapture(archive);}
+  const run=await openDataRun({source:"epa-echo",store,vault,now:input.now}),prior=run.prior;
+  const priorCaptures=prior.kind==="PROMOTED"?
+    await store.readCandidatePath<readonly OpenDataCapture[]>(prior.metadata.versionId!,["normalizedPayload","captures"])??[]:[];
+  const gaps:EchoMinimumGap[]=[];let excluded:RoutineCandidate["excludedFacts"]=[];
       if(archive.member!=="ECHO_EXPORTER.csv")throw Error("EPA exporter archive has a different source member.");
       let count=0;
       for await(const raw of streamCsvObjects(archive.textChunks)) {
@@ -108,9 +131,10 @@ export async function refreshEchoNational(input:{store:RoutineDataStore;vault:Ev
       const currentPartitions=async function*(){for await(const partition of spool.partitions({consume:true,maxRows:1000,maxBytes:4*1024*1024}))yield mergeEchoRetainedPartition(partition,retained);yield* retained.values();};
       await materializeEchoPartitions({partitions:currentPartitions(),addReports:rows=>run.addReports(rows),writePartition:partition=>run.writePartition(partition),readStateJoins:input.readStateJoins});
       excluded=gaps.map(gap=>gap.fact);
-    }
+  const sourceProbe=openDataSourceProbe({sourceId:"epa-echo",captures:[capture],dependencies,complete:!gaps.length&&!archive.outage});
+  return {publication:await run.publish(capture,excluded,sourceProbe),confirmation:null,reports:[...run.reports.values()],gaps,
+    unchanged:plan?.requests[0]?.rawHash===archive.sourceSha256};
   } finally {await archive.dispose();}
-  return {publication:await run.publish(capture,excluded),reports:[...run.reports.values()],gaps,unchanged:archive.unchanged===true};
 }
 async function main() {
   const source=parseOpenDataArguments(process.argv.slice(2));installNeonRequestDeadline();prepareProductionCivicDataWrite();
@@ -121,7 +145,7 @@ async function main() {
   const signal=AbortSignal.timeout(20*60_000);
   try {
     const vault=openDataVault();
-    let publication:Publication|undefined,reports:OpenDataReport[]=[],gaps:EchoMinimumGap[]=[];
+    let publication:Publication|null|undefined,confirmation:SourceHashConfirmation|null=null,reports:OpenDataReport[]=[],gaps:EchoMinimumGap[]=[];
     if(source==="socrata-discovery") {
       const run=await openDataRun({source,store,vault,now});
       const states=async function*():AsyncGenerator<SocrataGovernmentState>{
@@ -136,11 +160,18 @@ async function main() {
         publish:async(rows,capture)=>{for(const [state,row]of run.reports)run.reports.set(state,{...row,loaded:0,joined:0,unjoined:0});for(const row of rows)run.reports.set(row.state,row);publication=await run.publish(capture);}});
       if(!publication)throw Error("Source produced no captured publication.");
       reports=[...run.reports.values()];
-    } else ({publication,reports,gaps}=await refreshEchoNational({store,vault,archive:openDataArchiveStore(),spool,signal,now,readStateJoins:async state=>{
+    } else ({publication,confirmation,reports,gaps}=await refreshEchoNational({store,vault,archive:openDataArchiveStore(),spool,signal,now,readStateJoins:async state=>{
       const registration=await readRegistrationProjection(state,{store});
       if(registration.kind==="PROMOTED")return governmentJoinRows(registration.value.governments??[]);
+      if(registration.kind==="STORE_UNREACHABLE")throw Error(`EPA registration joins are unavailable for ${state}; prior facts remain live.`);
       console.log(`SRC_SO_JOIN_GAP=${JSON.stringify({state,reason:registration.kind})}`);return [];
     }}));
+    if(confirmation) {
+      await recordDoorOutcome(repos.doors,feedDoorId(source),"SUCCESS",now(),false);
+      console.log(`RCD_RECEIPT=${JSON.stringify({source,...sourceHashReceiptFields(confirmation),structuralReleaseContract:ZERO_RELEASE_EVENTS})}`);
+      return;
+    }
+    if(!publication)throw Error("Source produced no captured publication.");
     await recordDoorEvidence(repos.doors,feedDoorId(source),{kind:"GOOD",rows:reports.reduce((n,r)=>n+r.loaded,0)},now(),repos);
     const history = (await readSourceChangeHistory(readerFactDb().query, [routineTaskFromContract(requiredRoutineContract(source))])).get(source);
     await recordDoorOutcome(repos.doors,feedDoorId(source),"SUCCESS",now(),false,undefined,history);

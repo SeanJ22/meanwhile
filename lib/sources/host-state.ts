@@ -65,14 +65,14 @@ class FileHostState implements HostStateStore {
     }
     try {
       let state: HostState;
-      try { state = JSON.parse(await readFile(`${key}.json`, "utf8")) as HostState; }
+      try { state = JSON.parse(await readFile(`${key}.source-host-state`, "utf8")) as HostState; }
       catch (error) { if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error; state = empty(); }
       state.healthy ??= 0;
       try { return await work(state); }
       finally {
         const temporary = `${key}.${process.pid}.tmp`;
         await writeFile(temporary, JSON.stringify(state));
-        await rename(temporary, `${key}.json`);
+        await rename(temporary, `${key}.source-host-state`);
       }
     } finally { await rm(lock, { recursive: true, force: true }); }
   }

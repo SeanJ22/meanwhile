@@ -44,6 +44,16 @@ DB-05 is Sean's new session to take Neon down to 10 GB a day. River stopped DB-0
 - *Failed approaches:* a replay runner that blocked the cache host while children ran cached nothing (launch children without blocking); GitHub API/codeload return 403 here and adding openstates/people was denied, so the replay rebuilt input from the held people list; HTTP byte counting misses the socket geography read (count sockets too).
 - *DB-03 held steps DB-04 says it supersedes:* all of them (e4305907d, 6f0652479, 7e81c1452, 407e02a1d, f81db4b37, 18df1421b, 2600aecdc, ef74ed82e (already in river via DB-03A), 11072d2ed (evidence only), a0cb7d1ef, 3e3f1ab33). Held for DB-05 to confirm. Nothing from stream/db-04 or stream/river-db-04 is folded or shipped. DB-05's READY pieces are scanned like any lane and ride the next release with everything else READY.
 
+**Runner release fix**
+| READY | Lane | State |
+|---|---|---|
+| 2785d540e (stream/river-runner-release) | A stuck staging can't block later releases (one staging at a time for the newest release; a newer release cancels an older one; 15-minute install timeout marks it failed and goes the drain path; killed commands finish even if a leftover child holds the pipe). Heartbeat writes testedSha, codeIdentity and releaseStaging at startup and on the standing clock (at most once a minute); Admin shows a failed staging as attention | READY, scan clean, merges cleanly with bills and RIVER-PP. 814/814 focused tests (file by file), tsc, eslint, knip, preflight clean. In release 129 |
+
+*What happened 4:02-7:06 AM (from production, read-only):* the runner was not stuck. It moved to 125 (e12d76968) at 3:40 AM; 126's Netlify build failed so 125 stayed live; 127 went live at 6:49 and the runner closed new publish-now starts within about 2 minutes, then waited for the routine run already in progress (6:44:31-7:06:03, the usual ~22 minutes) and came up on 127 at 7:06:39, so it likely did not need the hand restart. 128 went the same way on its own (7:27:12 run end, 7:27:47 on 9352c8e14). The heartbeat misled: testedSha and codeIdentity were written only when a research cycle finished, so with hunts stopped they have read 8664f367 ("runner behind") since 9:54 PM. The separate staging bug (marker cleared only when a staging finished; a leftover child could hold it forever) did not cause Oct 26 but is fixed.
+*Follow-up, not urgent:* while hunts are stopped the main loop runs every second (CONTROL_WAKE_POLL_MS = 1 s), and each pass inspects the release (fetches /api/build and GitHub check runs: about 3,600 GitHub calls an hour against a 5,000 limit) and reads owner controls. River will cut this to once a minute in the next release.
+
+**RT-01c**: READY bdcb74269 conflicts with bills (both changed the held memory lanes on top of RT-01b). Its builder is merging bills and re-posting READY; it rides 129 if it lands before the fold, else the next release.
+
 **RIVER-PP: place pages on the runner**
 | READY | Lane | State |
 |---|---|---|

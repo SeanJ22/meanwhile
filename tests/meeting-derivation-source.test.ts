@@ -28,11 +28,14 @@ test("meeting derivations transfer source metadata and resume only incomplete or
   assert.deepEqual(meetingDerivationPending(changed), ["government:a"]);
   probe = { ...(probe as object), complete: false, pending: ["government:a"] };
   assert.deepEqual(meetingDerivationPending(await readMeetingDerivationSource(input)), ["government:a"]);
+  const absent = await readMeetingDerivationSource({ ...input, query: async () => [], groups: { "government:new": "AZ" } });
+  assert.deepEqual(meetingDerivationPending(absent), ["government:new"], "a reviewed government with no saved walk remains a dependency");
+  assert.deepEqual(absent.groupStates, { "government:new": "AZ" });
 });
 
 test("completed metadata confirms the raw source digest; pending work and normalization changes cannot skip", async () => {
   const inputs = [{ kind: "DISCOVERY_ATTEMPT" as const, attemptId: "walk:a", recordId: "1", recordedAt: at }];
-  const source: MeetingDerivationSource = { sourceContentInputs: inputs, walks: [], normalizationInputHash: "config", groupHashes: { a: "one" },
+  const source: MeetingDerivationSource = { sourceContentInputs: inputs, walks: [], normalizationInputHash: "config", groupHashes: { a: "one" }, groupStates: { a: "AZ" },
     priorProbe: { formatVersion: 1, sourceId: head.sourceId, complete: true, normalizationInputHash: "config", groups: { a: "one" }, pending: [] },
     outputHead: head, dependenciesReady: true };
   let calls = 0;

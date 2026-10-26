@@ -7,6 +7,7 @@ import { CURRENT_CALENDAR_READS_SQL } from "../control-plane/discovery/derived-w
 import { registrationTarget } from "../registration/publication.ts";
 import { MEETING_DOORS_RECORD_CLASS, MEETING_DOORS_SCOPE } from "../doors/meeting-doors.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { canonicalCivicDataJson } from "./changes.ts";
 import type { DerivedInputRef } from "./derived-authority.ts";
 import { confirmDerivedSourceUnchanged, derivedSourceInputContent, withDerivedSourceContent } from "./derived-source-hash.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
@@ -47,6 +48,7 @@ export interface MeetingDerivationProbe {
   readonly normalizationInputHash: string;
   /** Completed government inputs survive a pass cutoff, including when the civic facts did not change. */
   readonly groups: Readonly<Record<string, string>>;
+  readonly groupStates?: Readonly<Record<string, string>>;
   readonly pending: readonly string[];
 }
 export interface MeetingDerivationSource {
@@ -54,6 +56,7 @@ export interface MeetingDerivationSource {
   readonly walks: readonly MeetingDerivationWalkHead[];
   readonly normalizationInputHash: string;
   readonly groupHashes: Readonly<Record<string, string>>;
+  readonly groupStates: Readonly<Record<string, string>>;
   readonly priorProbe: MeetingDerivationProbe | null;
   readonly outputHead: SourceHead | null;
   readonly dependenciesReady: boolean;
@@ -76,13 +79,21 @@ export async function readMeetingDerivationSource(input: {
   readonly scope: string;
   readonly configHash: string;
   readonly pointers?: readonly { readonly recordClass: RoutineRecordClass; readonly scope: string }[];
+  readonly groups?: Readonly<Record<string, string>>;
+  /** Wiring owns only crosswalked governments; a new crosswalk version expands this list after the hash comparison. */
+  readonly reuseGroups?: boolean;
 }): Promise<MeetingDerivationSource> {
-  const rows = await input.query(MEETING_DERIVATION_SOURCE_SQL, [null]);
+  const outputHead = await input.store.readSourceHead(input.recordClass, input.scope);
+  const rawProbe = outputHead ? await input.store.readCandidatePath<MeetingDerivationProbe>(outputHead.versionId, ["normalizedPayload", "sourceProbe"]) : null;
+  const priorProbe = rawProbe?.formatVersion === 1 && rawProbe.sourceId === input.sourceId && typeof rawProbe.groups === "object" && Array.isArray(rawProbe.pending) ? rawProbe : null;
+  const selectedGroups = input.groups ?? (input.reuseGroups ? priorProbe?.groupStates : undefined);
+  const rows = await input.query(MEETING_DERIVATION_SOURCE_SQL, [selectedGroups ? Object.keys(selectedGroups) : null]);
   const walks: MeetingDerivationWalkHead[] = rows.map(row => ({ id: String(row.id), position: String(row.position), state: String(row.state),
-    jurisdiction: String(row.jurisdiction), routes: row.routes as string[], inputs: [{ kind: "DISCOVERY_ATTEMPT", attemptId: String(row.attempt_id),
+    jurisdiction: String(row.jurisdiction), routes: [...row.routes as string[]].sort(), inputs: [{ kind: "DISCOVERY_ATTEMPT", attemptId: String(row.attempt_id),
       recordId: String(row.position), recordedAt: String(row.recorded_at) },
       ...(typeof row.artifacts === "string" ? JSON.parse(row.artifacts) : row.artifacts) as DerivedInputRef[]] }));
-  const states = [...new Set(walks.map(walk => walk.state))].sort();
+  const groupStates = selectedGroups ?? Object.fromEntries(walks.map(walk => [walk.jurisdiction, walk.state]));
+  const states = [...new Set(Object.values(groupStates))].sort();
   const pointers = [{ recordClass: MEETING_DOORS_RECORD_CLASS, scope: MEETING_DOORS_SCOPE }, ...(input.pointers ?? [])];
   const globalHeads = await Promise.all(pointers.map(pointer => input.store.readSourceHead(pointer.recordClass, pointer.scope)));
   const stateHeads = new Map<string, readonly (SourceHead | null)[]>();
@@ -93,15 +104,13 @@ export async function readMeetingDerivationSource(input: {
   const tuple = (head: SourceHead | null) => head ? [head.versionId, head.rawHash, head.normalizedHash, head.parserVersion, head.candidateState] : null;
   const normalizationInputHash = canonicalCivicDataHash([input.configHash, globalHeads.map(tuple), [...stateHeads].map(([state, heads]) => [state, heads.map(tuple)])]);
   const sourceContentInputs = [...globalHeads.flatMap(promotedRef), ...[...stateHeads.values()].flatMap(heads => heads.flatMap(promotedRef)), ...walks.flatMap(walk => walk.inputs)];
-  const groupHashes = Object.fromEntries([...new Set(walks.map(walk => walk.jurisdiction))].map(jurisdiction => {
+  const groupHashes = Object.fromEntries(Object.entries(groupStates).map(([jurisdiction, state]) => {
     const members = walks.filter(walk => walk.jurisdiction === jurisdiction);
     return [jurisdiction, canonicalCivicDataHash([input.configHash, globalHeads.map(tuple),
-      stateHeads.get(members[0]!.state)?.map(tuple), members.map(walk => [walk.id, walk.position, walk.routes, walk.inputs.map(derivedSourceInputContent)])])];
+      stateHeads.get(state)?.map(tuple), members.map(walk => [walk.id, walk.position, walk.routes,
+        walk.inputs.map(derivedSourceInputContent).map(canonicalCivicDataJson).sort()])])];
   }));
-  const outputHead = await input.store.readSourceHead(input.recordClass, input.scope);
-  const rawProbe = outputHead ? await input.store.readCandidatePath<MeetingDerivationProbe>(outputHead.versionId, ["normalizedPayload", "sourceProbe"]) : null;
-  const priorProbe = rawProbe?.formatVersion === 1 && rawProbe.sourceId === input.sourceId && typeof rawProbe.groups === "object" && Array.isArray(rawProbe.pending) ? rawProbe : null;
-  return { sourceContentInputs, walks, normalizationInputHash, groupHashes, priorProbe, outputHead,
+  return { sourceContentInputs, walks, normalizationInputHash, groupHashes, groupStates, priorProbe, outputHead,
     dependenciesReady: promotedRef(globalHeads[0] ?? null).length > 0 };
 }
 
@@ -128,7 +137,7 @@ export async function confirmMeetingDerivationSource(input: {
 export function withMeetingDerivationProbe(candidate: RoutineCandidate, source: MeetingDerivationSource,
   completed: Readonly<Record<string, string>>, pending: readonly string[]): RoutineCandidate {
   const sourceProbe: MeetingDerivationProbe = { formatVersion: 1, sourceId: candidate.sourceId,
-    complete: source.dependenciesReady && pending.length === 0, normalizationInputHash: source.normalizationInputHash, groups: completed, pending };
+    complete: source.dependenciesReady && pending.length === 0, normalizationInputHash: source.normalizationInputHash, groups: completed, groupStates: source.groupStates, pending };
   const normalizedPayload = { ...(candidate.normalizedPayload as Record<string, unknown>), sourceProbe };
   return withDerivedSourceContent({ ...candidate, normalizedPayload,
     normalization: { ...candidate.normalization, normalizedPayloadHash: canonicalCivicDataHash(normalizedPayload) } }, source.sourceContentInputs);

@@ -1,34 +1,40 @@
 # River status
 
-build_state: LIVE FOR READERS: release 128 (main 9352c8e14, Maryland 413 loop fix; runner on 9352c8e14 since 7:27 AM EDT, no hand restart). GATING: release 129 on river-next-129 (RT-01b 92b527e93 + bills c0ddd0e46 onto river 90348edd4). READY to fold: bills c0ddd0e46 (in the 129 gate), RIVER-PP 338a7b418. BUILDING: batch 3 (GV-01, FM-01, MP-01, MT-02), runner-release fix, CT-01 + ballot date text, RT-01c. DB-04 stopped (replaced by DB-05). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 128 (main 9352c8e14; runner on it since 7:27 AM EDT). RIVER: 63d03105b (RT-01b + bills, gate 9/9). GATING: release 129 on river-next-129b 11890bcfd (+ RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, MT-02). NEXT: 130 = CT-01 812ba1da8 (fold being resolved). DB-04 replaced by DB-05. See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T15:05:00Z
+heartbeat: 2026-10-26T16:25:00Z
 
 
 <!-- READY-LIST -->
-## Every READY not on main (updated 11:05 AM EDT Oct 26)
-Live: release 128 (main 9352c8e14). River: 90348edd4.
+## Every READY not on main (updated 12:25 PM EDT Oct 26)
+Live: release 128 (main 9352c8e14). River: 63d03105b (RT-01b + bills, 9/9 gates, 10,102 tests pass, promoted 12:15 PM).
 
-**Release rule (Sean, 10:25 AM EDT Oct 26; replaces the old one):** an urgent fix (Neon cost, runner crash, cost spike, readers losing critical info) goes first but does not ship alone. Every other lane that is READY and passes its scan rides in the same release. Nothing finished waits behind an urgent fix; no batch waits on a lane that isn't READY. So: release 129 = RT-01b plus every lane READY and scanned when 129 folds. DB-04 no longer ships alone; it rides the release that is folding when it posts READY. Sean's latest order: ship the place map, merge the finished lanes in one batch, take over the quiet lanes.
+**Release rule (Sean, 10:25 AM EDT Oct 26):** an urgent fix goes first but does not ship alone; every other lane that is READY and passes its scan rides in the same release; nothing finished waits behind an urgent fix; no batch waits on a lane that isn't READY.
 
-**Place map: release 129**
+**Release 129: river 63d03105b + seven lanes, full gate running on river-next-129b 11890bcfd (from 12:20 PM)**
 | READY | Lane | State |
 |---|---|---|
-| 92b527e93 | RT-01b: a place-map turn per state, one shared Census worker, bounded heap (#822's approach) | In release 129. First gate's tsc was killed by container memory pressure (not a code error); re-gating with bills on river-next-129 from 10:50 AM |
-| c0ddd0e46 (built on 92b527e93) | Bills: the LegiScan fan-out gets the same memory turn as the place maps; /api/bills opens only current sessions so Alabama renders (9 bills, was 503) | READY, scan clean (no bypassCache, no proof files). In release 129. Cost: meeting reads start about 19% less often while bills are owed |
-| (pushing to stream/river-rt-01c) | RT-01c: each state's reservation from its own measured peak; a map that waited a full pass gets the next freed memory; old fixed reservation and old turn path deleted | River helper building. Follow-up release |
+| 92b527e93 | RT-01b: a place-map turn per state, one shared Census worker, bounded heap (#822's approach) | On river (gate 9/9) |
+| c0ddd0e46 | Bills: the LegiScan fan-out gets a memory turn; /api/bills opens only current sessions (Alabama 9 bills, was 503) | On river (gate 9/9) |
+| ee99564cb (RT-01c bdcb74269 + bills) | RT-01c: each state reserves its own memory (AS 502 MiB to TX 1,672), waited maps (and the bill fan-out) take the next freed memory, old fixed 3,709 MiB reservation and 5-minute hold deleted | Scan clean; 137/137 focused, tsc clean. In gate |
+| 338a7b418 | RIVER-PP: place pages built by the runner; Netlify function and deploy-time drain deleted | Scan clean. In gate |
+| 2785d540e | Runner release fix: stuck staging can't block releases; heartbeat shows running code | Scan clean. In gate |
+| b3f623480 (merges f4f1e47ab) | GV-01, Tucson hand-added roster record dropped; MT-02's duplicate roster lookup deleted, GV-01's rosterHolderById kept | Scan clean. In gate |
+| e60bfa7d8 (merges f98622201) | FM-01, lib/federal-money/refresh.ts reads only normalizedPayload.captures | Scan clean. In gate |
+| 459a51bc7 (only f4039045f) | MP-01 | Scan clean. In gate |
+| ff864c7d1 (merges aab119580) | MT-02, its roster lookup left out; host-state writes through operationalStatePath (firewall) | Scan clean. In gate |
 
-**Improvement batch 3 (River finishing each lane on its own branch)**
+*Runner release fix, what happened 4:02-7:06 AM (from production, read-only):* the runner was not stuck. It moved to 125 (e12d76968) at 3:40 AM; 126's Netlify build failed so 125 stayed live; 127 went live at 6:49 and the runner closed new publish-now starts within about 2 minutes, then waited for the routine run already in progress (6:44:31-7:06:03, the usual ~22 minutes) and came up on 127 at 7:06:39, so it likely did not need the hand restart. 128 went the same way on its own (7:27:12 run end, 7:27:47 on 9352c8e14). The heartbeat misled: testedSha and codeIdentity were written only when a research cycle finished, so with hunts stopped they have read 8664f367 ("runner behind") since 9:54 PM. The separate staging bug (marker cleared only when a staging finished; a leftover child could hold it forever) did not cause Oct 26 but is fixed.
+*Follow-up, not urgent:* while hunts are stopped the main loop runs every second (CONTROL_WAKE_POLL_MS = 1 s), and each pass inspects the release (fetches /api/build and GitHub check runs: about 3,600 GitHub calls an hour against a 5,000 limit) and reads owner controls. River will cut this to once a minute in the next release.
+
+
+**Release 130: CT-01**
 | READY | Lane | State |
 |---|---|---|
-| f4f1e47ab, re-cut on stream/river-gv-01 | GV-01 | Dropping the hand-added Tucson roster record (data/states/az/officials/body-compositions.json). No longer held for CT-01 |
-| f98622201, re-cut on stream/river-fm-01 | FM-01 | lib/federal-money/refresh.ts reads only normalizedPayload.captures |
-| f4039045f only | MP-01 | Folding only f4039045f |
-| aab119580, re-cut on stream/river-mt-02 | MT-02 | One single-person roster lookup kept, GV-01's duplicate deleted |
-| stream/river-runner-release | Runner release fix | A stuck staging can't block later releases; stuck/failed staging shows in heartbeat and Admin; testedSha and codeIdentity written at startup and on the standing clock |
+| 812ba1da8 (origin/stream/ct-01, posted 11:35 AM) | CT-01: missing information inside each card section, readable source quotes, plain term sentences, every held body contact; ballot date text cleaned in every state (Boise 83702: "Voter pre-registration ends on October 23.") | Scan clean (no bypassCache, no proof files). Conflicts with river in 15 files (it merged river at 1d1ed9300). River is resolving the fold locally (not pushing stream/ct-01 or stream/river-ct-01); it ships as 130 right after 129 so 129's place map doesn't wait |
 
 **DB-04 is replaced by DB-05 (Sean, 11:15 AM EDT)**
 DB-05 is Sean's new session to take Neon down to 10 GB a day. River stopped DB-04 at 11:15 AM EDT.
@@ -53,11 +59,6 @@ DB-05 is Sean's new session to take Neon down to 10 GB a day. River stopped DB-0
 *Follow-up, not urgent:* while hunts are stopped the main loop runs every second (CONTROL_WAKE_POLL_MS = 1 s), and each pass inspects the release (fetches /api/build and GitHub check runs: about 3,600 GitHub calls an hour against a 5,000 limit) and reads owner controls. River will cut this to once a minute in the next release.
 
 **RT-01c**: READY bdcb74269 conflicts with bills (both changed the held memory lanes on top of RT-01b). Its builder is merging bills and re-posting READY; it rides 129 if it lands before the fold, else the next release.
-
-**RIVER-PP: place pages on the runner**
-| READY | Lane | State |
-|---|---|---|
-| 338a7b418 (stream/river-place-pages) | The runner's new place-pages lane drains rebuild_queue with rebuildPlacePages (concurrency 4, 240 s turns, 424 MiB reservation = 403 MiB peak + 5%); stops at a pending restart or Admin pause; failed turns leave rows queued. Deleted: netlify/functions/rebuild-place-pages.mts, its netlify.toml block, the deploy-time 6-minute drain and the deploy-only initialBackfill mode. The deploy step keeps only seeding ZIP/body page entries and queuing unbuilt places | READY 11:20 AM. Scan clean (no bypassCache, no proof files). tsc clean (River fixed one test type), runner-place-pages 4/4, 87/87 place-page and write-path tests, 182/182 runner tests, eslint and knip clean. Folds onto river right after the 129 gate (with every other READY lane); 129 ships river + it |
 
 **CT-01 stays with its session (Sean, 11:25 AM EDT)**
 The CT-01 session is alive and posts READY itself, with the ballot date text fix. River stopped its takeover; stream/river-ct-01 is not pushed. CT-01's READY folds into the first release after it lands. Latest on origin/stream/ct-01: ed15f95fb (merge of river, 6:49 AM), no new READY yet.
@@ -89,6 +90,14 @@ Recommendation: Sean restarts both sessions. River's capacity is on the place ma
 <!-- /READY-LIST -->
 
 ## River session session_01KQeVtrq9c4dWXSpaNnogn3 (Oct 24, from 4:40 AM EDT)
+
+### 12 PM EDT
+- Live for readers: release 128 (main 9352c8e14). River moved to 63d03105b (RT-01b + bills) after 9/9 gates (10,102 pass, 0 fail).
+- Release 129 gating: river + RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, MT-02 (river-next-129b 11890bcfd). CT-01 READY 812ba1da8 needs its merge with river resolved; ships as 130.
+- Neon, 11 AM hour: reader 3.65 GB + control plane 0.24 GB = 3.89 GB (10 AM 3.35). Reader top: routine-civic-data 837 MB, member-offices 379, publish-now 266, openstates-people-nh 250, campaign-money 159, measure-translations:MD 86.
+- Federal money, 11 AM hour: usaspending 83.3 MB, openfema 11.6 MB (before-129 baseline continues: 9 AM 143.6/13.2, 10 AM 82.1/7.5).
+- Place pages: rebuild_queue 159,967, place_page 24,900 (no drain until 129). Place map: place_boundary 0 rows.
+- GB-01: New Orleans 70112 and Omaha 68102 still 0 bodies.
 
 ### 11 AM EDT
 - Live for readers: release 128 (main 9352c8e14). Runner on 9352c8e14 (vital signs 10:08 AM).

@@ -4,7 +4,7 @@ import { PGlite } from "@electric-sql/pglite";
 import type { ReadOnlyQuery, Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE } from "../lib/census-geography/publication.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
-import { readFederalMoneyJoinInput } from "../lib/federal-money/held-identities.ts";
+import { readFederalMoneyJoinInput, readFederalMoneyJoinInputHash } from "../lib/federal-money/held-identities.ts";
 import { joinFederalMoneyFacts } from "../lib/federal-money/join.ts";
 import { federalMoneyRows } from "../lib/federal-money/view.ts";
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
@@ -160,6 +160,19 @@ test("federal identity SQL reads only each page's exact native recipients and ge
     await t.test("both exact recipient lookups use the native row index", () => {
       assert.equal(plans.size, 2);
       for (const plan of plans.values()) assert.match(plan, /civic_data_rows_federal_native/);
+    });
+    await t.test("unchanged-source recipient dependencies return a digest and observe native identity edits",async()=>{
+      let bytes=0;
+      const hashes:ReadOnlyQuery=async statements=>{
+        const result:Row[][]=[];
+        for(const statement of statements){const rows=(await db.query(statement.text,[...statement.params])).rows as Row[];
+          bytes+=Buffer.byteLength(JSON.stringify(rows));result.push(rows);}
+        return result;
+      };
+      const before=await readFederalMoneyJoinInputHash("AR",[fact],hashes);
+      assert.match(before,/^[a-f0-9]{64}$/);assert.ok(bytes<128,"only the dependency digest leaves the database");
+      await db.query("UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{governments,0,nativeIds,census_pid6}','\"changed-native-id\"') WHERE record_class='REGISTRATION' AND scope='US-AR:registration:v1'");
+      assert.notEqual(await readFederalMoneyJoinInputHash("AR",[fact],hashes),before);
     });
   } finally { await db.close(); }
 });

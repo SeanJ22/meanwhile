@@ -1,7 +1,7 @@
 import { FEDERAL_MONEY_SOURCES } from "../lib/federal-money/model.ts";
 import { refreshFederalMoney } from "../lib/federal-money/refresh.ts";
 import { locateFederalMoneyFacts } from "../lib/federal-money/locations.ts";
-import { readFederalMoneyJoinInput } from "../lib/federal-money/held-identities.ts";
+import { readFederalMoneyJoinInput, readFederalMoneyJoinInputHash } from "../lib/federal-money/held-identities.ts";
 import { recordFederalMoneyDoorRead } from "../lib/federal-money/doors.ts";
 import { readerQuery } from "../lib/civic-data/promoted-reader-query.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -24,6 +24,7 @@ try {
   const edge = resolveReaderArtifactWriteStore();
   if (!edge) throw new Error("Federal records cannot publish because the reader artifact store is unavailable.");
   const result = await refreshFederalMoney({ source, store, identities: (state, facts) => readFederalMoneyJoinInput(state, facts, query),
+    identityHash:(state,facts)=>readFederalMoneyJoinInputHash(state,facts,query),
     locate: (state, facts) => locateFederalMoneyFacts(source, state, facts, query),
     onPartition: change => publishFederalMoneyPartition({ ...change, store: edge }),
     onProgress: (row, at) => publishFederalMoneyProgress({ store: edge, state: row.state, source, checkedAt: at, complete: row.status === "COMPLETE" || row.lastCompleteAt !== null, reason: row.reason }),

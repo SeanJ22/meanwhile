@@ -22,8 +22,9 @@ import { membersOfBody } from "../registry/body-membership.ts";
 import { bindNamedEntity } from "../routing/named-entity.ts";
 import type { AskNominee } from "./ballot-inventory.ts";
 import { canonicalBodyIdentity } from "./body-identity.ts";
-import { stateDivisionsOf, type HeldOfficial } from "./reader-officials.ts";
+import { stateDivisionsOf, readerOfficialKey, type HeldOfficial } from "./reader-officials.ts";
 import { ballotCandidateAliases, ballotCandidatePeople } from "../ballot/tickets.ts";
+import { liveNationalExecutiveRoster, readNationalPresident } from "../reader/national.ts";
 
 /** An exact full name in the already-read federal directory needs no state legislature lookup. */
 export function namedFederalOfficeholder(question: string): SeatHolder | null {
@@ -60,6 +61,15 @@ export async function namedOfficeholders(question: string, explicitIds: readonly
 }
 
 export async function readerOfficeholders(ocdIds: readonly string[], bodyIds: readonly string[] = [], offices?: readonly string[]): Promise<{ seats: SeatHolder[]; loaderFailures: number; held: HeldOfficial[] }> {
+  if (offices?.length && offices.every(key => key === "us_president" || key === "us_vice_president")) {
+    try {
+      const roster = liveNationalExecutiveRoster(await readNationalPresident());
+      const seats = roster ? [...new Map([...indexByOfficeholderId([roster]).values()].map(seat => [seat.id, seat])).values()] : [];
+      const held = seats.map((seat): HeldOfficial => ({ seat, divisionIds: ["ocd-division/country:us"], bodyId: null, bodyName: null }))
+        .filter(holder => offices.some(key => key === readerOfficialKey(holder)));
+      return { seats: held.map(holder => holder.seat), held, loaderFailures: 0 };
+    } catch { return { seats: [], held: [], loaderFailures: 1 }; }
+  }
   const statewide = new Set(["governor", "us_senator", "us_representative", "attorney_general", "secretary_of_state", "state_treasurer", "superintendent_of_public_instruction"]);
   const narrow = Boolean(offices?.length && offices.every(key => statewide.has(key)));
   const readDivision = async (id: string): Promise<SeatHolder[]> => {

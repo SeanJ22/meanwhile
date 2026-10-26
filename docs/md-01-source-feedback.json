@@ -1,0 +1,132 @@
+{
+  "scope": "Bounded production metadata and a controlled source-acquisition regression; no document bodies exported",
+  "readerSample": [
+    {
+      "subject_id": "ak-doe-2026-general-measure-3",
+      "title": "Ballot Measure No.3 \u2014 25USCV - An Act Addressing Voter Qualification",
+      "measure_text_url": "https://www.elections.alaska.gov/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf",
+      "filing_url": "https://d1gqre4bkgnik3.cloudfront.net/election/2026/General/SampleBallots/HD1-JD1.pdf"
+    }
+  ],
+  "failedSourceSample": [
+    {
+      "observed_at": "2026-10-25T13:57:30.394Z",
+      "source_hash": "089df2fa0e25bdbff5729d9b73951694604fddc9189fe7854ae3e727792935dc",
+      "text_hash": "089df2fa0e25bdbff5729d9b73951694604fddc9189fe7854ae3e727792935dc",
+      "source_url": "https://ltgov.alaska.gov/newsroom/2026/07/lt-governor-nancy-dahlstrom-to-host-ballot-measure-public-hearings/",
+      "artifact_hash": "sha256-089df2fa0e25bdbff5729d9b73951694604fddc9189fe7854ae3e727792935dc",
+      "document_bytes": "132089",
+      "captured_at": "2026-10-25T11:31:27.940Z"
+    }
+  ],
+  "directUrlArtifactCounts": [],
+  "sourceAttemptCounts": [
+    {
+      "observed_at": "2026-10-25T14:00:07.452Z",
+      "outcome": "ABORTED",
+      "reason": "fetch failed",
+      "source_attempts": "5",
+      "earliest_start": "2026-10-25T11:31:18.508Z",
+      "latest_end": "2026-10-25T11:31:39.028Z"
+    },
+    {
+      "observed_at": "2026-10-25T14:00:07.452Z",
+      "outcome": "COMPLETED",
+      "reason": null,
+      "source_attempts": "3",
+      "earliest_start": "2026-10-25T11:31:27.940Z",
+      "latest_end": "2026-10-25T11:31:38.443Z"
+    },
+    {
+      "observed_at": "2026-10-25T14:00:07.452Z",
+      "outcome": "ABORTED",
+      "reason": "Official text contains restricted material.",
+      "source_attempts": "1",
+      "earliest_start": "2026-10-25T11:31:31.979Z",
+      "latest_end": "2026-10-25T11:31:33.615Z"
+    },
+    {
+      "observed_at": "2026-10-25T14:00:07.452Z",
+      "outcome": "ABORTED",
+      "reason": "Official text returned HTTP 403.",
+      "source_attempts": "1",
+      "earliest_start": "2026-10-25T11:31:36.254Z",
+      "latest_end": "2026-10-25T11:31:36.454Z"
+    },
+    {
+      "observed_at": "2026-10-25T14:00:07.452Z",
+      "outcome": "ABORTED",
+      "reason": "Official text returned HTTP 502.",
+      "source_attempts": "1",
+      "earliest_start": "2026-10-25T11:31:19.046Z",
+      "latest_end": "2026-10-25T11:31:20.694Z"
+    }
+  ],
+  "preRelease115Calls": [
+    {
+      "observed_at": "2026-10-25T12:44:35.414Z",
+      "recorded_at": "2026-10-25T11:32:23.931Z",
+      "role": "TRANSLATION_CHECKER",
+      "model": "claude-opus-5-5",
+      "subject": "ak-doe-2026-general-measure-3",
+      "usd": "0.308756",
+      "uncached_tokens": "70007",
+      "output_tokens": "1038"
+    },
+    {
+      "observed_at": "2026-10-25T12:44:35.414Z",
+      "recorded_at": "2026-10-25T11:32:12.750Z",
+      "role": "TRANSLATOR",
+      "model": "claude-sonnet-5-5",
+      "subject": "ak-doe-2026-general-measure-3",
+      "usd": "0.160786",
+      "uncached_tokens": "69688",
+      "output_tokens": "1513"
+    },
+    {
+      "observed_at": "2026-10-25T12:44:35.414Z",
+      "recorded_at": "2026-10-25T11:32:01.522Z",
+      "role": "TRANSLATOR",
+      "model": "claude-haiku-5-5",
+      "subject": "ak-doe-2026-general-measure-3",
+      "usd": "0.0087021",
+      "uncached_tokens": "69676",
+      "output_tokens": "2841"
+    }
+  ],
+  "publicHeadFromExecutionEnvironment": {
+    "status": 503,
+    "contentType": "text/plain",
+    "downloadedBodyBytes": 0,
+    "url": "https://www.elections.alaska.gov/petitions/25USCV/25USCV%20BILL%20LANGUAGE.pdf"
+  },
+  "controlledNextPass": {
+    "fixture": "tests/measure-translation-found-sources.test.ts",
+    "usesSyntheticPageText": true,
+    "findsBillTextAfterRememberedFailedNotice": true,
+    "retainsAllCapturedPages": true,
+    "remembersRecoveredSource": true,
+    "laterPublicationClearsFailure": true,
+    "scopeAndSourceHashesMustMatch": true,
+    "neonConnections": 0,
+    "modelCalls": 0,
+    "missingFullTextKeepsAcquisitionOpenEvenWithSupportedSentences": true,
+    "formattingAloneDoesNotTriggerAnotherSearch": true,
+    "laterWriterFailureDoesNotCloseMissingFullTextWork": true,
+    "modelBudgetHoldDoesNotCloseFreeSourceAcquisition": true
+  },
+  "limitations": [
+    "The direct URL has no saved artifact at that exact address; grouped acquisition failures do not identify which error belongs to that URL.",
+    "The execution-environment HEAD status does not establish the production server's HTTP status.",
+    "The source-feedback change is not deployed and has not yet published a production explanation.",
+    "The retained Alaska diagnostic supports its recorded sentences and has no explicit false checker flag; its generic backend failure also covers formatting/citation mismatches. The missing full-text capture independently leaves source work open."
+  ],
+  "retainedDiagnosticFlags": [
+    {
+      "observed_at": "2026-10-25T14:48:57.766Z",
+      "diagnostic_characters": 829,
+      "has_explicit_failed_check": false,
+      "has_explicit_supported_sentence": true
+    }
+  ]
+}

@@ -11,6 +11,28 @@ const seat = (id: string, name: string, officeTitle: string, partyLabel: string 
 });
 const held = (s: SeatHolder, divisionIds: string[] = [], body: { id: string; name: string } | null = null): HeldOfficial => ({ seat: s, divisionIds, bodyId: body?.id ?? null, bodyName: body?.name ?? null });
 
+test("explicit United States executive questions use the held national offices and keep local board presidents separate", () => {
+  const country = "ocd-division/country:us";
+  const national = [held({ ...seat("white-house:president", "Alex Example", "President"), officeJurisdictionOcdId: country }, [country]),
+    held({ ...seat("white-house:vice-president", "Morgan Example", "Vice President"), officeJurisdictionOcdId: country }, [country])];
+  const local = held(seat("school:president", "Local Person", "President"), [AZ]);
+  for (const [office, key, name] of [["president", "us_president", "Alex Example"], ["vice president", "us_vice_president", "Morgan Example"]]) {
+    const ask = readerOfficialsQuestion(`Who is the ${office} of the United States?`);
+    assert.deepEqual(ask?.keys, [key]);
+    const composed = composeReaderOfficials({ ask: ask!, held: [...national, local], holdingFailed: false });
+    assert.ok(composed);
+    assert.notEqual(composed.missingAnswer, true);
+    assert.ok(composed?.answer.includes(name));
+    assert.equal(composed?.answer.includes("Local Person"), false);
+    assert.deepEqual(composed?.named.map(row => row.seat.id), [national.find(row => row.seat.name === name)!.seat.id]);
+    assert.equal(composed?.citedUrls.length, 1);
+  }
+  for (const question of ["Who is the president?", "Who is the president of the school board?", "Who is the president of France?",
+    "Who was the president of the United States in 2020?", "Who is the president of the United States after the next election?"]) {
+    assert.equal(readerOfficialsQuestion(question), null, question);
+  }
+});
+
 test("a missing requested official needs the AI fallback even when other officials are held", () => {
   const answer = composeReaderOfficials({ ask: readerOfficialsQuestion("Who is my governor?")!, holdingFailed: false,
     held: [held(seat("senator", "Casey Example", "United States Senator"), [AZ])] });

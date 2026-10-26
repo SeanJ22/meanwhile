@@ -33,6 +33,19 @@ test("records outside this ballot and malformed or repeated reaction identities 
   assert.deepEqual(measureRecordsForBallot({ ...ballot, measureRecords: [] }), []);
 });
 
+test("a retained part keeps its own original citation and date when its summary gets a new source", () => {
+  const original = { sourceUrl: record.sourceUrl, sourceHash: record.sourceHash, writtenAt: record.writtenAt };
+  const updated = { ...record, sourceUrl: "https://elections.example.gov/new-analysis", sourceHash: "b".repeat(64), writtenAt: "2026-10-24",
+    partSources: { [record.parts[0].id]: original } };
+  assert.equal(measureRecordIssue(updated), null);
+  const [part] = provisionsForContest(record.contestId, [updated]);
+  assert.equal(part.id, record.parts[0].id);
+  assert.equal(part.citesUrl, original.sourceUrl);
+  assert.equal(part.writtenAt, original.writtenAt);
+  assert.ok(measureRecordIssue({ ...updated, partSources: { "another-measure#part": original } }));
+  assert.ok(measureRecordIssue({ ...updated, partSources: { [record.parts[0].id]: { ...original, sourceUrl: "missing" } } }));
+});
+
 test("state ballot data carries every reviewed Arizona measure record and stable reaction target", () => {
   const state = JSON.parse(readFileSync("data/ballot/2026-general/az.json", "utf8"));
   const ballot = Object.values(state.ballots)[0] as BallotSet;

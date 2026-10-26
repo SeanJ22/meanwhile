@@ -59,13 +59,15 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
   const failures = new Map<string, Response | Error>();
   const freshForMs = currentMeetingClock().hotEveryMs;
   const original = dependencies.fetchImpl ?? globalThis.fetch;
+  let networkTransport = original;
   let complete = true;
   const fetchSource = (async (input, init) => {
     if (sourceIO.getStore()) return original(input, init);
     const requestedUrl = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     const url = new URL(requestedUrl);
-    if (url.protocol !== "https:" || /(?:^|\.)(?:neon\.tech|neon\.build|blob\.netlify\.com)$/.test(url.hostname) ||
+    if (/(?:^|\.)(?:neon\.tech|neon\.build|blob\.netlify\.com)$/.test(url.hostname) ||
       requestedUrl.startsWith(process.env.WTP_CIVIC_READ_CACHE_URL ?? "\u0000")) return original(input, init);
+    if (url.protocol !== "https:") { complete = false; return networkTransport(input, init); }
     if (!meetingSourceBudgetAvailable()) {
       await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages, deferred: true }, context));
       throw new Error("MEETING_SOURCE_CONTINUATION_PENDING");
@@ -93,7 +95,7 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
     const deadline = AbortSignal.timeout(Math.max(1, Math.min(30_000, passDeadlineFromEnv() - Date.now() - 40_000)));
     const sourceSignal = init?.signal ?? (input instanceof globalThis.Request ? input.signal : undefined);
     let response: Response;
-    try { response = await original(input, { ...init, signal: sourceSignal ? AbortSignal.any([sourceSignal, deadline]) : deadline }); }
+    try { response = await networkTransport(input, { ...init, signal: sourceSignal ? AbortSignal.any([sourceSignal, deadline]) : deadline }); }
     catch (error) {
       complete = false; failures.set(key, error instanceof Error ? error : new Error(String(error)));
       await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages, deferred: !meetingSourceBudgetAvailable() }, context));
@@ -139,8 +141,12 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
         responses.get(requestKey(page))?.finalUrl === page.finalUrl);
     },
     async run<T>(operation: () => Promise<T>): Promise<T> {
-      const prior = globalThis.fetch; globalThis.fetch = fetchSource;
-      try { return await operation(); } finally { globalThis.fetch = prior; }
+      const prior = globalThis.fetch, priorTransport = networkTransport;
+      // The existing acquisition counter wraps fetch outside this session. Bound adapter fetches
+      // still pass through it, while vault/checkpoint traffic continues to use the original transport.
+      if (prior !== fetchSource && !dependencies.fetchImpl) networkTransport = prior;
+      globalThis.fetch = fetchSource;
+      try { return await operation(); } finally { globalThis.fetch = prior; networkTransport = priorTransport; }
     },
     async clear() { await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages: {} }, context)); },
     async defer() { await sourceIO.run(true, () => cache.checkpoint(PROGRESS, partition.scope, { context, pages, deferred: true }, context)); },
@@ -166,6 +172,7 @@ export async function probeMeetingSource(input: {
   const head = input.session.head;
   const plan = head ? await input.store.readCandidatePath<MeetingSourceProbe>(head.versionId, ["normalizedPayload", "sourceProbe"]) : null;
   if (!head || head.rawHashBasis !== "SOURCE_CONTENT_V1" || !plan || plan.formatVersion !== 1 || !plan.complete || !plan.requests.length ||
+    !["REQUESTS", "DERIVED_INPUTS"].includes(plan.sourceHashKind) ||
     plan.normalizationInputHash !== input.normalizationInputHash || plan.sourceRawHash !== head.rawHash) return null;
   try { if (!await input.session.probe(plan) || await input.workRemains(plan)) return null; }
   catch (error) { if (!meetingSourceBudgetAvailable()) throw error; return null; }

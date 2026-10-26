@@ -20,10 +20,14 @@ import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { confirmDerivedSourceUnchanged, withDerivedSourceContent, derivedSourceContentHash } from "../lib/civic-data/derived-source-hash.ts";
+import { withDerivedSourceContent, derivedSourceContentHash } from "../lib/civic-data/derived-source-hash.ts";
 import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
 import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe } from "../lib/civic-data/meeting-source-probe.ts";
+import { readSourceProbeDependencies } from "../lib/civic-data/source-probe.ts";
+import { statesForRegistryDivisions, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 
 const program = readFileSync("scripts/ingest.ts", "utf8");
 function controllerFunction(name: string): string {
@@ -51,12 +55,13 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
   const snapshots: { generatedAt: string; meetings: readonly unknown[] }[] = [], errors: string[] = [];
   const acceptedCandidateId = `family:immutable-attempt:${disposition}`;
   let fetched = 0, hashPass = false;
+  let lastCandidate: RoutineCandidate;
   // Run the production controller and fact-publication helper; isolate unrelated wiring, promotion and venue services.
   const run = runInNewContext(transpileModule(`${controllerFunction("publishPartitionFacts")}\n${controllerFunction("promoteDerivedMeetingFamily")}`, {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\npromoteDerivedMeetingFamily", {
     Date, console: { log: () => {}, warn: () => {}, error: (message: string) => errors.push(message) },
-    readDerivedMeetingWiring: async () => ({ kind: "PROMOTED", value: { records: [member] }, metadata: { versionId: "wiring", promotedAt: anchor } }),
+    readDerivedMeetingWiring: async () => { assert.equal(hashPass, false, "an equal source does not reread the wiring payload"); return { kind: "PROMOTED", value: { records: [member] }, metadata: { versionId: "wiring", promotedAt: anchor } }; },
     familyMembers, readPreviousMeetingPartition: async () => { assert.equal(hashPass, false, "an equal source hash never reads the held family"); return null; },
     meetingFetchPass: () => meetingFetchPass({ fetchImpl: (async input => {
       assert.equal(String(input), route); fetched++;
@@ -73,13 +78,26 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
     reconcileSuccessfulMeetingPartition, retainMeetingCandidateEvidence,
     normalizeFamilyMeetingCitations: (meetings: unknown[]) => meetings,
     placePublishedMeetingPins: (input: Parameters<typeof placePublishedMeetingPins>[0]) => placePublishedMeetingPins({...input,offices:new Map()}),
-    derivedFamilyCandidate, processRegisteredMeetingPartitionCandidate: async (_store: MemoryRoutineDataStore, _partition: string, candidate: RoutineCandidate) => ({
+    derivedFamilyCandidate, processRegisteredMeetingPartitionCandidate: async (_store: MemoryRoutineDataStore, _partition: string, candidate: RoutineCandidate) => { lastCandidate = candidate; return ({
       promoted: disposition === "promoted" ? { versionId: acceptedCandidateId } : null, confirmed: disposition === "confirmed" ? { at: new Date().toISOString() } : null,
       candidate: { candidate: { ...candidate, id: acceptedCandidateId }, receipt: { decision: "GOOD" }, failureDetail: null },
-    }),
+    }); },
     printMeetingPartitionReceipt: () => {}, tracedResponses, publishReadMeetingFacts, factClocks,
-    confirmDerivedSourceUnchanged, withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
+    withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
     DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue, sourceHashReceiptFields, ZERO_RELEASE_EVENTS,
+    statesForRegistryDivisions, stateRegistryRuntimeScope, requiredManualProductionContract, readSourceProbeDependencies,
+    meetingSourceInputHash, probeMeetingSource, withMeetingSourceProbe,
+    meetingSourceSession: async (_partition: unknown, _hash: unknown, store: MemoryRoutineDataStore) => {
+      const responses = new Map();
+      const fetch = async () => {
+        fetched++; t.mock.timers.setTime(Date.now() + 30_000);
+        responses.set(route, { source: "ical", requestedUrl: route, finalUrl: route, httpStatus: 200, rawHash: sha256(feed),
+          byteCount: Buffer.byteLength(feed), bytes: new TextEncoder().encode(feed), retrievedAt: new Date().toISOString(), contentType: "text/calendar" });
+        return new Response(feed, { headers: { "content-type": "text/calendar" } });
+      };
+      return { head: await store.readSourceHead("MEETING", partition.scope), responses, fetch, complete: true,
+        probe: async () => { await fetch(); return true; }, clear: async () => {} };
+    },
   });
   const store = new MemoryRoutineDataStore(), partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));
   const vault = new MemoryEvidenceStore();
@@ -98,9 +116,12 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
     versionId: "wiring", readModelSha256: sha256(canonicalCivicDataJson({ records: [member] })), promotedAt: anchor },
     { kind: "MEMBER_ACQUISITION", memberKey: member.id, requestedUrl: route, finalUrl: route, httpStatus: 200,
       rawHash: sha256(feed), retrievedAt: anchor, horizonDay: anchor.slice(0, 10) }]);
-  Object.assign(store, { readSourceHead: async () => ({ sourceId: DERIVED_FAMILY_SOURCE_ID, recordClass: "MEETING", scope: partition.scope,
+  Object.assign(store, { readSourceHead: async (recordClass: string, scope: string) => recordClass === "MEETING" && scope === partition.scope ? ({ sourceId: DERIVED_FAMILY_SOURCE_ID, recordClass: "MEETING", scope: partition.scope,
     versionId: acceptedCandidateId, lastKnownGoodVersionId: acceptedCandidateId, rawHash, rawHashBasis: "SOURCE_CONTENT_V1", normalizedHash: "a".repeat(64),
-    parserVersion: "meetings-composite/2", promotedAt: anchor, candidateState: "PROMOTED", acquisitionSucceeded: true, imported: false }),
+    parserVersion: "meetings-composite/2", promotedAt: anchor, candidateState: "PROMOTED", acquisitionSucceeded: true, imported: false }) : null,
+    readCandidatePath: async (_id: string, path: string[]) => path.at(-1) === "bodyIds"
+      ? (lastCandidate!.normalizedPayload as {sourceProbe:{bodyIds:string[]}}).sourceProbe.bodyIds
+      : (lastCandidate!.normalizedPayload as {sourceProbe:unknown}).sourceProbe,
     confirmUnchanged: async () => ({ kind: "CONFIRMED", versionId: acceptedCandidateId, at: new Date().toISOString() }) });
   const confirmed = await run(store, partition, async () => { assert.fail("an equal source does not preload registry and venue records"); }, { db, vault });
   assert.ok(confirmed.head, "the next run returns the confirmed source header, with no fabricated candidate body");

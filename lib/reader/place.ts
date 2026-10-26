@@ -6,6 +6,7 @@ import { readerDatabaseQuery } from "./database.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
 import { composePlaceRow } from "./place-decode.ts";
+import { composeUnbuiltPlace } from "./place-builder.ts";
 import { mergePlaceRows } from "./place-compose.ts";
 import { unpackPlaceContextRow, unpackReadyPlace, unpackReadyTerritory } from "./place-ready.ts";
 import type { BodyTerritorySelection } from "../registry/body-territory.ts";
@@ -93,7 +94,7 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
   if(input.placeId && !(input.placeId.startsWith("zip:") && input.includeHistory)
     && !input.includeAgenda && !input.bodyFactsOnly && !input.meetingIds && !input.allBodies) {
     const [saved]=await query(READY_PLACE_SQL,[input.placeId,input.includeHistory??false]);
-    if(!saved?.page)throw new Error("PLACE_PAGE_NOT_BUILT");
+    if(!saved?.page)return readUnbuiltPlace(input,query);
     const place=unpackReadyPlace(saved.page);
     const territory=unpackReadyTerritory(saved.page);
     if(territory!==undefined)pageTerritories.set(place,territory);
@@ -102,12 +103,20 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
   }
   const rows=await query(PLACE_PAGES_SQL,[input.state.toUpperCase(),input.divisionIds,input.bodyIds??[],input.namedDivisionIds??[],
     input.neighbors??false,input.allBodies??false,input.includeHistory??false,input.includeAgenda??false,input.bodyFactsOnly??false]);
-  if(rows.some(row=>!row.row))throw new Error("PLACE_PAGE_NOT_BUILT");
+  if(rows.some(row=>!row.row))return readUnbuiltPlace(input,query);
   const empty=!input.allBodies&&!input.divisionIds.length&&!input.bodyIds?.length;
   const canonical={...input,bodyIds:rows[0]?.body_ids as string[]??input.bodyIds};
   const merged=mergePlaceRows(canonical,rows.map(row=>({...unpackPlaceContextRow(row.row),page_id:row.page_id,
     page_kind:empty?'empty':row.page_kind,built_at:row.built_at})));
   const place=await composePlaceRow(canonical,merged);
   pageIds.set(place,rows.flatMap(row=>typeof row.page_id==='string'?[row.page_id]:[]));
+  return place;
+}
+
+/** A place whose first page is still queued is read as it was before ready pages; its page tag is purged when the page is built. */
+async function readUnbuiltPlace(input:PlaceInput,query:Query):Promise<PlacePackage> {
+  const {place,territory}=await composeUnbuiltPlace(input,query);
+  if(territory!==undefined)pageTerritories.set(place,territory);
+  if(input.placeId)pageIds.set(place,[input.placeId]);
   return place;
 }

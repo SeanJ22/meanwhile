@@ -435,9 +435,17 @@ export async function buildPlaceRow(input: PlaceInput,query: Query): Promise<Rec
   return {...row,meeting_rows:expanded.rows,archived_meetings:expanded.archived,archived_documents:expanded.documents,parts:{}};
 }
 
-/** The query is run by publication workers, never by a reader request. */
+/** Publication workers run this query; a reader runs it only for a place whose first page is still queued. */
 export async function buildPlacePackage(input: PlaceInput, query: Query) {
   return composePlaceRow(input, await buildPlaceRow(input,query));
+}
+
+/** Until its first page is built, a place is composed from the same fact-store selection the builder reads, as before ready pages. */
+export async function composeUnbuiltPlace(input:PlaceInput,query:Query):Promise<{place:PlacePackage;territory?:BodyTerritorySelection|null}> {
+  const flags={...input,includeAgenda:input.includeAgenda ?? false};
+  if(!input.placeId || !/^zip:\d{5}$/.test(input.placeId))return {place:await buildPlacePackage(flags,query)};
+  const {input:selected,territory}=await placeBuildSelection(input.placeId,'place',input.state.toUpperCase());
+  return {place:await buildPlacePackage({...flags,...selected},query),territory};
 }
 
 export interface StoredPlacePage {

@@ -5,6 +5,7 @@ import { readFileSync } from "node:fs";
 import { civicElectionRows, civicLookupFromRaw } from "../lib/sources/google-civic/model.ts";
 import { civicCandidate } from "../lib/sources/google-civic/publication.ts";
 import { lookupCivicAddress, readCivicApi } from "../lib/sources/google-civic/acquisition.ts";
+import { SourceReadDeferred } from "../lib/sources/http.ts";
 import { GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_SCOPE, civicStateScope, GOOGLE_CIVIC_STATES } from "../lib/sources/google-civic/targets.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -104,26 +105,29 @@ test("a request-local public catalog prefetch is consumed once before sending th
   assert.equal(requests[0].searchParams.get("electionId"), "12000");
 });
 
-test("provider Retry-After is honored on 429 and 5xx without small-government pacing", async () => {
-  let requests = 0;
-  const pauses: number[] = [];
-  const result = await readCivicApi("elections", {}, { apiKey: "private-test-key", now: () => AT,
-    sleep: async ms => { pauses.push(ms); },
-    fetchImpl: (async () => ++requests === 1 ? new Response("", { status: 429, headers: { "retry-after": "7" } })
-      : requests === 2 ? new Response("", { status: 503, headers: { "retry-after": "2" } }) : new Response(fixture("elections"))) as typeof fetch });
-  assert.deepEqual(pauses, [7000, 2000]);
-  assert.equal(result.checkedAt, AT);
+test("provider Retry-After defers the shared host instead of retrying 429 or 5xx inside the lookup", async () => {
+  for (const status of [429, 503]) {
+    let requests = 0;
+    const options = { apiKey: "private-test-key", now: () => AT,
+      fetchImpl: (async () => { requests++; return new Response("", { status, headers: { "retry-after": "180" } }); }) as typeof fetch };
+    await assert.rejects(readCivicApi("elections", {}, options), SourceReadDeferred);
+    await assert.rejects(readCivicApi("voterinfo", { address: "private reader street" }, options), (error: unknown) => {
+      assert.ok(error instanceof SourceReadDeferred);
+      assert.doesNotMatch(error.message, /private-test-key|private reader street|private\+reader/);
+      return true;
+    });
+    assert.equal(requests, 1, "a second route observes the same provider cooldown without a request");
+  }
 });
 
 test("every HTTP failure logs its status and at most 300 body characters only on the server", async t => {
   const logs: string[] = [];
   t.mock.method(console, "error", (line: string) => logs.push(line));
-  let attempt = 0;
-  const statuses = [429, 503, 403];
-  await assert.rejects(readCivicApi("voterinfo", { address: "private reader street" }, {
-    apiKey: "private-test-key", sleep: async () => {},
-    fetchImpl: async () => new Response(`provider failure private-test-key private reader street ${"x".repeat(500)}`, { status: statuses[attempt++] }),
-  }), /HTTP 403/);
+  const statuses = [500, 503, 403];
+  for (const status of statuses) await assert.rejects(readCivicApi("voterinfo", { address: "private reader street" }, {
+    apiKey: "private-test-key",
+    fetchImpl: async () => new Response(`provider failure private-test-key private reader street ${"x".repeat(500)}`, { status }),
+  }), new RegExp(`HTTP ${status}`));
   const calls = logs.map(line => JSON.parse(line));
   assert.deepEqual(calls.map(row => row.httpStatus), statuses);
   assert.ok(calls.every(row => row.event === "google_civic_call_failed" && row.route === "voterinfo" && row.stage === "http" && row.body.length === 300));

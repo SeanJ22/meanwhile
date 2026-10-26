@@ -3,7 +3,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
-import { CardFooter } from "../components/ui/card-footer.tsx";
+import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
 import { CardSubjectContext } from "../components/ui/card-subject-context.tsx";
 
 import {
@@ -107,17 +107,18 @@ test("the confirmation reports the ASK and never a total", () => {
   );
 });
 
-test("body and candidate cards request missing facts once through their shared footer", () => {
+test("body and candidate sections request missing facts for the correct subject", () => {
   for (const type of DEMAND_SUBJECT_TYPES) {
     const subject = { type, id: `${type.toLowerCase()}:one` };
     const html = renderToStaticMarkup(createElement(CardSubjectContext.Provider, { value: subject },
-      createElement(CardFooter, { gaps: [{ id: "contact", label: "contact details" }], sources: [] })));
+      createElement(CardGapContribution, { id: "contact", label: "contact details" })));
     assert.equal((html.match(/data-demand-pill=/g) ?? []).length, 1);
     assert.ok(html.includes(`data-demand-pill="${type}"`));
     assert.ok(html.includes(`data-demand-subject="${subject.id}"`));
-    assert.match(html, /Ask us to find this/);
+    assert.match(html, /Want us to get this sooner\?/);
+    assert.match(html, /working on getting this info/);
     assert.ok(html.indexOf("data-card-gap") < html.indexOf("data-demand-pill"));
-    assert.ok(html.indexOf("data-demand-pill") < html.indexOf("data-card-sources"));
+    assert.doesNotMatch(html, /data-card-sources|Still gathering/);
   }
   const candidate = readFileSync("components/ballot/candidate-battlecard.tsx", "utf8");
   const body = readFileSync("components/map/popup/entity-modal.tsx", "utf8");

@@ -1,3 +1,4 @@
+import type { PinGeocodeAttempt } from "../meetings/publish-pins.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { datePath, extensionFor } from "../control-plane/evidence/store.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
@@ -19,6 +20,7 @@ interface SourceRef {
 }
 interface Cursor {
   readonly formatVersion: 1; readonly candidateId: string; readonly scope: string; readonly meetingIds: readonly string[];
+  readonly geocodeAttempts?: readonly (readonly [string,readonly PinGeocodeAttempt[]])[];
   readonly index: number; readonly complete: boolean; readonly sources: readonly SourceRef[];
 }
 const cursorKey = (candidateId: string) => `meeting-facts:${candidateId}`;
@@ -36,6 +38,7 @@ async function readCursor(query: Query, candidateId: string): Promise<Cursor | n
 export async function stageMeetingFactPublication(input: {
   readonly facts: FactDb & {readonly query:Query}; readonly vault: EvidenceStore; readonly scope: string;
   readonly candidateId: string; readonly meetings: readonly Meeting[]; readonly responses: readonly RetainedSourceResponse[];
+  readonly geocodeAttempts?: ReadonlyMap<string,readonly PinGeocodeAttempt[]>;
 }): Promise<void> {
   if ((await input.facts.query("SELECT EXISTS(SELECT 1 FROM pass_cursor WHERE name=$1) AS held",[cursorKey(input.candidateId)]))[0]?.held===true) return;
   const refs = [...new Map(input.responses.map(page => [`${page.finalUrl}:${page.rawHash}`, page])).values()];
@@ -50,7 +53,8 @@ export async function stageMeetingFactPublication(input: {
     sources.push({source:response.source,requestedUrl:response.requestedUrl,finalUrl:response.finalUrl,rawHash:response.rawHash,record,key:record ? sourceKey(record) : null});
   }
   const meetingIds = [...new Set(input.meetings.filter(meeting=>!meeting.carried).map(meeting=>meeting.id))];
-  const cursor: Cursor = {formatVersion:1,candidateId:input.candidateId,scope:input.scope,meetingIds,index:0,complete:meetingIds.length===0,sources};
+  const geocodeAttempts=input.geocodeAttempts?[...input.geocodeAttempts].filter(([id])=>meetingIds.includes(id)):undefined;
+  const cursor: Cursor = {geocodeAttempts,formatVersion:1,candidateId:input.candidateId,scope:input.scope,meetingIds,index:0,complete:meetingIds.length===0,sources};
   await writePassCursor(input.facts.query,cursorKey(input.candidateId),JSON.stringify(cursor));
 }
 
@@ -101,7 +105,7 @@ export async function continueMeetingFactPublication(input: {
       WHERE p.key=$1 AND p.current_version_id=$2 AND r.collection='meetings' AND r.row_id=$3`,[`MEETING:${cursor.scope}`,cursor.candidateId,id]);
     const meeting=supplied??row?.meeting as Meeting|undefined;
     if (!meeting || meeting.id!==id || meeting.carried) return {...tally,complete:false};
-    const report=await publishCapturedMeetingFacts({facts:input.facts,meetings:[meeting],captures,producedBy:cursor.candidateId,clocks:input.clocks,now:input.now,deadlineMs});
+    const report=await publishCapturedMeetingFacts({facts:input.facts,meetings:[meeting],captures,geocodeAttempts:new Map(cursor.geocodeAttempts??[]),producedBy:cursor.candidateId,clocks:input.clocks,now:input.now,deadlineMs});
     tally.live+=report.live;tally.confirmed+=report.confirmed;tally.held+=report.held;tally.blanks+=report.blanks;
     if (!report.complete) return {...tally,complete:false};
     cursor={...cursor,index:index+1,complete:index+1===cursor.meetingIds.length};

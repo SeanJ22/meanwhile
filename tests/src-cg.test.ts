@@ -8,6 +8,7 @@ import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts";
 import { feedDoorDrafts } from "../lib/doors/seed-feeds.ts";
 import { federalClient, federalPages, regulationPages } from "../lib/sources/congress/acquire.ts";
+import { SourceReadDeferred } from "../lib/sources/http.ts";
 import { normalizeFederalCapture } from "../lib/sources/congress/normalize.ts";
 import { countFederalFacts, federalCandidate, publishFederalPartition, readFederalSourceProjection } from "../lib/sources/congress/publication.ts";
 import { federalAskEvidence, isOpenFederalRule, readFederalMember, readFederalRules } from "../lib/sources/congress/reader.ts";
@@ -59,7 +60,7 @@ test("resumed Congress and govinfo backfills catch updates from their original f
     const cursor = source === "congress-api" ? `bootstrap:${JSON.stringify({ url, index: 1, through, pageHash })}` : `govinfoPage:${JSON.stringify({ url, through, pageHash })}`;
     await publishFederalPartition({ vault, source, partition: "national", captures: [c], records: [], cursor, store, now: through });
     const result = await refreshFederalSource({ vault, source, store, env: { CONGRESS_API_KEY: "fixture", DATA_GOV_API_KEY: "fixture" },
-      fetchImpl: (async () => Response.json(response)) as typeof fetch, sleep: async () => {}, now: () => NOW });
+      fetchImpl: (async () => Response.json(response)) as typeof fetch, now: () => NOW });
     assert.equal(result.ok, true);
     const held = await readFederalSourceProjection(source, "national", { store, now: NOW });
     assert.equal(held.kind, "PROMOTED");
@@ -80,7 +81,7 @@ test("a changed govinfo page cannot reuse a completed item index from different 
   const summary = JSON.parse(fixture("govinfo-summary.json")), packageLink = `https://api.govinfo.gov/packages/${summary.packageId}/summary`;
   const changed = { packages: [{ packageId: summary.packageId, packageLink }], count: 1, nextPage: null };
   const requests: string[] = [];
-  const result = await refreshFederalSource({ source: "govinfo", store, vault: own, env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW, sleep: async () => {},
+  const result = await refreshFederalSource({ source: "govinfo", store, vault: own, env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW,
     fetchImpl: (async input => {
       const requested = String(input); requests.push(requested);
       if (requested === url) return Response.json(changed);
@@ -171,7 +172,7 @@ test("national LDA acquisition keeps every real filing and item without replicat
   const expected = normalizeFederalCapture({ ...capture("senate-lda", "contributions", "lda-list.json"), body });
   let requests = 0;
   const result = await refreshFederalSource({ vault, source: "senate-lda", store, env: { LDA_API_KEY: "fixture" },
-    fetchImpl: (async () => { requests++; return new Response(body); }) as typeof fetch, sleep: async () => {}, now: () => NOW });
+    fetchImpl: (async () => { requests++; return new Response(body); }) as typeof fetch, now: () => NOW });
   assert.equal(result.ok, true); assert.equal(requests, 1);
   assert.equal(result.counts.loaded, expected.length); assert.equal(result.counts.unjoined, expected.length);
   for (const filing of page.results) {
@@ -203,7 +204,7 @@ test("a failed operational door write cannot turn successful source acquisition 
   const page = JSON.parse(fixture("lda-list.json"));
   const result = await refreshFederalSource({ vault, source: "senate-lda", store: new MemoryRoutineDataStore(), env: { LDA_API_KEY: "fixture" },
     fetchImpl: (async () => Response.json({ ...page, count: page.results.length, next: null })) as typeof fetch,
-    now: () => NOW, sleep: async () => {}, doorOutcome: async () => { throw new Error("Operational door store unavailable"); } });
+    now: () => NOW, doorOutcome: async () => { throw new Error("Operational door store unavailable"); } });
   assert.equal(result.ok, true); assert.ok(result.counts.loaded > 0);
   assert.equal(lines.filter(line => line.startsWith("RCD_RECEIPT=")).length, 1);
   assert.ok(operational.some(line => line.includes("doorOutcomeFailure")));
@@ -337,21 +338,29 @@ test("real federal rule metadata is held and controlled deadlines and withdrawal
   assert.match(ask.records[0].text, /2026-10-14/); assert.match(ask.records[0].text, /commenton/);
 });
 
-test("pagination follows every official page, refuses foreign next links, and honors Retry-After", async () => {
-  const calls: string[] = [], waits: number[] = []; let count = 0;
-  const client = federalClient({ source: "senate-lda", env: { LDA_API_KEY: "fixture" }, now: () => NOW, sleep: async ms => { waits.push(ms); },
+test("pagination follows every official page and refuses foreign next links", async () => {
+  const calls: string[] = []; let count = 0;
+  const client = federalClient({ source: "senate-lda", env: { LDA_API_KEY: "fixture" }, now: () => NOW,
     fetchImpl: (async input => { calls.push(String(input)); count++;
-      if (count === 1) return new Response("busy", { status: 429, headers: { "Retry-After": "9" } });
-      return Response.json({ count: 2, results: [{ filing_uuid: String(count) }], next: count === 2 ? "https://lda.gov/api/v1/contributions/?page=2" : null });
+      return Response.json({ count: 2, results: [{ filing_uuid: String(count) }], next: count === 1 ? "https://lda.gov/api/v1/contributions/?page=2" : null });
     }) as typeof fetch });
   let pages = 0; for await (const _page of federalPages(client, "senate-lda", "https://lda.gov/api/v1/contributions/", "contributions")) pages++;
-  assert.equal(pages, 2); assert.equal(calls.length, 3); assert.ok(waits.includes(9000));
+  assert.equal(pages, 2); assert.equal(calls.length, 2);
   await assert.rejects(client.get("https://unrelated.example/contributions/", "contributions"), /outside/);
+});
+
+test("federal readers share Retry-After deferral without their own retry loop", async () => {
+  let calls = 0;
+  const client = federalClient({ source: "senate-lda", env: { LDA_API_KEY: "fixture" }, now: () => NOW,
+    fetchImpl: async () => { calls++; return new Response("busy", { status: 429, headers: { "Retry-After": "180" } }); } });
+  await assert.rejects(client.get("https://lda.gov/api/v1/contributions/", "contributions"), SourceReadDeferred);
+  await assert.rejects(client.get("https://lda.gov/api/v1/contributions/?page=2", "contributions"), SourceReadDeferred);
+  assert.equal(calls, 1);
 });
 
 test("Regulations.gov partitions national results rather than silently stopping at 5,000 documents", async () => {
   const urls: string[] = [];
-  const client = federalClient({ source: "regulations-gov", env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW, sleep: async () => {},
+  const client = federalClient({ source: "regulations-gov", env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW,
     fetchImpl: (async input => { const u = new URL(String(input)); urls.push(u.href);
       const entire = u.searchParams.get("filter[postedDate][ge]") === "2026-10-10" && u.searchParams.get("filter[postedDate][le]") === "2026-10-12";
       return Response.json({ meta: { totalElements: entire ? 6000 : 1, hasNextPage: false }, data: [{ id: u.searchParams.get("filter[postedDate][ge]"), attributes: { title: "Transport fixture" } }] });
@@ -362,7 +371,7 @@ test("Regulations.gov partitions national results rather than silently stopping 
 
 test("Regulations.gov resumes the next page and every remaining date range after a cutoff", async () => {
   const urls: string[] = [];
-  const client = federalClient({ source: "regulations-gov", env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW, sleep: async () => {},
+  const client = federalClient({ source: "regulations-gov", env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW,
     fetchImpl: (async input => {
       const u = new URL(String(input)); urls.push(u.href);
       const from = u.searchParams.get("filter[postedDate][ge]"), through = u.searchParams.get("filter[postedDate][le]"), page = Number(u.searchParams.get("page[number]"));
@@ -400,13 +409,13 @@ test("Congress acquisition runs through its real bill samples and persists state
     }
     return new Response(fixture("congress-bill.json"));
   }) as typeof fetch;
-  const result = await refreshFederalSource({ vault, source: "congress-api", store, env: { CONGRESS_API_KEY: "test-key" }, fetchImpl, sleep: async () => {}, now: () => NOW, memberState: async id => id === "C001078" ? "VA" : null });
+  const result = await refreshFederalSource({ vault, source: "congress-api", store, env: { CONGRESS_API_KEY: "test-key" }, fetchImpl, now: () => NOW, memberState: async id => id === "C001078" ? "VA" : null });
   assert.equal(result.ok, true); assert.ok(routes.includes("/v3/member/C001078/sponsored-legislation"));
   assert.ok(result.counts.byState.VA.loaded > 0); assert.equal(result.counts.loaded, result.counts.joined + result.counts.unjoined);
   const reader = await readFederalMember("congress:C001078", { store, now: NOW }); assert.equal(reader.referrals.length, 2);
   const marker = await readFederalSourceProjection("congress-api", "national", { store, now: NOW });
   assert.equal(marker.kind, "PROMOTED"); if (marker.kind === "PROMOTED") assert.match(marker.value.cursor!, /^updates:/);
-  const second = await refreshFederalSource({ vault, source: "congress-api", store, env: { CONGRESS_API_KEY: "test-key" }, fetchImpl, sleep: async () => {}, now: () => "2026-10-12T19:00:00Z", memberState: async () => "VA" });
+  const second = await refreshFederalSource({ vault, source: "congress-api", store, env: { CONGRESS_API_KEY: "test-key" }, fetchImpl, now: () => "2026-10-12T19:00:00Z", memberState: async () => "VA" });
   assert.equal(second.ok, true); assert.equal(second.counts.loaded, result.counts.loaded);
   assert.equal(routes.filter(route => route === "/v3/member").length, 2, "member changes are checked independently of bill updates");
   assert.equal(routes.filter(route => route.endsWith("sponsored-legislation")).length, 1, "completed histories are not fetched again");

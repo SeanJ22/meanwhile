@@ -99,14 +99,18 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
         await page.getByLabel("Your street address or ZIP").fill(item.zip);
         await page.getByRole("button", { name: "Show me", exact: true }).click();
         const card = page.locator(item.embedded ? "[data-reader-card]" : ".voting-panel > .reader-card");
-        await card.locator("[data-card-gap]").waitFor({ state: "visible" });
-        assert.equal(await card.locator("[data-card-gap]").count(), 1);
+        await card.locator('[data-card-gap="voting-answer"]').waitFor({ state: "visible" });
+        await card.locator('[data-card-sources] a[href^="https:"]').first().waitFor({ state: "attached" });
+        assert.equal(await card.locator('[data-card-gap="voting-answer"]').count(), 1);
+        assert.equal(await card.locator("[data-card-footer] [data-card-gap]").count(), 0);
         assert.equal(await card.locator("[data-card-sources]").count(), 1);
         assert.equal(await card.getByRole("button", { name: /^Sources/ }).count(), 1);
         assert.equal(await card.locator("[data-card-footer]").evaluate(footer => footer === footer.parentElement?.lastElementChild), true);
         assert.equal(await card.locator("[data-card-sources]").evaluate(section => section === section.parentElement?.lastElementChild), true);
         const text = await card.innerText();
-        assert.doesNotMatch(text, /working on getting this info|Want us to get this info sooner|Want us to get this sooner/i);
+        assert.match(text, /working on getting this info/i);
+        assert.match(text, /Want us to get this sooner/i);
+        assert.doesNotMatch(text, /Still gathering/);
         assert.equal(await card.locator("[data-voting-site] [data-card-gap], [data-voting-site] [data-card-sources], [data-voting-site] .voting-site-gap").count(), 0);
         assert.match(text, /Polling locations do not accept absentee ballots on Election Day/);
         if (item.county === "Adams") {

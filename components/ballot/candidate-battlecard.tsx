@@ -3,7 +3,7 @@
 import { useHydrated } from "@/hooks/use-hydrated";
 
 import { PersonCard } from "@/components/ui/person-card";
-import { CardGapContext, CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { CardSourceContext } from "@/components/ui/card-source-context";
 import { useEffect, useState } from "react";
 
@@ -117,7 +117,7 @@ export function CandidateBattlecard({
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
-          <CardSourceContext.Provider value={null}><CardGapContext.Provider value={null}><PersonCard
+          <CardSourceContext.Provider value={null}><PersonCard
             title={readerText(name, "name")}
             className="account-modal"
             onClose={() => setOpen(false)}
@@ -169,7 +169,7 @@ export function CandidateBattlecard({
               <OfficialActions context={speakContext} divisionIds={divisionIds} subjectId={contactHolder?.id ?? subjectId} gapWhenEmpty={actionsGap} />
               <div className="mt-5"><SpeakYourMind subjectType="CANDIDATE" subjectId={subjectId} subject={name} context={speakContext ?? undefined} /></div>
             </>}
-          /></CardGapContext.Provider></CardSourceContext.Provider>
+          /></CardSourceContext.Provider>
         </div>
       )}
     </>

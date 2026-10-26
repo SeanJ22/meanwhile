@@ -2,10 +2,21 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {MemoryEvidenceStore} from '../lib/control-plane/evidence/store.ts';
-import {vaultCapture} from '../lib/facts/capture.ts';
+import {vaultCapture,fetchCapture} from '../lib/facts/capture.ts';
+import {createMemoryRepositories} from '../lib/control-plane/repository/memory.ts';
 import {sittingOnPage} from '../lib/facts/meeting-facts.ts';
 import {checkFact} from '../lib/facts/check.ts';
 const at='2026-10-20T06:45:00Z';
+
+test('an office source redirect retains the page actually read as its citation',async()=>{
+ const vault=new MemoryEvidenceStore(),repos=createMemoryRepositories(),finalUrl='https://county.example.gov/contact';
+ const result=await fetchCapture({vault,repos,url:'https://old-county.example.gov/',now:at,
+  fetch:async()=>({status:200,finalUrl,headers:new Headers({'content-type':'text/html'}),
+   bytes:async()=>new TextEncoder().encode('<address>123 Main Street, Tucson, AZ 85706</address>')})});
+ assert.ok('capture' in result);
+ assert.equal(result.capture.evidence.canonicalUrl,finalUrl);
+ assert.equal(result.capture.observedAt,at);
+});
 
 test('a real saved PDF retains exact binary bytes and a replayable complete text extraction',async()=>{
  const vault=new MemoryEvidenceStore();const bytes=await readFile('tests/fixtures/pima-edu/agenda-2026-08-10.pdf');

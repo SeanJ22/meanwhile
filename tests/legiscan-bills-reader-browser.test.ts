@@ -53,7 +53,7 @@ test("a legislator card shows sourced bulk bills and one Sources list at the bot
     await disclosure.getByRole("button",{name:/^Sources/}).click();
     await page.getByText(/Bill data licence: CC BY 4.0/).waitFor({state:"visible"});
     assert.equal(await disclosure.evaluate(element=>element.parentElement?.lastElementChild===element),true);
-    assert.match(await disclosure.innerText(),/published 2012-12-30/);
+    assert.match(await disclosure.innerText(),/December 30, 2012/);
     await mkdir(".scratch/ci",{recursive:true});await page.screenshot({path:".scratch/ci/src-ls-card-desktop.png",fullPage:true});
     await page.setViewportSize({width:375,height:800});await page.screenshot({path:".scratch/ci/src-ls-card-mobile.png",fullPage:true});
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=window.innerWidth),true);

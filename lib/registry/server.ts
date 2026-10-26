@@ -22,7 +22,7 @@ import { officeIdentity } from "../officials/office-identity.ts";
 import { BODY_TERRITORY_FILE, type BodyTerritoryFile } from "./body-territory.ts";
 import { readStateGeometryText } from "../geo/state-geometry.ts";
 import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
-import { rosterHoldersForBody } from "./body-rosters.ts";
+import { earlierRosterHoldersForBody, rosterHolderById, rosterHoldersForBody } from "./body-rosters.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition, currentStatewideExecutives } from "./runtime-read-model.ts";
 import { scopedHolders } from "../officials/scoped-holders.ts";
 import { readDivisionRepresentatives } from "./representation-server.ts";
@@ -50,6 +50,7 @@ import { composeRegistration, type RegistrationLayer } from "../registration/com
 import { REGISTRATION_TARGETS } from "../registration/publication.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import { bindGovernmentBodies, governmentStateOf, type RegistrationGovernmentListing } from "../registration/listings.ts";
+import { markUniqueGovernmentRecipientNames } from "../registration/recipient-names.ts";
 import { attachGovernmentDomains, readDotGovProjection } from "../civic-data/dotgov.ts";
 import { readRegistrationProjection, readRegistrationDivision, type DivisionMetadata } from "../registration/reader.ts";
 import jurisdictionLabels from "../../data/reference/us-jurisdiction-labels.json" with { type: "json" };
@@ -213,8 +214,8 @@ async function load(base: RegistryLoaded, federalAvailable: boolean): Promise<Lo
   for (const holder of statewideExecutivesFor(currentStatewideExecutives().map((executive) => executive.stateOcdId))) {
     for (const id of personIdentityKeys(holder)) officialsById.set(id, holder);
   }
-  for (const roster of currentBodyRosters()) for (const holder of rosterHoldersForBody(roster.bodyId)) {
-    if (!officialsById.has(holder.id)) officialsById.set(holder.id, holder);
+  for (const roster of currentBodyRosters()) for (const holder of [...rosterHoldersForBody(roster.bodyId), ...earlierRosterHoldersForBody(roster.bodyId)]) {
+    for (const id of personIdentityKeys(holder)) if (!officialsById.has(id)) officialsById.set(id, holder);
   }
   return {
     territory,
@@ -325,7 +326,8 @@ async function registrationModelFor(state: string): Promise<{ value: Registratio
   // The edge first: an ordinary visitor never wakes the database for registration. A state with no pointer yet,
   // or whose bytes could not be read, is read from the database on this request only.
   const served = await currentRegistrationsEdge()?.load(state).catch(() => null);
-  if (served) return served.value === null ? null : { value: served.value, versionId: served.versionId };
+  if (served) return served.value === null ? null : { value: { ...served.value,
+    ...(served.value.governments ? { governments: markUniqueGovernmentRecipientNames(served.value.governments) } : {}) }, versionId: served.versionId };
   refuseDatabaseInEdgeOnlyContext(`The ${state} registration`);
   const read = await readRegistrationProjection(state);
   // No store at all (tests, the census gate, local work) has no registration to compose: registration has
@@ -556,11 +558,7 @@ export async function seatHolderById(id: string, stateHint?: string): Promise<Se
   const statewide = statewideExecutivesFor(currentStatewideExecutives().map((row) => row.stateOcdId))
     .find((holder) => personIdentityKeys(holder).has(canonicalId));
   if (statewide) return statewide;
-  for (const roster of currentBodyRosters()) {
-    const holder = rosterHoldersForBody(roster.bodyId).find((row) => row.id === canonicalId);
-    if (holder) return holder;
-  }
-  return null;
+  return rosterHolderById(canonicalId);
 }
 
 /** Optional exact photo evidence already supplied to this request must not acquire another authority. */

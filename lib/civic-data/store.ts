@@ -26,6 +26,7 @@ import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { civicDataCandidateEvents, civicDataCandidates, civicDataPromotions, civicDataPayloadParts } from "../db/schema.ts";
 import { CivicPayloadParts, type CivicPayloadPartIO } from "./payload-parts.ts";
+import { storeFederalMoneyCheckpoint } from "../federal-money/checkpoint-storage.ts";
 import { isCivicPayloadPart } from "./payload-codec.ts";
 import { navigationCandidateIndex, type NavigationPublicationBase, type NavigationRecord } from "./navigation-publication-base.ts";
 import { ballotNavigationState } from "./ballot-navigation-scope.ts";
@@ -2425,7 +2426,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "rawHashBasis", "complete", "sourceCheck", "failureDetail"]),
     } : record.candidate;
     const navigationIndex = navigationCandidateIndex(record.candidate);
-    const stored = stateAuthority || meetingDoors || meeting || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
+    const federalCheckpoint = record.candidate.recordClass === "FEDERAL_MONEY" && record.candidate.readModel !== null && typeof record.candidate.readModel === "object" && "checkpoint" in record.candidate.readModel;
+    const stored = federalCheckpoint ? await storeFederalMoneyCheckpoint(record.candidate, this.payloadParts)
+      : stateAuthority || meetingDoors || meeting || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(candidate,
         ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"],
         meetingDoors || meeting ? ["readModel", "normalizedPayload", "changeSet", "identities"] : stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
@@ -3194,7 +3197,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const held = options.candidate;
     const partedManual = held !== undefined && isPartedManualCandidate(held);
     let record: CandidateVersionRecord | null;
-    if (held && (partedManual || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY" || held.recordClass === "FEDERAL_MONEY" || held.recordClass === "STATE_BILL")) {
+    if (held) {
       const hash = partedManual || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
       const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,

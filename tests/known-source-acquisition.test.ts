@@ -1,3 +1,5 @@
+import { createSourceHostPacer, SourceReadDeferred } from "../lib/sources/http.ts";
+import { memoryHostState } from "../lib/sources/host-state.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createHash } from "node:crypto";
@@ -14,9 +16,11 @@ const url = "https://publisher.example/releases/current.csv";
 function harness() {
   const store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
   let at = T0, requests = 0, respond = (_headers: Headers): Response => new Response("id,name\n1,A\n", { headers: { etag: '"one"' } });
+  const pacer = createSourceHostPacer({ store: memoryHostState(), clock: () => Date.parse(at), spacingMs: 0 });
+  const transport: typeof fetch = async (_url, init) => { requests++; return respond(new Headers(init?.headers)); };
   const options = { store, locks, sourceId: "known-publisher", releaseId: "current", url, parserVersion: "csv/1",
     signal: AbortSignal.timeout(10_000), maxBytes: 1024, checkAfterMs: DAY, now: () => at,
-    fetchImpl: (async (_url, init) => { requests++; return respond(new Headers(init?.headers)); }) as typeof fetch };
+    fetchImpl: ((url, init) => pacer.fetch(String(url), init, transport)) as typeof fetch };
   return { options, store, requests: () => requests, time: (value: string) => { at = value; }, response: (fn: typeof respond) => { respond = fn; } };
 }
 test("parallel consumers share one source request and byte identity without re-dating held evidence", async () => {
@@ -146,10 +150,10 @@ test("credential URLs and an unsolicited 304 cannot become source evidence", asy
 test("a provider Retry-After applies to the next native request without sleeping or advancing evidence", async () => {
   const h = harness();
   h.response(() => new Response("rate limited", { status: 429, headers: { "retry-after": "86400" } }));
-  await assert.rejects(acquireKnownRelease(h.options), /KNOWN_SOURCE_HTTP_429/);
-  await assert.rejects(acquireKnownRelease({ ...h.options, url: "https://publisher.example/releases/other.csv", releaseId: "other" }), /KNOWN_SOURCE_RETRY_AFTER/);
+  await assert.rejects(acquireKnownRelease(h.options), SourceReadDeferred);
+  await assert.rejects(acquireKnownRelease({ ...h.options, url: "https://publisher.example/releases/other.csv", releaseId: "other" }), SourceReadDeferred);
   assert.equal(h.requests(), 1);
-  assert.ok((await h.store.list("project/")).every(key => key.includes("/retry/")), "a refusal has no source body or good-release pointer");
+  assert.deepEqual(await h.store.list("project/"), [], "pacing writes no failure or source release");
   h.time(T1); h.response(() => new Response("id,name\n1,A\n"));
   await acquireKnownRelease(h.options); assert.equal(h.requests(), 2);
 });

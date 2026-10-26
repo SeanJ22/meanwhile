@@ -8,7 +8,7 @@ import { refreshFederalMoney } from "../lib/federal-money/refresh.ts";
 import { federalMoneyCandidate, federalMoneyCounts } from "../lib/federal-money/candidate.ts";
 import { parseFederalMoney } from "../lib/federal-money/parse.ts";
 import { joinFederalMoneyFacts, type FederalMoneyJoinInput } from "../lib/federal-money/join.ts";
-import { federalMoneyProjectionIssue, federalMoneyPartitionOf, federalMoneyPartitionScope, federalMoneyLookupKeys, type FederalMoneyProjection, type FederalMoneyCheckpoint, type FederalMoneyPage } from "../lib/federal-money/model.ts";
+import { FEDERAL_MONEY_JOIN_VERSION, federalMoneyProjectionIssue, federalMoneyPartitionOf, federalMoneyPartitionScope, federalMoneyLookupKeys, type FederalMoneyProjection, type FederalMoneyCheckpoint, type FederalMoneyPage } from "../lib/federal-money/model.ts";
 import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts";
 import { readFederalMoneyForPlace } from "../lib/federal-money/reader.ts";
 import { readFederalMoneyPartition, readFederalMoneyCheckpoint } from "../lib/federal-money/verify.ts";
@@ -103,6 +103,70 @@ test("national federal raw_hash follows applied provider bytes rather than empty
   assert.notEqual(next.candidate?.retrieval.rawHash,first.candidate.retrieval.rawHash,"same row counts cannot hide changed source facts");
 });
 
+test("the scheduled source job rejoins held facts with saved evidence and resumes its historical acquisition cursor", async t => {
+  const directory = mkdtempSync(join(tmpdir(), "federal-rejoin-held-"));
+  t.after(() => rmSync(directory, { recursive: true, force: true }));
+  const edge = new LocalFileArtifactStore(directory), store = new MemoryRoutineDataStore();
+  const body = JSON.stringify({ results: [{ assistance_transaction_unique_key: "SYNTHETIC-HELD", assistance_type: "04", recipient_name: "OUACHITA COUNTY", recipient_state_code: "AR", action_date: "2003-08-14", federal_action_obligation: "100", primary_place_of_performance_state_code: "AR", primary_place_of_performance_county_code: "103", award_description: "Housing assistance" }] });
+  const capture = await saveFederalMoneyCapture({ url: "https://api.usaspending.gov/api/v2/search/spending_by_transaction/", body, retrievedAt: now, publicationDate: null }, evidenceStore);
+  const facts = parseFederalMoney("usaspending", capture, "AR", body);
+  const continuation = { source: "usaspending" as const, phase: "download", year: 2006 };
+  const base = { source: "usaspending" as const, store, states: ["AR"], acquireOptions: { evidenceStore }, now: () => now, maxRounds: 1,
+    onPartition: (change: FederalMoneyPartitionChange) => publishFederalMoneyPartition({ ...change, store: edge }) };
+  await refreshFederalMoney({ ...base, identities: async () => ({ divisions: [], bodies: [], governments: [] }), acquire: async () => ({ facts, captures: [capture], complete: false, declaredTotal: null, continuation }) });
+  const bodyId = `${county}#governing`;
+  const recipientIdentities: FederalMoneyJoinInput = { ...identities, governments: [{ id: "government:US-AR:cog:001", name: "COUNTY OF OUACHITA", state: "AR", nativeIds: {}, aliases: [bodyId], associations: [], bodyIds: [] }] };
+  const scope = federalMoneyPartitionScope("usaspending", "AR", federalMoneyPartitionOf(facts[0]));
+  let acquired = 0, failedEdge = true;
+  const repair = { ...base, identities: async () => recipientIdentities,
+    nextHeldPartition: async (_state: string, after: string | null) => after ? null : scope,
+    acquire: async (_source: unknown, _state: unknown, options: { cursor?: unknown } = {}) => { acquired++; assert.deepEqual(options.cursor, continuation); return { facts: [], captures: [], complete: false, declaredTotal: null, continuation }; },
+    onPartition: async (change: FederalMoneyPartitionChange) => { if (failedEdge) { failedEdge = false; throw new Error("Simulated edge interruption after canonical promotion"); } return publishFederalMoneyPartition({ ...change, store: edge }); } };
+  const interrupted = await refreshFederalMoney(repair);
+  assert.equal(interrupted.projection.states[0].status, "OUTAGE");
+  assert.ok((await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", "usaspending:AR"))?.payload.checkpoint.joinPending);
+  await refreshFederalMoney(repair);
+  const read = await readFederalMoneyForPlace({ divisionId: county, bodyId }, { artifactStore: edge });
+  assert.equal(read.sources[0].records.length, 1);
+  assert.ok(read.sources[0].records[0].bodyIds.includes(bodyId));
+  assert.equal(acquired, 0, "held evidence is repaired without another publisher download");
+  await refreshFederalMoney(repair);
+  const checkpoint = (await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", "usaspending:AR"))!.payload;
+  assert.equal(checkpoint.checkpoint.joinVersion, FEDERAL_MONEY_JOIN_VERSION);
+  assert.deepEqual(checkpoint.counts, { loaded: 1, joined: 1, unjoined: 0 });
+  assert.deepEqual(checkpoint.checkpoint.cursor, continuation);
+  await refreshFederalMoney(repair);
+  assert.equal(acquired, 1);
+});
+
+test("an interrupted multi-county page resumes after its completed partitions and publishes its saved remaining facts", async t => {
+  const store = new MemoryRoutineDataStore();
+  let clock = Date.now(), acquired = 0;
+  t.mock.method(Date, "now", () => clock);
+  const source = JSON.parse(sourceBody);
+  const rows = ["103", "119", "125"].map((countyCode, index) => ({ ...source.DisasterDeclarationsSummaries[0], id: `synthetic-county-${index}`, fipsCountyCode: countyCode }));
+  const body = JSON.stringify({ metadata: { count: 3 }, DisasterDeclarationsSummaries: rows });
+  const capture = await saveFederalMoneyCapture({ url: "https://www.fema.gov/api/open/v2/DisasterDeclarationsSummaries?state=AR", body, retrievedAt: now, publicationDate: null }, evidenceStore);
+  const page: FederalMoneyPage = { facts: parseFederalMoney("openfema", capture, "AR", body), captures: [capture], complete: true, declaredTotal: 3 };
+  const written: string[] = [];
+  const input = { source: "openfema" as const, store, states: ["AR"], acquireOptions: { evidenceStore }, now: () => now, maxRounds: 1, identities: async () => identities,
+    acquire: async () => { acquired++; return page; } };
+  const interrupted = await refreshFederalMoney({ ...input, maxRunMs: 10,
+    onPartition: async (change: FederalMoneyPartitionChange) => { written.push(...change.projection.records.map(row => row.id)); clock += 1000; } });
+  assert.equal(interrupted.projection.counts.loaded, 1);
+  const partial = (await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", "openfema:AR"))!.payload;
+  assert.ok(partial.checkpoint.pending?.partitionProgress?.through);
+  assert.equal(partial.checkpoint.pending?.startingCounts?.loaded, 0);
+  assert.equal(partial.checkpoint.cursor, null, "source pagination cannot advance past unfinished county publication");
+  const completed = await refreshFederalMoney({ ...input,
+    onPartition: async (change: FederalMoneyPartitionChange) => { written.push(...change.projection.records.map(row => row.id)); } });
+  assert.equal(acquired, 1, "the saved source page supplies all remaining counties");
+  assert.equal(written.length, 3, "a completed county is skipped entirely on resume");
+  assert.equal(new Set(written).size, 3);
+  assert.equal(completed.projection.counts.loaded, 3);
+  assert.equal((await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", "openfema:AR"))!.payload.checkpoint.pending, undefined);
+});
+
 test("saved evidence reads require the acquisition vault and release its context after work", async () => {
   await assert.rejects(readFederalMoneyCapture(capture), /acquisition vault context/);
   assert.equal(await withFederalMoneyVault(evidenceStore, () => readFederalMoneyCapture(capture)), sourceBody);
@@ -120,7 +184,7 @@ test("an asynchronous initial USAspending page durably retains its cursor before
       assert.deepEqual(JSON.parse(String(init?.body)), { filters: {
         agencies: [{ type: "awarding", tier: "toptier", name: "all" }], prime_award_types: ["02", "03", "04", "05"],
         place_of_performance_locations: [{ country: "USA", state: "AZ" }], date_type: "action_date",
-        date_range: { start_date: "2000-10-01", end_date: "2000-12-31" },
+        date_range: { start_date: "2026-01-01", end_date: "2026-12-31" },
       }, file_format: "csv" });
       return Response.json({ status_url: "https://api.usaspending.gov/status?job=synthetic-job", file_url: "https://files.usaspending.gov/synthetic.zip" });
     }
@@ -133,7 +197,7 @@ test("an asynchronous initial USAspending page durably retains its cursor before
   assert.ok(first.outcome.promoted);
   assert.deepEqual(first.projection.counts, { loaded: 0, joined: 0, unjoined: 0 });
   const held = await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", "usaspending:AZ");
-  assert.equal(held?.payload.checkpoint?.cursor?.year, 2000);
+  assert.equal(held?.payload.checkpoint?.cursor?.year, 2026);
   assert.equal(held?.payload.checkpoint?.cursor?.statusUrl, "https://api.usaspending.gov/status?job=synthetic-job");
   const repeated = await refreshFederalMoney({ ...input, now: () => "2026-10-12T23:46:00.000Z" });
   assert.ok(repeated.outcome.promoted);

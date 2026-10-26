@@ -1,3 +1,4 @@
+import { federalMoneyGovernmentDivision } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { stateOcdIdFrom } from "../ocd/state-division.ts";
 import { factCommentAccessFromRows } from "../facts/comment-read.ts";
@@ -28,20 +29,50 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
   const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
   const divisionIds = row.division_ids as string[] | undefined ?? input.divisionIds;
   const entities = row.entities as Row[], rawSittings = row.sittings as Row[];
+  const registry = row.registry as RegistryRuntimeReadModel | null ?? null;
+  const governments = row.governments as RegistrationGovernmentListing[] ?? [];
+  const governmentRecipients = new Map<string, Map<string, { readonly ids: readonly string[]; readonly names: readonly string[]; readonly state: string; readonly moneyDivisionId?: string }>>();
+  for (const government of governments) {
+    const nativeBodies = government.nativeIds?.census_pid6 ? registry?.registry.bodies.filter(body =>
+      body.censusId === government.nativeIds.census_pid6).map(body => body.id) ?? [] : [];
+    const ids = [...new Set([government.id, ...(government.aliases ?? []), ...(government.bodyIds ?? []), ...nativeBodies])];
+    const moneyDivisionId = federalMoneyGovernmentDivision(government);
+    // The place query already carries both the exact entity parent and native
+    // registry bindings. A common name or service division establishes neither.
+    for (const key of ids) {
+      const recipients = governmentRecipients.get(key) ?? new Map();
+      recipients.set(government.id, { ids, names: government.recipientNameUnique === true ? [government.name] : [], state: government.state, moneyDivisionId });
+      governmentRecipients.set(key, recipients);
+    }
+  }
   const fields = bodyFieldsFromRows(row.fields as Row[]), { rosters, dispositions } = factRostersFromRows(row.rosters as Row[]);
   const roster = new Map(rosters.map(r => [r.bodyId,r])), comments = new Map(factCommentAccessFromRows(row.comments as Row[]).map(c => [c.bodyId,c]));
   const sittings = sittingFactsFromRows(rawSittings), disposition = new Map(dispositions.map(d => [d.sourceId,d]));
   const bodies: BodyFacts[] = entities.map(e => {
     const id = String(e.id), own = roster.get(id) ?? null;
+    const recipients = new Map([...(governmentRecipients.get(id) ?? []),
+      ...(typeof e.parent_id === "string" ? governmentRecipients.get(e.parent_id) ?? [] : [])]);
+    const recipient = recipients.size === 1 ? [...recipients.values()][0] : null;
     const divisions = [...new Set([...(e.divisions as string[] | undefined ?? []),String(e.division)].filter(id => id.startsWith("ocd-division/")))];
     const local = divisions.filter(id => id !== stateRoot);
     const served = local.length ? local : divisions;
     const division = served.find(id => divisionIds.includes(id)) ?? served[0] ?? String(e.division);
-    return { id, division, fields: fields[id] || e.placed === true ? {...fields[id],ocdId:division.startsWith("ocd-division/") ? division : null,
+    const registeredName = typeof e.registered_name === "string" && e.registered_name.trim() ? e.registered_name : null;
+    const governmentClass = typeof e.government_class === "string" ? e.government_class.toUpperCase() : "";
+    const governmentType = /SPECIAL/.test(governmentClass) ? "special_district" : /SCHOOL/.test(governmentClass) ? "school_district"
+      : /COUNTY/.test(governmentClass) ? "county" : /MUNICIPAL|TOWNSHIP|PLACE GOVERNMENT/.test(governmentClass) ? "city" : undefined;
+    return { id, division, fields: fields[id] || e.placed === true || registeredName ? {...fields[id],
+      ...(!fields[id]?.name && registeredName ? {name:registeredName} : {}),ocdId:division.startsWith("ocd-division/") ? division : null,
+      ...(typeof e.government === "string" ? { governmentName: e.government } : {}),
+      ...(typeof e.government_id === "string" ? { governmentId: e.government_id } : {}),
+      ...(governmentType ? {governmentType} : {}),
+      ...(registeredName || typeof e.name === "string" && e.name !== id ? {registeredName:registeredName ?? String(e.name)} : {}),
       ...(served.some(id => id !== division) ? {alsoServesOcdIds:served.filter(id => id !== division)} : {}),
       ...(e.placement_basis === "HOST_COUNTY" ? {placementBasis:"HOST_COUNTY" as const} : {})} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [],
       ...(typeof e.name === "string" && e.name !== id ? { name: e.name } : {}),
+      ...(recipient ? { recipientIds: [...new Set([id, ...recipient.ids])].sort(), recipientNames: recipient.names, recipientState: recipient.state,
+        ...(recipient.moneyDivisionId ? { moneyDivisionId: recipient.moneyDivisionId } : {}) } : {}),
       ...(typeof e.government === "string" ? { government: e.government } : {}) };
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });
@@ -130,9 +161,17 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
   // A published calendar names its body independently of the reviewed registry.
   // Use that source only where an independently published body-name fact is absent.
   for (const body of bodies) {
+    const calendar = overlaid.filter(m => m.bodyId === body.id && m.bodyName.trim() && m.provenance?.sourceUrl);
+    // A calendar also supplies the body's source when its independently held
+    // registered name has no separate name fact. It never substitutes a sitting label.
+    if (calendar[0] && !body.fields.provenance && !Object.values(body.fields.fieldSources ?? {}).some(source => source.sourceUrl)) {
+      Object.assign(body.fields, {provenance:calendar[0].provenance,sourceDataset:"DERIVED"});
+    }
     if (body.fields.name) continue;
-    const named = overlaid.filter(m => m.bodyId === body.id && m.bodyName.trim() && m.provenance?.sourceUrl)
-      .sort((a,b) => Date.parse(b.provenance.collectedAt)-Date.parse(a.provenance.collectedAt))[0];
+    const candidates = calendar.filter(m => !body.name || m.bodyName.trim().toLowerCase() === body.name.trim().toLowerCase());
+    // Different sitting categories never rename the body to whichever met last.
+    const names = new Set(candidates.map(m => m.bodyName.trim().toLowerCase()));
+    const named = names.size === 1 ? candidates[0] : undefined;
     if (!named) continue;
     Object.assign(body.fields,{name:named.bodyName,bodyOrigin:"SOURCED",sourceDataset:"DERIVED",provenance:named.provenance,
       ocdId:named.ocdId ?? (body.division.startsWith("ocd-division/") ? body.division : null)});
@@ -143,12 +182,12 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     return [body.id,{...snapshot,generatedAt:sources.map(s => s.generatedAt).sort().at(-1) ?? snapshot.generatedAt,meetings,
       counts:snapshotCounts(meetings,accounting.freshCollapsed),sources:[...accounting.sources],agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}];
   }));
-  return { registry:row.registry as RegistryRuntimeReadModel | null ?? null,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
+  return { registry,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
     publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])
       .map(({contractId,...attempt}) => ({...attempt,family:attemptFamilyOf(contractId)})),
     bodies,meetings: overlaid,snapshot,snapshotHeldAt,bodySnapshots,
     agendaDocumentLinks:agendaDocumentLinks.map(link => ({...link,meetingId:merged.aliases.get(link.meetingId) ?? link.meetingId})),
-    governments:row.governments as RegistrationGovernmentListing[],
+    governments,
     divisions:row.divisions as Division[],registrationHeld:row.registration_held === true };
 }
 

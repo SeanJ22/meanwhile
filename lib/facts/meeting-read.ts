@@ -1,8 +1,9 @@
 import type { Meeting, Provenance } from "../sources/types.ts";
 import type { Query } from "./publish.ts";
 import { repeatsPublishedVenue } from "../geo/address-query.ts";
-import { publishedVenueDescription, withPublishedPin } from "../meetings/pin-location.ts";
+import { hasPendingPinReplacement, publishedVenueDescription, withPublishedPin } from "../meetings/pin-location.ts";
 import { hasPublishedVenue } from "../meetings/venue-text.ts";
+import { isOnlineOnly } from "../meetings/online.ts";
 
 export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
 
@@ -36,6 +37,14 @@ export interface SittingFact {
 /** The current fields and exact office withdrawals for each given body's sittings. */
 export async function readSittingFacts(query: Query, bodyIds: readonly string[]): Promise<Map<string, SittingFact[]>> {
   return sittingFactsFromRows(bodyIds.length ? await query(SITTING_FACTS_SQL, [bodyIds]) : []);
+}
+
+/** Pin repair needs only its admitted sittings, including their merged source identities. */
+export async function readMeetingFacts(query: Query, meetings: readonly Meeting[]): Promise<SittingFact[]> {
+  const ids = [...new Set(meetings.flatMap(meeting => [meeting.id, ...meeting.mergedMeetingIds ?? []]).map(meetingEntityId))];
+  if (!ids.length) return [];
+  const rows = await query(SITTING_FACTS_SQL.replace("m.parent_id = ANY($1::text[])", "m.id = ANY($1::text[])"), [ids]);
+  return [...sittingFactsFromRows(rows).values()].flat();
 }
 
 /** Sitting facts from already selected rows, grouped by their body. */
@@ -108,7 +117,10 @@ export function withSittingFacts(meetings: readonly Meeting[], facts: readonly S
     if(!pin)return meeting;
     const agrees=meeting.location ? pin.basis==="MEETING"&&repeatsPublishedVenue(pin.address,meeting.location.name,meeting.location.address)
       :pin.publishedLocation===(meeting.venueGap?.publishedText??null);
-    if(agrees)return withPublishedPin(meeting,pin);
+    if(agrees||hasPendingPinReplacement(meeting,pin))return withPublishedPin(meeting,pin);
+    if(!meeting.location&&!pin.pendingReplacement&&pin.bodyId===meeting.bodyId)
+      return withPublishedPin(meeting,{...pin,pendingReplacement:{publishedLocation:meeting.venueGap?.publishedText??null,
+        onlineOnly:isOnlineOnly(meeting)}});
     const {mapPin:_stale,...rest}=meeting;return rest;
   });
 }

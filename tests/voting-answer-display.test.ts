@@ -27,8 +27,10 @@ test("VS-01 official HTML tables become in-page hours, return rules, clerk conta
   assert.match(markup, /north side of Courthouse entry available 24\/7/);
   assert.match(markup, /\(701\) 845-8500/);
   assert.match(markup, /Sources/);
-  assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1, "all location gaps share one footer line");
-  assert.doesNotMatch(markup.slice(0, markup.indexOf("data-card-footer")), /still being gathered|Still gathering|working on|voting-site-gap/i);
+  assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1, "the section groups its missing voting details once");
+  assert.match(markup.slice(0, markup.indexOf("data-card-footer")), /working on getting this info/i);
+  assert.match(markup.slice(0, markup.indexOf("data-card-footer")), /Want us to get this sooner/i);
+  assert.doesNotMatch(markup, /Still gathering/);
   const citations = votingSources(j);
   assert.ok(citations.some(citation => citation.provenance.sourceUrl === source.url));
 });
@@ -51,12 +53,15 @@ test("VS-01 native primary CSV stays visible with its published election, file d
   const markup = await render(projected);
   assert.equal((markup.match(/data-voting-site=/g) ?? []).length, projected.sites.length, "archive rows must remain visible");
   assert.match(markup, /Publisher(?:&#x27;|’|&#x2019;)s election label: 03\/03\/2026/);
-  assert.match(markup, /Nov 3, 2026 election confirmation/);
+  assert.match(markup, /working on getting this info/);
   assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1);
-  assert.doesNotMatch(markup.slice(0, markup.indexOf("data-card-footer")), /election confirmation|Still gathering|voting-site-gap/);
+  assert.match(markup.slice(0, markup.indexOf("data-card-footer")), /working on getting this info/);
+  assert.match(markup.slice(0, markup.indexOf("data-card-footer")), /Want us to get this sooner/);
+  assert.doesNotMatch(markup, /Still gathering/);
   assert.doesNotMatch(markup, /Open on election day/);
-  assert.ok(votingSources(j).some(citation => citation.what.includes(`file last updated ${door.fileUpdatedAt}`)));
-  assert.match(markup, /file last updated 2026-03-01T10:25:04Z/);
+  assert.ok(votingSources(j).some(citation => citation.updatedAt === door.fileUpdatedAt));
+  assert.match(markup, /File last updated<\/span><span[^>]*>March 1, 2026/);
+  assert.doesNotMatch(markup, /2026-03-01T10:25:04Z/);
 
   // A current official election-page association is authoritative even when
   // the linked file carries an earlier publisher label or modification date.

@@ -11,9 +11,22 @@ import { boundedQuery } from "../lib/control-plane/repository/request-bounds.ts"
 import { pathToFileURL } from "node:url";
 import {
   VITAL_SIGNS_LINE_PREFIX, VITAL_SIGNS_REPORT_ENV, callerFromStack, countNeonBytes, formatNeonBytesLine, formatVitalSignsReport,
-  hourStart, parseVitalSignsReport, processNeonBytes, reportNeonBytes, summarizeNeonBytes, vitalSignsLineFilter,
+  hourStart, parseVitalSignsReport, processNeonBytes, reportNeonBytes, summarizeNeonBytes, vitalSignsLineFilter,withDatabaseJob,
   type NeonBytesHour,
 } from "../lib/db/transfer-by-caller.ts";
+
+test("pin publication bytes stay separate from another concurrent standing job",async()=>{
+  const at=Date.parse("2030-01-02T03:00:00Z");
+  await Promise.all([
+    withDatabaseJob("meeting-pins",async()=>{await Promise.resolve();countNeonBytes("reader",1234,at,{requests:1,bytes:56},undefined,"fact");}),
+    withDatabaseJob("box-publication",async()=>{await Promise.resolve();countNeonBytes("reader",9876,at,{requests:1,bytes:78},undefined,"fact");}),
+  ]);
+  const hour=processNeonBytes().find(row=>row.hour===hourStart(at))!;
+  // Each read key is database, job, table, then the calling file (DB-05).
+  const byJob=(job:string)=>Object.entries(hour.reads??{}).filter(([key])=>key.split("\t").slice(0,3).join("\t")===`reader\t${job}\tfact`).map(([,read])=>read);
+  assert.deepEqual(byJob("meeting-pins"),[[1,56,1234]]);
+  assert.deepEqual(byJob("box-publication"),[[1,78,9876]]);
+});
 import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import { mayCountAsProgress } from "../lib/control-plane/scheduler/round-progress.ts";
 import { receiveChildVitalSigns, runRuntimeChildren } from "../scripts/pilot-runtime-child.mts";

@@ -407,6 +407,27 @@
       "when": 1792834200005,
       "tag": "GB-01_la_metro_boards",
       "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1792834200006,
+      "tag": "RB-A7_expand",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1792834200007,
+      "tag": "RB-A7_bootstrap_expand",
+      "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1792834200008,
+      "tag": "RB-A7_bootstrap_contract",
+      "breakpoints": true
     }
   ]
 }

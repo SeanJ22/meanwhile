@@ -1,6 +1,6 @@
 import { createHash } from "node:crypto";
 import type { Officeholder, OfficeholderSet } from "./types.ts";
-import { personIdentityKeys } from "./people-identity.ts";
+import { personIdentityKeys,nativePersonIdFromUrl,memberProfileSubpageParentUrl } from "./people-identity.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
 
 const name = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -36,7 +36,10 @@ export function retainsPeopleBindings(before:readonly Officeholder[],after:reado
  * Their original reader IDs stay with the named entry; native aliases return to
  * the source person that owns them. No reader or candidate is read here. */
 export function bindPeopleSources(sets: readonly OfficeholderSet[]): OfficeholderSet[] {
-  const sources = sets.flatMap(set => set.officeholders.flatMap(sourcePeople)).filter(person => !collapsed(person));
+  const sources = sets.flatMap(set => set.officeholders.flatMap(sourcePeople)).filter(person => !collapsed(person)&&!sourcePersonIsDocument(person)&&
+    (person.nativeIds?.["ocd-person"]?.length||!(person.nativeIds?.["official-legislature"]??[]).some(url=>{
+      const parent=memberProfileSubpageParentUrl(url);return Boolean(parent&&nativePersonIdFromUrl(parent));
+    })));
   const nativeIdentity=(person:Officeholder)=>person.nativeIds?.["ocd-person"]?.length===1
     ? `${person.state?.toUpperCase()}|${person.level}|${person.nativeIds["ocd-person"][0]}`:subject(person);
   const bySubject = new Map<string, Officeholder[]>(), byIdentity = new Map<string, Officeholder[]>(), owners = new Map<string, Set<string>>(), nativeOwners = new Map<string, Set<string>>();
@@ -74,8 +77,16 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
   };
   const foreign=(person:Officeholder,key:string)=>Boolean(ownerOf(key)&&ownerOf(key)!==identityOf(person));
   const documentReference=(person:Officeholder)=>{
-    if(!sourcePersonIsDocument(person))return undefined;
-    const matches=sources.filter(source=>source.nativeIds?.["ocd-person"]?.length===1&&personIdentityKeys(source).has(person.id));
+    if(person.nativeIds?.["ocd-person"]?.length)return undefined;
+    const parents=new Set((person.nativeIds?.["official-legislature"]??[]).flatMap(url=>{
+      const parent=memberProfileSubpageParentUrl(url),native=parent?nativePersonIdFromUrl(parent):null;
+      return native?[`${native.source}:${native.id}`]:[];
+    }));
+    if(!sourcePersonIsDocument(person)&&!parents.size)return undefined;
+    const matches=sources.filter(source=>source.nativeIds?.["ocd-person"]?.length===1&&(personIdentityKeys(source).has(person.id)||
+      [source.websiteUrl,...source.profileUrls??[]].some(url=>{
+        const native=url?nativePersonIdFromUrl(url):null;return Boolean(native&&parents.has(`${native.source}:${native.id}`));
+      })));
     return new Set(matches.map(nativeIdentity)).size===1?matches[0]:undefined;
   };
   const needsBinding=(person:Officeholder)=>collapsed(person)||Boolean(documentReference(person))||[...personIdentityKeys(person)].some(key=>foreign(person,key));

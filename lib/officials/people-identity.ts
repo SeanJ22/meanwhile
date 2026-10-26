@@ -50,11 +50,25 @@ export function sameNativePerson(left: Pick<Officeholder, "id" | "personId" | "n
 }
 
 /** A native official member URL carried by a source can link to that publisher's exact ID. */
+/** A member's content/form route names its parent profile; it is not a person entry. */
+export function memberProfileSubpageParentUrl(value:string):string|null {
+  let url:URL;try{url=new URL(value);}catch{return null;}
+  const route=/^(.*\/(?:members?|senators?|representatives|legislators))\/(.+)$/i.exec(url.pathname);
+  if(!route)return null;
+  const parts=route[2].split("/").filter(Boolean),personAt=/^\d{4}-\d{4}$/.test(parts[0])?1:0,content=parts.slice(personAt+1);
+  if(!content.length||content.length===1&&/^(?:bio|biography|about|contact)$/i.test(content[0]))return null;
+  url.pathname=`${route[1]}/${parts.slice(0,personAt+1).join("/")}`;url.search="";url.hash="";
+  return nativePersonIdFromUrl(url.href)||/^(?:news|newsletters?|newsletter-sign-up|sign-up|signup|photos?|photo-gallery|videos?|press|press-releases?|events|media)$/i.test(content[0])?url.href:null;
+}
 export function nativePersonIdFromUrl(value: string): { source: string; id: string } | null {
   let url: URL;
   try { url = new URL(value); } catch { return null; }
   if (!["http:", "https:"].includes(url.protocol) || url.username || url.password) return null;
   const host = url.hostname.toLowerCase().replace(/^www\./, "");
+  if(["ohiohouse.gov","ohiosenate.gov"].includes(host)&&!url.search) {
+    const slug=/^\/(?:members|senators|representatives)\/([a-z]+(?:-[a-z]+)+)(?:\/(?:bio|biography|about|contact))?\/?$/i.exec(url.pathname)?.[1];
+    if(slug&&!/(?:^|-)(?:directory|leadership|committee|district)(?:-|$)/i.test(slug))return {source:host==="ohiohouse.gov"?"oh-house":"oh-senate",id:slug.toLowerCase()};
+  }
   if (["flhouse.gov","myfloridahouse.gov"].includes(host) && /^\/Sections\/Representatives\/(?:custom\/)?details\.aspx$/i.test(url.pathname)) {
     const ids=[...url.searchParams].filter(([name])=>/^memberid$/i.test(name));
     if(ids.length===1&&/^\d+$/.test(ids[0][1]))return {source:"fl-house",id:ids[0][1]};

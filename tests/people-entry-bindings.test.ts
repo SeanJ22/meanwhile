@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { normalizeOfficialLegislaturePage, legislatureRosterLinks } from "../lib/sources/people/legislature.ts";
 import { emptyPerson, emptyRoster, provenance } from "../lib/sources/people/common.ts";
 import { mergePeopleSets } from "../lib/officials/merge-people.ts";
-import { personIdentityKeys } from "../lib/officials/people-identity.ts";
+import { personIdentityKeys,nativePersonIdFromUrl,memberProfileSubpageParentUrl } from "../lib/officials/people-identity.ts";
 import { publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -62,10 +62,44 @@ test("a member's news and photo-album titles never become people or member-list 
   const body='<h1>House Members</h1><div><a href="/members/vito">Vito Barbieri</a><p>Representative District 3</p><img src="/vito.jpg"></div><article><a href="/members/vito/photos/transportation-committee"><h2>Transportation Committee</h2></a><p>Representative District 3</p><img src="/committee.jpg"></article><a href="/members/vito/news/new-members">Members</a>';
   const parsed=parse(body);
   assert.deepEqual(parsed.officeholders.map(person=>person.name),["Vito Barbieri"]);
-  for(const path of ["/members/vito/news/grants","/members/vito/photos/transportation-committee"])
+  for(const path of ["/members/vito/news/grants","/members/vito/photos/transportation-committee","/members/vito/newsletter-sign-up","/members/vito/newsletters/an-update"])
     assert.equal(normalizeOfficialLegislaturePage('<title>Representative Vito Barbieri</title><p>Representative Vito Barbieri, District 3</p><img src="/vito.jpg">',`https://legislature.example.gov${path}`,
       {state:"id",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster(people)},at).officeholders.length,0);
   assert.deepEqual(legislatureRosterLinks(body,page),[]);
+});
+
+test("a member's old form-page IDs resolve to the person owning its explicit publisher profile",()=>{
+  const member={...people[0],state:"OH",websiteUrl:"https://ohiosenate.gov/members/vito-barbieri",profileUrls:["https://ohiosenate.gov/senators/vito-barbieri"]};
+  const form={...member,id:"old-form",personId:"old-form",name:"Sign Up",nativeIds:{"official-legislature":["https://www.ohiosenate.gov/members/vito-barbieri/newsletter-sign-up"]},memberships:[]};
+  const repaired=mergePeopleSets([roster([form]),roster([member])])!;
+  assert.equal(repaired.officeholders.length,1);
+  assert.equal(repaired.officeholders[0].name,member.name);
+  assert.ok(personIdentityKeys(repaired.officeholders[0]).has("old-form"));
+  assert.deepEqual(repaired.officeholders[0].nativeIds?.["ocd-person"],["ocd-person/vito"]);
+  assert.ok(retainsPeopleBindings([form],repaired.officeholders));
+});
+
+test("profile routes keep their own identity without treating a term or directory as a person",()=>{
+  assert.deepEqual(nativePersonIdFromUrl("https://www.ohiosenate.gov/members/al-landis/biography"),{source:"oh-senate",id:"al-landis"});
+  assert.equal(nativePersonIdFromUrl("https://ohiosenate.gov/members/member-directory"),null);
+  assert.equal(nativePersonIdFromUrl("https://ohiosenate.gov/members/al-landis/newsletter-sign-up"),null);
+  assert.equal(memberProfileSubpageParentUrl("https://flsenate.gov/Senators/2024-2026/S39"),null);
+  assert.equal(memberProfileSubpageParentUrl("https://legislature.idaho.gov/legislators/membership/2026/id6687/"),null);
+});
+
+test("rechecking one person's same source entry keeps facts and every old ID without multiplying snapshots",()=>{
+  let held=roster([{...people[0],email:"held@example.gov"}]);
+  const oldIds=new Set<string>();
+  for(let index=0;index<12;index++) {
+    const id=`entry-read-${index}`;oldIds.add(id);
+    held=mergePeopleSets([held,roster([{...people[0],id,personId:id,email:"held@example.gov",provenance:{...people[0].provenance,collectedAt:`2026-10-${String(index+1).padStart(2,"0")}T00:00:00.000Z`}}])])!;
+  }
+  const person=held.officeholders[0];
+  assert.equal(person.email,"held@example.gov");
+  assert.equal(person.sourceHolders?.length,1);
+  assert.ok([...oldIds].every(id=>personIdentityKeys(person).has(id)));
+  const changed=mergePeopleSets([held,roster([{...people[0],email:"new@example.gov",provenance:{...people[0].provenance,collectedAt:at}}])])!;
+  assert.equal(changed.officeholders[0].sourceHolders?.length,2,"different sourced facts remain available");
 });
 
 test("a portrait lead keeps its own source time when another page changes the person's contact",()=>{

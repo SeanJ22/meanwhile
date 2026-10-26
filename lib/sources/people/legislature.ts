@@ -1,7 +1,7 @@
 import { officeIdentity } from "../../officials/office-identity.ts";
 import { officialLegislatureRosterRoutes } from "./roster-routes.ts";
 import type { Officeholder, OfficeholderSet, SeatVacancy } from "../../officials/types.ts";
-import { nativePersonIdFromUrl, personIdentityKeys, sameNativePerson } from "../../officials/people-identity.ts";
+import { nativePersonIdFromUrl, personIdentityKeys, sameNativePerson,memberProfileSubpageParentUrl } from "../../officials/people-identity.ts";
 import { imagesIn, pickPortraits, looksLikeFurniture } from "../../hunt/portrait-pick.ts";
 import { decodeEntities } from "../http.ts";
 import { htmlEvidenceBlocks } from "../html-evidence.ts";
@@ -13,9 +13,9 @@ import { acquisition, appendRoster, digest, emptyPerson, emptyRoster, gap, legis
 
 const textOf = statewidePageText;
 const key = (value:string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
-const memberAction=(value:string)=>/^(?:contact|sponsored bills|view|read more|learn more|full biography|details|website|email|subscribe|track)\b/i.test(key(value));
+const memberAction=(value:string)=>/^(?:contact|sponsored bills|view|read more|learn more|full biography|details|website|email|subscribe|sign up|track)\b/i.test(key(value));
 const federalRoute=(value:string)=>/(?:^|\.)(?:house|senate|congress|whitehouse)\.gov$/i.test(new URL(value).hostname);
-const memberContentRoute=(value:string)=>/\/(?:members?|senators?|representatives|legislators)\/[^/]+\/(?:news|photos?|photo-gallery|videos?|press|press-releases?|events|media)(?:\/|$)/i.test(new URL(value).pathname);
+const memberContentRoute=(value:string)=>memberProfileSubpageParentUrl(value)!==null;
 function rosterLabelName(label: string): string {
   const observed=label.replace(/\s*--[\s\S]*$/,"").replace(/^(?:State\s+)?(?:Senator|Sen\.|Representative|Rep\.|Delegate|Assemblyman|Assemblywoman|Hon\.)\s+/i,"").trim();
   const reversed=/,\s*(?:Jr\.?|Sr\.?|II|III|IV)$/i.test(observed)?null:/^([^,]+),\s*([^,]+)$/.exec(observed);
@@ -237,8 +237,9 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
       const labels=[...card.matchAll(/<(a|strong|h[1-6])\b([^>]*)>([\s\S]*?)<\/\1>/gi)];
       for(const label of labels){
         const observed=anchorName(label[3]);
+        if(memberAction(observed))continue;
         if(!/^[\p{L}][\p{L}\p{M}.,'’\-]*(?:\s+["“]?[\p{L}][\p{L}\p{M}.,'’"“”\-]*){1,6}$/u.test(observed)||
-          /\b(?:view|read|contact|learn|current|all|former|member|state|house|senate|senators|representatives|assembly|live|video|text|proposal|listed|of|the|for|and|to|committee|majority|minority|president|speaker|leadership|sponsored|bills)\b/i.test(observed))continue;
+          /\b(?:view|read|contact|learn|current|all|former|state|house|senate|senators|representatives|assembly|live|video|text|proposal|listed|of|the|for|and|to|committee|majority|minority|president|speaker|leadership|sponsored|bills)\b/i.test(observed))continue;
         const href=attributes(label[2]).href??"";
         if(label[1].toLowerCase()==="a"&&(/^(?:mailto:|tel:)/i.test(href)||/\/(?:standingcommittees|committees|sessioninfo|bills|news)\//i.test(href)))continue;
         const known=held.find(person=>samePublishedName(observed,person.name));
@@ -274,6 +275,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
   for(const block of blocks) {
     const card=block.html.replace(/<a\b[^>]*\/>/gi,""),text=textOf(card);
     if(!/^<(?:tr|article|li|p|div)\b/i.test(card))continue;
+    if(!oneMember(card))continue;
     // Containers with several named member links cannot bind one member's
     // district, contact or image. Work each bounded child instead.
     const namedAnchors=[...card.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)].filter(anchor=>{

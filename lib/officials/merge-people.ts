@@ -18,6 +18,36 @@ const sourceFor = (person: Officeholder, field: string): Provenance => {
   return lead ? {sourceUrl:lead.sourceUrl,sourceOrg:new URL(lead.sourceUrl).hostname,collectedAt:lead.collectedAt,verifiedAt:null,
     kind:isOfficialSource(lead.sourceUrl)?"OFFICIAL":"REFERENCE"} : person.fieldSources?.[field] ?? person.provenance;
 };
+/** Rechecks of the same person's same entry retain one copy of each fact set.
+ * Different facts and portraits remain accessible; aliases accumulate. */
+function compactSourceEntries(rows:readonly Officeholder[],prefers:(right:Officeholder,left:Officeholder,field:string)=>boolean):Officeholder[] {
+  const entries=new Map<string,Officeholder>();
+  const visit=(person:Officeholder)=>{
+    const {id,personId,nativeIds,profileUrls,provenance,fieldSources,sourceHolders,...facts}=person;
+    let entry=provenance.sourceUrl??"";
+    try {
+      const address=new URL(entry);
+      for(const name of [...address.searchParams.keys()])if(/^(?:sortdirection|sortfield|lastsortfield)$/i.test(name))address.searchParams.delete(name);
+      if(address.hostname==="raw.githubusercontent.com"&&/^\/openstates\/people\/[a-f0-9]{40}\//.test(address.pathname))address.pathname=address.pathname.replace(/^(\/openstates\/people)\/[a-f0-9]{40}\//,"$1/entry/");
+      entry=address.href;
+    }catch { /* The original source identity is retained when it is not a URL. */ }
+    const identity=nativeIds?.["ocd-person"]?.length?[...nativeIds["ocd-person"]].sort():[personId??id];
+    const key=canonicalCivicDataJson(JSON.parse(JSON.stringify([identity,entry,facts]))),saved=entries.get(key);
+    if(!saved)entries.set(key,{...facts,id,personId,nativeIds,profileUrls,provenance,fieldSources});
+    else {
+      const chosen=prefers(person,saved,"name")?person:saved;
+      const combined=Object.fromEntries([...new Set([...Object.keys(saved.nativeIds??{}),...Object.keys(nativeIds??{})])]
+        .map(namespace=>[namespace,[...new Set([...saved.nativeIds?.[namespace]??[],...nativeIds?.[namespace]??[]])]]));
+      combined.reader=[...new Set([...combined.reader??[],saved.id,saved.personId??saved.id,id,personId??id])];
+      const sources={...saved.fieldSources,...fieldSources};
+      for(const field of Object.keys(sources))sources[field]=prefers(person,saved,field)?sourceFor(person,field):sourceFor(saved,field);
+      const {sourceHolders: _nested,...leaf}=chosen;void _nested;
+      entries.set(key,{...leaf,nativeIds:combined,profileUrls:[...new Set([...saved.profileUrls??[],...profileUrls??[]])],fieldSources:sources});
+    }
+    for(const source of sourceHolders??[])visit(source);
+  };
+  rows.forEach(visit);return [...entries.values()];
+}
 /** Shared identifiers first; a unique full name, office and state is the second binding. */
 export function mergePeopleSets(input: readonly OfficeholderSet[]): OfficeholderSet | null {
   const sets = bindPeopleSources(input.map(withoutInvalidStatewidePeople));
@@ -149,8 +179,7 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     const nativeIds = Object.fromEntries([...keys].map(key => [key, [...new Set([...(left.nativeIds?.[key] ?? []), ...(right.nativeIds?.[key] ?? [])])]]));
     nativeIds.reader = [...new Set([...(nativeIds.reader ?? []), left.id, personId, right.id, right.personId ?? right.id])];
     // Optional undefined fields disappear on publication; replay keys must use that same durable form.
-    const sourceHolders = [...new Map([left,right].flatMap(person=>originalSources.get(person) ?? heldPersonSources(person))
-      .map(person=>[canonicalCivicDataJson(JSON.parse(JSON.stringify(person))),person])).values()];
+    const sourceHolders = compactSourceEntries([left,right].flatMap(person=>originalSources.get(person) ?? heldPersonSources(person)),prefers);
     const merged: Officeholder = {...left, personId, nativeIds, sourceHolders, fieldSources: {...left.fieldSources}};
     personDivisions.set(merged,new Set([...(personDivisions.get(left)??[]),...(personDivisions.get(right)??[])]));
     const mergedKeys = personIdentityKeys(merged);

@@ -1365,3 +1365,8 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - rebuild_queue: 3,183.
 - Research cycle: none; every state's hunt stopped in Admin, nothing funded.
 - DB-04: no READY (last commit 1:11 AM).
+
+### 3:40 AM EDT: release 125 live (Idaho fixed); release 126 opened
+- 125 live 3:30 AM. Every Idaho ZIP loads; Chrome on Boise plus 6 random Idaho ZIPs shows contests in 4.4 to 8.7 s, no wrong or shared photos. Per-ZIP times in releases/125.md for BF-01.
+- 126 (batch 2 + CS-01) gate 9/9 on 7291d406a (10,092 pass). river moved there. [#838](https://github.com/SeanJ22/meanwhile/pull/838), auto-merge on. Report: releases/126.md.
+- Drain fix proof: runner pid 4001083 at 125 live (3:30 AM); watching for a new pid within one pass deadline.

@@ -1373,3 +1373,10 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 
 ### 3:50 AM EDT: drain fix proven on 125
 - The runner took release 125 by itself: vital signs written 3:41 AM show e12d76968, new pilot-runner pid 4177938 at 3:42 AM, 11 to 12 minutes after 125 went live at 3:30 AM. No hand restart by River.
+
+### 4:05 AM EDT: release 126 merged; Neon after the restart; Maryland cost spike
+- Release 126 ([#838](https://github.com/SeanJ22/meanwhile/pull/838)) merged 4:01 AM; live checks run when /api/build shows it.
+- Runner Neon, both databases, the two full hours after Sean's 2:06 AM restart: 2 AM 4,081 MB, 3 AM 5,949 MB. Before: 10 PM 1,792, 11 PM 2,933, midnight 1,753, 1 AM 2,852. The rise is not from 124 or 125 (neither adds reads).
+- Cost spike found: measure-translations:MD reads civic_data_candidates at 7 to 10 MB per read, about 210 reads an hour: 1,592 MB in the 2 AM hour and 2,103 MB in the 3 AM hour (under 30 MB in the 1 AM hour, when the job was on WV). Its CURATED_READER_RECORD events reads rose to 457 MB. Per-read size is growing. MD-01's READY already flagged Maryland's big sources and three missing completion clocks. Cause and a reads-only-what-changed fix are being worked now (River agent, local branch river-md-reads); it ships alone as a cost-spike release. Admin pauses and limits untouched.
+- openstates-people: 744 MB (2 AM), 1,202 MB (3 AM). DB-04's READY must show its before/after.
+- GB-01: census cursor in CO. rebuild_queue 4,782 (RB-A7 in 126 should start draining it).

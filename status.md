@@ -10,9 +10,11 @@ heartbeat: 2026-10-26T14:20:00Z
 
 <!-- READY-LIST -->
 ## Every READY not on main (updated 10:20 AM EDT Oct 26)
-Live: release 128 (main 9352c8e14). River: 90348edd4. Sean's latest order: ship the place map, merge the finished lanes in one batch, take over the quiet lanes.
+Live: release 128 (main 9352c8e14). River: 90348edd4.
 
-**Place map (ships with the batch, or alone if the batch isn't ready within the hour)**
+**Release rule (Sean, 10:25 AM EDT Oct 26; replaces the old one):** an urgent fix (Neon cost, runner crash, cost spike, readers losing critical info) goes first but does not ship alone. Every other lane that is READY and passes its scan rides in the same release. Nothing finished waits behind an urgent fix; no batch waits on a lane that isn't READY. So: release 129 = RT-01b plus every lane READY and scanned when 129 folds. DB-04 no longer ships alone; it rides the release that is folding when it posts READY. Sean's latest order: ship the place map, merge the finished lanes in one batch, take over the quiet lanes.
+
+**Place map: release 129**
 | READY | Lane | State |
 |---|---|---|
 | 92b527e93 | RT-01b: a place-map turn per state, one shared Census worker, bounded heap (#822's approach) | Full gate running on river-next-rt01b (started 9:50 AM). Becomes release 129 |
@@ -28,7 +30,7 @@ Live: release 128 (main 9352c8e14). River: 90348edd4. Sean's latest order: ship 
 | stream/river-runner-release | Runner release fix | A stuck staging can't block later releases; stuck/failed staging shows in heartbeat and Admin; testedSha and codeIdentity written at startup and on the standing clock |
 | stream/river-bills | Bills | Only Arizona shows; AL 503, MA/CA/TX/NY/OH 0; LegiScan promoted 3 sessions at 7:25 AM, nothing since. Cause being found |
 
-**Ships alone**
+**Rides the next release when READY (no longer alone)**
 | READY | Lane | State |
 |---|---|---|
 | stream/river-db-04 | DB-04 (taken over; silent since 1:11 AM) | River finishing. READY will show openstates-people (1.28 GB) and member-offices (0.64 GB, 8 AM hour) GB/h before and after |

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 129 (main ccb676a7a, live 2:40 PM EDT Oct 26): RT-01b, bills, RT-01c, RIVER-PP, runner-release, GV-01, FM-01, MP-01, CT-01. Runner loaded 129 by itself at 2:47:57 PM (heartbeat testedSha ccb676a7a, codeIdentity CONSISTENT; no restart asked). RIVER: 43783ed16. GATING: release 130 on river-next-130c c96b5849e (URGENT RIVER-LS1 84db3f3f0 + MT-02 87577ea3a + DB-05 3d4e87f62; DB-05's c1bf8151f and 0be79e9a5 turned away: 12 failing tests on DB-05's own branch). See 'Every READY not on main'
+build_state: LIVE FOR READERS: release 129 (main ccb676a7a, 2:40 PM EDT; runner on it since 2:47 PM). RIVER: c96b5849e (gate 9/9, 10,279 pass). SHIPPING: release 130 PR #842 (auto-merge on 4:24 PM): URGENT RIVER-LS1 + MT-02 + DB-05 piece 1. BUILDING: RIVER-PP2 (place pages read shared data once per turn). See 'Every READY not on main'
 worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T20:06:00Z
+heartbeat: 2026-10-26T20:26:00Z
 
 
 <!-- READY-LIST -->

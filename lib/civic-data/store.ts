@@ -841,7 +841,9 @@ export function proofConsistentObservedSuccess(
 
 /** Processing time decides continuation/failure; the provider observation still decides freshness. */
 function pointedSourceWorkClock(record:RoutineClockRecord|null,pointer:PromotionPointerProof|null|undefined,observedAt:string|undefined):Partial<RoutineStoreClock>{
-  if(!proofConsistentPointedSuccess(record,pointer))return{};
+  // Rebuilding registration from held Census/NCES evidence does not recover either provider.
+  // Parser readiness has its own version field and leaves the source failure/retry clock intact.
+  if(!proofConsistentPointedSuccess(record,pointer)||record.candidate.recordClass==="REGISTRATION")return{};
   const checked=proofConsistentObservedSuccess(record,pointer,observedAt);
   const completed=observedAt&&checked&&Date.parse(observedAt)>Date.parse(checked)?observedAt:undefined;
   const next=record.candidate.nextWorkAt;
@@ -1651,7 +1653,7 @@ function confirmedClock(
   const lastCompletedAt=completion&&lastSucceededObservedAt&&Date.parse(completion)>Date.parse(lastSucceededObservedAt)?completion:undefined;
   return {
     ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
-    ...(clock.failureStreak && (!completion || Date.parse(completion) < Date.parse(lastAttemptedAt ?? ""))
+    ...(clock.failureStreak && (!lastSucceededObservedAt || Date.parse(lastSucceededObservedAt) < Date.parse(lastAttemptedAt ?? ""))
       ? { failureStreak: clock.failureStreak } : {}),
     ...(lastSucceededAt ? { lastSucceededAt } : {}),
     ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),

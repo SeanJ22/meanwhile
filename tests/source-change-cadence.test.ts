@@ -181,3 +181,16 @@ test("state member-office histories count changes within each state and retire t
   assert.equal(history.meanChangeMs,2*DAY);
   assert.ok(bytes<600,"source bodies and event histories stay inside Postgres");
 });
+
+
+test("a successful local cutoff cannot recover a recorded native source failure", () => {
+  const provider = new Date(start - DAY).toISOString();
+  const failed = { lastAttemptedAt: AT, lastSucceededObservedAt: provider, lastCompletedAt: AT,
+    lastSucceededParserVersion: portrait.parserVersion, continuationPending: true, failureStreak: 2 };
+  for (const task of [portrait, { ...portrait, ownerInvocation: { requestedAt: provider, instructions: ["owed-publication"], publicationPending: true as const } }]) {
+    assert.equal(routineTaskDue(task, failed, start + 1), false, "finishing held-byte work does not clear the publisher failure");
+    assert.equal(routineTaskDue(task, failed, start + DAY), true, "the actual source failure still retries on its configured clock");
+    const recovered = { ...failed, lastSucceededObservedAt: AT };
+    assert.equal(routineTaskDue(task, recovered, start + 1), true, "an actual successful provider check permits the unfinished publication to continue");
+  }
+});

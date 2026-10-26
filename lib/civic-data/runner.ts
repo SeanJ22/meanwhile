@@ -677,11 +677,17 @@ export function routineTaskNextDueMs(
     : task.minimumRefreshMs ?? defaults.minimumRefreshMs;
   const retryDelayMs = sensitive ? failureRetryMs(task.retryMs, clock)
     : Math.max(minimumMs, failureRetryMs(task.retryMs, clock));
+  const sourceAttempted = Date.parse(clock?.lastAttemptedAt ?? "");
+  const sourceSucceeded = Date.parse(clock?.lastSucceededObservedAt ?? "");
+  // A successful replay may finish local work; only a newer provider check recovers a recorded source failure.
+  const sourceFailed = (clock?.failureStreak ?? 0) > 0 && Number.isFinite(sourceAttempted) &&
+    (!Number.isFinite(sourceSucceeded) || sourceAttempted > sourceSucceeded);
   if (task.ownerInvocation) {
     const requested = Date.parse(task.ownerInvocation.requestedAt);
     const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
     const completed=successfulProcessingMs(clock);
+    if(sourceFailed && attempted >= requested)return attempted + retryDelayMs;
     if(clock?.continuationPending===true&&Number.isFinite(attempted)&&Number.isFinite(completed)&&completed>=attempted&&completed<=nowMs)return nowMs;
     if (task.ownerInvocation.publicationPending) return !Number.isFinite(attempted) || attempted < requested ||
       (Number.isFinite(completed) && completed >= attempted && completed <= nowMs) ? nowMs : attempted + retryDelayMs;
@@ -704,6 +710,7 @@ export function routineTaskNextDueMs(
   const completed=successfulProcessingMs(clock);
   if (!Number.isFinite(attempted)) return nowMs;
   if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)||(Number.isFinite(completed)&&completed>nowMs)) return nowMs;
+  if(sourceFailed)return attempted + retryDelayMs;
   if(Number.isFinite(completed)&&attempted<=completed&&clock.continuationPending===true)return nowMs;
   if(clock.sourceComplete===false)return Math.max(attempted,Number.isFinite(completed)?completed:attempted)+retryDelayMs;
   const capWorkDue=(due:number)=>{

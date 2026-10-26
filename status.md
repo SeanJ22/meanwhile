@@ -17,7 +17,8 @@ Live: release 128 (main 9352c8e14). River: 90348edd4.
 **Place map: release 129**
 | READY | Lane | State |
 |---|---|---|
-| 92b527e93 | RT-01b: a place-map turn per state, one shared Census worker, bounded heap (#822's approach) | Full gate running on river-next-rt01b (started 9:50 AM). Becomes release 129 |
+| 92b527e93 | RT-01b: a place-map turn per state, one shared Census worker, bounded heap (#822's approach) | In release 129. First gate's tsc was killed by container memory pressure (not a code error); re-gating with bills on river-next-129 from 10:50 AM |
+| c0ddd0e46 (built on 92b527e93) | Bills: the LegiScan fan-out gets the same memory turn as the place maps; /api/bills opens only current sessions so Alabama renders (9 bills, was 503) | READY, scan clean (no bypassCache, no proof files). In release 129. Cost: meeting reads start about 19% less often while bills are owed |
 | (pushing to stream/river-rt-01c) | RT-01c: each state's reservation from its own measured peak; a map that waited a full pass gets the next freed memory; old fixed reservation and old turn path deleted | River helper building. Follow-up release |
 
 **Improvement batch 3 (River finishing each lane on its own branch)**
@@ -28,7 +29,6 @@ Live: release 128 (main 9352c8e14). River: 90348edd4.
 | f4039045f only | MP-01 | Folding only f4039045f |
 | aab119580, re-cut on stream/river-mt-02 | MT-02 | One single-person roster lookup kept, GV-01's duplicate deleted |
 | stream/river-runner-release | Runner release fix | A stuck staging can't block later releases; stuck/failed staging shows in heartbeat and Admin; testedSha and codeIdentity written at startup and on the standing clock |
-| stream/river-bills | Bills | Only Arizona shows; AL 503, MA/CA/TX/NY/OH 0; LegiScan promoted 3 sessions at 7:25 AM, nothing since. Cause being found |
 
 **Rides the next release when READY (no longer alone)**
 | READY | Lane | State |

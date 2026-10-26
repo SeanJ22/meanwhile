@@ -41,9 +41,9 @@ export const capturedText = (vault:EvidenceStore,row:StatePeopleCapture):Promise
 /** A complete unchanged state acquisition confirms its current version before any held roster is read. */
 export async function confirmStatePeopleSource(input: {
   readonly store: RoutineDataStore; readonly state: string; readonly roster: OfficeholderSet;
-  readonly acquisitions: readonly StatePeopleAcquisition[]; readonly gaps?: readonly unknown[]; readonly now: string;
+  readonly acquisitions: readonly StatePeopleAcquisition[]; readonly gaps?: readonly unknown[]; readonly excludedFacts?:RoutineCandidate["excludedFacts"]; readonly now: string;
 }) {
-  const rawHash = peopleSourceContentHash(input.acquisitions, input.roster);
+  const rawHash = peopleSourceContentHash(input.acquisitions, input.roster,input);
   const acquiredAt = input.acquisitions.map(row => row.retrievedAt).sort().at(-1) ?? input.now;
   const first = input.acquisitions[0];
   const sourceCheck = input.acquisitions.flatMap(row => row.sourceCheck ? [row.sourceCheck] : []).sort((a,b) => b.checkedAt.localeCompare(a.checkedAt))[0];
@@ -92,7 +92,7 @@ export async function confirmRepeatedStatePeopleInputs(input: StatePeopleInputs 
     const head=await input.store.readSourceHead("STATE_LEGISLATOR",scope);
     if(head?.sourceId==="plural-openstates" && head.versionId===head.lastKnownGoodVersionId && !head.imported &&
       head.candidateState==="PROMOTED" && head.acquisitionSucceeded && head.parserVersion===PLURAL_PARSER_VERSION &&
-      head.rawHashBasis==="SOURCE_CONTENT_V1" && head.rawHash===peopleSourceContentHash(input.acquisitions,input.roster) && head.normalizedHash &&
+      head.rawHashBasis==="SOURCE_CONTENT_V1" && head.rawHash===peopleSourceContentHash(input.acquisitions,input.roster,input) && head.normalizedHash &&
       await input.store.readCandidatePath<string>(head.versionId,["normalizedPayload","sourceInputDigest"])===inputDigest){
       const retrieval=await input.store.readCandidatePath<RoutineCandidate["retrieval"]>(head.versionId,["retrieval"]);
       if(retrieval?.rawHash===head.rawHash){
@@ -121,7 +121,7 @@ export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet
   // The exact saved bytes stay in the vault, so parser changes can replay them.
   const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,
     endedMemberships:input.roster.endedMemberships ?? [],gaps:input.gaps ?? [],excludedFacts}));
-  const rawHash = input.sourceRawHash ?? peopleSourceContentHash(input.captures, input.roster), normalizedHash = hash(readModel);
+  const rawHash = input.sourceRawHash ?? peopleSourceContentHash(input.captures, input.roster,input), normalizedHash = hash(readModel);
   const people = input.roster.officeholders;
   return {id:`cv-${hash(`${sourceId}|${scope}|${rawHash}|${normalizedHash}|${hash(sourceCheck ?? null)}`).slice(0,32)}`,sourceId,recordClass:"STATE_LEGISLATOR",scope,
     retrieval:{succeeded:input.captures.length>0 && input.captures.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.capture.byteLength>0),
@@ -199,7 +199,7 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
   })];
   const carriedPortraitFacts = heldExcluded?.filter(fact=>fact.code.startsWith("STATE_PORTRAIT_")) ?? [];
   const built = statePeopleCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,
-    sourceRawHash:peopleSourceContentHash(input.acquisitions,input.roster),excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
+    sourceRawHash:peopleSourceContentHash(input.acquisitions,input.roster,input),excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const inputDigest=statePeopleInputDigest(input),normalizedPayload={...(built.normalizedPayload as object),sourceInputDigest:inputDigest};
   const candidate={...built,id:`cv-${hash([built.id,inputDigest]).slice(0,32)}`,normalizedPayload,
     normalization:{...built.normalization,normalizedPayloadHash:hash(normalizedPayload)}};

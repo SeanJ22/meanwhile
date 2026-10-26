@@ -8,11 +8,13 @@ export function peopleNormalizationInputHash(roster: OfficeholderSet): string {
   const sort = (rows: unknown[][]) => rows.sort((a,b) => canonicalCivicDataJson(a).localeCompare(canonicalCivicDataJson(b)));
   const members = roster.officeholders.map(person => [person.id, person.officeTitle, person.termStart, person.termEnd,
     sort(person.memberships?.map(row => [row.id, row.current, row.divisionId]) ?? [])]);
-  return createHash("sha256").update(canonicalCivicDataJson({ members: sort(members),
+  return createHash("sha256").update(canonicalCivicDataJson({ currentMembershipComplete:roster.currentMembershipComplete ?? null,members: sort(members),
     divisions: sort(roster.divisions.map(row => [row.officeholderId, row.membershipId ?? null, row.ocdId, row.bodyId])),
     vacancies: sort((roster.vacancies ?? []).map(row => [row.ocdId, row.reason, row.since ?? null])) })).digest("hex");
 }
 
-export function peopleSourceContentHash(pages: readonly (StatePeopleAcquisition | StatePeopleCapture)[], roster: OfficeholderSet): string {
-  return sourceContentHash(pages, { normalizationInputHash: peopleNormalizationInputHash(roster) });
+export function peopleSourceContentHash(pages: readonly (StatePeopleAcquisition | StatePeopleCapture)[], roster: OfficeholderSet,
+  coverage:{readonly gaps?:readonly unknown[];readonly excludedFacts?:readonly unknown[]}={}): string {
+  return sourceContentHash(pages, { normalizationInputHash: peopleNormalizationInputHash(roster),
+    gaps:coverage.gaps ?? [],excludedFacts:coverage.excludedFacts ?? [] });
 }

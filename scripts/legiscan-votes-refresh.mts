@@ -88,7 +88,8 @@ export async function refreshLegiscanVotes(input: Omit<Parameters<typeof acquire
         await publish(legiscanVotesCandidate({ projection: next, acquired: [result.evidence], held: [...result.held,...identityHeld], checkedAt: input.now?.() ?? now,sourceProbe:sourceProbe(false) }));
         await input.onDataset?.(result);
       } });
-    if (confirmation) return {confirmation,publication:null,held:[],state,rollCalls:null,positions:null,resources:null};
+    const confirmed=confirmation as SourceHashConfirmation|null;
+    if (confirmed) return {confirmation:confirmed,publication:null,held:null,state,rollCalls:null,positions:null,resources:null};
     if (!acquisition.completed.length && acquisition.held.some(row => row.key.startsWith("session:"))) throw new Error("LEGISCAN_DATASETS_UNAVAILABLE");
     const activeSink=await initialize();
     const next = { ...mergeLegiscanVoteMetadata(projection, { state, datasets: [], identityAuthority: authority! }), ...await activeSink.snapshot() };

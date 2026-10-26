@@ -82,7 +82,7 @@ test("each bill publishes and checkpoints before the next one, and the typed rea
     published++;
     assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,published);
   } });
-  assert.ok(result.publication.outcome.promoted);
+  assert.ok(result.publication!.outcome.promoted);
   assert.equal(candidateCount(civicStore), 2, "a pass cut between bills has already published the first one");
   const rows = await readPluralVotesForPerson("az", person, { store: civicStore,  now: AT });
   assert.equal(rows.length, 2); assert.equal(rows[0].position, "yes");
@@ -94,7 +94,7 @@ test("each vote candidate holds a raw-capture reference, never the bill bytes, a
   const result = await refreshStateVotes({ ...h.input, civicStore });
   const saved = await civicStore.readCandidate((await civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope("az")))!.versionId);
   const held = (saved!.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions;
-  assert.ok(result.publication.outcome.promoted); assert.equal(held.length, 2);
+  assert.ok(result.publication!.outcome.promoted); assert.equal(held.length, 2);
   for (const [index, acquisition] of held.entries()) {
     const body = evidence(index + 1).body;
     assert.equal("body" in acquisition, false); assert.equal(acquisition.raw?.rawHash, acquisition.sha256);
@@ -129,12 +129,12 @@ test("a source check with no votes succeeds, then confirms the held empty projec
     return transport(raw, init);
   };
   const first = await refreshStateVotes({...h.input, civicStore, fetchImpl});
-  assert.ok(first.publication.outcome.promoted);
-  assert.deepEqual((first.publication.candidate.readModel as {rollCalls:unknown[]}).rollCalls, []);
+  assert.ok(first.publication!.outcome.promoted);
+  assert.deepEqual((first.publication!.candidate.readModel as {rollCalls:unknown[]}).rollCalls, []);
   const next = await refreshStateVotes({...h.input, civicStore, fetchImpl});
-  assert.ok(next.publication.outcome.confirmed);
-  assert.equal(next.publication.outcome.confirmed.versionId, first.publication.outcome.promoted.versionId);
-  assert.equal(next.held.length, 0);
+  assert.ok(next.confirmation);
+  assert.equal(next.confirmation!.head.versionId, first.publication!.outcome.promoted.versionId);
+  assert.equal(next.held, null, "the unchanged source reads no held failure list");
 });
 test("a conflicting native person never hides other independently verified positions", () => {
   const parsed = parsePluralBill("az", evidence(1, [vote(1, {votes: [

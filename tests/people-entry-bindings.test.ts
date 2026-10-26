@@ -84,6 +84,19 @@ test("a member's news and photo-album titles never become people or member-list 
   assert.deepEqual(legislatureRosterLinks(body,page),[]);
 });
 
+test("a profile's subordinate office headings, document links and email button never become people",()=>{
+  const profile="https://www.flsenate.gov/Senators/S38",pdf="https://www.flsenate.gov/PublishedContent/Offices/Senator/Newsletter.pdf";
+  const member={...people[0],state:"FL",chamber:"upper",officeTitle:"State Senator",websiteUrl:profile,memberships:people[0].memberships?.map(row=>({...row,chamber:"upper"}))};
+  const doc={...member,id:"old-newsletter",personId:"old-newsletter",name:"Monthly Newsletter",nativeIds:{"official-legislature":[pdf]}};
+  const action={...member,id:"old-email",personId:"old-email",name:"Email this Senator",nativeIds:{"official-legislature":[`${profile}#member=email%20this%20senator`]}};
+  const body=`<h1>The Florida Senate</h1><div><h3>Contact:</h3><a href="${profile}">Email this Senator</a><h4>District Office</h4><h2>Senator Vito Barbieri</h2><p>District 3</p><img src="/vito.jpg"><article><a href="${pdf}">Monthly Newsletter</a></article></div>`;
+  const parsed=normalizeOfficialLegislaturePage(body,profile,{state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,
+    roster:roster([member,{...doc,provenance:{...doc.provenance,sourceUrl:profile}},{...action,provenance:{...action.provenance,sourceUrl:profile}}])},at);
+  assert.deepEqual(parsed.officeholders.map(person=>person.name),[member.name]);
+  assert.equal(parsed.officeholders[0].portraitCandidate?.imageUrl,"https://www.flsenate.gov/vito.jpg");
+  for(const old of [doc,action])assert.ok(personIdentityKeys(parsed.officeholders[0]).has(old.id));
+});
+
 test("an own directory link's district and party label are not part of the member's name",()=>{
   const body='<h1>Senate Members</h1><div><a href="/members/vito-barbieri"><div>Vito Barbieri</div><div>District 3 | R</div></a></div>';
   const member={...people[0],state:"OH",chamber:"upper" as const,officeTitle:"State Senator",websiteUrl:"https://ohiosenate.gov/members/vito-barbieri",
@@ -105,13 +118,15 @@ test("normal publication binds a directory's member to its stated chamber",async
 
 test("a member's old form-page IDs resolve to the person owning its explicit publisher profile",()=>{
   const member={...people[0],state:"OH",websiteUrl:"https://ohiosenate.gov/members/vito-barbieri",profileUrls:["https://ohiosenate.gov/senators/vito-barbieri"]};
-  const form={...member,id:"old-form",personId:"old-form",name:"Sign Up",nativeIds:{"official-legislature":["https://www.ohiosenate.gov/members/vito-barbieri/newsletter-sign-up"]},memberships:[]};
+  for(const url of ["https://www.ohiosenate.gov/members/vito-barbieri/newsletter-sign-up","https://www.ohiosenate.gov/members/vito-barbieri"]) {
+  const form={...member,id:"old-form",personId:"old-form",name:"Sign Up",nativeIds:{"official-legislature":[url]},memberships:[]};
   const repaired=mergePeopleSets([roster([form]),roster([member])])!;
   assert.equal(repaired.officeholders.length,1);
   assert.equal(repaired.officeholders[0].name,member.name);
   assert.ok(personIdentityKeys(repaired.officeholders[0]).has("old-form"));
   assert.deepEqual(repaired.officeholders[0].nativeIds?.["ocd-person"],["ocd-person/vito"]);
   assert.ok(retainsPeopleBindings([form],repaired.officeholders));
+  }
 });
 
 test("profile routes keep their own identity without treating a term or directory as a person",()=>{

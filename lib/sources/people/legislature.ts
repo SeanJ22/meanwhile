@@ -16,6 +16,9 @@ const key = (value:string) => value.normalize("NFKD").replace(/[\u0300-\u036f]/g
 const memberAction=(value:string)=>/^(?:contact|sponsored bills|view|read more|learn more|full biography|details|website|email|subscribe|sign up|track)\b/i.test(key(value));
 const federalRoute=(value:string)=>/(?:^|\.)(?:house|senate|congress|whitehouse)\.gov$/i.test(new URL(value).hostname);
 const memberContentRoute=(value:string)=>memberProfileSubpageParentUrl(value)!==null;
+function documentRoute(value:string,base?:string):boolean {
+  try{return /\.(?:pdf|png|jpe?g|gif|svg|webp|docx?|xlsx?)$/i.test(new URL(value,base).pathname);}catch{return false;}
+}
 function rosterLabelName(label: string): string {
   const observed=label.replace(/\s*--[\s\S]*$/,"").replace(/\s+District\s*(?:No\.?\s*)?[:#-]?\s*\d+[a-z]?\b[\s\S]*$/i,"")
     .replace(/^(?:State\s+)?(?:Senator|Sen\.|Representative|Rep\.|Delegate|Assemblyman|Assemblywoman|Hon\.)\s+/i,"").trim();
@@ -244,9 +247,9 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     nameCache.set(card,people);return people;
   };
   const entryNames=new Map<string,Set<string>>();
-  const oneMember=(card:string)=>{
+  const oneMember=(card:string,expected?:string)=>{
     let names=entryNames.get(card);
-    if(!names){
+    if(!names||expected){
       names=new Set(namesIn(card).map(person=>key(person.name)));
       const labels=[...card.matchAll(/<(a|strong|h[1-6])\b([^>]*)>([\s\S]*?)<\/\1>/gi)];
       for(const label of labels){
@@ -255,11 +258,13 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
         if(!/^[\p{L}][\p{L}\p{M}.,'’\-]*(?:\s+["“]?[\p{L}][\p{L}\p{M}.,'’"“”\-]*){1,6}$/u.test(observed)||
           /\b(?:view|read|contact|learn|current|all|former|state|house|senate|senators|representatives|assembly|live|video|text|proposal|listed|of|the|for|and|to|committee|majority|minority|president|speaker|leadership|sponsored|bills)\b/i.test(observed))continue;
         const href=attributes(label[2]).href??"";
-        if(label[1].toLowerCase()==="a"&&(/^(?:mailto:|tel:)/i.test(href)||/\/(?:standingcommittees|committees|sessioninfo|bills|news)\//i.test(href)))continue;
+        if(label[1].toLowerCase()==="a"&&(/^(?:mailto:|tel:)/i.test(href)||/\/(?:standingcommittees|committees|sessioninfo|bills|news)\//i.test(href)||documentRoute(href,pageUrl)))continue;
         const known=held.find(person=>samePublishedName(observed,person.name));
+        if(label[1].toLowerCase()!=="a"&&!known&&(!expected||!samePublishedName(observed,expected))&&
+          !/^(?:State\s+)?(?:Senator|Sen\.|Representative|Rep\.|Delegate|Assemblyman|Assemblywoman)\s+/i.test(textOf(label[3])))continue;
         names.add(key(known?.name??observed));
       }
-      entryNames.set(card,names);
+      if(!expected)entryNames.set(card,names);
     }
     return names.size===1;
   };
@@ -301,7 +306,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     for(const anchor of card.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)) {
       const href=attributes(anchor[1]).href;if(!href)continue;
       let profile:string;try{profile=url(new URL(href,pageUrl).href)!;if(!profile)continue;}catch{continue;}
-      if(memberContentRoute(profile))continue;
+      if(memberContentRoute(profile)||documentRoute(profile))continue;
       if(new URL(profile).hostname!==new URL(pageUrl).hostname&&!isOfficialSource(profile,{url:pageUrl,html}))continue;
       const name=anchorName(anchor[2]);if(memberAction(name))continue;
       const known=entryPerson(name,card,held,pageRoleFor(headers),pageUrl);
@@ -352,7 +357,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
           seed.chamber=chamber;seed.websiteUrl=profile;
           const entry=blocks.filter(block=>legislaturePageNamesPerson(block.html,seed.name)&&namesIn(block.html).every(person=>key(person.name)===key(seed.name)))
             .sort((a,b)=>b.html.length-a.html.length)[0]?.html;
-          const parsed=entry&&oneMember(entry)?personOnPage(seed,entry,profile,options,collectedAt,profile===url(pageUrl)?`${pageUrl}#member=${encodeURIComponent(key(seed.name))}`:profile,true):null;
+          const parsed=entry&&oneMember(entry,seed.name)?personOnPage(seed,entry,profile,options,collectedAt,profile===url(pageUrl)?`${pageUrl}#member=${encodeURIComponent(key(seed.name))}`:profile,true):null;
           if(parsed&&!roster.officeholders.some(holder=>holder.id===parsed.id)){parsed.phone=string(row.telephone)??parsed.phone;parsed.email=string(row.email)??parsed.email;parsed.provenance=provenance(pageUrl,"State legislature — published Person data",collectedAt,entryQuote(entry,parsed.name));parsed.provenance.kind="OFFICIAL";sourced(parsed,parsed.provenance);roster.officeholders.push(parsed);}
         }
       }
@@ -371,8 +376,8 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
   const headed=roster.officeholders.filter(person=>person.nativeIds?.["ocd-person"]?.length===1&&
     [...content.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)].some(heading=>samePublishedName(rosterLabelName(textOf(heading[1])),person.name)));
   const owners=new Set(headed.map(person=>person.nativeIds!["ocd-person"][0]));
-  if(owners.size===1&&headed[0]) {
-    const person=headed[0],old=(options.roster?.officeholders??[]).filter(source=>sourcePersonIsDocument(source)&&source.provenance.sourceUrl===pageUrl);
+  if(owners.size===1&&roster.officeholders.length===1&&headed[0]) {
+    const person=headed[0],old=(options.roster?.officeholders??[]).filter(source=>(sourcePersonIsDocument(source)||memberAction(source.name))&&source.provenance.sourceUrl===pageUrl);
     if(old.length)person.nativeIds={...person.nativeIds,reader:[...new Set([...person.nativeIds?.reader??[],...old.flatMap(source=>[...personIdentityKeys(source)])])]};
   }
   return roster;

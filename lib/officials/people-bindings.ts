@@ -83,7 +83,8 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
   const documentReference=(person:Officeholder)=>{
     if(person.nativeIds?.["ocd-person"]?.length)return undefined;
     const parents=new Set((person.nativeIds?.["official-legislature"]??[]).flatMap(url=>{
-      const parent=memberProfileSubpageParentUrl(url),native=parent?nativePersonIdFromUrl(parent):null;
+      const parent=memberProfileSubpageParentUrl(url),action=/^(?:sign up|subscribe|contact|sponsored bills|read more|view)(?: |$)/.test(name(person.name));
+      const native=parent||action?nativePersonIdFromUrl(parent??url):null;
       return native?[`${native.source}:${native.id}`]:[];
     }));
     if(!sourcePersonIsDocument(person)&&!parents.size)return undefined;
@@ -91,7 +92,8 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
       [source.websiteUrl,...source.profileUrls??[]].some(url=>{
         const native=url?nativePersonIdFromUrl(url):null;return Boolean(native&&parents.has(`${native.source}:${native.id}`));
       })));
-    return new Set(matches.map(nativeIdentity)).size===1?matches[0]:undefined;
+    const nativeMatches=matches.filter(sourcePersonIsNativeReference),references=nativeMatches.length?nativeMatches:matches;
+    return new Set(references.map(nativeIdentity)).size===1?references[0]:undefined;
   };
   const needsBinding=(person:Officeholder)=>collapsed(person)||Boolean(documentReference(person))||[...personIdentityKeys(person)].some(key=>foreign(person,key));
   if(!sets.some(set=>set.officeholders.some(needsBinding)))return [...sets];
@@ -134,7 +136,7 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
         if(source&&owner!==identity)restored.set(owner!,source);
       }
       // A portrait collapse can even carry another member's canonical ID.
-      const foreignKey=(key:string)=>document?Boolean(ownerOf(key)&&ownerOf(key)!==identity):foreign(person,key);
+      const foreignKey=(key:string)=>document?Boolean(ownerOf(key)&&ownerOf(key)!==identity&&ownerOf(key)!==identityOf(person)):foreign(person,key);
       const id=foreignKey(person.id)?reference.id:person.id;
       const personId=foreignKey(person.personId??person.id)?reference.personId??reference.id:person.personId??person.id;
       const aliases=[...personIdentityKeys(person)].filter(key=>!foreignKey(key));

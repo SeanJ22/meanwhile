@@ -2037,9 +2037,11 @@ export function bodySubject(
 ): ModalSubject {
 
   const roster = [...projectedBodyRoster(body).members];
+  const earlierMembers = body.readerRoster?.earlierMembers ?? [];
 
+  const meetingBodyIds = new Set([body.bodyId, ...(body.meetingTypes ?? []).map(type => type.bodyId)]);
   const meetings = allMeetings
-    .filter((m) => m.bodyId !== undefined && m.bodyId === body.bodyId)
+    .filter((m) => m.bodyId !== undefined && meetingBodyIds.has(m.bodyId))
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
   /* The superintendent is hired by the board, so is shown only under "Runs the district day to day". */
@@ -2060,7 +2062,7 @@ export function bodySubject(
     publicRecordsDivisionId: body.ocdId,
     subjectKind: "BODY" as const,
     title: bodyDisplayName(body),
-    subtitle: readerGovernmentName(body.divisionLabel, body.divisionType),
+    subtitle: body.governmentName ?? readerGovernmentName(body.divisionLabel, body.divisionType),
     tier: body.tier,
     // Decides whether the card carries "Who runs it".
     divisionKind: body.divisionType,
@@ -2115,7 +2117,7 @@ export function bodySubject(
     rosterGaps: [...projectedBodyRoster(body).gaps],
     representationNote: representationNoteForClaim(claim),
     meetings,
-    sources: [...districtCardSources(roster, meetings, body.officeContact?.provenance, body.fieldSources), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
+    sources: [...districtCardSources([...roster, ...earlierMembers], meetings, body.officeContact?.provenance, body.fieldSources), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
     // Every section renders for every body: content, or its own absence line.
     bodyCard: {
       /* A body with no division has a null `divisionType` and gets no class definition. */
@@ -2134,6 +2136,7 @@ export function bodySubject(
       isSchoolDistrict: body.divisionType === "school_district",
       // Not in the elected roster; null renders the named gap.
       superintendent: superintendent,
+      ...(earlierMembers.length ? { earlierMembers } : {}),
       contact: bodyContactRows(body),
       /* The claim is made only in lib/meetings/jurisdiction-badge.ts; no published boundary, no Governs row. */
       jurisdiction: [

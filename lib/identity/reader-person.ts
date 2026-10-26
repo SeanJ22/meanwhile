@@ -1,6 +1,6 @@
 import { currentOfficialIdentityStatus, officialIdsForCandidacy, resolvedCandidacyForOfficial } from "../funding/campaign-money.ts";
 import { azLineupReconciliation, reconciledCandidacyIdForCard } from "./az-2026.ts";
-import { currentRosterMemberReaderDisposition } from "../registry/runtime-read-model.ts";
+import { currentRosterMemberReaderDisposition, currentRosterPersonKeys } from "../registry/runtime-read-model.ts";
 import { fecPersonKeys } from "../funding/snapshot.ts";
 import { candidateCardIdentityUnresolved, candidateKeysForState, heldCandidatePersonKeys } from "../ballot/person-keys.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
@@ -21,6 +21,7 @@ export function readerPersonKeys(subjectId: string): { status: "RESOLVED" | "DIR
     const key = pending.shift()!;
     if (!key || keys.has(key) || unresolvedCard(key)) continue;
     keys.add(key);
+    for (const related of currentRosterPersonKeys(key)) if (!keys.has(related)) pending.push(related);
     const namedState = /^(?:ballot-)?([a-z]{2})[-:]/i.exec(key)?.[1]?.toUpperCase();
     for (const state of new Set([...selectedRegistryStates(), ...namedState ? [namedState] : []]))
       for (const alias of [...candidateKeysForState(state, key), ...heldCandidatePersonKeys(state, key)]) if (!keys.has(alias)) pending.push(alias);

@@ -1,4 +1,5 @@
 import { failureRetryMs } from "./failure-backoff.ts";
+import { factRefreshBounds, timeSensitiveSource } from "./source-change-cadence.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import { VALIDATION_CHECKS, type RoutineRecordClass } from "./types.ts";
 import {
@@ -57,6 +58,9 @@ export interface RoutineSourceTask {
   readonly command: readonly string[];
   readonly cadenceMs: number;
   readonly retryMs: number;
+  /** Read from the owner's fact settings for this pass, using the source's fact kind. */
+  readonly minimumRefreshMs?: number;
+  readonly freshnessWindowMs?: number;
   readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection" | "fanOut">;
   readonly childTimeoutMs?: number;
   readonly ownerInvocation?: {
@@ -627,9 +631,6 @@ export function unchangedRoutineProtocolFailure(
     .some(at => Number.isFinite(Date.parse(at ?? "")) && Date.parse(at!) > failedAt && Date.parse(at!) <= nowMs);
 }
 
-/** The hourly floor: an observed change rate never makes a door's check faster than this. Same number as lib/doors/observed-rate.ts. */
-const MIN_OBSERVED_CHECK_MS = 60 * 60_000;
-
 export function routineBaselineOwed(task: RoutineSourceTask, clock: RoutineTaskClock | undefined): boolean {
   return !task.ownerInvocation && task.authorityMode !== "DERIVED" &&
     task.recordClass !== "MEETING" && task.recordClass !== "MEETING_OUTCOME" && (
@@ -653,24 +654,32 @@ export function routineTaskNextDueMs(
   sittingHot?: boolean,
   observedEveryMs?: number,
 ): number {
+  const defaults = factRefreshBounds(task);
+  const policyNowMs = cadenceMsAt(task.contract, nowMs);
+  // The explicit election/sitting obligation keeps its installed pace even when its broad fact kind retries more slowly.
+  const sensitive = timeSensitiveSource(task, nowMs);
+  const minimumMs = sensitive ? Math.min(task.minimumRefreshMs ?? defaults.minimumRefreshMs, policyNowMs)
+    : task.minimumRefreshMs ?? defaults.minimumRefreshMs;
+  const retryDelayMs = sensitive ? failureRetryMs(task.retryMs, clock)
+    : Math.max(minimumMs, failureRetryMs(task.retryMs, clock));
   if (task.ownerInvocation) {
     const requested = Date.parse(task.ownerInvocation.requestedAt);
     const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
     if (task.ownerInvocation.publicationPending) return !Number.isFinite(attempted) || attempted < requested ||
-      (Number.isFinite(succeeded) && succeeded >= attempted && succeeded <= nowMs) ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+      (Number.isFinite(succeeded) && succeeded >= attempted && succeeded <= nowMs) ? nowMs : attempted + retryDelayMs;
     if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return Number.POSITIVE_INFINITY;
-    return !Number.isFinite(attempted) || attempted < requested ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+    return !Number.isFinite(attempted) || attempted < requested ? nowMs : attempted + retryDelayMs;
   }
   if (clock?.lastSucceededParserVersion !== undefined && clock.lastSucceededParserVersion !== task.parserVersion) {
     // The store scopes attempts to this parser. A prior parser's GOOD remains live,
     // but cannot postpone a held-byte reparse for the source's full refresh cadence.
     const attempted = Date.parse(clock.lastAttemptedAt ?? "");
-    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + retryDelayMs;
   }
   if (task.contract?.cadence.requiredScopeVersions?.some(version => !clock?.publishedScopeVersions?.includes(version))) {
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
-    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + retryDelayMs;
   }
   if (!clock?.lastAttemptedAt) return nowMs;
   const attempted = Date.parse(clock.lastAttemptedAt);
@@ -678,11 +687,11 @@ export function routineTaskNextDueMs(
   if (!Number.isFinite(attempted)) return nowMs;
   if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return nowMs;
   const schedule = task.contract?.schedule;
-  if (schedule?.kind === "SITTING_WINDOW") return sittingWindowObligation(schedule, failureRetryMs(task.retryMs, clock),
+  if (schedule?.kind === "SITTING_WINDOW") return sittingWindowObligation(schedule, retryDelayMs,
     { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) }, sittingHot).eligibleAtMs;
-  if (!Number.isFinite(succeeded)) return attempted + failureRetryMs(task.retryMs, clock);
+  if (!Number.isFinite(succeeded)) return attempted + retryDelayMs;
     // Once a due read fails, the source's retry clock owns the next attempt.
-  if (attempted > succeeded) return attempted + failureRetryMs(task.retryMs, clock);
+  if (attempted > succeeded) return attempted + retryDelayMs;
   if (clock.continuationPending === true && task.contract.fanOut === true && (
       task.recordClass === "FEDERAL_MONEY" && task.scope === `${task.sourceId}:US` ||
       task.recordClass === "STATE_BILL" && task.sourceId === "legiscan-bills" && task.scope === "US:legiscan-datasets")) return nowMs;
@@ -693,8 +702,9 @@ export function routineTaskNextDueMs(
   const starts = [nowMs, ...boundaries];
   for (const [index, start] of starts.entries()) {
     const policyMs = cadenceMsAt(task.contract, start);
-    const everyMs = observedEveryMs === undefined ? policyMs
-      : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS));
+    const observed = observedEveryMs !== undefined && Number.isFinite(observedEveryMs) && observedEveryMs > 0 ? observedEveryMs : policyMs;
+    const everyMs = timeSensitiveSource(task, start) ? Math.min(policyMs, Math.max(observed, Math.min(minimumMs, policyMs)))
+      : Math.max(minimumMs, Math.min(task.freshnessWindowMs ?? defaults.freshnessWindowMs, observed));
     const due = index === 0 ? succeeded + everyMs : Math.max(start, succeeded + everyMs);
     if (due < (starts[index + 1] ?? Number.POSITIVE_INFINITY)) return due;
   }

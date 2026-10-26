@@ -28,6 +28,7 @@ import {
   routineAdmissionClock,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { factRefreshBounds, timeSensitiveSource } from "../lib/civic-data/source-change-cadence.ts";
 import { MEASURE_TRANSLATION_ROUTINE_TASKS } from "../lib/translate/routine-contract.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -412,10 +413,11 @@ test("a crashed task is a successful cycle's recorded attempt, and its next offe
   const clock = (iso: string) => routineAdmissionClock(lastSuccess, history.attempts.get(task.id), at(iso));
   assert.equal(routineTaskDue(task, lastSuccess, at("2026-10-14T13:43:00.000Z")), true, "without the record the next pass would run it again");
   assert.equal(routineTaskDue(task, clock("2026-10-14T13:43:00.000Z"), at("2026-10-14T13:43:00.000Z")), false);
-  assert.equal(routineTaskDue(task, clock("2026-10-14T14:38:00.000Z"), at("2026-10-14T14:38:00.000Z")), true, "offered again after its hour");
+  assert.equal(routineTaskDue(task, clock("2026-10-14T14:38:00.000Z"), at("2026-10-14T14:38:00.000Z")), false, "the fact retry floor prevents another hourly attempt");
+  assert.equal(routineTaskDue(task, clock("2026-10-15T13:38:00.000Z"), at("2026-10-15T13:38:00.000Z")), true, "offered again at its fact retry boundary");
 });
 
-test("source refreshes use their standing clocks without a Send and retry failed sources hourly", () => {
+test("source refreshes use their standing clocks without a Send and failed sources respect fact retries and election pace", () => {
   const now = Date.parse("2026-09-30T12:00:00Z");
   for (const task of AUTOMATIC_REFRESH_TASKS) {
     assert.equal(task.ownerInvocation, undefined);
@@ -425,7 +427,8 @@ test("source refreshes use their standing clocks without a Send and retry failed
     const checked = task.id.startsWith("voting-sites:") || task.id.startsWith("ballot-navigation-") ? "2026-09-30T00:00:00Z" : "2026-09-29T12:00:00Z";
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now - 1), false);
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now), true);
-    const failed = "2026-09-30T11:00:00Z";
+    const retryMs = timeSensitiveSource(task, now) ? task.retryMs : Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+    const failed = new Date(now - retryMs).toISOString();
     assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now - 1), false);
     assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now), true);
   }
@@ -713,13 +716,14 @@ test("cadence and retry are source-local", () => {
   const oneHour = 60 * 60 * 1_000;
   assert.equal(routineTaskDue(fec, undefined, now), true);
   assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - oneHour).toISOString() }, now), false);
-  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - 7 * oneHour).toISOString() }, now), true);
+  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - 7 * oneHour).toISOString() }, now), false, "the money fact retry floor is daily");
+  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - 24 * oneHour).toISOString() }, now), true);
   assert.equal(routineTaskDue(fec, {
     lastAttemptedAt: new Date(now - oneHour).toISOString(),
     lastSucceededAt: new Date(now - 8 * 24 * oneHour).toISOString(),
   }, now), false, "a failed due refresh waits for the FEC-specific retry interval");
   assert.equal(routineTaskDue(fec, {
-    lastAttemptedAt: new Date(now - 7 * oneHour).toISOString(),
+    lastAttemptedAt: new Date(now - 24 * oneHour).toISOString(),
     lastSucceededAt: new Date(now - 8 * 24 * oneHour).toISOString(),
   }, now), true, "the failed source becomes due when its own retry interval elapses");
   assert.equal(routineTaskDue(nh, { lastAttemptedAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededObservedAt: new Date(now - 2 * oneHour).toISOString() }, now), false);

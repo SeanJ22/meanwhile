@@ -6,7 +6,7 @@ import { createSourceFile, isFunctionDeclaration, ModuleKind, ScriptTarget, tran
 import { sha256 } from "../lib/civic-data/candidate-builders.ts";
 import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 import { readDerivedFamilyMembers, derivedFamilyReadGroups } from "../lib/civic-data/derived-meeting-acquisition.ts";
-import { buildDerivedFamily, derivedFamilyCandidate } from "../lib/civic-data/derived-meeting-family.ts";
+import { buildDerivedFamily, derivedFamilyCandidate, DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue } from "../lib/civic-data/derived-meeting-family.ts";
 import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
 import { DERIVED_WIRING_SOURCE_NAMES, derivedWiringKey, familyMembers, type DerivedWiringRecord } from "../lib/civic-data/derived-meeting-wiring.ts";
 import { derivedMeetingFamilyId, requiredMeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
@@ -20,6 +20,10 @@ import { placePublishedMeetingPins } from "../lib/meetings/publish-pins.ts";
 import { meetingFetchPass } from "../lib/meetings/shared-fetch.ts";
 import { reconcileSuccessfulMeetingPartition } from "../scripts/ingest.ts";
 import { factDb } from "./helpers/fact-db.ts";
+import { confirmDerivedSourceUnchanged, withDerivedSourceContent, derivedSourceContentHash } from "../lib/civic-data/derived-source-hash.ts";
+import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
 const program = readFileSync("scripts/ingest.ts", "utf8");
 function controllerFunction(name: string): string {
@@ -46,14 +50,14 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
   };
   const snapshots: { generatedAt: string; meetings: readonly unknown[] }[] = [], errors: string[] = [];
   const acceptedCandidateId = `family:immutable-attempt:${disposition}`;
-  let fetched = 0;
+  let fetched = 0, hashPass = false;
   // Run the production controller and fact-publication helper; isolate unrelated wiring, promotion and venue services.
   const run = runInNewContext(transpileModule(`${controllerFunction("publishPartitionFacts")}\n${controllerFunction("promoteDerivedMeetingFamily")}`, {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\npromoteDerivedMeetingFamily", {
     Date, console: { log: () => {}, warn: () => {}, error: (message: string) => errors.push(message) },
     readDerivedMeetingWiring: async () => ({ kind: "PROMOTED", value: { records: [member] }, metadata: { versionId: "wiring", promotedAt: anchor } }),
-    familyMembers, readPreviousMeetingPartition: async () => null,
+    familyMembers, readPreviousMeetingPartition: async () => { assert.equal(hashPass, false, "an equal source hash never reads the held family"); return null; },
     meetingFetchPass: () => meetingFetchPass({ fetchImpl: (async input => {
       assert.equal(String(input), route); fetched++;
       t.mock.timers.setTime(Date.now() + 30_000);
@@ -74,8 +78,12 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
       candidate: { candidate: { ...candidate, id: acceptedCandidateId }, receipt: { decision: "GOOD" }, failureDetail: null },
     }),
     printMeetingPartitionReceipt: () => {}, tracedResponses, publishReadMeetingFacts, factClocks,
+    confirmDerivedSourceUnchanged, withDerivedSourceContent, confirmMeetingFactsFromSources, meetingFactWorkRemains,
+    DERIVED_FAMILY_SOURCE_ID, familyMemberReadIssue, sourceHashReceiptFields, ZERO_RELEASE_EVENTS,
   });
-  await run(new MemoryRoutineDataStore(), requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ")), async () => {}, { db, vault: new MemoryEvidenceStore() });
+  const store = new MemoryRoutineDataStore(), partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-AZ"));
+  const vault = new MemoryEvidenceStore();
+  await run(store, partition, async () => {}, { db, vault });
   assert.equal(fetched, 1);
   assert.deepEqual(snapshots.map(snapshot => [snapshot.generatedAt, snapshot.meetings.length]), [[anchor, 1]], "acquisition does not move the snapshot's reconciliation window");
   assert.deepEqual(errors, []);
@@ -85,4 +93,19 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
   assert.ok(live.every(row => row.produced_by === acceptedCandidateId), "facts credit the accepted immutable attempt, including an unchanged confirmation");
   assert.ok(live.every(row => Date.parse(String(row.fetched_at)) > Date.parse(anchor)), "the copies really arrived after the snapshot anchor");
   assert.deepEqual(await db.query("SELECT reason FROM blank"), []);
+  hashPass = true;
+  const rawHash = derivedSourceContentHash([{ kind: "PROMOTED_VERSION", recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE,
+    versionId: "wiring", readModelSha256: sha256(canonicalCivicDataJson({ records: [member] })), promotedAt: anchor },
+    { kind: "MEMBER_ACQUISITION", memberKey: member.id, requestedUrl: route, finalUrl: route, httpStatus: 200,
+      rawHash: sha256(feed), retrievedAt: anchor, horizonDay: anchor.slice(0, 10) }]);
+  Object.assign(store, { readSourceHead: async () => ({ sourceId: DERIVED_FAMILY_SOURCE_ID, recordClass: "MEETING", scope: partition.scope,
+    versionId: acceptedCandidateId, lastKnownGoodVersionId: acceptedCandidateId, rawHash, rawHashBasis: "SOURCE_CONTENT_V1", normalizedHash: "a".repeat(64),
+    parserVersion: "meetings-composite/2", promotedAt: anchor, candidateState: "PROMOTED", acquisitionSucceeded: true, imported: false }),
+    confirmUnchanged: async () => ({ kind: "CONFIRMED", versionId: acceptedCandidateId, at: new Date().toISOString() }) });
+  const confirmed = await run(store, partition, async () => { assert.fail("an equal source does not preload registry and venue records"); }, { db, vault });
+  assert.ok(confirmed.head, "the next run returns the confirmed source header, with no fabricated candidate body");
+  assert.equal(fetched, 2, "time-sensitive source acquisition still runs on the next scheduled pass");
+  assert.equal(snapshots.length, 1, "the unchanged pass does not rebuild or re-read its held snapshot");
+  assert.ok((await db.query("SELECT checked_at FROM fact WHERE status='live'")).every(row => Date.parse(String(row.checked_at)) === Date.now()),
+    "unchanged source bytes still keep every existing fact current");
 });

@@ -11,7 +11,7 @@ export function derivedSourceInputContent(input: DerivedInputRef): unknown {
     case "VAULTED_EVIDENCE": return [input.kind, input.artifactId, input.contentHash, input.tier];
     case "DISCOVERY_ATTEMPT": return [input.kind, input.attemptId, input.recordId, input.revision ?? null, input.workItemRevision ?? null];
     case "PIPELINE_APPROVAL": return [input.kind, input.itemId, input.recordId];
-    case "MEMBER_ACQUISITION": return [input.kind, input.memberKey, input.requestedUrl, input.finalUrl, input.httpStatus, input.rawHash];
+    case "MEMBER_ACQUISITION": return [input.kind, input.memberKey, input.requestedUrl, input.finalUrl, input.httpStatus, input.rawHash, input.horizonDay ?? null];
     case "DOOR_RECORD": return [input.kind, input.doorId, input.revision, input.recordSha256];
     case "COMMITTED_ROUTE_HINT": return [input.kind, input.fingerprint];
     case "CROSSWALK_VERSION": return [input.kind, input.versionId];

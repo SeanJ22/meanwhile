@@ -49,7 +49,7 @@ export async function readDerivedFamilyMembers(
       const report = source.lastReport?.children.find(child => child.source === sourceName);
       const foreign = meetings.some(meeting => meeting.bodyId !== member.row.bodyId);
       const ok = fetched?.ok === true && report?.ok === true && !foreign;
-      return { member, acquisitions: fetched?.acquisitions ?? [], ok,
+      return { member, acquisitions: fetched?.acquisitions ?? [], ok, horizonDay: now.toISOString().slice(0, 10),
         error: ok ? null : foreign ? jobFailureDetail("the adapter returned another body's meetings") : fetched?.error ?? report?.error ?? `the composite produced no report for ${sourceName}`,
         freshMeetings: ok ? meetings : [], freshAgendaDocuments: [], retrievedAt: new Date().toISOString() };
     });

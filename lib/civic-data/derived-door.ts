@@ -59,7 +59,8 @@ export function derivedInputIssue(input: DerivedInputRef): string | null {
     case "MEMBER_ACQUISITION":
       return text(input.memberKey) && httpsHost(input.requestedUrl) !== null && httpsHost(input.finalUrl) !== null &&
           Number.isInteger(input.httpStatus) && input.httpStatus >= 200 && input.httpStatus < 300 &&
-          SHA256.test(input.rawHash) && instant(input.retrievedAt)
+          SHA256.test(input.rawHash) && instant(input.retrievedAt) &&
+          (input.horizonDay === undefined || /^\d{4}-\d{2}-\d{2}$/.test(input.horizonDay) && instant(input.horizonDay))
         ? null
         : `a member read lacks its member, https URLs, a 2xx status, its sha256 or its time`;
     case "DOOR_RECORD":

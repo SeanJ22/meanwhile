@@ -108,10 +108,16 @@ import {
   buildDerivedFamily,
   derivedFamilyCandidate,
   derivedFamilyFailedCandidate,
+  DERIVED_FAMILY_SOURCE_ID,
+  familyMemberReadIssue,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";
 import { retainingFetch, retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
+import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
+import { confirmDerivedSourceUnchanged, withDerivedSourceContent } from "../lib/civic-data/derived-source-hash.ts";
+import { sourceHashReceiptFields, type SourceHashConfirmation } from "../lib/civic-data/source-hash.ts";
+import type { DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { factReader, readerFactDb } from "../lib/facts/db.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
@@ -561,7 +567,7 @@ export async function promoteDerivedMeetingFamily(
   /* The registry and venue preload, run only once the family has a member: a family with none reads nothing else. */
   prepare: () => Promise<void> = async () => {},
   facts?: Omit<MeetingFactsTarget, "responses">,
-): Promise<PromotionOutcome> {
+): Promise<PromotionOutcome | SourceHashConfirmation> {
   const generatedAt = new Date().toISOString();
   const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<PromotionOutcome> => {
     const failed = derivedFamilyFailedCandidate(partition, generatedAt, detail);
@@ -582,14 +588,12 @@ export async function promoteDerivedMeetingFamily(
   if (members.length === 0) {
     return refuse(`No reviewed calendar is connected in ${partition.derivedFamily} yet, so this family has no member to read.`, "JOB");
   }
-  await prepare();
-  const previous = await readPreviousMeetingPartition(store, partition);
-  const reads: FamilyMemberRead[] = [];
+  let reads: FamilyMemberRead[] = [];
   const pass = meetingFetchPass();
   const retaining = retainingFetch(pass);
   const fetchImpl = retaining.fetch;
   for (const group of derivedFamilyReadGroups(members)) {
-    const acquired = await readDerivedFamilyMembers(group, fetchImpl, resolveAttribution);
+    const acquired = await readDerivedFamilyMembers(group, fetchImpl);
     for (const read of acquired) console.log(`  ${read.member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
     reads.push(...acquired);
     if (group[0].row.kind === "MUNICODE") pass.forgetGet(acquired.flatMap(read => read.acquisitions.map(row => row.requestedUrl)));
@@ -600,17 +604,30 @@ export async function promoteDerivedMeetingFamily(
   if (versionId === null || promotedAt === null) {
     return refuse(jobFailureDetail("The promoted meeting-source wiring carries no version id or promotion time."), "JOB");
   }
+  const wiringInput = { kind: "PROMOTED_VERSION" as const, recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE,
+    versionId, readModelSha256: sha256(canonicalCivicDataJson(wiring.value)), promotedAt };
+  const sourceContentInputs: DerivedInputRef[] = [wiringInput, ...reads.flatMap(read => read.acquisitions.map(acquisition => ({
+    kind: "MEMBER_ACQUISITION" as const, memberKey: read.member.id, requestedUrl: acquisition.requestedUrl, finalUrl: acquisition.finalUrl,
+    httpStatus: acquisition.httpStatus, rawHash: acquisition.rawHash, retrievedAt: read.retrievedAt, horizonDay: read.horizonDay ?? generatedAt.slice(0, 10),
+  })))];
+  const bodyIds = members.map(member => member.row.bodyId);
+  const complete = reads.length === members.filter(member => member.status === "ACTIVE").length && reads.every(read => familyMemberReadIssue(read) === null) &&
+    (!facts || !await meetingFactWorkRemains(facts.db.query, reads.flatMap(read => read.freshMeetings.map(meeting => meeting.id)), bodyIds, new Date().toISOString()));
+  const confirmed = await confirmDerivedSourceUnchanged({ store, sourceId: DERIVED_FAMILY_SOURCE_ID, recordClass: "MEETING", scope: partition.scope,
+    parserVersion: "meetings-composite/2", sourceContentInputs, now: new Date().toISOString(), complete });
+  if (confirmed) {
+    if (facts) await confirmMeetingFactsFromSources({ facts: facts.db, vault: facts.vault, bodyIds, responses: retaining.responses });
+    console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
+      bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(confirmed), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+    return confirmed;
+  }
+  await prepare();
+  reads = reads.map(read => read.ok ? { ...read, freshMeetings: resolveAttribution([...read.freshMeetings]) } : read);
+  const previous = await readPreviousMeetingPartition(store, partition);
   const history = await moveConcludedMeetingsForPartition(store, partition, previous, generatedAt);
   const restoredPrevious = await restoreRemovedHistoryForPartition(store, partition, previous, generatedAt);
   const build = buildDerivedFamily({
-    wiringInput: {
-      kind: "PROMOTED_VERSION",
-      recordClass: DERIVED_WIRING_RECORD_CLASS,
-      scope: DERIVED_WIRING_SCOPE,
-      versionId,
-      readModelSha256: sha256(canonicalCivicDataJson(wiring.value)),
-      promotedAt,
-    },
+    wiringInput,
     members,
     reads,
     previous: restoredPrevious,
@@ -633,7 +650,7 @@ export async function promoteDerivedMeetingFamily(
   const census = await placePublishedMeetingPins({meetings:cited,previous:previous?.meetings,query:facts?.db.query,fetchImpl});
   for (const hold of census.held) console.warn(`MEETING_PIN_UNRESOLVED ${hold}`);
   const finalBuild = { ...build,snapshot:{...build.snapshot,meetings:[...census.meetings]} };
-  const candidate = retainMeetingCandidateEvidence(derivedFamilyCandidate(partition, finalBuild),finalBuild.snapshot,[...retaining.responses,...census.responses]);
+  const candidate = retainMeetingCandidateEvidence(withDerivedSourceContent(derivedFamilyCandidate(partition, finalBuild), sourceContentInputs),finalBuild.snapshot,[...retaining.responses,...census.responses]);
   // An unchanged family pass is receipted on the pointed version.
   const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
@@ -654,6 +671,7 @@ export interface MeetingIngestResult {
   readonly sourceSucceeded: boolean;
   readonly exitCode: 0 | 2;
   readonly sourceReads: readonly Omit<RetainedSourceResponse, "bytes">[];
+  readonly confirmations?: readonly { readonly partition: MeetingPartitionContract; readonly confirmation: SourceHashConfirmation }[];
 }
 
 export interface MeetingIngestOptions {
@@ -844,9 +862,13 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
       if (partition.derivedFamily !== null) {
         const outcome = await promoteDerivedMeetingFamily(store, partition, prepare,
           options.facts ?? { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) });
-        const succeeded = outcome.promoted !== null || outcome.confirmed !== undefined;
-        results.push({ measurement: null, partitions: [{ partition, candidate: outcome.candidate.candidate, outcome }],
-          succeeded, sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: [] });
+        if ("head" in outcome) results.push({ measurement: null, partitions: [], confirmations: [{ partition, confirmation: outcome }],
+          succeeded: true, sourceSucceeded: true, exitCode: 0, sourceReads: [] });
+        else {
+          const succeeded = outcome.promoted !== null || outcome.confirmed !== undefined;
+          results.push({ measurement: null, partitions: [{ partition, candidate: outcome.candidate.candidate, outcome }],
+            succeeded, sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: [] });
+        }
       } else {
         await prepare();
         results.push(await readMeetingPartition(partition, store, options, dryRun));
@@ -863,7 +885,8 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
   if (results.length === 1 && partitions.length === 1) return results[0]!;
   const succeeded = results.length === partitions.length && results.every(result => result.succeeded);
   return { measurement: null, partitions: results.flatMap(result => result.partitions), succeeded,
-    sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: results.flatMap(result => result.sourceReads) };
+    sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: results.flatMap(result => result.sourceReads),
+    confirmations: results.flatMap(result => result.confirmations ?? []) };
 }
 
 async function readMeetingPartition(partition: MeetingPartitionContract, promotionStore: RoutineDataStore,

@@ -190,7 +190,6 @@ import {
 import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
 import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
 import { factReader } from "../lib/facts/db.ts";
-import { memberOfficesRunNeeded } from "../lib/officials/member-offices-publication.ts";
 
 
 let step = "reading its task selection";
@@ -1129,15 +1128,6 @@ for (const read of clockReads) {
       .catch(error => ({ needed: true, reason: `The portrait record could not be read (${safeFailure(sanitizedErrorDiagnostic(error))}); the state runs.` }));
     if (!portraits.needed) {
       recordLaunchDecision(task, "SKIP", "Portraits are current", portraits.reason);
-      continue;
-    }
-  }
-  // The daily member-office run waits until some state's lawmaker list is promoted again.
-  if (task.id === "member-offices" && !FORCE && dueRequest === null) {
-    const offices = await memberOfficesRunNeeded(store)
-      .catch(error => ({ needed: true, reason: `The member-office package could not be read (${safeFailure(sanitizedErrorDiagnostic(error))}); it runs.` }));
-    if (!offices.needed) {
-      recordLaunchDecision(task, "SKIP", "Member offices are current", offices.reason);
       continue;
     }
   }

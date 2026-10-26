@@ -128,8 +128,9 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
-  if (recordClass === "STATE_LEGISLATOR" && member.key.startsWith("member:")) {
-    return withoutProvenanceStamps(member.record, ["collectedAt", "verifiedAt"]);
+  if ((recordClass === "STATE_LEGISLATOR" && member.key.startsWith("member:")) ||
+    (recordClass === "FEDERAL_DIRECTORY" && member.key.startsWith("officeholder:"))) {
+    return withoutPeopleSourceCheckFields(withoutProvenanceStamps(member.record, ["collectedAt", "verifiedAt", "rawHash"]));
   }
   if (recordClass === "STATE_ROLL_CALL" && member.key.startsWith("roll:")) {
     const roll = object(member.record);
@@ -173,6 +174,15 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
   return { ...row, provenance: factualProvenance,
     ...(fieldSources ? {fieldSources:Object.fromEntries(Object.entries(fieldSources).map(([field,source])=>[field,
       object(source) ? Object.fromEntries(Object.entries(object(source)!).filter(([key])=>!stamps.includes(key))) : source]))} : {}) };
+}
+
+/** Exact source-body bindings and re-check dates describe evidence, never a new civic fact. */
+function withoutPeopleSourceCheckFields(value:unknown):unknown {
+  if(Array.isArray(value))return value.map(withoutPeopleSourceCheckFields);
+  const row=object(value);if(!row)return value;
+  const source=typeof row.sourceUrl==="string"&&typeof row.collectedAt==="string";
+  return Object.fromEntries(Object.entries(row).filter(([key])=>!source||!["rawHash","checkedAt","collectedAt","verifiedAt"].includes(key))
+    .map(([key,child])=>[key,withoutPeopleSourceCheckFields(child)]));
 }
 
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {

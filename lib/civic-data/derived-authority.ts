@@ -24,6 +24,9 @@ export type DerivedInputRef =
       readonly attemptId: string;
       readonly recordId: string;
       readonly recordedAt: string;
+      /** Mutable attempt completion and its work item are inputs to held-page derivation. */
+      readonly revision?: number;
+      readonly workItemRevision?: number;
     }
   | {
       readonly kind: "COMMITTED_ROUTE_HINT";

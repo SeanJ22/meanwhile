@@ -37,6 +37,8 @@ export interface Provenance {
   collectedAt: string;
   /** When a human or check last confirmed it still matches the source. */
   verifiedAt: string | null;
+  /** Exact saved source-body digest, when this field has an independently checked capture. */
+  rawHash?: string;
   /**
    * The registry id of the feed or page that holds this record. Stamped where the record is published, never by
    * an adapter. Absent when not known yet.

@@ -3,7 +3,7 @@ import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { confirmSourceHashUnchanged, sourceContentHash, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
-import { confirmStatePeopleSource, peopleSourceContentHash, publishStatePeople } from "../lib/civic-data/state-people-publication.ts";
+import { confirmRepeatedStatePeopleInputs, confirmStatePeopleSource, peopleSourceContentHash, publishStatePeople, statePeopleInputDigest } from "../lib/civic-data/state-people-publication.ts";
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
 import { PLURAL_PARSER_VERSION } from "../lib/sources/plural/targets.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
@@ -23,6 +23,18 @@ test("source digests ignore observations and archive revisions but retain bytes,
   assert.notEqual(sourceContentHash([archive("a")]), sourceContentHash([{ ...archive("a"), body: body.replace("Member One", "Member Two") }]));
   assert.equal(peopleSourceContentHash(acquisitions, roster), peopleSourceContentHash(acquisitions.map(row => ({ ...row, retrievedAt: later })), { ...roster, generatedAt: later }));
   assert.notEqual(peopleSourceContentHash(acquisitions, roster), peopleSourceContentHash(acquisitions, { ...roster, officeholders: roster.officeholders.map(row => ({ ...row, termEnd: "2026-10-01" })) }));
+  assert.notEqual(peopleSourceContentHash(acquisitions,roster),peopleSourceContentHash(acquisitions,{...roster,currentMembershipComplete:false}));
+  assert.notEqual(peopleSourceContentHash(acquisitions,roster),peopleSourceContentHash(acquisitions,roster,{gaps:[{sourceUrl:url,detail:"geography unresolved"}]}));
+});
+
+test("resolved parse gaps cannot confirm the old incomplete source from identical bytes",async()=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
+  assert.ok((await publishStatePeople({store,vault,state:"az",roster,acquisitions,releaseId:"a".repeat(40),now:at,
+    gaps:[{sourceUrl:url,detail:"GEOGRAPHY_UNRESOLVED: district evidence remains owed"}]})).outcome.promoted);
+  for(const method of ["readCandidate","readCandidatePath","readCandidateField","readPromotion","events"] as const)
+    Object.assign(store,{[method]:async()=>{throw new Error(`resolved gap read ${method}`);}});
+  assert.equal(await confirmStatePeopleSource({store,state:"az",roster,acquisitions,gaps:[],now:later}),null,
+    "changed coverage must publish its resolution rather than retain the old gap");
 });
 
 test("an unchanged complete state source confirms using its head and no held payload, metadata or event read", async () => {
@@ -31,6 +43,7 @@ test("an unchanged complete state source confirms using its head and no held pay
   assert.ok(first.outcome.promoted, JSON.stringify(first.outcome.candidate.receipt));
   const head = await store.readSourceHead("STATE_LEGISLATOR", scope);
   assert.equal(head?.rawHashBasis, "SOURCE_CONTENT_V1");
+  assert.equal(head?.acquisitionComplete,true);
   for (const method of ["readCandidate", "readCandidatePath", "readPromotion", "readPublishedCandidateMetadata", "events", "readPromotionIdentity"] as const)
     Object.assign(store, { [method]: async () => { throw new Error(`unchanged source read ${method}`); } });
   const confirmed = await confirmStatePeopleSource({ store, state: "az", roster: { ...roster, generatedAt: later },
@@ -82,4 +95,35 @@ test("a complete new run cannot confirm an explicitly incomplete held payload so
   const confirmed=await confirmSourceHashUnchanged({store,sourceId:head!.sourceId,recordClass:head!.recordClass,scope,parserVersion:head!.parserVersion,
     rawHash:head!.rawHash!,complete:true,now:later,retrieval:{requestedUrl:url,finalUrl:url,httpStatus:200,rawHash:head!.rawHash!,retrievedAt:later}});
   assert.equal(confirmed,null,"completed source work must publish its completed payload and clear its old continuation");
+});
+
+test("repeated partial inputs skip held people without refreshing unread facts", async () => {
+  const store = new MemoryRoutineDataStore(), vault = new MemoryEvidenceStore();
+  const input = {store,vault,state:"az",roster:{...roster,currentMembershipComplete:false},acquisitions,
+    releaseId:"a".repeat(40),gaps:[{sourceUrl:url,detail:"SOURCE_PARTIAL: another publisher is unavailable"}],now:at};
+  const first=await publishStatePeople(input);assert.ok(first.outcome.promoted);
+  assert.equal((await store.readSourceHead("STATE_LEGISLATOR",scope))?.acquisitionComplete,false);
+  const readPath=store.readCandidatePath.bind(store),metadataReads:string[]=[];
+  store.readCandidatePath=async<T>(id:string,path:readonly string[])=>{
+    const key=path.join(".");
+    assert.ok(["normalizedPayload.sourceInputDigest","retrieval"].includes(key),`partial confirmation attempted held ${key}`);
+    metadataReads.push(key);return readPath<T>(id,path);
+  };
+  for(const method of ["readCandidate","readCandidateField","readPromotion","readPublishedCandidateMetadata","events"] as const)
+    Object.assign(store,{[method]:async()=>{throw new Error(`partial confirmation read ${method}`);}});
+  assert.ok(await confirmRepeatedStatePeopleInputs({...input,now:later}));
+  assert.deepEqual(metadataReads,["normalizedPayload.sourceInputDigest","retrieval"],"the first unchanged pass reads stored hashes and retrieval metadata only");
+  const pointer=await store.readPromotionIdentity("STATE_LEGISLATOR",scope);
+  assert.equal(pointer?.latestConfirmation?.inputDigest,statePeopleInputDigest(input));
+  const checkedAt="2026-10-01T02:00:00.000Z";
+  const rechecked={...input,now:checkedAt,roster:{...input.roster,generatedAt:checkedAt},
+    acquisitions:input.acquisitions.map(row=>({...row,retrievedAt:checkedAt}))};
+  assert.equal(statePeopleInputDigest(rechecked),statePeopleInputDigest(input));
+  assert.ok(await confirmRepeatedStatePeopleInputs(rechecked));
+  assert.equal(metadataReads.length,2,"subsequent confirmations read no candidate fields at all");
+  const latest=await store.readPromotionIdentity("STATE_LEGISLATOR",scope);
+  assert.equal(latest?.latestConfirmation?.retrieval.retrievedAt,at,"partial confirmation preserves the original aggregate freshness");
+  assert.equal(latest?.latestConfirmation?.observedAt,checkedAt);
+  assert.equal(await confirmRepeatedStatePeopleInputs({...rechecked,gaps:[]}),null,"changed parse coverage must be checked normally");
+  assert.equal(await confirmRepeatedStatePeopleInputs({...rechecked,acquisitions:rechecked.acquisitions.map(row=>({...row,body:row.body+"# new bytes\n"}))}),null);
 });

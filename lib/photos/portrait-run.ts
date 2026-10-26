@@ -5,7 +5,9 @@ import { PEOPLE_SOURCE_IDS, peopleSourceRecordClass, peopleSourceScope } from ".
 import { peopleJurisdiction } from "../civic-data/people-source-read.ts";
 import { stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import { readStateRegistryRuntimeProjection } from "../civic-data/read-model.ts";
-import type { PortraitStamp, RoutineDataStore, SlimRoster } from "../civic-data/store.ts";
+import type { PortraitStamp, RoutineDataStore, SlimRoster, SourceHead } from "../civic-data/store.ts";
+import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
+import { sourceAuthority } from "../civic-data/source-authority.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import { promotedInputRef, type DerivedInputRef } from "../civic-data/derived-authority.ts";
 import { mergePeopleSets } from "../officials/merge-people.ts";
@@ -17,7 +19,7 @@ import type { Officeholder } from "../officials/types.ts";
 import { readFactRosters } from "../facts/roster-read.ts";
 import type { Query } from "../facts/publish.ts";
 import { portraitBindingMatches } from "./binding.ts";
-import { latestPortraitAttempts, portraitDueAt, PORTRAIT_DUE_WINDOW_MS, type PortraitAttempt } from "./portrait-work.ts";
+import { latestPortraitAttempts, portraitDueAt, PORTRAIT_DUE_WINDOW_MS, PORTRAIT_RETRY_MS, type PortraitAttempt } from "./portrait-work.ts";
 
 /** The promotions a state's portraits are built from: its people and federal directory records and, for a state, its local rosters. */
 export function portraitInputScopes(state: string): readonly { readonly recordClass: RoutineRecordClass; readonly scope: string; readonly sourceId: string }[] {
@@ -32,25 +34,75 @@ export function portraitInputScopes(state: string): readonly { readonly recordCl
 
 /** A fingerprint of a state's local board members, which change in the fact store without a promotion. */
 async function localRosterStamp(query: Query, state: string): Promise<string> {
-  const [row] = await query(`SELECT count(*)::text || ':' || md5(coalesce(string_agg(f.entity_id || '|' || f.field, ',' ORDER BY f.entity_id, f.field), '')) AS stamp
-    FROM fact f JOIN entity b ON b.id = f.entity_id
-    WHERE f.status = 'live' AND f.field LIKE 'member:%' AND b.kind = 'body' AND b.state = $1`, [state.toUpperCase()]);
+  const [row] = await query(`WITH members AS MATERIALIZED (
+      SELECT f.entity_id AS body_id,substr(f.field,8) AS person_id,f.field,f.value,f.quote,f.provenance_kind,s.sha256,s.url
+      FROM fact f JOIN entity b ON b.id=f.entity_id LEFT JOIN source_copy s ON s.id=f.source_copy_id
+      WHERE f.status='live' AND f.field LIKE 'member:%' AND b.kind='body' AND b.state=$1
+    ), content AS (
+      SELECT jsonb_build_array('member',body_id,field,value,quote,provenance_kind,sha256,url)::text AS value FROM members
+      UNION ALL SELECT jsonb_build_array('person',m.body_id,f.entity_id,f.field,f.value,f.quote,f.provenance_kind,s.sha256,s.url)::text
+      FROM members m JOIN fact f ON f.entity_id=m.person_id LEFT JOIN source_copy s ON s.id=f.source_copy_id
+      WHERE f.status='live' AND (f.field IN ('name','email','phone','website') OR f.field LIKE '%:'||m.body_id)
+      UNION ALL SELECT jsonb_build_array('id',x.entity_id,x.value)::text FROM entity_external_id x
+      WHERE x.scheme='roster-member' AND x.entity_id IN (SELECT person_id FROM members)
+    ) SELECT count(*)::text||':'||md5(coalesce(string_agg(value,',' ORDER BY value),'')) AS stamp FROM content`, [state.toUpperCase()]);
   return String(row?.stamp ?? "0:");
 }
 
-/** Who a state's rosters name, as digests of their people's ids and a fingerprint of its local board members.
- * A re-promotion naming the same people leaves it as it was. */
-export async function portraitStamp(store: RoutineDataStore, state: string, query: Query | null): Promise<PortraitStamp> {
+/** Source content and versions, including changed profile links for people already listed. */
+async function portraitSourceInputs(store: RoutineDataStore, state: string, query: Query | null) {
   const inputs = portraitInputScopes(state);
   const versions: Record<string, string> = {};
-  for (const recordClass of new Set(inputs.map(row => row.recordClass))) {
-    const scopes = inputs.filter(row => row.recordClass === recordClass).map(row => row.scope);
-    const rows = recordClass === "REGISTRY_RUNTIME_BINDING"
-      ? (await store.readPromotionIdentities(recordClass, scopes)).map(row => ({ scope: row.scope, digest: row.versionId }))
-      : await store.readRosterIdDigests(recordClass, scopes);
-    for (const row of rows) versions[`${recordClass}\t${row.scope}`] = row.digest;
+  const dependencies: Record<string, readonly [string,string|null,string|null,string] | null> = {};
+  const sourceContentInputs: DerivedInputRef[] = [];
+  const usable = (head: SourceHead) => head.candidateState === "PROMOTED" && head.acquisitionSucceeded && !head.imported && head.versionId === head.lastKnownGoodVersionId;
+  for (const input of inputs) {
+    const head = await store.readSourceHead(input.recordClass, input.scope), key = `${input.recordClass}\t${input.scope}`;
+    const dependency = head ? [head.versionId,head.rawHash,head.normalizedHash,head.parserVersion] as const : null;
+    dependencies[key] = dependency;
+    versions[key] = canonicalCivicDataHash(dependency);
+    if (head?.normalizedHash && usable(head)) sourceContentInputs.push({ kind: "PROMOTED_VERSION", recordClass: head.recordClass,
+      scope: head.scope, versionId: head.versionId, readModelSha256: head.normalizedHash, promotedAt: head.promotedAt });
   }
-  return { versions, local: state.toLowerCase() === "us" || !query ? null : await localRosterStamp(query, state) };
+  const stamp = { versions, local: state.toLowerCase() === "us" || !query ? null : await localRosterStamp(query, state) };
+  return { stamp, dependencies, sourceContentInputs };
+}
+export async function portraitStamp(store: RoutineDataStore, state: string, query: Query | null): Promise<PortraitStamp> {
+  return (await portraitSourceInputs(store, state, query)).stamp;
+}
+
+/** The portrait job's ordinary input plan and retry cursor; it holds no profile pages or person records. */
+export interface PortraitSourceProbe {
+  readonly formatVersion: 1;
+  readonly sourceId: "people-portraits";
+  readonly state: string;
+  readonly complete: boolean;
+  readonly normalizationInputHash: string;
+  readonly dependencies: Readonly<Record<string, readonly [string,string|null,string|null,string] | null>>;
+  readonly discovery: string;
+  readonly nextTermAt: string | null;
+  /** Exact raw digest of the validated sourceContentInputs, including immutable photo evidence. */
+  readonly sourceContentHash: string;
+  readonly retrievedAt: string;
+}
+
+export async function readPortraitSourceSnapshot(store: RoutineDataStore, state: string, query: Query | null) {
+  const inputs = await portraitSourceInputs(store, state, query);
+  const head = await store.readSourceHead("STATE_LEGISLATOR", peopleSourceScope(peopleJurisdiction(state), "people-portraits"));
+  const raw = head ? await store.readCandidatePath<PortraitSourceProbe>(head.versionId, ["normalizedPayload", "sourceProbe"]) : null;
+  const probe = raw?.formatVersion === 1 && raw.sourceId === "people-portraits" && raw.state === state.toUpperCase() ? raw : null;
+  const discovery = canonicalCivicDataHash(["PORTRAIT_SOURCE_PLAN_V1", sourceAuthority("people-portraits")?.parserVersion,
+    PORTRAIT_RETRY_MS, PORTRAIT_DUE_WINDOW_MS, portraitInputScopes(state)]);
+  const normalizationInputHash = canonicalCivicDataHash([inputs.dependencies, inputs.stamp.local, discovery]);
+  return { ...inputs, head, probe, discovery, normalizationInputHash };
+}
+
+export function portraitSnapshotSettled(snapshot: Awaited<ReturnType<typeof readPortraitSourceSnapshot>>, now: string): boolean {
+  return snapshot.head?.candidateState === "PROMOTED" && snapshot.head.acquisitionSucceeded && !snapshot.head.imported &&
+    snapshot.head.versionId === snapshot.head.lastKnownGoodVersionId && snapshot.head.rawHashBasis === "SOURCE_CONTENT_V1" &&
+    snapshot.probe?.complete === true && snapshot.probe.normalizationInputHash === snapshot.normalizationInputHash &&
+    snapshot.head.rawHash === snapshot.probe.sourceContentHash &&
+    (!snapshot.probe.nextTermAt || Date.parse(snapshot.probe.nextTermAt) > Date.parse(now));
 }
 const stampText = (stamp: PortraitStamp) => JSON.stringify([Object.entries(stamp.versions).sort(([a], [b]) => a.localeCompare(b)), stamp.local]);
 export const samePortraitStamp = (left: PortraitStamp, right: PortraitStamp) => stampText(left) === stampText(right);
@@ -85,10 +137,10 @@ export function portraitNextDueAt(people: readonly Officeholder[], members: read
 }
 
 /** The people a state's portraits are owed for: everyone its rosters name, merged as readers see them, without a shown portrait. */
-export async function portraitList(store: RoutineDataStore, state: string, now: string, attempts: readonly PortraitAttempt[], query: Query | null): Promise<PortraitList> {
+export async function portraitList(store: RoutineDataStore, state: string, now: string, attempts: readonly PortraitAttempt[], query: Query | null, sourceStamp?: PortraitStamp): Promise<PortraitList> {
   const national = state.toLowerCase() === "us";
   const jurisdiction = peopleJurisdiction(state);
-  const stamp = await portraitStamp(store, state, query);
+  const stamp = sourceStamp ?? await portraitStamp(store, state, query);
   const portraitScope = peopleSourceScope(jurisdiction, "people-portraits");
   // The order readers merge a state's people in: Open States first, then the official roster, then the people sources.
   const target = national ? undefined : officialStateLegislatorTargetByScope(jurisdiction as `US-${string}`);
@@ -155,14 +207,10 @@ export async function portraitList(store: RoutineDataStore, state: string, now: 
 
 /** Whether a state has portrait work: someone without a shown portrait is new or falls due. Nothing large is read to decide. */
 export async function portraitRunNeeded(store: RoutineDataStore, state: string, now: string, query: Query | null): Promise<{ needed: boolean; reason: string }> {
-  const last = await store.readPortraitRunState(peopleSourceScope(peopleJurisdiction(state), "people-portraits"));
-  if (!last) return { needed: true, reason: "No portrait record is held for this state yet." };
-  if (last.nextDueAt && Date.parse(last.nextDueAt) <= Date.parse(now)) return { needed: true, reason: `A person without a portrait fell due at ${last.nextDueAt}.` };
-  const stamp = await portraitStamp(store, state, query);
-  const waiting = last.nextDueAt ? ` The next person without a portrait is due ${last.nextDueAt}.` : " Everyone listed has a portrait.";
-  if (last.seen && samePortraitStamp(stamp, last.seen)) return { needed: false, reason: `No roster changed since the last list.${waiting}` };
-  const list = await portraitList(store, state, now, last.attempts, query);
-  const owed = list.due.people.length + list.due.members.length;
-  return owed ? { needed: true, reason: `${owed} people without a portrait are due.` }
-    : { needed: false, reason: `A roster changed, but everyone it names has a portrait or waits for a retry.${waiting}` };
+  const snapshot = await readPortraitSourceSnapshot(store, state, query);
+  if (!snapshot.head) return { needed: true, reason: "No portrait record is held for this state yet." };
+  const next = snapshot.probe?.nextTermAt;
+  if (next && Date.parse(next) <= Date.parse(now)) return { needed: true, reason: `A person without a portrait fell due at ${next}.` };
+  if (!portraitSnapshotSettled(snapshot, now)) return { needed: true, reason: "Portrait source content changed or unfinished work remains." };
+  return { needed: false, reason: next ? `No portrait source changed. The next person without a portrait is due ${next}.` : "No portrait source changed. Everyone listed has a portrait." };
 }

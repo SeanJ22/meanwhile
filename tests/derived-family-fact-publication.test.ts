@@ -84,5 +84,6 @@ for (const disposition of ["promoted", "confirmed"] as const) test(`a ${disposit
   assert.ok(live.every(row => Date.parse(String(row.checked_at)) >= Date.parse(String(row.fetched_at))));
   assert.ok(live.every(row => row.produced_by === acceptedCandidateId), "facts credit the accepted immutable attempt, including an unchanged confirmation");
   assert.ok(live.every(row => Date.parse(String(row.fetched_at)) > Date.parse(anchor)), "the copies really arrived after the snapshot anchor");
-  assert.deepEqual(await db.query("SELECT reason FROM blank"), []);
+  // The sitting has no published place or held office, so its pin stays open as standing work.
+  assert.deepEqual(await db.query("SELECT reason FROM blank"), [{ reason: "BODY_OFFICE_ADDRESS_MISSING" }]);
 });

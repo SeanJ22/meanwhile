@@ -1,6 +1,6 @@
 import HOLDINGS from "../../data/states/az/officials/body-compositions.json" with { type: "json" };
 
-import { rosterHoldersForBody, type RosterHolder } from "./body-rosters.ts";
+import { earlierRosterHoldersForBody, rosterHoldersForBody, type RosterHolder } from "./body-rosters.ts";
 
 /**
  * Who constitutes a body: explicitly, or not at all. Every body reaching a reader resolves through
@@ -175,4 +175,11 @@ export function membersOfBody(bodyId: string | null): ResolvedComposition {
     expectedSeats: composition?.expectedSeats ?? null,
     unknown: true,
   };
+}
+
+export function earlierMembersOfBody(bodyId: string | null): RosterHolder[] {
+  const direct = earlierRosterHoldersForBody(bodyId);
+  if (direct.length) return direct;
+  const composition = compositionFor(bodyId);
+  return composition?.aliasOfBodyId ? earlierRosterHoldersForBody(composition.aliasOfBodyId) : [];
 }

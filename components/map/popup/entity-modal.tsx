@@ -6,7 +6,7 @@ import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-s
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { StateCampaignSection } from "@/components/funding/state-campaign-section";
 import { FederalMoneySection } from "@/components/funding/federal-money-section";
-import { CardGapContext, CardGapContribution, useCardGapRegistry } from "@/components/ui/card-gap-context";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { CardFooter } from "@/components/ui/card-footer";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
@@ -70,7 +70,7 @@ export type ModalTab =
 
 
 /**
- * One held section of a body's card. Missing sections contribute to its footer.
+ * One section of a body's card, including its own missing-information message.
  */
 export interface BodyCardSection {
   id: string;
@@ -99,6 +99,11 @@ export interface BodyDefinitionText {
 }
 
 export interface BodyCardData {
+  /** Held government identities that receive money for this body. */
+  recipientIds?: readonly string[];
+  recipientNames?: readonly string[];
+  recipientState?: string;
+  moneyDivisionId?: string;
   /**
    * Two layers: `classDefinition` (what this kind of body does) always renders
    * where the class is known; `formDefinition` (its own charter or statute)
@@ -112,6 +117,8 @@ export interface BodyCardData {
   };
   /** A school district's superintendent, who is neither on the board nor elected. */
   superintendent: SeatHolder | null;
+  /** Earlier sourced memberships remain available apart from the current seats. */
+  earlierMembers?: SeatHolder[];
   /** Whether this body is a school district; decides section 3's line. */
   isSchoolDistrict: boolean;
   /** Section 5. Empty means no contact route has been sourced. */
@@ -296,11 +303,12 @@ function PublicRecordSection({ subject, zip }: { subject: ModalSubject; zip?: st
 }
 
 function MoneyRecordSection({ subject }: { subject: ModalSubject }) {
-  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
+  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId ?? subject.bodyCard?.moneyDivisionId;
   if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):|\/(?:state|district|territory):[a-z]{2}$/.test(divisionId)) return null;
   return <CardSection title="Money and records">
     <StateCampaignSection key={`campaign:${divisionId}`} divisionId={divisionId} />
-    <FederalMoneySection key={`${divisionId}:${subject.bodyCard ? subject.subjectId : "place"}`} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
+    <FederalMoneySection key={`${subject.bodyCard?.moneyDivisionId ?? divisionId}:${subject.bodyCard ? subject.subjectId : "place"}`} divisionId={subject.bodyCard?.moneyDivisionId ?? divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined}
+      recipientIds={subject.bodyCard?.recipientIds} recipientNames={subject.bodyCard?.recipientNames} recipientState={subject.bodyCard?.recipientState} />
   </CardSection>;
 }
 
@@ -356,16 +364,20 @@ function BodySections({
           ? `${subject.representation.length}`
           : undefined,
       content:
-        subject.representation.length > 0 || card.superintendent ? (
+        subject.representation.length > 0 || card.superintendent || card.earlierMembers?.length ? (
           <>
             <Representation
               holders={subject.representation}
               gaps={subject.rosterGaps}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
-              /* No "Who runs it" where nothing is run. */
-              showTopOffices={runsSomething(subject.divisionKind)}
+              /* Each member has one row, with their role beside their name. */
+              showTopOffices={false}
             />
+            {card.earlierMembers && card.earlierMembers.length > 0 && <details className="mt-3">
+              <summary className="cursor-pointer t-detail text-muted">Earlier membership records ({card.earlierMembers.length})</summary>
+              <Representation holders={card.earlierMembers} note="" showTopOffices={false} earlier onOpenHolder={onOpenHolder} />
+            </details>}
             {/* Rendered only for school districts. */}
             {card.isSchoolDistrict && (
               <div className="mt-2 border-t border-[var(--panel-border)] pt-2">
@@ -457,9 +469,11 @@ function BodySections({
 
       {/* One group, one open pill. */}
       <CardSectionGroup>
-        {sections.map((section) => section.content ? (
-          <CardSection key={section.id} title={section.title} meta={section.meta} defaultOpen={section.id === "meetings"}>{section.content}</CardSection>
-        ) : <CardGapContribution key={section.id} id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />)}
+        {sections.map((section) => (
+          <CardSection key={section.id} title={section.title} meta={section.meta} defaultOpen={section.id === "meetings"}>
+            {section.content || <CardGapContribution id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />}
+          </CardSection>
+        ))}
         <PublicRecordSection subject={subject} zip={homeZip} />
         <MoneyRecordSection subject={subject} />
       </CardSectionGroup>
@@ -483,7 +497,6 @@ export function EntityModal({
   const tab = initialTab;
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   const { register, sources: allSources, insideCard } = useCardSourceRegistry(subject.sources, `${subject.subjectKind}:${subject.subjectId}`);
-  const { register: registerGaps, gaps: allGaps } = useCardGapRegistry([], `${subject.subjectKind}:${subject.subjectId}`);
 
   useEffect(() => {
     if (embedded) return;
@@ -601,7 +614,7 @@ export function EntityModal({
   </div>;
 
   return (
-    <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><CardGapContext.Provider value={registerGaps}><div
+    <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><div
       ref={cardRef}
       className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
       role={embedded ? undefined : "dialog"}
@@ -702,9 +715,9 @@ export function EntityModal({
             />
           </div>
         )}
-        {!insideCard && <CardFooter gaps={allGaps} sources={allSources} />}
+        {!insideCard && <CardFooter sources={allSources} />}
       </div>
-    </div></CardGapContext.Provider></CardSourceContext.Provider></CardSubjectContext.Provider>
+    </div></CardSourceContext.Provider></CardSubjectContext.Provider>
   );
 }
 
@@ -715,6 +728,7 @@ export function Representation({
   onOpenHolder,
   /** Lead with the top offices. False only where the list already is the top office. */
   showTopOffices = true,
+  earlier = false,
 }: {
   holders: SeatHolder[];
   vacancy?: import("@/lib/officials/types").SeatVacancy;
@@ -722,6 +736,7 @@ export function Representation({
   gaps?: readonly RosterReaderGap[];
   onOpenHolder?: (holder: SeatHolder) => void;
   showTopOffices?: boolean;
+  earlier?: boolean;
 }) {
   if (holders.length === 0 && vacancy) return <p className="t-detail leading-relaxed">This seat is vacant.</p>;
   if (holders.length === 0) return <><RosterCompletenessGaps gaps={gaps} /><CardGapContribution id="representation" label="who sits on it" /></>;
@@ -762,11 +777,8 @@ export function Representation({
           ))}
         </div>
       )}
-      {showTopOffices && topOffices.length === 0 && (
-        <CardGapContribution id="top-offices" label="who runs it" />
-      )}
       {ordered.map((holder) => (
-        <div key={holder.id} data-roster-holder={holder.id} className="account-modal-person flex items-start gap-3">
+        <div key={holder.id} data-roster-holder={earlier ? undefined : holder.id} data-earlier-roster-holder={earlier ? holder.id : undefined} className="account-modal-person flex items-start gap-3">
           {/* `IdentityPortrait` renders initials where no portrait exists. */}
           <IdentityPortrait name={readerText(holder.name, "name")} photoUrl={holder.photoUrl} />
 

@@ -85,7 +85,10 @@ test("the committed congress-legislators sample shows held office fields with no
   }
   assert.doesNotMatch(markup, /working on getting|Want us|no published page|<summary[^>]*>Sources/);
   const missing = renderToStaticMarkup(createElement(DirectoryRecordsContent, { holderId: "congress:H001091", state: "IA", only: "offices", directory: { districtOffices: [], committees: [] }, failed: false }));
-  assert.equal(missing, "", "the empty directory contributes to the card gap without rendering field rows");
+  assert.match(missing, /working on getting this info/, "the empty directory explains the gap inside its section");
+  assert.match(missing, /Want us to get this sooner\?/);
+  assert.equal((missing.match(/data-card-gap=/g) ?? []).length, 1);
+  assert.doesNotMatch(missing, /data-directory-office=|Still gathering/);
 });
 
 

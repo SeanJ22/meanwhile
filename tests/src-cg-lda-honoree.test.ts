@@ -90,7 +90,15 @@ test("national LDA pages retain and report unresolved rows while joined facts re
   const member = await readFederalMember("congress:C001056", { store, now: SRC_CG_NOW });
   assert.equal(member.contributions.length, 1); assert.equal(member.contributions[0].honoreeName, "Sen. John Cornyn (R-TX)");
   assert.ok(member.sources.some(source => source.provenance.sourceUrl?.includes("lda.gov/filings/")));
-  assert.ok(member.sources.some(source => source.what.includes("Honoree identity")));
+  const identity = member.contributions[0].honoreeJoin;
+  assert.ok(identity?.status === "JOINED");
+  assert.equal(identity.matchedName, "John Cornyn");
+  assert.equal(identity.chamber, "senate");
+  assert.equal(identity.state, "TX");
+  const identitySource = member.sources.find(source => source.provenance.sourceUrl === identity.sourceUrl);
+  assert.equal(identitySource?.what, "The person named in this record, Sen. John Cornyn (R-TX), is John Cornyn, who serves in the U.S. Senate for Texas");
+  assert.equal(identitySource?.provenance.sourceOrg, identity.sourceOrg);
+  assert.equal(identitySource?.provenance.collectedAt, identity.checkedAt);
   const ask = await federalAskEvidence("congress:C001056", "What lobbying contributions were filed?", { store, now: SRC_CG_NOW });
   assert.ok(ask.records.some(row => row.kind === "FINANCE_TRANSACTION"));
   assert.ok(ask.records.some(row => row.text.includes("uniquely matches") && row.sourceUrl?.includes("legislators-current.yaml")));

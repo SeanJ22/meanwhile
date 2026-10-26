@@ -31,6 +31,8 @@ export interface RegistrationGovernmentListing {
     readonly basis: "SOURCE_CODE" | "GOVERNING_FUNCSTAT" | "SOURCE_BOUNDARY" | "COUNTY_IN_NAME";
   }[];
   readonly bodyIds: readonly string[];
+  /** Exact legal name is unique in this state's complete held inventory. */
+  readonly recipientNameUnique?: boolean;
   readonly provenance: RegistryProvenance;
   /** Independent directory and native-crosswalk evidence retained after an identity merge. */
   readonly additionalSources?: readonly RegistryProvenance[];

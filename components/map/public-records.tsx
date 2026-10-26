@@ -34,7 +34,7 @@ export function PlacePublicRecords({ divisionId, bodyId }: { divisionId: string;
     return () => { active = false; };
   }, [divisionId]);
   if (state?.division !== divisionId) return <p role="status" className="t-body text-muted">Loading public records…</p>;
-  if (state.failed) return <p role="status" className="t-body text-muted">Couldn’t load public records just now.</p>;
+  if (state.failed) return <><p role="status" className="t-body text-muted">Couldn’t load public records just now.</p><CardGapContribution id={`public-records:${bodyId ?? divisionId}`} label="public records" subject={bodyId ? { type: "BODY", id: bodyId } : undefined} /></>;
   const held = state.records.filter(record => record.ocdId === divisionId && (!bodyId || record.bodyId === bodyId));
   return held.length ? <PublicRecords divisionId={divisionId} bodyId={bodyId} records={held} /> : <CardGapContribution id={`public-records:${bodyId ?? divisionId}`} label="public records" subject={bodyId ? { type: "BODY", id: bodyId } : undefined} />;
 }

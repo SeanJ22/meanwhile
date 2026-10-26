@@ -13,6 +13,8 @@ import { carryBackRuntimeState, linkRuntimeState } from "./runtime-release-switc
 const FULL_SHA = /^[0-9a-f]{40}$/i;
 const GIT_TIMEOUT_MS = 2 * 60_000;
 const INSTALL_TIMEOUT_MS = 15 * 60_000;
+/** A staging still unsettled after its install timeout is abandoned; the drain-first path applies that release. */
+export const STAGING_LIFETIME_MS = INSTALL_TIMEOUT_MS;
 
 export const STAGED_RELEASES_RELATIVE_DIR = join(".runtime", "releases");
 export const STAGED_RELEASE_RECORD_RELATIVE_PATH = join(".runtime", "ops", "staged-release.json");
@@ -35,26 +37,45 @@ export interface AsyncCommandResult {
 export type AsyncRunCommand = (
   executable: string,
   args: readonly string[],
-  options: { readonly cwd: string; readonly timeoutMs: number; readonly env?: NodeJS.ProcessEnv },
+  options: {
+    readonly cwd: string; readonly timeoutMs: number; readonly env?: NodeJS.ProcessEnv;
+    /** Abandons the command: the child is killed and the call settles at once. */
+    readonly signal?: AbortSignal;
+  },
 ) => Promise<AsyncCommandResult>;
 
-/** Asynchronous so the runner's admission clocks keep ticking while Git and the install run. */
+/**
+ * Asynchronous so the runner's admission clocks keep ticking while Git and the install run. A timed-out or abandoned
+ * command settles when it is killed, not when its pipes close: a grandchild holding stdout must not hold the caller.
+ */
 export const defaultAsyncRunCommand: AsyncRunCommand = (executable, args, options) =>
   new Promise(resolve => {
+    if (options.signal?.aborted) { resolve({ status: null, stdout: "", stderr: "COMMAND_ABANDONED" }); return; }
     const child = spawn(executable, [...args], { cwd: options.cwd, env: options.env ?? process.env, stdio: ["ignore", "pipe", "pipe"] });
     const stdout: Buffer[] = [];
     let stdoutBytes = 0;
     let overflow = false;
     let stderr = "";
-    const timer = setTimeout(() => child.kill("SIGKILL"), options.timeoutMs);
+    let settled = false;
+    const settle = (result: AsyncCommandResult): void => {
+      if (settled) return;
+      settled = true;
+      clearTimeout(timer);
+      options.signal?.removeEventListener("abort", abandon);
+      resolve(result);
+    };
+    const stop = (why: string): void => { child.kill("SIGKILL"); settle({ status: null, stdout: "", stderr: `${stderr}\n${why}` }); };
+    const abandon = (): void => stop("COMMAND_ABANDONED");
+    const timer = setTimeout(() => stop("COMMAND_TIMED_OUT"), options.timeoutMs);
+    options.signal?.addEventListener("abort", abandon, { once: true });
     child.stdout.on("data", chunk => {
       stdoutBytes += chunk.length;
       if (stdoutBytes > 16 * 1024 * 1024) { overflow = true; child.kill("SIGKILL"); }
       else stdout.push(Buffer.from(chunk));
     });
     child.stderr.on("data", chunk => { stderr = (stderr + String(chunk)).slice(-64_000); });
-    child.on("error", error => { clearTimeout(timer); resolve({ status: null, stdout: "", stderr: `${stderr}${error.message}` }); });
-    child.on("close", status => { clearTimeout(timer); resolve({ status: overflow ? null : status, stdout: overflow ? "" : Buffer.concat(stdout).toString("utf8"), stderr: overflow ? `${stderr}\nCOMMAND_STDOUT_LIMIT_EXCEEDED` : stderr }); });
+    child.on("error", error => settle({ status: null, stdout: "", stderr: `${stderr}${error.message}` }));
+    child.on("close", status => settle({ status: overflow ? null : status, stdout: overflow ? "" : Buffer.concat(stdout).toString("utf8"), stderr: overflow ? `${stderr}\nCOMMAND_STDOUT_LIMIT_EXCEEDED` : stderr }));
   });
 
 export function stagedReleaseDirectory(root: string, targetSha: string): string {
@@ -128,12 +149,19 @@ export async function stageRuntimeRelease(input: {
   readonly now?: () => Date;
   /** Staged checkouts children may still be running from; never removed here. */
   readonly keep?: readonly string[];
+  /** An abandoned staging kills its command, runs nothing more, and never writes the record a newer staging owns. */
+  readonly signal?: AbortSignal;
 }): Promise<StagedReleaseRecord> {
-  const run = input.run ?? defaultAsyncRunCommand;
+  const base = input.run ?? defaultAsyncRunCommand;
+  const signal = input.signal;
+  const run: AsyncRunCommand = (executable, args, options) => signal?.aborted
+    ? Promise.resolve({ status: null, stdout: "", stderr: "COMMAND_ABANDONED" })
+    : base(executable, args, signal ? { ...options, signal } : options);
   const now = input.now ?? (() => new Date());
   const targetSha = input.targetSha.toLowerCase();
   const directory = stagedReleaseDirectory(input.root, targetSha);
   const record = (state: StagedReleaseRecord["state"], code: string | null, detail: string): StagedReleaseRecord => {
+    if (signal?.aborted) return { state: "FAILED", targetSha, directory, code: "STAGING_ABANDONED", detail: "this staging was abandoned", at: now().toISOString() };
     const value = { state, targetSha, directory, code, detail, at: now().toISOString() };
     writeRecord(input.root, value);
     return value;
@@ -181,4 +209,110 @@ export async function stageRuntimeRelease(input: {
 export async function discardStagedReleases(root: string, run: AsyncRunCommand = defaultAsyncRunCommand): Promise<void> {
   await removeOtherStagedCheckouts(root, [], run);
   rmSync(join(root, STAGED_RELEASE_RECORD_RELATIVE_PATH), { force: true });
+}
+
+export type ReleaseStagingStep = "STAGING" | "READY" | "FAILED";
+
+/** What the runner heartbeat shows Admin about the newest staging. */
+export interface ReleaseStagingStatus {
+  readonly targetSha: string;
+  readonly state: "INSTALLING" | "READY" | "FAILED";
+  readonly code: string | null;
+  readonly detail: string;
+  readonly startedAt: string;
+  readonly at: string;
+}
+
+/**
+ * At most one staging runs, and only for the newest target. A newer target supersedes an older staging; a staging
+ * still unsettled after its lifetime is abandoned and reported FAILED, so the drain-first path applies that release.
+ * A target whose staging failed is not staged again by this process.
+ */
+interface InFlightStaging { readonly targetSha: string; readonly startedAtMs: number; readonly controller: AbortController }
+
+export class ReleaseStaging {
+  #current: InFlightStaging | null = null;
+  readonly #failed = new Set<string>();
+  #status: ReleaseStagingStatus | null = null;
+  readonly #root: string;
+  readonly #stage: typeof stageRuntimeRelease;
+  readonly #now: () => number;
+  readonly #lifetimeMs: number;
+  readonly #log: (line: string) => void;
+  readonly #error: (line: string) => void;
+
+  constructor(input: {
+    readonly root: string;
+    readonly stage?: typeof stageRuntimeRelease;
+    readonly now?: () => number;
+    readonly lifetimeMs?: number;
+    readonly log?: (line: string) => void;
+    readonly error?: (line: string) => void;
+  }) {
+    this.#root = input.root;
+    this.#stage = input.stage ?? stageRuntimeRelease;
+    this.#now = input.now ?? Date.now;
+    this.#lifetimeMs = input.lifetimeMs ?? STAGING_LIFETIME_MS;
+    this.#log = input.log ?? (() => undefined);
+    this.#error = input.error ?? (() => undefined);
+  }
+
+  status(): ReleaseStagingStatus | null { return this.#status; }
+
+  /** One pass: whether `targetSha` is installed beside the running code, still installing, or must be applied by drain. */
+  advance(targetSha: string, keep: readonly string[] = []): ReleaseStagingStep {
+    const target = targetSha.toLowerCase();
+    const current = this.#current;
+    if (stagedReleaseIsReady(this.#root, target)) {
+      if (current?.targetSha === target) this.#current = null;
+      const known = this.#status?.targetSha === target ? this.#status : null;
+      if (known?.state !== "READY") this.#report(target, "READY", null, `release ${target} is installed beside the running one`, known?.startedAt);
+      return "READY";
+    }
+    if (current !== null && current.targetSha !== target) {
+      this.#abandon(current, "STAGING_SUPERSEDED", `newer release ${target.slice(0, 8)} replaced it`);
+    } else if (current !== null && this.#now() - current.startedAtMs >= this.#lifetimeMs) {
+      this.#abandon(current, "STAGING_TIMED_OUT", `still unsettled after ${Math.round(this.#lifetimeMs / 60_000)} minutes`);
+      this.#failed.add(target);
+      return "FAILED";
+    } else if (current !== null) return "STAGING";
+    if (this.#failed.has(target)) return "FAILED";
+    this.#start(target, keep);
+    return "STAGING";
+  }
+
+  #report(targetSha: string, state: ReleaseStagingStatus["state"], code: string | null, detail: string, startedAt?: string): void {
+    const at = new Date(this.#now()).toISOString();
+    this.#status = { targetSha, state, code, detail: detail.slice(0, 300), startedAt: startedAt ?? at, at };
+  }
+
+  #abandon(current: InFlightStaging, code: string, why: string): void {
+    current.controller.abort();
+    this.#current = null;
+    const detail = `staging release ${current.targetSha.slice(0, 8)} was abandoned: ${why}`;
+    this.#report(current.targetSha, "FAILED", code, detail, new Date(current.startedAtMs).toISOString());
+    this.#error(`${detail} (${code}); the drain-first path applies a release whose staging did not finish`);
+  }
+
+  #start(targetSha: string, keep: readonly string[]): void {
+    const controller = new AbortController();
+    const startedAtMs = this.#now();
+    const startedAt = new Date(startedAtMs).toISOString();
+    const entry = { targetSha, startedAtMs, controller };
+    this.#current = entry;
+    this.#report(targetSha, "INSTALLING", null, "installing the deployed release in its own checkout while work continues", startedAt);
+    this.#log(`release ${targetSha.slice(0, 8)} is installing in its own checkout; partition admissions continue`);
+    const settle = (state: "READY" | "FAILED", code: string | null, detail: string): void => {
+      if (this.#current !== entry) return;
+      this.#current = null;
+      if (state === "FAILED") this.#failed.add(targetSha);
+      this.#report(targetSha, state, code, detail, startedAt);
+      if (state === "READY") this.#log(`release ${targetSha.slice(0, 8)} is installed beside the running one; the switch can now be quick`);
+      else this.#error(`release ${targetSha.slice(0, 8)} could not be installed beside the running one (${code ?? "unknown"}: ${detail}); the drain-first path will apply it`);
+    };
+    this.#stage({ root: this.#root, targetSha, keep, signal: controller.signal }).then(
+      result => settle(result.state === "READY" ? "READY" : "FAILED", result.code, result.detail),
+      (error: unknown) => settle("FAILED", "STAGING_ERROR", error instanceof Error ? error.message : String(error)),
+    );
+  }
 }

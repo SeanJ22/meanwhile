@@ -1356,3 +1356,12 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 
 ### 2:55 AM EDT: CS-01 READY; batch 2 (126) re-gating with it
 - CS-01 READY fdff22df1 (River). Merges cleanly onto batch 2 on 125; scan: no added bypassCache, no whole-candidate reads, no proof files (5 left out). Batch 2 gate restarted with it on river-next-batch2 7291d406a (RT-01, MD-01 docs out, BL-02, DB-03 Admin, RB-A7, CS-01). After 126 is live River runs CS-01's 20-state capitals scan on meanwhileusa.com.
+
+### 3 AM EDT status
+- Release 125 (Idaho alone, [#837](https://github.com/SeanJ22/meanwhile/pull/837)): GitHub CI admission, verify and both builds green; test (affected) running since 2:36 AM. Live site still 124 (2424528c6). Idaho checks and the drain-fix proof (runner takes 125 within one pass deadline, no hand restart) run when it's live.
+- Release 126 (batch 2 + CS-01) gating on river-next-batch2 7291d406a: lint, tsc, dead-code, preflight pass; tests running.
+- Neon, 2 AM EDT hour (first full hour after Sean's 2:06 AM restart onto 124): reader 3,738 MB, control plane 343 MB, both 4,081 MB. openstates-people 744 MB of it. Before: 10 PM 1,792, 11 PM 2,933, midnight 1,753, 1 AM 2,852 (both databases). Second full hour (3 AM) read at 4 AM.
+- GB-01: census done through AZ (OR, AL, AK, AR, AZ). New Orleans 70112 and Omaha 68102 still 0 governing.
+- rebuild_queue: 3,183.
+- Research cycle: none; every state's hunt stopped in Admin, nothing funded.
+- DB-04: no READY (last commit 1:11 AM).

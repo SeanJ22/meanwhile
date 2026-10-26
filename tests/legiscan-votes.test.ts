@@ -144,3 +144,20 @@ test("a successful empty daily listing is a confirmed unchanged check and establ
   assert.equal(first.publication.candidate.absence.claimsAbsence, false);
   assert.ok(second.confirmation);
 });
+
+test("a deadline after one dataset publication resumes its immutable session without parsing or publishing its votes again",async()=>{
+  const civicStore=new MemoryRoutineDataStore(),store=new MemoryEvidenceStore(),{locks}=createMemoryRepositories(),transported=transport();
+  const roster=normalize(yamlToPeople(fixture("openstates-alma-allen.yml"),"tx",sourceUrl,at),indexDivisions([]),at,"US-TX");
+  await publishStatePeople({vault,store:civicStore,state:"tx",roster,releaseId:"fixture-cutoff-roster",
+    acquisitions:[{requestedUrl:sourceUrl,finalUrl:sourceUrl,body:fixture("openstates-alma-allen.yml"),rawHash:digest(fixture("openstates-alma-allen.yml")),httpStatus:200,retrievedAt:at}],now:at});
+  const input={state:"tx",civicStore,store,locks,fetchImpl:transported.fetchImpl,apiKey:"private-test-api-key",now:()=>at,signal:new AbortController().signal};
+  await assert.rejects(refreshLegiscanVotes({...input,onDataset:async()=>{throw Error("pass deadline");}}),/pass deadline/);
+  const before=await readLegiscanVotesForPerson("tx",personId,{store:civicStore,now:at});
+  assert.equal(before.length,1,"the completed session is already live at the cutoff");
+  let replayed=0;
+  const resumed=await refreshLegiscanVotes({...input,onDataset:async()=>{replayed++;}});
+  assert.ok(resumed.publication);assert.equal(replayed,0,"a completed session is not parsed or published twice");
+  assert.equal(transported.requests.filter(op=>op==="getDataset").length,1);
+  assert.deepEqual(await readLegiscanVotesForPerson("tx",personId,{store:civicStore,now:at}),before);
+  assert.ok((await refreshLegiscanVotes(input)).confirmation);
+});

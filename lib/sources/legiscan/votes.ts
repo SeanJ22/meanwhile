@@ -3,6 +3,7 @@ import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
 import type { SourceProbeDependencies } from "../../civic-data/source-probe.ts";
+import type { LegiscanCompletedDataset } from "./vote-acquisition.ts";
 import type { OfficialStateLegislatorReadModel } from "../../civic-data/candidate-builders.ts";
 import type { PluralVoteFact } from "../plural/votes.ts";
 import type { LegiscanDatasetRecord } from "./types.ts";
@@ -16,6 +17,7 @@ export interface LegiscanVoteSourceProbe {
   readonly listingHash: string;
   readonly dependencies: SourceProbeDependencies;
   readonly complete: boolean;
+  readonly completedDatasets?: readonly LegiscanCompletedDataset[];
 }
 export interface LegiscanVotesProjection {
   formatVersion: 1 | 2; memberPages?: VoteMemberPage[]; state: string; rollCalls: PluralVoteFact[]; datasets: LegiscanDatasetRecord[];
@@ -113,7 +115,7 @@ export function legiscanVotesCandidate(input: { projection: LegiscanVotesProject
     retrieval: { succeeded: input.acquired.length > 0, requestedUrl: acquisition?.requestedUrl ?? `https://api.legiscan.com/?op=getDatasetList&state=${projection.state}`,
       finalUrl: acquisition?.finalUrl ?? null, httpStatus: 200, retrievedAt: sourceThrough,
       rawHash: digest(input.sourceProbe ? { source: input.acquired.map(row => row.sha256).sort(), dependencies: input.sourceProbe.dependencies } : input.acquired.map(row => row.sha256).sort()),
-      ...(input.sourceProbe ? { rawHashBasis: "SOURCE_CONTENT_V1" as const } : {}), ...(sourceCheck ? { sourceCheck } : {}) },
+      ...(input.sourceProbe ? { rawHashBasis: "SOURCE_CONTENT_V1" as const,complete:input.sourceProbe.complete } : {}), ...(sourceCheck ? { sourceCheck } : {}) },
     normalization: { succeeded: !issue, parserVersion: LEGISCAN_VOTES_PARSER, schemaVersion: projection.formatVersion === 2 ? "legiscan-person-votes/2" : "legiscan-person-votes/1", normalizedHash: digest(projection), normalizedPayloadHash: digest(payload),
       inputRecords: projection.rollCalls.length, outputRecords: projection.rollCalls.length, droppedRecords: 0, missingRequiredFields: [] },
     identities: projection.rollCalls.map(vote => ({ subjectId: vote.id, jurisdiction, chamber: vote.chamber, term: vote.session, session: vote.session,

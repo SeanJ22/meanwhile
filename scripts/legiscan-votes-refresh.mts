@@ -1,5 +1,5 @@
 import { pathToFileURL } from "node:url";
-import { acquireLegiscanVotes, legiscanDatasetListUrl } from "../lib/sources/legiscan/vote-acquisition.ts";
+import { acquireLegiscanVotes, legiscanDatasetListUrl, type LegiscanCompletedDataset } from "../lib/sources/legiscan/vote-acquisition.ts";
 import { digest, legiscanState, type LegiscanIdentityAuthority } from "../lib/sources/legiscan/dataset.ts";
 import { legiscanVotesCandidate, legiscanVotesContract, legiscanVotesScope, mergeLegiscanVoteMetadata, readLegiscanVotesProjection,
   type LegiscanVoteSourceProbe, type LegiscanVotesProjection } from "../lib/sources/legiscan/votes.ts";
@@ -31,6 +31,7 @@ export async function refreshLegiscanVotes(input: Omit<Parameters<typeof acquire
   const dependencies = await readSourceProbeDependencies(input.civicStore, [{recordClass:"STATE_LEGISLATOR",scope:`US-${state}:openstates-people:v1`}]);
   const head = await input.civicStore.readSourceHead("STATE_ROLL_CALL",scope);
   const probe = head ? await input.civicStore.readCandidatePath<LegiscanVoteSourceProbe>(head.versionId,["normalizedPayload","sourceProbe"]) : null;
+  const completed=new Map<number,LegiscanCompletedDataset>();
   let sink: Awaited<ReturnType<typeof createVoteRefreshSink<LegiscanVotesProjection>>>["sink"] | null = null;
   let baseVersionId: string | null = null;
   let projection: LegiscanVotesProjection | null = null;
@@ -48,11 +49,13 @@ export async function refreshLegiscanVotes(input: Omit<Parameters<typeof acquire
     authority={sourceId:"plural-openstates",scope:holders.metadata.scope,versionId:holders.metadata.versionId,crosswalkSha256:digest([]),joins:[]};
     return sink;
   };
-  const sourceProbe = (complete: boolean): LegiscanVoteSourceProbe => ({formatVersion:1,listingHash:listing!.sha256,dependencies,complete});
+  const sourceProbe = (complete: boolean): LegiscanVoteSourceProbe => ({formatVersion:1,listingHash:listing!.sha256,dependencies,complete,
+    completedDatasets:[...completed.values()]});
   bindVotePageVault(input.civicStore, vault);
   let publication: { candidate: ReturnType<typeof legiscanVotesCandidate>; outcome: PromotionOutcome } | null = null;
   const publish = async (candidate: ReturnType<typeof legiscanVotesCandidate>) => {
-    const outcome = await processRegisteredRoutineCandidate(input.civicStore, legiscanVotesContract(state), candidate, input.now?.() ?? now, baseVersionId);
+    const outcome = await processRegisteredRoutineCandidate(input.civicStore, legiscanVotesContract(state), candidate, input.now?.() ?? now, baseVersionId,
+      {confirmUnchanged:false});
     if (!outcome.promoted && !outcome.confirmed) throw new Error(`LEGISCAN_VOTES_PUBLICATION_REFUSED:${outcome.candidate.failureCode}`);
     projection = { ...candidate.readModel as NonNullable<typeof projection>, rollCalls: [] };
     baseVersionId = outcome.promoted?.versionId ?? outcome.confirmed!.versionId;
@@ -61,8 +64,12 @@ export async function refreshLegiscanVotes(input: Omit<Parameters<typeof acquire
   const identityHeld: { key: string; detail: string }[] = [];
   try {
     const acquisition = await acquireLegiscanVotes({ ...input,
-      onListing: async value => {
+      onListing: async (value,sessions) => {
         listing=value;
+        if(probe?.formatVersion===1&&digest(probe.dependencies)===digest(dependencies)){
+          for(const saved of probe.completedDatasets??[])if(sessions.some(session=>session.sessionId===saved.session.sessionId&&session.datasetHash===saved.session.datasetHash))
+            completed.set(saved.session.sessionId,saved);
+        }
         if (head?.rawHash && probe?.complete && probe.formatVersion===1 && probe.listingHash===value.sha256 && digest(probe.dependencies)===digest(dependencies)) {
           confirmation=await confirmSourceHashUnchanged({store:input.civicStore,sourceId:LEGISCAN_VOTES_SOURCE,recordClass:"STATE_ROLL_CALL",scope,
             parserVersion:LEGISCAN_VOTES_PARSER,rawHash:head.rawHash,now:input.now?.()??now,complete:true,
@@ -71,7 +78,7 @@ export async function refreshLegiscanVotes(input: Omit<Parameters<typeof acquire
           if (confirmation) return false;
         }
         return true;
-      }, holders: async () => {
+      }, completedDataset:async session=>completed.get(session.sessionId)??null,holders: async () => {
         await initialize();
         if (holders?.kind!=="PROMOTED") throw new Error("LEGISCAN_OPENSTATES_IDENTITY_UNAVAILABLE");
         return holders.value.roster.officeholders;
@@ -81,6 +88,9 @@ export async function refreshLegiscanVotes(input: Omit<Parameters<typeof acquire
         if (issue) identityHeld.push({ key: vote.id, detail: issue });
         await input.onVote?.(vote);
       }, onDataset: async result => {
+        const {members:_members,...evidence}=result.evidence;
+        completed.set(result.session.sessionId,{session:result.session,evidence,rollCalls:result.rollCalls,memberVotes:result.memberVotes,
+          unmatchedPositions:result.unmatchedPositions,held:[...result.held,...identityHeld]});
         const joins = result.joins;
         const next = { ...mergeLegiscanVoteMetadata(projection, { state, datasets: [{ state, sessionId: result.session.sessionId,
           sessionName: result.session.sessionName, datasetHash: result.session.datasetHash, datasetDate: result.session.datasetDate, downloadedAt: result.evidence.retrievedAt }],

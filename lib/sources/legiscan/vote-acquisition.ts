@@ -16,6 +16,7 @@ const datasetUrl = (session: LegiscanSession) => `https://api.legiscan.com/?op=g
 export type LegiscanDatasetResult = Awaited<ReturnType<typeof parseLegiscanDatasetFile>> & { session: LegiscanSession };
 export interface LegiscanCompletedDataset {
   session: LegiscanSession; evidence: LegiscanDatasetEvidence; rollCalls: number; memberVotes: number; unmatchedPositions: number;
+  held?: readonly {key:string;detail:string}[];
 }
 /** The current regular cycle includes later special sessions, without
  * downloading prior cycles or next year's prefile before they begin. */
@@ -81,6 +82,8 @@ export async function acquireLegiscanVotes(input: SharedOptions & { state: strin
   holders: readonly Officeholder[] | (() => Promise<readonly Officeholder[]>);
   /** A matching immutable dataset catalog needs no roster, held votes or dataset parse. */
   onListing?: (listing: LegiscanDatasetEvidence, sessions: readonly LegiscanSession[]) => Promise<boolean>;
+  /** A published immutable session continues without downloading, parsing or opening its roster again. */
+  completedDataset?: (session: LegiscanSession) => Promise<LegiscanCompletedDataset | null>;
   onDataset?: (result: LegiscanDatasetResult) => Promise<void>;
   onVote?: (vote: PluralVoteFact) => Promise<void> }) {
   const state = legiscanState(input.state), url = legiscanDatasetListUrl(state), fetchImpl = privateTransport(state, input.apiKey ?? process.env.LEGISCAN_API_KEY, input.fetchImpl ?? fetch);
@@ -92,9 +95,12 @@ export async function acquireLegiscanVotes(input: SharedOptions & { state: strin
   const results: LegiscanDatasetResult[] = [], completed: LegiscanCompletedDataset[] = [], held: { key: string; detail: string }[] = [];
   if (input.onListing && !await input.onListing(evidence(listing), sessions))
     return { state, results, completed, held, listing: evidence(listing), listingHash: digest(listing.sha256), unchanged: true };
-  const holders = typeof input.holders === "function" ? await input.holders() : input.holders;
+  let holders:readonly Officeholder[]|null=null;
   for (const session of sessions) {
     input.signal.throwIfAborted();
+    const saved=await input.completedDataset?.(session);
+    if(saved&&saved.session.sessionId===session.sessionId&&saved.session.datasetHash===session.datasetHash){completed.push(saved);held.push(...saved.held??[]);continue;}
+    holders??=typeof input.holders === "function" ? await input.holders() : input.holders;
     let result: LegiscanDatasetResult, consumerFailed = false;
     try {
       const url = datasetUrl(session);
@@ -117,7 +123,7 @@ export async function acquireLegiscanVotes(input: SharedOptions & { state: strin
     // Callback consumers publish and release one session before fetching the next.
     // Only standalone callers asking for the result retain normalized sessions.
     if (!input.onDataset) results.push(result);
-    completed.push({ session, evidence: result.evidence, rollCalls: result.rollCalls, memberVotes: result.memberVotes, unmatchedPositions: result.unmatchedPositions });
+    completed.push({ session, evidence: result.evidence, rollCalls: result.rollCalls, memberVotes: result.memberVotes, unmatchedPositions: result.unmatchedPositions,held:result.held });
     held.push(...result.held);
     await input.onDataset?.(result);
   }

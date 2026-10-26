@@ -147,6 +147,8 @@ export function heldAcquisitions(acquisitions: readonly OfficialAcquisition[]): 
 }
 
 export function federalRollCallsCandidate(input: {
+  readonly complete?:boolean;
+  readonly continuationPending?:boolean;
   readonly identifierSourceHash?: string;
   readonly acquisitions: readonly HeldAcquisition[];
   readonly retrievedAt: string;
@@ -175,6 +177,7 @@ export function federalRollCallsCandidate(input: {
   const readModel: FederalRollCallsReadModel = { formatVersion: 1, snapshot, partyBreakdowns: input.partyBreakdowns, billSummaries: input.billSummaries };
   const normalizedPayload = {
     acquisitions: input.acquisitions,
+    ...(input.continuationPending!==undefined?{continuationPending:input.continuationPending}:{}),
     ...(input.identifierSourceHash ? { identifierSourceHash: input.identifierSourceHash } : {}),
     congress: snapshot.congress,
     session: snapshot.session,
@@ -192,6 +195,7 @@ export function federalRollCallsCandidate(input: {
       httpStatus: input.acquisitions[0]?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash: input.acquisitions.length > 0 ? rawHash : null,
+      ...(input.complete!==undefined?{complete:input.complete}:{}),
       ...(input.identifierSourceHash ? { rawHashBasis: "SOURCE_CONTENT_V1" as const } : {}),
       failureDetail: input.acquisitions.length > 0 ? undefined : "No official chamber response was acquired.",
     },

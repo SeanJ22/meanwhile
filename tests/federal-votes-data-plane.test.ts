@@ -330,6 +330,16 @@ test("a member's source hash follows its displayed bill-title body without inher
   assert.equal(member("congress:B000002","old official title").retrieval.rawHash,member("congress:B000002","changed official title").retrieval.rawHash);
 });
 
+test("a bounded federal catch-up publishes its source-backed frontier while keeping continuation explicit",async()=>{
+  const seed=await rollCallSeed();
+  const candidate=federalRollCallsCandidate({acquisitions:acquisitionsForRollCalls(seed.snapshot),identifierSourceHash:"a".repeat(64),retrievedAt:T0,
+    expectedCongress:119,expectedSession:2,snapshot:seed.snapshot,partyBreakdowns:{},billSummaries:seed.billSummaries,complete:false,continuationPending:true});
+  assert.equal(candidate.retrieval.complete,false);
+  assert.equal((candidate.normalizedPayload as {continuationPending:boolean}).continuationPending,true);
+  const published=await processRegisteredManualCandidate(new MemoryRoutineDataStore(),"congress-rollcalls",candidate,T0);
+  assert.ok(published.promoted,"verified bounded rolls reach readers before the remaining source horizon finishes");
+});
+
 test("federal-key-votes binds mutable official facts to the exact reviewed v1 selection", async () => {
   const seed = await keyVoteSeed();
   assert.equal(federalKeyVoteSelectionV1Issue(seed.snapshot), null);

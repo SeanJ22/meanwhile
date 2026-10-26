@@ -159,9 +159,9 @@ let houseTotal = 0;
 const newestHeld = (rolls: readonly number[] | undefined): number | null => rolls !== undefined && rolls.length > 0 ? Math.max(...rolls) : null;
 const latestHouse = await latestHouseRoll();
 const houseWindow = windowStart({ latest: latestHouse, previousNewest: newestHeld(heldWindow?.houseRolls), window: WINDOW });
-if (houseWindow.unreached > 0) console.warn(`  House: ${houseWindow.unreached} roll(s) between the held version and this window were not reached; the next run continues from here`);
+if (houseWindow.unreached > 0) console.warn(`  House: ${houseWindow.unreached} newer roll(s) remain after ${houseWindow.end}; the next pass continues from there`);
 const houseRolls: number[] = [];
-for (let n = houseWindow.start; n <= latestHouse; n++) {
+for (let n = houseWindow.start; n <= houseWindow.end; n++) {
   houseRolls.push(n);
 }
 
@@ -237,8 +237,8 @@ const menuEntries = [...menu.matchAll(/<vote>[\s\S]*?<\/vote>/g)].map((m) => {
 menuEntries.sort((a, b) => a.number - b.number);
 const latestSenate = menuEntries.at(-1)?.number ?? 0;
 const senateStart = windowStart({ latest: latestSenate, previousNewest: newestHeld(heldWindow?.senateRolls), window: WINDOW });
-if (senateStart.unreached > 0) console.warn(`  Senate: ${senateStart.unreached} roll(s) between the held version and this window were not reached; the next run continues from here`);
-const senateWindow = menuEntries.filter((entry) => entry.number >= senateStart.start);
+if (senateStart.unreached > 0) console.warn(`  Senate: ${senateStart.unreached} newer roll(s) remain after ${senateStart.end}; the next pass continues from there`);
+const senateWindow = menuEntries.filter((entry) => entry.number >= senateStart.start&&entry.number<=senateStart.end);
 
 let senateMatched = 0;
 let senateTotal = 0;
@@ -399,6 +399,8 @@ if (unchanged) {
 const billSummaries = await store.readCandidatePath<BillSummariesFile>(head.versionId, ["readModel", "billSummaries"]);
 if (!billSummaries || !billSummaries.summaries || !Array.isArray(billSummaries.pending)) throw new Error("FEDERAL_ROLLCALL_BILL_SUMMARIES_UNAVAILABLE");
 const candidate = federalRollCallsCandidate({
+  complete:houseWindow.unreached===0&&senateStart.unreached===0,
+  continuationPending:houseWindow.unreached>0||senateStart.unreached>0,
   identifierSourceHash,
   acquisitions: held,
   retrievedAt: attemptedAt,

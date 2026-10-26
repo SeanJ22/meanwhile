@@ -385,3 +385,21 @@ test("the completed hourly pass uses the registered promotion door for its refre
   }]},at);
   assert.ok(saved.outcome.promoted);assert.equal((await store.readPromotion("CAMPAIGN_FINANCE",CAMPAIGN_MONEY_SCOPE))?.versionId,saved.candidate.id);
 });
+
+test("campaign work history hashes source content independently of run counts and observation times",async()=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
+  const row={id:"hourly",state:"US",checkedAt:at,publishedPeople:1,peopleWorked:1,peopleWithMoney:1,loaded:1,unmatched:0,reasons:{},peakMemoryBytes:1,
+    sourceHash:"a".repeat(64),sourceComplete:true};
+  const report={kind:"campaign-finance-work-check" as const,state:"US",resource:"people" as const,records:[row]};
+  const first=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,report,at);
+  assert.ok(first.outcome.promoted);assert.equal(first.candidate.retrieval.rawHashBasis,"SOURCE_CONTENT_V1");
+  const later="2026-10-20T01:00:00.000Z";
+  const second=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,peopleWorked:0,loaded:0,peakMemoryBytes:100}]},later);
+  assert.ok(second.outcome.promoted||second.outcome.confirmed);
+  assert.equal(second.candidate.retrieval.rawHash,first.candidate.retrieval.rawHash,"run activity never looks like a publisher change");
+  const failed=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,sourceComplete:false}]},later);
+  assert.equal(failed.candidate.retrieval.complete,false,"partial source work keeps its existing retry pace");
+  assert.equal(failed.candidate.retrieval.rawHash,first.candidate.retrieval.rawHash);
+  const changed=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,sourceHash:"b".repeat(64)}]},later);
+  assert.notEqual(changed.candidate.retrieval.rawHash,first.candidate.retrieval.rawHash);
+});

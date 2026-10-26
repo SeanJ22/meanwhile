@@ -10,13 +10,18 @@ import {CAMPAIGN_PEOPLE_SQL,readCampaignMoneyPeople} from "./state-people.ts";
 const hash=(value:string)=>createHash("sha256").update(value).digest("hex");
 export const campaignResourceCursor=(state:string,id:string)=>`campaign-money:resource:${state}:${hash(id)}`;
 export interface CampaignResourceInput {readonly publicationId:string;readonly dependencyHash:string}
-export interface CampaignResourceCheck {readonly resourceId:string;readonly rawHashes:readonly string[];readonly checkedAt:string}
+export interface CampaignResourceCheck {readonly resourceId:string;readonly rawHash:string;readonly rawHashes:readonly string[];readonly checkedAt:string}
+export const campaignResourceContentHash=(resource:CampaignFinanceResource,rawHashes:readonly string[])=>
+  hash(`${CAMPAIGN_FINANCE_PARSER}:${JSON.stringify(resource)}:${[...new Set(rawHashes)].sort().join("\n")}`);
+export const campaignStateSourceHash=(state:string,descriptorHash:string,dependencyHash:string,resources:ReadonlyMap<string,string>)=>
+  hash(JSON.stringify({state,parser:CAMPAIGN_FINANCE_PARSER,descriptorHash,dependencyHash,resources:[...resources].sort(([a],[b])=>a.localeCompare(b))}));
 
 /** Native roster hashes and body bindings are source inputs; financial outputs never feed their own change clock. */
 const campaignDependencySql=`WITH dependencies AS (
     SELECT jsonb_build_array('promotion',p.record_class,p.scope,c.parser_version,c.raw_hash,c.normalized_hash) AS value
       FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
-      WHERE (p.scope=$1 OR p.scope LIKE $1||':%') AND p.record_class IN ('STATE_LEGISLATOR','FEDERAL_DIRECTORY','REGISTRY_RUNTIME_BINDING','BALLOT_CANDIDACY')
+      WHERE (p.scope=$1 OR p.scope LIKE $1||':%') AND (p.record_class IN ('STATE_LEGISLATOR','FEDERAL_DIRECTORY','REGISTRY_RUNTIME_BINDING','BALLOT_CANDIDACY','STATE_CAMPAIGN_FINANCE')
+        OR p.record_class='CURATED_READER_RECORD' AND p.scope=$1||':campaign-finance')
     UNION ALL SELECT jsonb_build_array('body',e.id,e.parent_id,e.name) FROM entity e WHERE e.state=$2 AND e.kind IN ('body','place')
     UNION ALL SELECT jsonb_build_array('body-place',ep.entity_id,ep.place_id) FROM entity_place ep JOIN entity e ON e.id=ep.entity_id WHERE e.state=$2 AND e.kind='body'
     UNION ALL SELECT jsonb_build_array('member',f.entity_id,f.field,f.value,p.name,s.url) FROM entity e JOIN fact f ON f.entity_id=e.id
@@ -67,7 +72,8 @@ export async function probeCampaignResource(state:string,resource:CampaignFinanc
     checks.push(...page.checkedSources??[]);complete=page.complete;
   }
   if(!complete||!checks.length)return null;
-  return {resourceId:resource.id,rawHashes:[...new Set(checks.map(check=>check.rawHash))],checkedAt:checks.map(check=>check.checkedAt).sort()[0]};
+  const rawHashes=[...new Set(checks.map(check=>check.rawHash))];
+  return {resourceId:resource.id,rawHash:campaignResourceContentHash(resource,rawHashes),rawHashes,checkedAt:checks.map(check=>check.checkedAt).sort()[0]};
 }
 
 /** Exact source bytes refresh only the financial facts they support. Cycle dates remain the oldest contributing check. */

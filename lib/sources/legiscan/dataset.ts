@@ -66,7 +66,7 @@ export interface LegiscanIdentityAuthority {
   scope: string; versionId: string; sourceId: "plural-openstates"; crosswalkSha256: string; joins: LegiscanPersonJoin[];
 }
 export type LegiscanIdentityHolder = Pick<Officeholder,"id"|"personId"|"nativeIds"> &
-  Partial<Pick<Officeholder,"level"|"websiteUrl"|"profileUrls">> &
+  Partial<Pick<Officeholder,"level"|"websiteUrl"|"profileUrls"|"name"|"state"|"chamber"|"memberships"|"officeTitle">> &
   { provenance?: Officeholder["provenance"] | null };
 export function sourcePersonIds(holder: Pick<Officeholder,"id"|"personId"|"nativeIds">): string[] {
   return [...new Set([...(holder.nativeIds?.["ocd-person"] ?? []), holder.personId ?? "", holder.id].flatMap(value =>

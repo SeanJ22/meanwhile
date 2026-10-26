@@ -683,8 +683,9 @@ export function routineTaskNextDueMs(
   if (!Number.isFinite(succeeded)) return attempted + failureRetryMs(task.retryMs, clock);
     // Once a due read fails, the source's retry clock owns the next attempt.
   if (attempted > succeeded) return attempted + failureRetryMs(task.retryMs, clock);
-  if (task.recordClass === "FEDERAL_MONEY" && task.contract.fanOut === true &&
-      task.scope === `${task.sourceId}:US` && clock.continuationPending === true) return nowMs;
+  if (clock.continuationPending === true && task.contract.fanOut === true && (
+      task.recordClass === "FEDERAL_MONEY" && task.scope === `${task.sourceId}:US` ||
+      task.recordClass === "STATE_BILL" && task.sourceId === "legiscan-bills" && task.scope === "US:legiscan-datasets")) return nowMs;
   // A member-office run its deadline cut short continues on the next pass, not the next day.
   if (task.id === "member-offices" && clock.continuationPending === true) return nowMs;
   const boundaries = [...new Set((task.contract.cadence.phases ?? []).map(phase => Date.parse(phase.through))

@@ -27,6 +27,9 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // 1,249 MiB LegiScan, each with 5% and rounded up to a whole MiB.
   "openstates-votes-refresh.mts": 3574,
   "legiscan-votes-refresh.mts": 1312,
+  // BL-02 production-copy fan-out (four states, two parts each):
+  // 2,127,003,648-byte /proc VmHWM plus 5%, rounded up to MiB.
+  "legiscan-bulk.mts": 2130,
   "federal-money-refresh.mts": 768,
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
@@ -323,7 +326,7 @@ function routineMinimumPeakBytes(entry: string): number {
   if (entry.startsWith("national-place:")) return Math.ceil(1.2 * 1024) * MIB;
   if (workerJobType(entry) === CALENDAR_READ_JOB) return CALENDAR_READ_PEAK_MIB * MIB;
   const script = entry.split(/[\\/]/).at(-1)!;
-  return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "acs-population-promote.mts", "place-map-refresh.mts"].includes(script)
+  return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "legiscan-bulk.mts", "acs-population-promote.mts", "place-map-refresh.mts"].includes(script)
     ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0);
 }
 

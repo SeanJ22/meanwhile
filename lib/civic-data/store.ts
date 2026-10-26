@@ -66,6 +66,7 @@ import {
 } from "./reader-readback.ts";
 import { canonicalAgendaDocument, type AgendaDocument } from "../meetings/agenda-documents.ts";
 import { freezeDurableJson } from "./durable-json.ts";
+import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,billScope,legiscanContinuationPending } from "../sources/legiscan/current-sessions.ts";
 import { projectionKey } from "./projection-key.ts";
 import { invalidateReaderCache, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
@@ -1195,6 +1196,8 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         ? { continuationPending: federalMoneyContinuationPending(pointer.payload, sourceId) } : {}),
       ...(recordClass === "CURATED_READER_RECORD" && scope === MEMBER_OFFICES_SCOPE
         ? { continuationPending: memberOfficesContinuationPending(pointer?.payload) } : {}),
+      ...(recordClass === "STATE_BILL" && scope === LEGISCAN_BULK_SCOPE && sourceId === "legiscan-bills"
+        ? { continuationPending: legiscanContinuationPending(pointer?.payload,id=>this.promotions.get(projectionKey("STATE_BILL",billScope(id)))) } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
     }, confirmation, sittings, parserVersion);
@@ -1268,6 +1271,42 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
       // A member-office run its deadline cut short names the states it still owes.
       ...(recordClass === "CURATED_READER_RECORD" && scope === MEMBER_OFFICES_SCOPE ? { continuationPending: sql<boolean>`
         jsonb_typeof(${civicDataPromotions.payload}->'pending') = 'array' and jsonb_array_length(${civicDataPromotions.payload}->'pending') > 0` } : {}),
+      ...(recordClass === "STATE_BILL" && scope === LEGISCAN_BULK_SCOPE ? { continuationPending: sql<boolean>`(
+        with catalog as (
+          select d, (d->>'state_id')::int state_id, (d->>'year_start')::int year_start,
+            (d->>'year_end')::int year_end, extract(year from current_date)::int this_year
+          from jsonb_array_elements(case when jsonb_typeof(${civicDataPromotions.payload}->'datasets') = 'array'
+            then ${civicDataPromotions.payload}->'datasets' else '[]'::jsonb end) d
+        ), current_sessions as (
+          select c.d from catalog c where c.year_start <= c.this_year and (
+            c.year_end >= c.this_year or (
+              not exists (select 1 from catalog other where other.state_id=c.state_id
+                and other.year_start<=other.this_year and other.year_end>=other.this_year)
+              and c.year_start=(select max(other.year_start) from catalog other
+                where other.state_id=c.state_id and other.year_start<=other.this_year)
+            )
+          ) or (
+            not exists (select 1 from catalog other where other.state_id=c.state_id and other.year_start<=other.this_year)
+            and c.d->>'session_id'=(select other.d->>'session_id' from catalog other
+              where other.state_id=c.state_id order by (other.d->>'session_id')::int desc limit 1)
+          )
+        )
+        select not exists(select 1 from catalog)
+          or exists(select 1 from catalog where year_start is null or year_end is null)
+          or exists (
+            select 1 from current_sessions current_session
+            left join civic_data_promotions held_session on held_session.record_class='STATE_BILL'
+              and held_session.scope='legiscan-bills:session:'||(current_session.d->>'session_id')
+            where held_session.current_version_id is null or held_session.source_id<>'legiscan-bills'
+              or held_session.current_version_id<>held_session.last_known_good_version_id
+              or held_session.validation_receipt->>'decision' is distinct from 'GOOD'
+              or held_session.payload->>'kind' is distinct from 'SESSION'
+              or held_session.payload->>'parserVersion' is distinct from ${LEGISCAN_BULK_PARSER}
+              or held_session.payload->>'sponsorMatchVersion' is distinct from ${LEGISCAN_SPONSOR_MATCH}
+              or held_session.payload#>>'{dataset,dataset_hash}' is distinct from current_session.d->>'dataset_hash'
+              or held_session.payload#>>'{dataset,dataset_date}' is distinct from current_session.d->>'dataset_date'
+          )
+        )` } : {}),
     })
     .from(civicDataPromotions)
     .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope)))
@@ -2755,6 +2794,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         ? { continuationPending: pointer.continuationPending === true } : {}),
       ...(recordClass === "CURATED_READER_RECORD" && scope === MEMBER_OFFICES_SCOPE
         ? { continuationPending: pointer?.continuationPending === true } : {}),
+      ...(recordClass === "STATE_BILL" && scope === LEGISCAN_BULK_SCOPE && sourceId === "legiscan-bills"
+        ? { continuationPending: pointer?.continuationPending !== false } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
     }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings, parserVersion);

@@ -30,7 +30,7 @@ if(failed){reject(failed);return}
 const id=++serial,abort=()=>{pending.delete(id);worker.postMessage({id,cancel:true});reject(signal.reason||new DOMException("Aborted","AbortError"))};
 if(signal?.aborted){abort();return}
 pending.set(id,{resolve,reject,clean:()=>signal?.removeEventListener("abort",abort)});
-signal?.addEventListener("abort",abort,{once:true});worker.postMessage({id,request},request.kind==="bootstrap"?[request.body]:[]);
+signal?.addEventListener("abort",abort,{once:true});worker.postMessage({id,request},request.kind==="json"?[request.body]:[]);
 });
 return window.__readerBoundary={url,request};
 };
@@ -45,25 +45,18 @@ const url=new URL(archive,location.href).href;
 window.__startReaderBoundary(url).request({kind:"header",url}).catch(()=>{});
 }catch(e){}}
 const parseResponse=r=>{
-const response=r.clone(),value=r.json();value.catch(()=>{});parsed.set(response,value);return response};
+const response=r.clone(),value=!window.__readerBoundary?r.json():r.arrayBuffer().then(body=>{
+const backup=body.slice(0);return window.__readerBoundary.request({kind:"json",body}).catch(()=>JSON.parse(new TextDecoder().decode(backup)))});
+value.catch(()=>{});parsed.set(response,value);return response};
 const early=url=>fetch(url,{headers:{accept:"application/json"}}).then(parseResponse);
-const placeUrl="/api/meetings?zip="+zip+"&include=state";
-const parsedResponse=result=>{const response=new Response("",{status:result.status,headers:result.headers});parsed.set(response,Promise.resolve(result.value));return response};
-const combined=fetch(placeUrl,{headers:{accept:"application/json"}}).then(async response=>{
-const split=value=>{const state=value.stateResponse;delete value.stateResponse;
-return{state:state||{value:{error:"The state's information could not be loaded"},status:503,headers:[["cache-control","no-store"]]},place:{value,status:response.status,headers:[...response.headers]}}};
-if(!window.__readerBoundary)return split(await response.json());
-const body=await response.arrayBuffer(),backup=body.slice(0);
-return window.__readerBoundary.request({kind:"bootstrap",body,status:response.status,headers:[...response.headers]}).catch(()=>split(JSON.parse(new TextDecoder().decode(backup))));
-});
-const state=combined.then(result=>parsedResponse(result.state)),place=combined.then(result=>parsedResponse(result.place));
+const placeUrl="/api/meetings?zip="+zip,place=early(placeUrl);
+requests[placeUrl]=place;place.catch(()=>{});
 const settings="/api/reader/settings";
 const outlines="/geo/state-outlines.geojson";
 if(previous?.requests[outlines])requests[outlines]=previous.requests[outlines];
 else if(!previous){requests[outlines]=early(outlines);requests[outlines].catch(()=>{})}
 if(previous?.requests[settings])requests[settings]=previous.requests[settings];
 else if(!previous){requests[settings]=early(settings);requests[settings].catch(()=>{})}
-state.catch(()=>{});place.catch(()=>{});
 start.location=fetch("/geo/reader-zips/"+zip.slice(0,2)+".json").then(r=>{
 if(!r.ok)throw new Error("ZIP lookup failed: "+r.status);return r.json()}).then(d=>{
 if(!d?.locations||typeof d.locations!=="object")throw new Error("Invalid ZIP location response");
@@ -72,8 +65,8 @@ if(p===null){if(window.__readerStart===start)start.expires=0;return null}
 if(!p||typeof p!=="object")throw new Error("Invalid ZIP location response");
 start.value=p;
 if(!previous&&window.__readerStart===start&&window.__readerBoundary){const reader=window.__readerBoundary;reader.request({kind:"prefetch",url:reader.url,zip:p.zip,lat:p.lat,lng:p.lng,width:innerWidth,height:innerHeight}).catch(()=>{})}
-if(p.postal?.state)requests["/api/reader/state?state="+encodeURIComponent(p.postal.state)+"&zip="+zip]=state;
-requests["/api/meetings?lat="+p.lat+"&lng="+p.lng+"&zip="+zip]=place;
+if(p.postal?.state){const stateUrl="/api/reader/state?state="+encodeURIComponent(p.postal.state)+"&zip="+zip;
+requests[stateUrl]=early(stateUrl);requests[stateUrl].catch(()=>{})}
 return p}).catch(error=>{if(window.__readerStart===start)start.expires=0;throw error});
 start.location.catch(()=>{});window.__readerStart=start;return start.location;
 };

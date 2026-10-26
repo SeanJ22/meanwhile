@@ -44,6 +44,8 @@ export interface ReaderCacheScope {
 export const READER_NATIONAL_CACHE_TAG = "reader-national";
 export const READER_NATIONAL_PEOPLE_CACHE_TAG = "reader-national-people";
 export const READER_CACHE_SECONDS = 15 * 60;
+/** First ZIP builds must keep advancing even when already-built large ZIPs change every turn. */
+export const UNBUILT_ZIP_PRIORITY = 1_000_000_000;
 
 /** Publication data read by the place builder; other families refresh their own endpoints. */
 export function placePageConsumesPublication(scope: string, recordClass?: string): boolean {
@@ -181,11 +183,15 @@ export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query)
       OR d.entity_id IN (SELECT id FROM service_places)
       OR d.entity_id IN (SELECT id FROM subjects WHERE kind<>'place')
     UNION SELECT e.id FROM entity e WHERE e.kind='place' AND e.id=ANY($2::text[])
-  ) INSERT INTO rebuild_queue(place_id,queued_at)
-    SELECT id,clock_timestamp() FROM affected ORDER BY id
+  ) INSERT INTO rebuild_queue(place_id,queued_at,priority)
+    SELECT a.id,clock_timestamp(),e.page_priority+CASE WHEN e.page_priority>0
+      AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=e.id) THEN ${UNBUILT_ZIP_PRIORITY} ELSE 0 END
+    FROM affected a JOIN entity e ON e.id=a.id ORDER BY a.id
     ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+1,
       next_queued_at=CASE WHEN rebuild_queue.lease_token IS NOT NULL
-        THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp()) ELSE rebuild_queue.next_queued_at END`,
+        THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp()) ELSE rebuild_queue.next_queued_at END
+    WHERE (rebuild_queue.lease_token IS NOT NULL AND rebuild_queue.next_queued_at IS NULL)
+      OR rebuild_queue.built_generation=rebuild_queue.generation`,
   [broad ? states : [],places,entities,broad && scope.national === true]);
 }
 

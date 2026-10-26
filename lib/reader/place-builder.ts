@@ -544,8 +544,9 @@ const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
   ) ORDER BY n LIMIT 1
 ), next AS (
   SELECT q.place_id,slot.n FROM rebuild_queue q JOIN entity e ON e.id=q.place_id CROSS JOIN slot
-  WHERE q.lease_until IS NULL OR q.lease_until<clock_timestamp()
-  ORDER BY q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
+  WHERE (q.lease_until IS NULL OR q.lease_until<clock_timestamp())
+    AND NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id AND p.built_at>=$2::timestamptz)
+  ORDER BY q.priority DESC,q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
 ) UPDATE rebuild_queue q SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes',lease_slot=next.n,next_queued_at=NULL
   FROM next,entity e WHERE q.place_id=next.place_id AND e.id=q.place_id
   RETURNING q.place_id,q.generation,q.built_generation,e.kind,e.state,
@@ -558,6 +559,8 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
   const deadline=Date.now()+(options.timeBudgetMs ?? 240_000);
   // One turn builds hundreds of pages; a record every page carries crosses the connection once per version.
   const shared:PlaceTurnReads={};
+  // Use the database clock for both ends of the pass, including a place deleted from the queue and requeued by a writer.
+  const [pass]=await db.transaction(query=>query("SELECT clock_timestamp()::text AS started_at"));
   let started=0,rebuilt=0,failed=0;
   const work=async()=>{
     while(started<limit && Date.now()<deadline) {
@@ -567,7 +570,7 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
         await query("SELECT pg_advisory_xact_lock(hashtextextended('place-page-rebuild-slots',0))");
         await query(`UPDATE rebuild_queue SET lease_token=NULL,lease_slot=NULL,lease_until=NULL
           WHERE lease_slot IS NOT NULL AND lease_until<clock_timestamp()`);
-        return (await query(CLAIM_PAGE_SQL,[token]))[0];
+        return (await query(CLAIM_PAGE_SQL,[token,pass!.started_at]))[0];
       });
       if(!claim)return;
       const id=String(claim.place_id),state=String(claim.state ?? "US");
@@ -604,7 +607,8 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
             await query("DELETE FROM place_page_dependency WHERE page_id=$1",[id]);
             await query(`INSERT INTO place_page_dependency(page_id,entity_id)
               SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
-            await query("UPDATE rebuild_queue SET built_generation=$3::bigint WHERE place_id=$1 AND lease_token=$2",[id,token,claim.generation]);
+            await query(`UPDATE rebuild_queue q SET built_generation=$3::bigint,priority=e.page_priority
+              FROM entity e WHERE q.place_id=$1 AND q.lease_token=$2 AND e.id=q.place_id`,[id,token,claim.generation]);
             await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);
           });
           built=true;

@@ -36,6 +36,7 @@ test("ZIP page identities follow the routed ZIP geography and retain their state
   const saved: Record<string,unknown>[]=[];
   const dependencies:Record<string,unknown>[]=[];
   const query:Query=async(text,args)=>{
+    if(text.startsWith('WITH priorities'))return[];
     const records=JSON.parse(String(args?.[0])) as Record<string,unknown>[];
     if(text.startsWith('INSERT INTO entity'))saved.push(...records);else dependencies.push(...records);
     return[];
@@ -43,6 +44,7 @@ test("ZIP page identities follow the routed ZIP geography and retain their state
   const root="ocd-division/country:us/state:az";
   const n=await seedZipPagePlaces(query,{
     states:['AZ'],
+    population:async zip=>zip==='85001'?200:0,
     postal:()=>({
       '85001':[33,-112,'standard','85001','Phoenix','AZ','Maricopa',null,null],
       '85002':[33,-112,'standard','85002','Phoenix','AZ','Maricopa',null,null],
@@ -54,8 +56,8 @@ test("ZIP page identities follow the routed ZIP geography and retain their state
     place:async zip=>zip==='85002'?null:{ids:['ocd-division/country:us/state:ca',root],partial:[],samples:1},
   });
   assert.equal(n,2);
-  assert.deepEqual(saved,[{id:'zip:85001',name:'ZIP 85001',state:'AZ',parent_id:root},
-    {id:'zip:85002',name:'ZIP 85002',state:'AZ',parent_id:null}]);
+  assert.deepEqual(saved,[{id:'zip:85001',name:'ZIP 85001',state:'AZ',parent_id:root,priority:201},
+    {id:'zip:85002',name:'ZIP 85002',state:'AZ',parent_id:null,priority:1}]);
   assert.deepEqual(dependencies,[{page_id:'zip:85001',entity_id:'ocd-division/country:us/state:ca'},
     {page_id:'zip:85001',entity_id:root},{page_id:'zip:85001',entity_id:'az:city:phoenix#governing'},
     {page_id:'zip:85002',entity_id:'az:city:phoenix#governing'}]);

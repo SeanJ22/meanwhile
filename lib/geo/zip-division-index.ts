@@ -88,6 +88,11 @@ export async function indexedZipDivisionEntry(zip: string | null): Promise<ZipDi
   return shard === null ? null : shardEntry(shard, zip);
 }
 
+/** Held Census residents, used to build the most-read ZIP pages first. Mail-only ZIPs have no borrowed population. */
+export async function indexedZipPopulation(zip: string): Promise<number> {
+  return (await shardFor(zipShardOf(zip)))?.zipResidents?.[zip] ?? 0;
+}
+
 /** A ZIP's divisions, or null when it is not indexed or its shard could not be read — our gap, never a claim about the place. */
 export async function zipDivisionEntry(zip: string | null, selection?: GeographySelection): Promise<ZipDivisionEntry | null> {
   if (zip === null || !/^\d{5}$/.test(zip)) return null;

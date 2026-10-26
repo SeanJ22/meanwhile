@@ -132,6 +132,9 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
+  if (recordClass === "REGISTRATION" || recordClass === "REGISTRY_RUNTIME_BINDING") {
+    return withoutPeopleSourceCheckFields(withoutProvenanceStamps(member.record, ["rawHash", "checkedAt", "collectedAt", "verifiedAt"]));
+  }
   if ((recordClass === "STATE_LEGISLATOR" && member.key.startsWith("member:")) ||
     (recordClass === "FEDERAL_DIRECTORY" && member.key.startsWith("officeholder:"))) {
     return withoutPeopleSourceCheckFields(withoutProvenanceStamps(member.record, ["collectedAt", "verifiedAt", "rawHash"]));

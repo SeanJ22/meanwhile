@@ -187,7 +187,7 @@ export interface CampaignFinanceWorkCheck {
   readonly resource: "people";
   /** Explicit unfinished work, never a provider outage or an unknown blank. */
   readonly continuationPending?:boolean;
-  readonly records: readonly (CampaignProviderClock & { readonly completedAt?:string;readonly continuationPending?:boolean;readonly sourceFailedAt?:string; readonly id:string;readonly state:string;readonly checkedAt:string;readonly startedAt?:string;readonly publishedPeople:number;readonly peopleWorked:number;readonly peopleWithMoney:number;readonly loaded:number;readonly unmatched:number;readonly reasons:Readonly<Record<string,number>>;readonly peakMemoryBytes:number;
+  readonly records: readonly (CampaignProviderClock & { readonly completedAt?:string;readonly heldContinuationPending?:boolean;readonly continuationPending?:boolean;readonly sourceFailedAt?:string; readonly id:string;readonly state:string;readonly checkedAt:string;readonly startedAt?:string;readonly publishedPeople:number;readonly peopleWorked:number;readonly peopleWithMoney:number;readonly loaded:number;readonly unmatched:number;readonly reasons:Readonly<Record<string,number>>;readonly peakMemoryBytes:number;
     readonly sourceHash?:string;readonly sourceComplete?:boolean;readonly sourceDescriptorHash?:string;readonly dependencyHash?:string })[];
 }
 export type CampaignFinancePublication = CampaignFinanceWorkCheck;

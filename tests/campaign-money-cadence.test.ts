@@ -45,4 +45,8 @@ test("successful native acquisition cutoffs resume without freshening provider d
   const localRetry={...failed,startedAt:later(1.25),completedAt:later(1.25)};
   assert.equal(campaignMoneyStateDue(localRetry,later(1.25)),false,"a local replay does not recover a real source outage");
   assert.equal(campaignMoneyStateDue({startedAt:at},later(0.1)),false,"legacy clock rows retain the installed/fact-floor pace");
+  const heldCutoff={startedAt:later(0.5),providerAttemptedAt:at,completedAt:later(0.5),sourceComplete:false,heldContinuationPending:true};
+  assert.equal(campaignMoneyStateNextDue(heldCutoff,later(0.5)),Date.parse(later(1)),"even a legacy held cutoff preserves its original provider deadline");
+  const partial={...first,sourceComplete:false,...observeCampaignProvider(first,{rawHash:"a".repeat(64),descriptorHash:first.sourceDescriptorHash!,checkedAt:later(30),complete:true})};
+  assert.equal(campaignMoneyEveryMs(partial),DAY,"a current unfinished source cannot learn a slower interval from old complete observations");
 });

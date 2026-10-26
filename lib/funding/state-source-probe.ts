@@ -88,7 +88,7 @@ export async function campaignResourceInputs(query:Query,state:string):Promise<R
 }
 
 export async function probeCampaignResource(state:string,resource:CampaignFinanceResource,input:CampaignResourceInput|undefined,dependencyHash:string,options:{
-  readonly vault:EvidenceStore;readonly directory:string;readonly runId:string;readonly now:()=>string;readonly fetch?:typeof fetch;readonly signal?:AbortSignal;readonly releaseEveryMs?:number;
+  readonly vault:EvidenceStore;readonly directory:string;readonly runId:string;readonly now:()=>string;readonly fetch?:typeof fetch;readonly signal?:AbortSignal;readonly releaseEveryMs?:number;readonly heldOnly?:boolean;
 }):Promise<CampaignResourceCheck|null> {
   const checks:{rawHash:string;checkedAt:string}[]=[];let complete=false;
   for await(const page of acquireCampaignFinanceResource(state,resource,{...options,signal:options.signal??new AbortController().signal,probeOnly:true,

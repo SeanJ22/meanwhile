@@ -41,11 +41,11 @@ async function publishPerson(db:Awaited<ReturnType<typeof campaignDb>>,person:Ca
   await publishMoneyFixture(db,{recordClass:"REGISTRY_RUNTIME_BINDING",scope,payload:{bodyRosters:retained}});
 }
 
-test("campaign source hashes skip held people and preserve newly changed filings inside the daily person window",async()=>{
+test("campaign hashes keep honest provider dates before the fact floor and admit changed filings at the next check",async()=>{
   const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-source-first-"));
-  let now=at,revision=1792454400,filed={...raw,contributions_amount:"100"};
+  let now=at,revision=1792454400,requests=0,filed={...raw,contributions_amount:"100"};
   const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
-    fetch:async(url:RequestInfo|URL)=>Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:revision}:[filed])};
+    fetch:async(url:RequestInfo|URL)=>{requests++;return Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:revision}:[filed]);}};
   const read=()=>readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id});
   try{
     await publishPerson(db,person);await refreshCampaignMoneyState(options);
@@ -61,15 +61,18 @@ test("campaign source hashes skip held people and preserve newly changed filings
     now="2026-10-20T03:00:00.000Z";
     const checked=await refreshCampaignMoneyState({...options,query:guarded,facts:{...db,query:guarded}});
     assert.equal(checked.report.records[0].peopleWorked,0);
-    assert.equal((await read()).records[0].sources[0].checkedAt,now);
+    assert.equal((await read()).records[0].sources[0].checkedAt,at,"held cache use does not manufacture a new provider observation");
+    assert.equal(requests,2,"neither source version nor filing is polled before the active money floor");
     assert.equal(Number((await db.query("SELECT count(*) AS n FROM fact WHERE field LIKE 'campaign-cycle:%'"))[0].n),1);
-    now="2026-10-20T04:00:00.000Z";revision++;filed={...filed,contributions_amount:"200"};
+    now="2026-10-21T00:00:00.000Z";revision++;filed={...filed,contributions_amount:"200"};
     await refreshCampaignMoneyState(options);
     assert.equal((await read()).records[0].totals.find(total=>total.label==="Contributions")?.amount,200,
-      "the new official filing reaches the reader while the person's previous daily check is still fresh");
+      "the changed official filing reaches the reader at its admitted provider check");
     await db.query("DELETE FROM fact WHERE entity_id=$1 AND field LIKE 'campaign-cycle:%'",[person.id]);
-    now="2026-10-20T04:05:00.000Z";
-    await refreshCampaignMoneyState({...options,query:guarded,facts:{...db,query:guarded}});
+    now="2026-10-21T00:05:00.000Z";
+    const beforeRepair=requests;
+    await refreshCampaignMoneyState({...options,heldOnly:true,query:guarded,facts:{...db,query:guarded}});
+    assert.equal(requests,beforeRepair,"a derived repair uses held native bytes without a provider poll");
     assert.equal((await read()).records.length,1,"an unchanged native source can repair a missing derived cycle without rereading people");
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
@@ -314,11 +317,14 @@ test("an amended native row moves between published people without leaving money
     assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records.length,1);
     now="2026-10-20T02:00:00.000Z";revision+=3600;filed={...filed,filer_id:"second-filer",filer_name:other.name,expenditures_amount:"",url:"https://www.pdc.wa.gov/filings/amended"};
     await refreshCampaignMoneyState(options);
+    assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records.length,1,"an unpolled amendment cannot erase held verified money before its fact floor");
+    assert.equal((await readCampaignFinanceForPlace(other.division,{query:db.query,personId:other.id})).records.length,0);
+    now="2026-10-21T00:00:00.000Z";await refreshCampaignMoneyState(options);
     assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records.length,0);
     const records=(await readCampaignFinanceForPlace(other.division,{query:db.query,personId:other.id})).records;
     assert.equal(records[0]?.totals.find(total=>total.label==="Contributions")?.amount,100);
     assert.equal(records[0]?.totals.some(total=>total.label==="Expenditures"),false);
-    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-20T03:00:00.000Z")).length,1);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T01:00:00.000Z")).length,1);
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 

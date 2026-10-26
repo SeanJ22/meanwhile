@@ -191,9 +191,11 @@ export async function campaignMoneyWork(query:Query,state:string,people:readonly
     .sort((a,b)=>Number(b.incumbent)-Number(a.incumbent)||a.id.localeCompare(b.id));
 }
 
-export async function readCampaignMoneyStateWork(query:Query,state:string){
-  const [row]=await query("SELECT position FROM pass_cursor WHERE name=$1",[campaignFinanceNativeScope(state)]);
-  return row ? JSON.parse(String(row.position)) as Partial<import("./state-sources.ts").CampaignFinanceWorkCheck["records"][number]> : null;
+export async function readCampaignMoneyStateWork(query:Query,state:string,fields?:readonly string[]){
+  const [row]=fields?await query(`SELECT (SELECT coalesce(jsonb_object_agg(k,position::jsonb->k),'{}'::jsonb)
+    FROM unnest($2::text[])k WHERE position::jsonb?k)AS position FROM pass_cursor WHERE name=$1`,[campaignFinanceNativeScope(state),fields]):
+    await query("SELECT position FROM pass_cursor WHERE name=$1",[campaignFinanceNativeScope(state)]);
+  return row ? (typeof row.position==="string"?JSON.parse(row.position):row.position) as Partial<import("./state-sources.ts").CampaignFinanceWorkCheck["records"][number]> : null;
 }
 export function campaignMoneyStateDue(work:CampaignStateClock|null,at:string,clocks:Clocks=factClocks(null)):boolean {
   return Date.parse(at)>=campaignMoneyStateNextDue(work,at,clocks);

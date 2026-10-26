@@ -1075,6 +1075,11 @@ if (selectedTasks.length > 0) try {
   console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 
+const campaignMoneyAdmission = selectedTasks.some(task=>task.id==="campaign-money")
+  ? await (await import("../lib/funding/state-local-work.ts")).readCampaignMoneyAdmission(readerFactDb().query,new Date(admissionNowMs).toISOString(),sourceFactClocks)
+    .catch(error=>{console.warn(`RCD_TASK campaign-money: state source/input clocks unavailable: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);return null;})
+  : null;
+
 const sourceChangeHistories = await readSourceChangeHistory(readerFactDb().query, selectedTasks).catch(error => {
   console.warn(`RCD_SOURCE_HISTORY ${safeFailure(sanitizedErrorDiagnostic(error))}; source fact clocks remain in force`);
   return new Map<string, SourceChangeHistory>();
@@ -1092,8 +1097,9 @@ for (const read of clockReads) {
   const publication = publicationTarget(task.id);
   const ballotsDue = publication !== null && ballotPublicationDue(task.id,
     ballotStamps.get(publication.key) ?? null, priorBallotPublications.get(publication.key) ?? null, read.clock);
-  const inputDue = routineInputState(task.id) !== null && (!inputStamps.has(task.id) ||
-    routineInputChanged(inputStamps.get(task.id) ?? null, priorInputs.get(task.id) ?? null));
+  const inputDue = task.id==="campaign-money"&&campaignMoneyAdmission?.localDue===true ||
+    routineInputState(task.id) !== null && (!inputStamps.has(task.id) ||
+      routineInputChanged(inputStamps.get(task.id) ?? null, priorInputs.get(task.id) ?? null));
   if (!FORCE && !ballotsDue && !inputDue && dueRequest === null && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
     recordLaunchDecision(task, "SKIP", "Waiting for a changed source or repair", "unchanged receipt failure; awaiting changed code, Send or source evidence");
     continue;
@@ -1109,7 +1115,7 @@ for (const read of clockReads) {
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
   const cadenceDue = routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
-  const taskDue = publication
+  const taskDue = task.id==="campaign-money"&&!task.ownerInvocation&&campaignMoneyAdmission!==null ? campaignMoneyAdmission.providerDue : publication
     // Navigation re-reads its official pages on its own cadence; a ballot file republishes only when it changes or was held.
     ? ballotsDue || (publication.family === "ballot-navigation" || !ballotStamps.has(publication.key) || priorBallotPublications.get(publication.key)?.status === "HELD") && cadenceDue
     : cadenceDue;
@@ -1131,7 +1137,7 @@ for (const read of clockReads) {
       continue;
     }
   }
-  if (inputDue) console.log(`RCD_INPUT_CHANGED ${task.id}: ${!inputStamps.has(task.id) ? "state input clock could not be read; refresh remains owed" : priorInputs.has(task.id) ? "state inputs changed" : "state inputs have no processed stamp"}; offered to the normal frontier`);
+  if (inputDue) console.log(`RCD_INPUT_CHANGED ${task.id}: ${task.id==="campaign-money"?"held native filings have changed people/bindings or unfinished derived work":!inputStamps.has(task.id) ? "state input clock could not be read; refresh remains owed" : priorInputs.has(task.id) ? "state inputs changed" : "state inputs have no processed stamp"}; offered to the normal frontier`);
   if (publicationDue) {
     const detail = `${task.id}: ${campaignPublicationInputs.get(task.id)!.approvals - campaignPublicationInputs.get(task.id)!.attemptedApprovals} committed approval(s) not attempted by this code; offered to the normal publication frontier without waiting for hourly cadence.`;
     publicationInputLines.push(detail);

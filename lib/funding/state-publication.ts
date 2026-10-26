@@ -31,6 +31,10 @@ import { US_JURISDICTIONS } from "../coverage/states.ts";
 import { campaignMoneySourceResources, campaignFinanceSource, campaignFinanceNativeScope, type CampaignFinanceResource, type CampaignFinanceWorkCheck } from "./state-sources.ts";
 import {campaignMoneyDependencyHash,campaignResourceContentHash,campaignResourceCursor,campaignResourceInputs,campaignStateSourceHash,confirmCampaignResourceChecks,probeCampaignResource,readCampaignMoneyInputs,settleCampaignSourceFailures,type CampaignResourceCheck} from "./state-source-probe.ts";
 import {factClocks} from "../facts/clocks.ts";
+import {runtimeCivicReadCache} from "../db/civic-read-cache.ts";
+import {CAMPAIGN_FINANCE_PARSER} from "./state-sources.ts";
+import {campaignHeldSourceUnavailable,CampaignHeldSourceUnavailable} from "./state-held-source.ts";
+import {campaignMoneyLocalWorkDue} from "./state-local-work.ts";
 import {campaignMoneyEveryMs,observeCampaignProvider} from "./state-cadence.ts";
 import {readHeldFactClocks} from "../control-plane/scheduler/providers/held-subject-progress.ts";
 import {passDeadlineFromEnv} from "../ops/independent-runtime-pass.ts";
@@ -214,6 +218,7 @@ interface StateRefreshOptions {
   readonly directory:string;readonly now?:()=>string;readonly fetch?:typeof fetch;
   readonly doors?:DoorRepository;
   readonly clocks?:Clocks;
+  readonly heldOnly?:boolean;
   readonly purge?:ReaderCachePurger;
 }
 async function moneyDoor(options:StateRefreshOptions,url:string,error:unknown,rows:number,at:string){
@@ -231,19 +236,22 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
   const {state,facts,vault}=options,clock=options.now??(()=>new Date().toISOString()),at=clock();
   campaignFinanceSource(state);
   const clocks=options.clocks??factClocks(null);
+  const heldOnly=options.heldOnly===true;
   let sourceFailed=false;
   const deadline=passDeadlineFromEnv(),signal=Number.isFinite(deadline)?AbortSignal.timeout(Math.max(1,deadline-Date.now()-5_000)):new AbortController().signal;
-  await facts.query(`INSERT INTO pass_cursor(name,position) VALUES($1,$2)
-    ON CONFLICT(name) DO UPDATE SET position=jsonb_set(pass_cursor.position::jsonb,'{startedAt}',to_jsonb($3::text))::text`,
-    [campaignFinanceNativeScope(state),JSON.stringify({state,startedAt:at}),at]);
   const previousState=await readCampaignMoneyStateWork(facts.query,state);
+  const providerAttemptedAt=heldOnly?previousState?.providerAttemptedAt??previousState?.startedAt??at:at;
+  await facts.query(`INSERT INTO pass_cursor(name,position) VALUES($1,$2)
+    ON CONFLICT(name) DO UPDATE SET position=jsonb_set(jsonb_set(pass_cursor.position::jsonb,'{startedAt}',to_jsonb($3::text)),
+      '{providerAttemptedAt}',to_jsonb($4::text))::text`,
+    [campaignFinanceNativeScope(state),JSON.stringify({state,startedAt:at,providerAttemptedAt}),at,providerAttemptedAt]);
   const releaseEveryMs=campaignMoneyEveryMs(previousState,clocks);
   const finishCutoff=async(loaded=0,unmatched=0,publishedPeople=previousState?.publishedPeople??0)=>{
     const report:CampaignFinanceWorkCheck={kind:"campaign-finance-work-check",state,resource:"people",records:[{id:`${state}:people`,state,startedAt:at,checkedAt:clock(),
       publishedPeople,peopleWorked:0,peopleWithMoney:previousState?.peopleWithMoney??0,loaded,unmatched,reasons:previousState?.reasons??{},peakMemoryBytes:process.resourceUsage().maxRSS*1024,
       ...observeCampaignProvider(previousState,{descriptorHash:previousState?.sourceDescriptorHash??"",checkedAt:previousState?.providerCheckedAt??at,complete:false}),
       sourceDescriptorHash:previousState?.sourceDescriptorHash,dependencyHash:previousState?.dependencyHash,
-      completedAt:clock(),continuationPending:!sourceFailed,...(sourceFailed?{sourceFailedAt:at}:previousState?.sourceFailedAt?{sourceFailedAt:previousState.sourceFailedAt}:{}),
+      completedAt:clock(),providerAttemptedAt,continuationPending:!heldOnly&&!sourceFailed,heldContinuationPending:heldOnly&&!sourceFailed,...(sourceFailed?{sourceFailedAt:at}:previousState?.sourceFailedAt?{sourceFailedAt:previousState.sourceFailedAt}:{}),
       ...(previousState?.sourceHash?{sourceHash:previousState.sourceHash}:{}),sourceComplete:false}]};
     await facts.query("INSERT INTO pass_cursor(name,position) VALUES($1,$2) ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position",[campaignFinanceNativeScope(state),JSON.stringify(report.records[0])]);
     return {report};
@@ -251,22 +259,29 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
   if(signal.aborted)return finishCutoff();
   const profiles=campaignMoneySourceResources(state),resources:CampaignFinanceResource[]=[],runId=randomUUID();
   const discoveryFailures:{url:string;error:unknown}[]=[];
-  for await(const resource of campaignFinanceResources(state,{vault,profiles,signal,fetch:options.fetch,
+  const plans=runtimeCivicReadCache().jobState(),planContext=hash(JSON.stringify([CAMPAIGN_FINANCE_PARSER,profiles]));
+  const plan=heldOnly?await plans.readCheckpoint<{context:string;resources:CampaignFinanceResource[]}>("campaign-source-plan",state):null;
+  if(heldOnly){
+    if(plan?.context===planContext)resources.push(...plan.resources);
+    else if(profiles.every(resource=>!resource.index))resources.push(...profiles);
+    else throw new CampaignHeldSourceUnavailable();
+  }else for await(const resource of campaignFinanceResources(state,{vault,profiles,signal,fetch:options.fetch,
     onFailure:async(_resource,url,error)=>{if(signal.aborted)return;sourceFailed=true;discoveryFailures.push({url,error});await moneyDoor(options,url,error,0,clock());}}))resources.push(resource);
+  if(!heldOnly&&!discoveryFailures.length&&!signal.aborted)await plans.checkpoint("campaign-source-plan",state,{context:planContext,resources});
   if(signal.aborted)return finishCutoff();
   let dependencyHash=await campaignMoneyDependencyHash(options.query,state);
   const sourceDescriptorHash=hash(JSON.stringify({profiles,resources:resources.map(resource=>resource.id)}));
   const accepted=await campaignResourceInputs(facts.query,state),checks=new Map<string,CampaignResourceCheck>(),probeFailures=new Map<string,unknown>();
   const probe=async(resource:CampaignFinanceResource)=>{
     const checked=await probeCampaignResource(state,resource,accepted.get(campaignResourceCursor(state,resource.id)),dependencyHash,
-      {vault,directory:options.directory,runId,now:clock,fetch:options.fetch,signal,releaseEveryMs});
+      {vault,directory:options.directory,runId,now:clock,fetch:options.fetch,signal,releaseEveryMs,heldOnly});
     if(checked)checks.set(resource.id,checked);return checked;
   };
   let unchanged=discoveryFailures.length===0 && (resources.length>0 ||
     previousState?.sourceComplete===true && previousState.sourceDescriptorHash===sourceDescriptorHash && previousState.dependencyHash===dependencyHash);
   for(const resource of resources){
     try{if(!await probe(resource)){unchanged=false;break;}}
-    catch(error){if(signal.aborted)return finishCutoff();sourceFailed=true;probeFailures.set(resource.id,error);await moneyDoor(options,resource.url,error,0,clock());unchanged=false;break;}
+    catch(error){if(signal.aborted)return finishCutoff();if(campaignHeldSourceUnavailable(error))throw error;sourceFailed=true;probeFailures.set(resource.id,error);await moneyDoor(options,resource.url,error,0,clock());unchanged=false;break;}
   }
   if(unchanged && await campaignMoneyDependencyHash(options.query,state)===dependencyHash){
     await confirmCampaignResourceChecks(facts,state,[...checks.values()],options.purge);
@@ -274,11 +289,12 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
     const checkedAt=[...checks.values()].map(check=>check.checkedAt).sort()[0]??at;
     if(checks.size)await settleCampaignSourceFailures(facts.query,state,dependencyHash,checkedAt);
     const sourceHash=campaignStateSourceHash(state,sourceDescriptorHash,dependencyHash,new Map([...checks].map(([id,check])=>[id,check.rawHash])));
+    const recovered=!previousState?.sourceFailedAt||Date.parse(checkedAt)>Date.parse(previousState.sourceFailedAt);
     const report:CampaignFinanceWorkCheck={kind:"campaign-finance-work-check",state,resource:"people",records:[{id:`${state}:people`,state,startedAt:at,checkedAt,
       publishedPeople:previousState?.publishedPeople??0,peopleWorked:0,peopleWithMoney:previousState?.peopleWithMoney??0,loaded:0,unmatched:0,
-      reasons:previousState?.reasons??{},peakMemoryBytes:process.resourceUsage().maxRSS*1024,sourceHash,sourceComplete:true,sourceDescriptorHash,dependencyHash,
-      ...observeCampaignProvider(previousState,{rawHash:campaignProviderHash(state,new Map([...checks].map(([id,check])=>[id,check.rawHash]))),descriptorHash:sourceDescriptorHash,checkedAt,complete:resources.length>0}),
-      completedAt:clock(),continuationPending:false,...(previousState?.sourceFailedAt&&Date.parse(checkedAt)<=Date.parse(previousState.sourceFailedAt)?{sourceFailedAt:previousState.sourceFailedAt}:{})}]};
+      reasons:previousState?.reasons??{},peakMemoryBytes:process.resourceUsage().maxRSS*1024,sourceHash,sourceComplete:recovered,sourceDescriptorHash,dependencyHash,
+      ...observeCampaignProvider(previousState,{rawHash:campaignProviderHash(state,new Map([...checks].map(([id,check])=>[id,check.rawHash]))),descriptorHash:sourceDescriptorHash,checkedAt,complete:resources.length>0&&recovered}),
+      completedAt:clock(),providerAttemptedAt,heldContinuationPending:false,continuationPending:false,...(previousState?.sourceFailedAt&&Date.parse(checkedAt)<=Date.parse(previousState.sourceFailedAt)?{sourceFailedAt:previousState.sourceFailedAt}:{})}]};
     await facts.query("INSERT INTO pass_cursor(name,position) VALUES($1,$2) ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position",[campaignFinanceNativeScope(state),JSON.stringify(report.records[0])]);
     console.log(`CAMPAIGN_SOURCE_CONFIRMED_UNCHANGED=${state}:${checks.size}`);
     return {report};
@@ -287,7 +303,7 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
   if(inputs.dependencyHash!==dependencyHash)checks.clear();
   dependencyHash=inputs.dependencyHash;
   // A changed source or identity set owes every published person its newly available filing, even inside their daily window.
-  const due=resources.length?people:await campaignMoneyWork(facts.query,state,people,at,clocks);
+  const due=resources.length||previousState?.dependencyHash!==dependencyHash?people:await campaignMoneyWork(facts.query,state,people,at,clocks);
   const confirmed=new Set<string>();
   const resourceRuns=new Map<string,{publicationId:string;completed:number;failed:boolean}>();
   const resourceHashes=new Map([...checks].map(([id,check])=>[id,check.rawHash]));
@@ -345,7 +361,7 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
           if(!sourceCheckedAt || checked.checkedAt<sourceCheckedAt)sourceCheckedAt=checked.checkedAt;
           continue;
         }
-        const result=await publishCampaignFinanceResource(state,resource,{people:cohort,publishedPeople:people,countUnmatched:!counted,facts,vault,directory:options.directory,runId,releaseEveryMs,now:clock,fetch:options.fetch,signal,
+        const result=await publishCampaignFinanceResource(state,resource,{people:cohort,publishedPeople:people,countUnmatched:!counted,facts,vault,directory:options.directory,runId,releaseEveryMs,heldOnly,now:clock,fetch:options.fetch,signal,
           materializationId:hash(JSON.stringify([dependencyHash,cohort])),
           purge:options.purge,onUnjoined:(row,reason)=>{const matches=campaignMoneyIdentityMatches(row,cohortIndex);if(matches.length===1)remember(matches[0],reason);},
           onPublished:async batch=>rebuildCampaignCycles(facts,state,batch.people,clock(),options.purge)});
@@ -354,7 +370,7 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
         if(!sourceCheckedAt || result.sourceCheck.checkedAt<sourceCheckedAt)sourceCheckedAt=result.sourceCheck.checkedAt;
         for(const [reason,count]of Object.entries(result.reasons))reasons[reason]=(reasons[reason]??0)+count;
         await moneyDoor(options,resource.url,null,result.records,clock());
-      }catch(error){if(signal.aborted)return finishCutoff(loaded,unmatched,people.length);progress.failed=true;sourceFailed=true;const reason=sanitizedErrorDiagnostic(error);issue(reason);failedSource(error);await moneyDoor(options,resource.url,error,0,clock());}
+      }catch(error){if(signal.aborted)return finishCutoff(loaded,unmatched,people.length);if(campaignHeldSourceUnavailable(error))throw error;progress.failed=true;sourceFailed=true;const reason=sanitizedErrorDiagnostic(error);issue(reason);failedSource(error);await moneyDoor(options,resource.url,error,0,clock());}
     }
     counted=true;
   }
@@ -387,13 +403,14 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
     const [held]=await facts.query("SELECT count(DISTINCT f.entity_id) AS count FROM fact f JOIN entity e ON e.id=f.entity_id WHERE f.entity_id=ANY($1::text[]) AND f.field LIKE 'campaign-cycle:%' AND f.status='live' AND f.value#>>'{person,name}'=e.name",[publishedIds.slice(start,start+500)]);
     found+=Number(held.count);
   }
-  const sourceComplete=resources.length>0 && discoveryFailures.length===0 && resources.every(resource=>checks.has(resource.id) ||
+  const recovered=!previousState?.sourceFailedAt||Date.parse(sourceCheckedAt??at)>Date.parse(previousState.sourceFailedAt);
+  const sourceComplete=recovered && resources.length>0 && discoveryFailures.length===0 && resources.every(resource=>checks.has(resource.id) ||
     !!cohorts.length && resourceRuns.get(resource.id)?.completed===cohorts.length && !resourceRuns.get(resource.id)?.failed);
   const sourceHash=campaignStateSourceHash(state,sourceDescriptorHash,dependencyHash,resourceHashes);
   const report:CampaignFinanceWorkCheck={kind:"campaign-finance-work-check",state,resource:"people",records:[{id:`${state}:people`,state,startedAt:at,checkedAt:clock(),publishedPeople:new Set(people.map(person=>person.id)).size,peopleWorked:due.length,peopleWithMoney:found,loaded,unmatched,reasons,peakMemoryBytes:process.resourceUsage().maxRSS*1024,
     sourceHash,sourceComplete,sourceDescriptorHash,dependencyHash,
     ...observeCampaignProvider(previousState,{rawHash:campaignProviderHash(state,resourceHashes),descriptorHash:sourceDescriptorHash,checkedAt:sourceCheckedAt??at,complete:sourceComplete&&resources.length>0&&resourceHashes.size===resources.length}),
-    completedAt:clock(),continuationPending:false,...(sourceFailed?{sourceFailedAt:at}:previousState?.sourceFailedAt&&Date.parse(sourceCheckedAt??at)<=Date.parse(previousState.sourceFailedAt)?{sourceFailedAt:previousState.sourceFailedAt}:{})}]};
+    completedAt:clock(),providerAttemptedAt,heldContinuationPending:false,continuationPending:false,...(sourceFailed?{sourceFailedAt:at}:previousState?.sourceFailedAt&&Date.parse(sourceCheckedAt??at)<=Date.parse(previousState.sourceFailedAt)?{sourceFailedAt:previousState.sourceFailedAt}:{})}]};
   await facts.query("INSERT INTO pass_cursor(name,position) VALUES($1,$2) ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position",[campaignFinanceNativeScope(state),JSON.stringify(report.records[0])]);
   for(const [resource,progress]of resourceRuns)if(!progress.failed && progress.completed===cohorts.length && progress.publicationId)
     await facts.query("INSERT INTO pass_cursor(name,position) VALUES($1,$2) ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position",
@@ -402,7 +419,8 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
 }
 async function main(){
   const state=process.argv.find(arg=>arg.startsWith("--state="))?.slice(8);
-  if(!state || process.argv.length!==3)throw new Error("Campaign money requires one state");
+  const heldRequested=process.argv.includes("--held");
+  if(!state || process.argv.length!==(heldRequested?4:3))throw new Error("Campaign money requires one state");
   campaignFinanceSource(state);prepareProductionCivicDataWrite();
   const {createPgRepositories,controlPlaneUrlFromEnv}=await import("../control-plane/repository/pg-store.ts");
   const control=controlPlaneUrlFromEnv();
@@ -412,11 +430,12 @@ async function main(){
   const cacheKey=createHash("sha256").update(database.hostname.replace("-pooler","")+database.pathname).digest("hex").slice(0,24);
   const clocks=await readHeldFactClocks();
   const facts=readerFactDb(),held=await readCampaignMoneyStateWork(facts.query,state);
-  if(held&&!campaignMoneyStateDue(held,new Date().toISOString(),clocks)){
+  const providerDue=campaignMoneyStateDue(held,new Date().toISOString(),clocks);
+  if(held&&!providerDue&&!await campaignMoneyLocalWorkDue(facts.query,state,held)){
     await new Promise<void>(resolve=>process.stdout.write("CAMPAIGN_MONEY_STATE="+JSON.stringify(held)+"\n",()=>resolve()));
     return;
   }
-  const result=await refreshCampaignMoneyState({state,query:facts.query,facts,vault:rawCaptureVault(),clocks,
+  const result=await refreshCampaignMoneyState({state,query:facts.query,facts,vault:rawCaptureVault(),clocks,heldOnly:heldRequested||!providerDue,
     doors:repos.doors,directory:join(tmpdir(),"meanwhile-campaign-finance",cacheKey)});
   await new Promise<void>(resolve=>process.stdout.write("CAMPAIGN_MONEY_STATE="+JSON.stringify(result.report.records[0])+"\n",()=>resolve()));
   process.exit(0);

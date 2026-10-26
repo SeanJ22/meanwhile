@@ -14,6 +14,7 @@ import { campaignSourceRecord, type CampaignSourceCapture, type CampaignSourceRe
 import { CAMPAIGN_FINANCE_PARSER, campaignFinanceSource, type CampaignFinanceResource } from "./state-sources.ts";
 import { campaignSession } from "./state-request.ts";
 import { joinedCampaignSourceRows } from "./state-source-join.ts";
+import {CampaignHeldSourceUnavailable,restoreCampaignSource} from "./state-held-source.ts";
 import {runtimeCivicReadCache} from "../db/civic-read-cache.ts";
 
 interface DownloadCheckpoint { readonly etag: string | null; readonly modified: string | null; readonly archiveId: string; readonly rawHash: string; readonly path: string; readonly byteLength: number; readonly retrievedAt: string }
@@ -44,6 +45,8 @@ interface Options {
   readonly publicationId?: string;
   readonly runId?: string;
   readonly releaseEveryMs?: number;
+  /** Rebuild changed bindings from original captured bytes, without polling any publisher. */
+  readonly heldOnly?:boolean;
   readonly selectRecord?:(row:CampaignSourceRecord)=>CampaignSourceRecord|null;
   readonly onCapture?:(capture:CampaignSourceCapture)=>Promise<void>;
   /** Compare completed native source slices without parsing or accepting a new publication. */
@@ -60,6 +63,8 @@ function requestIdentity(url: string, body: Record<string, unknown> | null, reso
   }
   if (stableBody && resource.session?.hiddenFields) for (const name of Object.keys(stableBody)) if (name.startsWith("__")) delete stableBody[name];
   if (stableBody && resource.session?.tokenField) delete stableBody[resource.session.tokenField];
+  if(resource.jsonQuery&&stableBody&&stableUrl.searchParams.has(resource.jsonQuery.parameter))
+    stableUrl.searchParams.set(resource.jsonQuery.parameter,JSON.stringify({[resource.jsonQuery.field]:stableBody}));
   return `${stableUrl.href}:${JSON.stringify(stableBody)}`;
 }
 const sleep = (milliseconds: number, signal: AbortSignal) => new Promise<void>((resolve, reject) => {
@@ -201,11 +206,20 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
   const directory = join(options.directory, state, "downloads", key);
   await mkdir(temporaryPath(directory), { recursive: true });
   const head = join(directory, "download.json");
-  let prior = await checkpoint<Download>(head);
+  const continuation=runtimeCivicReadCache().jobState(),continuationKey=digest(JSON.stringify([state,key]));
+  let prior = await checkpoint<Download>(head)??await continuation.readCheckpoint<Download>("campaign-source-download",continuationKey);
+  const save=async(value:Download)=>{await saveCheckpoint(head,value);await continuation.checkpoint("campaign-source-download",continuationKey,value);};
   if (prior) {
-    try { if (!(await stat(prior.path)).isFile()) prior = null; }
-    catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") prior = null; else throw error; }
+    const captured=prior;
+    try { if (!(await stat(captured.path)).isFile()) prior = null; }
+    catch (error) {
+      if((error as NodeJS.ErrnoException).code!=="ENOENT")throw error;
+      const restored=join(directory,"held",captured.rawHash);
+      try{await restoreCampaignSource(options.vault,{...captured,sourceUrl:captured.sourceCheck.requestedUrl,path:restored,signal:options.signal});prior={...captured,path:restored};await save(prior);}
+      catch(error){if(options.signal.aborted)throw error;prior=null;}
+    }
   }
+  if(options.heldOnly){if(!prior)throw new CampaignHeldSourceUnavailable();return prior;}
   if (options.runId && prior?.runId === options.runId) return prior;
   const at=(options.now??(()=>new Date().toISOString()))();
   if(prior && options.releaseEveryMs !== undefined && Date.parse(at)>=Date.parse(prior.sourceCheck.checkedAt) && Date.parse(at)-Date.parse(prior.sourceCheck.checkedAt)<options.releaseEveryMs)return prior;
@@ -235,7 +249,7 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
     await options.vault.put(`project/meanwhile/source/campaign-finance-release/${rawHash}`,bytes,{contentHash:`sha256-${rawHash}`,byteLength:bytes.length,contentType:"application/json"});
     if(prior?.releaseVersion===releaseVersion){
       const unchanged:Download={...prior,runId:options.runId??null,sourceCheck:{...prior.sourceCheck,checkedAt:at}};
-      await saveCheckpoint(head,unchanged);return unchanged;
+      await save(unchanged);return unchanged;
     }
   }
   const headers = new Headers({ accept: "application/json, text/csv, application/zip, */*" });
@@ -250,7 +264,7 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
     await acquired.body?.cancel();
     if (!prior) throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", "An unchanged campaign response has no saved source body.");
     const value: Download = { ...prior, runId: options.runId ?? null, sourceCheck: { requestedUrl: url, finalUrl: acquired.url || url, httpStatus: 304, rawHash: prior.rawHash, checkedAt } };
-    await saveCheckpoint(head, value);
+    await save(value);
     return value;
   }
   const generation = join(directory, randomUUID());
@@ -267,7 +281,7 @@ async function download(state: string, url: string, resource: CampaignFinanceRes
       path, archiveId, rawHash, byteLength: (await stat(path)).size, etag: acquired.headers.get("etag"), modified: acquired.headers.get("last-modified")??releasePublishedAt, retrievedAt: checkedAt,
     };
     const value: Download = { ...bytesHeld,...(releaseVersion?{releaseVersion}:{}), runId: options.runId ?? null, sourceCheck: { requestedUrl: url, finalUrl: acquired.url || url, httpStatus: 200, rawHash, checkedAt } };
-    await saveCheckpoint(head, value);
+    await save(value);
     if (value.path !== path) await rm(temporaryPath(generation), { recursive: true, force: true });
     else if (prior) await rm(temporaryPath(dirname(prior.path)), { recursive: true, force: true });
     return value;
@@ -279,7 +293,7 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
   const descriptorHash = digest(`${CAMPAIGN_FINANCE_PARSER}:${JSON.stringify(resource)}`);
   const materializationId=options.materializationId;
   const continuation=runtimeCivicReadCache().jobState();
-  resource = await campaignSession(resource, options.vault, url => campaignSourceResponse(url, {}, options));
+  if(!options.heldOnly)resource = await campaignSession(resource, options.vault, url => campaignSourceResponse(url, {}, options));
   const pageSize = resource.pageSize ?? (resource.kind === "SOCRATA" ? 50_000 : 500);
   let offset = resource.firstOffset ?? 0;
   let totalRead = 0, expectedTotal: number | null = null;
@@ -327,7 +341,7 @@ export async function* acquireCampaignFinanceResource(state: string, resource: C
     const lookupUrl = resource.lookup?.relativeUrl ? new URL(resource.lookup.relativeUrl, url).href : resource.lookup?.url;
     if (resource.lookup?.publicationResource && !campaignFinanceSource(state).resources.some(row => row.id === resource.lookup!.publicationResource)) throw new Error("The shared native cover file has no registered publication resource.");
     const lookup = lookupUrl ? await download(state, lookupUrl, { ...resource, method: undefined }, null, options) : undefined;
-    const metadata = { url: url.href, retrievedAt: raw.retrievedAt, archiveId: raw.archiveId, rawHash: raw.rawHash, byteLength: raw.byteLength,
+    const metadata = { url: raw.sourceCheck.requestedUrl, retrievedAt: raw.retrievedAt, archiveId: raw.archiveId, rawHash: raw.rawHash, byteLength: raw.byteLength,
       publicationDate: raw.modified && Number.isFinite(Date.parse(raw.modified)) ? new Date(raw.modified).toISOString() : null };
     await options.onCapture?.({url:metadata.url,retrievedAt:metadata.retrievedAt,publicationDate:metadata.publicationDate,
       rawHash:raw.rawHash,byteLength:raw.byteLength,vaultKey:raw.archiveId});

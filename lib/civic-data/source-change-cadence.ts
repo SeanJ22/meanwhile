@@ -73,6 +73,8 @@ export async function readSourceChangeHistory(query: Query, tasks: readonly Pick
       SELECT p.scope,coalesce(head.candidate#>>'{retrieval,rawHashBasis}','') AS hash_basis
       FROM civic_data_promotions p JOIN civic_data_candidates head ON head.id=p.current_version_id
       WHERE p.record_class=t.record_class AND p.source_id=t.source_id
+        AND head.state='PROMOTED'AND head.acquisition_succeeded
+        AND coalesce(head.candidate#>>'{retrieval,complete}','true')<>'false'
         AND (p.scope=t.scope OR t.id='member-offices' AND p.scope ~ '^US-[A-Z]{2}:state-legislator-member-offices$')
         AND (t.id<>'member-offices' OR p.scope<>t.scope OR NOT EXISTS(
           SELECT 1 FROM civic_data_promotions s WHERE s.record_class=t.record_class AND s.source_id=t.source_id
@@ -82,6 +84,7 @@ export async function readSourceChangeHistory(query: Query, tasks: readonly Pick
         SELECT c.id,c.scope,c.raw_hash FROM civic_data_candidates c
         WHERE c.source_id=t.source_id AND c.record_class=t.record_class AND c.scope=s.scope
           AND c.parser_version=t.parser_version AND c.state='PROMOTED' AND c.acquisition_succeeded=true
+          AND coalesce(c.candidate#>>'{retrieval,complete}','true')<>'false'
           AND c.raw_hash ~ '^[a-f0-9]{64}$' AND c.candidate#>>'{retrieval,rawHashBasis}'='SOURCE_CONTENT_V1'
           AND NOT (c.candidate ? 'bootstrapImport')
           AND coalesce(c.candidate#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'

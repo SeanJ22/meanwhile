@@ -11,6 +11,7 @@ import { readKeyedRegistry, readKeyedRegistryDivisions, selectRegistryLookup, ty
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
 import { bindStatePublicationPrior, takeStatePublicationPrior } from "./state-publication.ts";
 import { sourceCheckedAt } from "./source-check.ts";
+import { sourceWorkClock,sourceWorkClockSql,type SourceWorkClock } from "./source-work-clock.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, statePublicationScope } from "./state-publication.ts";
@@ -290,6 +291,10 @@ export interface RoutineStoreClock {
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
+  /** The store's successful processing event when retained provider evidence is older. Never source freshness. */
+  readonly lastCompletedAt?:string;
+  readonly nextWorkAt?:string;
+  readonly sourceComplete?:boolean;
   /** Returned for a parser-scoped clock; the prior GOOD keeps its original source timestamps. */
   readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
@@ -744,12 +749,12 @@ interface PromotionPointerProof {
 /** The only candidate fields the routine clock reads. It runs for every task on every pass, so widening it is a cost decision. */
 export const ROUTINE_CLOCK_CANDIDATE_FIELDS = {
   top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport", "stateRetirement"],
-  retrieval: ["retrievedAt", "sourceCheck"],
+  retrieval: ["retrievedAt", "sourceCheck","complete"],
   normalization: ["parserVersion"],
 } as const;
 
-type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport" | "stateRetirement"> & {
-  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt" | "sourceCheck">;
+type RoutineClockCandidate = Pick<RoutineCandidate, "id" | "sourceId" | "recordClass" | "scope" | "bootstrapImport" | "stateRetirement"> & SourceWorkClock & {
+  readonly retrieval: Pick<RoutineCandidate["retrieval"], "retrievedAt" | "sourceCheck"|"complete">;
   readonly normalization: Pick<RoutineCandidate["normalization"], "parserVersion">;
 };
 
@@ -775,6 +780,7 @@ export function routineClockCandidateView(candidate: RoutineCandidate): RoutineC
     ...Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.top.map((field) => [field, source[field] ?? null])),
     retrieval: Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.retrieval.map((field) => [field, retrieval[field] ?? null])),
     normalization: Object.fromEntries(ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization.map((field) => [field, normalization[field] ?? null])),
+    ...sourceWorkClock(candidate),
   }) as RoutineClockCandidate;
 }
 
@@ -808,6 +814,18 @@ export function proofConsistentObservedSuccess(
 ): string | undefined {
   if (!proofConsistentPointedSuccess(record, pointer)) return undefined;
   return sourceCheckedAt(record.candidate.retrieval, observedAt);
+}
+
+/** Processing time decides continuation/failure; the provider observation still decides freshness. */
+function pointedSourceWorkClock(record:RoutineClockRecord|null,pointer:PromotionPointerProof|null|undefined,observedAt:string|undefined):Partial<RoutineStoreClock>{
+  if(!proofConsistentPointedSuccess(record,pointer))return{};
+  const checked=proofConsistentObservedSuccess(record,pointer,observedAt);
+  const completed=observedAt&&checked&&Date.parse(observedAt)>Date.parse(checked)?observedAt:undefined;
+  const next=record.candidate.nextWorkAt;
+  return{...(completed?{lastCompletedAt:completed}:{}),
+    ...(next&&Number.isFinite(Date.parse(next))?{nextWorkAt:new Date(next).toISOString()}:{}),
+    ...(record.candidate.retrieval.complete===false?{sourceComplete:false}:{}),
+    ...(record.candidate.workPending===true?{continuationPending:true}:{})};
 }
 
 export function meetingPayloadSittingStarts(payload: unknown): readonly string[] {
@@ -1423,6 +1441,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         ? { continuationPending: legiscanContinuationPending(pointer?.payload,id=>this.promotions.get(projectionKey("STATE_BILL",billScope(id)))) } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointer)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
+      ...pointedSourceWorkClock(pointedRecord,pointer,pointedObservedAt),
     }, confirmation, sittings, parserVersion);
   }
 }
@@ -1460,9 +1479,10 @@ function routineClockCandidateStub() {
     sql`${sql.raw(`'${field}'`)}, ${column}#>${sql.raw(`'{retrieval,${field}}'`)}`);
   const normalization = ROUTINE_CLOCK_CANDIDATE_FIELDS.normalization.map((field) =>
     sql`${sql.raw(`'${field}'`)}, ${column}#>${sql.raw(`'{normalization,${field}}'`)}`);
+  const work=sourceWorkClockSql(column);
   return sql`jsonb_strip_nulls(jsonb_build_object(${sql.join(
     [...top, sql`'retrieval', jsonb_build_object(${sql.join(retrieval, sql`, `)})`,
-      sql`'normalization', jsonb_build_object(${sql.join(normalization, sql`, `)})`],
+      sql`'normalization', jsonb_build_object(${sql.join(normalization, sql`, `)})`,sql`'nextWorkAt',${work.nextWorkAt}`,sql`'workPending',${work.workPending}`],
     sql`, `,
   )}))`.mapWith(civicDataCandidates.candidate);
 }
@@ -1570,12 +1590,18 @@ function confirmedClock(
   const lastSucceededObservedAt = clock.lastSucceededObservedAt === undefined
     ? undefined
     : laterInstant(clock.lastSucceededObservedAt, confirmedAt);
+  const completion=laterInstant(clock.lastCompletedAt??clock.lastSucceededObservedAt,
+    clock.lastSucceededObservedAt===undefined||parserVersion!==undefined&&clock.lastSucceededParserVersion!==parserVersion?undefined:confirmation?.observedAt);
+  const lastCompletedAt=completion&&lastSucceededObservedAt&&Date.parse(completion)>Date.parse(lastSucceededObservedAt)?completion:undefined;
   return {
     ...(lastAttemptedAt ? { lastAttemptedAt } : {}),
-    ...(clock.failureStreak && (!lastSucceededObservedAt || Date.parse(lastSucceededObservedAt) < Date.parse(lastAttemptedAt ?? ""))
+    ...(clock.failureStreak && (!completion || Date.parse(completion) < Date.parse(lastAttemptedAt ?? ""))
       ? { failureStreak: clock.failureStreak } : {}),
     ...(lastSucceededAt ? { lastSucceededAt } : {}),
     ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),
+    ...(lastCompletedAt?{lastCompletedAt}:{}),
+    ...(clock.nextWorkAt?{nextWorkAt:clock.nextWorkAt}:{}),
+    ...(clock.sourceComplete!==undefined?{sourceComplete:clock.sourceComplete}:{}),
     ...(clock.lastSucceededParserVersion ? { lastSucceededParserVersion: clock.lastSucceededParserVersion } : {}),
     ...(clock.continuationPending !== undefined ? { continuationPending: clock.continuationPending } : {}),
     ...(clock.publishedScopeVersions !== undefined ? { publishedScopeVersions: clock.publishedScopeVersions } : {}),
@@ -3237,6 +3263,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         ? { continuationPending: pointer?.continuationPending !== false } : {}),
       ...(parserVersion !== undefined && proofConsistentPointedSuccess(pointedRecord, pointerProof)
         ? { lastSucceededParserVersion: pointedRecord.candidate.normalization.parserVersion } : {}),
+      ...pointedSourceWorkClock(pointedRecord,pointerProof,
+        observed===undefined?undefined:canonicalPostgresRoutineTimestamp(observed,"clock.lastCompletedAt")),
     }, confirmation !== null && pointer !== undefined && confirmation.versionId === pointer.currentVersionId ? confirmation : null, sittings, parserVersion);
   }
 }

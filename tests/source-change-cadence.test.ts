@@ -67,6 +67,27 @@ test("an unfinished member-office pass continues before its daily retry floor", 
     "a real failed source attempt keeps its configured retry");
 });
 
+test("explicit successful cutoffs resume every source family using processing time, while later real failures retain retry",()=>{
+  const provider=new Date(start-DAY).toISOString(),completed=AT;
+  for(const task of [...ROUTINE_SOURCE_TASKS,...AUTOMATIC_REFRESH_TASKS]){
+    const clock={lastAttemptedAt:new Date(start-HOUR).toISOString(),lastSucceededObservedAt:provider,lastCompletedAt:completed,
+      lastSucceededParserVersion:task.parserVersion,continuationPending:true,publishedScopeVersions:task.contract.cadence.requiredScopeVersions??[]};
+    assert.equal(routineTaskDue(task,clock,start+1,undefined,40*DAY),true,`${task.id} resumes successful unfinished processing`);
+    const failed={...clock,lastAttemptedAt:new Date(start+HOUR).toISOString()};
+    assert.equal(routineTaskDue(task,failed,start+HOUR+60_000,undefined,40*DAY),false,`${task.id} honors a later failed attempt`);
+  }
+});
+
+test("portrait blank/term work caps learned intervals, and partial source errors keep their installed retry",()=>{
+  const nextWorkAt=new Date(start+7*DAY).toISOString();
+  assert.equal(routineTaskNextDueMs(portrait,{...checked,nextWorkAt},start,undefined,30*DAY),start+7*DAY);
+  assert.equal(routineTaskNextDueMs(portrait,{...checked,nextWorkAt:new Date(start+HOUR).toISOString()},start,undefined,30*DAY),start+DAY,
+    "explicit work cannot shorten the configured fact retry floor");
+  const partial={...checked,lastCompletedAt:new Date(start+HOUR).toISOString(),sourceComplete:false};
+  assert.equal(routineTaskNextDueMs(portrait,partial,start+HOUR,undefined,30*DAY),routineTaskNextDueMs(portrait,partial,start+HOUR));
+  assert.equal(routineTaskNextDueMs(portrait,partial,start+HOUR,undefined,30*DAY),start+HOUR+DAY);
+});
+
 test("Postgres derives source movement from exact scope/parser/hash format; promotions and large bodies do not count", async t => {
   const pg = new PGlite();
   t.after(() => pg.close());
@@ -75,8 +96,8 @@ test("Postgres derives source movement from exact scope/parser/hash format; prom
     CREATE TABLE civic_data_candidate_events(candidate_id text,sequence int,at timestamptz);
     CREATE TABLE civic_data_promotions(source_id text,record_class text,scope text,current_version_id text);`);
   const task: RoutineSourceTask = { ...portrait, parserVersion: "people/1" };
-  const add = async (id: string, day: number, hash: string, basis: string | null, overrides: { scope?: string; parser?: string; state?: string } = {}) => {
-    const candidate = { retrieval: { ...(basis ? { rawHashBasis: basis } : {}) }, readModel: "large held record".repeat(20_000) };
+  const add = async (id: string, day: number, hash: string, basis: string | null, overrides: { scope?: string; parser?: string; state?: string;complete?:boolean } = {}) => {
+    const candidate = { retrieval: { ...(basis ? { rawHashBasis: basis } : {}),...(overrides.complete!==undefined?{complete:overrides.complete}:{}) }, readModel: "large held record".repeat(20_000) };
     await pg.query("INSERT INTO civic_data_candidates VALUES($1,$2,$3,$4,$5,$6,true,$7,$8::jsonb,$9)",
       [id, task.sourceId, task.recordClass, overrides.scope ?? task.scope, overrides.parser ?? task.parserVersion,
         overrides.state ?? "PROMOTED", hash.repeat(64), JSON.stringify(candidate), new Date(start + day * DAY).toISOString()]);
@@ -90,6 +111,7 @@ test("Postgres derives source movement from exact scope/parser/hash format; prom
   await add("other-state", 4, "c", "SOURCE_CONTENT_V1", { scope: "US-CA:portraits" });
   await add("other-parser", 4, "d", "SOURCE_CONTENT_V1", { parser: "people/0" });
   await add("failed", 4, "e", "SOURCE_CONTENT_V1", { state: "CANNOT_TELL" });
+  await add("partial-promotion",4,"c","SOURCE_CONTENT_V1",{complete:false});
   await pg.query("INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4)", [task.sourceId, task.recordClass, task.scope, "unchanged-again"]);
   let bytes = 0;
   const history = await readSourceChangeHistory(async (text, params) => {
@@ -103,6 +125,9 @@ test("Postgres derives source movement from exact scope/parser/hash format; prom
   await pg.query("UPDATE civic_data_promotions SET current_version_id=$1",["old-hash-format"]);
   assert.equal((await readSourceChangeHistory(async(text,params)=>(await pg.query<Record<string,unknown>>(text,[...(params ?? [])])).rows,[task])).size,0,
     "an untyped legacy hash cannot teach the scheduler that a changing native source is unchanged");
+  await pg.query("UPDATE civic_data_promotions SET current_version_id=$1",["partial-promotion"]);
+  const incomplete=await readSourceChangeHistory(async(text,params)=>(await pg.query<Record<string,unknown>>(text,[...(params??[])])).rows,[task]);
+  assert.equal(incomplete.has(task.id),false,"an incomplete head cannot learn a long unchanged source interval");
 });
 
 test("state member-office histories count changes within each state and retire the national clock",async t=>{

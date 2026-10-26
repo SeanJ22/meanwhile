@@ -3,6 +3,7 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { MemoryRoutineDataStore,type SlimRoster } from "../lib/civic-data/store.ts";
+import type { NhMemberReadModel } from "../lib/civic-data/candidate-builders.ts";
 import { readBillSponsorPeople } from "../lib/sources/legiscan/people.ts";
 import { bulkCandidate } from "../lib/sources/legiscan/publication.ts";
 import { sessionSponsorEvidence,type Dataset } from "../lib/sources/legiscan/bills.ts";
@@ -40,4 +41,38 @@ test("a bill part keeps sponsor authority without copying unrelated people field
   assert.equal(held.id,person.id);assert.deepEqual(held.nativeIds,person.nativeIds);
   assert.deepEqual(held.memberships,person.memberships);assert.deepEqual(held.profileUrls,person.profileUrls);
   assert.ok(!("biography"in held)&&!("offices"in held));
+});
+
+test("NH sponsor inputs pin the existing official identities and their original observation to named fields",async()=>{
+  const store=new MemoryRoutineDataStore(),versionId="official-nh-members",fields:string[]=[];
+  const model:NhMemberReadModel={formatVersion:1,jurisdiction:"US-NH",term:"2025-2026",
+    members:[{chamber:"H",seatNo:"1",givenName:"One",middleName:null,familyName:"Current",county:"Merrimack",district:"7",
+      electedStatus:"INCUMBENT",party:"R",title:null,phone:null,email:null,town:null,committees:[]}],
+    identities:[{officeholderId:"nh-general-court:1001",officialPersonId:"1001",chamber:"H",district:"7",seatNo:"1"}],
+    memberSourceDates:{"nh-general-court:1001":"2026-10-11T10:00:00.000Z"}};
+  let proofCoupled=true;
+  store.readSourceHead=async(recordClass,scope)=>{
+    assert.equal(recordClass,"STATE_LEGISLATOR");assert.equal(scope,"US-NH");
+    return{sourceId:"nh-general-court",recordClass,scope,versionId,lastKnownGoodVersionId:versionId,rawHash:hash("official members"),
+      rawHashBasis:"SOURCE_CONTENT_V1",normalizedHash:hash("official identities"),parserVersion:"nh-members/1",promotedAt:at,
+      candidateState:"PROMOTED",acquisitionSucceeded:true,acquisitionComplete:true,imported:false,proofCoupled,sourceThrough:at};
+  };
+  store.readSlimRosters=async()=>[];
+  store.readCandidate=async()=>{throw Error("whole NH source candidate");};
+  store.readPromotion=async()=>{throw Error("whole NH source projection");};
+  store.readCandidatePath=async<T>(id,path)=>{
+    assert.equal(id,versionId);fields.push(path.join("."));
+    assert.ok(path[0]==="readModel"||path.join(".")==="retrieval.retrievedAt");
+    const value=path[0]==="readModel"?model[path[1] as keyof NhMemberReadModel]:at;
+    return value===undefined?null:structuredClone(value) as T;
+  };
+  const held=await readBillSponsorPeople(store,"NH");
+  assert.equal(held.length,1);assert.equal(held[0].id,"nh-general-court:1001");
+  assert.deepEqual(held[0].nativeIds,{"nh-general-court":["1001"]});
+  assert.equal(held[0].provenance?.collectedAt,"2026-10-11T10:00:00.000Z");
+  assert.equal(held[0].provenance?.verifiedAt,at);
+  assert.ok(fields.includes("readModel.identities")&&fields.includes("readModel.memberSourceDates"));
+  fields.length=0;proofCoupled=false;
+  assert.deepEqual(await readBillSponsorPeople(store,"NH"),[]);
+  assert.deepEqual(fields,[],"an uncoupled official pointer is not opened or used as sponsor authority");
 });

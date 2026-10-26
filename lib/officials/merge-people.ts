@@ -13,7 +13,11 @@ import type { Officeholder, OfficeholderSet, PersonFieldDisagreement } from "./t
 
 const normalized = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const present = (value: unknown) => value !== null && value !== undefined && value !== "" && !(Array.isArray(value) && value.length === 0);
-const sourceFor = (person: Officeholder, field: string): Provenance => person.fieldSources?.[field] ?? person.provenance;
+const sourceFor = (person: Officeholder, field: string): Provenance => {
+  const lead=field === "portraitCandidate" ? person.portraitCandidate : null;
+  return lead ? {sourceUrl:lead.sourceUrl,sourceOrg:new URL(lead.sourceUrl).hostname,collectedAt:lead.collectedAt,verifiedAt:null,
+    kind:isOfficialSource(lead.sourceUrl)?"OFFICIAL":"REFERENCE"} : person.fieldSources?.[field] ?? person.provenance;
+};
 /** Shared identifiers first; a unique full name, office and state is the second binding. */
 export function mergePeopleSets(input: readonly OfficeholderSet[]): OfficeholderSet | null {
   const sets = bindPeopleSources(input.map(withoutInvalidStatewidePeople));

@@ -72,7 +72,7 @@ export const PORTRAIT_DUE_WINDOW_MS = DAY_MS;
 
 /** The links an attempt read for this person; a change makes the person due again at once. */
 export function portraitProfileLinks(person: PortraitPerson): readonly string[] {
-  return [...new Set([person.websiteUrl, ...(person.profileUrls ?? []), person.portraitCandidate?.imageUrl]
+  return [...new Set([person.websiteUrl, ...(person.profileUrls ?? []), person.portraitCandidate?.sourceUrl, person.portraitCandidate?.imageUrl]
     .filter((url): url is string => Boolean(url)))].sort();
 }
 
@@ -84,7 +84,7 @@ export function portraitDueAt(person: PortraitPerson, lastAttempt: PortraitAttem
   const record = lastAttempt?.record as { attemptedAt?: string; profiles?: readonly string[]; interrupted?: boolean } | undefined;
   const attemptedAt = Date.parse(record?.attemptedAt ?? "");
   if (record?.interrupted || !Number.isFinite(attemptedAt)) return 0;
-  if (record?.profiles && record.profiles.join("\n") !== portraitProfileLinks(person).join("\n")) return 0;
+  if (!record?.profiles || record.profiles.join("\n") !== portraitProfileLinks(person).join("\n")) return 0;
   return attemptedAt + PORTRAIT_RETRY_MS;
 }
 

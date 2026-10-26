@@ -32,7 +32,8 @@ function entryQuote(html:string,name:string):string {
 function samePublishedName(observed:string,expected:string):boolean {
   const forms=(value:string)=>{
     const tokens=key(value).split(" ");
-    return [tokens,...[...value.matchAll(/["“]([^"”]+)["”]/g)].map(match=>[...key(match[1]).split(" "),tokens.at(-1)!])];
+    return [tokens,...(tokens.length>2&&tokens[0].length===1?[tokens.slice(1)]:[]),
+      ...[...value.matchAll(/["“]([^"”]+)["”]/g)].map(match=>[...key(match[1]).split(" "),tokens.at(-1)!])];
   };
   return forms(observed).some(a=>forms(expected).some(b=>a[0]===b[0]&&a.at(-1)===b.at(-1)&&
     (a.every(token=>b.includes(token))||b.every(token=>a.includes(token)))));

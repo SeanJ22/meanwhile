@@ -56,6 +56,29 @@ test("a saved archive member binds its own portrait to its own source URL",async
   assert.equal(photo.verification?.sources[0].url,sourceUrl);
 });
 
+test("one unavailable saved entry cannot suppress another member's verified portrait",async()=>{
+  const store=new MemoryRoutineDataStore(),evidence=new MemoryEvidenceStore();
+  const acquisitions=["Jane Example","John Example"].map((name,index)=>{
+    const sourceUrl=`https://raw.githubusercontent.com/openstates/people/${SHA}/data/az/legislature/${index}.yml`;
+    return {requestedUrl:sourceUrl,finalUrl:sourceUrl,httpStatus:200,retrievedAt:NOW,
+      body:`id: ocd-person/member-${index}\nname: ${name}\nimage: https://legislature.example.gov/${index}.png\nroles:\n- type: upper\n  district: '${index+1}'\nlinks:\n- url: https://legislature.example.gov/members/${index}\n`};
+  });
+  const roster=normalize(acquisitions.flatMap(row=>yamlToPeople(row.body,"az",row.finalUrl,NOW)),new Map(),NOW,"US-AZ");
+  const seed=await publishStatePeople({vault:evidence,store,state:"az",roster,releaseId:SHA,now:NOW,acquisitions});
+  assert.ok(seed.outcome.promoted);
+  const missing=(seed.candidate.normalizedPayload as {captures:{capture:{vaultKey:string}}[]}).captures[1].capture.vaultKey;
+  const partialVault={put:evidence.put.bind(evidence),head:evidence.head.bind(evidence),list:evidence.list.bind(evidence),
+    get:async(key:string)=>key===missing?null:evidence.get(key)};
+  const reads:string[]=[];
+  const result=await refreshPeoplePortraits({vault:partialVault,store,state:"az",query:null,options:{now:()=>NOW,storePortrait:await images(),
+    acquire:async options=>{reads.push(options.url);return page(options,'<h1>John Example</h1><img alt="John Example" src="/1.png">');}}});
+  assert.ok(result.outcome.promoted);
+  const people=(result.candidate.readModel as {roster:{officeholders:{photo:unknown}[]}}).roster.officeholders;
+  assert.equal(people.filter(person=>person.photo).length,2);
+  assert.deepEqual(reads,["https://legislature.example.gov/members/1"]);
+  assert.ok(result.candidate.excludedFacts?.some(fact=>fact.code==="PORTRAIT_HELD_CAPTURE_UNAVAILABLE"&&fact.key===missing));
+});
+
 test("a scheduled portrait pass reads held people without refreshing their roster and publishes through the composite reader",async t=>{
   const store=new MemoryRoutineDataStore(),sourceUrl=`https://raw.githubusercontent.com/openstates/people/${SHA}/data/az/legislature/jane.yml`;
   const body="id: ocd-person/jane\nname: Jane Example\nroles:\n- type: upper\n  district: '7'\nlinks:\n- url: https://legislature.example.gov/jane\n";

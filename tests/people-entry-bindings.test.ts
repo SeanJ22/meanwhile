@@ -57,6 +57,15 @@ test("a newer bound official entry replaces an older official profile's value",(
   assert.equal(mergePeopleSets([roster([old]),parse()])!.officeholders.find(person=>person.name==="Vito Barbieri")?.phone,"208-555-0003");
 });
 
+test("a portrait lead keeps its own source time when another page changes the person's contact",()=>{
+  const newer=parse().officeholders[0];
+  const contact={...newer.provenance,sourceUrl:"https://legislature.example.gov/newsletter",collectedAt:"2026-10-27T00:00:00.000Z"};
+  const held={...people[0],portraitCandidate:{imageUrl:"https://legislature.example.gov/old.jpg",sourceUrl:"https://legislature.example.gov/members/vito",collectedAt:"2026-10-20T00:00:00.000Z"},fieldSources:{portraitCandidate:contact}};
+  const combined=mergePeopleSets([roster([newer]),roster([held])])!;
+  assert.equal(combined.officeholders[0].portraitCandidate?.imageUrl,"https://legislature.example.gov/vito.jpg");
+  assert.equal(combined.officeholders[0].fieldSources?.portraitCandidate?.sourceUrl,page);
+});
+
 test("a list discovers every named entry even without an aggregator or linked name",()=>{
   const parsed=parse(html,roster([]));assert.deepEqual(parsed.officeholders.map(person=>person.name),["Vito Barbieri","Jane Member"]);
   assert.equal(mergePeopleSets([parsed])!.officeholders.length,2);
@@ -237,6 +246,15 @@ test("the member's explicitly quoted nickname still binds the whole entry and it
   const ali={...people[0],name:"Ali Rabe"};
   const body=html.replaceAll("Vito Barbieri",'Alison “Ali” Rabe');
   const parsed=parse(body,roster([ali,people[1]]));assert.equal(parsed.officeholders.length,2);
+  const member=parsed.officeholders.find(person=>person.nativeIds?.["ocd-person"]?.includes("ocd-person/vito"))!;
+  assert.equal(member.portraitCandidate?.imageUrl,"https://legislature.example.gov/vito.jpg");
+  assert.equal(member.memberships?.[0].district,"3");
+});
+
+test("a published leading initial does not turn one member entry into two people",()=>{
+  const scott={...people[0],name:"Scott Grow"};
+  const parsed=parse(html.replaceAll("Vito Barbieri","C. Scott Grow"),roster([scott,people[1]]));
+  assert.equal(parsed.officeholders.length,2);
   const member=parsed.officeholders.find(person=>person.nativeIds?.["ocd-person"]?.includes("ocd-person/vito"))!;
   assert.equal(member.portraitCandidate?.imageUrl,"https://legislature.example.gov/vito.jpg");
   assert.equal(member.memberships?.[0].district,"3");

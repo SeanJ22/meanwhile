@@ -10,6 +10,7 @@ import type { KnownRelease, KnownReleaseOptions } from "../lib/sources/known-rel
 import { refreshPeoplePortraits } from "../scripts/people-portraits-refresh.mts";
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
+import { portraitDueAt, portraitProfileLinks, PORTRAIT_RETRY_MS } from "../lib/photos/portrait-work.ts";
 import { MemoryEvidenceStore, type EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 
@@ -44,6 +45,34 @@ async function imageStore() {
   const io: PortraitRuntime = { read: async (_url, signal) => { signal?.throwIfAborted(); return { bytes, retrievedAt: SOURCE_DATE, contentType: "image/png" }; }, put: async () => {} };
   return (id: string, sources: PortraitSources, at: string, signal: AbortSignal) => storeVerifiedPortrait(id, sources, at, io, "officials", signal);
 }
+
+test("a changed portrait entry is due even when the image URL stays the same", async () => {
+  const store = new MemoryRoutineDataStore();
+  await publishPeople(store, 1, sha, START);
+  const list = await import("../lib/photos/portrait-run.ts").then(({ portraitList }) => portraitList(store, "az", START, [], null));
+  const person = { ...list.everyone[0], portraitCandidate: { imageUrl: "https://legislature.example.gov/jane.png", sourceUrl: "https://legislature.example.gov/old-entry", collectedAt: SOURCE_DATE } };
+  const attemptedAt = START;
+  const attempt = { key: "attempt", code: "STATE_PORTRAIT_NOT_FOUND", detail: "No portrait", record: { attemptedAt, profiles: portraitProfileLinks(person) } };
+  assert.equal(portraitDueAt(person, attempt, () => false), Date.parse(attemptedAt) + PORTRAIT_RETRY_MS);
+  assert.equal(portraitDueAt(person, { ...attempt, record: { attemptedAt } }, () => false), 0, "an old attempt without an entry binding cannot defer the current entry");
+  assert.equal(portraitDueAt({ ...person, portraitCandidate: { ...person.portraitCandidate, sourceUrl: "https://legislature.example.gov/new-entry" } }, attempt, () => false), 0);
+});
+
+test("a batched portrait save and its final schedule keep the actual image acquisition proof", async () => {
+  const store = new MemoryRoutineDataStore();
+  await publishPeople(store, 51, sha, START);
+  const bytes = await sharp({ create: { width: 160, height: 180, channels: 3, background: "navy" } }).png().toBuffer();
+  const imageVaultKey = `project/freshness/source/person-portrait/raw/${portraitHash(bytes).slice(7)}`;
+  const result = await refreshPeoplePortraits({ store, vault, state: "az", query: null, options: { now: () => VERIFIED,
+    acquire: async options => profile(options),
+    storePortrait: (id, sources, at, signal) => storeVerifiedPortrait(id, sources, at, {
+      read: async () => ({ bytes, retrievedAt: VERIFIED, contentType: "image/png", vaultKey: imageVaultKey }), put: async () => {},
+    }, "officials", signal) } });
+  assert.ok(result.outcome.promoted, result.outcome.candidate.failureDetail ?? undefined);
+  assert.equal(result.candidate.retrieval.retrievedAt, VERIFIED);
+  assert.ok(result.candidate.retrieval.derived?.inputs.some(ref => ref.kind === "VAULTED_EVIDENCE" && ref.artifactId === imageVaultKey && ref.contentHash === portraitHash(bytes)));
+  assert.equal((result.candidate.readModel as { roster: { officeholders: unknown[] } }).roster.officeholders.length, 51);
+});
 
 /** Counts the large reads a decision or a run makes: whole candidates and whole promotions. */
 function countLargeReads(held: RoutineDataStore) {

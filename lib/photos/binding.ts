@@ -18,6 +18,7 @@ export interface PortraitVerification {
   readonly width?: number;
   readonly height?: number;
   readonly imageRetrievedAt?: string;
+  readonly imageVaultKey?: string;
   readonly basis?: "OWN_PAGE" | "SOURCE_FEED" | "TWO_SOURCES" | "COMMONS";
   readonly ownPageUrl?: string;
   readonly attribution?: { readonly sourceUrl: string; readonly name: string; readonly author?: string };

@@ -51,17 +51,24 @@ function personSources(person:Officeholder):{urls:string[];members:string[]} {
 }
 
 /** Only the saved pages of the people whose portraits are due; no state's whole file set is loaded. */
-async function personCaptures(store:RoutineDataStore,vault:EvidenceStore,list:PortraitList,people:readonly Officeholder[]):Promise<PortraitCapture[]> {
-  if(!people.length)return [];
+async function personCaptures(store:RoutineDataStore,vault:EvidenceStore,list:PortraitList,people:readonly Officeholder[]):Promise<{captures:PortraitCapture[];gaps:PortraitAttempt[]}> {
+  if(!people.length)return {captures:[],gaps:[]};
   const wanted=people.map(personSources),urls=[...new Set(wanted.flatMap(row=>row.urls))],members=[...new Set(wanted.flatMap(row=>row.members))];
   const memberUrls=new Map(urls.flatMap(url=>{
     const member=/^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/([a-f0-9]{40})\/(data\/.+)$/.exec(url);
     return member?[[`${member[1]}/${member[2]}`,url] as const]:[];
   }));
-  const captures:PortraitCapture[]=[],sourceIds=new Map(portraitInputScopes(list.state).map(row=>[row.scope,row.sourceId]));
+  const captures:PortraitCapture[]=[],gaps:PortraitAttempt[]=[],sourceIds=new Map(portraitInputScopes(list.state).map(row=>[row.scope,row.sourceId]));
   for(const roster of list.rosters){
     for(const row of await store.readCandidateCaptures(roster.versionId,urls,members) as StatePeopleCapture[]){
-      const text=await capturedText(vault,row);
+      let text:string;
+      try { text=await capturedText(vault,row); }
+      catch {
+        gaps.push({key:row.capture.vaultKey,code:"PORTRAIT_HELD_CAPTURE_UNAVAILABLE",
+          detail:"This saved page could not be verified from the evidence vault. Its photo lead needs a new source read; independent entries continue.",
+          record:{sourceUrl:row.finalUrl,vaultKey:row.capture.vaultKey,rawHash:row.capture.rawHash}});
+        continue;
+      }
       const sha=/^https:\/\/codeload\.github\.com\/openstates\/people\/zip\/([a-f0-9]{40})$/.exec(row.extractedFrom?.requestedUrl??"")?.[1];
       const sourceUrl=row.extractedFrom?memberUrls.get(`${sha}/${row.extractedFrom.member}`)??row.finalUrl:row.finalUrl;
       captures.push({transport:"REACHABLE",partial:false,httpStatus:row.httpStatus,
@@ -69,7 +76,7 @@ async function personCaptures(store:RoutineDataStore,vault:EvidenceStore,list:Po
           contentHash:portraitHash(new TextEncoder().encode(text)),text,retrievedAt:row.retrievedAt,vaultKey:row.capture.vaultKey}});
     }
   }
-  return captures;
+  return {captures,gaps};
 }
 
 /** The promotions a save's people came from, named by the read-model hash each holds. The door reads every named
@@ -94,6 +101,9 @@ function portraitInputs(person:Officeholder,facts:readonly PortraitAttempt[]):De
   const saved=(person.photo?.verification?.sources ?? []).flatMap(row=>row.artifactId || row.vaultKey ? [{
     kind:"VAULTED_EVIDENCE" as const,artifactId:row.artifactId ?? row.vaultKey!,contentHash:row.contentHash,tier:"RAW" as const,retrievedAt:row.retrievedAt,
   }] : []);
+  const image=person.photo?.verification;
+  if(image?.imageVaultKey && image.imageRetrievedAt) saved.push({kind:"VAULTED_EVIDENCE",artifactId:image.imageVaultKey,
+    contentHash:image.sourceImageHash,tier:"RAW",retrievedAt:image.imageRetrievedAt});
   for (const fact of facts) {
     const record=fact.record as {vaultKey?:string;rawHash?:string;sourceRetrievedAt?:string}|undefined;
     if (record?.vaultKey && record.rawHash && record.sourceRetrievedAt) saved.push({kind:"VAULTED_EVIDENCE",artifactId:record.vaultKey,
@@ -122,7 +132,8 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   // Work starts from the people without a portrait readers are shown; everyone else is never read again.
   const list=await portraitList(store,state,clock(),priorFacts,query);
   const sources=await sourceInputs(store,list);
-  const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? []),...await personCaptures(store,vault,list,list.due.people)];
+  const savedCaptures=await personCaptures(store,vault,list,list.due.people);
+  const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? []),...savedCaptures.captures];
   let last=null as Awaited<ReturnType<typeof publishPeopleSource>>|null;
   let finished=new Map<string,{person:Officeholder;facts:readonly PortraitAttempt[]}>(),queue=Promise.resolve();
   // The last save carries the run's end state: what is left to do, when the next person is due, and what the list was built from.
@@ -133,7 +144,8 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
     for(;;){
       // A state's first record names everyone listed; later saves carry only the people they finished.
       const officeholders=batch.length ? batch.map(row=>portraitPerson(row.person)) : held.versionId ? [] : list.everyone.map(portraitPerson);
-      const kept=heldFacts(held).filter(fact=>!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
+      const gapKeys=new Set(savedCaptures.gaps.map(fact=>fact.key));
+      const kept=heldFacts(held).filter(fact=>!gapKeys.has(fact.key)&&!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
         fact.code !== PORTRAIT_SCHEDULE_CODE && !(end && fact.code.endsWith("_WORK_REMAINS")));
       // Attempt times and the schedule are the record's own news: an unchanged roster still saves them.
       const heldSchedule=heldFacts(held).find(fact=>fact.code === PORTRAIT_SCHEDULE_CODE);
@@ -142,8 +154,9 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
       const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",
         bindingPeople:list.everyone,
         roster:{scope:state,generatedAt:clock(),officeholders,divisions:[],unmatched:[]},acquisitions:[],releaseId:clock(),now:clock(),
-        derivedInputs:[...sources(batch.length ? batch.map(row=>row.person) : held.versionId ? [] : list.everyone),...batch.flatMap(row=>portraitInputs(row.person,row.facts))],
-        excludedFacts:[...kept,...batch.flatMap(row=>row.facts),...end ? [...end.continuation,end.schedule] : []],confirmUnchanged:!news,held});
+        derivedInputs:batch.length || !last ? [...sources(batch.length ? batch.map(row=>row.person) : held.versionId ? [] : list.everyone),
+          ...batch.flatMap(row=>portraitInputs(row.person,row.facts))] : last.candidate.retrieval.derived?.inputs,
+        excludedFacts:[...kept,...savedCaptures.gaps,...batch.flatMap(row=>row.facts),...end ? [...end.continuation,end.schedule] : []],confirmUnchanged:!news,held});
       if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED"){held=await readHeldPeopleSource(store,jurisdiction,"people-portraits",clock());continue;}
       if(!publication.outcome.promoted && !publication.outcome.confirmed)throw Error(`PEOPLE_PORTRAIT_PUBLICATION_REFUSED:${publication.outcome.candidate.failureDetail}`);
       if(publication.outcome.promoted)held={versionId:publication.outcome.promoted.versionId,

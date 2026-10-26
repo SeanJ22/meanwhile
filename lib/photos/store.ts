@@ -6,7 +6,7 @@ import type { PortraitKeyPrefix } from "./binding.ts";
 import type { OfficeholderPhoto } from "../officials/types.ts";
 
 export interface PortraitRuntime {
-  readonly read: (url: string, signal?: AbortSignal) => Promise<Uint8Array | {bytes:Uint8Array;retrievedAt:string;contentType:string}>;
+  readonly read: (url: string, signal?: AbortSignal) => Promise<Uint8Array | {bytes:Uint8Array;retrievedAt:string;contentType:string;vaultKey?:string}>;
   readonly put: (key: string, bytes: Uint8Array) => Promise<void>;
 }
 
@@ -24,7 +24,7 @@ export function createPortraitRuntime(acquire:typeof acquireKnownRelease = acqui
         const declared=release.contentType.split(";")[0].trim().toLowerCase().replace(/^image\/(?:jpg|pjpeg)$/,"image/jpeg").replace(/^image\/x-png$/,"image/png");
         if(declared.startsWith("text/") || declared.startsWith("image/") && declared!==`image/${decoded.verdict.format}`)throw Error("PORTRAIT_CONTENT_TYPE_MISMATCH");
         decodedBytes.set(bytes,decoded);}});
-    return {bytes:held.bytes,retrievedAt:held.retrievedAt,contentType:held.contentType};
+    return {bytes:held.bytes,retrievedAt:held.retrievedAt,contentType:held.contentType,vaultKey:held.vaultKey};
   },
   put: async (key, bytes) => {
     const { getStore } = await import("@netlify/blobs");
@@ -63,5 +63,6 @@ export async function storeVerifiedPortrait(personId: string, sources: PortraitS
   return {url:`/api/portraits/${key}`,sourceUrl:sources.imageUrl,license:sourceCheck.license?.value ?? null,
     attribution:`Portrait: ${sourceCheck.attribution!.sourceUrl}`,collectedAt:acquired instanceof Uint8Array ? now : acquired.retrievedAt,
     verification:{...sourceCheck,imageHash,sourceImageHash:portraitHash(original),decoderVersion:PORTRAIT_DECODER_VERSION,
-      width:decoded.verdict.width,height:decoded.verdict.height,imageRetrievedAt:acquired instanceof Uint8Array ? now : acquired.retrievedAt}};
+      width:decoded.verdict.width,height:decoded.verdict.height,imageRetrievedAt:acquired instanceof Uint8Array ? now : acquired.retrievedAt,
+      ...(!(acquired instanceof Uint8Array) && acquired.vaultKey ? {imageVaultKey:acquired.vaultKey} : {})}};
 }

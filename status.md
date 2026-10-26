@@ -10,7 +10,7 @@ heartbeat: 2026-10-26T14:20:00Z
 
 <!-- READY-LIST -->
 ## Every READY not on main (updated 10:20 AM EDT Oct 26)
-Live: release 128 (main 9352c8e14). River: 90348edd4. Sean's 9:40 AM order: ship the place map, merge the finished lanes in one batch, take over the quiet lanes.
+Live: release 128 (main 9352c8e14). River: 90348edd4. Sean's latest order: ship the place map, merge the finished lanes in one batch, take over the quiet lanes.
 
 **Place map (ships with the batch, or alone if the batch isn't ready within the hour)**
 | READY | Lane | State |

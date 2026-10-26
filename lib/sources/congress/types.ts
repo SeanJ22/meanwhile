@@ -82,6 +82,7 @@ export interface FederalProjection {
   /** A provider cursor advances only after every preceding page was saved and published. */
   cursor?: string;
   counts?: FederalCounts;
+  countsPrimary?: boolean;
   sourceManifestVersion?: 1;
   sourceHashes?: Record<string, string>;
 }

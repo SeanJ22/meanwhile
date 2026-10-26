@@ -48,6 +48,17 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
   }
   const prior = await federalPartitionState(store, source, "national");
   const counts: FederalCounts = structuredClone(prior?.counts ?? emptyCounts());
+  const canonicalCounts = await store.readFederalCounts?.(source);
+  let countSnapshotComplete = canonicalCounts?.complete ?? false;
+  const useCanonicalCounts = (value: FederalCounts) => {
+    const joinReadFailures = counts.joinReadFailures;
+    Object.assign(counts, value);
+    if (!value.unjoinedReasons) delete counts.unjoinedReasons;
+    if (joinReadFailures !== undefined) counts.joinReadFailures = joinReadFailures;
+  };
+  // A hard kill after a native partition write cannot strand the prior national total.
+  // Only canonical per-partition count fields are summed; source clocks and held facts are not reopened.
+  if (canonicalCounts?.complete) useCanonicalCounts(canonicalCounts.counts);
   let last: Awaited<ReturnType<typeof publishFederalPartition>> | undefined;
   let listing: FederalCapture | undefined;
   const rosterVersions = source === "regulations-gov" || source === "federal-register" ? [] : await heldCongressRosterVersions(store);
@@ -69,7 +80,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
       billStates.set(billId, await federalPartitionState(store, "congress-api", `bill:${billId}`));
     }
     const dependencyHash = normalizedHash([rosterVersionId, [...billStates].map(([id, state]) => [id, state?.head.versionId ?? null])]);
-    const result = await publishFederalPartition({ source, partition, captures, records: facts, store, vault, now: now(), completePartition, ...replacement,
+    const result = await publishFederalPartition({ source, partition, captures, records: facts, store, vault, now: now(), completePartition, ...replacement, countsPrimary: primary,
       dependencyHash, countRecords: async retained => {
         const joined = new Set<string>();
         const states = new Map<string, string>();
@@ -94,12 +105,15 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
         }
         return countFederalFacts(retained.map(row => states.has(row.id) ? { ...row, state: states.get(row.id) } : row), joined);
     } });
-    if (result.kind === "UNCHANGED") return result;
-    const delta = result.outcome.candidate.candidate.changeSet;
-    const changed = [...(delta?.added ?? []), ...(delta?.changed ?? [])].filter(row => row.key.startsWith("federal:")).length;
-    if (changed > 0) console.log("RCD_PROGRESS=" + JSON.stringify({ key: result.candidate.id, records: changed }));
+    if (result.kind === "PUBLISHED") {
+      const delta = result.outcome.candidate.candidate.changeSet;
+      const changed = [...(delta?.added ?? []), ...(delta?.changed ?? [])].filter(row => row.key.startsWith("federal:")).length;
+      if (changed > 0) console.log("RCD_PROGRESS=" + JSON.stringify({ key: result.candidate.id, records: changed }));
+    }
     if (primary) {
-      replaceCounts(counts, result.previousCounts, result.counts!);
+      const aggregate = !countSnapshotComplete ? await store.readFederalCounts?.(source) : null;
+      if (aggregate?.complete) { useCanonicalCounts(aggregate.counts); countSnapshotComplete = true; }
+      else if (result.kind === "PUBLISHED") replaceCounts(counts, result.previousCounts, result.counts!);
       last = await publishFederalPartition({ source, partition: "national", captures, records: [], store, vault, now: now(), counts });
     }
     return result;

@@ -128,6 +128,7 @@ export async function publishFederalPartition(input: FederalSourceInput & { capt
   }
   const counts = input.countRecords ? await input.countRecords([...facts.values()]) : input.counts;
   const projection: FederalProjection = { formatVersion: 1, source: input.source, records: [...facts.values()].sort((a, b) => a.id.localeCompare(b.id)),
+    ...(input.countsPrimary !== undefined ? { countsPrimary: input.countsPrimary } : held?.countsPrimary !== undefined ? { countsPrimary: held.countsPrimary } : {}),
     sourceManifestVersion: 1, sourceHashes: { ...(input.partition === "national" ? {} : held?.sourceHashes),
       ...Object.fromEntries(input.captures.map(capture => { const single = federalSourceInputHash({ ...input, captures: [capture] }); return [single.sourceKey, single.rawHash]; })) },
     ...(input.cursor !== undefined ? { cursor: input.cursor } : held?.cursor ? { cursor: held.cursor } : {}),

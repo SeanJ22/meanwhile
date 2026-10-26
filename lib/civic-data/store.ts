@@ -71,6 +71,8 @@ import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,billSco
 import { projectionKey } from "./projection-key.ts";
 import { readPublishedSourceChecks, recordPublishedSourceCheck, validPublishedSourceCheck,
   type PublishedSourceCheck, type RecordPublishedSourceCheck } from "./source-checks.ts";
+import { aggregateFederalCounts, readFederalCounts as readFederalSourceCounts } from "../sources/congress/counts.ts";
+import type { FederalCounts, FederalProjection } from "../sources/congress/types.ts";
 import { enqueueReaderPlaces, invalidateReaderCache, placePageConsumesPublication, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
 import { seedRuntimeBodyPageSubjects } from "../reader/page-subjects.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
@@ -172,6 +174,7 @@ export interface RoutineDataStore {
   readonly readSourceHead: (recordClass: RoutineRecordClass, scope: string) => Promise<SourceHead | null>;
   readonly recordSourceCheck?: (input: RecordPublishedSourceCheck) => Promise<boolean>;
   readonly readSourceChecks?: (recordClass: RoutineRecordClass, scope: string, sourceKeys: readonly string[]) => Promise<readonly PublishedSourceCheck[]>;
+  readonly readFederalCounts?: (source: string) => Promise<{ readonly complete: boolean; readonly counts: FederalCounts }>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
   /** The current portrait record's input versions and next due time, without the record itself. */
   readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
@@ -1138,6 +1141,18 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
         (check.sourceHash !== undefined ? check.sourceHash === head.rawHash : payload?.sourceManifestVersion === 1 && payload.sourceHashes?.[key] === check.rawHash)
         ? [structuredClone(check)] : [];
     });
+  }
+
+  async readFederalCounts(source: string): Promise<{ complete: boolean; counts: FederalCounts }> {
+    const rows: { scope: string; payload: FederalProjection }[] = [];
+    for (const pointer of this.promotions.values()) {
+      const record = this.candidates.get(pointer.versionId);
+      if (pointer.recordClass !== "FEDERAL_CIVIC_RECORD" || pointer.sourceId !== source || pointer.versionId !== pointer.lastKnownGoodVersionId ||
+        !record || record.state !== "PROMOTED" || !record.acquisitionSucceeded || record.receipt?.decision !== "GOOD" ||
+        record.candidate.sourceId !== source || isImportOrStateMoveCandidate(record.candidate)) continue;
+      rows.push({ scope: pointer.scope, payload: pointer.payload as FederalProjection });
+    }
+    return aggregateFederalCounts(rows, source);
   }
 
   async readPromotionIdentities(
@@ -2635,6 +2650,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async recordSourceCheck(input: RecordPublishedSourceCheck): Promise<boolean> {
     this.assertCandidateMutationAuthority({ id: input.pointerVersionId, sourceId: input.sourceId, recordClass: input.recordClass, scope: input.scope });
     return recordPublishedSourceCheck((text, params) => this.readerRows(text, params), input);
+  }
+
+  async readFederalCounts(source: string): Promise<{ complete: boolean; counts: FederalCounts }> {
+    return readFederalSourceCounts((text, params) => this.readerRows(text, params), source);
   }
 
   async readSourceChecks(recordClass: RoutineRecordClass, scope: string, sourceKeys: readonly string[]): Promise<readonly PublishedSourceCheck[]> {

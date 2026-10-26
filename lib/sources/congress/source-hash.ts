@@ -7,6 +7,7 @@ import type { FederalCapture, FederalCounts } from "./types.ts";
 export interface FederalSourceInput {
   source: FederalSourceId; partition: string; captures: readonly FederalCapture[];
   cursor?: string; counts?: FederalCounts; completePartition?: boolean; replaceFilingId?: string; dependencyHash?: string;
+  countsPrimary?: boolean;
 }
 
 export function federalSourceInputHash(input: FederalSourceInput) {
@@ -42,11 +43,13 @@ export async function unchangedFederalSourceInput(store: RoutineDataStore, input
   if (!expected.length) return null;
   const checks = await store.readSourceChecks(FEDERAL_RECORD_CLASS, scope, expected.map(row => row.sourceKey));
   if (!expected.every(hash => checks.some(row => row.sourceKey === hash.sourceKey && row.rawHash === hash.rawHash && row.parserVersion === FEDERAL_PARSER_VERSION))) return null;
-  if (input.cursor !== undefined || input.counts !== undefined) {
+  if (input.cursor !== undefined || input.counts !== undefined || input.countsPrimary !== undefined) {
     const fields = await store.readPromotionPayloadFields(FEDERAL_RECORD_CLASS, scope, [
       ...(input.cursor !== undefined ? ["cursor"] : []), ...(input.counts !== undefined ? ["counts"] : []),
+      ...(input.countsPrimary !== undefined ? ["countsPrimary"] : []),
     ]);
     if (input.cursor !== undefined && fields?.cursor !== input.cursor || input.counts !== undefined && canonicalCivicDataHash(fields?.counts ?? null) !== canonicalCivicDataHash(input.counts)) return null;
+    if (input.countsPrimary !== undefined && fields?.countsPrimary !== input.countsPrimary) return null;
   }
   return { head, hash, sourceUrls: [...new Set(checks.flatMap(check => check.sourceUrls))] };
 }

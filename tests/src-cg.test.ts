@@ -242,6 +242,39 @@ test("every federal family compares its selected source hash before reading held
   }
 });
 
+test("an unchanged primary source repairs a national count snapshot stranded after its native write", async t => {
+  t.mock.method(console, "log", () => {});
+  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore(), source = "federal-register" as const;
+  const envelope = JSON.parse(fixture("federal-register.json"));
+  let rows = envelope.results.slice(0, 1);
+  const options = { store, vault: own, source, now: () => NOW,
+    fetchImpl: (async () => Response.json({ ...envelope, results: rows, count: rows.length, next_page_url: null })) as typeof fetch };
+  assert.equal((await refreshFederalSource(options)).ok, true);
+  const originalCreate = store.create.bind(store);
+  let interrupt = true;
+  store.create = async (...args: Parameters<typeof originalCreate>) => {
+    if (interrupt && args[0].candidate.scope === `${source}:national`) { interrupt = false; throw new Error("hard cutoff after native publication"); }
+    return originalCreate(...args);
+  };
+  rows = [...rows, { ...rows[0], document_number: "2026-99999", title: `${rows[0].title} additional native document` }];
+  const stopped = await refreshFederalSource(options);
+  assert.equal(stopped.ok, false);
+  const stranded = await readFederalSourceProjection(source, "national", { store, now: NOW });
+  assert.ok(stranded.kind === "PROMOTED");
+  assert.equal(stranded.value.counts?.loaded, 1);
+  const readPromotion = store.readPromotion.bind(store);
+  store.readPromotion = async (recordClass, scope) => {
+    assert.notEqual(scope, `${source}:rules`, "matching native input repairs totals without opening its held fact body");
+    return readPromotion(recordClass, scope);
+  };
+  const repaired = await refreshFederalSource(options);
+  assert.equal(repaired.ok, true);
+  assert.equal(repaired.counts.loaded, 2);
+  const national = await readFederalSourceProjection(source, "national", { store, now: NOW });
+  assert.ok(national.kind === "PROMOTED");
+  assert.equal(national.value.counts?.loaded, 2);
+});
+
 test("real federal rule metadata is held and controlled deadlines and withdrawals govern all states and Ask", async () => {
   const c = capture("federal-register", "rules", "federal-register.json");
   assert.equal(normalizeFederalCapture(c).length, JSON.parse(c.body).results.length);

@@ -4,7 +4,8 @@ import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { meetingsCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { meetingSourceSession, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceContinuationPending } from "../lib/civic-data/meeting-source-probe.ts";
-import type { RoutineDataStore, SourceHead } from "../lib/civic-data/store.ts";
+import type { SourceHead } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { MeetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
 import { FIXTURE_DOOR_ROWS } from "./helpers/meeting-doors-fixture.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
@@ -19,13 +20,13 @@ test("meeting hash comparison includes independently changing agendas before any
   const checkpoint = cache(), vault = new MemoryEvidenceStore(), now = new Date().toISOString();
   let head: SourceHead | null = null, heldPlan: unknown = null, agendaBody = "Agenda one", calls = 0, confirmations = 0;
   const fetchImpl: typeof fetch = async resource => { calls++; return new Response(String(resource) === agenda ? agendaBody : "Calendar", { headers: { "content-type": "text/plain" } }); };
-  const store = { async readSourceHead() { return head; }, async readCandidatePath<T>(_id: string, path: readonly string[]) {
+  const store = Object.assign(new MemoryRoutineDataStore(), { async readSourceHead() { return head; }, async readCandidatePath<T>(_id: string, path: readonly string[]) {
     assert.deepEqual(path, ["normalizedPayload", "sourceProbe"]); return heldPlan as T;
-  }, async confirmUnchanged() { confirmations++; return { kind: "CONFIRMED" as const, versionId: head!.versionId, at: now }; } } as RoutineDataStore;
+  }, async confirmUnchanged() { confirmations++; return { kind: "CONFIRMED" as const, versionId: head!.versionId, at: now }; } });
   const first = await meetingSourceSession(partition, "normalization:one", store, now, vault, undefined, undefined, { checkpoint, fetchImpl });
   await first.fetch(calendar); await first.fetch(agenda);
   const candidate = withMeetingSourceProbe(meetingsCandidate({ snapshot: { formatVersion: 1, generatedAt: now, counts: { fresh: 0, carried: 0, total: 0 },
-    sources: [{ source: "ical", ok: true, error: null, fetched: 0, normalized: 0, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }], meetings: [], agendaDocuments: [] },
+    sources: [{ source: "ical", ok: true, fetched: 0, normalized: 0, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }], meetings: [], agendaDocuments: [] },
     partition: { sourceName: "ical", bodyId: partition.bodyId, scope: partition.scope }, requestedUrl: calendar, finalUrl: calendar, retrievedAt: now }),
     partition, "normalization:one", [...first.responses.values()], true);
   heldPlan = (candidate.normalizedPayload as { sourceProbe: unknown }).sourceProbe;
@@ -78,9 +79,9 @@ test("an ephemeral calendar session compares acquired hashes before held output 
     assert.equal(new Headers(init?.headers).get("cookie"), "session=private");
     return new Response("Council events", { headers: { "content-type": "text/html" } });
   };
-  const store = { async readSourceHead() { return head; }, async readCandidatePath<T>(_id: string, path: readonly string[]) {
+  const store = Object.assign(new MemoryRoutineDataStore(), { async readSourceHead() { return head; }, async readCandidatePath<T>(_id: string, path: readonly string[]) {
     assert.deepEqual(path, ["normalizedPayload", "sourceProbe"]); return plan as T;
-  }, async confirmUnchanged() { confirmations++; return { kind: "CONFIRMED" as const, versionId: head!.versionId, at: now }; } } as RoutineDataStore;
+  }, async confirmUnchanged() { confirmations++; return { kind: "CONFIRMED" as const, versionId: head!.versionId, at: now }; } });
   const acquire = async () => {
     const session = await meetingSourceSession(partition, "session-input", store, now, vault, undefined, undefined, { checkpoint, fetchImpl });
     await session.fetch(calendar);
@@ -90,7 +91,7 @@ test("an ephemeral calendar session compares acquired hashes before held output 
   };
   const first = await acquire();
   const candidate = withMeetingSourceProbe(meetingsCandidate({ snapshot: { formatVersion: 1, generatedAt: now, counts: { fresh: 0, carried: 0, total: 0 },
-    sources: [{ source: "ical", ok: true, error: null, fetched: 0, normalized: 0, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }], meetings: [], agendaDocuments: [] },
+    sources: [{ source: "ical", ok: true, fetched: 0, normalized: 0, drops: { placeless: 0, unknownVenue: 0, unplaceableInTime: 0, notConfigured: 0 } }], meetings: [], agendaDocuments: [] },
     partition: { sourceName: "ical", bodyId: partition.bodyId, scope: partition.scope }, requestedUrl: calendar, finalUrl: calendar, retrievedAt: now }),
     partition, "session-input", [...first.responses.values()], false, true);
   plan = (candidate.normalizedPayload as {sourceProbe:unknown}).sourceProbe;

@@ -18,7 +18,7 @@ test("producer venue decisions use the canonical choice and the same semantic sn
     addressSourceUrl: "https://city.example.gov/hall", coordinateSourceUrl: "https://city.example.gov/map", verifiedAt: oldAt };
   try {
     process.env.WTP_READER_EDGE_DIR = dir;
-    await publishOwnerChoice("venue-resolutions", venue, { id: 1, resolvedAt: oldAt, choice: "TYPED_VALUE", values: { address: "Old edge address" },
+    await publishOwnerChoice("venue-resolutions", { ...venue }, { id: 1, resolvedAt: oldAt, choice: "TYPED_VALUE", values: { address: "Old edge address" },
       sourceUrl: "https://city.example.gov/old-address" }, new LocalFileArtifactStore(dir));
     await db.query(`INSERT INTO owner_flag(kind,reader_family,reader_id,resolved,owner_values,owner_source_url,resolved_at)
       VALUES('AUDIT_LOOKS_WRONG','venue-resolutions',$1,'TYPED_VALUE',$2::jsonb,$3,$4)`,

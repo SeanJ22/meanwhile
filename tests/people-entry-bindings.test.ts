@@ -114,6 +114,20 @@ test("normal publication retains a member's visible identity in the page header"
   assert.ok(saved.outcome.promoted,JSON.stringify(saved.outcome.candidate.receipt?.checks));
 });
 
+test("a uniquely named personal Senate profile binds its own surname-labelled portrait outside the contact entry",()=>{
+  const source="https://www.flsenate.gov/Senators/2024-2026/S3/101",image="https://www.flsenate.gov/PublishedContent/Photos/s03_101.jpg";
+  const member={...people[0],state:"FL",chamber:"upper" as const,officeTitle:"State Senator",websiteUrl:source};
+  const body='<h1>The Florida Senate</h1><h2>2024-2026</h2><div><h2>Senator Vito Barbieri</h2><p>District 3</p><h3>Committee Assignments</h3>'+'<p>Committee report</p>'.repeat(900)+'</div><aside><img src="/PublishedContent/Photos/s03_101.jpg" alt="Senator Barbieri"><img src="/seal.jpg" alt="Florida Senate seal"></aside>';
+  const capture={transport:"REACHABLE" as const,partial:false,httpStatus:200,observedAt:at,evidence:{canonicalUrl:source,sourceId:"official-state-people",retrievedAt:at,text:body,vaultKey:"project/freshness/source/official-state-people/raw/senator",contentHash:portraitHash(new TextEncoder().encode(body))}};
+  const subject={personId:member.personId!,name:member.name,state:"FL",chamber:"upper",officeTitle:member.officeTitle,nativeIds:member.nativeIds,profileUrls:[source]};
+  assert.deepEqual(profilePortraitImageUrls(subject,capture),[image]);
+  assert.equal(verifyPortraitSources(subject.personId,{subject,imageUrl:image,captures:[capture]},at).basis,"OWN_PAGE");
+  const list=body+'<div><h2>Senator Jane Member</h2><p>District 4</p></div>';
+  const parsed=normalizeOfficialLegislaturePage(list,source,{state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,
+    roster:roster([member,{...people[1],state:"FL",chamber:"upper",officeTitle:"State Senator"}])},at);
+  assert.ok(parsed.officeholders.every(person=>!person.portraitCandidate));
+});
+
 test("binding change records retain live identities and a history digest while the people record keeps every snapshot",async()=>{
   const source="https://legislature.example.gov/members/vito",body='<h1>Representative Vito Barbieri</h1><p>District 3</p>';
   const history=Array.from({length:20},(_,i)=>({...people[0],id:`old-entry-${i}`,phone:`208-555-${String(i).padStart(4,"0")}`}));
@@ -305,7 +319,7 @@ test("normal publication repairs a falsely bound named entry from that person's 
   const urls=["https://www.flsenate.gov/Senators/2024-2026/S1/101","https://www.flsenate.gov/Senators/2024-2026/S2/202"];
   const bodies=people.map(person=>`<h1>Senator ${person.name}</h1><p>District ${person===people[0]?3:4}</p>`);
   bodies[1]+='<article><h3>Vito Barbieri</h3><p>Senator Vito Barbieri spoke today. District 3</p></article>';
-  const options={state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([])};
+  const options={state:"fl",sourceId:"official-state-people" as const,asOf:at,signal:new AbortController().signal,roster:roster([])};
   const incoming=mergePeopleSets(bodies.map((body,i)=>normalizeOfficialLegislaturePage(body,urls[i],options,at)))!;
   assert.equal(incoming.officeholders.length,2);
   const member=incoming.officeholders.find(person=>person.name==="Vito Barbieri")!;

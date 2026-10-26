@@ -309,7 +309,13 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     const entries=blocks.filter(block=>/^<(?:tr|article|li|div|p)\b/i.test(block.html)&&namesIn(block.html).includes(holder)&&namesIn(block.html).length===1&&
       entryPerson(holder.name,block.html,held,holder.chamber==="upper"?"upper":"lower",pageUrl)?.id===holder.id);
     const personal=personalHeading&&pagePeople.length===1&&oneMember(content);
-    const entry=personal?content:entries.filter(block=>oneMember(block.html)).sort((a,b)=>b.html.length-a.html.length)[0]?.html;
+    const heading=ownsProfile(holder)?[...content.matchAll(/<h([12])\b[^>]*>[\s\S]*?<\/h\1>/gi)]
+      .find(match=>legislaturePageNamesPerson(match[0],holder.name)):undefined;
+    const following=heading?content.slice(heading.index!+heading[0].length):"";
+    const boundary=following.search(/<h[1-6]\b|<(?:article|section)\b/i);
+    const headed=heading?heading[0]+following.slice(0,boundary<0?0:boundary):undefined;
+    const entry=personal?content:entries.filter(block=>oneMember(block.html)).sort((a,b)=>b.html.length-a.html.length)[0]?.html
+      ??(headed&&headed.length<=16_000&&oneMember(headed)?headed:undefined);
     if(!entry)continue;
     const context=roleOnPage(textOf(entry),holder)?entry:pageRole?`<h2>${pageRole}</h2>${entry}`:entry;
     const profile=[...entry.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)].flatMap(anchor=>{
@@ -320,8 +326,14 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     })[0];
     const entryUrl=personal?pageUrl:profile??`${pageUrl}#member=${encodeURIComponent(key(holder.name))}`;
     const parsed=personOnPage(holder,context,pageUrl,options,collectedAt,entryUrl,!personal,ownsProfile(holder));
-    if(parsed&&!parsed.portraitCandidate&&personalHeading&&pagePeople.length===1) {
-      const image=pickPortraits(holder.name,imagesIn(content,pageUrl))[0];
+    if(parsed&&!parsed.portraitCandidate&&(personalHeading||ownsProfile(holder))&&pagePeople.length===1) {
+      const images=imagesIn(content,pageUrl);
+      const surname=key(holder.name).split(" ").filter(word=>!['jr','sr','ii','iii','iv'].includes(word)).at(-1);
+      const labeled=ownsProfile(holder)?images.filter(image=>{
+        const label=/^(?:state )?(?:senator|sen|representative|rep|delegate|assemblyman|assemblywoman) (.+)$/.exec(key(image.alt))?.[1];
+        return Boolean(surname&&label===surname&&!looksLikeFurniture(image));
+      }):[];
+      const image=pickPortraits(holder.name,images)[0]??(labeled.length===1?labeled[0]:undefined);
       if(image)parsed.portraitCandidate={imageUrl:image.src,sourceUrl:pageUrl,collectedAt};
     }
     if(parsed){parsed.websiteUrl=profile??pageUrl;parsed.provenance=provenance(pageUrl,"State legislature — official member entry",collectedAt,entryQuote(entry,parsed.name));parsed.provenance.kind="OFFICIAL";sourced(parsed,parsed.provenance);roster.officeholders.push(parsed);}

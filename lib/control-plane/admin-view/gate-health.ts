@@ -40,6 +40,11 @@ function runningRelease(r: GateHealthReadings): GateHealthRow {
   if (!r.heartbeat) return row("GATE-02", name, "not_measured", "No runner heartbeat has been recorded.");
   const live = livenessOf(r.heartbeat, r.nowIso);
   if (live.state !== "ALIVE") return row("GATE-02", name, "attention", `The runner is not beating on time. ${live.detail}`);
+  const staging = r.heartbeat.releaseStaging;
+  if (staging?.state === "FAILED") {
+    return row("GATE-02", name, "attention", `Release ${staging.targetSha.slice(0, 8)} could not be installed beside the running code ` +
+      `(${staging.code ?? "unknown"}: ${staging.detail}); the runner applies it by draining and restarting.`);
+  }
   const verdict = r.heartbeat.codeIdentity?.verdict ?? null;
   if (verdict === null || verdict === "CANNOT_TELL") {
     return row("GATE-02", name, "not_measured", "The runner is beating, but which code it runs could not be compared with the released code.");

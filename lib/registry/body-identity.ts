@@ -125,13 +125,22 @@ export function prepareBodyIdentities(bodies: readonly Body[], divisions: Readon
   const byGovernment = new Map<string, Body[]>();
   for (const original of bodies) {
     const rosterName = rosterNames.get(original.id);
-    const division = original.ocdId ? divisions.get(original.ocdId) : undefined;
+    const filedDivision = original.ocdId ? divisions.get(original.ocdId) : undefined;
+    // A county office can serve a school system without becoming that school
+    // government's department. Keep the served division and use its named owner.
+    const namedOwners = ADMIN.test(original.name ?? "") && !ADVISORY.test(original.name ?? "")
+      ? [...divisions.values()].filter(candidate => ["county", "place", "school_district"].includes(candidate.divisionType) &&
+        words(original.name ?? "").startsWith(`${words(readerGovernmentName(candidate.label, candidate.divisionType))} `)) : [];
+    const owner = namedOwners.sort((a,b) => b.label.length - a.label.length)[0];
+    const division = owner ?? filedDivision;
+    const owned = owner ? {...original,governmentName:owner.label,governmentId:owner.ocdId,
+      governmentType:owner.divisionType === "place" ? "city" as const : owner.divisionType as GovernmentType} : original;
     // A direct governing roster identifies its own body. A later extraction of
     // a court, department or sitting label cannot turn that roster into another body's members.
     const rosterGovernment = rosterName && governingBoardName(rosterName, {name:original.governmentName ?? division?.label,
       county:division?.divisionType === "county",school:division?.divisionType === "school_district"});
     const body = rosterGovernment && (COURT.test(original.name ?? "") || ADMIN.test(original.name ?? "") || MEETING.test(original.name ?? ""))
-      ? {...original,name:rosterName!} : original;
+      ? {...owned,name:rosterName!} : owned;
     const type = governmentType(body, division), government = ownGovernment(body, division, type);
     const matchesDivision = division && words(readerGovernmentName(division.label, division.divisionType)).replace(/^city of | city$/g, "") === words(government).replace(/^city of | city$/g, "");
     const governmentId = type === "special_district" ? `district:${words(government)}` : matchesDivision ? division.ocdId : body.governmentId ?? body.ocdId ?? `government:${words(government)}`;

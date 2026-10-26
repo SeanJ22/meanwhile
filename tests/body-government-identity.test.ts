@@ -108,3 +108,10 @@ test("school committees and a town meeting retain their actual governing functio
   assert.equal(ids.get("town")?.bodyClass,"GOVERNING");
   assert.equal(ids.get("budget")?.bodyClass,"ADVISORY");
 });
+
+test("a named county department keeps its government when serving a school district",()=>{
+  const ids=prepareBodyIdentities([body("Pima County Elections Department","elections",school,{governmentName:"Tucson Unified District",governmentType:"school_district"})],divisions);
+  assert.equal(ids.get("elections")?.governmentName,"Pima County");
+  assert.equal(ids.get("elections")?.governmentType,"county");
+  assert.equal(ids.get("elections")?.name,"Pima County Elections Department");
+});

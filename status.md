@@ -5,7 +5,7 @@ worker: claude-river
 provider: Claude
 run_id: session_01KQeVtrq9c4dWXSpaNnogn3
 lock: session_01KQeVtrq9c4dWXSpaNnogn3
-heartbeat: 2026-10-26T20:26:00Z
+heartbeat: 2026-10-26T20:40:00Z
 
 
 <!-- READY-LIST -->
@@ -94,6 +94,14 @@ Before (reader + control plane, from database_transfer_hourly): usaspending 143.
 - people-portrait-runner: "the national hourly portrait job reaches National cards and the next run retains its photo"
 - registration-contract (4 here, 2 in the gate run): "the current registration parser replays held evidence after registration/3 GOOD, then keeps the 90-day source clock"; "a failed current-parser registration attempt keeps the prior GOOD and its existing six-hour retry"; and two more.
 DB-05: fix on stream/db-05 and post a new READY; it rides the next release.
+
+**Release 131 (being folded): RIVER-PP2 + DB-05 through 4caea8f2b**
+| READY | Lane | State |
+|---|---|---|
+| 929ab8524 (stream/river-place-page-reads) | RIVER-PP2: each place-page build received one 25,974-byte national routing record (CURATED_READER_RECORD:US-AZ+US-NH+US-NJ:everyday-service-routing:v1), about 91% of every page's row; now it crosses once per turn and is filled in from memory, with a version check so a change mid-turn is seen | Scan clean. Test: 23,543 to 1,547 B per page received; production wire sample (9 pages) 297,582 to 89,790 B; pages byte-identical. Saves about 0.27 GB/h received at 10,300 pages/h; about 3.9 GB over the remaining queue |
+| 76d5c707d, d01db37b4, a68d0aae3, 68267fb23, 4caea8f2b (origin/stream/db-05, on top of c1bf8151f, 0be79e9a5) | DB-05: keyed government/body reads; voting and ballot hash-first reads; DotGov source hash before registry reads; Census geography source-byte checks; people probes and keyed member offices | Scan clean (no bypassCache added; no new docs/scripts files). The 12 tests that failed at 0be79e9a5 all pass at 4caea8f2b. 5 conflicts with the 130 tree (store.ts with LS1, three meeting-pin files with MT-02, door-queries); River's helper is resolving them |
+
+*For Sean and DB-05 (place-page writes):* most of place-pages' 1.53 GB in the 3 PM hour was sent, not received: 1.00 GB sent vs 0.53 GB received. Per page, about 38.6 KB is query text (DB-05's checked reads rename each query, so it can't be prepared once) and about 41 KB is the page write, which carries the same routing record in up to six compressed copies (body, history body, context variants). Storing that record by reference would cut the write and what readers fetch, but it changes the stored page format: Sean's call. The meter also shows about 52 KB received per page against about 29 KB measured on the wire; the other 23 KB is unexplained so far.
 
 **PP-01 and RB-A9 sessions are back**: origin/stream/pp-01 (merge of river, 12:05 PM) and origin/stream/rb-a9 (work in progress, 12:46 PM). No READY yet. River does not take them.
 

@@ -74,7 +74,8 @@ export async function readPersonBillParts(query: Query, parts: readonly BillPart
               SELECT 1 FROM jsonb_array_elements(reader_payload_value(reader_payload_node(b.item)->'sponsorRefs')) matched(value)
                 WHERE (matched.value#>>'{}')::integer=ANY(wanted.indices)))),'[]'::jsonb) AS sponsors
         FROM pointers pointer JOIN wanted ON pointer.scope=wanted.scope AND pointer.current_version_id=wanted.version
-          LEFT JOIN civic_data_candidates c ON c.id=pointer.current_version_id`, [keys, JSON.stringify(matching)]);
+          LEFT JOIN civic_data_candidates c ON c.id=pointer.current_version_id`,
+      [matching.map(part=>`STATE_BILL:${part.scope}`), JSON.stringify(matching)]);
     const byKey = new Map(rows.map(row => [String(row.key), row]));
     for (const match of matching) {
       const row = byKey.get(`STATE_BILL:${match.scope}`);

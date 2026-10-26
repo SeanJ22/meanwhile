@@ -207,7 +207,9 @@ test("every reader surface renders the upcoming sittings with held fields and ma
     const row = text(rowMarkup(html("duffy"), id));
     // The body's own published words, per row ("Via Zoom Webinar", "Via Zoom").
     const label = byId.get(id)?.online?.label;
-    check(!/data-working-on-it=|working on getting this info|Want us/.test(row), `Duffy panel: ${id} renders a missing-field placeholder`);
+    check(!/Still gathering/.test(row), `Duffy panel: ${id} renders the removed footer list`);
+    check(/working on getting this info/.test(row), `Duffy panel: ${id} omits its local missing-information message`);
+    check(/Want us to get this sooner/.test(row), `Duffy panel: ${id} omits its local request`);
     check(/data-meeting-where="online"/.test(rowMarkup(html("duffy"), id)), `Duffy panel: ${id} carries no online label`);
     check(Boolean(label) && row.includes(`Online · ${label}`), `Duffy panel: ${id} does not quote "${label}"`);
     check(/>Meeting page<\//.test(row), `Duffy panel: ${id} omits its held meeting page`);

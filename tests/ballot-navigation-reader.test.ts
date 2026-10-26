@@ -94,8 +94,8 @@ test("a ZIP in every state and DC renders acquired official navigation and deadl
       const start = performance.now();
       const card = await navigationCard(BallotPage({ searchParams: Promise.resolve({ zip }) }), state);
       assert.ok(card, `${state}: ZIP ${zip} has no navigation`);
-      assert.deepEqual(card.props.gaps, [], `${state}: false missing-information gap`);
       await page.setContent(renderToStaticMarkup(card));
+      assert.equal(await page.locator("[data-card-gap]").count(), 0, `${state}: false missing-information gap`);
       const stateFields = fields.filter(row => row.value.state === state);
       const stateRecords = projection.records.filter(row => (row.value as { state?: string } | undefined)?.state === state);
       const noRegistration = stateFields.some(row => row.value.fieldKind === "registration_deadline" &&

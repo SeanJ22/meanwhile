@@ -24,7 +24,7 @@ const congress = JSON.parse(readFileSync("tests/fixtures/ui-01-congress-legislat
 const projection = normalizeCongressDirectory(Object.fromEntries(Object.entries(congress.yaml).map(([file, yaml]) => [file, parse(yaml)])), congress.revision, congress.retrievedAt);
 const holder = indexByOfficeholderId([projection.roster]).get("congress:H001091")!;
 
-test("real held venue and congress cards collect gaps and sources only at the card foot", async () => {
+test("real held venue and congress cards keep missing info in sections and sources at the foot", async () => {
   // Preserve the observed 41/21 production response; do not manufacture the
   // earlier 42/19 sample. Use the same venue and placeless grouping as the map.
   assert.equal(meetings.length, 41);
@@ -88,41 +88,48 @@ test("real held venue and congress cards collect gaps and sources only at the ca
     for (const mode of ["venue", "official"] as const) {
       await page.goto(`http://127.0.0.1:${address.port}/${mode}`);
       const card = page.locator("[data-reader-card]");
-      await card.locator("[data-card-gap]").waitFor({ state: "visible" });
-      assert.equal(await card.locator("[data-card-gap]").count(), 1);
-      assert.equal(await card.getByRole("button", { name: "Ask us to find this", exact: true }).count(), 1);
+      await card.waitFor({ state: "visible" });
+      for (const header of await card.locator(".card-section-header").all()) {
+        if (await header.getAttribute("aria-expanded") === "false") await header.click();
+        const pane = card.locator(`[id="${await header.getAttribute("aria-controls")}"]`);
+        assert.ok((await pane.innerText()).trim(), `opening ${await header.innerText()} must reveal content`);
+      }
+      await card.locator("[data-card-gap]").first().waitFor({ state: "visible" });
+      assert.ok(await card.getByText(/We[’']re working on getting this info/, { exact: true }).count() > 0);
+      assert.ok(await card.getByRole("button", { name: "Want us to get this sooner?", exact: true }).count() > 0);
+      assert.equal(await card.locator("[data-card-footer] [data-card-gap]").count(), 0, "missing facts stay out of the source footer");
       assert.equal(await card.locator("[data-card-sources]").count(), 1);
       assert.equal(await card.getByRole("button", { name: /^Sources/ }).count(), 1);
       assert.equal(await card.locator("[data-card-footer]").evaluate(footer => footer === footer.parentElement?.lastElementChild), true, "the shared footer follows every card section");
       assert.equal(await card.locator("[data-card-sources]").evaluate(source => source === source.parentElement?.lastElementChild), true, "Sources is the final footer section");
-      assert.doesNotMatch(await card.innerText(), /working on getting this info|Want us to get this info sooner|Want us to get this sooner/i);
+      assert.doesNotMatch(await card.innerText(), /Still gathering|committee-to-person|Roster term or appointment note/);
       if (mode === "venue") {
         assert.equal(await card.locator("[data-meeting-row]").count(), 36);
-        const line = await card.locator("[data-card-gap]").innerText();
-        assert.match(line, /agendas for 18 meetings/);
-        assert.match(line, /online join links for 19 meetings/);
-        assert.match(line, /meeting places for 2 meetings/);
+        assert.ok(await card.locator("[data-meeting-row] [data-card-gap]").count() > 0, "each sitting keeps its own missing fields");
         const row = card.locator('[data-meeting-id="diligent:tusd1:2026-10-19T1800-alternative-education-advisory"]');
         assert.equal(await row.locator('[data-meeting-where="online"]').innerText(), "Online · Via Zoom Webinar");
         assert.equal(await row.getByRole("link", { name: "Meeting page", exact: true }).getAttribute("href"), "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=512");
         assert.ok(await card.locator(".how-to-be-heard").count() > 0);
         assert.equal(await card.locator(".how-to-be-heard [data-card-sources]").count(), 0);
-        assert.equal(await card.locator("[data-meeting-row] [data-demand-pill], [data-meeting-row] [data-card-gap], [data-meeting-row] [data-card-sources]").count(), 0);
+        assert.equal(await card.locator("[data-meeting-row] [data-card-sources]").count(), 0);
+        assert.ok(await row.getByRole("button", { name: "Want us to get this sooner?", exact: true }).count() > 0);
       }
       if (mode === "official") {
         for (const title of ["Committees", "Campaign money", "Voting record"]) {
-          await card.getByRole("button", { name: title, exact: true }).waitFor({ state: "hidden" });
+          const header = card.getByRole("button", { name: title, exact: true });
+          await header.waitFor({ state: "visible" });
+          const pane = card.locator(`[id="${await header.getAttribute("aria-controls")}"]`);
+          assert.match(await pane.innerText(), /working on getting this info/);
+          assert.ok(await pane.getByRole("button", { name: "Want us to get this sooner?", exact: true }).count() > 0);
         }
         const offices = card.getByRole("button", { name: "Offices near you", exact: true });
-        await offices.click();
         await card.getByText("Waterloo, IA", { exact: true }).waitFor({ state: "visible" });
-        assert.equal(await card.locator("[data-card-gap]").count(), 1);
-        assert.equal(await card.locator("[data-card-sources]").count(), 1);
-        await offices.click();
-        assert.equal(await card.locator("[data-card-gap]").count(), 1);
+        const officePane = card.locator(`[id="${await offices.getAttribute("aria-controls")}"]`);
+        assert.equal(await officePane.locator("[data-card-gap]").count(), 0, "held offices never claim their facts are missing");
         assert.equal(await card.locator("[data-card-sources]").count(), 1);
       }
-      await card.getByRole("button", { name: /^Sources/ }).click();
+      const sourceHeader = card.getByRole("button", { name: /^Sources/ });
+      if (await sourceHeader.getAttribute("aria-expanded") === "false") await sourceHeader.click();
       const sources = card.locator("[data-card-sources]");
       assert.doesNotMatch(await sources.innerText(), /Other\s*·|districtOffices|and \d+ more from this source|not yet|no published page|working on|Want us/i);
       if (mode === "official") {
@@ -137,7 +144,7 @@ test("real held venue and congress cards collect gaps and sources only at the ca
         assert.equal(new Set(urls).size, urls.length, "each held source URL appears once");
       }
       const pending = page.waitForResponse(response => response.url().endsWith("/api/demand-signal"));
-      await card.getByRole("button", { name: "Ask us to find this", exact: true }).click();
+      await card.getByRole("button", { name: "Want us to get this sooner?", exact: true }).first().click();
       await pending;
       await card.getByText("Noted.", { exact: true }).waitFor({ state: "visible" });
       assert.equal(writes.length, mode === "venue" ? 1 : 2);
@@ -147,7 +154,7 @@ test("real held venue and congress cards collect gaps and sources only at the ca
       assert.equal(typeof writes.at(-1)?.continuityKey, "string");
       assert.equal(typeof writes.at(-1)?.eventId, "string");
       mkdirSync(".scratch/ci", { recursive: true });
-      await card.locator("[data-card-gap]").scrollIntoViewIfNeeded();
+      await card.locator("[data-card-gap]").first().scrollIntoViewIfNeeded();
       await page.screenshot({ path: `.scratch/ci/ui-01-${mode}-sources.png` });
     }
     assert.deepEqual(errors, []);

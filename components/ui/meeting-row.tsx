@@ -51,7 +51,6 @@ export function MeetingRow(props: RowProps) {
   const agendaLink = meeting.agendaUrl ?? meeting.provenance.sourceUrl;
   const recording = meeting.status === "CONCLUDED" ? meeting.videoUrl : null;
   return <article data-meeting-row data-meeting-id={meeting.id} className={compact ? "py-2 t-detail leading-relaxed" : "px-5 pb-5 pt-4 t-body leading-relaxed"}>
-    {!gapsInParent && <CardGapsContribution id={`meeting:${meeting.id}`} gaps={meetingCardGaps(meeting)} />}
     <h3 className="font-display t-heading font-semibold text-paper">
       {onOpen ? <button type="button" className="text-left hover:text-signal" onClick={() => onOpen(meeting)}>{title}</button> : title}
     </h3>
@@ -75,6 +74,7 @@ export function MeetingRow(props: RowProps) {
     </div>}
     {!compact && meeting.status === "SCHEDULED" && <CalendarLinks meeting={meeting} />}
     {!sourcesInParent && <CardSourcesContribution id={`meeting:${meeting.id}`} sources={meetingCardSources(meeting, [])} />}
+    {!gapsInParent && <CardGapsContribution id={`meeting:${meeting.id}`} gaps={meetingCardGaps(meeting)} />}
     {children}
   </article>;
 }

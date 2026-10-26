@@ -9,7 +9,6 @@ import { tierForOffice } from "@/lib/ocd/tiers";
 import type { ReactionViewContext } from "@/lib/reactions/client";
 import { OfficialModal } from "@/components/map/popup/official-modal";
 import { CardSourceContext } from "@/components/ui/card-source-context";
-import { CardGapContext } from "@/components/ui/card-gap-context";
 
 /**
  * The candidate's name as the door to their battlecard, only where we hold the
@@ -40,13 +39,13 @@ export function IncumbentNameLink({
         {name}
       </button>
       {open && (
-        <CardSourceContext.Provider value={null}><CardGapContext.Provider value={null}><OfficialModal
+        <CardSourceContext.Provider value={null}><OfficialModal
           holder={holder}
           seatLabel={null}
           tier={tierForOffice(holder.officeTitle, holder.officeJurisdictionOcdId ?? "")}
           reactionContext={context}
           onClose={() => setOpen(false)}
-        /></CardGapContext.Provider></CardSourceContext.Provider>
+        /></CardSourceContext.Provider>
       )}
     </>
   );

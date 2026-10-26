@@ -377,7 +377,7 @@ function SiteRow({
         <span className="voting-site-name">{site.name}</span>
       </button>
       {site.address && <p className="voting-site-address">{site.address}</p>}
-      {/* A null distance renders nothing; map gaps join the card footer. */}
+      {/* A null distance renders nothing; missing map information stays here. */}
       {miles !== null && <p className="voting-site-distance">{milesLabel(miles)}</p>}
       {site.room && <p className="voting-site-room">{site.room}</p>}
       <p className="voting-site-kind">{(site.kinds ?? [site.kind]).map(kind => KIND_LABEL[kind]).join(" · ")}</p>
@@ -418,7 +418,8 @@ export function votingSources(j: VotingJurisdiction) {
   const unique = new Map<string, VotingSource>();
   for (const source of sources) unique.set(`${source.url}|${source.title ?? ""}`, source);
   return [...unique.values()].map(source => ({
-    what: `${source.title ?? "Voting locations, hours and rules"}${source.lastUpdated ? ` — file last updated ${source.lastUpdated}` : ""}`,
+    what: source.title ?? "Voting locations, hours and rules",
+    updatedAt: source.lastUpdated,
     provenance: { sourceUrl: source.url, sourceOrg: source.publisher, collectedAt: source.checkedAt ?? j.collectedAt, verifiedAt: null },
   }));
 }

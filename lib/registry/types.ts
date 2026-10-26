@@ -197,6 +197,8 @@ export interface Body {
   officeAddress?: string;
   /** The body's office phone, as its own page states it. */
   officePhone?: string;
+  /** The body's published office email. */
+  officeEmail?: string;
 
   demandCount: number;
   sourceDataset: SourceDataset;

@@ -1,3 +1,4 @@
+import labels from "../../../data/reference/us-jurisdiction-labels.json" with { type: "json" };
 import type { CardSource } from "../../officials/card-sources.ts";
 import type { FederalFact } from "./types.ts";
 
@@ -10,11 +11,12 @@ export function federalCalendarDate(value: string): string {
 }
 export const federalDeadlineDate = (row: FederalFact): string | null => row.closesAt ? federalCalendarDate(row.closesAt) : null;
 
+const jurisdictionNames = new Map(labels.jurisdictions.map(state => [state.postal, state.name]));
+
 /** Browser-safe presentation of facts already read through the promoted source store. */
 export function federalCardSources(records: readonly FederalFact[]): CardSource[] {
-  return records.flatMap(row => [{ what: `${row.title}${row.publishedAt ? ` · Published ${row.publishedAt.slice(0, 10)}` : " · Publication date not supplied"}`,
-    provenance: { sourceUrl: row.sourceUrl, sourceOrg: row.publisher, collectedAt: row.checkedAt, verifiedAt: row.checkedAt,
-      ...(row.source === "senate-lda" ? { quote: "Senate Office of Public Records cannot vouch for the data or analyses derived from these data after the data have been retrieved from LDA.gov." } : {}) } },
-    ...(row.honoreeJoin?.status === "JOINED" ? [{ what: `Honoree identity: ${row.honoreeName} → ${row.honoreeJoin.matchedName}, ${row.honoreeJoin.chamber}, ${row.honoreeJoin.state}`,
+  return records.flatMap(row => [{ what: row.kind === "LOBBYING_CONTRIBUTION" ? "Campaign contributions reported by lobbyists" : row.title, publishedAt: row.publishedAt,
+    provenance: { sourceUrl: row.sourceUrl, sourceOrg: row.publisher, collectedAt: row.checkedAt, verifiedAt: row.checkedAt } },
+    ...(row.honoreeJoin?.status === "JOINED" ? [{ what: `The person named in this record, ${row.honoreeName}, is ${row.honoreeJoin.matchedName}, who serves in the ${row.honoreeJoin.chamber === "senate" ? "U.S. Senate" : "U.S. House of Representatives"} for ${jurisdictionNames.get(row.honoreeJoin.state) ?? row.honoreeJoin.state}`,
       provenance: { sourceUrl: row.honoreeJoin.sourceUrl, sourceOrg: row.honoreeJoin.sourceOrg, collectedAt: row.honoreeJoin.checkedAt, verifiedAt: row.honoreeJoin.checkedAt } }] : [])]);
 }

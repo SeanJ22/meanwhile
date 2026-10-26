@@ -35,7 +35,7 @@ function Listing({ row }: { row: RegistrationGovernmentListing }) {
       ]} />
       {open && divisionId && <div className="pt-3"><h4 className="t-detail font-medium text-paper">Federal money and records</h4><FederalMoneySection divisionId={divisionId} bodyId={row.id} /></div>}
       {open && row.associations.length === 1 && <StateCampaignSection divisionId={row.associations[0].divisionId} />}
-      {!insideCard && <CardFooter gaps={[]} sources={sources} />}
+      {!insideCard && <CardFooter sources={sources} />}
     </div>
   </details></CardSourceContext>;
 }

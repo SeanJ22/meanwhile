@@ -159,7 +159,7 @@ function marksOverlap(standing: BodyStanding | undefined): boolean {
   return standing === "OVERLAP_NOT_RULED_OUT";
 }
 
-/** A seat shows its held name and representatives; gaps join the card footer. */
+/** A seat shows its held name and representatives; missing information stays with the seat. */
 function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; onOpenOfficial?: OpenOfficial }) {
   return <>
     {!seat.label && seat.sourcing !== "looking" && <CardGapContribution id={`seat-name:${seat.ocdId}`} label="district names" unit="district" />}

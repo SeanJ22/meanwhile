@@ -74,7 +74,8 @@ function federalMoneyText(fact: FederalMoneyFact, relationship: FederalMoneyRow[
 /** A single contribution lets the enclosing card retain its one Sources list. */
 export function federalMoneySources(rows: readonly FederalMoneyRow[]): CardSource[] {
   return rows.map(({ fact, label }) => ({
-    what: `${label} — ${fact.title}${fact.provenance.publicationDate ? ` · published ${fact.provenance.publicationDate.slice(0, 10)}` : " · publication date not provided"}`,
+    what: `${label} — ${fact.title}`,
+    publishedAt: fact.provenance.publicationDate ?? undefined,
     provenance: {
       kind: "OFFICIAL", sourceOrg: fact.provenance.sourceOrg, sourceUrl: fact.provenance.sourceUrl,
       collectedAt: fact.provenance.retrievedAt, verifiedAt: null,

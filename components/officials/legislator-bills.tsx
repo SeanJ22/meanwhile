@@ -38,8 +38,8 @@ export function LegislatorBills({holder}:{holder:SeatHolder}) {
       <CardSourcesContribution id={`bills:${holder.id}`} sources={[
         {what:`Bill data licence: ${LEGISCAN_ATTRIBUTION.licence}`,provenance:{sourceUrl:LEGISCAN_ATTRIBUTION.licenceUrl,sourceOrg:"LegiScan",collectedAt:read.checkedAt??"",verifiedAt:null}},
         ...bills.flatMap(bill=>[
-          {what:`${bill.number}: title, status, sponsors; published ${bill.facts.title.publishedAt}`,provenance:bill.facts.title},
-          ...bill.texts.map(row=>({what:`${bill.number}: ${row.type}; published ${row.date??bill.facts.title.publishedAt}`,provenance:{...bill.facts[`text:${row.id}`],sourceUrl:row.governmentUrl??row.url,sourceOrg:row.governmentSourceOfficial?`${bill.state} Legislature`:"LegiScan",kind:row.governmentSourceOfficial?"OFFICIAL" as const:"REFERENCE" as const}})),
+          {what:`The title, progress and sponsors of ${bill.number}`,publishedAt:bill.facts.title.publishedAt,provenance:bill.facts.title},
+          ...bill.texts.map(row=>({what:`The text of ${bill.number}: ${row.type}`,publishedAt:row.date??bill.facts.title.publishedAt,provenance:{...bill.facts[`text:${row.id}`],sourceUrl:row.governmentUrl??row.url,sourceOrg:row.governmentSourceOfficial?`${bill.state} Legislature`:"LegiScan",kind:row.governmentSourceOfficial?"OFFICIAL" as const:"REFERENCE" as const}})),
         ]),
       ]}/>
     </>

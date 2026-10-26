@@ -44,7 +44,7 @@ test("BX-10: the meeting card's Sources names the publisher record the recording
   assert.equal(sources.length, 2, "the recording and sitting share one publisher record; the agenda has its own source URL");
   assert.equal(sources[1]!.provenance.sourceUrl, meeting.agendaUrl);
   assert.equal(sources[0]!.provenance.sourceUrl, meeting.provenance.sourceUrl);
-  assert.match(sources[0]!.what, /The recording of this sitting/, "the recording's coverage is named behind its publisher record");
+  assert.match(sources[0]!.what, /The recording of this meeting/, "the recording's coverage is named behind its publisher record");
   assert.doesNotMatch(sources[0]!.what, /and \d+ more from this source/);
   const without = meetingCardSources(normalizeOne({ EventVideoPath: null }), []);
   assert.doesNotMatch(without[0]!.what, /recording/);

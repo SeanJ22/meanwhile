@@ -16,7 +16,7 @@ Rules (Sean): a release carries one lane only when it's urgent (Neon cost, runne
 | READY | Lane | Slot |
 |---|---|---|
 | DB-04 (not posted yet) | one read-only-what-changed path for every read | ships alone the moment it posts READY; preempts any gate |
-| 04681516c | DB-03 Admin (Admin's own screens) | RETURNED 9:36 PM EDT: 3 tests (returns/db-03.md). River finishes it at 10:36 PM EDT if no new READY |
+| 7dc32db25 (carries 04681516c) | DB-03 Admin (Admin's own screens), finished by River on stream/river-db03-admin; rides batch 2 | READY 10:50 PM EDT. Owed route kept as RB-A6 wrapped in adminRead; second conflict use-keeper-scoreboard.ts took Admin's version (drops AD-01's extra 60 s scoreboard fetch; Now still refreshes on the pulse); 3 tests fixed (2 test-only, path-separator in admin-read.ts); 734/734 focused, tsc, eslint, knip, preflight clean |
 
 **Improvement batch 1: gating now (AD-01, GB-01, MT-01, MD-01 merged on river e58835856 → d7dd06466)**
 | READY | Lane | Note |

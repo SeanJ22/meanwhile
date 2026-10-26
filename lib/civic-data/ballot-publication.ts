@@ -39,8 +39,8 @@ const publicationLogKey = (state: BallotState, family: BallotPublicationFamily =
 
 /**
  * Due state ballot files lead the pass because they already hold their source evidence. State place maps come next,
- * smallest reservation first: they run one at a time in the Census lane, so only the lane's current state asks for
- * memory, before long reads fill it, and a small state never waits behind a large one. Voting sites, measure explainers and the remaining work then take turns, retaining the order of how long each
+ * smallest reservation first, then the national bill fan-out: each runs one child at a time in its own lane, so it asks
+ * for memory before long reads fill it, and a small state never waits behind a large one. Voting sites, measure explainers and the remaining work then take turns, retaining the order of how long each
  * family's work is owed. A child can hold memory until the pass deadline, so each family needs its turn before another
  * fills the existing worker pool.
  */
@@ -48,10 +48,11 @@ export function electionLaunchOrder<T extends { readonly task: { readonly id: st
   const family = (job: T) => parseStateBallotContractId(job.task.id)?.family;
   const translation = (job: T) => /^measure-translations:[A-Z]{2}$/.test(job.task.id);
   const map = (job: T) => job.task.id.startsWith("place-map-");
+  const bills = (job: T) => job.task.id === "legiscan-bulk";
   const voting = jobs.filter(job => family(job) === "voting-sites");
   const translations = jobs.filter(translation);
-  const rest = jobs.filter(job => family(job) !== "ballot-contests" && family(job) !== "voting-sites" && !translation(job) && !map(job));
-  return [...jobs.filter(job => family(job) === "ballot-contests"), ...jobs.filter(map).sort((left, right) => placeMapReservationMiB(left.task.id.slice(10)) - placeMapReservationMiB(right.task.id.slice(10))), ...Array.from({ length: Math.max(voting.length, translations.length, rest.length) },
+  const rest = jobs.filter(job => family(job) !== "ballot-contests" && family(job) !== "voting-sites" && !translation(job) && !map(job) && !bills(job));
+  return [...jobs.filter(job => family(job) === "ballot-contests"), ...jobs.filter(map).sort((left, right) => placeMapReservationMiB(left.task.id.slice(10)) - placeMapReservationMiB(right.task.id.slice(10))), ...jobs.filter(bills), ...Array.from({ length: Math.max(voting.length, translations.length, rest.length) },
     (_, index) => [voting[index], translations[index], rest[index]]).flat().filter((job): job is T => job !== undefined)];
 }
 

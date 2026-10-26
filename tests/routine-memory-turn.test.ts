@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { runBoundedChildPass, type BoundedChildCommand } from "../lib/civic-data/bounded-child-pass.ts";
 import { routineChildMemoryOrder, routineDeferral, ROUTINE_PASS_BUDGET_MS, ROUTINE_SOURCE_TASKS, routinePassLaunchOrder, routineFailureDomainFrontier,
-  routinePlaceMapWaited, routineSerialLane, routineSerialLanesFirst, type RoutineTaskAdmissionCandidate } from "../lib/civic-data/runner.ts";
+  routineWaitedFullPass, routineSerialLane, routineSerialLanesFirst, type RoutineTaskAdmissionCandidate } from "../lib/civic-data/runner.ts";
 import { electionLaunchOrder } from "../lib/civic-data/ballot-publication.ts";
 import { routineProcessSlots, workerMemoryHost, type WorkerMemoryRelease } from "../lib/control-plane/workers/worker-slots.ts";
 import { placeMapReservationMiB } from "../lib/place-map/memory.ts";
@@ -57,7 +57,7 @@ const mapRunMs = (id: string) => 15_000 + Math.round(blockBytes(id) * 0.0009);
  * owed maps. Ordering, Census lane, waited rule, memory order and per-state reservations are the runner's own.
  * `shipped` replays RT-01 as shipped: 3,709 MiB maps ordered last that take only a free turn.
  */
-async function busyPass(maps: readonly Omit<RoutineTaskAdmissionCandidate, "deadlineMs">[], shipped = false) {
+async function busyPass(maps: readonly Omit<RoutineTaskAdmissionCandidate, "deadlineMs">[], shipped = false, legiscan?: "shipped" | "held") {
   const clock = new ControlledClock(0), launches: { id: string; at: number }[] = [];
   const window = 20 * 60_000, now = 0;
   const host = workerMemoryHost({ processes: () => [] });
@@ -73,16 +73,23 @@ async function busyPass(maps: readonly Omit<RoutineTaskAdmissionCandidate, "dead
     ...Array.from({ length: 100 }, (_, index) => ({ task: { ...site, id: `${site.id}:${index}`, acquisitionFailureDomain: `sites-${index}` },
       owedAtMs: now - 3_600_000 + index, lastConsideredAt: null })),
     ...maps,
+    // The national bill fan-out continuing from the previous pass: no owed instant, considered a pass ago.
+    ...legiscan ? [{ task: ROUTINE_SOURCE_TASKS.find(task => task.id === "legiscan-bulk")!, lastConsideredAt: new Date(now - 30 * 60_000).toISOString() }] : [],
   ];
   const admitted = routineFailureDomainFrontier(candidates);
-  const waited = new Set(admitted.filter(candidate => routinePlaceMapWaited(candidate, now)).map(({ task }) => task.id));
+  const waited = new Set(admitted.filter(candidate => routineWaitedFullPass(candidate, now)).map(({ task }) => task.id));
   // As shipped, a never-run map was ordered after all overdue work.
   const passOrder = routinePassLaunchOrder(routineSerialLanesFirst(admitted), now);
-  const ordered = shipped ? passOrder : electionLaunchOrder(passOrder);
+  // As shipped (BL-02), the bill fan-out was ordinary late work on a free turn.
+  const bills = (row: { task: { id: string } }) => row.task.id === "legiscan-bulk";
+  if (legiscan === "shipped") waited.delete("legiscan-bulk");
+  const ordered = shipped ? passOrder : legiscan === "shipped"
+    ? [...electionLaunchOrder(passOrder.filter(row => !bills(row))), ...passOrder.filter(bills)] : electionLaunchOrder(passOrder);
   const commands: BoundedChildCommand[] = ordered.map(({ task }) => ({ id: task.id, failureDomain: task.acquisitionFailureDomain,
-    serialLane: shipped ? undefined : routineSerialLane(task.command), executable: "ignored", args: [] }));
-  const script = (id: string) => id.startsWith("place-map-") ? "place-map-refresh.mts" : id.startsWith("meetings:") ? "ingest.ts" : "derive-candidate-campaign-sites.mts";
-  const runsFor = (id: string) => id.startsWith("place-map-") ? mapRunMs(id) : id.startsWith("meetings:") ? 4 * 60_000 : 60_000;
+    serialLane: shipped || legiscan === "shipped" && task.id === "legiscan-bulk" ? undefined : routineSerialLane(task.command), executable: "ignored", args: [] }));
+  const script = (id: string) => id.startsWith("place-map-") ? "place-map-refresh.mts" : id.startsWith("meetings:") ? "ingest.ts"
+    : id === "legiscan-bulk" ? "legiscan-bulk.mts" : "derive-candidate-campaign-sites.mts";
+  const runsFor = (id: string) => id.startsWith("place-map-") ? mapRunMs(id) : id.startsWith("meetings:") ? 4 * 60_000 : id === "legiscan-bulk" ? window : 60_000;
   const releases = new Map<string, WorkerMemoryRelease>();
   let mapsRunning = 0, mostMaps = 0, meetingsRunning = 0, fewestReads = Infinity, waitedHandedBack = 0;
   await clock.run(async () => {
@@ -122,6 +129,7 @@ async function busyPass(maps: readonly Omit<RoutineTaskAdmissionCandidate, "dead
   });
   assert.equal(releases.size, 0);
   return { mostMaps, fewestReads, waitedHandedBack,
+    bills: launches.filter(row => row.id === "legiscan-bulk"),
     maps: launches.filter(row => row.id.startsWith("place-map-")),
     meetings: launches.filter(row => row.id.startsWith("meetings:")) };
 }
@@ -137,11 +145,11 @@ test("RT-01 as shipped: 3,709 MiB maps on free turns never start on a host busy 
 test("a map waited a full pass when it was owed for one pass budget or has never run; other work never counts as waited", () => {
   const tx = MAPS.find(task => task.id === "place-map-tx")!;
   const now = Date.parse("2026-10-26T15:00:00.000Z");
-  assert.equal(routinePlaceMapWaited({ task: tx, baselineOwed: true, lastConsideredAt: null }, now), true);
-  assert.equal(routinePlaceMapWaited({ task: tx, owedAtMs: now - ROUTINE_PASS_BUDGET_MS, lastConsideredAt: "2026-09-20T00:00:00.000Z" }, now), true);
-  assert.equal(routinePlaceMapWaited({ task: tx, owedAtMs: now - ROUTINE_PASS_BUDGET_MS + 1, lastConsideredAt: "2026-09-20T00:00:00.000Z" }, now), false);
+  assert.equal(routineWaitedFullPass({ task: tx, baselineOwed: true, lastConsideredAt: null }, now), true);
+  assert.equal(routineWaitedFullPass({ task: tx, owedAtMs: now - ROUTINE_PASS_BUDGET_MS, lastConsideredAt: "2026-09-20T00:00:00.000Z" }, now), true);
+  assert.equal(routineWaitedFullPass({ task: tx, owedAtMs: now - ROUTINE_PASS_BUDGET_MS + 1, lastConsideredAt: "2026-09-20T00:00:00.000Z" }, now), false);
   const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
-  assert.equal(routinePlaceMapWaited({ task: meeting, baselineOwed: true, lastConsideredAt: null }, now), false);
+  assert.equal(routineWaitedFullPass({ task: meeting, baselineOwed: true, lastConsideredAt: null }, now), false);
   assert.deepEqual(routineChildMemoryOrder(3, true), { priority: 3, first: true });
   assert.deepEqual(routineChildMemoryOrder(4, false), { priority: 4, wait: false });
 });
@@ -196,4 +204,27 @@ test("each state's reservation is its own measured peak, or its block-file fit, 
   for (const [state, row] of Object.entries(measured)) {
     assert.ok(memory.fit.interceptBytes + memory.fit.slope * states[state]!.blockFileBytes >= row.peakBytes, `${state} lies on or under the fit`);
   }
+});
+
+test("BL-02 as shipped: the 2,130 MiB bill fan-out on a late free turn never starts on a host busy with reads", async () => {
+  const pass = await busyPass(neverRun, false, "shipped");
+  assert.equal(pass.bills.length, 0, "the production failure: every legiscan-bulk decision since 11:47 UTC was DEFER");
+});
+
+test("the bill fan-out has always waited a full pass, so it takes the next freed memory beside the maps in a busy pass", async () => {
+  const bulk = ROUTINE_SOURCE_TASKS.find(task => task.id === "legiscan-bulk")!;
+  assert.equal(routineSerialLane(bulk.command), "serial:scripts/legiscan-bulk.mts");
+  assert.equal(routineWaitedFullPass({ task: bulk, lastConsideredAt: new Date().toISOString() }, Date.now()), true);
+  const without = await busyPass(neverRun);
+  const pass = await busyPass(neverRun, false, "held");
+  assert.equal(pass.bills.length, 1);
+  assert.equal(pass.waitedHandedBack, 0, "neither the fan-out nor a waited map hands its turn back");
+  assert.ok(pass.bills[0]!.at <= 5 * 60_000, `the fan-out takes early room (started at ${pass.bills[0]!.at / 1000}s)`);
+  assert.equal(pass.maps[0]?.id, "place-map-as", "the smallest state still starts first");
+  assert.equal(pass.mostMaps, 1);
+  assert.ok(pass.maps.length >= 0.8 * without.maps.length, `maps keep their turn: ${pass.maps.length} with the fan-out, ${without.maps.length} without`);
+  // The fan-out holds one 2,130 MiB child (about 1.5 meeting reads) for the whole window while bills are owed.
+  assert.ok(pass.fewestReads >= 2, `meeting reads keep running beside it: at least ${pass.fewestReads} at once`);
+  assert.ok(pass.meetings.length >= 0.8 * without.meetings.length,
+    `meeting reads keep starting: ${pass.meetings.length} with the fan-out, ${without.meetings.length} without`);
 });

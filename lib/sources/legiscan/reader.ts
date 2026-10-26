@@ -2,6 +2,7 @@ import { readPromotedCivicData,type PromotedCivicDataReadOptions,type PromotedEd
 import { PostgresRoutineDataStore } from "../../civic-data/store.ts";
 import { bulkProjectionIssue } from "./publication.ts";
 import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,billScope,stateOfDataset,publicDatasetIndex,joinSponsors,hydrateBillPart,type BillSession,type BillPart,type BillIndex,type Bill,type HeldPerson } from "./bills.ts";
+import { currentLegiscanDatasets } from "./current-sessions.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
 import { readCanonicalShelf } from "../../reader/canonical.ts";
 import { readerCanonicalEntry } from "../../reader/canonical-context.ts";
@@ -51,18 +52,24 @@ export async function readBulkProjection(scope:string,options:BulkReadOptions={}
   }
   return result;
 }
-/** A request opens only sessions in its state. Missing sessions remain explicit coverage gaps. */
+/**
+ * A request opens only its state's current sessions, the ones the fan-out publishes; a catalogue without session years
+ * cannot name them, so it opens all of the state's sessions. A missing session, or one an earlier parser still holds
+ * until the fan-out republishes it, remains an explicit coverage gap.
+ */
 export async function readBillsForState(state:string,options:PromotedCivicDataReadOptions & {person?:HeldPerson}={}):Promise<{bills:Bill[];complete:boolean;checkedAt:string|null}> {
   const index=await readBulkProjection(LEGISCAN_BULK_SCOPE,options);
   if(index.kind!=="PROMOTED"||index.value.kind!=="INDEX") return {bills:[],complete:false,checkedAt:null};
-  const datasets=index.value.datasets.filter(row=>stateOfDataset(row)===state.toUpperCase());
+  const own=index.value.datasets.filter(row=>stateOfDataset(row)===state.toUpperCase());
+  const datasets=own.length&&own.every(row=>row.year_start!==undefined)?currentLegiscanDatasets(own,index.value.capturedAt):own;
   const bills:Bill[]=[]; let complete=datasets.length>0;
   for(let offset=0;offset<datasets.length;offset+=READER_SCOPE_BATCH){
     const batch=datasets.slice(offset,offset+READER_SCOPE_BATCH);
     const batchOptions=await exactBulkOptions(batch.map(dataset=>billScope(dataset.session_id)),options);
     const sessions=await runBoundedWorkPool(batch,4,async dataset=>{
-    const read=await readBulkProjection(billScope(dataset.session_id),batchOptions);
-    if(read.kind!=="PROMOTED"||read.value.kind!=="SESSION") {complete=false;return;}
+    const read=await readPromotedCivicData<BillSession|BillPart|BillIndex>("STATE_BILL",billScope(dataset.session_id),batchOptions);
+    if(read.kind==="PROMOTED"&&read.metadata.sourceId!=="legiscan-bills")throw Error("LEGISCAN_BULK_SOURCE_INVALID");
+    if(read.kind!=="PROMOTED"||read.value.kind!=="SESSION"||read.value.parserVersion!==LEGISCAN_BULK_PARSER) {complete=false;return;}
     if(read.value.state!==state.toUpperCase()) throw Error("LEGISCAN_READER_STATE_MISMATCH");
     if(read.value.dataset.dataset_hash!==dataset.dataset_hash) complete=false;
     const session=read.value;

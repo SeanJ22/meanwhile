@@ -53,7 +53,7 @@ import {
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineFailureDomainFrontier,
   routineChildMemoryOrder,
-  routinePlaceMapWaited,
+  routineWaitedFullPass,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   routineTaskFromContract,
@@ -1196,7 +1196,7 @@ const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, cloc
   ),
 })), routineFailureDomainRotationSeed(RUN_STARTED_AT));
 const admittedIds = new Set(admitted.map(({ task }) => task.id));
-const waitedMaps = new Set(admitted.filter(candidate => routinePlaceMapWaited(candidate, admissionNowMs)).map(({ task }) => task.id));
+const waitedFullPass = new Set(admitted.filter(candidate => routineWaitedFullPass(candidate, admissionNowMs)).map(({ task }) => task.id));
 for (const { pending } of dueCandidates) {
   if (admittedIds.has(pending.id)) continue;
   recordLaunchDecision(pending.task, "DEFER", "Other calendars on this source have this pass's turns",
@@ -1311,9 +1311,9 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
-      // A memory wait returns the source turn immediately, except a map's that has waited a full pass: it takes the next memory that fits.
+      // A memory wait returns the source turn immediately, except for work that has waited a full pass: it takes the next memory that fits.
       try {
-        await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), routineChildMemoryOrder(index, waitedMaps.has(command.id)));
+        await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), routineChildMemoryOrder(index, waitedFullPass.has(command.id)));
       } catch (error) {
         if (error instanceof Error && error.message.startsWith("WORKER_MEMORY_BUSY:")) return false;
         throw error;

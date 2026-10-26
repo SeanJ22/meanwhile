@@ -28,10 +28,12 @@ export function routineDeferral(run: BoundedChildResult, childStarted: boolean):
   return unsent || cut ? run.errorMessage : null;
 }
 
-/** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane. Census
- * work shares one worker: the national overlap child and each state's map child run one at a time in the Census lane. */
+/** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane, as does
+ * the national bill fan-out. Census work shares one worker: the national overlap child and each state's map child run
+ * one at a time in the Census lane. */
 const ROUTINE_SERIAL_SCRIPTS: ReadonlyMap<string, string> = new Map([
   ["scripts/national-people-refresh.mts", "serial:scripts/national-people-refresh.mts"],
+  ["scripts/legiscan-bulk.mts", "serial:scripts/legiscan-bulk.mts"],
   ["scripts/census-geography-refresh.mts", "serial:census-geography"],
   ["scripts/place-map-refresh.mts", "serial:census-geography"],
 ]);
@@ -40,16 +42,19 @@ export function routineSerialLane(command: readonly string[]): string | undefine
 }
 
 /**
- * A state map that has waited a full pass: owed at least one pass budget before admission, or never yet run. Its clock
- * moves only when it runs, so a map still owed after a whole pass did not start in it.
+ * Work whose one child reserves more than a finishing read frees, and that has waited a full pass, goes first for memory.
+ * A state map has waited when it was owed at least one pass budget before admission, or has never run: its clock moves
+ * only when it runs, so a map still owed after a whole pass did not start in it. The national bill fan-out (2,130 MiB)
+ * continues from pass to pass with no owed instant, so whenever it is admitted it has waited.
  */
-export function routinePlaceMapWaited(candidate: Pick<RoutineTaskAdmissionCandidate, "task" | "owedAtMs" | "baselineOwed" | "lastConsideredAt">, nowMs: number): boolean {
+export function routineWaitedFullPass(candidate: Pick<RoutineTaskAdmissionCandidate, "task" | "owedAtMs" | "baselineOwed" | "lastConsideredAt">, nowMs: number): boolean {
+  if (candidate.task.command[0] === "scripts/legiscan-bulk.mts") return true;
   if (!candidate.task.id.startsWith("place-map-")) return false;
   if (candidate.baselineOwed && !candidate.lastConsideredAt) return true;
   return candidate.owedAtMs !== undefined && candidate.owedAtMs <= nowMs - ROUTINE_PASS_BUDGET_MS;
 }
 
-/** A waited map goes to the front and takes the next freed memory that fits its own reservation; every other child
+/** Waited work goes to the front and takes the next freed memory that fits its own reservation; every other child
  * takes a free turn and stays queued if it does not fit. */
 export function routineChildMemoryOrder(priority: number, waited: boolean): WorkerMemoryOrder {
   return waited ? { priority, first: true } : { priority, wait: false };

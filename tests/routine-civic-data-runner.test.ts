@@ -2179,7 +2179,8 @@ test("national people children share one serial lane: one at a time, back to bac
   assert.equal(new Set(people.map(task => task.acquisitionFailureDomain)).size, people.length);
   assert.equal(routinePassLaunchOrder(people.map(task => ({ task, lastConsideredAt: null }))).length, people.length,
     "admission still offers every due source and state each pass");
-  const others = ROUTINE_SOURCE_TASKS.filter(task => !["scripts/national-people-refresh.mts", "scripts/place-map-refresh.mts", "scripts/census-geography-refresh.mts"].includes(task.command[0]!));
+  const others = ROUTINE_SOURCE_TASKS.filter(task => !["scripts/national-people-refresh.mts", "scripts/place-map-refresh.mts", "scripts/census-geography-refresh.mts",
+    "scripts/legiscan-bulk.mts"].includes(task.command[0]!));
   assert.ok(others.every(task => routineSerialLane(task.command) === undefined));
 
   const [first, second] = [people.find(task => task.id.endsWith("-ca"))!, people.find(task => task.id.endsWith("-ny"))!];

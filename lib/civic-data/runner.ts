@@ -28,20 +28,24 @@ export function routineDeferral(run: BoundedChildResult, childStarted: boolean):
   return unsent || cut ? run.errorMessage : null;
 }
 
-/** One national people child, or one state place map, holds gigabytes, so each family runs one child at a time in its own lane. */
+/** One national people child, one state place map, or the national bill fan-out holds gigabytes, so each family runs one child at a time in its own lane. */
 const PLACE_MAP_SCRIPT = "scripts/place-map-refresh.mts";
-const ROUTINE_SERIAL_SCRIPTS: ReadonlySet<string> = new Set(["scripts/national-people-refresh.mts", PLACE_MAP_SCRIPT]);
+const LEGISCAN_BULK_SCRIPT = "scripts/legiscan-bulk.mts";
+const ROUTINE_SERIAL_SCRIPTS: ReadonlySet<string> = new Set(["scripts/national-people-refresh.mts", PLACE_MAP_SCRIPT, LEGISCAN_BULK_SCRIPT]);
+/** Lanes whose one child reserves more than a finishing read frees: they keep their place in the memory queue. */
+const ROUTINE_HELD_LANES: ReadonlySet<string> = new Set([PLACE_MAP_SCRIPT, LEGISCAN_BULK_SCRIPT].map(script => `serial:${script}`));
 export function routineSerialLane(command: readonly string[]): string | undefined {
   return ROUTINE_SERIAL_SCRIPTS.has(command[0] ?? "") ? `serial:${command[0]}` : undefined;
 }
 
 /**
- * A state map reserves more memory than one finishing read frees, so with every child taking a free turn the reads
- * refill the host first and no map starts. The map lane's one waiting state keeps its place in the memory queue and
- * holds later starts for MEMORY_HOLD_MS until it fits; every other child takes a free turn and stays queued if it does not fit.
+ * A state map (1,672 MiB) or the national bill fan-out (2,130 MiB) reserves more memory than one finishing read frees,
+ * so with every child taking a free turn the reads refill the host first and it never starts. A held lane's one waiting
+ * child keeps its place in the memory queue and holds later starts for MEMORY_HOLD_MS until it fits; every other child
+ * takes a free turn and stays queued if it does not fit.
  */
 export function routineChildMemoryOrder(serialLane: string | undefined, priority: number): WorkerMemoryOrder {
-  return serialLane === `serial:${PLACE_MAP_SCRIPT}` ? { priority, hold: true } : { priority, wait: false };
+  return serialLane !== undefined && ROUTINE_HELD_LANES.has(serialLane) ? { priority, hold: true } : { priority, wait: false };
 }
 
 export const ROUTINE_SUPERVISOR_STARTED_AT_ENV = "WTP_ROUTINE_SUPERVISOR_STARTED_AT";

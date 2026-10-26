@@ -1393,3 +1393,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - The bootstrap triggers stay installed and keep queuing page rebuilds on every runner write until 126's code deploys and its contract migration drops them.
 - Netlify's own deploy log isn't reachable from River (the Netlify connector needs Sean's sign-in).
 - For Sean to decide: (a) forward fix: the deploy step builds pages for a fixed budget and lets the steady-state worker finish; a River agent is preparing it on local branch river-pages-bounded; or (b) revert 126 on main, which needs Sean's word, and still leaves the triggers queuing until a contract migration drops them.
+
+### 5:30 AM EDT: forward fix for the deploy blocker, gating
+- On 126 a place with no page gives readers PLACE_PAGE_NOT_BUILT (/api/meetings 503), which is why its build step refused to finish. Only the rebuild-place-pages scheduled function drains the queue, and it exists only once 126 is live. Queue: 95.5k OCD places, 41.9k ZIP places, 9.7k bodies, 12.9k re-queued by the bootstrap triggers (each meeting or registration publication re-queues its whole state).
+- Fix READY cea9618fe on stream/river-pages-bounded (forward fix, option (a); not a revert): the build step builds pages for 6 minutes then lets the deploy go on; a reader on a place with no page gets the pre-RB-A7 query and composer, which is what 125 runs on every visit today (0.25 to 1.9 s per ZIP, timed read-only). Tests reproduce 126's "didn't load" and pass with the fix (16/16; related 102/102).
+- Gating alone on river-next-pages 527ed53d4. Ships as release 127; then the Maryland cost fix (READY 271900f72) as 128.
+- Risks: the queue may take hours to drain and keeps refilling while the bootstrap triggers stand (they're dropped by the contract migration after 126's code is live); about 147k CDN purge calls during the drain could hit Netlify's rate limits (a failed purge only re-queues the page).

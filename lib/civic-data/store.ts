@@ -1974,6 +1974,20 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   constructor(cacheOptions: { readonly purge?: ReaderCachePurger } = {}) { this.cacheOptions = cacheOptions; }
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
+  /** The standing bill publisher already owns these immutable bytes. Keep only its bounded in-flight parts. */
+  private readonly justWrittenBills = new Map<string,RoutineCandidate>();
+  private async ownedBillRecord(candidateId:string):Promise<CandidateVersionRecord|null|undefined>{
+    const candidate=this.justWrittenBills.get(candidateId);if(!candidate)return undefined;
+    // Replace the old whole-row read with the same persisted state/proof metadata.
+    const record=await this.readPublishedCandidateMetadata(candidateId);if(!record)return null;
+    if(record.candidate.id!==candidate.id||record.candidate.sourceId!==candidate.sourceId||
+      record.candidate.recordClass!==candidate.recordClass||record.candidate.scope!==candidate.scope||
+      record.candidate.retrieval.rawHash!==candidate.retrieval.rawHash||
+      record.candidate.normalization.normalizedHash!==candidate.normalization.normalizedHash||
+      record.candidate.normalization.normalizedPayloadHash!==candidate.normalization.normalizedPayloadHash)
+      throw Error(`CANDIDATE_OWNED_BILL_ENVELOPE_MISMATCH:${candidateId}`);
+    return{...record,candidate};
+  }
   private async scopeVersion(recordClass: RoutineRecordClass, scope: string): Promise<string> {
     const result = await this.db.execute(sql`select coalesce((select version::text
       from civic_data_clock_versions where record_class = ${recordClass} and scope = ${scope}), '0') as etag`);
@@ -2264,6 +2278,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }),
       this.db.insert(civicDataCandidateEvents).values(firstEvent),
     ]);
+    if(record.candidate.sourceId==="legiscan-bills"&&record.candidate.recordClass==="STATE_BILL"){
+      this.justWrittenBills.set(record.candidate.id,freezeDurableJson(record.candidate));
+      while(this.justWrittenBills.size>16)this.justWrittenBills.delete(this.justWrittenBills.keys().next().value!);
+    }
   }
 
   async transition(candidateId: string, state: CandidateState, at: string, detail: string, receipt?: ValidationReceipt, failure?: { code: string; detail: string }, options: CandidateTransitionOptions = {}): Promise<CandidateVersionRecord> {
@@ -2333,6 +2351,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
+    const owned=await this.ownedBillRecord(candidateId);if(owned!==undefined)return owned;
     const [row] = await this.candidateRows([candidateId], "candidate", async ids =>
       this.db.select().from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...ids])));
     return row ? { ...rowToCandidate(await this.withReceiptParts(row)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
@@ -2744,6 +2763,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readCandidateProof(candidateId: string): Promise<CandidateVersionRecord | null> {
+    const owned=await this.ownedBillRecord(candidateId);if(owned!==undefined)return owned?{...owned,candidate:candidateProofView(owned.candidate)}:null;
     const [row] = await this.candidateRows([candidateId], "candidate-proof", async ids => candidateProofRead(this.db, ids));
     return row ? { ...candidateProofRowToRecord(await this.withReceiptParts(row, false)), candidate: await this.loadProofCandidate(row.candidate) } : null;
   }

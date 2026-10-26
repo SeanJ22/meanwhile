@@ -1370,3 +1370,6 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - 125 live 3:30 AM. Every Idaho ZIP loads; Chrome on Boise plus 6 random Idaho ZIPs shows contests in 4.4 to 8.7 s, no wrong or shared photos. Per-ZIP times in releases/125.md for BF-01.
 - 126 (batch 2 + CS-01) gate 9/9 on 7291d406a (10,092 pass). river moved there. [#838](https://github.com/SeanJ22/meanwhile/pull/838), auto-merge on. Report: releases/126.md.
 - Drain fix proof: runner pid 4001083 at 125 live (3:30 AM); watching for a new pid within one pass deadline.
+
+### 3:50 AM EDT: drain fix proven on 125
+- The runner took release 125 by itself: vital signs written 3:41 AM show e12d76968, new pilot-runner pid 4177938 at 3:42 AM, 11 to 12 minutes after 125 went live at 3:30 AM. No hand restart by River.

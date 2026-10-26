@@ -396,7 +396,8 @@ test("a thousand-session catalog reaches every jurisdiction in one cycle despite
     const archive=zip([{name:`${id}/bill/HB1.json`,data:Buffer.from(JSON.stringify(raw))}],"2026-10-12");
     return Response.json({status:"OK",dataset:{...dataset,mime_type:"application/zip",zip:archive.toString("base64")}});
   };
-  const result=await refreshLegiscan(store,AbortSignal.timeout(15000),{key:"fixture",fetchImpl,now:()=>at,peopleForState:async()=>[]});
+  // Test catalog fairness independently of host CPU contention; controlled per-bill fixtures cover cutoff and resume.
+  const result=await refreshLegiscan(store,new AbortController().signal,{key:"fixture",fetchImpl,now:()=>at,peopleForState:async()=>[]});
   assert.deepEqual([...requested].sort((a,b)=>a-b),Array.from({length:52},(_,i)=>i+1));
   assert.equal(result.counts.AL.failures.length,1);
   assert.equal(Object.values(result.counts).filter(row=>row.datasets===1).length,51);

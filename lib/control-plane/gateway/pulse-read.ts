@@ -10,6 +10,7 @@ import { RESEARCH_STATE_ID } from "../scheduler/research-policy.ts";
 import { RESEARCH_INTENT_LOG_KEY } from "../scheduler/research-policy.ts";
 import { pulseLanesOf } from "../scheduler/lane-reading.ts";
 import type { ControlPlaneRepositories, RecordProjection } from "../repository/types.ts";
+import { placeReadConnection } from "../repository/pg-store.ts";
 
 /** `failed` means we could not ask, which differs from an answer of nothing. */
 type Reading<T> = { readonly value: T | null; readonly unread: string | null; readonly failed: boolean };
@@ -32,11 +33,31 @@ export const PULSE_SNAPSHOT_FIELDS = {
   incidents: true,
   obligationsByState: true,
 } as const satisfies RecordProjection & Partial<Record<keyof OwnerSnapshot, true>>;
-export const PULSE_RESEARCH_FIELDS = { queue: true } as const satisfies RecordProjection;
+export const PULSE_RESEARCH_FIELDS = { queue: ["lanes"] } as const satisfies RecordProjection;
 /** Money/Hunts need only the saved policy revision on each pulse, no policy payload. */
 export const PULSE_CONFIG_REVISION_FIELDS = {} as const satisfies RecordProjection;
 
 type PulseSnapshot = Pick<OwnerSnapshot, keyof typeof PULSE_SNAPSHOT_FIELDS>;
+
+/** Counts are calculated in PostgreSQL; none of these append-only logs crosses the wire. */
+async function pulseLogCounts(repos: ControlPlaneRepositories) {
+  const sql = placeReadConnection(repos);
+  if (!sql) {
+    const [receipts, intents, jobs] = await Promise.all([repos.adminReceipts.read(ADMIN_RECEIPT_LOG_KEY),
+      repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY), repos.agentJobs.read(AGENT_JOB_LOG_KEY)]);
+    return { receipts: receipts.length, intents: intents.length, jobs: liveJobCount(jobs) };
+  }
+  const [row] = await sql.query(`WITH jobs AS (SELECT DISTINCT ON
+      (CASE WHEN jsonb_typeof(record->'jobId')='string' AND record->>'jobId'<>'' THEN record->>'jobId' ELSE record_id END)
+      record FROM cp_log_agent_jobs WHERE log_key=$3
+      ORDER BY CASE WHEN jsonb_typeof(record->'jobId')='string' AND record->>'jobId'<>'' THEN record->>'jobId' ELSE record_id END,position DESC)
+    SELECT (SELECT count(*)::text FROM cp_log_admin_receipts WHERE log_key=$1) AS receipts,
+      (SELECT count(*)::text FROM cp_log_research_intents WHERE log_key=$2) AS intents,
+      count(*) FILTER (WHERE record->>'status' IN ('REQUESTED','RUNNING'))::text AS running,
+      count(*) FILTER (WHERE (record->>'status' IN ('REQUESTED','RUNNING','DONE','REFUSED','FAILED')) IS NOT TRUE)::text AS unreadable FROM jobs`,
+    [ADMIN_RECEIPT_LOG_KEY, RESEARCH_INTENT_LOG_KEY, AGENT_JOB_LOG_KEY]) as Record<string,unknown>[];
+  return { receipts:Number(row.receipts),intents:Number(row.intents),jobs:{running:Number(row.running),unreadable:Number(row.unreadable)} };
+}
 
 function countsFrom(snapshot: PulseSnapshot | null): {
   readonly freshnessDebtRows: number | null;
@@ -60,14 +81,13 @@ export async function readPulse(
   repos: ControlPlaneRepositories,
   nowIso: string,
 ): Promise<LivePulse> {
-  const [heartbeat, snapshot, research, receipts, jobs, intents, sourceProgress, config] = await Promise.all([
-    reading("the runner's heartbeat", async () => (await repos.runnerHeartbeat.read(RUNNER_ID)) ?? null),
+  const [heartbeat, snapshot, research, logs, sourceProgress, config] = await Promise.all([
+    reading("the runner's heartbeat", async () => (await repos.runnerHeartbeat.readNarrowed(RUNNER_ID,
+      {beatAt:true,lastCycleFinishedAt:true,nextCycleDueAt:true})) ?? null),
     reading("the control centre snapshot", async () => (await repos.ownerSnapshots.readNarrowed(SNAPSHOT_ID, PULSE_SNAPSHOT_FIELDS)) ?? null),
     reading("the research lane's state", async () => (await repos.researchState.readNarrowed(RESEARCH_STATE_ID, PULSE_RESEARCH_FIELDS)) ?? null),
-    reading("what this console has already done", async () => repos.adminReceipts.read(ADMIN_RECEIPT_LOG_KEY)),
-    reading("the jobs running for you", async () => repos.agentJobs.read(AGENT_JOB_LOG_KEY)),
-    reading("your research requests", async () => repos.researchIntents.read(RESEARCH_INTENT_LOG_KEY)),
-    reading("shared source activity", async () => repos.ownerDigests.readRecent(HUNT_SOURCE_PROGRESS_LOG_KEY, 1)),
+    reading("orders, jobs and research requests", () => pulseLogCounts(repos)),
+    reading("shared source activity", async () => (await repos.ownerDigests.readLatest([HUNT_SOURCE_PROGRESS_LOG_KEY],{digestId:true})).get(HUNT_SOURCE_PROGRESS_LOG_KEY) as {digestId:string} | undefined ?? {digestId:null}),
     reading("the saved hunt policy", async () => (await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID,
       PULSE_CONFIG_REVISION_FIELDS)) ?? null),
   ]);
@@ -76,7 +96,7 @@ export async function readPulse(
   const counts = countsFrom(snapshotValue);
 
   /* An unreadable row makes the whole count unknown; an empty log is zero. */
-  const jobCount = jobs.value === null ? null : liveJobCount(jobs.value);
+  const jobCount = logs.value?.jobs ?? null;
 
   /* Tracker decision cards are not counted; the field stays as "not counted" so its absence is not read as zero. */
   const decisionsWaiting: number | null = null;
@@ -85,9 +105,7 @@ export async function readPulse(
     heartbeat.unread,
     snapshot.unread,
     research.unread,
-    receipts.unread,
-    jobs.unread,
-    intents.unread,
+    logs.unread,
     sourceProgress.unread,
     config.failed ? config.unread : null,
     jobCount !== null && jobCount.unreadable > 0
@@ -96,7 +114,7 @@ export async function readPulse(
     ...counts.unread,
   ].filter((name): name is string => name !== null);
 
-  const beat = heartbeat.value?.value ?? null;
+  const beat = (heartbeat.value?.value ?? null) as import("../owner-surface.ts").RunnerHeartbeat | null;
   return {
     revision: pulseRevision({
       beatAt: beat?.beatAt ?? null,
@@ -104,9 +122,9 @@ export async function readPulse(
       snapshotRevision: snapshot.value?.revision ?? null,
       decisionCount: null,
       researchRevision: research.value?.revision ?? null,
-      receiptCount: receipts.value?.length ?? null,
-      researchIntentCount: intents.value?.length ?? null,
-      sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null,
+      receiptCount: logs.value?.receipts ?? null,
+      researchIntentCount: logs.value?.intents ?? null,
+      sourceProgressId: sourceProgress.value?.digestId ?? null,
       capabilityRevision: `${ADMIN_CAPABILITIES.revision}|${ADMIN_V6_CAPABILITY_REVISION}|${config.value?.revision ?? "-"}`,
     }),
     at: nowIso,
@@ -114,9 +132,9 @@ export async function readPulse(
     v6: adminV6ReadCapabilities({ configRevision: config.value?.revision ?? null,
       snapshotRevision: snapshot.value?.revision ?? null, researchRevision: research.value?.revision ?? null,
       heartbeatRevision: heartbeat.value?.revision ?? null,
-      sourceProgressId: sourceProgress.value?.[0]?.digestId ?? null,
-      workerAgeBucket: Math.floor(Date.parse(nowIso) / 300_000),
-      historyRevision: receipts.value !== null && intents.value !== null ? `${receipts.value.length}:${intents.value.length}` : null }),
+      sourceProgressId: sourceProgress.value?.digestId ?? null,
+      workerAgeBucket: Math.floor(Date.parse(nowIso) / 15_000),
+      historyRevision: logs.value !== null ? `${logs.value.receipts}:${logs.value.intents}` : null }),
     runner: {
       beatAt: beat?.beatAt ?? null,
       lastCycleFinishedAt: beat?.lastCycleFinishedAt ?? null,

@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
@@ -16,7 +17,7 @@ const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
  * Is capture working? Events per day by type, topics vs free-form, new vs returning readers, usage by district, and anything that
  * failed to record: counts and shares only, never an anonymous ID, an exact time or one person's trail. Read-only.
  */
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });
   if (!guard.ok) return guard.status === 404 ? new NextResponse(null, { status: 404 })
@@ -31,3 +32,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ says: "Whether capture is working could not be read just now, so it is unknown, not stopped." }, { status: 503, headers: NO_STORE });
   }
 }
+
+export const GET = adminRead(get);

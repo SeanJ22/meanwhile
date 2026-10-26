@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readerGovernmentName } from "../lib/text/reader-names.ts";
+import { readerGovernmentName, readerText } from "../lib/text/reader-names.ts";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { mkdir } from "node:fs/promises";
@@ -79,14 +79,14 @@ test("five ZIPs first show their source-code school district, government contact
       await page.getByRole("textbox", { name: "ZIP" }).fill(postal);
       const records = regions[postal].records as RegistrationReadModel["governments"];
       const school = records!.find(row => row.nativeIds.nces_leaid && row.associations.length)!;
-      await page.getByText(school.name, { exact: true }).waitFor({ state: "visible" });
+      await page.getByText(readerGovernmentName(school.name, null), { exact: true }).waitFor({ state: "visible" });
       assert.equal(await page.locator('[data-state-office="ELECTION_OFFICE"]').count(), 1);
       assert.equal(await page.locator('[data-state-office="CAMPAIGN_FINANCE_OFFICE"]').count(), 1);
       assert.ok(await page.locator(`[data-office-state="${state}"] a[href^="tel:"]`).count() >= 2);
       assert.ok(Date.now() - start < 3000, `${postal}: first usable result must fit three seconds`);
       const government = records!.find(row => row.contactTitle && row.mailingAddress && row.website)!;
       await page.getByText(readerGovernmentName(government.name,null), { exact: true }).click();
-      await page.getByText(`Mailing address: ${government.mailingAddress}`, { exact: true }).waitFor({ state: "visible" });
+      await page.getByText(`Mailing address: ${readerText(government.mailingAddress!, "address")}`, { exact: true }).waitFor({ state: "visible" });
       await page.locator(`[data-government-listing="${government.id}"] a[href="${government.website}"]`).waitFor({ state: "visible" });
     }
     await mkdir(".scratch/ci", { recursive: true });

@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * May only read the control plane, fetch production's build identity, and forward a confirmed action to
  * `POST /api/admin/action`. The forward goes through the action route's own handler in process, with this
@@ -78,7 +79,7 @@ function gatewayDoor(request: NextRequest): ChatActionDoor {
   };
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function post(request: NextRequest): Promise<NextResponse> {
   if (!isAdminHostRequest(request.headers, ADMIN_ORIGIN)) {
     return new NextResponse(null, { status: 404 });
   }
@@ -174,3 +175,5 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   };
   return NextResponse.json(answer, { status: 200 });
 }
+
+export const POST = adminRead(post);

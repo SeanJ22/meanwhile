@@ -1018,9 +1018,12 @@ test("the incident record names class, moment and outcome, passes aggregate-only
 
 test("the break-glass route's security sequence, in order, from its source", () => {
   const whole = readFileSync(join(ROOT, "app", "api", "admin", "session", "route.ts"), "utf8");
+  // The exported handlers only tag the read with its route, then run the bodies below unchanged.
+  assert.match(whole, /^export const POST = adminRead\(post\);$/m, "POST is the break-glass body");
+  assert.match(whole, /^export const DELETE = adminRead\(removeSession\);$/m, "DELETE is the sign-out body");
   // The POST body only: DELETE (sign-out) has its own host check after it.
-  const postAt = whole.indexOf("export async function POST");
-  const deleteAt = whole.indexOf("export async function DELETE");
+  const postAt = whole.indexOf("async function post(");
+  const deleteAt = whole.indexOf("async function removeSession(");
   assert.ok(postAt >= 0 && deleteAt > postAt, "POST precedes DELETE in the route");
   const source = whole.slice(postAt, deleteAt);
   const order = [

@@ -1,3 +1,4 @@
+import { SECTION_IDS } from '../app/(admin)/_mw/admin-v6/contract.ts';
 import assert from "node:assert/strict";
 import test from "node:test";
 import { NextRequest } from "next/server";
@@ -363,7 +364,7 @@ test("an open v6 page picks up both sections through LiveSync and renders the or
         { withSafety: path === "/api/admin/v6/money", project: handler[path] as never, open });
       return { status: res.status, json: async () => res.json() };
     };
-    const sync = new LiveSync({ scope, fetch, schedule: () => () => {} });
+    const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope, fetch, schedule: () => () => {} });
     sync.onPulse({ revision: "r1", at: NOW, v6: { version: 1, actions: {}, sections: {
       hunts: { contract: "admin-v6/hunts@1", href: "/api/admin/v6/hunts", revision: "h1" },
       money: { contract: "admin-v6/money@1", href: "/api/admin/v6/money", revision: "m1" } } } });

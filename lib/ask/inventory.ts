@@ -1,5 +1,6 @@
 import { nameAReaderCanSay, type BindableEntity } from "../routing/named-entity.ts";
 import type { CanonicalBodyIdentity } from "./body-identity.ts";
+import { readerText } from "../text/reader-names.ts";
 
 /**
  * The bodies a reader can name: one entity per distinct `Meeting.bodyId`, and
@@ -38,7 +39,7 @@ export function snapshotEntities(
     if (!name) continue;
     seen.set(bodyId, {
       id: bodyId,
-      name,
+      name: readerText(name, "title"),
       nameClass: "body",
       divisionType: identity?.divisionType ?? divisionTypeOf(meeting.ocdId),
       level: "BODY",
@@ -73,9 +74,5 @@ function divisionTypeOf(ocdId: string | null): string | null {
  * a government calls itself, and applied only to names that are slugs.
  */
 export function titleCaseName(slugWords: string): string {
-  return slugWords
-    .split(" ")
-    .filter(Boolean)
-    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ");
+  return readerText(slugWords.trim().replace(/\s+/g, " ").toUpperCase(), "title");
 }

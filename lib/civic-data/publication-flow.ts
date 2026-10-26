@@ -13,7 +13,7 @@ type PublicationItem = Pick<WorkItem, "id" | "publicationOutcome"> & {
   readonly autonomousPlan?: Pick<NonNullable<WorkItem["autonomousPlan"]>, "publication" | "jurisdiction">;
 };
 
-/** The body's visible attempt changes only after its outcome has been retained successfully. */
+/** Store the work outcome; each reader-data publisher queues its own changed pages. */
 export async function saveWorkerPublicationOutcome<T extends PublicationItem>(
   repos: { readonly workItems: Pick<AggregateRepository<T>, "compareAndSet"> }, current: Persisted<T>,
   outcome: NonNullable<WorkItem["publicationOutcome"]>, at: string, options: { readonly purge?: ReaderCachePurger } = {},
@@ -23,7 +23,7 @@ export async function saveWorkerPublicationOutcome<T extends PublicationItem>(
   if (plan?.publication?.bodyId && canonicalJson(current.value.publicationOutcome) !== canonicalJson(outcome)) {
     const bodyStates = registryJurisdictions(plan.publication.bodyId);
     const states = bodyStates.length ? bodyStates : registryJurisdictions(plan.jurisdiction);
-    await invalidateReaderCache(states.length ? { states } : { national: true }, options.purge);
+    await invalidateReaderCache(states.length ? { states } : { national: true }, options.purge, null);
   }
   return saved;
 }

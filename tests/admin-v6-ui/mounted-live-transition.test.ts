@@ -11,11 +11,12 @@ const entry = `
   import { createRoot } from "react-dom/client";
   import { usePulseFeed } from "./app/(admin)/_mw/admin-v6/live-connection.ts";
   import { LiveSync } from "./app/(admin)/_mw/admin-v6/live-sync.ts";
+  import { SECTION_IDS } from "./app/(admin)/_mw/admin-v6/contract.ts";
 
   function MountedAdapter() {
     const [scope, setScope] = useState("st:az");
     const [draft, setDraft] = useState("");
-    const [sync] = useState(() => new LiveSync({
+    const [sync] = useState(() => new LiveSync({ screen: "now", sections: SECTION_IDS,
       scope: "st:az",
       fetch: (url, init) => fetch(url, { ...init, cache: "no-store" }),
       schedule: (fn, ms) => { const timer = setTimeout(fn, ms); return () => clearTimeout(timer); },

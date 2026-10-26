@@ -1,4 +1,5 @@
 const labels:Readonly<Record<string,string>>={
+  "Place pages":"Place pages",rebuilt:"Pages rebuilt",
   CREATED:"One-off work",STANDING:"Recurring work",REGISTRY_RUNTIME_BINDING:"Government lists",
   CURATED_READER_RECORD:"Published civic records",FEDERAL_CIVIC_RECORD:"Federal records",
   FEC_FUNDING:"Federal campaign money",STATE_CAMPAIGN_FINANCE:"State campaign money",LOCAL_CAMPAIGN_FINANCE:"Local campaign money",

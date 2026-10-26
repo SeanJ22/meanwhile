@@ -13,6 +13,7 @@ import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { Division } from "../lib/registry/types.ts";
+import { PLACE_PAGES_SQL } from "../lib/reader/place.ts";
 
 function stateRows(version: string, divisions: readonly string[], zip = false) {
   const at = "2026-10-19T00:00:00.000Z", scope = "US-AZ:reader-registry-runtime";
@@ -205,7 +206,13 @@ test("the ballot submits state and place reads before its independent auxiliary 
     if (family === "auxiliary") auxiliaryKeys.push(...keys);
     await blocked;
     if (family === "state") return [stateRows("priority-state",[],statement.text.includes("AS zip_registry"))];
-    if (family === "place") return [[{ entities:[],fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[],parts:{},governments:[],divisions:[],registration_held:false }]];
+    if (family === "place") {
+      assert.equal(statement.text,PLACE_PAGES_SQL);
+      const divisions=statement.params[1] as string[];
+      return [[{page_id:divisions[0],page_kind:"place",built_at:"2026-10-19T00:00:00.000Z",body_ids:statement.params[2],row:{
+        division_ids:divisions,entities:[],fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[],parts:{},governments:[],divisions:[],registration_held:false,
+      }}]];
+    }
     return [[]];
   });
   try {

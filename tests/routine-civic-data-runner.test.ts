@@ -24,7 +24,7 @@ import {
   routineTaskSelection,
   routineDeferral,
   routineSerialLane,
-  routineFailureDomainFrontier,
+  routinePassLaunchOrder,
   routineAdmissionClock,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
@@ -2177,7 +2177,7 @@ test("national people children share one serial lane: one at a time, back to bac
   assert.ok(people.length > 100);
   assert.deepEqual([...new Set(people.map(task => routineSerialLane(task.command)))], ["serial:scripts/national-people-refresh.mts"]);
   assert.equal(new Set(people.map(task => task.acquisitionFailureDomain)).size, people.length);
-  assert.equal(routineFailureDomainFrontier(people.map(task => ({ task, lastConsideredAt: null }))).length, people.length,
+  assert.equal(routinePassLaunchOrder(people.map(task => ({ task, lastConsideredAt: null }))).length, people.length,
     "admission still offers every due source and state each pass");
   const others = ROUTINE_SOURCE_TASKS.filter(task => task.command[0] !== "scripts/national-people-refresh.mts");
   assert.ok(others.every(task => routineSerialLane(task.command) === undefined));

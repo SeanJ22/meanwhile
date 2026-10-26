@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { settingsEdgeStore } from "@/lib/civic-data/reader-settings-publication.ts";
 import { WORKER_SAFETY_FRAME } from "@/lib/control-plane/playbooks.ts";
 import type { NextRequest } from "next/server";
@@ -10,7 +11,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 export const runtime = "nodejs";
 
-export async function GET(request: NextRequest) {
+async function get(request: NextRequest) {
   return adminGet(request, async observedAt => {
     const opened = await openControlPlane();
     if (!opened.ok) throw new Error("Worker instructions are unavailable");
@@ -25,3 +26,5 @@ export async function GET(request: NextRequest) {
 
   });
 }
+
+export const GET = adminRead(get);

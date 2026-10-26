@@ -1,5 +1,5 @@
 import type { Body, Division } from "./types.ts";
-import { bodyIdsAtPoint, bodyIdsWithTerritory, type BodyTerritoryFile } from "./body-territory.ts";
+import { bodyIdsAtPoint, bodyIdsWithTerritory, type BodyTerritory } from "./body-territory.ts";
 import { polygonContains } from "../geo/polygon.ts";
 
 export type Ring = [number, number][];
@@ -126,8 +126,8 @@ export function bodiesAt(
   divisions: Map<string, Division>,
   bodies: Body[],
   resolved?: Division[],
-  /** The committed body-territory polygons. Null when not loaded. */
-  territory?: BodyTerritoryFile | null,
+  /** Territory polygons or their exact saved selection for this point. */
+  territory?: BodyTerritory | null,
 ): { divisions: Division[]; bodies: Body[] } {
   const hit = resolved ?? divisionsAt(point, features, divisions);
   const ids = new Set(hit.map((d) => d.ocdId));

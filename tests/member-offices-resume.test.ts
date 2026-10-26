@@ -1,6 +1,5 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
 import { zip } from "../scripts/xlsx.mjs";
 import { acquireStatePeople } from "../lib/sources/plural/acquisition.ts";
 import { PLURAL_REVISION_URL } from "../lib/sources/plural/targets.ts";
@@ -75,11 +74,8 @@ test("a member-office run cut off by its deadline saves the states it finished a
 });
 
 test("on the production store the member-office progress, capture list and continuation are read without the records", async () => {
-  await withMigratedRoutineStore("openstates-people-ca", async (store, vault, pg) => {
-    // The curated reader's pre-promotion read consults owner flags in the fact store.
-    for (const file of ["0035_r1_fact_store.sql", "0046_ck01_audit_flags.sql", "0047_ck01_flag_target.sql"]) {
-      await pg.exec(readFileSync(new URL(`../lib/db/migrations/${file}`, import.meta.url), "utf8"));
-    }
+  await withMigratedRoutineStore("openstates-people-ca", async (store, vault) => {
+    // The curated reader's pre-promotion read consults owner flags in the fact store, which the migrated store already holds.
     const as = (contract: string, capability = "ROUTINE_CONTRACT") => Object.assign(store as unknown as { writeAuthority: object }, {
       writeAuthority: { ...(store as unknown as { writeAuthority: object }).writeAuthority, contract, capability } });
     await publishState(store, "ca", vault);

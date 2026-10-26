@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
@@ -14,7 +15,7 @@ export const runtime = "nodejs";
 
 const safeId = (id: string): boolean => /^[a-z][a-z0-9-]{1,120}$/.test(id);
 /** The route serves a checked copy of original bytes; it never fetches the publisher again. */
-export async function GET(request: NextRequest, context: { params: Promise<{
+async function get(request: NextRequest, context: { params: Promise<{
   workItemId: string; attemptId: string; artifactId: string;
 }> }): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers,
@@ -58,7 +59,7 @@ export async function GET(request: NextRequest, context: { params: Promise<{
 }
 
 /** Queue a copy of this exact recorded capture. The permanent runner does the byte work. */
-export async function POST(request: NextRequest, context: { params: Promise<{
+async function post(request: NextRequest, context: { params: Promise<{
   workItemId: string; attemptId: string; artifactId: string;
 }> }): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers,
@@ -97,3 +98,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{
     return NextResponse.json({ error: "The copy request could not be recorded or checked." }, { status: 503, headers: adminEvidencePrivateHeaders });
   }
 }
+
+export const GET = adminRead(get);
+
+export const POST = adminRead(post);

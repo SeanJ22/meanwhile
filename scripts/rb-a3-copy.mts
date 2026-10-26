@@ -6,7 +6,7 @@ import type { FactDb, Query } from "../lib/facts/publish.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { COUNT_SCHEMA_SOURCE } from "../lib/control-plane/repository/migrations/RB-A8.ts";
-import { readerIdentityMigration } from "../tests/helpers/reader-identity-db.ts";
+import { readerIdentityMigration,placePageMigration } from "../tests/helpers/reader-identity-db.ts";
 
 type Row = Record<string, unknown>;
 export interface FactSnapshot {
@@ -23,10 +23,11 @@ export interface FactSnapshot {
 
 /** Open only a fresh local database; restore permanent ids before their relationships. */
 export async function openFactCopy(snapshot: FactSnapshot) {
-  const db = await factDb({ withResolver: false });
+  const db = await factDb({ withResolver: false, withPlacePages: false });
   try {
     for (const statement of readerIdentityMigration().split("--> statement-breakpoint"))
       if (!/SELECT reader_sync_ids\(\)/.test(statement)) await db.pg.exec(statement);
+    await db.pg.exec(placePageMigration());
     const entities = JSON.stringify(snapshot.entities ?? []);
     await db.query(`INSERT INTO entity(id,kind,name,state,created_at)
       SELECT id,kind,name,state,created_at FROM jsonb_populate_recordset(NULL::entity,$1::jsonb)`, [entities]);

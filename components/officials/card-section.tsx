@@ -6,6 +6,7 @@
 
 import { CardGapContribution, CardGapsContribution } from "@/components/ui/card-gap-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
+import { readerText } from "@/lib/text/reader-names";
 
 import {
   Children,
@@ -119,8 +120,8 @@ export function CardSection({
         aria-controls={id}
         onClick={toggle}
       >
-        <span className="card-section-title">{title}</span>
-        {meta && <span className="card-section-meta">{meta}</span>}
+        <span className="card-section-title">{readerText(title)}</span>
+        {meta && <span className="card-section-meta">{readerText(meta)}</span>}
         <svg
           className="card-section-chevron"
           width="14"

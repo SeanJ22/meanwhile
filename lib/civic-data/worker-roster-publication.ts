@@ -290,13 +290,18 @@ export async function publishWorkerDirectoryResults(input: {
     let candidateId: string | null = null, versionId: string | null = null, readingId: string | null = null, parserId: string | null = null;
     let captures: WorkerPublicationCapture[] = [], heldDirectory: DirectoryReading | null = null, wentLive = 0;
     try {
+      const parser = latestParserResult(records, id);
+      parserId = parser?.id ?? null;
+      const brokeAfter = parser ? auditPull(records, parser) : null;
+      if (parser && item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.sourceObservedAt &&
+          item.publicationOutcome.status !== "HELD" && !(brokeAfter && brokeAfter.at > item.publicationOutcome.at)) {
+        report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
+      }
       const state = plan.contract.jurisdiction.state;
       if (registryState !== state) { registry = undefined; registryState = state; }
       if (registry === undefined) registry = await readRegistryRuntimePrior(input.store, input.now, state);
       const prior = registry;
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
-      const parser = latestParserResult(records, id);
-      parserId = parser?.id ?? null;
       captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture, officialLinks: manual.officialLinks }) : [];
       if (!parser) {
         const government = plan.directorySubject?.jurisdiction.id ?? id;
@@ -310,8 +315,7 @@ export async function publishWorkerDirectoryResults(input: {
         if (!heldDirectory) throw new Error("DIRECTORY_NO_READABLE_SAVED_PAGE:No saved official page for this government lists a board or commission that passes §3 yet");
       }
       readingId = parser?.id ?? heldDirectory!.id;
-      const brokeAfter = parser ? auditPull(records, parser) : null;
-      if (item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.sourceObservedAt && item.publicationOutcome.status !== "HELD" && !(brokeAfter && brokeAfter.at > item.publicationOutcome.at)) { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
+      if (!parser && item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.sourceObservedAt && item.publicationOutcome.status !== "HELD") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
       const already = publishedByBody.get(`${bodyId}\n${readingId}`);
       if (already) throw Object.assign(new Error("REUSED"), { reused: already });
       const directoryPackage = parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records, kinds })

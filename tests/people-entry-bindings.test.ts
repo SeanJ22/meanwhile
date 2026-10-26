@@ -102,6 +102,18 @@ test("rechecking one person's same source entry keeps facts and every old ID wit
   assert.equal(changed.officeholders[0].sourceHolders?.length,2,"different sourced facts remain available");
 });
 
+test("a merged snapshot's inherited Plural ID cannot lend another member's profile ID",()=>{
+  const profile=(id:string)=>`https://www.flhouse.gov/Sections/Representatives/details.aspx?MemberId=${id}`;
+  const native={...people[0],state:"FL",websiteUrl:profile("1"),profileUrls:[profile("1")],provenance:{...people[0].provenance,sourceUrl:`https://raw.githubusercontent.com/openstates/people/${"a".repeat(40)}/data/fl/legislature/vito.yml`}};
+  const merged={...native,websiteUrl:profile("2"),profileUrls:[profile("2")],provenance:{...native.provenance,sourceUrl:profile("1")}};
+  const body=`<h1>House Members</h1><div><a href="${profile("2")}"><h2>Lena Newname</h2></a><p>Representative District 4</p><img src="/lena.jpg"></div>`;
+  const parsed=normalizeOfficialLegislaturePage(body,"https://www.flhouse.gov/representatives",{state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,
+    roster:roster([{...native,sourceHolders:[native,merged]}])},at);
+  assert.equal(parsed.officeholders.length,1);
+  assert.equal(parsed.officeholders[0].name,"Lena Newname");
+  assert.equal(parsed.officeholders[0].nativeIds?.["ocd-person"],undefined);
+});
+
 test("a portrait lead keeps its own source time when another page changes the person's contact",()=>{
   const newer=parse().officeholders[0];
   const contact={...newer.provenance,sourceUrl:"https://legislature.example.gov/newsletter",collectedAt:"2026-10-27T00:00:00.000Z"};

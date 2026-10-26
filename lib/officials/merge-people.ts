@@ -38,11 +38,13 @@ function compactSourceEntries(rows:readonly Officeholder[],prefers:(right:Office
       const chosen=prefers(person,saved,"name")?person:saved;
       const combined=Object.fromEntries([...new Set([...Object.keys(saved.nativeIds??{}),...Object.keys(nativeIds??{})])]
         .map(namespace=>[namespace,[...new Set([...saved.nativeIds?.[namespace]??[],...nativeIds?.[namespace]??[]])]]));
-      combined.reader=[...new Set([...combined.reader??[],saved.id,saved.personId??saved.id,id,personId??id])];
+      if(saved.id!==id||saved.personId!==personId)combined.reader=[...new Set([...combined.reader??[],saved.id,saved.personId??saved.id,id,personId??id])];
       const sources={...saved.fieldSources,...fieldSources};
       for(const field of Object.keys(sources))sources[field]=prefers(person,saved,field)?sourceFor(person,field):sourceFor(saved,field);
       const {sourceHolders: _nested,...leaf}=chosen;void _nested;
-      entries.set(key,{...leaf,nativeIds:combined,profileUrls:[...new Set([...saved.profileUrls??[],...profileUrls??[]])],fieldSources:sources});
+      entries.set(key,{...leaf,nativeIds:Object.keys(combined).length?combined:chosen.nativeIds,
+        profileUrls:saved.profileUrls||profileUrls?[...new Set([...saved.profileUrls??[],...profileUrls??[]])]:undefined,
+        fieldSources:saved.fieldSources||fieldSources?sources:undefined});
     }
     for(const source of sourceHolders??[])visit(source);
   };

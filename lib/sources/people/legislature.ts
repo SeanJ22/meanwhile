@@ -8,7 +8,7 @@ import { htmlEvidenceBlocks } from "../html-evidence.ts";
 import { pacedPortraitAcquire } from "../../photos/portrait-work.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
 import { statewidePageText } from "../statewide/parse.ts";
-import { sourcePeople, sourcePersonIsDocument } from "../../officials/people-bindings.ts";
+import { sourcePeople, sourcePersonIsDocument,sourcePersonIsNativeReference } from "../../officials/people-bindings.ts";
 import { acquisition, appendRoster, digest, emptyPerson, emptyRoster, gap, legislativeDivision, provenance, record, result, savedRead, sourced, stateIdentity, string, url, type PeopleAcquisitionOptions, type PeopleSourceRelease } from "./common.ts";
 
 const textOf = statewidePageText;
@@ -200,7 +200,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
   const seedByPerson=new Map<string,Officeholder>();
   for(const holder of seeds){
     const identity=`${holder.nativeIds?.["ocd-person"]?.[0]??key(holder.name)}|${holder.chamber}`,prior=seedByPerson.get(identity);
-    if(prior&&(/^plural:/.test(prior.id)&&!/^plural:/.test(holder.id)||prior.memberships?.length&&!holder.memberships?.length))continue;
+    if(prior&&(sourcePersonIsNativeReference(prior)&&!sourcePersonIsNativeReference(holder)||prior.memberships?.length&&!holder.memberships?.length))continue;
     seedByPerson.set(identity,holder);
   }
   const held=[...seedByPerson.values()];

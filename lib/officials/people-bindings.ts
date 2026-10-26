@@ -9,6 +9,10 @@ const collapsed = (person: Officeholder) => (person.nativeIds?.["ocd-person"]?.l
 export function sourcePeople(person: Officeholder): readonly Officeholder[] {
   return person.sourceHolders?.length ? person.sourceHolders.flatMap(sourcePeople) : [person];
 }
+/** Reference IDs come from the publisher's actual entry, not a merged view that inherited its reader ID. */
+export function sourcePersonIsNativeReference(person:Officeholder):boolean {
+  return person.nativeIds?.["ocd-person"]?.length===1&&/^https:\/\/(?:raw\.githubusercontent\.com\/openstates\/people\/|data\.openstates\.org\/people\/|v3\.openstates\.org\/people\/)/.test(person.provenance.sourceUrl??"");
+}
 export function sourcePersonIsDocument(person:Officeholder):boolean {
   const urls=person.nativeIds?.["official-legislature"]??[];
   return !person.nativeIds?.["ocd-person"]?.length&&urls.length>0&&urls.every(value=>{
@@ -94,7 +98,7 @@ export function bindPeopleSources(sets: readonly OfficeholderSet[]): Officeholde
   const referenceFor = (identity:string):Officeholder|undefined => {
     const matches=byIdentity.get(identity)??[];
     return new Set(matches.flatMap(row=>row.nativeIds?.["ocd-person"]??[])).size===1
-      ? matches.find(row=>row.nativeIds?.["ocd-person"]?.length===1):undefined;
+      ? matches.find(sourcePersonIsNativeReference)??matches.find(row=>row.nativeIds?.["ocd-person"]?.length===1):undefined;
   };
   const returnedAliases=new Map<string,Set<string>>();
   for(const set of sets)for(const person of set.officeholders)if(needsBinding(person))for(const key of personIdentityKeys(person)){

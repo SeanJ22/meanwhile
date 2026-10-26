@@ -20,7 +20,7 @@ import { readHeldWorkerInputs, readHeldWorkerWorkIds, type HeldWorkerWorkItem } 
 import { passDeadlineFromEnv } from "../../ops/independent-runtime-pass.ts";
 import type { WorkerEvidence } from "./types.ts";
 import { requiredOperationalJurisdictionRegistry } from "../../civic-data/operational-references.ts";
-import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
+import { readRegistryRuntimeBody } from "../../registry/body-source.ts";
 import { authorizeInheritedHeldArtifact, type ResearchRuntimeTools } from "./research-runtime.ts";
 import { readCompletedWorkerResults } from "../repository/worker-completion.ts";
 import { readAuditHistory } from "./scoped-history.ts";
@@ -86,12 +86,7 @@ async function registryScope(contract: GeneralizedCivicExtractionContract) {
     const knownUrls = [subject.ownWebAddress, ...subject.sourceIds.map(id => registry.sourceCatalog[id]?.url)].filter((url): url is string => Boolean(url));
     return { subject, knownUrls };
   }
-  const read = await readRegistryRuntimeProjection([state]);
-  if (read.kind !== "PROMOTED") throw new Error(`AUDIT_REGISTRY_UNAVAILABLE:${state}:${read.kind}`);
-  const bodies = read.value.registry.bodies as {
-    id: string; ocdId: string | null; bodyClass: string; homepageUrl: string | null; agendaSourceRef: string | null; provenance?: { sourceUrl?: string };
-  }[];
-  const body = bodies.find(row => row.id === contract.subjectId);
+  const body = await readRegistryRuntimeBody(state, contract.subjectId);
   if (!body || !new RegExp(`(?:state:|curated:)${state}(?:[/#]|$)`).test(body.id)) throw new Error("AUDIT_CANONICAL_OBLIGATION_MISSING");
   const knownUrls = [body.homepageUrl, body.agendaSourceRef, body.provenance?.sourceUrl].filter((url): url is string => Boolean(url && hostname(url)));
   const jurisdiction = registry.jurisdictions.find(row => row.id === contract.jurisdiction.canonicalId);

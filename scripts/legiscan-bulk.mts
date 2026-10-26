@@ -29,8 +29,8 @@ export async function refreshLegiscan(store:RoutineDataStore,signal:AbortSignal,
   const counts:Record<string,{rows:number;joined:number;unjoined:number;sponsorsJoined:number;sponsorsUnjoined:number;datasets:number;unchanged:number;emptySessions:number[];failures:string[]}>= {};
   const current=bulkDatasetOrder(list.datasets,undefined,list.capture.retrievedAt),checkedAt=new Map<string,string>();
   await runBoundedWorkPool(current,4,async dataset=>{
-    const prior=await store.readSourceHead("STATE_BILL",billScope(dataset.session_id));
-    const state=stateOfDataset(dataset),age=prior?.promotedAt??"";
+    const prior=await store.readPromotionIdentity("STATE_BILL",billScope(dataset.session_id));
+    const state=stateOfDataset(dataset),age=prior?.latestConfirmation?.retrieval.retrievedAt??prior?.promotedAt??"";
     if(!checkedAt.has(state)||age<checkedAt.get(state)!)checkedAt.set(state,age);
   });
   const groups=new Map<string,Dataset[]>();

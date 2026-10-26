@@ -50,7 +50,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
   const counts: FederalCounts = structuredClone(prior?.counts ?? emptyCounts());
   const canonicalCounts = await store.readFederalCounts?.(source);
   let countSnapshotComplete = canonicalCounts?.complete ?? false;
-  const useCanonicalCounts = (value: FederalCounts) => {
+  const applyCanonicalCounts = (value: FederalCounts) => {
     const joinReadFailures = counts.joinReadFailures;
     Object.assign(counts, value);
     if (!value.unjoinedReasons) delete counts.unjoinedReasons;
@@ -58,7 +58,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
   };
   // A hard kill after a native partition write cannot strand the prior national total.
   // Only canonical per-partition count fields are summed; source clocks and held facts are not reopened.
-  if (canonicalCounts?.complete) useCanonicalCounts(canonicalCounts.counts);
+  if (canonicalCounts?.complete) applyCanonicalCounts(canonicalCounts.counts);
   let last: Awaited<ReturnType<typeof publishFederalPartition>> | undefined;
   let listing: FederalCapture | undefined;
   const rosterVersions = source === "regulations-gov" || source === "federal-register" ? [] : await heldCongressRosterVersions(store);
@@ -112,7 +112,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
     }
     if (primary) {
       const aggregate = !countSnapshotComplete ? await store.readFederalCounts?.(source) : null;
-      if (aggregate?.complete) { useCanonicalCounts(aggregate.counts); countSnapshotComplete = true; }
+      if (aggregate?.complete) { applyCanonicalCounts(aggregate.counts); countSnapshotComplete = true; }
       else if (result.kind === "PUBLISHED") replaceCounts(counts, result.previousCounts, result.counts!);
       last = await publishFederalPartition({ source, partition: "national", captures, records: [], store, vault, now: now(), counts });
     }

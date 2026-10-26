@@ -2624,7 +2624,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const held = options.candidate;
     const navigation = held !== undefined && isNavigationCandidate(held);
     let record: CandidateVersionRecord | null;
-    if (held && (navigation || statePublicationScope(held.scope) || held.recordClass === "MEETING" || held.recordClass === "CENSUS_GEOGRAPHY")) {
+    // A caller holding the exact candidate it wrote never reads the row back; its envelope and hashes must match.
+    if (held) {
       const hash = navigation || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
       const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,

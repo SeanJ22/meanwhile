@@ -6,6 +6,7 @@ import type { RoutineDataStore } from "../../civic-data/store.ts";
 import { LEGISCAN_BULK_CONTRACT,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,LEGISCAN_BULK_SCOPE,billScope,billPartScope,stateOfDataset,publicDatasetIndex,normalizeSession,sessionSponsorEvidence,type Dataset,type BillIndex,type BillPart,type BillPartPointer,type BillSession,type HeldPerson } from "./bills.ts";
 import type { BulkCapture } from "./acquisition.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
+import { runRowStore } from "./run-rows.ts";
 const hash=(value:unknown)=>createHash("sha256").update(typeof value==="string"?value:canonicalCivicDataJson(value)).digest("hex");
 export const LEGISCAN_PART_ROWS=250;
 /** Raw-member byte target; an indivisible larger bill stays in its own part. Escaping adds metadata. */
@@ -57,26 +58,36 @@ export async function publishBulkCandidate(store:RoutineDataStore,input:Paramete
     bodies.push(source);bytes+=size;
   }
   addChunk();
-  const published=await runBoundedWorkPool(chunks,2,async({bodies,memberOffset},partIndex)=>{
+  // Every read of a row this publish writes, or proves equal to a saved row, is answered from these bytes.
+  const run=runRowStore(store);
+  const partCandidate=({bodies,memberOffset}:typeof chunks[number],partIndex:number,retrievedAt:string)=>{
     const body=JSON.stringify({dataset,archiveHash,parentRawHash:input.capture.rawHash,partIndex,memberOffset,bodies,sessionSponsors});
-    const capture={...input.capture,body,rawHash:hash(body)};
-    const candidate=bulkCandidate({capture,dataset,bodies,people:input.people,partIndex,archiveHash,sessionSponsors});
+    return bulkCandidate({capture:{...input.capture,retrievedAt,body,rawHash:hash(body)},dataset,bodies,people:input.people,partIndex,archiveHash,sessionSponsors});
+  };
+  const published=await runBoundedWorkPool(chunks,2,async(chunk,partIndex)=>{
+    const candidate=partCandidate(chunk,partIndex,input.capture.retrievedAt),rawHash=candidate.retrieval.rawHash!;
     const value=candidate.readModel as BillPart;
     for(const bill of value.bills){if(seen.has(bill.id))throw Error("LEGISCAN_DUPLICATE_BILL");seen.add(bill.id);}
     // Completed source parts survive a pass interruption. Reuse only the same exact
     // bytes and recomputed joins; a changed roster, source or matcher publishes anew.
+    // The saved part is compared by its small metadata row: equal raw bytes, and equal
+    // facts when rebuilt at its own capture time. Its body is never read.
     const prefix=`${billScope(dataset.session_id)}:${dataset.dataset_hash}:part:${partIndex}:`;
     for(const scope of priorScopes.filter(scope=>scope.startsWith(prefix))){
-      const {readBulkProjection}=await import("./reader.ts");
-      const prior=await readBulkProjection(scope,{store,now});
-      if(prior.kind!=="PROMOTED"||prior.value.kind!=="PART"||prior.value.sourceRawHash!==capture.rawHash||
-        hash({...prior.value,capturedAt:null})!==hash({...value,capturedAt:null}))continue;
+      const pointer=await store.readPromotionIdentity("STATE_BILL",scope);
+      const prior=pointer&&pointer.versionId===pointer.lastKnownGoodVersionId?await store.readPublishedCandidateMetadata(pointer.versionId):null;
+      if(!pointer||!prior||prior.state!=="PROMOTED"||prior.receipt?.decision!=="GOOD"||prior.candidate.scope!==scope||prior.candidate.retrieval.rawHash!==rawHash)continue;
+      const retrievedAt=prior.candidate.retrieval.retrievedAt,saved=partCandidate(chunk,partIndex,retrievedAt);
+      if(saved.normalization.normalizedHash!==prior.candidate.normalization.normalizedHash)continue;
+      // The same roster rebuilds the saved row exactly; the session check then reads none of it.
+      if(saved.id===pointer.versionId&&saved.scope===scope)run.hold(saved,()=>partCandidate(chunk,partIndex,retrievedAt));
       console.log(`RCD_PROGRESS=${JSON.stringify({key:scope,records:value.bills.length})}`);
-      return {scope,versionId:prior.metadata.versionId!,rawHash:capture.rawHash,rows:value.bills.length,counts:value.counts};
+      return {scope,versionId:pointer.versionId,rawHash,rows:value.bills.length,counts:value.counts};
     }
-    const outcome=await processRegisteredFanOutCandidate(store,LEGISCAN_BULK_CONTRACT,candidate,now);
+    run.hold(candidate,()=>partCandidate(chunk,partIndex,input.capture.retrievedAt));
+    const outcome=await processRegisteredFanOutCandidate(run,LEGISCAN_BULK_CONTRACT,candidate,now);
     if(!outcome.promoted)throw Error(`LEGISCAN_PART_PUBLICATION_FAILED:${JSON.stringify(outcome.candidate.receipt?.checks.filter(row=>row.verdict!=="PASS"))}`);
-    const held=await store.readCandidate(outcome.promoted.versionId);
+    const held=await store.readPublishedCandidateMetadata(outcome.promoted.versionId);
     if(!held?.candidate.retrieval.rawHash)throw Error("LEGISCAN_PROMOTED_PART_MISSING");
     console.log(`RCD_PROGRESS=${JSON.stringify({key:candidate.scope,records:value.bills.length})}`);
     return {scope:candidate.scope,versionId:outcome.promoted.versionId,rawHash:held.candidate.retrieval.rawHash,rows:value.bills.length,counts:value.counts};
@@ -88,7 +99,8 @@ export async function publishBulkCandidate(store:RoutineDataStore,input:Paramete
   }
   const body=JSON.stringify({dataset,archiveHash,parentCapture:input.capture,parts,counts,sessionSponsorHash});
   const candidate=bulkCandidate({capture:{...input.capture,body,rawHash:hash(body)},dataset,parts,counts,archiveHash});
-  const outcome=await processRegisteredFanOutCandidate(store,LEGISCAN_BULK_CONTRACT,candidate,now);
+  run.hold(candidate,()=>candidate);
+  const outcome=await processRegisteredFanOutCandidate(run,LEGISCAN_BULK_CONTRACT,candidate,now);
   return {candidate,outcome};
 }
 /** Publisher stamps confirm every pointed part; a session marker cannot refresh missing bill bytes. */

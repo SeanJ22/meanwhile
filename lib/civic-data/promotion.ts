@@ -236,6 +236,7 @@ export async function processRegisteredFanOutCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
+  options: { readonly confirmUnchanged?: boolean } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
@@ -266,6 +267,7 @@ export async function processRegisteredFanOutCandidate(
       expectedBaseVersionId,
       REGISTERED_PRODUCTION_DOOR,
       sourceProjectionVerification,
+      options,
     ),
     now,
   );

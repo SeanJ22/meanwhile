@@ -138,6 +138,10 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
     const { retrievedAt: _retrievedAt, ...facts } = roll;
     return facts;
   }
+  if (recordClass === "FEDERAL_CIVIC_RECORD" && member.key.startsWith("federal:")) {
+    const { checkedAt: _checkedAt, sourceKey: _sourceKey, sourceHash: _sourceHash, ...facts } = object(member.record) ?? {};
+    return facts;
+  }
   if (recordClass === "VOTING_SITE" && member.key.startsWith("jurisdiction:")) {
     const row = object(member.record);
     if (row === null) return member.record;

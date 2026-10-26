@@ -13,6 +13,12 @@ const SCHEDULE_SQL = `SELECT f.entity_id, f.field, f.value, f.checked_at, (SELEC
 /** One body's live facts as readers see them: its own fields, its members, its comment rules and its sittings. */
 export interface BodyFacts {
   readonly id: string;
+  /** Recipient identities linked by the held government's ids or body parent,
+   * never by a shared place or a similar display name. */
+  readonly recipientIds?: readonly string[];
+  readonly recipientNames?: readonly string[];
+  readonly recipientState?: string;
+  readonly moneyDivisionId?: string;
   readonly division: string;
   readonly fields: Partial<Body>;
   readonly roster: BodyRoster | null;

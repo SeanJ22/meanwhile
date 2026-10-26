@@ -116,7 +116,11 @@ export function stateCoverage(
       ...(state.federal === undefined ? {} : { federalDirectoryUnavailable: state.federal === null }),
       bodies: coverage.bodies.map(body => {
         const gap = rosterGapForBody(body.bodyId);
-        return { ...body, readerRoster: { members: membersOfBody(body.bodyId).members, gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };
+        const fact = bodyFacts.find(fact => fact.id === body.bodyId);
+        return { ...body, ...(fact?.recipientIds?.length ? { recipientIds: fact.recipientIds,
+          recipientNames: fact.recipientNames, recipientState: fact.recipientState,
+          ...(fact.moneyDivisionId ? { moneyDivisionId: fact.moneyDivisionId } : {}) } : {}),
+          readerRoster: { members: membersOfBody(body.bodyId).members, gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };
       }),
     };
   }))));

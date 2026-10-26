@@ -99,6 +99,11 @@ export interface BodyDefinitionText {
 }
 
 export interface BodyCardData {
+  /** Held government identities that receive money for this body. */
+  recipientIds?: readonly string[];
+  recipientNames?: readonly string[];
+  recipientState?: string;
+  moneyDivisionId?: string;
   /**
    * Two layers: `classDefinition` (what this kind of body does) always renders
    * where the class is known; `formDefinition` (its own charter or statute)
@@ -300,7 +305,8 @@ function MoneyRecordSection({ subject }: { subject: ModalSubject }) {
   if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):|\/(?:state|district|territory):[a-z]{2}$/.test(divisionId)) return null;
   return <CardSection title="Money and records">
     <StateCampaignSection key={`campaign:${divisionId}`} divisionId={divisionId} />
-    <FederalMoneySection key={`${divisionId}:${subject.bodyCard ? subject.subjectId : "place"}`} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
+    <FederalMoneySection key={`${subject.bodyCard?.moneyDivisionId ?? divisionId}:${subject.bodyCard ? subject.subjectId : "place"}`} divisionId={subject.bodyCard?.moneyDivisionId ?? divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined}
+      recipientIds={subject.bodyCard?.recipientIds} recipientNames={subject.bodyCard?.recipientNames} recipientState={subject.bodyCard?.recipientState} />
   </CardSection>;
 }
 

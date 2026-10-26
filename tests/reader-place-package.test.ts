@@ -278,6 +278,9 @@ test("one indexed place read joins local facts and complete calendars from any s
     assert.equal(result.registrationHeld,true);
     assert.deepEqual(result.divisions,[division]);
     assert.equal(result.governments.length,2);
+    assert.equal(result.governments.find(g => g.id.endsWith(":city"))?.recipientNameUnique,true);
+    assert.equal(result.governments.find(g => g.id.endsWith(":pima"))?.recipientNameUnique,false,
+      "an identically named government elsewhere in the state remains ambiguous after the place is selected");
     assert.equal(result.governments.find(g => g.id.endsWith(":city"))?.officePhone,"520-555-0111");
     assert.deepEqual(result.governments.find(g => g.id.endsWith(":city"))?.govDomains,[{domain:"tucsonaz.gov",website:"https://tucsonaz.gov",sourceUrl:"https://get.gov/registry",checkedAt:AT}]);
     assert.deepEqual(result.governments.find(g => g.id.endsWith(":pima"))?.govDomains,[],"statewide duplicate identities stay ambiguous after narrowing to this ZIP");

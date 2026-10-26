@@ -2,6 +2,16 @@ import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.
 import type { FederalMoneyFact, FederalMoneyPartition, FederalMoneySource } from "./model.ts";
 import { federalMoneyLookupPath } from "./lookups.ts";
 
+/** The existing source job repairs one held partition at a time after identity
+ * code changes. The scope index keeps the seek inside this source and state. */
+export async function nextHeldFederalMoneyPartition(source: FederalMoneySource, state: string, afterScope: string | null, query: ReadOnlyQuery | null): Promise<string | null> {
+  if (!query) throw new Error("The held federal partition index is unavailable.");
+  const prefix = `${source}:${state.toUpperCase()}`;
+  const [[row]] = await query([{ text: "SELECT scope FROM civic_data_promotions WHERE record_class = 'FEDERAL_MONEY' AND scope >= $1 AND scope < $2 AND scope > $3 ORDER BY scope LIMIT 1",
+    params: [`${prefix}:`, `${prefix};`, afterScope ?? `${prefix}:`] }]);
+  return typeof row?.scope === "string" ? row.scope : null;
+}
+
 export async function locateFederalMoneyFacts(source: FederalMoneySource, state: string, facts: readonly FederalMoneyFact[], query: ReadOnlyQuery | null) {
   if (!facts.length) return [];
   if (!query) throw new Error("The federal partition index is unavailable.");

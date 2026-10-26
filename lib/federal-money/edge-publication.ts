@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
 import type { ReaderArtifactStore } from "../meetings/edge-store.ts";
 import { federalMoneyProjectionIssue, federalMoneyPartitionScope, type FederalMoneyProjection, type FederalMoneySource } from "./model.ts";
+import { compareFederalMoneyActions, federalMoneyActionDate } from "./model.ts";
 import { FederalMoneyIndex, federalMoneyArtifactHash, readFederalMoneyJson, FEDERAL_MONEY_PAGE_SIZE, federalMoneyFactPlaces, federalMoneyPlaceKey, federalMoneySegmentOrder, federalMoneyStatusKey,
   type FederalMoneyPlaceIndex, type FederalMoneyPlacePage, type FederalMoneyPlaceSnapshot, type FederalMoneySegmentArtifact, type FederalMoneyStateStatus } from "./edge.ts";
 
@@ -29,8 +30,9 @@ export async function publishFederalMoneyPartition(input: {
   }
   for (const place of places) {
     const records = projection.records.filter(fact => federalMoneyFactPlaces(fact).includes(place))
-      .sort((a, b) => (b.provenance.publicationDate ?? "").localeCompare(a.provenance.publicationDate ?? "") || a.id.localeCompare(b.id));
+      .sort(compareFederalMoneyActions);
     const digest = createHash("sha256");
+    digest.update("action-date/2\n");
     for (const record of records) digest.update(JSON.stringify(record)).update("\n");
     const contentHash = digest.digest("hex");
     const key = federalMoneyPlaceKey(projection.state, place);
@@ -40,11 +42,23 @@ export async function publishFederalMoneyPartition(input: {
     for (let attempt = 0; ; attempt += 1) {
       const held = await store.readJsonPointer<FederalMoneyPlaceIndex>(key);
       if (held && (held.value.formatVersion !== 3 || held.value.state !== projection.state || held.value.place !== place)) throw new Error("Federal place index identity does not match its key.");
-      const snapshot: FederalMoneyPlaceSnapshot = held ? await readFederalMoneyJson(store, held.value.snapshot) : { formatVersion: 3, state: projection.state, place, segments: null, order: null };
+      const snapshot: FederalMoneyPlaceSnapshot = held ? await readFederalMoneyJson(store, held.value.snapshot) : { formatVersion: 3, state: projection.state, place, segments: null, order: null, legacyActionSegments: 0 };
       if (snapshot.formatVersion !== 3 || snapshot.state !== projection.state || snapshot.place !== place) throw new Error("Federal place snapshot identity does not match its key.");
+      const legacyKnown = snapshot.legacyActionSegments !== undefined;
+      if (!legacyKnown) {
+        snapshot.legacyActionSegments = 0;
+        let cursor = "";
+        for (;;) {
+          const entry = await segments.next(snapshot.segments, cursor, cursor !== "");
+          if (!entry) break;
+          const segment = await readFederalMoneyJson<FederalMoneySegmentArtifact>(store, entry.value);
+          if (segment.actionOrderVersion !== 2) snapshot.legacyActionSegments++;
+          cursor = entry.key;
+        }
+      }
       const previousKey = await segments.get(snapshot.segments, segmentId);
       const previous = previousKey ? await readFederalMoneyJson<FederalMoneySegmentArtifact>(store, previousKey) : null;
-      if (previous?.versionId === input.versionId || previous?.contentHash === contentHash || previous === null && records.length === 0) break;
+      if (legacyKnown && previous?.contentHash === contentHash && previous.actionOrderVersion === 2 || previous === null && records.length === 0) break;
       if (prepared === null && records.length) {
         const pages = [];
         for (let offset = 0; offset < records.length; offset += FEDERAL_MONEY_PAGE_SIZE) {
@@ -54,10 +68,11 @@ export async function publishFederalMoneyPartition(input: {
           pages.push({ key: await store.putImmutable(bytes, "json.gz"), hash: federalMoneyArtifactHash(plain), count: page.records.length });
           saved(bytes.byteLength);
         }
-        prepared = { formatVersion: 3, state: projection.state, place, segmentId, year: projection.partition.year, source: projection.source, versionId: input.versionId, contentHash, checkedAt: input.checkedAt, latestPublication: records[0]?.provenance.publicationDate ?? null, pages };
+        prepared = { formatVersion: 3, state: projection.state, place, segmentId, year: projection.partition.year, source: projection.source, versionId: input.versionId, contentHash, checkedAt: input.checkedAt, latestPublication: records[0]?.provenance.publicationDate ?? null, latestActionDate: records[0] ? federalMoneyActionDate(records[0]) || null : null, latestActionId: records[0]?.id ?? "", actionOrderVersion: 2, pages };
         preparedKey = await immutable(prepared);
       }
       if (previous) for (const period of ["*", previous.year]) snapshot.order = await order.set(snapshot.order, `${projection.source}:${period}:${federalMoneySegmentOrder(previous)}`, null);
+      if (previous && previous.actionOrderVersion !== 2) snapshot.legacyActionSegments = Math.max(0, snapshot.legacyActionSegments! - 1);
       snapshot.segments = await segments.set(snapshot.segments, segmentId, preparedKey);
       if (prepared) for (const period of ["*", prepared.year]) snapshot.order = await order.set(snapshot.order, `${projection.source}:${period}:${federalMoneySegmentOrder(prepared)}`, preparedKey);
       const value: FederalMoneyPlaceIndex = { formatVersion: 3, state: projection.state, place, snapshot: await immutable(snapshot) };

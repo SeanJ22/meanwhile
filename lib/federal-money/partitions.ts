@@ -12,6 +12,12 @@ export interface FederalMoneyPartitionChange {
   readonly versionId: string;
   readonly checkedAt: string;
 }
+export interface FederalMoneyPartitionProgress {
+  readonly through: string | null;
+  readonly delta: FederalMoneyCounts;
+  /** Only relocations need a destination's intermediate count until removal. */
+  readonly corrections?: Readonly<Record<string, FederalMoneyCounts>>;
+}
 export function addFederalMoneyCounts(a: FederalMoneyCounts, b: FederalMoneyCounts, sign = 1): FederalMoneyCounts {
   return { loaded: a.loaded + sign * b.loaded, joined: a.joined + sign * b.joined, unjoined: a.unjoined + sign * b.unjoined };
 }
@@ -27,7 +33,10 @@ export async function writeFederalMoneyPartitions(input: {
   readonly onPartition?: (input: FederalMoneyPartitionChange) => Promise<unknown>;
   readonly baselines: Readonly<Record<string, FederalMoneyCounts>>;
   readonly priorLocations?: readonly { id: string; partition: FederalMoneyPartition }[];
-}): Promise<FederalMoneyCounts> {
+  readonly progress?: FederalMoneyPartitionProgress;
+  readonly shouldContinue?: () => boolean;
+  readonly onGroup?: (progress: FederalMoneyPartitionProgress) => Promise<void>;
+}): Promise<{ delta: FederalMoneyCounts; complete: boolean }> {
   const groups = new Map<string, { partition: FederalMoneyPartition; records: FederalMoneyFact[]; remove: string[] }>();
   for (const fact of input.page.facts) {
     const partition = federalMoneyPartitionOf(fact), scope = federalMoneyPartitionScope(input.source, input.state, partition);
@@ -43,19 +52,27 @@ export async function writeFederalMoneyPartitions(input: {
     const group = groups.get(scope) ?? { partition, records: [], remove: [] };
     group.remove.push(held.id); groups.set(scope, group);
   }
-  const totals = new Map<string, FederalMoneyCounts>();
-  for (const [scope, { partition, records }] of groups) if (records.length) {
-    totals.set(scope, await update(partition, records, input.page.captures));
+  let through = input.progress?.through ?? null, delta = input.progress?.delta ?? federalMoneyCounts([]);
+  const corrections = { ...input.progress?.corrections };
+  // The immutable saved page and prior locations always produce this same
+  // order. All destinations publish before any original rows are removed.
+  const operations = [...groups].flatMap(([scope, group]) => [
+    ...(group.records.length ? [{ key: `1:${scope}`, scope, group, remove: false }] : []),
+    ...(group.remove.length ? [{ key: `2:${scope}`, scope, group, remove: true }] : []),
+  ]).sort((left, right) => left.key < right.key ? -1 : left.key > right.key ? 1 : 0);
+  for (const operation of operations) {
+    if (through !== null && operation.key <= through) continue;
+    if (input.shouldContinue?.() === false) return { delta, complete: false };
+    const { scope, group } = operation;
+    const counts = operation.remove ? await update(group.partition, [], [], group.remove) : await update(group.partition, group.records, input.page.captures);
+    const baseline = operation.remove ? corrections[scope] ?? input.baselines[scope] : input.baselines[scope];
+    delta = addFederalMoneyCounts(delta, addFederalMoneyCounts(counts, baseline ?? federalMoneyCounts([]), -1));
+    if (!operation.remove && group.remove.length) corrections[scope] = counts;
+    if (operation.remove) delete corrections[scope];
+    through = operation.key;
+    await input.onGroup?.({ through, delta, ...(Object.keys(corrections).length ? { corrections: { ...corrections } } : {}) });
   }
-  // Every corrected destination must exist before a cycle removes its original rows.
-  for (const [scope, { partition, remove }] of groups) if (remove.length) {
-    totals.set(scope, await update(partition, [], [], remove));
-  }
-  let delta = federalMoneyCounts([]);
-  for (const [scope, total] of totals) {
-    delta = addFederalMoneyCounts(delta, addFederalMoneyCounts(total, input.baselines[scope] ?? federalMoneyCounts([]), -1));
-  }
-  return delta;
+  return { delta, complete: true };
 
   async function update(partition: FederalMoneyPartition, incoming: readonly FederalMoneyFact[], captures: readonly FederalMoneyCapture[], remove: readonly string[] = []): Promise<FederalMoneyCounts> {
     const scope = federalMoneyPartitionScope(input.source, input.state, partition);

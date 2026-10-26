@@ -50,6 +50,7 @@ import { composeRegistration, type RegistrationLayer } from "../registration/com
 import { REGISTRATION_TARGETS } from "../registration/publication.ts";
 import type { RegistrationReadModel } from "../registration/candidate.ts";
 import { bindGovernmentBodies, governmentStateOf, type RegistrationGovernmentListing } from "../registration/listings.ts";
+import { markUniqueGovernmentRecipientNames } from "../registration/recipient-names.ts";
 import { attachGovernmentDomains, readDotGovProjection } from "../civic-data/dotgov.ts";
 import { readRegistrationProjection, readRegistrationDivision, type DivisionMetadata } from "../registration/reader.ts";
 import jurisdictionLabels from "../../data/reference/us-jurisdiction-labels.json" with { type: "json" };
@@ -358,7 +359,10 @@ export async function governmentListingsForState(state: string, offset = 0, limi
   const code = state.replace(/^US-/i, "").toLowerCase();
   if (!REGISTRATION_STATES.has(code)) throw new Error("A US state or territory is required");
   const held = await registrationModelFor(code);
-  const records = await governmentDomainsFor(held?.value.governments ?? []);
+  const complete = held?.value.governments ?? [];
+  const named = held?.value.governmentCount === undefined || held.value.governmentCount === complete.length
+    ? markUniqueGovernmentRecipientNames(complete) : complete;
+  const records = await governmentDomainsFor(named);
   const start = Math.max(0, Math.floor(offset));
   const size = Math.min(100, Math.max(1, Math.floor(limit)));
   const window = currentReaderSelection()?.governmentWindow;

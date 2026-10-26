@@ -29,6 +29,7 @@ import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { readerDatabaseQuery } from "./database.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
+import { federalGovernmentNameSql, federalMoneyGovernmentDivision } from "../federal-money/recipient.ts";
 
 const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
 const rosterPersonFieldsSql = ROSTER_PERSON_FIELDS.map(field => `'${field}'`).join(",");
@@ -72,15 +73,20 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), named_places AS MATERIALIZED (
   SELECT unnest($10::text[]) AS id
 ), registration AS MATERIALIZED (
-  SELECT payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
+  SELECT reader_payload_node(payload) AS payload FROM civic_data_promotions WHERE $8::text[] IS NULL AND key='REGISTRATION:US-'||$1||':registration:v1' AND record_class='REGISTRATION'
 ), government_inventory AS MATERIALIZED (
-  SELECT g,${normalizedGovernmentSql("g->>'name'")} AS identity FROM registration,
-    LATERAL jsonb_array_elements(coalesce(payload->'governments','[]'::jsonb)) g
+  SELECT g,${normalizedGovernmentSql("g->>'name'")} AS identity,${federalGovernmentNameSql("g->>'name'")} AS recipient_identity FROM registration,
+    LATERAL reader_payload_members(payload->'governments') member,
+    LATERAL (SELECT reader_payload_node(member.item) AS original) header,
+    LATERAL (SELECT original || jsonb_build_object('name',reader_payload_value(original->'name')) AS g) named
 ), government_identities AS MATERIALIZED (
-  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities FROM government_inventory
+  SELECT g,identity,count(*) OVER (PARTITION BY upper(g->>'state'),identity) AS identities,
+    count(*) OVER (PARTITION BY upper(g->>'state'),recipient_identity) AS recipient_names FROM government_inventory
 ), local_governments AS MATERIALIZED (
-  SELECT * FROM government_identities WHERE EXISTS (
-    SELECT 1 FROM jsonb_array_elements(coalesce(g->'associations','[]'::jsonb)) a WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
+  SELECT reader_payload_value(g) AS g,identity,identities,recipient_names FROM government_identities WHERE EXISTS (
+    SELECT 1 FROM reader_payload_members(g->'associations') member,
+      LATERAL (SELECT reader_payload_node(member.item) AS a) association
+    WHERE a->>'divisionId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), dotgov AS MATERIALIZED (
   SELECT payload->'domains' AS domains,payload->'source' AS source FROM civic_data_promotions
     WHERE $8::text[] IS NULL AND key='DOTGOV_REFERENCE:US:current-full:domains' AND record_class='DOTGOV_REFERENCE'
@@ -417,10 +423,11 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
         FROM jsonb_each(reader_payload_node(root.value->'rosterPhotos')) photo
         WHERE photo.key IN (SELECT id FROM runtime_people UNION SELECT value->>'officeholderId' FROM runtime_photos)),'{}'::jsonb) ELSE '{}'::jsonb END)
     FROM runtime_root root CROSS JOIN runtime_registry r) END AS registry,
-  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(g || jsonb_build_object('recipientNameUnique',g.recipient_names=1,'govDomains',coalesce((SELECT jsonb_agg(jsonb_build_object(
     'domain',d->>'domain','website','https://'||(d->>'domain'),'sourceUrl',source->>'url','checkedAt',source->>'readAt'))
     FROM domains d WHERE d.identity=g.identity AND g.identities=1 AND g.identity<>''),'[]'::jsonb))) FROM local_governments g),'[]'::jsonb) ELSE '[]'::jsonb END AS governments,
-  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(d) FROM registration,LATERAL jsonb_array_elements(coalesce(payload->'divisions','[]'::jsonb)) d
+  CASE WHEN ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_agg(reader_payload_value(member.item)) FROM registration,LATERAL reader_payload_members(payload->'divisions') member,
+    LATERAL (SELECT reader_payload_node(member.item) AS d) division
     WHERE d->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)) OR d->>'ocdId' IN (SELECT id FROM named_places)),'[]'::jsonb) ELSE '[]'::jsonb END AS divisions,
   coalesce((SELECT jsonb_agg(to_jsonb(b) || jsonb_build_object('placed',b.id IN (SELECT id FROM linked_bodies)
     OR EXISTS (SELECT 1 FROM entity_place ep WHERE ep.entity_id=b.id)
@@ -521,11 +528,30 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
   if (!row) throw new Error("PLACE_PACKAGE_READ_FAILED");
   const divisionIds = row.division_ids as string[] | undefined ?? input.divisionIds;
   const entities = row.entities as Row[], rawSittings = row.sittings as Row[];
+  const registry = row.registry as RegistryRuntimeReadModel | null ?? null;
+  const governments = row.governments as RegistrationGovernmentListing[] ?? [];
+  const governmentRecipients = new Map<string, Map<string, { readonly ids: readonly string[]; readonly names: readonly string[]; readonly state: string; readonly moneyDivisionId?: string }>>();
+  for (const government of governments) {
+    const nativeBodies = government.nativeIds?.census_pid6 ? registry?.registry.bodies.filter(body =>
+      body.censusId === government.nativeIds.census_pid6).map(body => body.id) ?? [] : [];
+    const ids = [...new Set([government.id, ...(government.aliases ?? []), ...(government.bodyIds ?? []), ...nativeBodies])];
+    const moneyDivisionId = federalMoneyGovernmentDivision(government);
+    // The place query already carries both the exact entity parent and native
+    // registry bindings. A common name or service division establishes neither.
+    for (const key of ids) {
+      const recipients = governmentRecipients.get(key) ?? new Map();
+      recipients.set(government.id, { ids, names: government.recipientNameUnique === true ? [government.name] : [], state: government.state, moneyDivisionId });
+      governmentRecipients.set(key, recipients);
+    }
+  }
   const fields = bodyFieldsFromRows(row.fields as Row[]), { rosters, dispositions } = factRostersFromRows(row.rosters as Row[]);
   const roster = new Map(rosters.map(r => [r.bodyId,r])), comments = new Map(factCommentAccessFromRows(row.comments as Row[]).map(c => [c.bodyId,c]));
   const sittings = sittingFactsFromRows(rawSittings), disposition = new Map(dispositions.map(d => [d.sourceId,d]));
   const bodies: BodyFacts[] = entities.map(e => {
     const id = String(e.id), own = roster.get(id) ?? null;
+    const recipients = new Map([...(governmentRecipients.get(id) ?? []),
+      ...(typeof e.parent_id === "string" ? governmentRecipients.get(e.parent_id) ?? [] : [])]);
+    const recipient = recipients.size === 1 ? [...recipients.values()][0] : null;
     const divisions = [...new Set([...(e.divisions as string[] | undefined ?? []),String(e.division)].filter(id => id.startsWith("ocd-division/")))];
     const local = divisions.filter(id => id !== stateRoot);
     const served = local.length ? local : divisions;
@@ -535,6 +561,8 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
       ...(e.placement_basis === "HOST_COUNTY" ? {placementBasis:"HOST_COUNTY" as const} : {})} : {}, roster: own, comment: comments.get(id) ?? null,
       dispositions: own?.members.flatMap(m => disposition.get(m.id) ?? []) ?? [], sittings: sittings.get(id) ?? [],
       ...(typeof e.name === "string" && e.name !== id ? { name: e.name } : {}),
+      ...(recipient ? { recipientIds: [...new Set([id, ...recipient.ids])].sort(), recipientNames: recipient.names, recipientState: recipient.state,
+        ...(recipient.moneyDivisionId ? { moneyDivisionId: recipient.moneyDivisionId } : {}) } : {}),
       ...(typeof e.government === "string" ? { government: e.government } : {}) };
   });
   const parts = new CivicPayloadParts({ existing: async () => [], write: async () => {}, read: async () => { throw new Error("PLACE_PACKAGE_PART_MISSING"); } });
@@ -633,12 +661,12 @@ async function loadPlacePackage(input: PlaceInput, query: Query | null): Promise
     return [body.id,{...snapshot,generatedAt:sources.map(s => s.generatedAt).sort().at(-1) ?? snapshot.generatedAt,meetings,
       counts:snapshotCounts(meetings,accounting.freshCollapsed),sources:[...accounting.sources],agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}];
   }));
-  return { registry:row.registry as RegistryRuntimeReadModel | null ?? null,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
+  return { registry,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
     publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])
       .map(({contractId,...attempt}) => ({...attempt,family:attemptFamilyOf(contractId)})),
     bodies,meetings: overlaid,snapshot,snapshotHeldAt,bodySnapshots,
     agendaDocumentLinks:agendaDocumentLinks.map(link => ({...link,meetingId:merged.aliases.get(link.meetingId) ?? link.meetingId})),
-    governments:row.governments as RegistrationGovernmentListing[],
+    governments,
     divisions:row.divisions as Division[],registrationHeld:row.registration_held === true };
 }
 

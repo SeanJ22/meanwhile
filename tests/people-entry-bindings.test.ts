@@ -44,6 +44,22 @@ test("a shared member-list route binds each entry's identity, district, contact 
   assert.equal(mergePeopleSets([roster(people),parsed])!.officeholders.length,2);
 });
 
+test("successive occupants of a linked seat route have separate person identities",()=>{
+  const profile="https://www.flsenate.gov/Senators/S33";
+  const parseOccupant=(person:Officeholder)=>normalizeOfficialLegislaturePage(`<h1>Senator ${person.name}</h1><p>Senator District 33</p>`,profile,
+    {state:"fl",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([person])},at);
+  const members=people.map(person=>({...person,state:"FL",chamber:"upper" as const,officeTitle:"State Senator",websiteUrl:profile,
+    memberships:person.memberships?.map(row=>({...row,chamber:"upper" as const,district:"33"}))}));
+  const former=parseOccupant(members[0]),current=parseOccupant(members[1]);
+  assert.equal(former.officeholders.length,1);assert.equal(current.officeholders.length,1);
+  assert.notEqual(former.officeholders[0].personId,current.officeholders[0].personId);
+  assert.equal(mergePeopleSets([former,current])!.officeholders.length,2);
+  const legacy={...members[0],id:"old-seat-reader",personId:"old-seat-reader",nativeIds:{"official-legislature":[profile]}};
+  const corrected=parseOccupant(legacy);
+  assert.ok(personIdentityKeys(corrected.officeholders[0]).has("old-seat-reader"));
+  assert.equal(mergePeopleSets([roster([legacy]),corrected])!.officeholders.length,1);
+});
+
 test("a verified official roster entry supplies only that member's portrait",()=>{
   const capture={transport:"REACHABLE" as const,partial:false,httpStatus:200,observedAt:at,evidence:{canonicalUrl:page,sourceId:"official-state-people",
     retrievedAt:at,text:html,vaultKey:"project/freshness/source/official-state-people/raw/fixture",contentHash:portraitHash(new TextEncoder().encode(html))}};
@@ -68,6 +84,15 @@ test("a member's news and photo-album titles never become people or member-list 
   assert.deepEqual(legislatureRosterLinks(body,page),[]);
 });
 
+test("an own directory link's district and party label are not part of the member's name",()=>{
+  const body='<h1>Senate Members</h1><div><a href="/members/vito-barbieri"><div>Vito Barbieri</div><div>District 3 | R</div></a></div>';
+  const member={...people[0],state:"OH",chamber:"upper" as const,officeTitle:"State Senator",websiteUrl:"https://ohiosenate.gov/members/vito-barbieri",
+    memberships:people[0].memberships?.map(row=>({...row,chamber:"upper" as const}))};
+  const parsed=normalizeOfficialLegislaturePage(body,"https://ohiosenate.gov/members/directory",{state:"oh",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster([member])},at);
+  assert.deepEqual(parsed.officeholders.map(person=>person.name),["Vito Barbieri"]);
+  assert.deepEqual(parsed.officeholders[0].nativeIds?.["ocd-person"],["ocd-person/vito"]);
+});
+
 test("a member's old form-page IDs resolve to the person owning its explicit publisher profile",()=>{
   const member={...people[0],state:"OH",websiteUrl:"https://ohiosenate.gov/members/vito-barbieri",profileUrls:["https://ohiosenate.gov/senators/vito-barbieri"]};
   const form={...member,id:"old-form",personId:"old-form",name:"Sign Up",nativeIds:{"official-legislature":["https://www.ohiosenate.gov/members/vito-barbieri/newsletter-sign-up"]},memberships:[]};
@@ -88,11 +113,13 @@ test("profile routes keep their own identity without treating a term or director
 });
 
 test("rechecking one person's same source entry keeps facts and every old ID without multiplying snapshots",()=>{
-  let held=roster([{...people[0],email:"held@example.gov"}]);
+  const lead=(collectedAt:string)=>({imageUrl:"https://legislature.example.gov/vito.jpg",sourceUrl:page,collectedAt});
+  let held=roster([{...people[0],email:"held@example.gov",portraitCandidate:lead(at)}]);
   const oldIds=new Set<string>();
   for(let index=0;index<12;index++) {
     const id=`entry-read-${index}`;oldIds.add(id);
-    held=mergePeopleSets([held,roster([{...people[0],id,personId:id,email:"held@example.gov",provenance:{...people[0].provenance,collectedAt:`2026-10-${String(index+1).padStart(2,"0")}T00:00:00.000Z`}}])])!;
+    const observedAt=`2026-10-${String(index+1).padStart(2,"0")}T00:00:00.000Z`;
+    held=mergePeopleSets([held,roster([{...people[0],id,personId:id,email:"held@example.gov",portraitCandidate:lead(observedAt),provenance:{...people[0].provenance,collectedAt:observedAt}}])])!;
   }
   const person=held.officeholders[0];
   assert.equal(person.email,"held@example.gov");

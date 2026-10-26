@@ -32,7 +32,11 @@ function compactSourceEntries(rows:readonly Officeholder[],prefers:(right:Office
       entry=address.href;
     }catch { /* The original source identity is retained when it is not a URL. */ }
     const identity=nativeIds?.["ocd-person"]?.length?[...nativeIds["ocd-person"]].sort():[personId??id];
-    const key=canonicalCivicDataJson(JSON.parse(JSON.stringify([identity,entry,facts]))),saved=entries.get(key);
+    // A repeated observation of the same image lead is not another portrait fact.
+    // Keep the selected entry's complete capture time, without duplicating its facts.
+    const {collectedAt:_observed,...lead}=facts.portraitCandidate??{};void _observed;
+    const material={...facts,...(facts.portraitCandidate?{portraitCandidate:lead}:{})};
+    const key=canonicalCivicDataJson(JSON.parse(JSON.stringify([identity,entry,material]))),saved=entries.get(key);
     if(!saved)entries.set(key,{...facts,id,personId,nativeIds,profileUrls,provenance,fieldSources});
     else {
       const chosen=prefers(person,saved,"name")?person:saved;

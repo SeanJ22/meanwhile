@@ -17,7 +17,8 @@ const memberAction=(value:string)=>/^(?:contact|sponsored bills|view|read more|l
 const federalRoute=(value:string)=>/(?:^|\.)(?:house|senate|congress|whitehouse)\.gov$/i.test(new URL(value).hostname);
 const memberContentRoute=(value:string)=>memberProfileSubpageParentUrl(value)!==null;
 function rosterLabelName(label: string): string {
-  const observed=label.replace(/\s*--[\s\S]*$/,"").replace(/^(?:State\s+)?(?:Senator|Sen\.|Representative|Rep\.|Delegate|Assemblyman|Assemblywoman|Hon\.)\s+/i,"").trim();
+  const observed=label.replace(/\s*--[\s\S]*$/,"").replace(/\s+District\s*(?:No\.?\s*)?[:#-]?\s*\d+[a-z]?\b[\s\S]*$/i,"")
+    .replace(/^(?:State\s+)?(?:Senator|Sen\.|Representative|Rep\.|Delegate|Assemblyman|Assemblywoman|Hon\.)\s+/i,"").trim();
   const reversed=/,\s*(?:Jr\.?|Sr\.?|II|III|IV)$/i.test(observed)?null:/^([^,]+),\s*([^,]+)$/.exec(observed);
   return reversed?`${reversed[2]} ${reversed[1]}`:observed;
 }
@@ -114,14 +115,19 @@ function personOnPage(holder:Officeholder,html:string,sourceUrl:string,options:P
   if(!legislaturePageNamesPerson(html,holder.name)||!roleOnPage(text,holder))return null;
   const nameIndex=text.toLowerCase().indexOf(holder.name.toLowerCase());
   const excerpt=nameIndex>=0?text.slice(Math.max(0,nameIndex-160),nameIndex+holder.name.length+160):text;
-  const state=stateIdentity(options.state),personId=`official-legislature:${digest(entryUrl).slice(0,24)}`,id=`official-legislature:${state.state.toLowerCase()}:${digest(entryUrl).slice(0,24)}`,source=provenance(sourceUrl,"State legislature — official member page",collectedAt,excerpt);
+  const native=new URL(entryUrl).hash.startsWith("#member=")?null:nativePersonIdFromUrl(entryUrl);
+  // Some linked profiles name a seat (for example Florida's S33), not its occupant.
+  // Without an explicit publisher person ID, the named entry supplies identity.
+  const ownEntry=new URL(entryUrl);if(!native)ownEntry.hash=`member=${encodeURIComponent(key(holder.name))}`;
+  const entryIdentity=ownEntry.href;
+  const state=stateIdentity(options.state),personId=`official-legislature:${digest(entryIdentity).slice(0,24)}`,id=`official-legislature:${state.state.toLowerCase()}:${digest(entryIdentity).slice(0,24)}`,source=provenance(sourceUrl,"State legislature — official member page",collectedAt,excerpt);
   source.kind="OFFICIAL";
   const publishedTitle=normalized.includes(key(holder.officeTitle).replace(/^state /,""))?holder.officeTitle:
     holder.chamber==="upper"?/\b(?:Senator|Senate Member)/i.exec(text)?.[0]:/\b(?:Representative|Assemblyman|Assemblywoman|Assembly Member|Delegate|House Member)/i.exec(text)?.[0];
   if(!publishedTitle)return null;
   const result=emptyPerson(id,holder.name,publishedTitle,options.state,source);
-  result.personId=personId;result.chamber=holder.chamber; result.nativeIds={...holder.nativeIds,"official-legislature":[entryUrl]}; result.websiteUrl=sourceUrl;
-  const native=new URL(entryUrl).hash.startsWith("#member=")?null:nativePersonIdFromUrl(entryUrl);
+  result.personId=personId;result.chamber=holder.chamber; result.nativeIds={...holder.nativeIds,"official-legislature":[entryIdentity]}; result.websiteUrl=sourceUrl;
+  if(holder.nativeIds?.["official-legislature"]?.length)result.nativeIds={...result.nativeIds,reader:[...new Set([...holder.nativeIds.reader??[],holder.id,holder.personId??holder.id])]};
   if(native)result.nativeIds={...result.nativeIds,[native.source]:[...new Set([...(result.nativeIds[native.source]??[]),native.id])]};
   result.phone=phone(html); result.email=/href=["']mailto:([^"'?]+)/i.exec(html)?.[1]??null;
   const allImages=imagesIn(html,sourceUrl),images=pickPortraits(holder.name,allImages);

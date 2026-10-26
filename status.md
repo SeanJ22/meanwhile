@@ -1462,3 +1462,9 @@ Either way it's runner work, about 1.2 GB of memory per ZIP task, plus Neon read
 - RT-01b re-cut (#822 approach) being built. Place map 0 rows.
 - GB-01: census in GA. New Orleans and Omaha still 0 governing.
 - DB-04: no READY (last commit 1:11 AM). Research: no Send.
+
+### 10:35 AM EDT: RT-01b READY, gating
+- RT-01b READY 92b527e93 (River, from RB-A2 #822's approach): the 56 state maps share one serial lane; the one asking holds its place in the memory queue (up to the existing 5-minute hold); maps go right after held ballot files; reservation 1,672 MiB (Texas peak 1,669,304,320 bytes with a 1 GiB heap, plus 5%) instead of 3,709; map child heap 1 GiB, 32 geometries per batch, other parsed Census files released after acquisition. Left out of #822: proof files, ZCTA-less ZIPs change, census-geography-overlaps in the map lane.
+- Busy-host test with the runner's real order and reservations: RT-01 as shipped starts 0 maps (reproduces production); RT-01b starts the first at 30 s and 7 in a 20-minute window; meeting reads 53 starts vs 58 without maps. 127/127 focused; tsc, eslint, knip, preflight clean. Scan: no bypassCache, no whole-record reads, no proof files.
+- Expected fill: all 56 states in about 3.5 to 4.5 hours of passes after deploy.
+- Gating on river-next-rt01b. Nothing else is READY, so it ships as release 129 (RB-A10 waits on it).

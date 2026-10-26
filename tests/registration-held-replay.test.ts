@@ -86,7 +86,7 @@ test("the current registration parser replays original held listings after the r
   assert.equal(unproven.state, "TEMPORAL_INVALID", "a bare older capture remains refused");
   const outcome = await processRegisteredRoutineCandidate(store, target.contractId, candidate, replayAt);
   assert.equal(outcome.promoted?.versionId, candidate.id, outcome.candidate.failureDetail ?? "");
-  const read = await readRegistrationProjection(target.state, { store, now: replayAt, bypassCache: true });
+  const read = await readRegistrationProjection(target.state, { store, now: replayAt });
   assert.equal(read.kind, "PROMOTED");
   const delivered = read.value as RegistrationReadModel;
   assert.ok(delivered.governments!.length > 0);

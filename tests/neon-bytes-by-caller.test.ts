@@ -1,3 +1,4 @@
+import { unwrapVersionedStatement } from "./helpers/versioned-neon-fixture.ts";
 import assert from "node:assert/strict";
 import { mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -6,7 +7,6 @@ import { test } from "node:test";
 import { neonConfig } from "@neondatabase/serverless";
 import { createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { databaseTransferFetch } from "../lib/db/transfer-by-caller.ts";
-import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { boundedQuery } from "../lib/control-plane/repository/request-bounds.ts";
 import { pathToFileURL } from "node:url";
 import {
@@ -41,10 +41,13 @@ test("a real control-plane read counts its response bytes under the operation an
   const response = JSON.stringify({ command: "SELECT", rowCount: 1, rowAsArray: true,
     fields: ["id", "revision", "updated_at", "value"].map(name => ({ name, dataTypeID: 25 })),
     rows: [["admin", "1", "2026-10-02T00:00:00.000Z", "{\"padding\":\"" + "x".repeat(5000) + "\"}"]] });
+  const responses:string[]=[];
   neonConfig.fetchFunction = async (_url: string | URL | Request, init?: RequestInit) => {
     const body = JSON.parse(String(init?.body));
     if (body.queries) return new Response(JSON.stringify({ results: body.queries.map(() => ({ command: "INSERT", rowCount: 1, rowAsArray: true, fields: [], rows: [] })) }));
-    return new Response(response);
+    const checked=unwrapVersionedStatement(body.query,body.params);
+    const encoded=JSON.stringify(checked.wrap(JSON.parse(response)));responses.push(encoded);
+    return new Response(encoded);
   };
   try {
     const repos = await createPgRepositories(process.env.WTP_CONTROL_PLANE_DATABASE_URL!, undefined, { skipBootstrap: true });
@@ -53,7 +56,7 @@ test("a real control-plane read counts its response bytes under the operation an
     assert.equal(counted.length, 1, `one caller key, got ${JSON.stringify(counted)}`);
     const [caller, bytes] = counted[0]!;
     assert.match(caller, /^cp_admin_config\.\w+ ← tests\/neon-bytes-by-caller\.test\.ts:\d+$/);
-    assert.equal(bytes, 2 * Buffer.byteLength(response));
+    assert.equal(bytes,responses.reduce((sum,response)=>sum+Buffer.byteLength(response),0));
   } finally {
     neonConfig.fetchFunction = saved.fetch;
     for (const key of Object.keys(process.env)) if (!(key in saved.env)) delete process.env[key];
@@ -79,34 +82,39 @@ test("a read whose query is sent after the repository's own awaits counts under 
   }
 });
 
-test("a whole-table read answered from its held copy still counts its bytes under the code that asked", async () => {
-  const saved = { fetch: neonConfig.fetchFunction, env: { ...process.env } };
-  const dir = mkdtempSync(join(tmpdir(), "held-bytes-"));
-  Object.assign(process.env, { WTP_CONTROL_PLANE_READS_DIR: dir,
-    WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@ep-held-bytes-test.us-east-2.aws.neon.tech/neondb" });
-  const answer = (fields: string[], rows: unknown[][]) => JSON.stringify({ command: "SELECT", rowCount: rows.length, rowAsArray: true,
-    fields: fields.map(name => ({ name, dataTypeID: 25 })), rows });
-  // The counter wraps the driver's fetch once per process; an earlier test restored the bare one.
-  neonConfig.fetchFunction = databaseTransferFetch(async (_url, init) => {
-    const body = JSON.parse(String(init?.body));
-    return new Response(/now\(\) AS read_at/.test(body.query) ? answer(["read_at"], [["2026-10-07T00:00:00.000Z"]])
-      : answer(["id", "revision", "updated_at", "value"], [["door-a", "1", "2026-10-02T00:00:00.000Z", "{\"status\":\"OPEN\"}"]]));
-  }, row => { countNeonBytes(row.database, row.responseBytes); });
-  try {
-    readFromHeldCopies();
-    const repos = await createPgRepositories(process.env.WTP_CONTROL_PLANE_DATABASE_URL!, undefined, { skipBootstrap: true });
-    for (let i = 0; i < 2; i++) assert.equal((await repos.doors.list()).length, 1);
-    assert.ok(readdirSync(dir).length === 1, "the copy was kept on the runner's disk");
-    const counted = callerBytes("cp_doors.");
-    assert.deepEqual(counted.map(([caller]) => caller.replace(/:\d+$/, "")).sort(), [
-      "cp_doors.listChangedSince ← tests/neon-bytes-by-caller.test.ts",
-      "cp_doors.listChangedSince:clock ← tests/neon-bytes-by-caller.test.ts",
-    ]);
-  } finally {
-    neonConfig.fetchFunction = saved.fetch;
-    for (const key of Object.keys(process.env)) if (!(key in saved.env)) delete process.env[key];
-    Object.assign(process.env, saved.env);
-    rmSync(dir, { recursive: true, force: true });
+test("version and changed-body reads count bytes under the code that asked",async()=>{
+  const {PGlite}=await import("@electric-sql/pglite");
+  const db=new PGlite(),saved={fetch:neonConfig.fetchFunction,env:{...process.env}};
+  await db.exec(`CREATE TABLE cp_doors(id text PRIMARY KEY,revision bigint,updated_at timestamptz,value jsonb);
+    INSERT INTO cp_doors VALUES('door-a',1,'2026-10-02T00:00:00Z','{"status":"OPEN"}')`);
+  Object.assign(process.env,{WTP_CONTROL_PLANE_DATABASE_URL:"postgresql://local:local@ep-held-bytes-test.us-east-2.aws.neon.tech/neondb"});
+  let bodies=0,versions=0;
+  neonConfig.fetchFunction=databaseTransferFetch(async(_url,init)=>{
+    const payload=JSON.parse(String(init?.body));
+    const execute=async(statement:{query:string;params?:unknown[]})=>{
+      if(statement.query.includes("database_transfer_"))return {command:"INSERT",fields:[],rows:[],rowCount:0};
+      if(statement.query.includes("SELECT id,revision FROM cp_doors"))versions++;
+      const result=await db.query<Record<string,unknown>>(statement.query,statement.params??[]);
+      bodies+=result.rows.filter(row=>row.value!==undefined&&row.value!==null).length;
+      return {command:"SELECT",fields:result.fields,rows:result.rows.map(row=>result.fields.map(field=>{
+        const value=row[field.name];
+        return value===null?null:value instanceof Date?value.toISOString():typeof value==="boolean"?(value?"t":"f"):
+          typeof value==="object"?JSON.stringify(value):String(value);
+      })),rowCount:result.rows.length,rowAsArray:true};
+    };
+    return Response.json(payload.queries?await Promise.all(payload.queries.map(execute)):await execute(payload));
+  },row=>{countNeonBytes(row.database,row.responseBytes);});
+  try{
+    const repos=await createPgRepositories(process.env.WTP_CONTROL_PLANE_DATABASE_URL!,undefined,{skipBootstrap:true});
+    for(let i=0;i<2;i++)assert.equal((await repos.doors.list()).length,1);
+    assert.equal(bodies,1,"the next read transfers only versions");
+    assert.equal(versions,2);
+    const counted=callerBytes("cp_doors.");
+    assert.deepEqual(counted.map(([caller])=>caller.replace(/:\d+$/,"")).sort(),["cp_doors.list ← tests/neon-bytes-by-caller.test.ts"]);
+  }finally{
+    neonConfig.fetchFunction=saved.fetch;
+    for(const key of Object.keys(process.env))if(!(key in saved.env))delete process.env[key];
+    Object.assign(process.env,saved.env);await db.close();
   }
 });
 

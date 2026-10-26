@@ -1,9 +1,14 @@
+import { collectProcessTransfers } from "./transfer-journal.ts";
+import { mergeProcessTransfer, processTransferKey, processTransferStatements } from "./process-transfer.ts";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { neon, neonConfig } from "@neondatabase/serverless";
-import { countNeonBytes, databaseTransferFetch, easternDay, installNeonBytesReport, runnerClient, socketCaller, VITAL_SIGNS_REPORT_ENV, type NeonBytesHour } from "./transfer-by-caller.ts";
+import { countNeonBytes, databaseTransferFetch, onNeonBytesCount, keepsNeonBytesInProcess, easternDay, installNeonBytesReport, runnerClient, socketCaller, VITAL_SIGNS_REPORT_ENV, type NeonBytesHour } from "./transfer-by-caller.ts";
 
 import { currentReaderRoute } from "./reader-route.ts";
 import { adminChangesFetch } from "./admin-changes.ts";
+import { afterResponse } from "../log/after-response.ts";
+import { assertDatabaseReadTarget } from "./read-target.ts";
+import { runtimeCivicReadCache, type CivicRowVersion } from "./civic-read-cache.ts";
 
 type FetchLike = typeof fetch;
 export interface DatabaseTransfer {
@@ -19,70 +24,67 @@ export interface HourlyDatabaseTransfer extends Omit<DatabaseTransfer, "day" | "
 export interface RunnerDatabaseTransfer {
   readonly hours: readonly { readonly hour: string; readonly readerBytes: number; readonly controlPlaneBytes: number }[];
   readonly reads: readonly { readonly hour: string; readonly database: string; readonly job: string; readonly table: string;
-    readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
+    readonly file?: string; readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
 }
 
-const internal = new AsyncLocalStorage<boolean>();
-const pending = new Map<string, DatabaseTransfer>();
-const pendingHours = new Map<string, HourlyDatabaseTransfer>();
-let installed = false;
-let lastFlush = 0;
-let flushing: Promise<boolean> | null = null;
+interface TransferState {
+  internal: AsyncLocalStorage<boolean>;
+  pending: Map<string, DatabaseTransfer>;
+  pendingHours: Map<string, HourlyDatabaseTransfer>;
+  pendingParts: Map<string, NeonBytesHour>;
+  runnerParts: Map<string, { readonly hour: string; readonly bytes: NeonBytesHour["bytes"];
+    readonly sent: NonNullable<NeonBytesHour["sent"]>; readonly reads: NonNullable<NeonBytesHour["reads"]> }>;
+  installed: boolean;
+  lastFlush: number;
+  flushing: Promise<boolean> | null;
+}
+const transferSlot = Symbol.for("meanwhile.database.transfer.pending");
+const transferHost = globalThis as typeof globalThis & { [transferSlot]?: TransferState };
+const transferState: TransferState = transferHost[transferSlot] ??= { internal: new AsyncLocalStorage<boolean>(), pending: new Map(),
+  pendingHours: new Map(), pendingParts: new Map(), runnerParts: new Map(), installed: false, lastFlush: 0, flushing: null };
+const { internal, pending, pendingHours, pendingParts, runnerParts } = transferState;
 
 export function pendingDatabaseTransfer(): readonly DatabaseTransfer[] { return [...pending.values()]; }
 export function pendingRunnerDatabaseTransfer(): readonly HourlyDatabaseTransfer[] { return [...pendingHours.values()]; }
 
-/** One aggregate per day/database/client. A failed write keeps the pending bytes for the next flush. */
+/** Cumulative process counters and their cursors are saved in one transaction. Failed writes retain every part. */
 export async function flushDatabaseTransfer(): Promise<boolean> {
-  if (flushing) return flushing;
-  if (pending.size === 0 && pendingHours.size === 0) return true;
+  if (transferState.flushing) {
+    const saved = await transferState.flushing;
+    return saved && pendingParts.size ? flushDatabaseTransfer() : saved;
+  }
+  if (!pendingParts.size) return true;
   const url = process.env.DATABASE_URL;
   if (!url) return false;
-  lastFlush = Date.now();
-  const batch = [...pending.entries()];
-  const hours = [...pendingHours.entries()];
-  for (const [key] of batch) pending.delete(key);
-  for (const [key] of hours) pendingHours.delete(key);
-  flushing = internal.run(true, async () => {
+  transferState.lastFlush = Date.now();
+  const batch = [...pending.entries()], hours = [...pendingHours.entries()], parts = [...pendingParts.entries()];
+  pending.clear(); pendingHours.clear(); pendingParts.clear();
+  transferState.flushing = internal.run(true, async () => {
     try {
+      assertDatabaseReadTarget(url);
       const sql = neon(url);
-      await sql.transaction(batch.map(([, row]) => sql.query(
-        `INSERT INTO database_transfer_daily (day, database_name, client, requests, request_bytes, response_bytes, reads)
-         VALUES ($1::date, $2, $3, $4, $5, $6, $7::jsonb)
-         ON CONFLICT (day, database_name, client) DO UPDATE SET
-         requests = database_transfer_daily.requests + EXCLUDED.requests,
-         request_bytes = database_transfer_daily.request_bytes + EXCLUDED.request_bytes,
-         response_bytes = database_transfer_daily.response_bytes + EXCLUDED.response_bytes,
-         reads = (SELECT COALESCE(jsonb_object_agg(k, jsonb_build_array(
-           COALESCE((a->>0)::bigint,0) + COALESCE((b->>0)::bigint,0),
-           COALESCE((a->>1)::bigint,0) + COALESCE((b->>1)::bigint,0),
-           COALESCE((a->>2)::bigint,0) + COALESCE((b->>2)::bigint,0))), '{}'::jsonb)
-           FROM jsonb_each(database_transfer_daily.reads) old(k,a) FULL JOIN jsonb_each(EXCLUDED.reads) new(k,b) USING(k)),
-         updated_at = now()`,
-        [row.day, row.database, row.client, row.requests, row.requestBytes, row.responseBytes, JSON.stringify(row.reads ?? {})],
-      )).concat(hours.map(([, row]) => sql.query(
-        `INSERT INTO database_transfer_hourly (hour, database_name, requests, request_bytes, response_bytes, reads)
-         VALUES ($1::timestamptz,$2,$3,$4,$5,$6::jsonb)
-         ON CONFLICT (hour,database_name) DO UPDATE SET
-           requests = database_transfer_hourly.requests + EXCLUDED.requests,
-           request_bytes = database_transfer_hourly.request_bytes + EXCLUDED.request_bytes,
-           response_bytes = database_transfer_hourly.response_bytes + EXCLUDED.response_bytes,
-           reads = (SELECT coalesce(jsonb_object_agg(k,jsonb_build_array(
-             coalesce((a->>0)::bigint,0)+coalesce((b->>0)::bigint,0),
-             coalesce((a->>1)::bigint,0)+coalesce((b->>1)::bigint,0),
-             coalesce((a->>2)::bigint,0)+coalesce((b->>2)::bigint,0))),'{}'::jsonb)
-             FROM jsonb_each(database_transfer_hourly.reads) old(k,a) FULL JOIN jsonb_each(EXCLUDED.reads) new(k,b) USING(k))`,
-        [row.hour,row.database,row.requests,row.requestBytes,row.responseBytes,JSON.stringify(row.reads ?? {})],
-      ))));
-      lastFlush = Date.now();
+      const statements = parts.flatMap(([, part]) => processTransferStatements(part, easternDay(new Date(part.hour))));
+      for (let at = 0; at < statements.length; at += 100) {
+        await sql.transaction(statements.slice(at, at + 100).map(statement => sql.query(statement.query, [...statement.params])),
+          { fetchOptions: { signal: AbortSignal.timeout(5_000) } });
+      }
+      transferState.lastFlush = Date.now();
       return true;
     } catch {
       for (const [, row] of batch) accumulate(row);
       for (const [, row] of hours) accumulateHour(row);
+      for (const [key, part] of parts) pendingParts.set(key, mergeProcessTransfer(pendingParts.get(key), part));
       return false;
-    } finally { flushing = null; }
+    } finally { transferState.flushing = null; }
   });
-  return flushing;
+  return transferState.flushing;
+}
+
+/** The standing collector also recovers readonly sessions and children that died before stdout settlement. */
+export function collectDatabaseTransferJournals(dir: string): readonly NeonBytesHour[] {
+  const parts = collectProcessTransfers(dir);
+  for (const part of parts) keepRunnerTransfer(part);
+  return parts;
 }
 
 function accumulateHour(row: HourlyDatabaseTransfer): void {
@@ -119,7 +121,7 @@ function counted(row: DatabaseTransfer, caller?: string): void {
   if (reportsToRunner()) return;
   accumulate(row);
   // An answered query must not wait on the accounting write to the reader database.
-  if (Date.now() - lastFlush >= 60_000) void flushDatabaseTransfer();
+  if (Date.now() - transferState.lastFlush >= 60_000) void flushDatabaseTransfer();
 }
 
 /** Which of the two civic databases a socket URL reaches, by host; null for any other host. */
@@ -138,8 +140,10 @@ const messageBytes = (data: unknown): number => typeof data === "string" ? Buffe
   : data instanceof ArrayBuffer || ArrayBuffer.isView(data) ? data.byteLength : data instanceof Blob ? data.size : 0;
 
 /** The Pool driver's sockets (locks, pinned connections, the meeting and publication stores), counted like HTTP responses. */
+const countedSocketSlot = Symbol.for("meanwhile.database.transfer.socket.counted");
 function countedWebSocket(Socket: typeof WebSocket): typeof WebSocket {
-  return class CountedWebSocket extends Socket {
+  if ((Socket as typeof WebSocket & { [countedSocketSlot]?: boolean })[countedSocketSlot]) return Socket;
+  class CountedWebSocket extends Socket {
     constructor(url: string | URL, protocols?: string | string[]) {
       super(url, protocols);
       const database = socketDatabase(url);
@@ -153,25 +157,35 @@ function countedWebSocket(Socket: typeof WebSocket): typeof WebSocket {
       const send = this.send.bind(this);
       this.send = data => { try { counted(row(0, messageBytes(data)), caller); } catch { /* accounting never breaks a write */ } send(data); };
     }
-  };
+  }
+  Object.defineProperty(CountedWebSocket, countedSocketSlot, { value: true });
+  return CountedWebSocket;
 }
 
 /** Shared Neon HTTP and socket hook; query execution is unchanged and counter failure never hides data. */
 export function installDatabaseTransferCounter(): void {
-  if (installed) return;
-  installed = true;
+  onNeonBytesCount(part => {
+    if (!reportsToRunner() || keepsNeonBytesInProcess()) {
+      const key = processTransferKey(part);
+      pendingParts.set(key, mergeProcessTransfer(pendingParts.get(key), part));
+    }
+  });
   installNeonBytesReport();
-  neonConfig.fetchFunction = adminChangesFetch(databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); }, () => internal.getStore() === true));
+  neonConfig.fetchFunction = adminChangesFetch(databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); }, () => internal.getStore() === true, async () => {
+    if (!reportsToRunner()) await afterResponse(() => flushDatabaseTransfer(), { backgroundFallback: true });
+  }));
   const Socket = (neonConfig.webSocketConstructor ?? globalThis.WebSocket) as typeof WebSocket | undefined;
   if (Socket) neonConfig.webSocketConstructor = countedWebSocket(Socket);
+  if (transferState.installed) return;
+  transferState.installed = true;
   // Long-running processes flush once a minute. The supervisor also awaits a flush before it exits.
-  const timer = setInterval(() => { if (Date.now() - lastFlush >= 60_000) void flushDatabaseTransfer(); }, 60_000);
+  const timer = setInterval(() => { if (Date.now() - transferState.lastFlush >= 60_000) void flushDatabaseTransfer(); }, 60_000);
   timer.unref();
   // A process outside the runner also saves its final partial minute.
   process.once("beforeExit", () => { void flushDatabaseTransfer(); });
 }
 
-const runnerParts = new Map<string, { readonly hour: string; readonly bytes: NeonBytesHour["bytes"]; readonly sent: NonNullable<NeonBytesHour["sent"]>; readonly reads: NonNullable<NeonBytesHour["reads"]> }>();
+
 const NOTHING_SENT: NonNullable<NeonBytesHour["sent"]> = { reader: { requests: 0, bytes: 0 }, "control-plane": { requests: 0, bytes: 0 } };
 
 
@@ -180,6 +194,7 @@ export function keepRunnerTransfer(part: NeonBytesHour): void {
   installDatabaseTransferCounter();
   const key = `${part.pid}:${part.startedMs ?? ""}:${part.hour}`;
   const prior = runnerParts.get(key);
+  pendingParts.set(processTransferKey(part), mergeProcessTransfer(pendingParts.get(processTransferKey(part)), part));
   const sent = part.sent ?? NOTHING_SENT;
   const reads = { ...prior?.reads };
   for (const [read, counts] of Object.entries(part.reads ?? {}))
@@ -215,20 +230,42 @@ export type DailyDatabaseTransferRead =
   | { readonly kind: "RECORDED"; readonly rows: readonly DatabaseTransfer[]; readonly runner?: RunnerDatabaseTransfer | null }
   | { readonly kind: "NOT_INSTALLED"; readonly rows: readonly DatabaseTransfer[]; readonly detail: string };
 
+/** Accounting maps follow the same row-version path as civic and control-plane bodies. */
+async function readTransferRows(url: string, table: "database_transfer_daily" | "database_transfer_hourly",
+  columns: string, where: string, args: readonly unknown[], key: string): Promise<Record<string, unknown>[]> {
+  const sql = neon(url);
+  const etag = "xmin::text || ':' || ctid::text";
+  const versions = async (keys?: readonly string[]) => (await sql.query(
+    `SELECT ${key} AS key,${etag} AS etag FROM ${table} WHERE ${where}${keys ? ` AND ${key}=ANY($${args.length + 1}::text[])` : ""}`,
+    keys ? [...args, keys] : [...args])) as CivicRowVersion[];
+  const initial = await versions();
+  let first = true;
+  const rows = await runtimeCivicReadCache(url).rows<Record<string, unknown>, CivicRowVersion>({
+    namespace: `${table}:${columns}`, keys: initial.map(row => row.key),
+    versions: async keys => { if (first) { first = false; return initial; } return versions(keys); },
+    values: keys => sql.query(`SELECT ${columns},${key} AS key,${etag} AS etag FROM ${table}
+      WHERE ${where} AND ${key}=ANY($${args.length + 1}::text[])`, [...args, keys]),
+    keyOf: row => String(row.key), etagOf: row => String(row.etag),
+  });
+  return [...rows];
+}
+
 /** Admin's small daily read. Days are Eastern, matching Admin's calendar. */
 export async function readDailyDatabaseTransfer(days = 7): Promise<DailyDatabaseTransferRead> {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not configured");
-  const sql = neon(url);
+  assertDatabaseReadTarget(url);
   try {
-  const rows = await sql.query(`SELECT day::text, database_name AS database, client,
-    requests::text, request_bytes::text, response_bytes::text, reads
-    FROM database_transfer_daily WHERE day >= (now() AT TIME ZONE 'America/New_York')::date - $1::int
-    ORDER BY day DESC, database_name, client`, [Number.isFinite(days) ? Math.max(1, Math.min(90, Math.trunc(days))) - 1 : 6]);
+  const rows = await readTransferRows(url, "database_transfer_daily",
+    "day::text,database_name AS database,client,requests::text,request_bytes::text,response_bytes::text,reads",
+    "day >= (now() AT TIME ZONE 'America/New_York')::date - $1::int",
+    [Number.isFinite(days) ? Math.max(1, Math.min(90, Math.trunc(days))) - 1 : 6],
+    "day::text || E'\\t' || database_name || E'\\t' || client");
+  rows.sort((a,b) => String(b.day).localeCompare(String(a.day)) || String(a.database).localeCompare(String(b.database)) || String(a.client).localeCompare(String(b.client)));
   let runner: RunnerDatabaseTransfer | null = null;
   try { runner = await readRunnerDatabaseTransfer(); } catch { /* Existing daily totals remain readable. */ }
-  return { kind: "RECORDED", runner, rows: rows.map(row => ({ day: row.day, database: row.database, client: row.client,
-    requests: Number(row.requests), requestBytes: Number(row.request_bytes), responseBytes: Number(row.response_bytes), reads: row.reads })) };
+  return { kind: "RECORDED", runner, rows: rows.map(row => ({ day: String(row.day), database: row.database as DatabaseTransfer["database"], client: row.client as DatabaseTransfer["client"],
+    requests: Number(row.requests), requestBytes: Number(row.request_bytes), responseBytes: Number(row.response_bytes), reads: row.reads as DatabaseTransfer["reads"] })) };
   } catch (error) {
     if ((error as { code?: string }).code === "42P01") return { kind: "NOT_INSTALLED", rows: [],
       detail: "Daily database transfer is not recorded until migration 0030 is applied." };
@@ -245,8 +282,8 @@ export function runnerDatabaseTransferView(rows: readonly HourlyDatabaseTransfer
   }
   return { hours: [...hours.values()].sort((a,b) => b.hour.localeCompare(a.hour)),
     reads: rows.flatMap(row => Object.entries(row.reads ?? {}).map(([key, counts]) => {
-      const [job, ...table] = key.split("\t");
-      return { hour: row.hour,database: row.database,job,table: table.join("\t"),requests: counts[0],requestBytes: counts[1],responseBytes: counts[2] };
+      const [job, table, file] = key.split("\t");
+      return { hour: row.hour,database: row.database,job,table: table ?? "",...(file ? { file } : {}),requests: counts[0],requestBytes: counts[1],responseBytes: counts[2] };
     })).sort((a,b) => b.responseBytes-a.responseBytes || a.job.localeCompare(b.job)) };
 }
 
@@ -254,15 +291,18 @@ export function runnerDatabaseTransferView(rows: readonly HourlyDatabaseTransfer
 export async function readRunnerDatabaseTransfer(selectedHour?: string): Promise<RunnerDatabaseTransfer> {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not configured");
-  const sql = neon(url);
-  const totals = (await sql.query(`SELECT hour::text,database_name AS database,response_bytes::text
-    FROM database_transfer_hourly WHERE hour >= now()-interval '31 days' ORDER BY hour DESC`)).map(row => ({
-      hour: new Date(row.hour).toISOString(),database: row.database,responseBytes: Number(row.response_bytes),requests: 0,requestBytes: 0,
+  assertDatabaseReadTarget(url);
+  const totals = (await readTransferRows(url, "database_transfer_hourly",
+    "hour::text,database_name AS database,response_bytes::text",
+    "hour >= now()-interval '31 days'", [], "hour::text || E'\\t' || database_name")).map(row => ({
+      hour: new Date(String(row.hour)).toISOString(),database: row.database,responseBytes: Number(row.response_bytes),requests: 0,requestBytes: 0,
     })) as HourlyDatabaseTransfer[];
+  totals.sort((a,b) => b.hour.localeCompare(a.hour));
   const hour = selectedHour ?? totals[0]?.hour;
   if (!hour) return { hours: [], reads: [] };
-  const rows = await sql.query(`SELECT hour::text,database_name AS database,requests::text,request_bytes::text,response_bytes::text,reads
-    FROM database_transfer_hourly WHERE hour=$1::timestamptz ORDER BY database_name`, [hour]);
-  return runnerDatabaseTransferView(rows.map(row => ({ hour: new Date(row.hour).toISOString(),database: row.database,
-    requests: Number(row.requests),requestBytes: Number(row.request_bytes),responseBytes: Number(row.response_bytes),reads: row.reads })), totals);
+  const rows = await readTransferRows(url, "database_transfer_hourly",
+    "hour::text,database_name AS database,requests::text,request_bytes::text,response_bytes::text,reads",
+    "hour=$1::timestamptz", [hour], "hour::text || E'\\t' || database_name");
+  return runnerDatabaseTransferView(rows.map(row => ({ hour: new Date(String(row.hour)).toISOString(),database: row.database as DatabaseTransfer["database"],
+    requests: Number(row.requests),requestBytes: Number(row.request_bytes),responseBytes: Number(row.response_bytes),reads: row.reads as DatabaseTransfer["reads"] })), totals);
 }

@@ -548,6 +548,27 @@
   text-align: right;
   white-space: nowrap;
 }
+@media (max-width: 600px) {
+  .runnerFamilyTable {
+    table-layout: fixed;
+  }
+  .runnerFamilyTable th,
+  .runnerFamilyTable td {
+    padding-inline: 2px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .runnerFamilyTable th {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+  .runnerFamilyTable thead th:first-child {
+    width: 34%;
+  }
+  .runnerFamilyTable thead th:not(:first-child) {
+    width: 22%;
+  }
+}
 .thSort {
   border: 0;
   background: none;

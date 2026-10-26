@@ -154,9 +154,14 @@ function geoRow(state: string, type = "county", geoid = "12011", id = `${FL}/cou
 }
 
 test("county, district and ZIP checks resolve held geography and reject a forged state or division", async () => {
-  const query: ReadOnlyQuery = async statements => statements.map((statement, index) => index === 0 ? [{ version_id: "fixture-geography" }] :
-    statement.text.includes("AS known") ? [{ known: true }] : [geoRow("FL", statement.params[2] instanceof Array && statement.params[2].length === 1 ? String(statement.params[2][0]) : "county",
-      String(statement.params[3]), statement.params[3] === "1220" ? `${FL}/cd:20` : `${FL}/county:broward`)]);
+  const query:ReadOnlyQuery=async statements=>statements.map((statement,index)=>{
+    if(statement.text.includes(" AS unchanged,"))return [{etag:"1/(0,1)",unchanged:false,value:{
+      version_id:"fixture-geography",known:true,geography:[geoRow("FL")],zcta_tabulations:["2020"],
+    }}];
+    return index===0?[{version_id:"fixture-geography"}]:[geoRow("FL",
+      statement.params[2] instanceof Array&&statement.params[2].length===1?String(statement.params[2][0]):"county",
+      String(statement.params[3]),statement.params[3]==="1220"?`${FL}/cd:20`:`${FL}/county:broward`)];
+  });
   assert.ok((await resolveOfficialsScope("geo:fl.county.12011", query)).ok);
   assert.ok((await resolveOfficialsScope("geo:fl.congressional_district.1220", query)).ok);
   const zip = await resolveOfficialsScope("geo:fl.zcta.33301", query);

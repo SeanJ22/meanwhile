@@ -1,6 +1,5 @@
-/** Read production with the named read-only role; all writes and worker probes stay on local PostgreSQL. */
+/** Measure the previously saved local replay data without making a production copy. */
 import assert from "node:assert/strict";
-import { createHash } from "node:crypto";
 import { readFile, writeFile } from "node:fs/promises";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
@@ -17,42 +16,7 @@ const pool = new Pool({ host: "/tmp", port: 55435, database: "postgres", user: "
 const query = async (text: string, params: readonly unknown[] = []) => (await pool.query(text, [...params])).rows;
 const mode = process.argv[2];
 try {
-  if (mode === "snapshot") {
-    const url = (await readFile("/tmp/rb-a5-cp-readonly-url", "utf8")).trim();
-    assert.equal(new URL(url).username, "wtp_cp_release_readonly");
-    assert.match(new URL(url).hostname, /^ep-dark-night-aeo1ekz3(?:-pooler)?\./);
-    const remote = async (text: string, params: unknown[] = []) => {
-      assert.match(text, /^SELECT /);
-      const response = await fetch(`https://${new URL(url).hostname.replace("-pooler.", ".")}/sql`, {
-        method: "POST", headers: { "Neon-Connection-String": url, "Content-Type": "application/json" },
-        body: JSON.stringify({ query: text, params }),
-      });
-      if (!response.ok) throw new Error(`Read-only snapshot answered ${response.status}`);
-      const result = await response.json() as { rows: Record<string, unknown>[] };
-      return result.rows;
-    };
-    const startedAt = new Date().toISOString();
-    const [before] = await remote("SELECT current_user, count(*)::int AS n FROM cp_box_findings");
-    assert.equal(before!.current_user, "wtp_cp_release_readonly");
-    await query("CREATE TABLE IF NOT EXISTS rb_a5_box_copy(id text PRIMARY KEY, value jsonb NOT NULL)");
-    let cursor = "", total = 0;
-    const hash = createHash("sha256");
-    for (;;) {
-      const rows = await remote("SELECT id, value FROM cp_box_findings WHERE id > $1 ORDER BY id LIMIT 2000", [cursor]);
-      if (!rows.length) break;
-      const body = JSON.stringify(rows);
-      hash.update(body);
-      await query(`INSERT INTO rb_a5_box_copy SELECT * FROM jsonb_to_recordset($1::jsonb) AS rows(id text,value jsonb)
-        ON CONFLICT(id) DO UPDATE SET value=EXCLUDED.value`, [body]);
-      cursor = String(rows.at(-1)!.id); total += rows.length;
-      if (total % 20_000 === 0) console.log(`Copied ${total} Box rows`);
-    }
-    const [after] = await remote("SELECT count(*)::int AS n FROM cp_box_findings");
-    const report = { sourceProject: "withered-sunset-39821877", sourceBranch: "br-tiny-frog-aeufpjeq", role: before!.current_user,
-      startedAt, endedAt: new Date().toISOString(), rowsBefore: before!.n, rowsAfter: after!.n, copied: total, sha256: hash.digest("hex") };
-    await writeFile(".scratch/rb-a5/snapshot.json", JSON.stringify(report, null, 2));
-    console.log(report);
-  } else if (mode === "seed") {
+  if (mode === "seed") {
     const list = workList(query, { owner: "production-copy-loader" });
     let cursor = "", total = 0;
     for (;;) {

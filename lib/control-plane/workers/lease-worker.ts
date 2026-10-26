@@ -13,9 +13,7 @@ import { workerBroker } from "./worker-broker.ts";
 import { workerDispatchFailure, type LeaseWorkerConfig } from "./process-pool.ts";
 import { join } from "node:path";
 import type { HuntSearchResult } from "../../hunt/search.ts";
-import { readFromHeldCopies } from "../repository/incremental-reads.ts";
 
-readFromHeldCopies();
 
 const broker = workerBroker<LeaseWorkerConfig>(work);
 /** A long job stops this far before the pool would end the process, so it can record what it has. */

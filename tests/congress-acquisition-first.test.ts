@@ -44,7 +44,7 @@ test("core-only source promotes each place through its own pointer without optio
     const outcome=await processRegisteredManualCandidate(store,federalDirectoryContractId(state),candidate,NOW);
     assert.equal(outcome.candidate.state,"PROMOTED",outcome.candidate.failureDetail ?? "");
   }
-  const read=await readStateFederalDirectory("PR",{store,now:NOW,bypassCache:true});
+  const read=await readStateFederalDirectory("PR",{store,now:NOW});
   assert.equal(read.kind,"PROMOTED");
   if(read.kind==="PROMOTED")assert.deepEqual(read.value.roster.officeholders.map(row=>row.officeTitle),["Resident Commissioner"]);
 });

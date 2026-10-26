@@ -91,7 +91,7 @@ test("a full CISA candidate promotes through the typed Reader and reaches geogra
   const candidate = dotGovCandidate({ snapshot, rawText: csv, finalUrl: source.sourceUrl, retrievedAt: NOW });
   const outcome = await processRegisteredRoutineCandidate(store, "dotgov", candidate, NOW);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? outcome.candidate.failureCode ?? "The CISA candidate was refused.");
-  const read = await readDotGovProjection({ store, now: NOW, bypassCache: true });
+  const read = await readDotGovProjection({ store, now: NOW });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.value?.domains.length, source.domains);
   const edge = provenEdgeEntry({ recordClass: "DOTGOV_REFERENCE", scope: DOTGOV_SCOPE,

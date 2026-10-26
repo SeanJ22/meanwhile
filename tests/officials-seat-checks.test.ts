@@ -165,7 +165,7 @@ test("an official vacancy publishes from its saved page and reaches the state's 
   assert.ok(published.outcome.promoted, JSON.stringify(published.outcome.candidate.receipt));
   const changes = (published.candidate.normalizedPayload as { changes?: { kind: string; divisionId: string }[] }).changes ?? [];
   assert.deepEqual(changes.filter(change => change.kind === "vacant").map(change => change.divisionId).sort(), [LA77, "ocd-division/country:us/state:la/sldl:92"]);
-  const read = await readStatePeopleProjection("US-LA", { store, now: "2026-10-13T05:02:00.000Z", bypassCache: true });
+  const read = await readStatePeopleProjection("US-LA", { store, now: "2026-10-13T05:02:00.000Z" });
   assert.equal(read.kind, "PROMOTED"); if (read.kind !== "PROMOTED") return;
   assert.deepEqual(indexByDivision([read.value.roster]).get(LA77) ?? [], [], "the reader no longer shows the departed member in the vacant seat");
   assert.equal(read.value.roster.vacancies?.find(row => row.ocdId === LA77)?.sourceUrl, page.url);

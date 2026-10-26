@@ -8,7 +8,7 @@ import { publishCandidatePortraits } from "../lib/ballot/portrait-refresh.ts";
 import { campaignSiteHostRefusal } from "../lib/candidates/campaign-site-verifier.ts";
 import { join } from "node:path";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { derivedCampaignSitesContractId, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope,
@@ -141,7 +141,7 @@ async function linkedPublicationReads(vaultRoot: string, approvals: readonly Pub
 }
 
 async function readPrior() {
-  const priorRead = await readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state), { store, bypassCache: true, now });
+  const priorRead = await readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state), { store,  now });
   if (priorRead.kind === "PROMOTED") rememberStatePublicationPrior(store, priorRead.projection);
   const priorInput = priorRead.kind === "PROMOTED" ? promotedInputRef(DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
     derivedCampaignSitesScope(state), priorRead.metadata.versionId, priorRead.value, priorRead.metadata.promotedAt) : null;
@@ -152,7 +152,7 @@ async function readPrior() {
 
 async function readProfiles() {
   const profilesRead = await readPromotedCivicData<{ readonly links?: { readonly links?: Readonly<Record<string, CandidateLinksShape>> } }>(
-    PROFILES.recordClass, PROFILES.scope, { store, bypassCache: true, now },
+    PROFILES.recordClass, PROFILES.scope, { store,  now },
   );
   const profilesInput = profilesRead.kind === "PROMOTED"
     ? promotedInputRef(PROFILES.recordClass, PROFILES.scope, profilesRead.metadata.versionId, profilesRead.value, profilesRead.metadata.promotedAt)
@@ -198,7 +198,7 @@ async function main(): Promise<void> {
   prior = null;
   let subjects: ReturnType<typeof campaignSiteSubjects> = new Map();
   try {
-    const ballotRead = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, bypassCache: true, now });
+    const ballotRead = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store,  now });
     if (ballotRead.kind === "PROMOTED") {
       const groups = new Map<string, BallotSet[]>();
       for (const ballot of Object.values(ballotRead.value.ballots)) {

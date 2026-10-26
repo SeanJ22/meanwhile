@@ -153,7 +153,7 @@ async function historicalFixture() {
     pointerMoveEvents: async (id: string) => moves(id),
   };
   const current = await readPromotedCivicData<{ answer: number }>("FEC_FUNDING", "federal-supported",
-    { store, bypassCache: true });
+    { store });
   assert.equal(current.kind, "PROMOTED");
   if (current.kind !== "PROMOTED") throw new Error("fixture promotion failed");
   return { current, store, rows, previous };

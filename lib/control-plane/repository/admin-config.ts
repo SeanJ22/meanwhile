@@ -1,6 +1,7 @@
 import { randomUUID } from "node:crypto";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../gateway/admin-config.ts";
 import { ConcurrentModification, IdentityCollision, UnknownAggregate, canonicalJson, type AggregateRepository, type LockManager, type Persisted } from "./types.ts";
+import { versionedRowsFor, type VersionedRows } from "../../db/versioned-rows.ts";
 
 export const ADMIN_SECTIONS = {
   settingHistory: "setting_history", updates: "updates", fixList: "fix_list", methodStandings: "method_standings",
@@ -103,18 +104,14 @@ const scopeOf = (config: AdminConfig): AdminSectionsQuery => Object.fromEntries(
 type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 const timestamp = (value: unknown): string => new Date(value as string).toISOString();
 
-export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, query: Query): AdminConfigRepository {
-  let cached: Persisted<AdminConfig> | null = null;
+export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, query: Query, reads: VersionedRows = versionedRowsFor(query)): AdminConfigRepository {
+  const head = `value - ARRAY[${Object.keys(ADMIN_SECTIONS).map(key=>`'${key}'`).join(",")}]`;
   async function read(id: string, sections: AdminSectionsQuery = {}): Promise<Persisted<AdminConfig> | null> {
     for (;;) {
-      const previous = cached;
-      const rows = await query(`SELECT id, revision, updated_at, CASE WHEN revision = $2::bigint THEN NULL ELSE value - ARRAY[${Object.keys(ADMIN_SECTIONS).map(key=>`'${key}'`).join(",")}] END AS value
-        FROM cp_admin_config WHERE id = $1`, [id, previous?.id === id ? previous.revision : null]);
-      const row = rows[0];
-      if (!row) { if (cached === previous) cached = null; return null; }
-      const value = row.value === null ? previous!.value : (typeof row.value === "string" ? JSON.parse(row.value) : row.value) as AdminConfig;
+      const row = await reads.one(query,"cp_admin_config",id,head);
+      if (!row) return null;
+      const value = (typeof row.value === "string" ? JSON.parse(row.value) : row.value) as AdminConfig;
       const snapshot = { id, revision: Number(row.revision), updatedAt: timestamp(row.updated_at), value };
-      if (!cached || cached.id !== id || cached.revision <= snapshot.revision) cached = snapshot;
       const loaded: Record<string, unknown> = {};
       await Promise.all(Object.entries(sections).map(async ([name, selection]) => {
         const section = name as AdminSection;
@@ -139,11 +136,18 @@ export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, 
         if (options.activeAt && section === "routineDueRequests") filters.push(`value->>'withdrawnAt' IS NULL AND value->>'expiresAt' > ${at(options.activeAt)}`);
         for (const count of [options.limit, options.latestPerKey, options.activeAndRecent]) if (count !== undefined && (!Number.isSafeInteger(count) || count < 1)) throw new Error("Invalid Admin page size");
         if (options.activeAndRecent && section === "fixList") filters.push(`(value->>'state' != 'FIXED' OR id IN (SELECT id FROM cp_admin_fix_list WHERE config_id = $1 AND value->>'state' = 'FIXED' ORDER BY ordinal DESC LIMIT ${at(options.activeAndRecent)}))`);
-        let selected = `SELECT id, value, ordinal FROM cp_admin_${ADMIN_SECTIONS[section]} WHERE ${filters.join(" AND ")}`;
-        if (options.latestPerKey) selected = `SELECT id, value, ordinal FROM (SELECT id, value, ordinal, row_number() OVER (PARTITION BY value->>'key' ORDER BY ordinal DESC) AS rank FROM cp_admin_${ADMIN_SECTIONS[section]} WHERE ${filters.join(" AND ")}) ranked WHERE rank <= ${at(options.latestPerKey)}`;
+        const table = `cp_admin_${ADMIN_SECTIONS[section]}`;
+        let selected = `SELECT id, ordinal FROM ${table} WHERE ${filters.join(" AND ")}`;
+        if (options.latestPerKey) selected = `SELECT id, ordinal FROM (SELECT id, ordinal, row_number() OVER (PARTITION BY value->>'key' ORDER BY ordinal DESC) AS rank FROM ${table} WHERE ${filters.join(" AND ")}) ranked WHERE rank <= ${at(options.latestPerKey)}`;
         selected += ` ORDER BY ${options.afterId !== undefined ? "id ASC" : "ordinal DESC"}${options.limit ? ` LIMIT ${at(options.limit)}` : ""}`;
-        if (options.includeIds?.length) selected = `SELECT id, value, ordinal FROM ((${selected}) UNION SELECT id, value, ordinal FROM cp_admin_${ADMIN_SECTIONS[section]} WHERE config_id = $1 AND id = ANY(${at(options.includeIds)}::text[])) included ORDER BY ${options.afterId !== undefined ? "id ASC" : "ordinal DESC"}`;
-        const items = (await query(selected, params)).map(row => row.value);
+        if (options.includeIds?.length) selected = `SELECT id, ordinal FROM ((${selected}) UNION SELECT id, ordinal FROM ${table} WHERE config_id = $1 AND id = ANY(${at(options.includeIds)}::text[])) included ORDER BY ${options.afterId !== undefined ? "id ASC" : "ordinal DESC"}`;
+        const versions = await query(`SELECT picked.id,concat(source.xmin::text,'/',source.ctid::text) AS revision
+          FROM (${selected}) picked JOIN ${table} source ON source.config_id=$1 AND source.id=picked.id
+          ORDER BY picked.${options.afterId !== undefined ? "id ASC" : "ordinal DESC"}`,params) as {id:string;revision:string}[];
+        const bodies = await reads.known(table,versions,`config:${id}`,async ids=>await query(
+          `SELECT id,value,concat(xmin::text,'/',ctid::text) AS revision FROM ${table} WHERE config_id=$1 AND id=ANY($2::text[])`,[id,ids]),
+          row=>String(row.id),row=>String(row.revision));
+        const items = bodies.map(row => row.value);
         loaded[section] = options.afterId !== undefined ? items : items.reverse();
       }));
       if (Object.keys(sections).length) {
@@ -181,7 +185,6 @@ export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, 
     const rows = await query(`WITH ${clauses.join(",")} SELECT * FROM saved`, params);
     if (!rows.length) throw new ConcurrentModification("AdminConfig", id, held?.revision ?? 0, null);
     const saved = { id, revision: Number(rows[0].revision), updatedAt: timestamp(rows[0].updated_at), value: copy(currentSettings(next)) };
-    if (!cached || cached.id !== id || cached.revision <= saved.revision) cached = saved;
     return { ...saved, value: copy(next) };
   }
   return adminMethods(base, read, save);

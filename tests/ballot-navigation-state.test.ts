@@ -57,11 +57,11 @@ test("streamed fields are verified before the next source is produced", async ()
     verify: input => { verified++; return section3Record(input); } });
   assert.equal(result.fields.length, 2);
   assert.equal(result.gaps.length, 0);
-  const ohio = await readBallotNavigationProjection("OH", { store, now, bypassCache: true });
+  const ohio = await readBallotNavigationProjection("OH", { store, now });
   assert.equal(ohio.kind, "PROMOTED");
   assert.equal(ohio.kind === "PROMOTED" && ohio.projection.scope, "US-OH:official-ballot-navigation");
   assert.equal(ohio.kind === "PROMOTED" && ohio.value.records.length, 2);
-  assert.equal((await readBallotNavigationProjection("MI", { store, now, bypassCache: true })).kind, "NOT_RECORDED");
+  assert.equal((await readBallotNavigationProjection("MI", { store, now })).kind, "NOT_RECORDED");
 });
 
 test("a reader request reads its own state's navigation pointer and no other state's", async () => {

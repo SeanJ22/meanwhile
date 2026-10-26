@@ -1,5 +1,5 @@
 /** `pgAskGapObservationSink` is one atomic upsert per observation, so concurrent asks cannot lose a count to a compare-and-set race. */
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../db/client.ts";
 
 import { ASK_GAP_RECORD_CLASS, isAskGapCode, type AskGapCode, type AskGapRecordClass } from "../ask/gap-codes.ts";
 import type { AggregateRepository, Persisted } from "./repository/types.ts";

@@ -45,6 +45,7 @@ function groupingsQuery(withOverlaps: boolean, where: string, overlapZipParam?: 
   // state), so the national payload is never collected into a spilled tuplestore. A scope's type and version are
   // read from the scope itself, never from its versionMeta copy; one shared filter keeps the three lists aligned.
   const stateFilter = stateParam ? " ? (@.stateAbbr == $state || @.memberStates[*] == $state)" : "";
+  const zipFilter = overlapZipParam ? " ? (@.overlaps[*].zcta5 == $zip)" : "";
   const scope = "$.scopes[*] ? (exists(@.type) && exists(@.version) && exists(@.versionMeta))";
   return `WITH scopes AS MATERIALIZED (
     SELECT jsonb_build_object('type', s.type, 'version', s.version, 'versionMeta', s.meta) AS scope FROM civic_data_promotions p
@@ -56,8 +57,8 @@ function groupingsQuery(withOverlaps: boolean, where: string, overlapZipParam?: 
     NULL::text AS cbsa_class, NULL::jsonb AS member_states, NULL::jsonb AS overlaps, scope->'versionMeta' AS version_meta FROM scopes
   UNION ALL SELECT 'grouping', scope->>'type', scope->>'version', scope->'versionMeta'->>'plan', ${grouping}, NULL::jsonb FROM scopes CROSS JOIN LATERAL jsonb_path_query(
       (SELECT held.payload FROM civic_data_promotions held WHERE held.record_class = $1 AND held.scope = $2),
-      '$.scopes[*] ? (@.type == $type && @.version == $version).groupings[*]${stateFilter}',
-      jsonb_build_object('type', scope->'type', 'version', scope->'version'${stateParam ? `, 'state', $${stateParam}::text` : ""})) g
+      '$.scopes[*] ? (@.type == $type && @.version == $version).groupings[*]${stateFilter}${zipFilter}',
+      jsonb_build_object('type', scope->'type', 'version', scope->'version'${stateParam ? `, 'state', $${stateParam}::text` : ""}${overlapZipParam ? `, 'zip', $${overlapZipParam}::text` : ""})) g
     WHERE scope->>'type' = ANY($3::text[]) AND ${where}`;
 }
 
@@ -211,36 +212,43 @@ export interface CodeSlice extends GeographySlice {
   readonly known: boolean;
 }
 
-export async function containersOfCode(
-  zcta5: string,
-  types: readonly GeographyType[],
-  query: ReadOnlyQuery | null,
-): Promise<Slice<CodeSlice>> {
-  const { slice, rest } = await geography(
-    query,
-    `The Census geography for ZCTA ${zcta5}`,
-    [
-      {
-        text: groupingsQuery(true, "g->'overlaps' @> jsonb_build_array(jsonb_build_object('zcta5', $4::text))"),
-        params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...types], zcta5],
-      },
-      {
-        text: "SELECT (p.payload->'zctaUniverse') @> jsonb_build_array($3::text) AS known, (SELECT jsonb_agg(DISTINCT s->'versionMeta'->>'zctaTabulation') FROM jsonb_array_elements(p.payload->'scopes') s) AS zcta_tabulations FROM civic_data_promotions p WHERE p.record_class = $1 AND p.scope = $2",
-        params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, zcta5],
-      },
-    ],
-    true,
-  );
-  if (slice.kind !== "HELD") return slice;
-  return {
-    ...slice,
-    value: {
-      scopes: slice.value.scopes,
-      containers: slice.value.containers.map((c) => ({ ...c, overlaps: (c.overlaps ?? []).filter((o) => o.zcta5 === zcta5) })),
-      known: rest[0]?.[0]?.known === true,
-      zctaTabulations: Array.isArray(rest[0]?.[0]?.zcta_tabulations) ? (rest[0][0].zcta_tabulations as unknown[]).filter((v): v is string => typeof v === "string") : [],
-    },
-  };
+/** One source-row revision and its selected ZIP facts share one database snapshot. */
+export function codeSliceStatement(zcta5: string, types: readonly GeographyType[], heldVersion: string | null = null): Statement {
+  const version = "concat(p.xmin::text,'/',p.ctid::text)";
+  const geography = groupingsQuery(true, "g->'overlaps' @> jsonb_build_array(jsonb_build_object('zcta5', $4::text))", 4);
+  return { text: `SELECT ${version} AS etag, ${version}=$5::text AS unchanged,
+    CASE WHEN ${version}=$5::text THEN NULL ELSE jsonb_build_object(
+      'version_id',p.current_version_id,
+      'geography',coalesce((SELECT jsonb_agg(to_jsonb(g)) FROM (${geography}) g),'[]'::jsonb),
+      'known',(p.payload->'zctaUniverse') @> jsonb_build_array($4::text),
+      'zcta_tabulations',(SELECT jsonb_agg(DISTINCT s->'versionMeta'->>'zctaTabulation')
+        FROM jsonb_array_elements(p.payload->'scopes') s)
+    ) END AS value FROM civic_data_promotions p WHERE p.record_class=$1 AND p.scope=$2`,
+    params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...types], zcta5, heldVersion] };
+}
+
+export function codeSliceOfValue(value: unknown, zcta5: string): Slice<CodeSlice> {
+  if (!value || typeof value !== "object") return { kind: "NOT_PUBLISHED" };
+  const row = value as Row;
+  const versionId = text(row.version_id);
+  if (versionId === null) return { kind: "NOT_PUBLISHED" };
+  const geography = geographyOfRows(Array.isArray(row.geography) ? row.geography as readonly Row[] : [], true);
+  return { kind: "HELD", versionId, value: { ...geography,
+    containers: geography.containers.map(container => ({ ...container,
+      overlaps: (container.overlaps ?? []).filter(overlap => overlap.zcta5 === zcta5) })),
+    known: row.known === true,
+    zctaTabulations: Array.isArray(row.zcta_tabulations) ? row.zcta_tabulations.filter((value): value is string => typeof value === "string") : [],
+  } };
+}
+
+export async function containersOfCode(zcta5: string, types: readonly GeographyType[], query: ReadOnlyQuery | null): Promise<Slice<CodeSlice>> {
+  if (!query) return { kind: "UNREAD", detail: `The Census geography for ZCTA ${zcta5} was not read: this deployment names no reader store.` };
+  try {
+    const [rows] = await query([codeSliceStatement(zcta5, types)]);
+    return codeSliceOfValue(rows[0]?.value, zcta5);
+  } catch (error) {
+    return { kind: "UNREAD", detail: `The Census geography for ZCTA ${zcta5} could not be read (${error instanceof Error ? error.name : "error"}).` };
+  }
 }
 
 export interface RegisteredGovernmentSlice {

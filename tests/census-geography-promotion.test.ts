@@ -73,7 +73,7 @@ test("a valid dataset auto-promotes through the routine door and the pointer ser
   const read = await readPromotedCivicData<BuiltDataset>(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, {
     store,
     now: NOW,
-    bypassCache: true,
+
   });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;

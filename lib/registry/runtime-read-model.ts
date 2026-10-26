@@ -13,7 +13,7 @@ import { requireRegistryState, stateRegistryRuntimeScope, statesForRegistryDivis
 import { withRosterPeople } from "./roster-people.ts";
 import { personIdentityKeys } from "../officials/people-identity.ts";
 
-type Context = { states: readonly string[]; read?: CivicDataReadResult<RegistryRuntimeReadModel>; pending?: Promise<CivicDataReadResult<RegistryRuntimeReadModel>> };
+type Context = { bound?: true; states: readonly string[]; read?: CivicDataReadResult<RegistryRuntimeReadModel>; pending?: Promise<CivicDataReadResult<RegistryRuntimeReadModel>> };
 const requests = new WeakMap<object, Context>(), jobs = new AsyncLocalStorage<Context>();
 const contextKey = () => currentReaderSelection() ?? currentReaderAuthorityEdge();
 const current = () => { const key = contextKey(); return key ? requests.get(key) : jobs.getStore(); };
@@ -32,7 +32,7 @@ export function withRegistryRuntimeStates<T>(states: readonly string[], read: ()
 /** Bind an already loaded state package while composing its reader answer. */
 export function withRegistryRuntimeProjection<T>(value: RegistryRuntimeReadModel, states: readonly string[], read: () => T): T {
   const selected = [...new Set(states.map(requireRegistryState))].sort();
-  const context: Context = { states: selected, read: { kind: "BOOTSTRAP", value,
+  const context: Context = { bound: true, states: selected, read: { kind: "BOOTSTRAP", value,
     metadata: { recordClass: "REGISTRY_RUNTIME_BINDING", scope: selected.map(stateRegistryRuntimeScope).join("|"),
       sourceId: null, version: null, versionId: value.registry.generatedAt, lastKnownGoodVersionId: null,
       sourceThrough: null, retrievedAt: value.registry.generatedAt, promotedAt: null, stale: "UNKNOWN", staleAt: null },
@@ -48,7 +48,7 @@ export async function readRegistryRuntimeProjection(states: readonly string[], o
   if (!selected.length) throw new Error("REGISTRY_STATES_NOT_SELECTED");
   const key = contextKey(), existing = current();
   const sameStates = existing && selected.join() === existing.states.join();
-  if (!options.store && !options.bypassCache && sameStates) {
+  if (!options.store && sameStates && existing.bound) {
     if (existing.read) return existing.read;
     if (existing.pending) return existing.pending;
   }

@@ -91,7 +91,7 @@ test("the standing reader publishes acquired people and preserves both states af
   assert.equal(failureReceipt.receipt.state, "SOURCE_BLOCKED");
   assert.equal(failureReceipt.receipt.lastKnownGoodVersion, before[0]!.versionId);
   for (let index = 0; index < states.length; index++) {
-    const held = await readPeopleSourceProjection(`US-${states[index]!.toUpperCase()}`, sourceId, { store, now: at, bypassCache: true });
+    const held = await readPeopleSourceProjection(`US-${states[index]!.toUpperCase()}`, sourceId, { store, now: at });
     assert.equal(held.kind, "PROMOTED");
     if (held.kind === "PROMOTED") {
       assert.equal(held.metadata.versionId, before[index]!.versionId);

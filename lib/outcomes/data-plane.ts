@@ -190,7 +190,7 @@ export async function readAzOfficialActionsPrior(
   const read = await readPromotedCivicData<ExecutiveActionStore>(
     AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
     AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
-    { store, now, bypassCache: true },
+    { store, now },
   );
   if (read.kind === "NOT_RECORDED") return null;
   if (read.kind !== "PROMOTED") {

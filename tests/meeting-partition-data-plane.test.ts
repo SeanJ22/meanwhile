@@ -211,7 +211,7 @@ test("only exact out-of-window meeting evidence removes a row and its attached a
   assert.equal(seeded[0]?.outcome.candidate.state, "PROMOTED");
 
   const fresh = meeting(legistar, SECOND, "still-served");
-  const previous = await readMeetingPartitionProjection(legistar, { store, bypassCache: true, now: SECOND });
+  const previous = await readMeetingPartitionProjection(legistar, { store,  now: SECOND });
   assert.equal(previous.kind, "PROMOTED");
   const priorPartition = previous.kind === "PROMOTED"
     ? previous.value
@@ -423,28 +423,14 @@ test("production Reader configuration cannot reopen live composite acquisition",
   }
 });
 
-test("a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof", async () => {
-  const attestation = {
-    recordClass: "REGISTRY_RUNTIME_BINDING",
-    scope: "US-AZ:reader-registry-runtime",
-    versionId: "registry-reviewed-bindings:trusted-lkg:bb4500a518c9712b66e104569e74b71b",
-    payloadSha256: "d".repeat(64),
-    retrievedAt: "2026-09-14T04:24:35.148Z",
-    staleAtRetrieval: false,
-    version: "2026",
-    sourceThrough: null,
-  };
+test("a meeting child loads its registry through the current store path", async () => {
   const seen: unknown[] = [];
-  const run = (value: string | undefined) => preloadCanonicalMeetingDependencies({
+  await preloadCanonicalMeetingDependencies({
     sourceName: "composite", state: "AZ",
     refreshRegistry: async (states, options) => { assert.deepEqual(states, ["AZ"]); seen.push(options); },
     refreshVenues: async () => undefined,
-    env: { WTP_ROUTINE_ATTESTED_PROMOTIONS: value },
   });
-  await run(JSON.stringify([attestation]));
-  await run(JSON.stringify([{ ...attestation, payloadSha256: "not-a-hash" }]));
-  await run(undefined);
-  assert.deepEqual(seen, [{ attested: attestation }, {}, {}]);
+  assert.deepEqual(seen, [{}]);
 });
 
 test("a meeting re-check that finds no new fact is confirmed on the pointed version; a real change still promotes", async () => {
@@ -604,7 +590,7 @@ test('an unavailable meeting stamp writer never holds publication, and the next 
  store.fail=false;
  const [second]=await promoteMeetingPartitions({store,partitions:[legistar],meetings:[meeting(legistar,SECOND,'stamp-retry')],agendaDocuments:[],reports:[report(legistar.meetingSource,SECOND)],generatedAt:SECOND});
  assert.equal(second.outcome.promoted?.versionId,first.outcome.promoted?.versionId);
- assert.equal(second.outcome.readerReadback?.status,'PASS');
+ assert.equal(second.outcome.readerReadback?.status,'PASS',second.outcome.readerReadback?.detail);
  assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),true);
 });
 

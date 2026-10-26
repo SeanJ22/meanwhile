@@ -78,7 +78,7 @@ export function federalCandidate(input: { source: FederalSourceId; partition: st
 /** Each partition publishes as its page arrives; an outage never rolls back earlier verified pages. */
 export async function publishFederalPartition(input: { source: FederalSourceId; partition: string; captures: FederalCapture[]; records: FederalFact[];
   store: RoutineDataStore; vault: EvidenceStore; now: string; cursor?: string; counts?: FederalCounts; completePartition?: boolean; replaceFilingId?: string }) {
-  const prior = await readFederalSourceProjection(input.source, input.partition, { store: input.store, now: input.now, bypassCache: true });
+  const prior = await readFederalSourceProjection(input.source, input.partition, { store: input.store, now: input.now });
   if (prior.kind === "STORE_UNREACHABLE") throw new Error(prior.detail);
   const held = prior.kind === "PROMOTED" ? prior.value : null;
   const facts = new Map(input.completePartition ? [] : held?.records.filter(row => !input.replaceFilingId || row.filingId !== input.replaceFilingId).map(row => [row.id, row]) ?? []);

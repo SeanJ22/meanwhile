@@ -1,6 +1,6 @@
 /** A reader's reply address never leaves this module: the view is told only whether one was left. No delete or edit path. */
 import { feedbackConnection, type FeedbackSite } from "../../db/feedback.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import type { Sql } from "../repository/pg-store.ts";
 

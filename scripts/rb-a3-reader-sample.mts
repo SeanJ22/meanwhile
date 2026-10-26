@@ -1,5 +1,5 @@
 import { openLinkingCopy } from "../lib/facts/linking-copy.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { mkdirSync, readFileSync, writeFileSync, existsSync } from "node:fs";
 import { createHash } from "node:crypto";
 import { resolve } from "node:path";

@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "../../reader/database.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
@@ -9,8 +9,6 @@ import { ADMIN_V6_RELIABILITY_CONTRACT, readReliability, withSamQuota, type Admi
 import { sectionRevision, validateV6Query } from "./v6-hunts-read.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
-const MEMO_MS = 120_000;
-let memo: { at: number; rows: readonly AdminV6SourceReliability[] } | null = null;
 
 export async function v6ReliabilityGet(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
@@ -28,13 +26,14 @@ export async function v6ReliabilityGet(request: NextRequest): Promise<NextRespon
     return readSavedSamQuota({ get: key => vault.get(key, AbortSignal.timeout(2_000)) });
   })();
   const savedQuota = quota.then(hold => ({ hold, missing: false }), () => ({ hold: null, missing: true }));
+  let current:readonly AdminV6SourceReliability[];
   try {
-    if (!memo || Date.now() - memo.at > MEMO_MS) memo = { at: Date.now(), rows: await readReliability(neon(url)) };
+    current=await readReliability(databaseReadOnlySql(url));
   } catch {
     return NextResponse.json({ state: "UNREAD", says: "Source reliability could not be read just now, so it is unknown, not fine." }, { status: 503, headers: NO_STORE });
   }
   const status = await savedQuota;
-  const rows = withSamQuota(memo.rows, status.hold, now);
+  const rows = withSamQuota(current, status.hold, now);
   return NextResponse.json({ contract: ADMIN_V6_RELIABILITY_CONTRACT, scope: query.scopeKey, revision: sectionRevision("reliability", rows),
     asOf: now, data: rows, missingParts: status.missing ? ["SAM.gov's saved daily reset time could not be read."] : [] }, { headers: NO_STORE });
 }

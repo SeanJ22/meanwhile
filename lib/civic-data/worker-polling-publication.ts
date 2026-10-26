@@ -32,7 +32,7 @@ async function publishPollingDoor(input: {
   requirePublication(input.door.status !== "SUSPENDED" && section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text,
     retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, linkingPage }, "VOTING_SITE", input.now).ok, "POLLING_SOURCE_NOT_ADMITTED");
   const jurisdiction = readPollingDoor({ ...input, linkingPage: linkingPage ?? undefined });
-  let prior: Awaited<ReturnType<typeof readPromotedCivicData<VotingSitesFile>>> | null = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now, bypassCache: true });
+  let prior: Awaited<ReturnType<typeof readPromotedCivicData<VotingSitesFile>>> | null = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now });
   requirePublication(prior.kind === "PROMOTED" || prior.kind === "NOT_RECORDED", "POLLING_PRIOR_UNAVAILABLE");
   requirePublication(prior.kind !== "PROMOTED" || prior.metadata.sourceId === votingSitesContract(jurisdiction.state).sourceId, "POLLING_PRIOR_PUBLISHER_MISMATCH");
   if (prior.kind === "PROMOTED") rememberStatePublicationPrior(input.store, prior.projection);
@@ -46,7 +46,7 @@ async function publishPollingDoor(input: {
     retrievedAt: input.now, carriedFromVersionId: base });
   prior = null; held = null;
   const published = await processRegisteredManualCandidate(input.store, stateBallotContractId("voting-sites", jurisdiction.state), candidate, input.now, base);
-  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now, bypassCache: true });
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now });
   requirePublication(published.promoted && read.kind === "PROMOTED" && read.metadata.versionId === published.promoted.versionId,
     `POLLING_TYPED_READBACK_FAILED:${published.candidate.failureDetail ?? "pointer not readable"}`);
   return { ...published, jurisdiction };

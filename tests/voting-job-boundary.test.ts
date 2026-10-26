@@ -97,7 +97,7 @@ test("the scheduled job reads a known HTML list before discovery and keeps it on
         registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: [door] });
       assert.ok(report.terminal?.acquisitionSucceeded);
       assert.equal(report.attemptedSourceIds[0], door.id);
-      const reader = await readVotingSitesProjection("ND", { store, now: at, bypassCache: true });
+      const reader = await readVotingSitesProjection("ND", { store, now: at });
       assert.equal(reader.kind, "PROMOTED");
       if (reader.kind !== "PROMOTED") continue;
       const sites = reader.value.jurisdictions.flatMap(row => row.sites);

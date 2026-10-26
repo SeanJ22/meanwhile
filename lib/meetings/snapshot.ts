@@ -379,7 +379,7 @@ export async function readMeetingPartitionProjection(
     ...(options.store ? { store: options.store } : {}),
     now,
     maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
-    bypassCache: options.bypassCache,
+
   });
   return validateMeetingPartitionProjection(partition, result);
 }

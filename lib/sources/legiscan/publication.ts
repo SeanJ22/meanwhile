@@ -123,7 +123,7 @@ export async function bulkManifestIssue(candidate:RoutineCandidate,store?:Routin
     const counts:BillPart["counts"]={rows:0,joined:0,unjoined:0,sponsorsJoined:0,sponsorsUnjoined:0};
     let offset=0;
     for(const [index,pointer] of value.parts.entries()){
-      const read=await readBulkProjection(pointer.scope,{store,now:candidate.retrieval.retrievedAt,bypassCache:true});
+      const read=await readBulkProjection(pointer.scope,{store,now:candidate.retrieval.retrievedAt});
       const record=await store.readCandidate(pointer.versionId);
       if(read.kind!=="PROMOTED"||read.value.kind!=="PART"||read.metadata.versionId!==pointer.versionId||!record||record.state!=="PROMOTED"||record.receipt?.decision!=="GOOD")return "Session references an unavailable promoted part";
       if(record.candidate.scope!==pointer.scope||record.candidate.retrieval.rawHash!==pointer.rawHash||read.value.sourceRawHash!==pointer.rawHash)return "Session part version or raw source hash differs";

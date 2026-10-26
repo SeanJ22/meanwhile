@@ -242,11 +242,11 @@ test("an explainer written from a found page publishes and attaches to its exact
   const found = await runMeasureTranslationPass({ ...base, foundSources: new Map([["measure:12", [foundUrl]]]) });
   assert.deepEqual(found.outcomes.map(row => row.status), ["PUBLISHED"], JSON.stringify(found));
   assert.equal(found.persistenceError, null);
-  const attached = withMeasureTranslations(held, await readTranslations([division], { store, now, bypassCache: true }));
+  const attached = withMeasureTranslations(held, await readTranslations([division], { store, now }));
   assert.equal(attached.measureRecords?.[0].sourceUrl, foundUrl);
   assert.equal(attached.measureRecords?.[0].yesMeans, yes);
   const wrongMeasure = { ...held, contests: [{ ...held.contests[0], id: "measure:13", title: "Proposition 13" }] } as unknown as BallotSet;
-  assert.equal(withMeasureTranslations(wrongMeasure, await readTranslations([division], { store, now, bypassCache: true })).measureRecords, undefined, "another measure never takes it");
+  assert.equal(withMeasureTranslations(wrongMeasure, await readTranslations([division], { store, now })).measureRecords, undefined, "another measure never takes it");
 });
 
 
@@ -279,7 +279,7 @@ test("the ballot's verified full-text URL supplies a capture when its filing pag
     } };
   const first = await runMeasureTranslationPass(base);
   assert.equal(first.checkedAfter, 1, JSON.stringify(first));
-  const translated = await readTranslations([division], { store, now, bypassCache: true });
+  const translated = await readTranslations([division], { store, now });
   assert.equal(withMeasureTranslations(held, translated).measureRecords?.[0].sourceUrl, textUrl);
   const next = await runMeasureTranslationPass({ ...base, now: "2026-10-21T18:00:00.000Z" });
   assert.equal(next.checkedBefore, 1);

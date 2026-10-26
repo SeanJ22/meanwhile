@@ -4,7 +4,7 @@
  * they have checked `ok`.
  */
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "./client.ts";
 
 /** What a database says it has applied, or why that could not be established. */
 export type AppliedMigrations =

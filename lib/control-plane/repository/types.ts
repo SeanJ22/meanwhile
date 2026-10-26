@@ -39,7 +39,7 @@ import type { MeetingsDiscoveryAttempt } from "../../hunt/meetings-site-discover
 import type { CandidateStore } from "../../method/candidate.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import type { LiveAuditLogRow } from "../live-audit-log.ts";
-import type { DoorRecord } from "../../doors/registry.ts";
+import type { DoorRepository } from "../../doors/registry.ts";
 import type { LeadOrder } from "../leads/order.ts";
 import type { WebsitePacing } from "../website-pacing.ts";
 import type { OwnerSnapshotTotals, SpilledInbox, StateTotals } from "../owner-snapshot-totals.ts";
@@ -283,6 +283,8 @@ export interface ChangedRecords<T> {
 
 export interface AppendOnlyRepository<T> {
   append(key: string, recordId: string, record: T, now: string): Promise<AppendOutcome<T>>;
+  /** One member's original allocated position, including gaps left by conflicting appends. */
+  readEntry?(key: string, recordId: string): Promise<{ readonly record: T; readonly position: number } | null>;
 
   read(key: string): Promise<readonly T[]>;
 
@@ -516,7 +518,7 @@ export interface ControlPlaneRepositories {
 
   readonly askGapObservations: AggregateRepository<AskGapObservation>;
 
-  readonly doors: AggregateRepository<DoorRecord>;
+  readonly doors: DoorRepository;
 
   readonly leadOrders: AggregateRepository<LeadOrder>;
   readonly budget: BudgetRepository;

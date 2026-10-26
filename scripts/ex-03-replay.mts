@@ -84,7 +84,7 @@ assert.equal(responses, 8);
 const receipt = await measureTranslationRoutineReceipt({ store, ballots, state: "AL", now, holdReason: null });
 assert.equal(receipt.exitCode, 0);
 const divisions = [...new Set(records.map(record => record.ocdId))];
-const reader = await readerBallotSourcesForDivisions(["ocd-division/country:us/state:al/county:jefferson"], { store, now, bypassCache: true });
+const reader = await readerBallotSourcesForDivisions(["ocd-division/country:us/state:al/county:jefferson"], { store, now });
 const attached = reader.map(({ source }) => source.normalize(ballotPayload));
 const summaries = records.map(record => {
   const ballot = attached.find(ballot => ballot.contests.some(contest => contest.id === record.subjectId))!;
@@ -159,7 +159,7 @@ assert.equal(second.checkedBefore, 4);
 assert.equal(second.outcomes.length, 0);
 assert.equal(responses, 8);
 assert.equal((await measureTranslationRoutineReceipt({ store, ballots, state: "AL", now: tomorrow, holdReason: null })).exitCode, 0);
-assert.equal((await readTranslations(divisions, { store, now: tomorrow, bypassCache: true })).length, 4);
+assert.equal((await readTranslations(divisions, { store, now: tomorrow })).length, 4);
 
 // Alaska's observed production search hit was saved as bytes but rejected by
 // the old full-title matcher. Replay the real ballot, door and response bytes.

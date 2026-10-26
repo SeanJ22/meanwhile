@@ -21,7 +21,7 @@ import { federalDirectoryVersion } from "./people-version.ts";
 import type { OfficeholderSet } from "./types.ts";
 
 type Read = CivicDataReadResult<FederalDirectoryReadModel>;
-type Context = { states: readonly string[]; read?: Read; pending?: Promise<Read> };
+type Context = { bound?: true; states: readonly string[]; read?: Read; pending?: Promise<Read> };
 const requests = new WeakMap<object, Context>(), jobs = new AsyncLocalStorage<Context>();
 const contextKey = () => currentReaderSelection() ?? currentReaderAuthorityEdge();
 const current = () => { const key = contextKey(); return key ? requests.get(key) : jobs.getStore(); };
@@ -29,7 +29,7 @@ const current = () => { const key = contextKey(); return key ? requests.get(key)
 /** Compose a cached state answer with its already loaded, portrait-enriched directory. */
 export function withFederalDirectoryProjection<T>(read: Read | undefined, states: readonly string[], compose: () => T): T {
   if(!read)return compose();
-  const context: Context={states:[...new Set(states.map(requireRegistryState))].sort(),read};
+  const context: Context={bound:true,states:[...new Set(states.map(requireRegistryState))].sort(),read};
   const key=contextKey();
   if(key)requests.set(key,context);
   return jobs.run(context,compose);
@@ -109,11 +109,14 @@ export async function readFederalDirectoryProjection(states: readonly string[], 
   if (!selected.length) throw new Error("FEDERAL_DIRECTORY_PLACES_NOT_SELECTED");
   const key = contextKey(), existing = current();
   const sameStates = existing && selected.join() === existing.states.join();
-  if (!options.store && !options.bypassCache && sameStates && (existing.read || existing.pending)) return selectMembers(existing.read ?? await existing.pending!);
+  if (!options.store && sameStates && (existing.pending || existing.bound && existing.read))
+    return selectMembers(existing.pending ? await existing.pending : existing.read!);
   const context: Context = sameStates ? existing : { states: selected };
   if (key) requests.set(key, context); else if (context !== existing) jobs.enterWith(context);
-  context.pending = Promise.all(selected.map(state => loadState ? loadState(state) : readPlace(state, options))).then(reads => context.read = combine(reads, selected));
-  return selectMembers(await context.pending);
+  const pending = Promise.all(selected.map(state => loadState ? loadState(state) : readPlace(state, options))).then(reads => context.read = combine(reads, selected));
+  context.pending = pending;
+  try { return selectMembers(await pending); }
+  finally { if (context.pending === pending) context.pending = undefined; }
 }
 
 export async function refreshFederalDirectoryFromPromoted(states: readonly string[], options: PromotedCivicDataReadOptions = {}, loadState?: Parameters<typeof readFederalDirectoryProjection>[2]): Promise<string | null> {

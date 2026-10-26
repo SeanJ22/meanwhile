@@ -3,7 +3,8 @@ import { test } from "node:test";
 import { POINT_GEOMETRY_PLANS, divisionIdsForZipArea, unestablishedDistrictOfficesForFamilies } from "../lib/ballot/zip-divisions.ts";
 import { censusDistrictEdgeSlice, type CensusDistrictEdge } from "../lib/census-geography/district-edge.ts";
 import { selectGeographyVersion } from "../lib/census-geography/selection.ts";
-import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
+import { withCensusDistricts, publishedZipDistricts } from "../lib/geo/zip-census-districts.ts";
+import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { contestsForDivisions } from "../lib/ballot/contests.ts";
 import { azDistricts, azDistrictSlice, electionSelection } from "./helpers/ballot-district-fixtures.ts";
@@ -118,4 +119,46 @@ test("Michigan's 2024 Senate plan is excluded for 2026 while its unchanged House
   assert.ok(!ids.some(id => /\/state:mi\/sldu:/.test(id)));
   assert.ok(ids.includes("ocd-division/country:us/state:mi/sldl:20"));
   assert.deepEqual(unestablishedDistrictOfficesForFamilies(["mi/cd", "mi/sldu", "mi/sldl"], ids), ["State Senate"]);
+});
+
+
+test("published ZIP districts check the source version each time and rebuild only changed slices", async () => {
+  let version = "district-source-before", label = "Before", fail = false, present = true;
+  let versionReads = 0, sliceReads = 0;
+  installReaderDatabaseQuery(async statements => {
+    assert.equal(statements.length,1,"version and any changed ZIP facts share one statement");
+    versionReads++;
+    if (fail) throw new Error("Current district version unavailable");
+    if (!present) return [[]];
+    if (statements[0].params[4] === version) return [[{ etag: version, unchanged: true, value: null }]];
+    sliceReads++;
+    return [[{ etag: version, unchanged: false, value: {
+      version_id: "same-geography-publication", geography: [{
+        row_kind: "grouping", type: "congressional_district", version: "cd:119", geoid: "2801", label,
+        state_abbr: "MS", state_fips: "28", overlaps: [{ zcta5: "38846", whole: true }],
+      }], known: true, zcta_tabulations: ["2020"],
+    } }]];
+  });
+  try {
+    const before = await publishedZipDistricts("38846");
+    assert.equal(before.kind, "HELD");
+    if (before.kind === "HELD") assert.equal(before.value.containers[0]?.ref.label, "Before");
+    assert.deepEqual(await publishedZipDistricts("38846"), before);
+    assert.equal(versionReads, 2, "every operation asks for the current database row version");
+    assert.equal(sliceReads, 1, "unchanged source rows keep the already derived ZIP slice");
+    version = "district-source-after"; label = "After";
+    const after = await publishedZipDistricts("38846");
+    assert.equal(after.kind, "HELD");
+    if (after.kind === "HELD") {
+      assert.equal(after.versionId, "same-geography-publication");
+      assert.equal(after.value.containers[0]?.ref.label, "After", "an in-place source update is visible immediately");
+    }
+    assert.equal(sliceReads, 2);
+    fail = true;
+    assert.equal((await publishedZipDistricts("38846")).kind, "UNREAD", "a failed fresh check cannot serve a saved slice");
+    fail = false; present = false;
+    assert.equal((await publishedZipDistricts("38846")).kind, "NOT_PUBLISHED");
+    assert.equal(versionReads, 5);
+    assert.equal(sliceReads, 2);
+  } finally { installReaderDatabaseQuery(undefined); }
 });

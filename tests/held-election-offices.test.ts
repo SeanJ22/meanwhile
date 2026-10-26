@@ -117,7 +117,7 @@ test("one national directory publishes state, DC and territory offices without p
   const store = new MemoryRoutineDataStore();
   const result = await publishElectionFields({ store, now: NOW, fields, verify: section3Record });
   assert.equal(result.fields.length, 5, JSON.stringify(result.gaps));
-  const read = await readElectionFieldsForDivisions(fields.map(field => field.divisionId), { store, now: NOW, bypassCache: true });
+  const read = await readElectionFieldsForDivisions(fields.map(field => field.divisionId), { store, now: NOW });
   assert.equal(read.fields.length, 5);
   assert.ok(read.fields.every(row => row.value.navigationUrl === null && row.value.url === NATIONAL_ELECTION_OFFICES_URL));
   const newer = capture(page.replace("866/868-3947", "866/868-3948"), NATIONAL_ELECTION_OFFICES_URL, NOW);
@@ -132,7 +132,7 @@ test("a city's saved voting page puts its county election offices on the ballot 
   const result = await publishElectionFields({ store, now: NOW, fields: [...fields, ...stale], verify: section3Record });
   assert.equal(result.fields.length, 2);
   assert.equal(result.gaps.length, 2, "a capture outside the contact window publishes nothing");
-  const read = await readElectionFieldsForDivisions([CITY], { store, now: NOW, bypassCache: true });
+  const read = await readElectionFieldsForDivisions([CITY], { store, now: NOW });
   const elections = read.fields.find(row => row.value.text === "Cochise County Elections Office")!;
   assert.deepEqual([elections.value.fieldKind, elections.value.phone, elections.value.navigationUrl, elections.value.url],
     ["election_office", "(520) 432-8970", null, URL_], "the office's own page is a link nobody read, so it is not published");
@@ -178,7 +178,7 @@ test("owed jobs reuse a national capture from an unrelated job and pass over a n
   }
   const outcomes = await publishHeldElectionOffices({ repos, store, workItemIds: ids, now: NOW, readHeld: async record => copies.get(record.artifactId) ?? null });
   assert.ok(outcomes.every(row => row.outcome.status === "PARTIALLY_PUBLISHED"), JSON.stringify(outcomes));
-  const read = await readElectionFieldsForDivisions(states.map(state => "ocd-division/country:us/state:" + state), { store, now: NOW, bypassCache: true });
+  const read = await readElectionFieldsForDivisions(states.map(state => "ocd-division/country:us/state:" + state), { store, now: NOW });
   assert.equal(read.fields.length, 2);
   assert.ok(read.fields.every(row => row.value.url === NATIONAL_ELECTION_OFFICES_URL));
 });

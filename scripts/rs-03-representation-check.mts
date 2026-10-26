@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
 import { once } from "node:events";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
-import { neon, neonConfig } from "@neondatabase/serverless";
+import { neon, neonConfig } from "../lib/db/client.ts";
 import labels from "../data/reference/us-jurisdiction-labels.json" with { type: "json" };
 import { FIPS_TO_STATE } from "../lib/ocd/fips.ts";
 

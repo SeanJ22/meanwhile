@@ -1,5 +1,5 @@
 import { EMPTY_SPEND } from "../spend-window.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";

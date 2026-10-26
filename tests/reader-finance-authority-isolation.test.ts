@@ -11,7 +11,7 @@ test("lineup and measure lookups answer null when the ballot projection is unrea
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
   try {
-    assert.equal((await readGenericBallotProjection("AZ", { store: failedStore, bypassCache: true })).kind, "STORE_UNREACHABLE");
+    assert.equal((await readGenericBallotProjection("AZ", { store: failedStore })).kind, "STORE_UNREACHABLE");
     for (const id of ["ballot-nh-merrimack:governor", "ballot-nj-morris:county-commissioner"]) {
       assert.equal(lineupForContest("AZ", id), null, `${id}: the AZ canvass has no authority over this contest`);
       assert.equal(analysisForContest("AZ", id), null, `${id}: AZ measure analyses have no authority over this contest`);
@@ -29,7 +29,7 @@ test("foreign contest and card keys do not initialize the AZ identity bridge", a
   const previous = env.NODE_ENV;
   env.NODE_ENV = "production";
   try {
-    await readGenericBallotProjection("AZ", { store: failedStore, bypassCache: true });
+    await readGenericBallotProjection("AZ", { store: failedStore });
     for (const id of ["ballot-nh-merrimack:governor", "ballot-nj-morris:county-commissioner"]) {
       assert.equal(lineupBridgeCovers(id), false);
       assert.equal(lineupRowForCard(`${id}|Public test nominee`), null);

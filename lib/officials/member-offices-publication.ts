@@ -55,7 +55,7 @@ async function priorPackage(store: RoutineDataStore, now: string): Promise<{ ver
   rosters: Readonly<Record<string, string>>; pending: readonly string[] }> {
   const contract = requiredManualProductionContract(MEMBER_OFFICES_CONTRACT_ID);
   try {
-    const read = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, { store, now, bypassCache: true });
+    const read = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, { store, now });
     if (read.kind !== "PROMOTED") return { versionId: null, offices: new Map(), rosters: {}, pending: [] };
     return { versionId: read.projection.versionId, offices: new Map(read.value.records.map(row => [row.id, row as unknown as MemberOfficeRecord])),
       rosters: read.value.rosterDigests ?? {}, pending: read.value.pending ?? [] };
@@ -130,14 +130,14 @@ export async function publishMemberOffices(input: {
     if (clock() >= (input.deadlineMs ?? Number.POSITIVE_INFINITY) - MEMBER_OFFICES_SAVE_MARGIN_MS) { pending.push(jurisdiction); continue; }
     // A state that cannot be read keeps its offices and its old lawmaker list, so the next run reads it again.
     try {
-      const reference = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now,bypassCache:true});
+      const reference = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now});
       if (reference.kind !== "PROMOTED") {
         if (reference.kind === "STORE_UNREACHABLE") gaps.push({key:jurisdiction,detail:"ROSTER_UNAVAILABLE: prior offices retained"});
         else rosters[jurisdiction] = current.get(jurisdiction)!;
         continue;
       }
       const target = officialStateLegislatorTargetByScope(jurisdiction);
-      const official = target ? await readOfficialStateLegislatorsProjection(target.jurisdiction,{store:input.store,now:input.now,bypassCache:true})
+      const official = target ? await readOfficialStateLegislatorsProjection(target.jurisdiction,{store:input.store,now:input.now})
         .catch(error => { gaps.push({key:jurisdiction,detail:`OFFICIAL_ALIASES_UNREADABLE: ${message(error)}`}); return null; }) : null;
       const held = [...prior.offices.values()].filter(row => officeState(row) === jurisdiction);
       const heldMembers = new Set(held.map(row => row.officeholderId));

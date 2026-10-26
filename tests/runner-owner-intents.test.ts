@@ -201,7 +201,7 @@ function checkRunnerPublishesConsole(src: string): void {
   const snapshot = list[0].indexOf("scripts/publish-owner-snapshot.mts");
   assert.ok(snapshot >= 0, "publishConsole does not run publish-owner-snapshot.mts");
 
-  const fn = src.match(/async function publishConsole\(\): Promise<void> \{[\s\S]*?\n\}/);
+  const fn = src.match(/async function publishConsole\(onlyWhenDue=false\): Promise<void> \{[\s\S]*?\n\}/);
   assert.ok(fn, "pilot-runner.mts has no publishConsole()");
   assert.match(fn[0], /await publishChangedConsole\(\)/, "publishConsole does not check changed inputs");
   assert.match(src, /publish: publishConsoleChildren/, "changed inputs do not reach the publishers");

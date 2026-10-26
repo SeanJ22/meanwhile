@@ -1,6 +1,6 @@
 import { refreshDoorsForPass } from "../doors/install.ts";
 import type { DoorRepository } from "../doors/registry.ts";
-import { Pool } from "@neondatabase/serverless";
+import { Pool } from "../db/client.ts";
 import { and, eq, gte, inArray, lte, notExists, or, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
 import { alias } from "drizzle-orm/pg-core";

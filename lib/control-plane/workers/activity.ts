@@ -33,7 +33,7 @@ export async function readLegacyActivityCaptures(state: string, sql?: Sql, fullP
   jobsPerPage: number = LEGACY_ACTIVITY_JOBS_PER_PAGE): Promise<ActivityCapture[]> {
   if (!/^(?:[a-z]{2}|system)$/.test(state)) throw new Error("LEGACY_ACTIVITY_STATE_INVALID");
   if (!sql) {
-    const [{ neon }, { controlPlaneUrlFromEnv }] = await Promise.all([import("@neondatabase/serverless"), import("../repository/pg-store.ts")]);
+    const [{ neon }, { controlPlaneUrlFromEnv }] = await Promise.all([import("../../db/client.ts"), import("../repository/pg-store.ts")]);
     const url = controlPlaneUrlFromEnv();
     if (!url) throw new Error("LEGACY_ACTIVITY_STORE_UNCONFIGURED");
     sql = neon(url) as unknown as Sql;

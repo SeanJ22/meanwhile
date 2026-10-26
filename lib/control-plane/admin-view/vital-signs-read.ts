@@ -1,6 +1,6 @@
 import type { ScoreboardVitalHour } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import { boundedQuery, type BoundableSql } from "../repository/request-bounds.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { costPerFact } from "../vital-signs.ts";
 
 /** Database triggers count committed new and changed live facts, including writers outside the runner. */

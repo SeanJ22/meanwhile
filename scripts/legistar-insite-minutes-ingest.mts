@@ -129,8 +129,8 @@ const EMPTY: OutcomeSnapshot = { generatedOn: "UNKNOWN", generatedAt: "UNKNOWN",
 async function currentProjection(store: RoutineDataStore, outcome: OutcomeTenant): Promise<{ readonly snapshot: OutcomeSnapshot; readonly sourceThrough: string | null; readonly versionId: string | null }> {
   // Mesa's own pointer keeps its reader; a door's outcomes are read from the door's own scope.
   const read = outcome.contractId === MESA_OUTCOME_TENANT.contractId
-    ? await readDoorOutcomeProjection(outcome.scope, { store, bypassCache: true })
-    : await readPromotedCivicData<OutcomeSnapshot>(outcome.recordClass, outcome.scope, { store, bypassCache: true });
+    ? await readDoorOutcomeProjection(outcome.scope, { store })
+    : await readPromotedCivicData<OutcomeSnapshot>(outcome.recordClass, outcome.scope, { store });
   if (read.kind === "PROMOTED") return { snapshot: read.value, sourceThrough: read.metadata.sourceThrough, versionId: read.metadata.versionId };
   if (read.kind === "NOT_RECORDED") return { snapshot: EMPTY, sourceThrough: null, versionId: null };
   if (read.kind === "BOOTSTRAP") throw new Error("MINUTES_OUTCOME_PRODUCTION_BOOTSTRAP_FORBIDDEN");

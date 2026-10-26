@@ -144,7 +144,7 @@ test("a broken Cabinet page keeps the President and Vice President, and a new Tr
   const publish = async (release: Awaited<ReturnType<typeof acquire>>, now: string) => {
     const result = await publishPeopleSource({ store, vault, state: "us", sourceId: SOURCE, roster: release.roster, acquisitions: release.acquisitions, gaps: release.gaps, releaseId: release.releaseId, now });
     assert.ok(result.outcome.promoted || result.outcome.confirmed, JSON.stringify(result.outcome));
-    const read = await readPeopleSourceProjection("US", SOURCE, { store, now, bypassCache: true });
+    const read = await readPeopleSourceProjection("US", SOURCE, { store, now });
     return { result, roster: read.value!.roster, current: currentPresidentRoster(read.value!.roster)!.officeholders.map(person => [person.name, person.officeTitle]).sort() };
   };
   const firstAt = "2026-10-20T00:00:00.000Z";

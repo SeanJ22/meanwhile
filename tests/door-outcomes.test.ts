@@ -239,7 +239,7 @@ describe("DB-22: a door's outcomes are collected, promoted and read back beside 
     assert.ok(pointer?.versionId, "the door's own scope has a promoted pointer");
     assert.equal(await store.readPromotion("MEETING_OUTCOME", "US-AZ:county:pima:legistar-outcomes"), null, "Pima's pointer was never touched");
 
-    await readDoorOutcomeProjections({ store, bypassCache: true });
+    await readDoorOutcomeProjections({ store });
     const [part] = doorOutcomeParts();
     assert.equal(part.pointer.contractId, partition.id);
     assert.deepEqual(part.value.sittings.map((sitting) => sitting.meetingId), ["legistar:demo:1825"]);

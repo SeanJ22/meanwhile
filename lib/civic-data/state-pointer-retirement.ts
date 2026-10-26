@@ -5,7 +5,7 @@ import { STATE_RETIREMENT_KEY_ENV } from "./state-retirement-proof.ts";
 import { readFile, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { databaseIdentity } from "../control-plane/repository/incremental-reads.ts";
+import { databaseIdentity } from "../db/database-identity.ts";
 import { routineProcessSlots, type WorkerMemoryRelease, type WorkerProcessSlots } from "../control-plane/workers/worker-slots.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { runBoundedChildPass, ROUTINE_CHILD_TIMEOUT_MS, type BoundedChildLauncher } from "./bounded-child-pass.ts";

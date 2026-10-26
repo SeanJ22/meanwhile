@@ -9,7 +9,7 @@ export interface LineHour {
   readonly measuredAt: string;
   readonly counts: readonly HourCount[] | null;
   readonly waiting: readonly OldestWaiting[] | null;
-  readonly problems: readonly CountProblem[];
+  readonly problems: readonly Omit<CountProblem,"kind"|"state"|"items">[];
   readonly own: { readonly bytesRead: number };
 }
 /** Counts stay in count_hour. A run saves only its hour, finish time, problem count and bytes read. */

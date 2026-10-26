@@ -143,7 +143,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const prior = await readOfficialStateLegislatorsProjection(target.jurisdiction,{store,now:retrievedAt,bypassCache:true});
+  const prior = await readOfficialStateLegislatorsProjection(target.jurisdiction,{store,now:retrievedAt});
   if (prior.kind === "STORE_UNREACHABLE") throw Error("STATE_PEOPLE_PRIOR_UNAVAILABLE");
   const {publishRosterOfficePoints} = await import("../lib/officials/office-points-publication.ts");
   const roster = await publishRosterOfficePoints(parsed.roster, prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null);

@@ -1,11 +1,17 @@
 import { ADMIN_SECTION_TABLES } from "../lib/control-plane/repository/admin-config.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { boundedQuery } from "../lib/control-plane/repository/request-bounds.ts";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 
 const AGGREGATES = ["work_items", "route_tasks", "attempts", "leases",
   "obligations", "occurrences", "debts", "admin_config", "ask_gap_observations", "doors"];
 const LOGS = ["artifacts", "costs", "scout_results", "worker_results", "promotion_pipeline", "research_intents", "window_intents", "admin_receipts"];
+
+/** The existing console interval still elapses when no research cycle is admitted. */
+export function consolePublishClock(everyMs: number, now:()=>number=Date.now) {
+  let attemptedAt=Number.NEGATIVE_INFINITY;
+  return {due:()=>now()<attemptedAt||now()-attemptedAt>=everyMs,attempted:()=>{attemptedAt=now();}};
+}
 
 export const CONSOLE_INPUT_SQL = `SELECT md5(jsonb_build_array(
   ${AGGREGATES.map(name => `(SELECT COALESCE(jsonb_agg(jsonb_build_array(id, revision) ORDER BY id), '[]'::jsonb) FROM cp_${name})`).join(",\n  ")},

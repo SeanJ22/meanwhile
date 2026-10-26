@@ -72,7 +72,7 @@ for (const [state, ids, place, counts, keyed] of [
       clock += 1;
       assert.ok(report.terminal?.acquisitionSucceeded, JSON.stringify(report.terminal));
       assert.deepEqual(report.attemptedSourceIds.filter(id => (ids as readonly string[]).includes(id)).sort(), [...ids].sort());
-      const reader = await readVotingSitesProjection(state, { store, now, bypassCache: true });
+      const reader = await readVotingSitesProjection(state, { store, now });
       assert.equal(reader.kind, "PROMOTED");
       if (reader.kind !== "PROMOTED") return;
       const sites = reader.value.jurisdictions.flatMap(row => row.sites);

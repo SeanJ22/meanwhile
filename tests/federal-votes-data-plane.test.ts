@@ -133,7 +133,7 @@ test("congress-rollcalls promotes to the canonical plane and its Reader follows 
   assert.equal(outcome.promoted?.versionId, candidate.id);
   assert.equal(outcome.readerReadback?.status, "PASS");
 
-  const read = await readFederalRollCallsProjection({ store, bypassCache: true, now: T0 });
+  const read = await readFederalRollCallsProjection({ store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.equal(read.metadata.versionId, candidate.id);
@@ -284,13 +284,13 @@ test("each member's positions publish under that member alone, carrying only the
   const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, T0);
   assert.equal(outcome.candidate.state, "PROMOTED", outcome.candidate.failureDetail ?? "");
   assert.equal(outcome.readerReadback?.status, "PASS");
-  const read = await readFederalMemberVotes("congress:A000001", { store, bypassCache: true, now: T0 });
+  const read = await readFederalMemberVotes("congress:A000001", { store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(read.value.positions, mine);
     assert.deepEqual(read.value.votes.map((vote) => vote.id), ["house:119-2:1", "house:119-2:2"]);
   }
-  assert.equal((await readFederalMemberVotes("congress:B000002", { store, bypassCache: true, now: T0 })).kind, "NOT_RECORDED", "another member publishes only its own record");
+  assert.equal((await readFederalMemberVotes("congress:B000002", { store,  now: T0 })).kind, "NOT_RECORDED", "another member publishes only its own record");
   assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:A000001", positions: seed.positions }).semantics.violations.includes("POSITION_UNDER_ANOTHER_MEMBER"));
   assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:C000003", positions: [] }).semantics.violations.includes("MEMBER_HAS_NO_RECORDED_POSITION"));
   assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:A000001", positions: [...mine, { officeholderId: "congress:A000001", voteId: "house:119-2:9", position: "YES" }] })
@@ -313,7 +313,7 @@ test("federal-key-votes binds mutable official facts to the exact reviewed v1 se
   const outcome = await processRegisteredManualCandidate(store, "federal-key-votes", candidate, T0);
   assert.equal(outcome.candidate.state, "PROMOTED");
   assert.equal(outcome.readerReadback?.status, "PASS");
-  const read = await readFederalKeyVotesProjection({ store, bypassCache: true, now: T0 });
+  const read = await readFederalKeyVotesProjection({ store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.equal(read.metadata.versionId, candidate.id);
 
@@ -457,8 +457,8 @@ test("a store error never opens either tracked first seed", async () => {
     async readCandidate() { candidateReads += 1; return null; },
   };
   const [rollCalls, keyVotes] = await Promise.all([
-    readFederalRollCallsProjection({ store: brokenStore, bypassCache: true }),
-    readFederalKeyVotesProjection({ store: brokenStore, bypassCache: true }),
+    readFederalRollCallsProjection({ store: brokenStore }),
+    readFederalKeyVotesProjection({ store: brokenStore }),
   ]);
   assert.equal(rollCalls.kind, "STORE_UNREACHABLE");
   assert.equal(keyVotes.kind, "STORE_UNREACHABLE");

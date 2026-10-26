@@ -84,7 +84,7 @@ test("the routine discovers and acquires all three TIGER-only successor plans fr
   const store = new MemoryRoutineDataStore();
   const outcome = await processRegisteredRoutineCandidate(store, CENSUS_GEO_CONTRACT_ID, censusGeographyCandidate(dataset), dataset.builtAt);
   assert.ok(outcome.promoted, `TIGER memberships must pass the routine publication door: ${outcome.candidate.state}`);
-  const read = await readPromotedCivicData<BuiltDataset>(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, { store, now: dataset.builtAt, bypassCache: true });
+  const read = await readPromotedCivicData<BuiltDataset>(CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, { store, now: dataset.builtAt });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const lookup = createLookup(read.value, read.projection.versionId);

@@ -107,14 +107,14 @@ export async function portraitList(store: RoutineDataStore, state: string, now: 
   const sets = ordered.flatMap(row => slim.get(row.scope)?.roster ?? []);
   // New Hampshire's official roster is held in its own shape; it is read whole, as readers read it.
   if (target && jurisdiction === "US-NH") {
-    const nh = await readOfficialStateLegislatorsProjection(target.jurisdiction, { store, now, bypassCache: true });
+    const nh = await readOfficialStateLegislatorsProjection(target.jurisdiction, { store, now });
     if (nh.kind === "PROMOTED" || nh.kind === "BOOTSTRAP") sets.splice(slim.has(ordered[0]!.scope) ? 1 : 0, 0, nh.value.roster);
   }
   const merged = mergePeopleSets([...sets, ...!national && portraits ? [portraits] : []]);
   const local: Officeholder[] = [];
   let registry: string | null = null;
   if (!national) {
-    const held = await readStateRegistryRuntimeProjection(state, { store, now, bypassCache: true });
+    const held = await readStateRegistryRuntimeProjection(state, { store, now });
     if (held.kind === "PROMOTED" || held.kind === "BOOTSTRAP") {
       registry = stateRegistryRuntimeScope(state);
       const bodies = query ? await query("SELECT id FROM entity WHERE kind='body' AND state=$1", [state.toUpperCase()]) : [];
@@ -136,7 +136,7 @@ export async function portraitList(store: RoutineDataStore, state: string, now: 
   }
   let place: FederalDirectoryReadModel | null = null, placeInput: DerivedInputRef | null = null;
   if (!national) {
-    const read = await readStateFederalDirectory(state, { store, now, bypassCache: true });
+    const read = await readStateFederalDirectory(state, { store, now });
     if (read.kind === "PROMOTED") {
       place = { ...read.value, roster: portraits ? withFederalPortraits(read.value.roster, portraits) : read.value.roster };
       placeInput = promotedInputRef("FEDERAL_DIRECTORY", read.projection.scope, read.projection.versionId, read.projection.payload, read.projection.promotedAt);

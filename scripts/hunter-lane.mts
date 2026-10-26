@@ -17,9 +17,7 @@ import { durableSearchBudget } from "../lib/control-plane/discovery/search-runti
 import { LaneOwnSpend, armHunterLane, hunterLaneArmingPath, laneWorkerTransport, type ArmedHunterLane } from "../lib/control-plane/workers/hunter-lane-arming.ts";
 import { HUNTER_JOB_QUIET_MS, HUNTER_WORKER_RETIRE_MS, HUNTER_WORKER_WALL_MS, hunterLane, hunterLaneProgress, hunterQueuePath, readHunterQueue,
   stuckWorkerLine } from "../lib/control-plane/workers/hunter-lane.ts";
-import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
-readFromHeldCopies();
 
 const ROOT = process.cwd();
 

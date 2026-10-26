@@ -4,6 +4,7 @@ import { boundedQuery } from "../repository/request-bounds.ts";
 import type { ServedReaderWitness } from "../served-reader.ts";
 import type { WorkItem } from "../work-item.ts";
 import { PUBLIC_SITE_ORIGIN } from "../../ops/origins.ts";
+import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
 export const EXACT_SERVED_WITNESS_SQL = `
   SELECT entry.witness
@@ -13,9 +14,9 @@ export const EXACT_SERVED_WITNESS_SQL = `
       THEN snapshot.value->'servedReaderReadback'->'witnesses' ELSE '[]'::jsonb END
   ) AS entry(witness)
   WHERE snapshot.id = 'current'
-    AND entry.witness->>'itemId' = $1
-    AND entry.witness->>'approvalId' = $2
-    AND entry.witness->>'versionId' = $3
+    AND entry.witness->>'itemId' = $3
+    AND entry.witness->>'approvalId' = $4
+    AND entry.witness->>'versionId' = $5
   ORDER BY entry.witness->>'checkedAt' DESC
   LIMIT 1`;
 
@@ -69,9 +70,10 @@ function exactWitness(value: unknown, item: WorkItem): ServedReaderWitness | nul
 export async function readExactServedWitness(sql: Sql, item: WorkItem): Promise<ServedReaderWitness | null> {
   const outcome = item.publicationOutcome;
   if (!outcome?.versionId || outcome.status === "HELD") return null;
-  const rows = await boundedQuery(sql, { operation: "cp_owner_snapshots.exactServedWitness", callClass: "POINT" },
-    EXACT_SERVED_WITNESS_SQL, [item.id, outcome.workerResultId, outcome.versionId]) as readonly { readonly witness?: unknown }[];
-  return exactWitness(rows[0]?.witness, item);
+  const row = await versionedRowsFor(sql).one(async(text,params)=>await boundedQuery(sql,
+    {operation:"cp_owner_snapshots.exactServedWitness",callClass:"POINT"},text,params),"cp_owner_snapshots","current",
+    `(${EXACT_SERVED_WITNESS_SQL})`,undefined,[item.id,outcome.workerResultId,outcome.versionId]);
+  return exactWitness(row?.value, item);
 }
 
 export async function readPublishedResultObservation(input: {

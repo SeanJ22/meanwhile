@@ -88,7 +88,7 @@ for (const [state, count, name, phone, district] of [
     const publication = await publishPeopleSource({ vault, store, state, sourceId: "official-state-people", roster,
       acquisitions: [page], releaseId: page.sha256, now: NOW });
     assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
-    const read = await readPeopleSourceProjection(`US-${state.toUpperCase()}`, "official-state-people", { store, now: NOW, bypassCache: true });
+    const read = await readPeopleSourceProjection(`US-${state.toUpperCase()}`, "official-state-people", { store, now: NOW });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind === "PROMOTED") assert.equal(read.value.roster.officeholders.length, count);
   });

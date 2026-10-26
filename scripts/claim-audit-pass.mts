@@ -7,7 +7,7 @@
  * `--controlled` feeds a false claim through the same checks against
  * in-memory records, writes nothing, and exits 0 only if it is caught.
  */
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
 import { auditClaims, runClaimAuditWeek } from "../lib/control-plane/workers/claim-audit.ts";
@@ -15,9 +15,7 @@ import { recheckProvenFixes } from "../lib/control-plane/fix-standing.ts";
 import type { AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { createFixMapRepository } from "../lib/method/fix-map.ts";
 import { memoryFixMap } from "../lib/method/fix-map-record.ts";
-import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
-readFromHeldCopies();
 
 const now = new Date().toISOString();
 

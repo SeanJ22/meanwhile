@@ -51,11 +51,17 @@ export class CivicReadCache {
 
   /** One statement can return either the changed value or confirmation of the held revision. */
   async row<T>(input: { readonly namespace: string; readonly key: string;
-    readonly current: (etag: string | null) => Promise<{ readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null> }): Promise<T | null> {
+    readonly source?: { readonly namespace: string; readonly project: (value: T) => T };
+    readonly current: (etag: string | null, held?: T) => Promise<{ readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null> }): Promise<T | null> {
     const key = input.namespace + ":" + input.key;
-    const held = await this.read<T>(key);
-    const current = await input.current(held?.etag ?? null);
+    let held = await this.read<T>(key);
+    if (!held && input.source) {
+      const source = await this.read<T>(input.source.namespace + ":" + input.key);
+      if (source) held = { etag: source.etag, value: input.source.project(source.value) };
+    }
+    const current = await input.current(held?.etag ?? null, held?.value);
     if (current === null) return null;
+    if (typeof current.etag !== "string" || current.etag.length === 0) throw new Error("A stored row read returned no database version");
     if ("unchanged" in current) {
       if (held?.etag !== current.etag) throw new Error("A changed-row read confirmed an unavailable revision");
       return held.value;
@@ -77,11 +83,14 @@ export class CivicReadCache {
   }): Promise<readonly T[]> {
     if (input.keys.length === 0) return [];
     const versions = await input.versions([...new Set(input.keys)]);
+    if (versions.some(version => typeof version.key !== "string" || typeof version.etag !== "string" || !version.etag.length)) {
+      throw new Error("A stored row read returned no database version");
+    }
     const result = new Map<string, T>();
     const missing: V[] = [];
     await Promise.all(versions.map(async version => {
       const held = await this.read<T>(input.namespace + ":" + version.key);
-      if (held?.etag === version.etag && input.keyOf(held.value) === version.key) {
+      if (held && held.etag === version.etag && input.keyOf(held.value) === version.key) {
         result.set(version.key, input.freshen ? input.freshen(held.value, version) : held.value);
       } else missing.push(version);
     }));
@@ -104,29 +113,56 @@ export class CivicReadCache {
   }
 }
 
-/** Serving processes keep their existing in-memory caches; runner children
- * share disposable copies across passes and commits in their own checkout. */
-export function runtimeCivicReadCache(): CivicReadCache | null {
+const MEMORY_BYTES = 32 * 1024 * 1024;
+const memory = new Map<string, string>();
+let memoryBytes = 0;
+const memoryIO: CacheIO = {
+  read: async key => {
+    const value = memory.get(key);
+    if (value !== undefined) { memory.delete(key); memory.set(key, value); }
+    return value ?? null;
+  },
+  write: async (key, value) => {
+    const bytes = Buffer.byteLength(value);
+    if (bytes > MEMORY_BYTES) return;
+    memoryBytes -= Buffer.byteLength(memory.get(key) ?? "");
+    memory.delete(key);
+    while (memoryBytes + bytes > MEMORY_BYTES && memory.size) {
+      const oldest = memory.keys().next().value!;
+      memoryBytes -= Buffer.byteLength(memory.get(oldest)!); memory.delete(oldest);
+    }
+    memory.set(key, value); memoryBytes += bytes;
+  },
+};
+
+/** Every runtime uses the same version check. Runner children share their
+ * supervisor's disposable copies; other processes use bounded local copies. */
+export function runtimeCivicReadCache(connection = process.env.DATABASE_URL ?? ""): CivicReadCache {
   const endpoint = process.env.WTP_CIVIC_READ_CACHE_URL;
   const token = process.env.WTP_CIVIC_READ_CACHE_TOKEN;
-  if (!process.env.DATABASE_URL || !endpoint || !token) return null;
+  const namespace = hash(connection);
+  if (!endpoint || !token) return new CivicReadCache({
+    read: key => memoryIO.read(namespace + key),
+    write: (key, value) => memoryIO.write(namespace + key, value),
+  });
+  const remoteKey = (key: string) => hash(namespace + key);
   return new CivicReadCache({
     read: async key => {
-      const response = await fetch(endpoint + "/" + key,
+      const response = await fetch(endpoint + "/" + remoteKey(key),
         { headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
       return response.ok ? response.text() : null;
     },
     write: async (key, saved) => {
-      await fetch(endpoint + "/" + key, { method: "PUT", body: saved,
+      await fetch(endpoint + "/" + remoteKey(key), { method: "PUT", body: saved,
         headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
     },
     readCheckpoint: async key => {
-      const response = await fetch(endpoint + "/checkpoint/" + key,
+      const response = await fetch(endpoint + "/checkpoint/" + remoteKey(key),
         { headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
       return response.ok ? response.text() : null;
     },
     writeCheckpoint: async (key, saved) => {
-      const response = await fetch(endpoint + "/checkpoint/" + key, { method: "PUT", body: saved,
+      const response = await fetch(endpoint + "/checkpoint/" + remoteKey(key), { method: "PUT", body: saved,
         headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
       if (!response.ok) throw new Error("The job continuation could not be saved");
     },

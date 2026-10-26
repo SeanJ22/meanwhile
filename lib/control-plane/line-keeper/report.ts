@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import type { Sql } from "../repository/pg-store.ts";
 import { readCounts, query, countTimestamp } from "./read.ts";
 import { type LineState } from "./model.ts";

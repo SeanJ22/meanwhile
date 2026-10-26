@@ -262,7 +262,7 @@ export async function verifySourceScopedCandidateProjection(
     const result = await readMeetingPartitionProjection(partition, {
       store,
       now: observedAt,
-      bypassCache: true,
+
     });
     return result.kind === "PROMOTED" && result.metadata.versionId === candidate.id
       ? pass(

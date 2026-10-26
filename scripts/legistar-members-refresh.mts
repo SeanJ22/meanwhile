@@ -3,7 +3,7 @@ import { readerFactDb } from "../lib/facts/db.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { assignment } from "./cli-args.mts";
 import { recordLegistarMemberFailure } from "../lib/sources/legistar/members-tasks.ts";
 import { sanitizedErrorDiagnostic } from "../lib/ops/error-diagnostic.ts";

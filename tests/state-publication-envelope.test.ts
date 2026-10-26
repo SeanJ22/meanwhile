@@ -233,7 +233,7 @@ test("state publication derives persisted member hashes and refuses a forged pri
   assert.deepEqual(hashes.members, civicRecordsFor(input.recordClass, input.readModel).map(member => ({
     key: member.key, sha256: canonicalCivicDataHash(member.record), factsHash: canonicalCivicDataHash(civicRecordFacts(input.recordClass, member)),
   })));
-  const read = await readPromotedCivicData(input.recordClass, input.scope, { store, now: NOW, bypassCache: true });
+  const read = await readPromotedCivicData(input.recordClass, input.scope, { store, now: NOW });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const firstSite = (read.value as { jurisdictions: { sites: object[] }[] }).jurisdictions[0].sites[0];

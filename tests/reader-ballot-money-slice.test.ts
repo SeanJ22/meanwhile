@@ -15,10 +15,13 @@ import {provenEdgeEntry} from "./helpers/promoted-edge-entry.ts";
 import {readFundingSnapshot} from "../lib/funding/snapshot.ts";
 import {fundingAnswerForTarget} from "../lib/funding/display.ts";
 import type {FundingCandidate,FundingSnapshot} from "../lib/funding/types.ts";
+import {CivicReadCache} from "../lib/db/civic-read-cache.ts";
+import {versionedSelect} from "../lib/db/versioned-query.ts";
 
 const AT="2026-10-19T12:00:00.000Z";
 
-async function directoryRead(state:string, officeholders:Officeholder[]=[], divisions:FederalDirectoryReadModel["roster"]["divisions"]=[]) {
+async function directoryRead(state:string, officeholders:Officeholder[]=[], divisions:FederalDirectoryReadModel["roster"]["divisions"]=[],
+  versionId=`test:ballot-money-directory:${state}`) {
   const sha="0".repeat(40);
   const value:FederalDirectoryReadModel={formatVersion:1,sourceSha:sha,currentMembershipComplete:true,
     roster:{scope:`US-${state}`,generatedAt:AT,officeholders,divisions,unmatched:[]},
@@ -27,7 +30,18 @@ async function directoryRead(state:string, officeholders:Officeholder[]=[], divi
       byMember:Object.fromEntries(officeholders.map(holder=>[holder.id.slice("congress:".length),{districtOffices:[],committees:[]}]))}};
   return readPromotedCivicData<FederalDirectoryReadModel>("FEDERAL_DIRECTORY",federalDirectoryScope(state),{edge:provenEdgeEntry({
     recordClass:"FEDERAL_DIRECTORY",scope:federalDirectoryScope(state),sourceId:"congress-directory-project",
-    versionId:`test:ballot-money-directory:${state}`,value,retrievedAt:AT})});
+    versionId,value,retrievedAt:AT})});
+}
+
+function checkedFixture(pg:Awaited<ReturnType<typeof migratedReaderDb>>["pg"],bodyRead:()=>void) {
+  const held=new Map<string,string>();
+  const checked=versionedSelect("ballot-money-fixture",new CivicReadCache({read:async key=>held.get(key)??null,
+    write:async(key,value)=>{held.set(key,value);}}));
+  return (text:string,params:readonly unknown[])=>checked(async(text,params)=>{
+    const rows=(await pg.query<Record<string,unknown>>(text,[...params])).rows;
+    for(const row of rows)if(Object.entries(row).some(([key,value])=>key.startsWith("db04_retained_")&&value===false))bodyRead();
+    return rows;
+  },text,params);
 }
 
 test("partitioned federal ballot money keeps full selected filings and committee books without following a shared donor into another candidate",async()=>{
@@ -48,20 +62,20 @@ test("partitioned federal ballot money keeps full selected filings and committee
   const absences=[{targetKey:"ballot-nj-missing",reason:"Held source absence"},{targetKey:"elsewhere",reason:"Other candidate"}];
   const payload={formatVersion:1,fetchedAt:AT,cycle:2026,candidates,secondHop,absences,matchReport:{rosterMatched:3},refreshAttempts:{source:AT}};
   const encoded=partitionCivicPayload(payload);assert.ok(encoded.parts.length);
-  let reads=0;const previousUrl=process.env.DATABASE_URL;
+  let reads=0,bodies=0;const previousUrl=process.env.DATABASE_URL;
+  const checked=checkedFixture(pg,()=>bodies++);
   process.env.DATABASE_URL="postgres://readonly:fixture@127.0.0.1/reader-migrations-test";
   installReaderDatabaseQuery(async statements=>{
     reads++;const statement=statements[0];
     assert.equal(statements.length,1);assert.equal(statement.params.length,3,"a ballot slice has no geographic expansion");
-    return[(await pg.query<Record<string,unknown>>(statement.text,[...statement.params])).rows];
+    return[await checked(statement.text,statement.params)];
   });
   try{
     for(const part of encoded.parts)await pg.query("INSERT INTO civic_data_payload_parts(hash,payload) VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     await publish({id:"ballot-fec-slice",sourceId:contract.sourceId,recordClass:"FEC_FUNDING",scope:contract.scope,at:AT,value:encoded.value});
     const selection={states:["NJ"],keys:new Set([contest.ocdId,"state:NJ","07005"])};
     await withReaderSelection(selection,async()=>{
-      await readFederalDirectoryProjection(["NJ"],{},()=>directoryRead("NJ"));
-      await primeBallotFundingRead(set,[contest]);
+      await Promise.all([readFederalDirectoryProjection(["NJ"],{},()=>directoryRead("NJ")),primeBallotFundingRead(set,[contest])]);
       selection.keys.add("congress:A000001");
       const result=await readPromotedCivicData<typeof payload>("FEC_FUNDING",contract.scope);
       assert.equal(result.kind,"PROMOTED",JSON.stringify(result));
@@ -69,8 +83,20 @@ test("partitioned federal ballot money keeps full selected filings and committee
         assert.deepEqual(result.value,{...payload,candidates:candidates.slice(0,2),secondHop:secondHop.slice(0,2),absences:absences.slice(0,1)});
         assert.equal(result.metadata.sourceThrough,"2026-10-19");
       }
-      assert.equal(reads,1,"later card aliases reuse the same complete selected holding");
+      assert.equal(reads,2,"later card aliases check the selected holding's current version");
+      assert.equal(bodies,1,"later card aliases reuse the same complete selected holding without transferring it again");
     });
+    const nextCandidates=[{...candidates[0],totals:{...candidates[0].totals,receipts:54321}},...candidates.slice(1)];
+    await publish({id:"ballot-fec-slice-next",sourceId:contract.sourceId,recordClass:"FEC_FUNDING",scope:contract.scope,at:AT,
+      value:{...payload,candidates:nextCandidates}});
+    await withReaderSelection({states:["NJ"],keys:new Set([contest.ocdId,"state:NJ","07005"])},async()=>{
+      await Promise.all([readFederalDirectoryProjection(["NJ"],{},()=>directoryRead("NJ")),primeBallotFundingRead(set,[contest])]);
+      const next=await readPromotedCivicData<typeof payload>("FEC_FUNDING",contract.scope);
+      assert.equal(next.kind,"PROMOTED");
+      if(next.kind==="PROMOTED")assert.deepEqual(next.value,{...payload,candidates:nextCandidates.slice(0,2),secondHop:secondHop.slice(0,2),absences:absences.slice(0,1)});
+    });
+    assert.equal(reads,4,"the next ballot request checks the newly published holding");
+    assert.equal(bodies,2,"only the changed selected holding crosses again");
   }finally{installReaderDatabaseQuery(undefined);if(previousUrl===undefined)delete process.env.DATABASE_URL;else process.env.DATABASE_URL=previousUrl;await pg.close();}
 });
 
@@ -106,13 +132,14 @@ test("a cold Virginia ballot selects its held FEC registration after the concurr
     candidates:[registered,unrelated],absences:[]};
   const previousUrl=process.env.DATABASE_URL;
   process.env.DATABASE_URL="postgres://readonly:fixture@127.0.0.1/reader-migrations-test";
-  let fecReads=0;
+  let fecReads=0,fecBodies=0;
+  const checked=checkedFixture(pg,()=>fecBodies++);
   installReaderDatabaseQuery(async statements=>{
     const statement=statements[0];assert.equal(statements.length,1);
     assert.equal(statement.params[0],"FEC_FUNDING");fecReads++;
     assert.ok((statement.params[2]as string[]).includes("congress:S001230"),"the official key reaches the selected SQL before the FEC slice is pinned");
     assert.ok((statement.params[2]as string[]).includes("fec:H4VA10279"),"the source-native FEC alias is selected too");
-    return[(await pg.query<Record<string,unknown>>(statement.text,[...statement.params])).rows];
+    return[await checked(statement.text,statement.params)];
   });
   try{
     await publish({id:"virginia-registration-only",sourceId:contract.sourceId,recordClass:"FEC_FUNDING",scope:contract.scope,at:AT,value:payload});
@@ -120,7 +147,9 @@ test("a cold Virginia ballot selects its held FEC registration after the concurr
     await withReaderSelection(selection,async()=>{
       let finishDirectory!:()=>void;
       const pendingDirectory=new Promise<void>(resolve=>{finishDirectory=resolve;});
+      let directoryLoads=0;
       const directory=readFederalDirectoryProjection(["VA"],{},async()=>{
+        directoryLoads++;
         await pendingDirectory;
         return directoryRead("VA",[holder],[{ocdId:contest.ocdId,officeholderId:holder.id,bodyId:null}]);
       });
@@ -129,6 +158,7 @@ test("a cold Virginia ballot selects its held FEC registration after the concurr
       assert.equal(fecReads,0,"the concurrent official read settles before selecting the FEC records");
       finishDirectory();
       await Promise.all([directory,money]);
+      assert.equal(directoryLoads,1,"the pending official read is shared with the concurrent money selection");
       const read=await readFundingSnapshot();
       assert.equal(read.kind,"PROMOTED");
       if(read.kind==="PROMOTED")assert.deepEqual(read.value.candidates,[registered],"another district's filing stays outside the selected holding");
@@ -142,7 +172,16 @@ test("a cold Virginia ballot selects its held FEC registration after the concurr
         assert.deepEqual(answer.data.contributors,[]);
         assert.equal(answer.data.detailSource,undefined,"no unfetched committee is invented");
       }
-      assert.equal(fecReads,1,"the candidate card reuses the complete selected holding");
+      assert.equal(fecReads,2,"the candidate card checks the selected holding's current version");
+      assert.equal(fecBodies,1,"the candidate card reuses the complete selected holding without transferring it again");
+      const changedHolder={...holder,name:"Updated official source name"};
+      const updated=await readFederalDirectoryProjection(["VA"],{},async()=>{
+        directoryLoads++;
+        return directoryRead("VA",[changedHolder],[{ocdId:contest.ocdId,officeholderId:holder.id,bodyId:null}],"test:ballot-money-directory:VA:changed");
+      });
+      assert.equal(directoryLoads,2,"a settled pending read never becomes a permanent answer");
+      assert.equal(updated.kind,"PROMOTED");
+      if(updated.kind==="PROMOTED")assert.equal(updated.value.roster.officeholders[0].name,changedHolder.name,"the next read sees the changed official source");
     });
   }finally{installReaderDatabaseQuery(undefined);if(previousUrl===undefined)delete process.env.DATABASE_URL;else process.env.DATABASE_URL=previousUrl;await pg.close();}
 });

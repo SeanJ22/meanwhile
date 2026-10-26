@@ -27,9 +27,10 @@ function postgresOver(ds: BuiltDataset | null, seen: Statement[] = []): ReadOnly
     return statements.map((s): Row[] => {
       if (s.text.startsWith("SELECT current_version_id")) return ds === null ? [] : [{ version_id: "cv-test" }];
       if (ds === null) return [];
-      if (s.text.includes("zctaUniverse")) return [{ known: ds.zctaUniverse.includes(String(s.params[2])) }];
+      const atomicCode = s.text.startsWith("SELECT concat");
+      if (s.text.includes("zctaUniverse") && !atomicCode) return [{ known: ds.zctaUniverse.includes(String(s.params[2])) }];
       const [, , types, arg] = s.params as [string, string, string[], string];
-      const withOverlaps = s.text.includes("g->'memberStates', g->'overlaps'");
+      const withOverlaps = s.text.includes("g->'memberStates', g->'overlaps'") || s.text.includes("jsonb_array_elements(g->'overlaps')");
       const rows: Row[] = ds.scopes.map((scope) => ({ row_kind: "scope", type: scope.type, version: scope.version, plan: scope.versionMeta.plan }));
       for (const scope of ds.scopes) {
         if (!types.includes(scope.type)) continue;
@@ -56,7 +57,10 @@ function postgresOver(ds: BuiltDataset | null, seen: Statement[] = []): ReadOnly
           });
         }
       }
-      return rows;
+      return atomicCode ? [{ etag: "fixture-source-version", unchanged: false, value: {
+        version_id: "cv-test", geography: rows, known: ds.zctaUniverse.includes(arg),
+        zcta_tabulations: [...new Set(ds.scopes.map(scope => scope.versionMeta.zctaTabulation).filter(Boolean))],
+      } }] : rows;
     });
   };
 }
@@ -196,4 +200,60 @@ test("real state geography SQL carries each scope's metadata once and preserves 
     assert.ok(beforeRows.filter(row => row.row_kind === "grouping").every(row => row.version_meta));
     assert.ok(JSON.stringify(afterRows).length < JSON.stringify(beforeRows).length,"per-district copies of the same source metadata do not travel to readers");
   } finally { await pg.close(); }
+});
+
+
+test("one atomic ZIP statement preserves held geography and skips unchanged bodies after an in-place source update", async () => {
+  const { PGlite } = await import("@electric-sql/pglite");
+  const { publishedZipDistricts } = await import("../lib/geo/zip-census-districts.ts");
+  const { installReaderDatabaseQuery } = await import("../lib/reader/database.ts");
+  const pg = new PGlite();
+  const returned: Row[][] = [];
+  const query: ReadOnlyQuery = async statements => {
+    const result: Row[][] = [];
+    for (const statement of statements) {
+      const rows = (await pg.query<Record<string, unknown>>(statement.text, [...statement.params])).rows;
+      returned.push(rows); result.push(rows);
+    }
+    return result;
+  };
+  try {
+    await pg.exec("CREATE TABLE civic_data_promotions(record_class text,scope text,current_version_id text,payload jsonb)");
+    await pg.query("INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4)",
+      [CENSUS_GEO_RECORD_CLASS,CENSUS_GEO_SCOPE,"same-publication",JSON.stringify(dataset)]);
+    const zip = dataset.zctaUniverse.find(zip => dataset.scopes.some(scope => scope.groupings.some(group =>
+      group.overlaps.some(overlap => overlap.zcta5 === zip))))!;
+    const state = await stateContainers("AZ", TYPES, true, query);
+    assert.equal(state.kind,"HELD");
+    if (state.kind !== "HELD") return;
+    const expected = { kind: "HELD", versionId: "same-publication", value: {
+      scopes: state.value.scopes,
+      containers: state.value.containers.filter(container => container.overlaps?.some(overlap=>overlap.zcta5===zip))
+        .map(container=>({...container,overlaps:container.overlaps!.filter(overlap=>overlap.zcta5===zip)})),
+      known: true,
+      zctaTabulations: [...new Set(dataset.scopes.map(scope=>scope.versionMeta.zctaTabulation).filter(value=>typeof value==="string"))],
+    } };
+    returned.length = 0;
+    assert.deepEqual(await containersOfCode(zip,TYPES,query),expected);
+    assert.equal(returned.length,1,"the cold ZIP answer is one statement rather than a transaction with three queries");
+    installReaderDatabaseQuery(query);
+    const selected = await publishedZipDistricts(zip);
+    assert.equal(selected.kind,"HELD");
+    returned.length = 0;
+    assert.deepEqual(await publishedZipDistricts(zip),selected);
+    assert.equal(returned.length,1);
+    assert.equal(returned[0][0].unchanged,true);
+    assert.equal(returned[0][0].value,null,"unchanged ZIP facts stay in the shared copy store");
+    const changed = structuredClone(dataset);
+    const group = changed.scopes.filter(scope=>["congressional_district","state_leg_upper","state_leg_lower"].includes(scope.type))
+      .flatMap(scope=>scope.groupings).find(group=>group.overlaps.some(overlap=>overlap.zcta5===zip))!;
+    Object.assign(group,{label:group.label+" updated"});
+    await pg.query("UPDATE civic_data_promotions SET payload=$1",[JSON.stringify(changed)]);
+    returned.length = 0;
+    const next = await publishedZipDistricts(zip);
+    assert.equal(next.kind,"HELD");
+    if(next.kind==="HELD")assert.ok(next.value.containers.some(container=>container.ref.label===group.label));
+    assert.equal(returned.length,1);
+    assert.equal(returned[0][0].unchanged,false,"physical source revision changes even when the logical publication id does not");
+  } finally { installReaderDatabaseQuery(undefined); await pg.close(); }
 });

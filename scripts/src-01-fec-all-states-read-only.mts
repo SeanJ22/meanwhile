@@ -4,7 +4,7 @@ import { mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { execFileSync } from "node:child_process";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { FEDERAL_DIRECTORY_STATES } from "../lib/officials/federal-directory-data-plane.ts";
 
 const [urlFile, output] = process.argv.slice(2);

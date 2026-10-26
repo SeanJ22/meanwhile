@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "../../reader/database.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { guardAdminRequest } from "../gateway/admin-guard.ts";
@@ -19,7 +19,7 @@ export async function v6SendsGet(request: NextRequest): Promise<NextResponse> {
   if (!url) return NextResponse.json({ state: "UNREAD", says: "The control-plane database is not configured here, so sent instructions were not read." }, { status: 503, headers: NO_STORE });
   const now = new Date().toISOString();
   try {
-    const data = await readSends(neon(url));
+    const data = await readSends(databaseReadOnlySql(url));
     return NextResponse.json({ contract: ADMIN_V6_SENDS_CONTRACT, scope: query.scopeKey, revision: `sends:${data[0]?.id ?? "none"}:${data.map((s) => s.state[0]).join("")}`, asOf: now, data, missingParts: [] }, { headers: NO_STORE });
   } catch {
     return NextResponse.json({ state: "UNREAD", says: "The sent instructions could not be read just now, so which are still running is unknown, not none." }, { status: 503, headers: NO_STORE });

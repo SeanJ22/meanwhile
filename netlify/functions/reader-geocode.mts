@@ -2,10 +2,11 @@
 import {POST} from "../../app/api/geocode/route.ts";
 import {isAdminHostRequest} from "../../lib/control-plane/admin-auth.ts";
 import {ADMIN_ORIGIN} from "../../lib/ops/origins.ts";
+import {withResponseLifetime} from "../../lib/log/after-response.ts";
 
-export default async function readerGeocode(request:Request):Promise<Response> {
+export default async function readerGeocode(request:Request,context?:{waitUntil(work:Promise<unknown>):void}):Promise<Response> {
   if(isAdminHostRequest(request.headers,ADMIN_ORIGIN))return new Response(null,{status:404,headers:{"x-robots-tag":"noindex, nofollow, noarchive"}});
-  const response=await POST(request);
+  const response=await (context ? withResponseLifetime(work=>context.waitUntil(work),()=>POST(request)) : POST(request));
   response.headers.set("x-robots-tag","noindex, nofollow, noarchive");
   return response;
 }

@@ -20,13 +20,14 @@ const reposFor = (saved: WorkItem | null) => ({ workItems: { read: async () => s
 test("one exact published receipt returns its independently saved browser witness", async () => {
   const calls: unknown[][] = [];
   const sql = { query: async (text: string, params?: readonly unknown[]) => {
-    assert.equal(text, EXACT_SERVED_WITNESS_SQL);
+    assert.ok(text.includes(EXACT_SERVED_WITNESS_SQL));
+    assert.match(text,/CASE WHEN revision::text=\$2::text THEN NULL ELSE/);
     calls.push([...(params ?? [])]);
-    return [{ witness }];
+    return [{id:"current",revision:1,updated_at:witness.checkedAt,__unchanged:false,value:witness}];
   } };
   const result = await readPublishedResultObservation({ repos: reposFor(item), subjectKey,
     readWitness: row => readExactServedWitness(sql, row) });
-  assert.deepEqual(calls, [[item.id, "wr-1", "cv-1"]]);
+  assert.deepEqual(calls, [["current",null,item.id, "wr-1", "cv-1"]]);
   assert.equal(result?.publication?.state, "PARTIALLY_PUBLISHED");
   assert.equal(result?.factualVerification.state, "NOT_READ");
   assert.equal(result?.publicObservation.state, "CONFIRMED");
@@ -40,7 +41,7 @@ test("missing or mismatched browser evidence stays unavailable, never inferred f
     readWitness: async () => null });
   assert.equal(missing?.publication?.versionId, "cv-1");
   assert.deepEqual(missing?.publicObservation, { state: "UNAVAILABLE", witness: null });
-  assert.equal(await readExactServedWitness({ query: async () => [{ witness: { ...witness, versionId: "cv-old" } }] }, item), null);
+  assert.equal(await readExactServedWitness({ query: async () => [{id:"current",revision:1,updated_at:witness.checkedAt,value:{ ...witness, versionId: "cv-old" }}] }, item), null);
   assert.equal(await readPublishedResultObservation({ repos: reposFor(null), subjectKey, readWitness: async () => witness }), null);
   const held = { ...item, publicationOutcome: { ...item.publicationOutcome!, status: "HELD" as const } } as WorkItem;
   let called = false;

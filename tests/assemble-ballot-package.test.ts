@@ -165,7 +165,7 @@ test("assembles only the named state and never opens another state's malformed f
     assert.deepEqual(Object.keys(result.payload.ballots), ["TX:fixture-2026-general"]);
     assert.ok(reads.every(scope => scope === "US-TX:state-election-ballots"));
     assert.equal(result.sourceReceipt.sources.length, 1);
-    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now, bypassCache: true });
+    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "TX"), { store, now });
     assert.equal(read.kind, "PROMOTED");
     const rerun = await publishBallotState({ state: "TX", directory, store, now });
     assert.deepEqual(rerun.payload, result.payload);
@@ -295,7 +295,7 @@ test("signed empty territory partitions remain readable and normal missing-file 
       assert.equal(await durableRoutineRunnerReceiptIssue(result.receipt, { id: contractId, sourceId: before.sourceId,
         recordClass: "BALLOT_CANDIDACY", scope: stateScope }, store, "SUCCESS"), null);
       assert.deepEqual(await store.readPromotion("BALLOT_CANDIDACY", stateScope), before);
-      const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateScope, { store, now, bypassCache: true });
+      const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateScope, { store, now });
       assert.equal(read.kind, "PROMOTED");
       if (read.kind === "PROMOTED") assert.deepEqual(read.value, { kind: "ballot-contests", ballots: {} });
     }

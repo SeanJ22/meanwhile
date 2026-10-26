@@ -569,7 +569,7 @@ export async function promoteDerivedMeetingFamily(
     printMeetingPartitionReceipt(partition, failed, outcome, detail, kind);
     return outcome;
   };
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: generatedAt });
+  const wiring = await readDerivedMeetingWiring({ store,  now: generatedAt });
   if (wiring.kind !== "PROMOTED") {
     return refuse(
       wiring.kind === "NOT_RECORDED"
@@ -1095,7 +1095,7 @@ export async function readPreviousMeetingPartition(
 ): Promise<MeetingsSnapshot | null> {
   const read = await readMeetingPartitionProjection(partition, {
     store,
-    bypassCache: true,
+
   });
   if (read.kind === "PROMOTED") {
     console.log(`partition LKG base: ${partition.id} at ${read.metadata.versionId}`);

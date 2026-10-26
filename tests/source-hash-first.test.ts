@@ -7,6 +7,7 @@ import { confirmRepeatedStatePeopleInputs, confirmStatePeopleSource, peopleSourc
 import { normalize, yamlToPeople } from "../lib/sources/plural/index.ts";
 import { PLURAL_PARSER_VERSION } from "../lib/sources/plural/targets.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
+import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 
 const at = "2026-10-01T00:00:00.000Z", later = "2026-10-01T01:00:00.000Z";
 const scope = "US-AZ:openstates-people:v1";
@@ -109,4 +110,19 @@ test("repeated partial inputs skip held people without refreshing unread facts",
   assert.equal(latest?.latestConfirmation?.observedAt,checkedAt);
   assert.equal(await confirmRepeatedStatePeopleInputs({...rechecked,gaps:[]}),null,"changed parse coverage must be checked normally");
   assert.equal(await confirmRepeatedStatePeopleInputs({...rechecked,acquisitions:rechecked.acquisitions.map(row=>({...row,body:row.body+"# new bytes\n"}))}),null);
+});
+
+test("a complete new run cannot confirm an explicitly incomplete held payload solely because its bytes match",async()=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
+  const first=await publishStatePeople({store,vault,state:"az",roster:{...roster,currentMembershipComplete:false},acquisitions,
+    releaseId:"a".repeat(40),now:at,gaps:[{sourceUrl:url,detail:"SOURCE_PARTIAL: unfinished source parsing"}]});
+  assert.ok(first.outcome.promoted);
+  const partial={...first.outcome.candidate.candidate,id:"explicitly-incomplete-source",retrieval:{...first.outcome.candidate.candidate.retrieval,complete:false}};
+  assert.ok((await processRegisteredRoutineCandidate(store,"openstates-people-az",partial,at,undefined,{confirmUnchanged:false})).promoted);
+  const head=await store.readSourceHead("STATE_LEGISLATOR",scope);assert.equal(head?.acquisitionComplete,false);
+  for(const method of["readCandidate","readCandidatePath","readPromotion","events"]as const)
+    Object.assign(store,{[method]:async()=>{throw Error(`partial hash guard opened ${method}`);}});
+  const confirmed=await confirmSourceHashUnchanged({store,sourceId:head!.sourceId,recordClass:head!.recordClass,scope,parserVersion:head!.parserVersion,
+    rawHash:head!.rawHash!,complete:true,now:later,retrieval:{requestedUrl:url,finalUrl:url,httpStatus:200,rawHash:head!.rawHash!,retrievedAt:later}});
+  assert.equal(confirmed,null,"completed source work must publish its completed payload and clear its old continuation");
 });

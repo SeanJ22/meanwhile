@@ -33,6 +33,8 @@ export function unreachable<T>(which: string, error: unknown): ReadOutcome<T> {
   };
 }
 
+let adminConnection: { readonly url: string; readonly repos: Promise<ControlPlaneRepositories> } | null = null;
+
 export async function openControlPlane(): Promise<
   { readonly ok: true; readonly repos: ControlPlaneRepositories } | { readonly ok: false; readonly detail: string }
 > {
@@ -47,10 +49,13 @@ export async function openControlPlane(): Promise<
     };
   }
   try {
-    const repos = await createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true });
+    if (adminConnection?.url !== url) adminConnection = { url,
+      repos: createPgRepositories(url, new Date().toISOString(), { skipBootstrap: true }) };
+    const repos = await adminConnection.repos;
     assertDurableRepositories(repos, "the owner control centre");
     return { ok: true, repos };
   } catch (error) {
+    adminConnection = null;
 
     return {
       ok: false,

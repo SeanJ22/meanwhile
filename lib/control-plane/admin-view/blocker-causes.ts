@@ -112,6 +112,15 @@ function normalized(text: string): string {
   return text.toLowerCase().replace(/https?:\/\/\S+/g, "").replace(/[0-9a-f]{8,}/g, "#").replace(/\d+/g, "#").replace(/\s+/g, " ").trim().slice(0, 90);
 }
 
+/** The same ordered descriptions and normalization, for grouping counts inside PostgreSQL. */
+export function blockerCauseKeySql(blocker: string, state: string): string {
+  const quoted = (value: string) => `'${value.replaceAll("'", "''")}'`;
+  const shapes = SHAPES.map(shape => `WHEN coalesce(${blocker},'') ~* ${quoted(shape.test.source.replaceAll('\\b','\\y'))} THEN ${quoted(shape.key)}`).join("\n");
+  const normalized = `left(btrim(regexp_replace(regexp_replace(regexp_replace(regexp_replace(lower(btrim(${blocker})),
+    'https?://\\S+','','g'),'[0-9a-f]{8,}','#','g'),'\\d+','#','g'),'\\s+',' ','g')),90)`;
+  return `CASE ${shapes} WHEN btrim(coalesce(${blocker},''))='' THEN 'no-reason:'||lower(${state}) ELSE 'other:'||${normalized} END`;
+}
+
 function causeCore(row: Pick<StuckRowLike, "state" | "owner" | "blocker" | "overdue">): Omit<Cause, "needs"> {
   const owner = row.owner ?? "RUNNER";
   const laneByOwner = LANE_OF_OWNER[owner] ?? "auto";

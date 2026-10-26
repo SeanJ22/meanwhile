@@ -36,7 +36,7 @@ test("the runner forwards ordered memory reservations without losing a catch-up 
     "childMemoryReleases", "startedSourceChildren", "ranThisPass",
     ts.transpileModule(source.slice(start, end), { compilerOptions: { target: ts.ScriptTarget.ESNext, module: ts.ModuleKind.ESNext } }).outputText + "\nreturn acquireChildMemory;")(
     slots, launchDeadline, 900_000, new Map(), started, ran) as (...args: unknown[]) => Promise<void>;
-  const order = { priority: 2, hold: true };
+  const order = { priority: 2, first: true };
   const ordinary = { id: "state", args: ["scripts/ingest.ts"] };
   await acquire(ordinary, ["board"], order);
   const catchup = { id: "catchup", args: ["scripts/ingest.ts"], onStarted: undefined as ((pid: number) => void) | undefined };
@@ -108,9 +108,11 @@ test("four lease workers acquire memory alongside a standing job and the full re
 
 test("small-state observations cannot lower complete native vote or ACS reservations", async () => {
   const host = workerMemoryHost({ processes: () => [] });
-  host.transact(state => { state.peaks = { "openstates-votes-refresh.mts": [100 * mib], "legiscan-votes-refresh.mts": [100 * mib], "legiscan-bulk.mts": [100 * mib] }; }, false);
+  host.transact(state => { state.peaks = { "openstates-votes-refresh.mts": [100 * mib], "legiscan-votes-refresh.mts": [100 * mib], "legiscan-bulk.mts": [100 * mib],
+    "place-map-tx/place-map-refresh.mts": [100 * mib] }; }, false);
   const slots = routineProcessSlots({ host, availableBytes: () => 10000 * mib });
-  for (const [entry, expected] of [["openstates-votes-refresh.mts", 3574], ["legiscan-votes-refresh.mts", 1312], ["legiscan-bulk.mts", 2130], ["acs-population-promote.mts", 3928], ["place-map-refresh.mts", 1672]] as const) {
+  for (const [entry, expected] of [["openstates-votes-refresh.mts", 3574], ["legiscan-votes-refresh.mts", 1312], ["legiscan-bulk.mts", 2130], ["acs-population-promote.mts", 3928],
+    ["place-map-tx/place-map-refresh.mts", 1672], ["place-map-as/place-map-refresh.mts", 502]] as const) {
     const release = await slots.acquire(entry);
     host.transact(state => assert.equal(state.reservations[0].peak, expected * mib), false);
     release();

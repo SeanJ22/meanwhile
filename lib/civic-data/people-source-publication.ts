@@ -141,12 +141,15 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
 }
 /** The source's published record for this jurisdiction: its version, roster and saved payload. */
 export async function readHeldPeopleSource(store:RoutineDataStore,jurisdiction:ReturnType<typeof peopleJurisdiction>,sourceId:string,now:string):Promise<HeldPeopleSource> {
-  const prior = await readPeopleSourceProjection(jurisdiction,sourceId,{store,now,bypassCache:true});
+  const prior = await readPeopleSourceProjection(jurisdiction,sourceId,{store,now});
   if (prior.kind === "STORE_UNREACHABLE") throw Error("PEOPLE_SOURCE_PRIOR_UNAVAILABLE");
-  const old = prior.kind === "PROMOTED" ? await store.readCandidate(prior.metadata.versionId!) : null;
+  const [captures, excludedFacts] = prior.kind === "PROMOTED" ? await Promise.all([
+    store.readCandidatePath<readonly StatePeopleCapture[]>(prior.metadata.versionId!, ["normalizedPayload", "captures"]),
+    store.readCandidatePath<RoutineCandidate["excludedFacts"]>(prior.metadata.versionId!, ["normalizedPayload", "excludedFacts"]),
+  ]) : [null, null];
   return {versionId:prior.kind === "PROMOTED" ? prior.metadata.versionId ?? null : null,
     roster:prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null,
-    normalizedPayload:old?.candidate.normalizedPayload};
+    normalizedPayload:{ captures:captures ?? [], excludedFacts:excludedFacts ?? [] }};
 }
 
 /** Publish one source/state independently. A failed or partial route retains prior verified facts. */
@@ -228,7 +231,7 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   if (jurisdiction !== "US" && input.sourceId !== "people-portraits") {
     try {
       const { readStatePeopleProjection } = await import("../state-rollcalls/legislators.ts");
-      const composite = await readStatePeopleProjection(jurisdiction,{store:input.store,now:input.now,bypassCache:true});
+      const composite = await readStatePeopleProjection(jurisdiction,{store:input.store,now:input.now});
       if (composite.kind === "PROMOTED" || composite.kind === "BOOTSTRAP") {
         const comparison = mergePeopleSets([composite.value.roster,roster])!;
         roster = {...roster,disagreements:comparison.disagreements};

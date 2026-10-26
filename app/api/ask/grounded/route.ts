@@ -15,6 +15,7 @@ import { districtQuestion, composeDistrictAnswer } from "@/lib/ask/districts";
 import { governmentFinanceEvidence, governmentFinanceQuestion, composeGovernmentFinanceAnswer } from "@/lib/ask/government-finance";
 import { federalMoneyEvidence, federalMoneyQuestion, federalMoneyPlaceQuestion, federalMoneyPlaceDivisions, composeFederalMoneyAnswer } from "@/lib/ask/federal-money";
 import { federalMoneyStateDivision } from "@/lib/federal-money/view";
+import { federalMoneyGovernmentDivision } from "@/lib/federal-money/recipient";
 import { isBillQuestion,legiscanBillEvidence } from "@/lib/ask/legiscan-bills";
 import { openDataQuestion, openDataEvidenceFor } from "@/lib/ask/open-data";
 import { governmentListingEntity, governmentListingEvidenceRecords, readerGovernmentListings } from "@/lib/ask/government-listings";
@@ -1426,7 +1427,7 @@ async function answerWithSettings(request: Request, started: number) {
         // The reader's own division was already selected by the first read.
         // Only an explicitly named body elsewhere needs a wider registry read.
         if (!bound?.ocdId || !ocdIds.includes(bound.ocdId)) {
-          await timed("boundRegistry", () => readRegistryRuntimeProjection([...new Set([...registryStates, ...statesOf(bound?.ocdId ? [bound.ocdId] : [])])], { bypassCache: true }))();
+          await timed("boundRegistry", () => readRegistryRuntimeProjection([...new Set([...registryStates, ...statesOf(bound?.ocdId ? [bound.ocdId] : [])])], {  }))();
         }
       }
     }
@@ -1617,16 +1618,18 @@ async function answerWithSettings(request: Request, started: number) {
         try { contacts.push(...await officeContactsForBody(subject.id, subject.name)); }
         catch { gaps.push({ whose: "OURS", statement: `We couldn't load ${subject.name}'s office address just now.` }); }
       }
-      const listing = governmentListings.records.find(row => row.id === subject.id);
+      const listing = governmentListings.records.find(row => row.id === subject.id || row.bodyIds.includes(subject.id) || row.aliases.includes(subject.id));
       if (listing) {
         records.push(...governmentListingEvidenceRecords(listing));
         denominators.governmentInventoryRecords = 1;
       }
       const identity = canonicalBodyIdentity(subject.id);
       const financeDivision = bound?.ocdId ?? identity?.ocdId;
-      const federalDivision = financeDivision ?? (listing ? federalMoneyStateDivision(listing.state) : null);
+      const federalDivision = (listing ? federalMoneyGovernmentDivision(listing) : undefined) ?? financeDivision ?? (listing ? federalMoneyStateDivision(listing.state) : null);
       if (federalDivision && federalMoneyQuestion(question)) {
-        const federal = await federalMoneyEvidence([{ divisionId: federalDivision, ...(bound?.level === "BODY" ? { bodyId: subject.id } : {}) }], subject.id, { year: question.match(/\b((?:19|20)\d{2})\b/)?.[1] });
+        const federal = await federalMoneyEvidence([{ divisionId: federalDivision, bodyId: subject.id,
+          ...(listing ? { bodyIds: [listing.id, ...listing.bodyIds, ...listing.aliases], recipientState: listing.state,
+            recipientNames: listing.recipientNameUnique === true ? [listing.name] : [] } : {}) }], subject.id, { year: question.match(/\b((?:19|20)\d{2})\b/)?.[1] });
         records.push(...federal.records);
         Object.assign(denominators, federal.denominators);
         if (federalMoneyQuestion(question)) gaps.push(...federal.gaps);

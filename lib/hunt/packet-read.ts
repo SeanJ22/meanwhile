@@ -11,7 +11,7 @@ import { factReader } from "../facts/db.ts";
 import { readSourceCheckFailures, withSourceCheckFailures, type SourceCheckFailure } from "../facts/detective.ts";
 
 type HeldReader = (divisionIds: readonly string[], now: string) => Promise<HeldPlaceCapture>;
-const readHeld: HeldReader = (ids, now) => readHeldPlaceCapture(ids, { now, bypassCache: true });
+const readHeld: HeldReader = (ids, now) => readHeldPlaceCapture(ids, { now });
 
 /** Each government's packet as it stands now, recomputed from held data and what Ask could not answer. A government with nothing open has no blanks. */
 export async function readGovernmentPackets(governmentIds: readonly string[], now: string, asked: readonly AskedGap[] = [],

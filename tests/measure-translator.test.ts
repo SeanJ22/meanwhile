@@ -43,7 +43,7 @@ test("the guarded writer and independent checker publish exact source-supported 
     captures: [{ evidence, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" }] });
   assert.ok(published.promoted, JSON.stringify(published.candidate));
   assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
-  const held = await readTranslations([subject.ocdId], { store, now, bypassCache: true });
+  const held = await readTranslations([subject.ocdId], { store, now });
   assert.deepEqual(held, [result.record]);
   const ballot = { contests: [{ id: subject.contestId, ocdId: subject.ocdId, type: "MEASURE" }], measureRecords: [{ ...measure, noMeans: null }] } as unknown as BallotSet;
   assert.equal(withMeasureTranslations(ballot, held).measureRecords![0].noMeans, measure.noMeans);
@@ -287,7 +287,7 @@ test("a changed source is rewritten, an unchanged source costs nothing, and a fa
   const changed = { ...evidence, text: `${source} The next review is in 2028.`, contentHash: `sha256-${translationHash(`${source} The next review is in 2028.`)}` };
   const refused = await run(changed); assert.equal(refused.status, "HELD"); assert.equal(refused.usage.length, 4);
   assert.deepEqual(refused.usage.map(row => row.role), ["TRANSLATOR", "TRANSLATION_CHECKER", "TRANSLATOR", "TRANSLATION_CHECKER"]);
-  assert.deepEqual((await readTranslations([subject.ocdId], { store, now, bypassCache: true }))[0], first.record);
+  assert.deepEqual((await readTranslations([subject.ocdId], { store, now }))[0], first.record);
   rejectCheck = false;
   const rewritten = await run(changed); assert.equal(rewritten.status, "PUBLISHED", JSON.stringify(rewritten));
   assert.equal(rewritten.record?.sourceHash, changed.contentHash.replace(/^sha256-/, ""));
@@ -304,11 +304,11 @@ test("a translation for another exact district remains separate and same-place p
   const other = { ...record, id: "translation:measure:13", subjectId: "measure:13", measure: { ...measure, contestId: "measure:13" } };
   const published = await publishTranslation(store, { record: other, captures, now });
   assert.ok(published.promoted, JSON.stringify(published.candidate));
-  assert.equal((await readTranslations([subject.ocdId], { store, now, bypassCache: true })).length, 2);
+  assert.equal((await readTranslations([subject.ocdId], { store, now })).length, 2);
   const elsewhere = "ocd-division/country:us/state:mi/county:birch";
   await publishTranslation(store, { record: { ...record, ocdId: elsewhere }, captures, now });
-  assert.equal((await readTranslations([elsewhere], { store, now, bypassCache: true })).length, 1);
-  assert.equal((await readTranslations([subject.ocdId], { store, now, bypassCache: true })).length, 2);
+  assert.equal((await readTranslations([elsewhere], { store, now })).length, 1);
+  assert.equal((await readTranslations([subject.ocdId], { store, now })).length, 2);
 });
 
 test("a checked measure captured earlier publishes beside a newer source without losing either retrieval date", async () => {
@@ -323,7 +323,7 @@ test("a checked measure captured earlier publishes beside a newer source without
   const result = await publishTranslation(store, { record: older,
     captures: [{ ...captured, evidence: { ...evidence, retrievedAt: earlierAt }, observedAt: earlierAt }], now });
   assert.equal(result.readerReadback?.status, "PASS", JSON.stringify(result));
-  const records = await readTranslations([subject.ocdId], { store, now, bypassCache: true });
+  const records = await readTranslations([subject.ocdId], { store, now });
   assert.equal(records.length, 2);
   assert.equal(records.find(row => row.subjectId === "measure:13")!.retrievedAt, earlierAt);
   assert.equal(records.find(row => row.subjectId === "measure:12")!.retrievedAt, now);

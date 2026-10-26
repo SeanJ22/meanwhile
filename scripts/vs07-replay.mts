@@ -174,7 +174,7 @@ for (const day of [0, 1]) {
     throw new Error("This source response is not held in the read-only replay corpus");
   };
   let result: Awaited<ReturnType<typeof refreshVotingSources>> | null = null, failure: string | null = null;
-  const before = await readVotingSitesProjection(state, { store, now: observedAt, bypassCache: true });
+  const before = await readVotingSitesProjection(state, { store, now: observedAt });
   const passPredecessor = before.kind === "PROMOTED" ? await store.readCandidate(before.projection.versionId) : null;
   const firstCandidateIndex = store.createdCandidateIds.length;
   const priorSites = held?.jurisdictions.flatMap(row => row.sites.map(site => `${row.ocdId}:${site.id}`)) ?? [];
@@ -203,7 +203,7 @@ for (const day of [0, 1]) {
       nonPassingChecks: record.receipt?.checks.filter(check => check.verdict !== "PASS") ?? [],
     });
   }
-  const read = await readVotingSitesProjection(state, { store, now: observedAt, bypassCache: true });
+  const read = await readVotingSitesProjection(state, { store, now: observedAt });
   if (read.kind === "PROMOTED") held = read.value;
   const nextSites = held?.jurisdictions.flatMap(row => row.sites.map(site => `${row.ocdId}:${site.id}`)) ?? [];
   const readerBoundaries = held?.jurisdictions.filter(row => row.boundaries?.length).map(row => ({

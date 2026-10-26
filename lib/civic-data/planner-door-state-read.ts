@@ -1,9 +1,8 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlyQuery } from "../reader/database.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { isDoorRecord, type DoorRecord } from "../doors/registry.ts";
 import { installDoorRecords } from "../doors/meeting-doors.ts";
 import type { DoorPassResult } from "../doors/install.ts";
-import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { installConnectAttemptWindow } from "../ops/connect-attempt-window.ts";
 
 /** Door installation uses meeting doors only. Voting-source inventories and
@@ -19,9 +18,7 @@ export async function readPlannerMeetingDoors(state: string, query?: ReadOnlyQue
     const url = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
     if (!url) throw new Error("PLANNER_DOOR_STORE_UNCONFIGURED");
     installConnectAttemptWindow();
-    installDatabaseTransferCounter();
-    const sql = neon(url);
-    query = statements => sql.transaction(statements.map(statement => sql.query(statement.text, [...statement.params])), { readOnly: true });
+    query = databaseReadOnlyQuery(url);
   }
   const doors: DoorRecord[] = [];
   let after = "";

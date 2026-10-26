@@ -13,7 +13,7 @@ const caches = new WeakMap<RoutineDataStore, Map<string, Promise<LdaRoster | und
 export async function readHeldCongressRoster(store: RoutineDataStore, vault: EvidenceStore, now: string): Promise<LdaRoster | undefined> {
   const versions: string[] = [];
   for (const state of FEDERAL_DIRECTORY_STATES) {
-    const read = await readStateFederalDirectory(state, { store, now, bypassCache: true });
+    const read = await readStateFederalDirectory(state, { store, now });
     if (read.kind === "STORE_UNREACHABLE") throw new Error(read.detail);
     if (read.kind === "PROMOTED") versions.push(read.metadata.versionId!);
   }

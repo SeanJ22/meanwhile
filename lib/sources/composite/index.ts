@@ -1,4 +1,5 @@
-import { isZeroRowExtraction, totalDropped } from "../normalize-account.ts";
+import { isZeroRowExtraction, totalDropped, type ConservationRecord } from "../normalize-account.ts";
+import { withSourceVendor } from "../host-context.ts";
 import type {
   DuplicateIdentityCounts,
   Meeting,
@@ -32,6 +33,7 @@ export interface ChildRunReport {
   fetched: number;
   normalized: number;
   drops: NormalizeDropCounts;
+  accounting?: ConservationRecord;
 
   unreachableOcdIds?: string[];
 
@@ -225,7 +227,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
             timeoutMs: this.timeoutMs,
             parentSignal: query.signal,
           },
-          (signal) => child.fetch({ ...query, signal }),
+          (signal) => withSourceVendor(child.name, () => child.fetch({ ...query, signal })),
         )),
       ),
     );
@@ -376,7 +378,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           continue;
         }
         if (
-          isZeroRowExtraction({
+          accounting?.logicalInput !== 0 && isZeroRowExtraction({
             documentsInHand: fetched.fetched - refusedRows.length,
             produced: meetings.length,
             dropped: totalDropped(drops),
@@ -408,6 +410,7 @@ export class CompositeSource implements MeetingSource<TaggedRaw> {
           fetched: fetched.fetched,
           normalized: meetings.length,
           drops,
+          ...(accounting ? { accounting } : {}),
           ...(fetched.acquisitions ? { acquisitions: fetched.acquisitions } : {}),
           ...(unreachableOcdIds && unreachableOcdIds.length > 0
             ? { unreachableOcdIds }

@@ -60,7 +60,7 @@ import {
 import { foldSearch, type SearchLedger } from "./provider-billing-collector.ts";
 import { US_STATES } from "./readiness/catalog.ts";
 import { countsAsScoutAttempt } from "./research-metrics.ts";
-import { INCREMENTAL_READS_SLACK_MS } from "./repository/incremental-reads.ts";
+const SNAPSHOT_CLOCK_OVERLAP_MS = 120_000;
 import { jsonTextAtPath, readByKeys, type AggregateRepository, type AppendOnlyRepository, type ChangedRecord, type ControlPlaneRepositories, type Persisted, type RecordProjection } from "./repository/types.ts";
 import type { SnapshotStampedRead } from "./repository/pg-store.ts";
 import { unitCarriesState } from "./scheduler/dispatch-target.ts";
@@ -384,7 +384,7 @@ interface CostFoldInput {
 /** The ledger's totals with every charge appended since `prior` folded in; when a folded charge's context has changed (its Attempt
  * or work item appearing, the hunts or their members changing) the whole ledger is refolded page by page, as on a first publish. */
 async function foldCosts(repos: ControlPlaneRepositories, prior: CostTotals | null, input: CostFoldInput): Promise<CostTotals> {
-  const slackMs = input.slackMs ?? INCREMENTAL_READS_SLACK_MS;
+  const slackMs = input.slackMs ?? SNAPSHOT_CLOCK_OVERLAP_MS;
   const now = Date.parse(input.nowIso);
   const frame = input.scopes === null && prior !== null ? prior.billing : billingFrame(input.scopes ?? [], input.scopeMembers);
   const carried = input.carried.filter(billed);
@@ -726,7 +726,7 @@ export class OwnerSnapshotFold {
   private constructor(repos: ControlPlaneRepositories, prior: OwnerSnapshotTotals | null, input: OwnerSnapshotFoldInput) {
     this.#repos = repos;
     this.#input = input;
-    this.#slackMs = input.slackMs ?? INCREMENTAL_READS_SLACK_MS;
+    this.#slackMs = input.slackMs ?? SNAPSHOT_CLOCK_OVERLAP_MS;
     this.#servedReader = input.servedReader;
     const a = prior?.formatVersion === OWNER_SNAPSHOT_TOTALS_FORMAT ? prior.assignments : null;
     this.#rebuild = a === null || prior?.costs === null;

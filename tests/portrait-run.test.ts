@@ -123,7 +123,7 @@ test("once everyone has a portrait the state is skipped, and only a new person w
   assert.deepEqual(read, ["https://legislature.example.gov/members/3"]);
   assert.equal((await portraitRunNeeded(store, "az", "2026-10-11T21:00:07.000Z", null)).needed, false);
   // Readers keep every portrait they had and gain the new one.
-  const people = await readStatePeopleProjection("US-AZ", { store, now: "2026-10-11T21:00:07.000Z", bypassCache: true });
+  const people = await readStatePeopleProjection("US-AZ", { store, now: "2026-10-11T21:00:07.000Z" });
   assert.ok(people.kind === "PROMOTED");
   assert.equal(people.value.roster.officeholders.filter(person => person.photo?.verification).length, 4);
 });

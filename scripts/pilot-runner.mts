@@ -10,8 +10,7 @@ import { assertProductionDatabaseTarget } from "./pilot-runtime-config.mjs";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
-import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, researchPlanningStates, honorStoppedHunts } from "../lib/control-plane/repository/pg-store.ts";
-import { CONTROL_PLANE_READS_DIR_ENV, readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, readRunnerPauseIntents, researchPlanningStates, honorStoppedHunts } from "../lib/control-plane/repository/pg-store.ts";
 import {
   assertDurableRepositories,
   type ControlPlaneRepositories,
@@ -43,17 +42,18 @@ import {
 } from "../lib/control-plane/fleet-safety.ts";
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
-import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
+import { liveCycleHeartbeat, standingHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { parseRoutineSupervisorFailureSummary } from "../lib/control-plane/routine-outcome-summary.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
-import { keepRunnerTransfer } from "../lib/db/transfer.ts";
+import { collectDatabaseTransferJournals, keepRunnerTransfer } from "../lib/db/transfer.ts";
+import { transferJournalDir } from "../lib/db/transfer-journal.ts";
 import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import { VITAL_COUNTERS, composeVitalSignsRow, formatVitalSignsLine, readHourCosts, writeVitalSignsRow,
   type HourCosts } from "../lib/control-plane/vital-signs.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
@@ -61,7 +61,7 @@ import {
   neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
+import { consoleInputReader, consolePublisher, consolePublishClock } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { auditPassClock } from "./audit-pass-clock.mts";
@@ -80,6 +80,7 @@ import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane
 import { IndependentRuntimeLaneScheduler, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
+import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, type PlacePageTurn } from "../lib/reader/place-page-worker.ts";
 import {
   appendIntakeRuntimeObservationDigest,
   appendRoutineCivicDataSupervisorDigest,
@@ -98,7 +99,7 @@ import {
   writeRuntimeReleaseHold,
   type RuntimeReleaseInspection,
 } from "../lib/ops/runtime-release-handoff.ts";
-import { discardStagedReleases, defaultAsyncRunCommand, stageRuntimeRelease, stagedReleaseDirectory, stagedReleaseIsReady } from "../lib/ops/runtime-release-stage.ts";
+import { discardStagedReleases, defaultAsyncRunCommand, ReleaseStaging, stagedReleaseDirectory } from "../lib/ops/runtime-release-stage.ts";
 import { parentCodeChanged } from "../lib/ops/runtime-release-switch.ts";
 import { fetchServedCommit, PRODUCTION_BASE_URL } from "./post-deploy-observer.mts";
 import {
@@ -127,10 +128,10 @@ const STDERR_TAIL_LINES = 40;
 const ROOT = process.cwd();
 
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
+const DATABASE_TRANSFER_DIR = transferJournalDir();
+if (DATABASE_TRANSFER_DIR) process.env.WTP_DATABASE_TRANSFER_DIR = DATABASE_TRANSFER_DIR;
 process.env[VITAL_SIGNS_REPORT_ENV] = "1";
 
-process.env[CONTROL_PLANE_READS_DIR_ENV] = join(ROOT, ".runtime", "control-plane", "reads");
-readFromHeldCopies();
 
 keepNeonBytesInProcess();
 
@@ -141,6 +142,9 @@ function keepHourPart(part: NeonBytesHour): void {
 receiveChildVitalSigns(keepHourPart);
 
 function keepOwnNeonBytes(nowMs: number): void {
+  if (DATABASE_TRANSFER_DIR) {
+    for (const part of collectDatabaseTransferJournals(DATABASE_TRANSFER_DIR)) keepNeonBytesPart(VITAL_SIGNS_DIR, part);
+  }
   for (const part of takeNeonBytesHours(nowMs)) keepHourPart(part);
 }
 process.once("exit", () => { keepOwnNeonBytes(Date.now()); });
@@ -603,7 +607,10 @@ const publishChangedConsole = consolePublisher({
   publish: publishConsoleChildren,
 });
 
-async function publishConsole(): Promise<void> {
+const consoleClock=consolePublishClock(INTERVAL_MIN*60_000);
+async function publishConsole(onlyWhenDue=false): Promise<void> {
+  if(onlyWhenDue&&!consoleClock.due())return;
+  consoleClock.attempted();
   if (canary && STAGING) {
     console.log("  console publish: staging canary is scoped to research; billing and live-site readbacks are skipped");
     return;
@@ -675,8 +682,7 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
     },
   );
 
-  const beat = boundedBeat(() => writeLiveCycleBeat(null), BEAT_BOUND_MS, lateBeat);
-  const beatTimer = setInterval(() => { if (!researchCycleActive) void beat(); }, 60_000);
+  const beatTimer = setInterval(() => { if (!researchCycleActive) void standingBeat(); }, 60_000);
   const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
     executable: process.execPath,
@@ -958,30 +964,15 @@ let researchCycleChild: ChildProcess | null = null;
 let researchStoppedByOwner = false;
 
 const RELEASE_QUICK_SWITCH = process.env.WTP_RELEASE_QUICK_SWITCH === "1";
-const stagingAttempted = new Set<string>();
-let stagingInFlight: string | null = null;
-function startReleaseStaging(targetSha: string): void {
-  if (stagingInFlight !== null) return;
-  stagingInFlight = targetSha;
-  stagingAttempted.add(targetSha);
-  console.log(`  release ${targetSha.slice(0, 8)} is installing in its own checkout; partition admissions continue`);
-  void stageRuntimeRelease({ root: ROOT, targetSha, keep: CODE_ROOT === ROOT ? [] : [CODE_ROOT] }).then(result => {
-    if (result.state === "READY") console.log(`  release ${targetSha.slice(0, 8)} is installed beside the running one; the switch can now be quick`);
-    else console.error(`  release ${targetSha.slice(0, 8)} could not be installed beside the running one (${result.code ?? "unknown"}); the drain-first path will apply it`);
-  }).catch(error => {
-    console.error(`  staging release ${targetSha.slice(0, 8)} failed (${error instanceof Error ? error.name : "error"}); the drain-first path will apply it`);
-  }).finally(() => { stagingInFlight = null; });
-}
+/** One bounded staging at a time, for the newest target only; its state rides on the standing heartbeat. */
+const releaseStaging = new ReleaseStaging({ root: ROOT, log: line => console.log(`  ${line}`), error: line => console.error(`  ${line}`) });
 
 type StagedReleaseStep = "STAGING" | "SWITCHED" | "DRAIN";
 const parentChangeReported = new Set<string>();
 async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseStep> {
-  if (!stagedReleaseIsReady(ROOT, targetSha)) {
-    if (!stagingAttempted.has(targetSha)) startReleaseStaging(targetSha);
-
-    return stagingInFlight !== null ? "STAGING" : "DRAIN";
-  }
-  if (!RELEASE_QUICK_SWITCH || PARENT_CODE_SHA === null) return "DRAIN";
+  const staged = releaseStaging.advance(targetSha, CODE_ROOT === ROOT ? [] : [CODE_ROOT]);
+  if (staged === "STAGING") return "STAGING";
+  if (staged === "FAILED" || !RELEASE_QUICK_SWITCH || PARENT_CODE_SHA === null) return "DRAIN";
   const parent = await parentCodeChanged({ root: ROOT, parentSha: PARENT_CODE_SHA, targetSha, run: defaultAsyncRunCommand });
   if (parent.changed) {
     if (!parentChangeReported.has(targetSha)) {
@@ -1066,6 +1057,7 @@ const vitalSignsTimer = setInterval(() => {
       vitalSignsFinalHour = previous;
       await writeVitalSigns(previous, "last full hour", nowMs);
       pruneNeonBytes(VITAL_SIGNS_DIR, nowMs);
+      if (DATABASE_TRANSFER_DIR) pruneNeonBytes(DATABASE_TRANSFER_DIR, nowMs);
     }
     if (nowMs - vitalSignsPartialAt >= 600_000) {
       vitalSignsPartialAt = nowMs;
@@ -1097,14 +1089,19 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
     const memory = await hostMemoryReading().catch(() => null);
     let neonBytes: RunnerHeartbeat["neonBytes"] = null;
     try { neonBytes = neonBytesReading(); } catch {  }
+    let codeIdentity: RunnerHeartbeat["codeIdentity"] = null;
+    if (startedAt === null) {
+      try { codeIdentity = readCodeIdentity({ cwd: CODE_ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: new Date().toISOString(), fetch: false }); }
+      catch {  }
+    }
     for (let attempt = 0; attempt < 3; attempt++) {
       const at = new Date().toISOString();
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
-      if (startedAt === null && current === null) return;
 
       if (!exit && startedAt !== null && Date.parse(current?.value.lastCycleFinishedAt ?? "") >= Date.parse(startedAt)) return;
       const next = startedAt === null
-        ? { ...current!.value, beatAt: at, memory: memory ?? current!.value.memory ?? null, neonBytes: neonBytes ?? current!.value.neonBytes ?? null }
+        ? standingHeartbeat(current?.value ?? null, { at, testedSha: RUNNING_CODE_SHA, host: hostname(), codeIdentity,
+          releaseStaging: releaseStaging.status(), memory, neonBytes })
         : liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
           testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
           ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
@@ -1121,6 +1118,14 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
 
 const BEAT_BOUND_MS = 45_000;
 const lateBeat = () => console.error("  live cycle heartbeat did not answer in time; the next beat starts fresh");
+/** Startup and the standing clock write which code runs, at most once a minute, whether or not research runs. */
+const STANDING_BEAT_MS = 60_000;
+let standingBeatAt = 0;
+const standingBeat = boundedBeat(async () => {
+  if (Date.now() - standingBeatAt < STANDING_BEAT_MS) return;
+  standingBeatAt = Date.now();
+  await writeLiveCycleBeat(null);
+}, BEAT_BOUND_MS, lateBeat);
 
 const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
@@ -1202,12 +1207,51 @@ async function runPlatformCensus(deadlineMs: number): Promise<void> {
   } finally { release(); }
 }
 
+/** Place pages are built by the runner, the one process holding the production write address. */
+const placePageMemory = routineProcessSlots({ admissionsOpen: () => !runtimeAdmissionsHeld });
+let placePagePauseUnread = false;
+async function placePagesAdmitted(): Promise<boolean> {
+  if (runtimeAdmissionsHeld) return false;
+  try {
+    const repos = await ownerRepositories();
+    if (repos && readIntents([...await readRunnerPauseIntents(repos)]).runnerPause.paused) return false;
+    placePagePauseUnread = false;
+  } catch (error) {
+    if (!placePagePauseUnread) console.error(`  place pages: the owner's pause could not be read (${error instanceof Error ? error.message : String(error)}); no turn starts until it reads`);
+    placePagePauseUnread = true;
+    return false;
+  }
+  return !runtimeAdmissionsHeld;
+}
+
+async function runPlacePageTurn(deadlineMs: number): Promise<PlacePageTurn> {
+  const release = await placePageMemory.acquire("rebuild-place-pages.mts", Math.min(deadlineMs, Date.now() + 60_000));
+  try {
+    const [run] = await runRuntimeChildren([{
+      id: "place-pages", executable: process.execPath,
+      args: [...TS_CHILD, "scripts/rebuild-place-pages.mts"],
+      env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
+    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs: deadlineMs + PLACE_PAGE_TURN_GRACE_MS,
+      onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
+      onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
+    const result = run?.status === 0 ? placePageTurnResult(run.stdout ?? "") : null;
+    if (!result) throw new Error(`PLACE_PAGE_TURN_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}`);
+    return result;
+  } finally { release(); }
+}
+
+async function runPlacePages(deadlineMs: number): Promise<void> {
+  if (provider !== "postgres" || canary) return;
+  await drainPlacePageQueue({ deadlineMs, admitted: placePagesAdmitted, turn: runPlacePageTurn, log: line => console.log(line) });
+}
+
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, budgetMs: CENSUS_LANE_BUDGET_MS, run: runPlatformCensus },
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, budgetMs: INTAKE_RUNTIME_BUDGET_MS, run: runIntakeRuntime },
   // The lane retires at its life; the wall covers the last task a worker still holds.
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
+  placePagesLane(runPlacePages),
   publishNowLane(runPublishNow),
 ], (outcome) => {
   if (outcome.state === "FAILED") {
@@ -1295,6 +1339,7 @@ async function stopScheduledOrderClock(): Promise<void> {
 }
 
 function runStandingRuntimeTick(reason: string, force = false): void {
+  if (!canary) void standingBeat();
   checkReleaseForRestart();
   if (runtimeAdmissionsHeld) return;
   const launched = standingRuntimeScheduler.tick(Date.now(), force);
@@ -1853,6 +1898,7 @@ while (cycle < CYCLES) {
     const repos = await ownerRepositories();
     if (repos && !(await researchPlanningStates(repos, (await readRunnerControls(repos)).research)).length) {
       await honorStoppedHunts(repos,new Date().toISOString());
+      await publishConsole(true);
       // The parent's control clock still sees a new Send; there is no research child to read data while stopped.
       await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
       continue;

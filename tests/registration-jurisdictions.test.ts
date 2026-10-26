@@ -49,7 +49,7 @@ async function promoted(state: string, store = new MemoryRoutineDataStore()): Pr
     reviewed: reviewedIds(ROOT),
   });
   assert.equal((await processRegisteredRoutineCandidate(store, `registration-${state.toLowerCase()}`, candidate, T)).candidate.state, "PROMOTED");
-  const read = await readRegistrationProjection(state, { store, bypassCache: true, now: T });
+  const read = await readRegistrationProjection(state, { store,  now: T });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("unreachable");
   return { versionId: read.metadata.versionId!, model: read.value, store };
@@ -122,7 +122,7 @@ test("only the promoted version is read: one built from another reference, none 
 
 test("Puerto Rico: every municipio is registered from TIGER functional status, with no web address recorded and none invented", async () => {
   const { store } = await promoted("PR");
-  const load = await loadRegistrationJurisdictions({ root: ROOT, states: ["pr"], read: (state) => readRegistrationProjection(state, { store, bypassCache: true, now: T }) });
+  const load = await loadRegistrationJurisdictions({ root: ROOT, states: ["pr"], read: (state) => readRegistrationProjection(state, { store,  now: T }) });
   assert.deepEqual([...load.refused], []);
   const pr = load.registries.get("pr")!;
   const municipios = pr.jurisdictions.filter((j) => j.govClass === "COUNTY");
@@ -143,7 +143,7 @@ test("a state is readable through the one accessor only once its registration is
   assert.throws(() => requiredJurisdictionRegistry("oh"), /JURISDICTION_REGISTRY_NOT_READ:oh/);
 
   const { store } = await promotedOhio();
-  const first = await preloadRegistrationJurisdictions({ root: ROOT, states: ["OH", "oh"], options: { store, bypassCache: true, now: T } });
+  const first = await preloadRegistrationJurisdictions({ root: ROOT, states: ["OH", "oh"], options: { store,  now: T } });
   assert.deepEqual([...first.registries.keys()], ["oh"]);
   assert.equal(requiredJurisdictionRegistry("OH").stateCode, "OH");
   assert.equal((await preloadRegistrationJurisdictions({ root: ROOT, states: ["oh"], options: { store } })).registries.size, 0, "a state already read is not read again");

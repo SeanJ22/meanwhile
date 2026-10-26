@@ -1,3 +1,4 @@
+import { unwrapVersionedStatement } from "./helpers/versioned-neon-fixture.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -229,14 +230,16 @@ test("createPgRepositories survives a transient connect fault at the real bootst
         (err as { sourceError?: Error }).sourceError = new TypeError("fetch failed");
         throw err;
       }
-      const query = JSON.parse(init?.body ?? "{}").query as string | undefined;
+      const request=JSON.parse(init?.body??"{}");
+      const checked=unwrapVersionedStatement(request.query,request.params);
+      const query=checked.query;
       // The mocked database has a valid source index; only ordinary DDL and
       // version writes return no rows. A retry test never opens a real socket.
       const result = query?.includes("FROM pg_index i")
         ? { command: "SELECT", fields: [{ name: "valid", dataTypeID: 16 }, { name: "building", dataTypeID: 16 }], rows: [["t", "f"]], rowCount: 1, rowAsArray: false }
         : { command: "CREATE", fields: [], rows: [], rowCount: 0, rowAsArray: false };
       return new Response(
-        JSON.stringify(result),
+        JSON.stringify(checked.wrap(result)),
         { status: 200, headers: { "content-type": "application/json" } },
       );
     }) as typeof neonConfig.fetchFunction;

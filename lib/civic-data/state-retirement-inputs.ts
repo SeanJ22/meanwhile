@@ -1,4 +1,5 @@
 import { temporaryPath } from "./temporary-path.ts";
+import { versionedSelect } from "../db/versioned-query.ts";
 import { createHash } from "node:crypto";
 import { mkdir, open, readFile, rename, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -29,44 +30,22 @@ const text = (value: unknown) => typeof value === "string" ? value : "";
 const arrays = (value: unknown): unknown[] => Array.isArray(value) ? value : [];
 type Part = { readonly hash: string; readonly payload: unknown };
 const reference = (value: unknown): string | null => typeof object(value).$civicPayloadPart === "string" ? String(object(value).$civicPayloadPart) : null;
-const CACHED_PART_BYTES = 2 * 1024 * 1024;
-
 class StreamedCivicPayload {
-  private readonly cached = new Map<string, { value: unknown; size: number }>();
-  private cachedBytes = 0;
   private readonly borrowed = new WeakSet<object>();
-  private readonly directory: string;
   private readonly readParts: (hashes: readonly string[]) => Promise<readonly Part[]>;
-  constructor(directory: string, readParts: (hashes: readonly string[]) => Promise<readonly Part[]>) { this.directory = directory; this.readParts = readParts; }
+  constructor(readParts: (hashes: readonly string[]) => Promise<readonly Part[]>) { this.readParts = readParts; }
 
   private async part(hash: string): Promise<unknown> {
     if (!/^[a-f0-9]{64}$/.test(hash)) throw new Error("STATE_RETIREMENT_PART_HASH_INVALID");
-    if (this.cached.has(hash)) return this.cached.get(hash)!.value;
-    let value: unknown, encoded: string;
-    try { encoded = await readFile(join(this.directory, `${hash}.json`), "utf8"); value = JSON.parse(encoded); }
-    catch (error) {
-      if ((error as NodeJS.ErrnoException).code !== "ENOENT") throw error;
-      const held = (await this.readParts([hash])).find(part => part.hash === hash);
-      if (!held) throw new Error(`STATE_RETIREMENT_PART_MISSING:${hash}`);
-      value = held.payload;
-      await mkdir(temporaryPath(this.directory), { recursive: true, mode: 0o700 });
-      encoded = JSON.stringify(value);
-      await writeFile(temporaryPath(join(this.directory, `${hash}.json`)), encoded, { mode: 0o600, flag: "wx" });
-    }
+    const held = (await this.readParts([hash])).find(part => part.hash === hash);
+    if (!held) throw new Error(`STATE_RETIREMENT_PART_MISSING:${hash}`);
+    const value = held.payload;
     const borrow = (value: unknown): void => {
       if (!value || typeof value !== "object" || this.borrowed.has(value)) return;
       this.borrowed.add(value);
       for (const child of Object.values(value)) borrow(child);
     };
     borrow(value);
-    const size = Buffer.byteLength(encoded);
-    if (size <= CACHED_PART_BYTES) {
-      this.cached.set(hash, { value, size }); this.cachedBytes += size;
-      for (const [key, held] of this.cached) {
-        if (this.cached.size <= 8 && this.cachedBytes <= CACHED_PART_BYTES) break;
-        this.cached.delete(key); this.cachedBytes -= held.size;
-      }
-    }
     return value;
   }
 
@@ -212,29 +191,25 @@ interface CursorClient {
   query(text: string, params?: unknown[]): Promise<{ readonly rows: readonly Row[] }>;
 }
 
-export async function withRetirementSourceCursor<T>(client: CursorClient, read: (source: {
+export async function withRetirementSourceSnapshot<T>(client: CursorClient, read: (source: {
   query: (text: string, params: readonly unknown[]) => Promise<readonly Row[]>;
   streamRows: (text: string, params: readonly unknown[], onRow: (row: Row) => Promise<void>) => Promise<void>;
-}) => Promise<T>): Promise<T> {
-  await client.query("BEGIN READ ONLY");
-  let sequence = 0;
+}) => Promise<T>, connection=process.env.DATABASE_URL??"retirement-source"): Promise<T> {
+  await client.query("BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
+  const selected=versionedSelect(connection);
+  const query=(text:string,params:readonly unknown[])=>selected(async(text,params)=>(await client.query(text,[...params])).rows,text,params);
   try {
-    return await read({
-      query: async (text, params) => (await client.query(text, [...params])).rows,
-      streamRows: async (text, params, onRow) => {
-        const cursor = `state_retirement_${++sequence}`;
-        await client.query(`DECLARE ${cursor} NO SCROLL CURSOR FOR ${text}`, [...params]);
-        try {
-          while (true) {
-            const { rows } = await client.query(`FETCH FORWARD 128 FROM ${cursor}`);
-            if (!rows.length) break;
-            if (rows.length > 128) throw new Error("STATE_RETIREMENT_CURSOR_ROW_COUNT_INVALID");
-            for (const row of rows) await onRow(row);
-          }
-        } finally { await client.query(`CLOSE ${cursor}`); }
+    return await read({query,
+      streamRows:async(text,params,onRow)=>{
+        for(let offset=0;;offset+=128){
+          const statement=text.trim().replace(/;\s*$/,"");
+          const rows=await query(`SELECT * FROM (${statement}) retirement_rows OFFSET $${params.length+1} LIMIT 128`,[...params,offset]);
+          for(const row of rows)await onRow(row);
+          if(rows.length<128)break;
+        }
       },
     });
-  } finally { await client.query("ROLLBACK"); }
+  } finally {await client.query("ROLLBACK");}
 }
 
 class Spool {
@@ -708,7 +683,7 @@ export async function prepareRetirementStateInputs(input: {
         WHERE p.record_class=$1 AND p.scope=$2 AND c.id=$3 AND c.state='PROMOTED' AND c.validation_receipt->>'decision'='GOOD'
           AND c.normalized_hash=$4 AND p.payload=c.candidate->'readModel' AND p.validation_receipt=c.validation_receipt`, [origin.recordClass, origin.scope, origin.versionId, origin.hash]);
       if (!originProof.length) throw new Error(`STATE_RETIREMENT_ORIGIN_PROOF_CHANGED:${origin.scope}`);
-      const decoder = new StreamedCivicPayload(join(input.directory, "parts"), async hashes => (await input.query("SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", [hashes])).map(row => ({ hash: String(row.hash), payload: row.payload })));
+      const decoder = new StreamedCivicPayload(async hashes => (await input.query("SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", [hashes])).map(row => ({ hash: String(row.hash), payload: row.payload })));
       const source = new Source(origin, input.query, decoder, input.streamRows), metadata = await route(source, spool, unassigned);
       const states: readonly string[] = origin.family === "ballot-contests" && origin.scope !== "US:state-election-ballots"
         ? Array.from(spool.statement("SELECT DISTINCT state FROM members WHERE origin=? AND field='ballots' ORDER BY state").iterate(origin.versionId), row => String(row.state)) : REGISTRY_STATES;

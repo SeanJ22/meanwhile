@@ -4,41 +4,48 @@ import { parse } from "yaml";
 import { renderToStaticMarkup } from "react-dom/server";
 import { WorkingOnIt } from "../components/demand/working-on-it.tsx";
 import { PersonCard } from "../components/ui/person-card.tsx";
-import { cardGapLine } from "../lib/design/card-gaps.ts";
+import { CardGapsContribution } from "../components/ui/card-gap-context.tsx";
 import { copy } from "../lib/design/copy.ts";
 import congress from "./fixtures/ui-01-congress-legislators-hinson.json" with { type: "json" };
 
-test("the card gap counts missing facts once even when more than one section reports them", () => {
-  assert.equal(cardGapLine([
+const sectionParts = (html: string) => html.split(/(?=<section class="card-section")/).slice(1);
+const titleOf = (html: string) => /class="card-section-title"[^>]*>(.*?)<\/span>/.exec(html)?.[1];
+const missingText = /We(?:&#x27;|'|’)re working on getting this info/;
+
+test("a section deduplicates its missing requests without making a list", () => {
+  const html = renderToStaticMarkup(<CardGapsContribution id="meeting-info" gaps={[
     { id: "agenda:one", label: "agendas", unit: "meeting", kind: "not-posted" },
     { id: "agenda:two", label: "agendas", unit: "meeting", kind: "not-posted" },
     { id: "agenda:one", label: "agendas", unit: "meeting", kind: "not-posted" },
-    { id: "places", label: "meeting places", count: 2, unit: "meeting", kind: "not-posted" },
-  ]), "Not posted yet: agendas for 2 meetings, meeting places for 2 meetings.");
+    { id: "join", label: "online join links" },
+    { id: "place", label: "meeting places" },
+  ]} />);
+  assert.equal((html.match(/data-card-gap=/g) ?? []).length, 2);
+  assert.equal((html.match(/Agendas not posted yet\./g) ?? []).length, 1);
+  assert.match(html, missingText);
+  assert.equal((html.match(/Want us to get this sooner\?/g) ?? []).length, 2);
+  assert.doesNotMatch(html, /Still gathering|for \d+ meetings|online join links, meeting places/);
 });
 
-test("a publisher's unposted facts and our uncollected facts retain their meaning in one line", () => {
-  assert.equal(cardGapLine([
-    { id: "agenda", label: "an agenda", unit: "meeting", kind: "not-posted" },
-    { id: "contact", label: "contact details" },
-    { id: "rosters", label: "members", count: 2, unit: "body" },
-  ]), "Not posted yet: an agenda for 1 meeting; Still gathering: contact details, members for 2 bodies.");
-  assert.equal(cardGapLine([]), null);
-  assert.equal(cardGapLine([
+test("facts held already do not create missing-information messages", () => {
+  assert.equal(renderToStaticMarkup(<CardGapsContribution id="none" gaps={[]} />), "");
+  assert.equal(renderToStaticMarkup(<CardGapsContribution id="held" gaps={[
     { id: "held", label: "agendas", count: 0 },
     { id: "unnamed", label: "  " },
-  ]), null);
+  ]} />), "");
 });
 
-test("Ask's whole-answer absence keeps valid inline HTML and published copy overrides", () => {
+test("Ask's whole-answer absence keeps valid inline HTML and the section request", () => {
   const html = renderToStaticMarkup(<p><WorkingOnIt inline /></p>);
   assert.doesNotMatch(html, /<div/);
   assert.match(html, /data-working-on-it="not-searched"/);
+  assert.match(html, missingText);
+  assert.match(html, /Want us to get this sooner\?/);
   assert.equal(copy("copy.working", { "copy.working": "Gathering this information" }), "Gathering this information");
   assert.equal(copy("copy.working", { "copy.working": "  " }), copy("copy.working"));
 });
 
-test("a sparse person card renders held sections and one gap above its only Sources section", () => {
+test("a sparse person card keeps held facts and puts each request in its own section", () => {
   const [member] = parse(congress.yaml["legislators-current"]) as { name: { official_full: string }; terms: { url: string }[] }[];
   const [directory] = parse(congress.yaml["legislators-district-offices"]) as { offices: { city: string }[] }[];
   const html = renderToStaticMarkup(<PersonCard
@@ -48,26 +55,32 @@ test("a sparse person card renders held sections and one gap above its only Sour
     subject={{ type: "CANDIDATE", id: "congress:H001091" }}
     sections={{ offices: <p>{directory.offices[0].city}</p> }}
   />);
-  const headers = [...html.matchAll(/class="card-section-title"[^>]*>(.*?)<\/span>/g)].map(match => match[1]);
-  assert.deepEqual(headers, ["Offices near you", "Sources"]);
-  assert.match(html, /Waterloo/);
-  assert.equal((html.match(/data-card-gap=/g) ?? []).length, 1);
-  assert.equal((html.match(/data-demand-pill=/g) ?? []).length, 1);
+  const sections = sectionParts(html);
+  assert.deepEqual(sections.map(titleOf), ["Contact", "What this office does", "Positions", "Committees", "Offices near you", "Campaign money", "Voting record", "Sources"]);
+  assert.match(sections.find(section => titleOf(section) === "Offices near you")!, /Waterloo/);
+  for (const section of sections) {
+    if (["Contact", "Offices near you", "Sources"].includes(titleOf(section)!)) continue;
+    assert.match(section, missingText, `${titleOf(section)} states its own gap`);
+    assert.match(section, /Want us to get this sooner\?/);
+    assert.equal((section.match(/data-demand-pill=/g) ?? []).length, 1);
+  }
+  for (const title of ["Contact", "Offices near you"]) {
+    assert.doesNotMatch(sections.find(section => titleOf(section) === title)!, /data-card-gap/);
+  }
   assert.equal((html.match(/data-card-sources=/g) ?? []).length, 1);
-  assert.match(html, /Still gathering: what this office does, positions, committees, campaign money, voting record\./);
-  assert.doesNotMatch(html, /working on getting this info|Want us to get this info sooner|contact details/);
-  assert.ok(html.indexOf("data-person-contact") < html.indexOf("Offices near you"));
-  assert.ok(html.indexOf("data-card-gap") < html.indexOf("Ask us to find this"));
-  assert.ok(html.indexOf("Ask us to find this") < html.indexOf("data-card-sources"));
+  assert.doesNotMatch(html, /Still gathering|contact details/);
+  assert.doesNotMatch(html.slice(html.indexOf("data-card-footer")), /person:.*:(?:office|positions|money|record)/);
 });
 
-test("a person with no held contact or sections has one request and no empty field headers", () => {
+test("a person with no held contact or sections says so in every applicable section", () => {
   const html = renderToStaticMarkup(<PersonCard title="Person" identity={<p>Person</p>} contact={null}
     sections={{}} subject={{ type: "CANDIDATE", id: "candidate:one" }} />);
-  const headers = [...html.matchAll(/class="card-section-title"[^>]*>(.*?)<\/span>/g)].map(match => match[1]);
-  assert.deepEqual(headers, ["Sources"]);
-  assert.doesNotMatch(html, /data-person-contact|working on getting this info|Want us to get this info sooner/);
-  assert.match(html, /voting record, contact details\./);
-  assert.equal((html.match(/data-card-gap=/g) ?? []).length, 1);
-  assert.equal((html.match(/data-demand-pill=/g) ?? []).length, 1);
+  const sections = sectionParts(html);
+  assert.deepEqual(sections.map(titleOf), ["Contact", "What this office does", "Positions", "Committees", "Offices near you", "Campaign money", "Voting record", "Sources"]);
+  for (const section of sections.filter(section => titleOf(section) !== "Sources")) {
+    assert.match(section, missingText);
+    assert.match(section, /Want us to get this sooner\?/);
+    assert.equal((section.match(/data-demand-pill=/g) ?? []).length, 1);
+  }
+  assert.doesNotMatch(html, /Still gathering/);
 });

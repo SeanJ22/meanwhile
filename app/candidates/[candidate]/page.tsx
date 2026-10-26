@@ -2,6 +2,8 @@ import { readerRoute } from "@/lib/api/reader-route";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Card } from "@/components/ui/card";
+import { CardSection } from "@/components/officials/card-section";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { PersonCard } from "@/components/ui/person-card";
 import { FundingDisplay } from "@/components/funding/funding-section";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
@@ -18,9 +20,9 @@ export default readerRoute("/candidates/[candidate]", async function FecCandidat
   if (!/^[HS]\d[A-Z]{2}\d{5}$/.test(candidate)) notFound();
   try { await settleFundingRead(); }
   catch {
-    // An unread profile is one counted gap with the standing request, never a field placeholder.
-    return <main className="mw-page min-h-dvh p-5"><Card title="Candidate profile" sources={[]} independent
-      gaps={[{ id: `fec-profile:${candidate}`, label: "this candidate's profile", subject: { type: "CANDIDATE", id: `fec:${candidate}` } }]}>{null}</Card></main>;
+    return <main className="mw-page min-h-dvh p-5"><Card title="Candidate profile" sources={[]} independent>
+      <CardSection title="About this candidate"><CardGapContribution id={`fec-profile:${candidate}`} label="this candidate's profile" subject={{ type: "CANDIDATE", id: `fec:${candidate}` }} /></CardSection>
+    </Card></main>;
   }
   const row = fundingForTarget(`fec:${candidate}`); if (!row) notFound();
   const personId = fecPersonId(row), name = fecPersonName(row.name), money = fundingAnswerForTarget(`fec:${candidate}`);

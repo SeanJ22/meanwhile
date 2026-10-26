@@ -37,7 +37,7 @@ function fixtureProfile(withShares: boolean): PrlReaderProfile {
   } as unknown as PrlReaderProfile;
 }
 
-test("a congressional card starts loading; any other identity has no section", () => {
+test("a congressional card starts loading; other identities settle without a request", () => {
   assert.deepEqual(statementsLoadFor(SUBJECT), { kind: "loading" });
   assert.deepEqual(statementsLoadFor("ocd-person/abc"), { kind: "not-applicable" });
   assert.equal(statementsLoadFor("congress:A000055").kind, "loading");
@@ -56,7 +56,7 @@ test("every successful answer settles — held, null and unexpected subject", ()
   );
 });
 
-test("the failed state contributes to the card gap without a field placeholder", async () => {
+test("the failed state keeps the missing public statements message in its section", async () => {
   const src = (await import("node:fs")).readFileSync(
     "components/officials/public-statements-profile.tsx",
     "utf8",
@@ -64,7 +64,8 @@ test("the failed state contributes to the card gap without a field placeholder",
   const failed = src.slice(src.indexOf('case "failed":'), src.indexOf('case "held":'));
   assert.match(failed, /CardGapContribution/);
   assert.match(failed, /label="public statements"/);
-  assert.doesNotMatch(failed, /WorkingOnIt|CardSection/);
+  assert.match(failed, /CardSection title="Public statements"/);
+  assert.doesNotMatch(failed, /WorkingOnIt/);
 });
 
 test("held numeric shares draw five bars on one 0–100 scale, never counts", () => {
@@ -85,7 +86,12 @@ test("held numeric shares draw five bars on one 0–100 scale, never counts", ()
   }
   assert.ok(markup.includes(PRL_RHETORIC_ATTRIBUTION.citation.replace(/'/g, "&#x27;")), "the dataset citation is present");
   assert.ok(markup.includes(PRL_RHETORIC_ATTRIBUTION.licenceUrl));
-  assert.doesNotMatch(markup, /data-statement-feed="not-held"|working on getting|aren&#x27;t held here yet/, "the missing feed has no field placeholder");
+  assert.match(markup, /data-card-gap="individual-statements:congress:K000377"/);
+  assert.match(markup, /working on getting this info/);
+  assert.match(markup, /Want us to get this sooner\?/);
+  assert.doesNotMatch(markup, /data-statement-feed="not-held"|aren&#x27;t held here yet|Still gathering/);
+  const withStatements = renderToStaticMarkup(createElement(PublicStatementsProfileContent, { profile: fixtureProfile(true), statementsHeld: true }));
+  assert.doesNotMatch(withStatements, /data-card-gap=|working on getting this info/, "held individual statements never appear as missing");
 });
 
 test("without numeric shares the section falls back to the held sentences", () => {

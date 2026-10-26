@@ -147,7 +147,7 @@ test("a failed archive page keeps the acquired meeting rows and reports its scop
   assert.equal(result.meetings.length, 8);
   assert.equal(result.partialScopes?.length, 14);
   assert.ok(result.partialScopes?.every(scope => scope.scope === "ARCHIVE"));
-  assert.equal(fetched.length, 16);
+  assert.equal(fetched.length, 17, "the failed archive URLs share one check of the government home page for a moved route");
   assert.equal(new Set(fetched).size, fetched.length);
 });
 
@@ -222,4 +222,13 @@ test("cancellations and minutes-only rows remain distinct; impossible iCal dates
   const result = makeCivicPlusSource([row]).normalizeWithDrops([{ wiring: row, ical, collectedAt: NOW.toISOString() }], NOW);
   assert.equal(result.drops.unplaceableInTime, 1);
   assert.equal(result.accounting.outcome, "CONSERVED");
+});
+
+test("AgendaCenter section containers and an exact named category without a numeric filter retain their meetings", () => {
+  const section = NJ.replace(/<div\b/g, "<section").replace(/<\/div>/g, "</section>");
+  assert.deepEqual(parseAgendaCenter(section, "4"), parseAgendaCenter(NJ, "4"));
+  const row = wiring("NJ", "Planning Board", "www.rockawaytownship.org", "4", "America/New_York");
+  delete row.config.agendaCenterCategoryId;
+  const source = makeCivicPlusSource([row]);
+  assert.equal(source.normalize([{ wiring: row, ical: "", agendaPages: [{ url: row.config.agendaCenterUrl, text: NJ, collectedAt: NOW.toISOString() }], collectedAt: NOW.toISOString() }], NOW).length, 8);
 });

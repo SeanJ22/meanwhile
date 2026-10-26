@@ -11,7 +11,9 @@ import { MANUAL_PRODUCTION_SOURCE_CONTRACTS, requiredManualProductionContract } 
 import { recordRoutineReaderProjectionReadback } from "../lib/civic-data/reader-verification.ts";
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
-import { promotionProofIssue } from "../lib/civic-data/read-model.ts";
+import { promotionProofIssue, readPromotedCivicData } from "../lib/civic-data/read-model.ts";
+import { PGlite } from "@electric-sql/pglite";
+import { drizzle } from "drizzle-orm/pglite";
 import type { RoutineCandidate, RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { projectRoutineDataObservability } from "../lib/civic-data/observability.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -287,21 +289,35 @@ test("Ask reads native state people beside a partitioned registry without revivi
   const originalUrl = process.env.DATABASE_URL;
   process.env.DATABASE_URL = "postgresql://local:local@ep-test.neon.tech/neondb";
   installFactReader(null);
+  const pg = new PGlite();
   try {
+    await pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,record_class text,scope text,
+      current_version_id text,last_known_good_version_id text,promoted_at timestamptz,payload jsonb,validation_receipt jsonb);
+      CREATE TABLE civic_data_candidates(id text PRIMARY KEY,candidate jsonb,state text,acquisition_succeeded boolean,
+        promoted_version_id text,last_known_good_version_id text,validation_receipt jsonb,failure_code text,failure_detail text);
+      CREATE TABLE civic_data_candidate_events(candidate_id text,sequence int,detail text);
+      CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);`);
+    await pg.query(`INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
+      [pointer.key,pointer.sourceId,pointer.recordClass,pointer.scope,pointer.versionId,pointer.lastKnownGoodVersionId,
+        pointer.promotedAt,JSON.stringify(payload.value),JSON.stringify(pointer.receipt)]);
+    await pg.query(`INSERT INTO civic_data_candidates VALUES($1,$2,$3,$4,$5,$6,$7,NULL,NULL)`,
+      [candidate.id,JSON.stringify({...envelope.value as object,readModel:payload.value}),metadata.state,metadata.acquisitionSucceeded,
+        metadata.promotedVersion,metadata.lastKnownGoodVersion,JSON.stringify(metadata.receipt)]);
+    for (const part of parts) await pg.query(`INSERT INTO civic_data_payload_parts VALUES($1,$2)`,[part.hash,JSON.stringify(part.payload)]);
     const postgres = new PostgresRoutineDataStore();
-    const queries: unknown[][] = [];
-    Object.assign(postgres, { db: { execute: async (statement: SQL) => {
-      const query = new PgDialect().sqlToQuery(statement);
-      queries.push(query.params);
-      assert.match(query.sql, /WHERE p\.key = \$/);
-      return { rows: [structuredClone({ value: { projection: { ...pointer, payload: payload.value },
-        candidate: { ...metadata, candidate: envelope.value } }, coupled: true, reuse: false, confirmation: null,
-        parts: Object.fromEntries(parts.map(part => [part.hash, part.payload])) })] };
-    } } });
-    const read = await readRegistryRuntimeProjection(["OH"], { store: postgres, bypassCache: true, now: T0 });
+    const queries: string[] = [];
+    Object.assign(postgres, { db: drizzle(pg,{logger:{logQuery(query){queries.push(query);}}}) });
+    const read = await readRegistryRuntimeProjection(["OH"], { store: postgres,  now: T0 });
     if (read.kind !== "PROMOTED") throw new Error(JSON.stringify(read));
-    assert.equal(queries.length, 1, "the state payload, encoded parts and scalar proof arrive in one keyed read");
-    assert.ok(queries[0].includes(pointer.key));
+    const bodyReads = () => queries.filter(query=>query.includes("WITH state_promotion"));
+    assert.equal(bodyReads().length,1,"the state payload is read only after its version");
+    assert.match(queries[0],/xmin::text/);
+    assert.equal((await readPromotedCivicData(pointer.recordClass,pointer.scope,{store:postgres,now:T0})).kind,"PROMOTED");
+    assert.equal(bodyReads().length,1,"an unchanged state payload does not cross again");
+    await pg.query("UPDATE civic_data_candidates SET state='VALIDATED' WHERE id=$1",[candidate.id]);
+    assert.equal((await readPromotedCivicData(pointer.recordClass,pointer.scope,{store:postgres,now:T0})).kind,"STORE_UNREACHABLE",
+      "a changed candidate is seen on the next read even when the promotion id is unchanged");
+    await pg.query("UPDATE civic_data_candidates SET state='PROMOTED' WHERE id=$1",[candidate.id]);
     const entry = provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope("OH"), sourceId: candidate.sourceId, versionId: read.metadata.versionId!, value: read.value });
     const stateAuthorities = { families: new Set(["registry-runtime"] as const), load: async () => ({ kind: "PROMOTED_POINTERS" as const, entries: [entry] }) };
     await withReaderAuthorityEdge({ edgeOnly: true, stateAuthorities }, async () => {
@@ -336,6 +352,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
     });
     assert.ok(stateReads.length > 0);
   } finally {
+    await pg.close();
     installFactReader(undefined);
     if (originalUrl === undefined) delete process.env.DATABASE_URL;
     else process.env.DATABASE_URL = originalUrl;
@@ -351,7 +368,7 @@ test("a place's federal roster/directory promotes once and failed acquisition pr
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
   assert.deepEqual((await store.events(good.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
-  const read = await readStateFederalDirectory(state, { store, bypassCache: true, now: T0 });
+  const read = await readStateFederalDirectory(state, { store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.versionId, good.id);
 
@@ -456,7 +473,7 @@ test("registry relational bindings remain coherent while exact member deltas pro
   assert.ok(firstPackage.payload.statewideExecutives.length > 0);
   assert.ok(firstPackage.payload.officialCandidacies.rows.some((row) => row.status === "RESOLVED"));
   assert.ok(firstPackage.payload.officialCandidacies.rows.every((row) => !("sourcePath" in row.holder) && !(row.candidacy && "sourcePath" in row.candidacy)));
-  const firstRead = await readRegistryRuntimeProjection(["AZ"], { store, bypassCache: true, now: T0 });
+  const firstRead = await readRegistryRuntimeProjection(["AZ"], { store,  now: T0 });
   assert.equal(firstRead.kind, "PROMOTED");
   assert.equal(firstRead.metadata.versionId, first.id);
 
@@ -481,7 +498,7 @@ test("registry relational bindings remain coherent while exact member deltas pro
   assert.equal(changedOutcome.candidate.state, "PROMOTED");
   assert.ok(changedOutcome.candidate.candidate.changeSet?.changed.some((record) => record.key === `body:${changedBody.id}`));
   assert.ok(changedOutcome.candidate.candidate.changeSet?.changed.some((record) => record.key === `official-candidacy:${changedBridgeRow.holder.id}`));
-  const changedRead = await readRegistryRuntimeProjection(["AZ"], { store, bypassCache: true, now: T1 });
+  const changedRead = await readRegistryRuntimeProjection(["AZ"], { store,  now: T1 });
   assert.equal(changedRead.kind, "PROMOTED");
   assert.equal(changedRead.value.registry.bodies.find((body) => body.id === changedBody.id)?.homepageUrl, "https://changed.example.gov/");
   assert.match(changedRead.value.officialCandidacies.rows.find((row) => row.holder.id === changedBridgeRow.holder.id)?.reason ?? "", /successor package/);
@@ -817,7 +834,7 @@ test("the recorded state remains readable until its correction promotes", async 
   const prior = (await readRegistryRuntimePrior(store, T0, "AZ"))!;
   assert.equal(prior.payload.registry.bodies.filter(body => body.ocdId !== null && frozenPlaceholders("AZ").ids.has(body.ocdId)).length, 1);
   await withReaderAuthorityEdge({}, async () => {
-    const read = await readRegistryRuntimeProjection(["AZ"], { store, bypassCache: true, now: T0 });
+    const read = await readRegistryRuntimeProjection(["AZ"], { store,  now: T0 });
     assert.equal(read.kind, "PROMOTED");
     assert.equal(getRegistryRuntimeReadModel().registry.bodies.length, prior.payload.registry.bodies.length);
   });
@@ -837,8 +854,8 @@ test("both Reader projections reject cross-source proof and never bootstrap on s
     async readCandidate() { candidateReads += 1; return null; },
   };
   const reads = await Promise.all([
-    readStateFederalDirectory(state, { store: brokenStore, bypassCache: true }),
-    readRegistryRuntimeProjection(["AZ"], { store: brokenStore, bypassCache: true }),
+    readStateFederalDirectory(state, { store: brokenStore }),
+    readRegistryRuntimeProjection(["AZ"], { store: brokenStore }),
   ]);
   assert.deepEqual(reads.map((read) => read.kind), ["STORE_UNREACHABLE", "STORE_UNREACHABLE"]);
   assert.equal(candidateReads, 0);

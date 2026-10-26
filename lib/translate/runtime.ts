@@ -31,7 +31,7 @@ export async function runMeasureTranslation(input: {
       sourcePolicy: input.primary.sourcePolicy }, "BALLOT_MEASURE", input.now);
     if (!admitted.ok) throw new Error(admitted.reason ?? "Translation source is not admitted.");
     const hash = (evidence.sourceDocument?.contentHash ?? evidence.contentHash).replace(/^sha256-/, "");
-    const held = input.held ?? await readTranslations([input.subject.ocdId], { store: input.store, now: input.now, bypassCache: true });
+    const held = input.held ?? await readTranslations([input.subject.ocdId], { store: input.store, now: input.now });
     const current = held.find(row => row.kind === "MEASURE" && row.subjectId === input.subject.contestId && row.ocdId === input.subject.ocdId &&
       row.sourceUrl === evidence.canonicalUrl && row.sourceHash === hash && row.sourceTextHash === translationHash(evidence.text));
     if (current) return { status: "REUSED" as const, record: current, usage: [], versionId: null };

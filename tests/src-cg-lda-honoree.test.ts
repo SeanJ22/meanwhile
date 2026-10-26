@@ -70,7 +70,7 @@ test("national LDA pages retain and report unresolved rows while joined facts re
   const store = new MemoryRoutineDataStore(); await seedSrcCgRoster(store, vault);
   const captures = ldaHonoreeCaptures(), filings = captures.flatMap(capture => JSON.parse(capture.body).results);
   const requests: URL[] = [];
-  const result = await refreshFederalSource({ vault, source: "senate-lda", store, env: { LDA_API_KEY: "fixture" }, now: () => SRC_CG_NOW, sleep: async () => {},
+  const result = await refreshFederalSource({ vault, source: "senate-lda", store, env: { LDA_API_KEY: "fixture" }, now: () => SRC_CG_NOW,
     fetchImpl: (async input => {
       const url = new URL(String(input)); requests.push(url);
       const second = url.searchParams.get("page") === "2";
@@ -90,7 +90,15 @@ test("national LDA pages retain and report unresolved rows while joined facts re
   const member = await readFederalMember("congress:C001056", { store, now: SRC_CG_NOW });
   assert.equal(member.contributions.length, 1); assert.equal(member.contributions[0].honoreeName, "Sen. John Cornyn (R-TX)");
   assert.ok(member.sources.some(source => source.provenance.sourceUrl?.includes("lda.gov/filings/")));
-  assert.ok(member.sources.some(source => source.what.includes("Honoree identity")));
+  const identity = member.contributions[0].honoreeJoin;
+  assert.ok(identity?.status === "JOINED");
+  assert.equal(identity.matchedName, "John Cornyn");
+  assert.equal(identity.chamber, "senate");
+  assert.equal(identity.state, "TX");
+  const identitySource = member.sources.find(source => source.provenance.sourceUrl === identity.sourceUrl);
+  assert.equal(identitySource?.what, "The person named in this record, Sen. John Cornyn (R-TX), is John Cornyn, who serves in the U.S. Senate for Texas");
+  assert.equal(identitySource?.provenance.sourceOrg, identity.sourceOrg);
+  assert.equal(identitySource?.provenance.collectedAt, identity.checkedAt);
   const ask = await federalAskEvidence("congress:C001056", "What lobbying contributions were filed?", { store, now: SRC_CG_NOW });
   assert.ok(ask.records.some(row => row.kind === "FINANCE_TRANSACTION"));
   assert.ok(ask.records.some(row => row.text.includes("uniquely matches") && row.sourceUrl?.includes("legislators-current.yaml")));
@@ -105,7 +113,7 @@ test("an amended filing can unjoin a previously matched honoree without leaving 
   const store = new MemoryRoutineDataStore(); await seedSrcCgRoster(store, vault);
   const original = JSON.parse(ldaHonoreeCaptures()[0].body).results[0];
   let filing = original;
-  const options = { source: "senate-lda" as const, store, vault, env: { LDA_API_KEY: "fixture" }, now: () => SRC_CG_NOW, sleep: async () => {},
+  const options = { source: "senate-lda" as const, store, vault, env: { LDA_API_KEY: "fixture" }, now: () => SRC_CG_NOW,
     fetchImpl: (async () => Response.json({ count: 1, results: [filing], next: null })) as typeof fetch };
   assert.equal((await refreshFederalSource(options)).ok, true);
   assert.equal((await readFederalMember("congress:C001056", { store, now: SRC_CG_NOW })).contributions.length, 1);
@@ -129,7 +137,7 @@ test("an unavailable roster retains all LDA rows and reports the join gap as a s
   t.mock.method(console, "log", () => {});
   const store = new MemoryRoutineDataStore(), filing = JSON.parse(ldaHonoreeCaptures()[0].body).results[0];
   const doors: boolean[] = [];
-  const result = await refreshFederalSource({ vault, source: "senate-lda", store, now: () => SRC_CG_NOW, sleep: async () => {},
+  const result = await refreshFederalSource({ vault, source: "senate-lda", store, now: () => SRC_CG_NOW,
     fetchImpl: (async () => Response.json({ count: 1, results: [filing], next: null })) as typeof fetch, doorOutcome: async ok => { doors.push(ok); } });
   assert.equal(result.ok, true); assert.equal(result.counts.loaded, 1); assert.equal(result.counts.unjoinedReasons?.ROSTER_UNAVAILABLE, 1);
   assert.deepEqual(doors, [true]);
@@ -139,7 +147,7 @@ test("a newly available roster reopens the retained unjoined history, and an unc
   t.mock.method(console, "log", () => {});
   const store = new MemoryRoutineDataStore(), filing = JSON.parse(ldaHonoreeCaptures()[0].body).results[0], urls: URL[] = [];
   let unchanged = false;
-  const options = { source: "senate-lda" as const, store, vault, now: () => SRC_CG_NOW, sleep: async () => {},
+  const options = { source: "senate-lda" as const, store, vault, now: () => SRC_CG_NOW,
     fetchImpl: (async input => { urls.push(new URL(String(input))); return Response.json({ count: unchanged ? 0 : 1, results: unchanged ? [] : [filing], next: null }); }) as typeof fetch };
   assert.equal((await refreshFederalSource(options)).counts.unjoined, 1);
   await seedSrcCgRoster(store, vault);
@@ -160,7 +168,7 @@ test("an interrupted LDA backfill resumes its next page and keeps the original p
     if (outage && second) throw new Error("Controlled LDA page-two outage");
     return Response.json({ count: 2, results: [filings[second ? 1 : 0]], next: second ? null : "https://lda.gov/api/v1/contributions/?page_size=25&filing_year=2026&page=2" });
   }) as typeof fetch;
-  const options = { source: "senate-lda" as const, store, vault, fetchImpl, sleep: async () => {} };
+  const options = { source: "senate-lda" as const, store, vault, fetchImpl };
   assert.equal((await refreshFederalSource({ ...options, now: () => SRC_CG_NOW })).ok, false);
   outage = false;
   const result = await refreshFederalSource({ ...options, now: () => "2026-10-13T04:21:00.000Z" });

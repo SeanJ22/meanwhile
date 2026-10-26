@@ -144,14 +144,14 @@ export async function verifyRoutineReaderProjection(
     if (contract.id === "campaign-money") {
       const { readCampaignMoneyWork } = await import("../funding/campaign-finance-reader.ts");
       return verifyExactVersion(verifierId, await readCampaignMoneyWork(
-        { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Campaign money hourly work report");
+        { store: options.store, now: options.now }), options.expectedVersionId, "Campaign money hourly work report");
     }
     const state = parseStateBallotContractId(contract.id);
     if (state) {
       const scope = stateBallotScope(state.family, state.state);
       if (contract.scope !== scope || options.scope !== undefined && options.scope !== scope) return fail(verifierId, "State publication readback requires its exact state scope.");
       const { readPromotedCivicData } = await import("./read-model.ts");
-      const read = await readPromotedCivicData(contract.recordClass, scope, { store: options.store, now: options.now, bypassCache: true });
+      const read = await readPromotedCivicData(contract.recordClass, scope, { store: options.store, now: options.now });
       if (read.kind === "PROMOTED" && read.metadata.sourceId !== contract.sourceId) return fail(verifierId, "State publication readback names a different publisher.");
       return verifyExactVersion(verifierId, read, options.expectedVersionId, contract.id);
     }
@@ -160,20 +160,20 @@ export async function verifyRoutineReaderProjection(
       if (!source) return fail(verifierId, "The federal source is not registered.");
       const scope = options.scope ?? contract.scope;
       if (scope === `${source}:US`) {
-        return verifyExactVersion(verifierId, await readFederalMoneyNationalProjection(source, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "national federal acquisition progress");
+        return verifyExactVersion(verifierId, await readFederalMoneyNationalProjection(source, { store: options.store, now: options.now }), options.expectedVersionId, "national federal acquisition progress");
       }
       const state = scope.slice(source.length + 1).split(":")[0];
       if (!/^[A-Z]{2}$/.test(state)) return fail(verifierId, "The federal state scope is invalid.");
       if (scope === federalMoneyScope(source, state)) {
-        return verifyExactVersion(verifierId, await readFederalMoneyCheckpoint(source, state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal source checkpoint");
+        return verifyExactVersion(verifierId, await readFederalMoneyCheckpoint(source, state, { store: options.store, now: options.now }), options.expectedVersionId, "federal source checkpoint");
       }
-      return verifyExactVersion(verifierId, await readFederalMoneyPartition(source, scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal government records");
+      return verifyExactVersion(verifierId, await readFederalMoneyPartition(source, scope, { store: options.store, now: options.now }), options.expectedVersionId, "federal government records");
     }
     if (isPeopleSource(contract.sourceId) && contract.recordClass !== "FEDERAL_CIVIC_RECORD") {
       const { readPeopleSourceProjection } = await import("./people-source-read.ts");
       const jurisdiction = /^(US(?:-[A-Z]{2})?):/.exec(contract.scope)?.[1] as "US" | `US-${string}` | undefined;
       if (!jurisdiction) return fail(verifierId,"The people source has no exact jurisdiction.");
-      return verifyExactVersion(verifierId,await readPeopleSourceProjection(jurisdiction,contract.sourceId,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"people source");
+      return verifyExactVersion(verifierId,await readPeopleSourceProjection(jurisdiction,contract.sourceId,{store:options.store,now:options.now}),options.expectedVersionId,"people source");
     }
     if (contract.recordClass === "FEDERAL_CIVIC_RECORD") {
       const { readFederalSourceProjection } = await import("../sources/congress/publication.ts");
@@ -181,43 +181,43 @@ export async function verifyRoutineReaderProjection(
       if (!isFederalSource(contract.sourceId)) return fail(verifierId, "Unknown federal publisher.");
       const scope = options.scope ?? contract.scope;
       const partition = scope.slice(contract.sourceId.length + 1);
-      return verifyExactVersion(verifierId, await readFederalSourceProjection(contract.sourceId, partition, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal source");
+      return verifyExactVersion(verifierId, await readFederalSourceProjection(contract.sourceId, partition, { store: options.store, now: options.now }), options.expectedVersionId, "federal source");
     }
     if (contract.sourceId === "plural-openstates" && contract.recordClass === "STATE_LEGISLATOR") {
       const { readOpenStatesPeopleProjection } = await import("../state-rollcalls/legislators.ts");
       const jurisdiction = /^US-[A-Z]{2}/.exec(contract.scope)?.[0] as `US-${string}` | undefined;
       if (!jurisdiction) return fail(verifierId,"The state people scope has no jurisdiction.");
-      return verifyExactVersion(verifierId,await readOpenStatesPeopleProjection(jurisdiction,{store:options.store,now:options.now,bypassCache:true}),options.expectedVersionId,"state people");
+      return verifyExactVersion(verifierId,await readOpenStatesPeopleProjection(jurisdiction,{store:options.store,now:options.now}),options.expectedVersionId,"state people");
     }
     if (contract.recordClass === "STATE_ROLL_CALL" && (contract.sourceId === "plural-openstates-votes" || contract.sourceId === "legiscan")) {
       const state = /^US-([A-Z]{2}):/.exec(contract.scope)?.[1];
       if (!state) return fail(verifierId, "The vote source has no state scope.");
       const read = contract.sourceId === "plural-openstates-votes"
-        ? await (await import("../sources/plural/votes.ts")).readPluralVotesProjection(state, {store: options.store, now: options.now, bypassCache: true})
-        : await (await import("../sources/legiscan/votes.ts")).readLegiscanVotesProjection(state, {store: options.store, now: options.now, bypassCache: true});
+        ? await (await import("../sources/plural/votes.ts")).readPluralVotesProjection(state, {store: options.store, now: options.now})
+        : await (await import("../sources/legiscan/votes.ts")).readLegiscanVotesProjection(state, {store: options.store, now: options.now});
       return verifyExactVersion(verifierId, read, options.expectedVersionId, `${state} attributed votes`);
     }
     const directoryState = federalDirectoryStateOf(contract.id);
     if (directoryState) {
       const { readStateFederalDirectory } = await import("../officials/federal-directory-read-model.ts");
-      return verifyExactVersion(verifierId, await readStateFederalDirectory(directoryState, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${directoryState} federal-directory`);
+      return verifyExactVersion(verifierId, await readStateFederalDirectory(directoryState, { store: options.store, now: options.now }), options.expectedVersionId, `${directoryState} federal-directory`);
     }
     const registryState = stateFromRegistryRuntimeContractId(contract.id);
     if (registryState) {
       const { readStateRegistryRuntimeProjection } = await import("./read-model.ts");
       return verifyExactVersion(verifierId, await readStateRegistryRuntimeProjection(registryState, {
-        store: options.store, now: options.now, bypassCache: true,
+        store: options.store, now: options.now,
       }), options.expectedVersionId, `${registryState} registry-runtime`);
     }
     const family = contract.recordClass === "CENSUS_GEOGRAPHY" ? "census-geography-overlaps" : contract.id;
     switch (family) {
       case "legiscan-bulk": {
         const { readBulkProjection } = await import("../sources/legiscan/reader.ts");
-        return verifyExactVersion(verifierId, await readBulkProjection(options.scope ?? contract.scope, {store:options.store,now:options.now,bypassCache:true,verifySavedSource:true}),options.expectedVersionId,"LegiScan bills");
+        return verifyExactVersion(verifierId, await readBulkProjection(options.scope ?? contract.scope, {store:options.store,now:options.now,verifySavedSource:true}),options.expectedVersionId,"LegiScan bills");
       }
       case "google-civic-voterinfo": {
         const { readCivicProjection } = await import("../sources/google-civic/reader.ts");
-        const result = await readCivicProjection(options.scope ?? contract.scope, { store: options.store, now: options.now, bypassCache: true });
+        const result = await readCivicProjection(options.scope ?? contract.scope, { store: options.store, now: options.now });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "Google Civic voterinfo");
       }
       case "socrata-discovery":
@@ -227,21 +227,21 @@ export async function verifyRoutineReaderProjection(
         const scope = options.scope ?? contract.scope;
         if (!scope.startsWith(prefix)) return fail(verifierId, "Open-data readback requires its native source partition.");
         return verifyExactVersion(verifierId, await readOpenDataProjection(family as "socrata-discovery" | "epa-echo",scope.slice(prefix.length), {
-          store:options.store,now:options.now,bypassCache:true,
+          store:options.store,now:options.now,
         }), options.expectedVersionId, contract.id);
       }
       case "dotgov": {
         const { readDotGovProjection } = await import("./dotgov.ts");
-        return verifyExactVersion(verifierId, await readDotGovProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "government domains");
+        return verifyExactVersion(verifierId, await readDotGovProjection({ store: options.store, now: options.now }), options.expectedVersionId, "government domains");
       }
       case "fec-funding": {
         const { readFundingSnapshot } = await import("../funding/snapshot.ts");
-        const result = await readFundingSnapshot({ store: options.store, now: options.now, bypassCache: true });
+        const result = await readFundingSnapshot({ store: options.store, now: options.now });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "funding");
       }
       case "nh-members": {
         const { readNhMembers } = await import("./state-members.ts");
-        const result = await readNhMembers({ store: options.store, now: options.now, bypassCache: true });
+        const result = await readNhMembers({ store: options.store, now: options.now });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "NH-member");
       }
       case "az-state-legislators":
@@ -253,7 +253,7 @@ export async function verifyRoutineReaderProjection(
         const result = await readOfficialStateLegislatorsProjection(target.jurisdiction, {
           store: options.store,
           now: options.now,
-          bypassCache: true,
+
         });
         return verifyExactVersion(
           verifierId,
@@ -273,7 +273,7 @@ export async function verifyRoutineReaderProjection(
         const result = await readOfficialStateVotesProjection(target.jurisdiction, {
           store: options.store,
           now: options.now,
-          bypassCache: true,
+
         });
         return verifyExactVersion(
           verifierId,
@@ -288,7 +288,7 @@ export async function verifyRoutineReaderProjection(
         const result = await readPromotedCivicData("STATE_LEGISLATOR_VOTES", scope, {
           store: options.store,
           now: options.now,
-          bypassCache: true,
+
         });
         if (result.kind !== "PROMOTED" || result.metadata.versionId !== options.expectedVersionId) {
           return fail(
@@ -307,59 +307,59 @@ export async function verifyRoutineReaderProjection(
       }
       case "census-acs-population": {
         const { readPopulationProjection } = await import("../reference/acs-population.ts");
-        const result = await readPopulationProjection({ store: options.store, now: options.now, bypassCache: true });
+        const result = await readPopulationProjection({ store: options.store, now: options.now });
         return verifyExactVersion(verifierId, result, options.expectedVersionId, "ACS");
       }
       case "congress-rollcalls": {
         const { readFederalMemberVotes, readFederalRollCallsProjection } = await import("../votes/snapshot.ts");
-        const member = federalMemberOfScope(options.scope ?? contract.scope), read = { store: options.store, now: options.now, bypassCache: true };
+        const member = federalMemberOfScope(options.scope ?? contract.scope), read = { store: options.store, now: options.now };
         return member
           ? verifyExactVersion(verifierId, await readFederalMemberVotes(member, read), options.expectedVersionId, "federal member positions")
           : verifyExactVersion(verifierId, await readFederalRollCallsProjection(read), options.expectedVersionId, "federal-roll-call");
       }
       case "federal-key-votes": {
         const { readFederalKeyVotesProjection } = await import("../votes/key-votes-projection.ts");
-        return verifyExactVersion(verifierId, await readFederalKeyVotesProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "federal-key-vote");
+        return verifyExactVersion(verifierId, await readFederalKeyVotesProjection({ store: options.store, now: options.now }), options.expectedVersionId, "federal-key-vote");
       }
       case "plain-english-translations": {
         const { readTranslationProjection } = await import("../translate/projection-reader.ts");
-        return verifyExactVersion(verifierId, await readTranslationProjection({ store: options.store, now: options.now, bypassCache: true, scope: options.scope }), options.expectedVersionId, "plain-English translation");
+        return verifyExactVersion(verifierId, await readTranslationProjection({ store: options.store, now: options.now,  scope: options.scope }), options.expectedVersionId, "plain-English translation");
       }
       case "special-district-boundaries": {
         const { readSpecialDistrictBoundaries } = await import("../registry/special-district-boundary-reader.ts");
         const prefix = "US:special-district-boundaries:";
         if (!options.scope?.startsWith(prefix)) return fail(verifierId, "District-boundary readback requires its exact county jurisdiction.");
-        return verifyExactVersion(verifierId, await readSpecialDistrictBoundaries(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readSpecialDistrictBoundaries(options.scope.slice(prefix.length), { store: options.store, now: options.now }), options.expectedVersionId, contract.id);
       }
       case "public-records": {
         const { readPublicRecords } = await import("./public-records.ts");
         const prefix = "US:public-records:";
         if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Public-record readback requires its exact jurisdiction.");
-        return verifyExactVersion(verifierId, await readPublicRecords(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readPublicRecords(options.scope.slice(prefix.length), { store: options.store, now: options.now }), options.expectedVersionId, contract.id);
       }
       case "campaign-finance": {
         const { readCampaignFinance } = await import("../funding/campaign-finance-reader.ts");
         const { isCampaignFinanceStateScope } = await import("../funding/state-sources.ts");
         if (!options.scope || !isCampaignFinanceStateScope(options.scope)) return fail(verifierId, "Campaign-finance readback requires its exact state.");
-        return verifyExactVersion(verifierId, await readCampaignFinance(options.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readCampaignFinance(options.scope, { store: options.store, now: options.now }), options.expectedVersionId, contract.id);
       }
       case "government-budgets": {
         const { readGovernmentBudgets } = await import("./government-budgets.ts");
         const prefix = "US:government-budgets:";
         if (!options.scope?.startsWith(prefix)) return fail(verifierId, "Budget readback requires its exact jurisdiction.");
-        return verifyExactVersion(verifierId, await readGovernmentBudgets(options.scope.slice(prefix.length), { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readGovernmentBudgets(options.scope.slice(prefix.length), { store: options.store, now: options.now }), options.expectedVersionId, contract.id);
       }
       case "officeholder-statements": {
         const { readOfficeholderStatementsProjection } = await import("../corpus/data-plane.ts");
-        return verifyExactVersion(verifierId, await readOfficeholderStatementsProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "officeholder-statements");
+        return verifyExactVersion(verifierId, await readOfficeholderStatementsProjection({ store: options.store, now: options.now }), options.expectedVersionId, "officeholder-statements");
       }
       case "jurisdiction-operational-reference": {
         const { preloadOperationalReferenceBundle } = await import("./operational-references.ts");
-        return verifyExactVersion(verifierId, await preloadOperationalReferenceBundle({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "operational-reference");
+        return verifyExactVersion(verifierId, await preloadOperationalReferenceBundle({ store: options.store, now: options.now }), options.expectedVersionId, "operational-reference");
       }
       case "jurisdiction-operational-reference-az": {
         const { preloadAzOperationalReferenceBundle } = await import("./operational-references.ts");
-        return verifyExactVersion(verifierId, await preloadAzOperationalReferenceBundle({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "az-operational-reference");
+        return verifyExactVersion(verifierId, await preloadAzOperationalReferenceBundle({ store: options.store, now: options.now }), options.expectedVersionId, "az-operational-reference");
       }
       case "az-sos-campaign-finance":
       case "nh-sos-campaign-finance":
@@ -369,40 +369,40 @@ export async function verifyRoutineReaderProjection(
         const state = Object.entries(STATE_CAMPAIGN_FINANCE_SOURCES)
           .find(([, source]) => source.contractId === contract.id)?.[0] as keyof typeof STATE_CAMPAIGN_FINANCE_SOURCES | undefined;
         if (!state) return fail(verifierId, `No state campaign-finance authority owns contract ${contract.id}.`);
-        return verifyExactVersion(verifierId, await readStateMoneyProjection(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} campaign-finance`);
+        return verifyExactVersion(verifierId, await readStateMoneyProjection(state, { store: options.store, now: options.now }), options.expectedVersionId, `${state} campaign-finance`);
       }
       case "az-pima-local-finance": {
         const { refreshAzPimaFinanceFromPromoted } = await import("../control-plane/campaign-finance/held-records.ts");
-        const version = await refreshAzPimaFinanceFromPromoted({ store: options.store, now: options.now, bypassCache: true });
+        const version = await refreshAzPimaFinanceFromPromoted({ store: options.store, now: options.now });
         return version === options.expectedVersionId
           ? pass(verifierId, `The typed Pima campaign-finance Reader read canonical version ${options.expectedVersionId}.`)
           : fail(verifierId, `Expected promoted ${options.expectedVersionId}; typed Pima campaign-finance Reader returned ${version ?? "none"}.`);
       }
       case "prl": {
         const { readPrlProjection } = await import("../sources/prl/snapshot.ts");
-        return verifyExactVersion(verifierId, await readPrlProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "PRL");
+        return verifyExactVersion(verifierId, await readPrlProjection({ store: options.store, now: options.now }), options.expectedVersionId, "PRL");
       }
       case "prl-archives": {
         const { readPrlArchiveProjection } = await import("../sources/prl/archive-publication.ts");
-        return verifyExactVersion(verifierId, await readPrlArchiveProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "PRL archives");
+        return verifyExactVersion(verifierId, await readPrlArchiveProjection({ store: options.store, now: options.now }), options.expectedVersionId, "PRL archives");
       }
       case "az-official-actions": {
         const { readExecutiveActionsProjection } = await import("../officials/executive-actions.ts");
-        return verifyExactVersion(verifierId, await readExecutiveActionsProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Arizona official-actions");
+        return verifyExactVersion(verifierId, await readExecutiveActionsProjection({ store: options.store, now: options.now }), options.expectedVersionId, "Arizona official-actions");
       }
       case "pima-legistar-outcomes": {
         const [{ readDoorOutcomeProjection }, { PIMA_OUTCOME_TENANT }] = await Promise.all([import("../outcomes/store.ts"), import("../outcomes/data-plane.ts")]);
-        return verifyExactVersion(verifierId, await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Pima meeting-outcomes");
+        return verifyExactVersion(verifierId, await readDoorOutcomeProjection(PIMA_OUTCOME_TENANT.scope, { store: options.store, now: options.now }), options.expectedVersionId, "Pima meeting-outcomes");
       }
       case "mesa-legistar-minutes-outcomes": {
         const [{ readDoorOutcomeProjection }, { MESA_OUTCOME_TENANT }] = await Promise.all([import("../outcomes/store.ts"), import("../outcomes/data-plane.ts")]);
-        return verifyExactVersion(verifierId, await readDoorOutcomeProjection(MESA_OUTCOME_TENANT.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, "Mesa meeting-outcomes");
+        return verifyExactVersion(verifierId, await readDoorOutcomeProjection(MESA_OUTCOME_TENANT.scope, { store: options.store, now: options.now }), options.expectedVersionId, "Mesa meeting-outcomes");
       }
       case "ballot-navigation": {
         const state = ballotNavigationState(options.scope ?? "");
         if (!state) return fail(verifierId, "Navigation readback requires its exact state scope.");
         const { readBallotNavigationProjection } = await import("./curated-reader-read-model.ts");
-        return verifyExactVersion(verifierId, await readBallotNavigationProjection(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} ballot navigation`);
+        return verifyExactVersion(verifierId, await readBallotNavigationProjection(state, { store: options.store, now: options.now }), options.expectedVersionId, `${state} ballot navigation`);
       }
       case "official-filings":
       case "stances":
@@ -411,27 +411,27 @@ export async function verifyRoutineReaderProjection(
       case "venue-resolutions":
       case "meeting-body-crosswalk": {
         const { readCuratedReaderProjection } = await import("./curated-reader-read-model.ts");
-        return verifyExactVersion(verifierId, await readCuratedReaderProjection(family as Parameters<typeof readCuratedReaderProjection>[0], { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readCuratedReaderProjection(family as Parameters<typeof readCuratedReaderProjection>[0], { store: options.store, now: options.now }), options.expectedVersionId, contract.id);
       }
       case "meeting-source-wiring": {
         const { readDerivedMeetingWiring } = await import("./derived-meeting-wiring.ts");
-        return verifyExactVersion(verifierId, await readDerivedMeetingWiring({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readDerivedMeetingWiring({ store: options.store, now: options.now }), options.expectedVersionId, contract.id);
       }
       case "meeting-doors": {
         const { readMeetingDoors } = await import("../doors/meeting-doors.ts");
-        return verifyExactVersion(verifierId, await readMeetingDoors({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readMeetingDoors({ store: options.store, now: options.now }), options.expectedVersionId, contract.id);
       }
       case "meeting-body-crosswalk-derived": {
         const { readDerivedMeetingBodyCrosswalk } = await import("./derived-crosswalk.ts");
-        return verifyExactVersion(verifierId, await readDerivedMeetingBodyCrosswalk({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readDerivedMeetingBodyCrosswalk({ store: options.store, now: options.now }), options.expectedVersionId, contract.id);
       }
       case "everyday-routing": {
         const { readEverydayRoutingProjection } = await import("../routing/everyday-data-plane.ts");
-        return verifyExactVersion(verifierId, await readEverydayRoutingProjection({ store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, contract.id);
+        return verifyExactVersion(verifierId, await readEverydayRoutingProjection({ store: options.store, now: options.now }), options.expectedVersionId, contract.id);
       }
       case "census-geography-overlaps": {
         const { readCensusGeographyProjection } = await import("../census-geography/reader.ts");
-        return verifyExactVersion(verifierId, await readCensusGeographyProjection({ store: options.store, now: options.now, bypassCache: true }, options.scope ?? contract.scope), options.expectedVersionId, "census-geography");
+        return verifyExactVersion(verifierId, await readCensusGeographyProjection({ store: options.store, now: options.now }, options.scope ?? contract.scope), options.expectedVersionId, "census-geography");
       }
       default: {
         if (contract.recordClass === "REGISTRATION") {
@@ -439,13 +439,13 @@ export async function verifyRoutineReaderProjection(
           const state = /^US-([A-Z]{2}):registration:v1$/.exec(options.scope ?? contract.scope)?.[1];
           if (state === undefined) return fail(verifierId, `A registration scope must name one state; ${options.scope ?? contract.scope} does not.`);
           const { readRegistrationProjection } = await import("../registration/reader.ts");
-          return verifyExactVersion(verifierId, await readRegistrationProjection(state, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${state} registration`);
+          return verifyExactVersion(verifierId, await readRegistrationProjection(state, { store: options.store, now: options.now }), options.expectedVersionId, `${state} registration`);
         }
         if (contract.recordClass === "MEETING") {
           const { readMeetingPartitionProjection } = await import("../meetings/snapshot.ts");
           const { meetingPartitionContract } = await import("./meeting-partitions.ts");
           const partition = meetingPartitionContract(contract.id);
-          const read = partition === null ? null : await readMeetingPartitionProjection(partition, { store: options.store, now: options.now, bypassCache: true });
+          const read = partition === null ? null : await readMeetingPartitionProjection(partition, { store: options.store, now: options.now });
           if (read?.kind !== "PROMOTED" || read.metadata.versionId !== options.expectedVersionId) {
             return fail(verifierId, `Expected meeting partition ${contract.id}:${options.expectedVersionId}; typed meetings Reader returned ${read?.kind ?? "an unregistered partition"}:${read?.metadata.versionId ?? "none"}.`);
           }
@@ -454,7 +454,7 @@ export async function verifyRoutineReaderProjection(
         if (contract.recordClass === "MEETING_OUTCOME" && ["door-outcomes", "door-minutes-outcomes"].includes(contract.sourceId)) {
                     // A door's own scope, read as the Reader reads it (its tenant and meeting-id namespace checked).
           const { readDoorOutcomeProjection } = await import("../outcomes/store.ts");
-          return verifyExactVersion(verifierId, await readDoorOutcomeProjection(options.scope ?? contract.scope, { store: options.store, now: options.now, bypassCache: true }), options.expectedVersionId, `${contract.id} door outcomes`);
+          return verifyExactVersion(verifierId, await readDoorOutcomeProjection(options.scope ?? contract.scope, { store: options.store, now: options.now }), options.expectedVersionId, `${contract.id} door outcomes`);
         }
         throw new Error(`NO_TYPED_READER_VERIFIER:${contract.id}`);
       }

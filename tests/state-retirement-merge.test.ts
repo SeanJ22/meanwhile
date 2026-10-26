@@ -112,7 +112,7 @@ test("terminal replay carries a later national card after ordinary state publica
     originReadModelHash: unit.originReadModelHash, state: "NH", contractId: "candidate-profiles:NH" });
   const result = await reconcileRetirementStateInput({ file, sha256, seal, contractId: "candidate-profiles:NH", store, now: NOW });
   assert.equal(result.status, "PUBLISHED");
-  const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", "US-NH:candidate-profiles", { store, now: NOW, bypassCache: true });
+  const read = await readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", "US-NH:candidate-profiles", { store, now: NOW });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(read.value.cards.cards[KAREN], currentCard);
@@ -199,7 +199,7 @@ for (const family of ["voting-sites", "candidate-campaign-sites-derived"] as con
     originReadModelHash: unit.originReadModelHash, state: "NH", contractId });
   const outcome = await reconcileRetirementStateInput({ file, sha256, seal, contractId, store, now: NOW });
   assert.equal(outcome.status, "PUBLISHED");
-  const result = await readPromotedCivicData<VotingSitesFile & DerivedCampaignSitesProjection>(source.recordClass, state.scope, { store, now: NOW, bypassCache: true });
+  const result = await readPromotedCivicData<VotingSitesFile & DerivedCampaignSitesProjection>(source.recordClass, state.scope, { store, now: NOW });
   assert.equal(result.kind, "PROMOTED");
   if (result.kind !== "PROMOTED") return;
   const field = family === "voting-sites" ? "jurisdictions" : "records";
@@ -264,7 +264,7 @@ for (const family of ["ballot-contests", "candidate-profiles", "candidate-corpus
         originScope, originReadModelHash: unit.originReadModelHash, state, contractId });
       assert.equal((await reconcileRetirementStateInput({ file, sha256, seal, contractId, store, now: NOW })).status, "PUBLISHED");
       const scope = `US-${state}:${family === "ballot-contests" ? "state-election-ballots" : family === "candidate-corpus" ? "candidate-publications" : family}`;
-      const read = await readPromotedCivicData(source.recordClass, scope, { store, now: NOW, bypassCache: true });
+      const read = await readPromotedCivicData(source.recordClass, scope, { store, now: NOW });
       assert.equal(read.kind, "PROMOTED");
       if (read.kind !== "PROMOTED") throw new Error("The initialized state must be readable.");
       assert.deepEqual(read.value, payload);
@@ -373,7 +373,7 @@ for (const olderHeld of [false, true]) test(`terminal ballot replay keeps newer 
   const seal = sealStateRetirementUnit({ fileSha256: sha256, originId: unit.originId, originRecordClass: unit.originRecordClass,
     originScope, originReadModelHash: unit.originReadModelHash, state: "NH", contractId: "ballot-contests:NH" });
   assert.equal((await reconcileRetirementStateInput({ file, sha256, seal, contractId: "ballot-contests:NH", store, now: NOW })).status, "PUBLISHED");
-  const read = await readPromotedCivicData<import("../lib/ballot/generic-projection.ts").GenericBallotProjection>("BALLOT_CANDIDACY", newer.scope, { store, now: NOW, bypassCache: true });
+  const read = await readPromotedCivicData<import("../lib/ballot/generic-projection.ts").GenericBallotProjection>("BALLOT_CANDIDACY", newer.scope, { store, now: NOW });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const result = read.value.ballots["NH:2026-general"];
@@ -480,7 +480,7 @@ test("terminal Arizona contest aliases retain the complete race and bind earlier
   const seal = sealStateRetirementUnit({ fileSha256: sha256, originId: unit.originId, originRecordClass: unit.originRecordClass,
     originScope, originReadModelHash: unit.originReadModelHash, state: "AZ", contractId: "ballot-contests:AZ" });
   assert.equal((await reconcileRetirementStateInput({ file, sha256, seal, contractId: "ballot-contests:AZ", store, now: NOW })).status, "PUBLISHED");
-  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", newer.scope, { store, now: NOW, bypassCache: true });
+  const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", newer.scope, { store, now: NOW });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const result = read.value.ballots["AZ:2026-general"], before = (newer.readModel as GenericBallotProjection).ballots["AZ:2026-general"];

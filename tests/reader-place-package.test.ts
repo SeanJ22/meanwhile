@@ -354,6 +354,9 @@ test("the page builder joins local facts and complete calendars from every held 
     assert.equal(result.registrationHeld,true);
     assert.deepEqual(result.divisions,[division]);
     assert.equal(result.governments.length,2);
+    assert.equal(result.governments.find(g => g.id.endsWith(":city"))?.recipientNameUnique,true);
+    assert.equal(result.governments.find(g => g.id.endsWith(":pima"))?.recipientNameUnique,false,
+      "an identically named government elsewhere in the state remains ambiguous after the place is selected");
     assert.equal(result.governments.find(g => g.id.endsWith(":city"))?.officePhone,"520-555-0111");
     assert.deepEqual(result.governments.find(g => g.id.endsWith(":city"))?.govDomains,[{domain:"tucsonaz.gov",website:"https://tucsonaz.gov",sourceUrl:"https://get.gov/registry",checkedAt:AT}]);
     assert.deepEqual(result.governments.find(g => g.id.endsWith(":pima"))?.govDomains,[],"statewide duplicate identities stay ambiguous after narrowing to this ZIP");
@@ -440,7 +443,7 @@ test("canonical state-family scopes preserve meetings and venue details independ
         stateLegislatorAuthority:{scope:`US-${state}`,kind:"NOT_RECORDED",metadata:peopleRead.metadata,code:null,detail:"fixture"},
       };
       const coverage = stateCoverage(statePackage,[division],0,0,result.meetings,result.bodies);
-      assert.deepEqual(coverage.bodies.map(b => [b.bodyId,b.name,b.agendaSourceRef]),[[bodyId,"Planning Board",SOURCE]],"the existing body-card model receives the independently sourced body");
+      assert.deepEqual(coverage.bodies.map(b => [b.bodyId,b.name,b.agendaSourceRef]),[[bodyId,"City of Example Planning Board",SOURCE]],"the body card carries its owning government and independently sourced body");
     }
   } finally { await db.pg.close(); }
 });
@@ -824,7 +827,7 @@ test("the map and ballot reuse one place read for their request, and a later req
   } finally { installReaderDatabaseQuery(undefined); }
 });
 
-test("a shared cold place failure reaches both readers without a second query", async () => {
+test("one operation's cold place failure reaches its composed readers without a second query", async () => {
   const failure = new Error("First place read failed");
   let reads = 0, rejectRead: ((error: Error) => void) | undefined;
   installReaderDatabaseQuery(async () => {
@@ -833,17 +836,43 @@ test("a shared cold place failure reaches both readers without a second query", 
     return [];
   });
   try {
-    const first = readPlacePackage({ state: "AZ", divisionIds: [`${CITY}/bs01-failure`] });
-    const second = readPlacePackage({ state: "AZ", divisionIds: [`${CITY}/bs01-failure`] });
-    const outcomes = Promise.allSettled([first, second]);
-    await new Promise(resolve => setImmediate(resolve));
-    rejectRead!(failure);
-    for (const result of await outcomes) {
-      assert.equal(result.status, "rejected");
-      if (result.status === "rejected") assert.equal(result.reason, failure);
+    await withReaderSelection({states:["AZ"],keys:new Set([CITY])},async()=>{
+      const first = readPlacePackage({ state: "AZ", divisionIds: [`${CITY}/bs01-failure`] });
+      const second = readPlacePackage({ state: "AZ", divisionIds: [`${CITY}/bs01-failure`] });
+      const outcomes = Promise.allSettled([first, second]);
+      assert.equal(first,second,"both readers compose the same operation's source read");
+      await new Promise(resolve => setImmediate(resolve));
+      assert.equal(reads, 1);
+      rejectRead!(failure);
+      for (const result of await outcomes) {
+        assert.equal(result.status, "rejected");
+        if (result.status === "rejected") assert.equal(result.reason, failure);
+      }
+    });
+  } finally { rejectRead?.(failure);installReaderDatabaseQuery(undefined); }
+});
+
+test("independent place operations check separately and retain their own source failures",async()=>{
+  const failures=[new Error("First operation failed"),new Error("Second operation failed")];
+  const rejects:((error:Error)=>void)[]=[];
+  installReaderDatabaseQuery(async()=>{
+    await new Promise<void>((_resolve,reject)=>{rejects.push(reject);});
+    return [];
+  });
+  try {
+    const read=()=>readPlacePackage({state:"AZ",divisionIds:[`${CITY}/independent-failure`]});
+    const first=withReaderSelection({states:["AZ"],keys:new Set([CITY])},read);
+    const second=withReaderSelection({states:["AZ"],keys:new Set([CITY])},read);
+    const outcomes=Promise.allSettled([first,second]);
+    assert.notEqual(first,second);
+    await new Promise(resolve=>setImmediate(resolve));
+    assert.equal(rejects.length,2,"each independent operation starts its own current source check");
+    rejects.forEach((reject,index)=>reject(failures[index]));
+    for(const [index,result] of (await outcomes).entries()){
+      assert.equal(result.status,"rejected");
+      if(result.status==="rejected")assert.equal(result.reason,failures[index]);
     }
-    assert.equal(reads, 1);
-  } finally { installReaderDatabaseQuery(undefined); }
+  }finally{rejects.forEach((reject,index)=>reject(failures[index]));installReaderDatabaseQuery(undefined);}
 });
 
 test("a special district's board on a city's territory reads under the district, not under the city", async () => {
@@ -866,7 +895,7 @@ test("a special district's board on a city's territory reads under the district,
       provenance: { kind: "OFFICIAL", sourceUrl: "https://www2.census.gov/", sourceOrg: "Census", collectedAt: at, verifiedAt: at } }] }, bodyRosters: [], rosterReaderDispositions: [],
       statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {}, officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
     const coverage = stateCoverage({ state: "AL", registry: runtime, version: "fixture" }, [mobile], 0, 0, [], result.bodies);
-    assert.deepEqual(coverage.bodies.map(b => [b.name, b.divisionLabel]).sort(), [["Board of Commissioners", "Mobile Housing Authority"], ["City Council", "Mobile city"]]);
+    assert.deepEqual(coverage.bodies.map(b => [b.name, b.divisionLabel]).sort(), [["City of Mobile Council", "Mobile city"], ["Mobile Housing Authority Board of Commissioners", "Mobile Housing Authority"]]);
     assert.equal(coverage.bodies.find(b=>b.bodyId===board)?.bodyClass,"GOVERNING");
   } finally { await db.pg.close(); }
 });

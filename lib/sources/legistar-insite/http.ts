@@ -10,10 +10,10 @@
  */
 import {
   SourceHttpError,
+  sourceFetch,
   readValidatedResponse,
   sourceUserAgent,
 } from "../http.ts";
-import { sourceAcquisitionSleep } from "../acquisition-deadline.ts";
 
 /** `Crawl-delay: 2`, as published at https://legistar.com/robots.txt, in the directive's own units. */
 export const INSITE_CRAWL_DELAY_SECONDS = 2;
@@ -43,11 +43,9 @@ export class InSiteSession {
    * another host (e.g. a vendor document host).
    */
   private readonly jar = new Map<string, Map<string, string>>();
-  private readonly spacingMs: number;
   private readonly impl: typeof fetch;
   private readonly signal?: AbortSignal;
   private readonly followRedirects: boolean;
-  private lastAt = 0;
 
   /** Every URL this session actually retrieved, in order. Reported, never guessed. */
   readonly retrieved: string[] = [];
@@ -67,7 +65,6 @@ export class InSiteSession {
     this.followRedirects = options.followRedirects ?? true;
     // An injected fetch is a test's own double: it must not sleep, and the
     // suite must never wait two seconds per fixture.
-    this.spacingMs = options.spacingMs ?? (options.fetchImpl ? 0 : INSITE_SPACING_MS);
   }
 
   private static hostOf(url: string): string {
@@ -99,13 +96,6 @@ export class InSiteSession {
     }
   }
 
-  private async pace(): Promise<void> {
-    const wait = this.lastAt + this.spacingMs - Date.now();
-    if (wait > 0) await sourceAcquisitionSleep(wait, this.signal);
-    this.signal?.throwIfAborted();
-    this.lastAt = Date.now();
-  }
-
   private headers(url: string, extra: Record<string, string> = {}): Record<string, string> {
     const cookie = this.cookieHeader(url);
     return {
@@ -119,12 +109,11 @@ export class InSiteSession {
     url: string,
     accept = "*/*",
   ): Promise<{ status: number; contentType: string; text: string }> {
-    await this.pace();
-    const response = await this.impl(url, {
+    const response = await sourceFetch(url, {
       headers: this.headers(url, { Accept: accept }),
       signal: this.signal,
       ...(this.followRedirects ? {} : { redirect: "manual" as const }),
-    });
+    }, this.impl, "legistar");
     this.store(response, url);
     const movedTo = !this.followRedirects && response.status >= 300 && response.status < 400
       ? response.headers.get("location")
@@ -160,12 +149,11 @@ export class InSiteSession {
     url: string,
     accept = "*/*",
   ): Promise<{ status: number; contentType: string; finalUrl: string; bytes: Uint8Array } & DocumentValidators> {
-    await this.pace();
-    const response = await this.impl(url, {
+    const response = await sourceFetch(url, {
       headers: this.headers(url, { Accept: accept }),
       signal: this.signal,
       ...(this.followRedirects ? {} : { redirect: "manual" as const }),
-    });
+    }, this.impl, "legistar");
     this.store(response, url);
     if (!response.ok) {
       await response.body?.cancel().catch(() => undefined);
@@ -185,14 +173,13 @@ export class InSiteSession {
    * failed is not downloaded again. Never throws for the site: a failed request is `null`.
    */
   async head(url: string, accept = "*/*"): Promise<({ status: number; contentType: string; contentLength: number | null } & DocumentValidators) | null> {
-    await this.pace();
     try {
-      const response = await this.impl(url, {
+      const response = await sourceFetch(url, {
         method: "HEAD",
         headers: this.headers(url, { Accept: accept }),
         signal: this.signal,
         ...(this.followRedirects ? {} : { redirect: "manual" as const }),
-      });
+      }, this.impl, "legistar");
       this.store(response, url);
       await response.body?.cancel().catch(() => undefined);
       this.retrieved.push(`HEAD ${url}`);
@@ -219,8 +206,7 @@ export class InSiteSession {
     url: string,
     form: Record<string, string>,
   ): Promise<{ status: number; contentType: string; text: string }> {
-    await this.pace();
-    const response = await this.impl(url, {
+    const response = await sourceFetch(url, {
       method: "POST",
       headers: this.headers(url, {
         Accept: "text/html,application/xhtml+xml",
@@ -229,7 +215,7 @@ export class InSiteSession {
       }),
       body: new URLSearchParams(form).toString(),
       signal: this.signal,
-    });
+    }, this.impl, "legistar");
     this.store(response, url);
     if (!response.ok) {
       throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);

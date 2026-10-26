@@ -1,5 +1,6 @@
 /** @freshness-reads-here: stamps only the successful fetch whose bytes were just read; replays keep the original time. */
 import { createHash } from "node:crypto";
+import { trackSourceTransport } from "../sources/host-transport.ts";
 import type { RoutineCandidate } from "./types.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 
@@ -17,7 +18,7 @@ export type RetainedMeetingCandidate = RoutineCandidate & {
 export function retainingFetch(base: typeof fetch, now: () => string = () => new Date().toISOString()) {
   const responses: RetainedSourceResponse[] = [], refusals: string[] = [];
   let retainedBytes = 0;
-  const fetch = (async (input, init) => {
+  const fetch = trackSourceTransport((async (input, init) => {
     const requestedUrl = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     const response = await base(input, init);
     const finalUrl = response.url || requestedUrl;
@@ -31,7 +32,7 @@ export function retainingFetch(base: typeof fetch, now: () => string = () => new
       } else refusals.push(`RESEARCH_CAPTURE_BOUND_EXCEEDED:${finalUrl}`);
     }
     return response;
-  }) as typeof globalThis.fetch;
+  }) as typeof globalThis.fetch, base);
   return { fetch, responses, refusals };
 }
 

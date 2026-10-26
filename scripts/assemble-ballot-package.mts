@@ -23,7 +23,7 @@ async function missingBallotInput(store: RoutineDataStore, state: BallotState, n
   status: BallotPublicationResult["status"]; versionId: string | null; reason: string; receipt: RoutineRunnerReceipt | null;
 }> {
   const scope = stateBallotScope("ballot-contests", state), contractId = stateBallotContractId("ballot-contests", state);
-  const prior = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", scope, { store, now, bypassCache: true });
+  const prior = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", scope, { store, now });
   if (prior.kind !== "PROMOTED") return { status: "HELD", versionId: null, receipt: null,
     reason: `BALLOT_INPUT_MISSING_NO_HELD_STATE:${state}: no verified state ballot data is available.` };
   const versionId = prior.projection.versionId;

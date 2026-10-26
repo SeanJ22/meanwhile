@@ -51,11 +51,15 @@ for (const provider of ["memory", "file", "postgres"] as const) {
         const db = new PGlite();
         cleanup = () => db.close();
         await db.exec(`CREATE TABLE cp_log_heads(log_table text,log_key text,next_position bigint,PRIMARY KEY(log_table,log_key));
-          CREATE TABLE cp_log_owner_digests(log_key text,record_id text,position bigint,recorded_at timestamptz,record jsonb,
+          CREATE TABLE cp_log_owner_digests(log_key text,record_id text,position bigint,recorded_at timestamptz,record jsonb,changed_at timestamptz NOT NULL DEFAULT now(),
             PRIMARY KEY(log_key,record_id),UNIQUE(log_key,position));`);
         const sql = { query: async (text: string, params?: readonly unknown[]) => {
           const rows = (await db.query(text, params ? [...params] : [])).rows;
-          transferred = rows;
+          const bodies = rows.filter(row => Object.hasOwn(row as object, "record"));
+          if (bodies.length) transferred = bodies.map(row => {
+            const value = row as { log_key: string; record: unknown };
+            return { log_key: value.log_key, record: value.record };
+          });
           return rows;
         } };
         repos = { ...repos, ownerDigests: pgAppendOnlyRepository(sql, "owner_digests") };

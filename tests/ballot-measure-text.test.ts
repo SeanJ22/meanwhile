@@ -6,7 +6,6 @@ import * as React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
 import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
-import { cardGapLine } from "../lib/design/card-gaps.ts";
 import { readerText } from "../lib/text/reader-names.ts";
 
 import type { BallotSet } from "@/lib/ballot/types";
@@ -85,7 +84,7 @@ test("BAL-30: the ballot page renders the question and the statement it holds", 
   );
 });
 
-test("BAL-30: a null statement contributes one named card gap and renders no empty row", () => {
+test("BAL-30: a null statement explains the gap where its words belong", () => {
   const source = ts.createSourceFile("ballot.tsx", PAGE, ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   let statement: ts.ConditionalExpression | undefined;
   const visit = (node: ts.Node) => {
@@ -105,8 +104,10 @@ test("BAL-30: a null statement contributes one named card gap and renders no emp
     assert.equal(gap.props.id, `measure-statement:${id}`);
     assert.equal(gap.props.label, "the official statement");
     assert.equal(gap.props.kind ?? "not-held", "not-held", "an unread statement does not claim the authority published nothing");
-    assert.equal(renderToStaticMarkup(gap), "", "the missing field itself has no visible row");
-    assert.equal(cardGapLine([gap.props]), "Still gathering: the official statement.");
+    const markup = renderToStaticMarkup(gap);
+    assert.match(markup, /working on getting this info/);
+    assert.match(markup, /Want us to get this sooner\?/);
+    assert.doesNotMatch(markup, /Still gathering/);
   }
   const held = measureOf("ballot-az-pima:prop-425")!;
   const heldMarkup = renderToStaticMarkup(render(held, { id: held.contestId }));

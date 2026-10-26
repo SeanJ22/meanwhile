@@ -346,7 +346,7 @@ export async function durableRoutineRunnerReceiptIssue(
         return null;
       }
       if (!readerRepairReprovesVersion(expected)) {
-        const readback = await readPromotedCivicData(expected.recordClass, scope, { store, bypassCache: true });
+        const readback = await readPromotedCivicData(expected.recordClass, scope, { store });
         if (
           readback.kind !== "PROMOTED" ||
           readback.metadata.versionId !== receipt.candidateId ||

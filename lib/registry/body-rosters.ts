@@ -7,8 +7,12 @@ import type { Provenance } from "../sources/types.ts";
 
 import { getRegistryRuntimeReadModel, currentBodyRosters } from "./runtime-read-model.ts";
 import { photoForPerson } from "../photos/person.ts";
+import { mergeBallotPersonHolders } from "../ballot/held-holder.ts";
+import { personIdentityKeys } from "../officials/people-identity.ts";
 
 export interface RosterMember {
+  /** Original sourced rows behind one reader person. Their IDs remain aliases. */
+  sourceMembers?: readonly RosterMember[];
   fieldSources?: Record<string, Provenance>;
   /** The page and day this member's seat was read from. */
   membershipSource?: { sourceUrl: string; sourceOrg: string; collectedAt: string };
@@ -61,6 +65,8 @@ export type Partisanship =
   | "UNDETERMINED";
 
 export interface BodyRoster {
+  /** Earlier sourced memberships superseded by a complete newer roster. */
+  membershipHistory?: readonly RosterMember[];
   kind?: import("../control-plane/promotion/source-kinds.ts").SourceKind;
   /** Matches `BodySourceWiring.bodyId` exactly. */
   bodyId: string;
@@ -129,6 +135,9 @@ export function rosterForBody(bodyId: string | null): BodyRoster | null {
 
 /** A roster member in the shape every officeholder surface renders. */
 export interface RosterHolder {
+  sourceHolders?: readonly RosterHolder[];
+  personId?: string;
+  nativeIds?: RosterMember["nativeIds"];
   id: string;
   name: string;
   officeTitle: string;
@@ -166,9 +175,30 @@ export interface RosterHolder {
 export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
   const roster = rosterForBody(bodyId);
   if (!roster) return [];
+  return holdersFromRoster(roster, roster.members);
+}
+
+export function earlierRosterHoldersForBody(bodyId: string | null): RosterHolder[] {
+  const roster = rosterForBody(bodyId);
+  return roster ? holdersFromRoster(roster, roster.membershipHistory ?? []) : [];
+}
+
+/** Select the exact source person before resolving their portrait and card fields. */
+export function rosterHolderById(id: string): RosterHolder | null {
+  for (const roster of currentBodyRosters()) {
+    const member = roster.members.find(row => personIdentityKeys(row).has(id))
+      ?? roster.membershipHistory?.find(row => personIdentityKeys(row).has(id));
+    if (member) return holdersFromRoster(roster, [member])[0];
+  }
+  return null;
+}
+
+function holdersFromRoster(roster: BodyRoster, members: readonly RosterMember[]): RosterHolder[] {
   const photos = getRegistryRuntimeReadModel().rosterPhotos;
-  return roster.members.map((member) => ({
+  const holder = (member: RosterMember): RosterHolder => ({
     id: member.id,
+    personId: member.personId,
+    nativeIds: member.nativeIds,
     name: member.name,
     officeTitle: member.officeTitle,
     officeJurisdictionOcdId: roster.bodyId.split("#")[0],
@@ -189,12 +219,23 @@ export function rosterHoldersForBody(bodyId: string | null): RosterHolder[] {
     contactScope: member.contactScope,
     fieldSources: member.fieldSources,
     contactFormUrl: null,
-    photoUrl: photoForPerson(member.personId ?? member.id)?.url ?? photos[member.id] ?? null,
+    photoUrl: photoForPerson(member.personId ?? member.id)?.url ?? [...personIdentityKeys(member)].map(id => photos[id]).find(Boolean) ?? null,
     campaignUrl: null,
     termStart: member.termStart ?? null,
     termEnd: member.termEnd ?? null,
     birthDate: null,
-  }));
+  });
+  return members.map(member => {
+    const direct = holder(member);
+    if (!member.sourceMembers) return direct;
+    const merged = mergeBallotPersonHolders(member.sourceMembers.map(holder));
+    return merged ? { ...direct, ...merged, id: direct.id, personId: direct.personId,
+      name: direct.name, officeTitle: direct.officeTitle, nativeIds: direct.nativeIds,
+      officeJurisdictionOcdId: direct.officeJurisdictionOcdId, termNote: merged.termNote ?? direct.termNote,
+      sourceUrl: merged.sourceUrl ?? direct.sourceUrl, provenance: merged.provenance ?? direct.provenance,
+      contactFormUrl: null, campaignUrl: null, birthDate: null,
+    } as RosterHolder : direct;
+  });
 }
 
 /**
@@ -206,7 +247,7 @@ export function divisionOcdIdForRosterHolder(
   holderId: string,
 ): string | null {
   for (const roster of currentBodyRosters()) {
-    if (roster.members.some((member) => member.id === holderId)) {
+    if ([...roster.members, ...roster.membershipHistory ?? []].some((member) => personIdentityKeys(member).has(holderId))) {
       return roster.bodyId.split("#")[0];
     }
   }

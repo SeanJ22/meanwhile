@@ -20,6 +20,10 @@ import { factClocks } from "../lib/facts/clocks.ts";
 import { publishBoxFindings, reviewPublishedBoxFacts } from "../lib/facts/box-publication.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
+import { receiptCapture } from "../lib/facts/capture.ts";
+import { withReaderRoute } from "../lib/db/reader-route.ts";
+import { withDatabaseJob } from "../lib/db/transfer-by-caller.ts";
+import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
 
 import { hostname } from "node:os";
@@ -34,7 +38,7 @@ import { ballotPublicationDue, ballotPublicationHasNoInput, electionLaunchOrder,
   type BallotPublicationSummary, type BallotPublicationSummaries } from "../lib/civic-data/ballot-publication.ts";
 import { parseStateBallotContractId, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import { ballotNavigationTaskState } from "../lib/civic-data/ballot-navigation-scope.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { campaignPublicationInputsDue, readCampaignPublicationInputs, campaignPublicationTask, readCandidateProfilePublicationTasks, type CampaignPublicationInputs } from "../lib/civic-data/campaign-publication-due.ts";
 
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
@@ -53,6 +57,7 @@ import {
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineFailureDomainFrontier,
   routineChildMemoryOrder,
+  routineWaitedFullPass,
   ROUTINE_SOURCE_TASKS,
   ROUTINE_SUPERVISOR_STARTED_AT_ENV,
   routineTaskFromContract,
@@ -95,7 +100,7 @@ import { readNowDueRequests, settleReadNow } from "../lib/doors/mission-refresh.
 import { SOURCE_CHECK_AFTER_ENV } from "../lib/sources/known-release.ts";
 import { editDeriveDueRequests } from "../lib/doors/edit-derive.ts";
 import { meetingReadQuietMs } from "../lib/civic-data/meeting-lanes.ts";
-import { listDoors } from "../lib/doors/registry.ts";
+import { readRunnerDoors } from "../lib/doors/runner-reads.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
@@ -190,13 +195,11 @@ import {
   admittedRuntimeChildEnvironment,
   assertRuntimeAuthority,
 } from "../lib/civic-data/runtime-authority.ts";
-import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
 import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
 import { factReader } from "../lib/facts/db.ts";
 import { memberOfficesRunNeeded } from "../lib/officials/member-offices-publication.ts";
 
-readFromHeldCopies();
 
 let step = "reading its task selection";
 installFatalLine("routine-civic-data-runner", () => step);
@@ -512,13 +515,26 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
 
-  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async () => {
-    const report = await publishHeldMeetingPins({ facts:readerFactDb(), vault:new DurableEvidenceStore(join(ROOT,...VAULT_DIR)),
-      clocks:factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value??null), now:new Date().toISOString(),
+  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", () => withDatabaseJob("meeting-pins",()=>withReaderRoute("meeting-pins", async () => {
+    const vault=new DurableEvidenceStore(join(ROOT,...VAULT_DIR));
+    const sourceFetch=pacedProbeFetch({pacing:repos.websitePacing});
+    const sourceCopies=new Map<string,Promise<WorkerPublicationCapture>>();
+    const clocks=factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value??null);
+    const report = await publishHeldMeetingPins({ facts:readerFactDb(), vault,
+      clocks, now:new Date().toISOString(),
+      readCapture:url=>{
+        let copy=sourceCopies.get(url);
+        if(!copy){copy=(async()=>{
+          const read=await receiptCapture({url,repos,vault,fetch:sourceFetch,now:new Date().toISOString(),windowHours:clocks.windowHours("contact")});
+          if("error" in read)throw new Error(read.error);
+          return read.capture;
+        })();sourceCopies.set(url,copy);if(sourceCopies.size>32)sourceCopies.delete(sourceCopies.keys().next().value!);}
+        return copy;
+      },
       deadlineMs:Math.min(PASS_LAUNCH_DEADLINE_MS,Date.now()+Math.floor(PUBLISH_NOW_PASS_BUDGET_MS/3)) });
     console.log(`RCD_FACTS meeting pins: ${report.published} published; ${report.unplaced} still without a point`);
     if(report.failures.length)failures.push({taskId:"meeting-pins",code:"MEETING_PIN_PUBLICATION_FAILED",detail:safeFailure(report.failures.slice(0,8).join(" | "))});
-  });
+  })));
 
   // Publishing what is already found (Box findings, saved worker results, changed doors) is free: a pause never holds it.
   if (PUBLISH_NOW || (ONLY && WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) {
@@ -571,7 +587,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     if (!PUBLISH_NOW) return publication;
 
     try {
-      const listed = (await listDoors(repos.doors)).doors;
+      const listed = await readRunnerDoors(repos.doors, ["status"], "OPEN", "probes");
       const clockStore = new PostgresRoutineDataStore();
       const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
       const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb(), query: facts.query }, Date.now()),
@@ -583,7 +599,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     } catch (error) {
       console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
     }
-    return [...publication, ...publishNowDoorTasks((await listDoors(repos.doors)).doors,
+    return [...publication, ...publishNowDoorTasks(await readRunnerDoors(repos.doors, ["status"], "OPEN", "publication"),
       MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
   }
   const intents = readIntents([...(await readRunnerPauseIntents(repos))]);
@@ -840,7 +856,7 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
     const connection = controlPlaneUrlFromEnv();
     if (connection && Date.now() < deadlineMs) {
       const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-      const doors = (await listDoors(repos.doors)).doors;
+      const doors = await readRunnerDoors(repos.doors, ["kind"], "page", "refresh");
       const sizeFor = websiteSizeFromHoldings([...new Set(doors.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
       const pages = await refreshDuePageDoors({ repos, facts: readerFactDb(), vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
         fetch: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), doors, now: new Date().toISOString(), deadlineMs });
@@ -956,9 +972,9 @@ if (!FORCE && controlPlaneUrlFromEnv() !== null) {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     const settledAt = new Date().toISOString();
     const cleared = await settleReadNow(doorRepos.doors, settledAt);
-    const marked = readNowDueRequests((await listDoors(doorRepos.doors)).doors, new Set([...MEETING_PARTITION_CONTRACTS.map((contract) => contract.id), ...STANDING_SOURCE_TASKS.map((task) => task.id)]), settledAt);
+    const marked = readNowDueRequests(await readRunnerDoors(doorRepos.doors, ["readNow"], "true", "requests"), new Set([...MEETING_PARTITION_CONTRACTS.map((contract) => contract.id), ...STANDING_SOURCE_TASKS.map((task) => task.id)]), settledAt);
 
-    const derive = editDeriveDueRequests((await listDoors(doorRepos.doors)).doors, new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
+    const derive = editDeriveDueRequests(await readRunnerDoors(doorRepos.doors, ["origin"], "MANUAL", "requests"), new Set(DOOR_DERIVE_CONTRACT_IDS), settledAt);
     dueRequests = [...dueRequests, ...[...marked, ...derive].filter((request) => !dueRequests.some((held) => held.id === request.id))];
     if (marked.length > 0 || cleared > 0 || derive.length > 0) console.log(`RCD_DUE_REQUEST doors marked to be read now: ${marked.length} due, ${cleared} settled; ${derive.length} derive request(s) after door edits`);
   } catch (error) {
@@ -1195,6 +1211,7 @@ const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, cloc
   ),
 })), routineFailureDomainRotationSeed(RUN_STARTED_AT));
 const admittedIds = new Set(admitted.map(({ task }) => task.id));
+const waitedFullPass = new Set(admitted.filter(candidate => routineWaitedFullPass(candidate, admissionNowMs)).map(({ task }) => task.id));
 for (const { pending } of dueCandidates) {
   if (admittedIds.has(pending.id)) continue;
   recordLaunchDecision(pending.task, "DEFER", "Other calendars on this source have this pass's turns",
@@ -1309,9 +1326,9 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
       if (Date.now() >= PASS_LAUNCH_DEADLINE_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent, so release handoff can run before the next one");
-      // A memory wait returns the source turn immediately, except the state map's, which keeps its place until it fits.
+      // A memory wait returns the source turn immediately, except for work that has waited a full pass: it takes the next memory that fits.
       try {
-        await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), routineChildMemoryOrder(command.serialLane, index));
+        await acquireChildMemory(command, unitMembers(units[index]!).map((member) => member.id), routineChildMemoryOrder(index, waitedFullPass.has(command.id)));
       } catch (error) {
         if (error instanceof Error && error.message.startsWith("WORKER_MEMORY_BUSY:")) return false;
         throw error;

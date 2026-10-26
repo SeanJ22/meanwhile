@@ -16,7 +16,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 
 import { config as loadEnv } from "dotenv";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import {
   declaredMigrationCatalog,

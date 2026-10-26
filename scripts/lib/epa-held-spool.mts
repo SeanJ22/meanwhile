@@ -100,7 +100,7 @@ export async function cacheEpaBaselineRegistrations(states:readonly EpaBaselineS
     const file=join(root,`${jurisdiction.usps}.json`);
     let projection:Awaited<ReturnType<typeof readRegistrationProjection>>;
     try{projection=JSON.parse(await readFile(file,"utf8")) as typeof projection;}
-    catch(error){if((error as NodeJS.ErrnoException).code!=="ENOENT")throw error;projection=await readRegistrationProjection(jurisdiction.usps,{store,bypassCache:true});fetched++;}
+    catch(error){if((error as NodeJS.ErrnoException).code!=="ENOENT")throw error;projection=await readRegistrationProjection(jurisdiction.usps,{store});fetched++;}
     assert.equal(projection.kind,"PROMOTED",jurisdiction.usps);if(projection.kind!=="PROMOTED")throw Error(`Missing ${jurisdiction.usps} registration.`);
     assert.equal(projection.metadata.versionId,baseline.result.registration.version,`${jurisdiction.usps} registration changed since the full source replay.`);
     await writeFile(file,JSON.stringify(projection),{mode:0o600});

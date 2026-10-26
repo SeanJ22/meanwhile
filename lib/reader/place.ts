@@ -43,7 +43,6 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
     ELSE CASE WHEN $7::boolean THEN 'history' ELSE 'current' END END AS value) saved ON true
   WHERE e.state=$1::char(2) OR e.state IS NULL ORDER BY s.id`;
 
-const places = serverReaderValue("place-inflight", () => new Map<string, Promise<PlacePackage>>());
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
 const pageIds = serverReaderValue("place-page-ids", () => new WeakMap<PlacePackage, readonly string[]>());
 const pageTerritories = serverReaderValue("place-page-territories", () => new WeakMap<PlacePackage, BodyTerritorySelection|null>());
@@ -80,12 +79,10 @@ function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<P
   const key=JSON.stringify(selected),selection=currentReaderSelection();
   let request=selection?requests.get(selection):undefined;
   if(selection&&!request){request=new Map();requests.set(selection,request);}
-  const prior=request?.get(key)??places.get(key);
-  if(prior){request?.set(key,prior);return prior;}
+  const prior=request?.get(key);
+  if(prior)return prior;
   const read=loadPlacePackage(selected,query());
-  request?.set(key,read);places.set(key,read);
-  const settled=()=>{if(places.get(key)===read)places.delete(key);};
-  void read.then(settled,settled);
+  request?.set(key,read);
   return read;
 }
 

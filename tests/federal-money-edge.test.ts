@@ -136,7 +136,7 @@ test("a county index stays in bounded pages across splits and a correction remov
   } });
   for (let index = 0; index < 160; index += 1) await publishFederalMoneyPartition({ store, projection: partition(COUNTY, 1, index.toString(16)), previous: null, versionId: `v${index}`, checkedAt: NOW });
   const before = partition(COUNTY, 1, "a");
-  const corrected = { ...before, records: before.records.map(row => ({ ...row, title: "Corrected disaster", provenance: { ...row.provenance, publicationDate: "2026-10-15" } })) };
+  const corrected = { ...before, records: before.records.map(row => ({ ...row, title: "Corrected disaster", period: "2026-10-15", provenance: { ...row.provenance, publicationDate: "2026-10-15" } })) };
   await publishFederalMoneyPartition({ store, projection: corrected, previous: before, versionId: "corrected", checkedAt: NOW });
   assert.ok(largestPointer < 500);
   assert.ok(largestIndex < 24_000);
@@ -147,11 +147,12 @@ test("a county index stays in bounded pages across splits and a correction remov
     const result = await readFederalMoneyForPlace({ divisionId: COUNTY }, { artifactStore: trace(local, reads), cursor });
     if (pages === 0) assert.equal(result.sources[3].records[0].title, "Corrected disaster");
     for (const fact of result.sources[3].records) { assert.ok(!ids.has(fact.id)); ids.add(fact.id); }
-    assert.ok(reads.length < 25, "reader seeks index paths instead of scanning the county");
+    assert.ok(reads.filter(key => key.endsWith("json.gz")).length <= 100,
+      "a response opens at most the first 100 single-record segments for its selected county");
     cursor = result.nextCursor; pages += 1;
   } while (cursor);
   assert.equal(ids.size, 160);
-  assert.equal(pages, 160);
+  assert.equal(pages, 2, "one page merges the newest 100 records across partitions");
 });
 
 test("a cursor keeps its published snapshot through a correction and removal", async t => {

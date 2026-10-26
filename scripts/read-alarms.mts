@@ -14,7 +14,7 @@
 import { join } from "node:path";
 
 import { config as loadEnv } from "dotenv";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 loadEnv({ path: join(process.cwd(), ".env.local") });
 

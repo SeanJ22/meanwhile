@@ -2,6 +2,9 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import type { ModalSubject } from "../components/map/popup/entity-modal.tsx";
 
 import {
   BODY_BLURBS,
@@ -9,7 +12,7 @@ import {
   blurbForBody,
 } from "../lib/officials/body-description.ts";
 
-/* Body sections show sourced records; their card frame collects missing facts. */
+/* Every body section keeps its own held facts or missing-information message. */
 
 const ROOT = process.cwd();
 const PIMA = "ocd-division/country:us/state:az/county:pima";
@@ -82,26 +85,26 @@ test("M136: every blurb carries a checkable basis — no unsourced prose anywher
   }
 });
 
-test("body cards render held sections and collect absent ones at the foot", () => {
-  const source = readFileSync(
-    join(ROOT, "components/map/popup/entity-modal.tsx"),
-    "utf8",
-  );
-
-  for (const id of ["what", "representation", "meetings", "contact", "jurisdiction"]) {
-    assert.ok(
-      source.includes(`id: "${id}"`),
-      `the body card lost its "${id}" section`,
-    );
+test("each empty body section contains its own missing-information message and request link", async () => {
+  const { EntityModal } = await import("../components/map/popup/entity-modal.tsx");
+  const { DataProvider } = await import("../lib/state/data.tsx");
+  const subject: ModalSubject = { subjectId: "held:body", subjectKind: "BODY", title: "Held board", subtitle: "County", tier: "local",
+    facts: [], representation: [], representationNote: "", meetings: [], sources: [], bodyCard: {
+      whatItDoes: { classDefinition: null, formDefinition: null, unreadNote: null }, superintendent: null, isSchoolDistrict: false,
+      contact: [], jurisdiction: [],
+    } };
+  const data: Parameters<typeof DataProvider>[0]["value"] = { allMeetings: [], meetings: [], venues: [], result: null, location: null, drawnDistricts: [], dropped: 0,
+    searchFailed: false, atAddress: false, governing: null, zipPartial: null, basis: "ZIP" };
+  const html = renderToStaticMarkup(createElement(DataProvider, { value: data } as Parameters<typeof DataProvider>[0],
+    createElement(EntityModal, { subject, embedded: true, onClose: () => {} }))).replaceAll("&#x27;", "'").replaceAll("’", "'");
+  const sections = html.match(/<section\b[\s\S]*?<\/section>/g) ?? [];
+  for (const title of ["What this body does", "Who sits on it", "Meetings", "Contact", "Where it governs"]) {
+    const section = sections.find(markup => markup.includes(`>${title}</span>`));
+    assert.ok(section, `The body card lost its ${title} section`);
+    assert.ok(section.includes("We're working on getting this info"), title);
+    assert.ok(section.includes("Want us to get this sooner?"), title);
   }
-
-  assert.match(source, /sections\.map\(\(section\) => section\.content \?/);
-  assert.match(source, /<CardGapContribution key=\{section\.id\}/);
-  assert.doesNotMatch(source, /WorkingOnIt/);
-
-  // Sections and tabs are mutually exclusive: a card carrying both would say
-  // everything twice.
-  assert.match(source, /\{subject\.bodyCard \?/, "the body card no longer picks the section grammar");
+  assert.doesNotMatch(html, /Still gathering/);
 });
 
 test("M136: the body card orders meetings upcoming-first from one clock", () => {
@@ -135,9 +138,7 @@ test("M136: a school district's superintendent is asked for and named when missi
 });
 
 test("M136: the contact section never invents a route", () => {
-  const entry = readFileSync(join(ROOT, "components/map/map-entry.tsx"), "utf8");
-  const fn = entry.slice(entry.indexOf("function bodyContactRows"));
-  const body = fn.slice(0, fn.indexOf("\n}"));
+  const body = readFileSync(join(ROOT, "lib/registry/body-contact.ts"), "utf8");
   assert.ok(
     !/mailto:info@|@\$\{|`info@/.test(body),
     "a contact address is being pattern-built rather than sourced",

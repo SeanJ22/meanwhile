@@ -92,7 +92,7 @@ export async function runSpecialDistrictBoundaryPublication(input: Parameters<ty
   try {
     const built = specialDistrictBoundaryPackage(input), published = await publishSpecialDistrictBoundary(input.store, input);
     candidateId = published.candidate.candidate.id; versionId = published.promoted?.versionId ?? null;
-    const read = await readSpecialDistrictBoundaries(input.district.countyOcdId, { store: input.store, now: input.now, bypassCache: true });
+    const read = await readSpecialDistrictBoundaries(input.district.countyOcdId, { store: input.store, now: input.now });
     if (!published.promoted || read.kind !== "PROMOTED" || read.metadata.versionId !== versionId) throw new Error(published.candidate.failureDetail ?? "Boundary has not reached its typed reader.");
     outcome = { at: input.now, workerResultId: input.workerResultId, candidateId, versionId, status: "PUBLISHED",
       code: published.confirmed ? "VERIFIED_RESULT_REUSED" : "SPECIAL_DISTRICT_BOUNDARY_PUBLISHED",

@@ -33,9 +33,9 @@ export async function collectPeopleCoverage(options:PromotedCivicDataReadOptions
     const sources:{sourceId:string;status:string;people:number|null;legislators:number|null;photos:number|null;disagreements:number|null}[]=[];
     const target=officialStateLegislatorTargetByScope(jurisdiction);
     const reads=await Promise.allSettled([
-      readOpenStatesPeopleProjection(jurisdiction,{...options,now:observedAt,bypassCache:true}),
-      ...(target?[readOfficialStateLegislatorsProjection(target.jurisdiction,{...options,now:observedAt,bypassCache:true})]:[]),
-      ...PEOPLE_SOURCE_IDS.filter(id=>id!=="people-portraits").map(id=>readPeopleSourceProjection(jurisdiction,id,{...options,now:observedAt,bypassCache:true})),
+      readOpenStatesPeopleProjection(jurisdiction,{...options,now:observedAt}),
+      ...(target?[readOfficialStateLegislatorsProjection(target.jurisdiction,{...options,now:observedAt})]:[]),
+      ...PEOPLE_SOURCE_IDS.filter(id=>id!=="people-portraits").map(id=>readPeopleSourceProjection(jurisdiction,id,{...options,now:observedAt})),
     ]);
     const ids=["plural-openstates",...(target?[target.sourceId]:[]),...PEOPLE_SOURCE_IDS.filter(id=>id!=="people-portraits")];
     reads.forEach((result,index)=>{
@@ -44,9 +44,9 @@ export async function collectPeopleCoverage(options:PromotedCivicDataReadOptions
         legislators:roster?roster.officeholders.filter(isLegislator).length:null,photos:roster?roster.officeholders.filter(personHasPublishedPhoto).length:null,
         disagreements:roster?roster.disagreements?.length??0:null});
     });
-    const composite=await readStatePeopleProjection(jurisdiction,{...options,now:observedAt,bypassCache:true});
+    const composite=await readStatePeopleProjection(jurisdiction,{...options,now:observedAt});
     const held=composite.kind==="PROMOTED"||composite.kind==="BOOTSTRAP"?composite.value.roster:null;
-    const federal=await readFederalDirectoryProjection([jurisdiction.slice(3)],{...options,now:observedAt,bypassCache:true});
+    const federal=await readFederalDirectoryProjection([jurisdiction.slice(3)],{...options,now:observedAt});
     const federalSlice=federal.kind==="PROMOTED"||federal.kind==="BOOTSTRAP"?federal.value.roster:null;
     if(!federalSlice)issues.push({scope:jurisdiction,detail:`The place's members of Congress read ${federal.kind}`});
     const combined=mergePeopleSets([...(federalSlice?[federalSlice]:[]),...(held?[held]:[])]);

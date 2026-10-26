@@ -1,5 +1,5 @@
 /** Never touches the candidate JSON column, not even through a path operator: unpacking it row by row takes minutes. */
-import { Pool } from "@neondatabase/serverless";
+import { Pool } from "../db/client.ts";
 import { and, inArray, like, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
 

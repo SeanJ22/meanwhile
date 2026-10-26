@@ -217,3 +217,17 @@ export function countSitting(tally: IngestTally, sitting: PersistedSittingOutcom
   tally.voteRequestFailures += sitting.voteRequestFailures.length;
   if (sitting.extraction === "ZERO_ROWS_FAILED") tally.zeroRowSittings += 1;
 }
+
+/** A missing member in an open fact set does not retract a previously verified record. */
+export function retainVerifiedSittingRecords(fresh: PersistedSittingOutcomes, prior: PersistedSittingOutcomes | undefined): PersistedSittingOutcomes {
+  if (!prior || prior.extraction !== "RETRIEVED" || fresh.extraction !== "RETRIEVED") return fresh;
+  if (fresh.meetingId !== prior.meetingId || fresh.bodyId !== prior.bodyId || fresh.eventId !== prior.eventId || fresh.slug !== prior.slug) {
+    throw new Error("OUTCOME_PRIOR_SITTING_IDENTITY_MISMATCH");
+  }
+  const retain = <T extends { readonly eventItemId: number }>(current: readonly T[], held: readonly T[]): T[] => {
+    const ids = new Set(current.map(row => row.eventItemId));
+    return [...current, ...held.filter(row => !ids.has(row.eventItemId))];
+  };
+  return { ...fresh, agenda: retain(fresh.agenda, prior.agenda), outcomes: retain(fresh.outcomes, prior.outcomes),
+    rollCalls: retain(fresh.rollCalls, prior.rollCalls) };
+}

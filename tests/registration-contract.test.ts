@@ -38,7 +38,7 @@ test("held native listings promote and read independently; a replay keeps their 
   const first = registrationCandidate(args);
   const outcome = await processRegisteredRoutineCandidate(store, args.target.contractId, first, observed);
   assert.equal(outcome.promoted?.versionId, first.id, outcome.candidate.failureDetail ?? "");
-  const read = await readRegistrationProjection("NH", { store, now: observed, bypassCache: true });
+  const read = await readRegistrationProjection("NH", { store, now: observed });
   assert.equal(read.kind, "PROMOTED");
   const model = read.value as RegistrationReadModel;
   assert.equal(model.bodies.length, 0);
@@ -78,7 +78,7 @@ test("the current registration parser replays held evidence after registration/3
   assert.equal(clock.lastSucceededAt, previous.retrieval.retrievedAt);
   assert.equal(routineBaselineOwed(task, clock), true);
   assert.equal(routineTaskDue(task, clock, Date.parse(observed)), true);
-  assert.equal((await readRegistrationProjection("NH", { store, now: observed, bypassCache: true })).kind, "PROMOTED",
+  assert.equal((await readRegistrationProjection("NH", { store, now: observed })).kind, "PROMOTED",
     "the prior GOOD stays readable while its held evidence awaits reparse");
   const result = await processRegisteredRoutineCandidate(store, args.target.contractId, next, observed);
   assert.equal(result.promoted?.versionId, next.id, result.candidate.failureDetail ?? "");

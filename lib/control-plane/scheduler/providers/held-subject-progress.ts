@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../../db/client.ts";
 import type { HeldPlaceField } from "../../../coverage/place-owed.ts";
 import { factClocks } from "../../../facts/clocks.ts";
 import { officialTermScope } from "./held-subject-fields.ts";

@@ -3,6 +3,7 @@ import type { Meeting } from "../sources/types.ts";
 import { isOnlineOnly } from "./online.ts";
 import { readerBodyName, readerGovernmentName } from "../text/reader-names.ts";
 import { censusAddressQuery } from "../geo/address-query.ts";
+import { addressWords } from "../geo/address-words.ts";
 
 export interface MeetingPinBody {
   bodyId: string;
@@ -11,11 +12,17 @@ export interface MeetingPinBody {
     address: string | null;
     phone: string | null;
     provenance: RegistryProvenance;
+    /** Literal issuing-board header span before address normalization. */
+    quote?: string;
+    /** Exact header projected from an immutable promoted source document. */
+    savedSource?: {readonly versionId:string;readonly sha256:string;readonly text:string};
   } | null;
   governmentOffice?: {
     name: string;
     address: string;
     provenance: RegistryProvenance;
+    quote?: string;
+    verifiedPoint?: VerifiedMeetingPinPoint;
   };
   governmentOfficeAlternatives?: NonNullable<MeetingPinBody["governmentOffice"]>[];
   meetingAddresses?: MeetingPinAddress[];
@@ -23,6 +30,10 @@ export interface MeetingPinBody {
 }
 
 export type PinBasis = "MEETING" | "BODY_OFFICE" | "GOVERNMENT_OFFICE";
+export interface VerifiedMeetingPinPoint {
+  readonly lat:number;readonly lng:number;readonly matchedAddress:string;
+  readonly coordinateSourceUrl:string;readonly coordinateCheckedAt:string;
+}
 export interface MeetingPinAddress {
   meetingId: string;
   bodyId?: string;
@@ -32,6 +43,7 @@ export interface MeetingPinAddress {
   provenance: RegistryProvenance;
   geocodingAddress?:string;
   addressAlias?:{sourceAddress:string;provenance:RegistryProvenance};
+  verifiedPoint?:VerifiedMeetingPinPoint;
 }
 export interface MeetingPinLocation extends MeetingPinAddress {
   lat: number;
@@ -43,6 +55,8 @@ export interface MeetingPinLocation extends MeetingPinAddress {
   publishedLocation?: string | null;
   /** Normalized board-address inputs tried before a government-office fallback. */
   boardAddressQuery?: string | null;
+  /** A failed replacement keeps this checked point while the exact new venue remains acquisition work. */
+  pendingReplacement?: {readonly publishedLocation: string | null; readonly onlineOnly: boolean};
 }
 
 /** Keep the current attendance text while reusing a checked point and any still-needed street address. */
@@ -50,7 +64,15 @@ export function publishedVenueDescription<T extends string|null>(text:string,pre
   return {name:text,address:/^\d+[a-z]?(?:-\d+)?\s/i.test(censusAddressQuery(text))?text:previousAddress};
 }
 
+/** An explicitly failed current replacement can keep its earlier point without describing it as the new venue. */
+export function hasPendingPinReplacement(meeting: Meeting, pin: MeetingPinLocation): boolean {
+  return Boolean(pin.pendingReplacement && !meeting.location && pin.bodyId === meeting.bodyId &&
+    pin.pendingReplacement.publishedLocation === (meeting.venueGap?.publishedText ?? null) &&
+    pin.pendingReplacement.onlineOnly === isOnlineOnly(meeting));
+}
+
 export function withPublishedPin(meeting: Meeting, pin: MeetingPinLocation): Meeting {
+  if (hasPendingPinReplacement(meeting,pin)) return {...meeting,mapPin:pin};
   if(pin.basis==="MEETING" && pin.publishedLocation && pin.publishedLocation!==pin.name && pin.publishedLocation!==pin.address) {
     const text=pin.publishedLocation;
     pin={...pin,...publishedVenueDescription(text,pin.address)};
@@ -108,7 +130,13 @@ export function meetingPinAddresses(
       address: office.address,
       basis: "GOVERNMENT_OFFICE",
       provenance: office.provenance,
+      ...(office.verifiedPoint?{verifiedPoint:office.verifiedPoint}:{}),
     });
+  }
+  for(const address of addresses)if(!address.verifiedPoint){
+    const key=addressWords(censusAddressQuery(address.address));
+    const known=addresses.find(other=>other.verifiedPoint&&addressWords(censusAddressQuery(other.address))===key);
+    if(known)address.verifiedPoint=known.verifiedPoint;
   }
   return addresses;
 }

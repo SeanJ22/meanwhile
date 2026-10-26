@@ -1,5 +1,5 @@
 import { EMPTY_SPEND } from "../spend-window.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
@@ -13,7 +13,6 @@ import { CENSUS_LANE_BUDGET_MS } from "./census-lane.ts";
 import type { FieldManualEntry } from "../field-manual.ts";
 import type { PlatformRegistrationPage } from "./platform-registration.ts";
 import type { DiscoveryRuntime } from "./meetings-discovery-executor.ts";
-import { platformRequestPacer } from "./platform-request-pacing.ts";
 import { runPlatformCensusPass, ownerPlatformGovernments } from "./platform-census-pass.ts";
 import { readPlatformOrders, orderedPlatformGovernments } from "./platform-orders.ts";
 import { heldPlatformTenants } from "./platform-enumeration.ts";
@@ -71,7 +70,7 @@ export async function runNationalPlatformCensus() {
   const query = async (sql: string, parameters: readonly unknown[]) => {
     const rows = await reader.query(sql, [...parameters]); progress.note("registration read"); return rows;
   };
-  const vault = cycleVault(join(root, ...VAULT_DIR)), pace = platformRequestPacer();
+  const vault = cycleVault(join(root, ...VAULT_DIR));
   const sizeReaders = new Map<PlatformRegistrationPage, ReturnType<typeof websiteSizeFromHoldings>>();
   const fleet = new FleetSafetyController({ now: now(), spend: EMPTY_SPEND, modelHold: "Plain-code national platform census", websitePacing: repos.websitePacing,
     websiteSize: url => { const values = [...new Map([...sizeReaders.values()].flatMap(read => read(url) ?? []).map(size => [JSON.stringify(size), size])).values()]; return values.length === 1 ? values[0] : null; } });
@@ -79,7 +78,6 @@ export async function runNationalPlatformCensus() {
     now, spaceOut: async () => {}, vault: vault.put, budget: { spent: ended, remainingMs: () => remaining() },
     open: async input => {
       if (ended()) throw new Error("Platform census reading interrupted");
-      await pace(input.url);
       const got = await fleet.guardedOpenBytes("discovery-web", "platform-census", (url, init) => platformFetch(url, {
         ...init, method: input.method ?? "GET", body: input.body, redirect: "manual", signal: AbortSignal.timeout(Math.min(input.timeoutMs, remaining())),
       }), { followRedirects: false })(input);

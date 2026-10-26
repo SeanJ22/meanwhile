@@ -8,6 +8,8 @@ import {PLACE_PACKAGE_SQL,buildPlacePackage} from "../lib/reader/place-builder.t
 import {seedPlacePages} from "./helpers/place-pages.ts";
 import {withReaderSelection} from "../lib/db/reader-route.ts";
 import {stateCoverage,withPlaceRegistry} from "../lib/reader/coverage.ts";
+import {CivicReadCache} from "../lib/db/civic-read-cache.ts";
+import {versionedSelect} from "../lib/db/versioned-query.ts";
 
 test("a ballot roster keeps each person's current office, contacts, terms and sources without reading other-body facts",async()=>{
   const {pg}=await migratedReaderDb();
@@ -68,7 +70,46 @@ test("place reads preserve the migrated state type, use the existing one-shot cl
   }finally{release();installFactReader(undefined);installReaderDatabaseQuery(undefined);await pg.close();}
 });
 
-test("the ballot's body-facts projection preserves contacts and calendar-derived names while omitting unused packages",async()=>{
+test("an independent place request sees a rebuilt current page while an older query response is pending",async()=>{
+  const {pg}=await migratedReaderDb();
+  const copies=new Map<string,string>();
+  const checked=versionedSelect("place-request-race",new CivicReadCache({read:async key=>copies.get(key)??null,
+    write:async(key,value)=>{copies.set(key,value);}}));
+  const division="ocd-division/country:us/state:az/place:request-race",body=`${division}#council`,at="2026-10-24T12:00:00.000Z";
+  const input={state:"AZ",divisionIds:[division],bodyIds:[body],bodyFactsOnly:true};
+  const firstSelection={states:["AZ"],keys:new Set(input.divisionIds)},secondSelection={states:["AZ"],keys:new Set(input.divisionIds)};
+  let reads=0,release=()=>{},started=()=>{};
+  const held=new Promise<void>(resolve=>{release=resolve;});
+  const queried=new Promise<void>(resolve=>{started=resolve;});
+  try {
+    await pg.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Request race council','AZ')",[body]);
+    await pg.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,$1,$1,$2,$3,'source')",["https://example.gov/council",at,"d".repeat(64)]);
+    await pg.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,'office_phone','"520-555-0100"','520-555-0100','live','OFFICIAL',1,'Council contact',$2,'fixture')`,[body,at]);
+    const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+    await seedPlacePages(query,input);
+    installFactReader(async(text,params=[])=>{
+      const call=++reads;
+      const rows=await checked(async(text,params)=>(await pg.query<Record<string,unknown>>(text,[...params])).rows,text,params);
+      if(call===1){started();await held;}
+      return rows;
+    });
+    const first=withReaderSelection(firstSelection,()=>readPlacePackageHttp(input));
+    await queried;
+    await pg.query(`UPDATE fact SET value='"520-555-0199"',value_text='520-555-0199' WHERE entity_id=$1 AND field='office_phone'`,[body]);
+    await seedPlacePages(query,input);
+    const second=withReaderSelection(secondSelection,()=>readPlacePackageHttp(input));
+    assert.notEqual(second,first,"a new request never joins an older fact snapshot");
+    assert.equal(withReaderSelection(firstSelection,()=>readPlacePackageHttp(input)),first,"same-request composition retains its own snapshot");
+    assert.equal((await second).bodies[0]?.fields.officePhone,"520-555-0199");
+    assert.equal(reads,2,"the independent request issues a fresh database version check");
+    assert.equal(withReaderSelection(secondSelection,()=>readPlacePackageHttp(input)),second);
+    release();
+    assert.equal((await first).bodies[0]?.fields.officePhone,"520-555-0100");
+  } finally {release();installFactReader(undefined);await pg.close();}
+});
+
+test("the ballot's body-facts projection preserves contacts and registered body names while omitting unused packages",async()=>{
   const {pg,publish}=await migratedReaderDb();
   const division="ocd-division/country:us/state:az/place:fixture",body=`${division}#council`,at="2026-10-21T00:00:00.000Z";
   const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
@@ -88,7 +129,7 @@ test("the ballot's body-facts projection preserves contacts and calendar-derived
     const full=await buildPlacePackage(input,query),facts=await buildPlacePackage({...input,bodyFactsOnly:true},query);
     assert.deepEqual(facts.bodies,full.bodies);
     assert.equal(facts.bodies[0]?.fields.officePhone,"520-555-0100");
-    assert.equal(facts.bodies[0]?.fields.name,"Official council name");
+    assert.equal(facts.bodies[0]?.fields.name,"Fixture council");
     assert.deepEqual(facts.meetings,full.meetings);assert.equal(facts.meetings.length,1);
     assert.equal(facts.registry,null);assert.ok(full.registry);
     assert.deepEqual(facts.governments,[]);assert.deepEqual(facts.publicationAttempts,[]);

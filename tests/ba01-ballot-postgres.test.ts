@@ -77,11 +77,11 @@ test("BA-01 publishes every state through all real migrations and preserves the 
         const prior = await runBallotPublication({ state, directory: priorDirectory, store });
         assert.equal(prior.report.status, "PUBLISHED", `${state} baseline: ${prior.report.reason}`);
       }
-      const before = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, bypassCache: true });
+      const before = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store });
       if (existed) assert.equal(before.kind, "PROMOTED");
       const result = await runBallotPublication({ state, store });
       assert.equal(result.report.status, "PUBLISHED", `${state}: ${result.report.reason}`);
-      const after = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, bypassCache: true });
+      const after = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store });
       assert.equal(after.kind, "PROMOTED", state);
       if (after.kind !== "PROMOTED") continue;
       const incoming = JSON.parse(await readFile(`data/ballot/2026-general/${file}`, "utf8")) as GenericBallotProjection;

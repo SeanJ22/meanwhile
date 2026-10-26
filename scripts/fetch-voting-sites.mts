@@ -242,14 +242,14 @@ export async function refreshVotingSources(input: {
   let terminal: RoutineRunnerReceipt | null = null, publications = 0;
   const attemptedSourceIds: string[] = [];
   try {
-    let priorRead: Awaited<ReturnType<typeof readPromotedCivicData<VotingSitesFile>>> | null = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, { store, bypassCache: true });
+    let priorRead: Awaited<ReturnType<typeof readPromotedCivicData<VotingSitesFile>>> | null = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, { store });
     if (priorRead.kind !== "PROMOTED" && priorRead.kind !== "NOT_RECORDED") throw new Error("Voting-source holding is unavailable; preserve its last verified facts.");
     if (priorRead.kind === "PROMOTED" && priorRead.metadata.sourceId !== contract.sourceId) throw new Error("Voting-source holding names a different publisher.");
     if (priorRead.kind === "PROMOTED") rememberStatePublicationPrior(store, priorRead.projection);
     let held = priorRead.kind === "PROMOTED" ? priorRead.value : null;
     let version = priorRead.kind === "PROMOTED" ? priorRead.metadata.versionId : null;
     priorRead = null;
-    const registration = input.registration ?? await readRegistrationProjection(state, { store, bypassCache: true });
+    const registration = input.registration ?? await readRegistrationProjection(state, { store });
     const savedDoors = await registeredVotingSourceDoors(context.repos.doors, state);
     const registered = await votingSourceReadOrder(context.repos.doors, state,
       currentVotingSourceDoors(seeds, savedDoors));
@@ -319,7 +319,7 @@ export async function refreshVotingSources(input: {
           terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }; publications++;
         } else {
           if (!terminal) terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
-          const retained = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, { store, now: at, bypassCache: true });
+          const retained = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, { store, now: at });
           if (retained.kind !== "PROMOTED" && retained.kind !== "NOT_RECORDED") throw new Error("Voting-source holding is unavailable after a held update.");
           if (retained.kind === "PROMOTED") {
             rememberStatePublicationPrior(store, retained.projection);

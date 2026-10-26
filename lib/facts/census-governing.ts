@@ -20,7 +20,7 @@ const BATCH = 200;
 const PARALLEL = 2;
 
 /** The Census record's own fields each governing board carries: the government's mailing address and recorded website. */
-const FIELDS = [["office_address", "mailingAddress"], ["homepage", "website"]] as const;
+const FIELDS = [["mailing_address", "mailingAddress"], ["homepage", "website"]] as const;
 
 /** A Census of Governments unit as the division its government governs; every listed unit is an active government (FUNCSTAT A). */
 const DIVISION_OF: Readonly<Record<string, string>> = {
@@ -98,7 +98,7 @@ export async function makeCensusGoverningBodies(input: {
 }): Promise<CensusGoverningReport> {
   const { db } = input;
   const order = censusGoverningOrder(input.states);
-  const version = createHash("sha256").update("GB-01\n").update(readFileSync(join(input.root, "data", "derived", "registration", "index.json"))).digest("hex");
+  const version = createHash("sha256").update("MP-01:physical-office-address\n").update(readFileSync(join(input.root, "data", "derived", "registration", "index.json"))).digest("hex");
   const held = await readPassCursor(db.query, CENSUS_GOVERNING_CURSOR);
   const prior = held ? JSON.parse(held) as Cursor : null;
   let at = prior?.version === version ? order.indexOf(prior.state) + (prior.done ? 1 : 0) : 0;

@@ -89,14 +89,14 @@ test("two states use one validated archive and keep complete native identity, co
   const canonical = new MemoryRoutineDataStore();
   const published = await publishStatePeople({ vault, store: canonical, ...az, now: at });
   assert.ok(published.outcome.promoted, JSON.stringify(published.outcome.candidate.receipt));
-  const read = await readStatePeopleProjection("US-AZ", { store: canonical, now: at, bypassCache: true });
+  const read = await readStatePeopleProjection("US-AZ", { store: canonical, now: at });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.ok(read.value.roster.officeholders.some(row=>row.personId === "plural:one"));
-  assert.equal((await readMemberOffices("plural:az:one", undefined, {store:canonical,now:at,bypassCache:true})).length, 2,
+  assert.equal((await readMemberOffices("plural:az:one", undefined, {store:canonical,now:at})).length, 2,
     "native office contacts reach the scoped reader immediately with the core people projection");
   const offices = await publishMemberOffices({ store: canonical, now: at, jurisdictions: ["US-AZ"] });
   assert.ok(offices.outcome?.promoted, JSON.stringify(offices));
-  await refreshMemberOfficesFromPromoted({ store: canonical, now: at, bypassCache: true });
+  await refreshMemberOfficesFromPromoted({ store: canonical, now: at });
   const shown = currentMemberOffices("plural:az:one");
   assert.equal(shown.length, 2); assert.equal(shown[0].office.phone, "555-1000");
   assert.equal(shown[0].collectedAt, at); assert.match(shown[0].sourceUrl, /raw\.githubusercontent\.com\/openstates\/people/);
@@ -117,7 +117,7 @@ test("two states use one validated archive and keep complete native identity, co
   const replayed = await acquire("az");
   const replayedPublication = await publishStatePeople({ vault, store:canonical,...replayed,now});
   assert.ok(replayedPublication.outcome.confirmed, "identical source replay confirms existing facts without a new version");
-  const replayedRead = await readStatePeopleProjection("US-AZ", {store:canonical,now,bypassCache:true});
+  const replayedRead = await readStatePeopleProjection("US-AZ", {store:canonical,now});
   assert.equal(replayedRead.kind, "PROMOTED");
   if (replayedRead.kind === "PROMOTED") assert.equal(replayedRead.value.roster.unmatched.length, 1,
     "unchanged geographic gaps do not accumulate on every source replay");
@@ -171,7 +171,7 @@ test("Open States offices publish outside the official pilot rosters with their 
   const publication = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA"] });
   assert.ok(publication.outcome?.promoted, JSON.stringify(publication));
   assert.equal(publication.records, 2);
-  await refreshMemberOfficesFromPromoted({ store, now: at, bypassCache: true });
+  await refreshMemberOfficesFromPromoted({ store, now: at });
   const offices = currentMemberOffices("plural:ca:one");
   assert.deepEqual(offices.map(row => row.office.phone), ["555-1000", "555-2000"]);
   assert.ok(offices.every(row => row.official === false && row.sourceOrg === "Open States (Plural, CC-0)"));
@@ -202,7 +202,7 @@ test("Open States offices publish outside the official pilot rosters with their 
   assert.ok(next.outcome?.promoted && !next.outcome.confirmed,JSON.stringify(next));
   assert.equal(next.records,4,"Member Two's two new offices joined; Member One's two carried");
   const settled=await memberOfficesRunNeeded(store,["US-CA"]); assert.equal(settled.needed,false,settled.reason);
-  await refreshMemberOfficesFromPromoted({ store, now: third, bypassCache: true });
+  await refreshMemberOfficesFromPromoted({ store, now: third });
   assert.deepEqual(currentMemberOffices("plural:ca:one"), offices, "Member One's published offices are exactly as they were");
   assert.equal(currentMemberOffices("plural:ca:two").length, 2);
 });
@@ -265,13 +265,13 @@ test("the same native person in legislative and municipal files keeps both membe
   assert.equal(result.roster.officeholders[0].memberships?.filter(row=>row.current).length,2);
   assert.equal(indexByDivision([result.roster]).get("ocd-division/country:us/state:az/place:mesa")?.[0].officeTitle,"Mayor");
   await publishStatePeople({ vault, store:canonical,...result,now:at});
-  const read=await readStatePeopleProjection("US-AZ",{store:canonical,now:at,bypassCache:true});
+  const read=await readStatePeopleProjection("US-AZ",{store:canonical,now:at});
   assert.equal(read.kind,"PROMOTED"); if(read.kind!=="PROMOTED")return;
   const held=heldOfficialStateLegislatorsFromRead("US-AZ",read),link=held.divisions.find(row=>row.ocdId.endsWith("/place:mesa"))!;
   assert.equal(seatHolderForMembership(held.seats[0],link.membershipId)?.officeTitle,"Mayor");
   const ended=await acquire("2026-09-01");
   await publishStatePeople({ vault, store:canonical,...ended,now:at});
-  const after=await readStatePeopleProjection("US-AZ",{store:canonical,now:at,bypassCache:true});
+  const after=await readStatePeopleProjection("US-AZ",{store:canonical,now:at});
   assert.equal(after.kind,"PROMOTED"); if(after.kind!=="PROMOTED")return;
   assert.deepEqual(after.value.roster.divisions.map(row=>row.ocdId),["ocd-division/country:us/state:az/sldu:7"]);
   assert.equal(after.value.roster.officeholders.length,1,"ending the mayor tenure cannot remove the still-serving legislator");
@@ -306,7 +306,7 @@ test("native tenure retirement survives the canonical office vocabulary with hel
   assert.ok(successor.roster.endedMemberships?.some(row => row.personId === "plural:expired" && row.officeId.includes(":state_senator:")));
   const publication = await publishStatePeople({ vault, store, ...successor, now: at });
   assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
-  const read = await readStatePeopleProjection("US-AZ", { store, now: at, bypassCache: true });
+  const read = await readStatePeopleProjection("US-AZ", { store, now: at });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.deepEqual(read.value.roster.officeholders.map(person => person.name), ["Current Member"]);
 });
@@ -346,7 +346,7 @@ test("an explicitly ended final office retires during a partial refresh while ma
   const publication=await publishStatePeople({ vault, store:canonical,...partial,now:at});
   assert.ok(publication.outcome.promoted,JSON.stringify(publication.outcome.candidate.receipt));
   assert.ok(publication.outcome.candidate.receipt?.checks.some(row=>row.code === "NATIVE_MEMBERSHIPS_EXPLICITLY_ENDED"));
-  const read=await readStatePeopleProjection("US-AZ",{store:canonical,now:at,bypassCache:true});
+  const read=await readStatePeopleProjection("US-AZ",{store:canonical,now:at});
   assert.equal(read.kind,"PROMOTED"); if(read.kind!=="PROMOTED")return;
   assert.equal(indexByOfficeholderId([read.value.roster]).has("plural:ended"),false);
   const divisions=indexByDivision([read.value.roster]);

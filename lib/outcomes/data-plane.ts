@@ -190,7 +190,7 @@ export async function readAzOfficialActionsPrior(
   const read = await readPromotedCivicData<ExecutiveActionStore>(
     AZ_OFFICIAL_ACTIONS_CONTRACT.recordClass,
     AZ_OFFICIAL_ACTIONS_CONTRACT.scope,
-    { store, now, bypassCache: true },
+    { store, now },
   );
   if (read.kind === "NOT_RECORDED") return null;
   if (read.kind !== "PROMOTED") {
@@ -413,13 +413,7 @@ export function legistarOutcomesCandidate(input: {
     violations.push(`The ${tenant.label} outcome contract contains a different tenant.`);
   }
   const failedSittings = snapshot.sittings.filter((sitting) => sitting.extraction !== "RETRIEVED");
-  if (failedSittings.length > 0) {
-    violations.push(`${failedSittings.length} sitting acquisition(s) failed; their failure candidates remain durable but may not replace LKG.`);
-  }
   const voteFailures = snapshot.sittings.flatMap((sitting) => sitting.voteRequestFailures.map((failure) => ({ sitting, failure })));
-  if (voteFailures.length > 0) {
-    violations.push(`${voteFailures.length} expected per-item vote request(s) failed; the prior GOOD projection remains live.`);
-  }
   if (snapshot.sittings.some((sitting) => !sitting.meetingId.startsWith(`legistar:${tenant.slug}:`) || !sitting.sourceOrg || !sitting.publication.observedAt)) {
     violations.push("A sitting lacks its exact tenant identity, publisher, or observation time.");
   }
@@ -500,6 +494,7 @@ export function legistarOutcomesCandidate(input: {
     readModel: snapshot,
     civicRecords: members,
     excludedFacts: [
+      ...failedSittings.map(sitting => ({ key: sitting.meetingId, code: "SITTING_READ_HELD", detail: sitting.extractionNote ?? "This sitting remains open for acquisition." })),
       ...snapshot.sittings.flatMap((sitting) => sitting.failedRollCallExtractions.map((eventItemId) => ({
         key: `${sitting.meetingId}:item:${eventItemId}`,
         code: "ROLL_CALL_EXTRACTION_HELD",
@@ -550,15 +545,12 @@ export function legistarMinutesOutcomesCandidate(input: {
   const scopeIssue = minutesOutcomeScopeIssue(snapshot, tenant);
   if (scopeIssue) violations.push(scopeIssue);
   /*
-   * A failed request refuses the candidate and the prior GOOD pointer stays live. A document whose extraction failed on
-   * its bytes is admitted as that failed extraction, with no record, so the unchanged document is not re-downloaded and
-   * failed again on every retry.
+   * A failed request holds its sitting while independently verified records publish. A document whose extraction
+   * failed on its bytes is kept as that failed extraction, with no record, so the unchanged document is not
+   * re-downloaded and failed again on every retry.
    */
   const failed = snapshot.sittings.filter((sitting) =>
     sitting.extraction === "REQUEST_FAILED" || (sitting.extraction === "ZERO_ROWS_FAILED" && sitting.failedMinutesRead === undefined));
-  if (failed.length > 0) {
-    violations.push(`${failed.length} minutes read(s) failed (${failed.map((sitting) => sitting.meetingId).join(", ")}); the prior GOOD projection remains live.`);
-  }
   for (const sitting of snapshot.sittings.filter((row) => row.failedMinutesRead !== undefined)) {
     const read = sitting.failedMinutesRead!;
     if (!SHA256_HEX.test(read.sha256) || !read.url.startsWith(portalPrefix) || !read.reason.trim() || !read.parserRevision) {
@@ -666,6 +658,7 @@ export function legistarMinutesOutcomesCandidate(input: {
     readModel: snapshot,
     civicRecords: members,
     excludedFacts: [
+      ...failed.map(sitting => ({ key: sitting.meetingId, code: "SITTING_READ_HELD", detail: sitting.extractionNote ?? "This sitting remains open for acquisition." })),
       ...snapshot.sittings
         .filter((sitting) => sitting.extraction === "NOT_YET_PUBLISHED")
         .map((sitting) => ({

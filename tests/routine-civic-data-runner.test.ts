@@ -166,7 +166,7 @@ test("meeting pins and Box facts publish beside admission, so the first source l
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const read = functionSource(source, "readHuntSourceTasks");
   assert.doesNotMatch(read, /try \{\s*const (?:report|box) = await publish(?:HeldMeetingPins|BoxFindings)\(/, "admission no longer waits on either");
-  assert.match(read, /publishHeldBesideSources\(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async \(\) => \{\s*const report = await publishHeldMeetingPins\(/);
+  assert.match(read, /publishHeldBesideSources\(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", \(\) => withDatabaseJob\("meeting-pins",\s*\(\)\s*=>\s*withReaderRoute\("meeting-pins", async \(\) => \{[^]*?const report = await publishHeldMeetingPins\(/);
   assert.match(read, /publishHeldBesideSources\(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async \(\) => \{\s*const box = await publishBoxFindings\(/);
   const launch = source.indexOf("for (const { task } of electionLaunchOrder(");
   const awaited = [...source.matchAll(/await heldPublication;/g)].map(match => match.index!);
@@ -2179,7 +2179,8 @@ test("national people children share one serial lane: one at a time, back to bac
   assert.equal(new Set(people.map(task => task.acquisitionFailureDomain)).size, people.length);
   assert.equal(routinePassLaunchOrder(people.map(task => ({ task, lastConsideredAt: null }))).length, people.length,
     "admission still offers every due source and state each pass");
-  const others = ROUTINE_SOURCE_TASKS.filter(task => !["scripts/national-people-refresh.mts", "scripts/place-map-refresh.mts", "scripts/legiscan-bulk.mts"].includes(task.command[0]!));
+  const others = ROUTINE_SOURCE_TASKS.filter(task => !["scripts/national-people-refresh.mts", "scripts/place-map-refresh.mts", "scripts/census-geography-refresh.mts",
+    "scripts/legiscan-bulk.mts"].includes(task.command[0]!));
   assert.ok(others.every(task => routineSerialLane(task.command) === undefined));
 
   const [first, second] = [people.find(task => task.id.endsWith("-ca"))!, people.find(task => task.id.endsWith("-ny"))!];

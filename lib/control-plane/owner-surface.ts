@@ -223,6 +223,8 @@ export interface RunnerHeartbeat {
   } | null;
 
   readonly codeIdentity?: CodeIdentity | null;
+  /** The newest release staging this runner process tried; a FAILED one is applied by drain and restart. */
+  readonly releaseStaging?: import("../ops/runtime-release-stage.ts").ReleaseStagingStatus | null;
   readonly intakeRuntime?: IntakeRuntimeObservation | null;
   readonly discoverySearch?: DiscoverySearchApplied | null;
   readonly settings?: import("./settings.ts").RunnerSettingsApplied | null;

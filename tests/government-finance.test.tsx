@@ -42,7 +42,7 @@ test("Census, FAC and USAspending saved rows publish to the exact scoped typed r
     const published = await publishNationalGovernmentFinance(store, input);
     assert.ok(published.promoted, published.candidate.failureDetail ?? "promotion held");
     assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
-    const read = await readGovernmentBudgets(ocdId, { store, now, bypassCache: true });
+    const read = await readGovernmentBudgets(ocdId, { store, now });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind !== "PROMOTED") throw new Error("Finance absent");
     const record = read.value.records[0] as GovernmentFinanceFact;
@@ -61,7 +61,7 @@ test("Census, FAC and USAspending saved rows publish to the exact scoped typed r
     assert.equal(composeGovernmentFinanceAnswer({subject:{kind:"BODY",id:government.bodyId,name:government.name},question:"What is its revenue?",records:evidence})?.answer,view.rows[0].text);
     assert.equal(governmentFinanceChecklistEvidence([record], government.bodyId)["FIN-08"].length, 0, "unheld reconciliation stays owed");
     await assert.rejects(publishNationalGovernmentFinance(store, { ...input, responses: [{ ...response, partial: true }] }));
-    assert.equal((await readGovernmentBudgets(ocdId, { store, now, bypassCache: true })).kind, "PROMOTED", "failed acquisition preserves GOOD");
+    assert.equal((await readGovernmentBudgets(ocdId, { store, now })).kind, "PROMOTED", "failed acquisition preserves GOOD");
     const repos = createMemoryRepositories();
     const item = createWorkItem({ project: "fixture", subject: government.bodyId, obligation: "government finance", why: "Held national finance first", now });
     const plan = { contract: { schemaVersion: 2, recordClass: "PUBLIC_RECORD", jurisdiction: { canonicalId: ocdId } },
@@ -107,5 +107,9 @@ test("card and Ask select audit fiscal periods without treating capture order as
   assert.equal(composeGovernmentFinanceAnswer({subject,question:"What is its latest audit?",records:evidence})?.answer,records[1].sourceSentence);
   assert.equal(composeGovernmentFinanceAnswer({subject,question:"What is its FY2024 audit?",records:evidence})?.answer,records[0].sourceSentence);
   assert.equal(composeGovernmentFinanceAnswer({subject,question:"How much is its debt?",records:evidence}),null);
-  assert.equal(renderToStaticMarkup(createElement(GovernmentMoneySection,{bodyId,divisionId:ocdId,records:[]})), "", "missing government money contributes only to the card gap");
+  const missingMarkup=renderToStaticMarkup(createElement(GovernmentMoneySection,{bodyId,divisionId:ocdId,records:[]}));
+  assert.match(missingMarkup,/data-card-gap="government-money:fixture-county#governing"/);
+  assert.match(missingMarkup,/working on getting this info/);
+  assert.match(missingMarkup,/Want us to get this sooner\?/);
+  assert.doesNotMatch(missingMarkup,/Still gathering/);
 });

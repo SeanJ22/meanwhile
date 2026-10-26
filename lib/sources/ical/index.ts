@@ -1,3 +1,4 @@
+import { readCalendarRoute } from "../calendar-route.ts";
 /**
  * @freshness-reads-here
  *
@@ -160,6 +161,7 @@ export interface IcalRaw {
    * it is partial, not refused.
    */
   archiveRefused?: string;
+  upcomingRefused?: string;
   sourceUrl: string;
 }
 
@@ -778,16 +780,14 @@ export function makeIcalSource(
      */
     let publisherRelisted = 0;
     /** Divisions whose archive feed refused while their upcoming feed answered, collected per cause. */
-    const archiveRefusals = new Map<string, (string | null)[]>();
+    const scopeRefusals: PartialScopeFailure[] = [];
 
     const from = new Date(now.getTime() - WINDOW_BACK_DAYS * 86_400_000);
     const to = new Date(now.getTime() + WINDOW_FORWARD_DAYS * 86_400_000);
 
-    for (const { wiring, ics, collectedAt, refused, archiveRefused, sourceUrl } of raw) {
-      if (archiveRefused) {
-        const at = archiveRefusals.get(archiveRefused) ?? [];
-        at.push(wiring.ocdId ?? null);
-        archiveRefusals.set(archiveRefused, at);
+    for (const { wiring, ics, collectedAt, refused, archiveRefused, upcomingRefused, sourceUrl } of raw) {
+      for (const [scope, cause] of [["ARCHIVE", archiveRefused], ["UPCOMING", upcomingRefused]] as const) {
+        if (cause) scopeRefusals.push({ scope, cause, ocdIds: [wiring.ocdId ?? null] });
       }
       if (refused) {
         // A refusal is reported as a refusal. It never becomes an empty
@@ -1123,18 +1123,7 @@ export function makeIcalSource(
         // Reported always, like the duplicate counts: a series that was not
         // expanded is named here, never left for a short calendar to imply.
         recurrence,
-        ...(archiveRefusals.size > 0
-          ? {
-              // A-004 · the third state, between `ok` and refused. The
-              // upcoming feed answered; the archive did not; and the two must
-              // not be reported as one.
-              partialScopes: [...archiveRefusals].map(([cause, ocdIds]) => ({
-                scope: "ARCHIVE" as const,
-                ocdIds,
-                cause,
-              })),
-            }
-          : {}),
+        ...(scopeRefusals.length ? { partialScopes: scopeRefusals } : {}),
       },
       // A refused row carries no document. `unretrieved` is at the document layer and `logicalInput` at the event
       // layer, deliberately not added together: a refused feed contributes zero events to `considered`.
@@ -1153,114 +1142,35 @@ export function makeIcalSource(
 
     async fetch(query: MeetingQuery): Promise<IcalRaw[]> {
       const collected: IcalRaw[] = [];
-      // One feed is fetched once per run, however many bodies it serves, so a town is never asked for the same
-      // document once per wiring row. A refusal is shared by every row on that URL: one retrieval, one wall.
-      const fetched = new Map<string, { ics: string; refused: boolean; refusedReason?: string; refusedKind?: "WALL" | "JOB"; refusedRung?: number }>();
+      const fetched = new Map<string, Promise<{ text: string }>>();
+      const read = (url: string) => {
+        let pending = fetched.get(url);
+        if (!pending) {
+          pending = politeGetText(url, { fetchImpl, accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8", signal: query.signal,
+            expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" } });
+          fetched.set(url, pending);
+        }
+        return pending;
+      };
       for (const wiring of wiringRows) {
-        const url = wiring.config.feedUrl;
-        if (!url) {
-          collected.push({
-            wiring,
-            ics: "",
-            collectedAt: new Date().toISOString(),
-            refused: true,
-            // Our wiring names no feed: our configuration, never the town's wall.
-            refusedReason: "no calendar feed URL is wired for this body",
-            refusedKind: "JOB",
-            sourceUrl: "",
-          });
-          continue;
+        const routes = [["UPCOMING", wiring.config.feedUrl], ["ARCHIVE", wiring.config.pastFeedUrl]] as const;
+        const good: IcalRaw[] = [], failures: { scope: "UPCOMING" | "ARCHIVE"; error: unknown }[] = [];
+        for (const [scope, url] of routes) {
+          if (!url) continue;
+          try {
+            const response = scope === "ARCHIVE"
+              ? await readCalendarRoute({ url, read, fetchImpl, signal: query.signal })
+              : { url, value: await read(url) };
+            good.push({ wiring, ics: response.value.text, collectedAt: new Date().toISOString(), sourceUrl: response.url });
+          } catch (error) { query.signal?.throwIfAborted(); failures.push({ scope, error }); }
         }
-        const cached = fetched.get(url);
-        if (cached) {
-          collected.push({
-            wiring,
-            ics: cached.ics,
-            collectedAt: new Date().toISOString(),
-            ...(cached.refused
-              ? {
-                  refused: true,
-                  refusedReason: cached.refusedReason,
-                  refusedKind: cached.refusedKind,
-                  ...(typeof cached.refusedRung === "number" ? { refusedRung: cached.refusedRung } : {}),
-                }
-              : {}),
-            sourceUrl: url,
-          });
-          continue;
-        }
-        try {
-          const res = await politeGetText(url, {
-            fetchImpl,
-            accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
-            signal: query.signal,
-            // A 200 with no VCALENDAR in it is a failed retrieval, not an empty calendar. See `expect` in
-            // lib/sources/http.ts.
-            expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" },
-          });
-          // Ask for the past as well: the list view serves upcoming events only, so the row may name a past feed URL
-          // (e.g. `tribe_event_display=past`). A past feed that refuses does not fail the row.
-          let ics = res.text;
-          let archiveRefused: string | undefined;
-          if (wiring.config.pastFeedUrl) {
-            try {
-              const past = await politeGetText(wiring.config.pastFeedUrl, {
-                fetchImpl,
-                accept: "text/calendar,text/plain;q=0.9,*/*;q=0.8",
-                signal: query.signal,
-                expect: { label: "a calendar feed", marker: "BEGIN:VCALENDAR" },
-              });
-              ics += past.text;
-            } catch (error) {
-              // The archive refused: the row carries the cause, normalize turns it into a scoped partial, and
-              // carry-forward preserves the concluded rows for this division only.
-              archiveRefused = String((error as Error)?.message ?? error);
-            }
-          }
-          // A calendar with no events in it is a failed retrieval, not an empty calendar: a well-formed
-          // `BEGIN:VCALENDAR` envelope with no VEVENT passes every transport check. The row is refused, so the body
-          // keeps its last known sittings (clipped to the serving window) instead of the whole source going red. A
-          // calendar that genuinely empties is marked refused too, until its carried rows age out.
-          if (!/BEGIN:VEVENT/i.test(ics)) {
-            const refusedReason = `${url} answered a calendar envelope holding no events`;
-            fetched.set(url, { ics: "", refused: true, refusedReason, refusedKind: "WALL" });
-            collected.push({
-              wiring,
-              ics: "",
-              collectedAt: new Date().toISOString(),
-              refused: true,
-              refusedReason,
-              refusedKind: "WALL",
-              sourceUrl: url,
-            });
-            continue;
-          }
-          fetched.set(url, { ics, refused: false });
-          collected.push({
-            wiring,
-            ics,
-            collectedAt: new Date().toISOString(),
-            ...(archiveRefused ? { archiveRefused } : {}),
-            sourceUrl: url,
-          });
-        } catch (error) {
-          // One host's refusal empties this row and no other, carried forward as a refusal with its own words and
-          // kind.
-          const refusedReason = String((error as Error)?.message ?? error);
-          const refusedKind = fetchFailureKind(error);
-          const rung = (error as { rung?: unknown } | undefined)?.rung;
-          const refusedRung = typeof rung === "number" ? { refusedRung: rung } : {};
-          fetched.set(url, { ics: "", refused: true, refusedReason, refusedKind, ...refusedRung });
-          collected.push({
-            wiring,
-            ics: "",
-            collectedAt: new Date().toISOString(),
-            refused: true,
-            refusedReason,
-            refusedKind,
-            ...refusedRung,
-            sourceUrl: url,
-          });
+        const partial = Object.fromEntries(failures.map(({ scope, error }) => [scope === "ARCHIVE" ? "archiveRefused" : "upcomingRefused", String(error)]));
+        if (good.length) collected.push(...good.map(row => ({ ...row, ...partial })));
+        else {
+          const error = failures[0]?.error ?? new Error("no calendar feed URL is wired for this body");
+          collected.push({ wiring, ics: "", collectedAt: new Date().toISOString(), sourceUrl: wiring.config.feedUrl ?? "",
+            refused: true, refusedReason: String(error), refusedKind: fetchFailureKind(error),
+            ...((error as { rung?: number }).rung ? { refusedRung: (error as { rung: number }).rung } : {}) });
         }
       }
       return collected;

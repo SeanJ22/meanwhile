@@ -323,7 +323,7 @@ test("a routine pass reads the minutes the portal links, records the rest as not
   const proof = await verdict(store, result.receiptLine, result.exitCode);
   assert.deepEqual({ outcome: proof.outcome, issue: proof.issue }, { outcome: "SUCCESS", issue: null });
 
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(read.metadata.versionId, proof.candidateId);
@@ -392,7 +392,7 @@ test("a failed minutes read is a held attempt that leaves the last good pointer 
   assert.match(refused.result.refusedSittings[0] ?? "", /^legistar-insite:mesa:1336056 /);
   const proof = await verdict(store, refused.result.receiptLine, refused.result.exitCode);
   assert.deepEqual({ outcome: proof.outcome, issue: proof.issue }, { outcome: "HELD", issue: null });
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.ok(!read.value.sittings.some(({ meetingId }) => meetingId === "legistar-insite:mesa:1336056"), "the failed read never entered the pointer");
@@ -428,7 +428,7 @@ test("minutes whose extraction fails are held as a failed extraction and not dow
     candidate?.candidate.excludedFacts?.some((fact) => fact.key === "legistar-insite:mesa:1336056:minutes-extraction" && fact.code === "MINUTES_EXTRACTION_FAILED_HELD"),
     "the failure stays visible on every candidate while it is held",
   );
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const held = read.value.sittings.find(({ meetingId }) => meetingId === "legistar-insite:mesa:1336056")!;
@@ -471,7 +471,7 @@ test("minutes whose extraction fails are held as a failed extraction and not dow
   assert.equal(fourth.result.exitCode, 0, fourth.lines.join("\n"));
   assert.deepEqual(replaced.requests.filter((request) => request.includes("View.ashx")).map((request) => request.split(" ")[0]), ["HEAD", "GET"]);
   assert.match(fourth.lines.join("\n"), /DOCUMENT_CHANGED \(length/);
-  const after = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const after = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(after.kind, "PROMOTED");
   if (after.kind !== "PROMOTED") return;
   const now = after.value.sittings.find(({ meetingId }) => meetingId === "legistar-insite:mesa:1336056")!;
@@ -491,7 +491,7 @@ test("a held failed extraction's bytes are read again after a week, whatever the
   assert.equal(again.result.exitCode, 0, again.lines.join("\n"));
   assert.deepEqual(weekLater.requests.filter((request) => request.includes("View.ashx")).map((request) => request.split(" ")[0]), ["GET"], "re-verified by its bytes, with no HEAD first");
   assert.match(again.lines.join("\n"), /FAILED_DOCUMENT_REVERIFY/);
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const held = read.value.sittings.find(({ meetingId }) => meetingId === "legistar-insite:mesa:1336056")!;
@@ -527,12 +527,12 @@ test("the Reader combines Pima's and Mesa's pointers, each tenant's records and 
 
   // Pima alone, as the Reader reads it before Mesa has a pointer.
   resetOutcomeSnapshotCache();
-  const pimaRead = await readDoorOutcomeProjection(PIMA_SCOPE, { store, bypassCache: true });
+  const pimaRead = await readDoorOutcomeProjection(PIMA_SCOPE, { store });
   const pimaOnly = outcomeEvidenceFor({ bodyId: PIMA_BOARD, meetingId: PIMA_MEETING, questionClass: "WHAT_WAS_DECIDED" });
   const pimaAsk = meetingOutcomeEvidenceFor({ bodyId: PIMA_BOARD, meetingId: PIMA_MEETING, startsAt: PIMA_STARTS_AT, question: "What did the board decide?" });
 
   resetOutcomeSnapshotCache();
-  const combinedVersion = await refreshOutcomeSnapshotFromPromoted({ store, bypassCache: true });
+  const combinedVersion = await refreshOutcomeSnapshotFromPromoted({ store });
   const pimaPointer = await store.readPromotion("MEETING_OUTCOME", PIMA_SCOPE);
   const mesaPointer = await store.readPromotion("MEETING_OUTCOME", SCOPE);
   assert.equal(combinedVersion, `${CONTRACT_ID}=${mesaPointer?.versionId}|pima-legistar-outcomes=${pimaPointer?.versionId}`, "the refresh names every door's version");
@@ -552,7 +552,7 @@ test("the Reader combines Pima's and Mesa's pointers, each tenant's records and 
   // The edge artifact carries the same combination and primes both tenants with no database read.
   const edge = combineOutcomeProjections([
     { value: pimaRead.kind === "PROMOTED" ? pimaRead.value : pima, pointers: [{ contractId: "pima-legistar-outcomes", tenant: "pima", versionId: pimaPointer!.versionId }] },
-    { value: (await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true })).value!, pointers: [{ contractId: CONTRACT_ID, tenant: "mesa", versionId: mesaPointer!.versionId }] },
+    { value: (await readDoorOutcomeProjection(SCOPE, { store })).value!, pointers: [{ contractId: CONTRACT_ID, tenant: "mesa", versionId: mesaPointer!.versionId }] },
   ])!;
   assert.equal(edge.versionId, combinedVersion);
   assert.equal(combinedOutcomeVersionId([{ contractId: "pima-legistar-outcomes", versionId: pimaPointer!.versionId }]), `pima-legistar-outcomes=${pimaPointer!.versionId}`, "one door's artifact names that door alone");
@@ -570,7 +570,7 @@ test("the Reader combines Pima's and Mesa's pointers, each tenant's records and 
 test("Ask answers a Mesa council decision from the council's own minutes, with the exact passage, and never presents a tally as a roll call", async () => {
   const { store } = await storeWithBothTenants();
   resetOutcomeSnapshotCache();
-  await refreshOutcomeSnapshotFromPromoted({ store, bypassCache: true });
+  await refreshOutcomeSnapshotFromPromoted({ store });
 
   const meetingId = "legistar-insite:mesa:1336056";
   const answer = meetingOutcomeEvidenceFor({

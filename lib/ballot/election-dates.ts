@@ -14,6 +14,24 @@ export interface ElectionDates {
   steps: DatedStep[];
 }
 
+/** Display cleanup only: keep the source's words, dates, times and conditions. */
+export function ballotDateText(text: string | null): string | null {
+  if (!text?.trim()) return null;
+  const cleaned = text.trim()
+    .replace(/\s+([.,;:!?\)\]])/g, "$1")
+    .replace(/\.{2,}$/, ".")
+    .replace(/\b(january|february|april|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec|monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:may|march)(?=\s+\d))\b/gi,
+      word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .replace(/(^|\n\s*|[.!?]["'”’\)\]]*\s+)([a-z])/g, (whole, boundary: string, letter: string, offset: number, input: string) => {
+      // A time, legal citation or month abbreviation does not end a sentence.
+      const preceding = input.slice(0, offset + boundary.length).trimEnd();
+      if (boundary.startsWith(".") && /(?:\b[ap]\.m|\b[A-Za-z](?:\.[A-Za-z])+|\b(?:Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|Sec|par|s))\.$/i.test(preceding)) return whole;
+      return boundary + letter.toUpperCase();
+    })
+    .replace(/\s+/g, " ");
+  return /[.!?]["'”’\)\]]*$/.test(cleaned) ? cleaned : `${cleaned}.`;
+}
+
 function dateTopic(label: string): string {
   if (/registration/i.test(label)) return "registration";
   if (/early voting/i.test(label)) return "early";

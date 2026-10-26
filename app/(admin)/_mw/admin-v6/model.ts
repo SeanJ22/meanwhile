@@ -551,7 +551,7 @@ export interface SpendView {
   readonly neon: { readonly kind: "recorded" | "not-recorded"; readonly detail: string | null;
     readonly runnerHours?: readonly { readonly hour: string; readonly readerBytes: number; readonly controlPlaneBytes: number }[];
     readonly runnerReads?: readonly { readonly hour: string; readonly database: string; readonly job: string; readonly table: string;
-      readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
+      readonly file?: string; readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
     readonly readerReads?: readonly { readonly day: string; readonly route: string; readonly read: string;
       readonly requests: number; readonly requestBytes: number; readonly responseBytes: number }[];
     readonly days: readonly { readonly day: string; readonly responseBytes: number; readonly requestBytes: number; readonly requests: number }[] };

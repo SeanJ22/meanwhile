@@ -1,19 +1,18 @@
-import { neonConfig, Pool, type PoolClient } from "@neondatabase/serverless";
+import { neonConfig, Pool, type PoolClient } from "../db/client.ts";
 import type { ReadOnlyQuery, Statement } from "../control-plane/admin-view/promoted-slices.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
 import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
+import { versionedSelect } from "../db/versioned-query.ts";
+import { shareVersionedRows } from "../db/versioned-rows.ts";
 
 let installed: ReadOnlyQuery | null | undefined;
 
 const queryOn = (client: PoolClient, text: string, params: readonly unknown[] = []) =>
   withDatabaseQuery(text, async () => (await client.query(text, [...params])).rows);
 
-async function queryWithDeadline(pool: Pool, statements: readonly Statement[], deadlineMs?: number) {
-  if (deadlineMs === undefined && statements.length === 1) {
-    const statement = statements[0];
-    return withDatabaseQuery(statement.text, async () => [(await pool.query(statement.text, [...statement.params])).rows]);
-  }
+async function queryWithDeadline(pool: Pool, connection: string, statements: readonly Statement[], deadlineMs?: number) {
+  if (statements.length === 0) return [];
   const timeout = new Error("READER_DATABASE_TIMEOUT");
   timeout.name = "TimeoutError";
   let expired = false, release: ((error?: Error) => void) | undefined;
@@ -27,17 +26,17 @@ async function queryWithDeadline(pool: Pool, statements: readonly Statement[], d
     let released = false;
     release = error => { if (!released) { released = true; client.release(error); } };
     try {
-      if (statements.length === 1) {
-        const statement = statements[0];
-        return [await queryOn(client, statement.text, statement.params)];
-      }
-      await queryOn(client, "BEGIN READ ONLY");
+      if (statements.length > 1) await queryOn(client, "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
+      const selected = versionedSelect(connection);
       const rows = [];
-      for (const statement of statements) rows.push(await queryOn(client, statement.text, statement.params));
-      await queryOn(client, "COMMIT");
+      for (const statement of statements) rows.push(await selected((text, params) => {
+        if (expired) throw timeout;
+        return queryOn(client, text, params);
+      }, statement.text, statement.params));
+      if (statements.length > 1) await queryOn(client, "COMMIT");
       return rows;
     } catch (error) {
-      if (!expired && statements.length !== 1) await queryOn(client, "ROLLBACK").catch(() => {});
+      if (!expired && statements.length > 1) await queryOn(client, "ROLLBACK").catch(() => {});
       release(error instanceof Error ? error : new Error(String(error)));
       throw error;
     } finally { release(); }
@@ -61,6 +60,11 @@ export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
   if (installed !== undefined) return installed;
   const connectionString = process.env.DATABASE_URL?.trim();
   if (!connectionString) return null;
+  return databaseReadOnlyQuery(connectionString, deadlineMs);
+}
+
+/** The same row-version protocol also serves explicit control-plane evidence reads. */
+export function databaseReadOnlyQuery(connectionString: string, deadlineMs?: number): ReadOnlyQuery {
   installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   neonConfig.webSocketConstructor ??= globalThis.WebSocket;
   const pool = serverReaderValue(`database-pool:${connectionString}`, () => {
@@ -74,5 +78,16 @@ export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
     created.on("connect", (client: PoolClient) => client.on("error", readerConnectionError));
     return created;
   });
-  return statements => withCallerSite(() => queryWithDeadline(pool, statements, deadlineMs));
+  return statements => withCallerSite(() => queryWithDeadline(pool, connectionString, statements, deadlineMs));
+}
+
+/** SQL-shaped adapter for readers which issue one parameterized statement at a time. */
+export function databaseReadOnlySql(connectionString: string, deadlineMs?: number) {
+  return serverReaderValue(`database-sql:${connectionString}:${deadlineMs ?? ""}`, () => {
+    const read = databaseReadOnlyQuery(connectionString, deadlineMs);
+    const sql = { query: async (text: string, params: readonly unknown[] = []) =>
+      (await read([{ text, params }]))[0] ?? [] };
+    shareVersionedRows(sql, connectionString);
+    return sql;
+  });
 }

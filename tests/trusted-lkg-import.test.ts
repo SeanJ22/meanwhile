@@ -582,7 +582,7 @@ test("retired trusted-LKG doors refuse new imports while retained history remain
   const read = await readPromotedCivicData(MANUAL_RECORD_CLASS, MANUAL_SCOPE, {
     store,
     now: SECOND,
-    bypassCache: true,
+
   });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.stale, "STALE", "Reader serves the LKG but never confuses it with current source truth");
@@ -824,6 +824,6 @@ test("an import is read whole by its proof: its evidence binds the complete enve
     assert.ok(issue, "the whole row refuses the tamper");
     assert.equal(decide(tamper(narrowed)), issue);
   }
-  const read = await readPromotedCivicData(MANUAL_RECORD_CLASS, MANUAL_SCOPE, { store, bypassCache: true, now: SECOND });
+  const read = await readPromotedCivicData(MANUAL_RECORD_CLASS, MANUAL_SCOPE, { store,  now: SECOND });
   assert.equal(read.kind, "PROMOTED", "the Reader proves an import through the narrowed door");
 });

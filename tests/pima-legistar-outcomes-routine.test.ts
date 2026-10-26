@@ -1,9 +1,9 @@
+import { SITTING_WINDOW_ADMISSION_LEAD_MS, SITTING_WINDOW_BASE_ADMISSION_LEAD_MS } from "../lib/civic-data/sitting-window-admission.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
 import { cadenceMsAt, routineContract, ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
-import { SITTING_WINDOW_ADMISSION_LEAD_MS, SITTING_WINDOW_BASE_ADMISSION_LEAD_MS } from "../lib/civic-data/sitting-window-admission.ts";
 import {
   MANUAL_PRODUCTION_SOURCE_CONTRACTS,
   manualProductionContract,
@@ -23,7 +23,8 @@ import {
 } from "../lib/civic-data/runner-receipt.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { latestUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
-import { pimaLegistarOutcomesCandidate, retainVerifiedSittingRecords } from "../scripts/lib/held-legistar-outcomes.ts";
+import { pimaLegistarOutcomesCandidate } from "../lib/outcomes/data-plane.ts";
+import { retainVerifiedSittingRecords } from "../lib/outcomes/ingest.ts";
 import { readDoorOutcomeProjection, resetOutcomeSnapshotCache } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot, PersistedSittingOutcomes } from "../lib/outcomes/types.ts";
 import { findClient, type LegistarClient } from "../lib/sources/legistar/client-registry.ts";
@@ -363,7 +364,7 @@ test("(b) a GOOD Pima candidate promotes through the routine door and a later fa
   const pointer = await memory.readPromotion("MEETING_OUTCOME", SCOPE);
   assert.equal(pointer?.versionId, good.id);
   assert.equal(pointer?.lastKnownGoodVersionId, good.id);
-  const read = await readDoorOutcomeProjection(SCOPE, { store: memory, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store: memory });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.versionId, good.id);
 
@@ -421,7 +422,7 @@ test("body-first Pima acquisition promotes the exact native body's outcomes and 
   for (const path of ["/v1/pima/bodies", "/v1/pima/events", "/v1/pima/events/1825/eventitems", "/v1/pima/eventitems/329182/votes"]) {
     assert.ok(acquisitions.some(row => requestPath(row.requestedUrl) === path && row.source === CONTRACT_ID), `${path} remains attributed evidence`);
   }
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.ok(read.value.sittings.some(sitting => sitting.eventId === 1825 && sitting.rollCalls.some(row => row.eventItemId === 329182)));
@@ -492,7 +493,7 @@ test("a routine pass promotes every changed sitting, including one modified earl
 
   const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
   assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(read.metadata.versionId, verdict.candidateId);
@@ -562,24 +563,23 @@ test("a failed or empty events read is a durable held attempt, exits non-zero, a
   resetOutcomeSnapshotCache();
 });
 
-test("a refused sitting holds the pass even when a later sitting promotes, and the receipt proves the moved LKG", async () => {
+test("a refused sitting holds only itself while a later sitting publishes and returns its own GOOD receipt", async () => {
   const store = await storeHoldingSeed();
   const stub = recordedLegistar({
     events: [recordedEvent(1821, "2026-09-10T12:00:00.34"), recordedEvent(1825, "2026-09-20T18:00:00.12")],
     items: { 1825: 403 },
   });
   const { result } = await routinePass(store, stub, "2026-09-21T00:00:00.000Z");
-  assert.equal(result.exitCode, 2);
+  assert.equal(result.exitCode, 0);
   assert.equal(result.promotedSittings, 1);
   assert.equal(result.refusedSittings.length, 1);
   assert.match(result.refusedSittings[0]!, /^legistar:pima:1825 /);
 
   const verdict = await supervisorVerdict(store, result.receiptLine, result.exitCode);
-  assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "HELD", issue: null });
+  assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
   const runRecord = await store.readCandidate(verdict.candidateId);
-  assert.equal(runRecord?.state, "SOURCE_BLOCKED");
-  assert.match(runRecord?.candidate.retrieval.failureDetail ?? "", /legistar:pima:1825/);
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  assert.equal(runRecord?.state, "PROMOTED");
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(runRecord?.lastKnownGoodVersion, read.metadata.versionId, "the held receipt names the pointer as it now stands");
@@ -640,11 +640,23 @@ test("DB-07: outcomes older than the routine window stay published; a narrower w
     log: () => {},
   }));
   assert.equal(result.exitCode, 0);
-  const read = await readDoorOutcomeProjection(SCOPE, { store, bypassCache: true });
+  const read = await readDoorOutcomeProjection(SCOPE, { store });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   const held = new Set(read.value.sittings.map((sitting) => sitting.meetingId));
   for (const sitting of before) assert.ok(held.has(sitting.meetingId), `${sitting.meetingId} stays published past the window`);
   assert.ok(held.has("legistar:pima:1825"), "the sitting this window did read is added");
   resetOutcomeSnapshotCache();
+});
+
+test("a previously held refused sitting leaves every other sitting's verified outcomes publishable", async () => {
+  const store = await storeHoldingSeed();
+  const held = heldSeed();
+  const failed: PersistedSittingOutcomes = { ...held.sittings[0]!, eventId: 9999999, meetingId: "legistar:pima:9999999",
+    extraction: "REQUEST_FAILED", extractionNote: "The identified client was refused on this sitting.", agenda: [], outcomes: [], rollCalls: [], failedRollCallExtractions: [], voteRequestFailures: [] };
+  const candidate = pimaLegistarOutcomesCandidate({ snapshot: { ...held, sittings: [...held.sittings, failed] }, acquisitions: EVIDENCE,
+    retrievedAt: "2026-09-25T18:00:00.000Z", sourceThrough: "2026-09-25T18:00:00.000Z" });
+  const outcome = await processRegisteredRoutineCandidate(store, CONTRACT_ID, candidate, "2026-09-25T18:00:00.000Z");
+  assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "a sibling held the verified outcomes");
+  assert.ok(outcome.candidate.candidate.excludedFacts?.some(fact => fact.key === failed.meetingId && fact.code === "SITTING_READ_HELD"));
 });

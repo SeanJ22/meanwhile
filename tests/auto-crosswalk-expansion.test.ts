@@ -223,7 +223,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   });
   assert.equal((await processRegisteredRoutineCandidate(store, "registration-oh", registration, T_REGISTRATION)).candidate.state, "PROMOTED");
   await promoteVenues(store);
-  const reg = await readRegistrationProjection("OH", { store, bypassCache: true, now: T_CROSSWALK });
+  const reg = await readRegistrationProjection("OH", { store,  now: T_CROSSWALK });
   assert.equal(reg.kind, "PROMOTED");
   if (reg.kind !== "PROMOTED") return;
   const regInput: DerivedInputRef = { kind: "PROMOTED_VERSION", recordClass: "REGISTRATION", scope: reg.metadata.scope, versionId: reg.metadata.versionId!, readModelSha256: sha(reg.value), promotedAt: reg.metadata.promotedAt! };
@@ -276,7 +276,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.equal((heldFact?.record as { whoMovesNext?: string } | undefined)?.whoMovesNext, "a reviewing agent session");
 
   /* 5b. The wiring derives from the automatic rows, no reviewed crosswalk promoted at all. */
-  const automatic = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now: T_WIRING });
+  const automatic = await readDerivedMeetingBodyCrosswalk({ store,  now: T_WIRING });
   assert.equal(automatic.kind, "PROMOTED");
   if (automatic.kind !== "PROMOTED") return;
   const automaticInput: DerivedInputRef = {
@@ -290,7 +290,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
     const artifactId = walk.attempt.found.find((f) => f.url === row.route)!.artifactId!;
     readings.push({ key: `${row.id}\u0000${artifactId}`, row: wiringRowFor(row), held: { text: vault.get(artifactId)!.text, contentType: "text/calendar" }, evidence: vault.get(artifactId)!.evidence, others: [] });
   }
-  const read = await readHeldCalendars({ options: { store, bypassCache: true, now: T_WIRING }, now: T_WIRING, adapterDigest: () => "ical@0123456789ab", readings });
+  const read = await readHeldCalendars({ options: { store,  now: T_WIRING }, now: T_WIRING, adapterDigest: () => "ical@0123456789ab", readings });
   assert.equal(read.kind, "READ", read.kind === "UNREADABLE" ? read.detail : "");
   if (read.kind !== "READ") return;
   const decisions = deriveWiringDecisions({
@@ -315,7 +315,7 @@ test("EXPANSION END TO END: a Send for an Ohio county is walked free, reviewed b
   assert.equal(wiringOutcome.candidate.state, "PROMOTED", `${wiringOutcome.candidate.failureCode ?? ""} ${wiringOutcome.candidate.failureDetail ?? ""}`);
 
   /* 5c. Ohio's derived family reads the member on its own attested host and promotes. */
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: T_FAMILY });
+  const wiring = await readDerivedMeetingWiring({ store,  now: T_FAMILY });
   assert.equal(wiring.kind, "PROMOTED");
   if (wiring.kind !== "PROMOTED") return;
   const partition = requiredMeetingPartitionContract(derivedMeetingFamilyId("US-OH"));

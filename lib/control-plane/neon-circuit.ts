@@ -2,7 +2,8 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
-import { neonConfig } from "@neondatabase/serverless";
+import { neonConfig } from "../db/client.ts";
+import { preserveDatabaseFetchAccounting } from "../db/transfer-by-caller.ts";
 
 import { classifyProviderFailure, operationalNightAt, type ProviderCircuit } from "./fleet-safety.ts";
 import { ModelTransportError } from "./scheduler/scout-executor.ts";
@@ -36,7 +37,7 @@ export function latchNeonCircuit(root: string, condition: string, at: string): P
 /** Install before constructing the Neon client. One hard response closes the seam synchronously. */
 export function installNeonCircuitBreaker(root: string, now: () => string = () => new Date().toISOString()): void {
   const underlying = neonConfig.fetchFunction ?? fetch;
-  neonConfig.fetchFunction = async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
+  const guarded = async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
     const active = readNeonCircuit(root, now());
     if (active) throw new Error(`PROVIDER_CIRCUIT_BROKEN: neon is latched until ${active.eligibleAt}: ${active.condition}`);
     const response = await underlying(input, init);
@@ -55,4 +56,6 @@ export function installNeonCircuitBreaker(root: string, now: () => string = () =
     }
     return response;
   };
+  preserveDatabaseFetchAccounting(guarded, underlying);
+  neonConfig.fetchFunction = guarded;
 }

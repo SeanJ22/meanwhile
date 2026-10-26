@@ -9,7 +9,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseEnv } from "node:util";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { currentPluralSessions, pluralJurisdictionsUrl } from "../lib/sources/plural/vote-acquisition.ts";
 import { parsePluralBulkSessionFile } from "../lib/sources/plural/vote-bulk.ts";

@@ -81,9 +81,12 @@ export function statePeopleCandidate(input: {state:string;roster:OfficeholderSet
 
 export async function publishStatePeople(input: {store:RoutineDataStore;vault:EvidenceStore;state:string;roster:OfficeholderSet;acquisitions:readonly StatePeopleAcquisition[];sourceId?:string;releaseId:string;now:string;confirmUnchanged?:boolean;resolveOfficePoint?:OfficePointResolver} & StatePeopleEvidence) {
   const jurisdiction = `US-${input.state.toUpperCase()}` as const;
-  const prior = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now,bypassCache:true});
+  const prior = await readOpenStatesPeopleProjection(jurisdiction,{store:input.store,now:input.now});
   if (prior.kind === "STORE_UNREACHABLE") throw new Error("STATE_PEOPLE_PRIOR_UNAVAILABLE");
-  const priorCandidate = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
+  const [heldCaptures, heldExcluded] = prior.kind === "PROMOTED" ? await Promise.all([
+    input.store.readCandidatePath<readonly StatePeopleCapture[]>(prior.metadata.versionId!, ["normalizedPayload", "captures"]),
+    input.store.readCandidatePath<RoutineCandidate["excludedFacts"]>(prior.metadata.versionId!, ["excludedFacts"]),
+  ]) : [null, null];
   const held = prior.kind === "PROMOTED" || prior.kind === "BOOTSTRAP" ? prior.value.roster : null;
   const currentIds=new Set(input.roster.officeholders.map(row=>row.id));
   const explicitEnded = new Map((input.roster.endedMemberships ?? []).map(membership=>[membership.id,membership]));
@@ -118,13 +121,13 @@ export async function publishStatePeople(input: {store:RoutineDataStore;vault:Ev
   };
   const read=await holdPeopleCaptures(input.vault,input.sourceId ?? "plural-openstates",input.acquisitions);
   const captured=new Set(read.map(captureUrl));
-  const priorCaptures=priorPeopleCaptures(priorCandidate?.candidate.normalizedPayload);
+  const priorCaptures=priorPeopleCaptures({ captures: heldCaptures ?? [] });
   const captures=[...read,...priorCaptures.filter(row=>{
     const url=captureUrl(row);
     if (!referenced.has(url) || captured.has(url)) return false;
     captured.add(url); return true;
   })];
-  const carriedPortraitFacts = priorCandidate?.candidate.excludedFacts?.filter(fact=>fact.code.startsWith("STATE_PORTRAIT_")) ?? [];
+  const carriedPortraitFacts = heldExcluded?.filter(fact=>fact.code.startsWith("STATE_PORTRAIT_")) ?? [];
   const candidate = statePeopleCandidate({...input,roster,captures,excludedFacts:input.excludedFacts ?? carriedPortraitFacts});
   const outcome = await processRegisteredRoutineCandidate(input.store,`openstates-people-${input.state.toLowerCase()}`,candidate,input.now,
     prior.kind === "PROMOTED" ? prior.metadata.versionId : null,{confirmUnchanged:input.confirmUnchanged,vault:input.vault});

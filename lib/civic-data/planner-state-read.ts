@@ -1,7 +1,5 @@
-import { neon } from "@neondatabase/serverless";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
-import { installReaderDatabaseQuery } from "../reader/database.ts";
-import { installDatabaseTransferCounter } from "../db/transfer.ts";
+import { databaseReadOnlyQuery, installReaderDatabaseQuery } from "../reader/database.ts";
 import { installConnectAttemptWindow } from "../ops/connect-attempt-window.ts";
 import type { CivicDataReadResult } from "./read-model.ts";
 import { parseValidationReceipt } from "./receipt.ts";
@@ -51,8 +49,7 @@ export function plannerProjectionSql(payload: string): string {
     FROM pointer,LATERAL (SELECT reader_payload_node(payload) AS root) header`;
 }
 
-/** The planner uses the same direct, read-only HTTP transport for its state
- * packages and fact queries. It has no reader route, selection or page timer. */
+/** The planner uses the shared version-checked reader for state packages and facts. */
 export function plannerStateReads(state: string, query?: ReadOnlyQuery, observe?: (read: {
   readonly name: string; readonly elapsedMs: number; readonly bytes: number; readonly ok: boolean;
 }) => void) {
@@ -61,9 +58,7 @@ export function plannerStateReads(state: string, query?: ReadOnlyQuery, observe?
   if (!query) {
     if (!process.env.DATABASE_URL) throw new Error("PLANNER_STORE_UNCONFIGURED");
     installConnectAttemptWindow();
-    installDatabaseTransferCounter();
-    const sql = neon(process.env.DATABASE_URL);
-    query = statements => sql.transaction(statements.map(statement => sql.query(statement.text, [...statement.params])), { readOnly: true });
+    query = databaseReadOnlyQuery(process.env.DATABASE_URL);
   }
   const direct: ReadOnlyQuery = async statements => {
     const started = performance.now();
@@ -112,15 +107,12 @@ export function plannerStateReads(state: string, query?: ReadOnlyQuery, observe?
       projection: { key, recordClass, scope, sourceId: row.source_id as string, versionId: version,
         lastKnownGoodVersionId: version, promotedAt, receipt, payload: row.payload as T } };
   }
-  // One small identity read is shared by registration and partition ownership;
-  // refresh at the next pass rather than retaining duplicate payloads in a round.
-  let registration: Promise<CivicDataReadResult<RegistrationReadModel>> | undefined;
   return {
     query: direct,
     install: () => installReaderDatabaseQuery(direct),
     registration: (wanted: string) => {
       if (wanted.toUpperCase() !== postal) throw new Error(`PLANNER_STATE_BOUNDARY:${postal}:${wanted}`);
-      return registration ??= projection<RegistrationReadModel>("REGISTRATION", registrationTarget(wanted).scope, PLANNER_REGISTRATION_PAYLOAD, [0, 0])
+      return projection<RegistrationReadModel>("REGISTRATION", registrationTarget(wanted).scope, PLANNER_REGISTRATION_PAYLOAD, [0, 0])
         .then(async read => {
           if (read.kind === "PROMOTED" && (read.value.state.toUpperCase() !== postal || read.value.formatVersion !== 1))
             throw new Error(`PLANNER_REGISTRATION_INVALID:${postal}`);
@@ -154,7 +146,7 @@ export function plannerStateReads(state: string, query?: ReadOnlyQuery, observe?
             });
           }
           return read;
-        }).catch(error => { registration = undefined; throw error; });
+        });
     },
     wiring: () => projection<DerivedWiringProjection>("CURATED_READER_RECORD", "US:meeting-source-wiring", PLANNER_WIRING_PAYLOAD),
     bodyIds: () => projection<{ readonly ids: readonly string[] }>("REGISTRY_RUNTIME_BINDING", `US-${postal}:reader-registry-runtime`,

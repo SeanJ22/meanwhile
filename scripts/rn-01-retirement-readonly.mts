@@ -2,9 +2,9 @@ import assert from "node:assert/strict";
 import { randomBytes } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
-import { Client, neonConfig } from "@neondatabase/serverless";
+import { Client, neonConfig } from "../lib/db/client.ts";
 import { RETIRED_STATE_POINTERS } from "../lib/civic-data/state-pointer-retirement.ts";
-import { prepareRetirementStateInputs, withRetirementSourceCursor } from "../lib/civic-data/state-retirement-inputs.ts";
+import { prepareRetirementStateInputs, withRetirementSourceSnapshot } from "../lib/civic-data/state-retirement-inputs.ts";
 import { previewRetirementStateInput } from "../lib/civic-data/state-retirement-merge.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { civicRecordsFor, candidateChangeSet } from "../lib/civic-data/changes.ts";
@@ -51,7 +51,7 @@ try {
   const origin = { family, recordClass, scope, versionId: row.current_version_id as string,
     promotedAt: new Date(row.promoted_at).toISOString(), hash: row.normalized_hash as string };
   const prepareStart = performance.now();
-  const plan = await withRetirementSourceCursor(client, source => prepareRetirementStateInputs({ ...source, directory, origins: [origin] }));
+  const plan = await withRetirementSourceSnapshot(client, source => prepareRetirementStateInputs({ ...source, directory, origins: [origin] }));
   prepareMs = performance.now() - prepareStart;
   assert.equal(plan.unassigned.length, 0, JSON.stringify(plan.unassigned));
   console.log(JSON.stringify({ index, family, scope, prepareMs, units: plan.units.length }));

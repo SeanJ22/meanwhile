@@ -148,7 +148,7 @@ test("missing storage parts report failure and old inline candidates remain read
   await assert.rejects(() => new CivicPayloadParts(memory.io).load(stored), /CIVIC_PAYLOAD_PART_MISSING/);
 });
 
-test("a load assembles parts as they arrive, writing caches nothing, and recent parts are reused without another read", async () => {
+test("a load assembles parts as they arrive and asks its versioned IO on every load", async () => {
   const memory = memoryParts();
   const parts = new CivicPayloadParts(memory.io);
   const payload = { divisions: Array.from({ length: 300 }, (_, index) => row("wi", index)) };
@@ -157,7 +157,7 @@ test("a load assembles parts as they arrive, writing caches nothing, and recent 
   const firstReads = memory.reads.flat().length;
   assert.ok(firstReads > 0, "a write keeps no parts in memory; the first load reads them");
   assert.deepEqual(await parts.load(stored), { id: "wi", normalizedPayload: payload });
-  assert.equal(memory.reads.flat().length, firstReads, "parts just read are served from the bounded cache");
+  assert.equal(memory.reads.flat().length, firstReads * 2, "the IO owns version checking; decoded parts cannot skip it");
   assert.ok(memory.reads.every(batch => batch.length <= 8));
 });
 

@@ -91,7 +91,7 @@ test("a scheduled portrait pass reads held people without refreshing their roste
     acquire:async options=>{acquired++;assert.equal(options.sourceId,"official-person-profile");
       return page(options,'<h1>Jane Example</h1><img alt="Portrait of Jane Example" src="/jane.png">');}}});
   assert.ok(result.outcome.promoted);assert.equal(acquired,1);assert.equal(logs.length,1);
-  const reader=await readStatePeopleProjection("US-AZ",{store,now:NOW,bypassCache:true});
+  const reader=await readStatePeopleProjection("US-AZ",{store,now:NOW});
   assert.equal(reader.kind,"PROMOTED");if(reader.kind!=="PROMOTED")return;
   assert.equal(reader.value.roster.officeholders.length,1);
   assert.ok(reader.value.roster.officeholders[0].photo);
@@ -113,11 +113,11 @@ test("a place's portrait run also enriches its members of Congress, on the place
   const result=await refreshPeoplePortraits({ vault, store,state:"az",options:{now:()=>NOW,storePortrait:await images(),
     acquire:async options=>page(options,JSON.stringify({member:{bioguideId:"A000001",depiction:{imageUrl:"https://congress.gov/jane.png"}}}))}});
   assert.ok(result.outcome.promoted);
-  const reader=await readFederalDirectoryProjection(["AZ"],{store,now:NOW,bypassCache:true});
+  const reader=await readFederalDirectoryProjection(["AZ"],{store,now:NOW});
   assert.equal(reader.kind,"PROMOTED");if(reader.kind!=="PROMOTED")return;
   assert.ok(reader.value.roster.officeholders[0].photo);
   assert.equal(reader.value.roster.officeholders[0].phone,"202-225-1000");
-  const marker=await readPeopleSourceProjection("US-AZ","people-portraits",{store,now:NOW,bypassCache:true});
+  const marker=await readPeopleSourceProjection("US-AZ","people-portraits",{store,now:NOW});
   assert.equal(marker.kind,"PROMOTED");
   const portrait=reader.value.roster.officeholders[0].photo;
   let reacquired=0;
@@ -125,7 +125,7 @@ test("a place's portrait run also enriches its members of Congress, on the place
   await refreshPeoplePortraits({vault,store,state:"az",options:{now:()=>nextAt,
     acquire:async()=>{reacquired++;throw Error("A current congressional portrait is not due");}}});
   assert.equal(reacquired,0,"the independent portrait holding supplies the next run's freshness clock");
-  const next=await readFederalDirectoryProjection(["AZ"],{store,now:nextAt,bypassCache:true});
+  const next=await readFederalDirectoryProjection(["AZ"],{store,now:nextAt});
   assert.equal(next.kind,"PROMOTED");
   if(next.kind==="PROMOTED")assert.equal(next.value.roster.officeholders[0].photo?.url,portrait?.url);
 });
@@ -155,7 +155,7 @@ test("the national hourly portrait job reaches National cards and the next run r
   const nextAt=new Date(Date.parse(NOW)+task.cadenceMs).toISOString();
   assert.equal(routineTaskDue(task,clock,Date.parse(nextAt)),true);
   await refreshPeoplePortraits({store,vault,state:"us",options:{now:()=>nextAt,acquire:async()=>{throw Error("A fresh portrait is not due");}}});
-  const next=await readPeopleSourceProjection("US","people-portraits",{store,now:nextAt,bypassCache:true});
+  const next=await readPeopleSourceProjection("US","people-portraits",{store,now:nextAt});
   assert.equal(next.kind,'PROMOTED');
   if(next.kind==='PROMOTED')assert.equal(next.value.roster.officeholders[0].photo?.url,portrait.url);
 });

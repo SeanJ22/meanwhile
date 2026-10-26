@@ -140,7 +140,7 @@ export async function runNationalGovernmentFinancePublication(input: Parameters<
     const built = nationalGovernmentFinancePackage(input);
     const published = await publishNationalGovernmentFinance(input.store, input);
     candidateId = published.candidate.candidate.id; versionId = published.promoted?.versionId ?? null;
-    const confirmedRead = published.confirmed ? await readGovernmentBudgets(input.government.ocdId, { store: input.store, now: input.now, bypassCache: true }) : null;
+    const confirmedRead = published.confirmed ? await readGovernmentBudgets(input.government.ocdId, { store: input.store, now: input.now }) : null;
     const readback = published.readerReadback?.status === "PASS" || confirmedRead?.kind === "PROMOTED" && confirmedRead.metadata.versionId === versionId;
     if (!published.promoted || !readback) throw new Error(published.candidate.failureDetail ?? "National finance has not reached its scoped typed reader.");
     outcome = { at: input.now, workerResultId: input.workerResultId, candidateId, versionId, status: "PUBLISHED",

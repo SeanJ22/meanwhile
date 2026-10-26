@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../db/client.ts";
 
 import { SEARCH_LOG_EVENT_TYPES, type SearchLogEventType } from "../db/search-log.ts";
 import {

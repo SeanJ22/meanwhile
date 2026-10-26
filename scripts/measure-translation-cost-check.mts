@@ -117,7 +117,7 @@ try {
       loadBallotsForState: async () => ballots, loadCapturesForState: async () => sources.captures,
       readAttemptsForState: () => attempts.read(), saveAttempt: attempts.save });
     passes.push({ state: selection.state, result, sourceFailures: sources.failures });
-    const records = await readTranslations([...new Set(subjects.map(subject => subject.ocdId))], { store, now: now(), bypassCache: true });
+    const records = await readTranslations([...new Set(subjects.map(subject => subject.ocdId))], { store, now: now() });
     await writeFile(join(output, `${selection.state.toLowerCase()}-checked-explainers.json`), JSON.stringify(records, null, 2) + "\n");
     await writeFile(join(output, `${selection.state.toLowerCase()}-result.json`), JSON.stringify({ result, sourceFailures: sources.failures }, null, 2) + "\n");
     console.log("MEASURE_TRANSLATION_COST_STATE=" + JSON.stringify({ state: selection.state, ...result, sourceFailures: sources.failures }));

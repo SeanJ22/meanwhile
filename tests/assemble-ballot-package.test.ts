@@ -283,9 +283,11 @@ test("territories without local ballot input remain named gaps until a verified 
     await publish(store, packageFor(await fixture()));
     store.create = async () => assert.fail("missing input cannot authenticate a new candidate");
     store.confirmUnchanged = async () => assert.fail("a missing state record cannot be confirmed");
-    const readPromotion = store.readPromotion.bind(store);
+    const readSourceHead = store.readSourceHead.bind(store), readPromotionIdentity = store.readPromotionIdentity.bind(store);
     const reads: string[] = [];
-    store.readPromotion = async (recordClass, scope) => { reads.push(scope); return readPromotion(recordClass, scope); };
+    store.readPromotion = async () => assert.fail("missing input reads only the scoped source header, never a whole held record");
+    store.readSourceHead = async (recordClass, scope) => { reads.push(scope); return readSourceHead(recordClass, scope); };
+    store.readPromotionIdentity = async (recordClass, scope) => { reads.push(scope); return readPromotionIdentity(recordClass, scope); };
     for (const state of ["AS", "GU", "MP", "PR", "VI"] as const) {
       reads.length = 0;
       const result = await runBallotState({ state, directory, store, now });

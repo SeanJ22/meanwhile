@@ -48,3 +48,12 @@ test("the same Open States member bytes confirm an earlier pinned URL without re
   const fresh=await withPeopleSourceChecks(bound,head.recordClass,head.scope,store);
   assert.equal(fresh.provenance.verifiedAt,checked);assert.equal(fresh.other.verifiedAt,at);
 });
+test("a provider redirect confirms exact fields that still cite its public requested address",async()=>{
+  const requested="https://nces.ed.gov/ccd/native.csv",final="https://ies.ed.gov/native.csv",checks:RecordPublishedSourceCheck[]=[];
+  const store={recordSourceCheck:async(value:RecordPublishedSourceCheck)=>{checks.push(value);return true;},
+    readSourceChecks:async(_class:string,_scope:string,keys:string[])=>checks.filter(row=>keys.includes(row.sourceKey))} as unknown as RoutineDataStore;
+  await recordPeopleSourceChecks({store,head,pages:[{requestedUrl:requested,finalUrl:final,retrievedAt:at,capture:{rawHash},
+    sourceCheck:{requestedUrl:requested,finalUrl:final,httpStatus:304,rawHash,checkedAt:checked}}]});
+  const value=await withPeopleSourceChecks({provenance:{...source(requested),rawHash}},head.recordClass,head.scope,store);
+  assert.equal(value.provenance.verifiedAt,checked);assert.equal(checks.length,2);
+});

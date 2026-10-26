@@ -57,6 +57,7 @@ interface Bucket { requests: number; bytes: Record<NeonDatabase, number>; sent: 
 
 interface CallerState {
   scope: AsyncLocalStorage<string>;
+  job: AsyncLocalStorage<string>;
   pinnedSite: AsyncLocalStorage<string>;
   queryRoute: AsyncLocalStorage<string>;
   socketScope: AsyncLocalStorage<SocketRead>;
@@ -69,6 +70,7 @@ interface CallerState {
 }
 interface SocketRead {
   caller: string | undefined;
+  job: string | undefined;
   route: string;
   listeners: WeakMap<EventListenerOrEventListenerObject, EventListener>;
 }
@@ -76,9 +78,16 @@ interface SocketRead {
 const callerSlot = Symbol.for("meanwhile.database.transfer.callers");
 const host = globalThis as typeof globalThis & { [callerSlot]?: CallerState };
 const callerState: CallerState = host[callerSlot] ??= { scope: new AsyncLocalStorage<string>(), pinnedSite: new AsyncLocalStorage<string>(),
+  job: new AsyncLocalStorage<string>(),
   queryRoute: new AsyncLocalStorage<string>(), socketScope: new AsyncLocalStorage<SocketRead>(), sockets: new WeakMap(),
   buckets: new Map(), siteCache: new Map(), reportInstalled: false, keptInProcess: false };
 const { scope, pinnedSite, buckets, siteCache } = callerState;
+callerState.job ??= new AsyncLocalStorage<string>();
+
+/** Independent jobs sharing a process keep their existing hourly transfer attribution. */
+export function withDatabaseJob<T>(name: string, run: () => T): T {
+  return callerState.job.run(name, run);
+}
 /* Stack strings run to a few KB; a small cache keeps the per-process memory under 1 MB. */
 const SITE_CACHE_LIMIT = 256;
 
@@ -108,7 +117,7 @@ export function installDatabaseClientAccounting(config: typeof neonConfig, insta
   const held = (socket: WebSocket): SocketRead => {
     let read = callerState.sockets.get(socket);
     if (!read) {
-      read = { caller: scope.getStore(), route: callerState.queryRoute.getStore() ?? currentReaderRoute(), listeners: new WeakMap() };
+      read = { caller: scope.getStore(), job: callerState.job.getStore(), route: callerState.queryRoute.getStore() ?? currentReaderRoute(), listeners: new WeakMap() };
       callerState.sockets.set(socket, read);
     }
     return read;
@@ -119,6 +128,7 @@ export function installDatabaseClientAccounting(config: typeof neonConfig, insta
       const read = held(this), send = this.send.bind(this);
       this.send = data => {
         read.caller = scope.getStore() ?? read.caller;
+        read.job = callerState.job.getStore();
         read.route = callerState.queryRoute.getStore() ?? read.route;
         callerState.socketScope.run(read, () => send(data));
       };
@@ -212,7 +222,8 @@ export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: num
     bucket.bytes[database] += bytes;
     bucket.byCaller.set(key, (bucket.byCaller.get(key) ?? 0) + bytes);
     const route = socket?.route ?? callerState.queryRoute.getStore() ?? currentReaderRoute();
-    const job = route.startsWith("admin:") ? route : process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
+    const job = route.startsWith("admin:") ? route
+      : socket?.job ?? callerState.job.getStore() ?? process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
     const file = site.match(/ ← ((?:lib|scripts|app|netlify|tests)\/.+?):\d+$/)?.[1]
       ?? (process.argv[1] ?? "").match(/(?:^|\/)((?:scripts|netlify)\/.+)$/)?.[1];
     const read = `${database}\t${job}\t${table ?? site.match(/(?:^|\s)query:([^ ←]+)/)?.[1] ?? site.split(/[. ]/)[0]}${file ? `\t${file}` : ""}`;
@@ -429,12 +440,15 @@ export function databaseTransferFetch(underlying: FetchLike, record: (value: Dat
     const route = callerState.queryRoute.getStore() ?? currentReaderRoute();
     const read = `${route}\t${transferRead(typeof init?.body === "string" ? init.body : undefined)}`;
     const caller = scope.getStore() ?? `query:${read.split("\t")[1]} ← ${namedSite()}`;
+    const job = callerState.job.getStore() ?? process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
     const recordPart = async (responseBytes: number, requests = 0, sentBytes = 0): Promise<void> => {
       try {
-        await callerState.queryRoute.run(route, () => scope.run(caller, () => record({
+        // Consumption can happen in another job or a pooled socket callback. HTTP
+        // chunks belong to the job that sent this request, independent of its consumer.
+        await callerState.socketScope.exit(() => callerState.job.run(job, () => callerState.queryRoute.run(route, () => scope.run(caller, () => record({
           day: easternDay(new Date()), database, client, requests, requestBytes: sentBytes, responseBytes,
           reads: { [read]: [requests, sentBytes, responseBytes] },
-        })));
+        })))));
       } catch { /* A meter failure never hides data. */ }
     };
     await recordPart(0, 1, requestBytes);

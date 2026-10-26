@@ -48,7 +48,7 @@ export async function confirmSourceHashUnchanged(input: {
   if (!input.complete || !input.store.confirmUnchanged) return null;
   const head = await input.store.readSourceHead(input.recordClass, input.scope);
   if (!head || head.sourceId !== input.sourceId || head.recordClass !== input.recordClass || head.scope !== input.scope ||
-    head.candidateState !== "PROMOTED" || !head.acquisitionSucceeded || head.imported ||
+    head.candidateState !== "PROMOTED" || !head.acquisitionSucceeded || head.acquisitionComplete===false || head.imported ||
     head.versionId !== head.lastKnownGoodVersionId || head.rawHash !== input.rawHash ||
     head.parserVersion !== input.parserVersion || !head.normalizedHash || input.retrieval.rawHash !== input.rawHash) return null;
   const observedAt = input.store.eventObservedAt

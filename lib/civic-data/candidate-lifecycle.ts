@@ -176,6 +176,8 @@ export async function processRoutineCandidate(
     current !== null && lkg !== null && lkgProofIssue === null && !preloadedBaseChanged &&
     current.versionId === current.lastKnownGoodVersionId && lkg.candidate.id === current.versionId &&
     candidate.retrieval.succeeded && candidate.normalization.succeeded &&
+    candidate.retrieval.rawHashBasis === lkg.candidate.retrieval.rawHashBasis &&
+    (candidate.retrieval.rawHashBasis !== "SOURCE_CONTENT_V1" || candidate.retrieval.rawHash === lkg.candidate.retrieval.rawHash) &&
     candidate.normalization.parserVersion === lkg.candidate.normalization.parserVersion &&
     validated.state === "VALIDATED" && validated.receipt.decision === "GOOD" &&
     candidate.changeSet?.outcome === "UNCHANGED" &&

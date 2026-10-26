@@ -48,6 +48,7 @@ import { parseRoutineSupervisorFailureSummary } from "../lib/control-plane/routi
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
 import { collectDatabaseTransferJournals, keepRunnerTransfer } from "../lib/db/transfer.ts";
+import { transferJournalDir } from "../lib/db/transfer-journal.ts";
 import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import { VITAL_COUNTERS, composeVitalSignsRow, formatVitalSignsLine, readHourCosts, writeVitalSignsRow,
@@ -125,7 +126,8 @@ const STDERR_TAIL_LINES = 40;
 const ROOT = process.cwd();
 
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
-process.env.WTP_DATABASE_TRANSFER_DIR = VITAL_SIGNS_DIR;
+const DATABASE_TRANSFER_DIR = transferJournalDir();
+if (DATABASE_TRANSFER_DIR) process.env.WTP_DATABASE_TRANSFER_DIR = DATABASE_TRANSFER_DIR;
 process.env[VITAL_SIGNS_REPORT_ENV] = "1";
 
 
@@ -138,7 +140,9 @@ function keepHourPart(part: NeonBytesHour): void {
 receiveChildVitalSigns(keepHourPart);
 
 function keepOwnNeonBytes(nowMs: number): void {
-  collectDatabaseTransferJournals(VITAL_SIGNS_DIR);
+  if (DATABASE_TRANSFER_DIR) {
+    for (const part of collectDatabaseTransferJournals(DATABASE_TRANSFER_DIR)) keepNeonBytesPart(VITAL_SIGNS_DIR, part);
+  }
   for (const part of takeNeonBytesHours(nowMs)) keepHourPart(part);
 }
 process.once("exit", () => { keepOwnNeonBytes(Date.now()); });
@@ -1054,6 +1058,7 @@ const vitalSignsTimer = setInterval(() => {
       vitalSignsFinalHour = previous;
       await writeVitalSigns(previous, "last full hour", nowMs);
       pruneNeonBytes(VITAL_SIGNS_DIR, nowMs);
+      if (DATABASE_TRANSFER_DIR) pruneNeonBytes(DATABASE_TRANSFER_DIR, nowMs);
     }
     if (nowMs - vitalSignsPartialAt >= 600_000) {
       vitalSignsPartialAt = nowMs;

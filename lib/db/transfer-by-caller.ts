@@ -214,9 +214,9 @@ export function countNeonBytes(database: NeonDatabase, bytes: number, nowMs: num
     bucket.byCaller.set(key, (bucket.byCaller.get(key) ?? 0) + bytes);
     const route = socket?.route ?? callerState.queryRoute.getStore() ?? currentReaderRoute();
     const job = route.startsWith("admin:") ? route : process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
-    const file = / ← ((?:lib|scripts|app|netlify|tests)\/.+?):\d+$/.exec(site)?.[1]
-      ?? /(?:^|\/)((?:scripts|netlify)\/.+)$/.exec(process.argv[1] ?? "")?.[1];
-    const read = `${database}\t${job}\t${table ?? /(?:^|\s)query:([^ ←]+)/.exec(site)?.[1] ?? site.split(/[. ]/)[0]}${file ? `\t${file}` : ""}`;
+    const file = site.match(/ ← ((?:lib|scripts|app|netlify|tests)\/.+?):\d+$/)?.[1]
+      ?? (process.argv[1] ?? "").match(/(?:^|\/)((?:scripts|netlify)\/.+)$/)?.[1];
+    const read = `${database}\t${job}\t${table ?? site.match(/(?:^|\s)query:([^ ←]+)/)?.[1] ?? site.split(/[. ]/)[0]}${file ? `\t${file}` : ""}`;
     const held = bucket.reads.get(read) ?? [0, 0, 0];
     bucket.reads.set(read, [held[0] + sent.requests, held[1] + sent.bytes, held[2] + bytes]);
     if (route && route !== "unattributed") {

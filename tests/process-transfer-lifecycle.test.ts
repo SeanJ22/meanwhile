@@ -1,14 +1,49 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { spawn, spawnSync } from "node:child_process";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, readdirSync, rmSync, symlinkSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { once } from "node:events";
-import { collectProcessTransfers } from "../lib/db/transfer-journal.ts";
+import { collectProcessTransfers, journalProcessTransfer, transferJournalDir, TRANSFER_JOURNAL_DIR_ENV } from "../lib/db/transfer-journal.ts";
 import { databaseAddress } from "../lib/db/read-target.ts";
+import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
+import type { NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
 
 const args = ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", "--input-type=module", "-e"];
+
+test("host journals refresh hour totals, reject checkout destinations, and retain only the last 48 hours", () => {
+  const root = mkdtempSync(join(tmpdir(), "transfer-host-state-"));
+  const previous = process.env[TRANSFER_JOURNAL_DIR_ENV];
+  const journal = join(root, "journal"), hours = join(root, "hours");
+  const part: NeonBytesHour = { hour: "2026-10-26T12:00:00.000Z", pid: process.pid + 100_000, startedMs: 1,
+    requests: 1, bytes: { reader: 8192, "control-plane": 0 }, byCaller: {}, processes: ["killed-child"] };
+  try {
+    process.env[TRANSFER_JOURNAL_DIR_ENV] = journal;
+    assert.equal(transferJournalDir(), journal);
+    journalProcessTransfer(part);
+    for (const received of collectProcessTransfers(journal)) assert.equal(keepNeonBytesPart(hours, received), true);
+    assert.equal(readNeonBytesHour(hours, part.hour).bytes.reader, 8192);
+    journalProcessTransfer({ ...part, requests: 2, bytes: { reader: 16384, "control-plane": 0 } });
+    for (const received of collectProcessTransfers(journal)) assert.equal(keepNeonBytesPart(hours, received), true);
+    keepNeonBytesPart(hours, part);
+    assert.equal(readNeonBytesHour(hours, part.hour).bytes.reader, 16384, "a delayed stdout report cannot replace the newer journal");
+    journalProcessTransfer({ ...part, hour: "2026-10-24T11:00:00.000Z" });
+    journalProcessTransfer({ ...part, hour: "2026-10-24T12:00:00.000Z" });
+    pruneNeonBytes(journal, Date.parse("2026-10-26T12:30:00Z"));
+    assert.deepEqual(readdirSync(journal).sort(), ["2026-10-24T12", "2026-10-26T12"].map(hour => `${hour}--${part.pid}-1.json`));
+    process.env[TRANSFER_JOURNAL_DIR_ENV] = join(process.cwd(), ".runtime", "refused-transfer-journal");
+    assert.throws(transferJournalDir, /PATH_OUTSIDE_HOST_STATE|PATH_INSIDE_REPOSITORY/);
+    assert.doesNotThrow(() => journalProcessTransfer(part), "accounting never interrupts a response");
+    symlinkSync(process.cwd(), join(root, "checkout"), "dir");
+    process.env[TRANSFER_JOURNAL_DIR_ENV] = join(root, "checkout", "refused-transfer-journal");
+    assert.throws(transferJournalDir, /PATH_OUTSIDE_HOST_STATE|PATH_INSIDE_REPOSITORY/);
+    assert.doesNotThrow(() => journalProcessTransfer(part));
+  } finally {
+    if (previous === undefined) delete process.env[TRANSFER_JOURNAL_DIR_ENV]; else process.env[TRANSFER_JOURNAL_DIR_ENV] = previous;
+    rmSync(root, { recursive: true, force: true });
+  }
+});
 
 test("SIGKILL after the first chunk preserves its bytes before any response completion or child report", async () => {
   const dir = mkdtempSync(join(tmpdir(), "db03-killed-meter-"));

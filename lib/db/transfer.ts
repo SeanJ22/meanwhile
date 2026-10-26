@@ -80,8 +80,10 @@ export async function flushDatabaseTransfer(): Promise<boolean> {
 }
 
 /** The standing collector also recovers readonly sessions and children that died before stdout settlement. */
-export function collectDatabaseTransferJournals(dir: string): void {
-  for (const part of collectProcessTransfers(dir)) keepRunnerTransfer(part);
+export function collectDatabaseTransferJournals(dir: string): readonly NeonBytesHour[] {
+  const parts = collectProcessTransfers(dir);
+  for (const part of parts) keepRunnerTransfer(part);
+  return parts;
 }
 
 function accumulateHour(row: HourlyDatabaseTransfer): void {

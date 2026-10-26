@@ -1,25 +1,28 @@
 import { mkdirSync, readFileSync, readdirSync, renameSync, statSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { NeonBytesHour } from "./transfer-by-caller.ts";
 import { mayUseTestFixture } from "../civic-data/fixture-policy.ts";
+import { operationalStatePath } from "../ops/operational-state-path.ts";
 
 export const TRANSFER_JOURNAL_DIR_ENV = "WTP_DATABASE_TRANSFER_DIR";
 export function transferJournalDir(): string | null {
-  if (process.env[TRANSFER_JOURNAL_DIR_ENV]) return process.env[TRANSFER_JOURNAL_DIR_ENV]!;
+  if (process.env[TRANSFER_JOURNAL_DIR_ENV]) return operationalStatePath(process.env[TRANSFER_JOURNAL_DIR_ENV]!);
   if (process.env.NETLIFY || process.env.AWS_LAMBDA_FUNCTION_NAME || mayUseTestFixture(process.env)) return null;
-  return join(process.cwd(), ".runtime", "vital-signs");
+  return operationalStatePath(join(tmpdir(), "meanwhile-database-transfer"));
 }
 
 /** The existing meter's process/hour buffer. Persist before handing a received chunk to its caller. */
 export function journalProcessTransfer(part: NeonBytesHour): void {
-  const dir = transferJournalDir();
-  if (!dir || !Number.isSafeInteger(part.pid) || !Number.isFinite(part.startedMs)) return;
   try {
-    mkdirSync(dir, { recursive: true });
-    const file = join(dir, `${part.hour.slice(0, 13)}--${part.pid}-${part.startedMs}.json`);
-    const temporary = `${file}.owner.tmp`;
-    writeFileSync(temporary, JSON.stringify({ ...part, counterFormat: 1 }), { mode: 0o600 });
-    renameSync(temporary, file);
+    const journalDirectory = transferJournalDir();
+    if (!journalDirectory || !Number.isSafeInteger(part.pid) || !Number.isSafeInteger(part.startedMs) ||
+      !/^\d{4}-\d{2}-\d{2}T\d{2}:00:00\.000Z$/.test(part.hour)) return;
+    mkdirSync(operationalStatePath(journalDirectory), { recursive: true });
+    const journalDestination = operationalStatePath(join(journalDirectory, `${part.hour.slice(0, 13)}--${part.pid}-${part.startedMs}.json`));
+    const journalTemporary = operationalStatePath(`${journalDestination}.owner.tmp`);
+    writeFileSync(journalTemporary, JSON.stringify({ ...part, counterFormat: 1 }), { mode: 0o600 });
+    renameSync(journalTemporary, operationalStatePath(journalDestination));
   } catch { /* The in-process meter and normal flush still count if this buffer is unavailable. */ }
 }
 

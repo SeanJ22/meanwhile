@@ -16,7 +16,8 @@ export function keepNeonBytesPart(dir: string, part: NeonBytesHour): boolean {
     // Its delayed, truncated stdout report must never overwrite that newer buffer.
     try {
       const current = JSON.parse(readFileSync(file, "utf8"));
-      if (current.counterFormat === 1 && part.pid !== process.pid) return true;
+      if (current.counterFormat === 1 && (part as NeonBytesHour & { readonly counterFormat?: number }).counterFormat !== 1 &&
+        part.pid !== process.pid) return true;
     } catch { /* The first report can still create the old-format file. */ }
     writeFileSync(`${file}.tmp`, JSON.stringify(part), "utf8");
     renameSync(`${file}.tmp`, file);

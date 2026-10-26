@@ -101,8 +101,10 @@ test("a change in exact NH transport bytes enters validation even when decoded i
   assert.equal(after.officialIdentityAuthority?.sourceVersion, f.model.officialIdentityAuthority?.sourceVersion);
 });
 
-test("identical NH documents cannot confirm the prior supported term after the term boundary", async () => {
-  const f = await fixture(); f.setNow("2026-12-02T12:00:00.000Z");
+test("identical NH documents cannot confirm the prior supported term after the term boundary", async t => {
+  const f = await fixture();
+  t.mock.method(Date, "now", () => Date.parse("2026-12-02T12:01:00.000Z"));
+  f.setNow("2026-12-02T12:00:00.000Z");
   const refused = await f.run();
   assert.equal(refused.state, "TEMPORAL_INVALID"); assert.equal(refused.confirmedAt, undefined);
   assert.equal(refused.lastKnownGoodVersion, f.first.candidateId);

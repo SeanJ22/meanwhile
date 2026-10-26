@@ -16,7 +16,7 @@ interface PartSourceMembers {
   readonly dataset:Dataset;readonly rawHash:string;readonly memberHashes:readonly string[];readonly billIds:readonly string[];
   readonly counts:BillPart["counts"];readonly sessionSponsorHash:string;readonly sourceSponsors:readonly Record<string,unknown>[];
 }
-interface BulkInput {capture:BulkCapture;dataset?:Dataset;bodies?:readonly string[];people?:readonly HeldPerson[];datasets?:readonly Dataset[];partIndex?:number;parts?:BillPartPointer[];counts?:BillPart["counts"];archiveHash?:string;sessionSponsors?:readonly Record<string,unknown>[];partSourceMembers?:PartSourceMembers;}
+interface BulkInput {capture:BulkCapture;dataset?:Dataset;bodies?:readonly string[];people?:readonly HeldPerson[];datasets?:readonly Dataset[];partIndex?:number;parts?:BillPartPointer[];counts?:BillPart["counts"];archiveHash?:string;sessionSponsors?:readonly Record<string,unknown>[];partSourceMembers?:PartSourceMembers;complete?:boolean;}
 function partSourceMembers(input:BulkInput,value:BillPart):PartSourceMembers{
   const source=JSON.parse(input.capture.body);
   return{formatVersion:1,parentRawHash:source.parentRawHash,archiveHash:source.archiveHash,partIndex:source.partIndex,memberOffset:source.memberOffset,
@@ -33,7 +33,8 @@ export function bulkCandidate(input:BulkInput):RoutineCandidate {
     input.parts?{kind:"SESSION",parserVersion:LEGISCAN_BULK_PARSER,sponsorMatchVersion:LEGISCAN_SPONSOR_MATCH,dataset:dataset as Dataset,state:stateOfDataset(input.dataset),capturedAt:capture.retrievedAt,parts:input.parts,counts:input.counts!}:
     {...normalizeSession(input.dataset,input.bodies??[],capture.retrievedAt,input.people,input.sessionSponsors),sourceRawHash:capture.rawHash};
   const payload=JSON.parse(JSON.stringify({...evidence,...(input.dataset?{dataset}:{}),...(input.datasets?{datasets}:{}),
-    ...(readModel.kind==="PART"?{partSourceMembers:partSourceMembers(input,readModel)}:{})}));
+    ...(readModel.kind==="PART"?{partSourceMembers:partSourceMembers(input,readModel)}:{}),
+    sourceProbe:{formatVersion:1,complete:input.complete!==false,continuationPending:input.complete===false}}));
   // Exact bytes and recomputed sponsor joins identify a part across interrupted observations.
   const fingerprint=hash(readModel.kind==="PART"?{parser:LEGISCAN_BULK_PARSER,rawHash:capture.rawHash,model:{...readModel,capturedAt:null}}:
     `${LEGISCAN_BULK_PARSER}|${hash(payload)}`);
@@ -43,7 +44,7 @@ export function bulkCandidate(input:BulkInput):RoutineCandidate {
     readModel.kind==="SESSION"?readModel.parts.map(row=>({subjectId:row.scope,jurisdiction:readModel.state==="US"?"US":`US-${readModel.state}`,identifiers:{session_id:String(readModel.dataset.session_id)},matchBasis:"OFFICIAL_ID" as const,ambiguous:false})):
     datasets.map(row=>({subjectId:`legiscan-bills:session:${row.session_id}`,jurisdiction:"US",identifiers:{session_id:String(row.session_id)},matchBasis:"OFFICIAL_ID" as const,ambiguous:false}));
   return {id:`cv-${hash(`${scope}|${fingerprint}`).slice(0,32)}`,sourceId,recordClass,scope,
-    retrieval:{succeeded:true,requestedUrl:capture.requestedUrl,finalUrl:capture.finalUrl,httpStatus:capture.httpStatus,retrievedAt:capture.retrievedAt,rawHash:capture.rawHash},
+    retrieval:{succeeded:true,complete:input.complete!==false,rawHashBasis:"SOURCE_CONTENT_V1",requestedUrl:capture.requestedUrl,finalUrl:capture.finalUrl,httpStatus:capture.httpStatus,retrievedAt:capture.retrievedAt,rawHash:capture.rawHash},
     normalization:{succeeded:true,parserVersion:LEGISCAN_BULK_PARSER,schemaVersion:"legiscan-bills/4",normalizedHash:hash(readModel),normalizedPayloadHash:hash(payload),inputRecords:rows.length,outputRecords:rows.length,droppedRecords:0,missingRequiredFields:[]},
     identities,temporal:{version:input.dataset?.dataset_date??capture.retrievedAt,expectedVersion:input.dataset?.dataset_date??capture.retrievedAt,sourceThrough:capture.retrievedAt,staleAtRetrieval:false},
     semantics:{factKind:"LegiScan attributed bills, statuses, sponsors and text links",violations:[]},
@@ -52,7 +53,7 @@ export function bulkCandidate(input:BulkInput):RoutineCandidate {
     sourceProjectionEvidence:sourceProjectionEvidence(sourceId,recordClass,scope),
     dependentChecks:[{consumer:"LegiScan bills reader",passed:rows.length>0,detail:`${rows.length} source records retained including unresolved sponsor joins.`}],normalizedPayload:payload,readModel};
 }
-export async function publishBulkCandidate(store:RoutineDataStore,input:Parameters<typeof bulkCandidate>[0],now:string) {
+export async function publishBulkCandidate(store:RoutineDataStore,input:Parameters<typeof bulkCandidate>[0],now:string,options:{readonly signal?:AbortSignal}={}) {
   if(!input.dataset){const candidate=bulkCandidate(input);return {candidate,outcome:await processRegisteredRoutineCandidate(store,LEGISCAN_BULK_CONTRACT,candidate,now)};}
   const archiveHash=input.archiveHash??/"archiveHash":"([a-f0-9]{64})"/.exec(input.capture.body.slice(0,4096))?.[1];
   if(!archiveHash||!input.bodies?.length)throw Error("LEGISCAN_ARCHIVE_EVIDENCE_REQUIRED");
@@ -73,6 +74,7 @@ export async function publishBulkCandidate(store:RoutineDataStore,input:Paramete
   }
   addChunk();
   const published=await runBoundedWorkPool(chunks,2,async({bodies,memberOffset},partIndex)=>{
+    options.signal?.throwIfAborted();
     const body=JSON.stringify({dataset,archiveHash,parentRawHash:input.capture.rawHash,partIndex,memberOffset,bodies,sessionSponsors});
     const capture={...input.capture,body,rawHash:hash(body)};
     const candidate=bulkCandidate({capture,dataset,bodies,people:input.people,partIndex,archiveHash,sessionSponsors});
@@ -98,6 +100,7 @@ export async function publishBulkCandidate(store:RoutineDataStore,input:Paramete
     const {counts:partCounts,...pointer}=result.value;parts.push(pointer);
     for(const key of Object.keys(counts) as (keyof typeof counts)[])counts[key]+=partCounts[key];
   }
+  options.signal?.throwIfAborted();
   const body=JSON.stringify({dataset,archiveHash,parentCapture:input.capture,parts,counts,sessionSponsorHash});
   const candidate=bulkCandidate({capture:{...input.capture,body,rawHash:hash(body)},dataset,parts,counts,archiveHash});
   if(!store.readPublicationBase)throw Error("LEGISCAN_PUBLICATION_BASE_READER_REQUIRED");

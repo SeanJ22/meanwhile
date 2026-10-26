@@ -88,7 +88,7 @@ test("keyed planning preserves held facts, source aliases and state routes throu
   await assert.rejects(pg.transaction(async tx=>{await tx.query("UPDATE civic_data_promotions SET payload='{}'::jsonb WHERE record_class='REGISTRY_RUNTIME_BINDING'");throw new Error("ROLLBACK_LOOKUP_UPDATE");}),/ROLLBACK_LOOKUP_UPDATE/);
   assert.deepEqual((await pg.query("SELECT collection,row_id,value FROM civic_data_rows ORDER BY promotion_key,collection,ordinal")).rows,before,"pointer and keyed values roll back together");
   await put("REGISTRY_RUNTIME_BINDING","US-AZ:reader-registry-runtime",{...runtime,bodyRosters:[],statewideExecutives:[],officialCandidacies:{...runtime.officialCandidacies,rows:[]}});
-  assert.equal((await pg.query("SELECT count(*)::int AS n FROM civic_data_rows WHERE collection IN ('registry.rosterMembers','registry.executives','registry.candidacies')")).rows[0].n,0,"replacement removes only old collection members");
+  assert.equal((await pg.query<{n:number}>("SELECT count(*)::int AS n FROM civic_data_rows WHERE collection IN ('registry.rosterMembers','registry.executives','registry.candidacies')")).rows[0].n,0,"replacement removes only old collection members");
   await pg.query("DELETE FROM civic_data_promotions WHERE record_class='CURATED_READER_RECORD'");
   assert.equal(await readStateWiringRows(query,"AZ"),null,"deleted pointer leaves no routes");
 });

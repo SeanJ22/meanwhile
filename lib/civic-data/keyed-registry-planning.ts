@@ -28,9 +28,9 @@ export async function readRegistryPlanningRows(query:Query,state:string):Promise
   const row=result.find(row=>row.kind==="metadata");
   if(!row)return null;
   keyedSourceInput(row,"REGISTRY_RUNTIME_BINDING");
-  const metadata=row.value as {generatedAt:string;bridge:Record<string,unknown>};
-  const values=(kind:string)=>result.filter(row=>row.kind===kind).map(row=>row.value);
-  return {registry:{generatedAt:metadata.generatedAt,bodies:values("registry.bodies"),divisions:values("registry.divisions")},
-    bodyRosters:values("bodyRosters"),rosterReaderDispositions:values("registry.rosterDispositions"),statewideExecutives:values("registry.executives"),
-    officialCandidacies:{...metadata.bridge,rows:values("registry.candidacies")}} as RegistryPlanningView;
+  const metadata=row.value as {generatedAt:string;bridge:Omit<RegistryPlanningView["officialCandidacies"],"rows">};
+  const values=<T>(kind:string)=>result.filter(row=>row.kind===kind).map(row=>row.value as T);
+  return {registry:{generatedAt:metadata.generatedAt,bodies:values<RegistryPlanningView["registry"]["bodies"][number]>("registry.bodies"),divisions:values<RegistryPlanningView["registry"]["divisions"][number]>("registry.divisions")},
+    bodyRosters:values<RegistryPlanningView["bodyRosters"][number]>("bodyRosters"),rosterReaderDispositions:values<RegistryPlanningView["rosterReaderDispositions"][number]>("registry.rosterDispositions"),statewideExecutives:values<RegistryPlanningView["statewideExecutives"][number]>("registry.executives"),
+    officialCandidacies:{...metadata.bridge,rows:values<RegistryPlanningView["officialCandidacies"]["rows"][number]>("registry.candidacies")}};
 }

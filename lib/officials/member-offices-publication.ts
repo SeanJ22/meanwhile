@@ -132,7 +132,7 @@ async function publishOfficeState(input: {
         ...facts, sourceUrl: sourcePath(sourceUrl),
         ...(fieldSources ? { fieldSources: Object.fromEntries(Object.entries(fieldSources).map(([key, source]) => {
           const { collectedAt: _collected, verifiedAt: _verified, ...provenance } = source;
-          return [key, { ...provenance, sourceUrl: sourcePath(source.sourceUrl) }];
+          return [key, { ...provenance, sourceUrl: source.sourceUrl===null?null:sourcePath(source.sourceUrl) }];
         })) } : {}),
       });
       const rows = native.map((record, index) => {

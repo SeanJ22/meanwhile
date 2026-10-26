@@ -28,13 +28,13 @@ test("derived input validation reads immutable hashes and only named wiring memb
   const query=async(text:string,params:readonly unknown[]=[])=>{const rows=(await pg.query<Record<string,unknown>>(text,[...params])).rows;bytes+=JSON.stringify(rows).length;return rows;};
   const store={readDerivedInputHeads:(ids:readonly string[])=>readDerivedInputHeads(query,ids),readDerivedWiringRows:(id:string,keys:readonly string[])=>readDerivedWiringRows(query,id,keys),
     readCandidate:async()=>{throw new Error("whole promoted input read");}};
-  const candidate={retrieval:{derived:{inputs}}} as RoutineCandidate;
+  const candidate={retrieval:{derived:{inputs}}} as unknown as RoutineCandidate;
   assert.equal(await derivedInputAuthorityIssue(store,candidate),null);
   assert.ok(bytes<1_500,`${bytes} bytes includes no unrelated inventory or wiring`);
   const member=inputs.at(-1)! as Extract<DerivedInputRef,{kind:"MEMBER_ACQUISITION"}>;
-  const foreign={retrieval:{derived:{inputs:[...inputs.slice(0,-1),{...member,finalUrl:"https://unrelated.gov/calendar"}]}}} as RoutineCandidate;
+  const foreign={retrieval:{derived:{inputs:[...inputs.slice(0,-1),{...member,finalUrl:"https://unrelated.gov/calendar"}]}}} as unknown as RoutineCandidate;
   assert.match((await derivedInputAuthorityIssue(store,foreign))!,/DERIVED_MEMBER_HOST_NOT_ATTESTED/);
   const first=inputs[0] as Extract<DerivedInputRef,{kind:"PROMOTED_VERSION"}>;
-  const altered={retrieval:{derived:{inputs:[{...first,readModelSha256:"f".repeat(64)},...inputs.slice(1)]}}} as RoutineCandidate;
+  const altered={retrieval:{derived:{inputs:[{...first,readModelSha256:"f".repeat(64)},...inputs.slice(1)]}}} as unknown as RoutineCandidate;
   assert.match((await derivedInputAuthorityIssue(store,altered))!,/DERIVED_INPUT_READ_MODEL_MISMATCH/);
 });

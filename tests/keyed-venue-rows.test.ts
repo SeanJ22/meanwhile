@@ -22,14 +22,14 @@ test("venue backfill and pointer updates retain exact source/body/tenant placeme
   };
   await put("v1",[own,other]);
   await pg.exec(readFileSync(new URL("../lib/db/migrations/DB-05_venue_rows.sql",import.meta.url),"utf8"));
-  const selected=async()=> (await pg.query(`SELECT r.row_id,r.body_id,r.state,reader_payload_value(r.value) AS value FROM civic_data_rows r
+  const selected=async()=> (await pg.query<{row_id:string;body_id:string;state:string;value:typeof own}>(`SELECT r.row_id,r.body_id,r.state,reader_payload_value(r.value) AS value FROM civic_data_rows r
     JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
     WHERE r.collection='venues' AND r.value->>'sourceId'=$1 AND r.body_id=$2 AND r.value->>'tenant' IS NOT DISTINCT FROM $3`,[own.sourceId,own.bodyOcdId,null])).rows;
   assert.deepEqual(await selected(),[{row_id:own.id,body_id:own.bodyOcdId,state:"AZ",value:own}]);
   assert.ok(JSON.stringify(await selected()).length<2_000);
   await put("v2",[{...own,address:"2 Public Plaza"}]);
   assert.deepEqual((await selected())[0].value,{...own,address:"2 Public Plaza"});
-  assert.equal((await pg.query("SELECT count(*)::int n FROM civic_data_rows WHERE collection='venues'")).rows[0].n,1);
+  assert.equal((await pg.query<{n:number}>("SELECT count(*)::int n FROM civic_data_rows WHERE collection='venues'")).rows[0].n,1);
   await pg.exec("DELETE FROM civic_data_promotions");
   assert.deepEqual(await selected(),[]);
 });

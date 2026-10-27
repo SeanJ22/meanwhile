@@ -2385,9 +2385,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   private async eventValue<T>(namespace: string, candidateId: string, read: () => Promise<T>): Promise<T> {
     const [row] = await this.readCache.rows({ namespace, keys: [candidateId], keyOf: row => row.id,
       versions: async () => {
-        const rows = await this.db.select({ etag: sql<string>`coalesce(md5(string_agg(concat(
-          ${civicDataCandidateEvents.sequence}::text, '/', ${civicDataCandidateEvents}.xmin::text, '/',
-          ${civicDataCandidateEvents}.ctid::text), ',' order by ${civicDataCandidateEvents.sequence})), 'empty')` })
+        const rows = await this.db.select({ etag: sql<string>`concat('events-v1/', coalesce(md5(string_agg(md5(jsonb_build_array(
+          ${civicDataCandidateEvents.sequence}, ${civicDataCandidateEvents.state}, ${civicDataCandidateEvents.at},
+          ${civicDataCandidateEvents.detail})::text), '' order by ${civicDataCandidateEvents.sequence})), 'empty'))` })
           .from(civicDataCandidateEvents).where(eq(civicDataCandidateEvents.candidateId, candidateId));
         return [{ key: candidateId, etag: rows[0]!.etag }];
       }, values: async () => [{ id: candidateId, value: await read() }],

@@ -863,12 +863,13 @@ async function withCannedNeon<T>(
       if (version !== "POSTGRES") {
         const { query, params } = statement;
         if (query.includes("civic_data_clock_versions")||query.startsWith("WITH publication_head")) metadata = { columns: [["etag", "text"],["eligible","bool"]], rows: [[current,true]] };
-        else if (query.includes(".xmin::text") || query.includes("content-v1/") || query.includes("publication-v1/") || query.includes("part-v1/")) {
+        else if (query.includes("events-v1/") || query.includes("content-v1/") || query.includes("publication-v1/") || query.includes("part-v1/")) {
           const keys = params.flatMap(value => Array.isArray(value) ? value : [value]).filter((value): value is string =>
             typeof value === "string" && !value.startsWith("UNCHANGED_CONFIRMATION") &&
             (query.includes("civic_data_payload_parts") ? /^[a-f0-9]{64}$/.test(value) :
               query.includes("civic_data_promotions") ? /^[A-Z_]+:/.test(value) : true));
-          if (query.includes("content-v1/")) {
+          if(query.includes("events-v1/"))metadata={columns:[["etag","text"]],rows:[[current]]};
+          else if (query.includes("content-v1/")) {
             const fields = [["state","state","text"],["acquisitionSucceeded","acquisition_succeeded","bool"],
               ["validationReceipt","validation_receipt","jsonb"],["promotedVersionId","promoted_version_id","text"],
               ["lastKnownGoodVersionId","last_known_good_version_id","text"],["failureCode","failure_code","text"],

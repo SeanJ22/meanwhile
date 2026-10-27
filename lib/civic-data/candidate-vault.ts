@@ -106,7 +106,10 @@ export async function readCivicCandidatePath(query:Query,vault:EvidenceStore,id:
     if(path[0]==="normalizedPayload")return format.normalizedPayload?reader.path(format.normalizedPayload,path.slice(1)):null;
     if(path[0]==="excludedFacts")return format.excludedFacts?reader.path(format.excludedFacts.version,[...format.excludedFacts.path,...path.slice(1)]):[];
     if(path[0]==="civicRecords"){
+      if(format.civicRecords&&format.civicRecords!=="DERIVED")return reader.path(format.civicRecords,path.slice(1));
+      if(!format.civicRecords)return null;
       const [row]=await query("SELECT record_class FROM civic_data_candidates WHERE id=$1",[id]);
+      if(!row)return null;
       const value=format.readModel?await reader.read(format.readModel):null;
       const records=civicRecordsFor(row.record_class as RoutineCandidate["recordClass"],value);
       let result:unknown=records;for(const key of path.slice(1))result=object(result)?.[key]??(Array.isArray(result)?result[Number(key)]:null);

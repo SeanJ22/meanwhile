@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
-import { candidateChangeSet } from "../lib/civic-data/changes.ts";
+import { candidateChangeSet, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { holdCandidateFacts, hydrateCandidateFacts, readCivicCandidatePath, rebuildCandidateChanges } from "../lib/civic-data/candidate-vault.ts";
 import { holdCivicVersion } from "../lib/civic-data/version-vault.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -49,4 +49,23 @@ test("transition format retains readModel until historical readers switch; faile
   assert.equal(stored.vault.readModel?.fingerprint,hash(input.readModel),"vault identity always describes actual facts");
   assert.deepEqual((await hydrateCandidateFacts(vault,stored) as RoutineCandidate).readModel,input.readModel);
   assert.deepEqual(await hydrateCandidateFacts(vault,input),input,"legacy rows need no changes or backfill");
+});
+
+test("selected civic-record evidence preserves supplied records instead of replacing them with derived records",async()=>{
+  const vault=new MemoryEvidenceStore(),input=candidate();
+  const supplied=[{key:"unresolved-source-row",record:{id:"held/one",sourceText:"Source evidence that did not normalize."}}];
+  const stored=await holdCandidateFacts(vault,{...input,civicRecords:supplied},null,{retainReadModel:false});
+  const query=async(text:string)=>{
+    assert.equal(text,"SELECT candidate->'vault' AS vault FROM civic_data_candidates WHERE id=$1");
+    return [{vault:stored.vault}];
+  };
+  assert.deepEqual(await readCivicCandidatePath(query,vault,input.id,["civicRecords"]),supplied);
+  assert.equal(await readCivicCandidatePath(query,vault,input.id,["civicRecords","0","record","sourceText"]),supplied[0].record.sourceText);
+  const absent=await holdCandidateFacts(vault,input,null,{retainReadModel:false});
+  assert.equal(await readCivicCandidatePath(async()=>[{vault:absent.vault}],vault,input.id,["civicRecords"]),null);
+  const derived=civicRecordsFor(input.recordClass,input.readModel);
+  const compact=await holdCandidateFacts(vault,{...input,civicRecords:derived},null,{retainReadModel:false});
+  assert.equal(compact.vault.civicRecords,"DERIVED");
+  assert.deepEqual(await readCivicCandidatePath(async text=>text.includes("record_class")?[{record_class:input.recordClass}]:[{vault:compact.vault}],
+    vault,input.id,["civicRecords"]),derived);
 });

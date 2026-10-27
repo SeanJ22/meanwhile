@@ -53,6 +53,8 @@ test("production 2 PM totals replay on a test store: only the bill job pauses, n
     assert.equal(first.events[0]!.bytes_per_request,INCIDENT/933);
     assert.equal(first.events[0]!.top_table,"civic_data_candidates");
     assert.equal((await check(HOUR+2*JOB_BREAKER_INTERVAL_MS)).events.length,0,"rechecks are not new trips");
+    assert.equal((await check(HOUR+3*JOB_BREAKER_INTERVAL_MS,[incident,normal],"v2")).events.length,0,
+      "a first trip stays paused until the next hour even if a release arrives");
     const resumed=await check(HOUR+3_600_000,[normal]);
     assert.equal(resumed.events[0]?.action,"RESUME");
     assert.equal(resumed.events[0]?.top_table,"civic_data_candidates");

@@ -88,7 +88,7 @@ export function evaluateJobBreaker(input: {
     if (protectedJob(job)) continue;
     let state = states[job];
     const row = rows.get(job), code = input.code(job);
-    if (state && code && state.code && code !== state.code) {
+    if (state?.mode === "PAUSED_CODE" && code && state.code && code !== state.code) {
       state = states[job] = { ...state, mode: "HALF_RATE", trips: 0, tripDay: day, code,
         offsetHour: hour, offsetBytes: row?.bytes ?? 0, tripHour: "" };
       emit(state, "RESUME", "Job code changed in the running release");

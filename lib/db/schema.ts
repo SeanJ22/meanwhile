@@ -703,6 +703,12 @@ export const civicDataPayloadParts = pgTable("civic_data_payload_parts", {
   payload: jsonb("payload").notNull(),
 });
 
+/** Full body membership is requested only when its card opens. */
+export const readerBodyRosters = pgTable("reader_body_roster", {
+  hash: text("hash").primaryKey(),
+  payload: jsonb("payload").notNull(),
+});
+
 /** A scheduler cache changes only when this scope's candidates, events or pointer change. */
 export const civicDataClockVersions = pgTable("civic_data_clock_versions", {
   recordClass: text("record_class").notNull(),

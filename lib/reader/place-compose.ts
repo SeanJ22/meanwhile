@@ -127,6 +127,10 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
   return {
     division_ids: [...new Set([...input.divisionIds, ...(input.neighbors ? active.flatMap(page => strings(page.row.division_ids)) : [])])],
     registry,
+    ...(ordered.some(page => page.row.roster_refs) ? { roster_refs: Object.fromEntries(ordered.flatMap(page =>
+      Object.entries(record(page.row.roster_refs)).filter(([id]) => owns(page, id)))) } : {}),
+    ...(ordered.some(page => page.row.roster_previews) ? { roster_previews: Object.fromEntries(ordered.flatMap(page =>
+      Object.entries(record(page.row.roster_previews)).filter(([id]) => owns(page, id)))) } : {}),
     everyday_routing: input.bodyFactsOnly || agendaOnly ? null : last.row.everyday_routing ?? null,
     registration_held: !input.bodyFactsOnly && !agendaOnly && active.some(page => page.row.registration_held === true),
     governments: input.bodyFactsOnly || agendaOnly ? [] : unique(ordered.flatMap(page => records(page.row.governments)), row => String(row.id)),

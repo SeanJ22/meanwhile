@@ -4,7 +4,7 @@ import { officeTypeForTitle } from "../officials/office-blurbs.ts";
 // The one roster member Ask names: whoever runs the body.
 import { topOfficesFor } from "../officials/top-offices.ts";
 // The same store the body card and the representation view read.
-import { projectedBodyRoster } from "../registry/body-roster-client.ts";
+import { projectedBodyRoster, projectedRosterPreview } from "../registry/body-roster-client.ts";
 
 import type { NamedEntityBinding } from "./named-entity.ts";
 import { routeForTopic, type RouteStep, type TopicRoute } from "./topics.ts";
@@ -120,7 +120,7 @@ function peopleFor(
   // And only where there is exactly one body: under a heading covering several bodies, a named person
   // would read as belonging to all of them.
   if (bodies.length === 1) {
-    for (const top of topOfficesFor([...projectedBodyRoster(bodies[0]).members])) {
+    for (const top of topOfficesFor(projectedRosterPreview(bodies[0]))) {
       if (top.role === "Runs it day to day") push(top.holder);
     }
   }
@@ -205,7 +205,7 @@ export function resolveRouting(
       people.length === 0 &&
       // "No names shown" is not "no names held": the gap renders only where the bodies genuinely hold
       // nobody.
-      bodies.every((body) => projectedBodyRoster(body).members.length === 0)
+      bodies.every((body) => !(body.rosterRef && !body.readerRoster) && projectedBodyRoster(body).members.length === 0)
     ) {
       // The body exists; who sits on it is unsourced. Say which half.
       gap = "We haven't sourced who sits on this body yet.";

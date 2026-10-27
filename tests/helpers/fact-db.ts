@@ -50,6 +50,7 @@ export async function factDb(options: { readonly withResolver?: boolean; readonl
   for (const migration of MIGRATIONS.filter(path=>options.withPlacePages!==false || !path.endsWith("RB-A7_expand.sql")))
     for (const statement of readFileSync(migration, "utf8").split("--> statement-breakpoint")) if (factStatement(migration, statement)) await pg.exec(statement);
   if (options.withPlacePages !== false) for (const sql of readerIdentityMigration().split("--> statement-breakpoint").filter(sql => /^\s*ALTER TABLE entity_place/.test(sql))) await pg.exec(sql);
+  if (options.withPlacePages !== false) await pg.exec(readFileSync(join(import.meta.dirname, "../../lib/db/migrations/ZS-01_expand.sql"), "utf8"));
   await pg.exec(migration("_entity_places.sql"));
   if (options.withHourlyCounts) {
     await pg.exec("CREATE TABLE civic_data_promotions(scope text,record_class text,current_version_id text)");

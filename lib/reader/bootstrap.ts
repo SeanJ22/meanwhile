@@ -1,5 +1,6 @@
 import type { ZctaCentroid } from "../geo/zcta-core.ts";
 import type { ReaderWorkerRequest } from "../map/boundary-worker.ts";
+import { expandReaderValues } from "./shared.ts";
 
 interface ReaderBoundary { url: string; request: (request: ReaderWorkerRequest, signal?: AbortSignal) => Promise<unknown> }
 
@@ -50,7 +51,8 @@ const early=url=>fetch(url,{headers:{accept:"application/json"}}).then(parseResp
 const placeUrl="/api/meetings?zip="+zip+"&include=state";
 const parsedResponse=result=>{const response=new Response("",{status:result.status,headers:result.headers});parsed.set(response,Promise.resolve(result.value));return response};
 const combined=fetch(placeUrl,{headers:{accept:"application/json"}}).then(async response=>{
-const split=value=>{const state=value.stateResponse;delete value.stateResponse;
+const expand=${expandReaderValues.toString()};
+const split=input=>{const value=expand(input),state=value.stateResponse;delete value.stateResponse;
 return{state:state||{value:{error:"The state's information could not be loaded"},status:503,headers:[["cache-control","no-store"]]},place:{value,status:response.status,headers:[...response.headers]}}};
 if(!window.__readerBoundary)return split(await response.json());
 const body=await response.arrayBuffer(),backup=body.slice(0);
@@ -99,7 +101,7 @@ export function fetchReaderResponse(url: string, init?: RequestInit): Promise<Re
 /** Parse arriving data before hydration needs it; consume the original body exactly once. */
 export async function readReaderJson<T>(response: Response): Promise<T> {
   const parsed = typeof window === "undefined" ? undefined : window.__readerStart?.parsed.get(response);
-  if (!parsed) return response.json() as Promise<T>;
+  if (!parsed) return expandReaderValues(await response.json()) as T;
   window.__readerStart!.parsed.delete(response);
   // The early parser already consumes the bytes. Release this spare tee branch
   // without waiting for cancellation to propagate through the other branch or
@@ -107,7 +109,7 @@ export async function readReaderJson<T>(response: Response): Promise<T> {
   if (response.bodyUsed || response.body?.locked) throw new TypeError("Response body is already used or locked");
   if (response.body) void response.body.cancel().catch(() => {});
   else await response.arrayBuffer();
-  return parsed as Promise<T>;
+  return expandReaderValues(await parsed) as T;
 }
 
 /** A map ZIP change uses the same parallel reads as the arriving HTML. */

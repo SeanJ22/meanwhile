@@ -11,6 +11,7 @@ import { mergePlaceRows } from "./place-compose.ts";
 import { unpackPlaceContextRow, unpackReadyPlace, unpackReadyTerritory } from "./place-ready.ts";
 import type { BodyTerritorySelection } from "../registry/body-territory.ts";
 import type { PlaceInput, PlacePackage } from "./place-types.ts";
+import { preparePlaceRosters } from "./body-roster.ts";
 export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 
 /** The normal first ZIP visit reads one already composed page. */
@@ -46,6 +47,14 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
 const pageIds = serverReaderValue("place-page-ids", () => new WeakMap<PlacePackage, readonly string[]>());
 const pageTerritories = serverReaderValue("place-page-territories", () => new WeakMap<PlacePackage, BodyTerritorySelection|null>());
+
+function listPlace(place: PlacePackage): PlacePackage {
+  const prepared=preparePlaceRosters(place).place;
+  // Legacy saved pages have full rosters, but no corresponding immutable resources.
+  // Open their current body by identity until the runner publishes the new saved form.
+  return place.rosterRefs || !prepared.rosterRefs ? prepared : {...prepared,
+    rosterRefs:Object.fromEntries(Object.keys(prepared.rosterRefs).map(id=>[id,"unbuilt"]))};
+}
 
 /** Cache the exact pages selected, including canonical bodies reached through an alias. */
 export function placePageCacheIds(place: PlacePackage): readonly string[] {
@@ -88,11 +97,12 @@ function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<P
 
 async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<PlacePackage> {
   if(!query)throw new Error("FACT_STORE_DATABASE_URL_MISSING");
+  if(input.includeRoster)return readUnbuiltPlace(input,query);
   if(input.placeId && !(input.placeId.startsWith("zip:") && input.includeHistory)
     && !input.includeAgenda && !input.bodyFactsOnly && !input.meetingIds && !input.allBodies) {
     const [saved]=await query(READY_PLACE_SQL,[input.placeId,input.includeHistory??false]);
     if(!saved?.page)return readUnbuiltPlace(input,query);
-    const place=unpackReadyPlace(saved.page);
+    const place=listPlace(unpackReadyPlace(saved.page));
     const territory=unpackReadyTerritory(saved.page);
     if(territory!==undefined)pageTerritories.set(place,territory);
     pageIds.set(place,[input.placeId]);
@@ -105,14 +115,16 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
   const canonical={...input,bodyIds:rows[0]?.body_ids as string[]??input.bodyIds};
   const merged=mergePlaceRows(canonical,rows.map(row=>({...unpackPlaceContextRow(row.row),page_id:row.page_id,
     page_kind:empty?'empty':row.page_kind,built_at:row.built_at})));
-  const place=await composePlaceRow(canonical,merged);
+  const composed=await composePlaceRow(canonical,merged);
+  const place=!input.includeAgenda && !input.bodyFactsOnly && !input.includeRoster ? listPlace(composed) : composed;
   pageIds.set(place,rows.flatMap(row=>typeof row.page_id==='string'?[row.page_id]:[]));
   return place;
 }
 
 /** A place whose first page is still queued is read as it was before ready pages; its page tag is purged when the page is built. */
 async function readUnbuiltPlace(input:PlaceInput,query:Query):Promise<PlacePackage> {
-  const {place,territory}=await composeUnbuiltPlace(input,query);
+  const {place:composed,territory}=await composeUnbuiltPlace(input,query);
+  const place=!input.includeAgenda && !input.bodyFactsOnly && !input.includeRoster ? listPlace(composed) : composed;
   if(territory!==undefined)pageTerritories.set(place,territory);
   if(input.placeId)pageIds.set(place,[input.placeId]);
   return place;

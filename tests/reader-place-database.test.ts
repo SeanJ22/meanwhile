@@ -50,7 +50,7 @@ test("place reads preserve the migrated state type, use the existing one-shot cl
   try{
     await pg.exec("SET enable_seqscan=off");
     const plan=await pg.query<Record<string,unknown>>(`EXPLAIN (FORMAT JSON) ${PLACE_PACKAGE_SQL}`,
-      ["AZ",input.divisionIds,[],"ocd-division/country:us/state:az",false,false,false,null,false,[],null]);
+      ["AZ",input.divisionIds,[],"ocd-division/country:us/state:az",false,false,false,null,false,[],null,false]);
     assert.ok(!JSON.stringify(plan.rows).includes("(state)::text"),"a text comparison prevents the real char(2) state index from qualifying the read");
     await pg.exec("RESET enable_seqscan");
     const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
@@ -209,7 +209,10 @@ test("a merged board's saved runtime and old links resolve to one canonical body
       assert.deepEqual(result.bodies.map(row=>row.id),[body]);
       assert.deepEqual(result.registry?.registry.bodies.map(row=>row.id),[body]);
       assert.equal(result.registry?.bodyRosters[0]?.bodyId,body);
-      assert.equal(result.registry?.bodyRosters[0]?.members[0]?.name,"Jane Example");
+      assert.equal(result.registry?.bodyRosters[0]?.members.length,0);
+      const hash=result.rosterRefs?.[body];assert.ok(hash);
+      const opened=await (await import("../lib/reader/body-roster.ts")).readBodyRoster(query,hash);
+      assert.equal(opened?.members[0]?.name,"Jane Example");
       const current=result.registry!;
       const old={...current,registry:{...current.registry,bodies:[...current.registry.bodies,{...current.registry.bodies[0]!,id:alias}]}};
       const statePackage={state:"AZ",version:"fixture",registry:old};

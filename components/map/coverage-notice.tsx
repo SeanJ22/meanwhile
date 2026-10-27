@@ -35,7 +35,7 @@ import {
 import { useConfirmedDivisions } from "@/hooks/use-confirmed-divisions";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import { groupBodiesByGovernment } from "@/lib/registry/body-groups";
-import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
+import { projectedRosterPreview } from "@/lib/registry/body-roster-client";
 import {
   hasRepresentation,
   leadKind,
@@ -560,7 +560,7 @@ function CoverageBody({
         <ul className="mt-1 space-y-1">
           {/* A town with no mayor gets its substitute office named and its members shown. */}
           {shown.flatMap((body) => {
-            const board = projectedBodyRoster(body).members.filter((holder) =>
+            const board = projectedRosterPreview(body).filter((holder) =>
               /select\s?board/i.test(holder.officeTitle),
             );
             if (board.length === 0) return [];

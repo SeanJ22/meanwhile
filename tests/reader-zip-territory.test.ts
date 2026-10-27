@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { expandReaderValues } from "../lib/reader/shared.ts";
 import fs from "node:fs/promises";
 import {syncBuiltinESMExports} from "node:module";
 import {spawnSync} from "node:child_process";
@@ -96,13 +97,14 @@ test("a canonical ZIP uses its private ready selection with one SQL read and no 
   try {
     const location=await readerLocation(point.lat,point.lng,zip),page=ready([...new Set([ROOT,...location.divisionIds,...location.fringe])].map(division));
     stored=packReadyPlace(page,selection);
-    installReaderDatabaseQuery(async statements=>Promise.all(statements.map(async statement=>{
+    let selectedFixture: NonNullable<ReturnType<typeof import("../lib/reader/database.ts").readerDatabaseQuery>> = async statements=>Promise.all(statements.map(async statement=>{
       reads.push(statement.text);
       assert.equal(statement.text,READY_PLACE_SQL);
       assert.deepEqual(statement.params,[`zip:${zip}`,false]);
       return [{page:stored,version:1}];
-    })));
-    const call=async()=>{const response=await meetingsGET(new Request(`https://example.test/api/meetings?zip=${zip}`));const payload=await response.json();assert.equal(response.status,200,JSON.stringify(payload));return payload;};
+    }));
+    installReaderDatabaseQuery(statements=>selectedFixture(statements));
+    const call=async()=>{const response=await meetingsGET(new Request(`https://example.test/api/meetings?zip=${zip}`));const payload=expandReaderValues(await response.json());assert.equal(response.status,200,JSON.stringify(payload));return payload;};
     const fast=await call();
     assert.deepEqual(reads,[READY_PLACE_SQL]);assert.equal(geometryReads,0);assert.equal(fetches,0);
     assert.equal(JSON.stringify(fast).includes("BodyTerritorySelection"),false,"internal selection never enters public JSON");
@@ -126,10 +128,10 @@ test("a canonical ZIP uses its private ready selection with one SQL read and no 
       entities:bodies.map(b=>({id:b.id,division:b.ocdId??ROOT,kind:"body",state:"AZ"})),fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[{scope:"source:derived:family:US-AZ",payload:page.snapshot,current_version_id:"fixture",confirmation:null}],
       archived_meetings:[],archived_documents:[],archived_document_links:[],agenda_texts:[],parts:{}};
     let customReads=0;
-    installReaderDatabaseQuery(async statements=>Promise.all(statements.map(async statement=>{
+    selectedFixture=async statements=>Promise.all(statements.map(async statement=>{
       assert.equal(statement.text,PLACE_PAGES_SQL);customReads++;assert.deepEqual(statement.params[2],[]);
       return [{page_id:CITY,page_kind:"place",built_at:AT,body_ids:[],row:raw}];
-    })));
+    }));
     const custom=await meetingsGET(new Request(`https://example.test/api/meetings?zip=${zip}&lat=${point.lat+.02}&lng=${point.lng+.02}`));
     assert.equal(custom.status,200,JSON.stringify(await custom.clone().json()));assert.equal(customReads,1);
     const db=await factDb({withHourlyCounts:true});

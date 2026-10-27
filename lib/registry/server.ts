@@ -744,7 +744,7 @@ export async function coverageAt(
   ]);
   const meetings = heldMeetings.length ? heldMeetings : place.meetings;
   const local = place.registry ? withPlaceRegistry(bundle, place.registry) : bundle;
-  const coverage = stateCoverage(local, ids, lat, lng, meetings, place.bodies, [...place.divisions, ...resolvedDivisions ?? []], territory, meetingCount);
+  const coverage = stateCoverage({ ...local, rosterRefs: place.rosterRefs, rosterPreviews: place.rosterPreviews }, ids, lat, lng, meetings, place.bodies, [...place.divisions, ...resolvedDivisions ?? []], territory, meetingCount);
   return { ...coverage, governments: bindGovernmentBodies(place.governments, local.registry.registry.bodies),
     governmentInventoryUnavailableStates: place.registrationHeld ? [] : [state] };
 }

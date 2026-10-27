@@ -2,6 +2,8 @@ import { Buffer } from "node:buffer";
 import { gzipSync, gunzipSync } from "node:zlib";
 import type { PlacePackage } from "./place-types.ts";
 import type { BodyTerritorySelection } from "../registry/body-territory.ts";
+import { preparePlaceRosters } from "./body-roster.ts";
+import { shareReaderValues, expandReaderValues } from "./shared.ts";
 
 interface PackedReadyPlace {
   readonly encoding: "gzip-json-v1";
@@ -22,11 +24,11 @@ function unpack<T>(page: unknown): T {
 
 /** Compress the complete JSON response before it crosses the database connection. */
 export function packReadyPlace(page: PlacePackage,territory?:BodyTerritorySelection|null): PackedReadyPlace {
-  return {...pack(page),...(territory===undefined?{}:{territory:pack(territory)})};
+  return {...pack(shareReaderValues(preparePlaceRosters(page).place)),...(territory===undefined?{}:{territory:pack(territory)})};
 }
 
 /** Previously built uncompressed pages remain readable until their next rebuild. */
-export function unpackReadyPlace(page: unknown): PlacePackage { return unpack(page); }
+export function unpackReadyPlace(page: unknown): PlacePackage { return expandReaderValues(unpack<PlacePackage>(page)); }
 
 /** Undefined is a legacy page; null is a saved selection with no territory geometry. */
 export function unpackReadyTerritory(page:unknown):BodyTerritorySelection|null|undefined {
@@ -40,12 +42,21 @@ type Row = Record<string,unknown>;
 export function packPlaceContext(context: Row): Row {
   const packed:Row={formatVersion:context.formatVersion};
   for(const key of ["current","history","emptyCurrent","emptyHistory"]) {
-    const full=context[key] as Row|undefined;
-    if(!full)continue;
-    const brief={...full,agenda_texts:[],archived_documents:[],archived_document_links:[],
+    const original=context[key] as Row|undefined;
+    if(!original)continue;
+    const full:Row=original;
+    const brief={...full,...(original.roster_refs ? { rosters: [], registry: original.registry ? {
+        ...original.registry as Row,
+        bodyRosters: ((original.registry as Row).bodyRosters as Row[]).map(roster => {
+          const { members, membershipHistory, ...header } = roster; void members; void membershipHistory;
+          return { ...header, members: [] };
+        }),
+        rosterReaderDispositions: [], rosterPhotos: {}, officialPhotos: { photos: [] },
+        officialCandidacies: { ...(original.registry as Row).officialCandidacies as Row, rows: [] },
+      } : null } : {}),agenda_texts:[],archived_documents:[],archived_document_links:[],
       meeting_rows:(full.meeting_rows as Row[]).map(partition=>({...partition,
         payload:{...partition.payload as Row,agendaDocuments:[],agendaDocumentLinks:[]}}))};
-    const facts={...brief,registry:null,everyday_routing:null,governments:[],divisions:[],registration_held:false};
+    const facts={...brief,rosters:original.rosters,roster_refs:undefined,registry:null,everyday_routing:null,governments:[],divisions:[],registration_held:false};
     packed[key]={full:pack(full),brief:pack(brief),facts:pack(facts)};
   }
   return packed;

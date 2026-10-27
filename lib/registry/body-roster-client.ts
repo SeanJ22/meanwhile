@@ -16,6 +16,11 @@ export function projectedBodyRoster(
   return body?.readerRoster ?? EMPTY;
 }
 
+/** Names needed by the unopened list, without claiming a complete roster. */
+export function projectedRosterPreview(body: Pick<CoveredBody, "readerRoster" | "readerRosterPreview">): readonly SeatHolder[] {
+  return body.readerRoster?.members ?? body.readerRosterPreview ?? [];
+}
+
 function governingBodyForDivision(body: CoveredBody, ocdId: string): boolean {
   return body.bodyId === `${ocdId}#governing` || body.bodyId === `${ocdId}#board`;
 }

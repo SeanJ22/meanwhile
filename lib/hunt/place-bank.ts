@@ -56,7 +56,7 @@ export async function readScopedBank(query:Query,ids:readonly string[],state:str
   const heldBodyIds=new Set(held?.registry.bodies.map(b=>b.id)??[]);
   const bodies=[...new Set([...heldBodyIds,...nativeBodies.map(b=>String(b.id))])];
   const rosters=bodies.length?await readFactRosters(query,bodies):{rosters:[],dispositions:[]};
-  const bodyRows=bodies.length?await query(`SELECT f.entity_id,f.field,f.value,f.checked_at,s.url FROM fact f JOIN source_copy s ON s.id=f.source_copy_id
+  const bodyRows=bodies.length?await query(`SELECT f.entity_id,f.field,f.value,f.checked_at,s.url FROM checked_fact f JOIN source_copy s ON s.id=f.source_copy_id
     WHERE f.entity_id=ANY($1::text[]) AND f.status='live' AND f.field=ANY($2::text[])`,[bodies,['name','homepage','office_address','office_phone','meeting_cadence','agenda_url','comment:attend','comment:detail','comment:time_limit']]):[];
   const bodyFields=bodyFieldsFromRows(bodyRows.filter(r=>!String(r.field).startsWith('comment:')));
   const carton={formatVersion:1,registry:{generatedAt:now,divisions:[],bodies:[]},bodyRosters:[],rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{formatVersion:1,rule:'EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE',rows:[]},officialPhotos:{photos:[]},rosterPhotos:{},...held};

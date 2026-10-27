@@ -1,3 +1,4 @@
+import { recordFactConfirmation } from "../facts/confirmation.ts";
 import { createHash } from "node:crypto";
 import { campaignRecordYear } from "./state-people.ts";
 import { US_JURISDICTIONS } from "../coverage/states.ts";
@@ -61,29 +62,31 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
       JOIN fact f ON f.entity_id=e.id AND f.field=$3||x.value AND f.status='live'
       WHERE x.scheme=$1 AND x.value=ANY($2::text[]) AND e.state=$4 FOR UPDATE OF f`, [SCHEME, records.map(row => row.id), FIELD, state]) as unknown as readonly HeldFact[];
     const byId = new Map(previous.map(row => [row.field.slice(FIELD.length), row]));
-    const changed: CampaignSourceRecord[] = [], confirmed: {id:number;at:string}[] = [], replaced: number[] = [];
+    const changed: CampaignSourceRecord[] = [], confirmed: {id:number;row:CampaignSourceRecord}[] = [], replaced: number[] = [];
     for (const row of records) {
       const old = byId.get(row.id);
       if (old && (old.provenance_kind === "OWNER" || Date.parse(old.retrieved_at) > Date.parse(row.provenance.retrievedAt))) continue;
-      if (old && old.fingerprint === campaignSourceRecordHash(row) && old.entity_id === committeeId(row)) { confirmed.push({id:old.id,at:checkedAt(row,at)}); continue; }
+      if (old && old.fingerprint === campaignSourceRecordHash(row) && old.entity_id === committeeId(row)) { confirmed.push({id:old.id,row}); continue; }
       changed.push(row);
       if (old) replaced.push(old.id);
     }
-    const restamped = confirmed.length ? await query(`UPDATE fact f SET checked_at=c.at FROM unnest($1::bigint[],$2::timestamptz[]) c(id,at)
-      WHERE f.id=c.id AND f.checked_at<c.at RETURNING f.entity_id`, [confirmed.map(row=>row.id),confirmed.map(row=>row.at)]) : [];
-    for (const row of restamped) affected.add(String(row.entity_id));
+    const captures = [...new Map([...changed,...confirmed.map(item=>item.row)].map(row => [row.provenance.vaultKey, row.provenance])).values()];
+    await query(`INSERT INTO source_copy (url,final_url,fetched_at,http_status,sha256,blob_key,is_archive)
+      SELECT url,url,fetched::timestamptz,200,hash,key,false FROM unnest($1::text[],$2::text[],$3::text[],$4::text[]) s(url,fetched,hash,key)
+      ON CONFLICT (blob_key) DO NOTHING`,
+    [captures.map(source => source.url.split("#")[0]), captures.map(source => source.retrievedAt), captures.map(source => source.rawHash), captures.map(source => source.vaultKey)]);
+    const copies = await query("SELECT id,blob_key FROM source_copy WHERE blob_key=ANY($1::text[])",[captures.map(source=>source.vaultKey)]);
+    const sourceIds = new Map(copies.map(copy => [String(copy.blob_key), Number(copy.id)]));
+    for (const source of captures) {
+      const ids = confirmed.filter(item=>item.row.provenance.vaultKey===source.vaultKey).map(item=>item.id);
+      for (const id of await recordFactConfirmation(query,{copyId:sourceIds.get(source.vaultKey)!,scope:`campaign-money:${state}`,at:checkedAt(confirmed.find(item=>item.row.provenance.vaultKey===source.vaultKey)!.row,at),factIds:ids})) affected.add(id);
+    }
     if (!changed.length) {
       if (affected.size) await enqueueReaderPlaces({ entities: [...affected] }, query);
       return { written: 0, confirmed: confirmed.length, movedPeople:[] as string[], queued: affected.size > 0 };
     }
     const moved=[...new Set(changed.flatMap(row=>{const old=byId.get(row.id);return old && old.entity_id!==committeeId(row)?[old.entity_id]:[];}))];
     const movedPeople=moved.length?(await query("SELECT DISTINCT parent_id FROM entity WHERE id=ANY($1::text[]) AND state=$2 AND parent_id IS NOT NULL",[moved,state])).map(row=>String(row.parent_id)):[];
-    const captures = [...new Map(changed.map(row => [row.provenance.vaultKey, row.provenance])).values()];
-    const copies = await query(`INSERT INTO source_copy (url,final_url,fetched_at,http_status,sha256,blob_key,is_archive)
-      SELECT url,url,fetched::timestamptz,200,hash,key,false FROM unnest($1::text[],$2::text[],$3::text[],$4::text[]) s(url,fetched,hash,key)
-      ON CONFLICT (blob_key) DO UPDATE SET blob_key=EXCLUDED.blob_key RETURNING id,blob_key`,
-    [captures.map(source => source.url.split("#")[0]), captures.map(source => source.retrievedAt), captures.map(source => source.rawHash), captures.map(source => source.vaultKey)]);
-    const sourceIds = new Map(copies.map(copy => [String(copy.blob_key), Number(copy.id)]));
     const superseded = replaced.length ? await query("UPDATE fact SET status='superseded' WHERE id=ANY($1::bigint[]) RETURNING entity_id", [replaced]) : [];
     const written = await query(`INSERT INTO fact (entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by,cost_usd)
       SELECT entity,field,value::jsonb,text,'live','OFFICIAL',copy,'',checked,$7::timestamptz,producer,0
@@ -91,7 +94,7 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
     [changed.map(committeeId), changed.map(row => FIELD + row.id), changed.map(row => JSON.stringify({...row,fingerprint:campaignSourceRecordHash(row)})), changed.map(row => row.nativeId ?? row.filerId ?? row.id),
       changed.map(row => sourceIds.get(row.provenance.vaultKey)), changed.map(row => `campaign-person-money:${state}:${row.resource}`), at,changed.map(row=>checkedAt(row,at))]);
     await query(`INSERT INTO entity_external_id (entity_id,scheme,value) SELECT entity,$3,value FROM unnest($1::text[],$2::text[]) r(entity,value)
-      ON CONFLICT (scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id`, [changed.map(committeeId), changed.map(row => row.id), SCHEME]);
+      ON CONFLICT (scheme,value) DO UPDATE SET entity_id=EXCLUDED.entity_id WHERE entity_external_id.entity_id IS DISTINCT FROM EXCLUDED.entity_id`, [changed.map(committeeId), changed.map(row => row.id), SCHEME]);
     for (const row of [...superseded, ...written]) affected.add(String(row.entity_id));
     for (const row of changed) affected.add(row.person!.id);
     for (const id of movedPeople) affected.add(id);

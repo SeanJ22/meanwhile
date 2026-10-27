@@ -2181,7 +2181,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       coalesce(c.state='PROMOTED' AND c.acquisition_succeeded AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
         AND p.current_version_id=p.last_known_good_version_id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint
         AND p.validation_receipt=c.validation_receipt
-        AND (CASE WHEN c.read_model_fingerprint IS NULL THEN p.payload=c.candidate->'readModel' ELSE true END),false) AS eligible
+        AND p.current_version_id=c.id,false) AS eligible
       from civic_data_promotions p
       left join civic_data_candidates c on c.id=p.current_version_id
       where p.record_class=${recordClass} and p.scope=${scope})
@@ -2289,8 +2289,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           coalesce(${civicDataPromotions.payloadFingerprint},${civicDataCandidates.normalizedHash}))`,
         coupled: sql<boolean>`coalesce(${civicDataPromotions.currentVersionId}=${civicDataCandidates.id}
           AND ${civicDataPromotions.payloadFingerprint} IS NOT DISTINCT FROM ${civicDataCandidates.readModelFingerprint}
-          AND (CASE WHEN ${civicDataCandidates.readModelFingerprint} IS NULL
-            THEN ${civicDataPromotions.payload}=${civicDataCandidates.candidate}->'readModel' ELSE true END)
           AND ${civicDataPromotions.validationReceipt}=${civicDataCandidates.validationReceipt},false)`,
         confirmation: latestConfirmationDetail(),
       }).from(civicDataPromotions).leftJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.currentVersionId))
@@ -2647,8 +2645,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         and ${civicDataCandidates.recordClass} = ${civicDataPromotions.recordClass}
         and ${civicDataCandidates.scope} = ${civicDataPromotions.scope}
         and ${civicDataCandidates.normalizedHash} = ${civicDataCandidates.candidate} #>> '{normalization,normalizedHash}'
-        and ${civicDataCandidates.candidate}->'readModel' = ${civicDataPromotions.payload}
-        and ${civicDataCandidates.candidate}->'normalizedPayload' = ${civicDataCandidates.candidate}->'readModel'
+        and ${civicDataPromotions.currentVersionId}=${civicDataCandidates.id}
+        and ${civicDataPromotions.payloadFingerprint} IS NOT DISTINCT FROM ${civicDataCandidates.readModelFingerprint}
+        and ${civicDataCandidates.candidate}#>>'{normalization,normalizedPayloadHash}'=${civicDataCandidates.normalizedHash}
         and ${civicDataCandidates.validationReceipt} = ${civicDataPromotions.validationReceipt}`,
     }).from(civicDataPromotions).leftJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.currentVersionId))
       .where(and(eq(civicDataPromotions.recordClass, "CURATED_READER_RECORD"), eq(civicDataPromotions.scope, scope))).limit(1));
@@ -2671,6 +2670,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       promotedVersion: pointer.versionId, lastKnownGoodVersion: pointer.versionId, failureCode: null, failureDetail: null };
     const parts = this.payloadParts;
     const field = async (key: string) => {
+      if (key === "readModel") {
+        const [selected] = await this.db.select({ value: sql<unknown>`CASE WHEN ${civicDataPromotions.currentVersionId} IS NULL
+          THEN ${civicDataCandidates.candidate}->'readModel' ELSE ${civicDataPromotions.payload} END` })
+          .from(civicDataCandidates).leftJoin(civicDataPromotions,eq(civicDataPromotions.currentVersionId,civicDataCandidates.id))
+          .where(and(eq(civicDataCandidates.id,pointer.versionId),sql`${civicDataPromotions.currentVersionId} IS NULL
+            OR ${civicDataPromotions.payloadFingerprint} IS NOT DISTINCT FROM ${civicDataCandidates.readModelFingerprint}`)).limit(1);
+        if (!selected) throw new Error("MANUAL_SUCCESSOR_EXACT_BASE_UNAVAILABLE");
+        return selected.value;
+      }
       const [encoded] = await this.db.select({ value: sql<unknown>`${civicDataCandidates.candidate}->${key}` })
         .from(civicDataCandidates).where(eq(civicDataCandidates.id, pointer.versionId)).limit(1);
       if (!encoded) throw new Error("MANUAL_SUCCESSOR_EXACT_BASE_UNAVAILABLE");
@@ -3017,7 +3025,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         AND ${civicDataCandidates.candidate}#>>'{normalization,normalizedHash}'=${civicDataCandidates.normalizedHash}
         AND ${civicDataCandidates.candidate}#>>'{normalization,parserVersion}'=${civicDataCandidates.parserVersion}
         AND ${civicDataCandidates.candidate}#>>'{retrieval,rawHash}'=${civicDataCandidates.rawHash}
-        AND ${civicDataPromotions.payload}=${civicDataCandidates.candidate}->'readModel'
+        AND ${civicDataPromotions.currentVersionId}=${civicDataCandidates.id}
+        AND ${civicDataPromotions.payloadFingerprint} IS NOT DISTINCT FROM ${civicDataCandidates.readModelFingerprint}
         AND ${civicDataPromotions.validationReceipt}=${civicDataCandidates.validationReceipt}
         AND ${civicDataCandidates.validationReceipt}->>'decision'='GOOD'
         AND ${civicDataCandidates.validationReceipt}->>'candidateId'=${civicDataCandidates.id}

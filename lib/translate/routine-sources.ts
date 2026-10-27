@@ -1,3 +1,4 @@
+import { acquireColoradoBlueBook } from "./blue-book.ts";
 import { join } from "node:path";
 import { randomUUID } from "node:crypto";
 import type { BallotSet } from "../ballot/types.ts";
@@ -6,7 +7,7 @@ import { ZERO_COST, type Attempt } from "../control-plane/attempt.ts";
 import { recordArtifactMetadata } from "../control-plane/repository/coordinator.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import { artifactId, recordAcquisition, type Artifact } from "../control-plane/evidence/artifact.ts";
-import { putArtifact, readForParser } from "../control-plane/evidence/store.ts";
+import { objectKey, putArtifact, readForParser } from "../control-plane/evidence/store.ts";
 import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
 import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
 import { extractPdf } from "../control-plane/scheduler/scout-tools.ts";
@@ -24,6 +25,10 @@ import type { TranslationAttempt } from "./standing.ts";
 
 /** Pages followed per measure from the election office's own lists, hubs followed once for the whole state, and pages read from search. */
 const LINKS_PER_MEASURE = 3, HUBS_PER_STATE = 6, SEARCH_PAGES_PER_MEASURE = 3, DOOR_PAGES_PER_MEASURE = 4;
+const COUNTY_ELECTION_DIRECTORIES: Readonly<Record<string, string>> = {
+  CO: "https://www.coloradosos.gov/pubs/elections/Resources/CountyElectionOffices.html",
+  PA: "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials.html",
+};
 /** An empty search is not repeated sooner than this. */
 export const MEASURE_SEARCH_RETRY_MS = 6 * 60 * 60_000;
 
@@ -137,7 +142,8 @@ export async function loadRoutineMeasureSources(input: {
       }
       const { input: parserInput } = await readForParser(vault, "freshness", artifact);
       saved = await input.repos.attempts.compareAndSet(id, saved.revision, { ...saved.value, artifactIds: artifacts, endedAt: input.now(), outcome: "COMPLETED" }, input.now());
-      const evidence = evidenceProjection(parserInput);
+      const evidence = { ...evidenceProjection(parserInput), sourceCapture: { vaultKey: objectKey("freshness", artifact),
+        rawHash: parserInput.contentHash.slice(7), byteLength: Buffer.byteLength(parserInput.text) } };
       captures.push({ evidence, sourcePolicy, observedAt: at, partial: false, httpStatus: response.status, transport: "REACHABLE" });
       pages.set(url, evidence.text);
       return evidence.text;
@@ -149,12 +155,30 @@ export async function loadRoutineMeasureSources(input: {
     }
   }
 
-  for (const url of urls) await acquire(url);
+  const discovered = new Map<string, string[]>();
+  // Fresh state directories establish the official standing of county sites
+  // such as denvergov.org and luzernecounty.org, including older held records.
+  const directory = COUNTY_ELECTION_DIRECTORIES[input.state.toUpperCase()];
+  if (directory && blanks.some(blank => blank.ocdId !== `ocd-division/country:us/state:${input.state.toLowerCase()}` && [...blank.cited].some(url => !isOfficialSource(url)))) await acquire(directory);
+  if (input.state.toUpperCase() === "CO") {
+    const statewide = blanks.filter(blank => blank.ocdId === "ocd-division/country:us/state:co");
+    for (const year of new Set(statewide.map(blank => blank.year))) {
+      const blueBook = await acquireColoradoBlueBook(year, acquire);
+      if (blueBook) for (const blank of statewide.filter(blank => blank.year === year)) {
+        if (pageNamesMeasure(pages.get(blueBook) ?? "", blank.labels)) discovered.set(blank.contestId, [blueBook]);
+      }
+    }
+  }
+  for (const url of urls) {
+    // The official analysis includes the text and vote meanings. Keep fetching local sources.
+    const users = blanks.filter(blank => blank.cited.has(url));
+    if (users.length && users.every(blank => discovered.has(blank.contestId))) continue;
+    await acquire(url);
+  }
 
   // A hearing notice can name the measure without supplying its legal text.
   // A failed source check keeps discovery open on the next pass. All acquired
   // pages remain available to the existing writer/checker and reader records.
-  const discovered = new Map<string, string[]>();
   const needsSourceWork = (blank: MeasureBlank, url: string): boolean => {
     const evidence = captures.find(capture => capture.evidence.canonicalUrl === url)?.evidence;
     if (!evidence) return false;
@@ -166,7 +190,7 @@ export async function loadRoutineMeasureSources(input: {
     const rejected = held?.detail?.startsWith("A translated sentence lacks a confirmed source passage or independent support.") && /"supported"\s*:\s*false/.test(held.detail);
     return Boolean(held && (rejected || blank.textUrl && !pages.has(blank.textUrl)));
   };
-  const named = (blank: MeasureBlank): boolean => [...blank.cited, ...(blank.priorUrl ? [blank.priorUrl] : [])].some(url => {
+  const named = (blank: MeasureBlank): boolean => [...blank.cited, ...(discovered.get(blank.contestId) ?? []), ...(blank.priorUrl ? [blank.priorUrl] : [])].some(url => {
     const text = pages.get(url);
     return text !== undefined && !needsSourceWork(blank, url) && (url === blank.priorUrl || url === blank.textUrl || pageNamesMeasure(text, blank.labels));
   });

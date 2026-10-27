@@ -92,6 +92,16 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
 
 /** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if (recordClass === "CURATED_READER_RECORD") {
+    const row = object(member.record);
+    if (row?.kind === "MEASURE" && Array.isArray(row.sentences)) {
+      // Moving an already checked source into the vault changes storage, not facts.
+      // An evidence-only change must not copy the old full source into a before/after delta.
+      const { sourceText: _source, sourceTextHash: _hash, sourceCapture: _capture,
+        subjectQuote: _quote, writingRulesVersion: _rules, ...facts } = row;
+      return facts;
+    }
+  }
   if (recordClass === "FEDERAL_MONEY" && member.key === "federal-money-checkpoint") {
     const row = object(member.record);
     if (row) { const { lastCompleteAt: _at, refreshStartedAt: _started, ...progress } = row; return progress; }

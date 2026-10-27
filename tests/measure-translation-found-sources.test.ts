@@ -90,7 +90,7 @@ test("a measure whose cited page never names it is found through the election of
   const again: string[] = [];
   const second = await loadRoutineMeasureSources({ root, repos, state: "CO", ballots: [ballot], now: () => now, open: opener(served(), again), finds });
   assert.deepEqual(second.discovered.get("co-amendment-84"), [pageUrl]);
-  assert.deepEqual(new Set(again), new Set([cited, pageUrl]));
+  assert.deepEqual(new Set(again), new Set(["https://leg.colorado.gov/bluebook", cited, pageUrl]));
 });
 
 test("a measure whose cited page names it needs no discovery and opens nothing extra", async t => {
@@ -98,7 +98,7 @@ test("a measure whose cited page names it needs no discovery and opens nothing e
   const result = await loadRoutineMeasureSources({ root, repos, state: "CO", ballots: [ballot], now: () => now,
     open: opener(served({ [cited]: pageText }), opened), finds: routineMeasureFinds(repos, "CO") });
   assert.deepEqual([...result.discovered], []);
-  assert.deepEqual(opened, [cited]);
+  assert.deepEqual(opened, ["https://leg.colorado.gov/bluebook", cited]);
 });
 
 const sourceHold = (text: string, detail = 'A translated sentence lacks a confirmed source passage or independent support. [{"field":"whatItDoes","text":"Unsupported meaning.","supported":false}]'): TranslationAttempt => ({
@@ -179,7 +179,7 @@ test("writer-format failures, a changed source, another jurisdiction and a later
     const root = await localVault(t), { repos, served } = await stateRepos(true), opened: string[] = [];
     const result = await loadRoutineMeasureSources({ root, repos, state: "CO", ballots: [ballot], priorAttempts, now: () => now,
       open: opener(served({ [cited]: pageText }), opened), finds: routineMeasureFinds(repos, "CO") });
-    assert.deepEqual(opened, [cited]);
+    assert.deepEqual(opened, ["https://leg.colorado.gov/bluebook", cited]);
     assert.deepEqual([...result.discovered], []);
   });
 });
@@ -313,4 +313,55 @@ test("long ballot titles match the publisher's short designation and act title w
     '<a href="/notice-2">Ballot Measure 2</a><a href="/notice-20">Ballot Measure 20</a>' }],
   measureLinkNames(labels, labels[0]), new Set(), () => true);
   assert.deepEqual(links.map(link => link.url), ["https://ltgov.example.gov/notice-2"]);
+});
+
+
+test("Colorado's current Blue Book is followed, saved once and preferred over a measure filing", async t => {
+  const root = await localVault(t), { repos, served } = await stateRepos(true);
+  const index = "https://leg.colorado.gov/bluebook", publication = "https://content.leg.colorado.gov/publications/2026-blue-book";
+  const pdf = "https://content.leg.colorado.gov/sites/default/files/2026-blue-book-en-accessible.pdf", opened: string[] = [];
+  const pages = served({ [index]: `<a href="https://content.leg.colorado.gov/publications/2025-blue-book">2025</a><a href="${publication}">2026 Blue Book</a>`,
+    [publication]: `<a href="${pdf}">View Document (PDF)</a>`, [pdf]: pageText });
+  const sources = await loadRoutineMeasureSources({ root, repos, state: "CO", ballots: [ballot], now: () => now, open: opener(pages, opened) });
+  assert.deepEqual(sources.discovered.get("co-amendment-84"), [pdf]);
+  assert.deepEqual(opened, [index, publication, pdf]);
+  assert.equal(sources.failures.length, 0);
+  const capture = sources.captures.find(row => row.evidence.canonicalUrl === pdf)!;
+  assert.ok(capture.evidence.sourceCapture?.vaultKey);
+  const requests: ModelRequest[] = [], store = new MemoryRoutineDataStore();
+  const result = await runMeasureTranslationPass({ states: ["CO"], repos, store, now, modelLaneEnabled: true, paidWorkerCapacity: () => 1,
+    loadBallotsForState: async () => [ballot], loadCapturesForState: async () => sources.captures, readAttemptsForState: async () => [], saveAttempt: async () => {},
+    foundSources: sources.discovered, guardedTransportFor: () => async request => {
+      requests.push(request);
+      const measure = { contestId: "co-amendment-84", whatItDoes: "The measure requires an ID number on mail ballots.", yesMeans: "A YES vote requires an ID number.", noMeans: "A NO vote keeps the current rules.", parts: [], sourceUrl: pdf, sourceHash: translationHash(pageText), writtenAt: now };
+      const sentences = ["whatItDoes", "yesMeans", "noMeans"].map(field => ({ field, text: measure[field as "whatItDoes"] }));
+      return { model: request.model, stop_reason: "tool_use", usage: { input_tokens: 100, output_tokens: 50 }, content: [{ type: "tool_use", id: "result", name: request.tools[0].name,
+        input: request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked: sentences.map(row => ({ ...row, supported: true })) } }] };
+    } });
+  assert.equal(result.checkedAfter, 1, JSON.stringify(result));
+  assert.equal(requests.length, 2);
+  const records = await readTranslations([stateOcd], { store, now });
+  assert.equal(records[0].sourceUrl, pdf);
+  assert.equal(withMeasureTranslations(ballot, records).measureRecords?.[0]?.whatItDoes, "The measure requires an ID number on mail ballots.");
+});
+
+test("Denver and Luzerne retain local sources and acquire current state directory authority", async t => {
+  const root = await localVault(t);
+  for (const [state, city, directory] of [
+    ["CO", "https://www.denvergov.org/official-ballot.pdf", "https://www.coloradosos.gov/pubs/elections/Resources/CountyElectionOffices.html"],
+    ["PA", "https://www.luzernecounty.org/official-ballot.pdf", "https://www.pa.gov/agencies/vote/contact-us/contact-your-election-officials.html"],
+  ]) {
+    const repos = createMemoryRepositories(), opened: string[] = [];
+    const local = { ...ballot, election: { ...ballot.election, state }, contests: [{ ...ballot.contests[0], id: "county:2h", ocdId: `ocd-division/country:us/state:${state.toLowerCase()}/county:${state === "CO" ? "denver" : "luzerne"}`,
+      title: "Referred Question 2H", measureTextUrl: city, provenance: { sourceUrl: city } }], measures: [], measureRecords: [] } as unknown as BallotSet;
+    const sources = await loadRoutineMeasureSources({ root, repos, state, ballots: [local], now: () => now,
+      open: opener({ [city]: "Referred Question 2H. The auditor may enforce wage laws.",
+        [directory]: `<a href="${city}">County election office</a>` }, opened) });
+    assert.deepEqual(opened, [directory, city]);
+    assert.equal(sources.failures.length, 0);
+    const { linkingPageFrom, section3Page } = await import("../lib/control-plane/promotion/section3.ts");
+    const evidence = sources.captures.find(capture => capture.evidence.canonicalUrl === city)!.evidence;
+    assert.equal(section3Page({ url: city, text: evidence.text, retrievedAt: now,
+      linkingPage: linkingPageFrom(city, sources.captures.map(capture => capture.evidence)) }, "BALLOT_MEASURE", now).ok, true);
+  }
 });

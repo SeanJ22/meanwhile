@@ -1,3 +1,4 @@
+import { isTranslationProjection } from "./published-projection-base.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
@@ -460,7 +461,7 @@ async function loadPromotedCivicData<T>(
       };
     }
     observedProjection = projection;
-    if (stateAuthority) {
+    if (stateAuthority || isTranslationProjection(recordClass, scope)) {
       if (!store.readPublishedCandidateMetadata) throw new Error("STATE_PUBLISHED_METADATA_READ_REQUIRED");
       const candidate = await store.readPublishedCandidateMetadata(projection.versionId);
       if (!candidate) return {
@@ -947,6 +948,7 @@ function publishedStateProofIssue(
   if (!candidate.temporal || typeof candidate.temporal.version !== "string" || typeof candidate.temporal.sourceThrough !== "string")
     return "the published candidate lacks temporal metadata";
   const hash = candidate.normalization.normalizedHash;
+  if (isTranslationProjection(recordClass, scope) && candidate.normalization.normalizedPayloadHash !== hash) return "the normalized evidence and reader payload hashes differ";
   if (typeof hash !== "string" || !SHA256.test(hash)) return "the published candidate lacks its validated payload hash";
   try {
     const owned = immutableStateValue(projection.payload);

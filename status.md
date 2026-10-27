@@ -1,11 +1,11 @@
 # River status
 
 build_state: LIVE FOR READERS: release 131 (main f91893755) since 8:26 PM EDT; readers OK. Runner on 131 since 8:38 PM but BOTH runner lanes stall before launching (routine timed out 30 min, publish-now times out every 10 min, 0 tasks). DB-05 58e07b91 returned (28 suite failures on its own tip); 132 not cut
-worker: River
+worker: handing off
 provider: Claude
-run_id: session_01R8G1FdHA1LGMVbwp5wxrzN
-lock: session_01R8G1FdHA1LGMVbwp5wxrzN
-heartbeat: 2026-10-27T09:12:00Z
+run_id:
+lock:
+heartbeat: 2026-10-27T09:30:00Z
 
 ## River session_01R8G1FdHA1LGMVbwp5wxrzN (from Oct 26, 7:55 PM EDT)
 
@@ -13,6 +13,7 @@ heartbeat: 2026-10-27T09:12:00Z
 - Before 131 (read-only, database_transfer_hourly): reader 1.37 GB + control plane 0.28 GB in the 7 PM EDT hour; job `index` (reader functions) 1.15 GB: civic_data_candidate_events 0.44 GB (Next server routes), civic_data_promotions 0.33 GB (reader-meetings) + 0.32 GB (Next server routes).
 - Publish-now before 130 attempted 55-211 tasks an hour; since 130, 0 (10 of 11 passes timed out at 10 min; the 7:49 PM pass finished in 6 min with 0 launched).
 - 9:25 PM: first routine pass on 131 (started 8:55 PM) has no row_to_json error but timed out at 30 min with 0 tasks: ~600 clock reads in 25 min, no meeting clocks reached, reader database idle meanwhile. Publish-now on 131: 8:37, 8:55, 9:06 passes all timed out, 0 tasks; the 8:37 pass took its start timestamp only at 8:41:52 and never read a meeting clock. Same reads from a River container run ~40/s, so the wait is on the runner host; its journal (journalctl -u meanwhile-runner.service) is the missing evidence. Asked Sean.
+- Session stopped by Sean for a new River session; lock released. Open: runner lanes stalled since 130 (asks: runner journal, revert decision, Neon branch); DB-05 58e07b91 returned (returns/db-05.md), fold repairs on river-next-132 56bc18ed; reader-function cost = ballot canonical shelf ~9 MB/state/instance.
 - 5:12 AM check: 3-4 AM EDT 0.144 GB (index 0.002), 4-5 AM 0.477 GB (index 0.138). Runner unchanged since 5:36 PM yesterday (every pass timed out, 0 tasks). No new DB-05 READY; no answer from Sean. Site still on 131 (f91893755).
 - 3:14 AM check: 1-2 AM EDT 0.711 GB (index 0.632), 2-3 AM 0.924 GB (index 0.766). Runner unchanged (every pass timed out, 0 tasks). No new DB-05 READY; no answer from Sean.
 - 1:08 AM check: midnight-1 AM EDT: reader 0.425 + control plane 0.040 = 0.465 GB/h; index 0.375 GB/h. Runner unchanged (every pass timed out, 0 tasks). No new DB-05 READY; no answer from Sean.

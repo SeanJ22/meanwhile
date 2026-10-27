@@ -331,11 +331,11 @@ test("Postgres published metadata reads only metadata and resolves encoded evide
   const queries: string[] = [];
   const fields = ["retrieval", "temporal", "normalization"] as const;
   await pg.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,candidate jsonb,state text,acquisition_succeeded boolean,
-    validation_receipt jsonb,promoted_version_id text,last_known_good_version_id text,failure_code text,failure_detail text);
+    validation_receipt jsonb,promoted_version_id text,last_known_good_version_id text,failure_code text,failure_detail text,raw_hash text,normalized_hash text,parser_version text);
     CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);`);
   for (const [index, field] of fields.entries()) await pg.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",
     [String(index+1).repeat(64),{kind:"object",value:metadata.candidate[field]}]);
-  await pg.query("INSERT INTO civic_data_candidates VALUES('az-a',$1,'PROMOTED',true,$2,'az-a','az-a',null,null)",
+  await pg.query("INSERT INTO civic_data_candidates(id,candidate,state,acquisition_succeeded,validation_receipt,promoted_version_id,last_known_good_version_id,failure_code,failure_detail) VALUES('az-a',$1,'PROMOTED',true,$2,'az-a','az-a',null,null)",
     [metadata.candidate,metadata.receipt]);
   neonConfig.fetchFunction = async (_url: RequestInfo | URL, init?: RequestInit) => {
     const body = JSON.parse(String(init?.body));
@@ -353,13 +353,13 @@ test("Postgres published metadata reads only metadata and resolves encoded evide
     for (const encoded of [false,true]) {
       const candidate=encoded?{...metadata.candidate,...Object.fromEntries(fields.map((field,index)=>
         [field,{$civicPayloadPart:String(index+1).repeat(64)}]))}:metadata.candidate;
-      await pg.query("UPDATE civic_data_candidates SET candidate=$1 WHERE id='az-a'",[candidate]);
+      await pg.query("UPDATE civic_data_candidates SET candidate=$1,raw_hash=$2 WHERE id='az-a'",[candidate,encoded?'encoded-fixture':'inline-fixture']);
       queries.length=0;
       const read=await new PostgresRoutineDataStore().readPublishedCandidateMetadata("az-a");
       const expected = encoded ? metadata : { ...metadata, candidate: { ...metadata.candidate,
         normalization: { ...metadata.candidate.normalization, stateRecordHashes: null } } };
       assert.deepEqual(read,expected,"inline SQL represents an absent state index as JSON null; encoded metadata retains its stored shape");
-      assert.match(queries[0],/xmin::text/,"the version is checked before the metadata body");
+      assert.match(queries[0],/content-v1/,"the version is checked before the metadata body");
       const bodyReads=queries.filter(query=>query.includes("jsonb_build_object"));
       assert.equal(bodyReads.length,1);
       assert.doesNotMatch(bodyReads[0],/->\s*'(?:readModel|normalizedPayload|identities|civicRecords|changeSet)'/);

@@ -9,6 +9,7 @@ import { saveVotingSourceDoor } from "../lib/ballot/voting-source-publication.ts
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
+import { readEvidenceObject } from "../lib/control-plane/evidence/raw-pointer.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { captureIntact } from "../lib/civic-data/worker-publication-evidence.ts";
@@ -98,9 +99,9 @@ test("routine source reads retain exact UTF-8 bytes and attributable completed a
   assert.equal(metadata.length, 1);
   assert.equal(metadata[0].attemptId, attempt.id);
   assert.equal(metadata[0].canonicalUrl, sourceUrl);
-  const keys = await vault.list("project/freshness/");
+  const keys = (await vault.list("project/freshness/")).filter(key => !key.startsWith("project/freshness/raw/sha256/"));
   assert.equal(keys.length, 1);
-  const retained = await vault.get(keys[0]);
+  const retained = await readEvidenceObject(vault, keys[0]);
   assert.ok(retained);
   assert.equal(Buffer.from(retained.bytes).toString("utf8"), text);
   assert.equal(retained.meta.custom?.attemptId, attempt.id);
@@ -157,9 +158,9 @@ test("complete PDF source capture retains the original bytes and a source-bound 
   assert.equal(capture.evidence.sourceDocument?.kind, "PDF_TEXT");
   assert.notEqual(capture.evidence.contentHash, capture.evidence.sourceDocument?.contentHash);
   assert.match(capture.evidence.text, /\[Page 1\]/);
-  const keys = await vault.list("project/freshness/");
+  const keys = (await vault.list("project/freshness/")).filter(key => !key.startsWith("project/freshness/raw/sha256/"));
   assert.equal(keys.length, 2);
-  const objects = await Promise.all(keys.map(key => vault.get(key)));
+  const objects = await Promise.all(keys.map(key => readEvidenceObject(vault,key)));
   const original = objects.find(object => object?.meta.contentType === "application/pdf");
   const transcription = objects.find(object => object?.meta.custom?.tier === "EXTRACTED_DERIVED");
   assert.ok(original); assert.ok(transcription);

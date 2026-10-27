@@ -140,7 +140,7 @@ test("congress-rollcalls promotes to the canonical plane and its Reader follows 
     assert.equal(read.metadata.versionId, candidate.id);
     assert.deepEqual(read.value.snapshot, seed.snapshot);
   }
-  assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
+  assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);
 });
 
 test("bill summaries and pending reviews are stable exact Admin members without changing the Reader payload contract", async () => {

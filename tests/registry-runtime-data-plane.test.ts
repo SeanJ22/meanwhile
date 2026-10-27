@@ -296,13 +296,17 @@ test("Ask reads native state people beside a partitioned registry without revivi
       CREATE TABLE civic_data_candidates(id text PRIMARY KEY,candidate jsonb,state text,acquisition_succeeded boolean,
         promoted_version_id text,last_known_good_version_id text,validation_receipt jsonb,failure_code text,failure_detail text);
       CREATE TABLE civic_data_candidate_events(candidate_id text,sequence int,detail text);
-      CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);`);
+      CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
+      ALTER TABLE civic_data_candidates ADD COLUMN raw_hash text, ADD COLUMN normalized_hash text, ADD COLUMN parser_version text, ADD COLUMN read_model_fingerprint text;
+      ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
     await pg.query(`INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9)`,
       [pointer.key,pointer.sourceId,pointer.recordClass,pointer.scope,pointer.versionId,pointer.lastKnownGoodVersionId,
         pointer.promotedAt,JSON.stringify(payload.value),JSON.stringify(pointer.receipt)]);
     await pg.query(`INSERT INTO civic_data_candidates VALUES($1,$2,$3,$4,$5,$6,$7,NULL,NULL)`,
       [candidate.id,JSON.stringify({...envelope.value as object,readModel:payload.value}),metadata.state,metadata.acquisitionSucceeded,
         metadata.promotedVersion,metadata.lastKnownGoodVersion,JSON.stringify(metadata.receipt)]);
+    await pg.query("UPDATE civic_data_candidates SET normalized_hash=$1,raw_hash=$2,parser_version=$3",
+      [candidate.normalization.normalizedHash,candidate.retrieval.rawHash,candidate.normalization.parserVersion]);
     for (const part of parts) await pg.query(`INSERT INTO civic_data_payload_parts VALUES($1,$2)`,[part.hash,JSON.stringify(part.payload)]);
     const postgres = new PostgresRoutineDataStore();
     const queries: string[] = [];
@@ -311,7 +315,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
     if (read.kind !== "PROMOTED") throw new Error(JSON.stringify(read));
     const bodyReads = () => queries.filter(query=>query.includes("WITH state_promotion"));
     assert.equal(bodyReads().length,1,"the state payload is read only after its version");
-    assert.match(queries[0],/xmin::text/);
+    assert.match(queries[0],/xmin::text|content-v1/);
     assert.equal((await readPromotedCivicData(pointer.recordClass,pointer.scope,{store:postgres,now:T0})).kind,"PROMOTED");
     assert.equal(bodyReads().length,1,"an unchanged state payload does not cross again");
     await pg.query("UPDATE civic_data_candidates SET state='VALIDATED' WHERE id=$1",[candidate.id]);
@@ -367,7 +371,7 @@ test("a place's federal roster/directory promotes once and failed acquisition pr
   const promoted = await processRegisteredManualCandidate(store, contract, good, T0);
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.readerReadback?.status, "PASS");
-  assert.deepEqual((await store.events(good.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
+  assert.deepEqual((await store.events(good.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);
   const read = await readStateFederalDirectory(state, { store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.versionId, good.id);
@@ -437,7 +441,10 @@ test("two registry publications in one pass never reuse a clock before the scope
     const first = await processRegisteredManualCandidate(store, "registry-runtime:AZ", registryRuntimeCandidate(firstPackage), T0);
     assert.equal(first.candidate.state, "PROMOTED");
     const contract = requiredManualProductionContract("registry-runtime:AZ");
+    const sourceEvents = await store.events(first.promoted!.versionId);
     await recordRoutineReaderProjectionReadback(store, contract, first.promoted!, T1);
+    assert.deepEqual(await store.events(first.promoted!.versionId), sourceEvents, "fingerprint readback does not manufacture a later source observation");
+    const latestEvent = sourceEvents.at(-1)!.at;
     const beforeEvents = await store.events(first.promoted!.versionId);
     const secondPackage = await registryPackage(T0, "same-pass-second");
     const payload = changed ? { ...secondPackage.payload, registry: { ...secondPackage.payload.registry,
@@ -448,8 +455,8 @@ test("two registry publications in one pass never reuse a clock before the scope
     if (changed) {
       const readback = second.readerReadback!;
       assert.equal(readback.status, "PASS");
-      assert.ok(Date.parse(readback.observedAt) >= Date.parse(T1));
-      assert.ok(Date.parse(second.candidate.receipt!.validatedAt) >= Date.parse(T1));
+      assert.ok(Date.parse(readback.observedAt) >= Date.parse(latestEvent));
+      assert.ok(Date.parse(second.candidate.receipt!.validatedAt) >= Date.parse(latestEvent));
     } else {
       assert.equal(second.promoted!.versionId, first.promoted!.versionId);
       assert.deepEqual(await store.events(first.promoted!.versionId), beforeEvents, "an unchanged state writes no confirmation or new readback");

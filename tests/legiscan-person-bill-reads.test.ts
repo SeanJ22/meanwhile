@@ -81,6 +81,7 @@ test("a real Postgres person bill read selects exact native bills and complete c
         assert.ok(statement.query.includes(source));
         statement.query=statement.query.replace(source,`FROM (
           SELECT key,source_id,record_class,scope,current_version_id,last_known_good_version_id,promoted_at,validation_receipt,
+            CASE WHEN scope=${parameter} THEN repeat('0',64) ELSE payload_fingerprint END AS payload_fingerprint,
             CASE WHEN scope=${parameter} THEN jsonb_set(payload,'{state}','"WA"'::jsonb) ELSE payload END AS payload
           FROM civic_data_promotions
         ) p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id`);

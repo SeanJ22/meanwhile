@@ -732,7 +732,7 @@ test("Reader evidence names a pointer and a candidate by identity; neither datas
     /store\.readPromotions?\(|store\.readCandidates?\(/,
     "readback evidence reads identity; only the typed Reader reads and proves the dataset",
   );
-  assert.match(verification, /store\.readPromotionIdentity\(contract\.recordClass, contract\.scope\)/);
+  assert.match(verification, /publicationFingerprintIssue\(promoted\)/, "publication readback checks the returned fingerprint without another database read");
 });
 
 test("the Reader-evidence door's narrow read decides authority exactly as the whole envelope does", () => {
@@ -848,6 +848,7 @@ async function withCannedNeon<T>(
   process.env.WTP_VITAL_SIGNS_REPORT = "1";
   const sent: NeonStatement[] = [];
   const epoch = String(++cannedVersion);
+  const headers = new Map<string, Record<string, unknown>>();
   neonConfig.fetchFunction = (async (_endpoint: unknown, init: { readonly body: string }) => {
     const body = JSON.parse(init.body) as { query?: string; params?: unknown[]; queries?: NeonStatement[] };
     const statements = body.queries ?? [{ query: body.query ?? "", params: body.params ?? [] }];
@@ -861,18 +862,29 @@ async function withCannedNeon<T>(
       if (version !== "POSTGRES") {
         const { query, params } = statement;
         if (query.includes("civic_data_clock_versions")) metadata = { columns: [["etag", "text"]], rows: [[current]] };
-        else if (query.includes(".xmin::text")) {
+        else if (query.includes(".xmin::text") || query.includes("content-v1/")) {
           const keys = params.flatMap(value => Array.isArray(value) ? value : [value]).filter((value): value is string =>
             typeof value === "string" && !value.startsWith("UNCHANGED_CONFIRMATION") &&
             (query.includes("civic_data_payload_parts") ? /^[a-f0-9]{64}$/.test(value) :
               query.includes("civic_data_promotions") ? /^[A-Z_]+:/.test(value) : true));
-          metadata = { columns: [["key", "text"], ["etag", "text"], ["latestConfirmation", "text"]], rows: keys.map(key => [key,current,null]) };
+          if (query.includes("content-v1/")) {
+            const fields = [["state","state","text"],["acquisitionSucceeded","acquisition_succeeded","bool"],
+              ["validationReceipt","validation_receipt","jsonb"],["promotedVersionId","promoted_version_id","text"],
+              ["lastKnownGoodVersionId","last_known_good_version_id","text"],["failureCode","failure_code","text"],
+              ["failureDetail","failure_detail","text"]] as const;
+            metadata = { columns: [["key","text"],["etag","text"],...fields.map(([name,,type]) => [name,type] as NeonColumn)],
+              rows: keys.map(key => [key,current,...fields.map(([,column]) => headers.get(key)?.[column] ?? null)]) };
+          } else metadata = { columns: [["key", "text"], ["etag", "text"], ["latestConfirmation", "text"]], rows: keys.map(key => [key,current,null]) };
         }
       }
       // Existing fixtures count body statements. Version behavior itself is
       // covered by real PostgreSQL fixtures below and state-row-version-read.
       if (!metadata) sent.push(statement);
       const { columns, rows } = metadata ?? await answer(statement);
+      if (!metadata) for (const row of rows) {
+        const record = Object.fromEntries(columns.map(([name], index) => [name, row[index]]));
+        if (typeof record.id === "string" && typeof record.state === "string") headers.set(record.id, record);
+      }
       return wire.wrap({
         command: "SELECT",
         rowCount: rows.length,
@@ -1020,6 +1032,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     promotedAt,
     payload: value.readModel,
     payloadFingerprint: value.normalization.normalizedHash,
+    writeFingerprint: { expected: value.normalization.normalizedHash, stored: value.normalization.normalizedHash },
     receipt: persisted,
   });
 });
@@ -1333,10 +1346,10 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
       return none;
     }
     if (query.includes("WITH state_promotion")) return {
-      columns: [["projection", "jsonb"], ["coupled", "bool"], ["confirmation", "text"]],
+      columns: [["projection", "jsonb"], ["coupled", "bool"], ["expected_hash", "text"], ["confirmation", "text"]],
       rows: [[{ key: `${value.recordClass}:${value.scope}`, sourceId: value.sourceId, recordClass: value.recordClass,
         scope: value.scope, versionId: value.id, lastKnownGoodVersionId: value.id, promotedAt: "2026-09-08T12:01:00.000Z",
-        payload: envelope.readModel, receipt }, true, null]],
+        payload: envelope.readModel, receipt }, true, value.normalization.normalizedHash, null]],
     };
     if (query.includes('from "civic_data_promotions"')) return {
       columns: [["key", "text"], ["source_id", "text"], ["record_class", "text"], ["scope", "text"],
@@ -1458,7 +1471,7 @@ test("the keyed state read hydrates selected parts and rejects forged durable co
       normalized_hash text, validation_receipt jsonb, failure_code text, failure_detail text);
     CREATE TABLE civic_data_candidate_events(candidate_id text, sequence integer, detail text);
     CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY, payload jsonb);
-    ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text;
+    ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text, ADD COLUMN raw_hash text, ADD COLUMN parser_version text;
     ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
   const payload = { temporal: candidate("joined-state").temporal,
     rows: Array.from({ length: 40 }, (_, id) => ({ id, source: "https://az.gov/official", text: "Official source ".repeat(1000) })) };

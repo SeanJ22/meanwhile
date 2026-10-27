@@ -1531,9 +1531,9 @@ test("the keyed state read hydrates selected parts and rejects forged durable co
         assert.deepEqual(metadata?.candidate.temporal, read.value.temporal);
         assert.equal(Object.hasOwn(metadata!.candidate, "readModel"), false);
       })();
-      await pg.query("UPDATE civic_data_promotions SET payload='{}'");
+      await pg.query("UPDATE civic_data_promotions SET payload='{}',payload_fingerprint=$1",["0".repeat(64)]);
       await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /POINTER_PROOF_INVALID/);
-      await pg.query("UPDATE civic_data_promotions SET payload=$1, validation_receipt='{}'", [encoded.readModel]);
+      await pg.query("UPDATE civic_data_promotions SET payload=$1,payload_fingerprint=NULL,validation_receipt='{}'", [encoded.readModel]);
       await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /POINTER_PROOF_INVALID/);
       await pg.query("UPDATE civic_data_promotions SET validation_receipt=$1", [receipt]);
       copies.clear();

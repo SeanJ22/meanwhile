@@ -5,7 +5,7 @@ worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-27T21:05:00Z
+heartbeat: 2026-10-27T22:00:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -25,6 +25,10 @@ heartbeat: 2026-10-27T21:05:00Z
 - Open: publish-now still times out (4:52 PM pass hit its 10-minute deadline before recording a launch plan). Its reads: cp_doors whole records for change rates (110 MB; fixed in 133 below), meeting clock reads ~45,000 small requests/hour (about 30/s, vs ~0.4/s on 131) on a cache that was cold after the restart. Judging it on the next passes.
 - Still in the 4 PM hour: reader functions (job index) read 1.55 GB of civic_data_promotions (deploy cold starts across instances); cp_doors.list from lib/doors/seed-all.ts:78 (100 MB) and listWhereNarrowed from lib/ballot/voting-source-publication.ts:55 (98 MB), both through CR-01's changed-values path with a cold cache.
 - 133 being cut on river-next-133: MD-02 READY 1f915db3c (scan clean: original in the vault, only cited passages kept, metadata/path reads) + RIVER-DOORS-133 9530f6529 (the routine pass reads four fields per door for change rates). pnpm gates running.
+- 5:35 PM: runner still pid 3549988 (no restart since 4:28). Breaker: PAUSE place-pages + publish-now 4:58 (4 PM hour), RESUME all three 5:08 (new hour, half rate), PAUSE routine-civic-data again 5:28. Routine passes 5:16, 5:21, 5:28 (3 more promotions). PR and GU ballot publications 5:30. Publish-now: no outcome digest since its 4:52 timeout.
+- Data diet, for the people/portrait lanes (DB-06, PP-02): lib/photos/portrait-run.ts:104 store.readSlimRosters reads ~319 MB of reader civic_data_promotions:STATE_LEGISLATOR every hour (4 PM and 5 PM hours alike); it is what trips the breaker on routine-civic-data. Unchanged rosters should cost only their version check.
+- 133 (gates 12/12 on 9530f6529: MD-02 + RIVER-DOORS-133; river moved there). New READYs scanned: OB-01 d44f0b382 RETURNED (returns/ob-01.md: Legistar member publication throws MEETING_BODY_OWNER_UNKNOWN; bodies-panel gap test). BF-01 5ae05cfc5, RC-01 7342a43d2 and WR-01 67903ec18 folded on river-next-133b d72b1b9fe; fold fixes: BF-01's second readCandidate stub and second SELECT * FROM shelf now share one definition (RC-01 check passes; its saved read list shrank); BB-01's held-publication launch now states bytes per run (meeting-pins 6 MB, box-facts 4.5 MB). pnpm gates (now with RC-01's rulings check in lint) running.
+- HELD for Sean: stream/db-05 posted `READY: DB-05` b445d2278 at 5:38 PM after Sean renamed the lane DB-06; not folded until Sean says whether it counts as DB-06's READY. VP-01 has no READY yet.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

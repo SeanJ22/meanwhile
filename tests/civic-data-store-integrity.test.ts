@@ -1,3 +1,4 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { immutableStateHash, immutableStateValue, rememberStatePublicationHashes, rememberStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import assert from "node:assert/strict";
@@ -905,7 +906,7 @@ async function withCannedNeon<T>(
   }) as typeof neonConfig.fetchFunction;
   process.env.DATABASE_URL = "postgresql://canned:canned@ep-canned-store-proof.us-east-2.aws.neon.tech/neondb";
   try {
-    const store = new PostgresRoutineDataStore();
+    const store = new PostgresRoutineDataStore({vault:new MemoryEvidenceStore()});
     Object.assign(store as unknown as Record<string, unknown>, {
       writeAuthority: {
         repo: ROOT,

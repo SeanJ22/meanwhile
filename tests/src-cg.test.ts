@@ -234,7 +234,7 @@ test("a federal candidate holds vault references and an unchanged partial page n
   const second = await publishFederalPartition({ vault: own, source: "congress-api", partition: "bill:117:hr:21", captures: [detail], records: normalizeFederalCapture(detail), store, now: nextAt });
   assert.ok(second.kind === "UNCHANGED");
   assert.equal(second.head.versionId, first.outcome.promoted?.versionId);
-  assert.equal((await own.list("project/freshness/source/congress-api/raw/")).length, 2, "identical bytes are stored once");
+  assert.equal((await own.list("project/freshness/raw/sha256/")).length, 2, "identical bytes are stored once");
   const unchanged = await publishFederalPartition({ vault: new MemoryEvidenceStore(), source: "congress-api", partition: "bill:117:hr:21", captures: [detail],
     records: normalizeFederalCapture(detail), store, now: nextAt });
   assert.equal(unchanged.kind, "UNCHANGED", "a matching source must not reopen unrelated held capture bytes");

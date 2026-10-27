@@ -1,3 +1,8 @@
+/** New captures are filed by their content hash; legacy source objects remain valid evidence. */
+export function portraitVaultKeyMatches(key: string | undefined, hash: string): boolean {
+  return Boolean(key?.startsWith("project/freshness/source/") || /^sha256-[a-f0-9]{64}$/.test(hash) && key === `project/freshness/raw/sha256/${hash.slice(7)}`);
+}
+
 export interface CommonsCandidacyIdentity {
   readonly candidacyId: string;
   readonly wikidataId: string;
@@ -45,7 +50,7 @@ export function portraitVerificationMatches(personId: string, verification?: Por
     !Number.isFinite(Date.parse(verification.checkedAt))) return false;
   try {
     const validSources = verification.sources.length > 0 && verification.sources.every(s =>
-      (s.artifactId || s.vaultKey?.startsWith("project/freshness/source/")) && /^sha256-[a-f0-9]{64}$/.test(s.contentHash) && Number.isFinite(Date.parse(s.retrievedAt)));
+      (s.artifactId || portraitVaultKeyMatches(s.vaultKey,s.contentHash)) && /^sha256-[a-f0-9]{64}$/.test(s.contentHash) && Number.isFinite(Date.parse(s.retrievedAt)));
     const attributed = verification.attribution ? verification.attribution.name === verification.name &&
       verification.sources.some(s => s.url === verification.attribution!.sourceUrl)
       : Boolean(verification.license?.value && verification.license.quote && verification.sources.some(s => s.url === verification.license!.sourceUrl));

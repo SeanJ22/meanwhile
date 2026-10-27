@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { preparePlaceRosters, readBodyRoster } from "../lib/reader/body-roster.ts";
 import {createHash} from "node:crypto";
 import test from "node:test";
 import {buildPlacePackage,rebuildPlacePages} from "../lib/reader/place-builder.ts";
@@ -59,7 +60,8 @@ test("the real worker transfers only the requested compressed context and keeps 
     const readings:{mode:string;compressedBytes:number;legacyBytes?:number}[]=[];
     for(const input of cases) {
       const label=labels(input),canonical=await buildPlacePackage({...input,includeAgenda:input.includeAgenda??false},query);
-      expected.set(label,canonical);
+      const visible=!input.includeAgenda && !input.bodyFactsOnly ? preparePlaceRosters(canonical).place : canonical;
+      expected.set(label,visible);
       let reads=0;
       const actual=await readPlacePackage(input,async(text,params)=>{
         reads++;assert.equal(text,PLACE_PAGES_SQL,"every selection reads only saved context in one query");
@@ -81,9 +83,14 @@ test("the real worker transfers only the requested compressed context and keeps 
         return rows;
       });
       assert.equal(reads,1);
-      assert.deepEqual(actual,canonical,`${label}: every visible field keeps its canonical value`);
+      assert.deepEqual(actual,visible,`${label}: every visible field keeps its canonical value`);
       if(input.divisionIds.length) {
-        assert.equal(actual.bodies[0]!.roster!.members[0]!.name,"Exact member — é");
+        if(input.includeAgenda || input.bodyFactsOnly) assert.equal(actual.bodies[0]!.roster!.members[0]!.name,"Exact member — é");
+        else {
+          assert.equal(actual.bodies[0]!.roster,null);
+          const hash=actual.rosterRefs?.[BODY];assert.ok(hash);
+          if(hash!=="unbuilt") assert.equal((await readBodyRoster(query,hash))!.members[0]!.name,"Exact member — é");
+        }
         assert.ok(actual.meetings.some(row=>row.id==="fixture:fact-only"));
         assert.equal(actual.snapshot.agendaDocuments.length,input.includeAgenda?(input.includeHistory?2:1):0);
       }else assert.equal(actual.snapshotHeldAt,AT,"the empty family's checked time stays visible");

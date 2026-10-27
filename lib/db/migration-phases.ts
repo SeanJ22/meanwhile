@@ -401,6 +401,7 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "0039_sb01b_state_pointer_retirement": { phase: "expand", why: "Permits retiring replaced national pointers only after every exact state replacement is GOOD; existing writers retain their mutation rules." },
   "DB-01_read_versions": { phase: "expand", why: "Adds hourly runner transfer aggregates, per-scope clock versions and targeted open-flag indexes; existing readers and writers keep working." },
   "DB-03_process_transfer": { phase: "expand", why: "Adds defaulted process counters to the existing daily and hourly transfer tables before the accounting writer uses them; existing readers and writers keep working." },
+  "ZS-01_expand": { phase: "expand", why: "Adds immutable body roster resources before the place-page builder publishes their references." },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

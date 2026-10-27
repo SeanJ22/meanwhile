@@ -1,4 +1,5 @@
 import { stateFromRegistryRuntimeContractId } from "../civic-data/state-scopes.ts";
+import { expandReaderValues } from "../reader/shared.ts";
 import { createHash } from "node:crypto";
 import { factReader } from "../facts/db.ts";
 import { readFactRosters } from "../facts/roster-read.ts";
@@ -61,7 +62,7 @@ export async function observePublishedManual(page: Page, input: PublishedManualR
     await zip.fill(input.zip);
     await zip.press("Enter");
     await page.locator(".welcome-overlay.hidden").waitFor({ state: "attached" });
-    const coverage = await (await coverageResponse).json() as { meetings?: { id: string; bodyId?: string; bodyName: string; title: string; status: string; startsAt: string; timeZone: string }[] };
+    const coverage = expandReaderValues(await (await coverageResponse).json()) as { meetings?: { id: string; bodyId?: string; bodyName: string; title: string; status: string; startsAt: string; timeZone: string }[] };
     if (await tour.isVisible()) await tour.click();
     if (input.kind === "everyday-routing") {
       // The normal Ask server path can be paid. Block every Ask request in the
@@ -157,7 +158,7 @@ export async function observePublishedRoster(page: Page, input: PublishedRosterR
     await zip.fill(input.zip);
     await zip.press("Enter");
     await page.locator(".welcome-overlay.hidden").waitFor({ state: "attached" });
-    const coverage = await (await coverageResponse).json() as { coverage?: { bodies?: { bodyId: string; name?: string | null; divisionLabel: string }[] } };
+    const coverage = expandReaderValues(await (await coverageResponse).json()) as { coverage?: { bodies?: { bodyId: string; name?: string | null; divisionLabel: string }[] } };
     const body = coverage.coverage?.bodies?.find(body => body.bodyId === input.roster.bodyId);
     if (!body) throw Error("BODY_OUTSIDE_READER_COVERAGE");
     const bodyLabel = body.name ?? body.divisionLabel;

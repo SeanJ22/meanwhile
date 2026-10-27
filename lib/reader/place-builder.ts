@@ -13,6 +13,8 @@ import { randomUUID } from "node:crypto";
 import { purgeReaderCacheTags, readerCacheTags, type ReaderCachePurger } from "./cache.ts";
 import { composePlaceRow } from "./place-decode.ts";
 import { packPlaceContext, packReadyPlace } from "./place-ready.ts";
+import { preparePlaceRosters, savePlaceRosters } from "./body-roster.ts";
+import { compositionFor } from "../registry/body-membership.ts";
 import type { PlacePackage } from "./place-types.ts";
 import { lookupZcta } from "../geo/zcta.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "./location.ts";
@@ -20,6 +22,8 @@ import { selectBodyTerritory, type BodyTerritorySelection } from "../registry/bo
 
 const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
 const rosterPersonFieldsSql = ROSTER_PERSON_FIELDS.map(field => `'${field}'`).join(",");
+// Only these offices appear before a body opens. Full membership remains a separate resource.
+const previewTitleSql = `'(^|[^[:alpha:]])(superintendent|administrator|manager|executive director|(county|city|town) executive|select[[:space:]]?board)([^[:alpha:]]|$)'`;
 const retiredMeetingScopesSql = RETIRED_MEETING_ROUTES.map(route =>
   `'source:${encodeURIComponent(route.meetingSource)}:body:${encodeURIComponent(route.bodyId)}'`).join(",") || "NULL";
 
@@ -153,7 +157,9 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), body_facts AS MATERIALIZED (
   SELECT f.*,s.url,b.name AS body_name,b.parent_id FROM bodies b
     CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=b.id AND status='live'
-      AND ($8::text[] IS NULL OR field NOT LIKE 'member:%') OFFSET 0) f
+      AND (field NOT LIKE 'member:%' OR $8::text[] IS NULL AND ($12::boolean OR value->>'office' ~* ${previewTitleSql}
+        OR EXISTS (SELECT 1 FROM fact office WHERE office.entity_id=substr(fact.field,8) AND office.status='live'
+          AND office.field IN ('office','office:'||fact.entity_id) AND office.value#>>'{}' ~* ${previewTitleSql}))) OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
 ), members AS (
   SELECT f.entity_id AS body_id,f.body_name,substr(f.field,8) AS person_id,f.value,f.quote,f.checked_at,f.provenance_kind,f.url,
@@ -163,12 +169,14 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
         AND (p.field=ANY(ARRAY[${rosterPersonFieldsSql}]) OR p.field=ANY(ARRAY(SELECT field||':'||f.entity_id FROM unnest(ARRAY[${rosterPersonFieldsSql}]) field)))),'{}'::jsonb) AS person
   FROM body_facts f WHERE $8::text[] IS NULL AND f.field LIKE 'member:%'
 ), runtime_rosters AS MATERIALIZED (
-  SELECT CASE WHEN $8::text[] IS NULL THEN header.value ELSE (header.value-'members') || jsonb_build_object('members','[]'::jsonb) END AS item,
-    CASE WHEN $8::text[] IS NULL THEN header.value ELSE (header.value-'members') || jsonb_build_object('members','[]'::jsonb) END AS value
+  SELECT selected.value AS item,selected.value
     FROM runtime_root root,LATERAL reader_payload_members(root.value->'bodyRosters') r,
     LATERAL (SELECT reader_payload_node(r.item) AS original) source,
     LATERAL (SELECT CASE WHEN x.entity_id IS NULL THEN source.original ELSE jsonb_set(source.original,'{bodyId}',to_jsonb(x.entity_id)) END AS value
-      FROM (SELECT (SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=source.original->>'bodyId') AS entity_id) x) header
+      FROM (SELECT (SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=source.original->>'bodyId') AS entity_id) x) header,
+    LATERAL (SELECT CASE WHEN $8::text[] IS NULL AND $12::boolean THEN header.value ELSE (header.value-'members'-'membershipHistory')
+      || jsonb_build_object('members',coalesce((SELECT jsonb_agg(m.item ORDER BY m.ordinal_index) FROM reader_payload_members(header.value->'members') m
+        WHERE $8::text[] IS NULL AND reader_payload_node(m.item)->>'officeTitle' ~* ${previewTitleSql}),'[]'::jsonb)) END AS value) selected
     WHERE header.value->>'bodyId' IN (SELECT id FROM bodies)
 ), runtime_members AS MATERIALIZED (
   SELECT reader_payload_node(m.item) AS value FROM runtime_rosters r,LATERAL reader_payload_members(r.value->'members') m WHERE $8::text[] IS NULL
@@ -196,7 +204,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     FROM runtime_root root,LATERAL reader_payload_members(reader_payload_node(root.value->'officialCandidacies')->'rows') c,
       LATERAL (SELECT reader_payload_node(c.item) AS value) header
     WHERE $8::text[] IS NULL AND (reader_payload_node(header.value->'holder')->>'id' IN (SELECT id FROM runtime_people)
-      OR EXISTS (SELECT 1 FROM reader_payload_members(reader_payload_node(header.value->'holder')->'divisions') d
+      OR $12::boolean AND EXISTS (SELECT 1 FROM reader_payload_members(reader_payload_node(header.value->'holder')->'divisions') d
         WHERE d.item#>>'{}' IN (SELECT id FROM runtime_division_ids)))
 ), runtime_photos AS MATERIALIZED (
   SELECT p.item,header.value FROM runtime_root root,LATERAL reader_payload_members(reader_payload_node(root.value->'officialPhotos')->'photos') p,
@@ -427,6 +435,10 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
     'registered_name',(SELECT value->>'name' FROM runtime_bodies r WHERE r.value->>'id'=b.id LIMIT 1))) FROM bodies b),'[]'::jsonb) AS entities,
   coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone','office_email','mailing_address')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
+  CASE WHEN NOT $12::boolean AND ${!bodyFactsOnly} THEN coalesce((SELECT jsonb_object_agg(b.id,coalesce(saved.ref,to_jsonb('unbuilt'::text)))
+    FROM bodies b LEFT JOIN LATERAL (SELECT p.context->'rosterRefs'->b.id AS ref FROM place_page p
+      WHERE (p.place_id=b.id OR p.place_id IN (SELECT id FROM selected_places)) AND p.context->'rosterRefs' ? b.id
+      ORDER BY (p.place_id=b.id) DESC,p.place_id LIMIT 1) saved ON true),'{}'::jsonb) END AS roster_refs,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
   coalesce((SELECT jsonb_agg(to_jsonb(s)) FROM sittings s),'[]'::jsonb) AS sittings,
   coalesce((SELECT jsonb_agg(to_jsonb(m)) FROM meeting_rows m),'[]'::jsonb) AS meeting_rows,
@@ -452,11 +464,16 @@ export interface PlaceTurnReads {
 
 export async function buildPlaceRow(input: PlaceInput,query: Query,shared?: PlaceTurnReads): Promise<Record<string,unknown>> {
   const state = input.state.toUpperCase();
+  const bodyIds=new Set(input.bodyIds ?? []);
+  if(input.includeRoster) for(const id of bodyIds) {
+    const alias=compositionFor(id)?.aliasOfBodyId;
+    if(alias)bodyIds.add(alias);
+  }
   const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
   const held = shared?.everydayRouting;
-  const [read] = await query(input.bodyFactsOnly ? BODY_FACTS_PACKAGE_SQL : PLACE_PACKAGE_SQL,[state,input.divisionIds,input.bodyIds ?? [],stateRoot,
+  const [read] = await query(input.bodyFactsOnly ? BODY_FACTS_PACKAGE_SQL : PLACE_PACKAGE_SQL,[state,input.divisionIds,[...bodyIds],stateRoot,
     input.allBodies ?? false,input.includeHistory ?? false,input.includeAgenda ?? true,null,input.neighbors ?? false,input.namedDivisionIds ?? [],
-    held?.version ?? null]);
+    held?.version ?? null,input.includeRoster ?? (input.bodyFactsOnly || (input.includeAgenda ?? true))]);
   if (!read) throw new Error("PLACE_PAGE_BUILD_FAILED");
   const {everyday_routing_version:version,...row} = read;
   if (shared && typeof version === "string") {
@@ -511,15 +528,20 @@ async function placeBuildSelection(id:string,kind:string,state:string):Promise<{
 
 export async function buildPageBody(id:string,kind:string,state:string,query:Query,shared?:PlaceTurnReads):Promise<StoredPlacePage> {
   const {input:selected,territory}=await placeBuildSelection(id,kind,state),zip=/^zip:\d{5}$/.test(id);
-  const input:PlaceInput=zip?{...selected,includeAgenda:false}:selected;
+  const input:PlaceInput=zip?{...selected,includeAgenda:false}:{...selected,includeRoster:true};
   const history=zip?undefined:await buildPlaceRow({...input,includeHistory:true},query,shared);
   const current=history?currentPlaceRow(history):await buildPlaceRow(input,query,shared);
   const stateRoot=kind==='place' && /^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(id);
   const emptyHistory=stateRoot?await buildPlaceRow({...input,divisionIds:[],includeHistory:true},query,shared):undefined;
   const readyCurrent=await composePlaceRow(input,structuredClone(current));
+  const preparedCurrent=preparePlaceRosters(readyCurrent).place;
+  current.roster_refs=preparedCurrent.rosterRefs;
+  current.roster_previews=preparedCurrent.rosterPreviews;
+  const readyHistory=history?await composePlaceRow({...input,includeHistory:true},structuredClone(history)):undefined;
+  if(history && readyHistory){const prepared=preparePlaceRosters(readyHistory).place;history.roster_refs=prepared.rosterRefs;history.roster_previews=prepared.rosterPreviews;}
   return {formatVersion:1,current,readyCurrent,
     ...(zip?{territory}:{}),
-    ...(history?{history,readyHistory:await composePlaceRow({...input,includeHistory:true},structuredClone(history))}:{}),
+    ...(history?{history,readyHistory}:{}),
     ...(emptyHistory?{emptyCurrent:currentPlaceRow(emptyHistory),emptyHistory}:{})};
 }
 
@@ -585,7 +607,8 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
             const [lease]=await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
             if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
             const {readyCurrent,readyHistory,territory,...rawContext}=body;
-            const context=/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext);
+            await savePlaceRosters(query,[readyCurrent,...readyHistory?[readyHistory]:[]]);
+            const context=/^zip:\d{5}$/.test(id)?{formatVersion:1}:{...packPlaceContext(rawContext),rosterRefs:preparePlaceRosters(readyCurrent).place.rosterRefs};
             await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context)
               VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
               ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,

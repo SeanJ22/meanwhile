@@ -7,6 +7,7 @@ import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-d
 import { PLACE_PAGES_SQL, READY_PLACE_SQL, readPlacePackage, type PlaceInput } from "../lib/reader/place.ts";
 import { buildPageBody, buildPlacePackage } from "../lib/reader/place-builder.ts";
 import { packReadyPlace } from "../lib/reader/place-ready.ts";
+import { preparePlaceRosters } from "../lib/reader/body-roster.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { GET as agendaGET } from "../app/api/agenda/route.ts";
@@ -761,7 +762,7 @@ test("one place query preserves source-only bodies, local runtime records and th
     await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,'family-version')",
       [`MEETING:${scope}`,scope,JSON.stringify(family),AT]);
     let calls = 0;
-    const result = await buildPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL]},async(sql,params) => {
+    const result = await buildPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[SPECIAL],includeRoster:true},async(sql,params) => {
       calls++;const rows = await db.query(sql,params);
       assert.equal(JSON.stringify(rows).includes("ELSEWHERE"),false,"unrelated runtime records remain in the store");
       return rows;
@@ -791,6 +792,15 @@ test("one place query preserves source-only bodies, local runtime records and th
     assert.deepEqual(compact.registry?.officialPhotos,{photos:[]});
     assert.deepEqual(compact.registry?.rosterPhotos,{});
     assert.deepEqual(compact.meetings,result.meetings,"the ready page preserves full identity and URL ownership context");
+    const executive={...member,id:`roster:${BODY}#executive`,personId:"person:executive",name:"Sourced superintendent",officeTitle:"Superintendent"};
+    const previewRuntime={...runtime,bodyRosters:[{...roster,members:[member,executive]},specialRoster],
+      rosterReaderDispositions:[eligible,{...eligible,sourceId:executive.id,canonicalId:executive.id}]};
+    await db.query("UPDATE civic_data_promotions SET payload=$1::jsonb WHERE record_class='REGISTRY_RUNTIME_BINDING'",[JSON.stringify(previewRuntime)]);
+    const list=await buildPlacePackage({state:"AZ",divisionIds:[CITY],includeAgenda:false},db.query);
+    assert.deepEqual(list.registry!.bodyRosters.flatMap(roster=>roster.members.map(member=>member.id)),[executive.id],"the ZIP query reads the list's executive, never the full board");
+    const preview=preparePlaceRosters(list).place;
+    assert.deepEqual(preview.rosterPreviews![BODY]!.map(holder=>holder.name),[executive.name]);
+    assert.equal(preview.registry!.bodyRosters.flatMap(roster=>roster.members).length,0,"the list carries only its separate preview and roster reference");
   } finally { await db.pg.close(); }
 });
 

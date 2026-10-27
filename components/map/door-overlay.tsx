@@ -140,7 +140,7 @@ export function DoorOverlay({
             onOpenBody={onOpenBody}
           />
         ) : (
-          <OfficialsDoor coverage={coverage} onOpenOfficial={onOpenOfficial} />
+          <OfficialsDoor coverage={coverage} onOpenOfficial={onOpenOfficial} onOpenBody={onOpenBody} />
         )}
       </div>
     </div>
@@ -395,8 +395,10 @@ function DistrictRows({
 function OfficialsDoor({
   coverage,
   onOpenOfficial,
+  onOpenBody,
 }: {
   coverage: CoverageSummary;
+  onOpenBody: (body: CoveredBody) => void;
   onOpenOfficial: (
     holder: SeatHolder,
     seatLabel: string | null,
@@ -405,8 +407,9 @@ function OfficialsDoor({
 }) {
   // Grouped Local / State / Federal, closest first.
   const groups = groupOfficials(coverage);
+  const rosterBodies = coverage.bodies.filter(body => body.tier === "local" && body.rosterRef && !body.readerRoster);
   const total = groups.local.length + groups.state.length + groups.federal.length;
-  if (total === 0) {
+  if (total === 0 && rosterBodies.length === 0) {
     return (
       <p className="mt-3 t-body text-muted">
         No sourced officeholders resolved at this point yet.
@@ -421,12 +424,18 @@ function OfficialsDoor({
   return (
     <div className="mt-3 space-y-3">
       {(Object.keys(TIER_GROUP_LABELS) as TierGroup[]).map((group) =>
-        groups[group].length === 0 ? null : (
+        groups[group].length === 0 && !(group === "local" && rosterBodies.length) ? null : (
           <div key={group}>
             <p className={`t-structure ${TIER_HEADER_CLASS[group]}`}>
               {TIER_GROUP_LABELS[group]}
             </p>
             <ul className="mt-1 space-y-1.5">
+              {group === "local" && rosterBodies.map(body => <li key={body.bodyId} className="flex items-baseline justify-between gap-3">
+                <button type="button" onClick={() => onOpenBody(body)} className="cursor-pointer t-body text-signal underline decoration-dotted">
+                  {bodyDisplayName(body)} →
+                </button>
+                <span className="shrink-0 text-right t-caption text-muted">Members</span>
+              </li>)}
               {groups[group].map(({ holder, seatLabel, tier }) => (
                 <li
                   key={holder.id}

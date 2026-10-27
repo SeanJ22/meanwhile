@@ -4,6 +4,7 @@ import { createServer } from "node:http";
 import { build } from "esbuild";
 import { launchGuarded } from "../scripts/browser.mts";
 import { readerStartScript } from "../lib/reader/bootstrap.ts";
+import { shareReaderValues } from "../lib/reader/shared.ts";
 
 test("the arriving page starts one state/place read before hydration and the reader consumes each response once", async () => {
   const bundle = await build({ stdin: { resolveDir: process.cwd(), contents: `
@@ -72,7 +73,7 @@ test("the arriving page starts one state/place read before hydration and the rea
         districtOffices:[{address:"100 Example Street",city:"Tucson",state:"AZ",zip:"85701",lat:null,lng:null}],
         officeDetails:[{officeKind:"DISTRICT",official:true,sourceUrl:"https://example.gov/offices",sourceOrg:"Official office",collectedAt:"2026-10-01"}] }},
         {ids:["congress:A000002"],directory:{source:null,committees:[],districtOffices:[{address:"An unselected office"}],officeDetails:[]}}] };
-      response.writeHead(200,{"content-type":"application/json"}).end(JSON.stringify({meetings:["held"],stateResponse:{status:200,headers:[],value}})); }
+      response.writeHead(200,{"content-type":"application/json"}).end(JSON.stringify(shareReaderValues({meetings:["held"],stateResponse:{status:200,headers:[],value}}))); }
     else if (url === "/api/geocode") {
       let body="";for await(const chunk of request)body+=chunk;
       assert.equal(JSON.parse(body).address,"100 Example Street, Tucson, AZ 85701");

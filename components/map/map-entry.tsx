@@ -68,6 +68,7 @@ import {
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
 import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
+import { loadReaderBodyRoster } from "@/lib/reader/body-roster-client";
 import { bodyContactRows, bodyContactSources } from "@/lib/registry/body-contact";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { definitionsForBody } from "@/lib/officials/body-definitions";
@@ -1970,6 +1971,8 @@ function meetingSubject(
   /* The body holding this sitting, resolved explicitly; never a division fallback. */
   const roster = [...projectedBodyRoster(body).members];
   return {
+    ...(body?.rosterRef && !body.readerRoster ? { loadRoster: async () => meetingSubject(meeting,
+      { ...body, readerRoster: await loadReaderBodyRoster(body) }, pin) } : {}),
     // The body is the headline; the jurisdiction is the subtitle.
     ...(pin ? {mapPin:pin} : {}),
     subjectId: meeting.id,
@@ -2055,6 +2058,8 @@ export function bodySubject(
   const claim = jurisdictionClaim(body);
 
   return {
+    ...(body.rosterRef && !body.readerRoster ? { loadRoster: async () => bodySubject(
+      { ...body, readerRoster: await loadReaderBodyRoster(body) }, allMeetings) } : {}),
     // The body id, never the display title, which several governments share.
     subjectId: body.bodyId,
     publicRecordsDivisionId: body.ocdId,

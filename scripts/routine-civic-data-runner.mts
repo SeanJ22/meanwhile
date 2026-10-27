@@ -93,8 +93,7 @@ import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partition
 import { recordDoorOutcome, taskDoorId, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence, type DoorEvidence } from "../lib/doors/shut.ts";
-import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
-import { isDoorRecord } from "../lib/doors/registry.ts";
+import { OBSERVED_RATE_FIELDS, observedChangeMinutesByDoor, type ObservedRateFields } from "../lib/doors/observed-rate.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { MEETING_DOORS_CONTRACT_ID } from "../lib/doors/meeting-doors.ts";
 import { doorSyncLine, syncHeldDoors } from "../lib/doors/seed-all.ts";
@@ -370,8 +369,9 @@ async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
   if (connection === null) return new Map();
   try {
     doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-    const rows = await (await doorOutcomeRepos).doors.list();
-    return observedChangeMinutesByDoor(rows.map((row) => row.value).filter(isDoorRecord));
+    // Four fields per door, not whole records: unchanged rows cost only their version check.
+    const rows = await (await doorOutcomeRepos).doors.listNarrowed(OBSERVED_RATE_FIELDS);
+    return observedChangeMinutesByDoor(rows.map((row) => row.value as ObservedRateFields).filter((door) => typeof door?.doorId === "string"));
   } catch (error) {
     console.warn(`RCD_DOORS: observed change rates not read — ${error instanceof Error ? error.message : String(error)}; every task stays on its policy cadence`);
     return new Map();

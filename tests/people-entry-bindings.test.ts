@@ -90,6 +90,29 @@ test("a public member service binds each object and verifies only its own image"
   assert.notEqual(unknown.officeholders[0].personId,unknown.officeholders[1].personId);
 });
 
+test("a member service expands a held name through its native ID or exact district and personal phone",()=>{
+  const source="https://legislature.example.gov/graphql?query=members";
+  const entries=[
+    ["Greg Barnes","Gregory Barnes","13","2022440","3342610495"],
+    ["Brock Colvin","William Brock Colvin","26","202314","3342610438"],
+    ["A.J. McCampbell","Artis 'A.J.' McCampbell","71","100553","3342610547"],
+    ["Van Smith","Ivan Smith","42","105207","3342610459"],
+  ];
+  const members=entries.map(([name,,district,id,number],index)=>({...reference(name,`member${index}`,district),state:"AL",phone:number,
+    profileUrls:index<2?[]:[`https://www.legislature.state.al.us/aliswww/ISD/ALRepresentative.aspx?OID_SPONSOR=${id}&OID_PERSON=5544`]}));
+  const rows=entries.map(([,name,district,id,number])=>({id,fullName:name,honorificFullNameAffiliation:`Representative ${name} (R)`,body:"House",district:`House District ${district}`,phone:number,imageUrl:`https://legislature.example.gov/${id}.png`}));
+  const body=JSON.stringify({data:{legislativeMembers:{data:rows}}});
+  const unbound=normalizeOfficialLegislaturePage(body,source,{sourceId:"official-state-people",state:"al",asOf:at,signal:new AbortController().signal},at);
+  const parsed=normalizeOfficialLegislaturePage(body,source,{sourceId:"official-state-people",state:"al",asOf:at,signal:new AbortController().signal,roster:roster([...members,...unbound.officeholders])},at);
+  assert.equal(parsed.officeholders.length,4);
+  for(const [index,person]of parsed.officeholders.entries())assert.deepEqual(person.nativeIds?.["ocd-person"],[`ocd-person/member${index}`]);
+  assert.deepEqual(nativePersonIdFromUrl(members[2].profileUrls[0]),{source:"al-legislature",id:"100553"});
+  for(const changed of [{...rows[0],district:"House District 14"},{...rows[0],fullName:"Gregory Other",honorificFullNameAffiliation:"Representative Gregory Other (R)"}]) {
+    const result=normalizeOfficialLegislaturePage(JSON.stringify({data:{legislativeMembers:{data:[changed]}}}),source,{sourceId:"official-state-people",state:"al",asOf:at,signal:new AbortController().signal,roster:roster(members)},at);
+    assert.equal(result.officeholders[0].nativeIds?.["ocd-person"],undefined,"a shared phone cannot bind a different surname or district");
+  }
+});
+
 test("successive occupants of a linked seat route have separate person identities",()=>{
   const profile="https://www.flsenate.gov/Senators/S33";
   const parseOccupant=(person:Officeholder)=>normalizeOfficialLegislaturePage(`<h1>Senator ${person.name}</h1><p>Senator District 33</p>`,profile,

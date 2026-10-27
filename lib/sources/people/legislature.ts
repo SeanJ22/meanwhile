@@ -111,14 +111,14 @@ function pageRoleFor(headers:string):"upper"|"lower"|null {
   const upper=/\b(?:Senators?|Senate)\b/i.test(headers),lower=/\b(?:Representatives?|House|Assembly|Delegates?)\b/i.test(headers);
   return upper===lower?null:upper?"upper":"lower";
 }
-function entryPerson(name:string,card:string,people:readonly Officeholder[],chamber:"upper"|"lower"|null,pageUrl:string):Officeholder|undefined {
+function entryPerson(name:string,card:string,people:readonly Officeholder[],chamber:"upper"|"lower"|null,pageUrl:string,publisher?:{source:string;id:string}):Officeholder|undefined {
   if(!key(name))return undefined;
   const namedHeading=[...card.matchAll(/<h[1-6]\b[^>]*>([\s\S]*?)<\/h[1-6]>/gi)].some(heading=>samePublishedName(rosterLabelName(textOf(heading[1])),name));
-  const native=new Set([...card.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)].flatMap(anchor=>{
+  const native=new Set([...(publisher?[`${publisher.source}:${publisher.id}`]:[]),...[...card.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)].flatMap(anchor=>{
     if(!namedHeading&&!samePublishedName(anchorName(anchor[2]),name))return [];
     try{const href=attributes(anchor[1]).href,binding=href?nativePersonIdFromUrl(new URL(href,pageUrl).href):null;
       return binding?[`${binding.source}:${binding.id}`]:[];}catch{return [];}
-  }));
+  })]);
   if(native.size===1) {
     const matches=people.filter(person=>(!chamber||person.chamber===chamber)&&[...personIdentityKeys(person),
       ...[person.websiteUrl,...person.profileUrls??[]].flatMap(profile=>{const binding=profile?nativePersonIdFromUrl(profile):null;return binding?[`${binding.source}:${binding.id}`]:[];})].some(id=>native.has(id)));
@@ -129,6 +129,7 @@ function entryPerson(name:string,card:string,people:readonly Officeholder[],cham
   const seatFor=(person:Officeholder)=>districts.length===1&&person.memberships?.some(row=>row.current!==false&&(!chamber||row.chamber===chamber)&&row.district?.toLowerCase().replace(/^0+(?=\d)/,"")===districts[0].replace(/^0+(?=\d)/,""));
   if(exact.length===1&&(!districts.length||!exact[0].memberships?.some(row=>row.current!==false&&(!chamber||row.chamber===chamber)&&row.district)||seatFor(exact[0])))return exact[0];
   const emails=new Set([...card.matchAll(/href=["']mailto:([^"'?]+)/gi)].map(match=>match[1].toLowerCase()));
+  const contactPhone=phone(card)?.replace(/\D/g,"").replace(/^1(?=\d{10}$)/,"");
   const matches=people.filter(person=>{
     if(chamber&&person.chamber!==chamber)return false;
     const other=key(person.name).split(" ");
@@ -136,7 +137,8 @@ function entryPerson(name:string,card:string,people:readonly Officeholder[],cham
     const email=Boolean(person.email&&emails.has(person.email.toLowerCase()));
     const sameName=samePublishedName(name,person.name);
     const seat=seatFor(person);
-    return email||sameName&&seat;
+    const samePhone=contactPhone?.length===10&&contactPhone===person.phone?.replace(/\D/g,"").replace(/^1(?=\d{10}$)/,"");
+    return email||sameName&&seat||samePhone&&seat;
   });
   return matches.length===1?matches[0]:undefined;
 }
@@ -264,7 +266,8 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
       const image=url(row.imageUrl),email=string(row.email),phone=string(row.phone);
       const card=`<article><h1>${escape(label)}</h1><p>${escape(district)}</p>${image?`<img src="${escape(image)}" alt="${escape(name)}">`:""}${email?`<a href="mailto:${escape(email)}">Email</a>`:""}${phone?`<a href="tel:${escape(phone)}">${escape(phone)}</a>`:""}</article>`;
       const title=chamber==="upper"?"State Senator":"State Representative";
-      const known=entryPerson(name,card,held,chamber,pageUrl);
+      const publisher={source:`${stateIdentity(options.state).state.toLowerCase()}-legislature`,id};
+      const known=entryPerson(name,card,held.filter(sourcePersonIsNativeReference),chamber,pageUrl,publisher)??entryPerson(name,card,held,chamber,pageUrl,publisher);
       const seed=known??emptyPerson(`official-legislature:${digest(`${pageUrl}#member=${id}`).slice(0,24)}`,name,title,options.state,provenance(pageUrl,"State legislature — member data",collectedAt));
       const person={...seed,name,chamber,nativeIds:{...seed.nativeIds,[`${stateIdentity(options.state).state.toLowerCase()}-legislature`]:[id]}};
       const parsed=normalizeOfficialLegislaturePage(card,pageUrl,{...options,roster:{...emptyRoster(options.state,options.asOf),officeholders:[person]}},collectedAt);

@@ -78,6 +78,10 @@ export function nativePersonIdFromUrl(value: string): { source: string; id: stri
     const id=/^\/Senators\/(?:\d{4}-\d{4}\/)?S\d+\/(\d+)\/?$/i.exec(url.pathname)?.[1];
     if(id)return {source:"fl-senate",id};
   }
+  if(["legislature.state.al.us","alison.legislature.state.al.us"].includes(host)&&/^\/aliswww\/ISD\/AL(?:Representative|Senator)\.aspx$/i.test(url.pathname)) {
+    const ids=[...url.searchParams].filter(([name])=>/^oid_sponsor$/i.test(name));
+    if(ids.length===1&&/^\d+$/.test(ids[0][1]))return {source:"al-legislature",id:ids[0][1]};
+  }
   if (host === "azleg.gov" && /^\/(?:House\/House-member|Senate\/Senate-member|house-member|senate-member)\/?$/i.test(url.pathname)) {
     const id = url.searchParams.getAll("legislator").length === 1 ? url.searchParams.get("legislator") : null;
     if (id && /^\d+$/.test(id)) return { source: "az-legislature", id };

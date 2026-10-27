@@ -279,7 +279,7 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
   },complete=false): Promise<PromotionOutcome> => processRegisteredRoutineCandidate(
     store,
     tenant.contractId,
-    legistarOutcomesCandidate({...candidate,sourceProbe:sourcePlan(complete)}, tenant),
+    legistarOutcomesCandidate({...candidate, acquisitions: [...new Map([...requests.values(), ...candidate.acquisitions].map(row => [row.requestedUrl, row])).values()],sourceProbe:sourcePlan(complete)}, tenant),
     candidate.retrievedAt,
     undefined,
     {confirmUnchanged:!complete},

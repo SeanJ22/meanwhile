@@ -265,11 +265,11 @@ export function withMeetingSourceProbe(candidate: RoutineCandidate, partition: M
     : sourceContentHash(unique.map(page => ({ ...page, capture: { rawHash: page.rawHash } })), { normalizationInputHash });
   const sourceProbe: MeetingSourceProbe = { formatVersion: 1, complete, acquisitionComplete, normalizationInputHash, sourceRawHash,
     sourceHashKind: candidate.retrieval.derived ? "DERIVED_INPUTS" : "REQUESTS",
-    requests: unique.map(({ requestedUrl, finalUrl, rawHash, request }) => ({ requestedUrl, finalUrl, rawHash, request })),
+    requests: unique.map(({ requestedUrl, finalUrl, rawHash, request }) => ({ requestedUrl, finalUrl, rawHash, ...(request === undefined ? {} : {request}) })),
     meetingIds: (candidate.readModel as { meetings: { id: string }[] }).meetings.map(meeting => meeting.id),
     bodyIds: [...new Set([...(partition.derivedFamily ? [] : [partition.bodyId]),
       ...(candidate.readModel as { meetings: { bodyId: string }[] }).meetings.map(meeting => meeting.bodyId)])] };
-  const normalizedPayload = { ...(candidate.normalizedPayload as Record<string, unknown>), sourceProbe };
+  const normalizedPayload = JSON.parse(JSON.stringify({ ...(candidate.normalizedPayload as Record<string, unknown>), sourceProbe }));
   const normalizedPayloadHash = canonicalCivicDataHash(normalizedPayload);
   return { ...candidate, id: `cv-${canonicalCivicDataHash([candidate.id, sourceRawHash, normalizedPayloadHash]).slice(0, 32)}`,
     retrieval: { ...candidate.retrieval, rawHash: sourceRawHash, rawHashBasis: "SOURCE_CONTENT_V1", complete: acquisitionComplete }, normalizedPayload,

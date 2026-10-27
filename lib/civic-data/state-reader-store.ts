@@ -36,11 +36,11 @@ const READ_STATE = `WITH RECURSIVE selected AS MATERIALIZED (
 ), hashes(hash) AS (
   SELECT ref#>>'{}' FROM selected,LATERAL jsonb_path_query(roots,'strict $.**."$civicPayloadPart"','{}',true) ref WHERE proof_valid
   UNION
-  SELECT ref#>>'{}' FROM hashes h JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts WHERE hash=h.hash OFFSET 0) part ON true,
+  SELECT ref#>>'{}' FROM hashes h JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts WHERE hash=h.hash LIMIT 1) part ON true,
     LATERAL jsonb_path_query(part.payload,'strict $.**."$civicPayloadPart"','{}',true) ref
 )
 SELECT roots,proof_valid,confirmation,
-  COALESCE((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes h JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts WHERE hash=h.hash OFFSET 0) part ON true),'{}'::jsonb) AS parts
+  COALESCE((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes h JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts WHERE hash=h.hash LIMIT 1) part ON true),'{}'::jsonb) AS parts
 FROM selected`;
 
 function decodeStateParts(roots: unknown, parts: Record<string, unknown>): unknown {

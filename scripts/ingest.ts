@@ -1944,7 +1944,7 @@ export async function promoteMeetingPartitions(input: {
         snapshot,
         [],
         reconciled.removalEvidence,
-        [...input.retainedResponses??[],...census.responses],
+        [...input.retainedResponses??input.facts?.responses??[],...census.responses],
         [...recurrence.held, ...incomplete.map(failure => ({ key: `${partition.id}:${failure.scope}`, code: "MEETING_SCOPE_UNREAD", detail: `${failure.scope}: ${failure.cause}` }))],
         idSuffix,
         tracedResponses([{ source: partition.meetingSource, acquisitions: report.acquisitions }], input.facts?.responses ?? input.retainedResponses ?? [])

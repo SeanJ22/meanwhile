@@ -122,7 +122,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   const load = (ids: readonly string[]) => readCanonicalPackages([entries, needsPresident ? nationalPresidentPointers() : []],
     query, split ? stateContainersStatement(state, ids, zip) : statePackageStatement(state, ids, zip));
   // The resident President reader requests its group only on a cache miss or refresh.
-  const groupsRead = Promise.resolve().then(async () => load(await idsRead));
+  const groupsRead = split ? Promise.resolve().then(() => load(divisionIds)) : Promise.resolve().then(async () => load(await idsRead));
   const canonicalRead = groupsRead.then(groups => groups.readGroup(0));
   composition.canonical = canonicalRead;
   const selectedRead = split ? canonicalRead.then(async canonical => {
@@ -144,7 +144,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   const openStates = zip ? zipPeopleEntry(state, selectedRow?.zip_people as Record<string, unknown> | null) : undefined;
   const registry = zip ? selectedStateEntry("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state),
     selectedRow?.zip_registry as Record<string, unknown> | null) : undefined;
-  const localDivisions = (canonical.additionalRows[0]?.local_divisions ?? []) as readonly Division[];
+  const localDivisions = (selectedRow?.local_divisions ?? canonical.additionalRows[0]?.local_divisions ?? []) as readonly Division[];
   const selected = new Map<string,PromotedEdgeEntry>();
   if (zip) {
     for (const row of selectedRow?.zip_sources as readonly Record<string,unknown>[] ?? []) {
@@ -165,7 +165,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     selected.has(`${recordClass}:${scope}`) ? Promise.resolve(selected.get(`${recordClass}:${scope}`)!) : canonical.readPromotedEntry!(recordClass,scope)} : canonical};
   const target = officialStateLegislatorTargetByScope(jurisdiction);
   const officialRead = target ? readOfficialStateLegislatorsProjection(target.jurisdiction,options) : Promise.resolve(null);
-  const [runtime, people, federal, official, campaigns, everyday, president, offices, profiles, portraits, ballot] = await Promise.all([
+  const [runtime, people, federal, official, campaigns, everyday, president, profiles, portraits, ballot] = await Promise.all([
     readPromotedCivicData<RegistryRuntimeReadModel>("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), options),
     readStatePeopleProjection(`US-${state}`, options),
     readStateFederalDirectory(state, options),
@@ -173,7 +173,6 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     readCuratedReaderProjection("campaign-sites", options),
     readEverydayRoutingProjection(options),
     presidentRead,
-    readMemberOfficeStateProjection(state, options),
     readCandidateProfilesProjection(state, options),
     readDerivedCampaignSites(state, options),
     readGenericBallotProjection(state, options),
@@ -194,8 +193,12 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
       campaignUrl: holder.campaignUrl ?? [...personIdentityKeys(holder)].flatMap(key => campaignsByPerson.get(key) ?? []).at(0) ?? null,
     })),
   } } : null;
-  const memberOffices = offices.kind === "PROMOTED" || offices.kind === "BOOTSTRAP" ? offices.value.records as unknown as MemberOfficeRecord[] : [];
-  const version = createHash("sha256").update([runtime.metadata.versionId, people.metadata.versionId, federal.metadata.versionId, campaigns.metadata.versionId, offices.metadata.versionId,
+  const officeMembers = [...new Set([...(roster?.officeholders ?? []), ...(authoritative?.officeholders ?? []),
+    ...(directory?.roster.officeholders ?? []), ...runtime.value.bodyRosters.flatMap(row => row.members),
+    ...runtime.value.statewideExecutives.flatMap(row => row.holder ? [row.holder] : [])].flatMap(holder => [...personIdentityKeys(holder)]))];
+  const offices = officeMembers.length ? await readMemberOfficeStateProjection(state, options, officeMembers) : null;
+  const memberOffices = offices?.kind === "PROMOTED" || offices?.kind === "BOOTSTRAP" ? offices.value.records as unknown as MemberOfficeRecord[] : [];
+  const version = createHash("sha256").update([runtime.metadata.versionId, people.metadata.versionId, federal.metadata.versionId, campaigns.metadata.versionId, offices?.metadata.versionId,
     profiles.metadata.versionId, portraits.metadata.versionId, ballot.metadata.versionId,
     districts.kind === "HELD" ? districts.versionId : districts.kind, JSON.stringify(president), JSON.stringify(localDivisions)].join("|")).digest("hex");
   const result: ReaderStatePackage = {

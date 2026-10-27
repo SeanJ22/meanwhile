@@ -287,7 +287,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
       assert.ok(row&&"part_payload" in row);return [[row.part_payload[0]]];
     }
     if (keys.length && keys.every(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
-    const family=statement.text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices") ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
+    const family=(statement.text.includes("AS zip_registry") || statement.text.includes("FROM geography")) || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices") ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
     order.push(family);
     if (family === "auxiliary") auxiliaryKeys.push(...keys);
     await blocked;
@@ -331,7 +331,7 @@ test("an unavailable local territory file leaves the ballot's canonical families
     }
     const keys=statements[0].params[0] as string[];
     assert.ok(Array.isArray(keys),"a failed territory read cannot submit a local place query");
-    if (statements[0].text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices")) return [stateRows("territory-failure-state",[],statements[0].text.includes("AS zip_registry"))];
+    if ((statements[0].text.includes("AS zip_registry") || statements[0].text.includes("FROM geography")) || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices")) return [stateRows("territory-failure-state",[],statements[0].text.includes("AS zip_registry"))];
     if (keys.length && keys.every(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     auxiliaries++;
     return [[]];

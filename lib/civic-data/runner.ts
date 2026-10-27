@@ -740,7 +740,7 @@ export function routineTaskNextDueMs(
   const completed=successfulProcessingMs(clock);
   if (!Number.isFinite(attempted)) return nowMs;
   if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)||(Number.isFinite(completed)&&completed>nowMs)) return nowMs;
-  if(sourceFailed)return attempted + retryDelayMs;
+  if(sourceFailed && task.contract?.schedule?.kind !== "SITTING_WINDOW")return attempted + retryDelayMs;
   if(Number.isFinite(completed)&&attempted<=completed&&continuationPending)return nowMs;
   if(clock.sourceComplete===false)return Math.max(attempted,Number.isFinite(completed)?completed:attempted)+retryDelayMs;
   const capWorkDue=(due:number)=>{

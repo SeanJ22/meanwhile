@@ -17,7 +17,7 @@ test("ZIP ballot SQL retains the existing ballot answer, including inherited dis
   try {
     for (const [state, divisions] of [
       ["AZ", ["ocd-division/country:us/state:az/county:pima", "ocd-division/country:us/state:az/cd:7"]],
-      ["ND", ["ocd-division/country:us/state:nd/cd:0"]],
+      ["ND", ["ocd-division/country:us/state:nd/cd:0", "ocd-division/country:us/state:nd/county:cass"]],
     ] as const) {
       const value = JSON.parse(readFileSync(new URL(`../data/ballot/2026-general/${state.toLowerCase()}.json`, import.meta.url), "utf8")) as GenericBallotProjection;
       await publish({ id: `ballot:${state}`, recordClass: "BALLOT_CANDIDACY", scope: stateBallotScope("ballot-contests", state), sourceId: "ballot", at, value });

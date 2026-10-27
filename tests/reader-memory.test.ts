@@ -71,7 +71,9 @@ test("President reads stay current and independent of a blocked Congress read, i
     CREATE TABLE civic_data_candidates(id text PRIMARY KEY,record_class text,scope text,source_id text,state text,
     acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,normalized_hash text,retrieved_at timestamptz);
     CREATE TABLE civic_data_candidate_events(candidate_id text,sequence integer,detail text);
-    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);`);
+    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
+    ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text;
+    ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
   await pg.query("INSERT INTO civic_data_promotions VALUES($1,'STATE_LEGISLATOR',$2,'statewide-executive-sources','president-version','president-version',$3,$4,$5)",
     [`STATE_LEGISLATOR:${scope}`, scope, at, receipt, payload]);
   await pg.query("INSERT INTO civic_data_candidates VALUES('president-version','STATE_LEGISLATOR',$1,'statewide-executive-sources','PROMOTED',true,'president-version','president-version',$2,$3)",

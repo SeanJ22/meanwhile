@@ -80,11 +80,12 @@ export async function withMigratedRoutineStore(
     return response;
   }) as typeof neonConfig.fetchFunction;
   try {
-    const store = new PostgresRoutineDataStore({ purge: async () => ({purged:true}) });
+    const vault = new MemoryEvidenceStore();
+    const store = new PostgresRoutineDataStore({ purge: async () => ({purged:true}), vault });
     Object.assign(store as unknown as Record<string, unknown>, { writeAuthority: {
       repo: process.cwd(), sha: execFileSync("git",["rev-parse","HEAD"],{encoding:"utf8"}).trim(), capability: "ROUTINE_CONTRACT", contract, parentPid: process.pid, nonce: "2".repeat(64),
     } satisfies RuntimeAuthorityEnvelope });
-    await run(store, new MemoryEvidenceStore(), pg);
+    await run(store, vault, pg);
   } finally {
     neonConfig.fetchFunction = priorFetch;
     for (const [name, value] of priorEnvironment) {

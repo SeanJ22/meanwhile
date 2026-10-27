@@ -277,7 +277,10 @@ export async function processRoutineCandidate(
   }
 
   if (!candidate.retrieval.succeeded) {
-    return { candidate: (await store.readCandidate(candidate.id))!, promoted: null, readerReadback: null };
+    return { candidate: { candidate, state: initialState, acquisitionSucceeded: false, receipt: validated.receipt,
+      promotedVersion: null, lastKnownGoodVersion: lastKnownGoodVersionId,
+      failureCode: acquisitionFailure?.code ?? null, failureDetail: acquisitionFailure?.detail ?? null },
+      promoted: null, readerReadback: null };
   }
   const held = { candidate };
   if (!candidate.normalization.succeeded || validated.receipt.checks.find((check) => check.check === "SCHEMA_PARSE_VALIDITY")?.verdict !== "PASS") {
@@ -317,8 +320,7 @@ export async function processRoutineCandidate(
   const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt, undefined, held);
   let promoted: PromotedProjection;
   try {
-    promoted = await store.promote(candidate.id, validated.receipt, transitionAt,
-      scoped || navigation || candidate.recordClass === "MEETING" || candidate.recordClass === "CENSUS_GEOGRAPHY" || candidate.recordClass === "FEDERAL_MONEY" || candidate.recordClass === "STATE_BILL" ? held : undefined);
+    promoted = await store.promote(candidate.id, validated.receipt, transitionAt, held);
   } catch (error) {
     if (!(error instanceof PromotionBaseChangedError)) throw error;
     const code = "PROMOTION_BASE_CHANGED";

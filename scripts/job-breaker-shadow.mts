@@ -1,5 +1,5 @@
 /** Production observation only: both connections use read-only transactions. Never boots repositories or launches work. */
-import { appendFileSync } from "node:fs";
+import { appendFileSync, readFileSync } from "node:fs";
 import { neon, neonConfig } from "../lib/db/client.ts";
 import { evaluateJobBreaker, JOB_TRANSFER_SQL, jobTransfers, JOB_BREAKER_INTERVAL_MS,
   JOB_BREAKER_HOURLY_BUDGET, readJobBreakerStates, type JobBreakerState } from "../lib/control-plane/job-transfer-breaker.ts";
@@ -14,7 +14,13 @@ for (const [url, endpoint] of [[readerUrl,"ep-dry-river-axwtolzc"],[controlUrl,"
 process.env.WTP_VITAL_SIGNS_REPORT="1";
 const output = process.env.BB_SHADOW_OUTPUT;
 const record = (value: unknown) => { const line = JSON.stringify(value); console.log(line); if (output) appendFileSync(output, line+"\n"); };
-let requests = 0, sent = 0, received = 0;
+const prior = process.env.BB_SHADOW_RESUME === "1" && output
+  ? readFileSync(output,"utf8").trim().split("\n").filter(Boolean).map(line=>JSON.parse(line)) : [];
+const checks = prior.filter(row=>row.type === "check");
+if(prior.some(row=>row.type === "result") || checks.some((row,index)=>row.tick!==index || row.wouldPause.length))
+  throw new Error("Only an unfinished normal-hour observation can resume");
+const last = checks.at(-1);
+let requests = last?.requests ?? 0, sent = last?.requestBytes ?? 0, received = last?.responseBytes ?? 0;
 const underlying = neonConfig.fetchFunction ?? fetch;
 neonConfig.fetchFunction = async (input: Parameters<typeof fetch>[0], init?: Parameters<typeof fetch>[1]) => {
   requests++; sent += Buffer.byteLength(String(init?.body ?? ""));
@@ -27,16 +33,21 @@ const read = async (sql: typeof reader, text: string, params: readonly unknown[]
   (await sql.transaction([sql.query(text,[...params])], { readOnly: true,
     fetchOptions: { signal: AbortSignal.timeout(15_000) } }))[0] as Record<string,unknown>[];
 let states: Record<string,JobBreakerState> = {};
-const started = Date.now();
+const started = checks.length ? Date.parse(checks[0].at) : Date.now();
+const firstTick = last ? last.tick+1 : 0;
+if(checks.some((row,index)=>Math.abs(Date.parse(row.at)-(started+index*JOB_BREAKER_INTERVAL_MS))>5_000)
+  || firstTick>0 && Date.now()>started+firstTick*JOB_BREAKER_INTERVAL_MS+5_000)
+  throw new Error("Observation missed its ten-minute schedule; start a new hour");
 let pauses = 0;
-for (let tick = 0; tick <= 6; tick++) {
+for (let tick = firstTick; tick <= 6; tick++) {
+  if(tick===firstTick && firstTick>0) await new Promise(resolve=>setTimeout(resolve,Math.max(0,started+tick*JOB_BREAKER_INTERVAL_MS-Date.now())));
   const now = Date.now();
   const info = await read(control, `SELECT current_setting('transaction_read_only') AS read_only,
     to_regclass('cp_job_transfer_breaker')::text AS breaker_table,
     updated_at AS heartbeat_at,value->>'state' AS runner_state
     FROM cp_runner_heartbeat WHERE id='pilot-runner'`);
   if (info[0]?.read_only !== "on") throw new Error("Production control-plane observation is not read-only");
-  if (tick === 0 && info[0]?.breaker_table) states = await readJobBreakerStates({query:(text,params)=>read(control,text,params)});
+  if (tick === firstTick && info[0]?.breaker_table) states = await readJobBreakerStates({query:(text,params)=>read(control,text,params)});
   const rows = jobTransfers(await read(reader,JOB_TRANSFER_SQL,[hourStart(now)]));
   const result = evaluateJobBreaker({now,rows,states,code:()=>null});
   states = result.snapshot.states;
@@ -49,5 +60,5 @@ for (let tick = 0; tick <= 6; tick++) {
 const elapsedMs = Date.now()-started, bytesPerHour = (sent+received)*3_600_000/elapsedMs;
 const passed = elapsedMs >= 3_600_000 && pauses === 0 && bytesPerHour < JOB_BREAKER_HOURLY_BUDGET;
 record({type:"result",startedAt:new Date(started).toISOString(),finishedAt:new Date().toISOString(),elapsedMs,
-  checks:7,pauses,requests,requestBytes:sent,responseBytes:received,gbPerHour:bytesPerHour/1e9,passed});
+  checks:7,resumed:checks.length>0,pauses,requests,requestBytes:sent,responseBytes:received,gbPerHour:bytesPerHour/1e9,passed});
 if (!passed) process.exitCode=1;

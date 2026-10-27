@@ -101,7 +101,8 @@ export function readStateDistricts(value: string): Promise<Slice<GeographySlice>
 async function loadState(state: string, divisionIds: readonly string[], zip: string | undefined, composition: StateComposition, earlyDistricts: boolean): Promise<ReaderStatePackage> {
   const jurisdiction = `US-${state}` as const;
   let needsPresident = false;
-  const presidentRead = readNationalPresident(() => {
+  // National executives are read by /national; ZIP coverage does not display them.
+  const presidentRead = zip ? Promise.resolve(null) : readNationalPresident(() => {
     needsPresident = true;
     return groupsRead.then(groups => groups.readGroup(1));
   }).catch(() => null);
@@ -239,12 +240,14 @@ export function readStatePackage(value: string, divisionIds: readonly string[] =
 
 /** Select people against either this query's geography or its already held exact snapshot. */
 export function statePackageStatement(state: string, divisions: readonly string[] = [], zip?: string, heldGeography?: Record<string, unknown>) {
+  // The first query already delivered geography. The selected people query needs only its keys,
+  // so do not send the held source metadata back to PostgreSQL and download it a second time.
   const geography = heldGeography ? {text:`SELECT $1::text AS version_id,$2::jsonb AS geography,
     CASE WHEN cardinality($6::text[])>0 THEN coalesce((SELECT jsonb_agg(reader_payload_value(d.item))
       FROM civic_data_promotions registration,LATERAL reader_payload_members(reader_payload_node(registration.payload)->'divisions') d
       WHERE registration.key=$5 AND reader_payload_node(d.item)->>'ocdId'=ANY($6::text[])),'[]'::jsonb)
       ELSE $3::jsonb END AS local_divisions,$4::text[] AS canonical_keys`,
-    params:[heldGeography.version_id,JSON.stringify(heldGeography.geography),JSON.stringify(heldGeography.local_divisions),heldGeography.canonical_keys,
+    params:[heldGeography.version_id,"[]",JSON.stringify(heldGeography.local_divisions),heldGeography.canonical_keys,
       `REGISTRATION:US-${state}:registration:v1`,divisions]} : stateContainersStatement(state, divisions, zip);
   if (!zip) return geography;
   const jurisdiction=Object.values(FIPS_TO_STATE).find(entry=>entry.postal===requireRegistryState(state));

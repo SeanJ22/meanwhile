@@ -5,7 +5,7 @@
       "file": "lib/ballot/reader-data.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 157
+      "line": 150
     },
     {
       "file": "lib/civic-data/ballot-navigation-refresh.ts",
@@ -23,25 +23,19 @@
       "file": "lib/civic-data/candidate-lifecycle.ts",
       "kind": "readCandidate",
       "fingerprint": "988b8423f951fe30ebf96e3c6e31f1b260ba222f4f71aaa9d514a3692cc46e09",
-      "line": 97
+      "line": 101
     },
     {
       "file": "lib/civic-data/candidate-lifecycle.ts",
       "kind": "readCandidate",
       "fingerprint": "76be3f738ac18b5e08cfd9b25408a0567eb4f22edc1d82e5dd9d9f18f595739e",
-      "line": 108
+      "line": 112
     },
     {
       "file": "lib/civic-data/candidate-lifecycle.ts",
       "kind": "readCandidate",
       "fingerprint": "aa59de7bf1965ddbfc38731d37820051f69710a44c45d74461df59af171e68ec",
-      "line": 110
-    },
-    {
-      "file": "lib/civic-data/candidate-lifecycle.ts",
-      "kind": "readCandidate",
-      "fingerprint": "ceb7a1efb2862f4576bc61b149b95dd0d681accf5de487140ffba715a5c054ba",
-      "line": 264
+      "line": 115
     },
     {
       "file": "lib/civic-data/derived-door.ts",
@@ -60,12 +54,6 @@
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
       "line": 620
-    },
-    {
-      "file": "lib/civic-data/manual-successor.ts",
-      "kind": "readCandidate",
-      "fingerprint": "6323427df9747762ba194b0a32cea814fc12af457ed6c50eef985004df86a393",
-      "line": 36
     },
     {
       "file": "lib/civic-data/navigation-successor.ts",
@@ -107,19 +95,19 @@
       "file": "lib/civic-data/read-model.ts",
       "kind": "readCandidate",
       "fingerprint": "97ecec3d55d6e00fe7241df8313aa18dbd914548d3637c84494820bd6483e773",
-      "line": 49
+      "line": 50
     },
     {
       "file": "lib/civic-data/read-model.ts",
       "kind": "readCandidate",
       "fingerprint": "0bfb6f4adc51b838bc90681a88d1d1d68bbe1f70c5f7223403acf595ab4f2e1e",
-      "line": 479
+      "line": 480
     },
     {
       "file": "lib/civic-data/read-model.ts",
       "kind": "readCandidate",
       "fingerprint": "294759cff30571b68ea9ae1344db460f3ce7fcd43c770ab29a8cdd8b0a5d1bf2",
-      "line": 828
+      "line": 829
     },
     {
       "file": "lib/civic-data/store.ts",
@@ -161,31 +149,31 @@
       "file": "lib/control-plane/repository/dispatch-state.ts",
       "kind": "SELECT *",
       "fingerprint": "332768bb8ac7e07ae65f106e7d5cd6d579a341c0f3c478b3f60b5cce317358d9",
-      "line": 187
+      "line": 212
     },
     {
       "file": "lib/control-plane/repository/dispatch-state.ts",
       "kind": "SELECT *",
       "fingerprint": "332768bb8ac7e07ae65f106e7d5cd6d579a341c0f3c478b3f60b5cce317358d9",
-      "line": 187
+      "line": 212
     },
     {
       "file": "lib/control-plane/repository/dispatch-state.ts",
       "kind": "SELECT *",
       "fingerprint": "d63e9fe8f33b264ea3a60a05be02f7fc01dc830f0c384112c655b58e0cfc42ca",
-      "line": 240
+      "line": 265
     },
     {
       "file": "lib/control-plane/repository/dispatch-state.ts",
       "kind": "SELECT *",
       "fingerprint": "81e2509f6b61743e1939d303b26efc748c84cab428b6fd95d64ca3d7fa0d7415",
-      "line": 242
+      "line": 267
     },
     {
       "file": "lib/control-plane/repository/dispatch-state.ts",
       "kind": "SELECT *",
       "fingerprint": "bfe02eec9cc8bc7c860640cd9474099da02cc1ace27143e1a0eace99f502b899",
-      "line": 244
+      "line": 269
     },
     {
       "file": "lib/control-plane/repository/migrations/RB-A8.ts",
@@ -197,7 +185,7 @@
       "file": "lib/control-plane/repository/pg-store.ts",
       "kind": "SELECT *",
       "fingerprint": "07fa0dc17a094e448310ab84b3c654e08e2a33ee2623ac7ee95f17f1cb49e981",
-      "line": 1065
+      "line": 1107
     },
     {
       "file": "lib/control-plane/worker-reader-readback.ts",
@@ -266,12 +254,6 @@
       "line": 125
     },
     {
-      "file": "lib/funding/state-cycles.ts",
-      "kind": "SELECT *",
-      "fingerprint": "11981806943fc8117b0fc7cddc2f4fea15fb3d640d81935cd954db875f3183b6",
-      "line": 26
-    },
-    {
       "file": "lib/method/fix-map.ts",
       "kind": "SELECT *",
       "fingerprint": "2135a58f8008895421a793ed3a16dfd75ae2d7140cf63c9830a1ed9c767f5e8c",
@@ -299,37 +281,25 @@
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 60
+      "line": 122
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 153
-    },
-    {
-      "file": "lib/reader/canonical.ts",
-      "kind": "SELECT *",
-      "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
-      "line": 109
+      "line": 218
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "53c4f0abf7abbbf0554b3151506b4edeef5076703e66a2bb5e73c6279129d6a7",
-      "line": 110
+      "line": 133
     },
     {
-      "file": "lib/reader/place-builder.ts",
+      "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
-      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 155
-    },
-    {
-      "file": "lib/reader/place-builder.ts",
-      "kind": "SELECT *",
-      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 209
+      "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
+      "line": 174
     },
     {
       "file": "lib/sources/congress/lda-roster.ts",
@@ -390,12 +360,6 @@
       "kind": "readCandidate",
       "fingerprint": "96ed04d68b2d6858bb32d31246223736a276bb355067be4eb009bf5e0e680b8b",
       "line": 74
-    },
-    {
-      "file": "lib/translate/routine-receipt.ts",
-      "kind": "readCandidate",
-      "fingerprint": "6323427df9747762ba194b0a32cea814fc12af457ed6c50eef985004df86a393",
-      "line": 38
     },
     {
       "file": "scripts/ingest.ts",
@@ -467,13 +431,13 @@
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 839
+      "line": 848
     },
     {
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 848
+      "line": 857
     },
     {
       "file": "scripts/split-federal-people.mts",

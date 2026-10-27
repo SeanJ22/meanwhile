@@ -56,7 +56,7 @@ async function sharedCanonicalRead(query: ReadOnlyQuery, statement: Statement, s
   const offset = statement.params.length;
   const fingerprintSql = PUBLICATION_FINGERPRINT.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + offset}`);
   const text = `${statement.text} UNION ALL SELECT 'publication-fingerprint',empty.*,NULL::text,to_jsonb(versions.value)
-    FROM (${fingerprintSql}) versions LEFT JOIN LATERAL (SELECT * FROM shelf LIMIT 0) empty ON true`;
+    FROM (${fingerprintSql}) versions LEFT JOIN LATERAL (${EMPTY_SHELF}) empty ON true`;
   const readBody = (query as PublishedQuery).canonicalBody ?? query;
   const body = readBody([{ text, params: [...statement.params, ...params] }]).then(([rows]) => {
     const actual = rows.find(row => row.row_kind === "publication-fingerprint")?.part_payload;
@@ -129,6 +129,9 @@ export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], q
 }
 
 // Exclusion reasons belong to the read disposition; copies of rejected source rows stay in the audit store.
+// Gives a summary row the shelf's column shape; it returns no shelf rows.
+const EMPTY_SHELF = "SELECT * FROM shelf LIMIT 0";
+
 const SHELF = `SELECT p.key,p.record_class,p.scope,p.source_id,p.current_version_id,p.last_known_good_version_id,p.promoted_at,
  CASE WHEN jsonb_typeof(p.validation_receipt->'excludedFacts')='array' THEN
   jsonb_set(p.validation_receipt,'{excludedFacts}',coalesce((SELECT jsonb_agg(f.value-'record') FROM jsonb_array_elements(p.validation_receipt->'excludedFacts') f(value)),'[]'::jsonb))
@@ -169,7 +172,7 @@ function canonicalStatement(keys: readonly string[], additional?: Additional): S
   const extra = additional ? ` UNION ALL SELECT 'additional', empty.*, NULL::text, extra.rows
     FROM (SELECT coalesce(jsonb_agg(to_jsonb(item)), '[]'::jsonb) AS rows FROM (
       ${additional.canonicalKeys ? "SELECT * FROM additional" : additionalSql}
-    ) item) extra LEFT JOIN LATERAL (SELECT * FROM shelf LIMIT 0) empty ON true` : "";
+    ) item) extra LEFT JOIN LATERAL (${EMPTY_SHELF}) empty ON true` : "";
   return {text:shelfSql+extra,params:[keys,...additional?.params ?? []]};
 }
 

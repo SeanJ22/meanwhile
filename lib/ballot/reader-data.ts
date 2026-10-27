@@ -144,6 +144,12 @@ export function ballotCandidateDetailsStatement(state: string, keys: readonly st
     END END AS payload FROM pointer LEFT JOIN roots USING(key)`};
 }
 
+/** A ballot store primed from canonical entries; it never reads a promotion or a candidate body. */
+const CANONICAL_ENTRY_ONLY = {
+  async readPromotion(): Promise<never> { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+  async readCandidate(): Promise<never> { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+};
+
 export async function primeBallotCandidateDetails(set: BallotSet, contests: readonly Contest[]): Promise<void> {
   if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
   const statement = ballotCandidateDetailsStatement(set.election.state,ballotCandidateKeys(set,contests));
@@ -155,8 +161,7 @@ export async function primeBallotCandidateDetails(set: BallotSet, contests: read
     return [key,selectedStateEntry(pointer.recordClass,pointer.scope,rows.find(row=>row.key===key))];
   }));
   await primeReaderCanonicalStore(statement.pointers,{
-    async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
-    async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+    ...CANONICAL_ENTRY_ONLY,
     async readPromotedEntry(recordClass,scope) {
       const entry = entries.get(`${recordClass}:${scope}`);
       if (!entry) throw new Error("READER_SCOPE_NOT_SELECTED");
@@ -184,8 +189,7 @@ export async function primeBallotFundingRead(set: BallotSet, contests: readonly 
     const entry = await primeReaderProjection("FEC_FUNDING", pointer.scope,
       [...currentReaderSelection()!.keys,...keys],{exactKeys:true});
     await primeReaderCanonicalStore([{ recordClass: "FEC_FUNDING", scope: pointer.scope }], {
-      async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
-      async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+      ...CANONICAL_ENTRY_ONLY,
       async readPromotedEntry() { return entry; },
     });
   }

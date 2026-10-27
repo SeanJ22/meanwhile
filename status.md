@@ -5,7 +5,7 @@ worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-27T20:40:00Z
+heartbeat: 2026-10-27T21:05:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -20,6 +20,11 @@ heartbeat: 2026-10-27T20:40:00Z
 - 4:10 PM: 10 random ZIPs in 10 states load in Chromium (390 px), map and ballot pages, all 200, no page errors: FL 32301, AZ 85701, WI 54301, CO 80202, CA 92101, OH 43215, GA 31401, PA 17101, MN 55101, TX 78701. Slow: 4-8 s typical, 85701 ballot 14.8 s, 92101 map 13.6 s (3-second rule still broken; not new).
 - Runner: crash-looped (startup digests every 2-3 min) until 4:07 PM; same process from 4:07 on 131, drained (132 changes the runner's own code), loaded 132 by 4:28 PM (pid 3549988). Breaker's first CHECK 4:28:31 PM, before work: 13 jobs, 0 pauses. Routine lane launched sources at 4:34-4:35 PM; its 4:35 pass reported 2 failures (MEETING_PIN_PUBLICATION_FAILED, RECEIPT_COUNT_INVALID), 0 promotions.
 - Every hunt is stopped (one Stop order for every state at Oct 25 1:03 AM EDT; no funded expansion scopes), so the research cycle never starts and heartbeat lastCycleFinishedAt stays at Oct 25 9:54 PM no matter how healthy the runner is. River judges "cycles finishing" by the routine and publish-now lanes; Sean's pause stays as set.
+- WIN 5:00 PM: sources publish again. Routine passes on 132 finish every 7-10 minutes (4:35, 4:42, 4:52, 5:00 PM) and promoted 1 + 39 + 4 source tasks, the first promotions since 130 went live (Oct 26 5:36 PM). Meeting tasks across OH, TX, AK, VA, NH, AZ, CA, MA are queued and collecting. Same runner process (pid 3549988) since 4:28 PM: no restart.
+- Breaker live: CHECK rows 4:28, 4:38, 4:48 PM. PAUSE routine-civic-data at 4:48 PM: 0.78 GB in the 4 PM hour (top: reader civic_data_promotions:STATE_LEGISLATOR from lib/photos/portrait-run.ts:104, 319 MB; cp_doors from the pass's change-rate read). Held for the hour, then half rate.
+- Open: publish-now still times out (4:52 PM pass hit its 10-minute deadline before recording a launch plan). Its reads: cp_doors whole records for change rates (110 MB; fixed in 133 below), meeting clock reads ~45,000 small requests/hour (about 30/s, vs ~0.4/s on 131) on a cache that was cold after the restart. Judging it on the next passes.
+- Still in the 4 PM hour: reader functions (job index) read 1.55 GB of civic_data_promotions (deploy cold starts across instances); cp_doors.list from lib/doors/seed-all.ts:78 (100 MB) and listWhereNarrowed from lib/ballot/voting-source-publication.ts:55 (98 MB), both through CR-01's changed-values path with a cold cache.
+- 133 being cut on river-next-133: MD-02 READY 1f915db3c (scan clean: original in the vault, only cited passages kept, metadata/path reads) + RIVER-DOORS-133 9530f6529 (the routine pass reads four fields per door for change rates). pnpm gates running.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

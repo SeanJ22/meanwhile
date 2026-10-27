@@ -158,6 +158,8 @@ test("Postgres retirement guards read exact scalar origin proof and only the sel
         { normalization: { stateRecordHashes: hashes }, readModel: { unselectedPayload: ["must stay in storage"] } }]);
     await client.query("INSERT INTO civic_data_promotions VALUES($1,'voting-sites','VOTING_SITE','US-AZ:voting-sites','restored','restored',$2)", ["VOTING_SITE:US-AZ:voting-sites", receipt]);
     await client.query("INSERT INTO civic_data_candidate_events VALUES('restored',1,$1,'STATE_BUCKET_RESTORE_V1 held-source')", [T0]);
+    await client.exec(`ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text;
+      ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
     const queries: string[] = [], store = Object.create(PostgresRoutineDataStore.prototype) as InstanceType<typeof PostgresRoutineDataStore>;
     Object.defineProperty(store, "db", { value: drizzle(client, { logger: { logQuery: query => { queries.push(query); } } }) });
     const copies=new Map<string,string>();
@@ -172,6 +174,7 @@ test("Postgres retirement guards read exact scalar origin proof and only the sel
     assert.equal(await store.readStateRetirementBaseline("VOTING_SITE", "US-NH:voting-sites"), null);
     assert.ok(queries.every(query => !query.includes("readModel") && !query.includes('select "candidate"')));
     await client.query("UPDATE civic_data_promotions SET validation_receipt='{\"decision\":\"CANNOT_TELL\"}'");
-    assert.equal((await store.readStateRetirementOrigin("VOTING_SITE", "US-AZ:voting-sites"))?.promoted, false);
+    await assert.rejects(store.readStateRetirementOrigin("VOTING_SITE", "US-AZ:voting-sites"), /CIVIC_PUBLICATION_PROOF_INVALID/,
+      "a mismatched current receipt is refused before its cached origin can be reused");
   } finally { await client.close(); }
 });

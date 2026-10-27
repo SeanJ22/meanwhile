@@ -30,6 +30,22 @@ async function countedDb() {
 const updates = async (db: Awaited<ReturnType<typeof countedDb>>) => db.query("SELECT table_name,n FROM updated_rows ORDER BY table_name");
 const zero = [{table_name:"blank",n:0},{table_name:"entity",n:0},{table_name:"fact",n:0}];
 
+test("the door compares fingerprints without returning the held value, including corrections to null", async t=>{
+  const db=await countedDb();t.after(()=>db.pg.close());
+  await db.query("INSERT INTO entity(id,kind,name,state) VALUES('body','body','Example Council','KY')");
+  await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES(1,'https://example.gov','https://example.gov',$1,$2,'source')",[at,"a".repeat(64)]);
+  const heads:unknown[]=[];
+  const observed={...db,transaction:<T>(work:Parameters<typeof db.transaction<T>>[0])=>db.transaction(query=>work(async(text,params)=>{
+    const rows=await query(text,params);if(text.includes("WITH head AS MATERIALIZED"))heads.push(...rows);return rows;
+  }))};
+  const input={subjectId:"body",field:"large_value",fieldKind:"contact" as const,value:{a:"x".repeat(100_000),b:2},valueText:"value",quote:"",
+    provenance:"OFFICIAL" as const,producedBy:"wr-01",costUsd:0,copy:{id:1,finalUrl:"https://example.gov",fetchedAt:new Date(at),isArchive:false,text:""}};
+  assert.equal((await door(observed,input,clocks,new Date(at),{purge}) as {decision:string}).decision,"PUBLISH");
+  assert.equal((await door(observed,{...input,value:{b:2,a:input.value.a}},clocks,new Date(at),{purge}) as {decision:string}).decision,"CONFIRM");
+  assert.ok(Buffer.byteLength(JSON.stringify(heads))<1500,"the held record never crosses the database connection");
+  assert.equal((await door(observed,{...input,value:null,copy:{...input.copy,fetchedAt:new Date(later(1))}},clocks,new Date(later(1)),{purge}) as {decision:string}).decision,"PUBLISH");
+});
+
 async function seed(db: Awaited<ReturnType<typeof countedDb>>) {
   await db.query("INSERT INTO entity(id,kind,name,state) VALUES('body','body','Example Council','KY')");
   await db.query(`INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key)
@@ -71,6 +87,18 @@ test("a saved-copy scope is batched once and a later partial confirmation cannot
   assert.deepEqual((await db.query("SELECT checked_at FROM checked_fact ORDER BY id")).map(row=>new Date(row.checked_at as string).toISOString()),[later(2),later(1)]);
   await db.transaction(query=>recordFactConfirmation(query,{copyId:3,scope:"roster:body",at:later(1),factIds:[facts[0].id]}));
   assert.equal(new Date((await db.query("SELECT checked_at FROM checked_fact WHERE id=$1",[facts[0].id]))[0].checked_at as string).toISOString(),later(2));
+});
+
+test("sparse confirmation buckets use one query and preserve each bucket's partial dates",async t=>{
+  const db=await countedDb();t.after(()=>db.pg.close());const facts=await seed(db);
+  await db.query("UPDATE fact SET id=500000 WHERE id=$1",[facts[1].id]);
+  let saves=0;
+  await db.transaction(query=>recordFactConfirmation(async(text,params)=>{if(text.includes('WITH eligible AS MATERIALIZED'))saves++;return query(text,params);},
+    {copyId:2,scope:'sparse',at:later(1),factIds:[facts[0].id,500000]}));
+  assert.equal(saves,1);
+  assert.equal((await db.query('SELECT scope FROM fact_confirmation')).length,2);
+  await db.transaction(query=>recordFactConfirmation(query,{copyId:2,scope:'sparse',at:later(2),factIds:[facts[0].id]}));
+  assert.deepEqual((await db.query('SELECT checked_at FROM checked_fact ORDER BY id')).map(row=>new Date(row.checked_at as string).toISOString()),[later(2),later(1)]);
 });
 
 test("Kentucky counts cross-export transactions once, preserves within-export repeats and never reinserts donors for confirmation order",async t=>{

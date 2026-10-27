@@ -20,6 +20,7 @@ import {
   type VotingSitesAnswer,
   milesLabel,
   votingSitesForDisplay,
+  hasElectionDaySites,
   type VotingJurisdiction,
   type VotingSource,
 } from "@/lib/ballot/voting-sites";
@@ -27,20 +28,21 @@ import {
 /**
  * Where can I vote? The address goes to `/api/voting-sites`; the sites drop on
  * the map as pins and list here with the sentence naming the jurisdiction's
- * voting model. Answers without sites lead with an election office contact.
+ * voting model. Answers without Election Day sites lead with the state lookup.
  */
 
 export interface VotingSitesPanelProps {
   /** Lift the pinnable sites so the map can draw them. */
   onSites: (sites: { id: string; name: string; lat: number; lng: number }[]) => void;
   /** Lift the resolved point (never the address) so the map can draw the ten-mile ring. */
-  onAddressPoint?: (point: { lat: number; lng: number } | null) => void;
+  onAddressPoint?: (point: { lat: number; lng: number } | null, precision?: VotingSitesAnswer["precision"]) => void;
   /** Which pin is selected, so the list can scroll it into view. */
   selectedSiteId: string | null;
   onSelectSite: (id: string | null) => void;
   onClose: () => void;
   /** Inside the design popup, which owns the title and the close control. */
   embedded?: boolean;
+  currentState?: string | null;
 }
 
 type State =
@@ -56,16 +58,30 @@ export function VotingSitesPanel({
   onSelectSite,
   onClose,
   embedded = false,
+  currentState,
 }: VotingSitesPanelProps) {
   const readerCopy = useReaderCopy();
   const [address, setAddress] = useState("");
   const [state, setState] = useState<State>({ kind: "idle" });
+  const [initialLookups, setInitialLookups] = useState<NonNullable<VotingSitesAnswer["pollingLookups"]>>([]);
   const pendingRequest = useRef<AbortController | null>(null);
   const inputId = useId();
   const onSitesRef = useRef(onSites);
   useEffect(() => {
     onSitesRef.current = onSites;
   }, [onSites]);
+
+  useEffect(() => {
+    if (!currentState) return;
+    const controller = new AbortController();
+    void fetch(`/api/voting-sites?state=${encodeURIComponent(currentState)}`, { cache: "no-store", signal: controller.signal })
+      .then(async response => {
+        if (!response.ok) throw new Error(`Voting lookup links returned HTTP ${response.status}`);
+        const answer = await response.json() as VotingSitesAnswer;
+        if (!controller.signal.aborted) setInitialLookups(answer.pollingLookups ?? []);
+      }).catch(error => { if (!controller.signal.aborted) recordVotingFailure({ stage: "state-lookup-links", state: currentState }, error); });
+    return () => controller.abort();
+  }, [currentState]);
 
   const submit = useCallback(
     async (event: React.FormEvent) => {
@@ -144,15 +160,19 @@ export function VotingSitesPanel({
     );
   }, [state]);
 
-  // The ring appears with an answer and clears when the panel closes.
+  // The resolved place also moves the map for ZIP and fallback-only answers.
   useEffect(() => {
-    onAddressPoint?.(state.kind === "answered" ? state.answer.point : null);
+    onAddressPoint?.(state.kind === "answered" ? state.answer.point : null, state.kind === "answered" ? state.answer.precision : undefined);
   }, [state, onAddressPoint]);
 
   useEffect(() => () => onAddressPoint?.(null), [onAddressPoint]);
 
   useEffect(() => () => onSitesRef.current([]), []);
   useEffect(() => () => pendingRequest.current?.abort(), []);
+
+  const lookups = state.kind === "answered" ? state.answer.pollingLookups ?? [] : initialLookups.filter(lookup => lookup.state === currentState);
+  const showLookups = state.kind !== "answered" || state.answer.precision === "ZIP" || !hasElectionDaySites(state.answer);
+  const hasSites = state.kind === "answered" && state.answer.jurisdictions.some(j => j.sites.length > 0);
 
   return (
     <section
@@ -165,7 +185,7 @@ export function VotingSitesPanel({
 
       <form onSubmit={submit} className="voting-panel-form">
         <label htmlFor={inputId} className="voting-panel-label">
-          Your street address or ZIP
+          Enter your street address to find the polling place for your precinct.
         </label>
         <input
           id={inputId}
@@ -188,15 +208,11 @@ export function VotingSitesPanel({
         <VotingLookupPending />
       )}
 
-      {state.kind === "answered" && state.answer.electionOffices?.map((office, index) => <div className="voting-office" data-voting-office key={`${office.name}-${index}`}>
-        <h3 className="voting-jurisdiction-name">{office.name}</h3>
-        {office.address && <p>{office.address}</p>}
-        {office.phone && <OfficePhone phone={office.phone} />}
-        {office.hours && <p className="whitespace-pre-line">Hours: {office.hours}</p>}
-        {office.url && <p><a className="voting-site-directions" href={office.url} target="_blank" rel="noreferrer noopener">Find your polling place</a></p>}
-        <CardSourcesContribution id={`voting-office:${index}`} sources={office.sources.map(source => ({ what: source.title ?? "Election office", provenance: {
-          sourceUrl: source.url, sourceOrg: source.publisher, collectedAt: source.checkedAt, verifiedAt: null,
-        } }))} />
+      {showLookups && lookups.map(lookup => <div className="voting-office" data-voting-lookup key={lookup.state}>
+        <p><a className="voting-site-directions" href={lookup.url} target="_blank" rel="noreferrer noopener">{lookup.name}: find your polling place</a></p>
+        <CardSourcesContribution id={`voting-lookup:${lookup.state}`} sources={[{ what: "Official polling-place lookup", provenance: {
+          sourceUrl: lookup.sourceUrl, sourceOrg: lookup.sourceOrg, collectedAt: lookup.checkedAt, verifiedAt: lookup.checkedAt,
+        } }]} />
       </div>)}
 
       {state.kind === "answered" && !state.answer.match && !state.answer.outsideCoverage && (
@@ -206,7 +222,7 @@ export function VotingSitesPanel({
         </p>
       )}
 
-      {(state.kind === "failed" || state.kind === "answered" && state.answer.outsideCoverage) && (
+      {!hasSites && !lookups.length && (state.kind === "failed" || state.kind === "answered" && state.answer.outsideCoverage) && (
           <div className="voting-panel-status" data-voting-coverage-gap>
             <p>{readerCopy("copy.working")}.</p>
             <a href={feedbackHref({ about: "Voting locations", zip: /^\d{5}$/.test(address.trim()) ? address.trim() : null })}>
@@ -228,7 +244,7 @@ export const VotingJurisdictionRecords = memo(function VotingJurisdictionRecords
   const knownNames = useReaderNames();
   return <>
       <CardGapsContribution id="voting-answer" gaps={gaps} />
-      {answer.jurisdictions.map((j) => (
+      {answer.jurisdictions.filter(j => j.sites.length || j.publication).map((j) => (
           <article key={j.ocdId} className="voting-jurisdiction" data-voting-jurisdiction={j.ocdId}>
             <h3 className="voting-jurisdiction-name">{readerText(j.name, "title")}</h3>
             <p className="voting-model">{readerText(j.modelSentence, "sentence", [...knownNames, j.name])}</p>
@@ -253,13 +269,12 @@ export const VotingJurisdictionRecords = memo(function VotingJurisdictionRecords
                 </ol>
               </details>
             )}
-            {j.publication?.status === "POSTED_LATER" && <p className="voting-panel-status">{readerText(j.publication.text, "sentence", [...knownNames, j.name])}</p>}
+            {!j.sites.length && j.publication?.status === "POSTED_LATER" && <p className="voting-panel-status">{readerText(j.publication.text, "sentence", [...knownNames, j.name])}</p>}
             {j.rules?.map((rule, index) => <p className="voting-rule" key={`${rule.source.url}-${index}`}>{readerText(rule.text, "sentence", [...knownNames, j.name])}</p>)}
             {j.office && <div className="voting-office">
               <h4>Local election office: {readerText(j.office.name, "title")}</h4>
               {j.office.phone && <OfficePhone phone={j.office.phone} />}
               {j.office.email && <p>Email: <a href={`mailto:${j.office.email}`}>{j.office.email}</a></p>}
-              {j.office.address && <p>{readerText(j.office.address, "address")}</p>}
             </div>}
             {j.election && j.publication?.status !== "NO_GENERAL_ELECTION" && (
               <p className="voting-election">
@@ -267,7 +282,7 @@ export const VotingJurisdictionRecords = memo(function VotingJurisdictionRecords
               </p>
             )}
 
-            {j.refusal && (
+            {j.refusal && !j.sites.length && (
               <div className="voting-refusal">
                 <p>{j.refusalLine && readerText(j.refusalLine, "sentence", [...knownNames, j.name])}</p>
                 <p className="voting-refusal-wall">{readerText(j.refusal.wall, "sentence", [...knownNames, j.name])}</p>
@@ -319,7 +334,7 @@ function OfficePhone({ phone }: { phone: string }) {
 
 /** One contribution per answer avoids a separate card update for every missing site field. */
 function votingAnswerGaps(answer: VotingSitesAnswer): CardGap[] {
-  if (answer.outsideCoverage) return [];
+  if (answer.outsideCoverage || answer.jurisdictions.some(j => j.sites.length)) return [];
   const gaps = new Map<string, CardGap>();
   const add = (gap: CardGap) => {
     const key = `${gap.kind ?? "not-held"}:${gap.label}:${gap.unit ?? ""}`;

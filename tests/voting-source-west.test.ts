@@ -34,6 +34,14 @@ test("western statewide files keep all Oregon counties and Washington publisher 
   assert.equal(rows.length, 662, "all publisher rows, including services at shared facilities");
   const washington = await readVotingSource(wa, runtime());
   assert.equal(washington.sites.length, 627);
+  const mixed = rows.find(row => row.Place === "Fire District 1 - Loon Lake Station 2-District Office")!;
+  assert.equal(mixed.Address, "3962 Hwy 292/ POB 302, Loon Lake, WA 99148");
+  const loonLake = washington.sites.find(site => site.name === mixed.Place)!;
+  assert.equal(loonLake.address, "3962 Hwy 292, Loon Lake, WA 99148");
+  assert.equal(loonLake.lat, 48.0601);
+  assert.equal(loonLake.lng, -117.627);
+  assert.ok(loonLake.sources?.some(source => source.documentHash === capture.savedHash));
+  assert.ok(washington.sites.every(site => !/\b(?:P\.?\s*O\.?\s*Box|POB|Post Office Box)\b/i.test(site.address)));
   assert.equal(new Set(washington.sites.map(site => site.countyName)).size, 39);
   assert.ok(washington.sites.every(site => site.geocodeSource === "PUBLISHER"));
   const oregon = await readVotingSource(door("or-statewide-drop-sites-2026"), runtime());

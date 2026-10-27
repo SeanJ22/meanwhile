@@ -60,6 +60,7 @@ const civicObject = (v: unknown): CivicJson => {
   return v as CivicJson;
 };
 const string = (v: unknown) => typeof v === "string" ? v : "";
+export const civicTownKey = (value: string): string => value.trim().toLowerCase().replace(/^(?:town|city|township) of /, "").replace(/\s+(?:town|city)$/, "").replace(/\s+/g, " ");
 function civicArray(v: unknown): CivicJson[] {
   if (v === undefined) return [];
   if (!Array.isArray(v)) throw new Error("Google Civic returned an invalid row list.");
@@ -86,12 +87,14 @@ export function civicElectionRows(raw: string, checkedAt: string, knownIds: Read
       ocdId, joinedDivisionId: knownIds.has(ocdId) ? ocdId : null, value: row, sources: civicSources(row, checkedAt, "elections") };
   });
 }
-export function civicLookupFromRaw(raw: string, electionId: string, checkedAt: string, knownIds: ReadonlySet<string> = new Set()): CivicLookup {
+export function civicLookupFromRaw(raw: string, electionId: string, checkedAt: string, knownIds: ReadonlySet<string> = new Set(), expectedTowns: readonly string[] = []): CivicLookup {
   const data = civicObject(JSON.parse(raw)), election = civicObject(data.election);
   if (election.id !== electionId || election.electionDay !== GOOGLE_CIVIC_ELECTION_DAY) throw new Error("Google Civic returned a different election.");
   const normalized = civicObject(data.normalizedInput);
   const state = string(normalized.state).toUpperCase();
   if (!GOOGLE_CIVIC_STATES.includes(state)) throw new Error("Google Civic did not resolve a US state or territory.");
+  if (expectedTowns.length && !expectedTowns.some(town => civicTownKey(town) === civicTownKey(string(normalized.city))))
+    throw new Error("Google Civic resolved a different town.");
   const rows: CivicFact[] = [];
   const occurrences = new Map<string, number>();
   const groups = [["contests", "CONTEST"], ["pollingLocations", "POLLING_LOCATION"], ["earlyVoteSites", "EARLY_VOTE_SITE"], ["dropOffLocations", "DROP_OFF_LOCATION"]] as const;
@@ -114,7 +117,7 @@ export function civicLookupFromRaw(raw: string, electionId: string, checkedAt: s
       if (!area.electionAdministrationBody) continue;
       const office = civicObject(area.electionAdministrationBody);
       const url = [office.votingLocationFinderUrl, office.electionInfoUrl].map(string).find(value => /^https?:\/\//i.test(value));
-      const location = office.physicalAddress ?? office.correspondenceAddress;
+      const location = office.physicalAddress;
       const address = location ? civicObject(location) : {};
       const officials = civicArray(office.electionOfficials);
       electionOffices.push({ name: string(office.name) || string(area.name) || "Election office",

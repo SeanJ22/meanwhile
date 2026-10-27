@@ -21,6 +21,8 @@ export interface CivicReadOptions {
   now?: () => string;
   /** Request-local public catalog read while Census runs; carries no reader address. */
   electionCatalog?: Promise<Awaited<ReturnType<typeof readCivicApi>> | null>;
+  /** Request-local Census town membership; never returned or retained with the lookup. */
+  expectedTowns?: readonly string[];
 }
 
 /** Server diagnostics only. Response bodies never enter a lookup, candidate or source record. */
@@ -66,6 +68,10 @@ export async function readCivicApi(route: "elections" | "voterinfo", params: Rec
     throw new CivicSourceError(null, "Google Civic could not be reached.");
   }
   const raw = await civicResponseBody(response, route, params, options);
+  if(response.status===206){
+    logCivicCallFailure(route,response.status,raw,params,options,"http");
+    throw new CivicSourceError(response.status,"Google Civic returned an incomplete response.");
+  }
   if (response.ok) return { raw, checkedAt: (options.now ?? (() => new Date().toISOString()))(), status: response.status };
   logCivicCallFailure(route, response.status, raw, params, options, "http");
   // Only the safe reason enters the answer; the body stays in the server log.
@@ -97,7 +103,7 @@ export async function lookupCivicAddress(address: string, knownIds: ReadonlySet<
       }
     }
     const result = await readCivicApi("voterinfo", { address, electionId }, options);
-    return parseCivicResponse("voterinfo", result, raw => civicLookupFromRaw(raw, electionId!, result.checkedAt, knownIds), { address }, options);
+    return parseCivicResponse("voterinfo", result, raw => civicLookupFromRaw(raw, electionId!, result.checkedAt, knownIds, options.expectedTowns), { address }, options);
   } catch (error) {
     const reason = error instanceof SourceReadDeferred ? "Google Civic is waiting before another request; try again later."
       : error instanceof CivicSourceError ? error.reason : "Google Civic returned an unreadable voterinfo response.";

@@ -75,9 +75,12 @@ test("USVI newer current-election notice retains eleven facility/island location
   assert.ok(sites.every(site => site.hours === undefined), "hours absent from the election notices remain absent");
 });
 
-test("MP and VI held answers return each island's sites and exclude other islands", async () => {
+test("MP and VI held answers keep eligible island sites and withhold unassigned Election Day precincts", async () => {
   const initial: VotingReaderPlace = { precision: "ZIP", point: null, divisionIds: [], states: [], countyFips: [], countyNames: [], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
-  for (const [state, counts] of [["MP", { "69110": 11, "69100": 2, "69120": 2 }], ["VI", { "78010": 6, "78030": 5, "78020": 3 }]] as const) {
+  for (const [state, counts, eligible] of [
+    ["MP", { "69110": 11, "69100": 2, "69120": 2 }, { "69110": 1, "69100": 1, "69120": 1 }],
+    ["VI", { "78010": 6, "78030": 5, "78020": 3 }, { "78010": 6, "78030": 5, "78020": 3 }],
+  ] as const) {
     let file: VotingSitesFile | null = null;
     const groups = new Map<string, VotingSourceDoor[]>();
     for (const door of doors.filter(door => door.scope.state === state && door.covers.length)) {
@@ -92,11 +95,14 @@ test("MP and VI held answers return each island's sites and exclude other island
     }
     assert.ok(file);
     for (const [countyFips, count] of Object.entries(counts)) {
+      assert.equal(file.jurisdictions.flatMap(jurisdiction => jurisdiction.sites).filter(site => site.countyFips === countyFips).length,
+        count, `${state} ${countyFips}: source rows remain held`);
       const answer = await answerVotingSites(file, { ...initial, states: [state], countyFips: [countyFips] });
       const sites = answer.jurisdictions.flatMap(jurisdiction => jurisdiction.sites);
       assert.equal(answer.outsideCoverage, false, `${state} ${countyFips}`);
-      assert.equal(sites.length, count, `${state} ${countyFips}`);
+      assert.equal(sites.length, eligible[countyFips as keyof typeof eligible], `${state} ${countyFips}`);
       assert.ok(sites.every(site => site.countyFips === countyFips));
+      assert.ok(sites.every(site => !(site.kinds ?? [site.kind]).includes("ELECTION_DAY")));
     }
   }
 });

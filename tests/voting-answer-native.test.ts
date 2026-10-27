@@ -27,7 +27,7 @@ async function jurisdiction(kind: keyof typeof configs): Promise<VotingJurisdict
 }
 const initial: VotingReaderPlace = { precision: "ADDRESS", point: null, divisionIds: [], states: [], countyFips: [], countyNames: [], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
 
-test("VS-01 native Census address and 2020 VTD resolve the native statewide spreadsheet to Dillon church", async () => {
+test("VS-01 a native Census 2020 district does not assign an undated statewide polling row", async () => {
   const current = JSON.parse(fixture("census-dillon-geographies-native.json").toString());
   const historical = JSON.parse(fixture("census-dillon-2020-geographies-native.json").toString());
   const point = parseCensusPoint(current);
@@ -38,11 +38,14 @@ test("VS-01 native Census address and 2020 VTD resolve the native statewide spre
   assert.equal(place.precincts[0].name, "PRECINCT 12", "this actual church address is not evidence of precinct 1");
   const j = await jurisdiction("polling");
   const answer = await answerVotingSites({ generatedAt: "2026-10-13", jurisdictions: [j] }, place);
-  assert.equal(answer.jurisdictions[0].narrowing.kind, "EXACT");
-  assert.equal(answer.jurisdictions[0].sites.length, 1);
-  assert.equal(answer.jurisdictions[0].sites[0].name, "LUTHERAN CHURCH - CENTRAL");
-  assert.equal(answer.jurisdictions[0].sites[0].address, "715 E BANNACK, DILLON, 59725");
-  assert.equal(answer.jurisdictions[0].sites[0].hours, "7:00 am - 8:00 pm");
+  const held = j.sites.find(site => site.countyName === "Beaverhead" && site.precincts?.includes("12"))!;
+  assert.equal(held.name, "LUTHERAN CHURCH - CENTRAL");
+  assert.equal(held.address, "715 E BANNACK, DILLON, 59725");
+  assert.equal(held.hours, "7:00 am - 8:00 pm");
+  assert.equal(held.electionDate, undefined, "the saved row has no verified November association");
+  assert.equal(answer.jurisdictions[0].narrowing.kind, "REFUSED");
+  assert.equal(answer.jurisdictions[0].sites.length, 0);
+  assert.equal(answer.outsideCoverage, true);
 });
 
 test("VS-01 given Beaverhead precinct 1 uses the same native church row without substituting another precinct", async () => {

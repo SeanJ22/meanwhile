@@ -13,7 +13,7 @@ const normalizedHash = (value: unknown) => canonicalCivicDataHash(value, { durab
 export const VOTING_SITES_SOURCE_ID = "voting-sites" as const;
 export const votingSitesContract = (state: string) => ({
   id: stateBallotContractId("voting-sites", state), sourceId: VOTING_SITES_SOURCE_ID,
-  recordClass: "VOTING_SITE", scope: stateBallotScope("voting-sites", state), parserVersion: "official-voting-sites/4",
+  recordClass: "VOTING_SITE", scope: stateBallotScope("voting-sites", state), parserVersion: "official-voting-sites/5",
 } as const);
 
 /** Source bytes or a traced sanitized official-link derivative, outside the reader projection. */

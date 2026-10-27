@@ -313,7 +313,7 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     recordClass: "VOTING_SITE",
     scope: stateBallotScope("voting-sites", state),
     command: ["scripts/fetch-voting-sites.mts", `--state=${state}`, "--promote"],
-    parserNormalizerVersion: "official-voting-sites/4",
+    parserNormalizerVersion: "official-voting-sites/5",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "voting-sites" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,

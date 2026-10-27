@@ -366,7 +366,7 @@ const AUTHORITIES = {
     expectedIdentifierKeys: ["ocd_id", "voting_site_id"],
     expectedTemporalFields: ["election", "collected_at", "source_through"],
     horizonSemantics: "Every supported election authority is an independent acquisition scope. A failed authority retains only that scope's prior GOOD version; a zero-site response is a refusal, never proof that no place exists.",
-    parserVersion: "official-voting-sites/4",
+    parserVersion: "official-voting-sites/5",
     freshnessExpectation: "Every official door daily through Election Day, hourly in the final seven days. Failed routes retain their last verified facts and open hunter work.",
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,

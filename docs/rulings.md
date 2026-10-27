@@ -191,6 +191,8 @@ Sean expects improvement every pass, significant daily progress, and order-of-ma
 
 Do not compound or generate massive data files for workers to read every time.  Data should be useful and succinct.  Information that impacts how hunters hunt, how detectives discover, how they all do their jobs should read what has CHANGED since the last read.  This keeps data transfer in check.  
 
+Data diet. Keep one saved copy of each source, in the vault, filed by its fingerprint; the database holds facts and small pointers only. Don’t store anything that can be rebuilt. A job decides “did it change?” from the fingerprint and stops if it matches; it never downloads a stored record to find out. Every job states its database bytes per run before it ships, and any job over its hourly budget pauses itself until Sean releases it. Test copies of production expire within a day.
+
 ## 8. Carry decisions forward; ask only for real owner actions
 
 Check current decisions and relevant handoffs before asking Sean. Approval keeps its original scope across sessions and restarts. Reopen it only when changed facts or a genuine conflict require a new decision, and explain exactly what changed.

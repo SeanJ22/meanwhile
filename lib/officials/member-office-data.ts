@@ -3,19 +3,11 @@ import { parseValidationReceipt } from "../civic-data/receipt.ts";
 import type { Query } from "../facts/publish.ts";
 import type { ManualSourceReview, ValidationReceipt, NormalizationEvidence, PromotedPointerIdentity } from "../civic-data/types.ts";
 import type { MemberOfficeRecord } from "./member-offices.ts";
-import { STATE_PEOPLE_JURISDICTIONS } from "./people-identity.ts";
+import { memberOfficeStateScope, memberOfficeScopeState } from "./member-office-scope.ts";
 
 export const MEMBER_OFFICE_NATIONAL_SCOPE = "US:state-legislator-member-offices";
 export const MEMBER_OFFICE_CURSOR = "member-offices:states";
-export function memberOfficeStateScope(state: string): string {
-  const jurisdiction = `US-${state.replace(/^US-/i, "").toUpperCase()}` as `US-${string}`;
-  if (!STATE_PEOPLE_JURISDICTIONS.includes(jurisdiction)) throw new Error(`MEMBER_OFFICE_STATE_INVALID:${state}`);
-  return `${jurisdiction}:state-legislator-member-offices`;
-}
-export function memberOfficeScopeState(scope: string): string | null {
-  const state = /^US-([A-Z]{2}):state-legislator-member-offices$/.exec(scope)?.[1];
-  return state && STATE_PEOPLE_JURISDICTIONS.includes(`US-${state}`) ? state : null;
-}
+export { memberOfficeStateScope, memberOfficeScopeState } from "./member-office-scope.ts";
 /** Matches the keyed row's state: native id, office state, owned state scope, then saved source path. */
 export function memberOfficeRecordState(record: MemberOfficeRecord, scope: string): string | null {
   const state = /^(?:plural|statewide|legiscan|official-legislature|wikidata|congress-api|govinfo):([a-z]{2}):/.exec(record.officeholderId)?.[1]

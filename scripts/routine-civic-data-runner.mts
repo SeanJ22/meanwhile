@@ -1420,7 +1420,8 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     attempted -= 1;
 
     const detail = safeFailure(deferral);
-    recordLaunchDecision(pending.task, "DEFER", /MEMORY/.test(detail) ? "Waiting for a worker slot" : "Next pass will continue the source read", `${detail}; source work remains owed`);
+    recordLaunchDecision(pending.task, "DEFER", /^JOB_TRANSFER_BREAKER:/.test(detail) ? "Holding this source to reduce database traffic"
+      : /MEMORY/.test(detail) ? "Waiting for a worker slot" : "Next pass will continue the source read", `${detail}; source work remains owed`);
     notStarted.push(pending.task.id);
     return;
   }

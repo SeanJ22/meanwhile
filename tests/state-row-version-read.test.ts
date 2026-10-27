@@ -37,7 +37,7 @@ test("state bodies survive new stores, update on the next read, and cannot hide 
     const request = JSON.parse(String(init?.body));
     assert.ok(!request.queries, "all fixture traffic is read only");
     if (request.query.includes("state_promotion AS MATERIALIZED")) bodyReads++;
-    else { assert.ok(request.query.includes("xmin"), "every stored body first asks for its database row versions"); versionReads++; }
+    else { assert.ok(request.query.includes("publication-v1/"), "every stored body first asks for its content fingerprint and small proof header"); versionReads++; }
     const result = await pg.query<Record<string, unknown>>(request.query, request.params);
     return new Response(JSON.stringify({ command: "SELECT", rowCount: result.rows.length, rowAsArray: true, fields: result.fields,
       rows: result.rows.map(row => result.fields.map(field => row[field.name] === null ? null : typeof row[field.name] === "object"

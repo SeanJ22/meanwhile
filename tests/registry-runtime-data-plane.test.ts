@@ -106,9 +106,13 @@ function registryPriorCache(memory: MemoryRoutineDataStore) {
         write: async (key, value) => { saved.set(key, value); } }),
       db: { execute: async (statement: SQL) => {
         const query = new PgDialect().sqlToQuery(statement);
-        assert.match(query.sql, /from civic_data_clock_versions/);
+        assert.match(query.sql, /WITH publication_head/);
         assert.equal(query.params[0], "REGISTRY_RUNTIME_BINDING");
-        return { rows: [{ etag: String(versions.get(String(query.params[1])) ?? 0) }] };
+        const scope=String(query.params[1]);
+        const pointer=await memory.readPromotion("REGISTRY_RUNTIME_BINDING",scope);
+        const candidate=pointer?await memory.readCandidate(pointer.versionId):null;
+        return { rows: [{ etag:pointer?`publication-v1/${pointer.versionId}/${versions.get(scope)??0}`:"publication-v1/none",
+          eligible:!pointer||candidate?.state==="PROMOTED" }] };
       } },
       readPromotion: async <T>(recordClass: RoutineRecordClass, scope: string) => {
         reads++;
@@ -138,7 +142,7 @@ test("registry priors survive fresh passes with complete records and a fresh con
   assert.equal(cache.reads(), 1, "unchanged passes do not reload the registry or its proof events");
 });
 
-test("registry priors invalidate by scope version, including unchanged pointer proof changes and deletion", async () => {
+test("registry priors invalidate by content fingerprint and check mutable proof without reloading facts", async () => {
   const memory = stateRegistryRuntimeStore("AZ"), cache = registryPriorCache(memory), scope = stateRegistryRuntimeScope("AZ");
   const read = () => readRegistryRuntimePrior(cache.pass(), T1, "AZ");
   await read();
@@ -147,7 +151,7 @@ test("registry priors invalidate by scope version, including unchanged pointer p
   assert.equal(cache.reads(), 1, "an unrelated state keeps the AZ prior");
   cache.versions.set(scope, 1);
   await read(); await read();
-  assert.equal(cache.reads(), 2, "a candidate/event change re-proves even the same pointer ID");
+  assert.equal(cache.reads(), 2, "a changed content fingerprint reloads the same pointer ID");
   const held = memory as unknown as { promotions: Map<string, PromotedProjection> };
   const pointer = held.promotions.get(`REGISTRY_RUNTIME_BINDING:${scope}`)!;
   held.promotions.delete(pointer.key);
@@ -161,11 +165,10 @@ test("registry priors invalidate by scope version, including unchanged pointer p
   const candidates = (memory as unknown as { candidates: Map<string, CandidateVersionRecord> }).candidates;
   const row = candidates.get(pointer.versionId)!;
   candidates.set(pointer.versionId, { ...row, state: "SEMANTIC_INVALID" });
-  cache.versions.set(scope, 4);
-  await assert.rejects(read(), /REGISTRY_RUNTIME_BASE_UNAVAILABLE/);
+  await assert.rejects(read(), /CIVIC_PUBLICATION_PROOF_INVALID/);
   candidates.set(pointer.versionId, row);
   assert.ok(await read(), "a failed proof must not replace the cached good prior");
-  assert.equal(cache.reads(), 6);
+  assert.equal(cache.reads(), 4,"invalid proof is rejected from the small header, and restored proof reuses the unchanged facts");
 });
 
 test("registry prior cache corruption and a version racing the read reload the actual prior", async () => {
@@ -315,7 +318,7 @@ test("Ask reads native state people beside a partitioned registry without revivi
     if (read.kind !== "PROMOTED") throw new Error(JSON.stringify(read));
     const bodyReads = () => queries.filter(query=>query.includes("WITH state_promotion"));
     assert.equal(bodyReads().length,1,"the state payload is read only after its version");
-    assert.match(queries[0],/xmin::text|content-v1/);
+    assert.match(queries[0],/publication-v1|content-v1/);
     assert.equal((await readPromotedCivicData(pointer.recordClass,pointer.scope,{store:postgres,now:T0})).kind,"PROMOTED");
     assert.equal(bodyReads().length,1,"an unchanged state payload does not cross again");
     await pg.query("UPDATE civic_data_candidates SET state='VALIDATED' WHERE id=$1",[candidate.id]);

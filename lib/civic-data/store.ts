@@ -510,7 +510,8 @@ function receiptNamesCandidate(receipt: ValidationReceipt, candidate: RoutineCan
 }
 
 function receiptsEqual(left: ValidationReceipt, right: ValidationReceipt): boolean {
-  return left === right || canonicalCivicDataHash(left, { durable: true }) === canonicalCivicDataHash(right, { durable: true });
+  return left === right || canonicalCivicDataHash({...left,excludedFacts:[]}, { durable: true }) ===
+    canonicalCivicDataHash({...right,excludedFacts:[]}, { durable: true });
 }
 
 function receiptIsGoodForCandidate(receipt: ValidationReceipt, candidate: RoutineCandidateName): boolean {
@@ -2173,16 +2174,28 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw Error(`CANDIDATE_OWNED_BILL_ENVELOPE_MISMATCH:${candidateId}`);
     return{...record,candidate};
   }
-  private async scopeVersion(recordClass: RoutineRecordClass, scope: string): Promise<string> {
-    const result = await this.db.execute(sql`select coalesce((select version::text
-      from civic_data_clock_versions where record_class = ${recordClass} and scope = ${scope}), '0') as etag`);
-    return String((result.rows[0] as { etag: string }).etag);
+  private async scopeContentVersion(recordClass: RoutineRecordClass, scope: string): Promise<{etag:string;eligible:boolean}> {
+    const result = await this.db.execute(sql`WITH publication_head AS MATERIALIZED (select concat('publication-v1/',p.current_version_id,'/',
+      p.last_known_good_version_id,'/',coalesce(p.payload_fingerprint,c.normalized_hash),'/',
+      c.candidate#>>'{normalization,normalizedPayloadHash}') AS etag,
+      coalesce(c.state='PROMOTED' AND c.acquisition_succeeded AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
+        AND p.current_version_id=p.last_known_good_version_id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint
+        AND p.validation_receipt=c.validation_receipt
+        AND (CASE WHEN c.read_model_fingerprint IS NULL THEN p.payload=c.candidate->'readModel' ELSE true END),false) AS eligible
+      from civic_data_promotions p
+      left join civic_data_candidates c on c.id=p.current_version_id
+      where p.record_class=${recordClass} and p.scope=${scope})
+      select coalesce((select etag from publication_head),'publication-v1/none') AS etag,
+        coalesce((select eligible from publication_head),true) AS eligible`);
+    const row=result.rows[0] as {etag:string;eligible:boolean};
+    if(row.eligible===false)throw new Error(`CIVIC_PUBLICATION_PROOF_INVALID:${recordClass}:${scope}`);
+    return row;
   }
 
   async readVersioned<T>(namespace: string, recordClass: RoutineRecordClass, scope: string, read: () => Promise<T>): Promise<T> {
     const key = projectionKey(recordClass, scope);
     const [held] = await this.readCache.rows({ namespace, keys: [key], keyOf: row => row.key,
-      versions: async () => [{ key, etag: await this.scopeVersion(recordClass, scope) }],
+      versions: async () => [{ key, ...await this.scopeContentVersion(recordClass, scope) }],
       values: async () => [{ key, value: await read() }],
     });
     return held!.value;
@@ -2203,7 +2216,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       const values = (keys: readonly string[]) => this.readPayloadParts(keys);
       return this.readCache.rows({ namespace: "payload-part", keys: hashes,
         versions: async keys => this.db.select({ key: civicDataPayloadParts.hash,
-          etag: sql<string>`concat(${civicDataPayloadParts}.xmin::text, '/', ${civicDataPayloadParts}.ctid::text)`,
+          etag: sql<string>`concat('part-v1/',${civicDataPayloadParts.hash})`,
         }).from(civicDataPayloadParts).where(inArray(civicDataPayloadParts.hash, [...keys])),
         values, keyOf: row => row.hash,
       });
@@ -2213,8 +2226,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   private readonly ownedPayloadParts = new CivicPayloadParts(this.payloadPartIO);
   private readonly storedHeldFacts = new WeakMap<object, unknown>();
   private async loadPayload(value: unknown, scope: string): Promise<unknown> {
-    if (statePublicationScope(scope)) return decodeStateCandidate(await this.ownedPayloadParts.loadOwned(value));
-    return this.payloadParts.load(value);
+    const loaded=statePublicationScope(scope)?decodeStateCandidate(await this.ownedPayloadParts.loadOwned(value)):await this.payloadParts.load(value);
+    if(loaded&&typeof loaded==="object"&&"vault"in loaded&&"normalization"in loaded){
+      const [{hydrateCandidateFacts},{rawCaptureVault}]=await Promise.all([import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
+      return hydrateCandidateFacts(this.cacheOptions.vault??rawCaptureVault(),loaded);
+    }
+    return loaded;
   }
 
   /** A navigation proof never needs the losing values, which are a part of their own. */
@@ -2244,10 +2261,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   /** Large manual receipts share immutable held facts; full candidate reads hydrate them and reader proofs omit them. */
-  private async storeReceipt(candidate: Pick<RoutineCandidate, "recordClass" | "scope">, receipt: ValidationReceipt | null): Promise<unknown> {
-    if (receipt === null || !isPartedManualCandidate(candidate)) return receipt;
-    const { excludedFacts, ...rest } = receipt;
-    return { ...await this.payloadParts.store(rest, Object.keys(rest)) as object, excludedFacts: await this.heldFactParts(excludedFacts) };
+  private async storeReceipt(_candidate: Pick<RoutineCandidate, "recordClass" | "scope">, receipt: ValidationReceipt | null): Promise<unknown> {
+    if(receipt===null)return null;
+    // The receipt protects the publication decision. Losing source facts are
+    // already held once with the candidate's parser evidence in the vault.
+    return {...receipt,excludedFacts:[]};
   }
 
   /** The candidate and each of its receipts carry the same held facts, so they are encoded once. */
@@ -2265,17 +2283,23 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   private async readStatePromotion<T>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const result = await this.readCache.rows({ namespace: "state-promotion", keys: [projectionKey(recordClass, scope)],
-      keyOf: row => projectionKey(recordClass, scope),
+      keyOf: _row => projectionKey(recordClass, scope),
       versions: async () => this.db.select({ key: civicDataPromotions.key,
-        etag: sql<string>`concat(${civicDataPromotions}.xmin::text, '/', ${civicDataPromotions}.ctid::text, '/',
-          ${civicDataCandidates}.xmin::text, '/', ${civicDataCandidates}.ctid::text)`,
+        etag: sql<string>`concat('publication-v1/',${civicDataPromotions.currentVersionId},'/',${civicDataPromotions.lastKnownGoodVersionId},'/',
+          coalesce(${civicDataPromotions.payloadFingerprint},${civicDataCandidates.normalizedHash}))`,
+        coupled: sql<boolean>`coalesce(${civicDataPromotions.currentVersionId}=${civicDataCandidates.id}
+          AND ${civicDataPromotions.payloadFingerprint} IS NOT DISTINCT FROM ${civicDataCandidates.readModelFingerprint}
+          AND (CASE WHEN ${civicDataCandidates.readModelFingerprint} IS NULL
+            THEN ${civicDataPromotions.payload}=${civicDataCandidates.candidate}->'readModel' ELSE true END)
+          AND ${civicDataPromotions.validationReceipt}=${civicDataCandidates.validationReceipt},false)`,
         confirmation: latestConfirmationDetail(),
       }).from(civicDataPromotions).leftJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.currentVersionId))
         .where(eq(civicDataPromotions.key, projectionKey(recordClass, scope))),
       values: async () => { const value = await this.readStatePromotionBody<T>(recordClass, scope); return value ? [value] : []; },
       freshen: (row, version) => {
+        if(!version.coupled)throw new Error(`STATE_PUBLICATION_POINTER_PROOF_INVALID:${recordClass}:${scope}`);
         const confirmation = version.confirmation ? parseUnchangedConfirmation(version.confirmation) : null;
-        const { latestConfirmation, ...projection } = row;
+        const { latestConfirmation:_confirmation, ...projection } = row;
         return confirmation?.versionId === row.versionId ? { ...projection, latestConfirmation: confirmation } : projection;
       },
     });
@@ -2373,8 +2397,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   private promotionVersions(recordClass: RoutineRecordClass, scopes: readonly string[]) {
     return this.db.select({ key: civicDataPromotions.scope,
-      etag: sql<string>`concat(${civicDataPromotions}.xmin::text, '/', ${civicDataPromotions}.ctid::text, '/',
-        ${civicDataCandidates}.xmin::text, '/', ${civicDataCandidates}.ctid::text)`,
+      etag: sql<string>`concat('publication-v1/',${civicDataPromotions.currentVersionId},'/',${civicDataPromotions.lastKnownGoodVersionId},'/',
+        coalesce(${civicDataPromotions.payloadFingerprint},${civicDataCandidates.normalizedHash}))`,
     }).from(civicDataPromotions).leftJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.currentVersionId))
       .where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.scope, [...scopes])));
   }
@@ -2388,7 +2412,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (keys.length === 0) return [];
     return this.readCache.rows({ namespace: "promotion", keys, values, keyOf: row => row.key,
       versions: async selected => this.db.select({ key: civicDataPromotions.key,
-        etag: sql<string>`concat(${civicDataPromotions}.xmin::text, '/', ${civicDataPromotions}.ctid::text)`,
+        etag: sql<string>`concat('publication-v1/',${civicDataPromotions.currentVersionId},'/',${civicDataPromotions.lastKnownGoodVersionId},'/',${civicDataPromotions.payloadFingerprint})`,
         latestConfirmation: latestConfirmationDetail(),
       }).from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass),
         inArray(civicDataPromotions.key, [...selected]))),
@@ -2455,31 +2479,30 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async create(record: CandidateVersionRecord, firstEvent: CandidateEvent): Promise<void> {
     this.assertCandidateMutationAuthority(record.candidate);
     assertInitialRecord(record, firstEvent);
-    // The writer owns these facts now. Preserve their exact version before it can
-    // become historical, without fetching a departing promotion or candidate.
-    if (record.candidate.normalization.normalizedHash) {
-      const [{ holdCivicVersion }, { rawCaptureVault }] = await Promise.all([
-        import("./version-vault.ts"), import("./raw-capture-remote.ts"),
-      ]);
-      await holdCivicVersion(this.cacheOptions.vault ?? rawCaptureVault(), record.candidate.readModel,
-        record.candidate.normalization.normalizedHash);
-    }
+    const [{holdCandidateFacts},{rawCaptureVault}]=await Promise.all([import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
+    const [previous]=record.lastKnownGoodVersion?await this.db.select({fingerprint:civicDataCandidates.normalizedHash})
+      .from(civicDataCandidates).where(eq(civicDataCandidates.id,record.lastKnownGoodVersion)).limit(1):[];
+    // Transitional compatibility: DB-06 must switch the historical model and
+    // source-evidence readers before these two inline copies are removed.
+    const held=await holdCandidateFacts(this.cacheOptions.vault??rawCaptureVault(),record.candidate,previous?.fingerprint??null,
+      {retainReadModel:true,retainEvidence:true});
+    const full=held as RoutineCandidate;
     const stateAuthority = statePublicationScope(record.candidate.scope);
     const meetingDoors = record.candidate.sourceId === "meeting-doors";
     const meeting = record.candidate.recordClass === "MEETING";
     const memberOffices = record.candidate.recordClass === "CURATED_READER_RECORD" && (record.candidate.scope === MEMBER_OFFICES_SCOPE || memberOfficeScopeState(record.candidate.scope) !== null);
-    const candidate = stateAuthority || meetingDoors || meeting || memberOffices ? { ...(stateAuthority ? encodeStateCandidate(record.candidate) : record.candidate),
+    const candidate = stateAuthority || meetingDoors || meeting || memberOffices ? { ...(stateAuthority ? encodeStateCandidate(full) : full),
       retrieval: await this.payloadParts.store(record.candidate.retrieval,
         ["succeeded", "requestedUrl", "finalUrl", "httpStatus", "retrievedAt", "rawHash", "rawHashBasis", "complete", "sourceCheck", "failureDetail"]),
-    } : record.candidate;
+    } : full;
     const navigationIndex = navigationCandidateIndex(record.candidate);
     const federalCheckpoint = record.candidate.recordClass === "FEDERAL_MONEY" && record.candidate.readModel !== null && typeof record.candidate.readModel === "object" && "checkpoint" in record.candidate.readModel;
-    const stored = federalCheckpoint ? await storeFederalMoneyCheckpoint(record.candidate, this.payloadParts)
+    const stored = federalCheckpoint ? await storeFederalMoneyCheckpoint(candidate as RoutineCandidate, this.payloadParts)
       : stateAuthority || meetingDoors || meeting || ["REGISTRY_RUNTIME_BINDING", "STATE_ROLL_CALL", "CENSUS_REFERENCE"].includes(record.candidate.recordClass)
       ? await this.payloadParts.store(candidate,
         ["id", "sourceId", "recordClass", "scope", "retrieval", "normalization", "temporal", "bootstrapImport"],
         meetingDoors || meeting ? ["readModel", "normalizedPayload", "changeSet", "identities"] : stateAuthority ? ["readModel"] : undefined) as RoutineCandidate
-      : navigationIndex || memberOffices ? await this.storeSectionedCandidate(candidate as RoutineCandidate, navigationIndex) : record.candidate;
+      : navigationIndex || memberOffices ? await this.storeSectionedCandidate(candidate as RoutineCandidate, navigationIndex) : candidate;
     await this.db.batch([
       this.db.insert(civicDataCandidates).values({
         id: record.candidate.id,
@@ -3032,7 +3055,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const keys = scopes.map(scope => projectionKey(recordClass, scope));
     const rows = await this.readCache.rows({ namespace: "promotion-identity", keys, values, keyOf: row => row.key,
       versions: async selected => this.db.select({ key: civicDataPromotions.key,
-        etag: sql<string>`concat(${civicDataPromotions}.xmin::text, '/', ${civicDataPromotions}.ctid::text, '/', coalesce(${latestConfirmationSequence()}, 0))`,
+        etag: sql<string>`concat('publication-v1/',${civicDataPromotions.currentVersionId},'/',${civicDataPromotions.lastKnownGoodVersionId},'/',
+          ${civicDataPromotions.payloadFingerprint},'/',coalesce(${latestConfirmationSequence()},0))`,
       }).from(civicDataPromotions).where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.key, [...selected]))),
     });
     return rows.map(postgresPromotedPointerIdentity);
@@ -3281,7 +3305,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       .limit(1);
     const expectedVersionId = record.lastKnownGoodVersion;
     const manualParts = isPartedManualCandidate(candidate);
-    const storedReceipt = manualParts ? await this.storeReceipt(candidate, persistedReceipt) : persistedReceipt;
+    const storedReceipt = await this.storeReceipt(candidate, persistedReceipt);
     const receiptJson = JSON.stringify(storedReceipt);
     const eligibility = sql`
       ${civicDataCandidates.id} = ${candidateId}
@@ -3289,7 +3313,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       and ${civicDataCandidates.sourceId} = ${candidate.sourceId}
       and ${civicDataCandidates.recordClass} = ${candidate.recordClass}
       and ${civicDataCandidates.scope} = ${candidate.scope}
-      and ${civicDataCandidates.validationReceipt} = ${receiptJson}::jsonb
+      and ${civicDataCandidates.validationReceipt} - 'excludedFacts' = ${receiptJson}::jsonb - 'excludedFacts'
     `;
     const detail = `${POINTER_MOVE_DETAIL_PREFIX}${key} moved from ${prior?.currentVersionId ?? "bootstrap/no-version"} to ${candidateId}.`;
     const nextSequence = this.nextCandidateEventSequence(candidateId);
@@ -3341,7 +3365,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     `);
     const candidateWrite = this.db.update(civicDataCandidates).set({
       state: "PROMOTED",
-      validationReceipt: storedReceipt,
       promotedVersionId: candidateId,
       lastKnownGoodVersionId: candidateId,
     }).where(sql`${eligibility} and ${pointerOwnsCandidate}`).returning({ candidateId: civicDataCandidates.id });
@@ -3434,7 +3457,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const key = [sourceId, recordClass, scope, parserVersion ?? ""].join("\u0000");
     const [held] = await this.readCache.rows({ namespace: "routine-clock-v2", keys: [key], keyOf: row => row.key,
       values: async () => [{ key, clock: await this.readClock(sourceId, recordClass, scope, parserVersion) }],
-      versions: async () => [{ key, etag: await this.scopeVersion(recordClass, scope) }],
+      versions: async () => {
+        // A clock contains failed attempts and status, rather than source bodies.
+        const result=await this.db.execute(sql`select coalesce((select version::text from civic_data_clock_versions
+          where record_class=${recordClass} and scope=${scope}), '0') AS etag`);
+        return [{key,etag:String((result.rows[0] as {etag:string}).etag)}];
+      },
     });
     return held!.clock;
   }

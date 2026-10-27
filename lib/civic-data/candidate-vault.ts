@@ -12,6 +12,10 @@ export interface CandidateVaultFormat {
   readonly normalizedPayload: CivicVersionVaultRef | null;
   readonly excludedFacts: VaultPath | null;
   readonly previousFingerprint: string | null;
+  /** Removed after the source-evidence readers switch to the vault accessor. */
+  readonly inlineEvidence?: true;
+  readonly civicRecords?: "DERIVED" | CivicVersionVaultRef;
+  readonly excludedFactsPresent?: true;
 }
 export type VaultCandidate = Omit<RoutineCandidate,"readModel"|"normalizedPayload"|"excludedFacts"|"civicRecords"|"changeSet"> & {
   readonly vault: CandidateVaultFormat;
@@ -32,7 +36,7 @@ function sourceMetadata(value:unknown):Record<string,unknown>{
 
 /** A storage encoder only: callers keep their full, validated candidate for the write and its returned fingerprint. */
 export async function holdCandidateFacts(vault:EvidenceStore,candidate:RoutineCandidate,previousFingerprint:string|null,
-  options:{readonly retainReadModel:boolean}):Promise<VaultCandidate>{
+  options:{readonly retainReadModel:boolean;readonly retainEvidence?:boolean}):Promise<VaultCandidate>{
   const modelHash=hash(candidate.readModel);
   const readModel=await holdCivicVersion(vault,candidate.readModel,modelHash);
   const normalizedHash=hash(candidate.normalizedPayload);
@@ -45,10 +49,16 @@ export async function holdCandidateFacts(vault:EvidenceStore,candidate:RoutineCa
       excludedFacts={version:normalizedPayload,path:["excludedFacts"]};
     else excludedFacts={version:await holdCivicVersion(vault,candidate.excludedFacts,hash(candidate.excludedFacts)),path:[]};
   }
+  const civicRecords=candidate.civicRecords===undefined?undefined:
+    hash(candidate.civicRecords)===hash(civicRecordsFor(candidate.recordClass,candidate.readModel))?"DERIVED" as const:
+      await holdCivicVersion(vault,candidate.civicRecords,hash(candidate.civicRecords));
   const {readModel:_model,normalizedPayload:_normalized,excludedFacts:_facts,changeSet:_changes,civicRecords:_members,...metadata}=candidate;
-  return {...metadata,normalizedPayload:sourceMetadata(candidate.normalizedPayload),
+  return {...metadata,normalizedPayload:options.retainEvidence?candidate.normalizedPayload as Record<string,unknown>:sourceMetadata(candidate.normalizedPayload),
+    ...(options.retainEvidence&&candidate.excludedFacts?{excludedFacts:candidate.excludedFacts}:{}),
     ...(options.retainReadModel?{readModel:candidate.readModel}:{}),
-    vault:{formatVersion:1,readModel,normalizedPayload,excludedFacts,previousFingerprint}};
+    vault:{formatVersion:1,readModel,normalizedPayload,excludedFacts,previousFingerprint,
+      ...(civicRecords?{civicRecords}:{}),...(candidate.excludedFacts!==undefined?{excludedFactsPresent:true as const}:{}),
+      ...(options.retainEvidence?{inlineEvidence:true as const}:{})}};
 }
 
 export function candidateVaultFormat(candidate:unknown):CandidateVaultFormat|null{
@@ -61,12 +71,13 @@ export function candidateVaultFormat(candidate:unknown):CandidateVaultFormat|nul
 /** Hydrate only when an operation actually needs parser evidence. Reader proofs use the scalar fingerprints. */
 export async function hydrateCandidateFacts(vault:EvidenceStore,stored:unknown):Promise<unknown>{
   const format=candidateVaultFormat(stored);if(!format)return stored;
-  const candidate=stored as VaultCandidate,reader=civicVersionVault(vault);
+  const {vault:_vault,...candidate}=stored as VaultCandidate,reader=civicVersionVault(vault);
   const readModel=Object.hasOwn(candidate,"readModel")?candidate.readModel:format.readModel?await reader.read(format.readModel):null;
-  const normalizedPayload=format.normalizedPayload?format.normalizedPayload.fingerprint===format.readModel?.fingerprint?readModel:
+  const normalizedPayload=format.inlineEvidence?(stored as RoutineCandidate).normalizedPayload:format.normalizedPayload?format.normalizedPayload.fingerprint===format.readModel?.fingerprint?readModel:
     await reader.read(format.normalizedPayload):null;
-  const excludedFacts=format.excludedFacts?await reader.path(format.excludedFacts.version,format.excludedFacts.path):[];
-  return {...candidate,readModel,normalizedPayload,excludedFacts};
+  const excludedFacts=format.inlineEvidence?(stored as RoutineCandidate).excludedFacts??[]:format.excludedFacts?await reader.path(format.excludedFacts.version,format.excludedFacts.path):[];
+  return {...candidate,readModel,normalizedPayload,...(format.excludedFacts||format.excludedFactsPresent?{excludedFacts}:{}),
+    ...(format.civicRecords?{civicRecords:format.civicRecords==="DERIVED"?civicRecordsFor(candidate.recordClass,readModel):await reader.read(format.civicRecords)}:{})};
 }
 
 /** Rebuild a delta when requested, never as part of deciding whether a source changed. */

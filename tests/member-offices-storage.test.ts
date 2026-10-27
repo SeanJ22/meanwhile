@@ -78,10 +78,11 @@ test("a member-office package exceeding 42 MiB uses bounded immutable writes, ex
         const stored = (await pg.query<{ bytes: number; model: unknown; facts: unknown; identity: unknown }>(
           "SELECT octet_length(candidate::text) AS bytes, candidate->'readModel' AS model, validation_receipt->'excludedFacts' AS facts, identity FROM civic_data_candidates WHERE id=$1", [first.id])).rows[0]!;
         assert.ok(stored.bytes < 32 * 1024);
-        for (const value of [stored.model, stored.facts, stored.identity]) assert.equal(typeof (value as { $civicPayloadPart?: unknown }).$civicPayloadPart, "string");
+        for (const value of [stored.model, stored.identity]) assert.equal(typeof (value as { $civicPayloadPart?: unknown }).$civicPayloadPart, "string");
+        assert.deepEqual(stored.facts,[],"the decision receipt does not repeat the held source facts");
         const loaded = (await store.readCandidate(first.id))!;
         assert.equal(canonicalCivicDataHash(loaded.candidate), canonicalCivicDataHash(first, { durable: true }));
-        assert.deepEqual(loaded.receipt, receipt);
+        assert.deepEqual(loaded.receipt, {...receipt,excludedFacts:[]});
         assert.ok(parseValidationReceipt((await store.readPublishedCandidateMetadata(first.id))?.receipt));
         assert.equal((await store.clock(first.sourceId, first.recordClass, first.scope)).continuationPending, true);
 
@@ -109,7 +110,7 @@ test("a member-office package exceeding 42 MiB uses bounded immutable writes, ex
         await store.transition(next.id, "VALIDATED", next.retrieval.retrievedAt, "Changed office validated.", nextReceipt, undefined, { candidate: next });
         const promoted = await store.promote(next.id, nextReceipt, next.retrieval.retrievedAt, { candidate: next });
         assert.deepEqual(promoted.payload, next.readModel);
-        assert.deepEqual((await store.readCandidate(first.id))?.receipt, receipt, "the earlier edition and every retained source remain intact");
+        assert.deepEqual((await store.readCandidate(first.id))?.receipt, {...receipt,excludedFacts:[]}, "the earlier edition and every retained source remain intact");
       } finally { neonConfig.fetchFunction = transport; }
     });
   } finally { installFactReader(undefined); }

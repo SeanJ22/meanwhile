@@ -1,0 +1,7 @@
+build,state,apiRequests,apiRequestsPerHour,functionEquivalentInvocationsPerHour,databaseCalls,databaseResponseBytes,neonEquivalentGBPerHour
+before,visible,134,804,804,546,371806,0.002230836
+before,hidden,121,726,726,455,317138,0.001902828
+before,idle,142,852,852,582,397916,0.002387496
+after,visible,52,312,312,403,231701,0.001390206
+after,hidden,0,0,0,1,309,0.000001854
+after,idle,0,0,0,1,309,0.000001854

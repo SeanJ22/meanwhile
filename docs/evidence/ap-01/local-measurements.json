@@ -1,0 +1,279 @@
+{
+  "method": "Optimized production builds of current river and stream/ap-01, real Admin routes with the project test session, the same isolated native PostgreSQL 17 reader/control databases with committed migrations and an empty local event archive. Controlled browser and server Date clocks; one 1440x1000 Data business Admin tab at a time. Each measured window advances ten minutes and drains real HTTP/SQL work between clock steps. Initial loading and the five-minute idle grace are excluded. Every measured response succeeded. API/handler counts and measured database payload bytes are multiplied by six. Local handler invocations are Netlify function equivalents; actual billed Netlify invocations are zero because the builds run locally. Payload GB uses decimal 1e9 bytes and excludes transport/billing overhead. These local fixture results are not production bills.",
+  "beforeRevision": "f6d41b4e5fb41ae09048b67720a58648d8ca90c6",
+  "afterRevision": "1be417a632dd848390ff2f2dd6d43266c2c1ccb7",
+  "rows": [
+    {
+      "build": "before",
+      "state": "visible",
+      "windowSeconds": 600,
+      "apiRequests": 134,
+      "localFunctionEquivalentInvocations": 134,
+      "actualBilledNetlifyInvocations": 0,
+      "byPath": {
+        "/api/admin/v6/data/switches": 30,
+        "/api/admin/v6/alerts": 13,
+        "/api/admin/reader-demand": 13,
+        "/api/admin/v6/data/capture": 13,
+        "/api/admin/v6/data/population": 13,
+        "/api/admin/v6/data/places": 13,
+        "/api/admin/v6/data/aliases": 13,
+        "/api/admin/v6/topic-counts": 13,
+        "/api/admin/live": 13
+      },
+      "statuses": {
+        "200": 134
+      },
+      "databaseResponseBytes": 371806,
+      "databaseCalls": 546,
+      "databaseByApi": {
+        "/api/admin/v6/data/switches": {
+          "calls": 59,
+          "bytes": 30831
+        },
+        "/api/admin/reader-demand": {
+          "calls": 215,
+          "bytes": 126183
+        },
+        "/api/admin/v6/alerts": {
+          "calls": 26,
+          "bytes": 13494
+        },
+        "/api/admin/v6/data/capture": {
+          "calls": 59,
+          "bytes": 32986
+        },
+        "/api/admin/v6/data/population": {
+          "calls": 20,
+          "bytes": 6202
+        },
+        "/api/admin/v6/data/places": {
+          "calls": 18,
+          "bytes": 7297
+        },
+        "/api/admin/v6/data/aliases": {
+          "calls": 22,
+          "bytes": 79326
+        },
+        "/api/admin/v6/topic-counts": {
+          "calls": 36,
+          "bytes": 20510
+        },
+        "/api/admin/live": {
+          "calls": 91,
+          "bytes": 54977
+        }
+      },
+      "apiRequestsPerHour": 804,
+      "functionEquivalentInvocationsPerHour": 804,
+      "neonEquivalentGBPerHour": 0.002230836
+    },
+    {
+      "build": "before",
+      "state": "hidden",
+      "windowSeconds": 600,
+      "apiRequests": 121,
+      "localFunctionEquivalentInvocations": 121,
+      "actualBilledNetlifyInvocations": 0,
+      "byPath": {
+        "/api/admin/v6/data/switches": 30,
+        "/api/admin/v6/alerts": 13,
+        "/api/admin/reader-demand": 13,
+        "/api/admin/v6/data/capture": 13,
+        "/api/admin/v6/data/population": 13,
+        "/api/admin/v6/data/places": 13,
+        "/api/admin/v6/data/aliases": 13,
+        "/api/admin/v6/topic-counts": 13
+      },
+      "statuses": {
+        "200": 121
+      },
+      "databaseResponseBytes": 317138,
+      "databaseCalls": 455,
+      "databaseByApi": {
+        "/api/admin/v6/data/switches": {
+          "calls": 59,
+          "bytes": 30831
+        },
+        "/api/admin/reader-demand": {
+          "calls": 213,
+          "bytes": 125565
+        },
+        "/api/admin/v6/alerts": {
+          "calls": 26,
+          "bytes": 13494
+        },
+        "/api/admin/v6/data/capture": {
+          "calls": 60,
+          "bytes": 33295
+        },
+        "/api/admin/v6/data/population": {
+          "calls": 23,
+          "bytes": 6820
+        },
+        "/api/admin/v6/data/places": {
+          "calls": 18,
+          "bytes": 7297
+        },
+        "/api/admin/v6/data/aliases": {
+          "calls": 20,
+          "bytes": 79326
+        },
+        "/api/admin/v6/topic-counts": {
+          "calls": 36,
+          "bytes": 20510
+        }
+      },
+      "apiRequestsPerHour": 726,
+      "functionEquivalentInvocationsPerHour": 726,
+      "neonEquivalentGBPerHour": 0.001902828
+    },
+    {
+      "build": "before",
+      "state": "idle",
+      "windowSeconds": 600,
+      "apiRequests": 142,
+      "localFunctionEquivalentInvocations": 142,
+      "actualBilledNetlifyInvocations": 0,
+      "byPath": {
+        "/api/admin/v6/alerts": 14,
+        "/api/admin/reader-demand": 14,
+        "/api/admin/v6/data/capture": 14,
+        "/api/admin/v6/data/population": 14,
+        "/api/admin/v6/data/places": 14,
+        "/api/admin/v6/data/aliases": 14,
+        "/api/admin/v6/topic-counts": 14,
+        "/api/admin/live": 14,
+        "/api/admin/v6/data/switches": 30
+      },
+      "statuses": {
+        "200": 142
+      },
+      "databaseResponseBytes": 397916,
+      "databaseCalls": 582,
+      "databaseByApi": {
+        "/api/admin/reader-demand": {
+          "calls": 231,
+          "bytes": 135723
+        },
+        "/api/admin/v6/alerts": {
+          "calls": 28,
+          "bytes": 14532
+        },
+        "/api/admin/v6/data/capture": {
+          "calls": 63,
+          "bytes": 35357
+        },
+        "/api/admin/v6/data/population": {
+          "calls": 22,
+          "bytes": 6584
+        },
+        "/api/admin/v6/data/places": {
+          "calls": 21,
+          "bytes": 8096
+        },
+        "/api/admin/v6/data/aliases": {
+          "calls": 22,
+          "bytes": 85737
+        },
+        "/api/admin/v6/topic-counts": {
+          "calls": 37,
+          "bytes": 21541
+        },
+        "/api/admin/live": {
+          "calls": 98,
+          "bytes": 59206
+        },
+        "/api/admin/v6/data/switches": {
+          "calls": 60,
+          "bytes": 31140
+        }
+      },
+      "apiRequestsPerHour": 852,
+      "functionEquivalentInvocationsPerHour": 852,
+      "neonEquivalentGBPerHour": 0.002387496
+    },
+    {
+      "build": "after",
+      "state": "visible",
+      "windowSeconds": 600,
+      "apiRequests": 52,
+      "localFunctionEquivalentInvocations": 52,
+      "actualBilledNetlifyInvocations": 0,
+      "byPath": {
+        "/api/admin/live": 13,
+        "/api/admin/v6/alerts": 13,
+        "/api/admin/reader-demand": 13,
+        "/api/admin/v6/data/capture": 13
+      },
+      "statuses": {
+        "200": 52
+      },
+      "databaseResponseBytes": 231701,
+      "databaseCalls": 403,
+      "databaseByApi": {
+        "/api/admin/live": {
+          "calls": 102,
+          "bytes": 58555
+        },
+        "/api/admin/v6/alerts": {
+          "calls": 25,
+          "bytes": 13272
+        },
+        "/api/admin/reader-demand": {
+          "calls": 211,
+          "bytes": 124947
+        },
+        "/api/admin/v6/data/capture": {
+          "calls": 65,
+          "bytes": 34927
+        }
+      },
+      "apiRequestsPerHour": 312,
+      "functionEquivalentInvocationsPerHour": 312,
+      "neonEquivalentGBPerHour": 0.001390206
+    },
+    {
+      "build": "after",
+      "state": "hidden",
+      "windowSeconds": 600,
+      "apiRequests": 0,
+      "localFunctionEquivalentInvocations": 0,
+      "actualBilledNetlifyInvocations": 0,
+      "byPath": {},
+      "statuses": {},
+      "databaseResponseBytes": 309,
+      "databaseCalls": 1,
+      "databaseByApi": {
+        "/api/admin/v6/data/population": {
+          "calls": 1,
+          "bytes": 309
+        }
+      },
+      "apiRequestsPerHour": 0,
+      "functionEquivalentInvocationsPerHour": 0,
+      "neonEquivalentGBPerHour": 0.000001854
+    },
+    {
+      "build": "after",
+      "state": "idle",
+      "windowSeconds": 600,
+      "apiRequests": 0,
+      "localFunctionEquivalentInvocations": 0,
+      "actualBilledNetlifyInvocations": 0,
+      "byPath": {},
+      "statuses": {},
+      "databaseResponseBytes": 309,
+      "databaseCalls": 1,
+      "databaseByApi": {
+        "/api/admin/live": {
+          "calls": 1,
+          "bytes": 309
+        }
+      },
+      "apiRequestsPerHour": 0,
+      "functionEquivalentInvocationsPerHour": 0,
+      "neonEquivalentGBPerHour": 0.000001854
+    }
+  ]
+}

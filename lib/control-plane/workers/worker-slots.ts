@@ -44,8 +44,8 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   // One state's portrait pass at full size peaked at 390 MiB (New Hampshire, 407 people); the federal pass at 354 MiB.
   "people-portraits-refresh.mts": 448,
-  // ZP-01: four concurrent ZIP builds on a production copy peaked at 755,408,896 bytes over three turns; add 5%, round up to MiB.
-  "rebuild-place-pages.mts": 757,
+  // ZP-01: a complete four-builder turn on a production copy built 481 ZIPs and peaked at 802,811,904 bytes; add 5%, round up to MiB.
+  "rebuild-place-pages.mts": 804,
   "campaign-finance-az-pima-transactions.mts": 368,
   "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
   "ballot-navigation-refresh.mts": NAVIGATION_PUBLICATION_PEAK_MIB,

@@ -5,7 +5,7 @@ import { queueUnbuiltPlacePages, prepareProductionPlacePages, seedZipPagePlaces,
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { buildPageBody,PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
 import { unpackReadyPlace, unpackReadyTerritory } from "../lib/reader/place-ready.ts";
-import { readerCacheTags,enqueueReaderPlaces } from "../lib/reader/cache.ts";
+import { readerCacheTags,enqueueReaderPlaces,UNBUILT_ZIP_PRIORITY } from "../lib/reader/cache.ts";
 import { factDb } from "./helpers/fact-db.ts";
 
 test("the deployment queues every place and body that has no ready page for the runner", async () => {
@@ -61,6 +61,28 @@ test("ZIP page identities follow the routed ZIP geography and retain their state
   assert.deepEqual(dependencies,[{page_id:'zip:85001',entity_id:'ocd-division/country:us/state:ca'},
     {page_id:'zip:85001',entity_id:root},{page_id:'zip:85001',entity_id:'az:city:phoenix#governing'},
     {page_id:'zip:85002',entity_id:'az:city:phoenix#governing'}]);
+});
+
+test('production ZIP preparation fills existing priorities without requeueing or rewriting unchanged rows',async()=>{
+  const db=await factDb();
+  const root='ocd-division/country:us/state:az',ready='zip:85003',unbuilt='zip:85701';
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ'),($2,'place','Held ZIP name','AZ'),($3,'place','Tucson ZIP','AZ')",[root,ready,unbuilt]);
+    await db.query("INSERT INTO place_page(place_id,body) VALUES($1,'{}')",[ready]);
+    await db.query('INSERT INTO rebuild_queue(place_id,generation) VALUES($1,7),($2,9)',[ready,unbuilt]);
+    const seed=()=>seedZipPagePlaces(db.query,{states:['AZ'],
+      postal:()=>({'85003':[33,-112,'standard','85003','Phoenix','AZ','Maricopa',null,null],
+        '85701':[32,-110,'standard','85701','Tucson','AZ','Pima',null,null]}),
+      point:zip=>({zip,lat:32,lng:-110}),population:async zip=>zip==='85003'?200:100,
+      place:async()=>({ids:[root],partial:[],samples:1}),bodies:async()=>[]});
+    assert.equal(await seed(),2);
+    const rows=()=>db.query('SELECT q.place_id,q.generation::int,q.priority,q.ctid::text AS queue_tuple,e.ctid::text AS entity_tuple FROM rebuild_queue q JOIN entity e ON e.id=q.place_id ORDER BY q.place_id');
+    const first=await rows();
+    assert.deepEqual(first.map(({place_id,generation,priority})=>({place_id,generation,priority})),
+      [{place_id:ready,generation:7,priority:201},{place_id:unbuilt,generation:9,priority:UNBUILT_ZIP_PRIORITY+101}]);
+    assert.equal((await db.query('SELECT name FROM entity WHERE id=$1',[ready]))[0]!.name,'Held ZIP name');
+    await seed();assert.deepEqual(await rows(),first,'the next deployment leaves both tuple versions and generations unchanged');
+  }finally{await db.pg.close();}
 });
 
 test("runtime-only bodies get their existing canonical IDs without overwriting held subjects",async()=>{

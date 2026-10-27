@@ -211,5 +211,19 @@
       "45105",
       "44311"
     ]
+  },
+  "full_production_length_turn": {
+    "before": 68,
+    "after": 549,
+    "result": {
+      "rebuilt": 481,
+      "failed": 0,
+      "remaining": 127094
+    },
+    "elapsedMs": 241728.63864,
+    "pagesPerHour": 7163.40442631138,
+    "receivedBytes": 509115133,
+    "receivedGBPerHour": 7.582115586765711,
+    "peakRssBytes": 802811904
   }
 }

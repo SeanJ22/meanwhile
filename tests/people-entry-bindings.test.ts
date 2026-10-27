@@ -62,6 +62,32 @@ test("a Senate directory binds each CSS headshot to its own named card and refus
   assert.equal(icons.officeholders[0].portraitCandidate,undefined);
 });
 
+test("a public member service binds each object and verifies only its own image",()=>{
+  const source="https://legislature.example.gov/graphql?query=members";
+  const rows=people.map((person,index)=>({id:String(index+1),fullName:person.name,
+    honorificFullNameAffiliation:`Representative ${person.name} (R)`,body:"House",district:`House District ${index+3}`,
+    email:`member${index}@example.gov`,phone:`208-555-000${index}`,imageUrl:`https://legislature.example.gov/headshot${index}.jpg`}));
+  const body=JSON.stringify({data:{legislativeMembers:{data:[...rows,{id:"3",fullName:"Chamber Clerk",honorificFullNameAffiliation:"Clerk of the House Chamber Clerk",body:"House",district:null}]}}});
+  const parsed=normalizeOfficialLegislaturePage(body,source,{sourceId:"official-state-people",state:"id",asOf:at,signal:new AbortController().signal,roster:roster(people)},at);
+  assert.equal(parsed.officeholders.length,2);
+  const capture={transport:"REACHABLE" as const,partial:false,httpStatus:200,observedAt:at,evidence:{canonicalUrl:source,sourceId:"official-state-people",retrievedAt:at,text:body,vaultKey:"project/freshness/source/official-state-people/raw/json",contentHash:portraitHash(new TextEncoder().encode(body))}};
+  for(const [index,member] of parsed.officeholders.entries()) {
+    assert.deepEqual(member.nativeIds?.["ocd-person"],people[index].nativeIds?.["ocd-person"]);
+    assert.deepEqual(member.nativeIds?.["id-legislature"],[String(index+1)]);
+    assert.equal(member.email,rows[index].email);assert.equal(member.phone,rows[index].phone);
+    assert.equal(member.memberships?.[0].district,String(index+3));
+    assert.equal(member.portraitCandidate?.imageUrl,rows[index].imageUrl);
+    assert.ok(legislaturePageBindsPerson(body,source,member,at));
+    const subject={personId:member.personId!,name:member.name,nativeIds:member.nativeIds,state:member.state,chamber:member.chamber,officeTitle:member.officeTitle,profileUrls:[source]};
+    assert.deepEqual(profilePortraitImageUrls(subject,capture),[rows[index].imageUrl]);
+    assert.equal(verifyPortraitSources(subject.personId,{subject,imageUrl:rows[index].imageUrl,captures:[capture]},at).basis,"OWN_PAGE");
+    assert.throws(()=>verifyPortraitSources(subject.personId,{subject,imageUrl:rows[1-index].imageUrl,captures:[capture]},at),/PORTRAIT_SECOND_SOURCE_MISSING/);
+  }
+  const unknown=normalizeOfficialLegislaturePage(body,source,{sourceId:"official-state-people",state:"id",asOf:at,signal:new AbortController().signal},at);
+  assert.equal(unknown.officeholders.length,2,"the official service discovers current members without an aggregator entry");
+  assert.notEqual(unknown.officeholders[0].personId,unknown.officeholders[1].personId);
+});
+
 test("successive occupants of a linked seat route have separate person identities",()=>{
   const profile="https://www.flsenate.gov/Senators/S33";
   const parseOccupant=(person:Officeholder)=>normalizeOfficialLegislaturePage(`<h1>Senator ${person.name}</h1><p>Senator District 33</p>`,profile,

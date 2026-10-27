@@ -243,6 +243,34 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     seedByPerson.set(identity,holder);
   }
   let held=[...seedByPerson.values()];
+  // The legislature's public member service has the same boundary as an HTML card:
+  // each object supplies one named member, its chamber, district and image.
+  if(html.trimStart().startsWith("{")) {
+    let payload:unknown;try{payload=JSON.parse(html);}catch{return roster;}
+    const entries=record(record(payload).data).legislativeMembers;
+    const rows=record(entries).data;
+    if(!Array.isArray(rows))return roster;
+    const escape=(value:string)=>value.replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;");
+    for(const value of rows) {
+      const row=record(value),name=string(row.fullName),label=string(row.honorificFullNameAffiliation),id=string(row.id),district=string(row.district);
+      const chamber=row.body==="Senate"?"upper":row.body==="House"?"lower":null;
+      if(!name||!label||!id||!chamber||!district||!/^\d+$/.test(id)||
+        !(chamber==="upper"?/^Senator\s/i:/^Representative\s/i).test(label)||
+        !samePublishedName(rosterLabelName(label.replace(/\s*\([^)]+\)$/, "")),name))continue;
+      const image=url(row.imageUrl),email=string(row.email),phone=string(row.phone);
+      const card=`<article><h1>${escape(label)}</h1><p>${escape(district)}</p>${image?`<img src="${escape(image)}" alt="${escape(name)}">`:""}${email?`<a href="mailto:${escape(email)}">Email</a>`:""}${phone?`<a href="tel:${escape(phone)}">${escape(phone)}</a>`:""}</article>`;
+      const title=chamber==="upper"?"State Senator":"State Representative";
+      const known=entryPerson(name,card,held,chamber,pageUrl);
+      const seed=known??emptyPerson(`official-legislature:${digest(`${pageUrl}#member=${id}`).slice(0,24)}`,name,title,options.state,provenance(pageUrl,"State legislature — member data",collectedAt));
+      const person={...seed,name,chamber,nativeIds:{...seed.nativeIds,[`${stateIdentity(options.state).state.toLowerCase()}-legislature`]:[id]}};
+      const parsed=normalizeOfficialLegislaturePage(card,pageUrl,{...options,roster:{...emptyRoster(options.state,options.asOf),officeholders:[person]}},collectedAt);
+      for(const member of parsed.officeholders) {
+        member.provenance=provenance(pageUrl,"State legislature — member data",collectedAt,label);member.provenance.kind="OFFICIAL";sourced(member,member.provenance);
+      }
+      appendRoster(roster,parsed);
+    }
+    return roster;
+  }
   // A roster's observed links bind its bounded member card to the individual's official page.
   const content=html.replace(/<(script|style|nav|footer)\b[^>]*>[\s\S]*?<\/\1\s*>/gi," ");
   const headers=[...content.matchAll(/<(?:h[1-3]|title)\b[^>]*>([\s\S]*?)<\/(?:h[1-3]|title)>/gi)].map(match=>textOf(match[1])).join(" ");

@@ -1,6 +1,7 @@
 {
   "note": "Each legislature's own current member roster pages, read by the official-state-people source alongside the member pages it already holds. A roster's listed members and its explicit Vacant seats publish from the saved page; a member missing from a page is never read as a vacancy. A route that moves is replaced here as data, and a state without one here is found from its held member pages.",
   "rosters": {
+    "AL": ["https://www.sos.alabama.gov/alabama-votes/elected-official-map", "https://alison.legislature.state.al.us/graphql?query=%7B+legislativeMembers%28where%3A+%7B+active%3A+%7B+eq%3A+true+%7D+%7D%29+%7B+data+%7B+id+fullName+honorificFullNameAffiliation+body+phone+email+imageUrl+district+counties+%7D+%7D+%7D"],
     "AK": ["https://www.akleg.gov/basis/mbr_info.asp"],
     "AR": ["https://www.arkleg.state.ar.us/Legislators/List"],
     "AZ": ["https://www.azleg.gov/MemberRoster/"],

@@ -5,7 +5,7 @@ worker: River
 provider: Claude
 run_id: session_01R8G1FdHA1LGMVbwp5wxrzN
 lock: session_01R8G1FdHA1LGMVbwp5wxrzN
-heartbeat: 2026-10-27T05:08:00Z
+heartbeat: 2026-10-27T07:14:00Z
 
 ## River session_01R8G1FdHA1LGMVbwp5wxrzN (from Oct 26, 7:55 PM EDT)
 
@@ -13,6 +13,7 @@ heartbeat: 2026-10-27T05:08:00Z
 - Before 131 (read-only, database_transfer_hourly): reader 1.37 GB + control plane 0.28 GB in the 7 PM EDT hour; job `index` (reader functions) 1.15 GB: civic_data_candidate_events 0.44 GB (Next server routes), civic_data_promotions 0.33 GB (reader-meetings) + 0.32 GB (Next server routes).
 - Publish-now before 130 attempted 55-211 tasks an hour; since 130, 0 (10 of 11 passes timed out at 10 min; the 7:49 PM pass finished in 6 min with 0 launched).
 - 9:25 PM: first routine pass on 131 (started 8:55 PM) has no row_to_json error but timed out at 30 min with 0 tasks: ~600 clock reads in 25 min, no meeting clocks reached, reader database idle meanwhile. Publish-now on 131: 8:37, 8:55, 9:06 passes all timed out, 0 tasks; the 8:37 pass took its start timestamp only at 8:41:52 and never read a meeting clock. Same reads from a River container run ~40/s, so the wait is on the runner host; its journal (journalctl -u meanwhile-runner.service) is the missing evidence. Asked Sean.
+- 3:14 AM check: 1-2 AM EDT 0.711 GB (index 0.632), 2-3 AM 0.924 GB (index 0.766). Runner unchanged (every pass timed out, 0 tasks). No new DB-05 READY; no answer from Sean.
 - 1:08 AM check: midnight-1 AM EDT: reader 0.425 + control plane 0.040 = 0.465 GB/h; index 0.375 GB/h. Runner unchanged (every pass timed out, 0 tasks). No new DB-05 READY; no answer from Sean.
 - 12:25 AM check: 11 PM-midnight EDT: reader 0.501 + control plane 0.041 = 0.542 GB/h; index 0.457 GB/h. Runner: every routine (11:35 PM, 12:06 AM) and publish-now pass timed out, 0 tasks. No new DB-05 READY; no answer from Sean.
 - Reader-function cost, measured on the 131 production build against the production reader (read-only, Postgres wire bytes per query): a cold server loading /national + 2 ballots + /api/meetings read 25.6 MB; 19 MB of it is lib/reader/canonical.ts readCanonicalShelf with `additional` (state geography + canonical keys): it returns the state's whole canonical shelf with every payload part, ~9 MB per state, once per server instance per state (85701/03255 cached on the second load; a new state, 60602, read 8.6 MB again). That is the 30-40 MB per cold instance seen in production; cost scales with instances x states served. The fix is reading only the slice a ZIP needs (DB-05's keyed rows); added to returns/db-05.md.

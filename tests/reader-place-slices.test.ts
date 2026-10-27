@@ -7,7 +7,9 @@ import { answerVotingSites, type VotingReaderPlace } from "../lib/ballot/voting-
 import type { VotingJurisdiction, VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { selectedBallotStatement } from "../lib/reader/selected-ballot.ts";
-import { selectedVotingStatement } from "../lib/reader/selected-voting.ts";
+import { decodeSelectedVoting, selectedVotingStatement } from "../lib/reader/selected-voting.ts";
+import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 
 const at = "2026-10-19T00:00:00.000Z";
@@ -43,16 +45,23 @@ test("county-selected voting holdings preserve every location, rule, lookup and 
       serves: "Precinct 01", precinct: "01", countyFips: "12091", sources: [source] }], sourceOrg: source.publisher, sourceUrl: source.url, collectedAt: at, refusal: null };
   const value: VotingSitesFile = { generatedAt: at, jurisdictions: [base,
     { ...base, ocdId: "ocd-division/country:us/state:fl/county:other", name: "FOREIGN_COUNTY".repeat(10000), countyFips: "12001" },
-    { ...base, ocdId: "ocd-division/country:us/state:fl", name: "Florida rules", countyFips: undefined, sites: [], rules: [{ text: "Use the official county lookup", source }] },
+    { ...base, ocdId: "ocd-division/country:us/state:fl", name: "Florida rules", countyFips: undefined,
+      sites: [base.sites[0], ...Array.from({length:1000},(_,index)=>({...base.sites[0],id:`foreign:${index}`,countyFips:"12001",name:"FOREIGN_SITE".repeat(30)}))],
+      rules: [{ text: "Use the official county lookup", source }] },
     { ...base, ocdId: `${base.ocdId}/cousub:baker`, countyFips: "12001", countySubdivisionGeoid: "1209100001" },
   ] };
   const place: VotingReaderPlace = { precision: "ZIP", point: null, divisionIds: [base.ocdId], states: ["FL"], countyFips: ["12091"], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
   try {
-    await publish({ id: "voting:FL", recordClass: "VOTING_SITE", scope: stateBallotScope("voting-sites", "FL"), sourceId: "voting", at, value });
+    const encoded=partitionCivicPayload(value);
+    for(const part of encoded.parts)await pg.query("INSERT INTO civic_data_payload_parts(hash,payload) VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
+    await publish({ id: "voting:FL", recordClass: "VOTING_SITE", scope: stateBallotScope("voting-sites", "FL"), sourceId: "voting", at,
+      value:encoded.value,payloadHash:canonicalCivicDataHash(value) });
     const statement = selectedVotingStatement("FL", place);
     const { rows } = await pg.query<{ published: boolean; payload: VotingSitesFile }>(statement.text, statement.params);
     assert.equal(rows[0].published, true);
-    assert.deepEqual(await answerVotingSites(rows[0].payload, place), await answerVotingSites(JSON.parse(JSON.stringify(value)), place));
+    const selected=await decodeSelectedVoting(rows[0]);
+    assert.deepEqual(await answerVotingSites(selected!.payload as VotingSitesFile, place), await answerVotingSites(JSON.parse(JSON.stringify(value)), place));
     assert.ok(!JSON.stringify(rows).includes("FOREIGN_COUNTY"), "the unrelated county's stored records never reach the server");
+    assert.ok(!JSON.stringify(rows).includes("FOREIGN_SITE"), "foreign sites inside the statewide holding never reach the server");
   } finally { await pg.close(); }
 });

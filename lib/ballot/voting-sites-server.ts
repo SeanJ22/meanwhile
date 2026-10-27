@@ -1,4 +1,4 @@
-import { selectedVotingStatement } from "../reader/selected-voting.ts";
+import { decodeSelectedVoting, selectedVotingStatement } from "../reader/selected-voting.ts";
 import { selectedStateEntry } from "../reader/selected-entry.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import type { VotingReaderPlace } from "./voting-answer.ts";
@@ -17,7 +17,7 @@ export async function readVotingSitesProjection(state: string, options: Promoted
   const key = requireBallotState(state);
   const query = deadlineMs === undefined ? null : readerQuery(deadlineMs);
   const selectedQuery = place && !Object.keys(options).length && !currentReaderAuthorityEdge() ? query ?? readerQuery() : null;
-  const selected = selectedQuery ? (await selectedQuery([selectedVotingStatement(key,place!)]))[0][0] : undefined;
+  const selected = selectedQuery ? await decodeSelectedVoting((await selectedQuery([selectedVotingStatement(key,place!)]))[0][0]) : undefined;
   const result = selectedQuery
     ? await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites",key),
       {edge:selectedStateEntry("VOTING_SITE",stateBallotScope("voting-sites",key),selected)})

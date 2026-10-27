@@ -21,12 +21,29 @@ export interface DispatchRead {
 }
 export interface DispatchStateRepository {
   readOpen(input?: DispatchRead): Promise<DispatchSnapshot>;
+  /** The same live selection without advancing the runner's durable cursor. */
+  inspectOpen?(input?: DispatchRead): Promise<DispatchSnapshot>;
   archiveOccurrence(id: string, now: string): Promise<void>;
   prepareLineages(ids: readonly string[]): Promise<void>;
   lineages(obligationId: string, load: () => Promise<readonly StandingLineage[]>, stamp?: string): Promise<readonly StandingLineage[]>;
 }
 
 const OPEN_STATES = ["PENDING", "CLAIMED", "RECLAIMABLE", "POLICY_DENIED"];
+
+/** Sparse state walks start from the existing work-item and task-work indexes.
+ * A LIMIT on the outer task id must not walk every unrelated pending task.
+ */
+export function workItemStateFilter(table: string, state: string): string {
+  const parent = `SELECT 1 FROM cp_work_items_history w
+    WHERE w.id=${table}.value #>> '{workItemId}' AND cp_control_state(w.value)='${state}'`;
+  if (table !== "cp_route_tasks") return `EXISTS (${parent})`;
+  // Most pending tasks belong to system. Probe their exact parents instead of
+  // scanning every system work item, including hundreds of thousands archived.
+  if (state === "system") return `EXISTS (${parent} OFFSET 0)`;
+  const owned = `(SELECT id FROM cp_work_items_history WHERE cp_control_state(value)='${state}' ORDER BY id)`;
+  return `${table}.id=ANY(ARRAY(SELECT matched.id FROM ${owned} w CROSS JOIN LATERAL (
+    SELECT id FROM ${table} by_work WHERE by_work.value #>> '{workItemId}'=w.id OFFSET 0) matched))`;
+}
 const byId = <T>(rows: readonly Persisted<T>[]) => new Map(rows.map(row => [row.id, row]));
 const ordered = <T>(rows: readonly Persisted<T>[]) => {
   const unique = new Map<string, Persisted<T>>();
@@ -115,7 +132,7 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
     boundedQuery(sql, { operation: `cp_dispatch.${operation}`, callClass: page ? "PAGE" : "POINT" }, text, params, { bounds });
   async function rows<T>(table: string, predicate: string, params: readonly unknown[]): Promise<Persisted<T>[]> {
     const scoped = state ? table === 'cp_route_tasks'
-      ? `EXISTS (SELECT 1 FROM cp_work_items_history w WHERE w.id=${table}.value->>'workItemId' AND cp_control_state(w.value)='${state}')`
+      ? workItemStateFilter(table, state)
       : `cp_control_state(value)='${state}'` : "";
     const found = await versionedRowsFor(sql).rows((text, args) => run(`readOpen:${table}`, text, args, true),
       table, [predicate, scoped].filter(Boolean).map(filter => `(${filter})`).join(" AND "), params);
@@ -132,10 +149,11 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
         FROM cp_lineage_cache WHERE id=ANY($1::text[])`,[selected],true) as LineageRow[],row=>row.id,row=>row.__etag);
   }
 
-  return {
-    async readOpen(input = {}) {
-      return withCallerSite(async () => {
-      const scope = state ?? (input.obligationIds ? createHash("sha256").update([...input.obligationIds].sort().join("\n")).digest("hex") : "*");
+  const scopeFor = (input: DispatchRead) => state ?? (input.obligationIds
+    ? createHash("sha256").update([...input.obligationIds].sort().join("\n")).digest("hex") : "*");
+  async function inspectOpen(input: DispatchRead = {}): Promise<DispatchSnapshot> {
+    return withCallerSite(async () => {
+      const scope = scopeFor(input);
       const clock = await run("readOpen:cursor", "SELECT now() AS at, (SELECT through FROM cp_dispatch_cursors WHERE id=$1) AS since", [scope]) as { at: string; since: string | null }[];
       const through = new Date(clock[0].at).toISOString();
       const since = input.since ?? (clock[0].since ? new Date(Date.parse(String(clock[0].since)) - 120_000).toISOString() : null);
@@ -153,9 +171,16 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
       const workIds = [...new Set([...occurrences.map(row => row.value.workItemId), ...[...taskMap.values()].map(row => row.value.workItemId)])];
       const work = repos().workItems;
       const items = work.readMany ? await work.readMany(workIds) : (await Promise.all(workIds.map(id => work.read(id)))).filter(row => row !== null);
-      await run("readOpen:cursor", "INSERT INTO cp_dispatch_cursors (id, through) VALUES ($1,$2) ON CONFLICT (id) DO UPDATE SET through=GREATEST(cp_dispatch_cursors.through, EXCLUDED.through)", [scope, through]);
       return { occurrences: byId(occurrences), routeTasks: taskMap, workItems: byId(items), through };
-      });
+    });
+  }
+
+  return {
+    inspectOpen,
+    async readOpen(input = {}) {
+      const snapshot = await inspectOpen(input);
+      await run("readOpen:cursor", "INSERT INTO cp_dispatch_cursors (id, through) VALUES ($1,$2) ON CONFLICT (id) DO UPDATE SET through=GREATEST(cp_dispatch_cursors.through, EXCLUDED.through)", [scopeFor(input), snapshot.through]);
+      return snapshot;
     },
     async archiveOccurrence(id) { await withCallerSite(() => run("archiveOccurrence", "SELECT cp_archive_occurrences(ARRAY[$1]::text[])", [id])); },
     async prepareLineages(ids) {

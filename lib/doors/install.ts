@@ -9,7 +9,7 @@
 import type { MeetingPartitionRefresh } from "../civic-data/meeting-partitions.ts";
 import type { OutcomePartitionRefresh } from "../civic-data/outcome-partitions.ts";
 import { installDoorRecords } from "./meeting-doors.ts";
-import { listDoors, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { isDoorRecord, listDoors, type DoorRecord, type DoorRepository } from "./registry.ts";
 
 export interface DoorPassResult {
   /** Hand-wired meeting door rows adapters read now. */
@@ -25,10 +25,14 @@ export interface DoorPassResult {
 export async function refreshDoorsForPass(repo: DoorRepository): Promise<DoorPassResult> {
   let doors: readonly DoorRecord[];
   try {
-    doors = (await listDoors(repo)).doors;
+    doors = repo.meetingRecords
+      ? (await repo.meetingRecords()).map(row => row.value).filter(isDoorRecord)
+      : (await listDoors(repo)).doors.filter(door => door.meeting != null);
   } catch (error) {
     return { rows: 0, reason: `the door registry could not be read (${error instanceof Error ? error.message : String(error)})`, partitions: null, outcomes: null };
   }
+  const rank = { SHUT: 0, SUSPENDED: 1, OPEN: 2 };
+  doors = [...doors].sort((a, b) => rank[a.status] - rank[b.status] || (a.doorId < b.doorId ? -1 : a.doorId > b.doorId ? 1 : 0));
   const installed = installDoorRecords(doors);
   return {
     rows: installed.rows,

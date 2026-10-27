@@ -78,6 +78,20 @@ test("a normal hour and the exact threshold pause nothing; both database byte to
   assert.match(JOB_TRANSFER_SQL,/WHERE h\.hour=\$1::timestamptz/);
 });
 
+test("simultaneous jobs cannot restore a resume ahead of its same-check second-trip pause",async()=>{
+  const db=new PGlite();
+  try {
+    await db.exec(JOB_BREAKER_DDL);
+    const original=evaluateJobBreaker({now:HOUR,rows:[incident],states:{},code:()=>"v1"}).snapshot.states[incident.job]!;
+    const states=Object.fromEntries([...Array.from({length:9},(_,i)=>["other-"+i,{...original,job:"other-"+i}] as const),[incident.job,original]]);
+    const checked=evaluateJobBreaker({now:HOUR+3_600_000,rows:[incident],states,code:()=>"v1"});
+    assert.deepEqual(checked.events.slice(-2).map(event=>event.action),["RESUME","PAUSE"]);
+    const sql={query:async(text:string,params:readonly unknown[]=[]) => (await db.query<Record<string,unknown>>(text,[...params])).rows};
+    await writeJobBreakerEvents(sql,checked.events);
+    assert.equal((await readJobBreakerStates(sql))[incident.job]?.mode,"PAUSED_CODE");
+  } finally {await db.close();}
+});
+
 test("job code identity follows local dependencies and survives an unrelated release; new code does not inherit old bytes",()=>{
   const root=mkdtempSync(join(tmpdir(),"bb-code-"));
   try {
@@ -91,6 +105,11 @@ test("job code identity follows local dependencies and survives an unrelated rel
     admitJobLaunch({id:"job",args:["--import","./scripts/loader.mjs","scripts/job.mts"]},root,
       {...process.env,[JOB_BREAKER_PATH_ENV]:path},HOUR);
     assert.equal(registeredJobIdentity(path,root,"job"),first,"the source identity is the job, not Node's loader");
+    writeFileSync(join(root,"scripts/publish-now-runner.mts"),'import "./job.mts";');
+    const publisher=registeredJobIdentity(path,root,"publish-now");
+    admitJobLaunch({id:"publish-now",args:["scripts/publish-now-runner.mts"]},root,
+      {...process.env,[JOB_BREAKER_PATH_ENV]:path},HOUR);
+    assert.equal(registeredJobIdentity(path,root,"publish-now"),publisher,"first registration is not a release change");
     let state=evaluateJobBreaker({now:HOUR,rows:[incident],states:{},code:()=>first}).snapshot.states;
     state=evaluateJobBreaker({now:HOUR+3_600_000,rows:[incident],states:state,code:()=>first}).snapshot.states;
     assert.equal(state[incident.job]?.mode,"PAUSED_CODE");

@@ -44,8 +44,9 @@ export function registeredJobIdentity(path: string, root: string, job: string): 
   let entry: string;
   try { entry = JSON.parse(readFileSync(`${path}.jobs/${key(job)}.json`,"utf8")).entry; }
   catch {
-    const aliases: Record<string,string> = { "routine-civic-data":"routine-civic-data-runner", "publish-now":"routine-civic-data-runner",
-      "research-cycle":"freshness-shadow", "platform-census":"platform-census-runner", "place-pages":"rebuild-place-pages" };
+    const aliases: Record<string,string> = { "routine-civic-data":"routine-civic-data-runner", "publish-now":"publish-now-runner",
+      "research-cycle":"freshness-shadow", "intake-runtime":"intake-tripwire", "platform-census":"platform-census-runner",
+      "place-pages":"rebuild-place-pages", "console-publish:owner snapshot":"publish-owner-snapshot" };
     entry = `scripts/${aliases[job] ?? job}.mts`;
   }
   return jobSourceIdentity(root,entry);

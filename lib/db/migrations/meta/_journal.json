@@ -498,6 +498,13 @@
       "when": 1792834200018,
       "tag": "VB-01_read_model_fingerprints",
       "breakpoints": true
+    },
+    {
+      "idx": 71,
+      "version": "7",
+      "when": 1792834200019,
+      "tag": "VB-01_candidate_vault",
+      "breakpoints": true
     }
   ]
 }

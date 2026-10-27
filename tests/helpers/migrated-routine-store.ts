@@ -22,6 +22,7 @@ export async function withMigratedRoutineStore(
   const readerFunctions = readFileSync(new URL("../../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8")
     .split("--> statement-breakpoint").filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
   for (const sql of readerFunctions) await pg.exec(sql);
+  await pg.exec(readFileSync(new URL("../../lib/db/migrations/VB-01_candidate_vault.sql",import.meta.url),"utf8"));
   await pg.exec(readFileSync(COUNT_SCHEMA_SOURCE,"utf8"));
   // Use the actual migration's table and triggers: scoped field copies must
   // observe every candidate, event and pointer write in these adapter tests.

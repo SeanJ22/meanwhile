@@ -9,7 +9,7 @@ export const meetingEntityId = (meetingId: string) => `meeting:${meetingId}`;
 
 const SITTING_FACTS_SQL = `SELECT m.parent_id AS body_id, m.id AS entity_id, f.field, f.value, f.quote, f.checked_at,
   (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url
-  FROM entity m JOIN fact f ON f.entity_id = m.id
+  FROM entity m JOIN checked_fact f ON f.entity_id = m.id
   WHERE m.parent_id = ANY($1::text[]) AND m.kind = 'meeting' AND f.status = 'live'`;
 
 const FIELD = { title: "title", starts_at: "startsAt", location: "location", map_pin:"mapPin", online_access:"online", agenda_url: "agendaUrl", video_url: "videoUrl" } as const;

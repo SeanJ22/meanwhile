@@ -38,12 +38,12 @@ export const HELD_PIN_ROWS_SQL = `SELECT p.key,p.current_version_id,m.ordinal_in
   ${heldRows}
     AND ($5::text[] IS NULL OR sitting.value->>'bodyId'=ANY($5::text[]))
     AND (CASE WHEN jsonb_typeof(sitting.value->'online')='object' THEN 0 ELSE 1 END,p.key,m.ordinal_index)>($2::int,$3::text,$4::int)
-    AND NOT EXISTS(SELECT 1 FROM fact f WHERE f.entity_id='meeting:'||(sitting.value->>'id') AND f.field='map_pin' AND f.status='live'
+    AND NOT EXISTS(SELECT 1 FROM checked_fact f WHERE f.entity_id='meeting:'||(sitting.value->>'id') AND f.field='map_pin' AND f.status='live'
       AND NOT f.value ? 'pendingReplacement'
       AND f.value->>'bodyId'=sitting.value->>'bodyId' AND f.value->>'publishedLocation' IS NOT DISTINCT FROM sitting.value#>>'{venueGap,publishedText}')
     AND NOT EXISTS(SELECT 1 FROM blank b WHERE b.entity_id='meeting:'||(sitting.value->>'id') AND b.field='map_pin'
       AND b.next_try_at>$1::timestamptz AND b.updated_at>=p.promoted_at
-      AND b.updated_at>=coalesce((SELECT max(f.checked_at) FROM fact f JOIN entity e ON e.id=sitting.value->>'bodyId'
+      AND b.updated_at>=coalesce((SELECT max(f.checked_at) FROM checked_fact f JOIN entity e ON e.id=sitting.value->>'bodyId'
         WHERE f.entity_id IN(e.id,e.parent_id) AND f.field='office_address' AND f.status='live'),'-infinity'::timestamptz)
       AND b.updated_at>=coalesce((SELECT max(r.promoted_at) FROM civic_data_promotions r WHERE r.record_class='REGISTRATION'
         AND r.scope LIKE 'US-'||upper(substring(sitting.value->>'bodyId' FROM '/state:([a-z]{2})'))||'%'),'-infinity'::timestamptz))

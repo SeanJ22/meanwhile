@@ -151,15 +151,15 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     WHERE NOT EXISTS (SELECT 1 FROM entity e WHERE e.id=requested.id)
       AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=requested.id)
 ), body_facts AS MATERIALIZED (
-  SELECT f.*,s.url,b.name AS body_name,b.parent_id FROM bodies b
-    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=b.id AND status='live'
+  SELECT f.entity_id,f.field,f.value,f.quote,f.checked_at,f.provenance_kind,s.url,b.name AS body_name,b.parent_id FROM bodies b
+    CROSS JOIN LATERAL (SELECT entity_id,field,value,quote,checked_at,provenance_kind,source_copy_id FROM checked_fact WHERE entity_id=b.id AND status='live'
       AND ($8::text[] IS NULL OR field NOT LIKE 'member:%') OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
 ), members AS (
   SELECT f.entity_id AS body_id,f.body_name,substr(f.field,8) AS person_id,f.value,f.quote,f.checked_at,f.provenance_kind,f.url,
     coalesce((SELECT x.value FROM entity_external_id x WHERE x.entity_id=substr(f.field,8) AND x.scheme='roster-member' LIMIT 1),'') AS shown_id,
     coalesce((SELECT jsonb_object_agg(p.field,jsonb_build_object('value',p.value,'quote',p.quote,'url',s.url,'checked',p.checked_at))
-      FROM fact p LEFT JOIN source_copy s ON s.id=p.source_copy_id WHERE p.entity_id=substr(f.field,8) AND p.status='live'
+      FROM checked_fact p LEFT JOIN source_copy s ON s.id=p.source_copy_id WHERE p.entity_id=substr(f.field,8) AND p.status='live'
         AND (p.field=ANY(ARRAY[${rosterPersonFieldsSql}]) OR p.field=ANY(ARRAY(SELECT field||':'||f.entity_id FROM unnest(ARRAY[${rosterPersonFieldsSql}]) field)))),'{}'::jsonb) AS person
   FROM body_facts f WHERE $8::text[] IS NULL AND f.field LIKE 'member:%'
 ), runtime_rosters AS MATERIALIZED (
@@ -206,7 +206,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), sittings AS MATERIALIZED (
   SELECT b.id AS body_id,b.name AS body_name,m.id AS entity_id,f.field,f.value,f.quote,f.checked_at,s.url
     FROM bodies b CROSS JOIN LATERAL (SELECT id FROM entity WHERE parent_id=b.id AND kind='meeting' OFFSET 0) m
-    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=m.id AND status='live' OFFSET 0) f
+    CROSS JOIN LATERAL (SELECT field,value,quote,checked_at,source_copy_id FROM checked_fact WHERE entity_id=m.id AND status='live' OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
     WHERE $8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR substr(m.id,9) IN (SELECT id FROM agenda_fact_ids)
 ), encoded_bodies AS MATERIALIZED (
@@ -312,7 +312,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     CASE WHEN f.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T' AND pg_input_is_valid(f.value->>'startsAt','timestamptz')
       THEN (f.value->>'startsAt')::timestamptz END AS starts_at
   FROM bodies b CROSS JOIN LATERAL (SELECT id FROM entity WHERE parent_id=b.id AND kind='meeting' OFFSET 0) m
-    CROSS JOIN LATERAL (SELECT value FROM fact WHERE $8::text[] IS NOT NULL AND entity_id=m.id AND status='live' AND field='starts_at' OFFSET 0) f
+    CROSS JOIN LATERAL (SELECT value FROM checked_fact WHERE $8::text[] IS NOT NULL AND entity_id=m.id AND status='live' AND field='starts_at' OFFSET 0) f
 ), agenda_calendar_fallback AS MATERIALIZED (
   -- Ambiguous identities can change global duplicate-ID/merge decisions. Keep their original corpus intact.
   SELECT true AS needed WHERE EXISTS (SELECT 1 FROM agenda_meeting_headers h WHERE nullif(h.value->>'id','') IS NULL

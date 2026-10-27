@@ -36,7 +36,7 @@ export interface OwnerFlag {
 
 export async function readOwnerFlags(query: Query, after: number = 0, limit: number = 50): Promise<OwnerFlag[]> {
   const rows = await query(`SELECT o.id,o.fact_id,o.reader_family,o.reader_id,o.observed_value,o.reason,o.source_url,
-    f.entity_id,f.field,f.value,e.name,s.url FROM owner_flag o LEFT JOIN fact f ON f.id=o.fact_id
+    f.entity_id,f.field,f.value,e.name,s.url FROM owner_flag o LEFT JOIN checked_fact f ON f.id=o.fact_id
     LEFT JOIN entity e ON e.id=f.entity_id LEFT JOIN source_copy s ON s.id=f.source_copy_id
     WHERE o.resolved IS NULL AND o.id>$1 ORDER BY o.id LIMIT $2`, [after, Math.min(100, Math.max(1, limit))]);
   return rows.map(row => ({ id: String(row.id), factId: row.fact_id === null ? null : Number(row.fact_id),
@@ -75,7 +75,7 @@ export async function searchPublishedFacts(query: Query, words: string, limit: n
   const rows = await query(`WITH hits AS MATERIALIZED (SELECT id FROM entity WHERE name ILIKE $1 ESCAPE '\\' LIMIT 40)
     SELECT f.id, f.field, f.value, f.value_text, e.name AS title, s.url,
       EXISTS(SELECT 1 FROM owner_flag o WHERE o.fact_id = f.id AND o.resolved IS NULL) AS flagged
-    FROM fact f JOIN entity e ON e.id = f.entity_id LEFT JOIN source_copy s ON s.id = f.source_copy_id
+    FROM checked_fact f JOIN entity e ON e.id = f.entity_id LEFT JOIN source_copy s ON s.id = f.source_copy_id
     WHERE f.status = 'live' AND (f.entity_id IN (SELECT id FROM hits)
       OR f.field LIKE 'member:%' AND f.field IN (SELECT 'member:' || id FROM hits))
     ORDER BY e.name, f.field, f.id LIMIT $2`, [`%${text.replace(/[\\%_]/g, c => `\\${c}`)}%`, take + 1]);
@@ -94,7 +94,7 @@ export async function searchPublishedFacts(query: Query, words: string, limit: n
 /** Sean flags a published fact himself; it joins the same open flags the audits raise. */
 export async function raiseOwnerFlag(query: Query, factId: number): Promise<{ readonly created: boolean }> {
   const rows = await query(`INSERT INTO owner_flag(fact_id,kind,reason,source_url) SELECT f.id,'AUDIT_LOOKS_WRONG','Sean flagged this published value as wrong.',s.url
-    FROM fact f LEFT JOIN source_copy s ON s.id=f.source_copy_id WHERE f.id=$1 AND f.status='live'
+    FROM checked_fact f LEFT JOIN source_copy s ON s.id=f.source_copy_id WHERE f.id=$1 AND f.status='live'
     AND NOT EXISTS(SELECT 1 FROM owner_flag o WHERE o.fact_id=f.id AND o.resolved IS NULL) RETURNING id`, [factId]);
   return { created: rows.length > 0 };
 }
@@ -148,7 +148,7 @@ export async function resolveOwnerFlag(db: FactDb & { readonly query: Query }, i
 }, now: string, purge?: ReaderCachePurger): Promise<{ readonly factId: number | null; readonly entityId: string | null; readonly readerId: string | null; readonly family: string | null; readonly detail: string }> {
   const { outcome, scope } = await db.transaction(async query => {
     const [flag] = await query(`SELECT o.*,f.entity_id,f.field,f.value,f.status FROM owner_flag o
-      LEFT JOIN fact f ON f.id=o.fact_id WHERE o.id=$1 FOR UPDATE OF o`, [input.id]);
+      LEFT JOIN checked_fact f ON f.id=o.fact_id WHERE o.id=$1 FOR UPDATE OF o`, [input.id]);
     if (!flag || flag.resolved) throw new Error("This flag has already been answered. Refresh the list.");
     const original = flag.fact_id === null ? flag.observed_value : flag.value;
     let ownerValues=input.values;

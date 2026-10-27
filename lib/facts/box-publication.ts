@@ -1,3 +1,4 @@
+import { withFactConfirmations } from "./confirmation.ts";
 import { findingFact, finishBoxFinding, holdBoxFinding, otherSources, PUBLISHER, reopenBoxFinding, takeBoxFinding, type BoxFinding, type BoxOrigin } from "../control-plane/box.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
@@ -184,7 +185,7 @@ async function retitleMembers(query: Query, purge?: ReaderCachePurger): Promise<
     if (title === null || !name) continue;
     const person = String(row.field).slice("member:".length);
     await query(`UPDATE fact SET value = value || jsonb_build_object('name', $2::text, 'office', coalesce(value->>'office', $3::text)), value_text = $2 WHERE id = $1 AND status = 'live'`, [row.id, name, title]);
-    await query("UPDATE entity SET name = $2 WHERE id = $1 AND name = $3", [person, name, old]);
+    await query("UPDATE entity SET name = $2 WHERE id = $1 AND name = $3 AND name IS DISTINCT FROM $2", [person, name, old]);
     await query("UPDATE fact SET value = to_jsonb($2::text), value_text = $2 WHERE entity_id = $1 AND field = 'name' AND status = 'live' AND value_text = $3", [person, name, old]);
     if (row.office === null) {
       await query(`INSERT INTO fact (entity_id, field, value, value_text, status, provenance_kind, source_copy_id, quote, quote_start, checked_at, live_at, produced_by, cost_usd)
@@ -261,7 +262,11 @@ const PHONE_IN_QUOTE = /\+?1?[\s.-]?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}/;
 const DATED: readonly ElectionFieldKind[] = ["registration_deadline", "early_voting", "certified_outcome"];
 
 /** Box findings, each routed where its record publishes, checked on its own page; what has no route waits with its reason. */
-export async function publishBoxFindings(input: {
+export async function publishBoxFindings(input: Parameters<typeof publishBoxPass>[0]): Promise<BoxPublicationReport> {
+  return withFactConfirmations(input.facts,() => publishBoxPass(input),input.purge);
+}
+
+async function publishBoxPass(input: {
   readonly repos: Pick<ControlPlaneRepositories, "boxFindings" | "artifacts">;
   readonly facts: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly fetch: ProbeFetch;
   readonly store: RoutineDataStore; readonly clocks: Clocks; readonly now: string; readonly limit: number;
@@ -613,7 +618,7 @@ async function nameBoardsFromTheirPages(input: { readonly repos: Pick<ControlPla
   const { facts } = input;
   const outOfTime = () => Date.now() >= (input.deadlineMs ?? Infinity);
   if (outOfTime()) return 0;
-  const nameless = await facts.query(`SELECT e.id, (SELECT s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id WHERE f.entity_id = e.id AND f.status = 'live'
+  const nameless = await facts.query(`SELECT e.id, (SELECT s.url FROM checked_fact f JOIN source_copy s ON s.id = f.source_copy_id WHERE f.entity_id = e.id AND f.status = 'live'
         AND s.url ~ '^https?://' ORDER BY f.checked_at DESC, f.id DESC LIMIT 1) AS url
     FROM entity e WHERE e.kind = 'body'
       AND EXISTS (SELECT 1 FROM fact f WHERE f.entity_id = e.id AND f.status = 'live')

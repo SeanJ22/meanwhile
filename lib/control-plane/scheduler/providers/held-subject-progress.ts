@@ -41,8 +41,8 @@ export const HELD_SUBJECT_PROGRESS_SQL = `WITH held AS (
       WHEN jsonb_typeof(f.value)='object' THEN f.value<>'{}'::jsonb
       WHEN jsonb_typeof(f.value)='array' THEN jsonb_array_length(f.value)>0 ELSE false END nonempty,
     s.final_url source_url,f.checked_at
-    FROM identities h JOIN fact f ON f.entity_id=h.canonical_id AND f.status='live'
-      AND (h.kind='person' AND h.body_id IS NOT NULL AND EXISTS(SELECT 1 FROM fact membership
+    FROM identities h JOIN checked_fact f ON f.entity_id=h.canonical_id AND f.status='live'
+      AND (h.kind='person' AND h.body_id IS NOT NULL AND EXISTS(SELECT 1 FROM checked_fact membership
         WHERE membership.entity_id=h.body_id AND membership.field='member:'||h.canonical_id AND membership.status='live')
         AND (f.field IN ('email','phone','website')
         OR f.field IN ('term_start:'||h.term_scope,'term_end:'||h.term_scope,'term_note:'||h.term_scope)

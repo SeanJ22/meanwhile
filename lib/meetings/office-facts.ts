@@ -209,7 +209,7 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
   catch (error) { report.failures.push(`Held NCES office rows could not be read: ${error instanceof Error ? error.message : String(error)}`); }
   const known = new Set<string>(), processed = new Set<string>();
   const entityIds = [...new Set(targets.flatMap(row => [String(row.id), ...(row.government_id ? [String(row.government_id)] : [])]))];
-  const values = await input.facts.query("SELECT entity_id,value#>>'{}' AS address,(SELECT fetched_at FROM source_copy WHERE id=f.source_copy_id) AS fetched_at FROM fact f WHERE field='office_address' AND status='live' AND entity_id=ANY($1::text[])",
+  const values = await input.facts.query("SELECT entity_id,value#>>'{}' AS address,(SELECT fetched_at FROM source_copy WHERE id=f.source_copy_id) AS fetched_at FROM checked_fact f WHERE field='office_address' AND status='live' AND entity_id=ANY($1::text[])",
     [entityIds]);
   const capturedAt = new Map(values.map(row => [String(row.entity_id), Date.parse(String(row.fetched_at))]));
   const knownAddress = new Map(values.map(row => [String(row.entity_id), row.address]));
@@ -255,7 +255,7 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
               OR o.g->'aliases' ? e.parent_id OR o.g->'aliases' ? e.id OR o.g->'bodyIds' ? e.id
               OR o.g->'aliases' ? (e.parent_id||'#governing') OR o.g->'aliases' ? (e.parent_id||'#board')))
       ) UPDATE blank b SET next_try_at=least(b.next_try_at,$3::timestamptz)
-      WHERE b.field='map_pin' AND EXISTS(SELECT 1 FROM entity m JOIN bodies o ON o.id=m.parent_id WHERE m.id=b.entity_id)`,
+      WHERE b.field='map_pin' AND b.next_try_at>$3::timestamptz AND EXISTS(SELECT 1 FROM entity m JOIN bodies o ON o.id=m.parent_id WHERE m.id=b.entity_id)`,
       [id,String(state),input.now]);
     }
   };

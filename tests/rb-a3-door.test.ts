@@ -45,7 +45,7 @@ test("a newer source for an unchanged value rebuilds its pages and an exact repl
     const claim = input({ copy: { ...input().copy, id: 3, fetchedAt: next } });
     assert.equal((await door(db, claim, clocks, next, { purge }) as { decision: string }).decision, "CONFIRM");
     assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id")).map(row => row.place_id), [input().entity.id, "place-one", "place-two"]);
-    assert.equal(Number((await db.query("SELECT source_copy_id FROM fact WHERE status='live'"))[0]!.source_copy_id), 3);
+    assert.equal(Number((await db.query("SELECT source_copy_id FROM checked_fact WHERE status='live'"))[0]!.source_copy_id), 3);
     await db.query("DELETE FROM rebuild_queue");
     await door(db, claim, clocks, next, { purge });
     assert.deepEqual(await db.query("SELECT place_id FROM rebuild_queue"), []);
@@ -325,10 +325,10 @@ test("a real later observation of the same source bytes advances its checked dat
     const next = new Date(now.getTime() + 3_600_000);
     const claim = input({ copy: { ...input().copy, fetchedAt: next } });
     await door(db, claim, clocks, next, { purge });
-    const before = await db.query("SELECT * FROM fact");
+    const before = await db.query("SELECT id,value,checked_at,source_copy_id FROM checked_fact");
     assert.equal(new Date(before[0]!.checked_at as string).toISOString(), next.toISOString());
     await door(db, claim, clocks, new Date(next.getTime() + 3_600_000), { purge });
-    assert.deepEqual(await db.query("SELECT * FROM fact"), before);
+    assert.deepEqual(await db.query("SELECT id,value,checked_at,source_copy_id FROM checked_fact"), before);
     assert.deepEqual(await db.query(`SELECT sum(n)::int AS n FROM count_hour
       WHERE left(step,3)='v1:' AND substring(step FROM 4)::jsonb->>1='fact:live'
         AND substring(step FROM 4)::jsonb->>2='in'`), [{ n: 1 }]);

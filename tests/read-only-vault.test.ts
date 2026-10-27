@@ -150,7 +150,7 @@ test("Netlify vault preserves oversized metadata atomically with original bytes"
   assert.equal(writes, 1, "healthy oversized immutable reuse is still a no-op");
   new Uint8Array(data!)[data!.byteLength - 1] ^= 1;
   await assert.rejects(remote.get("large-note"), /Stored evidence is corrupt/);
-  await assert.rejects(remote.put("large-note", bytes, meta), /Stored evidence is corrupt/);
+  await remote.put("large-note", bytes, meta);
   assert.equal(writes, 1);
   const indexMeta = { ...meta, objectClass: "MUTABLE_INDEX" as const, contentHash: "manifest:large-note" };
   data = null;
@@ -189,6 +189,20 @@ test("envelope describe reads only a split metadata header and cancels the unrea
   assert.deepEqual(await remote.describe("enveloped-page"), { meta, bodySha256: contentHash(bytes) });
   assert.equal(reads, 3);
   assert.equal(cancelled, true);
+});
+
+test("immutable vault reuse and a concurrent create compare only saved fingerprints", async () => {
+  const bytes=new TextEncoder().encode("held source"),meta={contentType:"text/plain",contentHash:contentHash(bytes),byteLength:bytes.length};
+  for(const raced of [false,true]){
+    let heads=0,writes=0;
+    const remote=new NetlifyEvidenceStore({
+      async getMetadata(){heads++;return raced && heads===1?null:{metadata:{meta,bodySha256:meta.contentHash}};},
+      async getWithMetadata(){assert.fail("an unchanged source must not be downloaded to compare it");},
+      async set(){writes++;return {modified:false};},
+    } as unknown as Store);
+    await remote.put(meta.contentHash,bytes,meta);
+    assert.equal(writes,raced?1:0);assert.equal(heads,raced?2:1);
+  }
 });
 
 test("vault indexing propagates its deadline to every real SDK request", async t => {

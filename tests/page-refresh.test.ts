@@ -96,7 +96,7 @@ describe("DB-29: the pass re-reads due pages and restamps what still holds", () 
     const row = await repos.doors.mustRead(draft.doorId);
     await repos.doors.compareAndSet(draft.doorId, row.revision, { ...row.value, lastSuccessAt: PUBLISHED }, PUBLISHED);
     const doors = async () => (await repos.doors.list()).map((door) => door.value);
-    const live = () => facts.query(`SELECT f.field, f.checked_at, s.fetched_at FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
+    const live = () => facts.query(`SELECT f.field, f.checked_at, s.fetched_at FROM checked_fact f JOIN source_copy s ON s.id = f.source_copy_id
       WHERE f.status = 'live' ORDER BY f.id`);
     const pass = async (fetch: ProbeFetch) => refreshDuePageDoors({ repos, facts, vault, fetch, doors: await doors(), now: NOW, clock: () => NOW, purge: async () => ({ purged: true }) });
     return { facts, repos, door: draft.doorId, live, pass };

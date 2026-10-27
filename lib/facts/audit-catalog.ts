@@ -6,13 +6,13 @@ import type { Query } from "./publish.ts";
 export function factAuditCatalog(query: Query): LiveFactCatalog {
   return {
     areas: async () => (await query(`SELECT DISTINCT coalesce(e.state,'US') AS state FROM entity e
-      WHERE EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=e.id AND f.status='live' AND f.source_copy_id IS NOT NULL) ORDER BY state`)).map(row=>`facts:${row.state}`),
+      WHERE EXISTS(SELECT 1 FROM checked_fact f WHERE f.entity_id=e.id AND f.status='live' AND f.source_copy_id IS NOT NULL) ORDER BY state`)).map(row=>`facts:${row.state}`),
     factsInArea: async (area,limit) => {
       if (!area.startsWith("facts:")) return [];
       const name = `audit:${area}`;
       const cursor = Number(await readPassCursor(query,name) ?? 0);
       const read = (after:number) => query(`SELECT f.id,f.field,f.value_text,f.checked_at,s.url,e.state
-        FROM fact f JOIN entity e ON e.id=f.entity_id JOIN source_copy s ON s.id=f.source_copy_id
+        FROM checked_fact f JOIN entity e ON e.id=f.entity_id JOIN source_copy s ON s.id=f.source_copy_id
         WHERE f.status='live' AND coalesce(e.state,'US')=$1 AND f.id>$2 ORDER BY f.id LIMIT $3`,[area.slice(6),after,limit]);
       let rows = await read(cursor);
       if (!rows.length && cursor) rows = await read(0);

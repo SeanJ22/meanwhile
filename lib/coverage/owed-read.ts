@@ -27,7 +27,7 @@ function sources(scope: string): string {
     holdings AS MATERIALIZED (
       SELECT f.entity_id,f.field,bool_or(f.provenance_kind='OWNER') AS owner,
         max(f.checked_at) FILTER (WHERE f.checked_at<=$2::timestamptz) AS checked_at
-      FROM fact f JOIN subjects e ON e.id=f.entity_id WHERE f.status IN ('live','held') GROUP BY f.entity_id,f.field
+      FROM checked_fact f JOIN subjects e ON e.id=f.entity_id WHERE f.status IN ('live','held') GROUP BY f.entity_id,f.field
     ),
     active_fields AS MATERIALIZED (
       SELECT entity_id,field FROM holdings
@@ -136,7 +136,7 @@ export async function readPlaceNeeds(query: Query, config: AdminConfig | null, p
       coalesce((SELECT jsonb_agg(jsonb_build_object('id',f.id,'value',f.value,'status',f.status,'sourceUrl',s.final_url,
         'checkedAt',f.checked_at,'stale',f.provenance_kind<>'OWNER' AND (f.checked_at>$2::timestamptz OR
           f.checked_at + make_interval(secs => (($3::jsonb->>m.clock)::double precision)*3600) < $2::timestamptz)) ORDER BY f.id)
-        FROM fact f LEFT JOIN source_copy s ON s.id=f.source_copy_id
+        FROM checked_fact f LEFT JOIN source_copy s ON s.id=f.source_copy_id
         WHERE f.entity_id=m.id AND f.field=m.field AND f.status IN ('live','held')),'[]'::jsonb) AS facts
     FROM (SELECT count(*) AS n FROM root) roots LEFT JOIN measured m ON true
       LEFT JOIN subjects e ON e.id=m.id

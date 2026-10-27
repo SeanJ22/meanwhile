@@ -13,8 +13,8 @@ test("job clocks retain their exact receipt proof without downloading excluded s
       excludedFacts: [{ key: "foreign", code: "HELD", detail: "This record belongs to the audit, not the source clock.", record: "EXCLUDED_SOURCE_BODY".repeat(100_000) }] });
     const db = drizzle(pg) as unknown as Parameters<typeof routineClockPointerRead>[0];
     const pointer = (await routineClockPointerRead(db,"FEC_FUNDING",scope))[0];
-    const row = (await routineClockCandidateRead(db,id))[0];
     assert.ok(pointer.validationReceipt);
+    const row = (await routineClockCandidateRead(db,id))[0];
     const record: RoutineClockRecord = { candidate: row.candidate as RoutineClockRecord["candidate"], state: row.state as "PROMOTED", acquisitionSucceeded: row.acquisitionSucceeded,
       receipt: row.validationReceipt, promotedVersion: row.promotedVersionId, lastKnownGoodVersion: row.lastKnownGoodVersionId,
       failureCode: row.failureCode, failureDetail: row.failureDetail };

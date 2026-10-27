@@ -158,23 +158,34 @@ export function civicVersionVault(vault: EvidenceStore) {
   };
 }
 
-interface VersionHead {readonly id:string;readonly fingerprint:string|null;readonly legacy:boolean;readonly current:boolean}
+type VaultProvider=EvidenceStore|(()=>EvidenceStore);
+interface VersionHead {readonly id:string;readonly fingerprint:string|null;readonly legacy:boolean;readonly current:boolean;readonly ref:CivicVersionVaultRef|null}
 async function versionHead(query:Query,id:string):Promise<VersionHead|null>{
   const [row]=await query(`SELECT c.id,coalesce(c.read_model_fingerprint,c.normalized_hash) AS fingerprint,
-    c.candidate ? 'readModel' AS legacy,EXISTS(SELECT 1 FROM civic_data_promotions p WHERE p.current_version_id=c.id) AS current
+    c.candidate ? 'readModel' AS legacy,c.candidate#>'{vault,readModel}' AS read_model_ref,
+    EXISTS(SELECT 1 FROM civic_data_promotions p WHERE p.current_version_id=c.id) AS current
     FROM civic_data_candidates c WHERE c.id=$1`,[id]);
   if(!row)return null;
-  return {id:String(row.id),fingerprint:row.fingerprint as string|null,legacy:row.legacy===true,current:row.current===true};
+  return {id:String(row.id),fingerprint:row.fingerprint as string|null,legacy:row.legacy===true,current:row.current===true,
+    ref:row.read_model_ref as CivicVersionVaultRef|null??null};
+}
+async function versionArchive(provider:VaultProvider,head:VersionHead):Promise<{vault:EvidenceStore;ref:CivicVersionVaultRef}|null>{
+  // Passing rawCaptureVault as a factory lets legacy field reads work without
+  // opening a remote vault they never need. New writers carry the exact root.
+  if(typeof provider==="function"&&head.legacy&&!head.ref)return null;
+  const vault=typeof provider==="function"?provider():provider;
+  const ref=head.ref??(head.fingerprint?await civicVersionRef(vault,head.fingerprint):null);
+  return ref?{vault,ref}:null;
 }
 const sourceRoot=(head:VersionHead)=>head.current
   ? "SELECT payload AS value,0 AS depth FROM civic_data_promotions WHERE current_version_id=$1"
   : "SELECT candidate->'readModel' AS value,0 AS depth FROM civic_data_candidates WHERE id=$1";
 
 /** Legacy versions keep their original rows; a legacy read selects only the requested path. */
-export async function readCivicVersionPath(query:Query,vault:EvidenceStore,id:string,path:readonly string[]):Promise<unknown>{
+export async function readCivicVersionPath(query:Query,vault:VaultProvider,id:string,path:readonly string[]):Promise<unknown>{
   const head=await versionHead(query,id);if(!head)return null;
-  const ref=head.fingerprint?await civicVersionRef(vault,head.fingerprint):null;
-  if(ref)return civicVersionVault(vault).path(ref,path);
+  const archive=await versionArchive(vault,head);
+  if(archive)return civicVersionVault(archive.vault).path(archive.ref,path);
   if(!head.current&&!head.legacy)throw new Error(`CIVIC_VERSION_VAULT_MISSING:${id}`);
   if(!path.length)throw new Error("CIVIC_VERSION_LEGACY_PATH_REQUIRED");
   const [row]=await query(`WITH RECURSIVE selected(value,depth) AS (
@@ -187,10 +198,10 @@ export async function readCivicVersionPath(query:Query,vault:EvidenceStore,id:st
 }
 
 /** The four historical readers can keep their exact version/row selection without downloading a former candidate. */
-export async function readCivicVersionRows(query:Query,vault:EvidenceStore,id:string,path:readonly string[],selection:CivicVersionRowSelection={}):Promise<readonly CivicVersionRow[]>{
+export async function readCivicVersionRows(query:Query,vault:VaultProvider,id:string,path:readonly string[],selection:CivicVersionRowSelection={}):Promise<readonly CivicVersionRow[]>{
   const head=await versionHead(query,id);if(!head)return [];
-  const ref=head.fingerprint?await civicVersionRef(vault,head.fingerprint):null;
-  if(ref)return civicVersionVault(vault).rows(ref,path,selection);
+  const archive=await versionArchive(vault,head);
+  if(archive)return civicVersionVault(archive.vault).rows(archive.ref,path,selection);
   if(!head.current&&!head.legacy)throw new Error(`CIVIC_VERSION_VAULT_MISSING:${id}`);
   const rows=await query(`WITH RECURSIVE selected(value,depth) AS (
     ${sourceRoot(head)}

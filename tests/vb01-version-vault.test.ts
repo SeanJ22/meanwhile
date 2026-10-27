@@ -67,6 +67,7 @@ test("version accessor reads new history from the vault and selects legacy/curre
     await pg.query("INSERT INTO civic_data_candidates VALUES ('encoded',$1,null,$2)",[hash,{readModel:encoded.value}]);
     const seen:string[]=[];
     const query:Query=async(text,params=[])=>{seen.push(text);return(await pg.query<Record<string,unknown>>(text,[...params])).rows;};
+    assert.equal(await readCivicVersionPath(query,()=>{throw new Error("legacy does not need a vault credential");},"legacy",["kind"]),"open-data");
     for(const id of ["legacy","current","encoded"]){
       assert.equal(await readCivicVersionPath(query,vault,id,["agendaDocuments","1","text"]),before.agendaDocuments[1].text);
       assert.deepEqual(await readCivicVersionRows(query,vault,id,["meetings"],{match:{path:["id"],values:["sitting/second"]},fields:["id","location"]}),
@@ -79,6 +80,9 @@ test("version accessor reads new history from the vault and selects legacy/curre
     assert.deepEqual(await readCivicVersionRows(query,vault,"vault",["records"],{fields:["bodyIds","divisionIds"]}),before.records.map((row,index)=>({ordinal:index+1,value:{bodyIds:row.bodyIds,divisionIds:row.divisionIds}})));
     assert.equal(seen.length,2,"each access asks SQL for a small version header only");
     assert.ok(seen.every(sql=>!sql.includes("candidate->")&&!sql.includes("SELECT payload")));
+    const ref=await civicVersionRef(vault,hash);assert.ok(ref);
+    await pg.query("INSERT INTO civic_data_candidates VALUES ('root',$1,$1,$2)",[hash,{vault:{readModel:ref}}]);
+    assert.equal(await readCivicVersionPath(query,()=>vault,"root",["kind"]),"open-data");
     assert.deepEqual((await pg.query("SELECT read_model_fingerprint,candidate FROM civic_data_candidates WHERE id='legacy'")).rows,
       [{read_model_fingerprint:null,candidate:{readModel:before}}],"legacy versions are unchanged");
   }finally{await pg.close();}

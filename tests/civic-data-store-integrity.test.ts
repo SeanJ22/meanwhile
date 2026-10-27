@@ -784,7 +784,7 @@ test("the Reader-evidence door's narrow read decides authority exactly as the wh
 test("the Postgres promotion transaction is selected from the exact persisted proof", () => {
   const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
   const promote = source.slice(source.indexOf("  async promote(candidateId", source.indexOf("export class Postgres")), source.indexOf("  async events(candidateId", source.indexOf("export class Postgres")));
-  assert.match(promote, /validationReceipt\} = \$\{receiptJson\}::jsonb/);
+  assert.match(promote, /validationReceipt\} - 'excludedFacts' = \$\{receiptJson\}::jsonb - 'excludedFacts'/);
   assert.match(promote, /state\} = 'VALIDATED'/);
   assert.match(promote, /insert\(civicDataPromotions\)\.select/);
   assert.match(promote, /insert\(civicDataCandidateEvents\)\.select/);
@@ -793,7 +793,7 @@ test("the Postgres promotion transaction is selected from the exact persisted pr
   assert.match(promote, /civicDataPromotions\.currentVersionId, expectedVersionId/);
   assert.match(promote, /pointerOwnsCandidate/);
   assert.match(promote, /where \$\{eligibility\} and \$\{pointerOwnsCandidate\}/);
-  assert.match(promote, /validationReceipt: storedReceipt/);
+  assert.doesNotMatch(promote.slice(promote.indexOf("const candidateWrite")), /validationReceipt:/,"promotion preserves the already validated receipt, including legacy rows");
   assert.doesNotMatch(promote, /validationReceipt: receipt[,\n]/);
   assert.doesNotMatch(promote, /\.returning\(\)/, "a bare RETURNING ships the whole payload or envelope back");
   assert.match(promote, /\.onConflictDoUpdate\(\{[\s\S]*\}\)\.returning\(PROMOTED_POINTER_COLUMNS\)/);
@@ -862,8 +862,8 @@ async function withCannedNeon<T>(
       let metadata: NeonAnswer | null = null;
       if (version !== "POSTGRES") {
         const { query, params } = statement;
-        if (query.includes("civic_data_clock_versions")) metadata = { columns: [["etag", "text"]], rows: [[current]] };
-        else if (query.includes(".xmin::text") || query.includes("content-v1/")) {
+        if (query.includes("civic_data_clock_versions")||query.startsWith("WITH publication_head")) metadata = { columns: [["etag", "text"],["eligible","bool"]], rows: [[current,true]] };
+        else if (query.includes(".xmin::text") || query.includes("content-v1/") || query.includes("publication-v1/") || query.includes("part-v1/")) {
           const keys = params.flatMap(value => Array.isArray(value) ? value : [value]).filter((value): value is string =>
             typeof value === "string" && !value.startsWith("UNCHANGED_CONFIRMATION") &&
             (query.includes("civic_data_payload_parts") ? /^[a-f0-9]{64}$/.test(value) :
@@ -875,7 +875,9 @@ async function withCannedNeon<T>(
               ["failureDetail","failure_detail","text"]] as const;
             metadata = { columns: [["key","text"],["etag","text"],...fields.map(([name,,type]) => [name,type] as NeonColumn)],
               rows: keys.map(key => [key,current,...fields.map(([,column]) => headers.get(key)?.[column] ?? null)]) };
-          } else metadata = { columns: [["key", "text"], ["etag", "text"], ["latestConfirmation", "text"]], rows: keys.map(key => [key,current,null]) };
+          } else if(query.includes('"civic_data_promotions"."validation_receipt"='))
+            metadata={columns:[["key","text"],["etag","text"],["coupled","bool"],["confirmation","text"]],rows:keys.map(key=>[key,current,true,null])};
+          else metadata = { columns: [["key", "text"], ["etag", "text"], ["latestConfirmation", "text"]], rows: keys.map(key => [key,current,null]) };
         }
       }
       // Existing fixtures count body statements. Version behavior itself is
@@ -1386,7 +1388,8 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
     const decoded = await new CivicPayloadParts({ existing: async () => [], write: async () => {},
       read: async hashes => hashes.map(hash => ({ hash, payload: parts.get(hash) })),
     }).load(envelope!);
-    assert.deepEqual(decodeStateCandidate(decoded), value, "source evidence, identities, and reader values survive the encoding exactly");
+    const {vault:_vault,...logical}=decodeStateCandidate(decoded) as Record<string,unknown>;
+    assert.deepEqual(logical, value, "source evidence, identities, and reader values survive the encoding exactly");
     const readAt = sent.length;
     const lineageRef = (envelope!.retrieval.derived as unknown as { $civicPayloadPart: string }).$civicPayloadPart;
     assert.equal(typeof lineageRef, "string");
@@ -1628,7 +1631,8 @@ for (const family of ["candidate-profiles", "candidate-corpus", "candidate-campa
     assert.equal(parts.size, 1);
     const codec = new CivicPayloadParts({ existing: async () => [], write: async () => assert.fail("readback cannot write"),
       read: async hashes => hashes.map(hash => ({ hash, payload: parts.get(hash) })) });
-    assert.deepEqual(decodeStateCandidate(await codec.load(envelope)), value);
+    const {vault:_vault,...logical}=decodeStateCandidate(await codec.load(envelope)) as Record<string,unknown>;
+    assert.deepEqual(logical, value);
     assert.deepEqual(await codec.load(envelope.readModel), payload, "the promotion's exact stored reference resolves to the same payload");
   });
 }

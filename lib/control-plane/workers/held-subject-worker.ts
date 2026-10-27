@@ -1,3 +1,4 @@
+import { databaseByteContract } from "../../civic-data/database-byte-contract.ts";
 import { performance } from "node:perf_hooks";
 import { datePath, extensionFor, type EvidenceStore } from "../evidence/store.ts";
 import { ZERO_COST, type AttemptCost, type WorkerRef } from "../attempt.ts";
@@ -32,7 +33,7 @@ export async function enqueueHeldSubjectDetails(repos: ControlPlaneRepositories,
   const held = await readHeldSubjectSource(repos, input.workItemId, input.sourceRouteTaskId, input.artifactId);
   if (!held) return null;
   return enqueueWorkerTask(repos, { workItemId: input.workItemId, artifactId: input.artifactId, role: "ACQUIRER", now: input.now,
-    contract: { schemaVersion: 2, recordClass: HELD_SUBJECT_DETAILS_CLASS, subjectId: held.item.subject,
+    contract: { ...databaseByteContract({id:VERSION,recordClass:HELD_SUBJECT_DETAILS_CLASS}),schemaVersion: 2, recordClass: HELD_SUBJECT_DETAILS_CLASS, subjectId: held.item.subject,
       jurisdiction: { country: "US", state, canonicalId: held.item.subject }, identity: { namespace: VERSION, keyFields: ["subjectId"] },
       sourceScope: { sourceId: VERSION, publisher: new URL(held.record.canonicalUrl).hostname,
         routeIds: [input.sourceRouteTaskId], canonicalUrls: [...new Set([held.sourceUrl, held.record.canonicalUrl])], observationArtifactIds: [input.artifactId] },

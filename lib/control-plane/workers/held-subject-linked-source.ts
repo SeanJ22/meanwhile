@@ -1,3 +1,4 @@
+import { databaseByteContract } from "../../civic-data/database-byte-contract.ts";
 import { performance } from "node:perf_hooks";
 import { assertPublicUrl } from "../../hunt/egress.ts";
 import { heldCaptureReader } from "../../civic-data/worker-publication-context.ts";
@@ -53,7 +54,7 @@ export async function enqueueHeldSubjectLinkedSources(repos: ControlPlaneReposit
     const start = input.capture.evidence.text.indexOf(link.quote);
     if (start < 0) continue;
     tasks.push(await enqueueWorkerTask(repos, { workItemId: input.workItemId, artifactId: input.artifactId, role: "ACQUIRER", now: input.now,
-      contract: { schemaVersion: 2, recordClass: CLASS, subjectId: held.item.subject,
+      contract: { ...databaseByteContract({id:VERSION,recordClass:CLASS}),schemaVersion: 2, recordClass: CLASS, subjectId: held.item.subject,
         jurisdiction: { country: "US", state: input.state, canonicalId: held.item.subject },
         identity: { namespace: VERSION, keyFields: ["subjectId", "canonicalUrl"] },
         sourceScope: { sourceId: VERSION, publisher: new URL(link.url).hostname, routeIds: [input.sourceRouteTaskId],

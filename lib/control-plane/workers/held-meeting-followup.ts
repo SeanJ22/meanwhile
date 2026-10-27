@@ -1,3 +1,4 @@
+import { databaseByteContract } from "../../civic-data/database-byte-contract.ts";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -73,7 +74,7 @@ export async function enqueueHeldMeetingTask(repos: ControlPlaneRepositories, in
   const held = await sourceReceipt(repos, input.item.id, input.route.id, input.artifact.artifactId);
   if (!held || held.item.subject !== input.item.subject || held.record.contentHash !== input.artifact.contentHash) return null;
   return enqueueWorkerTask(repos, { workItemId: held.item.id, artifactId: held.record.artifactId, role: "ACQUIRER", now: input.now,
-    contract: { schemaVersion: 2, recordClass: HELD_MEETING_DETAILS_CLASS, subjectId: held.item.subject,
+    contract: { ...databaseByteContract({id:VERSION,recordClass:"MEETING"}),schemaVersion: 2, recordClass: HELD_MEETING_DETAILS_CLASS, subjectId: held.item.subject,
       jurisdiction: { country: "US", state, canonicalId: held.item.subject }, identity: { namespace: VERSION, keyFields: ["subjectId"] },
       sourceScope: { sourceId: VERSION, publisher: new URL(held.record.canonicalUrl).hostname,
         routeIds: [held.route.id], canonicalUrls: [...new Set([held.sourceUrl, held.record.canonicalUrl])], observationArtifactIds: [held.record.artifactId] },

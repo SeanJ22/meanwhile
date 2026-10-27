@@ -1,4 +1,5 @@
 import type { AttemptCost, WorkerRef } from "../attempt.ts";
+import type { DatabaseByteContract } from "../../civic-data/database-byte-contract.ts";
 import type { Artifact } from "../evidence/artifact.ts";
 import type { AttackMode, AuditEvidenceBase } from "../audit.ts";
 import { ATTACK_MODES, AUDIT_EVIDENCE_BASES } from "../audit.ts";
@@ -28,7 +29,7 @@ export interface WorkerEvidence {
   readonly methodRouteId: string;
   readonly sourceDocument?: { readonly artifactId: string; readonly contentHash: string; readonly kind: NonNullable<Artifact["extraction"]>["kind"] };
 }
-export interface LegacyCivicExtractionContract {
+export interface LegacyCivicExtractionContract extends Partial<DatabaseByteContract> {
   readonly recordClass: "LEGISTAR_EVENTS" | "CIVICCLERK_EVENTS";
   readonly schemaVersion: 1;
   readonly subjectId: string;
@@ -59,7 +60,7 @@ export type RecordExtractionShape = {
   | { readonly format: "TEXT_BLOCKS"; readonly recordStart: string; readonly recordEnd?: string }
   | { readonly format: "UNSUPPORTED"; readonly mediaType: string; readonly reason: string }
 );
-export interface GeneralizedContractMetadata {
+export interface GeneralizedContractMetadata extends Partial<DatabaseByteContract> {
   readonly jurisdiction: { readonly country: string; readonly state: string; readonly canonicalId: string };
   readonly identity: { readonly namespace: string; readonly keyFields: readonly string[] };
   readonly sourceScope: {

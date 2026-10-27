@@ -1,3 +1,4 @@
+import { databaseByteContract } from "../../civic-data/database-byte-contract.ts";
 import { ensurePeopleFeedDoors, markPeopleDoorsReadNow } from "../../doors/people-feeds.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import { isOfficialSource } from "../../civic-data/source-authority.ts";
@@ -37,7 +38,7 @@ export function officialsLeadPlan(scope: Extract<OfficialsScope, { ok: true }>, 
     version: 1, capability: "officials/offices", jurisdiction: state, sourceRegistryReferences: doors.map(door => door.doorId), seedUrls,
     sources: [], acquisition: [], auditScope: "SOURCE_UNIVERSE", ownerInstructions: [receiptId,
       `Check this lead for ${scope.label} against official government sources: ${note}. Capture the government's page and verify the seat, current holder or vacancy, and effective date. The owner's words are a lead, never source evidence.`],
-    contract: { schemaVersion: 2, recordClass: "OFFICIAL_ROSTER", subjectId: scope.divisions.find(id => /\/(?:state|territory|district):[^/]+$/.test(id)) ?? scope.divisions[0],
+    contract: { ...databaseByteContract({id:"officials-lead",recordClass:"STATE_LEGISLATOR"}),schemaVersion: 2, recordClass: "OFFICIAL_ROSTER", subjectId: scope.divisions.find(id => /\/(?:state|territory|district):[^/]+$/.test(id)) ?? scope.divisions[0],
       requiredFields: ["name", "office"], identity: { namespace: `officials-lead:${receiptId}`, keyFields: ["name", "office"] },
       jurisdiction: { country: "US", state, canonicalId: scope.divisions[0] },
       completenessScope: `What I heard in ${scope.label}: ${note}. Verify this lead on official government sources. The owner's words are an instruction, never source evidence. Independently capture each source and preserve unresolved contradictions and missing effective dates.`,

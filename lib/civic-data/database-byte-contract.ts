@@ -11,6 +11,7 @@ const profiles: Readonly<Record<string, readonly [number, number]>> = {
   "member-offices": [32 * MiB, 64 * 1024],
   "routine-civic-data": [64 * MiB, MiB],
   "publish-now": [16 * MiB, 64 * 1024],
+  "research-cycle": [64 * MiB, MiB],
   "STATE_LEGISLATOR": [32 * MiB, 128 * 1024],
   "STATE_BILL": [64 * MiB, 256 * 1024],
   "STATE_ROLL_CALL": [32 * MiB, 128 * 1024],
@@ -39,3 +40,4 @@ export const PUBLISH_NOW_DATABASE_BYTES = databaseByteContract({ id: "publish-no
 
 export const ROUTINE_SUPERVISOR_DATABASE_CONTRACT = { id: "routine-civic-data", ...ROUTINE_RUN_DATABASE_BYTES };
 export const PUBLISH_NOW_DATABASE_CONTRACT = { id: "publish-now", ...PUBLISH_NOW_DATABASE_BYTES };
+export const RESEARCH_CYCLE_DATABASE_CONTRACT = {id:"research-cycle",...databaseByteContract({id:"research-cycle"})};

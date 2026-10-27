@@ -1,3 +1,4 @@
+import { databaseByteContract } from "../../civic-data/database-byte-contract.ts";
 import { stateRegistryRuntimeContractId, type StateRegistryContractId } from "../../civic-data/state-scopes.ts";
 import { workerDoorForRecord } from "../../civic-data/worker-reader-contracts.ts";
 import type { CivicExtractionContract } from "./types.ts";
@@ -59,6 +60,7 @@ export function jurisdictionDiscoveryPlan(jurisdiction: Jurisdiction, source: Ju
     ...(["ADOPTED_BUDGET", "BUDGET_RESPONSIBILITY", "BUDGET_AMENDMENT"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "government-budgets" as const, bodyId } } : {}),
     ...(["CANDIDATE_FILING_DOCUMENT", "CAMPAIGN_FINANCE_FILING"].includes(spec.recordClass) && bodyId ? { publication: { contractId: "official-filings" as const, bodyId } } : {}),
     contract: {
+      ...databaseByteContract({id:routeId,recordClass:spec.recordClass}),
       schemaVersion: 2, recordClass: spec.recordClass, subjectId: jurisdiction.id,
       requiredFields: spec.fields, identity: { namespace: `${jurisdiction.id}:${source.recordClass}`, keyFields: spec.fields },
       jurisdiction: { country: "US", state, canonicalId: jurisdiction.id },

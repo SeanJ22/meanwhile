@@ -200,8 +200,8 @@ export async function statePeoplePortraits(input: {roster:OfficeholderSet;state:
     for (let i=excludedFacts.length-1;i>=0;i--) if (excludedFacts[i].key === `${person.personId ?? person.id}:portrait`) excludedFacts.splice(i,1);
     if (person.portraitCandidate) {
       const lead = person.portraitCandidate;
-      const captures = linkingCaptures.filter(row => row.evidence.canonicalUrl === lead.sourceUrl);
-      if (captures.length) try {
+      const captures = linkingCaptures;
+      if (captures.some(row => row.evidence.canonicalUrl === lead.sourceUrl)) try {
         person.photo = await storePortrait(person.personId ?? person.id, {subject:{personId:person.personId ?? person.id,
           name:person.name,nativeIds:person.nativeIds,state:person.state,chamber:person.chamber,officeTitle:person.officeTitle,
           profileUrls:person.profileUrls ?? []},imageUrl:lead.imageUrl,captures},clock(),sourceSignal);

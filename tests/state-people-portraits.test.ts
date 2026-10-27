@@ -188,6 +188,20 @@ test("a saved government endorsement verifies a named portrait on an official .u
   const photo=endorsed.roster.officeholders[0].photo!;
   assert.ok(portraitBindingMatches(person.personId!,photo));
   assert.equal(photo.verification!.basis,"OWN_PAGE");assert.equal(photo.verification!.ownPageUrl,url);
+  const leadText='<h1>State Senator Jane Member 0</h1><p>District 7</p><img alt="Jane Member 0" src="/member.jpg">';
+  const lead={...person,portraitCandidate:{sourceUrl:url,imageUrl:"https://legislature.example.us/member.jpg",collectedAt:SOURCE_DATE}};
+  const held=await statePeoplePortraits({state:"az",roster:{...roster,officeholders:[lead]},now:START},{now:()=>VERIFIED,
+    acquire:async()=>{throw Error("Saved member and endorsement captures supply the photo; no profile reread is needed");},storePortrait:images.store,
+    linkingCaptures:[{transport:"REACHABLE",partial:false,httpStatus:200,observedAt:CHECK,evidence:{canonicalUrl:"https://state.example.gov/legislature",
+      sourceId:"official-government",contentHash:portraitHash(new TextEncoder().encode(text)),text,retrievedAt:SOURCE_DATE,
+      vaultKey:"project/freshness/source/official-government/releases/fixture/endorsement.bin"}},
+      {transport:"REACHABLE",partial:false,httpStatus:200,observedAt:CHECK,evidence:{canonicalUrl:url,sourceId:"official-state-people",
+        contentHash:portraitHash(new TextEncoder().encode(leadText)),text:leadText,retrievedAt:SOURCE_DATE,
+        vaultKey:"project/freshness/source/official-state-people/releases/fixture/member.bin"}}]});
+  assert.equal(held.roster.officeholders[0].photo?.verification?.basis,"OWN_PAGE");
+  assert.equal(held.roster.officeholders[0].photo?.verification?.ownPageUrl,url);
+  assert.equal(held.roster.officeholders[0].photo?.sourceUrl,lead.portraitCandidate.imageUrl);
+  assert.deepEqual(held.excludedFacts,[]);
 });
 
 test("Cabinet portraits follow the department's named profile before the White House fallback",async()=>{

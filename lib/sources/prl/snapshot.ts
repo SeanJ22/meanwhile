@@ -1,6 +1,5 @@
 import {
   civicDataReadNotInitialized,
-  promotedVersionOrThrow,
   readPromotedCivicData,
   type CivicDataReadResult,
   type PromotedCivicDataReadOptions,
@@ -116,16 +115,10 @@ export async function readPrlProjection(
   return result;
 }
 
-export async function refreshPrlFromPromoted(
-  options: PromotedCivicDataReadOptions = {},
-): Promise<string | null> {
-  return promotedVersionOrThrow(await readPrlProjection(options));
-}
-
 function snapshot(): PrlSnapshot {
   if (cache) return cache;
   throw new Error(
-    `PRL holding is ${readState.kind}; call refreshPrlFromPromoted before reading the projection.`,
+    `PRL holding is ${readState.kind}; call readPrlProjection before reading the projection.`,
   );
 }
 

@@ -225,10 +225,6 @@ export async function refreshMemberOfficesFromPromoted(options: PromotedCivicDat
   readerStates().set("member-offices",{kind:"BOOTSTRAP",value:{kind:"member-offices",records:held.flatMap(read=>read.value.records)},metadata:{...held[0].metadata,versionId:version},detail:"The selected states' exact keyed member offices."});
   return version;
 }
-export const settleMemberOfficesRead = async (): Promise<CivicDataReadResult<CuratedReaderProjection>> => {
-  await refreshMemberOfficesFromPromoted();
-  return readerStates().get("member-offices")!;
-};
 export const refreshVenueResolutionsFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("venue-resolutions", options);
 

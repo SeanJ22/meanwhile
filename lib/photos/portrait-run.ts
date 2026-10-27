@@ -104,8 +104,6 @@ export function portraitSnapshotSettled(snapshot: Awaited<ReturnType<typeof read
     snapshot.head.rawHash === snapshot.probe.sourceContentHash &&
     (!snapshot.probe.nextTermAt || Date.parse(snapshot.probe.nextTermAt) > Date.parse(now));
 }
-const stampText = (stamp: PortraitStamp) => JSON.stringify([Object.entries(stamp.versions).sort(([a], [b]) => a.localeCompare(b)), stamp.local]);
-export const samePortraitStamp = (left: PortraitStamp, right: PortraitStamp) => stampText(left) === stampText(right);
 
 export interface PortraitList {
   readonly state: string;

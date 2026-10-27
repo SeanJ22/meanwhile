@@ -37,6 +37,7 @@ import {
   type EvidenceManifest,
 } from "../lib/control-plane/evidence/store.ts";
 import { credentials, scanText } from "../lib/ops/fixture-credentials.ts";
+import { holdRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
 
 const FAKE_GOOGLE_KEY = ["AI", "za"].join("") + "SyD4mQ8vX1nR7pLbT2wCzE0jHfGuY5aKs_-3xNp".slice(0, 35);
 
@@ -273,9 +274,35 @@ test("DURABLE READ: bytes that no longer hash to what was written are a FAILED R
   assert.ok(err instanceof EvidenceStoreRefusal);
 
   await assert.rejects(() => readArtifact(store, PROJECT, artifact, "AUDITOR"), EvidenceCorrupted);
-  await assert.rejects(() => store.head(key), EvidenceCorrupted);
+  assert.deepEqual(await store.head(key), artifactMeta(artifact), "metadata HEAD does not inspect same-size body content; get verifies its digest");
   await assert.rejects(() => store.put(key, utf8(PUBLIC_PAGE), artifactMeta(artifact)), EvidenceCorrupted);
   await assert.rejects(() => putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)), EvidenceCorrupted);
+});
+
+test("DURABLE HEAD: source fingerprint checks never call get or read the retained body", async t => {
+  const root = await makeRoot(t);
+  const store = new DurableEvidenceStore(root, { remote: null });
+  const capture = await holdRawCapture(store, "voting-sites", PUBLIC_PAGE, "text/html");
+  const bodyReader = store as unknown as { readBody(key: string, hash: string, bytes: number): Promise<Buffer> };
+  t.mock.method(store, "get", async () => { throw Error("HEAD must not load the stored source record"); });
+  t.mock.method(bodyReader, "readBody", async () => { throw Error("HEAD must not load the stored source body"); });
+  t.mock.method(store, "put", async () => { throw Error("An unchanged fingerprint must not store another copy"); });
+
+  assert.equal((await store.head(capture.vaultKey))?.contentHash, `sha256-${capture.rawHash}`);
+  assert.deepEqual(await holdRawCapture(store, "voting-sites", PUBLIC_PAGE, "text/html"), capture);
+});
+
+test("DURABLE HEAD: committed metadata with a missing or shortened body fails without loading bytes", async t => {
+  for (const fault of ["missing", "shortened"]) {
+    const root = await makeRoot(t);
+    const store = new DurableEvidenceStore(root, { remote: null });
+    const capture = await holdRawCapture(store, "voting-sites", PUBLIC_PAGE, "text/html");
+    const path = join(root, keyToRelativePath(capture.vaultKey));
+    if (fault === "missing") await rm(path);
+    else await writeFile(path, "shortened");
+    t.mock.method(store, "get", async () => { throw Error("HEAD must not use get to detect an incomplete body"); });
+    await assert.rejects(store.head(capture.vaultKey), EvidenceStoreRefusal);
+  }
 });
 
 test("DURABLE WRITE: the sidecar is the commit point, so an interrupted write is absent rather than half-declared", async (t) => {

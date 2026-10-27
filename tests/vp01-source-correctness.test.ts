@@ -92,7 +92,7 @@ test("published row kinds and configured source kinds cannot inherit a different
 });
 
 test("postal-only delivery addresses are never voting locations in source parsing or held answers", () => {
-  for (const address of ["PO Box 123", "P.O. Box 123", "P O Box 123", "Post Office Box 123", "POB 123", "General Delivery"]) {
+  for (const address of ["PO Box 123", "P.O. Box 123", "P O Box 123", "Post Office Box 123", "POB 123", "POBox123", "POB123", "General Delivery"]) {
     assert.equal(mailingOnlyVotingAddress(address), true, address);
     assert.equal(votingRowsToSites([{ name: "Protocol site", address }], protocol, source).sites.length, 0, address);
     assert.equal(projectVotingJurisdiction({ ...jurisdiction(protocol), sites: [{ id: "mail", name: "Protocol office", address,

@@ -1,4 +1,4 @@
-const postalBox = /\b(?:p[.\s]*o[.\s]*(?:box|b)|post\s+office\s+box)\b\.?\s*(?:#\s*)?[a-z0-9-]*/gi;
+const postalBox = /\b(?:p[.\s]*o[.\s]*(?:box|b)|post\s+office\s+box)(?=\b|\d)\.?\s*(?:#\s*)?[a-z0-9-]*/gi;
 
 /** Keep a published street when a separate delivery box was appended to it. */
 export function votingPhysicalAddress(address: string): string | null {

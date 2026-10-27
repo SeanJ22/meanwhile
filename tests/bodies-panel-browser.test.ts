@@ -158,11 +158,11 @@ test("Bodies stays compact and opens the correct body with next and last meeting
       for (const calendar of ["next", "last", "none"]) {
         await page.goto(`http://127.0.0.1:${address.port}/?zip=85701&calendar=${calendar}`);
         await openTusd();
-        assert.equal(await nextRow.count(), calendar === "next" ? 1 : 0);
-        assert.equal(await lastRow.count(), calendar === "last" ? 1 : 0);
         const gapId = calendar === "next" ? "body:last-meeting" : calendar === "last" ? "body:next-meeting" : `body:${tusd.bodyId}:meetings`;
         const gap = page.locator(`[data-card-gap="${gapId}"]`);
         await gap.waitFor({ state: "visible" });
+        assert.equal(await nextRow.count(), calendar === "next" ? 1 : 0);
+        assert.equal(await lastRow.count(), calendar === "last" ? 1 : 0);
         assert.match(await gap.innerText(), /working on getting this info/);
         assert.equal(await gap.locator("[data-demand-subject]").getAttribute("data-demand-subject"), tusd.bodyId);
       }

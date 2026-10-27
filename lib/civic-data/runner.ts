@@ -699,7 +699,7 @@ export function routineTaskNextDueMs(
   observedEveryMs?: number,
 ): number {
   const defaults = factRefreshBounds(task);
-  const continuationPending = clock?.continuationPending === true && (["MEETING", "MEETING_OUTCOME", "STATE_BILL", "CURATED_READER_RECORD"].includes(task.recordClass) || task.recordClass === "FEDERAL_MONEY" &&
+  const continuationPending = clock?.continuationPending === true && (Number.isFinite(Date.parse(clock.lastCompletedAt ?? "")) || ["MEETING", "MEETING_OUTCOME", "STATE_BILL", "CURATED_READER_RECORD"].includes(task.recordClass) || task.recordClass === "FEDERAL_MONEY" &&
     task.contract.fanOut !== undefined && task.scope === `${task.sourceId}:US`);
   const policyNowMs = cadenceMsAt(task.contract, nowMs);
   // The explicit election/sitting obligation keeps its installed pace even when its broad fact kind retries more slowly.

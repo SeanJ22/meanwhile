@@ -9,6 +9,7 @@ import { portraitBindingMatches } from "../photos/binding.ts";
 import { mergeExecutiveFacts } from "./national-executive.ts";
 import { heldPersonSources } from "./held-sources.ts";
 import { bindPeopleSources } from "./people-bindings.ts";
+import { looksLikeFurniture } from "../hunt/portrait-pick.ts";
 import type { Officeholder, OfficeholderSet, PersonFieldDisagreement } from "./types.ts";
 
 const normalized = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
@@ -140,6 +141,11 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     return held;
   };
   const prefers = (right: Officeholder, left: Officeholder, field: string) => {
+    if(field==="portraitCandidate") {
+      const usable=(person:Officeholder)=>Boolean(person.portraitCandidate&&!looksLikeFurniture({src:person.portraitCandidate.imageUrl,alt:""}));
+      const r=usable(right),l=usable(left);
+      if(r!==l)return r;
+    }
     const r = sourceFor(right, field), l = sourceFor(left, field);
     const rank = (source: Provenance) => {
       const authoritative = source.kind === "OFFICIAL" || Boolean(source.sourceUrl && official(source.sourceUrl));

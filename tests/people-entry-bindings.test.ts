@@ -412,6 +412,16 @@ test("a portrait lead keeps its own source time when another page changes the pe
   assert.equal(combined.officeholders[0].fieldSources?.portraitCandidate?.sourceUrl,page);
 });
 
+test("a newer contact icon cannot outrank an older portrait from the person's own entry",()=>{
+  const lead={...people[0],portraitCandidate:{imageUrl:"https://legislature.example.gov/vito-barbieri.jpg",sourceUrl:page,collectedAt:at}};
+  const icon={...people[0],portraitCandidate:{imageUrl:"https://legislature.example.gov/email.png",sourceUrl:"https://legislature.example.gov/members/vito",collectedAt:"2026-10-27T06:00:00.000Z"}};
+  for(const rows of [[lead,icon],[icon,lead]]) {
+    const merged=mergePeopleSets(rows.map(person=>roster([person])))!.officeholders[0];
+    assert.deepEqual(merged.portraitCandidate,lead.portraitCandidate);
+    assert.ok(personIdentityKeys(merged).has(people[0].personId!));
+  }
+});
+
 test("a list discovers every named entry even without an aggregator or linked name",()=>{
   const parsed=parse(html,roster([]));assert.deepEqual(parsed.officeholders.map(person=>person.name),["Vito Barbieri","Jane Member"]);
   assert.equal(mergePeopleSets([parsed])!.officeholders.length,2);

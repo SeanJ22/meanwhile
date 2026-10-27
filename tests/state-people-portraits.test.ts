@@ -246,7 +246,7 @@ async function seedHeldProfile(row:typeof heldProfiles[number],extraLinks=""){
   const url=`https://raw.githubusercontent.com/openstates/people/${releaseId}/${row.member}`;
   const body=row.body+extraLinks;
   const roster=normalize(yamlToPeople(body,state,url,HELD_NOW),new Map(),row.retrieved_at,`US-${state.toUpperCase()}`);
-  const published=await publishStatePeople({ vault, store,state,roster,acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,
+  const published=await publishStatePeople({ vault, store,state,roster,resolveOfficePoint:async()=>({reason:"NO_MATCH"}),acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,
     retrievedAt:row.retrieved_at,body}],releaseId,now:HELD_NOW});
   assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
   return {store,state,person:roster.officeholders[0]};

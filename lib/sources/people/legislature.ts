@@ -57,7 +57,7 @@ export function legislaturePageNamesPerson(html: string, name: string): boolean 
 export function legislaturePageBindsPerson(html:string,pageUrl:string,person:Officeholder,collectedAt:string):boolean {
   if(!legislaturePageNamesPerson(html,person.name))return false;
   const parsed=normalizeOfficialLegislaturePage(html,pageUrl,{state:person.state!,sourceId:"official-state-people",asOf:collectedAt,
-    signal:new AbortController().signal,roster:{...emptyRoster(person.state!,collectedAt),officeholders:[{...person,sourceHolders:undefined}]}},collectedAt);
+    signal:new AbortController().signal,roster:{...emptyRoster(person.state!,collectedAt),officeholders:[{...person,sourceHolders:undefined}]}},collectedAt,person);
   return parsed.officeholders.some(row=>row.chamber===person.chamber&&sameNativePerson(row,person));
 }
 const governmentRoute = (value:unknown):value is string => {
@@ -227,7 +227,7 @@ export function statedVacancies(content:string,headers:string,pageUrl:string,opt
   }
   return [...found.values()];
 }
-export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,options:PeopleAcquisitionOptions,collectedAt:string):OfficeholderSet {
+export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,options:PeopleAcquisitionOptions,collectedAt:string,subject?:Pick<Officeholder,"name"|"state"|"chamber"|"nativeIds">):OfficeholderSet {
   const roster=emptyRoster(options.state,options.asOf);
   if(federalRoute(pageUrl)||memberContentRoute(pageUrl))return roster;
   const seeds=(options.roster?.officeholders??[]).flatMap(sourcePeople)
@@ -257,6 +257,10 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
       if(!name||!label||!id||!chamber||!district||!/^\d+$/.test(id)||
         !(chamber==="upper"?/^Senator\s/i:/^Representative\s/i).test(label)||
         !samePublishedName(rosterLabelName(label.replace(/\s*\([^)]+\)$/, "")),name))continue;
+      if(subject) {
+        const ids=subject.nativeIds?.[`${stateIdentity(options.state).state.toLowerCase()}-legislature`];
+        if(chamber!==subject.chamber||!samePublishedName(name,subject.name)||ids?.length&&!ids.includes(id))continue;
+      }
       const image=url(row.imageUrl),email=string(row.email),phone=string(row.phone);
       const card=`<article><h1>${escape(label)}</h1><p>${escape(district)}</p>${image?`<img src="${escape(image)}" alt="${escape(name)}">`:""}${email?`<a href="mailto:${escape(email)}">Email</a>`:""}${phone?`<a href="tel:${escape(phone)}">${escape(phone)}</a>`:""}</article>`;
       const title=chamber==="upper"?"State Senator":"State Representative";

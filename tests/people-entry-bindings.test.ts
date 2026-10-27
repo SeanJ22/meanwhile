@@ -78,6 +78,8 @@ test("a public member service binds each object and verifies only its own image"
     assert.equal(member.memberships?.[0].district,String(index+3));
     assert.equal(member.portraitCandidate?.imageUrl,rows[index].imageUrl);
     assert.ok(legislaturePageBindsPerson(body,source,member,at));
+    const bounded=normalizeOfficialLegislaturePage(body,source,{sourceId:"official-state-people",state:"id",asOf:at,signal:new AbortController().signal,roster:roster(people)},at,member);
+    assert.deepEqual(bounded.officeholders.map(person=>person.name),[member.name]);
     const subject={personId:member.personId!,name:member.name,nativeIds:member.nativeIds,state:member.state,chamber:member.chamber,officeTitle:member.officeTitle,profileUrls:[source]};
     assert.deepEqual(profilePortraitImageUrls(subject,capture),[rows[index].imageUrl]);
     assert.equal(verifyPortraitSources(subject.personId,{subject,imageUrl:rows[index].imageUrl,captures:[capture]},at).basis,"OWN_PAGE");

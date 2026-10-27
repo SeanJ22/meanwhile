@@ -78,7 +78,7 @@ export function profilePortraitImageUrls(subject:PortraitSubject,capture:Portrai
       provenance(canonicalUrl,capture.evidence.sourceId,capture.evidence.retrievedAt)),nativeIds:subject.nativeIds,chamber:subject.chamber,profileUrls:[...subject.profileUrls]};
     const roster={...emptyRoster(subject.state,capture.evidence.retrievedAt),officeholders:[person]};
     const parsed=normalizeOfficialLegislaturePage(text,canonicalUrl,{state:subject.state,sourceId:"official-state-people",asOf:capture.evidence.retrievedAt,
-      signal:new AbortController().signal,roster},capture.evidence.retrievedAt);
+      signal:new AbortController().signal,roster},capture.evidence.retrievedAt,person);
     const own=parsed.officeholders.filter(row=>sameName(row.name,subject.name)||Boolean(subject.nativeIds?.["ocd-person"]?.length&&
       row.nativeIds?.["ocd-person"]?.some(id=>subject.nativeIds!["ocd-person"].includes(id))));
     if(parsed.officeholders.length)return [...new Set(own.flatMap(row=>row.portraitCandidate?.imageUrl??[]))];

@@ -38,3 +38,24 @@ test("derived input validation reads immutable hashes and only named wiring memb
   const altered={retrieval:{derived:{inputs:[{...first,readModelSha256:"f".repeat(64)},...inputs.slice(1)]}}} as unknown as RoutineCandidate;
   assert.match((await derivedInputAuthorityIssue(store,altered))!,/DERIVED_INPUT_READ_MODEL_MISMATCH/);
 });
+
+test("current wiring heads and members use the promotion fingerprint without a candidate read model", async t => {
+  const pg = new PGlite(); t.after(() => pg.close());
+  await pg.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,record_class text,scope text,state text,acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,normalized_hash text,candidate jsonb,validation_receipt jsonb);
+    CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,current_version_id text,last_known_good_version_id text,source_id text,promoted_at timestamptz,payload jsonb,validation_receipt jsonb);`);
+  await installKeyedRows(pg);
+  const model = { kind: "meeting-source-wiring", records: [{ id: "one", status: "ACTIVE", row: { officialHost: "example.gov", route: "https://example.gov/calendar" } }] };
+  const fingerprint = canonicalCivicDataHash(model), receipt = { candidateId: "current", recordClass: "CURATED_READER_RECORD", scope: DERIVED_WIRING_SCOPE, decision: "GOOD" };
+  await pg.query(`INSERT INTO civic_data_candidates(id,record_class,scope,state,acquisition_succeeded,promoted_version_id,last_known_good_version_id,normalized_hash,candidate,validation_receipt,read_model_fingerprint)
+    VALUES('current','CURATED_READER_RECORD',$1,'PROMOTED',true,'current','current',$2,'{}',$3,$2)`, [DERIVED_WIRING_SCOPE,fingerprint,receipt]);
+  await pg.query(`INSERT INTO civic_data_promotions(key,record_class,scope,current_version_id,last_known_good_version_id,source_id,payload,validation_receipt,payload_fingerprint)
+    VALUES($1,'CURATED_READER_RECORD',$2,'current','current','wiring',$3,$4,$5)`, [`CURATED_READER_RECORD:${DERIVED_WIRING_SCOPE}`,DERIVED_WIRING_SCOPE,model,receipt,fingerprint]);
+  const query = async (text: string, params: readonly unknown[] = []) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  assert.equal((await readDerivedInputHeads(query,["current"]))[0].readModelKind, model.kind);
+  assert.deepEqual(await readDerivedWiringRows(query,"current",["one"]), [{key:"one",status:"ACTIVE",officialHost:"example.gov",route:"https://example.gov/calendar"}]);
+  await pg.exec("DELETE FROM civic_data_rows");
+  assert.deepEqual(await readDerivedWiringRows(query,"current",["one"]), [{key:"one",status:"ACTIVE",officialHost:"example.gov",route:"https://example.gov/calendar"}], "an unindexed current pointer also selects from its payload");
+  await pg.query("UPDATE civic_data_promotions SET payload_fingerprint=$1",["0".repeat(64)]);
+  assert.equal((await readDerivedInputHeads(query,["current"]))[0].readModelSha256, null);
+  assert.deepEqual(await readDerivedWiringRows(query,"current",["one"]), [], "a mismatched current pointer cannot fall back to an older candidate body");
+});

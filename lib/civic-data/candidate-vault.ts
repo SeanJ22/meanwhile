@@ -36,7 +36,11 @@ function sourceMetadata(value:unknown):Record<string,unknown>{
 
 /** A storage encoder only: callers keep their full, validated candidate for the write and its returned fingerprint. */
 export async function holdCandidateFacts(vault:EvidenceStore,candidate:RoutineCandidate,previousFingerprint:string|null,
-  options:{readonly retainReadModel:boolean;readonly retainEvidence?:boolean}):Promise<VaultCandidate>{
+  options:{readonly retainReadModel:boolean;readonly retainEvidence?:boolean;readonly previousReadModel?:unknown}):Promise<VaultCandidate>{
+  // Legacy predecessors have no archive yet. A writer may already own their
+  // complete model; never fetch it again, or mistake a selected projection for it.
+  if(previousFingerprint&&options.previousReadModel!==undefined&&hash(options.previousReadModel)===previousFingerprint)
+    await holdCivicVersion(vault,options.previousReadModel,previousFingerprint);
   const modelHash=hash(candidate.readModel);
   const readModel=await holdCivicVersion(vault,candidate.readModel,modelHash);
   const normalizedHash=hash(candidate.normalizedPayload);

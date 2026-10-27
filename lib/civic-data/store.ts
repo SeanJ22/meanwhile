@@ -152,6 +152,11 @@ export interface CandidateTransitionOptions {
   readonly previousCacheScope?: ReaderCacheScope;
 }
 
+export interface CandidateCreateOptions {
+  /** The exact comparison base; null means the candidate was compared with an empty source. */
+  readonly changeBase?: {readonly fingerprint:string;readonly readModel:unknown}|null;
+}
+
 /** An already read exact merge base, reused by the existing source proof and promotion CAS. */
 export interface RoutinePublicationBase {
   readonly current:PromotedProjection|null;
@@ -178,7 +183,7 @@ export interface RoutineDataStore {
   /** Reuse a proven read across runner passes until this scope's candidates, events or pointer change. */
   readonly readVersioned?: <T>(namespace: string, recordClass: RoutineRecordClass, scope: string, read: () => Promise<T>) => Promise<T>;
   readonly eventObservedAt?: (recordClass: RoutineRecordClass, scope: string, requestedAt: string) => Promise<string>;
-  readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent) => Promise<void>;
+  readonly create: (record: CandidateVersionRecord, firstEvent: CandidateEvent, options?:CandidateCreateOptions) => Promise<void>;
   readonly transition: (
     candidateId: string,
     state: CandidateState,
@@ -2476,16 +2481,17 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return stored as unknown as RoutineCandidate;
   }
 
-  async create(record: CandidateVersionRecord, firstEvent: CandidateEvent): Promise<void> {
+  async create(record: CandidateVersionRecord, firstEvent: CandidateEvent, options:CandidateCreateOptions={}): Promise<void> {
     this.assertCandidateMutationAuthority(record.candidate);
     assertInitialRecord(record, firstEvent);
     const [{holdCandidateFacts},{rawCaptureVault}]=await Promise.all([import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
-    const [previous]=record.lastKnownGoodVersion?await this.db.select({fingerprint:civicDataCandidates.normalizedHash})
+    const [previous]=options.changeBase===undefined&&record.lastKnownGoodVersion?await this.db.select({fingerprint:civicDataCandidates.normalizedHash})
       .from(civicDataCandidates).where(eq(civicDataCandidates.id,record.lastKnownGoodVersion)).limit(1):[];
     // Transitional compatibility: DB-06 must switch the historical model and
     // source-evidence readers before these two inline copies are removed.
-    const held=await holdCandidateFacts(this.cacheOptions.vault??rawCaptureVault(),record.candidate,previous?.fingerprint??null,
-      {retainReadModel:true,retainEvidence:true});
+    const held=await holdCandidateFacts(this.cacheOptions.vault??rawCaptureVault(),record.candidate,
+      options.changeBase===undefined?previous?.fingerprint??null:options.changeBase?.fingerprint??null,
+      {retainReadModel:true,retainEvidence:true,previousReadModel:options.changeBase?.readModel});
     const full=held as RoutineCandidate;
     const stateAuthority = statePublicationScope(record.candidate.scope);
     const meetingDoors = record.candidate.sourceId === "meeting-doors";

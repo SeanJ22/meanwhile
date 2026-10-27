@@ -1,7 +1,7 @@
 import { statePublicationPriorOf } from "./state-publication.ts";
 import { randomUUID } from "node:crypto";
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
-import { assertPublicationBaseOwner, PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore, type RoutinePublicationBase } from "./store.ts";
+import { assertPublicationBaseOwner, PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type CandidateCreateOptions, type RoutineDataStore, type RoutinePublicationBase } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
 import { canonicalCivicDataJson, candidateChangeSet, heldCivicRecords } from "./changes.ts";
 import { promotionProofIssue } from "./read-model.ts";
@@ -11,6 +11,8 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { statePublicationScope } from "./state-publication.ts";
 import { navigationBaseProjection, type NavigationComparison } from "./navigation-successor.ts";
 import { readerCacheScopeForPublication } from "../reader/cache.ts";
+import { canonicalCivicDataHash } from "./canonical-hash.ts";
+import { publicationBaseHash } from "./navigation-publication-base.ts";
 
 
 function failureOf(receipt: NonNullable<CandidateVersionRecord["receipt"]>): { code: string; detail: string } {
@@ -145,18 +147,30 @@ export async function processRoutineCandidate(
           lkg,
           lkgTransferPredecessor,
         );
+  // The delta's base can be deliberately empty or an older declared version
+  // after a CAS race. Do not substitute the current pointer during storage.
+  const emptyCuratedBase=inputCandidate.recordClass === "CURATED_READER_RECORD" && inputCandidate.retrieval.manualSourceReceipt &&
+    !(preloadedBaseChanged ? exactDeclaredBase : lkg)?.candidate.retrieval.manualSourceReceipt;
+  let comparisonPayload=emptyCuratedBase?null:preloadedBaseChanged?exactDeclaredBase?.candidate.readModel??null:current?.payload??null;
+  const comparisonFingerprint=navigation?navigation.base?.hasSourceReceipt?publicationBaseHash(navigation.base.record):null:
+    !preloadedBaseChanged&&indexedPrior?lkg?.candidate.normalization.normalizedHash??null:
+    comparisonPayload===null?null:canonicalCivicDataHash(comparisonPayload,{durable:true});
+  let changeBase:CandidateCreateOptions["changeBase"]=comparisonFingerprint?{
+    fingerprint:comparisonFingerprint,
+    // Scoped readers may supply only an index; release it before insertion as
+    // before. Archive only complete models this writer already holds.
+    readModel:scoped?undefined:navigation?navigation.base?.record.candidate.readModel:comparisonPayload,
+  }:null;
   const candidate: RoutineCandidate = {
     ...inputCandidate,
     // A receiptless curated base contributes no verified records to the change set.
     changeSet: navigation ? { ...navigation.changes, held: heldCivicRecords(inputCandidate) } : candidateChangeSet(
       inputCandidate,
-      inputCandidate.recordClass === "CURATED_READER_RECORD" && inputCandidate.retrieval.manualSourceReceipt &&
-        !(preloadedBaseChanged ? exactDeclaredBase : lkg)?.candidate.retrieval.manualSourceReceipt
-        ? null
-        : preloadedBaseChanged ? exactDeclaredBase?.candidate.readModel ?? null : current?.payload ?? null,
+      comparisonPayload,
       undefined, preloadedBaseChanged ? undefined : indexedPrior,
     ),
   };
+  comparisonPayload=null;
   const initialState: CandidateState = candidate.retrieval.succeeded ? "FETCHED" : "SOURCE_BLOCKED";
   const trustedPredecessorVersionId = trustedLkgPredecessorVersionId(candidate);
   const continuingExactLkg = trustedPredecessorVersionId !== null &&
@@ -269,7 +283,7 @@ export async function processRoutineCandidate(
     state: initialState,
     at: transitionAt,
     detail: candidate.retrieval.succeeded ? `Acquired raw ${candidate.retrieval.rawHash}.` : (candidate.retrieval.failureDetail ?? "Source route blocked."),
-  }); } catch (error) {
+  },{changeBase}); } catch (error) {
     if (!duplicateCandidate(error, candidate.id) || inputCandidate.retryOfCandidateId) throw error;
     const priorAttempt = await store.readCandidateSummary(candidate.id);
     if (!priorAttempt || priorAttempt.candidate.sourceId !== candidate.sourceId ||
@@ -277,6 +291,7 @@ export async function processRoutineCandidate(
     return processRoutineCandidate(store, { ...inputCandidate, id: `cv-${randomUUID().replaceAll("-", "")}`,
       retryOfCandidateId: candidate.id }, transitionAt, expectedBaseVersionId, registeredDoor, sourceProjectionVerification, options);
   }
+  changeBase=null;
 
   if (!candidate.retrieval.succeeded) {
     return { candidate: { candidate, state: initialState, acquisitionSucceeded: false, receipt: validated.receipt,

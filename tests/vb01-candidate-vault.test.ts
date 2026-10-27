@@ -3,7 +3,7 @@ import test from "node:test";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { candidateChangeSet, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { holdCandidateFacts, hydrateCandidateFacts, readCivicCandidatePath, rebuildCandidateChanges } from "../lib/civic-data/candidate-vault.ts";
-import { holdCivicVersion } from "../lib/civic-data/version-vault.ts";
+import { civicVersionRef, holdCivicVersion } from "../lib/civic-data/version-vault.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 
@@ -68,4 +68,18 @@ test("selected civic-record evidence preserves supplied records instead of repla
   assert.equal(compact.vault.civicRecords,"DERIVED");
   assert.deepEqual(await readCivicCandidatePath(async text=>text.includes("record_class")?[{record_class:input.recordClass}]:[{vault:compact.vault}],
     vault,input.id,["civicRecords"]),derived);
+});
+
+test("the first post-legacy delta archives an already owned predecessor without another record read",async()=>{
+  const vault=new MemoryEvidenceStore(),input=candidate();
+  const previous={kind:"open-data",records:[{id:"row/one",title:"Earlier fact"},{id:"row/removed",title:"Removed fact"}]};
+  const fingerprint=hash(previous),changeSet=candidateChangeSet(input,previous);
+  assert.equal(await civicVersionRef(vault,fingerprint),null);
+  const stored=await holdCandidateFacts(vault,{...input,changeSet},fingerprint,{retainReadModel:false,previousReadModel:previous});
+  assert.ok(await civicVersionRef(vault,fingerprint));
+  assert.deepEqual(await rebuildCandidateChanges(vault,stored),changeSet);
+  const partialVault=new MemoryEvidenceStore();
+  const selected=await holdCandidateFacts(partialVault,input,fingerprint,{retainReadModel:false,previousReadModel:{records:previous.records.slice(0,1)}});
+  assert.equal(await civicVersionRef(partialVault,fingerprint),null,"selected fields cannot stand in for a complete predecessor");
+  await assert.rejects(()=>rebuildCandidateChanges(partialVault,selected),/CHANGE_BASE_NOT_IN_VAULT/);
 });

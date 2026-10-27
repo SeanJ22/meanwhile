@@ -6,10 +6,10 @@ import { processRegisteredRoutineCandidate,
 import { processRoutineCandidate } from "../lib/civic-data/candidate-lifecycle.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
-import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { MemoryRoutineDataStore, PostgresRoutineDataStore, type CandidateCreateOptions } from "../lib/civic-data/store.ts";
 import { failedAcquisitionCandidate, fecFundingCandidate, normalizedHash, officialStateRollCallsCandidate } from "../lib/civic-data/candidate-builders.ts";
 import type { FundingSnapshot } from "../lib/funding/types.ts";
-import { sourceProjectionEvidence, type CandidateVersionRecord, type RoutineCandidate, type RoutineRecordClass } from "../lib/civic-data/types.ts";
+import { sourceProjectionEvidence, type CandidateEvent, type CandidateVersionRecord, type RoutineCandidate, type RoutineRecordClass } from "../lib/civic-data/types.ts";
 import { VALIDATION_CHECKS } from "../lib/civic-data/types.ts";
 import { stateRollAttribution, stateRollPublisher } from "../lib/sources/legiscan/types.ts";
 import { parseReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
@@ -211,6 +211,25 @@ async function expectHeld(
 test("GOOD is the only path that reaches PROMOTED", async () => {
   const store = new MemoryRoutineDataStore();
   await seed(store);
+});
+
+test("candidate storage receives the exact delta base even when the canonical pointer has moved",async()=>{
+  class RecordingStore extends MemoryRoutineDataStore {
+    readonly bases=new Map<string,CandidateCreateOptions["changeBase"]>();
+    override async create(record:CandidateVersionRecord,event:CandidateEvent,options:CandidateCreateOptions={}){
+      this.bases.set(record.candidate.id,options.changeBase);
+      await super.create(record,event);
+    }
+  }
+  const store=new RecordingStore(),base=candidate("delta-base"),winner=candidate("delta-winner"),stale=candidate("delta-stale");
+  assert.ok((await processRoutineCandidate(store,base,NOW,undefined,null,null,{confirmUnchanged:false})).promoted);
+  assert.equal(store.bases.get(base.id),null,"a first version has an empty comparison base");
+  assert.ok((await processRoutineCandidate(store,winner,NOW,base.id,null,null,{confirmUnchanged:false})).promoted);
+  const outcome=await processRoutineCandidate(store,stale,NOW,base.id);
+  assert.equal(outcome.candidate.failureCode,"PROMOTION_BASE_CHANGED");
+  assert.equal(store.bases.get(stale.id)?.fingerprint,base.normalization.normalizedHash);
+  assert.notEqual(store.bases.get(stale.id)?.fingerprint,winner.normalization.normalizedHash);
+  assert.deepEqual(store.bases.get(stale.id)?.readModel,base.readModel,"rebuilding the refused delta must not substitute the winner's facts");
 });
 
 test("duplicate civic member keys are refused before a delta or pointer can collapse facts", async () => {

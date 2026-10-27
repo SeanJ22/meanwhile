@@ -721,6 +721,8 @@ export const civicDataCandidates = pgTable(
     acquisitionSucceeded: boolean("acquisition_succeeded").notNull(),
     rawHash: text("raw_hash"),
     normalizedHash: text("normalized_hash"),
+    /** Canonical read-model SHA-256; null on versions saved before the data diet. */
+    readModelFingerprint: text("read_model_fingerprint"),
     retrievedAt: timestamp("retrieved_at", { withTimezone: true, mode: "string" }).notNull(),
     sourceThrough: text("source_through").notNull(),
     parserVersion: text("parser_version").notNull(),
@@ -859,6 +861,8 @@ export const civicDataPromotions = pgTable(
     promotedAt: timestamp("promoted_at", { withTimezone: true, mode: "string" }).notNull(),
     payload: jsonb("payload").notNull(),
     validationReceipt: jsonb("validation_receipt").notNull(),
+    /** The candidate fingerprint copied by the atomic publication write. */
+    payloadFingerprint: text("payload_fingerprint"),
   },
   (table) => [
     uniqueIndex("civic_data_promotions_record_scope_idx").on(table.recordClass, table.scope),

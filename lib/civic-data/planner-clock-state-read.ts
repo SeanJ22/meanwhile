@@ -111,6 +111,8 @@ export async function readPlannerRoutineClock(task: Pick<RoutineSourceTask, "sou
   lastAttemptedAt = later(lastAttemptedAt,parserVersion === undefined || succeededParser === parserVersion ? confirmedAt : undefined);
   const lastSucceededAt = succeededAt === undefined ? undefined : later(succeededAt,confirmation?.retrieval.retrievedAt);
   const lastSucceededObservedAt = succeededObserved === undefined ? undefined : later(succeededObserved,confirmedAt);
+  const completion = success === undefined ? undefined : later(instant(row?.observed_at), confirmation?.observedAt);
+  const lastCompletedAt = completion && lastSucceededObservedAt && Date.parse(completion) > Date.parse(lastSucceededObservedAt) ? completion : undefined;
   return { ...(lastAttemptedAt ? { lastAttemptedAt } : {}),...(lastSucceededAt ? { lastSucceededAt } : {}),
-    ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),...(succeededParser ? { lastSucceededParserVersion: succeededParser } : {}),...sittings };
+    ...(lastSucceededObservedAt ? { lastSucceededObservedAt } : {}),...(succeededParser ? { lastSucceededParserVersion: succeededParser } : {}),...(lastCompletedAt ? {lastCompletedAt} : {}),...sittings };
 }

@@ -1,4 +1,4 @@
-import { memberOfficeScopeState } from "../officials/member-office-data.ts";
+import { memberOfficeScopeState } from "../officials/member-office-scope.ts";
 import { types } from "node:util";
 import type { GenericBallotProjection } from "../ballot/generic-projection.ts";
 import { STATE_BALLOT_FAMILIES, stateFromBallotScope, stateFromRegistryRuntimeScope } from "./state-scopes.ts";

@@ -20,7 +20,7 @@ export interface FederalRefreshOptions extends FederalClientOptions {
   memberState?: (bioguide: string) => Promise<string | null>;
   doorOutcome?: (ok: boolean, at: string, reason?: string) => Promise<unknown>;
 }
-const emptyCounts = (): FederalCounts => ({ loaded: 0, joined: 0, unjoined: 0, byState: {} });
+const emptyCounts = (): FederalCounts => ({ loaded: 0, joined: 0, unjoined: 0, byState: {}, unjoinedReasons: {} });
 /** Congress.gov and govinfo reject ISO timestamps containing fractional seconds. */
 export const federalApiTimestamp = (value: string) => new Date(value).toISOString().replace(/\.\d{3}Z$/, "Z");
 function replaceCounts(total: FederalCounts, before: FederalCounts | undefined, after: FederalCounts) {
@@ -53,7 +53,7 @@ export async function refreshFederalSource(options: FederalRefreshOptions) {
   const applyCanonicalCounts = (value: FederalCounts) => {
     const joinReadFailures = counts.joinReadFailures;
     Object.assign(counts, value);
-    if (!value.unjoinedReasons) delete counts.unjoinedReasons;
+    counts.unjoinedReasons = value.unjoinedReasons ?? {};
     if (joinReadFailures !== undefined) counts.joinReadFailures = joinReadFailures;
   };
   // A hard kill after a native partition write cannot strand the prior national total.

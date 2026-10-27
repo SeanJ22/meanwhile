@@ -697,6 +697,8 @@ export function routineTaskNextDueMs(
   observedEveryMs?: number,
 ): number {
   const defaults = factRefreshBounds(task);
+  const continuationPending = clock?.continuationPending === true && (["MEETING", "MEETING_OUTCOME", "STATE_BILL", "CURATED_READER_RECORD"].includes(task.recordClass) || task.recordClass === "FEDERAL_MONEY" &&
+    task.contract.fanOut !== undefined && task.scope === `${task.sourceId}:US`);
   const policyNowMs = cadenceMsAt(task.contract, nowMs);
   // The explicit election/sitting obligation keeps its installed pace even when its broad fact kind retries more slowly.
   const sensitive = timeSensitiveSource(task, nowMs);
@@ -715,8 +717,9 @@ export function routineTaskNextDueMs(
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
     const completed=successfulProcessingMs(clock);
     if(sourceFailed && attempted >= requested)return attempted + retryDelayMs;
-    if(clock?.continuationPending===true&&Number.isFinite(attempted)&&Number.isFinite(completed)&&completed>=attempted&&completed<=nowMs)return nowMs;
+    if(continuationPending&&Number.isFinite(attempted)&&Number.isFinite(completed)&&completed>=attempted&&completed<=nowMs)return nowMs;
     if (task.ownerInvocation.publicationPending) return !Number.isFinite(attempted) || attempted < requested ||
+      (!clock?.lastSucceededObservedAt && Number.isFinite(Date.parse(clock?.lastSucceededAt ?? "")) && Date.parse(clock!.lastSucceededAt!) >= attempted) ||
       (Number.isFinite(completed) && completed >= attempted && completed <= nowMs) ? nowMs : attempted + retryDelayMs;
     if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return Number.POSITIVE_INFINITY;
     return !Number.isFinite(attempted) || attempted < requested ? nowMs : attempted + retryDelayMs;
@@ -738,7 +741,7 @@ export function routineTaskNextDueMs(
   if (!Number.isFinite(attempted)) return nowMs;
   if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)||(Number.isFinite(completed)&&completed>nowMs)) return nowMs;
   if(sourceFailed)return attempted + retryDelayMs;
-  if(Number.isFinite(completed)&&attempted<=completed&&clock.continuationPending===true)return nowMs;
+  if(Number.isFinite(completed)&&attempted<=completed&&continuationPending)return nowMs;
   if(clock.sourceComplete===false)return Math.max(attempted,Number.isFinite(completed)?completed:attempted)+retryDelayMs;
   const capWorkDue=(due:number)=>{
     const next=Date.parse(clock.nextWorkAt??"");

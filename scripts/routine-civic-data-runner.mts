@@ -331,6 +331,7 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
       console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors))}`);
       const [published] = await runBoundedChildPass([{
         id: MEETING_DOORS_CONTRACT_ID,
+        databaseBytesPerRun: 54_489_734,
         failureDomain: "derived:meeting-doors",
         executable: process.execPath,
         args: [...TS_CHILD, "scripts/publish-meeting-doors.mts", "--promote"],
@@ -504,10 +505,10 @@ const BOX_FINDINGS_PER_PASS = 1000;
  * waits for them before it saves its outcome.
  */
 let heldPublication: Promise<void> = Promise.resolve();
-function publishHeldBesideSources(failures: SupervisorFailure[], taskId: string, code: string, publish: () => Promise<void>): void {
+function publishHeldBesideSources(failures: SupervisorFailure[], taskId: string, code: string, databaseBytesPerRun: number, publish: () => Promise<void>): void {
   heldPublication = heldPublication.then(async () => {
     if (!admitJobLaunch({ id: taskId, args: [taskId === "meeting-pins" ? "lib/civic-data/held-meeting-pins.ts" : "scripts/routine-civic-data-runner.mts"],
-      launchEveryMs: ROUTINE_DATA_ADMISSION_MS }, ROOT)) {
+      launchEveryMs: ROUTINE_DATA_ADMISSION_MS, databaseBytesPerRun }, ROOT)) {
       console.log(`RCD_DEFER ${taskId}: job transfer breaker holds new launches; work remains owed`);
       return;
     }
@@ -524,7 +525,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
 
-  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", () => withDatabaseJob("meeting-pins",()=>withReaderRoute("meeting-pins", async () => {
+  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", 6_000_000, () => withDatabaseJob("meeting-pins",()=>withReaderRoute("meeting-pins", async () => {
     const vault=new DurableEvidenceStore(join(ROOT,...VAULT_DIR));
     const sourceFetch=pacedProbeFetch({pacing:repos.websitePacing});
     const sourceCopies=new Map<string,Promise<WorkerPublicationCapture>>();
@@ -554,7 +555,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
 
     const startedAt = new Date(String((await query("SELECT now() AS at", []))[0]!.at)).toISOString();
     // Box delivery is independent of the worker outbox scan and paid planning history.
-    publishHeldBesideSources(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async () => {
+    publishHeldBesideSources(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", 4_500_000, async () => {
       const box = await publishBoxFindings({ repos, store, facts, vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
         fetch: pacedProbeFetch({ pacing: repos.websitePacing }), clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null),
         now: new Date().toISOString(), limit: BOX_FINDINGS_PER_PASS, audit: false,
@@ -814,7 +815,7 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
     try {
       const splitRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
       if (!await federalPeopleSplitRecorded(splitRepos.ownerDigests)) {
-        const [run] = await runBoundedChildPass([{ id: FEDERAL_PEOPLE_SPLIT_LOG_KEY, failureDomain: "derived:federal-people-split",
+        const [run] = await runBoundedChildPass([{ id: FEDERAL_PEOPLE_SPLIT_LOG_KEY, databaseBytesPerRun: 1_907_347_669, failureDomain: "derived:federal-people-split",
           executable: process.execPath, args: ["--experimental-strip-types", "scripts/split-federal-people.mts"],
           env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "FEDERAL_PEOPLE_SPLIT", parentPid: process.pid }),
         }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, deadlineMs, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
@@ -1239,6 +1240,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
   return {
     id: pending.id,
     launchEveryMs: pending.task.cadenceMs,
+    databaseBytesPerRun: pending.task.contract?.databaseBytesPerRun,
 
     failureDomain: pending.task.acquisitionFailureDomain,
     serialLane: routineSerialLane(pending.command),
@@ -1289,7 +1291,7 @@ function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
   if (unit.kind === "CONGRESS_DIRECTORY") {
     const handoff = writeContractHandoff(unit.members.map(member => member.id));
     sourceHandoffs.set(unit.id, handoff);
-    return { id: unit.id, launchEveryMs, failureDomain: "routine-source:congress-directory-project", executable: process.execPath,
+    return { id: unit.id, launchEveryMs, databaseBytesPerRun: 243_607_822, failureDomain: "routine-source:congress-directory-project", executable: process.execPath,
       args: [...TS_CHILD, "scripts/fetch-congress-legislators.mts", "--promote", ...handoff.args],
       env: withPassDeadline({ ...admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "MANUAL_CONTRACT", contract: unit.id, parentPid: process.pid }),
         ...stateCalendarEnvironment(unit.members) }, PASS_LAUNCH_DEADLINE_MS) };
@@ -1310,6 +1312,7 @@ function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
   return {
     id: unit.id,
     launchEveryMs,
+    databaseBytesPerRun: 52_979_307,
     failureDomain: unit.id,
     executable: process.execPath,
     args: [...TS_CHILD, ...unit.command.filter(arg => !arg.startsWith("--only-partition=")), ...handoff.args],

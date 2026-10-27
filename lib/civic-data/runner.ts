@@ -84,7 +84,7 @@ export interface RoutineSourceTask {
   readonly command: readonly string[];
   readonly cadenceMs: number;
   readonly retryMs: number;
-  readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection" | "fanOut">;
+  readonly contract: Pick<RoutineSourceContract, "databaseBytesPerRun" | "cadence" | "schedule" | "readerProjection" | "fanOut">;
   readonly childTimeoutMs?: number;
   readonly ownerInvocation?: {
     readonly publicationPending?: true;

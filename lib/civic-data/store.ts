@@ -1,4 +1,5 @@
 import { readRegistryPlaceRows, selectRegistryPlaceView, type RegistryPlaceSlice } from "./keyed-registry-place.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { readRegistryPlanningRows, type RegistryPlanningView } from "./keyed-registry-planning.ts";
 import { readDerivedMeetingBodyRows, derivedBodyScope, selectDerivedMeetingBodySnapshot, derivedMeetingProgressName, type DerivedMeetingFamilyProgress, type DerivedMeetingBodySlice } from "./derived-meeting-body.ts";
 import { readDerivedInputHeads, readDerivedWiringRows, selectDerivedWiringRows, type DerivedInputHead, type DerivedWiringRow } from "./derived-input-rows.ts";
@@ -2144,8 +2145,8 @@ function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): Candi
 }
 
 export class PostgresRoutineDataStore implements RoutineDataStore {
-  private readonly cacheOptions: { readonly purge?: ReaderCachePurger };
-  constructor(cacheOptions: { readonly purge?: ReaderCachePurger } = {}) { this.cacheOptions = cacheOptions; }
+  private readonly cacheOptions: { readonly purge?: ReaderCachePurger; readonly vault?: EvidenceStore };
+  constructor(cacheOptions: { readonly purge?: ReaderCachePurger; readonly vault?: EvidenceStore } = {}) { this.cacheOptions = cacheOptions; }
   private readonly db = getDb();
   private readonly readCache = runtimeCivicReadCache();
   /** The standing bill publisher already owns these immutable bytes. Keep only its bounded in-flight parts. */
@@ -2444,6 +2445,15 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async create(record: CandidateVersionRecord, firstEvent: CandidateEvent): Promise<void> {
     this.assertCandidateMutationAuthority(record.candidate);
     assertInitialRecord(record, firstEvent);
+    // The writer owns these facts now. Preserve their exact version before it can
+    // become historical, without fetching a departing promotion or candidate.
+    if (record.candidate.normalization.normalizedHash) {
+      const [{ holdCivicVersion }, { rawCaptureVault }] = await Promise.all([
+        import("./version-vault.ts"), import("./raw-capture-remote.ts"),
+      ]);
+      await holdCivicVersion(this.cacheOptions.vault ?? rawCaptureVault(), record.candidate.readModel,
+        record.candidate.normalization.normalizedHash);
+    }
     const stateAuthority = statePublicationScope(record.candidate.scope);
     const meetingDoors = record.candidate.sourceId === "meeting-doors";
     const meeting = record.candidate.recordClass === "MEETING";

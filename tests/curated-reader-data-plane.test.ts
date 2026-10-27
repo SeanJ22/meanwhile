@@ -201,7 +201,7 @@ test("each mutable curated Reader family promotes and reads from its own canonic
     assert.equal(outcome.readerReadback?.status, "PASS", id);
     assert.deepEqual(
       (await store.events(candidate.id)).map((event) => event.state),
-      ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"],
+      ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"],
       id,
     );
     const read = await readFamily(id, { store,  now: T0 });

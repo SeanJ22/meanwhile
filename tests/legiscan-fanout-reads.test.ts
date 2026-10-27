@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import type { PGlite } from "@electric-sql/pglite";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { createHash } from "node:crypto";
@@ -46,11 +47,13 @@ function summary(reads:Reads,partBytes:number) {
 }
 
 type Session=import("../lib/sources/legiscan/bills.ts").BillSession;
-const readbacks=async(store:import("../lib/civic-data/store.ts").PostgresRoutineDataStore,ids:readonly string[])=>
-  (await store.latestReaderReadbacks(ids)).map(event=>/"status":"(PASS|FAIL)"/.exec(event.detail)?.[1]);
+const fingerprints=async(pg:Pick<PGlite,"query">,ids:readonly string[])=>
+  (await pg.query<{stored:string;expected:string}>(`SELECT p.payload_fingerprint AS stored,c.read_model_fingerprint AS expected
+    FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
+    WHERE c.id=ANY($1::text[])`,[ids])).rows.map(row=>/^[a-f0-9]{64}$/.test(row.stored)&&row.stored===row.expected?"PASS":"FAIL");
 
 test("a multi-part LegiScan session publish never reads a part back whole, and a resumed publish reads no saved part body",async()=>{
-  await withMigratedRoutineStore("legiscan-bulk",async store=>{
+  await withMigratedRoutineStore("legiscan-bulk",async(store,_vault,pg)=>{
     const readBase=store.readPublicationBase.bind(store);let ownedBases=0;
     store.readPublicationBase=async(recordClass,scope)=>{
       const base=await readBase(recordClass,scope);
@@ -74,7 +77,7 @@ test("a multi-part LegiScan session publish never reads a part back whole, and a
     const interrupted=summary(first.reads,partBytes);
     console.log(`LEGISCAN_FANOUT_READS=${JSON.stringify({pass:"interrupted",partBytes,writes:first.reads.byTable.get("query:FETCHED,query:STATE_BILL"),...interrupted})}`);
     assert.equal(interrupted.wholeReads,0,"no part crosses back after it is written");
-    assert.deepEqual(await readbacks(store,saved.map(row=>row.versionId)),saved.map(()=>"PASS"),"each part's reader readback still passes");
+    assert.deepEqual(await fingerprints(pg,saved.map(row=>row.versionId)),saved.map(()=>"PASS"),"each part's stored publication fingerprint matches its candidate");
 
     // The next pass resumes over the same archive: saved parts are reused without reading their bodies.
     interrupt=false;
@@ -90,7 +93,7 @@ test("a multi-part LegiScan session publish never reads a part back whole, and a
     assert.equal(resumed.reads.byTable.get("query:FETCHED,query:STATE_BILL")?.[0],fresh.length+1,"only the unfinished parts and the session marker are written");
     assert.equal(resume.wholeReads,0,"no saved or new part body is read");
     assert.ok(resume.received<partBytes,`the resumed publish read ${resume.received} bytes; one part is ${partBytes}`);
-    assert.deepEqual(await readbacks(store,fresh.map(part=>part.versionId)),fresh.map(()=>"PASS"));
+    assert.deepEqual(await fingerprints(pg,fresh.map(part=>part.versionId)),fresh.map(()=>"PASS"));
     assert.equal((await store.readPromotion("STATE_BILL",billScope(dataset.session_id)))?.versionId,resumed.value.candidate.id);
 
     // A changed roster recomputes every join: all four parts publish anew, still without a read-back.
@@ -108,7 +111,7 @@ test("a session the pass deadline cuts resumes on later passes, survives a held-
   const {zip}=await import("../scripts/xlsx.mjs");
   const {refreshLegiscan}=await import("../scripts/legiscan-bulk.mts");
   const {readBillsForState}=await import("../lib/sources/legiscan/reader.ts");
-  await withMigratedRoutineStore("legiscan-bulk",async store=>{
+  await withMigratedRoutineStore("legiscan-bulk",async(store,_vault,pg)=>{
     const current={...dataset,year_start:2026,year_end:2026},members=Array.from({length:LEGISCAN_PART_ROWS*4+1},(_,index)=>{const raw=JSON.parse(ak);raw.bill.bill_id+=index;return JSON.stringify(raw);});
     const fetchImpl:typeof fetch=async value=>{
       const op=new URL(String(value)).searchParams.get("op");
@@ -163,7 +166,7 @@ test("a session the pass deadline cuts resumes on later passes, survives a held-
 test("an edited held card between passes cannot strand a session behind whole part reads",async()=>{
   // Production 21:16Z: a resumed session's check read its saved parts whole, ran past the Neon request deadline and
   // failed "Saved session archive parts cannot be verified"; Hawaii's held cards had changed between its passes.
-  await withMigratedRoutineStore("legiscan-bulk",async store=>{
+  await withMigratedRoutineStore("legiscan-bulk",async(store,_vault,pg)=>{
     const index=[(({access_key:_access,...row})=>row)(dataset)];
     await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:index}),at,"getDatasetList"),datasets:[dataset]},at);
     const partIds=new Set<string>(),create=store.create.bind(store);let interrupt=true;

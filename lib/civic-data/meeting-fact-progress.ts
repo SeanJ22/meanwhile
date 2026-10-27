@@ -58,13 +58,6 @@ export async function stageMeetingFactPublication(input: {
   await writePassCursor(input.facts.query,cursorKey(input.candidateId),JSON.stringify(cursor));
 }
 
-/** Only the current immutable candidate's remaining work makes its source due. Unaccepted candidates cannot reopen it. */
-export async function meetingFactPublicationPending(query: Query, scope: string): Promise<boolean> {
-  const [row] = await query(`SELECT coalesce((SELECT position::jsonb->>'complete'='false' FROM pass_cursor
-    WHERE name='meeting-facts:'||(SELECT current_version_id FROM civic_data_promotions WHERE key=$1)),false) AS pending`, [`MEETING:${scope}`]);
-  return row?.pending === true;
-}
-
 /** Resume one accepted record at a time; a partially written record retains its index and its exact saved evidence. */
 export async function continueMeetingFactPublication(input: {
   readonly facts: FactDb & {readonly query:Query}; readonly vault: EvidenceStore; readonly candidateId:string; readonly clocks:Clocks; readonly now:Date;

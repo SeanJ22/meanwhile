@@ -135,7 +135,8 @@ import { diggerMeasurement, type DiggerMeasurement } from "./lib/digger-measurem
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { currentMeetingClock, installMeetingClock, type MeetingClock } from "../lib/civic-data/contracts.ts";
 import { readHeldMeetingInput } from "../lib/control-plane/scheduler/providers/held-meeting-input.ts";
-import { meetingSourceSession, meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe,meetingSourceContinuationPending, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
+import { meetingSourceSession, meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
+import { meetingSourceContinuationPending } from "../lib/civic-data/meeting-source-progress.ts";
 import { readSourceProbeDependencies } from "../lib/civic-data/source-probe.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";

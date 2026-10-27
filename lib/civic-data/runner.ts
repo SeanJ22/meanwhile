@@ -19,7 +19,7 @@ import {
 } from "./runner-receipt.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
-import { meetingSourceContinuationPending } from "./meeting-source-probe.ts";
+import { meetingSourceContinuationPending } from "./meeting-source-progress.ts";
 import type { WorkerMemoryOrder } from "../control-plane/workers/worker-slots.ts";
 
 /** A command never spawned because memory stayed full or the pass's time ran out, or ended at the pass deadline: still owed, not failed. */

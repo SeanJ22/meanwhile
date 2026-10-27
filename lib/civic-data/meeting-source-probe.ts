@@ -16,8 +16,7 @@ import type { RetainedSourceResponse } from "./retained-meeting-bytes.ts";
 import { meetingFetchPass } from "../meetings/shared-fetch.ts";
 import { DOOR_KIND_SPECS } from "./derived-door-kinds.ts";
 import { factReader } from "../facts/db.ts";
-import type { Query } from "../facts/publish.ts";
-import { meetingFactPublicationPending } from "./meeting-fact-progress.ts";
+import { MEETING_SOURCE_PROGRESS, meetingFactPublicationPending, type MeetingSourceProgress, type ProgressPage } from "./meeting-source-progress.ts";
 import { recordAcquiredResponse, outsideSourceAcquisition } from "../sources/acquisition-trace.ts";
 
 type Request = NonNullable<RetainedSourceResponse["request"]>;
@@ -39,9 +38,6 @@ export interface MeetingSourceProbe {
   readonly meetingIds: readonly string[];
   readonly bodyIds: readonly string[];
 }
-interface ProgressPage { readonly response: Omit<RetainedSourceResponse, "bytes">; readonly vaultKey: string }
-interface MeetingSourceProgress { readonly context: string; readonly pages: Readonly<Record<string, ProgressPage>>; readonly deferred?: boolean }
-const PROGRESS = "meeting-source-probe:v1";
 const sourceIO = new AsyncLocalStorage<boolean>();
 const internalIO = <T>(operation:()=>T):T => sourceIO.run(true,()=>outsideSourceAcquisition(operation));
 const requestedInOperation = new AsyncLocalStorage<Set<string>>();
@@ -93,12 +89,12 @@ export async function meetingSourceSession(partition: MeetingPartitionContract, 
   const head = await store.readSourceHead("MEETING", partition.scope);
   const publicationPending=dependencies.publicationPending??(async()=>{const query=factReader();return query?meetingFactPublicationPending(query,partition.scope):false;});
   const cache = dependencies.checkpoint ?? runtimeCivicReadCache().jobState(), context = canonicalCivicDataHash([partition.sourceId, partition.scope, normalizationInputHash]);
-  const saved = await cache.readCheckpoint<MeetingSourceProgress>(PROGRESS, partition.scope);
+  const saved = await cache.readCheckpoint<MeetingSourceProgress>(MEETING_SOURCE_PROGRESS, partition.scope);
   const pages: Record<string, ProgressPage> = saved?.context === context ? { ...saved.pages } : {};
   let deferred = saved?.context === context && saved.deferred === true;
   let checkpointWrites=Promise.resolve(),finished=false;
   const checkpoint = (value:MeetingSourceProgress) => {
-    const write=checkpointWrites.then(()=>internalIO(()=>cache.checkpoint(PROGRESS,partition.scope,value,context)));
+    const write=checkpointWrites.then(()=>internalIO(()=>cache.checkpoint(MEETING_SOURCE_PROGRESS,partition.scope,value,context)));
     checkpointWrites=write.catch(()=>{});return write;
   };
   const save = () => checkpoint({context,pages:{...pages},deferred});
@@ -309,8 +305,3 @@ export async function confirmAcquiredMeetingSource(input: Parameters<typeof prob
 }
 
 /** A cut-off acquisition remains the same owed job, with its already captured pages held in the ordinary vault. */
-export async function meetingSourceContinuationPending(scope: string,
-  checkpoint: Pick<CivicReadCache, "readCheckpoint"> = runtimeCivicReadCache().jobState(), query:Query|null=factReader()): Promise<boolean> {
-  const progress = await checkpoint.readCheckpoint<MeetingSourceProgress>(PROGRESS, scope);
-  return progress?.deferred === true || (query ? await meetingFactPublicationPending(query,scope) : false);
-}

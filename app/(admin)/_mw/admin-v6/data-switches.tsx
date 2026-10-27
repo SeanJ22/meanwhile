@@ -14,7 +14,7 @@ interface SwitchesView { readonly observedAt: string; readonly rows: readonly Sw
 const CUSTOMER_ID = /^[a-z0-9][a-z0-9_-]{0,63}$/;
 
 export function DataSwitchesPanel() {
-  const { reading, reload } = useReading<SwitchesView>("/api/admin/v6/data/switches", 20_000);
+  const { reading, reload, status } = useReading<SwitchesView>("/api/admin/v6/data/switches");
   const [recipe, setRecipe] = useState("");
   const [customer, setCustomer] = useState("");
   const data = reading.kind === "ready" ? reading.data : null;
@@ -22,6 +22,7 @@ export function DataSwitchesPanel() {
   const chosen = recipe === "" ? data?.rows[0]?.recipe ?? "" : recipe;
   return (
     <Card title="Who can see each number" id="data-switches">
+      {status}
       {reading.kind === "loading" && <Loading what="the switches" />}
       {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
       {data && (

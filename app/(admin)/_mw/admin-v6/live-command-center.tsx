@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 import { scopeParam } from "../scope.ts";
+import { ADMIN_ACTIVITY_EVENT, adminIsActive } from "../admin-activity.ts";
 import { CommandCenter } from "./command-center.tsx";
 import type { View } from "./context.tsx";
 import type { Access } from "./eligibility.ts";
@@ -45,6 +46,12 @@ export function LiveCommandCenter(props: LiveCommandCenterProps) {
   const [sync] = useState(() => new LiveSync({ scope: props.initialScopeKey, fetch: fetchNoStore, schedule: scheduleTimeout,
     screen: props.initialView ?? "now", sections: VIEW_SECTIONS[props.initialView ?? "now"] }));
   useEffect(() => () => sync.dispose(), [sync]);
+  useEffect(() => {
+    const activity = () => sync.setActive(adminIsActive());
+    activity();
+    window.addEventListener(ADMIN_ACTIVITY_EVENT, activity);
+    return () => window.removeEventListener(ADMIN_ACTIVITY_EVENT, activity);
+  }, [sync]);
 
   const snapshot = useSyncExternalStore((fn) => sync.subscribe(fn), () => sync.snapshot(), () => sync.snapshot());
   const conn = usePulseFeed({ onPulse: (pulse) => sync.onPulse(pulse), onReconnected: () => sync.catchUp() });

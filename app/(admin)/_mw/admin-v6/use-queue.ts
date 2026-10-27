@@ -2,6 +2,7 @@
 
 /** The Queue's rows from the sections already loaded plus the two small readings it needs (shut doors, scheduled orders). Shared by the Queue and Now. */
 import type { DoorsView } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
+import { createElement, Fragment, type ReactNode } from "react";
 import type { ScheduledView } from "@/lib/control-plane/admin-view/v6-scheduled-read.ts";
 
 import { useV6 } from "./context.tsx";
@@ -9,11 +10,14 @@ import { buildQueue, type QueueRow } from "./queue.ts";
 import { useReading } from "./use-reading.ts";
 import { stateKeyOf } from "./places.ts";
 
-export function useQueueRows(): { readonly rows: readonly QueueRow[]; readonly unread: readonly string[] } {
+export function useQueueRows(): { readonly rows: readonly QueueRow[]; readonly unread: readonly string[]; readonly status: ReactNode } {
   const v = useV6();
-  const doors = useReading<DoorsView>("/api/admin/v6/doors", 60_000).reading;
-  const scheduled = useReading<ScheduledView>("/api/admin/v6/scheduled", 60_000).reading;
-  const problems=useReading<{rows:readonly QueueRow[];unread:boolean}>("/api/admin/v6/reader-problems",60_000).reading;
+  const doorRead = useReading<DoorsView>("/api/admin/v6/doors", "Shut doors");
+  const scheduledRead = useReading<ScheduledView>("/api/admin/v6/scheduled", "Scheduled orders");
+  const problemRead = useReading<{rows:readonly QueueRow[];unread:boolean}>("/api/admin/v6/reader-problems", "Reader problems");
+  const doors = doorRead.reading;
+  const scheduled = scheduledRead.reading;
+  const problems = problemRead.reading;
   const rows = buildQueue({
     readerProblems:problems.kind==="ready"?problems.data.rows:null,
     receipts: v.data.history.data,
@@ -30,5 +34,6 @@ export function useQueueRows(): { readonly rows: readonly QueueRow[]; readonly u
   ] as const).filter(([, missing]) => missing).map(([name]) => name);
   const state=stateKeyOf(v.scopeKey)?.slice(3).toUpperCase();
   const included=new Set([undefined,state]);
-  return { rows:state?rows.filter(row=>included.has(row.stateCode)):rows, unread };
+  return { rows:state?rows.filter(row=>included.has(row.stateCode)):rows, unread,
+    status: createElement(Fragment, null, doorRead.status, scheduledRead.status, problemRead.status) };
 }

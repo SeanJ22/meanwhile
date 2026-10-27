@@ -26,9 +26,10 @@ function Top({ caption, list, none }: { readonly caption: string; readonly list:
 }
 
 export function ReaderDemandPanel() {
-  const { reading, reload } = useReading<ReaderDemandReading>("/api/admin/reader-demand", 5 * 60_000);
+  const { reading, reload, status } = useReading<ReaderDemandReading>("/api/admin/reader-demand");
   return (
     <Card title="What readers are asking for" id="reader-demand">
+      {status}
       {reading.kind === "loading" && <Loading what="what readers looked up" />}
       {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
       {reading.kind === "ready" && reading.data.kind === "NOT_READ" && (

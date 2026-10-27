@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 131 (main f91893755); runner crash-looping since 130. Release 132 = RIVER-HOTFIX-132 + CR-01 + AP-01 + BB-01 on river-next-132r eb8f65050, pnpm gates re-running; ZS-01 returned (10 failures on its own READY)
+build_state: LIVE FOR READERS: release 131 (main f91893755); runner crash-looping since 130. Release 132 = https://github.com/SeanJ22/meanwhile/pull/845 (head eb8f65050 = river), auto-merge on, CI running
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-27T18:10:00Z
+heartbeat: 2026-10-27T19:26:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -14,6 +14,7 @@ heartbeat: 2026-10-27T18:10:00Z
 - 2:00 PM: RIVER-HOTFIX-132 38e6b38c1 on river-next. Cause of the crash loop: since 130 every checked read awaited its copy save to the runner's local read-cache host inside its 10 s bound, and that host writes one copy at a time for every runner process, so small reads queued behind door copies after each restart (a River container uses an in-memory copy, which is why the same reads ran ~40/s there). Also: one 16-slot admission shared by pages and small reads (now two lanes); the main loop let a timeout end the process (now the pass ends and the next tick retries); door reads now fetch only rows changed since the last read.
 - 2:45 PM: first full gate on river-next 38e6b38c1: all gates pass except the suite (14 failures). ZS-01's own READY 74d3fb7d5 fails 10 of them: returned (returns/zs-01.md), left out of 132. CR-01's own READY fails 3 whose fixtures matched door query text CR-01 replaced: fixed in the fold. One was River's (door delta on a table without changed_at): fixed. 2 resolve-once tests fail on plain main in this container too (environment), not 132's.
 - 132 fold rebuilt without ZS-01 as river-next-132r (river-next already holds the ZS-01 merge; no force-push): CR-01 fold ea1c5a08c, AP-01, BB-01, RIVER-HOTFIX-132 07936aee0, fold fixes eb8f65050. AP-01's test no longer writes work/ap-01/panels-paused.png.
+- 3:25 PM: pnpm gates on river-next-132r eb8f65050: 12/12 (tsc re-run after the build replaced a stale .next), suite 10,313 tests / 10,310 pass / 0 fail / 3 skipped. river moved to eb8f65050. Release 132 opened: https://github.com/SeanJ22/meanwhile/pull/845, auto-merge on. Baseline before 132 (database_transfer_hourly, 1 PM EDT hour): reader 0.361 GB, control plane 0.133 GB.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

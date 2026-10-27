@@ -953,6 +953,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     [["acquisition_succeeded", "bool"], true],
     [["raw_hash", "text"], value.retrieval.rawHash],
     [["normalized_hash", "text"], value.normalization.normalizedHash],
+    [["read_model_fingerprint", "text"], value.normalization.normalizedHash],
     [["retrieved_at", "timestamptz"], "2026-09-08 12:00:00+00"],
     [["source_through", "text"], value.temporal.sourceThrough],
     [["parser_version", "text"], value.normalization.parserVersion],
@@ -972,6 +973,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     [["current_version_id", "text"], value.id],
     [["last_known_good_version_id", "text"], value.id],
     [["promoted_at", "timestamptz"], "2026-09-08 12:01:00+00"],
+    [["payload_fingerprint", "text"], value.normalization.normalizedHash],
     [["validation_receipt", "jsonb"], persisted],
   ];
   const answer = (cells: readonly (readonly [NeonColumn, unknown])[]): NeonAnswer => ({
@@ -1017,6 +1019,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     lastKnownGoodVersionId: value.id,
     promotedAt,
     payload: value.readModel,
+    payloadFingerprint: value.normalization.normalizedHash,
     receipt: persisted,
   });
 });
@@ -1454,7 +1457,9 @@ test("the keyed state read hydrates selected parts and rejects forged durable co
       state text, acquisition_succeeded boolean, promoted_version_id text, last_known_good_version_id text,
       normalized_hash text, validation_receipt jsonb, failure_code text, failure_detail text);
     CREATE TABLE civic_data_candidate_events(candidate_id text, sequence integer, detail text);
-    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY, payload jsonb);`);
+    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY, payload jsonb);
+    ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text;
+    ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
   const payload = { temporal: candidate("joined-state").temporal,
     rows: Array.from({ length: 40 }, (_, id) => ({ id, source: "https://az.gov/official", text: "Official source ".repeat(1000) })) };
   const value = withStateRecordHashes({ ...candidate("joined-state"), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots",

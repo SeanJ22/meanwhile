@@ -8,8 +8,9 @@ test("DG reader fixtures apply the full real migration journal and retain actual
     const columns = await db.query(`SELECT column_name,is_nullable FROM information_schema.columns
       WHERE table_schema='public' AND table_name='civic_data_promotions' ORDER BY ordinal_position`);
     assert.deepEqual(columns.map(row => row.column_name), ["key", "source_id", "record_class", "scope", "current_version_id",
-      "last_known_good_version_id", "promoted_at", "payload", "validation_receipt"]);
-    assert.ok(columns.every(row => row.is_nullable === "NO"));
+      "last_known_good_version_id", "promoted_at", "payload", "validation_receipt", "payload_fingerprint"]);
+    assert.ok(columns.filter(row => row.column_name !== "payload_fingerprint").every(row => row.is_nullable === "NO"));
+    assert.equal(columns.find(row => row.column_name === "payload_fingerprint")!.is_nullable, "YES");
     await assert.rejects(db.query("INSERT INTO civic_data_promotions(key,payload,record_class) VALUES('incomplete','{}','REGISTRY_RUNTIME_BINDING')"), /null value/);
     await db.saveRegistry("AZ", { bodies: [{ id: "held-body" }], divisions: [], memberships: [] });
     const rows = await db.query(`SELECT source_id,scope,current_version_id=last_known_good_version_id AS known_good,

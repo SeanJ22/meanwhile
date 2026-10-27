@@ -7,6 +7,9 @@ import {
   type JurisdictionReferenceSourceReceipt,
 } from "./jurisdiction-reference-acquisition.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
+import { sourceContentHash,confirmSourceHashUnchanged } from "./source-hash.ts";
+import type { RoutineDataStore } from "./store.ts";
+import type { WebsiteCorrectionOutcome } from "./website-correction-acquisition.ts";
 import {
   CivicDataStoreUnavailableError,
   readPromotedCivicData,
@@ -130,6 +133,36 @@ function sourceReceiptIssues(receipts: readonly JurisdictionReferenceSourceRecei
     }
   }
   return [...new Set(issues)].sort();
+}
+
+export interface OperationalReferenceSourceProbe {
+  readonly formatVersion:1;readonly complete:boolean;readonly configurationHash:string;
+  readonly states:readonly JurisdictionReferenceState[];
+  readonly corrections:readonly Pick<WebsiteCorrectionOutcome,"jurisdictionId"|"recorded"|"corrected"|"disposition">[];
+}
+export function operationalReferenceSourceProbe(input:{readonly sourceReceipts:readonly JurisdictionReferenceSourceReceipt[];
+  readonly configurationHash:string;readonly states:readonly JurisdictionReferenceState[];readonly corrections:readonly WebsiteCorrectionOutcome[]}):OperationalReferenceSourceProbe {
+  return {formatVersion:1,complete:sourceReceiptIssues(input.sourceReceipts).length===0&&input.sourceReceipts.every(receipt=>receipt.httpStatus===200)&&
+    input.corrections.every(correction=>correction.disposition==="APPLIED_VERIFIED"),configurationHash:input.configurationHash,states:[...input.states].sort(),
+    corrections:input.corrections.map(({jurisdictionId,recorded,corrected,disposition})=>({jurisdictionId,recorded,corrected,disposition})).sort((a,b)=>a.jurisdictionId.localeCompare(b.jurisdictionId))};
+}
+export function operationalReferenceSourceHash(receipts:readonly JurisdictionReferenceSourceReceipt[],probe:OperationalReferenceSourceProbe):string {
+  return sourceContentHash(receipts.map(receipt=>({...receipt,capture:{rawHash:receipt.rawHash},
+    request:{sourceId:receipt.sourceId,httpStatus:receipt.httpStatus,byteCount:receipt.byteCount}})),
+    {parserVersion:JURISDICTION_REFERENCE_PARSER_VERSION,schemaVersion:JURISDICTION_REFERENCE_VERSION,configurationHash:probe.configurationHash,
+      states:probe.states,corrections:probe.corrections,workbookMember:"Govt_Units_2022_Final.xlsx"});
+}
+export async function confirmOperationalReferenceSources(input:{readonly store:RoutineDataStore;readonly sourceReceipts:readonly JurisdictionReferenceSourceReceipt[];
+  readonly probe:OperationalReferenceSourceProbe;readonly now:string}) {
+  if(!input.probe.complete||input.probe.states.length!==JURISDICTION_REFERENCE_STATES.length||
+    !JURISDICTION_REFERENCE_STATES.every(state=>input.probe.states.includes(state)))return null;
+  const head=await input.store.readSourceHead(OPERATIONAL_REFERENCE_RECORD_CLASS,JURISDICTION_REFERENCE_SCOPE);
+  const primary=input.sourceReceipts.find(receipt=>receipt.sourceId==="census-government-units-2022");
+  if(head?.rawHashBasis!=="SOURCE_CONTENT_V1"||!primary)return null;
+  const rawHash=operationalReferenceSourceHash(input.sourceReceipts,input.probe),retrievedAt=input.sourceReceipts.map(receipt=>receipt.retrievedAt).sort()[0];
+  return confirmSourceHashUnchanged({store:input.store,sourceId:JURISDICTION_REFERENCE_SOURCE_ID,recordClass:OPERATIONAL_REFERENCE_RECORD_CLASS,
+    scope:JURISDICTION_REFERENCE_SCOPE,parserVersion:JURISDICTION_REFERENCE_PARSER_VERSION,rawHash,complete:true,now:input.now,
+    retrieval:{requestedUrl:primary.requestedUrl,finalUrl:primary.finalUrl,httpStatus:primary.httpStatus,rawHash,retrievedAt}});
 }
 
 function websiteCorrectionIssues(
@@ -343,6 +376,7 @@ export function jurisdictionOperationalReferenceCandidate(input: {
     readonly byteCount: number;
   };
   readonly retrievedAt: string;
+  readonly sourceProbe?:OperationalReferenceSourceProbe;
 }): RoutineCandidate {
   return buildOperationalReferenceCandidate(input, JURISDICTION_REFERENCE_STATES, JURISDICTION_REFERENCE_SOURCE_ID, JURISDICTION_REFERENCE_SCOPE);
 }
@@ -352,6 +386,7 @@ export function azJurisdictionOperationalReferenceCandidate(input: {
   readonly sourceReceipts: readonly JurisdictionReferenceSourceReceipt[];
   readonly workbook: { readonly member: "Govt_Units_2022_Final.xlsx"; readonly rawHash: string; readonly byteCount: number };
   readonly retrievedAt: string;
+  readonly sourceProbe?:OperationalReferenceSourceProbe;
 }): RoutineCandidate {
   return buildOperationalReferenceCandidate(input, ["az"], AZ_JURISDICTION_REFERENCE_SOURCE_ID, AZ_JURISDICTION_REFERENCE_SCOPE);
 }
@@ -361,6 +396,7 @@ function buildOperationalReferenceCandidate(input: {
   readonly sourceReceipts: readonly JurisdictionReferenceSourceReceipt[];
   readonly workbook: { readonly member: "Govt_Units_2022_Final.xlsx"; readonly rawHash: string; readonly byteCount: number };
   readonly retrievedAt: string;
+  readonly sourceProbe?:OperationalReferenceSourceProbe;
 }, states: readonly JurisdictionReferenceState[], sourceId: string, scope: string): RoutineCandidate {
   const bundle = { formatVersion: 1 as const, sourceVersion: JURISDICTION_REFERENCE_VERSION, registries: input.registries };
   const receiptIssues = sourceReceiptIssues(input.sourceReceipts);
@@ -372,12 +408,13 @@ function buildOperationalReferenceCandidate(input: {
     })),
   );
   const rawHash = input.sourceReceipts.length > 0
-    ? sha256(canonicalCivicDataJson(input.sourceReceipts))
+    ? input.sourceProbe?operationalReferenceSourceHash(input.sourceReceipts,input.sourceProbe):sha256(canonicalCivicDataJson(input.sourceReceipts))
     : null;
   const normalizedPayload = {
     sourceInputs: input.sourceReceipts,
     workbook: input.workbook,
     bundle,
+    ...(input.sourceProbe?{sourceProbe:input.sourceProbe}:{}),
   };
   const normalizedHash = sha256(canonicalCivicDataJson(bundle));
   const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));
@@ -400,6 +437,7 @@ function buildOperationalReferenceCandidate(input: {
       httpStatus: primary?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash,
+      ...(input.sourceProbe?{rawHashBasis:"SOURCE_CONTENT_V1" as const,complete:input.sourceProbe.complete}:{}),
       failureDetail: rawHash === null
         ? "No authoritative jurisdiction-reference response receipts were supplied."
         : issues.length > 0

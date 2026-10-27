@@ -1,3 +1,4 @@
+import { readMemberOfficeStateProjection } from "../civic-data/curated-reader-read-model.ts";
 import {selectedPointerSql,selectedMetadataSql,selectedStateEntry,peopleIdentityKeysSql} from "./selected-entry.ts";
 import {FIPS_TO_STATE} from "../ocd/fips.ts";
 import { stateContainersStatement, geographyOfRows, type Slice, type GeographySlice } from "../control-plane/admin-view/promoted-slices.ts";
@@ -108,7 +109,6 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     ...(!zip ? [{ recordClass: "FEDERAL_DIRECTORY" as const, scope: federalDirectoryScope(state) }] : []),
     ...(!zip ? [{ recordClass: "STATE_LEGISLATOR" as const, scope: jurisdiction }] : []),
     { recordClass: "CURATED_READER_RECORD" as const, scope: "US:verified-officeholder-campaign-sites" },
-    { recordClass: "CURATED_READER_RECORD" as const, scope: "US:state-legislator-member-offices" },
     EVERYDAY_ROUTING_POINTER,
     ...stateAuthorityPointers("candidate-profiles", state),
     ...stateAuthorityPointers("candidate-campaign-sites-derived", state),
@@ -173,7 +173,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     readCuratedReaderProjection("campaign-sites", options),
     readEverydayRoutingProjection(options),
     presidentRead,
-    readCuratedReaderProjection("member-offices", options),
+    readMemberOfficeStateProjection(state, options),
     readCandidateProfilesProjection(state, options),
     readDerivedCampaignSites(state, options),
     readGenericBallotProjection(state, options),

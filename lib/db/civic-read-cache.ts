@@ -51,19 +51,25 @@ export class CivicReadCache {
 
   /** One statement can return either the changed value or confirmation of the held revision. */
   async row<T>(input: { readonly namespace: string; readonly key: string;
-    readonly source?: { readonly namespace: string; readonly project: (value: T) => T };
+    readonly source?: { readonly namespace: string; readonly project: (value: T) => T;
+      readonly newer?: (sourceEtag: string, heldEtag: string) => boolean };
     readonly current: (etag: string | null, held?: T) => Promise<{ readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null> }): Promise<T | null> {
     const key = input.namespace + ":" + input.key;
     let held = await this.read<T>(key);
-    if (!held && input.source) {
+    let projectedSource = false;
+    if (input.source && (!held || input.source.newer)) {
       const source = await this.read<T>(input.source.namespace + ":" + input.key);
-      if (source) held = { etag: source.etag, value: input.source.project(source.value) };
+      if (source && (!held || input.source.newer?.(source.etag, held.etag))) {
+        held = { etag: source.etag, value: input.source.project(source.value) };
+        projectedSource = true;
+      }
     }
     const current = await input.current(held?.etag ?? null, held?.value);
     if (current === null) return null;
     if (typeof current.etag !== "string" || current.etag.length === 0) throw new Error("A stored row read returned no database version");
     if ("unchanged" in current) {
       if (held?.etag !== current.etag) throw new Error("A changed-row read confirmed an unavailable revision");
+      if (projectedSource) await this.save(key, held);
       return held.value;
     }
     await this.save(key, current);

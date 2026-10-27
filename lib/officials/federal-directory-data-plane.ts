@@ -83,6 +83,20 @@ function rawSetHash(captures: readonly FederalDirectoryCapture[]): string {
   })).sort((left, right) => left.finalUrl.localeCompare(right.finalUrl))));
 }
 
+/** Actual source bytes and active native memberships, independent of observation clocks. */
+export function federalDirectoryCaptureHash(capture:FederalDirectoryCapture):string {
+  const address=(value:string)=>{
+    const url=new URL(value);
+    if(url.hostname==="raw.githubusercontent.com")url.pathname=url.pathname.replace(/^\/unitedstates\/congress-legislators\/[a-f0-9]{40}\//,"/unitedstates/congress-legislators/SOURCE_REVISION/");
+    return url.href;
+  };
+  return sha256(canonicalCivicDataJson([address(capture.requestedUrl),address(capture.finalUrl),capture.httpStatus,capture.raw.rawHash,capture.raw.byteLength]));
+}
+export function federalDirectorySourceContentHash(captures:readonly FederalDirectoryCapture[],normalizationInputHash:string):string {
+  return sha256(canonicalCivicDataJson({sourceId:FEDERAL_DIRECTORY_SOURCE_ID,parserVersion:FEDERAL_DIRECTORY_PARSER_VERSION,
+    normalizationInputHash,captures:captures.map(federalDirectoryCaptureHash).sort()}));
+}
+
 export function federalDirectoryProjectionIssues(value: FederalDirectoryReadModel): string[] {
   const issues: string[] = [];
   const holders = value.roster?.officeholders ?? [];
@@ -159,6 +173,9 @@ export function heldDirectoryCandidate(input: {
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
   /** Seats this read changed against the last published one, for Admin's officials check. */
   readonly changes?: readonly RosterChange[];
+  readonly sourceInputHash?:string;
+  readonly sourceComplete?:boolean;
+  readonly sourceWorkPending?:boolean;
 }): RoutineCandidate {
   const scope = federalDirectoryScope(input.state), place = requireRegistryState(input.state);
   const issues = federalDirectoryProjectionIssues(input.projection);
@@ -177,10 +194,11 @@ export function heldDirectoryCandidate(input: {
   }).sort();
   if (!acquiredFiles.includes("legislators-current.yaml")) issues.push("CORE_SOURCE_MISSING");
   if (new Set(acquiredFiles).size !== acquiredFiles.length) issues.push("DUPLICATE_SOURCE_FILE");
-  const rawHash = rawSetHash(input.acquisitions);
-  const sourceCheck = input.acquisitions.flatMap(row=>row.sourceCheck ? [row.sourceCheck] : []).sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt))[0];
+  const rawHash = input.sourceInputHash ? federalDirectorySourceContentHash(input.acquisitions,input.sourceInputHash) : rawSetHash(input.acquisitions);
+  const sourceCheck = input.acquisitions.flatMap(row=>row.sourceCheck ? [row.sourceCheck] : []).sort((a,b)=>a.checkedAt.localeCompare(b.checkedAt))[0];
   const normalizedPayload = {
     sourceSha: input.projection.sourceSha,
+    ...(input.sourceInputHash?{sourceInputHash:input.sourceInputHash,continuationPending:input.sourceWorkPending??false}:{}),
     ...(input.excludedFacts?.length ? { excludedFacts: input.excludedFacts } : {}),
     ...(input.changes?.length ? { changes: input.changes } : {}),
     acquisitions: input.acquisitions.map(({ requestedUrl, finalUrl, httpStatus, raw, retrievedAt, sourceCheck }) => ({ requestedUrl, finalUrl, httpStatus, raw, ...(retrievedAt ? {retrievedAt} : {}),...(sourceCheck ? {sourceCheck} : {}) })),
@@ -201,6 +219,7 @@ export function heldDirectoryCandidate(input: {
       httpStatus: input.acquisitions[0]?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash: input.acquisitions.length ? rawHash : null,
+      ...(input.sourceInputHash?{rawHashBasis:"SOURCE_CONTENT_V1" as const,complete:input.sourceComplete??false}:{}),
       ...(sourceCheck ? {sourceCheck} : {}),
       failureDetail: acquiredFiles.includes("legislators-current.yaml") ? undefined : "The current membership source was unavailable.",
     },

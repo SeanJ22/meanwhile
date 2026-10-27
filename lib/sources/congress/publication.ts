@@ -11,8 +11,12 @@ import { readLdaRosterVersion } from "./lda-roster.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { holdRawCapture, readRawCaptureText } from "../../civic-data/raw-capture-vault.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
+import { canonicalCivicDataHash } from "../../civic-data/canonical-hash.ts";
+import { federalSourceInputHash, unchangedFederalSourceInput, type FederalSourceInput } from "./source-hash.ts";
+import { readPublishedSourceChecks } from "../../civic-data/source-checks.ts";
+import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
 
-const factHash = ({ checkedAt: _checkedAt, ...fact }: FederalFact) => normalizedHash(fact);
+const factHash = ({ checkedAt: _checkedAt, sourceKey: _sourceKey, sourceHash: _sourceHash, ...fact }: FederalFact) => normalizedHash(fact);
 export function federalProjectionIssues(value: FederalProjection): string[] {
   if (!value || value.formatVersion !== 1 || !Array.isArray(value.records)) return ["Federal source projection has an invalid shape."];
   const issues: string[] = [];
@@ -31,6 +35,19 @@ export async function readFederalSourceProjection(source: FederalSourceId, parti
   if (result.kind === "PROMOTED" && (result.value.source !== source || federalProjectionIssues(result.value).length)) {
     return { ...result, kind: "STORE_UNREACHABLE" as const, value: null, code: "PROMOTION_PROOF_INVALID" as const, detail: "Federal source projection failed its typed reader contract." };
   }
+  if (result.kind === "PROMOTED" && result.value.sourceManifestVersion === 1) try {
+    const keys = [...new Set(result.value.records.flatMap(row => row.sourceKey ? [row.sourceKey] : []))];
+    const store = options.store as Partial<Pick<RoutineDataStore, "readSourceChecks">> | undefined;
+    const query = !options.store && !options.edge ? readerQuery() : null;
+    const checks = store?.readSourceChecks ? await store.readSourceChecks(FEDERAL_RECORD_CLASS, federalScope(source, partition), keys)
+      : query ? await readPublishedSourceChecks(async (text, params) => (await query([{ text, params }]))[0] ?? [], FEDERAL_RECORD_CLASS, federalScope(source, partition), keys) : [];
+    const byKey = new Map(checks.map(row => [row.sourceKey, row]));
+    return { ...result, value: { ...result.value, records: result.value.records.map(row => {
+      const check = row.sourceKey ? byKey.get(row.sourceKey) : undefined;
+      return check && result.value.sourceHashes?.[check.sourceKey] === check.rawHash && row.sourceHash === check.rawHash &&
+        check.sourceUrls.includes(row.sourceUrl) && Date.parse(check.checkedAt) > Date.parse(row.checkedAt) ? { ...row, checkedAt: check.checkedAt } : row;
+    }) } };
+  } catch (error) { console.error("FEDERAL_SOURCE_CHECK_READ_FAILED=" + JSON.stringify({ source, partition, detail: error instanceof Error ? error.message : String(error) })); }
   return result;
 }
 
@@ -76,22 +93,50 @@ export function federalCandidate(input: { source: FederalSourceId; partition: st
 }
 
 /** Each partition publishes as its page arrives; an outage never rolls back earlier verified pages. */
-export async function publishFederalPartition(input: { source: FederalSourceId; partition: string; captures: FederalCapture[]; records: FederalFact[];
-  store: RoutineDataStore; vault: EvidenceStore; now: string; cursor?: string; counts?: FederalCounts; completePartition?: boolean; replaceFilingId?: string }) {
-  const prior = await readFederalSourceProjection(input.source, input.partition, { store: input.store, now: input.now });
-  if (prior.kind === "STORE_UNREACHABLE") throw new Error(prior.detail);
-  const held = prior.kind === "PROMOTED" ? prior.value : null;
+export async function saveFederalSourceCheck(store: RoutineDataStore, input: FederalSourceInput, versionId: string, sourceUrls: readonly string[] = []) {
+  if (!store.recordSourceCheck || !input.captures.length) return false;
+  const groups = new Map(input.captures.map(capture => ({ ...input, captures: [capture] }))
+    .map(group => [federalSourceInputHash(group).sourceKey, group]));
+  let saved = true;
+  for (const group of groups.values()) saved = await store.recordSourceCheck({ ...federalSourceInputHash(group), sourceId: input.source,
+    recordClass: FEDERAL_RECORD_CLASS, scope: federalScope(input.source, input.partition), pointerVersionId: versionId, parserVersion: FEDERAL_PARSER_VERSION,
+    checkedAt: group.captures.map(row => row.retrievedAt).sort((a, b) => Date.parse(a) - Date.parse(b))[0],
+    sourceUrls: [...new Set([...group.captures.map(row => row.url), ...sourceUrls])], jurisdictionIds: ["US"] }) && saved;
+  return saved;
+}
+
+export async function publishFederalPartition(input: FederalSourceInput & { captures: FederalCapture[]; records: FederalFact[];
+  store: RoutineDataStore; vault: EvidenceStore; now: string; countRecords?: (records: readonly FederalFact[]) => Promise<FederalCounts> }) {
+  const unchanged = await unchangedFederalSourceInput(input.store, input);
+  if (unchanged && await saveFederalSourceCheck(input.store, input, unchanged.head.versionId, [...unchanged.sourceUrls, ...input.records.map(row => row.sourceUrl)])) {
+    console.log("FEDERAL_SOURCE_CONFIRMED_UNCHANGED=" + JSON.stringify({ source: input.source, partition: input.partition, sourceKey: unchanged.hash.sourceKey }));
+    return { kind: "UNCHANGED" as const, head: unchanged.head };
+  }
+  // Routine national checkpoints hold control fields. Preserve any older native facts by reading only those fields and their capture references.
+  const prior = input.partition === "national" ? null : await readFederalSourceProjection(input.source, input.partition, { store: input.store, now: input.now });
+  const nationalHead = input.partition === "national" ? await input.store.readSourceHead(FEDERAL_RECORD_CLASS, federalScope(input.source)) : null;
+  const nationalFields = nationalHead ? await input.store.readPromotionPayloadFields(FEDERAL_RECORD_CLASS, federalScope(input.source), ["cursor", "counts"]) : null;
+  const nationalCount = nationalHead ? await input.store.readCandidateField(nationalHead.versionId, ["normalization", "outputRecords"]) : null;
+  const nationalRecords = typeof nationalCount === "number" && nationalCount > 2
+    ? (await input.store.readPromotionPayloadFields(FEDERAL_RECORD_CLASS, federalScope(input.source), ["records"]))?.records as FederalFact[] ?? [] : [];
+  if (prior?.kind === "STORE_UNREACHABLE") throw new Error(prior.detail);
+  const held = prior?.kind === "PROMOTED" ? prior.value : nationalHead ? { formatVersion: 1 as const, source: input.source, records: nationalRecords, ...nationalFields } as FederalProjection : null;
   const facts = new Map(input.completePartition ? [] : held?.records.filter(row => !input.replaceFilingId || row.filingId !== input.replaceFilingId).map(row => [row.id, row]) ?? []);
   for (const row of input.records) {
     const old = held?.records.find(fact => fact.id === row.id);
-    facts.set(row.id, old && factHash(old) === factHash(row) ? old : row);
+    facts.set(row.id, { ...(old && factHash(old) === factHash(row) ? old : row), checkedAt: row.checkedAt });
   }
+  const counts = input.countRecords ? await input.countRecords([...facts.values()]) : input.counts;
   const projection: FederalProjection = { formatVersion: 1, source: input.source, records: [...facts.values()].sort((a, b) => a.id.localeCompare(b.id)),
+    ...(input.countsPrimary !== undefined ? { countsPrimary: input.countsPrimary } : held?.countsPrimary !== undefined ? { countsPrimary: held.countsPrimary } : {}),
+    sourceManifestVersion: 1, sourceHashes: { ...(input.partition === "national" ? {} : held?.sourceHashes),
+      ...Object.fromEntries(input.captures.map(capture => { const single = federalSourceInputHash({ ...input, captures: [capture] }); return [single.sourceKey, single.rawHash]; })) },
     ...(input.cursor !== undefined ? { cursor: input.cursor } : held?.cursor ? { cursor: held.cursor } : {}),
     // The refresh keeps adding to its running total, so the projection holds this moment's copy.
-    ...(input.counts ? { counts: structuredClone(input.counts) } : held?.counts ? { counts: held.counts } : {}) };
-  const priorCandidate = prior.kind === "PROMOTED" ? await input.store.readCandidate(prior.metadata.versionId!) : null;
-  const previousCaptures = (priorCandidate?.candidate.normalizedPayload as { captures?: HeldFederalCapture[] } | null)?.captures ?? [];
+    ...(counts ? { counts: structuredClone(counts) } : held?.counts ? { counts: held.counts } : {}) };
+  const previousCaptures = prior?.kind === "PROMOTED"
+    ? await input.store.readCandidatePath<HeldFederalCapture[]>(prior.metadata.versionId!, ["normalizedPayload", "captures"]) ?? []
+    : nationalRecords.length && nationalHead ? await input.store.readCandidatePath<HeldFederalCapture[]>(nationalHead.versionId, ["normalizedPayload", "captures"]) ?? [] : [];
   const fresh = await Promise.all(input.captures.map(capture => holdFederalCapture(input.vault, capture)));
   const evidence = new Map(fresh.map(row => [row.url, row.raw.rawHash]));
   // Replaced pages can retain records absent from the latest partial response. Keep their original bytes.
@@ -105,6 +150,18 @@ export async function publishFederalPartition(input: { source: FederalSourceId; 
     const roster = await readLdaRosterVersion(input.store, input.vault, version);
     if (roster) rosters.set(version, roster);
   }
+  const current = new Map(input.records.map(row => [row.id, factHash(row)]));
+  const provenance = new Map<string, { sourceKey: string; sourceHash: string }>();
+  for (const capture of fresh) {
+    const single = federalSourceInputHash({ ...input, captures: [capture] });
+    for (const row of normalizeFederalCaptureWithRoster(capture, rosters.get(capture.context?.honoreeRosterVersionId ?? ""))) {
+      if (current.get(row.id) === factHash(row) && !provenance.has(row.id)) provenance.set(row.id, { sourceKey: single.sourceKey, sourceHash: single.rawHash });
+    }
+  }
+  projection.records = projection.records.map(row => provenance.has(row.id) ? { ...row, ...provenance.get(row.id)! } : row);
+  const relevant = new Set([...input.captures.map(capture => federalSourceInputHash({ ...input, captures: [capture] }).sourceKey),
+    ...projection.records.flatMap(row => row.sourceKey ? [row.sourceKey] : [])]);
+  projection.sourceHashes = Object.fromEntries(Object.entries(projection.sourceHashes ?? {}).filter(([key]) => relevant.has(key)));
   // Retain only captures which reproduce an extant fact, plus the current listing for cursor evidence.
   const needed = new Set(projection.records.map(row => `${row.id}|${factHash(row)}`));
   const seen = new Set<string>();
@@ -114,10 +171,15 @@ export async function publishFederalPartition(input: { source: FederalSourceId; 
     if (!fresh.includes(capture) && !normalizeFederalCaptureWithRoster(capture, rosters.get(capture.context?.honoreeRosterVersionId ?? "")).some(row => needed.has(`${row.id}|${factHash(row)}`))) return false;
     seen.add(key); return true;
   });
-  const candidate = federalCandidate({ ...input, projection, captures: kept, rosters });
-  const outcome = await processRegisteredFanOutCandidate(input.store, input.source, candidate, input.now, prior.kind === "PROMOTED" ? prior.metadata.versionId : null);
+  const built = federalCandidate({ ...input, projection, captures: kept, rosters });
+  const candidate = { ...built, retrieval: { ...built.retrieval, rawHash: canonicalCivicDataHash(projection.sourceHashes), rawHashBasis: "SOURCE_CONTENT_V1" as const, complete: false,
+    sourceCheck: { requestedUrl: kept[0]?.url ?? "", finalUrl: kept[0]?.url ?? "", httpStatus: 200 as const,
+      rawHash: kept[0]?.raw.rawHash ?? "", checkedAt: kept[0]?.retrievedAt ?? input.now } } };
+  const outcome = await processRegisteredFanOutCandidate(input.store, input.source, candidate, input.now, prior?.kind === "PROMOTED" ? prior.metadata.versionId : nationalHead?.versionId ?? null, { confirmUnchanged: false });
   if (!outcome.promoted) throw new Error(outcome.candidate.failureDetail ?? "Federal source publication refused.");
-  return { candidate, outcome, previousCounts: held?.counts };
+  try { await saveFederalSourceCheck(input.store, input, outcome.promoted.versionId, input.records.map(row => row.sourceUrl)); }
+  catch (error) { console.error("FEDERAL_SOURCE_CHECK_WRITE_FAILED=" + JSON.stringify({ source: input.source, partition: input.partition, detail: error instanceof Error ? error.message : String(error) })); }
+  return { kind: "PUBLISHED" as const, candidate, outcome, previousCounts: held?.counts, counts };
 }
 
 export function countFederalFacts(records: readonly FederalFact[], joined: ReadonlySet<string>): FederalCounts {

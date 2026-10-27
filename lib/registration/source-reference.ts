@@ -101,7 +101,7 @@ export function registrationReferenceFromRelease(prior: LoadedReference, release
         nativeIds: { census_pid6: pid }, status: value("IS_ACTIVE") || null, sourceVintage: release.releaseId,
         ...censusGovernmentContacts(value),
         officePhone: null, officeAddress: null, countyFips: /^\d{2}$/.test(fips) && /^\d{3}$/.test(county) && county !== "000" ? fips + county : null,
-        associations: [], bodyIds: [], provenance: { sourceUrl: release.requestedUrl, sourceOrg: "U.S. Census Bureau", collectedAt: release.sourceObservedAt, verifiedAt: null } });
+        associations: [], bodyIds: [], provenance: { sourceUrl: release.requestedUrl, sourceOrg: "U.S. Census Bureau", collectedAt: release.sourceObservedAt, verifiedAt: null,rawHash:release.sha256 } });
       found++;
     }
   }

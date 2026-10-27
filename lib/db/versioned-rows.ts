@@ -35,7 +35,10 @@ export class VersionedRows {
 
   async one(query: Query, table: string, id: string, selected = "value", project?: (value: unknown) => unknown, params:readonly unknown[]=[]): Promise<Row | null> {
     return this.cache.row<Row>({namespace: this.namespace(table, params.length?`${selected}:${JSON.stringify(params)}`:selected), key: id,
-      ...(project ? {source: {namespace: this.namespace(table, "value"), project: (row: Row) => ({...row,value: project(row.value)})}} : {}),
+      ...(project ? {source: {namespace: this.namespace(table, "value"), project: (row: Row) => ({...row,value: project(row.value)}),
+        // A successful local write can already own a revision newer than this
+        // selected copy. The same SQL comparison still confirms its use.
+        newer: (source: string, held: string) => /^\d+$/.test(source) && /^\d+$/.test(held) && BigInt(source) > BigInt(held)}} : {}),
       current: async etag => {
         const [row] = await query(`SELECT id,revision,updated_at,revision::text=$2::text AS __unchanged,
           CASE WHEN revision::text=$2::text THEN NULL ELSE ${selected} END AS value FROM ${table} WHERE id=$1`,

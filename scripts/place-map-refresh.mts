@@ -1,4 +1,6 @@
 /** The standing source job loads one state, keeping the prior map on failure. */
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { refreshStatePlaceMap } from "../lib/place-map/refresh.ts";
 import { readerFactDb } from "../lib/facts/db.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
@@ -16,12 +18,16 @@ installNeonRequestDeadline();
 const prepared = prepareProductionCivicDataWrite(), facts = readerFactDb(prepared.connection);
 const store = new PostgresRoutineDataStore(), contract = `place-map-${state.toLowerCase()}`;
 try {
-  const { dataset } = await withPublisherAcquisitionDeadline(`${state} Census place map`, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
-    signal => refreshStatePlaceMap(facts, process.cwd(), state, { signal }));
-  const candidate = censusGeographyCandidate(dataset, `US-${state}:place-map`);
-  const result = await processRegisteredRoutineCandidate(store, contract, candidate, candidate.retrieval.retrievedAt);
-  printSourceRunnerReceipt(contract, candidate, result);
-  if (!result.promoted) process.exitCode = 2;
+  const result = await withPublisherAcquisitionDeadline(`${state} Census place map`, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
+    signal => refreshStatePlaceMap(facts, process.cwd(), state, store, { signal }));
+  if (result.confirmed) {
+    console.log("RCD_RECEIPT=" + JSON.stringify({ source: contract, ...sourceHashReceiptFields(result.confirmed), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+  } else {
+    const candidate = censusGeographyCandidate(result.dataset!, `US-${state}:place-map`, result.sourceProbe!);
+    const published = await processRegisteredRoutineCandidate(store, contract, candidate, candidate.retrieval.retrievedAt, result.baseVersionId, { confirmUnchanged: false });
+    printSourceRunnerReceipt(contract, candidate, published);
+    if (!published.promoted) process.exitCode = 2;
+  }
 } catch (error) {
   if (!isSourceAcquisitionFailure(error)) throw error;
   const result = await recordRegisteredSourceAcquisitionFailure({ store, contractId: contract, failure: error });

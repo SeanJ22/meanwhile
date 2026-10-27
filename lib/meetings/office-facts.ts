@@ -21,26 +21,21 @@ import { challengeIn } from "../sources/http.ts";
 const OFFICE_READER_VERSION="street-office-v2";
 
 /** A body's office stays its own fact; an owning government's office is a separate fact and pin fallback.
- * Project each state's directory and source hash once before expanding government rows. */
+ * Read only selected bodies and their exact keyed directory owners. */
 export const OFFICE_FACT_TARGETS_SQL = `WITH selected AS MATERIALIZED (
   SELECT id,name,state,parent_id,kind FROM entity WHERE kind IN ('body','government') AND id=ANY($1::text[])
-), registration AS MATERIALIZED (
-  SELECT coalesce(p.payload->'governments','[]'::jsonb) AS governments,p.payload#>>'{vintage,sourceSha256}' AS source_sha256
-  FROM civic_data_promotions p
-  WHERE p.record_class='REGISTRATION'
-    AND p.key=ANY(ARRAY(SELECT DISTINCT 'REGISTRATION:US-'||state||':registration:v1' FROM selected))
-), inventory AS MATERIALIZED (
-  SELECT g,r.source_sha256 FROM registration r,LATERAL jsonb_array_elements(r.governments) g
 ), owned AS (
   SELECT b.*,r.g,r.source_sha256 FROM selected b LEFT JOIN LATERAL (
-    SELECT g,source_sha256 FROM (SELECT g,source_sha256,count(*) OVER() AS owners FROM inventory
-      WHERE g->>'state'=b.state AND (CASE WHEN b.kind='government' THEN
-        g->>'id'=b.id OR g->>'jurisdictionId'=b.id OR g->'aliases' ? b.id
-        ELSE g->>'id'=b.parent_id OR g->>'jurisdictionId'=b.parent_id
-        OR g->>'id'=split_part(b.id,'#',1) OR g->>'jurisdictionId'=split_part(b.id,'#',1)
-        OR g->'aliases' ? b.parent_id OR g->'aliases' ? b.id OR g->'bodyIds' ? b.id
-        OR g->'aliases' ? (b.parent_id||'#governing') OR g->'aliases' ? (b.parent_id||'#board') END)) candidates
-    WHERE owners=1
+    SELECT reader_payload_value(value) AS g,source_sha256 FROM (
+      SELECT r.value,reader_payload_node(reader_payload_node(p.payload)->'vintage')->>'sourceSha256' AS source_sha256,count(*) OVER() AS owners
+      FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+      WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.state=b.state
+        AND r.promotion_key='REGISTRATION:US-'||b.state||':registration:v1'
+        AND r.aliases && ARRAY[b.id,CASE WHEN b.id NOT LIKE 'ocd-division/%' THEN split_part(b.id,'#',1) END,
+          (SELECT e.id FROM entity e WHERE e.id=b.parent_id AND e.kind='government')]
+        AND (b.kind='government' OR (SELECT e.kind FROM entity e WHERE e.id=b.parent_id) IS DISTINCT FROM 'government'
+          OR r.aliases @> ARRAY[b.parent_id])
+    ) candidates WHERE owners=1
   ) r ON true
 )
 SELECT b.id,b.name,b.state,b.parent_id,
@@ -242,12 +237,11 @@ export async function publishHeldOfficeFacts(input: OfficeFactsInput): Promise<{
     if(outcome.decision==="PUBLISH"){
       // A newly published office makes its existing pin work due, including aliases whose parent is a place.
       const state=targets.find(row=>row.id===id||row.government_id===id)?.state;
-      await input.facts.query(`WITH registration AS MATERIALIZED (
-        SELECT coalesce(p.payload->'governments','[]'::jsonb) AS governments FROM civic_data_promotions p
-        WHERE p.record_class='REGISTRATION' AND p.key='REGISTRATION:US-'||$2::text||':registration:v1'
-      ), owners AS MATERIALIZED (
-        SELECT g FROM registration r,LATERAL jsonb_array_elements(r.governments) g
-        WHERE g->>'id'=$1 OR g->>'jurisdictionId'=$1 OR g->'aliases' ? $1
+      await input.facts.query(`WITH owners AS MATERIALIZED (
+        SELECT reader_payload_value(r.value) AS g FROM civic_data_rows r
+          JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+        WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.state=$2
+          AND r.promotion_key='REGISTRATION:US-'||$2::text||':registration:v1' AND r.aliases @> ARRAY[$1::text]
       ), bodies AS MATERIALIZED (
         SELECT e.id FROM entity e WHERE e.kind='body' AND e.state=$2 AND (e.id=$1 OR e.parent_id=$1
           OR split_part(e.id,'#',1)=$1 OR EXISTS(SELECT 1 FROM owners o

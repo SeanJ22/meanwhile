@@ -31,6 +31,10 @@ export interface ElectionFieldInput {
   readonly document: { readonly url: string; readonly text: string; readonly collectedAt: string; readonly capture?: WorkerPublicationCapture };
   readonly linkingPage?: OfficialLinkingPage;
   readonly websiteDelegation?: GovernmentWebsiteDelegation | null;
+  /** Exact acquisition/configuration used to validate this field; never an observation timestamp. */
+  readonly sourceKey?: string;
+  readonly sourceHash?: string;
+  readonly sourceComplete?: boolean;
 }
 
 export interface PublishedElectionField {
@@ -50,6 +54,8 @@ export interface PublishedElectionField {
     readonly verifiedAt: string;
     readonly collectedAt: string;
     readonly sourceOrg: string;
+    readonly sourceKey?: string;
+    readonly sourceHash?: string;
   };
 }
 

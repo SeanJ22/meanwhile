@@ -1,5 +1,4 @@
 import { recordParentMemory } from "../lib/civic-data/parent-memory.ts";
-import { failureRetryMs } from "../lib/civic-data/failure-backoff.ts";
 import { groupCongressReads, congressMemberResults, type CongressRunGroup } from "../lib/civic-data/congress-runs.ts";
 import { appendRoutineLaunchDecisions, routineLaunchDecision, type RoutineLaunchDecision } from "../lib/civic-data/launch-decisions.ts";
 import {
@@ -17,6 +16,7 @@ import { makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
 import { syncReaderIds } from "../lib/core/resolve.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
+import { factRefreshBounds, observedSourceEveryMs, readSourceChangeHistory, type SourceChangeHistory } from "../lib/civic-data/source-change-cadence.ts";
 import { publishBoxFindings, reviewPublishedBoxFacts } from "../lib/facts/box-publication.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
@@ -91,8 +91,6 @@ import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partition
 import { recordDoorOutcome, taskDoorId, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence, type DoorEvidence } from "../lib/doors/shut.ts";
-import { observedChangeMinutesByDoor } from "../lib/doors/observed-rate.ts";
-import { isDoorRecord } from "../lib/doors/registry.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { MEETING_DOORS_CONTRACT_ID } from "../lib/doors/meeting-doors.ts";
 import { doorSyncLine, syncHeldDoors } from "../lib/doors/seed-all.ts";
@@ -198,7 +196,6 @@ import {
 import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
 import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
 import { factReader } from "../lib/facts/db.ts";
-import { memberOfficesRunNeeded } from "../lib/officials/member-offices-publication.ts";
 
 
 let step = "reading its task selection";
@@ -237,11 +234,13 @@ if (controlPlaneUrlFromEnv() === null) {
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, so this pass has no hand-wired meeting work — ${error instanceof Error ? error.message : String(error)}`);
   }
 }
+let sourceFactClocks = factClocks(null);
 if (controlPlaneUrlFromEnv() !== null) {
   try {
     const clockRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
     const owner = await withControlPlaneConnectRetry(() => clockRepos.adminConfig.read(ADMIN_CONFIG_ID));
     const settingsConfig = owner !== null && isAdminConfig(owner.value) ? owner.value : null;
+    sourceFactClocks = factClocks(settingsConfig);
     installMeetingClockFrom(settingsConfig);
     installVotingRefreshFrom(settingsConfig);
   } catch (error) {
@@ -363,22 +362,9 @@ const sharedBrowser = PUBLISH_NOW ? null : (await import("./scout-browse.mts")).
 const workerToolsHost = sharedBrowser && ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
   ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
     RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
-async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
-  const connection = controlPlaneUrlFromEnv();
-  if (connection === null) return new Map();
-  try {
-    doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-    const rows = await (await doorOutcomeRepos).doors.list();
-    return observedChangeMinutesByDoor(rows.map((row) => row.value).filter(isDoorRecord));
-  } catch (error) {
-    console.warn(`RCD_DOORS: observed change rates not read — ${error instanceof Error ? error.message : String(error)}; every task stays on its policy cadence`);
-    return new Map();
-  }
-}
-
 let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
-async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false, evidence: DoorEvidence | null = null,
-  sourceClock?: () => Promise<RoutineTaskClock>): Promise<void> {
+async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, evidence: DoorEvidence | null = null,
+  sourceClock?: () => Promise<RoutineTaskClock>, sourceTask?: RoutineSourceTask): Promise<void> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) return;
   try {
@@ -393,7 +379,9 @@ async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, chang
     if (outcome === "FAILURE" && evidence !== null) {
       if ((await recordDoorEvidence(repos.doors, doorId, evidence, at, repos)).written) return;
     }
-    await recordDoorOutcome(repos.doors, doorId, outcome, at, changed);
+    const history = outcome === "SUCCESS" && sourceTask
+      ? (await readSourceChangeHistory(readerFactDb().query, [sourceTask])).get(taskId) : undefined;
+    await recordDoorOutcome(repos.doors, doorId, outcome, at, false, undefined, history);
     if (outcome === "SUCCESS" && await reopenDoorIfShut(repos.doors, doorId, at, repos)) {
       console.log(`RCD_TASK ${taskId}: its door was shut and reads again; reopened`);
     }
@@ -503,7 +491,7 @@ const BOX_FINDINGS_PER_PASS = 1000;
  */
 let heldPublication: Promise<void> = Promise.resolve();
 function publishHeldBesideSources(failures: SupervisorFailure[], taskId: string, code: string, publish: () => Promise<void>): void {
-  heldPublication = heldPublication.then(publish).catch((error: unknown) => {
+  heldPublication = heldPublication.then(() => withDatabaseJob(taskId, () => withReaderRoute(taskId, publish))).catch((error: unknown) => {
     failures.push({ taskId, code, detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   });
 }
@@ -897,7 +885,8 @@ if (controlPlaneUrlFromEnv()) try {
 }
 
 const selectedTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
-  .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
+  .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)))
+  .map(task => ({ ...task, ...factRefreshBounds(task, sourceFactClocks) }));
 if (PUBLISH_NOW && selectedTasks.length === 0) {
   await heldPublication;
   if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length)) {
@@ -1105,7 +1094,15 @@ if (selectedTasks.length > 0) try {
   console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 
-const observedChangeRates = await readObservedChangeRates();
+const campaignMoneyAdmission = selectedTasks.some(task=>task.id==="campaign-money")
+  ? await (await import("../lib/funding/state-local-work.ts")).readCampaignMoneyAdmission(readerFactDb().query,new Date(admissionNowMs).toISOString(),sourceFactClocks)
+    .catch(error=>{console.warn(`RCD_TASK campaign-money: state source/input clocks unavailable: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);return null;})
+  : null;
+
+const sourceChangeHistories = await readSourceChangeHistory(readerFactDb().query, selectedTasks).catch(error => {
+  console.warn(`RCD_SOURCE_HISTORY ${safeFailure(sanitizedErrorDiagnostic(error))}; source fact clocks remain in force`);
+  return new Map<string, SourceChangeHistory>();
+});
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -1119,15 +1116,15 @@ for (const read of clockReads) {
   const publication = publicationTarget(task.id);
   const ballotsDue = publication !== null && ballotPublicationDue(task.id,
     ballotStamps.get(publication.key) ?? null, priorBallotPublications.get(publication.key) ?? null, read.clock);
-  const inputDue = routineInputState(task.id) !== null && (!inputStamps.has(task.id) ||
-    routineInputChanged(inputStamps.get(task.id) ?? null, priorInputs.get(task.id) ?? null));
+  const inputDue = task.id==="campaign-money"&&campaignMoneyAdmission?.localDue===true ||
+    routineInputState(task.id) !== null && (!inputStamps.has(task.id) ||
+      routineInputChanged(inputStamps.get(task.id) ?? null, priorInputs.get(task.id) ?? null));
   if (!FORCE && !ballotsDue && !inputDue && dueRequest === null && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
     recordLaunchDecision(task, "SKIP", "Waiting for a changed source or repair", "unchanged receipt failure; awaiting changed code, Send or source evidence");
     continue;
   }
   const sittingHot = sittingSignals.get(task.id);
-  const observedChange = observedChangeRates.get(task.id) ?? observedChangeRates.get(`feed:${task.id}`);
-  const observedEveryMs = observedChange === undefined ? undefined : observedChange * 60_000;
+  const observedEveryMs = observedSourceEveryMs(sourceChangeHistories.get(task.id), durableClock);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs.get(task.id) ?? null);
   const discoveryDue = meetingDiscoveryInputsDue(task.id, durableClock, meetingDiscoveryInputs, admissionNowMs);
   if (task.ownerInvocation) {
@@ -1137,7 +1134,7 @@ for (const read of clockReads) {
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
   const cadenceDue = routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
-  const taskDue = publication
+  const taskDue = task.id==="campaign-money"&&!task.ownerInvocation&&campaignMoneyAdmission!==null ? campaignMoneyAdmission.providerDue : publication
     // Navigation re-reads its official pages on its own cadence; a ballot file republishes only when it changes or was held.
     ? ballotsDue || (publication.family === "ballot-navigation" || !ballotStamps.has(publication.key) || priorBallotPublications.get(publication.key)?.status === "HELD") && cadenceDue
     : cadenceDue;
@@ -1147,7 +1144,7 @@ for (const read of clockReads) {
     const retrying = Date.parse(durableClock?.lastAttemptedAt ?? "") > Date.parse(durableClock?.lastSucceededObservedAt ?? "") || !durableClock?.lastSucceededObservedAt;
     recordLaunchDecision(task, "SKIP", fileOnly ? "State file unchanged" : retrying ? "Waiting to retry the source" : "Waiting for the next scheduled source check",
       fileOnly ? "Next publication is due when the state ballot file changes." :
-        `Next source check ${Number.isFinite(next) ? new Date(next).toISOString() : "after the owner's next request"}. ${retrying ? `Source retry after ${failureRetryMs(task.retryMs, durableClock)}ms` : "Source cadence"}; last attempted ${durableClock?.lastAttemptedAt ?? "never"}; last checked ${durableClock?.lastSucceededObservedAt ?? "never"}${inputStamps.has(task.id) ? "; state inputs unchanged" : ""}.`);
+        `Next source check ${Number.isFinite(next) ? new Date(next).toISOString() : "after the owner's next request"}. ${retrying ? "Source retry and fact clock" : "Source cadence"}; last attempted ${durableClock?.lastAttemptedAt ?? "never"}; last checked ${durableClock?.lastSucceededObservedAt ?? "never"}${inputStamps.has(task.id) ? "; state inputs unchanged" : ""}.`);
     continue;
   }
   // A state's portraits wait until its rosters name someone new without a portrait, or a retry falls due.
@@ -1159,16 +1156,7 @@ for (const read of clockReads) {
       continue;
     }
   }
-  // The daily member-office run waits until some state's lawmaker list is promoted again.
-  if (task.id === "member-offices" && !FORCE && dueRequest === null) {
-    const offices = await memberOfficesRunNeeded(store)
-      .catch(error => ({ needed: true, reason: `The member-office package could not be read (${safeFailure(sanitizedErrorDiagnostic(error))}); it runs.` }));
-    if (!offices.needed) {
-      recordLaunchDecision(task, "SKIP", "Member offices are current", offices.reason);
-      continue;
-    }
-  }
-  if (inputDue) console.log(`RCD_INPUT_CHANGED ${task.id}: ${!inputStamps.has(task.id) ? "state input clock could not be read; refresh remains owed" : priorInputs.has(task.id) ? "state inputs changed" : "state inputs have no processed stamp"}; offered to the normal frontier`);
+  if (inputDue) console.log(`RCD_INPUT_CHANGED ${task.id}: ${task.id==="campaign-money"?"held native filings have changed people/bindings or unfinished derived work":!inputStamps.has(task.id) ? "state input clock could not be read; refresh remains owed" : priorInputs.has(task.id) ? "state inputs changed" : "state inputs have no processed stamp"}; offered to the normal frontier`);
   if (publicationDue) {
     const detail = `${task.id}: ${campaignPublicationInputs.get(task.id)!.approvals - campaignPublicationInputs.get(task.id)!.attemptedApprovals} committed approval(s) not attempted by this code; offered to the normal publication frontier without waiting for hourly cadence.`;
     publicationInputLines.push(detail);
@@ -1402,8 +1390,13 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
   }
   const singleMeeting = pending.kind === "MEETING_PARTITION" && run.status === 0 && run.termination === "EXITED"
     ? stateCalendarMemberResults(run, [pending.id], true)[0] : null;
+  const partition= pending.kind==="MEETING_PARTITION"?meetingPartitionContract(pending.task.id):null;
+  const bodyContinuation=partition?.derivedFamily&&!partition.derivedParentId&&run.stdout.split(/\r?\n/).some(line=>{
+    if(!line.startsWith("RCD_MEETING_PARTITION_DEFERRED="))return false;
+    try{return JSON.parse(line.slice("RCD_MEETING_PARTITION_DEFERRED=".length)).partitionId===pending.task.id;}catch{return false;}
+  });
   const deferral = routineDeferral(run, startedSourceChildren.has(run.id)) ??
-    (singleMeeting && "owed" in singleMeeting ? singleMeeting.owed : null);
+    (bodyContinuation?"the derived family's saved body cursor remains owed":singleMeeting && "owed" in singleMeeting ? singleMeeting.owed : null);
   if (deferral !== null) {
     attempted -= 1;
 
@@ -1440,6 +1433,34 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
       return;
     }
+    const family=meetingPartitionContract(pending.task.id);
+    const children=parsed.receipts.map(receipt=>meetingPartitionContract(receipt.source));
+    if(family?.derivedFamily&&!family.derivedParentId&&children.every(child=>child?.derivedParentId===family.id)){
+      let good=0,held=0;
+      for(const [index,receipt] of parsed.receipts.entries()){
+        const child=children[index]!,task=routineTaskFromContract(child),promoted=successfulRoutineRunnerReceiptIssue(receipt)===null;
+        const issue=await durableRoutineRunnerReceiptIssue(receipt,task,store,promoted?"SUCCESS":"HELD");
+        if(issue!==null){
+          supervisorFailures.push({taskId:pending.task.id,code:"DURABLE_RECEIPT_INVALID",detail:issue});
+          console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${issue}`);
+          return;
+        }
+        if(promoted)good++;else held++;
+        captureTaskReceipt({...pending,id:task.id,task},receipt,promoted?"VERIFIED_SOURCE_SUCCESS":"VERIFIED_SOURCE_FAILURE");
+        console.log("RCD_RECEIPT="+JSON.stringify(receipt));
+      }
+      if(good){
+        verifiedSourceSuccesses++;
+        await recordTaskDoorOutcome(pending.task.id,"SUCCESS",null,()=>store.clock(pending.task.sourceId,pending.task.recordClass,pending.task.scope),pending.task);
+        console.log(`RCD_TASK ${pending.task.id}: GOOD (${good} body publications/checks, ${held} bodies held on their own retry clocks)`);
+      }else{
+        verifiedSourceFailures++;
+        await recordTaskDoorOutcome(pending.task.id,"FAILURE");
+        console.log(`RCD_TASK ${pending.task.id}: SOURCE_HELD_LKG (${held} body sources held)`);
+      }
+      if(executionFailure!==null)supervisorFailures.push(executionFailure);
+      return;
+    }
     if (parsed.receipts.length !== 1 || parsed.receipts[0]?.source !== pending.task.id) {
       const observed = parsed.receipts.map((receipt) => receipt.source).join(",") || "none";
       const detail = `expected exactly ${pending.task.id}; observed=${observed}`;
@@ -1462,15 +1483,15 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${durableIssue}`);
     } else if (promoted) {
       verifiedSourceSuccesses += 1;
-      await recordTaskDoorOutcome(pending.task.id, "SUCCESS", receipt.promotedVersion !== null && receipt.confirmedAt === undefined, null,
-        () => store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
+      await recordTaskDoorOutcome(pending.task.id, "SUCCESS", null,
+        () => store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope), pending.task);
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_SUCCESS");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: GOOD (${receipt.state})`);
     } else {
       verifiedSourceFailures += 1;
       const failedCandidate = !receipt.acquisitionSucceeded ? await store.readCandidateSummary(receipt.candidateId).catch(() => null) : null;
-      await recordTaskDoorOutcome(pending.task.id, "FAILURE", false, failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
+      await recordTaskDoorOutcome(pending.task.id, "FAILURE", failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_FAILURE");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: SOURCE_HELD_LKG (${receipt.state})`);
@@ -1539,10 +1560,10 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       : child.detail,
     child.kind === "SUPERVISOR_FAILURE" ? null : child.receipt.candidateId);
   if (child.kind === "VERIFIED_SOURCE_SUCCESS") {
-    await recordTaskDoorOutcome(pending.task.id, "SUCCESS", child.receipt.promotedVersion !== null && child.receipt.confirmedAt === undefined, null,
+    await recordTaskDoorOutcome(pending.task.id, "SUCCESS", null,
       () => pending.task.id.startsWith("legistar-members:")
         ? Promise.resolve({ lastSucceededObservedAt: child.receipt.confirmedAt })
-        : store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
+        : store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope), pending.task);
     verifiedSourceSuccesses += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_SUCCESS");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));
@@ -1551,7 +1572,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     console.log(`RCD_TASK ${pending.task.id}: GOOD (${child.state})${delivered ? ` — delivered ${delivered.records} record(s); ${delivered.gaps} owed: ${Object.entries(delivered.gapReasons).map(([code, n]) => `${code}×${n}`).join(", ") || "none"}` : ""}`);
   } else if (child.kind === "VERIFIED_SOURCE_FAILURE") {
     const failedCandidate = !child.receipt.acquisitionSucceeded ? await store.readCandidateSummary(child.receipt.candidateId).catch(() => null) : null;
-    await recordTaskDoorOutcome(pending.task.id, "FAILURE", false, failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
+    await recordTaskDoorOutcome(pending.task.id, "FAILURE", failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
     verifiedSourceFailures += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_FAILURE");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));

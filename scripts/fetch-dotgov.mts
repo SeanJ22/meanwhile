@@ -21,9 +21,9 @@
  */
 
 import { stamp } from "./stamp.mts";
-import { DOTGOV_BOUNDARY, parseDotGovRegistry, type DotGovSnapshot } from "../lib/civic-data/dotgov.ts";
+import { DOTGOV_BOUNDARY, DOTGOV_PARSER_VERSION, DOTGOV_SCOPE, parseDotGovRegistry, type DotGovSnapshot } from "../lib/civic-data/dotgov.ts";
 export type { DotGovDomain, DotGovSnapshot } from "../lib/civic-data/dotgov.ts";
-import { dotGovCandidate } from "../lib/civic-data/candidate-builders.ts";
+import { dotGovCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import {
@@ -37,8 +37,10 @@ import {
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { shortTransfer } from "../lib/sources/bulk-completeness.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
-import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
+import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
 const COMMITS_URL = "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1";
 
@@ -52,12 +54,13 @@ const UA = "we-the-people/1.0 (civic data; contact seanj22@gmail.com)";
 const MIN_DOMAINS = 15_000;
 const MIN_ELECTION_DOMAINS = 500;
 
-export interface DotGovAcquisition {
-  readonly snapshot: DotGovSnapshot;
+export interface DotGovSourceAcquisition {
+  readonly sourceSha: string;
   readonly rawText: string;
   readonly finalUrl: string;
   readonly retrievedAt: string;
 }
+export interface DotGovAcquisition extends DotGovSourceAcquisition { readonly snapshot: DotGovSnapshot }
 
 async function currentSourceSha(signal?: AbortSignal): Promise<string> {
   const response = await requestPublisher("CISA dotgov revision", () =>
@@ -92,12 +95,12 @@ async function currentSourceSha(signal?: AbortSignal): Promise<string> {
   return sha.toLowerCase();
 }
 
-export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisition> {
+export async function acquireDotGovSource(signal?: AbortSignal): Promise<DotGovSourceAcquisition> {
   const sha = await currentSourceSha(signal);
   const csvUrl = `https://raw.githubusercontent.com/cisagov/dotgov-data/${sha}/current-full.csv`;
   const response = await requestPublisher("CISA dotgov registry", () =>
     fetch(csvUrl, { headers: { "user-agent": UA }, signal }));
-  if (!response.ok) {
+  if (response.status !== 200) {
     throw sourceAcquisitionFailure(
       "PUBLISHER_RESPONSE_REFUSED",
       `dotgov: ${csvUrl} answered ${response.status}`,
@@ -114,6 +117,11 @@ export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisi
       `dotgov: ${csvUrl} answered ${response.status} with ${short}`,
     );
   }
+  return { sourceSha: sha, rawText: csv, finalUrl: response.url || csvUrl, retrievedAt: new Date().toISOString() };
+}
+
+function normalizeDotGovSource(acquired: DotGovSourceAcquisition): DotGovAcquisition {
+  const { sourceSha: sha, rawText: csv, retrievedAt } = acquired;
   let domains;
   try {
     domains = parseDotGovRegistry(csv);
@@ -137,8 +145,6 @@ export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisi
     );
   }
 
-  const retrievedAt = new Date().toISOString();
-
   const snapshot: DotGovSnapshot = {
     source: {
       name: "cisagov/dotgov-data",
@@ -146,7 +152,7 @@ export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisi
       sha,
       file: "current-full.csv",
       licence: "US Government work, public domain",
-      readAt: stamp(),
+      readAt: stamp(new Date(retrievedAt)),
     },
     counts: {
       domains: domains.length,
@@ -156,7 +162,31 @@ export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisi
     domains,
     boundary: DOTGOV_BOUNDARY,
   };
-  return { snapshot, rawText: csv, finalUrl: response.url || csvUrl, retrievedAt };
+  return { ...acquired, snapshot };
+}
+
+export async function acquireDotGov(signal?: AbortSignal): Promise<DotGovAcquisition> {
+  return normalizeDotGovSource(await acquireDotGovSource(signal));
+}
+
+/** Compare complete current publisher bytes before parsing or loading a held registry. */
+export async function refreshDotGov(input: {
+  readonly store: RoutineDataStore;
+  readonly signal?: AbortSignal;
+  readonly readSource?: typeof acquireDotGovSource;
+}) {
+  const source = await (input.readSource ?? acquireDotGovSource)(input.signal);
+  const rawHash = sha256(source.rawText);
+  const head = await input.store.readSourceHead("DOTGOV_REFERENCE", DOTGOV_SCOPE);
+  const confirmation = head?.rawHashBasis === "SOURCE_CONTENT_V1" ? await confirmSourceHashUnchanged({
+    store: input.store, sourceId: "cisa-dotgov-registry", recordClass: "DOTGOV_REFERENCE", scope: DOTGOV_SCOPE,
+    parserVersion: DOTGOV_PARSER_VERSION, rawHash, now: source.retrievedAt, complete: true,
+    retrieval: { requestedUrl: COMMITS_URL, finalUrl: source.finalUrl, httpStatus: 200, rawHash, retrievedAt: source.retrievedAt },
+  }) : null;
+  if (confirmation) return { confirmation, publication: null };
+  const acquisition = normalizeDotGovSource(source), candidate = dotGovCandidate(acquisition);
+  const outcome = await processRegisteredRoutineCandidate(input.store, "dotgov", candidate, source.retrievedAt);
+  return { confirmation: null, publication: { acquisition, candidate, outcome } };
 }
 
 export async function fetchDotGov(): Promise<DotGovSnapshot> {
@@ -173,12 +203,12 @@ async function main() {
   }
   prepareProductionCivicDataWrite();
   const store = new PostgresRoutineDataStore();
-  let acquisition: DotGovAcquisition;
+  let refreshed: Awaited<ReturnType<typeof refreshDotGov>>;
   try {
-    acquisition = await withPublisherAcquisitionDeadline(
+    refreshed = await withPublisherAcquisitionDeadline(
       "CISA dotgov",
       ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
-      acquireDotGov,
+      signal => refreshDotGov({ store, signal }),
     );
   } catch (error) {
     if (!isSourceAcquisitionFailure(error)) throw error;
@@ -191,9 +221,12 @@ async function main() {
     process.exitCode = 2;
     return;
   }
+  if (refreshed.confirmation) {
+    console.log("RCD_RECEIPT=" + JSON.stringify({ source: "dotgov", ...sourceHashReceiptFields(refreshed.confirmation), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+    return;
+  }
+  const { acquisition, candidate, outcome } = refreshed.publication!;
   const snapshot = acquisition.snapshot;
-  const candidate = dotGovCandidate(acquisition);
-  const outcome = await processRegisteredRoutineCandidate(store, "dotgov", candidate, acquisition.retrievedAt);
   console.log(`dotgov: ${snapshot.counts.domains} domains at ${snapshot.source.sha}`);
   console.log(
     `dotgov: ${snapshot.counts.electionDomains} typed as election offices — the named rung list`,
@@ -204,7 +237,7 @@ async function main() {
   for (const [type, n] of types) console.log(`  ${String(n).padStart(5)}  ${type}`);
   printSourceRunnerReceipt("dotgov", candidate, outcome);
   console.log(`dotgov: ${DOTGOV_BOUNDARY}`);
-  if (!outcome.promoted) process.exitCode = 2;
+  if (!outcome.promoted && !outcome.confirmed) process.exitCode = 2;
 }
 
 if (process.argv[1]?.endsWith("fetch-dotgov.mts")) {

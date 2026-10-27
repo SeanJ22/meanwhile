@@ -7,6 +7,7 @@ import { billScope,type Dataset } from "../lib/sources/legiscan/bills.ts";
 import { publishBulkCandidate,LEGISCAN_PART_ROWS } from "../lib/sources/legiscan/publication.ts";
 import { transferRead } from "../lib/db/reader-route.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
+import {assertPublicationBaseOwner} from "../lib/civic-data/store.ts";
 
 const at="2026-10-26T12:40:00.000Z",later="2026-10-26T13:40:00.000Z";
 const hash=(body:string)=>createHash("sha256").update(body).digest("hex");
@@ -15,7 +16,8 @@ const bill=JSON.parse(ak).bill;
 const dataset:Dataset={state_id:bill.state_id,session_id:bill.session_id,session_name:bill.session.session_name,dataset_hash:hash(ak),dataset_date:"2012-12-30",access_key:"fixture-access"};
 const person={id:"held:ak-gatto",nativeIds:{legiscan:["6033"]}};
 const capture=(body:string,now:string,op="getDataset")=>({body,requestedUrl:`https://api.legiscan.com/?op=${op}`,finalUrl:`https://api.legiscan.com/?op=${op}`,httpStatus:200,retrievedAt:now,rawHash:hash(body)});
-const bodies=Array.from({length:LEGISCAN_PART_ROWS*3+1},(_,index)=>{const raw=JSON.parse(ak);raw.bill.bill_id+=index;return JSON.stringify(raw);});
+const firstBillId=Math.floor(bill.bill_id/LEGISCAN_PART_ROWS)*LEGISCAN_PART_ROWS;
+const bodies=Array.from({length:LEGISCAN_PART_ROWS*3+1},(_,index)=>{const raw=JSON.parse(ak);raw.bill.bill_id=firstBillId+index;return JSON.stringify(raw);});
 function source(now:string){
   const {access_key:_access,...publicDataset}=dataset;
   return {capture:capture(JSON.stringify({dataset:publicDataset,archiveHash:hash(bodies.join("")),memberHashes:bodies.map(hash)}),now),dataset,bodies,people:[person],archiveHash:hash(bodies.join(""))};
@@ -49,6 +51,11 @@ const readbacks=async(store:import("../lib/civic-data/store.ts").PostgresRoutine
 
 test("a multi-part LegiScan session publish never reads a part back whole, and a resumed publish reads no saved part body",async()=>{
   await withMigratedRoutineStore("legiscan-bulk",async store=>{
+    const readBase=store.readPublicationBase.bind(store);let ownedBases=0;
+    store.readPublicationBase=async(recordClass,scope)=>{
+      const base=await readBase(recordClass,scope);
+      assertPublicationBaseOwner(store,base,recordClass,scope);ownedBases++;return base;
+    };
     const index=[(({access_key:_access,...row})=>row)(dataset)];
     await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:index}),at,"getDatasetList"),datasets:[dataset]},at);
     // A pass wall stops the first publish after two of its four parts.
@@ -93,6 +100,7 @@ test("a multi-part LegiScan session publish never reads a part back whole, and a
     console.log(`LEGISCAN_FANOUT_READS=${JSON.stringify({pass:"changed-roster",writes:changed.reads.byTable.get("query:FETCHED,query:STATE_BILL"),...republished})}`);
     assert.equal(changed.reads.byTable.get("query:FETCHED,query:STATE_BILL")?.[0],5);
     assert.equal(republished.wholeReads,0);
+    assert.ok(ownedBases>0,"every fan-out publication uses a base owned by the actual production adapter");
   });
 });
 

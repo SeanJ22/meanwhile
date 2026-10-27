@@ -391,8 +391,6 @@ test("A STATE WITH NO CONNECTED CALENDAR: its family reads the wiring first and 
   assert.equal(await store.readPromotion("MEETING", partition.scope), null, "nothing is published for a state with no member");
   const ingest = readFileSync(join(ROOT, "scripts", "ingest.ts"), "utf8");
   const program = ingest.slice(ingest.indexOf("async function readStateCalendars("));
-  assert.ok(
-    program.indexOf("promoteDerivedMeetingFamily(store, partition, prepare") < program.indexOf("await prepare();"),
-    "the child routes a family before the preload every source/body partition needs",
-  );
+  assert.ok(program.indexOf("if(partition.derivedFamily!==null)")<program.indexOf("await meetingSourceSession("),
+    "the state child dispatches the family orchestrator before constructing an ordinary one-body source session");
 });

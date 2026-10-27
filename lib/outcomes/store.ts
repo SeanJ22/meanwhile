@@ -35,6 +35,7 @@ import { promotedPayloadSha256 } from "../civic-data/attested-promotion.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 import { meetingPartitionId } from "../meetings/body-scope.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
+import { withOutcomeSourceChecks } from "./source-plan.ts";
 
 const stateScope = `(p.scope LIKE ANY($1::text[]) OR p.scope LIKE ANY($6::text[]))`;
 const bodySelected = (header: string) => `(${header}->>'bodyId'=ANY($2::text[]) OR ${header}->>'meetingId'=ANY($2::text[])
@@ -146,7 +147,7 @@ async function readMeetingOutcomes(states: readonly string[], selectors: readonl
     const read = await readPromotedCivicData<OutcomeSnapshot>("MEETING_OUTCOME", scope, { edge: entry });
     if (read.kind !== "PROMOTED") throw new Error(`READER_OUTCOME_PROOF_INVALID:${read.kind}`);
     assertSnapshot(read.value, ids);
-    snapshots.push(read.value);
+    snapshots.push(await withOutcomeSourceChecks(read.value,scope,{query}));
   }
   const stamp = (field: "generatedOn" | "generatedAt") => snapshots.map(snapshot => snapshot[field]).filter(value => value !== "UNKNOWN").sort().at(-1) ?? "UNKNOWN";
   return { generatedOn: stamp("generatedOn"), generatedAt: stamp("generatedAt"),
@@ -207,6 +208,7 @@ async function readOneDoorOutcome(pointer: DoorOutcomePointer, options: Promoted
   if (read.kind === "PROMOTED" || read.kind === "BOOTSTRAP") {
     const issue = outcomeScopeIssue(pointer, read.value);
     if (issue !== null) throw new Error(`Door outcome projection ${read.metadata.versionId ?? "unknown"}: ${issue}`);
+    if(read.kind==="PROMOTED")return{...read,value:await withOutcomeSourceChecks(read.value,pointer.scope,{store:options.store})};
   }
   return read;
 }

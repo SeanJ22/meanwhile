@@ -28,10 +28,10 @@ export async function readNavigationBase(store: RoutineDataStore, scope: string)
     identities: async function* () { yield* record.candidate.identities; } };
 }
 
-export async function prepareNavigationSuccessor(input: ManualProjectionPackage, store: RoutineDataStore): Promise<{
+export async function prepareNavigationSuccessor(input: ManualProjectionPackage, store: RoutineDataStore, options: { readonly forceMerge?: boolean } = {}): Promise<{
   readonly candidate: RoutineCandidate; readonly comparison: NavigationComparison;
 }> {
-  const merged = await mergeWithBase(input, store);
+  const merged = await mergeWithBase(input, store, options);
   if ("result" in merged) return merged.result;
   const { current, inherited, changed, conflicts, seen, receipt } = merged;
   let { base } = merged;
@@ -83,7 +83,7 @@ export async function prepareNavigationSuccessor(input: ManualProjectionPackage,
 }
 
 /** The first candidate lives only here: a merge that changes values rebuilds it, so the first is released before the rebuild. */
-async function mergeWithBase(input: ManualProjectionPackage, store: RoutineDataStore): Promise<
+async function mergeWithBase(input: ManualProjectionPackage, store: RoutineDataStore, options: { readonly forceMerge?: boolean }): Promise<
   | { readonly result: { readonly candidate: RoutineCandidate; readonly comparison: NavigationComparison } }
   | { readonly candidate: ManualSuccessorCandidate | null; readonly base: NavigationPublicationBase; readonly receipt: ManualSourceSetReceipt;
       readonly current: Map<string, NavigationRecord>; readonly inherited: NavigationRecord[]; readonly changed: CivicRecordDelta[];
@@ -93,7 +93,7 @@ async function mergeWithBase(input: ManualProjectionPackage, store: RoutineDataS
   const base = await readNavigationBase(store, first.scope);
   if (!base || !base.hasSourceReceipt) return { result: { candidate: first, comparison: { kind: "MERGED", base, changes: candidateChangeSet(first, null) } } };
   const current = new Map((first.readModel as CuratedReaderProjection).records.map(record => [record.id, record]));
-  if (store.confirmUnchanged && !base.record.candidate.bootstrapImport &&
+  if (!options.forceMerge && store.confirmUnchanged && !base.record.candidate.bootstrapImport &&
       base.record.candidate.normalization.parserVersion === first.normalization.parserVersion &&
       base.reviewHeldKeysHash === navigationHeldKeysHash(first) &&
       base.reviewFactsHash === navigationFactsHash(current.values())) return { result: { candidate: first,

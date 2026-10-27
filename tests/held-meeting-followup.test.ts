@@ -60,11 +60,10 @@ async function fixture(source: "ical" | "pima-insite" = "ical") {
     bodyClass: "committee", bodyOrigin: "SOURCED", coverageStatus: "LIVE", agendaSourceType: "ICAL", agendaSourceRef: route.target,
     meetingCadence: null, homepageUrl: null, demandCount: 0, sourceDataset: "GOV_DIRECTORY",
     provenance: { sourceUrl: route.target, sourceOrg: row.publishingOrg, collectedAt: at, verifiedAt: null } }] };
-  let inputReads = 0, released = 0, preparedFile = "";
+  let released = 0, preparedFile = "";
   const runtime: HeldMeetingWorkerRuntime = { root: process.cwd(), repos, vault, store, now: () => now,
     query: async () => { throw Error("UNSCOPED_DATABASE_READ"); },
     environment: { NODE_ENV: "test", WTP_RUNTIME_AUTHORITY_REPO: process.cwd(), WTP_RUNTIME_AUTHORITY_SHA: "a".repeat(40) },
-    readInput: async (_query, exact) => { inputReads++; assert.equal(exact.bodyId, row.bodyId); return { partition, registry, previous: null, venues: [] }; },
     slots: { acquire: async entry => { assert.equal(entry, source === "ical" ? `${partition.id}/scripts/ingest.ts`
       : "pima-legistar-outcomes/scripts/legistar-outcomes-ingest.mts"); return () => { released++; }; } },
     launcher: async command => {
@@ -77,19 +76,19 @@ async function fixture(source: "ical" | "pima-insite" = "ical") {
       const prepared = JSON.parse(await readFile(preparedFile, "utf8"));
       assert.equal(prepared.initialResponse.retrievedAt, at);
       assert.equal(Buffer.from(prepared.initialResponse.base64, "base64").toString(), text);
-      assert.equal(prepared.registry.bodies.length, 1);
+      assert.equal(prepared.registry, undefined, "the supervisor does not load held payloads before the child compares sources");
       const lines: string[] = [], originalLog = console.log;
       console.log = (...args) => { lines.push(args.join(" ")); };
       try {
         const result = await withFetch(async () => { throw Error("REPLAY_MADE_AN_EXTRA_REQUEST"); }, () => runMeetingIngest(
-          ["composite", "--promote", `--only-partition=${partition.id}`], { ...prepared, store, facts: { db: facts, vault },
+          ["composite", "--promote", `--only-partition=${partition.id}`], { ...prepared, registry, previous: null, venues: [], store, facts: { db: facts, vault },
             initialResponse: { ...prepared.initialResponse, bytes: new Uint8Array(Buffer.from(prepared.initialResponse.base64, "base64")) } }));
         lines.push(`DIGGER_RESULT=${JSON.stringify({ ...result, partitions: [] })}`);
         return { id: command.id, status: result.exitCode, signal: null, stdout: lines.join("\n"), stderr: "", termination: "EXITED", errorMessage: null };
       } finally { console.log = originalLog; }
     } };
   return { repos, vault, store, facts, runtime, partition, door, record, item, route, at, registry,
-    inputReads: () => inputReads, released: () => released, preparedFile: () => preparedFile };
+    released: () => released, preparedFile: () => preparedFile };
 }
 
 test("an acquired held calendar reaches the native reader through its exact routine authority and ordinary worker lease", async () => {
@@ -132,7 +131,7 @@ test("an acquired held calendar reaches the native reader through its exact rout
     assert.equal(output.artifacts[0]!.acquisitionAttemptId, f.record.attemptId);
     assert.equal(output.artifacts[0]!.reused, true);
   }
-  assert.equal(f.inputReads(), 1);
+
   assert.ok(doorReads.length > 0, "the worker rebuilds its exact-body native contract from actual registered door rows");
   assert.equal(f.released(), 1);
   await assert.rejects(stat(f.preparedFile()), /ENOENT/, "the original source payload is removed after the child settles");

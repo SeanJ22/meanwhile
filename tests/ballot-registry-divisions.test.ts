@@ -16,13 +16,14 @@ test("ballot workers read one named state's registry and match its division labe
   assert.deepEqual(await memory.readRegistryDivisions("NH", ["ALDER, COUNTY"]), expected);
   assert.deepEqual(await memory.readRegistryDivisions("AZ", ["Alder County"]), []);
   const calls: string[] = [];
-  const reader = { async readPromotion(recordClass: string, selectedScope: string) {
-    calls.push(`${recordClass}:${selectedScope}`);
-    assert.equal(selectedScope, scope);
-    return pointer;
+  const reader = { async readerRows(text: string, params: readonly unknown[]) {
+    assert.ok(text.includes('civic_data_rows'), 'one named division is read from keyed rows');
+    assert.deepEqual(params, [scope, 'NH', ['alder county']]);
+    calls.push(scope);
+    return [{valid:true,divisions:expected}];
   } } as unknown as PostgresRoutineDataStore;
   assert.deepEqual(await PostgresRoutineDataStore.prototype.readRegistryDivisions.call(reader, "NH", ["ALDER, COUNTY"]), expected);
-  assert.deepEqual(calls, [pointer.key]);
+  assert.deepEqual(calls, [scope]);
   assert.deepEqual(await PostgresRoutineDataStore.prototype.readRegistryDivisions.call(reader, "NH", []), []);
   assert.equal(calls.length, 1);
 });

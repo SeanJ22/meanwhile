@@ -5,7 +5,6 @@ import { neon, neonConfig } from "@neondatabase/serverless";
 import { countNeonBytes, databaseTransferFetch, onNeonBytesCount, keepsNeonBytesInProcess, easternDay, installNeonBytesReport, runnerClient, socketCaller, VITAL_SIGNS_REPORT_ENV, type NeonBytesHour } from "./transfer-by-caller.ts";
 
 import { currentReaderRoute } from "./reader-route.ts";
-import { adminChangesFetch } from "./admin-changes.ts";
 import { afterResponse } from "../log/after-response.ts";
 import { assertDatabaseReadTarget } from "./read-target.ts";
 import { runtimeCivicReadCache, type CivicRowVersion } from "./civic-read-cache.ts";
@@ -171,9 +170,9 @@ export function installDatabaseTransferCounter(): void {
     }
   });
   installNeonBytesReport();
-  neonConfig.fetchFunction = adminChangesFetch(databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); }, () => internal.getStore() === true, async () => {
+  neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); }, () => internal.getStore() === true, async () => {
     if (!reportsToRunner()) await afterResponse(() => flushDatabaseTransfer(), { backgroundFallback: true });
-  }));
+  });
   const Socket = (neonConfig.webSocketConstructor ?? globalThis.WebSocket) as typeof WebSocket | undefined;
   if (Socket) neonConfig.webSocketConstructor = countedWebSocket(Socket);
   if (transferState.installed) return;

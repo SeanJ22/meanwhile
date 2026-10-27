@@ -82,11 +82,11 @@ export interface DoorRecord {
   readonly shutReason?: string | null;
   /** System-kept: when the door last reopened after being shut. */
   readonly reopenedAt?: string | null;
-  /** System-kept: when a read of this door last promoted something different from before. Absent means never seen. */
+  /** System-kept: when this source's raw hash last changed. Absent means never seen. */
   readonly lastChangedAt?: string | null;
-  /** System-kept: minutes between its changed promotions, as a running average (lib/doors/observed-rate.ts). Absent until two have been seen. */
+  /** System-kept: minutes between actual source-content changes. Absent until a change interval has been seen. */
   readonly observedChangeMinutes?: number | null;
-  /** System-kept: how many changed promotions the average rests on. */
+  /** System-kept: how many actual source-content movements the average rests on. */
   readonly observedChanges?: number;
   /** Read at the next opportunity instead of waiting for the schedule. */
   readonly readNow: boolean;

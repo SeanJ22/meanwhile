@@ -1,6 +1,17 @@
 import { durableCivicDataHash } from "./canonical-hash.ts";
 import { durableStateHash, largePayloadScope } from "./state-publication.ts";
 import { federalMoneySavedSourceIssue } from "../federal-money/verify.ts";
+import type { Registry } from "../registry/types.ts";
+import type { RegistryPlanningView } from "./keyed-registry-planning.ts";
+import { selectRegistryPlaceView } from "./keyed-registry-place.ts";
+import type { FederalMoneyProjection } from "../federal-money/model.ts";
+import { selectRegistryLookup } from "./keyed-rows.ts";
+import { stateRegistryRuntimeScope } from "./state-scopes.ts";
+import { selectDerivedWiringRows } from "./derived-input-rows.ts";
+import { MEMBER_OFFICE_NATIONAL_SCOPE, memberOfficeStateScope, memberOfficeRecordState, type MemberOfficeSlice } from "../officials/member-office-data.ts";
+import type { MemberOfficeRecord } from "../officials/member-offices.ts";
+import { manualRecordSourceUrls } from "./manual-source-isolation.ts";
+import { manualSourceUrls } from "./manual-source-urls.ts";
 import { VOTING_SOURCE_REPLACEMENT_VERIFIER, votingSourceReplacement, votingSourceReplacementVerifier } from "../ballot/voting-source-replacement-contract.ts";
 
 import { candidateChangeSet } from "./changes.ts";
@@ -11,6 +22,7 @@ import { readMeetingPartitionProjection } from "../meetings/snapshot.ts";
 import { verifyRoutineReaderProjection, type RoutineReaderVerification } from "./reader-verification.ts";
 import {
   candidateVersionSummary,
+  candidateProofView,
   publishedCandidateMetadata,
   projectionKey,
   promotedPointerIdentity,
@@ -107,11 +119,64 @@ function candidateReadOnlyStore(
   const readOnly = async (): Promise<never> => {
     throw new Error("SOURCE_SCOPED_PREFLIGHT_STORE_IS_READ_ONLY");
   };
+  const owned = (id: string) => id === candidate.id ? record : predecessor?.candidate.id === id ? predecessor : null;
+  const ownedRecords = [record, ...(predecessor ? [predecessor] : [])];
+  const ownedScope = (recordClass: RoutineRecordClass, scope: string) =>
+    ownedRecords.find(row => row.candidate.recordClass === recordClass && row.candidate.scope === scope) ?? null;
+  const registryPlanning = (row: CandidateVersionRecord | null): RegistryPlanningView | null => {
+    if (row?.candidate.recordClass !== "REGISTRY_RUNTIME_BINDING") return null;
+    const value = row.candidate.readModel as RegistryPlanningView;
+    return { registry: value.registry, bodyRosters: value.bodyRosters ?? [],
+      rosterReaderDispositions: value.rosterReaderDispositions ?? [], statewideExecutives: value.statewideExecutives,
+      officialCandidacies: value.officialCandidacies };
+  };
+  const officeModel = (row: CandidateVersionRecord | null) => {
+    const value = row?.candidate.readModel as { kind?: string; records?: readonly MemberOfficeRecord[];
+      rosterDigests?: Readonly<Record<string, string>>; pending?: readonly string[] } | null;
+    return row?.candidate.recordClass === "CURATED_READER_RECORD" && value?.kind === "member-offices" ? value : null;
+  };
   return {
     create: readOnly,
     transition: readOnly,
     promote: readOnly,
     appendEvidence: readOnly,
+    writeMemberOfficeProgress: readOnly,
+    readMemberOfficeProgress: async () => {
+      const value = officeModel(record) ?? officeModel(predecessor);
+      return { rosterDigests: value?.rosterDigests ?? {}, pending: value?.pending ?? [] };
+    },
+    readMemberOfficeMembers: async members => {
+      const value = officeModel(record) ?? officeModel(predecessor);
+      return (value?.records ?? []).filter(row => members.includes(row.officeholderId));
+    },
+    readMemberOfficeSlice: async (state, members = []): Promise<MemberOfficeSlice | null> => {
+      const scope = memberOfficeStateScope(state), postal = scope.slice(3, 5);
+      const row = ownedRecords.find(row => row.candidate.scope === scope && officeModel(row))
+        ?? ownedRecords.find(row => row.candidate.scope === MEMBER_OFFICE_NATIONAL_SCOPE && officeModel(row));
+      const value = row ? officeModel(row) : null;
+      if (!row?.receipt || !value) return null;
+      const records = (value.records ?? []).filter(office => memberOfficeRecordState(office, row.candidate.scope) === postal &&
+        (!members.length || members.includes(office.officeholderId)));
+      const urls = new Set(records.flatMap(manualRecordSourceUrls));
+      const sources = (row.candidate.retrieval.manualSourceReceipt?.sources ?? []).filter(source => source.reviewOutcome !== "BLOCKED" &&
+        manualSourceUrls(source).some(url => urls.has(url))).map(source => source.extractedMembers
+        ? { ...source, extractedMembers: source.extractedMembers.filter(member => member.path.startsWith(`data/${postal.toLowerCase()}/`)) } : source);
+      return { scope: row.candidate.scope, versionId: row.candidate.id, sourceId: row.candidate.sourceId,
+        promotedAt: row === record ? observedAt : row.receipt.validatedAt, retrievedAt: row.candidate.retrieval.retrievedAt,
+        sourceThrough: row.candidate.temporal.sourceThrough, version: row.candidate.temporal.version,
+        staleAtRetrieval: row.candidate.temporal.staleAtRetrieval, receipt: row.receipt, records, sources,
+        header: Object.fromEntries(Object.entries(value).filter(([key]) => key !== "records")),
+        normalization: { normalizedHash: row.candidate.normalization.normalizedHash, stateRecordHashes: row.candidate.normalization.stateRecordHashes } };
+    },
+    readDerivedInputHeads: async ids => ids.flatMap(id => {
+      const row = owned(id);
+      if (!row) return [];
+      const value = row.candidate.readModel as { kind?: unknown } | null;
+      return [{ id, recordClass: row.candidate.recordClass, scope: row.candidate.scope, state: row.state,
+        readModelSha256: largePayloadScope(row.candidate.scope) ? durableStateHash(row.candidate.readModel) : durableCivicDataHash(row.candidate.readModel),
+        readModelKind: typeof value?.kind === "string" ? value.kind : null }];
+    }),
+    readDerivedWiringRows: async (id, keys) => selectDerivedWiringRows(owned(id)?.candidate.readModel, keys),
     readCandidate: async (candidateId) => candidateId === candidate.id
       ? record
       : predecessor?.candidate.id === candidateId ? predecessor : null,
@@ -121,11 +186,48 @@ function candidateReadOnlyStore(
       for (const key of path) value = (value as Record<string, unknown> | null)?.[key];
       return value === undefined ? null : value as T;
     },
+    // These selectors use only the already owned proposal/predecessor. A foreign source cannot enter preflight.
+    readPublicationBase: async (recordClass, scope) => recordClass === candidate.recordClass && scope === candidate.scope
+      ? { current: projection, lkg: { ...record, candidate: candidateProofView(record.candidate) } }
+      : { current: null, lkg: null },
+    readFederalMoneyPartitionKeys: async (scope, ids) => {
+      const row = ownedScope("FEDERAL_MONEY", scope);
+      if (!row) return null;
+      const model = row.candidate.readModel as FederalMoneyProjection;
+      return { versionId: row.candidate.id, sourceId: row.candidate.sourceId, state: model.state,
+        children: [...model.children ?? []], records: (model.records ?? []).filter(fact => ids.includes(fact.id))
+          .map(({ id, sourceId }) => ({ id, sourceId })) };
+    },
+    readFederalMoneyPriorPlaces: async id => {
+      const row = owned(id);
+      if (row?.candidate.recordClass !== "FEDERAL_MONEY") return [];
+      const model = row.candidate.readModel as FederalMoneyProjection;
+      return [...new Set((model.records ?? []).flatMap(fact => [...fact.bodyIds.map(id => `body:${id}`),
+        ...fact.divisionIds.map(id => `division:${id}`)]))].sort();
+    },
+    readRegistryPlanningView: async state => registryPlanning(ownedScope("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state))),
+    readRegistryPlaceView: async (state, divisionIds) => {
+      const row = ownedScope("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state)), value = registryPlanning(row);
+      return row && value ? { versionId: row.candidate.id, payload: selectRegistryPlaceView(value, divisionIds) } : null;
+    },
     readRegistryDivisions: async () => [],
+    readRegistrySlice: async (state,bodyIds,divisionIds) => {
+      if(candidate.recordClass !== "REGISTRY_RUNTIME_BINDING" || candidate.scope !== stateRegistryRuntimeScope(state))return null;
+      const registry=(candidate.readModel as {registry?:Registry} | null)?.registry;
+      return registry ? selectRegistryLookup(candidate.id,registry,bodyIds,divisionIds) : null;
+    },
+    readSourceHead: async (recordClass, scope) => recordClass === candidate.recordClass && scope === candidate.scope
+      ? {sourceId:candidate.sourceId,recordClass:candidate.recordClass,scope:candidate.scope,versionId:candidate.id,
+        lastKnownGoodVersionId:candidate.id,rawHash:candidate.retrieval.rawHash,rawHashBasis:candidate.retrieval.rawHashBasis ?? null,
+        normalizedHash:candidate.normalization.normalizedHash,parserVersion:candidate.normalization.parserVersion,
+        promotedAt:observedAt,candidateState:"PROMOTED",acquisitionSucceeded:candidate.retrieval.succeeded,
+        acquisitionComplete:candidate.retrieval.complete ?? null,sourceThrough:candidate.temporal.sourceThrough,imported:Boolean(candidate.bootstrapImport)}
+      : null,
     readPortraitRunState: readOnly,
     readPromotionPayloadFields: readOnly,
     readCandidateField: readOnly,
     readSlimRosters: readOnly,
+    readOfficeRoster: readOnly,
     readRosterIdDigests: readOnly,
     readCandidateCaptures: readOnly,
     readPublishedCandidateMetadata: async (candidateId) => candidateId === candidate.id

@@ -11,12 +11,18 @@ import { withFederalMoneyVault, readFederalMoneyCapture } from "./vault.ts";
 import { parseFederalMoney } from "./parse.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { withFederalMoneyVerificationCache } from "./verify.ts";
+import { readFederalMoneyProgress } from "./progress.ts";
+import { federalMoneyAppliedSourceHash, federalMoneySourceHash, federalMoneySourceKey } from "./source-hash.ts";
+import { sha256 } from "../civic-data/candidate-builders.ts";
+import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 
 interface FederalMoneyRefreshOptions {
   readonly source: FederalMoneySource; readonly store: RoutineDataStore;
   readonly states?: readonly string[]; readonly acquireOptions?: FederalMoneyAcquireOptions;
   readonly acquire?: typeof acquireFederalMoney; readonly now?: () => string;
   readonly identities: (state: string, facts: FederalMoneyPage["facts"]) => Promise<FederalMoneyJoinInput>;
+  /** Compact hashes of the exact native recipient dependencies, acquired without their record bodies. */
+  readonly identityHash?: (state: string, facts: FederalMoneyPage["facts"]) => Promise<string>;
   readonly locate?: (state: string, facts: FederalMoneyPage["facts"]) => Promise<readonly { id: string; partition: FederalMoneyPartition }[]>;
   /** Seek one held source/state partition; its facts use the normal publisher. */
   readonly nextHeldPartition?: (state: string, afterScope: string | null) => Promise<string | null>;
@@ -38,25 +44,28 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
   const order = input.maxRounds === 0 ? states : await leastRecentlyServed(input.store, input.source, states);
   const acquire = input.acquire ?? acquireFederalMoney;
   const progress = new Map<string, FederalMoneyStateProgress>();
+  const sourceHashes=new Map<string,string|null>(states.map(state=>[state,null]));
   const finished = new Set<string>();
   const maxRunMs = Math.max(0, Math.min(input.maxRunMs ?? 25 * 60_000, (input.deadlineMs ?? Infinity) - started));
   for (let round = 0; round < (input.maxRounds ?? Infinity) && Date.now() - started < maxRunMs && finished.size < states.length; round++) {
     for (const state of order) {
       if (finished.has(state) || Date.now() - started >= maxRunMs) continue;
-      const scope = federalMoneyScope(input.source, state);
-      let prior = await input.store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", scope);
-      const savedCheckpoint = prior?.payload.checkpoint;
+      let prior = await readFederalMoneyProgress(input.store,input.source,state);
+      const savedCheckpoint = prior?.checkpoint;
+      sourceHashes.set(state,federalMoneyAppliedSourceHash(input.source,state,savedCheckpoint?.sourcePages));
       if (input.nextHeldPartition && !savedCheckpoint?.pending && savedCheckpoint?.joinVersion !== FEDERAL_MONEY_JOIN_VERSION) {
         const at = now();
         try {
-          const repaired = await rejoinHeldPartition(input, state, prior?.payload ?? null, prior?.versionId ?? null, at);
-          const row: FederalMoneyStateProgress = { state, status: "BACKFILL", counts: repaired.counts, cursor: repaired.checkpoint.cursor, lastCompleteAt: repaired.checkpoint.lastCompleteAt, reason: null };
-          progress.set(state, row); input.onState?.(row);
-          await input.onProgress?.(row, at);
-        } catch (error) {
-          const row: FederalMoneyStateProgress = { state, status: "OUTAGE", counts: prior?.payload.counts ?? federalMoneyCounts([]), cursor: savedCheckpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, reason: sanitizedErrorDiagnostic(error) };
-          progress.set(state, row); input.onState?.(row); finished.add(state);
-          await input.onProgress?.(row, at);
+          const previous:FederalMoneyCheckpoint|null=prior?{formatVersion:2,source:input.source,state,counts:prior.counts,
+            checkpoint:savedCheckpoint??{complete:false,cursor:null,lastCompleteAt:null,refreshStartedAt:null}}:null;
+          const repaired = await rejoinHeldPartition(input,state,previous,prior?.versionId??null,at);
+          const row:FederalMoneyStateProgress={state,status:"BACKFILL",counts:repaired.counts,cursor:repaired.checkpoint.cursor,
+            lastCompleteAt:repaired.checkpoint.lastCompleteAt,reason:null};
+          progress.set(state,row);input.onState?.(row);await input.onProgress?.(row,at);
+        } catch(error) {
+          const row:FederalMoneyStateProgress={state,status:"OUTAGE",counts:prior?.counts??federalMoneyCounts([]),
+            cursor:savedCheckpoint?.cursor??null,lastCompleteAt:savedCheckpoint?.lastCompleteAt??null,reason:sanitizedErrorDiagnostic(error)};
+          progress.set(state,row);input.onState?.(row);finished.add(state);await input.onProgress?.(row,at);
         }
         continue;
       }
@@ -68,7 +77,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       const lastCompleteAt = savedCheckpoint?.lastCompleteAt ?? (savedCheckpoint?.complete ? prior?.latestConfirmation?.retrieval.retrievedAt : null);
       if (round === 0 && checkpoint?.complete && lastCompleteAt &&
         Date.parse(now()) - Date.parse(lastCompleteAt) < FEDERAL_MONEY_CONFIG[input.source].everyMs) {
-        const row: FederalMoneyStateProgress = { state, status: "COMPLETE", counts: prior!.payload.counts, cursor: null, lastCompleteAt, reason: null };
+        const row: FederalMoneyStateProgress = { state, status: "COMPLETE", counts: prior!.counts, cursor: null, lastCompleteAt, reason: null };
         progress.set(state, row);
         await input.onProgress?.(row, lastCompleteAt);
         finished.add(state); continue;
@@ -91,7 +100,7 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
       } catch (error) {
         const reason = sanitizedErrorDiagnostic(error);
         const at = now();
-        const row: FederalMoneyStateProgress = { state, status: "OUTAGE", counts: prior?.payload.counts ?? federalMoneyCounts([]),
+        const row: FederalMoneyStateProgress = { state, status: "OUTAGE", counts: prior?.counts ?? federalMoneyCounts([]),
           cursor: checkpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, reason };
         progress.set(state, row); finished.add(state); input.onState?.(row);
         await input.doorRead?.({ state, at, rows: row.counts.loaded, reason });
@@ -99,57 +108,77 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
         continue;
       }
       const at = now();
-      const priorLocations = checkpoint?.pending?.priorLocations ?? await input.locate?.(state, page.facts) ?? [];
-      const baselines = checkpoint?.pending?.baselines ?? await federalMoneyPartitionBaselines(input.store, input.source, state, page.facts, priorLocations);
-      const startingCounts = checkpoint?.pending?.startingCounts ?? prior?.payload.counts ?? federalMoneyCounts([]);
-      if (!checkpoint?.pending && page.facts.length) {
-        const { facts: _facts, ...savedPage } = page;
-        const pending: FederalMoneyCheckpoint = { formatVersion: 2, source: input.source, state,
-          counts: prior?.payload.counts ?? federalMoneyCounts([]),
-          checkpoint: { ...projectionVersion, complete: false, cursor: checkpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, refreshStartedAt,
-            pending: { page: savedPage, baselines, priorLocations, startingCounts } } };
-        const staged = federalMoneyCandidate({ projection: pending, page: { facts: [], captures: [], complete: false, declaredTotal: null }, now: at });
-        const saved = await processRegisteredFanOutCandidate(input.store, input.source, staged, at, prior?.versionId ?? null);
-        if (!saved.promoted) throw new Error(saved.candidate.failureDetail ?? "Federal page checkpoint could not be saved.");
-        prior = saved.promoted as typeof prior;
-      }
-      let identities: FederalMoneyJoinInput;
-      try { identities = await input.identities(state, page.facts); }
-      catch (error) {
-        const reason = sanitizedErrorDiagnostic(error);
-        const row: FederalMoneyStateProgress = { state, status: "OUTAGE", counts: prior?.payload.counts ?? federalMoneyCounts([]),
-          cursor: checkpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, reason };
-        progress.set(state, row); finished.add(state); input.onState?.(row);
-        await input.doorRead?.({ state, at, rows: page.facts.length, reason: null });
-        await input.onProgress?.(row, at);
-        continue;
-      }
-      const records = joinFederalMoneyFacts(page.facts, identities);
-      const written = await withFederalMoneyVerificationCache(() => writeFederalMoneyPartitions({ source: input.source, state, page: { ...page, facts: records }, store: input.store, now: at,
-        onPartition: input.onPartition, baselines, priorLocations, progress: checkpoint?.pending?.partitionProgress,
-        shouldContinue: () => Date.now() - started < maxRunMs,
-        onGroup: async partitionProgress => {
+      const sourceKey=federalMoneySourceKey(input.source,state,checkpoint?.complete?null:checkpoint?.cursor);
+      const rawHash=federalMoneySourceHash(input.source,state,page);
+      // A refused metadata read falls back to the ordinary current identity read.
+      let dependencyHash=rawHash && input.identityHash ? await input.identityHash(state,page.facts).catch(()=>null) : null;
+      const heldSource=savedCheckpoint?.sourcePages?.[sourceKey];
+      const unchanged=!checkpoint?.pending && rawHash!==null && dependencyHash!==null &&
+        heldSource?.rawHash===rawHash && heldSource.dependencyHash===dependencyHash;
+      const startingCounts=checkpoint?.pending?.startingCounts??prior?.counts??federalMoneyCounts([]);
+      let delta=federalMoneyCounts([]);
+      if(!unchanged) {
+        const priorLocations = checkpoint?.pending?.priorLocations ?? await input.locate?.(state, page.facts) ?? [];
+        const baselines = checkpoint?.pending?.baselines ?? await federalMoneyPartitionBaselines(input.store, input.source, state, page.facts, priorLocations);
+        if (!checkpoint?.pending && page.facts.length) {
           const { facts: _facts, ...savedPage } = page;
-          const projection: FederalMoneyCheckpoint = { formatVersion: 2, source: input.source, state, counts: addFederalMoneyCounts(startingCounts, partitionProgress.delta),
+          const pending: FederalMoneyCheckpoint = { formatVersion: 2, source: input.source, state,
+            counts: prior?.counts ?? federalMoneyCounts([]),
             checkpoint: { ...projectionVersion, complete: false, cursor: checkpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, refreshStartedAt,
-              pending: { page: savedPage, baselines, priorLocations, startingCounts, partitionProgress } } };
-          const candidate = federalMoneyCandidate({ projection, page: { facts: [], captures: [], complete: false, declaredTotal: null }, now: at });
-          const saved = await processRegisteredFanOutCandidate(input.store, input.source, candidate, at, prior?.versionId ?? null);
-          if (!saved.promoted) throw new Error(saved.candidate.failureDetail ?? "The federal page could not save its completed partitions.");
-          prior = saved.promoted as typeof prior;
-        } }));
-      if (!written.complete) {
-        const row: FederalMoneyStateProgress = { state, status: "BACKFILL", counts: prior?.payload.counts ?? startingCounts, cursor: checkpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, reason: null };
-        progress.set(state, row); input.onState?.(row); await input.onProgress?.(row, at); continue;
+              ...(savedCheckpoint?.sourcePages ? {sourcePages:savedCheckpoint.sourcePages} : {}),
+              pending: { page: savedPage, baselines, priorLocations, startingCounts } } };
+          const staged = federalMoneyCandidate({ projection: pending, page: { facts: [], captures: [], complete: false, declaredTotal: null }, now: at });
+          const saved = await processRegisteredFanOutCandidate(input.store, input.source, staged, at, prior?.versionId ?? null);
+          if (!saved.promoted) throw new Error(saved.candidate.failureDetail ?? "Federal page checkpoint could not be saved.");
+          prior = {versionId:saved.promoted.versionId,promotedAt:saved.promoted.promotedAt,
+            latestConfirmation:saved.promoted.latestConfirmation,counts:pending.counts,checkpoint:pending.checkpoint};
+        }
+        let identities: FederalMoneyJoinInput;
+        try { identities = await input.identities(state, page.facts); }
+        catch (error) {
+          const reason = sanitizedErrorDiagnostic(error);
+          const row: FederalMoneyStateProgress = { state, status: "OUTAGE", counts: prior?.counts ?? federalMoneyCounts([]),
+            cursor: checkpoint?.cursor ?? null, lastCompleteAt: savedCheckpoint?.lastCompleteAt ?? null, reason };
+          progress.set(state, row); finished.add(state); input.onState?.(row);
+          await input.doorRead?.({ state, at, rows: page.facts.length, reason: null });
+          await input.onProgress?.(row, at);
+          continue;
+        }
+        dependencyHash??=sha256(canonicalCivicDataJson(identities));
+        const records = joinFederalMoneyFacts(page.facts, identities);
+        const written = await withFederalMoneyVerificationCache(() => writeFederalMoneyPartitions({ source: input.source, state, page: { ...page, facts: records }, store: input.store, now: at,
+          onPartition: input.onPartition, baselines, priorLocations,progress:checkpoint?.pending?.partitionProgress,
+          shouldContinue:()=>Date.now()-started<maxRunMs,
+          onGroup:async partitionProgress=>{
+            const {facts:_facts,...savedPage}=page;
+            const projection:FederalMoneyCheckpoint={formatVersion:2,source:input.source,state,counts:addFederalMoneyCounts(startingCounts,partitionProgress.delta),
+              checkpoint:{...projectionVersion,complete:false,cursor:checkpoint?.cursor??null,lastCompleteAt:savedCheckpoint?.lastCompleteAt??null,refreshStartedAt,
+                ...(savedCheckpoint?.sourcePages?{sourcePages:savedCheckpoint.sourcePages}:{}),
+                pending:{page:savedPage,baselines,priorLocations,startingCounts,partitionProgress}}};
+            const candidate=federalMoneyCandidate({projection,page:{facts:[],captures:[],complete:false,declaredTotal:null},now:at});
+            const saved=await processRegisteredFanOutCandidate(input.store,input.source,candidate,at,prior?.versionId??null);
+            if(!saved.promoted)throw new Error(saved.candidate.failureDetail??"The federal page could not save its completed partitions.");
+            prior={versionId:saved.promoted.versionId,promotedAt:saved.promoted.promotedAt,latestConfirmation:saved.promoted.latestConfirmation,
+              counts:projection.counts,checkpoint:projection.checkpoint};
+          }}));
+        if(!written.complete){
+          const row:FederalMoneyStateProgress={state,status:"BACKFILL",counts:prior?.counts??startingCounts,cursor:checkpoint?.cursor??null,
+            lastCompleteAt:savedCheckpoint?.lastCompleteAt??null,reason:null};
+          progress.set(state,row);input.onState?.(row);await input.onProgress?.(row,at);continue;
+        }
+        delta=written.delta;
       }
       const cursor = page.continuation ? JSON.parse(JSON.stringify(page.continuation)) as FederalMoneyCursor : null;
       const projection: FederalMoneyCheckpoint = { formatVersion: 2, source: input.source, state,
-        counts: addFederalMoneyCounts(startingCounts, written.delta),
+        counts: unchanged?prior?.counts??startingCounts:addFederalMoneyCounts(startingCounts,delta),
         checkpoint: { ...projectionVersion, complete: page.complete, cursor,
-          lastCompleteAt: page.complete ? at : savedCheckpoint?.lastCompleteAt ?? null, refreshStartedAt } };
+          lastCompleteAt: page.complete ? at : savedCheckpoint?.lastCompleteAt ?? null, refreshStartedAt,
+          ...(rawHash && dependencyHash ? {sourcePages:{...savedCheckpoint?.sourcePages,[sourceKey]:{rawHash,dependencyHash}}}
+            : savedCheckpoint?.sourcePages ? {sourcePages:savedCheckpoint.sourcePages} : {}) } };
       const candidate = federalMoneyCandidate({ projection, page: { ...page, facts: [], captures: [] }, now: at, predecessorVersionId: prior?.versionId });
       const outcome = await processRegisteredFanOutCandidate(input.store, input.source, candidate, at, prior?.versionId ?? null);
       if (!outcome.promoted) throw new Error(outcome.candidate.failureDetail ?? `${input.source}:${state} did not publish its source facts.`);
+      sourceHashes.set(state,federalMoneyAppliedSourceHash(input.source,state,projection.checkpoint.sourcePages));
       const row: FederalMoneyStateProgress = { state, status: page.complete ? "COMPLETE" : "BACKFILL", counts: projection.counts,
         cursor: projection.checkpoint!.cursor, lastCompleteAt: projection.checkpoint!.lastCompleteAt, reason: null };
       progress.set(state, row); input.onState?.(row);
@@ -162,13 +191,15 @@ async function run(input: FederalMoneyRefreshOptions): Promise<{ projection: Fed
   for (const state of states) {
     const visited = progress.get(state);
     if (visited) { rows.push(visited); continue; }
-    const prior = await input.store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", federalMoneyScope(input.source, state));
-    const checkpoint = prior?.payload.checkpoint;
-    rows.push({ state, status: "BACKFILL", counts: prior?.payload.counts ?? federalMoneyCounts([]),
+    const prior = await readFederalMoneyProgress(input.store,input.source,state);
+    const checkpoint = prior?.checkpoint;
+    sourceHashes.set(state,federalMoneyAppliedSourceHash(input.source,state,checkpoint?.sourcePages));
+    rows.push({ state, status: "BACKFILL", counts: prior?.counts ?? federalMoneyCounts([]),
       cursor: checkpoint?.cursor ?? null, lastCompleteAt: checkpoint?.lastCompleteAt ?? null, reason: null });
   }
   const counts = rows.reduce((total, row) => ({ loaded: total.loaded + row.counts.loaded, joined: total.joined + row.counts.joined, unjoined: total.unjoined + row.counts.unjoined }), federalMoneyCounts([]));
-  const projection: FederalMoneyNationalProjection = { formatVersion: 2, source: input.source, state: "US", states: rows, counts };
+  const projection: FederalMoneyNationalProjection = { formatVersion: 2, source: input.source, state: "US", states: rows, counts,
+    sourceHashes:Object.fromEntries(sourceHashes) };
   const at = now();
   const outages = rows.filter(row => row.status === "OUTAGE");
   if (outages.length) {
@@ -198,16 +229,19 @@ async function rejoinHeldPartition(input: FederalMoneyRefreshOptions, state: str
   };
   const { joinPending: _pending, ...checkpoint } = saved;
   if (scope === null) return save({ ...checkpoint, joinVersion: FEDERAL_MONEY_JOIN_VERSION, joinCursor: null });
-  const held = await input.store.readPromotion<FederalMoneyProjection>("FEDERAL_MONEY", scope);
-  if (!held || held.payload.source !== input.source || held.payload.state !== state || held.payload.formatVersion !== 2) throw new Error("The held federal partition is unavailable.");
-  if (held.payload.records?.length) {
-    const identity = await input.identities(state, held.payload.records);
-    const records = joinFederalMoneyFacts(held.payload.records, identity);
-    const captures = await input.store.readCandidatePath<FederalMoneyEvidence["captures"]>(held.versionId, ["normalizedPayload", "captures"]) ?? [];
+  if(!input.store.readPublicationBase)throw new Error("FEDERAL_PUBLICATION_BASE_READER_REQUIRED");
+  const base=await input.store.readPublicationBase("FEDERAL_MONEY",scope);
+  const held=base.current;
+  const previousLeaf=held?.payload as FederalMoneyProjection|undefined;
+  if (!previousLeaf || previousLeaf.source !== input.source || previousLeaf.state !== state || previousLeaf.formatVersion !== 2) throw new Error("The held federal partition is unavailable.");
+  if (previousLeaf.records?.length) {
+    const identity = await input.identities(state, previousLeaf.records);
+    const records = joinFederalMoneyFacts(previousLeaf.records, identity);
+    const captures=(base.lkg?.candidate.normalizedPayload as FederalMoneyEvidence|undefined)?.captures??[];
     const baselines = saved.joinPending?.baselines ?? await federalMoneyPartitionBaselines(input.store, input.source, state, records);
     if (!saved.joinPending) await save({ ...checkpoint, joinPending: { scope, baselines } });
     const written = await withFederalMoneyVerificationCache(() => writeFederalMoneyPartitions({ source: input.source, state, store: input.store, now: at,
-      page: { facts: records, captures, complete: false, declaredTotal: null }, baselines, onPartition: input.onPartition }));
+      page: { facts: records, captures, complete: false, declaredTotal: null }, baselines, onPartition: input.onPartition,publicationBases:new Map([[scope,base]]) }));
     counts = addFederalMoneyCounts(counts, written.delta);
   }
   return save({ ...checkpoint, joinCursor: scope });
@@ -217,9 +251,9 @@ async function rejoinHeldPartition(input: FederalMoneyRefreshOptions, state: str
  * never-served first, so no state waits behind the same large states pass after pass. Ties keep the configured order. */
 async function leastRecentlyServed(store: RoutineDataStore, source: FederalMoneySource, states: readonly string[]): Promise<readonly string[]> {
   const served = new Map<string, number>();
-  for (const state of states) {
-    const prior = await store.readPromotion<FederalMoneyCheckpoint>("FEDERAL_MONEY", federalMoneyScope(source, state));
-    served.set(state, prior ? Math.max(Date.parse(prior.promotedAt), Date.parse(prior.latestConfirmation?.retrieval.retrievedAt ?? "") || 0) : -1);
-  }
+  const pointers = await store.readPromotionIdentities("FEDERAL_MONEY",states.map(state=>federalMoneyScope(source,state)));
+  const byScope=new Map(pointers.map(pointer=>[pointer.scope,pointer]));
+  for (const state of states) {const prior=byScope.get(federalMoneyScope(source,state));
+    served.set(state, prior ? Math.max(Date.parse(prior.promotedAt), Date.parse(prior.latestConfirmation?.retrieval.retrievedAt ?? "") || 0) : -1);}
   return [...states].sort((a, b) => served.get(a)! - served.get(b)!);
 }

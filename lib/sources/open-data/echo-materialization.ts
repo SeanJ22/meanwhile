@@ -9,7 +9,10 @@ export async function materializeEchoPartitions(input:{
   readStateJoins:(state:string)=>Promise<GovernmentJoin[]>;
   addReports:(rows:readonly OpenDataFact[])=>void;
   writePartition:(partition:EchoPartition)=>Promise<void>;
+  pendingWrites?:number;
 }):Promise<void> {
+  const pendingWrites=input.pendingWrites??4;
+  if(!Number.isSafeInteger(pendingWrites)||pendingWrites<1)throw Error("EPA pending writes must be a positive integer.");
   let heldState:string|null=null,held:GovernmentJoin[]=[];
   const pending=new Set<Promise<void>>();
   let writeFailure:unknown;
@@ -21,7 +24,7 @@ export async function materializeEchoPartitions(input:{
     const rows=partition.rows.map(row=>normalizeEcho(row.sourceRow,row.capturedAt,row.publishedAt,held));
     if(!partition.partition.startsWith("cell:"))input.addReports(rows);
     const writing:Promise<void>=input.writePartition({...partition,rows}).catch(error=>{writeFailure??=error;}).finally(()=>pending.delete(writing));pending.add(writing);
-    if(pending.size>=4)await Promise.race(pending);
+    if(pending.size>=pendingWrites)await Promise.race(pending);
     if(writeFailure)throw writeFailure;
   }await Promise.all(pending);if(writeFailure)throw writeFailure;}finally{await Promise.allSettled(pending);}
 }

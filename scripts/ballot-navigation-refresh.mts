@@ -36,9 +36,10 @@ try {
     vault: cycleVault(join(process.cwd(), ...VAULT_DIR)), now, state, ...(directory ? { directory } : {}) });
   console.log("BALLOT_NAVIGATION_REFRESH=" + JSON.stringify({ ...report, fields: report.fields.length }));
   if (!report.promotedVersionId) throw new Error(`NAVIGATION_NO_VERIFIED_FIELDS:${report.gaps.map(gap => gap.detail).join(";")}`);
-  const receipted = await printWorkerPublicationReceipt(store, taskId, [], { records: report.fields.length,
+  const receipted = report.receipt ?? await printWorkerPublicationReceipt(store, taskId, [], { records: report.fields.length,
     versionId: report.promotedVersionId, candidateId: report.candidateId,
     gaps: report.gaps.map(gap => ({ key: `${gap.divisionId}:${gap.kind}`, detail: gap.detail })) }, now);
+  if (report.receipt) console.log("RCD_RECEIPT=" + JSON.stringify(report.receipt));
   if (!receipted) throw new Error("NAVIGATION_PUBLICATION_RECEIPT_MISSING");
   result = { kind: "BALLOT_PUBLICATION", family: "ballot-navigation", state: requireBallotState(state), inputHash, inputStamp, at: now,
     status: "PUBLISHED", versionId: report.promotedVersionId, merged: [], skipped: [], reason: null };

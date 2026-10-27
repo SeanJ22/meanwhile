@@ -19,6 +19,7 @@ import { verifyRoutineReaderProjection } from "../lib/civic-data/reader-verifica
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { lookupZcta } from "../lib/geo/zcta.ts";
 import { openDataArchiveStore, refreshEchoNational } from "./open-data-refresh.mts";
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { FederalMoneyBenchmarkStore } from "./lib/federal-money-benchmark-store.mts";
 import { installOpenDataReaderSql, installOpenDataReplayVault, normalOpenDataPage } from "./lib/open-data-replay-reader.mts";
 import { compressedReplayVault } from "./lib/open-data-replay-vault.mts";
@@ -54,8 +55,11 @@ try {
     const projection = await readOpenDataProjection("epa-echo", "national", { store });
     assert.equal(projection.kind, "PROMOTED"); if (projection.kind !== "PROMOTED") throw Error("unpublished");
     const typed = await verifyRoutineReaderProjection(requiredRoutineContract("epa-echo"), { store, now: new Date().toISOString(), expectedVersionId: projection.metadata.versionId! });
-    const run: Record<string, unknown> = { label, elapsedMs, requests, unchanged: result.unchanged, promoted: !!result.publication.outcome.promoted, confirmed: !!result.publication.outcome.confirmed,
-      candidateState: result.publication.outcome.candidate.state, versionId: projection.metadata.versionId, typedReader: typed.status, gaps: result.gaps.map(gap => ({ id: gap.id, state: gap.state, reason: gap.fact.detail })),
+    const sourceOutcome=result.confirmation
+      ?{promoted:false,confirmed:true,candidateState:sourceHashReceiptFields(result.confirmation).state}
+      :{promoted:!!result.publication.outcome.promoted,confirmed:!!result.publication.outcome.confirmed,candidateState:result.publication.outcome.candidate.state};
+    const run: Record<string, unknown> = { label, elapsedMs, requests, unchanged: result.unchanged,...sourceOutcome,
+      versionId: projection.metadata.versionId, typedReader: typed.status, gaps: result.gaps.map(gap => ({ id: gap.id, state: gap.state, reason: gap.fact.detail })),
       partitions: projection.value.partitions?.length ?? 0, published: projection.value.reports.reduce((n, r) => n + r.loaded, 0), archiveKeys: (await archiveVault.list("project/freshness/source/src-so/archive/")).length,
       archiveDiskBytes: await diskBytes(join(root, "archive-vault")), states: [] as Record<string, unknown>[] };
     (proof.runs as unknown[]).push(run); await save();

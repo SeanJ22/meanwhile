@@ -13,10 +13,17 @@ import { routineReceiptFields } from "./runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "./release.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
-import type { StatePeopleAcquisition } from "./state-people-publication.ts";
+import { peopleSourceContentHash, type StatePeopleAcquisition } from "./state-people-publication.ts";
 import { statePeopleDivisions } from "../sources/plural/acquisition.ts";
 import type { RegistryDivisionLite } from "../sources/plural/index.ts";
 import type { Slice } from "../control-plane/admin-view/promoted-slices.ts";
+import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "./source-hash.ts";
+import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
+import { peopleJurisdiction } from "./people-source-read.ts";
+import { sourceAuthority } from "./source-authority.ts";
+import { acquirePeopleSourceProbe, peopleSourceProbe, probePeopleSource, readPeopleSourceDependencies,
+  reuseProbedPeopleSources, type PeopleSourceProbeAcquire } from "./people-source-probe.ts";
+import { recordPeopleSourceChecks } from "./people-source-checks.ts";
 
 interface PeopleSourceAcquired {
   readonly state: string;
@@ -62,6 +69,7 @@ export interface PeopleSourceRuntimeDependencies {
     readonly now?: () => string;
   }) => Promise<PeopleSourceAcquired>;
   readonly publish?: typeof publishPeopleSource;
+  readonly acquireProbe?: PeopleSourceProbeAcquire;
   readonly writeLine?: (line: string) => void;
 }
 
@@ -82,12 +90,31 @@ export async function runPeopleSourceRefresh(input: {
   const contractId = peopleSourceContractId(input.state, input.sourceId);
   const signal = input.signal ?? new AbortController().signal;
   let acquired: PeopleSourceAcquired;
+  const requiresHeldInputs = ["official-state-people", "wikidata-people", "statewide-executive-sources"].includes(input.sourceId);
+  let sourceInputs: Awaited<ReturnType<typeof readPeopleSourceDependencies>> = {};
+  let acquireRelease = reuseProbedPeopleSources([]);
   const geographyGaps: {sourceUrl:string;detail:string}[] = [];
-  const publish = (release: PeopleSourceAcquired) => (dependencies.publish ?? publishPeopleSource)({ store: input.store, vault: input.vault,
+  const publish = (release: PeopleSourceAcquired, complete = false) => (dependencies.publish ?? publishPeopleSource)({ store: input.store, vault: input.vault,
     state: input.state, sourceId: input.sourceId, contractId, roster: release.roster,
     acquisitions: release.acquisitions, releaseId: release.releaseId, gaps: [...release.gaps,...geographyGaps], now: now(),
+    ...(requiresHeldInputs ? {sourceProbe:peopleSourceProbe({state:input.state,sourceId:input.sourceId,roster:release.roster,
+      acquisitions:release.acquisitions,gaps:[...release.gaps,...geographyGaps],dependencies:sourceInputs,now:now(),complete})} : {}),
   });
   try {
+    if (requiresHeldInputs) {
+      sourceInputs = await readPeopleSourceDependencies(input.store,input.state,input.sourceId);
+      // Custom acquisitions supply their own probe transport; ordinary source jobs use the same paced reader as acquisition.
+      if (!dependencies.acquire || dependencies.acquireProbe) {
+        const probe = await probePeopleSource({store:input.store,sourceId:input.sourceId,state:input.state,now:now(),signal,dependencies:sourceInputs,
+          acquire:dependencies.acquireProbe ?? ((request,signal,at) => acquirePeopleSourceProbe({request,signal,now:at,
+            sourceId:input.sourceId,state:input.state,credentials:dependencies.executiveCredentials}))});
+        acquireRelease = reuseProbedPeopleSources(probe.sources);
+        if (probe.confirmed) {
+          writeLine(`RCD_RECEIPT=${JSON.stringify({source:contractId,...sourceHashReceiptFields(probe.confirmed),structuralReleaseContract:ZERO_RELEASE_EVENTS})}`);
+          return {succeeded:true,coverage:{confirmedUnchanged:true}};
+        }
+      }
+    }
     // State readers never request another state's source partitions.
     const asOf = now().slice(0,10);
     // The held boundary read answers HELD, UNREAD or NOT_PUBLISHED; only HELD supplies divisions, and the others stay standing work.
@@ -100,7 +127,7 @@ export async function runPeopleSourceRefresh(input: {
       return [];
     };
     const [roster,divisions] = await Promise.all([
-      (dependencies.readHeld ?? readHeld)(input.state, input.store, now()),
+      requiresHeldInputs ? (dependencies.readHeld ?? readHeld)(input.state, input.store, now()) : Promise.resolve(undefined),
       ["legiscan-api","official-state-people","wikidata-people"].includes(input.sourceId)
         ? (dependencies.readDivisions ?? statePeopleDivisions)(input.state,asOf).then(divisionsFrom).catch(()=>{
           geographyGaps.push({sourceUrl:"https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
@@ -108,7 +135,7 @@ export async function runPeopleSourceRefresh(input: {
           return [];
         }) : Promise.resolve([]),
     ]);
-    const options = { state: input.state, sourceId: input.sourceId, asOf, signal, roster, divisions, now };
+    const options = { state: input.state, sourceId: input.sourceId, asOf, signal, roster, divisions, now, acquire:acquireRelease };
     acquired = dependencies.acquire ? await dependencies.acquire(options)
       : input.state.toLowerCase() === "us" && input.sourceId === "statewide-executive-sources"
         ? await (async () => {
@@ -129,7 +156,26 @@ export async function runPeopleSourceRefresh(input: {
     writeLine(failed.line);
     return { succeeded: false };
   }
-  const publication = await publish(acquired);
+  const jurisdiction = peopleJurisdiction(input.state), rawHash = peopleSourceContentHash(acquired.acquisitions, acquired.roster);
+  const first = acquired.acquisitions[0], acquiredAt = acquired.acquisitions.map(row => row.retrievedAt).sort().at(-1) ?? now();
+  const sourceCheck = acquired.acquisitions.flatMap(row => row.sourceCheck ? [row.sourceCheck] : []).sort((a,b) => b.checkedAt.localeCompare(a.checkedAt))[0];
+  const confirmed = await confirmSourceHashUnchanged({ store: input.store, sourceId: input.sourceId,
+    recordClass: peopleSourceRecordClass(input.sourceId), scope: peopleSourceScope(jurisdiction,input.sourceId),
+    parserVersion: sourceAuthority(input.sourceId)?.parserVersion ?? "people-sources/1", rawHash, now: now(),
+    complete: !requiresHeldInputs && acquired.acquisitions.length > 0 && !acquired.gaps.length && !geographyGaps.length &&
+      acquired.acquisitions.every(row => row.httpStatus >= 200 && row.httpStatus < 300 && row.body.length > 0),
+    retrieval: { requestedUrl: first?.requestedUrl ?? "", finalUrl: first?.finalUrl ?? null, httpStatus: first?.httpStatus ?? null,
+      rawHash, retrievedAt: acquiredAt, ...(sourceCheck ? { sourceCheck } : {}) } });
+  if (confirmed) {
+    await recordPeopleSourceChecks({store:input.store,head:confirmed.head,pages:acquired.acquisitions});
+    const coverage = { sourceCoverage: acquired.coverage ?? null, peopleHeld: acquired.roster.officeholders.length,
+      legislatorsHeld: acquired.roster.officeholders.filter(person => person.level === "STATE" && ["upper", "lower"].includes(person.chamber ?? "")).length,
+      disagreements: acquired.roster.disagreements?.length ?? 0 };
+    writeLine(`PEOPLE_SOURCE_COVERAGE=${JSON.stringify({state:input.state,sourceId:input.sourceId,coverage})}`);
+    writeLine(`RCD_RECEIPT=${JSON.stringify({source:contractId,...sourceHashReceiptFields(confirmed),structuralReleaseContract:ZERO_RELEASE_EVENTS})}`);
+    return { succeeded: true, coverage };
+  }
+  const publication = await publish(acquired,true);
   const publishedRoster=(publication.candidate.readModel as {roster:OfficeholderSet}).roster;
   const coverage={sourceCoverage:acquired.coverage??null,peopleHeld:publishedRoster.officeholders.length,
     legislatorsHeld:publishedRoster.officeholders.filter(person=>person.level==="STATE"&&["upper","lower"].includes(person.chamber??"")).length,

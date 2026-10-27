@@ -1,5 +1,5 @@
 import { readerQuery } from "../../civic-data/promoted-reader-query.ts";
-import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
+import { readKeyedRegistry } from "../../civic-data/keyed-rows.ts";
 import { registrationTarget } from "../../registration/publication.ts";
 import { CENSUS_GEO_SCOPE, CENSUS_GEO_RECORD_CLASS } from "../../census-geography/publication.ts";
 import { censusWorkDivision } from "../../census-geography/division-id.ts";
@@ -21,9 +21,9 @@ export async function heldAcsJoinTargets(stateFips: string, rows: readonly AcsPo
   const state = FIPS_TO_STATE[stateFips]?.postal;
   if (!state) throw new Error("The ACS state has no held FIPS identity.");
   const [divisions, containers] = await query([
-    { text: "SELECT d AS division FROM civic_data_promotions p CROSS JOIN LATERAL jsonb_array_elements(p.payload->'divisions') d" +
-      " WHERE p.record_class = 'REGISTRATION' AND p.scope = $1" +
-      " AND upper(d->>'state') = $2", params: [registrationTarget(state).scope, state] },
+    { text: "SELECT jsonb_build_object('ocdId',d.value->'ocdId','divisionType',d.value->'divisionType','geoid',d.value->'geoid','sourceDataset',d.value->'sourceDataset') AS division" +
+      " FROM civic_data_rows d JOIN civic_data_promotions p ON p.key=d.promotion_key AND p.current_version_id=d.version_id" +
+      " WHERE d.record_class='REGISTRATION' AND d.scope=$1 AND d.collection='registration.divisions' AND d.state=$2", params: [registrationTarget(state).scope, state] },
     { text: "SELECT s->>'type' AS type, s->>'version' AS version, g AS geography FROM civic_data_promotions p" +
       " CROSS JOIN LATERAL jsonb_array_elements(p.payload->'scopes') s CROSS JOIN LATERAL jsonb_array_elements(s->'groupings') g" +
       " WHERE p.record_class = $1 AND p.scope = $2 AND g->>'stateFips' = $3", params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, stateFips] },
@@ -38,11 +38,8 @@ export async function heldAcsJoinTargets(stateFips: string, rows: readonly AcsPo
     return divisionId ? [divisionId] : [];
   });
   if (requested.length) {
-    const registry = await readRegistryRuntimeProjection([state]);
-    if (registry.kind !== "PROMOTED" && registry.kind !== "NOT_RECORDED") throw new Error(`ACS_REGISTRY_UNAVAILABLE:${state}:${registry.kind}`);
-    const selected = new Set(requested);
-    for (const division of registry.kind === "PROMOTED" ? registry.value.registry.divisions : []) {
-      if (!selected.has(division.ocdId)) continue;
+    const registry = await readKeyedRegistry(async(text,params)=>(await query([{text,params:params??[]}]))[0]??[],state,[],requested);
+    for (const division of registry?.payload.registry.divisions ?? []) {
       const geography = TYPES[division.divisionType];
       if (geography && division.geoid) targets.push({ geography, geoid: division.geoid, divisionId: division.ocdId });
     }

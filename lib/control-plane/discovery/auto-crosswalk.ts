@@ -36,6 +36,8 @@ import { parseBoardDocsMeetings, parseBoardDocsCommittees } from "../../sources/
 import { parseNovusMeetings } from "../../sources/novusagenda/index.ts";
 import type { CivicClerkEvent } from "../../sources/civicclerk/index.ts";
 import { parseCalendarRows as parseInSiteCalendarRows } from "../../sources/legistar-insite/calendar.ts";
+import { publishedBodyLabel } from "../../civic-data/published-body-name.ts";
+import { governingBoardName } from "../../civic-data/governing-board-name.ts";
 
 type VaultedEvidence = Extract<DerivedInputRef, { kind: "VAULTED_EVIDENCE" }>;
 
@@ -836,11 +838,19 @@ export function reviewDiscoveryWalk(input: AutoCrosswalkReviewInput): AutoCrossw
     }
     const addListedBody = (name: string, filter: Readonly<Record<string, string>>, page: HeldBytes, pageUrl: string, selected: number, suffix = ""): void => {
       if (!stateZone || !name) return;
-      const governing = governingNames(registeredKind).some(label => low(name) === low(label) || low(name).endsWith(` ${low(label)}`));
-      const role = governing && !suffix ? (registered.bodyId.endsWith("#board") ? "BOARD" : "GOVERNING") : "SUB_BODY";
+      const label = publishedBodyLabel(name);
+      const printed = label.name ?? governingNames(registeredKind).flatMap(body => {
+        const match=new RegExp(`\\b${body.replace(/[.*+?^${}()|[\]\\]/g,"\\$&")}\\b`,"i").exec(page.text);
+        return match ? [match[0]] : [];
+      })[0];
+      if (!printed) return;
+      name = printed;
+      const governing = governingBoardName(name,{name:registered.publishingOrg,school:registeredKind==='school',
+        special:registeredKind==='special',county:registeredKind==='county'})!==null;
+      const role = governing && (!suffix || label.kind!=='body') ? (registered.bodyId.endsWith("#board") ? "BOARD" : "GOVERNING") : "SUB_BODY";
       const bodyId = role === "SUB_BODY" ? `${subBodyId(bodyRoot, name)}${suffix}` : registered.bodyId;
       if (input.handWired(bodyId)) return;
-      const row: MeetingBodyCrosswalkRow = { id: crosswalkRowId(bodyId, kind, route), jurisdictionId, bodyId,
+      const row: MeetingBodyCrosswalkRow = { id: crosswalkRowId(bodyId, kind, route,filter), jurisdictionId, bodyId,
         ...(registered.governmentId ? { governmentId: registered.governmentId } : {}),
         ...(registered.website ? { governmentWebsite: registered.website } : {}),
         ocdId: registered.ocdId, ...(registered.alsoServesOcdIds?.length ? {alsoServesOcdIds:registered.alsoServesOcdIds} : {}), bodyName: name, bodyRole: role, kind, route, officialHost: routeHost,

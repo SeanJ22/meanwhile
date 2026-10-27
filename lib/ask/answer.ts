@@ -74,6 +74,11 @@ export interface AskAnswerPayload {
   trace: AskTrace;
 }
 
+/** Keep the stored interaction faithful to both parts of the delivered reply. */
+export function deliveredAskText(answer: Pick<AskAnswerPayload, "answer" | "aiAnswer">): string | null {
+  return [answer.answer, answer.aiAnswer ? `AI answer\n${answer.aiAnswer}` : null].filter(Boolean).join("\n\n") || null;
+}
+
 /**
  * The destination router's reply (`/api/ask/classify`), declared here so a
  * client can import it without server code. Navigation, never a fact about a

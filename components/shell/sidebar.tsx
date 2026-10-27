@@ -102,6 +102,7 @@ export function Sidebar({
         )}
 
         <ViewToggle />
+        <TutorialReplayButton onReplay={mobileOpen ? onMobileClose : undefined} />
         <NationalLink />
         <ScopeSelectors onJurisdictionChosen={onJurisdictionChosen} />
       </div>
@@ -150,9 +151,6 @@ export function Sidebar({
                 )}
                 <a href="/transparency">What this site collects</a>
                 <a href="/feedback">Feedback</a>
-              </div>
-              <div className="mw-link-row">
-                <TutorialReplayButton />
               </div>
             </div>
           )}

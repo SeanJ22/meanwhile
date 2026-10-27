@@ -25,6 +25,10 @@ import { bodySourceWiringFor, derivedWiringKey, derivedAdapterConfig, type Deriv
 import { makeDiligentSource } from "../lib/sources/diligent/index.ts";
 import { meetingEndpointCandidates } from "../lib/hunt/meetings-site-discovery.ts";
 import { makeIcalSource } from "../lib/sources/ical/index.ts";
+import { platformMeetingDoor } from "../lib/doors/platform-census.ts";
+import { wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
+import { legistarClientsFromWiring } from "../lib/sources/legistar/client-registry.ts";
+import { normalizeWithDrops as normalizeNativeMeetings } from "../lib/sources/legistar/index.ts";
 import type { MeetingsDiscoveryNeed } from "../lib/hunt/meetings-discovery.ts";
 import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { recordedDiscoveryOpen, type RecordedReply } from "./helpers/recorded-discovery-open.ts";
@@ -563,4 +567,30 @@ test("MANUAL ROWS WIN: a reviewed row for the same body and kind, withdrawn or n
 
   const alone = composeCrosswalk(null, [auto]);
   assert.deepEqual([...alone.automaticIds], [auto.id], "automatic rows connect calendars on their own");
+});
+
+test("native normal and special meeting selectors keep distinct routes on one real governing body",async()=>{
+  const recorded=await walk(SITE());
+  const labels=['City Council','Special Meeting','Public Notice','Test 1'];
+  const inventory=JSON.stringify(labels.map((BodyName,index)=>({BodyId:index+1,BodyName})));
+  const inventoryUrl=`https://${HOST}/v1/testburg/bodies`,calendarUrl=`https://${HOST}/v1/testburg/events`;
+  const calendar=JSON.stringify(labels.map((EventBodyName,index)=>({EventId:index+10,EventBodyId:index+1,EventBodyName,EventDate:'2026-10-20T18:00:00'})));
+  for(const [id,text] of [['native-bodies',inventory],['native-calendar',calendar]])recorded.bodies.set(id,{text,sha256:textSha256(text),evidence:{kind:'VAULTED_EVIDENCE',artifactId:id,contentHash:`sha256-${textSha256(text)}`,tier:'RAW',retrievedAt:T_WALK}});
+  const step=(url:string,id:string,text:string)=>({purpose:'endpoint' as const,url,permission:'ALLOWED' as const,status:200,transportError:null,bytes:text.length,artifactId:id,rung:2 as const,note:'saved native calendar'});
+  const attempt={...recorded.attempt,steps:[...recorded.attempt.steps,step(inventoryUrl,'native-bodies',inventory),step(calendarUrl,'native-calendar',calendar)],found:[{vendor:'legistar-api',url:calendarUrl,basis:'LINKED' as const,evidence:'native body inventory',count:4,detail:'saved native events',artifactId:'native-calendar',via:{page:inventoryUrl,artifactId:'native-bodies'}}]};
+  const result=review(attempt,recorded.bodies);
+  assert.equal(result.accepted.length,4,JSON.stringify(result.held));
+  assert.deepEqual([...new Set(result.accepted.map(a=>a.row.bodyId))],[REGISTERED.bodyId]);
+  assert.equal(new Set(result.accepted.map(a=>a.row.id)).size,4);
+  assert.deepEqual(result.accepted.map(a=>a.row.filter.eventBodyId).sort(),['1','2','3','4']);
+  for(const {row} of result.accepted)assert.equal(crosswalkRowIssue(row),null);
+  const doors=result.accepted.flatMap(({row})=>platformMeetingDoor(row));
+  assert.equal(new Set(doors.map(door=>door.doorId)).size,4,"each native selector keeps its scheduled source door");
+  const wiring=result.accepted.map(({row})=>wiringRowFor(row));
+  const clients=legistarClientsFromWiring(wiring.map(bodySourceWiringFor));
+  assert.equal(new Set(wiring.map(row=>derivedWiringKey(row.kind,row.bodyId,row.route,row.config))).size,4);
+  const read=normalizeNativeMeetings(JSON.parse(calendar).map((event:Record<string,unknown>)=>({event:{...event,
+    EventTime:'6:00 PM',EventLocation:null,EventComment:null,EventAgendaFile:null,EventInSiteURL:`https://${HOST}/meeting/${event.EventId}`},slug:'testburg',collectedAt:T_WALK,items:null})),new Date(NOW),clients);
+  assert.equal(read.meetings.length,4);
+  assert.ok(read.meetings.every(meeting=>meeting.bodyId===REGISTERED.bodyId));
 });

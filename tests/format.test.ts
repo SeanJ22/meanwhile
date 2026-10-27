@@ -3,6 +3,8 @@ import { test } from "node:test";
 
 import {
   formatDateMDY,
+  formatMeetingDate,
+  formatMeetingTime,
   locationLine,
   meetingHeadline,
 } from "../lib/map/format.ts";
@@ -65,4 +67,17 @@ test("BC-12: dates spell out, including inside ranges", () => {
     formatDateMDY("2026-10-24 – 2026-11-01"),
     "October 24th, 2026 – November 1st, 2026",
   );
+});
+
+
+test("meeting dates and clocks follow the reader across midnight and daylight saving", () => {
+  const meeting = meetingWith({ startsAt: "2026-11-01T06:30:00.000Z", timeZone: "UTC" });
+  assert.equal(formatMeetingDate(meeting, "America/Los_Angeles"), "Sat, October 31st, 2026");
+  assert.match(formatMeetingTime(meeting, "America/Los_Angeles"), /^11:30 PM PDT$/);
+  assert.equal(formatMeetingDate(meeting, "America/New_York"), "Sun, November 1st, 2026");
+  assert.match(formatMeetingTime(meeting, "America/New_York"), /^1:30 AM EST$/);
+  assert.match(formatMeetingTime(meeting, "Europe/Berlin"), /^7:30 AM GMT\+1$/);
+  const dayOnly = meetingWith({ startsAt: "2026-11-01T00:00:00.000Z", timeZone: "UTC", startPrecision: "DAY" });
+  assert.equal(formatMeetingDate(dayOnly, "America/Los_Angeles"), "Sun, November 1st, 2026");
+  assert.equal(formatMeetingTime(dayOnly, "America/Los_Angeles"), "Time not posted — check the agenda");
 });

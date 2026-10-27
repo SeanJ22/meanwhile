@@ -1,4 +1,5 @@
 import { formatDateLong } from "../text/format-date.ts";
+import { currentReaderTimeZone } from "./reader-clock.ts";
 
 /**
  * A sitting's date and time in the body's own zone. The calendar date is
@@ -30,6 +31,17 @@ export function zoneOf(sitting: SittingTime): { zone: string; known: boolean } {
     : { zone: "UTC", known: false };
 }
 
+/** Date-only postings keep the publisher's date; timed instants use the reader's clock. */
+export function displayZoneOf(sitting: SittingTime): { zone: string; known: boolean } {
+  const zone = startTimePosted(sitting) ? currentReaderTimeZone() : undefined;
+  return zone ? { zone, known: true } : zoneOf(sitting);
+}
+
+export function displayDate(sitting: SittingTime): string {
+  return new Intl.DateTimeFormat("en-CA", { timeZone: displayZoneOf(sitting).zone,
+    year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date(sitting.startsAt));
+}
+
 /** `YYYY-MM-DD` in the body's own zone. */
 export function localDate(sitting: SittingTime): string {
   const { zone } = zoneOf(sitting);
@@ -52,7 +64,7 @@ export function localWeekday(sitting: SittingTime): string {
 
 /** The clock, with the zone abbreviation the reader's own region uses. */
 export function localTime(sitting: SittingTime): string {
-  const { zone } = zoneOf(sitting);
+  const { zone } = displayZoneOf(sitting);
   return new Intl.DateTimeFormat("en-US", {
     timeZone: zone,
     hour: "numeric",
@@ -66,14 +78,16 @@ export function localTime(sitting: SittingTime): string {
  * using the product's `formatDateLong`. No ISO string or IANA zone name.
  */
 export function readableSitting(sitting: SittingTime): string {
-  const date = localDate(sitting);
+  const date = displayDate(sitting);
+  const weekday = new Intl.DateTimeFormat("en-US", { timeZone: displayZoneOf(sitting).zone,
+    weekday: "long" }).format(new Date(sitting.startsAt));
   const spelled = formatDateLong(date) ?? date;
   /* A date-only posting prints the date and says the time was not posted. */
   const base = startTimePosted(sitting)
-    ? `${localWeekday(sitting)}, ${spelled} at ${localTime(sitting)}`
-    : `${localWeekday(sitting)}, ${spelled} (start time not posted)`;
+    ? `${weekday}, ${spelled} at ${localTime(sitting)}`
+    : `${weekday}, ${spelled} (start time not posted)`;
   /* An unknown zone is named as unknown: our gap. */
-  return zoneOf(sitting).known
+  return displayZoneOf(sitting).known
     ? base
     : `${base} (we have not recorded this body's time zone, so this is shown in UTC)`;
 }

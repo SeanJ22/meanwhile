@@ -209,7 +209,7 @@ export function VotingSitesPanel({
       {(state.kind === "failed" || state.kind === "answered" && state.answer.outsideCoverage) && (
           <div className="voting-panel-status" data-voting-coverage-gap>
             <p>{readerCopy("copy.working")}.</p>
-            <a href={feedbackHref({ about: "Voting locations", zip: /^\d{5}$/.test(address.trim()) ? address.trim() : null })}>
+            <a href={feedbackHref({ about: "Voting locations", intent: "sooner", zip: /^\d{5}$/.test(address.trim()) ? address.trim() : null })}>
               Want us to get this sooner?
             </a>
           </div>

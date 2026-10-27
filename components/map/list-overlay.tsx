@@ -1,5 +1,7 @@
 "use client";
 
+import { useReaderTimeZone } from "@/hooks/use-reader-time-zone";
+import { CardGapSection } from "@/components/ui/card-gap-context";
 import { MeetingRow } from "@/components/ui/meeting-row";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { meetingCardSources } from "@/lib/officials/card-sources";
@@ -49,7 +51,7 @@ const GROUPS: { value: ListGroupBy; label: string }[] = [
   { value: "date", label: "Date" },
 ];
 
-function groupKeyFor(meeting: Meeting, groupBy: ListGroupBy): string {
+function groupKeyFor(meeting: Meeting, groupBy: ListGroupBy, timeZone: string | null): string {
   switch (groupBy) {
     case "jurisdiction":
       return meeting.jurisdiction;
@@ -62,7 +64,7 @@ function groupKeyFor(meeting: Meeting, groupBy: ListGroupBy): string {
       return tier ? TIER_LABEL[tier] : "Unknown";
     }
     case "date":
-      return formatMeetingDate(meeting);
+      return timeZone ? formatMeetingDate(meeting, timeZone) : "";
     default:
       return "";
   }
@@ -77,6 +79,7 @@ export function ListOverlay({
   embedded?: boolean;
 }) {
   const { meetings, location, result, governing } = useShellData();
+  const timeZone = useReaderTimeZone();
   const { badgeOf, bodyClassOf } = useMeetingBadge();
   const listingIdentity = useMeetingListingIdentity();
   const ui = useUi();
@@ -163,14 +166,14 @@ export function ListOverlay({
 
     const map = new Map<string, Meeting[]>();
     for (const meeting of sorted.slice(0, limit)) {
-      const key = groupKeyFor(meeting, ui.listGroupBy);
+      const key = groupKeyFor(meeting, ui.listGroupBy, timeZone);
       const list = map.get(key);
       if (list) list.push(meeting);
       else map.set(key, [meeting]);
     }
 
     return [...map.entries()].map(([key, items]) => ({ key, items }));
-  }, [sorted, ui.listGroupBy, limit]);
+  }, [sorted, ui.listGroupBy, limit, timeZone]);
 
   if (!ui.listOverlayOpen) return null;
 
@@ -181,7 +184,7 @@ export function ListOverlay({
   const showMore = () => {
     const nextLimit = limit + PAGE;
     // Newly added meetings must be readable even when their groups were closed.
-    const addedGroups = new Set(sorted.slice(limit, nextLimit).map(meeting => groupKeyFor(meeting, ui.listGroupBy)));
+    const addedGroups = new Set(sorted.slice(limit, nextLimit).map(meeting => groupKeyFor(meeting, ui.listGroupBy, timeZone)));
     for (const key of addedGroups) {
       if (key && !ui.expandedGroups.includes(key)) dispatch({ type: "list/toggleGroup", key });
     }
@@ -308,7 +311,8 @@ export function ListOverlay({
               : null;
 
           return (
-            <div key={group.key || "all"}>
+            <div key={group.key || "all"} data-meeting-section={group.key || "all"}>
+              <CardGapSection label={group.key || "meeting information"}>
               {group.key && (
                 <button
                   type="button"
@@ -358,6 +362,7 @@ export function ListOverlay({
                     </div>
                   );
                 })}
+              </CardGapSection>
             </div>
           );
         })}

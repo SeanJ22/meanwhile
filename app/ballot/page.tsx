@@ -1033,7 +1033,7 @@ export default readerRoute("/ballot", async function BallotPage({
       )}
 
       {attempted && !matched && ballotLoaderFailures.length === 0 && !divisionHoldingUnavailable && (
-        <p className="mt-6 lg:max-w-2xl">We do not have a ballot for this location yet.</p>
+        <CardGapContribution id={`ballot-coverage:${zip ?? "area"}`} label={zip ? `the ballot for ZIP ${zip}` : "the ballot for this area"} />
       )}
 
       <MyPicks
@@ -1388,14 +1388,14 @@ export default readerRoute("/ballot", async function BallotPage({
           data-ballot-no-local-races
         >
           <h2 className="t-structure text-paper-dim">County, city and school-board races</h2>
-          <p className="mt-2 t-body text-muted">We do not have county, city or school-board races for this ballot yet.</p>
+          <CardGapContribution id={`ballot-local:${zip ?? "area"}`} label="county, city and school-board races" />
         </section>
       )}
 
       {matched && Boolean(matched.heldContests?.length) && (
         <section className="mt-6 rounded-[10px] border border-dashed border-[var(--panel-border)] p-4 lg:max-w-2xl" data-ballot-held-contests>
           <h2 className="t-structure text-paper-dim">Contests we don&apos;t hold yet</h2>
-          <p className="mt-2 t-body text-muted">We&apos;re working on finding verified candidates for these contests.</p>
+          <CardGapContribution id={`ballot-held-contests:${zip ?? "area"}`} label="verified candidates for these contests" />
           <ul className="mt-2 space-y-2 t-body text-paper-dim">
             {matched.heldContests?.map(contest => <li key={contest.id} data-contest-id={contest.id}>
               <strong>{readerText(contest.title)}</strong>: {readerText(contest.reason, "sentence", askSubjects.map(subject => subject.name))}

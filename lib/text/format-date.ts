@@ -6,7 +6,8 @@
  * parse it as midnight UTC and a western zone would show the day before. So
  * the calendar form is read straight out of the string. Callers holding an
  * instant (a meeting's `startsAt`) resolve it to a calendar date in the
- * meeting's own zone first, as `lib/map/format.ts` does.
+ * reader's zone first, as `lib/map/format.ts` does for display. A date-only
+ * posting keeps the publisher's calendar day.
  */
 
 const MONTHS = [

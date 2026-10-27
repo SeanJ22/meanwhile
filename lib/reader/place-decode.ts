@@ -20,6 +20,7 @@ import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts
 import type { EverydayRoutingProjection } from "../routing/everyday.ts";
 import type { PublicBodyAttempt } from "../registry/body-attempt-read.ts";
 import { attemptFamilyOf } from "../registry/attempt-families.ts";
+import { publishedBodyLabel } from "../civic-data/published-body-name.ts";
 
 import type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types.ts";
 type Row = Record<string,unknown>;
@@ -29,7 +30,15 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
   const stateRoot = input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
   const divisionIds = row.division_ids as string[] | undefined ?? input.divisionIds;
   const entities = row.entities as Row[], rawSittings = row.sittings as Row[];
-  const registry = row.registry as RegistryRuntimeReadModel | null ?? null;
+  const names = new Map(entities.map(body => [String(body.id),String(body.name)]));
+  const canonicalName=(id:string,label:string|null|undefined)=>{
+    const name=names.get(id);
+    return typeof label==='string' && publishedBodyLabel(label).kind!=='body' && name && publishedBodyLabel(name).kind==='body' ? name : label;
+  };
+  const rawRegistry = row.registry as RegistryRuntimeReadModel | null ?? null;
+  const registry=rawRegistry ? {...rawRegistry,registry:{...rawRegistry.registry,bodies:rawRegistry.registry.bodies.map(body=>
+    ({...body,name:canonicalName(body.id,body.name) ?? body.name}))},bodyRosters:rawRegistry.bodyRosters.map(roster=>
+      ({...roster,bodyName:canonicalName(roster.bodyId,roster.bodyName) ?? roster.bodyName}))} : null;
   const governments = row.governments as RegistrationGovernmentListing[] ?? [];
   const governmentRecipients = new Map<string, Map<string, { readonly ids: readonly string[]; readonly names: readonly string[]; readonly state: string; readonly moneyDivisionId?: string }>>();
   for (const government of governments) {
@@ -62,6 +71,7 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     const governmentType = /SPECIAL/.test(governmentClass) ? "special_district" : /SCHOOL/.test(governmentClass) ? "school_district"
       : /COUNTY/.test(governmentClass) ? "county" : /MUNICIPAL|TOWNSHIP|PLACE GOVERNMENT/.test(governmentClass) ? "city" : undefined;
     return { id, division, fields: fields[id] || e.placed === true || registeredName ? {...fields[id],
+      ...(typeof fields[id]?.name==='string' ? {name:canonicalName(id,fields[id]!.name)} : {}),
       ...(!fields[id]?.name && registeredName ? {name:registeredName} : {}),ocdId:division.startsWith("ocd-division/") ? division : null,
       ...(typeof e.government === "string" ? { governmentName: e.government } : {}),
       ...(typeof e.government_id === "string" ? { governmentId: e.government_id } : {}),
@@ -81,6 +91,20 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     archived:Meeting[];documents:MeetingsSnapshot["agendaDocuments"];
   };
   const rows = decoded.rows;
+  const aliases = row.body_aliases as Record<string,string> | undefined ?? {};
+  const foldedTargets=new Set(Object.values(aliases));
+  const canonicalMeeting = (meeting: Meeting): Meeting => {
+    const id = meeting.bodyId && (aliases[meeting.bodyId] ?? meeting.bodyId);
+    if(!id)return meeting;
+    const bodyName=foldedTargets.has(id) ? names.get(id) ?? meeting.bodyName : canonicalName(id,meeting.bodyName) ?? meeting.bodyName;
+    return id!==meeting.bodyId || bodyName!==meeting.bodyName ? {...meeting,bodyId:id,bodyName} : meeting;
+  };
+  for (const source of rows) {
+    source.payload.meetings = source.payload.meetings.map(canonicalMeeting);
+    if(source.payload.derivedMembers)source.payload.derivedMembers=source.payload.derivedMembers.map(member=>
+      aliases[member.bodyId] ? {...member,bodyId:aliases[member.bodyId]!} : member);
+  }
+  decoded.archived = decoded.archived.map(canonicalMeeting);
   // This response's dictionary shares bytes only; every document regains its exact text before composition.
   const agendaTexts = row.agenda_texts as readonly string[] | undefined ?? [];
   for (const document of [...rows.flatMap(row => row.payload.agendaDocuments),...decoded.documents]) {

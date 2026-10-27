@@ -189,3 +189,28 @@ test("body-facts-only reads retain local facts without claiming that their indep
   assert.deepEqual(result.divisions, []);
   assert.deepEqual(result.governments, []);
 });
+
+test("saved current and history contexts keep meetings, agendas and members from folded calendar labels",async()=>{
+  const alias=`${CITY}#body:city-council-special-meeting`;
+  const full=(id:string,startsAt:string)=>({...sitting(id,alias),bodyName:'City Council Special Meeting',title:'Council sitting',startsAt,
+    timeZone:'America/Phoenix',location:null,agendaUrl:null,jurisdiction:'Tucson',status:'SCHEDULED',
+    provenance:{sourceUrl:'https://tucson.example.gov/calendar',sourceOrg:'City Council',collectedAt:AT,verifiedAt:AT}});
+  const current=full('native:current','2026-10-26T18:00:00Z'),past=full('native:past','2020-01-01T18:00:00Z');
+  for(const includeHistory of [false,true]) {
+    const partition=family([current],[alias]);
+    partition.payload.agendaDocuments=[{id:'current-agenda',meetingId:current.id,text:'Council agenda'}] as never;
+    const source=page(CITY,[{...entity(BOARD),name:'City Council'}],{
+      body_aliases:{[alias]:BOARD},meeting_rows:[partition],
+      archived_meetings:includeHistory?[past]:[],archived_documents:includeHistory?[{id:'old-minutes',meetingId:past.id,text:'Council minutes'}]:[],
+    });
+    const input={state:'AZ',divisionIds:[CITY],includeAgenda:true,includeHistory};
+    const merged=mergePlaceRows(input,[source]);
+    const member=entries(model(entries(merged.meeting_rows)[0]!.payload).derivedMembers)[0]!;
+    assert.equal(member.bodyId,BOARD);
+    const decoded=await composePlaceRow(input,merged);
+    assert.deepEqual(decoded.bodies.map(body=>body.id),[BOARD]);
+    assert.deepEqual(decoded.meetings.map(meeting=>meeting.id).sort(),(includeHistory?[past.id,current.id]:[current.id]).sort());
+    assert.ok(decoded.meetings.every(meeting=>meeting.bodyId===BOARD&&meeting.bodyName==='City Council'));
+    assert.deepEqual(decoded.snapshot.agendaDocuments.map(document=>document.id).sort(),(includeHistory?['old-minutes','current-agenda']:['current-agenda']).sort());
+  }
+});

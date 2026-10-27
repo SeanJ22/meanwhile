@@ -1,5 +1,5 @@
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
-import { CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardGapContribution, CardGapSection } from "@/components/ui/card-gap-context";
 import type {
   FundingAbsenceData,
   FundingDisplayData,
@@ -48,6 +48,7 @@ export function FundingDisplay({
           : "mt-3 rounded-md border border-[var(--panel-border)] bg-[var(--surface,rgba(255,255,255,0.04))]/60 p-3"
       }
     >
+      <CardGapSection label="campaign money" inherit={bare}>
       {!bare && <p className={SECTION_LABEL_CLASS}>Campaign money</p>}
       {data.registrationLabel && <p className="mt-1 t-detail text-muted">{readerText(data.registrationLabel, "sentence", knownNames)}</p>}
       <MoneyOverview data={data} />
@@ -138,6 +139,7 @@ export function FundingDisplay({
       )}
 
       <CardSourcesContribution id={`funding:${data.fecCandidateId}`} sources={[{ what: "Campaign money", provenance: { sourceUrl: data.sourceUrl ?? "", sourceOrg: data.sourceOrg, collectedAt: data.collectedAt, verifiedAt: null } }]} />
+      </CardGapSection>
     </div>
   );
 }

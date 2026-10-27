@@ -2,9 +2,9 @@ import { readerRoute } from "@/lib/api/reader-route";
 import { ballotPlaceFromRequest } from "@/lib/ballot/reader-place";
 import { withReaderFeatures } from "@/lib/civic-data/reader-feature-context.ts";
 import { writeDemandSignal } from "@/lib/db/demand-signal";
-import { raiseWriteAlarm } from "@/lib/db/write-alarm";
+import { errorCodeOf, raiseWriteAlarm } from "@/lib/db/write-alarm";
 import { markerFromRequest } from "@/lib/db/run-marker";
-import { coverageAt } from "@/lib/registry/server";
+import { currentReaderSelection } from "@/lib/db/reader-route";
 import { ripcordPulled } from "@/lib/ripcords";
 import { isSameOriginSubmission } from "@/lib/signal/intake-limits";
 import { intakeWindows } from "@/lib/db/intake-windows";
@@ -77,14 +77,15 @@ async function postWithSettings(request: Request) {
   }
 
 
-  const divisions = await ballotPlaceFromRequest(request);
   let known: Set<string>;
   try {
     known =
       submission.subjectType === "CANDIDATE"
-        ? await getCandidateTargetIds(divisions, submission.subjectId)
+        ? await getCandidateTargetIds(await ballotPlaceFromRequest(request), submission.subjectId)
         : await knownBodySubjectIds(submission.subjectId);
-  } catch {
+  } catch (error) {
+    console.error("Demand subject lookup failed", { requestId: request.headers.get("x-nf-request-id"),
+      subjectType: submission.subjectType, code: errorCodeOf(error), name: error instanceof Error ? error.name : "Error" });
     return Response.json({ error: "subject data unavailable" }, { status: 503 });
   }
   if (!known.has(submission.subjectId)) {
@@ -118,15 +119,9 @@ async function postWithSettings(request: Request) {
     lng >= -180 &&
     lng <= 180
   ) {
-    try {
-      const coverage = await coverageAt(lat, lng, 0);
-      ocdIds = [
-        ...coverage.bodies.flatMap((b) => (b.ocdId ? [b.ocdId] : [])),
-        ...coverage.seats.map((s) => s.ocdId),
-      ];
-    } catch {
-      // A failed resolution is an empty list, never a fabricated one.
-    }
+    // readerRoute already resolved this exact point. Recording the tap does
+    // not need to load its officials, calendars and ballots a second time.
+    ocdIds = [...currentReaderSelection()?.divisions ?? []];
   }
 
   try {

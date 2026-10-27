@@ -95,7 +95,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
       bool_or(place_id !~ '^ocd-division/country:us/(state|district|territory):[^/]+$') AS local
       FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')) served_places ON true
     CROSS JOIN LATERAL (SELECT CASE WHEN alias.entity_id IS NULL THEN original.value ELSE original.value || jsonb_build_object(
-      'id',alias.entity_id) END || jsonb_build_object('ocdId',CASE WHEN served_places.local
+      'id',alias.entity_id,'name',canonical.name) END || jsonb_build_object('ocdId',CASE WHEN served_places.local
         AND original.value->>'ocdId' ~ '^ocd-division/country:us/(state|district|territory):[^/]+$'
         THEN NULL ELSE original.value->>'ocdId' END) || CASE WHEN served_places.ids IS NOT NULL
         THEN jsonb_build_object('alsoServesOcdIds',to_jsonb(served_places.ids)
@@ -140,7 +140,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   UNION
   SELECT e.id,e.kind,e.name,e.parent_id,e.state FROM entity e JOIN owned p ON e.parent_id=p.id
     WHERE e.state=$1::char(2) AND e.kind IN ('government','body')
-), bodies AS MATERIALIZED (
+), raw_bodies AS MATERIALIZED (
   SELECT id,kind,name,parent_id,state FROM owned WHERE kind='body'
   UNION SELECT id,kind,name,parent_id,state FROM entity
     WHERE (id=ANY($3::text[]) OR id IN (SELECT x.entity_id FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=ANY($3::text[]))
@@ -150,6 +150,11 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     LEFT JOIN runtime_bodies r ON r.value->>'id'=requested.id
     WHERE NOT EXISTS (SELECT 1 FROM entity e WHERE e.id=requested.id)
       AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=requested.id)
+), bodies AS MATERIALIZED (
+  SELECT DISTINCT coalesce(b.id,raw.id) AS id,coalesce(b.kind,raw.kind) AS kind,coalesce(b.name,raw.name) AS name,
+    coalesce(b.parent_id,raw.parent_id) AS parent_id,coalesce(b.state,raw.state) AS state FROM raw_bodies raw
+    LEFT JOIN entity_external_id alias ON alias.scheme='body-alias' AND alias.value=raw.id
+    LEFT JOIN entity b ON b.id=coalesce(alias.entity_id,raw.id)
 ), body_facts AS MATERIALIZED (
   SELECT f.*,s.url,b.name AS body_name,b.parent_id FROM bodies b
     CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=b.id AND status='live'
@@ -210,7 +215,8 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
     WHERE $8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR substr(m.id,9) IN (SELECT id FROM agenda_fact_ids)
 ), encoded_bodies AS MATERIALIZED (
-  SELECT b.id,encoded.id AS encoded_id FROM bodies b
+  SELECT b.id,encoded.id AS encoded_id FROM (SELECT id FROM bodies UNION SELECT x.value FROM entity_external_id x
+    JOIN bodies b ON b.id=x.entity_id WHERE x.scheme='body-alias') b
   CROSS JOIN LATERAL (SELECT string_agg(CASE WHEN ch ~ '^[A-Za-z0-9_.!~*''()-]$' THEN ch
     ELSE regexp_replace(upper(encode(convert_to(ch,'UTF8'),'hex')),'(..)','%\\1','g') END,'' ORDER BY n) AS id
     FROM regexp_split_to_table(b.id,'') WITH ORDINALITY AS chars(ch,n)) encoded
@@ -233,7 +239,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'meetings') m,
     LATERAL (SELECT reader_payload_node(m.item) AS value) header
   WHERE p.scope LIKE 'source:derived:family:%' AND (
-    header.value->>'bodyId' IN (SELECT id FROM bodies)
+    coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId') IN (SELECT id FROM bodies)
     OR coalesce(header.value->>'bodyId','')='' AND header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), meeting_rows AS MATERIALIZED (
   SELECT p.scope,CASE WHEN p.scope LIKE 'source:derived:family:%' THEN
@@ -270,7 +276,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     CROSS JOIN LATERAL (SELECT candidate->'readModel' AS payload FROM civic_data_candidates WHERE id=v.id LIMIT 1) candidate
     CROSS JOIN LATERAL reader_payload_members(reader_payload_node(candidate.payload)->'meetings') m
     CROSS JOIN LATERAL (SELECT reader_payload_node(m.item) AS value) header
-    WHERE header.value->>'bodyId' IN (SELECT id FROM bodies) AND header.value->>'id' IS NOT NULL
+    WHERE coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId') IN (SELECT id FROM bodies) AND header.value->>'id' IS NOT NULL
       AND CASE WHEN header.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T'
         THEN (header.value->>'startsAt')::timestamptz < now()-make_interval(days=>${MEETING_HELD_LOOKBACK_DAYS}) ELSE false END
 ), archived_calendar AS MATERIALIZED (
@@ -293,7 +299,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), agenda_current_headers AS MATERIALIZED (
   SELECT p.scope,header.value FROM meeting_partitions p,LATERAL reader_payload_members(p.header->'meetings') m,
     LATERAL (SELECT reader_payload_node(m.item) AS value) header
-    WHERE $8::text[] IS NOT NULL AND (header.value->>'bodyId' IN (SELECT id FROM bodies)
+    WHERE $8::text[] IS NOT NULL AND (coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId') IN (SELECT id FROM bodies)
       OR coalesce(header.value->>'bodyId','')='' AND header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), agenda_raw_headers AS MATERIALIZED (
   SELECT * FROM agenda_current_headers
@@ -428,6 +434,8 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
   coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone','office_email','mailing_address')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
+  coalesce((SELECT jsonb_object_agg(x.value,x.entity_id) FROM entity_external_id x JOIN bodies b ON b.id=x.entity_id
+    WHERE x.scheme='body-alias'),'{}'::jsonb) AS body_aliases,
   coalesce((SELECT jsonb_agg(to_jsonb(s)) FROM sittings s),'[]'::jsonb) AS sittings,
   coalesce((SELECT jsonb_agg(to_jsonb(m)) FROM meeting_rows m),'[]'::jsonb) AS meeting_rows,
   coalesce((SELECT jsonb_agg(item) FROM archived_meetings),'[]'::jsonb) AS archived_meetings,

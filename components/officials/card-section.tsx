@@ -4,7 +4,7 @@
 // CardSectionGroup and read by CardSection, both client components; it never
 // crosses from a Server Component.
 
-import { CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardGapContribution, CardGapSection } from "@/components/ui/card-gap-context";
 import { readerText } from "@/lib/text/reader-names";
 
 import {
@@ -78,7 +78,7 @@ export function CardSection({
   // Async children can resolve to no held facts. Keep their request here.
   const observeContent = useCallback((node: HTMLDivElement | null) => {
     if (!node) return;
-    const check = () => setEmpty(!node.textContent?.trim() && !node.querySelector("img,video,audio,canvas,input,button,a[href]"));
+    const check = () => setEmpty(!node.textContent?.trim() && !node.querySelector("img,video,audio,canvas,input,button,a[href],[data-card-gap-contribution]"));
     check();
     const observer = new MutationObserver(check);
     observer.observe(node, { childList: true, subtree: true, characterData: true });
@@ -129,8 +129,10 @@ export function CardSection({
       </button>
       {(open || keepMounted) && (
         <div id={id} className="card-section-body" hidden={!open}>
-          <div ref={observeContent}>{children}</div>
-          {(children == null || empty) && <CardGapContribution id={`section:${id}`} label={title.toLowerCase()} />}
+          <CardGapSection label={title.toLowerCase()}>
+            <div ref={observeContent}>{children}</div>
+            {(children == null || empty) && <CardGapContribution id={`section:${id}`} label={title.toLowerCase()} />}
+          </CardGapSection>
         </div>
       )}
     </section>

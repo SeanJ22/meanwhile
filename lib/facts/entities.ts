@@ -14,6 +14,7 @@ import { fileEntityPlaces, type EntityPlace } from "./entity-places.ts";
 import type { Entity } from "../core/shapes.ts";
 import { enqueueReaderPlaces } from "../reader/cache.ts";
 import { registeredPlaceIds } from "../place-map/build.ts";
+import { bodyNameKey, publishedBodyLabel } from "../civic-data/published-body-name.ts";
 
 interface EntityRow extends Entity {
   /** The registered government a reviewed door names as a board's owner. */
@@ -399,6 +400,15 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<string
     if (row.places?.length) await fileEntityPlaces(query,id,row.places);
     return id;
   }
+  if (row.kind === "body" && publishedBodyLabel(row.name).kind !== "body") {
+    const body = await publishedBody(query, row);
+    if (!body) throw new Error("MEETING_BODY_OWNER_UNKNOWN");
+    if (body.id !== row.id) {
+      await query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2) ON CONFLICT DO NOTHING", [body.id, row.id]);
+      if (row.places?.length) await fileEntityPlaces(query, body.id, row.places);
+    }
+    return body.id;
+  }
   const parentId = row.kind === "body" ? await bodyGovernment(query, id, row.government) ?? row.parentId : row.parentId;
   const changed = await query(`WITH held AS MATERIALIZED (SELECT parent_id FROM entity WHERE id=$1), changed AS (
     INSERT INTO entity (id, kind, name, state, parent_id)
@@ -418,6 +428,25 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<string
 
 interface GovernmentRef { readonly id: string; readonly state: string | null; readonly placeId: string; readonly name: string }
 export interface BodyRef { readonly id: string; readonly name: string; readonly state: string | null; readonly parentId: string | null }
+
+/** Resolve a calendar label within its own government. Existing named boards win; an unnamed sitting uses its owner's board. */
+export async function publishedBody(query: Query, row: { readonly id: string; readonly name: string; readonly parentId?: string | null; readonly government?: string | null }): Promise<BodyRef | null> {
+  const label = publishedBodyLabel(row.name);
+  const government = await governmentAt(query, [row.government ?? null, row.parentId ?? null, splitSubject(row.id).root]);
+  if (!government) return null;
+  const siblings = await query(`SELECT id,name,state,parent_id FROM entity b WHERE kind='body'
+    AND (parent_id=$1 OR id LIKE $2) AND id<>$3
+    AND NOT EXISTS(SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=b.id)`,
+  [government.id, `${government.placeId}#%`, row.id]);
+  const key = ` ${bodyNameKey(row.name)} `;
+  const matched = siblings.filter(body => publishedBodyLabel(String(body.name)).kind === "body")
+    .map(body => ({ body, at: key.indexOf(` ${bodyNameKey(String(body.name))} `) }))
+    .filter(candidate => candidate.at >= 0)
+    .sort((a, b) => a.at - b.at || String(b.body.name).length - String(a.body.name).length)[0]?.body;
+  if (matched) return { id: String(matched.id), name: String(matched.name), state: matched.state as string | null, parentId: matched.parent_id as string | null };
+  if (label.name) return bodyNamed(query, government.id, null, label.name);
+  return ensureGoverningBody(query, government.id);
+}
 
 /** The government a finding is about, with the place it sits on; the first of the given ids that is one. A dependent school system the fact store lacks is added on its district's place when that place is held. */
 export async function governmentAt(query: Query, ids: readonly (string | null)[]): Promise<GovernmentRef | null> {
@@ -525,6 +554,8 @@ async function bodyUnder(query: Query, government: GovernmentRef, find: { readon
 
 /** The body a name on a government's page stands for: its governing board under whatever name the page gives it, a body of that name it already holds, or a new body named `<government id>#body:<slug>`. */
 export async function bodyNamed(query: Query, subjectId: string, governing: BodyRef | null, name: string): Promise<(BodyRef & { readonly asNamed?: string }) | null> {
+  const label = publishedBodyLabel(name);
+  if (label.kind !== "body") return publishedBody(query, { id: `${subjectId}#calendar-label`, name, parentId: governing?.parentId ?? subjectId });
   const government = await governmentAt(query, [governing?.parentId ?? null, governing?.id ?? null, subjectId]);
   if (!government) return null;
   const board = governingBoardName(name, await governmentContext(query, government.id));

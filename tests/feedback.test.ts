@@ -39,6 +39,9 @@ test("report links round-trip the card, ZIP and public record, with bounds and n
   assert.deepEqual(feedbackContext({}), { about: null, zip: null, recordId: null });
   assert.equal(feedbackContext({ zip: "85635-1234" }).zip, null);
   assert.equal(feedbackContext({ about: "x".repeat(100) }).about?.length, 80);
+  const sooner = new URL(feedbackHref({ ...context, intent: "sooner" }), "https://example.org");
+  assert.equal(sooner.searchParams.get("intent"), "sooner");
+  assert.equal(url.searchParams.has("intent"), false, "problem reports keep their own intent");
 });
 
 /** The address, assembled rather than written, so this file is not itself a hit. */

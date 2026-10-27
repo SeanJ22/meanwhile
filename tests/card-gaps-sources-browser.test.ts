@@ -23,6 +23,7 @@ const congress = JSON.parse(readFileSync("tests/fixtures/ui-01-congress-legislat
 };
 const projection = normalizeCongressDirectory(Object.fromEntries(Object.entries(congress.yaml).map(([file, yaml]) => [file, parse(yaml)])), congress.revision, congress.retrievedAt);
 const holder = indexByOfficeholderId([projection.roster]).get("congress:H001091")!;
+const midnightSource = recorded.meetings.find(meeting => meeting.provenance.collectedAt === "2026-09-24T05:55:08.378Z")!.provenance;
 
 test("real held venue and congress cards keep missing info in sections and sources at the foot", async () => {
   // Preserve the observed 41/21 production response; do not manufacture the
@@ -41,11 +42,14 @@ test("real held venue and congress cards keep missing info in sections and sourc
       import {MeetingPanel} from "./components/map/meeting-panel.tsx";
       import {OfficialModal} from "./components/map/popup/official-modal.tsx";
       import {DataProvider} from "./lib/state/data.tsx";
+      import {CardSourcesList} from "./components/officials/card-sources-list.tsx";
       const meetings=${JSON.stringify(meetings)}, venue=${JSON.stringify(venue)}, placeless=${JSON.stringify(placeless)}, holder=${JSON.stringify(holder)};
       const official=location.pathname==="/official";
       const data={allMeetings:meetings, meetings, venues:[venue], result:null, location:null, drawnDistricts:[], dropped:0, searchFailed:false, atAddress:false, governing:new Set([${JSON.stringify(tusd)}]), zipPartial:null, basis:"ZIP", commentAccess:${JSON.stringify(recorded.commentAccess)}};
       const noop=()=>{};
-      createRoot(document.getElementById("root")).render(<DataProvider value={data}>
+      createRoot(document.getElementById("root")).render(location.pathname==="/source-clock"
+        ? <CardSourcesList sources={[{what:"Meeting calendar",provenance:${JSON.stringify(midnightSource)}}]} />
+        : <DataProvider value={data}>
         <ReaderCard viewKey={official?holder.id:venue.key} kicker={official?holder.name:"Tucson Unified School District"} backLabel={null} onBack={noop} onClose={noop}>
           {official ? <OfficialModal holder={holder} tier="national" seatLabel="IA-2" reactionContext={null} onClose={noop} embedded />
             : <MeetingPanel venue={venue} placeless={placeless} onClose={noop} embedded />}
@@ -63,7 +67,7 @@ test("real held venue and congress cards keep missing info in sections and sourc
     const json = (value: unknown) => response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(value));
     if (request.url === "/fixture.js") response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
     else if (request.url === "/fixture.css") response.writeHead(200, { "content-type": "text/css" }).end(stylesheet);
-    else if (request.url === "/venue" || request.url === "/official") response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="/fixture.css"><div id="root"></div><script src="/fixture.js"></script>');
+    else if (request.url === "/venue" || request.url === "/official" || request.url === "/source-clock") response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><meta charset="utf-8"><link rel="stylesheet" href="/fixture.css"><div id="root"></div><script src="/fixture.js"></script>');
     else if (request.url?.startsWith("/api/directory?")) json({ ...projection.directory.byMember.H001091, source: projection.directory.source });
     else if (request.url === "/api/demand-signal") {
       let body = "";
@@ -79,7 +83,7 @@ test("real held venue and congress cards keep missing info in sections and sourc
   let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   try {
     browser = await launchGuarded({ label: "ui-01-real-source-cards" });
-    const context = await browser.context({ viewport: { width: 900, height: 900 } });
+    const context = await browser.context({ viewport: { width: 900, height: 900 }, timezoneId: "America/New_York" });
     const page = await context.newPage();
     const errors: string[] = [];
     page.on("pageerror", error => { errors.push(error.message); console.error(error.stack); });
@@ -106,18 +110,26 @@ test("real held venue and congress cards keep missing info in sections and sourc
       assert.doesNotMatch(await card.innerText(), /Still gathering|committee-to-person|Roster term or appointment note/);
       if (mode === "venue") {
         assert.equal(await card.locator("[data-meeting-row]").count(), 36);
-        assert.ok(await card.locator("[data-meeting-row] [data-card-gap]").count() > 0, "each sitting keeps its own missing fields");
-        const row = card.locator('[data-meeting-id="diligent:tusd1:2026-10-19T1800-alternative-education-advisory"]');
+        assert.equal(await card.locator("[data-meeting-row] [data-card-gap]").count(), 0, "missing fields contribute once to the surrounding meeting section");
+        const sectionCounts = await card.locator(".card-section, [data-meeting-section]").evaluateAll(sections => sections.map(section =>
+          [...section.querySelectorAll("[data-card-gap]")].filter(gap => gap.closest(".card-section, [data-meeting-section]") === section && /working on getting this info/.test(gap.textContent ?? "")).length));
+        assert.ok(sectionCounts.every(count => count <= 1), "each section has at most one working-on-it line");
+        const clockMeeting = meetings.find(meeting => meeting.id === "diligent:tusd1:2026-10-19T1800-alternative-education-advisory")!;
+        const row = card.locator(`[data-meeting-id="${clockMeeting.id}"]`);
+        assert.equal(await row.locator("time").nth(1).innerText(), new Intl.DateTimeFormat("en-US", {
+          timeZone: "America/New_York", hour: "numeric", minute: "2-digit", timeZoneName: "short",
+        }).format(new Date(clockMeeting.startsAt)), "the browser's Eastern clock displays the held Arizona meeting");
         assert.equal(await row.locator('[data-meeting-where="online"]').innerText(), "Online · Via Zoom Webinar");
         assert.equal(await row.getByRole("link", { name: "Meeting page", exact: true }).getAttribute("href"), "https://tusd1-schooldesk.community.diligentoneplatform.com/Portal/MeetingInformation.aspx?Org=Cal&Id=512");
         assert.ok(await card.locator(".how-to-be-heard").count() > 0);
         assert.equal(await card.locator(".how-to-be-heard [data-card-sources]").count(), 0);
         assert.equal(await card.locator("[data-meeting-row] [data-card-sources]").count(), 0);
-        assert.ok(await row.getByRole("button", { name: "Want us to get this sooner?", exact: true }).count() > 0);
+        assert.ok(await row.locator("xpath=ancestor::section[1]").getByRole("button", { name: "Want us to get this sooner?", exact: true }).count() > 0);
       }
       if (mode === "official") {
         assert.equal((await statementsResponse!).status(), 503, "exercise the failed public-statements response");
-        const statementsGap = card.locator(`[data-card-gap="statements:${holder.id}"]`);
+        const statementsHeader = card.getByRole("button", { name: "Public statements", exact: true });
+        const statementsGap = card.locator(`[id="${await statementsHeader.getAttribute("aria-controls")}"] [data-card-gap]`);
         await statementsGap.waitFor({ state: "visible" });
         assert.equal(await card.getByRole("button", { name: "Public statements", exact: true }).count(), 1, "the section stays present after the request fails");
         assert.equal(await statementsGap.evaluate(gap => gap.closest(".card-section")?.querySelector(".card-section-title")?.textContent), "Public statements", "the failed request belongs inside its section");
@@ -167,6 +179,14 @@ test("real held venue and congress cards keep missing info in sections and sourc
     }
     assert.deepEqual(errors, []);
     await context.close();
+    const phoenix = await browser.context({ viewport: { width: 390, height: 844 }, timezoneId: "America/Phoenix" });
+    const clockPage = await phoenix.newPage();
+    await clockPage.goto(`http://127.0.0.1:${address.port}/source-clock`);
+    const checked = clockPage.locator("[data-source-list] .popup-row").filter({ hasText: "Last checked" });
+    await checked.waitFor({ state: "visible" });
+    assert.equal(await checked.locator(".pv").innerText(), "September 23, 2026", "the actual saved 05:55 UTC source check falls on the reader's previous day in Phoenix");
+    assert.equal(midnightSource.collectedAt, "2026-09-24T05:55:08.378Z", "the native source timestamp remains untouched");
+    await phoenix.close();
   } finally {
     await browser?.close();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

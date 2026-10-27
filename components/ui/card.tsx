@@ -5,6 +5,7 @@ import { CardSourceContext, useCardSourceRegistry } from "./card-source-context"
 import { X } from "lucide-react";
 import type { CardSource } from "@/lib/officials/card-sources";
 import { CardFooter } from "./card-footer";
+import { CardGapSection } from "./card-gap-context";
 import { CardSectionGroup } from "@/components/officials/card-section";
 import { ReaderNamesProvider } from "./reader-names-context";
 import { readerText } from "@/lib/text/reader-names";
@@ -43,7 +44,7 @@ export function Card({
       </header>
       <div className="reader-card-body t-body text-paper">
         <CardSectionGroup independent={independent}>
-          {children}
+          <CardGapSection label={title}>{children}</CardGapSection>
           {!insideCard && <CardFooter sources={allSources} />}
         </CardSectionGroup>
       </div>

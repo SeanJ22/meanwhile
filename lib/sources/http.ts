@@ -15,7 +15,7 @@ import type { HostStateStore } from "./host-state.ts";
 import { currentSourceVendor, withSourceVendor } from "./host-context.ts";
 import { nativeSourceFetch, sourceTransportRoot } from "./host-transport.ts";
 import { rawCaptureVault } from "../civic-data/raw-capture-remote.ts";
-import { vaultSourceResponse } from "./raw-response.ts";
+import { RawCaptureFailure, vaultSourceResponse } from "./raw-response.ts";
 import {
   sourceAcquisitionSecondsRemaining,
   sourceAcquisitionSleep,
@@ -163,7 +163,9 @@ export async function sourceFetch(url: string | URL, init?: SourceRequestInit, f
     if (injected) injectedPacers.set(root, pacer); else sharedPacer = pacer;
   }
   const response = await (await pacer).fetch(url, init, transport, vendor ?? currentSourceVendor());
-  return injected ? response : vaultSourceResponse(response, rawCaptureVault(), vendor ?? new URL(url).hostname);
+  if(injected)return response;
+  try{return vaultSourceResponse(response, rawCaptureVault(), vendor ?? new URL(url).hostname);}
+  catch(error){throw new RawCaptureFailure(error);}
 }
 
 export async function deferSourceRead(url: string, until: number): Promise<void> {

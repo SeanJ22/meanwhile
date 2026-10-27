@@ -124,7 +124,7 @@ async function publishOfficeState(input: {
       const points = await publishDirectoryOfficePoints(native.map(row=>row.office), held.map(row=>row.office), input.resolveOfficePoint);
       const stateSources: ManualSourceReview[] = [];
       for(const office of points)if(office.geocodedPoint){
-        const review=officePointSourceReview(office.geocodedPoint);
+        const review=await officePointSourceReview(office.geocodedPoint);
         if(review)stateSources.push(review);
       }
       const sourcePath = (url: string) => url.replace(/(githubusercontent\.com\/openstates\/people\/)\b[a-f0-9]{40}\//, "$1");

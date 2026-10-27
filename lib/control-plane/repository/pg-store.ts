@@ -187,23 +187,29 @@ function callerPinned<R extends object>(repository: R): R {
     : member])) as R;
 }
 
+/** Concurrent control-plane calls per lane. Pages and small calls (POINT, DOCUMENT) admit through
+ * separate lanes, so a small read never waits behind a run of page reads. */
 export const CONTROL_PLANE_QUERY_CONCURRENCY = 16;
-let activeQueries = 0;
-const queryWaiters: Array<() => void> = [];
+interface AdmissionLane { active: number; readonly waiters: Array<() => void> }
+const admissionLanes: Readonly<Record<"PAGE" | "SMALL", AdmissionLane>> = {
+  PAGE: { active: 0, waiters: [] },
+  SMALL: { active: 0, waiters: [] },
+};
 
 function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBounds) {
   return async (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) => {
+    const lane = admissionLanes[callClass === "PAGE" ? "PAGE" : "SMALL"];
     await new Promise<void>((resolve, reject) => {
-      if (activeQueries < CONTROL_PLANE_QUERY_CONCURRENCY) { activeQueries++; resolve(); }
+      if (lane.active < CONTROL_PLANE_QUERY_CONCURRENCY) { lane.active++; resolve(); }
       else {
         let timer: ReturnType<typeof setTimeout> | undefined;
         const admit = () => { if (timer) clearTimeout(timer); resolve(); };
-        queryWaiters.push(admit);
+        lane.waiters.push(admit);
         const budget = currentStoreBudget();
         if (budget) timer = setTimeout(() => {
-          const index = queryWaiters.indexOf(admit);
+          const index = lane.waiters.indexOf(admit);
           if (index < 0) return;
-          queryWaiters.splice(index, 1);
+          lane.waiters.splice(index, 1);
 
           void boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params,
             { bounds, now: () => budget.deadlineMs }).catch(reject);
@@ -213,9 +219,9 @@ function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBoun
     try {
       return await boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });
     } finally {
-      const next = queryWaiters.shift();
+      const next = lane.waiters.shift();
       if (next) next();
-      else activeQueries--;
+      else lane.active--;
     }
   };
 }

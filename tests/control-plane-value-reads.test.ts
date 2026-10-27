@@ -128,3 +128,32 @@ test("held revisions stay local and suppress values before a changed-row fetch",
   assert.equal(changed.rows[0].value.state, "DONE");
   assert.deepEqual(f.bodies().map(row => row.id), ["101"]);
 });
+
+test("a changed door registry reads only the doors changed since the last read, and falls back to a full read when that cannot match", async () => {
+  const f = await fixture();
+  await db.exec(`INSERT INTO cp_doors SELECT 'door-'||lpad(i::text,3,'0'),1,now(),now(),
+    jsonb_build_object('meeting',jsonb_build_object('family',null),'notes',repeat('x',1000)) FROM generate_series(1,250) i`);
+  const doors = pgDoorRepository(f.sql);
+  const fullPages = () => f.queries.filter(query => query.text.includes(" AS value_version,") && query.text.includes(" AS row_version") && !query.text.includes("changed_at >=")).length;
+  assert.equal((await doors.meetingRecords!()).length, 250);
+  f.queries.length = 0;
+  assert.equal((await doors.meetingRecords!()).length, 250);
+  assert.equal(f.queries.length, 1, "an unchanged registry is one scalar confirmation");
+  await db.exec(`UPDATE cp_doors SET revision=revision+1,changed_at=now(),value=jsonb_set(value,'{notes}','"edited"') WHERE id='door-120'`);
+  f.queries.length = 0;
+  const edited = await doors.meetingRecords!();
+  assert.equal(edited.find(row => row.id === "door-120")?.value.notes, "edited");
+  assert.equal(fullPages(), 0, "only rows changed since the last read are listed");
+  assert.deepEqual(f.bodies().map(row => row.id), ["door-120"]);
+  await db.exec(`DELETE FROM cp_doors WHERE id='door-007'`);
+  f.queries.length = 0;
+  const removed = await doors.meetingRecords!();
+  assert.equal(removed.length, 249);
+  assert.ok(!removed.some(row => row.id === "door-007"));
+  assert.ok(fullPages() > 0, "a row that left the registry needs the full membership");
+  assert.equal(f.bodies().length, 0);
+  await db.exec(`UPDATE cp_doors SET revision=revision+1,value=jsonb_set(value,'{notes}','"quiet"') WHERE id='door-200'`);
+  f.queries.length = 0;
+  assert.equal((await doors.meetingRecords!()).find(row => row.id === "door-200")?.value.notes, "quiet",
+    "a change without a changed_at stamp is still found through the full read");
+});

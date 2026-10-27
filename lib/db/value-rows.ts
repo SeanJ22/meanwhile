@@ -6,6 +6,11 @@ import { passDeadlineFromEnv } from "../ops/independent-runtime-pass.ts";
 type Query = (text: string, params: readonly unknown[]) => Promise<unknown>;
 type Row = Record<string, unknown> & { id: string; revision: number | string; updated_at: unknown; value: unknown };
 type Version = { id: string; revision: number | string; updated_at: unknown; changed_at?: unknown; value_version: string };
+type HeldVersion = Version & { row_version: string };
+interface HeldMembership { readonly readAt: string; readonly versions: readonly HeldVersion[] }
+const heldVersion = (row: HeldVersion, includeChangedAt: boolean): HeldVersion => ({ id: row.id, revision: row.revision,
+  updated_at: row.updated_at, value_version: row.value_version, row_version: row.row_version,
+  ...(includeChangedAt ? { changed_at: row.changed_at } : {}) });
 const PAGE = 100;
 // Bundled copies of this module and the driver must share one map (see versioned-query.ts).
 const checkedStatements: Map<string, number> = ((globalThis as { [key: symbol]: Map<string, number> | undefined })[Symbol.for("meanwhile.valueVersionStatements")] ??= new Map<string, number>());
@@ -65,17 +70,21 @@ export class ValueRows {
     const source = this.metadataSource(table, includeChangedAt);
     const rowVersion = `encode(sha256(convert_to(jsonb_build_array(id,revision::text,updated_at,
       ${includeChangedAt ? "changed_at" : "NULL"},${source.native})::text,'UTF8')),'hex')`;
-    const namespace = `membership:${this.database}:${table}:${hash(selected)}:${hash(predicate)}:${includeChangedAt}`;
-    return await this.cache.row<Version[]>({ namespace, key: hash(JSON.stringify(params)), current: async etag => {
+    const namespace = `membership:v2:${this.database}:${table}:${hash(selected)}:${hash(predicate)}:${includeChangedAt}`;
+    const held = await this.cache.row<HeldMembership>({ namespace, key: hash(JSON.stringify(params)), current: async (etag, previous) => {
       this.withinPass(table);
-      const [current] = await checkedQuery(query, `SELECT count(*) AS count,
+      const [current] = await checkedQuery(query, `SELECT count(*) AS count,now()::text AS read_at,
         encode(sha256(convert_to(coalesce(string_agg(row_version,'' ORDER BY id),''),'UTF8')),'hex') AS etag
         FROM (SELECT id,${rowVersion} AS row_version FROM ${source.from}${predicate ? ` WHERE ${predicate}` : ""}) versions`,
-      params) as { count: number | string; etag: string }[];
+      params) as { count: number | string; read_at: string; etag: string }[];
       if (!current || !/^[a-f0-9]{64}$/.test(current.etag)) throw new Error("A membership read returned no database version");
       if (current.etag === etag) return { etag: current.etag, unchanged: true };
-      if (Number(current.count) === 0) return { etag: current.etag, value: [] };
-      const versions: Version[] = [];
+      if (Number(current.count) === 0) return { etag: current.etag, value: { readAt: current.read_at, versions: [] } };
+      const changed = previous && !table.endsWith("_history")
+        ? await this.changedSince(query, table, predicate, params, selected, includeChangedAt, rowVersion, previous, Number(current.count))
+        : null;
+      if (changed !== null && changed.etag === current.etag) return { etag: current.etag, value: { readAt: current.read_at, versions: changed.versions } };
+      const versions: HeldVersion[] = [];
       const actual = createHash("sha256");
       let after: string | null = null;
       for (;;) {
@@ -84,20 +93,53 @@ export class ValueRows {
         const page = await checkedQuery(query, `SELECT id,revision,updated_at,${includeChangedAt ? "changed_at," : ""}
           ${valueVersionSql(selected)} AS value_version,${rowVersion} AS row_version
           FROM ${source.from} WHERE ${predicate ? `(${predicate}) AND ` : ""}(${cursor}::text IS NULL OR id>${cursor})
-          ORDER BY id LIMIT ${PAGE}`, [...params, after]) as (Version & { row_version: string })[];
+          ORDER BY id LIMIT ${PAGE}`, [...params, after]) as HeldVersion[];
         for (const row of page) {
           if (!/^[a-f0-9]{64}$/.test(row.row_version)) throw new Error("A membership read returned no database row version");
           actual.update(row.row_version);
-          versions.push({ id: row.id, revision: row.revision, updated_at: row.updated_at, value_version: row.value_version,
-            ...(includeChangedAt ? { changed_at: row.changed_at } : {}) });
+          versions.push(heldVersion(row, includeChangedAt));
         }
         if (page.length < PAGE) break;
         after = page.at(-1)!.id;
       }
       // Tag the metadata actually read, including races between pages. A later
       // database check can reuse it only if that exact membership is current.
-      return { etag: actual.digest("hex"), value: versions };
-    } }) ?? [];
+      return { etag: actual.digest("hex"), value: { readAt: current.read_at, versions } };
+    } });
+    return held?.versions.map(({ row_version: _held, ...version }) => version) ?? [];
+  }
+
+  /** The held membership with only the rows changed since it was read. Rows that joined or left the
+   * membership, or any difference from the database's own membership version, mean a full read instead. */
+  private async changedSince(query: Query, table: string, predicate: string, params: readonly unknown[], selected: string,
+    includeChangedAt: boolean, rowVersion: string, previous: HeldMembership, count: number): Promise<{ etag: string; versions: HeldVersion[] } | null> {
+    if (previous.versions.length !== count || previous.versions.some(version => typeof version.row_version !== "string")) return null;
+    const since = `$${params.length + 1}`, cursor = `$${params.length + 2}`;
+    const changed: HeldVersion[] = [];
+    let after: string | null = null;
+    for (;;) {
+      this.withinPass(table);
+      // A writer's transaction stamps changed_at when it starts; the margin covers ones still open at the last read.
+      const page = await checkedQuery(query, `SELECT id,revision,updated_at,${includeChangedAt ? "changed_at," : ""}
+        ${valueVersionSql(selected)} AS value_version,${rowVersion} AS row_version
+        FROM ${table} WHERE ${predicate ? `(${predicate}) AND ` : ""}changed_at >= ${since}::timestamptz - interval '5 minutes'
+          AND (${cursor}::text IS NULL OR id>${cursor})
+        ORDER BY id LIMIT ${PAGE}`, [...params, previous.readAt, after]) as HeldVersion[];
+      changed.push(...page);
+      if (changed.length > count) return null;
+      if (page.length < PAGE) break;
+      after = page.at(-1)!.id;
+    }
+    const at = new Map(previous.versions.map((version, index) => [version.id, index]));
+    const versions = [...previous.versions];
+    for (const row of changed) {
+      const index = at.get(row.id);
+      if (index === undefined || !/^[a-f0-9]{64}$/.test(row.row_version)) return null;
+      versions[index] = heldVersion(row, includeChangedAt);
+    }
+    const actual = createHash("sha256");
+    for (const version of versions) actual.update(version.row_version);
+    return { etag: actual.digest("hex"), versions };
   }
 
   async remember(table: string, row: Row): Promise<void> {

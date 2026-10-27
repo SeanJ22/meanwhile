@@ -122,8 +122,12 @@ import { JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB } from "../lib/control-plane/j
 import { admitJobLaunch, JOB_BREAKER_PATH_ENV, registeredJobIdentity } from "../lib/control-plane/job-breaker-local.ts";
 import { JobTransferBreaker } from "../lib/control-plane/job-breaker-loop.ts";
 import { withDatabaseJob, processNeonBytes } from "../lib/db/transfer-by-caller.ts";
+import { isControlPlaneRequestTimeout } from "../lib/control-plane/repository/request-bounds.ts";
+import { controlPlaneTimeoutLine, keepRunningThroughControlPlaneTimeouts } from "../lib/ops/control-plane-timeout-guard.ts";
 
 installConnectAttemptWindow();
+// A control-plane read that did not answer in time ends its pass, never the runner.
+keepRunningThroughControlPlaneTimeouts();
 
 const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"] as const;
 
@@ -1937,6 +1941,7 @@ startAdminCopyClock();
 await publishConsole();
 
 while (cycle < CYCLES) {
+try {
 
   const owner = await holdWhilePaused();
 
@@ -2105,6 +2110,13 @@ while (cycle < CYCLES) {
   if (cycle >= CYCLES) break;
   const waitMs = await nextCycleWaitMs(result.ok);
   await sleepUnlessRunNow(result.failedAtMs === undefined ? waitMs : Math.max(0, waitMs - (Date.now() - result.failedAtMs)));
+} catch (error) {
+  if (!isControlPlaneRequestTimeout(error)) throw error;
+  researchCycleActive = false;
+  researchCycleChild = null;
+  console.error(controlPlaneTimeoutLine(error));
+  await sleepUnlessRunNow(POLL_MS);
+}
 }
 }
 

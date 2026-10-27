@@ -9,7 +9,7 @@ export class RawCaptureFailure extends Error {
 
 /** Save the exact response as its consumer reads it. A cancelled or truncated body is never a capture. */
 export function vaultSourceResponse(response: Response, vault: EvidenceStore, sourceId: string): Response {
-  if (!response.ok || !response.body || captures.has(response)) return response;
+  if (!response.body || captures.has(response)) return response;
   const reader = response.body.getReader(), chunks: Uint8Array[] = [];
   let length = 0;
   let resolve!: (capture: RawCaptureRef) => void, reject!: (error: unknown) => void;

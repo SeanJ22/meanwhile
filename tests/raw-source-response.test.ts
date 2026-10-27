@@ -36,6 +36,15 @@ test("an interrupted or truncated response never becomes a complete raw capture"
   assert.equal(vault.size, 0);
 });
 
+test("a fully read publisher refusal is retained as source evidence without becoming a successful acquisition",async()=>{
+  const vault=new MemoryEvidenceStore();
+  const response=vaultSourceResponse(new Response("Publisher maintenance",{status:503}),vault,"source");
+  assert.equal(response.status,503);assert.equal(response.ok,false);
+  assert.equal(await response.text(),"Publisher maintenance");
+  const capture=await rawResponseCapture(response);assert.ok(capture);
+  assert.equal(await readRawCaptureText(vault,capture),"Publisher maintenance");
+});
+
 test("a vault failure remains a vault failure rather than a publisher outage", async () => {
   const vault = new MemoryEvidenceStore();
   vault.put = async () => { throw new Error("vault unavailable"); };

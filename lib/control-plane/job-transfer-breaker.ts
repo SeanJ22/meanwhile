@@ -2,7 +2,6 @@ import { easternDay, hourStart } from "../db/transfer-by-caller.ts";
 
 export const JOB_BREAKER_INTERVAL_MS = 10 * 60_000;
 export const JOB_BREAKER_BYTES = 500_000_000;
-export const JOB_BREAKER_HOURLY_BUDGET = 5_000_000;
 export const JOB_BREAKER_JOB = "job-transfer-breaker";
 
 /** Only this hour's two accounting rows are expanded, beside the data. No read map leaves Postgres. */

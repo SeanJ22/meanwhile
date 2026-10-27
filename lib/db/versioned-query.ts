@@ -1,4 +1,4 @@
-import { createHash, randomUUID } from "node:crypto";
+import { createHash } from "node:crypto";
 import { deserialize, serialize } from "node:v8";
 import { CivicReadCache, runtimeCivicReadCache } from "./civic-read-cache.ts";
 import { singleStatementText, versionedStatementParts } from "./statement-kind.ts";
@@ -7,7 +7,7 @@ type Row = Record<string, unknown>;
 export type VersionedSelectQuery = (text: string, params: readonly unknown[]) => Promise<readonly Row[]>;
 interface SavedRow { readonly etag: string; readonly body: string }
 const hash = (value: Uint8Array) => createHash("sha256").update(value).digest("hex");
-const activeStatements = new Set<string>();
+const activeStatements = new Map<string, number>();
 /** Transport adapters recognize only the exact checked statement currently executing. */
 export const isVersionedSelectStatement = (text: string): boolean => activeStatements.has(text);
 
@@ -33,7 +33,10 @@ export function versionedSelect(connection: string, cache: CivicReadCache = runt
       namespace: "sql-result:v2", key,
       current: async (previous, held = []) => {
         const bodies = new Map(held.map(row => [row.etag, row.body]));
-        const token = randomUUID().replaceAll("-", "");
+        // Aliases depend only on SQL, never the call, held rows or parameters.
+        // Keep the names outside the caller's text without churning query text.
+        let token = hash(Buffer.from(statement)).slice(0, 16);
+        while (statement.includes(`_${token}`)) token = hash(Buffer.from(token)).slice(0, 16);
         const source = `db04_source_${token}`, tagged = `db04_rows_${token}`, selected = `db04_selected_${token}`;
         const ordinal = `db04_ordinal_${token}`, etag = `db04_etag_${token}`, unchanged = `db04_unchanged_${token}`;
         const version = `db04_version_${token}`, retained = `db04_retained_${token}`;
@@ -50,9 +53,13 @@ export function versionedSelect(connection: string, cache: CivicReadCache = runt
             SELECT current.* WHERE NOT current.${unchanged}
           ) body ON true ORDER BY current.${ordinal}`;
         let rows: readonly Row[];
-        activeStatements.add(checked);
+        activeStatements.set(checked, (activeStatements.get(checked) ?? 0) + 1);
         try { rows = await query(checked, [...params, [...bodies.keys()]]); }
-        finally { activeStatements.delete(checked); }
+        finally {
+          const remaining = activeStatements.get(checked)! - 1;
+          if (remaining) activeStatements.set(checked, remaining);
+          else activeStatements.delete(checked);
+        }
         const result: SavedRow[] = [];
         for (const row of rows) {
           if (typeof row[version] !== "string" || !/^[a-f0-9]{64}$/.test(row[version] as string) || typeof row[retained] !== "boolean") {

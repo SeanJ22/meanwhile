@@ -74,7 +74,7 @@ test("queued calls retain enclosing deadlines and release admission after transp
     }) as typeof neonConfig.fetchFunction;
     const repos = await createPgRepositories(URL, undefined, { skipBootstrap: true });
     const occupying = Array.from({ length: CONTROL_PLANE_QUERY_CONCURRENCY }, (_, index) =>
-      repos.occurrences.read(String(index)).catch(error => error));
+      repos.adminConfig.read(String(index)).catch(error => error));
     await new Promise(resolve => setImmediate(resolve));
     let expired = false;
     const queued = withStoreBudget("dispatch-finalization", 5, () => repos.adminConfig.read("live")).catch(error => { expired = true; return error; });
@@ -89,6 +89,28 @@ test("queued calls retain enclosing deadlines and release admission after transp
     assert.equal(calls, CONTROL_PLANE_QUERY_CONCURRENCY, "an expired queued call is never sent");
     neonConfig.fetchFunction = (async () => answer([])) as typeof neonConfig.fetchFunction;
     assert.equal(await repos.adminConfig.read("live"), null, "failed calls release capacity");
+  } finally { neonConfig.fetchFunction = original; }
+});
+
+test("a small read is sent while every page slot is held by a slow page read", async () => {
+  const original = neonConfig.fetchFunction;
+  const releases: Array<() => void> = [];
+  try {
+    neonConfig.fetchFunction = (async (_input: unknown, init?: { body?: string }) => {
+      const request = JSON.parse(init?.body ?? "{}");
+      if (Array.isArray(request.queries)) return Response.json(request.queries.map(() => ({ fields: [], rows: [], rowCount: 0, command: "INSERT" })));
+      if (/count\(\*\) AS count/.test(String(request.query))) {
+        return new Promise<Response>((_resolve, reject) => releases.push(() => reject(new Error("page released"))));
+      }
+      return answer([]);
+    }) as typeof neonConfig.fetchFunction;
+    const repos = await createPgRepositories(URL, undefined, { skipBootstrap: true });
+    const pages = Array.from({ length: CONTROL_PLANE_QUERY_CONCURRENCY + 4 }, () => repos.doors.list().catch(error => error));
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(releases.length, CONTROL_PLANE_QUERY_CONCURRENCY, "pages admit up to their own lane's limit");
+    assert.equal(await repos.adminConfig.read("live"), null, "the small read does not wait behind the pages");
+    while (releases.length) releases.shift()!();
+    await Promise.all(pages);
   } finally { neonConfig.fetchFunction = original; }
 });
 

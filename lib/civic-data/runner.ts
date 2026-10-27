@@ -23,7 +23,7 @@ import type { WorkerMemoryOrder } from "../control-plane/workers/worker-slots.ts
 /** A command never spawned because memory stayed full or the pass's time ran out, or ended at the pass deadline: still owed, not failed. */
 export function routineDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
   const unsent = !childStarted && run.termination === "SPAWN_FAILED" && run.status === null && run.signal === null &&
-    run.stdout === "" && run.stderr === "" && /^(?:WORKER_MEMORY_DEADLINE|PASS_TIME_BUDGET):/.test(run.errorMessage ?? "");
+    run.stdout === "" && run.stderr === "" && /^(?:WORKER_MEMORY_DEADLINE|PASS_TIME_BUDGET|JOB_TRANSFER_BREAKER):/.test(run.errorMessage ?? "");
   const cut = childStarted && run.termination === "TIMED_OUT" && /^PASS_TIME_BUDGET:/.test(run.errorMessage ?? "");
   return unsent || cut ? run.errorMessage : null;
 }

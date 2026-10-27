@@ -17,6 +17,7 @@
  * read on the reader database or the live site, not the control plane.
  */
 import type { ChildProcess } from "node:child_process";
+import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
@@ -133,7 +134,9 @@ export function auditPassClock(options: AuditPassClockOptions): AuditPassClock {
   const tick = (): string | null => {
     if (current !== null || timer === null) return null;
     const starts = readStarts(options.statePath);
-    const pass = duePasses(passes, starts, now())[0];
+    const pass = duePasses(passes, starts, now()).find(pass => admitJobLaunch({
+      id: `audit-pass:${pass.id}`, args: pass.args, launchEveryMs: pass.everyMs,
+    },options.codeRoot(),options.env(),now()));
     if (!pass) return null;
     const startedAt = new Date(now()).toISOString();
     try {

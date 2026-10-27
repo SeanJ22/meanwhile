@@ -2,6 +2,7 @@ import { createHash } from "node:crypto";
 import { CivicReadCache, runtimeCivicReadCache } from "./civic-read-cache.ts";
 import { currentStoreBudget, ControlPlaneRequestTimeout } from "../control-plane/repository/request-bounds.ts";
 import { passDeadlineFromEnv } from "../ops/independent-runtime-pass.ts";
+import { hasValueVersion, ValueRows } from "./value-rows.ts";
 
 type Row = Record<string, unknown> & { id: string; revision: number | string; updated_at: unknown; value: unknown };
 type Query = (text: string, params: readonly unknown[]) => Promise<unknown>;
@@ -21,7 +22,10 @@ function withinPass(table: string): void {
 export class VersionedRows {
   private readonly database: string;
   private readonly cache: CivicReadCache;
-  constructor(database: string, cache: CivicReadCache) { this.database=database;this.cache=cache; }
+  private readonly values: ValueRows;
+  constructor(database: string, cache: CivicReadCache) {
+    this.database=database;this.cache=cache;this.values=new ValueRows(database,cache);
+  }
 
   private namespace(table: string, selected: string): string {
     return `rows:${this.database}:${table.replace(/_(?:archive|history)$/, "")}:${digest(selected)}`;
@@ -29,11 +33,13 @@ export class VersionedRows {
 
   /** A successful write supplies bytes already owned by the caller; reads still confirm their revision. */
   async remember(table: string, row: Row): Promise<void> {
+    if (hasValueVersion(table)) return this.values.remember(table, row);
     await this.cache.row({namespace: this.namespace(table, "value"), key: row.id,
       current: async () => ({etag: String(row.revision), value: row})});
   }
 
   async one(query: Query, table: string, id: string, selected = "value", project?: (value: unknown) => unknown, params:readonly unknown[]=[]): Promise<Row | null> {
+    if (hasValueVersion(table)) return this.values.one(query, table, id, selected, params);
     return this.cache.row<Row>({namespace: this.namespace(table, params.length?`${selected}:${JSON.stringify(params)}`:selected), key: id,
       ...(project ? {source: {namespace: this.namespace(table, "value"), project: (row: Row) => ({...row,value: project(row.value)})}} : {}),
       current: async etag => {
@@ -60,7 +66,10 @@ export class VersionedRows {
     return versions.flatMap(row=>result.has(row.id)?[result.get(row.id)!]:[]);
   }
 
-  async rows(query: Query, table: string, predicate: string, params: readonly unknown[], selected="value"): Promise<Row[]> {
+  async rows(query: Query, table: string, predicate: string, params: readonly unknown[], selected="value",
+    page?: (rows: readonly Row[]) => Promise<void> | void, includeChangedAt = false,
+    accept?: (row: { id: string; revision: number | string }) => boolean): Promise<Row[]> {
+    if (hasValueVersion(table)) return this.values.rows(query, table, predicate, params, selected, page, includeChangedAt, accept);
     const result:Row[]=[];
     let after:string|null=null;
     for (;;) {
@@ -72,13 +81,15 @@ export class VersionedRows {
         `SELECT id,revision,updated_at,${selected} AS value FROM ${table}
          WHERE ${predicate?`(${predicate}) AND `:""}id=ANY($${params.length+1}::text[]) ORDER BY id`,[...params,ids]) as Row[],
       row=>row.id,row=>String(row.revision));
-      result.push(...rows);
+      if (page) await page(rows);
+      else result.push(...rows);
       if (versions.length<PAGE) return result;
       after=versions.at(-1)!.id;
     }
   }
 
   async selectedRows(query:Query,table:string,membership:string,params:readonly unknown[],selected="value"):Promise<Row[]> {
+    if (hasValueVersion(table)) return this.values.selectedRows(query, table, membership, params, selected);
     const versions=await query(`SELECT picked.id,source.revision FROM
       (SELECT members.*,row_number() OVER() AS __order FROM (${membership}) members) picked
       JOIN ${table} source USING(id) ORDER BY picked.__order`,params) as {id:string;revision:number|string}[];

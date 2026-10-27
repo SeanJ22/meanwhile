@@ -10,6 +10,16 @@ interface CacheIO {
 }
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
+/** A held copy that does not answer this fast is a miss: the database read goes ahead without it. */
+const CIVIC_READ_CACHE_LOOKUP_MS = 2_000;
+/** A read waits this long at most for its copy to be saved; a slower save finishes on its own. */
+const CIVIC_READ_CACHE_SAVE_WAIT_MS = 1_000;
+async function boundedWait(work: Promise<unknown>): Promise<void> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  await Promise.race([work, new Promise<void>(resolve => { timer = setTimeout(resolve, CIVIC_READ_CACHE_SAVE_WAIT_MS); })]);
+  clearTimeout(timer);
+}
+
 /** Disposable runner copies. A fresh database row version decides every use. */
 export class CivicReadCache {
   private readonly io: CacheIO;
@@ -66,7 +76,7 @@ export class CivicReadCache {
       if (held?.etag !== current.etag) throw new Error("A changed-row read confirmed an unavailable revision");
       return held.value;
     }
-    await this.save(key, current);
+    await boundedWait(this.save(key, current));
     return current.value;
   }
 
@@ -101,13 +111,15 @@ export class CivicReadCache {
       // newer etag. Return the actual read, but keep only stable row copies.
       const after = new Map((await input.versions(keys)).map(version => [version.key, version.etag]));
       const before = new Map(missing.map(version => [version.key, version.etag]));
-      await Promise.all(values.map(async value => {
+      const saves: Promise<void>[] = [];
+      for (const value of values) {
         const key = input.keyOf(value);
         result.set(key, value);
         if (input.etagOf || before.get(key) !== undefined && before.get(key) === after.get(key)) {
-          await this.save(input.namespace + ":" + key, { etag: input.etagOf?.(value) ?? before.get(key)!, value });
+          saves.push(this.save(input.namespace + ":" + key, { etag: input.etagOf?.(value) ?? before.get(key)!, value }));
         }
-      }));
+      }
+      await boundedWait(Promise.all(saves));
     }
     return input.keys.flatMap(key => result.has(key) ? [result.get(key)!] : []);
   }
@@ -149,7 +161,7 @@ export function runtimeCivicReadCache(connection = process.env.DATABASE_URL ?? "
   return new CivicReadCache({
     read: async key => {
       const response = await fetch(endpoint + "/" + remoteKey(key),
-        { headers: { authorization: token }, signal: AbortSignal.timeout(10_000) });
+        { headers: { authorization: token }, signal: AbortSignal.timeout(CIVIC_READ_CACHE_LOOKUP_MS) });
       return response.ok ? response.text() : null;
     },
     write: async (key, saved) => {

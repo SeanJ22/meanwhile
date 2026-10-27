@@ -1,6 +1,7 @@
 import { types as postgresTypes } from "./client.ts";
 import { isVersionedSelectStatement, versionedSelect } from "./versioned-query.ts";
 import { readsStoredRows } from "./statement-kind.ts";
+import { isValueVersionStatement } from "./value-rows.ts";
 
 export interface DriverField { readonly name: string; readonly dataTypeID: number; readonly format?: string; readonly [key: string]: unknown }
 export interface DriverResult { readonly fields: readonly DriverField[]; readonly rows: readonly (readonly unknown[])[];
@@ -22,7 +23,7 @@ function pgBoolean(value: unknown): boolean {
 const META = /^db04_(?:ordinal|etag|unchanged|version|retained)_[a-f0-9]+$/;
 
 export function needsVersionedRead(text: string): boolean {
-  return !isVersionedSelectStatement(text) && readsStoredRows(text);
+  return !isVersionedSelectStatement(text) && !isValueVersionStatement(text) && readsStoredRows(text);
 }
 
 /** The transport always saves raw cells. A caller's current type parsers run

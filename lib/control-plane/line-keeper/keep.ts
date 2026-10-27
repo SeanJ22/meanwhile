@@ -6,7 +6,9 @@ import { projectBrief, easternBriefClock } from "../admin-view/brief.ts";
 import { processNeonBytes } from "../../db/transfer-by-caller.ts";
 import { countProblems, type CountProblem } from "../../counts/hour.ts";
 import { groupCountProblems } from "../../counts/problem-groups.ts";
-import { readHour, readRunnerReadProblems, query } from "./read.ts";
+import { readHour, readRunnerReadProblems, readJobBreakerEvents, query } from "./read.ts";
+import { runnerFamilyLabel } from "../../db/runner-read-families.ts";
+import { formatEastern } from "../eastern-time.ts";
 import { LINE_KEEPER_BY, type LineHour } from "./model.ts";
 import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
@@ -29,7 +31,12 @@ export function withKeeperFixes(config: AdminConfig, hour: LineHour): AdminConfi
     key:`line-keeper:${problem.key}`,what:problem.says,owner:problem.owner,next:problem.next,
   }));
   const problems=[...latest.problems.filter(p=>!p.key.startsWith("line-keeper:")),...groupCountProblems(counted),...observations];
-  return {...next,latestBrief:{...latest,lineKeeperOnly:next.latestBrief?.day===day?next.latestBrief.lineKeeperOnly:true,createdAt:hour.measuredAt,problems},updatedAt:hour.measuredAt};
+  const breakerUpdates=(hour.breakerEvents??[]).map(event=>({id:`job-breaker:${event.id}`,
+    what:`${runnerFamilyLabel(event.job!)} ${event.action === "PAUSE" ? "paused new launches" : "resumed at half rate"} after ${Number(event.gb).toFixed(3)} GB in the measured hour.`,
+    when:formatEastern(event.checked_at),label:"Proven",isWin:false,before:null,after:null,evidenceHref:null}));
+  const ids=new Set(breakerUpdates.map(update=>update.id));
+  const updates=[...breakerUpdates,...latest.updates.filter(update=>!ids.has(update.id))];
+  return {...next,latestBrief:{...latest,updates,lineKeeperOnly:next.latestBrief?.day===day?next.latestBrief.lineKeeperOnly:true,createdAt:hour.measuredAt,problems},updatedAt:hour.measuredAt};
 }
 async function writeFixes(sql:Sql,hour:LineHour) {
   const keys=hour.problems.map(p=>`line-keeper:${p.key}`);
@@ -72,8 +79,12 @@ export async function runLineKeeper(control:Sql,reader:Sql,at:string,options:{re
     key:"runner-reads:unread",where:"Runner database reads",says:"The runner’s hourly database reads could not be compared with the previous 24 hours.",
     owner:"the database workers",next:"Restore the hourly read comparison and check the affected job families.",
   }]);
+  let breakerEvents: Awaited<ReturnType<typeof readJobBreakerEvents>> = [];
+  try { breakerEvents=await readJobBreakerEvents(control,input.window.from,input.window.through); }
+  catch { readProblems.push({key:"job-breaker:unread",where:"Job transfer protection",
+    says:"The hourly pause and resume report could not be read.",owner:"the runner workers",next:"Restore the job transfer control log."}); }
   const hour:LineHour={...input.window,measuredAt:at,counts:input.counts,waiting:input.waiting,
-    problems:[...countProblems(input.counts,input.previous,input.waiting,at),...readProblems],own:{bytesRead:Math.max(0,ownBytes()-baseline)}};
+    breakerEvents,problems:[...countProblems(input.counts,input.previous,input.waiting,at),...readProblems],own:{bytesRead:Math.max(0,ownBytes()-baseline)}};
   const oldest:Record<string,{n:number;at:string|null}>={};
   for(const waiting of input.waiting) {
     const code=REGISTRY_STATES.some(state=>state===waiting.state)?waiting.state:"US";

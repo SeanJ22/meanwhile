@@ -52,6 +52,7 @@ export class LiveSync {
   private active: ReadonlySet<SectionId>;
   private screen: string;
   private pulseAt: number | null = null;
+  private enabled = true;
 
   private readonly opts: { readonly scope: string; readonly fetch: SyncFetch; readonly schedule: Schedule };
 
@@ -88,6 +89,20 @@ export class LiveSync {
 
   capabilities(): V6Capabilities | null {
     return this.caps;
+  }
+
+  /** Stop pending reads and retry deadlines when the shell pauses. Resume on its next pulse. */
+  setActive(active: boolean) {
+    this.enabled = active;
+    if (active) return;
+    for (const slot of this.slots.values()) {
+      if (slot.inFlight || slot.retry) slot.wanted = null;
+      slot.inFlight?.abort();
+      slot.inFlight = null;
+      slot.retry?.();
+      slot.retry = null;
+      slot.seq += 1;
+    }
   }
 
   /** The latest pulse revision: the state an action rendered from this page quotes. */
@@ -139,6 +154,7 @@ export class LiveSync {
   }
 
   onPulse(pulse: unknown) {
+    if (!this.enabled) return;
     const at=Date.parse(String((pulse as {at?:unknown}|null)?.at??''));
     this.pulseAt=Number.isFinite(at)?at:null;
     const rev = (pulse as { revision?: unknown } | null)?.revision;
@@ -198,7 +214,7 @@ export class LiveSync {
   private read(id: SectionId) {
     const a = this.caps?.sections[id];
     const slot = this.slots.get(id)!;
-    if (!a || !this.active.has(id)) return;
+    if (!this.enabled || !a || !this.active.has(id)) return;
     slot.retry?.();
     slot.retry = null;
     slot.inFlight?.abort();

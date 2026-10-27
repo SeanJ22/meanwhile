@@ -3,7 +3,7 @@ import { REGISTRY_STATES, parseStateBallotContractId } from "../lib/civic-data/s
 import { CAMPAIGN_MONEY_SOURCE_ID,CAMPAIGN_FINANCE_SOURCES } from "../lib/funding/state-sources.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import test from "node:test";
+import test, { type TestContext } from "node:test";
 import { withDatabaseJob } from "../lib/db/transfer-by-caller.ts";
 import { withReaderRoute } from "../lib/db/reader-route.ts";
 import { childCrash } from "../lib/ops/fatal-line.ts";
@@ -57,7 +57,7 @@ import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggre
 import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
 import { HOT_READ_CATCH_UP_READ_BUDGET_MS } from "../lib/civic-data/hot-read-catch-up.ts";
 import { stateCalendarMemberResults } from "../lib/civic-data/state-calendars.ts";
-import { meetingPartitionContract } from "../lib/civic-data/meeting-partitions.ts";
+import { meetingPartitionContract, meetingRoutePartition } from "../lib/civic-data/meeting-partitions.ts";
 import {
   withPassDeadline,
 } from "../lib/ops/independent-runtime-pass.ts";
@@ -76,7 +76,6 @@ import {
   runBoundedChildPass,
   type BoundedChildResult,
 } from "../lib/civic-data/bounded-child-pass.ts";
-import { repairRoutineReaderProjectionReadback } from "../lib/civic-data/reader-verification.ts";
 
 function functionSource(source:string,name:string):string {
   const tree=createSourceFile("runner.mts",source,ScriptTarget.ESNext,true);
@@ -90,11 +89,13 @@ function functionSource(source:string,name:string):string {
   return declaration.getText(tree);
 }
 
-function regularMeetingTask() {
-  const task=ROUTINE_SOURCE_TASKS.find(task=>meetingPartitionContract(task.id)?.derivedFamily===null);
-  assert.ok(task,"the fixture needs an actual ordinary meeting partition");
-  assert.equal(meetingPartitionContract(task.id)?.derivedFamily,null);
-  return task;
+function regularMeetingTask(t: TestContext) {
+  const existing=ROUTINE_SOURCE_TASKS.find(task=>meetingPartitionContract(task.id)?.derivedFamily===null);
+  if(existing)return existing;
+  const partition=meetingRoutePartition("ical","fixture-memory-deadline",{wiring:null,ocdId:null,acquisitionFailureDomain:"fixture-memory-deadline"});
+  MEETING_PARTITION_CONTRACTS.push(partition);
+  t.after(()=>{const index=MEETING_PARTITION_CONTRACTS.indexOf(partition);if(index>=0)MEETING_PARTITION_CONTRACTS.splice(index,1);});
+  return routineTaskFromContract(partition);
 }
 
 test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure or a rewritten progress row", async t => {
@@ -117,7 +118,7 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     RUN_STARTED_AT: "2026-10-13T12:00:00.000Z", SUPERVISOR_CYCLE_ID: "publish-now-supervisor:host:2026-10-13T12:00:00.000Z",
     RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
   };
-  const meetingTask=regularMeetingTask();
+  const meetingTask=regularMeetingTask(t);
   const { recordHuntSourceProgress, settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + functionSource(source,"settlePendingRunResult"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\n({ recordHuntSourceProgress, settle: settlePendingRunResult });", context) as {
@@ -210,9 +211,9 @@ test("meeting pins and Box facts publish beside admission, so the first source l
     "a thrown publication is recorded as the pass's failure and never rejects the pass");
 });
 
-test("a single calendar child explicitly deferred before acquisition stays owed without a missing-receipt failure", async () => {
+test("a single calendar child explicitly deferred before acquisition stays owed without a missing-receipt failure", async t => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const task=regularMeetingTask(),id=task.id;
+  const task=regularMeetingTask(t),id=task.id;
   const failures: unknown[] = [], lines: string[] = [];
   const context = {
     recordLaunchDecision: (task: { id: string }, action: string, reason: string, detail = reason) => lines.push(`RCD_${action} ${task.id}: ${detail}`),
@@ -1498,10 +1499,7 @@ test("the CISA government-domain contract has a Reader projection even before it
   const dotgov = ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === "dotgov");
   assert.ok(dotgov);
   assert.equal(dotgov.readerProjection?.id, "government-domains");
-  assert.deepEqual(
-    await repairRoutineReaderProjectionReadback(new MemoryRoutineDataStore(), dotgov, T0),
-    { kind: "NO_PROMOTION", receipt: null },
-  );
+
 });
 
 test("standing task construction enforces every declarative authority and validation field", () => {

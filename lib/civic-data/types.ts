@@ -617,9 +617,11 @@ export interface PromotedProjection<T = unknown> {
   readonly receipt: ValidationReceipt;
     /** Reader freshness is measured from the later of this confirmation's retrieval and the version's. */
   readonly latestConfirmation?: UnchangedConfirmation;
+  /** Returned by the atomic publication write, never inferred from a later read. */
+  readonly writeFingerprint?: { readonly expected: string | null; readonly stored: string | null };
 }
 
 export type PromotedPointerIdentity = Pick<
   PromotedProjection,
-  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt" | "latestConfirmation" | "payloadFingerprint"
+  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt" | "latestConfirmation" | "writeFingerprint" | "payloadFingerprint"
 >;

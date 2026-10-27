@@ -1,3 +1,4 @@
+import { withDatabaseByteContract, type DatabaseByteContract } from "./database-byte-contract.ts";
 import { REGISTRY_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { REGISTRY_RUNTIME_PARSER_VERSION } from "../registry/runtime-version.ts";
 import { stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "./state-scopes.ts";
@@ -5,7 +6,7 @@ import { FEDERAL_DIRECTORY_STATES, federalDirectoryContractId, federalDirectoryS
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 
-export interface ManualProductionSourceContract {
+export interface ManualProductionSourceContract extends Partial<DatabaseByteContract> {
   readonly id: string;
   readonly execution: "EXPLICIT_OWNER_INVOCATION_ONLY";
   readonly sourceId: SourceAuthorityId;
@@ -34,7 +35,7 @@ export interface ManualProductionSourceContract {
 
 const STORE = "civic_data_candidates+civic_data_candidate_events+civic_data_promotions" as const;
 
-export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
+const MANUAL_PRODUCTION_SOURCE_DEFINITIONS = [
   {
     id: "special-district-boundaries", execution: "EXPLICIT_OWNER_INVOCATION_ONLY", sourceId: "curated-reader-primary-sources",
     recordClass: "CURATED_READER_RECORD", scope: "US:special-district-boundaries",
@@ -507,6 +508,8 @@ export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = [
     lkgBehavior: "Each exact source/contact member is isolated. A blocked or malformed source retains only its own prior GOOD contact; every uncovered topic/ZIP cell remains an explicit UNKNOWN/CONTACT_OWED obligation rather than silent absence.",
   },
 ] as const satisfies readonly ManualProductionSourceContract[];
+
+export const MANUAL_PRODUCTION_SOURCE_CONTRACTS = MANUAL_PRODUCTION_SOURCE_DEFINITIONS.map(withDatabaseByteContract);
 
 export type ManualProductionContractId = (typeof MANUAL_PRODUCTION_SOURCE_CONTRACTS)[number]["id"];
 

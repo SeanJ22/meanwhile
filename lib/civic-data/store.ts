@@ -917,6 +917,7 @@ export function promotedPointerIdentity(pointer: PromotedPointerIdentity): Promo
     lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
     promotedAt: pointer.promotedAt,
     ...(pointer.latestConfirmation ? { latestConfirmation: pointer.latestConfirmation } : {}),
+    ...(pointer.writeFingerprint ? { writeFingerprint: pointer.writeFingerprint } : {}),
     ...(pointer.payloadFingerprint === undefined ? {} : { payloadFingerprint: pointer.payloadFingerprint }),
   };
 }
@@ -1455,6 +1456,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       promotedAt: at,
       payload: record.candidate.readModel,
       receipt: structuredClone(persistedReceipt),
+      writeFingerprint: { expected: record.candidate.normalization.normalizedHash, stored: record.candidate.normalization.normalizedHash },
       payloadFingerprint: record.candidate.normalization.normalizedHash,
     };
     const { history, event } = this.nextEvent(
@@ -2319,8 +2321,24 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     if (ids.length === 0) return [];
     return this.readCache.rows({ namespace, keys: ids, values, keyOf: row => row.id,
       versions: async keys => this.db.select({ key: civicDataCandidates.id,
-        etag: sql<string>`concat(${civicDataCandidates}.xmin::text, '/', ${civicDataCandidates}.ctid::text)`,
+        etag: sql<string>`concat('content-v1/', ${civicDataCandidates.id}, '/', ${civicDataCandidates.rawHash}, '/',
+          ${civicDataCandidates.normalizedHash}, '/', ${civicDataCandidates.parserVersion})`,
+        state: civicDataCandidates.state,
+        acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
+        validationReceipt: sql<ValidationReceipt | null>`${civicDataCandidates.validationReceipt} - 'excludedFacts'`,
+        promotedVersionId: civicDataCandidates.promotedVersionId,
+        lastKnownGoodVersionId: civicDataCandidates.lastKnownGoodVersionId,
+        failureCode: civicDataCandidates.failureCode,
+        failureDetail: civicDataCandidates.failureDetail,
       }).from(civicDataCandidates).where(inArray(civicDataCandidates.id, [...keys])),
+      freshen: (row, version) => {
+        if (!("state" in row)) return row;
+        const held = row as T & { validationReceipt?: ValidationReceipt | null; candidate?: RoutineCandidate };
+        const { key: _key, etag: _etag, validationReceipt, ...status } = version;
+        return { ...row, ...status, validationReceipt: validationReceipt === null ? null : {
+          ...validationReceipt, excludedFacts: held.validationReceipt?.excludedFacts ?? held.candidate?.excludedFacts ?? [],
+        } };
+      },
     });
   }
 
@@ -3333,6 +3351,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       ? (text, params) => this.readerRows(text, params) : null);
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),
+      writeFingerprint: { expected: candidate.normalization.normalizedHash, stored: promotedRows[0].payloadFingerprint },
       payload: candidate.readModel,
       receipt: manualParts ? persistedReceipt : promotedRows[0].validationReceipt as ValidationReceipt,
     };

@@ -1,11 +1,20 @@
-import { ROUTINE_RECORD_CLASSES, type RoutineRecordClass } from "./types.ts";
+import { ROUTINE_RECORD_CLASSES, type PromotedPointerIdentity, type RoutineRecordClass } from "./types.ts";
 
 export const READER_PROJECTION_READBACK_PREFIX = "READER_PROJECTION_READBACK_V2 ";
 
 const LEGACY_READER_PROJECTION_READBACK_PREFIXES = ["READER_PROJECTION_READBACK_V1 "] as const;
 const GIT_SHA_PATTERN = /^[0-9a-f]{40}$/;
 
-export const READER_READBACK_EVIDENCE_KIND = "TYPED_READER_READ_MODEL" as const;
+export const READER_READBACK_EVIDENCE_KIND = "WRITE_CONTENT_FINGERPRINT" as const;
+
+/** The publication transaction already writes and checks this exact version. No payload read or evidence append follows it. */
+export function publicationFingerprintIssue(promoted: PromotedPointerIdentity): string | null {
+  const fingerprint = promoted.writeFingerprint;
+  if (!fingerprint || !fingerprint.expected || !/^[a-f0-9]{64}$/.test(fingerprint.expected) ||
+      fingerprint.stored !== fingerprint.expected || promoted.payloadFingerprint !== fingerprint.stored || promoted.versionId !== promoted.lastKnownGoodVersionId)
+    return "The publication write did not return the expected content fingerprint.";
+  return null;
+}
 
 export function sourceScopedReaderReadbackProjectionId(contractId: string): string {
   return `source-scoped:${contractId}`;
@@ -22,7 +31,7 @@ export interface ReaderProjectionReadbackReceipt {
   readonly versionId: string;
   readonly pointerKey: string;
   readonly observedAt: string;
-  readonly evidenceKind: typeof READER_READBACK_EVIDENCE_KIND;
+  readonly evidenceKind: typeof READER_READBACK_EVIDENCE_KIND | "TYPED_READER_READ_MODEL";
   readonly verifierId: string;
   readonly verifierCodeSha: string | null;
   readonly status: "PASS" | "FAIL";
@@ -71,7 +80,7 @@ export function parseReaderProjectionReadback(detail: string): ReaderProjectionR
     typeof row.versionId !== "string" || row.versionId.length === 0 ||
     row.pointerKey !== `${row.recordClass}:${row.scope}` ||
     typeof row.observedAt !== "string" || !Number.isFinite(Date.parse(row.observedAt)) ||
-    row.evidenceKind !== READER_READBACK_EVIDENCE_KIND ||
+    (row.evidenceKind !== READER_READBACK_EVIDENCE_KIND && row.evidenceKind !== "TYPED_READER_READ_MODEL") ||
     typeof row.verifierId !== "string" || row.verifierId.length === 0 ||
     (row.verifierCodeSha !== null && normalizeReaderCodeSha(
       typeof row.verifierCodeSha === "string" ? row.verifierCodeSha : undefined,

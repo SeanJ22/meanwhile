@@ -1,3 +1,4 @@
+import { rawCaptureKey } from "../lib/civic-data/raw-capture-vault.ts";
 import assert from "node:assert/strict";
 import { mkdtemp, readFile, readdir, rm, stat, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -246,7 +247,7 @@ test("DURABLE IDEMPOTENCY: two concurrent putArtifact calls leave ONE object and
     putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)),
   ]);
   assert.equal(a.key, b.key);
-  assert.deepEqual(await store.list("project/"), [a.key]);
+  assert.deepEqual(await store.list("project/"), [rawCaptureKey(artifact.contentHash.slice(7)),a.key].sort());
   assert.equal(decode((await new DurableEvidenceStore(root).get(a.key))!.bytes), PUBLIC_PAGE);
 });
 
@@ -258,7 +259,8 @@ test("DURABLE READ: bytes that no longer hash to what was written are a FAILED R
 
   assert.equal(decode((await store.get(key))!.bytes), PUBLIC_PAGE);
 
-  const bodyPath = join(root, ...key.split("/"));
+  const rawKey = rawCaptureKey(artifact.contentHash.slice(7));
+  const bodyPath = join(root, ...rawKey.split("/"));
   const corrupted = PUBLIC_PAGE.replace("Regular Session", "Special Session");
   assert.equal(corrupted.length, PUBLIC_PAGE.length, "the corruption must defeat a length check");
   await writeFile(bodyPath, corrupted);
@@ -274,7 +276,7 @@ test("DURABLE READ: bytes that no longer hash to what was written are a FAILED R
 
   await assert.rejects(() => readArtifact(store, PROJECT, artifact, "AUDITOR"), EvidenceCorrupted);
   await assert.rejects(() => store.head(key), EvidenceCorrupted);
-  await assert.rejects(() => store.put(key, utf8(PUBLIC_PAGE), artifactMeta(artifact)), EvidenceCorrupted);
+  await assert.rejects(() => store.put(rawKey, utf8(PUBLIC_PAGE), {contentType:"application/octet-stream",contentHash:artifact.contentHash,byteLength:artifact.byteLength}), EvidenceCorrupted);
   await assert.rejects(() => putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)), EvidenceCorrupted);
 });
 
@@ -288,12 +290,12 @@ test("DURABLE WRITE: the sidecar is the commit point, so an interrupted write is
 
   assert.equal(await store.head(key), null, "an uncommitted body is reported as an object");
   assert.equal(await store.get(key), null);
-  assert.deepEqual(await store.list("project/"), []);
+  assert.deepEqual(await store.list("project/"), [rawCaptureKey(artifact.contentHash.slice(7))], "the shared raw body survives an interrupted observation write");
   // The orphan body is still on disk; it is garbage, not evidence.
   assert.ok((await stat(join(root, ...key.split("/")))).isFile());
 
   assert.equal((await putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE))).written, true);
-  assert.deepEqual(await store.list("project/"), [key]);
+  assert.deepEqual(await store.list("project/"), [rawCaptureKey(artifact.contentHash.slice(7)), key].sort());
 
   await rm(join(root, ...key.split("/")));
   await assert.rejects(() => store.head(key), EvidenceStoreRefusal);
@@ -309,7 +311,7 @@ test("DURABLE WRITE: the sidecar is the commit point, so an interrupted write is
   );
 
   await writeFile(join(root, ".wtp-evidence-tmp-deadbeef"), "half a body");
-  assert.deepEqual(await store.list(""), [key], "an in-flight temp file was listed as an object");
+  assert.deepEqual(await store.list(""), [rawCaptureKey(artifact.contentHash.slice(7)), key].sort(), "the temp file is never listed as evidence");
 });
 
 test("a missing or corrupted body readback leaves no committed sidecar", async (t) => {

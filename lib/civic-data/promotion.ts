@@ -17,7 +17,7 @@ import {
   type ManualProductionSourceContract,
 } from "./manual-contracts.ts";
 import type { ReaderProjectionReadbackReceipt } from "./reader-readback.ts";
-import { recordRoutineReaderProjectionReadback, repairRoutineReaderProjectionReadback } from "./reader-verification.ts";
+import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { trustedLkgImportUrl } from "./trusted-lkg-import.ts";
 import { assertRegisteredRuntimeContract } from "./runtime-authority.ts";
 import { assertMeetingPartitionAuthority } from "./state-calendars.ts";
@@ -313,8 +313,8 @@ export async function processRegisteredMeetingPartitionCandidate(
   );
   if (outcome.promoted === null) return outcome;
   try {
-    const readback = await repairRoutineReaderProjectionReadback(store, contract, now);
-    return { ...outcome, readerReadback: readback.receipt };
+    const readback = await recordRoutineReaderProjectionReadback(store, contract, outcome.promoted, now);
+    return { ...outcome, readerReadback: readback };
   } catch {
     // The pointer is already live. Observation failure must not undo or hold publication.
     // The hourly keeper sees the missing stamp and queues its repair after 90 minutes.

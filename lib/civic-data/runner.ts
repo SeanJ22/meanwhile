@@ -19,6 +19,7 @@ import {
 } from "./runner-receipt.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
+import { withDatabaseByteContract } from "./database-byte-contract.ts";
 import { meetingSourceContinuationPending } from "./meeting-source-progress.ts";
 import type { WorkerMemoryOrder } from "../control-plane/workers/worker-slots.ts";
 
@@ -89,7 +90,7 @@ export interface RoutineSourceTask {
   /** Read from the owner's fact settings for this pass, using the source's fact kind. */
   readonly minimumRefreshMs?: number;
   readonly freshnessWindowMs?: number;
-  readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection" | "fanOut">;
+  readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection" | "fanOut" | "databaseBytesPerRun" | "databaseBytesPerUnchangedRun" | "databaseByteBasis">;
   readonly childTimeoutMs?: number;
   readonly ownerInvocation?: {
     readonly publicationPending?: true;
@@ -101,6 +102,7 @@ export interface RoutineSourceTask {
 }
 
 export function routineTaskFromContract(contract: RoutineSourceContract): RoutineSourceTask {
+  if (contract.databaseBytesPerRun === undefined) contract = withDatabaseByteContract(contract);
   if (contract.authorityConstraint.registry !== "SOURCE_AUTHORITIES" || contract.authorityConstraint.sourceId !== contract.sourceId) {
     throw new Error(`ROUTINE_CONTRACT_AUTHORITY_MISMATCH:${contract.id}`);
   }

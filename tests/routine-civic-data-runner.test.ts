@@ -5,6 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { childCrash } from "../lib/ops/fatal-line.ts";
+import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
 import { runInNewContext } from "node:vm";
 import { transpileModule, ScriptTarget, ModuleKind, createSourceFile, isFunctionDeclaration } from "typescript";
 
@@ -177,7 +178,8 @@ test("meeting pins and Box facts publish beside admission, so the first source l
 
   const order: string[] = [];
   const failures: { taskId: string; code: string; detail: string }[] = [];
-  const context: Record<string, unknown> = { heldPublication: Promise.resolve(), safeFailure: (value: string) => value,
+  const context: Record<string, unknown> = { heldPublication: Promise.resolve(), admitJobLaunch, ROOT:process.cwd(), ROUTINE_DATA_ADMISSION_MS,
+    safeFailure: (value: string) => value,
     sanitizedErrorDiagnostic: (error: unknown) => error instanceof Error ? error.message : String(error) };
   const start = runInNewContext(transpileModule(functionSource(source, "publishHeldBesideSources"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },

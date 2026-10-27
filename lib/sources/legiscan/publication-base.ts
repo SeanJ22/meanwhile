@@ -8,7 +8,7 @@ export async function readLegiscanPublicationBase(query:Query,scope:string,decod
   const [row]=await query(`SELECT p.key,p.source_id,p.scope,p.current_version_id,p.last_known_good_version_id,p.promoted_at,
     p.validation_receipt AS receipt,c.state,c.acquisition_succeeded,c.promoted_version_id,c.last_known_good_version_id AS candidate_lkg,
     c.failure_code,c.failure_detail,c.candidate-ARRAY['identities','changeSet','civicRecords'] AS candidate,
-    (p.payload=c.candidate->'readModel' AND p.validation_receipt=c.validation_receipt
+    ((p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt=c.validation_receipt
       AND c.normalized_hash=c.candidate#>>'{normalization,normalizedHash}') AS coupled,
     (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id AND left(e.detail,$2)=$3
       ORDER BY e.sequence DESC LIMIT 1) AS confirmation

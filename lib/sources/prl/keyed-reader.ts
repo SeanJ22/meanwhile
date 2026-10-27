@@ -14,7 +14,7 @@ const pointer=`SELECT p.key,p.current_version_id,
    AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope AND c.state='PROMOTED' AND c.acquisition_succeeded
    AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id AND c.candidate#>'{normalization,succeeded}'='true'::jsonb
    AND c.normalized_hash ~ '^[a-f0-9]{64}$' AND c.candidate#>>'{normalization,normalizedHash}'=c.normalized_hash
-   AND p.payload=c.candidate->'readModel' AND p.validation_receipt=c.validation_receipt AND p.validation_receipt->>'decision'='GOOD'
+   AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt=c.validation_receipt AND p.validation_receipt->>'decision'='GOOD'
    AND reader_payload_value(reader_payload_node(p.payload)->'formatVersion')='1'::jsonb
    AND p.validation_receipt->>'candidateId'=c.id AND p.validation_receipt->>'sourceId'=c.source_id
    AND p.validation_receipt->>'recordClass'=p.record_class AND p.validation_receipt->>'scope'=p.scope) AS valid

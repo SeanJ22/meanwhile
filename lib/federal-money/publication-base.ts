@@ -22,7 +22,7 @@ export async function readFederalMoneyPublicationBase(query:Query,cache:CivicRea
     CASE WHEN c.candidate?'bootstrapImport' THEN c.candidate-'readModel'
       ELSE c.candidate-ARRAY['readModel','identities','changeSet','civicRecords'] END AS candidate,
     reader_payload_node(p.payload)-'records' AS model,reader_payload_node(p.payload)?'records' AS has_records,
-    (p.payload=c.candidate->'readModel' AND p.validation_receipt=c.validation_receipt
+    ((p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt=c.validation_receipt
       AND c.normalized_hash=c.candidate#>>'{normalization,normalizedHash}') AS coupled,
     (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id AND left(e.detail,$2)=$3
       ORDER BY e.sequence DESC LIMIT 1) AS confirmation

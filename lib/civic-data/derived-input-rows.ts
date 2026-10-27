@@ -13,7 +13,7 @@ export async function readDerivedInputHeads(query:Query,ids:readonly string[]):P
     CASE WHEN c.acquisition_succeeded AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
       AND c.validation_receipt->>'decision'='GOOD' AND c.validation_receipt->>'candidateId'=c.id
       AND c.validation_receipt->>'recordClass'=c.record_class AND c.validation_receipt->>'scope'=c.scope
-      AND c.candidate#>>'{normalization,normalizedHash}'=c.normalized_hash
+      AND (c.read_model_fingerprint IS NULL OR c.read_model_fingerprint=c.normalized_hash)
       THEN c.normalized_hash ELSE NULL END AS read_model_hash,
     CASE WHEN c.record_class='CURATED_READER_RECORD' AND c.scope='US:meeting-source-wiring'
       THEN reader_payload_node(c.candidate->'readModel')->>'kind' END AS read_model_kind

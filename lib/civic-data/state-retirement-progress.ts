@@ -36,7 +36,7 @@ export const STATE_RETIREMENT_PROGRESS_SQL = `WITH expected AS (
     AND current.state='PROMOTED' AND current.acquisition_succeeded AND current.promoted_version_id=current.id
     AND current.last_known_good_version_id=current.id AND current.source_id=e.source_id
     AND current.record_class=e.record_class AND current.scope=e.scope AND current.validation_receipt=p.validation_receipt
-    AND p.payload=current.candidate->'readModel' AND current.normalized_hash ~ '^[a-f0-9]{64}$'
+    AND (p.current_version_id=current.id AND p.payload_fingerprint IS NOT DISTINCT FROM current.read_model_fingerprint) AND current.normalized_hash ~ '^[a-f0-9]{64}$'
     AND p.validation_receipt->>'candidateId'=current.id AND p.validation_receipt->>'sourceId'=e.source_id
     AND p.validation_receipt->>'recordClass'=e.record_class AND p.validation_receipt->>'scope'=e.scope
 ) AND EXISTS (

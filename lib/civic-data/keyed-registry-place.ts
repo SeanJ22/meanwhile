@@ -23,7 +23,7 @@ export async function readRegistryPlaceRows(query:Query,state:string,divisionIds
     SELECT p.key,p.scope,p.current_version_id AS version_id,p.promoted_at,c.normalized_hash,reader_payload_node(p.payload) AS root,
       (p.current_version_id=p.last_known_good_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded
        AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id AND c.source_id=p.source_id
-       AND c.record_class=p.record_class AND c.scope=p.scope AND c.candidate->'readModel'=p.payload
+       AND c.record_class=p.record_class AND c.scope=p.scope AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)
        AND c.validation_receipt=p.validation_receipt AND p.validation_receipt->>'decision'='GOOD'
        AND c.candidate#>>'{normalization,normalizedHash}'=c.normalized_hash) AS valid
     FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id WHERE p.key=$1

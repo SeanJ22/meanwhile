@@ -11,7 +11,7 @@ export interface BillCatalogSelection {
 
 /** Only the state's rows, or just the original header, leave the database. */
 export async function readStateCatalog(query:Query,state:string,headerOnly=false):Promise<BillCatalogSelection>{
-  const metadata=selectedMetadataSql.replace("pointer.published",`(pointer.published AND pointer.payload=c.candidate->'readModel'
+  const metadata=selectedMetadataSql.replace("pointer.published",`(pointer.published AND (pointer.current_version_id=c.id AND pointer.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)
     AND pointer.validation_receipt=c.validation_receipt AND c.normalized_hash=c.candidate#>>'{normalization,normalizedHash}') AS published`);
   const [row]=await query(`WITH pointer AS MATERIALIZED (${selectedPointerSql.replace("WHERE p.key=$1","WHERE p.key=ANY($1::text[])")})
     SELECT ${metadata},

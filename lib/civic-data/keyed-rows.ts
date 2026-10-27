@@ -11,7 +11,7 @@ export interface RegistryLookup {
 const registryPointer = `SELECT p.key,p.current_version_id,
   (p.source_id='registry-reviewed-bindings' AND p.current_version_id=p.last_known_good_version_id
     AND c.state='PROMOTED' AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope
-    AND p.payload=c.candidate->'readModel' AND p.validation_receipt=c.validation_receipt
+    AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt=c.validation_receipt
     AND p.validation_receipt->>'decision'='GOOD') AS valid
   FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id
   WHERE p.record_class='REGISTRY_RUNTIME_BINDING' AND p.scope=$1`;

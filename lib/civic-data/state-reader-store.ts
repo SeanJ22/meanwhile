@@ -28,7 +28,7 @@ const READ_STATE = `WITH RECURSIVE selected AS MATERIALIZED (
       AND c.normalized_hash ~ '^[a-f0-9]{64}$' AND p.validation_receipt=c.validation_receipt
       AND p.validation_receipt->>'decision'='GOOD' AND p.validation_receipt->>'candidateId'=c.id
       AND p.validation_receipt->>'sourceId'=c.source_id AND p.validation_receipt->>'recordClass'=c.record_class
-      AND p.validation_receipt->>'scope'=c.scope AND p.payload=c.candidate->'readModel') AS proof_valid,
+      AND p.validation_receipt->>'scope'=c.scope AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)) AS proof_valid,
     (SELECT detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id
       AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY sequence DESC LIMIT 1) AS confirmation
   FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id

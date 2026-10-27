@@ -530,6 +530,8 @@ test("unchanged events, items and votes confirm before opening the held tenant",
   const first = await routinePass(store, recordedLegistar({ events }), "2026-09-21T00:00:00.000Z");
   assert.equal(first.result.exitCode, 0);
   const pointerBefore = await store.readPromotion("MEETING_OUTCOME", SCOPE);
+  const beforeCandidate=(await store.readCandidate(pointerBefore!.versionId))!.candidate;
+  assert.equal(beforeCandidate.retrieval.complete,true,"a complete outcome pass saves a complete source plan for its next fingerprint check");
 
   const unchanged = recordedLegistar({ events });
   const readPromotion=store.readPromotion.bind(store),readCandidate=store.readCandidate.bind(store);
@@ -547,7 +549,7 @@ test("unchanged events, items and votes confirm before opening the held tenant",
   assert.deepEqual({ outcome: verdict.outcome, issue: verdict.issue }, { outcome: "SUCCESS", issue: null });
   // An unchanged pass confirms the existing version.
   assert.equal(verdict.candidateId, pointerBefore?.versionId);
-  assert.equal(latestUnchangedConfirmation(await store.events(verdict.candidateId), verdict.candidateId)?.retrieval.retrievedAt, "2026-09-21T03:00:03.000Z");
+  assert.equal(latestUnchangedConfirmation(await store.events(verdict.candidateId), verdict.candidateId)?.retrieval.retrievedAt, "2026-09-21T03:00:02.000Z");
   const pointerAfter = await store.readPromotion("MEETING_OUTCOME", SCOPE);
   assert.deepEqual(pointerAfter?.payload, pointerBefore?.payload);
   resetOutcomeSnapshotCache();

@@ -30,7 +30,7 @@ const POINTER = `SELECT CASE WHEN ${POINTER_ETAG}=$3 THEN NULL ELSE p.payload EN
     AND p.current_version_id=p.last_known_good_version_id AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
     AND c.state='PROMOTED' AND c.acquisition_succeeded AND c.candidate#>'{normalization,succeeded}'='true'::jsonb
     AND c.normalized_hash ~ '^[a-f0-9]{64}$' AND c.candidate#>>'{normalization,normalizedHash}'=c.normalized_hash
-    AND p.validation_receipt=c.validation_receipt AND p.payload=c.candidate->'readModel'
+    AND p.validation_receipt=c.validation_receipt AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)
     AND p.source_id=$2 AND p.validation_receipt->>'decision'='GOOD'
     AND p.validation_receipt->>'candidateId'=c.id AND p.validation_receipt->>'sourceId'=p.source_id
     AND p.validation_receipt->>'recordClass'=p.record_class AND p.validation_receipt->>'scope'=p.scope) AS proof_valid

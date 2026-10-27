@@ -13,7 +13,7 @@ export interface PersonBillPart {
 }
 
 const pointers = selectedPointerSql.replace("WHERE p.key=$1", "WHERE p.key=ANY($1::text[])");
-const metadata = selectedMetadataSql.replace("pointer.published", `(pointer.published AND pointer.payload=c.candidate->'readModel'
+const metadata = selectedMetadataSql.replace("pointer.published", `(pointer.published AND (pointer.current_version_id=c.id AND pointer.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)
   AND pointer.validation_receipt=c.validation_receipt AND c.normalized_hash=c.candidate#>>'{normalization,normalizedHash}') AS published`);
 const header = "reader_payload_node(pointer.payload)-ARRAY['bills','sponsors']";
 const numericDistrict = (value: string) => (value.normalize("NFKD").replace(/\p{M}/gu, "").match(/[0-9]+/g) ?? [])

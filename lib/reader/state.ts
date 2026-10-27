@@ -1,3 +1,4 @@
+import { selectedBallotStatement } from "./selected-ballot.ts";
 import { readMemberOfficeStateProjection } from "../civic-data/curated-reader-read-model.ts";
 import {selectedPointerSql,selectedMetadataSql,selectedStateEntry,peopleIdentityKeysSql} from "./selected-entry.ts";
 import {FIPS_TO_STATE} from "../ocd/fips.ts";
@@ -70,7 +71,7 @@ const selectedCanonical = serverReaderValue("state-selected-canonical", () => ne
 
 /** Reserve the ZIP's existing people and directory reads before ballot cards ask for them. */
 export function primeStateReaderPointers(state: string, read: Promise<ReaderStatePackage>): Promise<void> {
-  return primeReaderCanonicalStore([...zipSourcePointers(state), {recordClass:"STATE_LEGISLATOR",scope:`US-${state}`}], read.then(value => {
+  return primeReaderCanonicalStore([...zipSourcePointers(state), ...stateAuthorityPointers("ballot-contests", state), {recordClass:"STATE_LEGISLATOR",scope:`US-${state}`}], read.then(value => {
     const canonical = selectedCanonical.get(value);
     if (!canonical) throw new Error("READER_SELECTED_STATE_REQUIRED");
     return canonical;
@@ -110,9 +111,9 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     ...(!zip ? [{ recordClass: "STATE_LEGISLATOR" as const, scope: jurisdiction }] : []),
     { recordClass: "CURATED_READER_RECORD" as const, scope: "US:verified-officeholder-campaign-sites" },
     EVERYDAY_ROUTING_POINTER,
-    ...stateAuthorityPointers("candidate-profiles", state),
-    ...stateAuthorityPointers("candidate-campaign-sites-derived", state),
-    ...stateAuthorityPointers("ballot-contests", state),
+    ...(!zip ? stateAuthorityPointers("candidate-profiles", state) : []),
+    ...(!zip ? stateAuthorityPointers("candidate-campaign-sites-derived", state) : []),
+    ...(!zip ? stateAuthorityPointers("ballot-contests", state) : []),
     ...(!zip ? [{ recordClass: "STATE_LEGISLATOR" as const, scope: `${jurisdiction}:openstates-people:v1` }] : []),
     ...(!zip ? PEOPLE_SOURCE_IDS.map(source => ({ recordClass: peopleSourceRecordClass(source), scope: peopleSourceScope(jurisdiction, source) })) : []),
   ];
@@ -156,6 +157,8 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
       const key=`${pointer.recordClass}:${pointer.scope}`;
       if(!selected.has(key))selected.set(key,{kind:"NOT_RECORDED",...pointer});
     }
+    for (const pointer of stateAuthorityPointers("ballot-contests",state)) selected.set(`${pointer.recordClass}:${pointer.scope}`,
+      selectedStateEntry(pointer.recordClass,pointer.scope,selectedRow?.zip_ballot as Record<string,unknown>|null));
     selected.set(`STATE_LEGISLATOR:${jurisdiction}:openstates-people:v1`,openStates!);
     selected.set(`REGISTRY_RUNTIME_BINDING:${stateRegistryRuntimeScope(state)}`,registry!);
     selected.set(`STATE_LEGISLATOR:${jurisdiction}`,selectedStateEntry("STATE_LEGISLATOR",jurisdiction,
@@ -173,8 +176,8 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
     readCuratedReaderProjection("campaign-sites", options),
     readEverydayRoutingProjection(options),
     presidentRead,
-    readCandidateProfilesProjection(state, options),
-    readDerivedCampaignSites(state, options),
+    zip ? Promise.resolve(undefined) : readCandidateProfilesProjection(state, options),
+    zip ? Promise.resolve(undefined) : readDerivedCampaignSites(state, options),
     readGenericBallotProjection(state, options),
   ]);
   if (runtime.kind === "STORE_UNREACHABLE") throw new CivicDataStoreUnavailableError(runtime);
@@ -199,7 +202,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   const offices = officeMembers.length ? await readMemberOfficeStateProjection(state, options, officeMembers) : null;
   const memberOffices = offices?.kind === "PROMOTED" || offices?.kind === "BOOTSTRAP" ? offices.value.records as unknown as MemberOfficeRecord[] : [];
   const version = createHash("sha256").update([runtime.metadata.versionId, people.metadata.versionId, federal.metadata.versionId, campaigns.metadata.versionId, offices?.metadata.versionId,
-    profiles.metadata.versionId, portraits.metadata.versionId, ballot.metadata.versionId,
+    profiles?.metadata.versionId, portraits?.metadata.versionId, ballot.metadata.versionId,
     districts.kind === "HELD" ? districts.versionId : districts.kind, JSON.stringify(president), JSON.stringify(localDivisions)].join("|")).digest("hex");
   const result: ReaderStatePackage = {
     state, version, districts, localDivisions,
@@ -236,21 +239,27 @@ export function readStatePackage(value: string, divisionIds: readonly string[] =
 
 /** Select people against either this query's geography or its already held exact snapshot. */
 export function statePackageStatement(state: string, divisions: readonly string[] = [], zip?: string, heldGeography?: Record<string, unknown>) {
-  const geography = heldGeography ? {text:"SELECT $1::text AS version_id,$2::jsonb AS geography,$3::jsonb AS local_divisions,$4::text[] AS canonical_keys",
-    params:[heldGeography.version_id,JSON.stringify(heldGeography.geography),JSON.stringify(heldGeography.local_divisions),heldGeography.canonical_keys]} : stateContainersStatement(state, divisions, zip);
+  const geography = heldGeography ? {text:`SELECT $1::text AS version_id,$2::jsonb AS geography,
+    CASE WHEN cardinality($6::text[])>0 THEN coalesce((SELECT jsonb_agg(reader_payload_value(d.item))
+      FROM civic_data_promotions registration,LATERAL reader_payload_members(reader_payload_node(registration.payload)->'divisions') d
+      WHERE registration.key=$5 AND reader_payload_node(d.item)->>'ocdId'=ANY($6::text[])),'[]'::jsonb)
+      ELSE $3::jsonb END AS local_divisions,$4::text[] AS canonical_keys`,
+    params:[heldGeography.version_id,JSON.stringify(heldGeography.geography),JSON.stringify(heldGeography.local_divisions),heldGeography.canonical_keys,
+      `REGISTRATION:US-${state}:registration:v1`,divisions]} : stateContainersStatement(state, divisions, zip);
   if (!zip) return geography;
   const jurisdiction=Object.values(FIPS_TO_STATE).find(entry=>entry.postal===requireRegistryState(state));
   if(!jurisdiction)throw new Error("READER_JURISDICTION_UNAVAILABLE");
   // ZIP shards name local and legislative divisions; statewide officers govern every ZIP too.
   const places=[...new Set([...divisions,"ocd-division/country:us",`ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.postal.toLowerCase()}`])];
   const parts=[['zip_official',zipOfficialStatement(state,places)],['zip_people',zipPeopleStatement(state,places)],
-    ['zip_sources',zipSourcesStatement(state,places)],['zip_registry',zipRegistryStatement(state,places)]] as const;
+    ['zip_sources',zipSourcesStatement(state,places)],['zip_registry',zipRegistryStatement(state,places)],
+    ['zip_ballot',selectedBallotStatement(state,places,selectedDivisionsSql)]] as const;
   const params:unknown[]=[...geography.params];
   const ctes=parts.map(([name,statement])=>{const offset=params.length;params.push(...statement.params);
     return `${name} AS MATERIALIZED (${statement.text.replace(/\$(\d+)/g,(_,index:string)=>`$${Number(index)+offset}`)})`;});
   return {...geography,text:`WITH state_geography AS MATERIALIZED (${geography.text}),${ctes.join(',')}
     SELECT g.*,(SELECT to_jsonb(p) FROM zip_people p) AS zip_people,(SELECT to_jsonb(r) FROM zip_registry r) AS zip_registry,
-      (SELECT to_jsonb(o) FROM zip_official o) AS zip_official,(SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_sources s) AS zip_sources FROM state_geography g`,params};
+      (SELECT to_jsonb(o) FROM zip_official o) AS zip_official,(SELECT to_jsonb(b) FROM zip_ballot b) AS zip_ballot,(SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_sources s) AS zip_sources FROM state_geography g`,params};
 }
 
 const selectedDivisionsSql = `SELECT unnest($2::text[]) AS id UNION SELECT substring(unnest(canonical_keys)

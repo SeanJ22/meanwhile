@@ -25,7 +25,7 @@ export async function readCountyCivicContactInputs(query:ReadOnlyQuery,state:str
          WHEN 'VOTING_SITE' THEN 'voting-sites' ELSE 'registry-reviewed-bindings' END
        AND c.record_class=p.record_class AND c.scope=p.scope AND c.state='PROMOTED' AND c.acquisition_succeeded
        AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
-       AND c.candidate#>'{normalization,succeeded}'='true'::jsonb AND p.payload=c.candidate->'readModel'
+       AND c.candidate#>'{normalization,succeeded}'='true'::jsonb AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)
        AND c.normalized_hash ~ '^[a-f0-9]{64}$' AND c.candidate#>>'{normalization,normalizedHash}'=c.normalized_hash
        AND p.validation_receipt=c.validation_receipt AND p.validation_receipt->>'decision'='GOOD'
        AND p.validation_receipt->>'candidateId'=c.id AND p.validation_receipt->>'sourceId'=c.source_id

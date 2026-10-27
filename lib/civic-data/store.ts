@@ -2272,7 +2272,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   private async readStatePromotionBody<T>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const result = await this.db.execute(sql`WITH state_promotion AS MATERIALIZED (
       SELECT p.*,
-        (p.payload = c.candidate->'readModel' AND p.validation_receipt = c.validation_receipt) AS coupled,
+        ((p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt = c.validation_receipt) AS coupled,
         (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id = p.current_version_id
           AND left(e.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
           ORDER BY e.sequence DESC LIMIT 1) AS confirmation

@@ -260,7 +260,7 @@ async function executePimaLegistarOutcomeIngest(input: PimaOutcomeIngestInput): 
     pendingMeetingIds:[...pendingMeetings],
     complete:complete&&!pendingMeetings.size&&[...requests.values()].filter(request=>request.meetingId!==null).every(request=>{
       const sitting=heldById.get(request.meetingId!);
-      return sitting?.extraction==="RETRIEVED"&&!sitting.failedRollCallExtractions.length&&!sitting.voteRequestFailures.length;
+      return sitting?.extraction==="RETRIEVED"&&!sitting.voteRequestFailures.length;
     }),requests:[...requests.values()]});
   const initialize=async()=>{
     if(current)return;

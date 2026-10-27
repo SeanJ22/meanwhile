@@ -97,3 +97,43 @@ test("a real Postgres person bill read selects exact native bills and complete c
     }finally{neonConfig.fetchFunction=transport;}
   });
 });
+
+test("the atomic writer publishes owned facts when a candidate has only its vault fingerprint and roots",async()=>{
+  await withMigratedRoutineStore("legiscan-bulk",async(store,vault,pg)=>{
+    const transport=neonConfig.fetchFunction!;
+    const {readCivicCandidatePath}=await import("../lib/civic-data/candidate-vault.ts");
+    const query=async(text:string,params:readonly unknown[]=[]) =>(await pg.query<Record<string,unknown>>(text,[...params])).rows;
+    // DB-06's field readers can use the provided decoder during their cutover.
+    store.readCandidatePath=async<T,>(id:string,path:readonly string[])=>await readCivicCandidatePath(query,vault,id,path) as T|null;
+    // Exercise the post-cutover database shape without enabling the cutover
+    // before DB-06 has switched its historical readers.
+    neonConfig.fetchFunction=(async(...args:Parameters<typeof transport>)=>{
+      const init=args[1] as RequestInit,request=JSON.parse(String(init.body)) as {query?:string;params?:unknown[];queries?:{query:string;params?:unknown[]}[]};
+      for(const statement of request.queries??[request]){
+        if(!statement.query?.startsWith('insert into "civic_data_candidates"'))continue;
+        statement.params=statement.params?.map(value=>{
+          if(typeof value!=="string")return value;
+          let candidate;try{candidate=JSON.parse(value);}catch{return value;}
+          if(!candidate?.vault||!candidate.id)return value;
+          delete candidate.readModel;delete candidate.excludedFacts;delete candidate.vault.inlineEvidence;
+          candidate.normalizedPayload={};return JSON.stringify(candidate);
+        });
+      }
+      return transport(args[0],{...init,body:JSON.stringify(request)});
+    }) as typeof transport;
+    try{
+      const indexBody=JSON.stringify({status:"OK",datasetlist:[dataset]});
+      await publishBulkCandidate(store,{capture:{...capture,requestedUrl:"https://api.legiscan.com/?op=getDatasetList",finalUrl:"https://api.legiscan.com/?op=getDatasetList",
+        body:indexBody,rawHash:hash(indexBody)},datasets:[dataset]},at);
+      const published=await publishBulkCandidate(store,{capture,dataset,bodies,people:[person],archiveHash},at);
+      assert.ok(published.outcome.promoted,JSON.stringify({state:published.outcome.candidate.state,detail:published.outcome.candidate.failureDetail}));
+      const rows=(await pg.query<{has_model:boolean;has_changes:boolean;has_excluded:boolean;fingerprint:string;vault_fingerprint:string}>(`SELECT candidate?'readModel' AS has_model,candidate?'changeSet' AS has_changes,
+        candidate?'excludedFacts' AS has_excluded,read_model_fingerprint AS fingerprint,candidate#>>'{vault,readModel,fingerprint}' AS vault_fingerprint FROM civic_data_candidates`)).rows;
+      assert.ok(rows.length>=3);assert.ok(rows.every(row=>!row.has_model&&!row.has_changes&&!row.has_excluded&&row.fingerprint===row.vault_fingerprint));
+      const read=await readBillsForState("AK",{store,now:at,person});
+      assert.deepEqual(read.bills,hydrateBillPart(normalizeSession(dataset,bodies,at,[person]),person));
+      const {readCivicVersionPath}=await import("../lib/civic-data/version-vault.ts");
+      assert.equal(await readCivicVersionPath(query,vault,published.candidate.id,["kind"]),"SESSION");
+    }finally{neonConfig.fetchFunction=transport;}
+  });
+});

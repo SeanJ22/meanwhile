@@ -10,6 +10,7 @@ import type { RoutineReaderVerification } from "./reader-verification.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { statePublicationScope } from "./state-publication.ts";
 import { navigationBaseProjection, type NavigationComparison } from "./navigation-successor.ts";
+import { readerCacheScopeForPublication } from "../reader/cache.ts";
 
 
 function failureOf(receipt: NonNullable<CandidateVersionRecord["receipt"]>): { code: string; detail: string } {
@@ -241,6 +242,7 @@ export async function processRoutineCandidate(
   }
   const missingLkg = lkg === null;
   const lastKnownGoodVersionId = current?.lastKnownGoodVersionId ?? null;
+  const previousCacheScope=current?readerCacheScopeForPublication(candidate.scope,{recordClass:candidate.recordClass,readModels:[current.payload]}):undefined;
   if (scoped) {
     indexedPrior = undefined;
     base = null;
@@ -320,7 +322,7 @@ export async function processRoutineCandidate(
   const validatedRecord = await store.transition(candidate.id, "VALIDATED", transitionAt, "Every applicable GOOD check passed.", validated.receipt, undefined, held);
   let promoted: PromotedProjection;
   try {
-    promoted = await store.promote(candidate.id, validated.receipt, transitionAt, held);
+    promoted = await store.promote(candidate.id, validated.receipt, transitionAt, {...held,previousCacheScope});
   } catch (error) {
     if (!(error instanceof PromotionBaseChangedError)) throw error;
     const code = "PROMOTION_BASE_CHANGED";

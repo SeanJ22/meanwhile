@@ -75,6 +75,8 @@ test("a member-office package exceeding 42 MiB uses bounded immutable writes, ex
         promoting = false;
         assert.deepEqual(published.payload, first.readModel);
         assert.ok(promoteQueries.every(query => !/select[^;]*"candidate"\s*,[^;]*from "civic_data_candidates"/i.test(query)), "promotion uses held candidate and persisted scalar envelope");
+        assert.ok(promoteQueries.filter(query=>query.startsWith("select")&&query.includes('from "civic_data_promotions"'))
+          .every(query=>!query.includes('"payload"')),"cache invalidation does not fetch the departing member-office package");
         const stored = (await pg.query<{ bytes: number; model: unknown; facts: unknown; identity: unknown }>(
           "SELECT octet_length(candidate::text) AS bytes, candidate->'readModel' AS model, validation_receipt->'excludedFacts' AS facts, identity FROM civic_data_candidates WHERE id=$1", [first.id])).rows[0]!;
         assert.ok(stored.bytes < 32 * 1024);

@@ -96,6 +96,7 @@ export function civicVersionVault(vault: EvidenceStore) {
     return {$civicPayloadPart:ref.root};
   };
   const nodeOf = async (value: unknown): Promise<unknown> => {
+    if(!isCivicPayloadPart(value))return value;
     const node = await parts.node(value) as Node | null;
     return node?.kind === "object" ? node.value : node;
   };
@@ -103,7 +104,7 @@ export function civicVersionVault(vault: EvidenceStore) {
     let value = root;
     for (const key of path) {
       const node = await nodeOf(value) as Node | null;
-      if (node?.kind === "array" && /^\d+$/.test(key)) {
+      if (isCivicPayloadPart(value) && node?.kind === "array" && /^\d+$/.test(key)) {
         const index = Number(key), order = JSON.parse(await parts.load(node.order) as string) as number[];
         if (index >= order.length) return undefined;
         const group = order[index], position = order.slice(0,index).filter(value=>value===group).length;
@@ -116,7 +117,7 @@ export function civicVersionVault(vault: EvidenceStore) {
   async function* encodedRows(value: unknown): AsyncGenerator<unknown> {
     const node = await nodeOf(value) as Node | unknown[] | null;
     if (Array.isArray(node)) { yield* node; return; }
-    if (node?.kind !== "array" || !Array.isArray(node.groups)) throw new Error("CIVIC_VERSION_COLLECTION_INVALID");
+    if (!isCivicPayloadPart(value) || node?.kind !== "array" || !Array.isArray(node.groups)) throw new Error("CIVIC_VERSION_COLLECTION_INVALID");
     const order = JSON.parse(await parts.load(node.order) as string) as number[];
     const remaining = new Map<number,number>();
     for(const group of order)remaining.set(group,(remaining.get(group)??0)+1);

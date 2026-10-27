@@ -966,19 +966,16 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     [["scope", "text"], value.scope],
     [["state", "text"], "VALIDATED"],
     [["acquisition_succeeded", "bool"], true],
-    [["raw_hash", "text"], value.retrieval.rawHash],
-    [["normalized_hash", "text"], value.normalization.normalizedHash],
-    [["read_model_fingerprint", "text"], value.normalization.normalizedHash],
-    [["retrieved_at", "timestamptz"], "2026-09-08 12:00:00+00"],
-    [["source_through", "text"], value.temporal.sourceThrough],
-    [["parser_version", "text"], value.normalization.parserVersion],
-    [["identity", "jsonb"], value.identities],
-    [["candidate", "jsonb"], value],
     [["validation_receipt", "jsonb"], persisted],
     [["promoted_version_id", "text"], null],
     [["last_known_good_version_id", "text"], null],
     [["failure_code", "text"], null],
     [["failure_detail", "text"], null],
+    [["retrieved_at", "timestamptz"], "2026-09-08 12:00:00+00"],
+    [["raw_hash", "text"], value.retrieval.rawHash],
+    [["normalized_hash", "text"], value.normalization.normalizedHash],
+    [["normalizedPayloadHash", "text"], value.normalization.normalizedPayloadHash],
+    [["hasStoredReadModel", "bool"], true],
   ];
   const pointerRow: readonly (readonly [NeonColumn, unknown])[] = [
     [["key", "text"], `${value.recordClass}:${value.scope}`],
@@ -1009,7 +1006,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
   }, async (store, sent) => {
     // Judge the statements sent before the answer is mapped, so a whole-row
     // RETURNING fails on what it asked for, not on the canned reply's shape.
-    const settled = await store.promote(value.id, structuredClone(persisted), promotedAt)
+    const settled = await store.promote(value.id, structuredClone(persisted), promotedAt,{candidate:value})
       .then((result) => ({ result }), (error: unknown) => ({ error }));
 
     const priorRead = sent.find(({ query }) => query.startsWith("select") && query.includes(`from "civic_data_promotions"`));
@@ -1140,15 +1137,10 @@ test("a Postgres transition never reads the envelope the caller holds; it verifi
     });
   }
 
-  const unheld = await withCannedNeon(canned, async (store, sent) => {
-    const record = await store.transition(value.id, "NORMALIZED", at, "normalized");
-    const reads = candidateReads(sent);
-    assert.equal(reads.length, 3, "the pre-read, the post-write read, and the envelope");
-    assert.equal(reads.filter(envelopeSelected).length, 1, "the envelope is read once");
-    assert.equal(envelopeSelected(reads[0]!), false, "and never by the pre-read");
-    return record;
+  await withCannedNeon(canned, async (store, sent) => {
+    await assert.rejects(store.transition(value.id, "NORMALIZED", at, "normalized"),/TRANSITION_REQUIRES_OWNED_FACTS/);
+    assert.equal(candidateReads(sent).length,0,"an omitted owned candidate never falls back to downloading its record");
   });
-  assert.deepEqual(unheld.candidate, value);
 });
 
 test("promotion hands every transition the candidate it already holds", async () => {

@@ -88,7 +88,8 @@ import { readPublishedSourceChecks, recordPublishedSourceCheck, validPublishedSo
   type PublishedSourceCheck, type RecordPublishedSourceCheck } from "./source-checks.ts";
 import { aggregateFederalCounts, readFederalCounts as readFederalSourceCounts } from "../sources/congress/counts.ts";
 import type { FederalCounts, FederalProjection } from "../sources/congress/types.ts";
-import { enqueueReaderPlaces, invalidateReaderCache, placePageConsumesPublication, readerCacheScopeForPublication, readerPublicationNeedsGeography, type ReaderCachePurger } from "../reader/cache.ts";
+import { enqueueReaderPlaces, invalidateReaderCache, placePageConsumesPublication, readerCacheScopeForPublication, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
+import { publicationCacheScope } from "./publication-cache-scope.ts";
 import { seedRuntimeBodyPageSubjects } from "../reader/page-subjects.ts";
 import { stateCalendarsCovers } from "./state-calendars.ts";
 export { projectionKey } from "./projection-key.ts";
@@ -148,6 +149,7 @@ export interface CandidateVersionReadback {
 
 export interface CandidateTransitionOptions {
   readonly candidate?: RoutineCandidate;
+  readonly previousCacheScope?: ReaderCacheScope;
 }
 
 /** An already read exact merge base, reused by the existing source proof and promotion CAS. */
@@ -2533,6 +2535,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async transition(candidateId: string, state: CandidateState, at: string, detail: string, receipt?: ValidationReceipt, failure?: { code: string; detail: string }, options: CandidateTransitionOptions = {}): Promise<CandidateVersionRecord> {
     this.assertMutationAuthority();
+    if(!options.candidate)throw new Error(`CANDIDATE_TRANSITION_REQUIRES_OWNED_FACTS:${candidateId}`);
     const [priorRow] = await candidateTransitionRead(this.db, candidateId);
     if (!priorRow) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
     const authority = readerEvidenceRowToRecord(priorRow);
@@ -2582,19 +2585,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     }
     const { candidate: _sameRow, ...columns } = postgresCandidateSummary(updatedRows[0]);
     return { ...columns, receipt: receipt ?? columns.receipt as ValidationReceipt | null,
-      candidate: options.candidate ?? await this.readCandidateEnvelope(candidateId) };
-  }
-
-  private async readCandidateEnvelope(candidateId: string): Promise<RoutineCandidate> {
-    return (await this.candidateValue("candidate-envelope", candidateId, async () => {
-      const [row] = await this.db.select({ candidate: civicDataCandidates.candidate })
-      .from(civicDataCandidates)
-      .where(eq(civicDataCandidates.id, candidateId))
-      .limit(1);
-      if (!row) throw new Error(`CANDIDATE_NOT_FOUND:${candidateId}`);
-      return await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate;
-
-    })) ?? Promise.reject(new Error(`CANDIDATE_NOT_FOUND:${candidateId}`));
+      candidate: options.candidate };
   }
 
   async readDerivedInputHeads(ids:readonly string[]):Promise<readonly DerivedInputHead[]>{
@@ -3284,31 +3275,24 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async promote(candidateId: string, receipt: ValidationReceipt, at: string, options: CandidateTransitionOptions = {}): Promise<PromotedProjection> {
     this.assertMutationAuthority();
     const held = options.candidate;
+    if(!held)throw new Error(`CANDIDATE_PROMOTION_REQUIRES_OWNED_FACTS:${candidateId}`);
     const partedManual = held !== undefined && isPartedManualCandidate(held);
-    let record: CandidateVersionRecord | null;
-    // Any exact caller-owned candidate uses the same persisted envelope/hash proof.
-    if (held) {
-      const hash = partedManual || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
-      const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
+    const hash = partedManual || statePublicationScope(held.scope) ? durableStateHash : durableCivicDataHash;
+    const [row] = await this.db.select({ ...CANDIDATE_SUMMARY_COLUMNS,
         retrievedAt: civicDataCandidates.retrievedAt, rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
         normalizedPayloadHash: sql<string | null>`${civicDataCandidates.candidate}#>>'{normalization,normalizedPayloadHash}'`,
+        hasStoredReadModel:sql<boolean>`${civicDataCandidates.candidate} ? 'readModel'`.as("has_stored_read_model"),
       }).from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
-      if (!row || !heldEnvelopeMatches(row, held) || hash(held.readModel) !== row.normalizedHash ||
-          held.normalization.normalizedPayloadHash !== row.normalizedPayloadHash || hash(held.normalizedPayload) !== row.normalizedPayloadHash) throw new Error(`CANDIDATE_PROMOTION_ENVELOPE_MISMATCH:${candidateId}`);
-      record = { ...postgresCandidateSummary(row), ...(partedManual ? { receipt } : {}), candidate: held } as CandidateVersionRecord;
-    } else {
-      const [row] = await this.db.select().from(civicDataCandidates).where(eq(civicDataCandidates.id, candidateId)).limit(1);
-      record = row ? { ...rowToCandidate(await this.withReceiptParts(row)), candidate: await this.loadPayload(row.candidate, (row.candidate as RoutineCandidate).scope) as RoutineCandidate } : null;
-    }
+    if (!row || !heldEnvelopeMatches(row, held) || hash(held.readModel) !== row.normalizedHash ||
+        held.normalization.normalizedPayloadHash !== row.normalizedPayloadHash || hash(held.normalizedPayload) !== row.normalizedPayloadHash) throw new Error(`CANDIDATE_PROMOTION_ENVELOPE_MISMATCH:${candidateId}`);
+    const record = { ...postgresCandidateSummary(row), ...(partedManual ? { receipt } : {}), candidate: held } as CandidateVersionRecord;
     const persistedReceipt = persistedPromotionReceipt(record, receipt);
     if (!record || !persistedReceipt) throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     assertPromotionTime(record, persistedReceipt, at);
     this.assertCandidateMutationAuthority(record.candidate);
     const candidate = record.candidate;
     const key = projectionKey(candidate.recordClass, candidate.scope);
-    const needsGeography = readerPublicationNeedsGeography(candidate.scope, candidate.recordClass);
-    const [prior] = await this.db.select({ currentVersionId: civicDataPromotions.currentVersionId,
-      ...(needsGeography ? { payload: civicDataPromotions.payload } : {}), })
+    const [prior] = await this.db.select({ currentVersionId: civicDataPromotions.currentVersionId })
       .from(civicDataPromotions)
       .where(eq(civicDataPromotions.key, key))
       .limit(1);
@@ -3326,6 +3310,14 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     `;
     const detail = `${POINTER_MOVE_DETAIL_PREFIX}${key} moved from ${prior?.currentVersionId ?? "bootstrap/no-version"} to ${candidateId}.`;
     const nextSequence = this.nextCandidateEventSequence(candidateId);
+    let publicationModel=sql`${civicDataCandidates.candidate}->'readModel'`;
+    if(row.hasStoredReadModel===false){
+      // Once DB-06 has moved off the candidate copy, write the one live model
+      // from the validated bytes the job owns. Keep its top fields SQL-readable.
+      const model=candidate.readModel;
+      const encoded=await this.payloadParts.store(model,model!==null&&typeof model==="object"&&!Array.isArray(model)?[]:undefined);
+      publicationModel=sql`${JSON.stringify(encoded)}::jsonb`;
+    }
 
         /* One server-side transaction: a concurrent transition makes every statement a zero-row write. */
     const promotionWrite = this.db.insert(civicDataPromotions).select(sql`
@@ -3337,7 +3329,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         ${civicDataCandidates.id},
         ${civicDataCandidates.id},
         ${at}::timestamptz,
-        ${civicDataCandidates.candidate}->'readModel',
+        ${publicationModel},
         ${civicDataCandidates.validationReceipt},
         ${civicDataCandidates.readModelFingerprint}
       from ${civicDataCandidates}
@@ -3393,10 +3385,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       }
       throw new Error(`CANDIDATE_NOT_PROMOTABLE:${candidateId}`);
     }
-    const previousModel = needsGeography && prior?.payload ? await this.loadPayload(prior.payload, candidate.scope) : null;
-    const publicationScope = readerCacheScopeForPublication(candidate.scope, {
-      recordClass: candidate.recordClass, readModels: [candidate.readModel, previousModel],
-    });
+    const publicationScope=publicationCacheScope(candidate,options.previousCacheScope);
     if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") await seedRuntimeBodyPageSubjects(
       (text, params) => this.readerRows(text, params), publicationScope.states ?? []);
     await invalidateReaderCache(publicationScope, this.cacheOptions.purge, placePageConsumesPublication(candidate.scope, candidate.recordClass)

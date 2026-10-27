@@ -18,6 +18,15 @@ const model = () => ({
     {id:"wiring/second",status:"VERIFIED",row:{bodyId:"body/two",route:"other-route"},bodyIds:["body/two"],divisionIds:["division/two"]}],
 });
 
+test("literal source kind/value fields are facts rather than storage wrappers",async()=>{
+  const vault=new MemoryEvidenceStore(),value={metadata:{kind:"object",value:{name:"Native fact"}},
+    records:[{id:"native",kind:"object",value:{answer:42}}]};
+  const ref=await holdCivicVersion(vault,value,fingerprint(value)),reader=civicVersionVault(vault);
+  assert.equal(await reader.path(ref,["metadata","kind"]),"object");
+  assert.deepEqual(await reader.rows(ref,["records"]),[{ordinal:1,value:value.records[0]}]);
+  assert.deepEqual(await reader.read(ref),value);
+});
+
 test("historical venue, agenda, wiring and funding selections use shared vault parts",async()=>{
   const vault=new MemoryEvidenceStore(),before=model(),hash=fingerprint(before);
   const put=vault.put.bind(vault),putCalls:{key:string;bytes:Uint8Array}[]=[];

@@ -4,7 +4,8 @@ import { mkdtempSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { PGlite } from "@electric-sql/pglite";
-import { neon, neonConfig } from "@neondatabase/serverless";
+import { neonConfig } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { evaluateJobBreaker, JOB_TRANSFER_SQL, jobTransfers, readJobBreakerStates, writeJobBreakerEvents,
   JOB_BREAKER_INTERVAL_MS, type JobBreakerState, type JobTransfer } from "../lib/control-plane/job-transfer-breaker.ts";
 import { JOB_BREAKER_DDL } from "../lib/control-plane/repository/migrations/BB-01.ts";
@@ -188,6 +189,8 @@ test("the actual controller survives an uncertain control write, restarts and se
 
 test("six scheduled checks use under 5 MB/hour including real Neon request and response envelopes",async(t)=>{
   const db=new PGlite(),root=mkdtempSync(join(tmpdir(),"bb-wire-")),previous=neonConfig.fetchFunction;
+  const previousReport=process.env.WTP_VITAL_SIGNS_REPORT;
+  process.env.WTP_VITAL_SIGNS_REPORT="1";
   let requests=0,sent=0,received=0;
   try {
     await db.exec(`CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,reads jsonb);${JOB_BREAKER_DDL}`);
@@ -214,5 +217,9 @@ test("six scheduled checks use under 5 MB/hour including real Neon request and r
     assert.equal(checks,6);
     assert.equal((await db.query<{n:number}>("SELECT count(*)::int n FROM cp_job_transfer_breaker WHERE action='PAUSE'")).rows[0]!.n,0);
     t.diagnostic(JSON.stringify({testStore:true,beforeGbPerHour:before/1e9,afterGbPerHour:after/1e9,requestBytes:sent,responseBytes:received,requests}));
-  } finally {neonConfig.fetchFunction=previous;await db.close();rmSync(root,{recursive:true,force:true});}
+  } finally {
+    neonConfig.fetchFunction=previous;
+    if(previousReport===undefined)delete process.env.WTP_VITAL_SIGNS_REPORT;else process.env.WTP_VITAL_SIGNS_REPORT=previousReport;
+    await db.close();rmSync(root,{recursive:true,force:true});
+  }
 });

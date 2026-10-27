@@ -1,6 +1,6 @@
 /** Production observation only: both connections use read-only transactions. Never boots repositories or launches work. */
 import { appendFileSync } from "node:fs";
-import { neon, neonConfig } from "@neondatabase/serverless";
+import { neon, neonConfig } from "../lib/db/client.ts";
 import { evaluateJobBreaker, JOB_TRANSFER_SQL, jobTransfers, JOB_BREAKER_INTERVAL_MS,
   JOB_BREAKER_HOURLY_BUDGET, readJobBreakerStates, type JobBreakerState } from "../lib/control-plane/job-transfer-breaker.ts";
 import { hourStart } from "../lib/db/transfer-by-caller.ts";
@@ -10,7 +10,8 @@ for (const [url, endpoint] of [[readerUrl,"ep-dry-river-axwtolzc"],[controlUrl,"
   if (new URL(url).hostname.replace("-pooler.", ".").split(".")[0] !== endpoint)
     throw new Error("Shadow requires the production reader and control plane");
 }
-const reader = neon(readerUrl), control = neon(controlUrl);
+// Observe without issuing the normal counter flush writes; the runner collects these reports in production.
+process.env.WTP_VITAL_SIGNS_REPORT="1";
 const output = process.env.BB_SHADOW_OUTPUT;
 const record = (value: unknown) => { const line = JSON.stringify(value); console.log(line); if (output) appendFileSync(output, line+"\n"); };
 let requests = 0, sent = 0, received = 0;
@@ -21,6 +22,7 @@ neonConfig.fetchFunction = async (input: Parameters<typeof fetch>[0], init?: Par
   received += (await response.clone().arrayBuffer()).byteLength;
   return response;
 };
+const reader = neon(readerUrl), control = neon(controlUrl);
 const read = async (sql: typeof reader, text: string, params: readonly unknown[] = []) =>
   (await sql.transaction([sql.query(text,[...params])], { readOnly: true,
     fetchOptions: { signal: AbortSignal.timeout(15_000) } }))[0] as Record<string,unknown>[];

@@ -1,13 +1,20 @@
 # River status
 
-build_state: LIVE FOR READERS: release 130 (main aaf371bc5). Release 131 = PR #843 (head aeec71324), auto-merge on, CI running; River watching it to merge and deploy
+build_state: LIVE FOR READERS: release 131 (main f91893755, merge of #843), live 8:26 PM EDT; /national 200, ballots 85701/03255 render, meetings 200. Waiting for the runner to load 131. Next: release 132 = DB-05 58e07b91 fold on river-next-132
 worker: River
 provider: Claude
 run_id: session_01R8G1FdHA1LGMVbwp5wxrzN
 lock: session_01R8G1FdHA1LGMVbwp5wxrzN
-heartbeat: 2026-10-26T23:55:00Z
+heartbeat: 2026-10-27T00:30:00Z
 
-## Hand-off to the next River session (Oct 26, 7:50 PM EDT)
+## River session_01R8G1FdHA1LGMVbwp5wxrzN (from Oct 26, 7:55 PM EDT)
+
+- 8:23 PM: #843 merged (main f91893755). 8:26 PM: /api/build shows f91893755. /national 200 (1.6 s), /ballot?zip=85701 200 (13.7 s in Chrome, contests render), /ballot?zip=03255 200 (6.1 s), /api/meetings 85701 and 60602 200; no server error digests. Both ballot pages break the 3-second rule (open).
+- Before 131 (read-only, database_transfer_hourly): reader 1.37 GB + control plane 0.28 GB in the 7 PM EDT hour; job `index` (reader functions) 1.15 GB: civic_data_candidate_events 0.44 GB (Next server routes), civic_data_promotions 0.33 GB (reader-meetings) + 0.32 GB (Next server routes).
+- Publish-now before 130 attempted 55-211 tasks an hour; since 130, 0 (10 of 11 passes timed out at 10 min; the 7:49 PM pass finished in 6 min with 0 launched).
+- DB-05 fold for 132 on river-next-132 (d74993d0): folds DB-05 READY 58e07b91 (contains all seven hand-off pieces; 568b9aa61's line sits on a side line without 130, 18 conflicts, while 58e07b91 already carries DB-05's own 130 merge: 3 conflicts). Kept River's f6d41b4e5 line and both tests. DB-05's LegiScan publish replaces River's run-rows path (RIVER-LS1/BILLS2); BILLS2's cut-session test passes on it after one fix (a cut pass no longer records a false state failure). state-binding-refresh passes: its failure retry now expects the owner's facts.retryMinutes floor, as DB-05 schedules every non-election source. Production build found a DB-05 defect: reader routes traced 9,757 project files (ceiling 490) because runner.ts now loaded the meeting probe and, through it, file-reading publication modules; fixed (430 files). Local production build against the production reader: /national 200, ballots 200, /api/bills 200; /api/meetings 503 "civic_data_rows does not exist" because DB-05's 8 expand migrations are not on production yet.
+
+
 
 **Live on main:** release 130, main **aaf371bc5** (merge of #842), live 5:36 PM. https://meanwhileusa.com/api/build shows commit aaf371bc5c308a73ff03961599637c6d868d3401. Runner loaded it at about 6:00 PM (heartbeat testedSha aaf371bc5, verdict CONSISTENT).
 

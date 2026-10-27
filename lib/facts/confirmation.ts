@@ -12,22 +12,10 @@ export interface FactConfirmation {
 
 /** The receipt can move without modifying any of the confirmed fact versions. */
 export async function recordFactConfirmation(query: Query, input: FactConfirmation): Promise<readonly string[]> {
-  // Keep a statewide export from growing a single repeatedly rewritten receipt.
-  // A stable id range bounds each scope to 500 immutable fact versions.
-  const scopes = new Map<number,number[]>();
-  for (const id of new Set(input.factIds)) {
-    const bucket = Math.floor(id/500), ids = scopes.get(bucket) ?? [];
-    ids.push(id); scopes.set(bucket,ids);
-  }
-  const entities = new Set<string>();
-  for (const [bucket,ids] of scopes) for (const id of await saveFactConfirmation(query,{...input,
-    scope:`${input.scope}:facts:${bucket}`,factIds:ids})) entities.add(id);
-  return [...entities];
-}
-
-async function saveFactConfirmation(query: Query, input: FactConfirmation): Promise<readonly string[]> {
+  if (!input.factIds.length) return [];
+  // One round trip per source; each persisted scope still covers at most 500 ids.
   const rows = await query(`WITH eligible AS MATERIALIZED (
-    SELECT id,entity_id,md5(value::text) AS value_hash,jsonb_build_object('value_text',value_text,'quote',quote,'quote_start',quote_start,
+    SELECT id,entity_id,id/500 AS bucket,md5(value::text) AS value_hash,jsonb_build_object('value_text',value_text,'quote',quote,'quote_start',quote_start,
       'second_copy_id',second_copy_id,'provenance_kind',provenance_kind) AS receipt
     FROM checked_fact WHERE id=ANY($4::bigint[]) AND status='live'
       AND (checked_at<$3::timestamptz OR checked_at=$3::timestamptz AND (source_copy_id IS DISTINCT FROM $1::bigint
@@ -35,15 +23,15 @@ async function saveFactConfirmation(query: Query, input: FactConfirmation): Prom
           'second_copy_id',second_copy_id,'provenance_kind',provenance_kind) @> coalesce($5::jsonb->id::text,'{}'::jsonb)))
   ), saved AS (
     INSERT INTO fact_confirmation(source_copy_id,scope,checked_at,fact_ids,receipts)
-    SELECT $1,$2,$3,array_agg(id),jsonb_object_agg(id::text,receipt||coalesce($5::jsonb->id::text,'{}'::jsonb)||jsonb_build_object('checked_at',$3::timestamptz,'value_hash',value_hash)) FROM eligible HAVING count(*)>0
+    SELECT $1,$2||':facts:'||bucket,$3,array_agg(id ORDER BY id),jsonb_object_agg(id::text,receipt||coalesce($5::jsonb->id::text,'{}'::jsonb)||jsonb_build_object('checked_at',$3::timestamptz,'value_hash',value_hash)) FROM eligible GROUP BY bucket
     ON CONFLICT(source_copy_id,scope) DO UPDATE SET
       checked_at=greatest(fact_confirmation.checked_at,EXCLUDED.checked_at),
       fact_ids=ARRAY(SELECT DISTINCT id FROM unnest(fact_confirmation.fact_ids||EXCLUDED.fact_ids) id ORDER BY id),
       receipts=fact_confirmation.receipts||EXCLUDED.receipts
     WHERE fact_confirmation.checked_at<EXCLUDED.checked_at OR NOT fact_confirmation.fact_ids @> EXCLUDED.fact_ids
       OR NOT fact_confirmation.receipts @> EXCLUDED.receipts
-    RETURNING source_copy_id
-  ) SELECT DISTINCT entity_id FROM eligible WHERE EXISTS(SELECT 1 FROM saved)`,
+    RETURNING scope
+  ) SELECT DISTINCT entity_id FROM eligible WHERE EXISTS(SELECT 1 FROM saved WHERE scope=$2||':facts:'||eligible.bucket)`,
   [input.copyId,input.scope,input.at,input.factIds,JSON.stringify(input.receipts ?? {})]);
   const entities = rows.map(row => String(row.entity_id));
   if (entities.length) await query(`INSERT INTO fact_watermark(scope,version)

@@ -2,7 +2,7 @@ import { withDatabaseByteContract, type DatabaseByteContract } from "./database-
 import { REGISTRY_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { REGISTRY_RUNTIME_PARSER_VERSION } from "../registry/runtime-version.ts";
 import { stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "./state-scopes.ts";
-import { FEDERAL_DIRECTORY_STATES, federalDirectoryContractId, federalDirectoryScope } from "../officials/federal-directory-data-plane.ts";
+import { FEDERAL_DIRECTORY_STATES, federalDirectoryContractId, federalDirectoryScope } from "../officials/federal-directory-scope.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
 

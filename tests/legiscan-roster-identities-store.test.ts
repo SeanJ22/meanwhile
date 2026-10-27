@@ -23,7 +23,7 @@ test("production identity selectors keep current and immutable historical roster
       return create({...record,candidate:{...record.candidate,readModel:(plan.value as {readModel:unknown}).readModel}},event);
     };
     const roster=normalize(yamlToPeople(body,"tx",url,at),indexDivisions([]),at,"US-TX");
-    const published=await publishStatePeople({store,vault,state:"tx",roster,releaseId:"fixture-historical-identity",now:at,
+    const published=await publishStatePeople({resolveOfficePoint:async()=>({reason:"NO_MATCH"}),store,vault,state:"tx",roster,releaseId:"fixture-historical-identity",now:at,
       acquisitions:[{requestedUrl:url,finalUrl:url,body,rawHash:digest(body),httpStatus:200,retrievedAt:at}]});
     assert.ok(published.outcome.promoted);
     const version=published.outcome.promoted.versionId;

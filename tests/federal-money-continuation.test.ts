@@ -75,5 +75,6 @@ test("Postgres computes only the marker's continuation flag inside the normal ba
   assert.match(query, /'BACKFILL'/);
   assert.match(query, /'cursor'/);
   assert.doesNotMatch(query, /"payload"\s*,/, "the complete marker payload never leaves Postgres for admission");
-  assert.doesNotMatch(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported").toSQL().sql, /jsonb_array_elements/);
+  assert.doesNotMatch(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported").toSQL().sql,
+    /'states'|'BACKFILL'|'cursor'/, "unrelated admissions do not inspect the federal continuation marker");
 });

@@ -78,6 +78,30 @@ test("confirmations stay current without transferring an unchanged promotion pay
   }), /database unavailable/, "a failed version read never serves an unconfirmed copy");
 });
 
+test("status changes refresh a candidate header while the same content fingerprint keeps its body", async t => {
+  const root = await scratch(t);
+  let fingerprint = "source-a:model-a", state = "FETCHED", receipt: string | null = null, reads = 0;
+  const input = { namespace: "candidate-content", keys: ["candidate"],
+    versions: async () => [{ key: "candidate", etag: fingerprint, state, receipt }],
+    values: async () => { reads++; return [{id:"candidate",body:"source facts".repeat(100_000),state,receipt}]; },
+    keyOf: (row: {id:string}) => row.id,
+    freshen: (row:{id:string;body:string;state:string;receipt:string|null}, header:{state:string;receipt:string|null}) => ({...row,state:header.state,receipt:header.receipt}),
+  };
+  const [first] = await cache(root).rows(input);
+  state = "VALIDATED"; receipt = "GOOD";
+  const [validated] = await cache(root).rows(input);
+  state = "PROMOTED";
+  const [promoted] = await cache(root).rows(input);
+  assert.equal(validated.state, "VALIDATED");
+  assert.equal(promoted.state, "PROMOTED");
+  assert.equal(promoted.receipt, "GOOD");
+  assert.equal(promoted.body, first.body);
+  assert.equal(reads, 1);
+  fingerprint = "source-b:model-b";
+  await cache(root).rows(input);
+  assert.equal(reads, 2, "changed source content invalidates the cached body");
+});
+
 test("corrupt or unwritable disposable copies fall back to the actual database read", async t => {
   const root = await scratch(t);
   let calls = 0;

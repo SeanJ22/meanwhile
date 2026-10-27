@@ -1,3 +1,4 @@
+import { databaseByteContract, withDatabaseByteContract, type DatabaseByteContract } from "./database-byte-contract.ts";
 import { REGISTRY_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
@@ -114,7 +115,7 @@ export function sittingWindowDueAtMs(
   return succeededMs + sittingWindowRereadMs(schedule, hot) - ROUTINE_DATA_ADMISSION_MS;
 }
 
-export interface RoutineSourceContract {
+export interface RoutineSourceContract extends Partial<DatabaseByteContract> {
   readonly id: string;
   readonly sourceId: SourceAuthorityId;
   readonly recordClass: RoutineRecordClass;
@@ -167,6 +168,7 @@ const MEETING_CADENCE: RoutineCadencePolicy = {
 };
 
 export const MEETING_PARTITION_POLICY = {
+  ...databaseByteContract({ id: "meeting-partition", recordClass: "MEETING" }),
   sourceId: "meetings-public-bodies",
   recordClass: "MEETING",
   parserNormalizerVersion: "meetings-composite/2",
@@ -187,6 +189,7 @@ export const DERIVED_MEETING_FAMILY_STATES: readonly DerivedMeetingFamilyState[]
 export type DerivedMeetingFamilyState = `US-${string}`;
 
 export const DERIVED_MEETING_FAMILY_POLICY = {
+  ...databaseByteContract({ id: "derived-meeting-family", recordClass: "MEETING" }),
   sourceId: "meetings-derived-routes",
   recordClass: "MEETING",
   parserNormalizerVersion: "meetings-composite/2",
@@ -201,7 +204,7 @@ export const DERIVED_MEETING_FAMILY_POLICY = {
   readerConsumers: ["/api/meetings", "/api/agenda", "Ask", "Admin", "map"],
 } as const;
 
-export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
+const ROUTINE_SOURCE_DEFINITIONS: readonly RoutineSourceContract[] = [
   {
     id: "fec-funding",
     sourceId: "fec-open-api",
@@ -676,6 +679,8 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
   })),
 ] as const;
+
+export const ROUTINE_SOURCE_CONTRACTS = ROUTINE_SOURCE_DEFINITIONS.map(withDatabaseByteContract);
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {
   for (const phase of contract.cadence.phases ?? []) {

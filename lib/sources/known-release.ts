@@ -11,6 +11,7 @@ import { SourceAcquisitionFailure, isSourceAcquisitionFailure, readPublisherBody
 import { readCompleteResponse } from "./source-bytes.ts";
 import { sourceFetch, sourceUserAgent } from "./http.ts";
 import { SOURCE_CHECK_AFTER_ENV } from "./source-check-request.ts";
+import { holdRawCapture, rawCaptureKey } from "../civic-data/raw-capture-vault.ts";
 export { SOURCE_CHECK_AFTER_ENV } from "./source-check-request.ts";
 
 export interface KnownRelease {
@@ -51,6 +52,7 @@ export function knownReleaseSourceCheck(release: Pick<KnownRelease, "requestedUr
     rawHash: release.sha256, checkedAt: release.checkedAt };
 }
 interface ReleaseIndex extends Omit<KnownRelease, "bytes" | "reused"> {
+  readonly observations?: Readonly<Record<string, Pick<KnownRelease, "retrievedAt" | "sourceObservedAt" | "finalUrl" | "contentType">>>;
   readonly formatVersion: 1;
   readonly key: string;
   readonly byteLength: number;
@@ -133,7 +135,7 @@ function validIndex(value: unknown, options: KnownReleaseOptions): value is Rele
   const prefix = `project/freshness/source/${options.sourceId}/releases/${hash(`${options.sourceId}\n${options.releaseId}\n${options.url}`)}`;
   return !!v && v.formatVersion === 1 && v.sourceId === options.sourceId && v.releaseId === options.releaseId &&
     v.requestedUrl === options.url && /^[a-f0-9]{64}$/.test(v.sha256) && typeof v.key === "string" &&
-    v.key === `${prefix}/${v.sha256}.bin` && (!v.vaultKey || v.vaultKey === v.key) && Number.isSafeInteger(v.byteLength) && v.byteLength > 0 &&
+    (v.key === rawCaptureKey(v.sha256) || v.key === `${prefix}/${v.sha256}.bin`) && (!v.vaultKey || v.vaultKey === v.key) && Number.isSafeInteger(v.byteLength) && v.byteLength > 0 &&
     v.byteLength <= options.maxBytes && Array.isArray(v.parsers) && Number.isFinite(Date.parse(v.retrievedAt)) &&
     Number.isFinite(Date.parse(v.sourceObservedAt)) && Number.isFinite(Date.parse(v.checkedAt));
 }
@@ -188,19 +190,15 @@ export async function acquireKnownRelease(options: KnownReleaseOptions): Promise
         byteLength: bytes.byteLength, objectClass: "MUTABLE_INDEX" });
     };
     const save = async (release: KnownRelease, parsers: readonly string[]) => {
-      const bodyKey = `project/freshness/source/${options.sourceId}/releases/${identity}/${release.sha256}.bin`;
-      const existing = await store.head(bodyKey);
+      const { vaultKey: bodyKey } = await holdRawCapture(store, options.sourceId, release.bytes, release.contentType);
       release = { ...release, vaultKey: bodyKey };
-      if (existing?.custom?.retrievedAt) release = { ...release,
-        retrievedAt: existing.custom.retrievedAt, sourceObservedAt: existing.custom.sourceObservedAt ?? existing.custom.retrievedAt,
-        finalUrl: existing.custom.retrievalUrl ?? release.finalUrl, contentType: existing.contentType, reused: true };
-      await store.put(bodyKey, release.bytes, { contentType: release.contentType, contentHash: `sha256-${release.sha256}`,
-        byteLength: release.bytes.byteLength, custom: { sourceId: options.sourceId, releaseId: options.releaseId,
-          canonicalUrl: release.requestedUrl, retrievalUrl: release.finalUrl, retrievedAt: release.retrievedAt,
-          httpStatus: String(release.httpStatus), sourceObservedAt: release.sourceObservedAt,
-          permission: "NOT_APPLICABLE", transport: "REACHABLE", retentionPolicy: "EVIDENCE_PERMANENT", tier: "RAW" } });
+      const original = prior?.observations?.[release.sha256] ?? (prior?.sha256 === release.sha256 ? prior : null);
+      if (original) release = { ...release, retrievedAt: original.retrievedAt,
+        sourceObservedAt: original.sourceObservedAt, finalUrl: original.finalUrl, contentType: original.contentType, reused: true };
       const { bytes, reused, ...metadata } = release; void reused;
-      prior = { ...metadata, formatVersion: 1, key: bodyKey, byteLength: bytes.byteLength, parsers };
+      const observations = { ...prior?.observations, [release.sha256]: { retrievedAt: release.retrievedAt,
+        sourceObservedAt: release.sourceObservedAt, finalUrl: release.finalUrl, contentType: release.contentType } };
+      prior = { ...metadata, observations, formatVersion: 1, key: bodyKey, byteLength: bytes.byteLength, parsers };
       await writeIndex(prior);
       return release;
     };

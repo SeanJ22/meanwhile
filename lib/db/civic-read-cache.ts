@@ -10,7 +10,7 @@ interface CacheIO {
 }
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
-/** Disposable runner copies. A fresh database row version decides every use. */
+/** Disposable runner copies. A fresh content fingerprint decides every use. */
 export class CivicReadCache {
   private readonly io: CacheIO;
   constructor(io: CacheIO) { this.io = io; }
@@ -76,7 +76,7 @@ export class CivicReadCache {
     return current.value;
   }
 
-  /** Read only rows whose database etag differs from the held copy. */
+  /** Read only rows whose content fingerprint differs; freshen small mutable headers separately. */
   async rows<T, V extends CivicRowVersion>(input: {
     readonly namespace: string;
     readonly keys: readonly string[];
@@ -105,12 +105,13 @@ export class CivicReadCache {
       const values = await input.values(keys);
       // An UPDATE racing the whole read must never label old bytes with its
       // newer etag. Return the actual read, but keep only stable row copies.
-      const after = new Map((await input.versions(keys)).map(version => [version.key, version.etag]));
+      const after = new Map((await input.versions(keys)).map(version => [version.key, version]));
       const before = new Map(missing.map(version => [version.key, version.etag]));
       await Promise.all(values.map(async value => {
         const key = input.keyOf(value);
-        result.set(key, value);
-        if (input.etagOf || before.get(key) !== undefined && before.get(key) === after.get(key)) {
+        const version = after.get(key);
+        result.set(key, version && input.freshen ? input.freshen(value, version) : value);
+        if (input.etagOf || before.get(key) !== undefined && before.get(key) === version?.etag) {
           await this.save(input.namespace + ":" + key, { etag: input.etagOf?.(value) ?? before.get(key)!, value });
         }
       }));

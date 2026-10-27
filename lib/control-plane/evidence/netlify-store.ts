@@ -2,6 +2,7 @@ import { getStore, type Store } from "@netlify/blobs";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { contentHash } from "../ids.ts";
 import { outsideSourceAcquisition } from "../../sources/acquisition-trace.ts";
+import { rawCaptureMetadata, resolveRawCapturePointer } from "./raw-pointer.ts";
 import { EvidenceStoreRefusal, objectClassOf, reconcileExistingObject, type EvidenceStore, type ObjectMeta, type StoredObject } from "./store.ts";
 
 const ENVELOPE_FORMAT = "evidence-envelope@1";
@@ -94,7 +95,7 @@ export class NetlifyEvidenceStore implements EvidenceStore {
     // An immutable no-op means these bytes are held, not just their metadata.
     // Rebuilt indexes keep the metadata-only path so a damaged old index can be replaced.
     let held: { meta: ObjectMeta; bytes?: Uint8Array } | null;
-    if (objectClassOf(meta) === "IMMUTABLE_BODY") held = await this.get(key);
+    if (objectClassOf(meta) === "IMMUTABLE_BODY") held = await this.getStored(key);
     else {
       const metadata = await this.head(key);
       held = metadata ? { meta: metadata } : null;
@@ -106,13 +107,14 @@ export class NetlifyEvidenceStore implements EvidenceStore {
       ...(objectClassOf(meta) === "IMMUTABLE_BODY" ? { onlyIfNew: true } : {}),
     });
     if (!result.modified) {
-      const raced = await this.get(key);
+      const raced = await this.getStored(key);
       if (!raced || !reconcileExistingObject(key, bytes, meta, raced)) throw new EvidenceStoreRefusal(`Concurrent evidence write did not settle at ${key}`);
     }
   }
 
   async head(key: string): Promise<ObjectMeta | null> {
-    return (await this.describe(key))?.meta ?? null;
+    const meta = (await this.describe(key))?.meta;
+    return meta ? rawCaptureMetadata(meta) : null;
   }
 
   async describe(key: string, signal = AbortSignal.timeout(VAULT_READ_TIMEOUT_MS)): Promise<{ meta: ObjectMeta; bodySha256: string } | null> {
@@ -125,7 +127,12 @@ export class NetlifyEvidenceStore implements EvidenceStore {
     })(), signal));
   }
 
-  async get(key: string, signal = AbortSignal.timeout(VAULT_READ_TIMEOUT_MS)): Promise<StoredObject | null> {
+  async get(key: string, signal = this.requestSignals.getStore() ?? AbortSignal.timeout(VAULT_READ_TIMEOUT_MS)): Promise<StoredObject | null> {
+    return this.requestSignals.run(signal, () => abortable((async () =>
+      resolveRawCapturePointer(this, await this.getStored(key, signal)))(), signal));
+  }
+
+  private async getStored(key: string, signal = AbortSignal.timeout(VAULT_READ_TIMEOUT_MS)): Promise<StoredObject | null> {
     return this.requestSignals.run(signal, () => abortable((async () => {
     const held = await this.store.getWithMetadata(key, { type: "arrayBuffer" });
     if (held === null) return null;

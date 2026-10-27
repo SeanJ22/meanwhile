@@ -23,6 +23,6 @@ test("new publication fingerprints bind to the candidate while legacy rows stay 
     await assert.rejects(pg.query("UPDATE civic_data_candidates SET read_model_fingerprint=$1 WHERE id='new'", [other]), /immutable/);
     await assert.rejects(pg.query("INSERT INTO civic_data_candidates VALUES ('bad',$1,$2,$3)",
       [fingerprint,{normalization:{normalizedHash:fingerprint}},other]), /differs from its normalized model/);
-    assert.equal((await pg.query("SELECT payload_fingerprint FROM civic_data_promotions WHERE key='new'")).rows[0].payload_fingerprint, fingerprint);
+    assert.equal((await pg.query<{payload_fingerprint:string}>("SELECT payload_fingerprint FROM civic_data_promotions WHERE key='new'")).rows[0].payload_fingerprint, fingerprint);
   } finally { await pg.close(); }
 });

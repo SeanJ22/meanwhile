@@ -49,7 +49,7 @@ export async function refreshFederalKeyVotes(input:{readonly store:RoutineDataSt
   const read=async(url:string,context:string,reuse:boolean)=>continueOfficialVoteDocument({sourceId:FEDERAL_VOTES_SOURCE_ID,
     parserVersion:FEDERAL_VOTES_PARSER_VERSION,context,url,vault,cache:input.cache,signal:signal(),now,reuse,read:async()=>{
       if(url!==bridgeUrl)await delay(input.spacingMs??350,undefined,{signal:signal()});
-      const response=await fetcher(url,{headers:{"user-agent":"we-the-people-civic-app/0.1 (contact: seanj22@gmail.com)"},signal:signal()});
+      const response=await fetcher(url,{headers:{"user-agent":"Meanwhile/1.0 (+https://www.meanwhile.chat)"},signal:signal()});
       if(response.status!==200)throw Error(`${url} -> HTTP ${response.status}`);
       return{requestedUrl:url,finalUrl:response.url||url,httpStatus:response.status,bytes:new Uint8Array(await response.arrayBuffer()),retrievedAt:now()};
     }});

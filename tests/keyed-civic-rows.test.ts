@@ -43,7 +43,7 @@ test("migration backfills compressed registry rows and a one-body read returns o
     const reader = { readerRows: query } as unknown as PostgresRoutineDataStore;
     assert.deepEqual(await PostgresRoutineDataStore.prototype.readRegistryDivisions.call(reader, "AZ", ["TUCSON"]),
       [{ ocdId: division, state: "AZ", label: "Tucson", sourceDataset: "GOV_DIRECTORY" }]);
-    await pg.query("UPDATE civic_data_candidates SET candidate='{}'");
+    await pg.query("UPDATE civic_data_candidates SET read_model_fingerprint='changed'");
     await assert.rejects(readKeyedRegistry(query, "AZ", [bodyId], []), /INVALID_PUBLISHED_POINTER/);
     await assert.rejects(PostgresRoutineDataStore.prototype.readRegistryDivisions.call(reader, "AZ", ["Tucson"]), /INVALID_PUBLISHED_POINTER/);
   } finally { await pg.close(); }

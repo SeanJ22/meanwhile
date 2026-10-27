@@ -67,6 +67,20 @@ const governmentRoute = (value:unknown):value is string => {
   return /(?:^|\.)gov$/i.test(host)||/\.state\.[a-z]{2}\.us$/i.test(host);
 };
 function attributes(tag:string):Record<string,string> {return Object.fromEntries([...tag.matchAll(/\b([a-z-]+)\s*=\s*(?:"([^"]*)"|'([^']*)')/gi)].map(match=>[match[1].toLowerCase(),decodeEntities(match[2]??match[3])]));}
+function entryImages(html:string,base:string) {
+  const images=imagesIn(html,base);
+  for(const tag of html.matchAll(/<[a-z][^>]*\bstyle\s*=[^>]*>/gi)) {
+    const attrs=attributes(tag[0]);
+    const match=/\bbackground-image\s*:\s*url\(\s*(?:"([^"]+)"|'([^']+)'|([^)'"\s]+))\s*\)/i.exec(attrs.style??"");
+    if(!match)continue;
+    try {
+      const src=new URL(match[1]??match[2]??match[3],base).href;
+      if(looksLikeFurniture({src,alt:attrs.class??""})||images.some(image=>image.src===src))continue;
+      images.push({src,alt:attrs["aria-label"]??attrs.title??""});
+    }catch{continue;}
+  }
+  return images;
+}
 export function legislatureRosterLinks(html:string, pageUrl:string):string[] {
   const host = new URL(pageUrl).hostname, links:string[] = [];
   for (const match of html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/gi)) {
@@ -148,7 +162,7 @@ function personOnPage(holder:Officeholder,html:string,sourceUrl:string,options:P
   if(holder.nativeIds?.["official-legislature"]?.length)result.nativeIds={...result.nativeIds,reader:[...new Set([...holder.nativeIds.reader??[],holder.id,holder.personId??holder.id])]};
   if(native)result.nativeIds={...result.nativeIds,[native.source]:[...new Set([...(result.nativeIds[native.source]??[]),native.id])]};
   result.phone=phone(html); result.email=/href=["']mailto:([^"'?]+)/i.exec(html)?.[1]??null;
-  const allImages=imagesIn(html,sourceUrl),images=pickPortraits(holder.name,allImages);
+  const allImages=entryImages(html,sourceUrl),images=pickPortraits(holder.name,allImages);
   const image=images[0]??(boundedEntry&&allImages.length===1&&!looksLikeFurniture(allImages[0])?allImages[0]:undefined);
   if(image)result.portraitCandidate={imageUrl:image.src,sourceUrl,collectedAt};
   const known=holder.memberships?.find(membership=>membership.current!==false&&["upper","lower"].includes(membership.chamber??"")&&(!holder.chamber||holder.chamber==="legislature"||membership.chamber===holder.chamber));
@@ -300,7 +314,8 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     return names.size===1;
   };
   const pagePeople=namesIn(content);
-  const pageRole=/\b(?:Senators?|Senate Member(?:ship)?|Representatives?|House Member(?:ship)?|Assembly Members?|Delegates?)\b/i.exec(headers)?.[0];
+  const pageRole=/\b(?:Senators?|Senate Member(?:ship)?|Representatives?|House Member(?:ship)?|Assembly Members?|Delegates?)\b/i.exec(headers)?.[0]
+    ??(pageRoleFor(headers)==="upper"?"Senate Member":undefined);
   // The matched URL is only a route. Bind the largest balanced entry that
   // names this member alone, and read every field from that entry.
   for(const holder of held) {
@@ -327,7 +342,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
     const entryUrl=personal?pageUrl:profile??`${pageUrl}#member=${encodeURIComponent(key(holder.name))}`;
     const parsed=personOnPage(holder,context,pageUrl,options,collectedAt,entryUrl,!personal,ownsProfile(holder));
     if(parsed&&!parsed.portraitCandidate&&(personalHeading||ownsProfile(holder))&&pagePeople.length===1) {
-      const images=imagesIn(content,pageUrl);
+      const images=entryImages(content,pageUrl);
       const surname=key(holder.name).split(" ").filter(word=>!['jr','sr','ii','iii','iv'].includes(word)).at(-1);
       const labeled=ownsProfile(holder)?images.filter(image=>{
         const label=/^(?:state )?(?:senator|sen|representative|rep|delegate|assemblyman|assemblywoman) (.+)$/.exec(key(image.alt))?.[1];
@@ -366,7 +381,7 @@ export function normalizeOfficialLegislaturePage(html:string,pageUrl:string,opti
           || /\/(?:representatives|senators)\/(?:custom\/)?details\.aspx$/i.test(profileUrl.pathname)&&[...profileUrl.searchParams].some(([name,value])=>/^memberid$/i.test(name)&&/^\d+$/.test(value));
         const districtEvidence=/\bDistrict\s*(?:No\.?\s*)?[:#-]?\s*\d+/i.test(text)||/\/(?:district)\d+\b/i.test(profileUrl.pathname)
           ||/\b(?:title|aria-label)=["']District\s+\d+/i.test(card);
-        if(!(memberRoute&&(districtEvidence||upperPattern.test(text)||lowerPattern.test(text)))&&!pickPortraits(name,imagesIn(card,pageUrl)).length)continue;
+        if(!(memberRoute&&(districtEvidence||upperPattern.test(text)||lowerPattern.test(text)))&&!pickPortraits(name,entryImages(card,pageUrl)).length)continue;
         const tableContext=block.ancestors.join(" ").replace(/([a-z])([A-Z])/g,"$1 $2"),route=profileUrl.pathname;
         let upper=upperPattern.exec(text),lower=lowerPattern.exec(text);
         if(!upper&&!lower){

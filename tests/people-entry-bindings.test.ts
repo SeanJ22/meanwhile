@@ -46,6 +46,20 @@ test("a shared member-list route binds each entry's identity, district, contact 
   assert.equal(mergePeopleSets([roster(people),parsed])!.officeholders.length,2);
 });
 
+test("a Senate directory binds each CSS headshot to its own named card and refuses contact icons",()=>{
+  const source="https://ohiosenate.gov/members/directory",members=people.map(person=>({...person,state:"OH",chamber:"upper" as const,officeTitle:"State Senator"}));
+  const card=(name:string,slug:string,district:string)=>`<div><a href="/members/${slug}"><div>${name}</div><div>District ${district} | R</div><div class="media-thumbnail-image" style="background-image:url('/headshots/${slug}.jpg')"></div><img src="/email.png" alt="Email ${name}"></a></div>`;
+  const body='<title>Member Directory | Ohio Senate</title><h1>Member Directory</h1>'+card("Vito Barbieri","vito-barbieri","3")+card("Jane Member","jane-member","4");
+  const parsed=normalizeOfficialLegislaturePage(body,source,{state:"oh",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster(members)},at);
+  assert.equal(parsed.officeholders.length,2);
+  for(const [i,person] of parsed.officeholders.entries()) {
+    assert.equal(person.portraitCandidate?.imageUrl,`https://ohiosenate.gov/headshots/${i?"jane-member":"vito-barbieri"}.jpg`);
+    assert.deepEqual(person.nativeIds?.["ocd-person"],[`ocd-person/${i?"jane":"vito"}`]);
+  }
+  const icons=parse('<h1>House Membership</h1><div><h2>Representative Vito Barbieri</h2><p>District 3</p><img src="/email.png" alt="Email Vito Barbieri"></div>');
+  assert.equal(icons.officeholders[0].portraitCandidate,undefined);
+});
+
 test("successive occupants of a linked seat route have separate person identities",()=>{
   const profile="https://www.flsenate.gov/Senators/S33";
   const parseOccupant=(person:Officeholder)=>normalizeOfficialLegislaturePage(`<h1>Senator ${person.name}</h1><p>Senator District 33</p>`,profile,

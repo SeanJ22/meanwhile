@@ -75,7 +75,7 @@ export interface PickedPortrait {
  * officeholder. It can only remove a candidate, never add one.
  */
 const FURNITURE =
-  /\b(logos?|banners?|seals?|mastheads?|wordmarks?|letterheads?|favicons?|placeholders?|icons?|slides?|sliders?|heros?|headers?|footers?|sprites?|backgrounds?)\b/;
+  /\b(logos?|banners?|seals?|mastheads?|wordmarks?|letterheads?|favicons?|placeholders?|icons?|slides?|sliders?|heros?|headers?|footers?|sprites?|backgrounds?|email|facebook|twitter|instagram|linkedin|youtube)\b/;
 
 /**
  * The words in a filename, splitting on every separator a filename uses:

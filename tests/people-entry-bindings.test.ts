@@ -12,6 +12,7 @@ import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { indexByDivision } from "../lib/officials/lookup.ts";
+import { officeIdentity } from "../lib/officials/office-identity.ts";
 import { retainsPeopleBindings,bindPeopleSources } from "../lib/officials/people-bindings.ts";
 import { verifyPortraitSources, portraitHash,profilePortraitImageUrls } from "../lib/photos/evidence.ts";
 
@@ -53,6 +54,7 @@ test("a Senate directory binds each CSS headshot to its own named card and refus
   const parsed=normalizeOfficialLegislaturePage(body,source,{state:"oh",sourceId:"official-state-people",asOf:at,signal:new AbortController().signal,roster:roster(members)},at);
   assert.equal(parsed.officeholders.length,2);
   for(const [i,person] of parsed.officeholders.entries()) {
+    assert.equal(officeIdentity(person.officeTitle,person.memberships?.[0].divisionId),"state_senator");
     assert.equal(person.portraitCandidate?.imageUrl,`https://ohiosenate.gov/headshots/${i?"jane-member":"vito-barbieri"}.jpg`);
     assert.deepEqual(person.nativeIds?.["ocd-person"],[`ocd-person/${i?"jane":"vito"}`]);
   }

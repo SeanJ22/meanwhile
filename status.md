@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 132 (main 76fa94388) for readers since 4:09 PM EDT; runner loaded 132 by 4:28 PM EDT (breaker first CHECK row), routine lane launching; watching 2 hours
+build_state: LIVE: release 132 (main 76fa94388). Runner up 2 hours on 132 without a restart (4:28-6:28 PM EDT) but launching nothing since ~6:05 PM: the breaker holds routine-civic-data, place-pages and publish-now until their code changes (second trip today). 133 ready to ship pending Sean (it would release those holds)
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-27T22:00:00Z
+heartbeat: 2026-10-27T22:40:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -29,6 +29,9 @@ heartbeat: 2026-10-27T22:00:00Z
 - Data diet, for the people/portrait lanes (DB-06, PP-02): lib/photos/portrait-run.ts:104 store.readSlimRosters reads ~319 MB of reader civic_data_promotions:STATE_LEGISLATOR every hour (4 PM and 5 PM hours alike); it is what trips the breaker on routine-civic-data. Unchanged rosters should cost only their version check.
 - 133 (gates 12/12 on 9530f6529: MD-02 + RIVER-DOORS-133; river moved there). New READYs scanned: OB-01 d44f0b382 RETURNED (returns/ob-01.md: Legistar member publication throws MEETING_BODY_OWNER_UNKNOWN; bodies-panel gap test). BF-01 5ae05cfc5, RC-01 7342a43d2 and WR-01 67903ec18 folded on river-next-133b d72b1b9fe; fold fixes: BF-01's second readCandidate stub and second SELECT * FROM shelf now share one definition (RC-01 check passes; its saved read list shrank); BB-01's held-publication launch now states bytes per run (meeting-pins 6 MB, box-facts 4.5 MB). pnpm gates (now with RC-01's rulings check in lint) running.
 - HELD for Sean: stream/db-05 posted `READY: DB-05` b445d2278 at 5:38 PM after Sean renamed the lane DB-06; not folded until Sean says whether it counts as DB-06's READY. VP-01 has no READY yet.
+- 6:33 PM, two hours on 132: the runner process (pid 3549988) ran from 4:28 to 6:28 PM EDT without a restart; no ControlPlaneRequestTimeout ended it (no startup digests since 4:28). Breaker CHECK rows every 10 minutes, 13 of 13 (4:28 through 6:28). It launched tasks from 4:34 to about 6:05 PM: routine passes every 7-10 minutes, 47 source tasks promoted, PR and GU ballot publications, meeting tasks in OH, TX, AK, VA, NH, AZ, CA, MA, RI, WI, NV queued and collecting; publish-now launched calendars each pass (its 10,718 deferrals are turn-taking on shared upstreams and the 10-minute pass deadline). NOT MET: launching for the full two hours. Since ~6:05 PM nothing launches.
+- Why: BB-01 holds a job until its code changes after a second trip in a day. routine-civic-data (4:48 PM 0.78 GB; 5:28 PM 0.63 GB, top civic_data_promotions:STATE_LEGISLATOR from the portrait run), place-pages (4:58; 5:38 PM 0.63 GB, top place-builder query), publish-now (4:58; 5:58 PM 0.505 GB, top cp_doors) are all PAUSED_CODE. There is no Admin release; only a code change resumes them. Release 133 changes all three jobs' code, so shipping it would resume them. The ruling says an over-budget job pauses until Sean releases it, so 133's PR waits for Sean.
+- GB/h (database_transfer_hourly, EDT): 3 PM (before 132; runner crash-looping) reader 0.288 + control plane 0.081; 4 PM (deploy, switch at 4:28) reader 3.198 + 0.643; 5 PM (first full hour on 132) reader 2.358 + 0.480. 5 PM by job: reader functions (index) 1.285 GB (candidate_events 526 MB, promotions 397 MB; the reader-function cost DB-06 targets); routine-civic-data 0.632 GB reader (portrait-run.ts:104 319 MB) + 0.085 control plane; publish-now 0.188 control plane (cp_doors whole records for change rates 121 MB, narrowed in 133) + 0.129 reader; console-publish owner snapshot 0.154; place-pages 0.108. The portrait run's 319 MB is not new: per-state portrait jobs read 100-400 MB per state-hour on Oct 25.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

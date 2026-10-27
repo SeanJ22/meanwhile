@@ -37,9 +37,11 @@ export async function readHour(control: Sql, reader: Sql, at: string) {
 
 /** Oversight reads the breaker's bounded event window; it never reopens transfer read maps. */
 export async function readJobBreakerEvents(control: Sql, from: string, through: string): Promise<JobBreakerEvent[]> {
-  return await query(control,"job-transfer-breaker",`SELECT id,checked_at,hour,action,job,gb,top_table,bytes_per_request,state,detail
+  const rows=await query(control,"job-transfer-breaker",`SELECT id,checked_at,hour,action,job,gb,top_table,bytes_per_request,state,detail
     FROM cp_job_transfer_breaker WHERE checked_at >= $1::timestamptz AND checked_at < $2::timestamptz
-    AND action IN ('PAUSE','RESUME') ORDER BY checked_at,id`,[from,through]) as unknown as JobBreakerEvent[];
+    AND action IN ('PAUSE','RESUME') ORDER BY checked_at,id`,[from,through]);
+  return rows.map(row=>({...row,checked_at:countTimestamp(row.checked_at),hour:countTimestamp(row.hour),gb:Number(row.gb),
+    bytes_per_request:row.bytes_per_request===null?null:Number(row.bytes_per_request)})) as unknown as JobBreakerEvent[];
 }
 
 /** Aggregate beside the accounting rows; their large read maps never cross the wire. */

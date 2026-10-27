@@ -118,9 +118,9 @@ import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
 import { runtimeContractRetry, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
-import { evaluateJobBreaker, JOB_TRANSFER_SQL, jobTransfers, JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB,
-  readJobBreakerStates, writeJobBreakerEvents, type JobBreakerSnapshot } from "../lib/control-plane/job-transfer-breaker.ts";
-import { admitJobLaunch, JOB_BREAKER_PATH_ENV, registeredJobIdentity, saveBreakerSnapshot } from "../lib/control-plane/job-breaker-local.ts";
+import { JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB } from "../lib/control-plane/job-transfer-breaker.ts";
+import { admitJobLaunch, JOB_BREAKER_PATH_ENV, registeredJobIdentity } from "../lib/control-plane/job-breaker-local.ts";
+import { JobTransferBreaker } from "../lib/control-plane/job-breaker-loop.ts";
 import { withDatabaseJob, processNeonBytes } from "../lib/db/transfer-by-caller.ts";
 
 installConnectAttemptWindow();
@@ -203,7 +203,7 @@ let RUNNING_CODE_SHA = PARENT_CODE_SHA;
 let CODE_ROOT = ROOT;
 const jobBreakerPath = process.env[JOB_BREAKER_PATH_ENV] ?? join(ROOT, ".mirror", "job-transfer-breaker.json");
 if (provider === "postgres" && !STAGING) process.env[JOB_BREAKER_PATH_ENV] = jobBreakerPath;
-let jobBreakerSnapshot: JobBreakerSnapshot | null = null;
+let jobBreaker: JobTransferBreaker | null = null;
 let jobBreakerWork: Promise<void> | null = null;
 let jobBreakerTimer: ReturnType<typeof setInterval> | null = null;
 function breakerOwnBytes() {
@@ -217,33 +217,14 @@ async function checkJobTransfers(): Promise<void> {
   const controlUrl = controlPlaneUrlFromEnv(), readerUrl = process.env.DATABASE_URL;
   if (!controlUrl || !readerUrl) throw new Error("Job transfer breaker requires both databases");
   await withDatabaseJob(JOB_BREAKER_JOB, async () => {
-    const control = neon(controlUrl), reader = neon(readerUrl), now = Date.now();
-    if (!jobBreakerSnapshot) {
-      let cached: JobBreakerSnapshot | null = null;
-      try { cached = JSON.parse(readFileSync(jobBreakerPath,"utf8")); } catch { /* The control plane is authoritative on a new host. */ }
-      jobBreakerSnapshot = cached?.pendingEvents?.length ? cached : {
-        checkedAt: new Date(now).toISOString(), states: await readJobBreakerStates(control),
-      };
+    if (!jobBreaker) {
+      const bounded = (url: string) => { const sql=neon(url); return {query:(text:string,params:readonly unknown[]=[])=>
+        sql.query(text,[...params],{fetchOptions:{signal:AbortSignal.timeout(10_000)}})}; };
+      jobBreaker = new JobTransferBreaker({path:jobBreakerPath,control:bounded(controlUrl),reader:bounded(readerUrl),
+        code:job=>registeredJobIdentity(jobBreakerPath,CODE_ROOT,job),release:()=>RUNNING_CODE_SHA??"unknown",meter:breakerOwnBytes,
+        log:line=>console.log(`  job transfer breaker: ${line}`)});
     }
-    const before = breakerOwnBytes();
-    const rows = jobTransfers(await reader.query(JOB_TRANSFER_SQL,[hourStart(now)],{ fetchOptions: { signal: AbortSignal.timeout(10_000) } }));
-    const result = evaluateJobBreaker({ now, rows, states: jobBreakerSnapshot.states,
-      code: job => registeredJobIdentity(jobBreakerPath,CODE_ROOT,job) });
-    const own = breakerOwnBytes(), currentOwn = own.find(part=>part.hour === hourStart(now));
-    const pending: JobBreakerSnapshot = { ...result.snapshot, pendingEvents: [...jobBreakerSnapshot.pendingEvents ?? [], ...result.events, {
-      id: `check:${new Date(now).toISOString()}`, checked_at: new Date(now).toISOString(), hour: hourStart(now), action: "CHECK",
-      job: null, gb: (currentOwn?.bytes ?? 0)/1e9, top_table: "database_transfer_hourly",
-      bytes_per_request: currentOwn?.requests ? currentOwn.bytes/currentOwn.requests : null, state: null,
-      detail: { jobs: rows.length, before, throughRead: own, release: RUNNING_CODE_SHA,
-        pauses: result.events.filter(event=>event.action === "PAUSE").map(event=>event.job) },
-    }] };
-    // Persist the decision and its outbox together before enforcing it. A control-log failure cannot lose a pause.
-    saveBreakerSnapshot(jobBreakerPath,pending);
-    jobBreakerSnapshot = pending;
-    await writeJobBreakerEvents(control,pending.pendingEvents!);
-    jobBreakerSnapshot = result.snapshot;
-    saveBreakerSnapshot(jobBreakerPath,result.snapshot);
-    for (const event of result.events) console.log(`  job transfer breaker: ${event.action} ${event.job}; ${event.gb.toFixed(3)} GB; ${event.detail.reason}`);
+    await jobBreaker.check();
   });
 }
 function jobTransferTick(): Promise<void> {

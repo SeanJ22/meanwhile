@@ -1285,10 +1285,11 @@ for (const { id } of pendingRuns) unsettledSourceRuns.add(id);
 type SourceUnit = PendingRun | StateCalendarGroup<PendingRun> | CongressRunGroup<PendingRun>;
 const sourceHandoffs = new Map<string, ReturnType<typeof writeContractHandoff>>();
 function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
+  const launchEveryMs = Math.min(...unitMembers(unit).map(member=>member.task.cadenceMs));
   if (unit.kind === "CONGRESS_DIRECTORY") {
     const handoff = writeContractHandoff(unit.members.map(member => member.id));
     sourceHandoffs.set(unit.id, handoff);
-    return { id: unit.id, failureDomain: "routine-source:congress-directory-project", executable: process.execPath,
+    return { id: unit.id, launchEveryMs, failureDomain: "routine-source:congress-directory-project", executable: process.execPath,
       args: [...TS_CHILD, "scripts/fetch-congress-legislators.mts", "--promote", ...handoff.args],
       env: withPassDeadline({ ...admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "MANUAL_CONTRACT", contract: unit.id, parentPid: process.pid }),
         ...stateCalendarEnvironment(unit.members) }, PASS_LAUNCH_DEADLINE_MS) };
@@ -1308,6 +1309,7 @@ function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
   }
   return {
     id: unit.id,
+    launchEveryMs,
     failureDomain: unit.id,
     executable: process.execPath,
     args: [...TS_CHILD, ...unit.command.filter(arg => !arg.startsWith("--only-partition=")), ...handoff.args],

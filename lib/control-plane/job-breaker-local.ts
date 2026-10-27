@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
 import { dirname, extname, isAbsolute, join, relative, resolve } from "node:path";
 import { protectedJob, type JobBreakerSnapshot } from "./job-transfer-breaker.ts";
 
@@ -27,7 +27,7 @@ export function jobSourceIdentity(root: string, entry: string): string | null {
       const base = target.replace(/\.(?:js|mjs)$/, "");
       const candidates = extname(target) ? [target, `${base}.ts`, `${base}.mts`] : [target+".ts", target+".mts", target+".tsx", join(target,"index.ts")];
       const found = candidates.find(candidate => existsSync(candidate));
-      if (found) open(found);
+      if (found && /\.[cm]?[jt]sx?$/.test(found)) open(found);
     }
   };
   try {
@@ -56,7 +56,8 @@ interface Launch { id: string; args: readonly string[]; launchEveryMs?: number }
 export function admitJobLaunch(command: Launch, root: string, env: NodeJS.ProcessEnv = process.env, now = Date.now(), reserve = true): boolean {
   const path = env[JOB_BREAKER_PATH_ENV];
   if (!path || protectedJob(command.id)) return true;
-  const entry = command.args.find(arg => /\.(?:mts|mjs|tsx?|js)$/.test(arg));
+  const entry = command.args.find((arg,index) => !arg.startsWith("-") && /\.(?:mts|mjs|tsx?|js)$/.test(arg)
+    && !["--import","--require","--loader","--experimental-loader","-r"].includes(command.args[index-1]??""));
   if (entry) {
     mkdirSync(`${path}.jobs`, { recursive: true });
     const source = isAbsolute(entry) ? relative(root,entry) : entry;
@@ -71,9 +72,18 @@ export function admitJobLaunch(command: Launch, root: string, env: NodeJS.Proces
   const directory = `${path}.launches`;
   mkdirSync(directory,{recursive:true});
   const file = join(directory,key(command.id)), lock = file+".lock";
+  // A process killed between mkdir and finally must not leave the job permanently throttled off.
+  if (existsSync(lock)) {
+    try {
+      const pid = Number(readFileSync(join(lock,"pid"),"utf8"));
+      try { process.kill(pid,0); }
+      catch (error) { if ((error as NodeJS.ErrnoException).code === "ESRCH") rmSync(lock,{recursive:true,force:true}); }
+    } catch { if (Date.now()-statSync(lock).mtimeMs > 60_000) rmSync(lock,{recursive:true,force:true}); }
+  }
   try { mkdirSync(lock); }
   catch { return false; }
   try {
+    writeFileSync(join(lock,"pid"),String(process.pid));
     let last = 0;
     try { last = Number(readFileSync(file,"utf8")); } catch { /* First resumed launch. */ }
     const everyMs = command.launchEveryMs ?? 60_000;

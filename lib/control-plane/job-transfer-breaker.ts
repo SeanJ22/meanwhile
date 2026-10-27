@@ -40,6 +40,7 @@ export interface JobBreakerState {
   code: string | null;
   offsetHour: string;
   offsetBytes: number;
+  lastTransfer?: JobTransfer & { hour: string };
 }
 export interface JobBreakerEvent {
   id: string;
@@ -76,9 +77,12 @@ export function evaluateJobBreaker(input: {
   const rows = new Map(input.rows.map(row => [row.job, row]));
   const emit = (state: JobBreakerState, action: "PAUSE" | "RESUME", reason: string) => {
     const row = rows.get(state.job);
-    events.push({ id: `${at}:${state.job}:${events.length}`, checked_at: at, hour, action, job: state.job,
-      gb: (row?.bytes ?? 0) / 1e9, top_table: row?.topTable ?? null,
-      bytes_per_request: row?.requests ? row.bytes / row.requests : null, state: { ...state }, detail: { reason } });
+    const measurement = row ? { ...row, hour } : state.lastTransfer;
+    // A quiet next-hour resume retains the measured trip's table and request size. checked_at is the action clock.
+    events.push({ id: `${at}:${state.job}:${events.length}`, checked_at: at, hour: measurement?.hour ?? hour, action, job: state.job,
+      gb: (measurement?.bytes ?? 0) / 1e9, top_table: measurement?.topTable ?? null,
+      bytes_per_request: measurement?.requests ? measurement.bytes / measurement.requests : null,
+      state: { ...state }, detail: { reason, checkedHour: hour } });
   };
   for (const job of new Set([...Object.keys(states), ...rows.keys()])) {
     if (protectedJob(job)) continue;
@@ -97,7 +101,8 @@ export function evaluateJobBreaker(input: {
     if (bytes <= JOB_BREAKER_BYTES || state?.tripHour === hour) continue;
     const trips = (state?.tripDay === day ? state.trips : 0) + 1;
     state = states[job] = { job, mode: trips >= 2 ? "PAUSED_CODE" : "PAUSED_HOUR", trips, tripDay: day,
-      tripHour: hour, code, offsetHour: state?.offsetHour ?? hour, offsetBytes: state?.offsetBytes ?? 0 };
+      tripHour: hour, code, offsetHour: state?.offsetHour ?? hour, offsetBytes: state?.offsetBytes ?? 0,
+      lastTransfer: row ? {...row,hour} : state?.lastTransfer };
     emit(state, "PAUSE", trips >= 2 ? "Second trip today; waiting for this job's code to change" : "Hourly job transfer exceeded 0.5 GB");
   }
   return { snapshot: { checkedAt: at, states }, events };

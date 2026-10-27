@@ -99,7 +99,7 @@ test("the actual reader panel visibly labels both Clerk-confirmed vacancies with
 test("official Capitol contacts publish independently and reach the actual directory and office card", async () => {
   const core = roster("CA", "G000607"), value = withChamberDirectories(core, "CA", captures);
   const coreUrl = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${sha}/legislators-current.yaml`;
-  const candidate = await federalDirectoryCandidate({ state: "CA", projection: value, retrievedAt: at, vault: new MemoryEvidenceStore(),
+  const candidate = await federalDirectoryCandidate({ state: "CA", projection: value, retrievedAt: at, vault: new MemoryEvidenceStore(), resolveOfficePoint: async () => ({reason:"NO_MATCH"}),
     acquisitions: [{ requestedUrl: coreUrl, finalUrl: coreUrl, httpStatus: 200, body: "held membership" },
       ...captures.map(capture => ({ ...capture, requestedUrl: capture.finalUrl, httpStatus: 200 }))] });
   const outcome = await processRegisteredManualCandidate(new MemoryRoutineDataStore(), "congress-bulk-roster:CA", candidate, at);

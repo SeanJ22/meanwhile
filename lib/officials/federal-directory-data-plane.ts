@@ -4,7 +4,7 @@ import { canonicalCivicDataJson, civicRecordsFor } from "../civic-data/changes.t
 import { authorityFor } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import { holdRawCapture, type RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
-import { REGISTRY_STATES, requireRegistryState } from "../civic-data/state-scopes.ts";
+import { requireRegistryState } from "../civic-data/state-scopes.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { OfficeholderSet, SeatVacancy } from "./types.ts";
 import type { DirectoryFile } from "./directory.ts";
@@ -12,17 +12,10 @@ import { CHAMBER_DIRECTORY_URLS } from "./chamber-directory.ts";
 import type { RosterChange } from "./roster-changes.ts";
 import { publishFederalDirectoryOfficePoints, type OfficePointResolver } from "./office-points-publication.ts";
 
-export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
-export type FederalDirectoryState = typeof REGISTRY_STATES[number];
-export const FEDERAL_DIRECTORY_STATES: readonly FederalDirectoryState[] = REGISTRY_STATES;
-export const federalDirectoryScope = (state: string) => `US-${requireRegistryState(state)}:current-congress-directory`;
-export type FederalDirectoryContractId = `congress-bulk-roster:${FederalDirectoryState}`;
-export const federalDirectoryContractId = (state: string): FederalDirectoryContractId => `congress-bulk-roster:${requireRegistryState(state)}`;
-export function federalDirectoryStateOf(contractId: string): FederalDirectoryState | null {
-  const state = /^congress-bulk-roster:([A-Z]{2})$/.exec(contractId)?.[1];
-  return FEDERAL_DIRECTORY_STATES.find(place => place === state) ?? null;
-}
-export const FEDERAL_DIRECTORY_PARSER_VERSION = "congress-directory/5" as const;
+import { FEDERAL_DIRECTORY_SOURCE_ID, FEDERAL_DIRECTORY_PARSER_VERSION, federalDirectoryScope } from "./federal-directory-scope.ts";
+export { FEDERAL_DIRECTORY_SOURCE_ID, FEDERAL_DIRECTORY_STATES, FEDERAL_DIRECTORY_PARSER_VERSION,
+  federalDirectoryScope, federalDirectoryContractId, federalDirectoryStateOf } from "./federal-directory-scope.ts";
+export type { FederalDirectoryState, FederalDirectoryContractId } from "./federal-directory-scope.ts";
 
 export interface FederalDirectoryAcquisition {
   readonly requestedUrl: string;

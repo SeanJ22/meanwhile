@@ -101,7 +101,7 @@ test("daily listing checks reuse immutable saved datasets and never retain keys"
 test("actual source fixtures promote through the per-state routine contract and repeat checks confirm unchanged reader facts", async () => {
   const civicStore = new MemoryRoutineDataStore(), store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories(), { fetchImpl } = transport();
   const roster = normalize(yamlToPeople(fixture("openstates-alma-allen.yml"), "tx", sourceUrl, at), indexDivisions([]), at, "US-TX");
-  const published = await publishStatePeople({ vault, store: civicStore, state: "tx", roster, releaseId: "fixture-actual-openstates",
+  const published = await publishStatePeople({resolveOfficePoint:async()=>({reason:"NO_MATCH"}), vault, store: civicStore, state: "tx", roster, releaseId: "fixture-actual-openstates",
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, body: fixture("openstates-alma-allen.yml"), rawHash: digest(fixture("openstates-alma-allen.yml")), httpStatus: 200, retrievedAt: at }], now: at });
   assert.ok(published.outcome.promoted);
   const input = { state: "tx", civicStore, store, locks, fetchImpl, apiKey: "private-test-api-key", now: () => at, signal: AbortSignal.timeout(10_000) };
@@ -124,7 +124,7 @@ test("actual source fixtures promote through the per-state routine contract and 
   // A new capture of the same real native person is a distinct source version;
   // the earlier verified crosswalk keeps the exact source version it used.
   const later = at;
-  const republished = await publishStatePeople({ vault, store: civicStore, state: "tx", roster: { ...roster, generatedAt: later }, releaseId: "fixture-actual-openstates-next",
+  const republished = await publishStatePeople({resolveOfficePoint:async()=>({reason:"NO_MATCH"}), vault, store: civicStore, state: "tx", roster: { ...roster, generatedAt: later }, releaseId: "fixture-actual-openstates-next",
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, body: fixture("openstates-alma-allen.yml"), rawHash: digest(fixture("openstates-alma-allen.yml")), httpStatus: 200, retrievedAt: later }], now: later, confirmUnchanged: false });
   assert.ok(republished.outcome.promoted);
   const historical = structuredClone(first.publication.candidate);
@@ -144,7 +144,7 @@ test("actual source fixtures promote through the per-state routine contract and 
 test("a successful empty daily listing is a confirmed unchanged check and establishes no absent votes", async () => {
   const civicStore = new MemoryRoutineDataStore(), store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
   const roster = normalize(yamlToPeople(fixture("openstates-alma-allen.yml"), "tx", sourceUrl, at), indexDivisions([]), at, "US-TX");
-  await publishStatePeople({ vault, store: civicStore, state: "tx", roster, releaseId: "fixture-empty-list-roster",
+  await publishStatePeople({resolveOfficePoint:async()=>({reason:"NO_MATCH"}), vault, store: civicStore, state: "tx", roster, releaseId: "fixture-empty-list-roster",
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, body: fixture("openstates-alma-allen.yml"), rawHash: digest(fixture("openstates-alma-allen.yml")), httpStatus: 200, retrievedAt: at }], now: at });
   const input = { state: "tx", civicStore, store, locks, apiKey: "private-test-api-key", now: () => at, signal: AbortSignal.timeout(10_000),
     fetchImpl: (async () => new Response(JSON.stringify({ status: "OK", datasetlist: [] }))) as typeof fetch };
@@ -158,7 +158,7 @@ test("a successful empty daily listing is a confirmed unchanged check and establ
 test("a deadline after one dataset publication resumes its immutable session without parsing or publishing its votes again",async()=>{
   const civicStore=new MemoryRoutineDataStore(),store=new MemoryEvidenceStore(),{locks}=createMemoryRepositories(),transported=transport();
   const roster=normalize(yamlToPeople(fixture("openstates-alma-allen.yml"),"tx",sourceUrl,at),indexDivisions([]),at,"US-TX");
-  await publishStatePeople({vault,store:civicStore,state:"tx",roster,releaseId:"fixture-cutoff-roster",
+  await publishStatePeople({resolveOfficePoint:async()=>({reason:"NO_MATCH"}),vault,store:civicStore,state:"tx",roster,releaseId:"fixture-cutoff-roster",
     acquisitions:[{requestedUrl:sourceUrl,finalUrl:sourceUrl,body:fixture("openstates-alma-allen.yml"),rawHash:digest(fixture("openstates-alma-allen.yml")),httpStatus:200,retrievedAt:at}],now:at});
   const input={state:"tx",civicStore,store,locks,fetchImpl:transported.fetchImpl,apiKey:"private-test-api-key",now:()=>at,signal:new AbortController().signal};
   await assert.rejects(refreshLegiscanVotes({...input,onDataset:async()=>{throw Error("pass deadline");}}),/pass deadline/);

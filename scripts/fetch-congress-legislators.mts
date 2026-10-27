@@ -4,7 +4,7 @@ import { pathToFileURL } from "node:url";
 import { failedFederalDirectoryCandidate, heldDirectoryCandidate, federalDirectoryContractId, federalDirectoryForState, federalDirectoryStateOf,
   FEDERAL_DIRECTORY_PARSER_VERSION, federalDirectoryScope, federalDirectorySourceContentHash, federalDirectoryCaptureHash, type FederalDirectoryCapture } from "../lib/officials/federal-directory-data-plane.ts";
 import { normalizeCongressDirectory } from "../lib/officials/congress-normalize.ts";
-import { publishFederalDirectoryOfficePoints } from "../lib/officials/office-points-publication.ts";
+import { publishFederalDirectoryOfficePoints, type OfficePointResolver } from "../lib/officials/office-points-publication.ts";
 import { readStateFederalDirectory } from "../lib/officials/federal-directory-read-model.ts";
 import { requiredAssignment } from "./cli-args.mts";
 import { readContractHandoff } from "../lib/civic-data/contract-handoff.ts";
@@ -36,6 +36,7 @@ export async function refreshCongressDirectory(input: {
   vault: EvidenceStore;
   acquire?: typeof acquireKnownRelease;
   revision?: typeof acquireCongressSourceRevision;
+  resolveOfficePoint?: OfficePointResolver;
   now?: () => string;
 }): Promise<void> {
   const { store, vault } = input, clock = input.now ?? (() => new Date().toISOString());
@@ -68,7 +69,7 @@ export async function refreshCongressDirectory(input: {
     if (Date.now() >= deadline) return;
     try {
       // Office points found while publishing are saved with the state's directory and reused by its next publication.
-      const pointed = await publishFederalDirectoryOfficePoints(projection, latest.get(state) ?? priors.get(state) ?? null);
+      const pointed = await publishFederalDirectoryOfficePoints(projection, latest.get(state) ?? priors.get(state) ?? null, input.resolveOfficePoint);
       const candidate = heldDirectoryCandidate({ state, acquisitions, retrievedAt, projection: pointed, changes: changesFrom(priors.get(state) ?? null, pointed),
         sourceInputHash,sourceComplete:sourceComplete(),sourceWorkPending:!sourceComplete()&&optionalFailures===0 });
       const outcome = await processRegisteredManualCandidate(store, federalDirectoryContractId(state), candidate, clock(),baseVersions.get(state));

@@ -117,9 +117,7 @@ test("one pulse serves on-screen panels; hidden and five-minute idle tabs make n
     const quiet = [...counts.entries()];
     await page.clock.runFor(10 * 60_000);
     assert.deepEqual([...counts.entries()], quiet);
-    await page.screenshot({ path: "work/ap-01/panels-paused.png" });
     assert.deepEqual(errors, []);
-    console.log(JSON.stringify({ hidden10MinuteRequests: 0, idleHourRequestsAfterDeadline: 0, counts: Object.fromEntries(counts) }));
     await page.close();
   } finally { await browser.close(); }
 });

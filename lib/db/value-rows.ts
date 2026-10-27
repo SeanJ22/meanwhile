@@ -120,11 +120,18 @@ export class ValueRows {
     for (;;) {
       this.withinPass(table);
       // A writer's transaction stamps changed_at when it starts; the margin covers ones still open at the last read.
-      const page = await checkedQuery(query, `SELECT id,revision,updated_at,${includeChangedAt ? "changed_at," : ""}
-        ${valueVersionSql(selected)} AS value_version,${rowVersion} AS row_version
-        FROM ${table} WHERE ${predicate ? `(${predicate}) AND ` : ""}changed_at >= ${since}::timestamptz - interval '5 minutes'
-          AND (${cursor}::text IS NULL OR id>${cursor})
-        ORDER BY id LIMIT ${PAGE}`, [...params, previous.readAt, after]) as HeldVersion[];
+      let page: HeldVersion[];
+      try {
+        page = await checkedQuery(query, `SELECT id,revision,updated_at,${includeChangedAt ? "changed_at," : ""}
+          ${valueVersionSql(selected)} AS value_version,${rowVersion} AS row_version
+          FROM ${table} WHERE ${predicate ? `(${predicate}) AND ` : ""}changed_at >= ${since}::timestamptz - interval '5 minutes'
+            AND (${cursor}::text IS NULL OR id>${cursor})
+          ORDER BY id LIMIT ${PAGE}`, [...params, previous.readAt, after]) as HeldVersion[];
+      } catch (error) {
+        // A table without a change stamp reads its whole membership instead.
+        if ((error as { code?: unknown }).code === "42703") return null;
+        throw error;
+      }
       changed.push(...page);
       if (changed.length > count) return null;
       if (page.length < PAGE) break;

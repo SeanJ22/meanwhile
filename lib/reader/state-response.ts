@@ -9,7 +9,7 @@ import { readStatePackage } from "../reader/state";
 import { requireRegistryState } from "../civic-data/state-scopes";
 import { withReaderRoute } from "../db/reader-route";
 import { stateMemberDirectories, zipMemberDirectories } from "../reader/member-directories";
-import { readerCacheHeaders } from "../reader/cache";
+import { readerStateCacheHeaders } from "../reader/cache";
 
 export async function readerStateResponse(request: Request) {
   const params = new URL(request.url).searchParams;
@@ -56,7 +56,7 @@ export async function readerStateResponse(request: Request) {
       memberDirectories: zip ? zipMemberDirectories(value.people, value.memberOffices, value.federal,
         [...coverage.seats.flatMap(seat => seat.representatives), ...coverage.senators, ...coverage.statewideExecutives])
         : stateMemberDirectories(value.people, value.memberOffices), ...(zip ? { zip } : {}) }, { headers: {
-      ...readerCacheHeaders({ states: [state], places: zip ? ids : [] }),
+      ...readerStateCacheHeaders(state),
       "Netlify-Vary": "query=state|zip",
       "ETag": `"${value.version}:${zip ?? state}"`,
     } });

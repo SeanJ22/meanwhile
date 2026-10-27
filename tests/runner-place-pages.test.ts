@@ -162,10 +162,10 @@ test("the owner's pause, an unreadable pause and a failed turn leave pages queue
 });
 
 test("a place-page turn reserves its measured peak on the shared host memory", async () => {
-  assert.equal(ROUTINE_ENTRY_PEAK_MIB["rebuild-place-pages.mts"], Math.ceil(403 * 1.05));
+  assert.equal(ROUTINE_ENTRY_PEAK_MIB["rebuild-place-pages.mts"], Math.ceil(755_408_896 / (1024 * 1024) * 1.05));
   const reserve = (availableMiB: number) => routineProcessSlots({ availableBytes: () => availableMiB * MIB })
     .acquire("rebuild-place-pages.mts", Date.now() + 50);
-  const release = await reserve(WORKER_MEMORY_HEADROOM_MIB + 424);
+  const release = await reserve(WORKER_MEMORY_HEADROOM_MIB + 757);
   release();
-  await assert.rejects(reserve(WORKER_MEMORY_HEADROOM_MIB + 423), /WORKER_MEMORY_DEADLINE/, "a turn waits rather than starving other workers");
+  await assert.rejects(reserve(WORKER_MEMORY_HEADROOM_MIB + 756), /WORKER_MEMORY_DEADLINE/, "a turn waits rather than starving other workers");
 });

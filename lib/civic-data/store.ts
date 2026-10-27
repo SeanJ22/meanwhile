@@ -2735,7 +2735,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     });
     if (candidate.recordClass === "REGISTRY_RUNTIME_BINDING") await seedRuntimeBodyPageSubjects(
       (text, params) => this.readerRows(text, params), publicationScope.states ?? []);
-    await invalidateReaderCache(publicationScope, this.cacheOptions.purge, placePageConsumesPublication(candidate.scope, candidate.recordClass)
+    await invalidateReaderCache({...publicationScope,statePackages:candidate.recordClass!=="MEETING"}, this.cacheOptions.purge, placePageConsumesPublication(candidate.scope, candidate.recordClass)
       ? (text, params) => this.readerRows(text, params) : null);
     return {
       ...postgresPromotedPointerIdentity(promotedRows[0]),

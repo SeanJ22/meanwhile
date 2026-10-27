@@ -38,6 +38,8 @@ export interface ReaderCacheScope {
   readonly places?: readonly string[];
   readonly national?: boolean;
   readonly nationalPeople?: boolean;
+  /** Canonical state inputs changed; local fact and calendar publications do not consume this cache. */
+  readonly statePackages?: boolean;
   readonly entities?: readonly string[];
 }
 
@@ -61,6 +63,7 @@ export function readerCacheTags(scope: ReaderCacheScope): string[] {
     ...(scope.national ? [READER_NATIONAL_CACHE_TAG] : []),
     ...(scope.nationalPeople ? [READER_NATIONAL_PEOPLE_CACHE_TAG] : []),
     ...states.map(state => `reader-state:${state}`),
+    ...(scope.statePackages ? states.map(state=>`reader-state-package:${state}`) : []),
     ...places.map(place => `reader-place:${createHash("sha256").update(place).digest("hex")}`),
   ];
 }
@@ -78,6 +81,13 @@ export function readerCacheHeaders(scope: ReaderCacheScope): Record<string, stri
 export function readerPlaceCacheHeaders(places:readonly string[]):Record<string,string> {
   return {...readerCacheHeaders({places}),
     "Netlify-Cache-Tag":[...readerCacheTags({places}),"reader-settings"].join(",")};
+}
+
+/** State answers read canonical publications, independently of local calendar/fact page rebuilds. */
+export function readerStateCacheHeaders(state:string):Record<string,string> {
+  return {...readerCacheHeaders({states:[state]}),
+    "Netlify-Cache-Tag":[...readerCacheTags({states:[state],statePackages:true,nationalPeople:true})
+      .filter(tag=>!tag.startsWith('reader-state:')),"reader-settings"].join(',')};
 }
 
 /** Geography is read from typed fields, never from an incidental two-letter word in source text. */

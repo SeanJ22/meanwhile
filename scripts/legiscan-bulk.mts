@@ -67,7 +67,7 @@ export async function refreshLegiscan(store:RoutineDataStore,signal:AbortSignal,
       row.failures.push(detail);console.error(`LEGISCAN_STATE_FAILURE=${JSON.stringify({state,detail})}`);if(!dated)return;
     }
     }
-    if(!row.datasets&&!row.failures.length)row.failures.push("No nonempty publisher session is available");
+    if(!row.datasets&&!row.failures.length&&!signal.aborted)row.failures.push("No nonempty publisher session is available");
   });
   if(signal.aborted)return{marker,counts,deferred:true};
   for(const result of work)if(!result.ok)throw Error(result.error);

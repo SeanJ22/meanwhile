@@ -8,7 +8,9 @@ import {
 } from "./read-model.ts";
 import { requiredManualProductionContract } from "./manual-contracts.ts";
 import { validateOnce } from "./validated-once.ts";
-import { readPromotedEdgeFirst } from "../registry/runtime-edge.ts";
+import { readPromotedEdgeFirst, currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
+import { readerCanonicalEntry, primeReaderCanonicalStore } from "../reader/canonical-context.ts";
+import { readCanonicalShelf } from "../reader/canonical.ts";
 import type { CuratedReaderProjection } from "./manual-projections.ts";
 
 import { ballotNavigationScope } from "./ballot-navigation-scope.ts";
@@ -63,8 +65,8 @@ function initial(id: CuratedReaderContractId): CivicDataReadResult<CuratedReader
   );
 }
 
-function validate(id: CuratedReaderContractId, value: CuratedReaderProjection, version: string): void {
-  if (value?.kind !== id || !Array.isArray(value.records) || value.records.length === 0) {
+function validate(id: CuratedReaderContractId, value: CuratedReaderProjection, version: string, records: "ALL" | "SELECTED" = "ALL"): void {
+  if (value?.kind !== id || !Array.isArray(value.records) || (records === "ALL" && value.records.length === 0)) {
     throw new Error(`${id} projection ${version} has the wrong family or no records.`);
   }
   const keys = value.records.map((record) => record?.id);
@@ -76,10 +78,11 @@ function validate(id: CuratedReaderContractId, value: CuratedReaderProjection, v
 export async function readCuratedReaderProjection(
   id: CuratedReaderContractId,
   options: PromotedCivicDataReadOptions = {},
+  records: "ALL" | "SELECTED" = "ALL",
 ): Promise<CivicDataReadResult<CuratedReaderProjection>> {
   const contract = requiredManualProductionContract(id);
   let result = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, contract.scope, options);
-  if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown");
+  if (result.kind === "PROMOTED") validate(id, result.value, result.metadata.versionId ?? "unknown", records);
   if (result.kind === "PROMOTED") result = { ...result,value:{...result.value,
     records:await readerRecordsWithOwnerChoices(factReader(),id,result.value.records)} };
   readerStates().set(id, result);
@@ -154,9 +157,15 @@ export const readOfficialFilingsForReader = (): Promise<CivicDataReadResult<Cura
     options => readCuratedReaderProjection("official-filings", options), "Official filing records");
 };
 /** The national navigation record, read only for states whose own record is not yet published. */
-export const settleBallotNavigationRead = (): Promise<string> =>
-  readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope,
+export const settleBallotNavigationRead = async (): Promise<string> => {
+  if (currentReaderSelection() && !currentReaderAuthorityEdge() && process.env.DATABASE_URL &&
+      !readerCanonicalEntry(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope)) {
+    const pointers = [{ recordClass: BALLOT_NAVIGATION.recordClass, scope: BALLOT_NAVIGATION.scope }];
+    await primeReaderCanonicalStore(pointers, readCanonicalShelf(pointers));
+  }
+  return readPromotedEdgeFirst(BALLOT_NAVIGATION.recordClass, BALLOT_NAVIGATION.scope,
     options => refreshCuratedReaderProjection("ballot-navigation", options), "The ballot navigation links");
+};
 export const refreshCampaignSitesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>
   refreshCuratedReaderProjection("campaign-sites", options);
 export const refreshMemberOfficesFromPromoted = (options: PromotedCivicDataReadOptions = {}) =>

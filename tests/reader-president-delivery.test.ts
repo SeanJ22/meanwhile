@@ -36,7 +36,7 @@ function state(heldPresident: OfficeholderSet | null): ReaderStatePackage {
       officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } } as unknown as RegistryRuntimeReadModel,
     federal: { roster: congress } as FederalDirectoryReadModel, people: null, legislativePeople: null,
     stateLegislatorAuthority: { scope: "US-AZ", kind: "NOT_RECORDED", metadata: {}, code: null, detail: "fixture" },
-  } as ReaderStatePackage;
+  } as unknown as ReaderStatePackage;
 }
 
 test("the sourced current President is not on any ZIP's list of who governs there; the senators and the district's House member are", () => {

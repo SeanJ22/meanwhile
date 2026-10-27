@@ -11,6 +11,7 @@ import { Card } from "../components/ui/card.tsx";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { CuratedReaderProjection, ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { electionDatesFor } from "../lib/ballot/election-dates.ts";
+import { deadlineSummary } from "../lib/ballot/deadline-summary.ts";
 import { electionFieldIssue, type PublishedElectionField } from "../lib/civic-data/election-fields.ts";
 import { formatDateMDY } from "../lib/map/format.ts";
 import { absentEdgeEntry, manualEdgeEntry, promotedFamily, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
@@ -68,7 +69,7 @@ async function navigationCard(node: unknown, state: string): Promise<React.React
 }
 
 test("sourced no-date rules remain text and primary deadlines cannot stand in for November", () => {
-  const rule = fields.find(row => row.value.fieldKind === "registration_deadline" && row.value.dates.length === 0)!;
+  const rule = fields.find(row => row.value.state === "ND" && row.value.fieldKind === "registration_deadline" && row.value.dates.length === 0)!;
   assert.ok(rule);
   assert.equal(electionFieldIssue(rule), null);
   const calendar = electionDatesFor(rule.value.state, ballotNavigationFor(rule.value.state, { ...projection, records: [{ ...rule }] }, "BL-20:no-date-rule", []).dates)!;
@@ -145,7 +146,7 @@ test("a ZIP in every state and DC renders acquired official navigation and deadl
         for (const { value } of deadlines) {
           for (const date of value.dates) assert.ok(displayedDates.some(rendered => rendered.includes(formatDateMDY(date))), `${state}: missing displayed ${date}`);
           const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
-          assert.ok(displayedDetails.some(detail => words(detail) === words(value.quote)), `${state}: deadline clock or method disappeared`);
+          assert.ok(displayedDetails.some(detail => words(detail) === words(deadlineSummary(value))), `${state}: deadline instruction disappeared`);
           assert.ok(card.props.sources.some(source => source.provenance.sourceUrl === value.url && source.provenance.collectedAt === value.collectedAt), `${state}: original deadline provenance missing`);
         }
       }

@@ -1606,6 +1606,16 @@ function routineClockCandidateStub() {
 
 type RoutineClockDb = Pick<ReturnType<typeof getDb>, "select">;
 
+/** Preserve exact receipt equality while leaving excluded source records inside Postgres. */
+function clockReceiptRead(column: typeof civicDataCandidates.validationReceipt | typeof civicDataPromotions.validationReceipt) {
+  return sql<ValidationReceipt | null>`CASE WHEN jsonb_typeof(${column})='object' THEN ${column} || jsonb_build_object(
+    '_clockReceiptHash',encode(sha256(convert_to(${column}::text,'UTF8')),'hex'),
+    'excludedFacts',CASE WHEN jsonb_typeof(${column}->'excludedFacts')='array' THEN
+      coalesce((SELECT jsonb_agg(CASE WHEN jsonb_typeof(value)='object' THEN value-'record' ELSE value END ORDER BY ordinal)
+        FROM jsonb_array_elements(${column}->'excludedFacts') WITH ORDINALITY facts(value,ordinal)),'[]'::jsonb)
+      ELSE ${column}->'excludedFacts' END) ELSE ${column} END`;
+}
+
 export function routineClockPointerRead(db: RoutineClockDb, recordClass: RoutineRecordClass, scope: string) {
   return db
     .select({
@@ -1615,7 +1625,7 @@ export function routineClockPointerRead(db: RoutineClockDb, recordClass: Routine
       currentVersionId: civicDataPromotions.currentVersionId,
       lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
       promotedAt: civicDataPromotions.promotedAt,
-      validationReceipt: civicDataPromotions.validationReceipt,
+      validationReceipt: clockReceiptRead(civicDataPromotions.validationReceipt),
       ...(recordClass === "CENSUS_GEOGRAPHY" ? { publishedScopeVersions: sql<readonly string[]>`
         coalesce((select jsonb_agg(s->>'version') from jsonb_array_elements(${civicDataPromotions.payload}->'scopes') s
           where coalesce(s#>>'{versionMeta,retrievalComplete}', 'true') <> 'false'), '[]'::jsonb)` } : {}),
@@ -1851,7 +1861,7 @@ export function routineClockCandidateRead(db: RoutineClockDb, versionId: string)
       candidate: routineClockCandidateStub(),
       state: civicDataCandidates.state,
       acquisitionSucceeded: civicDataCandidates.acquisitionSucceeded,
-      validationReceipt: civicDataCandidates.validationReceipt,
+      validationReceipt: clockReceiptRead(civicDataCandidates.validationReceipt),
       promotedVersionId: civicDataCandidates.promotedVersionId,
       lastKnownGoodVersionId: civicDataCandidates.lastKnownGoodVersionId,
       failureCode: civicDataCandidates.failureCode,

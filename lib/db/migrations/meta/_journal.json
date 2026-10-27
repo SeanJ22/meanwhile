@@ -491,6 +491,13 @@
       "when": 1792834200017,
       "tag": "DB-05_prl_rows",
       "breakpoints": true
+    },
+    {
+      "idx": 70,
+      "version": "7",
+      "when": 1792834200018,
+      "tag": "VB-01_read_model_fingerprints",
+      "breakpoints": true
     }
   ]
 }

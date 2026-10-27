@@ -593,6 +593,7 @@ export interface CandidateEvent {
 }
 
 export interface CandidateVersionRecord {
+  readonly readModelFingerprint?: string | null;
   readonly candidate: RoutineCandidate;
   readonly state: CandidateState;
   readonly acquisitionSucceeded: boolean;
@@ -604,6 +605,7 @@ export interface CandidateVersionRecord {
 }
 
 export interface PromotedProjection<T = unknown> {
+  readonly payloadFingerprint?: string | null;
   readonly key: string;
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;
@@ -619,5 +621,5 @@ export interface PromotedProjection<T = unknown> {
 
 export type PromotedPointerIdentity = Pick<
   PromotedProjection,
-  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt" | "latestConfirmation"
+  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt" | "latestConfirmation" | "payloadFingerprint"
 >;

@@ -917,6 +917,7 @@ export function promotedPointerIdentity(pointer: PromotedPointerIdentity): Promo
     lastKnownGoodVersionId: pointer.lastKnownGoodVersionId,
     promotedAt: pointer.promotedAt,
     ...(pointer.latestConfirmation ? { latestConfirmation: pointer.latestConfirmation } : {}),
+    ...(pointer.payloadFingerprint === undefined ? {} : { payloadFingerprint: pointer.payloadFingerprint }),
   };
 }
 
@@ -1454,6 +1455,7 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
       promotedAt: at,
       payload: record.candidate.readModel,
       receipt: structuredClone(persistedReceipt),
+      payloadFingerprint: record.candidate.normalization.normalizedHash,
     };
     const { history, event } = this.nextEvent(
       candidateId,
@@ -1878,6 +1880,7 @@ const PROMOTED_POINTER_IDENTITY_COLUMNS = {
   currentVersionId: civicDataPromotions.currentVersionId,
   lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
   promotedAt: civicDataPromotions.promotedAt,
+  payloadFingerprint: civicDataPromotions.payloadFingerprint,
 } as const;
 
 function promotedPointerIdentityRead(
@@ -1939,6 +1942,7 @@ function postgresPromotedPointerIdentity(row: PostgresPromotedPointerIdentityRow
     versionId: row.currentVersionId,
     lastKnownGoodVersionId: row.lastKnownGoodVersionId,
     promotedAt: canonicalPostgresRoutineTimestamp(row.promotedAt, "promotion.promotedAt"),
+    payloadFingerprint: row.payloadFingerprint,
     ...(confirmation !== null && confirmation.versionId === row.currentVersionId ? { latestConfirmation: confirmation } : {}),
   };
 }
@@ -2447,6 +2451,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         acquisitionSucceeded: record.acquisitionSucceeded,
         rawHash: record.candidate.retrieval.rawHash,
         normalizedHash: record.candidate.normalization.normalizedHash,
+        readModelFingerprint: record.candidate.normalization.normalizedHash,
         retrievedAt: record.candidate.retrieval.retrievedAt,
         sourceThrough: record.candidate.temporal.sourceThrough,
         parserVersion: record.candidate.normalization.parserVersion,
@@ -3261,7 +3266,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         ${civicDataCandidates.id},
         ${at}::timestamptz,
         ${civicDataCandidates.candidate}->'readModel',
-        ${civicDataCandidates.validationReceipt}
+        ${civicDataCandidates.validationReceipt},
+        ${civicDataCandidates.readModelFingerprint}
       from ${civicDataCandidates}
       where ${eligibility}
     `).onConflictDoUpdate({
@@ -3275,6 +3281,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
           promotedAt: sql`excluded.promoted_at`,
           payload: sql`excluded.payload`,
           validationReceipt: sql`excluded.validation_receipt`,
+          payloadFingerprint: sql`excluded.payload_fingerprint`,
         },
         // A candidate may replace only the exact pointer it used as LKG while
         // validating. A first seed expects there to be no pointer at all.

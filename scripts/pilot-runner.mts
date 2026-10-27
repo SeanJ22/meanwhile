@@ -337,6 +337,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   ];
   const [run] = await runRuntimeChildren([{
     id: "research-cycle",
+    databaseBytesPerRun: 2_583_549_313,
     executable: process.execPath,
     args,
     env: standingChildEnvironment("RESEARCH_CYCLE"),
@@ -589,9 +590,9 @@ function deliver(body: string, headline: string): { readonly where: string } {
   return { where: path };
 }
 
-const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: readonly string[] }[] = [
+const CONSOLE_PUBLISHERS: readonly { readonly databaseBytesPerRun: number; readonly name: string; readonly args: readonly string[] }[] = [
 
-  { name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
+  { databaseBytesPerRun: 255_016_765, name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
 ];
 
 const publishChangedConsole = consolePublisher({
@@ -635,6 +636,7 @@ async function publishConsoleChildren(): Promise<boolean> {
     const started = Date.now();
     const [run] = await runRuntimeChildren([{
       id: `console-publish:${publisher.name}`,
+      databaseBytesPerRun: publisher.databaseBytesPerRun,
       executable: process.execPath,
 
       args: [...TS_CHILD, ...publisher.args],
@@ -685,6 +687,7 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
   const beatTimer = setInterval(() => { if (!researchCycleActive) void standingBeat(); }, 60_000);
   const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
+    databaseBytesPerRun: 128_890_931,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
     env: withPassDeadline(childEnvironment, deadlineMs),
@@ -738,6 +741,7 @@ async function runPublishNow(deadlineMs: number): Promise<void> {
   const startedAt = new Date().toISOString();
   const [run] = await runRuntimeChildren([{
     id: "publish-now",
+    databaseBytesPerRun: 137_544_447,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/publish-now-runner.mts"],
     env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
@@ -832,6 +836,7 @@ async function runIntakeRuntime(deadlineMs: number): Promise<void> {
   const startedAt = new Date().toISOString();
   const [run] = await runRuntimeChildren([{
     id: "intake-runtime",
+    databaseBytesPerRun: 22_277,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/intake-tripwire.mts"],
     env: withPassDeadline(standingChildEnvironment("INTAKE_RUNTIME"), deadlineMs),
@@ -1160,6 +1165,7 @@ async function runHunterLane(deadlineMs: number): Promise<void> {
   if (!CONTINUOUS_HUNTERS || canary || runtimeAdmissionsHeld) return;
   const [run] = await runRuntimeChildren([{
     id: "hunter-lane",
+    databaseBytesPerRun: 1_907_347_669,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/hunter-lane.mts", `--provider=${provider}`],
     env: withPassDeadline(standingChildEnvironment("RESEARCH_CYCLE"), deadlineMs),
@@ -1197,7 +1203,8 @@ async function runPlatformCensus(deadlineMs: number): Promise<void> {
   const release = await censusMemory.acquire("platform-census-runner.mts", Date.now() + 60_000);
   try {
     const [run] = await runRuntimeChildren([{
-      id: "platform-census", executable: process.execPath,
+      id: "platform-census",
+      databaseBytesPerRun: 11_852_414, executable: process.execPath,
       args: [...TS_CHILD, "scripts/platform-census-runner.mts"],
       env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
     }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
@@ -1228,7 +1235,8 @@ async function runPlacePageTurn(deadlineMs: number): Promise<PlacePageTurn> {
   const release = await placePageMemory.acquire("rebuild-place-pages.mts", Math.min(deadlineMs, Date.now() + 60_000));
   try {
     const [run] = await runRuntimeChildren([{
-      id: "place-pages", executable: process.execPath,
+      id: "place-pages",
+      databaseBytesPerRun: 132_198_128, executable: process.execPath,
       args: [...TS_CHILD, "scripts/rebuild-place-pages.mts"],
       env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
     }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs: deadlineMs + PLACE_PAGE_TURN_GRACE_MS,
@@ -1574,7 +1582,7 @@ const runtimeContracts = runtimeContractRetry({
   },
 });
 async function applyRuntimeContracts(sha: string, cwd: string): Promise<boolean> {
-  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", executable: process.execPath,
+  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", databaseBytesPerRun: 19_776, executable: process.execPath,
     args: [...TS_CHILD, "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
     cwd, env: process.env, maxBufferBytes: 16 * 1024 * 1024,

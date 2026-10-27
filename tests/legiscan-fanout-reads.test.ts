@@ -7,6 +7,7 @@ import { billScope,type Dataset } from "../lib/sources/legiscan/bills.ts";
 import { publishBulkCandidate,LEGISCAN_PART_ROWS } from "../lib/sources/legiscan/publication.ts";
 import { transferRead } from "../lib/db/reader-route.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
+import {assertPublicationBaseOwner} from "../lib/civic-data/store.ts";
 
 const at="2026-10-26T12:40:00.000Z",later="2026-10-26T13:40:00.000Z";
 const hash=(body:string)=>createHash("sha256").update(body).digest("hex");
@@ -15,7 +16,8 @@ const bill=JSON.parse(ak).bill;
 const dataset:Dataset={state_id:bill.state_id,session_id:bill.session_id,session_name:bill.session.session_name,dataset_hash:hash(ak),dataset_date:"2012-12-30",access_key:"fixture-access"};
 const person={id:"held:ak-gatto",nativeIds:{legiscan:["6033"]}};
 const capture=(body:string,now:string,op="getDataset")=>({body,requestedUrl:`https://api.legiscan.com/?op=${op}`,finalUrl:`https://api.legiscan.com/?op=${op}`,httpStatus:200,retrievedAt:now,rawHash:hash(body)});
-const bodies=Array.from({length:LEGISCAN_PART_ROWS*3+1},(_,index)=>{const raw=JSON.parse(ak);raw.bill.bill_id+=index;return JSON.stringify(raw);});
+const firstBillId=Math.floor(bill.bill_id/LEGISCAN_PART_ROWS)*LEGISCAN_PART_ROWS;
+const bodies=Array.from({length:LEGISCAN_PART_ROWS*3+1},(_,index)=>{const raw=JSON.parse(ak);raw.bill.bill_id=firstBillId+index;return JSON.stringify(raw);});
 function source(now:string){
   const {access_key:_access,...publicDataset}=dataset;
   return {capture:capture(JSON.stringify({dataset:publicDataset,archiveHash:hash(bodies.join("")),memberHashes:bodies.map(hash)}),now),dataset,bodies,people:[person],archiveHash:hash(bodies.join(""))};
@@ -49,6 +51,11 @@ const readbacks=async(store:import("../lib/civic-data/store.ts").PostgresRoutine
 
 test("a multi-part LegiScan session publish never reads a part back whole, and a resumed publish reads no saved part body",async()=>{
   await withMigratedRoutineStore("legiscan-bulk",async store=>{
+    const readBase=store.readPublicationBase.bind(store);let ownedBases=0;
+    store.readPublicationBase=async(recordClass,scope)=>{
+      const base=await readBase(recordClass,scope);
+      assertPublicationBaseOwner(store,base,recordClass,scope);ownedBases++;return base;
+    };
     const index=[(({access_key:_access,...row})=>row)(dataset)];
     await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:index}),at,"getDatasetList"),datasets:[dataset]},at);
     // A pass wall stops the first publish after two of its four parts.
@@ -93,12 +100,13 @@ test("a multi-part LegiScan session publish never reads a part back whole, and a
     console.log(`LEGISCAN_FANOUT_READS=${JSON.stringify({pass:"changed-roster",writes:changed.reads.byTable.get("query:FETCHED,query:STATE_BILL"),...republished})}`);
     assert.equal(changed.reads.byTable.get("query:FETCHED,query:STATE_BILL")?.[0],5);
     assert.equal(republished.wholeReads,0);
+    assert.ok(ownedBases>0,"every fan-out publication uses a base owned by the actual production adapter");
   });
 });
 
 test("a session the pass deadline cuts resumes on later passes, survives a held-card edit, and publishes without reading a part back",async()=>{
   const {zip}=await import("../scripts/xlsx.mjs");
-  const {refreshLegiscan,LEGISCAN_PART_WRITE_RESERVE_MS,LEGISCAN_SESSION_START_RESERVE_MS}=await import("../scripts/legiscan-bulk.mts");
+  const {refreshLegiscan}=await import("../scripts/legiscan-bulk.mts");
   const {readBillsForState}=await import("../lib/sources/legiscan/reader.ts");
   await withMigratedRoutineStore("legiscan-bulk",async store=>{
     const current={...dataset,year_start:2026,year_end:2026},members=Array.from({length:LEGISCAN_PART_ROWS*4+1},(_,index)=>{const raw=JSON.parse(ak);raw.bill.bill_id+=index;return JSON.stringify(raw);});
@@ -110,12 +118,13 @@ test("a session the pass deadline cuts resumes on later passes, survives a held-
     };
     // A held card carries far more than its identity: production parts embedded every office and source copy.
     let card={...person,level:"STATE" as const,state:"AK",offices:[{name:"capitol",address:"Room 410, State Capitol, Juneau"}]};
-    // Each part write takes a minute of the pass; the standing pass stops the child at its deadline.
-    let clock=Date.parse("2026-10-26T19:36:00.000Z");const written:number[]=[],partIds=new Set<string>();
+    // Each part write takes a minute of the pass; the standing pass stops the child at its deadline, two writes in.
+    let clock=Date.parse("2026-10-26T19:36:00.000Z"),wall=new AbortController();const written:number[]=[],partIds=new Set<string>();
     const create=store.create.bind(store);
     store.create=async(record,event)=>{
       const created=await create(record,event);
-      if((record.candidate.readModel as {kind:string}).kind==="PART"){written.push((record.candidate.normalizedPayload as {partIndex:number}).partIndex);partIds.add(record.candidate.id);clock+=60_000;}
+      if((record.candidate.readModel as {kind:string}).kind==="PART"){written.push((record.candidate.normalizedPayload as {partIndex:number}).partIndex);partIds.add(record.candidate.id);clock+=60_000;
+        if(written.length%2===0)wall.abort(Error("PASS_TIME_BUDGET"));}
       return created;
     };
     // Production's whole part reads (11-24 MB) ran past the 30 s Neon request deadline: the 21:16Z Georgia session check
@@ -124,22 +133,21 @@ test("a session the pass deadline cuts resumes on later passes, survives a held-
     const refuse=(id:string)=>{if(partIds.has(id))throw Error("NEON_REQUEST_DEADLINE: whole bill part read");};
     store.readCandidate=async id=>{refuse(id);return whole.readCandidate(id);};
     store.readCandidateProof=async id=>{refuse(id);return whole.readCandidateProof(id);};
-    const passes:{written:number[];deferred:number[]}[]=[];
+    const passes:{written:number[];deferred:boolean}[]=[];
     const all=await counted(async()=>{
       for(let pass=0;pass<6&&!(await store.readPromotion("STATE_BILL",billScope(dataset.session_id)));pass++){
-        const start=written.length,now=new Date(clock).toISOString();
-        const result=await refreshLegiscan(store,AbortSignal.timeout(60_000),{key:"fixture",fetchImpl,now:()=>now,peopleForState:async()=>[card],
-          clock:()=>clock,deadlineMs:clock+LEGISCAN_PART_WRITE_RESERVE_MS+2*60_000});
+        const start=written.length,now=new Date(clock).toISOString();wall=new AbortController();
+        const result=await refreshLegiscan(store,AbortSignal.any([wall.signal,AbortSignal.timeout(60_000)]),{key:"fixture",fetchImpl,now:()=>now,peopleForState:async()=>[card]});
         assert.deepEqual(result.counts.AK.failures,[]);
-        passes.push({written:written.slice(start),deferred:result.counts.AK.deferred});
+        passes.push({written:written.slice(start),deferred:result.deferred});
         // Between passes the held card's office moves; no identity field changes.
         card={...card,offices:[{name:"capitol",address:`Room ${500+pass}, State Capitol, Juneau`}]};
       }
     });
     console.log(`LEGISCAN_PASSES=${JSON.stringify(passes)}`);
     assert.ok(passes.length>=2,"the deadline cut the session at least once");
-    for(const pass of passes.slice(0,-1)){assert.ok(pass.written.length>0,"each cut pass still saved parts");assert.deepEqual(pass.deferred,[dataset.session_id]);}
-    assert.deepEqual(passes.at(-1)!.deferred,[]);
+    for(const pass of passes.slice(0,-1)){assert.ok(pass.written.length>0,"each cut pass still saved parts");assert.equal(pass.deferred,true);}
+    assert.equal(passes.at(-1)!.deferred,false);
     assert.deepEqual([...written].sort((a,b)=>a-b),[0,1,2,3,4],"each part was written exactly once: every pass resumed after the saved parts");
     assert.equal(summary(all.reads,1_000_000).wholeReads,0,"no pass read a saved part back whole");
     const session=(await store.readPromotion<Session>("STATE_BILL",billScope(dataset.session_id)))!;
@@ -149,7 +157,6 @@ test("a session the pass deadline cuts resumes on later passes, survives a held-
     assert.equal(read.complete,true);assert.equal(read.bills.length,members.length);
     const part=(await store.readCandidate(session.payload.parts[0].versionId))!.candidate.normalizedPayload as {people:Record<string,unknown>[]};
     assert.deepEqual(part.people.map(row=>Object.keys(row).sort()),[["id","level","nativeIds","state"]],"bill evidence keeps only the join's identity fields");
-    assert.ok(LEGISCAN_SESSION_START_RESERVE_MS<LEGISCAN_PART_WRITE_RESERVE_MS+2*60_000);
   });
 });
 

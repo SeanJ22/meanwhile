@@ -66,6 +66,10 @@ export async function readCivicApi(route: "elections" | "voterinfo", params: Rec
     throw new CivicSourceError(null, "Google Civic could not be reached.");
   }
   const raw = await civicResponseBody(response, route, params, options);
+  if(response.status===206){
+    logCivicCallFailure(route,response.status,raw,params,options,"http");
+    throw new CivicSourceError(response.status,"Google Civic returned an incomplete response.");
+  }
   if (response.ok) return { raw, checkedAt: (options.now ?? (() => new Date().toISOString()))(), status: response.status };
   logCivicCallFailure(route, response.status, raw, params, options, "http");
   // Only the safe reason enters the answer; the body stays in the server log.

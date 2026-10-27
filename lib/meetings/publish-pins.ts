@@ -34,19 +34,32 @@ import {
 /** Exact board and owning-government addresses; territorial neighbours never supply an office. */
 export const PIN_OFFICES_SQL = `WITH selected AS MATERIALIZED (
   SELECT id,name,state,parent_id FROM entity WHERE id=ANY($1::text[]) AND kind='body'
-), inventory AS MATERIALIZED (
-  SELECT g FROM civic_data_promotions p,LATERAL jsonb_array_elements(coalesce(p.payload->'governments','[]'::jsonb)) g
-  WHERE p.record_class='REGISTRATION' AND p.key=ANY(ARRAY(SELECT 'REGISTRATION:US-'||state||':registration:v1' FROM selected))
 ), owners AS MATERIALIZED (
   SELECT b.id,b.parent_id,g FROM selected b LEFT JOIN LATERAL (
-    SELECT g FROM (SELECT g,count(*) OVER() AS owners FROM inventory WHERE g->>'state'=b.state AND (g->>'jurisdictionId'=b.parent_id OR g->>'id'=b.parent_id
-      OR g->>'id'=split_part(b.id,'#',1) OR g->>'jurisdictionId'=split_part(b.id,'#',1)
-      OR g->'aliases' ? b.id OR g->'bodyIds' ? b.id OR g->'aliases' ? (b.parent_id||'#governing')
-      OR g->'aliases' ? (b.parent_id||'#board'))) matched WHERE owners=1
+    SELECT reader_payload_value(value) AS g FROM (
+      SELECT r.value,count(*) OVER() AS matches FROM civic_data_rows r
+      JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+      WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.state=b.state
+        AND r.promotion_key='REGISTRATION:US-'||b.state||':registration:v1'
+        AND r.aliases && ARRAY[b.id,
+          CASE WHEN b.id NOT LIKE 'ocd-division/%' THEN split_part(b.id,'#',1) END,
+          (SELECT e.id FROM entity e WHERE e.id=b.parent_id AND e.kind='government')]
+        AND ((SELECT e.kind FROM entity e WHERE e.id=b.parent_id) IS DISTINCT FROM 'government' OR r.aliases @> ARRAY[b.parent_id])
+    ) matched WHERE matches=1
   ) owned ON true
 )
-SELECT b.id,b.name,office.value#>>'{}' AS board_address,office.checked_at AS board_checked,office_source.url AS board_source,
-  o.g->>'mailingAddress' AS postal_alias,o.g->'provenance' AS postal_alias_source,
+SELECT b.id,b.name,
+  coalesce((SELECT id FROM entity WHERE id=b.parent_id AND kind='government'),o.g->>'id') AS owner_id,
+  coalesce((SELECT name FROM entity WHERE id=b.parent_id AND kind='government'),o.g->>'name') AS owner_name,
+  office.value#>>'{}' AS board_address,office.checked_at AS board_checked,office_source.url AS board_source,
+  coalesce((SELECT jsonb_agg(jsonb_build_object('address',reader_payload_value(r.value->'mailingAddress')#>>'{}',
+      'provenance',reader_payload_value(r.value->'provenance')) ORDER BY r.ordinal)
+    FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+    WHERE r.record_class='REGISTRATION' AND r.collection='governments' AND r.state=b.state
+      AND r.promotion_key='REGISTRATION:US-'||b.state||':registration:v1'
+      AND r.aliases && ARRAY[b.id,b.parent_id,b.parent_id||'#governing',b.parent_id||'#board',
+        CASE WHEN b.id NOT LIKE 'ocd-division/%' THEN split_part(b.id,'#',1) END]
+      AND r.value->'mailingAddress' IS NOT NULL),'[]'::jsonb) AS postal_aliases,
   coalesce(government.name,o.g->>'name') AS government_name,
   coalesce(government.value#>>'{}',o.g->>'officeAddress') AS government_address,
   coalesce(CASE WHEN government.value IS NOT NULL THEN jsonb_build_object('sourceUrl',government.url,
@@ -61,28 +74,16 @@ LEFT JOIN LATERAL (
       AND e.id IN (b.parent_id,o.g->>'jurisdictionId',o.g->>'id') ORDER BY f.checked_at DESC,e.id LIMIT 1
 ) government ON true`;
 
-const AGENDA_PIN_OFFICES_SQL = `WITH owned AS MATERIALIZED (
-  SELECT p.key,s.value->>'id' AS meeting_id,s.value->>'bodyId' AS body_id,
-    s.value->>'ocdId' AS ocd_id,s.value->>'jurisdiction' AS jurisdiction,s.value->>'startsAt' AS starts_at
-  FROM civic_data_promotions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
-    LATERAL (SELECT reader_payload_node(m.item) AS value) s
-  WHERE p.record_class='MEETING' AND s.value->>'bodyId'=ANY($1::text[])
-), headers AS MATERIALIZED (
-SELECT p.key,p.current_version_id,d.value->>'meetingId' AS meeting_id,d.value->>'ocdId' AS ocd_id,
+const AGENDA_PIN_OFFICES_SQL = `SELECT m.body_id,m.row_id AS meeting_id,m.value->>'jurisdiction' AS jurisdiction,m.version_id AS current_version_id,
   reader_payload_value(d.value->'contentHash')#>>'{}' AS content_hash,
-  reader_payload_value(d.value->'documentUrl')#>>'{}' AS url,
-  reader_payload_value(d.value->'sourceOrg')#>>'{}' AS source_org,
+  reader_payload_value(d.value->'documentUrl')#>>'{}' AS url,reader_payload_value(d.value->'sourceOrg')#>>'{}' AS source_org,
   reader_payload_value(d.value->'collectedAt')#>>'{}' AS collected_at,
   left(reader_payload_value(d.value->'text')#>>'{}',700) AS header
-FROM (SELECT DISTINCT key FROM owned) keys JOIN civic_data_promotions p ON p.key=keys.key,
-  LATERAL reader_payload_members(reader_payload_node(p.payload)->'agendaDocuments') a,
-  LATERAL (SELECT reader_payload_node(a.item) AS value) d
-WHERE d.value->>'extraction' IN ('pdf','html') AND EXISTS(SELECT 1 FROM owned o WHERE o.key=p.key
-  AND d.value->>'meetingId'=o.meeting_id AND d.value->>'ocdId' IS NOT DISTINCT FROM o.ocd_id)
-)
-SELECT o.body_id,o.meeting_id,o.jurisdiction,h.current_version_id,h.content_hash,h.url,h.source_org,h.collected_at,h.header
-FROM owned o JOIN headers h ON h.key=o.key AND h.meeting_id=o.meeting_id AND h.ocd_id IS NOT DISTINCT FROM o.ocd_id
-ORDER BY o.body_id,o.starts_at DESC,h.collected_at DESC`;
+FROM civic_data_rows m JOIN civic_data_rows d ON d.promotion_key=m.promotion_key AND d.collection='agendaDocuments'
+  AND d.value->>'meetingId'=m.row_id AND d.value->>'ocdId' IS NOT DISTINCT FROM m.value->>'ocdId'
+WHERE m.record_class='MEETING' AND m.collection='meetings' AND m.body_id=ANY($1::text[])
+  AND d.value->>'extraction' IN ('pdf','html')
+ORDER BY m.body_id,m.value->>'startsAt' DESC,reader_payload_value(d.value->'collectedAt')#>>'{}' DESC`;
 
 export async function publishedPinOffices(
   query: Query | undefined,
@@ -107,7 +108,9 @@ export async function publishedPinOffices(
         {
           bodyId: String(row.id),
           name: String(row.name),
-          ...(typeof row.postal_alias==="string"&&row.postal_alias_source?{postalAliases:[{address:row.postal_alias,provenance:row.postal_alias_source as RegistryProvenance}]}:{}),
+          ...(typeof row.owner_id==="string"&&typeof row.owner_name==="string"?{governmentOwner:{id:row.owner_id,name:row.owner_name}}:{}),
+          ...(Array.isArray(row.postal_aliases) ? {postalAliases:row.postal_aliases.filter((alias): alias is {address:string;provenance:RegistryProvenance} =>
+            Boolean(alias && typeof alias.address==="string" && alias.provenance?.sourceUrl))} : {}),
           ...(boardSource && row.board_address
             ? {
                 officeContact: {
@@ -454,13 +457,6 @@ export async function placePublishedMeetingPins(input: {
         const {pendingReplacement:_pending,...checked}=repeated;
         return withPublishedPin(meeting, {...checked,meetingId:meeting.id});
       }
-      // A calendar omitting an earlier hall citation does not retract its saved office point.
-      // Try current addresses first; an explicit government office still supersedes it.
-      const governmentOffice=offices.get(meeting.bodyId??"")?.governmentOffice?.address;
-      if (repeated?.basis === "GOVERNMENT_OFFICE" && repeated.bodyId === meeting.bodyId &&
-        (!governmentOffice || !isOfficeStreetAddress(governmentOffice)) &&
-        !candidates.some(address => address.basis === repeated.basis && address.address === repeated.address))
-        candidates.push(repeated);
       for (const address of candidates.flatMap(address=>[address,...postalAddressAliases(address,offices.get(meeting.bodyId??""))])) {
         if(address.basis==="BODY_OFFICE"&&repeated?.basis==="GOVERNMENT_OFFICE"&&
           (repeated.boardAddressQuery??null)===bodyQuery){bodyTried=true;continue;}

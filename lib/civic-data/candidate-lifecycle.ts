@@ -1,7 +1,7 @@
 import { statePublicationPriorOf } from "./state-publication.ts";
 import { randomUUID } from "node:crypto";
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
-import { PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
+import { assertPublicationBaseOwner, PostgresRoutineDataStore, PromotionBaseChangedError, routineEventObservedAt, type RoutineDataStore, type RoutinePublicationBase } from "./store.ts";
 import { validateRoutineCandidate } from "./validate.ts";
 import { canonicalCivicDataJson, candidateChangeSet, heldCivicRecords } from "./changes.ts";
 import { promotionProofIssue } from "./read-model.ts";
@@ -53,6 +53,15 @@ function sameHeldRecords(candidate: RoutineCandidate, pointed: RoutineCandidate)
 
 
 function sameAcquisitionProgress(candidate: RoutineCandidate, pointed: RoutineCandidate): boolean {
+  if(candidate.retrieval.complete!==pointed.retrieval.complete)return false;
+  if(candidate.recordClass==="CAMPAIGN_FINANCE"){
+    const pending=(value:RoutineCandidate)=>(value.normalizedPayload as {continuationPending?:boolean}|null)?.continuationPending===true;
+    if(pending(candidate)!==pending(pointed))return false;
+  }
+  if(candidate.sourceId==="plural-openstates" && candidate.recordClass==="STATE_LEGISLATOR"){
+    const inputDigest=(value:RoutineCandidate)=>(value.normalizedPayload as {sourceInputDigest?:string}|null)?.sourceInputDigest;
+    if(inputDigest(candidate)!==inputDigest(pointed))return false;
+  }
   if (candidate.recordClass === "MEETING_OUTCOME") {
     const checks = (value: RoutineCandidate) => canonicalCivicDataJson((value.readModel as {
       sittings?: { meetingId: string; minutesDocument?: { readAt?: string } }[]
@@ -75,7 +84,7 @@ export async function processRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   registeredDoor: symbol | null = null,
   sourceProjectionVerification: RoutineReaderVerification | null = null,
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"] } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly retirementAuthority?: RoutineCandidate["stateRetirement"]; readonly inputDigest?: string; readonly publicationBase?: RoutinePublicationBase } = {},
   navigation?: NavigationComparison,
 ): Promise<PromotionOutcome> {
   const productionStore = store instanceof PostgresRoutineDataStore;
@@ -87,8 +96,12 @@ export async function processRoutineCandidate(
   }
   if (inputCandidate.stateRetirement && inputCandidate.stateRetirement !== options.retirementAuthority)
     throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
+  if(options.publicationBase){
+    assertPublicationBaseOwner(store,options.publicationBase,inputCandidate.recordClass,inputCandidate.scope);
+    if(expectedBaseVersionId===undefined)expectedBaseVersionId=options.publicationBase.current?.versionId??null;
+  }
   const scoped = statePublicationScope(inputCandidate.scope);
-  let base = scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope) : null;
+  let base = options.publicationBase??(scoped && store.readStatePublicationBase ? await store.readStatePublicationBase(inputCandidate.recordClass, inputCandidate.scope) : null);
   let current = navigation ? navigation.base ? navigationBaseProjection(navigation.base) : null
     : base ? base.current : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
   // Geography needs the prior payload and its proof, without rereading the
@@ -96,7 +109,7 @@ export async function processRoutineCandidate(
   let lkg = navigation ? navigation.base?.record ?? null : base ? base.lkg : current ? await (inputCandidate.recordClass === "CENSUS_GEOGRAPHY" && store.readCandidateProof
     ? store.readCandidateProof(current.lastKnownGoodVersionId) : store.readCandidate(current.lastKnownGoodVersionId)) : null;
   let indexedPrior = lkg ? statePublicationPriorOf(lkg.candidate) : undefined;
-  const observedBaseVersionId = navigation
+  const observedBaseVersionId = navigation || options.publicationBase
     ? (await store.readPromotionIdentity(inputCandidate.recordClass, inputCandidate.scope))?.versionId ?? null
     : current?.versionId ?? null;
   const preloadedBaseChanged = expectedBaseVersionId !== undefined && expectedBaseVersionId !== observedBaseVersionId;
@@ -107,7 +120,7 @@ export async function processRoutineCandidate(
     ? null
     : await store.readCandidate(lkgPredecessorVersionId);
   let declaredBase = !scoped && preloadedBaseChanged && expectedBaseVersionId !== null && expectedBaseVersionId !== undefined
-    ? navigation?.base?.record ?? await store.readCandidate(expectedBaseVersionId)
+    ? options.publicationBase ? options.publicationBase.lkg : navigation?.base?.record ?? await store.readCandidate(expectedBaseVersionId)
     : null;
   let exactDeclaredBase = declaredBase &&
       declaredBase.candidate.id === expectedBaseVersionId &&
@@ -176,6 +189,8 @@ export async function processRoutineCandidate(
     current !== null && lkg !== null && lkgProofIssue === null && !preloadedBaseChanged &&
     current.versionId === current.lastKnownGoodVersionId && lkg.candidate.id === current.versionId &&
     candidate.retrieval.succeeded && candidate.normalization.succeeded &&
+    candidate.retrieval.rawHashBasis === lkg.candidate.retrieval.rawHashBasis &&
+    (candidate.retrieval.rawHashBasis !== "SOURCE_CONTENT_V1" || candidate.retrieval.rawHash === lkg.candidate.retrieval.rawHash) &&
     candidate.normalization.parserVersion === lkg.candidate.normalization.parserVersion &&
     validated.state === "VALIDATED" && validated.receipt.decision === "GOOD" &&
     candidate.changeSet?.outcome === "UNCHANGED" &&
@@ -213,6 +228,7 @@ export async function processRoutineCandidate(
         ...(candidate.retrieval.sourceCheck ? { sourceCheck: candidate.retrieval.sourceCheck } : {}),
       },
       retainedSourceResponses: retained ?? null,
+      ...(options.inputDigest ? {inputDigest: options.inputDigest} : {}),
     }, transitionAt);
     if (confirmed.kind === "CONFIRMED") {
       return {
@@ -302,7 +318,7 @@ export async function processRoutineCandidate(
   let promoted: PromotedProjection;
   try {
     promoted = await store.promote(candidate.id, validated.receipt, transitionAt,
-      scoped || navigation || candidate.recordClass === "MEETING" || candidate.recordClass === "CENSUS_GEOGRAPHY" ? held : undefined);
+      scoped || navigation || candidate.recordClass === "MEETING" || candidate.recordClass === "CENSUS_GEOGRAPHY" || candidate.recordClass === "FEDERAL_MONEY" || candidate.recordClass === "STATE_BILL" ? held : undefined);
   } catch (error) {
     if (!(error instanceof PromotionBaseChangedError)) throw error;
     const code = "PROMOTION_BASE_CHANGED";

@@ -144,7 +144,7 @@ function patchStore() {
     });
     return Response.json(request.queries ? { results } : results[0]);
   };
-  for (const method of ["readPromotion", "readPromotions", "readPromotionIdentity", "readPromotionIdentities", "readCandidate", "readCandidates", "readCandidateProof", "readCandidateProofs", "readPublishedCandidateMetadata", "listPromotionScopes"] as const) {
+  for (const method of ["readPromotion", "readPromotions", "readPromotionIdentity", "readPromotionIdentities", "readCandidate", "readCandidates", "readCandidateProof", "readCandidateProofs", "readPublishedCandidateMetadata", "readSourceHead", "readSlimRosters", "readHistoricalRosterIdentities", "listPromotionScopes"] as const) {
     Object.defineProperty(PostgresRoutineDataStore.prototype, method, { configurable: true, writable: true,
       value: function(...args: unknown[]) { const held = fixture().store; return Reflect.apply(held[method], held, args); } });
   }

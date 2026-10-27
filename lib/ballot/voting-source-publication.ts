@@ -220,5 +220,5 @@ export async function recordVotingSourceRead(repo: DoorRepository, door: VotingS
 }
 
 export function replaceVotingJurisdiction(file: VotingSitesFile | null, jurisdiction: VotingJurisdiction, now: string): VotingSitesFile {
-  return { generatedAt: now.slice(0, 10), jurisdictions: [...(file?.jurisdictions ?? []).filter(row => row.ocdId !== jurisdiction.ocdId), jurisdiction].sort((a, b) => a.ocdId.localeCompare(b.ocdId)) };
+  return { ...file, generatedAt: now.slice(0, 10), jurisdictions: [...(file?.jurisdictions ?? []).filter(row => row.ocdId !== jurisdiction.ocdId), jurisdiction].sort((a, b) => a.ocdId.localeCompare(b.ocdId)) };
 }

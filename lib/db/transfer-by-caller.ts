@@ -78,15 +78,15 @@ interface SocketRead {
 const callerSlot = Symbol.for("meanwhile.database.transfer.callers");
 const host = globalThis as typeof globalThis & { [callerSlot]?: CallerState };
 const callerState: CallerState = host[callerSlot] ??= { scope: new AsyncLocalStorage<string>(), pinnedSite: new AsyncLocalStorage<string>(),
-  job:new AsyncLocalStorage<string>(),
+  job: new AsyncLocalStorage<string>(),
   queryRoute: new AsyncLocalStorage<string>(), socketScope: new AsyncLocalStorage<SocketRead>(), sockets: new WeakMap(),
   buckets: new Map(), siteCache: new Map(), reportInstalled: false, keptInProcess: false };
 const { scope, pinnedSite, buckets, siteCache } = callerState;
-callerState.job??=new AsyncLocalStorage<string>();
+callerState.job ??= new AsyncLocalStorage<string>();
 
 /** Independent jobs sharing a process keep their existing hourly transfer attribution. */
-export function withDatabaseJob<T>(name:string,run:()=>T):T {
-  return callerState.job.run(name,run);
+export function withDatabaseJob<T>(name: string, run: () => T): T {
+  return callerState.job.run(name, run);
 }
 /* Stack strings run to a few KB; a small cache keeps the per-process memory under 1 MB. */
 const SITE_CACHE_LIMIT = 256;
@@ -103,9 +103,8 @@ export function withQueryCaller<T>(operation: string, run: () => T): T {
 
 export const countedFetchSlot = Symbol.for("meanwhile.database.transfer.fetch");
 export function preserveDatabaseFetchAccounting<T extends object>(wrapper: T, underlying: object): T {
-  for (const key of [countedFetchSlot, Symbol.for("meanwhile.database.admin-changes.fetch")]) {
-    if ((underlying as unknown as Record<symbol, unknown>)[key]) Object.defineProperty(wrapper, key, { value: true });
-  }
+  if ((underlying as unknown as Record<symbol, unknown>)[countedFetchSlot])
+    Object.defineProperty(wrapper, countedFetchSlot, { value: true });
   return wrapper;
 }
 const callerSocketSlot = Symbol.for("meanwhile.database.transfer.socket.context");
@@ -118,7 +117,7 @@ export function installDatabaseClientAccounting(config: typeof neonConfig, insta
   const held = (socket: WebSocket): SocketRead => {
     let read = callerState.sockets.get(socket);
     if (!read) {
-      read = { caller: scope.getStore(),job:callerState.job.getStore(), route: callerState.queryRoute.getStore() ?? currentReaderRoute(), listeners: new WeakMap() };
+      read = { caller: scope.getStore(), job: callerState.job.getStore(), route: callerState.queryRoute.getStore() ?? currentReaderRoute(), listeners: new WeakMap() };
       callerState.sockets.set(socket, read);
     }
     return read;
@@ -441,12 +440,15 @@ export function databaseTransferFetch(underlying: FetchLike, record: (value: Dat
     const route = callerState.queryRoute.getStore() ?? currentReaderRoute();
     const read = `${route}\t${transferRead(typeof init?.body === "string" ? init.body : undefined)}`;
     const caller = scope.getStore() ?? `query:${read.split("\t")[1]} ← ${namedSite()}`;
+    const job = callerState.job.getStore() ?? process.env.WTP_DATABASE_JOB ?? basename(process.argv[1] ?? "server").replace(/\.m?[jt]s$/, "");
     const recordPart = async (responseBytes: number, requests = 0, sentBytes = 0): Promise<void> => {
       try {
-        await callerState.queryRoute.run(route, () => scope.run(caller, () => record({
+        // Consumption can happen in another job or a pooled socket callback. HTTP
+        // chunks belong to the job that sent this request, independent of its consumer.
+        await callerState.socketScope.exit(() => callerState.job.run(job, () => callerState.queryRoute.run(route, () => scope.run(caller, () => record({
           day: easternDay(new Date()), database, client, requests, requestBytes: sentBytes, responseBytes,
           reads: { [read]: [requests, sentBytes, responseBytes] },
-        })));
+        })))));
       } catch { /* A meter failure never hides data. */ }
     };
     await recordPart(0, 1, requestBytes);

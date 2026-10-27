@@ -5,6 +5,7 @@ import {
   CURATED_READER_CONTRACT_IDS,
   readBallotNavigationProjection,
   readCuratedReaderProjection,
+  readMemberOfficeStateProjection,
 } from "../lib/civic-data/curated-reader-read-model.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import {
@@ -25,7 +26,7 @@ import { ballotNavigationFor } from "../lib/ballot/navigation.ts";
 const FAMILIES = [...CURATED_READER_CONTRACT_IDS.filter(id => id !== "ballot-navigation"), "ballot-navigation"] as const;
 type Family = (typeof FAMILIES)[number];
 const readFamily = (id: Family, options: Parameters<typeof readCuratedReaderProjection>[1]) =>
-  id === "ballot-navigation" ? readBallotNavigationProjection("AZ", options) : readCuratedReaderProjection(id, options);
+  id === "ballot-navigation" ? readBallotNavigationProjection("AZ", options) : id === "member-offices" ? readMemberOfficeStateProjection("AZ",options) : readCuratedReaderProjection(id, options);
 
 const T0 = "2026-09-08T12:00:00.000Z";
 const T1 = "2026-09-08T12:01:00.000Z";
@@ -129,7 +130,7 @@ function payloadFor(
   }
   if (id === "member-offices") {
     return {
-      kind: id,
+      kind: id, state: "AZ",
       records: [{
         id: "member-office:az-legislature:fixture:capitol:0",
         kind: "MEMBER_OFFICE",
@@ -261,7 +262,7 @@ test("a bad curated family is held against its own LKG and cannot affect another
   for (const id of FAMILIES) {
     const contract = MANUAL_PRODUCTION_SOURCE_CONTRACTS.find((entry) => entry.id === id)!;
     assert.equal(
-      (await store.readPromotion(contract.recordClass, id === "ballot-navigation" ? "US-AZ:official-ballot-navigation" : contract.scope))?.versionId,
+      (await store.readPromotion(contract.recordClass, id === "ballot-navigation" ? "US-AZ:official-ballot-navigation" : id === "member-offices" ? "US-AZ:state-legislator-member-offices" : contract.scope))?.versionId,
       promotedIds.get(id),
       `${id} LKG/pointer changed after the unrelated campaign-site refusal`,
     );

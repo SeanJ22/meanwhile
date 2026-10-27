@@ -105,7 +105,7 @@ async function priorCapturedRelease(options: KnownReleaseOptions, repos: Control
     .filter(row => row.tier === "RAW" && !row.partial && row.byteLength <= options.maxBytes)
     .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt));
   if (!rows.length) return null;
-  const resolve = researchVaultResolver({ ...repos, artifacts: { ...repos.artifacts, readAll: async () => rows } }, store, "freshness", { snapshot: true });
+  const resolve = researchVaultResolver(repos, store, "freshness", { records: rows });
   for (const row of rows) {
     try {
       const { artifact, bytes } = await resolve(row.artifactId);

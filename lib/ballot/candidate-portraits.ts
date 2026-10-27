@@ -16,7 +16,7 @@ export interface CandidateSitePage {
 
 export type CandidatePortraitPatch = Pick<CandidateCardData, "personId" | "photoUrl" | "photoSource" | "photoVerification">;
 
-export async function candidatePortraitFromOwnSite(page: CandidateSitePage, now: string, io?: PortraitRuntime):
+export async function candidatePortraitFromOwnSite(page: CandidateSitePage, now: string, io?: PortraitRuntime, signal?: AbortSignal):
   Promise<{ readonly patch: CandidatePortraitPatch } | { readonly gap: string }> {
   const { canonicalUrl, text } = page.capture.evidence;
   const name = `${page.identity.givenName} ${page.identity.familyName}`.replace(/\s+/g, " ").trim();
@@ -30,7 +30,7 @@ export async function candidatePortraitFromOwnSite(page: CandidateSitePage, now:
       imageUrl: image.src,
       captures: [page.capture],
       campaign: { url: canonicalUrl, identity: page.identity, cycleSource: page.cycleSource },
-    }, now, io, "candidates");
+    }, now, io, "candidates", signal);
     if (photo.verification?.basis !== "OWN_PAGE") return { gap: "PORTRAIT_NOT_FROM_OWN_PAGE" };
     return { patch: { personId, photoUrl: photo.url, photoSource: `Portrait from the campaign's own site, ${new URL(canonicalUrl).hostname.replace(/^www\./, "")}`,
       photoVerification: photo.verification } };
@@ -41,6 +41,7 @@ export async function candidatePortraitFromOwnSite(page: CandidateSitePage, now:
 export interface CommonsPortraitRuntime {
   readonly capture?: (url: string) => Promise<KnownRelease>;
   readonly portrait?: PortraitRuntime;
+  readonly signal?: AbortSignal;
 }
 
 function commonsCapture(release: KnownRelease): PortraitCapture {
@@ -80,7 +81,7 @@ SELECT DISTINCT ?person ?personLabel ?officeLabel ?districtLabel ?districtNumber
 
 const commonsReader = (io?: CommonsPortraitRuntime) => io?.capture ?? (async (url: string) => acquireKnownRelease({ sourceId: "candidate-wikimedia-portrait", releaseId: url,
     url, allowedHosts: [new URL(url).hostname], parserVersion: "candidate-wikimedia-portrait/1", maxBytes: 2_000_000,
-    checkAfterMs: 7 * 86_400_000, signal: AbortSignal.timeout(30_000),
+    checkAfterMs: 7 * 86_400_000, signal: io?.signal ? AbortSignal.any([io.signal, AbortSignal.timeout(30_000)]) : AbortSignal.timeout(30_000),
     headers: { accept: "application/json", "user-agent": sourceUserAgent(), "api-user-agent": sourceUserAgent() },
     validate: bytes => { JSON.parse(new TextDecoder().decode(bytes)); } }));
 
@@ -123,7 +124,7 @@ async function commonsFilePortrait(subject: CampaignSiteIdentity, file: string, 
   if (!imageUrl) return { gap: "COMMONS_IMAGE_NOT_HELD" };
   const verifiedAt=new Date(Math.max(Date.parse(now),...captures.map(row=>Date.parse(row.observedAt)),Date.parse(metadataCapture.observedAt))).toISOString();
   const photo = await storeVerifiedPortrait(subject.candidacyId, { subject: { personId: subject.candidacyId, name, profileUrls: [] },
-    imageUrl, commons: identity, captures: [...captures, metadataCapture] }, verifiedAt, io?.portrait, "candidates");
+    imageUrl, commons: identity, captures: [...captures, metadataCapture] }, verifiedAt, io?.portrait, "candidates", io?.signal);
   if (photo.verification?.basis !== "COMMONS") return { gap: "COMMONS_LICENSE_NOT_VERIFIED" };
   return { patch: { personId: subject.candidacyId, photoUrl: photo.url,
     photoSource: `Wikimedia Commons: ${photo.verification.attribution!.author}, ${photo.verification.license!.value}`,

@@ -8,20 +8,20 @@ import { inSiteTenantsFromWiring } from "../../lib/sources/legistar-insite/tenan
 import type { ReportingMeetingSource } from "../../lib/sources/types.ts";
 
 /** Acquire only the exact body bound by this official calendar door. */
-export function scopedMeetingSource(partition: MeetingPartitionContract): CompositeSource | null {
+export function scopedMeetingSource(partition: MeetingPartitionContract, fetchImpl?: typeof fetch): CompositeSource | null {
   if (!partition.wiring || partition.derivedFamily !== null) return null;
   const options = { timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS, captureAcquisitionEvidence: true };
   if (partition.meetingSource === "legistar") {
     const clients = legistarClientsFromWiring([partition.wiring]);
     const child: ReportingMeetingSource<LegistarEventWithClient> = {
-      ...makeLegistarSource(clients),
+      ...makeLegistarSource(clients, fetchImpl),
       normalizeWithDrops: (raw, now) => normalizeWithDrops(raw, now ?? new Date(), clients),
     };
     return new CompositeSource([child as ReportingMeetingSource<unknown>], options);
   }
   if (partition.meetingSource === "legistar-insite") {
     const tenants = inSiteTenantsFromWiring([partition.wiring]);
-    return new CompositeSource([makeLegistarInSiteSource({ tenants }) as ReportingMeetingSource<unknown>], options);
+    return new CompositeSource([makeLegistarInSiteSource({ tenants, fetchImpl }) as ReportingMeetingSource<unknown>], options);
   }
   return null;
 }

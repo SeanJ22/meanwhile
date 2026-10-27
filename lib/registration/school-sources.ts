@@ -81,7 +81,7 @@ export function schoolListingsFromRelease(prior: LoadedReference, release: Known
       officePhone: value("PHONE") || null,
       officeAddress: [value("LSTREET1", "LOCATION_STREET1"), value("LSTREET2", "LOCATION_STREET2"), value("LSTREET3", "LOCATION_STREET3"), value("LCITY", "LOCATION_CITY"), value("LSTATE", "LOCATION_STATE"), value("LZIP", "LOCATION_ZIP")].filter(Boolean).join(", ") || null,
       mailingAddress: [value("MSTREET1", "MAILING_STREET1"), value("MSTREET2", "MAILING_STREET2"), value("MSTREET3", "MAILING_STREET3"), value("MCITY", "MAILING_CITY"), value("MSTATE", "MAILING_STATE"), value("MZIP", "MAILING_ZIP")].filter(Boolean).join(", ") || null,
-      countyFips: null, associations: [], bodyIds: [], provenance: { sourceUrl: release.requestedUrl, sourceOrg: "National Center for Education Statistics", collectedAt: release.sourceObservedAt, verifiedAt: null } };
+      countyFips: null, associations: [], bodyIds: [], provenance: { sourceUrl: release.requestedUrl, sourceOrg: "National Center for Education Statistics", collectedAt: release.sourceObservedAt, verifiedAt: null,rawHash:release.sha256 } };
     out.push({ ...listing, associations: schoolDistrictSourceAssociations(listing, prior.reference) });
   }
   return out;

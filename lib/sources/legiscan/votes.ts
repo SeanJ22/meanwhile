@@ -1,8 +1,9 @@
 import { votePagesIssue, type VoteMemberPage } from "../../state-rollcalls/vote-page-model.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../../civic-data/types.ts";
-import type { RoutineDataStore } from "../../civic-data/store.ts";
-import type { OfficialStateLegislatorReadModel } from "../../civic-data/candidate-builders.ts";
+import type { RoutineDataStore, RosterIdentityPerson } from "../../civic-data/store.ts";
+import type { SourceProbeDependencies } from "../../civic-data/source-probe.ts";
+import type { LegiscanCompletedDataset } from "./vote-acquisition.ts";
 import type { PluralVoteFact } from "../plural/votes.ts";
 import type { LegiscanDatasetRecord } from "./types.ts";
 import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, nativePersonId, profileUrl, sourcePersonIds, validDay,
@@ -10,6 +11,13 @@ import { digest, LEGISCAN_VOTES_PARSER, LEGISCAN_VOTES_SOURCE, legiscanState, na
 
 export const legiscanVotesScope = (state: string) => `US-${legiscanState(state)}:legiscan-votes:v1`;
 export const legiscanVotesContract = (state: string) => `legiscan-votes-${legiscanState(state).toLowerCase()}`;
+export interface LegiscanVoteSourceProbe {
+  readonly formatVersion: 1;
+  readonly listingHash: string;
+  readonly dependencies: SourceProbeDependencies;
+  readonly complete: boolean;
+  readonly completedDatasets?: readonly LegiscanCompletedDataset[];
+}
 export interface LegiscanVotesProjection {
   formatVersion: 1 | 2; memberPages?: VoteMemberPage[]; state: string; rollCalls: PluralVoteFact[]; datasets: LegiscanDatasetRecord[];
   identityAuthority: LegiscanIdentityAuthority;
@@ -63,48 +71,56 @@ export function legiscanVotesProjectionIssue(value: LegiscanVotesProjection): st
   return null;
 }
 /** Joins cite immutable promoted roster versions so departed members retain their verified history. */
-export async function legiscanVoteIdentityAuthorityIssue(store: Pick<RoutineDataStore, "readPromotion" | "readCandidate">, candidate: RoutineCandidate): Promise<string | null> {
+export async function legiscanVoteIdentityAuthorityIssue(store: Pick<RoutineDataStore,"readSourceHead"|"readSlimRosters"|"readHistoricalRosterIdentities">, candidate: RoutineCandidate): Promise<string | null> {
   const projection = candidate.readModel as LegiscanVotesProjection, issue = legiscanVotesProjectionIssue(projection);
   if (issue) return issue;
   const authority = projection.identityAuthority;
-  const pointer = await store.readPromotion<OfficialStateLegislatorReadModel>("STATE_LEGISLATOR", authority.scope);
-  if (!pointer || pointer.sourceId !== "plural-openstates" || pointer.versionId !== authority.versionId || pointer.lastKnownGoodVersionId !== authority.versionId) return "The vote crosswalk does not cite the canonical held OpenStates roster.";
-  const byVersion = new Map<string, OfficialStateLegislatorReadModel>([[pointer.versionId, pointer.payload]]);
+  const pointer = await store.readSourceHead("STATE_LEGISLATOR", authority.scope);
+  if (!pointer || pointer.sourceId !== "plural-openstates" || pointer.versionId !== authority.versionId || pointer.lastKnownGoodVersionId !== authority.versionId ||
+    pointer.candidateState!=="PROMOTED"||!pointer.acquisitionSucceeded||pointer.imported||!pointer.normalizedHash)
+    return "The vote crosswalk does not cite the canonical held OpenStates roster.";
+  const current=(await store.readSlimRosters("STATE_LEGISLATOR",[authority.scope])).find(row=>row.scope===authority.scope);
+  if(!current||current.versionId!==pointer.versionId||current.readModelSha256!==pointer.normalizedHash||current.roster.scope!==`US-${projection.state}`)
+    return "The vote crosswalk's current OpenStates identity fields do not match its canonical held version.";
+  const byVersion = new Map<string,{sourceId:string;jurisdiction:string;officeholders:readonly RosterIdentityPerson[]}>(
+    [[pointer.versionId,{sourceId:pointer.sourceId,jurisdiction:current.roster.scope,officeholders:current.roster.officeholders}]]);
   for (const join of authority.joins) {
     const versionId = join.sourceRosterVersionId!;
     if (!byVersion.has(versionId)) {
-      const captured = await store.readCandidate(versionId);
-      if (!captured || captured.state !== "PROMOTED" || captured.receipt?.decision !== "GOOD" || captured.candidate.sourceId !== "plural-openstates" ||
-        captured.candidate.recordClass !== "STATE_LEGISLATOR" || captured.candidate.scope !== authority.scope ||
-        captured.candidate.normalization.normalizedHash !== digest(captured.candidate.readModel)) return "The vote crosswalk's historical OpenStates roster is not a verified held source version.";
-      byVersion.set(versionId, captured.candidate.readModel as OfficialStateLegislatorReadModel);
+      const captured = await store.readHistoricalRosterIdentities?.(versionId);
+      if (!captured || captured.versionId!==versionId||captured.sourceId !== "plural-openstates" || captured.recordClass !== "STATE_LEGISLATOR" ||
+        captured.scope !== authority.scope||!captured.parserVersion||!/^[a-f0-9]{64}$/.test(captured.normalizedHash))
+        return "The vote crosswalk's historical OpenStates roster is not a verified held source version.";
+      byVersion.set(versionId,captured);
     }
     const roster = byVersion.get(versionId)!;
-    if (roster.sourceId !== "plural-openstates" || roster.jurisdiction !== `US-${projection.state}` || !Array.isArray(roster.roster?.officeholders)) return "The vote crosswalk cites a roster for another state or publisher.";
-    const candidates = roster.roster.officeholders.filter(holder => {
+    if (roster.sourceId !== "plural-openstates" || roster.jurisdiction !== `US-${projection.state}` || !Array.isArray(roster.officeholders)) return "The vote crosswalk cites a roster for another state or publisher.";
+    const candidates = roster.officeholders.filter(holder => {
       if (holder.level !== "STATE" || !sourcePersonIds(holder).includes(join.personId)) return false;
       if (join.basis === "NATIVE_ID") return Object.entries(holder.nativeIds ?? {}).filter(([scheme]) => /^legiscan$/i.test(scheme)).flatMap(([, ids]) => ids).includes(String(join.legiscanPeopleId));
       return [holder.websiteUrl, ...(holder.profileUrls ?? [])].map(profileUrl).includes(join.matchedUrl);
     });
-    const sharing = join.basis === "EXACT_MEMBER_PROFILE_URL" ? roster.roster.officeholders.filter(holder => [holder.websiteUrl, ...(holder.profileUrls ?? [])].map(profileUrl).includes(join.matchedUrl)) : candidates;
+    const sharing = join.basis === "EXACT_MEMBER_PROFILE_URL" ? roster.officeholders.filter(holder => [holder.websiteUrl, ...(holder.profileUrls ?? [])].map(profileUrl).includes(join.matchedUrl)) : candidates;
     if (candidates.length !== 1 || sharing.length !== 1 || candidates[0].provenance.sourceUrl !== join.sourceUrl) return "The vote crosswalk is not a unique exact identity in its independently held OpenStates roster.";
   }
   return null;
 }
 export function legiscanVotesCandidate(input: { projection: LegiscanVotesProjection; acquired: readonly LegiscanDatasetEvidence[];
-  held: readonly { key: string; detail: string }[]; checkedAt: string }): RoutineCandidate {
+  held: readonly { key: string; detail: string }[]; checkedAt: string; sourceProbe?: LegiscanVoteSourceProbe }): RoutineCandidate {
   const projection = input.projection, scope = legiscanVotesScope(projection.state), jurisdiction = `US-${projection.state}`, issue = legiscanVotesProjectionIssue(projection);
   const acquisition = [...input.acquired].sort((a, b) => b.retrievedAt.localeCompare(a.retrievedAt))[0];
   const sourceThrough = [...input.acquired.map(row => row.retrievedAt), ...projection.datasets.flatMap(dataset => dataset.downloadedAt ? [dataset.downloadedAt] : []),
     ...projection.rollCalls.map(vote => vote.retrievedAt)].sort().at(-1) ?? input.checkedAt;
   const sourceCheck = input.acquired.flatMap(row => row.sourceCheck ? [row.sourceCheck] : []).sort((a, b) => b.checkedAt.localeCompare(a.checkedAt))[0];
-  const payload = { acquisitions: input.acquired.map(({ members, sourceCheck: _sourceCheck, ...row }) => ({ ...row,
+  const payload = { ...(input.sourceProbe ? { sourceProbe: input.sourceProbe } : {}), acquisitions: input.acquired.map(({ members, sourceCheck: _sourceCheck, ...row }) => ({ ...row,
     ...(members ? { members: members.map(({ name, sha256 }) => ({ name, sha256 })) } : {}) })), held: input.held };
   return { id: `cv-${digest([LEGISCAN_VOTES_SOURCE, scope, digest(projection), digest(payload), sourceCheck ?? null]).slice(0, 32)}`,
     sourceId: LEGISCAN_VOTES_SOURCE, recordClass: "STATE_ROLL_CALL", scope,
     sourceProjectionEvidence: sourceProjectionEvidence(LEGISCAN_VOTES_SOURCE, "STATE_ROLL_CALL", scope),
     retrieval: { succeeded: input.acquired.length > 0, requestedUrl: acquisition?.requestedUrl ?? `https://api.legiscan.com/?op=getDatasetList&state=${projection.state}`,
-      finalUrl: acquisition?.finalUrl ?? null, httpStatus: 200, retrievedAt: sourceThrough, rawHash: digest(input.acquired.map(row => row.sha256).sort()), ...(sourceCheck ? { sourceCheck } : {}) },
+      finalUrl: acquisition?.finalUrl ?? null, httpStatus: 200, retrievedAt: sourceThrough,
+      rawHash: digest(input.sourceProbe ? { source: input.acquired.map(row => row.sha256).sort(), dependencies: input.sourceProbe.dependencies } : input.acquired.map(row => row.sha256).sort()),
+      ...(input.sourceProbe ? { rawHashBasis: "SOURCE_CONTENT_V1" as const,complete:input.sourceProbe.complete } : {}), ...(sourceCheck ? { sourceCheck } : {}) },
     normalization: { succeeded: !issue, parserVersion: LEGISCAN_VOTES_PARSER, schemaVersion: projection.formatVersion === 2 ? "legiscan-person-votes/2" : "legiscan-person-votes/1", normalizedHash: digest(projection), normalizedPayloadHash: digest(payload),
       inputRecords: projection.rollCalls.length, outputRecords: projection.rollCalls.length, droppedRecords: 0, missingRequiredFields: [] },
     identities: projection.rollCalls.map(vote => ({ subjectId: vote.id, jurisdiction, chamber: vote.chamber, term: vote.session, session: vote.session,

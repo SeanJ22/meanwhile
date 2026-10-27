@@ -1,3 +1,4 @@
+import { memberOfficeScopeState } from "../officials/member-office-data.ts";
 import { parseStateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { ballotNavigationState } from "./ballot-navigation-scope.ts";
 import { stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
@@ -404,10 +405,15 @@ export async function verifyRoutineReaderProjection(
         const { readBallotNavigationProjection } = await import("./curated-reader-read-model.ts");
         return verifyExactVersion(verifierId, await readBallotNavigationProjection(state, { store: options.store, now: options.now }), options.expectedVersionId, `${state} ballot navigation`);
       }
+      case "member-offices": {
+        const state=memberOfficeScopeState(options.scope??"");
+        if(!state)return fail(verifierId,"Member-office readback requires its exact state scope.");
+        const {readMemberOfficeStateProjection}=await import("./curated-reader-read-model.ts");
+        return verifyExactVersion(verifierId,await readMemberOfficeStateProjection(state,{store:options.store,now:options.now}),options.expectedVersionId,`${state} member offices`);
+      }
       case "official-filings":
       case "stances":
       case "campaign-sites":
-      case "member-offices":
       case "venue-resolutions":
       case "meeting-body-crosswalk": {
         const { readCuratedReaderProjection } = await import("./curated-reader-read-model.ts");

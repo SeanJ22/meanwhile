@@ -14,6 +14,10 @@ import type { Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { MemoryEvidenceStore, putArtifact } from "../lib/control-plane/evidence/store.ts";
 import type { ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
+import { ballotNavigationScope } from "../lib/civic-data/ballot-navigation-scope.ts";
+import { ballotNavigationSourceCheckOverlay } from "../lib/civic-data/ballot-navigation-source-checks.ts";
+import type { PublishedElectionField } from "../lib/civic-data/election-fields.ts";
+import type { CuratedReaderProjection } from "../lib/civic-data/manual-projections.ts";
 
 const now = "2026-10-13T19:00:00.000Z";
 const division = (state: string) => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`;
@@ -35,6 +39,74 @@ function context() {
       saved.push({ artifact, bytes: Uint8Array.from(bytes) }); return { stored: true, where: artifact.id, why: "saved" };
     } }, saved };
 }
+
+test("unchanged navigation sources read no held payload and partial failures advance only the checked source", async () => {
+  const ctx = context(), state = "OH", scope = ballotNavigationScope(state);
+  const base = report(state), secondUrl = "https://county.example.gov/OH";
+  const sources: BallotNavigationStateReport = { ...base,
+    sources: [...base.sources, { requestedUrl: secondUrl, finalUrl: secondUrl, publisher: "Ohio county election authority" }],
+    facts: base.facts.map((fact, index) => index ? { ...fact, sourceUrl: secondUrl } : fact),
+  };
+  let failCounty = false;
+  const requested: string[] = [];
+  const fetcher = (async (url: string | URL | Request) => {
+    requested.push(String(url));
+    if (String(url) === secondUrl && !failCounty) assert.ok(await ctx.store.readSourceHead("CURATED_READER_RECORD", scope),
+      "the first verified source was published before the next page was fetched");
+    return new Response(failCounty && String(url) === secondUrl ? "Unavailable" : htmlFor(state),
+      { status: failCounty && String(url) === secondUrl ? 503 : 200, headers: { "content-type": "text/html" } });
+  }) as typeof fetch;
+  const first = await refreshBallotNavigation({ ...ctx, now, state, report: sources, fetch: fetcher });
+  assert.equal(first.fields.length, 2);
+  const original = await ctx.store.readPromotion<CuratedReaderProjection>("CURATED_READER_RECORD", scope);
+  assert.ok(original);
+  const originalSourceDates = original.payload.records.map(record => (record as unknown as PublishedElectionField).value.collectedAt);
+  const saved = ctx.saved.length;
+  const forbidden = ["readPromotion", "readCandidate", "readCandidatePath", "readCandidateField", "readPromotionPayloadFields", "create", "confirmUnchanged"] as const;
+  const originals = new Map(forbidden.map(method => [method, ctx.store[method]]));
+  for (const method of forbidden) Object.defineProperty(ctx.store, method, { configurable: true, value: async () => { throw new Error(`HELD_NAVIGATION_READ:${method}`); } });
+  const later = "2026-10-14T19:00:00.000Z";
+  failCounty = true;
+  const partial = await refreshBallotNavigation({ ...ctx, now: later, state, report: sources, fetch: fetcher });
+  assert.equal(partial.confirmedSources, 1);
+  assert.equal(partial.promotedVersionId, first.promotedVersionId);
+  assert.equal(partial.receipt?.confirmedAt, undefined);
+  assert.equal(partial.fields.length, 0);
+  assert.ok(partial.gaps.some(gap => gap.detail.includes(secondUrl)));
+  assert.equal(ctx.saved.length, saved);
+  const checks = await ctx.store.readSourceChecks("CURATED_READER_RECORD", scope,
+    original.payload.records.map(record => (record as unknown as PublishedElectionField).value.sourceKey!));
+  const overlay = ballotNavigationSourceCheckOverlay(original.payload, checks);
+  const fields = overlay.records.map(record => (record as unknown as PublishedElectionField).value);
+  assert.equal(fields.find(field => field.url === base.sources[0].requestedUrl)?.verifiedAt, later);
+  assert.equal(fields.find(field => field.url === secondUrl)?.verifiedAt, now);
+  assert.deepEqual(fields.map(field => field.collectedAt), originalSourceDates);
+  failCounty = false;
+  requested.length = 0;
+  const resumed = await refreshBallotNavigation({ ...ctx, now: later, state, report: sources, fetch: fetcher });
+  assert.equal(resumed.confirmedSources, 2);
+  assert.equal(resumed.promotedVersionId, first.promotedVersionId);
+  assert.equal(ctx.saved.length, saved);
+  assert.equal(requested.find(url => !url.endsWith("/robots.txt")), secondUrl, "the previously unavailable source resumes first");
+  for (const [method, implementation] of originals) Object.defineProperty(ctx.store, method, { configurable: true, value: implementation });
+  const read = await readElectionFieldsForDivisions([division(state)], { store: ctx.store, now: later });
+  assert.ok(read.fields.every(field => field.value.verifiedAt === later && field.value.collectedAt === now));
+});
+
+test("navigation facts changed against identical bytes are revalidated and cannot inherit an unchanged source check", async () => {
+  const ctx = context(), state = "OH", source = report(state);
+  const fetcher = (async () => new Response(htmlFor(state), { headers: { "content-type": "text/html" } })) as typeof fetch;
+  const first = await refreshBallotNavigation({ ...ctx, now, state, report: source, fetch: fetcher });
+  const invalid = { ...source, facts: source.facts.map(fact => ({ ...fact, value: "Unsupported value", quote: "Unsupported value", dates: [] })) };
+  const later = "2026-10-14T19:00:00.000Z";
+  const result = await refreshBallotNavigation({ ...ctx, now: later, state, report: invalid, fetch: fetcher });
+  assert.equal(result.confirmedSources, 0);
+  assert.equal(result.promotedVersionId, null);
+  assert.ok(result.gaps.length);
+  const read = await readElectionFieldsForDivisions([division(state)], { store: ctx.store, now: later });
+  assert.equal(read.reads[0].metadata.versionId, first.promotedVersionId);
+  assert.ok(read.fields.every(field => field.value.verifiedAt === now));
+});
 
 test("a failed state source retains its source dates while a sibling and DC publish through independent state runner contracts", async () => {
   const ctx = context();

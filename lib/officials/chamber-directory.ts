@@ -93,10 +93,17 @@ function withOfficialSeats(value: FederalDirectoryReadModel, state: string): Fed
     const stale = new Set(roster.officeholders.filter(holder => holder.chamber === official.chamber && !current.has(holder.id) &&
       (official.chamber === "senate" || roster.divisions.some(link => link.officeholderId === holder.id && seats.has(link.ocdId)))).map(holder => holder.id));
     const held = new Set(roster.officeholders.map(holder => holder.id));
+    const authoritative = new Map(official.members.map(member => [`congress:${member.bioguide}`, officialHolder(member,official,state)]));
+    const refresh = (holder:Officeholder):Officeholder => {
+      const source=authoritative.get(holder.id);if(!source)return holder;
+      const fields=(["name","officeTitle","termStart","partyLabel","websiteUrl","contactFormUrl","phone"] as const).filter(field=>source[field]);
+      return {...holder,...Object.fromEntries(fields.map(field=>[field,source[field]])),
+        fieldSources:{...holder.fieldSources,...Object.fromEntries(fields.map(field=>[field,source.fieldSources![field]]))}};
+    };
     const added = official.members.filter(member => !held.has(`congress:${member.bioguide}`)).map(member => officialHolder(member, official, state));
     for (const holder of added) byMember[holder.id.slice("congress:".length)] ??= { districtOffices: [], committees: [] };
     roster = { ...roster,
-      officeholders: [...roster.officeholders.filter(holder => !stale.has(holder.id)), ...added],
+      officeholders: [...roster.officeholders.filter(holder => !stale.has(holder.id)).map(refresh), ...added],
       divisions: [...roster.divisions.filter(link => !stale.has(link.officeholderId)),
         ...added.map(holder => ({ officeholderId: holder.id, ocdId: official.members.find(member => `congress:${member.bioguide}` === holder.id)!.ocdId, bodyId: null }))],
       unmatched: roster.unmatched.filter(row => !stale.has(row.officeholderId)) };

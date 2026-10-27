@@ -284,7 +284,8 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
     if(matched.length)await facts.query(`DELETE FROM blank b USING unnest($1::text[],$2::text[]) p(id,field) WHERE b.entity_id=p.id AND b.field=p.field`,[matched.map(person=>person.id),matched.map(person=>`campaign-money:${person.seat}`)]);
     if(missing.length)await facts.query(`INSERT INTO blank(entity_id,field,stage,reason,detail,next_try_at,attempts)
       SELECT id,field,'ACQUIRE','MONEY_NOT_YET_JOINED',detail,now()+interval '1 hour',1 FROM unnest($1::text[],$2::text[],$3::text[]) p(id,field,detail)
-      ON CONFLICT(entity_id,field) DO UPDATE SET detail=EXCLUDED.detail,next_try_at=EXCLUDED.next_try_at,attempts=blank.attempts+1,updated_at=now()`,
+      ON CONFLICT(entity_id,field) DO UPDATE SET detail=EXCLUDED.detail,next_try_at=EXCLUDED.next_try_at,attempts=blank.attempts+1,updated_at=now()
+      WHERE blank.detail IS DISTINCT FROM EXCLUDED.detail OR blank.next_try_at<=now()`,
       [missing.map(person=>person.id),missing.map(person=>`campaign-money:${person.seat}`),missing.map(person=>personReasons.get(campaignPersonKey(state,person))??CAMPAIGN_MONEY_MISSING_REASONS.absent)]);
   }
   found=0;

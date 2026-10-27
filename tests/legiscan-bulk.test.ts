@@ -486,3 +486,40 @@ test("bounded parts preserve cross-bill ambiguity, reject a truncated archive in
   assert.deepEqual(after.bills.map(bill=>bill.id).sort(),read.bills.map(bill=>bill.id).sort());assert.equal(after.complete,true);
   assert.equal((await store.readPromotion("STATE_BILL",billScope(datasets[0].session_id)))?.versionId,published.candidate.id);
 });
+test("parts saved with the whole held roster resume while it is unchanged and republish, never read whole, once it changes",async()=>{
+  const {sessionSponsorEvidence}=await import("../lib/sources/legiscan/bills.ts");
+  const {processRegisteredFanOutCandidate}=await import("../lib/civic-data/promotion.ts");
+  const bodies=Array.from({length:LEGISCAN_PART_ROWS*2+1},(_,index)=>{const raw=JSON.parse(ak[0]);raw.bill.bill_id+=index;return JSON.stringify(raw);});
+  const card={...person,level:"STATE" as const,state:"AK",offices:[{name:"capitol",address:"Room 410"}]};
+  // The shape production saved before this change: every part embeds the whole held card.
+  async function legacyParts(store:MemoryRoutineDataStore,input:ReturnType<typeof source>,roster:readonly object[]){
+    const {access_key:_access,...dataset}=input.dataset,sessionSponsors=sessionSponsorEvidence(bodies),ids:string[]=[];
+    for(const partIndex of [0,1]){
+      const members=bodies.slice(partIndex*LEGISCAN_PART_ROWS,(partIndex+1)*LEGISCAN_PART_ROWS);
+      const body=JSON.stringify({dataset,archiveHash:input.archiveHash,parentRawHash:input.capture.rawHash,partIndex,memberOffset:partIndex*LEGISCAN_PART_ROWS,bodies:members,sessionSponsors});
+      const candidate=bulkCandidate({capture:{...input.capture,body,rawHash:hash(body)},dataset,bodies:members,people:roster as never,partIndex,archiveHash:input.archiveHash,sessionSponsors});
+      assert.ok((await processRegisteredFanOutCandidate(store,"legiscan-bulk",candidate,at)).promoted);ids.push(candidate.id);
+    }
+    return new Set(ids);
+  }
+  class CountingStore extends MemoryRoutineDataStore {
+    createdParts=0;legacy=new Set<string>();
+    override async create(record:Parameters<MemoryRoutineDataStore["create"]>[0],event:Parameters<MemoryRoutineDataStore["create"]>[1]){
+      if((record.candidate.readModel as {kind:string}).kind==="PART")this.createdParts++;
+      return super.create(record,event);
+    }
+    override async readCandidate(id:string){if(this.legacy.has(id))throw Error("whole legacy part read");return super.readCandidate(id);}
+  }
+  const index=datasets.map(({access_key:_access,...row})=>row);
+  for(const edited of [false,true]){
+    const store=new CountingStore(),input=source(datasets[0],bodies);
+    await publishBulkCandidate(store,{capture:capture(JSON.stringify({status:"OK",datasetlist:index}),at,"getDatasetList"),datasets},at);
+    store.legacy=await legacyParts(store,input,[card]);store.createdParts=0;
+    const roster=edited?[{...card,offices:[{name:"capitol",address:"Room 500"}]}]:[card];
+    const resumed=await publishBulkCandidate(store,{...input,people:roster,capture:{...input.capture,retrievedAt:later}},later);
+    assert.ok(resumed.outcome.promoted,JSON.stringify(resumed.outcome.candidate.receipt?.checks.filter(check=>check.verdict!=="PASS")));
+    const kept=(resumed.candidate.readModel as import("../lib/sources/legiscan/bills.ts").BillSession).parts.filter(part=>store.legacy.has(part.versionId)).length;
+    assert.deepEqual({kept,created:store.createdParts},edited?{kept:0,created:3}:{kept:2,created:1});
+    assert.equal((await readBillsForState("AK",{store,now:later})).bills.length,bodies.length);
+  }
+});

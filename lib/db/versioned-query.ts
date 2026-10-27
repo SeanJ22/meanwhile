@@ -7,7 +7,8 @@ type Row = Record<string, unknown>;
 export type VersionedSelectQuery = (text: string, params: readonly unknown[]) => Promise<readonly Row[]>;
 interface SavedRow { readonly etag: string; readonly body: string }
 const hash = (value: Uint8Array) => createHash("sha256").update(value).digest("hex");
-const activeStatements = new Set<string>();
+// The bundler can copy this module into several server chunks; the driver and the reader must share one set.
+const activeStatements: Set<string> = ((globalThis as { [key: symbol]: Set<string> | undefined })[Symbol.for("meanwhile.versionedSelectStatements")] ??= new Set<string>());
 /** Transport adapters recognize only the exact checked statement currently executing. */
 export const isVersionedSelectStatement = (text: string): boolean => activeStatements.has(text);
 
@@ -39,9 +40,9 @@ export function versionedSelect(connection: string, cache: CivicReadCache = runt
         const version = `db04_version_${token}`, retained = `db04_retained_${token}`;
         const checked = `${parts.prefix ? parts.prefix + "," : "WITH"} ${source} AS MATERIALIZED (${parts.query}
         ), ${tagged} AS MATERIALIZED (
-          SELECT source.*, row_number() OVER () AS ${ordinal},
-            encode(sha256(convert_to(row_to_json(source)::text, 'UTF8') || record_send(source)), 'hex') AS ${etag}
-          FROM ${source} source
+          SELECT ${source}.*, row_number() OVER () AS ${ordinal},
+            encode(sha256(convert_to(row_to_json(${source})::text, 'UTF8') || record_send(${source})), 'hex') AS ${etag}
+          FROM ${source}
         ), ${selected} AS MATERIALIZED (
           SELECT *, (${etag}=ANY($${params.length + 1}::text[]) OR ${ordinal}<>min(${ordinal}) OVER (PARTITION BY ${etag})) AS ${unchanged}
           FROM ${tagged}

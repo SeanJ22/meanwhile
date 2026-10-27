@@ -130,3 +130,17 @@ test("checked SQL preserves quoted delimiters, trailing comments, parentheses an
     ]) assert.deepEqual(await read(query, text), (await pg.query(text)).rows, text);
   } finally { await pg.close(); }
 });
+
+test("a selected column named source does not shadow the checked row", async () => {
+  // Production: the routine task clock read selects a `source` column, and row_to_json(source) resolved to that text.
+  const pg = new PGlite();
+  const held = new Map<string, string>();
+  const cache = new CivicReadCache({ read: async key => held.get(key) ?? null, write: async (key, value) => { held.set(key, value); } });
+  const query = async (text: string, params: readonly unknown[] = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
+  try {
+    await pg.exec(`CREATE TABLE clocks(task text PRIMARY KEY, source text, due timestamptz);
+      INSERT INTO clocks VALUES ('a','legiscan','2026-10-26T00:00:00Z'),('b','census','2026-10-27T00:00:00Z');`);
+    const text = "SELECT task, source, due FROM clocks ORDER BY task";
+    assert.deepEqual(await versionedSelect("fixture", cache)(query, text), await query(text));
+  } finally { await pg.close(); }
+});

@@ -61,7 +61,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
       stateAuthorityPointers(family, state)),
     ...(state === "NH" && !zip ? [requiredRoutineContract("nh-members")] : []),
   ]);
-  for (const id of ["ballot-navigation", "official-filings"] as const) entries.push(requiredManualProductionContract(id));
+  entries.push(requiredManualProductionContract("official-filings"));
   for (const division of divisions) {
     if (!jurisdictionFromOcdId(division)) continue;
     entries.push({ recordClass: "CURATED_READER_RECORD", scope: translationScope(division) });
@@ -81,12 +81,14 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
     return value;
   };
   const districtRead = entry().then(async value => {
-    const pointersRead = Promise.all(packages.map(({ read }) => primeStateDistrictPointers(read)));
-    const extra = (value?.ids ?? []).filter(id => !divisions.includes(id) && jurisdictionFromOcdId(id)).flatMap(id => [
+    // Finish registering the pointers carried by the geography query before
+    // deciding which ones are missing, including its confirmed absences.
+    await Promise.all(packages.map(({ read }) => primeStateDistrictPointers(read)));
+    const extra = [...value?.ids ?? [], ...value?.fringe ?? []].filter(id => !divisions.includes(id) && jurisdictionFromOcdId(id)).flatMap(id => [
       { recordClass: "CURATED_READER_RECORD" as const, scope: translationScope(id) },
     ]);
     const missing = extra.filter(entry => !readerCanonicalEntry(entry.recordClass, entry.scope));
-    await Promise.all([pointersRead, missing.length ? primeReaderCanonicalStore(missing, readCanonicalShelf(missing)) : Promise.resolve()]);
+    if (missing.length) await primeReaderCanonicalStore(missing, readCanonicalShelf(missing));
   });
   const canonicalRead = Promise.all([baseRead, districtRead]).then(() => undefined);
   const registryRead = Promise.all(places).then(values => {
@@ -177,6 +179,14 @@ export async function primeBallotFundingRead(set: BallotSet, contests: readonly 
     for (const person of roster.officeholders) if (holders.has(person.id))
       for (const key of personIdentityKeys(person)) keys.add(key);
   } catch { /* Ballot-bound FEC records remain readable if the directory is unavailable. */ }
-  if (keys.size) await primeReaderProjection("FEC_FUNDING",requiredRoutineContract("fec-funding").scope,
-    [...currentReaderSelection()!.keys,...keys],{exactKeys:true});
+  if (keys.size) {
+    const pointer = requiredRoutineContract("fec-funding");
+    const entry = await primeReaderProjection("FEC_FUNDING", pointer.scope,
+      [...currentReaderSelection()!.keys,...keys],{exactKeys:true});
+    await primeReaderCanonicalStore([{ recordClass: "FEC_FUNDING", scope: pointer.scope }], {
+      async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+      async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+      async readPromotedEntry() { return entry; },
+    });
+  }
 }

@@ -7,6 +7,7 @@ import { LEGISCAN_BULK_CONTRACT,LEGISCAN_BULK_PARSER,LEGISCAN_SPONSOR_MATCH,LEGI
 import type { BulkCapture } from "./acquisition.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
 import { runRowStore } from "./run-rows.ts";
+import { legiscanIdentityHolder } from "./dataset.ts";
 const hash=(value:unknown)=>createHash("sha256").update(typeof value==="string"?value:canonicalCivicDataJson(value)).digest("hex");
 export const LEGISCAN_PART_ROWS=250;
 /** Raw-member byte target; an indivisible larger bill stays in its own part. Escaping adds metadata. */
@@ -37,7 +38,13 @@ export function bulkCandidate(input:BulkInput):RoutineCandidate {
     sourceProjectionEvidence:sourceProjectionEvidence(sourceId,recordClass,scope),
     dependentChecks:[{consumer:"LegiScan bills reader",passed:rows.length>0,detail:`${rows.length} source records retained including unresolved sponsor joins.`}],normalizedPayload:payload,readModel};
 }
-export async function publishBulkCandidate(store:RoutineDataStore,input:Parameters<typeof bulkCandidate>[0],now:string) {
+/** A pass that cannot finish another part write before its deadline stops: saved parts carry over to the next pass. */
+export const LEGISCAN_PASS_DEADLINE="LEGISCAN_PASS_DEADLINE";
+export interface BulkPublishOptions {
+  /** Asked before each new part write; false leaves the rest of the session to the next pass. */
+  readonly writeAllowed?:()=>boolean;
+}
+export async function publishBulkCandidate(store:RoutineDataStore,input:Parameters<typeof bulkCandidate>[0],now:string,options:BulkPublishOptions={}) {
   if(!input.dataset){const candidate=bulkCandidate(input);return {candidate,outcome:await processRegisteredRoutineCandidate(store,LEGISCAN_BULK_CONTRACT,candidate,now)};}
   const archiveHash=input.archiveHash??/"archiveHash":"([a-f0-9]{64})"/.exec(input.capture.body.slice(0,4096))?.[1];
   if(!archiveHash||!input.bodies?.length)throw Error("LEGISCAN_ARCHIVE_EVIDENCE_REQUIRED");
@@ -46,6 +53,7 @@ export async function publishBulkCandidate(store:RoutineDataStore,input:Paramete
   const parts:BillPartPointer[]=[];
   const counts:BillPart["counts"]={rows:0,joined:0,unjoined:0,sponsorsJoined:0,sponsorsUnjoined:0};
   const seen=new Set<string>();
+  const claim=(value:BillPart)=>{for(const bill of value.bills){if(seen.has(bill.id))throw Error("LEGISCAN_DUPLICATE_BILL");seen.add(bill.id);}};
   const sessionSponsors=sessionSponsorEvidence(input.bodies);
   const sessionSponsorHash=hash(sessionSponsors);
   const chunks:{bodies:string[];memberOffset:number}[]=[];
@@ -58,32 +66,44 @@ export async function publishBulkCandidate(store:RoutineDataStore,input:Paramete
     bodies.push(source);bytes+=size;
   }
   addChunk();
+  // A part keeps only the held identity fields its sponsor join reads, so an edited office, contact or source on a held
+  // card leaves every saved part byte-identical and provable from its metadata row.
+  const people=input.people?.map(legiscanIdentityHolder);
+  // Parts saved before that carry the whole held roster; while it is unchanged they still rebuild exactly.
+  const rosters:(readonly HeldPerson[]|undefined)[]=input.people?[people,input.people]:[people];
   // Every read of a row this publish writes, or proves equal to a saved row, is answered from these bytes.
   const run=runRowStore(store);
-  const partCandidate=({bodies,memberOffset}:typeof chunks[number],partIndex:number,retrievedAt:string)=>{
-    const body=JSON.stringify({dataset,archiveHash,parentRawHash:input.capture.rawHash,partIndex,memberOffset,bodies,sessionSponsors});
-    return bulkCandidate({capture:{...input.capture,retrievedAt,body,rawHash:hash(body)},dataset,bodies,people:input.people,partIndex,archiveHash,sessionSponsors});
+  const partBody=({bodies,memberOffset}:typeof chunks[number],partIndex:number)=>
+    JSON.stringify({dataset,archiveHash,parentRawHash:input.capture.rawHash,partIndex,memberOffset,bodies,sessionSponsors});
+  const partCandidate=(chunk:typeof chunks[number],partIndex:number,retrievedAt:string,roster:readonly HeldPerson[]|undefined=people)=>{
+    const body=partBody(chunk,partIndex);
+    return bulkCandidate({capture:{...input.capture,retrievedAt,body,rawHash:hash(body)},dataset,bodies:chunk.bodies,people:roster,partIndex,archiveHash,sessionSponsors});
   };
+  let deferred=false;
   const published=await runBoundedWorkPool(chunks,2,async(chunk,partIndex)=>{
-    const candidate=partCandidate(chunk,partIndex,input.capture.retrievedAt),rawHash=candidate.retrieval.rawHash!;
-    const value=candidate.readModel as BillPart;
-    for(const bill of value.bills){if(seen.has(bill.id))throw Error("LEGISCAN_DUPLICATE_BILL");seen.add(bill.id);}
-    // Completed source parts survive a pass interruption. Reuse only the same exact
-    // bytes and recomputed joins; a changed roster, source or matcher publishes anew.
-    // The saved part is compared by its small metadata row: equal raw bytes, and equal
-    // facts when rebuilt at its own capture time. Its body is never read.
+    const rawHash=hash(partBody(chunk,partIndex));
+    // Completed source parts survive a pass interruption. A saved part is reused only when these exact source bytes
+    // and the held roster rebuild it exactly; the session check then proves it from its small metadata row and never
+    // reads it. A changed roster, source or matcher publishes the part anew instead of reading the saved one back whole.
     const prefix=`${billScope(dataset.session_id)}:${dataset.dataset_hash}:part:${partIndex}:`;
     for(const scope of priorScopes.filter(scope=>scope.startsWith(prefix))){
       const pointer=await store.readPromotionIdentity("STATE_BILL",scope);
       const prior=pointer&&pointer.versionId===pointer.lastKnownGoodVersionId?await store.readPublishedCandidateMetadata(pointer.versionId):null;
       if(!pointer||!prior||prior.state!=="PROMOTED"||prior.receipt?.decision!=="GOOD"||prior.candidate.scope!==scope||prior.candidate.retrieval.rawHash!==rawHash)continue;
-      const retrievedAt=prior.candidate.retrieval.retrievedAt,saved=partCandidate(chunk,partIndex,retrievedAt);
-      if(saved.normalization.normalizedHash!==prior.candidate.normalization.normalizedHash)continue;
-      // The same roster rebuilds the saved row exactly; the session check then reads none of it.
-      if(saved.id===pointer.versionId&&saved.scope===scope)run.hold(saved,()=>partCandidate(chunk,partIndex,retrievedAt));
-      console.log(`RCD_PROGRESS=${JSON.stringify({key:scope,records:value.bills.length})}`);
-      return {scope,versionId:pointer.versionId,rawHash,rows:value.bills.length,counts:value.counts};
+      const retrievedAt=prior.candidate.retrieval.retrievedAt;
+      for(const roster of rosters){
+        const saved=partCandidate(chunk,partIndex,retrievedAt,roster);
+        if(saved.id!==pointer.versionId||saved.scope!==scope||saved.normalization.normalizedHash!==prior.candidate.normalization.normalizedHash||
+          saved.normalization.normalizedPayloadHash!==prior.candidate.normalization.normalizedPayloadHash)continue;
+        const value=saved.readModel as BillPart;claim(value);
+        run.hold(saved,()=>partCandidate(chunk,partIndex,retrievedAt,roster));
+        console.log(`RCD_PROGRESS=${JSON.stringify({key:scope,records:value.bills.length})}`);
+        return {scope,versionId:pointer.versionId,rawHash,rows:value.bills.length,counts:value.counts};
+      }
     }
+    if(options.writeAllowed&&!options.writeAllowed()){deferred=true;return null;}
+    const candidate=partCandidate(chunk,partIndex,input.capture.retrievedAt),value=candidate.readModel as BillPart;
+    claim(value);
     run.hold(candidate,()=>partCandidate(chunk,partIndex,input.capture.retrievedAt));
     const outcome=await processRegisteredFanOutCandidate(run,LEGISCAN_BULK_CONTRACT,candidate,now);
     if(!outcome.promoted)throw Error(`LEGISCAN_PART_PUBLICATION_FAILED:${JSON.stringify(outcome.candidate.receipt?.checks.filter(row=>row.verdict!=="PASS"))}`);
@@ -92,9 +112,10 @@ export async function publishBulkCandidate(store:RoutineDataStore,input:Paramete
     console.log(`RCD_PROGRESS=${JSON.stringify({key:candidate.scope,records:value.bills.length})}`);
     return {scope:candidate.scope,versionId:outcome.promoted.versionId,rawHash:held.candidate.retrieval.rawHash,rows:value.bills.length,counts:value.counts};
   });
+  for(const result of published)if(!result.ok)throw Error(result.error);
+  if(deferred)throw Error(LEGISCAN_PASS_DEADLINE);
   for(const result of published){
-    if(!result.ok)throw Error(result.error);
-    const {counts:partCounts,...pointer}=result.value;parts.push(pointer);
+    const {counts:partCounts,...pointer}=result.value!;parts.push(pointer);
     for(const key of Object.keys(counts) as (keyof typeof counts)[])counts[key]+=partCounts[key];
   }
   const body=JSON.stringify({dataset,archiveHash,parentCapture:input.capture,parts,counts,sessionSponsorHash});

@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
-import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionPath, readCivicVersionRows } from "../lib/civic-data/version-vault.ts";
+import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionPath, readCivicVersionRows, readCivicVersionText } from "../lib/civic-data/version-vault.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
@@ -25,6 +25,23 @@ test("literal source kind/value fields are facts rather than storage wrappers",a
   assert.equal(await reader.path(ref,["metadata","kind"]),"object");
   assert.deepEqual(await reader.rows(ref,["records"]),[{ordinal:1,value:value.records[0]}]);
   assert.deepEqual(await reader.read(ref),value);
+});
+
+test("lazy agenda text opens only its window and preserves Unicode across chunk boundaries",async()=>{
+  const vault=new MemoryEvidenceStore(),body="a".repeat(8191)+"😀"+"b".repeat(8190)+
+    Array.from({length:40},(_,index)=>String(index).padStart(3,"0")+"document ".repeat(910)).join("");
+  const model={body,other:"UNRELATED_AGENDA_TEXT ".repeat(10000)},ref=await holdCivicVersion(vault,model,fingerprint(model));
+  const get=vault.get.bind(vault),received:string[]=[];
+  vault.get=async key=>{const value=await get(key);if(value)received.push(new TextDecoder().decode(value.bytes));return value;};
+  const reader=civicVersionVault(vault),window=await reader.text(ref,["body"],{offset:8188,count:4});
+  assert.deepEqual(window,{text:"aaa😀",offset:8188,nextOffset:8193,totalLength:body.length,offsetUnit:"UTF16_CODE_UNITS"});
+  assert.ok(received.length<8,"a window does not load every string part");
+  assert.ok(received.every(text=>!text.includes("UNRELATED_AGENDA_TEXT")));
+  assert.equal((await reader.text(ref,["body"],{count:0}))?.totalLength,body.length);
+  assert.equal((await reader.text({...ref,stringChunkUnits:undefined},["body"],{count:0}))?.totalLength,body.length,"original version-1 refs remain readable");
+  let offset=0,result="";
+  while(offset<body.length){const next=await reader.text(ref,["body"],{offset,count:8192});assert.ok(next);result+=next.text;offset=next.nextOffset;}
+  assert.equal(result,body,"all windows reconstruct the original words and Unicode exactly");
 });
 
 test("historical venue, agenda, wiring and funding selections use shared vault parts",async()=>{
@@ -83,6 +100,11 @@ test("version accessor reads new history from the vault and selects legacy/curre
         [{ordinal:2,value:before.meetings[1]}]);
       assert.deepEqual(await readCivicVersionRows(query,vault,id,["records"],{fields:["bodyIds","divisionIds"]}),before.records.map((row,index)=>({ordinal:index+1,value:{bodyIds:row.bodyIds,divisionIds:row.divisionIds}})));
     }
+    let received=0;
+    const bounded:Query=async(text,params)=>{const rows=await query(text,params);received+=Buffer.byteLength(JSON.stringify(rows));return rows;};
+    const window=await readCivicVersionText(bounded,()=>{throw new Error("legacy does not need the vault");},"legacy",["agendaDocuments","1","text"],{offset:3,count:9});
+    assert.deepEqual(window,{text:before.agendaDocuments[1].text.slice(3,12),offset:3,nextOffset:12,totalLength:before.agendaDocuments[1].text.length,offsetUnit:"UNICODE_CODE_POINTS"});
+    assert.ok(received<2048,"an old text window does not download its complete document");
     await assert.rejects(readCivicVersionRows(query,vault,"missing",["records"]),/CIVIC_VERSION_VAULT_MISSING/);
     await holdCivicVersion(vault,before,hash);seen.length=0;
     assert.equal(await readCivicVersionPath(query,vault,"vault",["agendaDocuments","1","text"]),before.agendaDocuments[1].text);

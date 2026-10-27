@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 
 const INLINE_BYTES = 32 * 1024;
+export const CIVIC_PAYLOAD_STRING_CHUNK_UNITS = INLINE_BYTES / 4;
 const PART_BYTES = 256 * 1024;
 const REF = "$civicPayloadPart";
 type Ref = { readonly $civicPayloadPart: string };
@@ -97,7 +98,7 @@ export function partitionCivicPayload(input: unknown, inlineFields?: readonly st
       const size = typeof value === "string" ? stringBytes(value) : Buffer.byteLength(JSON.stringify(value));
       if (size <= INLINE_BYTES || typeof value !== "string" || inline) return { out: value, size, territory: "shared" };
       const chunks: string[] = [];
-      for (let index = 0; index < value.length; index += INLINE_BYTES / 4) chunks.push(value.slice(index, index + INLINE_BYTES / 4));
+      for (let index = 0; index < value.length; index += CIVIC_PAYLOAD_STRING_CHUNK_UNITS) chunks.push(value.slice(index, index + CIVIC_PAYLOAD_STRING_CHUNK_UNITS));
       return { out: put({ kind: "string", chunks: chunks.map(chunk => put(chunk)) }), size, territory: "shared" };
     }
     if (parents.has(value)) throw new TypeError("A civic payload cannot contain a circular structure.");

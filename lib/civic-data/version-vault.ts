@@ -3,12 +3,13 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { Query } from "../facts/publish.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { CivicPayloadParts, type CivicPayloadPartIO } from "./payload-parts.ts";
-import { isCivicPayloadPart, partitionCivicPayload } from "./payload-codec.ts";
+import { CIVIC_PAYLOAD_STRING_CHUNK_UNITS, isCivicPayloadPart, partitionCivicPayload } from "./payload-codec.ts";
 
 export interface CivicVersionVaultRef {
   readonly formatVersion: 1;
   readonly fingerprint: string;
   readonly root: string;
+  readonly stringChunkUnits?: number;
 }
 type Part = { readonly hash: string; readonly payload: unknown };
 type Node = { kind?: string; value?: unknown; groups?: unknown[]; order?: unknown; chunks?: unknown[] };
@@ -71,7 +72,7 @@ export async function holdCivicVersion(vault: EvidenceStore, model: unknown, fin
   }
   const known = new Set(await io.existing(parts.map(part=>part.hash)));
   await io.write(parts.filter(part=>!known.has(part.hash)));
-  const ref:CivicVersionVaultRef={formatVersion:1,fingerprint,root};
+  const ref:CivicVersionVaultRef={formatVersion:1,fingerprint,root,stringChunkUnits:CIVIC_PAYLOAD_STRING_CHUNK_UNITS};
   const bytes=new TextEncoder().encode(JSON.stringify(ref));
   try { await vault.put(versionKey(fingerprint),bytes,{contentHash:`sha256-${sha256(bytes)}`,byteLength:bytes.byteLength,
     contentType:"application/json",objectClass:"IMMUTABLE_BODY"}); }
@@ -86,6 +87,18 @@ export interface CivicVersionRowSelection {
   readonly omit?: readonly string[];
 }
 export interface CivicVersionRow {readonly ordinal: number; readonly value: Record<string,unknown>}
+export interface CivicVersionTextRange {readonly offset?:number;readonly count?:number}
+export interface CivicVersionTextWindow {
+  readonly text:string;readonly offset:number;readonly nextOffset:number;readonly totalLength:number;
+  /** Legacy SQL offsets count Unicode code points; archived string parts count UTF-16 units. Keep this with a lazy text locator. */
+  readonly offsetUnit:"UNICODE_CODE_POINTS"|"UTF16_CODE_UNITS";
+}
+function textRange(range:CivicVersionTextRange):{offset:number;count:number}{
+  const offset=range.offset??0,count=range.count??32768;
+  if(!Number.isSafeInteger(offset)||!Number.isSafeInteger(count)||offset<0||count<0||!Number.isSafeInteger(offset+count))
+    throw new Error("CIVIC_VERSION_TEXT_RANGE_INVALID");
+  return {offset,count};
+}
 
 /** This accessor reads paths and selected rows; it never opens the stored candidate envelope. */
 export function civicVersionVault(vault: EvidenceStore) {
@@ -93,6 +106,8 @@ export function civicVersionVault(vault: EvidenceStore) {
   const rootOf = (ref: CivicVersionVaultRef) => {
     if (ref.formatVersion !== 1 || !/^[a-f0-9]{64}$/.test(ref.fingerprint)) throw new Error("CIVIC_VERSION_VAULT_REF_INVALID");
     keyOf(ref.root);
+    if(ref.stringChunkUnits!==undefined&&(!Number.isSafeInteger(ref.stringChunkUnits)||ref.stringChunkUnits<=0))
+      throw new Error("CIVIC_VERSION_VAULT_REF_INVALID");
     return {$civicPayloadPart:ref.root};
   };
   const nodeOf = async (value: unknown): Promise<unknown> => {
@@ -140,6 +155,30 @@ export function civicVersionVault(vault: EvidenceStore) {
     async path(ref:CivicVersionVaultRef,path:readonly string[]):Promise<unknown>{
       const value=await pathOf(rootOf(ref),path);
       return value===undefined?null:parts.load(value);
+    },
+    /** Zero count returns the length. A text window opens only its immutable string chunks, plus the final chunk for length. */
+    async text(ref:CivicVersionVaultRef,path:readonly string[],range:CivicVersionTextRange={}):Promise<CivicVersionTextWindow|null>{
+      const {offset,count}=textRange(range),value=await pathOf(rootOf(ref),path);
+      if(value===undefined||value===null)return null;
+      const node=await nodeOf(value) as Node|string|null;
+      let totalLength:number,base=0,text:string;
+      if(typeof node==="string"){text=node;totalLength=text.length;}
+      else if(isCivicPayloadPart(value)&&node?.kind==="string"&&node.chunks?.length){
+        // Version 1 originally used 8192 UTF-16 units, before the size became explicit on the ref.
+        const units=ref.stringChunkUnits??8192,chunks=node.chunks;
+        const last=await parts.load(chunks.at(-1));if(typeof last!=="string")throw new Error("CIVIC_VERSION_TEXT_INVALID");
+        totalLength=(chunks.length-1)*units+last.length;
+        if(!count||offset>=totalLength)return{text:"",offset:Math.min(offset,totalLength),nextOffset:Math.min(offset,totalLength),totalLength,offsetUnit:"UTF16_CODE_UNITS"};
+        // One neighboring unit on either side preserves a surrogate pair crossing a window boundary.
+        const first=Math.floor(Math.max(0,offset-1)/units),end=Math.min(chunks.length,Math.floor(Math.min(totalLength-1,offset+count)/units)+1);
+        const selected=await parts.load(chunks.slice(first,end));
+        if(!Array.isArray(selected)||!selected.every(value=>typeof value==="string"))throw new Error("CIVIC_VERSION_TEXT_INVALID");
+        text=selected.join("");base=first*units;
+      }else throw new Error("CIVIC_VERSION_TEXT_INVALID");
+      let start=Math.min(offset,totalLength)-base,end=Math.min(offset+count,totalLength)-base;
+      if(count&&start>0&&/[\uDC00-\uDFFF]/.test(text[start]??"")&&/[\uD800-\uDBFF]/.test(text[start-1]))start--;
+      if(count&&/[\uD800-\uDBFF]/.test(text[end-1]??"")&&/[\uDC00-\uDFFF]/.test(text[end]??""))end++;
+      return{text:count?text.slice(start,end):"",offset:base+start,nextOffset:count?base+end:base+start,totalLength,offsetUnit:"UTF16_CODE_UNITS"};
     },
     async rows(ref:CivicVersionVaultRef,path:readonly string[],selection:CivicVersionRowSelection={}):Promise<readonly CivicVersionRow[]>{
       const value=await pathOf(rootOf(ref),path);if(value===undefined)return [];
@@ -215,4 +254,23 @@ export async function readCivicVersionRows(query:Query,vault:VaultProvider,id:st
     [id,[...path],selection.match?[...selection.match.path]:null,selection.match?[...selection.match.values]:null,
       selection.fields?[...selection.fields]:null,[...selection.omit??[]]]);
   return rows.map(row=>({ordinal:Number(row.ordinal),value:row.value as Record<string,unknown>}));
+}
+
+/** The archive planner can retain a lazy locator without fetching an old agenda's complete text. */
+export async function readCivicVersionText(query:Query,vault:VaultProvider,id:string,path:readonly string[],range:CivicVersionTextRange={}):Promise<CivicVersionTextWindow|null>{
+  const {offset,count}=textRange(range),head=await versionHead(query,id);if(!head)return null;
+  const archive=await versionArchive(vault,head);
+  if(archive)return civicVersionVault(archive.vault).text(archive.ref,path,range);
+  if(!head.current&&!head.legacy)throw new Error(`CIVIC_VERSION_VAULT_MISSING:${id}`);
+  if(!path.length)throw new Error("CIVIC_VERSION_LEGACY_PATH_REQUIRED");
+  const [row]=await query(`WITH RECURSIVE selected(value,depth) AS (
+    ${sourceRoot(head)}
+    UNION ALL SELECT CASE WHEN jsonb_typeof(reader_payload_node(value))='array' OR reader_payload_node(value)->>'kind'='array'
+      THEN (SELECT item FROM reader_payload_members(value) WHERE ordinal_index=(($2::text[])[depth+1])::int+1)
+      ELSE reader_payload_node(value)->($2::text[])[depth+1] END,depth+1 FROM selected WHERE depth<cardinality($2::text[])
+  ), document AS (SELECT reader_payload_value(value)#>>'{}' AS text FROM selected WHERE depth=cardinality($2::text[]))
+  SELECT substring(text FROM $3::int+1 FOR $4::int) AS text,char_length(text) AS total FROM document`,[id,[...path],offset,count]);
+  if(typeof row?.text!=="string")return null;
+  const totalLength=Number(row.total);
+  return{text:row.text,offset:Math.min(offset,totalLength),nextOffset:Math.min(offset,totalLength)+[...row.text].length,totalLength,offsetUnit:"UNICODE_CODE_POINTS"};
 }

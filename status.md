@@ -14,7 +14,7 @@ heartbeat: 2026-10-27T18:10:00Z
 - 2:00 PM: RIVER-HOTFIX-132 38e6b38c1 on river-next. Cause of the crash loop: since 130 every checked read awaited its copy save to the runner's local read-cache host inside its 10 s bound, and that host writes one copy at a time for every runner process, so small reads queued behind door copies after each restart (a River container uses an in-memory copy, which is why the same reads ran ~40/s there). Also: one 16-slot admission shared by pages and small reads (now two lanes); the main loop let a timeout end the process (now the pass ends and the next tick retries); door reads now fetch only rows changed since the last read.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
-- New production copy on the reader project: ob-01-check-20261027 (opened 1:45 PM EDT, expires Oct 28 1:44 PM EDT) — against the no-new-copies order; reported to Sean, not deleted.
+- Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.
 
 ## River session_01R8G1FdHA1LGMVbwp5wxrzN (from Oct 26, 7:55 PM EDT)
 

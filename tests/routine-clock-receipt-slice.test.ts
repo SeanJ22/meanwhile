@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { drizzle } from "drizzle-orm/pglite";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
-import { proofConsistentSuccess, routineClockCandidateRead, routineClockPointerRead } from "../lib/civic-data/store.ts";
+import { proofConsistentSuccess, routineClockCandidateRead, routineClockPointerRead, type RoutineClockRecord } from "../lib/civic-data/store.ts";
 import type { ValidationReceipt } from "../lib/civic-data/types.ts";
 
 test("job clocks retain their exact receipt proof without downloading excluded source records", async () => {
@@ -14,7 +14,8 @@ test("job clocks retain their exact receipt proof without downloading excluded s
     const db = drizzle(pg) as unknown as Parameters<typeof routineClockPointerRead>[0];
     const pointer = (await routineClockPointerRead(db,"FEC_FUNDING",scope))[0];
     const row = (await routineClockCandidateRead(db,id))[0];
-    const record = { candidate: row.candidate, state: row.state as "PROMOTED", acquisitionSucceeded: row.acquisitionSucceeded,
+    assert.ok(pointer.validationReceipt);
+    const record: RoutineClockRecord = { candidate: row.candidate as RoutineClockRecord["candidate"], state: row.state as "PROMOTED", acquisitionSucceeded: row.acquisitionSucceeded,
       receipt: row.validationReceipt, promotedVersion: row.promotedVersionId, lastKnownGoodVersion: row.lastKnownGoodVersionId,
       failureCode: row.failureCode, failureDetail: row.failureDetail };
     const proof = { sourceId: pointer.sourceId, recordClass: "FEC_FUNDING" as const, scope, versionId: id, lastKnownGoodVersionId: id, receipt: pointer.validationReceipt };

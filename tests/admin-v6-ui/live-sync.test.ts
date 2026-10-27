@@ -57,6 +57,37 @@ const pulse = (sections: Record<string, unknown> = {}, actions: Record<string, u
 const stuckAnn = (revision: string, contract = "admin-v6/stuck@1") => ({ stuck: { contract, href: "/api/admin/v6/stuck", revision } });
 const ok = (scope: string, revision: string, data: unknown) => ({ status: 200, body: { contract: "admin-v6/stuck@1", scope, revision, asOf: "2026-09-28T19:00:00.000Z", data } });
 
+test("pausing cancels pending retries and rejects late responses until the next active pulse", async () => {
+  const { sync, calls, timers } = harness();
+  sync.onPulse(pulse(stuckAnn("v1")));
+  calls[0].resolve("network");
+  await flush();
+  assert.equal(timers.length, 1);
+  sync.setActive(false);
+  assert.equal(timers[0].cancelled, true);
+  // Even a callback already queued by the browser cannot start a read.
+  timers[0].fn();
+  sync.catchUp();
+  sync.onPulse(pulse(stuckAnn("v2")));
+  sync.setScope("st:ny");
+  assert.equal(calls.length, 1);
+  sync.setActive(true);
+  assert.equal(calls.length, 1, "resume waits for the shared pulse");
+  sync.onPulse(pulse(stuckAnn("v2")));
+  assert.equal(calls.length, 2);
+  sync.setActive(false);
+  calls[1].resolve(ok("st:ny", "v2", ["late"]));
+  await flush();
+  assert.equal(sync.snapshot().stuck.data, null, "a response aborted by pause is discarded");
+  sync.setActive(true);
+  sync.onPulse(pulse(stuckAnn("v2")));
+  assert.equal(calls.length, 3);
+  calls[2].resolve(ok("st:ny", "v2", ["resumed"]));
+  await flush();
+  assert.deepEqual(sync.snapshot().stuck.data, ["resumed"]);
+  sync.dispose();
+});
+
 test("changing the account period clears old figures and names an unavailable period", async () => {
   const { sync, calls } = harness();
   sync.onPulse(pulse({ money: { contract: "admin-v6/money@1", href: "/api/admin/v6/money", revision: "m1" } }));

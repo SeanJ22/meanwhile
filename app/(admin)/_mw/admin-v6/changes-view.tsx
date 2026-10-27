@@ -20,13 +20,14 @@ function Line({ row }: { readonly row: ChangeRow }) {
 }
 
 export function ChangesView() {
-  const { reading, reload } = useReading<ChangesReading>("/api/admin/changes");
+  const { reading, reload, status } = useReading<ChangesReading>("/api/admin/changes");
   return (
-    <>
+    <section>
       <header>
         <p className={s.eyebrow}>Every session</p>
         <h1 className={s.h1}>Changes</h1>
       </header>
+      {status}
       {reading.kind === "loading" && <Loading what="the changes" />}
       {reading.kind === "failed" && <Failed what="The changes" retry={reload} />}
       {reading.kind === "ready" && reading.data.kind === "UNAVAILABLE" && (
@@ -54,6 +55,6 @@ export function ChangesView() {
           </>
         );
       })()}
-    </>
+    </section>
   );
 }

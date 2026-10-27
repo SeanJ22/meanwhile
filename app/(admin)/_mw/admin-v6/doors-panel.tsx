@@ -37,11 +37,12 @@ export function doorsInWords(counts: DoorsView["counts"]): string {
 }
 
 export function DoorsPanel() {
-  const { reading, reload } = useReading<DoorsView>("/api/admin/v6/doors", 60_000);
+  const { reading, reload, status } = useReading<DoorsView>("/api/admin/v6/doors");
   const data = reading.kind === "ready" ? reading.data : null;
   const shut = data ? shutDoorGroups(data.rows) : [];
   return (
     <Card title="Doors" id="doors">
+      {status}
       {reading.kind === "loading" && <Loading what="the doors" />}
       {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
       {data && (

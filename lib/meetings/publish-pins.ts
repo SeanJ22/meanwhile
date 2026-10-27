@@ -431,7 +431,7 @@ export async function placePublishedMeetingPins(input: {
         (repeated.basis!=="MEETING"||Date.parse(agenda.provenance.collectedAt)>Date.parse(repeated.provenance.collectedAt)&&
         !repeatsPublishedVenue(agenda.address,repeated.name,repeated.address)));
       if (repeated && repeated.basis !== "MEETING" && repeated.bodyId === meeting.bodyId &&
-        !meeting.online && !agendaReplacesPoint &&
+        !meeting.online && !bodyAddress && !agendaReplacesPoint &&
         (publishedLocation === repeated.publishedLocation && !(repeated.boardAddressQuery && bodyQuery !== repeated.boardAddressQuery) || !publishedLocation)) {
         placedCount++;
         return withPublishedPin(meeting, {...repeated, meetingId: meeting.id});

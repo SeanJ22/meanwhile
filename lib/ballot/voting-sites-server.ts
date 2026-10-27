@@ -1,3 +1,7 @@
+import { selectedVotingStatement } from "../reader/selected-voting.ts";
+import { selectedStateEntry } from "../reader/selected-entry.ts";
+import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
+import type { VotingReaderPlace } from "./voting-answer.ts";
 import { readPromotedCivicData, type CivicDataReadResult, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { readStateAuthorityProjection } from "../civic-data/state-reader.ts";
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
@@ -8,11 +12,16 @@ import type { RoutineDataStore } from "../civic-data/store.ts";
 import { votingSourceCheckOverlay } from "./voting-source-checks.ts";
 import { recordVotingFailure } from "./voting-errors.ts";
 
-export async function readVotingSitesProjection(state: string, options: PromotedCivicDataReadOptions = {}, deadlineMs?: number): Promise<CivicDataReadResult<VotingSitesFile>> {
+export async function readVotingSitesProjection(state: string, options: PromotedCivicDataReadOptions = {}, deadlineMs?: number, place?: VotingReaderPlace): Promise<CivicDataReadResult<VotingSitesFile>> {
   const startedAt = Date.now();
   const key = requireBallotState(state);
   const query = deadlineMs === undefined ? null : readerQuery(deadlineMs);
-  const result = await (Object.keys(options).length
+  const selectedQuery = place && !Object.keys(options).length && !currentReaderAuthorityEdge() ? query ?? readerQuery() : null;
+  const selected = selectedQuery ? (await selectedQuery([selectedVotingStatement(key,place!)]))[0][0] : undefined;
+  const result = selectedQuery
+    ? await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites",key),
+      {edge:selectedStateEntry("VOTING_SITE",stateBallotScope("voting-sites",key),selected)})
+    : await (Object.keys(options).length
     ? readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", key), options)
     : (await readStateAuthorityProjection<VotingSitesFile>("voting-sites", key,
       query ? async (text, params) => (await query([{ text, params }]))[0] : undefined)).result);

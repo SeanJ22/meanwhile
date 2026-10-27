@@ -2271,7 +2271,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   private async readStatePromotionBody<T>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const result = await this.db.execute(sql`WITH state_promotion AS MATERIALIZED (
-      SELECT p.*,
+      SELECT p.*, c.normalized_hash AS expected_hash,
         ((p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt = c.validation_receipt) AS coupled,
         (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id = p.current_version_id
           AND left(e.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
@@ -2281,11 +2281,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     ) SELECT jsonb_build_object('key', key, 'recordClass', record_class, 'scope', scope,
         'sourceId', source_id, 'versionId', current_version_id, 'lastKnownGoodVersionId', last_known_good_version_id,
         'promotedAt', promoted_at, 'receipt', validation_receipt, 'payload', payload) AS projection,
-      coupled, confirmation FROM state_promotion`);
-    const row = result.rows[0] as { projection: PromotedProjection<T>; coupled: boolean; confirmation: string | null } | undefined;
+      coupled, expected_hash, confirmation FROM state_promotion`);
+    const row = result.rows[0] as { projection: PromotedProjection<T>; coupled: boolean; expected_hash: string; confirmation: string | null } | undefined;
     if (!row) return null;
     if (!row.coupled) throw new Error(`STATE_PUBLICATION_POINTER_PROOF_INVALID:${recordClass}:${scope}`);
     const decoded = await this.ownedPayloadParts.loadOwned(row.projection) as PromotedProjection<T>;
+    if (canonicalCivicDataHash(decoded.payload) !== row.expected_hash) throw new Error(`STATE_PUBLICATION_POINTER_PROOF_INVALID:${recordClass}:${scope}`);
     const projection = { ...decoded, promotedAt: canonicalPostgresRoutineTimestamp(decoded.promotedAt, "promotion.promotedAt") };
     const confirmation = row.confirmation ? parseUnchangedConfirmation(row.confirmation) : null;
     if (confirmation?.versionId === projection.versionId) Object.assign(projection, { latestConfirmation: confirmation });

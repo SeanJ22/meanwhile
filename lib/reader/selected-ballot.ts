@@ -1,3 +1,4 @@
+import { canonicalCongressionalDivision } from "../ocd/fips.ts";
 import { stateBallotScope } from "../civic-data/state-scopes.ts";
 import { selectedPointerSql, selectedMetadataSql } from "./selected-entry.ts";
 
@@ -27,7 +28,10 @@ export function selectedBallotStatement(state: string, divisions: readonly strin
             LATERAL (SELECT reader_payload_node(member.item) AS v) item WHERE v->>'contestId' IN (${contestIds})),'[]'::jsonb))`] as [string,string]),
   ];
   const removed = [...fields,...optional].map(([key]) => `-'${key}'`).join("");
-  return {params:[`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests",state)}`,divisions],text:`WITH RECURSIVE
+  const selected = [...new Set(divisions.flatMap(id => [id,
+    ...id.includes("/cd:") ? [canonicalCongressionalDivision(id)].filter((value): value is string => value !== null) : [],
+    .../^(ocd-division\/country:us\/(?:state|district|territory):[a-z]{2})\//.exec(id)?.slice(1) ?? []]))];
+  return {params:[`BALLOT_CANDIDACY:${stateBallotScope("ballot-contests",state)}`,selected],text:`WITH RECURSIVE
     selected_divisions AS MATERIALIZED (${divisionSql}), pointer AS MATERIALIZED (${selectedPointerSql}),
     root AS MATERIALIZED (SELECT reader_payload_node(payload) AS value FROM pointer WHERE published),
     ballot_values AS MATERIALIZED (SELECT b.key,reader_payload_node(b.value) AS value FROM root,

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE FOR READERS: release 131 (main f91893755); runner crash-looping since 130. Release 132 = https://github.com/SeanJ22/meanwhile/pull/845 (head eb8f65050 = river), auto-merge on, CI running
+build_state: LIVE: release 132 (main 76fa94388) for readers since 4:09 PM EDT; runner loaded 132 by 4:28 PM EDT (breaker first CHECK row), routine lane launching; watching 2 hours
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-27T19:26:00Z
+heartbeat: 2026-10-27T20:40:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -15,6 +15,11 @@ heartbeat: 2026-10-27T19:26:00Z
 - 2:45 PM: first full gate on river-next 38e6b38c1: all gates pass except the suite (14 failures). ZS-01's own READY 74d3fb7d5 fails 10 of them: returned (returns/zs-01.md), left out of 132. CR-01's own READY fails 3 whose fixtures matched door query text CR-01 replaced: fixed in the fold. One was River's (door delta on a table without changed_at): fixed. 2 resolve-once tests fail on plain main in this container too (environment), not 132's.
 - 132 fold rebuilt without ZS-01 as river-next-132r (river-next already holds the ZS-01 merge; no force-push): CR-01 fold ea1c5a08c, AP-01, BB-01, RIVER-HOTFIX-132 07936aee0, fold fixes eb8f65050. AP-01's test no longer writes work/ap-01/panels-paused.png.
 - 3:25 PM: pnpm gates on river-next-132r eb8f65050: 12/12 (tsc re-run after the build replaced a stale .next), suite 10,313 tests / 10,310 pass / 0 fail / 3 skipped. river moved to eb8f65050. Release 132 opened: https://github.com/SeanJ22/meanwhile/pull/845, auto-merge on. Baseline before 132 (database_transfer_hourly, 1 PM EDT hour): reader 0.361 GB, control plane 0.133 GB.
+- 3:35 PM: #845 CI first ran in the "waiting" tier (opened before auto-merge was on; the auto_merge_enabled run never appeared). Added run-full-ci; merged 4:06 PM (main 76fa94388).
+- 4:09 PM: /api/build shows 76fa943. Deploy applied ZS-01-free expand migrations: cp_job_transfer_breaker exists.
+- 4:10 PM: 10 random ZIPs in 10 states load in Chromium (390 px), map and ballot pages, all 200, no page errors: FL 32301, AZ 85701, WI 54301, CO 80202, CA 92101, OH 43215, GA 31401, PA 17101, MN 55101, TX 78701. Slow: 4-8 s typical, 85701 ballot 14.8 s, 92101 map 13.6 s (3-second rule still broken; not new).
+- Runner: crash-looped (startup digests every 2-3 min) until 4:07 PM; same process from 4:07 on 131, drained (132 changes the runner's own code), loaded 132 by 4:28 PM (pid 3549988). Breaker's first CHECK 4:28:31 PM, before work: 13 jobs, 0 pauses. Routine lane launched sources at 4:34-4:35 PM; its 4:35 pass reported 2 failures (MEETING_PIN_PUBLICATION_FAILED, RECEIPT_COUNT_INVALID), 0 promotions.
+- Every hunt is stopped (one Stop order for every state at Oct 25 1:03 AM EDT; no funded expansion scopes), so the research cycle never starts and heartbeat lastCycleFinishedAt stays at Oct 25 9:54 PM no matter how healthy the runner is. River judges "cycles finishing" by the routine and publish-now lanes; Sean's pause stays as set.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

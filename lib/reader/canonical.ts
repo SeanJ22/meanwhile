@@ -6,17 +6,79 @@ import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { registerIntegrityCheckedEdgeEntries, type CivicDataReadStore, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
+import { serverReaderValue } from "./memory.ts";
+import { createHash } from "node:crypto";
 
 type Pointer = { recordClass: RoutineRecordClass; scope: string };
-type Additional = Statement & { readonly canonicalKeys?: true };
+type Additional = Statement & { readonly canonicalKeys?: true;
+  readonly sharedSources?: { readonly keys: readonly string[]; readonly translations: string } };
 type CanonicalRead = Awaited<ReturnType<typeof readCanonicalShelf>>;
+type PublishedQuery = ReadOnlyQuery & { publicationFingerprints?: true; canonicalBody?: ReadOnlyQuery };
+
+// Pointer and candidate row versions also cover admission and metadata changes.
+// Immutable payload parts remain addressed by their source fingerprints.
+const PUBLICATION_FINGERPRINT = `SELECT encode(sha256(convert_to(coalesce(string_agg(
+  jsonb_build_array(p.key,p.xmin::text,c.xmin::text,
+    (SELECT e.sequence::text FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id
+      AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY e.sequence DESC LIMIT 1))::text,
+  '|' ORDER BY p.key),''),'UTF8')),'hex') AS value
+  FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id
+  WHERE p.key=ANY($1::text[]) OR p.record_class='CURATED_READER_RECORD' AND p.scope LIKE $2`;
+type SharedSnapshot = { readonly fingerprint: string; readonly rows: readonly Row[] };
+type PendingSnapshot = { readonly expected: Promise<string>; readonly body: Promise<SharedSnapshot> };
+const inFlight = serverReaderValue("canonical-in-flight-by-publication-v2", () => new Map<string, Set<PendingSnapshot>>());
+
+/** Only borrow an in-flight snapshot after an independent current fingerprint check. */
+async function sharedCanonicalRead(query: ReadOnlyQuery, statement: Statement, sources: NonNullable<Additional["sharedSources"]>) {
+  const selection = createHash("sha256").update(JSON.stringify([process.env.DATABASE_URL, statement, sources])).digest("hex");
+  const params = [sources.keys, sources.translations];
+  const current = async () => {
+    const [[row]] = await query([{ text: PUBLICATION_FINGERPRINT, params }]);
+    if (typeof row?.value !== "string" || !/^[a-f0-9]{64}$/.test(row.value)) throw new Error("READER_PUBLICATION_FINGERPRINT_MISSING");
+    return row.value;
+  };
+  const candidates = [...inFlight.get(selection) ?? []];
+  if (candidates.length) {
+    let fingerprint = await current();
+    for (const candidate of candidates) {
+      // The producer checks metadata beside its body read, so neither map nor
+      // ballot needs to wait for a preliminary network round trip.
+      const expected = await candidate.expected.catch(() => null);
+      if (expected !== fingerprint) continue;
+      const result = await candidate.body;
+      if (result.fingerprint === fingerprint) return [result.rows];
+      fingerprint = await current();
+      if (result.fingerprint === fingerprint) return [result.rows];
+    }
+  }
+  const expected = current();
+  void expected.catch(() => {});
+  const offset = statement.params.length;
+  const fingerprintSql = PUBLICATION_FINGERPRINT.replace(/\$(\d+)/g, (_, index: string) => `$${Number(index) + offset}`);
+  const text = `${statement.text} UNION ALL SELECT 'publication-fingerprint',empty.*,NULL::text,to_jsonb(versions.value)
+    FROM (${fingerprintSql}) versions LEFT JOIN LATERAL (${EMPTY_SHELF}) empty ON true`;
+  const readBody = (query as PublishedQuery).canonicalBody ?? query;
+  const body = readBody([{ text, params: [...statement.params, ...params] }]).then(([rows]) => {
+    const actual = rows.find(row => row.row_kind === "publication-fingerprint")?.part_payload;
+    if (typeof actual !== "string" || !/^[a-f0-9]{64}$/.test(actual)) throw new Error("READER_PUBLICATION_FINGERPRINT_MISSING");
+    return { fingerprint: actual, rows: rows.filter(row => row.row_kind !== "publication-fingerprint") };
+  });
+  const pending = { expected, body };
+  const active = inFlight.get(selection) ?? new Set<PendingSnapshot>();
+  active.add(pending);
+  inFlight.set(selection, active);
+  try { return [(await body).rows]; }
+  finally { active.delete(pending); if (!active.size) inFlight.delete(selection); }
+}
 
 /** One network read with independent group failures; accompanying geography belongs to the first group. */
 export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Additional): CivicDataReadStore & { readGroup(index: number): Promise<CanonicalRead> } {
   const keys = [...new Set(groups.flatMap(group => group.map(entry => `${entry.recordClass}:${entry.scope}`)))];
   const batch = (async () => {
     if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
-    return query([canonicalStatement(keys, additional)]);
+    const statement = canonicalStatement(keys, additional);
+    return additional?.sharedSources && (query as PublishedQuery).publicationFingerprints
+      ? sharedCanonicalRead(query, statement, additional.sharedSources) : ((query as PublishedQuery).canonicalBody ?? query)([statement]);
   })();
   void batch.catch(() => undefined);
   const stores = new Map<string, Promise<CivicDataReadStore>>();
@@ -67,6 +129,9 @@ export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], q
 }
 
 // Exclusion reasons belong to the read disposition; copies of rejected source rows stay in the audit store.
+// Gives a summary row the shelf's column shape; it returns no shelf rows.
+const EMPTY_SHELF = "SELECT * FROM shelf LIMIT 0";
+
 const SHELF = `SELECT p.key,p.record_class,p.scope,p.source_id,p.current_version_id,p.last_known_good_version_id,p.promoted_at,
  CASE WHEN jsonb_typeof(p.validation_receipt->'excludedFacts')='array' THEN
   jsonb_set(p.validation_receipt,'{excludedFacts}',coalesce((SELECT jsonb_agg(f.value-'record') FROM jsonb_array_elements(p.validation_receipt->'excludedFacts') f(value)),'[]'::jsonb))
@@ -108,7 +173,7 @@ function canonicalStatement(keys: readonly string[], additional?: Additional): S
   const extra = additional ? ` UNION ALL SELECT 'additional', empty.*, NULL::text, extra.rows
     FROM (SELECT coalesce(jsonb_agg(to_jsonb(item)), '[]'::jsonb) AS rows FROM (
       ${additional.canonicalKeys ? "SELECT * FROM additional" : additionalSql}
-    ) item) extra LEFT JOIN LATERAL (SELECT * FROM shelf LIMIT 0) empty ON true` : "";
+    ) item) extra LEFT JOIN LATERAL (${EMPTY_SHELF}) empty ON true` : "";
   return {text:shelfSql+extra,params:[keys,...additional?.params ?? []]};
 }
 
@@ -116,7 +181,7 @@ function canonicalStatement(keys: readonly string[], additional?: Additional): S
 export async function readCanonicalShelf(entries: readonly { recordClass: RoutineRecordClass; scope: string }[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Additional): Promise<CivicDataReadStore & { additionalRows: readonly Row[]; additionalEntries: readonly Pointer[] }> {
   if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
   const keys = entries.map(entry => `${entry.recordClass}:${entry.scope}`);
-  const [loaded] = await query([canonicalStatement(keys,additional)]);
+  const [loaded] = await ((query as PublishedQuery).canonicalBody ?? query)([canonicalStatement(keys,additional)]);
   const additionalRows = loaded.find(row => row.row_kind === "additional")?.part_payload as readonly Row[] | undefined;
   const additionalEntries: Pointer[] = additional?.canonicalKeys ? [...new Set((additionalRows ?? []).flatMap(row => row.canonical_keys as readonly string[] ?? []))]
     .map(key => { const colon = key.indexOf(":"); return { recordClass: key.slice(0, colon) as RoutineRecordClass, scope: key.slice(colon + 1) }; }) : [];

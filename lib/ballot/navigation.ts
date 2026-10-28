@@ -2,6 +2,7 @@ import type { CuratedReaderProjection } from "../civic-data/manual-projections.t
 import { electionFieldIssue, type PublishedElectionField } from "../civic-data/election-fields.ts";
 import { ballotNavigationScope, ballotNavigationDivision } from "../civic-data/ballot-navigation-scope.ts";
 import type { ElectionDates } from "./election-dates.ts";
+import { deadlineAudience, deadlineSummary, orderedDeadlines } from "./deadline-summary.ts";
 
 export interface NavigationLink {
   state: string; label: string; url: string; sourceUrl: string; sourceOrg: string; verification: string; verifiedAt: string;
@@ -61,7 +62,7 @@ export function ballotNavigationFor(state: string, projection: CuratedReaderProj
         url: value.navigationUrl!, sourceUrl: value.url, sourceOrg: value.sourceOrg, verification: value.quote, verifiedAt: value.verifiedAt,
       });
       else if (LABELS[value.fieldKind] && value.electionDate) entry.dates.push({ state, electionDay: value.electionDate,
-        steps: [{ label: LABELS[value.fieldKind]!, date: value.dates.join(" – "), detail: value.quote, sourceUrl: value.url,
+        steps: [{ label: LABELS[value.fieldKind]!, date: value.dates.join(" – "), detail: deadlineSummary(value), audience: deadlineAudience(value), sourceUrl: value.url,
           sourceOrg: value.sourceOrg, collectedAt: value.collectedAt, verifiedAt: value.verifiedAt }] });
     }
     index = { version, state, divisions: byDivision };
@@ -76,5 +77,6 @@ export function ballotNavigationFor(state: string, projection: CuratedReaderProj
     existing.steps.push(...calendar.steps); dates.set(calendar.electionDay, existing);
   }
   return { offices: latest(entries.flatMap(entry => entry.offices), office => `${office.divisionId}:${office.phone!.replace(/\D/g, "")}`),
-    links: latest(entries.flatMap(entry => entry.links), row => `${row.purpose}:${row.url}`), dates: [...dates.values()] };
+    links: latest(entries.flatMap(entry => entry.links), row => `${row.purpose}:${row.url}`),
+    dates: [...dates.values()].map(calendar => ({ ...calendar, steps: orderedDeadlines(calendar.steps) })) };
 }

@@ -79,19 +79,15 @@ export function readerFactDb(url: string | undefined = process.env.DATABASE_URL)
 }
 
 let installed: Query | null | undefined;
-let reader: { url: string; query: Query } | undefined;
 
 /** Fact reads share the reader's version-checked, read-only connection. */
 export function factReader(): Query | null {
   if (installed !== undefined) return installed;
   const url = process.env.DATABASE_URL?.trim();
   if (!url) return null;
-  if (reader?.url === url) return reader.query;
   const selected = readerDatabaseQuery();
   if (!selected) return null;
-  const query = statementQuery(selected);
-  reader = { url, query };
-  return query;
+  return statementQuery(selected);
 }
 
 /** A process that already holds a fact connection (a test's database, a script's pool) reads through it. */

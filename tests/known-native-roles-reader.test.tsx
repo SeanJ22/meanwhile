@@ -196,8 +196,10 @@ test("the keyed governing roster gives the exact official mayor precedence over 
   const coverage = summarizeCoverage([0, 0], [], new Map([[divisionId, division]]), [], 0,
     new Map([[divisionId, [bulk]]]), [division], null);
   assert.equal(coverage.seats[0].representatives[0].id, bulk.id);
-  const hydrated = { ...coverage, bodies: [{ bodyId: roster.bodyId, ocdId: divisionId,
-    readerRoster: { members: rosterHoldersForBody(roster.bodyId), gaps: [], officePhone: null } } as CoveredBody] };
+  const hydrated = { ...coverage, bodies: [{ bodyId: roster.bodyId, ocdId: divisionId, name: null,
+    divisionLabel: division.label, divisionType: division.divisionType, lsad: null, schoolDependency: "UNCLASSIFIED",
+    bodyClass: "GOVERNING", coverageStatus: "NOT_ATTEMPTED", homepageUrl: null, agendaSourceRef: null,
+    lookedAt: false, tier: "local", readerRoster: { members: rosterHoldersForBody(roster.bodyId), gaps: [], officePhone: null } } as CoveredBody] };
   const mayors = representationForDivision(hydrated, divisionId).filter(row => row.officeTitle === "Mayor");
   assert.deepEqual(mayors.map(row => row.id), [official.id]);
 });

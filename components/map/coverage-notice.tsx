@@ -363,7 +363,8 @@ function CoverageBody({
     federalConfirmed,
   );
   const stateSeats = statePanel.yours;
-  const localSeatIds = new Set(coverage.seats.filter(seat => LOCAL_SEAT_TYPES.includes(seat.divisionType)).map(seat => seat.ocdId));
+  const localTypes = new Set<string>(LOCAL_SEAT_TYPES);
+  const localSeatIds = new Set(coverage.seats.filter(seat => localTypes.has(seat.divisionType)).map(seat => seat.ocdId));
   const localBodyDetails = useBodyDetails(coverage.bodies.filter(body => body.ocdId && localSeatIds.has(body.ocdId) &&
     (body.bodyId === `${body.ocdId}#governing` || body.bodyId === `${body.ocdId}#board`)), true);
   const localBodiesById = new Map(localBodyDetails.bodies.map(body => [body.bodyId, body]));

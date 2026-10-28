@@ -20,7 +20,7 @@ function runnerFunction(name: string): string {
   return fn;
 }
 
-test("a pending restart stops relaunching routine children and restarts within one pass deadline", async () => {
+test("a pending restart stops relaunching routine children and restarts within one pass deadline", async t => {
   const PASS_BUDGET_MS = 6_000;
   const target = "b".repeat(40);
   const launches: { id: string; at: number }[] = [];
@@ -55,6 +55,7 @@ test("a pending restart stops relaunching routine children and restarts within o
     "holdStandingRuntimeAtQuiescence", "reconcileRuntimeReleaseAtBoundary", "sleepUnlessRunNow"].map(runnerFunction).join("\n")), context);
 
   context.standingRuntimeTimer = setInterval(() => runInContext(`runStandingRuntimeTick("independent standing clock")`, context), 160);
+  t.after(() => clearInterval(context.standingRuntimeTimer));
   // The main loop sleeps toward its next research cycle; the pending restart must wake it.
   await runInContext("sleepUnlessRunNow(60_000)", context);
   const pendingAt = Date.now();

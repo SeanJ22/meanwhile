@@ -58,7 +58,7 @@ CREATE TRIGGER member_office_rows_changed AFTER INSERT OR UPDATE OF key,record_c
   ON civic_data_promotions FOR EACH ROW EXECUTE FUNCTION member_office_rows_changed();
 --> statement-breakpoint
 DO $$ DECLARE p record; BEGIN
-  FOR p IN SELECT * FROM civic_data_promotions WHERE record_class='CURATED_READER_RECORD'
+  FOR p IN SELECT key,scope,current_version_id,promoted_at,payload FROM civic_data_promotions WHERE record_class='CURATED_READER_RECORD'
     AND (scope='US:state-legislator-member-offices' OR scope ~ '^US-[A-Z]{2}:state-legislator-member-offices$') LOOP
     PERFORM refresh_member_office_rows(p.key,p.scope,p.current_version_id,p.promoted_at,p.payload);
   END LOOP;

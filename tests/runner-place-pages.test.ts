@@ -1,12 +1,14 @@
 import assert from "node:assert/strict";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
 import * as nodeModule from "node:module";
 import { test } from "node:test";
 import { createContext, runInContext } from "node:vm";
 import { IndependentRuntimeLaneScheduler, passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
-import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
+import { admitJobLaunch, JOB_BREAKER_PATH_ENV, saveBreakerSnapshot } from "../lib/control-plane/job-breaker-local.ts";
 import { ROUTINE_ENTRY_PEAK_MIB, WORKER_MEMORY_HEADROOM_MIB, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { PLACE_PACKAGE_SQL } from "../lib/reader/place-builder.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, PLACE_PAGE_TURN_LINE,
@@ -135,6 +137,34 @@ test("a pending restart stops new place-page turns and waits for no more than th
     await runner.context.runPlacePages(Date.now() + 60_000);
     assert.equal(runner.turns.length, 2, "a run already admitted takes no turn once held");
   } finally { await runner.db.pg.close(); }
+});
+
+test("a breaker pause written during a run stops place pages after the turn in progress, until Release", async () => {
+  const runner = await placePageRunner({ turnMs: 150 });
+  const root = mkdtempSync(join(tmpdir(), "place-pages-breaker-")), path = join(root, "breaker.json"), previous = process.env[JOB_BREAKER_PATH_ENV];
+  const snapshot = (mode?: "PAUSED" | "RELEASED") => saveBreakerSnapshot(path, { checkedAt: new Date().toISOString(),
+    states: mode ? { "place-pages": { job: "place-pages", mode, at: new Date().toISOString(), hour: new Date().toISOString(), offsetBytes: 0 } } : {} });
+  process.env[JOB_BREAKER_PATH_ENV] = path;
+  try {
+    snapshot();
+    await runner.queuePlaces(0, 400);
+    let pausedAt = 0;
+    runner.onTurn(index => { if (index === 2) setTimeout(() => { pausedAt = Date.now(); snapshot("PAUSED"); }, 20); });
+    runInContext(`runStandingRuntimeTick("test", true)`, runner.context);
+    await runner.context.standingRuntimeScheduler.waitForIdle();
+    assert.equal(runner.turns.length, 2, "no turn starts after the check that paused the job, though the run's hour is not over");
+    assert.ok(runner.turns[1]!.at < pausedAt && runner.turns[1]!.ended! >= pausedAt, "the pause came during the second turn");
+    assert.ok(runner.log.some(line => /place-pages is paused until released in Admin/.test(line)), runner.log.join("\n"));
+    await runner.context.runPlacePages(Date.now() + 60_000);
+    assert.equal(runner.turns.length, 2, "a paused job launches nothing on the next run either");
+    snapshot("RELEASED");
+    await runner.context.runPlacePages(Date.now() + 60_000);
+    assert.ok(runner.turns.length > 2, "Release lets the next run take turns again");
+  } finally {
+    if (previous === undefined) delete process.env[JOB_BREAKER_PATH_ENV]; else process.env[JOB_BREAKER_PATH_ENV] = previous;
+    rmSync(root, { recursive: true, force: true });
+    await runner.db.pg.close();
+  }
 });
 
 test("the owner's pause, an unreadable pause and a failed turn leave pages queued without failing the runner", async () => {

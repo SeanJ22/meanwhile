@@ -198,6 +198,8 @@ import {
 import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
 import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
 import { factReader } from "../lib/facts/db.ts";
+import { PLACE_MAP_PASS_BUDGET_MS, PLACE_MAP_RUN_RESERVE_MS, PLACE_MAP_SETTLEMENT_MS, PLACE_MAP_SINGLETON_PORT, isPlaceMapTask, laneSourceTasks, placeMapLaunchOrder, placeMapRowsOwed } from "../lib/civic-data/place-map-lane.ts";
+import { placeMapHeldZips } from "../lib/place-map/counts.ts";
 
 
 let step = "reading its task selection";
@@ -208,13 +210,19 @@ const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-
 
 const FORCE = process.argv.includes("--force");
 const PUBLISH_NOW = process.argv.includes("--publish-now");
+/** The place-map lane: only each state's map, one at a time, on its own clock and budget. */
+const PLACE_MAPS = process.argv.includes("--place-maps");
+const LANE = PUBLISH_NOW ? "publish-now" : PLACE_MAPS ? "place-maps" : "routine-civic-data";
 const HUNT_PROGRESS_WRITES_AT_ONCE = 16;
 /* Sources use the first two thirds of the pass; maintenance and settlement finish before its deadline.
-   Publication already confirms each write. There is no inventory readback phase. */
-const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
-const PASS_LAUNCH_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
+   Publication already confirms each write. There is no inventory readback phase.
+   A state map starts while one can still finish and runs until just before the place-map lane's own deadline. */
+const PASS_DEADLINE_MS = Math.min(passDeadlineFromEnv(), Date.now() + (PUBLISH_NOW ? PUBLISH_NOW_PASS_BUDGET_MS : PLACE_MAPS ? PLACE_MAP_PASS_BUDGET_MS : ROUTINE_PASS_BUDGET_MS));
+const PASS_LAUNCH_DEADLINE_MS = PLACE_MAPS ? PASS_DEADLINE_MS - PLACE_MAP_RUN_RESERVE_MS : PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 3);
+const SOURCE_CHILD_DEADLINE_MS = PLACE_MAPS ? PASS_DEADLINE_MS - PLACE_MAP_SETTLEMENT_MS : PASS_LAUNCH_DEADLINE_MS;
 const PASS_MAINTENANCE_DEADLINE_MS = PASS_DEADLINE_MS - Math.floor((PASS_DEADLINE_MS - Date.now()) / 6);
 if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated source work.");
+if (PUBLISH_NOW && PLACE_MAPS) throw new Error("Publish-now cannot run the place-map lane.");
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 installNeonRequestDeadline();
 
@@ -224,7 +232,9 @@ function routineJob<T>(job: RoutineJob, run: () => Promise<T>, fallback: T): Pro
   return runRoutineJob(job, run, id => { heldJobs.add(id); return fallback; });
 }
 
-if (controlPlaneUrlFromEnv() === null) {
+if (PLACE_MAPS) {
+  // A state map reads no meeting door.
+} else if (controlPlaneUrlFromEnv() === null) {
   console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
 } else {
   try {
@@ -258,14 +268,14 @@ if (controlPlaneUrlFromEnv() !== null) {
     console.warn(`RCD_TASK routine-civic-data-runner: the meeting and voting check clocks could not be read, so this pass uses the last installed values — ${safeFailure(sanitizedErrorDiagnostic(error))}`);
   }
 }
-const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : await withNationalPlaceTasks([
-
+const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : PLACE_MAPS ? laneSourceTasks(ROUTINE_SOURCE_TASKS, true, [])
+  : await withNationalPlaceTasks(laneSourceTasks([
   ...ROUTINE_SOURCE_TASKS.filter((task) => task.id !== MEETING_DOORS_CONTRACT_ID),
   ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
   ...STATE_BINDING_REFRESH_TASKS,
   ...await heldLegistarMemberTasks().catch(error => { console.warn(`RCD_TASK legistar-members: ${sanitizedErrorDiagnostic(error)}`); return []; }),
-], process.argv.slice(2));
+], false, process.argv.slice(2)), process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
 const inheritedStartedAt = process.env[ROUTINE_SUPERVISOR_STARTED_AT_ENV];
@@ -273,7 +283,7 @@ const RUN_STARTED_AT = inheritedStartedAt && Number.isFinite(Date.parse(inherite
     new Date(Date.parse(inheritedStartedAt)).toISOString() === inheritedStartedAt
   ? inheritedStartedAt
   : new Date().toISOString();
-const SUPERVISOR_CYCLE_ID = routineSupervisorCycleId(hostname(), RUN_STARTED_AT, PUBLISH_NOW ? "publish-now" : "routine-civic-data");
+const SUPERVISOR_CYCLE_ID = routineSupervisorCycleId(hostname(), RUN_STARTED_AT, LANE);
 const MEETING_PARTITION_TASK_IDS = new Set(MEETING_PARTITION_CONTRACTS.map((contract) => contract.id));
 
 if (!TASK_SELECTION.ok) {
@@ -294,8 +304,8 @@ step = "taking the host-local singleton";
 const ROUTINE_DATA_PROCESS_LEASE = TASK_SELECTION.ok ? await (async () => {
   try {
     return await acquireProcessSingleton(
-      PUBLISH_NOW ? "publish-now-runner" : "routine-civic-data-runner",
-      PUBLISH_NOW ? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT,
+      PUBLISH_NOW ? "publish-now-runner" : PLACE_MAPS ? "place-map-runner" : "routine-civic-data-runner",
+      PUBLISH_NOW ? PUBLISH_NOW_SINGLETON_PORT : PLACE_MAPS ? PLACE_MAP_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT,
     );
   } catch (error) {
     if (!(error instanceof ProcessSingletonHeldError)) throw error;
@@ -333,7 +343,7 @@ function releaseChildMemory(id: string): void {
 }
 
 const readCacheHost = ROUTINE_DATA_PROCESS_LEASE ? await startCivicReadCacheHost() : { close: async () => {} };
-if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
+if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv() && !PLACE_MAPS) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     if (!PUBLISH_NOW) {
@@ -359,7 +369,7 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
 }
 
 // State geometry is served from the reader edge store; each pass puts there any committed file it does not hold yet.
-if (ROUTINE_DATA_PROCESS_LEASE && !PUBLISH_NOW) {
+if (ROUTINE_DATA_PROCESS_LEASE && !PUBLISH_NOW && !PLACE_MAPS) {
   const edge = resolveReaderArtifactWriteStore();
   if (edge) {
     try {
@@ -371,7 +381,7 @@ if (ROUTINE_DATA_PROCESS_LEASE && !PUBLISH_NOW) {
   }
 }
 
-const sharedBrowser = PUBLISH_NOW ? null : (await import("./scout-browse.mts")).sharedScoutBrowser();
+const sharedBrowser = PUBLISH_NOW || PLACE_MAPS ? null : (await import("./scout-browse.mts")).sharedScoutBrowser();
 const workerToolsHost = sharedBrowser && ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
   ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
     RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
@@ -511,7 +521,7 @@ function publishHeldBesideSources(failures: SupervisorFailure[], job: RoutineJob
 
 async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: SupervisorFailure[]): Promise<readonly RoutineSourceTask[]> {
 
-  if (FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
+  if (PLACE_MAPS || FORCE || (ONLY && !WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) return [];
   const connection = controlPlaneUrlFromEnv();
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
@@ -670,7 +680,7 @@ async function persistSupervisorOutcome(input: {
   const outcome = routineCivicDataSupervisorOutcome({
     ...(input.ballotPublications ? { ballotPublications: input.ballotPublications } : {}),
     ...(input.ballotNavigationPublications ? { ballotNavigationPublications: input.ballotNavigationPublications } : {}),
-    lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
+    lane: LANE,
     ...(input.campaignPublicationApprovalsByState !== undefined ? { campaignPublicationApprovalsByState: input.campaignPublicationApprovalsByState } : {}),
     cycleId,
     startedAt: RUN_STARTED_AT,
@@ -690,8 +700,8 @@ async function persistSupervisorOutcome(input: {
     outcome,
     lines: [
       input.failures.length === 0
-        ? `ROUTINE CIVIC DATA CYCLE COMPLETED — ${input.taskReceipts.length} exact task receipt(s)`
-        : `ROUTINE CIVIC DATA SUPERVISOR FAILED — ${input.failures.length} task process/protocol failure(s)`,
+        ? `${PLACE_MAPS ? "STATE PLACE MAP" : "ROUTINE CIVIC DATA"} CYCLE COMPLETED — ${input.taskReceipts.length} exact task receipt(s)`
+        : `${PLACE_MAPS ? "STATE PLACE MAP" : "ROUTINE CIVIC DATA"} SUPERVISOR FAILED — ${input.failures.length} task process/protocol failure(s)`,
       `${input.verifiedSourceSuccesses} source task(s) promoted; ${input.verifiedSourceFailures} source task(s) held their own LKG.`,
       ...input.dueRequestLines,
       ...(input.crashedTasks ?? []).map((crash) => `${crash.taskId} ${crash.detail}; the child crashed and its work waits its retry.`),
@@ -902,7 +912,7 @@ try {
 }
 let candidateFindingTasks: readonly RoutineSourceTask[] = [];
 const candidateFindingLines: string[] = [];
-if (controlPlaneUrlFromEnv()) try {
+if (controlPlaneUrlFromEnv() && !PLACE_MAPS) try {
   const sql = neon(controlPlaneUrlFromEnv()!);
   const waiting = await readCandidateProfilePublicationTasks((text, params) => sql.query(text, params), RUN_STARTED_AT);
   candidateFindingTasks = waiting.tasks;
@@ -924,6 +934,15 @@ const selectedTasks = offeredTasks.filter(task => {
   recordLaunchDecision(task, "DEFER", "Holding this source to reduce database traffic", `JOB_TRANSFER_BREAKER: ${task.id} is ${JOB_HELD_WORDS}`);
   return false;
 });
+/** A pass with nothing further to do saves its byte counter and frees its host-local resources. */
+async function endPassEarly(exitCode: number): Promise<never> {
+  if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
+  await ROUTINE_DATA_PROCESS_LEASE!.release();
+  await readCacheHost.close();
+  await workerToolsHost?.close();
+  await sharedBrowser?.close();
+  process.exit(exitCode);
+}
 if (PUBLISH_NOW && selectedTasks.length === 0) {
   await heldPublication;
   recordHeldJobs();
@@ -948,12 +967,7 @@ if (PUBLISH_NOW && selectedTasks.length === 0) {
         state: "STORE_UNREACHABLE", detail, durable: false }));
     }
   }
-  if (!await flushDatabaseTransfer()) console.warn("RCD_TRANSFER daily byte counter could not be saved; data results are unchanged.");
-  await ROUTINE_DATA_PROCESS_LEASE.release();
-  await readCacheHost.close();
-  await workerToolsHost?.close();
-  await sharedBrowser?.close();
-  process.exit(supervisorFailures.length === 0 ? 0 : 2);
+  await endPassEarly(supervisorFailures.length === 0 ? 0 : 2);
 }
 step = "reading the routine task clocks";
 const memberClocks = !FORCE && selectedTasks.some(task => task.id.startsWith("legistar-members:"))
@@ -1149,6 +1163,11 @@ const sourceChangeHistories = await readSourceChangeHistory(readerFactDb().query
   console.warn(`RCD_SOURCE_HISTORY ${safeFailure(sanitizedErrorDiagnostic(error))}; source fact clocks remain in force`);
   return new Map<string, SourceChangeHistory>();
 });
+/** How many ZIPs each state's production map holds: a state map holding none is owed on its retry clock. */
+const heldMapZips = PLACE_MAPS && !FORCE ? await placeMapHeldZips(readerFactDb().query).catch(error => {
+  console.warn(`RCD_PLACE_MAP_COUNTS ${safeFailure(sanitizedErrorDiagnostic(error))}; each state map keeps its monthly clock`);
+  return null;
+}) : null;
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -1180,11 +1199,12 @@ for (const read of clockReads) {
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
   const cadenceDue = routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
+  const mapRowsOwed = placeMapRowsOwed(task, heldMapZips, durableClock, admissionNowMs);
   const taskDue = task.id==="campaign-money"&&!task.ownerInvocation&&campaignMoneyAdmission!==null ? campaignMoneyAdmission.providerDue : publication
     // Navigation re-reads its official pages on its own cadence; a ballot file republishes only when it changes or was held.
     ? ballotsDue || (publication.family === "ballot-navigation" || !ballotStamps.has(publication.key) || priorBallotPublications.get(publication.key)?.status === "HELD") && cadenceDue
     : cadenceDue;
-  if (!FORCE && !taskDue && !inputDue && dueRequest === null && !publicationDue && !discoveryDue) {
+  if (!FORCE && !taskDue && !inputDue && dueRequest === null && !publicationDue && !discoveryDue && !mapRowsOwed) {
     const fileOnly = publication?.family === "ballot-contests" && ballotStamps.has(publication.key) && priorBallotPublications.get(publication.key)?.status !== "HELD";
     const next = routineTaskNextDueMs(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
     const retrying = Date.parse(durableClock?.lastAttemptedAt ?? "") > Date.parse(durableClock?.lastSucceededObservedAt ?? "") || !durableClock?.lastSucceededObservedAt;
@@ -1202,6 +1222,7 @@ for (const read of clockReads) {
       continue;
     }
   }
+  if (mapRowsOwed && !cadenceDue) console.log(`RCD_INPUT_CHANGED ${task.id}: production holds no ZIPs for this state's map; offered now on its retry clock`);
   if (inputDue) console.log(`RCD_INPUT_CHANGED ${task.id}: ${task.id==="campaign-money"?"held native filings have changed people/bindings or unfinished derived work":!inputStamps.has(task.id) ? "state input clock could not be read; refresh remains owed" : priorInputs.has(task.id) ? "state inputs changed" : "state inputs have no processed stamp"}; offered to the normal frontier`);
   if (publicationDue) {
     const detail = `${task.id}: ${campaignPublicationInputs.get(task.id)!.approvals - campaignPublicationInputs.get(task.id)!.attemptedApprovals} committed approval(s) not attempted by this code; offered to the normal publication frontier without waiting for hourly cadence.`;
@@ -1234,6 +1255,13 @@ for (const read of clockReads) {
   });
 }
 
+if (PLACE_MAPS && dueCandidates.length === 0) {
+  await flushLaunchDecisions();
+  if (supervisorFailures.length === 0) {
+    console.log("place maps: every state's map is current");
+    await endPassEarly(0);
+  }
+}
 const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, clock, owedAtMs }) => ({
   task: pending.task,
   owedAtMs,
@@ -1245,7 +1273,7 @@ const admitted = routineFailureDomainFrontier(dueCandidates.map(({ pending, cloc
   ),
 })), routineFailureDomainRotationSeed(RUN_STARTED_AT));
 const admittedIds = new Set(admitted.map(({ task }) => task.id));
-const waitedFullPass = new Set(admitted.filter(candidate => routineWaitedFullPass(candidate, admissionNowMs)).map(({ task }) => task.id));
+const waitedFullPass = new Set(admitted.filter(candidate => PLACE_MAPS || routineWaitedFullPass(candidate)).map(({ task }) => task.id));
 for (const { pending } of dueCandidates) {
   if (admittedIds.has(pending.id)) continue;
   recordLaunchDecision(pending.task, "DEFER", "Other calendars on this source have this pass's turns",
@@ -1253,7 +1281,8 @@ for (const { pending } of dueCandidates) {
 }
 await flushLaunchDecisions();
 const pendingByTaskId = new Map(dueCandidates.map(({ pending }) => [pending.id, pending] as const));
-for (const { task } of electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), admissionNowMs))) pendingRuns.push(pendingByTaskId.get(task.id)!);
+for (const { task } of PLACE_MAPS ? placeMapLaunchOrder(admitted)
+  : electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), admissionNowMs))) pendingRuns.push(pendingByTaskId.get(task.id)!);
 await recordHuntSourceProgressEach(pendingRuns.map(pending => pending.task), "QUEUED", "Admitted to the existing source worker pool. Deterministic code; no model tokens. Verification and reader publication are still owed.");
 const dueRequestLines = [...honouredDueRequests].map(([taskId, request]) => admittedIds.has(taskId)
   ? `Owner due request ${request.id}: ${taskId} admitted by this ordinary pass (due ${request.dueAt}).`
@@ -1269,7 +1298,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
     serialLane: routineSerialLane(pending.command),
     executable: process.execPath,
     // The state map reservation was measured with a 1 GiB heap.
-    args: [...TS_CHILD, ...(pending.command[0] === "scripts/place-map-refresh.mts" ? ["--max-old-space-size=1024"] : []), ...pending.command],
+    args: [...TS_CHILD, ...(isPlaceMapTask(pending) ? ["--max-old-space-size=1024"] : []), ...pending.command],
     // A child told when the pass ends settles and exits with its receipt before the pass's wall stops it.
     env: withPassDeadline({
 
@@ -1285,7 +1314,7 @@ function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
         parentPid: process.pid,
       })),
       ...pending.env,
-    }, PASS_LAUNCH_DEADLINE_MS),
+    }, SOURCE_CHILD_DEADLINE_MS),
 
     ...(pending.task.childTimeoutMs === undefined ? {} : { timeoutMs: pending.task.childTimeoutMs }),
     ...(pending.kind === "MEETING_PARTITION" && meetingReadQuietMs() !== undefined ? { timeoutMs: meetingReadQuietMs()! } : {}),
@@ -1355,9 +1384,10 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
     cwd: ROOT,
     env: process.env,
     timeoutMs: ROUTINE_CHILD_TIMEOUT_MS,
-    deadlineMs: PASS_LAUNCH_DEADLINE_MS,
+    deadlineMs: SOURCE_CHILD_DEADLINE_MS,
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
-    concurrency: Math.max(1, units.length),
+    // State maps are memory-heavy: their lane runs one at a time.
+    concurrency: PLACE_MAPS ? 1 : Math.max(1, units.length),
 
     sameDomainGapMs: ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
     onStarting: async (command, index) => {
@@ -1716,7 +1746,7 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
   }));
 }
 
-const factMaintenance = !PUBLISH_NOW && ONLY === null
+const factMaintenance = !PUBLISH_NOW && !PLACE_MAPS && ONLY === null
   ? runFactMaintenance(Math.min(PASS_MAINTENANCE_DEADLINE_MS, Date.now() + 60_000)).catch(error => {
     supervisorFailures.push({ taskId: "fact-maintenance", code: "FACT_MAINTENANCE_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }) : Promise.resolve();
@@ -1739,11 +1769,11 @@ if (pass.error !== undefined) {
 await factMaintenance;
 await heldPublication;
 await flushLaunchDecisions();
-if (!PUBLISH_NOW && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
+if (!PUBLISH_NOW && !PLACE_MAPS && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
   try { await routineJob(ROUTINE_JOBS.boxFactAudit, () => reviewPublishedBoxFacts(readerFactDb().query), undefined); }
   catch (error) { supervisorFailures.push({ taskId: "box-fact-audit", code: "BOX_AUDIT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) }); }
 }
-if (!PUBLISH_NOW && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
+if (!PUBLISH_NOW && !PLACE_MAPS && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
   try { await routineJob(ROUTINE_JOBS.statePointerRetirement, async () => {
     const deadlineMs = PASS_DEADLINE_MS - 30_000, sql = neon(process.env.DATABASE_URL!);
     const query = (text: string, params: readonly unknown[]) => sql.query(text, [...params], { fetchOptions: {
@@ -1780,7 +1810,7 @@ try {
     kind: "ROUTINE_CIVIC_DATA_SUPERVISOR",
     state: supervisorFailures.length === 0 ? "SUCCEEDED" : "FAILED",
     cycleId,
-    lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
+    lane: LANE,
     exactTaskReceipts: verifiedTaskReceipts.length,
     durable: true,
   }));
@@ -1806,7 +1836,7 @@ const attemptedCount = floored(
   attempted,
 );
 console.log("RCD_RUN=" + JSON.stringify({
-  lane: PUBLISH_NOW ? "publish-now" : "routine-civic-data",
+  lane: LANE,
   attempted: attemptedCount.matched,
   denominator: attemptedCount.denominator,
   failed: verifiedSourceFailures + supervisorFailures.length,

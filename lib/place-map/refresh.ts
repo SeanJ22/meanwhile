@@ -19,6 +19,7 @@ import { geographicSpecialDistricts, heldSpecialDistrictBoundaries } from "./spe
 import { statePostalLinks } from "./postal-links.ts";
 import { isTownOrCountyDivision } from "../geo/postal-core.ts";
 import { currentGrfPlaceEdges } from "./grf-edges.ts";
+import { placeMapHeldZips } from "./counts.ts";
 
 /** Read only the legacy shards touching this state. Their source is explicitly
  * Census ZCTAs; the independent Census universe confirms each ZCTA row. */
@@ -138,13 +139,15 @@ export async function placeMapDependencyHash(query: Query, root: string, state: 
     sourceCatalog: JSON.parse(await readFile(join(root, "data/reference/district-boundary-sources.json"), "utf8")) });
 }
 
-/** A current source head never requires the held state dataset just to learn that nothing changed. */
+/** A current source head never requires the held state dataset just to learn that nothing changed. A head is not
+ * confirmed while production holds no ZIPs for the state's map: the map is loaded again instead. */
 export async function refreshStatePlaceMap(db: FactDb & { readonly query: Query }, root: string, state: string,
   store: RoutineDataStore, options: CensusSourceOptions = {}) {
   if (!/^[A-Z]{2}$/.test(state)) throw new Error("A state abbreviation is required");
   options = { ...options, releases: new Map(), sourceCaptures: new Map() };
   const scope = `US-${state}:place-map`, head = await store.readSourceHead("CENSUS_GEOGRAPHY", scope);
-  const saved = head?.rawHashBasis === "SOURCE_CONTENT_V1" && head.parserVersion === CENSUS_GEO_PARSER_VERSION
+  const held = ((await placeMapHeldZips(db.query, [state])).get(state) ?? 0) > 0;
+  const saved = held && head?.rawHashBasis === "SOURCE_CONTENT_V1" && head.parserVersion === CENSUS_GEO_PARSER_VERSION
     ? await store.readCandidatePath(head.versionId, ["normalizedPayload", "sourceProbe"]) : null;
   const prefixes = (saved as { postalPrefixes?: unknown } | null)?.postalPrefixes;
   if (validCensusSourceProbe(saved) && Array.isArray(prefixes) && prefixes.every(prefix => typeof prefix === "string" && /^\d{2}$/.test(prefix))) {

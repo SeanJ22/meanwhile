@@ -13,7 +13,8 @@ export interface RoutineJob {
  * source (its portrait list, its voting doors, its settlement) run under that source's task id. Bytes per run are the busiest
  * measured hour of the files each job calls (database_transfer_hourly, Oct 26–27); box-fact-audit and state-pointer-retirement
  * had no separate measurement and carry conservative figures. door-probes is one pass: its open-door list (3.6 MB in the
- * busiest pass, Oct 28), the probes' own door and pacing rows (0.1 MB) and one hot-partition statement (0.07 MB).
+ * busiest pass, Oct 28), the probes' own door and pacing rows (0.1 MB) and one hot-partition statement (0.05 MB: 5 KB sent and
+ * 43 KB of cold fingerprints returned, Oct 28).
  */
 export const ROUTINE_JOBS = {
   doors: { id: "doors", label: "Door install", databaseBytesPerRun: 145_000_000 },

@@ -38,7 +38,8 @@ export const BODY_PEOPLE_SQL = `WITH root AS (SELECT reader_payload_node(payload
     coalesce((SELECT jsonb_agg(reader_payload_value(r.value)) FROM civic_data_rows r
       JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
       WHERE r.promotion_key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
-        AND r.collection='registry.rosterDispositions' AND (r.row_id=ANY($2::text[]) OR r.aliases && $2::text[])),'[]'::jsonb) AS dispositions`;
+        AND r.collection='registry.rosterDispositions' AND (r.row_id=ANY($2::text[]) OR r.aliases && $2::text[]
+          OR reader_payload_node(r.value)->>'canonicalId'=ANY($2::text[]))),'[]'::jsonb) AS dispositions`;
 
 export async function readBodyDetail(query: Query, state: string, bodyId: string): Promise<ReaderBodyDetail> {
   const alias = compositionFor(bodyId)?.aliasOfBodyId;

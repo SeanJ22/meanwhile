@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { projectBodyDetail } from "../lib/reader/body-detail.ts";
 import test from "node:test";
 import { door } from "../lib/core/door.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
@@ -48,7 +49,10 @@ test("published body contacts reach Contact together and keep every source page"
       bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
       officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
     const facts = await readBodyFacts(db.query, [BODY], true);
-    const body = stateCoverage({ state: "NC", registry: runtime, version: "ct-01-test" }, [DIVISION], 0, 0, [], facts).bodies[0];
+    const summary = stateCoverage({ state: "NC", registry: runtime, version: "ct-01-test" }, [DIVISION], 0, 0, [], facts).bodies[0];
+    assert.equal(summary.fieldSources, undefined);
+    const detail = projectBodyDetail("NC", BODY, runtime, facts);
+    const body = { ...summary, readerRoster: detail.roster, fieldSources: detail.fieldSources };
     assert.deepEqual(bodyContactRows(body), [
       { label: "Phone", value: contacts[0][1], href: "tel:9195550100;ext=42" },
       { label: "Office address", value: contacts[1][1], href: null },

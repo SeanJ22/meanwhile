@@ -35,6 +35,22 @@ export function loadBodyDetail(state: string, bodyId: string): Promise<ReaderBod
   return read;
 }
 
+/** Resolve a selected set of bodies without turning a failed request into an empty roster. */
+export async function loadBodyDetails(bodies: readonly CoveredBody[]): Promise<ReadonlyMap<string, ReaderBodyDetail>> {
+  const details = new Map<string, ReaderBodyDetail>();
+  let next = 0;
+  const worker = async () => {
+    while (next < bodies.length) {
+      const body = bodies[next++], state = bodyDetailState(body);
+      if (!state) continue;
+      try { details.set(body.bodyId, await loadBodyDetail(state, body.bodyId)); }
+      catch { /* Keep the summary so readers can distinguish unavailable from empty. */ }
+    }
+  };
+  await Promise.all(Array.from({ length: Math.min(6, bodies.length) }, worker));
+  return details;
+}
+
 export function projectedBodyRoster(
   body: Pick<CoveredBody, "readerRoster"> | null | undefined,
 ): BodyRosterClientProjection {

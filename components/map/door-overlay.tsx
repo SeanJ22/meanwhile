@@ -238,7 +238,7 @@ function DistrictsDoor({
    * which districts the reader is in.
    */
   const governingRows =
-    atAddress && shownCoverage
+    atAddress && coverage && shownCoverage
       ? governingDoorRows(shownCoverage, (ocdId) =>
           representationForDivision(shownCoverage, ocdId),
         )

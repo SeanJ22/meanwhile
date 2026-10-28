@@ -185,7 +185,7 @@ export interface ShellStats {
    * is not an address) or when no coverage answered.
    */
   governingDistricts: number | null;
-  officials: number;
+  officials: number | null;
   /** False when no coverage answered — the two coverage counters can't claim. */
   coverageAnswered: boolean;
 }
@@ -220,7 +220,7 @@ export function computeStats(input: {
     districts: drawnDistricts ? drawnDistricts.length : null,
     governingDistricts:
       atAddress && coverage ? coverage.divisions.length : null,
-    officials: coverage ? coverage.officialCount ?? allOfficialRows(coverage).length : 0,
+    officials: coverage ? coverage.officialCount === undefined ? allOfficialRows(coverage).length : coverage.officialCount : 0,
     coverageAnswered: coverage !== null,
   };
 }
@@ -417,7 +417,7 @@ export function deriveStatsView(
     // may not state a number, and 0 is a number.
     bodies: stats.coverageAnswered ? stats.bodies : "—",
     bodiesSecondary: bodiesSecondary(stats),
-    officials: stats.coverageAnswered ? stats.officials : "—",
+    officials: stats.coverageAnswered ? stats.officials ?? "—" : "—",
     districts,
     districtsLabel,
     districtsSecondary,

@@ -217,7 +217,7 @@ export interface CoverageSummary {
   state: CoverageState;
   bodies: CoveredBody[];
   /** Count of distinct people shown by the officials panel for this place. */
-  officialCount?: number;
+  officialCount?: number | null;
   /** Source inventories are independent of sourced meeting bodies and people. */
   governments?: RegistrationGovernmentListing[];
   governmentInventoryStates?: string[];

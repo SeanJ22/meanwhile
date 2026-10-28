@@ -1,6 +1,7 @@
 import type { CoverageSummary } from "../registry/coverage.ts";
 import { WIRED_STATUSES } from "../registry/coverage-client.ts";
 import type { DirectoryFile } from "../officials/directory.ts";
+import { allOfficialRows } from "../officials/tier-grouping.ts";
 import type { PlaceEntry } from "../place-map/reader.ts";
 import type { MeetingSearchResult } from "../meetings/query.ts";
 import { representationForDivision } from "../registry/representation.ts";
@@ -102,13 +103,15 @@ export function stateCoverageForZip(state: ReaderStateResponse, zip: string, res
   // Mail-only ZIPs can lack a district index. Their state's senators and executives still serve them.
   const ids = new Set(entry?.ids ?? []);
   const partial = new Set(entry?.partial ?? []);
-  return withCounts({
+  const scoped = withCounts({
     ...state.coverage,
     bodies: state.coverage.bodies.filter(body => body.ocdId && ids.has(body.ocdId.split("#")[0]))
       .map(body => ({ ...body, couldGovern: !!body.ocdId && partial.has(body.ocdId.split("#")[0]) })),
     seats: state.coverage.seats.filter(seat => ids.has(seat.ocdId)),
     divisions: state.coverage.divisions.filter(division => ids.has(division.ocdId)),
   }, 0);
+  // State packages contain no local rosters; filtering their seats changes the count.
+  return { ...scoped, officialCount: allOfficialRows(scoped).length };
 }
 
 function mergeRows<T>(base: readonly T[], local: readonly T[], key: (row: T) => string): T[] {
@@ -117,7 +120,7 @@ function mergeRows<T>(base: readonly T[], local: readonly T[], key: (row: T) => 
 
 export function mergeReaderCoverage(state: CoverageSummary | null, place: CoverageSummary | null, meetingCount: number): CoverageSummary | null {
   if (!state || !place) return place ?? state;
-  return withCounts({
+  const merged = withCounts({
     ...state, ...place,
     bodies: mergeRows(state.bodies, place.bodies, row => row.bodyId),
     seats: mergeRows(state.seats, place.seats, row => row.ocdId),
@@ -126,6 +129,15 @@ export function mergeReaderCoverage(state: CoverageSummary | null, place: Covera
     statewideExecutives: mergeRows(state.statewideExecutives, place.statewideExecutives, row => row.id),
     stateLegislatorAuthorities: mergeRows(state.stateLegislatorAuthorities, place.stateLegislatorAuthorities, row => row.scope),
   }, meetingCount);
+  // The place count is distinct across local members, but their ids are not
+  // sent with the summary. Do not claim an exact union with state officials
+  // until those memberships have been opened.
+  const localMembers = place.bodies.some(body => (body.rosterSummary?.memberCount ?? 0) > 0 && !body.readerRoster);
+  const stateIds = new Set(allOfficialRows(state).map(row => row.holder.id));
+  const placeIds = new Set(allOfficialRows(place).map(row => row.holder.id));
+  const addsStatePeople = [...stateIds].some(id => !placeIds.has(id));
+  return { ...merged, officialCount: localMembers && addsStatePeople ? null
+    : localMembers ? place.officialCount : allOfficialRows(merged).length };
 }
 
 /** Both requests start before either is awaited. State is published first, even if place wins the race. */

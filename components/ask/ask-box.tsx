@@ -22,7 +22,7 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { NameableEntity } from "@/lib/routing/exact-name";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
-import { bodyDetailState, loadBodyDetail } from "@/lib/registry/body-roster-client";
+import { loadBodyDetails } from "@/lib/registry/body-roster-client";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { logEvent } from "@/lib/log/client";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
@@ -364,6 +364,7 @@ export function AskBox({
       }
 
       let routedCoverage = coverage;
+      let classified: Awaited<ReturnType<typeof classify>> = null;
       const groundedAnswer = await askGrounded(question, confirmation);
       setGrounded(groundedAnswer);
       /* Only a canonical resolution becomes a referent for later turns. */
@@ -382,10 +383,10 @@ export function AskBox({
       }
       /* The classifier runs only after the matcher refused and the grounded engine bound nothing. */
       if (result.answer.kind !== "ROUTED" && !answerSaysSomething(groundedAnswer)) {
-        const topic = await classify(question);
-        if (topic) {
+        classified = await classify(question);
+        if (classified) {
           result = answerQuestion(question, routedCoverage, zip, {
-            classified: topic,
+            classified,
             entities,
             everydayRouting,
           });
@@ -398,17 +399,13 @@ export function AskBox({
         .map(({ body }) => [body.bodyId, body])).values()]
         .filter(body => !body.readerRoster && body.rosterSummary && body.rosterSummary.memberCount > 0);
       if (selected.length) {
-        const reads = await Promise.allSettled(selected.map(body => {
-          const state = bodyDetailState(body);
-          return state ? loadBodyDetail(state, body.bodyId) : Promise.reject(new Error("Missing body state"));
-        }));
-        const details = new Map(reads.flatMap((read, index) => read.status === "fulfilled"
-          ? [[selected[index].bodyId, read.value] as const] : []));
+        const details = await loadBodyDetails(selected);
         routedCoverage = { ...coverage, bodies: coverage.bodies.map(body => {
           const detail = details.get(body.bodyId);
           return detail ? { ...body, readerRoster: detail.roster, fieldSources: detail.fieldSources } : body;
         }) };
-        result = answerQuestion(question, routedCoverage, zip, { entities, everydayRouting });
+        result = answerQuestion(question, routedCoverage, zip, { entities, everydayRouting,
+          ...(classified ? { classified } : {}) });
       }
 
       if (groundedAnswer.mode === "TRANSPORT_FAILED") {

@@ -10,6 +10,7 @@ import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";
 import { representationForDivision } from "../lib/registry/representation.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
+import { resolveRouting } from "../lib/routing/resolve.ts";
 import { namedOfficeholders, readerOfficeholders } from "../lib/ask/server-sources.ts";
 import { composeReaderOfficials, readerOfficialsQuestion, stateDivisionsOf } from "../lib/ask/reader-officials.ts";
 import { GET as representation } from "../app/api/representation/[...division]/route.ts";
@@ -214,6 +215,11 @@ test("the keyed governing roster gives the exact official mayor precedence over 
   assert.equal(state.bodies.length, 0, "a roster reference must not invent a visible body");
   assert.deepEqual(state.seats[0].bodyRosterRefs, [{ bodyId: roster.bodyId, state: division.state }]);
   assert.equal(state.officialCount, null, "the distinct count is unavailable until the keyed roster is resolved");
+  const superintendent = { ...official, officeTitle: "Superintendent" };
+  const askCoverage = { ...state, seats: state.seats.map(seat => ({ ...seat,
+    readerGoverningRoster: { members: [superintendent], gaps: [] } })) };
+  assert.ok(resolveRouting("schools-operations", askCoverage).steps.some(step => step.people.some(person => person.id === superintendent.id)),
+    "Ask names the person obtained from the keyed governing roster without inventing a body");
 });
 
 test("captured county mayors and district executives reach exact routes, first coverage and Ask without invented bodies", async () => {

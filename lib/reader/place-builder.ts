@@ -729,7 +729,7 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<R
               transfer=sharedPlaceBuildRead(`${randomUUID()}:${state}`,shared.retention);shared.transfers.set(state,transfer);
             }
             const read=await readPlaceBuild((text,params=[])=>transfer!(query,text,params),PLACE_PACKAGE_SQL,[state,input.divisionIds,input.bodyIds ?? [],stateRoot,
-              false,false,false,null,false,input.namedDivisionIds ?? [],null,null,false],territory,options.buildRevision);
+              false,false,false,null,false,input.namedDivisionIds ?? [],null,null,false],territory,options.buildRevision,id);
             if (read.reused) return {read};
             const current=await expandPlaceBuildRow(read.row!);
             const readyCurrent=await composePlaceRow(input,structuredClone(current));

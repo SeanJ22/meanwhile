@@ -22,6 +22,7 @@ test("identical ZIP inputs transfer only a fingerprint and copy the complete ans
     await reusePlaceBuild(query,'zip:22222',next.reused!,next.fingerprint);
     assert.deepEqual((await query("SELECT body FROM place_page WHERE place_id='zip:22222'"))[0]?.body,value);
     assert.deepEqual((await query("SELECT entity_id FROM place_page_dependency WHERE page_id='zip:22222' ORDER BY entity_id")).map(r=>r.entity_id),['body:shared','zip:22222']);
+    assert.deepEqual((await readPlaceBuild(query,statement,[JSON.stringify(value)],null,undefined,'zip:22222')).reused,{placeId:'zip:22222'},"prefer the target's own matching fingerprint over another ZIP's equal answer");
     // A changed selected fact, a removed field, and different territory each require fresh composition.
     for(const changed of [{...value,rosters:[]},{meetings:value.meetings}]) {
       const fresh=await readPlaceBuild(query,statement,[JSON.stringify(changed)],null);
@@ -33,7 +34,9 @@ test("identical ZIP inputs transfer only a fingerprint and copy the complete ans
     await query("INSERT INTO place_page_dependency(page_id,entity_id) VALUES('zip:22222','body:old')");
     await reusePlaceBuild(query,'zip:22222',next.reused!,next.fingerprint);
     assert.deepEqual((await query("SELECT entity_id FROM place_page_dependency WHERE page_id='zip:22222' ORDER BY entity_id")).map(r=>r.entity_id),['body:shared','zip:22222']);
+    const version=(await query("SELECT version FROM place_page WHERE place_id='zip:11111'"))[0]!.version;
     await reusePlaceBuild(query,'zip:11111',next.reused!,next.fingerprint);
+    assert.equal((await query("SELECT version FROM place_page WHERE place_id='zip:11111'"))[0]!.version,version,"a matching fingerprint confirms the page without rewriting its ready body");
     assert.deepEqual((await query("SELECT entity_id FROM place_page_dependency WHERE page_id='zip:11111' ORDER BY entity_id")).map(r=>r.entity_id),['body:shared','zip:11111']);
     await query("UPDATE place_page SET build_fingerprint='changed' WHERE place_id='zip:11111'");
     await assert.rejects(reusePlaceBuild(query,'zip:22222',next.reused!,next.fingerprint),/REUSE_REPLACED/);

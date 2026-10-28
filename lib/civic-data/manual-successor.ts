@@ -1,3 +1,4 @@
+import { readPublishedProjectionBase } from "./published-projection-base.ts";
 import { resolveRecordConflicts } from "./source-conflicts.ts";
 import { createHash } from "node:crypto";
 import { canonicalCivicDataJson, civicRecordsFor } from "./changes.ts";
@@ -33,8 +34,8 @@ export async function prepareManualProjectionSuccessor(
   const read = await readPromotedCivicData<CuratedReaderProjection>(contract.recordClass, fresh.scope, { store, now });
   if (read.kind === "NOT_RECORDED") return { candidate: fresh, expectedBaseVersionId: null };
   if (read.kind !== "PROMOTED") throw new Error(`MANUAL_PROMOTION_BASE_UNAVAILABLE:${input.contractId}:${read.detail}`);
-  const base = await store.readCandidate(read.projection.versionId);
-  if (!base || base.candidate.sourceId !== fresh.sourceId || hash(base.candidate.readModel) !== hash(read.value)) {
+  const base = await readPublishedProjectionBase(store, read.projection.versionId, read.value);
+  if (!base || base.candidate.sourceId !== fresh.sourceId || base.candidate.normalization.normalizedHash !== hash(read.value)) {
     throw new Error("MANUAL_SUCCESSOR_EXACT_BASE_UNAVAILABLE");
   }
   const priorReceipt = base.candidate.retrieval.manualSourceReceipt;
@@ -70,7 +71,9 @@ export async function prepareManualProjectionSuccessor(
   });
   if (inherited.length === 0) return { candidate:fresh,expectedBaseVersionId:base.candidate.id };
   const inheritedIds = new Set(inherited.map(([id]) => id));
-  const priorIdentities = base.candidate.identities.filter((identity) => inheritedIds.has(identity.identifiers.record_id));
+  const pathStore = store as typeof store & Pick<import("./store.ts").RoutineDataStore, "readCandidatePath">;
+  const identities = await pathStore.readCandidatePath<import("./types.ts").IdentityEvidence[]>(base.candidate.id, ["identities"]);
+  const priorIdentities = (identities ?? []).filter((identity) => inheritedIds.has(identity.identifiers.record_id));
   if (new Set(priorIdentities.map((identity) => identity.identifiers.record_id)).size !== inheritedIds.size) {
     throw new Error("MANUAL_SUCCESSOR_RETAINED_IDENTITY_PROOF_UNAVAILABLE");
   }

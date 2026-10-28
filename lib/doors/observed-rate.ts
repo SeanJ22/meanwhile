@@ -73,7 +73,11 @@ export function doorRateRow(door: DoorRecord, policyMinutes: number): DoorRateRo
 }
 
 /** Door id → observed change minutes, for the runner's due check. Doors with no observation yet are absent. */
-export function observedChangeMinutesByDoor(doors: readonly DoorRecord[]): ReadonlyMap<string, number> {
+/** The fields the change-rate map reads; a caller reads only these, not whole door records. */
+export const OBSERVED_RATE_FIELDS = { doorId: true, status: true, checkEveryMinutes: true, observedChangeMinutes: true } as const;
+export type ObservedRateFields = Pick<DoorRecord, "doorId" | "status" | "checkEveryMinutes" | "observedChangeMinutes">;
+
+export function observedChangeMinutesByDoor(doors: readonly ObservedRateFields[]): ReadonlyMap<string, number> {
   const out = new Map<string, number>();
   for (const door of doors) {
     if (door.status === "OPEN" && door.checkEveryMinutes === null && typeof door.observedChangeMinutes === "number" && door.observedChangeMinutes > 0) {

@@ -35,7 +35,7 @@ export async function measureTranslationRoutineReceipt(input: {
       !isCheckedMeasureTranslation(ballot, { subjectId: contest.id, division }, read.value.records)))) {
       holdReason = "A measure still has no checked explainer on its ballot card.";
     } else {
-      const current = await input.store.readCandidate(read.projection.versionId);
+      const current = await input.store.readPublishedCandidateMetadata(read.projection.versionId);
       const candidate = current?.candidate;
       if (!candidate?.normalization.normalizedHash || !candidate.retrieval.succeeded ||
           !candidate.retrieval.rawHash || !input.store.confirmUnchanged) {

@@ -3,6 +3,8 @@ import type { MeasureRecord } from "../ballot/measure-record-contract.ts";
 import { measureRecordIssue } from "../ballot/measure-record-contract.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { pageWords } from "../control-plane/promotion/section3.ts";
+import type { RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
+import { CARD_WRITING_RULES } from "../reader/card-writer.ts";
 import { canonicalModelId } from "../models.ts";
 
 export const TRANSLATION_SCOPE = "US:plain-english-translations";
@@ -51,7 +53,13 @@ export interface TranslationEvidence {
   readonly checked: readonly { readonly field: string; readonly text: string; readonly supported: true }[];
 }
 
+export const MEASURE_WRITING_VERSION = translationHash(JSON.stringify([CARD_WRITING_RULES, "measure-passages/6"]));
+
 export interface MeasureTranslation extends TranslationEvidence {
+  /** Complete original text is held once outside Neon; sourceText holds cited passages only. */
+  readonly sourceCapture?: RawCaptureRef;
+  readonly subjectQuote?: string;
+  readonly writingRulesVersion?: string;
   readonly kind: "MEASURE";
   readonly measure: MeasureRecord;
 }
@@ -107,6 +115,12 @@ export function translationDraftIssue(row: TranslationDraft): string | null {
   if ((row.kind === "AGENDA" || row.kind === "MINUTES") && (!row.meeting?.id || !row.meeting.bodyId ||
       row.subjectId !== `${row.kind.toLowerCase()}:${row.meeting.id}` || row.meeting.documentUrl !== row.sourceUrl ||
       row.meeting.documentHash !== row.sourceHash)) return "Meeting translation lacks its exact held body, sitting and document revision.";
+  if (row.kind === "MEASURE" && row.sourceCapture) {
+    const ref = row.sourceCapture;
+    if (!ref.vaultKey || !/^[a-f0-9]{64}$/.test(ref.rawHash) || !Number.isSafeInteger(ref.byteLength) || ref.byteLength < 1 ||
+        Buffer.byteLength(JSON.stringify(row)) >= 1_000_000 ||
+        row.subjectQuote && !translationSourceContains(row.sourceText, row.subjectQuote)) return "Translation lacks its saved original source or exceeds 1 MB.";
+  }
   const fieldsAndValues = row.kind === "MEASURE" ? outputFields(row.measure) : [["text", row.text]];
   for (const [field, value] of fieldsAndValues) {
     const sentences = row.sentences.filter(sentence => sentence.field === field);

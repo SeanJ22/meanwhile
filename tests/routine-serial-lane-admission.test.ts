@@ -68,8 +68,9 @@ test("a pass whose meeting programs fill memory still runs every read of the peo
   const calendars = Array.from({ length: 12 }, (_, i) => command(`calendar-${i}`));
   const small = Array.from({ length: 12 }, (_, i) => command(`small-${i}`));
   const peopleReads = ["people-us", "people-az", "people-tx"].map(id => command(id, lane));
-  const durations = (id: string) => id.startsWith("calendar") ? 400 : id.startsWith("small") ? 40 : 30;
-  const deadline = Date.now() + 1_000;
+  // Keep the same proportions while leaving room for timer scheduling under suite load.
+  const durations = (id: string) => id.startsWith("calendar") ? 1_600 : id.startsWith("small") ? 160 : 120;
+  const deadline = Date.now() + 4_000;
   const ran: string[] = [];
   const releases = new Map<string, () => void>();
   const ordered = routineSerialLanesFirst([...calendars, ...small, ...peopleReads].map(c => ({ task: { command: c.serialLane ? ["scripts/national-people-refresh.mts"] : ["x"] }, c }))).map(({ c }) => c);

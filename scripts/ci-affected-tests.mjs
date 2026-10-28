@@ -531,13 +531,15 @@ export function changedFiles(root, base, head = "HEAD") {
 
 /**
  * The plan for this event: the scheduled and dispatched certifications run
- * everything; a push to main and the cheap tiers run no tests.
- * @param {{ root: string, tier?: string, eventName?: string, base?: string }} input
+ * everything; a push to main and the cheap tiers run no tests. A River release
+ * (`release/<n>`) runs everything too: it is the one full test of what ships.
+ * @param {{ root: string, tier?: string, eventName?: string, base?: string, headRef?: string }} input
  * @returns {TestPlan}
  */
-export function decide({ root, tier, eventName, base }) {
+export function decide({ root, tier, eventName, base, headRef }) {
   if (tier !== "yes") return { plan: "none", files: [], needsBrowser: false, reasons: [`tier ${tier || "(none)"} runs no tests`] };
   if (eventName !== "pull_request") return fullPlan(`a ${eventName || "non-pull-request"} certification runs the whole suite`);
+  if (/^release\/\d+$/.test(headRef ?? "")) return fullPlan(`${headRef} is a release, so the whole suite runs once on what ships`);
   try {
     const tracked = filesThatWouldBeCommitted({ cwd: root });
     const changed = changedFiles(root, base);
@@ -565,6 +567,7 @@ function main() {
     tier: process.env.CI_TIER,
     eventName: process.env.CI_EVENT_NAME,
     base: process.env.CI_BASE_SHA,
+    headRef: process.env.CI_HEAD_REF,
   });
   emit("plan", decision.plan);
   emit("scope", decision.scope ?? "code");

@@ -13,6 +13,12 @@ import { factDb } from "./helpers/fact-db.ts";
 import { loadBodyDetail } from "../lib/registry/body-roster-client.ts";
 import { bodyRosterSummaries } from "../lib/reader/body-summary.ts";
 
+const registryPointerSchema = `CREATE TABLE civic_data_promotions(key text PRIMARY KEY,current_version_id text,payload jsonb,
+  last_known_good_version_id text,source_id text,record_class text,scope text,payload_fingerprint text,validation_receipt jsonb);
+  CREATE TABLE civic_data_candidates(id text PRIMARY KEY,state text,acquisition_succeeded boolean,promoted_version_id text,
+    last_known_good_version_id text,source_id text,record_class text,scope text,read_model_fingerprint text,
+    validation_receipt jsonb,candidate jsonb,normalized_hash text);`;
+
 test("one-body detail retains the existing member, photo, phone and field sources", () => {
   const fixture = JSON.parse(gunzipSync(readFileSync(new URL("./fixtures/registry-transfer-import.json.gz", import.meta.url))).toString());
   const bodyId = "ocd-division/country:us/state:az/county:pima#governing";
@@ -73,7 +79,7 @@ test("a failed or mismatched body answer is not cached as an empty roster", asyn
 test("the keyed reader selects one body and its people, including its portrait", async () => {
   const db = await factDb();
   try {
-    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,current_version_id text,payload jsonb);
+    await db.pg.exec(`${registryPointerSchema}
       CREATE TABLE civic_data_rows(promotion_key text,version_id text,collection text,ordinal bigint,row_id text,body_id text,aliases text[],value jsonb);
       CREATE FUNCTION reader_payload_node(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';
       CREATE FUNCTION reader_payload_value(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';
@@ -85,9 +91,12 @@ test("the keyed reader selects one body and its people, including its portrait",
     const member = { id: "roster:pima#one", name: "A Person", officeTitle: "Chair", termNote: null,
       email: null, phone: "520-555-0100", websiteUrl: null, fieldSources: { phone: source } };
     const key = "REGISTRY_RUNTIME_BINDING:US-AZ:reader-registry-runtime";
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'v1',$2::jsonb)", [key, JSON.stringify({
+    await db.query(`INSERT INTO civic_data_promotions(key,current_version_id,payload,last_known_good_version_id,source_id,record_class,scope,validation_receipt)
+      VALUES($1,'v1',$2::jsonb,'v1','fixture','REGISTRY_RUNTIME_BINDING','US-AZ:reader-registry-runtime','{"decision":"GOOD"}')`, [key, JSON.stringify({
       officialPhotos: { photos: [] }, rosterPhotos: { [member.id]: "/portrait.jpg", "other:person": "/other.jpg" },
     })]);
+    await db.query(`INSERT INTO civic_data_candidates VALUES('v1','PROMOTED',true,'v1','v1','fixture','REGISTRY_RUNTIME_BINDING',
+      'US-AZ:reader-registry-runtime',NULL,'{"decision":"GOOD"}','{"normalization":{"normalizedHash":"abc"}}','abc')`);
     const add = (collection: string, id: string, value: unknown) => db.query("INSERT INTO civic_data_rows VALUES($1,'v1',$2,1,$3,$3,ARRAY[$3],$4::jsonb)",
       [key, collection, id, JSON.stringify(value)]);
     await add("registry.bodies", body, { id: body, fieldSources: { officePhone: source } });
@@ -103,13 +112,16 @@ test("the keyed reader selects one body and its people, including its portrait",
     assert.deepEqual(detail.roster.members.map(person => person.id), [member.id]);
     assert.equal(detail.roster.members[0].photoUrl, "/portrait.jpg");
     assert.deepEqual(detail.fieldSources, { officePhone: source });
+    await db.query("UPDATE civic_data_candidates SET state='REJECTED' WHERE id='v1'");
+    const rejected = await GET(new Request(`https://example.test/api/reader/body?state=AZ&body=${encodeURIComponent(body)}`));
+    assert.equal(rejected.status, 503);
   } finally { installFactReader(undefined); await db.pg.close(); }
 });
 
 test("the keyed reader retains checked sources for derived body identity fields", async () => {
   const db = await factDb();
   try {
-    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,current_version_id text,payload jsonb);
+    await db.pg.exec(`${registryPointerSchema}
       CREATE TABLE civic_data_rows(promotion_key text,version_id text,collection text,ordinal bigint,row_id text,body_id text,aliases text[],value jsonb);
       CREATE FUNCTION reader_payload_value(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';`);
     const government = "az:special:fixture", body = "government:US-AZ:fixture#board", place = "ocd-division/country:us/state:az/county:pima";

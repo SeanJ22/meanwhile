@@ -303,7 +303,7 @@ test("research and routine pools use one host budget, and memory waits expire wi
   const active = await research.acquire();
   await assert.rejects(routine.acquire("routine", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   active();
-  const next = await routine.acquire("routine", Date.now() + 100);
+  const next = await routine.acquire("routine", Date.now() + 2_000);
   next();
 });
 

@@ -128,15 +128,14 @@ test("the narrow read selects no payload and never touches the candidate JSON", 
   assert.doesNotMatch(code, /civicDataPromotions\.payload|civicDataPromotions\.validationReceipt/);
   assert.doesNotMatch(code, /civicDataCandidates\.candidate|c\.candidate|\bcandidate\s*#>|\bcandidate\s*->/);
   assert.match(code, /SET LOCAL statement_timeout = \$\{statementTimeoutMs\}/);
-  assert.match(code, /e\.sequence = 1/, "the latest attempt is the local attempt clock, not the adapter's timestamp");
-  assert.match(code, /UNCHANGED_CONFIRMATION_PREFIX/, "a later accepted unchanged check supersedes an earlier failure");
-  assert.match(code, /retrieval,sourceCheck,checkedAt/, "a held replay keeps the provider check time rather than its local reprocessing time");
-  assert.match(code, /p\.current_version_id = c\.id/, "the confirmation must belong to the currently served pointer");
-  assert.match(code, /like\(civicDataCandidateEvents\.detail, `\$\{READER_PROJECTION_READBACK_PREFIX\}%`\)/);
+  assert.match(code, /civic_data_source_status/, "latest attempt metadata is maintained when the source changes");
+  assert.doesNotMatch(code, /FROM civic_data_candidates|JOIN civic_data_candidate_events/, "the page never reopens candidate or event histories");
+  assert.match(code, /PUBLICATION_READBACK_ROWS_SQL/, "only the latest valid readback of the selected current contracts leaves the database");
+  assert.doesNotMatch(code, /detail:\s*civicDataCandidateEvents\.detail/, "the event history is never returned whole");
 });
 
 test("the Sources page reads its sources together, starts the full proof read only when asked by name, and shows the narrow panel first", () => {
   const server = readFileSync("lib/civic-data/observability-server.ts", "utf8");
-  assert.match(server, /readPublicationStatusRows\(connection, ADMIN_PUBLICATION_STATUS_STATEMENT_TIMEOUT_MS\)/);
+  assert.match(server, /readPublicationStatusRows\(connection, ADMIN_PUBLICATION_STATUS_STATEMENT_TIMEOUT_MS, contracts\)/);
   assert.match(server, /No publication count is claimed/);
 });

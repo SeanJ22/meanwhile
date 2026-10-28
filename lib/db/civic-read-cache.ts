@@ -133,10 +133,10 @@ export class CivicReadCache {
   }
 }
 
-const MEMORY_BYTES = 32 * 1024 * 1024;
-const memory = new Map<string, string>();
-let memoryBytes = 0;
-const memoryIO: CacheIO = {
+function memoryCacheIO(limit: number): CacheIO {
+  const memory = new Map<string, string>();
+  let memoryBytes = 0;
+  return {
   read: async key => {
     const value = memory.get(key);
     if (value !== undefined) { memory.delete(key); memory.set(key, value); }
@@ -144,16 +144,19 @@ const memoryIO: CacheIO = {
   },
   write: async (key, value) => {
     const bytes = Buffer.byteLength(value);
-    if (bytes > MEMORY_BYTES) return;
+    if (bytes > limit) return;
     memoryBytes -= Buffer.byteLength(memory.get(key) ?? "");
     memory.delete(key);
-    while (memoryBytes + bytes > MEMORY_BYTES && memory.size) {
+    while (memoryBytes + bytes > limit && memory.size) {
       const oldest = memory.keys().next().value!;
       memoryBytes -= Buffer.byteLength(memory.get(oldest)!); memory.delete(oldest);
     }
     memory.set(key, value); memoryBytes += bytes;
   },
-};
+  };
+}
+const memoryIO = memoryCacheIO(32 * 1024 * 1024);
+const checkpointIO = memoryCacheIO(128 * 1024 * 1024);
 
 /** Every runtime uses the same version check. Runner children share their
  * supervisor's disposable copies; other processes use bounded local copies. */
@@ -164,6 +167,8 @@ export function runtimeCivicReadCache(connection = process.env.DATABASE_URL ?? "
   if (!endpoint || !token) return new CivicReadCache({
     read: key => memoryIO.read(namespace + key),
     write: (key, value) => memoryIO.write(namespace + key, value),
+    readCheckpoint: key => checkpointIO.read(namespace + key),
+    writeCheckpoint: (key, value) => checkpointIO.write(namespace + key, value),
   });
   const remoteKey = (key: string) => hash(namespace + key);
   // The runner's local copy host is our own infrastructure. A lookup made while a source is being read is

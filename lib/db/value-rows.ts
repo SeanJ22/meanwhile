@@ -25,6 +25,8 @@ async function checkedQuery(query: Query, text: string, params: readonly unknown
     else checkedStatements.delete(text);
   }
 }
+/** Other explicit content-fingerprint readers use the same transport protocol. */
+export { checkedQuery as checkedValueQuery };
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 export const valueVersionSql = (selected: string) => `encode(sha256(convert_to(coalesce((${selected})::text, ''), 'UTF8')), 'hex')`;
 

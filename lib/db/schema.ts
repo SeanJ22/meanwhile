@@ -849,6 +849,35 @@ export const civicDataCandidateEvents = pgTable(
  * this row atomically; candidates and raw validation evidence are never read
  * by Reader requests.
  */
+/** Small current status rows maintained with candidate events and publication pointers. */
+export const civicDataSourceStatus = pgTable("civic_data_source_status", {
+  sourceId: text("source_id").notNull(),
+  recordClass: text("record_class").notNull(),
+  scope: text("scope").notNull(),
+  candidateId: text("candidate_id").notNull(),
+  state: text("state").notNull(),
+  failureCode: text("failure_code"),
+  attemptedAt: timestamp("attempted_at", { withTimezone: true, mode: "string" }).notNull(),
+}, table => [
+  primaryKey({ name: "civic_data_source_status_pkey", columns: [table.sourceId, table.recordClass, table.scope] }),
+  index("civic_data_source_status_candidate").on(table.candidateId),
+]);
+
+export const civicDataCurrentReadbacks = pgTable("civic_data_current_readbacks", {
+  pointerKey: text("pointer_key").notNull(),
+  contractId: text("contract_id").notNull(),
+  candidateId: text("candidate_id").notNull(),
+  at: timestamp("at", { withTimezone: true, mode: "string" }).notNull(),
+  status: text("status").notNull(),
+}, table => [
+  primaryKey({ name: "civic_data_current_readbacks_pkey", columns: [table.pointerKey, table.contractId] }),
+  check("civic_data_current_readbacks_status_check", sql`${table.status} IN ('PASS','FAIL')`),
+]);
+
+export const civicDataSourceStatusReady = pgTable("civic_data_source_status_ready", {
+  id: boolean("id").primaryKey(),
+}, table => [check("civic_data_source_status_ready_id_check", sql`${table.id}`)]);
+
 export const civicDataPromotions = pgTable(
   "civic_data_promotions",
   {

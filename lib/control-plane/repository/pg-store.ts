@@ -1,5 +1,7 @@
+import { pgOwnerCostRefs } from "./owner-cost-refs.ts";
+import { pgOwnerAssignmentRows } from "./owner-assignment-rows.ts";
 import { versionedRowsFor, shareVersionedRows } from "../../db/versioned-rows.ts";
-import { hasValueVersion, valueVersionSql } from "../../db/value-rows.ts";
+import { checkedValueQuery, hasValueVersion, valueVersionSql } from "../../db/value-rows.ts";
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
 import {MANUAL_METHOD_POOL_SQL} from "./manual-method-index.ts";
 import { PLANNING_STATES, PLANNING_SUMMARY_SQL, PLANNING_FINISHED_TIMES_SQL, planningStateOf, planningStateOrder } from "../scheduler/state-planning.ts";
@@ -15,7 +17,9 @@ import type { AdminEvidenceCopyRequest } from "../evidence/admin-copy-request.ts
 import { installDatabaseTransferCounter } from "../../db/transfer.ts";
 import { installDatabaseClientAccounting, withCallerSite } from "../../db/transfer-by-caller.ts";
 import type { AskGapObservation } from "../ask-gap-observations.ts";
-import type { DoorRecord, DoorRepository } from "../../doors/registry.ts";
+import { applyDerivedRow, type DerivedDoorOutcome, type DoorRecord, type DoorRepository } from "../../doors/registry.ts";
+import { DOOR_DERIVE_FIELDS, DOOR_INSTALL_FIELDS } from "../../doors/read-changes.ts";
+import { controlCounts } from "./control-counts.ts";
 import { pageAddress } from "../../doors/page-doors.ts";
 import { requireBallotState } from "../../civic-data/state-scopes.ts";
 import type { VotingSourceDoor } from "../../ballot/voting-source-types.ts";
@@ -263,7 +267,6 @@ function jsonPathLiteral(table: string, path: readonly string[]): string {
 }
 
 function recordProjectionSql(table: string, projection: RecordProjection, column: "record" | "value" = "record"): string {
-
   const source = column === "record" ? "record" : `${table}.value`;
   const literal = (key: string): string => {
     if (!/^[A-Za-z0-9_]+$/.test(key)) {
@@ -271,20 +274,25 @@ function recordProjectionSql(table: string, projection: RecordProjection, column
     }
     return `'${key}'`;
   };
+  const object = (value: string, keys: readonly string[], select: (key: string) => string): string => {
+    if (!keys.length) return "'{}'::jsonb";
+    // Explicit key reads avoid expanding a large record just to select a few columns.
+    // Remove absent keys separately so a present JSON null stays a present null.
+    const parts: string[] = [];
+    for (let at = 0; at < keys.length; at += 40) {
+      const batch = keys.slice(at, at + 40);
+      parts.push(`(jsonb_build_object(${batch.flatMap(key => [literal(key), select(key)]).join(",")}) - ` +
+        `ARRAY(SELECT k FROM unnest(ARRAY[${batch.map(literal).join(",")}]) keys(k) WHERE NOT (${value} ? k)))`);
+    }
+    return parts.join(" || ");
+  };
   const kept = Object.keys(projection);
-  if (kept.length === 0) throw new Error(`${table}: an empty projection cannot select a field`);
-  const narrowed = kept.flatMap((key) => {
-    const keep = projection[key];
-    return keep === true ? [] : [
-      `WHEN t.key = ${literal(key)} AND jsonb_typeof(t.value) = 'object' THEN ` +
-        `(SELECT coalesce(jsonb_object_agg(f.key, f.value), '{}'::jsonb) FROM jsonb_each(t.value) AS f ` +
-        `WHERE f.key IN (${keep.length === 0 ? "NULL" : keep.map(literal).join(", ")}))`,
-    ];
-  });
-  const value = narrowed.length === 0 ? "t.value" : `CASE ${narrowed.join(" ")} ELSE t.value END`;
-  return `CASE WHEN jsonb_typeof(${source}) = 'object' THEN ` +
-    `(SELECT coalesce(jsonb_object_agg(t.key, ${value}), '{}'::jsonb) FROM jsonb_each(${source}) AS t ` +
-    `WHERE t.key IN (${kept.map(literal).join(", ")})) ELSE ${source} END`;
+  if (!kept.length) throw new Error(`${table}: an empty projection cannot select a field`);
+  return `CASE WHEN jsonb_typeof(${source})='object' THEN ${object(source, kept, key => {
+    const field = `${source}->${literal(key)}`, keep = projection[key];
+    return keep === true ? field : `CASE WHEN jsonb_typeof(${field})='object' THEN ${object(`(${field})`, keep,
+      nested => `${field}->${literal(nested)}`)} ELSE ${field} END`;
+  })} ELSE ${source} END`;
 }
 
 export const AGGREGATE_LIST_READ_PAGE = 100;
@@ -507,24 +515,206 @@ export const APPEND_ONLY_LOG_READ_PAGE = 100;
 export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): DoorRepository {
   const table = "cp_doors", repo = pgAggregateRepository<DoorRecord>(sql, "Door", table, options);
   const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
-  const scope = (options.state ? " AND cp_control_state(cp_doors.value)=$1::text" : "")
-    + (options.activeOnly ? " AND value->>'active'='true'" : "");
-  const params = options.state ? [options.state] : [];
+  const reader = versionedRowsFor(sql);
+  const fingerprinted = (operation: string, text: string, params: readonly unknown[]) =>
+    checkedValueQuery((query, values) => run(operation, "PAGE", query, values), text, params);
+  type CachedDoor = { readonly version: string; readonly row: Persisted<unknown> };
+  type DoorContinuation = { readonly generation: string; readonly rows: readonly CachedDoor[] };
+  async function currentRecords(projection: RecordProjection, meetingsOnly = false): Promise<readonly Persisted<unknown>[]> {
+    const selected = recordProjectionSql(table, projection, "value");
+    const installFingerprint = projection === DOOR_INSTALL_FIELDS;
+    const namespace = `door-current:2:${createHash("sha256").update(JSON.stringify({ projection, meetingsOnly, state: options.state, activeOnly: options.activeOnly })).digest("hex")}`;
+    const held = await reader.cached<DoorContinuation>(namespace, "rows", async (etag, previous) => {
+      const [counter] = await controlCounts(sql, table);
+      if (!counter) throw new Error("The door change counter is unavailable");
+      if (counter.generation === etag) return { etag: counter.generation, unchanged: true };
+      const rows = new Map((previous?.rows ?? []).map(row => [row.row.id, row]));
+      let cursor = previous?.generation ?? "-1", after: string | null = null;
+      if (!previous) {
+        // A first read owns no prior fingerprint. Return each needed projection with
+        // its fingerprint once, instead of downloading a separate pointer preflight.
+        for (;;) {
+          const values = await fingerprinted("currentRecords:first", `SELECT c.id,c.generation::text,cp_doors.revision,cp_doors.updated_at,
+            ${selected} AS value,${installFingerprint ? "cp_door_install_fingerprint(cp_doors.value)" : valueVersionSql(selected)} AS fingerprint
+            FROM cp_door_changes c JOIN cp_doors ON cp_doors.id=c.id
+            WHERE (c.generation,c.id)>($1::bigint,$2::text) AND c.generation<=$3::bigint AND NOT c.deleted
+              ${meetingsOnly ? "AND c.install_version IS NOT NULL" : ""}
+              ${options.state ? "AND cp_control_state(cp_doors.value)=$5::text" : ""}
+              ${options.activeOnly ? "AND cp_doors.value->>'active'='true'" : ""}
+            ORDER BY c.generation,c.id LIMIT $4`, [cursor, after, counter.generation, 100, ...(options.state ? [options.state] : [])]) as {
+              id: string; generation: string; revision: number | string; updated_at: string; value: unknown; fingerprint: string;
+            }[];
+          for (const value of values) rows.set(value.id, { version: value.fingerprint, row: {
+            id: value.id, revision: Number(value.revision), updatedAt: new Date(value.updated_at).toISOString(),
+            value: parseValue(value.value, `${table} id ${value.id}`),
+          } });
+          if (values.length < 100) break;
+          cursor = values.at(-1)!.generation; after = values.at(-1)!.id;
+        }
+        return { etag: counter.generation, value: { generation: counter.generation, rows: [...rows.values()] } };
+      }
+      for (;;) {
+        const changes = await fingerprinted("currentRecords:changes", `SELECT c.id,c.generation::text,c.revision,c.updated_at,c.deleted,
+          ${installFingerprint ? "c.install_version" : `CASE WHEN NOT c.deleted${meetingsOnly ? " AND c.install_version IS NOT NULL" : ""} THEN ${valueVersionSql(selected)} END`} AS fingerprint,
+          ${[options.state ? "cp_control_state(cp_doors.value)=$5::text" : "true", ...(options.activeOnly ? ["cp_doors.value->>'active'='true'"] : [])].join(" AND ")} AS in_scope
+          FROM cp_door_changes c LEFT JOIN cp_doors ON cp_doors.id=c.id
+          WHERE (c.generation,c.id)>($1::bigint,$2::text) AND c.generation<=$3::bigint
+          ORDER BY c.generation,c.id LIMIT $4`, [cursor, after, counter.generation, 100, ...(options.state ? [options.state] : [])]) as {
+            id: string; generation: string; revision: number | string; updated_at: string;
+            deleted: boolean; fingerprint: string | null; in_scope: boolean;
+          }[];
+        const changed = changes.filter(change => {
+          if (change.deleted || change.in_scope !== true || change.fingerprint === null) { rows.delete(change.id); return false; }
+          const saved = rows.get(change.id);
+          if (saved?.version !== change.fingerprint) return true;
+          rows.set(change.id, { ...saved, row: { ...saved.row, revision: Number(change.revision), updatedAt: new Date(change.updated_at).toISOString() } });
+          return false;
+        });
+        if (changed.length) {
+          const values = await fingerprinted("currentRecords:values", `SELECT id,revision,updated_at,${selected} AS value,
+            ${installFingerprint ? "cp_door_install_fingerprint(value)" : valueVersionSql(selected)} AS fingerprint
+            FROM cp_doors WHERE id=ANY($1::text[])`, [changed.map(row => row.id)]) as {
+              id: string; revision: number | string; updated_at: string; value: unknown; fingerprint: string | null;
+            }[];
+          for (const value of values) {
+            if (value.fingerprint === null) { rows.delete(value.id); continue; }
+            rows.set(value.id, { version: value.fingerprint, row: { id: value.id, revision: Number(value.revision),
+              updatedAt: new Date(value.updated_at).toISOString(), value: parseValue(value.value, `${table} id ${value.id}`) } });
+          }
+          for (const change of changed) if (!values.some(value => value.id === change.id)) rows.delete(change.id);
+        }
+        if (changes.length < 100) break;
+        cursor = changes.at(-1)!.generation; after = changes.at(-1)!.id;
+      }
+      return { etag: counter.generation, value: { generation: counter.generation, rows: [...rows.values()] } };
+    });
+    return (held?.rows ?? []).map(saved => saved.row).sort((a, b) => a.id.localeCompare(b.id));
+  }
   return { ...repo,
+    currentRecords,
+    async count() {
+      const [counter] = await controlCounts(sql, table);
+      if (!counter) throw new Error("The door count is unavailable");
+      return counter.count;
+    },
+    async deriveMany(drafts, deriveInputAt, at) {
+      if (!drafts.length) return [];
+      type DerivedPointer = { readonly source: string; readonly target: string | null; readonly current: string | null;
+        readonly editedAt: string | null; readonly readable: boolean; readonly deleted: boolean };
+      type DeriveContinuation = { readonly generation: string; readonly rows: Readonly<Record<string, DerivedPointer>> };
+      const source = new Map(drafts.map(draft => [draft.doorId, createHash("sha256").update(canonicalJson(
+        DOOR_DERIVE_FIELDS.map(field => draft[field]))).digest("hex")]));
+      const namespace = `door-derive:1:${createHash("sha256").update(canonicalJson([...source.keys()].sort())).digest("hex")}`;
+      const outcomes: DerivedDoorOutcome[] = [];
+      await reader.cached<DeriveContinuation>(namespace, "fingerprints", async (etag, previous) => {
+        const [counter] = await controlCounts(sql, table);
+        if (!counter) throw new Error("The door change counter is unavailable");
+        const pointers: Record<string, DerivedPointer> = { ...previous?.rows };
+        if (previous?.generation !== counter.generation) {
+          const changes = await fingerprinted("deriveMany:changes", `SELECT id,derive_version,edited_at,readable,deleted FROM cp_door_changes
+            WHERE id=ANY($1::text[]) AND generation>$2::bigint AND generation<=$3::bigint`,
+          [[...source.keys()], previous?.generation ?? "-1", counter.generation]) as {
+            id: string; derive_version: string | null; edited_at: string | null; readable: boolean; deleted: boolean;
+          }[];
+          for (const change of changes) pointers[change.id] = { ...pointers[change.id],
+            source: pointers[change.id]?.source ?? "", target: pointers[change.id]?.target ?? null,
+            current: change.derive_version, editedAt: change.edited_at, readable: change.readable, deleted: change.deleted };
+        }
+        const pending = drafts.filter(draft => {
+          const held = pointers[draft.doorId];
+          if (held?.readable && !held.deleted && held.editedAt !== null && Date.parse(held.editedAt) > Date.parse(deriveInputAt)) {
+            outcomes.push({ doorId: draft.doorId, result: "kept-manual-edit" }); return false;
+          }
+          if (held?.readable && !held.deleted && held.source === source.get(draft.doorId) && held.target !== null && held.target === held.current) {
+            outcomes.push({ doorId: draft.doorId, result: "unchanged" }); return false;
+          }
+          return true;
+        });
+        if (pending.length) {
+          const values = pending.map(draft => applyDerivedRow(null, draft, deriveInputAt, at)!);
+          const operational = recordProjectionSql(table, Object.fromEntries(["status", "readNow", "lastSuccessAt", "lastFailureAt", "validators", "shutSince",
+            "lastFailureReason", "transportFailures", "shutReason", "reopenedAt", "lastChangedAt", "observedChangeMinutes", "observedChanges", "editedAt"].map(key => [key, true])), "value");
+          const rows = await run("deriveMany", "PAGE", `WITH incoming AS MATERIALIZED (SELECT value->>'doorId' AS id,value
+            FROM jsonb_array_elements($1::jsonb) entries(value)), prior AS MATERIALIZED (
+              SELECT cp_doors.id,cp_doors.value->>'editedAt' AS edited_at FROM cp_doors JOIN incoming USING(id)
+            ), written AS (
+              INSERT INTO cp_doors(id,revision,updated_at,value)
+                SELECT id,1,$3::timestamptz,value FROM incoming
+              ON CONFLICT(id) DO UPDATE SET revision=cp_doors.revision+1,updated_at=excluded.updated_at,changed_at=now(),
+                value=CASE WHEN cp_door_count_bucket(cp_doors.value)='UNREADABLE' THEN excluded.value ELSE
+                  (excluded.value || ${operational}) - CASE WHEN cp_doors.value->>'status'='SHUT' THEN ARRAY[]::text[] ELSE ARRAY['shutReason'] END END
+              WHERE (cp_door_count_bucket(cp_doors.value)='UNREADABLE' OR cp_doors.value->>'editedAt' IS NULL OR cp_doors.value->>'editedAt'<=$2)
+                AND (cp_door_count_bucket(cp_doors.value)='UNREADABLE' OR cp_door_derive_fingerprint(cp_doors.value)<>cp_door_derive_fingerprint(excluded.value))
+              RETURNING id,(xmax=0) AS created
+            ) SELECT i.id AS door_id,cp_door_derive_fingerprint(i.value) AS target,CASE WHEN w.created THEN 'created' WHEN w.id IS NOT NULL THEN 'updated'
+              WHEN p.edited_at>$2 THEN 'kept-manual-edit' ELSE 'unchanged' END AS result
+              FROM incoming i LEFT JOIN written w USING(id) LEFT JOIN prior p USING(id) ORDER BY i.id`,
+          [JSON.stringify(values), deriveInputAt, at]) as { door_id: string; target: string; result: DerivedDoorOutcome["result"] }[];
+          for (const row of rows) {
+            outcomes.push({ doorId: row.door_id, result: row.result });
+            pointers[row.door_id] = { source: source.get(row.door_id)!, target: row.target,
+              current: row.result === "kept-manual-edit" ? pointers[row.door_id]?.current ?? null : row.target,
+              editedAt: pointers[row.door_id]?.editedAt ?? null, readable: true, deleted: false };
+          }
+        }
+        if (previous?.generation === counter.generation && !pending.length) return { etag: etag!, unchanged: true };
+        return { etag: counter.generation + ":" + createHash("sha256").update(canonicalJson(pointers)).digest("hex"),
+          value: { generation: counter.generation, rows: pointers } };
+      });
+      return outcomes;
+    },
+    async suspendDuplicate(id, revision, heldDoorId, at) {
+      const rows = await run("suspendDuplicate", "POINT", `UPDATE cp_doors SET revision=revision+1,updated_at=$3::timestamptz,
+        changed_at=now(),value=value||jsonb_build_object('status','SUSPENDED','readNow',false,'notes',$4::text,'updatedAt',$3::text)
+        WHERE id=$1 AND revision=$2 AND value->>'status'<>'SUSPENDED'
+          AND value->'meeting' IS NOT NULL AND value->'meeting'<>'null'::jsonb AND value->'config' ? 'crosswalkRowId'
+        RETURNING id`, [id, revision, at, `This board is read through ${heldDoorId}`]) as { id: string }[];
+      return rows.length > 0;
+    },
+    async retireDuplicates(at) {
+      const retired: string[] = [];
+      await reader.cached<{ readonly generation: string }>("door-duplicate-cursor:1", "current", async (etag, previous) => {
+        const [counter] = await controlCounts(sql, table);
+        if (!counter) throw new Error("The door change counter is unavailable");
+        if (etag === counter.generation) return { etag: counter.generation, unchanged: true };
+        const shape = `id,revision,CASE WHEN value->>'kind'='legistar-insite' THEN 'legistar' ELSE value->>'kind' END AS system,
+          value #>> '{bodyIds,0}' AS body,
+          regexp_replace(replace(lower(coalesce(nullif(trim(value #>> '{config,bodyName}'),''),
+            nullif(trim(value #>> '{config,insiteBodyName}'),''),nullif(trim(value #>> '{config,eventBodyName}'),''))),'&',' and '),'[^a-z0-9]+','','g') AS board,
+          lower(trim(CASE value->>'kind' WHEN 'legistar' THEN value #>> '{config,slug}'
+            WHEN 'legistar-insite' THEN value #>> '{config,insiteHost}' ELSE value #>> '{hosts,0}' END)) AS tenant`;
+        const rows = await run("retireDuplicates", "PAGE", `WITH changed AS MATERIALIZED (
+          SELECT id FROM cp_door_changes WHERE generation>$1::bigint AND generation<=$2::bigint
+        ), hand_wired AS MATERIALIZED (
+          SELECT ${shape} FROM cp_doors WHERE value->>'status' IN ('OPEN','SHUT') AND value->'meeting' IS NOT NULL
+            AND value->'meeting'<>'null'::jsonb AND NOT (coalesce(value->'config','{}'::jsonb) ? 'crosswalkRowId')
+            AND coalesce(value #> '{meeting,family}','null'::jsonb)='null'::jsonb
+        ), census AS MATERIALIZED (
+          SELECT ${shape} FROM cp_doors WHERE value->>'status' IN ('OPEN','SHUT') AND value->'meeting' IS NOT NULL
+            AND value->'meeting'<>'null'::jsonb AND value->'config' ? 'crosswalkRowId'
+        ), pairs AS MATERIALIZED (
+          SELECT DISTINCT ON(c.id) c.id,c.revision,h.id AS held_id FROM census c JOIN hand_wired h ON c.system=h.system
+            AND (c.body=h.body OR (c.board IS NOT NULL AND c.tenant IS NOT NULL AND c.board=h.board AND c.tenant=h.tenant))
+          WHERE c.id IN (SELECT id FROM changed) OR h.id IN (SELECT id FROM changed)
+          ORDER BY c.id,h.id
+        ), saved AS (
+          UPDATE cp_doors d SET revision=d.revision+1,updated_at=$3::timestamptz,changed_at=now(),
+            value=d.value||jsonb_build_object('status','SUSPENDED','readNow',false,'notes','This board is read through '||p.held_id,'updatedAt',$3::text)
+          FROM pairs p WHERE d.id=p.id AND d.revision=p.revision RETURNING d.id
+        ) SELECT id FROM saved ORDER BY id`, [previous?.generation ?? "-1", counter.generation, at]) as { id: string }[];
+        retired.push(...rows.map(row => row.id));
+        return { etag: counter.generation, value: { generation: counter.generation } };
+      });
+      return retired;
+    },
     async meetingRecords() {
-      const rows = await versionedRowsFor(sql).rows((text, params) => run("meetingRecords", "PAGE", text, params),
-        table, `value->'meeting' IS NOT NULL AND value->'meeting'<>'null'::jsonb${scope}`, params);
-      return rows.map(row => ({ id: row.id, revision: Number(row.revision),
-        updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<DoorRecord>(row.value, `${table} id ${row.id}`) }));
+      return (await currentRecords(DOOR_INSTALL_FIELDS, true)).map(row => ({ ...row,
+        value: { ...(row.value as DoorRecord), updatedAt: row.updatedAt } }));
     },
     async meetingMatches(census, projection) {
-      const predicate = `value->>'status' IN ('OPEN','SHUT') AND value->'meeting' IS NOT NULL AND value->'meeting'<>'null'::jsonb
-        AND ${census ? "(value->'config' ? 'crosswalkRowId')" : "NOT (coalesce(value->'config','{}'::jsonb) ? 'crosswalkRowId') AND coalesce(value #> '{meeting,family}','null'::jsonb)='null'::jsonb"}${scope}`;
-      const selected = recordProjectionSql(table, projection, "value");
-      const rows = await versionedRowsFor(sql).rows((text, params) => run("meetingMatches", "PAGE", text, params),
-        table, predicate, params, selected);
-      return rows.map(row => ({ id: String(row.id), revision: Number(row.revision),
-        updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<DoorRecord>(row.value, `${table} id ${row.id}`) }));
+      return (await currentRecords(projection, true)).map(row => ({ ...row, value: row.value as DoorRecord })).filter(({ value }) =>
+        value.status !== "SUSPENDED" && value.meeting != null && (census ? value.config?.crosswalkRowId !== undefined
+          : value.config?.crosswalkRowId === undefined && (value.meeting.family ?? null) === null));
     },
   };
 }
@@ -767,7 +957,9 @@ export function pgAppendOnlyRepository<T>(
 
       for (let at = 0; at < unique.length; at += APPEND_ONLY_LOG_READ_PAGE) {
         const rows=await versionedRowsFor(sql).selectedLogs((text,args)=>run("readLatest","PAGE",text,args),table,
-          `SELECT DISTINCT ON (log_key) log_key,position FROM ${table} WHERE log_key = ANY($1::text[]) ORDER BY log_key ASC, position DESC`,
+          `SELECT wanted.log_key,latest.position FROM unnest($1::text[]) wanted(log_key)
+           CROSS JOIN LATERAL (SELECT position FROM ${table} WHERE log_key=wanted.log_key ORDER BY position DESC LIMIT 1) latest
+           ORDER BY wanted.log_key`,
           [unique.slice(at,at+APPEND_ONLY_LOG_READ_PAGE)],narrowed);
         for (const r of rows) out.set(String(r.log_key), parseValue<unknown>(r.record, `${table} ${String(r.log_key)}`));
       }
@@ -846,12 +1038,12 @@ function pgBoxRepository(sql: Sql, options: PgRepositoryBounds = {}): BoxReposit
   };
 }
 
-export async function pgArtifactsByCanonicalUrl(sql: Sql, url: string, limit: number, options: PgRepositoryBounds = {}): Promise<readonly ArtifactRecord[]> {
+export async function pgArtifactsByCanonicalUrl(sql: Sql, url: string, limit: number, options: PgRepositoryBounds = {}, projection?: RecordProjection): Promise<readonly ArtifactRecord[]> {
   const run = boundedRunner(sql, "cp_log_artifacts", options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const rows = await versionedRowsFor(sql).selectedLogs((text,args)=>run("artifactsByCanonicalUrl","PAGE",text,args),"cp_log_artifacts",
     `SELECT log_key,position FROM cp_log_artifacts WHERE md5(record->>'canonicalUrl') = md5($1) AND record->>'canonicalUrl' = $1
      ORDER BY record->>'recordedAt' DESC NULLS LAST, record->>'artifactId' ASC LIMIT $2`,
-    [url, Math.max(0, Math.trunc(limit))]) as Record<string, unknown>[];
+    [url, Math.max(0, Math.trunc(limit))], projection ? recordProjectionSql("cp_log_artifacts", projection) : "record") as Record<string, unknown>[];
   return rows.map(row => parseValue<ArtifactRecord>(row.record, "cp_log_artifacts source capture"));
 }
 
@@ -1650,7 +1842,7 @@ export async function createPgRepositories(
     escalations: pgAppendOnlyRepository<Escalation>(sql, "escalations", bounded),
     dispositions: pgAppendOnlyRepository<DispositionCommit>(sql, "dispositions", bounded),
     artifacts: pgAppendOnlyRepository<ArtifactRecord>(sql, "artifacts", bounded),
-    artifactsByCanonicalUrl: (url, limit) => pgArtifactsByCanonicalUrl(sql, url, limit, bounded),
+    artifactsByCanonicalUrl: (url, limit, projection) => pgArtifactsByCanonicalUrl(sql, url, limit, bounded, projection),
     capturedCanonicalUrls: (urls) => pgCapturedCanonicalUrls(sql, urls, bounded),
     adminEvidenceCopyRequests: pgAggregateRepository<AdminEvidenceCopyRequest>(sql, "AdminEvidenceCopyRequest", "cp_admin_evidence_copy_requests", bounded),
     costs: pgAppendOnlyRepository<CostEntry>(sql, "costs", bounded),
@@ -1663,6 +1855,8 @@ export async function createPgRepositories(
     ownerSnapshotTotals: pgAggregateRepository<OwnerSnapshotTotals>(sql, "OwnerSnapshotTotals", "cp_owner_snapshots", bounded),
     ownerSnapshotStates: pgAggregateRepository<OwnerSnapshotState>(sql, "OwnerSnapshotState", "cp_owner_snapshots", bounded),
     ownerSnapshotStateTotals: pgAggregateRepository<StateTotals>(sql, "StateTotals", "cp_owner_snapshots", bounded),
+    ownerAssignmentRows: pgOwnerAssignmentRows(sql),
+    ownerCostRefs: pgOwnerCostRefs(sql),
     ownerSnapshotInboxes: pgAggregateRepository<SpilledInbox>(sql, "SpilledInbox", "cp_owner_snapshots", bounded),
     fieldManual: pgFieldManualRepository(sql,bounded,()=>repositories.fixMap),
     fixMap: createFixMapRepository(async (text, params) =>

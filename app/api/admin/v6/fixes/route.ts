@@ -25,6 +25,16 @@ async function get(request: NextRequest) {
   return adminGet(request, async (observedAt) => {
     const opened = await openControlPlane();
     if (!opened.ok) throw new Error(opened.detail);
+    // Now uses only the latest look check. Its work cards never consume fix history or testing rows.
+    if (request.nextUrl.searchParams.get("reading") === "now") {
+      const looks = await readLatestLookPasses(opened.repos, 1).catch(() => null);
+      return {
+        contract: "admin-v6/fixes@1", scope: request.nextUrl.searchParams.get("scope") ?? "united-states",
+        revision: `fixes-now:${looks?.[0]?.sha ?? "unavailable"}`, asOf: observedAt,
+        data: { open: [], closed: [], returned: [], ...(looks === null ? {} : { look: lookView(looks[0] ?? null, shotUrl) }) },
+        missingParts: [],
+      };
+    }
     const decisions = await readDecisions(opened.repos);
     if (decisions.kind !== "HELD") throw new Error(decisions.detail);
     const queue = fixQueueView(collapseDecisionLog(decisions.value));

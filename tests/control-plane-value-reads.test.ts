@@ -4,6 +4,8 @@ import { PGlite } from "@electric-sql/pglite";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { shareVersionedRows } from "../lib/db/versioned-rows.ts";
 import { pgAggregateRepository, pgDoorRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
+import { CONTROL_COUNTS_DDL } from "../lib/control-plane/repository/control-counts.ts";
+import { DOOR_READS_DDL } from "../lib/doors/read-changes.ts";
 
 const db = new PGlite();
 after(() => db.close());
@@ -15,6 +17,10 @@ async function fixture() {
     CREATE TABLE cp_work_items_archive(LIKE cp_work_items INCLUDING ALL);
     CREATE VIEW cp_work_items_history AS SELECT * FROM cp_work_items UNION ALL SELECT * FROM cp_work_items_archive;
     CREATE TABLE cp_doors(LIKE cp_work_items INCLUDING ALL);`);
+  for (const ddl of CONTROL_COUNTS_DDL) await db.exec(ddl);
+  await db.exec(`INSERT INTO cp_control_counts(table_name,bucket,n) VALUES('cp_doors','*',0);
+    CREATE TRIGGER a_cp_control_counts AFTER INSERT OR UPDATE OR DELETE ON cp_doors FOR EACH ROW EXECUTE FUNCTION cp_touch_control_counts()`);
+  for (const ddl of DOOR_READS_DDL) await db.exec(ddl);
   const held = new Map<string, string>();
   const queries: { text: string; params: readonly unknown[]; rows: Record<string, unknown>[] }[] = [];
   const sql: Sql = { query: async (text, params = []) => {
@@ -129,31 +135,30 @@ test("held revisions stay local and suppress values before a changed-row fetch",
   assert.deepEqual(f.bodies().map(row => row.id), ["101"]);
 });
 
-test("a changed door registry reads only the doors changed since the last read, and falls back to a full read when that cannot match", async () => {
+test("a changed door registry uses deletion pointers and fingerprints without a full membership read", async () => {
   const f = await fixture();
   await db.exec(`INSERT INTO cp_doors SELECT 'door-'||lpad(i::text,3,'0'),1,now(),now(),
     jsonb_build_object('meeting',jsonb_build_object('family',null),'notes',repeat('x',1000)) FROM generate_series(1,250) i`);
   const doors = pgDoorRepository(f.sql);
-  const fullPages = () => f.queries.filter(query => query.text.includes(" AS value_version,") && query.text.includes(" AS row_version") && !query.text.includes("changed_at >=")).length;
   assert.equal((await doors.meetingRecords!()).length, 250);
   f.queries.length = 0;
   assert.equal((await doors.meetingRecords!()).length, 250);
   assert.equal(f.queries.length, 1, "an unchanged registry is one scalar confirmation");
-  await db.exec(`UPDATE cp_doors SET revision=revision+1,changed_at=now(),value=jsonb_set(value,'{notes}','"edited"') WHERE id='door-120'`);
+  await db.exec(`UPDATE cp_doors SET revision=revision+1,changed_at=now(),value=jsonb_set(value,'{kind}','"edited"') WHERE id='door-120'`);
   f.queries.length = 0;
   const edited = await doors.meetingRecords!();
-  assert.equal(edited.find(row => row.id === "door-120")?.value.notes, "edited");
-  assert.equal(fullPages(), 0, "only rows changed since the last read are listed");
+  assert.equal(edited.find(row => row.id === "door-120")?.value.kind, "edited");
+  assert.ok(f.queries.some(query => query.text.includes("FROM cp_door_changes")), "only changed pointers are listed");
   assert.deepEqual(f.bodies().map(row => row.id), ["door-120"]);
   await db.exec(`DELETE FROM cp_doors WHERE id='door-007'`);
   f.queries.length = 0;
   const removed = await doors.meetingRecords!();
   assert.equal(removed.length, 249);
   assert.ok(!removed.some(row => row.id === "door-007"));
-  assert.ok(fullPages() > 0, "a row that left the registry needs the full membership");
+  assert.ok(f.queries.some(query => query.text.includes("FROM cp_door_changes")), "a deletion is carried by its changed pointer");
   assert.equal(f.bodies().length, 0);
-  await db.exec(`UPDATE cp_doors SET revision=revision+1,value=jsonb_set(value,'{notes}','"quiet"') WHERE id='door-200'`);
+  await db.exec(`UPDATE cp_doors SET revision=revision+1,value=jsonb_set(value,'{kind}','"quiet"') WHERE id='door-200'`);
   f.queries.length = 0;
-  assert.equal((await doors.meetingRecords!()).find(row => row.id === "door-200")?.value.notes, "quiet",
-    "a change without a changed_at stamp is still found through the full read");
+  assert.equal((await doors.meetingRecords!()).find(row => row.id === "door-200")?.value.kind, "quiet",
+    "the generation cursor finds changes independently of changed_at stamps");
 });

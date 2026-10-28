@@ -43,7 +43,8 @@ export const AUDIT_PASSES: readonly AuditPass[] = [
   { id: "resident-tasks", databaseBytesPerRun: 8_136, says: "daily resident tasks (FE-18)", args: ["scripts/resident-tasks.mts"], everyMs: DAY },
   { id: "speed", databaseBytesPerRun: 2_551_356, says: "worst-case speed on production (FE-02)", args: ["scripts/worst-case-speed-pass.mts"], everyMs: DAY },
   { id: "claim-audit", databaseBytesPerRun: 15_942, says: "claim audit and Proven labels (DP-33, DP-34)", args: ["scripts/claim-audit-pass.mts"], everyMs: DAY },
-  { id: "loss-study", databaseBytesPerRun: 31_052_492, says: "loss study (DP-29)", args: ["scripts/loss-study-pass.mts"], everyMs: DAY },
+  // CP-01 production-copy run: 15,254,529 request + response bytes, rounded up.
+  { id: "loss-study", databaseBytesPerRun: 16_000_000, says: "loss study (DP-29)", args: ["scripts/loss-study-pass.mts"], everyMs: DAY },
   { id: "break-patterns", databaseBytesPerRun: 2_772_310, says: "break patterns (DP-32)", args: ["scripts/break-pattern-pass.mts"], everyMs: DAY },
 ];
 

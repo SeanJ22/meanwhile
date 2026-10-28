@@ -7,6 +7,7 @@ import type { ActionReceipt } from "../gateway/contract.ts";
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { versionedRowsFor } from "../../db/versioned-rows.ts";
+import { controlCounts } from "../repository/control-counts.ts";
 
 // The same validity test as isDoorRecord, evaluated before a row leaves PostgreSQL.
 export const VALID_DOOR_SQL = `value->'formatVersion'='1'::jsonb
@@ -27,12 +28,14 @@ export async function readDoorCounts(repos: ControlPlaneRepositories): Promise<D
     return { open:doors.filter(d=>d.status==='OPEN').length, shut:doors.filter(d=>d.status==='SHUT').length,
       setAside:doors.filter(d=>d.status==='SUSPENDED').length, unreadable:rows.length-doors.length };
   }
-  const [row] = await sql.query(`WITH doors AS (SELECT value, (${VALID_DOOR_SQL}) IS TRUE AS valid FROM cp_doors)
-    SELECT count(*) FILTER (WHERE valid AND value->>'status'='OPEN')::text AS open,
-      count(*) FILTER (WHERE valid AND value->>'status'='SHUT')::text AS shut,
-      count(*) FILTER (WHERE valid AND value->>'status'='SUSPENDED')::text AS aside,
-      count(*) FILTER (WHERE NOT valid)::text AS unreadable FROM doors`) as Record<string,unknown>[];
-  return { open:Number(row.open),shut:Number(row.shut),setAside:Number(row.aside),unreadable:Number(row.unreadable) };
+  return readDoorCountsFromSql(sql);
+}
+
+export async function readDoorCountsFromSql(sql: Sql): Promise<DoorsView["counts"]> {
+  const rows = await controlCounts(sql, "cp_doors", ["OPEN", "SHUT", "SUSPENDED", "UNREADABLE"]);
+  if (rows.length !== 4) throw new Error("Door counts have not been initialized");
+  const counts = new Map(rows.map(row => [row.bucket, row.count]));
+  return { open: counts.get("OPEN")!, shut: counts.get("SHUT")!, setAside: counts.get("SUSPENDED")!, unreadable: counts.get("UNREADABLE")! };
 }
 
 export async function readAdminDoors(repos: ControlPlaneRepositories, saves: readonly ActionReceipt[], observedAt: string): Promise<DoorsView> {
@@ -59,7 +62,12 @@ export async function readAdminDeadLinks(repos: ControlPlaneRepositories) {
 
 /** A shut door is already live and readers are affected; unchanged door rows are confirmed by revision, not re-sent. */
 export async function readAdminShutDoors(sql: Sql): Promise<readonly DoorRecord[]> {
-  const rows = await versionedRowsFor(sql).rows(async(text,params)=>await boundedQuery(sql,
-    {operation:"cp_doors.shut",callClass:"PAGE"},text,params),"cp_doors",`value->>'status'='SHUT' AND (${VALID_DOOR_SQL})`,[],ADMIN_DOOR_VALUE_SQL);
+  const selected = `jsonb_build_object('formatVersion',1,'config','{}'::jsonb,'bodyIds','[]'::jsonb,
+    'doorId',value->'doorId','kind',value->'kind','hosts',value->'hosts','status',value->'status',
+    'updatedAt',value->'updatedAt','shutSince',value->'shutSince','lastFailureAt',value->'lastFailureAt','shutReason',value->'shutReason')`;
+  const rows = await versionedRowsFor(sql).selectedRows(async(text,params)=>await boundedQuery(sql,
+    {operation:"cp_doors.shut",callClass:"PAGE"},text,params),"cp_doors",
+    `SELECT id FROM cp_doors WHERE value->>'status'='SHUT' AND (${VALID_DOOR_SQL})
+     ORDER BY value->>'shutSince' ASC NULLS LAST,id LIMIT 300`,[],selected);
   return rows.map(row=>typeof row.value==='string'?JSON.parse(row.value):row.value).filter(isDoorRecord);
 }

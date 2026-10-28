@@ -54,6 +54,16 @@
       "id": "BB-01_expand",
       "phase": "expand",
       "hash": "10943cc3210338fc6950e300aca6fbd3b2cdfecbbeda020601958261366ae93c"
+    },
+    {
+      "id": "CP-01_counts_expand",
+      "phase": "expand",
+      "hash": "31e7a8274ac152665cb2e72bc59742588eeaec92b52311316593b23c7494128c"
+    },
+    {
+      "id": "CP-01_counts_contract",
+      "phase": "contract",
+      "hash": "f5dcb58048720668a917dedbe444b39ec36b8fa23171ad49eb05dab01945602c"
     }
   ]
 }

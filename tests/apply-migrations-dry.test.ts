@@ -392,3 +392,9 @@ test("writerless production inspection still refuses the wrong endpoint and appl
   assert.equal(drift.status, 1);
   assert.match(drift.output, /does not match the applied journal hash/);
 });
+
+test("publication counter backfill takes writer locks together while leaving readers serving", () => {
+  const statement = lockFirstStatement("CP-01_source_status");
+  assert.match(statement, /LOCK TABLE civic_data_candidates, civic_data_candidate_events, civic_data_promotions IN SHARE ROW EXCLUSIVE MODE;/);
+  assert.match(statement, /EXCEPTION WHEN lock_not_available OR deadlock_detected/);
+});

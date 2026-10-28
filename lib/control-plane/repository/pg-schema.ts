@@ -1,3 +1,9 @@
+import { OWNER_COST_REFS_DDL } from "./owner-cost-refs.ts";
+import { OWNER_STUCK_COUNTS_DDL, OWNER_STUCK_COUNTS_BACKFILL_DDL } from "./owner-stuck-counts.ts";
+import { CONTROL_COUNTS_DDL, CONTROL_COUNTS_INITIALIZE_DDL } from "./control-counts.ts";
+import { OWNER_ASSIGNMENT_ROWS_DDL } from "./owner-assignment-rows.ts";
+import { DOOR_READS_DDL } from "../../doors/read-changes.ts";
+import { LOSS_STUDY_COUNTS_DDL } from "../../method/loss-study-counts.ts";
 import { MANUAL_SOURCE_INDEX_DDL } from "./manual-source-index.ts";
 import {MANUAL_METHOD_INDEX_DDL} from "./manual-method-index.ts";
 import { PLANNING_CONTROL_DDL } from "../scheduler/state-planning.ts";
@@ -68,6 +74,15 @@ export const APPEND_ONLY_LOGS = [
 ] as const;
 
 export const DECLARED_TABLES: readonly string[] = [
+  "cp_control_counts",
+  "cp_owner_assignment_rows",
+  "cp_owner_cost_refs",
+  "cp_owner_stuck_rows",
+  "cp_owner_stuck_counts",
+  "cp_owner_stuck_ready",
+  "cp_door_changes",
+  "cp_loss_obligation_counts",
+  "cp_loss_obligation_heads",
   "cp_schema_version",
   "cp_migrations",
   "cp_log_heads",
@@ -706,6 +721,14 @@ END $$;`,
 
   ...WEBSITE_PACING_DDL,
   FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL,
+  ...OWNER_ASSIGNMENT_ROWS_DDL,
+  OWNER_COST_REFS_DDL,
+  ...OWNER_STUCK_COUNTS_DDL,
+  OWNER_STUCK_COUNTS_BACKFILL_DDL,
+  ...CONTROL_COUNTS_DDL,
+  CONTROL_COUNTS_INITIALIZE_DDL,
+  ...DOOR_READS_DDL,
+  ...LOSS_STUDY_COUNTS_DDL,
 ];
 
 export function duplicatePositionQuery(log: string): string {

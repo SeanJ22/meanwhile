@@ -460,7 +460,7 @@ test("ZIP process reports return after parent registry and election publication,
           members: [{ bodyId: "same-body", discoveryIds: ["same-official"], versionId: `version:${registryCalls}` }] };
       },
       publishElection: async () => { await write("election"); return { candidateId: "candidate:election",
-        promotedVersionId: `election:${registryCalls}`, fields: ["same-deadline"], gaps: [] }; },
+        promotedVersionId: `election:${registryCalls}`, fields: ["same-deadline"], newFields: registryCalls === 1 ? ["same-deadline"] : [], gaps: [] }; },
       onResult: report => { if ("deferred" in report) assert.fail(report.deferred);
         delivered.push(report.zip); assert.equal(report.electionPublications.length, 1); } });
     assert.equal(pids.length, 3);

@@ -15,10 +15,12 @@ export interface RoutineJob {
  * had no separate measurement and carry conservative figures. door-probes is one pass: its open-door list (3.6 MB in the
  * busiest pass, Oct 28), the probes' own door and pacing rows (0.1 MB) and one hot-partition statement (0.05 MB: 5 KB sent and
  * 43 KB of cold fingerprints returned, Oct 28).
+ * Door sync/install declarations round up the CP-01 production-copy cold runs on Oct 28 (request plus response):
+ * 2,563,104 and 14,588,752 bytes. Unchanged passes use 53,803 and 2,766 bytes, including a fresh repository instance.
  */
 export const ROUTINE_JOBS = {
-  doors: { id: "doors", label: "Door install", databaseBytesPerRun: 145_000_000 },
-  doorSync: { id: "door-sync", label: "Door registry sync", databaseBytesPerRun: 140_000_000 },
+  doors: { id: "doors", label: "Door install", databaseBytesPerRun: 15_000_000 },
+  doorSync: { id: "door-sync", label: "Door registry sync", databaseBytesPerRun: 3_000_000 },
   meetingPins: { id: "meeting-pins", label: "Meeting map pins", databaseBytesPerRun: 6_000_000 },
   boxFacts: { id: "box-facts", label: "Box findings publication", databaseBytesPerRun: 4_500_000 },
   workerPublication: { id: "worker-publication", label: "Saved worker results scan", databaseBytesPerRun: 40_000_000 },

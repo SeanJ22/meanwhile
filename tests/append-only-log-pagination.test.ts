@@ -101,14 +101,14 @@ function fakeLogSql(rows: readonly Row[]) {
         return rows.filter((r) => r.log_key === key).sort((a, b) => b.position - a.position).slice(0, Number(limit))
           .map(changedRow);
       }
-      // readLatest: DISTINCT ON (log_key) over WHERE log_key = ANY($1), bounded by the page of keys it names; only
+      // readLatest: one indexed newest-first lookup per requested key; only
       // the rows it chose are narrowed, by the projection the statement itself names.
-      if (/SELECT DISTINCT ON \(log_key\)/i.test(text)) {
+      if (/CROSS JOIN LATERAL \(SELECT position FROM/i.test(text)) {
         const [keys] = params as [string[]];
         if (keys.length > APPEND_ONLY_LOG_READ_PAGE) throw new Error(`one readLatest statement named ${keys.length} keys, over a page`);
         const projection = text.includes(" AS record")?projectionIn(text,"readLatest"):null;
-        /* DISTINCT ON keeps each key's FIRST row in the statement's own order, as Postgres does. */
-        const order = /ORDER BY log_key ASC, position (ASC|DESC)/i.exec(text)?.[1]?.toUpperCase();
+        /* Each key keeps the first row in its own indexed descending tail. */
+        const order = /ORDER BY position (ASC|DESC) LIMIT 1/i.exec(text)?.[1]?.toUpperCase();
         if (order === undefined) throw new Error(`a readLatest statement must order each key by position: ${text.replace(/\s+/g, " ").trim()}`);
         return keys.flatMap((key) => {
           const first = rows.filter((r) => r.log_key === key).sort((a, b) => (order === "DESC" ? b.position - a.position : a.position - b.position))[0];
@@ -358,7 +358,7 @@ test("readLatest() answers each key's newest record, narrowed by the database, i
   const latest = await repo.readLatest([...keys, "j1"], { outcome: true, seq: true });
   assert.equal(calls.length,4,"one version selection and one changed-body page per page of keys");
   assert.ok(calls.filter(c=>c.includes(" AS record")).every(c=>c.includes("CASE WHEN jsonb_typeof(record)")),"only the narrowed record leaves the database");
-  assert.ok(calls.filter(c=>c.includes("SELECT picked")).every(c=>c.includes("SELECT DISTINCT ON (log_key)")),"each newest row is chosen before body transfer");
+  assert.ok(calls.filter(c=>c.includes("SELECT picked")).every(c=>c.includes("CROSS JOIN LATERAL (SELECT position")),"each newest row is chosen before body transfer");
   assert.equal(latest.size, keys.filter((_, i) => i % 3 !== 0).length, "a key with no record is absent");
   assert.deepEqual(latest.get("j1"), { seq: 1, outcome: "BLOCKED" }, "the newest record by position, and nothing the projection drops");
   assert.deepEqual(latest.get("j2"), { seq: 1, outcome: "FOUND" });

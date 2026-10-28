@@ -27,6 +27,12 @@ export class VersionedRows {
     this.database=database;this.cache=cache;this.values=new ValueRows(database,cache);
   }
 
+  /** A job's narrowed continuation, scoped to this database and confirmed by its current fingerprint. */
+  async cached<T>(namespace: string, key: string, current: (etag: string | null, held?: T) => Promise<
+    { readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null>): Promise<T | null> {
+    return this.cache.jobState().row({ namespace: `${this.database}:${namespace}`, key, current });
+  }
+
   private namespace(table: string, selected: string): string {
     return `rows:${this.database}:${table.replace(/_(?:archive|history)$/, "")}:${digest(selected)}`;
   }

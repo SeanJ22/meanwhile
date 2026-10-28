@@ -11,11 +11,10 @@ import { expansionScopesOf } from "../expansion/scopes.ts";
 import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import type { OwnerSnapshot } from "../owner-surface.ts";
 import { readPopulationFacts, statePopulationId } from "../../reference/population-facts.ts";
-import { databaseReadOnlySql } from "../../reader/database.ts";
+import { databaseHttpReadOnlySql, databaseHttpReadOnlyQuery } from "../../reader/database.ts";
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { readCountryScores } from "../line-keeper/country.ts";
-import { readDistrictStuckCounts } from "./stuck-summary.ts";
-import { STUCK_INDEX_SQL } from "./v6-stuck-read.ts";
+import { readOwnerDistrictStuckCounts } from "../repository/owner-stuck-counts.ts";
 
 const NO_STORE = { "cache-control": "private, no-store, no-cache, must-revalidate" };
 
@@ -25,7 +24,7 @@ const SCORE_BUDGET_MS = 2_500;
 export const defaultNationalDeps: NationalDeps = {
   now: () => new Date().toISOString(),
   districts: (state) => readStateDistricts(state),
-  zipCounts: zipCountsByState,
+  zipCounts: () => zipCountsByState(process.env.DATABASE_URL ? databaseHttpReadOnlySql(process.env.DATABASE_URL).query : undefined),
   zipDivisions: (zips) => zipDivisionIds(zips),
   readHeld: (ids, now) => readHeldPlaceCapture(ids, { now }),
   scoreBudgetMs: SCORE_BUDGET_MS,
@@ -50,7 +49,7 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
     quick(opened.repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:true})),
     quick(opened.repos.ownerSnapshots.readNarrowed('current',{billingAttribution:true})),
     quick(population(query.scopeKey)),
-    query.scope.kind==='country'&&!options.deps&&controlPlaneUrlFromEnv()?quick(readCountryScores(databaseReadOnlySql(controlPlaneUrlFromEnv()!))):null,
+    query.scope.kind==='country'&&!options.deps&&controlPlaneUrlFromEnv()?quick(readCountryScores(databaseHttpReadOnlySql(controlPlaneUrlFromEnv()!))):null,
   ]);
   const scopes=expansionScopesOf(config?.value??null);
   const attribution=(snapshot?.value as Pick<OwnerSnapshot,'billingAttribution'>|undefined)?.billingAttribution;
@@ -58,11 +57,12 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
     sources: { hunts: { scopes:config?scopes.scopes:null, malformedScopes:scopes.malformed, attribution }, stuck:stuck?.rows??null,
       stuckCounts:stuck?.summary?.counts,
       ...(controlPlaneUrlFromEnv()?{countDistrictStuck:(districts:readonly import('./v6-national-geography.ts').DistrictInfo[])=>
-        readDistrictStuckCounts(databaseReadOnlySql(controlPlaneUrlFromEnv()!),STUCK_INDEX_SQL,districts)}:{}) }, deps,
+        readOwnerDistrictStuckCounts(databaseHttpReadOnlySql(controlPlaneUrlFromEnv()!),districts)}:{}) }, deps,
     ...(!options.deps && query.scope.kind==='country'?{publishedScores:new Map((country??[]).map(s=>[`st:${s.state}`,s.score]))}:{}) });
   if ("kind" in out) return NextResponse.json({ code: out.code, says: out.says }, { status: out.status, headers: NO_STORE });
   const keys = out.data.map(row => row.kind === "State" ? statePopulationId(row.code) : row.kind === "ZIP" ? `zcta:${row.code}` : `congressional_district:${row.placeKey.split(".").at(-1)}`);
-  const acs = await readPopulationFacts(keys.filter((id): id is string => id !== null));
+  const acs = await readPopulationFacts(keys.filter((id): id is string => id !== null),
+    process.env.DATABASE_URL ? databaseHttpReadOnlyQuery(process.env.DATABASE_URL,2_000) : undefined);
   const countryGaps=!options.deps&&query.scope.kind==='country'?(country===null||country.length===0?['The country’s published Readers have report is unavailable.']:country.filter(s=>s.error!==null).map(s=>`${s.state.toUpperCase()}: ${s.error}`)):[];
   return NextResponse.json({ ...out,missingParts:[...out.missingParts,...countryGaps], data: out.data.map((row, index) => ({ ...row,
     population: acs.rows.find(fact => `${fact.geography}:${fact.code}` === keys[index]) ?? null })) }, { headers: NO_STORE });

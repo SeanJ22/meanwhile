@@ -3,14 +3,14 @@ import { databaseReadOnlySql } from "@/lib/reader/database.ts";
 import type { NextRequest } from "next/server";
 
 import { loadLearningTrends } from "@/app/(admin)/_mw/data/learning-trends.ts";
-import { openControlPlane, RUNNER_ID } from "@/lib/control-plane/admin-data.ts";
+import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { readPlaceOwed } from "@/lib/control-plane/admin-view/place-owed-read.ts";
 import { readPlaceHistory } from "@/lib/control-plane/admin-view/place-history-read.ts";
 import { readScoreboardPlaces } from "@/lib/control-plane/admin-view/scoreboard-places.ts";
 import { CORE_ITEMS_DEFAULT, CORE_ITEMS_SETTING, readSetting } from "@/lib/control-plane/settings.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
 import { readV6History } from "@/lib/control-plane/admin-view/admin-v6-history.ts";
-import { readGateHealth } from "@/lib/control-plane/admin-view/gate-health.ts";
+import { readGateHealth, readGateHeartbeat } from "@/lib/control-plane/admin-view/gate-health.ts";
 import { buildLearningTrends } from "@/lib/control-plane/admin-view/learning-trends.ts";
 import { weeklyAuditAccuracy } from "@/lib/control-plane/admin-view/v6-audit-read.ts";
 import { readAuditWeek, readLatestSpeedPass, readRecentClaimPasses } from "@/lib/control-plane/live-audit-log.ts";
@@ -18,9 +18,8 @@ import { reportAccuracy, weekOf } from "@/lib/control-plane/workers/claim-audit.
 import { buildScoreboard, publicationCountsOf, v6LearningView, type ScoreboardReadings } from "@/lib/control-plane/admin-view/scoreboard-read.ts";
 import { captureWindow, readCaptureHealth } from "@/lib/control-plane/admin-view/v6-capture-health.ts";
 import { readDoorCounts, readAdminDeadLinks } from "@/lib/control-plane/admin-view/door-queries.ts";
-import { publicationView } from "@/lib/control-plane/admin-view/v6-publication-read.ts";
 import { readPipeline } from "@/lib/control-plane/admin-view/v6-results-read.ts";
-import { readRoutinePublicationStatus } from "@/lib/civic-data/observability-server.ts";
+import { readRoutinePublicationCounts } from "@/lib/civic-data/observability-server.ts";
 import { readinessCounts, recoveryWitnesses } from "@/lib/coverage/readiness-counts.ts";
 import { liveSources, netlifyHistoryStore, readCaptureFailures } from "@/lib/control-plane/data-business/live.ts";
 import { readSwitchConfig } from "@/lib/control-plane/data-business/switches.ts";
@@ -37,6 +36,7 @@ import { readVitalSigns } from "@/lib/control-plane/admin-view/vital-signs-read.
 import { readFactStore } from "@/lib/facts/admin-read.ts";
 import { readerQuery } from "@/lib/civic-data/promoted-reader-query.ts";
 import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
+import { readScoreboardFixes } from "@/lib/control-plane/admin-view/scoreboard-fixes-read.ts";
 
 const shotUrl = (key: string): string => `/api/admin/v6/resident-tasks/shot/${key.replace(/^resident-tasks\//, "")}`;
 
@@ -55,29 +55,34 @@ async function get(request: NextRequest) {
     const now = new Date(observedAt);
     if(request.nextUrl.searchParams.get('reading')==='hourly'){
       const url=controlPlaneUrlFromEnv();
-      const [keeper,pipeline,vital,factStore,heartbeat]=await Promise.all([url?attempt(()=>readLineReport(databaseReadOnlySql(url))):null,url?attempt(()=>readPipeline(databaseReadOnlySql(url),observedAt)):null,url?attempt(()=>readVitalSigns(databaseReadOnlySql(url),observedAt)):null,
-        attempt(async()=>{const query=readerQuery(5_000);return query?readFactStore(query):null;}),
-        attempt(async()=>{const opened=await openControlPlane();return opened.ok?(await opened.repos.runnerHeartbeat.read(RUNNER_ID))?.value??null:null;})]);
+      const [keeper,vital]=await Promise.all([
+        url?attempt(()=>readLineReport(databaseReadOnlySql(url),undefined,{includeCounts:false})):null,
+        url?attempt(()=>readVitalSigns(databaseReadOnlySql(url),observedAt)):null,
+      ]);
       return {contract:'admin-v6/scoreboard@1',scope:request.nextUrl.searchParams.get('scope')??'us',revision:`line-keeper:${keeper?.checkedAt??'unavailable'}`,asOf:observedAt,
-        data:buildScoreboard({lineKeeper:keeper,observedAt,vital,factStore,places:null,placesUnread:0,orders:null,publication:pipeline?.state==='READ'?publicationCountsOf(pipeline,null):null,shutDoors:null,returning:null,
+        data:buildScoreboard({lineKeeper:keeper,observedAt,vital,factStore:null,places:null,placesUnread:0,orders:null,publication:null,shutDoors:null,returning:null,
           learning:{trends:[],readings:[],notMeasured:[]},doors:null,
-          gates:readGateHealth({nowIso:observedAt,heartbeat,databaseReachable:null,lastDispatch:null,spend:null}),readiness:readinessCounts({})}),
+          gates:null,readiness:readinessCounts({})}),
         missingParts:keeper?[]:[keeperStatus(null,observedAt)]};
     }
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
     const url = controlPlaneUrlFromEnv();
-    const configRow = opened ? await attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { activeAndRecent: 500 }, methodStandings: true })) : null;
+    const [configRow, fixes] = await Promise.all([
+      opened ? attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID, { methodStandings: true })) : null,
+      opened ? attempt(() => readScoreboardFixes(opened)) : null,
+    ]);
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
+    const repairConfig = config !== null && fixes !== null ? { ...config, fixList: fixes } : null;
     const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
     const keeperRead=attempt(async()=>url?readLineReport(databaseReadOnlySql(url)):null);
     const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, keeper, deadLinks, looks, vital] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? readDoorCounts(opened) : null)),
-      attempt(async () => (opened ? (await opened.runnerHeartbeat.read(RUNNER_ID))?.value ?? null : null)),
-      attempt(async () => readDoorNumbers({ now: observedAt, config, keeper:await keeperRead })),
+      attempt(async () => (opened ? readGateHeartbeat(opened) : null)),
+      attempt(async () => readDoorNumbers({ now: observedAt, config: repairConfig, keeper:await keeperRead })),
       attempt(async () => { if (!url) return null; const r = await readPipeline(databaseReadOnlySql(url), observedAt); return r.state === "READ" ? r : null; }),
-      attempt(async () => { const r = await readRoutinePublicationStatus(); if (r.kind !== "HELD") return null; const v = publicationView(r.view); return { readBack: v.counts.find((c) => c.verdict === "READER_VISIBLE")?.count ?? 0, total: v.total }; }),
+      attempt(() => readRoutinePublicationCounts()),
       attempt(async () => {
         const config = opened ? await readSwitchConfig(opened) : null;
         const failures = await readCaptureFailures({ ...captureWindow(now), history: netlifyHistoryStore() }).catch(() => null);
@@ -128,7 +133,7 @@ async function get(request: NextRequest) {
       audit,
       speed,
       deadLinks,
-      look: looks === null ? null : { now: observedAt, passes: looks, fixStates: new Map((config ? fixItems(config) : []).map((i) => [i.id, i.state] as const)), imageUrl: shotUrl },
+      look: looks === null ? null : { now: observedAt, passes: looks, fixStates: new Map((repairConfig ? fixItems(repairConfig) : []).map((i) => [i.id, i.state] as const)), imageUrl: shotUrl },
       speedLimits: { share: readSetting(config, SLOW_SURFACE_SHARE_SETTING, SLOW_SURFACE_SHARE_DEFAULT), deadLinks: readSetting(config, DEAD_LINKS_SURFACE_SETTING, DEAD_LINKS_SURFACE_DEFAULT) },
       provenFixes,
       reportAccuracy: claims,

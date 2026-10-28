@@ -2,12 +2,36 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import { test } from "node:test";
 import { Client, Pool, neonConfig } from "@neondatabase/serverless";
-import { readerDatabaseQuery, installReaderDatabaseQuery, warmReaderConnections } from "../lib/reader/database.ts";
+import { readerDatabaseQuery, databaseHttpReadOnlyQuery, installReaderDatabaseQuery, warmReaderConnections } from "../lib/reader/database.ts";
 import type { ReadOnlyQuery, Statement } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { withReaderRoute } from "../lib/db/reader-route.ts";
 import { factReader } from "../lib/facts/db.ts";
 
 const statement: Statement = { text: "SELECT $1::text AS selected", params: ["this place"] };
+
+test("compact Admin reads keep a version-checked batch in one read-only HTTP snapshot without a socket checkout",async()=>{
+  const originalConnect=Pool.prototype.connect,originalFetch=neonConfig.fetchFunction;
+  let batches=0;
+  Pool.prototype.connect=(async()=>{throw new Error("A compact Admin read must not wait for a socket");}) as typeof Pool.prototype.connect;
+  neonConfig.fetchFunction=async(_url,init)=>{
+    const headers=new Headers(init?.headers);
+    assert.equal(headers.get("Neon-Batch-Read-Only"),"true");
+    assert.equal(headers.get("Neon-Batch-Isolation-Level"),"RepeatableRead");
+    batches++;
+    const body=JSON.parse(String(init?.body)) as {queries:{query:string;params:unknown[]}[]};
+    assert.equal(body.queries.length,2);
+    return Response.json({results:body.queries.map(({query,params})=>{
+      const row=selectedRows(query,params[0],params.at(-1))[0];
+      return {command:"SELECT",rowCount:1,fields:Object.entries(row).map(([name,value])=>({name,dataTypeID:typeof value==="boolean"?16:25})),
+        rows:[Object.values(row).map(value=>typeof value==="boolean"?value?"t":"f":value)]};
+    })});
+  };
+  try{
+    const read=databaseHttpReadOnlyQuery("postgresql://fixture:fixture@admin-http-batch.invalid/fixture",1800);
+    assert.deepEqual(await read([statement,{...statement,params:["second place"]}]),[[{selected:"this place"}],[{selected:"second place"}]]);
+    assert.equal(batches,1);assert.equal(read.publicationFingerprints,true);
+  }finally{Pool.prototype.connect=originalConnect;neonConfig.fetchFunction=originalFetch;}
+});
 
 test("startup warms connections once, releases successful checkouts and reads no civic records", async () => {
   const originalUrl = process.env.DATABASE_URL, originalConnect = Pool.prototype.connect, originalFetch = neonConfig.fetchFunction;

@@ -1,12 +1,11 @@
 import { HUNT_STATES, scopeControlKey } from "../hunt-orders.ts";
 import { parseV6PlaceKey } from "../admin-view/v6-hunts-read.ts";
 import { findScheduledChild } from "./receipts.ts";
-import { ownerDispatchWorkOf, type DispatchWorkReading, type OwnerDispatchWork } from "../expansion/dispatch-work.ts";
 import { confirmHuntScores, type PlaceScoreReader } from "./hunt-score.ts";
 
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { RESEARCH_INTENT_LOG_KEY, RESEARCH_STATE_ID, type ResearchIntent } from "../scheduler/research-policy.ts";
-import { RUNNER_ID } from "../admin-data.ts";
+import { readConfirmationHeartbeat, readDispatchConfirmation } from "./confirmation-read.ts";
 import type { ActionReceipt } from "./contract.ts";
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { formatEastern } from "../eastern-time.ts";
@@ -137,7 +136,8 @@ export function confirmationReadSession(repos: ControlPlaneRepositories): Contro
   };
   return {
     ...repos,
-    runnerHeartbeat: { ...repos.runnerHeartbeat, read: id => once(`heartbeat:${id}`, () => repos.runnerHeartbeat.read(id)) },
+    runnerHeartbeat: { ...repos.runnerHeartbeat, readNarrowed: (id, projection) =>
+      once(`heartbeat:${id}:${JSON.stringify(projection)}`, () => repos.runnerHeartbeat.readNarrowed(id, projection)) },
     researchState: { ...repos.researchState, readNarrowed: (id, projection) =>
       once(`research:${id}:${JSON.stringify(projection)}`, () => repos.researchState.readNarrowed(id, projection)) },
   };
@@ -152,7 +152,7 @@ export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: A
   core = await confirmHuntScores(repos, receipt, core, readPlaceScore);
   let nextRound: string | null = null;
   try {
-    const beat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
+    const beat = await readConfirmationHeartbeat(repos);
     nextRound = beat?.nextCycleDueAt ?? null;
     if (core.state === "waiting" && !(receipt.type === "orders.schedule" && core.words.startsWith("Scheduled."))) core = notPickedUp(core, beat, receipt, nowMs);
   } catch {  }
@@ -164,7 +164,7 @@ async function confirmLeads(repos: ControlPlaneRepositories, receipt: ActionRece
   let beat: RunnerHeartbeat | null = null;
   let order: LeadOrder | null = null;
   try {
-    beat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
+    beat = await readConfirmationHeartbeat(repos);
     const row = await repos.leadOrders.read(receipt.receiptId);
     order = row !== null && isLeadOrder(row.value) ? row.value : null;
   } catch { }
@@ -186,13 +186,13 @@ export const RUNNER_SILENT_MS = 15 * 60 * 1000;
 /** An officials check, from each people source's own runner outcome since the check and the Scout's verification of any lead. */
 async function confirmOfficials(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number): Promise<Confirmation> {
   try {
-    const [feeds, beat] = await Promise.all([officialsReceiptFeeds(repos, receipt), repos.runnerHeartbeat.read(RUNNER_ID)]);
+    const [feeds, beat] = await Promise.all([officialsReceiptFeeds(repos, receipt), readConfirmationHeartbeat(repos)]);
     const leadRef = receipt.openedWork.find(work => work.kind === "officials-lead");
     const lead = leadRef ? await officialsLeadStatus(repos, leadRef.id) : null;
     const total = feeds.length + (lead === null ? 0 : 1);
     const done = feeds.filter(feed => feed.state !== "waiting").length + (lead?.state === "checked" ? 1 : 0);
     const failed = feeds.filter(feed => feed.state === "failed" || feed.state === "paused").length;
-    const base = { plan: { who: "Runner", change: "Check officials now", creates: null, affects: receipt.subject, resultsBy: beat?.value.nextCycleDueAt ?? null },
+    const base = { plan: { who: "Runner", change: "Check officials now", creates: null, affects: receipt.subject, resultsBy: beat?.nextCycleDueAt ?? null },
       progress: { done, of: total }, items: [...feeds.map(feed => ({ name: feed.name,
         status: feed.state === "waiting" ? "queued" as const : feed.state === "failed" || feed.state === "paused" ? "failed" as const : "done" as const,
         label: feed.state === "changed" ? "Changes found" : feed.state === "checked" ? "Checked" : feed.state === "paused" ? "Paused or closed" : feed.state === "failed" ? "Could not read source" : "Waiting for the runner",
@@ -201,7 +201,7 @@ async function confirmOfficials(repos: ControlPlaneRepositories, receipt: Action
     if (done === total) return { ...base, state: "applied", at: [...feeds.map(feed => feed.checkedAt), lead?.checkedAt].filter((at): at is string => !!at).sort().at(-1) ?? receipt.completedAt,
       words: failed ? `Finished with ${failed} source${failed === 1 ? " needing" : "s needing"} attention.` : `Checked ${done} people source${done === 1 ? "" : "s"}.` };
     if (done > 0 || lead?.state === "working") return { ...base, state: "working", at: null, words: lead && feeds.every(feed => feed.state !== "waiting") ? "Sources checked. The reported change is still with a Scout." : `Finished ${done} of ${total} checks.` };
-    return { ...base, ...notPickedUp({ state: "waiting", at: null, words: "Saved. Waiting for the runner to check officials." }, beat?.value ?? null, receipt, nowMs) };
+    return { ...base, ...notPickedUp({ state: "waiting", at: null, words: "Saved. Waiting for the runner to check officials." }, beat, receipt, nowMs) };
   } catch { return { state: "unread", at: null, words: "Saved. Officials check results —" }; }
 }
 
@@ -289,7 +289,8 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
         words: `Stopped in ${done.length} of ${orders.length} states.`, progress: { done: done.length, of: orders.length } } : waiting;
     }
     if (inIntent) {
-      const rows: readonly ResearchIntent[] = await repos.researchIntents.readWhere(RESEARCH_INTENT_LOG_KEY, ["honors"], receipt.subject);
+      const rows = await repos.researchIntents.readRecentWhere(RESEARCH_INTENT_LOG_KEY, ["honors"], receipt.subject, 1,
+        { kind: true, honoredAt: true }) as readonly ResearchIntent[];
       const honored = rows.find((r) => r.kind === "HONORED");
       return honored && honored.kind === "HONORED" ? applied(honored.honoredAt) : waiting;
     }
@@ -319,7 +320,7 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
       const round = legacy?.value as { cycleStartedAt?: string; cycleFinishedAt?: string | null } | undefined;
       return later(round?.cycleStartedAt, receipt.completedAt ?? receipt.startedAt) && round?.cycleFinishedAt ? applied(round.cycleFinishedAt) : waiting;
     }
-    const heartbeat = (await repos.runnerHeartbeat.read(RUNNER_ID))?.value ?? null;
+    const heartbeat = await readConfirmationHeartbeat(repos);
     if (type === "config.setDiscoverySearch" && heartbeat?.discoverySearch?.receiptId === receipt.receiptId) {
       return applied(heartbeat.discoverySearch.appliedAt ?? null);
     }
@@ -355,23 +356,7 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
 async function confirmDispatch(repos: ControlPlaneRepositories, receipt: ActionReceipt, core: Confirmation): Promise<Confirmation> {
   if (receipt.type !== "fleet.deployHere" || receipt.outcome === "REFUSED") return core;
   try {
-    let work:OwnerDispatchWork|null=null;
-    const states = await Promise.all(HUNT_STATES.map(code =>
-      repos.researchState.readNarrowed(`${RESEARCH_STATE_ID}:${code}`, { ownerDispatch: true, dispatchWork: true })));
-    for(const held of states) {
-      const state=held?.value as {ownerDispatch?:{intentId:string;work?:OwnerDispatchWork|null};dispatchWork?:DispatchWorkReading|null}|undefined;
-      const scoped=ownerDispatchWorkOf(state?.dispatchWork??null,receipt.subject)
-        ??(state?.ownerDispatch?.intentId===receipt.subject?state.ownerDispatch.work??null:null);
-      if(!scoped)continue;
-      const prior=work as OwnerDispatchWork|null;
-      work=prior?{...prior,created:prior.created+scoped.created,deferred:prior.deferred+scoped.deferred}:scoped;
-    }
-    if (!work) {
-      const held = await repos.researchState.readNarrowed(RESEARCH_STATE_ID, { ownerDispatch: true, dispatchWork: true });
-      const state = held?.value as { ownerDispatch?: { intentId: string; work?: OwnerDispatchWork | null }; dispatchWork?: DispatchWorkReading | null } | undefined;
-      work = ownerDispatchWorkOf(state?.dispatchWork ?? null, receipt.subject)
-        ?? (state?.ownerDispatch?.intentId === receipt.subject ? state.ownerDispatch.work ?? null : null);
-    }
+    const work = await readDispatchConfirmation(repos, receipt.subject);
     if (!work || work.key !== `dispatch:${receipt.subject}`) return core;
     const of = work.created + work.deferred;
     return { ...core, progress: { done: work.created, of: of || null },

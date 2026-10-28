@@ -1,3 +1,6 @@
+import { storedOwnerCostRefs, type OwnerCostRef } from "./owner-cost-refs.ts";
+import { storedOwnerAssignmentRows } from "./stored-owner-assignment-rows.ts";
+import type { OwnerAssignmentRow } from "./owner-assignment-rows.ts";
 import type { HuntOrder } from "../hunt-orders.ts";
 import { createDispatchState } from "./dispatch-state.ts";
 import { ADMIN_SECTIONS, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
@@ -308,11 +311,11 @@ export function memoryAppendOnlyRepository<T>(log: string): AppendOnlyRepository
         .map(({ changed }) => changed));
     },
 
-    readKeys: async (keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>> => {
+    readKeys: async (keys: readonly string[], projection?: RecordProjection): Promise<ReadonlyMap<string, readonly T[]>> => {
       const out = new Map<string, readonly T[]>();
       for (const key of new Set(keys)) {
         const entries = partitions.get(key);
-        if (entries !== undefined && entries.length > 0) out.set(key, entries.map((entry) => jsonCopy(entry.record)));
+        if (entries !== undefined && entries.length > 0) out.set(key, entries.map((entry) => projection ? projectRecord(jsonCopy(entry.record), projection) as T : jsonCopy(entry.record)));
       }
       return out;
     },
@@ -347,6 +350,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
   const adminReceipts = memoryAppendOnlyRepository<ActionReceipt>("admin_receipts");
   const scoutResults = memoryAppendOnlyRepository<ScoutResult>("scout_results");
 
+  const ownerStateTotals = memoryAggregateRepository<StateTotals>("StateTotals");
   const repositories: ControlPlaneRepositories = {
     async adminActionHistoryPage(query) {
 
@@ -368,10 +372,10 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     escalations: memoryAppendOnlyRepository<Escalation>("escalations"),
     dispositions: memoryAppendOnlyRepository<DispositionCommit>("dispositions"),
     artifacts,
-    artifactsByCanonicalUrl: async (url, limit) =>
+    artifactsByCanonicalUrl: async (url, limit, projection) =>
       (await artifacts.readAll()).filter(record => record.canonicalUrl === url)
         .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId))
-        .slice(0, Math.max(0, Math.trunc(limit))),
+        .slice(0, Math.max(0, Math.trunc(limit))).map(record => projection ? projectRecord(record, projection) as ArtifactRecord : record),
     capturedCanonicalUrls: async (urls) => {
       const wanted = new Set(urls);
       return new Set((await artifacts.readAll()).map(record => record.canonicalUrl).filter(url => wanted.has(url)));
@@ -381,7 +385,9 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
     ownerSnapshotTotals: memoryAggregateRepository<OwnerSnapshotTotals>("OwnerSnapshotTotals"),
     ownerSnapshotStates: memoryAggregateRepository<OwnerSnapshotState>("OwnerSnapshotState"),
-    ownerSnapshotStateTotals: memoryAggregateRepository<StateTotals>("StateTotals"),
+    ownerSnapshotStateTotals: ownerStateTotals,
+    ownerAssignmentRows: storedOwnerAssignmentRows(memoryAggregateRepository<OwnerAssignmentRow | null>("OwnerAssignmentRow"), ownerStateTotals),
+    ownerCostRefs: storedOwnerCostRefs(memoryAggregateRepository<OwnerCostRef | null>("OwnerCostRef")),
     ownerSnapshotInboxes: memoryAggregateRepository<SpilledInbox>("SpilledInbox"),
     fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry"),()=>repositories.fixMap),
     fixMap: aggregateFixMap(memoryAggregateRepository<FixMapRow>("FixMapRow")),

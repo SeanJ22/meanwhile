@@ -1,14 +1,13 @@
 /** Never touches the candidate JSON column, not even through a path operator: unpacking it row by row takes minutes. */
 import { Pool } from "../db/client.ts";
-import { and, inArray, like, sql } from "drizzle-orm";
+import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/neon-serverless";
 
 import * as schema from "../db/schema.ts";
-import { civicDataCandidateEvents, civicDataPromotions } from "../db/schema.ts";
+import { civicDataPromotions } from "../db/schema.ts";
 import { ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS } from "./observability-store.ts";
-import type { PublicationStatusRows } from "./publication-status.ts";
-import { READER_PROJECTION_READBACK_PREFIX } from "./reader-readback.ts";
-import { UNCHANGED_CONFIRMATION_PREFIX } from "./unchanged-confirmation.ts";
+import type { PublicationContract, PublicationStatusRows } from "./publication-status.ts";
+import { publicationContractInputs, PUBLICATION_READBACK_ROWS_SQL } from "./publication-counts.ts";
 
 function iso(value: unknown): string {
   return value instanceof Date ? value.toISOString() : new Date(String(value)).toISOString();
@@ -20,14 +19,22 @@ function rowsOf(result: unknown): readonly Record<string, unknown>[] {
   return Array.isArray(rows) ? (rows as Record<string, unknown>[]) : [];
 }
 
+/** Each source's last attempt is maintained when its events or publication pointer change. */
+export const PUBLICATION_LATEST_ATTEMPTS_SQL = `WITH contracts AS (
+  SELECT DISTINCT s->>1 AS source_id,s->>2 AS record_class,s->>3 AS scope FROM jsonb_array_elements($1::jsonb) s
+) SELECT a.candidate_id,a.source_id,a.record_class,a.scope,a.state,a.failure_code,a.attempted_at
+  FROM contracts c JOIN civic_data_source_status a USING(source_id,record_class,scope)`;
+
 export async function readPublicationStatusRows(
   connection: string,
   statementTimeoutMs: number,
+  contracts: readonly PublicationContract[],
 ): Promise<PublicationStatusRows> {
   if (!Number.isSafeInteger(statementTimeoutMs) || statementTimeoutMs <= 0) {
     throw new Error(`PUBLICATION_STATUS_STATEMENT_TIMEOUT_INVALID:${statementTimeoutMs}`);
   }
   const pool = new Pool({ connectionString: connection, max: 1, connectionTimeoutMillis: 15000 });
+  const inputs = JSON.stringify(publicationContractInputs(contracts));
   try {
     return await drizzle(pool, { schema }).transaction(async (db) => {
       await db.execute(sql.raw(`SET LOCAL statement_timeout = ${statementTimeoutMs}`));
@@ -38,31 +45,12 @@ export async function readPublicationStatusRows(
         scope: civicDataPromotions.scope,
         currentVersionId: civicDataPromotions.currentVersionId,
         promotedAt: civicDataPromotions.promotedAt,
-      }).from(civicDataPromotions);
-      // A confirmation names its actual provider check; replaying held bytes cannot hide a later source failure.
-      const latest = rowsOf(await db.execute(sql`
-        SELECT DISTINCT ON (c.source_id, c.record_class, c.scope)
-               c.id AS candidate_id, c.source_id, c.record_class, c.scope, c.state, c.failure_code,
-               CASE WHEN e.state = 'PROMOTED' AND left(e.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
-                 THEN COALESCE((substring(e.detail from ${UNCHANGED_CONFIRMATION_PREFIX.length + 1})::jsonb #>> '{retrieval,sourceCheck,checkedAt}')::timestamptz, e.at)
-                 ELSE e.at END AS attempted_at
-          FROM civic_data_candidates c
-          JOIN civic_data_candidate_events e ON e.candidate_id = c.id
-         WHERE e.sequence = 1 OR (e.state = 'PROMOTED'
-           AND left(e.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
-           AND EXISTS (SELECT 1 FROM civic_data_promotions p WHERE p.current_version_id = c.id))
-         ORDER BY c.source_id, c.record_class, c.scope, attempted_at DESC, c.id DESC`));
-      const currentIds = [...new Set(promotions.map((p) => p.currentVersionId))];
-      const readbacks = currentIds.length === 0
-        ? []
-        : await db.select({
-            candidateId: civicDataCandidateEvents.candidateId,
-            at: civicDataCandidateEvents.at,
-            detail: civicDataCandidateEvents.detail,
-          }).from(civicDataCandidateEvents).where(and(
-            inArray(civicDataCandidateEvents.candidateId, currentIds),
-            like(civicDataCandidateEvents.detail, `${READER_PROJECTION_READBACK_PREFIX}%`),
-          ));
+      }).from(civicDataPromotions).where(sql`EXISTS (SELECT 1 FROM jsonb_array_elements(${inputs}::jsonb) c
+        WHERE c->>1=${civicDataPromotions.sourceId} AND c->>2=${civicDataPromotions.recordClass} AND c->>3=${civicDataPromotions.scope})`);
+      const [latestBefore,latestAfter] = PUBLICATION_LATEST_ATTEMPTS_SQL.split("$1::jsonb");
+      const latest = rowsOf(await db.execute(sql`${sql.raw(latestBefore)}${inputs}::jsonb${sql.raw(latestAfter)}`));
+      const [before, after] = PUBLICATION_READBACK_ROWS_SQL.split("$1::jsonb");
+      const readbacks = rowsOf(await db.execute(sql`${sql.raw(before)}${inputs}::jsonb${sql.raw(after)}`));
       return {
         promotions: promotions.map((p) => ({ ...p, promotedAt: iso(p.promotedAt) })),
         latestAttempts: latest.map((r) => ({
@@ -74,7 +62,8 @@ export async function readPublicationStatusRows(
           attemptedAt: iso(r.attempted_at),
           failureCode: r.failure_code === null || r.failure_code === undefined ? null : String(r.failure_code),
         })),
-        readbacks: readbacks.map((r) => ({ candidateId: r.candidateId, at: iso(r.at), detail: r.detail ?? "" })),
+        readbacks: readbacks.map((r) => ({ candidateId: String(r.candidate_id), at: iso(r.at),
+          summary: { contractId: String(r.contract_id), versionId: String(r.candidate_id), status: r.status as "PASS" | "FAIL" } })),
       };
     }, ROUTINE_OBSERVABILITY_SNAPSHOT_OPTIONS);
   } finally {

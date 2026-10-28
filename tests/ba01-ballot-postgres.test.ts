@@ -1,3 +1,4 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
 import { mkdtemp, readFile, readdir, rm, writeFile, mkdir } from "node:fs/promises";
@@ -69,7 +70,7 @@ test("BA-01 publishes every state through all real migrations and preserves the 
       const state = file.slice(0, 2).toUpperCase() as BallotState;
       const path = `data/ballot/2026-general/${file}`;
       const existed = Boolean(execFileSync("git", ["ls-tree", "--name-only", base, "--", path], { encoding: "utf8" }).trim());
-      const store = new PostgresRoutineDataStore({ purge: async () => ({ purged: true }) });
+      const store = new PostgresRoutineDataStore({ vault: new MemoryEvidenceStore(), purge: async () => ({ purged: true }) });
       Object.assign(store, { writeAuthority: assertRuntimeAuthority({ capabilities: ["MANUAL_CONTRACT"], contract: `ballot-contests:${state}` }) });
       if (existed) {
         const baseline = execFileSync("git", ["show", `${base}:${path}`], { encoding: "utf8", maxBuffer: 16 * 1024 * 1024 });

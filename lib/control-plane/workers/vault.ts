@@ -19,22 +19,22 @@ export async function artifactRecords(repos: Pick<ControlPlaneRepositories, "art
  * worker and whose bytes the vault holds is read. The ParserInput names that
  * Attempt, so extraction is attributed to the acquisition whose bytes it parsed.
  */
-export function workerVaultResolver(repos: ControlPlaneRepositories, store: EvidenceStore, project: string, options: { readonly snapshot?: boolean } = {}) {
-  // Only an explicitly bounded projection pass freezes its input index. Normal
-  // acquisition workers keep seeing newly appended records on every invocation.
-  let snapshotRecords: Promise<readonly ArtifactRecord[]> | undefined;
+export function workerVaultResolver(repos: ControlPlaneRepositories, store: EvidenceStore, project: string, options: { readonly records?: readonly ArtifactRecord[] } = {}) {
+  // Only explicit, already selected records freeze a pass. Normal acquisition
+  // workers keep seeing new matching observations on every invocation.
+  const fixedRecords = options.records ? [...options.records] : null;
   let snapshotKeys: Promise<string[]> | undefined;
   const snapshotHeads = new Map<string, Promise<ObjectMeta | null>>();
   const resolved = new Map<string, Promise<ParserInput>>();
   const resolve = async (artifactId: string): Promise<ParserInput> => {
-    const all = options.snapshot ? await (snapshotRecords ??= repos.artifacts.readAll()) : await artifactRecords(repos, artifactId);
+    const all = fixedRecords ?? await artifactRecords(repos, artifactId);
     const records = all.filter(a => a.artifactId === artifactId && !a.partial);
     if (records.length === 0) throw new Error(`WORKER_ARTIFACT_MISSING_OR_PARTIAL:${artifactId}`);
-    const listed = options.snapshot ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);
+    const listed = fixedRecords ? await (snapshotKeys ??= store.list(`project/${project}/`)) : await store.list(`project/${project}/`);
     const hashes = new Set(records.map(record => record.contentHash));
     const keys = listed.filter(key => hashes.has(key.slice(key.lastIndexOf("/") + 1).split(".")[0]));
     if (!keys.length) throw new Error("WORKER_ARTIFACT_NOT_IN_VAULT");
-    const heads = options.snapshot ? snapshotHeads : new Map<string, Promise<ObjectMeta | null>>();
+    const heads = fixedRecords ? snapshotHeads : new Map<string, Promise<ObjectMeta | null>>();
     let admitted = false;
     for (const record of records) {
       const acquiringAttempt = (await repos.attempts.mustRead(record.attemptId)).value;
@@ -62,7 +62,7 @@ export function workerVaultResolver(repos: ControlPlaneRepositories, store: Evid
     throw new Error(admitted ? "WORKER_ARTIFACT_NOT_IN_VAULT" : "WORKER_ARTIFACT_PROVENANCE_REFUSED");
   };
   return (artifactId: string) => {
-    if (!options.snapshot) return resolve(artifactId);
+    if (!fixedRecords) return resolve(artifactId);
     if (!resolved.has(artifactId)) resolved.set(artifactId, resolve(artifactId));
     return resolved.get(artifactId)!;
   };

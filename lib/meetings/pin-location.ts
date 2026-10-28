@@ -8,6 +8,8 @@ import { addressWords } from "../geo/address-words.ts";
 export interface MeetingPinBody {
   bodyId: string;
   name: string | null;
+  /** Explicit owner identity, including owners whose street office is still blank. */
+  governmentOwner?: {readonly id:string;readonly name:string};
   officeContact?: {
     address: string | null;
     phone: string | null;

@@ -22,6 +22,12 @@ import { acquireSchoolRelease, applyF33NativeCrosswalk, NCES_DIRECTORY, schoolLi
 import { referenceGovernmentListings } from "../lib/registration/listings.ts";
 import { knownReleaseSourceCheck } from "../lib/sources/known-release.ts";
 import { reconcileRegistrationHeldReceipt } from "../lib/registration/held-evidence.ts";
+import { REGISTRATION_PARSER_VERSION,REGISTRATION_SOURCE_ID } from "../lib/registration/publication.ts";
+import { registrationSourceContentHash,registrationSourceProbe,registrationProbePages,type RegistrationSourceProbe } from "../lib/registration/source-hash.ts";
+import { confirmSourceHashUnchanged,sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import type { KnownRelease } from "../lib/sources/known-release.ts";
+import { recordPeopleSourceChecks,withPeopleSourceChecks } from "../lib/civic-data/people-source-checks.ts";
+import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 
 export function parseRegistrationArguments(args: readonly string[]): { readonly target: RegistrationTarget } {
   const states = args.filter((value) => value.startsWith("--state="));
@@ -36,15 +42,13 @@ async function main(): Promise<void> {
   installNeonRequestDeadline();
   prepareProductionCivicDataWrite();
   const store = new PostgresRoutineDataStore();
-  const previousPromotion = await store.readPromotion<RegistrationReadModel>("REGISTRATION", target.scope);
-  const previous = previousPromotion?.payload ?? null;
-  const reference = registrationReferenceWithPublished(loadRegistrationReference(process.cwd(), target.state), previous);
-  const heldReceipt = reconcileRegistrationHeldReceipt(heldRegistrationReceipt(), reference,
-    previousPromotion && !previous?.governments ? await store.readCandidate(previousPromotion.versionId) : null);
+  const head=await store.readSourceHead("REGISTRATION",target.scope);
+  const reference=loadRegistrationReference(process.cwd(),target.state);
+  const heldReceipt=heldRegistrationReceipt();
   // Publish evidence already held before checking the publisher. Fresh access
   // is not a prerequisite for first-use delivery or a changed parser.
-  if (!previous?.governments) {
-    const held = registrationCandidate({ target, reference, receipt: heldReceipt, previous });
+  if (!head) {
+    const held = registrationCandidate({ target, reference, receipt: heldReceipt, previous:null });
     const delivery = await processRegisteredRoutineCandidate(store, target.contractId, held, new Date().toISOString());
     if (!delivery.promoted) throw new Error(`REGISTRATION_HELD_PUBLICATION_REFUSED:${delivery.candidate.receipt?.decision ?? "unknown"}`);
   }
@@ -52,7 +56,7 @@ async function main(): Promise<void> {
   let confirmedBy: RegistrationSourceReceipt["confirmedBy"] = "HELD_RELEASE";
   const capabilityGaps: string[] = [];
   const schoolChecks: SourceCheckEvidence[] = [];
-  let refreshed = reference;
+  const schools=new Map<string,KnownRelease>();
   let receipt = heldReceipt;
   let sourceFailure: unknown;
   let sourceFailedAt: string | undefined;
@@ -60,7 +64,7 @@ async function main(): Promise<void> {
   try {
     receipt = await withPublisherAcquisitionDeadline("Census of Governments (2022)", ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, (signal) => acquireRegistrationSource({ signal }));
     confirmedBy = receipt.confirmedBy;
-    if (receipt.release) refreshed = registrationReferenceFromRelease(reference, receipt.release);
+    if(receipt.release?.outage)throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE",receipt.release.outage);
   } catch (error) {
     sourceFailure = error;
     sourceFailedAt = new Date().toISOString();
@@ -73,13 +77,9 @@ async function main(): Promise<void> {
     try {
       const release = await withPublisherAcquisitionDeadline(`NCES ${kind}`, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, signal => acquireSchoolRelease(kind, { signal,
         onSourceUrl: url => { schoolUrl = url; } }));
-      const listings = referenceGovernmentListings(refreshed);
-      if (kind === "lea-directory") {
-        const updated = new Map(listings.map(row => [row.id, row]));
-        for (const row of schoolListingsFromRelease(refreshed, release)) updated.set(row.id, row);
-        refreshed = { ...refreshed, listings: [...updated.values()] };
-      } else refreshed = { ...refreshed, listings: applyF33NativeCrosswalk(listings, release) };
+      schools.set(kind,release);
       schoolChecks.push(knownReleaseSourceCheck(release));
+      if(release.outage)throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE",release.outage);
     } catch (error) {
       const detail = `NCES ${kind}: ${error instanceof Error ? error.message : String(error)}`;
       capabilityGaps.push(detail);
@@ -90,9 +90,64 @@ async function main(): Promise<void> {
       }
     }
   }
-  const candidate = registrationCandidate({ target, reference: refreshed,
-    receipt: { ...receipt, sourceCheck: registrationSourceCheck(receipt, schoolChecks) }, previous });
-  const outcome = await processRegisteredRoutineCandidate(store, target.contractId, candidate, new Date().toISOString());
+  const probe=registrationSourceProbe({referenceSha256:reference.sha256,receipt,schools,
+    complete:!capabilityGaps.length&&!!receipt.release&&!receipt.release.outage&&schools.size===2&&[...schools.values()].every(release=>!release.outage)});
+  const priorProbe=head?.parserVersion===REGISTRATION_PARSER_VERSION&&head.rawHashBasis==="SOURCE_CONTENT_V1"
+    ?await store.readCandidatePath<RegistrationSourceProbe>(head.versionId,["normalizedPayload","sourceProbe"]):null;
+  const rawHash=registrationSourceContentHash(probe),pages=registrationProbePages(probe);
+  if(priorProbe?.coverageComplete!==undefined&&head?.rawHash===rawHash) {
+    const retrieval=priorProbe.coverageComplete&&probe.complete?{requestedUrl:receipt.requestedUrl,
+      finalUrl:receipt.finalUrl,httpStatus:200,retrievedAt:receipt.retrievedAt,rawHash,sourceCheck:registrationSourceCheck(receipt,schoolChecks)}:
+      await store.readCandidatePath<RoutineCandidate["retrieval"]>(head.versionId,["retrieval"]);
+    const confirmation=await confirmSourceHashUnchanged({store,sourceId:REGISTRATION_SOURCE_ID,recordClass:"REGISTRATION",scope:target.scope,
+      parserVersion:REGISTRATION_PARSER_VERSION,rawHash,complete:!!retrieval&&retrieval.rawHash===rawHash,now:new Date().toISOString(),retrieval:{...retrieval!,rawHash}});
+    if(confirmation){
+      await recordPeopleSourceChecks({store,head:confirmation.head,pages});
+      if(sourceFailure&&isSourceAcquisitionFailure(sourceFailure)){
+        const failed=await recordRegisteredSourceAcquisitionFailure({store,contractId:target.contractId,failure:sourceFailure,
+          attemptedAt:sourceFailedAt,requestedUrl:sourceFailureUrl});
+        console.log("RCD_RECEIPT="+JSON.stringify({...failed.receipt,confirmedBy,capabilityGaps}));process.exitCode=2;return;
+      }
+      console.log("RCD_RECEIPT="+JSON.stringify({source:target.contractId,...sourceHashReceiptFields(confirmation),confirmedBy,
+        capabilityGaps,structuralReleaseContract:ZERO_RELEASE_EVENTS}));return;
+    }
+  }
+  const previousPromotion=await store.readPromotion<RegistrationReadModel>("REGISTRATION",target.scope);
+  const previous=previousPromotion?await withPeopleSourceChecks(previousPromotion.payload,"REGISTRATION",target.scope,store):null;
+  let refreshed=registrationReferenceWithPublished(reference,previous);
+  if(receipt.release)refreshed=registrationReferenceFromRelease(refreshed,receipt.release);
+  else if(previousPromotion&&!previous?.governments) {
+    const metadata=await store.readPublishedCandidateMetadata(previousPromotion.versionId);
+    const normalizedPayload=await store.readCandidatePath(previousPromotion.versionId,["normalizedPayload"]);
+    const previousHead=head?.versionId===previousPromotion.versionId?head:await store.readSourceHead("REGISTRATION",target.scope);
+    if(metadata&&previousHead)receipt=reconcileRegistrationHeldReceipt(receipt,refreshed,{...metadata,
+      candidate:{...metadata.candidate,normalization:{parserVersion:previousHead.parserVersion},readModel:previous,normalizedPayload}});
+  }
+  for(const [kind,release]of schools)try {
+    const listings=referenceGovernmentListings(refreshed);
+    if(kind==="lea-directory"){
+      const updated=new Map(listings.map(row=>[row.id,row]));
+      for(const row of schoolListingsFromRelease(refreshed,release))updated.set(row.id,row);
+      refreshed={...refreshed,listings:[...updated.values()]};
+    } else refreshed={...refreshed,listings:applyF33NativeCrosswalk(listings,release)};
+  } catch(error){
+    const detail=`NCES ${kind}: ${error instanceof Error?error.message:String(error)}`;capabilityGaps.push(detail);
+    if(kind==="lea-directory"&&!sourceFailure){sourceFailure=isSourceAcquisitionFailure(error)?error:sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID",detail);
+      sourceFailedAt=new Date().toISOString();sourceFailureUrl=release.requestedUrl;}
+  }
+  const sourceProbe={...probe,complete:probe.complete&&!capabilityGaps.length};
+  let candidate = registrationCandidate({ target, reference: refreshed,
+    receipt: { ...receipt, sourceCheck: registrationSourceCheck(receipt, schoolChecks) }, previous,sourceProbe });
+  const publishedProbe=(candidate.normalizedPayload as {sourceProbe:RegistrationSourceProbe}).sourceProbe;
+  if(previousPromotion&&!publishedProbe.coverageComplete){
+    const original=await store.readCandidatePath<RoutineCandidate["retrieval"]>(previousPromotion.versionId,["retrieval"]);
+    if(original)candidate={...candidate,retrieval:{...candidate.retrieval,retrievedAt:original.retrievedAt,sourceCheck:original.sourceCheck}};
+  }
+  const outcome = await processRegisteredRoutineCandidate(store, target.contractId, candidate, new Date().toISOString(),previousPromotion?.versionId??null,
+    {confirmUnchanged:priorProbe?.formatVersion===1&&priorProbe.complete===publishedProbe.complete&&priorProbe.coverageComplete===publishedProbe.coverageComplete});
+  const published=await store.readSourceHead("REGISTRATION",target.scope);
+  if(published&&(published.versionId===outcome.promoted?.versionId||published.versionId===outcome.confirmed?.versionId))
+    await recordPeopleSourceChecks({store,head:published,pages});
   if (sourceFailure && isSourceAcquisitionFailure(sourceFailure)) {
     // Publish independent held evidence first, then record the failed provider
     // attempt against that LKG. Exactly one terminal receipt belongs to this run.
@@ -115,7 +170,7 @@ async function main(): Promise<void> {
         structuralReleaseContract: ZERO_RELEASE_EVENTS,
       }),
   );
-  if (!outcome.promoted) process.exitCode = 2;
+  if (!outcome.promoted&&!outcome.confirmed) process.exitCode = 2;
 }
 
 const invokedDirectly = (process.argv[1] ?? "").replace(/\\/g, "/").endsWith("scripts/registration-refresh.mts");

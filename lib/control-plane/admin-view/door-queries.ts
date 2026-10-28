@@ -13,7 +13,7 @@ export const VALID_DOOR_SQL = `value->'formatVersion'='1'::jsonb
   AND jsonb_typeof(value->'doorId')='string' AND jsonb_typeof(value->'kind')='string'
   AND jsonb_typeof(value->'bodyIds')='array' AND jsonb_typeof(value->'hosts')='array'
   AND value->>'status' IN ('OPEN','SHUT','SUSPENDED') AND jsonb_typeof(value->'updatedAt')='string'`;
-const DOOR_KEYS = ["doorId", "kind", "bodyIds", "hosts", "holds", "status", "updatedAt", "shutSince", "lastSuccessAt", "lastFailureAt", "shutReason", "lastFailureReason"];
+const DOOR_KEYS = ["doorId", "kind", "bodyIds", "hosts", "holds", "status", "updatedAt", "shutSince", "lastSuccessAt", "lastFailureAt", "shutReason", "lastFailureReason", "notes"];
 export const ADMIN_DOOR_VALUE_SQL = `jsonb_build_object('formatVersion',1,'config','{}'::jsonb,
   ${DOOR_KEYS.map(key => `'${key}',value->'${key}'`).join(",")},
   'meeting',CASE WHEN value->'meeting' IS NULL OR value->'meeting'='null'::jsonb THEN NULL ELSE

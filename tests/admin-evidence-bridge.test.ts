@@ -55,6 +55,16 @@ test("exact complete raw capture is copied once under work, attempt, artifact an
   assert.deepEqual(verifyAdminEvidenceBlob(record, (await remote.read(adminEvidenceKey(record)))!), bytes);
 });
 
+test("a fingerprint-filed original keeps its pointer proof and rejects a substituted key, hash or length", () => {
+  const rawCapture = { vaultKey: `project/freshness/raw/sha256/${hash.slice(7)}`, rawHash: hash.slice(7), byteLength: bytes.byteLength };
+  const pointed = { ...held, rawCapture, bodySha256: contentHash(JSON.stringify(rawCapture)) };
+  assert.equal(assertOriginalCapture(record, attempt, pointed, bytes).contentHash, hash);
+  for (const forged of [{ ...pointed, bodySha256: hash },
+    { ...pointed, rawCapture: { ...rawCapture, vaultKey: "project/freshness/raw/sha256/other" } },
+    { ...pointed, rawCapture: { ...rawCapture, byteLength: bytes.byteLength + 1 } }])
+    assert.throws(() => assertOriginalCapture(record, attempt, forged, bytes), /BYTES_MISMATCH/);
+});
+
 test("a partial, mismatched owner, stale hash, restricted tier or reclassified credential never leaves the vault", async () => {
   const remote = new MemoryPrivateStore();
   for (const altered of [

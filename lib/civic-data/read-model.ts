@@ -99,7 +99,7 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata" | "readVersioned">> & {
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata" | "readVersioned" | "readPublicationBase" | "readLegiscanPersonParts" | "readLegiscanStateCatalog">> & {
   /** Already published canonical database rows, read together for the reader shelf. */
   readonly readPromotedEntry?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry>;
 };
@@ -451,7 +451,9 @@ async function loadPromotedCivicData<T>(
   let observedProjection: PromotedProjection<T> | null = null;
   try {
     const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
-    const projection = await store.readPromotion<T>(recordClass, scope);
+    const base=recordClass==="FEDERAL_MONEY"
+      ? await (store.readPublicationBase?.(recordClass,scope)??Promise.reject(new Error("FEDERAL_PUBLICATION_BASE_READER_REQUIRED"))) : null;
+    const projection = base ? base.current as PromotedProjection<T>|null : await store.readPromotion<T>(recordClass, scope);
     if (projection === null) {
       return {
         kind: "NOT_RECORDED",
@@ -474,7 +476,7 @@ async function loadPromotedCivicData<T>(
       const proven = rememberStateProof(projection, candidate, candidate.candidate.normalization.normalizedHash!);
       return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
     }
-    const candidate = await readProofCandidate(store, projection.versionId);
+    const candidate = base ? base.lkg : await readProofCandidate(store, projection.versionId);
     const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
     const predecessor = predecessorVersionId !== null
       ? await store.readCandidate(predecessorVersionId)

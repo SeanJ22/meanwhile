@@ -9,7 +9,7 @@ import { storeVerifiedPortrait, type PortraitRuntime } from "../lib/photos/store
 import type { KnownRelease, KnownReleaseOptions } from "../lib/sources/known-release.ts";
 import { refreshPeoplePortraits } from "../scripts/people-portraits-refresh.mts";
 import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
-import { portraitList, portraitRunNeeded } from "../lib/photos/portrait-run.ts";
+import { portraitList, portraitRunNeeded, portraitStamp } from "../lib/photos/portrait-run.ts";
 import { readHeldPeopleSource } from "../lib/civic-data/people-source-publication.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { PortraitAttempt } from "../lib/photos/portrait-work.ts";
@@ -66,6 +66,7 @@ test("once everyone has a portrait the state is skipped, and only a new person w
   assert.deepEqual(await portraitRunNeeded(store, "az", START, null), { needed: true, reason: "No portrait record is held for this state yet." });
   const storePortrait = await imageStore();
   const first = await refreshPeoplePortraits({ store, vault, state: "az", query: null, options: { now: () => VERIFIED, storePortrait, acquire: async options => profile(options) } });
+  assert.ok("outcome" in first);
   assert.ok(first.outcome.promoted);
   const schedule = first.candidate.excludedFacts?.find(fact => fact.code === PORTRAIT_SCHEDULE_CODE);
   assert.equal((schedule?.record as { nextDueAt: string | null }).nextDueAt, null, "everyone has a portrait, so no one is due again");
@@ -75,11 +76,15 @@ test("once everyone has a portrait the state is skipped, and only a new person w
   const rest = await portraitRunNeeded(store, "az", "2026-11-09T21:00:00.000Z", null);
   assert.equal(rest.needed, false, rest.reason);
   assert.deepEqual(reads.counts, { candidates: 0, promotions: 0, slim: 0 });
-  // Open States promoting the same people again changes nothing.
+  const confirmed = await refreshPeoplePortraits({ store, vault, state: "az", query: null,
+    options: { now: () => "2026-10-09T22:00:00.000Z", acquire: async () => { throw Error("settled source must not acquire"); } } });
+  assert.ok("confirmation" in confirmed);
+  assert.deepEqual(reads.counts, { candidates: 0, promotions: 0, slim: 0 });
+  // A different source version is reconsidered from its header even when it names the same people.
   reads.restore();
   await publishPeople(store, 3, "b".repeat(40), "2026-10-10T20:00:00.000Z");
   const again = countLargeReads(store);
-  assert.equal((await portraitRunNeeded(store, "az", "2026-10-10T21:00:00.000Z", null)).needed, false);
+  assert.equal((await portraitRunNeeded(store, "az", "2026-10-10T21:00:00.000Z", null)).needed, true);
   assert.deepEqual(again.counts, { candidates: 0, promotions: 0, slim: 0 });
   again.restore();
 
@@ -87,10 +92,11 @@ test("once everyone has a portrait the state is skipped, and only a new person w
   await publishPeople(store, 4, "c".repeat(40), "2026-10-11T20:00:00.000Z");
   const owed = await portraitRunNeeded(store, "az", "2026-10-11T21:00:00.000Z", null);
   assert.equal(owed.needed, true);
-  assert.match(owed.reason, /names someone it did not name/);
+  assert.match(owed.reason, /source changed since the last list/);
   const read: string[] = [];
   const next = await refreshPeoplePortraits({ store, vault, state: "az", query: null, options: { now: () => "2026-10-11T21:00:06.000Z", storePortrait,
     acquire: async options => { read.push(options.url); return profile(options); } } });
+  assert.ok("outcome" in next);
   assert.ok(next.outcome.promoted);
   assert.deepEqual(read, ["https://legislature.example.gov/members/3"]);
   assert.equal((await portraitRunNeeded(store, "az", "2026-10-11T21:00:07.000Z", null)).needed, false);
@@ -133,6 +139,7 @@ test("a run cut off by its deadline saves where it stopped and the next pass pic
       if (first.length === 2) controller.abort(new Error("PASS_TIME_BUDGET"));
       return profile(options);
     } } });
+  assert.ok("outcome" in cut);
   assert.ok(cut.outcome.promoted);
   assert.ok(cut.candidate.excludedFacts?.some(fact => fact.code === "STATE_PORTRAIT_WORK_REMAINS"));
   assert.ok(!cut.candidate.excludedFacts?.some(fact => fact.code === "STATE_PORTRAIT_PROCESSING_FAILED"), "an interrupted person is not a failure");
@@ -162,14 +169,15 @@ test("on the production store the list is read slim, a person's saved pages alon
     const one = await store.readCandidateCaptures(slim!.versionId, [`https://raw.githubusercontent.com/openstates/people/${sha}/data/az/legislature/1.yml`], ["data/az/legislature/9.yml"]);
     assert.equal(one.length, 1, "only the person's own file");
     assert.equal((await store.readCandidateCaptures(slim!.versionId, ["https://example.org/elsewhere"], [])).length, 0);
-    const digest = await store.readRosterIdDigests("STATE_LEGISLATOR", ["US-AZ:openstates-people:v1"]);
+    const digest = await portraitStamp(store, "az", null);
     as("people-portraits-az");
     const run = await refreshPeoplePortraits({ store, vault: pgVault, state: "az", query: null, options: { now: () => VERIFIED, storePortrait: await imageStore(),
       acquire: async options => profile(options) } });
+    assert.ok("outcome" in run);
     assert.ok(run.outcome.promoted, JSON.stringify(run.outcome.candidate.receipt));
     const state = await store.readPortraitRunState(run.candidate.scope);
     assert.equal(state?.nextDueAt, null);
-    assert.equal(state?.seen?.versions["STATE_LEGISLATOR\tUS-AZ:openstates-people:v1"], digest[0]?.digest);
+    assert.equal(state?.seen?.versions["STATE_LEGISLATOR\tUS-AZ:openstates-people:v1"], digest.versions["STATE_LEGISLATOR\tUS-AZ:openstates-people:v1"]);
     assert.equal(await store.readPortraitRunState("US-ZZ:people:portraits:v1"), null);
     const reads = countLargeReads(store);
     const rest = await portraitRunNeeded(store, "az", "2026-10-10T21:00:00.000Z", null);
@@ -211,6 +219,7 @@ async function portraitState(store: PostgresRoutineDataStore, vault: EvidenceSto
   as("people-portraits-az");
   const run = await refreshPeoplePortraits({ store, vault, state: "az", query: null, options: { now: () => VERIFIED, storePortrait: await imageStore(),
     acquire: async options => options.url.endsWith("/2") ? { ...profile(options), bytes: new TextEncoder().encode("<h1>Jane Member 2</h1>") } : profile(options) } });
+  assert.ok("outcome" in run, "a first portrait run publishes; it cannot confirm an unchanged source");
   assert.ok(run.outcome.promoted, JSON.stringify(run.outcome.candidate.receipt));
   return { as, record: run.candidate.scope };
 }

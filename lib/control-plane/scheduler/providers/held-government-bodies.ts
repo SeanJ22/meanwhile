@@ -40,15 +40,16 @@ export function governmentBodyAnchors(subject: HeldSubjectDetails, capture: Work
 
 /** Only source-named candidates and their exact held scope are searched; only unambiguous minimum identities return. */
 export const HELD_GOVERNMENT_BODIES_SQL = `WITH runtime AS MATERIALIZED (
-    SELECT reader_payload_node(payload) value FROM civic_data_promotions
+    SELECT key,current_version_id FROM civic_data_promotions
       WHERE key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
   ), anchors AS MATERIALIZED (
     SELECT name,url FROM jsonb_to_recordset($3::jsonb) AS a(name text,url text)
   ), held_bodies AS MATERIALIZED (
-    SELECT reader_payload_node(b.item)->>'id' id,reader_payload_node(b.item)->>'name' name,
-      reader_payload_node(b.item)->>'ocdId' division_id,reader_payload_node(b.item)->>'homepageUrl' homepage,
-      reader_payload_node(reader_payload_node(b.item)->'provenance')->>'sourceUrl' source_url
-      FROM runtime r,LATERAL reader_payload_members(reader_payload_node(r.value->'registry')->'bodies') b
+    SELECT b.row_id id,reader_payload_value(b.value->'name')#>>'{}' name,
+      b.value->>'ocdId' division_id,b.value->>'homepageUrl' homepage,
+      reader_payload_node(b.value->'provenance')->>'sourceUrl' source_url
+      FROM runtime p JOIN civic_data_rows b ON b.promotion_key=p.key AND b.version_id=p.current_version_id
+      WHERE b.collection='registry.bodies'
   ), bodies AS MATERIALIZED (
     SELECT id,name,division_id,homepage,source_url FROM held_bodies
       WHERE homepage IN (SELECT url FROM anchors) OR source_url IN (SELECT url FROM anchors)

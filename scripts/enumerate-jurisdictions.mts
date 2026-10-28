@@ -1,4 +1,6 @@
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
+import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
 import { NAME_BY_USPS } from "../lib/coverage/artifacts.ts";
 import type {
   Jurisdiction,
@@ -14,6 +16,7 @@ import {
   jurisdictionOperationalReferenceCandidate,
   jurisdictionOperationalReferenceFailureCandidate,
   type JurisdictionReferenceState,
+  operationalReferenceSourceProbe,confirmOperationalReferenceSources,
 } from "../lib/civic-data/operational-references.ts";
 import {
   acquireJurisdictionReferenceInputs,
@@ -21,6 +24,7 @@ import {
   CENSUS_GOVERNMENT_UNITS_URL,
   type CensusJurisdictionUnitInput,
   type JurisdictionReferenceAcquisitionFailure,
+  clearJurisdictionReferenceSourceProgress,
 } from "../lib/civic-data/jurisdiction-reference-acquisition.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { acquireWebsiteCorrections, type WebsiteCorrectionOutcome } from "../lib/civic-data/website-correction-acquisition.ts";
@@ -33,6 +37,9 @@ import {
 import { memoryInProcess, nodeResearchGet } from "../lib/hunt/robots-first-fetch.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
+import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
 const GENERATOR = "scripts/enumerate-jurisdictions.mts";
 let asOf = "";
@@ -661,7 +668,15 @@ for (const outcome of corrections.outcomes) {
   console.log(`website correction ${outcome.jurisdictionId}: ${outcome.disposition} — ${outcome.detail}`);
 }
 const sourceReceipts = [...acquisition.receipts, ...corrections.receipts];
-const retrievedAt = sourceReceipts.map((receipt) => receipt.retrievedAt).sort().at(-1)!;
+const retrievedAt = sourceReceipts.map((receipt) => receipt.retrievedAt).sort()[0]!;
+const sourceProbe=operationalReferenceSourceProbe({sourceReceipts,states:selectedStates,corrections:corrections.outcomes,
+  configurationHash:createHash("sha256").update(canonicalCivicDataJson({generator:createHash("sha256").update(readFileSync(new URL(import.meta.url))).digest("hex"),
+    jurisdictions:US_JURISDICTIONS,names:NAME_BY_USPS,websiteCorrections:[...applicableWebsiteCorrections(WEBSITE_CORRECTIONS).values()]})).digest("hex")});
+const unchanged=PROMOTE?await confirmOperationalReferenceSources({store,sourceReceipts,probe:sourceProbe,now:new Date().toISOString()}):null;
+if(unchanged){
+  await clearJurisdictionReferenceSourceProgress();
+  console.log("RCD_RECEIPT="+JSON.stringify({source:contractId,...sourceHashReceiptFields(unchanged),structuralReleaseContract:ZERO_RELEASE_EVENTS}));
+}else{
 asOf = retrievedAt.slice(0, 10);
 
 console.log(`jurisdictions:enumerate · acquired authoritative inputs as of ${asOf}\n`);
@@ -747,6 +762,7 @@ const candidate = jurisdictionOperationalReferenceCandidate({
   sourceReceipts,
   workbook: acquisition.workbook,
   retrievedAt,
+  sourceProbe,
 });
 const outcome = await processRegisteredManualCandidate(
   store,
@@ -754,14 +770,16 @@ const outcome = await processRegisteredManualCandidate(
   candidate,
   candidate.retrieval.retrievedAt,
 );
-if (outcome.candidate.state !== "PROMOTED") {
+if (!outcome.promoted&&!outcome.confirmed) {
   throw new Error(
     `JURISDICTION_REFERENCE_PROMOTION_REFUSED:${outcome.candidate.state}:` +
       `${outcome.candidate.failureCode ?? "UNKNOWN"}:${outcome.candidate.failureDetail ?? "no detail"}`,
   );
 }
+await clearJurisdictionReferenceSourceProgress();
 console.log(
   `${CHECK ? "validated in the deterministic memory store" : "promoted to the production data plane"}: ` +
     `${candidate.id}; ${candidate.normalization.outputRecords} jurisdiction rows; ` +
     `${outcome.candidate.candidate.changeSet?.outcome ?? "change outcome unavailable"}`,
 );
+}

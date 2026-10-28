@@ -566,6 +566,7 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
         "acquisition_succeeded",
         "raw_hash",
         "normalized_hash",
+        "read_model_fingerprint",
         "retrieved_at",
         "source_through",
         "parser_version",
@@ -594,7 +595,7 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
   civic_data_promotions: {
     storeClass: "OPERATIONAL",
     columns: {
-      ...nonIdentifying("source_id", "record_class", "scope", "promoted_at", "validation_receipt"),
+      ...nonIdentifying("source_id", "record_class", "scope", "promoted_at", "validation_receipt", "payload_fingerprint"),
       key: { space: "OPAQUE_HANDLE", why: "A record-class/scope projection key minted by the routine data plane." },
       current_version_id: { space: "OPAQUE_HANDLE" },
       last_known_good_version_id: { space: "OPAQUE_HANDLE" },

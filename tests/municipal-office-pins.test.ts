@@ -1,3 +1,4 @@
+import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
@@ -18,14 +19,15 @@ const reply = (value: unknown) => new Response(JSON.stringify(value));
 test("the same municipality's published hall address supplies a saved government-office fallback", async () => {
   const db = await factDb();
   try {
-    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb);
+    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,current_version_id text DEFAULT 'fixture',promoted_at timestamptz DEFAULT now());
       CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)`);
     for (const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8").split("--> statement-breakpoint"))
       if (/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement)) await db.pg.exec(statement);
+    await installKeyedRows(db.pg);
     const scope = `source:iqm2:body:${encodeURIComponent(source.bodyId!)}`;
     const repeated = Array.from({length:100},(_,index)=>({...source,id:`fixture:repeated-hall:${index}`,
       startsAt:new Date(Date.parse(source.startsAt)+index*60000).toISOString()}));
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3)", [`MEETING:${scope}`, scope, JSON.stringify({ meetings: [source,...repeated] })]);
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES($1,'MEETING',$2,$3)", [`MEETING:${scope}`, scope, JSON.stringify({ meetings: [source,...repeated] })]);
     const requests: string[] = [];
     const hallRows:number[]=[];
     const query:typeof db.query=async(sql,params)=>{const rows=await db.query(sql,params);if(sql.includes('halls AS ('))hallRows.push(rows.length);return rows;};
@@ -188,14 +190,15 @@ test("native government body identities recover only their exact published count
 test("the bounded courthouse read includes exact-location provenance and point metadata from a native partition",async()=>{
   const db=await factDb();
   try{
-    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb);
+    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,current_version_id text DEFAULT 'fixture',promoted_at timestamptz DEFAULT now());
       CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)`);
     for(const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint"))
       if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement))await db.pg.exec(statement);
+    await installKeyedRows(db.pg);
     const body="government:US-WI:cog:county#body:elections",physical={...countySource,bodyId:body,
       mapPin:{...countySource.mapPin!,bodyId:body}};
     const scope=`source:legistar:body:${encodeURIComponent(body)}`;
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3)",[`MEETING:${scope}`,scope,JSON.stringify({meetings:[{...physical,id:"legistar:milwaukeecounty:newer-same-address",mapPin:undefined,
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES($1,'MEETING',$2,$3)",[`MEETING:${scope}`,scope,JSON.stringify({meetings:[{...physical,id:"legistar:milwaukeecounty:newer-same-address",mapPin:undefined,
       startsAt:new Date(Date.parse(physical.startsAt)+60000).toISOString()},physical]})]);
     const result=await withMunicipalHallOffices(db.query,[countyTarget],new Map(),()=>assert.fail());
     assert.equal(result.get(COUNTY_BODY)?.governmentOfficeAlternatives?.[0]?.address,COURTHOUSE);
@@ -230,19 +233,20 @@ test("another body's verified courthouse point reaches the county's unplaced mee
 test("office acquisition reads one actual owner context per body without waiting on a pin or loading complete meetings",async()=>{
   const db=await factDb();
   try{
-    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb);
+    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,current_version_id text DEFAULT 'fixture',promoted_at timestamptz DEFAULT now());
       CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)`);
     for(const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint"))
       if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement))await db.pg.exec(statement);
+    await installKeyedRows(db.pg);
     const wanted={...countyTarget,id:"legistar:milwaukeecounty:current",startsAt:NOW};
     const older={...wanted,id:"legistar:milwaukeecounty:older",startsAt:new Date(Date.parse(NOW)-60000).toISOString()};
     const scope=`source:legistar:body:${encodeURIComponent(COUNTY_BODY)}`;
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3)",[`MEETING:${scope}`,scope,
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES($1,'MEETING',$2,$3)",[`MEETING:${scope}`,scope,
       JSON.stringify({meetings:[older,wanted],agendaDocuments:[{text:"Unrelated document contents".repeat(10000)}]})]);
     const sourceScope=`source:legistar:body:${encodeURIComponent(countySource.bodyId!)}`;
-    await db.query("INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3)",[`MEETING:${sourceScope}`,sourceScope,JSON.stringify({meetings:[countySource]})]);
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES($1,'MEETING',$2,$3)",[`MEETING:${sourceScope}`,sourceScope,JSON.stringify({meetings:[countySource]})]);
     const native="government:US-WI:cog:county#body:planning",derived={...wanted,id:"derived:planning",bodyId:native,bodyName:"Planning Commission"};
-    await db.query("INSERT INTO civic_data_promotions VALUES('MEETING:source:derived:family:US-WI','MEETING','source:derived:family:US-WI',$1)",
+    await db.query("INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES('MEETING:source:derived:family:US-WI','MEETING','source:derived:family:US-WI',$1)",
       [JSON.stringify({meetings:[derived,{...derived,id:"derived:unrequested",bodyId:"government:US-WI:cog:other#governing"}]})]);
     const contexts=await readOfficeContexts(db.query,[COUNTY_BODY,native,COUNTY_BODY]);
     assert.equal(contexts.length,2);
@@ -257,4 +261,12 @@ test("office acquisition reads one actual owner context per body without waiting
     }
     assert.deepEqual(await readOfficeContexts(async()=>{throw Error("An empty body set must not query any source");},[]),[]);
   }finally{await db.pg.close();}
+});
+
+
+test("a corrected explicit school owner cannot inherit a neighboring county courthouse from its old calendar label",async()=>{
+  const offices=new Map([[COUNTY_BODY,{bodyId:COUNTY_BODY,name:"Governing Board",
+    governmentOwner:{id:"government:US-WI:nces:school",name:"Independent School District"}}]]);
+  const selected=await withMunicipalHallOffices(undefined,[countyTarget,countySource],offices,()=>assert.fail());
+  assert.equal(selected.get(COUNTY_BODY)?.governmentOfficeAlternatives,undefined);
 });

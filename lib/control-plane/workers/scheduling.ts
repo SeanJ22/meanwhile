@@ -1,5 +1,6 @@
 import type { Attempt } from "../attempt.ts";
 import type { RouteTask } from "../route-task.ts";
+import type { AggregateRepository, RecordProjection } from "../repository/types.ts";
 import { recordFailure, type DebtCause, type FreshnessDebt } from "../scheduler/debt.ts";
 
 export interface WorkerTaskAdmission {
@@ -13,11 +14,25 @@ export interface WorkerTaskAdmission {
   readonly debt: FreshnessDebt | null;
 }
 
+export type WorkerRetryAttempt = Pick<Attempt, "id" | "routeTaskId" | "startedAt" | "endedAt" | "outcome" | "abortReason">;
+const RETRY_FIELDS: RecordProjection = { id: true, routeTaskId: true, startedAt: true, endedAt: true, outcome: true, abortReason: true };
+
+/** Admission uses only these exact tasks' retry clocks, never source evidence or another task's history. */
+export async function readWorkerRetryHistory(repo: Pick<AggregateRepository<Attempt>, "listWhereNarrowed">,
+  taskIds: readonly string[]): Promise<readonly WorkerRetryAttempt[]> {
+  const ids = [...new Set(taskIds)], rows: WorkerRetryAttempt[] = [];
+  for (let offset = 0; offset < ids.length; offset += 8) {
+    const batch = await Promise.all(ids.slice(offset, offset + 8).map(id => repo.listWhereNarrowed(["routeTaskId"], id, RETRY_FIELDS)));
+    rows.push(...batch.flat().map(row => row.value as WorkerRetryAttempt));
+  }
+  return rows;
+}
+
 function transientDenial(reason: string | null): boolean {
   return /^(?:DENIED_BY_POLICY:)?AUDIT_(?:ROLLING_COST_CEILING|MODEL_TRANSPORT_UNAVAILABLE)(?:[;:]|$)/.test(reason ?? "");
 }
 
-function debtCause(attempt: Attempt): DebtCause {
+function debtCause(attempt: WorkerRetryAttempt): DebtCause {
   if (attempt.outcome === "CRASHED" || attempt.outcome === "LEASE_EXPIRED") return "WORKER_LOST";
   if (/(?:AUDIT|PARSE)_ROLLING_COST_CEILING|(?:AUDIT|PARSE)_PROVIDER_FAILURE:429/.test(attempt.abortReason ?? "")) return "RATE_LIMITED";
   if (/(?:AUDIT|PARSE)_PROVIDER_FAILURE:5\d\d/.test(attempt.abortReason ?? "")) return "UPSTREAM_ERROR";
@@ -34,7 +49,7 @@ export function workerFailureCanRetry(detail: string): boolean {
 }
 
 /** A reading of canonical Attempts, not a second retry store or a lifetime attempt limit. */
-export function workerTaskAdmission(task: RouteTask, attempts: readonly Attempt[], now: string): WorkerTaskAdmission {
+export function workerTaskAdmission(task: RouteTask, attempts: readonly WorkerRetryAttempt[], now: string): WorkerTaskAdmission {
   const result = (state: WorkerTaskAdmission["state"], reason: string, debt: FreshnessDebt | null = null,
     requiresPolicyRecheck = false): WorkerTaskAdmission => ({
     due: state === "DUE", state, retryAt: debt?.retryAt ?? null,

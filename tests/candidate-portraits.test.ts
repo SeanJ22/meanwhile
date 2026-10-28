@@ -163,3 +163,29 @@ test("scheduled portrait refresh keeps the last photo when both source routes fa
   assert.equal(reads,1);
   assert.deepEqual(refreshed.portraits,plan.portraits);
 });
+
+test("blank portraits honor their retry clock, changed leads reopen them, and a stopped pass resumes only unfinished people", async () => {
+  const subjects = ["first", "second", "third"].map(id => ({ ...commonsSubject, candidacyId: id, readerKeys: [id], filingDomains: [] }));
+  const stop = new AbortController();
+  let reads = 0;
+  const empty = commonsRuntime([]);
+  const interrupted = await publishCandidatePortraits({ plan: { records: [], inputs: [], held: [], published: [] }, subjects, now: NOW,
+    signal: stop.signal, retryMinutes: 1440, commonsRuntime: { capture: async url => {
+      if (++reads === 2) stop.abort(Error("PASS_TIME_BUDGET"));
+      return empty.capture(url);
+    } } });
+  assert.deepEqual(interrupted.portraitWork?.pending, ["second", "third"]);
+  assert.deepEqual(Object.keys(interrupted.portraitWork?.attempts ?? {}), ["first"]);
+  const resumed = await publishCandidatePortraits({ plan: interrupted, subjects, now: "2026-10-01T01:00:00Z", retryMinutes: 1440,
+    commonsRuntime: { capture: async url => { reads++; return empty.capture(url); } } });
+  assert.equal(reads, 4, "the finished first person is not read on continuation");
+  assert.deepEqual(resumed.portraitWork?.pending, []);
+  const held = await publishCandidatePortraits({ plan: resumed, subjects, now: "2026-10-01T02:00:00Z", retryMinutes: 1440, subjectsComplete: false,
+    commonsRuntime: { capture: async () => { throw Error("unchanged blank was read before its retry"); } } });
+  assert.deepEqual(held.portraitWork?.attempts, resumed.portraitWork?.attempts);
+  assert.equal(held.portraitWork?.inputsComplete, false, "an unread input remains owed even when its completed portraits are waiting");
+  let changedReads = 0;
+  await publishCandidatePortraits({ plan: held, subjects: [{ ...subjects[0], givenName: "Changed" }], now: "2026-10-01T02:00:00Z", retryMinutes: 1440,
+    commonsRuntime: { capture: async url => { changedReads++; return empty.capture(url); } } });
+  assert.equal(changedReads, 1, "changed identity inputs are checked immediately");
+});

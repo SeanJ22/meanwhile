@@ -27,6 +27,8 @@ export const AUTOMATIC_REFRESH_TASKS: readonly RoutineSourceTask[] = AUTOMATIC_R
     requestedUrl: "", authorityMode: "REGISTERED_SOURCE_ROUTES", parserVersion: contract.parserNormalizerVersion,
     command: contract.command, cadenceMs: everyMs, retryMs: 60 * 60_000,
     contract: { readerProjection: contract.readerProjection,
+      databaseBytesPerRun: contract.databaseBytesPerRun, databaseBytesPerUnchangedRun: contract.databaseBytesPerUnchangedRun,
+      databaseByteBasis: contract.databaseByteBasis,
       cadence: stateContract?.family === "voting-sites" || id === "ballot-navigation" ? votingDoorRefreshCadence(election.electionDate)
         : { defaultEveryMs: everyMs, description: "daily official-source refresh on the continuous runner" } },
   };

@@ -5,6 +5,7 @@ import test from "node:test";
 
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
+import { factRefreshBounds, timeSensitiveSource } from "../lib/civic-data/source-change-cadence.ts";
 import {
   durableRoutineRunnerReceiptIssue,
   parseRoutineRunnerReceipt,
@@ -136,8 +137,10 @@ test("a registered source failure is one durable attempt with retry clock and un
     lastSucceededAt: GOOD_AT,
     lastSucceededObservedAt: GOOD_AT,
   });
-  assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), Date.parse(FAILED_AT) + task.retryMs - 1), false);
-  assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), Date.parse(FAILED_AT) + task.retryMs), true);
+  const failedAt = Date.parse(FAILED_AT);
+  const retryMs = timeSensitiveSource(task, failedAt) ? task.retryMs : Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+  assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), failedAt + retryMs - 1), false);
+  assert.equal(routineTaskDue(task, await store.clock(task.sourceId, task.recordClass, task.scope), failedAt + retryMs), true);
 });
 
 test("all five registered adapters can persist a well-formed source-scoped failure receipt", async () => {
@@ -164,8 +167,10 @@ test("all five registered adapters can persist a well-formed source-scoped failu
     assert.equal((await store.events(parsed.receipt.candidateId)).length, 1, `${contractId} must write exactly one attempt event`);
     const clock = await store.clock(task.sourceId, task.recordClass, task.scope);
     assert.deepEqual(clock, { lastAttemptedAt: FAILED_AT, failureStreak: 1 });
-    assert.equal(routineTaskDue(task, clock, Date.parse(FAILED_AT) + task.retryMs - 1), false, contractId);
-    assert.equal(routineTaskDue(task, clock, Date.parse(FAILED_AT) + task.retryMs), true, contractId);
+    const failedAt = Date.parse(FAILED_AT);
+    const retryMs = timeSensitiveSource(task, failedAt) ? task.retryMs : Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+    assert.equal(routineTaskDue(task, clock, failedAt + retryMs - 1), false, contractId);
+    assert.equal(routineTaskDue(task, clock, failedAt + retryMs), true, contractId);
   }
 });
 

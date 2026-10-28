@@ -1,15 +1,14 @@
+import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
 import { factDb } from "./helpers/fact-db.ts";
 import { openMissingPinBlanks } from "../lib/meetings/pin-blanks.ts";
 
 test("every unplaced sitting gets standing work, including entity-only history and bodies with no address",async()=>{
   const db=await factDb(),now="2026-10-26T07:00:00Z";
   try{
-    await db.pg.exec("CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,payload jsonb,promoted_at timestamptz DEFAULT '2026-10-26T06:00:00Z')");
-    for(const sql of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint"))
-      if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(sql))await db.pg.exec(sql);
+    await db.pg.exec("CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,payload jsonb,scope text DEFAULT 'fixture',current_version_id text DEFAULT 'fixture',promoted_at timestamptz DEFAULT '2026-10-26T06:00:00Z')");
+    await installKeyedRows(db.pg);
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES('body','body','Board','WI'),('meeting:history','meeting','Old sitting','WI')");
     const meeting=(id:string,extra:Record<string,unknown>={})=>({id,bodyId:"body",bodyName:"Board",...extra});
     await db.query("INSERT INTO civic_data_promotions(key,record_class,payload) VALUES('MEETING:test','MEETING',$1)",[JSON.stringify({meetings:[

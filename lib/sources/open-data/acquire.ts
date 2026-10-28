@@ -35,6 +35,7 @@ export function parseCatalogPage(body: string) {
 /** All public catalog entries, without a tag, state, government-size or dataset-category filter. */
 export async function* socrataPages(options: {
   signal: AbortSignal; token?: string; acquire?: typeof acquireKnownRelease;
+  maxSourceAgeMs?:number;
   releaseOptions?: Pick<KnownReleaseOptions,"store"|"locks"|"fetchImpl"|"now">;
 }): AsyncGenerator<CatalogPage> {
   let cursor="";
@@ -43,7 +44,7 @@ export async function* socrataPages(options: {
     // The provider caps offset+limit at 10,000. Native deep scrolling has no offset or order parameter.
     const url = new URL(SOCRATA_CATALOG); url.searchParams.set("limit","1000"); url.searchParams.set("scroll_id",cursor);
     const release = await (options.acquire ?? acquireKnownRelease)({sourceId:"socrata-discovery",releaseId:`catalog-scroll-${cursor || "start"}`,url:url.href,
-      parserVersion:OPEN_DATA_PARSER,maxBytes:32*1024*1024,checkAfterMs:OPEN_DATA_CLOCKS["socrata-discovery"],signal:options.signal,
+      parserVersion:OPEN_DATA_PARSER,maxBytes:32*1024*1024,checkAfterMs:Math.min(OPEN_DATA_CLOCKS["socrata-discovery"],options.maxSourceAgeMs??Infinity),signal:options.signal,
       headers:{accept:"application/json",...(options.token ? {"X-App-Token":options.token} : {})},allowedHosts:["api.us.socrata.com"],
       ...options.releaseOptions,fetchImpl:(url,init)=>openDataFetch(url,init,options.releaseOptions?.fetchImpl), validate:bytes=>{parseCatalogPage(new TextDecoder().decode(bytes));}});
     const body = new TextDecoder("utf-8",{fatal:true}).decode(release.bytes), page=parseCatalogPage(body);

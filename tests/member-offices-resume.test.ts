@@ -15,6 +15,8 @@ import { routineTaskNextDueMs } from "../lib/civic-data/runner.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { versionedSelect } from "../lib/db/versioned-query.ts";
+import { memberOfficeStateScope } from "../lib/officials/member-office-data.ts";
+import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
 
 beforeEach(() => installFactReader(async () => []));
 afterEach(() => installFactReader(undefined));
@@ -36,12 +38,12 @@ links:
 const CONTRACT = requiredManualProductionContract("member-offices");
 const TASK = AUTOMATIC_REFRESH_TASKS.find(task => task.id === "member-offices")!;
 
-async function publishState(store: RoutineDataStore, state: string, vault = new MemoryEvidenceStore()) {
-  const archive = zip([{ name: `people-${sha}/data/${state}/legislature/One.yml`, data: Buffer.from(yaml(`${state}-one`)) }], "2026-10-01");
-  const acquired = await acquireStatePeople({ state, store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks, now: () => at,
+async function publishState(store: RoutineDataStore, state: string, vault = new MemoryEvidenceStore(), phone = "555-1000", revision = sha, now = at, address = "Room 1, State Capitol") {
+  const archive = zip([{ name: `people-${revision}/data/${state}/legislature/One.yml`, data: Buffer.from(yaml(`${state}-one`).replace("555-1000", phone).replace("Room 1, State Capitol", address)) }], now.slice(0, 10));
+  const acquired = await acquireStatePeople({ state, store: new MemoryEvidenceStore(), locks: createMemoryRepositories().locks, now: () => now,
     signal: AbortSignal.timeout(10_000), divisions: [],
-    fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha }]) : new Response(archive)) as typeof fetch });
-  const published = await publishStatePeople({ vault, store, ...acquired, now: at });
+    fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha: revision }]) : new Response(archive)) as typeof fetch });
+  const published = await publishStatePeople({ vault, store, ...acquired, now, resolveOfficePoint: async () => ({reason:"NO_MATCH"}) });
   assert.ok(published.outcome.promoted, JSON.stringify(published.outcome.candidate.receipt));
 }
 
@@ -54,7 +56,7 @@ test("a member-office run cut off by its deadline saves the states it finished a
   store.readCandidateCaptures = async (id, urls, members) => { read.push(id); return readCandidateCaptures(id, urls, members); };
   // The pass deadline arrives after the first state.
   let ticks = 0;
-  const cut = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA", "US-TX"], deadlineMs: 1e12, clock: () => ticks++ === 0 ? 0 : 1e12 });
+  const cut = await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store, now: at, jurisdictions: ["US-CA", "US-TX"], deadlineMs: 1e12, clock: () => ticks++ === 0 ? 0 : 1e12 });
   assert.ok(cut.outcome?.promoted, JSON.stringify(cut));
   assert.deepEqual(cut.pending, ["US-TX"]);
   assert.equal(read.length, 1);
@@ -65,7 +67,12 @@ test("a member-office run cut off by its deadline saves the states it finished a
   assert.match((await memberOfficesRunNeeded(store, ["US-CA", "US-TX"])).reason, /1 state\(s\) are still owed/);
 
   read.length = 0;
-  const rest = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA", "US-TX"] });
+  const readPromotion=store.readPromotion.bind(store);
+  store.readPromotion = async (recordClass,scope) => {
+    assert.notEqual(scope,CONTRACT.scope,"successors never read the prior national package");
+    return readPromotion(recordClass,scope);
+  };
+  const rest = await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store, now: at, jurisdictions: ["US-CA", "US-TX"] });
   assert.ok(rest.outcome?.promoted && !rest.outcome.confirmed, JSON.stringify(rest));
   assert.deepEqual(rest.pending, []);
   assert.equal(read.length, 1, "the finished state is not read again");
@@ -94,24 +101,80 @@ test("on the production store the member-office progress, capture list and conti
     assert.ok(Array.isArray(captures) && captures.length === 1, JSON.stringify(captures));
     assert.equal(await store.readCandidateField(roster!.versionId, ["normalizedPayload", "absent"]), undefined);
     assert.equal(await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["rosterDigests"]), null);
-    const [digest] = await store.readRosterIdDigests("STATE_LEGISLATOR", ["US-CA:openstates-people:v1"]);
-    assert.match(digest!.digest, /^1:[a-f0-9]{32}$/);
+    const head = await store.readSourceHead("STATE_LEGISLATOR", "US-CA:openstates-people:v1");
+    const digest = canonicalCivicDataJson([head!.sourceId, head!.parserVersion, head!.rawHash]);
+    const officeInput = await store.readOfficeRoster("US-CA:openstates-people:v1");
+    assert.equal(officeInput?.roster.officeholders[0]?.offices?.[0]?.phone, "555-1000");
+    assert.deepEqual(officeInput?.roster.divisions, []);
     as("member-offices", "MANUAL_CONTRACT");
     let ticks = 0;
-    const cut = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA", "US-TX"], deadlineMs: 1e12, clock: () => ticks++ === 0 ? 0 : 1e12 });
+    const cut = await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store, now: at, jurisdictions: ["US-CA", "US-TX"], deadlineMs: 1e12, clock: () => ticks++ === 0 ? 0 : 1e12 });
     assert.ok(cut.outcome?.promoted, JSON.stringify(cut));
-    const held = await store.readPromotionPayloadFields(CONTRACT.recordClass, CONTRACT.scope, ["rosterDigests", "pending", "absent"]);
-    assert.deepEqual(held, { rosterDigests: { "US-CA": digest!.digest }, pending: ["US-TX"] });
+    const held = await store.readMemberOfficeProgress();
+    assert.deepEqual(held.rosterDigests, { "US-CA": digest });
+    assert.deepEqual(held.pending, ["US-TX"]);
     assert.equal((await store.clock(CONTRACT.sourceId, CONTRACT.recordClass, CONTRACT.scope)).continuationPending, true);
     const before=Number((await pg.query<{version:string}>("SELECT version::text FROM civic_data_clock_versions WHERE record_class=$1 AND scope=$2",
-      [CONTRACT.recordClass,CONTRACT.scope])).rows[0]!.version);
-    const rest = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA", "US-TX"] });
+      [CONTRACT.recordClass,memberOfficeStateScope("CA")])).rows[0]!.version);
+    const rest = await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store, now: at, jurisdictions: ["US-CA", "US-TX"] });
     assert.ok(rest.outcome?.promoted, JSON.stringify(rest));
     const after=Number((await pg.query<{version:string}>("SELECT version::text FROM civic_data_clock_versions WHERE record_class=$1 AND scope=$2",
-      [CONTRACT.recordClass,CONTRACT.scope])).rows[0]!.version);
+      [CONTRACT.recordClass,memberOfficeStateScope("CA")])).rows[0]!.version);
     assert.ok(after>before,"continuing a publication updates the same scope's stored version");
     assert.equal((await store.clock(CONTRACT.sourceId, CONTRACT.recordClass, CONTRACT.scope)).continuationPending, false);
     assert.equal((await memberOfficesRunNeeded(store, ["US-CA", "US-TX"])).needed, false);
     } finally { installFactReader(undefined); }
   });
+});
+
+test("unchanged office source hashes confirm without held rosters, records, or event history", async () => {
+  const store = new MemoryRoutineDataStore();
+  await publishState(store, "ca");
+  const first = await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store, now: at, jurisdictions: ["US-CA"] });
+  assert.ok(first.outcome?.promoted);
+  store.readCandidate = async () => { throw new Error("whole candidate read"); };
+  store.readPromotion = async () => { throw new Error("whole projection read"); };
+  store.events = async () => { throw new Error("event history read"); };
+  store.readOfficeRoster = async () => { throw new Error("held office roster read"); };
+  const unchanged = await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store, now: "2026-10-02T00:00:00.000Z", jurisdictions: ["US-CA"] });
+  assert.equal(unchanged.confirmation?.head.versionId, first.promotedVersionId);
+  assert.equal(unchanged.records, 0);
+});
+
+test("an existing member's changed office phone and address publish even when the member ids stay the same", async () => {
+  const store = new MemoryRoutineDataStore();
+  await publishState(store, "ca");
+  assert.ok((await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store, now: at, jurisdictions: ["US-CA"] })).outcome?.promoted);
+  const first = await store.readPromotionPayloadFields(CONTRACT.recordClass, memberOfficeStateScope("CA"), ["records"]);
+  const now = "2026-10-02T00:00:00.000Z";
+  await publishState(store, "ca", new MemoryEvidenceStore(), "555-2000", "b".repeat(40), now, "Room 2, State Capitol");
+  assert.equal((await memberOfficesRunNeeded(store, ["US-CA"])).needed, true);
+  const changed = await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store, now, jurisdictions: ["US-CA"] });
+  assert.ok(changed.outcome?.promoted, JSON.stringify(changed));
+  const records = (await store.readPromotionPayloadFields(CONTRACT.recordClass, memberOfficeStateScope("CA"), ["records"]))?.records as { id: string; office: { phone: string; address: string } }[];
+  assert.equal(records.length, 1);
+  assert.equal(records[0].id, (first!.records as { id: string }[])[0].id);
+  assert.equal(records[0].office.phone, "555-2000");
+  assert.equal(records[0].office.address, "Room 2, State Capitol");
+});
+
+test("a crash after a state promotes resumes from its source hash without rereading its offices", async () => {
+  const store=new MemoryRoutineDataStore();
+  await publishState(store,"ca");
+  const save=store.writeMemberOfficeProgress.bind(store);
+  let writes=0;
+  store.writeMemberOfficeProgress=async progress=>{if(++writes>1)throw new Error("TEST_CURSOR_WRITE_INTERRUPTED");await save(progress);};
+  await assert.rejects(publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}),store,now:at,jurisdictions:["US-CA"]}),/TEST_CURSOR_WRITE_INTERRUPTED/);
+  const head=await store.readSourceHead(CONTRACT.recordClass,memberOfficeStateScope("CA"));
+  assert.ok(head,"the state's facts committed before the cursor write failed");
+  assert.deepEqual((await store.readMemberOfficeProgress()).pending,["US-CA"]);
+  store.writeMemberOfficeProgress=save;
+  store.readMemberOfficeSlice=async()=>{throw new Error("unchanged state offices read");};
+  store.readOfficeRoster=async()=>{throw new Error("unchanged source roster read");};
+  store.readCandidate=async()=>{throw new Error("whole candidate read");};
+  store.readPromotion=async()=>{throw new Error("whole promotion read");};
+  const resumed=await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}),store,now:"2026-10-02T00:00:00.000Z",jurisdictions:["US-CA"]});
+  assert.equal(resumed.confirmation?.head.versionId,head.versionId);
+  assert.equal(resumed.records,0);
+  assert.deepEqual(resumed.pending,[]);
 });

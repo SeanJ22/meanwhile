@@ -18,7 +18,9 @@ test("the production progress SQL reads partitioned proof metadata and survives 
     await db.exec(`CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
       CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,
         acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,validation_receipt jsonb,normalized_hash text,candidate jsonb);
-      CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,current_version_id text,last_known_good_version_id text,validation_receipt jsonb,payload jsonb);`);
+      CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,current_version_id text,last_known_good_version_id text,validation_receipt jsonb,payload jsonb);
+      ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text;
+      ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
     const migration = await readFile("lib/db/migrations/0036_ne01.sql", "utf8"), start = migration.indexOf("CREATE FUNCTION reader_payload_node(");
     await db.exec(migration.slice(start, migration.indexOf("--> statement-breakpoint", start)));
     const origin = { versionId: "old-national", recordClass: "CANDIDATE_PROFILE", scope: "US-AZ+US-NH+US-NJ:2026-supported-candidates", readModelHash: "a".repeat(64) };

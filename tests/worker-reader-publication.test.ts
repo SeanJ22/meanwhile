@@ -218,7 +218,12 @@ test("verified directory bodies publish through the normal registry door and cre
     assert.equal(next.action, "BLOCKED");
     assert.match(next.reason, /hunted in its government's packet/, "unresolved source discovery is the government's hunt packet's");
   }
-  assert.deepEqual(await publishWorkerDirectoryResults(f.input), published, "durable publication prevents duplicate bodies or child work");
+  const reused = await publishWorkerDirectoryResults({ ...f.input,
+    store: new Proxy(f.store, { get() { assert.fail("a published identical directory parser result must not read the held state registry"); } }),
+    readCapture: async () => { assert.fail("a published identical directory parser result must not reload captures"); },
+    readHeld: async () => { assert.fail("a published identical directory parser result must not reload held pages"); },
+  });
+  assert.deepEqual(reused, published, "durable publication preserves the original outcome and sourceObservedAt without duplicate bodies or child work");
   assert.equal((await f.h.repos.workItems.list()).length, 4);
   const parser = f.results.find(row => row.result.role === "PARSER")!;
   const captures = await Promise.all([parser.result.role === "PARSER" ? parser.result.artifactId : "", f.artifact.id].map(f.input.readCapture));

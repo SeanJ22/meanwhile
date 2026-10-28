@@ -7,7 +7,6 @@ import { factClocks } from "../facts/clocks.ts";
 import { publishCommentFacts } from "../facts/comment-facts.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import { parserFieldSources } from "./field-sources.ts";
 import type { RoutineDataStore } from "./store.ts";
 import { publicationCaptureReaders } from "./worker-publication-context.ts";
@@ -45,7 +44,7 @@ export async function publishOwedCommentFacts(input: {
       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: extraction.artifactId, results, readCapture, officialLinks: manual.officialLinks });
       const capture = captures.find(c => c.evidence.artifactId === extraction.artifactId);
       if (!capture) throw new Error("COMMENT_PAGE_NOT_SAVED");
-      const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
+      const registry = await input.store.readRegistrySlice(plan.contract.jurisdiction.state, [plan.publication!.bodyId], [plan.contract.jurisdiction.canonicalId]);
       const bodyId = plan.publication.bodyId;
       const body = registry?.payload.registry.bodies.find(row => row.id === bodyId) ?? null;
       let live = 0, added = 0, reused = 0, blanks = 0;

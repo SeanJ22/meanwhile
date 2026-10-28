@@ -24,8 +24,41 @@ import {
   resetOutcomeSnapshotCache,
 } from "../lib/outcomes/store.ts";
 import type { OutcomeSnapshot } from "../lib/outcomes/types.ts";
+import { publishAzOfficialActionsPackage } from "../lib/outcomes/official-actions-package.ts";
 
 const B64 = "b".repeat(64);
+
+test("replaying the exact reviewed official-action files reads no held bodies and never renews a publisher date",async()=>{
+  const memory=new MemoryRoutineDataStore(),first=oneActionStore(),input={projection:first.store,sourceReceipt:first.receipt,sourceThrough:"2026-09-08T17:00:00.000Z"};
+  const published=await publishAzOfficialActionsPackage(input,memory,"2026-09-08T18:02:00.000Z");
+  assert.ok(published.publication?.outcome.promoted,JSON.stringify(published.publication?.outcome.candidate.receipt));
+  const id=published.publication.candidate.id,read=memory.readCandidate.bind(memory),events=memory.events.bind(memory),before=await read(id),history=await events(id);
+  assert.equal(before?.candidate.retrieval.retrievedAt,first.receipt.reviewedAt);
+  memory.readPromotion=async()=>{throw Error("held official actions read");};
+  memory.readCandidate=async()=>{throw Error("held official action candidate read");};
+  memory.readCandidateProof=async()=>{throw Error("held official action proof/history read");};
+  memory.readPublishedCandidateMetadata=async()=>{throw Error("held official action source-set read");};
+  memory.appendEvidence=async()=>{throw Error("package replay cannot append source freshness");};
+  const replay=await publishAzOfficialActionsPackage(input,memory,"2026-10-20T12:00:00.000Z");
+  assert.equal(replay.publication,null);assert.equal(replay.replay?.versionId,id);
+  assert.deepEqual(await events(id),history);assert.deepEqual((await read(id))?.candidate,before?.candidate);
+});
+
+test("a partial official-action file retains its prior native fact/date and then replays without loading it again",async()=>{
+  const memory=new MemoryRoutineDataStore(),first=oneActionStore(),sourceThrough="2026-09-08T17:00:00.000Z";
+  const original=await publishAzOfficialActionsPackage({projection:first.store,sourceReceipt:first.receipt,sourceThrough},memory,"2026-09-08T18:02:00.000Z");
+  assert.ok(original.publication?.outcome.promoted);
+  const partial=structuredClone(first.store);partial.actions[0]!.documentUrl="https://www.azleg.gov/unreceipted.pdf";
+  const input={projection:partial,sourceReceipt:{...first.receipt,reviewedAt:"2026-09-08T18:03:00.000Z"},sourceThrough};
+  const changed=await publishAzOfficialActionsPackage(input,memory,"2026-09-08T18:04:00.000Z");
+  assert.ok(changed.publication?.outcome.promoted,JSON.stringify(changed.publication?.outcome.candidate.receipt));
+  assert.deepEqual((changed.publication.candidate.readModel as ExecutiveActionStore).actions,first.store.actions);
+  assert.equal(changed.publication.candidate.retrieval.complete,false);
+  memory.readPromotion=async()=>{throw Error("unchanged retained action body read");};
+  memory.readCandidate=async()=>{throw Error("unchanged retained action candidate read");};
+  const replay=await publishAzOfficialActionsPackage(input,memory,"2026-10-20T12:00:00.000Z");
+  assert.equal(replay.publication,null);assert.equal(replay.replay?.versionId,changed.publication.candidate.id);
+});
 
 function actionReceipt(
   store: ExecutiveActionStore,

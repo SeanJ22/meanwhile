@@ -1,6 +1,8 @@
 import { createHash } from "node:crypto";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { trackSourceTransport } from "./host-transport.ts";
+import { rawCaptureVault } from "../civic-data/raw-capture-remote.ts";
+import { vaultSourceResponse } from "./raw-response.ts";
 
 export interface SourceAcquisitionEvidence {
   readonly source: string;
@@ -66,8 +68,10 @@ export async function captureSourceAcquisitions<T>(
   const evidence: SourceAcquisitionEvidence[] = [];
   activeEvidence = evidence;
   globalThis.fetch = trackSourceTransport((async (input, init) => {
-    const response = await originalFetch(input, init);
+    let response = await originalFetch(input, init);
     if (sourceContext.getStore() && response.ok) {
+      if (process.env.WTP_VAULT_PROVIDER === "netlify")
+        response = vaultSourceResponse(response, rawCaptureVault(), sourceContext.getStore()!);
       const bytes = new Uint8Array(await response.clone().arrayBuffer());
       recordAcquiredResponse({
         requestedUrl: urlOf(input),

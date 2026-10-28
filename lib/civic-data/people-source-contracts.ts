@@ -1,6 +1,7 @@
 // Database byte declarations use database_transfer_hourly, through 2026-10-27 17:00 UTC.
 // Source families use their largest recorded hour (request + response bytes) as a conservative per-run estimate.
 // Commands absent from the counters use the routine supervisor estimate, 1,907,347,669 bytes.
+import { withDatabaseByteContract } from "./database-byte-contract.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { PEOPLE_SOURCE_IDS, peopleSourceRecordClass, peopleSourceScope, type PeopleSourceId } from "../officials/people-sources.ts";
 import { VALIDATION_CHECKS } from "./types.ts";
@@ -19,7 +20,7 @@ export const peopleSourceContractId = (state: string, sourceId: StandingPeopleSo
   `people-${sourceId}-${state.toLowerCase()}`;
 
 /** Each invocation holds one state. The upstream transport owns shared release and host pacing. */
-export const PEOPLE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
+const PEOPLE_SOURCE_DEFINITIONS: readonly RoutineSourceContract[] = [
   {
     id: peopleSourceContractId("us", "statewide-executive-sources"), sourceId: "statewide-executive-sources", recordClass: "STATE_LEGISLATOR",
     scope: peopleSourceScope("US", "statewide-executive-sources"), acquisitionFailureDomain: "routine-source:statewide-executive-sources:us",
@@ -72,3 +73,5 @@ export const PEOPLE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     autoPromotable: true, childTimeoutMs: 0, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
   })),
 ];
+
+export const PEOPLE_SOURCE_CONTRACTS = PEOPLE_SOURCE_DEFINITIONS.map(withDatabaseByteContract);

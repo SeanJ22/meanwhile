@@ -98,7 +98,7 @@ test("officeholder statements use the canonical candidate/event/promotion pointe
   assert.equal(promoted.candidate.state, "PROMOTED");
   assert.equal(promoted.candidate.receipt?.decision, "GOOD");
   assert.equal(promoted.readerReadback?.status, "PASS");
-  assert.deepEqual((await store.events(candidate.id)).map(({ state }) => state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
+  assert.deepEqual((await store.events(candidate.id)).map(({ state }) => state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);
 
   const read = await readOfficeholderStatementsProjection({ store,  now: T0 });
   assert.equal(read.kind, "PROMOTED");

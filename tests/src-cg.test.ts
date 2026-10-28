@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -16,6 +17,7 @@ import { FEDERAL_SOURCE_IDS, FEDERAL_SOURCES, type FederalSourceId } from "../li
 import type { FederalCapture, HeldFederalCapture } from "../lib/sources/congress/types.ts";
 import { holdRawCapture, readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import { federalCalendarDate, federalDeadlineDate } from "../lib/sources/congress/presentation.ts";
+import { federalSourceInputHash } from "../lib/sources/congress/source-hash.ts";
 
 const vault = new MemoryEvidenceStore();
 
@@ -30,18 +32,33 @@ test("Congress.gov and govinfo cursor timestamps use the seconds-only format the
   assert.equal(federalApiTimestamp("2026-10-12T01:09:29.113Z"), "2026-10-12T01:09:29Z");
 });
 
+test("native federal hashes follow the selected object across listing pagination without treating join diagnostics as source changes", () => {
+  const filing = capture("senate-lda", "contributions", "lda-contribution.json", { filingId: "native-filing", honoreeRosterFailure: "temporary read A" });
+  const original = { source: "senate-lda" as const, partition: "filing:native-filing", captures: [filing], completePartition: true };
+  const first = federalSourceInputHash(original);
+  assert.deepEqual(federalSourceInputHash({ ...original, captures: [{ ...filing, url: `${filing.url}?page=3&filing_dt_posted_after=2026-10-25`,
+    context: { ...filing.context, honoreeRosterFailure: "temporary read B" } }] }), first);
+  assert.notEqual(federalSourceInputHash({ ...original, captures: [{ ...filing, body: `${filing.body}\n` }] }).rawHash, first.rawHash);
+  const member = capture("congress-api", "members", "congress-api-live.json", { bioguideId: "C001078" });
+  const input = { source: "congress-api" as const, partition: "congress:C001078", captures: [{ ...member,
+    url: "https://api.congress.gov/v3/member?currentMember=true&offset=0&limit=250" }] };
+  assert.deepEqual(federalSourceInputHash(input), federalSourceInputHash({ ...input, captures: [{ ...member,
+    url: "https://api.congress.gov/v3/member?limit=100&offset=500&currentMember=true" }] }));
+});
+
 test("resumed Congress and govinfo backfills catch updates from their original first page, even on a later day", async t => {
   t.mock.method(console, "log", () => {});
   const through = "2026-10-10T12:00:00.000Z";
   for (const source of ["congress-api", "govinfo"] as const) {
     const store = new MemoryRoutineDataStore();
-    const c = source === "congress-api" ? capture(source, "members", "congress-api-live.json") : capture(source, "govinfo-summary", "govinfo-collection.json");
+    const c: FederalCapture = { ...(source === "congress-api" ? capture(source, "members", "congress-api-live.json") : capture(source, "govinfo-summary", "govinfo-collection.json")), retrievedAt: through };
     const url = source === "congress-api" ? "https://api.congress.gov/v3/member?limit=1&currentMember=true" : "https://api.govinfo.gov/collections/BILLS/1993-01-01T00:00:00Z?pageSize=100&offsetMark=next";
-    const cursor = source === "congress-api" ? `bootstrap:${JSON.stringify({ url, index: 1, through })}` : `govinfoPage:${JSON.stringify({ url, through })}`;
-    await publishFederalPartition({ vault, source, partition: "national", captures: [c], records: [], cursor, store, now: through });
     const root = JSON.parse(c.body);
     // Controlled completed-page envelopes keep the source's member record unchanged.
     const response = source === "congress-api" ? { ...root, pagination: { count: root.members.length } } : { ...root, packages: [], count: 0, nextPage: null };
+    const pageHash = createHash("sha256").update(JSON.stringify(response)).digest("hex");
+    const cursor = source === "congress-api" ? `bootstrap:${JSON.stringify({ url, index: 1, through, pageHash })}` : `govinfoPage:${JSON.stringify({ url, through, pageHash })}`;
+    await publishFederalPartition({ vault, source, partition: "national", captures: [c], records: [], cursor, store, now: through });
     const result = await refreshFederalSource({ vault, source, store, env: { CONGRESS_API_KEY: "fixture", DATA_GOV_API_KEY: "fixture" },
       fetchImpl: (async () => Response.json(response)) as typeof fetch, now: () => NOW });
     assert.equal(result.ok, true);
@@ -49,6 +66,34 @@ test("resumed Congress and govinfo backfills catch updates from their original f
     assert.equal(held.kind, "PROMOTED");
     if (held.kind === "PROMOTED") assert.equal(held.value.cursor, source === "congress-api" ? `updates:${through}` : "2026-10-10T11:59:59.000Z");
   }
+});
+
+test("a changed govinfo page cannot reuse a completed item index from different source bytes", async t => {
+  t.mock.method(console, "log", () => {});
+  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore();
+  const url = "https://api.govinfo.gov/collections/BILLS/2018-01-01T00:00:00Z?pageSize=100&offsetMark=*";
+  const original = JSON.parse(fixture("govinfo-collection.json"));
+  const oldBody = JSON.stringify({ ...original, packages: original.packages.slice(0, 1), count: 1, nextPage: null });
+  const pageHash = createHash("sha256").update(oldBody).digest("hex");
+  const cursor = `govinfoPage:${JSON.stringify({ url, through: NOW, pageHash, index: 1 })}`;
+  await publishFederalPartition({ source: "govinfo", partition: "national", captures: [{ source: "govinfo", kind: "govinfo-summary", url, body: oldBody, retrievedAt: NOW }],
+    records: [], store, vault: own, now: NOW, cursor });
+  const summary = JSON.parse(fixture("govinfo-summary.json")), packageLink = `https://api.govinfo.gov/packages/${summary.packageId}/summary`;
+  const changed = { packages: [{ packageId: summary.packageId, packageLink }], count: 1, nextPage: null };
+  const requests: string[] = [];
+  const result = await refreshFederalSource({ source: "govinfo", store, vault: own, env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW,
+    fetchImpl: (async input => {
+      const requested = String(input); requests.push(requested);
+      if (requested === url) return Response.json(changed);
+      if (requested === packageLink) return Response.json(summary);
+      if (requested === summary.download.txtLink) return new Response(fixture("govinfo-bill-text.txt"));
+      throw new Error(`Unexpected source request ${requested}`);
+    }) as typeof fetch });
+  assert.equal(result.ok, true);
+  assert.ok(requests.includes(packageLink), "the replacement native edition must be acquired from item zero");
+  const held = await readFederalSourceProjection("govinfo", "bill:115:hr:1625", { store, now: NOW });
+  assert.ok(held.kind === "PROMOTED");
+  assert.ok(held.value.records.some(row => row.kind === "BILL_TEXT"));
 });
 
 test("fresh real responses from all five source APIs preserve their native records and publication fields", () => {
@@ -172,10 +217,11 @@ test("an unrelated contact question never opens the new national source holdings
   assert.deepEqual(result.records, []); assert.deepEqual(result.gaps, []);
 });
 
-test("a federal candidate holds vault references, not source bytes, and a later partial page re-verifies held facts from the vault", async () => {
+test("a federal candidate holds vault references and an unchanged partial page never reopens retained source bytes", async () => {
   const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore();
   const captures = [bill(), capture("congress-api", "committees", "congress-committees.json", { billId: "117:hr:21" })];
   const first = await publishFederalPartition({ vault: own, source: "congress-api", partition: "bill:117:hr:21", captures, records: captures.flatMap(normalizeFederalCapture), store, now: NOW });
+  assert.ok(first.kind === "PUBLISHED");
   const saved = first.candidate.normalizedPayload as { captures: HeldFederalCapture[] };
   assert.equal(saved.captures.length, 2);
   for (const [index, held] of saved.captures.entries()) {
@@ -186,21 +232,26 @@ test("a federal candidate holds vault references, not source bytes, and a later 
   assert.ok(!JSON.stringify(first.candidate).includes(captures[1].body.slice(0, 200)));
   const nextAt = "2026-10-12T19:00:00.000Z", detail = { ...captures[0], retrievedAt: nextAt };
   const second = await publishFederalPartition({ vault: own, source: "congress-api", partition: "bill:117:hr:21", captures: [detail], records: normalizeFederalCapture(detail), store, now: nextAt });
-  assert.ok(second.outcome.promoted ?? second.outcome.confirmed);
-  const kept = (second.candidate.normalizedPayload as { captures: HeldFederalCapture[] }).captures;
-  assert.deepEqual(kept.map(row => row.raw), [saved.captures[0].raw, saved.captures[1].raw]);
-  assert.equal((await own.list("project/freshness/source/congress-api/raw/")).length, 2, "identical bytes are stored once");
-  await assert.rejects(publishFederalPartition({ vault: new MemoryEvidenceStore(), source: "congress-api", partition: "bill:117:hr:21", captures: [detail],
-    records: normalizeFederalCapture(detail), store, now: nextAt }), /RAW_CAPTURE_MISSING_OR_CORRUPT/);
+  assert.ok(second.kind === "UNCHANGED");
+  assert.equal(second.head.versionId, first.outcome.promoted?.versionId);
+  assert.equal((await own.list("project/freshness/raw/sha256/")).length, 2, "identical bytes are stored once");
+  const unchanged = await publishFederalPartition({ vault: new MemoryEvidenceStore(), source: "congress-api", partition: "bill:117:hr:21", captures: [detail],
+    records: normalizeFederalCapture(detail), store, now: nextAt });
+  assert.equal(unchanged.kind, "UNCHANGED", "a matching source must not reopen unrelated held capture bytes");
+  const changed = { ...detail, body: `${detail.body}\n` };
+  await assert.rejects(publishFederalPartition({ vault: new MemoryEvidenceStore(), source: "congress-api", partition: "bill:117:hr:21", captures: [changed],
+    records: normalizeFederalCapture(changed), store, now: nextAt }), /RAW_CAPTURE_MISSING_OR_CORRUPT/);
 });
 
 test("unchanged provider checks succeed, and later outages preserve facts and record the actual door reason", async t => {
   t.mock.method(console, "log", () => {});
   const store = new MemoryRoutineDataStore(), c = bill(), facts = normalizeFederalCapture(c);
   const first = await publishFederalPartition({ vault, source: "congress-api", partition: "congress:C001078", captures: [c], records: facts, store, now: NOW });
+  assert.ok(first.kind === "PUBLISHED");
   const nextAt = "2026-10-12T19:00:00.000Z", nextCapture = { ...c, retrievedAt: nextAt };
   const second = await publishFederalPartition({ vault, source: "congress-api", partition: "congress:C001078", captures: [nextCapture], records: normalizeFederalCapture(nextCapture), store, now: nextAt });
-  assert.equal(second.outcome.confirmed?.versionId, first.outcome.promoted?.versionId);
+  assert.ok(second.kind === "UNCHANGED");
+  assert.equal(second.head.versionId, first.outcome.promoted?.versionId);
   const doors: { ok: boolean; reason?: string }[] = [];
   const result = await refreshFederalSource({ vault, source: "congress-api", store, now: () => nextAt, env: { CONGRESS_API_KEY: "fixture" },
     fetchImpl: (async () => { throw new Error("Workspace proxy refused connection"); }) as typeof fetch,
@@ -208,6 +259,68 @@ test("unchanged provider checks succeed, and later outages preserve facts and re
   assert.equal(result.ok, false); assert.match(doors[0].reason!, /proxy refused/);
   const held = await readFederalSourceProjection("congress-api", "congress:C001078", { store, now: nextAt });
   assert.equal(held.kind, "PROMOTED");
+});
+
+test("every federal family compares its selected source hash before reading held facts, captures or events", async t => {
+  t.mock.method(console, "log", () => {});
+  const cases: [FederalSourceId, FederalCapture["kind"], string][] = [
+    ["congress-api", "bill", "congress-bill.json"], ["govinfo", "bill-text", "govinfo-bill-text.txt"],
+    ["federal-register", "rules", "federal-register.json"], ["regulations-gov", "rules", "regulations-gov-live.json"],
+    ["senate-lda", "contributions", "lda-contribution.json"],
+  ];
+  for (const [source, kind, file] of cases) {
+    const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore(), c = capture(source, kind, file);
+    const partition = source === "federal-register" || source === "regulations-gov" ? "rules" : "fixture";
+    const records = normalizeFederalCapture(c);
+    const first = await publishFederalPartition({ vault: own, source, partition, captures: [c], records, store, now: NOW });
+    assert.ok(first.kind === "PUBLISHED", source);
+    const forbidden = ["readPromotion", "readCandidate", "readCandidatePath", "readCandidateField", "readPromotionPayloadFields", "events", "create"] as const;
+    const originals = new Map(forbidden.map(method => [method, store[method]]));
+    for (const method of forbidden) Object.defineProperty(store, method, { configurable: true, value: async () => { throw new Error(`FEDERAL_HELD_READ:${source}:${method}`); } });
+    const nextAt = "2026-10-12T19:00:00.000Z", fresh = { ...c, retrievedAt: nextAt };
+    const second = await publishFederalPartition({ vault: new MemoryEvidenceStore(), source, partition, captures: [fresh], records: normalizeFederalCapture(fresh), store, now: nextAt });
+    assert.ok(second.kind === "UNCHANGED", source);
+    assert.equal(second.head.versionId, first.outcome.promoted?.versionId, source);
+    for (const [method, implementation] of originals) Object.defineProperty(store, method, { configurable: true, value: implementation });
+    const read = await readFederalSourceProjection(source, partition, { store, now: nextAt });
+    assert.ok(read.kind === "PROMOTED", source);
+    assert.ok(read.value.records.every(row => row.checkedAt === nextAt), `${source}: readers see the actual unchanged source check`);
+  }
+});
+
+test("an unchanged primary source repairs a national count snapshot stranded after its native write", async t => {
+  t.mock.method(console, "log", () => {});
+  const store = new MemoryRoutineDataStore(), own = new MemoryEvidenceStore(), source = "federal-register" as const;
+  const envelope = JSON.parse(fixture("federal-register.json"));
+  let rows = envelope.results.slice(0, 1);
+  const options = { store, vault: own, source, now: () => NOW,
+    fetchImpl: (async () => Response.json({ ...envelope, results: rows, count: rows.length, next_page_url: null })) as typeof fetch };
+  assert.equal((await refreshFederalSource(options)).ok, true);
+  const originalCreate = store.create.bind(store);
+  let interrupt = true;
+  store.create = async (...args: Parameters<typeof originalCreate>) => {
+    const native = interrupt && args[0].candidate.scope === `${source}:national`
+      ? (await store.readPromotionPayloadFields("FEDERAL_CIVIC_RECORD", `${source}:rules`, ["counts"]))?.counts as { loaded?: number } | undefined : undefined;
+    if (native?.loaded === 2) { interrupt = false; throw new Error("hard cutoff after native publication"); }
+    return originalCreate(...args);
+  };
+  rows = [...rows, { ...rows[0], document_number: "2026-99999", title: `${rows[0].title} additional native document` }];
+  const stopped = await refreshFederalSource(options);
+  assert.equal(stopped.ok, false);
+  const stranded = await readFederalSourceProjection(source, "national", { store, now: NOW });
+  assert.ok(stranded.kind === "PROMOTED");
+  assert.equal(stranded.value.counts?.loaded, 1);
+  const readPromotion = store.readPromotion.bind(store);
+  store.readPromotion = async (recordClass, scope) => {
+    assert.notEqual(scope, `${source}:rules`, "matching native input repairs totals without opening its held fact body");
+    return readPromotion(recordClass, scope);
+  };
+  const repaired = await refreshFederalSource(options);
+  assert.equal(repaired.ok, true);
+  assert.equal(repaired.counts.loaded, 2);
+  const national = await readFederalSourceProjection(source, "national", { store, now: NOW });
+  assert.ok(national.kind === "PROMOTED");
+  assert.equal(national.value.counts?.loaded, 2);
 });
 
 test("real federal rule metadata is held and controlled deadlines and withdrawals govern all states and Ask", async () => {
@@ -254,6 +367,30 @@ test("Regulations.gov partitions national results rather than silently stopping 
     }) as typeof fetch });
   let pages = 0; for await (const _page of regulationPages(client, "2026-10-12", "2026-10-10", "2026-10-12")) pages++;
   assert.equal(pages, 2); assert.equal(urls.length, 3);
+});
+
+test("Regulations.gov resumes the next page and every remaining date range after a cutoff", async () => {
+  const urls: string[] = [];
+  const client = federalClient({ source: "regulations-gov", env: { DATA_GOV_API_KEY: "fixture" }, now: () => NOW,
+    fetchImpl: (async input => {
+      const u = new URL(String(input)); urls.push(u.href);
+      const from = u.searchParams.get("filter[postedDate][ge]"), through = u.searchParams.get("filter[postedDate][le]"), page = Number(u.searchParams.get("page[number]"));
+      const full = from === "2026-10-10" && through === "2026-10-12", lower = from === "2026-10-10" && through === "2026-10-11";
+      return Response.json({ meta: { totalElements: full ? 6000 : lower ? 2 : 1, hasNextPage: lower && page === 1 },
+        data: [{ id: `${from}:${page}`, attributes: { title: "Transport fixture" } }] });
+    }) as typeof fetch });
+  const firstPass = regulationPages(client, "2026-10-12", "2026-10-10", "2026-10-12");
+  const first = await firstPass.next();
+  assert.ok(!first.done && first.value.continuation);
+  const progress = first.value.continuation;
+  assert.equal(progress.pending.length, 2);
+  assert.equal(new URL(progress.pending[0].url!).searchParams.get("page[number]"), "2");
+  await firstPass.return(undefined);
+  urls.length = 0;
+  const resumed: string[] = [];
+  for await (const page of regulationPages(client, progress.today, "2026-10-10", "2026-10-12", progress.pending)) resumed.push(String(page.items[0].id));
+  assert.deepEqual(resumed, ["2026-10-10:2", "2026-10-12:1"]);
+  assert.equal(urls.length, 2, "completed ranges and pages are not reacquired before outstanding work");
 });
 
 test("Congress acquisition runs through its real bill samples and persists state counts and incremental cursors", async t => {

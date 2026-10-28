@@ -5,7 +5,6 @@ import { runPool } from "../control-plane/scheduler/shadow-loop.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { saveWorkerPublicationOutcome } from "./publication-flow.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import { pageWords, section3Record } from "../control-plane/promotion/section3.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { captureIntact, heldPageCopies } from "./worker-publication-evidence.ts";
@@ -190,7 +189,7 @@ export async function publishHeldElectionOffices(input: {
   for (const item of owed) {
     const plan = item.autonomousPlan!;
     if (plan.contract?.schemaVersion !== 2) { fieldsByItem.set(item.id, -1); continue; }
-    const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
+    const registry = await input.store.readRegistrySlice(plan.contract.jurisdiction.state, [plan.publication!.bodyId], [plan.contract.jurisdiction.canonicalId]);
     const body = registry?.payload.registry.bodies.find(row => row.id === plan.publication!.bodyId);
     const divisionId = body?.ocdId ?? null;
     const division = divisionId ? registry!.payload.registry.divisions.find(row => row.ocdId === divisionId) : undefined;

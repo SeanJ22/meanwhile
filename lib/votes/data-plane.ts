@@ -7,6 +7,7 @@ import type { BillSummariesFile } from "./bill-summaries.ts";
 import type { KeyVoteEntry } from "./key-votes.ts";
 import { federalKeyVoteSelectionV1Issue } from "./key-vote-selection-v1.ts";
 import { partyBreakdownFor, type PartyTally } from "./party-breakdown.ts";
+import { federalKeyVoteSourceHash,type FederalKeyVoteSourceProbe } from "./key-vote-source-hash.ts";
 import type { MemberVote, RollCallVote, VotePosition, VotesSnapshot } from "./types.ts";
 
 export const FEDERAL_VOTES_SOURCE_ID = "federal-legislative-records" as const;
@@ -20,6 +21,9 @@ export interface OfficialAcquisition {
   readonly httpStatus: number;
   /** Exact response bytes represented as a string before parsing. */
   readonly body: string;
+  readonly retrievedAt?:string;
+  readonly rawHash?:string;
+  readonly byteCount?:number;
 }
 
 /** An acquisition as candidates hold it: the response's hash and length, not its bytes. */
@@ -29,6 +33,7 @@ export interface HeldAcquisition {
   readonly httpStatus: number;
   readonly rawHash: string;
   readonly byteCount: number;
+  readonly retrievedAt?:string;
 }
 
 export type FederalRollCallWindow = Omit<VotesSnapshot, "positions">;
@@ -102,8 +107,9 @@ function acquisitionIssues(recordClass: "FEDERAL_ROLL_CALL" | "FEDERAL_KEY_VOTE"
   return issues;
 }
 
-function acquisitionRawHash(acquisitions: readonly HeldAcquisition[]): string {
-  return sha256(canonicalCivicDataJson(acquisitions.map(({ requestedUrl, finalUrl, httpStatus, rawHash, byteCount }) => ({ requestedUrl, finalUrl, httpStatus, rawHash, byteCount }))));
+export function federalVotesSourceHash(acquisitions: readonly HeldAcquisition[], identifierSourceHash?: string): string {
+  const sources = acquisitions.map(({ requestedUrl, finalUrl, httpStatus, rawHash, byteCount }) => ({ requestedUrl, finalUrl, httpStatus, rawHash, byteCount }));
+  return sha256(canonicalCivicDataJson(identifierSourceHash ? { sources, identifierSourceHash } : sources));
 }
 
 function latestVoteInstant(snapshot: FederalRollCallWindow): string {
@@ -131,11 +137,33 @@ function rollAcquisitions(window: FederalRollCallWindow, voteIds: ReadonlySet<st
   return acquisitions.filter(acquisition => urls.some(url => acquisitionNames(acquisition, url)));
 }
 
+/** A displayed official bill title is another source input to the members who voted on that bill. */
+function memberAcquisitions(window:FederalRollCallWindow,voteIds:ReadonlySet<string>,acquisitions:readonly HeldAcquisition[]):HeldAcquisition[]{
+  const rolls=new Set(rollAcquisitions(window,voteIds,acquisitions));
+  const titles=new Set(window.votes.filter(vote=>voteIds.has(vote.id)&&vote.titleSource==="BILL_TITLE").flatMap(vote=>{
+    const bill=/^(hr|hres|hjres|hconres|s|sres|sjres|sconres)([1-9]\d*)$/.exec((vote.legisNum??"").replace(/[.\s]/g,"").toLowerCase());
+    return bill?[`https://api.congress.gov/v3/bill/${vote.congress}/${bill[1]}/${bill[2]}`]:[];
+  }));
+  return acquisitions.filter(acquisition=>rolls.has(acquisition)||titles.has(acquisition.requestedUrl)||titles.has(acquisition.finalUrl));
+}
+
 export function heldAcquisitions(acquisitions: readonly OfficialAcquisition[]): HeldAcquisition[] {
-  return acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body }) => ({ requestedUrl, finalUrl, httpStatus, rawHash: sha256(body), byteCount: Buffer.byteLength(body) }));
+  return acquisitions.map(({ requestedUrl, finalUrl, httpStatus, body,rawHash,byteCount,retrievedAt }) => ({ requestedUrl, finalUrl, httpStatus,
+    rawHash:rawHash??sha256(body),byteCount:byteCount??Buffer.byteLength(body),...(retrievedAt?{retrievedAt}:{}) }));
+}
+
+/** Retained responses keep the actual oldest provider observation; processing time is separate. */
+export function federalVotesSourceObservation(acquisitions:readonly HeldAcquisition[],fallback:string){
+  const first=acquisitions.filter((row):row is HeldAcquisition&{retrievedAt:string}=>typeof row.retrievedAt==="string"&&
+    Number.isFinite(Date.parse(row.retrievedAt))).sort((a,b)=>Date.parse(a.retrievedAt)-Date.parse(b.retrievedAt))[0];
+  return first?{retrievedAt:first.retrievedAt,sourceCheck:{requestedUrl:first.requestedUrl,finalUrl:first.finalUrl,httpStatus:200 as const,
+    rawHash:first.rawHash,checkedAt:first.retrievedAt}}:{retrievedAt:fallback};
 }
 
 export function federalRollCallsCandidate(input: {
+  readonly complete?:boolean;
+  readonly continuationPending?:boolean;
+  readonly identifierSourceHash?: string;
   readonly acquisitions: readonly HeldAcquisition[];
   readonly retrievedAt: string;
   readonly expectedCongress: number;
@@ -163,10 +191,12 @@ export function federalRollCallsCandidate(input: {
   const readModel: FederalRollCallsReadModel = { formatVersion: 1, snapshot, partyBreakdowns: input.partyBreakdowns, billSummaries: input.billSummaries };
   const normalizedPayload = {
     acquisitions: input.acquisitions,
+    ...(input.continuationPending!==undefined?{continuationPending:input.continuationPending}:{}),
+    ...(input.identifierSourceHash ? { identifierSourceHash: input.identifierSourceHash } : {}),
     congress: snapshot.congress,
     session: snapshot.session,
   };
-  const rawHash = acquisitionRawHash(input.acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
+  const rawHash = federalVotesSourceHash(input.acquisitions, input.identifierSourceHash), normalizedHash = canonicalCivicDataHash(readModel);
   return {
     id: candidateId(FEDERAL_ROLLCALL_SCOPE, input.acquisitions, input.retrievedAt, normalizedHash),
     sourceId: FEDERAL_VOTES_SOURCE_ID,
@@ -177,8 +207,10 @@ export function federalRollCallsCandidate(input: {
       requestedUrl: input.acquisitions[0]?.requestedUrl ?? "https://clerk.house.gov/",
       finalUrl: input.acquisitions[0]?.finalUrl ?? null,
       httpStatus: input.acquisitions[0]?.httpStatus ?? null,
-      retrievedAt: input.retrievedAt,
+      ...federalVotesSourceObservation(input.acquisitions,input.retrievedAt),
       rawHash: input.acquisitions.length > 0 ? rawHash : null,
+      ...(input.complete!==undefined?{complete:input.complete}:{}),
+      ...(input.identifierSourceHash ? { rawHashBasis: "SOURCE_CONTENT_V1" as const } : {}),
       failureDetail: input.acquisitions.length > 0 ? undefined : "No official chamber response was acquired.",
     },
     normalization: {
@@ -234,6 +266,7 @@ export function federalPartyBreakdowns(snapshot: VotesSnapshot, parties: Readonl
 }
 
 export function federalMemberVotesCandidate(input: {
+  readonly identifierSourceHash?: string;
   readonly acquisitions: readonly HeldAcquisition[];
   readonly retrievedAt: string;
   readonly expectedCongress: number;
@@ -244,7 +277,7 @@ export function federalMemberVotesCandidate(input: {
 }): RoutineCandidate {
   const { snapshot, officeholderId, positions } = input, scope = federalMemberVotesScope(officeholderId);
   const named = new Set(positions.map(row => row.voteId)), votes = snapshot.votes.filter(vote => named.has(vote.id));
-  const acquisitions = rollAcquisitions(snapshot, named, input.acquisitions);
+  const acquisitions = memberAcquisitions(snapshot, named, input.acquisitions);
   const issues = acquisitionIssues("FEDERAL_ROLL_CALL", acquisitions);
   if (federalMemberOfScope(scope) !== officeholderId) issues.push("MEMBER_ID_INVALID");
   if (positions.length === 0) issues.push("MEMBER_HAS_NO_RECORDED_POSITION");
@@ -253,8 +286,9 @@ export function federalMemberVotesCandidate(input: {
   if (votes.length !== named.size) issues.push("POSITION_POINTS_OUTSIDE_ROLL_WINDOW");
   if ([...named].some(id => rollAcquisitions(snapshot, new Set([id]), acquisitions).length === 0)) issues.push("ROLL_ACQUISITION_RECEIPT_MISSING");
   const readModel: FederalMemberVotesReadModel = { formatVersion: 1, officeholderId, congress: snapshot.congress, session: snapshot.session, votes, positions };
-  const normalizedPayload = { acquisitions, congress: snapshot.congress, session: snapshot.session };
-  const rawHash = acquisitionRawHash(acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
+  const normalizedPayload = { acquisitions, congress: snapshot.congress, session: snapshot.session,
+    ...(input.identifierSourceHash ? { identifierSourceHash: input.identifierSourceHash } : {}) };
+  const rawHash = federalVotesSourceHash(acquisitions, input.identifierSourceHash), normalizedHash = canonicalCivicDataHash(readModel);
   return {
     id: candidateId(scope, acquisitions, input.retrievedAt, normalizedHash),
     sourceId: FEDERAL_VOTES_SOURCE_ID,
@@ -265,8 +299,9 @@ export function federalMemberVotesCandidate(input: {
       requestedUrl: acquisitions[0]?.requestedUrl ?? "https://clerk.house.gov/",
       finalUrl: acquisitions[0]?.finalUrl ?? null,
       httpStatus: acquisitions[0]?.httpStatus ?? null,
-      retrievedAt: input.retrievedAt,
+      ...federalVotesSourceObservation(acquisitions,input.retrievedAt),
       rawHash: acquisitions.length > 0 ? rawHash : null,
+      ...(input.identifierSourceHash ? { rawHashBasis: "SOURCE_CONTENT_V1" as const } : {}),
       failureDetail: acquisitions.length > 0 ? undefined : "No official chamber response names this member's window.",
     },
     normalization: {
@@ -314,6 +349,7 @@ export function federalKeyVotesCandidate(input: {
   readonly retrievedAt: string;
   readonly snapshot: FederalKeyVotesSnapshot;
   readonly positions: FederalKeyVotePositions;
+  readonly sourceProbe?:FederalKeyVoteSourceProbe;
 }): RoutineCandidate {
   const acquisitions = heldAcquisitions(input.acquisitions);
   const refs = input.snapshot.entries.flatMap((entry) => ([
@@ -350,10 +386,12 @@ export function federalKeyVotesCandidate(input: {
   const normalizedPayload = {
     selectionVersion: "v1",
     acquisitions,
+    ...(input.sourceProbe?{sourceProbe:input.sourceProbe}:{}),
   };
-  const rawHash = acquisitionRawHash(acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
+  const rawHash = input.sourceProbe?federalKeyVoteSourceHash(acquisitions,input.sourceProbe):federalVotesSourceHash(acquisitions), normalizedHash = canonicalCivicDataHash(readModel);
   return {
-    id: candidateId(FEDERAL_KEY_VOTE_SCOPE, acquisitions, input.retrievedAt, normalizedHash),
+    id: input.sourceProbe?`cv-${sha256(`${candidateId(FEDERAL_KEY_VOTE_SCOPE,acquisitions,input.retrievedAt,normalizedHash)}\u001f${rawHash}`).slice(0,32)}`:
+      candidateId(FEDERAL_KEY_VOTE_SCOPE, acquisitions, input.retrievedAt, normalizedHash),
     sourceId: FEDERAL_VOTES_SOURCE_ID,
     recordClass: "FEDERAL_KEY_VOTE",
     scope: FEDERAL_KEY_VOTE_SCOPE,
@@ -364,6 +402,7 @@ export function federalKeyVotesCandidate(input: {
       httpStatus: acquisitions[0]?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash: acquisitions.length > 0 ? rawHash : null,
+      ...(input.sourceProbe?{rawHashBasis:"SOURCE_CONTENT_V1" as const,complete:input.sourceProbe.complete}:{}),
       failureDetail: acquisitions.length > 0 ? undefined : "No selected official roll-call response was acquired.",
     },
     normalization: {

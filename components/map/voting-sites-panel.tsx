@@ -20,7 +20,6 @@ import {
   type VotingSitesAnswer,
   milesLabel,
   votingSitesForDisplay,
-  hasElectionDaySites,
   type VotingJurisdiction,
   type VotingSource,
 } from "@/lib/ballot/voting-sites";
@@ -28,7 +27,7 @@ import {
 /**
  * Where can I vote? The address goes to `/api/voting-sites`; the sites drop on
  * the map as pins and list here with the sentence naming the jurisdiction's
- * voting model. Answers without Election Day sites lead with the state lookup.
+ * voting model. The official state lookup remains available with every answer.
  */
 
 export interface VotingSitesPanelProps {
@@ -171,7 +170,6 @@ export function VotingSitesPanel({
   useEffect(() => () => pendingRequest.current?.abort(), []);
 
   const lookups = state.kind === "answered" ? state.answer.pollingLookups ?? [] : initialLookups.filter(lookup => lookup.state === currentState);
-  const showLookups = state.kind !== "answered" || state.answer.precision === "ZIP" || !hasElectionDaySites(state.answer);
   const hasSites = state.kind === "answered" && state.answer.jurisdictions.some(j => j.sites.length > 0);
 
   return (
@@ -208,7 +206,7 @@ export function VotingSitesPanel({
         <VotingLookupPending />
       )}
 
-      {showLookups && lookups.map(lookup => <div className="voting-office" data-voting-lookup key={lookup.state}>
+      {lookups.map(lookup => <div className="voting-office" data-voting-lookup key={lookup.state}>
         <p><a className="voting-site-directions" href={lookup.url} target="_blank" rel="noreferrer noopener">{lookup.name}: find your polling place</a></p>
         <CardSourcesContribution id={`voting-lookup:${lookup.state}`} sources={[{ what: "Official polling-place lookup", provenance: {
           sourceUrl: lookup.sourceUrl, sourceOrg: lookup.sourceOrg, collectedAt: lookup.checkedAt, verifiedAt: lookup.checkedAt,

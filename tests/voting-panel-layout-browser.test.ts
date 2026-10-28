@@ -29,7 +29,8 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
     const jurisdiction: VotingJurisdiction = { ...door.scope, model: "UNKNOWN", election: "November 3, 2026", electionDate: door.electionDate,
       sites: parsed.sites, assignedSiteIds: parsed.sites.filter(site => site.countyName === item.county && site.name.includes("Courthouse")).map(site => site.id), rules: door.rules, sourceUrl: door.url, sourceOrg: door.publisher, collectedAt: source.checkedAt, refusal: null };
     const place: VotingReaderPlace = { precision: "ADDRESS", point: { lat: 46.0, lng: -102.0 }, divisionIds: [door.scope.ocdId], states: [door.scope.state], countyFips: [], countyNames: [item.county], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
-    const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(jurisdiction, place)], outsideCoverage: false };
+    const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(jurisdiction, place)], outsideCoverage: false,
+      pollingLookups: [{ state: "ND", name: "North Dakota", url: "https://example.gov/polling-place", sourceUrl: "https://example.gov/elections", sourceOrg: "Protocol state election office", checkedAt: "2026-10-23" }] };
     assert.ok(answer.jurisdictions[0].sites.length > 0);
     answers.set(item.address, answer);
     answers.set(item.zip, { match: true, point: null, precision: "ZIP", jurisdictions: [], outsideCoverage: true,
@@ -103,6 +104,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
         await page.getByRole("button", { name: "Show me", exact: true }).click();
         const card = page.locator(item.embedded ? "[data-reader-card]" : ".voting-panel > .reader-card");
         await card.locator('[data-voting-site]').first().waitFor({ state: "visible" });
+        assert.equal(await card.locator("[data-voting-lookup] a").first().getAttribute("href"), "https://example.gov/polling-place");
         await card.locator('[data-card-sources] a[href^="https:"]').first().waitFor({ state: "attached" });
         assert.equal(await card.locator('[data-card-gap="voting-answer"]').count(), 0);
         assert.equal(await card.locator("[data-card-footer] [data-card-gap]").count(), 0);

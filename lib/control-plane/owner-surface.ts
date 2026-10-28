@@ -405,10 +405,13 @@ export interface RoutineCivicDataReaderReadbackReference {
   readonly receipt: ReaderProjectionReadbackReceipt | null;
 }
 
+/** The standing runner's three supervisor lanes: the routine pass, publish-now and each state's place map. */
+export type RoutineSupervisorLane = "routine-civic-data" | "publish-now" | "place-maps";
+
 export interface RoutineCivicDataSupervisorOutcome {
   readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly ballotNavigationPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
-  readonly lane?: "routine-civic-data" | "publish-now";
+  readonly lane?: RoutineSupervisorLane;
   /** Committed input snapshot attempted through an exact campaign publication receipt; not a publication count. */
   readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly kind: "ROUTINE_CIVIC_DATA_SUPERVISOR";

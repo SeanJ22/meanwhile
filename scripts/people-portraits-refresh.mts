@@ -113,7 +113,7 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   let held:HeldPeopleSource=await readHeldPeopleSource(store,jurisdiction,"people-portraits",clock());
   const heldFacts=(base:HeldPeopleSource)=>(base.normalizedPayload as {excludedFacts?:PortraitAttempt[]}|undefined)?.excludedFacts ?? [];
   const priorFacts=heldFacts(held);
-  // Work starts from the people without a portrait readers are shown; everyone else is never read again.
+  // Work starts from the people without a portrait readers are shown, read only from changed rosters and for due retries; everyone else is never read again.
   const list=await portraitList(store,state,clock(),priorFacts,query);
   const sources=await sourceInputs(store,list);
   const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? []),...await personCaptures(store,vault,list,list.due.people)];
@@ -161,14 +161,15 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   const continuationFacts=[...stateResult?.excludedFacts.filter(fact=>fact.code === "STATE_PORTRAIT_WORK_REMAINS") ?? [],
     ...congressResult?.excludedFacts.filter(fact=>fact.code === "CONGRESS_PORTRAIT_WORK_REMAINS") ?? []];
   await queue;
-  // The last save carries the remaining work, the next due time and the list's inputs, so a cut-off run resumes and a settled state rests.
+  // The last save carries the remaining work, the next due time, the list's inputs and the roster versions it read,
+  // so a cut-off run resumes, a settled state rests, and the next list reads only rosters that changed.
   const factsNow=[...priorFacts.filter(fact=>!runPeople.has((fact.record as {personId?:string}|undefined)?.personId ?? "")),...runFacts];
   const now=(person:Officeholder)=>runPeople.get(person.personId ?? person.id) ?? person;
-  const nextDueAt=portraitNextDueAt(list.unverified.people.map(now),list.unverified.members.map(now),factsNow,clock(),continuationFacts.length>0);
+  const nextDueAt=portraitNextDueAt(list.unverified.people.map(now),list.unverified.members.map(now),factsNow,clock(),continuationFacts.length>0,list.restingDueAt);
   await publish({continuation:continuationFacts,schedule:{key:`${jurisdiction}:portrait-schedule`,code:PORTRAIT_SCHEDULE_CODE,
     detail:nextDueAt ? `The next person without a portrait in this state is due ${nextDueAt}; until then the runner skips the state unless its rosters name someone new.`
       : "Everyone this state's rosters name has a portrait; the runner skips the state until they name someone new.",
-    record:{nextDueAt,seen:list.stamp}}});
+    record:{nextDueAt,seen:list.stamp,read:list.read}}});
   if(!last)throw Error("PEOPLE_PORTRAIT_NO_HELD_PEOPLE");
   printSourceRunnerReceipt(contractId,last.candidate,last.outcome);
   return last;

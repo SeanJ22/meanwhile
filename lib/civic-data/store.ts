@@ -30,6 +30,7 @@ import {
   type ValidationReceipt,
 } from "./types.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
+import { portraitRosterSlicesSql, portraitRosterVersionsSql, portraitSlicesInMemory, readPortraitRosters, type PortraitRosterRequest, type PortraitRosters } from "./portrait-rosters.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash, durableCivicDataHash } from "./canonical-hash.ts";
 import {
@@ -146,10 +147,11 @@ export interface RoutineDataStore {
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
-  /** The current portrait record's input versions and next due time, without the record itself. */
+  /** The current portrait record's input versions and next due time, without the record or its attempts. */
   readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
-  /** Promoted rosters' people, slimmed to what a portrait list needs. */
-  readonly readSlimRosters: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly SlimRoster[]>;
+  /** Each roster's version row, then only the people a portrait list is owed for: changed rosters' people and due people
+   * without a portrait readers are shown, chosen where the rosters are held. */
+  readonly readPortraitRosters: (request: PortraitRosterRequest) => Promise<PortraitRosters>;
   /** Each promoted roster's people as a short digest of their ids, which moves only when someone joins or leaves. */
   readonly readRosterIdDigests: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly { readonly scope: string; readonly digest: string }[]>;
   /** A stored candidate's saved captures whose address, or extracted archive member, is one of these. */
@@ -180,36 +182,14 @@ export interface PortraitStamp {
   readonly versions: Readonly<Record<string, string>>;
   readonly local: string | null;
 }
-type PortraitAttemptFact = NonNullable<RoutineCandidate["excludedFacts"]>[number];
-/** What the last portrait run saw, when a person without a portrait is next due, and each person's attempts. */
+/** What the last portrait run saw and when a person without a portrait is next due. */
 export interface PortraitRunState {
   readonly nextDueAt: string | null;
   readonly seen: PortraitStamp | null;
-  readonly attempts: readonly PortraitAttemptFact[];
 }
-const portraitAttemptCode = (code: string) => code.startsWith("STATE_PORTRAIT_") || code.startsWith("CONGRESS_PORTRAIT_");
 function portraitRunState(candidate: RoutineCandidate): PortraitRunState {
-  const facts = candidate.excludedFacts ?? [];
-  const schedule = facts.find(fact => fact.code === PORTRAIT_SCHEDULE_CODE)?.record as { nextDueAt?: string | null; seen?: PortraitStamp } | undefined;
-  return { nextDueAt: schedule?.nextDueAt ?? null, seen: schedule?.seen ?? null,
-    attempts: facts.filter(fact => portraitAttemptCode(fact.code)).map(fact => structuredClone(fact)) };
-}
-/** A person's fields a portrait list and its work need; offices, memberships' sources and most field receipts stay behind. */
-const ROSTER_PERSON_HEAVY_FIELDS = ["offices", "fieldSources"] as const;
-function slimRosterPerson(person: Record<string, unknown>): Record<string, unknown> {
-  const fieldSources = person.fieldSources as Record<string, unknown> | undefined;
-  const kept = Object.fromEntries(["name", "officeTitle", "photo"].flatMap(field => fieldSources?.[field] ? [[field, fieldSources[field]]] : []));
-  const slim = Object.fromEntries(Object.entries(person).filter(([key]) => !(ROSTER_PERSON_HEAVY_FIELDS as readonly string[]).includes(key)));
-  return { ...slim, fieldSources: kept };
-}
-/** One promoted roster's people without their offices and field receipts, and the identity its read model hash names. */
-export interface SlimRoster {
-  readonly recordClass: RoutineRecordClass;
-  readonly scope: string;
-  readonly versionId: string;
-  readonly promotedAt: string;
-  readonly readModelSha256: string | null;
-  readonly roster: OfficeholderSet;
+  const schedule = (candidate.excludedFacts ?? []).find(fact => fact.code === PORTRAIT_SCHEDULE_CODE)?.record as { nextDueAt?: string | null; seen?: PortraitStamp } | undefined;
+  return { nextDueAt: schedule?.nextDueAt ?? null, seen: schedule?.seen ? structuredClone(schedule.seen) : null };
 }
 
 export interface RoutineStoreClock {
@@ -809,16 +789,22 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     return record ? portraitRunState(record.candidate) : null;
   }
 
-  async readSlimRosters(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly SlimRoster[]> {
-    return scopes.flatMap(scope => {
-      const pointer = this.promotions.get(projectionKey(recordClass, scope));
+  async readPortraitRosters(request: PortraitRosterRequest): Promise<PortraitRosters> {
+    const held = (key: string) => {
+      const pointer = this.promotions.get(key);
       const record = pointer ? this.candidates.get(pointer.versionId) : undefined;
       const roster = (pointer?.payload as { roster?: OfficeholderSet } | undefined)?.roster;
-      if (!pointer || !record || !roster || !Array.isArray(roster.officeholders)) return [];
-      return [{ recordClass, scope, versionId: pointer.versionId, promotedAt: pointer.promotedAt,
-        readModelSha256: record.candidate.normalization.normalizedHash ?? null,
-        roster: structuredClone({ ...roster, officeholders: roster.officeholders.map(row => slimRosterPerson(row as unknown as Record<string, unknown>)) }) as unknown as OfficeholderSet }];
-    });
+      return pointer && record && roster && Array.isArray(roster.officeholders) ? { pointer, record, roster } : null;
+    };
+    return readPortraitRosters({
+      versions: async keys => keys.flatMap(key => {
+        const row = held(key);
+        return row ? [{ key, recordClass: row.pointer.recordClass, scope: row.pointer.scope, versionId: row.pointer.versionId,
+          promotedAt: row.pointer.promotedAt, readModelSha256: row.record.candidate.normalization.normalizedHash ?? null }] : [];
+      }),
+      slices: async input => portraitSlicesInMemory(new Map([...input.keys, ...input.portraitKey ? [input.portraitKey] : []]
+        .flatMap(key => { const row = held(key); return row ? [[key, row.roster] as const] : []; })), input),
+    }, request);
   }
 
   async readRosterIdDigests(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly { readonly scope: string; readonly digest: string }[]> {
@@ -1946,14 +1932,6 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     return row!.value;
   }
 
-  private promotionVersions(recordClass: RoutineRecordClass, scopes: readonly string[]) {
-    return this.db.select({ key: civicDataPromotions.scope,
-      etag: sql<string>`concat(${civicDataPromotions}.xmin::text, '/', ${civicDataPromotions}.ctid::text, '/',
-        ${civicDataCandidates}.xmin::text, '/', ${civicDataCandidates}.ctid::text)`,
-    }).from(civicDataPromotions).leftJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.currentVersionId))
-      .where(and(eq(civicDataPromotions.recordClass, recordClass), inArray(civicDataPromotions.scope, [...scopes])));
-  }
-
   private async promotionRows(recordClass: RoutineRecordClass, scopes: readonly string[]) {
     const values = async (keys: readonly string[]) => this.db
       .select({ ...getTableColumns(civicDataPromotions), latestConfirmation: latestConfirmationDetail() })
@@ -2330,38 +2308,30 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readPortraitRunState(scope: string): Promise<PortraitRunState | null> {
     return this.readVersioned("portrait-run-state", "STATE_LEGISLATOR", scope, async () => {
-      // The record itself is about 1 MB; only its schedule fact and its people's attempt facts leave the database.
+      // The record itself is about 1 MB and its attempts about 200 KB; only its schedule's due time and list stamp leave the database.
       const [row] = (await this.db.execute(sql`select
-        (select f->'record' from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
-            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' = ${PORTRAIT_SCHEDULE_CODE} limit 1) as schedule,
-        (select coalesce(jsonb_agg(f), '[]'::jsonb) from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
-            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' like 'STATE\_PORTRAIT\_%' or f->>'code' like 'CONGRESS\_PORTRAIT\_%') as attempts
+        (select jsonb_build_object('nextDueAt', f#>'{record,nextDueAt}', 'seen', f#>'{record,seen}')
+          from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
+            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' = ${PORTRAIT_SCHEDULE_CODE} limit 1) as schedule
       from civic_data_promotions p join civic_data_candidates c on c.id = p.current_version_id
-      where p.record_class = 'STATE_LEGISLATOR' and p.scope = ${scope}`)).rows as { schedule: { nextDueAt?: string | null; seen?: PortraitStamp } | null; attempts: PortraitAttemptFact[] }[];
-      return row ? { nextDueAt: row.schedule?.nextDueAt ?? null, seen: row.schedule?.seen ?? null, attempts: row.attempts } : null;
-
+      where p.record_class = 'STATE_LEGISLATOR' and p.scope = ${scope}`)).rows as { schedule: { nextDueAt?: string | null; seen?: PortraitStamp | null } | null }[];
+      return row ? { nextDueAt: row.schedule?.nextDueAt ?? null, seen: row.schedule?.seen ?? null } : null;
     });
   }
 
-  async readSlimRosters(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly SlimRoster[]> {
-    if (!scopes.length) return [];
-    type RosterRow = { scope: string; version_id: string; promoted_at: string | Date; normalized_hash: string | null; roster: OfficeholderSet };
-    const rows = await this.readCache.rows<RosterRow, { key: string; etag: string }>({ namespace: `slim-roster:${recordClass}`, keys: scopes,
-      keyOf: row => row.scope, versions: async selected => this.promotionVersions(recordClass, selected),
-      values: async selected => {
-      const rows = (await this.db.execute(sql`select p.scope, p.current_version_id as version_id, p.promoted_at, c.normalized_hash,
-        (p.payload->'roster') - 'officeholders' - 'endedMemberships' || jsonb_build_object('officeholders',
-          (select coalesce(jsonb_agg(o - 'offices' - 'fieldSources' || jsonb_build_object('fieldSources', coalesce(jsonb_strip_nulls(jsonb_build_object(
-              'name', o#>'{fieldSources,name}', 'officeTitle', o#>'{fieldSources,officeTitle}', 'photo', o#>'{fieldSources,photo}')), '{}'::jsonb))), '[]'::jsonb)
-            from jsonb_array_elements(p.payload#>'{roster,officeholders}') o)) as roster
-      from civic_data_promotions p join civic_data_candidates c on c.id = p.current_version_id
-      where p.record_class = ${recordClass} and p.scope in (${sql.join(selected.map(scope => sql`${scope}`), sql`, `)})
-        and jsonb_typeof(p.payload#>'{roster,officeholders}') = 'array'`)).rows as RosterRow[];
-        return rows;
+  async readPortraitRosters(request: PortraitRosterRequest): Promise<PortraitRosters> {
+    // Version rows decide what changed; nothing is held in a disposable copy, so nothing depends on one surviving.
+    return readPortraitRosters({
+      versions: async keys => ((await this.db.execute(portraitRosterVersionsSql(keys))).rows as {
+        key: string; record_class: RoutineRecordClass; scope: string; version_id: string; promoted_at: string | Date; normalized_hash: string | null }[])
+        .map(row => ({ key: row.key, recordClass: row.record_class, scope: row.scope, versionId: row.version_id,
+          promotedAt: new Date(row.promoted_at).toISOString(), readModelSha256: row.normalized_hash })),
+      slices: async input => {
+        const rows = (await this.db.execute(portraitRosterSlicesSql(input))).rows as { key: string | null; roster: unknown }[];
+        return { rosters: new Map(rows.flatMap(row => row.key === null ? [] : [[row.key, row.roster as OfficeholderSet] as const])),
+          shown: (rows.find(row => row.key === null)?.roster ?? []) as string[] };
       },
-    });
-    return rows.map(row => ({ recordClass, scope: row.scope, versionId: row.version_id,
-      promotedAt: new Date(row.promoted_at).toISOString(), readModelSha256: row.normalized_hash, roster: row.roster }));
+    }, request);
   }
 
   async readRosterIdDigests(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly { readonly scope: string; readonly digest: string }[]> {

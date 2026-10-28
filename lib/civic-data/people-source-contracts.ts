@@ -58,7 +58,9 @@ export const PEOPLE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: peopleSourceRecordClass("people-portraits"),
     scope: peopleSourceScope(state === "us" ? "US" : `US-${state.toUpperCase()}`, "people-portraits"),
     acquisitionFailureDomain: `routine-source:people-portraits:${state}`,
-    databaseBytesPerRun: 1_216_930_584,
+    // Estimated, not measured: the largest state's held portrait record read once (4.2 MB) and saved twice, its directory and
+    // changed rosters' people without a portrait. Unchanged rosters cost version rows only.
+    databaseBytesPerRun: 16_000_000,
     acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/people-portraits-refresh.mts", "--promote", `--state=${state}`] },
     parserNormalizerVersion: "people-portraits/1",
     cadence: { description: "standing verification of every missing or due official portrait", defaultEveryMs: HOUR },

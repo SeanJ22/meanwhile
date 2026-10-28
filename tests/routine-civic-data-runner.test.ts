@@ -15,6 +15,7 @@ import { processRegisteredRoutineCandidate, processRegisteredManualCandidate } f
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "../lib/civic-data/worker-reader-contracts.ts";
+import { isPlaceMapTask } from "../lib/civic-data/place-map-lane.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
   ROUTINE_SOURCE_TASKS,
@@ -278,7 +279,7 @@ test("candidate findings missing a place stay visible without failing unrelated 
   const task = { id: "candidate-profiles:CA" };
   const context = { controlPlaneUrlFromEnv: () => "postgres://fixture", neon: () => ({ query: () => {} }),
     readCandidateProfilePublicationTasks: async () => ({ tasks: [task], unscoped: 156 }),
-    RUN_STARTED_AT: "2026-10-21T00:00:00.000Z", supervisorFailures: failures,
+    RUN_STARTED_AT: "2026-10-21T00:00:00.000Z", supervisorFailures: failures, PLACE_MAPS: false,
     console: { log: () => {} }, safeFailure: String, sanitizedErrorDiagnostic: String };
   const run = () => runInNewContext(transpileModule(`(async () => { ${code}; return { tasks: candidateFindingTasks, lines: candidateFindingLines }; })()`, {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
@@ -570,7 +571,7 @@ test("installed doors' partitions are standing tasks once: the runner never adds
   assert.ok(ids.filter((id) => id.startsWith("meetings:")).length > 50, "the fixture doors are installed");
   assert.equal(new Set(ids).size, ids.length);
   const runner = readFileSync(new URL("../scripts/routine-civic-data-runner.mts", import.meta.url), "utf8");
-  const standing = runner.slice(runner.indexOf("const STANDING_SOURCE_TASKS"), runner.indexOf("], process.argv.slice(2));"));
+  const standing = runner.slice(runner.indexOf("const STANDING_SOURCE_TASKS"), runner.indexOf("], false, process.argv.slice(2)), process.argv.slice(2));"));
   assert.match(standing, /\.\.\.ROUTINE_SOURCE_TASKS\.filter\(\(task\) => task\.id !== MEETING_DOORS_CONTRACT_ID\)/);
   assert.doesNotMatch(standing, /MEETING_PARTITION_CONTRACTS/, "a second copy of the partitions makes every pass refuse its duplicate tasks");
 });
@@ -1252,9 +1253,9 @@ test("national and publication source commands retain the progress-renewed timeo
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "PASS_LAUNCH_DEADLINE_MS", `
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "SOURCE_CHILD_DEADLINE_MS", "isPlaceMapTask", `
     ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"],
-    withPassDeadline, Date.now() + 20 * 60_000);
+    withPassDeadline, Date.now() + 20 * 60_000, isPlaceMapTask);
   const portraits = ROUTINE_SOURCE_TASKS.find(task => task.id.startsWith("people-portraits-"))!;
   assert.equal(commandFor({ id: portraits.id, kind: "SOURCE", task: portraits, command: portraits.command }).timeoutMs, 0,
     "standing portrait work overrides the parent's quiet interval so every due person finishes");
@@ -1460,7 +1461,7 @@ test("each admitted meeting source/body contract is its own concurrent child bou
   assert.match(runner, /command:\s*task\.command/);
   assert.match(runner, /dueCandidates\.push\(\{[\s\S]*?id:\s*task\.id,[\s\S]*?task,/);
 
-  assert.match(runner, /for \(const \{ task \} of electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
+  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\) pendingRuns\.push\(pendingByTaskId\.get\(task\.id\)!\)/);
   assert.match(runner, /parsed\.receipts\.length !== 1/);
   assert.match(runner, /parsed\.receipts\[0\]\?\.source !== pending\.task\.id/);
   assert.doesNotMatch(runner, /--partitions=/);
@@ -2273,9 +2274,9 @@ test("every routine task's real child command runs a scripts/ script right after
   const start = source.indexOf("function sourceChildCommand(");
   const end = source.indexOf("function recordSourceSettlementFailures", start);
   const snippet = transpileModule(source.slice(start, end), { compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.None } }).outputText;
-  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "PASS_LAUNCH_DEADLINE_MS", `
+  const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "TS_CHILD", "withPassDeadline", "SOURCE_CHILD_DEADLINE_MS", "isPlaceMapTask", `
     ${snippet} return sourceChildCommand;`)(() => process.env, () => null, routineSerialLane, ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"],
-    withPassDeadline, Date.now() + 20 * 60_000);
+    withPassDeadline, Date.now() + 20 * 60_000, isPlaceMapTask);
   const tasks = [...ROUTINE_SOURCE_TASKS, ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract), ...AUTOMATIC_REFRESH_TASKS,
     ...STATE_BINDING_REFRESH_TASKS, ...legistarMemberTasks(["pima", "seattle", "fortworth"])];
   assert.ok(tasks.length > 100);

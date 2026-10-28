@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
-import { AsyncLocalStorage } from "node:async_hooks";
 import { trackSourceTransport } from "./host-transport.ts";
 import { rawCaptureVault } from "../civic-data/raw-capture-remote.ts";
 import { vaultSourceResponse } from "./raw-response.ts";
+import { acquiringSource, asSourceAcquisition } from "./acquisition-scope.ts";
 
 export interface SourceAcquisitionEvidence {
   readonly source: string;
@@ -15,7 +15,6 @@ export interface SourceAcquisitionEvidence {
 
 type RunForSource = <T>(source: string, operation: () => Promise<T>) => Promise<T>;
 
-const sourceContext = new AsyncLocalStorage<string>();
 let activeEvidence: SourceAcquisitionEvidence[] | null = null;
 
 function urlOf(input: Parameters<typeof fetch>[0]): string {
@@ -31,7 +30,7 @@ export function recordAcquiredResponse(input: {
   readonly httpStatus: number;
   readonly bytes: Uint8Array;
 }): void {
-  const source = sourceContext.getStore();
+  const source = acquiringSource();
   if (!source || activeEvidence === null) return;
   const evidence: SourceAcquisitionEvidence = {
     source,
@@ -49,11 +48,6 @@ export function recordAcquiredResponse(input: {
   )) activeEvidence.push(evidence);
 }
 
-/** A request our own infrastructure makes while a source is in scope (the evidence vault) is not that source's acquisition. */
-export function outsideSourceAcquisition<T>(operation: () => T): T {
-  return sourceContext.exit(operation);
-}
-
 /**
  * Capture every successful fetch performed by a batch composite acquisition.
  * AsyncLocalStorage keeps concurrently fetched children attributed to the
@@ -69,9 +63,10 @@ export async function captureSourceAcquisitions<T>(
   activeEvidence = evidence;
   globalThis.fetch = trackSourceTransport((async (input, init) => {
     let response = await originalFetch(input, init);
-    if (sourceContext.getStore() && response.ok) {
+    const source = acquiringSource();
+    if (source && response.ok) {
       if (process.env.WTP_VAULT_PROVIDER === "netlify")
-        response = vaultSourceResponse(response, rawCaptureVault(), sourceContext.getStore()!);
+        response = vaultSourceResponse(response, rawCaptureVault(), source);
       const bytes = new Uint8Array(await response.clone().arrayBuffer());
       recordAcquiredResponse({
         requestedUrl: urlOf(input),
@@ -82,7 +77,7 @@ export async function captureSourceAcquisitions<T>(
     }
     return response;
   }) as typeof fetch, originalFetch);
-  const runForSource: RunForSource = (source, child) => sourceContext.run(source, child);
+  const runForSource: RunForSource = (source, child) => asSourceAcquisition(source, child);
   try {
     const value = await operation(runForSource);
     return { value, evidence: [...evidence] };

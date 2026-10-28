@@ -269,13 +269,13 @@
       "file": "lib/reader/place-builder.ts",
       "kind": "SELECT *",
       "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 155
+      "line": 170
     },
     {
       "file": "lib/reader/place-builder.ts",
       "kind": "SELECT *",
       "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 209
+      "line": 224
     },
     {
       "file": "lib/sources/legiscan/reader.ts",
@@ -293,7 +293,7 @@
       "file": "scripts/ingest.ts",
       "kind": "readCandidate",
       "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
-      "line": 1307
+      "line": 1308
     },
     {
       "file": "scripts/legistar-insite-minutes-ingest.mts",
@@ -341,13 +341,13 @@
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 857
+      "line": 867
     },
     {
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 866
+      "line": 876
     },
     {
       "file": "scripts/split-federal-people.mts",

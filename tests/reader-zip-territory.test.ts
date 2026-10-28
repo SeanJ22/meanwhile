@@ -8,6 +8,7 @@ import test from "node:test";
 import {GET as meetingsGET} from "../app/api/meetings/route.ts";
 import {fixtureZipLocation as lookupZcta} from "./helpers/zip-location.ts";
 import {stateCoverage} from "../lib/reader/coverage.ts";
+import {projectBodyDetail} from "../lib/reader/body-detail.ts";
 import {readerLocation,readerTerritory} from "../lib/reader/location.ts";
 import {installReaderDatabaseQuery} from "../lib/reader/database.ts";
 import {PLACE_PAGES_SQL,READY_PLACE_SQL,placePageTerritory,readPlacePackage} from "../lib/reader/place.ts";
@@ -63,7 +64,10 @@ test("a preselected territory preserves complete coverage for inside, outside, o
     const preselected=stateCoverage(state,[ROOT,CITY],current[1],current[0],[],[],[],selected);
     assert.deepEqual(preselected,full,"every body, member, official and coverage field stays identical");
     assert.ok(!preselected.bodies.some(b=>b.bodyId===OUTSIDE),"a known outside territory cannot fall back to its city filing");
-    assert.equal(preselected.bodies.find(b=>b.bodyId===LOCAL)!.readerRoster!.members[0]!.id,member.id);
+    const local = preselected.bodies.find(b=>b.bodyId===LOCAL)!;
+    assert.equal(local.readerRoster,undefined);
+    assert.equal(local.rosterSummary?.memberCount,1);
+    assert.equal(projectBodyDetail("AZ",LOCAL,registry,[]).roster.members[0]!.id,member.id);
     assert.ok(preselected.seats.some(seat=>seat.representatives.some(holder=>holder.id==="official:exact")));
   }
   assert.deepEqual([...bodyIdsAtPoint(point,selectBodyTerritory(point,file))],[INSIDE,OVERLAP]);

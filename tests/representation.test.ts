@@ -13,6 +13,7 @@ installStateLegislators("US-NH");
 
 import { coverageAt } from "../lib/registry/server.ts";
 import { governingRosterHoldersForDivision } from "../lib/registry/body-rosters.ts";
+import { membersOfBody } from "../lib/registry/body-membership.ts";
 import {
   hasRepresentation,
   namedHolderCount,
@@ -432,7 +433,9 @@ for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
       "../lib/officials/tier-grouping.ts"
     );
 
-    const coverage = await coverageAt(lat, lng, 1);
+    const summary = await coverageAt(lat, lng, 1);
+    const coverage = { ...summary, bodies: summary.bodies.map(body => ({ ...body,
+      readerRoster: { members: membersOfBody(body.bodyId).members, gaps: [], officePhone: null } })) };
 
     // The drawn set the map reports; stood in for here by the districts the
     // registry resolves, because the value under test is the coupling, not
@@ -542,7 +545,9 @@ test("no division card denies people another surface renders", async () => {
   const covered = new Map<string, number>();
 
   for (const [zip, [lat, lng]] of Object.entries(ZIPS)) {
-    const coverage = await coverageAt(lat, lng, 0);
+    const summary = await coverageAt(lat, lng, 0);
+    const coverage = { ...summary, bodies: summary.bodies.map(body => ({ ...body,
+      readerRoster: { members: membersOfBody(body.bodyId).members, gaps: [], officePhone: null } })) };
 
     // Every division ANY surface holds people for: legislative seats from the
     // officeholder index, local governments from the curated rosters.

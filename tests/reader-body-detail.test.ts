@@ -11,6 +11,7 @@ import { GET } from "../app/api/reader/body/route.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { loadBodyDetail } from "../lib/registry/body-roster-client.ts";
+import { bodyRosterSummaries } from "../lib/reader/body-summary.ts";
 
 test("one-body detail retains the existing member, photo, phone and field sources", () => {
   const fixture = JSON.parse(gunzipSync(readFileSync(new URL("./fixtures/registry-transfer-import.json.gz", import.meta.url))).toString());
@@ -33,6 +34,10 @@ test("one-body detail retains the existing member, photo, phone and field source
   assert.deepEqual(detail.roster.officePhone, expected.officePhone);
   assert.equal(detail.roster.members[0].photoUrl, "/person.jpg");
   assert.deepEqual(detail.fieldSources, { officePhone: source });
+  const summary = bodyRosterSummaries(registry, [bodyId]);
+  assert.equal(summary.summaries.get(bodyId)?.memberCount, expected.members.length);
+  assert.deepEqual([...summary.memberIds], expected.members.map(person => person.id));
+  assert.deepEqual(Object.keys(summary.summaries.get(bodyId)!).sort(), ["hasSelectBoard", "memberCount"]);
 });
 
 test("concurrent requests for the same body share one request, and a later open can refresh", async t => {

@@ -27,6 +27,11 @@ test("merged coverage does not claim a distinct count before local members are o
   const federal = { ...coverage, senators: [{ id: "senator:one", name: "Senator One" } as SeatHolder] };
   const merged = mergeReaderCoverage(federal, local, 0)!;
   assert.equal(merged.officialCount, null);
+  const referenced = { ...coverage, officialCount: 2, seats: [{ ocdId: "ocd-division/country:us/state:az/county:pima",
+    label: "Pima County", divisionType: "county" as const, tier: "local" as const, representatives: [],
+    bodyRosterRefs: [{ bodyId: "ocd-division/country:us/state:az/county:pima#governing", state: "AZ" }] }] };
+  assert.equal(mergeReaderCoverage(federal, referenced, 0)?.officialCount, null,
+    "an absent-body roster cannot be dropped from a supposedly exact merged count");
 });
 
 test("a sourced vacancy survives the cached state, ZIP selection and merged place answer", async t => {

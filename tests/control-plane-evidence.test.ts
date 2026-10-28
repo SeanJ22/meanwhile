@@ -390,6 +390,14 @@ test("the object key is content-addressed, source-scoped and date-sharded", asyn
   assert.equal(store.size, 3);
 });
 
+test("an unchanged artifact is recognized from metadata without reading its stored body", async () => {
+  const store = new MemoryEvidenceStore();
+  const { artifact } = recordAcquisition(ACQUISITION, SEEDED_PAGE);
+  await putArtifact(store, PROJECT, artifact, utf8(SEEDED_PAGE));
+  store.get = async () => { throw new Error("unchanged evidence body was read"); };
+  assert.equal((await putArtifact(store, PROJECT, artifact, utf8(SEEDED_PAGE))).written, false);
+});
+
 test("a read of an artifact the store does not hold is a FAILED read, never an empty document", async () => {
   const store = new MemoryEvidenceStore();
   const { artifact } = recordAcquisition({ ...ACQUISITION, contentType: "text/plain" }, "unstored");

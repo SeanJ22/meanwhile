@@ -251,6 +251,14 @@ test("DURABLE IDEMPOTENCY: two concurrent putArtifact calls leave ONE object and
   assert.equal(decode((await new DurableEvidenceStore(root).get(a.key))!.bytes), PUBLIC_PAGE);
 });
 
+test("a repeat durable write checks metadata without opening the stored body", async t => {
+  const root = await makeRoot(t), store = new DurableEvidenceStore(root);
+  const { artifact } = recordAcquisition(ACQUISITION, PUBLIC_PAGE);
+  await putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE));
+  store.get = async () => { throw new Error("repeat write opened the stored body"); };
+  assert.equal((await putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE))).written, false);
+});
+
 test("DURABLE READ: bytes that no longer hash to what was written are a FAILED READ that names the corruption", async (t) => {
   const root = await makeRoot(t);
   const store = new DurableEvidenceStore(root);
@@ -275,9 +283,9 @@ test("DURABLE READ: bytes that no longer hash to what was written are a FAILED R
   assert.ok(err instanceof EvidenceStoreRefusal);
 
   await assert.rejects(() => readArtifact(store, PROJECT, artifact, "AUDITOR"), EvidenceCorrupted);
-  await assert.rejects(() => store.head(key), EvidenceCorrupted);
-  await assert.rejects(() => store.put(rawKey, utf8(PUBLIC_PAGE), {contentType:"application/octet-stream",contentHash:artifact.contentHash,byteLength:artifact.byteLength}), EvidenceCorrupted);
-  await assert.rejects(() => putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)), EvidenceCorrupted);
+  assert.equal((await store.head(key))?.contentHash, artifact.contentHash);
+  await store.put(rawKey, utf8(PUBLIC_PAGE), {contentType:"application/octet-stream",contentHash:artifact.contentHash,byteLength:artifact.byteLength});
+  assert.equal((await putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE))).written, false);
 });
 
 test("DURABLE WRITE: the sidecar is the commit point, so an interrupted write is absent rather than half-declared", async (t) => {

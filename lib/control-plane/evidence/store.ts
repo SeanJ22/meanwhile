@@ -340,8 +340,6 @@ export async function putArtifact(
 ): Promise<{ key: string; written: boolean }> {
   const key = objectKey(project, artifact);
 
-  await requireDocumentOriginal(store, project, artifact);
-
   if (bytes.byteLength !== artifact.byteLength) {
     throw new EvidenceStoreRefusal(
       `Artifact ${artifact.id} records ${artifact.byteLength} bytes and ${bytes.byteLength} ` +
@@ -365,15 +363,14 @@ export async function putArtifact(
   }
 
   const meta = artifactMeta(artifact);
-  const existing = await readEvidenceObject(store, key);
+  const existing = await store.head(key);
   if (existing) {
-    const conflict = objectIncompatibility(existing.meta, meta);
+    const conflict = objectIncompatibility(existing, meta);
     if (conflict) throw immutabilityRefusal(key, conflict);
-    if (existing.bytes.byteLength !== artifact.byteLength || contentHash(existing.bytes) !== offeredHash) {
-      throw new EvidenceStoreRefusal(`Key ${key} has metadata for artifact ${artifact.id}, but its stored bytes do not match. A failed body is never reused.`);
-    }
     return { key, written: false };
   }
+
+  await requireDocumentOriginal(store, project, artifact);
 
   if (artifact.tier === "RAW") {
     const ref = await holdRawCapture(store, artifact.sourceId, bytes, artifact.contentType);

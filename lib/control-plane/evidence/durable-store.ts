@@ -15,10 +15,10 @@
  */
 
 import { netlifyEvidenceStoreFromEnv } from "./netlify-store.ts";
-import { resolveRawCapturePointer } from "./raw-pointer.ts";
+import { rawCaptureMetadata, resolveRawCapturePointer } from "./raw-pointer.ts";
 import { randomBytes } from "node:crypto";
 import type { Dirent } from "node:fs";
-import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
 
 import { contentHash } from "../ids.ts";
@@ -371,10 +371,7 @@ export class DurableEvidenceStore implements EvidenceStore {
               "its life; the stored body is the one already cited and it is not replaced.",
           );
         }
-        if (noop) {
-          await this.readBody(key, existing.bodySha256, existing.bodyBytes);
-          return;
-        }
+        if (noop) { await this.assertBodyPresent(key, existing.bodyBytes); return; }
       }
     }
 
@@ -411,7 +408,18 @@ export class DurableEvidenceStore implements EvidenceStore {
       if (fromProvider) return fromProvider;
     }
     if (this.remote) return this.remote.head(key);
-    return (await this.get(key))?.meta ?? null;
+    const sidecar = await this.readSidecar(key);
+    if (!sidecar) return null;
+    await this.assertBodyPresent(key, sidecar.bodyBytes);
+    return rawCaptureMetadata(sidecar.meta);
+  }
+
+  private async assertBodyPresent(key: string, byteLength: number): Promise<void> {
+    try {
+      const info = await stat(this.bodyPath(key));
+      if (info.isFile() && info.size === byteLength) return;
+    } catch { /* A committed sidecar without its body is a failed read. */ }
+    throw new EvidenceStoreRefusal(`Key ${key} has metadata but its body is missing or has the wrong length; this is never an empty document.`);
   }
 
   /**

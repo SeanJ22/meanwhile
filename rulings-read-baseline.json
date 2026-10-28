@@ -212,6 +212,12 @@
       "line": 155
     },
     {
+      "file": "lib/funding/state-cycles.ts",
+      "kind": "SELECT *",
+      "fingerprint": "11981806943fc8117b0fc7cddc2f4fea15fb3d640d81935cd954db875f3183b6",
+      "line": 26
+    },
+    {
       "file": "lib/method/fix-map.ts",
       "kind": "SELECT *",
       "fingerprint": "2135a58f8008895421a793ed3a16dfd75ae2d7140cf63c9830a1ed9c767f5e8c",
@@ -258,6 +264,18 @@
       "kind": "SELECT *",
       "fingerprint": "53c4f0abf7abbbf0554b3151506b4edeef5076703e66a2bb5e73c6279129d6a7",
       "line": 111
+    },
+    {
+      "file": "lib/reader/place-builder.ts",
+      "kind": "SELECT *",
+      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
+      "line": 170
+    },
+    {
+      "file": "lib/reader/place-builder.ts",
+      "kind": "SELECT *",
+      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
+      "line": 224
     },
     {
       "file": "lib/sources/legiscan/reader.ts",

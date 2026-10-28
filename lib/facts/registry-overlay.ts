@@ -7,7 +7,7 @@ import { readSittingFacts, type SittingFact } from "./meeting-read.ts";
 import type { Query } from "./publish.ts";
 import { readFactRosters } from "./roster-read.ts";
 
-const SCHEDULE_SQL = `SELECT f.entity_id, f.field, f.value, f.checked_at, (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url FROM fact f
+const SCHEDULE_SQL = `SELECT f.entity_id, f.field, f.value, f.checked_at, (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url FROM checked_fact f
   WHERE f.status = 'live' AND f.field IN ('name', 'homepage', 'meeting_cadence', 'agenda_url', 'office_address', 'office_phone', 'office_email', 'mailing_address') AND f.entity_id = ANY($1::text[])`;
 
 /** One body's live facts as readers see them: its own fields, its members, its comment rules and its sittings. */

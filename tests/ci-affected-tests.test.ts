@@ -256,6 +256,11 @@ test("the schedule, dispatch and a missing base run the whole suite; main and ot
   assert.equal(decide({ root: ROOT, tier: "yes", eventName: "workflow_dispatch", base: undefined }).plan, "full");
   assert.equal(decide({ root: ROOT, tier: "yes", eventName: "pull_request", base: undefined }).plan, "full");
   assert.equal(decide({ root: ROOT, tier: "yes", eventName: "pull_request", base: "f".repeat(40) }).plan, "full", "an unknown base commit fails closed");
+  const release = decide({ root: ROOT, tier: "yes", eventName: "pull_request", base: undefined, headRef: "release/136" });
+  assert.equal(release.plan, "full");
+  assert.match(release.reasons[0]!, /release\/136 is a release, so the whole suite runs once on what ships/);
+  assert.equal(decide({ root: ROOT, tier: "waiting", eventName: "pull_request", base: undefined, headRef: "release/136" }).plan, "none",
+    "a release opened before its label waits like any other pull request");
   for (const tier of ["waiting", "draft", "no-preflight", ""]) assert.equal(decide({ root: ROOT, tier, eventName: "pull_request", base: undefined }).plan, "none");
 });
 

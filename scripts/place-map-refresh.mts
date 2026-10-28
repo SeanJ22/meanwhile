@@ -1,36 +1,12 @@
 /** The standing source job loads one state, keeping the prior map on failure. */
-import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { refreshStatePlaceMap } from "../lib/place-map/refresh.ts";
 import { readerFactDb } from "../lib/facts/db.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
-import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
-import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
-import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
-import { isSourceAcquisitionFailure, recordRegisteredSourceAcquisitionFailure, withPublisherAcquisitionDeadline } from "../lib/civic-data/source-acquisition-failure.ts";
-import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
+import { runStatePlaceMapJob } from "../lib/place-map/job.ts";
 
 const state = process.argv.find(arg => arg.startsWith("--state="))?.slice(8);
 if (!state || !/^[A-Z]{2}$/.test(state)) throw new Error("A state abbreviation is required");
 installNeonRequestDeadline();
-const prepared = prepareProductionCivicDataWrite(), facts = readerFactDb(prepared.connection);
-const store = new PostgresRoutineDataStore(), contract = `place-map-${state.toLowerCase()}`;
-try {
-  const result = await withPublisherAcquisitionDeadline(`${state} Census place map`, ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
-    signal => refreshStatePlaceMap(facts, process.cwd(), state, store, { signal }));
-  if (result.confirmed) {
-    console.log("RCD_RECEIPT=" + JSON.stringify({ source: contract, ...sourceHashReceiptFields(result.confirmed), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
-  } else {
-    const candidate = censusGeographyCandidate(result.dataset!, `US-${state}:place-map`, result.sourceProbe!);
-    const published = await processRegisteredRoutineCandidate(store, contract, candidate, candidate.retrieval.retrievedAt, result.baseVersionId, { confirmUnchanged: false });
-    printSourceRunnerReceipt(contract, candidate, published);
-    if (!published.promoted) process.exitCode = 2;
-  }
-} catch (error) {
-  if (!isSourceAcquisitionFailure(error)) throw error;
-  const result = await recordRegisteredSourceAcquisitionFailure({ store, contractId: contract, failure: error });
-  console.log(result.line);
-  process.exitCode = 2;
-}
+const prepared = prepareProductionCivicDataWrite();
+process.exitCode = await runStatePlaceMapJob({ facts: readerFactDb(prepared.connection), store: new PostgresRoutineDataStore(), root: process.cwd(), state });

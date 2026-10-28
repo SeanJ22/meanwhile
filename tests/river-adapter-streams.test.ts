@@ -190,8 +190,12 @@ test("a returned stream becomes one fix-list item owned by the lane that wrote i
 /* River end to end                                                           */
 /* -------------------------------------------------------------------------- */
 
+/** A stand-in `pnpm` for River's quick check (lint and types), first on PATH. */
+const FAKE_BIN = mkdtempSync(join(tmpdir(), "river-adapter-pnpm-"));
+writeFileSync(join(FAKE_BIN, "pnpm"), "#!/bin/sh\nexit 0\n", { mode: 0o755 });
+test.after(() => rmSync(FAKE_BIN, { recursive: true, force: true }));
 const ENV = {
-  ...process.env, GITHUB_TOKEN: "", GH_TOKEN: "",
+  ...process.env, GITHUB_TOKEN: "", GH_TOKEN: "", GH_REPOSITORY: "example/meanwhile", PATH: `${FAKE_BIN}:${process.env.PATH}`,
   GIT_AUTHOR_NAME: "River Test", GIT_AUTHOR_EMAIL: "river@example.invalid",
   GIT_COMMITTER_NAME: "River Test", GIT_COMMITTER_EMAIL: "river@example.invalid",
   GIT_CONFIG_NOSYSTEM: "1", GIT_TERMINAL_PROMPT: "0",
@@ -273,13 +277,15 @@ test("River takes an adapter stream like any lane, returns a conflicting one to 
     assert.equal(byHand.code, 0, byHand.out);
     assert.equal(parseStatus(sh(checkout, ["show", "origin/board/river:returns/adapter-alpha.md"])).check, "gates");
 
-    // The repaired alpha integrates alone; its return is cleared on the board.
+    // The repaired alpha integrates alone once GitHub CI passes its release; its return is cleared on the board.
+    sh(checkout, ["checkout", "--quiet", "-f", "main"]);
+    assert.match(river(checkout, "fold").out, /HELD adapter-alpha /, "a returned READY is not folded again unless named");
     sh(checkout, ["checkout", "--quiet", "-f", "main"]);
     assert.equal(river(checkout, "fold", "--lanes", "adapter-alpha").code, 0);
-    const head = sh(checkout, ["rev-parse", "HEAD"]);
-    writeFileSync(join(checkout, ".scratch/river/test.json"), JSON.stringify({ sha: head, gates: "pass" }));
-    const promoted = river(checkout, "promote");
-    assert.equal(promoted.code, 0, promoted.out);
+    const released = river(checkout, "release", "1");
+    assert.equal(released.code, 0, released.out);
+    const settled = river(checkout, "settle", "1", "--ci", "pass");
+    assert.equal(settled.code, 0, settled.out);
     assert.match(parseStatus(sh(checkout, ["show", "origin/board/river:returns/adapter-alpha.md"])).state, /^cleared: integrated ready /);
     assert.equal(parseStatus(sh(checkout, ["show", "origin/board/river:returns/adapter-beta.md"])).state, "returned", "an unrepaired return stays open");
     const integration = JSON.parse(sh(checkout, ["show", "origin/board/river:integration.json"]));

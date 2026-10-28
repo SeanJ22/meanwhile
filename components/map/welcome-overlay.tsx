@@ -8,6 +8,7 @@ import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { isWellFormedZip, resolveReaderZip } from "@/lib/reader/zip";
 
 import { useRecentZips } from "@/hooks/use-recent-zips";
+import { rememberZipChoice, useSavedZipChoice } from "@/hooks/use-stored-zip";
 import { recordLocationOrigin } from "@/lib/state/location-origin";
 import type { LocationOrigin } from "@/lib/ask/residency";
 import { ZipComb } from "./zip-comb";
@@ -39,6 +40,8 @@ export function WelcomeOverlay({
   onDismiss,
 }: WelcomeOverlayProps) {
   const [zip, setZip] = useState("");
+  const savedZip = useSavedZipChoice();
+  const ballotZip = isWellFormedZip(zip) ? zip : savedZip;
   const recents = useRecentZips();
   const [error, setError] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
@@ -181,6 +184,11 @@ export function WelcomeOverlay({
         >
           Show meetings
         </button>
+
+        <a href={ballotZip ? `/ballot?zip=${ballotZip}` : "/ballot"} data-ballot-link
+          className="welcome-team-btn" onClick={() => { if (ballotZip) rememberZipChoice(ballotZip); }}>
+          Show my ballot
+        </a>
 
         {/* The reader's own recent places first; none of them resolves a district. */}
         {recents.length > 0 && (

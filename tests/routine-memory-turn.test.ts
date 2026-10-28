@@ -1,13 +1,15 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { runBoundedChildPass, type BoundedChildCommand } from "../lib/civic-data/bounded-child-pass.ts";
-import { routineChildMemoryOrder, routineDeferral, ROUTINE_PASS_BUDGET_MS, ROUTINE_SOURCE_TASKS, routinePassLaunchOrder, routineFailureDomainFrontier,
+import { routineChildMemoryOrder, routineDeferral, ROUTINE_SOURCE_TASKS, routinePassLaunchOrder, routineFailureDomainFrontier,
   routineWaitedFullPass, routineSerialLane, routineSerialLanesFirst, type RoutineTaskAdmissionCandidate } from "../lib/civic-data/runner.ts";
 import { electionLaunchOrder } from "../lib/civic-data/ballot-publication.ts";
 import { routineProcessSlots, workerMemoryHost, type WorkerMemoryRelease } from "../lib/control-plane/workers/worker-slots.ts";
 import { placeMapReservationMiB } from "../lib/place-map/memory.ts";
 import memory from "../lib/place-map/memory.json" with { type: "json" };
 import { ControlledClock } from "./helpers/routine-pass-replay.ts";
+import { PLACE_MAP_PASS_BUDGET_MS, PLACE_MAP_RUN_RESERVE_MS, PLACE_MAP_SETTLEMENT_MS, placeMapLaunchOrder } from "../lib/civic-data/place-map-lane.ts";
+import { readFileSync } from "node:fs";
 
 const mib = 1024 ** 2;
 const exited = (command: BoundedChildCommand) => ({ id: command.id, status: 0, signal: null,
@@ -50,20 +52,22 @@ const stateOf = (id: string) => id.slice("place-map-".length).toUpperCase();
 const blockBytes = (id: string) => (memory.states as Record<string, { blockFileBytes: number }>)[stateOf(id)]!.blockFileBytes;
 /** RB-A2's runs took 225 s (TX), 175 s (CA) and 19 s (AK): about 15 s plus 0.9 s per MB of the state's block file. */
 const mapRunMs = (id: string) => 15_000 + Math.round(blockBytes(id) * 0.0009);
+/** The place-map lane's first run: maps start until its launch deadline and are ended just before its own. */
+const MAP_LAUNCH_MS = PLACE_MAP_PASS_BUDGET_MS - PLACE_MAP_RUN_RESERVE_MS, MAP_WALL_MS = PLACE_MAP_PASS_BUDGET_MS - PLACE_MAP_SETTLEMENT_MS;
 
 /**
  * Production shape: a host whose 20,244 MiB is already full of the previous pass's meeting reads and a campaign-site run,
- * and a pass whose own 1,447 MiB meeting reads and 512 MiB campaign-site runs keep finishing and relaunching, plus the
- * owed maps. Ordering, Census lane, waited rule, memory order and per-state reservations are the runner's own.
- * `shipped` replays RT-01 as shipped: 3,709 MiB maps ordered last that take only a free turn.
+ * and a routine pass whose own 1,447 MiB meeting reads and 512 MiB campaign-site runs keep finishing and relaunching.
+ * The owed maps run beside it in the place-map lane: another process sharing the host's memory, one map at a time,
+ * each waiting at the front of its own lane. Ordering, memory order and per-state reservations are the runners' own.
+ * `routineLaunchMs` is how much of the routine pass's launch window remains when the lane starts.
  */
-async function busyPass(maps: readonly Omit<RoutineTaskAdmissionCandidate, "deadlineMs">[], shipped = false, legiscan?: "shipped" | "held") {
+async function busyPass(maps: readonly Omit<RoutineTaskAdmissionCandidate, "deadlineMs">[], legiscan?: "shipped" | "held", routineLaunchMs = 20 * 60_000) {
   const clock = new ControlledClock(0), launches: { id: string; at: number }[] = [];
-  const window = 20 * 60_000, now = 0;
+  const window = routineLaunchMs, now = 0;
   const host = workerMemoryHost({ processes: () => [] });
-  const memoryLimit = { availableBytes: () => 20_244 * mib, host,
-    ...shipped ? { minimumPeakBytes: (entry: string) => entry.endsWith("/place-map-refresh.mts") ? 3709 * mib : 0 } : {} };
-  const earlier = routineProcessSlots(memoryLimit), slots = routineProcessSlots(memoryLimit);
+  const memoryLimit = { availableBytes: () => 20_244 * mib, host };
+  const earlier = routineProcessSlots(memoryLimit), slots = routineProcessSlots(memoryLimit), mapSlots = routineProcessSlots(memoryLimit);
   const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
   const site = ROUTINE_SOURCE_TASKS.find(task => task.sourceId === "candidate-campaign-site-chain")!;
   const candidates: RoutineTaskAdmissionCandidate[] = [
@@ -72,26 +76,38 @@ async function busyPass(maps: readonly Omit<RoutineTaskAdmissionCandidate, "dead
       deadlineMs: now - 3_600_000 + index, lastConsideredAt: null })),
     ...Array.from({ length: 100 }, (_, index) => ({ task: { ...site, id: `${site.id}:${index}`, acquisitionFailureDomain: `sites-${index}` },
       owedAtMs: now - 3_600_000 + index, lastConsideredAt: null })),
-    ...maps,
     // The national bill fan-out continuing from the previous pass: no owed instant, considered a pass ago.
     ...legiscan ? [{ task: ROUTINE_SOURCE_TASKS.find(task => task.id === "legiscan-bulk")!, lastConsideredAt: new Date(now - 30 * 60_000).toISOString() }] : [],
   ];
   const admitted = routineFailureDomainFrontier(candidates);
-  const waited = new Set(admitted.filter(candidate => routineWaitedFullPass(candidate, now)).map(({ task }) => task.id));
-  // As shipped, a never-run map was ordered after all overdue work.
+  const waited = new Set(admitted.filter(candidate => routineWaitedFullPass(candidate)).map(({ task }) => task.id));
   const passOrder = routinePassLaunchOrder(routineSerialLanesFirst(admitted), now);
   // As shipped (BL-02), the bill fan-out was ordinary late work on a free turn.
   const bills = (row: { task: { id: string } }) => row.task.id === "legiscan-bulk";
   if (legiscan === "shipped") waited.delete("legiscan-bulk");
-  const ordered = shipped ? passOrder : legiscan === "shipped"
+  const ordered = legiscan === "shipped"
     ? [...electionLaunchOrder(passOrder.filter(row => !bills(row))), ...passOrder.filter(bills)] : electionLaunchOrder(passOrder);
   const commands: BoundedChildCommand[] = ordered.map(({ task }) => ({ id: task.id, failureDomain: task.acquisitionFailureDomain,
-    serialLane: shipped || legiscan === "shipped" && task.id === "legiscan-bulk" ? undefined : routineSerialLane(task.command), executable: "ignored", args: [] }));
+    serialLane: legiscan === "shipped" && task.id === "legiscan-bulk" ? undefined : routineSerialLane(task.command), executable: "ignored", args: [] }));
+  const mapCommands: BoundedChildCommand[] = placeMapLaunchOrder(routineFailureDomainFrontier(maps)).map(({ task }) => ({ id: task.id,
+    failureDomain: task.acquisitionFailureDomain, executable: "ignored", args: [] }));
   const script = (id: string) => id.startsWith("place-map-") ? "place-map-refresh.mts" : id.startsWith("meetings:") ? "ingest.ts"
     : id === "legiscan-bulk" ? "legiscan-bulk.mts" : "derive-candidate-campaign-sites.mts";
   const runsFor = (id: string) => id.startsWith("place-map-") ? mapRunMs(id) : id.startsWith("meetings:") ? 4 * 60_000 : id === "legiscan-bulk" ? window : 60_000;
   const releases = new Map<string, WorkerMemoryRelease>();
   let mapsRunning = 0, mostMaps = 0, meetingsRunning = 0, fewestReads = Infinity, waitedHandedBack = 0;
+  const launch = async (command: BoundedChildCommand) => {
+    launches.push({ id: command.id, at: clock.nowMs });
+    const map = command.id.startsWith("place-map-"), read = command.id.startsWith("meetings:");
+    if (map) mostMaps = Math.max(mostMaps, ++mapsRunning);
+    if (read) meetingsRunning++;
+    await clock.sleepUntil(clock.nowMs + runsFor(command.id));
+    if (map) mapsRunning--;
+    if (read) meetingsRunning--;
+    // Meeting reads running, the previous pass's included, at each completion inside the launch window.
+    if (clock.nowMs < window) fewestReads = Math.min(fewestReads, meetingsRunning);
+    return exited(command);
+  };
   await clock.run(async () => {
     // The previous pass left 13 meeting reads and one campaign-site run: 19,323 MiB of 19,476 usable.
     const prior = [...Array.from({ length: 13 }, (_, index) => [`meetings:prior-${index}/ingest.ts`, 20_000 * (index + 1)] as const),
@@ -101,31 +117,30 @@ async function busyPass(maps: readonly Omit<RoutineTaskAdmissionCandidate, "dead
       if (entry.startsWith("meetings:")) meetingsRunning++;
       void clock.sleepUntil(endsAt).then(() => { release(); if (entry.startsWith("meetings:")) meetingsRunning--; });
     }
-    await runBoundedChildPass(commands, { cwd: process.cwd(), env: { NODE_ENV: "test" }, concurrency: commands.length, deadlineMs: window,
-      onStarting: async (command, index) => {
-        const order = shipped ? { priority: index, wait: false as const } : routineChildMemoryOrder(index, waited.has(command.id));
-        try { releases.set(command.id, await slots.acquire(`${command.id}/${script(command.id)}`, window, order)); }
-        catch (error) {
-          if (error instanceof Error && error.message.startsWith("WORKER_MEMORY_BUSY:")) {
-            if (waited.has(command.id)) waitedHandedBack++;
-            return false;
+    await Promise.all([
+      runBoundedChildPass(commands, { cwd: process.cwd(), env: { NODE_ENV: "test" }, concurrency: Math.max(1, commands.length), deadlineMs: window,
+        onStarting: async (command, index) => {
+          if (clock.nowMs >= window) throw new Error("PASS_TIME_BUDGET: this pass's time is spent");
+          try { releases.set(command.id, await slots.acquire(`${command.id}/${script(command.id)}`, window, routineChildMemoryOrder(index, waited.has(command.id)))); }
+          catch (error) {
+            if (error instanceof Error && error.message.startsWith("WORKER_MEMORY_BUSY:")) {
+              if (waited.has(command.id)) waitedHandedBack++;
+              return false;
+            }
+            throw error;
           }
-          throw error;
-        }
-      },
-      onSettled: result => { releases.get(result.id)?.(); releases.delete(result.id); },
-    }, async command => {
-      launches.push({ id: command.id, at: clock.nowMs });
-      const map = command.id.startsWith("place-map-"), read = command.id.startsWith("meetings:");
-      if (map) mostMaps = Math.max(mostMaps, ++mapsRunning);
-      if (read) meetingsRunning++;
-      await clock.sleepUntil(clock.nowMs + runsFor(command.id));
-      if (map) mapsRunning--;
-      if (read) meetingsRunning--;
-      // Meeting reads running, the previous pass's included, at each completion inside the launch window.
-      if (clock.nowMs < window) fewestReads = Math.min(fewestReads, meetingsRunning);
-      return exited(command);
-    });
+        },
+        onSettled: result => { releases.get(result.id)?.(); releases.delete(result.id); },
+      }, launch),
+      // The place-map lane, exactly as the runner gives it: one at a time, every map at the front of its own lane.
+      runBoundedChildPass(mapCommands, { cwd: process.cwd(), env: { NODE_ENV: "test" }, concurrency: 1, deadlineMs: MAP_WALL_MS,
+        onStarting: async (command, index) => {
+          if (clock.nowMs >= MAP_LAUNCH_MS) throw new Error("PASS_TIME_BUDGET: this pass's time is spent");
+          releases.set(command.id, await mapSlots.acquire(`${command.id}/${script(command.id)}`, MAP_LAUNCH_MS, routineChildMemoryOrder(index, true)));
+        },
+        onSettled: result => { releases.get(result.id)?.(); releases.delete(result.id); },
+      }, launch),
+    ]);
   });
   assert.equal(releases.size, 0);
   return { mostMaps, fewestReads, waitedHandedBack,
@@ -136,54 +151,44 @@ async function busyPass(maps: readonly Omit<RoutineTaskAdmissionCandidate, "dead
 
 const neverRun = MAPS.map(task => ({ task, baselineOwed: true, lastConsideredAt: null }));
 
-test("RT-01 as shipped: 3,709 MiB maps on free turns never start on a host busy with reads that keep relaunching", async () => {
-  const pass = await busyPass(neverRun, true);
-  assert.equal(pass.maps.length, 0, "the production failure: every place-map decision was DEFER");
-  assert.ok(pass.meetings.length > 0);
-});
-
-test("a map waited a full pass when it was owed for one pass budget or has never run; other work never counts as waited", () => {
+test("only the bill fan-out counts as having waited a full pass in the routine pass; every state map waits first in its own lane", () => {
   const tx = MAPS.find(task => task.id === "place-map-tx")!;
-  const now = Date.parse("2026-10-26T15:00:00.000Z");
-  assert.equal(routineWaitedFullPass({ task: tx, baselineOwed: true, lastConsideredAt: null }, now), true);
-  assert.equal(routineWaitedFullPass({ task: tx, owedAtMs: now - ROUTINE_PASS_BUDGET_MS, lastConsideredAt: "2026-09-20T00:00:00.000Z" }, now), true);
-  assert.equal(routineWaitedFullPass({ task: tx, owedAtMs: now - ROUTINE_PASS_BUDGET_MS + 1, lastConsideredAt: "2026-09-20T00:00:00.000Z" }, now), false);
+  assert.equal(routineWaitedFullPass({ task: tx }), false);
   const meeting = ROUTINE_SOURCE_TASKS.find(task => task.recordClass === "MEETING")!;
-  assert.equal(routineWaitedFullPass({ task: meeting, baselineOwed: true, lastConsideredAt: null }, now), false);
+  assert.equal(routineWaitedFullPass({ task: meeting }), false);
+  assert.equal(routineWaitedFullPass({ task: ROUTINE_SOURCE_TASKS.find(task => task.id === "legiscan-bulk")! }), true);
+  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
+  assert.match(runner, /const waitedFullPass = new Set\(admitted\.filter\(candidate => PLACE_MAPS \|\| routineWaitedFullPass\(candidate\)\)/);
+  assert.match(runner, /concurrency: PLACE_MAPS \? 1 : /, "the lane runs one map at a time");
   assert.deepEqual(routineChildMemoryOrder(3, true), { priority: 3, first: true });
   assert.deepEqual(routineChildMemoryOrder(4, false), { priority: 4, wait: false });
 });
 
-test("on a host busy with reads that keep relaunching, owed maps start smallest first, one at a time, and meeting reads keep running", async () => {
-  assert.deepEqual([...new Set(ROUTINE_SOURCE_TASKS.filter(task => task.sourceId === "census-geography-relationships")
-    .map(task => routineSerialLane(task.command)))], ["serial:census-geography"], "one shared Census worker");
+test("on a host busy with reads that keep relaunching, owed maps start in their own lane smallest first, one at a time, and meeting reads keep running", async () => {
+  assert.deepEqual(MAPS.map(task => routineSerialLane(task.command)).filter(Boolean), [], "no map is in the routine pass's Census lane");
+  assert.equal(routineSerialLane(ROUTINE_SOURCE_TASKS.find(task => task.id === "census-geography-overlaps")!.command), "serial:census-geography");
   const without = await busyPass([]);
   const pass = await busyPass(neverRun);
-  assert.equal(pass.mostMaps, 1, "one Census worker: one map at a time");
-  assert.equal(pass.waitedHandedBack, 0, "a map that waited a full pass never hands its turn back");
+  assert.equal(pass.mostMaps, 1, "one map at a time");
   assert.equal(pass.maps[0]?.id, "place-map-as", "American Samoa reserves its own 502 MiB and starts first");
-  assert.ok(pass.maps[0]!.at <= 20_000, `the first map takes the first room that opens (started at ${pass.maps[0]!.at / 1000}s)`);
   const started = new Map(pass.maps.map(row => [stateOf(row.id), row.at]));
-  const small = ["AS", "VI", "GU", "MP", "DC", "WY"];
-  assert.ok(small.every(state => started.has(state)), `small states start in the pass: ${[...started.keys()].join(" ")}`);
-  const firstLarge = Math.min(...pass.maps.filter(row => placeMapReservationMiB(stateOf(row.id)) >= 1000).map(row => row.at));
-  assert.ok(small.every(state => started.get(state)! < firstLarge), "small states never wait behind a large one");
-  assert.ok(pass.maps.length >= 20, `${pass.maps.length} states start in one 20-minute launch window`);
-  assert.ok(pass.fewestReads >= without.fewestReads,
-    `meeting reads keep running beside the map: at least ${pass.fewestReads} at once with maps, ${without.fewestReads} without`);
+  const small = placeMapLaunchOrder(MAPS.map(task => ({ task }))).slice(0, 6).map(({ task }) => stateOf(task.id));
+  assert.ok(small.includes("DC"));
+  assert.ok(small.every(state => started.has(state)), `small states start in the lane's first run: ${[...started.keys()].join(" ")}`);
+  const large = pass.maps.filter(row => placeMapReservationMiB(stateOf(row.id)) >= 1000).map(row => row.at);
+  assert.ok(small.every(state => started.get(state)! < Math.min(Infinity, ...large)), "small states never wait behind a large one");
+  assert.ok(pass.maps.length >= 10, `${pass.maps.length} states start in the lane's ${MAP_LAUNCH_MS / 60_000}-minute launch window`);
+  assert.ok(pass.maps.every(row => row.at < MAP_LAUNCH_MS));
   assert.ok(pass.meetings.length >= 0.85 * without.meetings.length,
     `meeting reads keep starting: ${pass.meetings.length} with maps, ${without.meetings.length} without`);
 });
 
-test("a map that waited a full pass takes the next freed memory that fits; one owed for less than a pass takes a free turn", async () => {
-  const tx = MAPS.find(task => task.id === "place-map-tx")!;
-  const waited = await busyPass([{ task: tx, owedAtMs: -ROUTINE_PASS_BUDGET_MS - 60_000, lastConsideredAt: "2026-09-20T00:00:00.000Z" }]);
-  const recent = await busyPass([{ task: tx, owedAtMs: -5 * 60_000, lastConsideredAt: "2026-09-20T00:00:00.000Z" }]);
-  // At 20 s one finished read leaves 1,600 MiB, which a free-turn read takes; Texas keeps it, and at 30 s a finished
-  // campaign-site run brings it to Texas's own 1,672 MiB.
-  assert.equal(waited.maps[0]?.at, 30_000);
-  assert.equal(waited.waitedHandedBack, 0);
-  assert.ok((recent.maps[0]?.at ?? Infinity) > 30_000, `a free turn lets reads take that room first (started at ${recent.maps[0]?.at})`);
+test("owed maps launch when the routine pass's time is already spent", async () => {
+  const pass = await busyPass(neverRun, undefined, 0);
+  assert.equal(pass.meetings.length, 0, "the routine pass starts nothing past its launch deadline");
+  assert.ok(pass.maps.length >= 20, `${pass.maps.length} maps start in the lane anyway`);
+  assert.equal(pass.mostMaps, 1);
+  assert.ok(MAP_WALL_MS - MAP_LAUNCH_MS >= 15 * 60_000, "a map started at the lane's last moment still has 15 minutes");
 });
 
 test("each state's reservation is its own measured peak, or its block-file fit, plus 5% rounded up", () => {
@@ -207,18 +212,18 @@ test("each state's reservation is its own measured peak, or its block-file fit, 
 });
 
 test("BL-02 as shipped: the 2,130 MiB bill fan-out on a late free turn never starts on a host busy with reads", async () => {
-  const pass = await busyPass(neverRun, false, "shipped");
+  const pass = await busyPass([], "shipped");
   assert.equal(pass.bills.length, 0, "the production failure: every legiscan-bulk decision since 11:47 UTC was DEFER");
 });
 
-test("the bill fan-out has always waited a full pass, so it takes the next freed memory beside the maps in a busy pass", async () => {
+test("the bill fan-out has always waited a full pass, so it takes the next freed memory in a busy pass beside the map lane", async () => {
   const bulk = ROUTINE_SOURCE_TASKS.find(task => task.id === "legiscan-bulk")!;
   assert.equal(routineSerialLane(bulk.command), "serial:scripts/legiscan-bulk.mts");
-  assert.equal(routineWaitedFullPass({ task: bulk, lastConsideredAt: new Date().toISOString() }, Date.now()), true);
+  assert.equal(routineWaitedFullPass({ task: bulk }), true);
   const without = await busyPass(neverRun);
-  const pass = await busyPass(neverRun, false, "held");
+  const pass = await busyPass(neverRun, "held");
   assert.equal(pass.bills.length, 1);
-  assert.equal(pass.waitedHandedBack, 0, "neither the fan-out nor a waited map hands its turn back");
+  assert.equal(pass.waitedHandedBack, 0, "the fan-out never hands its turn back");
   assert.ok(pass.bills[0]!.at <= 5 * 60_000, `the fan-out takes early room (started at ${pass.bills[0]!.at / 1000}s)`);
   assert.equal(pass.maps[0]?.id, "place-map-as", "the smallest state still starts first");
   assert.equal(pass.mostMaps, 1);

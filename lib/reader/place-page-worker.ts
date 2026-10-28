@@ -15,7 +15,8 @@ const PLACE_PAGE_CONCURRENCY = 2;
 /** The line a turn's process prints its result on. */
 export const PLACE_PAGE_TURN_LINE = "PLACE_PAGES_TURN ";
 
-export interface PlacePageTurn { readonly rebuilt: number; readonly failed: number; readonly remaining: number }
+/** `unchanged` counts rebuilt pages confirmed current from their prints, without reading or rewriting them. */
+export interface PlacePageTurn { readonly rebuilt: number; readonly failed: number; readonly remaining: number; readonly unchanged?: number }
 
 /** One turn of the rebuild queue, as the runner's turn process runs it. */
 export function rebuildPlacePageTurn(db: FactDb, deadlineMs: number, purge?: RebuildOptions["purge"], buildRevision?: string): Promise<PlacePageTurn> {
@@ -32,7 +33,8 @@ export function placePageTurnResult(output: string): PlacePageTurn | null {
   const line = output.split("\n").findLast(row => row.startsWith(PLACE_PAGE_TURN_LINE));
   if (!line) return null;
   const parsed = JSON.parse(line.slice(PLACE_PAGE_TURN_LINE.length)) as Partial<PlacePageTurn>;
-  return { rebuilt: Number(parsed.rebuilt ?? 0), failed: Number(parsed.failed ?? 0), remaining: Number(parsed.remaining ?? 0) };
+  return { rebuilt: Number(parsed.rebuilt ?? 0), failed: Number(parsed.failed ?? 0), remaining: Number(parsed.remaining ?? 0),
+    ...(parsed.unchanged ? { unchanged: Number(parsed.unchanged) } : {}) };
 }
 
 /**
@@ -57,7 +59,7 @@ export async function drainPlacePageQueue(input: {
     turns++; rebuilt += result.rebuilt; failed += result.failed;
     const before = remaining;
     remaining = result.remaining;
-    input.log(`  place pages: ${result.rebuilt} rebuilt, ${result.failed} failed and still queued, ${result.remaining} waiting`);
+    input.log(`  place pages: ${result.rebuilt} rebuilt${result.unchanged ? ` (${result.unchanged} unchanged)` : ""}, ${result.failed} failed and still queued, ${result.remaining} waiting`);
     if (!result.remaining || (!result.rebuilt && (before === null || result.remaining >= before))) break;
   }
   return { turns, rebuilt, failed, remaining };

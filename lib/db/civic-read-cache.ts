@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { outsideSourceAcquisition } from "../sources/acquisition-scope.ts";
 
 export interface CivicRowVersion { readonly key: string; readonly etag: string }
 interface Entry<T> { readonly etag: string; readonly value: T }
@@ -165,6 +166,9 @@ export function runtimeCivicReadCache(connection = process.env.DATABASE_URL ?? "
     write: (key, value) => memoryIO.write(namespace + key, value),
   });
   const remoteKey = (key: string) => hash(namespace + key);
+  // The runner's local copy host is our own infrastructure. A lookup made while a source is being read is
+  // never that source's acquisition, its evidence, or a raw capture.
+  const fetch: typeof globalThis.fetch = (input, init) => outsideSourceAcquisition(() => globalThis.fetch(input, init));
   return new CivicReadCache({
     read: async key => {
       const response = await fetch(endpoint + "/" + remoteKey(key),

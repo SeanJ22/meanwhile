@@ -33,6 +33,17 @@ test("ballot copies vary by ZIP and preserve Next's RSC discriminator", async ()
   assert.match(BALLOT_CACHE_VARY, /_rsc/);
 });
 
+test("the actual response carries the ZIP cache policy before place lookup, and short browser reuse ends by midnight", async context => {
+  context.mock.method(Date, "now", () => Date.parse("2026-10-23T22:00:00Z"));
+  const response = await middleware(new NextRequest(`${PUBLIC_SITE_ORIGIN}/ballot?zip=03301`));
+  assert.equal(response.headers.get("Cache-Control"), "private, max-age=30, must-revalidate");
+  assert.equal(response.headers.get("Netlify-CDN-Cache-Control"), "public, durable, max-age=32340, must-revalidate");
+  assert.equal(response.headers.get("Netlify-Cache-Tag"), "reader-state:NH,reader-national-people,reader-settings");
+  context.mock.method(Date, "now", () => Date.parse("2026-10-24T06:59:59Z"));
+  const midnight = await middleware(new NextRequest(`${PUBLIC_SITE_ORIGIN}/ballot?zip=03301`));
+  assert.equal(midnight.headers.get("Cache-Control"), "private, max-age=1, must-revalidate");
+});
+
 test("the origin answer for a known ZIP lives until Phoenix midnight and carries its state's purge tag, including 03301 and 07102", async context => {
   context.mock.method(Date, "now", () => Date.parse("2026-10-23T22:00:00Z"));
   for (const [zip, state] of [["03301", "NH"], ["07102", "NJ"], ["85701", "AZ"], ["90210", "CA"]]) {

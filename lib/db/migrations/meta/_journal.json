@@ -510,13 +510,20 @@
       "idx": 72,
       "version": "7",
       "when": 1792834200020,
-      "tag": "ZP-01_expand",
+      "tag": "WR-01_fact_confirmations",
       "breakpoints": true
     },
     {
       "idx": 73,
       "version": "7",
       "when": 1792834200021,
+      "tag": "ZP-01_expand",
+      "breakpoints": true
+    },
+    {
+      "idx": 74,
+      "version": "7",
+      "when": 1792834200022,
       "tag": "ZP-01_build_fingerprint",
       "breakpoints": true
     }

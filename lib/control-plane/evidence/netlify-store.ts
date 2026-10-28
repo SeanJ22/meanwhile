@@ -1,7 +1,7 @@
 import { getStore, type Store } from "@netlify/blobs";
 import { AsyncLocalStorage } from "node:async_hooks";
 import { contentHash } from "../ids.ts";
-import { outsideSourceAcquisition } from "../../sources/acquisition-trace.ts";
+import { outsideSourceAcquisition } from "../../sources/acquisition-scope.ts";
 import { rawCaptureMetadata, resolveRawCapturePointer } from "./raw-pointer.ts";
 import { EvidenceStoreRefusal, objectClassOf, reconcileExistingObject, type EvidenceStore, type ObjectMeta, type StoredObject } from "./store.ts";
 

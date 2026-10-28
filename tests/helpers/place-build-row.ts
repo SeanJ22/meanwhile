@@ -7,7 +7,7 @@ export function fixturePlaceBuild(query:Query,text:string,params:readonly unknow
     if(!/^[a-z_]+$/.test(key))throw Error("Invalid fixture column");
     return `'${JSON.stringify(value).replaceAll("'","''")}'::jsonb AS ${key}`;
   });
-  const types=['text','text[]','text[]','text','boolean','boolean','boolean','text[]','boolean','text[]','text'];
+  const types=['text','text[]','text[]','text','boolean','boolean','boolean','text[]','boolean','text[]','text','jsonb','boolean'];
   const input=`SELECT ${columns.join(',')} FROM (SELECT ${types.map((type,i)=>`$${i+1}::${type} AS p${i}`).join(',')}) parameters`;
   return query(text.replace(PLACE_PACKAGE_SQL,input),params);
 }

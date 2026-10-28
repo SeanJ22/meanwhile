@@ -9,6 +9,7 @@ import { electionLaunchOrder } from "../lib/civic-data/ballot-publication.ts";
 import { placeSourceLaunchOrder } from "../lib/hunt/place-source-admission.ts";
 import { routineProcessSlots, workerMemoryHost, workerProcessSlots, type WorkerMemoryOrder } from "../lib/control-plane/workers/worker-slots.ts";
 import { placeMapReservationMiB } from "../lib/place-map/memory.ts";
+import { placeMapLaunchOrder } from "../lib/civic-data/place-map-lane.ts";
 import { votingAcquisitionDeadline } from "../scripts/fetch-voting-sites.mts";
 import { passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 
@@ -113,7 +114,7 @@ test("voting sites and the overdue backlog take turns for memory, so neither hol
     ...["IL", "TX", "AK"].map(state => candidate(site(state), clocks[state], true)),
   ];
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /for \(const \{ task \} of electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\)/);
+  assert.match(runner, /for \(const \{ task \} of PLACE_MAPS \? placeMapLaunchOrder\(admitted\)\s+: electionLaunchOrder\(routinePassLaunchOrder\(routineSerialLanesFirst\(placeSourceLaunchOrder\(admitted\)\), admissionNowMs\)\)\)/);
   const order = electionLaunchOrder(routinePassLaunchOrder(routineSerialLanesFirst(placeSourceLaunchOrder(admitted)), now));
   assert.deepEqual(order.slice(0, 6).map(job => job.task.id.split(":")[0]), ["voting-sites", "meetings", "voting-sites", "meetings", "voting-sites", "meetings"]);
 
@@ -138,7 +139,8 @@ test("voting sites and the overdue backlog take turns for memory, so neither hol
   assert.ok(crowdedStarted.filter(id => id.startsWith("voting-sites:")).length >= 8, `voting sites keep half the memory: ${crowdedStarted.join(" ")}`);
 
   // A voting child told when the pass ends stops reading with time to publish; untold, it reads into the pass's wall.
-  assert.match(runner, /function sourceChildCommand[\s\S]*?env: withPassDeadline\(\{[\s\S]*?\.\.\.pending\.env,\s*\}, PASS_LAUNCH_DEADLINE_MS\),/);
+  assert.match(runner, /function sourceChildCommand[\s\S]*?env: withPassDeadline\(\{[\s\S]*?\.\.\.pending\.env,\s*\}, SOURCE_CHILD_DEADLINE_MS\),/);
+  assert.match(runner, /const SOURCE_CHILD_DEADLINE_MS = PLACE_MAPS \? [^;]+ : PASS_LAUNCH_DEADLINE_MS;/, "outside the place-map lane a child is told the launch deadline");
   const wall = now + 20 * 60_000;
   assert.equal(votingAcquisitionDeadline(now, passDeadlineFromEnv({})), wall);
   assert.ok(votingAcquisitionDeadline(now, passDeadlineFromEnv(withPassDeadline({ NODE_ENV: "test" }, wall))) <= wall - 6 * 60_000);
@@ -192,17 +194,17 @@ test("due explainers, voting sites and meetings each obtain memory before anothe
   assert.ok(20_244 - (count("voting-sites:") * 512 + count("measure-translations:") * 342 + count("meetings:") * 1447) >= 768);
 });
 
-test("state place maps take an early turn after held ballot files, smallest first, ahead of voting sites and long reads", () => {
+test("state place maps run in their own lane smallest first; the routine pass's order holds no map", () => {
   const maps = ROUTINE_SOURCE_TASKS.filter(task => task.id.startsWith("place-map-")).map(task => ({ task }));
   assert.equal(maps.length, 56);
+  const order = placeMapLaunchOrder(maps).map(job => job.task.id);
+  assert.deepEqual(order, [...maps].sort((left, right) => placeMapReservationMiB(left.task.id.slice(10)) -
+    placeMapReservationMiB(right.task.id.slice(10))).map(job => job.task.id), "the smallest reservation goes first");
+  assert.equal(order[0], "place-map-as");
+  assert.equal(order[55], "place-map-tx");
   const ballot = { task: AUTOMATIC_REFRESH_TASKS.find(task => task.id === "ballot-contests:AZ")! };
   const voting = { task: AUTOMATIC_REFRESH_TASKS.find(task => task.id === "voting-sites:AZ")! };
   const calendars = Array.from({ length: 3 }, (_, index) => ({ task: { ...meeting, id: `meetings:fixture:${index}` } }));
-  const order = electionLaunchOrder([...calendars, voting, ...maps, ballot]).map(job => job.task.id);
-  assert.equal(order[0], ballot.task.id, "already-held ballot files still publish first");
-  assert.deepEqual(order.slice(1, 57), [...maps].sort((left, right) => placeMapReservationMiB(left.task.id.slice(10)) -
-    placeMapReservationMiB(right.task.id.slice(10))).map(job => job.task.id), "the smallest reservation goes first");
-  assert.equal(order[1], "place-map-as");
-  assert.equal(order[56], "place-map-tx");
-  assert.deepEqual(order.slice(57), [voting.task.id, ...calendars.map(job => job.task.id)]);
+  assert.deepEqual(electionLaunchOrder([...calendars, voting, ballot]).map(job => job.task.id),
+    [ballot.task.id, voting.task.id, ...calendars.map(job => job.task.id)], "held ballot files first, then voting sites and reads take turns");
 });

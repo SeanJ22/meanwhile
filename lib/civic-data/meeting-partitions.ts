@@ -1,3 +1,6 @@
+// Database byte declarations use database_transfer_hourly, through 2026-10-27 17:00 UTC.
+// Source families use their largest recorded hour (request + response bytes) as a conservative per-run estimate.
+// Commands absent from the counters use the routine supervisor estimate, 1,907,347,669 bytes.
 import {
   RETIRED_MEETING_ROUTES,
   activeWiring,
@@ -136,6 +139,7 @@ export function meetingRoutePartition(
     ...policy,
     id,
     scope: meetingPartitionScope(meetingSource, bodyId, route),
+    databaseBytesPerRun: 193_468_748,
     acquisitionAdapter: {
       authorityMode: "REGISTERED_SOURCE_ROUTES" as const,
       command: ["scripts/ingest.ts", "composite", "--promote", `--only-partition=${id}`],
@@ -188,6 +192,7 @@ function buildMeetingPartitions(wirings: readonly BodySourceWiring[], skipped: s
       ...familyPolicy,
       id,
       scope: derivedMeetingFamilyScope(state),
+      databaseBytesPerRun: 193_468_748,
       acquisitionAdapter: {
         authorityMode: "DERIVED" as const,
         command: ["scripts/ingest.ts", "composite", "--promote", `--only-partition=${id}`],
@@ -378,6 +383,7 @@ export function meetingHistoryContract(partition: MeetingPartitionContract): Mee
     sourceId: MEETING_HISTORY_SOURCE_ID,
     scope,
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: MEETING_HISTORY_SOURCE_ID },
+    databaseBytesPerRun: partition.databaseBytesPerRun,
     acquisitionAdapter: { authorityMode: "DERIVED", command: partition.acquisitionAdapter.command },
     readerProjection: {
       id: `meetings-history:${partition.id}`,

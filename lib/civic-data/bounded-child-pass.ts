@@ -38,6 +38,8 @@ export type BoundedChildTermination =
   | "SPAWN_FAILED";
 
 export interface BoundedChildCommand {
+  /** Production launch declarations are checked by lint against the source contract. */
+  readonly databaseBytesPerRun?: number;
   readonly id: string;
   readonly launchEveryMs?: number;
   readonly onStarted?: (pid: number) => void;

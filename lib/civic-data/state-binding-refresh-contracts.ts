@@ -20,6 +20,7 @@ export const STATE_BINDING_REFRESH_TASKS: readonly RoutineSourceTask[] = REGISTR
     cadenceMs: 86_400_000,
     retryMs: 3_600_000,
     contract: {
+      databaseBytesPerRun: contract.databaseBytesPerRun,
       readerProjection: contract.readerProjection,
       cadence: { defaultEveryMs: 86_400_000, description: "Daily state reader binding refresh, independent of paid work and owner orders" },
     },

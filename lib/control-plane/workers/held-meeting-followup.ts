@@ -200,7 +200,7 @@ export async function runHeldMeetingNative(runtime: HeldMeetingWorkerRuntime, in
     await writeFile(file, JSON.stringify({ ...held, doorRecord: input.door, meetingClock: currentMeetingClock(),
       ...(replay ? { initialResponse: replay } : {}) }), { mode: 0o600 });
     input.assertLeaseHealthy?.();
-    const [child] = await runBoundedChildPass([{ id: input.contract.id, executable: process.execPath,
+    const [child] = await runBoundedChildPass([{ id: input.contract.id, databaseBytesPerRun: input.contract.databaseBytesPerRun, executable: process.execPath,
       args: ["--experimental-strip-types", ...args, `--prepared-file=${file}`], env, onStarted: pid => release.observe?.(pid) }],
     { cwd: runtime.root, env, deadlineMs: input.deadlineMs, concurrency: 1, onStarting: input.onSourceStarting }, runtime.launcher);
     input.assertLeaseHealthy?.();

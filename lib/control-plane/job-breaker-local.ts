@@ -52,7 +52,7 @@ export function registeredJobIdentity(path: string, root: string, job: string): 
   return jobSourceIdentity(root,entry);
 }
 
-interface Launch { id: string; args: readonly string[]; launchEveryMs?: number }
+interface Launch { id: string; args: readonly string[]; launchEveryMs?: number; databaseBytesPerRun?: number }
 /** Local files are shared by both supervisors and survive release checkout switches. No launch reads Postgres. */
 export function admitJobLaunch(command: Launch, root: string, env: NodeJS.ProcessEnv = process.env, now = Date.now(), reserve = true): boolean {
   const path = env[JOB_BREAKER_PATH_ENV];

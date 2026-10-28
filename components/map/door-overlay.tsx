@@ -231,7 +231,7 @@ function DistrictsDoor({
     body.bodyId === `${division.ocdId}#governing` || body.bodyId === `${division.ocdId}#board`));
   const details = useBodyDetails(governingBodies, atAddress);
   const drawnIds = new Set(drawnDistricts.map(district => district.ocdId));
-  const hiddenIds = (coverage?.seats ?? []).filter(seat => seat.bodyRosterRefs?.length && (atAddress || drawnIds.has(seat.ocdId)))
+  const hiddenIds = (coverage?.seats ?? []).filter(seat => seat.tier === "local" && (atAddress || drawnIds.has(seat.ocdId)))
     .map(seat => seat.ocdId);
   const hidden = useDivisionsRepresentation(coverage, hiddenIds);
   const byId = new Map(details.bodies.map(body => [body.bodyId, body]));
@@ -426,8 +426,13 @@ function OfficialsDoor({
   const hidden = useDivisionsRepresentation(coverage, coverage.seats.filter(seat => seat.bodyRosterRefs?.length).map(seat => seat.ocdId));
   const pending = details.pending || Object.values(hidden).some(row => row.status === "looking");
   const failed = details.failed || Object.values(hidden).some(row => row.status === "unavailable");
-  const groups = groupOfficials({ ...coverage, bodies: details.bodies, seats: coverage.seats.map(seat => hidden[seat.ocdId]
-    ? { ...seat, representatives: hidden[seat.ocdId].status === "resolved" ? hidden[seat.ocdId].holders : [] } : seat) });
+  const hydrated = { ...coverage, bodies: details.bodies };
+  const groups = groupOfficials({ ...hydrated, seats: coverage.seats.map(seat => {
+    if (hidden[seat.ocdId]) return { ...seat, representatives: hidden[seat.ocdId].status === "resolved" ? hidden[seat.ocdId].holders : [] };
+    const governing = details.bodies.filter(body => body.bodyId === `${seat.ocdId}#governing` || body.bodyId === `${seat.ocdId}#board`);
+    if (governing.some(body => body.rosterSummary?.memberCount && !body.readerRoster)) return { ...seat, representatives: [] };
+    return seat.tier === "local" ? { ...seat, representatives: representationForDivision(hydrated, seat.ocdId) } : seat;
+  }) });
   const total = groups.local.length + groups.state.length + groups.federal.length;
   if (total === 0 && !pending && !failed) {
     return (

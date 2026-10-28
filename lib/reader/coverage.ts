@@ -11,6 +11,7 @@ import { bodyRosterSummaries } from "./body-summary.ts";
 import { bodyDetailState } from "../registry/body-roster-client.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";
 import { allOfficialRows } from "../officials/tier-grouping.ts";
+import { heldDivisionRepresentatives } from "../registry/representation-server.ts";
 import { stateOfficesForStates } from "../reference/state-offices.ts";
 import type { BodyFacts } from "../facts/registry-overlay.ts";
 import type { Body, Division } from "../registry/types.ts";
@@ -114,13 +115,17 @@ export function stateCoverage(
     });
     const { summaries, memberIds } = bodyRosterSummaries(runtime, coverage.bodies.map(body => body.bodyId));
     const officialIds = new Set(memberIds);
-    for (const { holder } of allOfficialRows({ ...coverage, seats })) officialIds.add(holder.id);
+    // Only local divisions with independent officeholders need precedence
+    // resolution for the distinct count; their member cards do not leave here.
+    const countSeats = seats.map(seat => seat.tier === "local" && seat.representatives.length
+      ? { ...seat, representatives: heldDivisionRepresentatives(seat.ocdId, seat.representatives) } : seat);
+    for (const { holder } of allOfficialRows({ ...coverage, seats: countSeats })) officialIds.add(holder.id);
     return {
       ...coverage,
       seats,
       seatCounts: { total: seats.length, named: seats.filter(seat => seat.representatives.length > 0).length },
       governments: [],
-      officialCount: seats.some(seat => seat.bodyRosterRefs?.length) ? null : officialIds.size,
+      officialCount: officialIds.size,
       governmentInventoryStates: [state.state],
       governmentInventoryUnavailableStates: [],
       stateOffices: stateOfficesForStates([state.state]),

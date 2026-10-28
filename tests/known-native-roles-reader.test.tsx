@@ -17,7 +17,7 @@ import { GET as representation } from "../app/api/representation/[...division]/r
 import { CoverageNotice } from "../components/map/coverage-notice.tsx";
 import { DataProvider, type ShellData } from "../lib/state/data.tsx";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
-import { groupOfficials } from "../lib/officials/tier-grouping.ts";
+import { allOfficialRows, groupOfficials } from "../lib/officials/tier-grouping.ts";
 import { registryRuntimeProjectionIssues } from "../lib/registry/runtime-data-plane.ts";
 import { withoutPlaceholderBodies } from "../lib/registry/census-placeholders.ts";
 import { rosterHoldersForBody } from "../lib/registry/body-rosters.ts";
@@ -214,7 +214,12 @@ test("the keyed governing roster gives the exact official mayor precedence over 
       divisions: [{ ocdId: divisionId, officeholderId: bulk.id, bodyId: null }], unmatched: [] } }, [divisionId], 0, 0);
   assert.equal(state.bodies.length, 0, "a roster reference must not invent a visible body");
   assert.deepEqual(state.seats[0].bodyRosterRefs, [{ bodyId: roster.bodyId, state: division.state }]);
-  assert.equal(state.officialCount, null, "the distinct count is unavailable until the keyed roster is resolved");
+  const resolvedState = { ...state, seats: state.seats.map(seat => ({ ...seat,
+    readerGoverningRoster: { members: rosterHoldersForBody(roster.bodyId), gaps: [] } })) };
+  const countedState = { ...resolvedState, seats: resolvedState.seats.map(seat => ({ ...seat,
+    representatives: representationForDivision(resolvedState, seat.ocdId) })) };
+  assert.equal(state.officialCount, allOfficialRows(countedState).length,
+    "the distinct count matches the resolved door, including statewide offices");
   const superintendent = { ...official, officeTitle: "Superintendent" };
   const askCoverage = { ...state, seats: state.seats.map(seat => ({ ...seat,
     readerGoverningRoster: { members: [superintendent], gaps: [] } })) };

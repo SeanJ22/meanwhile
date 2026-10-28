@@ -132,7 +132,8 @@ export function mergeReaderCoverage(state: CoverageSummary | null, place: Covera
   // The place count is distinct across local members, but their ids are not
   // sent with the summary. Do not claim an exact union with state officials
   // until those memberships have been opened.
-  const localMembers = place.bodies.some(body => (body.rosterSummary?.memberCount ?? 0) > 0 && !body.readerRoster);
+  const localMembers = place.bodies.some(body => (body.rosterSummary?.memberCount ?? 0) > 0 && !body.readerRoster)
+    || place.seats.some(seat => seat.bodyRosterRefs?.length && !seat.readerGoverningRoster);
   const stateIds = new Set(allOfficialRows(state).map(row => row.holder.id));
   const placeIds = new Set(allOfficialRows(place).map(row => row.holder.id));
   const addsStatePeople = [...stateIds].some(id => !placeIds.has(id));

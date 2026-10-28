@@ -12,6 +12,7 @@ import {
   isSameOriginSubmission,
 } from "@/lib/signal/intake-limits";
 import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
+import { LOG_MAX_BODY_BYTES, LOG_MAX_OCD_IDS, LOG_MAX_OCD_ID_CHARS } from "@/lib/log/limits";
 
 /**
  * POST /api/log: accepts exactly the event shape `lib/db/search-log.ts` defines. No identifier is accepted;
@@ -21,7 +22,6 @@ import { SlidingWindowLimiter } from "@/lib/signal/rate-limit";
 
 export const runtime = "nodejs";
 
-const MAX_BODY_BYTES = 4096;
 
 let ipLimiter: SlidingWindowLimiter | null = null;
 function getIpLimiter() {
@@ -39,7 +39,7 @@ async function postWithSettings(request: Request) {
   }
 
   const raw = await request.text();
-  if (raw.length > MAX_BODY_BYTES) {
+  if (raw.length > LOG_MAX_BODY_BYTES) {
     return Response.json({ error: "payload too large" }, { status: 413 });
   }
 
@@ -80,8 +80,8 @@ async function postWithSettings(request: Request) {
   }
   if (
     !Array.isArray(event.ocdIds) ||
-    event.ocdIds.length > 40 ||
-    event.ocdIds.some((v) => typeof v !== "string" || v.length > 200)
+    event.ocdIds.length > LOG_MAX_OCD_IDS ||
+    event.ocdIds.some((v) => typeof v !== "string" || v.length > LOG_MAX_OCD_ID_CHARS)
   ) {
     return Response.json({ error: "ocdIds must be a short array of strings" }, { status: 400 });
   }

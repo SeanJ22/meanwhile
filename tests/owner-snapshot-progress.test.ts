@@ -19,7 +19,7 @@ test("stopped hunts keep the configured console interval without repeated snapsh
  * The runner starts the owner-snapshot publisher after every cycle, failed or not, and ends any child that prints no
  * new line for RUNTIME_NO_PROGRESS_MS. Times here are that limit scaled down; the relationship is the production one.
  */
-const QUIET_MS = 600;
+const QUIET_MS = 2_400;
 const STEP_MS = Math.round(QUIET_MS * 0.6);
 
 const publisher = (reportSteps: boolean) => `

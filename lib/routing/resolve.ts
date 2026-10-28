@@ -205,7 +205,8 @@ export function resolveRouting(
       people.length === 0 &&
       // "No names shown" is not "no names held": the gap renders only where the bodies genuinely hold
       // nobody.
-      bodies.every((body) => projectedBodyRoster(body).members.length === 0)
+      bodies.every((body) => body.readerRoster ? body.readerRoster.members.length === 0
+        : body.rosterSummary ? body.rosterSummary.memberCount === 0 : true)
     ) {
       // The body exists; who sits on it is unsourced. Say which half.
       gap = "We haven't sourced who sits on this body yet.";

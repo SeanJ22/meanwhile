@@ -7,7 +7,7 @@ import test, { type TestContext } from "node:test";
 
 import { recordAcquisition, type Artifact } from "../lib/control-plane/evidence/artifact.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
-import { putArtifact } from "../lib/control-plane/evidence/store.ts";
+import { putArtifact, type EvidenceStore, type ObjectMeta, type StoredObject } from "../lib/control-plane/evidence/store.ts";
 import { workerVaultResolver } from "../lib/control-plane/workers/vault.ts";
 import { researchVaultResolver } from "../lib/control-plane/workers/vault-object.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../lib/control-plane/repository/types.ts";
@@ -72,6 +72,24 @@ function repos(records: readonly ArtifactRecord[], roles: Readonly<Record<string
 }
 
 const hold = (store: DurableEvidenceStore, artifact: Artifact) => putArtifact(store, PROJECT, artifact, new TextEncoder().encode(BODY));
+
+test("an evidence provider exposing physical pointers still supports reuse and both worker readers", async () => {
+  const objects = new Map<string, StoredObject>();
+  let reads = 0;
+  const store: EvidenceStore = {
+    async put(key, bytes, meta) { objects.set(key, { key, bytes: Uint8Array.from(bytes), meta }); },
+    async get(key) { reads++; return objects.get(key) ?? null; },
+    async head(key): Promise<ObjectMeta | null> { return objects.get(key)?.meta ?? null; },
+    async list(prefix) { return [...objects.keys()].filter(key => key.startsWith(prefix)).sort(); },
+  };
+  const artifact = capture(1), bytes = new TextEncoder().encode(BODY);
+  assert.equal((await putArtifact(store, PROJECT, artifact, bytes)).written, true);
+  assert.equal((await putArtifact(store, PROJECT, artifact, bytes)).written, false);
+  assert.equal(reads, 0, "reuse compares fingerprints without downloading the saved source");
+  const repository = repos([record(artifact)]);
+  assert.equal((await workerVaultResolver(repository, store, PROJECT)(artifact.id)).text, BODY);
+  assert.equal(Buffer.from((await researchVaultResolver(repository, store, PROJECT)(artifact.id)).bytes).toString(), BODY);
+});
 
 test("normal vault resolution reads only the requested artifact, including later acquisitions", async t => {
   const store = await vault(t), artifact = capture(1);

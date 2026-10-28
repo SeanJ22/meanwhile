@@ -1,6 +1,7 @@
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import { artifactId as deriveArtifactId, type Artifact } from "../evidence/artifact.ts";
 import { readForParser, type EvidenceStore, type ObjectMeta } from "../evidence/store.ts";
+import { rawCaptureMetadata } from "../evidence/raw-pointer.ts";
 import type { ParserInput } from "../evidence/parser-boundary.ts";
 
 /** The acquiring roles whose bytes may reach a worker. */
@@ -42,7 +43,8 @@ export function workerVaultResolver(repos: ControlPlaneRepositories, store: Evid
       admitted = true;
       for (const key of keys) {
         if (!heads.has(key)) heads.set(key, store.head(key));
-        const meta = await heads.get(key);
+        const heldMeta = await heads.get(key);
+        const meta = heldMeta ? rawCaptureMetadata(heldMeta) : null;
         if (!meta || meta.contentHash !== record.contentHash) continue;
         const m = meta.custom;
         if (!m || m.tier !== record.tier || deriveArtifactId(record.tier, meta.contentHash) !== artifactId ||

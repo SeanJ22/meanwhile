@@ -371,7 +371,8 @@ export async function putArtifact(
 
   const meta = artifactMeta(artifact);
   assertDocumentProvenance(artifact);
-  const existing = await store.head(key);
+  const heldMeta = await store.head(key);
+  const existing = heldMeta ? rawCaptureMetadata(heldMeta) : null;
   if (existing) {
     const conflict = objectIncompatibility(existing, meta);
     if (conflict?.field === "custom.extraction" && artifact.extraction?.parent.tier === "SANITIZED_DERIVED")

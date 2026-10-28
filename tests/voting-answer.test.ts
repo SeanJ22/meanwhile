@@ -20,21 +20,22 @@ const lookup = (shape: VotingSourceDoor["shape"]): VotingSourceDoor => ({ id: sh
   covers: ["ELECTION_DAY"], scope: { state: "FL", ocdId: jurisdiction.ocdId, name: jurisdiction.name, countyFips: "12091" }, electionDate: "2026-11-03",
   electionPageUrl: "https://www.voteokaloosa.gov/", extraction: { addressFields: { address: "address" } } });
 
-test("VS-01 real county rows preserve precinct names; one loaded place never proves assignment", () => {
+test("VS-01 real county rows preserve precinct names without standing in for an address assignment", () => {
   const result = projectVotingJurisdiction(jurisdiction, place);
-  assert.ok(result.sites.some(site => site.name === "Baker Area Recreation Bldg" && site.address === "5503 HWY 4 Baker, FL 32531"));
+  assert.ok(jurisdiction.sites.some(site => site.name === "Baker Area Recreation Bldg" && site.address === "5503 HWY 4 Baker, FL 32531"));
+  assert.deepEqual(result.sites, []);
   assert.equal(result.narrowing.kind, "REFUSED");
   assert.equal(narrowingFor({ ...jurisdiction, sites: sites.slice(0, 1) }).kind, "REFUSED");
 });
 
 test("VS-01 published precinct matching narrows a county directory; a ZIP never assigns its centroid precinct", () => {
-  const resolved = { ...place, precincts: [{ name: "Precinct 01", countyFips: "12091", kind: "CENSUS_2020_VTD" as const }] };
+  const resolved = { ...place, precincts: [{ name: "Precinct 01", countyFips: "12091", kind: "OFFICIAL_PRECINCT" as const }] };
   const result = projectVotingJurisdiction(jurisdiction, resolved);
   assert.equal(result.sites.length, 1);
   assert.equal(result.sites[0].name, "Baker Area Recreation Bldg");
   assert.equal(result.narrowing.kind, "EXACT");
   const zip = projectVotingJurisdiction(jurisdiction, { ...resolved, precision: "ZIP" });
-  assert.equal(zip.sites.length, sites.length);
+  assert.equal(zip.sites.length, 0);
   assert.equal(zip.narrowing.kind, "REFUSED");
 });
 
@@ -43,9 +44,11 @@ test("VS-01 held precinct records answer without making official or Google reque
   let requests = 0;
   globalThis.fetch = async () => { requests++; throw new Error("A reader must never fetch a source after geocoding"); };
   try {
-    const answer = await answerVotingSites({ ...file, jurisdictions: [{ ...jurisdiction, addressLookups: [lookup("address-lookup"), lookup("identity-locked-lookup")] }] }, place);
+    const answer = await answerVotingSites({ ...file, jurisdictions: [{ ...jurisdiction, addressLookups: [lookup("address-lookup"), lookup("identity-locked-lookup")] }] },
+      { ...place, precincts: [{ name: "Precinct 01", countyFips: "12091", kind: "OFFICIAL_PRECINCT" }] });
     assert.equal(requests, 0);
-    assert.equal(answer.jurisdictions[0].sites.length, sites.length);
+    assert.equal(answer.jurisdictions[0].sites.length, 1);
+    assert.equal(answer.jurisdictions[0].sites[0].name, "Baker Area Recreation Bldg");
     assert.equal(answer.jurisdictions[0].addressLookups, undefined);
     assert.equal(answer.googleFallback, undefined);
     const gap = await answerVotingSites({ ...file, jurisdictions: [{ ...jurisdiction, sites: [] }] }, place);
@@ -98,10 +101,11 @@ test("VS-01 Texas identity-locked state answers from the official El Paso county
 });
 
 test("VS-01 a statewide row with no published locality never implies statewide eligibility", () => {
+  const resolved: VotingReaderPlace = { ...place, precincts: [{ name: sites[0].precinct!, kind: "OFFICIAL_PRECINCT" }] };
   const row = { ...jurisdiction, ocdId: "ocd-division/country:us/state:fl", countyFips: undefined,
     sites: [{ ...sites[0], countyFips: undefined, town: "Baker" }] };
-  assert.equal(projectVotingJurisdiction(row, place).sites.length, 0);
+  assert.equal(projectVotingJurisdiction(row, resolved).sites.length, 0);
   const namedCounty = { ...row, sites: [{ ...row.sites[0], countyName: "Okaloosa" }] };
-  assert.equal(projectVotingJurisdiction(namedCounty, { ...place, countyNames: ["Okaloosa County"] }).sites.length, 1);
-  assert.equal(projectVotingJurisdiction(namedCounty, { ...place, countyNames: ["Bradford County"] }).sites.length, 0);
+  assert.equal(projectVotingJurisdiction(namedCounty, { ...resolved, countyNames: ["Okaloosa County"] }).sites.length, 1);
+  assert.equal(projectVotingJurisdiction(namedCounty, { ...resolved, countyNames: ["Bradford County"] }).sites.length, 0);
 });

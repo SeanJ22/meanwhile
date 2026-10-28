@@ -11,15 +11,21 @@
       "requestedUrl": "https://www.mass.gov/topics/voting",
       "finalUrl": "https://www.mass.gov/topics/voting",
       "publisher": "Commonwealth of Massachusetts"
+    },
+    {
+      "requestedUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/WhereDoIVote",
+      "finalUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/WhereDoIVote",
+      "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+      "officialFrom": "https://www.mass.gov/topics/voting"
     }
   ],
   "package": {
     "contractId": "ballot-navigation",
-    "version": "2026-10-14T21:32:20.096Z",
-    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "version": "2026-10-27T17:49:50.726Z",
+    "sourceThrough": "2026-10-27T17:49:50.726Z",
     "sourceReceipt": {
       "contractVersion": 1,
-      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedAt": "2026-10-27T17:49:50.726Z",
       "reviewedBy": "code:section3Record",
       "sources": [
         {
@@ -43,6 +49,17 @@
           "rawHash": "ed183e4c75aa02ef42315ed5c994a778f90f07c2ebed76cee2e63a5bc764d0c0",
           "reviewOutcome": "SUPPORTED",
           "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/WhereDoIVote",
+          "finalUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/WhereDoIVote",
+          "publisher": "Massachusetts Secretary of the Commonwealth, Elections Division",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-27T17:49:50.726Z",
+          "httpStatus": 200,
+          "rawHash": "8069e84302e186fad015e5d1700ed52b2e64066ab684df96c5c29df0853b121f",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official web-extracted source text in the fingerprint vault; code confirmed the polling lookup label and destination. Source method: official-page-web-extraction."
         }
       ]
     },
@@ -204,21 +221,21 @@
           }
         },
         {
-          "id": "election-field:a3bddb495a2d9d6a3bfcb6b8edcbdda8",
+          "id": "election-field:9a77c2fedc42ca225a0d031c51c09ff5",
           "kind": "ELECTION_FIELD",
           "value": {
             "state": "MA",
             "divisionId": "ocd-division/country:us/state:ma",
             "fieldKind": "polling_lookup",
-            "text": "https://www.sec.state.ma.us/wheredoivotema//bal/MyElectionInfo.aspx",
-            "quote": "Find your polling place and view a sample ballot",
+            "text": "https://www.sec.state.ma.us/WhereDoIVoteMA/WhereDoIVote",
+            "quote": "Find my election information",
             "dates": [],
-            "url": "https://www.mass.gov/topics/voting",
-            "navigationUrl": "https://www.sec.state.ma.us/wheredoivotema//bal/MyElectionInfo.aspx",
+            "url": "https://www.sec.state.ma.us/WhereDoIVoteMA/WhereDoIVote",
+            "navigationUrl": "https://www.sec.state.ma.us/WhereDoIVoteMA/WhereDoIVote",
             "electionDate": "2026-11-03",
-            "verifiedAt": "2026-10-14T21:32:20.096Z",
-            "collectedAt": "2026-10-14T19:54:05.650060+00:00",
-            "sourceOrg": "Commonwealth of Massachusetts"
+            "verifiedAt": "2026-10-27T17:49:50.726Z",
+            "collectedAt": "2026-10-27T17:49:50.726Z",
+            "sourceOrg": "Massachusetts Secretary of the Commonwealth, Elections Division"
           }
         },
         {

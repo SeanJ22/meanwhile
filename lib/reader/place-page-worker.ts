@@ -10,8 +10,8 @@ export const PLACE_PAGE_TURN_GRACE_MS = 60_000;
 const PLACE_PAGE_IDLE_MS = 60_000;
 /** One run keeps taking turns while pages are owed; the standing clock starts the next run after this. */
 const PLACE_PAGE_RUN_MS = 60 * 60_000;
-/** Four builds at once, the queue's four lease slots. */
-const PLACE_PAGE_CONCURRENCY = 4;
+/** Bound simultaneous input and ready-page transfers within the job's hourly byte budget. */
+const PLACE_PAGE_CONCURRENCY = 2;
 /** The line a turn's process prints its result on. */
 export const PLACE_PAGE_TURN_LINE = "PLACE_PAGES_TURN ";
 
@@ -19,8 +19,8 @@ export const PLACE_PAGE_TURN_LINE = "PLACE_PAGES_TURN ";
 export interface PlacePageTurn { readonly rebuilt: number; readonly failed: number; readonly remaining: number; readonly unchanged?: number }
 
 /** One turn of the rebuild queue, as the runner's turn process runs it. */
-export function rebuildPlacePageTurn(db: FactDb, deadlineMs: number, purge?: RebuildOptions["purge"]): Promise<PlacePageTurn> {
-  return rebuildPlacePages({ db, ...(purge ? { purge } : {}), limit: Number.MAX_SAFE_INTEGER, concurrency: PLACE_PAGE_CONCURRENCY,
+export function rebuildPlacePageTurn(db: FactDb, deadlineMs: number, purge?: RebuildOptions["purge"], buildRevision?: string): Promise<PlacePageTurn> {
+  return rebuildPlacePages({ db, buildRevision, ...(purge ? { purge } : {}), limit: Number.MAX_SAFE_INTEGER, concurrency: PLACE_PAGE_CONCURRENCY,
     timeBudgetMs: Math.max(0, Math.min(PLACE_PAGE_TURN_MS, deadlineMs - Date.now())) });
 }
 

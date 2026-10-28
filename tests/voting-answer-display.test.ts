@@ -9,7 +9,7 @@ import { projectVotingJurisdiction, type VotingReaderPlace } from "../lib/ballot
 import type { VotingJurisdiction, VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 
-test("VS-01 official HTML tables become in-page hours, return rules, clerk contact and Sources", async () => {
+test("VS-01 official ballot-return rows become in-page hours, return rules, clerk contact and Sources", async () => {
   const source = { publisher: "North Dakota Secretary of State", url: "https://vip.sos.nd.gov/Precincts.aspx?eid=348", checkedAt: "2026-10-13" };
   const door: VotingSourceDoor = { id: "nd-official-table", publisher: source.publisher, url: source.url, shape: "list-page", covers: ["ELECTION_DAY", "DROP_BOX", "EARLY_VOTING"],
     scope: { state: "ND", ocdId: "ocd-division/country:us/state:nd", name: "North Dakota" }, electionDate: "2026-11-03", electionPageUrl: source.url,
@@ -23,19 +23,19 @@ test("VS-01 official HTML tables become in-page hours, return rules, clerk conta
   const markup = await renderCardWithSources({ modulePath: "./components/map/voting-sites-panel.tsx", exportName: "VotingJurisdictionRecords",
     props: { answer, selectedSiteId: null }, sourceUrls: [source.url] });
   assert.match(markup, /Adams County Courthouse/);
-  assert.match(markup, /9:00AM-7:00PM/);
+  assert.match(markup, /Available 24 hours per day/);
+  assert.doesNotMatch(markup, /9:00AM-7:00PM/);
   assert.match(markup, /north side of Courthouse entry available 24\/7/);
   assert.match(markup, /\(701\) 845-8500/);
   assert.match(markup, /Sources/);
-  assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1, "the section groups its missing voting details once");
-  assert.match(markup.slice(0, markup.indexOf("data-card-footer")), /working on getting this info/i);
-  assert.match(markup.slice(0, markup.indexOf("data-card-footer")), /Want us to get this sooner/i);
+  assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 0, "existing sites do not carry a missing-information message");
+  assert.doesNotMatch(markup, /working on getting this info/i);
   assert.doesNotMatch(markup, /Still gathering/);
   const citations = votingSources(j);
   assert.ok(citations.some(citation => citation.provenance.sourceUrl === source.url));
 });
 
-test("VS-01 native primary CSV stays visible with its published election, file date and unconfirmed November association", async () => {
+test("VS-01 a held primary CSV never stands in for the reader's November polling place", async () => {
   const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
   const door = doors.find(item => item.id === "nc-statewide-polling-primary-2026")!;
   const source = { publisher: door.publisher, url: door.url, title: door.title, lastUpdated: door.fileUpdatedAt, checkedAt: "2026-10-13" };
@@ -46,28 +46,16 @@ test("VS-01 native primary CSV stays visible with its published election, file d
   const j: VotingJurisdiction = { ...door.scope, model: "UNKNOWN", election: null, electionDate: door.electionDate, sites: parsed.sites,
     sourceUrl: door.url, sourceOrg: door.publisher, collectedAt: source.checkedAt, refusal: null };
   const projected = projectVotingJurisdiction(j, place);
-  assert.ok(projected.sites.length > 0);
-  assert.ok(projected.sites.every(site => site.election === "03/03/2026" && !site.electionDate));
-  const render = (jurisdiction: typeof projected) => renderCardWithSources({ modulePath: "./components/map/voting-sites-panel.tsx", exportName: "VotingJurisdictionRecords",
-    props: { answer: { match: true, point: null, jurisdictions: [jurisdiction], outsideCoverage: false }, selectedSiteId: null }, sourceUrls: [door.url] });
-  const markup = await render(projected);
-  assert.equal((markup.match(/data-voting-site=/g) ?? []).length, projected.sites.length, "archive rows must remain visible");
-  assert.match(markup, /Publisher(?:&#x27;|’|&#x2019;)s election label: 03\/03\/2026/);
-  assert.match(markup, /working on getting this info/);
-  assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1);
-  assert.match(markup.slice(0, markup.indexOf("data-card-footer")), /working on getting this info/);
-  assert.match(markup.slice(0, markup.indexOf("data-card-footer")), /Want us to get this sooner/);
-  assert.doesNotMatch(markup, /Still gathering/);
-  assert.doesNotMatch(markup, /Open on election day/);
+  assert.ok(parsed.sites.length > 0, "the source remains held");
+  assert.ok(parsed.sites.every(site => site.election === "03/03/2026" && !site.electionDate));
+  assert.equal(projected.sites.length, 0, "unassigned archive rows are withheld from the polling-place answer");
+  assert.doesNotMatch(projected.modelSentence, /listed below/i);
   assert.ok(votingSources(j).some(citation => citation.updatedAt === door.fileUpdatedAt));
-  assert.match(markup, /File last updated<\/span><span[^>]*>March 1, 2026/);
-  assert.doesNotMatch(markup, /2026-03-01T10:25:04Z/);
 
   // A current official election-page association is authoritative even when
   // the linked file carries an earlier publisher label or modification date.
   const associated = votingRowsToSites(rows, { ...door, electionAssociationVerified: true }, source);
-  const associatedMarkup = await render(projectVotingJurisdiction({ ...j, sites: associated.sites }, place));
-  assert.match(associatedMarkup, /03\/03\/2026/);
-  assert.match(associatedMarkup, /Election date: 2026-11-03/);
-  assert.doesNotMatch(associatedMarkup, /election confirmation/);
+  assert.ok(associated.sites.every(site => site.election === "03/03/2026" && site.electionDate === "2026-11-03"));
+  assert.equal(projectVotingJurisdiction({ ...j, sites: associated.sites }, place).sites.length, 0,
+    "a current election association still cannot assign a ZIP to a precinct");
 });

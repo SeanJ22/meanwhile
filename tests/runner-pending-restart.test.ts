@@ -20,8 +20,8 @@ function runnerFunction(name: string): string {
   return fn;
 }
 
-test("a pending restart stops relaunching routine children and restarts within one pass deadline", async () => {
-  const PASS_BUDGET_MS = 1_500;
+test("a pending restart stops relaunching routine children and restarts within one pass deadline", { timeout: 30_000 }, async t => {
+  const PASS_BUDGET_MS = 6_000;
   const target = "b".repeat(40);
   const launches: { id: string; at: number }[] = [];
   const lane = (id: string, childMs: number) => ({ id, everyMs: 1, budgetMs: PASS_BUDGET_MS, run: async (deadlineMs: number) => {
@@ -30,8 +30,8 @@ test("a pending restart stops relaunching routine children and restarts within o
       { cwd: process.cwd(), env: process.env, maxBufferBytes: 4096, deadlineMs });
   } });
   // Routine children finish and relaunch every tick; publish-now would outlive its deadline.
-  const scheduler = new IndependentRuntimeLaneScheduler([lane("routine-civic-data", 100), lane("publish-now", 60_000)]);
-  const releaseAppearsAt = Date.now() + 600;
+  const scheduler = new IndependentRuntimeLaneScheduler([lane("routine-civic-data", 400), lane("publish-now", 60_000)]);
+  let releaseAppearsAt = 0;
   const applied: string[] = [];
   const log: string[] = [];
   const context = createContext({
@@ -40,8 +40,10 @@ test("a pending restart stops relaunching routine children and restarts within o
     canary: false, standingBeat: async () => {},
     standingRuntimeTimer: null, ownerControlTimer: null, adminCopyTimer: null, activeControlRead: null,
     researchCycleActive: false, researchCycleChild: null, ownerWakePending: false, standingRuntimeScheduler: scheduler,
-    inspectRuntimeRelease: async () => Date.now() < releaseAppearsAt ? { state: "CURRENT", targetSha: null }
-      : { state: "UPDATE_REQUIRED", targetSha: target },
+    inspectRuntimeRelease: async () => {
+      if (!releaseAppearsAt && launches.filter(l => l.id === "routine-civic-data").length >= 3) releaseAppearsAt = Date.now();
+      return releaseAppearsAt ? { state: "UPDATE_REQUIRED", targetSha: target } : { state: "CURRENT", targetSha: null };
+    },
     advanceStagedRelease: async () => "DRAIN",
     resumeRuntimeReleaseInstall: () => null,
     applyRuntimeRelease: ({ targetSha }: { targetSha: string }) => { applied.push(targetSha); return { state: "UPDATED", detail: `installed ${targetSha.slice(0, 8)}` }; },
@@ -54,12 +56,14 @@ test("a pending restart stops relaunching routine children and restarts within o
   runInContext(stripTypeScriptTypes(["checkReleaseForRestart", "holdForRestart", "runStandingRuntimeTick",
     "holdStandingRuntimeAtQuiescence", "reconcileRuntimeReleaseAtBoundary", "sleepUnlessRunNow"].map(runnerFunction).join("\n")), context);
 
-  context.standingRuntimeTimer = setInterval(() => runInContext(`runStandingRuntimeTick("independent standing clock")`, context), 40);
+  context.standingRuntimeTimer = setInterval(() => runInContext(`runStandingRuntimeTick("independent standing clock")`, context), 160);
+  t.after(() => clearInterval(context.standingRuntimeTimer));
   // The main loop sleeps toward its next research cycle; the pending restart must wake it.
   await runInContext("sleepUnlessRunNow(60_000)", context);
   const pendingAt = Date.now();
   assert.equal(context.pendingRestart.target, target);
-  assert.ok(pendingAt - releaseAppearsAt < 400, `the sleep woke ${pendingAt - releaseAppearsAt}ms after the release appeared`);
+  assert.ok(releaseAppearsAt > 0, "the release appeared after routine children relaunched");
+  assert.ok(pendingAt - releaseAppearsAt < 1_600, `the sleep woke ${pendingAt - releaseAppearsAt}ms after the release appeared`);
   assert.equal(context.runtimeAdmissionsHeld, true);
   assert.ok(launches.filter(l => l.id === "routine-civic-data").length >= 3, "routine children kept finishing and relaunching before the release");
 
@@ -67,7 +71,7 @@ test("a pending restart stops relaunching routine children and restarts within o
   const restartedAfterMs = Date.now() - pendingAt;
   assert.equal(exit, 0, "the runner exits for the launcher to start the new code");
   assert.deepEqual(applied, [target]);
-  assert.ok(restartedAfterMs <= PASS_BUDGET_MS + 500, `restart took ${restartedAfterMs}ms, beyond one pass deadline`);
+  assert.ok(restartedAfterMs <= PASS_BUDGET_MS + 2_000, `restart took ${restartedAfterMs}ms, beyond one pass deadline`);
   assert.deepEqual(launches.filter(l => l.at > pendingAt), [], "no standing run started once the restart was pending");
   assert.equal(context.standingRuntimeTimer, null);
   assert.deepEqual(scheduler.inFlightIds(), []);

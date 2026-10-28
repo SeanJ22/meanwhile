@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { recordFactConfirmation } from "../facts/confirmation.ts";
 import type {FactDb,Query} from "../facts/publish.ts";
 import {enqueueReaderPlaces,invalidateReaderCache,type ReaderCachePurger} from "../reader/cache.ts";
@@ -7,7 +8,31 @@ export async function rebuildCampaignCycles(db:FactDb,state:string,people:readon
   if(people.length>500)throw new Error("Campaign cycle work exceeds one people batch");
   if(!people.length)return;
   const rules=campaignFinanceSource(state).resources.map(resource=>({id:resource.id,aggregation:resource.aggregation??null}));
+  const algorithm=createHash("sha256").update(rebuildCampaignCycles.toString()).digest("hex");
+  const scope=`campaign-cycles:${state}:${createHash("sha256").update(JSON.stringify([...new Set(people)].sort())).digest("hex")}`;
   const changed=await db.transaction(async query=>{
+    // The cursor holds only fingerprints. A repeated pass can stop before creating
+    // temporary rows, while changes to the inputs or published results reopen it.
+    const fingerprint=async()=>{
+      const [row]=await query(`WITH signatures AS (
+        SELECT 'input' AS kind,md5(jsonb_build_array(p.id,p.name,p.state)::text) AS signature
+          FROM entity p WHERE p.id=ANY($2::text[]) AND p.kind='person' AND p.state=$1
+        UNION ALL
+        SELECT 'input',md5(jsonb_build_array(e.id,e.parent_id,p.name,f.id,f.field,md5(f.value::text),f.source_copy_id,f.checked_at)::text)
+          FROM entity e JOIN entity p ON p.id=e.parent_id AND p.kind='person' AND p.state=$1
+          JOIN checked_fact f ON f.entity_id=e.id AND f.status='live' AND f.field LIKE 'campaign-money:%'
+          WHERE e.state=$1 AND e.parent_id=ANY($2::text[])
+        UNION ALL
+        SELECT 'output',md5(jsonb_build_array(f.id,f.entity_id,f.field,md5(f.value::text),f.source_copy_id,f.checked_at)::text)
+          FROM checked_fact f WHERE f.entity_id=ANY($2::text[]) AND f.status='live'
+            AND (f.field LIKE 'campaign-cycle:%' OR f.field LIKE 'campaign-donor:%')
+      ) SELECT md5($3::text||coalesce(string_agg(signature,'' ORDER BY signature) FILTER(WHERE kind='input'),'')) AS input,
+        md5(coalesce(string_agg(signature,'' ORDER BY signature) FILTER(WHERE kind='output'),'')) AS output FROM signatures`,[state,people,JSON.stringify([rules,algorithm])]);
+      return {input:String(row.input),output:String(row.output)};
+    };
+    const before=await fingerprint();
+    const [cursor]=await query("SELECT position FROM pass_cursor WHERE name=$1",[scope]);
+    if(cursor?.position===JSON.stringify(before))return false;
     await query(`CREATE TEMP TABLE money_input ON COMMIT DROP AS
       SELECT f.entity_id,e.parent_id,f.value->>'filerName' AS committee,f.value,f.source_copy_id,f.checked_at,
         CASE WHEN value->>'transactionDate' ~ '^\\d{4}-' THEN substr(value->>'transactionDate',1,4)::int
@@ -104,6 +129,9 @@ export async function rebuildCampaignCycles(db:FactDb,state:string,people:readon
     for(const row of donorChecks) for(const id of await recordFactConfirmation(query,{copyId:Number(row.source_copy_id),scope:"campaign-donors",at:new Date(row.checked_at as string).toISOString(),factIds:row.ids as number[]}))donorConfirmed.add(id);
     const affected=[...new Set([...cycles,...donorConfirmed,...[...removedCycles,...removedDonors,...addedDonors].map(row=>String(row.entity_id))])];
     if(affected.length)await enqueueReaderPlaces({entities:affected},query);
+    const after=await fingerprint();
+    if(before.input===after.input)await query(`INSERT INTO pass_cursor(name,position) VALUES($1,$2)
+      ON CONFLICT(name) DO UPDATE SET position=EXCLUDED.position WHERE pass_cursor.position IS DISTINCT FROM EXCLUDED.position`,[scope,JSON.stringify(after)]);
     return affected.length>0;
   });
   if(changed)await invalidateReaderCache({states:[state]},purge,null);

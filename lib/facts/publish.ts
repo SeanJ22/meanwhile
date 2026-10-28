@@ -32,14 +32,14 @@ export interface PublishInput extends Claim {
 export type PublishOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly blank: string };
 
 export async function openBlank(query: Query, input: { readonly entityId: string; readonly field: string; readonly stage: BlankStage;
-  readonly reason: string; readonly detail?: string | null; readonly retryMinutes: number }): Promise<void> {
+  readonly reason: string; readonly detail?: string | null; readonly retryMinutes: number; readonly countAttempt?: boolean }): Promise<void> {
   await query(`INSERT INTO blank (entity_id, field, stage, reason, detail, next_try_at, attempts)
     VALUES ($1, $2, $3, $4, $5, now() + make_interval(mins => $6::int), 1)
     ON CONFLICT (entity_id, field) DO UPDATE SET stage = EXCLUDED.stage, reason = EXCLUDED.reason, detail = EXCLUDED.detail,
       attempts = blank.attempts + 1, next_try_at = EXCLUDED.next_try_at, updated_at = now()
     WHERE (blank.stage,blank.reason,blank.detail) IS DISTINCT FROM (EXCLUDED.stage,EXCLUDED.reason,EXCLUDED.detail)
-      OR blank.next_try_at<=now()`,
-  [input.entityId, input.field, input.stage, input.reason, input.detail ?? null, Math.max(1, Math.round(input.retryMinutes))]);
+      OR blank.next_try_at<=now() OR $7::boolean`,
+  [input.entityId, input.field, input.stage, input.reason, input.detail ?? null, Math.max(1, Math.round(input.retryMinutes)), input.countAttempt ?? false]);
 }
 
 /** Older callers retain their blank result; every fact is written by the same door. */

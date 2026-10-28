@@ -119,6 +119,13 @@ test("Kentucky counts cross-export transactions once, preserves within-export re
   const november=[make("11/3/2026","GENERAL",150,1),make("11/3/2026","GENERAL",200,1)];
   await fileCampaignMoneyFacts(db,"KY",[...may,...november],at,{purge});
   await rebuildCampaignCycles(db,"KY",[person.id],at,purge);
+  let temporaryTables=0;
+  const observed={...db,transaction:<T>(work:Parameters<typeof db.transaction<T>>[0])=>db.transaction(query=>work(async(sql,params)=>{
+    if(sql.includes("CREATE TEMP TABLE"))temporaryTables++;
+    return query(sql,params);
+  }))};
+  await rebuildCampaignCycles(observed,"KY",[person.id],at,purge);
+  assert.equal(temporaryTables,0,"an unchanged rebuild stops on its fingerprint before creating temporary rows");
   const before=await db.query("SELECT id,field,value->>'amount' AS amount FROM fact WHERE field LIKE 'campaign-donor:%' AND status='live'");
   assert.equal(before.length,1);assert.equal(before[0].amount,"500");
   assert.equal(Number((await db.query("SELECT value#>>'{totals,0,amount}' AS amount FROM fact WHERE field LIKE 'campaign-cycle:%' AND status='live'"))[0].amount),500);
@@ -135,6 +142,10 @@ test("Kentucky counts cross-export transactions once, preserves within-export re
   const changed={...november[1],amounts:[{label:"Receipts",amount:250}],donor:{...november[1].donor!,amount:250}};
   await fileCampaignMoneyFacts(db,"KY",[changed],later(3),{purge});await rebuildCampaignCycles(db,"KY",[person.id],later(3),purge);
   assert.equal(Number((await db.query("SELECT value->>'amount' AS amount FROM fact WHERE field LIKE 'campaign-donor:%' AND status='live'"))[0].amount),550);
+  await db.query("UPDATE fact SET status='superseded' WHERE field LIKE 'campaign-donor:%' AND status='live'");
+  await rebuildCampaignCycles(db,"KY",[person.id],later(3),purge);
+  assert.equal(Number((await db.query("SELECT value->>'amount' AS amount FROM fact WHERE field LIKE 'campaign-donor:%' AND status='live'"))[0].amount),550,
+    "a changed published result invalidates the fingerprint and is rebuilt");
 });
 
 test("later page checks retain a confirmation's quote, display text and source rank",async t=>{

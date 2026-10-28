@@ -77,9 +77,17 @@ export async function fileCampaignMoneyFacts(db: FactDb, state: string, records:
     [captures.map(source => source.url.split("#")[0]), captures.map(source => source.retrievedAt), captures.map(source => source.rawHash), captures.map(source => source.vaultKey)]);
     const copies = await query("SELECT id,blob_key FROM source_copy WHERE blob_key=ANY($1::text[])",[captures.map(source=>source.vaultKey)]);
     const sourceIds = new Map(copies.map(copy => [String(copy.blob_key), Number(copy.id)]));
-    for (const source of captures) {
-      const ids = confirmed.filter(item=>item.row.provenance.vaultKey===source.vaultKey).map(item=>item.id);
-      for (const id of await recordFactConfirmation(query,{copyId:sourceIds.get(source.vaultKey)!,scope:`campaign-money:${state}`,at:checkedAt(confirmed.find(item=>item.row.provenance.vaultKey===source.vaultKey)!.row,at),factIds:ids})) affected.add(id);
+    const confirmationGroups = new Map<string,{copyId:number;at:string;ids:number[]}>();
+    for (const item of confirmed) {
+      const copyId=sourceIds.get(item.row.provenance.vaultKey)!;
+      const checked=checkedAt(item.row,at);
+      const key=JSON.stringify([copyId,checked]);
+      const group=confirmationGroups.get(key) ?? {copyId,at:checked,ids:[]};
+      group.ids.push(item.id);
+      confirmationGroups.set(key,group);
+    }
+    for (const group of confirmationGroups.values()) {
+      for (const id of await recordFactConfirmation(query,{copyId:group.copyId,scope:`campaign-money:${state}`,at:group.at,factIds:group.ids})) affected.add(id);
     }
     if (!changed.length) {
       if (affected.size) await enqueueReaderPlaces({ entities: [...affected] }, query);

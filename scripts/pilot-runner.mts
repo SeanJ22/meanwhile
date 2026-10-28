@@ -1317,7 +1317,7 @@ async function runPlacePageTurn(deadlineMs: number): Promise<PlacePageTurn> {
   try {
     const [run] = await runRuntimeChildren([{
       id: "place-pages",
-      databaseBytesPerRun: 132_198_128, executable: process.execPath,
+      databaseBytesPerRun: 32_000_000, executable: process.execPath,
       args: [...TS_CHILD, "scripts/rebuild-place-pages.mts"],
       env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
     }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs: deadlineMs + PLACE_PAGE_TURN_GRACE_MS,

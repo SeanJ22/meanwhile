@@ -17,7 +17,7 @@ import { fileCampaignMoneyFacts } from "../lib/funding/state-facts.ts";
 import { rebuildCampaignCycles } from "../lib/funding/state-cycles.ts";
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { campaignFinanceSource } from "../lib/funding/state-sources.ts";
-import { invalidateReaderCache, placePageConsumesPublication, purgeReaderCacheTags, readerCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
+import { invalidateReaderCache, placePageConsumesPublication, purgeReaderCacheTags, readerCacheHeaders, readerStateCacheHeaders, readerPlaceCacheHeaders, readerCacheScopeForPublication, readerCacheTags, withBatchedReaderInvalidation } from "../lib/reader/cache.ts";
 import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { campaignDb as factDb, publishMoneyFixture } from "./helpers/campaign-money-db.ts";
 
@@ -25,6 +25,24 @@ const PLACE = "ocd-division/country:us/state:az/place:tucson";
 const BODY = `${PLACE}#example-council`;
 const NOW = new Date("2026-10-18T12:00:00Z");
 const clocks = factClocks(null);
+
+test('local publications preserve cached ZIP and state answers; canonical state changes and ready replacements clear their own answers',async()=>{
+  const zip='zip:85701';
+  const stateTags=readerStateCacheHeaders('AZ')['Netlify-Cache-Tag']!.split(',');
+  const placeTags=readerPlaceCacheHeaders([zip])['Netlify-Cache-Tag']!.split(',');
+  const cleared:string[]=[];
+  const purge=async(tags:readonly string[])=>{cleared.push(...tags);return{purged:true};};
+  await invalidateReaderCache({states:['AZ'],entities:[BODY]},purge,null);
+  assert.ok(!cleared.some(tag=>stateTags.includes(tag)||placeTags.includes(tag)));
+  cleared.length=0;
+  await invalidateReaderCache({states:['AZ'],statePackages:true},purge,null);
+  assert.ok(cleared.some(tag=>stateTags.includes(tag)),'canonical state publication invalidates the state response');
+  assert.ok(!cleared.some(tag=>placeTags.includes(tag)),'the committed place page remains cached until its replacement exists');
+  cleared.length=0;
+  await purge(readerCacheTags({places:[zip]}));
+  assert.ok(cleared.some(tag=>placeTags.includes(tag)));
+  assert.ok(!cleared.some(tag=>stateTags.includes(tag)),'building a local page cannot invalidate its canonical state answer');
+});
 
 test("purge credentials accept the deployed WTP and runner token names without a network request", async t => {
   const tokenKeys = ["NETLIFY_API_TOKEN", "NETLIFY_AUTH_TOKEN", "NETLIFY_TOKEN", "WTP_BLOBS_TOKEN", "NETLIFY_BLOBS_TOKEN"];

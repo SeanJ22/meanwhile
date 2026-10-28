@@ -59,7 +59,7 @@ test("an exact saved fact files a second served city while retaining page genera
     assert.deepEqual(await db.query("SELECT place_id,boundary_year FROM entity_place WHERE entity_id=$1 ORDER BY place_id",[BODY]),
       [FIRST,SECOND].map(place_id=>({place_id,boundary_year:2025})));
     const pages=await db.query("SELECT place_id,generation,lease_token,next_queued_at FROM rebuild_queue WHERE place_id=ANY($1::text[]) ORDER BY place_id",[[FIRST_PAGE,SECOND_PAGE,OUTSIDE_PAGE]]);
-    assert.deepEqual(pages.map(row=>[row.place_id,Number(row.generation)]),[[FIRST_PAGE,8],[SECOND_PAGE,8]],"both served pages advance once without touching the outside ZIP");
+    assert.deepEqual(pages.map(row=>[row.place_id,Number(row.generation)]),[[FIRST_PAGE,8],[SECOND_PAGE,7]],"the active page retains one later generation; the waiting page already reads the latest filing");
     assert.equal(pages[0]!.lease_token,"building-first-city");
     assert.ok(pages[0]!.next_queued_at,"the placement arrival survives a page already being built");
     await door(db,expanded,CLOCKS,AT,{purge});

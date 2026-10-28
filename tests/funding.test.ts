@@ -143,7 +143,7 @@ test("D40: no query-keyed API route marks itself publicly cacheable unless the C
       assert.ok(!relative(ROOT,path).startsWith(".."),"a delegated reader handler stays inside the repository");
       source += `\n${readFileSync(/\.[cm]?tsx?$/.test(path)?path:`${path}.ts`,"utf8")}`;
     }
-    const sharedCache = /\breaderCacheHeaders\s*\(/.test(source) && sharedCacheIsPublic;
+    const sharedCache = /\breader(?:State|Place)?CacheHeaders\s*\(/.test(source) && sharedCacheIsPublic;
     const literalCache = /cache-control["']?\s*:\s*["'][^"']*public/i.test(source);
     if (/searchParams/.test(source) && (sharedCache || literalCache)) {
       const vary = source.match(/"Netlify-Vary":\s*"([^"]+)"/)?.[1];

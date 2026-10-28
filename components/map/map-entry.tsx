@@ -302,7 +302,8 @@ function MapEntryInner() {
         const zipParam = zip ? `&zip=${zip}` : "";
         const radiusParam = radiusKm ? `&radiusKm=${radiusKm}` : "";
         const response = await fetchReaderResponse(
-          `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
+          view.kind === "zip" && zip && !radiusKm ? `/api/meetings?zip=${zip}`
+            : `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
           { headers: { accept: "application/json" }, signal: controller.signal },
         );
         if (!response.ok) {

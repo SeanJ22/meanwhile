@@ -304,7 +304,7 @@ export function artifactMeta(artifact: Artifact): ObjectMeta {
   };
 }
 
-async function requireDocumentOriginal(store: EvidenceStore, project: string, artifact: Artifact): Promise<void> {
+function assertDocumentProvenance(artifact: Artifact): void {
   if (artifact.tier !== "EXTRACTED_DERIVED") return;
   const extraction = artifact.extraction;
   const original = extractionSourceDocument(artifact);
@@ -313,6 +313,13 @@ async function requireDocumentOriginal(store: EvidenceStore, project: string, ar
     !supportedDocumentExtraction(extraction)) {
     throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_PROVENANCE_INVALID");
   }
+}
+
+async function requireDocumentOriginal(store: EvidenceStore, project: string, artifact: Artifact): Promise<void> {
+  if (artifact.tier !== "EXTRACTED_DERIVED") return;
+  assertDocumentProvenance(artifact);
+  const extraction = artifact.extraction!;
+  const original = extractionSourceDocument(artifact)!;
   const parent = await readEvidenceObject(store, objectKey(project, extraction.parent));
   if (!parent || contentHash(parent.bytes) !== extraction.parent.contentHash || parent.meta.custom?.tier !== extraction.parent.tier ||
     parent.meta.custom?.canonicalUrl !== artifact.canonicalUrl || parent.meta.custom?.sourceId !== artifact.sourceId ||
@@ -363,9 +370,12 @@ export async function putArtifact(
   }
 
   const meta = artifactMeta(artifact);
+  assertDocumentProvenance(artifact);
   const existing = await store.head(key);
   if (existing) {
     const conflict = objectIncompatibility(existing, meta);
+    if (conflict?.field === "custom.extraction" && artifact.extraction?.parent.tier === "SANITIZED_DERIVED")
+      throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_SANITIZER_PROOF_INVALID");
     if (conflict) throw immutabilityRefusal(key, conflict);
     return { key, written: false };
   }

@@ -5,6 +5,8 @@ import { readFileSync } from "node:fs";
 import { factDb } from "./helpers/fact-db.ts";
 import { publishHeldMeetingPins, HELD_PIN_PRIOR_VENUES_SQL } from "../lib/civic-data/held-meeting-pins.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { holdCivicVersion } from "../lib/civic-data/version-vault.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { readSittingFacts,withSittingFacts } from "../lib/facts/meeting-read.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -26,7 +28,8 @@ async function setup(meetings:readonly Meeting[],office=OFFICE){
   await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,current_version_id text,promoted_at timestamptz,payload jsonb);
     CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
     ALTER TABLE civic_data_promotions ADD COLUMN source_id text DEFAULT 'fixture';
-    CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,retrieved_at timestamptz,candidate jsonb)`);
+    CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,retrieved_at timestamptz,candidate jsonb,
+      normalized_hash text,read_model_fingerprint text)`);
   for(const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint"))
     if(/CREATE FUNCTION reader_payload_(?:node|value|members)\(/.test(statement))await db.pg.exec(statement);
   await installKeyedRows(db.pg);
@@ -279,12 +282,18 @@ test("an already-promoted address for the same source sitting fills an abbreviat
     const short="1415 W Melody Ln",physical:Meeting={...online,id:"legistar:held:short",online:undefined,carried:undefined,
       venueGap:{kind:"STATED_NOT_PLACED",publishedText:short,publisher:"District"}};
     const prior={...physical,bodyId:valid?BODY:"other-body",venueGap:undefined,location:{name:"Board Room",address:OWN,lat:31.3,lng:-109.9}};
-    const db=await setup([physical],"P.O. Box 123");let requests=0;
+    const db=await setup([physical],"P.O. Box 123"),vault=new MemoryEvidenceStore();let requests=0;
     try {
       for(const [id,state,readModel] of [["cv-previous","PROMOTED",prior],["cv-unpromoted","PARSE_INVALID",{...prior,bodyId:BODY}]] as const)
-        await db.query("INSERT INTO civic_data_candidates VALUES($1,'fixture','MEETING','source:diligent:body:held',$2,$3,$4)",
+        await db.query("INSERT INTO civic_data_candidates(id,source_id,record_class,scope,state,retrieved_at,candidate) VALUES($1,'fixture','MEETING','source:diligent:body:held',$2,$3,$4)",
           [id,state,OLD,JSON.stringify({readModel:{meetings:[readModel]}})]);
-      const first=await publishHeldMeetingPins({facts:db,vault:new MemoryEvidenceStore(),clocks:factClocks(null),now:NOW,
+      if (valid) {
+        const model={meetings:[prior]},fingerprint=canonicalCivicDataHash(model,{durable:true});
+        const ref=await holdCivicVersion(vault,model,fingerprint);
+        await db.query("UPDATE civic_data_candidates SET candidate=$1,read_model_fingerprint=$2 WHERE id='cv-previous'",
+          [JSON.stringify({vault:{readModel:ref}}),fingerprint]);
+      }
+      const first=await publishHeldMeetingPins({facts:db,vault,clocks:factClocks(null),now:NOW,
         clock:()=>Date.parse(NOW),deadlineMs:Date.parse(NOW)+60000,fetchImpl:async input=>{
           requests++;const full=new URL(String(input)).searchParams.get("address")!.includes("Bisbee");
           return new Response(JSON.stringify(full?geocode("1415","MELODY","LN","W","BISBEE","85603"):{result:{addressMatches:[]}}));

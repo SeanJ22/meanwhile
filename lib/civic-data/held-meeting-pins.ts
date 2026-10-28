@@ -14,6 +14,7 @@ import { openMissingPinBlanks } from "../meetings/pin-blanks.ts";
 import { publishHeldOfficeFacts } from "../meetings/office-facts.ts";
 import { readOfficeContexts,withMunicipalHallOffices } from "../meetings/municipal-office.ts";
 import { meetingStateOf } from "../meetings/body-scope.ts";
+import { readCivicCandidateRows } from "./candidate-vault.ts";
 
 const withdrawnPin = (value: string) => `(reader_payload_node(${value}->'mapPin')->>'basis'='GOVERNMENT_OFFICE' AND EXISTS (
     SELECT 1 FROM fact retired WHERE retired.entity_id='meeting:'||p.row_id AND retired.field='map_pin'
@@ -26,15 +27,12 @@ const heldRows = `WHERE p.record_class='MEETING' AND p.collection='meetings' AND
     AND (coalesce(sitting.value->'mapPin','null'::jsonb)='null'::jsonb OR sitting.value->'mapPin' ? 'pendingReplacement' OR ${withdrawnPin("sitting.value")})`;
 
 /** Previously promoted points keep the address already verified for this exact source sitting. */
-export const HELD_PIN_PRIOR_VENUES_SQL = `SELECT DISTINCT ON (sitting.value->>'id')
-  reader_payload_value(sitting.value) AS value
+export const HELD_PIN_PRIOR_VENUES_SQL = `SELECT c.id,c.retrieved_at
   FROM civic_data_promotions p JOIN civic_data_candidates c ON c.scope=p.scope AND c.source_id=p.source_id
-    AND c.record_class='MEETING' AND c.state='PROMOTED' AND c.id<>p.current_version_id,
-  LATERAL reader_payload_members(reader_payload_node(c.candidate->'readModel')->'meetings') m,
-  LATERAL (SELECT reader_payload_node(m.item) AS value) sitting
-  WHERE p.key=ANY($1::text[]) AND sitting.value->>'id'=ANY($2::text[])
-    AND jsonb_typeof(sitting.value->'location')='object'
-  ORDER BY sitting.value->>'id',c.retrieved_at DESC,c.id`;
+    AND c.record_class='MEETING' AND c.state='PROMOTED' AND c.id<>p.current_version_id
+  WHERE p.key=ANY($1::text[]) AND ($2::timestamptz IS NULL OR c.retrieved_at<$2::timestamptz
+    OR c.retrieved_at=$2::timestamptz AND c.id>$3::text)
+  ORDER BY c.retrieved_at DESC,c.id LIMIT 128`;
 
 const dependencyScope = `(
   changed.body_id=p.body_id AND changed.collection IN ('agendaDocuments','registry.bodies')
@@ -186,14 +184,29 @@ export async function publishHeldMeetingPins(input: {
     const retainedAddresses = new Map<string,MeetingPinAddress>();
     const stated = new Map(current.filter(meeting=>!meeting.online && meeting.venueGap?.publishedText).map(meeting=>[meeting.id,meeting]));
     if(stated.size) try {
-      const prior = await facts.query(HELD_PIN_PRIOR_VENUES_SQL,[[...new Set(rows.map(row=>String(row.key)))],[...stated.keys()]]);
-      for(const row of prior) {
-        const old=row.value as Meeting,meeting=stated.get(old.id);
+      const keys=[...new Set(rows.map(row=>String(row.key)))], seen=new Set<string>();
+      let afterAt:string|null=null,afterId="";
+      for (;;) {
+        const versions=await facts.query(HELD_PIN_PRIOR_VENUES_SQL,[keys,afterAt,afterId]);
+        for (const version of versions) {
+          const prior=await readCivicCandidateRows(facts.query,input.vault,String(version.id),["meetings"],
+            {match:{path:["id"],values:[...stated.keys()].filter(id=>!seen.has(id))}});
+          for (const row of prior) {
+        const old=row.value as unknown as Meeting,meeting=stated.get(old.id);
+        if (!old.location || typeof old.location !== "object" || seen.has(old.id)) continue;
+        seen.add(old.id);
         if(meeting && old.location?.address && Number.isFinite(old.location.lat) && Number.isFinite(old.location.lng) &&
           meeting.bodyId===old.bodyId && meeting.ocdId===old.ocdId && meeting.provenance.sourceUrl===old.provenance.sourceUrl &&
           repeatsPublishedVenue(meeting.venueGap!.publishedText!,old.location.name,old.location.address))
           retainedAddresses.set(meeting.id,{meetingId:meeting.id,bodyId:meeting.bodyId,name:old.location.name,
             address:old.location.address,basis:"MEETING",provenance:old.fieldSources?.location??old.provenance});
+          }
+          if (seen.size===stated.size) break;
+        }
+        if (versions.length<128 || seen.size===stated.size) break;
+        const last=versions.at(-1)!;
+        afterAt=last.retrieved_at instanceof Date?last.retrieved_at.toISOString():String(last.retrieved_at);
+        afterId=String(last.id);
       }
     } catch(error) { failures.push(`Earlier meeting addresses could not be read: ${error instanceof Error?error.message:String(error)}`); }
     const census=await placePublishedMeetingPins({meetings:current,previous:[...previous,...savedPrevious],offices,retainedAddresses,query:facts.query,

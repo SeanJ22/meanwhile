@@ -46,7 +46,7 @@ export async function readRegistryPlaceRows(query:Query,state:string,divisionIds
       WHERE p.valid AND (r.collection='registry.divisions' AND r.row_id=ANY($2::text[])
         OR r.collection='registry.executives' AND r.value->>'stateOcdId'=ANY($2::text[])
         OR r.collection='registry.candidacies' AND coalesce(reader_payload_value(reader_payload_node(r.value->'holder')->'divisions'),'[]'::jsonb) ?| $2::text[]
-        OR r.collection='registry.rosterDispositions' AND (r.row_id IN (SELECT id FROM members) OR r.value->>'canonicalId' IN (SELECT id FROM members)
+        OR r.collection='registry.rosterDispositions' AND (cardinality($3::text[])=0 AND (r.row_id IN (SELECT id FROM members) OR r.value->>'canonicalId' IN (SELECT id FROM members))
           OR r.row_id=ANY($4::text[]) OR reader_payload_node(r.value)->>'canonicalId'=ANY($4::text[])))
   ), selected AS (
     SELECT 'metadata'::text AS kind,p.scope,p.version_id,p.promoted_at,p.normalized_hash,p.valid,NULL::text AS row_id,

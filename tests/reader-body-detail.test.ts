@@ -113,7 +113,12 @@ test("the keyed reader selects one body and its people, including its portrait",
       sourceOrg: source.sourceOrg, collectedAt: source.collectedAt, partisanship: "UNDETERMINED", members: [member] });
     await add("bodyRosters", other, { bodyId: other, bodyName: "Other", sourceUrl: source.sourceUrl,
       sourceOrg: source.sourceOrg, collectedAt: source.collectedAt, partisanship: "UNDETERMINED", members: [{ ...member, id: "other:person" }] });
-    installFactReader(db.query);
+    const registryReads: string[][] = [];
+    installFactReader(async (sql, params) => {
+      const rows = await db.query(sql, params);
+      if (sql.includes("registry.rosterDispositions")) registryReads.push(rows.map(row => String(row.kind)));
+      return rows;
+    });
     const response = await GET(new Request(`https://example.test/api/reader/body?state=AZ&body=${encodeURIComponent(body)}`));
     assert.equal(response.status, 200);
     assert.equal(response.headers.get("netlify-vary"), "query=state|body");
@@ -121,6 +126,8 @@ test("the keyed reader selects one body and its people, including its portrait",
     assert.deepEqual(detail.roster.members.map(person => person.id), [member.id]);
     assert.equal(detail.roster.members[0].photoUrl, "/portrait.jpg");
     assert.deepEqual(detail.fieldSources, { officePhone: source });
+    assert.ok(registryReads[0].includes("bodyRosters"));
+    assert.ok(!registryReads[1].includes("bodyRosters"), "the portrait lookup must not reread the roster");
     await db.query("UPDATE civic_data_candidates SET state='REJECTED' WHERE id='v1'");
     const rejected = await GET(new Request(`https://example.test/api/reader/body?state=AZ&body=${encodeURIComponent(body)}`));
     assert.equal(rejected.status, 503);

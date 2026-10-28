@@ -21,7 +21,8 @@ async function setup() {
   await db.exec(readFileSync("lib/db/migrations/DB-03_process_transfer.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
 }
 async function apply(part: NeonBytesHour) {
-  for (const statement of processTransferStatements(part, "2026-10-25")) await db.query(statement.query, [...statement.params]);
+  for (const table of ["hourly", "daily"] as const)
+    for (const statement of processTransferStatements(part, table)) await db.query(statement.query, [...statement.params]);
 }
 async function totals() {
   return (await db.query<{ response_bytes: number; requests: number; reads: Record<string, number[]>; processes: unknown }>(
@@ -40,8 +41,7 @@ test("the same meter retains legacy bytes and applies cumulative reports once ac
   const row = await totals();
   assert.equal(row.response_bytes, 1600); assert.equal(row.requests, 6);
   assert.deepEqual(row.reads, { "old\ttable": [2, 4, 100], "child\tcp_doors": [3, 10, 1000], "child\tnew_table": [1, 5, 500] });
-  const daily = (await db.query<{ n: number }>("SELECT response_bytes::int AS n FROM database_transfer_daily")).rows[0];
-  assert.equal(daily.n, 1500);
+  assert.deepEqual((await db.query("SELECT 1 FROM database_transfer_daily")).rows, [], "the runner's day is rebuilt from its hours, not stored");
   // A reused OS pid names a new process, so both processes' bytes survive.
   await apply({ ...base, startedMs: 2 });
   assert.equal((await totals()).response_bytes, 2600);
@@ -56,4 +56,17 @@ test("split caller details can arrive after totals without losing or double-coun
   await apply({ ...base, bytes: { reader: 900, "control-plane": 0 }, reads: {} });
   await apply(base);
   assert.equal((await totals()).response_bytes, 1000);
+});
+
+test("a reader function's daily row applies cumulative reports once and stays apart from its hour", async () => {
+  await setup();
+  const reader: NeonBytesHour = { ...base, client: "reader", pid: 9, startedMs: 77 };
+  await apply(reader); await apply(reader);
+  const newer = { ...reader, bytes: { reader: 1500, "control-plane": 0 }, sent: { ...reader.sent!, reader: { requests: 4, bytes: 15 } } };
+  await apply(newer); await apply(reader); await apply(newer);
+  const daily = (await db.query<{ day: string; client: string; n: number; requests: number }>(
+    "SELECT day::text,client,response_bytes::int AS n,requests::int FROM database_transfer_daily")).rows;
+  assert.deepEqual(daily, [{ day: "2026-10-25", client: "reader", n: 1500, requests: 4 }]);
+  assert.equal((await totals()).response_bytes, 1500);
+  for (const statement of processTransferStatements(reader, "hourly")) assert.doesNotMatch(statement.query, /database_transfer_daily/);
 });

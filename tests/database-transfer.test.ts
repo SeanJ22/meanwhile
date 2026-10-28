@@ -133,19 +133,18 @@ test("answered control-plane reads finish while accounting is held, and a failed
     const failedFlush = flushDatabaseTransfer();
     failWriter();
     assert.equal(await failedFlush, false);
-    const retained = pendingDatabaseTransfer();
-    assert.equal(retained.length, 1);
-    assert.equal(retained[0]!.database, "control-plane");
-    assert.equal(retained[0]!.requests, 2, "failed in-flight bytes merge with the next answered read");
-    const requestBytes = reads.reduce((total, body) => total + Buffer.byteLength(body), 0);
-    assert.equal(retained[0]!.requestBytes, requestBytes);
-    const responseBytes=responses.reduce((total,response)=>total+Buffer.byteLength(response),0);
-    assert.equal(retained[0]!.responseBytes,responseBytes);
-    assert.equal(await flushDatabaseTransfer(), true);
+    assert.match(writes[0]![0]!.query, /INSERT INTO database_transfer_hourly/, "the hour is saved on its own");
+    assert.match(writes[1]![0]!.query, /INSERT INTO database_transfer_daily/, "a failed hour does not hold back the reader function's day");
     assert.equal(writes.length, 2);
-    assert.match(writes[1]![0]!.query, /INSERT INTO database_transfer_daily/);
-    assert.deepEqual(writes[1]![0]!.params.slice(3, 6).map(Number), [2, requestBytes, responseBytes]);
-    const detail = JSON.parse(writes[1]![0]!.params[6] as string) as Record<string, number[]>;
+    const requestBytes = reads.reduce((total, body) => total + Buffer.byteLength(body), 0);
+    const responseBytes=responses.reduce((total,response)=>total+Buffer.byteLength(response),0);
+    assert.equal(await flushDatabaseTransfer(), true);
+    const hour = writes.slice(2).find(write => /INSERT INTO database_transfer_hourly/.test(write[0]!.query))!;
+    assert.deepEqual(hour[0]!.params.slice(2, 5).map(Number), [2, requestBytes, responseBytes],
+      "the failed hour's bytes merge with the next answered read as one cumulative report");
+    const day = writes.slice(2).find(write => /INSERT INTO database_transfer_daily/.test(write[0]!.query))!;
+    assert.deepEqual(day[0]!.params.slice(2, 6).map(String), ["reader", "2", String(requestBytes), String(responseBytes)]);
+    const detail = JSON.parse(hour[0]!.params[5] as string) as Record<string, number[]>;
     assert.equal(Object.values(detail).reduce((sum, counts) => sum + counts[2], 0), responseBytes);
     assert.deepEqual(pendingDatabaseTransfer(), [], "the successful accounting write is not itself counted");
   } finally {

@@ -10,7 +10,8 @@ import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plan
 import { GET } from "../app/api/reader/body/route.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { loadBodyDetail } from "../lib/registry/body-roster-client.ts";
+import { bodyDetailState, loadBodyDetail } from "../lib/registry/body-roster-client.ts";
+import type { CoveredBody } from "../lib/registry/coverage.ts";
 import { bodyRosterSummaries } from "../lib/reader/body-summary.ts";
 
 const registryPointerSchema = `CREATE TABLE civic_data_promotions(key text PRIMARY KEY,current_version_id text,payload jsonb,
@@ -18,6 +19,11 @@ const registryPointerSchema = `CREATE TABLE civic_data_promotions(key text PRIMA
   CREATE TABLE civic_data_candidates(id text PRIMARY KEY,state text,acquisition_succeeded boolean,promoted_version_id text,
     last_known_good_version_id text,source_id text,record_class text,scope text,read_model_fingerprint text,
     validation_receipt jsonb,candidate jsonb,normalized_hash text);`;
+
+test("a cross-state body's own identifier selects the body reader's state", () => {
+  const body = { bodyId: "government:US-CA:cog:123#board", ocdId: "ocd-division/country:us/state:nv/county:clark" } as CoveredBody;
+  assert.equal(bodyDetailState(body, "NV"), "CA");
+});
 
 test("one-body detail retains the existing member, photo, phone and field sources", () => {
   const fixture = JSON.parse(gunzipSync(readFileSync(new URL("./fixtures/registry-transfer-import.json.gz", import.meta.url))).toString());

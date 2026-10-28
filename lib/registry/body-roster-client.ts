@@ -14,8 +14,8 @@ const EMPTY: BodyRosterClientProjection = Object.freeze({ members: [], gaps: [] 
 const pending = new Map<string, Promise<ReaderBodyDetail>>();
 
 export function bodyDetailState(body: CoveredBody, fallback?: string | null): string | null {
-  return (body.readerState ?? ocdStateCode(body.ocdId) ?? ocdStateCode(body.bodyId) ??
-    /^government:US-([A-Z]{2}):/i.exec(body.bodyId)?.[1] ?? /^([a-z]{2}):/i.exec(body.bodyId)?.[1] ??
+  return (body.readerState ?? ocdStateCode(body.bodyId) ?? /^government:US-([A-Z]{2}):/i.exec(body.bodyId)?.[1] ??
+    /^([a-z]{2}):/i.exec(body.bodyId)?.[1] ?? ocdStateCode(body.ocdId) ??
     body.recipientState ?? fallback ?? null)?.toUpperCase() ?? null;
 }
 

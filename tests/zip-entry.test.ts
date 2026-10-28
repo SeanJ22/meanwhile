@@ -119,17 +119,20 @@ test("ZIP-01: a mail-only ZIP that is its own Census ZCTA keeps its residents' s
   for (const zip of ["73960", "10540"]) assert.ok((await readZipPlace(zip))?.ids.some(id => /\/school_district:/.test(id)), zip);
 });
 
-test("ZIP-01: mail-only ZIPs cannot acquire residential legislative or school districts from a ZCTA or its point", async () => {
+test("ZIP-01: mail-only ZIPs never settle residential districts from a ZCTA or its point", async () => {
   for (const zip of ["10008", "00501"]) {
     const entry = await readZipPlace(zip);
     assert.ok(entry, zip);
     assert.equal(entry.samples, 0);
     assert.ok(entry.ids.length > 0, "town and county remain available");
-    assert.ok(entry.ids.every(id => !/\/(?:cd|sldu|sldl|school_district|special_district):/.test(id)));
+    assert.ok(entry.ids.every(id => !/\/(?:cd|sldu|sldl):/.test(id)), "legislative districts wait for an address");
+    const possible = entry.ids.filter(id => /\/(?:school_district|special_district):/.test(id));
+    assert.ok(possible.every(id => entry.partial.includes(id)), "the linked ZCTA's districts could govern a box holder, never settle it");
     const certainty = await zipCertainty(zip);
     assert.ok(certainty);
     assert.ok(entry.ids.filter(id => id.split("/").length > 3).every(id => certainty.certaintyOf(id) !== "CERTAIN"));
-    assert.deepEqual(await readZipDivisions(zip), []);
+    assert.ok((await readZipDivisions(zip)).every(division => !["cd", "sldu", "sldl"].includes(division.divisionType)));
+    assert.ok((await divisionIdsForZipArea(zip, [])).every(id => !possible.includes(id)), "a mail-only ZIP's ballot holds its town and county");
     const point = ["ocd-division/country:us/state:tx/cd:13", "ocd-division/country:us/state:tx/sldu:31", "ocd-division/country:us/state:tx/school_district:texhoma"];
     assert.ok((await divisionIdsForZipArea(zip, point)).every(id => !point.includes(id)));
     const withQualifiedPoint = await divisionIdsForZipArea(zip, point, {

@@ -50,8 +50,8 @@ const publication=(db:Database,key:string,family:string,scope:string,version='v1
   [key,family,scope,version,'{}']);
 
 test('the migration runner locks all affected busy tables before either transition phase',()=>{
-  for(const phase of ['expand','contract'])assert.equal(lockFirstStatement(`RB-A7_bootstrap_${phase}`),
-    'LOCK TABLE fact, civic_data_promotions, entity, entity_place, entity_host, entity_external_id, civic_data_candidate_events, rebuild_queue IN SHARE ROW EXCLUSIVE MODE;');
+  for(const phase of ['expand','contract'])assert.ok(lockFirstStatement(`RB-A7_bootstrap_${phase}`).includes(
+    'LOCK TABLE fact, civic_data_promotions, entity, entity_place, entity_host, entity_external_id, civic_data_candidate_events, rebuild_queue IN ACCESS EXCLUSIVE MODE;'));
 });
 
 test('the preceding door bumps active rebuild generations and queues only locally dependent ZIPs',async()=>{

@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import { factReader } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
-import { placesAtPoint, placesForCode, CODE_MEMBERSHIP_SQL } from "./read.ts";
+import { placesAtPoint, placesForCode, codeMembershipsSql } from "./read.ts";
 import type { PlaceMapResult } from "./types.ts";
 import { currentRepresentationSelection, type GeographySelection } from "../census-geography/selection.ts";
 import { districtFamilyKey } from "../census-geography/division-id.ts";
@@ -84,16 +84,17 @@ export async function stateForZip(zip: string): Promise<string | null> {
 }
 
 /** Enumerate only the requested state's codes; their memberships use the same lookup as a typed ZIP. */
-export async function readStateZipPlaces(input: string, selection: GeographySelection = currentRepresentationSelection()): Promise<ReadonlyMap<string, PlaceEntry>> {
+export function readStateZipPlaces(input: string, selection: GeographySelection = currentRepresentationSelection()): Promise<ReadonlyMap<string, PlaceEntry>> {
+  return stateZipPlaces(input, selection, true);
+}
+
+async function stateZipPlaces(input: string, selection: GeographySelection, postalLinks: boolean): Promise<ReadonlyMap<string, PlaceEntry>> {
   const state = requireRegistryState(input.replace(/^US-/i, "")), query = placeMapQuery();
   const codes = await query("SELECT DISTINCT m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id WHERE e.state=$1::char(2) AND e.kind='place' ORDER BY m.zip", [state]);
   const out = new Map<string, PlaceEntry>();
   // Read the state in one bounded query, then apply the shared year selection per code.
   if (!codes.length) return out;
-  const rows = await query(`SELECT m.zip,json_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year) AS memberships
-    FROM zip_place m JOIN entity e ON e.id=m.place_id
-    JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.zip=ANY($1::text[]) AND e.kind='place' GROUP BY m.zip ORDER BY m.zip`, [codes.map(row => String(row.zip))]);
+  const rows = await query(codeMembershipsSql("zip", "$1::text[]", postalLinks), [codes.map(row => String(row.zip))]);
   for (const row of rows) {
     const code=String(row.zip),result = await placesForCode(async () => [row], "zip", code, selection);
     const entry = placeEntry(result);
@@ -102,9 +103,10 @@ export async function readStateZipPlaces(input: string, selection: GeographySele
   return orderZipStates(out);
 }
 
+/** A division's example ZIP holds that division itself, never only through a mail-only ZIP's postal link. */
 export async function lowestZipByDivision(state: string): Promise<ReadonlyMap<string, string>> {
   const out = new Map<string, string>();
-  for (const [zip, entry] of await readStateZipPlaces(state)) for (const id of entry.ids) {
+  for (const [zip, entry] of await stateZipPlaces(state, currentRepresentationSelection(), false)) for (const id of entry.ids) {
     if (!out.has(id)) out.set(id, zip);
   }
   return out;

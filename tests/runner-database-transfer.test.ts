@@ -31,7 +31,7 @@ neonConfig.fetchFunction = async (_url: string | URL | Request, init?: RequestIn
 Object.assign(process.env, { DATABASE_URL: READER, WTP_CONTROL_PLANE_DATABASE_URL: CONTROL });
 installDatabaseTransferCounter();
 
-test("a runner process's bytes reach the daily table once, from its hour reports, even when it never flushes", async () => {
+test("a runner process's bytes reach the hourly table once, from its hour reports, even when it never flushes", async () => {
   process.env[VITAL_SIGNS_REPORT_ENV] = "1";
   try {
     await neon(CONTROL).query("select 1");
@@ -44,22 +44,25 @@ test("a runner process's bytes reach the daily table once, from its hour reports
     await neon(CONTROL).query("select 2");
     const [second] = takeNeonBytesHours();
     keepRunnerTransfer(second!);
-    const rows = pendingDatabaseTransfer();
+    assert.deepEqual(pendingDatabaseTransfer(), [], "the runner's day is rebuilt from its hours, so it queues no daily row");
+    const rows = pendingRunnerDatabaseTransfer();
     assert.equal(rows.length, 1);
-    assert.equal(rows[0]!.client, "runner");
+    assert.equal(rows[0]!.hour, first!.hour);
     assert.equal(rows[0]!.database, "control-plane");
     assert.equal(rows[0]!.requests, 2, "a repeated report adds nothing; a later one adds only what is new");
     assert.equal(rows[0]!.responseBytes, 2 * Buffer.byteLength(answer));
     assert.equal(rows[0]!.requestBytes, second!.sent!["control-plane"].bytes);
     assert.ok(rows[0]!.requestBytes > first!.sent!["control-plane"].bytes);
-    const hourly = neonTransferOf({ kind: "RECORDED", rows, runner: runnerDatabaseTransferView(pendingRunnerDatabaseTransfer()) }).runnerReads!;
+    const hourly = neonTransferOf({ kind: "RECORDED", rows: [], runner: runnerDatabaseTransferView(rows) }).runnerReads!;
     assert.equal(hourly.length, 1);
     assert.equal(hourly[0].hour, first!.hour);
     assert.equal(hourly[0].requests, 2);
     assert.equal(hourly[0].responseBytes, 2 * Buffer.byteLength(answer));
+    const before = writes.length;
     assert.equal(await flushDatabaseTransfer(), true);
-    assert.match(writes.at(-1)![0]!.query, /INSERT INTO database_transfer_daily/);
-    assert.deepEqual(writes.at(-1)![0]!.params.slice(2, 6).map(String), ["runner", "2", String(rows[0]!.requestBytes), String(2 * Buffer.byteLength(answer))]);
+    const saved = writes.slice(before).flat();
+    assert.ok(saved.length > 0 && saved.every(write => /INSERT INTO database_transfer_hourly/.test(write.query)), "the runner writes hours only");
+    assert.deepEqual(saved.at(-1)!.params.slice(1, 5).map(String), ["control-plane", "2", String(rows[0]!.requestBytes), String(2 * Buffer.byteLength(answer))]);
   } finally {
     delete process.env[VITAL_SIGNS_REPORT_ENV];
   }
@@ -74,8 +77,7 @@ test("all job and table reads survive bounded child reports and duplicate delive
   assert.ok(reports.length > 2);
   assert.ok(reports.every(line => Buffer.byteLength(line) <= 3800));
   for (const line of [...reports, ...reports]) keepRunnerTransfer(parseVitalSignsReport(line)!);
-  const rows = pendingDatabaseTransfer().filter(row => row.day === "2026-10-24" && row.client === "runner" && row.database === "reader");
-  const hourly = neonTransferOf({ kind: "RECORDED", rows, runner: runnerDatabaseTransferView(pendingRunnerDatabaseTransfer()) }).runnerReads!.filter(row => row.hour === part.hour);
+  const hourly = neonTransferOf({ kind: "RECORDED", rows: [], runner: runnerDatabaseTransferView(pendingRunnerDatabaseTransfer()) }).runnerReads!.filter(row => row.hour === part.hour);
   assert.equal(hourly.length, 150);
   assert.equal(hourly.reduce((sum, row) => sum + row.responseBytes, 0), 150000);
   assert.equal(hourly.reduce((sum, row) => sum + row.requests, 0), 150);

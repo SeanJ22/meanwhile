@@ -49,7 +49,7 @@ test("a pass with too little time skips the actual cleanup block and still saves
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText;
   await runInNewContext(code, { PUBLISH_NOW: false, ONLY: null, PASS_DEADLINE_MS: 1_000_000,
-    Date: { now: () => 980_000 }, supervisorFailures: [],
+    Date: { now: () => 980_000 }, supervisorFailures: [], recordHeldJobs: () => {}, flushLaunchDecisions: async () => {},
     neon: () => { throw Error("cleanup must not open the database"); },
     saveResults: async () => { saved = true; } });
   assert.equal(saved, true);

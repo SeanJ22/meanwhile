@@ -18,7 +18,7 @@ export function PausedJobsList(props: { readonly jobs: readonly PausedJobView[] 
           <span className={s.small}>Paused {mst(job.pausedAt)} after reading {job.gb.toFixed(2)} GB in one hour{job.topTableWords ? `, most of it from ${job.topTableWords}` : ""}.</span>
           <span className={s.meta}>It waits until you release it.</span>
           <ActionButton action={{ kind: "job-release", target: job.job, label: "Release", payload: { name: job.label } }} />
-          <Technical lines={[`Job: ${job.job}`, `Most read: ${job.topTable ?? "—"}`, `Paused at ${job.pausedAt}`]} />
+          <Technical lines={[`Job: ${job.job}`, `Most read: ${job.topTable ?? "—"}`, `Paused at ${mst(job.pausedAt)}`]} />
         </li>
       ))}
     </ul>

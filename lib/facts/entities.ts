@@ -71,7 +71,7 @@ const localPlace = (id: string) => id.startsWith(`${COUNTRY}/`) && id.slice(COUN
 export interface Legislator { readonly ocdPersonId: string; readonly name: string }
 
 function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGovernmentFacts>, bodies: readonly RegistryBody[],
-  legislators: readonly Legislator[] = []): EntityBatch {
+  legislators: readonly Legislator[] = [], registeredOwners: ReadonlyMap<string,string> = new Map()): EntityBatch {
   const out = emptyBatch();
   const placeIds = registeredPlaceIds(reg);
   reg = {...reg,divisions:reg.divisions.map(([id,layer,geoid,name]) => [placeIds.get(`${layer}:${geoid}`) ?? id,layer,geoid,name])};
@@ -101,13 +101,27 @@ function stateEntities(reg: Registration, census: ReadonlyMap<string, CensusGove
     if (host) out.hosts.push([jurisdictionId, host]);
   }
   const governmentByPid = new Map(reg.governments.map(g => [g[0], g[1]]));
-  const governmentOnDivision = new Map(reg.governments.filter(g => g[4] >= 0).map(g => [reg.divisions[g[4]]?.[0], g[1]]));
+  const governmentIds = new Set(reg.governments.map(g => g[1]));
+  const governmentOnDivision = new Map<string, string[]>();
+  for (const government of reg.governments) {
+    const division = reg.divisions[government[4]];
+    if (!division) continue;
+    const ownLayer = government[3] === "COUNTY" ? "county" : government[3] === "MUNICIPAL" ? "place"
+      : government[3] === "TOWNSHIP" ? "cousub" : /^(?:SCHOOL DISTRICT|DEPENDENT SCHOOL SYSTEM)$/.test(government[3]) ? "school" : null;
+    if (ownLayer !== division[1] && !(ownLayer === "school" && ["unsd", "elsd", "scsd"].includes(division[1]))) continue;
+    const owners = governmentOnDivision.get(division[0]) ?? [];
+    owners.push(government[1]); governmentOnDivision.set(division[0], owners);
+  }
   const governmentNames = new Map(reg.governments.map(g => [g[1], titleCase(g[2])]));
   const divisionName = new Map(reg.divisions.map(d => [d[0], d[3]]));
   for (const body of bodies) {
     if (body.ocdId && isCensusPlaceholderDivision({ ocdId: body.ocdId })) continue;
     const place = body.ocdId && known.has(body.ocdId) ? body.ocdId : null;
-    const government = (body.censusId ? governmentByPid.get(body.censusId) : undefined) ?? (place ? governmentOnDivision.get(place) : undefined);
+    const root = splitSubject(body.id).root;
+    // A named government's identity or native Census key establishes ownership. A served county does not.
+    const general = place && [place + "#governing", place + "#board"].includes(body.id) ? governmentOnDivision.get(place) : undefined;
+    const government = (body.censusId ? governmentByPid.get(body.censusId) : undefined)
+      ?? (governmentIds.has(root) ? root : undefined) ?? (general?.length === 1 ? general[0] : undefined) ?? registeredOwners.get(body.id);
     const ownerName = (government && governmentNames.get(government)) ?? (place && divisionName.get(place)) ?? body.id;
     const role = body.bodyClass === "GOVERNING" ? (place?.includes("/school_district:") ? "school board" : "governing board") : body.bodyClass.toLowerCase().replace(/_/g, " ");
     const name = body.name ?? `${ownerName} ${role}`;
@@ -132,14 +146,59 @@ async function insertEntities(query: Query, batch: EntityBatch): Promise<void> {
   for (let i = 0; i < batch.entities.length; i += size) {
     const rows = batch.entities.slice(i, i + size);
     // A government moves when its reference territory moves, and a registry body when its government does; every other held row keeps what it has.
-    await query(`INSERT INTO entity (id, kind, name, state, parent_id)
+    const changed = await query(`WITH held AS MATERIALIZED (SELECT id,parent_id FROM entity WHERE id=ANY($1::text[])), changed AS (
+      INSERT INTO entity (id, kind, name, state, parent_id)
       SELECT * FROM unnest($1::text[], $2::text[], $3::text[], $4::char(2)[], $5::text[])
       ON CONFLICT (id) DO UPDATE SET parent_id = EXCLUDED.parent_id,state=EXCLUDED.state,
         name = CASE WHEN entity.kind = 'body' AND entity.name ~ ' governing$' THEN EXCLUDED.name ELSE entity.name END
         WHERE entity.kind IN ('government', 'body') AND EXCLUDED.kind = entity.kind
           AND (entity.parent_id IS DISTINCT FROM EXCLUDED.parent_id OR entity.state IS DISTINCT FROM EXCLUDED.state
-            OR (entity.kind = 'body' AND entity.name ~ ' governing$' AND entity.name IS DISTINCT FROM EXCLUDED.name))`,
+            OR (entity.kind = 'body' AND entity.name ~ ' governing$' AND entity.name IS DISTINCT FROM EXCLUDED.name))
+      RETURNING id,kind,parent_id
+    ) SELECT changed.id,held.parent_id AS old_parent FROM changed JOIN held ON held.id=changed.id
+      WHERE changed.kind='body' AND held.parent_id IS DISTINCT FROM changed.parent_id`,
     [rows.map(r => r.id), rows.map(r => r.kind), rows.map(r => r.name), rows.map(r => r.state), rows.map(r => r.parentId)]);
+    // A corrected owner withdraws that owner's borrowed office claim, while the body's own venue and office stay intact.
+    if (changed.length) {
+      const moved = [changed.map(row => String(row.id)), changed.map(row => String(row.old_parent))];
+      await query(`UPDATE fact pin SET status='pulled',held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED',checked_at=now()
+      FROM entity meeting,entity old_owner,unnest($1::text[],$2::text[]) AS moved(body_id,old_parent)
+      WHERE meeting.parent_id=moved.body_id AND meeting.kind='meeting' AND pin.entity_id=meeting.id
+        AND pin.field='map_pin' AND pin.status='live' AND pin.provenance_kind<>'OWNER' AND pin.value->>'basis'='GOVERNMENT_OFFICE'
+        AND old_owner.id=moved.old_parent AND old_owner.kind='government'
+        AND (lower(pin.value->>'name')=lower(old_owner.name) OR EXISTS (
+          SELECT 1 FROM fact address JOIN source_copy source ON source.id=address.source_copy_id
+          WHERE address.entity_id=old_owner.id AND address.field='office_address' AND address.status='live'
+            AND address.value#>>'{}'=pin.value->>'address'
+            AND source.url=pin.value#>>'{provenance,sourceUrl}'))`,
+      moved);
+      if ((await query("SELECT to_regclass('civic_data_rows') IS NOT NULL AS held"))[0]?.held === true) {
+        await query(`WITH affected AS MATERIALIZED (
+          SELECT DISTINCT 'meeting:'||r.row_id AS meeting_id,moved.body_id,body.state,body.name,pin.value,address.source_copy_id,address.quote
+          FROM unnest($1::text[],$2::text[]) AS moved(body_id,old_parent)
+          JOIN entity old_owner ON old_owner.id=moved.old_parent AND old_owner.kind='government'
+          JOIN entity body ON body.id=moved.body_id
+          JOIN civic_data_rows r ON r.body_id=moved.body_id AND r.collection='meetings'
+          JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+          CROSS JOIN LATERAL (SELECT reader_payload_value(r.value->'mapPin') AS value) pin
+          CROSS JOIN LATERAL (SELECT f.source_copy_id,f.quote FROM fact f JOIN source_copy s ON s.id=f.source_copy_id
+            WHERE f.entity_id=old_owner.id AND f.field='office_address' AND f.status='live'
+              AND f.value#>>'{}'=pin.value->>'address' AND s.url=pin.value#>>'{provenance,sourceUrl}'
+            ORDER BY f.checked_at DESC LIMIT 1) address
+          WHERE pin.value->>'basis'='GOVERNMENT_OFFICE' AND pin.value->>'bodyId'=moved.body_id
+            AND NOT EXISTS (SELECT 1 FROM fact choice WHERE choice.entity_id='meeting:'||r.row_id
+              AND choice.field='map_pin' AND choice.status='live' AND choice.provenance_kind='OWNER')
+        ), created AS (
+          INSERT INTO entity(id,kind,name,state,parent_id)
+          SELECT DISTINCT ON(meeting_id) meeting_id,'meeting',name,state,body_id FROM affected ORDER BY meeting_id
+          ON CONFLICT(id) DO NOTHING RETURNING id
+        ) INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,held_reason,produced_by)
+          SELECT meeting_id,'map_pin',value,value->>'address','pulled','OFFICIAL',source_copy_id,quote,now(),
+            'GOVERNMENT_OFFICE_OWNER_CHANGED','registration-ownership' FROM affected
+          WHERE NOT EXISTS (SELECT 1 FROM fact retired WHERE retired.entity_id=affected.meeting_id AND retired.field='map_pin'
+              AND retired.status='pulled' AND retired.held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED' AND retired.value=affected.value)`, moved);
+      }
+    }
   }
   for (let i = 0; i < batch.externalIds.length; i += size) {
     const rows = batch.externalIds.slice(i, i + size);
@@ -276,6 +335,7 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
   const [idAt, nameAt, stateAt] = [column("ocd_person_id"), column("name"), column("jurisdiction")];
   const loaded = new Map((await db.query("SELECT source, sha256 FROM fact_store_load")).map(r => [String(r.source), String(r.sha256)]));
   const registrationHeld = (await db.query("SELECT to_regclass('civic_data_promotions') IS NOT NULL AS held"))[0]?.held === true;
+  const keyedHeld = (await db.query("SELECT to_regclass('civic_data_rows') IS NOT NULL AS held"))[0]?.held === true;
   const country = await db.query(`INSERT INTO entity (id, kind, name, state) VALUES ($1, 'place', 'United States', NULL) ON CONFLICT (id) DO NOTHING RETURNING id`, [COUNTRY]);
   if (country.length) await enqueueReaderPlaces({ places: [COUNTRY] }, db.query);
   const mapHeld = (await db.query("SELECT to_regclass('place_boundary') IS NOT NULL AS held"))[0]?.held === true;
@@ -286,6 +346,13 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
     const census = readCensusGovernmentFacts(root,[st]).byPid;
     const stateBodies = [...new Map(bodies.filter(body => (body.ocdId ?? body.id).includes(`/state:${st}`) || body.id.startsWith(`curated:${st}/`))
       .map(body => [body.id, body])).values()];
+    const ownerRows = keyedHeld ? await db.query(`SELECT body.id,min(owner.id) AS owner_id FROM unnest($2::text[]) body(id)
+      JOIN civic_data_rows r ON r.record_class='REGISTRATION' AND r.collection='governments' AND r.aliases @> ARRAY[body.id]
+      JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+      JOIN entity owner ON owner.kind='government' AND owner.id IN(r.value->>'jurisdictionId',r.value->>'id')
+      WHERE r.promotion_key=$1 GROUP BY body.id HAVING count(DISTINCT owner.id)=1 ORDER BY body.id`,
+      [`REGISTRATION:US-${st.toUpperCase()}:registration:v1`,stateBodies.map(body=>body.id)]) : [];
+    const registeredOwners = new Map(ownerRows.map(row=>[String(row.id),String(row.owner_id)]));
     const legislators = people.filter(row => row[stateAt]?.toLowerCase() === st && row[idAt]?.startsWith("ocd-person/"))
       .map(row => ({ ocdPersonId: row[idAt]!, name: row[nameAt]! }));
     // Published service territory is data. A Census office location never overrides a source-established local association.
@@ -326,9 +393,9 @@ export async function ensureFactEntities(db: FactDb & { readonly query: Query },
       JOIN entity p ON p.id=ep.place_id
       WHERE e.id=ANY($1::text[]) AND b.layer='district'
       GROUP BY e.id,p.state ORDER BY e.id,p.state`,[registration.governments.map(g => g[1])]));
-    const hash = sha256(Buffer.concat([file, Buffer.from(JSON.stringify(["RB-A4", stateBodies, legislators, associations]))]));
+    const hash = sha256(Buffer.concat([file, Buffer.from(JSON.stringify(["ENTITY_OWNERSHIP_V2", stateBodies, legislators, associations,ownerRows]))]));
     if (loaded.get(`registration:${st}`) === hash) continue;
-    const batch = stateEntities(registration, census, stateBodies, legislators);
+    const batch = stateEntities(registration, census, stateBodies, legislators,registeredOwners);
     const places = new Set(batch.entities.filter(row => row.kind === "place").map(row => row.id));
     for (const association of associations) {
       const territory = (association.places as EntityPlace[]).filter(p => association.held_place || places.has(p.placeId));

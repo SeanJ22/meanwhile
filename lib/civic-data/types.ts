@@ -196,11 +196,19 @@ export interface RetrievalEvidence {
   readonly retrievedAt: string;
   /** SHA-256, lowercase hex. Null when no response body was acquired. */
   readonly rawHash: string | null;
+  /** The digest covers source addresses and bytes, without observation stamps. */
+  readonly rawHashBasis?: "SOURCE_CONTENT_V1";
+  /** False keeps incomplete source work on its normal publication path even when input bytes repeat. */
+  readonly complete?: boolean;
   /** Last actual provider check, retained unchanged on held-byte or parser replay. */
   readonly sourceCheck?: SourceCheckEvidence;
   readonly failureDetail?: string;
   readonly manualSourceReceipt?: ManualSourceSetReceipt;
-  readonly derived?: { readonly inputs: readonly DerivedInputRef[] };
+  readonly derived?: {
+    readonly inputs: readonly DerivedInputRef[];
+    /** External source versions used by hash-first derivations; each also appears in inputs. */
+    readonly sourceContentInputs?: readonly DerivedInputRef[];
+  };
 }
 
 export interface NormalizationEvidence {
@@ -210,6 +218,8 @@ export interface NormalizationEvidence {
   readonly normalizedHash: string | null;
     /** Required by every promotable production candidate; only fixtures that cannot reach a production door may omit it. */
   readonly normalizedPayloadHash?: string | null;
+  /** Exact parser package and configuration already applied to this pointed output; a replay never changes source freshness. */
+  readonly sourceInputDigest?:string;
   readonly stateRecordHashes?: {
     readonly readModelHash: string;
     readonly members: readonly { readonly key: string; readonly factsHash: string; readonly sha256: string }[];
@@ -583,6 +593,7 @@ export interface CandidateEvent {
 }
 
 export interface CandidateVersionRecord {
+  readonly readModelFingerprint?: string | null;
   readonly candidate: RoutineCandidate;
   readonly state: CandidateState;
   readonly acquisitionSucceeded: boolean;
@@ -594,6 +605,7 @@ export interface CandidateVersionRecord {
 }
 
 export interface PromotedProjection<T = unknown> {
+  readonly payloadFingerprint?: string | null;
   readonly key: string;
   readonly sourceId: string;
   readonly recordClass: RoutineRecordClass;
@@ -605,9 +617,11 @@ export interface PromotedProjection<T = unknown> {
   readonly receipt: ValidationReceipt;
     /** Reader freshness is measured from the later of this confirmation's retrieval and the version's. */
   readonly latestConfirmation?: UnchangedConfirmation;
+  /** Returned by the atomic publication write, never inferred from a later read. */
+  readonly writeFingerprint?: { readonly expected: string | null; readonly stored: string | null };
 }
 
 export type PromotedPointerIdentity = Pick<
   PromotedProjection,
-  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt" | "latestConfirmation"
+  "key" | "sourceId" | "recordClass" | "scope" | "versionId" | "lastKnownGoodVersionId" | "promotedAt" | "latestConfirmation" | "writeFingerprint" | "payloadFingerprint"
 >;

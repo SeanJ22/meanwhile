@@ -93,7 +93,7 @@ test("AZ, NH, and NJ finance candidates bind exact source/class/scope and promot
     assert.equal(outcome.readerReadback?.versionId, candidate.id);
     assert.equal(outcome.candidate.candidate.changeSet?.added.length, 1);
     assert.equal(outcome.candidate.candidate.changeSet?.changed.length, 0);
-    assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
+    assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);
   }
 });
 

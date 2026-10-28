@@ -1,3 +1,4 @@
+import { isTranslationProjection } from "./published-projection-base.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
@@ -98,7 +99,7 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata" | "readVersioned">> & {
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata" | "readVersioned" | "readPublicationBase" | "readLegiscanPersonParts" | "readLegiscanStateCatalog">> & {
   /** Already published canonical database rows, read together for the reader shelf. */
   readonly readPromotedEntry?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry>;
 };
@@ -450,7 +451,9 @@ async function loadPromotedCivicData<T>(
   let observedProjection: PromotedProjection<T> | null = null;
   try {
     const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
-    const projection = await store.readPromotion<T>(recordClass, scope);
+    const base=recordClass==="FEDERAL_MONEY"
+      ? await (store.readPublicationBase?.(recordClass,scope)??Promise.reject(new Error("FEDERAL_PUBLICATION_BASE_READER_REQUIRED"))) : null;
+    const projection = base ? base.current as PromotedProjection<T>|null : await store.readPromotion<T>(recordClass, scope);
     if (projection === null) {
       return {
         kind: "NOT_RECORDED",
@@ -460,7 +463,7 @@ async function loadPromotedCivicData<T>(
       };
     }
     observedProjection = projection;
-    if (stateAuthority) {
+    if (stateAuthority || isTranslationProjection(recordClass, scope)) {
       if (!store.readPublishedCandidateMetadata) throw new Error("STATE_PUBLISHED_METADATA_READ_REQUIRED");
       const candidate = await store.readPublishedCandidateMetadata(projection.versionId);
       if (!candidate) return {
@@ -473,7 +476,7 @@ async function loadPromotedCivicData<T>(
       const proven = rememberStateProof(projection, candidate, candidate.candidate.normalization.normalizedHash!);
       return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
     }
-    const candidate = await readProofCandidate(store, projection.versionId);
+    const candidate = base ? base.lkg : await readProofCandidate(store, projection.versionId);
     const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
     const predecessor = predecessorVersionId !== null
       ? await store.readCandidate(predecessorVersionId)
@@ -947,6 +950,7 @@ function publishedStateProofIssue(
   if (!candidate.temporal || typeof candidate.temporal.version !== "string" || typeof candidate.temporal.sourceThrough !== "string")
     return "the published candidate lacks temporal metadata";
   const hash = candidate.normalization.normalizedHash;
+  if (isTranslationProjection(recordClass, scope) && candidate.normalization.normalizedPayloadHash !== hash) return "the normalized evidence and reader payload hashes differ";
   if (typeof hash !== "string" || !SHA256.test(hash)) return "the published candidate lacks its validated payload hash";
   try {
     const owned = immutableStateValue(projection.payload);

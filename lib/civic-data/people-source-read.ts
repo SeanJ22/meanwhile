@@ -1,6 +1,7 @@
 import type { OfficialStateLegislatorReadModel } from "./candidate-builders.ts";
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import { isPeopleSource, peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
+import { withPeopleSourceChecks } from "./people-source-checks.ts";
 
 /** The read side of the people sources, apart from publication so the crawlers'
  * file reads never enter a reader route's bundle. */
@@ -20,5 +21,7 @@ export async function readPeopleSourceProjection(jurisdiction: PeopleSourceReadM
       roster.officeholders.some(row=>!row.id || !row.name || !row.officeTitle || !row.provenance.sourceUrl || jurisdiction !== "US" && row.state?.toUpperCase() !== jurisdiction.slice(3)) ||
       roster.divisions.some(row=>!ids.has(row.officeholderId))) throw Error("PEOPLE_SOURCE_PROJECTION_INVALID");
   }
+  if(result.kind==="PROMOTED"&&options.edge===undefined)return {...result,value:{...result.value,
+    roster:await withPeopleSourceChecks(result.value.roster,peopleSourceRecordClass(sourceId),peopleSourceScope(jurisdiction,sourceId),options.store)}};
   return result;
 }

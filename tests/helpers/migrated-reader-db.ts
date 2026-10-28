@@ -1,7 +1,7 @@
 import {readFileSync} from "node:fs";
 import {canonicalCivicDataHash} from "../../lib/civic-data/canonical-hash.ts";
 import {PGlite} from "@electric-sql/pglite";
-import {VALIDATION_CHECKS, type RoutineRecordClass} from "../../lib/civic-data/types.ts";
+import {VALIDATION_CHECKS, type RoutineRecordClass, type ValidationReceipt} from "../../lib/civic-data/types.ts";
 
 /** Reader SQL runs against every real production migration, including constraints and triggers. */
 export async function migratedReaderDb() {
@@ -9,10 +9,10 @@ export async function migratedReaderDb() {
   const migrations = new URL("../../lib/db/migrations/",import.meta.url);
   const journal = JSON.parse(readFileSync(new URL("meta/_journal.json",migrations),"utf8")) as {entries:{tag:string}[]};
   for (const {tag} of journal.entries) await pg.exec(readFileSync(new URL(`${tag}.sql`,migrations),"utf8"));
-  const publish = async ({id,value,at,recordClass,scope,sourceId,payloadHash}: {id:string;value:unknown;at:string;recordClass:RoutineRecordClass;scope:string;sourceId:string;payloadHash?:string}) => {
+  const publish = async ({id,value,at,recordClass,scope,sourceId,payloadHash,excludedFacts}: {id:string;value:unknown;at:string;recordClass:RoutineRecordClass;scope:string;sourceId:string;payloadHash?:string;excludedFacts?:ValidationReceipt["excludedFacts"]}) => {
     const key = `${recordClass}:${scope}`, hash = payloadHash ?? canonicalCivicDataHash(value);
     const receipt = {contractVersion:2,decision:"GOOD",candidateId:id,sourceId,recordClass,scope,validatedAt:at,
-      checks:VALIDATION_CHECKS.map(check=>({check,verdict:"PASS",code:"HELD",detail:"Metadata fixture"})),excludedFacts:[]};
+      checks:VALIDATION_CHECKS.map(check=>({check,verdict:"PASS",code:"HELD",detail:"Metadata fixture"})),excludedFacts:excludedFacts??[]};
     const candidate = {id,sourceId,recordClass,scope,identities:[],readModel:value,
       retrieval:{succeeded:true,retrievedAt:at,rawHash:null},normalization:{parserVersion:"metadata-test",normalizedHash:hash},
       temporal:{sourceThrough:"2026-10-19"}};

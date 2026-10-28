@@ -121,3 +121,78 @@ test("cleaned source metadata passes the actual PostgreSQL JSONB NUL constraint"
     assert.equal(saved.rows[0]!.source.nested[0]!.hours, "7am");
   } finally { await db.close(); }
 });
+
+test("a cutoff records only its completed unchanged sources, resumes the other source first, and never refreshes the whole state early", async (t) => {
+  const { refreshVotingSources } = await import("../scripts/fetch-voting-sites.mts");
+  const { MemoryRoutineDataStore } = await import("../lib/civic-data/store.ts");
+  const { votingSitesContract } = await import("../lib/ballot/voting-sites-data-plane.ts");
+  const { cycleVault } = await import("../lib/control-plane/scheduler/vault.ts");
+  const { mkdtemp, rm } = await import("node:fs/promises");
+  const { tmpdir } = await import("node:os");
+  const { join } = await import("node:path");
+  const store = new MemoryRoutineDataStore(), repos = createMemoryRepositories();
+  const source: VotingSourceDoor = { id: "nd-full-list", url: "https://elections.example.gov/locations.csv", publisher: "County clerk",
+    scope: { state: "ND", ocdId: "ocd-division/country:us/state:nd/county:adams", name: "Adams County", countyFips: "38001" },
+    shape: "file", covers: ["ELECTION_DAY"], electionDate: "2026-11-03", electionPageUrl: "https://elections.example.gov/locations.csv",
+    electionAssociationVerified: true, model: "ASSIGNED", extraction: { format: "csv", columns: { name: "Location", address: "Address", kind: "Kind", date: "Date" } } };
+  const sourceBytes = "Location,Address,Kind,Date\nPublic Library,1 Main St,ELECTION_DAY,2026-11-03\n";
+  const second = { ...source, id: `${source.id}-second`, url: "https://elections.example.gov/second.csv" };
+  const root = await mkdtemp(join(tmpdir(), "voting-hash-resume-"));
+  const contract = votingSitesContract("ND");
+  let clock = Date.parse(now), cut = false;
+  const deadline = Date.parse("2026-10-24T08:00:00.000Z") + 10_000;
+  t.mock.method(Date, "now", () => clock);
+  const fetchSource = (async input => {
+    const url = String(input);
+    if (url.endsWith("/robots.txt")) return new Response("User-agent: *\nAllow: /", { headers: { "content-type": "text/plain" } });
+    return [source.url, second.url].includes(url) ? new Response(sourceBytes, { headers: { "content-type": "text/csv" } }) : new Response(null, { status: 404 });
+  }) as typeof fetch;
+  const run = (at: string) => refreshVotingSources({ state: "ND", store, context: { repos }, now: () => at,
+    deadlineMs: at === "2026-10-24T08:00:00.000Z" ? deadline : clock + 10_000,
+    fetch: fetchSource, geocode: async () => null, registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: [source, second] });
+  try {
+    const initial = await run(now);
+    const firstConfirmation = (await store.readPromotionIdentity(contract.recordClass, contract.scope))!.latestConfirmation!.observedAt;
+    let forbidHeld = true;
+    const originalRead = store.readPromotion.bind(store);
+    t.mock.method(store, "readPromotion", async (recordClass: Parameters<typeof originalRead>[0], scope: string) => {
+      if (forbidHeld) assert.notEqual(recordClass, "VOTING_SITE", "matching sources never load the held state, including after a cutoff");
+      return originalRead(recordClass, scope);
+    });
+    const originalCandidate = store.readCandidate.bind(store);
+    t.mock.method(store, "readCandidate", async (id: string) => {
+      assert.equal(forbidHeld, false, "matching sources never read a held candidate body");
+      return originalCandidate(id);
+    });
+    const compareAndSet = repos.doors.compareAndSet.bind(repos.doors);
+    t.mock.method(repos.doors, "compareAndSet", async (...[id, revision, value, at]: Parameters<typeof compareAndSet>) => {
+      const saved = await compareAndSet(id, revision, value, at);
+      if (cut && value.validators?.checkedAt === "2026-10-24T08:00:00.000Z") { cut = false; clock = deadline; }
+      return saved;
+    });
+    clock = Date.parse("2026-10-24T08:00:00.000Z"); cut = true;
+    const partial = await run("2026-10-24T08:00:00.000Z");
+    assert.equal(partial.attemptedSourceIds.length, 1);
+    assert.equal(partial.publications, 0);
+    assert.equal(partial.confirmedSources, 1);
+    assert.equal(partial.terminal?.confirmedAt, undefined);
+    assert.equal((await store.readPromotionIdentity(contract.recordClass, contract.scope))!.latestConfirmation!.observedAt, firstConfirmation);
+    forbidHeld = false;
+    const { readVotingSitesProjection } = await import("../lib/ballot/voting-sites-server.ts");
+    const reader = await readVotingSitesProjection("ND", { store, now: "2026-10-24T08:00:00.000Z" });
+    assert.equal(reader.kind, "PROMOTED");
+    if (reader.kind !== "PROMOTED") return;
+    const checkedUrl = partial.attemptedSourceIds[0] === source.id ? source.url : second.url;
+    const sourceRows = reader.value.jurisdictions.flatMap(row => [...row.sources ?? [], ...row.sites.flatMap(site => site.sources ?? [])]);
+    assert.ok(sourceRows.some(row => row.url === checkedUrl && row.checkedAt === "2026-10-24T08:00:00.000Z"), "the completed source's actual check reaches Sources");
+    assert.ok(sourceRows.filter(row => row.url !== checkedUrl).every(row => row.checkedAt === now), "the unread sibling keeps its earlier check");
+    assert.equal(reader.metadata.retrievedAt, now, "a partial source check does not freshen the whole state");
+    forbidHeld = true;
+    clock = Date.parse("2026-10-25T08:00:00.000Z");
+    const resumed = await run("2026-10-25T08:00:00.000Z");
+    assert.notEqual(resumed.attemptedSourceIds[0], partial.attemptedSourceIds[0], "the unread source keeps its earlier persisted attempt time");
+    assert.equal(resumed.confirmedSources, 2);
+    assert.equal(resumed.terminal?.confirmedAt, "2026-10-25T08:00:00.000Z");
+    assert.equal(resumed.terminal?.candidateId, initial.terminal?.candidateId, "both source confirmations retain the same published facts");
+  } finally { await rm(root, { recursive: true, force: true }); }
+});

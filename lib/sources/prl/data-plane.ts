@@ -1,7 +1,9 @@
 import { normalizedHash, sha256 } from "../../civic-data/candidate-builders.ts";
 import type { CivicRecordMember, RoutineCandidate } from "../../civic-data/types.ts";
+import type { SourceCheckEvidence } from "../../civic-data/types.ts";
 import { sourceProjectionEvidence } from "../../civic-data/types.ts";
 import { PRL_CATEGORIES, PRL_FORBIDDEN_COLUMN_PATTERN, PRL_RHETORIC_ATTRIBUTION, type PrlSnapshot } from "./types.ts";
+import { prlSourceContentHash,type PrlSourceProbe } from "./source-hash.ts";
 
 export const PRL_CONTRACT = {
   id: "prl",
@@ -46,11 +48,15 @@ export function prlCandidate(input: {
   readonly sourceEvidence?: { readonly sha256: string; readonly bytes: number };
   readonly finalUrl: string;
   readonly retrievedAt: string;
+  readonly sourceProbe?:PrlSourceProbe;
+  readonly sourceCheck?:SourceCheckEvidence;
 }): RoutineCandidate {
   const semanticViolations = violations(input.snapshot);
   const civicRecords = prlMembers(input.snapshot);
-  const rawHash = input.sourceEvidence?.sha256 ?? sha256(input.rawZip ?? new Uint8Array());
-  const acquired = (input.sourceEvidence?.bytes ?? input.rawZip?.byteLength ?? 0) > 0 && /^[a-f0-9]{64}$/.test(rawHash);
+  const sourceHash = input.sourceEvidence?.sha256 ?? sha256(input.rawZip ?? new Uint8Array());
+  const rawHash=input.sourceProbe?prlSourceContentHash(input.sourceProbe):sourceHash;
+  const normalizedPayload={...input.snapshot,...(input.sourceProbe?{sourceProbe:input.sourceProbe}:{})};
+  const acquired = (input.sourceEvidence?.bytes ?? input.rawZip?.byteLength ?? 0) > 0 && /^[a-f0-9]{64}$/.test(sourceHash);
   const dropped = Math.max(0, input.snapshot.rowsInFile - input.snapshot.profiles.length);
   const sourceThrough = input.snapshot.profiles.map((profile) => profile.measuredAt).sort().at(-1) ?? input.snapshot.fetchedAt;
   return {
@@ -59,13 +65,14 @@ export function prlCandidate(input: {
     recordClass: PRL_CONTRACT.recordClass,
     scope: PRL_CONTRACT.scope,
     sourceProjectionEvidence: sourceProjectionEvidence(PRL_CONTRACT.sourceId, PRL_CONTRACT.recordClass, PRL_CONTRACT.scope),
-    retrieval: { succeeded: acquired, requestedUrl: input.snapshot.sourceUrl, finalUrl: input.finalUrl, httpStatus: acquired ? 200 : null, retrievedAt: input.retrievedAt, rawHash: acquired ? rawHash : null, failureDetail: acquired ? undefined : "No PRL profile archive bytes were acquired." },
+    retrieval: { succeeded: acquired, requestedUrl: input.snapshot.sourceUrl, finalUrl: input.finalUrl, httpStatus: acquired ? 200 : null, retrievedAt: input.retrievedAt, rawHash: acquired ? rawHash : null,
+      ...(input.sourceProbe?{rawHashBasis:"SOURCE_CONTENT_V1" as const}:{}),...(input.sourceCheck?{sourceCheck:input.sourceCheck}:{}),failureDetail: acquired ? undefined : "No PRL profile archive bytes were acquired." },
     normalization: {
       succeeded: semanticViolations.length === 0,
       parserVersion: PRL_CONTRACT.parserVersion,
       schemaVersion: "prl-attributed-profile/1",
       normalizedHash: normalizedHash(input.snapshot),
-      normalizedPayloadHash: normalizedHash(input.snapshot),
+      normalizedPayloadHash: normalizedHash(normalizedPayload),
       inputRecords: input.snapshot.rowsInFile,
       outputRecords: input.snapshot.profiles.length,
       droppedRecords: dropped,
@@ -81,7 +88,7 @@ export function prlCandidate(input: {
       { consumer: "/api/profile/[subject]", passed: semanticViolations.length === 0, detail: `${input.snapshot.profiles.length} exact Bioguide profiles retain the required PRL attribution.` },
       { consumer: "ballot and map public-statements profile", passed: input.snapshot.profiles.every((profile) => Object.keys(profile.shares).every((key) => PRL_CATEGORIES.some((category) => category.key === key))), detail: "Only the five allowlisted attributed rhetoric shares may reach the Reader." },
     ],
-    normalizedPayload: input.snapshot,
+    normalizedPayload,
     readModel: input.snapshot,
     civicRecords,
     excludedFacts: input.snapshot.rosterMisses.map((bioguideId) => ({ key: `profile:${bioguideId}`, code: "PRL_PROFILE_UNMEASURED", detail: `${bioguideId} has no positive classified-statement measurement in this source version.` })),

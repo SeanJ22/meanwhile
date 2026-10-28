@@ -25,6 +25,7 @@ async function fixture() {
   const readerFunctions = readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8")
     .split("--> statement-breakpoint").filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
   for (const sql of readerFunctions) await db.pg.exec(sql);
+  await db.pg.exec(readFileSync(new URL("../lib/db/migrations/DB-05_keyed_rows.sql", import.meta.url), "utf8"));
   const publish = async (recordClass: string, scope: string, payload: unknown, version: string, at = AT) => {
     const encoded = partitionCivicPayload(payload);
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts(hash,payload) VALUES($1,$2) ON CONFLICT DO NOTHING", [part.hash, JSON.stringify(part.payload)]);

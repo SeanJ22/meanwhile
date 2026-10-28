@@ -106,7 +106,7 @@ function namedPublicationScope(scope: string, recordClass?: string): ReaderCache
   if(bodyScope && (!recordClass || recordClass==='MEETING')) {
     let body=bodyScope[1]!;
     try{body=decodeURIComponent(body);}catch{ /* Keep a literal legacy identity. */ }
-    return {states:registryJurisdictions(body),entities:[body]};
+    return {states:[...new Set([...registryJurisdictions(body),...registryJurisdictions(/^source:derived~(US-[A-Z]{2}):body:/.exec(scope)?.[1])])],entities:[body]};
   }
   // These feed and vote publications have no reader response cache.
   if (/(?:^|:)(?:govinfo|congress-api|regulations-gov|federal-register|senate-lda)(?=:|$)/i.test(decoded)

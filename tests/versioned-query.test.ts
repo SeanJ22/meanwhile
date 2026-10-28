@@ -2,7 +2,45 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
-import { versionedSelect } from "../lib/db/versioned-query.ts";
+import { isVersionedSelectStatement, versionedSelect } from "../lib/db/versioned-query.ts";
+import { legistarMemberClocks } from "../lib/sources/legistar/members-tasks.ts";
+
+test("the dispatched member clock query keeps its source column and checks unchanged row versions", async () => {
+  const pg = new PGlite(), held = new Map<string, string>();
+  const cache = new CivicReadCache({read:async key=>held.get(key)??null,write:async(key,value)=>{held.set(key,value);}});
+  const read = versionedSelect("member-clock-source-column",cache);
+  const batches:Record<string,unknown>[][]=[];
+  const query=async(text:string,params:readonly unknown[]=[])=>{
+    const rows=(await pg.query<Record<string,unknown>>(text,[...params])).rows;
+    batches.push(rows);return rows;
+  };
+  const tasks=["legistar-members:alpha","legistar-members:beta"];
+  const clockRead=()=>legistarMemberClocks((text,params)=>read(query,text,params),tasks);
+  try{
+    await pg.exec(`CREATE TABLE fact_store_load(source text PRIMARY KEY,loaded_at timestamptz);
+      CREATE TABLE pass_cursor(name text PRIMARY KEY,position text);
+      INSERT INTO fact_store_load VALUES ('legistar-members:alpha','2026-10-26T00:10:00Z'),
+        ('legistar-members:beta','2026-10-26T00:12:00Z'),('legistar-members:outside','2026-10-26T00:15:00Z');
+      INSERT INTO pass_cursor VALUES ('source-attempt:legistar-members:beta','{"at":"2026-10-26T01:00:00.000Z"}');`);
+    const expected=await legistarMemberClocks(query,tasks);
+    batches.length=0;
+    assert.deepEqual(await clockRead(),expected,"the actual scheduled clock query survives a text column named source");
+    assert.equal(batches.length,1);
+    assert.deepEqual(batches[0].map(row=>row.source).sort(),tasks);
+    batches.length=0;
+    assert.deepEqual(await clockRead(),expected);
+    assert.equal(batches.length,1,"an unchanged clock still checks the current PostgreSQL result");
+    assert.ok(batches[0].every(row=>row.source===null&&row.loaded_at===null&&row.position===null),
+      "unchanged typed clock fields are suppressed by PostgreSQL");
+    await pg.exec("UPDATE fact_store_load SET loaded_at='2026-10-26T02:00:00Z' WHERE source='legistar-members:alpha'");
+    batches.length=0;
+    const changed=await clockRead();
+    assert.equal(changed.get(tasks[0])?.lastSucceededObservedAt,"2026-10-26T02:00:00.000Z");
+    assert.deepEqual(changed.get(tasks[1]),expected.get(tasks[1]),"the independent retry clock stays intact");
+    assert.deepEqual(batches[0].filter(row=>row.source!==null).map(row=>row.source),[tasks[0]],
+      "only the changed source clock crosses the database connection");
+  }finally{await pg.close();}
+});
 
 test("projected SQL reads transfer only changed rows and retain ordering, removals and driver types", async () => {
   const pg = new PGlite();
@@ -81,6 +119,39 @@ test("a failed fresh version query never returns a held SQL result", async () =>
     await assert.rejects(read(async () => [{ value: 2 }], "SELECT 1 AS value"), /no database row version/,
       "a missing version can never turn into a permanent unchanged cache key");
   } finally { await pg.close(); }
+});
+
+test("checked SQL text is fixed across parameters, cache contents and overlapping executions", async () => {
+  const pg = new PGlite();
+  const cache = new CivicReadCache({ read: async () => null, write: async () => {} });
+  const read = versionedSelect("fixed-sql", cache);
+  const text = "SELECT $1::integer AS value";
+  const statements: string[] = [];
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  let arrived!: () => void;
+  const started = new Promise<void>(resolve => { arrived = resolve; });
+  try {
+    const first = await read(async (sql, params) => {
+      statements.push(sql);
+      return (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
+    }, text, [1]);
+    assert.deepEqual(first, [{ value: 1 }]);
+    const waiting = read(async (sql, params) => {
+      statements.push(sql); arrived(); await gate;
+      return (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
+    }, text, [2]);
+    await started;
+    await read(async (sql, params) => {
+      statements.push(sql);
+      return (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
+    }, text, [3]);
+    assert.equal(new Set(statements).size, 1);
+    assert.equal(isVersionedSelectStatement(statements[0]), true, "finishing one call leaves the identical pending call registered");
+    release();
+    assert.deepEqual(await waiting, [{ value: 2 }]);
+    assert.equal(isVersionedSelectStatement(statements[0]), false);
+  } finally { release?.(); await pg.close(); }
 });
 
 test("a checked writer CTE runs once per call, including unchanged results, and stays inside its transaction", async () => {

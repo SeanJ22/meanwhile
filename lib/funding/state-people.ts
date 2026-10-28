@@ -1,7 +1,9 @@
 import {createHash} from "node:crypto";
 import { officeIdentity } from "../officials/office-identity.ts";
 import { campaignFinanceNativeScope, campaignFinanceSource } from "./state-sources.ts";
-import type { Query } from "../facts/publish.ts";
+import { factClocks } from "../facts/clocks.ts";
+import { campaignMoneyStateNextDue,type CampaignStateClock } from "./state-cadence.ts";
+import type { Clocks, Query } from "../facts/publish.ts";
 import type { CampaignSourceRecord } from "./state-source-records.ts";
 
 export interface CampaignMoneyPerson {
@@ -168,10 +170,11 @@ export const CAMPAIGN_MONEY_MISSING_REASONS = {
 export const campaignPersonKey = (state:string,person:Pick<CampaignMoneyPerson,"id"|"seat">) =>
   `campaign-money:person:${state}:${createHash("sha256").update(`${person.id}\0${person.seat}`).digest("hex")}`;
 interface CampaignPersonCheck { readonly checkedAt:string; readonly found:boolean }
-function campaignMoneyDue(person:CampaignPersonCheck|null,at:string):boolean {
-  return !person || !person.found || Date.parse(at)-Date.parse(person.checkedAt)>=24*60*60_000;
+function campaignMoneyDue(person:CampaignPersonCheck|null,at:string,clocks:Clocks):boolean {
+  const checked=Date.parse(person?.checkedAt??""),now=Date.parse(at);
+  return !person || !person.found || !Number.isFinite(checked) || checked>now || now-checked>=clocks.retryMinutes("money")*60_000;
 }
-export async function campaignMoneyWork(query:Query,state:string,people:readonly CampaignMoneyPerson[],at:string):Promise<readonly CampaignMoneyPerson[]> {
+export async function campaignMoneyWork(query:Query,state:string,people:readonly CampaignMoneyPerson[],at:string,clocks:Clocks=factClocks(null)):Promise<readonly CampaignMoneyPerson[]> {
   const checks=new Map<string,CampaignPersonCheck>(),withMoney=new Set<string>();
   for(let start=0;start<people.length;start+=500){
     const keys=people.slice(start,start+500).map(person=>campaignPersonKey(state,person));
@@ -184,15 +187,16 @@ export async function campaignMoneyWork(query:Query,state:string,people:readonly
       [batch.map(person=>person.id),batch.map(person=>person.name),batch.map(person=>person.seat)]);
     for(const row of money)withMoney.add(campaignPersonKey(state,{id:String(row.id),seat:String(row.seat)}));
   }
-  return people.filter(person=>!withMoney.has(campaignPersonKey(state,person)) || campaignMoneyDue(checks.get(campaignPersonKey(state,person))??null,at))
+  return people.filter(person=>!withMoney.has(campaignPersonKey(state,person)) || campaignMoneyDue(checks.get(campaignPersonKey(state,person))??null,at,clocks))
     .sort((a,b)=>Number(b.incumbent)-Number(a.incumbent)||a.id.localeCompare(b.id));
 }
 
-export async function readCampaignMoneyStateWork(query:Query,state:string){
-  const [row]=await query("SELECT position FROM pass_cursor WHERE name=$1",[campaignFinanceNativeScope(state)]);
-  return row ? JSON.parse(String(row.position)) as Partial<import("./state-sources.ts").CampaignFinanceWorkCheck["records"][number]> : null;
+export async function readCampaignMoneyStateWork(query:Query,state:string,fields?:readonly string[]){
+  const [row]=fields?await query(`SELECT (SELECT coalesce(jsonb_object_agg(k,position::jsonb->k),'{}'::jsonb)
+    FROM unnest($2::text[])k WHERE position::jsonb?k)AS position FROM pass_cursor WHERE name=$1`,[campaignFinanceNativeScope(state),fields]):
+    await query("SELECT position FROM pass_cursor WHERE name=$1",[campaignFinanceNativeScope(state)]);
+  return row ? (typeof row.position==="string"?JSON.parse(row.position):row.position) as Partial<import("./state-sources.ts").CampaignFinanceWorkCheck["records"][number]> : null;
 }
-export function campaignMoneyStateDue(work:{readonly startedAt?:string}|null,at:string):boolean {
-  const started=Date.parse(work?.startedAt??""),now=Date.parse(at);
-  return !Number.isFinite(started) || started>now || now-started>=60*60_000;
+export function campaignMoneyStateDue(work:CampaignStateClock|null,at:string,clocks:Clocks=factClocks(null)):boolean {
+  return Date.parse(at)>=campaignMoneyStateNextDue(work,at,clocks);
 }

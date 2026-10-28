@@ -10,9 +10,10 @@ import { boundedQuery } from "../../repository/request-bounds.ts";
 import type { HeldSubjectDetails } from "./held-subject-enrichment.ts";
 
 export const HELD_FACT_CLOCKS_SQL = `SELECT (SELECT value->'settings'->'facts.freshnessHours'
-  FROM cp_admin_config WHERE id='current') AS freshness_hours`;
+  FROM cp_admin_config WHERE id='current') AS freshness_hours,
+  (SELECT value->'settings'->'facts.retryMinutes' FROM cp_admin_config WHERE id='current') AS retry_minutes`;
 
-/** One settings value, once per provider pass; neither source bodies nor the full Admin config travel here. */
+/** The active fact windows and retry floors, once per provider pass; the full Admin config stays behind. */
 export async function readHeldFactClocks(query?: Query): Promise<Clocks> {
   if (!query) {
     const url = controlPlaneUrlFromEnv();
@@ -24,7 +25,7 @@ export async function readHeldFactClocks(query?: Query): Promise<Clocks> {
   const [row] = await query(HELD_FACT_CLOCKS_SQL);
   if (!row) throw new Error("HELD_FACT_CLOCKS_UNREADABLE");
   // The fact store has checked_at, not a persisted fresh_until. Use the same per-kind Admin clock as publication.
-  return factClocks({ settings: { "facts.freshnessHours": row.freshness_hours } } as unknown as AdminConfig);
+  return factClocks({ settings: { "facts.freshnessHours": row.freshness_hours, "facts.retryMinutes": row.retry_minutes } } as unknown as AdminConfig);
 }
 
 /** Values stay on the server: the owed list needs only the live field's identity, type, source and clock. */

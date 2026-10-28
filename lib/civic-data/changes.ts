@@ -92,6 +92,20 @@ function agendaDocumentMembers(values: readonly unknown[]): CivicRecordMember[] 
 
 /** Facts decide a change; observation stamps such as `collectedAt` stay on the record but never decide it. */
 export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicRecordMember): unknown {
+  if (recordClass === "CURATED_READER_RECORD") {
+    const row = object(member.record);
+    if (row?.kind === "MEASURE" && Array.isArray(row.sentences)) {
+      // Moving an already checked source into the vault changes storage, not facts.
+      // An evidence-only change must not copy the old full source into a before/after delta.
+      const { sourceText: _source, sourceTextHash: _hash, sourceCapture: _capture,
+        subjectQuote: _quote, writingRulesVersion: _rules, ...facts } = row;
+      return facts;
+    }
+  }
+  if(recordClass==="PRL_ARCHIVE" && member.key.startsWith("dataset:")){
+    const row=object(member.record);
+    if(row){const {rowsWritten:_written,newObjectKeys:_newKeys,fetchedAt:_fetched,...facts}=row;return facts;}
+  }
   if (recordClass === "FEDERAL_MONEY" && member.key === "federal-money-checkpoint") {
     const row = object(member.record);
     if (row) { const { lastCompleteAt: _at, refreshStartedAt: _started, ...progress } = row; return progress; }
@@ -128,13 +142,21 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
   if (recordClass === "MEETING" && member.key.startsWith("meeting:")) {
     return withoutProvenanceStamps(member.record, ["collectedAt"]);
   }
-  if (recordClass === "STATE_LEGISLATOR" && member.key.startsWith("member:")) {
-    return withoutProvenanceStamps(member.record, ["collectedAt", "verifiedAt"]);
+  if (recordClass === "REGISTRATION" || recordClass === "REGISTRY_RUNTIME_BINDING") {
+    return withoutPeopleSourceCheckFields(withoutProvenanceStamps(member.record, ["rawHash", "checkedAt", "collectedAt", "verifiedAt"]));
+  }
+  if ((recordClass === "STATE_LEGISLATOR" && member.key.startsWith("member:")) ||
+    (recordClass === "FEDERAL_DIRECTORY" && member.key.startsWith("officeholder:"))) {
+    return withoutPeopleSourceCheckFields(withoutProvenanceStamps(member.record, ["collectedAt", "verifiedAt", "rawHash"]));
   }
   if (recordClass === "STATE_ROLL_CALL" && member.key.startsWith("roll:")) {
     const roll = object(member.record);
     if (roll === null) return member.record;
     const { retrievedAt: _retrievedAt, ...facts } = roll;
+    return facts;
+  }
+  if (recordClass === "FEDERAL_CIVIC_RECORD" && member.key.startsWith("federal:")) {
+    const { checkedAt: _checkedAt, sourceKey: _sourceKey, sourceHash: _sourceHash, ...facts } = object(member.record) ?? {};
     return facts;
   }
   if (recordClass === "VOTING_SITE" && member.key.startsWith("jurisdiction:")) {
@@ -157,7 +179,7 @@ export function civicRecordFacts(recordClass: RoutineRecordClass, member: CivicR
     }
     const value = object(row?.value);
     if (row?.kind === "ELECTION_FIELD" && value) {
-      const { verifiedAt: _verifiedAt, collectedAt: _collectedAt, ...facts } = value;
+      const { verifiedAt: _verifiedAt, collectedAt: _collectedAt, sourceKey: _sourceKey, sourceHash: _sourceHash, ...facts } = value;
       return { ...row, value: facts };
     }
   }
@@ -173,6 +195,15 @@ function withoutProvenanceStamps(record: unknown, stamps: readonly string[]): un
   return { ...row, provenance: factualProvenance,
     ...(fieldSources ? {fieldSources:Object.fromEntries(Object.entries(fieldSources).map(([field,source])=>[field,
       object(source) ? Object.fromEntries(Object.entries(object(source)!).filter(([key])=>!stamps.includes(key))) : source]))} : {}) };
+}
+
+/** Exact source-body bindings and re-check dates describe evidence, never a new civic fact. */
+function withoutPeopleSourceCheckFields(value:unknown):unknown {
+  if(Array.isArray(value))return value.map(withoutPeopleSourceCheckFields);
+  const row=object(value);if(!row)return value;
+  const source=typeof row.sourceUrl==="string"&&typeof row.collectedAt==="string";
+  return Object.fromEntries(Object.entries(row).filter(([key])=>!source||!["rawHash","checkedAt","collectedAt","verifiedAt"].includes(key))
+    .map(([key,child])=>[key,withoutPeopleSourceCheckFields(child)]));
 }
 
 export function civicRecordsFor(recordClass: RoutineRecordClass, payload: unknown): readonly CivicRecordMember[] {

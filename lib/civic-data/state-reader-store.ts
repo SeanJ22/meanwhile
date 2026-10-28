@@ -28,7 +28,7 @@ const READ_STATE = `WITH RECURSIVE selected AS MATERIALIZED (
       AND c.normalized_hash ~ '^[a-f0-9]{64}$' AND p.validation_receipt=c.validation_receipt
       AND p.validation_receipt->>'decision'='GOOD' AND p.validation_receipt->>'candidateId'=c.id
       AND p.validation_receipt->>'sourceId'=c.source_id AND p.validation_receipt->>'recordClass'=c.record_class
-      AND p.validation_receipt->>'scope'=c.scope AND p.payload=c.candidate->'readModel') AS proof_valid,
+      AND p.validation_receipt->>'scope'=c.scope AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)) AS proof_valid,
     (SELECT detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id
       AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY sequence DESC LIMIT 1) AS confirmation
   FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id
@@ -36,11 +36,11 @@ const READ_STATE = `WITH RECURSIVE selected AS MATERIALIZED (
 ), hashes(hash) AS (
   SELECT ref#>>'{}' FROM selected,LATERAL jsonb_path_query(roots,'strict $.**."$civicPayloadPart"','{}',true) ref WHERE proof_valid
   UNION
-  SELECT ref#>>'{}' FROM hashes h JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts WHERE hash=h.hash OFFSET 0) part ON true,
+  SELECT ref#>>'{}' FROM hashes h JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts WHERE hash=h.hash LIMIT 1) part ON true,
     LATERAL jsonb_path_query(part.payload,'strict $.**."$civicPayloadPart"','{}',true) ref
 )
 SELECT roots,proof_valid,confirmation,
-  COALESCE((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes h JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts WHERE hash=h.hash OFFSET 0) part ON true),'{}'::jsonb) AS parts
+  COALESCE((SELECT jsonb_object_agg(part.hash,part.payload) FROM hashes h JOIN LATERAL (SELECT hash,payload FROM civic_data_payload_parts WHERE hash=h.hash LIMIT 1) part ON true),'{}'::jsonb) AS parts
 FROM selected`;
 
 function decodeStateParts(roots: unknown, parts: Record<string, unknown>): unknown {

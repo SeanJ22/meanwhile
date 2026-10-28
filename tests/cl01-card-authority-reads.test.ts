@@ -27,6 +27,16 @@ function withCanonical(entries: readonly Entry[], run: (reads: readonly (readonl
     const keys = statement.params[0] as string[];
     assert.ok(Array.isArray(keys), "these routes need only their batched canonical authorities");
     reads.push(keys);
+    if (statement.text.includes("r.collection='memberOffices'")) {
+      const entry = entries.find(entry => entry.projection.recordClass === "CURATED_READER_RECORD" && keys.includes(entry.projection.scope));
+      if (!entry) return [];
+      const payload = entry.projection.payload as {kind:string;records:MemberOfficeRecord[]};
+      const members = statement.params[3] as string[];
+      assert.ok(members.includes(person.id) && members.includes(person.personId!), "the keyed lookup retains exact person aliases");
+      return [{valid:true, scope:entry.projection.scope,version_id:entry.projection.versionId,source_id:entry.projection.sourceId,
+        promoted_at:entry.projection.promotedAt,retrieved_at:entry.attested.retrievedAt, temporal:{},header:{kind:payload.kind},normalization:{},
+        receipt:entry.projection.receipt,records:payload.records.filter(record=>members.includes(record.officeholderId)),sources:[]}];
+    }
     return keys.flatMap(key => {
       const entry = byKey.get(key);
       return entry ? [{row_kind: "promotion", key, record_class: entry.projection.recordClass, scope: entry.projection.scope,
@@ -72,7 +82,7 @@ test("a person without native offices still receives the existing curated office
   await withCanonical([peopleEntry({...person, offices: []}), fallback], async reads => {
     assert.deepEqual(await readCardMemberOffices(person.id, "TX"), [record]);
     assert.equal(reads.length, 2);
-    assert.deepEqual(reads[1], [`${curated.recordClass}:${curated.scope}`]);
+    assert.deepEqual(reads[1], ["US-TX:state-legislator-member-offices", curated.scope]);
   });
 });
 

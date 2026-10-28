@@ -5,7 +5,7 @@ import { processRegisteredRoutineCandidate } from "./promotion.ts";
 import { sourceAuthority, isOfficialSource } from "./source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "./types.ts";
 import type { RoutineDataStore } from "./store.ts";
-import { capturedText, holdPeopleCaptures, priorPeopleCaptures, type StatePeopleAcquisition, type StatePeopleCapture } from "./state-people-publication.ts";
+import { capturedText, holdPeopleCaptures, peopleSourceContentHash, priorPeopleCaptures, type StatePeopleAcquisition, type StatePeopleCapture } from "./state-people-publication.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { peopleSourceRecordClass, peopleSourceScope } from "../officials/people-sources.ts";
 import { mergePeopleSets } from "../officials/merge-people.ts";
@@ -18,6 +18,11 @@ import { withExecutiveCompleteness, executiveEvidenceReferences } from "../offic
 import { legislaturePageNamesPerson } from "../sources/people/legislature.ts";
 import { rosterChanges, type RosterChange } from "../officials/roster-changes.ts";
 import { publishRosterOfficePoints, type OfficePointResolver } from "../officials/office-points-publication.ts";
+import type { PeopleSourceProbe } from "./people-source-probe.ts";
+import { sourceContentHash } from "./source-hash.ts";
+import { bindPeopleSourceHashes, recordPeopleSourceChecks } from "./people-source-checks.ts";
+import type { PortraitSourceProbe } from "../photos/portrait-run.ts";
+import { withDerivedSourceContent } from "./derived-source-hash.ts";
 
 const hash = (value: unknown) => createHash("sha256").update(typeof value === "string" ? value : canonicalCivicDataJson(value)).digest("hex");
 export {  readPeopleSourceProjection,  } from "./people-source-read.ts";
@@ -35,10 +40,12 @@ interface PublishPeopleSourceInput {
   readonly gaps?: readonly {sourceUrl:string;detail:string}[];
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
   readonly derivedInputs?: readonly DerivedInputRef[];
+  readonly sourceContentInputs?: readonly DerivedInputRef[];
   readonly confirmUnchanged?: boolean;
   readonly resolveOfficePoint?: OfficePointResolver;
   /** A caller extending the record it just published passes it here instead of reading it again. */
   readonly held?: HeldPeopleSource;
+  readonly sourceProbe?: PeopleSourceProbe | PortraitSourceProbe;
 }
 /** The published record a new version is built on. */
 export interface HeldPeopleSource {
@@ -51,6 +58,7 @@ type PeopleCandidateInput = Omit<PublishPeopleSourceInput,"store"|"vault"|"acqui
   readonly violations: readonly string[];
   /** Seats this read changed against the source's last published read, for Admin's officials check. */
   readonly changes?: readonly RosterChange[];
+  readonly sourceRawHash?: string;
 };
 const words = (text:string) => text.normalize("NFKD").replace(/\p{M}/gu,"").toLowerCase().replace(/[^a-z0-9]+/g," ").trim();
 
@@ -119,15 +127,16 @@ function peopleSourceCandidate(input: PeopleCandidateInput): RoutineCandidate {
   const records = people.length + vacancies.length;
   const excludedFacts = [...(input.excludedFacts ?? []), ...(input.gaps ?? []).map(gap=>({key:gap.sourceUrl,code:"PEOPLE_SOURCE_GAP",detail:gap.detail,record:gap})),
     ...(input.roster.disagreements ?? []).map(row=>({key:row.key,code:"PEOPLE_FIELD_DISAGREEMENT",detail:`${row.field} has conflicting source values; the preferred value is published and BL-01 is owed the disagreement.`,record:row}))];
-  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,excludedFacts,...(input.changes?.length ? {changes:input.changes} : {})}));
-  const rawHash = hash(payload), normalizedHash = hash(readModel);
+  const payload = JSON.parse(JSON.stringify({releaseId:input.releaseId,captures:input.captures,excludedFacts,
+    ...(input.sourceProbe ? {sourceProbe:input.sourceProbe} : {}),...(input.changes?.length ? {changes:input.changes} : {})}));
+  const rawHash = input.sourceRawHash ?? peopleSourceContentHash(input.captures,input.roster), normalizedHash = hash(readModel);
   const derived = input.derivedInputs?.length ? derivedRetrieval(input.derivedInputs) : null;
   // The read's own instant orders versions; the "read:" prefix sorts after any content-hash version.
   const version = `read:${input.now}`;
   return {id:`cv-${hash([input.sourceId, scope, rawHash, normalizedHash]).slice(0,32)}`, sourceId:input.sourceId,recordClass,scope,
     retrieval: derived ? {succeeded:true,requestedUrl:derivedRequestedUrl(input.sourceId,scope),finalUrl:null,httpStatus:null,retrievedAt:derived.retrievedAt!,rawHash:derived.rawHash,derived:{inputs:input.derivedInputs!}}
-      : {succeeded:input.captures.length>0 && input.captures.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.capture.byteLength>0),requestedUrl:input.captures[0]?.requestedUrl ?? "",finalUrl:input.captures[0]?.finalUrl ?? null,httpStatus:input.captures[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash},
-    normalization:{succeeded:input.violations.length===0,parserVersion,schemaVersion:"people-sources/1",normalizedHash,normalizedPayloadHash:rawHash,inputRecords:records,outputRecords:records,droppedRecords:0,
+      : {succeeded:input.captures.length>0 && input.captures.every(row=>row.httpStatus>=200 && row.httpStatus<300 && row.capture.byteLength>0),requestedUrl:input.captures[0]?.requestedUrl ?? "",finalUrl:input.captures[0]?.finalUrl ?? null,httpStatus:input.captures[0]?.httpStatus ?? null,retrievedAt:acquiredAt,rawHash,rawHashBasis:"SOURCE_CONTENT_V1"},
+    normalization:{succeeded:input.violations.length===0,parserVersion,schemaVersion:"people-sources/1",normalizedHash,normalizedPayloadHash:hash(payload),inputRecords:records,outputRecords:records,droppedRecords:0,
       missingRequiredFields:people.some(row=>!row.id || !row.name || !row.officeTitle || !row.provenance.sourceUrl) ? ["person/office/source"] : []},
     identities:[...people.map(row=>({subjectId:row.id,jurisdiction,identifiers:{person_id:row.personId ?? row.id},matchBasis:"OFFICIAL_ID" as const,ambiguous:false,office:row.officeTitle,chamber:row.chamber})),
       ...vacancies.map(row=>({subjectId:row.ocdId,jurisdiction,identifiers:{office_id:row.ocdId},matchBasis:"OFFICIAL_ID" as const,ambiguous:false,...(row.officeTitle ? {office:row.officeTitle} : {})}))],
@@ -237,11 +246,19 @@ export async function publishPeopleSource(input: PublishPeopleSourceInput) {
   const violations = await peopleSourceViolations({state:input.state,sourceId:input.sourceId,roster,captures,read:input.acquisitions,vault:input.vault,verifyNationalCurrent:!national});
   if (national && !roster.officeholders.length) violations.push("NATIONAL_OFFICIAL_NONE_VERIFIED");
   roster = await publishRosterOfficePoints(roster, held, input.resolveOfficePoint);
-  const candidate = peopleSourceCandidate({...input,roster,captures,violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
+  const sourceRawHash = input.sourceProbe
+    ? sourceContentHash(input.acquisitions,{normalizationInputHash:input.sourceProbe.normalizationInputHash})
+    : peopleSourceContentHash(input.acquisitions,input.roster);
+  const built = peopleSourceCandidate({...input,roster:bindPeopleSourceHashes(roster,captures),captures,sourceRawHash,
+    violations,changes:rosterChanges(held,roster),excludedFacts:[...(input.excludedFacts ?? []),...nationalExcluded,...comparisonFacts]});
+  let candidate:RoutineCandidate={...built,retrieval:{...built.retrieval,complete:input.sourceProbe?.complete ?? !input.gaps?.length}};
+  if(input.sourceContentInputs)candidate=withDerivedSourceContent(candidate,input.sourceContentInputs);
   const state = input.state.replace(/^US-/i, "").toLowerCase();
   const contractId = input.contractId ?? (input.sourceId === "people-portraits"
     ? `people-portraits-${state}`
     : `people-${input.sourceId}-${state}`);
   const outcome = await processRegisteredRoutineCandidate(input.store,contractId,candidate,input.now,base.versionId,{confirmUnchanged:input.confirmUnchanged});
+  if(outcome.promoted){const head=await input.store.readSourceHead(candidate.recordClass,candidate.scope);
+    if(head?.versionId===outcome.promoted.versionId)await recordPeopleSourceChecks({store:input.store,head,pages:input.acquisitions});}
   return {candidate,outcome};
 }

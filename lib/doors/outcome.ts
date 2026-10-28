@@ -9,6 +9,7 @@ import { observeChange } from "./observed-rate.ts";
 import { feedDoorId, isDoorRecord, type DoorRepository } from "./registry.ts";
 import { doorPartitionIds } from "./mission-refresh.ts";
 import { meetingPartitionIdentity } from "../meetings/body-scope.ts";
+import type { SourceChangeHistory } from "../civic-data/source-change-cadence.ts";
 
 export type DoorOutcome = "SUCCESS" | "FAILURE";
 
@@ -30,16 +31,20 @@ export async function taskDoorId(repo: DoorRepository, taskId: string): Promise<
 /** Returns true when the record was written; false when there is no such door (nothing is invented). */
 export async function recordDoorOutcome(
   repo: DoorRepository, doorId: string, outcome: DoorOutcome, at: string,
-  /** The read promoted something different from the version before it. */
+  /** A page read proved different source bytes. Routine source tasks pass their actual raw-hash history below. */
   changed = false,
   failureReason?: string,
+  sourceHistory?: SourceChangeHistory,
 ): Promise<boolean> {
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const row = await repo.read(doorId);
     if (row === null || !isDoorRecord(row.value)) return false;
     const door = row.value;
     const next = outcome === "SUCCESS"
-      ? { ...door, lastSuccessAt: at, lastFailureReason: null, ...(changed ? observeChange(door, at) : {}) }
+      ? { ...door, lastSuccessAt: at, lastFailureReason: null, ...(sourceHistory ? {
+        lastChangedAt: sourceHistory.lastChangedAt, observedChanges: sourceHistory.changes,
+        observedChangeMinutes: sourceHistory.meanChangeMs === null ? null : sourceHistory.meanChangeMs / 60_000,
+      } : changed ? observeChange(door, at) : {}) }
       : { ...door, lastFailureAt: at, ...(failureReason ? { lastFailureReason: failureReason } : {}) };
     try {
       await repo.compareAndSet(doorId, row.revision, { ...next, updatedAt: door.updatedAt }, at);

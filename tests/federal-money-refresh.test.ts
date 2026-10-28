@@ -22,6 +22,8 @@ import { FEDERAL_MONEY_STATES } from "../lib/federal-money/sources.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { recordFederalMoneyDoorRead } from "../lib/federal-money/doors.ts";
 import { feedDoorId } from "../lib/doors/registry.ts";
+import { readFederalMoneyProgress } from "../lib/federal-money/progress.ts";
+import { federalMoneySourceHash, federalMoneySourceKey } from "../lib/federal-money/source-hash.ts";
 
 const now = "2026-10-12T23:45:00.000Z";
 beforeEach(context => { if ("mock" in context) context.mock.method(Date, "now", () => Date.parse("2026-10-13T03:00:00.000Z")); });
@@ -35,6 +37,71 @@ const identities: FederalMoneyJoinInput = { divisions: [{ ocdId: county, geoid: 
 const fullPage: FederalMoneyPage = { facts: native, captures: [capture], complete: true, declaredTotal: 1 };
 const leafScope = federalMoneyPartitionScope("openfema", "AR", federalMoneyPartitionOf(native[0]));
 const acquireOptions = { evidenceStore };
+
+test("federal source resumes its exact saved cursor without reading its held record, candidate, or events", async () => {
+  const store=new MemoryRoutineDataStore();
+  const projection:FederalMoneyCheckpoint={formatVersion:2,source:"usaspending",state:"AZ",counts:{loaded:7,joined:5,unjoined:2},
+    checkpoint:{complete:false,cursor:{source:"usaspending",phase:"download",year:2020,chunkIndex:4},lastCompleteAt:null,refreshStartedAt:now}};
+  const candidate=federalMoneyCandidate({projection,page:{facts:[],captures:[],complete:false,declaredTotal:null},now});
+  const published=await processRegisteredFanOutCandidate(store,"usaspending",candidate,now,null);
+  assert.ok(published.promoted);
+  Object.assign(store,{readPromotion:()=>{throw new Error("whole held progress read");},
+    readCandidate:()=>{throw new Error("whole held candidate read");},events:()=>{throw new Error("held event history read");}});
+  const actual=await readFederalMoneyProgress(store,"usaspending","AZ");
+  assert.equal(actual?.versionId,published.promoted.versionId);
+  assert.deepEqual(actual?.counts,projection.counts);
+  assert.deepEqual(actual?.checkpoint,projection.checkpoint);
+});
+
+test("an unchanged federal provider page checks hashes before recipient, location and held partition reads", async () => {
+  const store=new MemoryRoutineDataStore();let reads=0,clock=now;
+  const input={source:"openfema" as const,store,states:["AR"],acquireOptions,maxRounds:1,
+    acquire:async()=>fullPage,now:()=>clock,identityHash:async()=>"a".repeat(64),
+    identities:async()=>{reads++;return identities;}};
+  const first=await refreshFederalMoney(input);assert.ok(first.outcome.promoted);assert.equal(reads,1);
+  const leaf=await store.readPromotion("FEDERAL_MONEY",leafScope);assert.ok(leaf);
+  const readPromotion=store.readPromotion.bind(store),readCandidate=store.readCandidate.bind(store);
+  Object.assign(store,{readPromotion:async(...args:Parameters<MemoryRoutineDataStore["readPromotion"]>)=>{
+    assert.notEqual(args[1],leafScope,"same native bytes never reread the held geography partition");return readPromotion(...args);},
+    readCandidate:async(id:string)=>{assert.notEqual(id,leaf.versionId);return readCandidate(id);}});
+  clock="2026-10-13T00:30:00.000Z";
+  const repeated=await refreshFederalMoney({...input,identities:async()=>{assert.fail("unchanged source read recipient facts");},
+    locate:async()=>{assert.fail("unchanged source read prior locations");},onPartition:async()=>{assert.fail("unchanged source rebuilt its published partition");}});
+  assert.deepEqual(repeated.projection.counts,first.projection.counts);
+  assert.equal(reads,1);
+  Object.assign(store,{readPromotion,readCandidate});
+  clock="2026-10-13T01:15:00.000Z";
+  await refreshFederalMoney({...input,identityHash:async()=>"b".repeat(64)});
+  assert.equal(reads,2,"changed native recipient dependencies rerun the joins even against identical provider bytes");
+  assert.equal(federalMoneySourceHash("openfema","AR",fullPage),federalMoneySourceHash("openfema","AR",{
+    ...fullPage,captures:fullPage.captures.map(capture=>({...capture,retrievedAt:clock}))}));
+  assert.equal(federalMoneySourceKey("openfema","AR",{source:"openfema",phase:"declarations",offset:20,since:now}),
+    federalMoneySourceKey("openfema","AR",{source:"openfema",phase:"declarations",offset:20,since:clock}));
+  assert.notEqual(federalMoneySourceKey("openfema","AR",{source:"openfema",phase:"declarations",offset:20}),
+    federalMoneySourceKey("openfema","AR",{source:"openfema",phase:"declarations",offset:40}));
+});
+
+test("national federal raw_hash follows applied provider bytes rather than empty captures or observation clocks",async()=>{
+  const store=new MemoryRoutineDataStore();let clock=now,page=fullPage;
+  const input={source:"openfema" as const,store,states:["AR"],acquireOptions,maxRounds:1,
+    identities:async()=>identities,identityHash:async()=>"a".repeat(64),acquire:async()=>page,now:()=>clock};
+  const first=await refreshFederalMoney(input);assert.ok(first.candidate);
+  assert.equal(first.candidate.retrieval.rawHashBasis,"SOURCE_CONTENT_V1");
+  assert.equal(first.candidate.retrieval.complete,true);
+  assert.match(first.projection.sourceHashes?.AR??"",/^[a-f0-9]{64}$/);
+  clock="2026-10-13T00:30:00.000Z";
+  const repeated=await refreshFederalMoney(input);
+  assert.equal(repeated.candidate?.retrieval.rawHash,first.candidate.retrieval.rawHash);
+  clock="2026-10-13T01:15:00.000Z";
+  const changedBody=JSON.parse(sourceBody);changedBody.DisasterDeclarationsSummaries[0].declarationTitle="Changed source declaration";
+  const body=JSON.stringify(changedBody);
+  assert.notEqual(body,sourceBody);
+  const changed=await saveFederalMoneyCapture({url:capture.url,body,retrievedAt:clock,publicationDate:null},evidenceStore);
+  page={...fullPage,facts:parseFederalMoney("openfema",changed,"AR",body),captures:[changed]};
+  const next=await refreshFederalMoney(input);
+  assert.deepEqual(next.projection.counts,first.projection.counts);
+  assert.notEqual(next.candidate?.retrieval.rawHash,first.candidate.retrieval.rawHash,"same row counts cannot hide changed source facts");
+});
 
 test("the scheduled source job rejoins held facts with saved evidence and resumes its historical acquisition cursor", async t => {
   const directory = mkdtempSync(join(tmpdir(), "federal-rejoin-held-"));

@@ -10,17 +10,24 @@ export interface RawCaptureRef {
 
 const sha256 = (bytes: Uint8Array) => createHash("sha256").update(bytes).digest("hex");
 
+export const rawCaptureKey = (rawHash: string) => `project/freshness/raw/sha256/${rawHash}`;
+
 /** Stored once per content hash; a second holder of the same bytes only checks it is there. */
-export async function holdRawCapture(vault: EvidenceStore, sourceId: string, body: Uint8Array | string, contentType: string): Promise<RawCaptureRef> {
+export async function holdRawCapture(vault: EvidenceStore, _sourceId: string, body: Uint8Array | string, _contentType: string): Promise<RawCaptureRef> {
   const bytes = typeof body === "string" ? new TextEncoder().encode(body) : body, rawHash = sha256(bytes);
-  const vaultKey = `project/freshness/source/${sourceId}/raw/${rawHash}`;
-  if (!await vault.head(vaultKey)) {
-    await vault.put(vaultKey, bytes, { contentType, contentHash: `sha256-${rawHash}`, byteLength: bytes.byteLength, objectClass: "IMMUTABLE_BODY" });
+  const vaultKey = rawCaptureKey(rawHash);
+  const existing = await vault.head(vaultKey);
+  if (existing && (existing.contentHash !== `sha256-${rawHash}` || existing.byteLength !== bytes.byteLength)) {
+    throw Error(`RAW_CAPTURE_MISSING_OR_CORRUPT:${vaultKey}`);
+  }
+  if (!existing) {
+    // Route, publisher, MIME and observation time belong on the holder. Identical bytes share one object across sources.
+    await vault.put(vaultKey, bytes, { contentType: "application/octet-stream", contentHash: `sha256-${rawHash}`, byteLength: bytes.byteLength, objectClass: "IMMUTABLE_BODY" });
   }
   return { vaultKey, rawHash, byteLength: bytes.byteLength };
 }
 
-async function readRawCapture(vault: EvidenceStore, ref: RawCaptureRef): Promise<Uint8Array> {
+export async function readRawCapture(vault: EvidenceStore, ref: RawCaptureRef): Promise<Uint8Array> {
   const object = await vault.get(ref.vaultKey);
   if (!object || object.bytes.byteLength !== ref.byteLength || sha256(object.bytes) !== ref.rawHash) {
     throw Error(`RAW_CAPTURE_MISSING_OR_CORRUPT:${ref.vaultKey}`);

@@ -7,7 +7,7 @@ import { statePeopleSourcePointers } from "../lib/officials/people-identity.ts";
 import { toSeatHolder } from "../lib/officials/lookup.ts";
 import type { Officeholder } from "../lib/officials/types.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
-import { billPartScope, billScope, LEGISCAN_BULK_SCOPE, type BillPart, type BillSession } from "../lib/sources/legiscan/bills.ts";
+import { billPartScope, billScope, LEGISCAN_BULK_SCOPE, type BillPart, type BillSession, type Dataset } from "../lib/sources/legiscan/bills.ts";
 import { readBillsForState } from "../lib/sources/legiscan/reader.ts";
 import { readNativeMemberVotes, type NativeMemberVoteReaders } from "../lib/state-rollcalls/reader-votes.ts";
 import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
@@ -59,11 +59,26 @@ test("native bill requests keep the full-holder answer and legacy alias without 
     assert.ok(Array.isArray(keys), "no geography/state-package query is allowed");
     assert.ok(keys.every(key => typeof key === "string" && allowed.has(key)), "only people and bill authorities are read");
     selected.push(keys);
-    return entries.filter(entry => keys.includes(entry.projection.key)).map(entry => ({ row_kind: "promotion", key: entry.projection.key,
-      record_class: entry.projection.recordClass, scope: entry.projection.scope, source_id: entry.projection.sourceId,
-      current_version_id: entry.projection.versionId, last_known_good_version_id: entry.projection.versionId,
-      promoted_at: entry.projection.promotedAt, validation_receipt: entry.projection.receipt, payload: entry.projection.payload,
-      normalized_hash: entry.attested.payloadSha256, retrieved_at: entry.attested.retrievedAt, published: true }));
+    return entries.filter(entry => keys.includes(entry.projection.key)).map(entry => {
+      const row={ row_kind: "promotion", key: entry.projection.key,
+        record_class: entry.projection.recordClass, scope: entry.projection.scope, source_id: entry.projection.sourceId,
+        current_version_id: entry.projection.versionId, last_known_good_version_id: entry.projection.versionId,
+        promoted_at: entry.projection.promotedAt, validation_receipt: entry.projection.receipt, payload: entry.projection.payload,
+        normalized_hash: entry.attested.payloadSha256, retrieved_at: entry.attested.retrievedAt, published: true };
+      if(statement.text.includes("AS source_nonempty")){
+        const index=entry.projection.payload as {datasets:Dataset[]};
+        return {...row,source_nonempty:index.datasets.length>0,payload:{...index,datasets:statement.params[2]?[]:index.datasets.filter(dataset=>dataset.state_id===statement.params[1])}};
+      }
+      if(statement.text.includes("AS full_rows") || statement.text.includes("AS bills")){
+        assert.equal(entry.projection.key,heldPart.projection.key);
+        const {bills,sponsors,...header}=part;
+        const dictionary=sponsors.map((value,index)=>({index,value}));
+        if(statement.text.includes("AS full_rows"))return {...row,payload:header,full_rows:bills.length,sponsors:dictionary};
+        assert.deepEqual(JSON.parse(String(statement.params[1])),[{scope,version:heldPart.projection.versionId,indices:[0]}]);
+        return {...row,payload:header,bills,sponsors:dictionary};
+      }
+      return row;
+    });
   }));
   try {
     for (const member of [person.id, "az-legislature:old-id"]) {

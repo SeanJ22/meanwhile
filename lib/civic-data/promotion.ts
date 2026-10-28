@@ -1,7 +1,7 @@
 import { rememberStatePublicationHashes, withStateRecordHashes } from "./state-publication.ts";
 import { processRoutineCandidate } from "./candidate-lifecycle.ts";
 import type { CandidateVersionRecord, PromotedPointerIdentity, PromotedProjection, RoutineCandidate } from "./types.ts";
-import { PostgresRoutineDataStore, promotedPointerIdentity, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
+import { PostgresRoutineDataStore, promotedPointerIdentity, routineEventObservedAt, assertPublicationBaseOwner, type RoutineDataStore, type RoutinePublicationBase } from "./store.ts";
 import { canonicalCivicDataJson, heldCivicRecords } from "./changes.ts";
 import { validateRoutineCandidate } from "./validate.ts";
 import type { NavigationComparison } from "./navigation-successor.ts";
@@ -17,7 +17,7 @@ import {
   type ManualProductionSourceContract,
 } from "./manual-contracts.ts";
 import type { ReaderProjectionReadbackReceipt } from "./reader-readback.ts";
-import { recordRoutineReaderProjectionReadback, repairRoutineReaderProjectionReadback } from "./reader-verification.ts";
+import { recordRoutineReaderProjectionReadback } from "./reader-verification.ts";
 import { trustedLkgImportUrl } from "./trusted-lkg-import.ts";
 import { assertRegisteredRuntimeContract } from "./runtime-authority.ts";
 import { assertMeetingPartitionAuthority } from "./state-calendars.ts";
@@ -28,6 +28,7 @@ import { isScopedManualContractScope, manualPayloadScope } from "./scoped-manual
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import { freezeDurableJson } from "./durable-json.ts";
 import { immutableStateCandidate, largePayloadScope, statePublicationScope } from "./state-publication.ts";
+import type { SourceHashConfirmation } from "./source-hash.ts";
 
 /** Only the exact registered contract doors in this module possess this token. */
 const REGISTERED_PRODUCTION_DOOR = Symbol("REGISTERED_PRODUCTION_DOOR");
@@ -138,7 +139,7 @@ export async function processRegisteredRoutineCandidate(
   expectedBaseVersionId: string | null | undefined = undefined,
   // Rechecks keep the held version by default. Explicit false is reserved for
   // callers that need a distinct candidate even when its facts are unchanged.
-  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore; readonly inputDigest?: string; readonly publicationBase?: RoutinePublicationBase } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
@@ -188,6 +189,27 @@ export async function processRegisteredRoutineCandidate(
   );
 }
 
+/** River's repeated-input shortcut also covers a deterministic partial source pass.
+ * Reuse its original retrieval: checking a partial input again cannot refresh facts it did not read. */
+export async function confirmRepeatedRoutineInputs(store: RoutineDataStore, contractId: string, inputDigest: string,
+  now: string): Promise<SourceHashConfirmation | null> {
+  if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
+  if (!store.confirmUnchanged) return null;
+  const contract = requiredRoutineContract(contractId), task = routineTaskFromContract(contract);
+  const pointer = await store.readPromotionIdentity(contract.recordClass, contract.scope), held = pointer?.latestConfirmation;
+  if (!pointer || !held || held.inputDigest !== inputDigest || held.versionId !== pointer.versionId ||
+    pointer.lastKnownGoodVersionId !== pointer.versionId || pointer.sourceId !== contract.sourceId ||
+    held.sourceId !== contract.sourceId || held.parserVersion !== task.parserVersion) return null;
+  const head = await store.readSourceHead(contract.recordClass, contract.scope);
+  if (!head || head.versionId !== pointer.versionId || head.candidateState !== "PROMOTED" || !head.acquisitionSucceeded ||
+    head.imported || head.normalizedHash !== held.readModelHash || head.parserVersion !== held.parserVersion) return null;
+  const at = await routineEventObservedAt(store, contract.recordClass, contract.scope, now);
+  const result = await store.confirmUnchanged({sourceId: held.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+    parserVersion: held.parserVersion, pointerVersionId: head.versionId, readModelHash: held.readModelHash, basis: held.basis,
+    retrieval: held.retrieval, stamps: held.stamps, inputDigest}, at);
+  return result.kind === "CONFIRMED" ? {head, at: result.at} : null;
+}
+
 /** A fan-out contract owns a scope family: its per-state marker plus one candidate per `<sourceId>:<officeholderId>`. */
 function routineCandidateFanOutContractIssue(
   contract: RoutineSourceContract,
@@ -214,6 +236,8 @@ export async function processRegisteredFanOutCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
+  // A new source/progress envelope must be persisted even when its civic facts match the current version.
+  options: { readonly confirmUnchanged?: boolean; readonly inputDigest?: string; readonly publicationBase?: RoutinePublicationBase } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "routine");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
@@ -225,13 +249,14 @@ export async function processRegisteredFanOutCandidate(
   }
   const issue = routineCandidateFanOutContractIssue(contract, boundedCandidate);
   if (issue !== null) throw new Error(`FANOUT_CANDIDATE_CONTRACT_MISMATCH:${contractId}:${issue}`);
-  const federalPrior = boundedCandidate.recordClass === "FEDERAL_MONEY"
-    ? await store.readPromotion(boundedCandidate.recordClass, boundedCandidate.scope) : null;
+  const publicationBase=options.publicationBase??(boundedCandidate.recordClass === "FEDERAL_MONEY"
+    ? await (store.readPublicationBase?.(boundedCandidate.recordClass,boundedCandidate.scope)??Promise.reject(new Error("FEDERAL_PUBLICATION_BASE_READER_REQUIRED"))) : undefined);
+  if(publicationBase)assertPublicationBaseOwner(store,publicationBase,boundedCandidate.recordClass,boundedCandidate.scope);
   const sourceProjectionVerification = await verifySourceScopedCandidateProjection(
     contract,
     boundedCandidate,
     sourceProjectionObservedAt(store, now),
-    federalPrior ? await store.readCandidate(federalPrior.versionId) : null,
+    publicationBase?.lkg??null,
     store,
   );
   return appendTypedReaderProjectionReadback(
@@ -244,6 +269,7 @@ export async function processRegisteredFanOutCandidate(
       expectedBaseVersionId,
       REGISTERED_PRODUCTION_DOOR,
       sourceProjectionVerification,
+      {...options,...(publicationBase?{publicationBase}:{})},
     ),
     now,
   );
@@ -287,8 +313,8 @@ export async function processRegisteredMeetingPartitionCandidate(
   );
   if (outcome.promoted === null) return outcome;
   try {
-    const readback = await repairRoutineReaderProjectionReadback(store, contract, now);
-    return { ...outcome, readerReadback: readback.receipt };
+    const readback = await recordRoutineReaderProjectionReadback(store, contract, outcome.promoted, now);
+    return { ...outcome, readerReadback: readback };
   } catch {
     // The pointer is already live. Observation failure must not undo or hold publication.
     // The hourly keeper sees the missing stamp and queues its repair after 90 minutes.

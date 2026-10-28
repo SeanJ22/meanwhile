@@ -2,6 +2,7 @@ import { normalizedHash, sha256 } from "../civic-data/candidate-builders.ts";
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import type { BuiltDataset } from "./dataset.ts";
+import { censusProbeHash, censusProbeRetrieval, type CensusSourceProbe } from "./source-probe.ts";
 import {
   CENSUS_GEO_PARSER_VERSION,
   CENSUS_GEO_RECORD_CLASS,
@@ -11,14 +12,14 @@ import {
   CENSUS_GEO_SOURCE_ROUTE,
 } from "./publication.ts";
 
-export function censusGeographyCandidate(dataset: BuiltDataset, scope: string = CENSUS_GEO_SCOPE): RoutineCandidate {
+export function censusGeographyCandidate(dataset: BuiltDataset, scope: string = CENSUS_GEO_SCOPE, sourceProbe?: CensusSourceProbe): RoutineCandidate {
   const edges = dataset.scopes.reduce((n, s) => n + s.zctaEdgeCount, 0);
   const groupings = dataset.scopes.reduce((n, s) => n + s.instanceCount, 0);
 
   // rawHash is derived from the exact Census file checksums the build read, so
   // an identical acquisition yields an identical candidate id (idempotent).
   const checksums = dataset.scopes.flatMap((s) => s.versionMeta.provenance.sourceChecksums).sort();
-  const rawHash = sha256(checksums.length > 0 ? checksums.join("\n") : normalizedHash(dataset));
+  const rawHash = sourceProbe ? censusProbeHash(sourceProbe) : sha256(checksums.length > 0 ? checksums.join("\n") : normalizedHash(dataset));
   const retrievedAt = dataset.builtAt;
   const version = dataset.scopes.map((s) => s.version).sort().join("+") || "empty";
 
@@ -45,6 +46,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset, scope: string = 
   const readModelHash = canonicalCivicDataHash(dataset);
   // A compact descriptor bound to the read model by its hash, never a second copy: the promotion response has a size cap.
   const normalizedPayload = {
+    ...(sourceProbe ? { sourceProbe } : {}),
     formatVersion: dataset.formatVersion,
     builtAt: dataset.builtAt,
     readModelHash,
@@ -72,6 +74,7 @@ export function censusGeographyCandidate(dataset: BuiltDataset, scope: string = 
       httpStatus: 200,
       retrievedAt,
       rawHash,
+      ...(sourceProbe ? { sourceCheck: censusProbeRetrieval(sourceProbe).sourceCheck, rawHashBasis: "SOURCE_CONTENT_V1" as const, complete: sourceProbe.complete } : {}),
     },
     normalization: {
       succeeded: true,

@@ -15,11 +15,11 @@ test("candidate fields cross Postgres inline or through just their own payload p
     if (originalReport === undefined) delete process.env.WTP_VITAL_SIGNS_REPORT; else process.env.WTP_VITAL_SIGNS_REPORT = originalReport;
     await pg.close();
   });
-  await pg.exec("CREATE TABLE civic_data_candidates(id text PRIMARY KEY,candidate jsonb); CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)");
+  await pg.exec("CREATE TABLE civic_data_candidates(id text PRIMARY KEY,candidate jsonb,raw_hash text,normalized_hash text,parser_version text,state text,acquisition_succeeded boolean,validation_receipt jsonb,promoted_version_id text,last_known_good_version_id text,failure_code text,failure_detail text); CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)");
   const captures = [{ requestedUrl: "https://publisher.example/old-release", rawHash: "old-capture" }];
   const ref = (hash: string) => ({ $civicPayloadPart: hash.repeat(64) });
   const unused = "unrelated_roster_must_not_cross_the_wire";
-  await pg.query("INSERT INTO civic_data_candidates VALUES('inline',$1),('partitioned',$2),('newer',$3)", [
+  await pg.query("INSERT INTO civic_data_candidates(id,candidate) VALUES('inline',$1),('partitioned',$2),('newer',$3)", [
     { normalizedPayload: { captures, roster: unused.repeat(10_000) }, readModel: unused.repeat(10_000) }, ref("a"),
     { normalizedPayload: { captures: [{ rawHash: "new-capture" }] } },
   ]);
@@ -54,11 +54,11 @@ test("candidate fields cross Postgres inline or through just their own payload p
   statements.length = 0;
   assert.deepEqual(await new PostgresRoutineDataStore().readCandidatePath("inline", ["normalizedPayload", "captures"]), captures);
   assert.ok(statements.every(query => !query.includes("candidate_path")), "a new store confirms the row version without fetching held fields");
-  assert.ok(statements.some(query => query.includes("xmin")), "the held value is never used without asking PostgreSQL");
+  assert.ok(statements.some(query => query.includes("content-v1/")), "the held value is never used without asking PostgreSQL");
   const changed = [{ requestedUrl: "https://publisher.example/changed", rawHash: "changed-capture" }];
-  await pg.query("UPDATE civic_data_candidates SET candidate=jsonb_set(candidate,'{normalizedPayload,captures}',$1::jsonb) WHERE id='inline'", [changed]);
+  await pg.query("UPDATE civic_data_candidates SET raw_hash='changed-capture',candidate=jsonb_set(candidate,'{normalizedPayload,captures}',$1::jsonb) WHERE id='inline'", [changed]);
   assert.deepEqual(await store.readCandidatePath("inline", ["normalizedPayload", "captures"]), changed,
-    "the very next read sees a body change even when the application id and timestamps do not change");
+    "the very next read sees a capture fingerprint change even when the application id and timestamps do not change");
   assert.ok(bodies.some(body => body.includes("changed-capture")));
   await pg.exec("DELETE FROM civic_data_candidates WHERE id='inline'");
   assert.equal(await store.readCandidatePath("inline", ["normalizedPayload", "captures"]), null);

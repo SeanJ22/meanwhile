@@ -5,6 +5,7 @@ import * as schema from "../lib/db/schema.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
+import { factRefreshBounds } from "../lib/civic-data/source-change-cadence.ts";
 import { MemoryRoutineDataStore, routineClockPointerRead } from "../lib/civic-data/store.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
 import { federalMoneyCandidate, type FederalMoneyNationalProjection } from "../lib/federal-money/candidate.ts";
@@ -28,8 +29,9 @@ test("verified partial national acquisition resumes on the next admission while 
     const complete = { lastAttemptedAt: AT, lastSucceededObservedAt: AT, continuationPending: false };
     assert.equal(routineTaskDue(sourceTask, complete, Date.parse(AT) + 5 * 60_000), false, source);
     assert.equal(routineTaskDue(sourceTask, { ...complete, continuationPending: true }, Date.parse(AT) + 5 * 60_000), true, source);
-    assert.equal(routineTaskDue(sourceTask, complete, Date.parse(AT) + sourceTask.cadenceMs - 1), false, source);
-    assert.equal(routineTaskDue(sourceTask, complete, Date.parse(AT) + sourceTask.cadenceMs), true, source);
+    const everyMs = Math.max(sourceTask.cadenceMs, factRefreshBounds(sourceTask).minimumRefreshMs);
+    assert.equal(routineTaskDue(sourceTask, complete, Date.parse(AT) + everyMs - 1), false, source);
+    assert.equal(routineTaskDue(sourceTask, complete, Date.parse(AT) + everyMs), true, source);
   }
   const pending = { lastAttemptedAt: AT, lastSucceededObservedAt: AT, continuationPending: true };
   assert.equal(routineTaskDue({ ...task, scope: "openfema:AR" }, pending, Date.parse(AT) + 1), false, "state pointers never own source admission");
@@ -54,8 +56,9 @@ test("the persisted pending marker survives a real failed attempt, whose retry c
   assert.equal(failed.continuationPending, true, "the previous verified progress remains held");
   assert.equal(failed.lastSucceededObservedAt, AT);
   assert.equal(failed.lastAttemptedAt, FAILED_AT);
-  assert.equal(routineTaskDue(task, failed, Date.parse(FAILED_AT) + task.retryMs - 1), false);
-  assert.equal(routineTaskDue(task, failed, Date.parse(FAILED_AT) + task.retryMs), true);
+  const retryMs = Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+  assert.equal(routineTaskDue(task, failed, Date.parse(FAILED_AT) + retryMs - 1), false);
+  assert.equal(routineTaskDue(task, failed, Date.parse(FAILED_AT) + retryMs), true);
   const complete = federalMoneyCandidate({ projection: marker(true),
     page: { facts: [], captures: [], complete: true, declaredTotal: null }, now: COMPLETE_AT });
   const final = await processRegisteredRoutineCandidate(store, "openfema", complete, COMPLETE_AT);
@@ -72,5 +75,6 @@ test("Postgres computes only the marker's continuation flag inside the normal ba
   assert.match(query, /'BACKFILL'/);
   assert.match(query, /'cursor'/);
   assert.doesNotMatch(query, /"payload"\s*,/, "the complete marker payload never leaves Postgres for admission");
-  assert.doesNotMatch(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported").toSQL().sql, /jsonb_array_elements/);
+  assert.doesNotMatch(routineClockPointerRead(drizzle.mock({ schema }), "FEC_FUNDING", "federal-supported").toSQL().sql,
+    /'states'|'BACKFILL'|'cursor'/, "unrelated admissions do not inspect the federal continuation marker");
 });

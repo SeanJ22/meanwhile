@@ -12,6 +12,8 @@ import {
 } from "./artifact.ts";
 import { contentHash } from "../ids.ts";
 import { issueParserInput, type ParserInput } from "./parser-boundary.ts";
+import { holdRawCapture } from "../../civic-data/raw-capture-vault.ts";
+import { rawCaptureMetadata, rawCapturePointer, readEvidenceObject, resolveRawCapturePointer } from "./raw-pointer.ts";
 
 /** ------------------------------------------------------ the provider */
 
@@ -311,14 +313,14 @@ async function requireDocumentOriginal(store: EvidenceStore, project: string, ar
     !supportedDocumentExtraction(extraction)) {
     throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_PROVENANCE_INVALID");
   }
-  const parent = await store.get(objectKey(project, extraction.parent));
+  const parent = await readEvidenceObject(store, objectKey(project, extraction.parent));
   if (!parent || contentHash(parent.bytes) !== extraction.parent.contentHash || parent.meta.custom?.tier !== extraction.parent.tier ||
     parent.meta.custom?.canonicalUrl !== artifact.canonicalUrl || parent.meta.custom?.sourceId !== artifact.sourceId ||
     parent.meta.custom?.workItemId !== artifact.workItemId) throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_ORIGINAL_MISSING");
   if (extraction.parent.tier === "SANITIZED_DERIVED") {
     const raw: Artifact = { ...extraction.parent, id: original.artifactId, contentHash: original.contentHash,
       tier: original.artifactId === artifactId("RESTRICTED_RAW", original.contentHash) ? "RESTRICTED_RAW" : "RAW", derivation: undefined };
-    const native = await store.get(objectKey(project, raw));
+    const native = await readEvidenceObject(store, objectKey(project, raw));
     if (!native || contentHash(native.bytes) !== raw.contentHash || native.meta.custom?.tier !== raw.tier ||
         native.meta.custom?.canonicalUrl !== artifact.canonicalUrl || native.meta.custom?.sourceId !== artifact.sourceId ||
         native.meta.custom?.workItemId !== artifact.workItemId) throw new EvidenceStoreRefusal("DOCUMENT_EXTRACTION_ORIGINAL_MISSING");
@@ -363,7 +365,7 @@ export async function putArtifact(
   }
 
   const meta = artifactMeta(artifact);
-  const existing = await store.get(key);
+  const existing = await readEvidenceObject(store, key);
   if (existing) {
     const conflict = objectIncompatibility(existing.meta, meta);
     if (conflict) throw immutabilityRefusal(key, conflict);
@@ -373,7 +375,11 @@ export async function putArtifact(
     return { key, written: false };
   }
 
-  await store.put(key, bytes, meta);
+  if (artifact.tier === "RAW") {
+    const ref = await holdRawCapture(store, artifact.sourceId, bytes, artifact.contentType);
+    const pointer = rawCapturePointer(ref, meta);
+    await store.put(key, pointer.bytes, pointer.meta);
+  } else await store.put(key, bytes, meta);
   return { key, written: true };
 }
 
@@ -432,7 +438,7 @@ export async function readArtifact(
   }
 
   const key = objectKey(project, target);
-  const object = await store.get(key);
+  const object = await readEvidenceObject(store, key);
   if (!object) {
     throw new EvidenceStoreRefusal(
       `Artifact ${target.id} is recorded at ${key} and the store does not hold it. ` +
@@ -491,11 +497,12 @@ export class MemoryEvidenceStore implements EvidenceStore {
 
   async get(key: string): Promise<StoredObject | null> {
     const found = this.objects.get(key);
-    return found ? { key, bytes: Uint8Array.from(found.bytes), meta: found.meta } : null;
+    return resolveRawCapturePointer(this, found ? { key, bytes: Uint8Array.from(found.bytes), meta: found.meta } : null);
   }
 
   async head(key: string): Promise<ObjectMeta | null> {
-    return this.objects.get(key)?.meta ?? null;
+    const meta = this.objects.get(key)?.meta;
+    return meta ? rawCaptureMetadata(meta) : null;
   }
 
   async list(prefix: string): Promise<string[]> {

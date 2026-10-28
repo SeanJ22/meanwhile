@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
-import type { PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
-import { readPrlArchiveProjection, type PrlArchiveProjection } from "./archive-publication.ts";
+import { PRL_ARCHIVE_SCOPE, readPrlArchiveProjection, type PrlArchiveProjection } from "./archive-publication.ts";
+import { readKeyedPrlPerson, type PrlPersonProjection } from "./keyed-reader.ts";
+import { localPrlSnapshot, prlPersonQuery, type PrlPersonReadOptions } from "./reader-input.ts";
 import { resolveS3ArchiveStore, type PrlArchiveStore } from "./archive-store.ts";
 import { requiredPrlDataset } from "./inventory.ts";
 import { isVisibleAsOf } from "./future-date.ts";
@@ -30,7 +31,7 @@ const sourceUrl = (value: unknown) => {
 };
 
 /** Native person lookup only. A request never lists a bucket or opens a national source. */
-export async function readPrlPerson(keys: PrlPersonKeys, options: Omit<PromotedCivicDataReadOptions, "now"> & {
+export async function readPrlPerson(keys: PrlPersonKeys, options: Omit<PrlPersonReadOptions, "now"> & {
   archive?: PrlArchiveStore; projection?: PrlArchiveProjection; now?: number;
 } = {}): Promise<PrlPersonRead> {
   const out: PrlPersonRead = { statements: [], summaries: [], gaps: [] };
@@ -38,11 +39,18 @@ export async function readPrlPerson(keys: PrlPersonKeys, options: Omit<PromotedC
   const statePerson = keys.openstatesId && /^ocd-person\/[0-9a-f-]{36}$/.test(keys.openstatesId) ? keys.openstatesId : null;
   const candidate = keys.candidateId && /^[HSP][A-Z0-9]{8}$/.test(keys.candidateId) ? keys.candidateId : null;
   if (!bioguide && !statePerson && !candidate) return out;
-  let projection = options.projection;
+  let projection: PrlPersonProjection | undefined = options.projection;
   if (!projection) {
-    const held = await readPrlArchiveProjection({ ...options, now: options.now === undefined ? undefined : new Date(options.now).toISOString() });
-    if (held.kind !== "PROMOTED") return { ...out, gaps: ["We are still acquiring archived statements for this person."] };
-    projection = held.value;
+    const readOptions = { ...options, now: options.now === undefined ? undefined : new Date(options.now).toISOString() };
+    const local = await localPrlSnapshot("PRL_ARCHIVE", PRL_ARCHIVE_SCOPE, readOptions);
+    if (local) {
+      const held = await readPrlArchiveProjection(local);
+      if (held.kind === "PROMOTED") projection = held.value;
+    } else {
+      const query = prlPersonQuery(readOptions);
+      if (query) projection = await readKeyedPrlPerson(query, { bioguideId: bioguide, openstatesId: statePerson, candidateId: candidate }) ?? undefined;
+    }
+    if (!projection) return { ...out, gaps: ["We are still acquiring archived statements for this person."] };
   }
   for (const [datasetId, kind, native, field] of [
     ["profiles-state", "state", statePerson, "openstatesId"],

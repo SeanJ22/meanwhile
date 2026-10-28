@@ -7,6 +7,7 @@ import test from "node:test";
 import { posixRelative } from "../scripts/repo-path.mjs";
 
 import { hashLimiterKey } from "../lib/db/intake-limiter.ts";
+import { browserEmailLeaks, PERSONAL_EMAIL as ADDRESS } from "../lib/feedback/browser-privacy.ts";
 import { scrubFreeText } from "../lib/log/scrub.ts";
 import { REPLY_TO_MAX_CHARS, isReplyToShaped } from "../lib/feedback/shape.ts";
 import {
@@ -44,15 +45,6 @@ test("report links round-trip the card, ZIP and public record, with bounds and n
   assert.equal(url.searchParams.has("intent"), false, "problem reports keep their own intent");
 });
 
-/** The address, assembled rather than written, so this file is not itself a hit. */
-const ADDRESS = ["seanj22", "gmail.com"].join("@");
-
-/*
- * The only exemption: the outbound User-Agent to upstream services carries a contact address (courteous-client
- * rule). It is server-only, and it has one home so no route copies the literal.
- */
-const SERVER_ONLY_ALLOWED = new Set(["lib/geo/outbound-agent.ts"]);
-
 function walk(dir: string, out: string[] = []): string[] {
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
@@ -63,15 +55,15 @@ function walk(dir: string, out: string[] = []): string[] {
 }
 
 test("the author's personal address is gone from every source a browser can reach", () => {
-  const hits: string[] = [];
-  for (const root of ["app", "components", "hooks", "lib"]) {
-    for (const file of walk(join(ROOT, root))) {
-      if (!/\.(ts|tsx|js|jsx|css|json)$/.test(file)) continue;
-      const rel = posixRelative(ROOT, file);
-      if (SERVER_ONLY_ALLOWED.has(rel)) continue;
-      if (readFileSync(file, "utf8").includes(ADDRESS)) hits.push(rel);
+  function* sources(): Generator<readonly [string, string]> {
+    for (const root of ["app", "components", "hooks", "lib", "public", "data", "netlify"]) {
+      if (!existsSync(join(ROOT, root))) continue;
+      for (const file of walk(join(ROOT, root))) {
+        if (/\.(?:[cm]?[jt]sx?|css|json|txt|html|svg)$/.test(file)) yield [posixRelative(ROOT, file), readFileSync(file, "utf8")];
+      }
     }
   }
+  const hits = browserEmailLeaks(sources());
   assert.deepEqual(
     hits,
     [],
@@ -91,13 +83,8 @@ test("the address is in no built client chunk", (t) => {
     t.skip("CANNOT RUN: no .next/static — run pnpm build first (the ship gate does)");
     return;
   }
-  const hits: string[] = [];
-  for (const file of walk(staticDir)) {
-    if (!/\.(js|css|json|txt)$/.test(file)) continue;
-    if (readFileSync(file, "utf8").includes(ADDRESS)) {
-      hits.push(posixRelative(ROOT, file));
-    }
-  }
+  const hits = browserEmailLeaks(walk(staticDir).filter(file => /\.(js|css|json|txt)$/.test(file))
+    .map(file => [posixRelative(ROOT, file), readFileSync(file, "utf8")] as const));
   assert.deepEqual(hits, [], `the address reached the client bundle: ${hits.join(", ")}`);
 });
 

@@ -73,6 +73,9 @@ test("failed checks retain both calls' usage and wait for the existing retry bef
   f.recoverCheck();
   const next = await runHeldMeasureTranslations({ ...f.input, attempts: failed.outcomes });
   assert.equal(next.outcomes[0].status, "PUBLISHED");
+  assert.ok(failed.outcomes[0].repairCapture);
+  assert.equal(JSON.parse(measureRequestContext(f.requests[4]).feedback).previousProposal.rejectedChecks.length, 3);
+  assert.match(measureRequestContext(f.requests[4]).feedback, /previousProposal/);
   assert.deepEqual(f.requests.slice(4).map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5"]);
 });
 
@@ -171,24 +174,18 @@ test("a durable attempt must exist before spending; final persistence failure re
   assert.equal(result.outcomes[0].status, "PUBLISHED");
 });
 
-test("a publication the database refuses as one oversized write waits for changed source bytes instead of buying both calls again", async () => {
-  const f = fixture();
-  f.input.store.create = async () => {
-    throw new Error("NeonDbError: Server error (HTTP status 413): {\"message\":\"request is too large (max is 67108864 bytes)\"}");
-  };
+test("a historical oversized-write failure retries the same source on its normal clock after the storage repair", async () => {
+  const f = fixture(), create = f.input.store.create.bind(f.input.store);
+  f.input.store.create = async () => { throw new Error("NeonDbError: Server error (HTTP status 413): request is too large"); };
   const failed = await runHeldMeasureTranslations(f.input);
   assert.equal(failed.outcomes[0].status, "HELD");
-  assert.match(failed.outcomes[0].detail ?? "", /request is too large/);
   assert.equal(f.requests.length, 2);
+  f.input.store.create = create;
   f.input.now = "2026-10-05T20:00:00Z";
-  const later = await runHeldMeasureTranslations({ ...f.input, attempts: failed.outcomes });
-  assert.equal(later.outcomes.length, 0);
-  assert.match(later.deferred[0].reason, /larger than one database write/);
-  assert.equal(f.requests.length, 2, "the same source bytes buy no second writer or checker call");
-  const changed = `${text} The election office published a shorter text.`;
-  f.input.captures = [{ ...capture, observedAt: f.input.now, evidence: { ...capture.evidence, text: changed,
-    contentHash: `sha256-${translationHash(changed)}`, retrievedAt: f.input.now } }];
   const retried = await runHeldMeasureTranslations({ ...f.input, attempts: failed.outcomes });
-  assert.equal(retried.outcomes.length, 1);
-  assert.equal(f.requests.length, 4, "changed source bytes are written and checked again");
+  assert.equal(retried.outcomes[0].status, "PUBLISHED", JSON.stringify(retried));
+  assert.equal(f.requests.length, 4);
+  const again = await runHeldMeasureTranslations({ ...f.input, attempts: [...failed.outcomes, ...retried.outcomes] });
+  assert.equal(again.outcomes[0].status, "REUSED");
+  assert.equal(f.requests.length, 4, "a successful publication stays flat on the next run");
 });

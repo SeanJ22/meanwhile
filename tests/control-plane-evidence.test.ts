@@ -452,7 +452,7 @@ test("IMMUTABILITY: an occupied key must hold the SAME object, and the refusal n
   assert.match(err.message, /"RAW"/);
   assert.match(err.message, /"SANITIZED_DERIVED"/);
   assert.match(err.message, /decides who may read/);
-  assert.equal(store.size, 1, "the second write neither stored nor relabelled");
+  assert.equal(store.size, 2, "one raw body and its observation pointer; the refused write adds nothing");
 
   assert.equal((await store.head(objectKey(PROJECT, raw)))?.custom?.tier, "RAW");
 });
@@ -606,7 +606,7 @@ test("THE MANIFEST: a rebuilt index overwrites in place, and the exemption is de
   assert.equal(objectClassOf({ contentType: "text/html", contentHash: "x", byteLength: 1 }), "IMMUTABLE_BODY");
 });
 
-test("KEY SEMANTICS: identical bytes under two work items are two DISTINCT keys, and each key is individually immutable", async () => {
+test("raw observations keep their own metadata and share one immutable body", async () => {
   const store = new MemoryEvidenceStore();
   const page = "<p>Regular Session — Wednesday, January 14, 2026 at 9:00 a.m.</p>";
 
@@ -636,7 +636,8 @@ test("KEY SEMANTICS: identical bytes under two work items are two DISTINCT keys,
   for (const artifact of [one, two, otherSource, otherDay]) {
     assert.equal((await putArtifact(store, PROJECT, artifact, utf8(page))).written, true);
   }
-  assert.equal(store.size, 4, "duplicate bodies across prefixes are permitted, on purpose");
+  assert.equal(store.size, 5, "four source observations share one body by its fingerprint");
+  assert.equal((await store.list("project/freshness/raw/sha256/")).length, 1);
 
   assert.equal((await store.list(`project/${PROJECT}/source/granicus/`)).length, 1);
   assert.equal((await store.list(workItemPrefix(PROJECT, one))).length, 1);
@@ -652,5 +653,5 @@ test("KEY SEMANTICS: identical bytes under two work items are two DISTINCT keys,
       EvidenceStoreRefusal,
     );
   }
-  assert.equal(store.size, 4);
+  assert.equal(store.size, 5);
 });

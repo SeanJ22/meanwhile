@@ -8,6 +8,7 @@ import { canonicalJson } from "../control-plane/repository/types.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../control-plane/repository/types.ts";
 import type { WorkerEvidence, WorkerResultRecord } from "../control-plane/workers/types.ts";
 import type { RegistryRuntimeCarton, RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
+import type { RegistryLookup } from "./keyed-rows.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { readRegistryRuntimePrior, registryRuntimeCandidate, acceptedRegistryPrior } from "../registry/runtime-data-plane.ts";
 import type { RoutineDataStore } from "./store.ts";
@@ -111,7 +112,7 @@ function parserReading(parser: WorkerResultRecord, contract: NonNullable<WorkIte
 }
 
 export async function heldRosterReading(input: {
-  readonly bodyId: string; readonly prior: RegistryRuntimePrior; readonly now: string;
+  readonly bodyId: string; readonly prior: RegistryLookup; readonly now: string;
   readonly artifacts: readonly ArtifactRecord[];
   readonly readHeld: (record: ArtifactRecord) => Promise<WorkerPublicationCapture | null>;
   readonly limit?: number;
@@ -195,7 +196,7 @@ export async function publishOwedRosterFacts(input: {
     const plan = item.autonomousPlan;
     if (!plan?.publication || !stateFromRegistryRuntimeContractId(plan.publication.contractId) || plan.contract.schemaVersion !== 2 || plan.contract.recordClass !== "OFFICIAL_ROSTER") continue;
     const bodyId = plan.publication.bodyId;
-    const prior = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
+    const prior = await input.store.readRegistrySlice(plan.contract.jurisdiction.state, [bodyId], [plan.contract.jurisdiction.canonicalId]);
     const body = prior?.payload.registry.bodies.find(row => row.id === bodyId);
     let outcome: NonNullable<WorkItem["publicationOutcome"]>;
     let reading: RosterReading | null = null;
@@ -289,13 +290,18 @@ export async function publishWorkerDirectoryResults(input: {
     let candidateId: string | null = null, versionId: string | null = null, readingId: string | null = null, parserId: string | null = null;
     let captures: WorkerPublicationCapture[] = [], heldDirectory: DirectoryReading | null = null, wentLive = 0;
     try {
+      const parser = latestParserResult(records, id);
+      parserId = parser?.id ?? null;
+      const brokeAfter = parser ? auditPull(records, parser) : null;
+      if (parser && item.publicationOutcome?.workerResultId === parser.id && item.publicationOutcome.sourceObservedAt &&
+          item.publicationOutcome.status !== "HELD" && !(brokeAfter && brokeAfter.at > item.publicationOutcome.at)) {
+        report.push({ workItemId: id, outcome: item.publicationOutcome }); continue;
+      }
       const state = plan.contract.jurisdiction.state;
       if (registryState !== state) { registry = undefined; registryState = state; }
       if (registry === undefined) registry = await readRegistryRuntimePrior(input.store, input.now, state);
       const prior = registry;
       if (!prior) throw new Error("ROSTER_PRIOR_READER_AUTHORITY_MISSING");
-      const parser = latestParserResult(records, id);
-      parserId = parser?.id ?? null;
       captures = parser ? await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: (parser.result as { artifactId: string }).artifactId, results: records, readCapture, officialLinks: manual.officialLinks }) : [];
       if (!parser) {
         const government = plan.directorySubject?.jurisdiction.id ?? id;
@@ -309,8 +315,7 @@ export async function publishWorkerDirectoryResults(input: {
         if (!heldDirectory) throw new Error("DIRECTORY_NO_READABLE_SAVED_PAGE:No saved official page for this government lists a board or commission that passes §3 yet");
       }
       readingId = parser?.id ?? heldDirectory!.id;
-      const brokeAfter = parser ? auditPull(records, parser) : null;
-      if (item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.sourceObservedAt && item.publicationOutcome.status !== "HELD" && !(brokeAfter && brokeAfter.at > item.publicationOutcome.at)) { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
+      if (!parser && item.publicationOutcome?.workerResultId === readingId && item.publicationOutcome.sourceObservedAt && item.publicationOutcome.status !== "HELD") { report.push({ workItemId: id, outcome: item.publicationOutcome }); continue; }
       const already = publishedByBody.get(`${bodyId}\n${readingId}`);
       if (already) throw Object.assign(new Error("REUSED"), { reused: already });
       const directoryPackage = parser ? workerBodyDirectoryPackage({ plan, parser, captures, prior, now: input.now, results: records, kinds })

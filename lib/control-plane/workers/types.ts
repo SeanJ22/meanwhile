@@ -18,6 +18,7 @@ export function isFieldValue(value: unknown): value is FieldValue {
 
 /** Text is issued by readForParser, never fetched or supplied by a model. */
 export interface WorkerEvidence {
+  readonly sourceCapture?: { readonly vaultKey: string; readonly rawHash: string; readonly byteLength: number };
   readonly artifactId: string;
   readonly contentHash: string;
   readonly text: string;

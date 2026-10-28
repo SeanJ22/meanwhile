@@ -6,9 +6,10 @@ import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
 
 export function PlaceMapPanel() {
-  const { reading } = useReading<{ counts: readonly PlaceMapCounts[] | null }>("/api/admin/v6/data/places", 60_000);
+  const { reading, status } = useReading<{ counts: readonly PlaceMapCounts[] | null }>("/api/admin/v6/data/places");
   const counts = reading.kind === "ready" ? reading.data.counts : null;
   return <Card id="places" title="Places and ZIPs">
+      {status}
     {reading.kind === "loading" ? <Loading what="places and ZIPs" /> : counts === null ? <Empty>—</Empty> :
       <div className={s.tableWrap}><table className={s.table}>
         <thead><tr><th scope="col">State</th><th scope="col">Places mapped</th><th scope="col">ZIPs</th><th scope="col">Census areas</th><th scope="col">Districts attached to a county</th></tr></thead>

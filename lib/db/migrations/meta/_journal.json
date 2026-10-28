@@ -512,6 +512,13 @@
       "when": 1792834200020,
       "tag": "ZP-01_expand",
       "breakpoints": true
+    },
+    {
+      "idx": 73,
+      "version": "7",
+      "when": 1792834200021,
+      "tag": "ZP-01_build_fingerprint",
+      "breakpoints": true
     }
   ]
 }

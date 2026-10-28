@@ -66,7 +66,7 @@ test("the real worker transfers only the requested compressed context and keeps 
         const rows=await query(text,params);
         bytes.set(label,Buffer.byteLength(JSON.stringify(rows)));
         for(const {row} of rows) {
-          assert.equal((row as {encoding:string}).encoding,"gzip-json-v1");
+          assert.equal((row as {encoding:string}).encoding,"br-json-v1");
           const decoded=unpackPlaceContextRow(row);
           if(!input.includeAgenda) {
             assert.deepEqual(decoded.archived_documents,[]);

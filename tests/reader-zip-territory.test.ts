@@ -1,3 +1,4 @@
+import {fixturePlaceBuild} from "./helpers/place-build-row.ts";
 import assert from "node:assert/strict";
 import fs from "node:fs/promises";
 import {syncBuiltinESMExports} from "node:module";
@@ -138,8 +139,10 @@ test("a canonical ZIP uses its private ready selection with one SQL read and no 
       await db.query("INSERT INTO rebuild_queue(place_id) VALUES($1)",[`zip:${zip}`]);
       let sourceReads=0;
       const wrapped:FactDb={transaction:run=>db.transaction(query=>run(async(text,args)=>{
-        if(text!==PLACE_PACKAGE_SQL)return query(text,args);
-        sourceReads++;assert.deepEqual(args?.[2],[]);return [raw];
+        if(text.includes(PLACE_PACKAGE_SQL)) {
+          sourceReads++;assert.deepEqual(args?.[2],[]);return fixturePlaceBuild(query,text,args,raw);
+        }
+        return query(text,args);
       }))};
       assert.deepEqual(await rebuildPlacePages({db:wrapped,limit:1,concurrency:1,purge:async()=>({purged:true})}),{rebuilt:1,failed:0,remaining:0});
       assert.equal(sourceReads,1);

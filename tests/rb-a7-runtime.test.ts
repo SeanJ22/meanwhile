@@ -1,3 +1,4 @@
+import {fixturePlaceBuild} from "./helpers/place-build-row.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -166,18 +167,18 @@ test("a ZIP worker stores only its ready current page and retains the serving de
     await db.query('INSERT INTO rebuild_queue(place_id) VALUES($1)',[zip]);
     let sourceReads=0;
     const wrapped:FactDb={transaction:run=>db.transaction(query=>run(async(text,args)=>{
-      if(text!==PLACE_PACKAGE_SQL)return query(text,args);
+      if(!text.includes(PLACE_PACKAGE_SQL))return query(text,args);
       sourceReads++;
       assert.equal(args?.[5],false);
       assert.equal(args?.[6],false);
-      return[{...rawPage(city),entities:[{id:body,kind:'body',state:'CA',division:city,parent_id:city}],divisions:[{ocdId:fringe}]}];
+      return fixturePlaceBuild(query,text,args,{...rawPage(city),entities:[{id:body,kind:'body',state:'CA',division:city,parent_id:city}],divisions:[{ocdId:fringe}]});
     }))};
     assert.deepEqual(await rebuildPlacePages({db:wrapped,limit:1,concurrency:1,purge:async()=>({purged:true})}),{rebuilt:1,failed:0,remaining:0});
     assert.equal(sourceReads,1);
     const [page]=await db.query('SELECT body,history_body,context FROM place_page WHERE place_id=$1',[zip]);
     assert.deepEqual(page!.history_body,{});
     assert.deepEqual(page!.context,{formatVersion:1});
-    assert.equal((page!.body as {encoding:string}).encoding,'gzip-json-v1');
+    assert.equal((page!.body as {encoding:string}).encoding,'br-json-v1');
     assert.equal(unpackReadyPlace(page!.body).bodies.length,1);
     assert.equal(unpackReadyTerritory(page!.body),null);
     const dependencies=await db.query('SELECT entity_id FROM place_page_dependency WHERE page_id=$1 ORDER BY entity_id',[zip]);

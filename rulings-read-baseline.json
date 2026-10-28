@@ -266,18 +266,6 @@
       "line": 111
     },
     {
-      "file": "lib/reader/place-builder.ts",
-      "kind": "SELECT *",
-      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 155
-    },
-    {
-      "file": "lib/reader/place-builder.ts",
-      "kind": "SELECT *",
-      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 209
-    },
-    {
       "file": "lib/sources/legiscan/reader.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",

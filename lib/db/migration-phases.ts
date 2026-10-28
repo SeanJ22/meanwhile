@@ -167,6 +167,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "ZP-01_build_fingerprint": { phase: "expand", why: "ZIP builds compare selected-input fingerprints before transferring or copying an answer.", lockFirst: ["place_page"] },
   "ZP-01_expand": { phase: "expand", why: "Prioritizes queued ZIP pages by their held Census population before builders claim them.", lockFirst: ["entity", "rebuild_queue"] },
   "RB-A8_count_hour": { phase: "expand", why: "Adds hourly counters and their writer hooks before the compact observer is deployed.",
     // Its trigger on fact, then a 1M-row backfill, then triggers on civic_data_promotions and entity deadlocked with the runner at the 9:47 PM EDT Oct 24 build.

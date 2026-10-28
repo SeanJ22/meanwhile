@@ -1,3 +1,4 @@
+import {fixturePlaceBuild} from "./helpers/place-build-row.ts";
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { factDb } from './helpers/fact-db.ts';
@@ -40,7 +41,7 @@ test('every pass grows ZIP pages, in descending held population, despite an alwa
     const ordered=(await db.query("SELECT place_id FROM rebuild_queue WHERE priority>0 ORDER BY priority DESC,place_id")).map(row=>String(row.place_id));
     const built:string[]=[];
     const wrapped:FactDb={transaction:work=>db.transaction(query=>work(async(text,params)=>{
-      if(text===PLACE_PACKAGE_SQL)return[{...raw}];
+      if(text.includes(PLACE_PACKAGE_SQL))return fixturePlaceBuild(query,text,params,raw);
       const result=await query(text,params);
       if(text.startsWith('WITH slot'))for(const row of result)built.push(String(row.place_id));
       return result;
@@ -72,7 +73,7 @@ test('a publication after queue deletion cannot rebuild that page twice in one p
     const wrapped:FactDb={transaction:async work=>{
       let completed=false;
       const result=await db.transaction(query=>work(async(text,params)=>{
-        if(text===PLACE_PACKAGE_SQL)return[{...raw}];
+        if(text.includes(PLACE_PACKAGE_SQL))return fixturePlaceBuild(query,text,params,raw);
         const rows=await query(text,params);
         if(text.startsWith('DELETE FROM rebuild_queue'))completed=true;
         return rows;

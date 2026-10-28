@@ -1,3 +1,5 @@
+import { createHash } from "node:crypto";
+import { isVersionedSelectStatement } from "../db/versioned-query.ts";
 import { neonConfig, Pool } from "../db/client.ts";
 import type { FactDb, Query } from "./publish.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
@@ -24,7 +26,10 @@ export function readerFactDb(url: string | undefined = process.env.DATABASE_URL)
     }),
     transaction: work => withCallerSite(async () => {
       const client = await pool.connect();
-      const query: Query = (text, params = []) => withDatabaseQuery(text, async () => (await client.query(text, [...params])).rows);
+      const query: Query = (text, params = []) => withDatabaseQuery(text, async () => (await client.query(
+        text.length>20000 && isVersionedSelectStatement(text)
+          ? {name:`facts-${createHash("sha256").update(text).digest("hex").slice(0,40)}`,text,values:[...params]}
+          : {text,values:[...params]})).rows);
       try {
         await query("BEGIN");
         const out = await work(query);

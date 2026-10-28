@@ -1,3 +1,6 @@
+import type { VersionedRowRetention } from "../db/versioned-query.ts";
+import { sharedPlaceBuildRead, type PlaceBuildTransfer } from "./place-build-transfer.ts";
+import { readPlaceBuild, reusePlaceBuild, type PlaceBuildRead } from "./place-build-reuse.ts";
 import { federalGovernmentNameSql } from "../federal-money/recipient.ts";
 import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
 import { RETIRED_MEETING_ROUTES } from "../registry/source-wiring.ts";
@@ -151,8 +154,8 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     WHERE NOT EXISTS (SELECT 1 FROM entity e WHERE e.id=requested.id)
       AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=requested.id)
 ), body_facts AS MATERIALIZED (
-  SELECT f.*,s.url,b.name AS body_name,b.parent_id FROM bodies b
-    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=b.id AND status='live'
+  SELECT f.entity_id,f.field,f.value,f.quote,f.checked_at,f.provenance_kind,s.url,b.name AS body_name,b.parent_id FROM bodies b
+    CROSS JOIN LATERAL (SELECT entity_id,field,value,quote,checked_at,provenance_kind,source_copy_id FROM fact WHERE entity_id=b.id AND status='live'
       AND ($8::text[] IS NULL OR field NOT LIKE 'member:%') OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
 ), members AS (
@@ -206,7 +209,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), sittings AS MATERIALIZED (
   SELECT b.id AS body_id,b.name AS body_name,m.id AS entity_id,f.field,f.value,f.quote,f.checked_at,f.status,s.url
     FROM bodies b CROSS JOIN LATERAL (SELECT id FROM entity WHERE parent_id=b.id AND kind='meeting' OFFSET 0) m
-    CROSS JOIN LATERAL (SELECT * FROM fact WHERE entity_id=m.id AND (status='live'
+    CROSS JOIN LATERAL (SELECT field,value,quote,checked_at,status,source_copy_id FROM fact WHERE entity_id=m.id AND (status='live'
       OR field='map_pin' AND status='pulled' AND held_reason='GOVERNMENT_OFFICE_OWNER_CHANGED') OFFSET 0) f
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
     WHERE $8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR substr(m.id,9) IN (SELECT id FROM agenda_fact_ids)
@@ -446,12 +449,13 @@ const BODY_FACTS_PACKAGE_SQL = placePackageSql(true);
 
 
 /**
- * Records every page carries whole, held for one rebuild turn. The national
- * everyday-routing projection is the same ~25 KB on every page in the country;
- * each page's query reads its current row version in the page's own snapshot
- * and returns the body only when that version is not the one already held.
+ * One turn retains fingerprint-checked ZIP input chunks within 128 MiB. Each
+ * query checks its current snapshot before reusing a chunk. Other place builds
+ * also share the national routing record after checking its row version.
  */
 export interface PlaceTurnReads {
+  transfers?: Map<string, PlaceBuildTransfer>;
+  retention?: VersionedRowRetention;
   everydayRouting?: { readonly version: string; readonly value: unknown };
 }
 
@@ -468,6 +472,10 @@ export async function buildPlaceRow(input: PlaceInput,query: Query,shared?: Plac
     if (version === held?.version) row.everyday_routing = structuredClone(held.value);
     else shared.everydayRouting = {version,value:structuredClone(row.everyday_routing)};
   }
+  return expandPlaceBuildRow(row);
+}
+
+async function expandPlaceBuildRow(row: Record<string,unknown>): Promise<Record<string,unknown>> {
   const parts = new CivicPayloadParts({existing:async()=>[],write:async()=>{},read:async()=>{throw new Error("PLACE_PAGE_PART_MISSING");}});
   const expanded = await parts.loadOwned({rows:row.meeting_rows,archived:row.archived_meetings ?? [],documents:row.archived_documents ?? []},row.parts as Record<string,unknown>) as Record<string,unknown>;
   return {...row,meeting_rows:expanded.rows,archived_meetings:expanded.archived,archived_documents:expanded.documents,parts:{}};
@@ -541,6 +549,7 @@ export interface RebuildOptions {
   readonly limit?: number;
   readonly concurrency?: number;
   readonly timeBudgetMs?: number;
+  readonly buildRevision?: string;
 }
 
 const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
@@ -582,9 +591,24 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
       let built=claim.has_page===true && claim.built_generation!=null && String(claim.built_generation)===String(claim.generation);
       try {
         if(!built) {
-          const body=await db.transaction<StoredPlacePage>(async query=>{
+          const prepared=await db.transaction<{body?:StoredPlacePage;read?:PlaceBuildRead}>(async query=>{
             await query("SET TRANSACTION ISOLATION LEVEL REPEATABLE READ");
-            return buildPageBody(id,String(claim.kind),state,query,shared);
+            if (!/^zip:\d{5}$/.test(id)) return {body:await buildPageBody(id,String(claim.kind),state,query,shared)};
+            const {input:selected,territory}=await placeBuildSelection(id,String(claim.kind),state);
+            const input={...selected,includeAgenda:false};
+            const stateRoot=input.divisionIds.map(stateOcdIdFrom).find(Boolean) ?? `ocd-division/country:us/state:${state.toLowerCase()}`;
+            shared.transfers ??= new Map();
+            let transfer=shared.transfers.get(state);
+            if(!transfer){
+              shared.retention ??= {rows:new Map(),bytes:0};
+              transfer=sharedPlaceBuildRead(`${randomUUID()}:${state}`,shared.retention);shared.transfers.set(state,transfer);
+            }
+            const read=await readPlaceBuild((text,params=[])=>transfer!(query,text,params),PLACE_PACKAGE_SQL,[state,input.divisionIds,input.bodyIds ?? [],stateRoot,
+              false,false,false,null,false,input.namedDivisionIds ?? [],null],territory,options.buildRevision);
+            if (read.reused) return {read};
+            const current=await expandPlaceBuildRow(read.row!);
+            const readyCurrent=await composePlaceRow(input,structuredClone(current));
+            return {read,body:{formatVersion:1,current,readyCurrent,territory}};
           });
           // Writers can queue a newer generation while the snapshot is being read.
           // Lock its lease only after leaving that snapshot, in this short transaction.
@@ -592,26 +616,30 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<{
             // A worker whose lease expired cannot replace a newer worker's page.
             const [lease]=await query("SELECT place_id FROM rebuild_queue WHERE place_id=$1 AND lease_token=$2 FOR UPDATE",[id,token]);
             if(!lease)throw new Error("PLACE_PAGE_LEASE_REPLACED");
-            const {readyCurrent,readyHistory,territory,...rawContext}=body;
-            const context=/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext);
-            await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context)
-              VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
-              ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
-                body=excluded.body,history_body=excluded.history_body,context=excluded.context`,
-            [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context)]);
-            const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
-              !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
-            const dependencies=new Set<string>([id,...rows.flatMap(row=>[
-              ...row.division_ids as string[] ?? [],
-              ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
-              ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
-                [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
-                  .filter((value):value is string=>typeof value==='string')),
-              ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
-            ])]);
-            await query("DELETE FROM place_page_dependency WHERE page_id=$1",[id]);
-            await query(`INSERT INTO place_page_dependency(page_id,entity_id)
-              SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
+            if (prepared.read?.reused) {
+              await reusePlaceBuild(query,id,prepared.read.reused,prepared.read.fingerprint);
+            } else {
+              const {readyCurrent,readyHistory,territory,...rawContext}=prepared.body!;
+              const context=/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext);
+              await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context,build_fingerprint)
+                VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb,$5)
+                ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
+                  body=excluded.body,history_body=excluded.history_body,context=excluded.context,build_fingerprint=excluded.build_fingerprint`,
+              [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context),prepared.read?.fingerprint ?? null]);
+              const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
+                !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
+              const dependencies=new Set<string>([id,...rows.flatMap(row=>[
+                ...row.division_ids as string[] ?? [],
+                ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
+                ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
+                  [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
+                    .filter((value):value is string=>typeof value==='string')),
+                ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
+              ])]);
+              await query("DELETE FROM place_page_dependency WHERE page_id=$1",[id]);
+              await query(`INSERT INTO place_page_dependency(page_id,entity_id)
+                SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
+            }
             await query(`UPDATE rebuild_queue q SET built_generation=$3::bigint,priority=e.page_priority
               FROM entity e WHERE q.place_id=$1 AND q.lease_token=$2 AND e.id=q.place_id`,[id,token,claim.generation]);
             await query("SELECT count_hour_add($1,'Place pages','rebuilt',0,1,1)",[state]);

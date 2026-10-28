@@ -331,5 +331,2297 @@
       "fingerprint": "009005af569b584b1ffbe35d88ec5f568ac5a08577a152640e2a36033ed9b081",
       "line": 192
     }
+  ],
+  "bundleTables": [
+    {
+      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
+      "table": "civic_data_clock_versions"
+    },
+    {
+      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/ballot/state-voting-lookups.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/ballot/state-voting-lookups.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/census-geography/area-lookup.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/census-geography/scope-lookup.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/candidate-vault.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/clock-presence.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/clock-presence.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/contracts.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/contracts.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/contracts.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/derived-input-rows.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/derived-input-rows.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/derived-meeting-body.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/derived-meeting-body.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/held-meeting-pins.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/held-meeting-pins.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/held-place-geography.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/civic-data/held-place-geography.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/held-place-slices.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/keyed-government-lookup.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/keyed-government-lookup.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/keyed-registry-place.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/keyed-registry-place.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/keyed-registry-planning.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/keyed-registry-planning.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/keyed-rows.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/keyed-rows.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/manual-contracts.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/manual-contracts.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/manual-contracts.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/meeting-fact-progress.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/meeting-family-dependencies.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/meeting-family-dependencies.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/meeting-source-progress.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/observability.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/observability.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/observability.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/operational-reference-state-read.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/operational-reference-state-read.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/outcome-partitions.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/outcome-partitions.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/outcome-partitions.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/people-source-contracts.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/people-source-contracts.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/people-source-contracts.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/place-payload-slices.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/civic-data/place-payload-slices.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/planner-archive-state-read.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/planner-clock-state-read.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/planner-clock-state-read.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/planner-clock-state-read.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/planner-meeting-state-read.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/planner-meeting-state-read.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/civic-data/planner-meeting-state-read.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/planner-state-read.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/planner-state-read.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/portrait-rosters.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/portrait-rosters.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/publication-status-store.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/publication-status-store.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/publication-status-store.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/read-model.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/read-model.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/source-change-cadence.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/source-change-cadence.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/source-change-cadence.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/source-checks.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/source-checks.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/state-pointer-retirement.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/state-pointer-retirement.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/state-reader-store.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/state-reader-store.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/state-reader-store.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/civic-data/state-reader-store.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/state-retirement-inputs.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/state-retirement-inputs.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/state-retirement-inputs.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/civic-data/state-retirement-inputs.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/state-retirement-progress.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/state-retirement-progress.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/store.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/civic-data/store.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/store.ts",
+      "table": "civic_data_clock_versions"
+    },
+    {
+      "file": "lib/civic-data/store.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/civic-data/version-vault.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/civic-data/version-vault.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/admin-view/promoted-slices.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/discovery/platform-census-pass.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/control-plane/discovery/platform-census-pass.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/discovery/platform-orders.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/control-plane/discovery/platform-orders.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/discovery/platform-registration.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/control-plane/discovery/platform-registration.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/job-names.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/control-plane/line-keeper/posting.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/control-plane/line-keeper/posting.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/control-plane/line-keeper/posting.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/scheduler/providers/held-government-bodies.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/scheduler/providers/held-meeting-input.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/scheduler/providers/held-subject-loader.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/scheduler/providers/held-subject-member-identities.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/control-plane/workers/routine-meeting-intake.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/db/identity-domains.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/db/identity-domains.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/db/identity-domains.ts",
+      "table": "civic_data_clock_versions"
+    },
+    {
+      "file": "lib/db/identity-domains.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/db/identity-domains.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/db/migration-phases.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/db/migration-phases.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/db/migration-phases.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/db/schema.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/db/schema.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/db/schema.ts",
+      "table": "civic_data_clock_versions"
+    },
+    {
+      "file": "lib/db/schema.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/db/schema.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/doors/hot-partitions.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/doors/hot-partitions.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/facts/carton-import.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/facts/carton-import.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/facts/entities.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/federal-money/held-identities.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/federal-money/locations.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/federal-money/publication-base.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/federal-money/publication-base.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/federal-money/publication-base.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/funding/state-people.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/funding/state-publication.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/funding/state-source-probe.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/funding/state-source-probe.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/hunt/place-bank.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/meetings/municipal-office.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/meetings/office-facts.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/meetings/pin-blanks.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/meetings/publish-pins.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/officials/member-office-data.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/officials/member-office-data.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/officials/member-office-data.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/outcomes/store.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/outcomes/store.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/reader/canonical.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/reader/canonical.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/reader/canonical.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/reader/canonical.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/reader/page-subjects.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/reader/place-builder.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/reader/place-builder.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/reader/place-builder.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/reader/place-builder.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/reader/selected-entry.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/reader/selected-entry.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/reader/selected-entry.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/reader/selected-voting.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/reference/population-facts.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/reference/population-facts.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/registration/reader.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/registration/reader.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/sources/census-acs-population/held-joins.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/sources/congress/counts.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/sources/congress/counts.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/sources/google-civic/county-inputs.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/sources/google-civic/county-inputs.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/sources/legiscan/person-reader.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/sources/legiscan/publication-base.ts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "lib/sources/legiscan/publication-base.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/sources/legiscan/publication-base.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/sources/legiscan/state-catalog.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/sources/prl/keyed-reader.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/sources/prl/keyed-reader.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "lib/state-rollcalls/vote-predecessor.ts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "lib/state-rollcalls/vote-predecessor.ts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "lib/state-rollcalls/vote-predecessor.ts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/lib/federal-money-benchmark-identities.mts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "scripts/lib/federal-money-benchmark-identities.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/lib/federal-money-benchmark-identities.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/lib/federal-money-postgres-server.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/lib/federal-money-postgres-server.mts",
+      "table": "civic_data_clock_versions"
+    },
+    {
+      "file": "scripts/pilot-runtime-publish.mts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "scripts/pilot-runtime-publish.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/portrait-census.mts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "scripts/portrait-census.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/rb-a3-capture.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/rb-a3-copy.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/rb-a3-reader-archives.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/rb-a3-reader-sample.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/rb-a3-reader-sample.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/rb-a4-portal-copy.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/rb-a4-portal-copy.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/rb-a4-portals.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/rb-a4-portals.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/rb-a4-replay.mts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "scripts/rb-a4-replay.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/rb-a4-replay.mts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "scripts/rb-a4-replay.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/replay-epa-all-states.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/replay-epa-sql.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/replay-legiscan-all-states.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/rn-01-retirement-readonly.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/rn-01-retirement-readonly.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/rs-02-check.mts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "scripts/rs-02-check.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/rs-03-representation-check.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/sp-01-audit.mts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "scripts/sp-01-audit.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/sp-01-audit.mts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "scripts/sp-01-audit.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/sp-01-check.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/sp-01-check.mts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "scripts/sp-01-check.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/src-01-epa-scheduled-runs.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/src-01-epa-scheduled-runs.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/src-01-fac-all-states-read-only-replay.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/src-01-fac-all-states-read-only-replay.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/src-01-fec-all-states-read-only.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/src-01-fec-all-states-read-only.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/src-01-openfema-all-states-replay.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/src-money-check.mts",
+      "table": "civic_data_candidate_events"
+    },
+    {
+      "file": "scripts/src-money-check.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/src-money-check.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/state-votes-check.mts",
+      "table": "civic_data_candidates"
+    },
+    {
+      "file": "scripts/state-votes-check.mts",
+      "table": "civic_data_payload_parts"
+    },
+    {
+      "file": "scripts/state-votes-check.mts",
+      "table": "civic_data_promotions"
+    },
+    {
+      "file": "scripts/verify-federal-zips.mts",
+      "table": "civic_data_promotions"
+    }
+  ],
+  "controlRecordReads": [
+    {
+      "file": "app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/route.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/route.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/route.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/status/route.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/status/route.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "app/api/admin/evidence/[workItemId]/[attemptId]/[artifactId]/status/route.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "app/api/admin/session/route.ts",
+      "table": "cp_log_owner_digests"
+    },
+    {
+      "file": "app/api/admin/v6/fixes/route.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "app/api/admin/v6/owed/route.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "app/api/admin/v6/place/route.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "app/api/admin/v6/scheduled/route.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "app/api/admin/v6/scoreboard/route.ts",
+      "table": "cp_runner_heartbeat"
+    },
+    {
+      "file": "app/api/admin/v6/settings/route.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "app/api/admin/v6/settings/route.ts",
+      "table": "cp_runner_heartbeat"
+    },
+    {
+      "file": "lib/ask/question-work.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/ask/question-work.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/ballot/voting-source-blanks.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/ballot/voting-source-blanks.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/ballot/voting-source-blanks.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/civic-data/campaign-source-inputs.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/civic-data/campaign-source-inputs.ts",
+      "table": "cp_log_promotion_pipeline"
+    },
+    {
+      "file": "lib/civic-data/campaign-source-inputs.ts",
+      "table": "cp_work_items_history"
+    },
+    {
+      "file": "lib/civic-data/candidate-profile-findings-job.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/civic-data/candidate-profile-findings-job.ts",
+      "table": "cp_box_findings"
+    },
+    {
+      "file": "lib/civic-data/held-artifact-captures.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/civic-data/meeting-derivation-source.ts",
+      "table": "cp_log_discovery_attempts"
+    },
+    {
+      "file": "lib/civic-data/national-government-finance.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/civic-data/owner-refresh.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/civic-data/planner-door-state-read.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/civic-data/routine-due-request.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/civic-data/special-district-boundaries.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/civic-data/worker-ballot-contests.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/civic-data/worker-ballot-contests.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/civic-data/worker-body-directory.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/civic-data/worker-comment-facts.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/civic-data/worker-comment-facts.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/civic-data/worker-held-elections.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/civic-data/worker-held-elections.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/civic-data/worker-page-doors.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/civic-data/worker-page-doors.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/civic-data/worker-polling-publication.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/civic-data/worker-polling-publication.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/civic-data/worker-publication-evidence.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/civic-data/worker-reader-publication.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/civic-data/worker-reader-publication.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/civic-data/worker-roster-publication.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/civic-data/worker-roster-publication.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/civic-data/worker-roster-publication.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/admin-data.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/admin-data.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/admin-data.ts",
+      "table": "cp_log_owner_decisions"
+    },
+    {
+      "file": "lib/control-plane/admin-data.ts",
+      "table": "cp_log_owner_digests"
+    },
+    {
+      "file": "lib/control-plane/admin-data.ts",
+      "table": "cp_owner_snapshots"
+    },
+    {
+      "file": "lib/control-plane/admin-data.ts",
+      "table": "cp_research_state"
+    },
+    {
+      "file": "lib/control-plane/admin-data.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/admin-data.ts",
+      "table": "cp_runner_heartbeat"
+    },
+    {
+      "file": "lib/control-plane/admin-data.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/admin-view/brief-route.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/admin-view/brief.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/admin-view/door-queries.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/control-plane/admin-view/fix-prevention-history.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/admin-view/fix-prevention-history.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/admin-view/model-spend.ts",
+      "table": "cp_log_costs"
+    },
+    {
+      "file": "lib/control-plane/admin-view/officials-results.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/control-plane/admin-view/public-reader-observation-read.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/admin-view/runner-progress-read.ts",
+      "table": "cp_log_owner_digests"
+    },
+    {
+      "file": "lib/control-plane/admin-view/v6-agents-read.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/admin-view/v6-national-route.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/admin-view/v6-results-read.ts",
+      "table": "cp_log_promotion_pipeline"
+    },
+    {
+      "file": "lib/control-plane/admin-view/v6-stuck-surfaces.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/admin-view/v6-workers-read.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/admin-view/v6-workers-read.ts",
+      "table": "cp_log_owner_digests"
+    },
+    {
+      "file": "lib/control-plane/admin-view/worker-progress.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/admin-view/worker-progress.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/admin-view/worker-progress.ts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "lib/control-plane/admin-view/worker-progress.ts",
+      "table": "cp_log_worker_results"
+    },
+    {
+      "file": "lib/control-plane/admin-view/worker-progress.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/admin-view/worker-progress.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_ask_gap_observations"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_debts"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_log_costs"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_log_dispositions"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_log_promotion_pipeline"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_log_worker_results"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/assignment-read.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/box.ts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "lib/control-plane/box.ts",
+      "table": "cp_log_worker_results"
+    },
+    {
+      "file": "lib/control-plane/box.ts",
+      "table": "cp_pass_cursors"
+    },
+    {
+      "file": "lib/control-plane/data-business/switches.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/discovery/derived-wiring.ts",
+      "table": "cp_log_discovery_attempts"
+    },
+    {
+      "file": "lib/control-plane/discovery/platform-census-runtime.ts",
+      "table": "cp_field_manual_entries"
+    },
+    {
+      "file": "lib/control-plane/discovery/platform-census-runtime.ts",
+      "table": "cp_log_discovery_attempts"
+    },
+    {
+      "file": "lib/control-plane/discovery/platform-orders.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/discovery/route-hints.ts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "lib/control-plane/evidence/admin-bridge-runner.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/evidence/admin-bridge-runner.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/evidence/admin-bridge-runner.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/evidence/admin-bridge-runner.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/evidence/admin-copy-poller.ts",
+      "table": "cp_admin_evidence_copy_requests"
+    },
+    {
+      "file": "lib/control-plane/evidence/admin-copy-poller.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/evidence/admin-copy-poller.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/evidence/admin-copy-poller.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/evidence/admin-copy-request.ts",
+      "table": "cp_admin_evidence_copy_requests"
+    },
+    {
+      "file": "lib/control-plane/expansion/dispatch-work.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/expansion/dispatch-work.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/expansion/dispatch-work.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/expansion/runner-load.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/fix-history.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/fix-list.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/fix-standing.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/gateway/bulk-actions.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/gateway/confirmation.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/gateway/confirmation.ts",
+      "table": "cp_lead_orders"
+    },
+    {
+      "file": "lib/control-plane/gateway/confirmation.ts",
+      "table": "cp_log_research_intents"
+    },
+    {
+      "file": "lib/control-plane/gateway/confirmation.ts",
+      "table": "cp_runner_heartbeat"
+    },
+    {
+      "file": "lib/control-plane/gateway/fix-migrate.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/gateway/hunt-score.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/gateway/officials-action.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/gateway/pulse-read.ts",
+      "table": "cp_log_agent_jobs"
+    },
+    {
+      "file": "lib/control-plane/gateway/pulse-read.ts",
+      "table": "cp_log_research_intents"
+    },
+    {
+      "file": "lib/control-plane/gateway/registry.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/gateway/registry.ts",
+      "table": "cp_owner_snapshots"
+    },
+    {
+      "file": "lib/control-plane/gateway/registry.ts",
+      "table": "cp_research_state"
+    },
+    {
+      "file": "lib/control-plane/gateway/registry.ts",
+      "table": "cp_runner_heartbeat"
+    },
+    {
+      "file": "lib/control-plane/gateway/scheduled-fire.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/gateway/write-readback.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/hunt-orders.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/hunt-orders.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/leads/actions.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/control-plane/leads/plain-test.ts",
+      "table": "cp_lead_orders"
+    },
+    {
+      "file": "lib/control-plane/line-keeper/country.ts",
+      "table": "cp_owner_snapshots"
+    },
+    {
+      "file": "lib/control-plane/line-keeper/keep.ts",
+      "table": "cp_admin_fix_list"
+    },
+    {
+      "file": "lib/control-plane/live-audit-log.ts",
+      "table": "cp_log_live_audits"
+    },
+    {
+      "file": "lib/control-plane/model-batch.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/model-batch.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/officials-leads.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/officials-leads.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/officials-leads.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/control-plane/officials-leads.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/operator-chat/read-context.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/owner-snapshot-totals.ts",
+      "table": "cp_owner_snapshots"
+    },
+    {
+      "file": "lib/control-plane/promotion/campaign-publication-cycle.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/promotion/campaign-publication-cycle.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/promotion/campaign-site-chain.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/promotion/campaign-site-chain.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/promotion/campaign-site-chain.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/promotion/campaign-site-chain.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/promotion/campaign-site-cycle.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/promotion/campaign-site-reads.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/promotion/campaign-site-reads.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/promotion/pipeline.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/promotion/pipeline.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/promotion/pipeline.ts",
+      "table": "cp_log_promotion_pipeline"
+    },
+    {
+      "file": "lib/control-plane/promotion/pipeline.ts",
+      "table": "cp_log_worker_results"
+    },
+    {
+      "file": "lib/control-plane/promotion/window.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/repository/active-work-claims.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/repository/active-work-claims.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/repository/control-reads-backfill.ts",
+      "table": "cp_log_costs"
+    },
+    {
+      "file": "lib/control-plane/repository/coordinator.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/repository/coordinator.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/repository/coordinator.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/repository/coordinator.ts",
+      "table": "cp_log_dispositions"
+    },
+    {
+      "file": "lib/control-plane/repository/coordinator.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/repository/coordinator.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/repository/dispatch-state.ts",
+      "table": "cp_lineage_cache"
+    },
+    {
+      "file": "lib/control-plane/repository/manual-method-index.ts",
+      "table": "cp_field_manual_entries"
+    },
+    {
+      "file": "lib/control-plane/repository/migrations/DT-01.ts",
+      "table": "cp_debts"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_box_findings"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_field_manual_entries"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_log_research_intents"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_method_candidates"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "table": "cp_work_items_history"
+    },
+    {
+      "file": "lib/control-plane/repository/running-jobs.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/repository/running-jobs.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/repository/worker-completion.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/repository/worker-completion.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/repository/worker-completion.ts",
+      "table": "cp_log_costs"
+    },
+    {
+      "file": "lib/control-plane/repository/worker-completion.ts",
+      "table": "cp_log_worker_results"
+    },
+    {
+      "file": "lib/control-plane/repository/worker-completion.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/repository/worker-completion.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/research-progression.ts",
+      "table": "cp_log_window_runs"
+    },
+    {
+      "file": "lib/control-plane/research-progression.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/research-view.ts",
+      "table": "cp_log_costs"
+    },
+    {
+      "file": "lib/control-plane/research-view.ts",
+      "table": "cp_log_research_intents"
+    },
+    {
+      "file": "lib/control-plane/research-view.ts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "lib/control-plane/research-view.ts",
+      "table": "cp_research_state"
+    },
+    {
+      "file": "lib/control-plane/scheduler/absence-reopen.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/scheduler/cycle-selection.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/scheduler/cycle-selection.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/scheduler/cycle-selection.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/control-plane/scheduler/cycle-selection.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/scheduler/cycle-selection.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/scheduler/dispatch.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/scheduler/dispatch.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/scheduler/durable.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/scheduler/durable.ts",
+      "table": "cp_debts"
+    },
+    {
+      "file": "lib/control-plane/scheduler/durable.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/scheduler/durable.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/control-plane/scheduler/durable.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/scheduler/state-planning.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/scheduler/state-planning.ts",
+      "table": "cp_research_state"
+    },
+    {
+      "file": "lib/control-plane/updates.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/workers/activity.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/activity.ts",
+      "table": "cp_leases"
+    },
+    {
+      "file": "lib/control-plane/workers/activity.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/workers/activity.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/activity.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/audit-sampling.ts",
+      "table": "cp_log_worker_results"
+    },
+    {
+      "file": "lib/control-plane/workers/claim-audit.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/workers/coordinator.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/coordinator.ts",
+      "table": "cp_debts"
+    },
+    {
+      "file": "lib/control-plane/workers/coordinator.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/workers/coordinator.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/control-plane/workers/coordinator.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/coordinator.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/held-digger-plan.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/held-digger-plan.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/workers/held-digger-plan.ts",
+      "table": "cp_pass_cursors"
+    },
+    {
+      "file": "lib/control-plane/workers/held-digger-plan.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/held-digger-plan.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/held-digger-sources.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/held-meeting-followup.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/held-meeting-followup.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/control-plane/workers/held-meeting-followup.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/workers/held-meeting-followup.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/held-meeting-followup.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/held-subject-linked-source.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/held-subject-source.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/held-subject-source.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/workers/held-subject-source.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/held-subject-source.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/held-subject-worker.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/held-worker-inputs.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/workers/held-worker-inputs.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/held-worker-inputs.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/hunter-lane-arming.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/workers/hunter-lane-arming.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/workers/lease-worker.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/lease-worker.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/live-audit-run.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/control-plane/workers/model-audit.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/paid-work-guards.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/workers/paid-work-guards.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/control-plane/workers/paid-work-guards.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/pipeline.ts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "lib/control-plane/workers/research-runtime.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/research-runtime.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/workers/research-runtime.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/routine-meeting-intake.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/workers/routine-meeting-intake.ts",
+      "table": "cp_log_dispositions"
+    },
+    {
+      "file": "lib/control-plane/workers/routine-meeting-intake.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/routine-meeting-intake.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/runtime.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/runtime.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/control-plane/workers/runtime.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/scoped-history.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/scoped-history.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/control-plane/workers/scoped-history.ts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "lib/control-plane/workers/scoped-history.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/control-plane/workers/scoped-history.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/standing-lineage.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/control-plane/workers/standing-lineage.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/control-plane/workers/standing-runtime.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/control-plane/workers/vault-object.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/vault.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/control-plane/workers/vault.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/doors/actions.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/doors/legistar-tenant.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/doors/page-check.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/doors/page-check.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/doors/repair.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/doors/source-capture.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/doors/source-capture.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/facts/box-publication.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/facts/comment-summary.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/frontend/look-spend.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/frontend/look-spend.ts",
+      "table": "cp_log_research_intents"
+    },
+    {
+      "file": "lib/funding/campaign-finance.ts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "lib/health/surface-fixes.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/hunt/directions.ts",
+      "table": "cp_log_research_intents"
+    },
+    {
+      "file": "lib/hunt/exa-admission.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/hunt/place-needs.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/hunt/place-source-admission.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/hunt/place-source-admission.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/hunt/place-source-task.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/hunt/place-source-task.ts",
+      "table": "cp_occurrences"
+    },
+    {
+      "file": "lib/hunt/place-source-task.ts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "lib/hunt/runtime.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/hunt/runtime.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "lib/hunt/runtime.ts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "lib/hunt/runtime.ts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "lib/hunt/source-meetings.ts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "lib/method/break-patterns.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/translate/routine-attempts.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/translate/routine-finds.ts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "lib/translate/routine-paid-work.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "lib/translate/routine-paid-work.ts",
+      "table": "cp_research_state"
+    },
+    {
+      "file": "lib/translate/worker.ts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "scripts/derive-candidate-campaign-sites.mts",
+      "table": "cp_log_promotion_pipeline"
+    },
+    {
+      "file": "scripts/derive-candidate-campaign-sites.mts",
+      "table": "cp_work_items_history"
+    },
+    {
+      "file": "scripts/field-manual-seed.mts",
+      "table": "cp_method_candidates"
+    },
+    {
+      "file": "scripts/freshness-shadow.mts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "scripts/freshness-shadow.mts",
+      "table": "cp_debts"
+    },
+    {
+      "file": "scripts/freshness-shadow.mts",
+      "table": "cp_log_research_intents"
+    },
+    {
+      "file": "scripts/freshness-shadow.mts",
+      "table": "cp_log_scout_results"
+    },
+    {
+      "file": "scripts/freshness-shadow.mts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "scripts/freshness-shadow.mts",
+      "table": "cp_research_state"
+    },
+    {
+      "file": "scripts/freshness-shadow.mts",
+      "table": "cp_route_tasks"
+    },
+    {
+      "file": "scripts/freshness-shadow.mts",
+      "table": "cp_runner_heartbeat"
+    },
+    {
+      "file": "scripts/ingest.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "scripts/legistar-members-scale.mts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "scripts/lib/held-meeting-child-input.ts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "scripts/loss-study-pass.mts",
+      "table": "cp_obligations"
+    },
+    {
+      "file": "scripts/loss-study-pass.mts",
+      "table": "cp_work_items"
+    },
+    {
+      "file": "scripts/measure-translation-cost-check.mts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "scripts/pilot-runner.mts",
+      "table": "cp_runner_heartbeat"
+    },
+    {
+      "file": "scripts/pilot-runtime-control.mts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "scripts/pilot-runtime-control.mts",
+      "table": "cp_log_research_intents"
+    },
+    {
+      "file": "scripts/pilot-runtime-control.mts",
+      "table": "cp_log_window_intents"
+    },
+    {
+      "file": "scripts/promote-registry-runtime.mts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "scripts/publish-owner-snapshot.mts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "scripts/publish-owner-snapshot.mts",
+      "table": "cp_cache_observations"
+    },
+    {
+      "file": "scripts/publish-owner-snapshot.mts",
+      "table": "cp_log_owner_decisions"
+    },
+    {
+      "file": "scripts/publish-owner-snapshot.mts",
+      "table": "cp_owner_snapshots"
+    },
+    {
+      "file": "scripts/rb-a4-portal-copy.mts",
+      "table": "cp_doors"
+    },
+    {
+      "file": "scripts/rb-a6-admin-check.mts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "scripts/rb-a6-admin-check.mts",
+      "table": "cp_admin_setting_history"
+    },
+    {
+      "file": "scripts/rb-a6-verify.mts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "scripts/routine-civic-data-runner.mts",
+      "table": "cp_admin_config"
+    },
+    {
+      "file": "scripts/vault-restore.mts",
+      "table": "cp_attempts"
+    },
+    {
+      "file": "scripts/vault-restore.mts",
+      "table": "cp_log_artifacts"
+    },
+    {
+      "file": "scripts/vs07-replay.mts",
+      "table": "cp_work_items"
+    }
   ]
 }

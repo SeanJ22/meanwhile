@@ -367,6 +367,14 @@ const readHourTotals = async (url: string, where: string, args: readonly unknown
     database: row.database as DatabaseTransfer["database"], requests: Number(row.requests), requestBytes: Number(row.request_bytes),
     responseBytes: Number(row.response_bytes) }));
 
+/** Admin's daily reading line: every hour since yesterday began in Eastern time, read by key as small totals. */
+export async function readRecentHourTotals(): Promise<HourlyDatabaseTransfer[]> {
+  const url = process.env.DATABASE_URL;
+  if (!url) throw new Error("DATABASE_URL is not configured");
+  assertDatabaseReadTarget(url);
+  return readHourTotals(url, "hour >= (((now() AT TIME ZONE 'America/New_York')::date - 1)::timestamp AT TIME ZONE 'America/New_York')", []);
+}
+
 /** Read small hour totals, then only the selected hour's job/table details. */
 export async function readRunnerDatabaseTransfer(selectedHour?: string, held?: readonly HourlyDatabaseTransfer[]): Promise<RunnerDatabaseTransfer> {
   const url = process.env.DATABASE_URL;

@@ -4,6 +4,7 @@ import { Fragment, useMemo, useState } from "react";
 
 import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
 
+import { PausedJobsPanel } from "./paused-jobs-panel.tsx";
 import { useKeeperScoreboard } from "./use-keeper-scoreboard.ts";
 import { useV6 } from "./context.tsx";
 import { count, mst, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
@@ -42,6 +43,7 @@ export function NowScreen() {
       <DirectWork />
       <OfficialsChecks />
       <IsItWorking />
+      <PausedJobsPanel />
       <OrdersInMotion />
       <NeedsMe />
     </>

@@ -7,7 +7,7 @@ import { processNeonBytes } from "../../db/transfer-by-caller.ts";
 import { countProblems, type CountProblem } from "../../counts/hour.ts";
 import { groupCountProblems } from "../../counts/problem-groups.ts";
 import { readHour, readRunnerReadProblems, readJobBreakerEvents, query } from "./read.ts";
-import { runnerFamilyLabel } from "../../db/runner-read-families.ts";
+import { jobLabel } from "../job-names.ts";
 import { formatEastern } from "../eastern-time.ts";
 import { LINE_KEEPER_BY, type LineHour } from "./model.ts";
 import { versionedRowsFor } from "../../db/versioned-rows.ts";
@@ -32,7 +32,8 @@ export function withKeeperFixes(config: AdminConfig, hour: LineHour): AdminConfi
   }));
   const problems=[...latest.problems.filter(p=>!p.key.startsWith("line-keeper:")),...groupCountProblems(counted),...observations];
   const breakerUpdates=(hour.breakerEvents??[]).map(event=>({id:`job-breaker:${event.id}`,
-    what:`${runnerFamilyLabel(event.job!)} ${event.action === "PAUSE" ? "paused new launches" : "resumed at half rate"} after ${Number(event.gb).toFixed(3)} GB in the measured hour.`,
+    what:event.action === "PAUSE" ? `${jobLabel(event.job!)} paused after ${Number(event.gb).toFixed(3)} GB in one hour. It waits until you release it in Admin.`
+      : `${jobLabel(event.job!)} was released and may start again.`,
     when:formatEastern(event.checked_at),label:"Proven",isWin:false,before:null,after:null,evidenceHref:null}));
   const ids=new Set(breakerUpdates.map(update=>update.id));
   const updates=[...breakerUpdates,...latest.updates.filter(update=>!ids.has(update.id))];

@@ -12,7 +12,7 @@ import { defaultAdminConfig, type AdminConfig } from "../lib/control-plane/gatew
 import { lookupAction } from "../lib/control-plane/gateway/registry.ts";
 import { withSetting, type SettingValue } from "../lib/control-plane/settings.ts";
 import { US_STATES } from "../lib/control-plane/readiness/catalog.ts";
-import { placeBoundaryMigration } from "./helpers/reader-identity-db.ts";
+import { placeBoundaryMigration, zipLocationMigration } from "./helpers/reader-identity-db.ts";
 import { publishClaim } from "../lib/facts/publish.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 
@@ -106,6 +106,7 @@ test("the hunter entry point uses RB-A2's selected ZIP places without adding ano
     await db.pg.exec(`CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8 NOT NULL CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
       CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8 NOT NULL CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
     await db.pg.exec(placeBoundaryMigration());
+    await db.pg.exec(zipLocationMigration());
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES ('county','place','County','AZ'),('town','place','Town','AZ'),('elsewhere','place','Another town','AZ')");
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES ('ocd-division/country:us','place','United States',NULL),('national-board','body','National board','US')");
     await db.query("INSERT INTO entity_place VALUES ('national-board','ocd-division/country:us',2026)");

@@ -9,7 +9,7 @@ import { placeMapCounts } from "../lib/place-map/counts.ts";
 import { divisionIdsAt, type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import type { RegistrationReference } from "../lib/registration/reference.ts";
-import { identitySourceTables, identityEventTables, readerIdentityMigration, placeBoundaryMigration } from "./helpers/reader-identity-db.ts";
+import { identitySourceTables, identityEventTables, readerIdentityMigration, placeBoundaryMigration, zipLocationMigration } from "./helpers/reader-identity-db.ts";
 import { ROUTINE_SOURCE_TASKS, routineTaskDue } from "../lib/civic-data/runner.ts";
 import { geographicSpecialDistricts } from "../lib/place-map/special-districts.ts";
 import { currentGrfPlaceEdges } from "../lib/place-map/grf-edges.ts";
@@ -59,6 +59,7 @@ test("year-aware tables preserve ids on reload, separate ZIP from ZCTA and resol
     await db.exec(readerIdentityMigration());
     await db.exec(placeBoundaryMigration());
     await db.exec(readFileSync("lib/db/migrations/RB-A7_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
+    await db.exec(zipLocationMigration());
     let calls = 0;
     const query: Query = async (sql, params = []) => { calls++; return (await db.query(sql, [...params])).rows as Record<string, unknown>[]; };
     const map: StatePlaceMap = {

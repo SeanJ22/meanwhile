@@ -233,7 +233,7 @@
       "file": "lib/place-map/read.ts",
       "kind": "SELECT *",
       "fingerprint": "dce52e00818c153ffdc8b0ae784d491de09a807315e228525a9c7c690b0b9725",
-      "line": 96
+      "line": 120
     },
     {
       "file": "lib/reader/canonical.ts",

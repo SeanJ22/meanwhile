@@ -97,7 +97,7 @@ test("one set of point source rows answers current representation and the select
 test("ZIP ballots retain every selected race including fringe membership without adding a point's other districts", async () => {
   const base = state("AZ"), county = `${base}/county:pima`, district = `${base}/sldl:20`, fringe = `${base}/sldl:21`;
   let calls = 0;
-  installPlaceMapQuery(async sql => {if(sql.includes("FROM zip_location"))return [];calls++;return fixtureCodeRows([
+  installPlaceMapQuery(async sql => {if(sql.includes("FROM zip_location")&&!sql.includes("zip_place"))return [];calls++;return fixtureCodeRows([
     row(base,"AZ","state","state:2023"),
     row(county,"AZ","county","county:2020"),
     row(district,"AZ","sldl","sldl:2024",{partial:true}),

@@ -17,8 +17,10 @@ export async function divisionIdsForZipArea(
   if (!zip) return [...new Set(pointDivisionIds)];
   const entry = supplied === undefined ? await readZipPlace(zip, selection) : supplied;
   const needsAddress=postalAreaNeedsAddress(zip,(await readZipPostalAreas([zip])).get(zip)??null);
-  const local = pointDivisionIds.filter(id => !districtFamilyKey(id) && (!needsAddress || isTownOrCountyDivision(id)));
-  return [...new Set([...local, ...entry?.ids ?? [], ...entry?.fringe ?? []])];
+  // A mail-only ZIP's ballot holds its town and county; the districts it could be in wait for a residential address.
+  const ballot = (id: string) => !needsAddress || isTownOrCountyDivision(id);
+  const local = pointDivisionIds.filter(id => !districtFamilyKey(id) && ballot(id));
+  return [...new Set([...local, ...entry?.ids ?? [], ...entry?.fringe ?? []].filter(ballot))];
 }
 
 export function unestablishedDistrictOfficesForFamilies(families: readonly string[], electionIds: readonly string[]): string[] {

@@ -1,4 +1,5 @@
 import { readerRoute } from "@/lib/api/reader-route";
+import { compressedJson } from "@/lib/api/compressed-json";
 import { matching, numeric, numericInRange, refuse, rejectUnknown } from "@/lib/api/params";
 import { stageTimer } from "@/lib/api/server-timing";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
@@ -88,7 +89,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     const pageIds = placePageCacheIds(place);
     const cachePlaces = readyZip ? [`zip:${readyZip}`] : pageIds.length ? pageIds : [...ids, ...fringe, ...territoryBodyIds];
     const stateAnswer = await stateAnswerRead;
-    return Response.json({
+    return await compressedJson(request, {
       ...result, coverage, listingIdentity, ...(stateAnswer ? {stateResponse:stateAnswer} : {}),
       readerScope: readerMeetingScope({ heldMeetings: place.meetings, bodies: coverage.bodies, ownDivisionIds: divisionIds,
         now: new Date(), listingIdentity: meetingListingIdentity(place.meetings, canonicalBodyIdentity) }),

@@ -11,8 +11,7 @@ import {
   type ManualProjectionContractId,
   type ManualProjectionPackage,
 } from "../lib/civic-data/manual-projections.ts";
-import { prepareManualProjectionSuccessor } from "../lib/civic-data/manual-successor.ts";
-import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { publishManualProjectionPackage } from "../lib/civic-data/manual-package-publication.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
@@ -76,15 +75,12 @@ if (input.contractId !== contractId) {
 prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
-const { candidate, expectedBaseVersionId } = await prepareManualProjectionSuccessor(input, store, input.sourceReceipt.reviewedAt);
-const outcome = await processRegisteredManualCandidate(
-  store,
-  contractId,
-  candidate,
-  input.sourceReceipt.reviewedAt,
-  expectedBaseVersionId,
-);
-
+const result=await publishManualProjectionPackage(input,store,input.sourceReceipt.reviewedAt);
+if(result.replay){
+  console.log("MANUAL_CIVIC_DATA_RECEIPT="+JSON.stringify({contractId,candidateId:result.replay.versionId,state:"PROMOTED",decision:"GOOD",
+    promotedVersion:result.replay.versionId,lastKnownGoodVersion:result.replay.lastKnownGoodVersionId,replayed:true,structuralReleaseContract:ZERO_RELEASE_EVENTS}));
+}else{
+const {candidate,outcome}=result.publication!;
 console.log("MANUAL_CIVIC_DATA_RECEIPT=" + JSON.stringify({
   contractId,
   candidateId: candidate.id,
@@ -94,5 +90,6 @@ console.log("MANUAL_CIVIC_DATA_RECEIPT=" + JSON.stringify({
   lastKnownGoodVersion: outcome.candidate.lastKnownGoodVersion,
   structuralReleaseContract: ZERO_RELEASE_EVENTS,
 }));
-if (!outcome.promoted) process.exitCode = 2;
+if (!outcome.promoted&&!outcome.confirmed) process.exitCode = 2;
+}
 }

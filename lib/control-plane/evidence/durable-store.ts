@@ -15,6 +15,7 @@
  */
 
 import { netlifyEvidenceStoreFromEnv } from "./netlify-store.ts";
+import { resolveRawCapturePointer } from "./raw-pointer.ts";
 import { randomBytes } from "node:crypto";
 import type { Dirent } from "node:fs";
 import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
@@ -441,7 +442,7 @@ export class DurableEvidenceStore implements EvidenceStore {
     if (!sidecar) return null;
 
     const bytes = await this.readBody(key, sidecar.bodySha256, sidecar.bodyBytes);
-    return { key, bytes: new Uint8Array(bytes), meta: sidecar.meta };
+    return resolveRawCapturePointer(this, { key, bytes: new Uint8Array(bytes), meta: sidecar.meta });
   }
 
   private async readBody(key: string, recordedHash: string, byteLength: number): Promise<Buffer> {

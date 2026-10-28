@@ -6,6 +6,7 @@ import test from "node:test";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { candidateChangeSet, canonicalCivicDataJson, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
+import { settleFederalVoteSources } from "../lib/votes/source-fanout.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { sourceProjectionEvidence } from "../lib/civic-data/types.ts";
 import {
@@ -139,7 +140,7 @@ test("congress-rollcalls promotes to the canonical plane and its Reader follows 
     assert.equal(read.metadata.versionId, candidate.id);
     assert.deepEqual(read.value.snapshot, seed.snapshot);
   }
-  assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
+  assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);
 });
 
 test("bill summaries and pending reviews are stable exact Admin members without changing the Reader payload contract", async () => {
@@ -295,6 +296,61 @@ test("each member's positions publish under that member alone, carrying only the
   assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:C000003", positions: [] }).semantics.violations.includes("MEMBER_HAS_NO_RECORDED_POSITION"));
   assert.ok(federalMemberVotesCandidate({ ...common, officeholderId: "congress:A000001", positions: [...mine, { officeholderId: "congress:A000001", voteId: "house:119-2:9", position: "YES" }] })
     .semantics.violations.includes("POSITION_POINTS_OUTSIDE_ROLL_WINDOW"));
+});
+
+test("a matching national hash repairs an interrupted member fanout before confirming, without reopening unchanged held records",async()=>{
+  const seed=await rollCallSeed(),store=new MemoryRoutineDataStore();
+  const common={acquisitions:acquisitionsForRollCalls(seed.snapshot),identifierSourceHash:"a".repeat(64),retrievedAt:T0,
+    expectedCongress:119,expectedSession:2,snapshot:seed.snapshot};
+  const national=federalRollCallsCandidate({...common,partyBreakdowns:{},billSummaries:seed.billSummaries});
+  assert.ok((await processRegisteredManualCandidate(store,"congress-rollcalls",national,T0)).promoted);
+  const members=["congress:A000001","congress:B000002"].map(officeholderId=>federalMemberVotesCandidate({...common,officeholderId,
+    positions:seed.positions.filter(position=>position.officeholderId===officeholderId)}));
+  assert.ok((await processRegisteredManualCandidate(store,"congress-rollcalls",members[0]!,T0)).promoted);
+  const source={sourceId:national.sourceId,recordClass:national.recordClass,scope:national.scope,parserVersion:national.normalization.parserVersion,
+    rawHash:national.retrieval.rawHash!,now:T1,complete:true,retrieval:{requestedUrl:national.retrieval.requestedUrl,finalUrl:national.retrieval.finalUrl,
+      httpStatus:national.retrieval.httpStatus,rawHash:national.retrieval.rawHash!,retrievedAt:T1}};
+  const published:string[]=[];
+  const first=await settleFederalVoteSources({store,members,source,publish:async candidate=>{
+    published.push(candidate.scope);return processRegisteredManualCandidate(store,"congress-rollcalls",candidate,T1);
+  }});
+  assert.ok(first.confirmed);assert.deepEqual(first.refused,[]);assert.deepEqual(published,[members[1]!.scope]);
+  assert.ok(await store.readSourceHead(members[1]!.recordClass,members[1]!.scope),"the interrupted member is live before the national confirmation");
+  store.readPromotion=async()=>{throw Error("unchanged fanout opened a held payload");};store.readCandidate=async()=>{throw Error("unchanged fanout opened a held candidate");};
+  const repeated=await settleFederalVoteSources({store,members,source,publish:async()=>{throw Error("unchanged member republished");}});
+  assert.ok(repeated.confirmed);assert.deepEqual(repeated.refused,[]);
+});
+
+test("a member's source hash follows its displayed bill-title body without inheriting unrelated members' titles",async()=>{
+  const seed=await rollCallSeed(),acquisitions=acquisitionsForRollCalls(seed.snapshot);
+  const title=(body:string)=>heldAcquisitions([{requestedUrl:"https://api.congress.gov/v3/bill/119/hr/1",finalUrl:"https://api.congress.gov/v3/bill/119/hr/1",httpStatus:200,body}])[0]!;
+  const member=(officeholderId:string,body:string)=>federalMemberVotesCandidate({acquisitions:[...acquisitions,title(body)],retrievedAt:T0,
+    expectedCongress:119,expectedSession:2,snapshot:seed.snapshot,officeholderId,positions:seed.positions.filter(position=>position.officeholderId===officeholderId)});
+  assert.notEqual(member("congress:A000001","old official title").retrieval.rawHash,member("congress:A000001","changed official title").retrieval.rawHash);
+  assert.equal(member("congress:B000002","old official title").retrieval.rawHash,member("congress:B000002","changed official title").retrieval.rawHash);
+});
+
+test("a bounded federal catch-up publishes its source-backed frontier while keeping continuation explicit",async()=>{
+  const seed=await rollCallSeed();
+  const candidate=federalRollCallsCandidate({acquisitions:acquisitionsForRollCalls(seed.snapshot),identifierSourceHash:"a".repeat(64),retrievedAt:T0,
+    expectedCongress:119,expectedSession:2,snapshot:seed.snapshot,partyBreakdowns:{},billSummaries:seed.billSummaries,complete:false,continuationPending:true});
+  assert.equal(candidate.retrieval.complete,false);
+  assert.equal((candidate.normalizedPayload as {continuationPending:boolean}).continuationPending,true);
+  const published=await processRegisteredManualCandidate(new MemoryRoutineDataStore(),"congress-rollcalls",candidate,T0);
+  assert.ok(published.promoted,"verified bounded rolls reach readers before the remaining source horizon finishes");
+});
+
+test("resumed federal source bytes preserve each member's actual source observation instead of the processing date",async()=>{
+  const seed=await rollCallSeed(),older="2026-09-08T11:00:00.000Z";
+  const acquired=acquisitionsForRollCalls(seed.snapshot).map((row,index)=>({...row,retrievedAt:index===2?older:T0}));
+  const common={acquisitions:acquired,identifierSourceHash:"a".repeat(64),retrievedAt:T1,expectedCongress:119,expectedSession:2,snapshot:seed.snapshot};
+  const national=federalRollCallsCandidate({...common,partyBreakdowns:{},billSummaries:seed.billSummaries});
+  assert.equal(national.retrieval.retrievedAt,older);assert.equal(national.retrieval.sourceCheck?.checkedAt,older);
+  const mine=federalMemberVotesCandidate({...common,officeholderId:"congress:A000001",positions:seed.positions.filter(row=>row.officeholderId==="congress:A000001")});
+  assert.equal(mine.retrieval.retrievedAt,T0);assert.equal(mine.retrieval.sourceCheck?.checkedAt,T0,"an unrelated member's older source does not restamp this member");
+  const rechecked=federalMemberVotesCandidate({...common,acquisitions:acquired.map(row=>({...row,retrievedAt:T1})),officeholderId:"congress:A000001",
+    positions:seed.positions.filter(row=>row.officeholderId==="congress:A000001")});
+  assert.equal(rechecked.retrieval.rawHash,mine.retrieval.rawHash,"observation movement alone does not move the source-content hash");
 });
 
 test("federal-key-votes binds mutable official facts to the exact reviewed v1 selection", async () => {
@@ -501,10 +557,14 @@ test("a roll-call acquisition with an answered absent pointer refuses rather tha
 
 test("the two live federal acquisition commands have no circular canonical-pointer prerequisite", () => {
   const rollCalls = readFileSync("scripts/fetch-votes.mts", "utf8");
-  assert.match(rollCalls, /billSummariesForRollCallAcquisition\(previous\)/);
+  const sourceComparison=rollCalls.indexOf("settleFederalVoteSources({");
+  const summariesRead=rollCalls.indexOf('readCandidatePath<BillSummariesFile>');
+  assert.ok(sourceComparison>=0&&summariesRead>sourceComparison,"held title summaries are read only after current native bytes and member fan-out were compared");
+  assert.match(rollCalls, /\["readModel", "billSummaries"\]/);
+  assert.doesNotMatch(rollCalls, /readFederalRollCallsProjection\(/);
   assert.doesNotMatch(rollCalls, /previous\.kind\s*!==\s*"PROMOTED"/);
 
-  const keyVotes = readFileSync("scripts/fetch-key-vote-positions.mts", "utf8");
+  const keyVotes = [readFileSync("scripts/fetch-key-vote-positions.mts", "utf8"),readFileSync("lib/votes/key-vote-refresh.ts", "utf8")].join("\n");
   assert.doesNotMatch(keyVotes, /readFederalKeyVotesProjection/);
   assert.doesNotMatch(keyVotes, /current\.kind\s*!==\s*"PROMOTED"/);
   assert.match(keyVotes, /federalKeyVoteSelectionV1Snapshot/);

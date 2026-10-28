@@ -1,3 +1,7 @@
+// Database byte declarations use database_transfer_hourly, through 2026-10-27 17:00 UTC.
+// Source families use their largest recorded hour (request + response bytes) as a conservative per-run estimate.
+// Commands absent from the counters use the routine supervisor estimate, 1,907,347,669 bytes.
+import { databaseByteContract, withDatabaseByteContract, type DatabaseByteContract } from "./database-byte-contract.ts";
 import { REGISTRY_STATES, stateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { VALIDATION_CHECKS, type RoutineDataClassification, type RoutineRecordClass } from "./types.ts";
 import type { SourceAuthorityId } from "./source-authority.ts";
@@ -114,7 +118,7 @@ export function sittingWindowDueAtMs(
   return succeededMs + sittingWindowRereadMs(schedule, hot) - ROUTINE_DATA_ADMISSION_MS;
 }
 
-export interface RoutineSourceContract {
+export interface RoutineSourceContract extends Partial<DatabaseByteContract> {
   readonly id: string;
   readonly sourceId: SourceAuthorityId;
   readonly recordClass: RoutineRecordClass;
@@ -167,6 +171,7 @@ const MEETING_CADENCE: RoutineCadencePolicy = {
 };
 
 export const MEETING_PARTITION_POLICY = {
+  ...databaseByteContract({ id: "meeting-partition", recordClass: "MEETING" }),
   sourceId: "meetings-public-bodies",
   recordClass: "MEETING",
   parserNormalizerVersion: "meetings-composite/2",
@@ -187,6 +192,7 @@ export const DERIVED_MEETING_FAMILY_STATES: readonly DerivedMeetingFamilyState[]
 export type DerivedMeetingFamilyState = `US-${string}`;
 
 export const DERIVED_MEETING_FAMILY_POLICY = {
+  ...databaseByteContract({ id: "derived-meeting-family", recordClass: "MEETING" }),
   sourceId: "meetings-derived-routes",
   recordClass: "MEETING",
   parserNormalizerVersion: "meetings-composite/2",
@@ -201,12 +207,13 @@ export const DERIVED_MEETING_FAMILY_POLICY = {
   readerConsumers: ["/api/meetings", "/api/agenda", "Ask", "Admin", "map"],
 } as const;
 
-export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
+const ROUTINE_SOURCE_DEFINITIONS: readonly RoutineSourceContract[] = [
   {
     id: "fec-funding",
     sourceId: "fec-open-api",
     recordClass: "FEC_FUNDING",
     scope: "federal-supported",
+    databaseBytesPerRun: 42_707_982,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/fetch-fec.mts", "--promote"] },
     parserNormalizerVersion: "fec-funding/4",
     cadence: { description: "weekly", defaultEveryMs: 7 * DAY },
@@ -225,6 +232,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     sourceId: "nh-general-court",
     recordClass: "STATE_LEGISLATOR",
     scope: "US-NH",
+    databaseBytesPerRun: 1_266_877,
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/nh-gencourt-members.mts", "--promote"], requestedUrl: "https://gc.nh.gov/downloads/Members.txt" },
     parserNormalizerVersion: "nh-general-court/3",
     cadence: { description: "daily while the supported term is live", defaultEveryMs: DAY },
@@ -246,6 +254,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       recordClass: "STATE_LEGISLATOR",
       scope: target.jurisdiction,
       acquisitionFailureDomain: `routine-source:${target.sourceId}`,
+      databaseBytesPerRun: 14_609_506,
       acquisitionAdapter: {
         authorityMode: "REGISTERED_SOURCE_ROUTES",
         command: ["scripts/state-legislators.mts", "--promote", `--state=${target.state}`],
@@ -272,6 +281,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "STATE_LEGISLATOR",
     scope: `US-${state.toUpperCase()}:openstates-people:v1`,
     acquisitionFailureDomain: `routine-source:${PLURAL_SOURCE_ID}:${state}`,
+    databaseBytesPerRun: 408_953_781,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/openstates-people-refresh.mts", "--promote", `--state=${state}`] },
     parserNormalizerVersion: PLURAL_PARSER_VERSION,
     cadence: { description: "daily known-source people refresh, independent of Sends", defaultEveryMs: DAY },
@@ -291,6 +301,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "STATE_ROLL_CALL",
     scope: `US-${state.toUpperCase()}:openstates-votes:v1`,
     acquisitionFailureDomain: `routine-source:plural-openstates-votes:${state}`,
+    databaseBytesPerRun: 1_117_330_555,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/openstates-votes-refresh.mts", "--promote", `--state=${state}`] },
     parserNormalizerVersion: "plural-votes/2",
     cadence: { description: "daily public bulk session votes; Open States API v3 fallback", defaultEveryMs: DAY },
@@ -310,6 +321,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "STATE_ROLL_CALL",
     scope: `US-${state.toUpperCase()}:legiscan-votes:v1`,
     acquisitionFailureDomain: `routine-source:legiscan:${state}`,
+    databaseBytesPerRun: 29_681_804,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/legiscan-votes-refresh.mts", "--promote", `--state=${state}`] },
     parserNormalizerVersion: "legiscan-votes/1",
     cadence: { description: "weekly LegiScan session datasets", defaultEveryMs: 7 * DAY },
@@ -331,6 +343,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
       recordClass: fanOut ? "STATE_LEGISLATOR_VOTES" : "STATE_ROLL_CALL",
       scope: target.jurisdiction,
       acquisitionFailureDomain: `routine-source:${target.sourceId}`,
+      databaseBytesPerRun: 22_470_725,
       acquisitionAdapter: {
         authorityMode: "REGISTERED_SOURCE_ROUTES",
         command: ["scripts/state-rollcalls.mts", "--promote", `--state=${target.state}`],
@@ -360,6 +373,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     sourceId: "census-data-api",
     recordClass: "CENSUS_REFERENCE",
     scope: "acs-population",
+    databaseBytesPerRun: 1_907_347_669,
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/acs-population-promote.mts"], requestedUrl: "https://api.census.gov/data/" },
     parserNormalizerVersion: "census-data-api/3",
     cadence: { description: "monthly check of Census's annual ACS five-year release catalog; read the newest published vintage", defaultEveryMs: 30 * DAY },
@@ -378,6 +392,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     sourceId: "census-geography-relationships",
     recordClass: "CENSUS_GEOGRAPHY",
     scope: "US:zcta-geography-overlaps",
+    databaseBytesPerRun: 1_907_347_669,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/census-geography-refresh.mts"] },
     childTimeoutMs: 20 * 60_000,
     parserNormalizerVersion: CENSUS_GEO_PARSER_VERSION,
@@ -402,6 +417,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     sourceId: "pima-legistar-outcomes",
     recordClass: "MEETING_OUTCOME",
     scope: "US-AZ:county:pima:legistar-outcomes",
+    databaseBytesPerRun: 12_324_639,
     acquisitionAdapter: {
       // Native body lookup, events, items and votes all stay within the registered Pima tenant.
       authorityMode: "REGISTERED_SOURCE_ROUTES",
@@ -434,6 +450,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "MEETING_OUTCOME",
     scope: "US-AZ:place:mesa:legistar-minutes-outcomes",
     acquisitionFailureDomain: "meeting-upstream:mesa.legistar.com",
+    databaseBytesPerRun: 87_369_967,
     acquisitionAdapter: {
       authorityMode: "SINGLE_ROUTE",
       command: ["scripts/legistar-insite-minutes-ingest.mts", "--promote", "--slug", "mesa"],
@@ -461,6 +478,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     sourceId: "cisa-dotgov-registry",
     recordClass: "DOTGOV_REFERENCE",
     scope: "US:current-full:domains",
+    databaseBytesPerRun: 1_907_347_669,
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/fetch-dotgov.mts", "--promote"], requestedUrl: "https://api.github.com/repos/cisagov/dotgov-data/commits?path=current-full.csv&per_page=1" },
     parserNormalizerVersion: "cisa-dotgov/3",
     cadence: { description: "monthly", defaultEveryMs: 30 * DAY },
@@ -480,6 +498,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "REGISTRATION",
     scope: target.scope,
     acquisitionFailureDomain: `routine-source:${REGISTRATION_SOURCE_ID}:${target.state}`,
+    databaseBytesPerRun: 1_907_347_669,
     acquisitionAdapter: {
       authorityMode: "REGISTERED_SOURCE_ROUTES",
       command: ["scripts/registration-refresh.mts", "--promote", `--state=${target.state}`],
@@ -504,6 +523,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     acquisitionFailureDomain: `routine-source:census-geography-relationships:${target.state}`,
     recordClass: "CENSUS_GEOGRAPHY",
     scope: `US-${target.state}:place-map`,
+    databaseBytesPerRun: 60_592_693,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/place-map-refresh.mts", `--state=${target.state}`] },
     parserNormalizerVersion: CENSUS_GEO_PARSER_VERSION,
     cadence: { description: "monthly Census boundary and ZIP membership check", defaultEveryMs: 30 * DAY },
@@ -523,6 +543,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "CURATED_READER_RECORD",
     scope: "US:meeting-body-crosswalk-derived",
     acquisitionFailureDomain: "derived:meeting-body-crosswalk",
+    databaseBytesPerRun: 30_744_592,
     acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-meeting-body-crosswalk.mts", "--promote"] },
     parserNormalizerVersion: "meeting-source-wiring/1",
     cadence: { description: "every six hours", defaultEveryMs: 6 * HOUR },
@@ -542,6 +563,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "CURATED_READER_RECORD",
     scope: "US:meeting-doors",
     acquisitionFailureDomain: "derived:meeting-doors",
+    databaseBytesPerRun: 137_962_889,
     acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/publish-meeting-doors.mts", "--promote"] },
     parserNormalizerVersion: "meeting-doors/1",
     cadence: { description: "at the start of every routine pass, before any meeting door is read", defaultEveryMs: ROUTINE_DATA_ADMISSION_MS },
@@ -561,6 +583,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "CURATED_READER_RECORD",
     scope: "US:meeting-source-wiring",
     acquisitionFailureDomain: "derived:meeting-source-wiring",
+    databaseBytesPerRun: 47_964_971,
     acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-meeting-source-wiring.mts", "--promote"] },
     parserNormalizerVersion: "meeting-source-wiring/1",
     cadence: { description: "every six hours", defaultEveryMs: 6 * HOUR },
@@ -580,6 +603,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     recordClass: "CURATED_READER_RECORD",
     scope: stateBallotScope("candidate-campaign-sites-derived", state),
     acquisitionFailureDomain: `derived:candidate-campaign-sites:${state}`,
+    databaseBytesPerRun: 17_847_646,
     acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/derive-candidate-campaign-sites.mts", `--state=${state}`, "--promote"] },
     parserNormalizerVersion: "candidate-campaign-site-chain/1",
     cadence: { description: "hourly, the research cycle's own rhythm", defaultEveryMs: HOUR },
@@ -597,6 +621,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     id: CAMPAIGN_MONEY_SOURCE_ID, sourceId: CAMPAIGN_MONEY_SOURCE_ID,
     recordClass: "CAMPAIGN_FINANCE", scope: CAMPAIGN_MONEY_SCOPE,
     acquisitionFailureDomain: "routine-source:campaign-money",
+    databaseBytesPerRun: 189_057_997,
     acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/state-campaign-finance.mts", "--promote"] },
     parserNormalizerVersion: CAMPAIGN_FINANCE_PARSER,
     cadence: { description: "Each routine pass checks the states' hourly clocks; one state worker at a time", defaultEveryMs: ROUTINE_DATA_ADMISSION_MS },
@@ -610,6 +635,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   ...FEDERAL_MONEY_SOURCES.map((source): RoutineSourceContract => ({
     id: source, sourceId: source, recordClass: "FEDERAL_MONEY", scope: `${source}:US`, fanOut: true,
     acquisitionFailureDomain: `routine-source:${source}`,
+    databaseBytesPerRun: 159_215_469,
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/federal-money-refresh.mts", "--promote", `--source=${source}`], requestedUrl: FEDERAL_MONEY_CONFIG[source].route },
     parserNormalizerVersion: FEDERAL_MONEY_PARSER,
     cadence: { description: FEDERAL_MONEY_CONFIG[source].clock, defaultEveryMs: FEDERAL_MONEY_CONFIG[source].everyMs },
@@ -622,6 +648,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   })),
   {
     id: "legiscan-bulk", sourceId: "legiscan-bills", recordClass: "STATE_BILL", scope: "US:legiscan-datasets",
+    databaseBytesPerRun: 10_261_138_473,
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/legiscan-bulk.mts", "--promote"], requestedUrl: "https://api.legiscan.com/?op=getDatasetList" },
     parserNormalizerVersion: "legiscan-bulk/4",
     cadence: { description: "weekly, following LegiScan's weekly dataset publication", defaultEveryMs: 7 * DAY },
@@ -638,6 +665,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     sourceId: GOOGLE_CIVIC_SOURCE_ID,
     recordClass: "GOOGLE_CIVIC_VOTERINFO",
     scope: GOOGLE_CIVIC_SCOPE,
+    databaseBytesPerRun: 385_085_031,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/google-civic-refresh.mts", "--promote"] },
     parserNormalizerVersion: GOOGLE_CIVIC_PARSER_VERSION,
     cadence: { description: "daily elections-catalog checks through November 3; weekly outside the election window; voterinfo only on an explicit reader fallback where official sources are absent", defaultEveryMs: 7 * DAY,
@@ -654,6 +682,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   ...OPEN_DATA_SOURCES.map((sourceId): RoutineSourceContract => ({
     id: sourceId, sourceId, recordClass: "CURATED_READER_RECORD", scope: `${sourceId}:national`,
     acquisitionFailureDomain: `routine-source:${sourceId}`,
+    databaseBytesPerRun: 72_035_966,
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/open-data-refresh.mts", "--promote", `--source=${sourceId}`],
       requestedUrl: sourceId === "socrata-discovery" ? SOCRATA_CATALOG : ECHO_EXPORT },
     parserNormalizerVersion: OPEN_DATA_PARSER,
@@ -666,6 +695,7 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
   })),
   ...FEDERAL_SOURCE_IDS.map((id): RoutineSourceContract => ({
     id, sourceId: id, recordClass: FEDERAL_RECORD_CLASS, scope: federalScope(id), fanOut: true,
+    databaseBytesPerRun: 74_284_098,
     acquisitionAdapter: { authorityMode: "SINGLE_ROUTE", command: ["scripts/src-cg-refresh.mts", "--promote", `--source=${id}`], requestedUrl: FEDERAL_SOURCES[id].url },
     parserNormalizerVersion: FEDERAL_PARSER_VERSION,
     cadence: { description: FEDERAL_SOURCES[id].clock, defaultEveryMs: FEDERAL_SOURCES[id].everyMs },
@@ -676,6 +706,8 @@ export const ROUTINE_SOURCE_CONTRACTS: readonly RoutineSourceContract[] = [
     autoPromotable: true, classification: "RUNTIME_CIVIC_DATA", bootstrapFixturePaths: [],
   })),
 ] as const;
+
+export const ROUTINE_SOURCE_CONTRACTS = ROUTINE_SOURCE_DEFINITIONS.map(withDatabaseByteContract);
 
 export function cadenceMsAt(contract: Pick<RoutineSourceContract, "cadence">, nowMs: number): number {
   for (const phase of contract.cadence.phases ?? []) {

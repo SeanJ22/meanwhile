@@ -79,9 +79,9 @@ export interface OverdueDoor {
 /** The check a door owes at `now`. */
 export function checkEveryFor(door: DoorRecord, facts: DoorFacts | undefined): { readonly minutes: number; readonly own: boolean } {
   if (door.checkEveryMinutes !== null) return { minutes: door.checkEveryMinutes, own: true };
-  // The faster of the standing check and the observed change rate.
+  // Meetings retain their required check; other sources may have a slower observed change interval.
   const standing = door.meeting != null ? (facts?.hot ? hotCheckMinutes() : coldCheckMinutes()) : STANDING_CHECK_MINUTES;
-  return { minutes: checkEveryWithObserved(door, standing).minutes, own: false };
+  return { minutes: checkEveryWithObserved(door, standing, door.meeting != null ? standing : Number.POSITIVE_INFINITY).minutes, own: false };
 }
 
 /** Open doors whose last success is older than their check, most late first. */

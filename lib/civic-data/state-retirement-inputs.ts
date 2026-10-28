@@ -681,7 +681,7 @@ export async function prepareRetirementStateInputs(input: {
     for (const origin of origins) {
       const originProof = await input.query(`SELECT c.id FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
         WHERE p.record_class=$1 AND p.scope=$2 AND c.id=$3 AND c.state='PROMOTED' AND c.validation_receipt->>'decision'='GOOD'
-          AND c.normalized_hash=$4 AND p.payload=c.candidate->'readModel' AND p.validation_receipt=c.validation_receipt`, [origin.recordClass, origin.scope, origin.versionId, origin.hash]);
+          AND c.normalized_hash=$4 AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt=c.validation_receipt`, [origin.recordClass, origin.scope, origin.versionId, origin.hash]);
       if (!originProof.length) throw new Error(`STATE_RETIREMENT_ORIGIN_PROOF_CHANGED:${origin.scope}`);
       const decoder = new StreamedCivicPayload(async hashes => (await input.query("SELECT hash,payload FROM civic_data_payload_parts WHERE hash=ANY($1::text[])", [hashes])).map(row => ({ hash: String(row.hash), payload: row.payload })));
       const source = new Source(origin, input.query, decoder, input.streamRows), metadata = await route(source, spool, unassigned);

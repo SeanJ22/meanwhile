@@ -1,5 +1,9 @@
-import { createHash } from "node:crypto";
+import { createHash,randomUUID } from "node:crypto";
 import { readZipEntries } from "../sources/archive.ts";
+import { continueOfficialVoteDocument } from "../state-rollcalls/source-continuation.ts";
+import { rawCaptureVault } from "./raw-capture-remote.ts";
+import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
+import { passDeadlineFromEnv } from "../ops/independent-runtime-pass.ts";
 
 export const CENSUS_GOVERNMENT_UNITS_URL =
   "https://www2.census.gov/programs-surveys/gus/datasets/2022/govt_units_2022.ZIP" as const;
@@ -115,6 +119,7 @@ async function fetchExactSource(
   fetchImpl: typeof fetch,
   clock: FetchClock,
   priorReceipts: readonly JurisdictionReferenceSourceReceipt[],
+  signal?:AbortSignal,
 ): Promise<
   | { readonly kind: "ACQUIRED"; readonly bytes: Uint8Array; readonly receipt: JurisdictionReferenceSourceReceipt }
   | JurisdictionReferenceAcquisitionFailure
@@ -126,6 +131,7 @@ async function fetchExactSource(
       method: "GET",
       redirect: "follow",
       headers: { accept: source.mediaType },
+      signal,
     });
   } catch (error) {
     return failed({
@@ -154,7 +160,7 @@ async function fetchExactSource(
     rawHash,
     byteCount: bytes.byteLength,
   };
-  if (!response.ok) {
+  if (response.status!==200) {
     return failed({
       stage: "HTTP",
       requestedUrl: source.url,
@@ -356,13 +362,15 @@ async function acquireWith(
   fetchImpl: typeof fetch,
   clock: FetchClock,
   denominators: WorkbookDenominators,
+  readSource?:(id:JurisdictionReferenceHttpSourceId,prior:readonly JurisdictionReferenceSourceReceipt[])=>ReturnType<typeof fetchExactSource>,
 ): Promise<JurisdictionReferenceAcquisitionResult> {
   const receipts: JurisdictionReferenceSourceReceipt[] = [];
-  const census = await fetchExactSource("census-government-units-2022", fetchImpl, clock, receipts);
+  const read=readSource??((id:JurisdictionReferenceHttpSourceId,prior:readonly JurisdictionReferenceSourceReceipt[])=>fetchExactSource(id,fetchImpl,clock,prior));
+  const census = await read("census-government-units-2022", receipts);
   if (census.kind === "FAILED") return census;
   receipts.push(census.receipt);
 
-  const guide = await fetchExactSource("az-sos-bulk-filing-guide-2026", fetchImpl, clock, receipts);
+  const guide = await read("az-sos-bulk-filing-guide-2026", receipts);
   if (guide.kind === "FAILED") return guide;
   receipts.push(guide.receipt);
   if (guide.bytes.byteLength < 5 || new TextDecoder().decode(guide.bytes.subarray(0, 5)) !== "%PDF-") {
@@ -410,7 +418,30 @@ async function acquireWith(
 
 /** Production acquisition has no path or fixture override. */
 export async function acquireJurisdictionReferenceInputs(): Promise<JurisdictionReferenceAcquisitionResult> {
-  return acquireWith(globalThis.fetch, () => new Date().toISOString(), PRODUCTION_DENOMINATORS);
+  const copies=runtimeCivicReadCache().jobState(),saved=await copies.readCheckpoint<{passId:string}>("source-probe-progress:v1","jurisdiction-operational-reference");
+  const progress=saved?.passId?saved:{passId:randomUUID()};
+  await copies.checkpoint("source-probe-progress:v1","jurisdiction-operational-reference",progress);
+  const vault=rawCaptureVault(),clock=()=>new Date().toISOString();
+  return acquireWith(globalThis.fetch,clock,PRODUCTION_DENOMINATORS,async(id,prior)=>{
+    const source=sourceFor(id),signal=AbortSignal.timeout(Math.max(1,Math.min(60_000,passDeadlineFromEnv()-Date.now())));
+    const failure:{value:JurisdictionReferenceAcquisitionFailure|null}={value:null};
+    try{
+      const document=await continueOfficialVoteDocument({sourceId:"jurisdiction-operational-reference",parserVersion:"jurisdiction-operational-reference/3",
+        context:progress.passId,url:source.url,vault,signal,read:async()=>{
+          const result=await fetchExactSource(id,globalThis.fetch,clock,prior,signal);
+          signal.throwIfAborted();
+          if(result.kind==="FAILED"){failure.value=result;throw Error("The current operational-reference source could not be acquired.");}
+          return {requestedUrl:result.receipt.requestedUrl,finalUrl:result.receipt.finalUrl,httpStatus:result.receipt.httpStatus,
+            bytes:result.bytes,retrievedAt:result.receipt.retrievedAt};
+        }});
+      return {kind:"ACQUIRED",bytes:document.bytes,receipt:{sourceId:id,requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,
+        httpStatus:document.httpStatus,retrievedAt:document.retrievedAt,rawHash:sha256(document.bytes),byteCount:document.bytes.byteLength}};
+    }catch(error){if(failure.value)return failure.value;throw error;}
+  });
+}
+
+export async function clearJurisdictionReferenceSourceProgress():Promise<void>{
+  await runtimeCivicReadCache().jobState().checkpoint("source-probe-progress:v1","jurisdiction-operational-reference",null);
 }
 
 /**

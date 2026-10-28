@@ -7,8 +7,14 @@ import type { OfficeholderSet } from "./types.ts";
 import type { FederalDirectoryReadModel } from "./federal-directory-data-plane.ts";
 import {createHash} from "node:crypto";
 import type {ManualSourceReview} from "../civic-data/types.ts";
+import { sourceFetch } from "../sources/http.ts";
+import { RawCaptureFailure, rawResponseCapture } from "../sources/raw-response.ts";
+import { holdRawCapture, readRawCaptureText, type RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
+import { rawCaptureVault } from "../civic-data/raw-capture-remote.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 
-interface CensusOfficeEvidence { readonly body:string; readonly rawHash:string; readonly retrievedAt:string; readonly url:string }
+interface CensusOfficeEvidence { readonly body?:string; readonly capture?:RawCaptureRef; readonly rawHash:string; readonly retrievedAt:string; readonly url:string }
+const ownedCensusBytes = new WeakMap<CensusOfficeEvidence,string>();
 type ResolvedOfficePoint = OfficePoint & {readonly census?:CensusOfficeEvidence};
 const STREET_WORDS:Readonly<Record<string,string>>={STREET:"ST",ROAD:"RD",AVENUE:"AVE",BOULEVARD:"BLVD",DRIVE:"DR",PLACE:"PL",COURT:"CT",LANE:"LN",NORTH:"N",SOUTH:"S",EAST:"E",WEST:"W"};
 const streetWords=(value:string)=>value.toUpperCase()
@@ -40,7 +46,7 @@ export type OfficePointResolver = (address: string) => Promise<OfficePointResolu
 /** Public office addresses are published facts; the private home-address proxy deliberately hides failure details. */
 export const resolvePublishedOfficePoint: OfficePointResolver = async address => {
   try {
-    const response = await fetch(censusGeocodeUrl(address), {
+    const response = await sourceFetch(censusGeocodeUrl(address), {
       headers: {accept:"application/json", "user-agent":OUTBOUND_USER_AGENT}, signal:AbortSignal.timeout(8_000), cache:"no-store",
     });
     if (!response.ok) return {reason:`UPSTREAM_HTTP_${response.status}`};
@@ -48,8 +54,13 @@ export const resolvePublishedOfficePoint: OfficePointResolver = async address =>
     if (!point) return {reason:"NO_MATCH"};
     const expectedZip = /\b[A-Z]{2}\s+(\d{5})(?:-\d{4})?$/.exec(address)?.[1];
     if (expectedZip && expectedZip !== parseCensusZip(payload) && !samePhysicalOffice(address,payload)) return {reason:"ZIP_MISMATCH"};
-    return {...point,census:{body,rawHash:createHash("sha256").update(body).digest("hex"),retrievedAt:new Date().toISOString(),url:censusGeocodeUrl(address)}};
+    const capture = await rawResponseCapture(response);
+    const census:CensusOfficeEvidence={...(capture?{capture}:{body}),rawHash:createHash("sha256").update(body).digest("hex"),
+      retrievedAt:new Date().toISOString(),url:censusGeocodeUrl(address)};
+    ownedCensusBytes.set(census,body);
+    return {...point,census};
   } catch (error) {
+    if(error instanceof RawCaptureFailure)throw error;
     return {reason:error instanceof Error && error.name === "TimeoutError" ? "UPSTREAM_TIMEOUT" : "UPSTREAM_ERROR"};
   }
 };
@@ -58,10 +69,23 @@ const valid = (point: OfficePointResolution | undefined): point is OfficePoint =
 export const publicOfficeAddress = (office: Pick<DirectoryOffice, "address" | "city" | "state" | "zip">) =>
   office.address?.trim() ? [office.address, [office.city, [office.state, office.zip].filter(Boolean).join(" ")].filter(Boolean).join(", ")].filter(Boolean).join(", ") : "";
 
-/** Saved with the office, before hashing and publishing. A later run reuses points for the exact same public address. */
+/** New versions retain the old point's original source by fingerprint; legacy versions are not rewritten. */
+export async function holdOfficePointEvidence(point:PublishedOfficePoint,vault?:EvidenceStore):Promise<PublishedOfficePoint>{
+  if(point.census?.body===undefined)return point;
+  const {body,...evidence}=point.census;
+  let capture:RawCaptureRef;
+  try{capture=await holdRawCapture(vault??rawCaptureVault(),"census-office-geocoder",body,"application/json");}
+  catch(error){throw error instanceof RawCaptureFailure?error:new RawCaptureFailure(error);}
+  if(capture.rawHash!==evidence.rawHash)throw new Error("OFFICE_CENSUS_CAPTURE_HASH_MISMATCH");
+  const census={...evidence,capture};ownedCensusBytes.set(census,body);
+  return {...point,census};
+}
+
+/** Saved with the office before hashing. A later run reuses points for the exact same public address. */
 function officePointPublisher(prior: readonly PublishedOfficePoint[] = [], resolve: OfficePointResolver = resolvePublishedOfficePoint) {
   type Result = {geocodedPoint:PublishedOfficePoint} | {pointUnavailable:OfficePointUnavailable};
-  const held = new Map<string, Promise<Result>>(prior.filter(point => valid(point)).map(point => [point.address, Promise.resolve({geocodedPoint:point})]));
+  const held = new Map<string, Promise<Result>>();
+  const previous = new Map(prior.filter(point=>valid(point)).map(point=>[point.address,point]));
   const missing = (address:string,reason:OfficePointUnavailable["reason"]):Result => ({pointUnavailable:{address,reason}});
   // Source rosters can hold thousands of offices. Bound upstream work independently of their size.
   let active = 0;
@@ -70,10 +94,15 @@ function officePointPublisher(prior: readonly PublishedOfficePoint[] = [], resol
     if (active >= 8) await new Promise<void>(resume=>waiting.push(resume));
     active++;
     try {
+      const kept=previous.get(address);
+      if(kept)return {geocodedPoint:process.env.WTP_VAULT_PROVIDER==="netlify"?await holdOfficePointEvidence(kept):kept};
       const point = await resolve(address);
       return valid(point) ? {geocodedPoint:{...point,address,sourceUrl:(point as ResolvedOfficePoint).census?.url??CENSUS_GEOCODER_URL}}
         : missing(address,point && "reason" in point ? point.reason : point ? "INVALID_POINT" : "NO_MATCH");
-    } catch { return missing(address,"UPSTREAM_ERROR"); }
+    } catch(error) {
+      if(error instanceof RawCaptureFailure||error instanceof Error&&error.message==="OFFICE_CENSUS_CAPTURE_HASH_MISMATCH")throw error;
+      return missing(address,"UPSTREAM_ERROR");
+    }
     finally { active--; waiting.shift()?.(); }
   };
   return (address: string): Promise<Result> => {
@@ -88,16 +117,18 @@ function officePointPublisher(prior: readonly PublishedOfficePoint[] = [], resol
   };
 }
 
-export function officePointSourceReview(point:PublishedOfficePoint):ManualSourceReview | null {
+export async function officePointSourceReview(point:PublishedOfficePoint,vault?:EvidenceStore):Promise<ManualSourceReview | null> {
   const evidence=point.census;
   if(!evidence||evidence.url!==censusGeocodeUrl(point.address)||point.sourceUrl!==evidence.url||
-      !Number.isFinite(Date.parse(evidence.retrievedAt))||createHash("sha256").update(evidence.body).digest("hex")!==evidence.rawHash)return null;
+      !Number.isFinite(Date.parse(evidence.retrievedAt)))return null;
+  const body=ownedCensusBytes.get(evidence)??evidence.body??(evidence.capture?await readRawCaptureText(vault??rawCaptureVault(),evidence.capture):null);
+  if(body===null||createHash("sha256").update(body).digest("hex")!==evidence.rawHash)return null;
   let parsed:OfficePoint|null;
-  try{parsed=parseCensusPoint(JSON.parse(evidence.body));}catch{return null;}
+  try{parsed=parseCensusPoint(JSON.parse(body));}catch{return null;}
   if(!parsed||parsed.lat!==point.lat||parsed.lng!==point.lng)return null;
   return{requestedUrl:evidence.url,finalUrl:evidence.url,publisher:"U.S. Census Bureau",sourceClass:"OFFICIAL_PUBLISHER",
     retrievedAt:evidence.retrievedAt,httpStatus:200,rawHash:evidence.rawHash,reviewOutcome:"SUPPORTED",
-    reviewedEvidence:"One exact Census address match; its reply bytes and SHA-256 are retained with the saved office point."};
+    reviewedEvidence:"One exact Census address match; its reply is retained by SHA-256 in the source vault."};
 }
 
 export async function publishRosterOfficePoints(roster: OfficeholderSet, prior: OfficeholderSet | null, resolve?: OfficePointResolver): Promise<OfficeholderSet> {

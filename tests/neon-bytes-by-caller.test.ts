@@ -95,7 +95,7 @@ test("version and changed-body reads count bytes under the code that asked",asyn
     const payload=JSON.parse(String(init?.body));
     const execute=async(statement:{query:string;params?:unknown[]})=>{
       if(statement.query.includes("database_transfer_"))return {command:"INSERT",fields:[],rows:[],rowCount:0};
-      if(statement.query.includes("SELECT id,revision FROM cp_doors"))versions++;
+      if(statement.query.includes("count(*) AS count"))versions++;
       const result=await db.query<Record<string,unknown>>(statement.query,statement.params??[]);
       bodies+=result.rows.filter(row=>row.value!==undefined&&row.value!==null).length;
       return {command:"SELECT",fields:result.fields,rows:result.rows.map(row=>result.fields.map(field=>{

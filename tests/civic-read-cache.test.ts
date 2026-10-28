@@ -78,6 +78,30 @@ test("confirmations stay current without transferring an unchanged promotion pay
   }), /database unavailable/, "a failed version read never serves an unconfirmed copy");
 });
 
+test("status changes refresh a candidate header while the same content fingerprint keeps its body", async t => {
+  const root = await scratch(t);
+  let fingerprint = "source-a:model-a", state = "FETCHED", receipt: string | null = null, reads = 0;
+  const input = { namespace: "candidate-content", keys: ["candidate"],
+    versions: async () => [{ key: "candidate", etag: fingerprint, state, receipt }],
+    values: async () => { reads++; return [{id:"candidate",body:"source facts".repeat(100_000),state,receipt}]; },
+    keyOf: (row: {id:string}) => row.id,
+    freshen: (row:{id:string;body:string;state:string;receipt:string|null}, header:{state:string;receipt:string|null}) => ({...row,state:header.state,receipt:header.receipt}),
+  };
+  const [first] = await cache(root).rows(input);
+  state = "VALIDATED"; receipt = "GOOD";
+  const [validated] = await cache(root).rows(input);
+  state = "PROMOTED";
+  const [promoted] = await cache(root).rows(input);
+  assert.equal(validated.state, "VALIDATED");
+  assert.equal(promoted.state, "PROMOTED");
+  assert.equal(promoted.receipt, "GOOD");
+  assert.equal(promoted.body, first.body);
+  assert.equal(reads, 1);
+  fingerprint = "source-b:model-b";
+  await cache(root).rows(input);
+  assert.equal(reads, 2, "changed source content invalidates the cached body");
+});
+
 test("corrupt or unwritable disposable copies fall back to the actual database read", async t => {
   const root = await scratch(t);
   let calls = 0;
@@ -171,6 +195,16 @@ test("concurrent streamed writes stay under the hard limit including temporary f
   assert.equal((await readdir(root)).some(file => file.endsWith(".tmp")), false);
   await store.write("recovered", "12345678");
   assert.ok(await diskBytes(root) <= 32);
+});
+
+test("replacing a disposable copy makes it newer than older copies when the cache is full", async t => {
+  const root = await scratch(t);
+  const store = civicReadCopyStore(root, 24);
+  await store.ready;
+  for (const key of ["a", "b", "a", "c", "d"]) await store.write(key, "12345678");
+  assert.equal(await readFile(join(root, "a.json"), "utf8"), "12345678");
+  await assert.rejects(readFile(join(root, "b.json")), { code: "ENOENT" });
+  assert.equal(await diskBytes(root), 24);
 });
 
 test("seventeen concurrent uploads do not accumulate complete copies in the supervisor", async t => {

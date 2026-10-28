@@ -202,6 +202,41 @@ test("an API with mixed 304 and changed pages replays the whole native resource 
   } finally { await options.facts.pg.close(); await rm(options.directory, { recursive: true, force: true }); }
 });
 
+test("a campaign materialization cutoff resumes completed native batches only for identical bytes and people inputs",async()=>{
+  const directory=await mkdtemp(join(tmpdir(),"campaign-materialization-")),vault=new MemoryEvidenceStore();
+  let revision=1;
+  const source={...resource,pageSize:2000};
+  const rows=()=>Array.from({length:1001},(_,id)=>({...fixture[0],id:String(id),contributions_amount:id===0?String(revision):"1"}));
+  const fetchSource:typeof fetch=async(_url,init)=>new Headers(init?.headers).get("if-none-match")===String(revision)
+    ? new Response(null,{status:304}):new Response(JSON.stringify(rows()),{headers:{etag:String(revision)}});
+  const options={directory,vault,now:()=>now,fetch:fetchSource,materializationId:"same-people",publicationId:"source-pass"};
+  const cutoff=new AbortController();
+  try{
+    await assert.rejects(async()=>{
+      for await(const page of acquireCampaignFinanceResource("WA",source,{...options,signal:cutoff.signal})){
+        if(page.records.length){assert.equal(page.records.length,500);await page.saveProgress?.();cutoff.abort(new Error("standing pass cutoff"));}
+      }
+    },/standing pass cutoff/);
+    let resumed=0,materialized=0;
+    for await(const page of acquireCampaignFinanceResource("WA",source,{...options,signal:new AbortController().signal})){
+      if(page.resumed)resumed+=page.records.length;else materialized+=page.records.length;
+      await page.saveProgress?.();
+    }
+    assert.equal(resumed,500);assert.equal(materialized,501,"completed batches do not repeat held fact reads or publication");
+    let changedPeople=0;
+    for await(const page of acquireCampaignFinanceResource("WA",source,{...options,materializationId:"new-people",signal:new AbortController().signal})){
+      if(page.records.length)assert.equal(page.resumed,false);changedPeople+=page.records.length;
+    }
+    assert.equal(changedPeople,1001);
+    revision++;
+    let changedBytes=0;
+    for await(const page of acquireCampaignFinanceResource("WA",source,{...options,signal:new AbortController().signal})){
+      if(page.records.length)assert.equal(page.resumed,false);changedBytes+=page.records.length;
+    }
+    assert.equal(changedBytes,1001,"a publisher change reopens the old native prefix");
+  }finally{await rm(directory,{recursive:true,force:true});}
+});
+
 test("real California and Pennsylvania native cover joins stream independently and an archive shared by profiles downloads once", async () => {
   for (const [state, cover, filing, coverName, filingName, id] of [
     ["CA", "ca-native-cover.tsv", "ca-native-summary.tsv", "CalAccess/DATA/CVR_CAMPAIGN_DISCLOSURE_CD.TSV", "CalAccess/DATA/SMRY_CD.TSV", "calaccess-summary"],

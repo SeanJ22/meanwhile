@@ -15,7 +15,7 @@ import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 const AT = "2026-10-20T04:00:00.000Z", DIVISION = "ocd-division/country:us/state:nh/place:example_town";
 const BODY_ID = `${DIVISION}#governing`, SOURCE_URL = "https://example.nh.gov/calendar.ics";
 const VENUE_SCOPE = requiredManualProductionContract("venue-resolutions").scope;
-const UNLOADED = { $civicPayloadPart: "out-of-scope-part-must-never-be-loaded" };
+const UNLOADED = { unselected: "out-of-scope-data-must-never-be-returned".repeat(3000) };
 
 function wiring(bodyId = BODY_ID, ocdId: string | null = DIVISION): BodySourceWiring {
   return { bodyId, ocdId, agendaSourceType: "ICAL", jurisdiction: "Example Town, NH", publishingOrg: "Example Town Clerk",
@@ -63,7 +63,7 @@ async function fixture(row = wiring(), options: {
     registry: { generatedAt: AT, bodies: [
       { id: "ocd-division/country:us/state:az/place:other#body", ocdId: "ocd-division/country:us/state:az/place:other",
         name: "OTHER_STATE_BODY_".repeat(3000), unneeded: UNLOADED }, selected,
-    ], divisions: UNLOADED }, country: UNLOADED,
+    ], divisions: [{ocdId: "ocd-division/country:us/state:az/place:other",label:"FOREIGN_DIVISION_".repeat(3000)}] }, country: UNLOADED,
   });
   const savePrevious = (value: MeetingsSnapshot = previous, source: string = selectedPartition.sourceId) =>
     save("MEETING", selectedPartition.scope, source, value);

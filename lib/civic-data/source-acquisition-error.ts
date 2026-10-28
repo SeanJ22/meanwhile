@@ -1,5 +1,6 @@
 import { isSourceAcquisitionDeadlineError, runInSourceAcquisitionDomain } from "../sources/acquisition-deadline.ts";
 import { sourceReadDeferred } from "../sources/http.ts";
+import { RawCaptureFailure } from "../sources/raw-response.ts";
 
 export const SOURCE_ACQUISITION_FAILURE_CODES = [
   "PUBLISHER_UNAVAILABLE",
@@ -41,8 +42,9 @@ export async function requestPublisher<T>(
   sourceLabel: string,
   request: () => Promise<T>,
 ): Promise<T> {
+  let result: T;
   try {
-    return await request();
+    result = await request();
   } catch (error) {
     if (isSourceAcquisitionFailure(error) || sourceReadDeferred(error)) throw error;
     throw sourceAcquisitionFailure(
@@ -50,6 +52,13 @@ export async function requestPublisher<T>(
       `${sourceLabel}: the publisher request did not complete (${errorKind(error)}).`,
     );
   }
+  if (result instanceof Response && process.env.WTP_VAULT_PROVIDER === "netlify") {
+    const [{ vaultSourceResponse }, { rawCaptureVault }] = await Promise.all([
+      import("../sources/raw-response.ts"), import("./raw-capture-remote.ts"),
+    ]);
+    return vaultSourceResponse(result, rawCaptureVault(), sourceLabel) as T;
+  }
+  return result;
 }
 
 export async function readPublisherBody<T>(
@@ -59,7 +68,7 @@ export async function readPublisherBody<T>(
   try {
     return await read();
   } catch (error) {
-    if (isSourceAcquisitionFailure(error)) throw error;
+    if (isSourceAcquisitionFailure(error) || error instanceof RawCaptureFailure) throw error;
     throw sourceAcquisitionFailure(
       "PUBLISHER_RESPONSE_REFUSED",
       `${sourceLabel}: the publisher response body could not be read (${errorKind(error)}).`,

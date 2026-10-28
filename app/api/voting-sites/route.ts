@@ -11,7 +11,6 @@ import { markerFromRequest } from "@/lib/db/run-marker";
 import { recordVotingLookupCount } from "@/lib/ballot/voting-sites-counts";
 import { votingSitesResponse } from "@/lib/ballot/voting-sites-stream";
 import { GOOGLE_CIVIC_STATES } from "@/lib/sources/google-civic/targets";
-import { readCivicApi } from "@/lib/sources/google-civic/acquisition";
 import { afterResponse } from "@/lib/log/after-response";
 import type { VotingSitesAnswer, VotingSitesFile } from "@/lib/ballot/voting-sites";
 
@@ -46,12 +45,12 @@ export async function GET(request: Request): Promise<Response> {
   });
 }
 
-async function heldVotingFile(state: string, precision: VotingReaderPlace["precision"], deadline: number): Promise<VotingSitesFile> {
+async function heldVotingFile(state: string, place: VotingReaderPlace, deadline: number): Promise<VotingSitesFile> {
   try {
-    const read = await readVotingSitesProjection(state, {}, Math.max(1, deadline - Date.now()));
+    const read = await readVotingSitesProjection(state, {}, Math.max(1, deadline - Date.now()), place);
     if (read.kind === "PROMOTED") return read.value;
-    if (read.kind !== "NOT_RECORDED") recordVotingFailure({ stage: "held-voting-sites", state, precision }, new Error(`Voting-site holding could not be read: ${read.kind}`));
-  } catch (error) { recordVotingFailure({ stage: "held-voting-sites", state, precision }, error); }
+    if (read.kind !== "NOT_RECORDED") recordVotingFailure({ stage: "held-voting-sites", state, precision: place.precision }, new Error(`Voting-site holding could not be read: ${read.kind}`));
+  } catch (error) { recordVotingFailure({ stage: "held-voting-sites", state, precision: place.precision }, error); }
   return { generatedAt: "", jurisdictions: [] };
 }
 
@@ -97,13 +96,6 @@ export async function POST(request: Request): Promise<Response> {
             return { match: !!place.states.length, point, precision: "ZIP", jurisdictions: [], outsideCoverage: true,
               pollingLookups: await linksFor(place.states) };
           }
-          // The state holding is the same before and after Census resolves the
-          // precinct. Start that read now; project its sites only once located.
-          const prefetched = state ? withReaderSelection({ states: [state], keys: new Set() }, () => heldVotingFile(state, "ADDRESS", deadline)) : null;
-          const electionCatalog = prefetched?.then(file => file.jurisdictions.length ? null : readCivicApi("elections", {}, { signal }));
-          // Observe an early rejection until the fallback consumes it. Held
-          // sites never send the address to Google or start a catalog request.
-          void electionCatalog?.catch(() => {});
           stage = "geocode";
           const located = await censusVotingAddress(address);
           if (!located && zipInput) {
@@ -142,13 +134,12 @@ export async function POST(request: Request): Promise<Response> {
           stage = "held-voting-sites";
           const selectedPlace = place;
           const result = withReaderSelection({ states: selectedPlace.states, keys: new Set(selectedPlace.divisionIds), ...(selectedPlace.point ? { point: [selectedPlace.point.lng, selectedPlace.point.lat] as const } : {}) }, async () => {
-            const files = await Promise.all(selectedPlace.states.map(selected => selected === state && prefetched
-              ? prefetched : heldVotingFile(selected, selectedPlace.precision, deadline)));
+            const files = await Promise.all(selectedPlace.states.map(selected => heldVotingFile(selected, selectedPlace, deadline)));
             const file: VotingSitesFile = { generatedAt: files.map(row => row.generatedAt).sort().at(-1) ?? "", jurisdictions: files.flatMap(row => row.jurisdictions) };
             stage = "precinct-match";
             const answer = await answerVotingSites(file, selectedPlace);
             stage = "google-fallback";
-            return fillVotingSitesAnswer(answer, address, selectedPlace, { signal, electionCatalog });
+            return fillVotingSitesAnswer(answer, address, selectedPlace, { signal });
           });
           const [answer] = await Promise.all([result, counted]);
           const states = [...new Set([...place.states, ...answer.jurisdictions.map(j => j.state)])];

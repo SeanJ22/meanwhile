@@ -190,6 +190,11 @@ export interface VotingJurisdiction {
 export interface VotingSitesFile {
   generatedAt: string;
   jurisdictions: VotingJurisdiction[];
+  /** Each independently refreshed source's bytes/configuration hash; null keeps a partial source owed. */
+  sourceHashes?: Readonly<Record<string, string | null>>;
+  sourceManifestVersion?: 1;
+  /** Older source URLs already replaced by a published current-election source. */
+  supersededSources?: readonly string[];
 }
 
 export const votingSiteAddressKey = (address: string): string => address.toLowerCase().replace(/\s+/g, " ").trim();

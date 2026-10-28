@@ -33,6 +33,8 @@ test("the guarded writer and independent checker publish exact source-supported 
   const requests: ModelRequest[] = [];
   const result = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
     transportFor: () => async request => { requests.push(request); return response(request, requests.length === 1 ? measureDraft(measure, sentences) : { checked }); } });
+  assert.equal(requests[1].tools[0].strict, true);
+  assert.match(measureRequestContext(requests[1]).instruction, /these vote definitions/);
   assert.equal(requests.length, 2); assert.notEqual(requests[0].model, requests[1].model);
   assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5"]);
   assert.match(measureRequestContext(requests[1]).instruction, /Reject recommendations, judgments, persuasion/);
@@ -71,8 +73,10 @@ test("a whole source used as a binding quote is sent once, before the measure co
     evidence: { ...evidence, text, contentHash: `sha256-${translationHash(text)}` }, subject: { ...subject, sourceQuote: text }, now,
     transportFor: () => async request => { requests.push(request); return response(request,
       request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked }); } });
-  assert.equal(result.record.sourceText, text);
-  assert.equal(result.record.sourceTextHash, translationHash(text));
+  assert.equal(result.record.sourceCapture?.rawHash, translationHash(text));
+  assert.equal(result.record.sourceCapture?.byteLength, Buffer.byteLength(text));
+  assert.ok(result.record.sourceText.length < text.length / 10);
+  assert.equal(result.record.sourceTextHash, translationHash(result.record.sourceText));
   for (const request of requests) {
     assert.deepEqual(cacheTtlOrderProblems(request), []);
     const blocks = request.messages[0].content as { text: string; cache_control?: { ttl: string } }[];
@@ -385,6 +389,7 @@ test("a failed Sonnet check buys a Sonnet rewrite and an Opus check, metering al
   assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-sonnet-5-5", "claude-opus-5-5"]);
   assert.match(requests[2].system[0].text, /Write|write/);
   assert.equal(result.record.writerModel, "claude-sonnet-5-5");
+  assert.match(measureRequestContext(requests[2]).feedback, /previousProposal/);
   assert.equal(result.record.checkerModel, "claude-opus-5-5");
   assert.equal(result.record.subjectId, subject.contestId);
   assert.equal(result.usage.length, 4);
@@ -394,4 +399,19 @@ test("a failed Sonnet check buys a Sonnet rewrite and an Opus check, metering al
   assert.equal(costs.length, 4);
   assert.ok(costs.every(row => row.jurisdiction === subject.ocdId && row.workItemId === subject.contestId), "every rung keeps the job ID and attributes dollars to its real state, including legacy ballot IDs");
   assert.equal(translationRecordIssue({ ...result.record, checkerModel: `${result.record.writerModel}-20261024` })?.includes("independent checker"), true);
+});
+
+test("a truncated repair retains its draft context and enough output space under the same guarded transport", async () => {
+  const requests: ModelRequest[] = [], priorDraft = measureDraft(measure, sentences);
+  const result = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now, priorDraft,
+    priorFeedback: "Retain the levy condition in the working draft.", transportFor: () => async request => {
+      requests.push(request);
+      if (requests.length === 1) return { ...response(request, {}), stop_reason: "max_tokens" };
+      return response(request, request.tools[0].name === "write_measure_translation" ? priorDraft : { checked });
+    } });
+  assert.equal(result.record.measure.whatItDoes, measure.whatItDoes);
+  assert.match(measureRequestContext(requests[1]).feedback, /Retain the levy condition/);
+  assert.match(measureRequestContext(requests[1]).feedback, /previousProposal/);
+  assert.ok(requests.every(request => request.max_tokens === 16384));
+  assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"]);
 });

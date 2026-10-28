@@ -29,7 +29,7 @@ async function fixture() {
       statements.push(statement);
       const rows = (await db.query<Record<string, unknown>>(text, [...params])).rows;
       statement.valueIds = rows.filter(row => Object.hasOwn(row, "value") && row.__unchanged !== true).map(row => String(row.id));
-      if (/^SELECT id,revision FROM/.test(text) && hook.afterVersions) {
+      if (/^SELECT id,revision(?: FROM|,updated_at)/.test(text) && !text.includes(" AS value,") && hook.afterVersions) {
         const run = hook.afterVersions; delete hook.afterVersions; await run();
       }
       return rows;
@@ -120,8 +120,8 @@ test("a cut-off selection restarts in a fresh repository without fetching unchan
   f.statements.length=0;
   const resumed=pgAggregateRepository<Value>(f.connection(),"StandingObligation","cp_obligations",{state:"az",activeOnly:true});
   const rows=await resumed.list();
-  const firstVersions=f.statements.find(row=>row.text.startsWith("SELECT id,revision FROM"))!;
-  assert.doesNotMatch(firstVersions.text,/id > /,"restart needs no continuation path; confirmed copies avoid unchanged bodies");
+  const firstVersions=f.statements.find(row=>row.text.startsWith("SELECT id,revision"))!;
+  assert.equal(firstVersions.params.at(-1),null,"restart starts at the beginning; confirmed copies avoid unchanged bodies");
   assert.equal(rows.length,205);assert.ok(rows.some(row=>row.id==="before-cursor"));assert.ok(!rows.some(row=>row.id==="item-001"));
   const transferred=f.values().flatMap(row=>row.valueIds??[]);
   assert.ok(!transferred.includes("item-002"),"the completed prefix stays held, rather than rebuilding its history");

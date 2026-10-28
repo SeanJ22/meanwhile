@@ -1,11 +1,12 @@
 import { versionedRowsFor, shareVersionedRows } from "../../db/versioned-rows.ts";
+import { hasValueVersion, valueVersionSql } from "../../db/value-rows.ts";
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
 import {MANUAL_METHOD_POOL_SQL} from "./manual-method-index.ts";
 import { PLANNING_STATES, PLANNING_SUMMARY_SQL, PLANNING_FINISHED_TIMES_SQL, planningStateOf, planningStateOrder } from "../scheduler/state-planning.ts";
 import { applyHuntOrders, type HuntOrder, type HuntOrderRepository } from "../hunt-orders.ts";
 import { parseDispatchTarget } from "../scheduler/dispatch-target.ts";
 import { pgAdminConfigRepository } from "./admin-config.ts";
-import { archivedAggregateRepository, createPgDispatchState } from "./dispatch-state.ts";
+import { archivedAggregateRepository, createPgDispatchState, workItemStateFilter } from "./dispatch-state.ts";
 import { pgSpendRepository } from "./model-charges.ts";
 import { pgControlReadsBackfill } from "./control-reads-backfill.ts";
 import { PUBLISHER, type BoxFinding, type BoxRepository } from "../box.ts";
@@ -82,6 +83,7 @@ import {
   type OnlineIndex,
 } from "./pg-schema.ts";
 import type { SpendHold } from "../budget.ts";
+import { readJobBreakerLatest, releaseJob } from "../job-transfer-breaker.ts";
 import {
   SETTLED_HOLD_RETENTION_MS,
   SPEND_HOLD_STALE_MS,
@@ -186,23 +188,29 @@ function callerPinned<R extends object>(repository: R): R {
     : member])) as R;
 }
 
+/** Concurrent control-plane calls per lane. Pages and small calls (POINT, DOCUMENT) admit through
+ * separate lanes, so a small read never waits behind a run of page reads. */
 export const CONTROL_PLANE_QUERY_CONCURRENCY = 16;
-let activeQueries = 0;
-const queryWaiters: Array<() => void> = [];
+interface AdmissionLane { active: number; readonly waiters: Array<() => void> }
+const admissionLanes: Readonly<Record<"PAGE" | "SMALL", AdmissionLane>> = {
+  PAGE: { active: 0, waiters: [] },
+  SMALL: { active: 0, waiters: [] },
+};
 
 function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBounds) {
   return async (operation: string, callClass: ControlPlaneCallClass, text: string, params?: readonly unknown[]) => {
+    const lane = admissionLanes[callClass === "PAGE" ? "PAGE" : "SMALL"];
     await new Promise<void>((resolve, reject) => {
-      if (activeQueries < CONTROL_PLANE_QUERY_CONCURRENCY) { activeQueries++; resolve(); }
+      if (lane.active < CONTROL_PLANE_QUERY_CONCURRENCY) { lane.active++; resolve(); }
       else {
         let timer: ReturnType<typeof setTimeout> | undefined;
         const admit = () => { if (timer) clearTimeout(timer); resolve(); };
-        queryWaiters.push(admit);
+        lane.waiters.push(admit);
         const budget = currentStoreBudget();
         if (budget) timer = setTimeout(() => {
-          const index = queryWaiters.indexOf(admit);
+          const index = lane.waiters.indexOf(admit);
           if (index < 0) return;
-          queryWaiters.splice(index, 1);
+          lane.waiters.splice(index, 1);
 
           void boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params,
             { bounds, now: () => budget.deadlineMs }).catch(reject);
@@ -212,9 +220,9 @@ function boundedRunner(sql: Sql, prefix: string, bounds: ControlPlaneRequestBoun
     try {
       return await boundedQuery(sql, { operation: `${prefix}.${operation}`, callClass }, text, params, { bounds });
     } finally {
-      const next = queryWaiters.shift();
+      const next = lane.waiters.shift();
       if (next) next();
-      else activeQueries--;
+      else lane.active--;
     }
   };
 }
@@ -289,7 +297,7 @@ export function pgAggregateRepository<T>(
 ): AggregateRepository<T> {
   if (options.state && !/^(?:[a-z]{2}|system)$/.test(options.state)) throw new Error("One planning state is required");
   const statePredicate = ["cp_route_tasks", "cp_route_tasks_history", "cp_route_tasks_archive", "cp_attempts"].includes(table)
-    ? `EXISTS(SELECT 1 FROM cp_work_items_history w WHERE w.id=${table}.value->>'workItemId' AND cp_control_state(w.value)='${options.state}')`
+    ? workItemStateFilter(table, options.state ?? "system")
     : table === "cp_leases"
       ? `EXISTS(SELECT 1 FROM cp_route_tasks_history t JOIN cp_work_items_history w ON w.id=t.value->>'workItemId' WHERE t.id=${table}.value->>'routeTaskId' AND cp_control_state(w.value)='${options.state}')`
       : `cp_control_state(${table}.value)='${options.state}'`;
@@ -312,6 +320,15 @@ export function pgAggregateRepository<T>(
     const clock = (await run("listChangedSince:clock", "POINT", "SELECT now() AS read_at")) as Record<string, unknown>[];
     const through = new Date(clock[0]?.read_at as string).toISOString();
     const selected = read.projection ? recordProjectionSql(table, read.projection, "value") : "value";
+    if (hasValueVersion(table)) {
+      const heldRevisions = new Map(held ?? []);
+      const predicate = `($1::timestamptz IS NULL OR changed_at >= $1::timestamptz)${scopeFilter}`;
+      const rows = await revisions.rows((text, params) => run("listChangedSince", "PAGE", text, params),
+        table, predicate, [since], selected,
+        read.page ? rows => read.page!(rows.map(row => persistedRow<T>(row, includeChangedAt))) : undefined, includeChangedAt,
+        row => heldRevisions.get(row.id) !== Number(row.revision));
+      return { rows: rows.map(row => persistedRow<T>(row, includeChangedAt)), through };
+    }
     const out: Persisted<T>[] = [];
     let afterId: string | null = null;
     for (;;) {
@@ -326,7 +343,7 @@ export function pgAggregateRepository<T>(
         await run("listChangedSince", "PAGE", `SELECT id,revision,updated_at,${includeChangedAt ? "changed_at," : ""}${selected} AS value
           FROM ${table} WHERE ${predicate?`(${predicate}) AND `:""}id=ANY($${params.length+1}::text[]) ORDER BY id`, [...params,ids]) as Record<string,unknown>[],
       row => String(row.id), row => String(row.revision));
-      const page = rows.map(row => persistedRow<T>(row));
+      const page = rows.map(row => persistedRow<T>(row, includeChangedAt));
       if (read.page) await read.page(page);
       else out.push(...page);
       if (rows.length < AGGREGATE_LIST_READ_PAGE) break;
@@ -335,19 +352,27 @@ export function pgAggregateRepository<T>(
     return { rows: out, through };
   }
 
-  function persistedRow<O>(row: Record<string, unknown>): Persisted<O> {
+  function persistedRow<O>(row: Record<string, unknown>, includeChangedAt = false): Persisted<O> {
     return {
       id: String(row.id),
       revision: Number(row.revision),
       updatedAt: new Date(row.updated_at as string).toISOString(),
-      ...(row.changed_at == null ? {} : { changedAt: new Date(row.changed_at as string).toISOString() }),
+      ...(!includeChangedAt || row.changed_at == null ? {} : { changedAt: new Date(row.changed_at as string).toISOString() }),
       value: parseValue<O>(row.value, `${where} id ${String(row.id)}`),
     };
   }
 
   async function readManyAs<O>(ids: readonly string[], selected: string, caller: string): Promise<Persisted<O>[]> {
     if (!ids.length) return [];
-    return (await currentRows(caller, "id=ANY($1::text[])", [[...new Set(ids)]], selected)).map(row => persistedRow<O>(row));
+    const wanted = [...new Set(ids)];
+    if (!hasValueVersion(table)) return (await currentRows(caller, "id=ANY($1::text[])", [wanted], selected)).map(row => persistedRow<O>(row));
+    wanted.sort();
+    const rows: Persisted<O>[] = [];
+    for (let at = 0; at < wanted.length; at += AGGREGATE_LIST_READ_PAGE) {
+      rows.push(...(await currentRows(caller, "id=ANY($1::text[])", [wanted.slice(at, at + AGGREGATE_LIST_READ_PAGE)], selected))
+        .map(row => persistedRow<O>(row)));
+    }
+    return rows;
   }
 
   const held = <O>(out: (row: Persisted<T>) => O): Promise<O[]> =>
@@ -382,11 +407,11 @@ export function pgAggregateRepository<T>(
         `INSERT INTO ${table} (id, revision, updated_at, value)
          VALUES ($1, 1, $2, $3::jsonb)
          ON CONFLICT (id) DO NOTHING
-         RETURNING id`,
+         RETURNING id${hasValueVersion(table) ? `,revision,updated_at,changed_at,${valueVersionSql("value")} AS value_version` : ""}`,
         [id, now, submitted],
-      )) as unknown[];
+      )) as Record<string, unknown>[];
 
-      if(inserted.length)await revisions.remember(table,{id,revision:1,updated_at:now,value:JSON.parse(submitted)});
+      if(inserted.length)await revisions.remember(table,{...inserted[0],id,revision:1,updated_at:now,value:JSON.parse(submitted)});
       const persisted = await read(id);
       if (persisted === null) {
         throw new CorruptPersistedState(
@@ -417,7 +442,7 @@ export function pgAggregateRepository<T>(
         `UPDATE ${table}
             SET revision = revision + 1, updated_at = $1, value = $2::jsonb, changed_at = now()
           WHERE id = $3 AND revision = $4
-       RETURNING id, revision, updated_at`,
+       RETURNING id, revision, updated_at${hasValueVersion(table) ? `,changed_at,${valueVersionSql("value")} AS value_version` : ""}`,
         [now, submitted, id, expectedRevision],
       )) as Record<string, unknown>[];
 
@@ -433,7 +458,7 @@ export function pgAggregateRepository<T>(
         );
       }
       const row = updated[0];
-      await revisions.remember(table,{id:String(row.id),revision:Number(row.revision),updated_at:row.updated_at,value:JSON.parse(submitted)});
+      await revisions.remember(table,{...row,id:String(row.id),revision:Number(row.revision),updated_at:row.updated_at,value:JSON.parse(submitted)});
       return {
         id: String(row.id),
         revision: Number(row.revision),
@@ -451,12 +476,24 @@ export function pgAggregateRepository<T>(
       if (!wanted.length) return [];
       const jsonPath = jsonPathLiteral(table, path);
       const selected = Object.keys(projection).length === 0 ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value");
-      return (await currentRows("listWhereIn", `value #>> '${jsonPath}'=ANY($1::text[])${scopeFilter}`, [wanted], selected))
+      if (!hasValueVersion(table)) return (await currentRows("listWhereIn", `value #>> '${jsonPath}'=ANY($1::text[])${scopeFilter}`, [wanted], selected))
         .map(row => persistedRow<unknown>(row));
+      const rows = new Map<string, Persisted<unknown>>();
+      const batch = AGGREGATE_LIST_READ_PAGE;
+      for (let at = 0; at < wanted.length; at += batch) {
+        for (const row of await currentRows("listWhereIn", `value #>> '${jsonPath}'=ANY($1::text[])${scopeFilter}`, [wanted.slice(at, at + batch)], selected)) {
+          const value = persistedRow<unknown>(row);
+          if (value.revision >= (rows.get(value.id)?.revision ?? 0)) rows.set(value.id, value);
+        }
+      }
+      return [...rows.values()].sort((a, b) => a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
     },
 
     list: () => held(row => row),
-    listNarrowed: projection => held(row => ({ ...row, value: projectAggregate(row.value, projection) })),
+    listNarrowed: projection => table === "cp_owner_snapshots"
+      ? held(row => ({ ...row, value: projectAggregate(row.value, projection) }))
+      : currentRows("listNarrowed", scopeFilter.slice(5), [], Object.keys(projection).length === 0
+        ? "'{}'::jsonb" : recordProjectionSql(table, projection, "value")).then(rows => rows.map(row => persistedRow<unknown>(row))),
     listChangedSince,
 
     listWhere: (path, value) => listWhereAs<T>(path, value, "value", "listWhere"),
@@ -474,6 +511,12 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
     + (options.activeOnly ? " AND value->>'active'='true'" : "");
   const params = options.state ? [options.state] : [];
   return { ...repo,
+    async meetingRecords() {
+      const rows = await versionedRowsFor(sql).rows((text, params) => run("meetingRecords", "PAGE", text, params),
+        table, `value->'meeting' IS NOT NULL AND value->'meeting'<>'null'::jsonb${scope}`, params);
+      return rows.map(row => ({ id: row.id, revision: Number(row.revision),
+        updatedAt: new Date(row.updated_at as string).toISOString(), value: parseValue<DoorRecord>(row.value, `${table} id ${row.id}`) }));
+    },
     async meetingMatches(census, projection) {
       const predicate = `value->>'status' IN ('OPEN','SHUT') AND value->'meeting' IS NOT NULL AND value->'meeting'<>'null'::jsonb
         AND ${census ? "(value->'config' ? 'crosswalkRowId')" : "NOT (coalesce(value->'config','{}'::jsonb) ? 'crosswalkRowId') AND coalesce(value #> '{meeting,family}','null'::jsonb)='null'::jsonb"}${scope}`;
@@ -1465,9 +1508,13 @@ export async function pgCoordinatorWorkItems(sql: Sql, exaAgentLane = false, sta
       SELECT 1 FROM cp_occurrences_history own JOIN cp_obligations o ON o.id=own.value->>'obligationId'
       WHERE own.value #>> '{workItemId}'=w.id AND o.value->>'active'='true' OFFSET 0) END` : ""}
     ORDER BY w.id`, state ? [state] : []) as Record<string, unknown>[]).map(row => String(row.id));
-  const rows = await versionedRowsFor(sql).rows((text, params) => run("coordinatorItemValues", "PAGE", text, params),
-    "cp_work_items_history", "id=ANY($1::text[]) AND value->'autonomousPlan' IS NOT NULL", [ids]);
-  return rows.map(row => parseValue<WorkItem>(row.value, `coordinator work item ${row.id}`));
+  const values: WorkItem[] = [];
+  for (let at = 0; at < ids.length; at += AGGREGATE_LIST_READ_PAGE) {
+    const rows = await versionedRowsFor(sql).rows((text, params) => run("coordinatorItemValues", "PAGE", text, params),
+      "cp_work_items_history", "id=ANY($1::text[]) AND value->'autonomousPlan' IS NOT NULL", [ids.slice(at, at + AGGREGATE_LIST_READ_PAGE)]);
+    values.push(...rows.map(row => parseValue<WorkItem>(row.value, `coordinator work item ${row.id}`)));
+  }
+  return values;
 }
 
 export async function readPlaceArtifacts(repos: ControlPlaneRepositories, url: string, cutoff: string, now: string): Promise<readonly ArtifactRecord[]> {
@@ -1580,6 +1627,9 @@ export async function createPgRepositories(
   const adminRun = boundedRunner(sql, "cp_admin_config", bounds);
   const fixMapRun = boundedRunner(sql, "cp_fix_map", bounds);
   const pacingRun = boundedRunner(sql, "cp_website_pacing", bounds);
+  const breakerRun = boundedRunner(sql, "cp_job_transfer_breaker", bounds);
+  const breakerSql = { query: async (text: string, params: readonly unknown[] = []) =>
+    (await breakerRun("jobTransferPauses", "POINT", text, params)) as Record<string, unknown>[] };
   const repositories: ControlPlaneRepositories = {
     adminActionHistoryPage: query => readActionHistoryPage(sql, query, bounds),
     dispatchState: callerPinned(createPgDispatchState(sql, () => repositories, bounds)),
@@ -1619,6 +1669,7 @@ export async function createPgRepositories(
       (await fixMapRun("fixMap", "PAGE", text, params)) as readonly Record<string, unknown>[]),
     websitePacing: createWebsitePacing(async (text, params) =>
       (await pacingRun("websitePacing", "POINT", text, params)) as readonly Record<string, unknown>[]),
+    jobTransferPauses: { latest: () => readJobBreakerLatest(breakerSql), release: input => releaseJob(breakerSql, input) },
     runnerHeartbeat: pgAggregateRepository<RunnerHeartbeat>(
       sql,
       "RunnerHeartbeat",

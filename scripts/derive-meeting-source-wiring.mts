@@ -23,23 +23,23 @@ import { crosswalkRowIssue, type MeetingBodyCrosswalkRow } from "../lib/civic-da
 import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { CURRENT_CALENDAR_READS_SQL, deriveWiringDecisions, latestCalendarWalk, sameRoute, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
+import { deriveWiringDecisions, latestCalendarWalk, sameRoute, wiringRowFor } from "../lib/control-plane/discovery/derived-wiring.ts";
 import { readHeldCalendars, type HeldCalendarReading } from "../lib/control-plane/discovery/derived-wiring-reading.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { artifactId } from "../lib/control-plane/evidence/artifact.ts";
 import { heldArtifactCaptures, heldManualCrosswalkCapture } from "../lib/civic-data/held-artifact-captures.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { ocdStateCode } from "../lib/ocd/state-of.ts";
-import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { activeWiring } from "../lib/registry/source-wiring.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
+import { confirmMeetingDerivationSource, meetingDerivationCanContinue, meetingDerivationConfig, meetingDerivationPending, readMeetingDerivationSource, readMeetingDerivationWalks, withMeetingDerivationProbe } from "../lib/civic-data/meeting-derivation-source.ts";
+import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 
 const CONTRACT_ID = "meeting-source-wiring";
 
@@ -51,15 +51,9 @@ prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
-// A body a hand-wired door already serves gets no derived row; without the doors, that cannot be told, so nothing is derived.
-const doors = await ensureMeetingDoors();
-if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
-
-
-
-  await promoteDerivedCandidate(store, CONTRACT_ID, candidate, now);
+  await promoteDerivedCandidate(store, CONTRACT_ID, candidate, now, { confirmUnchanged: false });
 }
 
 /* A state, DC or a territory: every registered one has its registration (lib/ocd/state-of.ts). */
@@ -81,6 +75,37 @@ async function heldText(held: HeldVaultArtifact): Promise<HeldCalendarReading["h
 }
 
 async function main(): Promise<void> {
+  const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+  if (!controlPlane) {
+    await finish(derivedWiringFailedCandidate(now, "The control plane's attempt log is not configured (WTP_CONTROL_PLANE_DATABASE_URL), so no walk can be read."));
+    return;
+  }
+  const sql = neon(controlPlane), query = async (text: string, params: readonly unknown[] = []) => sql.query(text, [...params]);
+  const crosswalkContract = requiredManualProductionContract("meeting-body-crosswalk");
+  const venues = requiredManualProductionContract("venue-resolutions");
+  const sourceOptions = { store, query, sourceId: CONTRACT_ID, recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE,
+    reuseGroups: true, pointers: [{ recordClass: crosswalkContract.recordClass, scope: crosswalkContract.scope },
+      { recordClass: DERIVED_CROSSWALK_RECORD_CLASS, scope: DERIVED_CROSSWALK_SCOPE }, { recordClass: venues.recordClass, scope: venues.scope }],
+    configHash: meetingDerivationConfig(process.cwd(), ["data/derived/registration/index.json", "lib/control-plane/discovery/derived-wiring.ts",
+      "lib/control-plane/discovery/derived-wiring-reading.ts", "lib/control-plane/discovery/reviewed-body.ts",
+      "lib/civic-data/derived-meeting-wiring.ts"], [ADAPTER_OUTPUT_VERSION, now.slice(0, 10)]) };
+  let source: Awaited<ReturnType<typeof readMeetingDerivationSource>>;
+  try {
+    source = await readMeetingDerivationSource(sourceOptions);
+    const confirmed = await confirmMeetingDerivationSource({ source, store, sourceId: CONTRACT_ID,
+      recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE, parserVersion: "meeting-source-wiring/1", now,
+      force: process.argv.includes("--force") });
+    if (confirmed) {
+      console.log("RCD_RECEIPT=" + JSON.stringify({ source: CONTRACT_ID,
+        ...sourceHashReceiptFields(confirmed), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+      return;
+    }
+  } catch (error) {
+    await finish(derivedWiringFailedCandidate(now, `The derivation source metadata could not be read: ${error instanceof Error ? error.message : String(error)}`));
+    return;
+  }
+  const doors = await ensureMeetingDoors();
+  if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
   const lkg = await readDerivedMeetingWiring({ store,  now });
   if (lkg.kind === "STORE_UNREACHABLE") {
     await finish(derivedWiringFailedCandidate(now, `The previous wiring version could not be read (${lkg.code}): ${lkg.detail}`));
@@ -92,7 +117,6 @@ async function main(): Promise<void> {
     : null;
 
 
-  const crosswalkContract = requiredManualProductionContract("meeting-body-crosswalk");
   const crosswalk = await readCuratedReaderProjection("meeting-body-crosswalk", { store,  now });
   const automaticRead = await readDerivedMeetingBodyCrosswalk({ store,  now });
   for (const read of [crosswalk, automaticRead]) {
@@ -124,7 +148,16 @@ async function main(): Promise<void> {
   const automatic = automaticInput === null
     ? undefined
     : { input: automaticInput, versionId: automaticRead.metadata.versionId ?? "", rowIds: composed.automaticIds };
-  const rows = composed.rows.filter((row) => crosswalkRowIssue(row) === null);
+  const allRows = composed.rows.filter((row) => crosswalkRowIssue(row) === null);
+  const groups = Object.fromEntries([...previous.map(entry => entry.row), ...allRows].flatMap(row => {
+    const state = stateOf(row.ocdId); return state ? [[row.jurisdictionId, state]] : [];
+  }));
+  source = await readMeetingDerivationSource({ ...sourceOptions, groups });
+  const remaining = new Set(meetingDerivationPending(source, process.argv.includes("--force")));
+  const completed = { ...source.priorProbe?.groups };
+  const previousHeld = source.outputHead ? await store.readCandidatePath<NonNullable<RoutineCandidate["excludedFacts"]>>(
+    source.outputHead.versionId, ["excludedFacts"]) ?? [] : [];
+
 
   /* Registration supplies the Census division. The reviewed registry may own its exact governing body. */
   const reviewedBodies = new Map<string, { readonly resolved: NonNullable<ReturnType<typeof reviewedBodyForGovernment>>; readonly input: DerivedInputRef } | { readonly unread: string }>();
@@ -132,143 +165,135 @@ async function main(): Promise<void> {
     readonly input: DerivedInputRef;
     readonly bodies: readonly { id: string; ocdId: string; jurisdictionId: string | null }[];
   } | { readonly unread: string }>();
-  for (const state of new Set(rows.map((row) => stateOf(row.ocdId)).filter((s): s is string => s !== null))) {
+  const loadRegistration = async (state: string): Promise<void> => {
+    if (registrations.has(state)) return;
     console.log(`RCD_PROGRESS meeting-source-wiring registration ${state}`);
     try {
-      const read = await readRegistrationProjection(state, { store,  now });
-      const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
-      if (read.kind !== "PROMOTED" || input === null) {
-        registrations.set(state, { unread: `${state} registration is ${read.kind}` });
-        continue;
-      }
-      registrations.set(state, { input,
-        bodies: read.value.bodies.map((b) => ({ id: b.id, ocdId: b.ocdId, jurisdictionId: b.jurisdictionId })) });
-      const reviewed = await readRegistryRuntimeProjection([state], { store,  now });
-      const reviewedInput = reviewed.kind === "PROMOTED"
-        ? promotedInputRef("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), reviewed.metadata.versionId, reviewed.value, reviewed.metadata.promotedAt)
-        : null;
       const reference = loadRegistrationReference(process.cwd(), state);
-      for (const row of rows.filter(row => stateOf(row.ocdId) === state)) {
-        if (reviewed.kind !== "PROMOTED" || !reviewedInput) reviewedBodies.set(row.id, { unread: `${state} reviewed registry is ${reviewed.kind}` });
-        else if (reference.sha256 !== read.value.vintage.referenceSha256) reviewedBodies.set(row.id, { unread: `${state} registration does not name the committed Census government pairing` });
-        else {
-          const resolved = reviewedBodyForGovernment(reference, row.jurisdictionId, reviewed.value.registry.bodies);
-          reviewedBodies.set(row.id, resolved ? { resolved, input: reviewedInput } : { unread: `${state} reviewed registry does not pair ${row.jurisdictionId} with one exact governing body` });
+      const selected=allRows.filter(row=>stateOf(row.ocdId)===state && remaining.has(row.jurisdictionId));
+      const wanted=[...new Set(selected.map(row=>row.jurisdictionId))],ids=new Set(wanted);
+      const lookup=await store.readGovernmentLookup(state,wanted,reference.reference.governments.filter(row=>ids.has(row[1])).map(row=>row[0]),selected.map(row=>row.bodyId));
+      const read=lookup.registration,reviewed=lookup.reviewed;
+      if(!read){registrations.set(state,{unread:`${state} registration is NOT_RECORDED`});return;}
+      const input=read.input;
+      registrations.set(state,{input,bodies:read.value.bodies.map(body=>({id:body.id,ocdId:body.ocdId,jurisdictionId:body.jurisdictionId}))});
+      for(const row of selected){
+        if(!reviewed)reviewedBodies.set(row.id,{unread:`${state} reviewed registry is NOT_RECORDED`});
+        else if(reference.sha256!==read.value.vintage.referenceSha256)reviewedBodies.set(row.id,{unread:`${state} registration does not name the committed Census government pairing`});
+        else{
+          const resolved=reviewedBodyForGovernment(reference,row.jurisdictionId,reviewed.bodies);
+          reviewedBodies.set(row.id,resolved?{resolved,input:reviewed.input}:{unread:`${state} reviewed registry does not pair ${row.jurisdictionId} with one exact governing body`});
         }
       }
     } catch (error) {
       registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
     }
-  }
+  };
 
-  /* The newest walk of each crosswalked government, read only. */
-  const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
-  if (!controlPlane) {
-    await finish(derivedWiringFailedCandidate(now, "The control plane's attempt log is not configured (WTP_CONTROL_PLANE_DATABASE_URL), so no walk can be read."));
-    return;
-  }
-  const jurisdictions = [...new Set(rows.map((row) => row.jurisdictionId))];
-  let attempts: { attempt: MeetingsDiscoveryAttempt; recordId: string; recordedAt: string }[];
-  try {
-    const sql = neon(controlPlane);
-    const found = jurisdictions.length === 0 ? [] : await sql.query(
-      CURRENT_CALENDAR_READS_SQL,
-      [jurisdictions],
-    ) as { id: string; position: number | string; value: MeetingsDiscoveryAttempt }[];
-    attempts = found.map((row) => ({ attempt: row.value, recordId: String(row.position), recordedAt: row.value.finishedAt }));
-  } catch (error) {
-    await finish(derivedWiringFailedCandidate(now, `The discovery-attempt log could not be read: ${error instanceof Error ? error.message : String(error)}`));
-    return;
-  }
+  const decisions: ReturnType<typeof deriveWiringDecisions>[number][] = [];
+  for (const jurisdiction of remaining) {
+    if (!meetingDerivationCanContinue()) break;
+    const rows = allRows.filter(row => row.jurisdictionId === jurisdiction);
+    const groupPrevious = previous.filter(entry => entry.row.jurisdictionId === jurisdiction);
+    const state = groups[jurisdiction];
+    if (state) await loadRegistration(state);
+    const attempts = await readMeetingDerivationWalks(query, source.walks.filter(walk => walk.jurisdiction === jurisdiction));
 
-  /* The vault, read only, and the adapter's reading of every held route byte the walks cite. */
-  const vaultRoot = join(process.cwd(), "data", "control-plane", "vault");
-  const citedIds = [...new Set([
-    ...attempts.flatMap(({ attempt }) => [...attempt.found, ...attempt.steps].flatMap(row => row.artifactId ? [row.artifactId] : [])),
-    ...rows.filter(row => row.status === "ACTIVE").map(row => artifactId("RAW", `sha256-${row.evidence.bodyPage.sha256}`)),
-  ])];
-  const capture = await heldArtifactCaptures(vaultRoot, citedIds, controlPlane);
-  const byId = new Map<string, HeldVaultArtifact>();
-  const byHash = new Map<string, HeldVaultArtifact>();
-  for (const id of citedIds) {
-    const held = await capture(id);
-    if (held) { byId.set(id, held); byHash.set(held.contentHash.slice("sha256-".length), held); }
-    console.log(`RCD_PROGRESS meeting-source-wiring cited capture ${id}`);
-  }
-  for (const row of rows.filter(row => row.status === "ACTIVE")) {
-    const hash = row.evidence.bodyPage.sha256;
-    if (!byHash.has(hash) || byHash.get(hash)?.tier === "RESTRICTED_RAW") {
-      const held = await heldManualCrosswalkCapture(vaultRoot, hash, row.evidence.readAt);
-      if (held) byHash.set(hash, held);
-      console.log(`RCD_PROGRESS meeting-source-wiring body-page ${row.id}`);
+    /* The vault, read only, and the adapter's reading of every held route byte the walks cite. */
+    const vaultRoot = join(process.cwd(), "data", "control-plane", "vault");
+    const citedIds = [...new Set([
+      ...attempts.flatMap(({ attempt }) => [...attempt.found, ...attempt.steps].flatMap(row => row.artifactId ? [row.artifactId] : [])),
+      ...rows.filter(row => row.status === "ACTIVE").map(row => artifactId("RAW", `sha256-${row.evidence.bodyPage.sha256}`)),
+    ])];
+    const capture = await heldArtifactCaptures(vaultRoot, citedIds, controlPlane);
+    const byId = new Map<string, HeldVaultArtifact>();
+    const byHash = new Map<string, HeldVaultArtifact>();
+    for (const id of citedIds) {
+      const held = await capture(id);
+      if (held) { byId.set(id, held); byHash.set(held.contentHash.slice("sha256-".length), held); }
+      console.log(`RCD_PROGRESS meeting-source-wiring cited capture ${id}`);
+    }
+    for (const row of rows.filter(row => row.status === "ACTIVE")) {
+      const hash = row.evidence.bodyPage.sha256;
+      if (!byHash.has(hash) || byHash.get(hash)?.tier === "RESTRICTED_RAW") {
+        const held = await heldManualCrosswalkCapture(vaultRoot, hash, row.evidence.readAt);
+        if (held) byHash.set(hash, held);
+        console.log(`RCD_PROGRESS meeting-source-wiring body-page ${row.id}`);
+      }
+    }
+    const refOf = (held: HeldVaultArtifact | null) =>
+      held === null || held.tier === "RESTRICTED_RAW"
+        ? null
+        : ({ kind: "VAULTED_EVIDENCE" as const, artifactId: held.id, contentHash: held.contentHash, tier: held.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" as const : "RAW" as const, retrievedAt: held.retrievedAt ?? now });
+    const pending: HeldCalendarReading[] = [];
+    for (const reviewed of rows.filter((row) => row.status === "ACTIVE")) {
+      console.log(`RCD_PROGRESS meeting-source-wiring ${reviewed.id}`);
+      const walk = latestCalendarWalk(attempts, reviewed.jurisdictionId, reviewed.route)?.attempt;
+      if (walk === undefined) continue;
+      const others = rows.filter((r) => r.jurisdictionId === reviewed.jurisdictionId && r.bodyId !== reviewed.bodyId && r.status === "ACTIVE").map((r) => r.bodyName);
+      const cited = [
+        ...walk.found.filter((f) => sameRoute(f.url, reviewed.route)).map((f) => f.artifactId),
+        ...walk.steps.filter((s) => sameRoute(s.url, reviewed.route)).map((s) => s.artifactId),
+      ].filter((id): id is string => id !== null);
+      for (const artifactId of new Set(cited)) {
+        const held = await capture(artifactId);
+        console.log(`RCD_PROGRESS meeting-source-wiring capture ${artifactId}`);
+        const evidence = refOf(held);
+        if (held === null || evidence === null) continue;
+        pending.push({ key: `${reviewed.id}\u0000${artifactId}`, row: wiringRowFor(reviewed), held: await heldText(held), evidence, others });
+      }
+    }
+    /* The Reader projections the adapters resolve through are read before any reading; an unreadable one refuses the pass. */
+    const read = await readHeldCalendars({ options: { store,  now }, now, adapterDigest, readings: pending });
+    if (read.kind === "UNREADABLE") {
+      console.error(`RCD_PROGRESS meeting-source-wiring pending ${jurisdiction}: ${read.detail}`);
+      continue;
+    }
+    const readings = read.verifications;
+
+    const groupDecisions = deriveWiringDecisions({
+      crosswalk: {
+        input: crosswalkInput,
+        versionId: (crosswalk.kind === "PROMOTED" ? crosswalk.metadata.versionId : automaticRead.metadata.versionId) ?? "",
+        rows,
+        ...(automatic === undefined ? {} : { automatic }),
+      },
+      registration: (row) => {
+        const state = stateOf(row.ocdId);
+        const reg = state === null ? undefined : registrations.get(state);
+        if (reg === undefined || "unread" in reg) return { notRegistered: reg !== undefined && "unread" in reg ? reg.unread : `no covered state in ${row.ocdId}` };
+        const body = reg.bodies.find((b) => b.jurisdictionId === row.jurisdictionId);
+        if (body !== undefined) {
+          if (body.ocdId !== row.ocdId) return { notRegistered: `registration pairs ${row.jurisdictionId} with ${body.ocdId}, not ${row.ocdId}` };
+          if (row.bodyRole !== "SUB_BODY" && body.id !== row.bodyId) return { notRegistered: `registration's body is ${body.id}, not ${row.bodyId}` };
+          return { input: reg.input };
+        }
+        const reviewed = reviewedBodies.get(row.id);
+        if (!reviewed || "unread" in reviewed) return { notRegistered: reviewed?.unread ?? `${state} reviewed registry was not read` };
+        const { resolved } = reviewed;
+        if (resolved === null || resolved.ocdId !== row.ocdId || (row.bodyRole !== "SUB_BODY" && resolved.bodyId !== row.bodyId)) {
+          return { notRegistered: `registration and reviewed registry do not pair ${row.jurisdictionId} with ${row.bodyId}` };
+        }
+        return { input: reg.input, identityInput: reviewed.input };
+      },
+      attempts,
+      handWired: (bodyId) => activeWiring().some((wiring) => wiring.bodyId === bodyId),
+      vaulted: (artifactId) => refOf(byId.get(artifactId) ?? null),
+      /* A credential-bearing page is held as its sanitized derivative, filed under the raw page's sha256 (vault-crosswalk-evidence). */
+      vaultedBytes: (hex) => refOf(byHash.get(hex) ?? null),
+      verify: (row, _binding, evidence) =>
+        readings.get(`${row.crosswalkRowId}\u0000${evidence.artifactId}`) ?? { refused: `no adapter reading of ${evidence.artifactId} was made this pass` },
+      adapterDigest,
+      previous: groupPrevious.map(unsuspended),
+      now,
+    });
+    decisions.push(...groupDecisions);
+    if (!groupDecisions.some(decision => decision.disposition === "HOLD" &&
+      ["BODY_NOT_REGISTERED", "EVIDENCE_NOT_VAULTED", "ADAPTER_REFUSED"].includes(decision.reason))) {
+      completed[jurisdiction] = source.groupHashes[jurisdiction]!;
+      remaining.delete(jurisdiction);
     }
   }
-  const refOf = (held: HeldVaultArtifact | null) =>
-    held === null || held.tier === "RESTRICTED_RAW"
-      ? null
-      : ({ kind: "VAULTED_EVIDENCE" as const, artifactId: held.id, contentHash: held.contentHash, tier: held.tier === "SANITIZED_DERIVED" ? "SANITIZED_DERIVED" as const : "RAW" as const, retrievedAt: held.retrievedAt ?? now });
-  const pending: HeldCalendarReading[] = [];
-  for (const reviewed of rows.filter((row) => row.status === "ACTIVE")) {
-    console.log(`RCD_PROGRESS meeting-source-wiring ${reviewed.id}`);
-    const walk = latestCalendarWalk(attempts, reviewed.jurisdictionId, reviewed.route)?.attempt;
-    if (walk === undefined) continue;
-    const others = rows.filter((r) => r.jurisdictionId === reviewed.jurisdictionId && r.bodyId !== reviewed.bodyId && r.status === "ACTIVE").map((r) => r.bodyName);
-    const cited = [
-      ...walk.found.filter((f) => sameRoute(f.url, reviewed.route)).map((f) => f.artifactId),
-      ...walk.steps.filter((s) => sameRoute(s.url, reviewed.route)).map((s) => s.artifactId),
-    ].filter((id): id is string => id !== null);
-    for (const artifactId of new Set(cited)) {
-      const held = await capture(artifactId);
-      console.log(`RCD_PROGRESS meeting-source-wiring capture ${artifactId}`);
-      const evidence = refOf(held);
-      if (held === null || evidence === null) continue;
-      pending.push({ key: `${reviewed.id}\u0000${artifactId}`, row: wiringRowFor(reviewed), held: await heldText(held), evidence, others });
-    }
-  }
-  /* The Reader projections the adapters resolve through are read before any reading; an unreadable one refuses the pass. */
-  const read = await readHeldCalendars({ options: { store,  now }, now, adapterDigest, readings: pending });
-  if (read.kind === "UNREADABLE") {
-    await finish(derivedWiringFailedCandidate(now, read.detail));
-    return;
-  }
-  const readings = read.verifications;
-
-  const decisions = deriveWiringDecisions({
-    crosswalk: {
-      input: crosswalkInput,
-      versionId: (crosswalk.kind === "PROMOTED" ? crosswalk.metadata.versionId : automaticRead.metadata.versionId) ?? "",
-      rows,
-      ...(automatic === undefined ? {} : { automatic }),
-    },
-    registration: (row) => {
-      const state = stateOf(row.ocdId);
-      const reg = state === null ? undefined : registrations.get(state);
-      if (reg === undefined || "unread" in reg) return { notRegistered: reg !== undefined && "unread" in reg ? reg.unread : `no covered state in ${row.ocdId}` };
-      const body = reg.bodies.find((b) => b.jurisdictionId === row.jurisdictionId);
-      if (body !== undefined) {
-        if (body.ocdId !== row.ocdId) return { notRegistered: `registration pairs ${row.jurisdictionId} with ${body.ocdId}, not ${row.ocdId}` };
-        if (row.bodyRole !== "SUB_BODY" && body.id !== row.bodyId) return { notRegistered: `registration's body is ${body.id}, not ${row.bodyId}` };
-        return { input: reg.input };
-      }
-      const reviewed = reviewedBodies.get(row.id);
-      if (!reviewed || "unread" in reviewed) return { notRegistered: reviewed?.unread ?? `${state} reviewed registry was not read` };
-      const { resolved } = reviewed;
-      if (resolved === null || resolved.ocdId !== row.ocdId || (row.bodyRole !== "SUB_BODY" && resolved.bodyId !== row.bodyId)) {
-        return { notRegistered: `registration and reviewed registry do not pair ${row.jurisdictionId} with ${row.bodyId}` };
-      }
-      return { input: reg.input, identityInput: reviewed.input };
-    },
-    attempts,
-    handWired: (bodyId) => activeWiring().some((wiring) => wiring.bodyId === bodyId),
-    vaulted: (artifactId) => refOf(byId.get(artifactId) ?? null),
-    /* A credential-bearing page is held as its sanitized derivative, filed under the raw page's sha256 (vault-crosswalk-evidence). */
-    vaultedBytes: (hex) => refOf(byHash.get(hex) ?? null),
-    verify: (row, _binding, evidence) =>
-      readings.get(`${row.crosswalkRowId}\u0000${evidence.artifactId}`) ?? { refused: `no adapter reading of ${evidence.artifactId} was made this pass` },
-    adapterDigest,
-    previous: previous.map(unsuspended),
-    now,
-  });
   const restored = new Set(decisions.filter((d) => d.disposition === "PROMOTE").map((d) => d.key));
   const plan = planDerivedVersion(previous.map((entry) => restored.has(entry.key) ? unsuspended(entry) : entry), decisions);
   for (const d of decisions) {
@@ -282,7 +307,11 @@ async function main(): Promise<void> {
     decisions.filter((d) => d.disposition === "PROMOTE").length,
     decisions.length === 0 ? "no calendar-to-body row reached the derive this pass" : undefined,
   )));
-  await finish(derivedWiringCandidate(plan, [...new Set([manualInput, automaticInput, lkgInput])].filter((i): i is DerivedInputRef => i !== null), now));
+  const candidate = derivedWiringCandidate(plan, [...new Set([manualInput, automaticInput, lkgInput])].filter((i): i is DerivedInputRef => i !== null), now);
+  const touched = new Set(decisions.map(decision => `derived-wiring:${decision.key}`));
+  await finish(withMeetingDerivationProbe({ ...candidate, excludedFacts: [
+    ...previousHeld.filter(fact => !fact.key || !touched.has(fact.key)), ...(candidate.excludedFacts ?? []),
+  ] }, source, completed, [...remaining]));
 }
 
 await main();

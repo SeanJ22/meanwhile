@@ -90,11 +90,12 @@ function OwedEditor({ data, reload }: { readonly data: OwedData; readonly reload
 
 export function OwedPanel() {
   const [countState, setCountState] = useState("US");
-  const { reading, reload } = useReading<{ readonly data: OwedData }>(`/api/admin/v6/owed?state=${countState}`, 60_000);
+  const { reading, reload, status } = useReading<{ readonly data: OwedData }>(`/api/admin/v6/owed?state=${countState}`);
   const data = reading.kind === "ready" ? reading.data.data : null;
   const measured = data?.counts?.filter(row => row.state === countState);
   const stateName = countState === "US" ? "National government" : US_STATES.find(row => row.code.toUpperCase() === countState)!.name;
   return <Card title="What readers are owed" id="owed" aside={<button type="button" className={s.btn} onClick={reload}>Refresh</button>}>
+    {status}
     <div className={s.stack}>
       {reading.kind === "loading" && <Loading what="what readers are owed" />}
       {reading.kind === "failed" && <p className={s.p}>—</p>}

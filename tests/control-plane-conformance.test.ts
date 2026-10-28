@@ -558,7 +558,7 @@ test("SB-01 bootstraps territory voting doors and reports an unmigratable row wi
     }
     const sql = { query: async (text: string, params?: readonly unknown[]) => {
       if (text.includes("indisvalid")) return [{ valid: true, building: false }];
-      if ((text.includes("JOIN cp_doors source")||text.startsWith("SELECT id,revision,updated_at,value->'config'")) || text.startsWith("UPDATE cp_doors SET") ||
+      if ((text.includes("JOIN cp_doors source")||text.includes("JOIN cp_doors USING(id)")||text.startsWith("SELECT id,revision,updated_at,value->'config'")) || text.startsWith("UPDATE cp_doors SET") ||
           text.startsWith("SELECT version FROM cp_schema_version") || text.startsWith("INSERT INTO cp_schema_version"))
         return (await db.query(text, params ? [...params] : [])).rows;
       return [];
@@ -593,8 +593,8 @@ test("BL-30 migrates existing voting doors to exact state and canonical URL quer
     let scans = 0;
     const sql = { query: async (text: string, params?: readonly unknown[]) => {
       if (text.includes("indisvalid")) return [{ valid: true, building: false }];
-      if(text.includes("JOIN cp_doors source"))scans++;
-      if ((text.includes("JOIN cp_doors source")||text.startsWith("SELECT id,revision,updated_at,value->'config'")) || text.startsWith("UPDATE cp_doors SET") ||
+      if(text.includes("JOIN cp_doors source")||text.includes("JOIN cp_doors USING(id)"))scans++;
+      if ((text.includes("JOIN cp_doors source")||text.includes("JOIN cp_doors USING(id)")||text.startsWith("SELECT id,revision,updated_at,value->'config'")) || text.startsWith("UPDATE cp_doors SET") ||
           text.startsWith("SELECT version FROM cp_schema_version") || text.startsWith("INSERT INTO cp_schema_version"))
         return (await db.query(text, params ? [...params] : [])).rows;
       return [];

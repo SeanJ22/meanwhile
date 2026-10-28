@@ -7,6 +7,7 @@ import { sourceProjectionEvidence } from "../civic-data/types.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "./voting-sites.ts";
 import type { VotingSourceDoor } from "./voting-source-types.ts";
+import { votingSourceManifestHash } from "./voting-source-hash.ts";
 
 const normalizedHash = (value: unknown) => canonicalCivicDataHash(value, { durable: true });
 
@@ -65,6 +66,7 @@ function retainFailedVotingSiteScopes(
   const healthy = current.jurisdictions.filter(row => !affected(row));
   const fallbackWithoutLkg = current.jurisdictions.filter(row => affected(row) && !retainedIds.has(row.ocdId));
   return {
+    ...current,
     generatedAt: current.generatedAt,
     jurisdictions: [...healthy, ...retained, ...fallbackWithoutLkg]
       .sort((left, right) => left.ocdId.localeCompare(right.ocdId)),
@@ -89,7 +91,7 @@ export function votingSitesStandardSuccessor(
   if (!prior) return current;
   const refreshed = new Set([...refreshedJurisdictionIds, ...current.jurisdictions.map(row => row.ocdId)]);
   const outside = prior.jurisdictions.filter(row => !refreshed.has(row.ocdId));
-  return { generatedAt: current.generatedAt, jurisdictions: [...current.jurisdictions, ...outside]
+  return { ...current, generatedAt: current.generatedAt, jurisdictions: [...current.jurisdictions, ...outside]
     .sort((left, right) => left.ocdId.localeCompare(right.ocdId)) };
 }
 
@@ -169,7 +171,8 @@ export function votingSitesCandidate(input: {
   const readModel = retainFailedVotingSiteScopes(input.current, input.prior, input.failures);
   const civicRecords = votingSiteMembers(readModel);
   const semanticViolations = votingSitesProjectionIssues(readModel);
-  const rawHash = sha256(input.acquisition.map((capture) => capture.rawHash).join("\n"));
+  const rawHash = readModel.sourceHashes ? votingSourceManifestHash(readModel.sourceHashes)
+    : sha256(input.acquisition.map((capture) => capture.rawHash).join("\n"));
   const currentJurisdictions = new Map(readModel.jurisdictions.map(row => [row.ocdId, row]));
   const carriedJurisdictionIds = input.prior?.jurisdictions.filter(row => {
     const next = currentJurisdictions.get(row.ocdId);
@@ -215,6 +218,7 @@ export function votingSitesCandidate(input: {
       httpStatus: input.successfulAuthorityReads > 0 ? 200 : null,
       retrievedAt: input.retrievedAt,
       rawHash: input.acquisition.length > 0 ? rawHash : null,
+      ...(readModel.sourceHashes ? { rawHashBasis: "SOURCE_CONTENT_V1" as const } : {}),
       failureDetail: input.successfulAuthorityReads > 0 ? undefined : "No registered election authority returned successful bytes.",
     },
     normalization: {

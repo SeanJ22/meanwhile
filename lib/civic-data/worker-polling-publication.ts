@@ -11,7 +11,6 @@ import { readPollingDoor, POLLING_DOOR_KINDS } from "../ballot/polling-door-read
 import { votingSitesCandidate, votingSitesScopedSuccessor, votingSitesContract } from "../ballot/voting-sites-data-plane.ts";
 import type { VotingSitesFile } from "../ballot/voting-sites.ts";
 import { readPromotedCivicData } from "./read-model.ts";
-import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { captureIntact, capturesForPublication, jobWorkerResults, latestParserResult, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
 import { section3Page, linkingPageFrom } from "../control-plane/promotion/section3.ts";
@@ -76,7 +75,7 @@ export async function publishWorkerPollingResults(input: {
       requirePublication(plan.contract.schemaVersion === 2 && plan.contract.recordClass === "VOTING_SITE", "POLLING_CONTRACT_UNRESOLVED");
       const divisionIds = [plan.contract.jurisdiction.canonicalId], bodyIds = [plan.publication!.bodyId];
       const registry = input.readRegistrySlice ? await input.readRegistrySlice(divisionIds, bodyIds)
-        : (await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state))?.payload.registry;
+        : (await input.store.readRegistrySlice(plan.contract.jurisdiction.state, [plan.publication!.bodyId], [plan.contract.jurisdiction.canonicalId]))?.payload.registry;
       const body = registry?.bodies.find(row => row.id === plan.publication!.bodyId);
       const divisionId = body?.ocdId ?? plan.publication!.bodyId;
       const division = registry?.divisions.find(row => row.ocdId === divisionId);

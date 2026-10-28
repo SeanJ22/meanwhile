@@ -102,8 +102,8 @@ export function stateLegislatorCoverageAuthority(
 ;
 
 /**
- * A body covering the point. `divisionLabel` is the division's sourced name, or the special district's
- * registered name for that district's board; the body's own name is never invented.
+ * A body covering the point. `divisionLabel` names its established district owner or the sourced
+ * geographic division; the body's own name is never invented.
  */
 export interface CoveredBody {
   bodyId: string;
@@ -350,6 +350,7 @@ export function summarizeCoverage(
   const identities = prepareBodyIdentities(bodies, divisionsById, rosterNames);
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;
+    const namedOwner=Boolean(body.governmentId || body.censusId || /^(?:[a-z]{2}:(?:special|school|depschool):|government:US-[A-Z]{2}:)/i.test(body.id));
     const held = heldMeetings.find(meeting => meeting.bodyId === body.id);
     const historyGap = historyGapFor(body.id);
     return {
@@ -357,7 +358,7 @@ export function summarizeCoverage(
       ocdId: body.ocdId,
       ...identities.get(body.id)!,
       // A body with no division: real, hyperlocal, and not a division.
-      divisionLabel: body.governmentName ?? division?.label ?? "",
+      divisionLabel: (namedOwner ? body.governmentName : null) ?? division?.label ?? body.governmentName ?? "",
       ...(body.placementBasis ? {placementBasis:body.placementBasis} : {}),
       // Null, never a placeholder type.
       divisionType: division?.divisionType ?? null,

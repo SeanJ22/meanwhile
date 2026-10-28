@@ -1,28 +1,25 @@
+import { memberOfficeScopeState } from "../officials/member-office-data.ts";
 import { parseStateBallotContractId, stateBallotScope } from "./state-scopes.ts";
 import { ballotNavigationState } from "./ballot-navigation-scope.ts";
 import { stateFromRegistryRuntimeContractId } from "./state-scopes.ts";
 import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
 import { federalMemberOfScope } from "../votes/data-plane.ts";
-import { readLatestReaderReadbacks, routineEventObservedAt, type RoutineDataStore } from "./store.ts";
+import type { RoutineDataStore } from "./store.ts";
 import type { RoutineSourceContract } from "./contracts.ts";
 import type { ManualProductionSourceContract } from "./manual-contracts.ts";
-import type { CandidateEvent, PromotedPointerIdentity } from "./types.ts";
+import type { PromotedPointerIdentity } from "./types.ts";
 import { headSha } from "../ops/git-facts.ts";
-import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { isPeopleSource } from "../officials/people-sources.ts";
 import { FEDERAL_MONEY_SOURCES, federalMoneyScope } from "../federal-money/model.ts";
 import { readFederalMoneyPartition, readFederalMoneyNationalProjection, readFederalMoneyCheckpoint } from "../federal-money/verify.ts";
 import {
   normalizeReaderCodeSha,
-  parseReaderProjectionReadback,
-  READER_PROJECTION_READBACK_PREFIX,
+  publicationFingerprintIssue,
   READER_READBACK_EVIDENCE_KIND,
-  serializeReaderProjectionReadback,
   type ReaderProjectionReadbackReceipt,
 } from "./reader-readback.ts";
 
-export const READER_READBACK_RETRY_MS = 5 * 60_000;
 
 export interface RoutineReaderVerification {
   readonly verifierId: string;
@@ -404,10 +401,15 @@ export async function verifyRoutineReaderProjection(
         const { readBallotNavigationProjection } = await import("./curated-reader-read-model.ts");
         return verifyExactVersion(verifierId, await readBallotNavigationProjection(state, { store: options.store, now: options.now }), options.expectedVersionId, `${state} ballot navigation`);
       }
+      case "member-offices": {
+        const state=memberOfficeScopeState(options.scope??"");
+        if(!state)return fail(verifierId,"Member-office readback requires its exact state scope.");
+        const {readMemberOfficeStateProjection}=await import("./curated-reader-read-model.ts");
+        return verifyExactVersion(verifierId,await readMemberOfficeStateProjection(state,{store:options.store,now:options.now}),options.expectedVersionId,`${state} member offices`);
+      }
       case "official-filings":
       case "stances":
       case "campaign-sites":
-      case "member-offices":
       case "venue-resolutions":
       case "meeting-body-crosswalk": {
         const { readCuratedReaderProjection } = await import("./curated-reader-read-model.ts");
@@ -464,167 +466,27 @@ export async function verifyRoutineReaderProjection(
   }
 }
 
-const POINTER_READBACK_VERIFIER_ID = "lib/civic-data/store.ts#readPromotionIdentity";
-
-async function promotedPointerReadbackIssue(
-  store: RoutineDataStore,
-  contract: ReaderContract,
-  promoted: PromotedPointerIdentity,
-): Promise<string | null> {
-  let pointer: PromotedPointerIdentity | null;
-  try {
-    pointer = await store.readPromotionIdentity(contract.recordClass, promoted.scope);
-  } catch (error) {
-    return `Reading canonical pointer ${promoted.key} failed (${sanitizedErrorDiagnostic(error)}). We could not ask the store.`;
-  }
-  if (
-    pointer === null ||
-    pointer.key !== promoted.key ||
-    pointer.sourceId !== contract.sourceId ||
-    pointer.versionId !== promoted.versionId ||
-    pointer.lastKnownGoodVersionId !== promoted.versionId
-  ) {
-    return `Promoted pointer readback expected ${promoted.versionId}; canonical pointer ${promoted.key} is ` +
-      `${pointer === null ? "NOT_RECORDED" : `${pointer.sourceId}:${pointer.versionId}`}.`;
-  }
-  return null;
-}
-
-/** Persists one typed Reader observation without changing candidate disposition, the pointer, or LKG. */
+/** Compare the atomic write result; this observation is returned to the caller without another read or receipt write. */
 export async function recordRoutineReaderProjectionReadback(
-  store: RoutineDataStore,
+  _store: RoutineDataStore,
   contract: ReaderContract,
   promoted: PromotedPointerIdentity,
   observedAt: string,
   verifierCodeSha: string | null = headSha(),
 ): Promise<ReaderProjectionReadbackReceipt | null> {
   if (contract.readerProjection === null) return null;
-  const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
-  const pointerIssue = await promotedPointerReadbackIssue(store, contract, promoted);
-  const readerVerification = pointerIssue !== null
-    ? fail(POINTER_READBACK_VERIFIER_ID, pointerIssue)
-    : await verifyRoutineReaderProjection(contract, {
-        store,
-        now: observedAt,
-        expectedVersionId: promoted.versionId,
-        scope: promoted.scope,
-      });
-  return appendReaderProjectionReadback(
-    store,
-    contract,
-    promoted,
-    observedAt,
-    normalizedVerifierCodeSha,
-    readerVerification,
-  );
-}
-
-async function appendReaderProjectionReadback(
-  store: RoutineDataStore,
-  contract: ReaderContract,
-  promoted: PromotedPointerIdentity,
-  observedAt: string,
-  normalizedVerifierCodeSha: string | null,
-  readerVerification: RoutineReaderVerification,
-): Promise<ReaderProjectionReadbackReceipt> {
-  if (contract.readerProjection === null) {
-    throw new Error(`READER_PROJECTION_NOT_APPLICABLE:${contract.id}`);
-  }
-  const verification = normalizedVerifierCodeSha === null
-    ? fail(
-        readerVerification.verifierId,
-        `The typed Reader result cannot be certified because its executing code commit was not resolvable. ${readerVerification.detail}`,
-      )
-    : readerVerification;
-  observedAt = await routineEventObservedAt(store, promoted.recordClass, promoted.scope, observedAt);
-  const receipt: ReaderProjectionReadbackReceipt = {
-    contractVersion: 2,
-    kind: "READER_PROJECTION_READBACK",
-    contractId: contract.id,
-    sourceId: contract.sourceId,
-    recordClass: contract.recordClass,
-        // Must equal the promoted candidate's scope, so the durable evidence binds to the row actually read.
-    scope: promoted.scope,
-    projectionId: contract.readerProjection.id,
-    versionId: promoted.versionId,
-    pointerKey: promoted.key,
-    observedAt,
-    evidenceKind: READER_READBACK_EVIDENCE_KIND,
-    verifierId: verification.verifierId,
-    verifierCodeSha: normalizedVerifierCodeSha,
-    status: verification.status,
-    detail: verification.detail,
+  const issue = promotionIdentityIssue(contract, promoted) ?? publicationFingerprintIssue(promoted);
+  return {
+    contractVersion: 2, kind: "READER_PROJECTION_READBACK", contractId: contract.id,
+    sourceId: contract.sourceId, recordClass: contract.recordClass, scope: promoted.scope,
+    projectionId: contract.readerProjection.id, versionId: promoted.versionId, pointerKey: promoted.key,
+    observedAt, evidenceKind: READER_READBACK_EVIDENCE_KIND,
+    verifierId: "lib/civic-data/reader-readback.ts#publicationFingerprintIssue",
+    verifierCodeSha: normalizeReaderCodeSha(verifierCodeSha), status: issue ? "FAIL" : "PASS",
+    detail: issue ?? `Publication returned content fingerprint ${promoted.writeFingerprint!.stored}.`,
   };
-  await store.appendEvidence(promoted.versionId, "PROMOTED", observedAt, serializeReaderProjectionReadback(receipt));
-  return receipt;
 }
 
-export type ReaderReadbackRepairOutcome =
-  | { readonly kind: "NOT_APPLICABLE" | "NO_PROMOTION" | "BACKOFF"; readonly receipt: null }
-  | {
-      readonly kind: "CURRENT";
-      /** The exact durable PASS that made this readback current. */
-      readonly receipt: ReaderProjectionReadbackReceipt & { readonly status: "PASS" };
-    }
-  | {
-      readonly kind: "FAILED_BACKOFF";
-      readonly receipt: ReaderProjectionReadbackReceipt & { readonly status: "FAIL" };
-    }
-  | { readonly kind: "RECORDED"; readonly receipt: ReaderProjectionReadbackReceipt };
-
-interface ReaderReadbackInspection {
-  readonly outcome: ReaderReadbackRepairOutcome | null;
-  readonly promotion: PromotedPointerIdentity | null;
-  readonly attestFrom?: ReaderProjectionReadbackReceipt & { readonly status: "PASS"; readonly verifierCodeSha: string };
-}
-
-export interface ReaderVerifierClosureAttestation {
-  readonly identical: boolean;
-  readonly detail: string;
-}
-
-export type ReaderVerifierClosureAttestor = (
-  priorVerifierCodeSha: string,
-  currentVerifierCodeSha: string,
-) => Promise<ReaderVerifierClosureAttestation> | ReaderVerifierClosureAttestation;
-
-async function attestReaderProjectionReadback(
-  store: RoutineDataStore,
-  contract: ReaderContract,
-  promotion: PromotedPointerIdentity,
-  prior: NonNullable<ReaderReadbackInspection["attestFrom"]>,
-  observedAt: string,
-  normalizedVerifierCodeSha: string | null,
-  attestor: ReaderVerifierClosureAttestor | undefined,
-): Promise<ReaderProjectionReadbackReceipt | null> {
-  if (attestor === undefined || normalizedVerifierCodeSha === null) return null;
-  let attestation: ReaderVerifierClosureAttestation;
-  try {
-    attestation = await attestor(prior.verifierCodeSha, normalizedVerifierCodeSha);
-  } catch {
-    return null;
-  }
-  if (!attestation.identical) return null;
-  try {
-    return await appendReaderProjectionReadback(
-      store,
-      contract,
-      promotion,
-      observedAt,
-      normalizedVerifierCodeSha,
-      pass(
-        prior.verifierId,
-        `ATTESTED, not re-read: the exact PASS for canonical version ${promotion.versionId} at code ` +
-          `${prior.verifierCodeSha} (observed ${prior.observedAt}) carries to code ${normalizedVerifierCodeSha}; ` +
-          `${attestation.detail}`,
-      ),
-    );
-  } catch {
-    // Not attested (the pointer moved, or the append failed): the caller
-    // re-reads through the typed Reader, whose own failure stays visible.
-    return null;
-  }
-}
 
 function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPointerIdentity): string | null {
   const fanOut = "fanOut" in contract && contract.fanOut === true && promotion.scope.startsWith(`${contract.sourceId}:`);
@@ -639,110 +501,4 @@ function promotionIdentityIssue(contract: ReaderContract, promotion: PromotedPoi
     promotion.lastKnownGoodVersionId !== promotion.versionId
   ) return `READER_PROMOTION_IDENTITY_INVALID:${contract.id}`;
   return null;
-}
-
-function inspectReaderReadbackEvents(
-  contract: ReaderContract,
-  promotion: PromotedPointerIdentity,
-  events: readonly CandidateEvent[],
-  now: string,
-  normalizedVerifierCodeSha: string | null,
-): ReaderReadbackInspection {
-  const marked = events
-    .filter((event) => event.detail.startsWith(READER_PROJECTION_READBACK_PREFIX))
-    .sort((left, right) => Date.parse(right.at) - Date.parse(left.at) || right.sequence - left.sequence);
-  const latestEvent = marked[0];
-  const latest = latestEvent ? parseReaderProjectionReadback(latestEvent.detail) : null;
-  const sameVersion = normalizedVerifierCodeSha !== null && latest !== null &&
-    latest.contractId === contract.id &&
-    latest.sourceId === contract.sourceId &&
-    latest.recordClass === contract.recordClass &&
-    latest.scope === promotion.scope &&
-    latest.projectionId === contract.readerProjection?.id &&
-    latest.versionId === promotion.versionId &&
-    latest.pointerKey === promotion.key;
-  const exact = sameVersion && latest.verifierCodeSha === normalizedVerifierCodeSha;
-  if (exact && latest.status === "PASS") {
-    return { outcome: { kind: "CURRENT", receipt: { ...latest, status: "PASS" } }, promotion: null };
-  }
-  const nowMs = Date.parse(now);
-  const latestMs = latestEvent ? Date.parse(latestEvent.at) : Number.NaN;
-  if (
-    exact && latestEvent &&
-    Number.isFinite(nowMs) &&
-    Number.isFinite(latestMs) &&
-    nowMs >= latestMs &&
-    nowMs - latestMs < READER_READBACK_RETRY_MS
-  ) {
-    if (latest.status === "FAIL") {
-      return { outcome: { kind: "FAILED_BACKOFF", receipt: { ...latest, status: "FAIL" } }, promotion: null };
-    }
-    return { outcome: { kind: "BACKOFF", receipt: null }, promotion: null };
-  }
-  if (sameVersion && !exact && latest.status === "PASS" && latest.verifierCodeSha !== null) {
-    return { outcome: null, promotion, attestFrom: { ...latest, status: "PASS", verifierCodeSha: latest.verifierCodeSha } };
-  }
-  return { outcome: null, promotion };
-}
-
-async function inspectReaderReadback(
-  store: RoutineDataStore,
-  contract: ReaderContract,
-  now: string,
-  normalizedVerifierCodeSha: string | null,
-): Promise<ReaderReadbackInspection> {
-  if (contract.readerProjection === null) {
-    return { outcome: { kind: "NOT_APPLICABLE", receipt: null }, promotion: null };
-  }
-  const promotion = await store.readPromotionIdentity(contract.recordClass, contract.scope);
-  if (promotion === null) return { outcome: { kind: "NO_PROMOTION", receipt: null }, promotion: null };
-  const identityIssue = promotionIdentityIssue(contract, promotion);
-  if (identityIssue !== null) throw new Error(identityIssue);
-  const events = await readLatestReaderReadbacks(store, [promotion.versionId]);
-  return inspectReaderReadbackEvents(contract, promotion, events, now, normalizedVerifierCodeSha);
-}
-
-/** Never reacquires a publisher and never mutates source state. */
-export async function repairRoutineReaderProjectionReadback(
-  store: RoutineDataStore,
-  contract: ReaderContract,
-  now: string = new Date().toISOString(),
-  verifierCodeSha: string | null = headSha(),
-  options: {
-    readonly attestor?: ReaderVerifierClosureAttestor;
-  } = {},
-): Promise<ReaderReadbackRepairOutcome> {
-  const normalizedVerifierCodeSha = normalizeReaderCodeSha(verifierCodeSha);
-  const inspection = await inspectReaderReadback(store, contract, now, normalizedVerifierCodeSha);
-  return repairInspectedReaderReadback(store, contract, inspection, now, normalizedVerifierCodeSha, options);
-}
-
-async function repairInspectedReaderReadback(
-  store: RoutineDataStore, contract: ReaderContract, inspection: ReaderReadbackInspection, now: string,
-  normalizedVerifierCodeSha: string | null, options: { readonly attestor?: ReaderVerifierClosureAttestor },
-  remainingPointerRetry = 1,
-): Promise<ReaderReadbackRepairOutcome> {
-  if (inspection.outcome !== null) return inspection.outcome;
-  if (inspection.promotion === null) throw new Error(`READER_REPAIR_PROMOTION_MISSING:${contract.id}`);
-  let receipt: ReaderProjectionReadbackReceipt | null = null;
-  let failed: { readonly error: unknown } | null = null;
-  try {
-    if (inspection.attestFrom !== undefined) {
-      receipt = await attestReaderProjectionReadback(store, contract, inspection.promotion, inspection.attestFrom,
-        now, normalizedVerifierCodeSha, options.attestor);
-    }
-    receipt ??= await recordRoutineReaderProjectionReadback(store, contract, inspection.promotion, now, normalizedVerifierCodeSha);
-  } catch (error) { failed = { error }; }
-  if (remainingPointerRetry > 0 && (failed !== null || receipt?.status === "FAIL")) {
-    // A concurrent publication is not evidence that either source version is invalid.
-    // Re-inspect once, and let the exact typed Reader and append guard verify the new pointer.
-    const current = await store.readPromotionIdentity(contract.recordClass, inspection.promotion.scope);
-    if (current?.versionId !== inspection.promotion.versionId) {
-      const latest = await inspectReaderReadback(store, contract, now, normalizedVerifierCodeSha);
-      return repairInspectedReaderReadback(store, contract, latest, now, normalizedVerifierCodeSha, options, remainingPointerRetry - 1);
-    }
-  }
-  if (failed !== null) throw failed.error;
-  if (receipt === null) return { kind: "NOT_APPLICABLE", receipt: null };
-  return { kind: "RECORDED", receipt };
 }

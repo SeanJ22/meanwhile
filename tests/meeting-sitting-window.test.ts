@@ -2,9 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 
-import { drizzle } from "drizzle-orm/neon-http";
-
-import * as schema from "../lib/db/schema.ts";
+import { PgDialect } from "drizzle-orm/pg-core";
 
 import {
   MEETING_SITTING_WINDOW,
@@ -281,11 +279,15 @@ test("C6: a sitting concludes at its publisher-stated end; only a sitting with n
     [["s", new Map([[long, now - 6.5 * DAY]])]]);
 });
 
-test("C6: the stated-ends read is built in Postgres, returns only stated pairs, and never selects a payload whole", () => {
-  const text = statedSittingEndsRead(drizzle.mock({ schema })).toSQL().sql;
-  assert.match(text, /jsonb_build_array\(m->'startsAt', m->'endsAt'\)/);
-  assert.match(text, /jsonb_typeof\(m->'endsAt'\) = 'string'/);
-  assert.doesNotMatch(text.slice(0, text.indexOf(" from \"civic_data_promotions\"")), /select (?:"civic_data_promotions"\.)?"payload"[,\s]/);
+test("C6: the stated-ends read is built in Postgres, returns only stated pairs, and never selects a payload whole", async () => {
+  const statements: string[] = [];
+  const rows = await statedSittingEndsRead({ execute: async (query) => { statements.push(new PgDialect().sqlToQuery(query).sql); return { rows: [{ scope: "s", pairs: [["a", "b"]] }] }; } });
+  assert.deepEqual(rows, [{ scope: "s", pairs: [["a", "b"]] }]);
+  assert.equal(statements.length, 1);
+  const text = statements[0]!, returned = text.slice(text.lastIndexOf("\nSELECT"));
+  assert.match(text, /^WITH RECURSIVE walk\(/);
+  assert.match(text, /FROM civic_data_payload_parts WHERE hash = ref\.hash/, "sittings held in stored parts are read in the database");
+  assert.match(returned, /^\nSELECT scope, jsonb_agg\(jsonb_build_array\(starts, ends\)\) AS pairs FROM meeting WHERE ends IS NOT NULL GROUP BY scope$/);
 });
 
 test("C6: the runner reads the stated ends once a pass and hands them to the sitting window by task", () => {

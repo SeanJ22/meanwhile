@@ -22,6 +22,7 @@ import { federalDirectoryStateOf } from "../officials/federal-directory-data-pla
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, statePublicationScope } from "./state-publication.ts";
 
 import { and, desc, eq, getTableColumns, inArray, like, or, sql, type SQL } from "drizzle-orm";
+import { meetingSittingsSql } from "./sitting-window-admission.ts";
 
 import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
@@ -1798,15 +1799,17 @@ export function routineClockPointedObservedRead(db: RoutineClockDb, recordClass:
     .limit(1);
 }
 
+/**
+ * One pointer's sitting starts, read from inline sittings and stored parts alike (`meetingSittingsSql`), in the clock's
+ * batch: only the start strings cross the connection. A payload naming a missing part, or holding a sitting time as a
+ * part, reads as null, so its sittings are unknown and the partition counts as hot, as the hourly check's hot rule does.
+ */
 export function sittingStartsRead(db: RoutineClockDb, scope: string) {
-  const payload = civicDataPromotions.payload;
+  const [head, tail] = meetingSittingsSql(" AND scope = \u0000").split("\u0000") as [string, string];
   return db
     .select({
-      starts: sql<unknown>`coalesce((
-        select jsonb_agg(m->'startsAt')
-        from jsonb_array_elements(case when jsonb_typeof(${payload}->'meetings') = 'array' then ${payload}->'meetings' else '[]'::jsonb end) as m
-        where jsonb_typeof(m->'startsAt') = 'string'
-      ), '[]'::jsonb)`,
+      starts: sql<unknown>`(WITH RECURSIVE ${sql.raw(head)}${scope}${sql.raw(tail)}
+        SELECT CASE WHEN EXISTS (SELECT 1 FROM unreadable) THEN NULL ELSE coalesce((SELECT jsonb_agg(starts) FROM meeting), '[]'::jsonb) END)`,
     })
     .from(civicDataPromotions)
     .where(and(eq(civicDataPromotions.recordClass, "MEETING"), eq(civicDataPromotions.scope, scope)))

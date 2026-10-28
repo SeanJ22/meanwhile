@@ -3245,6 +3245,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
     const id = input.pointerVersionId;
     this.assertCandidateMutationAuthority({ id, sourceId: input.sourceId, recordClass: input.recordClass, scope: input.scope });
     const detail = serializeUnchangedConfirmation(built.confirmation);
+    const retained = input.retainedSourceResponses?.length
+      ? await (await import("./retained-meeting-bytes.ts")).holdMeetingResponses(
+        this.cacheOptions.vault??(await import("./raw-capture-remote.ts")).rawCaptureVault(), input.retainedSourceResponses)
+      : null;
     const nextSequence = this.nextCandidateEventSequence(id);
     const checkedAt = sourceCheckedAt(built.confirmation.retrieval, built.confirmation.observedAt)!;
     // This receipt shares the existing candidate lock. A delayed parser replay cannot replace a newer real check.
@@ -3296,10 +3300,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
               ))
           )
       `).returning({ sequence: civicDataCandidateEvents.sequence }),
-      ...(input.retainedSourceResponses?.length
+      ...(retained?.length
         ? [this.db.insert(civicDataCandidateEvents).select(sql`
             select gen_random_uuid(), ${id}, ${this.nextCandidateEventSequence(id)}, ${"PROMOTED"}, ${at}::timestamptz,
-              ${serializeUnchangedConfirmationSources(built.confirmation, input.retainedSourceResponses)}
+              ${serializeUnchangedConfirmationSources(built.confirmation, retained)}
             where exists (
               select 1 from ${civicDataCandidateEvents}
               where ${civicDataCandidateEvents.candidateId} = ${id}

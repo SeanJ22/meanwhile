@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { createHash } from "node:crypto";
 import test from "node:test";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -78,6 +79,30 @@ test("the real source-head selector and unchanged event rule compare current sou
       pointerVersionId: head!.versionId, readModelHash: head!.normalizedHash!, basis: "RAW_HASH_UNCHANGED" as const,
       retrieval: { requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash: "f".repeat(64), retrievedAt: at } };
     assert.equal((await store.confirmUnchanged!(bad, new Date().toISOString())).kind, "HASH_DIFFERS");
+  });
+});
+
+test("unchanged source receipts retain only a fingerprint-filed source reference", async () => {
+  await withMigratedRoutineStore("openstates-people-az", async (store, vault, pg) => {
+    const first = await publishStatePeople({ store, vault, state: "az", roster, acquisitions, releaseId: "a".repeat(40), now: at });
+    assert.ok(first.outcome.promoted);
+    const head = (await store.readSourceHead("STATE_LEGISLATOR", scope))!;
+    const bytes = Buffer.from("source response retained for downstream work");
+    const rawHash = createHash("sha256").update(bytes).digest("hex");
+    const checkedAt = new Date().toISOString();
+    const response = { source: "test", requestedUrl: url, finalUrl: url, httpStatus: 200, rawHash,
+      byteCount: bytes.length, contentType: "text/plain", retrievedAt: checkedAt, base64: bytes.toString("base64") };
+    const result = await store.confirmUnchanged!({ sourceId: head.sourceId, recordClass: head.recordClass, scope,
+      parserVersion: head.parserVersion, pointerVersionId: head.versionId, readModelHash: head.normalizedHash!,
+      basis: "RAW_HASH_UNCHANGED", retrieval: { requestedUrl: url, finalUrl: url, httpStatus: 200,
+        rawHash: head.rawHash!, retrievedAt: checkedAt }, retainedSourceResponses: [response] }, checkedAt);
+    assert.equal(result.kind, "CONFIRMED");
+    const rows = (await pg.query<{detail:string}>("SELECT detail FROM civic_data_candidate_events WHERE candidate_id=$1 AND detail LIKE 'UNCHANGED_CONFIRMATION_SOURCES_V1 %'", [head.versionId])).rows;
+    assert.equal(rows.length, 1);
+    assert.doesNotMatch(rows[0].detail, /base64|source response retained/);
+    const saved = JSON.parse(rows[0].detail.slice("UNCHANGED_CONFIRMATION_SOURCES_V1 ".length)).retainedSourceResponses[0];
+    assert.match(saved.vaultKey, new RegExp(`${rawHash}$`));
+    assert.deepEqual(Buffer.from((await vault.get(saved.vaultKey))!.bytes), bytes);
   });
 });
 

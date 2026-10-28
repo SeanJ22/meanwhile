@@ -5,6 +5,7 @@ import { candidateChangeSet, civicRecordsFor } from "./changes.ts";
 import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionKind, readCivicVersionPath, readCivicVersionRows, readCivicVersionText,
   type CivicVersionVaultRef, type CivicVersionRowSelection, type CivicVersionTextRange } from "./version-vault.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "./types.ts";
+import { holdMeetingResponses, type RetainedMeetingCandidate } from "./retained-meeting-bytes.ts";
 import { sourceWorkClockMetadata, type SourceWorkClockMetadata } from "./source-work-clock.ts";
 
 interface VaultPath { readonly version: CivicVersionVaultRef; readonly path: readonly string[] }
@@ -61,11 +62,14 @@ export async function holdCandidateFacts(vault:EvidenceStore,candidate:RoutineCa
   const civicRecords=candidate.civicRecords===undefined?undefined:
     hash(candidate.civicRecords)===hash(civicRecordsFor(candidate.recordClass,candidate.readModel))?"DERIVED" as const:
       await holdCivicVersion(vault,candidate.civicRecords,hash(candidate.civicRecords));
-  const {readModel:_model,normalizedPayload:_normalized,excludedFacts:_facts,changeSet:_changes,civicRecords:_members,...metadata}=candidate;
+  const {readModel:_model,normalizedPayload:_normalized,excludedFacts:_facts,changeSet:_changes,civicRecords:_members,
+    retainedSourceResponses,...metadata}=candidate as RetainedMeetingCandidate;
+  const retained=retainedSourceResponses?await holdMeetingResponses(vault,retainedSourceResponses):undefined;
   const portraitFact=candidate.excludedFacts?.find(fact=>fact.code==="PEOPLE_PORTRAIT_SCHEDULE");
   const portraitRecord=object(portraitFact?.record);
   const portraitSchedule=portraitFact?{nextDueAt:portraitRecord?.nextDueAt??null,seen:portraitRecord?.seen??null}:null;
   return {...metadata,normalizedPayload:options.retainEvidence?candidate.normalizedPayload as Record<string,unknown>:sourceMetadata(candidate.normalizedPayload),
+    ...(retained?{retainedSourceResponses:retained}:{}),
     ...(options.retainEvidence&&candidate.excludedFacts?{excludedFacts:candidate.excludedFacts}:{}),
     ...(options.retainReadModel?{readModel:candidate.readModel}:{}),
     vault:{formatVersion:1,readModel,normalizedPayload,excludedFacts,previousFingerprint,

@@ -11,25 +11,25 @@
       "file": "lib/civic-data/candidate-integrity.ts",
       "kind": "readCandidate",
       "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
-      "line": 354
+      "line": 355
     },
     {
       "file": "lib/civic-data/candidate-lifecycle.ts",
       "kind": "readCandidate",
       "fingerprint": "988b8423f951fe30ebf96e3c6e31f1b260ba222f4f71aaa9d514a3692cc46e09",
-      "line": 114
+      "line": 117
     },
     {
       "file": "lib/civic-data/candidate-lifecycle.ts",
       "kind": "readCandidate",
       "fingerprint": "76be3f738ac18b5e08cfd9b25408a0567eb4f22edc1d82e5dd9d9f18f595739e",
-      "line": 125
+      "line": 128
     },
     {
       "file": "lib/civic-data/candidate-lifecycle.ts",
       "kind": "readCandidate",
       "fingerprint": "aa59de7bf1965ddbfc38731d37820051f69710a44c45d74461df59af171e68ec",
-      "line": 128
+      "line": 131
     },
     {
       "file": "lib/civic-data/manual-projections.ts",
@@ -89,13 +89,13 @@
       "file": "lib/civic-data/store.ts",
       "kind": "readCandidate",
       "fingerprint": "85d10c08f9d5b0b2c59eab1a3895a504ab31eb61bdfdb76ae85657a674ed2c1d",
-      "line": 1180
+      "line": 1187
     },
     {
       "file": "lib/civic-data/store.ts",
       "kind": "readCandidate",
       "fingerprint": "85d10c08f9d5b0b2c59eab1a3895a504ab31eb61bdfdb76ae85657a674ed2c1d",
-      "line": 2620
+      "line": 2643
     },
     {
       "file": "lib/control-plane/admin-view/officials-results.ts",

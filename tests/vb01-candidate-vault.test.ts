@@ -1,10 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { candidateChangeSet, civicRecordsFor } from "../lib/civic-data/changes.ts";
 import { holdCandidateFacts, hydrateCandidateFacts, readCivicCandidatePath, readCivicCandidateEvidenceRows, readCivicCandidateExcludedRows, rebuildCandidateChanges } from "../lib/civic-data/candidate-vault.ts";
 import { civicVersionRef, holdCivicVersion } from "../lib/civic-data/version-vault.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { readRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 
 const hash=(value:unknown)=>canonicalCivicDataHash(value,{durable:true});
@@ -65,6 +67,19 @@ test("portrait schedule selects a held fact and its small fields without unrelat
   assert.equal(await readCivicCandidatePath(query,vault,input.id,["excludedFacts","1","record","nextDueAt"]),schedule.record.nextDueAt);
   assert.deepEqual(await readCivicCandidatePath(query,vault,input.id,["excludedFacts","1","record","seen"]),schedule.record.seen);
   assert.equal(unrelatedRead,false);
+});
+
+test("retained meeting responses are filed once by their source fingerprint",async()=>{
+  const vault=new MemoryEvidenceStore(),input=candidate(),bytes=Buffer.from("official meeting feed");
+  const response={source:"fixture",requestedUrl:"https://example.gov/feed",finalUrl:"https://example.gov/feed",httpStatus:200,
+    rawHash:createHash("sha256").update(bytes).digest("hex"),byteCount:bytes.length,contentType:"application/json",
+    retrievedAt:"2026-10-28T00:00:00Z",base64:bytes.toString("base64")};
+  const stored=await holdCandidateFacts(vault,{...input,retainedSourceResponses:[response]} as RoutineCandidate,null,{retainReadModel:false});
+  const [saved]=(stored as unknown as {retainedSourceResponses:{vaultKey:string;rawHash:string;byteCount:number}[]}).retainedSourceResponses;
+  assert.equal("base64" in saved,false);
+  assert.deepEqual(Buffer.from(await readRawCapture(vault,{vaultKey:saved.vaultKey,rawHash:saved.rawHash,byteLength:saved.byteCount})),bytes);
+  await assert.rejects(holdCandidateFacts(vault,{...input,retainedSourceResponses:[{...response,rawHash:"0".repeat(64)}]} as RoutineCandidate,
+    null,{retainReadModel:false}),/MEETING_CAPTURE_FINGERPRINT_MISMATCH/);
 });
 
 test("transition format retains readModel until historical readers switch; failed evidence keeps its actual vault identity",async()=>{

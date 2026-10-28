@@ -14,9 +14,10 @@ import { abandonAttempt, beginAttemptFor, claimRouteTask, disposeRouteTask, reco
 import { enqueueWorkerTask, FLEET_POLICY_VERSION } from "./runtime.ts";
 import { registeredHeldMeetingContract } from "./held-meeting-contract.ts";
 import { ZERO_COST } from "../attempt.ts";
+import { rawCaptureKey, readRawCapture } from "../../civic-data/raw-capture-vault.ts";
 
 const CAPTURE_OBLIGATION = "Independently verify the permanent meeting source capture for Reader publication";
-type CaptureMetadata = Omit<RetainedSourceResponse, "bytes">;
+type CaptureMetadata = Omit<RetainedSourceResponse, "bytes"> & { readonly vaultKey?: string };
 interface CaptureHead { readonly candidateId: string; readonly ordinal: number; readonly response: CaptureMetadata }
 function captureTask(response: CaptureMetadata, subjectId: string, candidateVersionId: string | undefined, now: string) {
   const contract = registeredHeldMeetingContract(response.finalUrl, subjectId);
@@ -35,11 +36,6 @@ export const RECENT_ROUTINE_MEETING_CAPTURE_HEADS_SQL = `WITH recent AS MATERIAL
 ) SELECT c.id AS candidate_id,s.ordinal_index AS ordinal,reader_payload_value(h.value-'base64') AS response
   FROM recent c,LATERAL reader_payload_members(reader_payload_node(c.candidate)->'retainedSourceResponses') s,
     LATERAL (SELECT reader_payload_node(s.item) AS value) h ORDER BY c.retrieved_at,c.id,s.ordinal_index`;
-export const ROUTINE_MEETING_CAPTURE_BYTES_SQL = `SELECT reader_payload_value(h.value->'base64') AS base64
-  FROM civic_data_candidates c,LATERAL reader_payload_members(reader_payload_node(c.candidate)->'retainedSourceResponses') s,
-    LATERAL (SELECT reader_payload_node(s.item) AS value) h WHERE c.id=$1 AND s.ordinal_index=$2
-    AND h.value->>'rawHash'=$3 AND reader_payload_value(h.value->'requestedUrl')#>>'{}'=$4`;
-
 /**
  * Retain an actual routine response for independent work. No acquisition is
  * scheduled here. One capture task per candidate response, settled once: the
@@ -140,10 +136,15 @@ export async function retainRecentRoutineMeetingEvidence(input: {
       if (!planned) continue;
       const prior = await input.repos.routeTasks.read(planned.task.id);
       if (prior?.value.disposition != null || prior && prior.value.state !== "PENDING" && prior.value.state !== "RECLAIMABLE") continue;
-      const base64 = input.candidates ? input.candidates.find(candidate => candidate.id === head.candidateId)?.retainedSourceResponses?.[head.ordinal]?.base64
-        : (await query!(ROUTINE_MEETING_CAPTURE_BYTES_SQL, [head.candidateId, head.ordinal, head.response.rawHash, head.response.requestedUrl]))[0]?.base64;
-      if (typeof base64 !== "string") throw new Error("ROUTINE_MEETING_CAPTURE_BYTES_UNAVAILABLE");
-      const response = { ...head.response, bytes: new Uint8Array(Buffer.from(base64, "base64")) };
+      const base64 = input.candidates ? input.candidates.find(candidate => candidate.id === head.candidateId)?.retainedSourceResponses?.[head.ordinal]?.base64 : undefined;
+      let bytes: Uint8Array;
+      if (typeof base64 === "string") bytes = new Uint8Array(Buffer.from(base64, "base64"));
+      else {
+        if (!/^[a-f0-9]{64}$/.test(head.response.rawHash) || head.response.vaultKey !== rawCaptureKey(head.response.rawHash))
+          throw new Error("ROUTINE_MEETING_CAPTURE_BYTES_UNAVAILABLE");
+        bytes = await readRawCapture(input.store,{vaultKey:head.response.vaultKey,rawHash:head.response.rawHash,byteLength:head.response.byteCount});
+      }
+      const response = { ...head.response, bytes };
       const result = await retainRoutineMeetingForWorkers({ ...input, response, candidateVersionId: head.candidateId, subjectId: partition.bodyId });
       if (result) results.push(result);
     } catch (error) {

@@ -11,7 +11,8 @@ import { beginAttemptFor, claimRouteTask, reclaimRouteTask, registerRouteTask } 
 import { createRouteTask } from "../lib/control-plane/route-task.ts";
 import { FLEET_POLICY_VERSION } from "../lib/control-plane/workers/runtime.ts";
 import { PIMA_LEGISTAR_CONTRACT } from "../lib/control-plane/workers/held-meeting-contract.ts";
-import { retainRecentRoutineMeetingEvidence, retainRoutineMeetingForWorkers, RECENT_ROUTINE_MEETING_CAPTURE_HEADS_SQL, ROUTINE_MEETING_CAPTURE_BYTES_SQL } from "../lib/control-plane/workers/routine-meeting-intake.ts";
+import { retainRecentRoutineMeetingEvidence, retainRoutineMeetingForWorkers, RECENT_ROUTINE_MEETING_CAPTURE_HEADS_SQL } from "../lib/control-plane/workers/routine-meeting-intake.ts";
+import { holdRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
 import type { RetainedMeetingCandidate, RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
 import { meetingPartitionForRow } from "../lib/civic-data/meeting-partitions.ts";
 import { methodFixture } from "./method-store-fixture.ts";
@@ -142,12 +143,13 @@ test("one candidate's capture failure does not keep the other candidate's bytes 
 test("the worker connection reads a held source body once, then checks only source metadata for its settled task", async t => {
   const { repos, store, now } = harness(t);
   const { bytes: _bytes, ...metadata } = response(DAY_ONE, now());
+  const ref = await holdRawCapture(store,"legistar",bytes,"application/json");
+  const get = store.get.bind(store);
   let bodyReads = 0, headReads = 0;
-  const query: Query = async (text, params) => {
-    if (text === RECENT_ROUTINE_MEETING_CAPTURE_HEADS_SQL) { headReads++; return [{ candidate_id: "cv-metadata-first", ordinal: 0, response: metadata }]; }
-    assert.equal(text, ROUTINE_MEETING_CAPTURE_BYTES_SQL);
-    assert.deepEqual(params, ["cv-metadata-first", 0, rawHash, DAY_ONE]);
-    bodyReads++; return [{ base64: Buffer.from(bytes).toString("base64") }];
+  store.get = async key => { if(key===ref.vaultKey)bodyReads++;return get(key); };
+  const query: Query = async text => {
+    assert.equal(text,RECENT_ROUTINE_MEETING_CAPTURE_HEADS_SQL);
+    headReads++; return [{ candidate_id: "cv-metadata-first", ordinal: 0, response: {...metadata,vaultKey:ref.vaultKey} }];
   };
   assert.equal((await retainRecentRoutineMeetingEvidence({ repos, store, methodVersion, now, query })).length, 1);
   assert.equal(bodyReads, 1);

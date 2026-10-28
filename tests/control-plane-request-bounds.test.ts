@@ -339,7 +339,10 @@ test("an answered call is returned untouched, and every timeout is told to the o
   const original = neonConfig.fetchFunction;
   try {
     neonConfig.fetchFunction = (async (_input:unknown,init?:{body?:string})=>checkedAnswer(init,[{ id: "pilot-runner", revision: "3", updated_at: "2026-09-23T00:00:00.000Z", value: "{\"beatAt\":\"x\"}" }])) as typeof neonConfig.fetchFunction;
-    const answered = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true, requestBounds: TINY });
+    // The answered and serialized-write checks do not test a 90 ms deadline.
+    // Leave enough time for their fake responses when other suite workers are busy.
+    const answered = await createPgRepositories(URL, "2026-09-23T00:00:00.000Z", { skipBootstrap: true,
+      requestBounds: { POINT: 1000, DOCUMENT: 2000, PAGE: 3000 } });
     const row = await answered.runnerHeartbeat.read("pilot-runner");
     assert.equal(row?.revision, 3);
     assert.deepEqual(row?.value, { beatAt: "x" });

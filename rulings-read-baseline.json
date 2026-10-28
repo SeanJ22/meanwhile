@@ -269,13 +269,13 @@
       "file": "lib/reader/place-builder.ts",
       "kind": "SELECT *",
       "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 155
+      "line": 170
     },
     {
       "file": "lib/reader/place-builder.ts",
       "kind": "SELECT *",
       "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 209
+      "line": 224
     },
     {
       "file": "lib/sources/legiscan/reader.ts",

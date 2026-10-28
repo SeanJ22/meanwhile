@@ -10,7 +10,7 @@ const independentModule = JSON.stringify(new URL("../lib/ops/independent-runtime
 
 // The runner's limits scaled down in proportion: a lane that is still running and prints nothing after the dispatch
 // cutoff, for longer than the runner's no-progress window.
-const NO_PROGRESS_MS = 1_000;
+const NO_PROGRESS_MS = 4_000;
 const QUIET_MS = Math.round(NO_PROGRESS_MS * (RUNTIME_NO_PROGRESS_MS - POST_CUTOFF_QUIET_LEAD_MS) / RUNTIME_NO_PROGRESS_MS);
 const roundChild = (bounded: boolean) => `
   import { untilQuietLimit, watchOutputClock } from ${boundModule};

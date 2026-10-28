@@ -1,4 +1,4 @@
-import { sourceFetch, SourceReadDeferred } from "../http.ts";
+import { sourceFetch, sourceFetchPrivate, SourceReadDeferred } from "../http.ts";
 import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
 import { civicElectionRows, civicLookupFromRaw, unavailableCivicLookup, type CivicLookup } from "./model.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../../civic-data/source-acquisition-failure.ts";
@@ -21,12 +21,14 @@ export interface CivicReadOptions {
   now?: () => string;
   /** Request-local public catalog read while Census runs; carries no reader address. */
   electionCatalog?: Promise<Awaited<ReturnType<typeof readCivicApi>> | null>;
+  /** Request-local Census town membership; never returned or retained with the lookup. */
+  expectedTowns?: readonly string[];
 }
 
 /** Server diagnostics only. Response bodies never enter a lookup, candidate or source record. */
 function logCivicCallFailure(route: "elections" | "voterinfo", status: number | null, body: string, params: Record<string, string>, options: CivicReadOptions, stage: "transport" | "body" | "http" | "parse"): void {
   if (typeof window !== "undefined") return;
-  let preview = body;
+  let preview = route === "voterinfo" ? "" : body;
   for (const secret of [options.apiKey ?? process.env.GOOGLE_CIVIC_API_KEY, params.address].filter((value): value is string => !!value)) {
     preview = preview.split(secret).join("[redacted]").split(encodeURIComponent(secret)).join("[redacted]");
   }
@@ -52,14 +54,14 @@ async function civicResponseBody(response: Response, route: "elections" | "voter
   } finally { reader.releaseLock(); }
 }
 
-export async function readCivicApi(route: "elections" | "voterinfo", params: Record<string, string>, options: CivicReadOptions = {}): Promise<{ raw: string; checkedAt: string; status: number }> {
+async function readCivicApiCall(route: "elections" | "voterinfo", params: Record<string, string>, options: CivicReadOptions, transport: typeof sourceFetch): Promise<{ raw: string; checkedAt: string; status: number }> {
   const key = options.apiKey ?? process.env.GOOGLE_CIVIC_API_KEY;
   if (!key) throw new CivicSourceError(null, "Google Civic API key is not configured.", "KEY_MISSING");
   const url = new URL(`${GOOGLE_CIVIC_API}${route}`);
   url.search = new URLSearchParams({ ...params, key }).toString();
   const signal = options.signal ?? AbortSignal.timeout(2500);
   let response: Response;
-  try { response = await sourceFetch(url, { signal, cache: "no-store", headers: { accept: "application/json" } }, options.fetchImpl); }
+  try { response = await transport(url, { signal, cache: "no-store", headers: { accept: "application/json" } }, options.fetchImpl); }
   catch (error) {
     if (error instanceof SourceReadDeferred) throw error;
     logCivicCallFailure(route, null, "", params, options, "transport");
@@ -72,10 +74,15 @@ export async function readCivicApi(route: "elections" | "voterinfo", params: Rec
   }
   if (response.ok) return { raw, checkedAt: (options.now ?? (() => new Date().toISOString()))(), status: response.status };
   logCivicCallFailure(route, response.status, raw, params, options, "http");
-  // Only the safe reason enters the answer; the body stays in the server log.
+  // Only the safe reason enters the answer. Voter response bodies stay out of logs.
   throw new CivicSourceError(response.status, response.status === 404 ? "Google Civic has no information for this address (HTTP 404)."
     : response.status === 400 ? "Google Civic could not resolve this address (HTTP 400)." : `Google Civic request failed (HTTP ${response.status}).`,
   route === "voterinfo" && (response.status === 400 || response.status === 404) ? "NO_DATA" : "GOOGLE_UNAVAILABLE");
+}
+
+/** Public catalog acquisition is vaulted; address-derived voter responses are request-only. */
+export function readCivicApi(route: "elections" | "voterinfo", params: Record<string, string>, options: CivicReadOptions = {}): Promise<{ raw: string; checkedAt: string; status: number }> {
+  return readCivicApiCall(route, params, options, route === "voterinfo" ? sourceFetchPrivate : sourceFetch);
 }
 
 export function parseCivicResponse<T>(route: "elections" | "voterinfo", response: Awaited<ReturnType<typeof readCivicApi>>, parse: (raw: string) => T, params: Record<string, string>, options: CivicReadOptions): T {
@@ -91,7 +98,7 @@ export async function lookupCivicAddress(address: string, knownIds: ReadonlySet<
   try {
     let electionId = options.electionId;
     if (!electionId) {
-      const catalog = await options.electionCatalog ?? await readCivicApi("elections", {}, options);
+      const catalog = await options.electionCatalog ?? await readCivicApiCall("elections", {}, options, sourceFetchPrivate);
       const elections = parseCivicResponse("elections", catalog, raw => civicElectionRows(raw, catalog.checkedAt, knownIds), {}, options);
       // Explicit election id prevents the API's default from selecting an earlier election.
       electionId = elections.find(row => row.ocdId === "ocd-division/country:us")?.electionId;
@@ -101,7 +108,7 @@ export async function lookupCivicAddress(address: string, knownIds: ReadonlySet<
       }
     }
     const result = await readCivicApi("voterinfo", { address, electionId }, options);
-    return parseCivicResponse("voterinfo", result, raw => civicLookupFromRaw(raw, electionId!, result.checkedAt, knownIds), { address }, options);
+    return parseCivicResponse("voterinfo", result, raw => civicLookupFromRaw(raw, electionId!, result.checkedAt, knownIds, options.expectedTowns), { address }, options);
   } catch (error) {
     const reason = error instanceof SourceReadDeferred ? "Google Civic is waiting before another request; try again later."
       : error instanceof CivicSourceError ? error.reason : "Google Civic returned an unreadable voterinfo response.";

@@ -1,4 +1,6 @@
 import { containsPoint } from "../geo/polygon.ts";
+import election from "../../data/reference/voting-election.json" with { type: "json" };
+import { votingPhysicalAddress } from "./voting-site-address.ts";
 import { modelSentence, narrowingFor, refusalLine, votingSiteHasKind, type Narrowing, type VotingJurisdiction, type VotingSitesAnswer, type VotingSitesFile, type VotingSource, type VotingSite } from "./voting-sites.ts";
 
 /** Shared attribution for Google's separately acquired civic records. */
@@ -26,16 +28,23 @@ const matches = (values: readonly string[], value: string) => values.some(candid
 
 function votingScopeCovers(j: Pick<VotingJurisdiction, "state" | "ocdId" | "countyFips" | "countySubdivisionGeoid">, place: VotingReaderPlace): boolean {
   if (!place.states.includes(j.state.toUpperCase())) return false;
-  if (j.countySubdivisionGeoid) return place.countySubdivisionGeoids.includes(j.countySubdivisionGeoid) || place.divisionIds.includes(j.ocdId);
-  if (j.countyFips) return place.countyFips.includes(j.countyFips);
-  const town = /\/(?:place|cousub):([^/]+)$/.exec(j.ocdId)?.[1]?.replaceAll("_", " ");
+  if (j.countyFips && !place.countyFips.includes(j.countyFips)) return false;
+  const exact = place.divisionIds.includes(j.ocdId);
+  if (j.countySubdivisionGeoid && !place.countySubdivisionGeoids.includes(j.countySubdivisionGeoid) && !exact) return false;
+  const town = /\/(?:place|cousub):([^/]+)(?:\/|$)/.exec(j.ocdId)?.[1]?.replaceAll("_", " ");
   if (town) {
     const parentCounty = /\/county:([^/]+)\//.exec(j.ocdId)?.[1]?.replaceAll("_", " ");
-    return matches(place.towns, town) && (!parentCounty || (place.countyNames ?? []).some(name => countyKey(name) === countyKey(parentCounty)));
+    if (!exact && !matches(place.towns, town)) return false;
+    if (!j.countyFips && parentCounty && !(place.countyNames ?? []).some(name => countyKey(name) === countyKey(parentCounty))) return false;
   }
+  const ward = /\/ward:([^/]+)(?:\/|$)/.exec(j.ocdId)?.[1]?.replaceAll("_", " ");
+  if (ward && !exact && !matches(place.wards, ward)) return false;
+  const precinct = /\/(?:precinct|voting_district):([^/]+)(?:\/|$)/.exec(j.ocdId)?.[1]?.replaceAll("_", " ");
+  if (precinct && !exact && !place.precincts.some(value => precinctKey(value.name) === precinctKey(precinct))) return false;
+  if (j.countyFips || j.countySubdivisionGeoid || town || ward || precinct) return true;
   const county = /\/county:([^/]+)$/.exec(j.ocdId)?.[1]?.replaceAll("_", " ");
   if (county) return (place.countyNames ?? []).some(name => countyKey(name) === countyKey(county));
-  return place.divisionIds.includes(j.ocdId) || /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(j.ocdId);
+  return exact || /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(j.ocdId);
 }
 
 export function votingJurisdictionCovers(j: VotingJurisdiction, place: VotingReaderPlace): boolean {
@@ -48,8 +57,11 @@ function siteInPlace(site: VotingSite, place: VotingReaderPlace, jurisdiction: V
   if (site.countySubdivisionGeoid && !place.countySubdivisionGeoids.includes(site.countySubdivisionGeoid) &&
     !(place.precision === "ZIP" && (site.town && matches(place.towns, site.town) || jurisdiction.countySubdivisionGeoid === site.countySubdivisionGeoid && place.divisionIds.includes(jurisdiction.ocdId)))) return false;
   const unit = site.matchingUnit ?? jurisdiction.matchingUnit;
-  if (unit === "TOWN" && site.town && place.towns.length && !matches(place.towns, site.town)) return false;
-  if (unit === "WARD" && site.ward && place.wards.length && !matches(place.wards, site.ward)) return false;
+  if (unit === "TOWN") {
+    const town = site.town ?? /\/(?:place|cousub):([^/]+)(?:\/|$)/.exec(jurisdiction.ocdId)?.[1]?.replaceAll("_", " ");
+    if (!town || !matches(place.towns, town)) return false;
+  }
+  if (unit === "WARD" && site.ward && !matches(place.wards, site.ward)) return false;
   if (site.districtOcdIds?.length && !site.districtOcdIds.some(id => place.divisionIds.includes(id))) return false;
   const statewide = /^ocd-division\/country:us\/(?:state|district|territory):[a-z]{2}$/.test(jurisdiction.ocdId);
   if (statewide && !jurisdiction.countyFips && !jurisdiction.countySubdivisionGeoid &&
@@ -73,17 +85,27 @@ function precinctsFor(j: VotingJurisdiction, place: VotingReaderPlace): VotingRe
 }
 
 export function projectVotingJurisdiction(j: VotingJurisdiction, place: VotingReaderPlace): VotingSitesAnswer["jurisdictions"][number] {
-  const scoped = j.sites.filter(site => siteInPlace(site, place, j));
   const precincts = precinctsFor(j, place);
+  const scopedPlace = { ...place, wards: [...new Set([...place.wards, ...precincts.flatMap(precinct => precinct.ward ? [precinct.ward] : [])])] };
+  const scoped = j.sites.flatMap(site => {
+    const address = votingPhysicalAddress(site.address);
+    if (!address) return [];
+    const physical = address === site.address ? site : { ...site, address };
+    return siteInPlace(physical, scopedPlace, j) ? [physical] : [];
+  });
   const uniquePrecinct = precincts.length === 1 ? precincts[0] : null;
-  const matchingAssigned = uniquePrecinct ? scoped.filter(site => votingSiteHasKind(site, "ELECTION_DAY") &&
+  const lookupAssigned = place.precision === "ADDRESS" ? scoped.filter(site => votingSiteHasKind(site, "ELECTION_DAY") && j.assignedSiteIds?.includes(site.id)) : [];
+  const precinctAssigned = uniquePrecinct ? scoped.filter(site => votingSiteHasKind(site, "ELECTION_DAY") &&
+    (uniquePrecinct.kind === "OFFICIAL_PRECINCT" || site.electionDate === election.electionDate && j.electionDate === election.electionDate) &&
     (site.assignments ?? (site.precincts ?? (site.precinct ? [site.precinct] : [])).map(precinct => ({ precinct, ward: site.ward })))
       .some(assignment => precinctKey(assignment.precinct) === precinctKey(uniquePrecinct.name) &&
         (!assignment.ward || matches(uniquePrecinct.ward ? [uniquePrecinct.ward] : place.wards, assignment.ward)))) : [];
-  const sites = matchingAssigned.length ? scoped.flatMap(site => {
+  const matchingAssigned = lookupAssigned.length ? lookupAssigned : precinctAssigned;
+  const needsAssignment = j.model !== "VOTE_CENTER" && j.model !== "ALL_MAIL" && !j.allMail;
+  const sites = matchingAssigned.length || needsAssignment ? scoped.flatMap(site => {
     if (matchingAssigned.includes(site)) {
-      const assignment = site.assignments?.find(item => precinctKey(item.precinct) === precinctKey(uniquePrecinct!.name) &&
-        (!item.ward || matches(uniquePrecinct!.ward ? [uniquePrecinct!.ward] : place.wards, item.ward)));
+      const assignment = !lookupAssigned.length && uniquePrecinct ? site.assignments?.find(item => precinctKey(item.precinct) === precinctKey(uniquePrecinct.name) &&
+        (!item.ward || matches(uniquePrecinct.ward ? [uniquePrecinct.ward] : place.wards, item.ward))) : undefined;
       return [{ ...site, name: assignment?.name ?? site.name, room: assignment?.room ?? site.room,
         locationNotes: assignment?.locationNotes ?? site.locationNotes }];
     }
@@ -99,7 +121,7 @@ export function projectVotingJurisdiction(j: VotingJurisdiction, place: VotingRe
   const projected = { ...j, sites, office: distinctOffices.length === 1 ? distinctOffices[0] : j.office,
     blanks: j.blanks?.filter(blank => votingScopeCovers(blank.scope, place)) };
   let narrowing: Narrowing = narrowingFor(projected);
-  if (matchingAssigned.length === 1) {
+  if (!lookupAssigned.length && matchingAssigned.length === 1) {
     narrowing = { kind: "EXACT", siteId: matchingAssigned[0].id,
       sentence: `${uniquePrecinct!.kind === "CENSUS_2020_VTD" ? "The Census 2020 voting district" : "The official precinct boundary"} matches precinct ${uniquePrecinct!.name}: ${sites.find(site => site.id === matchingAssigned[0].id)!.name}.` };
   } else if (place.precision === "ZIP" && j.model === "ASSIGNED" && j.publication?.status !== "NO_GENERAL_ELECTION") {

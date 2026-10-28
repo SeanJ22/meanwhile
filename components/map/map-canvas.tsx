@@ -702,6 +702,7 @@ export function MapCanvas({
       button.type = "button";
       button.className = "wtp-vote-pin";
       button.dataset.siteId = id;
+      button.dataset.selected = String(id === selectedVotingSiteId);
       button.setAttribute("aria-label", `Voting location: ${readerText(site.name)}`);
       const dot = document.createElement("span");
       dot.className = "wtp-vote-pin-dot";
@@ -715,7 +716,7 @@ export function MapCanvas({
         .addTo(map);
       pins.set(id, marker);
     }
-  }, [votingSites, presentationReady]);
+  }, [votingSites, presentationReady, selectedVotingSiteId]);
 
   useLayoutEffect(() => {
     const map = mapRef.current;

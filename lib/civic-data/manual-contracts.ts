@@ -337,7 +337,7 @@ const MANUAL_PRODUCTION_SOURCE_DEFINITIONS = [
     scope: stateBallotScope("voting-sites", state),
     databaseBytesPerRun: 1_083_820_042,
     command: ["scripts/fetch-voting-sites.mts", `--state=${state}`, "--promote"],
-    parserNormalizerVersion: "official-voting-sites/4",
+    parserNormalizerVersion: "official-voting-sites/5",
     authorityConstraint: { registry: "SOURCE_AUTHORITIES", sourceId: "voting-sites" },
     validationContract: VALIDATION_CHECKS,
     canonicalProductionStore: STORE,

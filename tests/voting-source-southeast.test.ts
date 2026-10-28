@@ -47,12 +47,21 @@ test("government location names retain Spanish accents encoded as HTML entities"
 test("Virginia's namespaced SpreadsheetML with implicit coordinates preserves all precinct columns", async () => {
   const current = door("va-statewide-polling-general-2026");
   const bytes = fixture("va-november-polling.xlsx");
+  const sourceHash = createHash("sha256").update(bytes).digest("hex");
+  assert.equal(sourceHash, "b511e32781088274193f6978a528deed1950d4b05d4a1b4533d660f05c91b7d3");
   const tables = xlsxVotingTables(bytes);
   assert.equal(tables[0]!.rows.length, 2817);
   assert.equal(tables[0]!.headers.length, 21);
   const rows = await parseVotingCapture({ url: current.url, contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", bytes }, current);
   const read = votingRowsToSites(rows, current, { publisher: current.publisher, url: current.url });
   assert.equal(read.sites.length, 2651);
+  const mixed = rows.find(row => row["Polling Location Name"] === "Thomas Walker High School")!;
+  assert.equal(mixed["Polling Location Address Line 1"], "126 BLUE GRAY RD");
+  assert.equal(mixed["Polling Location Address Line 2"], "PO BOX 39", "the source retains its separate postal delivery line");
+  const thomasWalker = read.sites.find(site => site.name === "Thomas Walker High School")!;
+  assert.equal(thomasWalker.address, "126 BLUE GRAY RD, Ewing, VA, 24248");
+  assert.ok(thomasWalker.sources?.some(source => source.documentHash === sourceHash));
+  assert.ok(read.sites.every(site => !/\b(?:P\.?\s*O\.?\s*Box|POB|Post Office Box)\b/i.test(site.address)));
   const ashland = read.sites.find(row => row.name === "Ashland Town Hall")!;
   assert.equal(ashland.address, "121 Thompson St., Ashland, VA, 23005-2081");
   assert.equal(ashland.room, "Council Chambers");

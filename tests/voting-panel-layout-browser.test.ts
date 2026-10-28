@@ -21,19 +21,23 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
   const bytes = readFileSync("tests/fixtures/voting-sources/nd-2026-native.html");
   const parsed = votingRowsToSites(await parseVotingCapture({ url: door.url, bytes, contentType: "text/html" }, door), door, source);
   const cases = [
-    { path: "/adams", county: "Adams", zip: "58639", embedded: false },
-    { path: "/burleigh", county: "Burleigh", zip: "58504", embedded: true },
+    { path: "/adams", county: "Adams", zip: "58639", address: "123 Main St, Hettinger, ND 58639", embedded: false },
+    { path: "/burleigh", county: "Burleigh", zip: "58504", address: "123 Main St, Bismarck, ND 58504", embedded: true },
   ];
   const answers = new Map<string, VotingSitesAnswer>();
   for (const item of cases) {
     const jurisdiction: VotingJurisdiction = { ...door.scope, model: "UNKNOWN", election: "November 3, 2026", electionDate: door.electionDate,
-      sites: parsed.sites, rules: door.rules, sourceUrl: door.url, sourceOrg: door.publisher, collectedAt: source.checkedAt, refusal: null };
-    const place: VotingReaderPlace = { precision: "ZIP", point: null, divisionIds: [door.scope.ocdId], states: [door.scope.state], countyFips: [], countyNames: [item.county], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
-    const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(jurisdiction, place)], outsideCoverage: false };
+      sites: parsed.sites, assignedSiteIds: parsed.sites.filter(site => site.countyName === item.county && site.name.includes("Courthouse")).map(site => site.id), rules: door.rules, sourceUrl: door.url, sourceOrg: door.publisher, collectedAt: source.checkedAt, refusal: null };
+    const place: VotingReaderPlace = { precision: "ADDRESS", point: { lat: 46.0, lng: -102.0 }, divisionIds: [door.scope.ocdId], states: [door.scope.state], countyFips: [], countyNames: [item.county], countySubdivisionGeoids: [], towns: [], wards: [], aiannhGeoids: [], precincts: [] };
+    const answer: VotingSitesAnswer = { match: true, point: null, jurisdictions: [projectVotingJurisdiction(jurisdiction, place)], outsideCoverage: false,
+      pollingLookups: [{ state: "ND", name: "North Dakota", url: "https://example.gov/polling-place", sourceUrl: "https://example.gov/elections", sourceOrg: "Protocol state election office", checkedAt: "2026-10-23" }] };
     assert.ok(answer.jurisdictions[0].sites.length > 0);
-    answers.set(item.zip, answer);
+    answers.set(item.address, answer);
+    answers.set(item.zip, { match: true, point: null, precision: "ZIP", jurisdictions: [], outsideCoverage: true,
+      pollingLookups: [{ state: "ND", name: "North Dakota", url: "https://example.gov/polling-place", sourceUrl: "https://example.gov/elections", sourceOrg: "Protocol state election office", checkedAt: "2026-10-23" }] });
   }
   answers.set("Office contact", { match: true, point: null, jurisdictions: [], outsideCoverage: true,
+    pollingLookups: [{ state: "ND", name: "North Dakota", url: "https://example.gov/polling-place", sourceUrl: "https://example.gov/elections", sourceOrg: "Protocol state election office", checkedAt: "2026-10-23" }],
     electionOffices: [{ name: "Protocol county election office", address: "Protocol office address", phone: "(555) 010-0100",
       hours: "Monday–Friday, 8 am–5 pm", url: "https://example.gov/polling-place",
       sources: [{ publisher: "Protocol source", url: "https://example.gov/elections", checkedAt: "2026-10-23" }] }] });
@@ -73,7 +77,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       if (data.address === "Stalled request") {
         response.writeHead(200, { "content-type": "application/x-ndjson" });
         response.write('{"pending":true}\n');
-        finishStalled = () => response.end(JSON.stringify({ answer: { ...answers.get(cases[0].zip), expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() } }) + "\n");
+        finishStalled = () => response.end(JSON.stringify({ answer: { ...answers.get(cases[0].address), expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() } }) + "\n");
         return;
       }
       const answer = answers.get(data.address); assert.ok(answer);
@@ -96,20 +100,21 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       const diagnostics: string[] = []; page.on("console", message => { if (message.type() === "error") diagnostics.push(message.text()); });
       for (const item of cases) {
         await page.goto(`${origin}${item.path}`);
-        await page.getByLabel("Your street address or ZIP").fill(item.zip);
+        await page.getByLabel("Enter your street address to find the polling place for your precinct.").fill(item.address);
         await page.getByRole("button", { name: "Show me", exact: true }).click();
         const card = page.locator(item.embedded ? "[data-reader-card]" : ".voting-panel > .reader-card");
-        await card.locator('[data-card-gap="voting-answer"]').waitFor({ state: "visible" });
+        await card.locator('[data-voting-site]').first().waitFor({ state: "visible" });
+        assert.equal(await card.locator("[data-voting-lookup] a").first().getAttribute("href"), "https://example.gov/polling-place");
         await card.locator('[data-card-sources] a[href^="https:"]').first().waitFor({ state: "attached" });
-        assert.equal(await card.locator('[data-card-gap="voting-answer"]').count(), 1);
+        assert.equal(await card.locator('[data-card-gap="voting-answer"]').count(), 0);
         assert.equal(await card.locator("[data-card-footer] [data-card-gap]").count(), 0);
         assert.equal(await card.locator("[data-card-sources]").count(), 1);
         assert.equal(await card.getByRole("button", { name: /^Sources/ }).count(), 1);
         assert.equal(await card.locator("[data-card-footer]").evaluate(footer => footer === footer.parentElement?.lastElementChild), true);
         assert.equal(await card.locator("[data-card-sources]").evaluate(section => section === section.parentElement?.lastElementChild), true);
         const text = await card.innerText();
-        assert.match(text, /working on getting this info/i);
-        assert.match(text, /Want us to get this sooner/i);
+        assert.doesNotMatch(text, /working on getting this info/i);
+        assert.doesNotMatch(text, /Want us to get this sooner/i);
         assert.doesNotMatch(text, /Still gathering/);
         assert.equal(await card.locator("[data-voting-site] [data-card-gap], [data-voting-site] [data-card-sources], [data-voting-site] .voting-site-gap").count(), 0);
         assert.match(text, /Polling locations do not accept absentee ballots on Election Day/);
@@ -151,28 +156,34 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
         await page.screenshot({ path: `${base}-sites.png` });
         await card.locator("[data-card-footer]").scrollIntoViewIfNeeded();
         await page.screenshot({ path: `${base}-footer.png` });
-        await page.getByLabel("Your street address or ZIP").scrollIntoViewIfNeeded();
+        await page.getByLabel("Enter your street address to find the polling place for your precinct.").scrollIntoViewIfNeeded();
         await page.screenshot({ path: `${base}-top.png` });
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
         assert.equal(overflow, false, "no viewport horizontal overflow");
       }
+      await page.goto(`${origin}/adams`);
+      await page.getByLabel("Enter your street address to find the polling place for your precinct.").fill(cases[0].zip);
+      await page.getByRole("button", { name: "Show me", exact: true }).click();
+      await page.locator("[data-voting-lookup]").waitFor();
+      assert.match(await page.locator(".voting-panel").innerText(), /Enter your street address/);
+      assert.equal(await page.locator("[data-voting-site]").count(), 0);
+      assert.equal(await page.locator("[data-voting-lookup] a").first().getAttribute("href"), "https://example.gov/polling-place");
       assert.deepEqual(errors, []); assert.deepEqual(external, []);
       // Protocol failures assert no civic facts and use no database or invented SQL schema.
       await page.goto(`${origin}/adams`);
-      await page.getByLabel("Your street address or ZIP").fill("Office contact");
+      await page.getByLabel("Enter your street address to find the polling place for your precinct.").fill("Office contact");
       await page.getByRole("button", { name: "Show me", exact: true }).click();
-      const office = page.locator("[data-voting-office]");
-      await office.waitFor();
-      assert.match(await office.innerText(), /Protocol county election office/);
-      assert.match(await office.innerText(), /Protocol office address/);
-      assert.match(await office.innerText(), /Monday–Friday, 8 am–5 pm/);
-      assert.equal(await office.getByRole("link", { name: "(555) 010-0100", exact: true }).getAttribute("href"), "tel:5550100100");
-      assert.equal(await office.getByRole("link", { name: "Find your polling place", exact: true }).getAttribute("href"), "https://example.gov/polling-place");
-      assert.equal(await office.evaluate(element => element.getBoundingClientRect().top < document.querySelector("[data-voting-coverage-gap]")!.getBoundingClientRect().top), true);
+      const lookup = page.locator("[data-voting-lookup]");
+      await lookup.waitFor();
+      assert.match(await lookup.innerText(), /North Dakota/);
+      assert.doesNotMatch(await page.locator(".voting-panel").innerText(), /Protocol office address|Monday–Friday, 8 am–5 pm/);
+      assert.equal(await page.locator("[data-voting-office]").count(), 0);
+      assert.equal(await lookup.getByRole("link").first().getAttribute("href"), "https://example.gov/polling-place");
+      assert.equal(await page.locator("[data-voting-coverage-gap]").count(), 0);
       await page.screenshot({ path: `.scratch/ci/lv01-office-${viewport.name}.png` });
       for (const input of ["Server failure", "KEY_MISSING", "GOOGLE_UNAVAILABLE", "NO_DATA", "Stalled request"]) {
         if (input === "Stalled request") await page.clock.install();
-        await page.getByLabel("Your street address or ZIP").fill(input);
+        await page.getByLabel("Enter your street address to find the polling place for your precinct.").fill(input);
         await page.evaluate(() => {
           const state = { started: 0, elapsed: 0 };
           Object.assign(window, { lookupTiming: state });
@@ -216,7 +227,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
       assert.deepEqual(errors, []);
       await context.close();
     }
-    assert.equal(received.length, 16); assert.ok(received.every(row => row.googleFallback === undefined));
+    assert.equal(received.length, 18); assert.ok(received.every(row => row.googleFallback === undefined));
   } finally {
     await browser?.close();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

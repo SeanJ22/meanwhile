@@ -8,6 +8,7 @@ import { readVotingPages } from "./voting-source-pages.ts";
 import { votingFetchSession, type VotingCapture, type VotingFetchSession } from "./voting-source-fetch.ts";
 import { readVotingBoundaries } from "./voting-source-boundaries.ts";
 import { votingPdfText } from "./voting-source-extraction.ts";
+import { votingPhysicalAddress } from "./voting-site-address.ts";
 
 const normalized = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
 const ALIASES: Partial<Record<VotingColumn, string[]>> = {
@@ -101,7 +102,12 @@ function officialElectionLinkMatches(html: string, pageUrl: string, door: Voting
     try { return new URL(link.replace(/&amp;/g, "&"), pageUrl).href.split("#")[0] === door.url.split("#")[0]; } catch { return false; }
   });
 }
-const kindFrom = (value: string, fallback: SiteKind): SiteKind => /drop|ballot.?box/i.test(value) ? "DROP_BOX" : /satellite/i.test(value) ? "SATELLITE" : /early/i.test(value) ? "EARLY_VOTING" : /vote.?cent[er]{2}/i.test(value) ? "VOTE_CENTER" : /mobile/i.test(value) ? "MOBILE" : fallback;
+const kindFrom = (value: string, fallback: SiteKind): SiteKind => /drop|ballot.?box/i.test(value) ? "DROP_BOX"
+  : /satellite/i.test(value) ? "SATELLITE" : /mobile/i.test(value) ? "MOBILE"
+  : /election[\s_-]*day/i.test(value) ? "ELECTION_DAY"
+  : /early|advance|in[\s_-]*person[\s_-]*absentee/i.test(value) ? "EARLY_VOTING"
+  : /vote[\s_-]*cent(?:er|re)/i.test(value) ? "VOTE_CENTER"
+  : /polling|precinct/i.test(value) ? "ELECTION_DAY" : fallback;
 function tableRecords(table: VotingTable): Record<string, unknown>[] {
   return table.rows.map(row => Object.fromEntries([...row.flatMap((value, index) => [[table.headers[index] ?? String(index), value], [String(index), value]]), ["__tableTitle", table.title ?? ""], ["__fileTitle", table.documentTitle ?? ""], ["__documentText", table.documentText ?? ""], ["__fileUpdatedAt", table.lastUpdated ?? ""]]));
 }
@@ -126,8 +132,10 @@ export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingS
     const phone = get("phone"), email = get("email");
     const rowOffice = phone || email ? { name: get("officeName") || get("town") || get("countyName") || door.publisher, ...(phone ? { phone } : {}), ...(email ? { email } : {}), ...(get("officeAddress") ? { address: get("officeAddress") } : {}), url: source.url } : undefined;
     if (rowOffice) officeRows.push({ label: get("town") || get("countyName") || door.scope.name, countyName: get("countyName"), office: rowOffice });
-    const name = get("name"), address = get("address");
-    if (!name || !address) { if ((name || address || phone || email) && !(rowOffice && !door.covers.some(isVotingSiteKind))) recordMissing(`${get("town") || get("countyName") || name || address || door.scope.name}: ${!name ? "site name" : ""}${!name && !address ? " and " : ""}${!address ? "site address" : ""}`); continue; }
+    const name = get("name"), publishedAddress = get("address");
+    if (!name || !publishedAddress) { if ((name || publishedAddress || phone || email) && !(rowOffice && !door.covers.some(isVotingSiteKind))) recordMissing(`${get("town") || get("countyName") || name || publishedAddress || door.scope.name}: ${!name ? "site name" : ""}${!name && !publishedAddress ? " and " : ""}${!publishedAddress ? "site address" : ""}`); continue; }
+    const address = votingPhysicalAddress(publishedAddress);
+    if (!address) { recordMissing(`${name}: a physical polling-place address`); continue; }
     const rowEvidence = Object.values(row).filter(value => typeof value === "string" || typeof value === "number").map(String);
     const stated = (field: VotingColumn) => !config.constants?.[field] || (row.__verifiedConstants as string[] | undefined)?.includes(field) || rowEvidence
       .some(text => normalized(text).includes(normalized(config.constants![field]!)));
@@ -137,7 +145,8 @@ export function votingRowsToSites(rows: Record<string, unknown>[], door: VotingS
     const rowSource = { ...source,
       ...(typeof row.__captureHash === "string" ? { documentHash: row.__captureHash } : {}),
       ...(typeof row.__captureUrl === "string" ? { documentUrl: row.__captureUrl } : {}) };
-    const kind = kindFrom(get("kind") || String(row.__tableTitle ?? ""), config.kind ?? door.covers.find(isVotingSiteKind) ?? "ELECTION_DAY");
+    const kind = get("kind") ? kindFrom(get("kind"), config.kind ?? door.covers.find(isVotingSiteKind) ?? "ELECTION_DAY")
+      : config.kind ?? kindFrom(String(row.__tableTitle ?? ""), door.covers.find(isVotingSiteKind) ?? "ELECTION_DAY");
     const id = `voting-${createHash("sha256").update([door.scope.state, get("countyFips") || door.scope.countyFips || get("countyName") || door.scope.ocdId,
       get("countySubdivisionGeoid") || door.scope.countySubdivisionGeoid || get("town"), address, get("room")].map(normalized).join("\0")).digest("hex").slice(0, 24)}`;
     const site: VotingSite = { id, name, address, room: get("room") || null, lat: null, lng: null, kind, election: election || door.title || null, electionDate: door.electionAssociationVerified === true || (electionDateNamed(election, door.electionDate) || /general/i.test(election) && election.includes(door.electionDate.slice(0, 4))) ? door.electionDate : undefined, serves: get("precinct") || get("ward") || null, sources: [rowSource] };

@@ -22,6 +22,13 @@ export async function readZipPostalAreas(zips: readonly string[], query?: Query)
   return new Map((await records(zips,query)).flatMap(row=>row.postal ? [[String(row.zip),row.postal as PostalArea] as const] : []));
 }
 
+/** A typed ZIP's display point, when placed, and postal area come from one indexed row. */
+export async function readZipArea(input: string): Promise<{ point: { lat: number; lng: number } | null; postal: PostalArea | null } | null> {
+  const row = (await records([input]))[0];
+  return row ? { point: row.lat !== null && row.lng !== null ? { lat: Number(row.lat), lng: Number(row.lng) } : null,
+    postal: (row.postal as PostalArea | null) ?? null } : null;
+}
+
 export async function readZipLocation(input: string): Promise<ZctaCentroid | null> {
   return (await readZipLocations([input])).get(input.trim()) ?? null;
 }

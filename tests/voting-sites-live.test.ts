@@ -8,12 +8,11 @@ import { votingSitesResponse } from "../lib/ballot/voting-sites-stream.ts";
 import { answerVotingSites } from "../lib/ballot/voting-answer.ts";
 import { votingPlaceFromZip } from "../lib/ballot/voting-answer-geography.ts";
 import type { VotingFallbackReason, VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
-import { GOOGLE_CIVIC_DOCS } from "../lib/sources/google-civic/targets.ts";
 
 const empty: VotingSitesAnswer = { match: true, point: null, jurisdictions: [], outsideCoverage: true };
-const place = { ...votingPlaceFromZip(["ocd-division/country:us/state:mi/county:ingham"]), precision: "ADDRESS" as const };
+const place = { ...votingPlaceFromZip(["ocd-division/country:us/state:mi/county:ingham"]), precision: "ADDRESS" as const, towns: ["Lansing city"] };
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/google-civic/${name}.json`, import.meta.url), "utf8");
-const options = { apiKey: "private-test-key", fetchImpl: (async (input: URL) =>
+const options = { apiKey: "private-test-key", censusFetchImpl: (async () => new Response("")) as typeof fetch, fetchImpl: (async (input: URL) =>
   new Response(fixture(input.pathname.endsWith("elections") ? "elections" : "mi-voterinfo"))) as unknown as typeof fetch };
 
 test("an empty held answer gets live Google locations, hours, assignment and required Sources", async () => {
@@ -27,7 +26,7 @@ test("an empty held answer gets live Google locations, hours, assignment and req
   assert.match(JSON.stringify(answer), /7 am - 8 pm/);
   assert.ok(answer.jurisdictions[0].sources?.some(source => source.title === "Voting information powered by the Civic Information API"));
   assert.ok(answer.jurisdictions[0].sources?.some(source => source.title === "Election office" && source.url === "https://mvic.sos.state.mi.us/Voter/Index"));
-  assert.equal(answer.electionOffices, undefined, "office fallback is shown only without sites");
+  assert.equal(answer.electionOffices, undefined, "state polling lookups are attached by the route; offices are never substituted for sites");
   assert.doesNotMatch(JSON.stringify(answer), /private reader street|private-test-key/);
   const expiresAt = Date.parse(answer.expiresAt!);
   assert.ok(expiresAt >= before + 24 * 60 * 60 * 1000);
@@ -40,19 +39,21 @@ test("every lookup is fresh, ZIPs never claim an assigned precinct, and a mismat
   const fresh = { ...options, fetchImpl: (async (input: URL) => { requests++; return options.fetchImpl(input); }) as unknown as typeof fetch };
   await fillVotingSitesAnswer(empty, "private reader street", place, fresh);
   const zip = await fillVotingSitesAnswer(empty, "48933", { ...place, precision: "ZIP" }, fresh);
-  assert.equal(requests, 4, "neither the street nor its Google answer is cached");
-  assert.equal(zip.jurisdictions[0].narrowing.kind, "REFUSED");
-  assert.deepEqual(zip.jurisdictions[0].assignedSiteIds, []);
+  assert.equal(requests, 2, "a ZIP never sends an ambiguous voterinfo request");
+  assert.deepEqual(zip.jurisdictions, []);
+  assert.equal(zip.googleFallback, undefined);
+  await fillVotingSitesAnswer(empty, "private reader street", place, fresh);
+  assert.equal(requests, 4, "the second street lookup makes its own fresh catalog and voterinfo requests");
   const mismatch = await fillVotingSitesAnswer(empty, "private reader street", { ...place, states: ["TX"] }, options);
   assert.equal(mismatch.outsideCoverage, true);
   assert.equal(mismatch.jurisdictions.length, 0);
 });
 
-test("AZ, NH and NJ held answers win without any Google request", async () => {
+test("held Election Day answers win without any Google request", async () => {
   for (const state of ["AZ", "NH", "NJ"]) {
     const j = { ocdId: `ocd-division/country:us/state:${state.toLowerCase()}`, name: "Held election office", state,
       model: "VOTE_CENTER" as const, election: "2026 General", collectedAt: "2026-10-20", sourceOrg: "Held official office", sourceUrl: "https://official.example.gov/locations", refusal: null,
-      sites: [{ id: `held-${state}`, name: "Held official site", address: "Public office", kind: "VOTE_CENTER" as const,
+      sites: [{ id: `held-${state}`, name: "Held official site", address: "Public office", kind: "ELECTION_DAY" as const,
         room: null, lat: null, lng: null, election: "2026 General", serves: null, countyFips: "protocol" }] };
     const selected = { ...place, states: [state], divisionIds: [j.ocdId], countyFips: ["protocol"] };
     const held = await answerVotingSites({ generatedAt: "2026-10-20", jurisdictions: [j] }, selected);
@@ -101,7 +102,7 @@ for (const scenario of [
     assert.doesNotMatch(JSON.stringify(answer), /private reader street|private-test-key/);
     if (scenario.reason === "KEY_MISSING") assert.equal(requests, 0);
     if (scenario.name === "no sites in a successful response") {
-      assert.ok(answer.electionOffices?.some(office => office.url), "office links survive a no-sites response");
+      assert.equal(answer.electionOffices, undefined, "an election office cannot replace a polling place");
     }
   });
 }
@@ -112,53 +113,53 @@ test("a missing election catalog is an unavailable provider rather than no data 
   assert.equal(answer.googleFallback?.reason, "GOOGLE_UNAVAILABLE");
 });
 
-test("a no-sites response leads with Google's local office, preserving live contacts and preferring its polling-place finder", async () => {
-  const data = JSON.parse(fixture("mi-voterinfo"));
-  delete data.pollingLocations; delete data.earlyVoteSites; delete data.dropOffLocations;
-  data.state[0].local_jurisdiction.electionAdministrationBody.hours = "Monday–Friday, 8 am–5 pm";
-  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options, fetchImpl: googleFetch(JSON.stringify(data)) });
-  assert.deepEqual(answer.electionOffices?.[0], {
-    name: "LANSING CITY", address: "701 W JOLLY RD, LANSING, MI 48910", phone: "5174834133",
-    email: "ROBIN.STITES@LANSINGMI.GOV", hours: "Monday–Friday, 8 am–5 pm", url: "https://mvic.sos.state.mi.us/Voter/Index",
-    sources: [{ publisher: "Google", title: "Voting information powered by the Civic Information API",
-      url: GOOGLE_CIVIC_DOCS, checkedAt: answer.electionOffices![0].sources[0].checkedAt }],
+const heldEarlyAnswer = (): VotingSitesAnswer => ({
+  ...empty, outsideCoverage: false,
+  jurisdictions: [{
+    ocdId: "ocd-division/country:us/state:mi/county:ingham", name: "Ingham County", state: "MI",
+    model: "ASSIGNED", election: "2026 General Election", sourceOrg: "County election office", sourceUrl: "https://county.example.gov/early-voting",
+    collectedAt: "2026-10-20T12:00:00.000Z", refusal: null, refusalLine: null,
+    modelSentence: "Published early voting locations.", narrowing: { kind: "REFUSED", sentence: "Use a street address for your Election Day polling place.", rungs: [] },
+    sites: [{ id: "held-early", name: "Published early voting center", address: "100 Public St, Lansing, MI 48933",
+      room: null, lat: null, lng: null, kind: "EARLY_VOTING", election: "2026 General Election", electionDate: "2026-11-03", serves: null,
+      days: "October 24 through November 1", hours: "9 am–5 pm" }],
+  }],
+});
+
+test("held early voting leaves Election Day owed and preserves both kinds in the answer", async () => {
+  const held = heldEarlyAnswer();
+  const answer = await fillVotingSitesAnswer(held, "private reader street", place, options);
+  assert.equal(answer.googleFallback?.requested, true);
+  assert.equal(answer.outsideCoverage, false);
+  assert.deepEqual(answer.jurisdictions[0].sites, held.jurisdictions[0].sites, "published early dates and hours survive the Election Day lookup");
+  const electionDay = answer.jurisdictions.flatMap(j => j.sites).filter(site => site.kind === "ELECTION_DAY");
+  assert.ok(electionDay.length > 0);
+  const assigned = answer.jurisdictions.find(j => j.narrowing.kind === "EXACT");
+  assert.ok(assigned?.assignedSiteIds?.some(id => electionDay.some(site => site.id === id)));
+  assert.equal(answer.electionOffices, undefined);
+});
+
+test("a Google outage keeps held early sites without reporting an empty coverage gap", async () => {
+  const held = heldEarlyAnswer();
+  const answer = await fillVotingSitesAnswer(held, "private reader street", place, { ...options,
+    fetchImpl: async () => new Response("provider unavailable", { status: 503 }),
   });
+  assert.equal(answer.googleFallback?.reason, "GOOGLE_UNAVAILABLE");
+  assert.equal(answer.outsideCoverage, false);
+  assert.deepEqual(answer.jurisdictions, held.jurisdictions);
+  assert.equal(answer.electionOffices, undefined);
 });
 
-test("missing Google offices use only the requested state's FEC election office, without inventing address or hours", async () => {
-  const data = JSON.parse(fixture("mi-voterinfo"));
-  delete data.pollingLocations; delete data.earlyVoteSites; delete data.dropOffLocations; delete data.state;
-  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options, fetchImpl: googleFetch(JSON.stringify(data)) });
-  assert.equal(answer.electionOffices?.length, 1);
-  const office = answer.electionOffices![0];
-  assert.match(office.name, /Michigan|Lansing, MI/);
-  assert.ok(office.phone);
-  assert.match(office.url!, /michigan.gov/);
-  assert.match(office.sources[0].url, /fec.gov/);
-  assert.equal(office.address, undefined);
-  assert.equal(office.hours, undefined);
-});
-
-test("partial Google offices retain each published field and fill only missing fields from the same state's FEC office", async () => {
+test("a no-sites response never substitutes office contacts or office hours for voting information", async () => {
   const data = JSON.parse(fixture("mi-voterinfo"));
   delete data.pollingLocations; delete data.earlyVoteSites; delete data.dropOffLocations;
-  const local = data.state[0].local_jurisdiction.electionAdministrationBody;
-  delete local.electionOfficials;
-  delete local.votingLocationFinderUrl; delete local.electionInfoUrl;
-  local.hours = "Monday–Friday, 8 am–5 pm";
-  const answer = await fillVotingSitesAnswer(empty, "private reader street", { ...place, states: ["MI", "TX"] }, { ...options, fetchImpl: googleFetch(JSON.stringify(data)) });
-  const office = answer.electionOffices![0];
-  assert.equal(office.name, "LANSING CITY");
-  assert.equal(office.address, "701 W JOLLY RD, LANSING, MI 48910");
-  assert.equal(office.hours, local.hours);
-  assert.match(office.phone!, /517/);
-  assert.match(office.url!, /michigan.gov/);
-  assert.equal(office.sources.length, 2);
-  assert.match(office.sources[1].url, /fec.gov/);
-  const state = answer.electionOffices![1];
-  assert.equal(state.phone, "5173353234", "a Google phone is never replaced");
-  assert.equal(state.url, "https://mvic.sos.state.mi.us/Voter/Index", "a Google finder is never replaced");
-  assert.equal(state.sources.length, 1, "FEC is cited only when it supplies a field");
+  const office = data.state[0].local_jurisdiction.electionAdministrationBody;
+  office.hours = "Monday–Friday, 8 am–5 pm";
+  office.correspondenceAddress = { line1: "PO Box 7984", city: "Madison", state: "WI", zip: "53707" };
+  const answer = await fillVotingSitesAnswer(empty, "private reader street", place, { ...options, fetchImpl: googleFetch(JSON.stringify(data)) });
+  assert.deepEqual(answer.jurisdictions, []);
+  assert.equal(answer.electionOffices, undefined);
+  assert.doesNotMatch(JSON.stringify(answer), /701 W JOLLY|PO Box 7984|Monday–Friday/);
 });
 
 test("anonymous counts atomically increment only day, ZIP and deduplicated divisions", async () => {

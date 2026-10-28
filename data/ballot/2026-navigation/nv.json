@@ -31,15 +31,20 @@
       "requestedUrl": "https://www.humboldtcountynv.gov/317/Elections",
       "finalUrl": "https://www.humboldtcountynv.gov/317/Elections",
       "publisher": "Humboldt County Clerk, Nevada"
+    },
+    {
+      "requestedUrl": "https://nvsos.gov/sos/elections/election-information/2026-election-information",
+      "finalUrl": "https://nvsos.gov/sos/elections/election-information/2026-election-information",
+      "publisher": "Nevada Secretary of State"
     }
   ],
   "package": {
     "contractId": "ballot-navigation",
-    "version": "2026-10-14T21:32:20.096Z",
-    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "version": "2026-10-27T17:49:50.726Z",
+    "sourceThrough": "2026-10-27T17:49:50.726Z",
     "sourceReceipt": {
       "contractVersion": 1,
-      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedAt": "2026-10-27T17:49:50.726Z",
       "reviewedBy": "code:section3Record",
       "sources": [
         {
@@ -96,6 +101,17 @@
           "rawHash": "2e519a97946c839525a741b1e76c39064b57e38b83de1368da2d0fb93be1cb49",
           "reviewOutcome": "SUPPORTED",
           "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://nvsos.gov/sos/elections/election-information/2026-election-information",
+          "finalUrl": "https://nvsos.gov/sos/elections/election-information/2026-election-information",
+          "publisher": "Nevada Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-27T17:49:50.726Z",
+          "httpStatus": 200,
+          "rawHash": "63f4566662d2a406aec3b997fdf913e06b2cfd6090895ebec5fb7f0959d56482",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official web-extracted source text in the fingerprint vault; code confirmed the polling lookup label and destination. Source method: official-page-web-extraction."
         }
       ]
     },
@@ -103,21 +119,21 @@
       "kind": "ballot-navigation",
       "records": [
         {
-          "id": "election-field:0a69dec01d368656cfb466051a80f258",
+          "id": "election-field:891bb3e66d2a1bfedb12e8d8bdd1ae4e",
           "kind": "ELECTION_FIELD",
           "value": {
             "state": "NV",
             "divisionId": "ocd-division/country:us/state:nv",
             "fieldKind": "polling_lookup",
-            "text": "https://www.nvsos.gov/VoterSearch",
-            "quote": "NVSOS.gov/ VoterSearch\nfind their polling location",
+            "text": "https://nvsos.gov/sos/elections/election-information/2026-election-information",
+            "quote": "POLLING LOCATIONS: Find a polling location or mail ballot dropbox in your county HERE.",
             "dates": [],
-            "url": "https://archive.leg.state.nv.us/Session/82nd2023/Exhibits/Senate/LOE/SLOE115C.pdf",
-            "navigationUrl": "https://www.nvsos.gov/VoterSearch",
+            "url": "https://nvsos.gov/sos/elections/election-information/2026-election-information",
+            "navigationUrl": "https://nvsos.gov/sos/elections/election-information/2026-election-information",
             "electionDate": "2026-11-03",
-            "verifiedAt": "2026-10-14T21:32:20.096Z",
-            "collectedAt": "2026-10-14T20:02:32.865887+00:00",
-            "sourceOrg": "Nevada Secretary of State presentation to the Nevada Legislature"
+            "verifiedAt": "2026-10-27T17:49:50.726Z",
+            "collectedAt": "2026-10-27T17:49:50.726Z",
+            "sourceOrg": "Nevada Secretary of State"
           }
         },
         {

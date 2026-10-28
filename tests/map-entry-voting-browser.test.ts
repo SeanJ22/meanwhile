@@ -53,7 +53,7 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
     for (const input of [place.address, place.zip]) {
       const isZip = input === place.zip;
       answers.set(input, {
-        match: true, precision: isZip ? "ZIP" : "ADDRESS", point: isZip ? null : { lat: place.lat, lng: place.lng },
+        match: true, precision: isZip ? "ZIP" : "ADDRESS", point: { lat: place.lat, lng: place.lng },
         outsideCoverage: false, jurisdictions: [{
           state: place.state, ocdId: `ocd-division/country:us/state:${place.state.toLowerCase()}`,
           name: `${place.state} protocol fixture`, model: "VOTE_CENTER", election: "Protocol election",
@@ -83,6 +83,7 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
     } else if (url.pathname === "/api/reader/state") json(stateAnswer);
     else if (url.pathname === "/api/meetings") json({ meetings: [], coverage, tier: "none", radiusKm: 40, center: { lat: 38.58, lng: -121.49 }, stateResponse: { status: 200, headers: [], value: stateAnswer } });
     else if (url.pathname === "/api/voting-sites") {
+      if (request.method === "GET") { json({ pollingLookups: [{ state: "CA", name: "California", url: "https://example.gov/polling-place", sourceUrl: "https://example.gov/elections", sourceOrg: "Protocol state election office", checkedAt: "2026-10-23" }] }); return; }
       let body = ""; for await (const chunk of request) body += chunk;
       const { address } = JSON.parse(body); inputs.push(address);
       json(answers.get(address) ?? { match: false, point: null, jurisdictions: [], outsideCoverage: true });
@@ -111,11 +112,12 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
       await page.goto(origin);
       await page.waitForFunction(() => (window as unknown as MapWindow).__wtpMapProbe?.().focusOcdId === "ocd-division/country:us/state:ca");
       await page.getByRole("button", { name: "Where can I vote?", exact: true }).filter({ visible: true }).first().click();
-      await page.getByLabel("Your street address or ZIP").waitFor();
+      await page.getByLabel("Enter your street address to find the polling place for your precinct.").waitFor();
       const readsBefore = requests.filter(url => /\/api\/(meetings|reader\/state)|\/api\/location\/zip/.test(url));
       for (const place of places) {
-        for (const input of [place.address, place.zip]) {
-          await page.getByLabel("Your street address or ZIP").fill(input);
+        for (const input of [place.address, place.zip, place.address, place.address]) {
+          await page.evaluate(() => (window as unknown as MapWindow).__wtpMap.jumpTo({ center: [-98, 39], zoom: 4 }));
+          await page.getByLabel("Enter your street address to find the polling place for your precinct.").fill(input);
           const started = performance.now();
           await page.getByRole("button", { name: "Show me", exact: true }).click();
           await page.waitForFunction(({ lat, lng, state }) => {
@@ -133,6 +135,13 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
           assert.equal(await page.evaluate(() => (window as unknown as MapWindow).__wtpMapProbe().focusOcdId), "ocd-division/country:us/state:ca");
           assert.equal(await page.evaluate(() => !!(window as unknown as MapWindow).__wtpMap.getSource("voting-address-ring")), input !== place.zip);
           await page.screenshot({ path: `${out}/${place.state.toLowerCase()}-${input === place.zip ? "zip" : "address"}-${viewport.width}.png` });
+          // Pins are recreated after an answer; their selection effect follows
+          // the row render. Read the toggle state only when both agree.
+          await page.waitForFunction(id => {
+            const row = document.querySelector<HTMLElement>(`[data-voting-site="${id}"]`);
+            const pin = document.querySelector<HTMLElement>(`.wtp-vote-pin[data-site-id="${id}"]`);
+            return !!row && !!pin && pin.dataset.selected === row.dataset.selected;
+          }, `${place.state}-1`);
           const wasSelected = await page.locator(`.wtp-vote-pin[data-site-id="${place.state}-1"]`).getAttribute("data-selected") === "true";
           await page.locator(`[data-voting-site="${place.state}-1"] .voting-site-head`).click();
           await page.waitForFunction(({ id, selected }) => document.querySelector<HTMLElement>(`.wtp-vote-pin[data-site-id="${id}"]`)?.dataset.selected === String(selected), { id: `${place.state}-1`, selected: !wasSelected });
@@ -149,13 +158,13 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
               const p = panel.getBoundingClientRect(), r = row.querySelector(".voting-site-head")!.getBoundingClientRect();
               return r.top >= p.top && r.bottom <= p.bottom;
             }, `${place.state}-1`, { timeout: 1000 });
-            assert.equal(await page.getByLabel("Your street address or ZIP").count(), 1);
+            assert.equal(await page.getByLabel("Enter your street address to find the polling place for your precinct.").count(), 1);
           }
         }
       }
       assert.deepEqual(requests.filter(url => /\/api\/(meetings|reader\/state)|\/api\/location\/zip/.test(url)), readsBefore, "voting answers must not reload the meeting or ZIP view");
       const centerBefore = await page.evaluate(() => (window as unknown as MapWindow).__wtpMap.getCenter().toArray());
-      await page.getByLabel("Your street address or ZIP").fill("Unmatched protocol lookup");
+      await page.getByLabel("Enter your street address to find the polling place for your precinct.").fill("Unmatched protocol lookup");
       await page.getByRole("button", { name: "Show me", exact: true }).click();
       await page.locator("[data-voting-coverage-gap]").waitFor();
       assert.equal(await page.locator(".wtp-vote-pin").count(), 0);
@@ -166,7 +175,7 @@ test("VS-03: cross-state address and ZIP voting answers move the real map, keep 
       assert.deepEqual(external, []);
       await context.close();
     }
-    assert.equal(inputs.length, 14);
+    assert.equal(inputs.length, 26);
   } finally {
     writeFileSync(`${out}/timings.json`, JSON.stringify({ controlledResponses: true, realMap: true, timings }, null, 2) + "\n");
     await browser?.close();

@@ -41,15 +41,20 @@
       "requestedUrl": "https://www.lebanonnh.gov/563/Registering-to-Vote",
       "finalUrl": "https://www.lebanonnh.gov/563/Registering-to-Vote",
       "publisher": "City of Lebanon, New Hampshire"
+    },
+    {
+      "requestedUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/documents/2024-10/2024-state-general-election-media-guide.pdf",
+      "finalUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/documents/2024-10/2024-state-general-election-media-guide.pdf",
+      "publisher": "New Hampshire Secretary of State"
     }
   ],
   "package": {
     "contractId": "ballot-navigation",
-    "version": "2026-10-15T20:10:00.000Z",
-    "sourceThrough": "2026-10-15T20:10:00.000Z",
+    "version": "2026-10-27T17:49:50.726Z",
+    "sourceThrough": "2026-10-27T17:49:50.726Z",
     "sourceReceipt": {
       "contractVersion": 1,
-      "reviewedAt": "2026-10-15T20:10:00.000Z",
+      "reviewedAt": "2026-10-27T17:49:50.726Z",
       "reviewedBy": "code:section3Record",
       "sources": [
         {
@@ -139,6 +144,17 @@
           "rawHash": "1fb900a8db63b83131e17ad510439503dd6cc8ff7ed45764d950ac2a3ede398e",
           "reviewOutcome": "SUPPORTED",
           "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/documents/2024-10/2024-state-general-election-media-guide.pdf",
+          "finalUrl": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/documents/2024-10/2024-state-general-election-media-guide.pdf",
+          "publisher": "New Hampshire Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-27T17:49:50.726Z",
+          "httpStatus": 200,
+          "rawHash": "dbaf06a1c7e3f96cf13a10dc67a3795a3aa1908c67a4a34eaf02c271e8e3567f",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official web-extracted source text in the fingerprint vault; code confirmed the polling lookup label and destination. Source method: official-page-web-extraction."
         }
       ]
     },
@@ -240,21 +256,21 @@
           }
         },
         {
-          "id": "election-field:5d70e74fda7f734f9fa848b6ec3c8dc7",
+          "id": "election-field:fac0b24831d4d2c116eddd2cc93a82c7",
           "kind": "ELECTION_FIELD",
           "value": {
             "state": "NH",
             "divisionId": "ocd-division/country:us/state:nh",
             "fieldKind": "polling_lookup",
             "text": "https://app.sos.nh.gov/viphome",
-            "quote": "Voter Information Lookup (registration status, polling location, absentee ballot status)",
+            "quote": "Voter Information Lookup (voter registration info, polling locations & hours, statewide list of town/city clerks,",
             "dates": [],
-            "url": "https://alton.nh.gov/absentee-sample-ballot-november-3-2026-state-general-election/",
+            "url": "https://www.sos.nh.gov/sites/g/files/ehbemt561/files/documents/2024-10/2024-state-general-election-media-guide.pdf",
             "navigationUrl": "https://app.sos.nh.gov/viphome",
             "electionDate": "2026-11-03",
-            "verifiedAt": "2026-10-14T21:32:20.096Z",
-            "collectedAt": "2026-10-14T19:59:10.017257+00:00",
-            "sourceOrg": "Town of Alton"
+            "verifiedAt": "2026-10-27T17:49:50.726Z",
+            "collectedAt": "2026-10-27T17:49:50.726Z",
+            "sourceOrg": "New Hampshire Secretary of State"
           }
         },
         {

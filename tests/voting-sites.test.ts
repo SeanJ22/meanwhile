@@ -200,12 +200,19 @@ test("B19: the route writes nothing — a source scan for every write primitive"
   assert.ok(source.includes("no-store"), "the response must never be cached");
   assert.ok(
     /export (?:async function|const) POST\b/.test(source),
-    "a GET would put a home address in a URL",
+    "street lookups use POST so home addresses stay out of URLs",
   );
-  assert.ok(
-    !/export (?:async function|const) GET\b/.test(source),
-    "no GET on this route",
-  );
+  const getHandler = source.slice(source.indexOf("export async function GET"), source.indexOf("async function heldVotingFile"));
+  assert.doesNotMatch(getHandler, /searchParams\.get\(["\']address["\']\)|request\.json\(|censusVotingAddress\(/, "GET never reads or resolves a street address");
+});
+
+test("the state-link GET refuses street addresses, unknown keys, and duplicate states", async () => {
+  const { GET } = await import("../app/api/voting-sites/route.ts");
+  for (const query of ["state=WI&address=private-street", "state=WI&zip=53213", "state=WI&state=MD", ""]) {
+    const response = await GET(new Request(`http://localhost/api/voting-sites?${query}`));
+    assert.equal(response.status, 400);
+    assert.doesNotMatch(await response.text(), /private-street/);
+  }
 });
 
 test("VS-01: voting-panel privacy copy stays on the collection-information page", () => {

@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 133 (main 14d57ddd0) since 10:51 PM EDT; runner on 133 since ~10:58 PM, all three lanes launching. 134 (RC-01, RIVER-BREAKER-134, RIVER-PORTRAITS-134, DB-06) on river-next-134 fff87c9e8: pnpm gates running
+build_state: LIVE: release 134 (main 45640fe8b) since 12:45 AM EDT Oct 28; runner on 134 since ~12:52 AM. 135 (RIVER-PLACEPAGES-135) on river-next-135 4d2a66a22: pnpm gates running
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-28T03:20:00Z
+heartbeat: 2026-10-28T05:10:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -42,6 +42,9 @@ heartbeat: 2026-10-28T03:20:00Z
 - 133: #846 merged 10:48 PM, /api/build 14d57ddd0 at 10:51 PM. Runner loaded 133 ~10:58 PM (new pid 3841347); breaker RESUME place-pages, publish-now, routine-civic-data at 10:58 (code changed). Within 15 minutes all three launched: by 11:14 PM routine 299.5 MB, publish-now 132 MB (690 meeting-task digests, first launch 11:09), place-pages 47.7 MB with 2,589 place pages built; rebuild_queue 86,904 → 84,317; 291 facts live in the first 16 minutes (~1,100/h pace). publish-now's first pass still hit its 10-minute deadline (11:09). Routine's 0.3 GB in 14 minutes means it trips again this hour (portrait sweep + one job name); 134 fixes both.
 - 134 fold: DB-05 b445d2278 folded as DB-06 on river-next-134-db06 (96a2966ae, 17 conflicts resolved: breaker job names and portrait reads kept, measured bytes win, DB-05's door change-rate removal replaces RIVER-DOORS-133). Fold fixes: evidence store decides from metadata (head), never downloads a body (3f7f24836); measure explanations accept fingerprint-filed captures (dcdfc4124); explicit columns for the five SELECT * (922ec8aac; rulings read list 79 → 61); paused-jobs card Eastern time + two runner tests (fff87c9e8). Suite before the last fix: 10,523 pass, 3 fail (the 3 River fixed).
 - For Sean: DB-06's civic_data_rows (DB-05_keyed_rows.sql) stores jsonb copies of payload members, which can be rebuilt; it stays as approved unless Sean says otherwise.
+- 11 PM-12:48 AM on 133: breaker paused routine-civic-data 11:18 PM (0.52 GB), place-pages 11:28 PM (0.92 GB), publish-now 11:38 PM (0.53 GB); 133's breaker resumed all three at 12:08 AM (new hour); paused routine-civic-data 12:28 AM (0.98 GB, portrait need-check) and place-pages 12:48 AM (0.58 GB, place-builder package query). GB/h, EDT: 11 PM reader 2.325 + control plane 0.490.
+- 134: https://github.com/SeanJ22/meanwhile/pull/847 full CI green, merged 12:37 AM (main 45640fe8b); /api/build 45640fe8b at 12:45 AM. Runner loaded 134 by 12:52 AM (pid 3966071); breaker CHECK 12:52 and 1:02 AM, no pause. Per-task names in the meter from 1 AM: door-probes, doors, door-publication, box-facts, meeting-pins, worker-publication, meetings-state:<ST>, ballot-navigation-<st>, registration-<st>. Portrait need-check (319 MB/h on STATE_LEGISLATOR) is gone from the 1 AM hour. place-pages stays paused from 12:48 AM until Sean presses Release on Admin Now (134 has no self-resume). Open: routine-civic-data's own scheduling reads (lib/civic-data/runner.ts candidate/promotion reads) were 157 MB in the first 13 minutes after the restart; the supervisor is never paused, judging over the full hour.
+- 135 built (READY: RIVER-PLACEPAGES-135 9be9dfe23, stream/river-placepages-135): place-builder compares per-part fingerprints (md5 on the server) to the ones stored in place_page.context.prints; an unchanged place returns only a flag (fixture: 649 B vs 212 KB per page), a partly changed place returns only changed parts; the 44 KB package SQL is sent once per connection as a named statement (falls back to text if refused). Before: ~175 KB per page at ~9,700 pages/hour ≈ 1.7 GB/h. Folded on river-next-135 4d2a66a22, gates running.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

@@ -9,6 +9,7 @@ interface CacheIO {
   readonly writeCheckpoint?: (key: string, saved: string) => Promise<void>;
 }
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
+const rowContentKey = (namespace: string, key: string, etag: string) => JSON.stringify([namespace, key, etag]);
 
 /** A held copy that does not answer this fast is a miss: the database read goes ahead without it. */
 const CIVIC_READ_CACHE_LOOKUP_MS = 2_000;
@@ -105,7 +106,7 @@ export class CivicReadCache {
     const result = new Map<string, T>();
     const missing: V[] = [];
     await Promise.all(versions.map(async version => {
-      const held = await this.read<T>(input.namespace + ":" + version.key);
+      const held = await this.read<T>(rowContentKey(input.namespace, version.key, version.etag));
       if (held && held.etag === version.etag && input.keyOf(held.value) === version.key) {
         result.set(version.key, input.freshen ? input.freshen(held.value, version) : held.value);
       } else missing.push(version);
@@ -123,7 +124,8 @@ export class CivicReadCache {
         const version = after.get(key);
         result.set(key, version && input.freshen ? input.freshen(value, version) : value);
         if (input.etagOf || before.get(key) !== undefined && before.get(key) === version?.etag) {
-          saves.push(this.save(input.namespace + ":" + key, { etag: input.etagOf?.(value) ?? before.get(key)!, value }));
+          const etag = input.etagOf?.(value) ?? before.get(key)!;
+          saves.push(this.save(rowContentKey(input.namespace, key, etag), { etag, value }));
         }
       }
       await boundedWait(Promise.all(saves));

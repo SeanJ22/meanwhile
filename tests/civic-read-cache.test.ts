@@ -102,6 +102,22 @@ test("status changes refresh a candidate header while the same content fingerpri
   assert.equal(reads, 2, "changed source content invalidates the cached body");
 });
 
+test("row copies are addressed by content version when a previous version returns", async t => {
+  const root = await scratch(t);
+  let fingerprint = "a", reads = 0;
+  const input = { namespace: "promotion", keys: ["scope"],
+    versions: async () => [{ key: "scope", etag: fingerprint }],
+    values: async () => { reads++; return [{ key: "scope", text: fingerprint }]; },
+    keyOf: (row: {key: string; text: string}) => row.key,
+  };
+  assert.equal((await cache(root).rows(input))[0]!.text, "a");
+  fingerprint = "b";
+  assert.equal((await cache(root).rows(input))[0]!.text, "b");
+  fingerprint = "a";
+  assert.equal((await cache(root).rows(input))[0]!.text, "a");
+  assert.equal(reads, 2);
+});
+
 test("corrupt or unwritable disposable copies fall back to the actual database read", async t => {
   const root = await scratch(t);
   let calls = 0;

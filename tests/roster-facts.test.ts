@@ -61,6 +61,9 @@ test("a structured API roster publishes its name and term fields without page-na
     [report.people.get("source:42"), `term_start:${BODY.id}`]);
   assert.deepEqual(term, { value: record.TermStart, quote_start: null });
   assert.deepEqual(await db.query("SELECT DISTINCT provenance_kind FROM fact WHERE status='live'"), [{ provenance_kind: "OFFICIAL" }]);
+  const { rosters } = await readFactRosters(db.query, [BODY.id]);
+  assert.equal(rosters[0].members[0].termStart, record.TermStart);
+  assert.equal(rosters[0].members[0].fieldSources?.termStart?.sourceUrl, api.evidence.canonicalUrl);
 });
 
 test("a re-read confirms; a complete official page that drops a member retires only that membership; a page label is never a person", async () => {

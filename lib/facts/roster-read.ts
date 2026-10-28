@@ -12,7 +12,8 @@ const ROSTER_FACTS_SQL = `WITH members AS (
         'url', (SELECT ps.url FROM source_copy ps WHERE ps.id = p.source_copy_id), 'checked', p.checked_at))
       FROM checked_fact p
       WHERE p.entity_id = m.person_id AND p.status = 'live'
-        AND (p.field IN ('name', 'email', 'phone', 'website') OR p.field LIKE '%:' || m.body_id)), '{}'::jsonb) AS person
+        AND (p.field IN ('name', 'office', 'email', 'phone', 'website', 'term_note', 'term_start', 'term_end')
+          OR p.field IN (SELECT field || ':' || m.body_id FROM unnest(ARRAY['name', 'office', 'email', 'phone', 'website', 'term_note', 'term_start', 'term_end']) field))), '{}'::jsonb) AS person
   FROM members m JOIN entity b ON b.id = m.body_id
   ORDER BY m.body_id, m.person_id`;
 

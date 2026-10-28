@@ -9,7 +9,7 @@ import { lastChildLines, recordFailedCycle } from "../lib/control-plane/schedule
 
 const slotsModule = JSON.stringify(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url).href);
 
-const QUIET_MS = 600;
+const QUIET_MS = 2_400;
 const scale = QUIET_MS / RUNTIME_NO_PROGRESS_MS;
 const DISPATCH_WAIT_MS = Math.round(15 * 60_000 * scale);
 

@@ -10,6 +10,7 @@ import { ResetViewButton } from "@/components/reset-view-button";
 import { ThemeToggle } from "@/components/theme-toggle";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { useShellData } from "@/lib/state/data";
+import { useSavedZipChoice } from "@/hooks/use-stored-zip";
 
 import { FiltersArea } from "./filters-area";
 import { NearMeControl } from "./near-me-control";
@@ -55,6 +56,7 @@ export function Sidebar({
   snapshot?: SnapshotStatus | null;
 }) {
   const { location } = useShellData();
+  const savedZip = useSavedZipChoice();
   const [aboutOpen, setAboutOpen] = useState(false);
   const carriedShown = (snapshot?.carried?.count ?? 0) > 0;
 
@@ -93,7 +95,8 @@ export function Sidebar({
 
         {nav ?? (
           <a
-            href={location ? `/ballot?zip=${location.zip}` : "/ballot"}
+            data-ballot-link
+            href={location?.zip || savedZip ? `/ballot?zip=${location?.zip ?? savedZip}` : "/ballot"}
             className="sidebar-ballot-entry"
           >
             <span>What&apos;s on the ballot</span>

@@ -83,7 +83,7 @@ test("partitioned federal ballot money keeps full selected filings and committee
         assert.deepEqual(result.value,{...payload,candidates:candidates.slice(0,2),secondHop:secondHop.slice(0,2),absences:absences.slice(0,1)});
         assert.equal(result.metadata.sourceThrough,"2026-10-19");
       }
-      assert.equal(reads,2,"later card aliases check the selected holding's current version");
+      assert.equal(reads,1,"later card aliases share this request's fingerprint-checked selected holding");
       assert.equal(bodies,1,"later card aliases reuse the same complete selected holding without transferring it again");
     });
     const nextCandidates=[{...candidates[0],totals:{...candidates[0].totals,receipts:54321}},...candidates.slice(1)];
@@ -95,7 +95,7 @@ test("partitioned federal ballot money keeps full selected filings and committee
       assert.equal(next.kind,"PROMOTED");
       if(next.kind==="PROMOTED")assert.deepEqual(next.value,{...payload,candidates:nextCandidates.slice(0,2),secondHop:secondHop.slice(0,2),absences:absences.slice(0,1)});
     });
-    assert.equal(reads,4,"the next ballot request checks the newly published holding");
+    assert.equal(reads,2,"each ballot request checks its own current publication once");
     assert.equal(bodies,2,"only the changed selected holding crosses again");
   }finally{installReaderDatabaseQuery(undefined);if(previousUrl===undefined)delete process.env.DATABASE_URL;else process.env.DATABASE_URL=previousUrl;await pg.close();}
 });
@@ -172,7 +172,7 @@ test("a cold Virginia ballot selects its held FEC registration after the concurr
         assert.deepEqual(answer.data.contributors,[]);
         assert.equal(answer.data.detailSource,undefined,"no unfetched committee is invented");
       }
-      assert.equal(fecReads,2,"the candidate card checks the selected holding's current version");
+      assert.equal(fecReads,1,"the candidate card shares this request's fingerprint-checked selected holding");
       assert.equal(fecBodies,1,"the candidate card reuses the complete selected holding without transferring it again");
       const changedHolder={...holder,name:"Updated official source name"};
       const updated=await readFederalDirectoryProjection(["VA"],{},async()=>{

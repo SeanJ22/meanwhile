@@ -18,6 +18,7 @@ const nextConfig: NextConfig = {
   // Load a route's server code on its first request instead of every route on cold start.
   experimental: {
     preloadEntriesOnStart: false,
+    staleTimes: { dynamic: 30 },
   },
   // Inline the build's commit at build time; Netlify sets COMMIT_REF only in the build environment.
   env: {

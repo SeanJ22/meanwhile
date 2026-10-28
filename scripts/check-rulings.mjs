@@ -97,6 +97,83 @@ function storedProjection(source, match) {
   const qualified = [...match[0].matchAll(/\b([a-z_][\w$]*)\s*\.\s*\*/gi)];
   return qualified.length ? qualified.some(m => targets.get(m[1].toLowerCase()) !== false) : targets.size === 0 || [...targets.values()].some(Boolean);
 }
+/** The bundle tables. Each file that names one stays listed until its family moves off the bundles. */
+export const BUNDLE_TABLES = ["civic_data_candidates", "civic_data_promotions", "civic_data_candidate_events", "civic_data_payload_parts", "civic_data_clock_versions"];
+const REPOSITORIES = "lib/control-plane/repository/pg-store.ts";
+/** Migrations change tables rather than read them; this check names the tables it lists. */
+const listedFile = file => sourceFile(file) && !file.startsWith("lib/db/migrations/") && file !== "scripts/check-rulings.mjs";
+
+export function bundleTables(file, text) {
+  const clean = withoutComments(text);
+  return BUNDLE_TABLES.filter(table => new RegExp(`\\b${table}\\b`).test(clean)).map(table => ({ file, table }));
+}
+
+/** The control-plane table behind each repository on `repos`, from the repositories' own constructors. */
+export function repositoryTables(text) {
+  const tables = new Map();
+  const constructor = /(?:^|[\s,{])(\w+)\s*:\s*(?:callerPinned\(\s*)?(?:pg\w+\(\s*)?(pgAggregateRepository|pgArchivedAggregateRepository|pgAppendOnlyRepository|pgDoorRepository)\s*(?:<[^>()]*>)?\s*\(\s*sql\s*(?:,\s*"([\w-]+)"\s*(?:,\s*"(cp_\w+)")?)?/g;
+  for (const [, key, kind, first, second] of text.matchAll(constructor)) {
+    const table = kind === "pgDoorRepository" ? "cp_doors" : kind === "pgAppendOnlyRepository" ? first && `cp_log_${first}` : second;
+    if (table && !tables.has(key)) tables.set(key, table);
+  }
+  return tables;
+}
+
+/** Repository calls that return whole records; the Narrowed, keyed and projected reads do not. */
+const WHOLE_RECORD_METHODS = new Set(["read", "mustRead", "readMany", "list", "listWhere", "listChangedSince",
+  "readEntry", "readWhere", "readAll", "readSince", "readRecent", "readKeys", "readChangedSince", "readStampedBetween"]);
+const SMALL_VALUE = /\b(?:pg_column_size|octet_length|md5|sha256|jsonb_typeof|count)\s*\([^()]*\)/gi;
+const holdsRepositories = node => {
+  const name = ts.isIdentifier(node) ? node.text : ts.isPropertyAccessExpression(node) ? node.name.text : null;
+  return name !== null && /^(?:\w*[rR]epos|repositories)$/.test(name);
+};
+
+/** Control-plane tables a file reads whole: a whole-record repository call, or SQL selecting a cp_* row's bare value or log record. */
+export function controlRecordReads(file, text, tables) {
+  const found = new Set(), clean = withoutComments(text);
+  for (const [, columns, table] of clean.matchAll(/\bselect\b((?:(?!\bselect\b|\bfrom\b)[\s\S])*?)\bfrom\s+"?(cp_\w+)/gi)) {
+    const selected = columns.replace(SMALL_VALUE, " ").replace(/\bas\s+"?\w+"?/gi, " ");
+    if (/(?:^|[\s,(])(?:[a-z_]\w*\.)?(?:value|record)\b(?!\s*(?:->|#>|\?|@>|<@))/i.test(selected)) found.add(table.toLowerCase());
+  }
+  if (!/\.sql$/.test(file) && /\b\w*(?:[rR]epos|repositories)\b/.test(clean)) {
+    const ast = ts.createSourceFile(file, clean, ts.ScriptTarget.Latest, true, /x$/.test(file) ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
+    const aliases = new Map();
+    const tableOf = node => {
+      while (ts.isParenthesizedExpression(node) || ts.isNonNullExpression(node) || ts.isAwaitExpression(node)) node = node.expression;
+      if (ts.isPropertyAccessExpression(node) && holdsRepositories(node.expression)) return tables.get(node.name.text);
+      return ts.isIdentifier(node) ? aliases.get(node.text) : undefined;
+    };
+    const visit = node => {
+      if (ts.isVariableDeclaration(node) && node.initializer) {
+        if (ts.isIdentifier(node.name)) { const table = tableOf(node.initializer); if (table) aliases.set(node.name.text, table); }
+        else if (ts.isObjectBindingPattern(node.name) && holdsRepositories(node.initializer)) {
+          for (const element of node.name.elements) {
+            const key = (element.propertyName ?? element.name).getText(ast);
+            if (ts.isIdentifier(element.name) && tables.has(key)) aliases.set(element.name.text, tables.get(key));
+          }
+        }
+      }
+      if (ts.isCallExpression(node) && ts.isPropertyAccessExpression(node.expression) && WHOLE_RECORD_METHODS.has(node.expression.name.text)) {
+        const table = tableOf(node.expression.expression);
+        const projected = /ChangedSince$/.test(node.expression.name.text) && node.arguments.some(arg => /\bprojection\b/.test(arg.getText(ast)));
+        if (table && !projected) found.add(table);
+      }
+      ts.forEachChild(node, visit);
+    };
+    visit(ast);
+  }
+  return [...found].sort().map(table => ({ file, table }));
+}
+
+/** Lists that only shrink: a file appears in one only while it still reads that table. */
+const READER_LISTS = [
+  ["bundleTables", row => sentence(`A new reader of the bundle table ${row.table}`, row.file)],
+  ["controlRecordReads", row => sentence(`A new whole-record read of ${row.table}`, row.file)],
+];
+const listKey = row => `${row.file}\t${row.table}`;
+const unlisted = (rows, allowed) => { const keys = new Set(allowed.map(listKey)); return rows.filter(row => !keys.has(listKey(row))); };
+const byFile = (a, b) => a.file.localeCompare(b.file) || a.table.localeCompare(b.table);
+
 const keyOf = row => `${row.file}\t${row.kind}\t${row.fingerprint}`;
 function excess(rows, allowance) {
   const counts = new Map();
@@ -171,12 +248,30 @@ export async function checkRulings({ cwd = process.cwd(), base, update = true } 
   const current = [...texts].filter(([file]) => sourceFile(file)).flatMap(([file, text]) => recordReads(file, text));
   const allowance = prior ? JSON.parse(prior).reads : [...new Set([...baseline.reads, ...current].map(row => row.file))]
     .flatMap(file => recordReads(file, held(cwd, INITIAL, file) ?? ""));
-  const history = git(cwd, "log", "-2", "--format=%H", "--", BASELINE).trim().split("\n").filter(Boolean)
-    .map(ref => JSON.parse(held(cwd, ref, BASELINE)).reads);
+  const committed = git(cwd, "log", "-2", "--format=%H", "--", BASELINE).trim().split("\n").filter(Boolean)
+    .map(ref => JSON.parse(held(cwd, ref, BASELINE)));
+  const history = committed.map(saved => saved.reads);
   for (const row of [...excess(baseline.reads, allowance), ...excess(current, allowance),
     ...excess(current, baseline.reads), ...(history.length === 2 ? excess(history[0], history[1]) : []),
     ...(history.length ? excess(baseline.reads, history[0]) : [])]) {
     problems.push(sentence(`An added ${row.kind} whole-record read`, row.file));
+  }
+  // A list absent from the merge base starts from the merge base's own code; after that it only shrinks.
+  const readerLists = sources => {
+    const tables = repositoryTables(sources.get(REPOSITORIES) ?? "");
+    const listed = [...sources].filter(([file]) => listedFile(file));
+    return { bundleTables: listed.flatMap(([file, text]) => bundleTables(file, text)).sort(byFile),
+      controlRecordReads: listed.flatMap(([file, text]) => controlRecordReads(file, text, tables)).sort(byFile) };
+  };
+  const lists = readerLists(texts);
+  const priorLists = prior ? JSON.parse(prior) : {};
+  const seeded = READER_LISTS.some(([name]) => !priorLists[name])
+    ? readerLists(new Map([...previous].filter(listedFile).map(file => [file, held(cwd, base, file) ?? ""]))) : {};
+  for (const [name, say] of READER_LISTS) {
+    const now = lists[name], allowed = priorLists[name] ?? seeded[name], saved = baseline[name] ?? allowed;
+    const [newest, older] = committed.map(saved => saved[name]);
+    for (const row of [...unlisted(now, saved), ...unlisted(saved, allowed),
+      ...(newest && older ? unlisted(newest, older) : []), ...(newest ? unlisted(saved, newest) : [])]) problems.push(say(row));
   }
   const reachable = importedScripts(texts);
   for (const file of paths.filter(file => !previous.has(file))) {
@@ -213,7 +308,7 @@ export async function checkRulings({ cwd = process.cwd(), base, update = true } 
     }
   }
   if (update && !problems.length) {
-    const next = JSON.stringify({ ...baseline, reads: current }, null, 2) + "\n";
+    const next = JSON.stringify({ ...baseline, reads: current, ...lists }, null, 2) + "\n";
     if (next !== baselineText) writeFileSync(resolve(cwd, BASELINE), next);
   }
   return [...new Set(problems)];

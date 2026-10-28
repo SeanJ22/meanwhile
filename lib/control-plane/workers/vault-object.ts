@@ -1,5 +1,6 @@
 import { artifactId as deriveArtifactId, type Artifact } from "../evidence/artifact.ts";
 import { readArtifact, type EvidenceStore } from "../evidence/store.ts";
+import { rawCaptureMetadata } from "../evidence/raw-pointer.ts";
 import type { ArtifactRecord, ControlPlaneRepositories } from "../repository/types.ts";
 import { artifactRecords } from "./vault.ts";
 
@@ -22,7 +23,8 @@ export function researchVaultResolver(repos: ControlPlaneRepositories, store: Ev
       const acquiring = (await repos.attempts.mustRead(record.attemptId)).value;
       if (!["ACQUIRER", "SCOUT", "DETECTIVE", "ADVERSARIAL_AUDITOR"].includes(acquiring.worker.role)) continue;
       for (const key of keys) {
-        const meta = await store.head(key);
+        const heldMeta = await store.head(key);
+        const meta = heldMeta ? rawCaptureMetadata(heldMeta) : null;
         const m = meta?.custom;
         if (!meta || !m || meta.contentHash !== record.contentHash || m.workItemId !== record.workItemId ||
           m.attemptId !== record.attemptId || m.canonicalUrl !== record.canonicalUrl || m.tier !== record.tier ||

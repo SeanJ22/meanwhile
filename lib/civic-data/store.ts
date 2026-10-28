@@ -3004,7 +3004,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   async readCandidateCaptures(candidateId: string, urls: readonly string[], members: readonly string[]): Promise<readonly unknown[]> {
     return (await this.candidateValue(`candidate-captures:${JSON.stringify([urls,members])}`, candidateId, async () => {
       const [{readCivicCandidateEvidenceRows},{rawCaptureVault}]=await Promise.all([import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
-      const vault=this.cacheOptions.vault??rawCaptureVault,query=(text:string,params:readonly unknown[])=>this.readerRows(text,params);
+      const vault=this.cacheOptions.vault??rawCaptureVault,query=(text:string,params:readonly unknown[]=[])=>this.readerRows(text,params);
       const requests=[{path:["finalUrl"],values:urls},{path:["requestedUrl"],values:urls},{path:["extractedFrom","member"],values:members}].filter(x=>x.values.length);
       const selected=await Promise.all(requests.map(match=>readCivicCandidateEvidenceRows(query,vault,candidateId,["captures"],{match})));
       return [...new Map(selected.flat().map(row=>[row.ordinal,row.value])).entries()].sort((a,b)=>a[0]-b[0]).map(([,value])=>value);

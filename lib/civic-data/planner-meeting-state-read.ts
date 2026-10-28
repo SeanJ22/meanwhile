@@ -72,7 +72,7 @@ export async function* readPlannerMeetingBodies(state: string, query: ReadOnlyQu
         const chunks: string[] = [];
         if (text.candidate) {
           let offset = 0;
-          const read = async (sql: string, params: readonly unknown[]) => (await query([{ text: sql, params }]))[0] ?? [];
+          const read = async (sql: string, params: readonly unknown[] = []) => (await query([{ text: sql, params }]))[0] ?? [];
           while (offset < text.chars) {
             const window = await readCivicCandidateText(read, vault, text.candidate,
               ["agendaDocuments", String(text.ordinal - 1), "text"], { offset, count: 32768 });

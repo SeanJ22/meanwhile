@@ -2,6 +2,7 @@
 
 import { DurableEvidenceStore } from "../evidence/durable-store.ts";
 import { putArtifact } from "../evidence/store.ts";
+import { rawCaptureMetadata, readEvidenceObject } from "../evidence/raw-pointer.ts";
 import type { Artifact } from "../evidence/artifact.ts";
 import type { ArtifactRecord } from "../repository/types.ts";
 
@@ -63,7 +64,7 @@ export function cycleVault(vaultRoot: string): CycleVault {
     putBytes(artifact, Buffer.from(body, "utf8"));
 
   const readBack = async (key: string): Promise<string | null> => {
-    const object = await store.get(key);
+    const object = await readEvidenceObject(store, key);
     if (object === null) return null;
     return Buffer.from(object.bytes).toString("utf8");
   };
@@ -78,7 +79,8 @@ export function cycleVault(vaultRoot: string): CycleVault {
     const suffix = `/${record.workItemId}/${record.contentHash}.`;
     for (const key of await heldKeys) {
       if (!key.includes(suffix)) continue;
-      const meta = await store.head(key);
+      const heldMeta = await store.head(key);
+      const meta = heldMeta ? rawCaptureMetadata(heldMeta) : null;
       const custom = meta?.custom;
       if (
         !meta ||

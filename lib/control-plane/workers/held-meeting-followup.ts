@@ -1,4 +1,5 @@
 import { databaseByteContract } from "../../civic-data/database-byte-contract.ts";
+import { rawCaptureMetadata } from "../evidence/raw-pointer.ts";
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -93,7 +94,7 @@ export async function readHeldMeetingCapture(vault: EvidenceStore, project: stri
     const prefix = `project/${project}/source/${host}/${day}/${record.workItemId}/`;
     const keys = (await vault.list(prefix)).filter(key => key.startsWith(`${prefix}${record.contentHash}.`) && !key.endsWith(".meta.json"));
     for (const key of keys) {
-      const meta = await vault.head(key), m = meta?.custom;
+      const heldMeta = await vault.head(key), meta = heldMeta ? rawCaptureMetadata(heldMeta) : null, m = meta?.custom;
       if (!m || meta?.contentHash !== record.contentHash || m.tier !== record.tier || m.workItemId !== record.workItemId ||
         m.attemptId !== record.attemptId || m.canonicalUrl !== record.canonicalUrl || m.sourceId !== host || !Number.isFinite(Date.parse(m.retrievedAt))) continue;
       const artifact: Artifact = { id: record.artifactId, tier: record.tier, contentHash: record.contentHash, byteLength: record.byteLength,

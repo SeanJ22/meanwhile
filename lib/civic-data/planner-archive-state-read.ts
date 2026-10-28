@@ -30,7 +30,7 @@ export async function readPlannerMeetingArchives(text: string, params: readonly 
   const rankOf = new Map(versions.map((version, rank) => [String(version.id), rank]));
   const meetings = new Map<string, { rank: number; value: Record<string, unknown> }>();
   const documents = new Map<string, { rank: number; value: Record<string, unknown> }>();
-  const read = async (text: string, params: readonly unknown[]) => (await query([{ text, params }]))[0] ?? [];
+  const read = async (text: string, params: readonly unknown[] = []) => (await query([{ text, params }]))[0] ?? [];
   for (const kind of ["meetings", "documents"] as const) {
     if (kind === "documents" && !meetings.size) break;
     const target = kind === "meetings" ? meetings : documents;

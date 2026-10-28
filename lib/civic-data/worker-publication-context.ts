@@ -2,6 +2,7 @@ import { readPublicationSourcePolicy } from "../control-plane/promotion/source-s
 import { join } from "node:path";
 import { controlPlaneUrlFromEnv, createPgRepositories } from "../control-plane/repository/pg-store.ts";
 import { DurableEvidenceStore } from "../control-plane/evidence/durable-store.ts";
+import { rawCaptureMetadata } from "../control-plane/evidence/raw-pointer.ts";
 import { VAULT_DIR } from "../control-plane/scheduler/vault.ts";
 import { publicationVaultReaders } from "./publication-vault.ts";
 import { evidenceProjection } from "../control-plane/workers/evidence-projection.ts";
@@ -59,7 +60,7 @@ export function heldCaptureReader(store: EvidenceStore, project = "freshness") {
 
 /** A job that already holds an exact vault key does not list the source's artifact inventory again. */
 export async function heldCaptureAtKey(store: EvidenceStore, record: ArtifactRecord, key: string, project = "freshness"): Promise<WorkerPublicationCapture | null> {
-  const meta = await store.head(key), m = meta?.custom;
+  const heldMeta = await store.head(key), meta = heldMeta ? rawCaptureMetadata(heldMeta) : null, m = meta?.custom;
   if (!meta || !m || meta.contentHash !== record.contentHash) return null;
   if (m.tier !== record.tier || m.canonicalUrl !== record.canonicalUrl || record.partial) return null;
   const artifact: Artifact = { id: record.artifactId, tier: record.tier, contentHash: record.contentHash, byteLength: record.byteLength,

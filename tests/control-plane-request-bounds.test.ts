@@ -445,7 +445,7 @@ test("connect-retry: a spent budget stops the retries at once rather than asking
   const { sql, calls } = hangThenAnswer(99);
   const retries: unknown[] = [];
   const { outcome } = await elapsed(() =>
-    withStoreBudget("heartbeat", 30, () =>
+    withStoreBudget("heartbeat", 1_500, () =>
       withControlPlaneConnectRetry(
         () => boundedQuery(sql, { operation: "cp_runner_heartbeat.read", callClass: "POINT" }, "SELECT 1", [], { bounds: { POINT: 5_000, DOCUMENT: 5_000, PAGE: 5_000 } }),
         { sleep: async () => {}, onRetry: (info) => retries.push(info) },

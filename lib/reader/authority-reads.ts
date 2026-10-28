@@ -2,13 +2,13 @@ import type { PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import { readRegistryRuntimeProjection as readRegistry, refreshRegistryRuntimeFromPromoted as refreshRegistry } from "../registry/runtime-read-model.ts";
 import { readFederalDirectoryProjection as readFederal, refreshFederalDirectoryFromPromoted as refreshFederal } from "../officials/federal-directory-read-model.ts";
-import { readStatePackage } from "./state.ts";
+import { readStateAuthorities, readStatePackage } from "./state.ts";
 import { readCanonicalShelf } from "./canonical.ts";
 import { primeReaderCanonicalStore, readerCanonicalEntry } from "./canonical-context.ts";
 import { stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 
-const registryState = async (state: string) => (await readStatePackage(state)).registryRead;
-const federalState = async (state: string) => (await readStatePackage(state)).federalRead;
+const registryState = async (state: string) => (await readStateAuthorities(readStatePackage(state))).registryRead;
+const federalState = async (state: string) => (await readStateAuthorities(readStatePackage(state))).federalRead;
 const readsStatePackage = (options: PromotedCivicDataReadOptions) => !options.store && !currentReaderAuthorityEdge();
 
 /** Reader adapters keep state-package loading out of the shared publication readers. */

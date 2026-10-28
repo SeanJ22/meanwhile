@@ -1,6 +1,7 @@
 "use client";
 
 import { useReaderCopy } from "@/hooks/use-reader-copy";
+import { useSavedZipChoice } from "@/hooks/use-stored-zip";
 import Link from "next/link";
 import { useLinkStatus } from "next/link";
 
@@ -39,10 +40,12 @@ export function PillCluster({
   /** Background ballot reads wait until this place's state and local reads finish. */
   prefetchReady?: boolean;
 }) {
+  const savedZip = useSavedZipChoice();
   const validZip = zip && /^\d{5}$/.test(zip) ? zip : null;
+  const ballotZip = validZip ?? savedZip;
   const ballotParams = new URLSearchParams();
+  if (ballotZip) ballotParams.set("zip", ballotZip);
   if (state) ballotParams.set("state", state);
-  if (validZip) ballotParams.set("zip", validZip);
   if (point) {
     ballotParams.set("lat", String(point.lat));
     ballotParams.set("lng", String(point.lng));
@@ -56,6 +59,7 @@ export function PillCluster({
     <div className="mw-nav-wrap" data-pill-cluster={placement}>
       <nav className="mw-compound-nav" aria-label="Main">
         <Link
+          data-ballot-link
           href={ballotHref}
           prefetch={prefetchReady ? null : false}
           className="mw-nav-seg mw-nav-ballot"

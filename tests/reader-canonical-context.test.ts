@@ -6,7 +6,7 @@ import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { readStateAuthorityProjection } from "../lib/civic-data/state-reader.ts";
 import { stateAuthorityPointers } from "../lib/civic-data/state-reader.ts";
 import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
-import { readStatePackage, readStateDistricts, primeStateDistrictPointers, primeStateReaderPointers } from "../lib/reader/state.ts";
+import { readStatePackage, readStateAuthorities, readStateDistricts, primeStateDistrictPointers, primeStateReaderPointers } from "../lib/reader/state.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { refreshRegistryRuntimeFromPromoted } from "../lib/reader/authority-reads.ts";
 import { getRegistryRuntimeReadModel } from "../lib/registry/runtime-read-model.ts";
@@ -19,7 +19,7 @@ import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { versionedSelect } from "../lib/db/versioned-query.ts";
 import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 
-function stateRows(version: string, divisions: readonly string[], zip = false) {
+function stateRows(version: string, divisions: readonly string[], zip = false, withMember = false) {
   const at = "2026-10-19T00:00:00.000Z", scope = "US-AZ:reader-registry-runtime";
   const division = (ocdId: string, label: string, local = false): Division => ({
     ocdId, label, divisionType: local ? ocdId.includes("/county:") ? "county" : "place" : "state", tier: local ? "local" : "state", state: "AZ",
@@ -29,7 +29,9 @@ function stateRows(version: string, divisions: readonly string[], zip = false) {
   });
   const runtime: RegistryRuntimeReadModel = { formatVersion: 1,
     registry: { generatedAt: at, divisions: [division("ocd-division/country:us/state:az", version)], bodies: [] },
-    bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
+    bodyRosters: withMember ? [{ bodyId: "fixture-body", sourceUrl: "https://example.gov/roster", sourceOrg: "Fixture", collectedAt: at,
+      members: [{ id: "fixture-member", name: "Fixture Member", officeTitle: "Council member" }] }] as unknown as RegistryRuntimeReadModel["bodyRosters"] : [],
+    rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
     officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
   const entry = provenEdgeEntry({ recordClass: "REGISTRY_RUNTIME_BINDING", scope, sourceId: "registry-reviewed-bindings", versionId: version, value: runtime });
   const p = entry.projection;
@@ -166,51 +168,73 @@ test("an independent state request checks a committed change while an older quer
   } finally {release();installReaderDatabaseQuery(undefined);await pg.close();}
 });
 
-test("early districts and canonical pointers stay with their state promise across concurrent requests", async () => {
+test("a ballot's geography, people and canonical pointers share one answer across concurrent requests", async () => {
   const firstSelection=selection("AZ"),secondSelection=selection("AZ"),zip="85701";
   const scope=(version:string)=>`US:plain-english-translations:ocd-division/country:us/state:az/cd:${version}`;
-  let version="before",release=()=>{},selectedStarted=()=>{},firstSettled=false,reads=0;
+  let version="before",release=()=>{},firstStarted=()=>{},reads=0;
   const held=new Promise<void>(resolve=>{release=resolve;});
-  const selecting=new Promise<void>(resolve=>{selectedStarted=resolve;});
-  installReaderDatabaseQuery(async statements=>{
-    const statement=statements[0];reads++;
-    if(statement.text.startsWith("WITH state_geography")){
-      const selectedVersion=String(statement.params[0]).replace("geography:","");
-      if(selectedVersion==="before"){selectedStarted();await held;}
-      const row=stateRows(selectedVersion,[],true)[0] as {part_payload:Record<string,unknown>[]};
-      return [[row.part_payload[0]]];
-    }
-    const row=stateRows(version,[],true)[0] as {part_payload:Record<string,unknown>[]};
-    row.part_payload[0].canonical_keys=[`CURATED_READER_RECORD:${scope(version)}`];
+  const starting=new Promise<void>(resolve=>{firstStarted=resolve;});
+  installReaderDatabaseQuery(async()=>{
+    reads++;
+    const selectedVersion=version;
+    const row=stateRows(selectedVersion,[],true)[0] as {part_payload:Record<string,unknown>[]};
+    row.part_payload[0].canonical_keys=[`CURATED_READER_RECORD:${scope(selectedVersion)}`];
+    if(selectedVersion==="before"){firstStarted();await held;}
     return [[row]];
   });
   try {
     const first=withReaderSelection(firstSelection,()=>readStatePackage("AZ",[],zip,{earlyDistricts:true}));
-    void first.then(()=>{firstSettled=true;},()=>{});
-    await selecting;
-    const districts=await withReaderSelection(firstSelection,()=>readStateDistricts("AZ"));
-    assert.equal(districts.kind,"HELD");
-    if(districts.kind==="HELD")assert.equal(districts.versionId,"geography:before");
-    await withReaderSelection(firstSelection,()=>primeStateDistrictPointers(first));
-    assert.equal(firstSettled,false,"geography and its canonical pointers arrive before selected people finish");
+    await starting;
     version="after";
     const second=withReaderSelection(secondSelection,()=>readStatePackage("AZ",[],zip,{earlyDistricts:true}));
     assert.notEqual(second,first);
+    const secondState=await second;
+    assert.equal(secondState.registry.registry.divisions[0].label,"after");
     await withReaderSelection(secondSelection,()=>primeStateDistrictPointers(second));
     const secondDistricts=await withReaderSelection(secondSelection,()=>readStateDistricts("AZ"));
     assert.equal(secondDistricts.kind,"HELD");
     if(secondDistricts.kind==="HELD")assert.equal(secondDistricts.versionId,"geography:after");
+    release();
+    const firstState=await first;
+    assert.equal(firstState.registry.registry.divisions[0].label,"before");
+    assert.equal(firstState.districts.kind,"HELD");
+    if(firstState.districts.kind==="HELD")assert.equal(firstState.districts.versionId,"geography:before");
+    await withReaderSelection(firstSelection,()=>primeStateDistrictPointers(first));
     for(const [selected,own,other] of [[firstSelection,"before","after"],[secondSelection,"after","before"]] as const)
       await withReaderSelection(selected,async()=>{
         assert.equal((await readerCanonicalEntry("CURATED_READER_RECORD",scope(own)))?.kind,"NOT_RECORDED");
         assert.equal(readerCanonicalEntry("CURATED_READER_RECORD",scope(other)),undefined);
       });
-    assert.equal((await second).registry.registry.divisions[0].label,"after");
-    assert.equal(reads,4,"each request reads its own district and selected-people statements");
-    release();
-    assert.equal((await first).registry.registry.divisions[0].label,"before");
-    assert.equal(await withReaderSelection(firstSelection,()=>readStateDistricts("AZ")),districts);
+    assert.equal(reads,2,"each request reads its own geography and selected people together once");
   } finally {release();installReaderDatabaseQuery(undefined);}
+});
+
+test("the ballot receives verified state authorities without waiting for member-office details", async () => {
+  let release = () => {}, started = () => {};
+  const blocked = new Promise<void>(resolve => { release = resolve; });
+  const officeStarted = new Promise<void>(resolve => { started = resolve; });
+  installReaderDatabaseQuery(async statements => {
+    if (statements[0].text.includes("collection='memberOffices'")) {
+      started(); await blocked; return [[]];
+    }
+    return [stateRows("early-authorities", [], true, true)];
+  });
+  try {
+    await withReaderSelection(selection("AZ"), async () => {
+      const state = readStatePackage("AZ", [], "85701", { earlyDistricts: true });
+      const authorities = readStateAuthorities(state);
+      await officeStarted;
+      let stateFinished = false;
+      void state.then(() => { stateFinished = true; });
+      const early = await authorities;
+      assert.equal(early.registryRead.kind, "PROMOTED");
+      assert.equal(stateFinished, false, "the separate office query remains pending");
+      release();
+      const complete = await state;
+      assert.equal(early.registryRead, complete.registryRead);
+      assert.equal(early.federalRead, complete.federalRead);
+    });
+  } finally { release(); installReaderDatabaseQuery(undefined); }
 });
 
 test("a failed state read remains failed for that request and a later request can retry", async () => {
@@ -274,24 +298,30 @@ test("the ballot submits state and place reads before its independent auxiliary 
   const { ballotPlaceFromParams } = await import("../lib/ballot/reader-place.ts");
   const order: string[] = [];
   const auxiliaryKeys: string[] = [];
+  const newDistrict = "ocd-division/country:us/state:az/cd:99";
+  const newTranslation = `US:plain-english-translations:${newDistrict}`;
   let release: (()=>void) | undefined;
   const blocked = new Promise<void>(resolve=>{ release=resolve; });
-  let releasePeople: (()=>void) | undefined;
-  const peopleBlocked = new Promise<void>(resolve=>{ releasePeople=resolve; });
   installReaderDatabaseQuery(async statements=>{
     assert.equal(statements.length,1);
     const statement=statements[0], keys=Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
-    if(statement.text.includes("AS zip_registry")&&!Array.isArray(statement.params[0])) {
-      order.push("state-people");await peopleBlocked;
-      const row=stateRows("priority-state",[],true).find(row=>"part_payload" in row);
-      assert.ok(row&&"part_payload" in row);return [[row.part_payload[0]]];
-    }
     if (keys.length && keys.every(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
-    const family=(statement.text.includes("AS zip_registry") || statement.text.includes("FROM geography")) || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices") ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
+    const family=statement.text.includes("additional AS MATERIALIZED") || statement.text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")) ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
     order.push(family);
     if (family === "auxiliary") auxiliaryKeys.push(...keys);
     await blocked;
-    if (family === "state") return [stateRows("priority-state",[],statement.text.includes("AS zip_registry"))];
+    if (family === "state") {
+      const rows = stateRows("priority-state",[],statement.text.includes("AS zip_registry"));
+      const additional = rows.find(row => "part_payload" in row) as { part_payload: Record<string, unknown>[] };
+      additional.part_payload[0].canonical_keys = [`CURATED_READER_RECORD:${newTranslation}`];
+      additional.part_payload[0].geography = [
+        { row_kind: "scope", type: "congressional_district", version: "cd:119", plan: "cd119", version_meta: {} },
+        { row_kind: "grouping", type: "congressional_district", version: "cd:119", plan: "cd119", geoid: "0499",
+          ocd_id: newDistrict, label: "Fixture district", state_abbr: "AZ", state_fips: "04",
+          overlaps: [{ zcta5: "85701", whole: true, fraction: 1 }] },
+      ];
+      return [rows];
+    }
     if (family === "place") {
       assert.equal(statement.text,PLACE_PAGES_SQL);
       const divisions=statement.params[1] as string[];
@@ -307,16 +337,15 @@ test("the ballot submits state and place reads before its independent auxiliary 
     assert.deepEqual(order,["state","place","auxiliary"],
       "the local lookup reaches the shared pool before any ballot auxiliary group can occupy its connection slot");
     for (const prefix of ["CURATED_READER_RECORD:US-AZ:official-ballot-navigation"]) assert.ok(auxiliaryKeys.some(key=>key.startsWith(prefix)),`the single auxiliary batch retains ${prefix}`);
-    assert.ok(auxiliaryKeys.every(key=>!key.startsWith("BALLOT_CANDIDACY:")), "the state supplies the ZIP ballot slice instead of re-reading the full state ballot");
+    assert.ok(auxiliaryKeys.every(key=>!key.startsWith("BALLOT_CANDIDACY:")), "the state supplies the selected ZIP ballot");
     assert.ok(auxiliaryKeys.every(key=>!key.startsWith("CANDIDATE_PROFILE:")&&!key.startsWith("CANDIDATE_PUBLICATION:")&&!key.endsWith(":candidate-campaign-sites-derived")),
       "candidate details wait for the displayed contests instead of reading the whole state's candidates");
     release!();
-    let registryFinished=false;void data.registryRead.then(()=>{registryFinished=true},()=>{registryFinished=true});
     await data.districtRead;
-    assert.equal(registryFinished,false,"the ballot's district selection and translations do not wait for people");
-    assert.deepEqual(order,["state","place","auxiliary","state-people"]);
-    releasePeople!();await data.registryRead;
-  } finally { release?.();releasePeople?.(); installReaderDatabaseQuery(undefined); }
+    assert.ok((await data.entry())?.ids.includes(newDistrict), "the geography adds a district outside the initial ZIP source");
+    await data.registryRead;
+    assert.deepEqual(order,["state","place","auxiliary"], "the ballot never repeats the geography or its held translation absences");
+  } finally { release?.(); installReaderDatabaseQuery(undefined); }
 });
 
 test("an unavailable local territory file leaves the ballot's canonical families available", async () => {
@@ -331,7 +360,7 @@ test("an unavailable local territory file leaves the ballot's canonical families
     }
     const keys=statements[0].params[0] as string[];
     assert.ok(Array.isArray(keys),"a failed territory read cannot submit a local place query");
-    if ((statements[0].text.includes("AS zip_registry") || statements[0].text.includes("FROM geography")) || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")||key==="CURATED_READER_RECORD:US:state-legislator-member-offices")) return [stateRows("territory-failure-state",[],statements[0].text.includes("AS zip_registry"))];
+    if (statements[0].text.includes("additional AS MATERIALIZED") || statements[0].text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [stateRows("territory-failure-state",[],statements[0].text.includes("AS zip_registry"))];
     if (keys.length && keys.every(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     auxiliaries++;
     return [[]];

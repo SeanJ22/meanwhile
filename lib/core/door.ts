@@ -10,6 +10,7 @@ import { saveCaptureCopy } from "../facts/source-copy.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import {fileEntityPlaces, type EntityPlace} from "../facts/entity-places.ts";
 import { resolveId } from "./resolve.ts";
+import { confirmFactSource, type FactConfirmation } from "../facts/confirmation.ts";
 
 export type Decision = "PUBLISH" | "CONFIRM" | "KEEP_CURRENT" | "FLAG_OWNER";
 
@@ -44,6 +45,10 @@ function officialSource(url: string, hosts: readonly string[], linkingPage?: Off
 export function decide(current: Side | null, incoming: Side, field?: string): Decision {
   if (current === null) return "PUBLISH";
   if (canonicalJson(current.value) === canonicalJson(incoming.value)) return "CONFIRM";
+  return decideDifferent(current, incoming, field);
+}
+
+function decideDifferent(current: Side, incoming: Side, field?: string): Decision {
   if (incoming.provenance === "OWNER") return "PUBLISH";
   if (current.provenance === "OWNER") return "FLAG_OWNER";
   if (field === "agenda_url" && (current.provenance === "OFFICIAL" || current.provenance === "FILING")
@@ -101,6 +106,7 @@ export async function ensureGoverningBody(query: Query, subjectId: string): Prom
 export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Date = new Date(),
   options: DoorOptions = {}): Promise<DoorOutcome> {
   let changed: ReaderCacheScope | undefined;
+  let confirmation: FactConfirmation | undefined;
   let refusedClaim: PublishInput | undefined;
   const outcome = await db.transaction<DoorOutcome>(async (query) => {
     const requested = input.subjectId ?? input.entity!.id;
@@ -143,17 +149,21 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       SELECT id FROM fact WHERE entity_id = $1 AND field = $2
       ORDER BY (status = 'live') DESC, id DESC LIMIT 1 FOR UPDATE
     ), own AS MATERIALIZED (
-      SELECT id, value, value_text, quote, second_copy_id, provenance_kind, source_copy_id, checked_at, status, held_reason FROM fact WHERE id = (SELECT id FROM head)
-    ) SELECT f.id, f.value, f.value_text, f.quote, f.second_copy_id, f.provenance_kind, f.status, f.held_reason, f.source_copy_id, f.checked_at,
+      SELECT id, value, value_text, quote, second_copy_id, provenance_kind, source_copy_id, checked_at, status, held_reason FROM checked_fact WHERE id = (SELECT id FROM head)
+    ) SELECT f.id, md5(f.value::text)=md5($3::jsonb::text) AS same_value,
+      f.value_text=$4 AS same_text, f.quote=$5 AS same_quote,
+      CASE WHEN $6::boolean THEN f.value#>>'{}' END AS agenda_value,
+      f.second_copy_id, f.provenance_kind, f.status, f.held_reason, f.source_copy_id, f.checked_at,
       coalesce(s.fetched_at,f.checked_at) AS fetched_at,s.final_url AS source_url
-      FROM own f LEFT JOIN source_copy s ON s.id=f.source_copy_id`, [c.entity.id, c.field]);
+      FROM own f LEFT JOIN source_copy s ON s.id=f.source_copy_id`,
+      [c.entity.id, c.field, JSON.stringify(c.value), c.valueText, c.quote, !fast && c.field === "agenda_url"]);
     const row = head?.status === "live" ? head : undefined;
     // Replaying an already checked source is a no-op, including after its freshness window.
     // It does not refresh the checked date, publish a value, or count another delivery.
     const repeated = campaignSelf && row && Number(row.source_copy_id) === c.copy.id && (row.provenance_kind === c.provenance || row.provenance_kind === input.provenance)
       && c.copy.fetchedAt.getTime() <= Math.max(new Date(row.fetched_at as string).getTime(), new Date(row.checked_at as string).getTime())
-      && row.quote === c.quote && row.value_text === c.valueText && (row.second_copy_id === null ? null : Number(row.second_copy_id)) === (c.second?.copy.id ?? null)
-      && canonicalJson(row.value) === canonicalJson(c.value);
+      && row.same_quote && row.same_text && (row.second_copy_id === null ? null : Number(row.second_copy_id)) === (c.second?.copy.id ?? null)
+      && row.same_value;
     const verdict = repeated ? {ok:true as const,quoteStart:null} : !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
       : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
     if (!verdict.ok) {
@@ -166,19 +176,19 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     }
     if (repeated) return {decision:"CONFIRM",factId:Number(row!.id)};
     // Sean removed this value; the same words from a source do not put it back, a different value does.
-    if (!row && head?.held_reason === "OWNER_REMOVED" && canonicalJson(head.value) === canonicalJson(c.value)) return { decision: "KEEP_CURRENT", factId: null };
+    if (!row && head?.held_reason === "OWNER_REMOVED" && head.same_value) return { decision: "KEEP_CURRENT", factId: null };
     const currentProvenance = row?.provenance_kind === "OWNER" || row?.provenance_kind === "FILING" ? row.provenance_kind
       : row?.source_url && (isOfficialUrl(String(row.source_url),entity.hosts) || isSourceApiUrl(String(row.source_url))) ? "OFFICIAL" : row?.provenance_kind;
-    const decision = decide(row ? { value: row.value, provenance: currentProvenance as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string), sourceUrl: row.source_url as string } : null,
+    const decision = !row ? "PUBLISH" : row.same_value ? "CONFIRM" : decideDifferent(
+      { value: row.agenda_value, provenance: currentProvenance as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string), sourceUrl: row.source_url as string },
       { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt }, fast ? undefined : c.field);
     if (decision === "CONFIRM") {
       if (row!.provenance_kind !== "OWNER" && rank[c.provenance] <= rank[row!.provenance_kind as Provenance]
         && (rank[c.provenance] < rank[row!.provenance_kind as Provenance] || c.copy.fetchedAt > new Date(row!.fetched_at as string))) {
-        await query(`UPDATE fact SET checked_at=$2,source_copy_id=$3,quote=$4,quote_start=$5,second_copy_id=$6,provenance_kind=$7,value_text=$8 WHERE id=$1`,
-        [row!.id,now.toISOString(),c.copy.id,c.quote,verdict.quoteStart,c.second?.copy.id ?? null,c.provenance,c.valueText]);
+        confirmation = {copyId:c.copy.id,scope:`door:${c.producedBy}`,at:now.toISOString(),factIds:[Number(row!.id)],
+          receipts:{[String(row!.id)]:{quote:c.quote,quote_start:verdict.quoteStart,second_copy_id:c.second?.copy.id ?? null,
+            provenance_kind:c.provenance,value_text:c.valueText}}};
         await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [c.entity.id, c.field]);
-        await enqueueReaderPlaces({ entities: [entity.id] }, query);
-        changed = await readerCacheScopeForEntity(query, entity.id);
       }
       return { decision, factId: Number(row!.id) };
     }
@@ -210,6 +220,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
   });
   // The work list can be on another database. Release the fact transaction before handing off a refusal.
   if ("refused" in outcome && refusedClaim) await options.refusal?.(refusedClaim, outcome.refused);
+  if (confirmation) await confirmFactSource(db,confirmation,options.purge);
   if (changed) await invalidateReaderCache(changed, options.purge, null);
   return outcome;
 }

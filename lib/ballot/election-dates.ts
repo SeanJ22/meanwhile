@@ -1,4 +1,7 @@
+import { orderedDeadlines } from "./deadline-summary.ts";
+
 export interface DatedStep {
+  audience?: "GENERAL" | "MILITARY_OVERSEAS";
   label: string;
   date: string;
   detail: string | null;
@@ -47,11 +50,11 @@ export function electionDatesFor(state: string, projection: readonly ElectionDat
   const published = projection.find(calendar => calendar.state === state && calendar.electionDay === electionDay) ?? null;
   const held = builtInElectionDatesFor(state);
   if (!held?.verifiedAt || held.electionDay !== electionDay) return published;
-  const supplied = new Set(published?.steps.map(step => dateTopic(step.label)) ?? []);
+  const supplied = new Set(published?.steps.filter(step => step.audience !== "MILITARY_OVERSEAS").map(step => dateTopic(step.label)) ?? []);
   const retained = held.steps.filter(step => step.label !== "Election Day" && !supplied.has(dateTopic(step.label)))
     .map(step => ({ ...step, label: DATE_LABELS[dateTopic(step.label)] ?? step.label,
       sourceUrl: held.sourceUrl, sourceOrg: held.sourceOrg, collectedAt: held.collectedAt, verifiedAt: held.verifiedAt! }));
-  return { state, electionDay, steps: [...(published?.steps ?? []), ...retained] };
+  return { state, electionDay, steps: orderedDeadlines([...(published?.steps ?? []), ...retained]) };
 }
 
 /** Existing sourced dates remain available until that field has a replacement. */

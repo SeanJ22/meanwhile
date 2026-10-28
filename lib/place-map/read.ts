@@ -60,22 +60,46 @@ function selected(rows: readonly PlaceMembership[], selection: GeographySelectio
   return result;
 }
 
-/** Shared by single-code reads and bounded state enumeration. */
-export const CODE_MEMBERSHIP_SQL = `json_build_object(
+const membershipSql = (partial: string) => `json_build_object(
       'placeId',e.id,'name',e.name,'state',e.state,'layer',b.layer,'boundaryYear',b.boundary_year,'version',b.version,
-      'share',m.share,'shareBasis',m.share_basis,'partial',m.partial,'fringe',m.fringe,
+      'share',m.share,'shareBasis',m.share_basis,'partial',${partial},'fringe',m.fringe,
       'countyAttachment',b.county_attachment,'hostCountyId',b.host_county_id
     )`;
 
-/** RB-A10's ZIP and ZCTA entry point. Each call performs one indexed table lookup. */
+/** Shared by single-code reads and bounded state enumeration. */
+const CODE_MEMBERSHIP_SQL = membershipSql("m.partial");
+
+/** A mail-only ZIP that borrows another ZCTA's area (postalAreaNeedsAddress) holds its own town and county rows. That
+ * ZCTA's school, special and tribal districts reach it through the postal link as ones that could govern the box
+ * holder, never as settled; its legislative districts wait for a residential address. `codes` is the SQL text array of
+ * requested ZIPs. Each linked ZIP reads its ZCTA by index: OFFSET 0 keeps the planner from turning a state's links into
+ * a hash join over every ZCTA's rows. */
+const postalLinkRows = (codes: string) => `SELECT l.zip AS code,x.place_id,x.boundary_year,x.membership
+    FROM (SELECT DISTINCT ON(zip) zip,postal->>'type' AS type,postal->>'zcta' AS zcta FROM zip_location
+      WHERE zip=ANY(${codes}) ORDER BY zip,boundary_year DESC) l
+    CROSS JOIN LATERAL (SELECT e.id AS place_id,b.boundary_year,${membershipSql("true")} AS membership
+      FROM zcta_place m JOIN entity e ON e.id=m.place_id
+      JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
+      WHERE m.zcta=l.zcta AND e.kind='place' AND b.layer NOT IN ('state','county','place','cousub','cd','sldu','sldl') OFFSET 0) x
+    WHERE l.type IS DISTINCT FROM 'standard' AND l.zcta<>l.zip`;
+
+/** Every membership row of the requested codes, grouped per code. ZIP reads include what a mail-only ZIP's postal link
+ * supplies unless `postalLinks` is false. */
+export function codeMembershipsSql(kind: "zip" | "zcta", codes: string, postalLinks = true): string {
+  const table = kind === "zip" ? "zip_place" : "zcta_place";
+  const own = `SELECT m.${kind} AS code,e.id AS place_id,b.boundary_year,${CODE_MEMBERSHIP_SQL} AS membership
+    FROM ${table} m JOIN entity e ON e.id=m.place_id
+    JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
+    WHERE m.${kind}=ANY(${codes}) AND e.kind='place'`;
+  return `SELECT r.code AS ${kind},json_agg(r.membership ORDER BY r.place_id,r.boundary_year) AS memberships
+    FROM (${own}${kind === "zip" && postalLinks ? ` UNION ALL ${postalLinkRows(codes)}` : ""}) r GROUP BY r.code ORDER BY r.code`;
+}
+
+/** RB-A10's ZIP and ZCTA entry point. Each call performs one indexed statement. */
 export async function placesForCode(query: Query, kind: "zip" | "zcta", code: string,
   selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceMapResult> {
   if (!/^\d{5}$/.test(code)) throw new Error("A five-digit ZIP or ZCTA is required");
-  const table = kind === "zip" ? "zip_place" : "zcta_place";
-  const rows = await query(`SELECT coalesce(json_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year),'[]'::json) AS memberships
-    FROM ${table} m JOIN entity e ON e.id=m.place_id
-    JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
-    WHERE m.${kind}=$1 AND e.kind='place'`, [code]);
+  const rows = await query(codeMembershipsSql(kind, "$1::text[]"), [[code]]);
   // RB-A10 also supplies already fetched state rows through Query, sharing
   // the same selection across every ZIP without another database round trip.
   const normalized = rows.length === 1 && "memberships" in rows[0] ? rows[0].memberships : rows.map(membership);

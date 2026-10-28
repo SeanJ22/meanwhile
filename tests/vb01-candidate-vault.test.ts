@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { candidateChangeSet, civicRecordsFor } from "../lib/civic-data/changes.ts";
-import { holdCandidateFacts, hydrateCandidateFacts, readCivicCandidatePath, readCivicCandidateEvidenceRows, rebuildCandidateChanges } from "../lib/civic-data/candidate-vault.ts";
+import { holdCandidateFacts, hydrateCandidateFacts, readCivicCandidatePath, readCivicCandidateEvidenceRows, readCivicCandidateExcludedRows, rebuildCandidateChanges } from "../lib/civic-data/candidate-vault.ts";
 import { civicVersionRef, holdCivicVersion } from "../lib/civic-data/version-vault.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
@@ -48,6 +48,23 @@ test("source-evidence selection reads only the matching capture from the vault",
   const rows=await readCivicCandidateEvidenceRows(query,vault,input.id,["captures"],{match:{path:["finalUrl"],values:[captures[0].finalUrl]}});
   assert.deepEqual(rows,[{ordinal:1,value:captures[0]}]);
   assert.equal(JSON.stringify(rows).includes("unrelated"),false);
+});
+
+test("portrait schedule selects a held fact and its small fields without unrelated evidence",async()=>{
+  const vault=new MemoryEvidenceStore(),input=candidate();
+  const schedule={code:"PEOPLE_PORTRAIT_SCHEDULE",detail:"schedule",record:{nextDueAt:"2026-10-28T00:00:00Z",seen:{versions:{x:"digest"},local:null}}};
+  const facts=[{code:"OTHER",detail:"unrelated",record:{body:"unrelated evidence ".repeat(20_000)}},schedule];
+  const stored=await holdCandidateFacts(vault,{...input,excludedFacts:facts} as RoutineCandidate,null,{retainReadModel:false});
+  assert.deepEqual(stored.vault.portraitSchedule,schedule.record);
+  assert.ok(stored.vault.workClock?.nextDates.includes(schedule.record.nextDueAt));
+  const get=vault.get.bind(vault);let unrelatedRead=false;
+  vault.get=async key=>{const object=await get(key);if(object&&new TextDecoder().decode(object.bytes).includes("unrelated evidence"))unrelatedRead=true;return object;};
+  const query=async()=>[{vault:stored.vault}];
+  const rows=await readCivicCandidateExcludedRows(query,vault,input.id,{match:{path:["code"],values:[schedule.code]},fields:[],limit:1});
+  assert.deepEqual(rows,[{ordinal:2,value:{}}]);
+  assert.equal(await readCivicCandidatePath(query,vault,input.id,["excludedFacts","1","record","nextDueAt"]),schedule.record.nextDueAt);
+  assert.deepEqual(await readCivicCandidatePath(query,vault,input.id,["excludedFacts","1","record","seen"]),schedule.record.seen);
+  assert.equal(unrelatedRead,false);
 });
 
 test("transition format retains readModel until historical readers switch; failed evidence keeps its actual vault identity",async()=>{

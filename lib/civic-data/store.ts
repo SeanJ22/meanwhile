@@ -2877,14 +2877,21 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readPortraitRunState(scope: string): Promise<PortraitRunState | null> {
     return this.readVersioned("portrait-run-state", "STATE_LEGISLATOR", scope, async () => {
-      // The record itself is about 1 MB and its attempts about 200 KB; only its schedule's due time and list stamp leave the database.
-      const [row] = (await this.db.execute(sql`select
-        (select jsonb_build_object('nextDueAt', f#>'{record,nextDueAt}', 'seen', f#>'{record,seen}')
-          from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
-            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' = ${PORTRAIT_SCHEDULE_CODE} limit 1) as schedule
-      from civic_data_promotions p join civic_data_candidates c on c.id = p.current_version_id
-      where p.record_class = 'STATE_LEGISLATOR' and p.scope = ${scope}`)).rows as { schedule: { nextDueAt?: string | null; seen?: PortraitStamp | null } | null }[];
-      return row ? { nextDueAt: row.schedule?.nextDueAt ?? null, seen: row.schedule?.seen ?? null } : null;
+      const [row]=(await this.db.execute(sql`select c.id, c.candidate#>'{vault,portraitSchedule}' AS schedule,
+        coalesce(c.candidate->'vault' ? 'portraitSchedule',false) AS schedule_present from civic_data_promotions p
+        join civic_data_candidates c on c.id=p.current_version_id where p.record_class='STATE_LEGISLATOR' and p.scope=${scope}`)).rows as {
+          id:string;schedule_present:boolean;schedule:{nextDueAt?:string|null;seen?:PortraitStamp|null}|null}[];
+      if(!row)return null;
+      if(row.schedule_present)return {nextDueAt:row.schedule?.nextDueAt??null,seen:row.schedule?.seen??null};
+      const [{readCivicCandidateExcludedRows,readCivicCandidatePath},{rawCaptureVault}]=await Promise.all([
+        import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
+      const query=(text:string,params:readonly unknown[]=[])=>this.readerRows(text,params),vault=this.cacheOptions.vault??rawCaptureVault;
+      const [schedule]=await readCivicCandidateExcludedRows(query,vault,row.id,{match:{path:["code"],values:[PORTRAIT_SCHEDULE_CODE]},fields:[],limit:1});
+      if(!schedule)return {nextDueAt:null,seen:null};
+      const base=["excludedFacts",String(schedule.ordinal-1),"record"];
+      const [nextDueAt,seen]=await Promise.all([readCivicCandidatePath(query,vault,row.id,[...base,"nextDueAt"]),
+        readCivicCandidatePath(query,vault,row.id,[...base,"seen"])]);
+      return {nextDueAt:(nextDueAt??null) as string|null,seen:seen as PortraitStamp|null};
     });
   }
 

@@ -203,10 +203,10 @@ async function transferred<T>(work: () => Promise<T>): Promise<{ value: T; bytes
 }
 
 /** A pass in a runner process whose disposable read copies are gone, as on a production host: every read asks the database. */
-async function withoutCopies<T>(work: (store: PostgresRoutineDataStore) => Promise<T>): Promise<T> {
+async function withoutCopies<T>(vault: EvidenceStore, work: (store: PostgresRoutineDataStore) => Promise<T>): Promise<T> {
   const names = ["WTP_CIVIC_READ_CACHE_URL", "WTP_CIVIC_READ_CACHE_TOKEN"], prior = names.map(name => process.env[name]);
   process.env.WTP_CIVIC_READ_CACHE_URL = "http://127.0.0.1:1"; process.env.WTP_CIVIC_READ_CACHE_TOKEN = "gone";
-  try { return await work(new PostgresRoutineDataStore()); }
+  try { return await work(new PostgresRoutineDataStore({vault})); }
   finally { names.forEach((name, index) => prior[index] === undefined ? delete process.env[name] : process.env[name] = prior[index]); }
 }
 
@@ -231,14 +231,14 @@ test("hour after hour, a record without a list stamp is decided from small rows,
     const { record, as } = await portraitState(store, pgVault, 3);
     // The records written before the schedule fact existed (55 of 57 states on Oct 27) hold attempts and no list stamp.
     await pg.exec("ALTER TABLE civic_data_candidates DISABLE TRIGGER USER");
-    await pg.query(`UPDATE civic_data_candidates c SET candidate = jsonb_set(c.candidate, '{excludedFacts}',
+    await pg.query(`UPDATE civic_data_candidates c SET candidate = jsonb_set(c.candidate - 'vault', '{excludedFacts}',
       (SELECT jsonb_agg(f) FROM jsonb_array_elements(c.candidate->'excludedFacts') f WHERE f->>'code' <> $1))
       FROM civic_data_promotions p WHERE p.scope = $2 AND c.id = p.current_version_id`, [PORTRAIT_SCHEDULE_CODE, record]);
     await pg.exec("ALTER TABLE civic_data_candidates ENABLE TRIGGER USER");
     assert.equal((await store.readPortraitRunState(record))?.seen, null);
     const passes = [];
     for (const hour of ["2026-10-10T16:00:00.000Z", "2026-10-10T17:00:00.000Z"]) {
-      passes.push(await withoutCopies(runner => transferred(() => portraitRunNeeded(runner, "az", hour, null))));
+      passes.push(await withoutCopies(pgVault, runner => transferred(() => portraitRunNeeded(runner, "az", hour, null))));
     }
     t.diagnostic(`decision without a stamp: ${passes.map(pass => `${pass.bytes} B in ${pass.responses} responses naming ${pass.named.size} people (${pass.value.reason})`).join("; ")}`);
     for (const pass of passes) {
@@ -252,9 +252,12 @@ test("hour after hour, a record without a list stamp is decided from small rows,
     await refreshPeoplePortraits({ store, vault: pgVault, state: "az", query: null, options: { now: () => "2026-10-10T17:00:06.000Z",
       storePortrait: await imageStore(), acquire: async options => { stamped.push(options.url); return profile(options); } } });
     assert.deepEqual(stamped, [], "no one is due, so no page is read");
-    const rest = await withoutCopies(runner => transferred(() => portraitRunNeeded(runner, "az", "2026-10-10T18:00:00.000Z", null)));
+    const get=pgVault.get.bind(pgVault);let vaultReads=0;
+    pgVault.get=async key=>{vaultReads++;return get(key);};
+    const rest = await withoutCopies(pgVault, runner => transferred(() => portraitRunNeeded(runner, "az", "2026-10-10T18:00:00.000Z", null)));
     assert.equal(rest.value.needed, false, rest.value.reason);
     assert.deepEqual([...rest.named], []);
+    assert.equal(vaultReads,0,"a repeat scheduling decision reads fingerprints and schedule metadata, not stored evidence");
   });
 });
 
@@ -266,7 +269,7 @@ test("unchanged rosters cost only version rows, a due retry reads only that pers
     const quiet = [];
     for (const now of [DAY, "2026-10-11T21:00:00.000Z"]) {
       const attempts = await heldAttempts(store, now);
-      quiet.push(await withoutCopies(runner => transferred(() => portraitList(runner, "az", now, attempts, null))));
+      quiet.push(await withoutCopies(pgVault, runner => transferred(() => portraitList(runner, "az", now, attempts, null))));
     }
     for (const pass of quiet) {
       assert.deepEqual([...pass.named], [], "no one is read while their rosters are unchanged and no retry is due");
@@ -276,14 +279,14 @@ test("unchanged rosters cost only version rows, a due retry reads only that pers
     }
     // A week on, member 2's retry is due: only member 2 is read. Members 0 and 1, whose portraits show, never are.
     const attempts = await heldAttempts(store, WEEK);
-    const retry = await withoutCopies(runner => transferred(() => portraitList(runner, "az", WEEK, attempts, null)));
+    const retry = await withoutCopies(pgVault, runner => transferred(() => portraitList(runner, "az", WEEK, attempts, null)));
     assert.deepEqual([...retry.named], [2]);
     assert.deepEqual(retry.value.due.people.map(person => person.name), ["Jane Member 2"]);
     // Open States names a fourth member: its roster changed, so its people without a shown portrait are read, and no one else.
     as("openstates-people-az");
     await publishPeople(store, 4, "b".repeat(40), "2026-10-11T20:00:00.000Z", pgVault);
     const changedAttempts = await heldAttempts(store, DAY);
-    const changed = await withoutCopies(runner => transferred(() => portraitList(runner, "az", "2026-10-11T21:00:00.000Z", changedAttempts, null)));
+    const changed = await withoutCopies(pgVault, runner => transferred(() => portraitList(runner, "az", "2026-10-11T21:00:00.000Z", changedAttempts, null)));
     assert.deepEqual([...changed.named].sort(), [2, 3]);
     assert.deepEqual(changed.value.due.people.map(person => person.name), ["Jane Member 3"]);
     assert.deepEqual(changed.value.unverified.people.map(person => person.name).sort(), ["Jane Member 2", "Jane Member 3"]);

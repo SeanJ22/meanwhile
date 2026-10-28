@@ -5,6 +5,7 @@ import { candidateChangeSet, civicRecordsFor } from "./changes.ts";
 import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionKind, readCivicVersionPath, readCivicVersionRows, readCivicVersionText,
   type CivicVersionVaultRef, type CivicVersionRowSelection, type CivicVersionTextRange } from "./version-vault.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "./types.ts";
+import { sourceWorkClockMetadata, type SourceWorkClockMetadata } from "./source-work-clock.ts";
 
 interface VaultPath { readonly version: CivicVersionVaultRef; readonly path: readonly string[] }
 export interface CandidateVaultFormat {
@@ -17,6 +18,9 @@ export interface CandidateVaultFormat {
   readonly inlineEvidence?: true;
   readonly civicRecords?: "DERIVED" | CivicVersionVaultRef;
   readonly excludedFactsPresent?: true;
+  /** Small scheduling facts and input fingerprints, independent of the held source body. */
+  readonly workClock?: SourceWorkClockMetadata;
+  readonly portraitSchedule?: {readonly nextDueAt:unknown;readonly seen:unknown}|null;
 }
 export type VaultCandidate = Omit<RoutineCandidate,"readModel"|"normalizedPayload"|"excludedFacts"|"civicRecords"|"changeSet"> & {
   readonly vault: CandidateVaultFormat;
@@ -58,10 +62,14 @@ export async function holdCandidateFacts(vault:EvidenceStore,candidate:RoutineCa
     hash(candidate.civicRecords)===hash(civicRecordsFor(candidate.recordClass,candidate.readModel))?"DERIVED" as const:
       await holdCivicVersion(vault,candidate.civicRecords,hash(candidate.civicRecords));
   const {readModel:_model,normalizedPayload:_normalized,excludedFacts:_facts,changeSet:_changes,civicRecords:_members,...metadata}=candidate;
+  const portraitFact=candidate.excludedFacts?.find(fact=>fact.code==="PEOPLE_PORTRAIT_SCHEDULE");
+  const portraitRecord=object(portraitFact?.record);
+  const portraitSchedule=portraitFact?{nextDueAt:portraitRecord?.nextDueAt??null,seen:portraitRecord?.seen??null}:null;
   return {...metadata,normalizedPayload:options.retainEvidence?candidate.normalizedPayload as Record<string,unknown>:sourceMetadata(candidate.normalizedPayload),
     ...(options.retainEvidence&&candidate.excludedFacts?{excludedFacts:candidate.excludedFacts}:{}),
     ...(options.retainReadModel?{readModel:candidate.readModel}:{}),
     vault:{formatVersion:1,readModel,normalizedPayload,excludedFacts,previousFingerprint,
+      workClock:sourceWorkClockMetadata(candidate),portraitSchedule,
       ...(civicRecords?{civicRecords}:{}),...(candidate.excludedFacts!==undefined?{excludedFactsPresent:true as const}:{}),
       ...(options.retainEvidence?{inlineEvidence:true as const}:{})}};
 }
@@ -123,7 +131,10 @@ export async function readCivicCandidatePath(query:Query,vault:EvidenceStore|(()
   }
   const [row]=await query(`WITH RECURSIVE selected(value,depth) AS (
     SELECT candidate,0 FROM civic_data_candidates WHERE id=$1
-    UNION ALL SELECT reader_payload_node(value)->($2::text[])[depth+1],depth+1 FROM selected WHERE depth<cardinality($2::text[])
+    UNION ALL SELECT CASE WHEN jsonb_typeof(reader_payload_node(value))='array' OR reader_payload_node(value)->>'kind'='array'
+      THEN CASE WHEN ($2::text[])[depth+1]~'^[0-9]{1,9}$'
+        THEN (SELECT item FROM reader_payload_members(value) WHERE ordinal_index=(($2::text[])[depth+1])::int+1) END
+      ELSE reader_payload_node(value)->($2::text[])[depth+1] END,depth+1 FROM selected WHERE depth<cardinality($2::text[])
   ) SELECT reader_payload_value(value) AS value FROM selected ORDER BY depth DESC LIMIT 1`,[id,[...path]]);
   return row?.value??null;
 }
@@ -146,19 +157,20 @@ export const readCivicCandidateText = (query: Query, vault: EvidenceStore | (() 
   path: readonly string[], range: CivicVersionTextRange = {}) => readCivicVersionText(query, vault, id, path, range);
 
 /** Select source-evidence rows without returning the complete candidate envelope. */
-export async function readCivicCandidateEvidenceRows(query:Query,vault:EvidenceStore|(()=>EvidenceStore),id:string,
-  path:readonly string[],selection:CivicVersionRowSelection={}) {
-  if (!path.length || !Number.isSafeInteger(selection.afterOrdinal??0) || (selection.afterOrdinal??0)<0 ||
+async function readCandidateEvidenceRows(query:Query,vault:EvidenceStore|(()=>EvidenceStore),id:string,
+  root:"normalizedPayload"|"excludedFacts",path:readonly string[],selection:CivicVersionRowSelection={}) {
+  if ((root==="normalizedPayload"&&!path.length) || !Number.isSafeInteger(selection.afterOrdinal??0) || (selection.afterOrdinal??0)<0 ||
       selection.limit!==undefined && (!Number.isSafeInteger(selection.limit)||selection.limit<1)) throw new Error("CIVIC_CANDIDATE_ROW_RANGE_INVALID");
   const [header]=await query("SELECT candidate->'vault' AS vault FROM civic_data_candidates WHERE id=$1",[id]);
   if(!header)return [];
   const format=candidateVaultFormat(header);
   if(format){
-    if(!format.normalizedPayload)return [];
-    return civicVersionVault(typeof vault==="function"?vault():vault).rows(format.normalizedPayload,path,selection);
+    const target=root==="normalizedPayload"?(format.normalizedPayload?{version:format.normalizedPayload,path:[] as readonly string[]}:null):format.excludedFacts;
+    if(!target)return [];
+    return civicVersionVault(typeof vault==="function"?vault():vault).rows(target.version,[...target.path,...path],selection);
   }
   const rows=await query(`WITH RECURSIVE selected(value,depth) AS (
-    SELECT reader_payload_node(candidate)->'normalizedPayload',0 FROM civic_data_candidates WHERE id=$1
+    SELECT reader_payload_node(candidate)->'${root}',0 FROM civic_data_candidates WHERE id=$1
     UNION ALL SELECT reader_payload_node(value)->($2::text[])[depth+1],depth+1 FROM selected WHERE depth<cardinality($2::text[])
   ), members AS (SELECT ordinal_index,reader_payload_node(item) AS value FROM selected,
     LATERAL reader_payload_members(selected.value) WHERE depth=cardinality($2::text[]))
@@ -170,3 +182,8 @@ export async function readCivicCandidateEvidenceRows(query:Query,vault:EvidenceS
       selection.match?[...selection.match.values]:null,selection.fields?[...selection.fields]:null,[...selection.omit??[]],selection.afterOrdinal??0,selection.limit??null,selection.skipNonObjects?1:0]);
   return rows.map(row=>({ordinal:Number(row.ordinal),value:row.value as Record<string,unknown>}));
 }
+
+export const readCivicCandidateEvidenceRows=(query:Query,vault:EvidenceStore|(()=>EvidenceStore),id:string,
+  path:readonly string[],selection:CivicVersionRowSelection={})=>readCandidateEvidenceRows(query,vault,id,"normalizedPayload",path,selection);
+export const readCivicCandidateExcludedRows=(query:Query,vault:EvidenceStore|(()=>EvidenceStore),id:string,
+  selection:CivicVersionRowSelection={})=>readCandidateEvidenceRows(query,vault,id,"excludedFacts",[],selection);

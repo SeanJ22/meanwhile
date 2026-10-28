@@ -4,6 +4,10 @@ import { join, resolve } from "node:path";
 import test from "node:test";
 
 import { drizzle } from "drizzle-orm/neon-http";
+import { sql } from "drizzle-orm";
+import { PgDialect } from "drizzle-orm/pg-core";
+import { PGlite } from "@electric-sql/pglite";
+import { sourceWorkClockMetadata, sourceWorkClockSql } from "../lib/civic-data/source-work-clock.ts";
 
 import * as schema from "../lib/db/schema.ts";
 import {
@@ -167,7 +171,8 @@ test("the routine clock reads a pointer's identity and proof, never its promoted
 test("the routine clock builds its candidate view in Postgres; the payload and read model never leave the database", () => {
   const select = selectList(routineClockCandidateRead(drizzle.mock({ schema }), "cv-example"));
   assert.doesNotMatch(select,/->'readModel'|->'retainedSourceResponses'|->'identities'/);
-  assert.match(select,/'nextWorkAt',\(SELECT min\(value\)/,"only an aggregated work date leaves source plans");
+  assert.match(select,/'nextWorkAt',CASE WHEN[\s\S]*workClock/,"only the stored work date or an aggregated legacy date leaves source plans");
+  assert.match(select,/SELECT min\(value\)/,"legacy source dates remain aggregated");
   assert.match(select,/'workPending',CASE WHEN/,"continuation leaves source plans as one boolean");
   assert.doesNotMatch(select, /"candidate"(?!\s*(?:->|#>))/, "the whole candidate column is never selected");
   assert.match(select, /jsonb_strip_nulls\(jsonb_build_object\(/);
@@ -202,6 +207,25 @@ test("source plans and portrait blank schedules expose only their earliest work 
   assert.doesNotMatch(JSON.stringify(view),/large source metadata|held person|sourceProbe/);
   const failed=routineClockCandidateView({...value,excludedFacts:[],retrieval:{...value.retrieval,complete:false}});
   assert.equal(failed.workPending,undefined,"an incomplete HTTP/parser result alone does not declare a successful cutoff");
+});
+
+test("compact work metadata preserves the existing Postgres date and pending decisions",async()=>{
+  const pg=new PGlite();
+  try{
+    await pg.exec("CREATE TABLE candidate_clock(candidate jsonb); CREATE TABLE civic_data_payload_parts(hash text,payload jsonb)");
+    const functions=readFileSync(join(ROOT,"lib/db/migrations/0036_ne01.sql"),"utf8").split("--> statement-breakpoint")
+      .filter(statement=>/^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(statement));
+    for(const statement of functions)await pg.exec(statement);
+    const value=candidate("clock-offsets",{normalizedPayload:{sourceProbe:{nextTermAt:"2026-10-28T09:00:00-07:00",nextDueAt:"2026-10-28T10:00:00+02:00"}},
+      excludedFacts:[{key:"schedule",code:"PEOPLE_PORTRAIT_SCHEDULE",detail:"schedule",record:{nextDueAt:"2026-10-28T08:00:00Z"}},
+        {key:"pending",code:"STATE_PORTRAIT_WORK_REMAINS",detail:"remaining"}]});
+    const metadata=sourceWorkClockMetadata(value);
+    await pg.query("INSERT INTO candidate_clock VALUES($1),($2)",[value,{vault:{workClock:metadata}}]);
+    const selected=sourceWorkClockSql(sql.raw("candidate"));
+    const statement=new PgDialect().sqlToQuery(sql`SELECT ${selected.nextWorkAt} AS next_work_at,${selected.workPending} AS work_pending FROM candidate_clock`);
+    const rows=(await pg.query(statement.sql,statement.params)).rows;
+    assert.deepEqual(rows[1],rows[0]);
+  }finally{await pg.close();}
 });
 
 test("both stores' clocks read through the narrowed view, never a whole row", () => {

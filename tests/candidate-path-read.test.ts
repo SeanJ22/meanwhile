@@ -40,7 +40,7 @@ test("candidate fields cross Postgres inline or through just their own payload p
     assert.match(request.query, /^\s*(WITH|SELECT)\b/i);
     const result = await pg.query<Record<string, unknown>>(request.query, request.params);
     const body = JSON.stringify({ command: "SELECT", rowCount: result.rows.length, rowAsArray: true, fields: result.fields,
-      rows: result.rows.map(row => result.fields.map(field => row[field.name] === null ? null : typeof row[field.name] === "object"
+      rows: result.rows.map(row => result.fields.map(field => row[field.name] === null ? null : field.dataTypeID === 3802 || field.dataTypeID === 114 || typeof row[field.name] === "object"
         ? JSON.stringify(row[field.name]) : String(row[field.name]))) });
     bodies.push(body);
     return new Response(body);
@@ -48,6 +48,8 @@ test("candidate fields cross Postgres inline or through just their own payload p
   const store = new PostgresRoutineDataStore();
   for (const id of ["inline", "partitioned"]) assert.deepEqual(await store.readCandidatePath(id, ["normalizedPayload", "captures"]), captures);
   for (const id of ["inline", "partitioned"]) assert.deepEqual(await store.readCandidateCaptures(id, [captures[0].requestedUrl], []), captures);
+  assert.equal(await store.readCandidatePath("inline", ["normalizedPayload", "captures", "0", "rawHash"]), "old-capture");
+  assert.equal(await store.readCandidatePath("inline", ["normalizedPayload", "captures", "not-an-index"]), null);
   assert.equal(await store.readCandidatePath("missing", ["normalizedPayload", "captures"]), null);
   assert.equal(await store.readCandidatePath("inline", ["normalizedPayload", "missing"]), null);
   assert.ok(statements.some(query => query.includes("reader_payload_node")), "partitioned field is selected through the payload accessor");

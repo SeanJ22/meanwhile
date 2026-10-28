@@ -4,6 +4,7 @@ import { Fragment, useMemo, useState } from "react";
 
 import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
 
+import { DatabaseReadingLine } from "./database-reading-line.tsx";
 import { PausedJobsPanel } from "./paused-jobs-panel.tsx";
 import { useKeeperScoreboard } from "./use-keeper-scoreboard.ts";
 import { useV6 } from "./context.tsx";
@@ -39,6 +40,7 @@ export function NowScreen() {
         <p className={cx(s.eyebrow, s.nowEyebrow)}>{v.place.name} · {periodLabel(v.period, new Date())}</p>
         <h1 className={cx(s.h1, s.nowH1)}>Now</h1>
       </header>
+      <DatabaseReadingLine />
       {nationalDepth(v.scopeKey) !== null && <National />}
       <DirectWork />
       <OfficialsChecks />

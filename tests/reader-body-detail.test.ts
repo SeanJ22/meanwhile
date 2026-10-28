@@ -21,7 +21,9 @@ const registryPointerSchema = `CREATE TABLE civic_data_promotions(key text PRIMA
     validation_receipt jsonb,candidate jsonb,normalized_hash text);`;
 
 test("a cross-state body's own identifier selects the body reader's state", () => {
-  const body = { bodyId: "government:US-CA:cog:123#board", ocdId: "ocd-division/country:us/state:nv/county:clark" } as CoveredBody;
+  const body: CoveredBody = { bodyId: "government:US-CA:cog:123#board", ocdId: "ocd-division/country:us/state:nv/county:clark",
+    name: null, divisionLabel: "", divisionType: null, lsad: null, schoolDependency: "UNCLASSIFIED", bodyClass: "GOVERNING",
+    coverageStatus: "NOT_ATTEMPTED", homepageUrl: null, agendaSourceRef: null, lookedAt: false, tier: "local" };
   assert.equal(bodyDetailState(body, "NV"), "CA");
 });
 

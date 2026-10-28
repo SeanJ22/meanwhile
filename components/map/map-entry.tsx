@@ -1,6 +1,8 @@
 "use client";
 
 import { useOfficePins } from "@/hooks/use-office-pins";
+import { useBodyDetail } from "@/hooks/use-body-detail";
+import { ocdStateCode } from "@/lib/ocd/state-of";
 import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
 import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
@@ -438,6 +440,12 @@ function MapEntryInner() {
   });
   const shown = pinned;
   const refreshing = current === null && shown !== null;
+  const selectedDetailBody = large?.kind === "entity" ? large.subject.detailBody : undefined;
+  const selectedBodyState = selectedDetailBody ? (ocdStateCode(selectedDetailBody.ocdId) ?? ocdStateCode(selectedDetailBody.bodyId) ??
+    /^government:US-([A-Z]{2}):/i.exec(selectedDetailBody.bodyId)?.[1] ??
+    /^([a-z]{2}):/i.exec(selectedDetailBody.bodyId)?.[1] ?? selectedDetailBody.recipientState ?? view?.state ?? null)?.toUpperCase() ?? null : null;
+  const selectedBodyDetail = useBodyDetail(selectedBodyState, selectedDetailBody?.bodyId ?? null,
+    Boolean(selectedDetailBody && !selectedDetailBody.readerRoster));
 
   // Everything downstream reads this one filtered list.
   const meetings = useMemo<Meeting[]>(
@@ -1489,7 +1497,7 @@ function MapEntryInner() {
       case "large": {
         const surface = cardView.surface;
         if (surface.kind === "entity") {
-          const subject =
+          let subject =
             surface.subject.divisionOcdId &&
             districtPopup &&
             surface.subject.divisionOcdId === districtPopup.ocdId
@@ -1501,6 +1509,15 @@ function MapEntryInner() {
                   lastHits,
                 )
               : surface.subject;
+          if (subject.detailBody && selectedBodyDetail.status === "ready") {
+            const body = { ...subject.detailBody, readerRoster: selectedBodyDetail.detail.roster,
+              fieldSources: selectedBodyDetail.detail.fieldSources };
+            subject = subject.subjectKind === "BODY" ? bodySubject(body, subject.meetings)
+              : subject.subjectKind === "MEETING" && subject.meetings[0] ? meetingSubject(subject.meetings[0], body, subject.mapPin)
+              : subject;
+          } else if (subject.detailBody && (selectedBodyDetail.status === "loading" || selectedBodyDetail.status === "unavailable")) {
+            subject = { ...subject, detailStatus: selectedBodyDetail.status };
+          }
           return (
             <EntityModal
               embedded
@@ -1990,6 +2007,7 @@ function meetingSubject(
     ...(pin ? {mapPin:pin} : {}),
     subjectId: meeting.id,
     subjectKind: "MEETING" as const,
+    ...(body ? { detailBody: body } : {}),
     heldByBodyId: body?.bodyId ?? null,
     title: meetingEntryTitle(meeting, { bodyShown: true }),
     /* The line beneath the sitting names the body from the registry, else the jurisdiction. */
@@ -2075,6 +2093,7 @@ export function bodySubject(
     subjectId: body.bodyId,
     publicRecordsDivisionId: body.ocdId,
     subjectKind: "BODY" as const,
+    detailBody: body,
     title: bodyDisplayName(body),
     subtitle: body.governmentName ?? readerGovernmentName(body.divisionLabel, body.divisionType),
     tier: body.tier,

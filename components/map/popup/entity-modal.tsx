@@ -156,6 +156,9 @@ export interface ModalSubject {
    */
   subjectId: string;
   subjectKind: "OFFICIAL" | "BODY" | "MEETING";
+  /** Summary needed to attach a keyed body detail when this card opens. */
+  detailBody?: import("@/lib/registry/coverage").CoveredBody;
+  detailStatus?: "loading" | "unavailable";
   /** A meeting's body by registry id, so "Held by" opens its card. Absent when not in coverage. */
   heldByBodyId?: string | null;
   /**
@@ -364,7 +367,9 @@ function BodySections({
           ? `${subject.representation.length}`
           : undefined,
       content:
-        subject.representation.length > 0 || card.superintendent || card.earlierMembers?.length ? (
+        subject.detailStatus ? <p className="t-detail text-muted">{subject.detailStatus === "loading"
+          ? "Looking up who sits on this body…" : "We couldn't load who sits on this body."}</p>
+        : subject.representation.length > 0 || card.superintendent || card.earlierMembers?.length ? (
           <>
             <Representation
               holders={subject.representation}
@@ -608,7 +613,9 @@ export function EntityModal({
     <MeetingCard meeting={subject.meetings[0]} title={readerText(subject.title)} subtitle={subject.subtitle} representation={subject.representation} sources={subject.sources} onClose={embedded ? undefined : onClose}>
       {meetingLinks}
       <CardSection title="What this meeting is about" defaultOpen>{overview}</CardSection>
-      <CardSection title="Who sits on it"><Representation holders={subject.representation} note={subject.representationNote} gaps={subject.rosterGaps} onOpenHolder={onOpenHolder} /></CardSection>
+      <CardSection title="Who sits on it">{subject.detailStatus ? <p className="t-detail text-muted">{subject.detailStatus === "loading"
+        ? "Looking up who sits on this body…" : "We couldn't load who sits on this body."}</p>
+        : <Representation holders={subject.representation} note={subject.representationNote} gaps={subject.rosterGaps} onOpenHolder={onOpenHolder} />}</CardSection>
       <SpeakYourMind subjectType="MEETING" subjectId={subject.subjectId} subject={readerText(subject.title)} />
     </MeetingCard>
   </div>;

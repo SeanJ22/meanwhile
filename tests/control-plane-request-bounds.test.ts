@@ -88,11 +88,14 @@ test("queued calls retain enclosing deadlines and release admission after transp
     assert.equal(error.kind, "DEADLINE");
     assert.equal(error.budget, "dispatch-finalization");
     assert.equal(calls, CONTROL_PLANE_QUERY_CONCURRENCY, "an expired queued call is never sent");
-    releases.forEach(release => release());
+    releases.splice(0).forEach(release => release());
     await Promise.all(occupying);
     neonConfig.fetchFunction = (async () => answer([])) as typeof neonConfig.fetchFunction;
     assert.equal(await repos.adminConfig.read("live"), null, "failed calls release capacity");
-  } finally { neonConfig.fetchFunction = original; }
+  } finally {
+    releases.splice(0).forEach(release => release());
+    neonConfig.fetchFunction = original;
+  }
 });
 
 test("a small read is sent while every page slot is held by a slow page read", async () => {
@@ -117,7 +120,10 @@ test("a small read is sent while every page slot is held by a slow page read", a
       releases.shift()!();
     }
     await Promise.all(pages);
-  } finally { neonConfig.fetchFunction = original; }
+  } finally {
+    releases.splice(0).forEach(release => release());
+    neonConfig.fetchFunction = original;
+  }
 });
 
 interface HungFetch {

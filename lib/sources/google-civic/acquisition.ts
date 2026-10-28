@@ -28,7 +28,7 @@ export interface CivicReadOptions {
 /** Server diagnostics only. Response bodies never enter a lookup, candidate or source record. */
 function logCivicCallFailure(route: "elections" | "voterinfo", status: number | null, body: string, params: Record<string, string>, options: CivicReadOptions, stage: "transport" | "body" | "http" | "parse"): void {
   if (typeof window !== "undefined") return;
-  let preview = body;
+  let preview = route === "voterinfo" ? "" : body;
   for (const secret of [options.apiKey ?? process.env.GOOGLE_CIVIC_API_KEY, params.address].filter((value): value is string => !!value)) {
     preview = preview.split(secret).join("[redacted]").split(encodeURIComponent(secret)).join("[redacted]");
   }
@@ -74,7 +74,7 @@ export async function readCivicApi(route: "elections" | "voterinfo", params: Rec
   }
   if (response.ok) return { raw, checkedAt: (options.now ?? (() => new Date().toISOString()))(), status: response.status };
   logCivicCallFailure(route, response.status, raw, params, options, "http");
-  // Only the safe reason enters the answer; the body stays in the server log.
+  // Only the safe reason enters the answer. Voter response bodies stay out of logs.
   throw new CivicSourceError(response.status, response.status === 404 ? "Google Civic has no information for this address (HTTP 404)."
     : response.status === 400 ? "Google Civic could not resolve this address (HTTP 400)." : `Google Civic request failed (HTTP ${response.status}).`,
   route === "voterinfo" && (response.status === 400 || response.status === 404) ? "NO_DATA" : "GOOGLE_UNAVAILABLE");

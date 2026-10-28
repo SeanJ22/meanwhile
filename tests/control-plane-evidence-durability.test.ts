@@ -277,9 +277,10 @@ test("DURABLE READ: bytes that no longer hash to what was written are a FAILED R
 
   await assert.rejects(() => readArtifact(store, PROJECT, artifact, "AUDITOR"), EvidenceCorrupted);
   assert.deepEqual(await store.head(key), artifactMeta(artifact), "metadata HEAD does not inspect same-size body content; get verifies its digest");
-  await assert.rejects(() => store.put(key, utf8(PUBLIC_PAGE), artifactMeta(artifact)), EvidenceCorrupted);
+  await assert.rejects(() => store.put(key, utf8(PUBLIC_PAGE), artifactMeta(artifact)), EvidenceStoreRefusal);
 
-  await assert.rejects(() => putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)), EvidenceCorrupted);
+  assert.equal((await putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE))).written, false,
+    "an unchanged fingerprint is reused from metadata; actual reads still detect corruption");
 });
 
 test("DURABLE HEAD: source fingerprint checks never call get or read the retained body", async t => {
@@ -293,6 +294,17 @@ test("DURABLE HEAD: source fingerprint checks never call get or read the retaine
 
   assert.equal((await store.head(capture.vaultKey))?.contentHash, `sha256-${capture.rawHash}`);
   assert.deepEqual(await holdRawCapture(store, "voting-sites", PUBLIC_PAGE, "text/html"), capture);
+});
+
+test("an existing artifact is reused from its fingerprint without rereading source bytes", async t => {
+  const root = await makeRoot(t);
+  const store = new DurableEvidenceStore(root, { remote: null });
+  const { artifact } = recordAcquisition(ACQUISITION, PUBLIC_PAGE);
+  const first = await putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE));
+  t.mock.method(store, "get", async () => { throw Error("reuse must not download a saved record"); });
+  const again = await putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE));
+  assert.equal(again.key, first.key);
+  assert.equal(again.written, false);
 });
 
 test("DURABLE HEAD: committed metadata with a missing or shortened body fails without loading bytes", async t => {

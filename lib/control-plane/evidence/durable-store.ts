@@ -15,7 +15,7 @@
  */
 
 import { netlifyEvidenceStoreFromEnv } from "./netlify-store.ts";
-import { resolveRawCapturePointer } from "./raw-pointer.ts";
+import { rawCaptureMetadata, resolveRawCapturePointer } from "./raw-pointer.ts";
 import { randomBytes } from "node:crypto";
 import type { Dirent } from "node:fs";
 import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
@@ -371,10 +371,7 @@ export class DurableEvidenceStore implements EvidenceStore {
               "its life; the stored body is the one already cited and it is not replaced.",
           );
         }
-        if (noop) {
-          await this.readBody(key, existing.bodySha256, existing.bodyBytes);
-          return;
-        }
+        if (noop) return;
       }
     }
 
@@ -424,7 +421,7 @@ export class DurableEvidenceStore implements EvidenceStore {
     if (!body.isFile()) throw new EvidenceStoreRefusal(`Key ${key} has no regular file holding its body.`);
     if (body.size !== sidecar.bodyBytes || body.size !== sidecar.meta.byteLength)
       throw new EvidenceStoreRefusal(`Key ${key} records ${sidecar.bodyBytes} byte(s), but holds ${body.size}.`);
-    return sidecar.meta;
+    return rawCaptureMetadata(sidecar.meta);
   }
 
   /**

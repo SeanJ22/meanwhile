@@ -10,6 +10,7 @@ import { readCounts } from "../lib/control-plane/line-keeper/read.ts";
 import { countWindow } from "../lib/counts/hour.ts";
 import { readBodyFacts } from "../lib/facts/registry-overlay.ts";
 import { stateCoverage } from "../lib/reader/coverage.ts";
+import { projectBodyDetail } from "../lib/reader/body-detail.ts";
 import { districtCardSources } from "../lib/officials/card-sources.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 
@@ -86,7 +87,10 @@ test("both lanes reach the existing place card with their own saved field source
       bodyRosters: [], rosterReaderDispositions: [], statewideExecutives: [], officialPhotos: { photos: [] }, rosterPhotos: {},
       officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] } };
     const facts = await readBodyFacts(db.query, [input().entity.id], true);
-    const card = stateCoverage({ state: "AZ", registry: runtime, version: "test" }, ["place-one"], 0, 0, [], facts).bodies[0]!;
+    const summary = stateCoverage({ state: "AZ", registry: runtime, version: "test" }, ["place-one"], 0, 0, [], facts).bodies[0]!;
+    assert.equal(summary.fieldSources, undefined);
+    const detail = projectBodyDetail("AZ", input().entity.id, runtime, facts);
+    const card = { ...summary, fieldSources: detail.fieldSources };
     assert.equal(card.name, "City of Example City Council");
     assert.equal(card.officeContact?.address, address);
     const sources = districtCardSources([], [], card.officeContact?.provenance, card.fieldSources);

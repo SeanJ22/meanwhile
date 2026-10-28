@@ -22,6 +22,7 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { NameableEntity } from "@/lib/routing/exact-name";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
+import { loadBodyDetails } from "@/lib/registry/body-roster-client";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { logEvent } from "@/lib/log/client";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
@@ -362,6 +363,8 @@ export function AskBox({
         }
       }
 
+      let routedCoverage = coverage;
+      let classified: Awaited<ReturnType<typeof classify>> = null;
       const groundedAnswer = await askGrounded(question, confirmation);
       setGrounded(groundedAnswer);
       /* Only a canonical resolution becomes a referent for later turns. */
@@ -380,14 +383,29 @@ export function AskBox({
       }
       /* The classifier runs only after the matcher refused and the grounded engine bound nothing. */
       if (result.answer.kind !== "ROUTED" && !answerSaysSomething(groundedAnswer)) {
-        const topic = await classify(question);
-        if (topic) {
-          result = answerQuestion(question, coverage, zip, {
-            classified: topic,
+        classified = await classify(question);
+        if (classified) {
+          result = answerQuestion(question, routedCoverage, zip, {
+            classified,
             entities,
             everydayRouting,
           });
         }
+      }
+
+      // Resolve only the bodies selected by the route. Their members are no longer
+      // part of the ZIP answer, and an unavailable roster must not look empty.
+      const selected = [...new Map(result.answer.steps.flatMap(step => step.bodies)
+        .map(({ body }) => [body.bodyId, body])).values()]
+        .filter(body => !body.readerRoster && body.rosterSummary && body.rosterSummary.memberCount > 0);
+      if (selected.length) {
+        const details = await loadBodyDetails(selected);
+        routedCoverage = { ...coverage, bodies: coverage.bodies.map(body => {
+          const detail = details.get(body.bodyId);
+          return detail ? { ...body, readerRoster: detail.roster, fieldSources: detail.fieldSources } : body;
+        }) };
+        result = answerQuestion(question, routedCoverage, zip, { entities, everydayRouting,
+          ...(classified ? { classified } : {}) });
       }
 
       if (groundedAnswer.mode === "TRANSPORT_FAILED") {

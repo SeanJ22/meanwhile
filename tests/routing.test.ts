@@ -229,7 +229,11 @@ test("a thin area routes honestly: gaps stated, nothing guessed", async () => {
 const ROCKAWAY: [number, number] = [40.9187, -74.5143];
 
 test("ASK-9: one district names the superintendent and no board member", async () => {
-  const coverage = await coverageAt(...TUCSON, 1);
+  const summary = await coverageAt(...TUCSON, 1);
+  assert.ok(summary.bodies.every(body => !body.readerRoster));
+  // The route receives the result of the same body-keyed read used by Ask.
+  const coverage = { ...summary, bodies: summary.bodies.map(body => ({ ...body,
+    readerRoster: { members: rosterHoldersForBody(body.bodyId), gaps: [], officePhone: null } })) };
   const answer = resolveRouting("schools-operations", coverage);
   const named = answer.steps.flatMap((s) => s.people.map((p) => p.name));
 
@@ -262,7 +266,9 @@ test("ASK-9: one district names the superintendent and no board member", async (
 });
 
 test("ASK-10: several districts name NO person from any of their rosters", async () => {
-  const coverage = await coverageAt(...ROCKAWAY, 1);
+  const summary = await coverageAt(...ROCKAWAY, 1);
+  const coverage = { ...summary, bodies: summary.bodies.map(body => ({ ...body,
+    readerRoster: { members: rosterHoldersForBody(body.bodyId), gaps: [], officePhone: null } })) };
   const answer = resolveRouting("schools-operations", coverage);
 
   const step = answer.steps.find((s) => s.bodies.length > 1);

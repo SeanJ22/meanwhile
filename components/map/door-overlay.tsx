@@ -1,8 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { createContext, useContext,useEffect,useState } from "react";
-import {loadReaderBodyRoster} from "@/lib/reader/body-roster-client";
+import { createContext, useContext } from "react";
 
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
@@ -16,6 +15,7 @@ import {
 import { districtDoorRows, governingDoorRows, type DistrictDoorRow } from "@/lib/state/derive";
 import { representationForDivision } from "@/lib/registry/representation";
 import { projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
+import { useBodyDetails } from "@/hooks/use-body-details";
 import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 import {
   groupOfficials,
@@ -226,6 +226,11 @@ function DistrictsDoor({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
+  const governingBodies = (coverage?.bodies ?? []).filter(body => coverage?.divisions.some(division =>
+    body.bodyId === `${division.ocdId}#governing` || body.bodyId === `${division.ocdId}#board`));
+  const details = useBodyDetails(governingBodies, atAddress);
+  const byId = new Map(details.bodies.map(body => [body.bodyId, body]));
+  const shownCoverage = coverage ? { ...coverage, bodies: coverage.bodies.map(body => byId.get(body.bodyId) ?? body) } : null;
   /*
    * Two sections, always both: "Districts you're in" (boundaries containing
    * the resolved point) and "Districts in view" (what the map draws). Without
@@ -233,9 +238,9 @@ function DistrictsDoor({
    * which districts the reader is in.
    */
   const governingRows =
-    atAddress && coverage
-      ? governingDoorRows(coverage, (ocdId) =>
-          representationForDivision(coverage, ocdId),
+    atAddress && coverage && shownCoverage
+      ? governingDoorRows(shownCoverage, (ocdId) =>
+          representationForDivision(shownCoverage, ocdId),
         )
       : null;
 
@@ -256,7 +261,9 @@ function DistrictsDoor({
             <p className="mt-2 t-body text-muted">
               Every district your address sits inside.
             </p>
-            <DistrictRows rows={governingRows} coverage={coverage} onOpenOfficial={onOpenOfficial} />
+            {details.pending && <p className="t-body text-muted">Looking up local representatives…</p>}
+            {details.failed && <p className="t-body text-muted">We couldn&apos;t load some local representatives.</p>}
+            <DistrictRows rows={governingRows} coverage={shownCoverage} onOpenOfficial={onOpenOfficial} />
           </>
         ) : (
           // A fact about the limits of a zip, not a claim that the reader is in nothing.
@@ -404,22 +411,11 @@ function OfficialsDoor({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
-  // Grouped Local / State / Federal, closest first.
-  const [rosters,setRosters]=useState<Record<string,NonNullable<CoveredBody['readerRoster']>>>({});
-  const [failed,setFailed]=useState(false);
-  useEffect(()=>{
-    let active=true;
-    const bodies=coverage.bodies.filter(body=>body.rosterRef&&!body.readerRoster);
-    for(const body of bodies)loadReaderBodyRoster(body).then(roster=>{
-      if(active)setRosters(previous=>({...previous,[`${body.bodyId}:${body.rosterRef}`]:roster}));
-    }).catch(()=>{if(active)setFailed(true);});
-    return()=>{active=false;};
-  },[coverage]);
-  const bodies=coverage.bodies.map(body=>({...body,readerRoster:body.readerRoster??rosters[`${body.bodyId}:${body.rosterRef}`]}));
-  const pending=bodies.some(body=>body.rosterRef&&!body.readerRoster);
-  const groups = groupOfficials({...coverage,bodies});
+  // The door asks for the memberships it displays after it opens.
+  const details = useBodyDetails(coverage.bodies, true);
+  const groups = groupOfficials({ ...coverage, bodies: details.bodies });
   const total = groups.local.length + groups.state.length + groups.federal.length;
-  if (total === 0&&!pending) {
+  if (total === 0 && !details.pending && !details.failed) {
     return (
       <p className="mt-3 t-body text-muted">
         No sourced officeholders resolved at this point yet.
@@ -433,7 +429,8 @@ function OfficialsDoor({
   };
   return (
     <div className="mt-3 space-y-3">
-      {pending?<p role={failed?'alert':'status'} className="t-body text-muted">{failed?'Some officials could not be loaded.':'Loading officials…'}</p>:null}
+      {details.pending && <p className="t-body text-muted">Looking up local officials…</p>}
+      {details.failed && <p className="t-body text-muted">We couldn&apos;t load some local officials.</p>}
       {(Object.keys(TIER_GROUP_LABELS) as TierGroup[]).map((group) =>
         groups[group].length === 0 ? null : (
           <div key={group}>

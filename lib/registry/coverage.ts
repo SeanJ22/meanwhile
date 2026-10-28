@@ -107,6 +107,9 @@ export function stateLegislatorCoverageAuthority(
  */
 export interface CoveredBody {
   bodyId: string;
+  /** The jurisdiction and member count for a deferred body detail. */
+  readerState?: string;
+  rosterSummary?: { readonly memberCount: number; readonly hasSelectBoard: boolean };
   /** Exact held government and body aliases for this government's records. */
   recipientIds?: readonly string[];
   recipientNames?: readonly string[];
@@ -177,11 +180,9 @@ export interface CoveredBody {
    */
   couldGovern?: boolean;
   /**
-   * Body-scoped people and completeness gaps projected at the server Reader
-   * boundary. Client components consume these bytes; they never import the
-   * canonical roster/runtime graph to reconstruct them in the browser.
-   *
-   * List answers carry rosterRef instead. The full projection arrives when a body opens.
+   * Body-scoped people and completeness gaps, attached after the body is opened.
+   * ZIP answers carry only a saved roster summary.
+
    */
   rosterRef?: string;
   /** Only the people the unopened list names; never a complete membership projection. */
@@ -220,6 +221,8 @@ export interface Seat {
 export interface CoverageSummary {
   state: CoverageState;
   bodies: CoveredBody[];
+  /** Count of distinct people shown by the officials panel for this place. */
+  officialCount?: number | null;
   /** Source inventories are independent of sourced meeting bodies and people. */
   governments?: RegistrationGovernmentListing[];
   governmentInventoryStates?: string[];
@@ -370,7 +373,6 @@ export function summarizeCoverage(
       coverageStatus: held ? "LIVE" : body.coverageStatus,
       homepageUrl: body.homepageUrl,
       ...(body.homepageUrl && !body.fieldSources?.homepageUrl ? { provenance: body.provenance } : {}),
-      ...(body.fieldSources ? { fieldSources: body.fieldSources } : {}),
       agendaSourceRef: held?.provenance.sourceUrl ?? body.agendaSourceRef,
       meetingCadence: body.meetingCadence
         ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
@@ -399,7 +401,7 @@ export function summarizeCoverage(
       divisionType: d.divisionType,
       tier: d.tier,
       representatives: stateOcdIdFrom(d.ocdId) === d.ocdId ? rootLegislators(d) : d.tier === "local"
-        ? heldDivisionRepresentatives(d.ocdId, holdersFor(officials, d.ocdId))
+        ? scopedHolders([], holdersFor(officials, d.ocdId))
         : holdersFor(officials, d.ocdId),
     }));
 

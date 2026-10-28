@@ -5,6 +5,7 @@ import { officeTypeForTitle } from "../officials/office-blurbs.ts";
 import { topOfficesFor } from "../officials/top-offices.ts";
 // The same store the body card and the representation view read.
 import { projectedBodyRoster } from "../registry/body-roster-client.ts";
+import { representationForDivision } from "../registry/representation.ts";
 
 import type { NamedEntityBinding } from "./named-entity.ts";
 import { routeForTopic, type RouteStep, type TopicRoute } from "./topics.ts";
@@ -131,7 +132,7 @@ function peopleFor(
     return holders;
   }
   for (const seat of coverage.seats) {
-    for (const holder of seat.representatives) {
+    for (const holder of representationForDivision(coverage, seat.ocdId)) {
       if (officeTypeForTitle(holder.officeTitle) === step.officeType) {
         push(holder);
       }
@@ -205,7 +206,8 @@ export function resolveRouting(
       people.length === 0 &&
       // "No names shown" is not "no names held": the gap renders only where the bodies genuinely hold
       // nobody.
-      bodies.every((body) => projectedBodyRoster(body).members.length === 0)
+      bodies.every((body) => body.readerRoster ? body.readerRoster.members.length === 0
+        : body.rosterSummary ? body.rosterSummary.memberCount === 0 : true)
     ) {
       // The body exists; who sits on it is unsourced. Say which half.
       gap = "We haven't sourced who sits on this body yet.";

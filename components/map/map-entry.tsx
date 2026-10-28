@@ -1,6 +1,7 @@
 "use client";
 
 import { useOfficePins } from "@/hooks/use-office-pins";
+import { useBodyDetail } from "@/hooks/use-body-detail";
 import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
 import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
@@ -67,8 +68,7 @@ import {
 } from "@/lib/officials/card-sources";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
-import { loadReaderBodyRoster } from "@/lib/reader/body-roster-client";
+import { bodyDetailState, projectedBodyRoster } from "@/lib/registry/body-roster-client";
 import { bodyContactRows, bodyContactSources } from "@/lib/registry/body-contact";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { definitionsForBody } from "@/lib/officials/body-definitions";
@@ -439,6 +439,10 @@ function MapEntryInner() {
   });
   const shown = pinned;
   const refreshing = current === null && shown !== null;
+  const selectedDetailBody = large?.kind === "entity" ? large.subject.detailBody : undefined;
+  const selectedBodyState = selectedDetailBody ? bodyDetailState(selectedDetailBody, view?.state) : null;
+  const selectedBodyDetail = useBodyDetail(selectedBodyState, selectedDetailBody?.bodyId ?? null,
+    Boolean(selectedDetailBody && !selectedDetailBody.readerRoster));
 
   // Everything downstream reads this one filtered list.
   const meetings = useMemo<Meeting[]>(
@@ -1490,7 +1494,7 @@ function MapEntryInner() {
       case "large": {
         const surface = cardView.surface;
         if (surface.kind === "entity") {
-          const subject =
+          let subject =
             surface.subject.divisionOcdId &&
             districtPopup &&
             surface.subject.divisionOcdId === districtPopup.ocdId
@@ -1502,6 +1506,15 @@ function MapEntryInner() {
                   lastHits,
                 )
               : surface.subject;
+          if (subject.detailBody && selectedBodyDetail.status === "ready") {
+            const body = { ...subject.detailBody, readerRoster: selectedBodyDetail.detail.roster,
+              fieldSources: selectedBodyDetail.detail.fieldSources };
+            subject = subject.subjectKind === "BODY" ? bodySubject(body, subject.meetings)
+              : subject.subjectKind === "MEETING" && subject.meetings[0] ? meetingSubject(subject.meetings[0], body, subject.mapPin)
+              : subject;
+          } else if (subject.detailBody && (selectedBodyDetail.status === "loading" || selectedBodyDetail.status === "unavailable")) {
+            subject = { ...subject, detailStatus: selectedBodyDetail.status };
+          }
           return (
             <EntityModal
               embedded
@@ -1987,12 +2000,11 @@ function meetingSubject(
   /* The body holding this sitting, resolved explicitly; never a division fallback. */
   const roster = [...projectedBodyRoster(body).members];
   return {
-    ...(body?.rosterRef && !body.readerRoster ? { onLoadRoster: async () => meetingSubject(meeting,
-      { ...body, readerRoster: await loadReaderBodyRoster(body) }, pin) } : {}),
     // The body is the headline; the jurisdiction is the subtitle.
     ...(pin ? {mapPin:pin} : {}),
     subjectId: meeting.id,
     subjectKind: "MEETING" as const,
+    ...(body ? { detailBody: body } : {}),
     heldByBodyId: body?.bodyId ?? null,
     title: meetingEntryTitle(meeting, { bodyShown: true }),
     /* The line beneath the sitting names the body from the registry, else the jurisdiction. */
@@ -2074,12 +2086,11 @@ export function bodySubject(
   const claim = jurisdictionClaim(body);
 
   return {
-    ...(body.rosterRef && !body.readerRoster ? { onLoadRoster: async () => bodySubject(
-      { ...body, readerRoster: await loadReaderBodyRoster(body) }, allMeetings) } : {}),
     // The body id, never the display title, which several governments share.
     subjectId: body.bodyId,
     publicRecordsDivisionId: body.ocdId,
     subjectKind: "BODY" as const,
+    detailBody: body,
     title: bodyDisplayName(body),
     subtitle: body.governmentName ?? readerGovernmentName(body.divisionLabel, body.divisionType),
     tier: body.tier,

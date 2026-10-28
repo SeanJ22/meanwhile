@@ -4,7 +4,9 @@ import {keyedSourceInput} from "./keyed-government-lookup.ts";
 import {requireRegistryState,stateRegistryRuntimeScope} from "./state-scopes.ts";
 
 /** The selected place's held subjects, not a complete registry successor. */
-export interface RegistryPlaceSlice {readonly versionId:string;readonly payload:RegistryPlanningView}
+export interface RegistryPlaceSlice {readonly versionId:string;readonly payload:RegistryPlanningView;
+  readonly photos?: readonly import("../registry/runtime-data-plane.ts").RegistryRuntimeReadModel["officialPhotos"]["photos"][number][];
+  readonly rosterPhotos?: Readonly<Record<string,string>>}
 
 export function selectRegistryPlaceView(value:RegistryPlanningView,divisionIds:readonly string[]):RegistryPlanningView{
   const ids=new Set(divisionIds),bodies=value.registry.bodies.filter(body=>[body.ocdId,...body.alsoServesOcdIds??[]].some(id=>id!==null&&ids.has(id)));
@@ -17,7 +19,8 @@ export function selectRegistryPlaceView(value:RegistryPlanningView,divisionIds:r
 }
 
 /** One statement binds the named divisions and their held rows to the same source pointer. */
-export async function readRegistryPlaceRows(query:Query,state:string,divisionIds:readonly string[]):Promise<RegistryPlaceSlice|null>{
+export async function readRegistryPlaceRows(query:Query,state:string,divisionIds:readonly string[],
+  options?:{readonly bodyIds?:readonly string[];readonly personIds?:readonly string[]}):Promise<RegistryPlaceSlice|null>{
   const scope=stateRegistryRuntimeScope(requireRegistryState(state));
   const result=await query(`WITH pointer AS MATERIALIZED (
     SELECT p.key,p.scope,p.current_version_id AS version_id,p.promoted_at,c.normalized_hash,reader_payload_node(p.payload) AS root,
@@ -29,11 +32,11 @@ export async function readRegistryPlaceRows(query:Query,state:string,divisionIds
     FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id WHERE p.key=$1
   ), bodies AS MATERIALIZED (
     SELECT r.ordinal,r.row_id,r.value FROM pointer p JOIN civic_data_rows r ON r.promotion_key=p.key AND r.version_id=p.version_id
-    WHERE p.valid AND r.collection='registry.bodies' AND (r.value->>'ocdId'=ANY($2::text[])
+    WHERE p.valid AND r.collection='registry.bodies' AND (r.row_id=ANY($3::text[]) OR r.value->>'ocdId'=ANY($2::text[])
       OR coalesce(reader_payload_value(r.value->'alsoServesOcdIds'),'[]'::jsonb) ?| $2::text[])
   ), rosters AS MATERIALIZED (
     SELECT r.ordinal,r.row_id,r.value FROM pointer p JOIN civic_data_rows r ON r.promotion_key=p.key AND r.version_id=p.version_id
-    WHERE p.valid AND r.collection='bodyRosters' AND r.row_id IN (SELECT row_id FROM bodies)
+    WHERE p.valid AND r.collection='bodyRosters' AND (r.row_id=ANY($3::text[]) OR r.row_id IN (SELECT row_id FROM bodies))
   ), members AS MATERIALIZED (
     SELECT reader_payload_node(m.item)->>'id' AS id FROM rosters r,LATERAL reader_payload_members(r.value->'members') m
   ), rows AS (
@@ -43,19 +46,26 @@ export async function readRegistryPlaceRows(query:Query,state:string,divisionIds
       WHERE p.valid AND (r.collection='registry.divisions' AND r.row_id=ANY($2::text[])
         OR r.collection='registry.executives' AND r.value->>'stateOcdId'=ANY($2::text[])
         OR r.collection='registry.candidacies' AND coalesce(reader_payload_value(reader_payload_node(r.value->'holder')->'divisions'),'[]'::jsonb) ?| $2::text[]
-        OR r.collection='registry.rosterDispositions' AND (r.row_id IN (SELECT id FROM members) OR r.value->>'canonicalId' IN (SELECT id FROM members)))
+        OR r.collection='registry.rosterDispositions' AND (cardinality($3::text[])=0 AND (r.row_id IN (SELECT id FROM members) OR r.value->>'canonicalId' IN (SELECT id FROM members))
+          OR r.row_id=ANY($4::text[]) OR reader_payload_node(r.value)->>'canonicalId'=ANY($4::text[])))
   ), selected AS (
     SELECT 'metadata'::text AS kind,p.scope,p.version_id,p.promoted_at,p.normalized_hash,p.valid,NULL::text AS row_id,
       jsonb_build_object('generatedAt',reader_payload_node(p.root->'registry')->'generatedAt',
-        'bridge',reader_payload_value(reader_payload_node(p.root->'officialCandidacies')-'rows')) AS value,0 AS sort_group,0::bigint AS sort_ordinal FROM pointer p
+        'bridge',reader_payload_value(reader_payload_node(p.root->'officialCandidacies')-'rows'),
+        'photos',CASE WHEN cardinality($4::text[])>0 AND p.valid THEN coalesce((SELECT jsonb_agg(reader_payload_value(photo.item))
+          FROM reader_payload_members(reader_payload_node(p.root->'officialPhotos')->'photos') photo
+          WHERE reader_payload_node(photo.item)->>'officeholderId'=ANY($4::text[]) OR reader_payload_node(photo.item)->>'personId'=ANY($4::text[])),'[]'::jsonb) ELSE '[]'::jsonb END,
+        'rosterPhotos',CASE WHEN cardinality($4::text[])>0 AND p.valid THEN coalesce((SELECT jsonb_object_agg(photo.key,reader_payload_value(photo.value))
+          FROM jsonb_each(reader_payload_node(p.root->'rosterPhotos')) photo WHERE photo.key=ANY($4::text[])),'{}'::jsonb) ELSE '{}'::jsonb END) AS value,0 AS sort_group,0::bigint AS sort_ordinal FROM pointer p
     UNION ALL SELECT r.collection,NULL,NULL,NULL,NULL,NULL,r.row_id,reader_payload_value(r.value),1,r.ordinal FROM rows r
   ) SELECT kind,scope,version_id,promoted_at,normalized_hash,valid,row_id,value FROM selected ORDER BY sort_group,kind,sort_ordinal`,
-  [`REGISTRY_RUNTIME_BINDING:${scope}`,[...new Set(divisionIds)]]);
+  [`REGISTRY_RUNTIME_BINDING:${scope}`,[...new Set(divisionIds)],[...new Set(options?.bodyIds??[])],[...new Set(options?.personIds??[])]]);
   const metadata=result.find(row=>row.kind==="metadata");
   if(!metadata)return null;
-  const input=keyedSourceInput(metadata,"REGISTRY_RUNTIME_BINDING"),header=metadata.value as {generatedAt:string;bridge:RegistryPlanningView["officialCandidacies"]};
+  const input=keyedSourceInput(metadata,"REGISTRY_RUNTIME_BINDING"),header=metadata.value as {generatedAt:string;bridge:RegistryPlanningView["officialCandidacies"];
+    photos:RegistryPlaceSlice["photos"];rosterPhotos:RegistryPlaceSlice["rosterPhotos"]};
   const values=(kind:string)=>result.filter(row=>row.kind===kind).map(row=>row.value);
-  return {versionId:input.versionId,payload:{registry:{generatedAt:header.generatedAt,bodies:values("registry.bodies"),divisions:values("registry.divisions")},
+  return {versionId:input.versionId,...(options?.personIds?{photos:header.photos,rosterPhotos:header.rosterPhotos}:{}),payload:{registry:{generatedAt:header.generatedAt,bodies:values("registry.bodies"),divisions:values("registry.divisions")},
     bodyRosters:values("bodyRosters"),rosterReaderDispositions:values("registry.rosterDispositions"),statewideExecutives:values("registry.executives"),
     officialCandidacies:{...header.bridge,rows:values("registry.candidacies")}} as RegistryPlanningView};
 }

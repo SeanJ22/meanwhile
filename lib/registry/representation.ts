@@ -1,6 +1,7 @@
 import type { CoverageTier } from "../meetings/constants.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import { allOfficialRows } from "../officials/tier-grouping.ts";
+import { scopedHolders } from "../officials/scoped-holders.ts";
 
 import { projectedGoverningHoldersForDivision } from "./body-roster-client.ts";
 import type { CoverageSummary } from "./coverage.ts";
@@ -17,8 +18,8 @@ export function representationForDivision(
 ): SeatHolder[] {
   if (!ocdId) return [];
   const seat = coverage?.seats.find((s) => s.ocdId === ocdId);
-  if (seat?.representatives.length) return seat.representatives;
-  return projectedGoverningHoldersForDivision(coverage, ocdId);
+  const governing = projectedGoverningHoldersForDivision(coverage, ocdId);
+  return governing.length ? scopedHolders(governing, seat?.representatives ?? []) : seat?.representatives ?? [];
 }
 
 export function representationNoteFor(
@@ -65,7 +66,7 @@ export function hasRepresentation(coverage: CoverageSummary | null): boolean {
  */
 export function namedHolderCount(coverage: CoverageSummary | null): number {
   if (!coverage) return 0;
-  return new Set([...allOfficialRows(coverage).map(row=>row.holder.id),...coverage.bodies.flatMap(body=>body.readerRosterIds??[])]).size;
+  return coverage.officialCount ?? allOfficialRows(coverage).length;
 }
 
 /**

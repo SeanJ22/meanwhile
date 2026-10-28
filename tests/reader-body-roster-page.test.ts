@@ -4,7 +4,7 @@ import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
 import {buildPageBody,storePlacePage} from "../lib/reader/place-builder.ts";
 import {readPlacePackage} from "../lib/reader/place.ts";
 import {installFactReader} from "../lib/facts/db.ts";
-import {GET} from "../app/api/reader/roster/route.ts";
+import {GET} from "../app/api/reader/body/route.ts";
 import type {Query} from "../lib/facts/publish.ts";
 
 test("the unopened place carries roster keys; opening a body reads its saved complete roster by key",async()=>{
@@ -27,11 +27,11 @@ test("the unopened place carries roster keys; opening a body reads its saved com
     assert.equal(place.registry?.bodyRosters.flatMap(row=>row.members).length,0);
     assert.ok(place.bodies.every(row=>row.roster===null));
     statements.length=0;installFactReader(query);
-    const response=await GET(new Request(`https://example.com/api/reader/roster?body=${encodeURIComponent(body)}`));
+    const response=await GET(new Request(`https://example.com/api/reader/body?state=AZ&body=${encodeURIComponent(body)}`));
     assert.equal(response.status,200);
-    const roster=await response.json();
+    const {roster}=await response.json();
     assert.deepEqual(roster.members.map((row:{name:string})=>row.name),['Ada Sample','Bea Example','Cam Citizen']);
-    assert.equal(response.headers.get('Netlify-Vary'),'query=body');
+    assert.equal(response.headers.get('Netlify-Vary'),'query=state|body');
     assert.ok(statements.length>0&&statements.every(sql=>!(/civic_data_(?:promotions|candidates|candidate_events|payload_parts)/.test(sql))));
   }finally{installFactReader(undefined);await pg.close();}
 });

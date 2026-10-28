@@ -33,13 +33,15 @@ import {
   type LocationCertainty,
 } from "@/lib/state/resolved-location";
 import { useConfirmedDivisions } from "@/hooks/use-confirmed-divisions";
+import { useBodyDetails } from "@/hooks/use-body-details";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import { groupBodiesByGovernment } from "@/lib/registry/body-groups";
-import { projectedRosterPreview } from "@/lib/registry/body-roster-client";
+import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
 import {
   hasRepresentation,
   leadKind,
   noticeLabel,
+  representationForDivision,
   shouldRenderNotice,
 } from "@/lib/registry/representation";
 import {
@@ -361,7 +363,15 @@ function CoverageBody({
     federalConfirmed,
   );
   const stateSeats = statePanel.yours;
-  const localSeats = panelSeatsFor(coverage, subject.location, LOCAL_SEAT_TYPES, localConfirmed).yours;
+  const localTypes = new Set<string>(LOCAL_SEAT_TYPES);
+  const localSeatIds = new Set(coverage.seats.filter(seat => localTypes.has(seat.divisionType)).map(seat => seat.ocdId));
+  const localBodyDetails = useBodyDetails(coverage.bodies.filter(body => body.ocdId && localSeatIds.has(body.ocdId) &&
+    (body.bodyId === `${body.ocdId}#governing` || body.bodyId === `${body.ocdId}#board`)), true);
+  const localBodiesById = new Map(localBodyDetails.bodies.map(body => [body.bodyId, body]));
+  const localCoverage = { ...coverage, bodies: coverage.bodies.map(body => localBodiesById.get(body.bodyId) ?? body) };
+  localCoverage.seats = coverage.seats.map(seat => localSeatIds.has(seat.ocdId)
+    ? { ...seat, representatives: representationForDivision(localCoverage, seat.ocdId) } : seat);
+  const localSeats = panelSeatsFor(localCoverage, subject.location, LOCAL_SEAT_TYPES, localConfirmed).yours;
   const federalSeats = federalPanel.yours;
   const stateLegislatorGaps = stateLegislatorAuthorities.filter(authority => authority.kind === "NOT_RECORDED" || authority.kind === "STORE_UNREACHABLE");
 
@@ -377,6 +387,8 @@ function CoverageBody({
 
   const derived = deriveWhoGoverns(bodiesHere, selected);
   const shown = derived.rows;
+  const selectBoards = useBodyDetails(shown.filter(body => body.rosterSummary?.hasSelectBoard ||
+    projectedBodyRoster(body).members.some(holder => /select\s?board/i.test(holder.officeTitle))), true);
   const shownIds = new Set(shown.map(body => body.bodyId));
   const filedMeetings = derived.otherRows.filter(body => body.meetingBodyId && shownIds.has(body.meetingBodyId));
   const otherBodies = derived.otherRows.filter(body => !body.meetingBodyId || !shownIds.has(body.meetingBodyId));
@@ -559,8 +571,10 @@ function CoverageBody({
           ))}
         <ul className="mt-1 space-y-1">
           {/* A town with no mayor gets its substitute office named and its members shown. */}
-          {shown.flatMap((body) => {
-            const board = projectedRosterPreview(body).filter((holder) =>
+          {selectBoards.pending && <li className="t-detail text-muted">Looking up Select Board members…</li>}
+          {selectBoards.failed && <li className="t-detail text-muted">We couldn&apos;t load some Select Board members.</li>}
+          {selectBoards.bodies.flatMap((body) => {
+            const board = projectedBodyRoster(body).members.filter((holder) =>
               /select\s?board/i.test(holder.officeTitle),
             );
             if (board.length === 0) return [];
@@ -608,11 +622,13 @@ function CoverageBody({
         </>
       )}
 
-      {localSeats.length > 0 && (
+      {(localSeats.length > 0 || localBodyDetails.pending || localBodyDetails.failed) && (
         <>
           <p className="t-structure mt-4 text-local">Local officials</p>
+          {localBodyDetails.pending && <p className="t-detail text-muted">Looking up local representatives…</p>}
+          {localBodyDetails.failed && <p className="t-detail text-muted">We couldn&apos;t load some local representatives.</p>}
           <ul className="mt-1 space-y-1">
-            {localSeats.map(seat => <SeatRow key={seat.ocdId} seat={seat} zip={zip} onOpenOfficial={onOpenOfficial} />)}
+            {!localBodyDetails.pending && !localBodyDetails.failed && localSeats.map(seat => <SeatRow key={seat.ocdId} seat={seat} zip={zip} onOpenOfficial={onOpenOfficial} />)}
           </ul>
         </>
       )}

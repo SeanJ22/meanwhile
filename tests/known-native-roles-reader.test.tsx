@@ -7,6 +7,8 @@ import { yamlToPeople, normalize } from "../lib/sources/plural/index.ts";
 import { withReaderAuthorityEdge } from "../lib/registry/runtime-edge.ts";
 import { allSeatHolders, seatHoldersForDivision, seatHoldersForOffice, settleCoverageStateLegislators } from "../lib/registry/server.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
+import type { CoveredBody } from "../lib/registry/coverage.ts";
+import { representationForDivision } from "../lib/registry/representation.ts";
 import { namedOfficeholders, readerOfficeholders } from "../lib/ask/server-sources.ts";
 import { composeReaderOfficials, readerOfficialsQuestion, stateDivisionsOf } from "../lib/ask/reader-officials.ts";
 import { GET as representation } from "../app/api/representation/[...division]/route.ts";
@@ -182,7 +184,7 @@ test("an exact official office holder takes precedence without joining names or 
   });
 });
 
-test("coverage gives the exact official mayor precedence over a conflicting bulk office record", async () => {
+test("the keyed governing roster gives the exact official mayor precedence over a conflicting bulk record", async () => {
   await installRegistryAuthority();
   const roster = currentBodyRosters().find(row => /\/place:[^/]+#governing$/.test(row.bodyId) &&
     row.members.some(member => member.officeTitle === "Mayor"))!;
@@ -193,7 +195,12 @@ test("coverage gives the exact official mayor precedence over a conflicting bulk
   const bulk = { ...official, id: "plural:fixture:old-mayor", personId: "plural:fixture:old-mayor", name: "Superseded Bulk Mayor" };
   const coverage = summarizeCoverage([0, 0], [], new Map([[divisionId, division]]), [], 0,
     new Map([[divisionId, [bulk]]]), [division], null);
-  const mayors = coverage.seats.flatMap(row => row.representatives).filter(row => row.officeTitle === "Mayor");
+  assert.equal(coverage.seats[0].representatives[0].id, bulk.id);
+  const hydrated = { ...coverage, bodies: [{ bodyId: roster.bodyId, ocdId: divisionId, name: null,
+    divisionLabel: division.label, divisionType: division.divisionType, lsad: null, schoolDependency: "UNCLASSIFIED",
+    bodyClass: "GOVERNING", coverageStatus: "NOT_ATTEMPTED", homepageUrl: null, agendaSourceRef: null,
+    lookedAt: false, tier: "local", readerRoster: { members: rosterHoldersForBody(roster.bodyId), gaps: [], officePhone: null } } as CoveredBody] };
+  const mayors = representationForDivision(hydrated, divisionId).filter(row => row.officeTitle === "Mayor");
   assert.deepEqual(mayors.map(row => row.id), [official.id]);
 });
 

@@ -156,8 +156,9 @@ export interface ModalSubject {
    */
   subjectId: string;
   subjectKind: "OFFICIAL" | "BODY" | "MEETING";
-  onLoadRoster?: () => Promise<ModalSubject>;
-  rosterStatus?: ReactNode;
+  /** Summary needed to attach a keyed body detail when this card opens. */
+  detailBody?: import("@/lib/registry/coverage").CoveredBody;
+  detailStatus?: "loading" | "unavailable";
   /** A meeting's body by registry id, so "Held by" opens its card. Absent when not in coverage. */
   heldByBodyId?: string | null;
   /**
@@ -366,7 +367,9 @@ function BodySections({
           ? `${subject.representation.length}`
           : undefined,
       content:
-        subject.rosterStatus ?? (subject.representation.length > 0 || card.superintendent || card.earlierMembers?.length ? (
+        subject.detailStatus ? <p className="t-detail text-muted">{subject.detailStatus === "loading"
+          ? "Looking up who sits on this body…" : "We couldn't load who sits on this body."}</p>
+        : subject.representation.length > 0 || card.superintendent || card.earlierMembers?.length ? (
           <>
             <Representation
               holders={subject.representation}
@@ -398,7 +401,7 @@ function BodySections({
               </div>
             )}
           </>
-        ) : null),
+        ) : null,
     },
     {
       id: "meetings",
@@ -484,7 +487,7 @@ function BodySections({
 }
 
 export function EntityModal({
-  subject: initialSubject,
+  subject,
   onClose,
   onOpenHolder,
   onOpenPlaceBody,
@@ -494,20 +497,6 @@ export function EntityModal({
   onShowOnMap,
   onOpenVenue,
 }: EntityModalProps) {
-  const [roster, setRoster] = useState<{ original: ModalSubject; value?: ModalSubject; failed?: boolean } | null>(null);
-  const [rosterRetry, setRosterRetry] = useState(0);
-  useEffect(() => {
-    if (!initialSubject.onLoadRoster) return;
-    let active = true;
-    initialSubject.onLoadRoster().then(value => { if (active) setRoster({ original: initialSubject, value }); })
-      .catch(() => { if (active) setRoster({ original: initialSubject, failed: true }); });
-    return () => { active = false; };
-  }, [initialSubject, rosterRetry]);
-  const resolved = roster?.original === initialSubject ? roster : null;
-  const subject = resolved?.value ?? (initialSubject.onLoadRoster ? { ...initialSubject,
-    rosterStatus: resolved?.failed ? <p role="alert">Members could not be loaded. <button type="button" onClick={() => {
-      setRoster(null); setRosterRetry(value => value + 1);
-    }}>Try again</button></p> : <p role="status">Loading members…</p> } : initialSubject);
   const cardRef = useRef<HTMLDivElement>(null);
   useCardVisibility(cardRef, `${subject.subjectKind}:${subject.subjectId}`, subject.subjectKind);
   const tab = initialTab;
@@ -624,7 +613,9 @@ export function EntityModal({
     <MeetingCard meeting={subject.meetings[0]} title={readerText(subject.title)} subtitle={subject.subtitle} representation={subject.representation} sources={subject.sources} onClose={embedded ? undefined : onClose}>
       {meetingLinks}
       <CardSection title="What this meeting is about" defaultOpen>{overview}</CardSection>
-      <CardSection title="Who sits on it">{subject.rosterStatus ?? <Representation holders={subject.representation} note={subject.representationNote} gaps={subject.rosterGaps} onOpenHolder={onOpenHolder} />}</CardSection>
+      <CardSection title="Who sits on it">{subject.detailStatus ? <p className="t-detail text-muted">{subject.detailStatus === "loading"
+        ? "Looking up who sits on this body…" : "We couldn't load who sits on this body."}</p>
+        : <Representation holders={subject.representation} note={subject.representationNote} gaps={subject.rosterGaps} onOpenHolder={onOpenHolder} />}</CardSection>
       <SpeakYourMind subjectType="MEETING" subjectId={subject.subjectId} subject={readerText(subject.title)} />
     </MeetingCard>
   </div>;
@@ -698,8 +689,8 @@ export function EntityModal({
           <CardSectionGroup independent={embedded}>
             <CardSection title="What this body does">{overview}{meetingLinks}</CardSection>
             <CardSection title={subject.subjectKind === "MEETING" || subject.divisionOcdId == null ? "Who sits on it" : "Representation"}>
-              {subject.rosterStatus ?? <Representation holders={subject.representation} vacancy={subject.vacancy} gaps={subject.rosterGaps} note={subject.representationNote}
-                onOpenHolder={onOpenHolder} showTopOffices={runsSomething(subject.divisionKind)} />}
+              <Representation holders={subject.representation} vacancy={subject.vacancy} gaps={subject.rosterGaps} note={subject.representationNote}
+                onOpenHolder={onOpenHolder} showTopOffices={runsSomething(subject.divisionKind)} />
             </CardSection>
             {subject.spotRepresentation && subject.spotRepresentation.length > 0 && (
               <CardSection title="Who represents this spot" defaultOpen>

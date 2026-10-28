@@ -3,6 +3,8 @@ import test from "node:test";
 import { getCachedStateCoverageForDivision, getCachedStateDivision, isStateDivisionPending, loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip, type ReaderStateResponse } from "../lib/reader/client.ts";
 import type { CoverageSummary } from "../lib/registry/coverage.ts";
 import type { MeetingSearchResult } from "../lib/meetings/query.ts";
+import type { CoveredBody } from "../lib/registry/coverage.ts";
+import type { SeatHolder } from "../lib/officials/lookup.ts";
 
 function deferred<T>() {
   let resolve!: (value: T) => void;
@@ -18,6 +20,14 @@ const coverage: CoverageSummary = {
 };
 const state: ReaderStateResponse = { state: "AZ", version: "held", coverage, zipPlaces: {}, directory: null, boundaryUrl: "/tiles.pmtiles" };
 const place: MeetingSearchResult = { coverage, meetings: [], tier: "none", radiusKm: 20, center: { lat: 32, lng: -110 } };
+
+test("merged coverage does not claim a distinct count before local members are opened", () => {
+  const local = { ...coverage, officialCount: 2, bodies: [{ bodyId: "local:board", tier: "local",
+    rosterSummary: { memberCount: 2, hasSelectBoard: false } } as CoveredBody] };
+  const federal = { ...coverage, senators: [{ id: "senator:one", name: "Senator One" } as SeatHolder] };
+  const merged = mergeReaderCoverage(federal, local, 0)!;
+  assert.equal(merged.officialCount, null);
+});
 
 test("a sourced vacancy survives the cached state, ZIP selection and merged place answer", async t => {
   const ocdId = "ocd-division/country:us/state:fl/cd:20";

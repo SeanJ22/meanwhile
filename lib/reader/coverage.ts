@@ -7,9 +7,9 @@ import { scopedHolders } from "../officials/scoped-holders.ts";
 import { personIdentityKeys } from "../officials/people-identity.ts";
 import { indexByDivision } from "../officials/lookup.ts";
 import { withStateRegistryFacts } from "../registry/state-composition.ts";
-import { rosterGapForBody } from "../registry/body-rosters.ts";
-import { earlierMembersOfBody, membersOfBody } from "../registry/body-membership.ts";
-import { officePhoneForBody } from "../meetings/office-phone.ts";
+import { bodyRosterSummaries } from "./body-summary.ts";
+import { bodyDetailState } from "../registry/body-roster-client.ts";
+import { allOfficialRows } from "../officials/tier-grouping.ts";
 import { stateOfficesForStates } from "../reference/state-offices.ts";
 import type { BodyFacts } from "../facts/registry-overlay.ts";
 import type { Body, Division } from "../registry/types.ts";
@@ -27,7 +27,7 @@ export function withPlaceRegistry<T extends { readonly registry: RegistryRuntime
     bodyRosters: place.bodyRosters, rosterReaderDispositions: place.rosterReaderDispositions } };
 }
 
-type CoverageState = {rosterRefs?:import("./body-roster.ts").ReaderRosterRefs;rosterPreviews?:import("./body-roster.ts").ReaderRosterPreviews;rosterIds?:import("./body-roster.ts").ReaderRosterIds} & Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
+type CoverageState = Pick<import("./place-types.ts").PlacePackage,"rosterRefs"|"rosterPreviews"|"rosterIds"> & Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
   "people" | "peopleRead" | "candidateProfilesRead" | "candidatePortraitsRead" | "ballotRead" | "legislativePeople" | "federal" | "federalRead" | "stateLegislatorAuthority">>;
 type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: CoverageState["federal"]; people: CoverageState["legislativePeople"]; version: string; officials: ReturnType<typeof indexByDivision> };
 const heldOfficials = serverReaderValue("state-official-index", () => new WeakMap<object, Officials>());
@@ -104,27 +104,28 @@ export function stateCoverage(
         .find(row => row.ocdId === seat.ocdId);
       return vacancy ? { ...seat, vacancy } : seat;
     });
+    const { summaries, memberIds } = bodyRosterSummaries(runtime, coverage.bodies.map(body => body.bodyId));
+    const officialIds = new Set([...memberIds,...Object.values(state.rosterIds??{}).flat()]);
+    for (const { holder } of allOfficialRows({ ...coverage, seats })) officialIds.add(holder.id);
     return {
       ...coverage,
       seats,
       seatCounts: { total: seats.length, named: seats.filter(seat => seat.representatives.length > 0).length },
       governments: [],
+      officialCount: officialIds.size,
       governmentInventoryStates: [state.state],
       governmentInventoryUnavailableStates: [],
       stateOffices: stateOfficesForStates([state.state]),
       ...(state.federal === undefined ? {} : { federalDirectoryUnavailable: state.federal === null }),
       bodies: coverage.bodies.map(body => {
-        const gap = rosterGapForBody(body.bodyId);
-        const earlierMembers = earlierMembersOfBody(body.bodyId);
         const fact = bodyFacts.find(fact => fact.id === body.bodyId);
         return { ...body, ...(fact?.recipientIds?.length ? { recipientIds: fact.recipientIds,
           recipientNames: fact.recipientNames, recipientState: fact.recipientState,
           ...(fact.moneyDivisionId ? { moneyDivisionId: fact.moneyDivisionId } : {}) } : {}),
-          ...(state.rosterPreviews?.[body.bodyId]?.length?{readerRosterPreview:state.rosterPreviews[body.bodyId]}:{}),
-          ...(state.rosterIds?.[body.bodyId]?{readerRosterIds:state.rosterIds[body.bodyId]}:{}),
-          ...(state.rosterRefs?(state.rosterRefs[body.bodyId]?{rosterRef:state.rosterRefs[body.bodyId]}:{})
-            :{readerRoster:{members:membersOfBody(body.bodyId).members,...(earlierMembers.length?{earlierMembers}:{}),
-              gaps:gap?[gap]:[],officePhone:officePhoneForBody(body.bodyId)}}) };
+          readerState: bodyDetailState(body, state.state) ?? state.state,
+          rosterSummary: state.rosterIds?.[body.bodyId]?{memberCount:state.rosterIds[body.bodyId].length,
+            hasSelectBoard:state.rosterPreviews?.[body.bodyId]?.some(holder=>/select\s?board/i.test(holder.officeTitle))??false}
+            :summaries.get(body.bodyId) ?? { memberCount: 0, hasSelectBoard: false } };
       }),
     };
   }))));

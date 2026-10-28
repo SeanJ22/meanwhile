@@ -97,6 +97,7 @@ heartbeat: 2026-10-28T08:35:00Z
   - ZIPs 19810, 67213, 94565 and 82190 load with no failed /api/log request (they got 400/413 before).
 - Runner: still on 139 (c8f768f) at 4:28 PM. River is watching for the switch, then the meter rows by job, the breaker's GB, hot partitions, door-probes GB/h and hourly looks.
 - Door looks before 141 (cp_doors validators.checkedAt, each door's latest look): 3 PM 117 doors in 62 places; 4 PM so far 92.
+- 5:06 PM: runner still on 139 (c8f768f). Its code check says main ebe82373 is newer, and no boundary failure is recorded; 139's switch took 33 minutes after deploy. Runner counter, 4 PM hour (still 139, breaker still blind): reader 3.803 + control plane 0.803 = 4.61 GB/h.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

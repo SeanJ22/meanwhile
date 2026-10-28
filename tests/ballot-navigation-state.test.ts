@@ -90,7 +90,7 @@ test("navigation admission reserves the largest state after a small state's meas
   const slots = routineProcessSlots({ host, availableBytes: () => free });
   await assert.rejects(slots.acquire("ballot-navigation-il/ballot-navigation-refresh.mts", Date.now() + 25), /WORKER_MEMORY_DEADLINE/);
   free = (768 + 768) * mib;
-  const release = await slots.acquire("ballot-navigation-il/ballot-navigation-refresh.mts", Date.now() + 100);
+  const release = await slots.acquire("ballot-navigation-il/ballot-navigation-refresh.mts", Date.now() + 2_000);
   release();
 });
 

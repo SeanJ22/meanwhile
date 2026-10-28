@@ -6,7 +6,6 @@ import { readStateVotingLookups } from "@/lib/ballot/state-voting-lookups";
 import { answerVotingSites, type VotingReaderPlace } from "@/lib/ballot/voting-answer";
 import { addCensusVotingGeographies, censusVotingAddress, votingInputZip, votingPlaceFromZip } from "@/lib/ballot/voting-answer-geography";
 import { recordVotingFailure } from "@/lib/ballot/voting-errors";
-import { fillVotingSitesAnswer } from "@/lib/ballot/voting-sites-live";
 import { markerFromRequest } from "@/lib/db/run-marker";
 import { recordVotingLookupCount } from "@/lib/ballot/voting-sites-counts";
 import { votingSitesResponse } from "@/lib/ballot/voting-sites-stream";
@@ -96,6 +95,9 @@ export async function POST(request: Request): Promise<Response> {
             return { match: !!place.states.length, point, precision: "ZIP", jurisdictions: [], outsideCoverage: true,
               pollingLookups: await linksFor(place.states) };
           }
+          // Start loading the optional live provider while Census resolves the address.
+          const live = import("@/lib/ballot/voting-sites-live");
+          void live.catch(() => {});
           stage = "geocode";
           const located = await censusVotingAddress(address);
           if (!located && zipInput) {
@@ -139,7 +141,7 @@ export async function POST(request: Request): Promise<Response> {
             stage = "precinct-match";
             const answer = await answerVotingSites(file, selectedPlace);
             stage = "google-fallback";
-            return fillVotingSitesAnswer(answer, address, selectedPlace, { signal });
+            return (await live).fillVotingSitesAnswer(answer, address, selectedPlace, { signal });
           });
           const [answer] = await Promise.all([result, counted]);
           const states = [...new Set([...place.states, ...answer.jurisdictions.map(j => j.state)])];

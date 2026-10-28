@@ -50,11 +50,12 @@ function textAt(record: unknown, path: readonly string[]): string | null {
 /** The `RecordProjection` a narrowed read's statement names, read back from the statement itself. */
 function projectionIn(text: string, read: string): Record<string, true | string[]> {
   const keys = (list: string) => [...list.matchAll(/'([A-Za-z0-9_]+)'/g)].map((m) => m[1]!);
-  const top = /WHERE t\.key IN \(([^)]*)\)\) ELSE record END AS record/.exec(text);
+  const top = /unnest\(ARRAY\[([^\]]*)\]\) keys\(k\) WHERE NOT \(record \? k\)/.exec(text);
   if (top === null) throw new Error(`${read} must narrow the record in the SELECT list: ${text}`);
   const projection: Record<string, true | string[]> = Object.fromEntries(keys(top[1]).map((k) => [k, true]));
-  for (const nested of text.matchAll(/WHEN t\.key = '([A-Za-z0-9_]+)' AND jsonb_typeof\(t\.value\) = 'object' THEN \(SELECT coalesce\(jsonb_object_agg\(f\.key, f\.value\), '\{\}'::jsonb\) FROM jsonb_each\(t\.value\) AS f WHERE f\.key IN \(([^)]*)\)\)/g)) {
-    projection[nested[1]!] = keys(nested[2]!);
+  for (const key of Object.keys(projection)) {
+    const nested = new RegExp(`unnest\\(ARRAY\\[([^\\]]*)\\]\\) keys\\(k\\) WHERE NOT \\(\\(record->'${key}'\\) \\? k\\)`).exec(text);
+    if (nested) projection[key] = keys(nested[1]);
   }
   return projection;
 }
@@ -96,7 +97,7 @@ function fakeLogSql(rows: readonly Row[]) {
           .map((r) => ({...changedRow(r),record:projection?projectRecord(r.record,projection):r.record}));
       }
       // readRecent: newest first, LIMIT is a parameter.
-      if (/ORDER BY\s+position DESC/i.test(text)) {
+      if (/ORDER BY\s+position DESC/i.test(text) && !text.includes("CROSS JOIN LATERAL")) {
         const [key, limit] = params as [string, number];
         return rows.filter((r) => r.log_key === key).sort((a, b) => b.position - a.position).slice(0, Number(limit))
           .map(changedRow);

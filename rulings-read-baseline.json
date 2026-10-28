@@ -104,12 +104,6 @@
       "line": 92
     },
     {
-      "file": "lib/control-plane/admin-view/stuck-summary.ts",
-      "kind": "SELECT *",
-      "fingerprint": "71a9c08230cdbf2e87f0a4f45208ab0f5821d1afc8002f34460066cd01573581",
-      "line": 32
-    },
-    {
       "file": "lib/control-plane/operator-chat/contract.ts",
       "kind": "SELECT *",
       "fingerprint": "f3d77a2667e53b826b4447b57c0949bebfa96665f43501b3513221243dc6aab1",
@@ -161,7 +155,7 @@
       "file": "lib/control-plane/repository/pg-store.ts",
       "kind": "SELECT *",
       "fingerprint": "07fa0dc17a094e448310ab84b3c654e08e2a33ee2623ac7ee95f17f1cb49e981",
-      "line": 1235
+      "line": 1300
     },
     {
       "file": "lib/control-plane/worker-reader-readback.ts",

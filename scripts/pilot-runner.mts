@@ -641,7 +641,9 @@ function deliver(body: string, headline: string): { readonly where: string } {
 
 const CONSOLE_PUBLISHERS: readonly { readonly databaseBytesPerRun: number; readonly name: string; readonly args: readonly string[] }[] = [
 
-  { databaseBytesPerRun: 255_016_765, name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
+  // CP-01 production-copy full publishes: 459,240 steady bytes; 698,718 with a changed lease and next-pass clock.
+  // A fresh shared cache read 4,670,309 bytes once; unchanged publishes reuse its confirmed source fingerprints.
+  { databaseBytesPerRun: 750_000, name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
 ];
 
 const publishChangedConsole = consolePublisher({

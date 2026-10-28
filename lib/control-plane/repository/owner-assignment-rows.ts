@@ -101,7 +101,7 @@ export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
       for (const status of groups) {
         const recent = status === "SUCCEEDED" || status === "RETIRED";
         const band = status === "WORKING" || status === "WAITING";
-        const rows = await sql.query(`SELECT picked.* FROM unnest($3::text[]) AS g(lane) CROSS JOIN LATERAL (
+        const rows = await sql.query(`SELECT picked.id,picked.state,picked.lane,picked.band,picked."waitingSince",picked."lastActivityAt" FROM unnest($3::text[]) AS g(lane) CROSS JOIN LATERAL (
           SELECT r.id,r.assignment_state AS state,r.lane,r.band,
             r.waiting_since AS "waitingSince",r.last_activity_at AS "lastActivityAt"
           FROM cp_owner_assignment_rows r WHERE r.state_code=$1 AND r.assignment_state=$2 AND r.lane=g.lane AND NOT(r.id=ANY($5::text[]))

@@ -28,7 +28,7 @@ CREATE OR REPLACE FUNCTION civic_refresh_source_status(source_key text,record_ki
         AND e.state='PROMOTED' AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 '
         AND EXISTS(SELECT 1 FROM civic_data_promotions p WHERE p.current_version_id=c.id)
     ), typed AS MATERIALIZED (
-      SELECT *,CASE WHEN event_state='PROMOTED' AND left(detail,26)='UNCHANGED_CONFIRMATION_V1 '
+      SELECT candidate_id,source_id,record_class,scope,state,failure_code,at,CASE WHEN event_state='PROMOTED' AND left(detail,26)='UNCHANGED_CONFIRMATION_V1 '
         AND pg_input_is_valid(substring(detail FROM 27),'jsonb')
         THEN substring(detail FROM 27)::jsonb #>> '{retrieval,sourceCheck,checkedAt}' END AS source_at FROM events
     ) SELECT source_id,record_class,scope,candidate_id,state,failure_code,
@@ -130,7 +130,7 @@ DO $$ BEGIN
       JOIN civic_data_candidate_events e ON e.candidate_id=c.id AND e.sequence<>1
       WHERE e.state='PROMOTED' AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 '
     ), typed AS MATERIALIZED (
-      SELECT *,CASE WHEN event_state='PROMOTED' AND left(detail,26)='UNCHANGED_CONFIRMATION_V1 '
+      SELECT candidate_id,source_id,record_class,scope,state,failure_code,at,CASE WHEN event_state='PROMOTED' AND left(detail,26)='UNCHANGED_CONFIRMATION_V1 '
         AND pg_input_is_valid(substring(detail FROM 27),'jsonb')
         THEN substring(detail FROM 27)::jsonb #>> '{retrieval,sourceCheck,checkedAt}' END AS source_at FROM events
     ), stamped AS (

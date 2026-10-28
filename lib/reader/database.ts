@@ -132,7 +132,7 @@ export function databaseReadOnlyQuery(connectionString: string, deadlineMs?: num
 }
 
 /** Compact Admin reads use one read-only HTTP transaction, including the same driver content-version checks. */
-export function databaseHttpReadOnlyQuery(connectionString: string, deadlineMs?: number): ReadOnlyQuery {
+export function databaseHttpReadOnlyQuery(connectionString: string, deadlineMs?: number) {
   const sql = serverReaderValue(`http-read-only:${connectionString}`, () => neon(connectionString));
   const read: ReadOnlyQuery = async statements => {
     if (!statements.length) return [];

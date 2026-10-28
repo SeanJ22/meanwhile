@@ -13,7 +13,7 @@ test("compact Admin reads keep a version-checked batch in one read-only HTTP sna
   const originalConnect=Pool.prototype.connect,originalFetch=neonConfig.fetchFunction;
   let batches=0;
   Pool.prototype.connect=(async()=>{throw new Error("A compact Admin read must not wait for a socket");}) as typeof Pool.prototype.connect;
-  neonConfig.fetchFunction=async(_url,init)=>{
+  neonConfig.fetchFunction=async(_url:RequestInfo|URL,init?:RequestInit)=>{
     const headers=new Headers(init?.headers);
     assert.equal(headers.get("Neon-Batch-Read-Only"),"true");
     assert.equal(headers.get("Neon-Batch-Isolation-Level"),"RepeatableRead");

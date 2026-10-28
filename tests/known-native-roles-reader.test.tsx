@@ -9,6 +9,7 @@ import { allSeatHolders, seatHoldersForDivision, seatHoldersForOffice, settleCov
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";
 import { representationForDivision } from "../lib/registry/representation.ts";
+import { stateCoverage } from "../lib/reader/coverage.ts";
 import { namedOfficeholders, readerOfficeholders } from "../lib/ask/server-sources.ts";
 import { composeReaderOfficials, readerOfficialsQuestion, stateDivisionsOf } from "../lib/ask/reader-officials.ts";
 import { GET as representation } from "../app/api/representation/[...division]/route.ts";
@@ -202,6 +203,17 @@ test("the keyed governing roster gives the exact official mayor precedence over 
     lookedAt: false, tier: "local", readerRoster: { members: rosterHoldersForBody(roster.bodyId), gaps: [], officePhone: null } } as CoveredBody] };
   const mayors = representationForDivision(hydrated, divisionId).filter(row => row.officeTitle === "Mayor");
   assert.deepEqual(mayors.map(row => row.id), [official.id]);
+  const registry = registryTransferImport().projection.payload;
+  const state = stateCoverage({ state: division.state, version: "fixture", registry: { ...registry,
+    registry: { ...registry.registry, bodies: [], divisions: [division] }, bodyRosters: [roster] },
+    people: { scope: division.state, generatedAt: NOW, officeholders: [{ id: bulk.id, personId: bulk.personId,
+      name: bulk.name, officeTitle: bulk.officeTitle, level: "LOCAL", termStart: "2025-01-01", termEnd: "2028-01-01",
+      birthDate: null, partyLabel: null, websiteUrl: null, contactFormUrl: null, phone: null, email: null,
+      campaignUrl: null, photo: null, provenance: official.provenance! }],
+      divisions: [{ ocdId: divisionId, officeholderId: bulk.id, bodyId: null }], unmatched: [] } }, [divisionId], 0, 0);
+  assert.equal(state.bodies.length, 0, "a roster reference must not invent a visible body");
+  assert.deepEqual(state.seats[0].bodyRosterRefs, [{ bodyId: roster.bodyId, state: division.state }]);
+  assert.equal(state.officialCount, null, "the distinct count is unavailable until the keyed roster is resolved");
 });
 
 test("captured county mayors and district executives reach exact routes, first coverage and Ask without invented bodies", async () => {

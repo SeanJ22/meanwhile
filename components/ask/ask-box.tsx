@@ -22,7 +22,7 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { NameableEntity } from "@/lib/routing/exact-name";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
-import { loadBodyDetails } from "@/lib/registry/body-roster-client";
+import { loadBodyDetails, loadBodyReferences } from "@/lib/registry/body-roster-client";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { logEvent } from "@/lib/log/client";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
@@ -398,11 +398,18 @@ export function AskBox({
       const selected = [...new Map(result.answer.steps.flatMap(step => step.bodies)
         .map(({ body }) => [body.bodyId, body])).values()]
         .filter(body => !body.readerRoster && body.rosterSummary && body.rosterSummary.memberCount > 0);
-      if (selected.length) {
+      const refs = result.answer.kind === "ROUTED" ? coverage.seats.flatMap(seat => seat.bodyRosterRefs ?? []) : [];
+      if (selected.length || refs.length) {
         const details = await loadBodyDetails(selected);
+        const hidden = await loadBodyReferences(refs);
         routedCoverage = { ...coverage, bodies: coverage.bodies.map(body => {
           const detail = details.get(body.bodyId);
           return detail ? { ...body, readerRoster: detail.roster, fieldSources: detail.fieldSources } : body;
+        }), seats: coverage.seats.map(seat => {
+          const rosters = (seat.bodyRosterRefs ?? []).flatMap(ref => hidden.get(ref.bodyId)?.roster ?? []);
+          if (seat.bodyRosterRefs?.some(ref => !hidden.has(ref.bodyId))) return { ...seat, representatives: [] };
+          return rosters.length ? { ...seat, readerGoverningRoster: { members: rosters.flatMap(roster => roster.members),
+            gaps: rosters.flatMap(roster => roster.gaps) } } : seat;
         }) };
         result = answerQuestion(question, routedCoverage, zip, { entities, everydayRouting,
           ...(classified ? { classified } : {}) });

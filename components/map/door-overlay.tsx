@@ -16,6 +16,7 @@ import { districtDoorRows, governingDoorRows, type DistrictDoorRow } from "@/lib
 import { representationForDivision } from "@/lib/registry/representation";
 import { projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
 import { useBodyDetails } from "@/hooks/use-body-details";
+import { useDivisionsRepresentation } from "@/hooks/use-division-representation";
 import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 import {
   groupOfficials,
@@ -229,6 +230,10 @@ function DistrictsDoor({
   const governingBodies = (coverage?.bodies ?? []).filter(body => coverage?.divisions.some(division =>
     body.bodyId === `${division.ocdId}#governing` || body.bodyId === `${division.ocdId}#board`));
   const details = useBodyDetails(governingBodies, atAddress);
+  const drawnIds = new Set(drawnDistricts.map(district => district.ocdId));
+  const hiddenIds = (coverage?.seats ?? []).filter(seat => seat.bodyRosterRefs?.length && (atAddress || drawnIds.has(seat.ocdId)))
+    .map(seat => seat.ocdId);
+  const hidden = useDivisionsRepresentation(coverage, hiddenIds);
   const byId = new Map(details.bodies.map(body => [body.bodyId, body]));
   const shownCoverage = coverage ? { ...coverage, bodies: coverage.bodies.map(body => byId.get(body.bodyId) ?? body) } : null;
   /*
@@ -240,14 +245,16 @@ function DistrictsDoor({
   const governingRows =
     atAddress && coverage && shownCoverage
       ? governingDoorRows(shownCoverage, (ocdId) =>
-          representationForDivision(shownCoverage, ocdId),
+          hidden[ocdId] ? hidden[ocdId].status === "resolved" ? hidden[ocdId].holders : []
+            : representationForDivision(shownCoverage, ocdId),
         )
       : null;
 
   /* `districtsAreVisible` is the single rule, shared with the stats tile. */
   const drawnRows =
     drawnDistricts.length > 0
-      ? districtDoorRows(drawnDistricts, coverage?.seats ?? [])
+      ? districtDoorRows(drawnDistricts, (coverage?.seats ?? []).map(seat => hidden[seat.ocdId]
+        ? { ...seat, representatives: hidden[seat.ocdId].status === "resolved" ? hidden[seat.ocdId].holders : [] } : seat))
       : null;
 
   return (
@@ -261,8 +268,8 @@ function DistrictsDoor({
             <p className="mt-2 t-body text-muted">
               Every district your address sits inside.
             </p>
-            {details.pending && <p className="t-body text-muted">Looking up local representatives…</p>}
-            {details.failed && <p className="t-body text-muted">We couldn&apos;t load some local representatives.</p>}
+            {(details.pending || Object.values(hidden).some(row => row.status === "looking")) && <p className="t-body text-muted">Looking up local representatives…</p>}
+            {(details.failed || Object.values(hidden).some(row => row.status === "unavailable")) && <p className="t-body text-muted">We couldn&apos;t load some local representatives.</p>}
             <DistrictRows rows={governingRows} coverage={shownCoverage} onOpenOfficial={onOpenOfficial} />
           </>
         ) : (
@@ -279,8 +286,11 @@ function DistrictsDoor({
 
       <DoorSection heading="Districts in view" count={drawnRows?.length ?? null}>
         {drawnRows ? (
-          // Exactly one row per drawn district.
-          <DistrictRows rows={drawnRows} coverage={coverage} onOpenOfficial={onOpenOfficial} />
+          <>
+            {Object.values(hidden).some(row => row.status === "looking") && <p className="t-body text-muted">Looking up local representatives…</p>}
+            {Object.values(hidden).some(row => row.status === "unavailable") && <p className="t-body text-muted">We couldn&apos;t load some local representatives.</p>}
+            <DistrictRows rows={drawnRows} coverage={coverage} onOpenOfficial={onOpenOfficial} />
+          </>
         ) : districtsSwitchedOffAndEmpty(drawnDistricts.length, districtOverlayOn) ? (
           // Reached only when the layer is off and nothing is painted.
           <div className="mt-2">
@@ -413,9 +423,13 @@ function OfficialsDoor({
 }) {
   // The door asks for the memberships it displays after it opens.
   const details = useBodyDetails(coverage.bodies, true);
-  const groups = groupOfficials({ ...coverage, bodies: details.bodies });
+  const hidden = useDivisionsRepresentation(coverage, coverage.seats.filter(seat => seat.bodyRosterRefs?.length).map(seat => seat.ocdId));
+  const pending = details.pending || Object.values(hidden).some(row => row.status === "looking");
+  const failed = details.failed || Object.values(hidden).some(row => row.status === "unavailable");
+  const groups = groupOfficials({ ...coverage, bodies: details.bodies, seats: coverage.seats.map(seat => hidden[seat.ocdId]
+    ? { ...seat, representatives: hidden[seat.ocdId].status === "resolved" ? hidden[seat.ocdId].holders : [] } : seat) });
   const total = groups.local.length + groups.state.length + groups.federal.length;
-  if (total === 0 && !details.pending && !details.failed) {
+  if (total === 0 && !pending && !failed) {
     return (
       <p className="mt-3 t-body text-muted">
         No sourced officeholders resolved at this point yet.
@@ -429,8 +443,8 @@ function OfficialsDoor({
   };
   return (
     <div className="mt-3 space-y-3">
-      {details.pending && <p className="t-body text-muted">Looking up local officials…</p>}
-      {details.failed && <p className="t-body text-muted">We couldn&apos;t load some local officials.</p>}
+      {pending && <p className="t-body text-muted">Looking up local officials…</p>}
+      {failed && <p className="t-body text-muted">We couldn&apos;t load some local officials.</p>}
       {(Object.keys(TIER_GROUP_LABELS) as TierGroup[]).map((group) =>
         groups[group].length === 0 ? null : (
           <div key={group}>

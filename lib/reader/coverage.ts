@@ -9,6 +9,7 @@ import { indexByDivision } from "../officials/lookup.ts";
 import { withStateRegistryFacts } from "../registry/state-composition.ts";
 import { bodyRosterSummaries } from "./body-summary.ts";
 import { bodyDetailState } from "../registry/body-roster-client.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
 import { allOfficialRows } from "../officials/tier-grouping.ts";
 import { stateOfficesForStates } from "../reference/state-offices.ts";
 import type { BodyFacts } from "../facts/registry-overlay.ts";
@@ -99,10 +100,17 @@ export function stateCoverage(
     const { officials } = stateOfficials(state);
     const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings,
       new Map(state.registry.bodyRosters.map(roster => [roster.bodyId,roster.bodyName])));
+    const visibleBodyIds = new Set(coverage.bodies.map(body => body.bodyId));
+    const missingBodyIds = coverage.seats.filter(seat => seat.tier === "local").flatMap(seat =>
+      [`${seat.ocdId}#governing`, `${seat.ocdId}#board`].filter(id => !visibleBodyIds.has(id)));
+    const missing = bodyRosterSummaries(runtime, missingBodyIds).summaries;
     const seats = coverage.seats.map(seat => {
       const vacancy = !seat.representatives.length && [...state.federal?.vacancies ?? [], ...(state.legislativePeople ?? state.people)?.vacancies ?? []]
         .find(row => row.ocdId === seat.ocdId);
-      return vacancy ? { ...seat, vacancy } : seat;
+      const bodyRosterRefs = seat.tier === "local" ? [`${seat.ocdId}#governing`, `${seat.ocdId}#board`]
+        .filter(id => (missing.get(id)?.memberCount ?? 0) > 0)
+        .map(bodyId => ({ bodyId, state: ocdStateCode(bodyId)?.toUpperCase() ?? state.state })) : [];
+      return { ...seat, ...(vacancy ? { vacancy } : {}), ...(bodyRosterRefs.length ? { bodyRosterRefs } : {}) };
     });
     const { summaries, memberIds } = bodyRosterSummaries(runtime, coverage.bodies.map(body => body.bodyId));
     const officialIds = new Set(memberIds);
@@ -112,7 +120,7 @@ export function stateCoverage(
       seats,
       seatCounts: { total: seats.length, named: seats.filter(seat => seat.representatives.length > 0).length },
       governments: [],
-      officialCount: officialIds.size,
+      officialCount: seats.some(seat => seat.bodyRosterRefs?.length) ? null : officialIds.size,
       governmentInventoryStates: [state.state],
       governmentInventoryUnavailableStates: [],
       stateOffices: stateOfficesForStates([state.state]),

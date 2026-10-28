@@ -209,6 +209,10 @@ export interface Seat {
    * that the seat is vacant.
    */
   representatives: SeatHolder[];
+  /** A governing roster whose body is not among the visible coverage bodies. */
+  bodyRosterRefs?: readonly { bodyId: string; state: string }[];
+  /** Attached only after the keyed governing roster has been read. */
+  readerGoverningRoster?: { members: SeatHolder[]; gaps: RosterReaderGap[] };
   /** A vacancy is shown only when the office's own source explicitly states it. */
   vacancy?: SeatVacancy;
 }

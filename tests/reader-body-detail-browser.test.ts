@@ -97,12 +97,14 @@ test("division and confirmed-address readers share the body's keyed request", as
     const body={bodyId:id,ocdId:division,divisionLabel:'Pima County',divisionType:'county',tier:'local',readerState:'AZ',rosterSummary:{memberCount:1,hasSelectBoard:false}};
     const coverage={seats:[],bodies:[body],divisions:[],senators:[],statewideExecutives:[]};
     const conflicting={...coverage,seats:[{ocdId:division,label:'Pima County',divisionType:'county',tier:'local',representatives:[{id:'old',name:'Old Mayor',officeTitle:'Mayor',provenance:{sourceUrl:'https://bulk.example',collectedAt:'2020'}}]}]};
+    const hidden={...conflicting,bodies:[],seats:conflicting.seats.map(seat=>({...seat,bodyRosterRefs:[{bodyId:id,state:'AZ'}]}))};
     window.calls=[];window.fetch=async url=>{window.calls.push(String(url));await new Promise(resolve=>setTimeout(resolve,100));
       return Response.json({bodyId:id,roster:{members:[{id:'person:1',name:'A Person',officeTitle:'Mayor',provenance:{sourceUrl:'https://pima.gov',collectedAt:'2026'}}],gaps:[],officePhone:null}})};
     function App(){const a=useDivisionsRepresentation(coverage,[division])[division];
       const c=useDivisionsRepresentation(conflicting,[division])[division];
+      const d=useDivisionsRepresentation(hidden,[division])[division];
       const b=useConfirmedDivisions(coverage,{certainty:'ADDRESS_RESOLVED',confirmedDivisionIds:[division]},['county'])[0];
-      return <p id="answer">{a?.holders[0]?.name??a?.status}|{b?.holders[0]?.name??b?.status}|{c?.status==='resolved'?c.holders[0]?.name:c?.status}</p>}
+      return <p id="answer">{a?.holders[0]?.name??a?.status}|{b?.holders[0]?.name??b?.status}|{c?.status==='resolved'?c.holders[0]?.name:c?.status}|{d?.status==='resolved'?d.holders[0]?.name:d?.status}</p>}
     createRoot(document.getElementById('root')).render(<App/>);
   ` }, bundle: true, write: false, format: "esm", platform: "browser", logLevel: "silent" });
   const server = createServer((request, response) => request.url === "/client.js"
@@ -115,7 +117,7 @@ test("division and confirmed-address readers share the body's keyed request", as
     browser = await launchGuarded({ label: "zs-body-division", blockWrites: true });
     const page = await (await browser.context()).newPage();
     await page.goto(`http://127.0.0.1:${address.port}/`);
-    await page.getByText("A Person|A Person|A Person", { exact: true }).waitFor();
+    await page.getByText("A Person|A Person|A Person|A Person", { exact: true }).waitFor();
     const calls = await page.evaluate(() => (window as unknown as { calls: string[] }).calls);
     assert.equal(calls.length, 1);
     assert.match(calls[0], /^\/api\/reader\/body\?/);

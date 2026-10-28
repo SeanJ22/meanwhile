@@ -1,5 +1,4 @@
 import { recordParentMemory } from "../lib/civic-data/parent-memory.ts";
-import { failureRetryMs } from "../lib/civic-data/failure-backoff.ts";
 import { groupCongressReads, congressMemberResults, type CongressRunGroup } from "../lib/civic-data/congress-runs.ts";
 import { appendRoutineLaunchDecisions, routineLaunchDecision, type RoutineLaunchDecision } from "../lib/civic-data/launch-decisions.ts";
 import {
@@ -17,6 +16,7 @@ import { makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
 import { syncReaderIds } from "../lib/core/resolve.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
+import { factRefreshBounds, observedSourceEveryMs, readSourceChangeHistory, type SourceChangeHistory } from "../lib/civic-data/source-change-cadence.ts";
 import { publishBoxFindings, reviewPublishedBoxFacts } from "../lib/facts/box-publication.ts";
 import { workerPublicationContext } from "../lib/civic-data/worker-publication-context.ts";
 import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
@@ -24,6 +24,7 @@ import { receiptCapture } from "../lib/facts/capture.ts";
 import { withReaderRoute } from "../lib/db/reader-route.ts";
 import { withDatabaseJob } from "../lib/db/transfer-by-caller.ts";
 import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
+import { JOB_HELD_WORDS, ROUTINE_JOBS, runRoutineJob, type RoutineJob } from "../lib/civic-data/routine-jobs.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
 
@@ -78,7 +79,6 @@ import {
   routineSerialLane,
   routineSerialLanesFirst,
   ROUTINE_PASS_BUDGET_MS,
-  ROUTINE_DATA_ADMISSION_MS,
   sittingWindowSignals,
   routineUnreceiptedSupervisorAttemptHistory,
   type RoutineSupervisorAttemptHistory,
@@ -93,7 +93,6 @@ import { OUTCOME_PARTITION_CONTRACTS } from "../lib/civic-data/outcome-partition
 import { recordDoorOutcome, taskDoorId, type DoorOutcome } from "../lib/doors/outcome.ts";
 import { evidenceFromCandidate, reopenDoorIfShut } from "../lib/doors/ingest-evidence.ts";
 import { recordDoorEvidence, type DoorEvidence } from "../lib/doors/shut.ts";
-import { OBSERVED_RATE_FIELDS, observedChangeMinutesByDoor, type ObservedRateFields } from "../lib/doors/observed-rate.ts";
 import { refreshDoorsForPass } from "../lib/doors/install.ts";
 import { MEETING_DOORS_CONTRACT_ID } from "../lib/doors/meeting-doors.ts";
 import { doorSyncLine, syncHeldDoors } from "../lib/doors/seed-all.ts";
@@ -199,7 +198,6 @@ import {
 import { reconcileNationalStatePointers, retireNationalStatePointers } from "../lib/civic-data/state-pointer-retirement.ts";
 import { portraitRunNeeded } from "../lib/photos/portrait-run.ts";
 import { factReader } from "../lib/facts/db.ts";
-import { memberOfficesRunNeeded } from "../lib/officials/member-offices-publication.ts";
 
 
 let step = "reading its task selection";
@@ -220,29 +218,40 @@ if (PUBLISH_NOW && FORCE) throw new Error("Publish-now cannot force unrelated so
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 installNeonRequestDeadline();
 
+/** In-process work this pass found paused; each stays owed and is recorded as deferred. */
+const heldJobs = new Set<string>();
+function routineJob<T>(job: RoutineJob, run: () => Promise<T>, fallback: T): Promise<T> {
+  return runRoutineJob(job, run, id => { heldJobs.add(id); return fallback; });
+}
+
 if (controlPlaneUrlFromEnv() === null) {
   console.warn("RCD_TASK routine-civic-data-runner: no door registry is configured, so this pass has no hand-wired meeting work");
 } else {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
-    const doorPass = await refreshDoorsForPass(doorRepos.doors);
-    console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from the registry (${doorPass.partitions?.partitions ?? 0} partitions)` +
-      `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}` +
-      `${(doorPass.partitions?.skipped.length ?? 0) > 0 ? `; ${doorPass.partitions!.skipped.length} door(s) left out (${doorPass.partitions!.skipped.join("; ")})` : ""}`);
-    if (doorPass.outcomes !== null) {
-      console.log(`RCD_TASK routine-civic-data-runner: outcome doors — ${doorPass.outcomes.partitions} door(s) collect outcomes` +
-        `${doorPass.outcomes.reason ? ` — ${doorPass.outcomes.reason}` : ""}` +
-        `${doorPass.outcomes.skipped.length > 0 ? `; ${doorPass.outcomes.skipped.length} left out (${doorPass.outcomes.skipped.map((skip) => `${skip.doorId}: ${skip.why}`).join("; ")})` : ""}`);
+    const doorPass = await routineJob(ROUTINE_JOBS.doors, () => refreshDoorsForPass(doorRepos.doors), null);
+    if (doorPass === null) console.log("RCD_TASK routine-civic-data-runner: door install is paused, so this pass has no hand-wired meeting work");
+    else {
+      console.log(`RCD_TASK routine-civic-data-runner: meeting doors read from the registry (${doorPass.partitions?.partitions ?? 0} partitions)` +
+        `${doorPass.reason ?? doorPass.partitions?.reason ? ` — ${doorPass.reason ?? doorPass.partitions?.reason}` : ""}` +
+        `${(doorPass.partitions?.skipped.length ?? 0) > 0 ? `; ${doorPass.partitions!.skipped.length} door(s) left out (${doorPass.partitions!.skipped.join("; ")})` : ""}`);
+      if (doorPass.outcomes !== null) {
+        console.log(`RCD_TASK routine-civic-data-runner: outcome doors — ${doorPass.outcomes.partitions} door(s) collect outcomes` +
+          `${doorPass.outcomes.reason ? ` — ${doorPass.outcomes.reason}` : ""}` +
+          `${doorPass.outcomes.skipped.length > 0 ? `; ${doorPass.outcomes.skipped.length} left out (${doorPass.outcomes.skipped.map((skip) => `${skip.doorId}: ${skip.why}`).join("; ")})` : ""}`);
+      }
     }
   } catch (error) {
     console.warn(`RCD_TASK routine-civic-data-runner: the door registry could not be read, so this pass has no hand-wired meeting work — ${error instanceof Error ? error.message : String(error)}`);
   }
 }
+let sourceFactClocks = factClocks(null);
 if (controlPlaneUrlFromEnv() !== null) {
   try {
     const clockRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, new Date().toISOString(), { skipBootstrap: true });
     const owner = await withControlPlaneConnectRetry(() => clockRepos.adminConfig.read(ADMIN_CONFIG_ID));
     const settingsConfig = owner !== null && isAdminConfig(owner.value) ? owner.value : null;
+    sourceFactClocks = factClocks(settingsConfig);
     installMeetingClockFrom(settingsConfig);
     installVotingRefreshFrom(settingsConfig);
   } catch (error) {
@@ -328,9 +337,11 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
   try {
     const doorRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
     if (!PUBLISH_NOW) {
-      console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(await syncHeldDoors(doorRepos.doors))}`);
+      const synced = await routineJob(ROUTINE_JOBS.doorSync, () => syncHeldDoors(doorRepos.doors), null);
+      if (synced) console.log(`RCD_TASK routine-civic-data-runner: door registry — ${doorSyncLine(synced)}`);
       const [published] = await runBoundedChildPass([{
         id: MEETING_DOORS_CONTRACT_ID,
+        databaseBytesPerRun: 54_489_734,
         failureDomain: "derived:meeting-doors",
         executable: process.execPath,
         args: [...TS_CHILD, "scripts/publish-meeting-doors.mts", "--promote"],
@@ -339,7 +350,7 @@ if (ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()) {
         onStarting: command => acquireChildMemory(command), onSettled: run => releaseChildMemory(run.id) });
       console.log(`RCD_TASK routine-civic-data-runner: meeting doors ${published?.status === 0 ? "published" : `not published (${safeFailure(published?.errorMessage ?? published?.stderr.trim().split("\n").at(-1) ?? "no answer")}); children read the last good doors`}`);
     }
-    await refreshDoorsForPass(doorRepos.doors);
+    await routineJob(ROUTINE_JOBS.doors, () => refreshDoorsForPass(doorRepos.doors), null);
     // Keep both this pass's initial tasks and doors discovered during its refresh attributable by partition receipt.
     for (const contract of MEETING_PARTITION_CONTRACTS) MEETING_PARTITION_TASK_IDS.add(contract.id);
   } catch (error) {
@@ -364,23 +375,9 @@ const sharedBrowser = PUBLISH_NOW ? null : (await import("./scout-browse.mts")).
 const workerToolsHost = sharedBrowser && ROUTINE_DATA_PROCESS_LEASE && controlPlaneUrlFromEnv()
   ? await startWorkerToolsHost({ repos: await createPgRepositories(controlPlaneUrlFromEnv()!,
     RUN_STARTED_AT, { skipBootstrap: true }), browse: sharedBrowser.browse }) : null;
-async function readObservedChangeRates(): Promise<ReadonlyMap<string, number>> {
-  const connection = controlPlaneUrlFromEnv();
-  if (connection === null) return new Map();
-  try {
-    doorOutcomeRepos ??= createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
-    // Four fields per door, not whole records: unchanged rows cost only their version check.
-    const rows = await (await doorOutcomeRepos).doors.listNarrowed(OBSERVED_RATE_FIELDS);
-    return observedChangeMinutesByDoor(rows.map((row) => row.value as ObservedRateFields).filter((door) => typeof door?.doorId === "string"));
-  } catch (error) {
-    console.warn(`RCD_DOORS: observed change rates not read — ${error instanceof Error ? error.message : String(error)}; every task stays on its policy cadence`);
-    return new Map();
-  }
-}
-
 let doorOutcomeRepos: Promise<Awaited<ReturnType<typeof createPgRepositories>>> | null = null;
-async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, changed = false, evidence: DoorEvidence | null = null,
-  sourceClock?: () => Promise<RoutineTaskClock>): Promise<void> {
+async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, evidence: DoorEvidence | null = null,
+  sourceClock?: () => Promise<RoutineTaskClock>, sourceTask?: RoutineSourceTask): Promise<void> {
   const connection = controlPlaneUrlFromEnv();
   if (connection === null) return;
   try {
@@ -395,7 +392,9 @@ async function recordTaskDoorOutcome(taskId: string, outcome: DoorOutcome, chang
     if (outcome === "FAILURE" && evidence !== null) {
       if ((await recordDoorEvidence(repos.doors, doorId, evidence, at, repos)).written) return;
     }
-    await recordDoorOutcome(repos.doors, doorId, outcome, at, changed);
+    const history = outcome === "SUCCESS" && sourceTask
+      ? (await readSourceChangeHistory(readerFactDb().query, [sourceTask])).get(taskId) : undefined;
+    await recordDoorOutcome(repos.doors, doorId, outcome, at, false, undefined, history);
     if (outcome === "SUCCESS" && await reopenDoorIfShut(repos.doors, doorId, at, repos)) {
       console.log(`RCD_TASK ${taskId}: its door was shut and reads again; reopened`);
     }
@@ -504,16 +503,9 @@ const BOX_FINDINGS_PER_PASS = 1000;
  * waits for them before it saves its outcome.
  */
 let heldPublication: Promise<void> = Promise.resolve();
-function publishHeldBesideSources(failures: SupervisorFailure[], taskId: string, code: string, publish: () => Promise<void>): void {
-  heldPublication = heldPublication.then(async () => {
-    if (!admitJobLaunch({ id: taskId, args: [taskId === "meeting-pins" ? "lib/civic-data/held-meeting-pins.ts" : "scripts/routine-civic-data-runner.mts"],
-      launchEveryMs: ROUTINE_DATA_ADMISSION_MS }, ROOT)) {
-      console.log(`RCD_DEFER ${taskId}: job transfer breaker holds new launches; work remains owed`);
-      return;
-    }
-    await publish();
-  }).catch((error: unknown) => {
-    failures.push({ taskId, code, detail: safeFailure(sanitizedErrorDiagnostic(error)) });
+function publishHeldBesideSources(failures: SupervisorFailure[], job: RoutineJob, code: string, publish: () => Promise<void>): void {
+  heldPublication = heldPublication.then(() => routineJob(job, () => withReaderRoute(job.id, publish), undefined)).catch((error: unknown) => {
+    failures.push({ taskId: job.id, code, detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   });
 }
 
@@ -524,7 +516,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
   if (!connection) throw new Error("control-plane reporting connection is unavailable");
   const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
 
-  if (ONLY === null) publishHeldBesideSources(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", () => withDatabaseJob("meeting-pins",()=>withReaderRoute("meeting-pins", async () => {
+  if (ONLY === null) publishHeldBesideSources(failures, ROUTINE_JOBS.meetingPins, "MEETING_PIN_PUBLICATION_FAILED", () => withReaderRoute("meeting-pins", async () => {
     const vault=new DurableEvidenceStore(join(ROOT,...VAULT_DIR));
     const sourceFetch=pacedProbeFetch({pacing:repos.websitePacing});
     const sourceCopies=new Map<string,Promise<WorkerPublicationCapture>>();
@@ -543,7 +535,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
       deadlineMs:Math.min(PASS_LAUNCH_DEADLINE_MS,Date.now()+Math.floor(PUBLISH_NOW_PASS_BUDGET_MS/3)) });
     console.log(`RCD_FACTS meeting pins: ${report.published} published; ${report.unplaced} still without a point`);
     if(report.failures.length)failures.push({taskId:"meeting-pins",code:"MEETING_PIN_PUBLICATION_FAILED",detail:safeFailure(report.failures.slice(0,8).join(" | "))});
-  })));
+  }));
 
   // Publishing what is already found (Box findings, saved worker results, changed doors) is free: a pause never holds it.
   if (PUBLISH_NOW || (ONLY && WORKER_PUBLICATION_TASK_IDS.some(id => ONLY.has(id)))) {
@@ -554,7 +546,7 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
 
     const startedAt = new Date(String((await query("SELECT now() AS at", []))[0]!.at)).toISOString();
     // Box delivery is independent of the worker outbox scan and paid planning history.
-    publishHeldBesideSources(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async () => {
+    publishHeldBesideSources(failures, ROUTINE_JOBS.boxFacts, "BOX_FACT_PUBLICATION_FAILED", async () => {
       const box = await publishBoxFindings({ repos, store, facts, vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)),
         fetch: pacedProbeFetch({ pacing: repos.websitePacing }), clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null),
         now: new Date().toISOString(), limit: BOX_FINDINGS_PER_PASS, audit: false,
@@ -563,53 +555,61 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
       if (box.failuresByReason.BOX_PUBLICATION_EXCEPTION) failures.push({ taskId: "box-facts", code: "BOX_FACT_PUBLICATION_FAILED",
         detail: `${box.failuresByReason.BOX_PUBLICATION_EXCEPTION} finding(s) need retry: ${safeFailure(JSON.stringify(box.errorExamples))}` });
     });
-    recordParentMemory(PUBLISH_NOW ? "publish-now" : "routine", "before-publication-inputs");
-    const cursor = PUBLISH_NOW ? await readPassCursor(facts.query, PUBLISH_NOW_CURSOR) : null;
-    const since = cursor === null ? null : new Date(Date.parse(cursor) - 60_000).toISOString();
-    const pointers = new PostgresRoutineDataStore();
-    const shared = await readHeldPointerTimes(query, async (recordClass, scope) => (await pointers.readPromotionIdentity(recordClass, scope))?.promotedAt ?? null, REGISTRY_STATES,
-      (recordClass, scopes) => pointers.readPromotionIdentities(recordClass, scopes))
-      .catch((error: unknown) => { console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`); return null; });
-    const retryIds = PUBLISH_NOW ? await readPublishNowRetryIds(facts.query, startedAt) : [];
-    const { items, through } = await readWorkerPublicationItems(query, selected, since === null ? null
-      : { at: since, until: startedAt, sharedInputsMoved: shared === null || [shared.nationalAt, shared.registryAt, shared.routesAt].some(at => at !== null && at > since) },
-      retryIds, Date.now() + PUBLISH_NOW_SCAN_BUDGET_MS);
-    if (through !== null && through < startedAt) console.log(`RCD_PUBLISH_NOW_SCAN read changes through ${through}; the next pass reads on from there`);
-    const heldInputs = shared === null ? null : await readHeldInputs(query, shared, items).catch((error: unknown) => {
-      console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`);
-      return null;
-    });
-    const { owed, publication } = await readPublicationAdmission(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT, heldInputs);
-    recordParentMemory(PUBLISH_NOW ? "publish-now" : "routine", "after-publication-inputs");
-    if (PUBLISH_NOW && ONLY === null) await savePublishNowProgress(facts, { startedAt, scannedThrough: through ?? startedAt, selectedItemIds: items.map(item => item.id),
-      owedItemIds: publishNowRetryItemIds(items, [...owed.rosters, ...owed.comments, ...publication.flatMap(task => task.ownerInvocation?.workItemIds ?? [])], heldInputs) });
+    const scan = await routineJob(ROUTINE_JOBS.workerPublication, async () => {
+      recordParentMemory(PUBLISH_NOW ? "publish-now" : "routine", "before-publication-inputs");
+      const cursor = PUBLISH_NOW ? await readPassCursor(facts.query, PUBLISH_NOW_CURSOR) : null;
+      const since = cursor === null ? null : new Date(Date.parse(cursor) - 60_000).toISOString();
+      const pointers = new PostgresRoutineDataStore();
+      const shared = await readHeldPointerTimes(query, async (recordClass, scope) => (await pointers.readPromotionIdentity(recordClass, scope))?.promotedAt ?? null, REGISTRY_STATES,
+        (recordClass, scopes) => pointers.readPromotionIdentities(recordClass, scopes))
+        .catch((error: unknown) => { console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`); return null; });
+      const retryIds = PUBLISH_NOW ? await readPublishNowRetryIds(facts.query, startedAt) : [];
+      const { items, through } = await readWorkerPublicationItems(query, selected, since === null ? null
+        : { at: since, until: startedAt, sharedInputsMoved: shared === null || [shared.nationalAt, shared.registryAt, shared.routesAt].some(at => at !== null && at > since) },
+        retryIds, Date.now() + PUBLISH_NOW_SCAN_BUDGET_MS);
+      if (through !== null && through < startedAt) console.log(`RCD_PUBLISH_NOW_SCAN read changes through ${through}; the next pass reads on from there`);
+      const heldInputs = shared === null ? null : await readHeldInputs(query, shared, items).catch((error: unknown) => {
+        console.log(`RCD_HELD_INPUTS CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; held routes are read again hourly`);
+        return null;
+      });
+      const admission = await readPublicationAdmission(items, ids => readCompletedWorkerResultsOf(repos, ids), RUN_STARTED_AT, heldInputs);
+      recordParentMemory(PUBLISH_NOW ? "publish-now" : "routine", "after-publication-inputs");
+      if (PUBLISH_NOW && ONLY === null) await savePublishNowProgress(facts, { startedAt, scannedThrough: through ?? startedAt, selectedItemIds: items.map(item => item.id),
+        owedItemIds: publishNowRetryItemIds(items, [...admission.owed.rosters, ...admission.owed.comments, ...admission.publication.flatMap(task => task.ownerInvocation?.workItemIds ?? [])], heldInputs) });
+      return admission;
+    }, null);
+    const owed = scan?.owed ?? { rosters: [], comments: [] }, publication = scan?.publication ?? [];
     if (owed.rosters.length || owed.comments.length) try {
-      const context = await workerPublicationContext(RUN_STARTED_AT, repos);
-      for (const [label, publish, ids] of [["rosters", publishOwedRosterFacts, owed.rosters], ["comment rules", publishOwedCommentFacts, owed.comments]] as const) {
-        if (!ids.length) continue;
-        const report = await publish({ repos, store, facts, workItemIds: ids, now: RUN_STARTED_AT, readCapture: context.readCapture });
-        console.log(`RCD_FACTS ${label}: ${report.filter(row => row.outcome.status !== "HELD").length} of ${report.length} published as facts`);
-      }
+      await routineJob(ROUTINE_JOBS.workerFacts, async () => {
+        const context = await workerPublicationContext(RUN_STARTED_AT, repos);
+        for (const [label, publish, ids] of [["rosters", publishOwedRosterFacts, owed.rosters], ["comment rules", publishOwedCommentFacts, owed.comments]] as const) {
+          if (!ids.length) continue;
+          const report = await publish({ repos, store, facts, workItemIds: ids, now: RUN_STARTED_AT, readCapture: context.readCapture });
+          console.log(`RCD_FACTS ${label}: ${report.filter(row => row.outcome.status !== "HELD").length} of ${report.length} published as facts`);
+        }
+      }, undefined);
     } catch (error) {
       failures.push({ taskId: "fact-publication", code: "FACT_PUBLICATION_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
     }
     if (!PUBLISH_NOW) return publication;
 
     try {
-      const listed = await readRunnerDoors(repos.doors, ["status"], "OPEN", "probes");
-      const clockStore = new PostgresRoutineDataStore();
-      const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
-      const report = await runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb(), query: facts.query }, Date.now()),
-        pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), new Date().toISOString(), Math.min(PASS_LAUNCH_DEADLINE_MS, Date.now() + 30_000));
-      if (report.looked > 0 || report.deferred > 0 || report.waiting > 0) {
+      const report = await routineJob(ROUTINE_JOBS.doorProbes, async () => {
+        const listed = await readRunnerDoors(repos.doors, ["status"], "OPEN", "probes");
+        const clockStore = new PostgresRoutineDataStore();
+        const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
+        return runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb(), query: facts.query }, Date.now()),
+          pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), new Date().toISOString(), Math.min(PASS_LAUNCH_DEADLINE_MS, Date.now() + 30_000));
+      }, null);
+      if (report && (report.looked > 0 || report.deferred > 0 || report.waiting > 0)) {
         console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ` +
           `${report.waiting} waiting on their website's hour or its request to wait; ${report.deferred} not due`);
       }
     } catch (error) {
       console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
     }
-    return [...publication, ...publishNowDoorTasks(await readRunnerDoors(repos.doors, ["status"], "OPEN", "publication"),
-      MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT)];
+    return [...publication, ...await routineJob(ROUTINE_JOBS.doorPublication, async () => publishNowDoorTasks(
+      await readRunnerDoors(repos.doors, ["status"], "OPEN", "publication"), MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT), [])];
   }
   const intents = readIntents([...(await readRunnerPauseIntents(repos))]);
   if (intents.runnerPause.paused) return [];
@@ -722,6 +722,12 @@ function recordLaunchDecision(task: Pick<RoutineSourceTask, "id" | "sourceId" | 
   console.log(`RCD_${action} ${task.id}: ${detail}`);
   launchDecisions.push(routineLaunchDecision(task, action, reason, safeFailure(detail), new Date().toISOString()));
 }
+/** In-process work its breaker held this pass is deferred like a held source: owed, with its reason. */
+function recordHeldJobs(): void {
+  for (const id of heldJobs) recordLaunchDecision({ id, sourceId: id, scope: "US" }, "DEFER", "Holding this work to reduce database traffic",
+    `JOB_TRANSFER_BREAKER: ${id} is ${JOB_HELD_WORDS}`);
+  heldJobs.clear();
+}
 async function flushLaunchDecisions(): Promise<void> {
   const rows = launchDecisions.splice(0), batch = decisionBatch++;
   if (rows.length) decisionWrites = decisionWrites.then(async () => {
@@ -782,7 +788,10 @@ async function recordHuntSourceProgressEach(tasks: readonly RoutineSourceTask[],
 
 async function runFactMaintenance(deadlineMs: number): Promise<void> {
   const facts = readerFactDb(), states = registeredStates(ROOT);
-  try { console.log(`fact store reader identities: ${await syncReaderIds(facts.query)} targets resolve`); }
+  try {
+    const resolved = await routineJob(ROUTINE_JOBS.readerEntityIds, () => syncReaderIds(facts.query), null);
+    if (resolved !== null) console.log(`fact store reader identities: ${resolved} targets resolve`);
+  }
   catch (error) {
     supervisorFailures.push({ taskId: "reader-entity-ids", code: "READER_ENTITY_IDS_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
@@ -791,9 +800,9 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   if (!state || Date.now() >= deadlineMs) return;
   step = "loading fact store entities";
   try {
-    const loaded = await loadChangedStates(states, await readPassCursor(facts.query, "routine-fact-entities-state"),
+    const loaded = await routineJob(ROUTINE_JOBS.factEntities, async () => loadChangedStates(states, await readPassCursor(facts.query, "routine-fact-entities-state"),
       next => ensureFactEntities(facts, ROOT, [next]), next => writePassCursor(facts.query, "routine-fact-entities-state", next),
-      () => Date.now() < deadlineMs);
+      () => Date.now() < deadlineMs), []);
     if (loaded.length) console.log(`fact store entities: loaded ${loaded.join(", ")}`);
   } catch (error) {
     supervisorFailures.push({ taskId: "fact-store-entities", code: "FACT_ENTITIES_LOAD_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
@@ -801,9 +810,10 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   // Free national work: every Census government's governing board, a state at a time, beside the steps below.
   // It gets its own ten minutes: about 81,000 board facts would otherwise take two days of one-minute maintenance budgets.
   const governingDeadlineMs = Math.min(PASS_MAINTENANCE_DEADLINE_MS, Date.now() + 10 * 60_000);
-  const governingBoards = makeCensusGoverningBodies({ db: facts, root: ROOT, states, clocks: factClocks(null), more: () => Date.now() < governingDeadlineMs })
+  const governingBoards = routineJob(ROUTINE_JOBS.censusGoverningBodies,
+    () => makeCensusGoverningBodies({ db: facts, root: ROOT, states, clocks: factClocks(null), more: () => Date.now() < governingDeadlineMs }), null)
     .then(report => {
-      if (report.states.length) console.log(`RCD_TASK census-governing-bodies: ${report.states.join(", ")}: ${report.live} board facts live, ` +
+      if (report?.states.length) console.log(`RCD_TASK census-governing-bodies: ${report.states.join(", ")}: ${report.live} board facts live, ` +
         `${report.confirmed} confirmed, ${report.held} held, ${report.unheld} governments not yet held on a place` +
         (Object.keys(report.refused).length ? `; refused ${JSON.stringify(report.refused)}` : ""));
     }, error => {
@@ -814,7 +824,7 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
     try {
       const splitRepos = await createPgRepositories(controlPlaneUrlFromEnv()!, RUN_STARTED_AT, { skipBootstrap: true });
       if (!await federalPeopleSplitRecorded(splitRepos.ownerDigests)) {
-        const [run] = await runBoundedChildPass([{ id: FEDERAL_PEOPLE_SPLIT_LOG_KEY, failureDomain: "derived:federal-people-split",
+        const [run] = await runBoundedChildPass([{ id: FEDERAL_PEOPLE_SPLIT_LOG_KEY, databaseBytesPerRun: 1_907_347_669, failureDomain: "derived:federal-people-split",
           executable: process.execPath, args: ["--experimental-strip-types", "scripts/split-federal-people.mts"],
           env: admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "FEDERAL_PEOPLE_SPLIT", parentPid: process.pid }),
         }], { cwd: ROOT, env: process.env, timeoutMs: ROUTINE_CHILD_TIMEOUT_MS, deadlineMs, maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES, concurrency: 1,
@@ -834,7 +844,7 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   try {
     const facts = readerFactDb();
     const connection = controlPlaneUrlFromEnv();
-    if (connection && Date.now() < deadlineMs) {
+    if (connection && Date.now() < deadlineMs) await routineJob(ROUTINE_JOBS.factCartons, async () => {
       const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
       const common = { facts, clocks: factClocks((await repos.adminConfig.read(ADMIN_CONFIG_ID))?.value ?? null), repos,
         vault: new DurableEvidenceStore(join(ROOT, ...VAULT_DIR)), fetch: pacedProbeFetch({ pacing: repos.websitePacing }), now: RUN_STARTED_AT, deadlineMs };
@@ -856,14 +866,14 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
         const comments = await cartonComments(facts.query, id => store.readCandidate(id));
         if (comments) report("comment rules", await importCartonComments({ ...comments, ...common }));
       }
-    }
+    }, undefined);
   } catch (error) {
     supervisorFailures.push({ taskId: "fact-store-import", code: "FACT_IMPORT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
   step = "re-reading pages whose facts are past their refresh date";
   try {
     const connection = controlPlaneUrlFromEnv();
-    if (connection && Date.now() < deadlineMs) {
+    if (connection && Date.now() < deadlineMs) await routineJob(ROUTINE_JOBS.pageRefresh, async () => {
       const repos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
       const doors = await readRunnerDoors(repos.doors, ["kind"], "page", "refresh");
       const sizeFor = websiteSizeFromHoldings([...new Set(doors.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
@@ -874,7 +884,7 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
           `${pages.changed} changed, ${pages.unreadable} unreadable; ${pages.waiting} waiting on their website` +
           (pages.failures.length ? `; ${pages.failures.length} could not finish — ${safeFailure(pages.failures.join("; "))}` : ""));
       }
-    }
+    }, undefined);
   } catch (error) {
     console.log(`RCD_PAGE_REFRESH CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; pages past their refresh date are read again next pass`);
   }
@@ -905,10 +915,19 @@ if (controlPlaneUrlFromEnv()) try {
   supervisorFailures.push({ taskId: "candidate-profile-findings", code: "CANDIDATE_FINDING_ADMISSION_UNREAD", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
 }
 
-const selectedTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
-  .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)));
+const offeredTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
+  .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)))
+  .map(task => ({ ...task, ...factRefreshBounds(task, sourceFactClocks) }));
+/** A source its transfer breaker paused is not read for, clocked or launched; its work stays owed until it is released. */
+const selectedTasks = offeredTasks.filter(task => {
+  if (admitJobLaunch(task.id)) return true;
+  recordLaunchDecision(task, "DEFER", "Holding this source to reduce database traffic", `JOB_TRANSFER_BREAKER: ${task.id} is ${JOB_HELD_WORDS}`);
+  return false;
+});
 if (PUBLISH_NOW && selectedTasks.length === 0) {
   await heldPublication;
+  recordHeldJobs();
+  await flushLaunchDecisions();
   if (publishNowHasNothingOwed(PUBLISH_NOW, selectedTasks.length, supervisorFailures.length)) {
     console.log("publish-now: nothing owed this minute");
   } else {
@@ -1045,10 +1064,13 @@ if (publicationTargets.length) {
     console.error(`RCD_INPUT_CHANGED ballot publication: ${safeFailure(sanitizedErrorDiagnostic(error))}; publication history unavailable`);
     return null;
   }) : null;
+  // Each source's own reads count under its task id, as its child does.
   for (const { family, state, key } of publicationTargets) try {
-    ballotStamps.set(key, await ballotInputStamp(resolve(ROOT, PUBLICATION_INPUTS[family]), state));
-    const prior = ballotPublicationRepos ? await readLatestBallotPublicationSummary(ballotPublicationRepos, state, family) : null;
-    if (prior) priorBallotPublications.set(key, prior);
+    await withDatabaseJob(key, async () => {
+      ballotStamps.set(key, await ballotInputStamp(resolve(ROOT, PUBLICATION_INPUTS[family]), state));
+      const prior = ballotPublicationRepos ? await readLatestBallotPublicationSummary(ballotPublicationRepos, state, family) : null;
+      if (prior) priorBallotPublications.set(key, prior);
+    });
   } catch (error) {
     console.error(`RCD_INPUT_CHANGED ${key}: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);
   }
@@ -1061,10 +1083,13 @@ for (const task of selectedTasks) {
       if (!connection) throw new Error("Source input history has no reporting connection.");
       ballotPublicationRepos = await createPgRepositories(connection, RUN_STARTED_AT, { skipBootstrap: true });
     }
-    const stamp = await routineInputStamp(ROOT, task.id, ballotPublicationRepos);
-    if (stamp !== null) inputStamps.set(task.id, stamp);
-    const prior = await readRoutineInput(ballotPublicationRepos, task.id);
-    if (prior) priorInputs.set(task.id, prior);
+    const repos = ballotPublicationRepos;
+    await withDatabaseJob(task.id, async () => {
+      const stamp = await routineInputStamp(ROOT, task.id, repos);
+      if (stamp !== null) inputStamps.set(task.id, stamp);
+      const prior = await readRoutineInput(repos, task.id);
+      if (prior) priorInputs.set(task.id, prior);
+    });
   } catch (error) {
     const detail = safeFailure(sanitizedErrorDiagnostic(error));
     supervisorFailures.push({ taskId: task.id, code: "PUBLICATION_INPUT_CLOCK_UNREAD", detail });
@@ -1078,7 +1103,8 @@ for (const task of selectedTasks) {
     const connection = controlPlaneUrlFromEnv();
     if (!connection) throw new Error("control-plane reporting connection is unavailable");
     const sql = neon(connection);
-    campaignPublicationInputs.set(task.id, await readCampaignPublicationInputs(target.state, (query, params) => sql.query(query, params), RUNNING_CODE_SHA));
+    campaignPublicationInputs.set(task.id, await withDatabaseJob(task.id, () =>
+      readCampaignPublicationInputs(target.state, (query, params) => sql.query(query, params), RUNNING_CODE_SHA)));
   } catch (error) {
     const detail = safeFailure(sanitizedErrorDiagnostic(error));
     supervisorFailures.push({ taskId: task.id, code: "PUBLICATION_INPUT_CLOCK_UNREAD", detail });
@@ -1114,7 +1140,15 @@ if (selectedTasks.length > 0) try {
   console.error(`RCD_TASK routine-civic-data-provider-frontier: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
 }
 
-const observedChangeRates = await readObservedChangeRates();
+const campaignMoneyAdmission = selectedTasks.some(task=>task.id==="campaign-money")
+  ? await (await import("../lib/funding/state-local-work.ts")).readCampaignMoneyAdmission(readerFactDb().query,new Date(admissionNowMs).toISOString(),sourceFactClocks)
+    .catch(error=>{console.warn(`RCD_TASK campaign-money: state source/input clocks unavailable: ${safeFailure(sanitizedErrorDiagnostic(error))}; normal cadence retained`);return null;})
+  : null;
+
+const sourceChangeHistories = await readSourceChangeHistory(readerFactDb().query, selectedTasks).catch(error => {
+  console.warn(`RCD_SOURCE_HISTORY ${safeFailure(sanitizedErrorDiagnostic(error))}; source fact clocks remain in force`);
+  return new Map<string, SourceChangeHistory>();
+});
 for (const read of clockReads) {
   const { task } = read;
   if (!read.ok) {
@@ -1128,15 +1162,15 @@ for (const read of clockReads) {
   const publication = publicationTarget(task.id);
   const ballotsDue = publication !== null && ballotPublicationDue(task.id,
     ballotStamps.get(publication.key) ?? null, priorBallotPublications.get(publication.key) ?? null, read.clock);
-  const inputDue = routineInputState(task.id) !== null && (!inputStamps.has(task.id) ||
-    routineInputChanged(inputStamps.get(task.id) ?? null, priorInputs.get(task.id) ?? null));
+  const inputDue = task.id==="campaign-money"&&campaignMoneyAdmission?.localDue===true ||
+    routineInputState(task.id) !== null && (!inputStamps.has(task.id) ||
+      routineInputChanged(inputStamps.get(task.id) ?? null, priorInputs.get(task.id) ?? null));
   if (!FORCE && !ballotsDue && !inputDue && dueRequest === null && unchangedRoutineProtocolFailure(task, read.clock, protocolFailures, RUNNING_CODE_SHA, admissionNowMs)) {
     recordLaunchDecision(task, "SKIP", "Waiting for a changed source or repair", "unchanged receipt failure; awaiting changed code, Send or source evidence");
     continue;
   }
   const sittingHot = sittingSignals.get(task.id);
-  const observedChange = observedChangeRates.get(task.id) ?? observedChangeRates.get(`feed:${task.id}`);
-  const observedEveryMs = observedChange === undefined ? undefined : observedChange * 60_000;
+  const observedEveryMs = observedSourceEveryMs(sourceChangeHistories.get(task.id), durableClock);
   const publicationDue = campaignPublicationInputsDue(task.id, campaignPublicationInputs.get(task.id) ?? null);
   const discoveryDue = meetingDiscoveryInputsDue(task.id, durableClock, meetingDiscoveryInputs, admissionNowMs);
   if (task.ownerInvocation) {
@@ -1146,7 +1180,7 @@ for (const read of clockReads) {
     publicationInputLines.push(`Send ${task.ownerInvocation.instructions.join(", ")}: shared ${task.id} ${due ? "refresh offered to the normal source frontier" : reused ? "verified shared result reused" : "failed attempt held under retry backoff"}; canonical scope ${task.scope}.`);
   }
   const cadenceDue = routineTaskDue(task, durableClock, admissionNowMs, sittingHot, observedEveryMs);
-  const taskDue = publication
+  const taskDue = task.id==="campaign-money"&&!task.ownerInvocation&&campaignMoneyAdmission!==null ? campaignMoneyAdmission.providerDue : publication
     // Navigation re-reads its official pages on its own cadence; a ballot file republishes only when it changes or was held.
     ? ballotsDue || (publication.family === "ballot-navigation" || !ballotStamps.has(publication.key) || priorBallotPublications.get(publication.key)?.status === "HELD") && cadenceDue
     : cadenceDue;
@@ -1156,28 +1190,19 @@ for (const read of clockReads) {
     const retrying = Date.parse(durableClock?.lastAttemptedAt ?? "") > Date.parse(durableClock?.lastSucceededObservedAt ?? "") || !durableClock?.lastSucceededObservedAt;
     recordLaunchDecision(task, "SKIP", fileOnly ? "State file unchanged" : retrying ? "Waiting to retry the source" : "Waiting for the next scheduled source check",
       fileOnly ? "Next publication is due when the state ballot file changes." :
-        `Next source check ${Number.isFinite(next) ? new Date(next).toISOString() : "after the owner's next request"}. ${retrying ? `Source retry after ${failureRetryMs(task.retryMs, durableClock)}ms` : "Source cadence"}; last attempted ${durableClock?.lastAttemptedAt ?? "never"}; last checked ${durableClock?.lastSucceededObservedAt ?? "never"}${inputStamps.has(task.id) ? "; state inputs unchanged" : ""}.`);
+        `Next source check ${Number.isFinite(next) ? new Date(next).toISOString() : "after the owner's next request"}. ${retrying ? "Source retry and fact clock" : "Source cadence"}; last attempted ${durableClock?.lastAttemptedAt ?? "never"}; last checked ${durableClock?.lastSucceededObservedAt ?? "never"}${inputStamps.has(task.id) ? "; state inputs unchanged" : ""}.`);
     continue;
   }
   // A state's portraits wait until its rosters name someone new without a portrait, or a retry falls due.
   if (task.sourceId === "people-portraits" && !FORCE && dueRequest === null) {
-    const portraits = await portraitRunNeeded(store, task.id.slice("people-portraits-".length), new Date(admissionNowMs).toISOString(), factReader())
+    const portraits = await withDatabaseJob(task.id, () => portraitRunNeeded(store, task.id.slice("people-portraits-".length), new Date(admissionNowMs).toISOString(), factReader()))
       .catch(error => ({ needed: true, reason: `The portrait record could not be read (${safeFailure(sanitizedErrorDiagnostic(error))}); the state runs.` }));
     if (!portraits.needed) {
       recordLaunchDecision(task, "SKIP", "Portraits are current", portraits.reason);
       continue;
     }
   }
-  // The daily member-office run waits until some state's lawmaker list is promoted again.
-  if (task.id === "member-offices" && !FORCE && dueRequest === null) {
-    const offices = await memberOfficesRunNeeded(store)
-      .catch(error => ({ needed: true, reason: `The member-office package could not be read (${safeFailure(sanitizedErrorDiagnostic(error))}); it runs.` }));
-    if (!offices.needed) {
-      recordLaunchDecision(task, "SKIP", "Member offices are current", offices.reason);
-      continue;
-    }
-  }
-  if (inputDue) console.log(`RCD_INPUT_CHANGED ${task.id}: ${!inputStamps.has(task.id) ? "state input clock could not be read; refresh remains owed" : priorInputs.has(task.id) ? "state inputs changed" : "state inputs have no processed stamp"}; offered to the normal frontier`);
+  if (inputDue) console.log(`RCD_INPUT_CHANGED ${task.id}: ${task.id==="campaign-money"?"held native filings have changed people/bindings or unfinished derived work":!inputStamps.has(task.id) ? "state input clock could not be read; refresh remains owed" : priorInputs.has(task.id) ? "state inputs changed" : "state inputs have no processed stamp"}; offered to the normal frontier`);
   if (publicationDue) {
     const detail = `${task.id}: ${campaignPublicationInputs.get(task.id)!.approvals - campaignPublicationInputs.get(task.id)!.attemptedApprovals} committed approval(s) not attempted by this code; offered to the normal publication frontier without waiting for hourly cadence.`;
     publicationInputLines.push(detail);
@@ -1238,7 +1263,7 @@ attempted = pendingRuns.length;
 function sourceChildCommand(pending: PendingRun): BoundedChildCommand {
   return {
     id: pending.id,
-    launchEveryMs: pending.task.cadenceMs,
+    databaseBytesPerRun: pending.task.contract?.databaseBytesPerRun,
 
     failureDomain: pending.task.acquisitionFailureDomain,
     serialLane: routineSerialLane(pending.command),
@@ -1285,11 +1310,10 @@ for (const { id } of pendingRuns) unsettledSourceRuns.add(id);
 type SourceUnit = PendingRun | StateCalendarGroup<PendingRun> | CongressRunGroup<PendingRun>;
 const sourceHandoffs = new Map<string, ReturnType<typeof writeContractHandoff>>();
 function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
-  const launchEveryMs = Math.min(...unitMembers(unit).map(member=>member.task.cadenceMs));
   if (unit.kind === "CONGRESS_DIRECTORY") {
     const handoff = writeContractHandoff(unit.members.map(member => member.id));
     sourceHandoffs.set(unit.id, handoff);
-    return { id: unit.id, launchEveryMs, failureDomain: "routine-source:congress-directory-project", executable: process.execPath,
+    return { id: unit.id, databaseBytesPerRun: 243_607_822, failureDomain: "routine-source:congress-directory-project", executable: process.execPath,
       args: [...TS_CHILD, "scripts/fetch-congress-legislators.mts", "--promote", ...handoff.args],
       env: withPassDeadline({ ...admittedRuntimeChildEnvironment({ parentEnv: process.env, capability: "MANUAL_CONTRACT", contract: unit.id, parentPid: process.pid }),
         ...stateCalendarEnvironment(unit.members) }, PASS_LAUNCH_DEADLINE_MS) };
@@ -1309,7 +1333,7 @@ function sourceUnitCommand(unit: SourceUnit): BoundedChildCommand {
   }
   return {
     id: unit.id,
-    launchEveryMs,
+    databaseBytesPerRun: 52_979_307,
     failureDomain: unit.id,
     executable: process.execPath,
     args: [...TS_CHILD, ...unit.command.filter(arg => !arg.startsWith("--only-partition=")), ...handoff.args],
@@ -1348,25 +1372,28 @@ const sourcePass = runMeetingDiscoveryChain(pendingRuns, runs => {
       await recordHuntSourceProgressEach(unitMembers(units[index]!).map(member => member.task), "COLLECTING_AND_VERIFYING",
         "The source command has a worker slot. Collecting current source records and running the existing identity, content, freshness and reader checks. No model call is used.");
     },
+    // A source's settlement reads count under its own task id, as its child's do.
     onSettled: async (run, index) => {
-      const unit = units[index]!;
-      if (unit.kind === "CONGRESS_DIRECTORY") {
-        try {
-          for (const result of congressMemberResults(run, unit.members.map(member => member.id), startedSourceChildren.has(run.id))) {
-            const member = unit.members.find(member => member.id === result.id)!;
-            if (result.run) await settlePendingRunResult(member, result.run);
-            else {
-              unsettledSourceRuns.delete(member.id); attempted--;
-              recordLaunchDecision(member.task, "DEFER", "National Congress publication remains due", result.owed!);
-              notStarted.push(member.id);
+      await withDatabaseJob(run.id, async () => {
+        const unit = units[index]!;
+        if (unit.kind === "CONGRESS_DIRECTORY") {
+          try {
+            for (const result of congressMemberResults(run, unit.members.map(member => member.id), startedSourceChildren.has(run.id))) {
+              const member = unit.members.find(member => member.id === result.id)!;
+              if (result.run) await settlePendingRunResult(member, result.run);
+              else {
+                unsettledSourceRuns.delete(member.id); attempted--;
+                recordLaunchDecision(member.task, "DEFER", "National Congress publication remains due", result.owed!);
+                notStarted.push(member.id);
+              }
             }
+          } finally {
+            for (const member of unit.members) startedSourceChildren.delete(member.id);
+            releaseChildMemory(run.id); sourceHandoffs.get(unit.id)?.cleanup(); sourceHandoffs.delete(unit.id);
           }
-        } finally {
-          for (const member of unit.members) startedSourceChildren.delete(member.id);
-          releaseChildMemory(run.id); sourceHandoffs.get(unit.id)?.cleanup(); sourceHandoffs.delete(unit.id);
-        }
-      } else if (unit.kind === "STATE_CALENDARS") await settleStateCalendars(unit, run);
-      else await settlePendingRun(unit, run);
+        } else if (unit.kind === "STATE_CALENDARS") await settleStateCalendars(unit, run);
+        else await settlePendingRun(unit, run);
+      });
       await flushLaunchDecisions();
     },
 
@@ -1414,8 +1441,13 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
   }
   const singleMeeting = pending.kind === "MEETING_PARTITION" && run.status === 0 && run.termination === "EXITED"
     ? stateCalendarMemberResults(run, [pending.id], true)[0] : null;
+  const partition= pending.kind==="MEETING_PARTITION"?meetingPartitionContract(pending.task.id):null;
+  const bodyContinuation=partition?.derivedFamily&&!partition.derivedParentId&&run.stdout.split(/\r?\n/).some(line=>{
+    if(!line.startsWith("RCD_MEETING_PARTITION_DEFERRED="))return false;
+    try{return JSON.parse(line.slice("RCD_MEETING_PARTITION_DEFERRED=".length)).partitionId===pending.task.id;}catch{return false;}
+  });
   const deferral = routineDeferral(run, startedSourceChildren.has(run.id)) ??
-    (singleMeeting && "owed" in singleMeeting ? singleMeeting.owed : null);
+    (bodyContinuation?"the derived family's saved body cursor remains owed":singleMeeting && "owed" in singleMeeting ? singleMeeting.owed : null);
   if (deferral !== null) {
     attempted -= 1;
 
@@ -1453,6 +1485,34 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${detail}`);
       return;
     }
+    const family=meetingPartitionContract(pending.task.id);
+    const children=parsed.receipts.map(receipt=>meetingPartitionContract(receipt.source));
+    if(family?.derivedFamily&&!family.derivedParentId&&children.every(child=>child?.derivedParentId===family.id)){
+      let good=0,held=0;
+      for(const [index,receipt] of parsed.receipts.entries()){
+        const child=children[index]!,task=routineTaskFromContract(child),promoted=successfulRoutineRunnerReceiptIssue(receipt)===null;
+        const issue=await durableRoutineRunnerReceiptIssue(receipt,task,store,promoted?"SUCCESS":"HELD");
+        if(issue!==null){
+          supervisorFailures.push({taskId:pending.task.id,code:"DURABLE_RECEIPT_INVALID",detail:issue});
+          console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${issue}`);
+          return;
+        }
+        if(promoted)good++;else held++;
+        captureTaskReceipt({...pending,id:task.id,task},receipt,promoted?"VERIFIED_SOURCE_SUCCESS":"VERIFIED_SOURCE_FAILURE");
+        console.log("RCD_RECEIPT="+JSON.stringify(receipt));
+      }
+      if(good){
+        verifiedSourceSuccesses++;
+        await recordTaskDoorOutcome(pending.task.id,"SUCCESS",null,()=>store.clock(pending.task.sourceId,pending.task.recordClass,pending.task.scope),pending.task);
+        console.log(`RCD_TASK ${pending.task.id}: GOOD (${good} body publications/checks, ${held} bodies held on their own retry clocks)`);
+      }else{
+        verifiedSourceFailures++;
+        await recordTaskDoorOutcome(pending.task.id,"FAILURE");
+        console.log(`RCD_TASK ${pending.task.id}: SOURCE_HELD_LKG (${held} body sources held)`);
+      }
+      if(executionFailure!==null)supervisorFailures.push(executionFailure);
+      return;
+    }
     if (parsed.receipts.length !== 1 || parsed.receipts[0]?.source !== pending.task.id) {
       const observed = parsed.receipts.map((receipt) => receipt.source).join(",") || "none";
       const detail = `expected exactly ${pending.task.id}; observed=${observed}`;
@@ -1475,15 +1535,15 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       console.error(`RCD_TASK ${pending.task.id}: SUPERVISOR_FAILURE (CANNOT_TELL) — ${durableIssue}`);
     } else if (promoted) {
       verifiedSourceSuccesses += 1;
-      await recordTaskDoorOutcome(pending.task.id, "SUCCESS", receipt.promotedVersion !== null && receipt.confirmedAt === undefined, null,
-        () => store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
+      await recordTaskDoorOutcome(pending.task.id, "SUCCESS", null,
+        () => store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope), pending.task);
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_SUCCESS");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: GOOD (${receipt.state})`);
     } else {
       verifiedSourceFailures += 1;
       const failedCandidate = !receipt.acquisitionSucceeded ? await store.readCandidateSummary(receipt.candidateId).catch(() => null) : null;
-      await recordTaskDoorOutcome(pending.task.id, "FAILURE", false, failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
+      await recordTaskDoorOutcome(pending.task.id, "FAILURE", failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
       captureTaskReceipt(pending, receipt, "VERIFIED_SOURCE_FAILURE");
       console.log("RCD_RECEIPT=" + JSON.stringify(receipt));
       console.log(`RCD_TASK ${pending.task.id}: SOURCE_HELD_LKG (${receipt.state})`);
@@ -1552,10 +1612,10 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
       : child.detail,
     child.kind === "SUPERVISOR_FAILURE" ? null : child.receipt.candidateId);
   if (child.kind === "VERIFIED_SOURCE_SUCCESS") {
-    await recordTaskDoorOutcome(pending.task.id, "SUCCESS", child.receipt.promotedVersion !== null && child.receipt.confirmedAt === undefined, null,
+    await recordTaskDoorOutcome(pending.task.id, "SUCCESS", null,
       () => pending.task.id.startsWith("legistar-members:")
         ? Promise.resolve({ lastSucceededObservedAt: child.receipt.confirmedAt })
-        : store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope));
+        : store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope), pending.task);
     verifiedSourceSuccesses += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_SUCCESS");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));
@@ -1564,7 +1624,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     console.log(`RCD_TASK ${pending.task.id}: GOOD (${child.state})${delivered ? ` — delivered ${delivered.records} record(s); ${delivered.gaps} owed: ${Object.entries(delivered.gapReasons).map(([code, n]) => `${code}×${n}`).join(", ") || "none"}` : ""}`);
   } else if (child.kind === "VERIFIED_SOURCE_FAILURE") {
     const failedCandidate = !child.receipt.acquisitionSucceeded ? await store.readCandidateSummary(child.receipt.candidateId).catch(() => null) : null;
-    await recordTaskDoorOutcome(pending.task.id, "FAILURE", false, failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
+    await recordTaskDoorOutcome(pending.task.id, "FAILURE", failedCandidate === null ? null : evidenceFromCandidate(failedCandidate));
     verifiedSourceFailures += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_FAILURE");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));
@@ -1651,7 +1711,7 @@ async function runHotRead(task: RoutineSourceTask, atMs: number): Promise<void> 
     maxBufferBytes: ROUTINE_CHILD_MAX_BUFFER_BYTES,
     concurrency: 1,
     onStarting: command => acquireChildMemory(command, [run.id], readDeadlineMs),
-    onSettled: async (result) => settlePendingRun(run, result),
+    onSettled: async (result) => withDatabaseJob(result.id, () => settlePendingRun(run, result)),
     discardOutputAfterSettlement: true,
   }));
 }
@@ -1680,11 +1740,11 @@ await factMaintenance;
 await heldPublication;
 await flushLaunchDecisions();
 if (!PUBLISH_NOW && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
-  try { await reviewPublishedBoxFacts(readerFactDb().query); }
+  try { await routineJob(ROUTINE_JOBS.boxFactAudit, () => reviewPublishedBoxFacts(readerFactDb().query), undefined); }
   catch (error) { supervisorFailures.push({ taskId: "box-fact-audit", code: "BOX_AUDIT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) }); }
 }
 if (!PUBLISH_NOW && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
-  try {
+  try { await routineJob(ROUTINE_JOBS.statePointerRetirement, async () => {
     const deadlineMs = PASS_DEADLINE_MS - 30_000, sql = neon(process.env.DATABASE_URL!);
     const query = (text: string, params: readonly unknown[]) => sql.query(text, [...params], { fetchOptions: {
       signal: AbortSignal.timeout(Math.max(1, Math.min(5_000, deadlineMs - Date.now()))),
@@ -1693,11 +1753,13 @@ if (!PUBLISH_NOW && ONLY === null && Date.now() < PASS_DEADLINE_MS - 30_000) {
       onDeferred: (id, scope, detail) => recordLaunchDecision({ id, sourceId: "state-pointer-retirement", scope }, "DEFER", detail.split(":")[0], detail) });
     const retired = await retireNationalStatePointers(query, origins);
     if (retired) console.log(`RCD_STATE_BUCKETS retired=${retired}`);
-  } catch (error) {
+  }, undefined); } catch (error) {
     supervisorFailures.push({ taskId: "state-pointer-retirement", code: "STATE_POINTER_RETIREMENT_FAILED", detail: safeFailure(sanitizedErrorDiagnostic(error)) });
   }
   await flushLaunchDecisions();
 }
+recordHeldJobs();
+await flushLaunchDecisions();
 step = "persisting the supervisor outcome";
 try {
   const cycleId = await persistSupervisorOutcome({
@@ -1740,7 +1802,7 @@ try {
 const attemptedCount = floored(
   "attempted routine source tasks",
   "the selected routine source/body partitions and owed hunt publications",
-  selectedTasks.length,
+  offeredTasks.length,
   attempted,
 );
 console.log("RCD_RUN=" + JSON.stringify({

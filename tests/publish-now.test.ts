@@ -133,7 +133,7 @@ test("BX-12: the executable selects only publication work and never holds the ro
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
   assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
-  assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
+  assert.match(runner, /return \[\.\.\.publication, \.\.\.(?:await routineJob\(ROUTINE_JOBS\.doorPublication, async \(\) => )?publishNowDoorTasks/);
   assert.doesNotMatch(runner, /publishChangedReaderEdge|publishNowEdgeChecks/);
 });
 

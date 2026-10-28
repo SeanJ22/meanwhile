@@ -207,7 +207,7 @@ test("national ballot and candidate authorities promote through the canonical ca
     assert.equal(outcome.candidate.state, "PROMOTED", id);
     assert.equal(outcome.candidate.receipt?.decision, "GOOD", id);
     assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify({ id, readback: outcome.readerReadback }));
-    assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
+    assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);
   }
 
   const reads = await Promise.all([

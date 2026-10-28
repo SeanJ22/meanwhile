@@ -50,7 +50,12 @@ export function federalClient(options: FederalClientOptions) {
   return { get };
 }
 
-export interface FederalPage { capture: FederalCapture; items: Record<string, unknown>[]; next: string | null; total: number }
+export interface RegulationPageWork { readonly from: string; readonly through: string; readonly url?: string }
+export interface FederalPage {
+  capture: FederalCapture; items: Record<string, unknown>[]; next: string | null; total: number;
+  /** Remaining date partitions and pages, after this page is published. */
+  continuation?: { readonly today: string; readonly pending: readonly RegulationPageWork[] };
+}
 export async function* federalPages(client: ReturnType<typeof federalClient>, source: FederalSourceId, start: string, kind: FederalCapture["kind"], context?: FederalCapture["context"]): AsyncGenerator<FederalPage> {
   const seen = new Set<string>();
   let url: string | null = publicFederalUrl(start);
@@ -78,24 +83,33 @@ export async function* federalPages(client: ReturnType<typeof federalClient>, so
 }
 
 /** Split document queries at the published 5,000-row limit; never clip page 20. */
-export async function* regulationPages(client: ReturnType<typeof federalClient>, today: string, from = "1900-01-01", through = today): AsyncGenerator<FederalPage> {
-  const u = new URL("https://api.regulations.gov/v4/documents");
-  u.searchParams.set("page[size]", "250"); u.searchParams.set("page[number]", "1");
-  u.searchParams.set("filter[documentType]", "Proposed Rule,Rule,Notice");
-  u.searchParams.set("filter[commentEndDate][ge]", today); u.searchParams.set("filter[postedDate][ge]", from); u.searchParams.set("filter[postedDate][le]", through);
-  u.searchParams.set("sort", "postedDate,documentId");
-  const pages = federalPages(client, "regulations-gov", u.href, "rules");
-  const first = await pages.next();
-  if (first.done) return;
-  if (first.value.total > 5000) {
-    await pages.return(undefined);
-    const lo = Date.parse(from), hi = Date.parse(through);
-    if (lo >= hi) throw new Error(`Regulations.gov reports ${first.value.total} documents on ${from}; date partition cannot prove complete pagination.`);
-    const middle = Math.floor((lo + hi) / 2 / 86_400_000) * 86_400_000;
-    yield* regulationPages(client, today, from, new Date(middle).toISOString().slice(0, 10));
-    yield* regulationPages(client, today, new Date(middle + 86_400_000).toISOString().slice(0, 10), through);
-    return;
+export async function* regulationPages(client: ReturnType<typeof federalClient>, today: string, from = "1900-01-01", through = today,
+  pending?: readonly RegulationPageWork[]): AsyncGenerator<FederalPage> {
+  const work: RegulationPageWork[] = pending?.length ? [...pending] : [{ from, through }];
+  while (work.length) {
+    const range = work.shift()!;
+    const u = new URL("https://api.regulations.gov/v4/documents");
+    u.searchParams.set("page[size]", "250"); u.searchParams.set("page[number]", "1");
+    u.searchParams.set("filter[documentType]", "Proposed Rule,Rule,Notice");
+    u.searchParams.set("filter[commentEndDate][ge]", today); u.searchParams.set("filter[postedDate][ge]", range.from); u.searchParams.set("filter[postedDate][le]", range.through);
+    u.searchParams.set("sort", "postedDate,documentId");
+    const pages = federalPages(client, "regulations-gov", range.url ?? u.href, "rules");
+    const first = await pages.next();
+    if (first.done) continue;
+    if (first.value.total > 5000) {
+      await pages.return(undefined);
+      const lo = Date.parse(range.from), hi = Date.parse(range.through);
+      if (lo >= hi) throw new Error(`Regulations.gov reports ${first.value.total} documents on ${range.from}; date partition cannot prove complete pagination.`);
+      const middle = Math.floor((lo + hi) / 2 / 86_400_000) * 86_400_000;
+      work.unshift({ from: range.from, through: new Date(middle).toISOString().slice(0, 10) },
+        { from: new Date(middle + 86_400_000).toISOString().slice(0, 10), through: range.through });
+      continue;
+    }
+    let selected: IteratorResult<FederalPage> = first;
+    while (!selected.done) {
+      const page = selected.value;
+      yield { ...page, continuation: { today, pending: [...(page.next ? [{ ...range, url: page.next }] : []), ...work] } };
+      selected = await pages.next();
+    }
   }
-  yield first.value;
-  for await (const page of pages) yield page;
 }

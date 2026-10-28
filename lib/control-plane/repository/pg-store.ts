@@ -83,6 +83,7 @@ import {
   type OnlineIndex,
 } from "./pg-schema.ts";
 import type { SpendHold } from "../budget.ts";
+import { readJobBreakerLatest, releaseJob } from "../job-transfer-breaker.ts";
 import {
   SETTLED_HOLD_RETENTION_MS,
   SPEND_HOLD_STALE_MS,
@@ -1626,6 +1627,9 @@ export async function createPgRepositories(
   const adminRun = boundedRunner(sql, "cp_admin_config", bounds);
   const fixMapRun = boundedRunner(sql, "cp_fix_map", bounds);
   const pacingRun = boundedRunner(sql, "cp_website_pacing", bounds);
+  const breakerRun = boundedRunner(sql, "cp_job_transfer_breaker", bounds);
+  const breakerSql = { query: async (text: string, params: readonly unknown[] = []) =>
+    (await breakerRun("jobTransferPauses", "POINT", text, params)) as Record<string, unknown>[] };
   const repositories: ControlPlaneRepositories = {
     adminActionHistoryPage: query => readActionHistoryPage(sql, query, bounds),
     dispatchState: callerPinned(createPgDispatchState(sql, () => repositories, bounds)),
@@ -1665,6 +1669,7 @@ export async function createPgRepositories(
       (await fixMapRun("fixMap", "PAGE", text, params)) as readonly Record<string, unknown>[]),
     websitePacing: createWebsitePacing(async (text, params) =>
       (await pacingRun("websitePacing", "POINT", text, params)) as readonly Record<string, unknown>[]),
+    jobTransferPauses: { latest: () => readJobBreakerLatest(breakerSql), release: input => releaseJob(breakerSql, input) },
     runnerHeartbeat: pgAggregateRepository<RunnerHeartbeat>(
       sql,
       "RunnerHeartbeat",

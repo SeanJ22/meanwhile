@@ -118,6 +118,8 @@ export interface FederalMoneyCheckpoint {
     readonly complete: boolean;
     readonly lastCompleteAt: string | null;
     readonly refreshStartedAt: string | null;
+    /** Latest bytes applied for each native request slice; observations do not decide a change. */
+    readonly sourcePages?: Readonly<Record<string,{readonly rawHash:string;readonly dependencyHash:string}>>;
     readonly pending?: {
       readonly page: Omit<FederalMoneyPage, "facts">;
       readonly baselines: Readonly<Record<string, FederalMoneyCounts>>;

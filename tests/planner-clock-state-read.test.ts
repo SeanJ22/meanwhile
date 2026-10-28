@@ -13,7 +13,7 @@ import { serializeUnchangedConfirmation } from "../lib/civic-data/unchanged-conf
 test("planner source clocks match the original clock on real migrations without sorting candidate payloads", async t => {
   const pg = new PGlite();
   t.after(() => pg.close());
-  for (const name of ["0025_typical_fixer","0030_database_transfer_daily","0031_civic_payload_parts","0036_ne01"])
+  for (const name of ["0025_typical_fixer","0030_database_transfer_daily","0031_civic_payload_parts","0036_ne01","DB-05_keyed_rows"])
     await pg.exec(readFileSync(`lib/db/migrations/${name}.sql`, "utf8"));
   const db = Object.assign(drizzle(pg,{schema}),{batch: (queries: PromiseLike<unknown>[]) => Promise.all(queries)});
   const oldRead = (PostgresRoutineDataStore.prototype as unknown as {

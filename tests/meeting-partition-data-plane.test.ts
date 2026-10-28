@@ -574,7 +574,7 @@ test("DB-01: the validator accepts a V1 removal for one pass and refuses removin
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
 });
 
-test('an unavailable meeting stamp writer never holds publication, and the next unchanged check repairs its stamp',async()=>{
+test('meeting publication and unchanged checks use their returned fingerprints without writing readback evidence',async()=>{
  class StampFailureStore extends MemoryRoutineDataStore {
    fail=true;
    override async appendEvidence(...args:Parameters<MemoryRoutineDataStore['appendEvidence']>){
@@ -585,13 +585,13 @@ test('an unavailable meeting stamp writer never holds publication, and the next 
  const store=new StampFailureStore();
  const [first]=await promoteMeetingPartitions({store,partitions:[legistar],meetings:[meeting(legistar,FIRST,'stamp-retry')],agendaDocuments:[],reports:[report(legistar.meetingSource,FIRST)],generatedAt:FIRST});
  assert.equal(first.outcome.candidate.state,'PROMOTED');assert.ok(first.outcome.promoted);
- assert.equal(first.outcome.readerReadback,null);
+ assert.equal(first.outcome.readerReadback?.status,'PASS');
  assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),false);
  store.fail=false;
  const [second]=await promoteMeetingPartitions({store,partitions:[legistar],meetings:[meeting(legistar,SECOND,'stamp-retry')],agendaDocuments:[],reports:[report(legistar.meetingSource,SECOND)],generatedAt:SECOND});
  assert.equal(second.outcome.promoted?.versionId,first.outcome.promoted?.versionId);
  assert.equal(second.outcome.readerReadback?.status,'PASS',second.outcome.readerReadback?.detail);
- assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),true);
+ assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),false);
 });
 
 test("a failed archive or upcoming scope never withholds the other scope's independently read meeting", async () => {

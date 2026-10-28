@@ -38,8 +38,9 @@ export type BoundedChildTermination =
   | "SPAWN_FAILED";
 
 export interface BoundedChildCommand {
+  /** Production launch declarations are checked by lint against the source contract. */
+  readonly databaseBytesPerRun?: number;
   readonly id: string;
-  readonly launchEveryMs?: number;
   readonly onStarted?: (pid: number) => void;
   /**
    * Commands in one upstream/provider failure domain never run concurrently.
@@ -198,11 +199,11 @@ export async function runBoundedChildPass(
       if (options.deadlineMs !== undefined && Date.now() >= options.deadlineMs) {
         throw new Error("PASS_TIME_BUDGET: queued work remains owed");
       }
-      const admit = (reserve: boolean) => admitJobLaunch(command, options.cwd, options.env, Date.now(),reserve);
-      if (!admit(false)) throw new Error(`JOB_TRANSFER_BREAKER: ${command.id} new launches are held; work remains owed`);
+      const held = () => new Error(`JOB_TRANSFER_BREAKER: ${command.id} is paused until released in Admin; work remains owed`);
+      if (!admitJobLaunch(command.id, options.env)) throw held();
       if (options.onStarting && await options.onStarting(command, index) === false) return false;
       // A slot can wait across a breaker tick. Recheck immediately before the child starts.
-      if (!admit(true)) throw new Error(`JOB_TRANSFER_BREAKER: ${command.id} new launches are held; work remains owed`);
+      if (!admitJobLaunch(command.id, options.env)) throw held();
       result = await launch(command, options);
     } catch (error) {
       result = {

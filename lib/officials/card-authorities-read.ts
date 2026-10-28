@@ -1,5 +1,4 @@
-import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
-import { CivicDataStoreUnavailableError, type CivicDataReadStore, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
+import { CivicDataStoreUnavailableError, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import { readCanonicalShelf } from "../reader/canonical.ts";
 import { readNationalShelf } from "../reader/national.ts";
@@ -41,17 +40,7 @@ export async function readCardMemberOffices(member: string, state?: string) {
   const scope = statePeopleScopeForId(member, state);
   if (currentReaderAuthorityEdge() || !scope) return readMemberOffices(member, state);
   const people = await readCanonicalShelf(statePeopleSourcePointers(scope));
-  const curated = requiredManualProductionContract("member-offices");
-  const store: CivicDataReadStore = {...people, readPromotedEntry: async (recordClass, scope) => {
-    // The existing reader requests this source only when the native person has
-    // no offices. A native record never waits for the national fallback.
-    if (recordClass === curated.recordClass && scope === curated.scope) {
-      const fallback = await readCanonicalShelf([{recordClass, scope}]);
-      return fallback.readPromotedEntry!(recordClass, scope);
-    }
-    return people.readPromotedEntry!(recordClass, scope);
-  }};
-  return readMemberOffices(member, state, {store});
+  return readMemberOffices(member, state, {store: people});
 }
 
 function memberDirectory(value: FederalDirectoryReadModel, member: string) {

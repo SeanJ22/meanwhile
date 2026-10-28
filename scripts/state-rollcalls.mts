@@ -23,7 +23,11 @@ import {
   type PromotionOutcome,
 } from "../lib/civic-data/promotion.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import { readPromotedCivicDataBatch } from "../lib/civic-data/read-model.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/changes.ts";
+import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { officialVoteSourceHash, readOfficialRosterIds, withOfficialVoteSourceHash } from "../lib/state-rollcalls/source-hash.ts";
+import { continueOfficialVoteDocument, oldestOfficialVoteObservation } from "../lib/state-rollcalls/source-continuation.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
 import {
@@ -36,7 +40,7 @@ import {
 } from "../lib/civic-data/source-acquisition-failure.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import type { StateLegislatorVotePosition, StateLegislatorVotes, StateRollCall } from "../lib/sources/legiscan/types.ts";
+import type { StateLegislatorVotePosition, StateRollCall } from "../lib/sources/legiscan/types.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS } from "../lib/sources/acquisition-deadline.ts";
@@ -84,6 +88,8 @@ interface NjTextDocument {
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly body: string;
+  readonly retrievedAt:string;
+  readonly rawHash:string;
 }
 
 interface NjArchiveDocument {
@@ -93,6 +99,7 @@ interface NjArchiveDocument {
   readonly finalUrl: string;
   readonly httpStatus: number;
   readonly bytes: Uint8Array;
+  readonly retrievedAt:string;
 }
 
 type NjDocument = NjTextDocument | NjArchiveDocument;
@@ -182,19 +189,28 @@ async function main(): Promise<void> {
   installNeonRequestDeadline();
   prepareProductionCivicDataWrite();
   const store = new PostgresRoutineDataStore();
+  const rosterPointer=await store.readSourceHead("STATE_LEGISLATOR",target.jurisdiction);
+  const vault=rawCaptureVault();
+  const parserVersion=target.state==="NH"?"nh-general-court/3":"nj-legislature/2";
+  const sourceContext=canonicalCivicDataHash([target.sourceId,target.jurisdiction,parserVersion,
+    rosterPointer?[rosterPointer.versionId,rosterPointer.lastKnownGoodVersionId,rosterPointer.rawHash,rosterPointer.parserVersion]:null]);
 
   if (state === "NH") {
-    let documents: readonly NhOfficialDocument[];
+    let documents: readonly (NhOfficialDocument&{readonly rawHash:string;readonly retrievedAt:string})[];
     let projection: ReturnType<typeof buildNhOfficialRollCallProjection>;
     let retrievedAt: string;
     try {
       documents = await withPublisherAcquisitionDeadline(
         "New Hampshire General Court complete roll-call horizon",
         ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS,
-        async (signal) => readNhOfficialDocumentsSerially(
+        async (signal) => {
+          let summaryHash:string|null=null;
+          return readNhOfficialDocumentsSerially(
           [NH_ROLL_SUMMARY_URL, NH_ROLL_HISTORY_URL, NH_LEGISLATORS_URL],
-          async (url): Promise<NhOfficialDocument> => {
+          async (url,index): Promise<NhOfficialDocument&{readonly rawHash:string;readonly retrievedAt:string}> => {
             const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
+            const document=await continueOfficialVoteDocument({sourceId:target.sourceId,parserVersion,context:canonicalCivicDataHash([sourceContext,index===0?"summary":summaryHash]),
+              url,vault,signal:requestSignal,reuse:index!==0,read:async()=>{
             const result = await requestPublisher(
               "New Hampshire General Court complete roll-call horizon",
               () => fetch(url, {
@@ -213,20 +229,23 @@ async function main(): Promise<void> {
               "New Hampshire General Court complete roll-call horizon",
               () => result.arrayBuffer(),
             );
-            requestSignal.throwIfAborted();
             return {
               requestedUrl: url,
               finalUrl: result.url || url,
               httpStatus: result.status,
-              body: decodeNhPublisherBytes(bytes),
+              bytes:new Uint8Array(bytes),retrievedAt:new Date().toISOString(),
             };
+            }});
+            const rawHash=sha256(document.bytes);
+            if(index===0)summaryHash=rawHash;
+            return{requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,httpStatus:document.httpStatus,
+              body:decodeNhPublisherBytes(document.bytes),retrievedAt:document.retrievedAt,rawHash};
           },
           { signal },
-        ),
+        );},
       );
-      // @freshness-reads-here — the clock is minted only after all three
-      // serial publisher reads settled with complete non-empty bytes.
-      retrievedAt = new Date().toISOString();
+      // A resumed source keeps its actual observation; the whole set is only as current as its oldest response.
+      retrievedAt = oldestOfficialVoteObservation(documents);
       projection = buildNhOfficialRollCallProjection({
         summaries: parseNhRollCallSummary(documents[0]!.body),
         history: parseNhRollCallHistory(documents[1]!.body),
@@ -247,14 +266,12 @@ async function main(): Promise<void> {
       return;
     }
 
-    const rosterPointer = await store.readPromotion("STATE_LEGISLATOR", target.jurisdiction);
-    const pointerPayload = rosterPointer?.payload as {
-      readonly identities?: readonly { readonly officeholderId?: unknown }[];
-    } | undefined;
-    const currentOfficeholderIds = Array.isArray(pointerPayload?.identities) &&
-        pointerPayload.identities.every((row) => typeof row.officeholderId === "string")
-      ? pointerPayload.identities.map((row) => row.officeholderId as string)
-      : [];
+    const sourceHash=officialVoteSourceHash(documents.map(document=>({requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,capture:{rawHash:document.rawHash}})),rosterPointer);
+    const confirmed=await confirmSourceHashUnchanged({store,sourceId:target.sourceId,recordClass:"STATE_LEGISLATOR_VOTES",scope:target.jurisdiction,
+      parserVersion:"nh-general-court/3",rawHash:sourceHash,now:retrievedAt,complete:true,
+      retrieval:{requestedUrl:NH_ROLL_SUMMARY_URL,finalUrl:documents[0]!.finalUrl,httpStatus:200,rawHash:sourceHash,retrievedAt}});
+    if(confirmed){console.log("RCD_RECEIPT="+JSON.stringify({source:target.contractId,...sourceHashReceiptFields(confirmed),structuralReleaseContract:ZERO_RELEASE_EVENTS}));return;}
+    const currentOfficeholderIds=await readOfficialRosterIds(store,rosterPointer);
     // The chamber's roster authority, reduced once to its digest so every candidate cites identical authority.
     const identityAuthority = officialStateIdentityAuthorityEvidence({
       sourceId: target.sourceId,
@@ -298,20 +315,8 @@ async function main(): Promise<void> {
         positions: [...positions].sort((left, right) => left.rollCallId.localeCompare(right.rollCallId)),
       }));
 
-    // One batched read of every member's current promotion; an unchanged member is skipped
-    // (candidateId folds in retrievedAt, so re-promoting would mint a fresh version each cycle).
-    const currentByScope = new Map(
-      (await readPromotedCivicDataBatch<StateLegislatorVotes>(
-        "STATE_LEGISLATOR_VOTES",
-        memberEntries.map(({ officeholderId }) => officeholderId),
-        { store, now: retrievedAt },
-      )).map((result, index) => [memberEntries[index]!.officeholderId, result] as const),
-    );
-    const positionsFingerprint = (positions: readonly StateLegislatorVotePosition[]): string =>
-      positions.map((position) => `${position.rollCallId}\u0000${position.position}\u0000${position.publisherPosition ?? ""}\u0000${position.date}`).join("");
-
     const throughRoll = [...projection.rolls].sort((left, right) => left.date.localeCompare(right.date)).at(-1) ?? null;
-    const marker = officialStateLegislatorVotesSessionMarker({
+    const marker = withOfficialVoteSourceHash(officialStateLegislatorVotesSessionMarker({
       sourceId: target.sourceId,
       jurisdiction: target.jurisdiction,
       term: projection.rolls[0]!.term,
@@ -327,23 +332,24 @@ async function main(): Promise<void> {
       positionCount: projection.positions.length,
       sourceDocumentsSha256: sha256(documents.map((document) => sha256(document.body)).join("\n")),
       identityAuthority,
-    });
+    }),sourceHash);
 
     // Promote only changed members, then advance the per-state marker last, so a part-way failure
     // leaves the watermark unmoved and the next cycle re-promotes only what did not land.
     let promotedMembers = 0;
     let unchangedMembers = 0;
     for (const { officeholderId, chamber, positions } of memberEntries) {
-      const current = currentByScope.get(officeholderId);
-      if (current?.kind === "PROMOTED" && current.value.term === projection.rolls[0]!.term && current.value.session === "regular" &&
-          current.value.rollCalls?.length === positions.length &&
-          positionsFingerprint(current.value.positions) === positionsFingerprint(positions) &&
-          sha256(JSON.stringify(current.value.rollCalls.map(({ retrievedAt: _retrievedAt, ...roll }) => roll))) ===
-          sha256(JSON.stringify(positions.map(position => { const { retrievedAt: _retrievedAt, ...roll } = rollById.get(position.rollCallId)!; return roll; })))) {
+      const memberRolls=positions.map(position=>rollById.get(position.rollCallId)!);
+      const memberHash=canonicalCivicDataHash({officeholderId,term:projection.rolls[0]!.term,session:"regular",positions,
+        rolls:memberRolls.map(({retrievedAt:_retrievedAt,...roll})=>roll),rosterHash:rosterPointer?.rawHash??null,rosterParser:rosterPointer?.parserVersion??null});
+      const unchanged=await confirmSourceHashUnchanged({store,sourceId:target.sourceId,recordClass:"STATE_LEGISLATOR_VOTES",scope:officeholderId,
+        parserVersion:"nh-general-court/3",rawHash:memberHash,now:retrievedAt,complete:true,
+        retrieval:{requestedUrl:NH_ROLL_SUMMARY_URL,finalUrl:documents[0]!.finalUrl,httpStatus:200,rawHash:memberHash,retrievedAt}});
+      if(unchanged){
         unchangedMembers += 1;
         continue;
       }
-      const memberCandidate = officialStateLegislatorVotesCandidate({
+      const memberCandidate = withOfficialVoteSourceHash(officialStateLegislatorVotesCandidate({
         sourceId: target.sourceId,
         jurisdiction: target.jurisdiction,
         officeholderId,
@@ -351,13 +357,13 @@ async function main(): Promise<void> {
         term: projection.rolls[0]!.term,
         session: "regular",
         positions,
-        rollCalls: positions.map(position => rollById.get(position.rollCallId)!),
+        rollCalls: memberRolls,
         requestedUrl: NH_ROLL_SUMMARY_URL,
         finalUrl: documents[0]!.finalUrl,
         httpStatus,
         retrievedAt,
         identityAuthority,
-      });
+      }),memberHash);
       const persistedMember = await persistFanOutStateRollCall(store, target.contractId, memberCandidate, retrievedAt);
       if (persistedMember.kind === "WRITE_FAILED") {
         console.error(persistedMember.diagnostic);
@@ -402,6 +408,7 @@ async function main(): Promise<void> {
       readonly archiveBodies: readonly string[];
       readonly indexFinalUrl: string;
       readonly retrievedAt: string;
+      readonly sources:Parameters<typeof officialVoteSourceHash>[0];
       readonly projection: ReturnType<typeof buildNjOfficialRollCallProjection>;
     };
     try {
@@ -424,14 +431,19 @@ async function main(): Promise<void> {
               `New Jersey Legislature voting-record session index answered HTTP ${indexResponse.status}.`,
             );
           }
-          const indexBody = await readPublisherBody(
+          const indexBytes = new Uint8Array(await readPublisherBody(
             "New Jersey Legislature voting-record session index",
-            () => indexResponse.text(),
-          );
-          indexSignal.throwIfAborted();
+            () => indexResponse.arrayBuffer(),
+          ));
+          const indexRetrievedAt=new Date().toISOString();
           const indexFinalUrl = validateNjVotingRecordsIndexFinalUrl(indexResponse.url || NJ_VOTING_RECORDS_INDEX_URL);
+          await continueOfficialVoteDocument({sourceId:target.sourceId,parserVersion,context:sourceContext,url:NJ_VOTING_RECORDS_INDEX_URL,
+            vault,signal:indexSignal,reuse:false,read:async()=>({requestedUrl:NJ_VOTING_RECORDS_INDEX_URL,finalUrl:indexFinalUrl,httpStatus:indexResponse.status,
+              bytes:indexBytes,retrievedAt:indexRetrievedAt})});
+          const indexBody=new TextDecoder("utf-8",{fatal:true}).decode(indexBytes);
           const sessionYear = currentNjVotingSessionYear(new Date().toISOString());
           const index = parseNjVotingRecordsIndex(indexBody, sessionYear);
+          const detailContext=canonicalCivicDataHash([sourceContext,sessionYear,indexFinalUrl,sha256(indexBody)]);
           const requests: readonly (
             | { readonly kind: "MEMBER"; readonly participant: NjSessionParticipant; readonly url: string }
             | { readonly kind: "ARCHIVE"; readonly definition: NjVoteArchiveDefinition; readonly url: string }
@@ -456,6 +468,8 @@ async function main(): Promise<void> {
             > => {
               try {
                 const requestSignal = AbortSignal.any([signal, AbortSignal.timeout(60_000)]);
+                const completed=await continueOfficialVoteDocument({sourceId:target.sourceId,parserVersion,context:detailContext,url:request.url,
+                  vault,signal:requestSignal,read:async()=>{
                 const response = await requestPublisher(
                   `New Jersey Legislature ${request.kind === "MEMBER" ? `member ${request.participant.rosterKey}` : request.definition.kind}`,
                   () => fetch(request.url, {
@@ -474,44 +488,26 @@ async function main(): Promise<void> {
                     `New Jersey Legislature ${request.url} answered HTTP ${response.status}.`,
                   );
                 }
-                if (request.kind === "MEMBER") {
-                  const body = await readPublisherBody(
-                    `New Jersey Legislature member ${request.participant.rosterKey}`,
-                    () => response.text(),
-                  );
-                  requestSignal.throwIfAborted();
-                  const finalUrl = validateNjMemberVotingRecordsFinalUrl(
-                    response.url || request.url,
-                    sessionYear,
-                    request.participant.rosterKey,
-                  );
-                  return {
-                    ok: true,
-                    document: {
-                      kind: "MEMBER",
-                      participant: request.participant,
-                      requestedUrl: request.url,
-                      finalUrl,
-                      httpStatus: response.status,
-                      body,
-                    },
-                  };
-                }
                 const bytes = new Uint8Array(await readPublisherBody(
-                  `New Jersey Legislature ${request.definition.kind} archive`,
+                  `New Jersey Legislature ${request.kind==="MEMBER"?`member ${request.participant.rosterKey}`:request.definition.kind}`,
                   () => response.arrayBuffer(),
                 ));
-                requestSignal.throwIfAborted();
-                const finalUrl = validateNjVoteArchiveFinalUrl(response.url || request.url, request.definition);
+                const finalUrl=request.kind==="MEMBER"?validateNjMemberVotingRecordsFinalUrl(response.url||request.url,sessionYear,request.participant.rosterKey):
+                  validateNjVoteArchiveFinalUrl(response.url||request.url,request.definition);
+                return{requestedUrl:request.url,finalUrl,httpStatus:response.status,bytes,retrievedAt:new Date().toISOString()};
+                }});
+                if(request.kind==="MEMBER")return{ok:true,document:{kind:"MEMBER",participant:request.participant,
+                  requestedUrl:request.url,finalUrl:completed.finalUrl,httpStatus:completed.httpStatus,retrievedAt:completed.retrievedAt,
+                  body:new TextDecoder("utf-8",{fatal:true}).decode(completed.bytes),rawHash:sha256(completed.bytes)}};
                 return {
                   ok: true,
                   document: {
                     kind: "ARCHIVE",
                     definition: request.definition,
                     requestedUrl: request.url,
-                    finalUrl,
-                    httpStatus: response.status,
-                    bytes,
+                    finalUrl:completed.finalUrl,
+                    httpStatus:completed.httpStatus,
+                    bytes:completed.bytes,retrievedAt:completed.retrievedAt,
                   },
                 };
               } catch (error) {
@@ -535,8 +531,8 @@ async function main(): Promise<void> {
           const archiveDocuments = documents.filter((document): document is NjArchiveDocument => document.kind === "ARCHIVE");
           const memberBodies = memberDocuments.map(({ body }) => body);
           const archiveBodies = archiveDocuments.map(({ bytes, definition }) => decodeNjVoteArchive(bytes, definition.entryName));
-          const retrievedAt = new Date().toISOString();
-          if (currentNjVotingSessionYear(retrievedAt) !== sessionYear) {
+          const retrievedAt = oldestOfficialVoteObservation([{retrievedAt:indexRetrievedAt},...documents]);
+          if (currentNjVotingSessionYear(new Date().toISOString()) !== sessionYear) {
             throw sourceAcquisitionFailure(
               "PUBLISHER_DOCUMENT_INVALID",
               "New Jersey Legislature session boundary changed during one acquisition; no mixed-term candidate was emitted.",
@@ -548,7 +544,10 @@ async function main(): Promise<void> {
             archives: archiveDocuments.map(({ definition }, archiveIndex) => parseNjVoteArchive(archiveBodies[archiveIndex]!, definition, sessionYear)),
             retrievedAt,
           });
-          return { indexBody, memberBodies, archiveBodies, indexFinalUrl, retrievedAt, projection };
+          const sources=[{requestedUrl:NJ_VOTING_RECORDS_INDEX_URL,finalUrl:indexFinalUrl,capture:{rawHash:sha256(indexBytes)}},
+            ...memberDocuments.map(document=>({requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,capture:{rawHash:document.rawHash}})),
+            ...archiveDocuments.map(document=>({requestedUrl:document.requestedUrl,finalUrl:document.finalUrl,capture:{rawHash:sha256(document.bytes)}}))];
+          return { indexBody, memberBodies, archiveBodies, indexFinalUrl, retrievedAt, projection,sources };
         },
       );
     } catch (error) {
@@ -564,16 +563,14 @@ async function main(): Promise<void> {
       return;
     }
 
-    const rosterPointer = await store.readPromotion("STATE_LEGISLATOR", target.jurisdiction);
-    const pointerPayload = rosterPointer?.payload as {
-      readonly roster?: { readonly officeholders?: readonly { readonly id?: unknown }[] };
-    } | undefined;
-    const currentOfficeholderIds = Array.isArray(pointerPayload?.roster?.officeholders) &&
-        pointerPayload.roster.officeholders.every((row) => typeof row.id === "string")
-      ? pointerPayload.roster.officeholders.map((row) => row.id as string)
-      : [];
+    const sourceHash=officialVoteSourceHash(acquired.sources,rosterPointer);
+    const confirmed=await confirmSourceHashUnchanged({store,sourceId:target.sourceId,recordClass:"STATE_ROLL_CALL",scope:target.jurisdiction,
+      parserVersion:"nj-legislature/2",rawHash:sourceHash,now:acquired.retrievedAt,complete:true,
+      retrieval:{requestedUrl:NJ_VOTING_RECORDS_INDEX_URL,finalUrl:acquired.indexFinalUrl,httpStatus:200,rawHash:sourceHash,retrievedAt:acquired.retrievedAt}});
+    if(confirmed){console.log("RCD_RECEIPT="+JSON.stringify({source:target.contractId,...sourceHashReceiptFields(confirmed),structuralReleaseContract:ZERO_RELEASE_EVENTS}));return;}
+    const currentOfficeholderIds=await readOfficialRosterIds(store,rosterPointer);
     const sessionYear = acquired.projection.rolls[0]!.term.slice(0, 4);
-    const candidate = officialStateRollCallsCandidate({
+    const candidate = withOfficialVoteSourceHash(officialStateRollCallsCandidate({
       sourceId: target.sourceId,
       jurisdiction: target.jurisdiction,
       rawBodies: [acquired.indexBody, ...acquired.memberBodies, ...acquired.archiveBodies],
@@ -598,7 +595,7 @@ async function main(): Promise<void> {
         sessionParticipantIds: acquired.projection.participantIds,
         sessionParticipantSourceVersion: acquired.projection.participantSourceVersion,
       },
-    });
+    }),sourceHash);
     const persisted = await persistAcquiredStateRollCall(store, target.contractId, candidate, acquired.retrievedAt);
     if (persisted.kind === "WRITE_FAILED") {
       console.error(persisted.diagnostic);

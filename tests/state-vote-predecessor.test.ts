@@ -35,7 +35,9 @@ async function setup(failure?: "proof" | "hash") {
   const db = new PGlite();
   await db.exec(`CREATE TABLE civic_data_promotions(record_class text,scope text,current_version_id text,last_known_good_version_id text,source_id text,validation_receipt jsonb,payload jsonb);
     CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,promoted_version_id text,last_known_good_version_id text,state text,acquisition_succeeded boolean,candidate jsonb,normalized_hash text,validation_receipt jsonb);
-    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);`);
+    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
+    ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text;
+    ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
   let encoded = partitionCivicPayload(projection);
   const versionId=candidate.id,receipt=published.promoted!.receipt,fetched:string[]=[];
   const writeParts = async () => { for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts(hash,payload) VALUES($1,$2::jsonb) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]); };

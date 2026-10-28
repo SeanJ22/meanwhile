@@ -87,7 +87,7 @@ test("a promoted partition's fresh sittings become facts on the very bytes its d
     WHERE f.entity_id = $1 AND f.status = 'live' ORDER BY f.field`, [meetingEntityId(meeting.id)]);
   assert.deepEqual(live.map(row => [row.field, row.quote]), [["starts_at", "20261020T190000"], ["title", "Regular Council Meeting"]]);
   assert.ok(live.every(row => row.url === feed && String(row.blob_key).startsWith("artifact:")));
-  assert.equal((await vault.list("project/freshness/")).filter(key => !key.endsWith(".meta.json")).length, 1, "the feed's bytes are in the vault");
+  assert.equal((await vault.list("project/freshness/")).filter(key => key.startsWith("project/freshness/raw/sha256/")).length, 1, "one fingerprint-filed copy of the feed's bytes is in the vault");
 });
 
 test("readers see each sitting with its live facts and the saved page every one was found on", async () => {

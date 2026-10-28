@@ -31,7 +31,7 @@ function sourceFor(record: Record<string, unknown>, field: string, receipt: Manu
     ...(source ? { kind: receiptSourceKind(source.sourceClass) } : typeof fieldSource.kind === "string" ? { kind: fieldSource.kind as SourceKind } : {}),
     ...(typeof fieldSource.quote === "string" ? { quote: fieldSource.quote } : {}) };
 }
-const META = new Set(["id", "bodyId", "ocdId", "sourceUrl", "sourceOrg", "collectedAt", "verifiedAt", "fieldSources", "kind"]);
+const META = new Set(["id", "bodyId", "ocdId", "sourceUrl", "sourceOrg", "collectedAt", "verifiedAt", "sourceKey", "sourceHash", "fieldSources", "kind"]);
 
 export function resolveRecordConflicts(current: Record<string, unknown> & { id: string }, prior: Record<string, unknown> & { id: string },
   currentReceipt: ManualSourceSetReceipt, priorReceipt: ManualSourceSetReceipt): { record: typeof current; conflicts: SourceScopedHeldFact[] } {

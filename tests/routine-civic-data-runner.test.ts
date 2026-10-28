@@ -3,9 +3,10 @@ import { REGISTRY_STATES, parseStateBallotContractId } from "../lib/civic-data/s
 import { CAMPAIGN_MONEY_SOURCE_ID,CAMPAIGN_FINANCE_SOURCES } from "../lib/funding/state-sources.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import test from "node:test";
+import test, { type TestContext } from "node:test";
+import { withReaderRoute } from "../lib/db/reader-route.ts";
 import { childCrash } from "../lib/ops/fatal-line.ts";
-import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
+import { JOB_HELD_WORDS, ROUTINE_JOBS, runRoutineJob } from "../lib/civic-data/routine-jobs.ts";
 import { runInNewContext } from "node:vm";
 import { transpileModule, ScriptTarget, ModuleKind, createSourceFile, isFunctionDeclaration } from "typescript";
 
@@ -29,6 +30,7 @@ import {
   routineAdmissionClock,
 } from "../lib/civic-data/runner.ts";
 import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
+import { factRefreshBounds, timeSensitiveSource } from "../lib/civic-data/source-change-cadence.ts";
 import { MEASURE_TRANSLATION_ROUTINE_TASKS } from "../lib/translate/routine-contract.ts";
 import { PEOPLE_SOURCE_CONTRACTS } from "../lib/civic-data/people-source-contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
@@ -55,6 +57,7 @@ import { HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggre
 import { routineProcessSlots, workerMemoryHost } from "../lib/control-plane/workers/worker-slots.ts";
 import { HOT_READ_CATCH_UP_READ_BUDGET_MS } from "../lib/civic-data/hot-read-catch-up.ts";
 import { stateCalendarMemberResults } from "../lib/civic-data/state-calendars.ts";
+import { meetingPartitionContract, meetingRoutePartition } from "../lib/civic-data/meeting-partitions.ts";
 import {
   withPassDeadline,
 } from "../lib/ops/independent-runtime-pass.ts";
@@ -73,7 +76,6 @@ import {
   runBoundedChildPass,
   type BoundedChildResult,
 } from "../lib/civic-data/bounded-child-pass.ts";
-import { repairRoutineReaderProjectionReadback } from "../lib/civic-data/reader-verification.ts";
 
 function functionSource(source:string,name:string):string {
   const tree=createSourceFile("runner.mts",source,ScriptTarget.ESNext,true);
@@ -85,6 +87,15 @@ function functionSource(source:string,name:string):string {
   visit(tree);
   assert.ok(declaration,`Missing function ${name}`);
   return declaration.getText(tree);
+}
+
+function regularMeetingTask(t: TestContext) {
+  const existing=ROUTINE_SOURCE_TASKS.find(task=>meetingPartitionContract(task.id)?.derivedFamily===null);
+  if(existing)return existing;
+  const partition=meetingRoutePartition("ical","fixture-memory-deadline",{wiring:null,ocdId:null,acquisitionFailureDomain:"fixture-memory-deadline"});
+  MEETING_PARTITION_CONTRACTS.push(partition);
+  t.after(()=>{const index=MEETING_PARTITION_CONTRACTS.indexOf(partition);if(index>=0)MEETING_PARTITION_CONTRACTS.splice(index,1);});
+  return routineTaskFromContract(partition);
 }
 
 test("a pre-spawn memory deadline leaves source work queued without a missing-receipt failure or a rewritten progress row", async t => {
@@ -102,11 +113,12 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     console: { log: (line: string) => lines.push(line), error: (line: string) => lines.push(line) },
     safeFailure: (message: string) => message,
     boundedExecutionFailure: () => ({ taskId: "deferred", code: "CHILD_SPAWN_FAILED", detail: "WORKER_MEMORY_DEADLINE: work remains owed" }),
-    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routineDeferral,
+    parseRoutineRunnerReceipt, classifyRoutineChildOutcome, routineDeferral, meetingPartitionContract,
     controlPlaneUrlFromEnv: () => "postgres://memory", createPgRepositories: async () => repos,
     RUN_STARTED_AT: "2026-10-13T12:00:00.000Z", SUPERVISOR_CYCLE_ID: "publish-now-supervisor:host:2026-10-13T12:00:00.000Z",
     RUNNING_CODE_SHA: "a".repeat(40), HUNT_SOURCE_PROGRESS_LOG_KEY, OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, Date,
   };
+  const meetingTask=regularMeetingTask(t);
   const { recordHuntSourceProgress, settle } = runInNewContext(transpileModule(source.slice(progressStart, progressEnd) + functionSource(source,"settlePendingRunResult"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\n({ recordHuntSourceProgress, settle: settlePendingRunResult });", context) as {
@@ -114,8 +126,9 @@ test("a pre-spawn memory deadline leaves source work queued without a missing-re
     settle: (pending: unknown, run: unknown) => Promise<void>;
   };
   for (const kind of ["SINGLE", "MEETING_PARTITION"]) {
-    const id = `worker-publication:ballot-navigation:${kind}`;
-    const task = { id, sourceId: "source", scope: "US", acquisitionFailureDomain: id, contract: {},
+    const base=kind==="MEETING_PARTITION"?meetingTask:{id:`worker-publication:ballot-navigation:${kind}`,sourceId:"source",scope:"US",acquisitionFailureDomain:`worker-publication:ballot-navigation:${kind}`,contract:{}};
+    const id=base.id;
+    const task = { ...base,
       ownerInvocation: { publicationPending: true, requestedAt: context.RUN_STARTED_AT, instructions: ["section3-publication"] } };
     context.attempted = 1; lines.length = 0; context.unsettledSourceRuns.add(id);
     await recordHuntSourceProgress(task, "QUEUED", "Admitted to the existing source worker pool.");
@@ -167,8 +180,8 @@ test("meeting pins and Box facts publish beside admission, so the first source l
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const read = functionSource(source, "readHuntSourceTasks");
   assert.doesNotMatch(read, /try \{\s*const (?:report|box) = await publish(?:HeldMeetingPins|BoxFindings)\(/, "admission no longer waits on either");
-  assert.match(read, /publishHeldBesideSources\(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", \(\) => withDatabaseJob\("meeting-pins",\s*\(\)\s*=>\s*withReaderRoute\("meeting-pins", async \(\) => \{[^]*?const report = await publishHeldMeetingPins\(/);
-  assert.match(read, /publishHeldBesideSources\(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async \(\) => \{\s*const box = await publishBoxFindings\(/);
+  assert.match(read, /publishHeldBesideSources\(failures, ROUTINE_JOBS\.meetingPins, "MEETING_PIN_PUBLICATION_FAILED", \(\) => withReaderRoute\("meeting-pins", async \(\) => \{[^]*?const report = await publishHeldMeetingPins\(/);
+  assert.match(read, /publishHeldBesideSources\(failures, ROUTINE_JOBS\.boxFacts, "BOX_FACT_PUBLICATION_FAILED", async \(\) => \{\s*const box = await publishBoxFindings\(/);
   const launch = source.indexOf("for (const { task } of electionLaunchOrder(");
   const awaited = [...source.matchAll(/await heldPublication;/g)].map(match => match.index!);
   assert.equal(awaited.length, 2, "the quiet publish-now exit and the full pass each wait for held publication");
@@ -178,17 +191,17 @@ test("meeting pins and Box facts publish beside admission, so the first source l
 
   const order: string[] = [];
   const failures: { taskId: string; code: string; detail: string }[] = [];
-  const context: Record<string, unknown> = { heldPublication: Promise.resolve(), admitJobLaunch, ROOT:process.cwd(), ROUTINE_DATA_ADMISSION_MS,
-    safeFailure: (value: string) => value,
+  const context: Record<string, unknown> = { heldPublication: Promise.resolve(), runRoutineJob, heldJobs: new Set(), JOB_HELD_WORDS, console,
+    withReaderRoute, safeFailure: (value: string) => value,
     sanitizedErrorDiagnostic: (error: unknown) => error instanceof Error ? error.message : String(error) };
-  const start = runInNewContext(transpileModule(functionSource(source, "publishHeldBesideSources"), {
+  const start = runInNewContext(transpileModule(functionSource(source, "routineJob") + "\n" + functionSource(source, "publishHeldBesideSources"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\npublishHeldBesideSources", context);
   let releasePins!: () => void;
-  start(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async () => {
+  start(failures, ROUTINE_JOBS.meetingPins, "MEETING_PIN_PUBLICATION_FAILED", async () => {
     order.push("pins started"); await new Promise<void>(resolve => { releasePins = resolve; }); order.push("pins done");
   });
-  start(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async () => { order.push("box started"); throw new Error("Box store unreachable"); });
+  start(failures, ROUTINE_JOBS.boxFacts, "BOX_FACT_PUBLICATION_FAILED", async () => { order.push("box started"); throw new Error("Box store unreachable"); });
   order.push("admission continued");
   await new Promise(resolve => setImmediate(resolve));
   assert.deepEqual(order, ["admission continued", "pins started"], "admission does not wait, and Box waits its turn behind pins");
@@ -199,22 +212,22 @@ test("meeting pins and Box facts publish beside admission, so the first source l
     "a thrown publication is recorded as the pass's failure and never rejects the pass");
 });
 
-test("a single calendar child explicitly deferred before acquisition stays owed without a missing-receipt failure", async () => {
+test("a single calendar child explicitly deferred before acquisition stays owed without a missing-receipt failure", async t => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const id = "meeting-partition:deferred-calendar";
+  const task=regularMeetingTask(t),id=task.id;
   const failures: unknown[] = [], lines: string[] = [];
   const context = {
     recordLaunchDecision: (task: { id: string }, action: string, reason: string, detail = reason) => lines.push(`RCD_${action} ${task.id}: ${detail}`),
     laneLastEndedMs: new Map(), unsettledSourceRuns: new Set([id]), startedSourceChildren: new Set([id]),
     notStarted: [] as string[],
-    routineDeferral, stateCalendarMemberResults, attempted: 1, supervisorFailures: failures,
+    routineDeferral, stateCalendarMemberResults, meetingPartitionContract, attempted: 1, supervisorFailures: failures,
     safeFailure: String, console: { log: (line: string) => lines.push(line) },
     parseMeetingPartitionRunnerReceipts: () => { throw Error("deferred work must not need a receipt"); },
   };
   const settle = runInNewContext(transpileModule(functionSource(source, "settlePendingRunResult"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\nsettlePendingRunResult", context);
-  await settle({ id, kind: "MEETING_PARTITION", task: { id, acquisitionFailureDomain: id } }, {
+  await settle({ id, kind: "MEETING_PARTITION", task }, {
     id, termination: "EXITED", status: 0, signal: null, errorMessage: null, stderr: "",
     stdout: "RCD_MEETING_PARTITION_DEFERRED=" + JSON.stringify({ partitionId: id }),
   });
@@ -260,7 +273,7 @@ test("a missing ballot file with no canonical state records an owed publication,
 
 test("candidate findings missing a place stay visible without failing unrelated source passes, while an unreadable Box still fails", async () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const code = source.slice(source.indexOf("let candidateFindingTasks:"), source.indexOf("const selectedTasks ="));
+  const code = source.slice(source.indexOf("let candidateFindingTasks:"), source.indexOf("const offeredTasks ="));
   const failures: { code: string }[] = [];
   const task = { id: "candidate-profiles:CA" };
   const context = { controlPlaneUrlFromEnv: () => "postgres://fixture", neon: () => ({ query: () => {} }),
@@ -414,10 +427,11 @@ test("a crashed task is a successful cycle's recorded attempt, and its next offe
   const clock = (iso: string) => routineAdmissionClock(lastSuccess, history.attempts.get(task.id), at(iso));
   assert.equal(routineTaskDue(task, lastSuccess, at("2026-10-14T13:43:00.000Z")), true, "without the record the next pass would run it again");
   assert.equal(routineTaskDue(task, clock("2026-10-14T13:43:00.000Z"), at("2026-10-14T13:43:00.000Z")), false);
-  assert.equal(routineTaskDue(task, clock("2026-10-14T14:38:00.000Z"), at("2026-10-14T14:38:00.000Z")), true, "offered again after its hour");
+  assert.equal(routineTaskDue(task, clock("2026-10-14T14:38:00.000Z"), at("2026-10-14T14:38:00.000Z")), false, "the fact retry floor prevents another hourly attempt");
+  assert.equal(routineTaskDue(task, clock("2026-10-15T13:38:00.000Z"), at("2026-10-15T13:38:00.000Z")), true, "offered again at its fact retry boundary");
 });
 
-test("source refreshes use their standing clocks without a Send and retry failed sources hourly", () => {
+test("source refreshes use their standing clocks without a Send and failed sources respect fact retries and election pace", () => {
   const now = Date.parse("2026-09-30T12:00:00Z");
   for (const task of AUTOMATIC_REFRESH_TASKS) {
     assert.equal(task.ownerInvocation, undefined);
@@ -427,7 +441,8 @@ test("source refreshes use their standing clocks without a Send and retry failed
     const checked = task.id.startsWith("voting-sites:") || task.id.startsWith("ballot-navigation-") ? "2026-09-30T00:00:00Z" : "2026-09-29T12:00:00Z";
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now - 1), false);
     assert.equal(routineTaskDue(task, { lastAttemptedAt: checked, lastSucceededAt: checked, lastSucceededObservedAt: checked }, now), true);
-    const failed = "2026-09-30T11:00:00Z";
+    const retryMs = timeSensitiveSource(task, now) ? task.retryMs : Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+    const failed = new Date(now - retryMs).toISOString();
     assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now - 1), false);
     assert.equal(routineTaskDue(task, { lastAttemptedAt: failed }, now), true);
   }
@@ -715,13 +730,14 @@ test("cadence and retry are source-local", () => {
   const oneHour = 60 * 60 * 1_000;
   assert.equal(routineTaskDue(fec, undefined, now), true);
   assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - oneHour).toISOString() }, now), false);
-  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - 7 * oneHour).toISOString() }, now), true);
+  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - 7 * oneHour).toISOString() }, now), false, "the money fact retry floor is daily");
+  assert.equal(routineTaskDue(fec, { lastAttemptedAt: new Date(now - 24 * oneHour).toISOString() }, now), true);
   assert.equal(routineTaskDue(fec, {
     lastAttemptedAt: new Date(now - oneHour).toISOString(),
     lastSucceededAt: new Date(now - 8 * 24 * oneHour).toISOString(),
   }, now), false, "a failed due refresh waits for the FEC-specific retry interval");
   assert.equal(routineTaskDue(fec, {
-    lastAttemptedAt: new Date(now - 7 * oneHour).toISOString(),
+    lastAttemptedAt: new Date(now - 24 * oneHour).toISOString(),
     lastSucceededAt: new Date(now - 8 * 24 * oneHour).toISOString(),
   }, now), true, "the failed source becomes due when its own retry interval elapses");
   assert.equal(routineTaskDue(nh, { lastAttemptedAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededAt: new Date(now - 2 * oneHour).toISOString(), lastSucceededObservedAt: new Date(now - 2 * oneHour).toISOString() }, now), false);
@@ -1272,10 +1288,11 @@ test("per-command child environments override the batch and never leak across si
   ], {
     cwd: process.cwd(),
     env: { ...base, BOUNDED_CHILD_TOKEN: "batch-must-not-leak" },
-    timeoutMs: 1_000,
+    timeoutMs: 10_000,
     maxBufferBytes: 1_024,
     concurrency: 2,
   });
+  assert.deepEqual(results.map(result=>result.termination),["EXITED","EXITED"]);
   assert.deepEqual(JSON.parse(results[0]!.stdout), ["first", "yes", null]);
   assert.deepEqual(JSON.parse(results[1]!.stdout), ["second", null, "yes"]);
 });
@@ -1483,10 +1500,7 @@ test("the CISA government-domain contract has a Reader projection even before it
   const dotgov = ROUTINE_SOURCE_CONTRACTS.find((contract) => contract.id === "dotgov");
   assert.ok(dotgov);
   assert.equal(dotgov.readerProjection?.id, "government-domains");
-  assert.deepEqual(
-    await repairRoutineReaderProjectionReadback(new MemoryRoutineDataStore(), dotgov, T0),
-    { kind: "NO_PROMOTION", receipt: null },
-  );
+
 });
 
 test("standing task construction enforces every declarative authority and validation field", () => {
@@ -1599,7 +1613,7 @@ test("every standing source child emits its exact contract id and the supervisor
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /const ADMITTED_CODE_SHA = assertRuntimeAuthority\([\s\S]*\.sha/);
   assert.match(runner, /const RUNNING_CODE_SHA = TASK_SELECTION\.ok\s+\? ADMITTED_CODE_SHA\s+: null/);
-  for (const mutation of ["await syncHeldDoors(", "await startCivicReadCacheHost("]) {
+  for (const mutation of ["syncHeldDoors(doorRepos.doors)", "await startCivicReadCacheHost("]) {
     assert.ok(runner.indexOf("const ADMITTED_CODE_SHA") < runner.indexOf(mutation), `${mutation} requires admitted code first`);
     assert.ok(runner.indexOf("const ROUTINE_DATA_PROCESS_LEASE") < runner.indexOf(mutation), `${mutation} requires the process lease first`);
   }

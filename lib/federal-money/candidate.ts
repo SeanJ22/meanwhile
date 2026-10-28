@@ -4,6 +4,7 @@ import { freezeDurableJson } from "../civic-data/durable-json.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import { FEDERAL_MONEY_PARSER, federalMoneyScope, federalMoneyPartitionScope, type FederalMoneyPage, type FederalMoneyProjection, type FederalMoneySource, type FederalMoneyCursor, type FederalMoneyCheckpoint, type FederalMoneyCapture, type FederalMoneyCounts } from "./model.ts";
 import { FEDERAL_MONEY_CONFIG } from "./sources.ts";
+import { federalMoneyAppliedSourceHash } from "./source-hash.ts";
 
 export interface FederalMoneyStateProgress {
   readonly state: string;
@@ -17,6 +18,8 @@ export interface FederalMoneyNationalProjection {
   readonly formatVersion: 2; readonly source: FederalMoneySource; readonly state: "US";
   readonly states: readonly FederalMoneyStateProgress[];
   readonly counts: FederalMoneyCounts;
+  /** Null explicitly preserves an as-yet-unhashed state; it never means an empty provider. */
+  readonly sourceHashes?:Readonly<Record<string,string|null>>;
 }
 export interface FederalMoneyEvidence {
   readonly captures: readonly FederalMoneyCapture[];
@@ -49,7 +52,11 @@ export function federalMoneyCandidate(input: {
   const captures = [...new Map([...input.retainedCaptures ?? [], ...page.captures].filter(row => hashes.has(row.rawHash)).map(row => [row.rawHash, row])).values()];
   const normalizedPayload: FederalMoneyEvidence = freezeDurableJson({ captures, predecessorVersionId: input.predecessorVersionId ?? null,
     incomingIds: page.facts.map(row => row.id), readModelHash });
-  const rawHash = sha256(captures.map(row => row.rawHash).join("\n"));
+  const sourcePages="checkpoint" in projection ? projection.checkpoint.sourcePages : undefined;
+  const sourceHashes="states" in projection?projection.sourceHashes:undefined;
+  const rawHash = sourcePages ? federalMoneyAppliedSourceHash(source,projection.state,sourcePages)!
+    : sourceHashes ? sha256(canonicalCivicDataJson({source,state:projection.state,states:sourceHashes}))
+    : sha256([...new Set(captures.map(row => row.rawHash))].sort().join("\n"));
   const route = FEDERAL_MONEY_CONFIG[source].route;
   const records = "records" in projection ? [...projection.records, { state: projection.state }]
     : "states" in projection ? projection.states : [{ state: projection.state }];
@@ -58,7 +65,9 @@ export function federalMoneyCandidate(input: {
   return {
     id: `cv-${sha256(`${source}:${scope}:${readModelHash}:${rawHash}:${now}`).slice(0, 32)}`,
     sourceId: source, recordClass: "FEDERAL_MONEY", scope,
-    retrieval: { succeeded: true, requestedUrl: route, finalUrl: route, httpStatus: 200, retrievedAt: now, rawHash },
+    retrieval: { succeeded: true, requestedUrl: route, finalUrl: route, httpStatus: 200, retrievedAt: now, rawHash,
+      ...(sourcePages || sourceHashes || "partition" in projection ? {rawHashBasis:"SOURCE_CONTENT_V1" as const} : {}),
+      ...(sourceHashes?{complete:page.complete && Object.values(sourceHashes).every(hash=>hash!==null)}:{}) },
     normalization: { succeeded: true, parserVersion: FEDERAL_MONEY_PARSER, schemaVersion: FEDERAL_MONEY_PARSER,
       normalizedHash: readModelHash, normalizedPayloadHash: sha256(canonicalCivicDataJson(normalizedPayload)),
       inputRecords: records.length, outputRecords: records.length, droppedRecords: 0, missingRequiredFields: [] },

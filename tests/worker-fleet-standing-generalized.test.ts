@@ -200,6 +200,10 @@ test("standing advancement needs a successful Hunter result, not merely same-hos
   await h.repos.workerResults.append(h.item.id, record.id, record, h.now());
   await advanceHeldWorkerFleet(ROOT, h.runtime, 1, true);
   assert.ok(!(await h.repos.routeTasks.list()).some(row => row.value.workerTask), "Legacy-only admission cannot enqueue generalized work.");
+  h.repos.workerResults.readAll = async () => { throw new Error("whole worker-result history"); };
+  h.repos.artifacts.readAll = async () => { throw new Error("whole held-artifact history"); };
+  h.repos.workItems.list = async () => { throw new Error("whole work-item inventory"); };
+  h.repos.attempts.list = async () => { throw new Error("whole attempt history"); };
   await advanceHeldWorkerFleet(ROOT, h.runtime, 1);
   const queued = (await h.repos.routeTasks.list()).filter(row => row.value.workerTask);
   assert.equal(queued.length, 1);

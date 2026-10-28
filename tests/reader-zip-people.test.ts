@@ -92,7 +92,7 @@ test("ZIP people selection joins the held Census districts and official aliases 
         {geoid:"33028",stateFips:"33",stateAbbr:"NH",label:"District 28",overlaps:[{zcta5:"03046",whole:true,fraction:1}]}]}]},at:AT});
     const selected=statePackageStatement("NH",[],"03046",held);
     const reused=(await pg.query<Record<string,unknown>>(selected.text,[...selected.params])).rows[0];
-    assert.deepEqual(reused,row,"the later people query uses the exact held geography even if Census publishes in between");
+    assert.deepEqual(reused,{...row,geography:[]},"the later people query uses the exact held district keys without downloading geography again, even if Census publishes in between");
     const missing=statePackageStatement("NH",[],"00000");
     const absent=zipPeopleEntry("NH",(await pg.query<{zip_people:Record<string,unknown>}>(missing.text,[...missing.params])).rows[0].zip_people);assert.equal(absent.kind,"PROMOTED");
     if(absent.kind==="PROMOTED")assert.deepEqual((absent.projection.payload as typeof payload).roster.officeholders,[]);

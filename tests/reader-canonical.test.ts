@@ -65,7 +65,9 @@ test("canonical shelf version-checks recursive parts in one round trip and rejec
       CREATE TABLE civic_data_candidates(id text PRIMARY KEY,normalized_hash text,retrieved_at timestamptz,state text,acquisition_succeeded boolean,
         promoted_version_id text,last_known_good_version_id text,record_class text,scope text,source_id text);
       CREATE TABLE civic_data_candidate_events(candidate_id text,detail text,sequence bigint);
-      CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)`);
+      CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
+      ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text;
+      ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text`);
     for (const part of encoded.parts) await pg.query("INSERT INTO civic_data_payload_parts VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     const promote = async (version: string) => {
       await pg.query(`INSERT INTO civic_data_candidates VALUES($1,$2,$3,'PROMOTED',true,$1,$1,$4,$5,'official-source') ON CONFLICT DO NOTHING`,

@@ -101,11 +101,12 @@ test("daily listing checks reuse immutable saved datasets and never retain keys"
 test("actual source fixtures promote through the per-state routine contract and repeat checks confirm unchanged reader facts", async () => {
   const civicStore = new MemoryRoutineDataStore(), store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories(), { fetchImpl } = transport();
   const roster = normalize(yamlToPeople(fixture("openstates-alma-allen.yml"), "tx", sourceUrl, at), indexDivisions([]), at, "US-TX");
-  const published = await publishStatePeople({ vault, store: civicStore, state: "tx", roster, releaseId: "fixture-actual-openstates",
+  const published = await publishStatePeople({resolveOfficePoint:async()=>({reason:"NO_MATCH"}), vault, store: civicStore, state: "tx", roster, releaseId: "fixture-actual-openstates",
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, body: fixture("openstates-alma-allen.yml"), rawHash: digest(fixture("openstates-alma-allen.yml")), httpStatus: 200, retrievedAt: at }], now: at });
   assert.ok(published.outcome.promoted);
   const input = { state: "tx", civicStore, store, locks, fetchImpl, apiKey: "private-test-api-key", now: () => at, signal: AbortSignal.timeout(10_000) };
   const first = await refreshLegiscanVotes(input); assert.equal(first.rollCalls, 1); assert.equal(first.positions, 1);
+  assert.ok(first.publication);
   assert.equal((first.publication.candidate.readModel as { formatVersion: number }).formatVersion, 2);
   assert.equal(legiscanVotesProjectionIssue(first.publication.candidate.readModel as Parameters<typeof legiscanVotesProjectionIssue>[0]), null);
   const unboundPages = structuredClone(first.publication.candidate.readModel) as Parameters<typeof legiscanVotesProjectionIssue>[0];
@@ -114,30 +115,59 @@ test("actual source fixtures promote through the per-state routine contract and 
   assert.equal(legiscanVotesProjectionIssue(unboundPages), "LEGISCAN_VOTE_NATIVE_FACT_INVALID");
   const votes = await readLegiscanVotesForPerson("tx", personId, { store: civicStore, now: at });
   assert.equal(votes.length, 1); assert.equal(votes[0].position, "Yea");
-  const second = await refreshLegiscanVotes(input); assert.ok(second.publication.outcome.confirmed);
-  assert.equal(second.publication.outcome.confirmed.versionId, first.publication.outcome.promoted?.versionId);
+  const second = await refreshLegiscanVotes(input); assert.ok(second.confirmation);
+  assert.equal(second.publication,null,"an unchanged catalog never reads the held vote package");
+  assert.equal(second.confirmation.head.versionId, first.publication.outcome.promoted?.versionId);
   const forged = structuredClone(first.publication.candidate);
   (forged.readModel as Parameters<typeof legiscanVotesProjectionIssue>[0]).identityAuthority.versionId = "unheld-roster";
   assert.match((await legiscanVoteIdentityAuthorityIssue(civicStore, forged))!, /canonical held OpenStates roster/);
   // A new capture of the same real native person is a distinct source version;
   // the earlier verified crosswalk keeps the exact source version it used.
   const later = at;
-  const republished = await publishStatePeople({ vault, store: civicStore, state: "tx", roster: { ...roster, generatedAt: later }, releaseId: "fixture-actual-openstates-next",
+  const republished = await publishStatePeople({resolveOfficePoint:async()=>({reason:"NO_MATCH"}), vault, store: civicStore, state: "tx", roster: { ...roster, generatedAt: later }, releaseId: "fixture-actual-openstates-next",
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, body: fixture("openstates-alma-allen.yml"), rawHash: digest(fixture("openstates-alma-allen.yml")), httpStatus: 200, retrievedAt: later }], now: later, confirmUnchanged: false });
   assert.ok(republished.outcome.promoted);
   const historical = structuredClone(first.publication.candidate);
   (historical.readModel as Parameters<typeof legiscanVotesProjectionIssue>[0]).identityAuthority.versionId = republished.outcome.promoted.versionId;
-  assert.equal(await legiscanVoteIdentityAuthorityIssue(civicStore, historical), null);
+  const readPromotion=civicStore.readPromotion.bind(civicStore),readCandidate=civicStore.readCandidate.bind(civicStore);
+  civicStore.readPromotion=async()=>{throw Error("whole roster read");};civicStore.readCandidate=async()=>{throw Error("whole historical candidate read");};
+  try{
+    assert.equal(await legiscanVoteIdentityAuthorityIssue(civicStore,historical),null,"departed-member evidence survives without whole record reads");
+    const captured=await civicStore.readHistoricalRosterIdentities(published.outcome.promoted!.versionId);
+    assert.ok(captured);assert.ok(captured.officeholders.length);
+    assert.ok(captured.officeholders.every(person=>!("offices"in person)&&!("fieldSources"in person)&&Object.keys(person.provenance).length===1));
+    const withoutHistorical={readSourceHead:civicStore.readSourceHead.bind(civicStore),readSlimRosters:civicStore.readSlimRosters.bind(civicStore)};
+    assert.match((await legiscanVoteIdentityAuthorityIssue(withoutHistorical,historical))!,/historical OpenStates roster/,
+      "an unavailable narrow selector cannot fall back to a full candidate or self-certify a join");
+  }finally{civicStore.readPromotion=readPromotion;civicStore.readCandidate=readCandidate;}
 });
 test("a successful empty daily listing is a confirmed unchanged check and establishes no absent votes", async () => {
   const civicStore = new MemoryRoutineDataStore(), store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
   const roster = normalize(yamlToPeople(fixture("openstates-alma-allen.yml"), "tx", sourceUrl, at), indexDivisions([]), at, "US-TX");
-  await publishStatePeople({ vault, store: civicStore, state: "tx", roster, releaseId: "fixture-empty-list-roster",
+  await publishStatePeople({resolveOfficePoint:async()=>({reason:"NO_MATCH"}), vault, store: civicStore, state: "tx", roster, releaseId: "fixture-empty-list-roster",
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, body: fixture("openstates-alma-allen.yml"), rawHash: digest(fixture("openstates-alma-allen.yml")), httpStatus: 200, retrievedAt: at }], now: at });
   const input = { state: "tx", civicStore, store, locks, apiKey: "private-test-api-key", now: () => at, signal: AbortSignal.timeout(10_000),
     fetchImpl: (async () => new Response(JSON.stringify({ status: "OK", datasetlist: [] }))) as typeof fetch };
   const first = await refreshLegiscanVotes(input), second = await refreshLegiscanVotes(input);
+  assert.ok(first.publication);
   assert.equal(first.rollCalls, 0); assert.equal(first.positions, 0);
   assert.equal(first.publication.candidate.absence.claimsAbsence, false);
-  assert.ok(second.publication.outcome.confirmed);
+  assert.ok(second.confirmation);
+});
+
+test("a deadline after one dataset publication resumes its immutable session without parsing or publishing its votes again",async()=>{
+  const civicStore=new MemoryRoutineDataStore(),store=new MemoryEvidenceStore(),{locks}=createMemoryRepositories(),transported=transport();
+  const roster=normalize(yamlToPeople(fixture("openstates-alma-allen.yml"),"tx",sourceUrl,at),indexDivisions([]),at,"US-TX");
+  await publishStatePeople({resolveOfficePoint:async()=>({reason:"NO_MATCH"}),vault,store:civicStore,state:"tx",roster,releaseId:"fixture-cutoff-roster",
+    acquisitions:[{requestedUrl:sourceUrl,finalUrl:sourceUrl,body:fixture("openstates-alma-allen.yml"),rawHash:digest(fixture("openstates-alma-allen.yml")),httpStatus:200,retrievedAt:at}],now:at});
+  const input={state:"tx",civicStore,store,locks,fetchImpl:transported.fetchImpl,apiKey:"private-test-api-key",now:()=>at,signal:new AbortController().signal};
+  await assert.rejects(refreshLegiscanVotes({...input,onDataset:async()=>{throw Error("pass deadline");}}),/pass deadline/);
+  const before=await readLegiscanVotesForPerson("tx",personId,{store:civicStore,now:at});
+  assert.equal(before.length,1,"the completed session is already live at the cutoff");
+  let replayed=0;
+  const resumed=await refreshLegiscanVotes({...input,onDataset:async()=>{replayed++;}});
+  assert.ok(resumed.publication);assert.equal(replayed,0,"a completed session is not parsed or published twice");
+  assert.equal(transported.requests.filter(op=>op==="getDataset").length,1);
+  assert.deepEqual(await readLegiscanVotesForPerson("tx",personId,{store:civicStore,now:at}),before);
+  assert.ok((await refreshLegiscanVotes(input)).confirmation);
 });

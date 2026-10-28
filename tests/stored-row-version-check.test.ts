@@ -5,7 +5,7 @@ import test, { after } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { pgAggregateRepository, pgAppendOnlyRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
-import { shareVersionedRows } from "../lib/db/versioned-rows.ts";
+import { shareVersionedRows, versionedRowsFor } from "../lib/db/versioned-rows.ts";
 import { posixRelative } from "../scripts/repo-path.mjs";
 
 const db=new PGlite();
@@ -59,6 +59,69 @@ test("every aggregate and log read checks database versions before a stored body
     UPDATE cp_log_worker_results SET record=jsonb_set(record,'{kind}','"updated"')`);
   assert.equal((await aggregate.mustRead("a")).value.status,"CLOSED");
   assert.equal((await log.read("work"))[0].kind,"updated","even a log row changed outside the append API invalidates its copy");
+});
+
+test("owner snapshot projections reuse newer remembered full rows after the same SQL revision check", async () => {
+  type Snapshot = { allRowsIndex: string[]; publishedAt: string; privatePayload: string };
+  await db.exec(`CREATE TABLE cp_owner_snapshots(id text PRIMARY KEY,revision bigint,updated_at timestamptz,changed_at timestamptz,value jsonb)`);
+  const first: Snapshot = { allRowsIndex: ["held"], publishedAt: "2026-10-26T20:00:00Z", privatePayload: "not selected" };
+  await db.query("INSERT INTO cp_owner_snapshots VALUES('current',1,now(),now(),$1::jsonb)", [JSON.stringify(first)]);
+  const held = new Map<string, string>(), selects: { text: string; params: readonly unknown[] }[] = [];
+  let bodies = 0, beforeSelect: (() => Promise<void>) | null = null;
+  const sql: Sql = { query: async (text, params = []) => {
+    if (text.startsWith("SELECT")) {
+      selects.push({ text, params });
+      const race = beforeSelect; beforeSelect = null;
+      await race?.();
+    }
+    const rows = (await db.query<Record<string, unknown>>(text, [...params])).rows;
+    bodies += rows.filter(row => Object.hasOwn(row, "value") && row.value !== null).length;
+    return rows;
+  } };
+  shareVersionedRows(sql, "postgres://fixture:fixture@owner-copy.invalid/neondb", new CivicReadCache({
+    read: async key => held.get(key) ?? null, write: async (key, value) => { held.set(key, value); },
+  }));
+  const repo = pgAggregateRepository<Snapshot>(sql, "OwnerSnapshot", "cp_owner_snapshots");
+  const project = () => repo.readNarrowed("current", { allRowsIndex: true });
+  assert.deepEqual((await project())!.value, { allRowsIndex: ["held"] });
+  assert.equal(bodies, 1);
+
+  const second = { ...first, allRowsIndex: ["changed"], publishedAt: "2026-10-26T21:00:00Z" };
+  await repo.compareAndSet("current", 1, second, second.publishedAt);
+  selects.length = 0;
+  assert.deepEqual((await project())!.value, { allRowsIndex: ["changed"] }, "only the named projection can leave the full local copy");
+  assert.equal(selects.length, 1, "no separate database readback is added");
+  assert.equal(selects[0]!.params[1], "2", "the newer full copy revision participates in the existing atomic comparison");
+  assert.match(selects[0]!.text, /CASE WHEN revision::text=\$2::text THEN NULL ELSE/);
+  assert.equal(bodies, 1, "an older projected copy cannot force a second body download after the write remembers the full row");
+  assert.deepEqual((await project())!.value, { allRowsIndex: ["changed"] });
+  assert.equal(bodies, 1, "the confirmed projection is reusable on the next read");
+
+  const third = { ...second, publishedAt: "2026-10-26T22:00:00Z" };
+  await repo.compareAndSet("current", 2, third, third.publishedAt);
+  const unchanged = await project();
+  assert.equal(unchanged!.revision, 3);
+  assert.deepEqual(unchanged!.value, { allRowsIndex: ["changed"] });
+  assert.equal(bodies, 1, "an unrelated publication timestamp does not redownload an already-held projection");
+
+  await versionedRowsFor(sql).remember("cp_owner_snapshots", { id: "current", revision: 1, updated_at: first.publishedAt, value: first });
+  selects.length = 0;
+  assert.equal((await project())!.revision, 3);
+  assert.equal(selects[0]!.params[1], "3", "a late older full copy cannot replace the newer narrowed copy");
+  assert.equal(bodies, 1);
+
+  const fourth = { ...third, allRowsIndex: ["fourth"], publishedAt: "2026-10-26T22:01:00Z" };
+  await repo.compareAndSet("current", 3, fourth, fourth.publishedAt);
+  beforeSelect = async () => { await db.query("UPDATE cp_owner_snapshots SET revision=5,value=jsonb_set(value,'{allRowsIndex}',$1::jsonb)", [JSON.stringify(["racing update"])]); };
+  selects.length = 0;
+  const raced = await project();
+  assert.equal(selects.length, 1);
+  assert.equal(selects[0]!.params[1], "4");
+  assert.equal(raced!.revision, 5);
+  assert.deepEqual(raced!.value, { allRowsIndex: ["racing update"] }, "a racing database revision returns its actual selected fields instead of the local write");
+  assert.equal(bodies, 2);
+  assert.deepEqual((await project())!.value, raced!.value);
+  assert.equal(bodies, 2, "the older full write cannot invalidate the freshly read revision");
 });
 
 test("runtime sources expose no flag that can skip the shared version path",async()=>{

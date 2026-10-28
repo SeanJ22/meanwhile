@@ -5,6 +5,7 @@ import { PromotionBaseChangedError, type RoutineDataStore } from "../civic-data/
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { captureIntact, section3SourceReceipt } from "../civic-data/worker-publication-evidence.ts";
 import { isOfficialSource } from "../civic-data/source-authority.ts";
+import { rawCaptureKey } from "../civic-data/raw-capture-vault.ts";
 import { section3Page, linkingPageFrom } from "../control-plane/promotion/section3.ts";
 import { translationRecordIssue, translationSourceContains, type TranslationRecord } from "./records.ts";
 
@@ -21,8 +22,10 @@ export function translationPackage(input: {
       (record.kind === "MEASURE" && record.sourceCapture
         ? capture.evidence.contentHash === `sha256-${record.sourceCapture.rawHash}` &&
           record.sourceCapture.byteLength === Buffer.byteLength(capture.evidence.text) &&
-          record.sourceCapture.vaultKey === (capture.evidence.sourceCapture?.vaultKey ??
-            `project/freshness/source/${new URL(record.sourceUrl).hostname}/raw/${record.sourceCapture.rawHash}`) &&
+          (capture.evidence.sourceCapture ? record.sourceCapture.vaultKey === capture.evidence.sourceCapture.vaultKey
+            // DB-05 files raw responses by fingerprint; earlier captures keep their host path.
+            : [rawCaptureKey(record.sourceCapture.rawHash),
+              `project/freshness/source/${new URL(record.sourceUrl).hostname}/raw/${record.sourceCapture.rawHash}`].includes(record.sourceCapture.vaultKey)) &&
           record.sentences.every(sentence => translationSourceContains(capture.evidence.text, sentence.quote)) &&
           (!record.subjectQuote || translationSourceContains(capture.evidence.text, record.subjectQuote))
         : capture.evidence.text === record.sourceText) && (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash) === `sha256-${record.sourceHash}`);

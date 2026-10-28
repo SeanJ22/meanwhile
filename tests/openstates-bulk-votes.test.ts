@@ -69,10 +69,10 @@ for (const sample of manifest.states.filter(sample => sample.readerExample)) {
       assert.equal(result.votes.length, 1);
     } });
     assert.equal(published, 1);
-    assert.ok(first.publication.outcome.promoted);
-    assert.equal((first.publication.candidate.readModel as { formatVersion: number }).formatVersion, 2);
+    assert.ok(first.publication!.outcome.promoted);
+    assert.equal((first.publication!.candidate.readModel as { formatVersion: number }).formatVersion, 2);
     assert.ok(await h.civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope(sample.state)));
-    const [archive] = (first.publication.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions;
+    const [archive] = (first.publication!.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions;
     assert.equal("body" in archive, false); assert.equal(archive.sha256, sample.fixtureArchiveSha256);
     if (sample.state === "GA") {
       assert.deepEqual(first.held, [{ key: `${example.voteId}:ocd-person/546d682f-b256-4060-8fd3-084d7f118d43`, detail: "the native person has conflicting publisher positions" }]);
@@ -89,12 +89,12 @@ for (const sample of manifest.states.filter(sample => sample.readerExample)) {
     if (sample.state !== "GA") assert.ok(rows[0].sourceUrls.length, "the publisher's original HTTPS source links survive");
     // Georgia supplies only its HTTP SOAP service WSDL as a vote source. The
     // original row remains in the archive and the public bulk URL cites the vote.
-    const version = first.publication.outcome.promoted!.versionId;
+    const version = first.publication!.outcome.promoted!.versionId;
     h.nextCheck();
     const unchanged = await refreshStateVotes(h.input);
-    assert.ok(unchanged.publication.outcome.confirmed, "no new votes is a successful unchanged check");
-    assert.equal(unchanged.publication.outcome.confirmed!.versionId, version);
-    assert.deepEqual(unchanged.held, first.held);
+    assert.ok(unchanged.confirmation, "no new votes is a successful hash-first source check");
+    assert.equal(unchanged.confirmation!.head.versionId, version);
+    assert.equal(unchanged.held, null, "the unchanged source reads no held failure list");
     assert.deepEqual(await readPluralVotesForPerson(sample.state, example.personId, { store: h.civicStore,  now: h.input.now() }), rows);
   });
 }
@@ -104,11 +104,11 @@ test("NJ: the actual current archive omits vote files and checks successfully wi
   const parsed = await parsePluralBulkSession(sample.state, sample.session, h.zip, sourceEvidence(sample, h.zip));
   assert.deepEqual(parsed.votes, []); assert.deepEqual(parsed.held, []);
   const first = await refreshStateVotes(h.input);
-  assert.ok(first.publication.outcome.promoted);
+  assert.ok(first.publication!.outcome.promoted);
   h.nextCheck();
   const next = await refreshStateVotes(h.input);
-  assert.ok(next.publication.outcome.confirmed);
-  assert.deepEqual(next.held, []);
+  assert.ok(next.confirmation);
+  assert.equal(next.held, null, "an unchanged empty archive does not read or invent held rows");
 });
 
 test("real API v3 fallback resolves nested voter IDs and counts-only responses publish no person positions", async () => {

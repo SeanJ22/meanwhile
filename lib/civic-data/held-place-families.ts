@@ -7,7 +7,7 @@ import { type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { VotingSitesFile } from "../ballot/voting-sites.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { federalDirectoryScope, type FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
-import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import type { RegistryPlanningView } from "./keyed-registry-planning.ts";
 import type { FundingSnapshot } from "../funding/types.ts";
 import type { StateMoneySnapshot } from "../funding/state-money.ts";
 import { isRenderable } from "../funding/state-money-reader.ts";
@@ -78,7 +78,7 @@ function placeBallot(ballot: BallotSet, divisions: ReadonlySet<string>): BallotS
   };
 }
 
-export async function readHeldPlaceFamilies(divisionIds: readonly string[], options: PromotedCivicDataReadOptions, registry?: RegistryRuntimeReadModel | null): Promise<HeldPlaceFamilies> {
+export async function readHeldPlaceFamilies(divisionIds: readonly string[], options: PromotedCivicDataReadOptions, registry?: RegistryPlanningView | null): Promise<HeldPlaceFamilies> {
   const sliced = registry !== undefined, divisions = new Set(divisionIds);
   const targets = [...new Set([...(registry?.bodyRosters.flatMap(roster => roster.members.map(member => member.id)) ?? []),
     ...(registry?.officialCandidacies.rows.flatMap(row => row.status === "RESOLVED" && row.candidacy ? [row.candidacy.candidacyId] : []) ?? [])])];
@@ -142,7 +142,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
 }
 
 /** No names, state-wide money expansion, or original-job/ZIP filters participate in joins. */
-export function projectHeldPlaceFamilies(divisionIds: readonly string[], registry: RegistryRuntimeReadModel | null, families: HeldPlaceFamilies): HeldPlaceCapture {
+export function projectHeldPlaceFamilies(divisionIds: readonly string[], registry: RegistryPlanningView | null, families: HeldPlaceFamilies): HeldPlaceCapture {
   const wanted = new Set(divisionIds);
   const subjects = new Map<string, HeldPlaceCapture["subjects"][number]>();
   const held: HeldPlaceCapture["held"][number][] = [];

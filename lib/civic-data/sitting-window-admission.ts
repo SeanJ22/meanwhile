@@ -93,6 +93,8 @@ export interface SittingWindowReads {
   readonly attemptedMs: number;
   /** NaN when no success is proven. */
   readonly succeededMs: number;
+  /** A retained source may have completed processing after its actual provider check. */
+  readonly completedMs?:number;
   readonly published: boolean;
 }
 
@@ -110,7 +112,7 @@ export function sittingWindowObligation(
   const rereadMs = sittingWindowRereadMs(schedule, hot);
   const [fromMs, periodMs] = !Number.isFinite(reads.succeededMs)
     ? [reads.attemptedMs, reads.published ? Math.min(sittingWindowRetryMs(schedule, retryMs, true), rereadMs) : sittingWindowRetryMs(schedule, retryMs, false)]
-    : reads.attemptedMs > reads.succeededMs
+    : reads.attemptedMs > (Number.isFinite(reads.completedMs)?reads.completedMs!:reads.succeededMs)
       ? [reads.attemptedMs, Math.min(retryMs, rereadMs)]
       : [reads.succeededMs, rereadMs];
   const leadMs = periodMs >= schedule.baseEveryMs ? SITTING_WINDOW_BASE_ADMISSION_LEAD_MS : SITTING_WINDOW_ADMISSION_LEAD_MS;

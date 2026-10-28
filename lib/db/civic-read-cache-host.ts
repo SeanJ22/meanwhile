@@ -96,7 +96,7 @@ export async function saveCivicReadCopy(root: string, key: string, saved: string
 }
 
 /** Host-local copy sink inherited by every child. Each use still checks the
- * database etag. Disk copies, temporary writes and individual bodies are bounded. */
+ * database content fingerprint. Disk copies, temporary writes and individual bodies are bounded. */
 export async function startCivicReadCacheHost(options: { readonly maxBytes?: number; readonly maxCopyBytes?: number } = {}): Promise<{ close: () => Promise<void> }> {
   const database = process.env.DATABASE_URL;
   if (!database || (process.env.WTP_CIVIC_READ_CACHE_URL && process.env.WTP_CIVIC_READ_CACHE_TOKEN)) return { close: async () => {} };

@@ -20,7 +20,7 @@ async function boundedWait(work: Promise<unknown>): Promise<void> {
   clearTimeout(timer);
 }
 
-/** Disposable runner copies. A fresh database row version decides every use. */
+/** Disposable runner copies. A fresh content fingerprint decides every use. */
 export class CivicReadCache {
   private readonly io: CacheIO;
   constructor(io: CacheIO) { this.io = io; }
@@ -61,26 +61,32 @@ export class CivicReadCache {
 
   /** One statement can return either the changed value or confirmation of the held revision. */
   async row<T>(input: { readonly namespace: string; readonly key: string;
-    readonly source?: { readonly namespace: string; readonly project: (value: T) => T };
+    readonly source?: { readonly namespace: string; readonly project: (value: T) => T;
+      readonly newer?: (sourceEtag: string, heldEtag: string) => boolean };
     readonly current: (etag: string | null, held?: T) => Promise<{ readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null> }): Promise<T | null> {
     const key = input.namespace + ":" + input.key;
     let held = await this.read<T>(key);
-    if (!held && input.source) {
+    let projectedSource = false;
+    if (input.source && (!held || input.source.newer)) {
       const source = await this.read<T>(input.source.namespace + ":" + input.key);
-      if (source) held = { etag: source.etag, value: input.source.project(source.value) };
+      if (source && (!held || input.source.newer?.(source.etag, held.etag))) {
+        held = { etag: source.etag, value: input.source.project(source.value) };
+        projectedSource = true;
+      }
     }
     const current = await input.current(held?.etag ?? null, held?.value);
     if (current === null) return null;
     if (typeof current.etag !== "string" || current.etag.length === 0) throw new Error("A stored row read returned no database version");
     if ("unchanged" in current) {
       if (held?.etag !== current.etag) throw new Error("A changed-row read confirmed an unavailable revision");
+      if (projectedSource) await this.save(key, held);
       return held.value;
     }
     await boundedWait(this.save(key, current));
     return current.value;
   }
 
-  /** Read only rows whose database etag differs from the held copy. */
+  /** Read only rows whose content fingerprint differs; freshen small mutable headers separately. */
   async rows<T, V extends CivicRowVersion>(input: {
     readonly namespace: string;
     readonly keys: readonly string[];
@@ -109,13 +115,14 @@ export class CivicReadCache {
       const values = await input.values(keys);
       // An UPDATE racing the whole read must never label old bytes with its
       // newer etag. Return the actual read, but keep only stable row copies.
-      const after = new Map((await input.versions(keys)).map(version => [version.key, version.etag]));
+      const after = new Map((await input.versions(keys)).map(version => [version.key, version]));
       const before = new Map(missing.map(version => [version.key, version.etag]));
       const saves: Promise<void>[] = [];
       for (const value of values) {
         const key = input.keyOf(value);
-        result.set(key, value);
-        if (input.etagOf || before.get(key) !== undefined && before.get(key) === after.get(key)) {
+        const version = after.get(key);
+        result.set(key, version && input.freshen ? input.freshen(value, version) : value);
+        if (input.etagOf || before.get(key) !== undefined && before.get(key) === version?.etag) {
           saves.push(this.save(input.namespace + ":" + key, { etag: input.etagOf?.(value) ?? before.get(key)!, value }));
         }
       }

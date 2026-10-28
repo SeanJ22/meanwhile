@@ -20,10 +20,9 @@ export function publicationVaultReaders(repos: ControlPlaneRepositories, store: 
     if (!reading) {
       reading = (async () => {
         const records = await artifactRecords(repos, id);
-        const scoped = { ...repos, artifacts: { ...repos.artifacts, readAll: async () => records } };
         return {
-          readObject: researchVaultResolver(scoped, evidenceStore, project, { snapshot: true }),
-          readEvidence: workerVaultResolver(scoped, evidenceStore, project, { snapshot: true }),
+          readObject: researchVaultResolver(repos, evidenceStore, project, { records }),
+          readEvidence: workerVaultResolver(repos, evidenceStore, project, { records }),
         };
       })();
       readers.set(id, reading);

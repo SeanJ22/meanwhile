@@ -1,4 +1,4 @@
-import { easternDay, hourStart } from "../db/transfer-by-caller.ts";
+import { hourStart } from "../db/transfer-by-caller.ts";
 
 export const JOB_BREAKER_INTERVAL_MS = 10 * 60_000;
 export const JOB_BREAKER_BYTES = 500_000_000;
@@ -30,16 +30,17 @@ export function jobTransfers(rows: readonly Record<string, unknown>[]): JobTrans
   });
 }
 
+/**
+ * A paused job stays paused until the owner releases it in Admin. A released job counts only the bytes it reads after
+ * its release took effect in that hour.
+ */
 export interface JobBreakerState {
   job: string;
-  mode: "PAUSED_HOUR" | "PAUSED_CODE" | "HALF_RATE";
-  tripDay: string;
-  trips: number;
-  tripHour: string;
-  code: string | null;
-  offsetHour: string;
+  mode: "PAUSED" | "RELEASED";
+  /** When the breaker paused the job, or when its release took effect. */
+  at: string;
+  hour: string;
   offsetBytes: number;
-  lastTransfer?: JobTransfer & { hour: string };
 }
 export interface JobBreakerEvent {
   id: string;
@@ -56,71 +57,100 @@ export interface JobBreakerEvent {
 export interface JobBreakerSnapshot {
   checkedAt: string;
   states: Record<string, JobBreakerState>;
+  /** The newest owner release this controller has read. */
+  releasesThrough?: string | null;
   pendingEvents?: JobBreakerEvent[];
 }
+export interface JobRelease { job: string; at: string }
 
-/** These are serving/parent identities, never independently pausable acquisitions. */
+/** Supervisors and serving identities keep only their own small reads; the work they run is metered and paused under each task's name. */
 export function protectedJob(job: string): boolean {
-  return ["pilot-runner", JOB_BREAKER_JOB, "index", "server", "production-contract-migrations"].includes(job) || job.startsWith("admin:") || job.startsWith("reader:");
+  return ["pilot-runner", JOB_BREAKER_JOB, "index", "server", "production-contract-migrations", "routine-civic-data", "publish-now"].includes(job)
+    || job.startsWith("admin:") || job.startsWith("reader:");
 }
 
-/** A trip is one crossing per job/hour. A code hold survives midnight and process/release restarts. */
+/** One crossing pauses a job. Nothing here resumes one: only the owner's release does. */
 export function evaluateJobBreaker(input: {
   now: number;
   rows: readonly JobTransfer[];
   states: Readonly<Record<string, JobBreakerState>>;
-  code: (job: string) => string | null;
-}): { snapshot: JobBreakerSnapshot; events: JobBreakerEvent[] } {
-  const at = new Date(input.now).toISOString(), hour = hourStart(input.now), day = easternDay(new Date(input.now));
-  const states: Record<string,JobBreakerState> = structuredClone(input.states), events: JobBreakerEvent[] = [];
+  releases?: readonly JobRelease[];
+}): { snapshot: JobBreakerSnapshot; events: JobBreakerEvent[]; released: string[] } {
+  const at = new Date(input.now).toISOString(), hour = hourStart(input.now);
+  const states: Record<string, JobBreakerState> = structuredClone(input.states), events: JobBreakerEvent[] = [], released: string[] = [];
   const rows = new Map(input.rows.map(row => [row.job, row]));
-  const emit = (state: JobBreakerState, action: "PAUSE" | "RESUME", reason: string) => {
-    const row = rows.get(state.job);
-    const measurement = row ? { ...row, hour } : state.lastTransfer;
-    // A quiet next-hour resume retains the measured trip's table and request size. checked_at is the action clock.
-    events.push({ id: `${at}:${state.job}:${String(events.length).padStart(8,"0")}`, checked_at: at, hour: measurement?.hour ?? hour, action, job: state.job,
-      gb: (measurement?.bytes ?? 0) / 1e9, top_table: measurement?.topTable ?? null,
-      bytes_per_request: measurement?.requests ? measurement.bytes / measurement.requests : null,
-      state: { ...state }, detail: { reason, checkedHour: hour } });
-  };
-  for (const job of new Set([...Object.keys(states), ...rows.keys()])) {
-    if (protectedJob(job)) continue;
-    let state = states[job];
-    const row = rows.get(job), code = input.code(job);
-    if (state?.mode === "PAUSED_CODE" && code && state.code && code !== state.code) {
-      state = states[job] = { ...state, mode: "HALF_RATE", trips: 0, tripDay: day, code,
-        offsetHour: hour, offsetBytes: row?.bytes ?? 0, tripHour: "" };
-      emit(state, "RESUME", "Job code changed in the running release");
-    } else if (state?.mode === "PAUSED_HOUR" && state.tripHour < hour) {
-      state = states[job] = { ...state, mode: "HALF_RATE" };
-      emit(state, "RESUME", "Next hour; launch interval doubled");
-    }
-    if (state?.mode === "PAUSED_CODE" || state?.mode === "PAUSED_HOUR") continue;
-    const bytes = (row?.bytes ?? 0) - (state?.offsetHour === hour ? state.offsetBytes : 0);
-    if (bytes <= JOB_BREAKER_BYTES || state?.tripHour === hour) continue;
-    const trips = (state?.tripDay === day ? state.trips : 0) + 1;
-    state = states[job] = { job, mode: trips >= 2 ? "PAUSED_CODE" : "PAUSED_HOUR", trips, tripDay: day,
-      tripHour: hour, code, offsetHour: state?.offsetHour ?? hour, offsetBytes: state?.offsetBytes ?? 0,
-      lastTransfer: row ? {...row,hour} : state?.lastTransfer };
-    emit(state, "PAUSE", trips >= 2 ? "Second trip today; waiting for this job's code to change" : "Hourly job transfer exceeded 0.5 GB");
+  for (const release of input.releases ?? []) {
+    const state = states[release.job];
+    if (state?.mode !== "PAUSED" || Date.parse(release.at) < Date.parse(state.at)) continue;
+    states[release.job] = { job: release.job, mode: "RELEASED", at, hour, offsetBytes: rows.get(release.job)?.bytes ?? 0 };
+    released.push(release.job);
   }
-  return { snapshot: { checkedAt: at, states }, events };
+  for (const job of new Set([...Object.keys(states), ...rows.keys()])) {
+    if (protectedJob(job)) { delete states[job]; continue; }
+    const row = rows.get(job);
+    if (states[job]?.mode === "PAUSED") continue;
+    if (states[job]?.mode === "RELEASED" && states[job].hour !== hour) delete states[job];
+    if (!row || row.bytes - (states[job]?.offsetBytes ?? 0) <= JOB_BREAKER_BYTES) continue;
+    const paused: JobBreakerState = states[job] = { job, mode: "PAUSED", at, hour, offsetBytes: 0 };
+    events.push({ id: `${at}:${job}:${String(events.length).padStart(8, "0")}`, checked_at: at, hour, action: "PAUSE", job,
+      gb: row.bytes / 1e9, top_table: row.topTable, bytes_per_request: row.requests ? row.bytes / row.requests : null,
+      state: paused, detail: { reason: "Hourly job transfer exceeded 0.5 GB; held until released in Admin", checkedHour: hour } });
+  }
+  return { snapshot: { checkedAt: at, states }, events, released };
 }
 
-export const JOB_BREAKER_STATE_SQL = `SELECT DISTINCT ON (job) job,state
-  FROM cp_job_transfer_breaker WHERE action IN ('PAUSE','RESUME') ORDER BY job,checked_at DESC,id DESC`;
+/** The latest pause or release of each job: a few rows, without their state documents. */
+export const JOB_BREAKER_LATEST_SQL = `SELECT job,action,checked_at,hour,gb,top_table,bytes_per_request FROM (
+  SELECT DISTINCT ON (job) job,action,checked_at,hour,gb,top_table,bytes_per_request FROM cp_job_transfer_breaker
+  WHERE action IN ('PAUSE','RESUME') ORDER BY job,checked_at DESC,id DESC) latest ORDER BY checked_at DESC,job`;
+/** Owner releases written since the controller last looked, with an hour's overlap for a writer whose clock runs behind. */
+export const JOB_BREAKER_RELEASES_SQL = `SELECT job,checked_at FROM cp_job_transfer_breaker
+  WHERE action='RESUME' AND checked_at > $1::timestamptz - interval '1 hour' ORDER BY checked_at,id`;
 export const JOB_BREAKER_WRITE_SQL = `INSERT INTO cp_job_transfer_breaker
   (id,checked_at,hour,action,job,gb,top_table,bytes_per_request,state,detail)
   SELECT id,checked_at,hour,action,job,gb,top_table,bytes_per_request,state,detail
   FROM jsonb_to_recordset($1::jsonb) AS x(id text,checked_at timestamptz,hour timestamptz,action text,
     job text,gb numeric,top_table text,bytes_per_request numeric,state jsonb,detail jsonb)
   ON CONFLICT (id) DO NOTHING`;
+/** A release lands only on a job whose latest entry is a pause, always after it; the receipt id makes a resend the same release. */
+export const JOB_BREAKER_RELEASE_SQL = `WITH latest AS (SELECT action,checked_at FROM cp_job_transfer_breaker
+    WHERE job=$3 AND action IN ('PAUSE','RESUME') ORDER BY checked_at DESC,id DESC LIMIT 1),
+  at AS (SELECT greatest($2::timestamptz,latest.checked_at+interval '1 millisecond') AS at FROM latest WHERE latest.action='PAUSE')
+  INSERT INTO cp_job_transfer_breaker (id,checked_at,hour,action,job,gb,top_table,bytes_per_request,state,detail)
+  SELECT $1,at.at,date_trunc('hour',at.at),'RESUME',$3,0,NULL,NULL,jsonb_build_object('job',$3::text,'mode','RELEASED'),$4::jsonb FROM at
+  ON CONFLICT (id) DO NOTHING RETURNING id`;
 
+const iso = (value: unknown) => value instanceof Date ? value.toISOString() : new Date(String(value)).toISOString();
+export interface JobBreakerLatest {
+  job: string;
+  action: "PAUSE" | "RESUME";
+  at: string;
+  hour: string;
+  gb: number;
+  topTable: string | null;
+  bytesPerRequest: number | null;
+}
 export interface BreakerSql { query(text: string, params?: readonly unknown[]): Promise<Record<string, unknown>[]> }
-export async function readJobBreakerStates(sql: BreakerSql): Promise<Record<string, JobBreakerState>> {
-  const rows = await sql.query(JOB_BREAKER_STATE_SQL);
-  return Object.fromEntries(rows.map(row => [String(row.job), row.state as JobBreakerState]));
+export async function readJobBreakerLatest(sql: BreakerSql): Promise<JobBreakerLatest[]> {
+  return (await sql.query(JOB_BREAKER_LATEST_SQL)).map(row => ({ job: String(row.job), action: row.action === "PAUSE" ? "PAUSE" : "RESUME",
+    at: iso(row.checked_at), hour: iso(row.hour), gb: Number(row.gb), topTable: row.top_table == null ? null : String(row.top_table),
+    bytesPerRequest: row.bytes_per_request == null ? null : Number(row.bytes_per_request) }));
+}
+/** The jobs the control plane holds paused, built from each row's own columns. */
+export function pausedStates(latest: readonly JobBreakerLatest[]): Record<string, JobBreakerState> {
+  return Object.fromEntries(latest.filter(row => row.action === "PAUSE" && !protectedJob(row.job)).map(row => [row.job,
+    { job: row.job, mode: "PAUSED", at: row.at, hour: row.hour, offsetBytes: 0 } satisfies JobBreakerState]));
+}
+export async function readJobReleases(sql: BreakerSql, since: string | null): Promise<JobRelease[]> {
+  return (await sql.query(JOB_BREAKER_RELEASES_SQL, [since ?? new Date(0).toISOString()]))
+    .map(row => ({ job: String(row.job), at: iso(row.checked_at) }));
 }
 export async function writeJobBreakerEvents(sql: BreakerSql, events: readonly JobBreakerEvent[]): Promise<void> {
   await sql.query(JOB_BREAKER_WRITE_SQL, [JSON.stringify(events)]);
+}
+/** The owner's release from Admin. False when the job is not paused. */
+export async function releaseJob(sql: BreakerSql, input: { job: string; at: string; receiptId: string; actorRef: string }): Promise<boolean> {
+  const rows = await sql.query(JOB_BREAKER_RELEASE_SQL, [`release:${input.receiptId}`, input.at, input.job,
+    JSON.stringify({ reason: "Released by the owner in Admin", receiptId: input.receiptId, actorRef: input.actorRef })]);
+  return rows.length > 0;
 }

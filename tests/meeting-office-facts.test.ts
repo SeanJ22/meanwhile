@@ -1,3 +1,4 @@
+import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
@@ -20,8 +21,9 @@ async function setup(address = ADDRESS) {
   await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES
     ($1,'place','Sunnyside Unified School District','AZ',NULL),
     ($2,'government','Sunnyside Unified School District','AZ',$1),($3,'body','Governing Board','AZ',$2)`, [PLACE, GOVERNMENT, BODY]);
-  await db.pg.exec("CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,payload jsonb)");
-  await db.query("INSERT INTO civic_data_promotions VALUES($1,'REGISTRATION',$2)", ["REGISTRATION:US-AZ:registration:v1", JSON.stringify({ governments: [{
+  await db.pg.exec("CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,payload jsonb,scope text DEFAULT 'US-AZ:registration:v1',current_version_id text DEFAULT 'fixture',promoted_at timestamptz DEFAULT now())");
+  await installKeyedRows(db.pg);
+  await db.query("INSERT INTO civic_data_promotions(key,record_class,payload) VALUES($1,'REGISTRATION',$2)", ["REGISTRATION:US-AZ:registration:v1", JSON.stringify({ governments: [{
     id: "government:US-AZ:nces:0408170", jurisdictionId: GOVERNMENT, state: STATE,
     aliases: [GOVERNMENT], bodyIds: [BODY], name: "Sunnyside Unified School District", officeAddress: address,
     mailingAddress: "PO Box 123, Tucson, AZ 85706", website: null, provenance,
@@ -189,7 +191,20 @@ test("sharing a place does not give a board either neighboring government's offi
   } finally { await db.pg.close(); }
 });
 
-for (const suffix of ["#governing", "#board"]) test(`a subboard resolves its exact government through the published ${suffix} alias`, async () => {
+test("a sole directory government sharing only a place alias never supplies a board's office",async()=>{
+  const {db,vault}=await setup();
+  try{
+    await db.query("UPDATE entity SET parent_id=$2 WHERE id=$1",[BODY,PLACE]);
+    await db.query("UPDATE civic_data_promotions SET payload=jsonb_set(jsonb_set(payload,'{governments,0,bodyIds}','[]'),'{governments,0,aliases}',$1)",
+      [JSON.stringify([GOVERNMENT,`${PLACE}#governing`])]);
+    const [target]=await db.query(OFFICE_FACT_TARGETS_SQL,[[BODY]]);
+    assert.equal(target!.government_id,null);assert.equal(target!.registration_address,null);
+    const report=await publishHeldOfficeFacts({facts:db,vault,clocks:factClocks(null),now:NOW,bodyIds:[BODY],more:()=>true});
+    assert.equal(report.published,0);assert.deepEqual(await db.query("SELECT field FROM fact"),[]);
+  }finally{await db.pg.close();}
+});
+
+for (const suffix of ["#governing", "#board"]) test(`a subboard resolves its exact government through its registered body identity beside the ${suffix} alias`, async () => {
   const { db, vault } = await setup();
   try {
     const subbody = `${PLACE}#body:planning`, homepage = "https://sunnyside.example.gov/", neighbor = "az:school:neighbor";
@@ -198,7 +213,7 @@ for (const suffix of ["#governing", "#board"]) test(`a subboard resolves its exa
     await db.query("INSERT INTO entity_host(entity_id,host) VALUES($1,'sunnyside.example.gov')", [GOVERNMENT]);
     await db.query("UPDATE civic_data_promotions SET payload=$1", [JSON.stringify({ governments: [
       { id: "government:US-AZ:nces:0408170", jurisdictionId: GOVERNMENT, state: STATE, aliases: [GOVERNMENT, `${PLACE}${suffix}`],
-        bodyIds: [], name: "Sunnyside Unified School District", officeAddress: ADDRESS, website: homepage, provenance },
+        bodyIds: [subbody], name: "Sunnyside Unified School District", officeAddress: ADDRESS, website: homepage, provenance },
       { id: neighbor, jurisdictionId: neighbor, state: STATE, aliases: [neighbor], bodyIds: [], name: "Neighbor School District",
         officeAddress: "88 Neighbor Street, Tucson, AZ 85706", website: "https://neighbor.example.gov/", provenance },
     ] })]);

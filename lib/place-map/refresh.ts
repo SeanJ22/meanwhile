@@ -1,5 +1,9 @@
+import { createHash } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
+import type { RoutineDataStore } from "../civic-data/store.ts";
+import { confirmCensusProbe, censusSourceDependencies, censusSourceProbe, recheckCensusProbe, validCensusSourceProbe, verifyCensusScopeSources } from "../census-geography/source-probe.ts";
+import { CENSUS_GEO_PARSER_VERSION } from "../census-geography/publication.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
 import { loadRegistrationReference } from "../registration/reference.ts";
 import { readCensusGovernmentFacts } from "../registration/jurisdictions.ts";
@@ -49,26 +53,8 @@ export async function knownPostalZips(root: string, requested: ReadonlySet<strin
   return result;
 }
 
-/** Only one state's held Census payload crosses the database connection. */
-export async function heldStateDataset(query: Query, state: string): Promise<BuiltDataset | undefined> {
-  const [row] = await query(`WITH held AS (
-      SELECT reader_payload_node(payload) AS root FROM civic_data_promotions
-      WHERE record_class='CENSUS_GEOGRAPHY' AND scope IN ('US-' || $1 || ':place-map','US:zcta-geography-overlaps')
-      ORDER BY (scope='US-' || $1 || ':place-map') DESC LIMIT 1
-    ) SELECT jsonb_build_object('formatVersion',1,'builtAt',h.root->>'builtAt','coverage',$1::text,
-    'zctaUniverse','[]'::jsonb,'scopes',coalesce(jsonb_agg(s.scope),'[]'::jsonb)) AS dataset
-    FROM held h CROSS JOIN LATERAL (
-      SELECT reader_payload_value(reader_payload_node(held_scope.item) - 'groupings') || jsonb_build_object('groupings',
-        (SELECT coalesce(jsonb_agg(reader_payload_value(g.item)),'[]'::jsonb)
-          FROM reader_payload_members(reader_payload_node(held_scope.item)->'groupings') g
-          WHERE reader_payload_node(g.item)->>'stateAbbr'=$1)) AS scope
-      FROM reader_payload_members(h.root->'scopes') held_scope WHERE reader_payload_node(held_scope.item)->>'type'<>'cbsa'
-    ) s GROUP BY h.root->>'builtAt'`, [state]);
-  return row?.dataset as BuiltDataset | undefined;
-}
-
 export async function prepareStatePlaceMap(query: Query, root: string, state: string,
-  options: CensusSourceOptions = {}): Promise<{ map: StatePlaceMap; dataset: BuiltDataset }> {
+  options: CensusSourceOptions = {}): Promise<{ map: StatePlaceMap; dataset: BuiltDataset; postalPrefixes: readonly string[]; nativeBindingsHash: string }> {
   if (!/^[A-Z]{2}$/.test(state)) throw new Error("A state abbreviation is required");
   const releases = options.releases ?? new Map();
   options = { ...options, releases };
@@ -85,8 +71,7 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
       legacyZips.set(link.zip, { ids, partial: ids.filter(id => id.split("/").length > 3), samples: 0 });
     } else if (!legacyZips.has(link.zip)) legacyZips.set(link.zip, base);
   }
-  const previousDataset = await heldStateDataset(query, state);
-  const acquired = await acquireDataset({ ...options, previousDataset, states: new Set([fips]), discoverPlans: false,
+  const acquired = await acquireDataset({ ...options, states: new Set([fips]), discoverPlans: false,
     only: ["county", "place", "cousub", "cd119", "sldu", "sldl", "cd120", "sldu2026", "sldl2026"] });
   // The overlap scopes now hold their parsed rows. Only the state's block
   // file is read again, for tribal identities and current place memberships.
@@ -111,21 +96,69 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
   if (specialShapes.length) acquiredEdges.push(...await acquireBoundaryOverlaps(specialShapes, zctas, options));
   const sources = JSON.parse(await readFile(join(root, "data/reference/district-boundary-sources.json"), "utf8")) as { sources: { id: string; countyFips: string | null }[] };
   const geographicDistricts = await geographicSpecialDistricts(root, fips);
-  const governmentIds = new Map((await query("SELECT value,entity_id FROM entity_external_id WHERE scheme='census-pid6' AND value=ANY($1::text[])",
-    [geographicDistricts.map(d => d.pid)])).map(row => [String(row.value), String(row.entity_id)]));
+  const bindings = await query(`WITH rows AS MATERIALIZED (
+      SELECT value,entity_id FROM entity_external_id WHERE scheme='census-pid6' AND value=ANY($1::text[])
+    ) SELECT value,entity_id,(SELECT md5(coalesce(jsonb_agg(jsonb_build_array(value,entity_id) ORDER BY value,entity_id)::text,'[]')) FROM rows) AS hash FROM rows`,
+    [geographicDistricts.map(d => d.pid)]);
+  const governmentIds = new Map(bindings.map(row => [String(row.value), String(row.entity_id)]));
+  const nativeBindingsHash = bindings[0]?.hash ?? createHash("md5").update("[]").digest("hex");
+  if (typeof nativeBindingsHash !== "string") throw new Error("PLACE_MAP_NATIVE_BINDINGS_UNREADABLE");
   const map = buildStatePlaceMap({ registration, scopes: dataset.scopes, legacyZips, legacyZctas, boundaries, acquiredEdges,
     additionalPlaces: shapes.places, censusFacts: readCensusGovernmentFacts(root, [state]).byPid,
     geographicDistricts: geographicDistricts.map(d => ({ ...d, governmentId: governmentIds.get(d.pid) })),
     postalLinks, knownZips,
     crossStateZctas,
     sourceCounties: new Map(sources.sources.map(source => [source.id, source.countyFips])), checkedAt: dataset.builtAt });
-  return { map, dataset };
+  return { map, dataset, postalPrefixes: [...new Set([...zctas].map(code => code.slice(0, 2)))].sort(), nativeBindingsHash };
 }
 
-/** The standing Census job uses this same import on every scheduled refresh. */
+/** All non-provider inputs that can change native identity, ZIP aliases or boundary normalization. */
+export async function placeMapDependencyHash(query: Query, root: string, state: string, postalPrefixes: readonly string[], expectedBindings?: string): Promise<string> {
+  const { reference: registration } = loadRegistrationReference(root, state);
+  const fips = registration.divisions.find(d => d[1] === "state")?.[2];
+  if (!fips) throw new Error(`No state FIPS for ${state}`);
+  if (postalPrefixes.some(prefix => !/^\d{2}$/.test(prefix))) throw new Error("Invalid Census source postal prefix");
+  const districts = await geographicSpecialDistricts(root, fips);
+  const [binding] = await query(`SELECT md5(coalesce(jsonb_agg(jsonb_build_array(value,entity_id) ORDER BY value,entity_id)::text,'[]')) AS hash
+    FROM entity_external_id WHERE scheme='census-pid6' AND value=ANY($1::text[])`, [districts.map(row => row.pid)]);
+  if (typeof binding?.hash !== "string") throw new Error("PLACE_MAP_NATIVE_BINDINGS_UNREADABLE");
+  if (expectedBindings !== undefined && expectedBindings !== binding.hash) throw new Error("PLACE_MAP_NATIVE_BINDINGS_MOVED");
+  const postalCodes = await Promise.all([...new Set(postalPrefixes)].sort().map(async prefix => {
+    try { const shard = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${prefix}.json`), "utf8")) as ZipDivisionShard;
+      return [prefix, Object.keys(shard.zips).sort()] as const; }
+    catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return [prefix, null] as const; throw error; }
+  }));
+  const parser = createHash("sha256");
+  for (const file of ["./refresh.ts", "./build.ts", "./acquire.ts", "./grf-edges.ts", "./overlap.ts", "./postal-links.ts", "./special-districts.ts"])
+    parser.update(await readFile(new URL(file, import.meta.url)));
+  return censusSourceDependencies({ kind: "STATE_PLACE_MAP", state, parser: parser.digest("hex"), registration,
+    legacy: [...await readLegacyStateMemberships(root, state)], postalLinks: await statePostalLinks(root, state),
+    boundaries: await heldSpecialDistrictBoundaries(root, registration), districts, bindings: binding.hash,
+    censusFacts: [...readCensusGovernmentFacts(root, [state]).byPid], postalCodes,
+    sourceCatalog: JSON.parse(await readFile(join(root, "data/reference/district-boundary-sources.json"), "utf8")) });
+}
+
+/** A current source head never requires the held state dataset just to learn that nothing changed. */
 export async function refreshStatePlaceMap(db: FactDb & { readonly query: Query }, root: string, state: string,
-  options: CensusSourceOptions = {}): Promise<{ map: StatePlaceMap; dataset: BuiltDataset }> {
+  store: RoutineDataStore, options: CensusSourceOptions = {}) {
+  if (!/^[A-Z]{2}$/.test(state)) throw new Error("A state abbreviation is required");
+  options = { ...options, releases: new Map(), sourceCaptures: new Map() };
+  const scope = `US-${state}:place-map`, head = await store.readSourceHead("CENSUS_GEOGRAPHY", scope);
+  const saved = head?.rawHashBasis === "SOURCE_CONTENT_V1" && head.parserVersion === CENSUS_GEO_PARSER_VERSION
+    ? await store.readCandidatePath(head.versionId, ["normalizedPayload", "sourceProbe"]) : null;
+  const prefixes = (saved as { postalPrefixes?: unknown } | null)?.postalPrefixes;
+  if (validCensusSourceProbe(saved) && Array.isArray(prefixes) && prefixes.every(prefix => typeof prefix === "string" && /^\d{2}$/.test(prefix))) {
+    await recheckCensusProbe(saved, options);
+    const dependencies = await placeMapDependencyHash(db.query, root, state, prefixes);
+    const probe = censusSourceProbe(options, dependencies, saved.complete);
+    const confirmed = await confirmCensusProbe(store, scope, probe, new Date().toISOString());
+    if (confirmed) return { confirmed, map: null, dataset: null, sourceProbe: null, baseVersionId: head!.versionId };
+  }
   const prepared = await prepareStatePlaceMap(db.query, root, state, options);
+  await verifyCensusScopeSources(prepared.dataset.scopes, options);
+  const dependencies = await placeMapDependencyHash(db.query, root, state, prepared.postalPrefixes, prepared.nativeBindingsHash);
+  const sourceProbe = { ...censusSourceProbe(options, dependencies, true), postalPrefixes: prepared.postalPrefixes };
+  // Completion of these writes precedes the source-head publication, so a cut-off pass still owes the old head.
   await loadStatePlaceMap(db, prepared.map);
-  return prepared;
+  return { ...prepared, dataset: { ...prepared.dataset, builtAt: new Date().toISOString() }, confirmed: null, sourceProbe, baseVersionId: head?.versionId ?? null };
 }

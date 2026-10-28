@@ -7,9 +7,11 @@ import { readShutDoorRecords } from "../lib/control-plane/admin-view/v6-stuck-do
 import { applyManualEdit,checkDoorDraft } from "../lib/doors/registry.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
-import { readdirSync,readFileSync } from "node:fs";
+import { existsSync,readdirSync,readFileSync } from "node:fs";
 
 test("Admin read routes cannot bypass row-version checks with a raw SQL client or time-only response memo",()=>{
+  assert.equal(existsSync("lib/db/admin-changes.ts"),false,"Admin uses the same current-version connection as every reader");
+  assert.doesNotMatch(readFileSync("lib/db/transfer.ts","utf8"),/adminChangesFetch/);
   const files=[...readdirSync("lib/control-plane/admin-view").filter(file=>file.endsWith("route.ts")).map(file=>`lib/control-plane/admin-view/${file}`),"lib/control-plane/admin-view/v6-stuck-population.ts",
     "app/api/admin/v6/place/route.ts","app/api/admin/v6/scoreboard/route.ts"];
   for(const file of files){

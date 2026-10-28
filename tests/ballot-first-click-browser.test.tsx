@@ -70,10 +70,12 @@ for (const surface of ["battlecard", "person"] as const) test(`the ${surface} op
     const button = page.locator(`[data-first-click-case="${surface}"]`).getByRole("button", { exact: true,
       name: surface === "battlecard" ? "View Battlecard" : person.name });
     await button.waitFor({ state: "visible" });
+    const serverReadyMs = performance.now() - started;
     const beforeEnabled = await button.isEnabled();
     if (beforeEnabled) await button.click();
     const variant = beforeEnabled ? "before-repair" : "verified";
     await page.screenshot({ path: `${artifact}/${surface}-${variant}-server.png` });
+    const releasedAt = performance.now();
     release();
     await page.waitForFunction(() => (window as unknown as { fixtureHydrated?: boolean }).fixtureHydrated === true);
     const afterPrematureClick = await page.getByRole("dialog", { name: person.name, exact: true }).count();
@@ -81,7 +83,10 @@ for (const surface of ["battlecard", "person"] as const) test(`the ${surface} op
     assert.equal(beforeEnabled, false, "server HTML must not offer an enabled click before the component has its handler");
     await page.waitForFunction(selector => !(document.querySelector<HTMLButtonElement>(selector)?.disabled ?? true),
       `[data-first-click-case="${surface}"] button`);
-    const readyMs = Math.round(performance.now() - started);
+    // Navigation and natural script/hydration time count; the screenshot and
+    // deliberate refusal to deliver JavaScript are controlled test work.
+    const readyMs = Math.round(serverReadyMs + performance.now() - releasedAt);
+    writeFileSync(`${artifact}/${surface}-${variant}.json`, JSON.stringify({ surface, beforeEnabled, afterPrematureClick, readyMs }, null, 2));
     assert.ok(readyMs < 3000, "the control becomes usable on its first visit within three seconds");
     const clicked = performance.now();
     await button.click();

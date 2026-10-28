@@ -97,7 +97,7 @@ test("one set of point source rows answers current representation and the select
 test("ZIP ballots retain every selected race including fringe membership without adding a point's other districts", async () => {
   const base = state("AZ"), county = `${base}/county:pima`, district = `${base}/sldl:20`, fringe = `${base}/sldl:21`;
   let calls = 0;
-  installPlaceMapQuery(async sql => {if(sql.includes("FROM zip_location"))return [];calls++;return fixtureCodeRows([
+  installPlaceMapQuery(async sql => {if(sql.includes("FROM zip_location")&&!sql.includes("zip_place"))return [];calls++;return fixtureCodeRows([
     row(base,"AZ","state","state:2023"),
     row(county,"AZ","county","county:2020"),
     row(district,"AZ","sldl","sldl:2024",{partial:true}),
@@ -228,6 +228,7 @@ test("the next map refresh uses the current point boundary and retains unreplace
     await db.exec(readerIdentityMigration());
     await db.exec(placeBoundaryMigration());
     await db.exec(readFileSync("lib/db/migrations/RB-A7_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
+    await db.exec(readFileSync("lib/db/migrations/ZP-01_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
     await db.exec(zipLocationMigration());
     const square = (west:number,east:number):import("../lib/registry/resolve.ts").GeoFeature["geometry"] => ({type:"Polygon",coordinates:[[[west,30],[east,30],[east,34],[west,34],[west,30]]]});
     const map = (year:number,west:number,east:number,zip:string):StatePlaceMap => ({

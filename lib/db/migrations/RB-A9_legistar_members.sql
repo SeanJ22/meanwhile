@@ -1,5 +1,6 @@
-CREATE INDEX rebuild_queue_source_updates ON rebuild_queue ((next_queued_at IS NOT NULL) DESC,
-  (next_queued_at IS NOT NULL AND place_id LIKE 'ocd-division/%' AND place_id NOT LIKE '%#%') DESC,
+CREATE INDEX rebuild_queue_source_updates ON rebuild_queue
+  ((next_queued_at IS NOT NULL AND place_id ~ '^ocd-division/country:us/(state|territory|district):[a-z]{2}/' AND place_id NOT LIKE '%#%') DESC,
+  priority DESC,(next_queued_at IS NOT NULL) DESC,
   (next_queued_at IS NOT NULL AND place_id NOT LIKE 'zip:%') DESC,next_queued_at DESC NULLS LAST,queued_at,place_id);
 --> statement-breakpoint
 CREATE FUNCTION count_legistar_fact() RETURNS trigger LANGUAGE plpgsql AS $$

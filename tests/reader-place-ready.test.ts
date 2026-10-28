@@ -1,3 +1,4 @@
+import {gzipSync} from "node:zlib";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { packPlaceContext, packReadyPlace, unpackPlaceContextRow, unpackReadyPlace, unpackReadyTerritory } from "../lib/reader/place-ready.ts";
@@ -24,13 +25,13 @@ test("ready compression preserves the complete JSON, exact event identities and 
   const published = { ...page, futureSourceFields: { blank: "", absent: null, count: 0, enabled: false, values: ["résumé", "予算"] } };
   const packed = packReadyPlace(published);
   assert.deepEqual(Object.keys(packed), ["encoding", "data"]);
-  assert.equal(packed.encoding, "gzip-json-v1");
+  assert.equal(packed.encoding, "br-json-v1");
   assert.deepEqual(unpackReadyPlace(packed), JSON.parse(JSON.stringify(published)));
   assert.ok(Buffer.byteLength(JSON.stringify(packed)) < Buffer.byteLength(JSON.stringify(published)) / 3);
 });
 
 test("compressed and legacy ready pages each resolve exact IDs through one existing reader query", async () => {
-  for (const stored of [packReadyPlace(page), page]) {
+  for (const stored of [packReadyPlace(page), {encoding:"gzip-json-v1",data:gzipSync(JSON.stringify(page)).toString("base64")}, page]) {
     let queries = 0;
     const value = await readPlacePackage({ state: "AZ", placeId: BODY, divisionIds: [], includeHistory: true }, async (text, params) => {
       queries++;
@@ -47,12 +48,12 @@ test("compressed and legacy ready pages each resolve exact IDs through one exist
 
 test("a corrupt compressed ready page fails its single read without querying source tables", async () => {
   assert.throws(() => unpackReadyPlace({ encoding: "another-format", data: "" }), /PLACE_PAGE_ENCODING_INVALID/);
-  assert.throws(() => unpackReadyPlace({ encoding: "gzip-json-v1" }), /PLACE_PAGE_ENCODING_INVALID/);
+  assert.throws(() => unpackReadyPlace({ encoding: "br-json-v1" }), /PLACE_PAGE_ENCODING_INVALID/);
   let queries = 0;
   await assert.rejects(readPlacePackage({ state: "AZ", placeId: BODY, divisionIds: [] }, async text => {
     queries++;
     assert.equal(text, READY_PLACE_SQL);
-    return [{ page: { encoding: "gzip-json-v1", data: "corrupt-gzip" }, version: 2 }];
+    return [{ page: { encoding: "br-json-v1", data: "corrupt-gzip" }, version: 2 }];
   }));
   assert.equal(queries, 1);
 });

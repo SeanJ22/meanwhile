@@ -38,12 +38,16 @@ export interface ReaderCacheScope {
   readonly places?: readonly string[];
   readonly national?: boolean;
   readonly nationalPeople?: boolean;
+  /** Canonical state inputs changed; local fact and calendar publications do not consume this cache. */
+  readonly statePackages?: boolean;
   readonly entities?: readonly string[];
 }
 
 export const READER_NATIONAL_CACHE_TAG = "reader-national";
 export const READER_NATIONAL_PEOPLE_CACHE_TAG = "reader-national-people";
 export const READER_CACHE_SECONDS = 15 * 60;
+/** First ZIP builds must keep advancing even when already-built large ZIPs change every turn. */
+export const UNBUILT_ZIP_PRIORITY = 1_000_000_000;
 
 /** Publication data read by the place builder; other families refresh their own endpoints. */
 export function placePageConsumesPublication(scope: string, recordClass?: string): boolean {
@@ -59,6 +63,7 @@ export function readerCacheTags(scope: ReaderCacheScope): string[] {
     ...(scope.national ? [READER_NATIONAL_CACHE_TAG] : []),
     ...(scope.nationalPeople ? [READER_NATIONAL_PEOPLE_CACHE_TAG] : []),
     ...states.map(state => `reader-state:${state}`),
+    ...(scope.statePackages ? states.map(state=>`reader-state-package:${state}`) : []),
     ...places.map(place => `reader-place:${createHash("sha256").update(place).digest("hex")}`),
   ];
 }
@@ -76,6 +81,13 @@ export function readerCacheHeaders(scope: ReaderCacheScope): Record<string, stri
 export function readerPlaceCacheHeaders(places:readonly string[]):Record<string,string> {
   return {...readerCacheHeaders({places}),
     "Netlify-Cache-Tag":[...readerCacheTags({places}),"reader-settings"].join(",")};
+}
+
+/** State answers read canonical publications, independently of local calendar/fact page rebuilds. */
+export function readerStateCacheHeaders(state:string):Record<string,string> {
+  return {...readerCacheHeaders({states:[state]}),
+    "Netlify-Cache-Tag":[...readerCacheTags({states:[state],statePackages:true,nationalPeople:true})
+      .filter(tag=>!tag.startsWith('reader-state:')),"reader-settings"].join(',')};
 }
 
 /** Geography is read from typed fields, never from an incidental two-letter word in source text. */
@@ -181,12 +193,17 @@ export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query)
       OR d.entity_id IN (SELECT id FROM service_places)
       OR d.entity_id IN (SELECT id FROM subjects WHERE kind<>'place')
     UNION SELECT e.id FROM entity e WHERE e.kind='place' AND e.id=ANY($2::text[])
-  ) INSERT INTO rebuild_queue(place_id,queued_at,next_queued_at)
-    SELECT id,clock_timestamp(),CASE WHEN $5::boolean THEN clock_timestamp() END FROM affected ORDER BY id
+  ) INSERT INTO rebuild_queue(place_id,queued_at,priority,next_queued_at)
+    SELECT a.id,clock_timestamp(),e.page_priority+CASE WHEN e.page_priority>0
+      AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=e.id) THEN ${UNBUILT_ZIP_PRIORITY} ELSE 0 END,
+      CASE WHEN $5::boolean THEN clock_timestamp() END
+    FROM affected a JOIN entity e ON e.id=a.id ORDER BY a.id
     ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+1,
       next_queued_at=CASE WHEN rebuild_queue.lease_token IS NOT NULL
         THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp())
-        WHEN $5::boolean THEN clock_timestamp() ELSE rebuild_queue.next_queued_at END`,
+        WHEN $5::boolean THEN clock_timestamp() ELSE rebuild_queue.next_queued_at END
+    WHERE (rebuild_queue.next_queued_at IS NULL AND (rebuild_queue.lease_token IS NOT NULL OR $5::boolean))
+      OR rebuild_queue.built_generation=rebuild_queue.generation`,
   [broad ? states : [],places,entities,broad && scope.national === true,!broad]);
 }
 

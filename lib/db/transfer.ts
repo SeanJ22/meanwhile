@@ -31,6 +31,8 @@ interface TransferState {
   pending: Map<string, DatabaseTransfer>;
   pendingHours: Map<string, HourlyDatabaseTransfer>;
   pendingParts: Map<string, NeonBytesHour>;
+  pendingDailyParts: Map<string, NeonBytesHour>;
+  warned: Map<string, number>;
   runnerParts: Map<string, { readonly hour: string; readonly bytes: NeonBytesHour["bytes"];
     readonly sent: NonNullable<NeonBytesHour["sent"]>; readonly reads: NonNullable<NeonBytesHour["reads"]> }>;
   installed: boolean;
@@ -40,40 +42,85 @@ interface TransferState {
 const transferSlot = Symbol.for("meanwhile.database.transfer.pending");
 const transferHost = globalThis as typeof globalThis & { [transferSlot]?: TransferState };
 const transferState: TransferState = transferHost[transferSlot] ??= { internal: new AsyncLocalStorage<boolean>(), pending: new Map(),
-  pendingHours: new Map(), pendingParts: new Map(), runnerParts: new Map(), installed: false, lastFlush: 0, flushing: null };
-const { internal, pending, pendingHours, pendingParts, runnerParts } = transferState;
+  pendingHours: new Map(), pendingParts: new Map(), pendingDailyParts: new Map(), warned: new Map(), runnerParts: new Map(), installed: false, lastFlush: 0, flushing: null };
+const { internal, pending, pendingHours, pendingParts, pendingDailyParts, warned, runnerParts } = transferState;
 
 export function pendingDatabaseTransfer(): readonly DatabaseTransfer[] { return [...pending.values()]; }
 export function pendingRunnerDatabaseTransfer(): readonly HourlyDatabaseTransfer[] { return [...pendingHours.values()]; }
 
-/** Cumulative process counters and their cursors are saved in one transaction. Failed writes retain every part. */
+/** A process/hour part is saved to the hourly table, and a reader function's part also to its daily row. */
+function queuePart(part: NeonBytesHour): void {
+  retain(pendingParts, part);
+  if (part.client === "reader") retain(pendingDailyParts, part);
+}
+function retain(parts: Map<string, NeonBytesHour>, part: NeonBytesHour): void {
+  const key = processTransferKey(part);
+  parts.set(key, mergeProcessTransfer(parts.get(key), part));
+}
+
+const WARN_EVERY_MS = 10 * 60_000;
+function warnUnsaved(table: string, error: unknown): void {
+  const now = Date.now();
+  if (now - (warned.get(table) ?? 0) < WARN_EVERY_MS) return;
+  warned.set(table, now);
+  // Names and codes only: a driver message can carry the database address.
+  const { code, sourceError } = (error ?? {}) as { code?: unknown; sourceError?: unknown };
+  const kind = [error instanceof Error ? error.name : typeof error, typeof code === "string" ? code : null,
+    sourceError instanceof Error ? sourceError.name : null].filter(Boolean).join(" ");
+  console.warn(`DATABASE_TRANSFER ${table} could not be saved (${kind}); its counts are kept for the next flush.`);
+}
+
+/** Saves one table's parts in small transactions. A failed transaction keeps its parts for the next flush;
+ * cumulative cursors make the retry exact. */
+async function saveParts(sql: ReturnType<typeof neon>, table: "hourly" | "daily", parts: readonly NeonBytesHour[],
+  retry: Map<string, NeonBytesHour>): Promise<boolean> {
+  let saved = true;
+  for (let at = 0; at < parts.length; at += 25) {
+    const chunk = parts.slice(at, at + 25);
+    try {
+      const statements = chunk.flatMap(part => processTransferStatements(part, table));
+      if (statements.length) await sql.transaction(statements.map(statement => sql.query(statement.query, [...statement.params])),
+        { fetchOptions: { signal: AbortSignal.timeout(5_000) } });
+    } catch (error) {
+      saved = false;
+      warnUnsaved(`database_transfer_${table}`, error);
+      for (const part of chunk) retain(retry, part);
+    }
+  }
+  return saved;
+}
+
+/** Hourly rows (the job breaker's meter) and reader functions' daily rows are saved independently,
+ * so a slow or failed daily write never holds back an hour. */
 export async function flushDatabaseTransfer(): Promise<boolean> {
   if (transferState.flushing) {
     const saved = await transferState.flushing;
-    return saved && pendingParts.size ? flushDatabaseTransfer() : saved;
+    return saved && (pendingParts.size || pendingDailyParts.size) ? flushDatabaseTransfer() : saved;
   }
-  if (!pendingParts.size) return true;
+  if (!pendingParts.size && !pendingDailyParts.size) return true;
   const url = process.env.DATABASE_URL;
   if (!url) return false;
   transferState.lastFlush = Date.now();
-  const batch = [...pending.entries()], hours = [...pendingHours.entries()], parts = [...pendingParts.entries()];
-  pending.clear(); pendingHours.clear(); pendingParts.clear();
+  const batch = [...pending.values()], hours = [...pendingHours.values()];
+  const hourParts = [...pendingParts.values()], dayParts = [...pendingDailyParts.values()];
+  pending.clear(); pendingHours.clear(); pendingParts.clear(); pendingDailyParts.clear();
   transferState.flushing = internal.run(true, async () => {
     try {
-      assertDatabaseReadTarget(url);
-      const sql = neon(url);
-      const statements = parts.flatMap(([, part]) => processTransferStatements(part, easternDay(new Date(part.hour))));
-      for (let at = 0; at < statements.length; at += 100) {
-        await sql.transaction(statements.slice(at, at + 100).map(statement => sql.query(statement.query, [...statement.params])),
-          { fetchOptions: { signal: AbortSignal.timeout(5_000) } });
+      let sql: ReturnType<typeof neon>;
+      try { assertDatabaseReadTarget(url); sql = neon(url); } catch (error) {
+        warnUnsaved("database_transfer_hourly", error);
+        for (const part of hourParts) retain(pendingParts, part);
+        for (const part of dayParts) retain(pendingDailyParts, part);
+        for (const row of batch) accumulate(row);
+        for (const row of hours) accumulateHour(row);
+        return false;
       }
+      const hourly = await saveParts(sql, "hourly", hourParts, pendingParts);
+      if (!hourly) for (const row of hours) accumulateHour(row);
+      const daily = await saveParts(sql, "daily", dayParts, pendingDailyParts);
+      if (!daily) for (const row of batch) accumulate(row);
       transferState.lastFlush = Date.now();
-      return true;
-    } catch {
-      for (const [, row] of batch) accumulate(row);
-      for (const [, row] of hours) accumulateHour(row);
-      for (const [key, part] of parts) pendingParts.set(key, mergeProcessTransfer(pendingParts.get(key), part));
-      return false;
+      return hourly && daily;
     } finally { transferState.flushing = null; }
   });
   return transferState.flushing;
@@ -164,10 +211,7 @@ function countedWebSocket(Socket: typeof WebSocket): typeof WebSocket {
 /** Shared Neon HTTP and socket hook; query execution is unchanged and counter failure never hides data. */
 export function installDatabaseTransferCounter(): void {
   onNeonBytesCount(part => {
-    if (!reportsToRunner() || keepsNeonBytesInProcess()) {
-      const key = processTransferKey(part);
-      pendingParts.set(key, mergeProcessTransfer(pendingParts.get(key), part));
-    }
+    if (!reportsToRunner() || keepsNeonBytesInProcess()) queuePart(part);
   });
   installNeonBytesReport();
   neonConfig.fetchFunction = databaseTransferFetch((neonConfig.fetchFunction ?? fetch) as FetchLike, row => { counted(row); }, () => internal.getStore() === true, async () => {
@@ -193,7 +237,7 @@ export function keepRunnerTransfer(part: NeonBytesHour): void {
   installDatabaseTransferCounter();
   const key = `${part.pid}:${part.startedMs ?? ""}:${part.hour}`;
   const prior = runnerParts.get(key);
-  pendingParts.set(processTransferKey(part), mergeProcessTransfer(pendingParts.get(processTransferKey(part)), part));
+  queuePart(part);
   const sent = part.sent ?? NOTHING_SENT;
   const reads = { ...prior?.reads };
   for (const [read, counts] of Object.entries(part.reads ?? {}))
@@ -203,7 +247,6 @@ export function keepRunnerTransfer(part: NeonBytesHour): void {
     sent: Object.fromEntries((["reader", "control-plane"] as const).map(database => [database, {
       requests: Math.max(sent[database].requests, prior?.sent[database].requests ?? 0), bytes: Math.max(sent[database].bytes, prior?.sent[database].bytes ?? 0),
     }])) as NonNullable<NeonBytesHour["sent"]>, reads });
-  const day = easternDay(new Date(part.hour));
   for (const database of ["reader", "control-plane"] as const) {
     const reads: Record<string, readonly [number, number, number]> = {};
     for (const [read, counts] of Object.entries(part.reads ?? {})) {
@@ -217,7 +260,6 @@ export function keepRunnerTransfer(part: NeonBytesHour): void {
     const requestBytes = sent[database].bytes - (prior?.sent[database].bytes ?? 0);
     if (responseBytes > 0 || requests > 0 || requestBytes > 0 || Object.keys(reads).length) {
       const delta = { database, requests: Math.max(0, requests), requestBytes: Math.max(0, requestBytes), responseBytes: Math.max(0, responseBytes) };
-      accumulate({ day, ...delta, client: "runner" });
       accumulateHour({ hour: part.hour, ...delta, reads });
     }
   }
@@ -249,22 +291,54 @@ async function readTransferRows(url: string, table: "database_transfer_daily" | 
   return [...rows];
 }
 
+const transferRow = (row: Record<string, unknown>): DatabaseTransfer => ({ day: String(row.day), database: row.database as DatabaseTransfer["database"],
+  client: row.client as DatabaseTransfer["client"], requests: Number(row.requests), requestBytes: Number(row.request_bytes),
+  responseBytes: Number(row.response_bytes), reads: row.reads as DatabaseTransfer["reads"] });
+
+/** The runner keeps no daily row: its day is every hour's bytes less what reader functions saved for that day.
+ * A runner row saved before every hour was kept holds more than its hours, and stands where it is larger. */
+function withRunnerDays(saved: readonly DatabaseTransfer[], hours: readonly DatabaseTransfer[]): DatabaseTransfer[] {
+  const key = (row: DatabaseTransfer) => `${row.day}\t${row.database}`;
+  const readers = new Map(saved.filter(row => row.client === "reader").map(row => [key(row), row]));
+  const runners = new Map(saved.filter(row => row.client === "runner").map(row => [key(row), row]));
+  for (const hour of hours) {
+    const reader = readers.get(key(hour)), stored = runners.get(key(hour));
+    const rebuilt: DatabaseTransfer = { day: hour.day, database: hour.database, client: "runner",
+      requests: Math.max(0, hour.requests - (reader?.requests ?? 0)), requestBytes: Math.max(0, hour.requestBytes - (reader?.requestBytes ?? 0)),
+      responseBytes: Math.max(0, hour.responseBytes - (reader?.responseBytes ?? 0)), reads: {} };
+    if (!stored || rebuilt.responseBytes > stored.responseBytes) runners.set(key(hour), rebuilt);
+  }
+  return [...readers.values(), ...runners.values()];
+}
+
 /** Admin's small daily read. Days are Eastern, matching Admin's calendar. */
 export async function readDailyDatabaseTransfer(days = 7): Promise<DailyDatabaseTransferRead> {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not configured");
   assertDatabaseReadTarget(url);
+  const window = Number.isFinite(days) ? Math.max(1, Math.min(90, Math.trunc(days))) - 1 : 6;
   try {
   const rows = await readTransferRows(url, "database_transfer_daily",
     "day::text,database_name AS database,client,requests::text,request_bytes::text,response_bytes::text,reads",
     "day >= (now() AT TIME ZONE 'America/New_York')::date - $1::int",
-    [Number.isFinite(days) ? Math.max(1, Math.min(90, Math.trunc(days))) - 1 : 6],
+    [window],
     "day::text || E'\\t' || database_name || E'\\t' || client");
-  rows.sort((a,b) => String(b.day).localeCompare(String(a.day)) || String(a.database).localeCompare(String(b.database)) || String(a.client).localeCompare(String(b.client)));
+  const totals = await readHourTotals(url, `hour >= least(now()-interval '31 days',
+    (((now() AT TIME ZONE 'America/New_York')::date - $1::int)::timestamp AT TIME ZONE 'America/New_York'))`, [window]);
+  const today = easternDay(new Date()), first = new Date(Date.parse(`${today}T12:00:00Z`) - window * 86_400_000).toISOString().slice(0, 10);
+  const hourDays = new Map<string, DatabaseTransfer>();
+  for (const hour of totals) {
+    const day = easternDay(new Date(hour.hour));
+    if (day < first) continue;
+    const held = hourDays.get(`${day}\t${hour.database}`);
+    hourDays.set(`${day}\t${hour.database}`, { day, database: hour.database, client: "runner", requests: (held?.requests ?? 0) + hour.requests,
+      requestBytes: (held?.requestBytes ?? 0) + hour.requestBytes, responseBytes: (held?.responseBytes ?? 0) + hour.responseBytes });
+  }
   let runner: RunnerDatabaseTransfer | null = null;
-  try { runner = await readRunnerDatabaseTransfer(); } catch { /* Existing daily totals remain readable. */ }
-  return { kind: "RECORDED", runner, rows: rows.map(row => ({ day: String(row.day), database: row.database as DatabaseTransfer["database"], client: row.client as DatabaseTransfer["client"],
-    requests: Number(row.requests), requestBytes: Number(row.request_bytes), responseBytes: Number(row.response_bytes), reads: row.reads as DatabaseTransfer["reads"] })) };
+  const lastMonth = new Date(Date.now() - 31 * 86_400_000).toISOString();
+  try { runner = await readRunnerDatabaseTransfer(undefined, totals.filter(hour => hour.hour >= lastMonth)); } catch { /* Existing daily totals remain readable. */ }
+  return { kind: "RECORDED", runner, rows: withRunnerDays(rows.map(transferRow), [...hourDays.values()]).sort((a,b) => b.day.localeCompare(a.day)
+    || a.database.localeCompare(b.database) || a.client.localeCompare(b.client)) };
   } catch (error) {
     if ((error as { code?: string }).code === "42P01") return { kind: "NOT_INSTALLED", rows: [],
       detail: "Daily database transfer is not recorded until migration 0030 is applied." };
@@ -286,16 +360,19 @@ export function runnerDatabaseTransferView(rows: readonly HourlyDatabaseTransfer
     })).sort((a,b) => b.responseBytes-a.responseBytes || a.job.localeCompare(b.job)) };
 }
 
+const readHourTotals = async (url: string, where: string, args: readonly unknown[]): Promise<HourlyDatabaseTransfer[]> =>
+  (await readTransferRows(url, "database_transfer_hourly",
+    "hour::text,database_name AS database,requests::text,request_bytes::text,response_bytes::text",
+    where, args, "hour::text || E'\\t' || database_name")).map(row => ({ hour: new Date(String(row.hour)).toISOString(),
+    database: row.database as DatabaseTransfer["database"], requests: Number(row.requests), requestBytes: Number(row.request_bytes),
+    responseBytes: Number(row.response_bytes) }));
+
 /** Read small hour totals, then only the selected hour's job/table details. */
-export async function readRunnerDatabaseTransfer(selectedHour?: string): Promise<RunnerDatabaseTransfer> {
+export async function readRunnerDatabaseTransfer(selectedHour?: string, held?: readonly HourlyDatabaseTransfer[]): Promise<RunnerDatabaseTransfer> {
   const url = process.env.DATABASE_URL;
   if (!url) throw new Error("DATABASE_URL is not configured");
   assertDatabaseReadTarget(url);
-  const totals = (await readTransferRows(url, "database_transfer_hourly",
-    "hour::text,database_name AS database,response_bytes::text",
-    "hour >= now()-interval '31 days'", [], "hour::text || E'\\t' || database_name")).map(row => ({
-      hour: new Date(String(row.hour)).toISOString(),database: row.database,responseBytes: Number(row.response_bytes),requests: 0,requestBytes: 0,
-    })) as HourlyDatabaseTransfer[];
+  const totals = [...held ?? await readHourTotals(url, "hour >= now()-interval '31 days'", [])];
   totals.sort((a,b) => b.hour.localeCompare(a.hour));
   const hour = selectedHour ?? totals[0]?.hour;
   if (!hour) return { hours: [], reads: [] };

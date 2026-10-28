@@ -37,11 +37,38 @@ export const RUNTIME_CONTRACT_ATTEMPT_MS = 5 * 60_000;
 // journalled DO statement must release them inside the reader query deadline.
 export const RUNTIME_CONTRACT_SQL_SETTINGS = ["SET LOCAL lock_timeout = '250ms'", "SET LOCAL statement_timeout = '1000ms'"] as const;
 
-/** Tables a migration declares are locked in one statement, so it never holds one while waiting for another. */
+/** How long a migration keeps asking for its declared tables before it fails without applying anything. */
+export const LOCK_FIRST_WAIT = "10 minutes";
+/** Each ask waits this long, under PostgreSQL's one-second deadlock check, so a waiting migration always yields first. */
+export const LOCK_FIRST_ATTEMPT = "500ms";
+
+/**
+ * A migration takes every table it declares, in the mode its ALTERs need, before its first statement. Its request
+ * queues ahead of later readers, but each ask gives up after LOCK_FIRST_ATTEMPT and releases what it got, then waits a
+ * second and asks again. A place-page builder holds rebuild_queue and then reads entity; a publication writes entity
+ * and then queues pages; a migration holding one table while it waits for another deadlocks with one of them. Asking
+ * this way, the migration backs off before PostgreSQL's deadlock check could cancel either of them, and it never
+ * upgrades a lock it already holds. Its own statements then run under the caller's lock timeout again.
+ */
 export function lockFirstStatement(tag: string): string {
   const tables = declaredPhase(tag)?.lockFirst ?? [];
   if (tables.some(table => !/^[a-z_][a-z0-9_]*$/.test(table))) throw new Error(`db:apply: REFUSED — ${tag} declares an invalid table to lock`);
-  return tables.length ? `LOCK TABLE ${tables.join(", ")} IN SHARE ROW EXCLUSIVE MODE;` : "";
+  return tables.length ? `DECLARE lock_first_prior text := current_setting('lock_timeout');
+    BEGIN
+    <<lock_first>> LOOP
+      BEGIN
+        PERFORM set_config('lock_timeout', '${LOCK_FIRST_ATTEMPT}', true);
+        LOCK TABLE ${tables.join(", ")} IN ACCESS EXCLUSIVE MODE;
+        EXIT lock_first;
+      EXCEPTION WHEN lock_not_available OR deadlock_detected THEN
+        IF clock_timestamp() > statement_timestamp() + interval '${LOCK_FIRST_WAIT}' THEN
+          RAISE EXCEPTION 'MIGRATION_TABLES_BUSY: ${tables.join(", ")} stayed in use for ${LOCK_FIRST_WAIT}';
+        END IF;
+        PERFORM pg_sleep(1);
+      END;
+    END LOOP lock_first;
+    PERFORM set_config('lock_timeout', lock_first_prior, true);
+    END;` : "";
 }
 
 /** A migration may declare a longer statement budget; the lock wait stays bounded either way. */

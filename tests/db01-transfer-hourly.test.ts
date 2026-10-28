@@ -76,13 +76,81 @@ test("hourly job totals persist atomically, tolerate replay and recover a failed
 
   const daily = await readDailyDatabaseTransfer(1);
   assert.equal(daily.kind, "RECORDED");
+  const today = daily.rows[0]!.day;
+  assert.deepEqual(daily.rows, [{ day: today, database: "reader", client: "runner", requests: 2, requestBytes: 20, responseBytes: 300, reads: {} }],
+    "the runner's day is rebuilt from its hours");
+  await pg.query("INSERT INTO database_transfer_daily VALUES($1,'reader','reader',1,10,50,$2::jsonb)", [today, JSON.stringify({ "route\tfact": [1,10,50] })]);
+  const split = await readDailyDatabaseTransfer(1);
+  assert.deepEqual(split.rows.map(row => [row.client, row.responseBytes]), [["reader", 50], ["runner", 250]],
+    "the hour holds reader functions' bytes too, so the day still totals 300");
   const dailyBodies = bodies.database_transfer_daily;
-  assert.deepEqual(await readDailyDatabaseTransfer(1), daily);
+  assert.deepEqual(await readDailyDatabaseTransfer(1), split);
   assert.equal(bodies.database_transfer_daily, dailyBodies, "unchanged daily maps use the same version-checked copy mechanism");
-  await pg.query("UPDATE database_transfer_daily SET response_bytes=400,reads=$1::jsonb", [JSON.stringify({ "route\tfact": [4,40,400] })]);
+  await pg.query("UPDATE database_transfer_daily SET response_bytes=60,reads=$1::jsonb", [JSON.stringify({ "route\tfact": [2,20,60] })]);
   const changedDay = await readDailyDatabaseTransfer(1);
   assert.equal(changedDay.kind, "RECORDED");
-  assert.equal(changedDay.rows.find(row => row.client === "runner")!.responseBytes, 400);
-  assert.deepEqual(changedDay.rows.find(row => row.client === "runner")!.reads, { "route\tfact": [4,40,400] });
+  assert.deepEqual(changedDay.rows.find(row => row.client === "reader")!.reads, { "route\tfact": [2,20,60] });
   assert.equal(bodies.database_transfer_daily, dailyBodies + 1);
+  await pg.query("INSERT INTO database_transfer_daily VALUES($1,'reader','runner',9,90,900,'{}'::jsonb)", [today]);
+  assert.equal((await readDailyDatabaseTransfer(1)).rows.find(row => row.client === "runner")!.responseBytes, 900,
+    "a runner day saved before every hour was kept stands where it holds more");
+  await pg.query("UPDATE database_transfer_daily SET response_bytes=100 WHERE client='runner'");
+  assert.equal((await readDailyDatabaseTransfer(1)).rows.find(row => row.client === "runner")!.responseBytes, 240,
+    "a runner row that stopped saving mid-day yields to its hours");
+});
+
+test("an hour lands every flush while its day's write times out, and the retried day counts once", async t => {
+  const pg = new PGlite(), originalFetch = neonConfig.fetchFunction, originalUrl = process.env.DATABASE_URL, warn = console.warn;
+  const warnings: string[] = [];
+  console.warn = (line: string) => { warnings.push(line); };
+  // A real stalled request holds its socket open; the stand-in holds the loop open the same way.
+  const held = setInterval(() => {}, 1_000);
+  t.after(async () => { clearInterval(held); neonConfig.fetchFunction = originalFetch; console.warn = warn;
+    if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl; await pg.close(); });
+  await pg.exec(`CREATE TABLE database_transfer_daily(day date,database_name text,client text,requests bigint,request_bytes bigint,response_bytes bigint,
+      reads jsonb DEFAULT '{}',updated_at timestamptz DEFAULT now(),PRIMARY KEY(day,database_name,client));
+    CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,requests bigint,request_bytes bigint,response_bytes bigint,
+      reads jsonb DEFAULT '{}',PRIMARY KEY(hour,database_name));`);
+  await pg.exec(readFileSync(new URL("../lib/db/migrations/DB-03_process_transfer.sql", import.meta.url), "utf8").replaceAll("--> statement-breakpoint", ""));
+  process.env.DATABASE_URL = "postgresql://local:local@ep-hour-apart-test.us-east-2.aws.neon.tech/neondb";
+  let slowDay = true;
+  neonConfig.fetchFunction = async (_input: RequestInfo | URL, init?: RequestInit) => {
+    const { queries } = JSON.parse(String(init?.body)) as { queries: { query: string; params: unknown[] }[] };
+    if (slowDay && queries.some(statement => statement.query.includes("INTO database_transfer_daily")))
+      await new Promise((_resolve, reject) => init!.signal!.addEventListener("abort", () => reject(init!.signal!.reason)));
+    await pg.transaction(async tx => { for (const statement of queries) await tx.query(statement.query, statement.params); });
+    return new Response(JSON.stringify({ results: queries.map(() => ({ command: "INSERT", rowCount: 1, rowAsArray: true, fields: [], rows: [] })) }));
+  };
+  const hour = "2026-10-28T18:00:00.000Z";
+  const part = (pid: number, bytes: number, client: "reader" | "runner") => ({ hour, pid, startedMs: 1, client, requests: bytes / 100,
+    bytes: { reader: bytes, "control-plane": 0 }, sent: { reader: { requests: bytes / 100, bytes: bytes / 10 }, "control-plane": { requests: 0, bytes: 0 } },
+    reads: { [`reader\t${client === "reader" ? "index" : "door-probes"}\tcp_doors`]: [bytes / 100, bytes / 10, bytes] as const }, byCaller: {}, processes: [] });
+  const hourly = async () => (await pg.query<{ requests: number; response_bytes: number; reads: unknown }>(
+    "SELECT requests::int,response_bytes::int,reads FROM database_transfer_hourly")).rows;
+  const daily = async () => (await pg.query<{ client: string; response_bytes: number }>("SELECT client,response_bytes::int FROM database_transfer_daily")).rows;
+
+  keepRunnerTransfer(part(4101, 1000, "runner"));
+  keepRunnerTransfer(part(9, 200, "reader"));
+  assert.equal(await flushDatabaseTransfer(), false, "the timed-out day is reported as unsaved");
+  assert.deepEqual(await hourly(), [{ requests: 12, response_bytes: 1200,
+    reads: { "door-probes\tcp_doors": [10, 100, 1000], "index\tcp_doors": [2, 20, 200] } }], "the breaker's hour landed anyway");
+  assert.deepEqual(await daily(), []);
+  assert.deepEqual(warnings, ["DATABASE_TRANSFER database_transfer_daily could not be saved (NeonDbError TimeoutError); its counts are kept for the next flush."]);
+
+  keepRunnerTransfer(part(4101, 1500, "runner"));
+  keepRunnerTransfer(part(9, 200, "reader"));
+  assert.equal(await flushDatabaseTransfer(), false);
+  assert.equal((await hourly())[0]!.response_bytes, 1700, "each flush lands the hour's new bytes, once");
+  assert.equal(warnings.length, 1, "repeated failures warn once per ten minutes");
+
+  slowDay = false;
+  keepRunnerTransfer(part(9, 300, "reader"));
+  assert.equal(await flushDatabaseTransfer(), true);
+  assert.deepEqual(await daily(), [{ client: "reader", response_bytes: 300 }], "only reader functions keep a day row, counted once across retries");
+  assert.equal((await hourly())[0]!.response_bytes, 1800);
+  keepRunnerTransfer(part(9, 300, "reader"));
+  keepRunnerTransfer(part(4101, 1500, "runner"));
+  assert.equal(await flushDatabaseTransfer(), true);
+  assert.equal((await hourly())[0]!.response_bytes, 1800, "a replayed report adds nothing");
+  assert.deepEqual(await daily(), [{ client: "reader", response_bytes: 300 }]);
 });

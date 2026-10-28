@@ -233,7 +233,7 @@
       "file": "lib/place-map/read.ts",
       "kind": "SELECT *",
       "fingerprint": "dce52e00818c153ffdc8b0ae784d491de09a807315e228525a9c7c690b0b9725",
-      "line": 96
+      "line": 120
     },
     {
       "file": "lib/reader/canonical.ts",
@@ -305,13 +305,13 @@
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 865
+      "line": 866
     },
     {
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 874
+      "line": 875
     },
     {
       "file": "scripts/split-federal-people.mts",

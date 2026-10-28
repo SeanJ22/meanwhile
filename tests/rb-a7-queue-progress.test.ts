@@ -106,6 +106,8 @@ test("a targeted source update rebuilds ahead of older bulk work without resetti
     const body=PLACE+'#body:bulk';
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Body page','AZ')",[body]);
     await db.query("INSERT INTO rebuild_queue(place_id,next_queued_at) VALUES($1,clock_timestamp())",[body]);
+    await db.query("INSERT INTO entity(id,kind,name,state,page_priority) VALUES('zip:85701','place','85701','AZ',5000)");
+    await db.query("INSERT INTO rebuild_queue(place_id,priority) VALUES('zip:85701',1000005000)");
     assert.deepEqual(await db.query("SELECT queued_at FROM rebuild_queue WHERE place_id=$1",[PLACE]),[targetAge]);
     const result=await rebuildPlacePages({db:wrapped,limit:1,concurrency:1,purge:async()=>({purged:true})});
     assert.equal(result.rebuilt,1);assert.equal(result.failed,0);

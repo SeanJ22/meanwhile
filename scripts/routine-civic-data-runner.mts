@@ -604,9 +604,8 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     try {
       const report = await routineJob(ROUTINE_JOBS.doorProbes, async () => {
         const listed = await readRunnerDoors(repos.doors, ["status"], "OPEN", "probes");
-        const clockStore = new PostgresRoutineDataStore();
         const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
-        return runHourlyProbes(repos.doors, listed, await hotMeetingPartitions({ readClock: (task) => clockStore.clock(task.sourceId, task.recordClass, task.scope), db: getDb(), query: facts.query }, Date.now()),
+        return runHourlyProbes(repos.doors, listed, await hotMeetingPartitions(facts.query, Date.now()),
           pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), new Date().toISOString(), Math.min(PASS_LAUNCH_DEADLINE_MS, Date.now() + 30_000));
       }, null);
       if (report && (report.looked > 0 || report.deferred > 0 || report.waiting > 0)) {

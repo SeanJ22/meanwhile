@@ -1,7 +1,10 @@
 import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { nativeSourceFetch, trackSourceTransport } from "../lib/sources/host-transport.ts";
 import { civicElectionRows, civicLookupFromRaw } from "../lib/sources/google-civic/model.ts";
 import { civicCandidate } from "../lib/sources/google-civic/publication.ts";
 import { lookupCivicAddress, readCivicApi } from "../lib/sources/google-civic/acquisition.ts";
@@ -105,6 +108,26 @@ test("a request-local public catalog prefetch is consumed once before sending th
   assert.equal(requests[0].searchParams.get("electionId"), "12000");
 });
 
+test("reader lookup never vaults its catalog or address-derived response on the production transport", async () => {
+  const root = mkdtempSync(join(tmpdir(), "voting-private-"));
+  const previousRoot = process.env.WTP_WORKER_MEMORY_DIRECTORY, previousVault = process.env.WTP_VAULT_PROVIDER;
+  process.env.WTP_WORKER_MEMORY_DIRECTORY = root;
+  delete process.env.WTP_VAULT_PROVIDER;
+  const transport = trackSourceTransport((async (input: string | URL | Request) => {
+    const url = new URL(String(input));
+    return new Response(fixture(url.pathname.endsWith("elections") ? "elections" : "mi-voterinfo"));
+  }) as typeof fetch, nativeSourceFetch);
+  try {
+    const answer = await lookupCivicAddress("private reader street", new Set(), { apiKey: "private-test-key", fetchImpl: transport });
+    assert.equal(answer.status, "AVAILABLE");
+    assert.ok(answer.rows.length > 0);
+  } finally {
+    if (previousRoot === undefined) delete process.env.WTP_WORKER_MEMORY_DIRECTORY; else process.env.WTP_WORKER_MEMORY_DIRECTORY = previousRoot;
+    if (previousVault === undefined) delete process.env.WTP_VAULT_PROVIDER; else process.env.WTP_VAULT_PROVIDER = previousVault;
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
 test("provider Retry-After defers the shared host instead of retrying 429 or 5xx inside the lookup", async () => {
   for (const status of [429, 503]) {
     let requests = 0;
@@ -120,7 +143,7 @@ test("provider Retry-After defers the shared host instead of retrying 429 or 5xx
   }
 });
 
-test("every HTTP failure logs its status and at most 300 body characters only on the server", async t => {
+test("voter lookup failures log status without the response body", async t => {
   const logs: string[] = [];
   t.mock.method(console, "error", (line: string) => logs.push(line));
   const statuses = [500, 503, 403];
@@ -130,11 +153,11 @@ test("every HTTP failure logs its status and at most 300 body characters only on
   }), new RegExp(`HTTP ${status}`));
   const calls = logs.map(line => JSON.parse(line));
   assert.deepEqual(calls.map(row => row.httpStatus), statuses);
-  assert.ok(calls.every(row => row.event === "google_civic_call_failed" && row.route === "voterinfo" && row.stage === "http" && row.body.length === 300));
+  assert.ok(calls.every(row => row.event === "google_civic_call_failed" && row.route === "voterinfo" && row.stage === "http" && row.body === ""));
   assert.doesNotMatch(logs.join(""), /private-test-key|private reader street/);
 });
 
-test("unreadable JSON logs its successful HTTP status and body prefix without leaking them into the answer", async t => {
+test("unreadable voter JSON logs its status without the response body", async t => {
   const logs: string[] = [];
   t.mock.method(console, "error", (line: string) => logs.push(line));
   const answer = await lookupCivicAddress("private reader street", new Set(), { apiKey: "private-test-key", electionId: "12000",
@@ -143,12 +166,21 @@ test("unreadable JSON logs its successful HTTP status and body prefix without le
   const call = JSON.parse(logs[0]);
   assert.equal(call.httpStatus, 200);
   assert.equal(call.stage, "parse");
-  assert.equal(call.body.length, 300);
+  assert.equal(call.body, "");
   assert.doesNotMatch(logs.join(""), /private-test-key|private reader street/);
   assert.doesNotMatch(JSON.stringify(answer), /not JSON|yyyy|private-test-key|private reader street/);
 });
 
-test("body and transport failures log the known HTTP status and available body, using null only without a response", async t => {
+test("a normalized voter address never reaches logs on a parse failure", async t => {
+  const logs: string[] = [];
+  t.mock.method(console, "error", (line: string) => logs.push(line));
+  await lookupCivicAddress("123 Main St, Example, MI", new Set(), { apiKey: "private-test-key", electionId: "12000",
+    fetchImpl: async () => new Response('{"normalizedInput":{"line1":"123 Main Street"},"pollingLocations":"invalid"}') });
+  assert.ok(logs.length);
+  assert.doesNotMatch(logs.join(""), /123 Main Street|123 Main St|private-test-key/);
+});
+
+test("body and transport failures log status without voter response contents", async t => {
   const logs: string[] = [];
   t.mock.method(console, "error", (line: string) => logs.push(line));
   let sent = false;
@@ -160,7 +192,7 @@ test("body and transport failures log the known HTTP status and available body, 
   await assert.rejects(readCivicApi("voterinfo", {}, { apiKey: "private-test-key", fetchImpl: async () => { throw new Error("connection refused"); } }), /could not be reached/);
   const calls = logs.map(line => JSON.parse(line));
   assert.deepEqual(calls.map(row => [row.stage, row.httpStatus, row.body]), [
-    ["body", 200, "partial provider response"], ["transport", null, ""],
+    ["body", 200, ""], ["transport", null, ""],
   ]);
 });
 

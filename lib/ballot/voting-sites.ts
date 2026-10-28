@@ -255,6 +255,7 @@ export interface VotingSitesAnswer {
   })[];
   outsideCoverage: boolean;
   precision?: "ADDRESS" | "ZIP";
+  pollingLookups?: import("./state-voting-lookups.ts").StateVotingLookup[];
   googleFallback?: { available: boolean; requested: boolean; reason?: VotingFallbackReason; label?: string; message?: string };
   /** Transient Google results must disappear from an open panel within 24 hours. */
   expiresAt?: string;
@@ -265,13 +266,13 @@ export interface VotingSitesAnswer {
 
 export function modelSentence(j: VotingJurisdiction): string {
   if (j.publication?.status === "NO_GENERAL_ELECTION") return j.publication.text;
-  if (j.model === "UNKNOWN") return "Published voting locations and their eligibility rules are listed below as the election office provides them.";
-  if (j.model === "ALL_MAIL" || j.allMail) return "Voting is by mail here. Ballot drop boxes and vote centers are listed first, with the publisher’s return rules.";
+  if (j.model === "UNKNOWN") return j.sites.length ? "Published voting locations and their eligibility rules are listed below." : "Use the official state lookup to find your polling place.";
+  if (j.model === "ALL_MAIL" || j.allMail) return j.sites.length ? "Voting is by mail here. Published ballot return locations are listed below." : "Voting is by mail here.";
   if (j.model === "VOTE_CENTER") return j.sites.length
     ? `${j.name} lets eligible registered voters vote at any of these locations within the published service area.`
     : `${j.name} runs vote centers. Follow each center’s published service area and hours.`;
   return j.sites.length
-    ? `${j.name} assigns you an election-day polling place by precinct. Early-voting and ballot-return rules are listed separately.`
+    ? `${j.name} assigns you an Election Day polling place by precinct.`
     : `${j.name} assigns each voter a polling place by precinct.`;
 }
 
@@ -288,6 +289,7 @@ export function narrowingFor(j: VotingJurisdiction): Narrowing {
   if (j.publication?.status === "NO_GENERAL_ELECTION") return {
     kind: "NOT_NEEDED", sentence: (j.publication.specialElections ?? []).join(" "),
   };
+  if (!j.sites.length) return { kind: "REFUSED", sentence: "Use the official state lookup to find your polling place.", rungs: [] };
   if (j.model === "VOTE_CENTER" || j.model === "ALL_MAIL" || j.allMail) return {
     kind: "NOT_NEEDED", sentence: "Use the published dates, hours and eligibility rules for each location.",
   };
@@ -296,9 +298,15 @@ export function narrowingFor(j: VotingJurisdiction): Narrowing {
     sentence: `The official address lookup assigns you to ${assigned[0].name}.` };
   return {
     kind: "REFUSED",
-    sentence: "We have not fixed your precinct. These are the published locations for your county and legislative districts, with each precinct named where published.",
+    sentence: "Use the official state lookup to confirm your assigned Election Day polling place.",
     rungs: j.refusal?.rungs ?? [],
   };
+}
+
+export function hasElectionDaySites(answer: VotingSitesAnswer): boolean {
+  return answer.jurisdictions.some(j => j.sites.some(site => votingSiteHasKind(site, "ELECTION_DAY") ||
+    votingSiteHasKind(site, "VOTE_CENTER") && site.schedules?.some(schedule =>
+      schedule.kind === "ELECTION_DAY" || schedule.kind === "VOTE_CENTER" && !!schedule.date && schedule.date === schedule.electionDate)));
 }
 
 /** All-mail jurisdictions lead with ballot returns; distance never changes eligibility. */

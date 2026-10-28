@@ -12,7 +12,9 @@ export interface RoutineJob {
  * passes 0.5 GB in an hour, and runs again when the owner releases it in Admin. Source children and the reads made for one
  * source (its portrait list, its voting doors, its settlement) run under that source's task id. Bytes per run are the busiest
  * measured hour of the files each job calls (database_transfer_hourly, Oct 26–27); box-fact-audit and state-pointer-retirement
- * had no separate measurement and carry conservative figures.
+ * had no separate measurement and carry conservative figures. door-probes is one pass: its open-door list (3.6 MB in the
+ * busiest pass, Oct 28), the probes' own door and pacing rows (0.1 MB) and one hot-partition statement (0.05 MB: 5 KB sent and
+ * 43 KB of cold fingerprints returned, Oct 28).
  */
 export const ROUTINE_JOBS = {
   doors: { id: "doors", label: "Door install", databaseBytesPerRun: 145_000_000 },
@@ -21,7 +23,7 @@ export const ROUTINE_JOBS = {
   boxFacts: { id: "box-facts", label: "Box findings publication", databaseBytesPerRun: 4_500_000 },
   workerPublication: { id: "worker-publication", label: "Saved worker results scan", databaseBytesPerRun: 40_000_000 },
   workerFacts: { id: "worker-facts", label: "Rosters and comment rules from workers", databaseBytesPerRun: 2_000_000 },
-  doorProbes: { id: "door-probes", label: "Hourly door checks", databaseBytesPerRun: 10_000_000 },
+  doorProbes: { id: "door-probes", label: "Hourly door checks", databaseBytesPerRun: 4_000_000 },
   doorPublication: { id: "door-publication", label: "Changed doors to publish", databaseBytesPerRun: 10_000_000 },
   readerEntityIds: { id: "reader-entity-ids", label: "Reader page ids", databaseBytesPerRun: 1_000_000 },
   factEntities: { id: "fact-entities", label: "Places and bodies for facts", databaseBytesPerRun: 6_000_000 },

@@ -1,23 +1,24 @@
 import { Buffer } from "node:buffer";
-import { gzipSync, gunzipSync } from "node:zlib";
+import { brotliCompressSync, brotliDecompressSync, constants, gunzipSync } from "node:zlib";
 import type { PlacePackage } from "./place-types.ts";
 import type { BodyTerritorySelection } from "../registry/body-territory.ts";
 
 interface PackedReadyPlace {
-  readonly encoding: "gzip-json-v1";
+  readonly encoding: "br-json-v1" | "gzip-json-v1";
   readonly data: string;
   readonly territory?: PackedReadyPlace;
 }
 
 function pack(page: unknown): PackedReadyPlace {
-  return { encoding: "gzip-json-v1", data: gzipSync(JSON.stringify(page)).toString("base64") };
+  return { encoding: "br-json-v1", data: brotliCompressSync(JSON.stringify(page), {params:{[constants.BROTLI_PARAM_QUALITY]:5}}).toString("base64") };
 }
 
 function unpack<T>(page: unknown): T {
   if (!page || typeof page !== "object" || !("encoding" in page)) return page as T;
-  if (page.encoding !== "gzip-json-v1" || !("data" in page) || typeof page.data !== "string")
+  if (!["br-json-v1","gzip-json-v1"].includes(String(page.encoding)) || !("data" in page) || typeof page.data !== "string")
     throw new Error("PLACE_PAGE_ENCODING_INVALID");
-  return JSON.parse(gunzipSync(Buffer.from(page.data, "base64")).toString("utf8")) as T;
+  const bytes=Buffer.from(page.data,"base64");
+  return JSON.parse((page.encoding==="br-json-v1"?brotliDecompressSync(bytes):gunzipSync(bytes)).toString("utf8")) as T;
 }
 
 /** Compress the complete JSON response before it crosses the database connection. */

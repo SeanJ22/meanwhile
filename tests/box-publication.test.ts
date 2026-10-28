@@ -31,9 +31,17 @@ const AGENDA = `${TUCSON}#agenda-committee`;
 const TCCC_URL = "https://clerksboards.tucsonaz.gov/boards/15";
 const AGENDA_URL = "https://clerksboards.tucsonaz.gov/boards/?board=136";
 
+const openFactDatabases = new Set<Awaited<ReturnType<typeof factDb>>>();
+test.afterEach(async () => {
+  const databases = [...openFactDatabases];
+  openFactDatabases.clear();
+  await Promise.all(databases.map(({ pg }) => pg.close()));
+});
+
 /** Arizona's fact entities, memory repositories and a vault holding each page a hunter cited, as `wi-hunt` saved it. */
 async function setup() {
   const facts = await factDb();
+  openFactDatabases.add(facts);
   await ensureFactEntities(facts, ROOT, ["az"]);
   const repos = createMemoryRepositories();
   const vault = new MemoryEvidenceStore();
@@ -1020,9 +1028,8 @@ test("a board-name backfill exception is included in the saved publication failu
   assert.deepEqual(report.errorExamples, [{ findingId: "board-names", stage: "BODY_NAMING", detail: "body naming query unavailable" }]);
 });
 
-test("a federal committee page cannot seat its members on an unrelated local government", async t => {
+test("a federal committee page cannot seat its members on an unrelated local government", async () => {
   const { facts, repos, vault, hold } = await setup();
-  t.after(() => facts.pg.close());
   const url = "https://www.hud.gov/helping-americans/public-indian-housing-tiac";
   const artifact = await hold(url, "<h1>Tribal Intergovernmental Advisory Committee</h1><p>Committee Member Jacqueline Pata, Juneau, AK</p>", NOW);
   await indexReportedFinding(repos.boxFindings, { workItemId: "wi-hunt", attemptId: "at-hunt", missionPart: null,

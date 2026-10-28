@@ -150,8 +150,8 @@ function keyedApiRequest(address: URL, headers: HeadersInit | undefined): boolea
 let sharedPacer: Promise<SourceHostPacer> | undefined;
 const injectedPacers = new WeakMap<typeof fetch, Promise<SourceHostPacer>>();
 
-/** The only source fetch: production children share host state; an injected transport owns isolated test state. */
-export async function sourceFetch(url: string | URL, init?: SourceRequestInit, fetchImpl?: typeof fetch, vendor?: string, sharedTransport = false): Promise<Response> {
+/** Production children share host state; an injected transport owns isolated test state. */
+async function pacedSourceFetch(url: string | URL, init?: SourceRequestInit, fetchImpl?: typeof fetch, vendor?: string, sharedTransport = false): Promise<{ response: Response; injected: boolean }> {
   const transport = fetchImpl ?? globalThis.fetch;
   const root = sourceTransportRoot(transport);
   const injected = root !== nativeSourceFetch && !sharedTransport;
@@ -163,9 +163,20 @@ export async function sourceFetch(url: string | URL, init?: SourceRequestInit, f
     if (injected) injectedPacers.set(root, pacer); else sharedPacer = pacer;
   }
   const response = await (await pacer).fetch(url, init, transport, vendor ?? currentSourceVendor());
-  if(injected)return response;
-  try{return vaultSourceResponse(response, rawCaptureVault(), vendor ?? new URL(url).hostname);}
-  catch(error){throw new RawCaptureFailure(error);}
+  return { response, injected };
+}
+
+/** Public acquisition responses are saved once in the source vault. */
+export async function sourceFetch(url: string | URL, init?: SourceRequestInit, fetchImpl?: typeof fetch, vendor?: string, sharedTransport = false): Promise<Response> {
+  const { response, injected } = await pacedSourceFetch(url, init, fetchImpl, vendor, sharedTransport);
+  if (injected) return response;
+  try { return vaultSourceResponse(response, rawCaptureVault(), vendor ?? new URL(url).hostname); }
+  catch (error) { throw new RawCaptureFailure(error); }
+}
+
+/** A voter lookup contains a reader address and is request-only. It shares the host clock but is never vaulted. */
+export async function sourceFetchPrivate(url: string | URL, init?: SourceRequestInit, fetchImpl?: typeof fetch, vendor?: string): Promise<Response> {
+  return (await pacedSourceFetch(url, init, fetchImpl, vendor)).response;
 }
 
 export async function deferSourceRead(url: string, until: number): Promise<void> {

@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import { projectVotingJurisdiction, votingJurisdictionCovers } from "../lib/ballot/voting-answer.ts";
 import { addCensusVotingGeographies, votingPlaceFromZip } from "../lib/ballot/voting-answer-geography.ts";
 import { POST } from "../app/api/voting-sites/route.ts";
@@ -12,9 +13,17 @@ import { votingFailureDetail } from "../lib/ballot/voting-errors.ts";
 import { readVotingBoundaries, votingBoundaryBlanks } from "../lib/ballot/voting-source-boundaries.ts";
 import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
 import { mergeVotingSiteRows, type VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
+import type { PublishedElectionField } from "../lib/civic-data/election-fields.ts";
 
 const at = "2026-10-20T00:00:00.000Z";
 const source = { publisher: "Protocol fixture", url: "https://protocol.example.gov/polling", checkedAt: at };
+const navigation = JSON.parse(readFileSync("data/ballot/2026-navigation/tx.json", "utf8"));
+const lookups = (navigation.package.payload.records as PublishedElectionField[]).filter(record =>
+  record.kind === "ELECTION_FIELD" && record.value.fieldKind === "polling_lookup");
+test.before(() => installReaderDatabaseQuery(async statements => statements.map(statement =>
+  statement.text.includes("WITH pointers") ? lookups.map(record => ({ ...record, valid: true })) : [])));
+test.after(() => installReaderDatabaseQuery(undefined));
 // Controlled protocol data exercises requests and persistence, and asserts no real precinct assignment.
 const file: VotingSitesFile = { generatedAt: "2026-10-20", jurisdictions: [{
   ocdId: "ocd-division/country:us/state:tx/county:harris", state: "TX", countyFips: "48201", name: "Protocol county",
@@ -43,7 +52,7 @@ async function holding(): Promise<ReaderAuthorityEdgeBundle> {
   } } };
 }
 
-test("street requests use one Census geocode, held polygons and held sites; ZIP requests need no external lookup", async () => {
+test("street requests use one Census geocode and held precincts; ZIPs return the official link and map point", async () => {
   const edge = await holding(), previous = globalThis.fetch, requests: string[] = [];
   globalThis.fetch = async input => {
     const url = new URL(String(input));
@@ -69,10 +78,16 @@ test("street requests use one Census geocode, held polygons and held sites; ZIP 
     assert.equal(JSON.stringify(answer).includes("Private request input"), false);
     const zip = await withReaderAuthorityEdge(edge, () => POST(new Request("http://localhost/api/voting-sites", { method: "POST", body: JSON.stringify({ address: "77002" }) })));
     assert.equal(zip.status, 200);
-    assert.equal((await zip.json()).jurisdictions[0].sites.length, 3);
+    const zipAnswer = await zip.json();
+    assert.deepEqual(zipAnswer.jurisdictions, []);
+    assert.equal(zipAnswer.pollingLookups[0].url, lookups[0].value.navigationUrl);
+    assert.ok(Number.isFinite(zipAnswer.point?.lat) && Number.isFinite(zipAnswer.point?.lng));
     const postal = await withReaderAuthorityEdge(edge, () => POST(new Request("http://localhost/api/voting-sites", { method: "POST", body: JSON.stringify({ address: "77201" }) })));
     assert.equal(postal.status, 200);
-    assert.equal((await postal.json()).jurisdictions[0].sites.length, 3, "the held Houston postal alias must return the same held county sites");
+    const postalAnswer = await postal.json();
+    assert.deepEqual(postalAnswer.jurisdictions, [], "a postal ZIP cannot assign a county's polling sites");
+    assert.equal(postalAnswer.pollingLookups[0].url, lookups[0].value.navigationUrl);
+    assert.ok(Number.isFinite(postalAnswer.point?.lat) && Number.isFinite(postalAnswer.point?.lng));
     assert.equal(requests.length, 1);
   } finally { globalThis.fetch = previous; }
 });

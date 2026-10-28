@@ -1,3 +1,4 @@
+import {fixturePlaceBuild} from "./helpers/place-build-row.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
@@ -5,7 +6,7 @@ import { queueUnbuiltPlacePages, prepareProductionPlacePages, seedZipPagePlaces,
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 import { buildPageBody,PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
 import { unpackReadyPlace, unpackReadyTerritory } from "../lib/reader/place-ready.ts";
-import { readerCacheTags,enqueueReaderPlaces } from "../lib/reader/cache.ts";
+import { readerCacheTags,enqueueReaderPlaces,UNBUILT_ZIP_PRIORITY } from "../lib/reader/cache.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { zipLocationMigration } from "./helpers/reader-identity-db.ts";
 import { fillMissingZipLocations } from "../lib/place-map/location-import.ts";
@@ -52,14 +53,14 @@ test("ZIP page identities follow the routed ZIP geography and retain their state
     // 85002's only membership is across the line; 85004 has no membership and 85003 no display point.
     await db.query(`INSERT INTO zip_place(zip,place_id,share,boundary_year) VALUES
       ('85001',$1,1,2023),('85001',$2,1,2023),('85002',$2,1,2023),('85003',$1,1,2023),('90001',$2,1,2023)`,[county,ca]);
-    const n=await seedZipPagePlaces(db.query,{states:["AZ"],bodies:async()=>()=>["az:city:phoenix#governing"]});
+    const n=await seedZipPagePlaces(db.query,{states:["AZ"],bodies:async()=>()=>["az:city:phoenix#governing"],residents:async()=>({"85001":200})});
     assert.equal(n,2);
-    assert.deepEqual(await db.query("SELECT id,name,state,parent_id FROM entity WHERE id LIKE 'zip:%' ORDER BY id"),
-      [{id:"zip:85001",name:"ZIP 85001",state:"AZ",parent_id:root},{id:"zip:85002",name:"ZIP 85002",state:"AZ",parent_id:null}]);
+    assert.deepEqual(await db.query("SELECT id,name,state,parent_id,page_priority FROM entity WHERE id LIKE 'zip:%' ORDER BY id"),
+      [{id:"zip:85001",name:"ZIP 85001",state:"AZ",parent_id:root,page_priority:201},{id:"zip:85002",name:"ZIP 85002",state:"AZ",parent_id:null,page_priority:1}]);
     assert.deepEqual(await db.query("SELECT page_id,entity_id FROM place_page_dependency ORDER BY page_id,entity_id"),
       [{page_id:"zip:85001",entity_id:"az:city:phoenix#governing"},{page_id:"zip:85001",entity_id:county},{page_id:"zip:85001",entity_id:ca},
         {page_id:"zip:85002",entity_id:"az:city:phoenix#governing"},{page_id:"zip:85002",entity_id:ca}]);
-    assert.equal(await seedZipPagePlaces(db.query,{states:["AZ"],bodies:async()=>null}),2,"a second deploy keeps the same identities");
+    assert.equal(await seedZipPagePlaces(db.query,{states:["AZ"],bodies:async()=>null,residents:async()=>({"85001":200})}),2,"a second deploy keeps the same identities");
     assert.equal((await db.query("SELECT count(*)::int AS n FROM place_page_dependency"))[0].n,5);
   } finally { await db.pg.close(); }
 });
@@ -79,6 +80,31 @@ test("a deploy writes only missing ZIP display points and never replaces a held 
     assert.ok(Number(phoenix.lat) > 33 && Number(phoenix.lng) < -111);
     assert.equal(await fillMissingZipLocations(db.query, process.cwd()), 0, "a later deploy writes nothing");
   } finally { await db.pg.close(); }
+});
+
+test('production ZIP preparation fills existing priorities without requeueing or rewriting unchanged rows',async()=>{
+  const db=await factDb();
+  const root='ocd-division/country:us/state:az',ready='zip:85003',unbuilt='zip:85701';
+  try {
+    await db.pg.exec(zipLocationMigration());
+    await db.pg.exec(`CREATE TABLE zip_place(zip text NOT NULL,place_id text NOT NULL REFERENCES entity(id),share double precision NOT NULL,
+      boundary_year integer NOT NULL,PRIMARY KEY(zip,place_id,boundary_year))`);
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ'),($2,'place','Held ZIP name','AZ'),($3,'place','Tucson ZIP','AZ')",[root,ready,unbuilt]);
+    await db.query(`INSERT INTO zip_location(zip,boundary_year,lat,lng,postal,source_urls,checked_at) VALUES
+      ('85003',2020,33,-112,'{"state":"AZ"}','["https://www2.census.gov/"]','2026-10-01T00:00:00Z'),
+      ('85701',2020,32,-110,'{"state":"AZ"}','["https://www2.census.gov/"]','2026-10-01T00:00:00Z')`);
+    await db.query("INSERT INTO zip_place(zip,place_id,share,boundary_year) VALUES('85003',$1,1,2023),('85701',$1,1,2023)",[root]);
+    await db.query("INSERT INTO place_page(place_id,body) VALUES($1,'{}')",[ready]);
+    await db.query('INSERT INTO rebuild_queue(place_id,generation) VALUES($1,7),($2,9)',[ready,unbuilt]);
+    const seed=()=>seedZipPagePlaces(db.query,{states:['AZ'],bodies:async()=>null,residents:async()=>({'85003':200,'85701':100})});
+    assert.equal(await seed(),2);
+    const rows=()=>db.query('SELECT q.place_id,q.generation::int,q.priority,q.ctid::text AS queue_tuple,e.ctid::text AS entity_tuple FROM rebuild_queue q JOIN entity e ON e.id=q.place_id ORDER BY q.place_id');
+    const first=await rows();
+    assert.deepEqual(first.map(({place_id,generation,priority})=>({place_id,generation,priority})),
+      [{place_id:ready,generation:7,priority:201},{place_id:unbuilt,generation:9,priority:UNBUILT_ZIP_PRIORITY+101}]);
+    assert.equal((await db.query('SELECT name FROM entity WHERE id=$1',[ready]))[0]!.name,'Held ZIP name');
+    await seed();assert.deepEqual(await rows(),first,'the next deployment leaves both tuple versions and generations unchanged');
+  }finally{await db.pg.close();}
 });
 
 test("runtime-only bodies get their existing canonical IDs without overwriting held subjects",async()=>{
@@ -162,18 +188,18 @@ test("a ZIP worker stores only its ready current page and retains the serving de
     await db.query('INSERT INTO rebuild_queue(place_id) VALUES($1)',[zip]);
     let sourceReads=0;
     const wrapped:FactDb={transaction:run=>db.transaction(query=>run(async(text,args)=>{
-      if(text!==PLACE_PACKAGE_SQL)return query(text,args);
+      if(!text.includes(PLACE_PACKAGE_SQL))return query(text,args);
       sourceReads++;
       assert.equal(args?.[5],false);
       assert.equal(args?.[6],false);
-      return[{...rawPage(city),entities:[{id:body,kind:'body',state:'CA',division:city,parent_id:city}],divisions:[{ocdId:fringe}]}];
+      return fixturePlaceBuild(query,text,args,{...rawPage(city),entities:[{id:body,kind:'body',state:'CA',division:city,parent_id:city}],divisions:[{ocdId:fringe}]});
     }))};
     assert.deepEqual(await rebuildPlacePages({db:wrapped,limit:1,concurrency:1,purge:async()=>({purged:true})}),{rebuilt:1,failed:0,remaining:0});
     assert.equal(sourceReads,1);
     const [page]=await db.query('SELECT body,history_body,context FROM place_page WHERE place_id=$1',[zip]);
     assert.deepEqual(page!.history_body,{});
     assert.deepEqual(page!.context,{formatVersion:1});
-    assert.equal((page!.body as {encoding:string}).encoding,'gzip-json-v1');
+    assert.equal((page!.body as {encoding:string}).encoding,'br-json-v1');
     assert.equal(unpackReadyPlace(page!.body).bodies.length,1);
     assert.equal(unpackReadyTerritory(page!.body),null);
     const dependencies=await db.query('SELECT entity_id FROM place_page_dependency WHERE page_id=$1 ORDER BY entity_id',[zip]);

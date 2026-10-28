@@ -11,7 +11,7 @@ import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 // retrieved 2026-10-22T00:34:17.886Z. The clock read the transfer as a fresh read, so the daily task said "not due"
 // at 03:35Z and every pass after; 56 voting-site states were held the same way (CA's inherited read was from Oct 7).
 // A transfer retains published facts without a source read (RN-03), so it never makes the source look freshly read.
-const SCOPE = "US-AZ:voting-sites", PARSER = "official-voting-sites/4";
+const SCOPE = "US-AZ:voting-sites", PARSER = "official-voting-sites/5";
 const RETRIEVED = "2026-10-22T00:34:17.886Z", ORIGINAL_EVENT = "2026-10-22T00:34:19.699Z", TRANSFERRED = "2026-10-24T00:11:56.290Z";
 const NOW = Date.parse("2026-10-24T03:35:19.563Z");
 const task = AUTOMATIC_REFRESH_TASKS.find(row => row.id === "voting-sites:AZ")!;

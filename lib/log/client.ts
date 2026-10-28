@@ -2,6 +2,7 @@
 
 import { SYNTHETIC_RUN_BODY_KEY } from "@/lib/db/run-marker";
 import type { SearchLogEventType } from "@/lib/db/search-log";
+import { LOG_MAX_BODY_BYTES, LOG_MAX_OCD_IDS, LOG_MAX_OCD_ID_CHARS } from "@/lib/log/limits";
 
 /**
  * Fire-and-forget client half of the search log: an event type, the divisions
@@ -27,10 +28,7 @@ export function logEvent(
       typeof (window as { __WTP_SYNTHETIC_RUN__?: unknown }).__WTP_SYNTHETIC_RUN__ === "string"
         ? (window as unknown as { __WTP_SYNTHETIC_RUN__: string }).__WTP_SYNTHETIC_RUN__
         : undefined;
-    const base: Record<string, unknown> = { eventType, ocdIds, detail };
-    if (approximateLocation !== undefined) base.approximateLocation = approximateLocation;
-    if (declared !== undefined) base[SYNTHETIC_RUN_BODY_KEY] = declared;
-    const body = JSON.stringify(base);
+    const body = fittedLogBody(eventType, ocdIds, detail, approximateLocation, declared);
     if (typeof navigator !== "undefined" && navigator.sendBeacon) {
       navigator.sendBeacon(
         "/api/log",
@@ -47,4 +45,28 @@ export function logEvent(
   } catch {
     /* never the reader's problem */
   }
+}
+
+/**
+ * One event's body, inside what /api/log accepts. A ZIP can touch more divisions than one event carries; the
+ * event then keeps the leading divisions that fit and states how many it touched, rather than being refused.
+ */
+export function fittedLogBody(
+  eventType: SearchLogEventType,
+  ocdIds: string[],
+  detail: Record<string, string | number | boolean> | undefined,
+  approximateLocation: string | null | undefined,
+  declared: string | undefined,
+): string {
+  const ids = [...new Set(ocdIds)].filter(id => id.length <= LOG_MAX_OCD_ID_CHARS);
+  const bodyWith = (kept: string[]) => {
+    const fitted = kept.length < ids.length ? { ...detail, ocdIdCount: ids.length } : detail;
+    const base: Record<string, unknown> = { eventType, ocdIds: kept, detail: fitted };
+    if (approximateLocation !== undefined) base.approximateLocation = approximateLocation;
+    if (declared !== undefined) base[SYNTHETIC_RUN_BODY_KEY] = declared;
+    return JSON.stringify(base);
+  };
+  let kept = ids.slice(0, LOG_MAX_OCD_IDS), body = bodyWith(kept);
+  while (kept.length > 0 && new TextEncoder().encode(body).length > LOG_MAX_BODY_BYTES) body = bodyWith(kept = kept.slice(0, -1));
+  return body;
 }

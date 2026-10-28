@@ -21,15 +21,20 @@
       "requestedUrl": "https://s3.amazonaws.com/pub-attachments/afbf997d-ccbe-4f28-9cb0-1277e5b2567b.pdf",
       "finalUrl": "https://s3.amazonaws.com/pub-attachments/afbf997d-ccbe-4f28-9cb0-1277e5b2567b.pdf",
       "publisher": "Illinois Attorney General"
+    },
+    {
+      "requestedUrl": "https://www.elections.il.gov/VotingAndRegistrationSystems/PollingPlaces.aspx",
+      "finalUrl": "https://www.elections.il.gov/VotingAndRegistrationSystems/PollingPlaces.aspx",
+      "publisher": "Illinois State Board of Elections"
     }
   ],
   "package": {
     "contractId": "ballot-navigation",
-    "version": "2026-10-14T21:32:20.096Z",
-    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "version": "2026-10-27T17:49:50.726Z",
+    "sourceThrough": "2026-10-27T17:49:50.726Z",
     "sourceReceipt": {
       "contractVersion": 1,
-      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedAt": "2026-10-27T17:49:50.726Z",
       "reviewedBy": "code:section3Record",
       "sources": [
         {
@@ -75,6 +80,17 @@
           "rawHash": "d5d95509b0d4ef1b5d8a538bc3768c4e98c6315a2a4f1dd07daba9343386960a",
           "reviewOutcome": "SUPPORTED",
           "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.elections.il.gov/VotingAndRegistrationSystems/PollingPlaces.aspx",
+          "finalUrl": "https://www.elections.il.gov/VotingAndRegistrationSystems/PollingPlaces.aspx",
+          "publisher": "Illinois State Board of Elections",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-27T17:49:50.726Z",
+          "httpStatus": 200,
+          "rawHash": "524b74f3d05f2ca46c56ddf2f6e830f964eb475b4b4d431010a40efd7c088243",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official web-extracted source text in the fingerprint vault; code confirmed the polling lookup label and destination. Source method: official-page-web-extraction."
         }
       ]
     },
@@ -178,21 +194,21 @@
           }
         },
         {
-          "id": "election-field:7b2377ef6648f5ccb7a7cda15194a7c9",
+          "id": "election-field:639e301b5ab7401833d3b87831c399b4",
           "kind": "ELECTION_FIELD",
           "value": {
             "state": "IL",
             "divisionId": "ocd-division/country:us/state:il",
             "fieldKind": "polling_lookup",
-            "text": "https://www.elections.il.gov/ElectionOperations/ElectionAuthorities.aspx",
-            "quote": "Voters can look up their local election authority, including contact information, using the Illinois State Board of Elections website.",
+            "text": "https://www.elections.il.gov/VotingAndRegistrationSystems/PollingPlaces.aspx",
+            "quote": "Polling Places",
             "dates": [],
-            "url": "https://www.illinoisattorneygeneral.gov/news/story/attorney-general-raoul-launches-election-monitoring-encourages-illinois-voters-to-make-a-voting-plan-today",
-            "navigationUrl": "https://www.elections.il.gov/ElectionOperations/ElectionAuthorities.aspx",
+            "url": "https://www.elections.il.gov/VotingAndRegistrationSystems/PollingPlaces.aspx",
+            "navigationUrl": "https://www.elections.il.gov/VotingAndRegistrationSystems/PollingPlaces.aspx",
             "electionDate": "2026-11-03",
-            "verifiedAt": "2026-10-14T21:32:20.096Z",
-            "collectedAt": "2026-10-14T19:57:28.056697+00:00",
-            "sourceOrg": "Illinois Attorney General"
+            "verifiedAt": "2026-10-27T17:49:50.726Z",
+            "collectedAt": "2026-10-27T17:49:50.726Z",
+            "sourceOrg": "Illinois State Board of Elections"
           }
         },
         {

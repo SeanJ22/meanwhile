@@ -302,7 +302,8 @@ function MapEntryInner() {
         const zipParam = zip ? `&zip=${zip}` : "";
         const radiusParam = radiusKm ? `&radiusKm=${radiusKm}` : "";
         const response = await fetchReaderResponse(
-          `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
+          view.kind === "zip" && zip && !radiusKm ? `/api/meetings?zip=${zip}`
+            : `/api/meetings?lat=${lat}&lng=${lng}${zipParam}${radiusParam}`,
           { headers: { accept: "application/json" }, signal: controller.signal },
         );
         if (!response.ok) {
@@ -998,12 +999,9 @@ function MapEntryInner() {
   );
   const onVotingSites = useCallback((sites: VotingSitePin[]) => {
     setVotingPins(sites);
-    // ZIP answers may have no address point; their sites still locate the map.
-    const point = sites[0];
-    if (point) setFocus({ lat: point.lat, lng: point.lng, zoom: 10, key: `vote:${point.lat},${point.lng}` });
   }, []);
-  const onVotingAddressPoint = useCallback((point: { lat: number; lng: number } | null) => {
-    setVotingAddressPoint(point);
+  const onVotingAddressPoint = useCallback((point: { lat: number; lng: number } | null, precision?: "ADDRESS" | "ZIP") => {
+    setVotingAddressPoint(precision === "ZIP" ? null : point);
     if (point) setFocus({ lat: point.lat, lng: point.lng, zoom: 10, key: `vote:${point.lat},${point.lng}` });
   }, []);
 
@@ -1818,6 +1816,7 @@ function MapEntryInner() {
             {pop === "vote" && (
               <VotingSitesPanel
                 embedded
+                currentState={stateAbbrFromOcdId(focusState.activeOcdId) ?? view?.state}
                 onSites={onVotingSites}
                 onAddressPoint={onVotingAddressPoint}
                 selectedSiteId={selectedVotingSiteId}

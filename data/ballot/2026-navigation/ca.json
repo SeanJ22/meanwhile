@@ -26,15 +26,20 @@
       "requestedUrl": "https://www.sos.ca.gov/elections/contact",
       "finalUrl": "https://www.sos.ca.gov/elections/contact",
       "publisher": "California Secretary of State"
+    },
+    {
+      "requestedUrl": "https://www.sos.ca.gov/elections/publications-and-resources",
+      "finalUrl": "https://www.sos.ca.gov/elections/publications-and-resources",
+      "publisher": "California Secretary of State"
     }
   ],
   "package": {
     "contractId": "ballot-navigation",
-    "version": "2026-10-14T21:32:20.096Z",
-    "sourceThrough": "2026-10-14T21:32:20.096Z",
+    "version": "2026-10-27T17:45:04.211Z",
+    "sourceThrough": "2026-10-27T17:45:04.211Z",
     "sourceReceipt": {
       "contractVersion": 1,
-      "reviewedAt": "2026-10-14T21:32:20.096Z",
+      "reviewedAt": "2026-10-27T17:45:04.211Z",
       "reviewedBy": "code:section3Record",
       "sources": [
         {
@@ -91,6 +96,17 @@
           "rawHash": "b78322400c71c3bb2ad486013e2d7775898d57de984f873a7f623543595221cf",
           "reviewOutcome": "SUPPORTED",
           "reviewedEvidence": "Saved official source; section3Record confirmed this field's value and quote within its freshness window."
+        },
+        {
+          "requestedUrl": "https://www.sos.ca.gov/elections/publications-and-resources",
+          "finalUrl": "https://www.sos.ca.gov/elections/publications-and-resources",
+          "publisher": "California Secretary of State",
+          "sourceClass": "OFFICIAL_PUBLISHER",
+          "retrievedAt": "2026-10-27T17:45:04.211Z",
+          "httpStatus": 200,
+          "rawHash": "b3ec8499f4a01a3992e1ee44b658fb4d212c1dac140eb5181c8462fc90c51881",
+          "reviewOutcome": "SUPPORTED",
+          "reviewedEvidence": "Saved official source response in the fingerprint vault; code confirmed the polling lookup label and destination. Source method: official-page-native."
         }
       ]
     },
@@ -138,20 +154,20 @@
           }
         },
         {
-          "id": "election-field:5747e94f7dea057812df6ec7f12b36bc",
+          "id": "election-field:25affbe402190975c4e4b01f6d8d7134",
           "kind": "ELECTION_FIELD",
           "value": {
             "state": "CA",
             "divisionId": "ocd-division/country:us/state:ca",
             "fieldKind": "polling_lookup",
-            "text": "https://caearlyvoting.sos.ca.gov/",
-            "quote": "Early Voting",
+            "text": "https://www.sos.ca.gov/elections/polling-place",
+            "quote": "Polling Place Lookup",
             "dates": [],
-            "url": "https://www.sos.ca.gov/elections/upcoming-elections/general-election-november-3-2026/key-dates-deadlines",
-            "navigationUrl": "https://caearlyvoting.sos.ca.gov/",
+            "url": "https://www.sos.ca.gov/elections/publications-and-resources",
+            "navigationUrl": "https://www.sos.ca.gov/elections/polling-place",
             "electionDate": "2026-11-03",
-            "verifiedAt": "2026-10-14T21:32:20.096Z",
-            "collectedAt": "2026-10-14T19:36:29.203416+00:00",
+            "verifiedAt": "2026-10-27T17:45:04.211Z",
+            "collectedAt": "2026-10-27T17:45:04.211Z",
             "sourceOrg": "California Secretary of State"
           }
         },

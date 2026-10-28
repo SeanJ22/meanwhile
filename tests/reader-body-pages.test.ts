@@ -125,7 +125,7 @@ test("state selection reads individual body contexts and direct pages select sep
       assert.deepEqual(selected.meetings.map(row => row.id).sort(), (includeHistory ? [past.id, current.id] : [current.id]).sort());
     }
     const [stored] = await query("SELECT body->>'encoding' AS direct_current,history_body->>'encoding' AS direct_history,context ? 'current' AS raw_current FROM place_page WHERE place_id=$1", [FIRST]);
-    assert.deepEqual(stored, { direct_current: "gzip-json-v1", direct_history: "gzip-json-v1", raw_current: true });
+    assert.deepEqual(stored, { direct_current: "br-json-v1", direct_history: "br-json-v1", raw_current: true });
   } finally { await pg.close(); }
 });
 
@@ -151,7 +151,7 @@ test("the real worker stores agenda-free ready body pages and preserves full cur
     assert.deepEqual(await rebuildPlacePages({ db, limit: 1, concurrency: 1, purge: async () => ({ purged: true }) }),
       { rebuilt: 1, failed: 0, remaining: 0 });
     const [stored] = await query("SELECT body,history_body,context FROM place_page WHERE place_id=$1", [FIRST]);
-    for (const ready of [stored!.body, stored!.history_body]) assert.equal((ready as { encoding: string }).encoding, "gzip-json-v1");
+    for (const ready of [stored!.body, stored!.history_body]) assert.equal((ready as { encoding: string }).encoding, "br-json-v1");
     const readyWire = JSON.stringify([unpackReadyPlace(stored!.body), unpackReadyPlace(stored!.history_body)]);
     assert.equal(readyWire.includes("SOURCE AGENDA"), false, "neither ready encoding stores source agenda text");
     const context = stored!.context as { current: {full:unknown}; history: {full:unknown} };

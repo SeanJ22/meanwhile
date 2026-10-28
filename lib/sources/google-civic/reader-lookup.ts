@@ -1,11 +1,12 @@
 import { lookupCivicAddress, type CivicReadOptions } from "./acquisition.ts";
 import { GOOGLE_CIVIC_DOCS, GOOGLE_CIVIC_ELECTION_DAY } from "./targets.ts";
-import type { CivicJson, CivicLookup } from "./model.ts";
+import { civicTownKey, type CivicJson, type CivicLookup } from "./model.ts";
 import { GOOGLE_VOTING_DATA_LABEL, type VotingReaderPlace } from "../../ballot/voting-answer.ts";
 import type { VotingFallbackReason, VotingJurisdiction, VotingSite, VotingSitesAnswer } from "../../ballot/voting-sites.ts";
 import { recordVotingFailure } from "../../ballot/voting-errors.ts";
 import { censusBatchPoints, type BatchAddress } from "../../geo/census-batch.ts";
 import { plausibleUsPoint } from "../../geo/census-geocoder.ts";
+import { votingPhysicalAddress } from "../../ballot/voting-site-address.ts";
 
 const words = (value: unknown): string => typeof value === "string" ? value : "";
 export const GOOGLE_CIVIC_ATTRIBUTION = "Voting information powered by the Civic Information API";
@@ -23,10 +24,14 @@ function civicVotingJurisdictions(lookup: CivicLookup, place: VotingReaderPlace,
     const kind = row.kind === "POLLING_LOCATION" ? "ELECTION_DAY" : row.kind === "EARLY_VOTE_SITE" ? "EARLY_VOTING" : row.kind === "DROP_OFF_LOCATION" ? "DROP_BOX" : null;
     if (!kind) return [];
     const location = row.value.address as CivicJson | undefined;
-    const address = [location?.line1, location?.line2, location?.line3, location?.city, location?.state, location?.zip].map(words).filter(Boolean).join(", ");
+    if (words(location?.state) && words(location?.state).toUpperCase() !== lookup.state) return [];
+    // Nonassigned lists can span the whole state. Confirm their locality before
+    // retaining a row or asking Census to place its published address.
+    if (kind !== "ELECTION_DAY" && !place.towns.some(town => civicTownKey(town) === civicTownKey(words(location?.city)))) return [];
+    const address = votingPhysicalAddress([location?.line1, location?.line2, location?.line3, location?.city, location?.state, location?.zip].map(words).filter(Boolean).join(", "));
     if (!address) return [];
     const point = googlePoint(row.value);
-    const street = [location?.line1, location?.line2, location?.line3].map(words).filter(Boolean).join(" ");
+    const street = votingPhysicalAddress([location?.line1, location?.line2, location?.line3].map(words).filter(Boolean).join(", "))?.replace(/,\s*/g, " ");
     if (!point && street) unplaced.set(row.id, { street, city: words(location?.city), state: words(location?.state) || lookup.state!, zip: words(location?.zip) });
     return [{ id: row.id, kind, name: words(location?.locationName) || "Published voting location", address,
       room: null, lat: point?.lat ?? null, lng: point?.lng ?? null, ...(point ? { geocodeSource: "PUBLISHER" as const } : {}), election: "November 3, 2026", electionDate: GOOGLE_CIVIC_ELECTION_DAY, serves: null,
@@ -60,7 +65,7 @@ export async function readGoogleVotingAnswer(address: string, place: VotingReade
   jurisdictions: VotingJurisdiction[]; electionOffices: NonNullable<VotingSitesAnswer["electionOffices"]>; state: string | null; reason?: VotingFallbackReason;
 }> {
   const signal = options.signal ?? AbortSignal.timeout(2200);
-  const lookup = await lookupCivicAddress(address, new Set(place.divisionIds), { ...options, signal });
+  const lookup = await lookupCivicAddress(address, new Set(place.divisionIds), { ...options, signal, expectedTowns: place.towns });
   if (lookup.status === "OUTAGE") recordVotingFailure({ stage: "google-fallback", precision: place.precision, state: place.states[0] },
     new Error(lookup.reason ?? "Google voting information could not be read."));
   const unplaced = new Map<string, BatchAddress>();

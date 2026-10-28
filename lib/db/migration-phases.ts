@@ -43,7 +43,7 @@ export interface PhaseDeclaration {
   readonly why: string;
   /** A contract that must rebuild an index over a large reader table holds its locks this long, not the default second. */
   readonly contractStatementTimeoutMs?: number;
-  /** Tables a migration adds triggers to while the runner writes them, locked together before its first statement so it never waits holding one. */
+  /** Tables a migration alters or adds triggers to while the runner writes them, all taken before its first statement so it never waits holding one. */
   readonly lockFirst?: readonly string[];
 }
 
@@ -167,6 +167,8 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "ZP-01_build_fingerprint": { phase: "expand", why: "ZIP builds compare selected-input fingerprints before transferring or copying an answer.", lockFirst: ["place_page"] },
+  "ZP-01_expand": { phase: "expand", why: "Prioritizes queued ZIP pages by their held Census population before builders claim them.", lockFirst: ["rebuild_queue", "entity"] },
   "RB-A10_zip_locations": { phase: "expand", why: "Adds imported ZIP display points; existing memberships, identities and readers are unaffected." },
   "WR-01_fact_confirmations": { phase: "expand", why: "Adds scoped source confirmations and their reader view without rewriting existing facts." },
   "RB-A9_legistar_members": {phase:"expand",why:"Adds Legistar publication counts and an index for targeted source updates ahead of bulk page rebuilding.",lockFirst:["fact","rebuild_queue"]},

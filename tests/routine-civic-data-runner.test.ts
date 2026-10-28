@@ -5,7 +5,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { childCrash } from "../lib/ops/fatal-line.ts";
-import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
+import { JOB_HELD_WORDS, ROUTINE_JOBS, runRoutineJob } from "../lib/civic-data/routine-jobs.ts";
 import { runInNewContext } from "node:vm";
 import { transpileModule, ScriptTarget, ModuleKind, createSourceFile, isFunctionDeclaration } from "typescript";
 
@@ -167,8 +167,8 @@ test("meeting pins and Box facts publish beside admission, so the first source l
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   const read = functionSource(source, "readHuntSourceTasks");
   assert.doesNotMatch(read, /try \{\s*const (?:report|box) = await publish(?:HeldMeetingPins|BoxFindings)\(/, "admission no longer waits on either");
-  assert.match(read, /publishHeldBesideSources\(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", \(\) => withDatabaseJob\("meeting-pins",\s*\(\)\s*=>\s*withReaderRoute\("meeting-pins", async \(\) => \{[^]*?const report = await publishHeldMeetingPins\(/);
-  assert.match(read, /publishHeldBesideSources\(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async \(\) => \{\s*const box = await publishBoxFindings\(/);
+  assert.match(read, /publishHeldBesideSources\(failures, ROUTINE_JOBS\.meetingPins, "MEETING_PIN_PUBLICATION_FAILED", \(\) => withReaderRoute\("meeting-pins", async \(\) => \{[^]*?const report = await publishHeldMeetingPins\(/);
+  assert.match(read, /publishHeldBesideSources\(failures, ROUTINE_JOBS\.boxFacts, "BOX_FACT_PUBLICATION_FAILED", async \(\) => \{\s*const box = await publishBoxFindings\(/);
   const launch = source.indexOf("for (const { task } of electionLaunchOrder(");
   const awaited = [...source.matchAll(/await heldPublication;/g)].map(match => match.index!);
   assert.equal(awaited.length, 2, "the quiet publish-now exit and the full pass each wait for held publication");
@@ -178,17 +178,17 @@ test("meeting pins and Box facts publish beside admission, so the first source l
 
   const order: string[] = [];
   const failures: { taskId: string; code: string; detail: string }[] = [];
-  const context: Record<string, unknown> = { heldPublication: Promise.resolve(), admitJobLaunch, ROOT:process.cwd(), ROUTINE_DATA_ADMISSION_MS,
+  const context: Record<string, unknown> = { heldPublication: Promise.resolve(), runRoutineJob, heldJobs: new Set(), JOB_HELD_WORDS, console,
     safeFailure: (value: string) => value,
     sanitizedErrorDiagnostic: (error: unknown) => error instanceof Error ? error.message : String(error) };
-  const start = runInNewContext(transpileModule(functionSource(source, "publishHeldBesideSources"), {
+  const start = runInNewContext(transpileModule(functionSource(source, "routineJob") + "\n" + functionSource(source, "publishHeldBesideSources"), {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText + "\npublishHeldBesideSources", context);
   let releasePins!: () => void;
-  start(failures, "meeting-pins", "MEETING_PIN_PUBLICATION_FAILED", async () => {
+  start(failures, ROUTINE_JOBS.meetingPins, "MEETING_PIN_PUBLICATION_FAILED", async () => {
     order.push("pins started"); await new Promise<void>(resolve => { releasePins = resolve; }); order.push("pins done");
   });
-  start(failures, "box-facts", "BOX_FACT_PUBLICATION_FAILED", async () => { order.push("box started"); throw new Error("Box store unreachable"); });
+  start(failures, ROUTINE_JOBS.boxFacts, "BOX_FACT_PUBLICATION_FAILED", async () => { order.push("box started"); throw new Error("Box store unreachable"); });
   order.push("admission continued");
   await new Promise(resolve => setImmediate(resolve));
   assert.deepEqual(order, ["admission continued", "pins started"], "admission does not wait, and Box waits its turn behind pins");
@@ -260,7 +260,7 @@ test("a missing ballot file with no canonical state records an owed publication,
 
 test("candidate findings missing a place stay visible without failing unrelated source passes, while an unreadable Box still fails", async () => {
   const source = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  const code = source.slice(source.indexOf("let candidateFindingTasks:"), source.indexOf("const selectedTasks ="));
+  const code = source.slice(source.indexOf("let candidateFindingTasks:"), source.indexOf("const offeredTasks ="));
   const failures: { code: string }[] = [];
   const task = { id: "candidate-profiles:CA" };
   const context = { controlPlaneUrlFromEnv: () => "postgres://fixture", neon: () => ({ query: () => {} }),
@@ -1599,7 +1599,7 @@ test("every standing source child emits its exact contract id and the supervisor
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.match(runner, /const ADMITTED_CODE_SHA = assertRuntimeAuthority\([\s\S]*\.sha/);
   assert.match(runner, /const RUNNING_CODE_SHA = TASK_SELECTION\.ok\s+\? ADMITTED_CODE_SHA\s+: null/);
-  for (const mutation of ["await syncHeldDoors(", "await startCivicReadCacheHost("]) {
+  for (const mutation of ["syncHeldDoors(doorRepos.doors)", "await startCivicReadCacheHost("]) {
     assert.ok(runner.indexOf("const ADMITTED_CODE_SHA") < runner.indexOf(mutation), `${mutation} requires admitted code first`);
     assert.ok(runner.indexOf("const ROUTINE_DATA_PROCESS_LEASE") < runner.indexOf(mutation), `${mutation} requires the process lease first`);
   }

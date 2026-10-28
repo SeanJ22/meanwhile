@@ -27,12 +27,12 @@ const STEPS = [
   {
     id: "levels",
     title: "Local / State / Federal",
-    body: "Open the menu to find the Local, State and Federal controls. Turn a level on or off to choose which meetings appear. You can keep more than one level on.",
+    body: "Use Local, State and Federal in the sidebar to choose which meetings appear. On a phone, open Meetings, filters and more first. You can keep more than one level on.",
   },
   {
     id: "boundaries",
     title: "Boundary lines",
-    body: "Open the menu, then Filters. Use Show districts to turn boundary lines off or on, or expand District types to choose individual kinds. The Boundary line key explains their patterns. All types start on.",
+    body: "Open Filters in the sidebar. On a phone, open Meetings, filters and more first. Use Show districts to turn boundary lines off or on, or expand District types to choose individual kinds. The Boundary line key explains their patterns.",
   },
 ] as const;
 
@@ -47,7 +47,7 @@ const subscribe = (onStoreChange: () => void) =>
 
 function readSeen(): boolean {
   try {
-    return window.localStorage.getItem(STORAGE_KEY) === "1";
+    return seenWithoutStorage || window.localStorage.getItem(STORAGE_KEY) === "1";
   } catch {
     return seenWithoutStorage;
   }
@@ -61,8 +61,15 @@ function markSeen() {
   );
 }
 
-/** Persistent replay door in the menu, outside the collapsed filter contents. */
-export function TutorialReplayButton() {
+/** The shell yields its other dialogs before the tour becomes modal. */
+export function useTutorialRequested(): boolean {
+  const seen = useSyncExternalStore(subscribe, readSeen, () => true);
+  const replay = useSyncExternalStore(subscribe, readReplay, serverReplay);
+  return replay.pending || !seen;
+}
+
+/** Persistent replay door beside the map's main controls. */
+export function TutorialReplayButton({ onReplay }: { onReplay?: () => void }) {
   // A visible SSR button must not accept a click before its client handler
   // exists. The server snapshot keeps that tiny hydration interval explicit.
   const hydrated = useSyncExternalStore(subscribe, () => true, () => false);
@@ -73,6 +80,7 @@ export function TutorialReplayButton() {
       aria-label="Replay quick tour"
       disabled={!hydrated}
       onClick={() => {
+        onReplay?.();
         // The menu can become usable before the lazy tutorial mounts. Keep
         // this request until it is dismissed, rather than losing a DOM event.
         replayRequest = { version: replayRequest.version + 1, pending: true };
@@ -117,12 +125,11 @@ function StepPreview({ id }: { id: (typeof STEPS)[number]["id"] }) {
 export function TutorialOverlay({ active }: { active: boolean }) {
   const pathname = usePathname();
   const [progress, setProgress] = useState({ version: 0, step: 0 });
-  const seen = useSyncExternalStore(subscribe, readSeen, () => true);
+  const requested = useTutorialRequested();
   const replay = useSyncExternalStore(subscribe, readReplay, serverReplay);
-  const [dismissed, setDismissed] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const visible = active && (pathname === null || pathname === "/") && (replay.pending || (!seen && !dismissed));
+  const visible = active && (pathname === null || pathname === "/") && requested;
   const step = progress.version === replay.version ? progress.step : 0;
   const setStep = (next: number) => setProgress({ version: replay.version, step: next });
 
@@ -154,7 +161,6 @@ export function TutorialOverlay({ active }: { active: boolean }) {
   }, [step, visible]);
 
   const dismiss = () => {
-    setDismissed(true);
     replayRequest = { ...replayRequest, pending: false };
     markSeen();
   };
@@ -195,7 +201,7 @@ export function TutorialOverlay({ active }: { active: boolean }) {
           <button type="button" className={styles.next} onClick={() => last ? dismiss() : setStep(step + 1)}>{last ? "Done" : "Next"}</button>
         </div>
       </div>
-      <p className={styles.replayHint}>Replay anytime: menu → Quick tour</p>
+      <p className={styles.replayHint}>Replay anytime with the Quick tour button.</p>
     </dialog>
   );
 }

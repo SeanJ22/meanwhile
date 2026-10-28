@@ -39,11 +39,12 @@ export function feedbackContext(input: FeedbackContext): FeedbackContext {
   };
 }
 
-export function feedbackHref(input: FeedbackContext): string {
+export function feedbackHref(input: FeedbackContext & { intent?: "sooner" }): string {
   const params = new URLSearchParams();
   for (const [key, value] of Object.entries(feedbackContext(input))) {
     if (value) params.set(key, value);
   }
+  if (input.intent === "sooner") params.set("intent", "sooner");
   return `/feedback${params.size ? `?${params}` : ""}`;
 }
 

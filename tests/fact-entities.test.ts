@@ -135,8 +135,8 @@ test("a board hangs on the registered government its id or door names, and one p
     // Held as the door's first, statewide reading left it.
     const council = "government:US-OR:cog:155003#body:council-meeting";
     await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES ($1,'body','Council meeting','OR',$2)", [council, or]);
-    await ensureEntity(db.query, { id: council, kind: "body", name: "Council meeting", state: "OR", parentId: multnomah });
-    assert.equal(await parent(council), metro, "the Census id the board is named under resolves to its government");
+    const resolvedCouncil = await ensureEntity(db.query, { id: council, kind: "body", name: "Council meeting", state: "OR", parentId: multnomah });
+    assert.equal(await parent(resolvedCouncil), metro, "the Census id the board is named under resolves to its government");
     const tpac = `${multnomah}#body:transportation-policy-alternatives-committee-tpac`;
     await ensureEntity(db.query, { id: tpac, kind: "body", name: "TPAC", state: "OR", parentId: multnomah, government: metro });
     assert.equal(await parent(tpac), metro, "a new tenant board hangs on the government its door names, not on the door's county");
@@ -145,7 +145,7 @@ test("a board hangs on the registered government its id or door names, and one p
     assert.equal(await parent(unnamed), multnomah, "a government the store does not hold leaves the door's place");
     // A board already on a local home keeps it; a later writer naming only the state never pulls it back.
     await ensureEntity(db.query, { id: council, kind: "body", name: "Council meeting", state: "OR", parentId: or });
-    assert.equal(await parent(council), metro);
+    assert.equal(await parent(resolvedCouncil), metro);
     await db.query("UPDATE entity SET parent_id=$2 WHERE id=$1", [unnamed, or]);
     await ensureEntity(db.query, { id: unnamed, kind: "body", name: "Council retreat", state: "OR", parentId: multnomah });
     assert.equal(await parent(unnamed), multnomah, "a parked board moves to the local place a writer now names");

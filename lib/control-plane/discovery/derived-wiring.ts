@@ -276,9 +276,9 @@ type Decision = DerivedRowDecision<DerivedWiringRow>;
 export function deriveWiringDecisions(inputs: DerivedWiringInputs): readonly Decision[] {
   const previous = new Map(inputs.previous.map((entry) => [entry.key, entry]));
   const previousRoutes = new Map(inputs.previous.map(entry =>
-    [derivedWiringKey(entry.row.kind, entry.row.bodyId, entry.row.route), entry.key]));
-  const keyFor = (row: Pick<MeetingBodyCrosswalkRow, "kind" | "bodyId" | "route">) => {
-    const routeKey = derivedWiringKey(row.kind, row.bodyId, row.route);
+    [derivedWiringKey(entry.row.kind, entry.row.bodyId, entry.row.route,entry.row.config), entry.key]));
+  const keyFor = (row: Pick<MeetingBodyCrosswalkRow, "kind" | "bodyId" | "route" | "filter">) => {
+    const routeKey = derivedWiringKey(row.kind, row.bodyId, row.route,row.filter);
     return previousRoutes.get(routeKey) ?? routeKey;
   };
   const decisions = new Map<string, Decision>();

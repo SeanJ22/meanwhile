@@ -107,3 +107,12 @@ test("context modes preserve exact source JSON and omit only the data their read
   }
   assert.equal(unpackPlaceContextRow(row),row,"legacy raw context stays readable without another query");
 });
+
+test("rebuildable body aliases remain transient in every packed context mode",()=>{
+  const body_aliases={'former-body':BODY};
+  const row={entities:[{id:BODY}],meeting_rows:[],body_aliases};
+  const packed=packPlaceContext({formatVersion:1,current:row,history:row,emptyCurrent:row,emptyHistory:row});
+  for(const key of ['current','history','emptyCurrent','emptyHistory'])for(const mode of ['full','brief','facts'])
+    assert.equal(Object.hasOwn(unpackPlaceContextRow((packed[key] as Record<string,unknown>)[mode]),'body_aliases'),false);
+  assert.equal(row.body_aliases,body_aliases,'packing leaves the current build turn intact');
+});

@@ -98,7 +98,8 @@ test("vote cards show the held tail and omit empty views while retaining indepen
     }
     for (const [scenario, id] of [["failed", "congress:Z999997"], ["empty", "congress:Z999996"]]) {
       const surface = page.locator(`#${scenario}`);
-      const gap = surface.locator(`[data-card-gap="votes:${id}"]`);
+      await surface.locator(`[data-card-gap-contribution="votes:${id}"]`).waitFor({ state: "attached" });
+      const gap = surface.locator('.reader-card-body > [data-card-gap]');
       await gap.waitFor({ state: "visible" });
       assert.match(await gap.innerText(), /We[’']re working on getting this info/);
       assert.equal(await gap.getByRole("button", { name: "Want us to get this sooner?", exact: true }).count(), 1);

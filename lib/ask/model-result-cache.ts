@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { currentReaderTimeZone } from "./reader-clock.ts";
 
 /**
  * One model call per distinct input, per server instance. Synthesis is keyed
@@ -72,6 +73,7 @@ export function synthesisCacheKey(
     v: 1,
     model,
     effort,
+    readerTimeZone: currentReaderTimeZone(),
     question: normalizeAskQuestion(pack.question),
     intent: pack.intent,
     temporal: pack.temporal,

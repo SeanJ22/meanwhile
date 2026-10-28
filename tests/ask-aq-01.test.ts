@@ -108,12 +108,12 @@ test("AQ-01 ordinary question words do not silently name an unrelated body", () 
 
 test("AQ-01 meeting answers use the body's local day and time across states, including daylight saving", () => {
   for (const [zone, expected] of [
-    ["America/Phoenix", "October 7 at 4:00 PM"],
-    ["America/Los_Angeles", "October 7 at 4:00 PM"],
-    ["America/Chicago", "October 7 at 6:00 PM"],
-    ["America/New_York", "October 7 at 7:00 PM"],
-    ["America/Anchorage", "October 7 at 3:00 PM"],
-    ["Pacific/Honolulu", "October 7 at 1:00 PM"],
+    ["America/Phoenix", "October 7 at 4:00 PM MST"],
+    ["America/Los_Angeles", "October 7 at 4:00 PM PDT"],
+    ["America/Chicago", "October 7 at 6:00 PM CDT"],
+    ["America/New_York", "October 7 at 7:00 PM EDT"],
+    ["America/Anchorage", "October 7 at 3:00 PM AKDT"],
+    ["Pacific/Honolulu", "October 7 at 1:00 PM HST"],
   ]) {
     const sitting = { id: "m", title: "Budget Advisory Committee", startsAt: "2026-10-07T23:00:00Z", timeZone: zone, status: "SCHEDULED" };
     const answer = composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "TUSD", sittings: [sitting],

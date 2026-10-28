@@ -2981,11 +2981,6 @@ a.ballot-pill-main:focus {
   background: rgba(240, 242, 245, 0.7);
 }
 
-.welcome-overlay.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
-
 .welcome-card {
   background: var(--panel);
   border: 1px solid var(--panel-border);

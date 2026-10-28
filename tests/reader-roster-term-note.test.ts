@@ -89,6 +89,6 @@ test("roster-source link label never supplies a missing note, publisher or read 
   assert.doesNotMatch(withoutNote, /data-official-term-note/);
   assert.ok(withoutUrl.includes(escapedNote.replace(/^Elected /, "Elected in ")));
   assert.doesNotMatch(withoutUrl, /href="https?:/, "A missing source never gets an invented source link");
-  assert.match(withoutUrl, /Want us to get this sooner/, "The missing Sources section keeps its request link");
+  assert.match(withoutUrl, /data-card-gap-contribution="sources"/, "The missing Sources section contributes its gap");
   assert.ok(!withoutUrl.includes("Published roster"), "No source link label substitutes for an absent URL");
 });

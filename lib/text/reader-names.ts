@@ -79,12 +79,16 @@ export function readerText(raw: string, mode: ReaderTextMode = "title", knownNam
       if (plural && READER_ACRONYMS.has(plural[1])) return `${plural[1]}${plural[2].toLowerCase()}`;
     }
     // A state after a comma or a "State:" label ("Morris County, NJ", "Vail, AZ 85641") is a postal code in every mode.
-    if (POSTAL_CODES.has(word) && /(?:,|\bstate:)\s*$/i.test(raw.slice(0, offset))
-      && /^(?:\s*\d{5}(?:-\d{4})?)?(?:[\s,]+USA)?\s*(?:$|[—–·|(),;.]|\s-\s)/.test(raw.slice(previousEnd))) return word;
+    if (POSTAL_CODES.has(upper) && raw.trim() === word) return upper;
+    if (mode !== "sentence" && atStart && POSTAL_CODES.has(upper)
+      && /^\s+(?:(?:(?:state\s+)?(?:senate|house|assembly|legislative)|congressional)\s+district|voting information|election office|campaign-finance office|government(?: and school)? listings)\b/i.test(raw.slice(previousEnd))) return upper;
+    if (POSTAL_CODES.has(upper) && /\(\s*$/.test(raw.slice(0, offset)) && /^\s*\)/.test(raw.slice(previousEnd))) return upper;
+    if (POSTAL_CODES.has(upper) && /(?:,|\bstate:)\s*$/i.test(raw.slice(0, offset))
+      && /^(?:\s*\d{5}(?:-\d{4})?)?(?:[\s,]+USA)?\s*(?:$|[—–·|(),;.]|\s-\s)/.test(raw.slice(previousEnd))) return upper;
     // Party-state and district codes: "(R-TX)", "TX-23".
-    if (POSTAL_CODES.has(word) && (/(?:^|[\s(])[A-Z]-$/.test(raw.slice(0, offset)) || /^-\d/.test(raw.slice(previousEnd)))) return word;
+    if (POSTAL_CODES.has(upper) && (/(?:^|[\s(])[A-Z]-$/.test(raw.slice(0, offset)) || /^-\d/.test(raw.slice(previousEnd)))) return upper;
     if (mode === "address" && (word === "PO" || /^(?:N|S|E|W|NE|NW|SE|SW)$/.test(word)
-      || (POSTAL_CODES.has(word) && /^[\s,]*(?:\d{5}(?:-\d{4})?)?(?:[\s,]+USA)?\s*$/i.test(raw.slice(previousEnd))))) return word;
+      || (POSTAL_CODES.has(upper) && /^[\s,]*(?:\d{5}(?:-\d{4})?)?(?:[\s,]+USA)?\s*$/i.test(raw.slice(previousEnd))))) return upper;
     // A phrase opened by a bracket, colon, dash or new sentence starts capitalised: "campaign money (The source …)".
     const phraseStart = atStart || /(?:[([:—–]|[.!?]\s)\s*$/.test(raw.slice(0, offset));
     if (mode !== "sentence" && !phraseStart && SMALL_WORDS.has(word.toLowerCase())) return word.toLowerCase();

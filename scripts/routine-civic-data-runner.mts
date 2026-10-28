@@ -12,6 +12,7 @@ import { routineTasksWithoutClocks } from "../lib/civic-data/clock-presence.ts";
 import { writeContractHandoff } from "../lib/civic-data/contract-handoff-parent.ts";
 import { savePublishNowFailure } from "../lib/civic-data/publish-now-failure.ts";
 import { ensureFactEntities, loadChangedStates, registeredStates } from "../lib/facts/entities.ts";
+import { ensurePortalBodyLabels } from "../lib/facts/portal-publication.ts";
 import { makeCensusGoverningBodies } from "../lib/facts/census-governing.ts";
 import { syncReaderIds } from "../lib/core/resolve.ts";
 import { cartonComments, cartonOffices, cartonRosters, importCartonComments, importCartonOffices, importCartonRosters } from "../lib/facts/carton-import.ts";
@@ -811,7 +812,10 @@ async function runFactMaintenance(deadlineMs: number): Promise<void> {
   step = "loading fact store entities";
   try {
     const loaded = await routineJob(ROUTINE_JOBS.factEntities, async () => loadChangedStates(states, await readPassCursor(facts.query, "routine-fact-entities-state"),
-      next => ensureFactEntities(facts, ROOT, [next]), next => writePassCursor(facts.query, "routine-fact-entities-state", next),
+      async next => {
+        const loaded=await ensureFactEntities(facts, ROOT, [next]);
+        return await ensurePortalBodyLabels(facts,next.toUpperCase()) ? [...new Set([...loaded,next])] : loaded;
+      }, next => writePassCursor(facts.query, "routine-fact-entities-state", next),
       () => Date.now() < deadlineMs), []);
     if (loaded.length) console.log(`fact store entities: loaded ${loaded.join(", ")}`);
   } catch (error) {

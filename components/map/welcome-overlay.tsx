@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { ZIP_AREA_MISSING } from "@/lib/geo/postal-core";
 import { ZipAddressPrompt } from "./zip-address-prompt";
 
@@ -29,8 +29,7 @@ interface WelcomeOverlayProps {
   open: boolean;
   onResolved: (zip: string, lat: number, lng: number) => void;
   onAddressLocated: (zip: string, lat: number, lng: number) => void;
-  /** Null while no zip is stored: there is nothing behind the card to dismiss into. */
-  onDismiss: (() => void) | null;
+  onDismiss: () => void;
 }
 
 export function WelcomeOverlay({
@@ -48,6 +47,22 @@ export function WelcomeOverlay({
   const [addressZip, setAddressZip] = useState<string | null>(null);
   const choiceRequest = useRef(0);
   useEffect(() => () => { choiceRequest.current++; }, []);
+  const dismiss = useCallback(() => {
+    choiceRequest.current++;
+    setLocating(false);
+    onDismiss();
+  }, [onDismiss]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      event.stopPropagation();
+      dismiss();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, dismiss]);
 
   /*
    * Records how the zip was given (typed, tapped, device location). Only this
@@ -110,16 +125,14 @@ export function WelcomeOverlay({
     );
   }
 
+  if (!open) return null;
+
   return (
     <div
-      className={`welcome-overlay${open ? "" : " hidden"}`}
+      className="welcome-overlay"
       role="dialog"
       aria-modal="true"
       aria-label="Choose a location"
-      aria-hidden={!open}
-      onKeyDown={(e) => {
-        if (e.key === "Escape" && onDismiss) onDismiss();
-      }}
     >
       <div className="welcome-card">
         <div className="welcome-lockup">
@@ -129,28 +142,7 @@ export function WelcomeOverlay({
         </div>
         <hr className="welcome-rule" />
 
-        {/* Mission text pinned by tests/welcome-copy.test.ts. */}
-        <div className="welcome-msg space-y-[5px] text-left">
-          <p>
-            Whether you care about politics or not, politics cares about you.
-          </p>
-          <p>Government reports to you.</p>
-          <p>
-            While you were at work, a data center was approved three miles from
-            your kids&apos; school. While you were at soccer practice, the
-            school board adopted a new AI policy. While you were living an
-            ordinary week, decisions about your next four years got made.
-          </p>
-          <p>
-            Not in secret. In public, on a schedule, in a room you were allowed
-            to walk into. Nobody told you.
-          </p>
-          <p>
-            Know where it&apos;s happening. Know when it&apos;s happening. Show
-            up if you can.
-          </p>
-          <p>And when you can&apos;t — say something anyway.</p>
-        </div>
+        <p className="welcome-msg">Understand your government, find meetings, and have your say.</p>
 
         <p className="welcome-start">Start where you live</p>
 
@@ -221,18 +213,9 @@ export function WelcomeOverlay({
           {locating ? "Locating…" : "Use my location"}
         </button>
 
-        {onDismiss && (
-          <>
-            <p className="welcome-divider">or</p>
-            <button
-              type="button"
-              className="welcome-team-btn"
-              onClick={onDismiss}
-            >
-              Keep current view
-            </button>
-          </>
-        )}
+        <button type="button" className="welcome-team-btn" onClick={dismiss}>
+          Skip, show me the map
+        </button>
 
         <p className="welcome-fineprint">
           <a

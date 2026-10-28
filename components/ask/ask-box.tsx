@@ -47,7 +47,7 @@ import {
   type SearchItem,
   type SearchKind,
 } from "@/lib/search";
-import { formatMeetingDate } from "@/lib/map/format";
+import { ReaderMeetingDate } from "@/components/ui/reader-meeting-time";
 import { useShellData } from "@/lib/state/data";
 import { useUi, useUiDispatch } from "@/lib/state/provider";
 import { isOnlineOnly } from "@/lib/meetings/online";
@@ -311,7 +311,7 @@ export function AskBox({
     try {
       const response = await fetch("/api/ask/grounded", {
         method: "POST",
-        headers: { "content-type": "application/json" },
+        headers: { "content-type": "application/json", "x-wtp-time-zone": Intl.DateTimeFormat().resolvedOptions().timeZone },
         body: JSON.stringify({
           question,
           confirmation,
@@ -1143,9 +1143,7 @@ function DigestAnswer({
             </span>
             <span className="text-muted"> · </span>
             <span className="text-voice">
-              {row.startPrecision === "DAY"
-                ? `${formatMeetingDate(row)} (no start time published)`
-                : formatMeetingDate(row)}
+              <ReaderMeetingDate meeting={row} />{row.startPrecision === "DAY" ? " (no start time published)" : ""}
             </span>
             {row.agendaUrl && (
               <>
@@ -1182,7 +1180,7 @@ function DigestAnswer({
             </span>
             <span className="text-muted"> · </span>
             <span className="text-voice">
-              {formatMeetingDate(row)}
+              <ReaderMeetingDate meeting={row} />
             </span>
             {row.agendaUrl && (
               <>

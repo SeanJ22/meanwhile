@@ -8,7 +8,7 @@ import { memberProbe } from "../lib/sources/legistar/members-model.ts";
 import { legistarMembersPackage, publishLegistarMembers } from "../lib/sources/legistar/members-publication.ts";
 import { legistarMemberTasks, legistarMemberClocks, legistarMemberReceiptIssue, recordLegistarMemberFailure } from "../lib/sources/legistar/members-tasks.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { loadLegistarMembers, saveLegistarMembers, saveLegistarReading } from "../lib/sources/legistar/members-cache.ts";
+import { legistarMemberCapture, saveLegistarReading } from "../lib/sources/legistar/members-cache.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -61,42 +61,55 @@ test("member probes exclude ended offices and historic people, and detect a low-
   const calls: URL[] = [];
   const read = makeLegistarMembersReader(new MemoryEvidenceStore(), recordedMemberFetch(() => raw, calls));
   const first = await read("pima");
+  assert.ok(first);
   assert.ok(!first.offices.some(row => row.OfficeRecordId === 999999));
   assert.ok(!first.persons.some(row => row.PersonId === 999999));
   assert.deepEqual(calls.slice(0, 3).map(url => url.pathname.split("/").at(-1)), ["bodies", "officerecords", "persons"]);
   assert.ok(calls.filter(url => url.pathname.endsWith("officerecords")).every(url => url.searchParams.get("$filter")!.includes("OfficeRecordEndDate ge")));
   assert.ok(calls.filter(url => url.pathname.endsWith("persons")).every(url => url.searchParams.get("$filter")!.includes("PersonId eq")));
   calls.length = 0;
-  assert.equal((await read("pima")).signature, first.signature);
+  assert.equal(await read("pima"), null);
   assert.ok(calls.every(memberProbe));
   raw = { ...raw, offices: raw.offices.map((row, i) => i === 0 ? { ...row, OfficeRecordRowVersion: "changed" } : row) };
-  assert.notEqual((await read("pima")).signature, first.signature);
+  assert.notEqual((await read("pima"))?.signature, first.signature);
   raw = { ...raw, offices: raw.offices.slice(1) };
-  assert.ok(!(await read("pima")).offices.some(row => row.OfficeRecordId === current.OfficeRecordId));
+  assert.ok(!(await read("pima"))!.offices.some(row => row.OfficeRecordId === current.OfficeRecordId));
 });
 
-test("a changed source never opens the prior full roster, and an unchanged probe opens it only afterward", async t => {
+test("an unchanged fingerprint stops without fetching or saving the full roster", async t => {
   t.mock.timers.enable({ apis: ["Date"], now: Date.parse(NOW) });
   const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
-  const { legistarMemberSignature } = await import("../lib/sources/legistar/members-model.ts");
   const source = rawFor("pima"), vault = new MemoryEvidenceStore();
   const raw = await makeLegistarMembersReader(vault, recordedMemberFetch(() => source, []))("pima");
-  await saveLegistarMembers(vault, raw, NOW);
-  const cached = (await loadLegistarMembers(vault, "pima"))!;
-  let loads = 0;
+  assert.ok(raw?.inputFingerprint);
+  vault.get = async () => { throw new Error("Saved source bytes must stay unopened"); };
+  const put = vault.put.bind(vault);
+  vault.put = async () => { throw new Error("An unchanged probe must not save derived probe pages"); };
   const calls: URL[] = [];
-  const prior = { ...cached, read: async () => {
-    loads++;
-    assert.ok(calls.length > 0 && calls.every(memberProbe));
-    return cached.read();
-  } };
-  const current = await makeLegistarMembersReader(vault, recordedMemberFetch(() => raw, calls), prior)("pima");
-  assert.equal(loads, 1);
-  assert.equal(current.signature, legistarMemberSignature(raw));
-  const changed = { ...raw, offices: raw.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
-  await makeLegistarMembersReader(vault, recordedMemberFetch(() => changed, []), { ...cached, read: async () => {
-    throw new Error("Prior payload must stay unopened when the source changes");
-  } })("pima");
+  assert.equal(await makeLegistarMembersReader(vault, recordedMemberFetch(() => source, calls), raw.inputFingerprint)("pima"), null);
+  assert.ok(calls.length > 0 && calls.every(memberProbe));
+  vault.put = put;
+  const changed = { ...source, offices: source.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
+  assert.ok(await makeLegistarMembersReader(vault, recordedMemberFetch(() => changed, []), raw.inputFingerprint)("pima"),
+    "a changed source saves fresh bytes without downloading the previous copy");
+});
+
+test("a term transition or changed door binding reopens the source even when row versions stay fixed", async t => {
+  t.mock.timers.enable({ apis: ["Date"], now: Date.parse(NOW) });
+  const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
+  const source = rawFor("pima"), rows = wiring(source, "AZ", "America/Phoenix");
+  const future = { ...source, offices: source.offices.map((office, i) => i ? office : { ...office, OfficeRecordStartDate: "2026-10-14T00:00:00" }) };
+  const vault = new MemoryEvidenceStore(), calls: URL[] = [];
+  const read = makeLegistarMembersReader(vault, recordedMemberFetch(() => future, calls), null, rows);
+  const first = await read("pima");
+  assert.ok(first?.inputFingerprint);
+  assert.equal(await read("pima"), null);
+  t.mock.timers.tick(24 * 3_600_000);
+  const next = await read("pima");
+  assert.ok(next && next.inputFingerprint !== first.inputFingerprint, "a seat becoming current triggers publication");
+  const changedRows = rows.map((row, i) => i ? row : { ...row, bodyId: `${row.bodyId}-corrected` });
+  const rebound = await makeLegistarMembersReader(vault, recordedMemberFetch(() => future, []), next.inputFingerprint, changedRows)("pima");
+  assert.ok(rebound, "a corrected door binding is applied without waiting for a source edit");
 });
 
 test("tenant facts retain dates, leave an unchanged roster intact, and remove every departed member", async t => {
@@ -147,6 +160,9 @@ test("tenant facts retain dates, leave an unchanged roster intact, and remove ev
   assert.equal((await readFactRosters(db.query, rows.map(row => row.bodyId))).rosters.length, 0);
   assert.match((await legistarMemberReceiptIssue(db.query, receipt, receipt.source))!, /differs/);
   assert.ok(legistarMemberTasks(["pima"])[0].command.includes("--legistar-client=pima"));
+  const { databaseBytesPerRun, databaseBytesPerUnchangedRun, databaseByteBasis } = legistarMemberTasks(["pima"])[0].contract;
+  assert.deepEqual({ databaseBytesPerRun, databaseBytesPerUnchangedRun, databaseByteBasis },
+    { databaseBytesPerRun: 16 * 1024 * 1024, databaseBytesPerUnchangedRun: 64 * 1024, databaseByteBasis: "EXPECTED" });
 });
 
 test("publication streams source pages across bodies without losing members from another page", async t => {
@@ -164,28 +180,15 @@ test("publication streams source pages across bodies without losing members from
   const report = await publishLegistarMembers({ facts: db, vault, raw, rows, clocks: factClocks(null), now: NOW });
   assert.equal(report.members, 15);
   const live = await readFactRosters(db.query, rows.map(row => row.bodyId));
-  assert.equal(live.rosters.reduce((total, roster) => total + roster.members.length, 0), report.members);
+  assert.deepEqual(new Set(live.rosters.flatMap(roster => roster.members.map(member => member.name))),
+    new Set(raw.offices.filter(office => (!office.OfficeRecordStartDate || office.OfficeRecordStartDate.slice(0, 10) <= "2026-10-13")
+      && (!office.OfficeRecordEndDate || office.OfficeRecordEndDate.slice(0, 10) >= "2026-10-13"))
+      .map(office => office.OfficeRecordFullName.trim())));
 });
 
-test("latest-manifest reads never list vault history and still reject corrupt source bytes", async () => {
-  const vault = new MemoryEvidenceStore(), raw = rawFor("pima");
-  vault.list = async () => { throw new Error("History enumeration is forbidden"); };
-  await storeMemberFixtures(vault, raw);
-  await saveLegistarMembers(vault, raw, NOW);
-  const held = await (await loadLegistarMembers(vault, "pima"))!.read();
-  assert.deepEqual(held.offices, raw.offices);
-  const changed = { ...raw, collectedAt: "2026-10-14T08:00:00.000Z", offices: raw.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
-  changed.readings = await Promise.all(raw.readings.map(reading => officePage(reading)
-    ? saveLegistarReading(vault, raw.slug, { url: reading.artifact.canonicalUrl, text: JSON.stringify(changed.offices), body: changed.offices, retrievedAt: changed.collectedAt })
-    : reading));
-  await saveLegistarMembers(vault, changed, changed.collectedAt);
-  assert.deepEqual((await (await loadLegistarMembers(vault, "pima"))!.read()).offices, changed.offices);
-  const get = vault.get.bind(vault);
-  vault.get = async key => {
-    const held = await get(key);
-    return held && key.endsWith(".json") && !key.endsWith("manifest.json") && !key.endsWith("latest.json") ? { ...held, bytes: Buffer.from("[]") } : held;
-  };
-  await assert.rejects(async () => (await loadLegistarMembers(vault, "pima"))!.read(), /HASH_INVALID|hash/);
+test("publication checks the freshly fetched bytes against their fingerprint", () => {
+  const reading = rawFor("pima").readings[0];
+  assert.throws(() => legistarMemberCapture({ ...reading, text: "[]" }), /HASH_INVALID/);
 });
 
 test("a shared tenant binds only the exact governments named by its own doors", () => {
@@ -224,6 +227,7 @@ test("a tenant with many seated people is read in filters Legistar accepts and s
   const raw = { ...source, offices, persons: offices.map((office, i) => ({ PersonId: office.OfficeRecordPersonId, PersonFullName: `Member ${i}`, PersonRowVersion: `v${i}` })) };
   const calls: URL[] = [];
   const read = await makeLegistarMembersReader(new MemoryEvidenceStore(), recordedMemberFetch(() => raw, calls))("pima");
+  assert.ok(read);
   assert.equal(read.persons.length, 47);
   const personCalls = calls.filter(url => url.pathname.endsWith("persons"));
   assert.ok(personCalls.length >= 4);
@@ -292,8 +296,9 @@ test("each Legistar body is published with its name, quoted from the saved bodie
   await storeMemberFixtures(vault, raw);
   await publishLegistarMembers({ facts: db, raw, rows, vault, clocks: factClocks(null), now: NOW, purge: async () => ({ purged: true }) });
   const facts = await readBodyFacts(db.query, rows.map(row => row.bodyId));
-  assert.equal(facts.filter(fact => fact.fields.name && fact.fields.provenance?.sourceUrl).length, raw.bodies.length, "every body has a verified, sourced name");
-  for (const body of raw.bodies) {
+  const realBodies = raw.bodies.filter(body => body.BodyId === 138);
+  assert.equal(facts.filter(fact => fact.fields.name && fact.fields.provenance?.sourceUrl).length, realBodies.length, "every real body has a verified, sourced name");
+  for (const body of realBodies) {
     const fact = facts.find(row => row.id === rows.find(wired => Number(wired.config.eventBodyId) === body.BodyId)!.bodyId)!;
     assert.equal(fact.fields.name, body.BodyName.trim());
     assert.match(String(fact.fields.provenance!.sourceUrl), /^https:\/\/webapi\.legistar\.com\/v1\/pima\/bodies\?/);
@@ -314,7 +319,7 @@ test("pages saved after the pass began publish on the first pass", async t => {
   const started = new Date(Date.now() - 60_000).toISOString();
   const report = await refreshLegistarMembers({ facts: db, clocks: factClocks(null), now: started, slug: "pima", doors: doors as never,
     vault: new MemoryEvidenceStore(), fetchImpl: recordedMemberFetch(() => raw, []) });
-  assert.ok(report.members > 0);
+  assert.ok((report.members ?? 0) > 0);
   assert.ok(Date.parse(report.checkedAt) > Date.parse(started), "the facts are dated after the download, not at the pass start");
   assert.ok((await db.query("SELECT 1 FROM fact WHERE field LIKE 'member:%' AND status = 'live'")).length > 0);
 });

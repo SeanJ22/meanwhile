@@ -99,9 +99,11 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
         await page.getByLabel("Your street address or ZIP").fill(item.zip);
         await page.getByRole("button", { name: "Show me", exact: true }).click();
         const card = page.locator(item.embedded ? "[data-reader-card]" : ".voting-panel > .reader-card");
-        await card.locator('[data-card-gap="voting-answer"]').waitFor({ state: "visible" });
+        const votingGap = card.locator('[data-card-gap-contribution="voting-answer"]')
+          .locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' reader-card-body ')][1]").locator(":scope > [data-card-gap]");
+        await votingGap.waitFor({ state: "visible" });
         await card.locator('[data-card-sources] a[href^="https:"]').first().waitFor({ state: "attached" });
-        assert.equal(await card.locator('[data-card-gap="voting-answer"]').count(), 1);
+        assert.equal(await votingGap.count(), 1);
         assert.equal(await card.locator("[data-card-footer] [data-card-gap]").count(), 0);
         assert.equal(await card.locator("[data-card-sources]").count(), 1);
         assert.equal(await card.getByRole("button", { name: /^Sources/ }).count(), 1);

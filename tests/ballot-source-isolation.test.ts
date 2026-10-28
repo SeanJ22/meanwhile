@@ -372,7 +372,7 @@ test("all production ballot entry points use state-scoped selection", () => {
   assert.doesNotMatch(reactions, /Promise\.all\(\[refreshFundingFromPromoted\(\),\s*refreshFederalVotesFromPromoted\(\)\]\)/);
 
   const demand = readFileSync(join(process.cwd(), "app/api/demand-signal/route.ts"), "utf8");
-  assert.match(demand, /getCandidateTargetIds\(divisions, submission\.subjectId\)/);
+  assert.match(demand, /getCandidateTargetIds\(await ballotPlaceFromRequest\(request\), submission\.subjectId\)/);
 });
 
 test("supporting authority failures show their own plain message and request link", () => {

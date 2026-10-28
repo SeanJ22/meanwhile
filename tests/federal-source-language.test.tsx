@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { federalCardSources } from "../lib/sources/congress/presentation.ts";
-import { CardSourcesList } from "../components/officials/card-sources-list.tsx";
+import { CardSourcesList, sourceDate } from "../components/officials/card-sources-list.tsx";
 import type { FederalFact } from "../lib/sources/congress/types.ts";
 
 test("lobbying records describe their facts and dates without the API contribution code", () => {
@@ -14,8 +14,8 @@ test("lobbying records describe their facts and dates without the API contributi
   const html = renderToStaticMarkup(<CardSourcesList sources={sources} />);
   assert.match(html, /Campaign contributions reported by lobbyists/);
   assert.match(html, /Sen. John Cornyn \(R-TX\), is John Cornyn, who serves in the U.S. Senate for Texas/);
-  assert.match(html, /October 15, 2026/);
-  assert.match(html, /October 24, 2026/);
+  assert.equal(sourceDate(record.publishedAt, "America/Phoenix"), "October 15, 2026");
+  assert.equal(sourceDate(record.checkedAt, "America/Phoenix"), "October 24, 2026");
   assert.doesNotMatch(html, /feca|cannot vouch|Honoree identity|2026-10-15T|2026-10-24T/);
   for (const url of [record.sourceUrl, "https://senate.gov/cornyn"]) assert.ok(html.includes(`href="${url}"`));
 });

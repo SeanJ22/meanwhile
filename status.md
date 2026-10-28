@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 138 (main d253e28c9). Place map complete in production at 11:42 AM EDT Oct 28 (56 jurisdictions). Release 139 (RB-A10) open: https://github.com/SeanJ22/meanwhile/pull/852, CI running.
+build_state: LIVE: release 139 (main c8f768f98, RB-A10) since 12:59 PM EDT Oct 28; river = cee2c2cd0 (GitHub CI passed). Release 140 (search log fit) open: https://github.com/SeanJ22/meanwhile/pull/853.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -64,6 +64,7 @@ heartbeat: 2026-10-28T08:35:00Z
 - 20 random ZIPs in 20 states resolve in the place map to their county/city (AK 99786, AL 36425, AR 72384, AS 96799, CA 94565, DE 19810, GU 96928, KY 41725, MD 21767, ME 04862, MI 49028, MS 39348, NJ 07188, NM 87042, NV 88905, PR 00656, SD 57050, VA 22404, WV 25628, WY 82190); all 40 map/ballot pages load 200 on release 138. First pass logged 3 map request 500s (AK, AL, AR) and a stylesheet MIME error (VA ballot); none reproduced on two reloads (cold starts). AS 96799 logs a 413 on the page's own POST /api/log (not reader-visible).
 - 139 = RB-A10 folded onto river (a97528c5d, stream/rb-a10-river; 17 conflicts resolved, RB-A10's 5 MB ZIP seed migration replaced by a create-table migration plus a deploy-time fill from lib/geo; proof files not shipped). Quick check passed; https://github.com/SeanJ22/meanwhile/pull/852 opened 11:59 AM with run-full-ci + auto-merge.
 - For Sean: zip_location is filled at deploy from the ZIP source files in lib/geo (rebuildable data stored for reader speed); RB-A10 itself had it as a migration seed. Paused, waiting on Release in Admin Now: place-pages (3:52 AM), door-probes (4:52 AM).
+- 139 (RB-A10) shipped: https://github.com/SeanJ22/meanwhile/pull/852 opened 11:59 AM; all four test shards and both builds green; the gates rollup job was cancelled at checkout (git fetch hung 10 minutes, before any test ran) and re-run once at 12:53 PM, green; merged 12:54 PM, live 12:59 PM; river moved to cee2c2cd0 after CI. Deploy filled zip_location: 42,883 ZIPs (437 without a point). Live check on 139: 30 ZIPs in 30 states (the 20 above plus OK 73663, WI 53221, GA 31810, AZ 85630, NY 11531, TX 78841, KS 67213, IL 62655, VT 05731, IN 46732): all 60 map and ballot pages 200 with the ZIP shown, median 4.9 s. Six map pages' own SEARCH log POST was refused by /api/log (400 more than 40 ocdIds, 413 over 4 KB): the place map gives a ZIP more divisions than one log event carries, so those searches were dropped from the search log (readers saw nothing). Fixed in RIVER-SEARCHLOG-140 984f1ea16 (client fits each event, records detail.ocdIdCount), release 140 opened 1:11 PM.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

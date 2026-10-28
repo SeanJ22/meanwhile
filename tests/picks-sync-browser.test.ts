@@ -9,6 +9,7 @@ import { launchGuarded } from "../scripts/browser.mts";
 import { handleSavedPicks } from "../lib/ballot/saved-picks-handler.ts";
 import { savedPicksStore } from "../lib/db/saved-picks.ts";
 import type { PickableContest } from "../lib/ballot/pick-tally.ts";
+import { markerFromRequestWithBody } from "../lib/db/run-marker.ts";
 
 const replay = process.env.PK01_REPLAY_BALLOT_FILE ? JSON.parse(readFileSync(process.env.PK01_REPLAY_BALLOT_FILE, "utf8")) as {
   source: string; observedAt: string; contests: { contestId: string; contestTitle: string; contestOcdId: string; options: { label: string }[] }[];
@@ -72,7 +73,8 @@ test("two fresh browsers restore, sync in both directions, keep offline edits an
   let releaseRead: (() => void) | undefined;
   const server = createServer(async (request, response) => {
     const path = request.url?.split("?")[0];
-    requests.push({ url: request.url!, synthetic: Boolean(request.headers["x-wtp-synthetic-run"]), device: String(request.headers["x-pk-test-device"] ?? "") });
+    const observed={ url: request.url!, synthetic: Boolean(request.headers["x-wtp-synthetic-run"]), device: String(request.headers["x-pk-test-device"] ?? "") };
+    requests.push(observed);
     if (path === "/fixture.js") response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
     else if (path === "/fixture.css") response.writeHead(200, { "content-type": "text/css" }).end(css);
     else if (path === "/ballot") response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><html lang="en"><link rel="stylesheet" href="/fixture.css"><body class="mw-reader"><main id="root"></main><script src="/fixture.js"></script></body></html>');
@@ -94,6 +96,9 @@ test("two fresh browsers restore, sync in both directions, keep offline edits an
       const chunks: Buffer[] = [];
       for await (const chunk of request) chunks.push(Buffer.from(chunk));
       const body = JSON.parse(Buffer.concat(chunks).toString());
+      observed.synthetic=markerFromRequestWithBody(new Request(`http://${request.headers.host}${request.url}`,{
+        headers:request.headers as Record<string,string>,
+      }),body).runClass!=="ORGANIC";
       if (!eventBatches.has(body.batchId)) {
         eventBatches.add(body.batchId);
         captured.push(...body.events);

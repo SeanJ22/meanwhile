@@ -314,6 +314,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
       const rows = stateRows("priority-state",[],statement.text.includes("AS zip_registry"));
       const additional = rows.find(row => "part_payload" in row) as { part_payload: Record<string, unknown>[] };
       additional.part_payload[0].canonical_keys = [`CURATED_READER_RECORD:${newTranslation}`];
+      // A district only the state's geography names never joins the ZIP: its districts come from the shared place map.
       additional.part_payload[0].geography = [
         { row_kind: "scope", type: "congressional_district", version: "cd:119", plan: "cd119", version_meta: {} },
         { row_kind: "grouping", type: "congressional_district", version: "cd:119", plan: "cd119", geoid: "0499",
@@ -332,7 +333,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
     return [[]];
   });
   try {
-    const data=await withReaderSelection(selection("AZ"),()=>readBallotReaderData(ballotPlaceFromParams({zip:"85701"})));
+    const data=await withReaderSelection(selection("AZ"),async()=>readBallotReaderData(await ballotPlaceFromParams({zip:"85701"})));
     assert.ok(data);
     assert.deepEqual(order,["state","place","auxiliary"],
       "the local lookup reaches the shared pool before any ballot auxiliary group can occupy its connection slot");
@@ -342,7 +343,9 @@ test("the ballot submits state and place reads before its independent auxiliary 
       "candidate details wait for the displayed contests instead of reading the whole state's candidates");
     release!();
     await data.districtRead;
-    assert.ok((await data.entry())?.ids.includes(newDistrict), "the geography adds a district outside the initial ZIP source");
+    const entry = await data.entry();
+    assert.ok(entry?.ids.includes("ocd-division/country:us/state:az/county:pima"), "the ZIP's places come from the shared place map");
+    assert.ok(!entry?.ids.includes(newDistrict), "the state's geography cannot add a district the place map does not hold");
     await data.registryRead;
     assert.deepEqual(order,["state","place","auxiliary"], "the ballot never repeats the geography or its held translation absences");
   } finally { release?.(); installReaderDatabaseQuery(undefined); }
@@ -367,7 +370,7 @@ test("an unavailable local territory file leaves the ballot's canonical families
   });
   try {
     await withReaderSelection(selection("AZ"),async()=>{
-      const data=await readBallotReaderData(ballotPlaceFromParams({zip:"85701"}),async()=>{ throw failure; });
+      const data=await readBallotReaderData(await ballotPlaceFromParams({zip:"85701"}),async()=>{ throw failure; });
       assert.ok(data,"a registry-local failure cannot abort ballot initialization");
       await assert.rejects(data.registryRead,error=>error === failure);
       await data.districtRead;

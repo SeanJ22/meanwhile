@@ -3,6 +3,15 @@ import { boundingBoxOf } from "../registry/resolve.ts";
 import type { PlaceBoundary } from "./types.ts";
 import type { EntityPlace } from "../core/shapes.ts";
 import { enqueueReaderPlaces } from "../reader/cache.ts";
+import type { ZctaCentroid } from "../geo/zcta-core.ts";
+
+export interface MapZipLocation extends Omit<ZctaCentroid,"lat"|"lng"> {
+  readonly lat: number | null;
+  readonly lng: number | null;
+  readonly boundaryYear: number;
+  readonly sourceUrls: readonly string[];
+  readonly checkedAt: string;
+}
 
 export interface MapPlace {
   readonly id: string;
@@ -25,10 +34,22 @@ export interface StatePlaceMap {
   readonly zipEdges: readonly MapEdge[];
   readonly zctaEdges: readonly MapEdge[];
   readonly entityPlaces?: readonly EntityPlace[];
+  readonly zipLocations?: readonly MapZipLocation[];
 }
 
 async function batches<T>(rows: readonly T[], run: (batch: readonly T[]) => Promise<void>, size = 500): Promise<void> {
   for (let at = 0; at < rows.length; at += size) await run(rows.slice(at, at + size));
+}
+
+/** ZIP display points and postal metadata; `replace` updates held rows, otherwise they are kept. */
+export async function writeZipLocations(query: Query, locations: readonly MapZipLocation[], replace = true): Promise<void> {
+  await query(`INSERT INTO zip_location(zip,boundary_year,lat,lng,postal,source_urls,checked_at)
+    SELECT zip,boundary_year,lat,lng,postal,source_urls,checked_at FROM jsonb_to_recordset($1::jsonb)
+      AS p(zip text,boundary_year integer,lat float8,lng float8,postal jsonb,source_urls jsonb,checked_at timestamptz)
+    ON CONFLICT(zip,boundary_year) DO ${replace ? `UPDATE SET lat=EXCLUDED.lat,lng=EXCLUDED.lng,postal=EXCLUDED.postal,
+      source_urls=EXCLUDED.source_urls,checked_at=EXCLUDED.checked_at` : "NOTHING"}`,
+  [JSON.stringify(locations.map(row => ({zip:row.zip,boundary_year:row.boundaryYear,lat:row.lat,lng:row.lng,
+    postal:row.postal ?? null,source_urls:row.sourceUrls,checked_at:row.checkedAt})))]);
 }
 
 /** One boundary statement's encoded geometry. Production loaded Idaho's 5.8 MB and South Dakota's 3.2 MB statements
@@ -55,6 +76,7 @@ export const PLACE_PAGE_QUEUE_IDS = 200;
  * remain available; its pages are queued and Admin totals refresh afterward, each in short transactions. */
 export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise<void> {
   await db.transaction(async query => {
+    await batches(map.zipLocations ?? [], locations => writeZipLocations(query, locations));
     await batches(map.places, async places => {
       await query(`INSERT INTO entity(id,kind,name,state)
         SELECT id,'place',name,state FROM jsonb_to_recordset($1::jsonb) AS p(id text,name text,state char(2))

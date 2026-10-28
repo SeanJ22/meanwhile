@@ -25,7 +25,7 @@ export function PillCluster({
   prefetchReady = false,
 }: {
   placement: AskPillPlacement;
-  /** The zip the viewport currently resolves to. Null shows a ZIP chooser. */
+  /** The typed ZIP. A map point shows a ZIP chooser. */
   zip: string | null;
   state: string | null;
   point: { lat: number; lng: number } | null;
@@ -41,8 +41,9 @@ export function PillCluster({
   prefetchReady?: boolean;
 }) {
   const savedZip = useSavedZipChoice();
-  const validZip = zip && /^\d{5}$/.test(zip) ? zip : null;
-  const ballotZip = validZip ?? savedZip;
+  const validZip = !point && zip && /^\d{5}$/.test(zip) ? zip : null;
+  // A map point is its own selection; the saved ZIP opens Ballot only before a place is shown.
+  const ballotZip = validZip ?? (point ? null : savedZip);
   const ballotParams = new URLSearchParams();
   if (ballotZip) ballotParams.set("zip", ballotZip);
   if (state) ballotParams.set("state", state);

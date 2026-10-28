@@ -2,11 +2,33 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import test from "node:test";
+import { createElement } from "react";
+import { renderToStaticMarkup } from "react-dom/server";
+import { PillCluster } from "../components/shell/pill-cluster.tsx";
 
 import {
   ASK_PILL_EXAMPLES,
   ASK_PILL_LABELS,
 } from "../lib/routing/ask-pill-labels.ts";
+
+test("the ballot door follows a map point while the previous ZIP's answer is retained", () => {
+  const props = { placement: "map" as const, zip: "85701", state: "AZ", pop: null,
+    governsOpen: false, onOpenPop: () => {}, onOpenGoverns: () => {} };
+  const link = (point: { lat: number; lng: number } | null) => {
+    const html = renderToStaticMarkup(createElement(PillCluster, { ...props, point }));
+    const href = /href="([^"]*\/ballot[^\"]*)"/.exec(html)?.[1];
+    assert.ok(href, "The rendered ballot door has a destination");
+    return new URL(href.replaceAll("&amp;", "&"), "https://example.test").searchParams;
+  };
+  const moved = link({ lat: 33.4484, lng: -112.074 });
+  assert.equal(moved.get("zip"), null);
+  assert.equal(moved.get("state"), "AZ");
+  assert.equal(moved.get("lat"), "33.4484");
+  assert.equal(moved.get("lng"), "-112.074");
+  const typed = link(null);
+  assert.equal(typed.get("zip"), "85701");
+  assert.equal(typed.get("lat"), null);
+});
 
 const ROOT = join(import.meta.dirname, "..");
 

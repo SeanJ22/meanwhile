@@ -7,6 +7,8 @@ import { buildPageBody,PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reade
 import { unpackReadyPlace, unpackReadyTerritory } from "../lib/reader/place-ready.ts";
 import { readerCacheTags,enqueueReaderPlaces } from "../lib/reader/cache.ts";
 import { factDb } from "./helpers/fact-db.ts";
+import { zipLocationMigration } from "./helpers/reader-identity-db.ts";
+import { fillMissingZipLocations } from "../lib/place-map/location-import.ts";
 
 test("the deployment queues every place and body that has no ready page for the runner", async () => {
   const db = await factDb();
@@ -33,32 +35,50 @@ test("preview and local builds never try to populate production pages", async ()
 });
 
 test("ZIP page identities follow the routed ZIP geography and retain their state's parent", async () => {
-  const saved: Record<string,unknown>[]=[];
-  const dependencies:Record<string,unknown>[]=[];
-  const query:Query=async(text,args)=>{
-    const records=JSON.parse(String(args?.[0])) as Record<string,unknown>[];
-    if(text.startsWith('INSERT INTO entity'))saved.push(...records);else dependencies.push(...records);
-    return[];
-  };
-  const root="ocd-division/country:us/state:az";
-  const n=await seedZipPagePlaces(query,{
-    states:['AZ'],
-    postal:()=>({
-      '85001':[33,-112,'standard','85001','Phoenix','AZ','Maricopa',null,null],
-      '85002':[33,-112,'standard','85002','Phoenix','AZ','Maricopa',null,null],
-      '85003':[null,null,'standard','85003','Phoenix','AZ','Maricopa',null,null],
-      '90001':[34,-118,'standard','90001','Los Angeles','CA','Los Angeles',null,null],
-    }),
-    point:zip=>zip==='85003'?null:{zip,lat:33,lng:-112},
-    bodies:async()=>['az:city:phoenix#governing'],
-    place:async zip=>zip==='85002'?null:{ids:['ocd-division/country:us/state:ca',root],partial:[],samples:1},
-  });
-  assert.equal(n,2);
-  assert.deepEqual(saved,[{id:'zip:85001',name:'ZIP 85001',state:'AZ',parent_id:root},
-    {id:'zip:85002',name:'ZIP 85002',state:'AZ',parent_id:null}]);
-  assert.deepEqual(dependencies,[{page_id:'zip:85001',entity_id:'ocd-division/country:us/state:ca'},
-    {page_id:'zip:85001',entity_id:root},{page_id:'zip:85001',entity_id:'az:city:phoenix#governing'},
-    {page_id:'zip:85002',entity_id:'az:city:phoenix#governing'}]);
+  const db = await factDb();
+  try {
+    await db.pg.exec(zipLocationMigration());
+    await db.pg.exec(`CREATE TABLE zip_place(zip text NOT NULL,place_id text NOT NULL REFERENCES entity(id),share double precision NOT NULL,
+      boundary_year integer NOT NULL,PRIMARY KEY(zip,place_id,boundary_year))`);
+    const root="ocd-division/country:us/state:az",county=`${root}/county:maricopa`,ca="ocd-division/country:us/state:ca";
+    await db.query(`INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ'),($2,'place','Maricopa','AZ'),
+      ($3,'place','California','CA'),('az:city:phoenix#governing','body','Phoenix City Council','AZ')`,[root,county,ca]);
+    const located=(zip:string,state:string,lat:number|null)=>({zip,boundary_year:2020,lat,lng:lat===null?null:-112,
+      postal:{type:"standard",zcta:zip,place:"Phoenix",state},source_urls:["https://www2.census.gov/"],checked_at:"2026-10-01T00:00:00Z"});
+    await db.query(`INSERT INTO zip_location(zip,boundary_year,lat,lng,postal,source_urls,checked_at)
+      SELECT zip,boundary_year,lat,lng,postal,source_urls,checked_at FROM jsonb_to_recordset($1::jsonb)
+        AS p(zip text,boundary_year integer,lat float8,lng float8,postal jsonb,source_urls jsonb,checked_at timestamptz)`,
+      [JSON.stringify([located("85001","AZ",33),located("85002","AZ",33),located("85003","AZ",null),located("85004","AZ",33),located("90001","CA",34)])]);
+    // 85002's only membership is across the line; 85004 has no membership and 85003 no display point.
+    await db.query(`INSERT INTO zip_place(zip,place_id,share,boundary_year) VALUES
+      ('85001',$1,1,2023),('85001',$2,1,2023),('85002',$2,1,2023),('85003',$1,1,2023),('90001',$2,1,2023)`,[county,ca]);
+    const n=await seedZipPagePlaces(db.query,{states:["AZ"],bodies:async()=>()=>["az:city:phoenix#governing"]});
+    assert.equal(n,2);
+    assert.deepEqual(await db.query("SELECT id,name,state,parent_id FROM entity WHERE id LIKE 'zip:%' ORDER BY id"),
+      [{id:"zip:85001",name:"ZIP 85001",state:"AZ",parent_id:root},{id:"zip:85002",name:"ZIP 85002",state:"AZ",parent_id:null}]);
+    assert.deepEqual(await db.query("SELECT page_id,entity_id FROM place_page_dependency ORDER BY page_id,entity_id"),
+      [{page_id:"zip:85001",entity_id:"az:city:phoenix#governing"},{page_id:"zip:85001",entity_id:county},{page_id:"zip:85001",entity_id:ca},
+        {page_id:"zip:85002",entity_id:"az:city:phoenix#governing"},{page_id:"zip:85002",entity_id:ca}]);
+    assert.equal(await seedZipPagePlaces(db.query,{states:["AZ"],bodies:async()=>null}),2,"a second deploy keeps the same identities");
+    assert.equal((await db.query("SELECT count(*)::int AS n FROM place_page_dependency"))[0].n,5);
+  } finally { await db.pg.close(); }
+});
+
+test("a deploy writes only missing ZIP display points and never replaces a held one", async () => {
+  const db = await factDb();
+  try {
+    await db.pg.exec(zipLocationMigration());
+    await db.query(`INSERT INTO zip_location(zip,boundary_year,lat,lng,postal,source_urls,checked_at)
+      VALUES('85701',2020,1,1,'{"state":"AZ"}','["https://example.test/"]','2026-01-01T00:00:00Z')`);
+    const written = await fillMissingZipLocations(db.query, process.cwd());
+    assert.ok(written > 40_000, "every postal state's acquired rows are written once");
+    const [tucson] = await db.query("SELECT lat,checked_at FROM zip_location WHERE zip='85701'");
+    assert.equal(tucson.lat, 1, "a held point is kept for the state's map import to update");
+    const [phoenix] = await db.query("SELECT lat,lng,postal->>'state' AS state,source_urls FROM zip_location WHERE zip='85004'");
+    assert.equal(phoenix.state, "AZ");
+    assert.ok(Number(phoenix.lat) > 33 && Number(phoenix.lng) < -111);
+    assert.equal(await fillMissingZipLocations(db.query, process.cwd()), 0, "a later deploy writes nothing");
+  } finally { await db.pg.close(); }
 });
 
 test("runtime-only bodies get their existing canonical IDs without overwriting held subjects",async()=>{

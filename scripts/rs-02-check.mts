@@ -150,9 +150,9 @@ function missingHeld(before: ReaderPayload, after: ReaderPayload): { missing: st
 }
 
 async function child(probe: Probe): Promise<Result> {
-  const [{ GET: stateRoute }, { GET: placeRoute }, { GET: zipRoute }, { GET: directoryRoute }, { lookupZcta }, client, national] = await Promise.all([
+  const [{ GET: stateRoute }, { GET: placeRoute }, { GET: zipRoute }, { GET: directoryRoute }, client, national] = await Promise.all([
     import("../app/api/reader/state/route.ts"), import("../app/api/meetings/route.ts"),
-    import("../app/api/location/zip/route.ts"), import("../app/api/directory/route.ts"), import("../lib/geo/zcta.ts"), import("../lib/reader/client.ts"), import("../lib/reader/national.ts"),
+    import("../app/api/location/zip/route.ts"), import("../app/api/directory/route.ts"), import("../lib/reader/client.ts"), import("../lib/place-map/reader.ts"),
   ]);
   const importMs = Math.round(performance.now() - scriptStarted), rounds: Round[] = [];
   let firstState: ReaderStateResponse | null = null, firstPlace: ReaderPayload | null = null;
@@ -206,7 +206,7 @@ async function child(probe: Probe): Promise<Result> {
   await round(probe.zip, "cold");
   await round(probe.zip, "repeat");
   const stateValue = firstState as ReaderStateResponse | null;
-  const nextZip = [...(await national.readStateZipPlaces(probe.state)).keys()].find(zip => zip !== probe.zip && lookupZcta(zip)?.postal?.state === probe.state);
+  const nextZip = [...(await national.readStateZipPlaces(probe.state)).keys()].find(zip => zip !== probe.zip);
   if (nextZip) await round(nextZip, "next-zip");
   const result: Result = { state: probe.state, zip: probe.zip, importMs, coldWithImportsMs: importMs + rounds[0]!.usableMs, rounds, errors: rounds.flatMap(row => row.errors) };
   if (result.coldWithImportsMs! >= 3000) result.errors.push("Cold data result including route imports took at least three seconds");
@@ -299,7 +299,7 @@ if (arg("child")) {
   const memoryPresidentIds = [...new Set(shelf.president?.officeholders.map(person => person.id) ?? [])].sort();
   const national = {
     members: new Set(shelf.congress.roster.officeholders.map(row => row.id)).size,
-    jurisdictions: shelf.federalByState.size, zipPlaces: shelf.zipPlaces.size,
+    jurisdictions: shelf.federalByState.size,
     president: shelf.president?.officeholders.map(row => row.name) ?? [],
     presidentHeld: memoryPresidentIds.length > 0,
     presidentStatus: memoryPresidentIds.length ? "HELD" : "NOT_RECORDED",
@@ -308,7 +308,7 @@ if (arg("child")) {
     membersWithoutHeldOffice: shelf.congress.roster.officeholders.filter(row => !shelf.congress.directory.byMember[row.id.replace(/^congress:/, "")]?.districtOffices.length).map(row => ({ id: row.id, name: row.name })),
     errors: [] as string[],
   };
-  if (national.members < 500 || national.jurisdictions < 50 || national.zipPlaces < 40_000) national.errors.push("National shelf is incomplete");
+  if (national.members < 500 || national.jurisdictions < 50) national.errors.push("National shelf is incomplete");
   if (memoryPresidentIds.join("|") !== canonicalPresidentIds.join("|")) national.errors.push("The in-memory President holding does not match the canonical current records");
   const requested = arg("states")?.toUpperCase().split(",");
   const probes = (arg("probes") ? JSON.parse(await readFile(resolve(arg("probes")!), "utf8")) as Probe[] : PROBES).filter(probe => !requested || requested.includes(probe.state));
@@ -344,6 +344,6 @@ if (arg("child")) {
     if (slowest) console.log(`Slowest ${kind}: ${slowest.state} ${slowest.zip}, ${slowest.usableMs} ms; state information ${slowest.stateMs} ms`);
   }
   console.log(`${results.filter(result => result.errors.length === 0).length} of ${results.length} states passed the data-handler checks`);
-  console.log(`National shelf: ${national.members} members, ${national.zipPlaces} ZIPs; ${national.errors.join("; ") || "PASS"}`);
+  console.log(`National shelf: ${national.members} members, ${national.jurisdictions} jurisdictions; ${national.errors.join("; ") || "PASS"}`);
   if (national.errors.length || results.some(result => result.errors.length)) process.exitCode = 1;
 }

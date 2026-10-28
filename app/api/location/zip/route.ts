@@ -1,5 +1,5 @@
 import { rejectUnknown } from "@/lib/api/params";
-import { lookupZcta, resolveZip } from "@/lib/geo/zcta";
+import { resolveZipLocation } from "@/lib/place-map/locations";
 
 export const runtime = "nodejs";
 
@@ -10,5 +10,6 @@ export async function GET(request: Request): Promise<Response> {
   if (!unknown.ok || zips.length !== 1 || !/^\d{5}$/.test(zips[0])) {
     return Response.json({ error: "Send one five-digit ZIP." }, { status: 400 });
   }
-  return Response.json({ location: lookupZcta(zips[0]), resolution: resolveZip(zips[0]) });
+  const resolution = await resolveZipLocation(zips[0]);
+  return Response.json({ location: resolution.ok ? resolution.centroid : null, resolution });
 }

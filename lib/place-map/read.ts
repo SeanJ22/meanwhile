@@ -60,16 +60,19 @@ function selected(rows: readonly PlaceMembership[], selection: GeographySelectio
   return result;
 }
 
+/** Shared by single-code reads and bounded state enumeration. */
+export const CODE_MEMBERSHIP_SQL = `json_build_object(
+      'placeId',e.id,'name',e.name,'state',e.state,'layer',b.layer,'boundaryYear',b.boundary_year,'version',b.version,
+      'share',m.share,'shareBasis',m.share_basis,'partial',m.partial,'fringe',m.fringe,
+      'countyAttachment',b.county_attachment,'hostCountyId',b.host_county_id
+    )`;
+
 /** RB-A10's ZIP and ZCTA entry point. Each call performs one indexed table lookup. */
 export async function placesForCode(query: Query, kind: "zip" | "zcta", code: string,
   selection: GeographySelection = currentRepresentationSelection()): Promise<PlaceMapResult> {
   if (!/^\d{5}$/.test(code)) throw new Error("A five-digit ZIP or ZCTA is required");
   const table = kind === "zip" ? "zip_place" : "zcta_place";
-  const rows = await query(`SELECT coalesce(json_agg(json_build_object(
-      'placeId',e.id,'name',e.name,'state',e.state,'layer',b.layer,'boundaryYear',b.boundary_year,'version',b.version,
-      'share',m.share,'shareBasis',m.share_basis,'partial',m.partial,'fringe',m.fringe,
-      'countyAttachment',b.county_attachment,'hostCountyId',b.host_county_id
-    ) ORDER BY e.id,b.boundary_year),'[]'::json) AS memberships
+  const rows = await query(`SELECT coalesce(json_agg(${CODE_MEMBERSHIP_SQL} ORDER BY e.id,b.boundary_year),'[]'::json) AS memberships
     FROM ${table} m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
     WHERE m.${kind}=$1 AND e.kind='place'`, [code]);

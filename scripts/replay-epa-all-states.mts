@@ -30,9 +30,9 @@ import { saveOpenDataPartition, readOpenDataPartition } from "../lib/sources/ope
 import { publishOpenData, readOpenDataProjection, type OpenDataCapture } from "../lib/sources/open-data/publication.ts";
 import { FederalMoneyBenchmarkStore } from "./lib/federal-money-benchmark-store.mts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
-import { installOpenDataReaderSql, installOpenDataReplayVault, normalOpenDataPage } from "./lib/open-data-replay-reader.mts";
+import { installOpenDataReaderSql, installOpenDataReplayMap, installOpenDataReplayVault, normalOpenDataPage } from "./lib/open-data-replay-reader.mts";
 import { compressedReplayVault } from "./lib/open-data-replay-vault.mts";
-import { lookupZcta } from "../lib/geo/zcta.ts";
+import { readZipLocation } from "../lib/place-map/locations.ts";
 import { openDataEvidence } from "../lib/ask/open-data.ts";
 
 interface ArchiveMeta {url:string;finalUrl:string;sha256:string;byteLength:number;retrievedAt:string;httpStatus:number;lastModified:string|null;etag:string|null;contentType:string|null}
@@ -72,6 +72,7 @@ const safeError=(error:unknown)=>(error instanceof Error?error.message:String(er
 async function main() {
   const started=realNow(),connection=urlFile?(await readFile(urlFile,"utf8")).trim():process.env.WTP_PRODUCTION_DATABASE_URL_READONLY;
   if(!connection||decodeURIComponent(new URL(connection).username)!=="readonly")throw Error("An existing production readonly-role connection is required.");
+  installOpenDataReplayMap(connection);
   process.env.DATABASE_URL=connection;
   // The production role supplies reads; disposable runner-cache writes stay off for this replay.
   process.env.WTP_CIVIC_READ_CACHE_URL="";
@@ -93,7 +94,7 @@ async function main() {
       let metrics=sourceMetrics.get(state);if(!metrics){metrics={rows:0,valid:0,program:0,noZip:0,coordinates:0,sample:null,gaps:[]};sourceMetrics.set(state,metrics);}metrics.rows++;
       const gap=echoMinimumGap(raw);if(gap){metrics.gaps.push(gap);continue;}
       const row=normalizeEcho(raw,meta.retrievedAt,archive.publishedAt);metrics.valid++;
-      if(row.id.startsWith("epa-echo:program:"))metrics.program++;if(!row.zip)metrics.noZip++;else if(!metrics.sample&&lookupZcta(row.zip))metrics.sample={id:row.id,zip:row.zip};
+      if(row.id.startsWith("epa-echo:program:"))metrics.program++;if(!row.zip)metrics.noZip++;else if(!metrics.sample&&await readZipLocation(row.zip))metrics.sample={id:row.id,zip:row.zip};
       await nationalSpool.append(row.zip?`${zipPartition(row.zip)}:state:${state}`:`unlocated:${state}`,row,capture);
       const point=facilityPoint(row);if(point){metrics.coordinates++;await nationalSpool.append(`${facilityCell(point.lat,point.lng)}:state:${state}`,row,capture);}
       if(nationalRows%250000===0)console.log(JSON.stringify({stage:"national-source-spool",rows:nationalRows,elapsedMs:realNow()-nationalIngestStarted,rss:process.memoryUsage().rss}));

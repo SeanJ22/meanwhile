@@ -5,7 +5,7 @@ import { stageTimer } from "@/lib/api/server-timing";
 import { DEFAULT_RADIUS_KM, MAX_RADIUS_KM } from "@/lib/meetings/constants";
 import { readerLocation, readerTerritory, territoryBodies } from "@/lib/reader/location";
 import { readStatePackage } from "@/lib/reader/state";
-import { placePageCacheIds, placePageTerritory, readPlacePackageHttp as readPlacePackage } from "@/lib/reader/place";
+import { placePageCacheIds, placePageTerritory, readPlacesForStates } from "@/lib/reader/place";
 import { stateCoverage, withPlaceRegistry } from "@/lib/reader/coverage";
 import { meetingBodyIds, searchMeetingsFromSource as searchMeetings } from "@/lib/meetings/query";
 import { snapshotSourceFor } from "@/lib/meetings/snapshot-source";
@@ -19,7 +19,7 @@ import { bindGovernmentBodies } from "@/lib/registration/listings";
 import { readerCacheHeaders,readerPlaceCacheHeaders } from "@/lib/reader/cache";
 import { attemptsByFamily } from "@/lib/registry/attempt-families";
 import {readerStateResponse} from "@/lib/reader/state-response";
-import { lookupZcta } from "@/lib/geo/zcta";
+import { readZipLocation } from "@/lib/place-map/locations";
 import type { ReaderStateResponse } from "@/lib/reader/client";
 
 export const runtime = "nodejs";
@@ -31,10 +31,10 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
   if (params.has("include") && params.get("include")!=="state") return refuse("include must be state");
   const zipRead = matching(params, "zip", /^\d{5}$/, { default: null });
   if (!zipRead.ok) return refuse(zipRead.error);
+  const zipPoint = zipRead.value ? await readZipLocation(zipRead.value) : null;
   if (zipRead.value && !params.has("lat") && !params.has("lng")) {
-    const location = lookupZcta(zipRead.value);
-    if (!location) return refuse("That ZIP could not be located");
-    params.set("lat", String(location.lat)); params.set("lng", String(location.lng));
+    if (!zipPoint) return refuse("That ZIP could not be located");
+    params.set("lat", String(zipPoint.lat)); params.set("lng", String(zipPoint.lng));
   }
   const latRead = numericInRange(params, "lat", -90, 90, "refuse");
   if (!latRead.ok) return refuse(latRead.error);
@@ -55,10 +55,10 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     // ZIP entry already starts its independent state endpoint before this read.
     const stateRead = zipRead.value ? Promise.resolve(null) : timing.time("state", () => readStatePackage(location.state));
     const fringe = zipRead.value ? location.fringe : [];
-    const zipPoint = zipRead.value ? lookupZcta(zipRead.value) : null;
-    const readyZip = zipPoint?.lat === lat && zipPoint?.lng === lng ? zipRead.value : null;
+    // A crossing ZIP reads each touched state's pages; its saved ZIP page holds one state.
+    const readyZip = location.states.length<=1 && zipPoint?.lat === lat && zipPoint?.lng === lng ? zipRead.value : null;
     const territoryRead = readyZip ? null : readerTerritory(location.state);
-    const placeRead = timing.time("place", async () => readPlacePackage({ state: location.state, divisionIds: location.divisionIds,
+    const placeRead = timing.time("place", async () => readPlacesForStates(location.states, { divisionIds: location.divisionIds,
       ...(readyZip ? {placeId:`zip:${readyZip}`} : {bodyIds:territoryBodies(lat,lng,await territoryRead!)}),namedDivisionIds:fringe }));
     const [state, place, settings] = await Promise.all([
       stateRead, placeRead, readReaderMeetingSettings(),
@@ -66,8 +66,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     if (!place.registry) throw new Error("The place's government records could not be loaded");
     const selectedTerritory = readyZip ? placePageTerritory(place) : undefined;
     const territory = selectedTerritory!==undefined ? selectedTerritory : await (territoryRead ?? readerTerritory(location.state));
-    const point = zipRead.value ? null : await (await import("@/lib/registry/server")).divisionsAt(lat, lng);
-    const ids = point?.map(division => division.ocdId) ?? location.divisionIds;
+    const ids = location.divisionIds;
     const divisionIds = new Set(ids);
     const registry = place.registry;
     const bodies = registry.registry.bodies;
@@ -85,7 +84,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       publicationAttempts: attemptsByFamily(place.publicationAttempts.filter(attempt => attempt.bodyId === body.bodyId)) }));
     const partial = new Set(location.partial);
     if (zipRead.value) coverage.bodies = coverage.bodies.map(body => body.ocdId && partial.has(body.ocdId) ? { ...body, couldGovern: true } : body);
-    const listingIdentity = withRegistryRuntimeProjection(registry, [location.state], () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
+    const listingIdentity = withRegistryRuntimeProjection(registry, location.states, () => meetingListingIdentity(result.meetings, canonicalBodyIdentity));
     const pageIds = placePageCacheIds(place);
     const cachePlaces = readyZip ? [`zip:${readyZip}`] : pageIds.length ? pageIds : [...ids, ...fringe, ...territoryBodyIds];
     const stateAnswer = await stateAnswerRead;
@@ -99,7 +98,7 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
       snapshot: wireSnapshot(place.snapshotHeldAt, place.snapshot.sources),
       nearZip: location.zip, governingOcdIds: ids, partialOcdIds: zipRead.value ? [...partial] : null,
     }, { headers: { ...(stateAnswer && stateAnswer.status>=400 ? {"Cache-Control":"no-store"}
-      : stateAnswer ? readerCacheHeaders({states:[location.state],places:cachePlaces})
+      : stateAnswer ? readerCacheHeaders({states:location.states,places:cachePlaces})
       : readerPlaceCacheHeaders(cachePlaces)),
       "Netlify-Vary": "query=lat|lng|radiusKm|zip|include", "Server-Timing": timing.header() } });
   } catch (error) {

@@ -19,23 +19,15 @@ import {
 
 const ROOT = resolve(import.meta.dirname, "..");
 
-test("built registry routes contain their canonical geometry manifests and ZIP inputs", (context) => {
+test("built reader routes keep the body-territory manifest and exclude replaced ZIP shards", (context) => {
   if (!existsSync(join(ROOT, ".next", "BUILD_ID"))) {
     context.skip("No completed production build; canonical holdings trace proof requires pnpm build.");
     return;
   }
-  const resolver = "data/derived/resolver-geometry.json";
-  const manifest = JSON.parse(readFileSync(join(ROOT, resolver), "utf8")) as { files: string[] };
-  assert.ok(manifest.files.length >= 20, "resolver input denominator unexpectedly empty or partial");
   const stateGeometryFile = "data/derived/state-geometry.json";
   const stateGeometry = JSON.parse(readFileSync(join(ROOT, stateGeometryFile), "utf8")) as { files: Record<string, { sha256: string }> };
   assert.match(stateGeometry.files[BODY_TERRITORY_FILE]?.sha256 ?? "", /^[a-f0-9]{64}$/,
     "the special-district territory remains available through the reader edge manifest");
-  // DS-01 moved state geometry to the reader edge; functions pack its manifest and national geometry.
-  const expected = [resolver, stateGeometryFile, ...manifest.files.filter(file => !file.startsWith("data/states/"))];
-  const votingInputs = ["lib/geo/postal-zips.json", ...readdirSync(join(ROOT, "data/derived/zip-divisions"))
-    .filter(file => /^\d{2}\.json$/.test(file)).map(file => `data/derived/zip-divisions/${file}`)];
-  assert.ok(votingInputs.length > 1, "the voting ZIP input denominator must include the held shards");
   const routes = [
     "api/address/resolve/route", "api/ballot/scope/route", "api/demand-signal/route",
     "api/meetings/route", "api/reactions/route", "api/representation/[...division]/route",
@@ -47,8 +39,8 @@ test("built registry routes contain their canonical geometry manifests and ZIP i
     assert.ok(existsSync(traceFile), `${route}: production trace is absent`);
     const trace = JSON.parse(readFileSync(traceFile, "utf8")) as { files: string[] };
     const traced = new Set(trace.files.map((file) => resolve(dirname(traceFile), file)));
-    const missing = (route === "api/voting-sites/route" ? votingInputs : expected).filter((file) => !traced.has(resolve(ROOT, file)));
-    assert.deepEqual(missing, [], `${route}: canonical holdings missing from production bundle`);
+    assert.ok(traced.has(resolve(ROOT,stateGeometryFile)),`${route}: body-territory manifest missing from production bundle`);
+    assert.deepEqual([...traced].filter(file=>file.startsWith(resolve(ROOT,"data/derived/zip-divisions")+sep)),[],`${route}: replaced ZIP shards remain in the production bundle`);
   }
 });
 

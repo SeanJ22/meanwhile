@@ -32,7 +32,8 @@ import {
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
 import { movedAdminPage } from "@/lib/control-plane/moved-pages.ts";
-import { BALLOT_CACHE_HEADER, BALLOT_CACHE_VARY, ballotCacheValue } from "@/lib/reader/ballot-cache.ts";
+import { BALLOT_CACHE_HEADER, BALLOT_CACHE_VARY } from "@/lib/reader/ballot-cache.ts";
+import { ballotCacheValue } from "@/lib/reader/ballot-cache-value.ts";
 
 /** The command center and its authenticated API. */
 const ADMIN_PATH_PREFIXES = ["/admin", "/api/admin"] as const;
@@ -81,15 +82,15 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     if (isAdminPath(pathname)) return notFound();
     if (pathname !== "/ballot") return NextResponse.next();
     // Only middleware may decide a ballot copy is storable; a reader-sent verdict is dropped.
-    const headers = new Headers(request.headers), verdict = ballotCacheValue(request);
+    const headers = new Headers(request.headers), verdict = await ballotCacheValue(request);
     headers.delete(BALLOT_CACHE_HEADER);
     if (verdict) headers.set(BALLOT_CACHE_HEADER, verdict);
     const response = NextResponse.next({ request: { headers } });
     if (verdict) {
-      const [ttl, state] = verdict.split(";");
+      const [ttl, tags] = verdict.split(";");
       response.headers.set("Cache-Control", `private, max-age=${Math.min(30, Number(ttl))}, must-revalidate`);
       response.headers.set("Netlify-CDN-Cache-Control", `public, durable, max-age=${ttl}, must-revalidate`);
-      response.headers.set("Netlify-Cache-Tag", `reader-state:${state},reader-national-people,reader-settings`);
+      response.headers.set("Netlify-Cache-Tag", `${tags},reader-national-people,reader-settings`);
       response.headers.set("Netlify-Vary", BALLOT_CACHE_VARY);
     }
     return response;
@@ -155,5 +156,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
  * narrowed to `/admin/*`.
  */
 export const config = {
+  runtime: "nodejs",
   matcher: ["/((?!_next/static|_next/image|favicon.ico|robots.txt).*)"],
 };

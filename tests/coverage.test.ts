@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 
-import { resolveZip } from "../lib/geo/zcta.ts";
+import { fixtureZipResolution } from "./helpers/zip-location.ts";
 import { summarizeCoverage } from "../lib/registry/coverage.ts";
 import { type GeoFeature } from "../lib/registry/resolve.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
@@ -189,7 +189,7 @@ const registry = JSON.parse(
 const byId = new Map<string, Division>(registry.divisions.map((d) => [d.ocdId, d]));
 
 function coverageFor(zip: string, meetingCount: number) {
-  const r = resolveZip(zip);
+  const r = fixtureZipResolution(zip);
   assert.ok(r.ok, `${zip} must resolve to a centroid`);
   return summarizeCoverage(
     [r.centroid.lng, r.centroid.lat],

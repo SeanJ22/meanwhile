@@ -14,7 +14,7 @@ import { purgeReaderCacheTags, readerCacheTags, type ReaderCachePurger } from ".
 import { composePlaceRow } from "./place-decode.ts";
 import { packPlaceContext, packReadyPlace, unpackPlaceContextRow } from "./place-ready.ts";
 import type { PlacePackage } from "./place-types.ts";
-import { lookupZcta } from "../geo/zcta.ts";
+import { readZipLocation } from "../place-map/locations.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "./location.ts";
 import { selectBodyTerritory, type BodyTerritorySelection } from "../registry/body-territory.ts";
 
@@ -576,14 +576,14 @@ export interface StoredPlacePage {
   readonly prints?: PlacePagePrints;
 }
 
-/** ZIP geometry is already held; it is the same selection used by the public endpoint. */
+/** A ZIP page selects from the shared place map, the same selection used by the public endpoint. */
 export async function placeBuildInput(id:string,kind:string,state:string):Promise<PlaceInput> {
   return (await placeBuildSelection(id,kind,state)).input;
 }
 
 async function placeBuildSelection(id:string,kind:string,state:string):Promise<{input:PlaceInput;territory?:BodyTerritorySelection|null}> {
   if (/^zip:\d{5}$/.test(id)) {
-    const zip=id.slice(4),point=lookupZcta(zip);
+    const zip=id.slice(4),point=await readZipLocation(zip);
     if(!point)throw new Error(`Place geometry is missing for ZIP ${zip}`);
     const location=await readerLocation(point.lat,point.lng,zip);
     const territory=selectBodyTerritory([point.lng,point.lat],await readerTerritory(state));

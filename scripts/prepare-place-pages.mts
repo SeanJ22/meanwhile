@@ -6,57 +6,52 @@ import { productionBuildCanApply } from "./db-apply.mts";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 import { seedRuntimeBodyPageSubjects } from "../lib/reader/page-subjects.ts";
 export { seedRuntimeBodyPageSubjects } from "../lib/reader/page-subjects.ts";
-import { postalArea,postalTable } from "../lib/geo/postal.ts";
-import { lookupZcta } from "../lib/geo/zcta.ts";
-import { readZipPlace } from "../lib/reader/national.ts";
-import { stateOcdIdFrom } from "../lib/ocd/state-division.ts";
 import { readerTerritory,territoryBodies } from "../lib/reader/location.ts";
+import { fillMissingZipLocations } from "../lib/place-map/location-import.ts";
 
 interface ZipSeedOptions {
   readonly states?: readonly string[];
-  readonly postal?: typeof postalTable;
-  readonly place?: typeof readZipPlace;
-  readonly point?: typeof lookupZcta;
-  readonly bodies?: (state:string,point:{lat:number;lng:number})=>Promise<readonly string[]>;
+  /** The bodies whose territory holds a point, or null for a state without body territories. */
+  readonly bodies?: (state:string)=>Promise<((point:{lat:number;lng:number})=>readonly string[])|null>;
 }
 
-/** ZIPs are reader selections, so each routed ZIP gets one ready answer of its own. */
+/** ZIPs whose postal state this is, with a display point and at least one place-map membership. */
+const ROUTED_ZIPS_SQL = `SELECT l.zip,l.lat,l.lng,EXISTS(SELECT 1 FROM zip_place m JOIN entity e ON e.id=m.place_id
+    WHERE m.zip=l.zip AND e.state=$1::char(2)) AS in_state
+  FROM (SELECT DISTINCT ON(zip) zip,lat,lng FROM zip_location WHERE postal->>'state'=$1 ORDER BY zip,boundary_year DESC) l
+  WHERE l.lat IS NOT NULL AND EXISTS(SELECT 1 FROM zip_place m WHERE m.zip=l.zip)`;
+
+/** ZIPs are reader selections, so each routed ZIP gets one ready answer of its own. Identities and their
+ * map dependencies are written inside the database from the shared place map; only body territories need points. */
 export async function seedZipPagePlaces(query: Query, options: ZipSeedOptions = {}): Promise<number> {
-  const postal=(options.postal ?? postalTable)(),point=options.point ?? lookupZcta;
-  const place=options.place ?? (zip=>readZipPlace(postalArea(zip)?.zcta ?? zip));
-  const bodies=options.bodies ?? (async(state,point)=>territoryBodies(point.lat,point.lng,await readerTerritory(state)));
+  const bodies=options.bodies ?? (async state=>{
+    const territory=await readerTerritory(state);
+    return territory?point=>territoryBodies(point.lat,point.lng,territory):null;
+  });
   let zips=0;
   for(const state of options.states ?? REGISTRY_STATES) {
-    let batch:{id:string;name:string;state:string;parent_id:string|null}[]=[];
-    let dependencies:{page_id:string;entity_id:string}[]=[];
-    const flush=async()=>{
-      if(!batch.length)return;
-      await query(`INSERT INTO entity(id,kind,name,state,parent_id)
-        SELECT p.id,'place',p.name,p.state,parent.id
-        FROM jsonb_to_recordset($1::jsonb) AS p(id text,name text,state char(2),parent_id text)
-        LEFT JOIN entity parent ON parent.id=p.parent_id
-        ON CONFLICT(id) DO NOTHING`,[JSON.stringify(batch)]);
+    const [seeded]=await query(`WITH routed AS (${ROUTED_ZIPS_SQL}), added AS (
+        INSERT INTO entity(id,kind,name,state,parent_id)
+        SELECT 'zip:'||r.zip,'place','ZIP '||r.zip,$1,CASE WHEN r.in_state THEN parent.id END
+        FROM routed r LEFT JOIN entity parent ON parent.kind='place' AND parent.state=$1::char(2)
+          AND parent.id ~ '^ocd-division/country:us/(state|district|territory):[a-z]{2}$'
+        ON CONFLICT(id) DO NOTHING RETURNING 1
+      ) SELECT (SELECT count(*)::int FROM routed) AS n`,[state]);
+    await query(`INSERT INTO place_page_dependency(page_id,entity_id)
+      SELECT DISTINCT page.id,m.place_id FROM entity page JOIN zip_place m ON m.zip=substr(page.id,5)
+      WHERE page.kind='place' AND page.state=$1::char(2) AND page.id LIKE 'zip:%'
+      ON CONFLICT(page_id,entity_id) DO NOTHING`,[state]);
+    zips+=Number(seeded?.n ?? 0);
+    const at=await bodies(state);
+    if(!at)continue;
+    const dependencies=(await query(ROUTED_ZIPS_SQL,[state])).flatMap(row=>
+      at({lat:Number(row.lat),lng:Number(row.lng)}).map(entity_id=>({page_id:`zip:${row.zip}`,entity_id})));
+    for(let start=0;start<dependencies.length;start+=500)
       await query(`INSERT INTO place_page_dependency(page_id,entity_id)
         SELECT page.id,subject.id FROM jsonb_to_recordset($1::jsonb) AS d(page_id text,entity_id text)
         JOIN entity page ON page.id=d.page_id JOIN entity subject ON subject.id=coalesce(
           (SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=d.entity_id),d.entity_id)
-        ON CONFLICT(page_id,entity_id) DO NOTHING`,[JSON.stringify(dependencies)]);
-      zips+=batch.length;
-      batch=[];
-      dependencies=[];
-    };
-    for(const [zip,row] of Object.entries(postal)) {
-      if(row[5]!==state)continue;
-      const position=point(zip);
-      if(!position)continue;
-      const entry=await place(zip);
-      const parent=entry?.ids.map(stateOcdIdFrom).find(id=>id?.endsWith(`:${state.toLowerCase()}`)) ?? null;
-      batch.push({id:`zip:${zip}`,name:`ZIP ${zip}`,state,parent_id:parent});
-      dependencies.push(...[...entry?.ids ?? [],...entry?.fringe ?? [],...await bodies(state,position)]
-        .map(entity_id=>({page_id:`zip:${zip}`,entity_id})));
-      if(batch.length===500)await flush();
-    }
-    await flush();
+        ON CONFLICT(page_id,entity_id) DO NOTHING`,[JSON.stringify(dependencies.slice(start,start+500))]);
   }
   return zips;
 }
@@ -80,9 +75,11 @@ export async function prepareProductionPlacePages(env: Record<string,string|unde
     throw new Error("Place page identities require the production reader database");
   const {query}=readerFactDb(handle.connection);
   const runtimeBodies=await seedRuntimeBodyPageSubjects(query);
+  // ZIP pages and typed ZIPs read display points; a state's map import keeps them current afterward.
+  const zipLocations=await fillMissingZipLocations(query,process.cwd());
   const zips=await seedZipPagePlaces(query);
   const queued = await queueUnbuiltPlacePages(query);
-  console.log(JSON.stringify({ placePages: "queued for the runner", zips, runtimeBodies, queued }));
+  console.log(JSON.stringify({ placePages: "queued for the runner", zipLocations, zips, runtimeBodies, queued }));
 }
 
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {

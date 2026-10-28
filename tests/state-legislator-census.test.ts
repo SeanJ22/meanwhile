@@ -4,7 +4,7 @@ import test from "node:test";
 
 import { censusWorkDivision } from "../lib/census-geography/division-id.ts";
 import { containerOfRow, geographyOfRows, stateContainers, type ReadOnlyQuery, type Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
-import { withCensusDistricts } from "../lib/geo/zip-census-districts.ts";
+import { entryForCensusFixture } from "./helpers/place-map.ts";
 import { statePeopleDivisions } from "../lib/sources/plural/acquisition.ts";
 import { designationFromLabel, designationKey, indexDivisions, normalize, type PluralPerson, type RegistryDivisionLite } from "../lib/sources/plural/index.ts";
 import { settleCoverageStateLegislators } from "../lib/registry/server.ts";
@@ -118,7 +118,7 @@ test("state acquisition derives the same district ids as the ZIP Census path and
     const expected = census.value.containers.map(container => censusWorkDivision(container.ref)).filter(id => id !== null);
     assert.deepEqual(held.value.map(division => division.ocdId), expected, state);
     const zip = "12345";
-    const zipEntry = withCensusDistricts({ ids: [], partial: [], samples: 0 }, { ...census,
+    const zipEntry = await entryForCensusFixture( { ...census,
       value: { ...census.value, known: true, containers: census.value.containers.map(container => ({
         ...container, overlaps: [{ zcta5: zip, whole: true, fraction: 1 }],
       })) } }, zip, SELECTION);
@@ -224,7 +224,7 @@ test("coverage puts a real legislator under the ZIP-derived lower-chamber Census
   const sample = fixture.samples.find(sample => sample.row.geoid === fixture.coverageZip.geoid && sample.row.type === "state_leg_lower")!;
   const census = geographyOfRows([...fixture.scopes, sample.row], false);
   const zip = fixture.coverageZip.zip;
-  const entry = withCensusDistricts({ ids: [], partial: [], samples: 0 }, {
+  const entry = await entryForCensusFixture( {
     kind: "HELD", versionId: fixture.sources.census.versionId,
     value: { ...census, known: true, containers: census.containers.map(container => ({
       ...container, overlaps: [fixture.coverageZip.overlap],

@@ -5,8 +5,6 @@ import { BALLOT_CACHE_RULES } from "./lib/reader/ballot-cache.ts";
 const staticGeographyTrace = [
   // State geometry is read from the reader edge store; only its manifest is packed (lib/geo/state-geometry.ts).
   "./data/derived/state-geometry.json",
-  // The resolver manifest is read by a literal path and traces itself.
-  "./public/geo/*.geojson",
 ];
 const stateOfficeTrace = [
   "./data/reference/fec_state_election_offices.csv",
@@ -40,29 +38,19 @@ const nextConfig: NextConfig = {
   },
   // Computed paths need explicit traces for static geography and schema inputs.
   // Mutable civic facts resolve the canonical store instead of bundled first seeds.
-  // ZIP startup projections are browser assets, never server lookup inputs.
   // No function packs state geometry: the reader edge store serves each file (lib/geo/state-geometry.ts).
-  outputFileTracingExcludes: { "/*": ["./public/geo/reader-zips/**", "./data/states/*/geo/**"] },
+  outputFileTracingExcludes: { "/*": ["./data/states/*/geo/**"] },
   outputFileTracingIncludes: {
-    "/api/reader/state": ["./data/derived/zip-divisions/*.json", ...stateOfficeTrace],
-    "/api/reader/places": ["./data/derived/zip-divisions/*.json"],
-    "/api/location/zip": ["./lib/geo/zcta-centroids.json", "./lib/geo/postal-zips.json"],
-    // Bulk hunts compute ZIP shard names, which static tracing cannot discover.
-    "/api/admin/bulk-hunts": ["./data/derived/zip-divisions/*.json"],
-    // The country view counts each state's ZIPs and reads the divisions of a district's ZIPs from the same shards, and a
-    // district's place score (the Checklist view of a district) reads them too; the shard names are computed, so the tracer cannot see them.
-    "/api/admin/v6/{national,place}": ["./data/derived/zip-divisions/*.json"],
+    "/api/reader/state": stateOfficeTrace,
+    // The geography preview uses generated source references; readers query the place map.
     "/api/admin/geography-preview": [
       "./data/derived/place-reference/**",
     ],
     "/api/{address/resolve,ballot/scope,demand-signal,meetings,reactions,representation/**,speak,votes,voting-sites}": staticGeographyTrace,
-    "/api/ask/grounded": ["./public/geo/cd119.geojson", "./public/geo/county-us.geojson"],
     "/{ballot,about-area}": staticGeographyTrace,
-    "/about-area/compare": ["./data/derived/resolver-geometry.json"],
     "/api/meetings": [
       ...staticGeographyTrace,
       ...stateOfficeTrace,
-      // The ZIP index shards are read from a literal folder, so the tracer finds them itself.
     ],
     // The coverage tier path is computed at runtime, so static tracing cannot discover it.
     "/ballot": ["./data/derived/zip-coverage-tiers-runtime.json", ...stateOfficeTrace],

@@ -59,9 +59,10 @@ test("the state outline is still excluded, for the reason it always was", () => 
   assert.match(row.reason, /never a governance boundary/);
 });
 
-test("the server reads the manifest and no longer lists a directory", () => {
+test("the server resolves places through the map without reading a geometry directory", () => {
   const source = readFileSync(join(ROOT, "lib", "registry", "server.ts"), "utf8");
-  assert.match(source, /resolver-geometry\.json/, "the server is not reading the manifest");
+  assert.match(source, /place-map\/reader/);
+  assert.doesNotMatch(source, /resolver-geometry\.json/);
   assert.doesNotMatch(
     source,
     /readdir\(/,

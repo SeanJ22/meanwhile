@@ -6,6 +6,7 @@ const stepMigration = (step: string) => readFileSync(join(directory,
   readdirSync(directory).find(name => name.toLowerCase().replaceAll("-", "_").endsWith(`${step.toLowerCase().replaceAll("-", "_")}.sql`))!), "utf8");
 export const readerIdentityMigration = () => stepMigration("RB-A1_shared");
 export const placeBoundaryMigration = () => stepMigration("RB-A2_place_boundaries");
+export const zipLocationMigration = () => stepMigration("RB-A10_zip_locations");
 export const placePageMigration = () => stepMigration("RB-A7_expand");
 
 export async function identitySourceTables(pg: { exec(sql: string): Promise<unknown> }): Promise<void> {

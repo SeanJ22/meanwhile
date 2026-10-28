@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {GET as meetingsGET} from "../app/api/meetings/route.ts";
-import {lookupZcta} from "../lib/geo/zcta.ts";
+import {fixtureZipLocation as lookupZcta} from "./helpers/zip-location.ts";
 import {readerLocation} from "../lib/reader/location.ts";
 import {installReaderDatabaseQuery} from "../lib/reader/database.ts";
 import {PLACE_PAGES_SQL,READY_PLACE_SQL,placePageCacheIds,readPlacePackage} from "../lib/reader/place.ts";

@@ -66,7 +66,8 @@ test("DR-01: a page observation reads only the doors for its own URL, however ma
   assert.equal(small.other, "OPEN", "a voting source for another URL is left alone");
   assert.deepEqual(large.mine, ["SUSPENDED", "SUSPENDED"]);
   assert.equal(large.other, "OPEN");
-  assert.equal(large.bytes, small.bytes, `bytes per observation stay flat as the table grows 16x (${small.bytes} → ${large.bytes})`);
+  // Allow small serialized-value differences while still detecting table-sized reads.
+  assert.ok(Math.abs(large.bytes - small.bytes) <= 32, `bytes per observation stay flat as the table grows 16x (${small.bytes} → ${large.bytes})`);
   assert.ok(large.bytes < 4_000, `an observation reads a few KB, not the table (${large.bytes} bytes)`);
   assert.equal(large.statements, small.statements);
   assert.match(large.plan, /cp_doors_config_url/, "the URL lookup is an index scan");

@@ -10,6 +10,7 @@ import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plan
 import { GET } from "../app/api/reader/body/route.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import { factDb } from "./helpers/fact-db.ts";
+import { loadBodyDetail } from "../lib/registry/body-roster-client.ts";
 
 test("one-body detail retains the existing member, photo, phone and field sources", () => {
   const fixture = JSON.parse(gunzipSync(readFileSync(new URL("./fixtures/registry-transfer-import.json.gz", import.meta.url))).toString());
@@ -32,6 +33,36 @@ test("one-body detail retains the existing member, photo, phone and field source
   assert.deepEqual(detail.roster.officePhone, expected.officePhone);
   assert.equal(detail.roster.members[0].photoUrl, "/person.jpg");
   assert.deepEqual(detail.fieldSources, { officePhone: source });
+});
+
+test("concurrent requests for the same body share one request, and a later open can refresh", async t => {
+  const detail = { bodyId: "body:one", roster: { members: [], gaps: [], officePhone: null } };
+  let requests = 0;
+  t.mock.method(globalThis, "fetch", async input => {
+    requests++;
+    const url = new URL(String(input), "https://example.test");
+    assert.equal(url.searchParams.get("state"), "AZ");
+    assert.equal(url.searchParams.get("body"), detail.bodyId);
+    return Response.json(detail);
+  });
+  const [first, second] = await Promise.all([loadBodyDetail("AZ", detail.bodyId), loadBodyDetail("AZ", detail.bodyId)]);
+  assert.deepEqual(first, detail);
+  assert.deepEqual(second, detail);
+  assert.equal(requests, 1);
+  await loadBodyDetail("AZ", detail.bodyId);
+  assert.equal(requests, 2);
+});
+
+test("a failed or mismatched body answer is not cached as an empty roster", async t => {
+  let calls = 0;
+  t.mock.method(globalThis, "fetch", async () => {
+    calls++;
+    return calls === 1 ? new Response(null, { status: 503 })
+      : Response.json({ bodyId: "other", roster: { members: [], gaps: [], officePhone: null } });
+  });
+  await assert.rejects(loadBodyDetail("AZ", "body:two"));
+  await assert.rejects(loadBodyDetail("AZ", "body:two"));
+  assert.equal(calls, 2);
 });
 
 test("the keyed reader selects one body and its people, including its portrait", async () => {

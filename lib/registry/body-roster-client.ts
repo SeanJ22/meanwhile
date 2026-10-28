@@ -1,6 +1,7 @@
 import type { SeatHolder } from "../officials/lookup.ts";
 import type { RosterReaderGap } from "./body-rosters.ts";
 import type { CoverageSummary, CoveredBody } from "./coverage.ts";
+import type { ReaderBodyDetail } from "../reader/body-detail.ts";
 
 /** Client-safe view of a body roster already projected by the server Reader. */
 export interface BodyRosterClientProjection {
@@ -9,6 +10,23 @@ export interface BodyRosterClientProjection {
 }
 
 const EMPTY: BodyRosterClientProjection = Object.freeze({ members: [], gaps: [] });
+const pending = new Map<string, Promise<ReaderBodyDetail>>();
+
+/** One in-flight request per body; subsequent opens can receive a freshly invalidated answer. */
+export function loadBodyDetail(state: string, bodyId: string): Promise<ReaderBodyDetail> {
+  const key = JSON.stringify([state, bodyId]);
+  const existing = pending.get(key);
+  if (existing) return existing;
+  const url = new URLSearchParams({ state, body: bodyId });
+  const read = fetch(`/api/reader/body?${url}`).then(async response => {
+    if (!response.ok) throw new Error("The body's information could not be loaded");
+    const detail = await response.json() as ReaderBodyDetail;
+    if (detail.bodyId !== bodyId || !Array.isArray(detail.roster?.members)) throw new Error("The body's information could not be loaded");
+    return detail;
+  }).finally(() => { pending.delete(key); });
+  pending.set(key, read);
+  return read;
+}
 
 export function projectedBodyRoster(
   body: Pick<CoveredBody, "readerRoster"> | null | undefined,

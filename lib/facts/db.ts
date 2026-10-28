@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import { neonConfig, Pool } from "../db/client.ts";
 import type { FactDb, Query } from "./publish.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
@@ -5,6 +6,31 @@ import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } fr
 import { readerDatabaseQuery } from "../reader/database.ts";
 
 const pools = new Map<string, Pool>();
+const prepared = new Map<string, string>();
+let preparedRefused = false;
+
+/**
+ * A long statement a worker runs for every page: on a pooled transaction client its text crosses each connection once,
+ * and every later run sends only its parameters. Returns the text unchanged.
+ */
+export function preparedStatement(text: string): string {
+  if (!prepared.has(text)) prepared.set(text, `meanwhile_${createHash("sha256").update(text).digest("hex").slice(0, 32)}`);
+  return text;
+}
+
+/** The named form of a registered statement, or the plain text and parameters for every other statement. */
+export function statementConfig(text: string, params: readonly unknown[]): { readonly name?: string; readonly text: string; readonly values: unknown[] } {
+  const name = preparedRefused ? undefined : prepared.get(text);
+  return name ? { name, text, values: [...params] } : { text, values: [...params] };
+}
+
+/** A connection that cannot hold a named statement (26000, 42P05) sends the full text from then on; the failed build stays queued. */
+export function refusePreparedStatement(error: unknown): void {
+  const code = (error as { code?: unknown } | null)?.code;
+  if (preparedRefused || (code !== "26000" && code !== "42P05")) return;
+  preparedRefused = true;
+  console.error("Named statements refused by the database connection; sending full statement text", { code });
+}
 
 /** The reader database over the pooled WebSocket client, so each publish is one real transaction. */
 export function readerFactDb(url: string | undefined = process.env.DATABASE_URL): FactDb & { readonly query: Query } {
@@ -24,7 +50,10 @@ export function readerFactDb(url: string | undefined = process.env.DATABASE_URL)
     }),
     transaction: work => withCallerSite(async () => {
       const client = await pool.connect();
-      const query: Query = (text, params = []) => withDatabaseQuery(text, async () => (await client.query(text, [...params])).rows);
+      const query: Query = (text, params = []) => withDatabaseQuery(text, async () => {
+        try { return (await client.query(statementConfig(text, params))).rows; }
+        catch (error) { refusePreparedStatement(error); throw error; }
+      });
       try {
         await query("BEGIN");
         const out = await work(query);

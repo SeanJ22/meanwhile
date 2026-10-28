@@ -10,6 +10,7 @@ test("calendar selectors keep the printed body and reject notice and test identi
   for (const name of ["Planning and Zoning Commission Special Meeting", "Planning and Zoning Commission Executive Session and Regular Meeting"])
     assert.deepEqual(publishedBodyLabel(name),{kind:"meeting",name:"Planning and Zoning Commission"});
   assert.deepEqual(publishedBodyLabel("Board of Directors Workshop on Audit"),{kind:"meeting",name:"Board of Directors"});
+  assert.deepEqual(publishedBodyLabel("Board of Supervisors Addendum"),{kind:"meeting",name:"Board of Supervisors"});
   assert.deepEqual(publishedBodyLabel("Special Meeting of the Facilities Committee"),{kind:"meeting",name:"Facilities Committee"});
   for(const name of ["Public Notice","Notice of Quorum","Public Notice under the Open Meetings Act"]) assert.equal(publishedBodyLabel(name).kind,"notice");
   for(const name of ["Test 1","SYSTEM TEST 145","Audio Testing","Test Open Meetings Act Committee"]) assert.equal(publishedBodyLabel(name).kind,"test");
@@ -46,4 +47,24 @@ test("every writer reuses the real body; held meetings and evidence survive a la
     assert.equal((await db.query("SELECT count(*) AS n FROM source_copy"))[0]?.n,1,"reconciliation neither downloads nor copies a source");
     assert.equal((await foldPortalBodyLabels(db,"AZ",async()=>({purged:true}))).folded,0,"a second pass changes nothing");
   }finally{await db.pg.close();}
+});
+
+test("a named sitting remains publishable before its government is held", async () => {
+  const db = await factDb();
+  try {
+    const id = "ocd-division/country:us/state:az/county:pima#body:study-session";
+    assert.equal(await ensureEntity(db.query, { id, kind: "body", name: "Board of Supervisors Study Session", state: "AZ", parentId: "missing" }), id);
+    assert.deepEqual(await db.query("SELECT name FROM entity WHERE id=$1", [id]), [{ name: "Board of Supervisors" }]);
+  } finally { await db.pg.close(); }
+});
+
+test("a sitting is not assigned arbitrarily when two bodies share its name", async () => {
+  const db = await factDb();
+  const place = "ocd-division/country:us/state:az/place:example";
+  try {
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Planning Commission','AZ'),($2,'body','Planning Commission','AZ')", [`${place}#one`, `${place}#two`]);
+    const id = `${place}#session`;
+    assert.equal(await ensureEntity(db.query, { id, kind: "body", name: "Planning Commission Study Session", state: "AZ", parentId: null }), id);
+    assert.deepEqual(await db.query("SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=$1", [id]), []);
+  } finally { await db.pg.close(); }
 });

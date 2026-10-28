@@ -469,6 +469,10 @@ export async function ensureEntity(query: Query, row: EntityRow): Promise<string
   }
   if (row.kind === "body" && publishedBodyLabel(row.name).kind !== "body") {
     const body = await publishedBody(query, row);
+    // A named body can still be published before its government has been loaded.
+    // Keep the body name, not the calendar's sitting label.
+    if (!body && publishedBodyLabel(row.name).name)
+      return ensureEntity(query, { ...row, name: publishedBodyLabel(row.name).name! });
     if (!body) throw new Error("MEETING_BODY_OWNER_UNKNOWN");
     if (body.id !== row.id) {
       await query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2) ON CONFLICT DO NOTHING", [body.id, row.id]);
@@ -499,7 +503,21 @@ export interface BodyRef { readonly id: string; readonly name: string; readonly 
 /** Resolve a calendar label within its own government. Existing named boards win; an unnamed sitting uses its owner's board. */
 export async function publishedBody(query: Query, row: { readonly id: string; readonly name: string; readonly parentId?: string | null; readonly government?: string | null }): Promise<BodyRef | null> {
   const label = publishedBodyLabel(row.name);
-  const government = await governmentAt(query, [row.government ?? null, row.parentId ?? null, splitSubject(row.id).root]);
+  const registered = await bodyGovernment(query, row.id, row.government);
+  const government = await governmentAt(query, [registered, row.government ?? null, row.parentId ?? null, splitSubject(row.id).root]);
+  // A source may arrive before its government entity. An already held body
+  // under the same exact place can still identify a named sitting.
+  if (!government && label.name) {
+    const root = splitSubject(row.id).root;
+    const siblings = await query(`SELECT id,name,state,parent_id FROM entity b WHERE kind='body' AND id LIKE $1 AND id<>$2
+      AND split_part(id,'#',1)=$3
+      AND NOT EXISTS(SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=b.id)`, [`${root}#%`, row.id, root]);
+    const matches = siblings.filter(body => publishedBodyLabel(String(body.name)).kind === "body" && bodyNameKey(String(body.name)) === bodyNameKey(label.name!));
+    if (matches.length === 1) {
+      const match = matches[0];
+      return { id: String(match.id), name: String(match.name), state: match.state as string | null, parentId: match.parent_id as string | null };
+    }
+  }
   if (!government) return null;
   const siblings = await query(`SELECT id,name,state,parent_id FROM entity b WHERE kind='body'
     AND (parent_id=$1 OR id LIKE $2) AND id<>$3

@@ -160,7 +160,8 @@ test("Bodies stays compact and opens the correct body with next and last meeting
         const opened = Date.now();
         await openTusd();
         const gapId = calendar === "next" ? "body:last-meeting" : calendar === "last" ? "body:next-meeting" : `body:${tusd.bodyId}:meetings`;
-        const gap = page.locator(`[data-card-gap="${gapId}"]`);
+        const contribution = page.locator(`[data-card-gap-contribution="${gapId}"]`);
+        const gap = contribution.locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' card-section-body ')]").locator("[data-card-gap]");
         await gap.waitFor({ state: "visible", timeout: 3000 });
         if (calendar === "next") await nextRow.waitFor({ state: "visible", timeout: 3000 });
         if (calendar === "last") await lastRow.waitFor({ state: "visible", timeout: 3000 });
@@ -168,6 +169,7 @@ test("Bodies stays compact and opens the correct body with next and last meeting
         assert.equal(await nextRow.count(), calendar === "next" ? 1 : 0);
         assert.equal(await lastRow.count(), calendar === "last" ? 1 : 0);
         assert.match(await gap.innerText(), /working on getting this info/);
+        assert.equal(await gap.count(), 1, "the section shows one coverage line");
         assert.equal(await gap.locator("[data-demand-subject]").getAttribute("data-demand-subject"), tusd.bodyId);
       }
       await page.goto(`http://127.0.0.1:${address.port}/?zip=85701&types=1`);

@@ -38,7 +38,8 @@ test("OB-01: first visit, ZIP entry and replay keep the real map's dialogs usabl
   const css = globals.css + readFileSync("app/reader.css", "utf8");
   const state = { state: "NY", version: "protocol", coverage, zipPlaces: {}, directory: null };
   const server = createServer((request, response) => {
-    const path = new URL(request.url!, "http://localhost").pathname;
+    const requestUrl = new URL(request.url!, "http://localhost");
+    const path = requestUrl.pathname;
     const json = (value: unknown) => response.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(value));
     if (scripts.has(path)) response.writeHead(200, { "content-type": path.endsWith(".css") ? "text/css" : "application/javascript" }).end(scripts.get(path));
     else if (path === "/styles.css") response.writeHead(200, { "content-type": "text/css" }).end(css);
@@ -126,6 +127,39 @@ test("OB-01: first visit, ZIP entry and replay keep the real map's dialogs usabl
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       await context.close();
     }
+  } finally {
+    await browser?.close();
+    await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+  }
+});
+
+test("the quick tour opens on the map and stays closed on the ballot route", async () => {
+  const bundle = await build({ stdin: { contents: `
+    import React from "react"; import {createRoot} from "react-dom/client";
+    import {PathnameContext} from "next/dist/shared/lib/hooks-client-context.shared-runtime";
+    import {TutorialOverlay} from "./components/map/tutorial-overlay.tsx";
+    createRoot(document.getElementById("root")).render(<PathnameContext.Provider value={location.pathname}><TutorialOverlay active /></PathnameContext.Provider>);`,
+    resolveDir: process.cwd(), loader: "tsx" }, bundle: true, write: false, outfile: "work/tour-route.js", platform: "browser", format: "iife", jsx: "automatic",
+    define: { "process.env.NODE_ENV": '"production"', "process.env": "{}" }, logLevel: "silent" });
+  const javascript = bundle.outputFiles.find(file => file.path.endsWith(".js"))!.text;
+  const server = createServer((request, response) => {
+    if (request.url === "/app.js") response.writeHead(200, { "content-type": "application/javascript" }).end(javascript);
+    else response.writeHead(200, { "content-type": "text/html" }).end('<!doctype html><div id="root"></div><script src="/app.js"></script>');
+  });
+  await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
+  const address = server.address(); assert.ok(address && typeof address !== "string");
+  let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
+  try {
+    browser = await launchGuarded({ label: "ob01-tour-home-route", blockWrites: true });
+    const page = await browser.page();
+    page.on("pageerror", error => console.error(error.message));
+    await page.goto(`http://127.0.0.1:${address.port}/ballot`);
+    await page.locator('[data-tour-ready="true"]').waitFor({ state: "attached" });
+    assert.equal(await page.locator("dialog[open]").count(), 0);
+    await page.goto(`http://127.0.0.1:${address.port}/`);
+    await page.getByRole("heading", { name: "Ask", exact: true }).waitFor({ state: "visible" });
+    await page.getByRole("button", { name: "Next", exact: true }).click();
+    await page.getByRole("heading", { name: "Who Governs Here", exact: true }).waitFor({ state: "visible" });
   } finally {
     await browser?.close();
     await new Promise<void>((resolve, reject) => server.close(error => error ? reject(error) : resolve()));

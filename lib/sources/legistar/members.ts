@@ -1,18 +1,21 @@
 import type { BodyRoster, RosterMember } from "../../registry/body-rosters.ts";
+import { createHash } from "node:crypto";
 import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { fetchBodies, fetchPersons, fetchOfficeRecords } from "./client.ts";
 import { saveLegistarReading } from "./members-cache.ts";
-import { legistarMemberSignature, validateLegistarMembers, termDate, memberProbe, type LegistarMembers, type CachedLegistarMembers, type MemberBody, type MemberPerson, type MemberOffice } from "./members-model.ts";
+import { legistarMemberSignature, validateLegistarMembers, termDate, memberProbe, type LegistarMembers, type MemberBody, type MemberPerson, type MemberOffice } from "./members-model.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 
 /** Legistar refuses a filter of more than 100 expression nodes; 15 ids stay under it with the paging clause. */
 const PERSON_IDS_PER_REQUEST = 15;
 
-export function makeLegistarMembersReader(vault: EvidenceStore, fetchImpl?: typeof fetch, initial: CachedLegistarMembers | null = null) {
+export function makeLegistarMembersReader(vault: EvidenceStore, fetchImpl?: typeof fetch, initial: string | null = null, rows: readonly BodySourceWiring[] = []) {
   let held = initial;
-  return async (slug: string, signal?: AbortSignal): Promise<LegistarMembers> => {
+  return async (slug: string, signal?: AbortSignal): Promise<LegistarMembers | null> => {
     const readings: LegistarMembers["readings"] = [];
-    const options = { fetchImpl, signal, onRead: async (reading: { url: string; text: string; retrievedAt: string; body: unknown }) => { readings.push(await saveLegistarReading(vault, slug, reading)); } };
+    const options = { fetchImpl, signal, onRead: async (reading: { url: string; text: string; retrievedAt: string; body: unknown }) => {
+      if (!memberProbe(new URL(reading.url))) readings.push(await saveLegistarReading(vault, slug, reading));
+    } };
     const day = new Date(Date.now() - 86_400_000).toISOString().slice(0, 10);
     const officeFilter = `(OfficeRecordEndDate eq null or OfficeRecordEndDate ge datetime'${day}T00:00:00')`;
     const people = async (personIds: readonly number[], select?: readonly string[]) => {
@@ -27,23 +30,27 @@ export function makeLegistarMembersReader(vault: EvidenceStore, fetchImpl?: type
     const probe = async () => {
       const bodies = await fetchBodies<MemberBody>(slug, { ...options, select: ["BodyId", "BodyRowVersion"] });
       const offices = await fetchOfficeRecords<MemberOffice>(slug, { ...options, filter: officeFilter,
-        select: ["OfficeRecordId", "OfficeRecordPersonId", "OfficeRecordRowVersion"] });
+        select: ["OfficeRecordId", "OfficeRecordPersonId", "OfficeRecordBodyId", "OfficeRecordStartDate", "OfficeRecordEndDate", "OfficeRecordRowVersion"] });
       const personIds = [...new Set(offices.map(office => office.OfficeRecordPersonId))].sort((a, b) => a - b);
       if (personIds.some(id => !Number.isSafeInteger(id) || id <= 0)) throw new Error("LEGISTAR_MEMBERS_PERSON_ID_MISSING");
       const persons = await people(personIds, ["PersonId", "PersonRowVersion"]);
-      return { signature: legistarMemberSignature({ bodies, persons, offices }), personIds };
+      const signature = legistarMemberSignature({ bodies, persons, offices });
+      const bindings = rows.map(row => [row.bodyId, row.ocdId, row.timeZone, row.config.eventBodyId, row.config.eventBodyName,
+        row.config.insiteBodyName, row.config.governmentId]).sort((a, b) => JSON.stringify(a).localeCompare(JSON.stringify(b)));
+      const days = [...new Set(rows.map(row => row.timeZone))].sort().map(zone => new Intl.DateTimeFormat("en-CA", {
+        timeZone: zone, year: "numeric", month: "2-digit", day: "2-digit" }).format(new Date()));
+      const active = offices.map(office => [office.OfficeRecordId, ...days.map(day => {
+        const start = termDate(office.OfficeRecordStartDate), end = termDate(office.OfficeRecordEndDate);
+        return (!start || start <= day) && (!end || end >= day);
+      })]);
+      const fingerprint = createHash("sha256").update(JSON.stringify(["legistar-members-input-v1", signature, bindings, active])).digest("hex");
+      return { signature, fingerprint, personIds };
     };
-    const { signature, personIds } = await probe();
-    if (held?.signature === signature) {
-      const previous = await held.read();
-      if (previous.slug !== slug) throw new Error("LEGISTAR_MEMBERS_CACHE_TENANT_INVALID");
-      previous.readings = previous.readings.filter(reading => !memberProbe(new URL(reading.artifact.canonicalUrl)));
-      previous.readings.push(...readings);
-      return previous;
-    }
+    const { signature, fingerprint, personIds } = await probe();
+    if (held === fingerprint) return null;
     held = null;
     readings.length = 0;
-    const result = { slug, signature, collectedAt: new Date().toISOString(), readings,
+    const result = { slug, signature, inputFingerprint: fingerprint, collectedAt: new Date().toISOString(), readings,
       bodies: await fetchBodies<MemberBody>(slug, { ...options, select: ["BodyId", "BodyName", "BodyRowVersion"] }),
       persons: await people(personIds, ["PersonId", "PersonFullName", "PersonRowVersion"]),
       offices: await fetchOfficeRecords<MemberOffice>(slug, { ...options, filter: officeFilter,
@@ -51,7 +58,7 @@ export function makeLegistarMembersReader(vault: EvidenceStore, fetchImpl?: type
           "OfficeRecordMemberType", "OfficeRecordStartDate", "OfficeRecordEndDate", "OfficeRecordRowVersion"] }) };
     validateLegistarMembers(result);
     if (legistarMemberSignature(result) !== signature) throw new Error("LEGISTAR_MEMBERS_CHANGED_DURING_READ");
-    held = { signature, collectedAt: result.collectedAt, read: async () => result };
+    held = fingerprint;
     return result;
   };
 }

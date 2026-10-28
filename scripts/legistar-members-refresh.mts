@@ -23,7 +23,8 @@ console.log(JSON.stringify(result));
 console.log("RCD_RECEIPT=" + JSON.stringify({ source: `legistar-members:${slug}`, candidateId: result.versionId,
   acquisitionSucceeded: true, state: "PROMOTED", decision: "GOOD", promotedVersion: result.versionId,
   lastKnownGoodVersion: result.versionId, confirmedAt: result.checkedAt, structuralReleaseContract: ZERO_RELEASE_EVENTS,
-  delivered: { records: result.records, gaps: result.gaps.length + result.blanks, gapReasons: { LEGISTAR_MEMBERS_BODY_UNBOUND: result.gaps.length, ...result.blankReasons } } }));
+  delivered: result.gaps ? { records: result.records, gaps: result.gaps.length + result.blanks,
+    gapReasons: { LEGISTAR_MEMBERS_BODY_UNBOUND: result.gaps.length, ...result.blankReasons } } : { records: 0 } }));
 } catch (error) {
   const detail = sanitizedErrorDiagnostic(error);
   console.error(detail);

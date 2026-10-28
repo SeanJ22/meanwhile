@@ -153,8 +153,7 @@ test("MTG-14: meeting lists and body cards preserve the held online label and me
       assert.ok(row.includes(`>${heading}</h3>`), `${meeting.id}: ${heading}`);
       assert.ok(row.includes(`data-meeting-where="online">Online · ${label}</div>`), `${meeting.id}: ${heading}`);
       assert.doesNotMatch(row, /Join online|Still gathering/);
-      assert.match(row, /working on getting this info/);
-      assert.match(row, /Want us to get this sooner\?/);
+      assert.ok(row.includes(`data-card-gap-contribution="meeting:${meeting.id}"`), "the meeting contributes its gap to the section");
     }
   }
 });

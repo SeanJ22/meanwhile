@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { isoTermDate } from "../../civic-data/term-dates.ts";
 import type { Artifact } from "../../control-plane/evidence/artifact.ts";
 
-export interface MemberReading { readonly artifact: Artifact; readonly ids: readonly number[] }
+export interface MemberReading { readonly artifact: Artifact; readonly ids: readonly number[]; readonly text: string }
 
 export interface MemberBody { BodyId: number; BodyName: string; BodyRowVersion: string; }
 export interface MemberPerson { PersonId: number; PersonFullName: string; PersonRowVersion: string }
@@ -14,12 +14,8 @@ export interface MemberOffice {
 export interface LegistarMembers {
   slug: string; bodies: MemberBody[]; persons: MemberPerson[]; offices: MemberOffice[];
   signature: string; collectedAt: string;
+  inputFingerprint?: string;
   readings: MemberReading[];
-}
-export interface CachedLegistarMembers {
-  readonly signature: string;
-  readonly collectedAt: string;
-  read(): Promise<LegistarMembers>;
 }
 
 export function legistarMemberSignature(raw: Pick<LegistarMembers, "bodies" | "persons" | "offices">): string {
@@ -54,13 +50,13 @@ export function termDate(value: string | null): string | null {
   return date;
 }
 
-export function memberReading(artifact: Artifact, rows: unknown): MemberReading {
+export function memberReading(artifact: Artifact, rows: unknown, text: string): MemberReading {
   const url = new URL(artifact.canonicalUrl), collection = url.pathname.split("/").at(-1);
   const key = collection === "bodies" ? "BodyId" : collection === "persons" ? "PersonId" : "OfficeRecordId";
   if (!Array.isArray(rows)) throw new Error("LEGISTAR_MEMBERS_SOURCE_PAGE_INVALID");
   const ids = rows.map(row => row[key]);
   if (ids.some(id => !Number.isSafeInteger(id) || id <= 0)) throw new Error("LEGISTAR_MEMBERS_SOURCE_PAGE_INVALID");
-  return { artifact, ids };
+  return { artifact, ids, text };
 }
 
 export function memberProbe(url: URL): boolean {

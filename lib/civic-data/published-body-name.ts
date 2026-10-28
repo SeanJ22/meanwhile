@@ -2,7 +2,7 @@ export type PublishedBodyLabel = { readonly kind: "body" | "meeting" | "notice" 
 
 const words = (text: string) => text.replace(/\s+/g, " ").trim();
 const bodyNoun = /\b(?:board|council|commission|committee|authority|agency|assembly|court|corporation|commissioners|supervisors|trustees|selectmen|selectboard|jury)\b/i;
-const event = /\b(?:meetings?|sessions?|worksession|workshops?)\b/i;
+const event = /\b(?:meetings?|sessions?|worksession|workshops?|addendum|addenda)\b/i;
 
 /** A calendar's meeting-type selector is not a second government body. Keep the body's printed words. */
 export function publishedBodyLabel(raw: string): PublishedBodyLabel {
@@ -24,7 +24,7 @@ export function publishedBodyLabel(raw: string): PublishedBodyLabel {
     .replace(/^(?:(?:regular|special|emergency|joint|cancelled|canceled|annual|quarterly)\s+)+/i, "")
     .replace(/\s*\(SAP\)\s*$/i, "");
   // Everything from the sitting description onward belongs to the meeting, including a workshop's subject.
-  name = name.replace(/\s*(?:[-–—:(/]\s*)?(?:(?:regular|special|emergency|joint|annual|monthly|quarterly|full|first|second|pre|business|land use|agenda review|strategic planning|planning|budget|executive|closed|work|study|training|listening|organizational|ceremonial|conference|public|board)\s+)*(?:meetings?|sessions?|worksession|workshops?)\b[\s\S]*$/i, "")
+  name = name.replace(/\s*(?:[-–—:(/]\s*)?(?:(?:regular|special|emergency|joint|annual|monthly|quarterly|full|first|second|pre|business|land use|agenda review|strategic planning|planning|budget|executive|closed|work|study|training|listening|organizational|ceremonial|conference|public|board)\s+)*(?:meetings?|sessions?|worksession|workshops?|addendum|addenda)\b[\s\S]*$/i, "")
     .replace(/[\s,:;/(\-–—]+$/g, "").replace(/\s+and$/i, "");
   name = words(name);
   return { kind, name: bodyNoun.test(name) ? name : null };

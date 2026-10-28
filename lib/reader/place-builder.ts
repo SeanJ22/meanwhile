@@ -302,13 +302,9 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
 ), agenda_current_headers AS MATERIALIZED (
   SELECT p.scope,header.value FROM meeting_partitions p,LATERAL (SELECT r.ordinal AS ordinal_index,r.value AS item FROM civic_data_rows r WHERE r.promotion_key='MEETING:'||p.scope AND r.version_id=p.current_version_id AND r.collection='meetings') m,
     LATERAL (SELECT reader_payload_node(m.item) AS value) header
-<<<<<<< HEAD
-    WHERE $8::text[] IS NOT NULL AND (coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId') IN (SELECT id FROM bodies)
-=======
     WHERE $8::text[] IS NOT NULL AND (p.scope NOT LIKE 'source:derived:family:%' OR NOT (right(p.scope,8)<>':history' AND EXISTS(SELECT 1 FROM encoded_bodies held_body JOIN civic_data_promotions own
       ON own.key='MEETING:source:derived~US-'||$1||':body:'||held_body.encoded_id AND own.record_class='MEETING'
-      WHERE held_body.id=header.value->>'bodyId'))) AND (header.value->>'bodyId' IN (SELECT id FROM bodies)
->>>>>>> origin/river
+      WHERE held_body.id=coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId')))) AND (coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId') IN (SELECT id FROM bodies)
       OR coalesce(header.value->>'bodyId','')='' AND header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), agenda_raw_headers AS MATERIALIZED (
   SELECT * FROM agenda_current_headers

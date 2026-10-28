@@ -85,7 +85,7 @@ test("M136: every blurb carries a checkable basis — no unsourced prose anywher
   }
 });
 
-test("each empty body section contains its own missing-information message and request link", async () => {
+test("each empty body section contributes its missing information to the section line", async () => {
   const { EntityModal } = await import("../components/map/popup/entity-modal.tsx");
   const { DataProvider } = await import("../lib/state/data.tsx");
   const subject: ModalSubject = { subjectId: "held:body", subjectKind: "BODY", title: "Held board", subtitle: "County", tier: "local",
@@ -101,8 +101,7 @@ test("each empty body section contains its own missing-information message and r
   for (const title of ["What this body does", "Who sits on it", "Meetings", "Contact", "Where it governs"]) {
     const section = sections.find(markup => markup.includes(`>${title}</span>`));
     assert.ok(section, `The body card lost its ${title} section`);
-    assert.ok(section.includes("We're working on getting this info"), title);
-    assert.ok(section.includes("Want us to get this sooner?"), title);
+    assert.ok(section.includes("data-card-gap-contribution="), title);
   }
   assert.doesNotMatch(html, /Still gathering/);
 });

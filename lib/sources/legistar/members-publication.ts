@@ -10,6 +10,7 @@ import { invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurge
 import { legistarMemberRosters } from "./members.ts";
 import { memberProbe, type LegistarMembers } from "./members-model.ts";
 import { legistarMemberCapture } from "./members-cache.ts";
+import { publishedBodyLabel } from "../../civic-data/published-body-name.ts";
 
 export function legistarMembersPackage(raw: LegistarMembers, rows: readonly BodySourceWiring[], now: string) {
   const own = rows.filter(row => row.config.slug === raw.slug);
@@ -19,6 +20,13 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
   const unbound: { key: string; detail: string }[] = [];
   const candidates = new Map<string, { body: LegistarMembers["bodies"][number]; row: BodySourceWiring }[]>();
   for (const body of raw.bodies) {
+    const label = publishedBodyLabel(body.BodyName);
+    // Calendar selectors without seats are not bodies and must not hold up the roster.
+    if (label.kind !== "body" && !raw.offices.some(office => office.OfficeRecordBodyId === body.BodyId)) continue;
+    if (label.kind !== "body" && !label.name) {
+      unbound.push({ key: `${raw.slug}:body:${body.BodyId}`, detail: "The seated calendar label does not identify a body" });
+      continue;
+    }
     const wired = own.filter(row => Number(row.config.eventBodyId) === body.BodyId || !row.config.eventBodyId &&
       (row.config.eventBodyName || row.config.insiteBodyName) === body.BodyName);
     if (wired.length > 1 || wired.length === 0 && (jurisdictions.size !== 1 || parent.ocdId === null)) {
@@ -75,18 +83,21 @@ export async function publishLegistarMembers(input: {
     const offices = new Map(input.raw.offices.map(office => [office.OfficeRecordId, office]));
     const bodyFor = (owner: BodySourceWiring) => ({ id: owner.bodyId, name: owner.config.bodyName ?? owner.bodyId,
       state: /\/state:([a-z]{2})/.exec(owner.ocdId ?? "")?.[1]?.toUpperCase() ?? null, parentId: owner.ocdId, government: owner.config.governmentId });
-    for (const owner of prepared.bound) {
+    const bound: BodySourceWiring[] = [];
+    // Seed named bodies before resolving calendar labels that refer to them.
+    for (const owner of [...prepared.bound].sort((a, b) => Number(publishedBodyLabel(a.config.bodyName ?? "").kind !== "body") - Number(publishedBodyLabel(b.config.bodyName ?? "").kind !== "body"))) {
       const body = bodyFor(owner);
-      await ensureEntity(input.facts.query, { ...body, kind: "body" });
-      await learnDoorChannel(input.facts.query, body.id, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords`);
+      const id = await ensureEntity(input.facts.query, { ...body, kind: "body" });
+      bound.push({ ...owner, bodyId: id });
+      await learnDoorChannel(input.facts.query, id, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords`);
     }
     for (const reading of input.raw.readings) {
       const url = new URL(reading.artifact.canonicalUrl);
       if (!url.pathname.endsWith("/bodies") || memberProbe(url)) continue;
-      const capture = await legistarMemberCapture(input.vault, reading.artifact);
-      for (const owner of prepared.bound) {
+      const capture = legistarMemberCapture(reading);
+      for (const owner of bound) {
         const row = reading.ids.includes(Number(owner.config.eventBodyId)) ? input.raw.bodies.find(body => body.BodyId === Number(owner.config.eventBodyId)) : undefined;
-        if (!row) continue;
+        if (!row || publishedBodyLabel(row.BodyName).kind !== "body") continue;
         const [outcome] = await publishBodyFacts(input.facts, { bodyId: owner.bodyId, capture, producedBy: source, purge: input.purge, acquisition: "loader",
           facts: [{ field: "name", value: row.BodyName.trim(), quote: jsonValues(row).join("\n") }] }, input.clocks, new Date(input.now));
         if (outcome && "blank" in outcome) { blanks++; blankReasons[`name:${outcome.blank}`] = (blankReasons[`name:${outcome.blank}`] ?? 0) + 1; }
@@ -96,11 +107,11 @@ export async function publishLegistarMembers(input: {
     for (const reading of input.raw.readings) {
       const url = new URL(reading.artifact.canonicalUrl);
       if (!url.pathname.endsWith("/officerecords") || memberProbe(url)) continue;
-      const capture = await legistarMemberCapture(input.vault, reading.artifact);
-      for (const roster of legistarMemberRosters(input.raw, prepared.bound, input.now, reading.artifact.canonicalUrl)) {
+      const capture = legistarMemberCapture(reading);
+      for (const roster of legistarMemberRosters(input.raw, bound, input.now, reading.artifact.canonicalUrl)) {
         const members = roster.members;
         if (!members.length) continue;
-        const owner = prepared.bound.find(row => row.bodyId === roster.bodyId)!;
+        const owner = bound.find(row => row.bodyId === roster.bodyId)!;
         const report = await publishRosterFacts(input.facts, { body: bodyFor(owner), capture, complete: false, producedBy: source, purge: input.purge, acquisition: "loader", nameFromPage: false,
           shownMemberIds: new Map(members.map(member => [nameKey(member.name), member.id])),
           members: members.map(member => {
@@ -120,16 +131,18 @@ export async function publishLegistarMembers(input: {
         records += report.live;
       }
     }
-    for (const roster of legistarMemberRosters(input.raw, prepared.bound, input.now)) {
+    const rosters = [...legistarMemberRosters(input.raw, bound, input.now)];
+    for (const bodyId of new Set(rosters.map(roster => roster.bodyId))) {
+      const members = rosters.filter(roster => roster.bodyId === bodyId).flatMap(roster => roster.members);
       const departed = await input.facts.query(`WITH own AS MATERIALIZED (
         SELECT id, field, status, provenance_kind, source_copy_id FROM fact WHERE entity_id = $1
       ) UPDATE fact f SET status = 'superseded', held_reason = 'NOT_ON_CURRENT_OFFICIAL_ROSTER'
         FROM own WHERE f.id = own.id AND own.status = 'live' AND own.provenance_kind = 'OFFICIAL' AND own.field LIKE 'member:%'
           AND (SELECT starts_with(url, $2) FROM source_copy WHERE id = own.source_copy_id)
           AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.entity_id = substr(own.field, 8) AND x.scheme = $3 AND x.value = ANY($4::text[])) RETURNING f.id`,
-      [roster.bodyId, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords?`, `legistar:${input.raw.slug}`,
-        roster.members.map(member => member.nativeIds![`legistar:${input.raw.slug}`][0])]);
-      if (departed.length) await invalidateReaderCache(await readerCacheScopeForEntity(input.facts.query, roster.bodyId), input.purge, input.facts.query);
+      [bodyId, `https://webapi.legistar.com/v1/${input.raw.slug}/officerecords?`, `legistar:${input.raw.slug}`,
+        members.map(member => member.nativeIds![`legistar:${input.raw.slug}`][0])]);
+      if (departed.length) await invalidateReaderCache(await readerCacheScopeForEntity(input.facts.query, bodyId), input.purge, input.facts.query);
       records += departed.length;
     }
   }

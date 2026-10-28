@@ -363,9 +363,8 @@ export function AskBox({
         }
       }
 
-      const groundedRead = askGrounded(question, confirmation);
       let routedCoverage = coverage;
-      const groundedAnswer = await groundedRead;
+      const groundedAnswer = await askGrounded(question, confirmation);
       setGrounded(groundedAnswer);
       /* Only a canonical resolution becomes a referent for later turns. */
       if (groundedAnswer?.subject) {

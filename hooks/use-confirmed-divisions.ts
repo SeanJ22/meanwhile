@@ -62,16 +62,21 @@ export function useConfirmedDivisions(
     return level !== null && divisionTypes.includes(level);
   });
   /* A stable key, so the effect re-runs only when the divisions change. */
-  const cached = new Map(wanted.map(id => [id, getCachedStateDivision(id)]));
-  const key = wanted.filter(id => !cached.get(id) && !isStateDivisionPending(id)).join("|");
-  const localBodiesKey = JSON.stringify(Object.fromEntries(wanted.map(id => [id, (coverage?.bodies ?? [])
+  const localBodies = Object.fromEntries(wanted.map(id => [id, (coverage?.bodies ?? [])
     .filter(body => (body.bodyId === `${id}#governing` || body.bodyId === `${id}#board`) && body.rosterSummary)
     .map(body => ({ id: body.bodyId, state: bodyDetailState(body), label: body.divisionLabel,
-      divisionType: body.divisionType, tier: body.tier }))])));
+      divisionType: body.divisionType, tier: body.tier }))]));
+  const localBodiesKey = JSON.stringify(localBodies);
+  const cached = new Map(wanted.map(id => [id, localBodies[id]?.length ? null : getCachedStateDivision(id)]));
+  const key = wanted.filter(id => localBodies[id]?.length || (!cached.get(id) && !isStateDivisionPending(id))).join("|");
+  const requestKey = JSON.stringify([key, localBodiesKey]);
 
-  const [answers, setAnswers] = useState<Record<string, Answer>>({});
-
+  const [heldAnswers, setHeldAnswers] = useState<{ key: string; values: Record<string, Answer> }>({ key: requestKey, values: {} });
+  if (heldAnswers.key !== requestKey) setHeldAnswers({ key: requestKey, values: {} });
+  const answers = heldAnswers.key === requestKey ? heldAnswers.values : {};
   useEffect(() => {
+    const setAnswers = (update: (previous: Record<string, Answer>) => Record<string, Answer>) =>
+      setHeldAnswers(previous => previous.key === requestKey ? { key: requestKey, values: update(previous.values) } : previous);
     const ids = key ? key.split("|") : [];
     const localBodies = JSON.parse(localBodiesKey) as Record<string, { id: string; state: string | null;
       label: string; divisionType: string | null; tier: string }[]>;
@@ -152,7 +157,7 @@ export function useConfirmedDivisions(
         });
     }
     return () => controller.abort();
-  }, [key, localBodiesKey]);
+  }, [key, localBodiesKey, requestKey]);
 
   return wanted.map((ocdId) => {
     const cachedAnswer = cached.get(ocdId);

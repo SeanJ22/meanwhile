@@ -43,7 +43,7 @@ test("one-body detail retains the existing member, photo, phone and field source
 test("concurrent requests for the same body share one request, and a later open can refresh", async t => {
   const detail = { bodyId: "body:one", roster: { members: [], gaps: [], officePhone: null } };
   let requests = 0;
-  t.mock.method(globalThis, "fetch", async input => {
+  t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
     requests++;
     const url = new URL(String(input), "https://example.test");
     assert.equal(url.searchParams.get("state"), "AZ");

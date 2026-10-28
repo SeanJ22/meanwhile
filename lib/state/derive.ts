@@ -220,7 +220,7 @@ export function computeStats(input: {
     districts: drawnDistricts ? drawnDistricts.length : null,
     governingDistricts:
       atAddress && coverage ? coverage.divisions.length : null,
-    officials: coverage ? allOfficialRows(coverage).length : 0,
+    officials: coverage ? coverage.officialCount ?? allOfficialRows(coverage).length : 0,
     coverageAnswered: coverage !== null,
   };
 }

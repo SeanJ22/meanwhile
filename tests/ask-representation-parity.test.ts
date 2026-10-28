@@ -10,8 +10,11 @@ await installRegistryAuthority();
 
 const TUCSON: [number, number] = [32.21696, -110.971];
 
-test("ASK-5: every body a routed step names carries the roster the battlecard renders", async () => {
-  const coverage = await coverageAt(...TUCSON, 1);
+test("ASK-5: a routed body uses the same keyed roster as the battlecard", async () => {
+  const summary = await coverageAt(...TUCSON, 1);
+  assert.ok(summary.bodies.every(body => !body.readerRoster));
+  const coverage = { ...summary, bodies: summary.bodies.map(body => ({ ...body,
+    readerRoster: { members: rosterHoldersForBody(body.bodyId), gaps: [], officePhone: null } })) };
 
   // The school-operations route's own step targets the school district's governing board.
   const answer = resolveRouting("schools-operations", coverage);

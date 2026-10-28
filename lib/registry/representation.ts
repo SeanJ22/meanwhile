@@ -65,7 +65,7 @@ export function hasRepresentation(coverage: CoverageSummary | null): boolean {
  */
 export function namedHolderCount(coverage: CoverageSummary | null): number {
   if (!coverage) return 0;
-  return allOfficialRows(coverage).length;
+  return coverage.officialCount ?? allOfficialRows(coverage).length;
 }
 
 /**

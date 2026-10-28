@@ -1,7 +1,10 @@
 import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
-import { readFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { nativeSourceFetch, trackSourceTransport } from "../lib/sources/host-transport.ts";
 import { civicElectionRows, civicLookupFromRaw } from "../lib/sources/google-civic/model.ts";
 import { civicCandidate } from "../lib/sources/google-civic/publication.ts";
 import { lookupCivicAddress, readCivicApi } from "../lib/sources/google-civic/acquisition.ts";
@@ -103,6 +106,26 @@ test("a request-local public catalog prefetch is consumed once before sending th
   assert.ok(requests[0].pathname.endsWith("voterinfo"));
   assert.equal(requests[0].searchParams.get("address"), "private reader street");
   assert.equal(requests[0].searchParams.get("electionId"), "12000");
+});
+
+test("reader lookup never vaults its catalog or address-derived response on the production transport", async () => {
+  const root = mkdtempSync(join(tmpdir(), "voting-private-"));
+  const previousRoot = process.env.WTP_WORKER_MEMORY_DIRECTORY, previousVault = process.env.WTP_VAULT_PROVIDER;
+  process.env.WTP_WORKER_MEMORY_DIRECTORY = root;
+  delete process.env.WTP_VAULT_PROVIDER;
+  const transport = trackSourceTransport((async (input: string | URL | Request) => {
+    const url = new URL(String(input));
+    return new Response(fixture(url.pathname.endsWith("elections") ? "elections" : "mi-voterinfo"));
+  }) as typeof fetch, nativeSourceFetch);
+  try {
+    const answer = await lookupCivicAddress("private reader street", new Set(), { apiKey: "private-test-key", fetchImpl: transport });
+    assert.equal(answer.status, "AVAILABLE");
+    assert.ok(answer.rows.length > 0);
+  } finally {
+    if (previousRoot === undefined) delete process.env.WTP_WORKER_MEMORY_DIRECTORY; else process.env.WTP_WORKER_MEMORY_DIRECTORY = previousRoot;
+    if (previousVault === undefined) delete process.env.WTP_VAULT_PROVIDER; else process.env.WTP_VAULT_PROVIDER = previousVault;
+    rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test("provider Retry-After defers the shared host instead of retrying 429 or 5xx inside the lookup", async () => {

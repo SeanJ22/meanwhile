@@ -1,6 +1,6 @@
 # River status
 
-build_state: site and runner on 139; 140 merged but its deploy failed (ZP-01 migration deadlock). Release 141 (deadlock fix, meter fix, payload-part hot rule, ZIP districts) in CI: https://github.com/SeanJ22/meanwhile/pull/854. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 141 on the site since 4:28 PM EDT (main ebe82373b; includes 140). river = 795832ac9. Runner switch pending. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -89,6 +89,14 @@ heartbeat: 2026-10-28T08:35:00Z
 - Neon before 141, from the runner's own counter (the meter table is the broken one): 2 PM EDT reader 3.113 + control plane 0.801 = 3.91 GB/h; place-builder 1.98 GB of it. The 3 PM hour follows when it closes.
 - URGENT FOR SEAN, 4:20 PM: place-pages is getting more expensive while the breaker is blind. Runner counter for the 3 PM hour: reader 6.452 + control plane 0.825 = 7.28 GB/h (2 PM was 3.91). place-builder.ts:701 reading civic_data_promotions was 5.06 GB of it, i.e. place-pages on 139's builder. 141 replaces that builder path (ZP-01 measured ~0.34 GB/h) and restores the breaker. Until 141 is live, pausing place-pages in Admin is your call.
 - 4:19 PM: 141's full GitHub CI passed (all four shards, gates, build, verify) on 795832ac9; river moved there. Auto-merge is pending; then the deploy applies ZP-01 under the new lock.
+- WIN 4:28 PM: RELEASE 141 IS LIVE ON THE SITE (main ebe82373b, /api/build ebe8237), and with it 140's contents (VP-01, ZP-01, door-checks fix, search log). The production migration applied ZP-01 under the new lock at 4:25 PM: 2 migrations, 8 statements, journal 76 of 76, no deadlock. river = 795832ac9 (CI passed).
+- Checked live on 141:
+  - The same 32 ZIPs as the 139 check show the same or more meetings, bodies and officials in every ZIP.
+  - 19712 has the Colonial School District Board of Education back (6 bodies, was 5), marked "could govern".
+  - The same 13 ZIPs are empty as before; not caused by 139-141.
+  - ZIPs 19810, 67213, 94565 and 82190 load with no failed /api/log request (they got 400/413 before).
+- Runner: still on 139 (c8f768f) at 4:28 PM. River is watching for the switch, then the meter rows by job, the breaker's GB, hot partitions, door-probes GB/h and hourly looks.
+- Door looks before 141 (cp_doors validators.checkedAt, each door's latest look): 3 PM 117 doors in 62 places; 4 PM so far 92.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

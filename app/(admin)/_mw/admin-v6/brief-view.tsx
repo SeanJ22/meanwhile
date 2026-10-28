@@ -28,22 +28,21 @@ export function BriefParts({brief}:{readonly brief:BriefSnapshot}){
  </div>;
 }
 export function BriefView(){
- const {reading,reload}=useReading<BriefReading>("/api/admin/v6/brief");
- return <><header className={s.spread}><h1 className={s.h1}>Brief</h1><button type="button" className={s.btn} onClick={reload}>Pull a report</button></header>
+ const { reading, reload, status } = useReading<BriefReading>("/api/admin/v6/brief");
+ return <section><header className={s.spread}><h1 className={s.h1}>Brief</h1><button type="button" className={s.btn} onClick={reload}>Pull a report</button></header>{status}
   {reading.kind==="loading"&&<Loading what="the brief"/>}{reading.kind==="failed"&&<Failed what="The brief" retry={reload}/>}
   {reading.kind==="ready"&&<>{reading.stale&&<p role="status">This is the earlier report; the latest read failed.</p>}<BriefParts brief={reading.data.fresh}/></>}
- </>;
+ </section>;
 }
 export function DailyBrief(){
- const {reading,reload}=useReading<{latest:BriefSnapshot|null}>("/api/admin/v6/daily-brief");
- if(reading.kind==="loading")return null;
- if(reading.kind==="failed")return <Failed what="The daily brief" retry={reload}/>;
- if(!reading.data.latest)return null;
- return <Card title="Latest daily brief">{reading.stale&&<p role="status">The latest read failed; this is the earlier daily brief.</p>}<BriefParts brief={reading.data.latest}/></Card>;
+ const { reading, reload, status } = useReading<{latest:BriefSnapshot|null}>("/api/admin/v6/daily-brief");
+ return <Card title="Latest daily brief">{status}
+  {reading.kind==="failed"&&<Failed what="The daily brief" retry={reload}/>}
+  {reading.kind==="ready"&&reading.data.latest&&<BriefParts brief={reading.data.latest}/>}</Card>;
 }
 export function AlertStrip(){
- const {reading}=useReading<{on:boolean;alerts:BriefSnapshot["alerts"]}>("/api/admin/v6/alerts",60_000);
+ const { reading, status } = useReading<{on:boolean;alerts:BriefSnapshot["alerts"]}>("/api/admin/v6/alerts");
  // No alert appears before the owner turns on the setting. A failed refresh does not revive a stale switch.
- if(reading.kind!=="ready"||reading.stale||!reading.data.on||!reading.data.alerts.length)return null;
- return <aside className={s.banner} aria-label="Needs me"><ul>{reading.data.alerts.map(a=><li key={a.key}>{a.what} · {a.next}</li>)}</ul></aside>;
+ return <section>{status}{reading.kind==="ready"&&!reading.stale&&reading.data.on&&reading.data.alerts.length>0&&
+  <aside className={s.banner} aria-label="Needs me"><ul>{reading.data.alerts.map(a=><li key={a.key}>{a.what} · {a.next}</li>)}</ul></aside>}</section>;
 }

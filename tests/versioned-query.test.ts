@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
-import { versionedSelect } from "../lib/db/versioned-query.ts";
+import { isVersionedSelectStatement, versionedSelect } from "../lib/db/versioned-query.ts";
 import { legistarMemberClocks } from "../lib/sources/legistar/members-tasks.ts";
 
 test("the dispatched member clock query keeps its source column and checks unchanged row versions", async () => {
@@ -119,6 +119,39 @@ test("a failed fresh version query never returns a held SQL result", async () =>
     await assert.rejects(read(async () => [{ value: 2 }], "SELECT 1 AS value"), /no database row version/,
       "a missing version can never turn into a permanent unchanged cache key");
   } finally { await pg.close(); }
+});
+
+test("checked SQL text is fixed across parameters, cache contents and overlapping executions", async () => {
+  const pg = new PGlite();
+  const cache = new CivicReadCache({ read: async () => null, write: async () => {} });
+  const read = versionedSelect("fixed-sql", cache);
+  const text = "SELECT $1::integer AS value";
+  const statements: string[] = [];
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  let arrived!: () => void;
+  const started = new Promise<void>(resolve => { arrived = resolve; });
+  try {
+    const first = await read(async (sql, params) => {
+      statements.push(sql);
+      return (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
+    }, text, [1]);
+    assert.deepEqual(first, [{ value: 1 }]);
+    const waiting = read(async (sql, params) => {
+      statements.push(sql); arrived(); await gate;
+      return (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
+    }, text, [2]);
+    await started;
+    await read(async (sql, params) => {
+      statements.push(sql);
+      return (await pg.query<Record<string, unknown>>(sql, [...params])).rows;
+    }, text, [3]);
+    assert.equal(new Set(statements).size, 1);
+    assert.equal(isVersionedSelectStatement(statements[0]), true, "finishing one call leaves the identical pending call registered");
+    release();
+    assert.deepEqual(await waiting, [{ value: 2 }]);
+    assert.equal(isVersionedSelectStatement(statements[0]), false);
+  } finally { release?.(); await pg.close(); }
 });
 
 test("a checked writer CTE runs once per call, including unchanged results, and stays inside its transaction", async () => {

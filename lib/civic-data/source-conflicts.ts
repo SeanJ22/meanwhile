@@ -35,12 +35,16 @@ const META = new Set(["id", "bodyId", "ocdId", "sourceUrl", "sourceOrg", "collec
 
 export function resolveRecordConflicts(current: Record<string, unknown> & { id: string }, prior: Record<string, unknown> & { id: string },
   currentReceipt: ManualSourceSetReceipt, priorReceipt: ManualSourceSetReceipt): { record: typeof current; conflicts: SourceScopedHeldFact[] } {
+  // Source storage and sentence attestations describe evidence, not changed reader facts.
+  // Logging a replaced full source here would put its megabytes back into every candidate.
+  const metadata = current.kind === "MEASURE" && Array.isArray(current.sentences)
+    ? new Set([...META, "sourceText", "sourceTextHash", "sourceCapture", "subjectQuote", "sentences", "checked", "writerModel", "checkerModel", "playbookVersion", "writingRulesVersion"]) : META;
   const record = { ...current }, fieldSources = { ...row(current.fieldSources) };
   const conflicts: SourceScopedHeldFact[] = [];
   const walk = (incomingRow: Record<string, unknown>, oldRow: Record<string, unknown>, prefix = ""): Record<string, unknown> => {
     const result = { ...incomingRow };
     for (const [key, incoming] of Object.entries(incomingRow)) {
-      if (META.has(key) || incoming === null || incoming === undefined) continue;
+      if (metadata.has(key) || incoming === null || incoming === undefined) continue;
       const old = oldRow[key], field = prefix + key;
       if (old === undefined || old === null || canonicalCivicDataJson(old) === canonicalCivicDataJson(incoming)) continue;
       if (typeof incoming === "object" && !Array.isArray(incoming) && typeof old === "object" && !Array.isArray(old)) {

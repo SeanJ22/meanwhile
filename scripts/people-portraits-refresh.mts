@@ -4,7 +4,7 @@ import { STATE_PEOPLE_JURISDICTIONS } from "../lib/officials/people-identity.ts"
 import { statePeoplePortraits } from "../lib/civic-data/state-people-publication.ts";
 import { publishPeopleSource, readHeldPeopleSource, type HeldPeopleSource } from "../lib/civic-data/people-source-publication.ts";
 import { congressPortraits } from "../lib/officials/congress-portraits.ts";
-import { portraitInputScopes, portraitList, portraitNextDueAt, portraitSnapshotSettled, readPortraitSourceSnapshot, type PortraitList, type PortraitSourceProbe } from "../lib/photos/portrait-run.ts";
+import { portraitInputScopes, portraitList, portraitNextDueAt, portraitSnapshotSettled, readPortraitSourceSnapshot, samePortraitStamp, type PortraitList, type PortraitSourceProbe } from "../lib/photos/portrait-run.ts";
 import { derivedRetrieval, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { derivedSourceContentHash } from "../lib/civic-data/derived-source-hash.ts";
 import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
@@ -115,11 +115,14 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   const jurisdiction=peopleJurisdiction(state);
   const contractId=`people-portraits-${state.toLowerCase()}`;
   const snapshot=await readPortraitSourceSnapshot(store,state,query),at=clock();
+  // A settled record confirms unchanged only when its schedule names the list it was built from; otherwise the run records one.
+  const runState=await store.readPortraitRunState(peopleSourceScope(jurisdiction,"people-portraits"));
+  const listed=Boolean(runState?.seen && samePortraitStamp(snapshot.stamp,runState.seen));
   const rawHash=snapshot.probe?.sourceContentHash ?? "";
   const confirmation=await confirmSourceHashUnchanged({store,sourceId:"people-portraits",recordClass:"STATE_LEGISLATOR",
     scope:peopleSourceScope(jurisdiction,"people-portraits"),parserVersion:sourceAuthority("people-portraits")!.parserVersion,
     rawHash,retrieval:{requestedUrl:`derived:people-portraits:${peopleSourceScope(jurisdiction,"people-portraits")}`,finalUrl:null,httpStatus:null,
-      rawHash,retrievedAt:snapshot.probe?.retrievedAt ?? at},now:at,complete:!input.force && portraitSnapshotSettled(snapshot,at)});
+      rawHash,retrievedAt:snapshot.probe?.retrievedAt ?? at},now:at,complete:!input.force && listed && portraitSnapshotSettled(snapshot,at)});
   if(confirmation){
     console.log("RCD_RECEIPT="+JSON.stringify({source:contractId,...sourceHashReceiptFields(confirmation),structuralReleaseContract:ZERO_RELEASE_EVENTS}));
     return {kind:"CONFIRMED_UNCHANGED" as const,confirmation};
@@ -181,14 +184,15 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
   const continuationFacts=[...stateResult?.excludedFacts.filter(fact=>fact.code === "STATE_PORTRAIT_WORK_REMAINS") ?? [],
     ...congressResult?.excludedFacts.filter(fact=>fact.code === "CONGRESS_PORTRAIT_WORK_REMAINS") ?? []];
   await queue;
-  // The last save carries the remaining work, the next due time and the list's inputs, so a cut-off run resumes and a settled state rests.
+  // The last save carries the remaining work, the next due time, the list's inputs and the roster versions it read,
+  // so a cut-off run resumes, a settled state rests, and the next list reads only rosters that changed.
   const factsNow=[...priorFacts.filter(fact=>!runPeople.has((fact.record as {personId?:string}|undefined)?.personId ?? "")),...runFacts];
   const now=(person:Officeholder)=>runPeople.get(person.personId ?? person.id) ?? person;
-  const nextDueAt=portraitNextDueAt(list.unverified.people.map(now),list.unverified.members.map(now),factsNow,clock(),continuationFacts.length>0);
+  const nextDueAt=portraitNextDueAt(list.unverified.people.map(now),list.unverified.members.map(now),factsNow,clock(),continuationFacts.length>0,list.restingDueAt);
   await publish({continuation:continuationFacts,schedule:{key:`${jurisdiction}:portrait-schedule`,code:PORTRAIT_SCHEDULE_CODE,
     detail:nextDueAt ? `The next person without a portrait in this state is due ${nextDueAt}; until then the runner skips the state unless its rosters name someone new.`
       : "Everyone this state's rosters name has a portrait; the runner skips the state until they name someone new.",
-    record:{nextDueAt,seen:list.stamp}}});
+    record:{nextDueAt,seen:list.stamp,read:list.read}}});
   if(!last)throw Error("PEOPLE_PORTRAIT_NO_HELD_PEOPLE");
   printSourceRunnerReceipt(contractId,last.candidate,last.outcome);
   return last;

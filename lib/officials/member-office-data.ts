@@ -44,7 +44,7 @@ export interface MemberOfficeSlice {
 export async function readMemberOfficeRows(query: Query, state: string, members: readonly string[] = []): Promise<MemberOfficeSlice | null> {
   const scope = memberOfficeStateScope(state), postal = memberOfficeScopeState(scope)!;
   const [row] = await query(`WITH pointer AS MATERIALIZED (
-    SELECT p.*,c.retrieved_at,c.candidate->'temporal' AS temporal,
+    SELECT p.key,p.scope,p.current_version_id,p.source_id,p.promoted_at,p.validation_receipt,c.retrieved_at,c.candidate->'temporal' AS temporal,
       (reader_payload_node(p.payload)-'records') AS header,
       jsonb_build_object('normalizedHash',c.normalized_hash,'stateRecordHashes',CASE WHEN cardinality($4::text[])=0 THEN reader_payload_value(c.candidate#>'{normalization,stateRecordHashes}') END) AS normalization,
       (p.current_version_id=p.last_known_good_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded

@@ -100,6 +100,8 @@ export interface DoorRecord {
 }
 
 export type DoorRepository = AggregateRepository<DoorRecord> & {
+  /** Meeting installation does not need voting pages or other saved source bodies. */
+  meetingRecords?(): Promise<readonly Persisted<DoorRecord>[]>;
   /** Current store-filtered descriptors for hand-wired calendars or census calendars. */
   meetingMatches?(census: boolean, projection: RecordProjection): Promise<readonly Persisted<DoorRecord>[]>;
 };

@@ -112,10 +112,11 @@ function FlagSearch({reload}:{readonly reload:()=>void}) {
 export function AuditFlagsPanel() {
   const {mode} = useV6();
   const [after,setAfter] = useState("0");
-  const {reading,reload} = useReading<{flags:OwnerFlag[];next:string|null}>(`/api/admin/v6/fact-flags?after=${after}`);
+  const { reading, reload, status } = useReading<{flags:OwnerFlag[];next:string|null}>(`/api/admin/v6/fact-flags?after=${after}`);
   if (mode !== "live") return null;
   const flags = reading.kind === "ready" ? reading.data : null;
   return <section aria-label="Published fact flags" className={s.stack}>
+    {status}
     <h2>Published fact flags</h2>
     <FlagSearch reload={reload}/>
     {reading.kind === "failed" && <p className={s.why}>Published fact flags could not be read.</p>}

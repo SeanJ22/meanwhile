@@ -1,3 +1,4 @@
+import { isTranslationProjection, readPublishedProjectionBase } from "./published-projection-base.ts";
 import { statePublicationPriorOf } from "./state-publication.ts";
 import { randomUUID } from "node:crypto";
 import type { CandidateState, CandidateVersionRecord, PromotedProjection, RoutineCandidate, ValidationReceipt } from "./types.ts";
@@ -109,7 +110,10 @@ export async function processRoutineCandidate(
     : base ? base.current : await store.readPromotion(inputCandidate.recordClass, inputCandidate.scope);
   // Geography needs the prior payload and its proof, without rereading the
   // national before/after delta and identity lists from the prior candidate.
-  let lkg = navigation ? navigation.base?.record ?? null : base ? base.lkg : current ? await (inputCandidate.recordClass === "CENSUS_GEOGRAPHY" && store.readCandidateProof
+  let lkg = navigation ? navigation.base?.record ?? null : base ? base.lkg :
+    current && isTranslationProjection(inputCandidate.recordClass, inputCandidate.scope)
+      ? await readPublishedProjectionBase(store, current.lastKnownGoodVersionId, current.lastKnownGoodVersionId === current.versionId ? current.payload : undefined)
+      : current ? await (inputCandidate.recordClass === "CENSUS_GEOGRAPHY" && store.readCandidateProof
     ? store.readCandidateProof(current.lastKnownGoodVersionId) : store.readCandidate(current.lastKnownGoodVersionId)) : null;
   let indexedPrior = lkg ? statePublicationPriorOf(lkg.candidate) : undefined;
   const observedBaseVersionId = navigation || options.publicationBase
@@ -123,7 +127,8 @@ export async function processRoutineCandidate(
     ? null
     : await store.readCandidate(lkgPredecessorVersionId);
   let declaredBase = !scoped && preloadedBaseChanged && expectedBaseVersionId !== null && expectedBaseVersionId !== undefined
-    ? options.publicationBase ? options.publicationBase.lkg : navigation?.base?.record ?? await store.readCandidate(expectedBaseVersionId)
+    ? options.publicationBase ? options.publicationBase.lkg : navigation?.base?.record ?? (isTranslationProjection(inputCandidate.recordClass, inputCandidate.scope)
+      ? await readPublishedProjectionBase(store, expectedBaseVersionId) : await store.readCandidate(expectedBaseVersionId))
     : null;
   let exactDeclaredBase = declaredBase &&
       declaredBase.candidate.id === expectedBaseVersionId &&

@@ -81,11 +81,18 @@ export function portraitProfileLinks(person: PortraitPerson): readonly string[] 
 export function portraitDueAt(person: PortraitPerson, lastAttempt: PortraitAttempt | undefined,
   verified: (person: PortraitPerson) => boolean): number {
   if (verified(person)) return Number.POSITIVE_INFINITY;
-  const record = lastAttempt?.record as { attemptedAt?: string; profiles?: readonly string[]; interrupted?: boolean } | undefined;
-  const attemptedAt = Date.parse(record?.attemptedAt ?? "");
-  if (record?.interrupted || !Number.isFinite(attemptedAt)) return 0;
+  const record = lastAttempt?.record as { profiles?: readonly string[] } | undefined;
+  const due = portraitAttemptDueAt(lastAttempt);
+  if (due === 0) return 0;
   if (record?.profiles && record.profiles.join("\n") !== portraitProfileLinks(person).join("\n")) return 0;
-  return attemptedAt + PORTRAIT_RETRY_MS;
+  return due;
+}
+
+/** When a person's retry falls due from their last attempt alone, while their links are as the attempt read them. */
+export function portraitAttemptDueAt(lastAttempt: PortraitAttempt | undefined): number {
+  const record = lastAttempt?.record as { attemptedAt?: string; interrupted?: boolean } | undefined;
+  const attemptedAt = Date.parse(record?.attemptedAt ?? "");
+  return record?.interrupted || !Number.isFinite(attemptedAt) ? 0 : attemptedAt + PORTRAIT_RETRY_MS;
 }
 
 /** Each person's latest attempt with this code prefix. */

@@ -1,3 +1,6 @@
+// Database byte declarations use database_transfer_hourly, through 2026-10-27 17:00 UTC.
+// Source families use their largest recorded hour (request + response bytes) as a conservative per-run estimate.
+// Commands absent from the counters use the routine supervisor estimate, 1,907,347,669 bytes.
 import { withDatabaseByteContract } from "./database-byte-contract.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { PEOPLE_SOURCE_IDS, peopleSourceRecordClass, peopleSourceScope, type PeopleSourceId } from "../officials/people-sources.ts";
@@ -21,6 +24,7 @@ const PEOPLE_SOURCE_DEFINITIONS: readonly RoutineSourceContract[] = [
   {
     id: peopleSourceContractId("us", "statewide-executive-sources"), sourceId: "statewide-executive-sources", recordClass: "STATE_LEGISLATOR",
     scope: peopleSourceScope("US", "statewide-executive-sources"), acquisitionFailureDomain: "routine-source:statewide-executive-sources:us",
+    databaseBytesPerRun: 77_713_226,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: ["scripts/national-people-refresh.mts", "--promote", "--state=us", "--source=statewide-executive-sources"] },
     parserNormalizerVersion: sourceAuthority("statewide-executive-sources")!.parserVersion,
     cadence: { description: "daily current President refresh from the White House administration", defaultEveryMs: DAY },
@@ -35,6 +39,7 @@ const PEOPLE_SOURCE_DEFINITIONS: readonly RoutineSourceContract[] = [
     recordClass: peopleSourceRecordClass(sourceId),
     scope: peopleSourceScope(`US-${state.toUpperCase()}`, sourceId),
     acquisitionFailureDomain: `routine-source:${sourceId}:${state}`,
+    databaseBytesPerRun: 77_713_226,
     acquisitionAdapter: { authorityMode: "REGISTERED_SOURCE_ROUTES", command: [
       "scripts/national-people-refresh.mts", "--promote", `--state=${state}`, `--source=${sourceId}`,
     ] },
@@ -54,6 +59,9 @@ const PEOPLE_SOURCE_DEFINITIONS: readonly RoutineSourceContract[] = [
     recordClass: peopleSourceRecordClass("people-portraits"),
     scope: peopleSourceScope(state === "us" ? "US" : `US-${state.toUpperCase()}`, "people-portraits"),
     acquisitionFailureDomain: `routine-source:people-portraits:${state}`,
+    // Estimated, not measured: the largest state's held portrait record read once (4.2 MB) and saved twice, its directory and
+    // changed rosters' people without a portrait. Unchanged rosters cost version rows only.
+    databaseBytesPerRun: 16_000_000,
     acquisitionAdapter: { authorityMode: "DERIVED", command: ["scripts/people-portraits-refresh.mts", "--promote", `--state=${state}`] },
     parserNormalizerVersion: "people-portraits/1",
     cadence: { description: "standing verification of every missing or due official portrait", defaultEveryMs: HOUR },

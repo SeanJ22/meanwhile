@@ -19,16 +19,16 @@ export async function readFederalMoneyJoinInputHash(state:string,facts:readonly 
   const [rows]=await query([{text:`WITH native AS MATERIALIZED (
     SELECT * FROM jsonb_to_recordset($2::jsonb) n(source text,uei text,identifiers jsonb)
   ), reports AS MATERIALIZED (
-    SELECT r.* FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+    SELECT r.collection,r.scope,r.row_id,r.content_hash,r.value->>'uei' AS uei FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
     WHERE r.record_class='FEDERAL_MONEY' AND r.collection='federalMoney' AND r.state=$1
       AND reader_payload_node(p.payload)->>'source'='federal-audit-clearinghouse'
       AND r.aliases&&ARRAY(SELECT 'report:'||(identifiers->>'reportId') FROM native WHERE source='federal-audit-clearinghouse' AND identifiers->>'reportId' IS NOT NULL)
       AND reader_payload_node(r.value->'details')->>'table'='general'
   ), entities AS MATERIALIZED (
-    SELECT r.* FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+    SELECT r.collection,r.scope,r.row_id,r.content_hash FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
     WHERE r.record_class='FEDERAL_MONEY' AND r.collection='federalMoney' AND r.state=$1
       AND reader_payload_node(p.payload)->>'source'='sam-gov-entities' AND r.value->>'kind'='ENTITY'
-      AND r.aliases&&ARRAY(SELECT 'uei:'||uei FROM native WHERE uei IS NOT NULL UNION SELECT 'uei:'||(value->>'uei') FROM reports WHERE value->>'uei' IS NOT NULL)
+      AND r.aliases&&ARRAY(SELECT 'uei:'||uei FROM native WHERE uei IS NOT NULL UNION SELECT 'uei:'||uei FROM reports WHERE uei IS NOT NULL)
   ), dependencies AS (
     SELECT jsonb_build_array(r.collection,r.scope,r.row_id,r.content_hash) AS identity FROM civic_data_rows r
       JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id

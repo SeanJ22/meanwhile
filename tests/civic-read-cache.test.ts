@@ -197,6 +197,16 @@ test("concurrent streamed writes stay under the hard limit including temporary f
   assert.ok(await diskBytes(root) <= 32);
 });
 
+test("replacing a disposable copy makes it newer than older copies when the cache is full", async t => {
+  const root = await scratch(t);
+  const store = civicReadCopyStore(root, 24);
+  await store.ready;
+  for (const key of ["a", "b", "a", "c", "d"]) await store.write(key, "12345678");
+  assert.equal(await readFile(join(root, "a.json"), "utf8"), "12345678");
+  await assert.rejects(readFile(join(root, "b.json")), { code: "ENOENT" });
+  assert.equal(await diskBytes(root), 24);
+});
+
 test("seventeen concurrent uploads do not accumulate complete copies in the supervisor", async t => {
   const root = await scratch(t);
   const child = fork(new URL("./fixtures/civic-read-cache-host.mjs", import.meta.url), [], { cwd: root,

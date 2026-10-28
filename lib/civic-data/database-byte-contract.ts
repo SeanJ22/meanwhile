@@ -31,8 +31,12 @@ export function databaseByteContract(source: { readonly id: string; readonly sou
   return { databaseBytesPerRun, databaseBytesPerUnchangedRun, databaseByteBasis: "EXPECTED" };
 }
 
-export function withDatabaseByteContract<T extends { readonly id: string; readonly sourceId?: string; readonly recordClass?: string }>(source: T): T & DatabaseByteContract {
-  return { ...source, ...databaseByteContract(source) };
+export function withDatabaseByteContract<T extends { readonly id: string; readonly sourceId?: string; readonly recordClass?: string; readonly databaseBytesPerRun?: number }>(source: T): T & DatabaseByteContract {
+  const expected = databaseByteContract(source);
+  // A per-source figure measured from database_transfer_hourly (RC-01) outranks the family profile.
+  return typeof source.databaseBytesPerRun === "number"
+    ? { ...source, ...expected, databaseBytesPerRun: source.databaseBytesPerRun, databaseByteBasis: "MEASURED" }
+    : { ...source, ...expected };
 }
 
 export const ROUTINE_RUN_DATABASE_BYTES = databaseByteContract({ id: "routine-civic-data" });

@@ -27,8 +27,9 @@ test("every aggregate and log read checks database versions before a stored body
       if(!key)continue;
       if(!body){checked.add(key);versions++;continue;}
       if(row.__unchanged===true)continue;
-      // A CASE expression compares the held revision and conditionally returns the body atomically.
-      assert.ok(checked.has(key)||/CASE WHEN revision::text=\$2::text THEN NULL ELSE/.test(text),
+      // A CASE expression compares the held content version (or document
+      // revision) and conditionally returns the body in the same statement.
+      assert.ok(checked.has(key)||/CASE WHEN (?:revision::text|value_version)=\$2::text THEN NULL ELSE/.test(text),
         `stored body skipped the version check: ${text}`);
       bodies++;
     }

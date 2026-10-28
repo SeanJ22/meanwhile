@@ -92,14 +92,9 @@ export class NetlifyEvidenceStore implements EvidenceStore {
     if (bytes.byteLength !== meta.byteLength || objectClassOf(meta) === "IMMUTABLE_BODY" && bodySha256 !== meta.contentHash) {
       throw new EvidenceStoreRefusal(`Evidence bytes do not match metadata at ${key}`);
     }
-    // An immutable no-op means these bytes are held, not just their metadata.
-    // Rebuilt indexes keep the metadata-only path so a damaged old index can be replaced.
-    let held: { meta: ObjectMeta; bytes?: Uint8Array } | null;
-    if (objectClassOf(meta) === "IMMUTABLE_BODY") held = await this.getStored(key);
-    else {
-      const metadata = await this.head(key);
-      held = metadata ? { meta: metadata } : null;
-    }
+    // "Already held?" is decided from the stored metadata and its content hash; the stored body is never downloaded to decide it.
+    const metadata = await this.head(key);
+    const held = metadata ? { meta: metadata } : null;
     if (reconcileExistingObject(key, bytes, meta, held)) return;
     const encoded = encodeObject(bytes, { meta, bodySha256 });
     const result = await this.store.set(key, new Uint8Array(encoded.bytes).buffer, {
@@ -107,8 +102,8 @@ export class NetlifyEvidenceStore implements EvidenceStore {
       ...(objectClassOf(meta) === "IMMUTABLE_BODY" ? { onlyIfNew: true } : {}),
     });
     if (!result.modified) {
-      const raced = await this.getStored(key);
-      if (!raced || !reconcileExistingObject(key, bytes, meta, raced)) throw new EvidenceStoreRefusal(`Concurrent evidence write did not settle at ${key}`);
+      const raced = await this.head(key);
+      if (!raced || !reconcileExistingObject(key, bytes, meta, { meta: raced })) throw new EvidenceStoreRefusal(`Concurrent evidence write did not settle at ${key}`);
     }
   }
 

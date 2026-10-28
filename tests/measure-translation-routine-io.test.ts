@@ -195,8 +195,8 @@ test("registered official linking pages are re-read and vaulted before admitting
     open: async url => { opened.push(url); return new Response(url === officialUrl ? freshIndex : text); },
   });
   assert.deepEqual(result.failures, []);
-  assert.deepEqual(new Set(opened), new Set([measureUrl, officialUrl]));
-  assert.equal(result.captures.length, 2);
+  assert.deepEqual(new Set(opened), new Set(["https://leg.colorado.gov/bluebook", measureUrl, officialUrl]));
+  assert.equal(result.captures.length, 3);
   const primary = result.captures.find(capture => capture.evidence.canonicalUrl === measureUrl)!;
   const links = linkingPageFrom(measureUrl, result.captures.map(capture => capture.evidence));
   assert.equal(links?.html, freshIndex, "authority uses the actual saved HTTP response, never the registry's stored excerpt");

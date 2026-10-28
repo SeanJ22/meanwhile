@@ -21,7 +21,7 @@ import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { federalDirectoryStateOf } from "../officials/federal-directory-data-plane.ts";
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, statePublicationScope } from "./state-publication.ts";
 
-import { and, desc, eq, getTableColumns, inArray, like, or, sql } from "drizzle-orm";
+import { and, desc, eq, getTableColumns, inArray, like, or, sql, type SQL } from "drizzle-orm";
 
 import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";
@@ -42,6 +42,9 @@ import {
   type ValidationReceipt,
 } from "./types.ts";
 import type { Officeholder, OfficeholderSet } from "../officials/types.ts";
+import { portraitRosterSlicesSql, portraitRosterVersionsSql, portraitSlicesInMemory, readPortraitRosters, type PortraitRosterRequest, type PortraitRosters } from "./portrait-rosters.ts";
+import type { SlimRoster } from "./portrait-rosters.ts";
+export type { SlimRoster } from "./portrait-rosters.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
 import { canonicalCivicDataHash, durableCivicDataHash } from "./canonical-hash.ts";
 import {
@@ -235,12 +238,17 @@ export interface RoutineDataStore {
   readonly readPromotions: <T = unknown>(recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedProjection<T>[]>;
   readonly readPromotionIdentity: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedPointerIdentity | null>;
   readonly readSourceHead: (recordClass: RoutineRecordClass, scope: string) => Promise<SourceHead | null>;
+  /** The same heads for several sources in one read; adapters without it read them one by one. */
+  readonly readSourceHeads?: (pointers: readonly { readonly recordClass: RoutineRecordClass; readonly scope: string }[]) => Promise<ReadonlyMap<string, SourceHead>>;
   readonly recordSourceCheck?: (input: RecordPublishedSourceCheck) => Promise<boolean>;
   readonly readSourceChecks?: (recordClass: RoutineRecordClass, scope: string, sourceKeys: readonly string[]) => Promise<readonly PublishedSourceCheck[]>;
   readonly readFederalCounts?: (source: string) => Promise<{ readonly complete: boolean; readonly counts: FederalCounts }>;
   readonly readPromotionIdentities: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly PromotedPointerIdentity[]>;
-  /** The current portrait record's input versions and next due time, without the record itself. */
+  /** The current portrait record's input versions and next due time, without the record or its attempts. */
   readonly readPortraitRunState: (scope: string) => Promise<PortraitRunState | null>;
+  /** Each roster's version row, then only the people a portrait list is owed for: changed rosters' people and due people
+   * without a portrait readers are shown, chosen where the rosters are held. */
+  readonly readPortraitRosters: (request: PortraitRosterRequest) => Promise<PortraitRosters>;
   /** Promoted rosters' people, slimmed to what a portrait list needs. */
   readonly readSlimRosters: (recordClass: RoutineRecordClass, scopes: readonly string[]) => Promise<readonly SlimRoster[]>;
   /** Exact promoted historical roster identity fields; unavailable adapters leave the join unresolved. */
@@ -276,19 +284,14 @@ export interface PortraitStamp {
   readonly versions: Readonly<Record<string, string>>;
   readonly local: string | null;
 }
-type PortraitAttemptFact = NonNullable<RoutineCandidate["excludedFacts"]>[number];
-/** What the last portrait run saw, when a person without a portrait is next due, and each person's attempts. */
+/** What the last portrait run saw and when a person without a portrait is next due. */
 export interface PortraitRunState {
   readonly nextDueAt: string | null;
   readonly seen: PortraitStamp | null;
-  readonly attempts: readonly PortraitAttemptFact[];
 }
-const portraitAttemptCode = (code: string) => code.startsWith("STATE_PORTRAIT_") || code.startsWith("CONGRESS_PORTRAIT_");
 function portraitRunState(candidate: RoutineCandidate): PortraitRunState {
-  const facts = candidate.excludedFacts ?? [];
-  const schedule = facts.find(fact => fact.code === PORTRAIT_SCHEDULE_CODE)?.record as { nextDueAt?: string | null; seen?: PortraitStamp } | undefined;
-  return { nextDueAt: schedule?.nextDueAt ?? null, seen: schedule?.seen ?? null,
-    attempts: facts.filter(fact => portraitAttemptCode(fact.code)).map(fact => structuredClone(fact)) };
+  const schedule = (candidate.excludedFacts ?? []).find(fact => fact.code === PORTRAIT_SCHEDULE_CODE)?.record as { nextDueAt?: string | null; seen?: PortraitStamp } | undefined;
+  return { nextDueAt: schedule?.nextDueAt ?? null, seen: schedule?.seen ? structuredClone(schedule.seen) : null };
 }
 /** A person's fields a portrait list and its work need; offices, memberships' sources and most field receipts stay behind. */
 const ROSTER_PERSON_HEAVY_FIELDS = ["offices", "fieldSources"] as const;
@@ -305,15 +308,6 @@ function slimRosterPerson(person: Record<string, unknown>): Record<string, unkno
   const kept = Object.fromEntries(["name", "officeTitle", "photo"].flatMap(field => fieldSources?.[field] ? [[field, fieldSources[field]]] : []));
   const slim = Object.fromEntries(Object.entries(person).filter(([key]) => !(ROSTER_PERSON_HEAVY_FIELDS as readonly string[]).includes(key)));
   return { ...slim, fieldSources: kept };
-}
-/** One promoted roster's people without their offices and field receipts, and the identity its read model hash names. */
-export interface SlimRoster {
-  readonly recordClass: RoutineRecordClass;
-  readonly scope: string;
-  readonly versionId: string;
-  readonly promotedAt: string;
-  readonly readModelSha256: string | null;
-  readonly roster: OfficeholderSet;
 }
 
 export type RosterIdentityPerson=Pick<Officeholder,"id"|"personId"|"nativeIds"|"level"|"websiteUrl"|"profileUrls">&{
@@ -957,6 +951,24 @@ export class MemoryRoutineDataStore implements RoutineDataStore {
     const pointer = this.promotions.get(projectionKey("STATE_LEGISLATOR", scope));
     const record = pointer ? this.candidates.get(pointer.versionId) : undefined;
     return record ? portraitRunState(record.candidate) : null;
+  }
+
+  async readPortraitRosters(request: PortraitRosterRequest): Promise<PortraitRosters> {
+    const held = (key: string) => {
+      const pointer = this.promotions.get(key);
+      const record = pointer ? this.candidates.get(pointer.versionId) : undefined;
+      const roster = (pointer?.payload as { roster?: OfficeholderSet } | undefined)?.roster;
+      return pointer && record && roster && Array.isArray(roster.officeholders) ? { pointer, record, roster } : null;
+    };
+    return readPortraitRosters({
+      versions: async keys => keys.flatMap(key => {
+        const row = held(key);
+        return row ? [{ key, recordClass: row.pointer.recordClass, scope: row.pointer.scope, versionId: row.pointer.versionId,
+          promotedAt: row.pointer.promotedAt, readModelSha256: row.record.candidate.normalization.normalizedHash ?? null }] : [];
+      }),
+      slices: async input => portraitSlicesInMemory(new Map([...input.keys, ...input.portraitKey ? [input.portraitKey] : []]
+        .flatMap(key => { const row = held(key); return row ? [[key, row.roster] as const] : []; })), input),
+    }, request);
   }
 
   async readSlimRosters(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly SlimRoster[]> {
@@ -2313,7 +2325,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   private async readStatePromotionBody<T>(recordClass: RoutineRecordClass, scope: string): Promise<PromotedProjection<T> | null> {
     const result = await this.db.execute(sql`WITH state_promotion AS MATERIALIZED (
-      SELECT p.*, c.normalized_hash AS expected_hash,
+      SELECT p.key, p.record_class, p.scope, p.source_id, p.current_version_id, p.last_known_good_version_id, p.promoted_at,
+        p.validation_receipt, p.payload, c.normalized_hash AS expected_hash,
         ((p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt = c.validation_receipt) AS coupled,
         (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id = p.current_version_id
           AND left(e.detail, ${UNCHANGED_CONFIRMATION_PREFIX.length}) = ${UNCHANGED_CONFIRMATION_PREFIX}
@@ -2831,19 +2844,34 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readPortraitRunState(scope: string): Promise<PortraitRunState | null> {
     return this.readVersioned("portrait-run-state", "STATE_LEGISLATOR", scope, async () => {
-      // The record itself is about 1 MB; only its schedule fact and its people's attempt facts leave the database.
+      // The record itself is about 1 MB and its attempts about 200 KB; only its schedule's due time and list stamp leave the database.
       const [row] = (await this.db.execute(sql`select
-        (select f->'record' from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
-            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' = ${PORTRAIT_SCHEDULE_CODE} limit 1) as schedule,
-        (select coalesce(jsonb_agg(f), '[]'::jsonb) from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
-            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' like 'STATE\_PORTRAIT\_%' or f->>'code' like 'CONGRESS\_PORTRAIT\_%') as attempts
+        (select jsonb_build_object('nextDueAt', f#>'{record,nextDueAt}', 'seen', f#>'{record,seen}')
+          from jsonb_array_elements(case when jsonb_typeof(c.candidate->'excludedFacts') = 'array'
+            then c.candidate->'excludedFacts' else '[]'::jsonb end) f where f->>'code' = ${PORTRAIT_SCHEDULE_CODE} limit 1) as schedule
       from civic_data_promotions p join civic_data_candidates c on c.id = p.current_version_id
-      where p.record_class = 'STATE_LEGISLATOR' and p.scope = ${scope}`)).rows as { schedule: { nextDueAt?: string | null; seen?: PortraitStamp } | null; attempts: PortraitAttemptFact[] }[];
-      return row ? { nextDueAt: row.schedule?.nextDueAt ?? null, seen: row.schedule?.seen ?? null, attempts: row.attempts } : null;
-
+      where p.record_class = 'STATE_LEGISLATOR' and p.scope = ${scope}`)).rows as { schedule: { nextDueAt?: string | null; seen?: PortraitStamp | null } | null }[];
+      return row ? { nextDueAt: row.schedule?.nextDueAt ?? null, seen: row.schedule?.seen ?? null } : null;
     });
   }
 
+  async readPortraitRosters(request: PortraitRosterRequest): Promise<PortraitRosters> {
+    // Version rows decide what changed; nothing is held in a disposable copy, so nothing depends on one surviving.
+    return readPortraitRosters({
+      versions: async keys => ((await this.db.execute(portraitRosterVersionsSql(keys))).rows as {
+        key: string; record_class: RoutineRecordClass; scope: string; version_id: string; promoted_at: string | Date; normalized_hash: string | null }[])
+        .map(row => ({ key: row.key, recordClass: row.record_class, scope: row.scope, versionId: row.version_id,
+          promotedAt: new Date(row.promoted_at).toISOString(), readModelSha256: row.normalized_hash })),
+      slices: async input => {
+        const rows = (await this.db.execute(portraitRosterSlicesSql(input))).rows as { key: string | null; roster: unknown }[];
+        return { rosters: new Map(rows.flatMap(row => row.key === null ? [] : [[row.key, row.roster as OfficeholderSet] as const])),
+          shown: (rows.find(row => row.key === null)?.roster ?? []) as string[] };
+
+      },
+    }, request);
+  }
+
+  /** Legiscan identity reads only; portrait lists read version rows and owed people through readPortraitRosters. */
   async readSlimRosters(recordClass: RoutineRecordClass, scopes: readonly string[]): Promise<readonly SlimRoster[]> {
     if (!scopes.length) return [];
     type RosterRow = { scope: string; version_id: string; promoted_at: string | Date; normalized_hash: string | null; roster: OfficeholderSet };
@@ -3003,7 +3031,19 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readSourceHead(recordClass: RoutineRecordClass, scope: string): Promise<SourceHead | null> {
-    const [head] = await this.db.select({
+    const [row] = await this.sourceHeadRows(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope))!, 1);
+    return row?.head ?? null;
+  }
+
+  /** Several sources' heads in one small read, by the pointer each was asked for: version rows only, never their records. */
+  async readSourceHeads(pointers: readonly { readonly recordClass: RoutineRecordClass; readonly scope: string }[]): Promise<ReadonlyMap<string, SourceHead>> {
+    if (!pointers.length) return new Map();
+    const rows = await this.sourceHeadRows(inArray(civicDataPromotions.key, pointers.map(pointer => projectionKey(pointer.recordClass, pointer.scope))));
+    return new Map(rows.map(row => [row.key, row.head]));
+  }
+
+  private async sourceHeadRows(where: SQL, limit?: number): Promise<{ key: string; head: SourceHead }[]> {
+    const query = this.db.select({ pointerKey: civicDataPromotions.key,
       sourceId: civicDataCandidates.sourceId, recordClass: civicDataCandidates.recordClass, scope: civicDataCandidates.scope,
       versionId: civicDataPromotions.currentVersionId, lastKnownGoodVersionId: civicDataPromotions.lastKnownGoodVersionId,
       rawHash: civicDataCandidates.rawHash, normalizedHash: civicDataCandidates.normalizedHash,
@@ -3034,9 +3074,10 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
         OR coalesce(${civicDataCandidates.candidate}#>>'{stateRetirement,kind}', '') = 'STATE_AUTHORITY_RETIREMENT'
         OR ${civicDataPromotions.sourceId} <> ${civicDataCandidates.sourceId}`.as("imported"),
     }).from(civicDataPromotions).innerJoin(civicDataCandidates, eq(civicDataCandidates.id, civicDataPromotions.currentVersionId))
-      .where(and(eq(civicDataPromotions.recordClass, recordClass), eq(civicDataPromotions.scope, scope))).limit(1);
-    return head ? { ...head, recordClass: head.recordClass as RoutineRecordClass,
-      candidateState: head.candidateState as CandidateState, promotedAt: canonicalPostgresRoutineTimestamp(head.promotedAt, "sourceHead.promotedAt") } : null;
+      .where(where);
+    const rows = limit === undefined ? await query : await query.limit(limit);
+    return rows.map(({ pointerKey, ...head }) => ({ key: pointerKey, head: { ...head, recordClass: head.recordClass as RoutineRecordClass,
+      candidateState: head.candidateState as CandidateState, promotedAt: canonicalPostgresRoutineTimestamp(head.promotedAt, "sourceHead.promotedAt") } }));
   }
 
   async recordSourceCheck(input: RecordPublishedSourceCheck): Promise<boolean> {

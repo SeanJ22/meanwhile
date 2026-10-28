@@ -24,6 +24,8 @@ export function measureTranslationRoutineTask(state: string): RoutineSourceTask 
     retryMs: PLAIN_ENGLISH_TRANSLATION_ROUTINE.retryAfterMs,
     childTimeoutMs: 0,
     contract: {
+      // Largest recorded source-family hour, request + response bytes (database_transfer_hourly, through 2026-10-27 17:00 UTC).
+      databaseBytesPerRun: 3_156_175_988,
       cadence: {
         description: "Keep every missing measure explainer open on the standing translation retry clock; unchanged checked sources spend nothing",
         defaultEveryMs: PLAIN_ENGLISH_TRANSLATION_ROUTINE.retryAfterMs,

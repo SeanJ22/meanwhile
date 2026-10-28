@@ -10,6 +10,7 @@ import { spawnSync } from "node:child_process";
 import ts from "typescript";
 import { DEFAULT_HANG_KILL_MS } from "../scripts/runner-hang-watchdog.mts";
 import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
+import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
 
 const source = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
 const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & {
@@ -199,6 +200,7 @@ test("console children use the research idle guard", async () => {
     assert.ok(fn);
     let observed: number | undefined;
     const context = createContext({ CONSOLE_PUBLISHERS: [{ name: "fixture", args: [] }], TS_CHILD: [], ROOT: ".", CODE_ROOT: ".", process,
+      admitJobLaunch, INTERVAL_MIN:60,
       RUNTIME_NO_PROGRESS_MS: 600_000, standingChildEnvironment: () => process.env,
       recoverExitedWindowHolder: async () => {}, console: { log: () => {}, error: () => {} },
       runRuntimeChildren: async (_children: unknown, options: { noProgressMs?: number }) => {
@@ -206,7 +208,8 @@ test("console children use the research idle guard", async () => {
         return [{ status: 0, stdout: "", stderr: "" }];
       },
     });
-    await runInContext(stripTypeScriptTypes(fn) + `\n${name}('fixture')`, context);
+    const admission=source.match(/function jobLaunchAllowed\([\s\S]*?\n\}/)![0];
+    await runInContext(stripTypeScriptTypes(admission+"\n"+fn) + `\n${name}('fixture')`, context);
     assert.equal(observed, 600_000);
     console.log(`${name}: noProgressMs=${observed}`);
   }

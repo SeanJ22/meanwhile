@@ -157,10 +157,14 @@ test("Bodies stays compact and opens the correct body with next and last meeting
       // date from the other, a canceled meeting or another body.
       for (const calendar of ["next", "last", "none"]) {
         await page.goto(`http://127.0.0.1:${address.port}/?zip=85701&calendar=${calendar}`);
+        const opened = Date.now();
         await openTusd();
         const gapId = calendar === "next" ? "body:last-meeting" : calendar === "last" ? "body:next-meeting" : `body:${tusd.bodyId}:meetings`;
         const gap = page.locator(`[data-card-gap="${gapId}"]`);
-        await gap.waitFor({ state: "visible" });
+        await gap.waitFor({ state: "visible", timeout: 3000 });
+        if (calendar === "next") await nextRow.waitFor({ state: "visible", timeout: 3000 });
+        if (calendar === "last") await lastRow.waitFor({ state: "visible", timeout: 3000 });
+        assert.ok(Date.now() - opened < 3000, `${calendar}: the held meeting and coverage gap are usable`);
         assert.equal(await nextRow.count(), calendar === "next" ? 1 : 0);
         assert.equal(await lastRow.count(), calendar === "last" ? 1 : 0);
         assert.match(await gap.innerText(), /working on getting this info/);
@@ -173,7 +177,10 @@ test("Bodies stays compact and opens the correct body with next and last meeting
       assert.equal(await parentRow.locator("[data-meeting-type-row]").count(), 1);
       await parentRow.locator(":scope > button").click();
       await page.locator('[data-meeting-id="held-worksession"]').waitFor();
+      const openedRoster = Date.now();
       await page.getByRole("button", { name: "Who sits on it 1", exact: true }).click();
+      await page.locator("[data-roster-holder]").first().waitFor({ state: "visible", timeout: 3000 });
+      assert.ok(Date.now() - openedRoster < 3000, "the held roster is usable");
       assert.equal(await page.locator("[data-roster-holder]").count(), 1);
       assert.equal(await page.getByRole("button", { name: "Current Member", exact: true }).count(), 1, "the mayor appears once in the member list");
       assert.equal(await page.locator("[data-earlier-roster-holder]").count(), 1);

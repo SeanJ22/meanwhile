@@ -226,6 +226,7 @@ function candidateReadOnlyStore(
     readPortraitRunState: readOnly,
     readPromotionPayloadFields: readOnly,
     readCandidateField: readOnly,
+    readPortraitRosters: readOnly,
     readSlimRosters: readOnly,
     readOfficeRoster: readOnly,
     readRosterIdDigests: readOnly,

@@ -7,6 +7,7 @@ import { linkingPageFrom, section3Page } from "../control-plane/promotion/sectio
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { measureLabels, pageNamesMeasure } from "./routine-measure-pages.ts";
 import { translationHash, translationScope, type TranslationRecord } from "./records.ts";
+import { isColoradoBlueBook } from "./blue-book.ts";
 import { runMeasureTranslation } from "./runtime.ts";
 import { runTextTranslation } from "./text-runtime.ts";
 
@@ -23,10 +24,8 @@ export interface TranslationAttempt {
   readonly usage: TranslationResult["usage"];
   readonly versionId: string | null;
   readonly detail?: string;
+  readonly repairCapture?: import("../civic-data/raw-capture-vault.ts").RawCaptureRef;
 }
-
-/** Neon's answer to a single request over its 64 MiB limit. */
-const PUBLICATION_TOO_LARGE = /\bHTTP status 413\b|request is too large/;
 
 /** The parent leased worker names source-backed subjects; no global document sweep. */
 export async function runHeldTextTranslations(input: Pick<Parameters<typeof runTextTranslation>[0], "repos" | "store" | "transportFor" | "now"> & {
@@ -92,7 +91,7 @@ export async function runHeldTextTranslations(input: Pick<Parameters<typeof runT
  * guarded transport. Attempts use that worker's existing durable attempt
  * repository; this creates no separate clock, spend guard or production table.
  */
-export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "repos" | "store" | "transportFor" | "now"> & {
+export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "repos" | "store" | "transportFor" | "now" | "vault"> & {
   readonly divisions: readonly string[];
   readonly ballots: readonly BallotSet[];
   readonly captures: readonly WorkerPublicationCapture[];
@@ -142,7 +141,9 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       const sourcePage = (capture: WorkerPublicationCapture) => section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text,
         retrievedAt: capture.evidence.retrievedAt, linkingPage: linkingPageFrom(capture.evidence.canonicalUrl, pages.map(row => row.evidence)), sourcePolicy: capture.sourcePolicy },
       PLAIN_ENGLISH_TRANSLATION_ROUTINE.inputRecordClass, input.now);
-      const primary = candidates.find(capture => capture.evidence.canonicalUrl === contest.measureTextUrl && sourcePage(capture).ok) ?? candidates[0];
+      const primary = candidates.find(capture => contest.ocdId === "ocd-division/country:us/state:co" &&
+        isColoradoBlueBook(capture.evidence.canonicalUrl) && sourcePage(capture).ok) ??
+        candidates.find(capture => capture.evidence.canonicalUrl === contest.measureTextUrl && sourcePage(capture).ok) ?? candidates[0];
       if (!primary) { deferred.push({ subjectId: contest.id, reason: "No complete current source capture is held." }); continue; }
       const sourceHash = (primary.evidence.sourceDocument?.contentHash ?? primary.evidence.contentHash).replace(/^sha256-/, "");
       const sourceTextHash = translationHash(primary.evidence.text);
@@ -160,11 +161,6 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         deferred.push({ subjectId: contest.id, reason: "The existing attempt's retry clock is unreadable." }); continue;
       }
       const last = matchingAttempts.reverse().sort((a, b) => Date.parse(b.at) - Date.parse(a.at))[0];
-      // The routine's trigger is a changed held source. The database refused this exact source's
-      // publication as one oversized write; repeating it buys both paid calls and fails the same way.
-      if (last?.status === "HELD" && PUBLICATION_TOO_LARGE.test(last.detail ?? "")) {
-        deferred.push({ subjectId: contest.id, reason: "The checked explainer for this exact source is larger than one database write; it waits for changed source bytes." }); continue;
-      }
       if (last && ["RUNNING", "HELD"].includes(last.status) &&
           nowMs - Date.parse(last.at) < PLAIN_ENGLISH_TRANSLATION_ROUTINE.retryAfterMs) {
         deferred.push({ subjectId: contest.id, reason: "The existing attempt is running or its retry is not due." }); continue;
@@ -176,13 +172,15 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       // Refuse to spend if the worker cannot first retain its running attempt.
       await input.saveAttempt(attempt);
       const result = await runMeasureTranslation({ ...input, primary, captures: pages,
+        ...(last?.status === "HELD" && last.detail ? { priorFeedback: last.detail, ...(last.repairCapture ? { priorRepairCapture: last.repairCapture } : {}) } : {}),
         batchPriority: { now: input.now, electionAt: [ballot.election?.date ?? ""] },
         subject: { contestId: contest.id, title: contest.title, ocdId: contest.ocdId,
           state: jurisdictionFromOcdId(contest.ocdId)!.usps,
           sourceQuote: labels.find(value => pageNamesMeasure(primary.evidence.text, [value])) ?? primary.evidence.text,
           prior: measure } });
       const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage,
-        versionId: result.versionId, ...("detail" in result ? { detail: result.detail } : {}) };
+        versionId: result.versionId, ...("detail" in result ? { detail: result.detail } : {}),
+        ...("repairCapture" in result ? { repairCapture: result.repairCapture } : {}) };
       outcomes.push(finished);
       try { await input.saveAttempt(finished); }
       catch (error) {

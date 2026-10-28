@@ -128,6 +128,8 @@ function buildOne(door: DoorRecord): OutcomePartitionContract | null {
     recordClass: "MEETING_OUTCOME",
     scope,
     acquisitionFailureDomain: meetingAcquisitionFailureDomain(kind, row),
+    // Largest recorded family hour, request + response bytes, database_transfer_hourly through 2026-10-27 17:00 UTC.
+    databaseBytesPerRun: kind === "legistar" ? 12_324_639 : 87_369_967,
     acquisitionAdapter: {
       authorityMode: "SINGLE_ROUTE",
       command: [

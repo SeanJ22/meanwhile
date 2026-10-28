@@ -147,7 +147,7 @@ export async function readCivicCandidateEvidenceRows(query:Query,vault:EvidenceS
     return civicVersionVault(typeof vault==="function"?vault():vault).rows(format.normalizedPayload,path,selection);
   }
   const rows=await query(`WITH RECURSIVE selected(value,depth) AS (
-    SELECT candidate->'normalizedPayload',0 FROM civic_data_candidates WHERE id=$1
+    SELECT reader_payload_node(candidate)->'normalizedPayload',0 FROM civic_data_candidates WHERE id=$1
     UNION ALL SELECT reader_payload_node(value)->($2::text[])[depth+1],depth+1 FROM selected WHERE depth<cardinality($2::text[])
   ), members AS (SELECT ordinal_index,reader_payload_node(item) AS value FROM selected,
     LATERAL reader_payload_members(selected.value) WHERE depth=cardinality($2::text[]))

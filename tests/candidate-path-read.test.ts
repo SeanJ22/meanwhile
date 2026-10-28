@@ -47,6 +47,7 @@ test("candidate fields cross Postgres inline or through just their own payload p
   };
   const store = new PostgresRoutineDataStore();
   for (const id of ["inline", "partitioned"]) assert.deepEqual(await store.readCandidatePath(id, ["normalizedPayload", "captures"]), captures);
+  for (const id of ["inline", "partitioned"]) assert.deepEqual(await store.readCandidateCaptures(id, [captures[0].requestedUrl], []), captures);
   assert.equal(await store.readCandidatePath("missing", ["normalizedPayload", "captures"]), null);
   assert.equal(await store.readCandidatePath("inline", ["normalizedPayload", "missing"]), null);
   assert.ok(statements.some(query => query.includes("reader_payload_node")), "partitioned field is selected through the payload accessor");

@@ -231,6 +231,8 @@ async function checkJobTransfers(): Promise<void> {
     }
     await jobBreaker.check();
   });
+  // The hunter lane's one child lives up to 55 minutes; a pause asks it to finish its tasks in hand and take no more.
+  if (!admitJobLaunch("hunter-lane")) drainHunterLane();
 }
 function jobTransferTick(): Promise<void> {
   if (jobBreakerWork) return jobBreakerWork;
@@ -1296,7 +1298,8 @@ async function runPlatformCensus(deadlineMs: number): Promise<void> {
 const placePageMemory = routineProcessSlots({ admissionsOpen: () => !runtimeAdmissionsHeld });
 let placePagePauseUnread = false;
 async function placePagesAdmitted(): Promise<boolean> {
-  if (runtimeAdmissionsHeld) return false;
+  // Asked before every turn, so a breaker pause stops the run within one turn of the check that wrote it.
+  if (runtimeAdmissionsHeld || !jobLaunchAllowed("place-pages")) return false;
   try {
     const repos = await ownerRepositories();
     if (repos && readIntents([...await readRunnerPauseIntents(repos)]).runnerPause.paused) return false;
@@ -1955,6 +1958,9 @@ async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boo
   return { ownerIntentsUnreadable: says === "UNREADABLE" };
 }
 
+// The breaker's first check writes this release's snapshot before anything can launch, including the standing clock a
+// release handoff reopens below.
+await jobTransferTick();
 let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();
 let cycle = 0;
 
@@ -1968,7 +1974,6 @@ console.log(
 
 console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
 
-await jobTransferTick();
 jobBreakerTimer = setInterval(() => { void jobTransferTick(); },JOB_BREAKER_INTERVAL_MS);
 jobBreakerTimer.unref();
 startStandingRuntimeClock();

@@ -2,6 +2,7 @@ import type { SeatHolder } from "../officials/lookup.ts";
 import type { RosterReaderGap } from "./body-rosters.ts";
 import type { CoverageSummary, CoveredBody } from "./coverage.ts";
 import type { ReaderBodyDetail } from "../reader/body-detail.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
 
 /** Client-safe view of a body roster already projected by the server Reader. */
 export interface BodyRosterClientProjection {
@@ -11,6 +12,12 @@ export interface BodyRosterClientProjection {
 
 const EMPTY: BodyRosterClientProjection = Object.freeze({ members: [], gaps: [] });
 const pending = new Map<string, Promise<ReaderBodyDetail>>();
+
+export function bodyDetailState(body: CoveredBody, fallback?: string | null): string | null {
+  return (body.readerState ?? ocdStateCode(body.ocdId) ?? ocdStateCode(body.bodyId) ??
+    /^government:US-([A-Z]{2}):/i.exec(body.bodyId)?.[1] ?? /^([a-z]{2}):/i.exec(body.bodyId)?.[1] ??
+    body.recipientState ?? fallback ?? null)?.toUpperCase() ?? null;
+}
 
 /** One in-flight request per body; subsequent opens can receive a freshly invalidated answer. */
 export function loadBodyDetail(state: string, bodyId: string): Promise<ReaderBodyDetail> {

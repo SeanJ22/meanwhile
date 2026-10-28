@@ -15,6 +15,7 @@ import {
 import { districtDoorRows, governingDoorRows, type DistrictDoorRow } from "@/lib/state/derive";
 import { representationForDivision } from "@/lib/registry/representation";
 import { projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
+import { useBodyDetails } from "@/hooks/use-body-details";
 import { RosterCompletenessGaps } from "@/components/officials/roster-completeness-gap";
 import {
   groupOfficials,
@@ -403,10 +404,11 @@ function OfficialsDoor({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
-  // Grouped Local / State / Federal, closest first.
-  const groups = groupOfficials(coverage);
+  // The door asks for the memberships it displays after it opens.
+  const details = useBodyDetails(coverage.bodies, true);
+  const groups = groupOfficials({ ...coverage, bodies: details.bodies });
   const total = groups.local.length + groups.state.length + groups.federal.length;
-  if (total === 0) {
+  if (total === 0 && !details.pending && !details.failed) {
     return (
       <p className="mt-3 t-body text-muted">
         No sourced officeholders resolved at this point yet.
@@ -420,6 +422,8 @@ function OfficialsDoor({
   };
   return (
     <div className="mt-3 space-y-3">
+      {details.pending && <p className="t-body text-muted">Looking up local officials…</p>}
+      {details.failed && <p className="t-body text-muted">We couldn&apos;t load some local officials.</p>}
       {(Object.keys(TIER_GROUP_LABELS) as TierGroup[]).map((group) =>
         groups[group].length === 0 ? null : (
           <div key={group}>

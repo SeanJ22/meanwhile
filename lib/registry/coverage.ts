@@ -107,6 +107,9 @@ export function stateLegislatorCoverageAuthority(
  */
 export interface CoveredBody {
   bodyId: string;
+  /** The jurisdiction and member count for a deferred body detail. */
+  readerState?: string;
+  rosterSummary?: { readonly memberCount: number; readonly hasSelectBoard: boolean };
   /** Exact held government and body aliases for this government's records. */
   recipientIds?: readonly string[];
   recipientNames?: readonly string[];

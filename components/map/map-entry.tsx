@@ -2,7 +2,6 @@
 
 import { useOfficePins } from "@/hooks/use-office-pins";
 import { useBodyDetail } from "@/hooks/use-body-detail";
-import { ocdStateCode } from "@/lib/ocd/state-of";
 import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
 import { beginReaderAgenda, discardReaderAgendaStart, fetchReaderResponse, readReaderJson } from "@/lib/reader/bootstrap";
@@ -69,7 +68,7 @@ import {
 } from "@/lib/officials/card-sources";
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
-import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
+import { bodyDetailState, projectedBodyRoster } from "@/lib/registry/body-roster-client";
 import { bodyContactRows, bodyContactSources } from "@/lib/registry/body-contact";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { definitionsForBody } from "@/lib/officials/body-definitions";
@@ -441,9 +440,7 @@ function MapEntryInner() {
   const shown = pinned;
   const refreshing = current === null && shown !== null;
   const selectedDetailBody = large?.kind === "entity" ? large.subject.detailBody : undefined;
-  const selectedBodyState = selectedDetailBody ? (ocdStateCode(selectedDetailBody.ocdId) ?? ocdStateCode(selectedDetailBody.bodyId) ??
-    /^government:US-([A-Z]{2}):/i.exec(selectedDetailBody.bodyId)?.[1] ??
-    /^([a-z]{2}):/i.exec(selectedDetailBody.bodyId)?.[1] ?? selectedDetailBody.recipientState ?? view?.state ?? null)?.toUpperCase() ?? null : null;
+  const selectedBodyState = selectedDetailBody ? bodyDetailState(selectedDetailBody, view?.state) : null;
   const selectedBodyDetail = useBodyDetail(selectedBodyState, selectedDetailBody?.bodyId ?? null,
     Boolean(selectedDetailBody && !selectedDetailBody.readerRoster));
 

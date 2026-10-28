@@ -7,6 +7,7 @@ import type { CoverageSummary } from "@/lib/registry/coverage";
 import { representationForDivision } from "@/lib/registry/representation";
 import type { RosterReaderGap } from "@/lib/registry/body-rosters";
 import { bodyDetailState, loadBodyDetail, projectedRosterGapsForDivision } from "@/lib/registry/body-roster-client";
+import { scopedHolders } from "@/lib/officials/scoped-holders";
 import { getCachedStateDivision, isStateDivisionPending } from "@/lib/reader/client";
 import type { SeatVacancy } from "@/lib/officials/types";
 
@@ -43,10 +44,12 @@ export function useDivisionsRepresentation(
     const holders = representationForDivision(coverage, id);
     return [id, holders.length ? holders : cached.get(id)?.holders ?? holders];
   }));
-  const remoteIdsKey = JSON.stringify(ids.filter(id => !local.get(id)?.length && !vacancies.get(id) && !cached.get(id) && !isStateDivisionPending(id)).sort());
-  const localBodiesKey = JSON.stringify(Object.fromEntries(ids.map(id => [id, (coverage?.bodies ?? [])
+  const localBodies = Object.fromEntries(ids.map(id => [id, (coverage?.bodies ?? [])
     .filter(body => (body.bodyId === `${id}#governing` || body.bodyId === `${id}#board`) && body.rosterSummary)
-    .map(body => ({ id: body.bodyId, state: bodyDetailState(body) }))])));
+    .map(body => ({ id: body.bodyId, state: bodyDetailState(body) }))]));
+  const localBodiesKey = JSON.stringify(localBodies);
+  const remoteIdsKey = JSON.stringify(ids.filter(id => localBodies[id]?.length ||
+    (!local.get(id)?.length && !vacancies.get(id) && !cached.get(id) && !isStateDivisionPending(id))).sort());
   const requestKey = JSON.stringify([remoteIdsKey, localBodiesKey]);
   const [answers, setAnswers] = useState<{ key: string; values: Record<string, Answer> }>({ key: requestKey, values: {} });
   if (answers.key !== requestKey) setAnswers({ key: requestKey, values: {} });
@@ -100,12 +103,19 @@ export function useDivisionsRepresentation(
   return Object.fromEntries(ids.map(ocdId => {
     const holders = local.get(ocdId)!;
     const cachedAnswer = cached.get(ocdId);
+    const answer = answers.key === requestKey ? answers.values[ocdId] : undefined;
+    if (localBodies[ocdId]?.length) {
+      if (!answer) return [ocdId, { holders, status: "looking" }];
+      if (answer.failed) return [ocdId, { holders, status: "unavailable" }];
+      const merged = scopedHolders(answer.holders, holders);
+      return [ocdId, { holders: merged, vacancy: vacancies.get(ocdId), rosterGaps: answer.rosterGaps ?? [],
+        status: merged.length ? "resolved" : "unsourced" }];
+    }
     if (holders.length || cachedAnswer || vacancies.get(ocdId)) return [ocdId, {
       holders, status: holders.length ? "resolved" : "unsourced",
       vacancy: vacancies.get(ocdId),
       rosterGaps: cachedAnswer?.rosterGaps ?? projectedRosterGapsForDivision(coverage, ocdId),
     }];
-    const answer = answers.key === requestKey ? answers.values[ocdId] : undefined;
     if (!answer) return [ocdId, { holders: [], status: "looking" }];
     if (answer.failed) return [ocdId, { holders: [], status: "unavailable" }];
     return [ocdId, {

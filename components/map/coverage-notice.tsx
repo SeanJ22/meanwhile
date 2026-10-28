@@ -41,6 +41,7 @@ import {
   hasRepresentation,
   leadKind,
   noticeLabel,
+  representationForDivision,
   shouldRenderNotice,
 } from "@/lib/registry/representation";
 import {
@@ -362,7 +363,14 @@ function CoverageBody({
     federalConfirmed,
   );
   const stateSeats = statePanel.yours;
-  const localSeats = panelSeatsFor(coverage, subject.location, LOCAL_SEAT_TYPES, localConfirmed).yours;
+  const localSeatIds = new Set(coverage.seats.filter(seat => LOCAL_SEAT_TYPES.includes(seat.divisionType)).map(seat => seat.ocdId));
+  const localBodyDetails = useBodyDetails(coverage.bodies.filter(body => body.ocdId && localSeatIds.has(body.ocdId) &&
+    (body.bodyId === `${body.ocdId}#governing` || body.bodyId === `${body.ocdId}#board`)), true);
+  const localBodiesById = new Map(localBodyDetails.bodies.map(body => [body.bodyId, body]));
+  const localCoverage = { ...coverage, bodies: coverage.bodies.map(body => localBodiesById.get(body.bodyId) ?? body) };
+  localCoverage.seats = coverage.seats.map(seat => localSeatIds.has(seat.ocdId)
+    ? { ...seat, representatives: representationForDivision(localCoverage, seat.ocdId) } : seat);
+  const localSeats = panelSeatsFor(localCoverage, subject.location, LOCAL_SEAT_TYPES, localConfirmed).yours;
   const federalSeats = federalPanel.yours;
   const stateLegislatorGaps = stateLegislatorAuthorities.filter(authority => authority.kind === "NOT_RECORDED" || authority.kind === "STORE_UNREACHABLE");
 
@@ -613,11 +621,13 @@ function CoverageBody({
         </>
       )}
 
-      {localSeats.length > 0 && (
+      {(localSeats.length > 0 || localBodyDetails.pending || localBodyDetails.failed) && (
         <>
           <p className="t-structure mt-4 text-local">Local officials</p>
+          {localBodyDetails.pending && <p className="t-detail text-muted">Looking up local representatives…</p>}
+          {localBodyDetails.failed && <p className="t-detail text-muted">We couldn&apos;t load some local representatives.</p>}
           <ul className="mt-1 space-y-1">
-            {localSeats.map(seat => <SeatRow key={seat.ocdId} seat={seat} zip={zip} onOpenOfficial={onOpenOfficial} />)}
+            {!localBodyDetails.pending && !localBodyDetails.failed && localSeats.map(seat => <SeatRow key={seat.ocdId} seat={seat} zip={zip} onOpenOfficial={onOpenOfficial} />)}
           </ul>
         </>
       )}

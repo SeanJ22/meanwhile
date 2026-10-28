@@ -63,8 +63,9 @@ test("one rebuild turn reads the national routing record once and stores the sam
     const stored = await pg.query<Record<string, unknown>>("SELECT place_id,body,history_body,context FROM place_page ORDER BY place_id");
     assert.equal(stored.rows.length, PAGES);
     for (const row of stored.rows) {
-      const { place_id: id, ...page } = row;
-      assert.deepEqual(page, expected.get(String(id)), `${id} stores the same page as a page that read the record itself`);
+      const { place_id: id, context: { prints, ...context }, ...page } = row as { place_id: string; context: Record<string, unknown> };
+      assert.ok(prints, "the page keeps the prints its next rebuild compares with");
+      assert.deepEqual({ ...page, context }, expected.get(String(id)), `${id} stores the same page as a page that read the record itself`);
     }
 
     const perPage = (bytes: number) => Math.round(bytes / PAGES);

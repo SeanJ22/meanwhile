@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 141 on the site (4:28 PM EDT) and on the runner (5:05 PM). river = 795832ac9. Open: probe throughput for hourly looks. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 141 on the site (4:28 PM EDT) and runner (5:05 PM), checked. river = 795832ac9. Open for Sean: RIVER-PROBERATE proposal (hourly looks for hot bodies). BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -104,6 +104,17 @@ heartbeat: 2026-10-28T08:35:00Z
 - door-probes on 141, first ~20 minutes of the 5 PM hour: 12.96 MB (control plane 12.81 MB, open-door list and look writes; reader 0.15 MB, the new hot-partition query). Projects to ~0.03-0.04 GB/h, under Sean's 0.1.
 - place-pages, 5 PM hour so far: 217 MB reader (part may be 139 before the 5:05 switch). The breaker can see it now and will pause it if it goes over its budget; River will post the full hour.
 - NOT MET YET: a body with a sitting this week gets checked every hour. The hot rule now marks 1,816 meeting partitions hot (was 29), but in the last 60 minutes the probe lane looked at only 19 meeting doors (legistar 19; ical, granicus, page and source-feed 0). Over 24 hours: legistar 323 of 2,228 open doors, ical 104 of 580. The limit is probe throughput: each runner pass gives probes a 30 s window, there are a few passes an hour, doors are looked at one at a time, and small publishers are capped at 10 requests an hour. River will measure the full 6 PM hour (looks per hour against hot doors) and post a proposal; raising throughput is a change to the probe lane and its per-website politeness, so it needs Sean's yes.
+- 6:10 PM: 141 CHECKED ON THE LIVE RUNNER (5 PM hour, first full hour on 141; switch at 5:05).
+  - Neon, from database_transfer_hourly, now whole again (request + response):
+    - Hour before 141 (3 PM, runner counter, meter broken then): reader 6.452 + control plane 0.825 = 7.28 GB/h. 4 PM: 4.61 GB/h.
+    - Hour after (5 PM): reader 1.670 + control plane 1.162 = 2.83 GB/h.
+  - door-probes: before, 0.52 GB in the 4 AM hour (paused 4:52 AM). 5 PM hour on 141: 28.7 MB = 0.029 GB/h (control plane 28.4 MB: open-door list and look writes; reader 0.3 MB: the new hot statement). Under 0.1 GB/h. Sean, door-probes has not paused since your 1:36 PM release.
+  - place-pages: 0.49 GB in the 5 PM hour (part on 139 before 5:05), against 5.06 GB in the 3 PM hour on 139. Not paused.
+  - Breaker: 6 CHECKs since 5:09 PM see every job; no PAUSE.
+  - Hot bodies: 29 hot meeting partitions before (the inline-only rule); 1,816 with the payload-part rule (1,787 held in parts), from River's read-only production check at 3:17 PM. Same open doors are considered; the hot set is what changed.
+  - NOT MET: a body with a sitting this week is not yet looked at every hour. In the 5 PM hour the probe lane looked at 60 meeting doors (granicus 41, legistar 11, ical 3, 5 others), far short of 1,816 hot partitions. RCD_PROBE lines go only to the runner's own log, which River can't read; this is from each door's last-look time.
+  - Why: probes run inside the publish-now pass (about 6 an hour), get a 30 s window each pass, and look at one page at a time with a 15 s timeout. That is about 3 minutes of looking an hour.
+- PROPOSAL FOR SEAN (RIVER-PROBERATE, needs your yes): give door probes their own standing turn like the place-map lane, looking at several websites at once (one request per website at a time, under the existing fetch.hostConcurrency 8), until every hot door has had its hourly look. Politeness is unchanged: small publishers keep their 10 requests an hour, and an hourly look is one request per page. Expected cost at ~9 KB per look: ~1,500 looks/h adds ~0.014 GB/h, so door-probes stays near 0.05 GB/h, under 0.1. Also found, not changed: the routine clock's and Admin's sitting reads are still inline-only (same blind spot).
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

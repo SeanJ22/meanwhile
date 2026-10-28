@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { createElement as h } from "react";
@@ -200,6 +200,30 @@ test("Admin lists the paused job with a Release button; Release resumes it on th
     assert.deepEqual(saved.latestBrief!.updates.map(update=>update.what).sort(),["Portraits · CA paused after 0.950 GB in one hour. It waits until you release it in Admin.",
       "Portraits · CA was released and may start again."]);
   } finally {await db.close();rmSync(root,{recursive:true,force:true});}
+});
+
+test("a hold stands whatever release wrote it; a snapshot that cannot be read admits only the supervisors that never pause",()=>{
+  const root=mkdtempSync(join(tmpdir(),"bb-admit-")),path=join(root,"breaker.json"),env={...process.env,[JOB_BREAKER_PATH_ENV]:path};
+  try {
+    // A release's first launches can read the snapshot the previous release wrote, in its own words.
+    writeFileSync(path,JSON.stringify({checkedAt:"2026-10-28T04:48:18.539Z",states:{
+      "place-pages":{job:"place-pages",mode:"PAUSED_HOUR",trips:1},"publish-now":{job:"publish-now",mode:"PAUSED_CODE"},
+      "voting-sites:WI":{job:"voting-sites:WI",mode:"HALF_RATE"},"doors":{job:"doors",mode:"RELEASED"}}}));
+    for(const job of ["place-pages","voting-sites:WI"]) assert.equal(admitJobLaunch(job,env),false,`${job} stays held`);
+    for(const job of ["doors","meeting-pins","publish-now","routine-civic-data"]) assert.equal(admitJobLaunch(job,env),true,`${job} launches`);
+    rmSync(path);
+    for(const job of ["place-pages","doors","people-portraits-ca"]) assert.equal(admitJobLaunch(job,env),false,`${job} waits while the snapshot is missing`);
+    writeFileSync(path,"{");
+    assert.equal(admitJobLaunch("place-pages",env),false,"a torn snapshot holds too");
+    for(const supervisor of ["routine-civic-data","publish-now","pilot-runner"]) assert.equal(admitJobLaunch(supervisor,env),true);
+  } finally { rmSync(root,{recursive:true,force:true}); }
+});
+
+test("the runner's first breaker check runs before the release handoff can reopen the standing clock",()=>{
+  const runner=readFileSync(new URL("../scripts/pilot-runner.mts",import.meta.url),"utf8");
+  const first=runner.indexOf("\nawait jobTransferTick();"),handoff=runner.indexOf("\nlet handoffExitCode = await reconcileRuntimeReleaseAtBoundary();");
+  assert.ok(first>0&&handoff>first,"the breaker writes this release's snapshot before anything launches");
+  assert.equal(runner.split("\nawait jobTransferTick();").length,2,"one startup check");
 });
 
 test("plain job names: per-state tasks say their state, in-process tasks their own words",()=>{

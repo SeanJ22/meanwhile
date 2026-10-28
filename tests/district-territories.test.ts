@@ -1,16 +1,20 @@
+import { installFactReader } from "../lib/facts/db.ts";
+import { fixturePlaceMapQuery } from "./helpers/place-map.ts";
 import assert from "node:assert/strict";
 import { join } from "node:path";
 import test from "node:test";
-import { shardEntry, ZIP_RESIDENT_SHARE_SHOWN, type ZipDivisionShard } from "../lib/geo/zip-division-index.ts";
+import { legacyZipEntry, ZIP_RESIDENT_SHARE_SHOWN, type LegacyZipShard } from "../lib/place-map/legacy.ts";
 import { districtNameKey } from "../lib/registration/district-sources.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
 import { referenceGovernmentListings } from "../lib/registration/listings.ts";
-import { zipDivisionEntry } from "../lib/geo/zip-division-index.ts";
+import { readZipPlace } from "../lib/place-map/reader.ts";
 
 const ROOT = join(import.meta.dirname, "..");
 
+installFactReader(fixturePlaceMapQuery());
+
 test("a ZIP shows the divisions its residents live in, names the ones a few live in, and is whole only where all do", () => {
-  const shard: ZipDivisionShard = {
+  const shard: LegacyZipShard = {
     divisions: ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az/county:pima", "ocd-division/country:us/state:az/place:tucson",
       "ocd-division/country:us/state:az/place:vail", "ocd-division/country:us/state:az/place:new_town"],
     zips: { "85641": [0, 1, 2, 3, 4], "85999": [1, 2] },
@@ -18,14 +22,14 @@ test("a ZIP shows the divisions its residents live in, names the ones a few live
     residents: { "85641": [1000, 1000, 40, 600, -1] },
     zipResidents: { "85641": 1000 },
   };
-  const entry = shardEntry(shard, "85641")!;
+  const entry = legacyZipEntry(shard, "85641")!;
   assert.ok(40 / 1000 < ZIP_RESIDENT_SHARE_SHOWN);
   assert.deepEqual(entry.ids, ["ocd-division/country:us/state:az", "ocd-division/country:us/state:az/county:pima",
     "ocd-division/country:us/state:az/place:vail", "ocd-division/country:us/state:az/place:new_town"]);
   assert.deepEqual(entry.fringe, ["ocd-division/country:us/state:az/place:tucson"]);
   assert.deepEqual(entry.partial, ["ocd-division/country:us/state:az/place:vail", "ocd-division/country:us/state:az/place:new_town"],
     "the county holds every resident; a division the blocks never measured keeps the hedge");
-  const unmeasured = shardEntry(shard, "85999")!;
+  const unmeasured = legacyZipEntry(shard, "85999")!;
   assert.deepEqual(unmeasured.ids, shard.zips["85999"].map(i => shard.divisions[i]));
   assert.deepEqual(unmeasured.partial, unmeasured.ids, "a ZIP without resident counts keeps every division hedged");
   assert.equal(unmeasured.fringe, undefined);
@@ -40,7 +44,7 @@ test("a district's own layer and its Census listing name it the same way, whatev
 });
 
 test("85641 shows Vail's fire districts and school district, and names Tucson only as a small part of it", async () => {
-  const entry = await zipDivisionEntry("85641");
+  const entry = await readZipPlace("85641");
   assert.ok(entry);
   for (const id of ["ocd-division/country:us/state:az/special_district:rincon_valley_fire_district",
     "ocd-division/country:us/state:az/special_district:corona_de_tucson_fire_district",

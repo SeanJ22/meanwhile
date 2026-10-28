@@ -46,7 +46,8 @@ import {
   MEETINGS_SOURCE_ID,
   type MeetingsSnapshot,
 } from "../lib/meetings/snapshot.ts";
-import { failedAcquisitionCandidate, meetingsCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
+import { meetingsCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
+import { failedMeetingAcquisitionCandidate } from "../lib/civic-data/failed-meeting-acquisition.ts";
 import { jobFailureDetail } from "../lib/sources/composite/failure-kind.ts";
 import { agendaDocumentRecordKey, candidateChangeSet } from "../lib/civic-data/changes.ts";
 import {
@@ -1169,8 +1170,8 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
     const partition = partitions[0]!, detail = fetched.error ?? "The source acquisition did not complete.";
     measurement?.fail(detail);
     if (dryRun || !promotionStore) return { measurement: measurement?.result() ?? null, partitions: [], succeeded: false, sourceSucceeded: false, exitCode: 2, sourceReads };
-    const candidate = failedAcquisitionCandidate({ sourceId: partition.sourceId, recordClass: "MEETING", scope: partition.scope,
-      requestedUrl: fetched.acquisitions?.[0]?.requestedUrl ?? "", attemptedAt: new Date().toISOString(), failureDetail: detail, parserVersion: "meetings-composite/2" });
+    const candidate = failedMeetingAcquisitionCandidate({ sourceId: partition.sourceId, scope: partition.scope,
+      acquisitions: fetched.acquisitions, attemptedAt: new Date().toISOString(), failureDetail: detail });
     const outcome = await processRegisteredMeetingPartitionCandidate(promotionStore, partition.id, candidate, new Date().toISOString());
     printMeetingPartitionReceipt(partition, candidate, outcome, detail, "JOB");
     return { measurement: measurement?.result() ?? null, partitions: [{ partition, candidate, outcome }], succeeded: false, sourceSucceeded: false, exitCode: 2, sourceReads };
@@ -1865,14 +1866,12 @@ export async function promoteMeetingPartitions(input: {
       const failureDetail = report?.error
         ? failureKind === "JOB" ? jobFailureDetail(report.error) : report.error
         : jobFailureDetail(`The composite produced no report for ${partition.meetingSource}.`);
-      const failed = failedAcquisitionCandidate({
+      const failed = failedMeetingAcquisitionCandidate({
         sourceId: MEETINGS_SOURCE_ID,
-        recordClass: MEETINGS_RECORD_CLASS,
         scope: partition.scope,
-        requestedUrl: report?.acquisitions?.[0]?.requestedUrl ?? "",
+        acquisitions: report?.acquisitions,
         attemptedAt: input.generatedAt,
         failureDetail,
-        parserVersion: "meetings-composite/2",
       });
       const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, failed, input.generatedAt);
       printMeetingPartitionReceipt(partition, failed, outcome, failureDetail, failureKind);

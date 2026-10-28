@@ -39,6 +39,17 @@ export async function recordRegisteredSourceAcquisitionFailure(input: {
   if (!isSourceAcquisitionFailure(input.failure)) {
     throw new Error(`SOURCE_FAILURE_NOT_CLASSIFIED:${input.contractId}`);
   }
+  return recordRegisteredSourceFailure({ ...input, failureDetail: `${input.failure.code}: ${input.failure.message}` });
+}
+
+/** Any failed run of a registered source, recorded as that source's failed attempt with its own stated detail. */
+export async function recordRegisteredSourceFailure(input: {
+  readonly store: RoutineDataStore;
+  readonly contractId: string;
+  readonly failureDetail: string;
+  readonly attemptedAt?: string;
+  readonly requestedUrl?: string;
+}): Promise<RegisteredSourceFailureRecord> {
   const contract = requiredRoutineContract(input.contractId);
   const task = routineTaskFromContract(contract);
   const requestedUrl = input.requestedUrl ?? task.requestedUrl;
@@ -52,7 +63,7 @@ export async function recordRegisteredSourceAcquisitionFailure(input: {
     scope: task.scope,
     requestedUrl,
     attemptedAt,
-    failureDetail: `${input.failure.code}: ${input.failure.message}`,
+    failureDetail: input.failureDetail,
     parserVersion: task.parserVersion,
   });
   const outcome = await processRegisteredRoutineCandidate(

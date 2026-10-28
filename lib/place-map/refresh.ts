@@ -7,7 +7,8 @@ import { CENSUS_GEO_PARSER_VERSION } from "../census-geography/publication.ts";
 import type { FactDb, Query } from "../facts/publish.ts";
 import { loadRegistrationReference } from "../registration/reference.ts";
 import { readCensusGovernmentFacts } from "../registration/jurisdictions.ts";
-import { shardEntry, type ZipDivisionEntry, type ZipDivisionShard } from "../geo/zip-division-index.ts";
+import { legacyZipEntry, type LegacyZipShard } from "./legacy.ts";
+import type { PlaceEntry } from "./reader.ts";
 import { acquireDataset } from "../census-geography/acquire.ts";
 import type { BuiltDataset } from "../census-geography/dataset.ts";
 import type { CensusSourceOptions } from "../census-geography/source-release.ts";
@@ -18,18 +19,20 @@ import { loadStatePlaceMap, type StatePlaceMap } from "./load.ts";
 import { geographicSpecialDistricts, heldSpecialDistrictBoundaries } from "./special-districts.ts";
 import { statePostalLinks } from "./postal-links.ts";
 import { isTownOrCountyDivision } from "../geo/postal-core.ts";
+import { stateZipLocations } from "./location-import.ts";
 import { currentGrfPlaceEdges } from "./grf-edges.ts";
+import { placeMapHeldZips } from "./counts.ts";
 
 /** Read only the legacy shards touching this state. Their source is explicitly
  * Census ZCTAs; the independent Census universe confirms each ZCTA row. */
-export async function readLegacyStateMemberships(root: string, state: string): Promise<Map<string, ZipDivisionEntry>> {
+export async function readLegacyStateMemberships(root: string, state: string): Promise<Map<string, PlaceEntry>> {
   const manifest = JSON.parse(await readFile(join(root, "data/derived/zip-divisions/index.json"), "utf8")) as { statesToShards: Record<string, string[]> };
-  const result = new Map<string, ZipDivisionEntry>();
+  const result = new Map<string, PlaceEntry>();
   for (const shard of manifest.statesToShards[state] ?? []) {
     if (!/^\d{2}$/.test(shard)) throw new Error("Invalid ZIP shard");
-    const data = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${shard}.json`), "utf8")) as ZipDivisionShard;
+    const data = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${shard}.json`), "utf8")) as LegacyZipShard;
     for (const zip of Object.keys(data.zips)) {
-      const entry = shardEntry(data, zip)!;
+      const entry = legacyZipEntry(data, zip)!;
       if ([...entry.ids, ...entry.fringe ?? []].some(id => id.includes(`:${state.toLowerCase()}/`) || id.endsWith(`:${state.toLowerCase()}`))) result.set(zip, entry);
     }
   }
@@ -45,7 +48,7 @@ export async function knownPostalZips(root: string, requested: ReadonlySet<strin
     const prefix = code.slice(0, 2), codes = prefixes.get(prefix) ?? []; codes.push(code); prefixes.set(prefix, codes);
   }
   for (const [prefix, codes] of prefixes) {
-    let shard: ZipDivisionShard;
+    let shard: LegacyZipShard;
     try { shard = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${prefix}.json`), "utf8")); }
     catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") continue; throw error; }
     for (const code of codes) if (Object.hasOwn(shard.zips, code)) result.add(code);
@@ -109,7 +112,7 @@ export async function prepareStatePlaceMap(query: Query, root: string, state: st
     postalLinks, knownZips,
     crossStateZctas,
     sourceCounties: new Map(sources.sources.map(source => [source.id, source.countyFips])), checkedAt: dataset.builtAt });
-  return { map, dataset, postalPrefixes: [...new Set([...zctas].map(code => code.slice(0, 2)))].sort(), nativeBindingsHash };
+  return { map: { ...map, zipLocations: await stateZipLocations(root, state, dataset.builtAt) }, dataset, postalPrefixes: [...new Set([...zctas].map(code => code.slice(0, 2)))].sort(), nativeBindingsHash };
 }
 
 /** All non-provider inputs that can change native identity, ZIP aliases or boundary normalization. */
@@ -124,27 +127,31 @@ export async function placeMapDependencyHash(query: Query, root: string, state: 
   if (typeof binding?.hash !== "string") throw new Error("PLACE_MAP_NATIVE_BINDINGS_UNREADABLE");
   if (expectedBindings !== undefined && expectedBindings !== binding.hash) throw new Error("PLACE_MAP_NATIVE_BINDINGS_MOVED");
   const postalCodes = await Promise.all([...new Set(postalPrefixes)].sort().map(async prefix => {
-    try { const shard = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${prefix}.json`), "utf8")) as ZipDivisionShard;
+    try { const shard = JSON.parse(await readFile(join(root, "data/derived/zip-divisions", `${prefix}.json`), "utf8")) as LegacyZipShard;
       return [prefix, Object.keys(shard.zips).sort()] as const; }
     catch (error) { if ((error as NodeJS.ErrnoException).code === "ENOENT") return [prefix, null] as const; throw error; }
   }));
   const parser = createHash("sha256");
-  for (const file of ["./refresh.ts", "./build.ts", "./acquire.ts", "./grf-edges.ts", "./overlap.ts", "./postal-links.ts", "./special-districts.ts"])
+  for (const file of ["./refresh.ts", "./build.ts", "./acquire.ts", "./grf-edges.ts", "./overlap.ts", "./postal-links.ts", "./special-districts.ts", "./location-import.ts", "./source-rows.ts"])
     parser.update(await readFile(new URL(file, import.meta.url)));
   return censusSourceDependencies({ kind: "STATE_PLACE_MAP", state, parser: parser.digest("hex"), registration,
     legacy: [...await readLegacyStateMemberships(root, state)], postalLinks: await statePostalLinks(root, state),
     boundaries: await heldSpecialDistrictBoundaries(root, registration), districts, bindings: binding.hash,
     censusFacts: [...readCensusGovernmentFacts(root, [state]).byPid], postalCodes,
+    // The state's ZIP display points and postal metadata come from the same acquired files the import reads.
+    zipLocations: await stateZipLocations(root, state, ""),
     sourceCatalog: JSON.parse(await readFile(join(root, "data/reference/district-boundary-sources.json"), "utf8")) });
 }
 
-/** A current source head never requires the held state dataset just to learn that nothing changed. */
+/** A current source head never requires the held state dataset just to learn that nothing changed. A head is not
+ * confirmed while production holds no ZIPs for the state's map: the map is loaded again instead. */
 export async function refreshStatePlaceMap(db: FactDb & { readonly query: Query }, root: string, state: string,
   store: RoutineDataStore, options: CensusSourceOptions = {}) {
   if (!/^[A-Z]{2}$/.test(state)) throw new Error("A state abbreviation is required");
   options = { ...options, releases: new Map(), sourceCaptures: new Map() };
   const scope = `US-${state}:place-map`, head = await store.readSourceHead("CENSUS_GEOGRAPHY", scope);
-  const saved = head?.rawHashBasis === "SOURCE_CONTENT_V1" && head.parserVersion === CENSUS_GEO_PARSER_VERSION
+  const held = ((await placeMapHeldZips(db.query, [state])).get(state) ?? 0) > 0;
+  const saved = held && head?.rawHashBasis === "SOURCE_CONTENT_V1" && head.parserVersion === CENSUS_GEO_PARSER_VERSION
     ? await store.readCandidatePath(head.versionId, ["normalizedPayload", "sourceProbe"]) : null;
   const prefixes = (saved as { postalPrefixes?: unknown } | null)?.postalPrefixes;
   if (validCensusSourceProbe(saved) && Array.isArray(prefixes) && prefixes.every(prefix => typeof prefix === "string" && /^\d{2}$/.test(prefix))) {

@@ -1,7 +1,7 @@
 /** Postal ZIPs describe mail destinations. Only a residential address settles districts. */
 export type ZipType = "standard" | "po-box" | "unique" | "military" | null;
 
-/** Compact national table, kept in the lazy geography chunk. Null coordinates mean a known, unplaced ZIP. */
+/** Acquired postal source row. Null coordinates mean a known, unplaced ZIP. */
 export type PostalRow = [
   lat: number | null, lng: number | null, type: ZipType,
   zcta: string | null, place: string, state: string,

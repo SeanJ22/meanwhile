@@ -99,7 +99,7 @@ jobs:
           CACHED_COMMIT_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
           COMMIT_REF: ${{ github.sha }}
         run: node scripts/netlify-ignore.mjs --ci
-      # Pull requests run the tests their change can reach; scheduled and manual runs run all four shards; main runs none.
+      # Pull requests run the tests their change can reach; release/<n> pull requests, scheduled and manual runs run all four shards; main runs none.
       - name: Select the tests this change can reach
         id: tests
         if: always() && steps.tier.outputs.expensive == 'yes'
@@ -107,6 +107,7 @@ jobs:
           CI_TIER: ${{ steps.tier.outputs.expensive }}
           CI_EVENT_NAME: ${{ github.event_name }}
           CI_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          CI_HEAD_REF: ${{ github.head_ref }}
         run: node scripts/ci-affected-tests.mjs
       - name: Explain selected verification
         if: always()

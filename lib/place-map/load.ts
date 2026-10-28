@@ -3,6 +3,15 @@ import { boundingBoxOf } from "../registry/resolve.ts";
 import type { PlaceBoundary } from "./types.ts";
 import type { EntityPlace } from "../core/shapes.ts";
 import { enqueueReaderPlaces } from "../reader/cache.ts";
+import type { ZctaCentroid } from "../geo/zcta-core.ts";
+
+export interface MapZipLocation extends Omit<ZctaCentroid,"lat"|"lng"> {
+  readonly lat: number | null;
+  readonly lng: number | null;
+  readonly boundaryYear: number;
+  readonly sourceUrls: readonly string[];
+  readonly checkedAt: string;
+}
 
 export interface MapPlace {
   readonly id: string;
@@ -25,16 +34,49 @@ export interface StatePlaceMap {
   readonly zipEdges: readonly MapEdge[];
   readonly zctaEdges: readonly MapEdge[];
   readonly entityPlaces?: readonly EntityPlace[];
+  readonly zipLocations?: readonly MapZipLocation[];
 }
 
 async function batches<T>(rows: readonly T[], run: (batch: readonly T[]) => Promise<void>, size = 500): Promise<void> {
   for (let at = 0; at < rows.length; at += size) await run(rows.slice(at, at + size));
 }
 
+/** ZIP display points and postal metadata; `replace` updates held rows, otherwise they are kept. */
+export async function writeZipLocations(query: Query, locations: readonly MapZipLocation[], replace = true): Promise<void> {
+  await query(`INSERT INTO zip_location(zip,boundary_year,lat,lng,postal,source_urls,checked_at)
+    SELECT zip,boundary_year,lat,lng,postal,source_urls,checked_at FROM jsonb_to_recordset($1::jsonb)
+      AS p(zip text,boundary_year integer,lat float8,lng float8,postal jsonb,source_urls jsonb,checked_at timestamptz)
+    ON CONFLICT(zip,boundary_year) DO ${replace ? `UPDATE SET lat=EXCLUDED.lat,lng=EXCLUDED.lng,postal=EXCLUDED.postal,
+      source_urls=EXCLUDED.source_urls,checked_at=EXCLUDED.checked_at` : "NOTHING"}`,
+  [JSON.stringify(locations.map(row => ({zip:row.zip,boundary_year:row.boundaryYear,lat:row.lat,lng:row.lng,
+    postal:row.postal ?? null,source_urls:row.sourceUrls,checked_at:row.checkedAt})))]);
+}
+
+/** One boundary statement's encoded geometry. Production loaded Idaho's 5.8 MB and South Dakota's 3.2 MB statements
+ * within the read bound (2026-10-28); this cap holds every statement under them however large a state's polygons are,
+ * and one batch's strings far inside the 1 GiB child heap. A single larger row is sent alone. */
+export const PLACE_BOUNDARY_STATEMENT_BYTES = 4 * 1024 * 1024;
+
+/** JSON arrays of rows, each at most `maxBytes` (or one row), each row encoded once. */
+function* encodedBatches<T>(rows: readonly T[], encode: (row: T) => string, maxBytes: number, maxRows: number): Generator<string> {
+  let held: string[] = [], bytes = 2;
+  for (const row of rows) {
+    const text = encode(row), size = Buffer.byteLength(text) + 1;
+    if (held.length && (bytes + size > maxBytes || held.length >= maxRows)) { yield `[${held.join(",")}]`; held = []; bytes = 2; }
+    held.push(text); bytes += size;
+  }
+  if (held.length) yield `[${held.join(",")}]`;
+}
+
+/** Ids per page-rebuild statement. A 200-place, 150-government statement measured 0.8 s on production
+ * (2026-10-28); a whole state's (South Dakota 2,590 places, 1,889 governments) ran past the 31 s query bound. */
+export const PLACE_PAGE_QUEUE_IDS = 200;
+
 /** One state's map rows commit atomically. Older plans and every existing id
- * remain available; Admin totals refresh in a separate transaction afterward. */
+ * remain available; its pages are queued and Admin totals refresh afterward, each in short transactions. */
 export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise<void> {
   await db.transaction(async query => {
+    await batches(map.zipLocations ?? [], locations => writeZipLocations(query, locations));
     await batches(map.places, async places => {
       await query(`INSERT INTO entity(id,kind,name,state)
         SELECT id,'place',name,state FROM jsonb_to_recordset($1::jsonb) AS p(id text,name text,state char(2))
@@ -46,11 +88,10 @@ export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise
         WHERE held.entity_id IS DISTINCT FROM EXCLUDED.entity_id
           AND EXISTS(SELECT 1 FROM entity e WHERE e.id=held.entity_id AND e.kind='place')`, [JSON.stringify(aliases)]);
     });
-    // Geometry is large; 32-row batches keep each encoded statement inside the measured 1 GiB child heap.
-    await batches(map.boundaries, async boundaries => {
-      const rows = boundaries.map(b => ({ place_id: b.placeId, boundary_year: b.boundaryYear, layer: b.layer, version: b.version,
-        geometry: b.geometry, bounds: b.geometry ? boundingBoxOf({ properties: { ocdId: b.placeId, label: "" }, geometry: b.geometry }) : null,
-        host_county_id: b.hostCountyId, county_attachment: b.countyAttachment, source_urls: b.sourceUrls, checked_at: b.checkedAt }));
+    const boundaryRow = (b: PlaceBoundary) => JSON.stringify({ place_id: b.placeId, boundary_year: b.boundaryYear, layer: b.layer, version: b.version,
+      geometry: b.geometry, bounds: b.geometry ? boundingBoxOf({ properties: { ocdId: b.placeId, label: "" }, geometry: b.geometry }) : null,
+      host_county_id: b.hostCountyId, county_attachment: b.countyAttachment, source_urls: b.sourceUrls, checked_at: b.checkedAt });
+    for (const rows of encodedBatches(map.boundaries, boundaryRow, PLACE_BOUNDARY_STATEMENT_BYTES, 500)) {
       await query(`INSERT INTO place_boundary(place_id,boundary_year,layer,version,geometry,bounds,host_county_id,county_attachment,source_urls,checked_at)
         SELECT place_id,boundary_year,layer,version,geometry,
           CASE WHEN bounds IS NULL THEN NULL ELSE box(point((bounds->>0)::float8,(bounds->>1)::float8),point((bounds->>2)::float8,(bounds->>3)::float8)) END,
@@ -60,8 +101,8 @@ export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise
         ON CONFLICT(place_id,boundary_year) DO UPDATE SET geometry=coalesce(EXCLUDED.geometry,place_boundary.geometry),
           bounds=coalesce(EXCLUDED.bounds,place_boundary.bounds), source_urls=EXCLUDED.source_urls, checked_at=EXCLUDED.checked_at,
           county_attachment=CASE WHEN coalesce(EXCLUDED.geometry,place_boundary.geometry) IS NOT NULL THEN false ELSE EXCLUDED.county_attachment END,
-          host_county_id=coalesce(EXCLUDED.host_county_id,place_boundary.host_county_id)`, [JSON.stringify(rows)]);
-    }, 32);
+          host_county_id=coalesce(EXCLUDED.host_county_id,place_boundary.host_county_id)`, [rows]);
+    }
     await loadEdges(query, "zip", map.zipEdges);
     await loadEdges(query, "zcta", map.zctaEdges);
     await batches(map.entityPlaces ?? [], async rows => {
@@ -71,14 +112,19 @@ export async function loadStatePlaceMap(db: FactDb, map: StatePlaceMap): Promise
         ON CONFLICT(entity_id,place_id,boundary_year) DO NOTHING`,
       [JSON.stringify(rows.map(row => ({ entity_id: row.entityId, place_id: row.placeId, boundary_year: row.boundaryYear })))]);
     });
-    await enqueueReaderPlaces({
-      states: [...new Set(map.places.flatMap(place => place.state ?? []))],
-      places: [...new Set([...map.places.map(place => place.id), ...map.boundaries.map(boundary => boundary.placeId),
-        ...map.zipEdges.map(edge => edge.placeId), ...map.zctaEdges.map(edge => edge.placeId)])],
-      entities: [...new Set(map.entityPlaces?.map(link => link.entityId) ?? [])],
-    }, query);
   });
+  await queuePlacePages(db, map);
   await refreshAdminCounts(db);
+}
+
+/** Pages showing the committed map are queued afterward, a bounded number of ids per short statement. A failure here
+ * fails the job before its source head or Admin totals move, so the next pass loads and queues the state again. */
+async function queuePlacePages(db: FactDb, map: StatePlaceMap): Promise<void> {
+  const places = [...new Set([...map.places.map(place => place.id), ...map.boundaries.map(boundary => boundary.placeId),
+    ...map.zipEdges.map(edge => edge.placeId), ...map.zctaEdges.map(edge => edge.placeId)])];
+  const entities = [...new Set(map.entityPlaces?.map(link => link.entityId) ?? [])];
+  await batches(places, batch => db.transaction(query => enqueueReaderPlaces({ places: batch }, query)), PLACE_PAGE_QUEUE_IDS);
+  await batches(entities, batch => db.transaction(query => enqueueReaderPlaces({ entities: batch }, query)), PLACE_PAGE_QUEUE_IDS);
 }
 
 /** Keep Admin's country totals off the page's request path. Maps commit first;

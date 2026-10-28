@@ -25,7 +25,7 @@ import { EVERYDAY_ROUTING_POINTER } from "../../lib/routing/everyday-data-plane.
 import { PLACE_PAGES_SQL, READY_PLACE_SQL } from "../../lib/reader/place.ts";
 import { composePlaceRow } from "../../lib/reader/place-decode.ts";
 import { placeBuildInput } from "../../lib/reader/place-builder.ts";
-import { stateForZip } from "../../lib/reader/national.ts";
+import { fixturePostalArea } from "./zip-location.ts";
 import type { PlaceInput } from "../../lib/reader/place-types.ts";
 
 export interface ReaderValue { readonly value: unknown; readonly versionId: string }
@@ -262,7 +262,7 @@ export function activateCanonicalFixture(key: string): void {
   };
   const readFacts: Query = async (sql,params=[]) => {
     if(sql===READY_PLACE_SQL){
-      const id=String(params[0]),state=id.startsWith("zip:")?stateForZip(id.slice(4)):meetingStateOf(id);
+      const id=String(params[0]),state=id.startsWith("zip:")?fixturePostalArea(id.slice(4))?.state:meetingStateOf(id);
       if(!state)throw new Error("The fixture page must name a held state");
       const input=await placeBuildInput(id,id.startsWith("zip:") || id.startsWith("ocd-division/") && !id.includes("#")?"place":"body",state);
       return savedRows({...input,includeHistory:params[1]===true},true);

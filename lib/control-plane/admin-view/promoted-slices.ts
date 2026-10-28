@@ -213,7 +213,7 @@ export interface CodeSlice extends GeographySlice {
 }
 
 /** One source-row revision and its selected ZIP facts share one database snapshot. */
-export function codeSliceStatement(zcta5: string, types: readonly GeographyType[], heldVersion: string | null = null): Statement {
+function codeSliceStatement(zcta5: string, types: readonly GeographyType[], heldVersion: string | null = null): Statement {
   const version = "concat(p.xmin::text,'/',p.ctid::text)";
   const geography = groupingsQuery(true, "g->'overlaps' @> jsonb_build_array(jsonb_build_object('zcta5', $4::text))", 4);
   return { text: `SELECT ${version} AS etag, ${version}=$5::text AS unchanged,
@@ -227,7 +227,7 @@ export function codeSliceStatement(zcta5: string, types: readonly GeographyType[
     params: [CENSUS_GEO_RECORD_CLASS, CENSUS_GEO_SCOPE, [...types], zcta5, heldVersion] };
 }
 
-export function codeSliceOfValue(value: unknown, zcta5: string): Slice<CodeSlice> {
+function codeSliceOfValue(value: unknown, zcta5: string): Slice<CodeSlice> {
   if (!value || typeof value !== "object") return { kind: "NOT_PUBLISHED" };
   const row = value as Row;
   const versionId = text(row.version_id);

@@ -120,7 +120,7 @@ interface TaggedResult extends MeetingSearchResult {
   zip: string;
   /** Which view request produced this answer; stale answers are dropped. */
   viewKey: string;
-  /** The nearest ZCTA to a settled viewport, resolved server-side. */
+  /** The typed ZIP when this answer came from ZIP entry. */
   nearZip?: string | null;
   /** Present when the committed snapshot served this answer. */
   snapshot?: SnapshotStatus | null;
@@ -129,7 +129,7 @@ interface TaggedResult extends MeetingSearchResult {
 interface ViewTarget {
   key: string;
   kind: "zip" | "settled";
-  /** Known for a typed zip; resolved server-side for a settled viewport. */
+  /** Present for a typed ZIP; a map point has no ZIP. */
   zip: string | null;
   lat: number;
   lng: number;
@@ -254,7 +254,7 @@ function MapEntryInner() {
   // A settled viewport overrides the typed zip's view until the next zip
   // entry; `forZip` makes it stale on a new zip without an effect.
   const [settled, setSettled] = useState<{
-    forZip: string;
+    forZip: string | null;
     target: ViewTarget;
   } | null>(null);
 
@@ -274,7 +274,7 @@ function MapEntryInner() {
   );
 
   const view =
-    settled && location && settled.forZip === location.zip
+    settled && settled.forZip === (location?.zip ?? null)
       ? settled.target
       : zipView;
 
@@ -381,6 +381,22 @@ function MapEntryInner() {
     } });
     setFocus({ lat, lng, zoom: 14, key: `address:${lat.toFixed(4)},${lng.toFixed(4)}` });
   }, [search]);
+
+  const pointLocated = useCallback((lat: number, lng: number) => {
+    discardReaderAgendaStart();
+    dispatch({ type: "select/venue", key: null });
+    dispatch({ type: "select/district", ocdId: null, districtType: null });
+    setPopupMeeting(null);
+    setLarge(null);
+    setPop(null);
+    setFailure(null);
+    setWelcomeRequested(false);
+    dismissSidebar();
+    setSettled({ forZip: location?.zip ?? null, target: {
+      key: `point:${lat},${lng}`, kind: "settled", zip: null, lat, lng,
+    } });
+    setFocus({ lat, lng, zoom: 14, key: `point:${lat},${lng}` });
+  }, [dispatch, setLarge, dismissSidebar, location]);
 
   const focusState = useStateFocus(view);
   const { contains } = focusState;
@@ -607,7 +623,7 @@ function MapEntryInner() {
   const onViewportSettle = useCallback(
     (center: { lat: number; lng: number; viewportRadiusKm: number }) => {
       const crossing = focusState.stateAt(center.lat, center.lng) !== focusState.activeOcdId;
-      if (!location || welcomeRequested) return;
+      if (!view || welcomeRequested) return;
       if (!crossing && (popupMeeting || ui.selectedVenueKey || ui.selectedDistrictOcdId)) return;
 
       const radiusKm = requestRadiusKm(center.viewportRadiusKm);
@@ -645,7 +661,7 @@ function MapEntryInner() {
         setDrawnDistricts([]);
       }
       setSettled({
-        forZip: location.zip,
+        forZip: location?.zip ?? null,
         target: {
           // The radius is part of the key: same centre, different zoom is a different question.
           key: `settled:${center.lat.toFixed(3)},${center.lng.toFixed(3)}@${radiusKm}:${focusState.stateAt(center.lat, center.lng) ?? ""}`,
@@ -909,7 +925,7 @@ function MapEntryInner() {
 
   const onStreetPoint = useCallback(
     (point: { lat: number; lng: number; street: string }) => {
-      if (!location) return;
+      if (!view) return;
       setFocus({
         lat: point.lat,
         lng: point.lng,
@@ -917,18 +933,18 @@ function MapEntryInner() {
         key: `street:${point.street}:${point.lat.toFixed(4)}`,
       });
       setSettled({
-        forZip: location.zip,
+        forZip: location?.zip ?? null,
         target: {
           key: `street:${point.lat.toFixed(4)},${point.lng.toFixed(4)}`,
           kind: "settled",
-          // Null: the server resolves and logs the nearest ZCTA, never the street point.
+          // The exact point supplies its places; no ZIP is inferred.
           zip: null,
           lat: point.lat,
           lng: point.lng,
         },
       });
     },
-    [location],
+    [location, view],
   );
 
   const onDistrictClick = useCallback(
@@ -1034,7 +1050,7 @@ function MapEntryInner() {
   // The sidebar stays under the scrim while a card is open.
   const sidebarUp = sidebarVisible;
 
-  const clusterZip = shown
+  const clusterZip = view?.kind === "settled" ? null : shown
     ? /^\d{5}$/.test(shown.zip)
       ? shown.zip
       : (shown.nearZip ?? null)
@@ -1876,17 +1892,18 @@ function MapEntryInner() {
         {/* Until the stored zip has resolved, so a returning reader never sees the prompt. */}
         {restored && (
           <WelcomeOverlay
-            open={!location || welcomeRequested}
+            open={(!location && !settled) || welcomeRequested}
             onResolved={search}
             onAddressLocated={addressLocated}
+            onPointLocated={pointLocated}
             onDismiss={
-              location ? () => setWelcomeRequested(false) : null
+              location || settled ? () => setWelcomeRequested(false) : null
             }
           />
         )}
         {location && <PostalZipNotice location={location} onLocated={addressLocated} hidden={welcomeRequested || pop !== null || cardView !== null} />}
         {restored && (
-          <TutorialOverlay active={Boolean(location) && !welcomeRequested && mapPresentationReady} />
+          <TutorialOverlay active={Boolean(location || settled) && !welcomeRequested && mapPresentationReady} />
         )}
       </main>
       </AddressResolutionProvider>

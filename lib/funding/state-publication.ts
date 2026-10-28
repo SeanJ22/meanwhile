@@ -392,7 +392,9 @@ export async function refreshCampaignMoneyState(options:StateRefreshOptions){
       SELECT id,field,'ACQUIRE','MONEY_NOT_YET_JOINED',detail,now()+make_interval(mins=>$4::int),1 FROM unnest($1::text[],$2::text[],$3::text[]) p(id,field,detail)
       ON CONFLICT(entity_id,field) DO UPDATE SET detail=CASE
         WHEN EXCLUDED.detail=ANY($5::text[]) AND NOT blank.detail=ANY($5::text[]) THEN blank.detail ELSE EXCLUDED.detail END,
-        next_try_at=EXCLUDED.next_try_at,attempts=blank.attempts+1,updated_at=now()`,
+        next_try_at=EXCLUDED.next_try_at,attempts=blank.attempts+1,updated_at=now()
+      WHERE blank.detail IS DISTINCT FROM (CASE WHEN EXCLUDED.detail=ANY($5::text[]) AND NOT blank.detail=ANY($5::text[])
+        THEN blank.detail ELSE EXCLUDED.detail END) OR blank.next_try_at<=now()`,
       [missing.map(person=>person.id),missing.map(person=>`campaign-money:${person.seat}`),missing.map(person=>personReasons.get(campaignPersonKey(state,person))??CAMPAIGN_MONEY_MISSING_REASONS.absent),
         Math.max(1,Math.round(clocks.retryMinutes("money"))),
         [CAMPAIGN_MONEY_MISSING_REASONS.unavailable,CAMPAIGN_MONEY_MISSING_REASONS.invalid]]);

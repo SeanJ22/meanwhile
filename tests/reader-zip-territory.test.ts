@@ -5,7 +5,7 @@ import {spawnSync} from "node:child_process";
 import {fileURLToPath} from "node:url";
 import test from "node:test";
 import {GET as meetingsGET} from "../app/api/meetings/route.ts";
-import {lookupZcta} from "../lib/geo/zcta.ts";
+import {fixtureZipLocation as lookupZcta} from "./helpers/zip-location.ts";
 import {stateCoverage} from "../lib/reader/coverage.ts";
 import {readerLocation,readerTerritory} from "../lib/reader/location.ts";
 import {installReaderDatabaseQuery} from "../lib/reader/database.ts";

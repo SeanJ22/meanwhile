@@ -1,7 +1,7 @@
 import type { CoverageSummary } from "../registry/coverage.ts";
 import { WIRED_STATUSES } from "../registry/coverage-client.ts";
 import type { DirectoryFile } from "../officials/directory.ts";
-import type { ZipDivisionEntry } from "../geo/zip-division-index.ts";
+import type { PlaceEntry } from "../place-map/reader.ts";
 import type { MeetingSearchResult } from "../meetings/query.ts";
 import { representationForDivision } from "../registry/representation.ts";
 import { projectedRosterGapsForDivision } from "../registry/body-roster-client.ts";
@@ -12,7 +12,7 @@ export interface ReaderStateResponse {
   state: string;
   version: string;
   coverage: CoverageSummary;
-  zipPlaces: Record<string, ZipDivisionEntry>;
+  zipPlaces: Record<string, PlaceEntry>;
   directory: DirectoryFile | null;
   memberDirectories?: readonly StateMemberDirectory[];
   boundaryUrl: string;
@@ -97,7 +97,7 @@ function withCounts(coverage: CoverageSummary, meetingCount: number): CoverageSu
 }
 
 /** A state package is complete for its state; a ZIP displays only the divisions it touches. */
-export function stateCoverageForZip(state: ReaderStateResponse, zip: string, resolved?: ZipDivisionEntry): CoverageSummary | null {
+export function stateCoverageForZip(state: ReaderStateResponse, zip: string, resolved?: PlaceEntry): CoverageSummary | null {
   const entry = resolved ?? state.zipPlaces[zip];
   // Mail-only ZIPs can lack a district index. Their state's senators and executives still serve them.
   const ids = new Set(entry?.ids ?? []);

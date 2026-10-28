@@ -82,7 +82,7 @@ interface PageFact {
 async function liveFactsOn(query: Query, urls: readonly string[]): Promise<ReadonlyMap<string, readonly PageFact[]>> {
   const out = new Map<string, PageFact[]>();
   if (!urls.length) return out;
-  const rows = await query(`SELECT f.id, f.entity_id, f.field, f.value_text, f.quote, s.url FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
+  const rows = await query(`SELECT f.id, f.entity_id, f.field, f.value_text, f.quote, s.url FROM checked_fact f JOIN source_copy s ON s.id = f.source_copy_id
     WHERE f.status = 'live' AND f.provenance_kind <> 'OWNER' AND s.url = ANY($1::text[]) ORDER BY f.id`, [urls.flatMap((url) => [url, `${url}/`])]);
   for (const row of rows) {
     const url = pageAddress(String(row.url))?.url;

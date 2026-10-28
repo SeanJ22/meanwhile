@@ -1,7 +1,3 @@
-
-
-
-
 import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";

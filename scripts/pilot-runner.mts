@@ -17,7 +17,7 @@ import {
 } from "../lib/control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { unacknowledgedResearchResume } from "../lib/control-plane/scheduler/launch-wake.ts";
-import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type OwnerDigestRecord, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type OwnerDigestRecord, type RunnerHeartbeat, type RoutineSupervisorLane } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
   unreadableIntakeRuntimeObservation,
@@ -80,6 +80,7 @@ import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane
 import { IndependentRuntimeLaneScheduler, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
+import { placeMapsLane } from "../lib/civic-data/place-map-lane.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, type PlacePageTurn } from "../lib/reader/place-page-worker.ts";
 import {
   appendIntakeRuntimeObservationDigest,
@@ -230,6 +231,8 @@ async function checkJobTransfers(): Promise<void> {
     }
     await jobBreaker.check();
   });
+  // The hunter lane's one child lives up to 55 minutes; a pause asks it to finish its tasks in hand and take no more.
+  if (!admitJobLaunch("hunter-lane")) drainHunterLane();
 }
 function jobTransferTick(): Promise<void> {
   if (jobBreakerWork) return jobBreakerWork;
@@ -807,14 +810,41 @@ async function runPublishNow(deadlineMs: number): Promise<void> {
   }
 }
 
+/** Each state's map runs in its own lane, one at a time, with the same source children, receipts and launch log as the
+ * routine pass, so the routine pass's time and memory never hold it back. */
+async function runPlaceMaps(deadlineMs: number): Promise<void> {
+  if (provider !== "postgres" || canary) return;
+  if (!jobLaunchAllowed("place-maps")) return;
+  const startedAt = new Date().toISOString();
+  const [run] = await runRuntimeChildren([{
+    id: "place-maps",
+    databaseBytesPerRun: 16_777_216,
+    executable: process.execPath,
+    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", "--place-maps"],
+    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
+  }], {
+    cwd: CODE_ROOT,
+    env: process.env,
+    deadlineMs,
+    maxBufferBytes: 16 * 1024 * 1024,
+    onStdout: (_id, output) => process.stdout.write(output),
+    onStderr: (_id, output) => process.stderr.write(output),
+  });
+  if (!run) throw new Error("PLACE_MAPS_CHILD_RESULT_MISSING");
+  if (run.status !== 0) {
+    await persistOuterRoutineChildFailure(routineSupervisorCycleId(hostname(), startedAt, "place-maps"), startedAt, run,
+      `${run.stdout ?? ""}\n${run.stderr ?? ""}`, "place-maps");
+  }
+}
+
 async function persistOuterRoutineChildFailure(
   cycleId: string,
   startedAt: string,
   run: Awaited<ReturnType<typeof runRuntimeChildren>>[number],
   output: string,
-  lane: "routine-civic-data" | "publish-now" = "routine-civic-data",
+  lane: RoutineSupervisorLane = "routine-civic-data",
 ): Promise<void> {
-  const name = lane === "publish-now" ? "publish now" : "routine civic data";
+  const name = lane === "publish-now" ? "publish now" : lane === "place-maps" ? "state place maps" : "routine civic data";
   const outer = routineSupervisorOuterEvidence({
     output,
     termination: run.termination,
@@ -1268,7 +1298,8 @@ async function runPlatformCensus(deadlineMs: number): Promise<void> {
 const placePageMemory = routineProcessSlots({ admissionsOpen: () => !runtimeAdmissionsHeld });
 let placePagePauseUnread = false;
 async function placePagesAdmitted(): Promise<boolean> {
-  if (runtimeAdmissionsHeld) return false;
+  // Asked before every turn, so a breaker pause stops the run within one turn of the check that wrote it.
+  if (runtimeAdmissionsHeld || !jobLaunchAllowed("place-pages")) return false;
   try {
     const repos = await ownerRepositories();
     if (repos && readIntents([...await readRunnerPauseIntents(repos)]).runnerPause.paused) return false;
@@ -1312,6 +1343,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   placePagesLane(runPlacePages),
   publishNowLane(runPublishNow),
+  placeMapsLane(runPlaceMaps),
 ], (outcome) => {
   if (outcome.state === "FAILED") {
     console.error(`  ${outcome.id}: standing operation failed — ${outcome.error}`);
@@ -1926,6 +1958,9 @@ async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boo
   return { ownerIntentsUnreadable: says === "UNREADABLE" };
 }
 
+// The breaker's first check writes this release's snapshot before anything can launch, including the standing clock a
+// release handoff reopens below.
+await jobTransferTick();
 let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();
 let cycle = 0;
 
@@ -1939,7 +1974,6 @@ console.log(
 
 console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
 
-await jobTransferTick();
 jobBreakerTimer = setInterval(() => { void jobTransferTick(); },JOB_BREAKER_INTERVAL_MS);
 jobBreakerTimer.unref();
 startStandingRuntimeClock();

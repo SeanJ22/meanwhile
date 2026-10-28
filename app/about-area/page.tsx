@@ -5,13 +5,11 @@ import Link from "next/link";
 import { areaFactsForState } from "@/lib/area/facts";
 import { AREA_FACTS } from "@/lib/area/facts";
 const FACT_STATES = AREA_FACTS.map(row => ({ usps: row.state, name: row.stateName, slug: row.state.toLowerCase() }));
-import { resolveZip } from "@/lib/geo/zcta";
-import { divisionsAt } from "@/lib/registry/server";
+import { stateForZip } from "@/lib/place-map/reader";
 import { Logo } from "@/components/brand/logo";
 import { titleFor } from "@/lib/brand";
 import { stateOfficesForStates } from "@/lib/reference/state-offices";
 import { StateOfficeContacts } from "@/components/state-office-contacts";
-import { ocdStateCode } from "@/lib/ocd/state-of";
 
 export const runtime = "nodejs";
 
@@ -29,17 +27,7 @@ export default readerRoute("/about-area", async function AboutAreaPage({
 
   let state: string | null = stateParam?.toUpperCase() ?? null;
   if (!state && zip) {
-    const resolution = resolveZip(zip);
-    if (resolution.ok) {
-      const divisions = await divisionsAt(
-        resolution.centroid.lat,
-        resolution.centroid.lng,
-      );
-      const match = divisions
-        .map((d) => ocdStateCode(d.ocdId))
-        .find(Boolean);
-      state = match ? match.toUpperCase() : null;
-    }
+    state = await stateForZip(zip);
   }
 
   const facts = state ? areaFactsForState(state) : null;

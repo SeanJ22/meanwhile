@@ -5,7 +5,7 @@
       "file": "lib/ballot/reader-data.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 157
+      "line": 140
     },
     {
       "file": "lib/civic-data/candidate-integrity.ts",
@@ -212,12 +212,6 @@
       "line": 155
     },
     {
-      "file": "lib/funding/state-cycles.ts",
-      "kind": "SELECT *",
-      "fingerprint": "11981806943fc8117b0fc7cddc2f4fea15fb3d640d81935cd954db875f3183b6",
-      "line": 26
-    },
-    {
       "file": "lib/method/fix-map.ts",
       "kind": "SELECT *",
       "fingerprint": "2135a58f8008895421a793ed3a16dfd75ae2d7140cf63c9830a1ed9c767f5e8c",
@@ -239,43 +233,31 @@
       "file": "lib/place-map/read.ts",
       "kind": "SELECT *",
       "fingerprint": "dce52e00818c153ffdc8b0ae784d491de09a807315e228525a9c7c690b0b9725",
-      "line": 93
+      "line": 96
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 60
+      "line": 122
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 154
-    },
-    {
-      "file": "lib/reader/canonical.ts",
-      "kind": "SELECT *",
-      "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
-      "line": 110
+      "line": 219
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
       "fingerprint": "53c4f0abf7abbbf0554b3151506b4edeef5076703e66a2bb5e73c6279129d6a7",
-      "line": 111
+      "line": 133
     },
     {
-      "file": "lib/reader/place-builder.ts",
+      "file": "lib/reader/canonical.ts",
       "kind": "SELECT *",
-      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 170
-    },
-    {
-      "file": "lib/reader/place-builder.ts",
-      "kind": "SELECT *",
-      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
-      "line": 224
+      "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
+      "line": 175
     },
     {
       "file": "lib/sources/legiscan/reader.ts",
@@ -293,7 +275,7 @@
       "file": "scripts/ingest.ts",
       "kind": "readCandidate",
       "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
-      "line": 1307
+      "line": 1308
     },
     {
       "file": "scripts/legistar-insite-minutes-ingest.mts",
@@ -314,24 +296,6 @@
       "line": 15
     },
     {
-      "file": "scripts/rb-a6-place-replay.mts",
-      "kind": "SELECT *",
-      "fingerprint": "a92f08b06546d5f137726211bbefa41c722230cf21c9702a6a2cc7d8cfcbd155",
-      "line": 55
-    },
-    {
-      "file": "scripts/rb-a6-place-replay.mts",
-      "kind": "SELECT *",
-      "fingerprint": "65f1e5d5f4d3a43118515eba82facfac6b217253dba7e22fcff26873865f821b",
-      "line": 62
-    },
-    {
-      "file": "scripts/rb-a6-place-replay.mts",
-      "kind": "SELECT *",
-      "fingerprint": "d22e85daa32152c090687905fb00d423e1376c8878e9f4931dc734c3fb7591b5",
-      "line": 63
-    },
-    {
       "file": "scripts/replay-legiscan-all-states.mts",
       "kind": "readCandidate",
       "fingerprint": "96ed04d68b2d6858bb32d31246223736a276bb355067be4eb009bf5e0e680b8b",
@@ -341,13 +305,13 @@
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 857
+      "line": 867
     },
     {
       "file": "scripts/routine-civic-data-runner.mts",
       "kind": "readCandidate",
       "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
-      "line": 866
+      "line": 876
     },
     {
       "file": "scripts/split-federal-people.mts",
@@ -359,13 +323,13 @@
       "file": "scripts/vs07-replay.mts",
       "kind": "readCandidate",
       "fingerprint": "bd26374f153813332eb6fe45756cd7795450b66a2e7aadf9103530142b2bcb6a",
-      "line": 178
+      "line": 177
     },
     {
       "file": "scripts/vs07-replay.mts",
       "kind": "readCandidate",
       "fingerprint": "009005af569b584b1ffbe35d88ec5f568ac5a08577a152640e2a36033ed9b081",
-      "line": 193
+      "line": 192
     }
   ]
 }

@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { readPromotedCivicDataBatch, type PromotedCivicDataReadOptions } from "../../civic-data/read-model.ts";
 import { assertOpenDataProjection } from "./publication.ts";
-import { lookupZcta } from "../../geo/zcta.ts";
+import { readZipLocation } from "../../place-map/locations.ts";
 import { nearbyFacilityCells,facilityNear,FACILITY_RADIUS_KM } from "./geography.ts";
 import { openDataScope,divisionPartition,zipPartition,type OpenDataFact,type OpenDataSource,type OpenDataProjection,type OpenDataPartitionRef } from "./model.ts";
 import { readOpenDataPartition } from "./artifacts.ts";
@@ -33,7 +33,7 @@ function decodeCursor(value:string,scope:string,version:string):Cursor {
 
 /** One setup and at most one held source slice in memory; API and complete Ask reads share this iterator. */
 async function prepareOpenData(input:Input,options:Options) {
-  const divisions=[...new Set(input.divisionIds??[])],point=input.zip?lookupZcta(input.zip):null;
+  const divisions=[...new Set(input.divisionIds??[])],point=input.zip?await readZipLocation(input.zip):null;
   const requested=[...divisions.map(id=>({source:"socrata-discovery" as const,partition:divisionPartition(id)})),
     ...(input.zip&&/^\d{5}$/.test(input.zip)?[zipPartition(input.zip),...(point?nearbyFacilityCells(point):[])].map(partition=>({source:"epa-echo" as const,partition})):[])];
   const selection=currentReaderSelection();for(const item of requested)selection?.keys.add(`${OPEN_DATA_READER_KEY_PREFIX}${item.partition}`);

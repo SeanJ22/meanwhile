@@ -18,14 +18,14 @@ import {publishOpenData,readOpenDataProjection,type OpenDataCapture} from "../li
 import {openDataReaderRecord,type OpenDataPartitionRef,type OpenDataReport} from "../lib/sources/open-data/model.ts";
 import {echoReaderArtifactRecord,normalizeEcho} from "../lib/sources/open-data/normalize.ts";
 import {nearbyFacilityCells} from "../lib/sources/open-data/geography.ts";
-import {lookupZcta} from "../lib/geo/zcta.ts";
+import {readZipLocation} from "../lib/place-map/locations.ts";
 import {openDataEvidence} from "../lib/ask/open-data.ts";
 import {OpenDataFacts,openDataSources} from "../components/map/open-data.tsx";
 import {FederalMoneyBenchmarkStore} from "./lib/federal-money-benchmark-store.mts";
-import {installOpenDataReaderSql,installOpenDataReplayVault,normalOpenDataPage} from "./lib/open-data-replay-reader.mts";
+import {installOpenDataReaderSql,installOpenDataReplayMap,installOpenDataReplayVault,normalOpenDataPage} from "./lib/open-data-replay-reader.mts";
 import {createEpaReplayVault} from "./lib/epa-held-spool.mts";
 import {compressedReplayVault} from "./lib/open-data-replay-vault.mts";
-import {stateForZip} from "../lib/reader/national.ts";
+import {stateForZip} from "../lib/place-map/reader.ts";
 
 const args=new Map(process.argv.slice(2).map(arg=>{const at=arg.indexOf("=");return[arg.slice(0,at),arg.slice(at+1)];}));
 const cache=resolve(args.get("--cache")??".scratch/src01-epa"),vaultRoot=resolve(args.get("--vault")!),nativeConnectionFile=args.get("--native-postgres-file");
@@ -64,15 +64,21 @@ if(args.get("--retention-only")==="true"){
   }finally{clearInterval(sample);}
   process.exit(0);
 }
+installOpenDataReplayMap();
 const samples: {state:string;zip:string;id:string}[]=[];
 for(const state of states.filter(state=>all?US_JURISDICTIONS.some(row=>row.usps===state.state):wanted.has(state.state))){
   let sample:{state:string;zip:string;id:string}|undefined;
-  for(const reference of state.references.filter(ref=>ref.id.startsWith("zip:"))){const zip=/^zip:(\d{5}):/.exec(reference.id)?.[1];if(all&&zip&&stateForZip(zip)!==state.state)continue;const read=await readOpenDataPartition("epa-echo",reference,vault);const row=read.records.find(row=>row.zip&&lookupZcta(row.zip));if(row){sample={state:state.state,zip:row.zip!,id:row.id};break;}}
+  for(const reference of state.references.filter(ref=>ref.id.startsWith("zip:"))){
+    const zip=/^zip:(\d{5}):/.exec(reference.id)?.[1];if(all&&zip&&await stateForZip(zip)!==state.state)continue;
+    const read=await readOpenDataPartition("epa-echo",reference,vault);
+    for(const row of read.records)if(row.zip&&await readZipLocation(row.zip)){sample={state:state.state,zip:row.zip,id:row.id};break;}
+    if(sample)break;
+  }
   assert.ok(sample,`No actual readable source ZIP for ${state.state}`);samples.push(sample);
 }
 const compactProof={logicalReferences:0,uniqueBodies:0,rows:0,beforeBytes:0,afterBytes:0,allPublicRowsEqual:true,allInterpretedCellsRoundTrip:true};
 if(compactStorage){
-  const logical=new Set(samples.flatMap(sample=>[`zip:${sample.zip}`,...nearbyFacilityCells(lookupZcta(sample.zip)!)])),replaced=new Map<string,OpenDataPartitionRef>();
+  const logical=new Set((await Promise.all(samples.map(async sample=>[`zip:${sample.zip}`,...nearbyFacilityCells((await readZipLocation(sample.zip))!)]))).flat()),replaced=new Map<string,OpenDataPartitionRef>();
   for(const reference of references.filter(reference=>[...logical].some(key=>reference.id===key||reference.id.startsWith(`${key}:state:`)))){
     compactProof.logicalReferences++;if(replaced.has(reference.key))continue;
     const read=await readOpenDataPartition("epa-echo",reference,vault);

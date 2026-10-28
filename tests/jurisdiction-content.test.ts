@@ -8,7 +8,7 @@ import { EVERYDAY_CONTACTS, everydayContactsFor } from "../lib/routing/everyday.
 import { TOPIC_ROUTES } from "../lib/routing/topics.ts";
 import { resolveRouting } from "../lib/routing/resolve.ts";
 import { coverageAt } from "../lib/registry/server.ts";
-import { lookupZcta } from "../lib/geo/zcta.ts";
+import { fixtureZipLocation } from "./helpers/zip-location.ts";
 import {
   DIVISION_OFFICE_BLURBS,
   OFFICE_BLURBS,
@@ -293,7 +293,7 @@ test("the regression itself: every ask-box answer at every covered zip is free o
   let checkedAnswers = 0;
   let checkedStrings = 0;
   for (const [zip, own] of Object.entries(ZIP_STATE) as [string, StateCode][]) {
-    const centroid = lookupZcta(zip);
+    const centroid = fixtureZipLocation(zip);
     assert.ok(centroid, `${zip} has a centroid`);
     const coverage = await coverageAt(centroid.lat, centroid.lng, 0);
     for (const route of TOPIC_ROUTES) {
@@ -342,8 +342,8 @@ test("the regression itself: every ask-box answer at every covered zip is free o
 });
 
 test("the sourced Pima library fact reaches Pima readers and nobody else", async () => {
-  const az = lookupZcta("85701");
-  const nh = lookupZcta("03255");
+  const az = fixtureZipLocation("85701");
+  const nh = fixtureZipLocation("03255");
   assert.ok(az && nh);
   const azAnswer = resolveRouting(
     "libraries",

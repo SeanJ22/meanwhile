@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import test from "node:test";
 import { RECIPES, wordsIn, type Recipe } from "../lib/control-plane/data-business/recipes.ts";
 import { readRecipe, leavable, RecipeShapeError, type ReadDeps, type Sources, type TotalsQuery } from "../lib/control-plane/data-business/read.ts";
-import { shardPlaceIndex } from "../lib/control-plane/data-business/places.ts";
+import { placeIndex } from "../lib/control-plane/data-business/places.ts";
 import { districtLabel, parseSlice, periodOf, weekOf } from "../lib/control-plane/data-business/slice.ts";
 import type { CapturedEvent, CohortRow, ResultBody, TotalsRow } from "../lib/control-plane/data-business/types.ts";
 
@@ -50,11 +50,13 @@ const COHORTS: CohortRow[] = [
   { grain: "day", period: "2026-10-01", readers: 10, newReaders: 3 },
 ];
 
-const shardOf = (divisions: string[], zips: Record<string, number[]>) => ({ divisions, zips });
-const places = shardPlaceIndex(async (prefix) =>
-  prefix === "07" ? shardOf(["ocd-division/country:us/state:nj", UNION, "ocd-division/country:us/state:nj/county:essex"], { "07090": [0, 1], "07091": [0, 1, 2] })
-  : prefix === "32" ? shardOf(["ocd-division/country:us/state:fl", "ocd-division/country:us/state:fl/county:seminole"], { "32708": [0, 1] })
-  : shardOf([], {}));
+const mapRows = new Map([
+  ["07090", {ids:["ocd-division/country:us/state:nj", UNION],partial:[],samples:0,states:["NJ"]}],
+  ["07091", {ids:["ocd-division/country:us/state:nj", UNION, "ocd-division/country:us/state:nj/county:essex"],partial:[],samples:0,states:["NJ"]}],
+  ["32708", {ids:["ocd-division/country:us/state:fl", "ocd-division/country:us/state:fl/county:seminole"],partial:[],samples:0,states:["FL"]}],
+]);
+const places = placeIndex(async zip => mapRows.get(zip) ?? null,
+  async state => new Map([...mapRows].filter(([, entry]) => entry.states.includes(state.toUpperCase()))));
 
 const sources: Sources = {
   places,
@@ -236,7 +238,7 @@ test("A SLICE THE SOURCE CANNOT COUNT is refused in words, not answered with a w
   const gone: Sources = { ...sources, totals: async () => ({ kind: "NOT_INSTALLED", detail: "Reader events need migration 0034." }) };
   const n = await ask("topic-share", {}, "admin", deps({ sources: gone }));
   assert.equal(n.kind, "NOT_INSTALLED");
-  const broken = shardPlaceIndex(async () => null);
+  const broken = placeIndex(async () => null, async () => { throw new Error("Map unavailable"); });
   const u = await ask("topic-share", { place: { kind: "state", id: "nj" } }, "admin", deps({ sources: { ...sources, places: broken } }));
   assert.equal(u.kind === "REFUSED" && u.why, "PLACE_UNKNOWN", "a shard that could not be read is unknown, not an empty state");
   const wide: Sources = { ...sources, totals: async () => ({ kind: "ROWS", rows: [], truncated: true }) };

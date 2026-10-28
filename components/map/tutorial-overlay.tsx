@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { usePathname } from "next/navigation";
 import {
   commitStorageWrite,
   publishToListeners,
@@ -114,13 +115,14 @@ function StepPreview({ id }: { id: (typeof STEPS)[number]["id"] }) {
 }
 
 export function TutorialOverlay({ active }: { active: boolean }) {
+  const pathname = usePathname();
   const [progress, setProgress] = useState({ version: 0, step: 0 });
   const seen = useSyncExternalStore(subscribe, readSeen, () => true);
   const replay = useSyncExternalStore(subscribe, readReplay, serverReplay);
   const [dismissed, setDismissed] = useState(false);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
-  const visible = active && (replay.pending || (!seen && !dismissed));
+  const visible = active && (pathname === null || pathname === "/") && (replay.pending || (!seen && !dismissed));
   const step = progress.version === replay.version ? progress.step : 0;
   const setStep = (next: number) => setProgress({ version: replay.version, step: next });
 

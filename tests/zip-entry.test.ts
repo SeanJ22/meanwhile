@@ -1,42 +1,59 @@
+import { installFactReader } from "../lib/facts/db.ts";
+import { fixturePlaceMapQuery } from "./helpers/place-map.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
+import { mkdtemp, writeFile, rm } from "node:fs/promises";
+import { join } from "node:path";
+import { tmpdir } from "node:os";
 import test from "node:test";
 import centroidFile from "../lib/geo/zcta-centroids.json" with { type: "json" };
 import postalFile from "../lib/geo/postal-zips.json" with { type: "json" };
-import { lookupZcta, resolveZip, COVERAGE_IS_COMPLETE, CENTROID_SOURCE } from "../lib/geo/zcta.ts";
-import { lookupIn, resolveIn, type CentroidTable } from "../lib/geo/zcta-core.ts";
+import { fixtureZipLocation, fixtureZipResolution } from "./helpers/zip-location.ts";
+import { resolveZipLocation } from "../lib/place-map/locations.ts";
 import { resolveReaderZip } from "../lib/reader/zip.ts";
-import { readerZipStarts } from "../lib/geo/reader-zip-start.ts";
+import { stateZipLocations } from "../lib/place-map/location-import.ts";
+import { zipSourceRows, type ZipSourceMetadata } from "../lib/place-map/source-rows.ts";
+import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { postalAreaMessage, ZIP_AREA_MISSING, type PostalTable } from "../lib/geo/postal-core.ts";
-import { postalTable } from "../lib/geo/postal.ts";
 import { assertGovernmentZipCoverage, parseGazetteer, parseGeoNames, parsePostalTypes } from "../lib/geo/zip-source.ts";
 import { areaLookup, buildPostalTable } from "../lib/geo/build-postal-table.ts";
 import type { Feature } from "../lib/geo/shapefile.ts";
-import { zipDivisionEntry } from "../lib/geo/zip-division-index.ts";
+import { installPlaceMapQuery, readZipPlace } from "../lib/place-map/reader.ts";
 import { zipCertainty } from "../lib/geo/zip-certainty.ts";
-import { publishedDivisionsForZip } from "../lib/geo/zip-census-districts.ts";
-import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS } from "../lib/ballot/zip-divisions.ts";
+import { readZipDivisions } from "../lib/place-map/reader.ts";
+import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import { locateAddressInZip, parseCensusPoint, sampleStreetPoints } from "../lib/geo/census-geocoder.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/zip-entry/${name}`, import.meta.url), "utf8");
 
-test("server module contexts share the complete unchanged postal table", async () => {
-  const second = await import(new URL("../lib/geo/postal.ts?context=another-server-bundle", import.meta.url).href) as typeof import("../lib/geo/postal.ts");
-  assert.equal(second.postalTable(), postalTable());
-  assert.deepEqual(postalTable(), postalFile.zips);
+installFactReader(fixturePlaceMapQuery());
+
+test("ZIP source streaming keeps split Unicode rows and refuses a truncated capture", async () => {
+  const directory = await mkdtemp(join(tmpdir(),"rb-a10-zip-source-")), path = join(directory,"zips.json");
+  const rows = {"00501":[1,2,"unique","11742","Río [\"North\"]".repeat(6000),"NY","County",null,null],"00502":[3,4]};
+  const capture = JSON.stringify({source:"https://example.gov/zip-source",vintage:2020,zips:rows});
+  try {
+    await writeFile(path,capture);
+    const metadata: ZipSourceMetadata = {};
+    const decoded = Object.fromEntries(await Array.fromAsync(zipSourceRows(path,metadata)));
+    assert.deepEqual(decoded,rows);
+    assert.equal(metadata.source,"https://example.gov/zip-source"); assert.equal(metadata.vintage,2020);
+    await writeFile(path,capture.slice(0,-1));
+    await assert.rejects(async () => Array.fromAsync(zipSourceRows(path)),/Incomplete acquired ZIP source/);
+  } finally { await rm(directory,{recursive:true,force:true}); }
 });
 
-test("server module contexts retain complete Census ZIP coordinates and source metadata", async () => {
-  const second = await import(new URL("../lib/geo/zcta.ts?context=another-server-bundle", import.meta.url).href) as typeof import("../lib/geo/zcta.ts");
-  assert.deepEqual(CENTROID_SOURCE, { url: centroidFile.source, org: centroidFile.sourceOrg, vintage: centroidFile.vintage });
-  assert.deepEqual(second.CENTROID_SOURCE, CENTROID_SOURCE);
-  assert.equal(COVERAGE_IS_COMPLETE, centroidFile.complete === true);
-  assert.equal(second.COVERAGE_IS_COMPLETE, COVERAGE_IS_COMPLETE);
-  for (const [zip, point] of Object.entries(centroidFile.centroids)) {
-    const location = second.lookupZcta(zip);
-    assert.ok(location, zip);
-    assert.deepEqual([location.lat, location.lng], point, zip);
-    assert.deepEqual(location, lookupZcta(zip), zip);
+test("the map import preserves every acquired Census ZIP display coordinate and source", async () => {
+  const rows=(await Promise.all(US_JURISDICTIONS.map(state=>stateZipLocations(process.cwd(),state.usps,"2026-10-24T00:00:00Z")))).flat();
+  const byZip=new Map(rows.map(row=>[row.zip,row]));
+  for(const [zip,point] of Object.entries(centroidFile.centroids)){
+    const row=byZip.get(zip);assert.ok(row,zip);assert.deepEqual([row.lat,row.lng],point,zip);
+    assert.ok(row.sourceUrls.includes(centroidFile.source));
+  }
+  const states=new Set(US_JURISDICTIONS.map(state=>state.usps));
+  for(const [zip,row] of Object.entries(postalFile.zips))if(states.has(row[5] as typeof US_JURISDICTIONS[number]["usps"])){
+    const imported=byZip.get(zip);assert.ok(imported,zip);
+    assert.deepEqual(imported.postal,{type:row[2],zcta:row[3],place:row[4],state:row[5],county:row[6],countyFips:row[7],placeGeoid:row[8]},zip);
   }
 });
 
@@ -46,17 +63,15 @@ test("ZIP-01: every government-index ZIP resolves in the complete 2020 ZCTA tabl
   assert.equal(zips.length, 33791);
   assert.equal(Object.keys(centroidFile.centroids).length, 33791);
   assertGovernmentZipCoverage(centroidFile.centroids as unknown as Record<string, [number, number]>, zips);
-  assert.deepEqual(zips.filter(zip => !resolveZip(zip).ok), []);
+  assert.deepEqual(zips.filter(zip => !fixtureZipResolution(zip).ok), []);
   assert.throws(() => assertGovernmentZipCoverage({}, zips), /omits 33791/);
 });
 
 test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each sample's location and postal type", async (t) => {
-  const shards = readerZipStarts(centroidFile.centroids as unknown as CentroidTable, postalFile.zips as unknown as PostalTable);
   t.mock.method(globalThis, "fetch", async (input: string | URL | Request) => {
     const requestUrl = new URL(input instanceof Request ? input.url : input, "http://localhost");
-    const match = /^\/geo\/reader-zips\/(\d{2})\.json$/.exec(requestUrl.pathname);
-    assert.ok(match, requestUrl.pathname);
-    return Response.json(shards[Number(match[1])]);
+    assert.equal(requestUrl.pathname,"/api/location/zip");
+    return Response.json({location:fixtureZipLocation(requestUrl.searchParams.get("zip")!)});
   });
   const centroids = parseGazetteer(fixture("gazetteer.tsv"));
   const geonames = parseGeoNames(fixture("geonames.tsv"));
@@ -65,10 +80,10 @@ test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each samp
   const table = buildPostalTable(centroids, geonames, types, boundaries);
   for (const zip of Object.keys(geonames)) {
     assert.deepEqual(table[zip], (postalFile.zips as unknown as PostalTable)[zip], zip);
-    const sync = resolveZip(zip), asyncResult = await resolveReaderZip(zip);
+    const sync = fixtureZipResolution(zip), asyncResult = await resolveReaderZip(zip);
     assert.ok(sync.ok, zip);
     assert.deepEqual(asyncResult, sync, "resident server table and browser projection agree");
-    assert.deepEqual(lookupZcta(zip), sync.centroid);
+    assert.deepEqual(fixtureZipLocation(zip), sync.centroid);
   }
   assert.equal(table["73960"][2], "po-box");
   assert.equal(table["05009"][2], "unique");
@@ -80,31 +95,33 @@ test("ZIP-01: the saved Gazetteer, GeoNames and postal types reproduce each samp
   assert.equal(areaLookup(boundaries.zcta)(0, 0), null, "an uncovered point never gets its nearest ZCTA assigned");
 });
 
-test("ZIP-01: absent and known-but-unplaced five-digit ZIPs offer an address, without claiming nonexistence", () => {
-  assert.deepEqual(resolveIn({}, "73960"), { ok: false, reason: "uncovered" });
-  assert.deepEqual(resolveZip("00000"), { ok: false, reason: "uncovered" });
-  const postal: PostalTable = { "73960": [null, null, "po-box", null, "Texhoma", "TX", "Sherman County", "48421", null] };
-  assert.equal(lookupIn({}, "73960", postal), null);
-  assert.deepEqual(resolveIn({}, "73960", postal), { ok: false, reason: "uncovered" });
-  assert.deepEqual(resolveZip("0509"), { ok: false, reason: "malformed" });
+test("ZIP-01: absent and known-but-unplaced five-digit ZIPs offer an address, without claiming nonexistence", async () => {
+  installPlaceMapQuery(async () => []);
+  try {
+    assert.deepEqual(await resolveZipLocation("73960"), { ok: false, reason: "uncovered" });
+    assert.deepEqual(await resolveZipLocation("00000"), { ok: false, reason: "uncovered" });
+    installPlaceMapQuery(async () => [{zip:"73960",lat:null,lng:null,postal:fixtureZipLocation("73960")!.postal}]);
+    assert.deepEqual(await resolveZipLocation("73960"), { ok: false, reason: "uncovered" });
+    assert.deepEqual(await resolveZipLocation("0509"), { ok: false, reason: "malformed" });
+  } finally { installPlaceMapQuery(undefined); }
   assert.equal(ZIP_AREA_MISSING, "We don't have that ZIP's area yet. Enter your street address and we'll find your districts.");
-  const text = postalAreaMessage(lookupZcta("73960")!.postal!);
+  const text = postalAreaMessage(fixtureZipLocation("73960")!.postal!);
   assert.match(text, /Texhoma, TX · Sherman County/);
   assert.match(text, /P.O. Box only/);
   assert.match(text, /Your districts depend on where you live/);
-  assert.match(postalAreaMessage(lookupZcta("05009")!.postal!), /unique to one institution/);
+  assert.match(postalAreaMessage(fixtureZipLocation("05009")!.postal!), /unique to one institution/);
 });
 
 test("ZIP-01: a mail-only ZIP that is its own Census ZCTA keeps its residents' school district", async () => {
   // Bethel's residents get their mail at the post office; the Census still counts them in ZCTA 99559.
-  const bethel = await zipDivisionEntry("99559");
+  const bethel = await readZipPlace("99559");
   assert.ok(bethel?.ids.includes("ocd-division/country:us/state:ak/school_district:lower_kuskokwim_school_district"));
-  for (const zip of ["73960", "10540"]) assert.ok((await zipDivisionEntry(zip))?.ids.some(id => /\/school_district:/.test(id)), zip);
+  for (const zip of ["73960", "10540"]) assert.ok((await readZipPlace(zip))?.ids.some(id => /\/school_district:/.test(id)), zip);
 });
 
 test("ZIP-01: mail-only ZIPs cannot acquire residential legislative or school districts from a ZCTA or its point", async () => {
   for (const zip of ["10008", "00501"]) {
-    const entry = await zipDivisionEntry(zip);
+    const entry = await readZipPlace(zip);
     assert.ok(entry, zip);
     assert.equal(entry.samples, 0);
     assert.ok(entry.ids.length > 0, "town and county remain available");
@@ -112,12 +129,12 @@ test("ZIP-01: mail-only ZIPs cannot acquire residential legislative or school di
     const certainty = await zipCertainty(zip);
     assert.ok(certainty);
     assert.ok(entry.ids.filter(id => id.split("/").length > 3).every(id => certainty.certaintyOf(id) !== "CERTAIN"));
-    assert.deepEqual(await publishedDivisionsForZip(zip), []);
+    assert.deepEqual(await readZipDivisions(zip), []);
     const point = ["ocd-division/country:us/state:tx/cd:13", "ocd-division/country:us/state:tx/sldu:31", "ocd-division/country:us/state:tx/school_district:texhoma"];
     assert.ok((await divisionIdsForZipArea(zip, point)).every(id => !point.includes(id)));
     const withQualifiedPoint = await divisionIdsForZipArea(zip, point, {
       purpose: "representation", asOf: "2026-10-13",
-    }, POINT_GEOMETRY_PLANS);
+    });
     assert.ok(withQualifiedPoint.every(id => !point.includes(id)), "a valid point plan still cannot assign districts from a mail-only ZIP");
   }
 });

@@ -90,3 +90,19 @@ test("the same person read from two pages is one person; a name the page does no
   assert.ok(blanks.every(b => b.stage === "CHECK" && b.reason === "CHECK_FAILED:QUOTE_NOT_ON_SAVED_COPY"));
   assert.ok(blanks.some(b => String(b.field).startsWith("member:")));
 });
+
+test("two fresh copies of an unchanged roster update zero facts and file one confirmation per source scope",async t=>{
+  const db=await seeded();t.after(()=>db.pg.close());const purge=async()=>({purged:true});
+  await publishRosterFacts(db,{body:BODY,capture:capture(html,"fresh-roster-1"),members:members(html),complete:true,producedBy:"held-roster",purge},clocks,NOW);
+  const before=await db.query("SELECT id,xmin::text AS version,ctid::text AS slot FROM fact ORDER BY id");
+  for(const [edition,hour] of [[2,1],[3,2]]){
+    const checked=new Date(+NOW+hour*3_600_000);
+    const result=await publishRosterFacts(db,{body:BODY,capture:capture(html,`fresh-roster-${edition}`,checked.toISOString()),
+      members:members(html),complete:true,producedBy:"held-roster",purge},clocks,checked);
+    assert.equal(result.confirmed,12);
+    assert.deepEqual(await db.query("SELECT id,xmin::text AS version,ctid::text AS slot FROM fact ORDER BY id"),before);
+    assert.deepEqual(await db.query("SELECT count(*)::int AS n FROM fact_confirmation"),[{n:edition-1}]);
+    const {rosters}=await readFactRosters(db.query,[TCCC]);
+    assert.ok(rosters[0].members.every(member=>member.fieldSources?.name?.verifiedAt===checked.toISOString().slice(0,10)));
+  }
+});

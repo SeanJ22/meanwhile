@@ -1,8 +1,8 @@
 import { currentReaderSelection } from "../db/reader-route.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
-import { readStatePackage, readStateDistricts, primeStateDistrictPointers, primeStateReaderPointers } from "../reader/state.ts";
+import { readStatePackage, readStateAuthorities, primeStateDistrictPointers, primeStateReaderPointers } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
-import { readZipPlace, stateForZip } from "../reader/national.ts";
+import { readZipPlace } from "../place-map/reader.ts";
 import { readerTerritory, territoryBodies } from "../reader/location.ts";
 import { readCanonicalShelf, readCanonicalPackages } from "../reader/canonical.ts";
 import { primeReaderCanonicalStore, readerCanonicalEntry } from "../reader/canonical-context.ts";
@@ -13,8 +13,6 @@ import { requiredRoutineContract } from "../civic-data/contracts.ts";
 import { translationScope } from "../translate/records.ts";
 import { withStateRegistryFacts, combineStateRegistries } from "../registry/state-composition.ts";
 import { withRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
-import { withCensusDistricts } from "../geo/zip-census-districts.ts";
-import { postalArea } from "../geo/postal.ts";
 import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import type { GeographySelection } from "../census-geography/selection.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
@@ -33,26 +31,24 @@ import { personIdentityKeys } from "../officials/people-identity.ts";
 export async function readBallotReaderData(place: BallotPlace, readTerritory = readerTerritory) {
   const selection = currentReaderSelection();
   if (!place.centroid || !selection || currentReaderAuthorityEdge()) return null;
-  const states = place.state ? [place.state.code] : place.zip && stateForZip(place.zip)
-    ? [...new Set([stateForZip(place.zip)!, ...selection.states ?? []])] : [...selection.states ?? []];
+  const rawEntry = place.zip ? await readZipPlace(place.zip) : null;
+  const states = place.state ? [place.state.code] : [...new Set([...rawEntry?.states ?? [], ...selection.states ?? []])];
   if (!states.length) return null;
   const point = place.centroid;
-  const zip = place.zip ? postalArea(place.zip)?.zcta ?? place.zip : undefined;
-  const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip, {earlyDistricts:true}), districts: readStateDistricts(state) }));
+  const zip = place.zip ?? undefined;
+  const packages = states.map(state => ({ state, read: readStatePackage(state, [], zip, {earlyDistricts:true}) }));
   // Reserve these promises now: the ballot's early incumbent and portrait reads
   // consume the state query's verified ZIP slices instead of opening another read.
   if (zip) for (const {state,read} of packages) void primeStateReaderPointers(state,read).catch(()=>undefined);
-  const [rawEntry, territories] = await Promise.all([
-    place.zip ? readZipPlace(postalArea(place.zip)?.zcta ?? place.zip) : Promise.resolve(null),
-    Promise.allSettled(states.map(readTerritory)),
-  ]);
+  const territories = await Promise.allSettled(states.map(readTerritory));
   const places = packages.map(async ({ state, read }, index) => {
     const territory = territories[index];
     if (territory.status === "rejected") throw territory.reason;
     const local = readPlacePackage({ state, divisionIds: rawEntry ? [...rawEntry.ids, ...rawEntry.fringe ?? []] : selection.divisions ?? [], bodyFactsOnly: true,
       bodyIds: territoryBodies(point.lat, point.lng, territory.value) });
-    const [held, facts] = await Promise.all([read, local]);
-    return withStateRegistryFacts(held.registry, facts.bodies);
+    const [held, facts] = await Promise.all([readStateAuthorities(read), local]);
+    if (held.registryRead.kind !== "PROMOTED" && held.registryRead.kind !== "BOOTSTRAP") throw new Error(`STATE_PACKAGE_NOT_RECORDED:${state}`);
+    return withStateRegistryFacts(held.registryRead.value, facts.bodies);
   });
   const divisions = [...new Set([...rawEntry?.ids ?? [], ...rawEntry?.fringe ?? [], ...selection.divisions ?? [],
     ...states.map(state => `ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`)])];
@@ -61,7 +57,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
       stateAuthorityPointers(family, state)),
     ...(state === "NH" && !zip ? [requiredRoutineContract("nh-members")] : []),
   ]);
-  for (const id of ["ballot-navigation", "official-filings"] as const) entries.push(requiredManualProductionContract(id));
+  entries.push(requiredManualProductionContract("official-filings"));
   for (const division of divisions) {
     if (!jurisdictionFromOcdId(division)) continue;
     entries.push({ recordClass: "CURATED_READER_RECORD", scope: translationScope(division) });
@@ -72,21 +68,17 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   const baseRead = primeReaderCanonicalStore(unique, readCanonicalPackages([ballots, other]));
   const entry = async (geography?: GeographySelection) => {
     if (!place.zip) return rawEntry;
-    let value = rawEntry ?? { ids: [], partial: [], samples: 0 };
-    for (const { districts } of packages) {
-      const held = await districts;
-      if (held.kind === "HELD") value = withCensusDistricts(value,
-        { ...held, value: { ...held.value, known: true } }, place.zip, geography);
-    }
-    return value;
+    return geography ? readZipPlace(place.zip, geography) : rawEntry;
   };
   const districtRead = entry().then(async value => {
-    const pointersRead = Promise.all(packages.map(({ read }) => primeStateDistrictPointers(read)));
-    const extra = (value?.ids ?? []).filter(id => !divisions.includes(id) && jurisdictionFromOcdId(id)).flatMap(id => [
+    // Finish registering the pointers carried by the geography query before
+    // deciding which ones are missing, including its confirmed absences.
+    await Promise.all(packages.map(({ read }) => primeStateDistrictPointers(read)));
+    const extra = [...value?.ids ?? [], ...value?.fringe ?? []].filter(id => !divisions.includes(id) && jurisdictionFromOcdId(id)).flatMap(id => [
       { recordClass: "CURATED_READER_RECORD" as const, scope: translationScope(id) },
     ]);
     const missing = extra.filter(entry => !readerCanonicalEntry(entry.recordClass, entry.scope));
-    await Promise.all([pointersRead, missing.length ? primeReaderCanonicalStore(missing, readCanonicalShelf(missing)) : Promise.resolve()]);
+    if (missing.length) await primeReaderCanonicalStore(missing, readCanonicalShelf(missing));
   });
   const canonicalRead = Promise.all([baseRead, districtRead]).then(() => undefined);
   const registryRead = Promise.all(places).then(values => {
@@ -142,6 +134,12 @@ export function ballotCandidateDetailsStatement(state: string, keys: readonly st
     END END AS payload FROM pointer LEFT JOIN roots USING(key)`};
 }
 
+/** A ballot store primed from canonical entries; it never reads a promotion or a candidate body. */
+const CANONICAL_ENTRY_ONLY = {
+  async readPromotion(): Promise<never> { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+  async readCandidate(): Promise<never> { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+};
+
 export async function primeBallotCandidateDetails(set: BallotSet, contests: readonly Contest[]): Promise<void> {
   if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
   const statement = ballotCandidateDetailsStatement(set.election.state,ballotCandidateKeys(set,contests));
@@ -153,8 +151,7 @@ export async function primeBallotCandidateDetails(set: BallotSet, contests: read
     return [key,selectedStateEntry(pointer.recordClass,pointer.scope,rows.find(row=>row.key===key))];
   }));
   await primeReaderCanonicalStore(statement.pointers,{
-    async readPromotion() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
-    async readCandidate() { throw new Error("READER_USES_CANONICAL_ENTRY"); },
+    ...CANONICAL_ENTRY_ONLY,
     async readPromotedEntry(recordClass,scope) {
       const entry = entries.get(`${recordClass}:${scope}`);
       if (!entry) throw new Error("READER_SCOPE_NOT_SELECTED");
@@ -177,6 +174,13 @@ export async function primeBallotFundingRead(set: BallotSet, contests: readonly 
     for (const person of roster.officeholders) if (holders.has(person.id))
       for (const key of personIdentityKeys(person)) keys.add(key);
   } catch { /* Ballot-bound FEC records remain readable if the directory is unavailable. */ }
-  if (keys.size) await primeReaderProjection("FEC_FUNDING",requiredRoutineContract("fec-funding").scope,
-    [...currentReaderSelection()!.keys,...keys],{exactKeys:true});
+  if (keys.size) {
+    const pointer = requiredRoutineContract("fec-funding");
+    const entry = await primeReaderProjection("FEC_FUNDING", pointer.scope,
+      [...currentReaderSelection()!.keys,...keys],{exactKeys:true});
+    await primeReaderCanonicalStore([{ recordClass: "FEC_FUNDING", scope: pointer.scope }], {
+      ...CANONICAL_ENTRY_ONLY,
+      async readPromotedEntry() { return entry; },
+    });
+  }
 }

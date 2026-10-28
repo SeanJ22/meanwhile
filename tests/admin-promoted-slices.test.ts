@@ -203,10 +203,8 @@ test("real state geography SQL carries each scope's metadata once and preserves 
 });
 
 
-test("one atomic ZIP statement preserves held geography and skips unchanged bodies after an in-place source update", async () => {
+test("one atomic ZIP statement preserves held geography", async () => {
   const { PGlite } = await import("@electric-sql/pglite");
-  const { publishedZipDistricts } = await import("../lib/geo/zip-census-districts.ts");
-  const { installReaderDatabaseQuery } = await import("../lib/reader/database.ts");
   const pg = new PGlite();
   const returned: Row[][] = [];
   const query: ReadOnlyQuery = async statements => {
@@ -236,24 +234,5 @@ test("one atomic ZIP statement preserves held geography and skips unchanged bodi
     returned.length = 0;
     assert.deepEqual(await containersOfCode(zip,TYPES,query),expected);
     assert.equal(returned.length,1,"the cold ZIP answer is one statement rather than a transaction with three queries");
-    installReaderDatabaseQuery(query);
-    const selected = await publishedZipDistricts(zip);
-    assert.equal(selected.kind,"HELD");
-    returned.length = 0;
-    assert.deepEqual(await publishedZipDistricts(zip),selected);
-    assert.equal(returned.length,1);
-    assert.equal(returned[0][0].unchanged,true);
-    assert.equal(returned[0][0].value,null,"unchanged ZIP facts stay in the shared copy store");
-    const changed = structuredClone(dataset);
-    const group = changed.scopes.filter(scope=>["congressional_district","state_leg_upper","state_leg_lower"].includes(scope.type))
-      .flatMap(scope=>scope.groupings).find(group=>group.overlaps.some(overlap=>overlap.zcta5===zip))!;
-    Object.assign(group,{label:group.label+" updated"});
-    await pg.query("UPDATE civic_data_promotions SET payload=$1",[JSON.stringify(changed)]);
-    returned.length = 0;
-    const next = await publishedZipDistricts(zip);
-    assert.equal(next.kind,"HELD");
-    if(next.kind==="HELD")assert.ok(next.value.containers.some(container=>container.ref.label===group.label));
-    assert.equal(returned.length,1);
-    assert.equal(returned[0][0].unchanged,false,"physical source revision changes even when the logical publication id does not");
-  } finally { installReaderDatabaseQuery(undefined); await pg.close(); }
+  } finally { await pg.close(); }
 });

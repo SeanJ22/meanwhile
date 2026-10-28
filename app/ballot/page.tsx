@@ -1,3 +1,4 @@
+import { readPointPlace } from "@/lib/place-map/reader";
 import {Suspense} from "react";
 import {preload as preloadResource} from "react-dom";
 import { readBallotReaderData, primeBallotFundingRead, primeBallotCandidateDetails } from "@/lib/ballot/reader-data";
@@ -30,11 +31,13 @@ import {
   settleBallotAuxiliaryPreloads,
   type BallotAuxiliaryFamily,
 } from "@/lib/ballot/auxiliary-preloads";
-import { divisionIdsForZipArea, POINT_GEOMETRY_PLANS, unestablishedDistrictOfficesForFamilies } from "@/lib/ballot/zip-divisions";
+import { divisionIdsForZipArea, unestablishedDistrictOfficesForFamilies } from "@/lib/ballot/zip-divisions";
 import { phoenixToday } from "@/lib/ballot/dated-events";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
 import { orderMeasures } from "@/lib/ballot/measure-order";
+import { measureTitle } from "@/lib/ballot/measure-title";
+import { BallotZipForm } from "@/components/ballot/ballot-zip-form";
 import { summaryForContest } from "@/lib/ballot/measure-summary";
 import {
   PROVISION_KIND_LABEL,
@@ -482,7 +485,7 @@ export default readerRoute("/ballot", async function BallotPage({
 }: {
   searchParams: Promise<{ zip?: string; state?: string; lat?: string; lng?: string }>;
 }) {
-  const place = ballotPlaceFromParams(await searchParams);
+  const place = await ballotPlaceFromParams(await searchParams);
   const { zip, centroid } = place;
   const ballotRead = (async () => {
   let filingRead: Promise<Awaited<ReturnType<typeof readOfficialFilingsForReader>> | null> = Promise.resolve(null);
@@ -503,11 +506,12 @@ export default readerRoute("/ballot", async function BallotPage({
     if (!read) { read = readBallotNavigationProjection(state); navigationReads.set(state, read); }
     return read;
   };
-  const pointDivisionsRead = centroid ? place.state
+  const pointDivisionsRead = centroid && !zip ? readerSelection?.divisions ? Promise.resolve([...readerSelection.divisions]) : place.state
     ? ballotPointStateDivisions(place.state, centroid.lat, centroid.lng)
     : ballotPointDivisions(readerSelection?.states ?? [], centroid.lat, centroid.lng) : Promise.resolve([]);
   void pointDivisionsRead.catch(() => undefined);
   const readerData = await readBallotReaderData(place);
+  if (centroid) filingRead = readOfficialFilingsForReader().catch(() => null);
   const stanceTopics = readStanceTopics();
   void stanceTopics.catch(()=>undefined);
   const knownState = place.state?.code ?? (readerSelection?.states?.length === 1 ? readerSelection.states[0] : null);
@@ -520,21 +524,21 @@ export default readerRoute("/ballot", async function BallotPage({
   const zipEntry = readerData ? await readerData.entry() : undefined;
   let certainty = await zipCertainty(zip, undefined, zipEntry);
   if (centroid) {
-    filingRead = readOfficialFilingsForReader().catch(() => null);
     attempted = true;
     const pointDivisionIds = [...certainty?.all ?? []];
     divisionHoldingUnavailable = pointDivisionIds.length === 0 && !place.state;
     try {
       pointDivisionIds.push(...await pointDivisionsRead);
     } catch { divisionHoldingUnavailable = true; }
-    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, POINT_GEOMETRY_PLANS, zipEntry);
+    const ocdIds = await divisionIdsForZipArea(zip, pointDivisionIds, undefined, zipEntry);
     askOcdIds = ocdIds;
     const electionDivisions = new Map<string, string[]>();
     const missingDistrictOffices = new Map<string, string[]>();
     await readerData?.districtRead.catch(() => undefined);
     for (const { state, source } of await readerBallotSourcesForDivisions(ocdIds, {}, async (election, districtFamilies) => {
       const geography = { purpose: "election" as const, asOf: phoenixToday(), electionDate: election.date };
-      const ids = await divisionIdsForZipArea(zip, pointDivisionIds, geography, POINT_GEOMETRY_PLANS, readerData ? await readerData.entry(geography) : undefined);
+      const electionPointIds = zip ? pointDivisionIds : [...(await readPointPlace(centroid.lat, centroid.lng, geography)).ids];
+      const ids = await divisionIdsForZipArea(zip, electionPointIds, geography, readerData ? await readerData.entry(geography) : undefined);
       electionDivisions.set(election.id, ids);
       missingDistrictOffices.set(election.id, unestablishedDistrictOfficesForFamilies(districtFamilies, ids));
       return ids;
@@ -629,7 +633,7 @@ export default readerRoute("/ballot", async function BallotPage({
   }
   const candidacyContests =
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
-  const officeholderReads = ["registry-runtime", "federal-directory", "nh-members", "federal-funding"] as const;
+  const officeholderReads = ["registry-runtime", "federal-directory", "nh-members"] as const;
   const personResolutionsRead = Promise.allSettled(officeholderReads.flatMap(family => {
     const read = auxiliaryPreloads.get(family);
     return read ? [read()] : [];
@@ -986,8 +990,13 @@ export default readerRoute("/ballot", async function BallotPage({
               <h3 className="mt-4 font-semibold">Election Day: {formatDateMDY(calendar.electionDay)}</h3>
               <AddToCalendar event={{ id: `election-day-${state}-${calendar.electionDay}`, title: `Election Day — vote (${state})`,
                 allDayDate: calendar.electionDay, description: `Your ballot, with sources: found via ${PRODUCT_NAME}.` }} />
+              {(["GENERAL", "MILITARY_OVERSEAS"] as const).map(audience => {
+                const steps = calendar.steps.filter(step => (step.audience ?? "GENERAL") === audience);
+                if (!steps.length) return null;
+                return <div key={audience} data-deadline-audience={audience}>
+                {audience === "MILITARY_OVERSEAS" && <h4 className="mt-4 font-semibold">Military and overseas voters</h4>}
               <ul className="mt-3 space-y-3">
-                {calendarableSteps(calendar.steps).map(({ step, window, upcoming }, index) => <li key={`${step.label}:${index}`} data-dated-event>
+                {calendarableSteps(steps).map(({ step, window, upcoming }, index) => <li key={`${step.label}:${index}`} data-dated-event>
                   <p className="font-semibold">{step.label}</p>
                   {step.date && <p className="font-mono text-[0.875rem]" data-navigation-date>
                     {formatDateMDY(step.date.replaceAll(" – ", ", "))}
@@ -1000,20 +1009,15 @@ export default readerRoute("/ballot", async function BallotPage({
                   }} />}
                 </li>)}
               </ul>
+              </div>;
+              })}
             </>}
             {missing.map(gap => <CardSection key={gap.id} title={gap.label.charAt(0).toUpperCase() + gap.label.slice(1)}><CardGapContribution {...gap} /></CardSection>)}
           </Card>
         </section>;
       })}
 
-      {!centroid && !zip && (
-        <p className="mt-6 t-body text-muted lg:max-w-2xl">
-          Open this page with a zip, e.g.{" "}
-          <Link href="/ballot?zip=07866" className="underline decoration-dotted">
-            /ballot?zip=07866
-          </Link>.
-        </p>
-      )}
+      {!centroid && <BallotZipForm />}
 
       {zip && !centroid && (
         <p className="mt-6 t-body text-muted lg:max-w-2xl">
@@ -1102,7 +1106,7 @@ export default readerRoute("/ballot", async function BallotPage({
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
                   {readerText(contest.title)}
-
+                  {" "}
                   <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
 
                   {certainty && needsPill(certainty.certaintyOf(contest.ocdId)) && (
@@ -1248,7 +1252,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
             const measure = measureFor(contest.id);
             return (
-              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={readerText(contest.title)} titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
+              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={readerText(measureTitle(contest, measure))} titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
               <div>
 
                 {summary ? (

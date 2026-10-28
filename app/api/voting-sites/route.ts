@@ -1,7 +1,6 @@
 import { withReaderRoute, withReaderSelection } from "@/lib/db/reader-route";
 import { readVotingSitesProjection } from "@/lib/ballot/voting-sites-server";
-import { indexedZipDivisionEntry } from "@/lib/geo/zip-division-index";
-import { postalArea } from "@/lib/geo/postal";
+import { readZipPlace, withPlaceMapReads } from "@/lib/place-map/reader";
 import { answerVotingSites, type VotingReaderPlace } from "@/lib/ballot/voting-answer";
 import { addCensusVotingGeographies, censusVotingAddress, votingInputZip, votingPlaceFromZip } from "@/lib/ballot/voting-answer-geography";
 import { recordVotingFailure } from "@/lib/ballot/voting-errors";
@@ -28,7 +27,7 @@ async function heldVotingFile(state: string, place: VotingReaderPlace, deadline:
 }
 
 export async function POST(request: Request): Promise<Response> {
-  return withReaderRoute("/api/voting-sites", async () => {
+  return withReaderRoute("/api/voting-sites", () => withPlaceMapReads(async () => {
     const started = Date.now();
     const deadline = started + 2400;
     let address = "";
@@ -58,7 +57,7 @@ export async function POST(request: Request): Promise<Response> {
           let place: VotingReaderPlace;
           if (!located && zipInput) {
             stage = "zip-membership";
-            const zip = await indexedZipDivisionEntry(zipInput) ?? await indexedZipDivisionEntry(postalArea(zipInput)?.zcta ?? null);
+            const zip = await readZipPlace(zipInput);
             place = votingPlaceFromZip(zip?.ids ?? []);
             if (!isZip) place.precision = "ADDRESS";
           } else if (located) {
@@ -108,5 +107,5 @@ export async function POST(request: Request): Promise<Response> {
       recordVotingFailure({ stage }, error, address);
       return empty(stage === "input" ? 400 : 503, stage !== "input");
     }
-  });
+  }));
 }

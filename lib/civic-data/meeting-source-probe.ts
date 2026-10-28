@@ -17,7 +17,8 @@ import { meetingFetchPass } from "../meetings/shared-fetch.ts";
 import { DOOR_KIND_SPECS } from "./derived-door-kinds.ts";
 import { factReader } from "../facts/db.ts";
 import { MEETING_SOURCE_PROGRESS, meetingFactPublicationPending, type MeetingSourceProgress, type ProgressPage } from "./meeting-source-progress.ts";
-import { recordAcquiredResponse, outsideSourceAcquisition } from "../sources/acquisition-trace.ts";
+import { recordAcquiredResponse } from "../sources/acquisition-trace.ts";
+import { outsideSourceAcquisition } from "../sources/acquisition-scope.ts";
 
 type Request = NonNullable<RetainedSourceResponse["request"]>;
 export interface MeetingSourcePage {

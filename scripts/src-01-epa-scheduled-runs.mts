@@ -17,11 +17,11 @@ import { readOpenDataProjection } from "../lib/sources/open-data/publication.ts"
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
 import { verifyRoutineReaderProjection } from "../lib/civic-data/reader-verification.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
-import { lookupZcta } from "../lib/geo/zcta.ts";
+import { readZipLocation } from "../lib/place-map/locations.ts";
 import { openDataArchiveStore, refreshEchoNational } from "./open-data-refresh.mts";
 import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
 import { FederalMoneyBenchmarkStore } from "./lib/federal-money-benchmark-store.mts";
-import { installOpenDataReaderSql, installOpenDataReplayVault, normalOpenDataPage } from "./lib/open-data-replay-reader.mts";
+import { installOpenDataReaderSql, installOpenDataReplayMap, installOpenDataReplayVault, normalOpenDataPage } from "./lib/open-data-replay-reader.mts";
 import { compressedReplayVault } from "./lib/open-data-replay-vault.mts";
 
 const root = process.argv[2]; assert.ok(root, "work root required");
@@ -30,6 +30,7 @@ await mkdir(root, { recursive: true });
 const connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY!;
 const access = (await neon(connection).query("SELECT current_user::text AS role, has_table_privilege(current_user,'public.civic_data_candidates','INSERT, UPDATE, DELETE') AS can_write"))[0];
 assert.match(String(access.role), /^readonly/); assert.equal(access.can_write, false);
+installOpenDataReplayMap(connection);
 const before = await neon(connection).query("SELECT count(*)::int AS promotions FROM civic_data_promotions WHERE source_id='epa-echo'");
 process.env.DATABASE_URL = connection; process.env.WTP_CIVIC_READ_CACHE_URL = "";
 const production = new PostgresRoutineDataStore();
@@ -78,7 +79,8 @@ try {
           for (const id of byState.get(report.state) ?? []) {
             const reference = projection.value.partitions!.find(p => p.id === id)!;
             const part = await readOpenDataPartition("epa-echo", reference, vault);
-            const hit = part.records.find(r => r.zip && lookupZcta(r.zip)); if (hit) { sample = { id: hit.id, zip: hit.zip! }; break; }
+            for (const hit of part.records) if (hit.zip && await readZipLocation(hit.zip)) { sample = { id: hit.id, zip: hit.zip }; break; }
+            if (sample) break;
           }
           if (!sample) { row.reader = "NO_USABLE_ZIP"; continue; }
           const page = await normalOpenDataPage(sample.zip, sample.id);

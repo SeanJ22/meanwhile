@@ -32,6 +32,11 @@ export function refusePreparedStatement(error: unknown): void {
   console.error("Named statements refused by the database connection; sending full statement text", { code });
 }
 
+/** The pg client's own `query_timeout` error: the statement may still be running on the server. */
+function isQueryReadTimeout(error: unknown): boolean {
+  return error instanceof Error && error.message === "Query read timeout";
+}
+
 /** The reader database over the pooled WebSocket client, so each publish is one real transaction. */
 export function readerFactDb(url: string | undefined = process.env.DATABASE_URL): FactDb & { readonly query: Query } {
   if (!url) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
@@ -54,35 +59,35 @@ export function readerFactDb(url: string | undefined = process.env.DATABASE_URL)
         try { return (await client.query(statementConfig(text, params))).rows; }
         catch (error) { refusePreparedStatement(error); throw error; }
       });
+      let broken: Error | undefined;
       try {
         await query("BEGIN");
         const out = await work(query);
         await query("COMMIT");
         return out;
       } catch (error) {
-        await query("ROLLBACK").catch(() => undefined);
+        // A statement past the client's read bound still occupies the connection, so a ROLLBACK would only queue behind
+        // it for another full bound. Closing the connection ends the server's transaction instead.
+        if (isQueryReadTimeout(error)) broken = error as Error;
+        else await query("ROLLBACK").catch((rollback: unknown) => { broken = rollback instanceof Error ? rollback : new Error(String(rollback)); });
         throw error;
       } finally {
-        client.release();
+        client.release(broken);
       }
     }),
   };
 }
 
 let installed: Query | null | undefined;
-let reader: { url: string; query: Query } | undefined;
 
 /** Fact reads share the reader's version-checked, read-only connection. */
 export function factReader(): Query | null {
   if (installed !== undefined) return installed;
   const url = process.env.DATABASE_URL?.trim();
   if (!url) return null;
-  if (reader?.url === url) return reader.query;
   const selected = readerDatabaseQuery();
   if (!selected) return null;
-  const query = statementQuery(selected);
-  reader = { url, query };
-  return query;
+  return statementQuery(selected);
 }
 
 /** A process that already holds a fact connection (a test's database, a script's pool) reads through it. */

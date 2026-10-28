@@ -4,10 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { ZIP_AREA_MISSING } from "@/lib/geo/postal-core";
 import { ZipAddressPrompt } from "./zip-address-prompt";
 
-import { nearestZctaAsync } from "@/lib/geo/zcta-table";
 import { isWellFormedZip, resolveReaderZip } from "@/lib/reader/zip";
 
 import { useRecentZips } from "@/hooks/use-recent-zips";
+import { rememberZipChoice, useSavedZipChoice } from "@/hooks/use-stored-zip";
 import { recordLocationOrigin } from "@/lib/state/location-origin";
 import type { LocationOrigin } from "@/lib/ask/residency";
 import { ZipComb } from "./zip-comb";
@@ -28,6 +28,7 @@ interface WelcomeOverlayProps {
   open: boolean;
   onResolved: (zip: string, lat: number, lng: number) => void;
   onAddressLocated: (zip: string, lat: number, lng: number) => void;
+  onPointLocated: (lat: number, lng: number) => void;
   /** Null while no zip is stored: there is nothing behind the card to dismiss into. */
   onDismiss: (() => void) | null;
 }
@@ -36,9 +37,12 @@ export function WelcomeOverlay({
   open,
   onResolved,
   onAddressLocated,
+  onPointLocated,
   onDismiss,
 }: WelcomeOverlayProps) {
   const [zip, setZip] = useState("");
+  const savedZip = useSavedZipChoice();
+  const ballotZip = isWellFormedZip(zip) ? zip : savedZip;
   const recents = useRecentZips();
   const [error, setError] = useState<string | null>(null);
   const [locating, setLocating] = useState(false);
@@ -79,20 +83,11 @@ export function WelcomeOverlay({
 
     setLocating(true);
     navigator.geolocation.getCurrentPosition(
-      async (position) => {
+      (position) => {
         setLocating(false);
-        const near = await nearestZctaAsync(
-          position.coords.latitude,
-          position.coords.longitude,
-        );
         if (request !== choiceRequest.current) return;
-        if (!near) {
-          setError("Couldn't match that location to a zip code.");
-          return;
-        }
-        /* A device fix proves presence, never residence. */
-        recordLocationOrigin(near.zip, "DEVICE_LOCATION");
-        onResolved(near.zip, near.lat, near.lng);
+        recordLocationOrigin(null, "DEVICE_LOCATION");
+        onPointLocated(position.coords.latitude, position.coords.longitude);
       },
       (err) => {
         if (request !== choiceRequest.current) return;
@@ -181,6 +176,11 @@ export function WelcomeOverlay({
         >
           Show meetings
         </button>
+
+        <a href={ballotZip ? `/ballot?zip=${ballotZip}` : "/ballot"} data-ballot-link
+          className="welcome-team-btn" onClick={() => { if (ballotZip) rememberZipChoice(ballotZip); }}>
+          Show my ballot
+        </a>
 
         {/* The reader's own recent places first; none of them resolves a district. */}
         {recents.length > 0 && (

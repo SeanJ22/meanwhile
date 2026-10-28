@@ -9,6 +9,7 @@ import { openBlank, publishClaim, type Clocks, type FactDb, type PublishInput, t
 import { saveCaptureCopy } from "./source-copy.ts";
 import { governingBodyNameOn } from "./body-name.ts";
 import { invalidateReaderCache, readerCacheScopeForEntity, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
+import { withFactConfirmations } from "./confirmation.ts";
 import type { EntityPlace } from "./entity-places.ts";
 
 const rosterCopies = new WeakMap<FactDb, WeakMap<WorkerPublicationCapture, Promise<SavedCopy>>>();
@@ -87,7 +88,7 @@ export async function publishBodyNameFromPage(db: FactDb & { readonly query: (te
 /** One saved roster page becomes facts, each on its own: who sits on the body, their title, contacts and term. */
 export async function publishRosterFacts(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: RosterFactsInput, clocks: Clocks, now: Date): Promise<RosterFactsReport> {
-  return withBatchedReaderInvalidation(purge => publishRosterFields(db, { ...input, purge }, clocks, now), input.purge);
+  return withBatchedReaderInvalidation(purge => withFactConfirmations(db,() => publishRosterFields(db, { ...input, purge }, clocks, now),purge), input.purge);
 }
 
 async function publishRosterFields(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
@@ -157,7 +158,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
   }
   if (input.complete && provenance === "OFFICIAL" && seated.size) {
     const gone = await db.transaction(query => query(`UPDATE fact f SET status = 'superseded', held_reason = 'NOT_ON_CURRENT_OFFICIAL_ROSTER'
-      FROM source_copy s WHERE s.id = f.source_copy_id AND s.url = $2 AND f.entity_id = $1 AND f.status = 'live'
+      FROM checked_fact current,source_copy s WHERE current.id=f.id AND s.id=current.source_copy_id AND s.url = $2 AND f.entity_id = $1 AND f.status = 'live'
         AND f.field LIKE 'member:%' AND NOT (substr(f.field, 8) = ANY($3::text[])) RETURNING f.id`,
     [body.id, capture.evidence.canonicalUrl, [...seated]]));
     tally.departed = gone.length;
@@ -174,7 +175,7 @@ export async function publishBodyFacts(db: FactDb & { readonly query: (text: str
     readonly purge?: ReaderCachePurger;
     readonly facts: readonly { readonly field: "name" | "meeting_cadence" | "agenda_url" | "office_address" | "office_phone"; readonly value: string; readonly quote: string }[] },
   clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
-  return withBatchedReaderInvalidation(async purge => {
+  return withBatchedReaderInvalidation(purge => withFactConfirmations(db,async () => {
     const entity = await readCheckEntity(db.query, input.bodyId);
     if (!entity || !input.facts.length) return [];
     const copy = await rosterCopy(db, input.capture);
@@ -186,5 +187,5 @@ export async function publishBodyFacts(db: FactDb & { readonly query: (text: str
     }
     if (!input.facts.some(row => row.field === "name")) await publishBodyNameFromPage(db, { entity, copy, provenance, producedBy: input.producedBy, acquisition: input.acquisition, purge }, clocks, now);
     return out;
-  }, input.purge);
+  },purge), input.purge);
 }

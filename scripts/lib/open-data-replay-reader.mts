@@ -6,6 +6,21 @@ import type { ReadOnlyQuery } from "../../lib/control-plane/admin-view/promoted-
 import type { OpenDataFact } from "../../lib/sources/open-data/model.ts";
 import { openDataFactIssue } from "../../lib/sources/open-data/model.ts";
 import { GET } from "../../app/api/open-data/route.ts";
+import { neon, neonConfig } from "../../lib/db/client.ts";
+import { installPlaceMapQuery } from "../../lib/place-map/reader.ts";
+
+let mapHost: string | undefined;
+/** Replay holdings stay local; place selection reads the imported production map. */
+export function installOpenDataReplayMap(connection = process.env.WTP_PRODUCTION_DATABASE_URL_READONLY) {
+  assert.ok(connection, "A production readonly connection is required for the place map.");
+  const url = new URL(connection);
+  assert.equal(decodeURIComponent(url.username), "readonly");
+  const endpoint = neonConfig.fetchEndpoint;
+  mapHost = new URL(typeof endpoint === "function" ? endpoint(url.hostname, url.port || 5432) : endpoint).hostname;
+  const sql = neon(connection);
+  installPlaceMapQuery(async (text, params = []) =>
+    (await sql.transaction([sql.query(text, [...params])], {readOnly:true}))[0]);
+}
 
 export async function installOpenDataReaderSql(query:ReadOnlyQuery) {
   const [functions]=await query([{text:"SELECT to_regprocedure('reader_place_payload(jsonb,text[],jsonb)')::text AS held",params:[]}]);
@@ -19,8 +34,9 @@ export function installOpenDataReplayVault(vault:EvidenceStore) {
   const originalFetch=globalThis.fetch,names=["WTP_VAULT_PROVIDER","WTP_BLOBS_SITE_ID","WTP_BLOBS_TOKEN"],environment=new Map(names.map(name=>[name,process.env[name]]));
   Object.assign(process.env,{WTP_VAULT_PROVIDER:"netlify",WTP_BLOBS_SITE_ID:"readonly-replay",WTP_BLOBS_TOKEN:"local-replay-token"});
   const requested:string[]=[];
-  globalThis.fetch=(async(input)=>{
+  globalThis.fetch=(async(input,init)=>{
     const url=new URL(input instanceof Request?input.url:String(input));
+    if(mapHost&&url.hostname===mapHost)return originalFetch(input,init);
     if(url.hostname==="api.netlify.com"){
       const at=url.pathname.indexOf("/project/");assert.ok(at>=0);
       return Response.json({url:`https://replay-artifacts.local/${url.pathname.slice(at+1)}`});

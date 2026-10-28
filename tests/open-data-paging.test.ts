@@ -9,11 +9,11 @@ import {saveOpenDataPartition} from "../lib/sources/open-data/artifacts.ts";
 import {publishOpenData} from "../lib/sources/open-data/publication.ts";
 import {readerOpenData,readerOpenDataPages,OpenDataCursorError} from "../lib/sources/open-data/reader.ts";
 import {facilityCell,FACILITY_RADIUS_KM} from "../lib/sources/open-data/geography.ts";
-import {lookupZcta} from "../lib/geo/zcta.ts";
+import {fixtureZipLocation} from "./helpers/zip-location.ts";
 import {streamCsvObjects} from "../lib/sources/prl/streaming.ts";
 import {ECHO_EXPORT,type OpenDataFact,type OpenDataPartitionRef} from "../lib/sources/open-data/model.ts";
 
-const NOW="2026-10-23T09:06:56.174Z",LATER="2026-10-23T09:07:56.174Z",zip="85331",point=lookupZcta(zip)!;
+const NOW="2026-10-23T09:06:56.174Z",LATER="2026-10-23T09:07:56.174Z",zip="85331",point=fixtureZipLocation(zip)!;
 async function rows(count:number,location:{zip:string;lat:number;lng:number},start=0) {
   const sample=readFileSync(new URL("./fixtures/src-so/echo-exporter-sample.csv",import.meta.url),"utf8");
   let source:Record<string,unknown>={};for await(const row of streamCsvObjects((async function*(){yield sample;})())){source=row;break;}

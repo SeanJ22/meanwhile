@@ -33,6 +33,10 @@ export type DoorInput = Omit<PublishInput, "entity"> & (
   readonly places?: readonly EntityPlace[];
 };
 export type DoorOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly refused: string };
+export function savedCopyFreshnessRefusal(fetchedAt: Date, windowHours: number, now: Date): string | undefined {
+  const age=(now.getTime()-fetchedAt.getTime())/3_600_000;
+  return !Number.isFinite(age)||age<0||age>windowHours?"COPY_OUTSIDE_FRESHNESS_WINDOW":undefined;
+}
 interface DoorOptions {
   readonly purge?: ReaderCachePurger;
   readonly refusal?: (claim: PublishInput, reason: string) => Promise<void>;
@@ -194,8 +198,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       && c.copy.fetchedAt.getTime() <= Math.max(new Date(row.fetched_at as string).getTime(), new Date(row.checked_at as string).getTime())
       && row.same_quote && row.same_text && (row.second_copy_id === null ? null : Number(row.second_copy_id)) === (c.second?.copy.id ?? null)
       && row.same_value;
-    const sourceAgeHours=(now.getTime()-c.copy.fetchedAt.getTime())/3_600_000;
-    const verdict = repeated ? {ok:true as const,quoteStart:null} : input.savedField && (sourceAgeHours<0 || sourceAgeHours>clocks.windowHours(c.fieldKind))
+    const verdict = repeated ? {ok:true as const,quoteStart:null} : input.savedField && savedCopyFreshnessRefusal(c.copy.fetchedAt,clocks.windowHours(c.fieldKind),now)
       ? {ok:false as const,reason:"COPY_OUTSIDE_FRESHNESS_WINDOW"} : !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
       : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
     if (!verdict.ok) {
@@ -263,7 +266,9 @@ export async function retireRosterThroughDoor(db: FactDb & { readonly query: Que
   readonly seated: readonly string[]; readonly producedBy: string; readonly sourcePrefix?: string;
   readonly nativeScheme?: string; readonly purge?: ReaderCachePurger;
   readonly roster?: { readonly pages: readonly WorkerPublicationCapture[]; readonly bodyId: number; readonly day: string };
+  readonly freshness?: { readonly windowHours: number; readonly now: Date };
 }): Promise<number> {
+  if(input.freshness&&savedCopyFreshnessRefusal(input.copy.fetchedAt,input.freshness.windowHours,input.freshness.now))return 0;
   let changed: ReaderCacheScope | undefined;
   const count = await db.transaction(async query => {
     const bodyId = await resolveId(input.bodyId,query) ?? input.bodyId;

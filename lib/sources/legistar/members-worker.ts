@@ -1,6 +1,6 @@
 import {withFactConfirmations} from "../../facts/confirmation.ts";
 import {withBatchedReaderInvalidation} from "../../reader/cache.ts";
-import { door, retireRosterThroughDoor, type DoorOutcome } from "../../core/door.ts";
+import { door, retireRosterThroughDoor, savedCopyFreshnessRefusal, type DoorOutcome } from "../../core/door.ts";
 import { ensureEntity, resolvePerson, learnDoorChannel } from "../../facts/entities.ts";
 import { nameKey } from "../../facts/roster-facts.ts";
 import { legistarMemberCapture } from "./members-cache.ts";
@@ -31,6 +31,8 @@ export function legistarMemberPublisher(input:{facts:FactDb&{query:Query};vault:
   const publishOne=async(value:MemberRecordWork,now:string,purge?:ReaderCachePurger):Promise<{published:number;retired:number;refused?:string}>=>{
     if(value.reason||!value.body)return {published:0,retired:0,refused:value.reason??"Government binding missing"};
     const body=value.body,source=`legistar-members:${value.slug}`,saved=await capture(value.source);
+    const stale=savedCopyFreshnessRefusal(new Date(saved.observedAt),input.clocks.windowHours("officeholder"),new Date(now));
+    if(stale)return {published:0,retired:0,refused:stale};
     const records=recordsFor(saved);
     const record=records.find(row=>row[value.type==="body"?"BodyId":"OfficeRecordId"]===value.nativeId);
     if(!record)return {published:0,retired:0,refused:"The saved response does not contain this record"};
@@ -81,6 +83,7 @@ export function legistarMemberPublisher(input:{facts:FactDb&{query:Query};vault:
       const evidence=await capture(value.officeSources[0]);
       const copy=await input.facts.transaction(query=>saveCaptureCopy(query,evidence));
       retired=await retireRosterThroughDoor(input.facts,{bodyId,copy,seated:[...seats.keys()].map(String),producedBy:source,
+        freshness:{windowHours:input.clocks.windowHours("officeholder"),now:new Date(now)},
         roster:{pages:await Promise.all(value.officeSources.map(capture)),bodyId:body.nativeId,day},
         nativeScheme:`legistar:${value.slug}`,sourcePrefix:`https://webapi.legistar.com/v1/${value.slug}/officerecords?`,purge});
     }

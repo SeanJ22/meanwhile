@@ -62,3 +62,16 @@ test("tenant completion becomes due again at twelve hours and another family can
   t.mock.timers.tick(12*3600_000-1);assert.equal((await work.claim("load",1,"legistar-members:")).length,0);
   t.mock.timers.tick(1);assert.equal((await work.claim("load",1,"legistar-members:")).length,1);
 });
+
+test("a complete roster that ages while queued cannot retire a holder or change any fact",async t=>{
+  const f=await fixture(t);await f.load();await f.drain();
+  const before=await f.facts.query("SELECT id,status FROM fact ORDER BY id");
+  assert.ok(before.length>0);
+  const removed=f.source.offices[0];
+  f.setSource({...f.source,offices:f.source.offices.filter(row=>row.OfficeRecordPersonId!==removed.OfficeRecordPersonId)});
+  t.mock.timers.tick(1_000);await f.load();
+  t.mock.timers.tick(31*24*3600_000);
+  const result=await f.drain();
+  assert.equal(result.failed,0);assert.ok(result.refused>0);
+  assert.deepEqual(await f.facts.query("SELECT id,status FROM fact ORDER BY id"),before);
+});

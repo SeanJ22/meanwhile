@@ -1,3 +1,4 @@
+import {writeReadyAuthorities} from "./helpers/ready-authorities.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import {readCanonicalPackages} from "../lib/reader/canonical.ts";
@@ -19,11 +20,12 @@ test("one migrated canonical batch preserves state geography and extra pointers 
     await publish({...state,id:"rs03-group-state",value:payload,at,sourceId:"rs03-state-source"});
     await publish({...extra,id:"rs03-group-geography",value:{districts:["held-district"]},at,sourceId:"rs03-geography-source"});
     await publish({...country,id:"rs03-group-country",value:{official:"Unverified country data"},payloadHash:"0".repeat(64),at,sourceId:"rs03-country-source"});
+    await writeReadyAuthorities(pg,[state,country,extra].map(p=>`${p.recordClass}:${p.scope}`));
     const groups=readCanonicalPackages([[state],[country]],async statements=>{
       reads++;assert.equal(statements.length,1);
       const statement=statements[0];return[(await pg.query<Record<string,unknown>>(statement.text,[...statement.params])).rows];
     },{text:"SELECT $1::text[] AS canonical_keys,$2::text AS version_id",params:[[
-      `${extra.recordClass}:${extra.scope}`],"held-geography-version"],canonicalKeys:true});
+      `${extra.recordClass}:${extra.scope}`],"held-geography-version"],canonicalKeys:true,pageId:"ocd-division/country:us"});
     const held=await groups.readGroup(0);
     assert.equal(held.additionalRows[0].version_id,"held-geography-version");
     assert.deepEqual(held.additionalEntries,[extra]);
@@ -41,7 +43,7 @@ test("a cold state schedules its President pointers in the same query and keeps 
   const failure=new Error("The first combined read failed");
   installReaderDatabaseQuery(async statements=>{
     reads++;assert.equal(statements.length,1);
-    const keys=statements[0].params[0]as string[];
+    const keys=(JSON.parse(String(statements[0].params[0])) as {key:string}[]).map(row=>row.key);
     assert.ok(keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:US-AZ:")));
     for(const pointer of nationalPresidentPointers())assert.ok(keys.includes(`${pointer.recordClass}:${pointer.scope}`),"the President must not open another initial connection");
     throw failure;

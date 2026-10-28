@@ -35,6 +35,7 @@ export async function withMigratedRoutineStore(
   await pg.exec(readFileSync(new URL("../../lib/db/migrations/DB-05_federal_money_rows.sql",import.meta.url),"utf8").replaceAll("--> statement-breakpoint",""));
   await pg.exec(readFileSync(new URL("../../lib/db/migrations/DB-05_lookup_rows.sql",import.meta.url),"utf8"));
   await pg.exec(readFileSync(new URL("../../lib/db/migrations/DB-05_venue_rows.sql",import.meta.url),"utf8"));
+  await pg.exec(readFileSync(new URL("../../lib/db/migrations/RP-01_reader_facts.sql",import.meta.url),"utf8"));
   const priorFetch = neonConfig.fetchFunction;
   const names = ["DATABASE_URL", "WTP_DB_ROLE", "WTP_VITAL_SIGNS_REPORT", "WTP_RUNTIME_MODE", "WTP_CONTROL_PLANE_DATABASE_URL"];
   const priorEnvironment = new Map(names.map(name => [name, process.env[name]]));

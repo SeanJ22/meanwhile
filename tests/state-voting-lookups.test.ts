@@ -1,3 +1,4 @@
+import {canonicalCivicDataHash} from "../lib/civic-data/canonical-hash.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFile } from "node:fs/promises";
@@ -14,8 +15,16 @@ const field = (state: string, url = `https://elections.${state.toLowerCase()}.go
     url: `https://elections.${state.toLowerCase()}.gov/`, verifiedAt: now, collectedAt: now, sourceOrg: "State election office" },
 });
 const queryFor = (records: readonly PublishedElectionField[], choices: readonly Record<string, unknown>[] = []): ReadOnlyQuery =>
-  async statements => statements.map(statement => statement.text.includes("WITH pointers")
-    ? records.map(record => ({ ...record, valid: true })) : [...choices]);
+  async statements => statements.map(statement => {
+    if(!statement.text.includes('shelf AS MATERIALIZED'))return [...choices];
+    assert.doesNotMatch(statement.text,/civic_data_(?:candidates|promotions|candidate_events|payload_parts)/);
+    return (JSON.parse(String(statement.params[0])) as {key:string}[]).map(({key})=>{
+      const payload={records};return {row_kind:'promotion',key,record_class:'CURATED_READER_RECORD',scope:key.slice('CURATED_READER_RECORD:'.length),
+        source_id:'curated-reader-primary-sources',current_version_id:'nav-v1',last_known_good_version_id:'nav-v1',published:true,
+        promoted_at:now,retrieved_at:now,payload,normalized_hash:canonicalCivicDataHash(payload),validation_receipt:{decision:'GOOD'}};
+    });
+  });
+
 
 test("all 50 states and DC have an existing sourced polling lookup and keep the state's own link", async () => {
   assert.equal(BALLOT_NAVIGATION_STATES.length, 51);
@@ -49,6 +58,6 @@ test("a removed lookup stays removed and a different state's route is refused", 
 });
 
 test("an invalid published pointer cannot supply a lookup", async () => {
-  const query: ReadOnlyQuery = async () => [[{ valid: false }]];
-  await assert.rejects(readStateVotingLookups(["WI"], undefined, query), /PUBLISHED_PROOF_INVALID/);
+  const query: ReadOnlyQuery = async () => [[{ row_kind:"promotion",published:false }]];
+  await assert.rejects(readStateVotingLookups(["WI"], undefined, query), /POINTER_INVALID/);
 });

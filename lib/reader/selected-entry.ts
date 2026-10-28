@@ -13,10 +13,10 @@ export function selectedStateEntry(recordClass: import("../civic-data/types.ts")
   if (row.published !== true) throw new Error("READER_PUBLISHED_POINTER_INVALID");
   const entry: Extract<PromotedEdgeEntry,{kind:"PROMOTED"}> = {kind:"PROMOTED",projection:{key:String(row.key),sourceId:String(row.source_id),recordClass,scope,
     versionId:String(row.current_version_id),lastKnownGoodVersionId:String(row.last_known_good_version_id),
-    promotedAt:String(row.promoted_at),payload:row.payload,
+    promotedAt:new Date(row.promoted_at as string).toISOString(),payload:row.payload,
     receipt:row.validation_receipt as Extract<PromotedEdgeEntry,{kind:"PROMOTED"}>["projection"]["receipt"]},
     attested:{recordClass,scope,versionId:String(row.current_version_id),payloadSha256:promotedPayloadSha256(row.payload),
-      retrievedAt:String(row.retrieved_at),staleAtRetrieval:false,version:null,sourceThrough:null}};
+      retrievedAt:new Date(row.retrieved_at as string).toISOString(),staleAtRetrieval:false,version:null,sourceThrough:null}};
   const confirmation = typeof row.confirmation==="string" ? parseUnchangedConfirmation(row.confirmation) : null;
   if (confirmation?.versionId===entry.projection.versionId && confirmation.pointerKey===entry.projection.key) Object.assign(entry.projection,{latestConfirmation:confirmation});
   registerIntegrityCheckedEdgeEntries([entry]);

@@ -55,22 +55,13 @@ export async function recordPublishedSourceCheck(query: SourceChecksQuery, input
   return rows.length === 1;
 }
 
-/** Exactly the requested source keys, validated against the pointer currently serving the reader. */
+/** Exact keyed checks; consumers bind their hashes to the admitted page's source facts. */
 export async function readPublishedSourceChecks(query: SourceChecksQuery, recordClass: RoutineRecordClass, scope: string,
   sourceKeys: readonly string[]): Promise<readonly PublishedSourceCheck[]> {
   if (!sourceKeys.length) return [];
   const rows = await query(`SELECT s.source_key,s.raw_hash,s.parser_version,s.checked_at,s.source_urls,s.jurisdiction_ids,s.source_raw_hash
-    FROM civic_data_source_checks s JOIN civic_data_promotions p ON p.record_class=s.record_class AND p.scope=s.scope
-    JOIN civic_data_candidates c ON c.id=p.current_version_id
+    FROM civic_data_source_checks s
     WHERE s.record_class=$1 AND s.scope=$2 AND s.source_key=ANY($3::text[])
-      AND s.source_id=p.source_id AND p.last_known_good_version_id=p.current_version_id
-      AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope
-      AND c.state='PROMOTED' AND c.acquisition_succeeded AND c.parser_version=s.parser_version
-      AND c.candidate#>>'{retrieval,rawHashBasis}'='SOURCE_CONTENT_V1'
-      AND ((s.source_raw_hash IS NULL AND reader_payload_node(p.payload)->>'sourceManifestVersion'='1' AND reader_payload_node(reader_payload_node(p.payload)->'sourceHashes')->>s.source_key=s.raw_hash)
-        OR (s.source_raw_hash IS NOT NULL AND c.raw_hash=s.source_raw_hash))
-      AND NOT (c.candidate ? 'bootstrapImport')
-      AND coalesce(c.candidate#>>'{stateRetirement,kind}','')<>'STATE_AUTHORITY_RETIREMENT'
     ORDER BY s.source_key`, [recordClass, scope, [...new Set(sourceKeys)]]);
   return rows.map(row => ({ sourceKey: String(row.source_key), rawHash: String(row.raw_hash), parserVersion: String(row.parser_version),
     checkedAt: new Date(String(row.checked_at)).toISOString(), sourceUrls: row.source_urls as string[], jurisdictionIds: row.jurisdiction_ids as string[],

@@ -11,10 +11,9 @@ import type { RoutineRecordClass } from "../civic-data/types.ts";
 import { isCivicPayloadPart } from "../civic-data/payload-codec.ts";
 
 type Pointer = { recordClass: RoutineRecordClass; scope: string };
-type Additional = PageAdditional & {
-  readonly sharedSources?: { readonly keys: readonly string[]; readonly translations: string } };
+type Additional = PageAdditional;
 type CanonicalRead = Awaited<ReturnType<typeof readCanonicalShelf>>;
-type PublishedQuery = ReadOnlyQuery & { publicationFingerprints?: true; canonicalBody?: ReadOnlyQuery };
+type PublishedQuery = ReadOnlyQuery & { canonicalBody?: ReadOnlyQuery };
 
 /** One network read with independent group failures; accompanying geography belongs to the first group. */
 export function readCanonicalPackages(groups: readonly (readonly Pointer[])[], query: ReadOnlyQuery | null = readerDatabaseQuery(), additional?: Additional): CivicDataReadStore & { readGroup(index: number): Promise<CanonicalRead> } {

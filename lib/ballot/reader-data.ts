@@ -18,11 +18,9 @@ import type { GeographySelection } from "../census-geography/selection.ts";
 import type { RoutineRecordClass } from "../civic-data/types.ts";
 import type { BallotPlace } from "./reader-place.ts";
 import type { BallotSet, Contest } from "./types.ts";
-import {lineupForContest} from "./general-lineup.ts";
-import {reconciledCandidacyIdForCard} from "../identity/az-2026.ts";
+import {ballotCandidateKeys} from "./candidate-keys.ts";
 import {selectedPointerSql,selectedMetadataSql,selectedStateEntry} from "../reader/selected-entry.ts";
 import {readerDatabaseQuery} from "../reader/database.ts";
-import { ballotCandidateAliases, ballotCandidatePeople } from "./tickets.ts";
 import { settleFederalDirectoryRead } from "../registry/server.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { personIdentityKeys } from "../officials/people-identity.ts";
@@ -91,45 +89,26 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   return { registryRead, districtRead, entry };
 }
 
-/** Every card key and its held Arizona alias, including earlier filing candidacies. */
-function ballotCandidateKeys(set: BallotSet, contests: readonly Contest[]): string[] {
-  const ids = new Set(contests.map(contest=>contest.id));
-  const keys = new Set([...set.candidacies,...set.filingCandidacies ?? []].filter(candidate=>ids.has(candidate.contestId))
-    .flatMap(candidate => [...ballotCandidateAliases(candidate), ...ballotCandidatePeople(candidate).flatMap(ballotCandidateAliases)]));
-  for (const contest of contests) {
-    const lineup = lineupForContest(set.election.state,contest.id) ?? set.generalLineup?.contests.find(row=>row.contestId===contest.id);
-    for (const nominee of lineup?.nominees ?? []) {
-      const key = `${contest.id}|${nominee.name}`;
-      keys.add(key);
-      if (set.election.state === "AZ") {
-        const canonical = reconciledCandidacyIdForCard(key);
-        if (canonical) keys.add(canonical);
-      }
-    }
-  }
-  return [...keys];
-}
-
 /** Full facts for the ballot's candidates; other contests' records stay in the store. */
 export function ballotCandidateDetailsStatement(state: string, keys: readonly string[]) {
   const pointers = (["candidate-profiles","candidate-publications","candidate-campaign-sites-derived"] as const)
     .flatMap(family => stateAuthorityPointers(family,state));
-  const selectedArray = (value: string, field: string) => `coalesce((SELECT jsonb_agg(reader_payload_value(r.item) ORDER BY r.ordinal_index)
-    FROM reader_payload_members(${value}->'${field}') r WHERE reader_payload_node(r.item)->>'candidateKey'=ANY($2::text[])
-      OR reader_payload_node(r.item)->>'candidacyId'=ANY($2::text[])), '[]'::jsonb)`;
-  const selectedObject = (value: string) => `coalesce((SELECT jsonb_object_agg(r.key,reader_payload_value(object.value->r.key))
-    FROM (SELECT reader_payload_node(${value}) AS value) object,
+  const selectedArray = (value: string, field: string) => `coalesce((SELECT jsonb_agg((r.item) ORDER BY r.ordinal_index)
+    FROM jsonb_array_elements(${value}->'${field}') WITH ORDINALITY r(item,ordinal_index) WHERE (r.item)->>'candidateKey'=ANY($2::text[])
+      OR (r.item)->>'candidacyId'=ANY($2::text[])), '[]'::jsonb)`;
+  const selectedObject = (value: string) => `coalesce((SELECT jsonb_object_agg(r.key,(object.value->r.key))
+    FROM (SELECT (${value}) AS value) object,
       (SELECT DISTINCT unnest($2::text[]) AS key) r WHERE object.value ? r.key), '{}'::jsonb)`;
   return {pointers,params:[pointers.map(pointer=>`${pointer.recordClass}:${pointer.scope}`),keys],text:`WITH pointer AS MATERIALIZED (
     ${selectedPointerSql().replace('p.key=$1','p.key=ANY($1::text[])')}
-  ), roots AS MATERIALIZED (SELECT key,reader_payload_node(payload) AS value FROM pointer WHERE published)
+  ), roots AS MATERIALIZED (SELECT key,(payload) AS value FROM pointer WHERE published)
   SELECT ${selectedMetadataSql}, CASE WHEN published THEN CASE pointer.record_class
-    WHEN 'CANDIDATE_PROFILE' THEN reader_payload_value(roots.value-'cards'-'links') || jsonb_build_object(
-      'cards',reader_payload_value(reader_payload_node(roots.value->'cards')-'cards') || jsonb_build_object('cards',${selectedObject("reader_payload_node(roots.value->'cards')->'cards'")}),
-      'links',reader_payload_value(reader_payload_node(roots.value->'links')-'links') || jsonb_build_object('links',${selectedObject("reader_payload_node(roots.value->'links')->'links'")}))
-    WHEN 'CANDIDATE_PUBLICATION' THEN reader_payload_value(roots.value-'documents'-'failures') || jsonb_build_object(
+    WHEN 'CANDIDATE_PROFILE' THEN (roots.value-'cards'-'links') || jsonb_build_object(
+      'cards',((roots.value->'cards')-'cards') || jsonb_build_object('cards',${selectedObject("(roots.value->'cards')->'cards'")}),
+      'links',((roots.value->'links')-'links') || jsonb_build_object('links',${selectedObject("(roots.value->'links')->'links'")}))
+    WHEN 'CANDIDATE_PUBLICATION' THEN (roots.value-'documents'-'failures') || jsonb_build_object(
       'documents',${selectedArray('roots.value','documents')},'failures',${selectedArray('roots.value','failures')})
-    ELSE reader_payload_value(roots.value-'records'-'portraits') || jsonb_build_object('records',${selectedArray('roots.value','records')})
+    ELSE (roots.value-'records'-'portraits') || jsonb_build_object('records',${selectedArray('roots.value','records')})
       || CASE WHEN roots.value ? 'portraits' THEN jsonb_build_object('portraits',${selectedArray('roots.value','portraits')}) ELSE '{}'::jsonb END
     END END AS payload FROM pointer LEFT JOIN roots USING(key)`};
 }

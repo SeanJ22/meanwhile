@@ -6,7 +6,7 @@ import type { GenericBallotProjection } from "../lib/ballot/generic-projection.t
 import { answerVotingSites, type VotingReaderPlace } from "../lib/ballot/voting-answer.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
-import { selectedBallotStatement } from "../lib/reader/selected-ballot.ts";
+import { buildSelectedBallotStatement as selectedBallotStatement } from "../lib/reader/place-builder.ts";
 import { decodeSelectedVoting, selectedVotingStatement } from "../lib/reader/selected-voting.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";

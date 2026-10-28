@@ -7,7 +7,7 @@ import { bulkProjectionIssue } from "./publication.ts";
 import { LEGISCAN_BULK_SCOPE,LEGISCAN_BULK_PARSER,billScope,stateOfDataset,publicDatasetIndex,joinSponsors,hydrateBillPart,type BillSession,type BillPart,type BillIndex,type Bill,type HeldPerson,type Dataset } from "./bills.ts";
 import { currentLegiscanDatasets } from "./current-sessions.ts";
 import { runBoundedWorkPool } from "../../ops/bounded-work-pool.ts";
-import { readCanonicalShelf } from "../../reader/canonical.ts";
+import { readKeyedEntry } from "../../civic-data/keyed-reader.ts";
 import { readerCanonicalEntry } from "../../reader/canonical-context.ts";
 import { currentReaderAuthorityEdge,ensurePromotedEdge,refuseDatabaseInEdgeOnlyContext } from "../../registry/runtime-edge.ts";
 
@@ -27,14 +27,15 @@ async function exactBulkOptions(scopes:readonly string[],options:BulkReadOptions
   }));
   const missing=scopes.filter(scope=>!held.has(scope));
   if(missing.length)refuseDatabaseInEdgeOnlyContext(`LegiScan bill parts: ${missing.join(",")}`);
-  const shelf=missing.length?await readCanonicalShelf(missing.map(scope=>({recordClass:"STATE_BILL" as const,scope}))):null;
+  const query=missing.length?readerDatabaseQuery():null;
+  if(missing.length&&!query)throw Error("READER_STORE_NOT_CONFIGURED");
   return {...options,store:{
     async readCandidate(){throw Error("LEGISCAN_READER_USES_CANONICAL_ENTRY");},
     async readPromotion(){throw Error("LEGISCAN_READER_USES_CANONICAL_ENTRY");},
     async readPromotedEntry(recordClass,scope){
       if(recordClass!=="STATE_BILL"||!scopes.includes(scope))throw Error("LEGISCAN_READER_SCOPE_NOT_SELECTED");
       const entry=held.get(scope);if(entry)return entry;
-      return shelf!.readPromotedEntry!(recordClass,scope);
+      return readKeyedEntry(async(text,params)=>(await query!([{text,params:params??[]}]))[0]??[],recordClass,scope);
     },
   }};
 }

@@ -8,7 +8,7 @@ import { REGISTRY_STATES, stateRegistryRuntimeScope } from "../lib/civic-data/st
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import { routineTaskDue, routineBaselineOwed, routineFailureDomainFrontier, routinePassLaunchOrder, type RoutineTaskClock } from "../lib/civic-data/runner.ts";
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
-import { readStateReaderPromotion } from "../lib/civic-data/state-reader-store.ts";
+import { readStateReaderEntry } from "../lib/civic-data/state-reader-store.ts";
 import { answerVotingSites, type VotingReaderPlace } from "../lib/ballot/voting-answer.ts";
 import type { VotingSitesFile, VotingSitesAnswer } from "../lib/ballot/voting-sites.ts";
 import type { FederalDirectoryReadModel } from "../lib/officials/federal-directory-data-plane.ts";
@@ -58,15 +58,15 @@ for (const state of REGISTRY_STATES) {
   for (const kind of ["registry", "congress"] as const) try {
     const recordClass = kind === "registry" ? "REGISTRY_RUNTIME_BINDING" : "FEDERAL_DIRECTORY";
     const scope = kind === "registry" ? stateRegistryRuntimeScope(state) : `US-${state}:current-congress-directory`;
-    const read = await readStateReaderPromotion<{ registry: { bodies: unknown[] } } | FederalDirectoryReadModel>(rq, recordClass, scope);
-    if (!read) issues.push(`${kind}:NOT_RECORDED`);
-    else if ("registry" in read.projection.payload) row.registryBodies = read.projection.payload.registry.bodies.length;
-    else row.congressMembers = read.projection.payload.roster.officeholders.length;
+    const read = await readStateReaderEntry(rq, recordClass, scope);
+    if (read.kind!=="PROMOTED") issues.push(`${kind}:NOT_RECORDED`);
+    else if ("registry" in (read.projection.payload as { registry?:unknown })) row.registryBodies = (read.projection.payload as {registry:{bodies:unknown[]}}).registry.bodies.length;
+    else row.congressMembers = (read.projection.payload as FederalDirectoryReadModel).roster.officeholders.length;
   } catch (error) { issues.push(`${kind}:${error instanceof Error ? error.message : String(error)}`); }
   for (let run = 0; run < 2; run++) try {
-    const read = await readStateReaderPromotion<VotingSitesFile>(rq, "VOTING_SITE", `US-${state}:voting-sites`);
-    if (!read) { if (run === 0) issues.push("voting:NOT_RECORDED"); continue; }
-    const file = read.projection.payload, jurisdictions = new Map<string, VotingSitesAnswer["jurisdictions"][number]>();
+    const read = await readStateReaderEntry(rq, "VOTING_SITE", `US-${state}:voting-sites`);
+    if (read.kind!=="PROMOTED") { if (run === 0) issues.push("voting:NOT_RECORDED"); continue; }
+    const file = read.projection.payload as VotingSitesFile, jurisdictions = new Map<string, VotingSitesAnswer["jurisdictions"][number]>();
     for (const jurisdiction of file.jurisdictions) {
       const sites = jurisdiction.sites, town = /\/(?:place|cousub):([^/]+)$/.exec(jurisdiction.ocdId)?.[1]?.replaceAll("_", " ");
       const county = /\/county:([^/]+)/.exec(jurisdiction.ocdId)?.[1]?.replaceAll("_", " ");

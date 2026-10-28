@@ -1,6 +1,7 @@
+import { keyedReaderPointers } from "../../civic-data/keyed-reader.ts";
 import type { Query } from "../../facts/publish.ts";
 import type { PromotedEdgeEntry } from "../../civic-data/read-model.ts";
-import { peopleIdentityKeysSql, selectedMetadataSql, selectedPointerSql, selectedStateEntry } from "../../reader/selected-entry.ts";
+import { peopleIdentityKeysSql, selectedMetadataSql, selectedStateEntry } from "../../reader/selected-entry.ts";
 import { personIdentityKeys } from "../../officials/people-identity.ts";
 import { joinSponsors, type BillPart, type BillPartPointer, type HeldPerson, type StoredBill } from "./bills.ts";
 
@@ -12,10 +13,9 @@ export interface PersonBillPart {
   readonly rows: number | null;
 }
 
-const pointers = selectedPointerSql().replace("WHERE p.key=$1", "WHERE p.key=ANY($1::text[])");
-const metadata = selectedMetadataSql.replace("pointer.published", `(pointer.published AND (pointer.current_version_id=c.id AND pointer.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)
-  AND pointer.validation_receipt=c.validation_receipt AND c.normalized_hash=c.candidate#>>'{normalization,normalizedHash}') AS published`);
-const header = "reader_payload_node(pointer.payload)-ARRAY['bills','sponsors']";
+const pointers=keyedReaderPointers;
+const metadata=selectedMetadataSql;
+const header="pointer.payload";
 const numericDistrict = (value: string) => (value.normalize("NFKD").replace(/\p{M}/gu, "").match(/[0-9]+/g) ?? [])
   .map(part => part.replace(/^0+(?=[0-9])/, "")).join(":");
 
@@ -35,18 +35,18 @@ export async function readPersonBillParts(query: Query, parts: readonly BillPart
   if (!parts.length) return new Map();
   const keys = parts.map(part => `STATE_BILL:${part.scope}`);
   const headers = await query(`WITH pointers AS MATERIALIZED (${pointers})
-    SELECT ${metadata},reader_payload_value(${header}) AS payload,
-      (SELECT count(*) FROM reader_payload_members(reader_payload_node(pointer.payload)->'bills')) AS full_rows,
-      coalesce((SELECT jsonb_agg(jsonb_build_object('index',s.ordinal_index-1,'value',reader_payload_value(s.item)) ORDER BY s.ordinal_index)
-        FROM reader_payload_members(reader_payload_node(pointer.payload)->'sponsors') s,
-          LATERAL (SELECT reader_payload_node(s.item) AS value) sponsor
-        WHERE ('legiscan:'||(sponsor.value->>'peopleId'))=ANY($2::text[]) OR ${peopleIdentityKeysSql("sponsor.value")} && $2::text[]
+    SELECT ${metadata},${header} AS payload,
+      (SELECT count(*) FROM civic_data_rows r WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='rp01.bills') AS full_rows,
+      coalesce((SELECT jsonb_agg(jsonb_build_object('index',s.ordinal-1,'value',s.value) ORDER BY s.ordinal)
+        FROM civic_data_rows s CROSS JOIN LATERAL (SELECT s.value) sponsor
+        WHERE s.promotion_key=pointer.key AND s.version_id=pointer.current_version_id AND s.collection='rp01.sponsors' AND (
+        ('legiscan:'||(sponsor.value->>'peopleId'))=ANY($2::text[]) OR ${peopleIdentityKeysSql("sponsor.value")} && $2::text[]
           OR sponsor.value->>'state'=$3 AND EXISTS(SELECT 1 FROM jsonb_to_recordset($4::jsonb) seat(chamber text,numbers text)
             WHERE sponsor.value->>'chamber'=seat.chamber AND
               (octet_length(coalesce(sponsor.value->>'district',''))<>char_length(coalesce(sponsor.value->>'district','')) OR seat.numbers=coalesce((
                 SELECT string_agg(coalesce(nullif(ltrim(m.part[1],'0'),''),'0'),':' ORDER BY m.n)
-                FROM regexp_matches(normalize(coalesce(sponsor.value->>'district',''),NFKD),'([0-9]+)','g') WITH ORDINALITY m(part,n)),'')))),'[]'::jsonb) AS sponsors
-      FROM pointers pointer LEFT JOIN civic_data_candidates c ON c.id=pointer.current_version_id`,
+                FROM regexp_matches(normalize(coalesce(sponsor.value->>'district',''),NFKD),'([0-9]+)','g') WITH ORDINALITY m(part,n)),''))))),'[]'::jsonb) AS sponsors
+      FROM pointers pointer`,
     [keys, [...personIdentityKeys(person)], person.state?.toUpperCase() ?? null, JSON.stringify(fallbackSeats(person))]);
   const join = joinSponsors([person]), selected = new Map<string, PersonBillPart>();
   const matching: { scope: string; version: string; indices: number[] }[] = [];
@@ -62,19 +62,17 @@ export async function readPersonBillParts(query: Query, parts: readonly BillPart
   if (matching.length) {
     const rows = await query(`WITH pointers AS MATERIALIZED (${pointers}),wanted AS (
         SELECT * FROM jsonb_to_recordset($2::jsonb) w(scope text,version text,indices integer[])
-      ) SELECT ${metadata},reader_payload_value(${header}) AS payload,
-        coalesce((SELECT jsonb_agg(reader_payload_value(b.item) ORDER BY b.ordinal_index) FROM reader_payload_members(reader_payload_node(pointer.payload)->'bills') b
-          WHERE EXISTS(SELECT 1 FROM jsonb_array_elements(reader_payload_value(reader_payload_node(b.item)->'sponsorRefs')) r(value)
-            WHERE (r.value#>>'{}')::integer=ANY(wanted.indices))),'[]'::jsonb) AS bills,
-        coalesce((SELECT jsonb_agg(jsonb_build_object('index',s.ordinal_index-1,'value',reader_payload_value(s.item)) ORDER BY s.ordinal_index)
-          FROM reader_payload_members(reader_payload_node(pointer.payload)->'sponsors') s
-          WHERE EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(pointer.payload)->'bills') b,
-              LATERAL jsonb_array_elements(reader_payload_value(reader_payload_node(b.item)->'sponsorRefs')) r(value)
-            WHERE (r.value#>>'{}')::integer=s.ordinal_index-1 AND EXISTS(
-              SELECT 1 FROM jsonb_array_elements(reader_payload_value(reader_payload_node(b.item)->'sponsorRefs')) matched(value)
-                WHERE (matched.value#>>'{}')::integer=ANY(wanted.indices)))),'[]'::jsonb) AS sponsors
-        FROM pointers pointer JOIN wanted ON pointer.scope=wanted.scope AND pointer.current_version_id=wanted.version
-          LEFT JOIN civic_data_candidates c ON c.id=pointer.current_version_id`,
+      ), bills AS MATERIALIZED (
+        SELECT b.* FROM pointers pointer JOIN wanted ON pointer.scope=wanted.scope AND pointer.current_version_id=wanted.version
+        JOIN civic_data_rows b ON b.promotion_key=pointer.key AND b.version_id=pointer.current_version_id
+          AND b.collection='rp01.bills' AND b.aliases && ARRAY(SELECT 'sponsor:'||i FROM unnest(wanted.indices) i)
+      ) SELECT ${metadata},${header} AS payload,
+        coalesce((SELECT jsonb_agg(b.value ORDER BY b.ordinal) FROM bills b WHERE b.promotion_key=pointer.key),'[]'::jsonb) AS bills,
+        coalesce((SELECT jsonb_agg(jsonb_build_object('index',s.ordinal-1,'value',s.value) ORDER BY s.ordinal)
+          FROM civic_data_rows s WHERE s.promotion_key=pointer.key AND s.version_id=pointer.current_version_id
+            AND s.collection='rp01.sponsors' AND EXISTS(SELECT 1 FROM bills b WHERE b.promotion_key=s.promotion_key
+              AND b.aliases @> ARRAY['sponsor:'||(s.ordinal-1)])),'[]'::jsonb) AS sponsors
+        FROM pointers pointer JOIN wanted ON pointer.scope=wanted.scope AND pointer.current_version_id=wanted.version`,
       [matching.map(part=>`STATE_BILL:${part.scope}`), JSON.stringify(matching)]);
     const byKey = new Map(rows.map(row => [String(row.key), row]));
     for (const match of matching) {

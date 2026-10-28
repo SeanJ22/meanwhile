@@ -1,3 +1,4 @@
+import { AUTHORITY_FIELDS } from "../reader/page-authorities.ts";
 import {
   evidenceRecordsFor,
   ruleOnQuestion,
@@ -41,33 +42,24 @@ const stateScope = `(p.scope LIKE ANY($1::text[]) OR p.scope LIKE ANY($6::text[]
 const bodySelected = (header: string) => `(${header}->>'bodyId'=ANY($2::text[]) OR ${header}->>'meetingId'=ANY($2::text[])
   OR EXISTS(SELECT 1 FROM entity e WHERE e.id=${header}->>'bodyId' AND e.state=ANY($5::text[])))`;
 
-// Select sitting headers before expanding immutable parts: a body's other meetings stay in the database.
-const SELECTED_OUTCOMES = `WITH selected AS MATERIALIZED (
-  SELECT p.key,p.record_class,p.scope,p.source_id,p.current_version_id,p.last_known_good_version_id,p.promoted_at,
-    CASE WHEN jsonb_typeof(p.validation_receipt->'excludedFacts')='array' THEN
-      jsonb_set(p.validation_receipt,'{excludedFacts}',coalesce((SELECT jsonb_agg(f.value-'record') FROM jsonb_array_elements(p.validation_receipt->'excludedFacts') f(value)),'[]'::jsonb))
-      ELSE p.validation_receipt END AS validation_receipt,
-    reader_payload_node(p.payload) AS root,c.retrieved_at,reader_payload_node(c.candidate)->'temporal' AS temporal,
-    ${stateScope} AS state_scoped,
-    ($3::text[] IS NULL AND EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(p.payload)->'sittings') s
-      WHERE ${bodySelected("reader_payload_node(s.item)")})) AS selected_by_body,
-    (p.current_version_id=p.last_known_good_version_id AND c.id=p.current_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded
-      AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id AND c.record_class=p.record_class AND c.scope=p.scope AND c.source_id=p.source_id
-      AND p.validation_receipt->>'decision'='GOOD' AND p.validation_receipt->>'candidateId'=c.id AND p.validation_receipt->>'sourceId'=c.source_id
-      AND p.validation_receipt->>'recordClass'=p.record_class AND p.validation_receipt->>'scope'=p.scope) AS published
-    FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id
-    WHERE p.record_class='MEETING_OUTCOME' AND (${stateScope} OR p.key=ANY($4::text[])
-      OR $3::text[] IS NULL AND p.scope LIKE 'door:%:outcomes' AND EXISTS(
-        SELECT 1 FROM reader_payload_members(reader_payload_node(p.payload)->'sittings') s WHERE ${bodySelected("reader_payload_node(s.item)")}))
-)
-SELECT key,record_class,scope,source_id,current_version_id,last_known_good_version_id,promoted_at,validation_receipt,retrieved_at,temporal,published,selected_by_body,
-  (jsonb_typeof(selected.root)='object' AND selected.root ? 'sittings' AND selected.root ? 'tenants') AS snapshot_shape_valid,
-  CASE WHEN $3::text[] IS NULL THEN reader_payload_value(matching.root) ELSE reader_place_payload(matching.root,$2::text[],NULL) END AS payload
-  FROM selected CROSS JOIN LATERAL (SELECT root||jsonb_build_object('sittings',coalesce((
-    SELECT jsonb_agg(s.item ORDER BY s.ordinal_index) FROM reader_payload_members(root->'sittings') s
-    WHERE CASE WHEN $3::text[] IS NOT NULL THEN reader_payload_node(s.item)->>'meetingId'=ANY($3::text[])
-      ELSE state_scoped OR ${bodySelected("reader_payload_node(s.item)")} END
-  ),'[]'::jsonb)) AS root) matching ORDER BY scope,key`;
+// A selected body or sitting is a keyed fact, with the producer's publication metadata.
+const SELECTED_OUTCOMES = `WITH pointers AS MATERIALIZED (
+  SELECT p.*,r.value->'temporal' AS temporal,(r.value->>'sittingShape')::boolean AS snapshot_shape_valid
+  FROM civic_data_rows r CROSS JOIN LATERAL jsonb_to_record(r.value) p(${AUTHORITY_FIELDS})
+  WHERE r.collection='rp01.header' AND r.record_class='MEETING_OUTCOME'
+), selected AS MATERIALIZED (
+  SELECT p.*,${stateScope} AS state_scoped,
+    ($3::text[] IS NULL AND EXISTS(SELECT 1 FROM civic_data_rows s WHERE s.promotion_key=p.key
+      AND s.version_id=p.current_version_id AND s.collection='rp01.sittings' AND ${bodySelected('s.value')})) AS selected_by_body
+  FROM pointers p WHERE ${stateScope} OR p.key=ANY($4::text[]) OR $3::text[] IS NULL AND p.scope LIKE 'door:%:outcomes'
+    AND EXISTS(SELECT 1 FROM civic_data_rows s WHERE s.promotion_key=p.key AND s.version_id=p.current_version_id
+      AND s.collection='rp01.sittings' AND ${bodySelected('s.value')})
+) SELECT key,record_class,scope,source_id,current_version_id,last_known_good_version_id,promoted_at,validation_receipt,
+  retrieved_at,temporal,published,selected_by_body,snapshot_shape_valid,
+  payload||jsonb_build_object('sittings',coalesce((SELECT jsonb_agg(s.value ORDER BY s.ordinal) FROM civic_data_rows s
+    WHERE s.promotion_key=selected.key AND s.version_id=selected.current_version_id AND s.collection='rp01.sittings'
+      AND CASE WHEN $3::text[] IS NOT NULL THEN s.row_id=ANY($3::text[]) ELSE state_scoped OR ${bodySelected('s.value')} END),'[]'::jsonb)) AS payload
+  FROM selected ORDER BY scope,key`;
 
 const object = (value: unknown): value is Record<string, unknown> => value !== null && typeof value === "object" && !Array.isArray(value);
 

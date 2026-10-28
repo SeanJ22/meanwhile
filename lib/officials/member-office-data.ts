@@ -83,20 +83,10 @@ export async function readMemberOfficeRows(query: Query, state: string, members:
 /** A source-native global person id needs no guessed state and never loads other members. */
 export async function readMemberOfficeMembers(query: Query, members: readonly string[]): Promise<readonly MemberOfficeRecord[]> {
   if (!members.length) return [];
-  const rows=await query(`WITH pointers AS MATERIALIZED (
-    SELECT p.key,p.scope,p.current_version_id,
-      (p.current_version_id=p.last_known_good_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded
-       AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id AND c.source_id=p.source_id
-       AND c.record_class=p.record_class AND c.scope=p.scope AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)
-       AND c.validation_receipt=p.validation_receipt AND p.validation_receipt->>'decision'='GOOD') AS valid
-    FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id
-    WHERE p.record_class='CURATED_READER_RECORD'
-      AND (p.scope=$2 OR p.scope ~ '^US-[A-Z]{2}:state-legislator-member-offices$')
-  ) SELECT p.valid,reader_payload_value(r.value) AS record FROM civic_data_rows r JOIN pointers p
-      ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+  const rows=await query(`SELECT reader_payload_value(r.value) AS record FROM civic_data_rows r
     WHERE r.collection='memberOffices' AND r.body_id=ANY($1::text[])
-      AND (p.scope<>$2 OR NOT EXISTS(SELECT 1 FROM pointers s WHERE s.scope='US-'||r.state||':state-legislator-member-offices'))
+      AND (r.scope<>$2 OR NOT EXISTS(SELECT 1 FROM civic_data_rows s
+        WHERE s.collection='memberOffices' AND s.body_id=r.body_id AND s.scope='US-'||r.state||':state-legislator-member-offices'))
     ORDER BY r.state,r.ordinal`,[[...members],MEMBER_OFFICE_NATIONAL_SCOPE]);
-  if(rows.some(row=>row.valid!==true))throw new Error("MEMBER_OFFICE_POINTER_INVALID:member");
   return rows.map(row=>row.record as MemberOfficeRecord);
 }

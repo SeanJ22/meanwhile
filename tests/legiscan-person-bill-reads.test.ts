@@ -77,14 +77,12 @@ test("a real Postgres person bill read selects exact native bills and complete c
       const init=args[1] as RequestInit,request=JSON.parse(String(init.body)) as Statement&{queries?:Statement[]};
       for(const statement of request.queries??[request])if(statement.query.includes("AS full_rows")){
         const parameter=`$${(statement.params?.length??0)+1}`;
-        const source="FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id";
+        const source="FROM civic_data_rows r CROSS JOIN LATERAL";
         assert.ok(statement.query.includes(source));
         statement.query=statement.query.replace(source,`FROM (
-          SELECT key,source_id,record_class,scope,current_version_id,last_known_good_version_id,promoted_at,validation_receipt,
-            CASE WHEN scope=${parameter} THEN repeat('0',64) ELSE payload_fingerprint END AS payload_fingerprint,
-            CASE WHEN scope=${parameter} THEN jsonb_set(payload,'{state}','"WA"'::jsonb) ELSE payload END AS payload
-          FROM civic_data_promotions
-        ) p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id`);
+          SELECT promotion_key,collection,content_hash,CASE WHEN promotion_key='STATE_BILL:'||${parameter}
+            THEN jsonb_set(value,'{payload,state}','"WA"'::jsonb) ELSE value END AS value FROM civic_data_rows
+        ) r CROSS JOIN LATERAL`);
         statement.params=[...statement.params??[],pointer.scope];injected++;
       }
       return transport(args[0],{...init,body:JSON.stringify(request)});

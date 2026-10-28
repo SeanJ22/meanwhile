@@ -22,6 +22,9 @@ test("a keyed source check follows the same source hash across unrelated promoti
     for (const sql of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8").split("--> statement-breakpoint")
       .filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node)\(/.test(sql))) await db.exec(sql);
     await db.exec(readFileSync(new URL("../lib/db/migrations/DB-05_source_checks.sql", import.meta.url), "utf8"));
+    const triggers=readFileSync(new URL("../lib/db/migrations/RP-01_reader_facts.sql",import.meta.url),"utf8").split("--> statement-breakpoint")
+      .filter(sql=>sql.includes("CREATE FUNCTION rp01_prune_source_checks")||sql.includes("CREATE CONSTRAINT TRIGGER zz_rp01_prune"));
+    for(const sql of triggers)await db.exec(sql);
     const query = async (text: string, params: readonly unknown[]) => (await db.query<Record<string, unknown>>(text, [...params])).rows;
     await db.query("INSERT INTO civic_data_candidates VALUES('v1',$1,$2,$3,'PROMOTED',true,$4,$5::jsonb,$6)",
       [check.sourceId, check.recordClass, check.scope, check.parserVersion, JSON.stringify({ retrieval: { rawHashBasis: "SOURCE_CONTENT_V1" } }), "c".repeat(64)]);

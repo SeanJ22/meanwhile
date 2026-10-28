@@ -1,3 +1,6 @@
+import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
+import {ballotCandidateKeys} from "../ballot/candidate-keys.ts";
+import type {BallotSet} from "../ballot/types.ts";
 import type { Statement } from "../control-plane/admin-view/promoted-slices.ts";
 import { canonicalCongressionalDivision, FIPS_TO_STATE } from "../ocd/fips.ts";
 import { requireRegistryState, stateRegistryRuntimeScope, stateBallotScope } from "../civic-data/state-scopes.ts";
@@ -1308,10 +1311,11 @@ function pageAuthorityPointers(input:PlaceInput):{recordClass:RoutineRecordClass
   const translations=input.divisionIds.filter(id=>id.startsWith('ocd-division/')).map(id=>({recordClass:'CURATED_READER_RECORD' as const,scope:`US:plain-english-translations:${id}`}));
   if(!zip&&!root)return translations;
   const national=[...nationalPresidentPointers(),EVERYDAY_ROUTING_POINTER,...memberContextPointers,
-    {recordClass:'CURATED_READER_RECORD' as const,scope:'US:official-filings'}];
+    requiredManualProductionContract('official-filings')];
   if(state==='US')return national;
   return [...translations,...national,...stateAuthorityPointers('ballot-navigation',state),
     ...stateAuthorityPointers('candidate-profiles',state),...stateAuthorityPointers('candidate-campaign-sites-derived',state),
+    ...stateAuthorityPointers('candidate-publications',state),
     ...(!zip?[{recordClass:'REGISTRY_RUNTIME_BINDING' as const,scope:stateRegistryRuntimeScope(state)},
       {recordClass:'STATE_LEGISLATOR' as const,scope:`US-${state}`},
       {recordClass:'STATE_LEGISLATOR' as const,scope:`US-${state}:openstates-people:v1`},...zipSourcePointers(state),
@@ -1344,7 +1348,9 @@ export async function buildPageAuthorities(input:PlaceInput,query:Query):Promise
   const state=input.state.toUpperCase(),zip=input.placeId?.startsWith('zip:')?input.placeId.slice(4):undefined;
   const root=/^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(input.divisionIds[0]??'');
   const additional=state!=='US'&&(zip||root)?buildStatePackageStatement(state,input.divisionIds,zip):undefined;
-  const keys=pageAuthorityPointers(input).map(row=>`${row.recordClass}:${row.scope}`);
+  const detailKeys=new Set(state==='US'?[]:['candidate-profiles','candidate-publications','candidate-campaign-sites-derived'].flatMap(family=>
+    stateAuthorityPointers(family as 'candidate-profiles'|'candidate-publications'|'candidate-campaign-sites-derived',state)).map(row=>`${row.recordClass}:${row.scope}`));
+  const keys=pageAuthorityPointers(input).map(row=>`${row.recordClass}:${row.scope}`).filter(key=>!detailKeys.has(key));
   const statement=buildCanonicalStatement(keys,additional);
   const loaded=await query(statement.text,statement.params);
   const preloaded=Object.fromEntries(loaded.filter(row=>row.row_kind==='part').map(row=>[String(row.part_hash),row.part_payload]));
@@ -1354,6 +1360,14 @@ export async function buildPageAuthorities(input:PlaceInput,query:Query):Promise
   if(extra)for(const field of ['zip_official','zip_people','zip_registry','zip_ballot','zip_sources','zip_context']) {
     const value=extra[field];
     for(const row of Array.isArray(value)?value:value?[value]:[])rows.push(row as Record<string,unknown>);
+  }
+  if(state!=='US'&&(zip||root)) {
+    const ballots=rows.filter(row=>row.record_class==='BALLOT_CANDIDACY'||String(row.key).startsWith('BALLOT_CANDIDACY:'));
+    const candidateKeys=new Set<string>();
+    for(const row of ballots)for(const set of Object.values((row.payload as {ballots?:Record<string,BallotSet>}).ballots??{}))
+      for(const key of ballotCandidateKeys(set,[...set.contests,...set.heldContests??[]]))candidateKeys.add(key);
+    const selected=buildBallotCandidateDetailsStatement(state,[...candidateKeys]);
+    rows.push(...await query(selected.text,selected.params));
   }
   const authorities:Record<string,Record<string,unknown>>={};
   for(const row of rows){
@@ -1388,3 +1402,27 @@ async function buildMemberOffices(query:Query,state:string):Promise<MemberOffice
     sourceThrough:null,version:null,receipt:row.validation_receipt as MemberOfficeSlice['receipt'],records,sources:[],header,
     normalization:{normalizedHash:canonicalCivicDataHash({...header,records})},...(confirmation?{latestConfirmation:confirmation}:{})};
 }
+
+export function buildBallotCandidateDetailsStatement(state: string, keys: readonly string[]) {
+  const pointers = (["candidate-profiles","candidate-publications","candidate-campaign-sites-derived"] as const)
+    .flatMap(family => stateAuthorityPointers(family,state));
+  const selectedArray = (value: string, field: string) => `coalesce((SELECT jsonb_agg(reader_payload_value(r.item) ORDER BY r.ordinal_index)
+    FROM reader_payload_members(${value}->'${field}') r WHERE reader_payload_node(r.item)->>'candidateKey'=ANY($2::text[])
+      OR reader_payload_node(r.item)->>'candidacyId'=ANY($2::text[])), '[]'::jsonb)`;
+  const selectedObject = (value: string) => `coalesce((SELECT jsonb_object_agg(r.key,reader_payload_value(object.value->r.key))
+    FROM (SELECT reader_payload_node(${value}) AS value) object,
+      (SELECT DISTINCT unnest($2::text[]) AS key) r WHERE object.value ? r.key), '{}'::jsonb)`;
+  return {pointers,params:[pointers.map(pointer=>`${pointer.recordClass}:${pointer.scope}`),keys],text:`WITH pointer AS MATERIALIZED (
+    ${buildSelectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')}
+  ), roots AS MATERIALIZED (SELECT key,reader_payload_node(payload) AS value FROM pointer WHERE published)
+  SELECT ${buildSelectedMetadataSql}, CASE WHEN published THEN CASE pointer.record_class
+    WHEN 'CANDIDATE_PROFILE' THEN reader_payload_value(roots.value-'cards'-'links') || jsonb_build_object(
+      'cards',reader_payload_value(reader_payload_node(roots.value->'cards')-'cards') || jsonb_build_object('cards',${selectedObject("reader_payload_node(roots.value->'cards')->'cards'")}),
+      'links',reader_payload_value(reader_payload_node(roots.value->'links')-'links') || jsonb_build_object('links',${selectedObject("reader_payload_node(roots.value->'links')->'links'")}))
+    WHEN 'CANDIDATE_PUBLICATION' THEN reader_payload_value(roots.value-'documents'-'failures') || jsonb_build_object(
+      'documents',${selectedArray('roots.value','documents')},'failures',${selectedArray('roots.value','failures')})
+    ELSE reader_payload_value(roots.value-'records'-'portraits') || jsonb_build_object('records',${selectedArray('roots.value','records')})
+      || CASE WHEN roots.value ? 'portraits' THEN jsonb_build_object('portraits',${selectedArray('roots.value','portraits')}) ELSE '{}'::jsonb END
+    END END AS payload FROM pointer LEFT JOIN roots USING(key)`};
+}
+

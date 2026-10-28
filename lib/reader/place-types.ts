@@ -9,6 +9,9 @@ import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 
 export type AgendaDocumentLink = Pick<MeetingsSnapshot["agendaDocuments"][number], "meetingId" | "documentUrl">;
 export interface PlacePackage {
+  readonly rosterRefs?: import("./body-roster.ts").ReaderRosterRefs;
+  readonly rosterPreviews?: import("./body-roster.ts").ReaderRosterPreviews;
+  readonly rosterIds?:import("./body-roster.ts").ReaderRosterIds;
   readonly registry: RegistryRuntimeReadModel | null;
   readonly everydayRouting: EverydayRoutingProjection | null;
   readonly publicationAttempts: readonly PublicBodyAttempt[];
@@ -26,6 +29,8 @@ export interface PlacePackage {
 }
 
 export type PlaceInput = { readonly state: string; readonly divisionIds: readonly string[]; readonly bodyIds?: readonly string[]; readonly allBodies?: boolean; readonly includeHistory?: boolean; readonly includeAgenda?: boolean;
+  /** Only a body build or an opened body reads its complete membership. */
+  readonly includeRoster?: boolean;
   /** A ZIP has one complete prebuilt answer. Map selections combine their saved division pages. */
   readonly placeId?: string;
   /** Ballot reads consume only body facts; their registry and directory come from the state package. */

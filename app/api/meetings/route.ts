@@ -75,7 +75,8 @@ export const GET = readerRoute("/api/meetings", async function GET(request: Requ
     const result = await searchMeetings(lat, lng, radiusKm, new Date(), divisionIds, snapshotSourceFor(place.snapshot), settings,
       selectedBodyIds, new Set(bodies.map(body => body.id)));
     const localIds = state ? ids : ids.filter(id => !/\/(?:cd|sldu|sldl):/.test(id));
-    const coverage = stateCoverage(state ? withPlaceRegistry(state, registry) : { state: location.state, registry, version: place.snapshot.generatedAt },
+    const coverage = stateCoverage({...state ? withPlaceRegistry(state, registry) : { state: location.state, registry, version: place.snapshot.generatedAt },
+      rosterRefs:place.rosterRefs,rosterPreviews:place.rosterPreviews,rosterIds:place.rosterIds},
       localIds, lat, lng, place.meetings, place.bodies, place.divisions, territory, result.meetings.length);
     coverage.governments = bindGovernmentBodies(place.governments, bodies);
     coverage.governmentInventoryUnavailableStates = place.registrationHeld ? [] : [location.state];

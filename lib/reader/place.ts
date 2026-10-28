@@ -18,7 +18,7 @@ export type { PlaceInput, PlacePackage, AgendaDocumentLink } from "./place-types
 
 /** The normal first ZIP visit reads one already composed page. */
 export const READY_PLACE_SQL = `SELECT CASE WHEN $2::boolean THEN history_body ELSE body END AS page,version
-  FROM place_page WHERE place_id=$1`;
+  FROM place_page WHERE place_id=$1 AND context->>'readerFormat'='1'`;
 
 /** Map and body selections use only ready pages and their existing identity aliases. */
 export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
@@ -37,7 +37,7 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
     AND (NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
       OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies))
 ) SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies) THEN 'empty' ELSE e.kind END AS page_kind,p.built_at,
-  coalesce(saved.value->CASE WHEN $8::boolean THEN 'full' WHEN $9::boolean THEN 'facts' ELSE 'brief' END,saved.value) AS row,
+  CASE WHEN p.context->>'readerFormat'='1' THEN coalesce(saved.value->CASE WHEN $8::boolean THEN 'full' WHEN $9::boolean THEN 'facts' ELSE 'brief' END,saved.value) END AS row,
   ARRAY(SELECT id FROM requested_bodies) AS body_ids
   FROM selected s LEFT JOIN entity e ON e.id=s.id LEFT JOIN place_page p ON p.place_id=s.id
   LEFT JOIN LATERAL (SELECT p.context->CASE WHEN NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
@@ -119,7 +119,7 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,writer?:FactDb
     && !input.includeAgenda && !input.bodyFactsOnly && !input.meetingIds && !input.allBodies) {
     const [saved]=await query(READY_PLACE_SQL,[input.placeId,input.includeHistory??false]);
     if(!saved?.page){
-      await buildMissingPlacePages([{id:input.placeId,kind:'place',state:input.state.toUpperCase()}],writer);
+      await buildMissingPlacePages([{id:input.placeId,kind:'place',state:input.state.toUpperCase(),reader:true}],writer);
       return loadPlacePackage(input,query,writer);
     }
     const place=unpackReadyPlace(saved.page);
@@ -132,7 +132,7 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null,writer?:FactDb
     input.neighbors??false,input.allBodies??false,input.includeHistory??false,input.includeAgenda??false,input.bodyFactsOnly??false]);
   const missing=rows.filter(row=>!row.row);
   if(missing.length){
-    await buildMissingPlacePages(missing.map(row=>({id:String(row.page_id),kind:row.page_kind==='body'?'body':'place',state:input.state.toUpperCase()})),writer);
+    await buildMissingPlacePages(missing.map(row=>({id:String(row.page_id),kind:row.page_kind==='body'?'body':'place',state:input.state.toUpperCase(),reader:true})),writer);
     return loadPlacePackage(input,query,writer);
   }
   const empty=!input.allBodies&&!input.divisionIds.length&&!input.bodyIds?.length;

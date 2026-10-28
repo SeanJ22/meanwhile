@@ -1,7 +1,8 @@
 "use client";
 
 import { X } from "lucide-react";
-import { createContext, useContext } from "react";
+import { createContext, useContext,useEffect,useState } from "react";
+import {loadReaderBodyRoster} from "@/lib/reader/body-roster-client";
 
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
@@ -404,9 +405,21 @@ function OfficialsDoor({
   ) => void;
 }) {
   // Grouped Local / State / Federal, closest first.
-  const groups = groupOfficials(coverage);
+  const [rosters,setRosters]=useState<Record<string,NonNullable<CoveredBody['readerRoster']>>>({});
+  const [failed,setFailed]=useState(false);
+  useEffect(()=>{
+    let active=true;
+    const bodies=coverage.bodies.filter(body=>body.rosterRef&&!body.readerRoster);
+    for(const body of bodies)loadReaderBodyRoster(body).then(roster=>{
+      if(active)setRosters(previous=>({...previous,[`${body.bodyId}:${body.rosterRef}`]:roster}));
+    }).catch(()=>{if(active)setFailed(true);});
+    return()=>{active=false;};
+  },[coverage]);
+  const bodies=coverage.bodies.map(body=>({...body,readerRoster:body.readerRoster??rosters[`${body.bodyId}:${body.rosterRef}`]}));
+  const pending=bodies.some(body=>body.rosterRef&&!body.readerRoster);
+  const groups = groupOfficials({...coverage,bodies});
   const total = groups.local.length + groups.state.length + groups.federal.length;
-  if (total === 0) {
+  if (total === 0&&!pending) {
     return (
       <p className="mt-3 t-body text-muted">
         No sourced officeholders resolved at this point yet.
@@ -420,6 +433,7 @@ function OfficialsDoor({
   };
   return (
     <div className="mt-3 space-y-3">
+      {pending?<p role={failed?'alert':'status'} className="t-body text-muted">{failed?'Some officials could not be loaded.':'Loading officials…'}</p>:null}
       {(Object.keys(TIER_GROUP_LABELS) as TierGroup[]).map((group) =>
         groups[group].length === 0 ? null : (
           <div key={group}>

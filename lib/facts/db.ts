@@ -97,6 +97,9 @@ export function installFactReader(query: Query | null | undefined): void {
   installed = query;
 }
 
+/** An explicitly supplied fact connection, for callers that own their database transaction. */
+export function installedFactConnection():Query|null {return installed??null;}
+
 export const statementQuery = (run: (statements: readonly { readonly text: string; readonly params: readonly unknown[] }[]) => Promise<readonly (readonly Record<string, unknown>[])[]>): Query =>
   async (text, params = []) => (await run([{ text, params }]))[0] ?? [];
 

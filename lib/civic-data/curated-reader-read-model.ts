@@ -1,4 +1,5 @@
-import { memberOfficeStateScope, readMemberOfficeRows, type MemberOfficeSlice } from "../officials/member-office-data.ts";
+import { memberOfficeStateScope, type MemberOfficeSlice } from "../officials/member-office-data.ts";
+import {readReadyMemberOffices} from "../reader/member-offices.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
 import {
   civicDataReadNotInitialized,
@@ -109,7 +110,7 @@ export async function readMemberOfficeStateProjection(state: string, options: Pr
   let slice: MemberOfficeSlice | null;
   try {
     if(store?.readMemberOfficeSlice)slice=await store.readMemberOfficeSlice(state,members);
-    else if(query)slice=await readMemberOfficeRows(async(text,params)=>(await query([{text,params:params??[]}]))[0]??[],state,members);
+    else if(query)slice=await readReadyMemberOffices(async(text,params)=>(await query([{text,params:params??[]}]))[0]??[],state,members);
     else return civicDataReadNotInitialized(contract.recordClass,scope,"The member-office state reader has no database connection.");
   } catch(error) { return {kind:"STORE_UNREACHABLE",value:null,metadata:{recordClass:contract.recordClass,scope,sourceId:null,version:null,versionId:null,lastKnownGoodVersionId:null,sourceThrough:null,retrievedAt:null,promotedAt:null,stale:"UNKNOWN",staleAt:null},code:"STORE_READ_FAILED",detail:sanitizedErrorDiagnostic(error)}; }
   if(!slice)return {kind:"NOT_RECORDED",value:null,metadata:{recordClass:contract.recordClass,scope,sourceId:null,version:null,versionId:null,lastKnownGoodVersionId:null,sourceThrough:null,retrievedAt:null,promotedAt:null,stale:"UNKNOWN",staleAt:null},detail:`No held offices are recorded for ${state}.`};

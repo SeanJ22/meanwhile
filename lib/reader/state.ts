@@ -1,16 +1,20 @@
-import { selectedBallotStatement } from "./selected-ballot.ts";
+import {statePageId} from "./page-authorities.ts";
+import {selectedMemberOfficeSlice} from "./member-offices.ts";
+import type {MemberOfficeSlice} from "../officials/member-office-data.ts";
+import {stateBallotScope} from "../civic-data/state-scopes.ts";
+import {memberContextPointers,zipSourcePointers} from "./place-builder.ts";
 import { readMemberOfficeStateProjection } from "../civic-data/curated-reader-read-model.ts";
-import {selectedPointerSql,selectedMetadataSql,selectedStateEntry,peopleIdentityKeysSql} from "./selected-entry.ts";
+import {selectedStateEntry} from "./selected-entry.ts";
 import {FIPS_TO_STATE} from "../ocd/fips.ts";
-import { stateContainersStatement, geographyOfRows, type Slice, type GeographySlice } from "../control-plane/admin-view/promoted-slices.ts";
+import { geographyOfRows, type Slice, type GeographySlice } from "../control-plane/admin-view/promoted-slices.ts";
 import { readerDatabaseQuery } from "./database.ts";
 import { createHash } from "node:crypto";
-import { readPromotedCivicData, CivicDataStoreUnavailableError, type CivicDataReadResult, type CivicDataReadStore, type PromotedEdgeEntry } from "../civic-data/read-model.ts";
+import { readPromotedCivicData, CivicDataStoreUnavailableError, type CivicDataReadResult, type CivicDataReadStore, type PromotedEdgeEntry,type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "../civic-data/state-scopes.ts";
 import type { OfficialStateLegislatorReadModel } from "../civic-data/candidate-builders.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { registryRuntimeProjectionIssues } from "../registry/runtime-issues.ts";
-import { readStatePeopleProjection, readOfficialStateLegislatorsProjection, NH_COUNTY } from "../state-rollcalls/legislators.ts";
+import { readStatePeopleProjection, readOfficialStateLegislatorsProjection } from "../state-rollcalls/legislators.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import type { FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
 import { readStateFederalDirectory, withFederalPortraits } from "../officials/federal-directory-read-model.ts";
@@ -162,18 +166,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   const idsRead = zip && !divisionIds.length ? readZipPlace(zip).then(value=>[...new Set(value?.ids ?? [])].sort()) : Promise.resolve(divisionIds);
   const load = (ids: readonly string[]) => {
     const statement = statePackageStatement(state, ids, zip);
-    const place = Object.values(FIPS_TO_STATE).find(row => row.postal === state)!;
-    const geography = stateContainersStatement(state);
-    const sources = [...entries, ...zipSourcePointers(state), ...memberContextPointers, ...stateAuthorityPointers("ballot-contests", state),
-      { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
-      { recordClass: "STATE_LEGISLATOR", scope: jurisdiction },
-      { recordClass: "STATE_LEGISLATOR", scope: `${jurisdiction}:openstates-people:v1` },
-      { recordClass: geography.params[0], scope: geography.params[1] },
-      { recordClass: "REGISTRATION", scope: `${jurisdiction}:registration:v1` }];
-    return readCanonicalPackages([entries, needsPresident ? nationalPresidentPointers() : []], query, { ...statement, ...(zip && ballotOnly ? { sharedSources: {
-      keys: [...new Set(sources.map(row => `${row.recordClass}:${row.scope}`))].sort(),
-      translations: `US:plain-english-translations:ocd-division/country:us/${place.prefix}:${state.toLowerCase()}%`,
-    } } : {}) });
+    return readCanonicalPackages([entries, needsPresident ? nationalPresidentPointers() : []], query, statement);
   };
   const groupsRead = Promise.resolve().then(async () => load(await idsRead));
   const canonicalRead = groupsRead.then(groups => groups.readGroup(0));
@@ -190,7 +183,9 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   if (zip) composition.selected = selectedRead;
   const [canonical, districts, store] = await Promise.all([canonicalRead, districtsRead, selectedRead]);
   const localDivisions = (canonical.additionalRows[0]?.local_divisions ?? []) as readonly Division[];
-  const options = { store };
+  const officeStore:CivicDataReadStore&{readMemberOfficeSlice(state:string,members?:readonly string[]):Promise<MemberOfficeSlice|null>}={...store,
+    readMemberOfficeSlice:async(_state,members=[])=>selectedMemberOfficeSlice(canonical.additionalRows[0]?.member_offices as MemberOfficeSlice??null,members)};
+  const options:PromotedCivicDataReadOptions={store:officeStore};
   const target = officialStateLegislatorTargetByScope(jurisdiction);
   const officialRead = target ? readOfficialStateLegislatorsProjection(target.jurisdiction,options) : Promise.resolve(null);
   const [runtime, people, federal, official, campaigns, everyday, president, profiles, portraits, ballot] = await Promise.all([
@@ -242,7 +237,7 @@ async function loadState(state: string, divisionIds: readonly string[], zip: str
   };
   if (zip) {
     districtCanonical.set(result, canonical);
-    selectedCanonical.set(result, options.store);
+    selectedCanonical.set(result, officeStore);
   }
   return result;
 }
@@ -270,261 +265,25 @@ export function readStatePackage(value: string, divisionIds: readonly string[] =
   return read;
 }
 
-/** Geography and selected people share one database snapshot and one network read. */
-export function statePackageStatement(state: string, divisions: readonly string[] = [], zip?: string) {
-  const geography = stateContainersStatement(state, divisions, zip);
-  if (!zip) return geography;
-  const jurisdiction=Object.values(FIPS_TO_STATE).find(entry=>entry.postal===requireRegistryState(state));
-  if(!jurisdiction)throw new Error("READER_JURISDICTION_UNAVAILABLE");
-  // ZIP shards name local and legislative divisions; statewide officers govern every ZIP too.
-  const places=[...new Set([...divisions,"ocd-division/country:us",`ocd-division/country:us/${jurisdiction.prefix}:${jurisdiction.postal.toLowerCase()}`])];
-  const parts=[['zip_official',zipOfficialStatement(state,places)],['zip_people',zipPeopleStatement(state,places)],
-    ['zip_sources',zipSourcesStatement(state,places)],['zip_registry',zipRegistryStatement(state,places)],
-    ['zip_context',zipMemberContextStatement(state)], ['zip_ballot',selectedBallotStatement(state,places,selectedDivisionsSql)]] as const;
-  const params:unknown[]=[...geography.params];
-  const ctes=parts.map(([name,statement])=>{const offset=params.length;params.push(...statement.params);
-    return `${name} AS MATERIALIZED (${statement.text.replace(/\$(\d+)/g,(_,index:string)=>`$${Number(index)+offset}`)})`;});
-  return {...geography,text:`WITH state_geography AS MATERIALIZED (${geography.text}),${ctes.join(',')}
-    SELECT g.*,(SELECT to_jsonb(p) FROM zip_people p) AS zip_people,(SELECT to_jsonb(r) FROM zip_registry r) AS zip_registry,
-      (SELECT to_jsonb(o) FROM zip_official o) AS zip_official,(SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_sources s) AS zip_sources,
-      (SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_context s) AS zip_context,
-      (SELECT to_jsonb(b) FROM zip_ballot b) AS zip_ballot FROM state_geography g`,params};
-}
-
-const memberContextPointers = ["US:verified-officeholder-campaign-sites"]
-  .map(scope => ({ recordClass: "CURATED_READER_RECORD" as const, scope }));
-
-/** A state's own member offices and the selected people's campaign links. */
-function zipMemberContextStatement(state: string) {
-  return { params: [memberContextPointers.map(pointer => `${pointer.recordClass}:${pointer.scope}`), state], text: `WITH
-    pointer AS MATERIALIZED (${selectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')}),
-    roots AS MATERIALIZED (SELECT key,reader_payload_node(payload) AS value FROM pointer WHERE published),
-    rosters AS MATERIALIZED (SELECT reader_payload_node(payload->'roster') AS value FROM zip_people
-      UNION ALL SELECT reader_payload_node(payload->'roster') FROM zip_official
-      UNION ALL SELECT reader_payload_node(payload->'roster') FROM zip_sources),
-    people AS MATERIALIZED (SELECT ${peopleIdentityKeysSql("reader_payload_node(p.item)")} AS ids
-      FROM rosters,LATERAL reader_payload_members(value->'officeholders') p),
-    selected AS MATERIALIZED (SELECT r.key,m.ordinal_index,m.item FROM roots r,LATERAL reader_payload_members(value->'records') m
-      WHERE reader_payload_node(m.item)->'office'->>'state'=$2
-        OR reader_payload_node(m.item)->>'officeholderId'=ANY(ARRAY(SELECT unnest(ids) FROM people)))
-    SELECT ${selectedMetadataSql}, CASE WHEN published THEN reader_payload_value(roots.value-'records') || jsonb_build_object('records',
-      coalesce((SELECT jsonb_agg(reader_payload_value(s.item) ORDER BY s.ordinal_index) FROM selected s WHERE s.key=pointer.key),'[]'::jsonb)) END AS payload
-    FROM pointer LEFT JOIN roots USING(key)` };
-}
-
-const selectedDivisionsSql = `SELECT unnest($2::text[]) AS id UNION SELECT substring(unnest(canonical_keys)
-  FROM ${"CURATED_READER_RECORD:US:plain-english-translations:".length + 1}) FROM state_geography`;
-function zipSourcePointers(state: string) {
-  return [{recordClass:"FEDERAL_DIRECTORY" as const,scope:federalDirectoryScope(state)},
-    ...PEOPLE_SOURCE_IDS.map(source=>({recordClass:peopleSourceRecordClass(source),scope:peopleSourceScope(`US-${state}`,source)}))];
-}
-
-/** Exact identities and name ambiguity stay closed across sources before the ordinary people merge. */
-function zipSourcesStatement(state: string,divisions:readonly string[]) {
-  return {params:[zipSourcePointers(state).map(pointer=>`${pointer.recordClass}:${pointer.scope}`),divisions],text:`WITH RECURSIVE
-    selected_divisions AS MATERIALIZED (${selectedDivisionsSql}),pointer AS MATERIALIZED (${selectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')}),
-    roots AS MATERIALIZED (SELECT key,reader_payload_node(payload) AS value FROM pointer WHERE published),
-    rosters AS MATERIALIZED (SELECT key,reader_payload_node(value->'roster') AS value FROM roots),
-    links AS MATERIALIZED (SELECT key,d.ordinal_index,reader_payload_node(d.item) AS value FROM rosters,LATERAL reader_payload_members(value->'divisions') d),
-    seed_rosters AS MATERIALIZED (SELECT reader_payload_node(payload->'roster') AS value FROM zip_people UNION ALL SELECT reader_payload_node(payload->'roster') FROM zip_official),
-    seeds AS MATERIALIZED (SELECT reader_payload_node(h.item) AS value FROM seed_rosters,LATERAL reader_payload_members(value->'officeholders') h
-      UNION ALL SELECT jsonb_build_object('id',i.value->>'officeholderId','personId',i.value->>'officeholderId',
-        'name',concat_ws(' ',nullif(m.value->>'givenName',''),nullif(m.value->>'middleName',''),nullif(m.value->>'familyName','')),
-        'nativeIds',jsonb_build_object('nh-general-court',jsonb_build_array(i.value->>'officialPersonId')))
-        FROM zip_official o,LATERAL reader_payload_members(o.payload->'members') member,LATERAL (SELECT reader_payload_node(member.item) AS value) m,
-          LATERAL reader_payload_members(o.payload->'identities') identity,LATERAL (SELECT reader_payload_node(identity.item) AS value) i
-        WHERE m.value->>'chamber'=i.value->>'chamber' AND m.value->>'seatNo'=i.value->>'seatNo' AND m.value->>'district'=i.value->>'district'),
-    seed_ids AS MATERIALIZED (SELECT unnest(${peopleIdentityKeysSql("value")}) AS id FROM seeds),
-    seed_names AS MATERIALIZED (SELECT regexp_replace(lower(normalize(reader_payload_value(value->'name')#>>'{}',NFKD)),'[^a-z0-9]','','g') AS name FROM seeds),
-    people AS MATERIALIZED (SELECT r.key,h.ordinal_index,header.value,
-      ${peopleIdentityKeysSql("header.value")} AS identities,
-      regexp_replace(lower(normalize(reader_payload_value(header.value->'name')#>>'{}',NFKD)),'[^a-z0-9]','','g') AS name
-      FROM rosters r,LATERAL reader_payload_members(r.value->'officeholders') h,LATERAL (SELECT reader_payload_node(h.item) AS value) header),
-    labels AS MATERIALIZED (SELECT key,ordinal_index,'identity:'||unnest(identities) AS label FROM people
-      UNION ALL SELECT key,ordinal_index,'name:'||name FROM people),
-    selected(key,ordinal_index) AS (SELECT p.key,p.ordinal_index FROM people p WHERE identities && ARRAY(SELECT id FROM seed_ids) OR name IN (SELECT name FROM seed_names)
-      OR value->>'id' IN (SELECT value->>'officeholderId' FROM links WHERE links.key=p.key AND value->>'ocdId' IN (SELECT id FROM selected_divisions))
-      UNION SELECT next.key,next.ordinal_index FROM selected s JOIN labels prior ON prior.key=s.key AND prior.ordinal_index=s.ordinal_index
-        JOIN labels next ON next.label=prior.label),
-    chosen AS MATERIALIZED (SELECT p.* FROM people p JOIN selected s USING(key,ordinal_index)),
-    identities AS MATERIALIZED (SELECT unnest(identities) AS id FROM chosen)
-    SELECT pointer.key,pointer.source_id,pointer.current_version_id,pointer.last_known_good_version_id,pointer.promoted_at,
-      (pointer.validation_receipt-'excludedFacts')||jsonb_build_object('excludedFacts','[]'::jsonb) AS validation_receipt,
-      pointer.retrieved_at,pointer.confirmation,pointer.published,
-      CASE WHEN published THEN reader_payload_value(roots.value-'roster'-'directory')||jsonb_build_object('roster',
-        reader_payload_value(rosters.value-'officeholders'-'divisions'-'unmatched'-'disagreements')||jsonb_build_object(
-          'officeholders',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM chosen WHERE chosen.key=pointer.key),'[]'::jsonb),
-          'divisions',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM links WHERE links.key=pointer.key AND value->>'officeholderId' IN (SELECT value->>'id' FROM chosen WHERE chosen.key=pointer.key)),'[]'::jsonb),
-          'unmatched',coalesce((SELECT jsonb_agg(reader_payload_value(u.item) ORDER BY u.ordinal_index) FROM reader_payload_members(rosters.value->'unmatched') u WHERE reader_payload_node(u.item)->>'officeholderId' IN (SELECT id FROM identities)),'[]'::jsonb),
-          'disagreements',coalesce((SELECT jsonb_agg(reader_payload_value(d.item) ORDER BY d.ordinal_index) FROM reader_payload_members(rosters.value->'disagreements') d WHERE reader_payload_node(d.item)->>'personId' IN (SELECT id FROM identities)),'[]'::jsonb)))
-        ||CASE WHEN roots.value ? 'directory' THEN jsonb_build_object('directory',reader_payload_value(reader_payload_node(roots.value->'directory')-'byMember')||jsonb_build_object('byMember',
-          coalesce((SELECT jsonb_object_agg(d.key,reader_payload_value(d.value)) FROM jsonb_each(reader_payload_node(reader_payload_node(roots.value->'directory')->'byMember')) d
-            WHERE 'congress:'||d.key IN (SELECT value->>'id' FROM chosen WHERE chosen.key=pointer.key)),'{}'::jsonb))) ELSE '{}'::jsonb END
-      END AS payload FROM pointer LEFT JOIN roots USING(key) LEFT JOIN rosters USING(key)`};
-}
-
-/** Keep the ZIP's governments, statewide officers, and complete records for its people and held rosters. */
-function zipRegistryStatement(state: string, divisions: readonly string[]) {
-  return {text:`WITH selected_divisions AS MATERIALIZED (${selectedDivisionsSql}),
-    pointer AS MATERIALIZED (${selectedPointerSql}),
-    root AS MATERIALIZED (SELECT reader_payload_node(payload) AS value FROM pointer WHERE published),
-    registry AS MATERIALIZED (SELECT reader_payload_node(value->'registry') AS value FROM root),
-    divisions AS MATERIALIZED (
-      SELECT d.ordinal_index,reader_payload_node(d.item) AS value FROM registry,LATERAL reader_payload_members(value->'divisions') d
-    ), own_divisions AS MATERIALIZED (
-      SELECT * FROM divisions WHERE value->>'ocdId' IN (SELECT id FROM selected_divisions)
-        OR value->>'canonicalOcdId' IN (SELECT id FROM selected_divisions)
-    ), bodies AS MATERIALIZED (
-      SELECT b.ordinal_index,reader_payload_node(b.item) AS value FROM registry,LATERAL reader_payload_members(value->'bodies') b
-    ), own_bodies AS MATERIALIZED (
-      SELECT * FROM bodies WHERE value->>'ocdId' IS NULL OR value->>'ocdId' IN (SELECT value->>'ocdId' FROM own_divisions)
-        OR reader_payload_value(value->'alsoServesOcdIds') ?| ARRAY(SELECT value->>'ocdId' FROM own_divisions)
-        OR value->>'id' IN (SELECT reader_payload_node(r.item)->>'bodyId' FROM root,LATERAL reader_payload_members(value->'bodyRosters') r)
-    ), needed_divisions AS MATERIALIZED (
-      SELECT value->>'ocdId' AS id FROM own_divisions UNION SELECT value->>'ocdId' FROM own_bodies
-      UNION SELECT jsonb_array_elements_text(coalesce(nullif(reader_payload_value(value->'alsoServesOcdIds'),'null'::jsonb),'[]'::jsonb)) FROM own_bodies
-    ), people AS MATERIALIZED (
-      SELECT reader_payload_node(h.item) AS value FROM (
-        SELECT payload->'roster' AS value FROM zip_people UNION ALL SELECT payload->'roster' FROM zip_official
-        UNION ALL SELECT payload->'roster' FROM zip_sources
-      ) roster,LATERAL reader_payload_members(roster.value->'officeholders') h
-      UNION ALL SELECT reader_payload_node(m.item) FROM root,LATERAL reader_payload_members(root.value->'bodyRosters') r,
-        LATERAL reader_payload_members(reader_payload_node(r.item)->'members') m
-      UNION ALL SELECT reader_payload_node(e.item)->'holder' FROM root,LATERAL reader_payload_members(root.value->'statewideExecutives') e
-    ), identities AS MATERIALIZED (
-      SELECT unnest(${peopleIdentityKeysSql("value")}) AS id FROM people
-      UNION SELECT reader_payload_node(i.item)->>'officeholderId' FROM zip_official o,LATERAL reader_payload_members(o.payload->'identities') i
-    ), candidacies AS MATERIALIZED (
-      SELECT c.ordinal_index,reader_payload_node(c.item) AS value FROM root,
-        LATERAL reader_payload_members(reader_payload_node(root.value->'officialCandidacies')->'rows') c
-      WHERE reader_payload_node(reader_payload_node(c.item)->'holder')->>'id' IN (SELECT id FROM identities)
-        OR reader_payload_value(reader_payload_node(reader_payload_node(c.item)->'holder')->'divisions') ?| ARRAY(SELECT id FROM selected_divisions)
-    ), photos AS MATERIALIZED (
-      SELECT p.ordinal_index,reader_payload_node(p.item) AS value FROM root,
-        LATERAL reader_payload_members(reader_payload_node(root.value->'officialPhotos')->'photos') p
-      WHERE reader_payload_node(p.item)->>'officeholderId' IN (SELECT id FROM identities UNION SELECT reader_payload_node(value->'holder')->>'id' FROM candidacies)
-        OR reader_payload_node(p.item)->>'personId' IN (SELECT id FROM identities)
-        OR reader_payload_node(p.item)->>'url' IN (SELECT r.value FROM jsonb_each_text(reader_payload_value(root.value->'rosterPhotos')) r)
-    ) SELECT ${selectedMetadataSql}, CASE WHEN published THEN
-      reader_payload_value(root.value-'registry'-'officialPhotos'-'officialCandidacies') || jsonb_build_object(
-        'officialPhotos',reader_payload_value(reader_payload_node(root.value->'officialPhotos')-'photos') || jsonb_build_object('photos',
-          coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM photos),'[]'::jsonb)),
-        'officialCandidacies',reader_payload_value(reader_payload_node(root.value->'officialCandidacies')-'rows') || jsonb_build_object('rows',
-          coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM candidacies),'[]'::jsonb)),
-        'registry',
-        reader_payload_value(registry.value-'divisions'-'bodies') || jsonb_build_object(
-          'divisions',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM divisions
-            WHERE value->>'ocdId' IN (SELECT id FROM needed_divisions)),'[]'::jsonb),
-          'bodies',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM own_bodies),'[]'::jsonb)))
-      END AS payload FROM pointer LEFT JOIN root ON true LEFT JOIN registry ON true`,
-    params:[`REGISTRY_RUNTIME_BINDING:${stateRegistryRuntimeScope(state)}`,divisions]};
-}
-
-/** The same county ordinal and numeric district encoding as nhReadModel. */
-function nhMemberDivisionSql(value: string, counties: string): string {
-  const number = `((${value}->>'district')::int)`;
-  return `CASE WHEN btrim(${value}->>'district') ~ '^[0-9]+$' AND ${number}>0 THEN
-    CASE WHEN ${value}->>'chamber'='S' THEN 'ocd-division/country:us/state:nh/sldu:'||${number}::text
-      WHEN array_position(${counties}::text[],btrim(${value}->>'county')) IS NOT NULL THEN 'ocd-division/country:us/state:nh/sldl:'||
-        (((array_position(${counties}::text[],btrim(${value}->>'county'))-1)::text||
-          CASE WHEN ${number}<10 THEN '0'||${number}::text ELSE ${number}::text END)::int)::text END END`;
-}
-
-/** ZIP readers retain the official members attached to their divisions, with every source field. */
-function zipOfficialStatement(state: string, divisions: readonly string[]) {
-  return {text:`WITH RECURSIVE selected_divisions AS MATERIALIZED (${selectedDivisionsSql}),
-    pointer AS MATERIALIZED (${selectedPointerSql}),
-    root AS MATERIALIZED (SELECT reader_payload_node(payload) AS value FROM pointer WHERE published),
-    roster AS MATERIALIZED (SELECT reader_payload_node(value->'roster') AS value FROM root),
-    links AS MATERIALIZED (SELECT d.ordinal_index,reader_payload_node(d.item) AS value FROM roster,LATERAL reader_payload_members(value->'divisions') d),
-    all_people AS MATERIALIZED (SELECT h.ordinal_index,header.value,${peopleIdentityKeysSql("header.value")} AS identities,
-      regexp_replace(lower(normalize(reader_payload_value(header.value->'name')#>>'{}',NFKD)),'[^a-z0-9]','','g') AS name
-      FROM roster,LATERAL reader_payload_members(value->'officeholders') h,LATERAL (SELECT reader_payload_node(h.item) AS value) header),
-    labels AS MATERIALIZED (SELECT ordinal_index,'identity:'||unnest(identities) AS label FROM all_people
-      UNION ALL SELECT ordinal_index,'name:'||name FROM all_people),
-    selected(ordinal_index) AS (SELECT ordinal_index FROM all_people WHERE value->>'id' IN
-      (SELECT value->>'officeholderId' FROM links WHERE value->>'ocdId' IN (SELECT id FROM selected_divisions))
-      UNION SELECT next.ordinal_index FROM selected s JOIN labels prior USING(ordinal_index)
-        JOIN labels next ON next.label=prior.label),
-    people AS MATERIALIZED (SELECT p.* FROM all_people p JOIN selected s USING(ordinal_index)),
-    all_members AS MATERIALIZED (SELECT m.ordinal_index,reader_payload_node(m.item) AS value,
-      regexp_replace(lower(normalize(concat_ws(' ',reader_payload_node(m.item)->>'givenName',nullif(reader_payload_node(m.item)->>'middleName',''),reader_payload_node(m.item)->>'familyName'),NFKD)),'[^a-z0-9]','','g') AS name
-      FROM root,LATERAL reader_payload_members(root.value->'members') m),
-    members AS MATERIALIZED (SELECT * FROM all_members WHERE name IN (SELECT name FROM all_members WHERE ${nhMemberDivisionSql("value","$3")} IN (SELECT id FROM selected_divisions))),
-    identities AS MATERIALIZED (SELECT i.ordinal_index,reader_payload_node(i.item) AS value FROM root,LATERAL reader_payload_members(root.value->'identities') i
-      WHERE EXISTS (SELECT 1 FROM members m WHERE m.value->>'chamber'=reader_payload_node(i.item)->>'chamber'
-        AND m.value->>'seatNo'=reader_payload_node(i.item)->>'seatNo' AND m.value->>'district'=reader_payload_node(i.item)->>'district'))
-    SELECT ${selectedMetadataSql}, CASE WHEN published THEN CASE WHEN root.value ? 'members' THEN
-      reader_payload_value(root.value-'members'-'identities') || jsonb_build_object(
-        'members',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM members),'[]'::jsonb),
-        'identities',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM identities),'[]'::jsonb))
-    ELSE reader_payload_value(root.value-'roster') || jsonb_build_object('roster',
-      reader_payload_value(roster.value-'officeholders'-'divisions'-'unmatched') || jsonb_build_object(
-        'officeholders',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM people),'[]'::jsonb),
-        'divisions',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM links WHERE value->>'officeholderId' IN (SELECT value->>'id' FROM people)),'[]'::jsonb),
-        'unmatched',coalesce((SELECT jsonb_agg(reader_payload_value(u.item) ORDER BY u.ordinal_index) FROM reader_payload_members(roster.value->'unmatched') u
-          WHERE reader_payload_node(u.item)->>'officeholderId' IN (SELECT value->>'id' FROM people)),'[]'::jsonb))) END
-    END AS payload FROM pointer LEFT JOIN root ON true LEFT JOIN roster ON true`,
-    params:[`STATE_LEGISLATOR:US-${requireRegistryState(state)}`,divisions,Object.keys(NH_COUNTY)]};
-}
-
-/** Keep exact aliases and every same-name candidate before the ordinary identity merge. */
-function zipPeopleStatement(state: string, divisions: readonly string[]) {
-  const stateCode = requireRegistryState(state);
-  return {text:`WITH RECURSIVE selected_divisions AS MATERIALIZED (${selectedDivisionsSql}), official_root AS MATERIALIZED (
-    SELECT reader_payload_node(payload) AS value FROM zip_official WHERE published
-  ), official_roster AS MATERIALIZED (
-    SELECT reader_payload_node(value->'roster') AS value FROM official_root
-  ), official_people AS MATERIALIZED (
-    SELECT reader_payload_node(h.item) AS value FROM official_roster,LATERAL reader_payload_members(value->'officeholders') h
-    UNION ALL SELECT jsonb_build_object('id',i.value->>'officeholderId','personId',i.value->>'officeholderId',
-      'name',concat_ws(' ',nullif(m.value->>'givenName',''),nullif(m.value->>'middleName',''),nullif(m.value->>'familyName','')),
-      'nativeIds',jsonb_build_object('nh-general-court',jsonb_build_array(i.value->>'officialPersonId')))
-    FROM official_root,LATERAL reader_payload_members(official_root.value->'members') member,
-      LATERAL (SELECT reader_payload_node(member.item) AS value) m,
-      LATERAL reader_payload_members(official_root.value->'identities') identity,
-      LATERAL (SELECT reader_payload_node(identity.item) AS value) i
-    WHERE m.value->>'chamber'=i.value->>'chamber' AND m.value->>'seatNo'=i.value->>'seatNo' AND m.value->>'district'=i.value->>'district'
-  ), seed_ids AS MATERIALIZED (SELECT id FROM selected_divisions UNION SELECT unnest(${peopleIdentityKeysSql("value")}) FROM official_people
-  ), seed_names AS MATERIALIZED (
-    SELECT regexp_replace(lower(normalize(reader_payload_value(value->'name')#>>'{}',NFKD)),'[^a-z0-9]','','g') AS name FROM official_people
-  ), pointer AS MATERIALIZED (${selectedPointerSql}), root AS MATERIALIZED (
-    SELECT reader_payload_node(payload) AS value FROM pointer WHERE published
-  ), roster AS MATERIALIZED (
-    SELECT reader_payload_node(value->'roster') AS value FROM root
-  ), links AS MATERIALIZED (
-    SELECT d.ordinal_index,reader_payload_node(d.item) AS value FROM roster,LATERAL reader_payload_members(value->'divisions') d
-  ), people AS MATERIALIZED (
-    SELECT h.ordinal_index,header.value,
-      ${peopleIdentityKeysSql("header.value")} AS identities,
-      regexp_replace(lower(normalize(reader_payload_value(header.value->'name')#>>'{}',NFKD)),'[^a-z0-9]','','g') AS name
-    FROM roster,LATERAL reader_payload_members(value->'officeholders') h,
-      LATERAL (SELECT reader_payload_node(h.item) AS value) header
-  ), labels AS MATERIALIZED (
-    SELECT ordinal_index,'identity:'||unnest(identities) AS label FROM people
-    UNION ALL SELECT ordinal_index,'name:'||name FROM people
-  ), selected(ordinal_index) AS (
-    SELECT ordinal_index FROM people WHERE identities && ARRAY(SELECT id FROM seed_ids) OR name IN (SELECT name FROM seed_names)
-      OR value->>'id' IN (SELECT value->>'officeholderId' FROM links WHERE value->>'ocdId' IN (SELECT id FROM selected_divisions))
-    UNION
-    SELECT next.ordinal_index FROM selected s JOIN labels prior ON prior.ordinal_index=s.ordinal_index
-      JOIN labels next ON next.label=prior.label
-  ), chosen AS MATERIALIZED (
-    SELECT p.* FROM people p JOIN selected s USING(ordinal_index)
-  ) SELECT ${selectedMetadataSql},
-    CASE WHEN published THEN reader_payload_value(root.value-'roster') || jsonb_build_object('roster',
-      reader_payload_value(roster.value-'officeholders'-'divisions'-'unmatched'-'endedMemberships') || jsonb_build_object(
-        'officeholders',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM chosen),'[]'::jsonb),
-        'divisions',coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM links
-          WHERE value->>'officeholderId' IN (SELECT value->>'id' FROM chosen)),'[]'::jsonb),
-        'endedMemberships',coalesce((SELECT jsonb_agg(reader_payload_value(e.item) ORDER BY e.ordinal_index) FROM reader_payload_members(roster.value->'endedMemberships') e
-          WHERE reader_payload_node(e.item)->>'personId' IS NULL
-            OR reader_payload_node(e.item)->>'personId' IN (SELECT unnest(identities) FROM chosen)
-            OR reader_payload_node(e.item)->>'divisionId' IN (SELECT id FROM selected_divisions)),'[]'::jsonb),
-        'unmatched',coalesce((SELECT jsonb_agg(reader_payload_value(u.item) ORDER BY u.ordinal_index) FROM reader_payload_members(roster.value->'unmatched') u
-          WHERE reader_payload_node(u.item)->>'officeholderId' IN (SELECT value->>'id' FROM chosen)),'[]'::jsonb)))
-    END AS payload FROM pointer LEFT JOIN root ON true LEFT JOIN roster ON true`,
-    params:[`STATE_LEGISLATOR:US-${stateCode}:openstates-people:v1`,divisions]};
+/** Geography and selected authorities were composed by the place builder. */
+export function statePackageStatement(state:string,divisions:readonly string[]=[],zip?:string) {
+  void divisions;
+  const pageId=zip?`zip:${zip}`:statePageId(state);
+  const source=(key:string)=>`page.context->'authorities'->'${key.replaceAll("'","''")}'`;
+  const rows=(keys:readonly string[])=>`coalesce((SELECT jsonb_agg(value) FROM jsonb_each(page.context->'authorities') WHERE key=ANY(ARRAY[${keys.map(key=>`'${key.replaceAll("'","''")}'`).join(',')}]::text[])),'[]'::jsonb)`;
+  return {pageId,canonicalKeys:true as const,params:[pageId],text:`SELECT
+    page.context->'authorityGeography'->>'version_id' AS version_id,
+    coalesce(page.context->'authorityGeography'->'geography','[]'::jsonb) AS geography,
+    coalesce(page.context->'authorityGeography'->'local_divisions','[]'::jsonb) AS local_divisions,
+    page.context->'authorityGeography'->'member_offices' AS member_offices,
+    ARRAY(SELECT jsonb_array_elements_text(coalesce(page.context->'authorityGeography'->'canonical_keys','[]'::jsonb))) AS canonical_keys,
+    ${source(`STATE_LEGISLATOR:US-${state}:openstates-people:v1`)} AS zip_people,
+    ${source(`REGISTRY_RUNTIME_BINDING:${stateRegistryRuntimeScope(state)}`)} AS zip_registry,
+    ${source(`STATE_LEGISLATOR:US-${state}`)} AS zip_official,
+    ${rows(zipSourcePointers(state).map(row=>`${row.recordClass}:${row.scope}`))} AS zip_sources,
+    ${rows(memberContextPointers.map(row=>`${row.recordClass}:${row.scope}`))} AS zip_context,
+    ${source(`BALLOT_CANDIDACY:${stateBallotScope('ballot-contests',state)}`)} AS zip_ballot
+    FROM place_page page WHERE page.place_id=$1`};
 }
 
 export function zipPeopleEntry(state: string, row: Record<string, unknown> | null | undefined): PromotedEdgeEntry {

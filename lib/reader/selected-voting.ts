@@ -7,7 +7,7 @@ import { CivicPayloadParts } from "../civic-data/payload-parts.ts";
  * Unscoped and subdivision holdings remain available to the existing exact matcher. */
 export function selectedVotingStatement(state: string, place: VotingReaderPlace) {
   return {params:[`VOTING_SITE:${stateBallotScope("voting-sites",state)}`,place.countyFips],text:`WITH RECURSIVE pointer AS MATERIALIZED (
-    ${selectedPointerSql}
+    ${selectedPointerSql()}
   ), root AS MATERIALIZED (SELECT reader_payload_node(payload) AS value FROM pointer WHERE published),
   jurisdictions AS MATERIALIZED (
     SELECT j.ordinal_index,reader_payload_node(j.item) AS value FROM root,LATERAL reader_payload_members(root.value->'jurisdictions') j

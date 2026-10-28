@@ -24,6 +24,7 @@ interface DivisionReaders {
   statePeople(scope: StatePeopleJurisdiction): Promise<ReturnType<typeof heldOfficialStateLegislatorsFromRead> | null>;
   federal(): Promise<OfficeholderIndex>;
   registry(): Promise<void>;
+  local?():Promise<SeatHolder[]>;
 }
 
 /** Read independent authorities for this exact division, retaining each current membership and official precedence. */
@@ -42,7 +43,8 @@ export async function readDivisionRepresentatives(ocdId: string, readers: Divisi
   if (federalDirectoryAppliesToDivision(ocdId)) reads.push({ official: false,
     read: readers.federal().then(officials => holdersFor(officials, ocdId)) });
   if (stateOcdIdFrom(ocdId) === ocdId || !/\/(?:sld[lu]|cd):[^/]+$/.test(ocdId) && !federalDirectoryAppliesToDivision(ocdId)) {
-    reads.push({ official: true, read: readers.registry().then(() => heldDivisionRepresentatives(ocdId)) });
+    reads.push({ official: true, read:readers.local&&!federalDirectoryAppliesToDivision(ocdId)?readers.local()
+      :readers.registry().then(() => heldDivisionRepresentatives(ocdId)) });
   }
   const settled = await Promise.allSettled(reads.map(row => row.read));
   const primary = settled.flatMap((read, index) => read.status === "fulfilled" && reads[index].official ? read.value : []);

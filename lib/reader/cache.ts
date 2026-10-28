@@ -51,9 +51,9 @@ export const UNBUILT_ZIP_PRIORITY = 1_000_000_000;
 
 /** Publication data read by the place builder; other families refresh their own endpoints. */
 export function placePageConsumesPublication(scope: string, recordClass?: string): boolean {
-  return recordClass === "REGISTRATION" || recordClass === "REGISTRY_RUNTIME_BINDING" || recordClass === "MEETING"
-    || recordClass === "DOTGOV_REFERENCE" || recordClass === "CURATED_READER_RECORD"
-      && scope === requiredManualProductionContract("everyday-routing").scope;
+  void scope;
+  return ["REGISTRATION","REGISTRY_RUNTIME_BINDING","MEETING","DOTGOV_REFERENCE","CURATED_READER_RECORD",
+    "STATE_LEGISLATOR","FEDERAL_DIRECTORY","CENSUS_GEOGRAPHY","CANDIDATE_PROFILE","BALLOT_CANDIDACY","VOTING_SITE"].includes(recordClass??'');
 }
 
 export function readerCacheTags(scope: ReaderCacheScope): string[] {

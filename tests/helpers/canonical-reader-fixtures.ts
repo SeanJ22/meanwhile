@@ -24,7 +24,7 @@ import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../../lib/routing/everyday-data-plane.ts";
 import { PLACE_PAGES_SQL, READY_PLACE_SQL } from "../../lib/reader/place.ts";
 import { composePlaceRow } from "../../lib/reader/place-decode.ts";
-import { placeBuildInput } from "../../lib/reader/place-builder.ts";
+import { placeBuildInput,buildCanonicalStatement,buildStatePackageStatement } from "../../lib/reader/place-builder.ts";
 import { fixturePostalArea } from "./zip-location.ts";
 import type { PlaceInput } from "../../lib/reader/place-types.ts";
 
@@ -285,6 +285,16 @@ export function activateCanonicalFixture(key: string): void {
   };
 
   installFactReader(readFacts);
-  installReaderDatabaseQuery(async statements => Promise.all(statements.map(statement =>
-    canonicalRows(statement.text, statement.params) ?? readFacts(statement.text, statement.params))));
+  installReaderDatabaseQuery(async statements => Promise.all(statements.map(async statement => {
+    if(statement.text.includes("'missing-page'")) {
+      const requested=JSON.parse(String(statement.params[0])) as {key:string;page_id:string}[];
+      const pageId=String(statement.params[1]??'');
+      const state=/REGISTRY_RUNTIME_BINDING:US-([A-Z]{2}):/.exec(statement.text)?.[1];
+      const zip=pageId.startsWith('zip:')?pageId.slice(4):undefined;
+      const selected=zip&&state?await placeBuildInput(pageId,'place',state):undefined;
+      const prepared=buildCanonicalStatement(requested.map(row=>row.key),state?buildStatePackageStatement(state,selected?.divisionIds??[],zip):undefined);
+      return canonicalRows(prepared.text,prepared.params)??[];
+    }
+    return canonicalRows(statement.text,statement.params)??readFacts(statement.text,statement.params);
+  })));
 }

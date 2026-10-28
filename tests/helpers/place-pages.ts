@@ -25,6 +25,6 @@ export async function seedPlacePages(query: Query, input: PlaceInput): Promise<v
     await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context) VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb)
       ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,body=excluded.body,
         history_body=excluded.history_body,context=excluded.context`, [id, JSON.stringify(packReadyPlace(readyCurrent,territory)), JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),
-      JSON.stringify(id.startsWith("zip:") ? { formatVersion: context.formatVersion } : packPlaceContext(context))]);
+      JSON.stringify(id.startsWith("zip:") ? { formatVersion: context.formatVersion,readerFormat:1 } : {...packPlaceContext(context),readerFormat:1})]);
   }
 }

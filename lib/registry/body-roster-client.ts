@@ -41,3 +41,8 @@ export function projectedRosterGapsForDivision(
     .filter((body) => governingBodyForDivision(body, ocdId))
     .flatMap((body) => [...projectedBodyRoster(body).gaps]);
 }
+
+/** People named in the unopened list; complete body membership loads on its own key. */
+export function projectedRosterPreview(body:Pick<CoveredBody,'readerRoster'|'readerRosterPreview'>):readonly SeatHolder[] {
+  return body.readerRosterPreview??body.readerRoster?.members??[];
+}

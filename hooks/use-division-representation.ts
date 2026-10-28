@@ -37,7 +37,8 @@ export function useDivisionsRepresentation(
   ocdIds: readonly string[],
 ): Record<string, DivisionRepresentation> {
   const ids = [...new Set(ocdIds)];
-  const cached = new Map(ids.map(id => [id, getCachedStateDivision(id)]));
+  const cached = new Map(ids.map(id => [id,coverage?.bodies.some(body=>body.rosterRef&&!body.readerRoster&&
+    (body.bodyId===`${id}#governing`||body.bodyId===`${id}#board`))?undefined:getCachedStateDivision(id)]));
   const vacancies = new Map(ids.map(id => [id, cached.get(id)?.vacancy ?? coverage?.seats.find(seat => seat.ocdId === id)?.vacancy]));
   const local = new Map(ids.map(id => {
     const holders = representationForDivision(coverage, id);

@@ -178,7 +178,7 @@ if (process.argv[1]?.endsWith("rb-a3-reader-sample.mts")) {
     delegationCache.set(key, undefined);
   };
   const states = process.argv[3] ? [process.argv[3]] : Object.values(FIPS_TO_STATE).map(s => s.postal).sort();
-  const published = selectedPointerSql.replace("WHERE p.key=$1", "WHERE p.record_class=$1 AND (p.scope ~* $2 OR reader_payload_node(p.payload)->>'state'=$3)");
+  const published = selectedPointerSql().replace("WHERE p.key=$1", "WHERE p.record_class=$1 AND (p.scope ~* $2 OR reader_payload_node(p.payload)->>'state'=$3)");
   for (const state of states) {
     if (!/^[A-Z]{2}$/.test(state)) throw Error("Invalid state");
     const values: ReaderSampleValue[] = [], inventory: Row[] = [], seen = new Set<string>(), buckets: ReaderSampleValue[][] = [];

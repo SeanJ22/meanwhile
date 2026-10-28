@@ -181,9 +181,12 @@ export interface CoveredBody {
    * boundary. Client components consume these bytes; they never import the
    * canonical roster/runtime graph to reconstruct them in the browser.
    *
-   * Optional only for pure historical fixtures that construct CoveredBody by
-   * hand. `coverageAt` always supplies the projection for production reads.
+   * List answers carry rosterRef instead. The full projection arrives when a body opens.
    */
+  rosterRef?: string;
+  /** Only the people the unopened list names; never a complete membership projection. */
+  readerRosterPreview?: SeatHolder[];
+  readerRosterIds?:readonly string[];
   readerRoster?: {
     members: SeatHolder[];
     earlierMembers?: SeatHolder[];

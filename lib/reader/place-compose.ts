@@ -125,6 +125,11 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
   const last = latest(active)!;
   const allDivisions = unique(pages.flatMap(page => records(page.row.divisions)), row => String(row.ocdId));
   return {
+    ...(ordered.some(page=>page.row.roster_refs)?{
+      roster_refs:Object.assign({},...ordered.map(page=>record(page.row.roster_refs))),
+      roster_previews:Object.assign({},...ordered.map(page=>record(page.row.roster_previews))),
+      roster_ids:Object.assign({},...ordered.map(page=>record(page.row.roster_ids))),
+    }:{}),
     division_ids: [...new Set([...input.divisionIds, ...(input.neighbors ? active.flatMap(page => strings(page.row.division_ids)) : [])])],
     registry,
     everyday_routing: input.bodyFactsOnly || agendaOnly ? null : last.row.everyday_routing ?? null,

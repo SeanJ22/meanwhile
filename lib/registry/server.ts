@@ -1,6 +1,8 @@
 import { readPointPlace, readZipDivisions } from "../place-map/reader.ts";
 import { readStatePackage } from "../reader/state.ts";
 import { readPlacePackage } from "../reader/place.ts";
+import {readSavedBodyRoster} from "../reader/body-roster.ts";
+import {factReader} from "../facts/db.ts";
 import { stateCoverage, withPlaceRegistry } from "../reader/coverage.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "../reader/location.ts";
 import { sha256OfJson } from "../meetings/edge-artifacts.ts";
@@ -21,7 +23,7 @@ import { statewideExecutivesFor } from "../officials/statewide-executives.ts";
 import { earlierRosterHoldersForBody, rosterHolderById, rosterHoldersForBody } from "./body-rosters.ts";
 import { currentBodyRosters, currentRosterMemberReaderDisposition, currentStatewideExecutives } from "./runtime-read-model.ts";
 import { scopedHolders } from "../officials/scoped-holders.ts";
-import { readDivisionRepresentatives } from "./representation-server.ts";
+import { readDivisionRepresentatives,heldDivisionRepresentatives } from "./representation-server.ts";
 export { federalDirectoryAppliesToDivision } from "./representation-server.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { federalDirectoryReadState, getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
@@ -537,6 +539,16 @@ export async function seatHoldersForDivision(
       return indexByDivision([getFederalOfficeholderSet()], suppliedOfficialPhotos());
     },
     registry: () => settleRegistryRuntimeRead(statesForRegistryDivisions([ocdId])),
+    ...(!currentReaderAuthorityEdge()?{local:async()=>{
+      const query=factReader();
+      if(!query)throw new Error('FACT_STORE_DATABASE_URL_MISSING');
+      for(const id of [`${ocdId}#governing`,`${ocdId}#board`]){
+        const saved=await readSavedBodyRoster(query,id);
+        if(saved?.roster.members.length)return [...saved.roster.members];
+      }
+      await settleRegistryRuntimeRead(statesForRegistryDivisions([ocdId]));
+      return heldDivisionRepresentatives(ocdId);
+    }}:{}),
   });
 }
 
@@ -667,7 +679,7 @@ export async function coverageAt(
   ]);
   const meetings = heldMeetings.length ? heldMeetings : place.meetings;
   const local = place.registry ? withPlaceRegistry(bundle, place.registry) : bundle;
-  const coverage = stateCoverage(local, ids, lat, lng, meetings, place.bodies, [...place.divisions, ...resolvedDivisions ?? []], territory, meetingCount);
+  const coverage = stateCoverage({...local,rosterRefs:place.rosterRefs,rosterPreviews:place.rosterPreviews,rosterIds:place.rosterIds}, ids, lat, lng, meetings, place.bodies, [...place.divisions, ...resolvedDivisions ?? []], territory, meetingCount);
   return { ...coverage, governments: bindGovernmentBodies(place.governments, local.registry.registry.bodies),
     governmentInventoryUnavailableStates: place.registrationHeld ? [] : [state] };
 }

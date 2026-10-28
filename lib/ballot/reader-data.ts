@@ -121,7 +121,7 @@ export function ballotCandidateDetailsStatement(state: string, keys: readonly st
     FROM (SELECT reader_payload_node(${value}) AS value) object,
       (SELECT DISTINCT unnest($2::text[]) AS key) r WHERE object.value ? r.key), '{}'::jsonb)`;
   return {pointers,params:[pointers.map(pointer=>`${pointer.recordClass}:${pointer.scope}`),keys],text:`WITH pointer AS MATERIALIZED (
-    ${selectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')}
+    ${selectedPointerSql().replace('p.key=$1','p.key=ANY($1::text[])')}
   ), roots AS MATERIALIZED (SELECT key,reader_payload_node(payload) AS value FROM pointer WHERE published)
   SELECT ${selectedMetadataSql}, CASE WHEN published THEN CASE pointer.record_class
     WHEN 'CANDIDATE_PROFILE' THEN reader_payload_value(roots.value-'cards'-'links') || jsonb_build_object(

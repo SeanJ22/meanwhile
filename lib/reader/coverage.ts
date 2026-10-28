@@ -27,7 +27,7 @@ export function withPlaceRegistry<T extends { readonly registry: RegistryRuntime
     bodyRosters: place.bodyRosters, rosterReaderDispositions: place.rosterReaderDispositions } };
 }
 
-type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
+type CoverageState = {rosterRefs?:import("./body-roster.ts").ReaderRosterRefs;rosterPreviews?:import("./body-roster.ts").ReaderRosterPreviews;rosterIds?:import("./body-roster.ts").ReaderRosterIds} & Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
   "people" | "peopleRead" | "candidateProfilesRead" | "candidatePortraitsRead" | "ballotRead" | "legislativePeople" | "federal" | "federalRead" | "stateLegislatorAuthority">>;
 type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: CoverageState["federal"]; people: CoverageState["legislativePeople"]; version: string; officials: ReturnType<typeof indexByDivision> };
 const heldOfficials = serverReaderValue("state-official-index", () => new WeakMap<object, Officials>());
@@ -120,8 +120,11 @@ export function stateCoverage(
         return { ...body, ...(fact?.recipientIds?.length ? { recipientIds: fact.recipientIds,
           recipientNames: fact.recipientNames, recipientState: fact.recipientState,
           ...(fact.moneyDivisionId ? { moneyDivisionId: fact.moneyDivisionId } : {}) } : {}),
-          readerRoster: { members: membersOfBody(body.bodyId).members, ...(earlierMembers.length ? { earlierMembers } : {}),
-            gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };
+          ...(state.rosterPreviews?.[body.bodyId]?.length?{readerRosterPreview:state.rosterPreviews[body.bodyId]}:{}),
+          ...(state.rosterIds?.[body.bodyId]?{readerRosterIds:state.rosterIds[body.bodyId]}:{}),
+          ...(state.rosterRefs?(state.rosterRefs[body.bodyId]?{rosterRef:state.rosterRefs[body.bodyId]}:{})
+            :{readerRoster:{members:membersOfBody(body.bodyId).members,...(earlierMembers.length?{earlierMembers}:{}),
+              gaps:gap?[gap]:[],officePhone:officePhoneForBody(body.bodyId)}}) };
       }),
     };
   }))));

@@ -43,10 +43,14 @@ export function packPlaceContext(context: Row): Row {
   for(const key of ["current","history","emptyCurrent","emptyHistory"]) {
     const full=context[key] as Row|undefined;
     if(!full)continue;
-    const brief={...full,agenda_texts:[],archived_documents:[],archived_document_links:[],
+    const runtime=full.registry as PlacePackage['registry'];
+    const brief={...full,rosters:full.roster_refs?[]:full.rosters,
+      registry:full.roster_refs&&runtime?{...runtime,bodyRosters:runtime.bodyRosters.map(roster=>({...roster,members:[],membershipHistory:[]})),
+        rosterReaderDispositions:[],rosterPhotos:{},officialPhotos:{photos:[]},officialCandidacies:{...runtime.officialCandidacies,rows:[]}}:runtime,
+      agenda_texts:[],archived_documents:[],archived_document_links:[],
       meeting_rows:(full.meeting_rows as Row[]).map(partition=>({...partition,
         payload:{...partition.payload as Row,agendaDocuments:[],agendaDocumentLinks:[]}}))};
-    const facts={...brief,registry:null,everyday_routing:null,governments:[],divisions:[],registration_held:false};
+    const facts={...brief,rosters:full.rosters,registry:null,everyday_routing:null,governments:[],divisions:[],registration_held:false};
     packed[key]={full:pack(full),brief:pack(brief),facts:pack(facts)};
   }
   return packed;

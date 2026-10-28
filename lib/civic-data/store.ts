@@ -3280,7 +3280,7 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
       throw error;
     }
     if (eventRows[0]) {
-      if (input.recordClass === "MEETING") await enqueueReaderPlaces(readerCacheScopeForPublication(input.scope, { recordClass: input.recordClass }),
+      if (placePageConsumesPublication(input.scope,input.recordClass)) await enqueueReaderPlaces(readerCacheScopeForPublication(input.scope, { recordClass: input.recordClass }),
         (text, params) => this.readerRows(text, params));
       return { kind: "CONFIRMED", versionId: id, at };
     }

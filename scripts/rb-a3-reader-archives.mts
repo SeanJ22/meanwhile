@@ -19,7 +19,7 @@ if (connection.role !== "readonly" || connection.read_only !== "on") throw Error
 const held = JSON.parse(readFileSync(resolve(directory, "held-api-doors.json"), "utf8"));
 const meetingSources = JSON.parse(readFileSync(resolve(directory, "meeting-source-hosts.json"), "utf8"));
 const tenants = JSON.parse(readFileSync(resolve(directory, "legistar-tenants.json"), "utf8"));
-const pointerSql = selectedPointerSql.replace("WHERE p.key=$1", "WHERE p.record_class='MEETING' AND p.scope ~* $1");
+const pointerSql = selectedPointerSql().replace("WHERE p.key=$1", "WHERE p.record_class='MEETING' AND p.scope ~* $1");
 const at = (record: Record<string, unknown>, path: string): unknown => path.split(".").reduce<unknown>((value, key) =>
   value && typeof value === "object" ? (value as Record<string, unknown>)[key] : undefined, record);
 mkdirSync(resolve(directory, "pre-archives"), { recursive: true, mode: 0o700 });

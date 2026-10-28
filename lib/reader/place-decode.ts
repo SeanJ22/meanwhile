@@ -183,7 +183,8 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     return [body.id,{...snapshot,generatedAt:sources.map(s => s.generatedAt).sort().at(-1) ?? snapshot.generatedAt,meetings,
       counts:snapshotCounts(meetings,accounting.freshCollapsed),sources:[...accounting.sources],agendaDocuments:snapshot.agendaDocuments.filter(d => ids.has(d.meetingId))}];
   }));
-  return { registry,everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
+  return { registry,...(row.roster_refs?{rosterRefs:row.roster_refs as PlacePackage['rosterRefs'],rosterPreviews:row.roster_previews as PlacePackage['rosterPreviews'],rosterIds:row.roster_ids as PlacePackage['rosterIds']}:{}),
+    everydayRouting:row.everyday_routing as EverydayRoutingProjection | null ?? null,
     publicationAttempts:((row.publication_attempts ?? []) as (Omit<PublicBodyAttempt,"family"> & {contractId?:string})[])
       .map(({contractId,...attempt}) => ({...attempt,family:attemptFamilyOf(contractId)})),
     bodies,meetings: overlaid,snapshot,snapshotHeldAt,bodySnapshots,

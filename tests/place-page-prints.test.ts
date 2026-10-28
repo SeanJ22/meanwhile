@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
-import { buildPageBody, PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
+import { buildPageBody, PLACE_PACKAGE_SQL, rebuildPlacePages,storePlacePage } from "../lib/reader/place-builder.ts";
 import { packPlaceContext, packReadyPlace, unpackPlaceContextRow, unpackReadyPlace } from "../lib/reader/place-ready.ts";
 import { meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
@@ -123,7 +123,8 @@ const factDb = (pg: Awaited<ReturnType<typeof fixture>>["pg"], into: Meter): Fac
 async function stored(query: Query) {
   const rows = await query("SELECT place_id,body,history_body,context FROM place_page ORDER BY place_id");
   return new Map(rows.map(row => {
-    const { prints, ...context } = row.context as Record<string, unknown>;
+    const raw = row.context as Record<string,unknown>,prints=raw.prints;
+    const context=Object.fromEntries(Object.entries(raw).filter(([key])=>['formatVersion','current','history','emptyCurrent','emptyHistory'].includes(key)));
     return [String(row.place_id), { body: unpackReadyPlace(row.body), history: unpackReadyPlace(row.history_body), prints,
       context: Object.fromEntries(Object.entries(context).map(([key, value]) => [key, key === "formatVersion" ? value
         : Object.fromEntries(Object.entries(value as Record<string, unknown>).map(([shape, packed]) => [shape, unpackPlaceContextRow(packed)]))])) }];
@@ -147,7 +148,7 @@ test("a rebuild reads only what changed for its place and stores the same pages 
     assert.deepEqual(await turn(pg, first), { rebuilt: PLACES, failed: 0, remaining: 0 });
     const built = await stored(query);
     const town = built.get(place(3))!;
-    assert.ok(town.body.meetings.length > 0 && town.body.bodies.some(body => body.roster?.members.length === 7), "the fixture page has sittings and officials");
+    assert.ok(town.body.meetings.length > 0 && Object.values(town.body.rosterIds??{}).some(ids=>ids.length>=7), "the fixture page has sittings and keyed officials");
     assert.ok(town.body.registry?.registry.bodies.some(body => body.id === council(3)) && town.body.governments.length === 1 && town.body.divisions.length,
       "the fixture page has registry bodies, a registered government and divisions");
     assert.ok(town.history.meetings.some(meeting => Date.parse(meeting.startsAt) < Date.now() - 300 * DAY), "the history page keeps archived sittings");
@@ -195,7 +196,10 @@ test("a rebuild reads only what changed for its place and stores the same pages 
     }
     assert.deepEqual(full.get(place(3))!.body.everydayRouting, routing("second"));
     assert.ok(full.get(place(3))!.body.meetings.some(meeting => meeting.title.startsWith("moved")));
-    assert.equal(full.get(place(3))!.body.bodies.find(body => body.id === council(3))!.roster!.members
+    const bodyPage=await buildPageBody(council(3),'body','AZ',query);
+    await storePlacePage(query,council(3),bodyPage);
+    const [savedRoster]=await query("SELECT context->'bodyRoster' AS roster FROM place_page WHERE place_id=$1",[council(3)]);
+    assert.equal((savedRoster.roster as {members:{personId?:string;phone?:string}[]}).members
       .find(member => member.personId === `person:${council(3)}:1`)?.phone, "520-555-0199");
     assert.deepEqual(full.get(place(2))!.body.meetings, built.get(place(2))!.body.meetings, "another town's calendar is untouched");
 

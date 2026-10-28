@@ -100,14 +100,14 @@ export async function rebuildCandidateChanges(vault:EvidenceStore,stored:unknown
 }
 
 /** A selected source-evidence field can be rebuilt without selecting its candidate envelope. */
-export async function readCivicCandidatePath(query:Query,vault:EvidenceStore,id:string,path:readonly string[]):Promise<unknown>{
+export async function readCivicCandidatePath(query:Query,vault:EvidenceStore|(()=>EvidenceStore),id:string,path:readonly string[]):Promise<unknown>{
   if(!path.length)throw new Error("CIVIC_CANDIDATE_PATH_REQUIRED");
   if(path[0]==="readModel")return readCivicVersionPath(query,vault,id,path.slice(1));
   const [header]=await query("SELECT candidate->'vault' AS vault FROM civic_data_candidates WHERE id=$1",[id]);
   if(!header)return null;
   const format=candidateVaultFormat(header);
   if(format){
-    const reader=civicVersionVault(vault);
+    const reader=civicVersionVault(typeof vault === "function" ? vault() : vault);
     if(path[0]==="normalizedPayload")return format.normalizedPayload?reader.path(format.normalizedPayload,path.slice(1)):null;
     if(path[0]==="excludedFacts")return format.excludedFacts?reader.path(format.excludedFacts.version,[...format.excludedFacts.path,...path.slice(1)]):[];
     if(path[0]==="civicRecords"){

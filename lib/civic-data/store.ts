@@ -2608,10 +2608,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readDerivedInputHeads(ids:readonly string[]):Promise<readonly DerivedInputHead[]>{
-    return readDerivedInputHeads((text,params)=>this.readerRows(text,params),ids);
+    const vault=this.cacheOptions.vault??(await import("./raw-capture-remote.ts")).rawCaptureVault;
+    return readDerivedInputHeads((text,params)=>this.readerRows(text,params),ids,vault);
   }
   async readDerivedWiringRows(id:string,keys:readonly string[]):Promise<readonly DerivedWiringRow[]>{
-    return readDerivedWiringRows((text,params)=>this.readerRows(text,params),id,keys);
+    const vault=this.cacheOptions.vault??(await import("./raw-capture-remote.ts")).rawCaptureVault;
+    return readDerivedWiringRows((text,params)=>this.readerRows(text,params),id,keys,vault);
   }
 
   async readCandidate(candidateId: string): Promise<CandidateVersionRecord | null> {
@@ -2812,7 +2814,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readFederalMoneyPriorPlaces(candidateId:string):Promise<readonly string[]> {
-    return readFederalMoneyPriorPlaces((text,params)=>this.readerRows(text,params),candidateId);
+    const vault=this.cacheOptions.vault??(await import("./raw-capture-remote.ts")).rawCaptureVault;
+    return readFederalMoneyPriorPlaces((text,params)=>this.readerRows(text,params),candidateId,vault);
   }
 
   async readFederalMoneyPartitionKeys(scope:string,ids:readonly string[]):Promise<FederalMoneyPartitionKeys|null> {

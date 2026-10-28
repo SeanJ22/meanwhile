@@ -11,6 +11,27 @@ import {parseFederalMoney} from "../lib/federal-money/parse.ts";
 import {writeFederalMoneyPartitions} from "../lib/federal-money/partitions.ts";
 import {saveFederalMoneyCapture,withFederalMoneyVault} from "../lib/federal-money/vault.ts";
 import {withMigratedRoutineStore} from "./helpers/migrated-routine-store.ts";
+import {PGlite} from "@electric-sql/pglite";
+import {installKeyedRows} from "./helpers/keyed-rows.ts";
+import {canonicalCivicDataHash} from "../lib/civic-data/canonical-hash.ts";
+import {holdCivicVersion} from "../lib/civic-data/version-vault.ts";
+import {readFederalMoneyPriorPlaces} from "../lib/federal-money/publication-base.ts";
+
+test("historical federal places come from bounded vault rows",async t=>{
+  const pg=new PGlite();t.after(()=>pg.close());
+  await pg.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,record_class text,normalized_hash text,candidate jsonb);
+    CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,current_version_id text,promoted_at timestamptz,payload jsonb);`);
+  await installKeyedRows(pg);
+  const vault=new MemoryEvidenceStore(),model={records:Array.from({length:70},(_,i)=>({bodyIds:[`body-${i%3}`],divisionIds:[`division-${i%2}`],unrelated:"evidence ".repeat(1000)}))};
+  const fingerprint=canonicalCivicDataHash(model,{durable:true}),ref=await holdCivicVersion(vault,model,fingerprint);
+  await pg.query("INSERT INTO civic_data_candidates(id,record_class,normalized_hash,read_model_fingerprint,candidate) VALUES('old','FEDERAL_MONEY',$1,$1,$2)",
+    [fingerprint,{vault:{readModel:ref}}]);
+  let transferred=0;
+  const query=async(text:string,params:readonly unknown[]=[])=>{const rows=(await pg.query<Record<string,unknown>>(text,[...params])).rows;
+    transferred+=JSON.stringify(rows).length;return rows;};
+  assert.deepEqual(await readFederalMoneyPriorPlaces(query,"old",vault),["body:body-0","body:body-1","body:body-2","division:division-0","division:division-1"]);
+  assert.ok(transferred<2000,`${transferred} database bytes contain only headers`);
+});
 
 const fixture=JSON.parse(readFileSync(new URL("./fixtures/federal-money/openfema-live.json",import.meta.url),"utf8")).DisasterDeclarationsSummaries[0];
 async function page(vault:MemoryEvidenceStore,title:string,at:string,ids:readonly string[]=["base-one"]):Promise<FederalMoneyPage> {

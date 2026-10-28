@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { holdCivicVersion } from "../lib/civic-data/version-vault.ts";
 import { readDerivedInputHeads, readDerivedWiringRows } from "../lib/civic-data/derived-input-rows.ts";
 import { derivedInputAuthorityIssue, DERIVED_WIRING_SCOPE } from "../lib/civic-data/derived-door.ts";
 import type { DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
@@ -58,4 +60,27 @@ test("current wiring heads and members use the promotion fingerprint without a c
   await pg.query("UPDATE civic_data_promotions SET payload_fingerprint=$1",["0".repeat(64)]);
   assert.equal((await readDerivedInputHeads(query,["current"]))[0].readModelSha256, null);
   assert.deepEqual(await readDerivedWiringRows(query,"current",["one"]), [], "a mismatched current pointer cannot fall back to an older candidate body");
+});
+
+test("historical wiring fields are selected from its fingerprint-filed vault model", async t => {
+  const pg=new PGlite();t.after(()=>pg.close());
+  await pg.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,record_class text,scope text,state text,acquisition_succeeded boolean,
+    promoted_version_id text,last_known_good_version_id text,normalized_hash text,candidate jsonb,validation_receipt jsonb);
+    CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,current_version_id text,last_known_good_version_id text,
+      source_id text,promoted_at timestamptz,payload jsonb,validation_receipt jsonb);`);
+  await installKeyedRows(pg);
+  const vault=new MemoryEvidenceStore(),model={kind:"meeting-source-wiring",records:[
+    {id:"one",status:"ACTIVE",row:{officialHost:"Example.Gov",route:"https://example.gov/calendar"}},
+    {id:"other",status:"ACTIVE",row:{officialHost:"unrelated.gov",route:"https://unrelated.gov",evidence:"unrelated ".repeat(20_000)}}]};
+  const fingerprint=canonicalCivicDataHash(model,{durable:true}),ref=await holdCivicVersion(vault,model,fingerprint);
+  const receipt={candidateId:"old",recordClass:"CURATED_READER_RECORD",scope:DERIVED_WIRING_SCOPE,decision:"GOOD"};
+  await pg.query(`INSERT INTO civic_data_candidates(id,record_class,scope,state,acquisition_succeeded,promoted_version_id,last_known_good_version_id,
+    normalized_hash,candidate,validation_receipt,read_model_fingerprint) VALUES('old','CURATED_READER_RECORD',$1,'PROMOTED',true,'old','old',$2,$3,$4,$2)`,
+    [DERIVED_WIRING_SCOPE,fingerprint,{vault:{readModel:ref}},receipt]);
+  let transferred=0;
+  const query=async(text:string,params:readonly unknown[]=[])=>{const rows=(await pg.query<Record<string,unknown>>(text,[...params])).rows;
+    transferred+=JSON.stringify(rows).length;return rows;};
+  assert.equal((await readDerivedInputHeads(query,["old"],vault))[0].readModelKind,model.kind);
+  assert.deepEqual(await readDerivedWiringRows(query,"old",["one"],vault),[{key:"one",status:"ACTIVE",officialHost:"example.gov",route:"https://example.gov/calendar"}]);
+  assert.ok(transferred<2000,`${transferred} database bytes include no unrelated wiring body`);
 });

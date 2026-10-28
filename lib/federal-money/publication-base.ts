@@ -3,6 +3,8 @@ import type {CivicReadCache} from "../db/civic-read-cache.ts";
 import type {RoutinePublicationBase} from "../civic-data/store.ts";
 import type {CandidateState,RoutineCandidate,ValidationReceipt} from "../civic-data/types.ts";
 import {parseUnchangedConfirmation,UNCHANGED_CONFIRMATION_PREFIX} from "../civic-data/unchanged-confirmation.ts";
+import {readCivicCandidateRows} from "../civic-data/candidate-vault.ts";
+import type {EvidenceStore} from "../control-plane/evidence/store.ts";
 
 interface Header {
   readonly key:string;readonly source_id:string;readonly scope:string;readonly current_version_id:string;readonly last_known_good_version_id:string;
@@ -72,12 +74,19 @@ export async function readFederalMoneyPartitionKeys(query:Query,scope:string,ids
 }
 
 /** A retried edge publication only needs the old affected places, never old native facts. */
-export async function readFederalMoneyPriorPlaces(query:Query,candidateId:string):Promise<readonly string[]> {
-  const rows=await query(`SELECT DISTINCT place FROM civic_data_candidates c
-    CROSS JOIN LATERAL reader_payload_members(reader_payload_node(c.candidate->'readModel')->'records') r
-    CROSS JOIN LATERAL (
-      SELECT 'body:'||jsonb_array_elements_text(coalesce(reader_payload_value(reader_payload_node(r.item)->'bodyIds'),'[]'::jsonb)) AS place
-      UNION ALL SELECT 'division:'||jsonb_array_elements_text(coalesce(reader_payload_value(reader_payload_node(r.item)->'divisionIds'),'[]'::jsonb)) AS place
-    ) places WHERE c.id=$1 AND c.record_class='FEDERAL_MONEY' ORDER BY place`,[candidateId]);
-  return rows.map(row=>String(row.place));
+export async function readFederalMoneyPriorPlaces(query:Query,candidateId:string,vault:EvidenceStore|(()=>EvidenceStore)):Promise<readonly string[]> {
+  const [head]=await query("SELECT record_class FROM civic_data_candidates WHERE id=$1",[candidateId]);
+  if(head?.record_class!=="FEDERAL_MONEY")return [];
+  const places=new Set<string>();let afterOrdinal=0;
+  for (;;) {
+    const rows=await readCivicCandidateRows(query,vault,candidateId,["records"],{fields:["bodyIds","divisionIds"],afterOrdinal,limit:64});
+    for(const {value} of rows) for(const [field,prefix] of [["bodyIds","body"],["divisionIds","division"]] as const) {
+      const ids=value[field];if(ids===null||ids===undefined)continue;
+      if(!Array.isArray(ids))throw new Error("FEDERAL_PRIOR_PLACES_INVALID");
+      for(const id of ids)places.add(id===null?"null":`${prefix}:${typeof id==="string"?id:JSON.stringify(id)}`);
+    }
+    if(rows.length<64)break;
+    afterOrdinal=rows.at(-1)!.ordinal;
+  }
+  return [...places].sort();
 }

@@ -4,6 +4,8 @@ import { trackSourceTransport } from "../sources/host-transport.ts";
 import type { RoutineCandidate } from "./types.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import type { Meeting } from "../sources/types.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { holdRawCapture, rawCaptureKey } from "./raw-capture-vault.ts";
 
 export interface RetainedSourceResponse {
   readonly source: string; readonly requestedUrl: string; readonly finalUrl: string;
@@ -30,6 +32,28 @@ export function bindMeetingSourceObservations(meetings: readonly Meeting[], resp
 export type RetainedMeetingCandidate = RoutineCandidate & {
   readonly retainedSourceResponses?: readonly (Omit<RetainedSourceResponse, "bytes"> & { readonly base64: string })[];
 };
+
+/** Move owned or legacy response bytes to the single fingerprint-filed source copy. */
+export async function holdMeetingResponses(vault:EvidenceStore,responses:readonly unknown[]):Promise<readonly unknown[]> {
+  return Promise.all(responses.map(async value=>{
+    if(!value || typeof value!=="object" || Array.isArray(value))throw new Error("MEETING_CAPTURE_INVALID");
+    const row=value as Record<string,unknown>,{base64,...metadata}=row;
+    if(typeof row.rawHash!=="string" || !/^[a-f0-9]{64}$/.test(row.rawHash) ||
+      !Number.isSafeInteger(row.byteCount) || (row.byteCount as number)<0)throw new Error("MEETING_CAPTURE_INVALID");
+    if(base64===undefined){
+      if(row.vaultKey!==rawCaptureKey(row.rawHash))throw new Error("MEETING_CAPTURE_VAULT_MISSING");
+      const held=await vault.head(row.vaultKey as string);
+      if(!held || held.contentHash!==`sha256-${row.rawHash}` || held.byteLength!==row.byteCount)throw new Error("MEETING_CAPTURE_VAULT_MISSING");
+      return metadata;
+    }
+    if(typeof base64!=="string")throw new Error("MEETING_CAPTURE_INVALID");
+    const bytes=Buffer.from(base64,"base64");
+    if(bytes.length!==row.byteCount || createHash("sha256").update(bytes).digest("hex")!==row.rawHash)
+      throw new Error("MEETING_CAPTURE_FINGERPRINT_MISMATCH");
+    const ref=await holdRawCapture(vault,"meeting-source",bytes,typeof row.contentType==="string"?row.contentType:"application/octet-stream");
+    return {...metadata,vaultKey:ref.vaultKey};
+  }));
+}
 
 /** A fetch that keeps every successful HTTPS response it makes, so the facts a read yields cite the exact bytes. */
 export function retainingFetch(base: typeof fetch, now: () => string = () => new Date().toISOString()) {

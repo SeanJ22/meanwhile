@@ -4,7 +4,6 @@ import { CAMPAIGN_MONEY_SOURCE_ID,CAMPAIGN_FINANCE_SOURCES } from "../lib/fundin
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test, { type TestContext } from "node:test";
-import { withDatabaseJob } from "../lib/db/transfer-by-caller.ts";
 import { withReaderRoute } from "../lib/db/reader-route.ts";
 import { childCrash } from "../lib/ops/fatal-line.ts";
 import { JOB_HELD_WORDS, ROUTINE_JOBS, runRoutineJob } from "../lib/civic-data/routine-jobs.ts";

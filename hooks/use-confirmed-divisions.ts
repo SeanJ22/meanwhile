@@ -8,6 +8,7 @@ import { representationForDivision } from "@/lib/registry/representation";
 import { levelKeyOf, type ResolvedLocation } from "@/lib/state/resolved-location";
 import { getCachedStateDivision, isStateDivisionPending } from "@/lib/reader/client";
 import type { SeatVacancy } from "@/lib/officials/types";
+import { bodyDetailState, loadBodyDetail } from "@/lib/registry/body-roster-client";
 
 /**
  * The reader's confirmed divisions, resolved by key. `coverage.seats` is the
@@ -63,14 +64,33 @@ export function useConfirmedDivisions(
   /* A stable key, so the effect re-runs only when the divisions change. */
   const cached = new Map(wanted.map(id => [id, getCachedStateDivision(id)]));
   const key = wanted.filter(id => !cached.get(id) && !isStateDivisionPending(id)).join("|");
+  const localBodiesKey = JSON.stringify(Object.fromEntries(wanted.map(id => [id, (coverage?.bodies ?? [])
+    .filter(body => (body.bodyId === `${id}#governing` || body.bodyId === `${id}#board`) && body.rosterSummary)
+    .map(body => ({ id: body.bodyId, state: bodyDetailState(body), label: body.divisionLabel,
+      divisionType: body.divisionType, tier: body.tier }))])));
 
   const [answers, setAnswers] = useState<Record<string, Answer>>({});
 
   useEffect(() => {
     const ids = key ? key.split("|") : [];
+    const localBodies = JSON.parse(localBodiesKey) as Record<string, { id: string; state: string | null;
+      label: string; divisionType: string | null; tier: string }[]>;
     if (ids.length === 0) return;
     const controller = new AbortController();
     for (const ocdId of ids) {
+      const bodies = localBodies[ocdId] ?? [];
+      if (bodies.length) {
+        void Promise.all(bodies.map(body => body.state ? loadBodyDetail(body.state, body.id) : Promise.reject(new Error("Body state unavailable"))))
+          .then(details => {
+            if (!controller.signal.aborted) setAnswers(prev => ({ ...prev, [ocdId]: {
+              label: bodies[0].label, divisionType: bodies[0].divisionType, tier: bodies[0].tier,
+              holders: details.flatMap(detail => detail.roster.members), failed: false } }));
+          }).catch(() => {
+            if (!controller.signal.aborted) setAnswers(prev => ({ ...prev, [ocdId]: {
+              label: null, divisionType: null, tier: null, holders: [], failed: true } }));
+          });
+        continue;
+      }
       // The OCD-ID in the path, so every cache keys on the division.
       const path = ocdId
         .split("/")
@@ -132,7 +152,7 @@ export function useConfirmedDivisions(
         });
     }
     return () => controller.abort();
-  }, [key]);
+  }, [key, localBodiesKey]);
 
   return wanted.map((ocdId) => {
     const cachedAnswer = cached.get(ocdId);

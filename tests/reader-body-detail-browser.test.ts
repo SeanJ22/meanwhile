@@ -87,3 +87,38 @@ test("the officials list requests each needed body only after it opens", async (
     await new Promise<void>(resolve => server.close(() => resolve()));
   }
 });
+
+test("division and confirmed-address readers share the body's keyed request", async () => {
+  const bundle = await build({ stdin: { resolveDir: process.cwd(), loader: "tsx", contents: `
+    import React from 'react'; import {createRoot} from 'react-dom/client';
+    import {useDivisionsRepresentation} from './hooks/use-division-representation.ts';
+    import {useConfirmedDivisions} from './hooks/use-confirmed-divisions.ts';
+    const division='ocd-division/country:us/state:az/county:pima',id=division+'#governing';
+    const body={bodyId:id,ocdId:division,divisionLabel:'Pima County',divisionType:'county',tier:'local',readerState:'AZ',rosterSummary:{memberCount:1,hasSelectBoard:false}};
+    const coverage={seats:[],bodies:[body],divisions:[],senators:[],statewideExecutives:[]};
+    window.calls=[];window.fetch=async url=>{window.calls.push(String(url));await new Promise(resolve=>setTimeout(resolve,100));
+      return Response.json({bodyId:id,roster:{members:[{id:'person:1',name:'A Person'}],gaps:[],officePhone:null}})};
+    function App(){const a=useDivisionsRepresentation(coverage,[division])[division];
+      const b=useConfirmedDivisions(coverage,{certainty:'ADDRESS_RESOLVED',confirmedDivisionIds:[division]},['county'])[0];
+      return <p id="answer">{a?.holders[0]?.name??a?.status}|{b?.holders[0]?.name??b?.status}</p>}
+    createRoot(document.getElementById('root')).render(<App/>);
+  ` }, bundle: true, write: false, format: "esm", platform: "browser", logLevel: "silent" });
+  const server = createServer((request, response) => request.url === "/client.js"
+    ? response.writeHead(200, { "content-type": "application/javascript" }).end(bundle.outputFiles[0].text)
+    : response.writeHead(200, { "content-type": "text/html" }).end('<div id="root"></div><script type="module" src="/client.js"></script>'));
+  await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
+  const address = server.address(); assert.ok(address && typeof address !== "string");
+  let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
+  try {
+    browser = await launchGuarded({ label: "zs-body-division", blockWrites: true });
+    const page = await (await browser.context()).newPage();
+    await page.goto(`http://127.0.0.1:${address.port}/`);
+    await page.getByText("A Person|A Person", { exact: true }).waitFor();
+    const calls = await page.evaluate(() => (window as unknown as { calls: string[] }).calls);
+    assert.equal(calls.length, 1);
+    assert.match(calls[0], /^\/api\/reader\/body\?/);
+  } finally {
+    await browser?.close();
+    await new Promise<void>(resolve => server.close(() => resolve()));
+  }
+});

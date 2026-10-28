@@ -226,6 +226,11 @@ function DistrictsDoor({
     tier: "local" | "state" | "national",
   ) => void;
 }) {
+  const governingBodies = (coverage?.bodies ?? []).filter(body => coverage?.divisions.some(division =>
+    body.bodyId === `${division.ocdId}#governing` || body.bodyId === `${division.ocdId}#board`));
+  const details = useBodyDetails(governingBodies, atAddress);
+  const byId = new Map(details.bodies.map(body => [body.bodyId, body]));
+  const shownCoverage = coverage ? { ...coverage, bodies: coverage.bodies.map(body => byId.get(body.bodyId) ?? body) } : null;
   /*
    * Two sections, always both: "Districts you're in" (boundaries containing
    * the resolved point) and "Districts in view" (what the map draws). Without
@@ -233,9 +238,9 @@ function DistrictsDoor({
    * which districts the reader is in.
    */
   const governingRows =
-    atAddress && coverage
-      ? governingDoorRows(coverage, (ocdId) =>
-          representationForDivision(coverage, ocdId),
+    atAddress && shownCoverage
+      ? governingDoorRows(shownCoverage, (ocdId) =>
+          representationForDivision(shownCoverage, ocdId),
         )
       : null;
 
@@ -256,7 +261,9 @@ function DistrictsDoor({
             <p className="mt-2 t-body text-muted">
               Every district your address sits inside.
             </p>
-            <DistrictRows rows={governingRows} coverage={coverage} onOpenOfficial={onOpenOfficial} />
+            {details.pending && <p className="t-body text-muted">Looking up local representatives…</p>}
+            {details.failed && <p className="t-body text-muted">We couldn&apos;t load some local representatives.</p>}
+            <DistrictRows rows={governingRows} coverage={shownCoverage} onOpenOfficial={onOpenOfficial} />
           </>
         ) : (
           // A fact about the limits of a zip, not a claim that the reader is in nothing.

@@ -33,6 +33,7 @@ import {
   type LocationCertainty,
 } from "@/lib/state/resolved-location";
 import { useConfirmedDivisions } from "@/hooks/use-confirmed-divisions";
+import { useBodyDetails } from "@/hooks/use-body-details";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import { groupBodiesByGovernment } from "@/lib/registry/body-groups";
 import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
@@ -377,6 +378,8 @@ function CoverageBody({
 
   const derived = deriveWhoGoverns(bodiesHere, selected);
   const shown = derived.rows;
+  const selectBoards = useBodyDetails(shown.filter(body => body.rosterSummary?.hasSelectBoard ||
+    projectedBodyRoster(body).members.some(holder => /select\s?board/i.test(holder.officeTitle))), true);
   const shownIds = new Set(shown.map(body => body.bodyId));
   const filedMeetings = derived.otherRows.filter(body => body.meetingBodyId && shownIds.has(body.meetingBodyId));
   const otherBodies = derived.otherRows.filter(body => !body.meetingBodyId || !shownIds.has(body.meetingBodyId));
@@ -559,7 +562,9 @@ function CoverageBody({
           ))}
         <ul className="mt-1 space-y-1">
           {/* A town with no mayor gets its substitute office named and its members shown. */}
-          {shown.flatMap((body) => {
+          {selectBoards.pending && <li className="t-detail text-muted">Looking up Select Board members…</li>}
+          {selectBoards.failed && <li className="t-detail text-muted">We couldn&apos;t load some Select Board members.</li>}
+          {selectBoards.bodies.flatMap((body) => {
             const board = projectedBodyRoster(body).members.filter((holder) =>
               /select\s?board/i.test(holder.officeTitle),
             );

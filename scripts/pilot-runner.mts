@@ -82,6 +82,7 @@ import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
 import { placeMapsLane } from "../lib/civic-data/place-map-lane.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, type PlacePageTurn } from "../lib/reader/place-page-worker.ts";
+import { DOOR_PROBES_JOB, doorProbesLane } from "../lib/doors/probe-lane.ts";
 import {
   appendIntakeRuntimeObservationDigest,
   appendRoutineCivicDataSupervisorDigest,
@@ -1097,6 +1098,7 @@ function holdForRestart(targetSha: string): void {
   console.log(`  release ${targetSha.slice(0, 8)} loads by restart: no new standing run starts; ` +
     `${running.length ? `${running.join(", ")} end by their deadlines` : "nothing is running"}, then the runner restarts`);
   drainHunterLane();
+  drainDoorProbes();
   if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
   });
@@ -1335,6 +1337,37 @@ async function runPlacePages(deadlineMs: number): Promise<void> {
   await drainPlacePageQueue({ deadlineMs, admitted: placePagesAdmitted, turn: runPlacePageTurn, log: line => console.log(line) });
 }
 
+/** Hot meeting doors are looked at in their own standing turn, several websites at once, so a new meeting shows within the hour. */
+const doorProbeMemory = routineProcessSlots({ admissionsOpen: () => !runtimeAdmissionsHeld });
+let doorProbesChild: ChildProcess | null = null;
+async function runDoorProbes(deadlineMs: number): Promise<void> {
+  if (provider !== "postgres" || canary || runtimeAdmissionsHeld) return;
+  if (!jobLaunchAllowed(DOOR_PROBES_JOB.id)) return;
+  const release = await doorProbeMemory.acquire("door-probes.mts", Math.min(deadlineMs, Date.now() + 60_000));
+  try {
+    const [run] = await runRuntimeChildren([{
+      id: DOOR_PROBES_JOB.id,
+      databaseBytesPerRun: DOOR_PROBES_JOB.databaseBytesPerRun, executable: process.execPath,
+      args: [...TS_CHILD, "scripts/door-probes.mts"],
+      env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
+    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
+      onStarted: (_id, child) => { doorProbesChild = child; if (child.pid) release.observe?.(child.pid); },
+      onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
+    if (!run || run.status !== 0) throw new Error(`DOOR_PROBES_TURN_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}; due doors stay owed and the next turn starts within a minute`);
+  } finally {
+    doorProbesChild = null;
+    release();
+  }
+}
+
+/** A release restart waits for no door look beyond those in flight. */
+function drainDoorProbes(): void {
+  if (!doorProbesChild?.connected) return;
+  doorProbesChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
+    if (error) console.error("  door probes drain message could not be delivered; the turn ends at its deadline");
+  });
+}
+
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, budgetMs: CENSUS_LANE_BUDGET_MS, run: runPlatformCensus },
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData },
@@ -1344,6 +1377,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   placePagesLane(runPlacePages),
   publishNowLane(runPublishNow),
   placeMapsLane(runPlaceMaps),
+  doorProbesLane(runDoorProbes),
 ], (outcome) => {
   if (outcome.state === "FAILED") {
     console.error(`  ${outcome.id}: standing operation failed — ${outcome.error}`);
@@ -1475,6 +1509,7 @@ let standingDrainFailed = false;
 async function holdStandingRuntimeAtQuiescence(): Promise<void> {
   runtimeAdmissionsHeld = true;
   drainHunterLane();
+  drainDoorProbes();
   if (standingRuntimeTimer !== null) {
     clearInterval(standingRuntimeTimer);
     standingRuntimeTimer = null;

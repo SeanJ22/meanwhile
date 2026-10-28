@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 132 (main 76fa94388). Runner up on 132 without a restart since 4:28 PM EDT; breaker holds routine-civic-data, place-pages, publish-now since ~6:05 PM. Sean: ship 133 now (it resumes them). 133 gates re-running (worker restart killed the first run's suite)
+build_state: LIVE: release 132 (main 76fa94388). Release 133 = https://github.com/SeanJ22/meanwhile/pull/846 (9530f6529: MD-02 + RIVER-DOORS-133; resumes the held lanes), CI running. 134 being built: RC-01, RIVER-BREAKER-134, RIVER-PORTRAITS-134, DB-06
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-28T00:50:00Z
+heartbeat: 2026-10-28T02:00:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -34,6 +34,11 @@ heartbeat: 2026-10-28T00:50:00Z
 - GB/h (database_transfer_hourly, EDT): 3 PM (before 132; runner crash-looping) reader 0.288 + control plane 0.081; 4 PM (deploy, switch at 4:28) reader 3.198 + 0.643; 5 PM (first full hour on 132) reader 2.358 + 0.480. 5 PM by job: reader functions (index) 1.285 GB (candidate_events 526 MB, promotions 397 MB; the reader-function cost DB-06 targets); routine-civic-data 0.632 GB reader (portrait-run.ts:104 319 MB) + 0.085 control plane; publish-now 0.188 control plane (cp_doors whole records for change rates 121 MB, narrowed in 133) + 0.129 reader; console-publish owner snapshot 0.154; place-pages 0.108. The portrait run's 319 MB is not new: per-state portrait jobs read 100-400 MB per state-hour on Oct 25.
 - Sean (8:45 PM): ship 133 now, which resumes the held jobs (the breaker holds them again if they go over); fold stream/db-05 `READY: DB-05` b445d2278 as DB-06's READY. 133 keeps its contents (MD-02, RIVER-DOORS-133, BF-01, RC-01, WR-01); DB-05/DB-06 is scanned for 134.
 - GB/h, EDT (database_transfer_hourly): 6 PM reader 1.089 + control plane 0.206; 7 PM reader 0.530 + 0.154; 8 PM (partial at 8:45) 0.414 + 0.145. Runner jobs held since ~6:05, so most of it is the reader functions. Breaker: 26 CHECK rows, every 10 minutes, last 8:38 PM; no pause or resume since 5:58 PM.
+- 9:55 PM: full suite on river-next-133b d72b1b9fe: 4 failures. BF-01's own READY fails 2 (returns/bf-01.md), WR-01's own READY fails 1 (returns/wr-01.md), 1 was River's (a source-text test of the held-publication call). 133 shipped as river 9530f6529 (gates 12/12) merged with main: https://github.com/SeanJ22/meanwhile/pull/846, run-full-ci, auto-merge on.
+- Sean's 134 order (8:50 PM): per-task metering, changed-only portrait reads, DB-06 with its SELECT * fixed and place-pages measured, Admin Release with no self-resume. Neon meter before starting (7 PM EDT hour): reader 0.530 GB + control plane 0.154 GB.
+- Built: READY: RIVER-BREAKER-134 eade57e55 (stream/river-breaker-134): each in-process routine task metered and admitted under its own job name with bytes per run; no self-resume; Admin Now lists paused jobs with Release (jobs.release gateway action writes a RESUME row; runner applies it within 10 minutes). Supervisors (routine-civic-data, publish-now) keep their names for their own scheduling reads and are never paused (open: fingerprint-only clock checks). After deploy, the old place-pages pause shows on Now for Sean to release.
+- Built: READY: RIVER-PORTRAITS-134 7aedef6bd (stream/river-portraits-134): the 319 MB/h was the hourly need-check, not portrait runs. 55 of 57 state portrait records predate DB-03's schedule stamp, so every hour the check rebuilt each state's full people list from every roster, found nobody due and saved nothing. Now the check reads only small version rows; runs read in SQL only changed rosters' people without a shown portrait. Expected ~0.0002 GB/h for the check + ~0.01-0.018 GB/h for runs; one-time catch-up ~0.27 GB as 55 states stamp. Open: each run still reads its own portrait record whole (1-4 MB).
+- Baselines (reader DB): place_boundary 26,546 rows (21 state prefixes); rebuild_queue 86,904 pending; facts going live per hour: ~7,400-7,900 on Oct 26 before 130, near zero until 132, 1,232 (4 PM) and 2,412 (5 PM) on 132, 104 (6 PM) once the breaker held the lanes.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

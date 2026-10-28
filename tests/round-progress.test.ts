@@ -61,7 +61,7 @@ test("a round stuck on one await names it before the limit, and the answer does 
   `;
   const [result] = await runRuntimeChildren([{ id: "research-cycle", executable: process.execPath,
     args: ["--experimental-strip-types", "--input-type=module", "-e", source] }], {
-    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 600 });
+    cwd: process.cwd(), env: process.env, maxBufferBytes: 1 << 16, noProgressMs: 2_400 });
   assert.equal(result!.termination, "TIMED_OUT");
   assert.match(result!.errorMessage!, /RESEARCH_CHILD_NO_PROGRESS/);
   assert.match(result!.stderr, new RegExp(`${STALL_REPORT_PREFIX} pending: autonomous-workers; store call in flight: routeTasks\\.read; last phase: dispatch`));

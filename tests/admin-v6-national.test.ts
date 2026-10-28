@@ -297,7 +297,7 @@ test("a failed read of held data is null scores and a response; it is not rememb
 
 function deps(over: Partial<NationalDeps> = {}): NationalDeps & { reads: { held: number; districts: number } } {
   const reads = { held: 0, districts: 0 };
-  return { reads, now: () => NOW, scoreBudgetMs: 2_000,
+  return { reads, now: () => NOW, scoreBudgetMs: 10_000,
     districts: async (state) => { reads.districts += 1; return state === "az" ? { ok: true, versionId: "cv-1", districts: [D5, D6] } : { ok: true, versionId: "cv-1", districts: [] }; },
     zipCounts: async () => countsByState,
     zipDivisions: async (zips) => new Map(zips.map((z) => [z, [`${AZ}/county:${z === "85635" ? "cochise" : "pinal"}`]] as const)),

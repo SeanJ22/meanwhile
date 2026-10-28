@@ -29,7 +29,7 @@ export async function withdrawPlatformPublication(db: FactDb, door: DoorRecord, 
     const bodies=[...scopes];
     const partition = meetingPartitionOfId(door.doorId);
     if (partition) for (const body of bodies) for (const scope of [partition.scope,`${partition.scope}:history`])
-      await openBlank(query,{entityId:body,field:`calendar:${scope}`,stage:'CHECK',reason:'PORTAL_AUTHORITY_UNCONFIRMED',detail:portal,retryMinutes:10});
+      await openBlank(query,{entityId:body,field:`calendar:${scope}`,stage:'CHECK',reason:'PORTAL_AUTHORITY_UNCONFIRMED',detail:portal,retryMinutes:10,countAttempt:true});
     if(!created.length)return null;
     const scope=await portalScope(query,door,created);
     await enqueueReaderPlaces(scope,query);

@@ -2,6 +2,7 @@ import { normalizeText, type Claim, type FieldKind, type SavedCopy } from "./che
 import type { Decision } from "../core/door.ts";
 import { door } from "../core/door.ts";
 import { enqueueReaderPlaces, type ReaderCachePurger } from "../reader/cache.ts";
+import { recordFactConfirmation } from "./confirmation.ts";
 
 export type Query = (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 
@@ -31,12 +32,14 @@ export interface PublishInput extends Claim {
 export type PublishOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly blank: string };
 
 export async function openBlank(query: Query, input: { readonly entityId: string; readonly field: string; readonly stage: BlankStage;
-  readonly reason: string; readonly detail?: string | null; readonly retryMinutes: number }): Promise<void> {
+  readonly reason: string; readonly detail?: string | null; readonly retryMinutes: number; readonly countAttempt?: boolean }): Promise<void> {
   await query(`INSERT INTO blank (entity_id, field, stage, reason, detail, next_try_at, attempts)
     VALUES ($1, $2, $3, $4, $5, now() + make_interval(mins => $6::int), 1)
     ON CONFLICT (entity_id, field) DO UPDATE SET stage = EXCLUDED.stage, reason = EXCLUDED.reason, detail = EXCLUDED.detail,
-      attempts = blank.attempts + 1, next_try_at = EXCLUDED.next_try_at, updated_at = now()`,
-  [input.entityId, input.field, input.stage, input.reason, input.detail ?? null, Math.max(1, Math.round(input.retryMinutes))]);
+      attempts = blank.attempts + 1, next_try_at = EXCLUDED.next_try_at, updated_at = now()
+    WHERE (blank.stage,blank.reason,blank.detail) IS DISTINCT FROM (EXCLUDED.stage,EXCLUDED.reason,EXCLUDED.detail)
+      OR blank.next_try_at<=now() OR $7::boolean`,
+  [input.entityId, input.field, input.stage, input.reason, input.detail ?? null, Math.max(1, Math.round(input.retryMinutes)), input.countAttempt ?? false]);
 }
 
 /** Older callers retain their blank result; every fact is written by the same door. */
@@ -51,32 +54,27 @@ export async function publishClaim(db: FactDb, input: PublishInput, clocks: Cloc
   return "refused" in outcome ? { blank: outcome.refused } : outcome;
 }
 
-/** A live value seen again on a fresh saved copy: its checked date and receipt move to that copy. Its blank closes. */
-async function restamp(query: Query, fact: { readonly id: unknown; readonly entityId: string; readonly field: string }, at: Date,
-  receipt: { readonly copyId: number; readonly quoteStart: number | null }): Promise<boolean> {
-  if (!(await query(`UPDATE fact SET checked_at = greatest(checked_at, $2::timestamptz), source_copy_id = $3, quote_start = $4
-    WHERE id = $1 AND status = 'live' AND (checked_at < $2::timestamptz
-      OR source_copy_id IS DISTINCT FROM $3::bigint OR quote_start IS DISTINCT FROM $4::integer)
-    RETURNING id`, [fact.id, at.toISOString(), receipt.copyId, receipt.quoteStart])).length) return false;
-  await query("DELETE FROM blank WHERE entity_id = $1 AND field = $2", [fact.entityId, fact.field]);
-  return true;
-}
-
-/** Live facts a fresh read of their page still shows: each one's checked date and receipt move to that saved copy. Returns how many moved. */
+/** A source recheck records its exact live fact versions together. */
 export async function restampFacts(db: FactDb, facts: readonly { readonly id: number; readonly entityId: string; readonly field: string; readonly quote: string }[],
   copy: Pick<SavedCopy, "id" | "text" | "fetchedAt">): Promise<number> {
   if (!facts.length) return 0;
   const page = normalizeText(copy.text);
   return db.transaction(async query => {
-    let count = 0;
-    const changed = new Set<string>();
-    for (const fact of facts) {
+    const receipts = Object.fromEntries(facts.map(fact => {
       const start = fact.quote ? page.indexOf(normalizeText(fact.quote)) : -1;
-      if (!await restamp(query, fact, copy.fetchedAt, { copyId: copy.id, quoteStart: start < 0 ? null : start })) continue;
-      count++;
-      changed.add(fact.entityId);
+      return [String(fact.id),{quote_start:start<0?null:start}];
+    }));
+    const eligible = await query(`SELECT id,entity_id,field FROM checked_fact WHERE id=ANY($1::bigint[]) AND status='live'
+      AND checked_at<=$2::timestamptz AND (checked_at<$2::timestamptz OR source_copy_id IS DISTINCT FROM $3::bigint
+        OR quote_start IS DISTINCT FROM ($4::jsonb->id::text->>'quote_start')::int)`,
+      [facts.map(fact=>fact.id),copy.fetchedAt.toISOString(),copy.id,JSON.stringify(receipts)]);
+    const changed = await recordFactConfirmation(query,{copyId:copy.id,scope:"source-recheck",at:copy.fetchedAt.toISOString(),
+      factIds:eligible.map(row=>Number(row.id)),receipts});
+    if (changed.length) {
+      await query(`DELETE FROM blank b USING unnest($1::text[],$2::text[]) f(entity_id,field)
+        WHERE b.entity_id=f.entity_id AND b.field=f.field`,[eligible.map(row=>row.entity_id),eligible.map(row=>row.field)]);
+      await enqueueReaderPlaces({entities:changed},query);
     }
-    if (changed.size) await enqueueReaderPlaces({ entities: [...changed] }, query);
-    return count;
+    return changed.length ? eligible.length : 0;
   });
 }

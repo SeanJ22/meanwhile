@@ -167,6 +167,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "WR-01_fact_confirmations": { phase: "expand", why: "Adds scoped source confirmations and their reader view without rewriting existing facts." },
   "RB-A8_count_hour": { phase: "expand", why: "Adds hourly counters and their writer hooks before the compact observer is deployed.",
     // Its trigger on fact, then a 1M-row backfill, then triggers on civic_data_promotions and entity deadlocked with the runner at the 9:47 PM EDT Oct 24 build.
     lockFirst: ["fact", "civic_data_promotions", "entity"] },

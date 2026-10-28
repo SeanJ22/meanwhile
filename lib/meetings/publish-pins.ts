@@ -66,10 +66,10 @@ SELECT b.id,b.name,
     'sourceOrg',government.name,'collectedAt',government.checked_at,'verifiedAt',government.checked_at) END,
     o.g#>'{contactProvenance,officeAddress}',o.g->'provenance') AS government_source
 FROM selected b JOIN owners o ON o.id=b.id
-LEFT JOIN LATERAL (SELECT value,checked_at,source_copy_id FROM fact WHERE entity_id=b.id AND field='office_address' AND status='live' ORDER BY checked_at DESC LIMIT 1) office ON true
+LEFT JOIN LATERAL (SELECT value,checked_at,source_copy_id FROM checked_fact WHERE entity_id=b.id AND field='office_address' AND status='live' ORDER BY checked_at DESC LIMIT 1) office ON true
 LEFT JOIN source_copy office_source ON office_source.id=office.source_copy_id
 LEFT JOIN LATERAL (
-  SELECT e.name,f.value,f.checked_at,s.url FROM entity e JOIN fact f ON f.entity_id=e.id AND f.status='live' AND f.field='office_address'
+  SELECT e.name,f.value,f.checked_at,s.url FROM entity e JOIN checked_fact f ON f.entity_id=e.id AND f.status='live' AND f.field='office_address'
     JOIN source_copy s ON s.id=f.source_copy_id WHERE e.kind='government' AND e.state=b.state
       AND e.id IN (b.parent_id,o.g->>'jurisdictionId',o.g->>'id') ORDER BY f.checked_at DESC,e.id LIMIT 1
 ) government ON true`;
@@ -274,7 +274,7 @@ export async function placePublishedMeetingPins(input: {
   });
   if(input.query&&unresolved.length)try {
     const owners=new Map(unresolved.flatMap(meeting=>[meeting.id,...meeting.mergedMeetingIds??[]].map(id=>[id,meeting] as const)));
-    const rows=await input.query("SELECT entity_id,value FROM fact WHERE field='map_pin' AND status='live' AND entity_id=ANY($1::text[])",
+    const rows=await input.query("SELECT entity_id,value FROM checked_fact WHERE field='map_pin' AND status='live' AND entity_id=ANY($1::text[])",
       [[...owners.keys()].map(meetingEntityId)]);
     for(const row of rows) {
       const pin=row.value as MeetingPinLocation|null;

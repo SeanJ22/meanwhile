@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 141 on the site (4:28 PM EDT) and runner (5:05 PM), checked. river = 795832ac9. Open for Sean: RIVER-PROBERATE proposal (hourly looks for hot bodies). BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 141. Release 142 (read lock + Now reading line) in CI: https://github.com/SeanJ22/meanwhile/pull/855. RIVER-PROBERATE being built. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -115,6 +115,12 @@ heartbeat: 2026-10-28T08:35:00Z
   - NOT MET: a body with a sitting this week is not yet looked at every hour. In the 5 PM hour the probe lane looked at 60 meeting doors (granicus 41, legistar 11, ical 3, 5 others), far short of 1,816 hot partitions. RCD_PROBE lines go only to the runner's own log, which River can't read; this is from each door's last-look time.
   - Why: probes run inside the publish-now pass (about 6 an hour), get a 30 s window each pass, and look at one page at a time with a 15 s timeout. That is about 3 minutes of looking an hour.
 - PROPOSAL FOR SEAN (RIVER-PROBERATE, needs your yes): give door probes their own standing turn like the place-map lane, looking at several websites at once (one request per website at a time, under the existing fetch.hostConcurrency 8), until every hot door has had its hourly look. Politeness is unchanged: small publishers keep their 10 requests an hour, and an hourly look is one request per page. Expected cost at ~9 KB per look: ~1,500 looks/h adds ~0.014 GB/h, so door-probes stays near 0.05 GB/h, under 0.1. Also found, not changed: the routine clock's and Admin's sitting reads are still inline-only (same blind spot).
+- 6:42 PM: RELEASE 142 OPEN (Sean's read lock): https://github.com/SeanJ22/meanwhile/pull/855, head 7bcfbd100, auto-merge on, CI running.
+  - RIVER-READLOCK-142 e92f590e6: RC-01's check now keeps two shrink-only lists, started from river's code: files naming a bundle table (227 entries, 111 files) and files reading a cp_* record whole (345 entries, 166 files).
+  - Real-repo test branch: a new civic_data_promotions reader fails lint with "A new reader of the bundle table civic_data_promotions in lib/readlock-probe.ts violates docs/rulings.md:192 and 194."; removing a reader shrinks the list 227 -> 226; restoring it after the shrink is committed fails.
+  - Admin Now line: "Database reading: yesterday 32.8 GB, today 38.8 GB so far, against the 10 GB a day target" (6:38 PM numbers). It reads 86 hour rows (~12.7 KB) by key and equals a direct SQL sum: Oct 27 32.788909 GB both ways; Oct 28 equal on one snapshot.
+  - Hour before, from database_transfer_hourly: 5 PM 2.83 GB/h. The 6 PM hour follows.
+- RIVER-PROBERATE-142 (Sean's yes, 6:20 PM): River builder working on stream/river-proberate-142. Door probes get their own standing turn with several websites in parallel and each site's request limits unchanged; the routine scheduler's two sitting reads follow stored parts like the hot rule. Admin's sitting read is left to CP-01.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

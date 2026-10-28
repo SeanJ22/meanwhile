@@ -37,9 +37,10 @@ export function savedCanonicalStatement(keys:readonly string[],additional?:PageA
     requested AS (SELECT key,page_id FROM jsonb_to_recordset($1::jsonb) r(key text,page_id text)${more}),
     shelf AS MATERIALIZED (${shelf})
     SELECT 'promotion' AS row_kind,shelf.*,NULL::text AS part_hash,NULL::jsonb AS part_payload FROM shelf
-    UNION ALL SELECT 'missing-page',empty.*,id,NULL FROM unnest(ARRAY[${pages.map(quote).join(',')}]::text[]) AS wanted(id)
+    UNION ALL SELECT 'missing-page',empty.*,id,to_jsonb(ARRAY(SELECT key FROM requested r WHERE r.page_id=id)) FROM unnest(ARRAY[${pages.map(quote).join(',')}]::text[]) AS wanted(id)
       LEFT JOIN LATERAL (${empty}) empty ON true
-      WHERE NOT EXISTS(SELECT 1 FROM place_page page WHERE page.place_id=id AND page.context->>'authorityFormat'='1')
+      WHERE NOT EXISTS(SELECT 1 FROM place_page page WHERE page.place_id=id AND page.context->>'authorityFormat'='1'
+        AND NOT EXISTS(SELECT 1 FROM requested r WHERE r.page_id=id AND NOT (coalesce(page.context->'authorityKeys','[]'::jsonb)?r.key OR page.context->'authorities'?r.key)))
     ${additional?`UNION ALL SELECT 'additional',empty.*,NULL,coalesce((SELECT jsonb_agg(to_jsonb(a)) FROM additional a),'[]'::jsonb)
       FROM (SELECT 1) singleton LEFT JOIN LATERAL (${empty}) empty ON true`:''}`};
 }

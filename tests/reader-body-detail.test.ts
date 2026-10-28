@@ -9,16 +9,9 @@ import { officePhoneForBody } from "../lib/meetings/office-phone.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import { GET } from "../app/api/reader/body/route.ts";
 import { installFactReader } from "../lib/facts/db.ts";
-import { factDb } from "./helpers/fact-db.ts";
 import { bodyDetailState, loadBodyDetail } from "../lib/registry/body-roster-client.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";
 import { bodyRosterSummaries } from "../lib/reader/body-summary.ts";
-
-const registryPointerSchema = `CREATE TABLE civic_data_promotions(key text PRIMARY KEY,current_version_id text,payload jsonb,
-  last_known_good_version_id text,source_id text,record_class text,scope text,payload_fingerprint text,validation_receipt jsonb,promoted_at timestamptz);
-  CREATE TABLE civic_data_candidates(id text PRIMARY KEY,state text,acquisition_succeeded boolean,promoted_version_id text,
-    last_known_good_version_id text,source_id text,record_class text,scope text,read_model_fingerprint text,
-    validation_receipt jsonb,candidate jsonb,normalized_hash text);`;
 
 test("a cross-state body's own identifier selects the body reader's state", () => {
   const body: CoveredBody = { bodyId: "government:US-CA:cog:123#board", ocdId: "ocd-division/country:us/state:nv/county:clark",
@@ -84,76 +77,23 @@ test("a failed or mismatched body answer is not cached as an empty roster", asyn
   assert.equal(calls, 2);
 });
 
-test("the keyed reader selects one body and its people, including its portrait", async () => {
-  const db = await factDb();
+test("a saved body detail keeps its portraits, shared phone and field sources without source reads",async()=>{
+  const {migratedReaderDb}=await import('./helpers/migrated-reader-db.ts');
+  const {packReadyPlace}=await import('../lib/reader/place-ready.ts');
+  const {pg}=await migratedReaderDb();
+  const body='ocd-division/country:us/state:az/county:pima#governing';
+  const source={sourceUrl:'https://example.gov/council',sourceOrg:'Council',collectedAt:'2026-10-01',verifiedAt:null};
+  const roster={members:[{id:'member:one',name:'A Person',photoUrl:'/portrait.jpg'}],gaps:[],officePhone:{phone:'520-555-0100',sourceUrl:source.sourceUrl,sourceOrg:source.sourceOrg}};
+  const place={registry:{registry:{bodies:[{id:body,fieldSources:{officePhone:source}}]}},bodies:[]} as unknown as import('../lib/reader/place-types.ts').PlacePackage;
   try {
-    await db.pg.exec(`${registryPointerSchema}
-      CREATE TABLE civic_data_rows(promotion_key text,version_id text,collection text,ordinal bigint,row_id text,body_id text,aliases text[],value jsonb);
-      CREATE FUNCTION reader_payload_node(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';
-      CREATE FUNCTION reader_payload_value(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';
-      CREATE FUNCTION reader_payload_members(jsonb) RETURNS TABLE(item jsonb,ordinal_index bigint) LANGUAGE sql IMMUTABLE AS
-        'SELECT value,ordinality FROM jsonb_array_elements(coalesce($1,''[]''::jsonb)) WITH ORDINALITY';`);
-    const body = "ocd-division/country:us/state:az/county:pima#governing";
-    const other = "ocd-division/country:us/state:az/county:other#governing";
-    const source = { sourceUrl: "https://example.gov/council", sourceOrg: "Council", collectedAt: "2026-10-01", verifiedAt: null };
-    const member = { id: "roster:pima#one", name: "A Person", officeTitle: "Chair", termNote: null,
-      email: null, phone: "520-555-0100", websiteUrl: null, fieldSources: { phone: source } };
-    const key = "REGISTRY_RUNTIME_BINDING:US-AZ:reader-registry-runtime";
-    await db.query(`INSERT INTO civic_data_promotions(key,current_version_id,payload,last_known_good_version_id,source_id,record_class,scope,validation_receipt,promoted_at)
-      VALUES($1,'v1',$2::jsonb,'v1','fixture','REGISTRY_RUNTIME_BINDING','US-AZ:reader-registry-runtime','{"decision":"GOOD"}','2026-10-01')`, [key, JSON.stringify({
-      officialPhotos: { photos: [] }, rosterPhotos: { [member.id]: "/portrait.jpg", "other:person": "/other.jpg" },
-    })]);
-    await db.query(`INSERT INTO civic_data_candidates VALUES('v1','PROMOTED',true,'v1','v1','fixture','REGISTRY_RUNTIME_BINDING',
-      'US-AZ:reader-registry-runtime',NULL,'{"decision":"GOOD"}',$1::jsonb,$2)`,
-      [JSON.stringify({ normalization: { normalizedHash: "a".repeat(64) } }), "a".repeat(64)]);
-    const add = (collection: string, id: string, value: unknown) => db.query("INSERT INTO civic_data_rows VALUES($1,'v1',$2,1,$3,$3,ARRAY[$3],$4::jsonb)",
-      [key, collection, id, JSON.stringify(value)]);
-    await add("registry.bodies", body, { id: body, fieldSources: { officePhone: source } });
-    await add("bodyRosters", body, { bodyId: body, bodyName: "County Board", sourceUrl: source.sourceUrl,
-      sourceOrg: source.sourceOrg, collectedAt: source.collectedAt, partisanship: "UNDETERMINED", members: [member] });
-    await add("bodyRosters", other, { bodyId: other, bodyName: "Other", sourceUrl: source.sourceUrl,
-      sourceOrg: source.sourceOrg, collectedAt: source.collectedAt, partisanship: "UNDETERMINED", members: [{ ...member, id: "other:person" }] });
-    const registryReads: string[][] = [];
-    installFactReader(async (sql, params) => {
-      const rows = await db.query(sql, params);
-      if (sql.includes("registry.rosterDispositions")) registryReads.push(rows.map(row => String(row.kind)));
-      return rows;
-    });
-    const response = await GET(new Request(`https://example.test/api/reader/body?state=AZ&body=${encodeURIComponent(body)}`));
-    assert.equal(response.status, 200);
-    assert.equal(response.headers.get("netlify-vary"), "query=state|body");
-    const detail = await response.json() as ReaderBodyDetail;
-    assert.deepEqual(detail.roster.members.map(person => person.id), [member.id]);
-    assert.equal(detail.roster.members[0].photoUrl, "/portrait.jpg");
-    assert.deepEqual(detail.fieldSources, { officePhone: source });
-    assert.ok(registryReads[0].includes("bodyRosters"));
-    assert.ok(!registryReads[1].includes("bodyRosters"), "the portrait lookup must not reread the roster");
-    await db.query("UPDATE civic_data_candidates SET state='REJECTED' WHERE id='v1'");
-    const rejected = await GET(new Request(`https://example.test/api/reader/body?state=AZ&body=${encodeURIComponent(body)}`));
-    assert.equal(rejected.status, 503);
-  } finally { installFactReader(undefined); await db.pg.close(); }
-});
-
-test("the keyed reader retains checked sources for derived body identity fields", async () => {
-  const db = await factDb();
-  try {
-    await db.pg.exec(`${registryPointerSchema}
-      CREATE TABLE civic_data_rows(promotion_key text,version_id text,collection text,ordinal bigint,row_id text,body_id text,aliases text[],value jsonb);
-      CREATE FUNCTION reader_payload_node(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';
-      CREATE FUNCTION reader_payload_value(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';
-      CREATE FUNCTION reader_payload_members(jsonb) RETURNS TABLE(item jsonb,ordinal_index bigint) LANGUAGE sql IMMUTABLE AS
-        'SELECT value,ordinality FROM jsonb_array_elements(coalesce($1,''[]''::jsonb)) WITH ORDINALITY';`);
-    const government = "az:special:fixture", body = "government:US-AZ:fixture#board", place = "ocd-division/country:us/state:az/county:pima";
-    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'government','Fixture District','AZ'),($2,'place','Pima','AZ')", [government, place]);
-    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'body','Board','AZ',$2)", [body, government]);
-    await db.query("INSERT INTO entity_place(entity_id,place_id,placement_basis) VALUES($1,$2,'HOST_COUNTY')", [body, place]);
-    const [copy] = await db.query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key)
-      VALUES('https://example.gov/board','https://example.gov/board','2026-10-01',repeat('a',64),'fixture') RETURNING id`);
-    await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
-      VALUES($1,'name','"Fixture Board"','Fixture Board','live','OFFICIAL',$2,'Fixture Board','2026-10-01','fixture')`, [body, copy.id]);
-    const { readBodyDetail } = await import("../lib/reader/body-detail-read.ts");
-    const detail = await readBodyDetail(db.query, "AZ", body);
-    assert.deepEqual(Object.keys(detail.fieldSources ?? {}).sort(), ["governmentId", "governmentName", "governmentType", "name", "ocdId", "placementBasis", "registeredName"].sort());
-    for (const source of Object.values(detail.fieldSources ?? {})) assert.equal(source.sourceUrl, "https://example.gov/board");
-  } finally { await db.pg.close(); }
+    await pg.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','County Board','AZ')",[body]);
+    await pg.query("INSERT INTO place_page(place_id,version,built_at,body,history_body,context) VALUES($1,1,now(),$2,'{}',$3)",[body,JSON.stringify(packReadyPlace(place)),JSON.stringify({bodyRoster:roster})]);
+    const statements:string[]=[];
+    installFactReader(async(text,params=[])=>{statements.push(text);return(await pg.query<Record<string,unknown>>(text,[...params])).rows;});
+    const response=await GET(new Request(`https://example.test/api/reader/body?state=AZ&body=${encodeURIComponent(body)}`));
+    assert.equal(response.status,200);assert.equal(response.headers.get('netlify-vary'),'query=state|body');
+    assert.deepEqual(await response.json(),{bodyId:body,roster,fieldSources:{officePhone:source}});
+    assert.ok(statements.length&&statements.every(sql=>!(/civic_data_(?:candidates|promotions|candidate_events|payload_parts)/.test(sql))));
+    assert.equal((await GET(new Request(`https://example.test/api/reader/body?state=CA&body=${encodeURIComponent(body)}`))).status,503);
+  }finally{installFactReader(undefined);await pg.close();}
 });

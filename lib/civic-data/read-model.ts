@@ -4,12 +4,10 @@ import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
 import { currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
-import { OPEN_DATA_READER_PAYLOAD } from "../sources/open-data/reader-sql.ts";
 import {createRequire} from "node:module";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import { readerCanonicalEntry } from "../reader/canonical-context.ts";
-import { registrationRecipientNamesSql } from "../registration/recipient-names.ts";
 
 import type {
   CandidateEvent,
@@ -1225,34 +1223,16 @@ async function readReaderProjection(recordClass: RoutineRecordClass, scope: stri
 
 // On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.
 async function loadReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection, exactKeys=false): Promise<PromotedEdgeEntry> {
-  const query = readerDatabaseQuery(1800);
-  if (!query) throw new Error("READER_STORE_UNCONFIGURED");
-  const window = selection.governmentWindow;
-  const money = recordClass === "STATE_CAMPAIGN_FINANCE";
-  const fec = exactKeys && recordClass === "FEC_FUNDING";
-  const openData=recordClass==="CURATED_READER_RECORD"&&(scope==="epa-echo:national"||scope==="socrata-discovery:national");
-  const selectedPayload = fec ? BALLOT_FEC_MONEY_PAYLOAD : recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD
-    : money ? exactKeys ? BALLOT_STATE_MONEY_PAYLOAD : STATE_MONEY_READER_PAYLOAD
-    : openData ? OPEN_DATA_READER_PAYLOAD
-    : window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
-  const payload = recordClass === "REGISTRATION" ? registrationRecipientNamesSql("p.payload", selectedPayload) : selectedPayload;
-  const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
-    p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
-    ${payload} payload,
-    c.retrieved_at, reader_payload_node(c.candidate)->'temporal' temporal FROM civic_data_promotions p
-    JOIN civic_data_candidates c ON c.id=p.current_version_id
-    WHERE p.record_class=$1 AND p.scope=$2 AND c.state='PROMOTED' AND $3::text[] IS NOT NULL`, params: [recordClass, scope, [...selection.keys],
-      ...(recordClass === "FEDERAL_KEY_VOTE" || money || fec || openData ? [] : window ?? [selection.point ? JSON.stringify(selection.point) : null])] }]);
-  const row = rows[0];
-  if (!row) return { kind: "NOT_RECORDED", recordClass, scope };
-  const temporal = row.temporal as { staleAtRetrieval?: boolean; version?: string; sourceThrough?: string } | null;
-  return { kind: "PROMOTED", projection: { key: row.key as string, sourceId: row.source_id as string, recordClass, scope,
-    versionId: row.current_version_id as string, lastKnownGoodVersionId: row.last_known_good_version_id as string,
-    promotedAt: new Date(row.promoted_at as string).toISOString(), payload: row.payload,
-    receipt: row.validation_receipt as Extract<PromotedEdgeEntry, {kind:"PROMOTED"}>["projection"]["receipt"] },
-    attested: { recordClass, scope, versionId: row.current_version_id as string, payloadSha256: promotedPayloadSha256(row.payload),
-      retrievedAt: new Date(row.retrieved_at as string).toISOString(), staleAtRetrieval: temporal?.staleAtRetrieval === true,
-      version: temporal?.version ?? null, sourceThrough: temporal?.sourceThrough ?? null } };
+  const keyed=['FEC_FUNDING','STATE_CAMPAIGN_FINANCE','FEDERAL_KEY_VOTE'].includes(recordClass)
+    ||recordClass==='CURATED_READER_RECORD'&&['epa-echo:national','socrata-discovery:national'].includes(scope);
+  if(keyed){
+    const query=readerDatabaseQuery(1800);if(!query)throw Error('READER_STORE_UNCONFIGURED');
+    const {readKeyedSelection}=await import('./keyed-reader.ts');
+    return readKeyedSelection(async(text,params=[])=>(await query([{text,params}]))[0]??[],recordClass,scope,[...selection.keys]);
+  }
+  void exactKeys;
+  const {readCanonicalShelf}=await import('../reader/canonical.ts');
+  return (await readCanonicalShelf([{recordClass,scope}])).readPromotedEntry!(recordClass,scope);
 }
 
 export async function readStateRegistryRuntimeProjection(state: string, options: PromotedCivicDataReadOptions = {}): Promise<CivicDataReadResult<RegistryRuntimeReadModel>> {

@@ -4,10 +4,10 @@ import { keyedReaderPointers } from "../civic-data/keyed-reader.ts";
 import { selectedMetadataSql } from "./selected-entry.ts";
 
 /** Only the county's keyed jurisdiction and site facts leave the database. */
-export function selectedVotingStatement(state:string,place:VotingReaderPlace) {
+export function selectedVotingStatement(state:string,place:Pick<VotingReaderPlace,"countyFips">) {
   return {params:[[ `VOTING_SITE:${stateBallotScope('voting-sites',state)}` ],place.countyFips],text:`WITH
     pointer AS MATERIALIZED (${keyedReaderPointers}), jurisdictions AS MATERIALIZED (
-      SELECT r.* FROM pointer JOIN civic_data_rows r ON r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id
+      SELECT r.promotion_key,r.version_id,r.ordinal,r.body_id,r.value FROM pointer JOIN civic_data_rows r ON r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id
       WHERE pointer.published AND r.collection='rp01.jurisdictions' AND
         (cardinality($2::text[])=0 OR r.value->>'countySubdivisionGeoid' IS NOT NULL
           OR r.value->>'countyFips' IS NULL OR r.value->>'countyFips'=ANY($2::text[]))

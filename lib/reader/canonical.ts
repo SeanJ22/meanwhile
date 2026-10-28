@@ -130,7 +130,7 @@ async function readReadyStatement(query:ReadOnlyQuery,statement:Statement):Retur
       const state=/\/(?:state|territory|district):([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase()
         ??currentReaderSelection()?.states?.[0]??(id==='ocd-division/country:us'?'US':undefined);
       if(!state)throw new Error(`PLACE_AUTHORITY_STATE_MISSING:${id}`);
-      pages.push({id,kind:'place',state,authorities:true});
+      pages.push({id,kind:'place',state,authorities:true,authorityKeys:rows.filter(row=>row.row_kind==='missing-page'&&row.part_hash===id).flatMap(row=>row.part_payload as string[]??[])});
     }
     await buildMissingPlacePages(pages);
     [rows]=await run([statement]);

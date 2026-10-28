@@ -102,7 +102,8 @@ export function stateCoverage(
     const seats = coverage.seats.map(seat => {
       const vacancy = !seat.representatives.length && [...state.federal?.vacancies ?? [], ...(state.legislativePeople ?? state.people)?.vacancies ?? []]
         .find(row => row.ocdId === seat.ocdId);
-      return vacancy ? { ...seat, vacancy } : seat;
+      const readerBodyIds=[`${seat.ocdId}#governing`,`${seat.ocdId}#board`].filter(id=>state.rosterIds?.[id]?.length);
+      return {...seat,...(vacancy?{vacancy}:{}),...(readerBodyIds.length?{readerBodyIds}:{})};
     });
     const { summaries, memberIds } = bodyRosterSummaries(runtime, coverage.bodies.map(body => body.bodyId));
     const officialIds = new Set([...memberIds,...Object.values(state.rosterIds??{}).flat()]);
@@ -112,7 +113,7 @@ export function stateCoverage(
       seats,
       seatCounts: { total: seats.length, named: seats.filter(seat => seat.representatives.length > 0).length },
       governments: [],
-      officialCount: officialIds.size,
+      officialCount: officialIds.size,officialIds:[...officialIds],
       governmentInventoryStates: [state.state],
       governmentInventoryUnavailableStates: [],
       stateOffices: stateOfficesForStates([state.state]),

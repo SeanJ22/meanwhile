@@ -146,12 +146,14 @@ test("a canonical ZIP uses its private ready selection with one SQL read and no 
         if(text.includes(PLACE_PACKAGE_SQL)) {
           sourceReads++;assert.deepEqual(args?.[2],[]);return fixturePlaceBuild(query,text,args,raw);
         }
+        if(text.includes('FROM civic_data_promotions'))return text.includes(' AS fingerprint')?[{fingerprint:'fixture-empty-authorities'}]:[];
         return query(text,args);
       }))};
       assert.deepEqual(await rebuildPlacePages({db:wrapped,limit:1,concurrency:1,purge:async()=>({purged:true})}),{rebuilt:1,failed:0,remaining:0});
       assert.equal(sourceReads,1);
       const [saved]=await db.query("SELECT body,context FROM place_page WHERE place_id=$1",[`zip:${zip}`]);
-      assert.deepEqual(saved!.context,{formatVersion:1});
+      assert.equal((saved!.context as {formatVersion:number}).formatVersion,1);
+      assert.equal((saved!.context as {readerFormat:number}).readerFormat,1);
       assert.deepEqual(unpackReadyTerritory(saved!.body),selectBodyTerritory(coordinates,loaded));
       const published=await readPlacePackage({state:"AZ",placeId:`zip:${zip}`,divisionIds:[]},async()=>[{page:saved!.body,version:1}]);
       assert.deepEqual(placePageTerritory(published),selectBodyTerritory(coordinates,loaded));

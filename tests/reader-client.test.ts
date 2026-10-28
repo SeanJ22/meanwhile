@@ -29,6 +29,12 @@ test("merged coverage does not claim a distinct count before local members are o
   assert.equal(merged.officialCount, null);
 });
 
+test("saved member identities give an exact distinct merged count before any roster opens",()=>{
+  const local={...coverage,officialIds:['local:one','shared:person'],officialCount:2,bodies:[{bodyId:'board',rosterSummary:{memberCount:2,hasSelectBoard:false}} as CoveredBody]};
+  const state={...coverage,officialIds:['shared:person','senator:one'],senators:[{id:'senator:one'} as SeatHolder]};
+  assert.equal(mergeReaderCoverage(state,local,0)?.officialCount,3);
+});
+
 test("a sourced vacancy survives the cached state, ZIP selection and merged place answer", async t => {
   const ocdId = "ocd-division/country:us/state:fl/cd:20";
   const vacancy = { ocdId, sourceUrl: "https://clerk.house.gov/xml/lists/MemberData.xml", sourceOrg: "House Clerk",

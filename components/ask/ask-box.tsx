@@ -22,7 +22,7 @@ import { WorkingOnIt } from "@/components/demand/working-on-it";
 import type { NameableEntity } from "@/lib/routing/exact-name";
 import { ASK_BEAT_POOL, beatStem, drawAskBeat } from "@/lib/routing/ask-beat-pool";
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
-import { loadBodyDetails } from "@/lib/registry/body-roster-client";
+import { loadBodyDetails,hydrateGoverningSeats } from "@/lib/registry/body-roster-client";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { logEvent } from "@/lib/log/client";
 import { getOrCreateBrowserKey } from "@/lib/state/browser-key";
@@ -406,6 +406,11 @@ export function AskBox({
         }) };
         result = answerQuestion(question, routedCoverage, zip, { entities, everydayRouting,
           ...(classified ? { classified } : {}) });
+      }
+
+      if(routedCoverage?.seats.some(seat=>seat.readerBodyIds?.length)){
+        routedCoverage=await hydrateGoverningSeats(routedCoverage);
+        result=answerQuestion(question,routedCoverage,zip,{entities,everydayRouting,...(classified?{classified}:{})});
       }
 
       if (groundedAnswer.mode === "TRANSPORT_FAILED") {

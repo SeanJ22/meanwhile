@@ -34,7 +34,7 @@ export function preparePlaceRosters(place: PlacePackage): { place: PlacePackage;
   if (!place.registry) return { place, rosters: new Map() };
   const rosters = new Map<string, ReaderBodyRoster>(), refs: Record<string, string> = {}, previews: Record<string, SeatHolder[]> = {},ids:Record<string,string[]>={};
   const runtime = withStateRegistryFacts(place.registry, place.bodies);
-  withRegistryRuntimeProjection(runtime, [], () => { for (const bodyId of new Set([...runtime.registry.bodies.map(body => body.id), ...place.bodies.map(body => body.id)])) {
+  withRegistryRuntimeProjection(runtime, [], () => { for (const bodyId of new Set([...runtime.registry.bodies.map(body => body.id),...runtime.bodyRosters.map(roster=>roster.bodyId), ...place.bodies.map(body => body.id)])) {
     const roster = projectRoster(bodyId);
     ids[bodyId]=roster.members.map(member=>member.id);
     // Ask names the appointed executive; the coverage list names a town's Select Board.

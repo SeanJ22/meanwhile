@@ -5,7 +5,7 @@
       "file": "lib/ballot/reader-data.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 140
+      "line": 119
     },
     {
       "file": "lib/civic-data/candidate-integrity.ts",
@@ -71,19 +71,19 @@
       "file": "lib/civic-data/read-model.ts",
       "kind": "readCandidate",
       "fingerprint": "97ecec3d55d6e00fe7241df8313aa18dbd914548d3637c84494820bd6483e773",
-      "line": 50
+      "line": 48
     },
     {
       "file": "lib/civic-data/read-model.ts",
       "kind": "readCandidate",
       "fingerprint": "0bfb6f4adc51b838bc90681a88d1d1d68bbe1f70c5f7223403acf595ab4f2e1e",
-      "line": 482
+      "line": 480
     },
     {
       "file": "lib/civic-data/read-model.ts",
       "kind": "readCandidate",
       "fingerprint": "294759cff30571b68ea9ae1344db460f3ce7fcd43c770ab29a8cdd8b0a5d1bf2",
-      "line": 831
+      "line": 829
     },
     {
       "file": "lib/civic-data/store.ts",
@@ -239,37 +239,25 @@
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 122
+      "line": 65
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 219
-    },
-    {
-      "file": "lib/reader/canonical.ts",
-      "kind": "SELECT *",
-      "fingerprint": "53c4f0abf7abbbf0554b3151506b4edeef5076703e66a2bb5e73c6279129d6a7",
-      "line": 133
-    },
-    {
-      "file": "lib/reader/canonical.ts",
-      "kind": "SELECT *",
-      "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
-      "line": 175
+      "line": 113
     },
     {
       "file": "lib/sources/legiscan/reader.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 32
+      "line": 33
     },
     {
       "file": "lib/sources/legiscan/reader.ts",
       "kind": "readCandidate",
       "fingerprint": "55c342842a9a2b3402c4c672ae19d68fd56085705011bb8edf425e6b2d6fbd61",
-      "line": 50
+      "line": 51
     },
     {
       "file": "scripts/ingest.ts",
@@ -333,34 +321,6 @@
     }
   ],
   "bundleTables": [
-    {
-      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
-      "table": "civic_data_clock_versions"
-    },
-    {
-      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "app/(admin)/_mw/admin-v6/screen-money.tsx",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/ballot/state-voting-lookups.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/ballot/state-voting-lookups.ts",
-      "table": "civic_data_promotions"
-    },
     {
       "file": "lib/census-geography/area-lookup.ts",
       "table": "civic_data_promotions"
@@ -598,14 +558,6 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "lib/civic-data/read-model.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/civic-data/read-model.ts",
-      "table": "civic_data_promotions"
-    },
-    {
       "file": "lib/civic-data/source-change-cadence.ts",
       "table": "civic_data_candidate_events"
     },
@@ -631,22 +583,6 @@
     },
     {
       "file": "lib/civic-data/state-pointer-retirement.ts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/civic-data/state-reader-store.ts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "lib/civic-data/state-reader-store.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/civic-data/state-reader-store.ts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "lib/civic-data/state-reader-store.ts",
       "table": "civic_data_promotions"
     },
     {
@@ -902,34 +838,6 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "lib/outcomes/store.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/outcomes/store.ts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/reader/canonical.ts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "lib/reader/canonical.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/reader/canonical.ts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "lib/reader/canonical.ts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/reader/page-subjects.ts",
-      "table": "civic_data_promotions"
-    },
-    {
       "file": "lib/reader/place-builder.ts",
       "table": "civic_data_candidate_events"
     },
@@ -944,22 +852,6 @@
     {
       "file": "lib/reader/place-builder.ts",
       "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/reader/selected-entry.ts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "lib/reader/selected-entry.ts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "lib/reader/selected-entry.ts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/reader/selected-voting.ts",
-      "table": "civic_data_payload_parts"
     },
     {
       "file": "lib/reference/population-facts.ts",
@@ -998,10 +890,6 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "lib/sources/legiscan/person-reader.ts",
-      "table": "civic_data_candidates"
-    },
-    {
       "file": "lib/sources/legiscan/publication-base.ts",
       "table": "civic_data_candidate_events"
     },
@@ -1012,10 +900,6 @@
     {
       "file": "lib/sources/legiscan/publication-base.ts",
       "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/sources/legiscan/state-catalog.ts",
-      "table": "civic_data_candidates"
     },
     {
       "file": "lib/sources/prl/keyed-reader.ts",

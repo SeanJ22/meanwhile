@@ -111,7 +111,8 @@ export function stateCoverageForZip(state: ReaderStateResponse, zip: string, res
     divisions: state.coverage.divisions.filter(division => ids.has(division.ocdId)),
   }, 0);
   // State packages contain no local rosters; filtering their seats changes the count.
-  return { ...scoped, officialCount: allOfficialRows(scoped).length };
+  const officialIds=allOfficialRows(scoped).map(row=>row.holder.id);
+  return { ...scoped, officialCount:officialIds.length,officialIds };
 }
 
 function mergeRows<T>(base: readonly T[], local: readonly T[], key: (row: T) => string): T[] {
@@ -129,15 +130,10 @@ export function mergeReaderCoverage(state: CoverageSummary | null, place: Covera
     statewideExecutives: mergeRows(state.statewideExecutives, place.statewideExecutives, row => row.id),
     stateLegislatorAuthorities: mergeRows(state.stateLegislatorAuthorities, place.stateLegislatorAuthorities, row => row.scope),
   }, meetingCount);
-  // The place count is distinct across local members, but their ids are not
-  // sent with the summary. Do not claim an exact union with state officials
-  // until those memberships have been opened.
-  const localMembers = place.bodies.some(body => (body.rosterSummary?.memberCount ?? 0) > 0 && !body.readerRoster);
-  const stateIds = new Set(allOfficialRows(state).map(row => row.holder.id));
-  const placeIds = new Set(allOfficialRows(place).map(row => row.holder.id));
-  const addsStatePeople = [...stateIds].some(id => !placeIds.has(id));
-  return { ...merged, officialCount: localMembers && addsStatePeople ? null
-    : localMembers ? place.officialCount : allOfficialRows(merged).length };
+  const officialIds=new Set([...state.officialIds??allOfficialRows(state).map(row=>row.holder.id),
+    ...place.officialIds??allOfficialRows(place).map(row=>row.holder.id)]);
+  const missingIds=!place.officialIds&&place.bodies.some(body=>(body.rosterSummary?.memberCount??0)>0&&!body.readerRoster);
+  return {...merged,officialIds:missingIds?undefined:[...officialIds],officialCount:missingIds?null:officialIds.size};
 }
 
 /** Both requests start before either is awaited. State is published first, even if place wins the race. */

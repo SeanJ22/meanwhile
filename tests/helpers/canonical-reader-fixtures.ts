@@ -1,3 +1,5 @@
+import {projectBodyDetail} from "../../lib/reader/body-detail.ts";
+import {packReadyPlace} from "../../lib/reader/place-ready.ts";
 import {PEOPLE_SOURCE_IDS,peopleSourceRecordClass,peopleSourceScope} from "../../lib/officials/people-sources.ts";
 import { MemoryRoutineDataStore, PostgresRoutineDataStore, type RoutineDataStore } from "../../lib/civic-data/store.ts";
 import { clearPromotedReadModelCache, type PromotedEdgeEntry } from "../../lib/civic-data/read-model.ts";
@@ -56,8 +58,9 @@ function censusRows(value: CensusDistrictEdge, state?: unknown): Record<string, 
 function canonicalRows(sql: string, params: readonly unknown[]): Record<string, unknown>[] | undefined {
   const held = fixture().store as unknown as { promotions: Map<string, PromotedProjection>; candidates: Map<string, CandidateVersionRecord> };
   const zipPeople = sql.includes("AS zip_people") && sql.includes("selected(ordinal_index)");
-  const selectedOutcomes = sql.includes("AS snapshot_shape_valid") && sql.includes("p.record_class='MEETING_OUTCOME'");
-  const selectedKeys = sql.includes("FROM civic_data_promotions p") && sql.includes("p.key=ANY($1::text[]");
+  const selectedOutcomes = sql.includes("AS snapshot_shape_valid") && sql.includes("r.record_class='MEETING_OUTCOME'");
+  const selectedKeys = sql.includes("FROM civic_data_promotions p") && sql.includes("p.key=ANY($1::text[]")
+    || sql.includes("r.collection='rp01.header'")&&sql.includes("r.promotion_key=ANY($1::text[])");
   if (!selectedOutcomes && !selectedKeys) return undefined;
   const keys = Array.isArray(params[0]) ? [...params[0]] : String(params[0]).match(/"((?:[^"\\]|\\.)*)"/g)?.map(key => JSON.parse(key)) ?? [];
   const exactKeys = selectedOutcomes ? params[3] as readonly string[] : [];
@@ -273,6 +276,12 @@ export function activateCanonicalFixture(key: string): void {
     const values=[...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];
     const registries=values.filter(p=>p.recordClass==="REGISTRY_RUNTIME_BINDING").map(p=>p.payload as RegistryRuntimeReadModel);
     const rosters=registries.flatMap(r=>r.bodyRosters??[]);
+    if(sql.startsWith('SELECT e.id,e.state,p.context')||sql.startsWith('SELECT p.body,e.state FROM place_page')){
+      const id=String(params[0]),runtime=registries.find(r=>r.registry.bodies.some(b=>b.id===id)||r.bodyRosters.some(r=>r.bodyId===id));
+      if(!runtime)return [];
+      const state=meetingStateOf(id),detail=projectBodyDetail(state,id,runtime,[]);
+      return sql.startsWith('SELECT e.id')?[{id,state,roster:detail.roster}]:[{state,body:packReadyPlace({registry:runtime,bodies:[]} as unknown as import('../../lib/reader/place-types.ts').PlacePackage)}];
+    }
     if(sql.startsWith("SELECT id FROM entity")){
       const sourceStore=held.meetings??held.store;
       const scopes=await sourceStore.listPromotionScopes?.(["MEETING"])??[];

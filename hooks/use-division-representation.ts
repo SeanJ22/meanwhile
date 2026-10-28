@@ -45,9 +45,13 @@ export function useDivisionsRepresentation(
     const holders = representationForDivision(coverage, id);
     return [id, holders.length ? holders : cached.get(id)?.holders ?? holders];
   }));
-  const localBodies = Object.fromEntries(ids.map(id => [id, (coverage?.bodies ?? [])
-    .filter(body => (body.bodyId === `${id}#governing` || body.bodyId === `${id}#board`) && body.rosterSummary)
-    .map(body => ({ id: body.bodyId, state: bodyDetailState(body) }))]));
+  const localBodies = Object.fromEntries(ids.map(id => {
+    const bodies=(coverage?.bodies??[]).filter(body=>(body.bodyId===`${id}#governing`||body.bodyId===`${id}#board`)&&body.rosterSummary)
+      .map(body=>({id:body.bodyId,state:bodyDetailState(body)}));
+    for(const bodyId of coverage?.seats.find(seat=>seat.ocdId===id)?.readerBodyIds??[])if(!bodies.some(body=>body.id===bodyId))
+      bodies.push({id:bodyId,state:/\/(?:state|territory|district):([a-z]{2})/.exec(id)?.[1]?.toUpperCase()??null});
+    return [id,bodies];
+  }));
   const localBodiesKey = JSON.stringify(localBodies);
   const remoteIdsKey = JSON.stringify(ids.filter(id => localBodies[id]?.length ||
     (!local.get(id)?.length && !vacancies.get(id) && !cached.get(id) && !isStateDivisionPending(id))).sort());

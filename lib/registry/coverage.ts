@@ -205,6 +205,8 @@ export interface CoveredBody {
  * a division's representatives do not establish who sits on every board there.
  */
 export interface Seat {
+  /** Saved governing roster keys, including rosters without a visible body card. */
+  readerBodyIds?:readonly string[];
   ocdId: string;
   label: string;
   divisionType: DivisionType;
@@ -223,6 +225,8 @@ export interface CoverageSummary {
   bodies: CoveredBody[];
   /** Count of distinct people shown by the officials panel for this place. */
   officialCount?: number | null;
+  /** Stable identities only, for the distinct union of independently loaded place and state summaries. */
+  officialIds?:readonly string[];
   /** Source inventories are independent of sourced meeting bodies and people. */
   governments?: RegistrationGovernmentListing[];
   governmentInventoryStates?: string[];

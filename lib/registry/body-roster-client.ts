@@ -1,3 +1,4 @@
+import {scopedHolders} from "../officials/scoped-holders.ts";
 import type { SeatHolder } from "../officials/lookup.ts";
 import type { RosterReaderGap } from "./body-rosters.ts";
 import type { CoverageSummary, CoveredBody } from "./coverage.ts";
@@ -86,4 +87,18 @@ export function projectedRosterGapsForDivision(
 /** People named in the unopened list; complete body membership loads on its own key. */
 export function projectedRosterPreview(body:Pick<CoveredBody,'readerRoster'|'readerRosterPreview'>):readonly SeatHolder[] {
   return body.readerRosterPreview??body.readerRoster?.members??[];
+}
+
+/** Governing rosters may exist without a visible body card; their saved keys still own local representation. */
+export async function hydrateGoverningSeats(coverage:CoverageSummary):Promise<CoverageSummary> {
+  const seats=await Promise.all(coverage.seats.map(async seat=>{
+    if(!seat.readerBodyIds?.length)return seat;
+    const state=ocdStateCode(seat.ocdId);
+    if(!state)return seat;
+    try {
+      const details=await Promise.all(seat.readerBodyIds.map(id=>loadBodyDetail(state,id)));
+      return {...seat,representatives:scopedHolders(details.flatMap(detail=>detail.roster.members),seat.representatives)};
+    }catch{return {...seat,representatives:[]};}
+  }));
+  return {...coverage,seats};
 }

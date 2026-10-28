@@ -25,7 +25,7 @@ export async function readStateReaderEntry(query:Query,recordClass:RoutineRecord
   if (!state) throw new Error(`STATE_READER_SCOPE_INVALID:${recordClass}:${scope}`);
   if(recordClass==='VOTING_SITE'){
     const postal=REGISTRY_STATES.find(state=>stateBallotScope('voting-sites',state)===scope)!;
-    const statement=selectedVotingStatement(postal,{countyFips:[]} as import("../ballot/voting-answer.ts").VotingReaderPlace);
+    const statement=selectedVotingStatement(postal,{countyFips:[]});
     return selectedStateEntry(recordClass,scope,(await query(statement.text,statement.params))[0]);
   }
   const shelf=await readCanonicalShelf([{recordClass,scope}],async statements=>Promise.all(statements.map(statement=>query(statement.text,statement.params))));

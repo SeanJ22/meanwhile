@@ -1,3 +1,4 @@
+import {AUTHORITY_COLUMNS} from "./page-authorities.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import {ballotCandidateKeys} from "../ballot/candidate-keys.ts";
 import type {BallotSet} from "../ballot/types.ts";
@@ -589,16 +590,17 @@ export async function buildPlacePackage(input: PlaceInput, query: Query) {
 }
 
 /** First use publishes the same page as the standing builder. Concurrent visits share the saved result. */
-export async function buildMissingPlacePages(pages:readonly {id:string;kind:string;state:string;authorities?:boolean;roster?:boolean;reader?:boolean}[],db?:FactDb):Promise<void> {
+export async function buildMissingPlacePages(pages:readonly {id:string;kind:string;state:string;authorities?:boolean;authorityKeys?:readonly string[];roster?:boolean;reader?:boolean}[],db?:FactDb):Promise<void> {
   const supplied=installedFactConnection();
   const writer=db ?? (supplied?{transaction:<T>(work:(query:Query)=>Promise<T>)=>work(supplied)}:readerFactDb(process.env.WTP_DB_ROLE==='local' ? process.env.DATABASE_URL
     : resolveProductionWriteHandle().connection));
-  for(const {id,kind,state,authorities,roster,reader} of pages) await writer.transaction(async query=>{
+  for(const {id,kind,state,authorities,authorityKeys,roster,reader} of pages) await writer.transaction(async query=>{
     await query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",[`place-page:${id}:${authorities?'authorities':reader?'reader':'body'}`]);
-    const [existing]=await query(`SELECT place_id,context->>'authorityFormat' AS authority_format,
-      (NOT $2::boolean OR context->>'authorityFormat'='1') AND (NOT $3::boolean OR context?'bodyRoster')
+    const [existing]=await query(`SELECT place_id,context->>'authorityFormat' AS authority_format,version,
+      (NOT $2::boolean OR context->>'authorityFormat'='1' AND NOT EXISTS(SELECT 1 FROM unnest($5::text[]) key
+        WHERE NOT (coalesce(context->'authorityKeys','[]'::jsonb)?key OR context->'authorities'?key))) AND (NOT $3::boolean OR context?'bodyRoster')
       AND (NOT $4::boolean OR context->>'readerFormat'='1') AS ready FROM place_page WHERE place_id=$1`,
-    [id,authorities??false,roster??false,reader??false]);
+    [id,authorities??false,roster??false,reader??false,authorityKeys??[]]);
     if(existing?.ready===true)return;
     if(existing&&reader&&id.startsWith('zip:')){
       const [saved]=await query("SELECT body,encode(sha256(convert_to(body::text,'UTF8')),'hex') AS fingerprint FROM place_page WHERE place_id=$1",[id]);
@@ -617,13 +619,13 @@ export async function buildMissingPlacePages(pages:readonly {id:string;kind:stri
     }
     if(existing && authorities&&!reader&&!roster){
       const {input}=await placeBuildSelection(id,kind,state);
-      const sections=await buildPageAuthorities(input,query);
+      const sections=await buildPageAuthorities(input,query,authorityKeys);
       await query(`UPDATE place_page SET context=context||$2::jsonb,version=version+1,build_fingerprint=NULL
         WHERE place_id=$1 AND context->>'authorityFormat' IS NOT DISTINCT FROM $3::text`,[id,JSON.stringify(sections),existing.authority_format]);
       return;
     }
     await query("INSERT INTO entity(id,kind,name,state) VALUES($1,$2,$1,$3) ON CONFLICT DO NOTHING",[id,kind,state]);
-    await storePlacePage(query,id,await buildPageBody(id,kind,state,query),null,!existing);
+    await storePlacePage(query,id,await buildPageBody(id,kind,state,query),null,!existing,existing?Number(existing.version):undefined);
   });
 }
 
@@ -640,6 +642,7 @@ export interface StoredPlacePage {
   readonly prints?: PlacePagePrints;
   readonly authorities?:Readonly<Record<string,Record<string,unknown>>>;
   readonly authorityFormat?:1;
+  readonly authorityKeys?:readonly string[];
   readonly authorityGeography?:Record<string,unknown>;
   readonly bodyRoster?:ReaderBodyRoster;
   readonly rosters?:readonly {id:string;roster:ReaderBodyRoster}[];
@@ -705,6 +708,7 @@ export async function rebuildPageBody(id:string,kind:string,state:string,query:Q
   }
   const printed:PlacePagePrints={...frame,reads:prints,authorities:authorityVersion};
   const sameAuthorities=same?.prints.authorities===authorityVersion;
+  if(sameAuthorities)await refreshPageAuthorityHeaders(query,id);
   if([...rows.values()].every(row=>row===null) && sameAuthorities)return {unchanged:true,prints:printed};
   // A read that printed nothing leaves the page without prints; its next rebuild reads it whole.
   const kept=Object.values(prints).every(read=>Object.keys(read).length>0);
@@ -735,17 +739,17 @@ function currentPlaceRow(history:Record<string,unknown>):Record<string,unknown> 
 }
 
 /** The page is the allowed derived copy: every later website visit reads this answer. */
-export async function storePlacePage(query:Query,id:string,page:StoredPlacePage,fingerprint:string|null=null,onlyIfMissing=false):Promise<void> {
-  const {readyCurrent,readyHistory,territory,prints,authorities,authorityGeography,authorityFormat,bodyRoster,rosters,...rawContext}=page;
+export async function storePlacePage(query:Query,id:string,page:StoredPlacePage,fingerprint:string|null=null,onlyIfMissing=false,expectedVersion?:number):Promise<void> {
+  const {readyCurrent,readyHistory,territory,prints,authorities,authorityGeography,authorityFormat,authorityKeys,bodyRoster,rosters,...rawContext}=page;
   const context={...(/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext)),readerFormat:1,...(prints?{prints}:{}),
-    ...(authorities?{authorities,authorityFormat}:{}),...(authorityGeography?{authorityGeography}:{}),...(bodyRoster?{bodyRoster}:{})};
+    ...(authorities?{authorities,authorityFormat,authorityKeys}:{}),...(authorityGeography?{authorityGeography}:{}),...(bodyRoster?{bodyRoster}:{})};
   const saved=await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context,build_fingerprint)
     VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb,$5)
     ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
       body=excluded.body,history_body=excluded.history_body,
       context=(place_page.context-'current'-'history'-'emptyCurrent'-'emptyHistory')||excluded.context,
-      build_fingerprint=excluded.build_fingerprint WHERE NOT $6::boolean RETURNING place_id`,
-  [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context),fingerprint,onlyIfMissing]);
+      build_fingerprint=excluded.build_fingerprint WHERE NOT $6::boolean AND ($7::bigint IS NULL OR place_page.version=$7) RETURNING place_id`,
+  [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context),fingerprint,onlyIfMissing,expectedVersion??null]);
   if(!saved.length)return;
   const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
     !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
@@ -924,7 +928,7 @@ export async function seedRuntimeBodyPageSubjects(query:Query,states:readonly st
   return inserted;
 }
 
-export const buildSelectedPointerSql = `SELECT p.*,c.retrieved_at,
+export const buildSelectedPointerSql = `SELECT p.key,p.record_class,p.scope,p.source_id,p.current_version_id,p.last_known_good_version_id,p.promoted_at,p.payload,p.payload_fingerprint,p.validation_receipt,c.retrieved_at,
   (SELECT e.detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id
     AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY e.sequence DESC LIMIT 1) AS confirmation,
   (p.current_version_id=p.last_known_good_version_id AND c.state='PROMOTED' AND c.acquisition_succeeded
@@ -1010,7 +1014,7 @@ export function buildStatePackageStatement(state: string, divisions: readonly st
   const ctes=parts.map(([name,statement])=>{const offset=params.length;params.push(...statement.params);
     return `${name} AS MATERIALIZED (${statement.text.replace(/\$(\d+)/g,(_,index:string)=>`$${Number(index)+offset}`)})`;});
   return {...geography,text:`WITH state_geography AS MATERIALIZED (${geography.text}),${ctes.join(',')}
-    SELECT g.*,(SELECT to_jsonb(p) FROM zip_people p) AS zip_people,(SELECT to_jsonb(r) FROM zip_registry r) AS zip_registry,
+    SELECT g.version_id,g.geography,g.local_divisions,g.canonical_keys,(SELECT to_jsonb(p) FROM zip_people p) AS zip_people,(SELECT to_jsonb(r) FROM zip_registry r) AS zip_registry,
       (SELECT to_jsonb(o) FROM zip_official o) AS zip_official,(SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_sources s) AS zip_sources,
       (SELECT coalesce(jsonb_agg(to_jsonb(s)),'[]'::jsonb) FROM zip_context s) AS zip_context,
       (SELECT to_jsonb(b) FROM zip_ballot b) AS zip_ballot FROM state_geography g`,params};
@@ -1071,7 +1075,7 @@ function zipSourcesStatement(state: string,divisions:readonly string[]) {
       OR value->>'id' IN (SELECT value->>'officeholderId' FROM links WHERE links.key=p.key AND value->>'ocdId' IN (SELECT id FROM selected_divisions))
       UNION SELECT next.key,next.ordinal_index FROM selected s JOIN labels prior ON prior.key=s.key AND prior.ordinal_index=s.ordinal_index
         JOIN labels next ON next.label=prior.label),
-    chosen AS MATERIALIZED (SELECT p.* FROM people p JOIN selected s USING(key,ordinal_index)),
+    chosen AS MATERIALIZED (SELECT p.key,p.ordinal_index,p.value FROM people p JOIN selected s USING(key,ordinal_index)),
     identities AS MATERIALIZED (SELECT unnest(identities) AS id FROM chosen)
     SELECT pointer.key,pointer.source_id,pointer.current_version_id,pointer.last_known_good_version_id,pointer.promoted_at,
       (pointer.validation_receipt-'excludedFacts')||jsonb_build_object('excludedFacts','[]'::jsonb) AS validation_receipt,
@@ -1097,12 +1101,12 @@ function zipRegistryStatement(state: string, divisions: readonly string[]) {
     divisions AS MATERIALIZED (
       SELECT d.ordinal_index,reader_payload_node(d.item) AS value FROM registry,LATERAL reader_payload_members(value->'divisions') d
     ), own_divisions AS MATERIALIZED (
-      SELECT * FROM divisions WHERE value->>'ocdId' IN (SELECT id FROM selected_divisions)
+      SELECT ordinal_index,value FROM divisions WHERE value->>'ocdId' IN (SELECT id FROM selected_divisions)
         OR value->>'canonicalOcdId' IN (SELECT id FROM selected_divisions)
     ), bodies AS MATERIALIZED (
       SELECT b.ordinal_index,reader_payload_node(b.item) AS value FROM registry,LATERAL reader_payload_members(value->'bodies') b
     ), own_bodies AS MATERIALIZED (
-      SELECT * FROM bodies WHERE value->>'ocdId' IS NULL OR value->>'ocdId' IN (SELECT value->>'ocdId' FROM own_divisions)
+      SELECT ordinal_index,value FROM bodies WHERE value->>'ocdId' IS NULL OR value->>'ocdId' IN (SELECT value->>'ocdId' FROM own_divisions)
         OR reader_payload_value(value->'alsoServesOcdIds') ?| ARRAY(SELECT value->>'ocdId' FROM own_divisions)
         OR value->>'id' IN (SELECT reader_payload_node(r.item)->>'bodyId' FROM root,LATERAL reader_payload_members(value->'bodyRosters') r)
     ), needed_divisions AS MATERIALIZED (
@@ -1171,11 +1175,11 @@ function zipOfficialStatement(state: string, divisions: readonly string[]) {
       (SELECT value->>'officeholderId' FROM links WHERE value->>'ocdId' IN (SELECT id FROM selected_divisions))
       UNION SELECT next.ordinal_index FROM selected s JOIN labels prior USING(ordinal_index)
         JOIN labels next ON next.label=prior.label),
-    people AS MATERIALIZED (SELECT p.* FROM all_people p JOIN selected s USING(ordinal_index)),
+    people AS MATERIALIZED (SELECT p.ordinal_index,p.value FROM all_people p JOIN selected s USING(ordinal_index)),
     all_members AS MATERIALIZED (SELECT m.ordinal_index,reader_payload_node(m.item) AS value,
       regexp_replace(lower(normalize(concat_ws(' ',reader_payload_node(m.item)->>'givenName',nullif(reader_payload_node(m.item)->>'middleName',''),reader_payload_node(m.item)->>'familyName'),NFKD)),'[^a-z0-9]','','g') AS name
       FROM root,LATERAL reader_payload_members(root.value->'members') m),
-    members AS MATERIALIZED (SELECT * FROM all_members WHERE name IN (SELECT name FROM all_members WHERE ${nhMemberDivisionSql("value","$3")} IN (SELECT id FROM selected_divisions))),
+    members AS MATERIALIZED (SELECT ordinal_index,value,name FROM all_members WHERE name IN (SELECT name FROM all_members WHERE ${nhMemberDivisionSql("value","$3")} IN (SELECT id FROM selected_divisions))),
     identities AS MATERIALIZED (SELECT i.ordinal_index,reader_payload_node(i.item) AS value FROM root,LATERAL reader_payload_members(root.value->'identities') i
       WHERE EXISTS (SELECT 1 FROM members m WHERE m.value->>'chamber'=reader_payload_node(i.item)->>'chamber'
         AND m.value->>'seatNo'=reader_payload_node(i.item)->>'seatNo' AND m.value->>'district'=reader_payload_node(i.item)->>'district'))
@@ -1235,7 +1239,7 @@ function zipPeopleStatement(state: string, divisions: readonly string[]) {
     SELECT next.ordinal_index FROM selected s JOIN labels prior ON prior.ordinal_index=s.ordinal_index
       JOIN labels next ON next.label=prior.label
   ), chosen AS MATERIALIZED (
-    SELECT p.* FROM people p JOIN selected s USING(ordinal_index)
+    SELECT p.key,p.ordinal_index,p.value FROM people p JOIN selected s USING(ordinal_index)
   ) SELECT ${buildSelectedMetadataSql},
     CASE WHEN published THEN reader_payload_value(root.value-'roster') || jsonb_build_object('roster',
       reader_payload_value(roster.value-'officeholders'-'divisions'-'unmatched'-'endedMemberships') || jsonb_build_object(
@@ -1256,7 +1260,7 @@ function zipPeopleStatement(state: string, divisions: readonly string[]) {
 export type BuildCanonicalAdditional=Statement & {readonly canonicalKeys?:true};
 // Exclusion reasons belong to the read disposition; copies of rejected source rows stay in the audit store.
 // Gives a summary row the shelf's column shape; it returns no shelf rows.
-const EMPTY_SHELF = "SELECT * FROM shelf LIMIT 0";
+const EMPTY_SHELF = `SELECT ${AUTHORITY_COLUMNS} FROM shelf LIMIT 0`;
 
 const SHELF = `SELECT p.key,p.record_class,p.scope,p.source_id,p.current_version_id,p.last_known_good_version_id,p.promoted_at,
  CASE WHEN jsonb_typeof(p.validation_receipt->'excludedFacts')='array' THEN
@@ -1284,7 +1288,7 @@ const SHELF_WITH_PARTS = `WITH RECURSIVE shelf AS MATERIALIZED (${SHELF}), hashe
     CROSS JOIN LATERAL (SELECT payload FROM civic_data_payload_parts WHERE hash=hashes.hash LIMIT 1) part,
     LATERAL jsonb_path_query(part.payload,'strict $.**."$civicPayloadPart"','{}',true) ref
 )
-SELECT 'promotion' AS row_kind,shelf.*,NULL::text AS part_hash,NULL::jsonb AS part_payload FROM shelf
+SELECT 'promotion' AS row_kind,${AUTHORITY_COLUMNS.split(',').map(column=>`shelf.${column}`).join(',')},NULL::text AS part_hash,NULL::jsonb AS part_payload FROM shelf
 UNION ALL
 SELECT 'part',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,part.hash,part.payload
   FROM hashes CROSS JOIN LATERAL (
@@ -1296,10 +1300,9 @@ export function buildCanonicalStatement(keys: readonly string[], additional?: Bu
   const shelfSql = additional?.canonicalKeys ? SHELF_WITH_PARTS
     .replace("WITH RECURSIVE shelf", () => `WITH RECURSIVE additional AS MATERIALIZED (${additionalSql}), shelf`)
     .replace("p.key=ANY($1::text[])", "p.key=ANY($1::text[] || ARRAY(SELECT DISTINCT unnest(canonical_keys) FROM additional))") : SHELF_WITH_PARTS;
-  const extra = additional ? ` UNION ALL SELECT 'additional', empty.*, NULL::text, extra.rows
-    FROM (SELECT coalesce(jsonb_agg(to_jsonb(item)), '[]'::jsonb) AS rows FROM (
-      ${additional.canonicalKeys ? "SELECT * FROM additional" : additionalSql}
-    ) item) extra LEFT JOIN LATERAL (${EMPTY_SHELF}) empty ON true` : "";
+  const extra = additional ? ` UNION ALL SELECT 'additional', ${AUTHORITY_COLUMNS.split(',').map(column=>`empty.${column}`).join(',')}, NULL::text, extra.rows
+    FROM (SELECT coalesce(jsonb_agg(to_jsonb(item)), '[]'::jsonb) AS rows FROM
+      ${additional.canonicalKeys ? "additional" : `(${additionalSql})`} item) extra LEFT JOIN LATERAL (${EMPTY_SHELF}) empty ON true` : "";
   return {text:shelfSql+extra,params:[keys,...additional?.params ?? []]};
 }
 
@@ -1333,24 +1336,27 @@ async function pageAuthorityFingerprint(input:PlaceInput,query:Query):Promise<st
     {recordClass:'CURATED_READER_RECORD',scope:memberOfficeStateScope(state)},
     {recordClass:'CURATED_READER_RECORD',scope:MEMBER_OFFICE_NATIONAL_SCOPE},
     ...stateAuthorityPointers('ballot-contests',state)]].map(row=>`${row.recordClass}:${row.scope}`);
-  const [row]=await query(`SELECT encode(sha256(convert_to(coalesce(string_agg(jsonb_build_array(p.key,p.xmin::text,c.xmin::text,
-    (SELECT max(sequence) FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 '))::text,
+  const [row]=await query(`SELECT encode(sha256(convert_to(coalesce(string_agg(jsonb_build_array(p.key,p.payload_fingerprint,c.normalized_hash)::text,
     '|' ORDER BY p.key),''),'UTF8')),'hex') AS fingerprint
     FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id
-    WHERE p.key=ANY($1::text[]) OR p.record_class='CURATED_READER_RECORD' AND p.scope LIKE $2`,
-  [keys,stateSections?`US:plain-english-translations:ocd-division/country:us/%:${state.toLowerCase()}%`:null]);
+    WHERE p.key=ANY($1::text[] || coalesce((SELECT ARRAY(SELECT jsonb_array_elements_text(context->'authorityKeys')) FROM place_page WHERE place_id=$3),'{}'::text[])) OR p.record_class='CURATED_READER_RECORD' AND p.scope LIKE $2`,
+  [keys,stateSections?`US:plain-english-translations:ocd-division/country:us/%:${state.toLowerCase()}%`:null,input.placeId??null]);
   if(typeof row?.fingerprint!=='string')throw new Error('PLACE_AUTHORITY_FINGERPRINT_MISSING');
   return row.fingerprint;
 }
 
 /** Publication metadata, selected officials and their Checked dates travel with the ready page. */
-export async function buildPageAuthorities(input:PlaceInput,query:Query):Promise<Pick<StoredPlacePage,'authorities'|'authorityGeography'|'authorityFormat'>> {
+export async function buildPageAuthorities(input:PlaceInput,query:Query,requestedKeys:readonly string[]=[]):Promise<Pick<StoredPlacePage,'authorities'|'authorityGeography'|'authorityFormat'|'authorityKeys'>> {
   const state=input.state.toUpperCase(),zip=input.placeId?.startsWith('zip:')?input.placeId.slice(4):undefined;
   const root=/^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(input.divisionIds[0]??'');
   const additional=state!=='US'&&(zip||root)?buildStatePackageStatement(state,input.divisionIds,zip):undefined;
   const detailKeys=new Set(state==='US'?[]:['candidate-profiles','candidate-publications','candidate-campaign-sites-derived'].flatMap(family=>
     stateAuthorityPointers(family as 'candidate-profiles'|'candidate-publications'|'candidate-campaign-sites-derived',state)).map(row=>`${row.recordClass}:${row.scope}`));
-  const keys=pageAuthorityPointers(input).map(row=>`${row.recordClass}:${row.scope}`).filter(key=>!detailKeys.has(key));
+  const [prior]=input.placeId?await query("SELECT context->'authorityKeys' AS keys FROM place_page WHERE place_id=$1",[input.placeId]):[];
+  const fixedKeys=pageAuthorityPointers(input).map(row=>`${row.recordClass}:${row.scope}`);
+  const dynamicKeys=[...new Set([...requestedKeys,...prior?.keys as string[]??[]])].filter(key=>!fixedKeys.includes(key));
+  const contextKeys=new Set(additional?memberContextPointers.map(row=>`${row.recordClass}:${row.scope}`):[]);
+  const keys=pageAuthorityPointers(input).map(row=>`${row.recordClass}:${row.scope}`).filter(key=>!detailKeys.has(key)&&!contextKeys.has(key));
   const statement=buildCanonicalStatement(keys,additional);
   const loaded=await query(statement.text,statement.params);
   const preloaded=Object.fromEntries(loaded.filter(row=>row.row_kind==='part').map(row=>[String(row.part_hash),row.part_payload]));
@@ -1369,6 +1375,13 @@ export async function buildPageAuthorities(input:PlaceInput,query:Query):Promise
     const selected=buildBallotCandidateDetailsStatement(state,[...candidateKeys]);
     rows.push(...await query(selected.text,selected.params));
   }
+  if(dynamicKeys.length){
+    const selected=await query(`WITH pointer AS (${buildSelectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')})
+      SELECT ${buildSelectedMetadataSql},pointer.record_class,pointer.scope,
+        CASE WHEN pointer.published THEN reader_place_payload(pointer.payload,$2::text[],NULL) END AS payload FROM pointer`,
+      [dynamicKeys,[...input.divisionIds,...input.bodyIds??[]]]);
+    rows.push(...selected);
+  }
   const authorities:Record<string,Record<string,unknown>>={};
   for(const row of rows){
     if(row.published!==true)throw new Error('PLACE_AUTHORITY_PUBLICATION_INVALID');
@@ -1381,14 +1394,14 @@ export async function buildPageAuthorities(input:PlaceInput,query:Query):Promise
   }
   const authorityGeography=extra?Object.fromEntries(Object.entries(extra).filter(([key])=>!key.startsWith('zip_'))):{};
   if(state!=='US'&&(zip||root))authorityGeography.member_offices=await buildMemberOffices(query,state);
-  return {authorities,authorityGeography,authorityFormat:1};
+  return {authorities,authorityGeography,authorityFormat:1,authorityKeys:[...fixedKeys,...dynamicKeys]};
 }
 
 /** Member offices are facts selected by state; source envelopes and national review lists stay behind. */
 async function buildMemberOffices(query:Query,state:string):Promise<MemberOfficeSlice|null> {
   const scope=memberOfficeStateScope(state);
   const [row]=await query(`WITH pointers AS MATERIALIZED (${buildSelectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')}),
-    pointer AS (SELECT * FROM pointers ORDER BY (scope=$2::text) DESC LIMIT 1)
+    pointer AS (SELECT key,record_class,scope,source_id,current_version_id,last_known_good_version_id,promoted_at,payload,payload_fingerprint,validation_receipt,retrieved_at,confirmation,published FROM pointers ORDER BY (scope=$2::text) DESC LIMIT 1)
     SELECT ${buildSelectedMetadataSql},pointer.scope,
       coalesce((SELECT jsonb_agg(reader_payload_value(r.value) ORDER BY r.ordinal) FROM civic_data_rows r
         WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='memberOffices' AND r.state=$3),'[]'::jsonb) AS records
@@ -1426,3 +1439,16 @@ export function buildBallotCandidateDetailsStatement(state: string, keys: readon
     END END AS payload FROM pointer LEFT JOIN roots USING(key)`};
 }
 
+
+/** Confirmation changes update the saved clocks in SQL; unchanged source bodies never cross the wire. */
+async function refreshPageAuthorityHeaders(query:Query,id:string):Promise<void> {
+  await query(`WITH pointer AS MATERIALIZED (${buildSelectedPointerSql.replace('p.key=$1',
+    "p.key IN (SELECT jsonb_object_keys(context->'authorities') FROM place_page WHERE place_id=$1)")}),
+    sections AS (SELECT jsonb_object_agg(section.key,section.value||jsonb_build_object(
+      'source_id',p.source_id,'current_version_id',p.current_version_id,'last_known_good_version_id',p.last_known_good_version_id,
+      'promoted_at',p.promoted_at,'retrieved_at',p.retrieved_at,'confirmation',p.confirmation,'validation_receipt',reader_payload_value(reader_payload_node(p.validation_receipt)-'excludedFacts')||jsonb_build_object('excludedFacts','[]'::jsonb),
+      'published',p.published)) AS value FROM place_page page CROSS JOIN LATERAL jsonb_each(page.context->'authorities') section
+      LEFT JOIN pointer p ON p.key=section.key WHERE page.place_id=$1)
+    UPDATE place_page SET context=jsonb_set(context,'{authorities}',sections.value)
+      FROM sections WHERE place_id=$1 AND sections.value IS NOT NULL AND context->'authorities' IS DISTINCT FROM sections.value`,[id]);
+}

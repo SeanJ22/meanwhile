@@ -17,14 +17,18 @@ BEGIN
   SELECT key,source_id,record_class,scope,current_version_id,last_known_good_version_id,promoted_at,payload,validation_receipt,payload_fingerprint
     INTO p.key,p.source_id,p.record_class,p.scope,p.current_version_id,p.last_known_good_version_id,p.promoted_at,p.payload,p.validation_receipt,p.payload_fingerprint
     FROM civic_data_promotions WHERE key=p_key;
-  IF NOT FOUND OR p.record_class NOT IN ('STATE_BILL','MEETING_OUTCOME','VOTING_SITE') THEN RETURN;END IF;
+  IF NOT FOUND OR p.record_class NOT IN ('STATE_BILL','MEETING_OUTCOME','VOTING_SITE','FEC_FUNDING','STATE_CAMPAIGN_FINANCE','FEDERAL_KEY_VOTE') AND NOT (p.record_class='CURATED_READER_RECORD' AND p.scope IN ('epa-echo:national','socrata-discovery:national')) THEN RETURN;END IF;
   SELECT id,source_id,record_class,scope,state,acquisition_succeeded,retrieved_at,promoted_version_id,last_known_good_version_id,read_model_fingerprint,validation_receipt,normalized_hash,candidate
     INTO c.id,c.source_id,c.record_class,c.scope,c.state,c.acquisition_succeeded,c.retrieved_at,c.promoted_version_id,c.last_known_good_version_id,c.read_model_fingerprint,c.validation_receipt,c.normalized_hash,c.candidate
     FROM civic_data_candidates WHERE id=p.current_version_id;
   root:=reader_payload_node(p.payload);
   collections:=CASE p.record_class WHEN 'STATE_BILL' THEN ARRAY['bills','sponsors','datasets']
-    WHEN 'MEETING_OUTCOME' THEN ARRAY['sittings'] ELSE ARRAY['jurisdictions'] END;
-  header:=reader_payload_value(root-collections);
+    WHEN 'MEETING_OUTCOME' THEN ARRAY['sittings'] WHEN 'VOTING_SITE' THEN ARRAY['jurisdictions']
+    WHEN 'FEC_FUNDING' THEN ARRAY['candidates','absences','secondHop'] WHEN 'FEDERAL_KEY_VOTE' THEN '{}'::text[]
+    WHEN 'CURATED_READER_RECORD' THEN ARRAY['partitions'] ELSE ARRAY['records'] END;
+  header:=reader_payload_value(root-collections-CASE WHEN p.record_class='FEDERAL_KEY_VOTE' THEN ARRAY['positions'] ELSE '{}'::text[] END);
+  IF p.record_class='FEDERAL_KEY_VOTE' THEN header:=header||jsonb_build_object('positions',reader_payload_value(reader_payload_node(root->'positions')-ARRAY['positions','retiredMappings']));END IF;
+  SELECT coalesce(array_agg(field),'{}') INTO collections FROM unnest(collections) field WHERE root ? field;
   metadata:=jsonb_build_object('key',p.key,'record_class',p.record_class,'scope',p.scope,'source_id',p.source_id,
     'current_version_id',p.current_version_id,'last_known_good_version_id',p.last_known_good_version_id,'promoted_at',p.promoted_at,
     'retrieved_at',c.retrieved_at,'validation_receipt',reader_payload_value(p.validation_receipt-'excludedFacts')||jsonb_build_object('excludedFacts','[]'::jsonb),
@@ -39,12 +43,24 @@ BEGIN
   row_state:=upper(substring(p.scope FROM '^US-([A-Z]{2})'));
   PERFORM rp01_reader_fact(p.key,p.record_class,p.scope,p.current_version_id,p.promoted_at,'rp01.header',0,p.key,NULL,row_state,'{}',metadata);
   DELETE FROM civic_data_rows r WHERE r.promotion_key=p.key AND r.collection LIKE 'rp01.%' AND r.collection<>'rp01.header';
+  IF p.record_class='FEDERAL_KEY_VOTE' THEN
+    n:=0;
+    FOR member IN SELECT key,value FROM jsonb_each(reader_payload_value(reader_payload_node(root->'positions')->'positions')) LOOP
+      FOR site IN SELECT key,value FROM jsonb_each(member.value) LOOP
+        n:=n+1;
+        PERFORM rp01_reader_fact(p.key,p.record_class,p.scope,p.current_version_id,p.promoted_at,'rp01.positions',n,site.key,site.key,NULL,
+          ARRAY[site.key],jsonb_build_object('roll',member.key,'member',site.key,'position',site.value));
+      END LOOP;
+    END LOOP;
+  END IF;
   FOREACH collection IN ARRAY collections LOOP
     FOR member IN SELECT ordinal_index,item FROM reader_payload_members(root->collection) ORDER BY ordinal_index LOOP
       v:=reader_payload_value(member.item);body:=v->>'bodyId';
       identity:=coalesce(v->>'id',v->>'meetingId',v->>'peopleId',v->>'session_id',member.ordinal_index::text);
       row_state:=upper(coalesce(v->>'state',substring(body FROM '/(?:state|territory|district):([a-z]{2})(?:/|$)'),substring(p.scope FROM '^US-([A-Z]{2})')));
-      aliases:=ARRAY[identity];
+      SELECT coalesce(array_agg(DISTINCT value#>>'{}'),'{}') INTO aliases FROM jsonb_path_query(v,'$.** ? (@.type() == "string")') leaf(value) WHERE length(value#>>'{}')<=1024;
+      IF collection='candidates' AND v->>'fecCandidateId' IS NOT NULL THEN aliases:=aliases||('fec:'||(v->>'fecCandidateId'));END IF;
+      IF collection='partitions' THEN aliases:=aliases||split_part(identity,':state:',1);END IF;
       IF collection='sponsors' THEN body:='legiscan:'||(v->>'peopleId');END IF;
       IF collection='bills' THEN
         SELECT coalesce(array_agg('sponsor:'||value),'{}') INTO aliases FROM jsonb_array_elements_text(coalesce(v->'sponsorRefs','[]'::jsonb));
@@ -78,7 +94,8 @@ CREATE CONSTRAINT TRIGGER zz_rp01_reader_facts_changed AFTER INSERT OR UPDATE ON
 CREATE FUNCTION rp01_reader_fact_checked() RETURNS trigger LANGUAGE plpgsql AS $$
 BEGIN
   IF left(NEW.detail,26)='UNCHANGED_CONFIRMATION_V1 ' THEN
-    UPDATE civic_data_rows SET value=jsonb_set(value,'{confirmation}',to_jsonb(NEW.detail)),change_id=nextval('civic_data_row_change')
+    UPDATE civic_data_rows SET value=jsonb_set(value,'{confirmation}',to_jsonb(NEW.detail)),
+      content_hash=encode(sha256(convert_to(jsonb_set(value,'{confirmation}',to_jsonb(NEW.detail))::text,'UTF8')),'hex'),change_id=nextval('civic_data_row_change')
       WHERE collection='rp01.header' AND version_id=NEW.candidate_id;
   END IF;RETURN NEW;
 END $$;
@@ -91,7 +108,7 @@ CREATE INDEX civic_data_rows_rp01_header ON civic_data_rows(record_class,scope) 
 CREATE INDEX civic_data_rows_rp01_sitting ON civic_data_rows(row_id,promotion_key) WHERE collection='rp01.sittings';
 --> statement-breakpoint
 DO $$DECLARE source_key text;BEGIN
-  FOR source_key IN SELECT key FROM civic_data_promotions WHERE record_class IN ('STATE_BILL','MEETING_OUTCOME','VOTING_SITE') LOOP
+  FOR source_key IN SELECT key FROM civic_data_promotions WHERE record_class IN ('STATE_BILL','MEETING_OUTCOME','VOTING_SITE','FEC_FUNDING','STATE_CAMPAIGN_FINANCE','FEDERAL_KEY_VOTE') OR record_class='CURATED_READER_RECORD' AND scope IN ('epa-echo:national','socrata-discovery:national') LOOP
     PERFORM rp01_reader_facts(source_key);
   END LOOP;
 END $$;

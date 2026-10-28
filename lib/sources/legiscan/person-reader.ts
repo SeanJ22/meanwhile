@@ -61,9 +61,9 @@ export async function readPersonBillParts(query: Query, parts: readonly BillPart
   }
   if (matching.length) {
     const rows = await query(`WITH pointers AS MATERIALIZED (${pointers}),wanted AS (
-        SELECT * FROM jsonb_to_recordset($2::jsonb) w(scope text,version text,indices integer[])
+        SELECT w.scope,w.version,w.indices FROM jsonb_to_recordset($2::jsonb) w(scope text,version text,indices integer[])
       ), bills AS MATERIALIZED (
-        SELECT b.* FROM pointers pointer JOIN wanted ON pointer.scope=wanted.scope AND pointer.current_version_id=wanted.version
+        SELECT b.promotion_key,b.ordinal,b.value,b.aliases FROM pointers pointer JOIN wanted ON pointer.scope=wanted.scope AND pointer.current_version_id=wanted.version
         JOIN civic_data_rows b ON b.promotion_key=pointer.key AND b.version_id=pointer.current_version_id
           AND b.collection='rp01.bills' AND b.aliases && ARRAY(SELECT 'sponsor:'||i FROM unnest(wanted.indices) i)
       ) SELECT ${metadata},${header} AS payload,

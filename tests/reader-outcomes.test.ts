@@ -1,7 +1,8 @@
+import {canonicalCivicDataHash} from "../lib/civic-data/canonical-hash.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test, { type TestContext } from "node:test";
-import { PGlite } from "@electric-sql/pglite";
+import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { meetingPartitionId } from "../lib/meetings/body-scope.ts";
@@ -31,24 +32,12 @@ function sourceRow(payload: OutcomeSnapshot = own, scope = SCOPE) {
 }
 
 async function outcomeDatabase(t: TestContext) {
-  const pg = new PGlite();
-  t.after(() => pg.close());
-  await pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,source_id text,current_version_id text,
-      last_known_good_version_id text,promoted_at timestamptz,validation_receipt jsonb,payload jsonb);
-    CREATE TABLE civic_data_candidates(id text PRIMARY KEY,retrieved_at timestamptz,state text,acquisition_succeeded boolean,
-      promoted_version_id text,last_known_good_version_id text,record_class text,scope text,source_id text,candidate jsonb);
-    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
-    CREATE TABLE entity(id text PRIMARY KEY,state text)`);
-  for (const statement of readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8").split("--> statement-breakpoint")) {
-    if (/^\s*CREATE FUNCTION reader_/.test(statement)) await pg.exec(statement);
-  }
-  const put = async (payload: OutcomeSnapshot, scope: string) => {
-    const row = sourceRow(payload, scope), encoded = partitionCivicPayload(payload);
-    for (const part of encoded.parts) await pg.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING", [part.hash, JSON.stringify(part.payload)]);
-    await pg.query(`INSERT INTO civic_data_promotions VALUES($1,'MEETING_OUTCOME',$2,$3,$4,$4,$5,$6,$7)`,
-      [row.key, scope, row.source_id, row.current_version_id, row.promoted_at, JSON.stringify(row.validation_receipt), JSON.stringify(encoded.value)]);
-    await pg.query(`INSERT INTO civic_data_candidates VALUES($1,$2,'PROMOTED',true,$1,$1,'MEETING_OUTCOME',$3,$4,$5)`,
-      [row.current_version_id, row.retrieved_at, scope, row.source_id, JSON.stringify({ temporal: row.temporal })]);
+  const {pg,publish}=await migratedReaderDb();t.after(()=>pg.close());
+  const put=async(payload:OutcomeSnapshot,scope:string)=>{
+    const row=sourceRow(payload,scope),encoded=partitionCivicPayload(payload);
+    for(const part of encoded.parts)await pg.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
+    await publish({id:row.current_version_id,recordClass:'MEETING_OUTCOME',scope,sourceId:row.source_id,
+      at:row.promoted_at,value:encoded.value,payloadHash:canonicalCivicDataHash(payload)});
   };
   return { pg, put };
 }
@@ -126,7 +115,7 @@ test("one SQL statement selects exact sitting payload parts from state and deriv
   const routed = await readSelectedMeetingOutcomes(["AZ"], BODY, [routedId], query);
   assert.deepEqual(routed.sittings.map(row => row.meetingId), [routedId], "a selected meeting reads its body's routed outcome pointer on the first request");
   assert.ok(!JSON.stringify(snapshot).includes("Other sitting."));
-  await pg.query("UPDATE civic_data_candidates SET state='VALIDATED' WHERE scope=$1", [SCOPE]);
+  await pg.query("UPDATE civic_data_rows SET value=jsonb_set(value,'{published}','false') WHERE collection='rp01.header' AND scope=$1", [SCOPE]);
   await assert.rejects(readSelectedMeetingOutcomes(["AZ"], BODY, [sitting.meetingId], query), /PUBLICATION_INVALID/);
 });
 
@@ -136,7 +125,7 @@ test("a cold Ask reads published doors without a runner catalogue, keeps old yea
   const current = { ...sitting, slug: "demo", bodyId: body, meetingId: "legistar:demo:1825" };
   const old = { ...current, meetingId: "legistar:demo:2018", startsAt: "2018-01-09T09:00:00-07:00" };
   const source = outcomePartitionScope(meetingPartitionId("legistar", body));
-  await pg.query("INSERT INTO entity VALUES($1,'AZ'),($2,'CA')", [body, otherBody]);
+  await pg.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body',$1,'AZ'),($2,'body',$2,'CA')", [body, otherBody]);
   await put({ ...own, tenants: ["demo"], sittings: [current, old] }, source);
   await put({ ...own, sittings: [{ ...sitting, bodyId: otherBody, meetingId: "legistar:other-state:1" }] }, outcomePartitionScope(meetingPartitionId("legistar", otherBody)));
   await put({ ...own, sittings: [{ ...sitting, bodyId: unregisteredBody, meetingId: "legistar:independent:1" }] }, outcomePartitionScope(meetingPartitionId("legistar", unregisteredBody)));
@@ -173,7 +162,7 @@ test("a cold Ask reads published doors without a runner catalogue, keeps old yea
   assert.deepEqual(getOutcomeSnapshot().sittings, [], "reader results never prime the process-global runner store");
   const exact = await readStateMeetingOutcomes(["AZ"], [unregisteredBody], query);
   assert.ok(exact.sittings.some(row => row.bodyId === unregisteredBody), "an exact body selector works without an OCD id or entity row");
-  await pg.query("UPDATE civic_data_candidates SET state='VALIDATED' WHERE scope=$1", [source]);
+  await pg.query("UPDATE civic_data_rows SET value=jsonb_set(value,'{published}','false') WHERE collection='rp01.header' AND scope=$1", [source]);
   await withReaderSelection({ states: ["AZ"], keys: new Set() }, async () => {
     await assert.rejects(refreshOutcomeSnapshotFromPromoted(), /PUBLICATION_INVALID/);
     assert.equal(loadedFrom(), "EMPTY_STORE");

@@ -198,7 +198,8 @@ export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query)
       AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=e.id) THEN ${UNBUILT_ZIP_PRIORITY} ELSE 0 END,
       CASE WHEN $5::boolean THEN clock_timestamp() END
     FROM affected a JOIN entity e ON e.id=a.id ORDER BY a.id
-    ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+1,
+    ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+CASE
+      WHEN rebuild_queue.lease_token IS NOT NULL OR rebuild_queue.built_generation=rebuild_queue.generation THEN 1 ELSE 0 END,
       next_queued_at=CASE WHEN rebuild_queue.lease_token IS NOT NULL
         THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp())
         WHEN $5::boolean THEN clock_timestamp() ELSE rebuild_queue.next_queued_at END

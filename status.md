@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 141 on the site since 4:28 PM EDT (main ebe82373b; includes 140). river = 795832ac9. Runner switch pending. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 141 on the site (4:28 PM EDT) and on the runner (5:05 PM). river = 795832ac9. Open: probe throughput for hourly looks. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -98,6 +98,12 @@ heartbeat: 2026-10-28T08:35:00Z
 - Runner: still on 139 (c8f768f) at 4:28 PM. River is watching for the switch, then the meter rows by job, the breaker's GB, hot partitions, door-probes GB/h and hourly looks.
 - Door looks before 141 (cp_doors validators.checkedAt, each door's latest look): 3 PM 117 doors in 62 places; 4 PM so far 92.
 - 5:06 PM: runner still on 139 (c8f768f). Its code check says main ebe82373 is newer, and no boundary failure is recorded; 139's switch took 33 minutes after deploy. Runner counter, 4 PM hour (still 139, breaker still blind): reader 3.803 + control plane 0.803 = 4.61 GB/h.
+- WIN 5:09 PM: THE RUNNER IS ON 141 (ebe82373; first breaker CHECK on it 5:09 PM). The meter works again:
+  - database_transfer_hourly has per-job rows again: the 5 PM hour so far holds 24,940 reader requests by job (place-pages, routine-civic-data, door-probes, publish-now, voting-sites...). The 4 PM hour was backfilled from the runner's on-disk journals: reader 42,796 requests, 0.716 GB.
+  - The breaker's 5:19 PM CHECK sees 284 jobs, where it saw 0-18 since 10 AM. No pauses so far.
+- door-probes on 141, first ~20 minutes of the 5 PM hour: 12.96 MB (control plane 12.81 MB, open-door list and look writes; reader 0.15 MB, the new hot-partition query). Projects to ~0.03-0.04 GB/h, under Sean's 0.1.
+- place-pages, 5 PM hour so far: 217 MB reader (part may be 139 before the 5:05 switch). The breaker can see it now and will pause it if it goes over its budget; River will post the full hour.
+- NOT MET YET: a body with a sitting this week gets checked every hour. The hot rule now marks 1,816 meeting partitions hot (was 29), but in the last 60 minutes the probe lane looked at only 19 meeting doors (legistar 19; ical, granicus, page and source-feed 0). Over 24 hours: legistar 323 of 2,228 open doors, ical 104 of 580. The limit is probe throughput: each runner pass gives probes a 30 s window, there are a few passes an hour, doors are looked at one at a time, and small publishers are capped at 10 requests an hour. River will measure the full 6 PM hour (looks per hour against hot doors) and post a proposal; raising throughput is a change to the probe lane and its per-website politeness, so it needs Sean's yes.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

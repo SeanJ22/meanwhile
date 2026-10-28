@@ -100,7 +100,7 @@ test("a targeted source update rebuilds ahead of older bulk work without resetti
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Bulk place','AZ')",[old]);
     await db.query("INSERT INTO rebuild_queue(place_id,queued_at,next_queued_at) VALUES($1,clock_timestamp()-interval '1 day',clock_timestamp()-interval '1 hour')",[old]);
     const [age]=await db.query("SELECT queued_at FROM rebuild_queue WHERE place_id=$1",[old]);
-    await db.query("UPDATE rebuild_queue SET queued_at=clock_timestamp()-interval '1 day',next_queued_at=clock_timestamp()-interval '2 hours' WHERE place_id=$1",[PLACE]);
+    await db.query("UPDATE rebuild_queue SET queued_at=clock_timestamp()-interval '1 day' WHERE place_id=$1",[PLACE]);
     const [targetAge]=await db.query("SELECT queued_at FROM rebuild_queue WHERE place_id=$1",[PLACE]);
     await enqueueReaderPlaces({places:[PLACE]},db.query);
     const body=PLACE+'#body:bulk';

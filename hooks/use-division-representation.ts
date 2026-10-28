@@ -107,8 +107,8 @@ export function useDivisionsRepresentation(
     const cachedAnswer = cached.get(ocdId);
     const answer = answers.key === requestKey ? answers.values[ocdId] : undefined;
     if (localBodies[ocdId]?.length) {
-      if (!answer) return [ocdId, { holders, status: "looking" }];
-      if (answer.failed) return [ocdId, { holders, status: "unavailable" }];
+      if (!answer) return [ocdId, { holders: [], status: "looking" }];
+      if (answer.failed) return [ocdId, { holders: [], status: "unavailable" }];
       const merged = scopedHolders(answer.holders, holders);
       return [ocdId, { holders: merged, vacancy: vacancies.get(ocdId), rosterGaps: answer.rosterGaps ?? [],
         status: merged.length ? "resolved" : "unsourced" }];

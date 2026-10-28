@@ -100,3 +100,24 @@ test("the keyed reader selects one body and its people, including its portrait",
     assert.deepEqual(detail.fieldSources, { officePhone: source });
   } finally { installFactReader(undefined); await db.pg.close(); }
 });
+
+test("the keyed reader retains checked sources for derived body identity fields", async () => {
+  const db = await factDb();
+  try {
+    await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,current_version_id text,payload jsonb);
+      CREATE TABLE civic_data_rows(promotion_key text,version_id text,collection text,ordinal bigint,row_id text,body_id text,aliases text[],value jsonb);
+      CREATE FUNCTION reader_payload_value(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';`);
+    const government = "az:special:fixture", body = "government:US-AZ:fixture#board", place = "ocd-division/country:us/state:az/county:pima";
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'government','Fixture District','AZ'),($2,'place','Pima','AZ')", [government, place]);
+    await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'body','Board','AZ',$2)", [body, government]);
+    await db.query("INSERT INTO entity_place(entity_id,place_id,placement_basis) VALUES($1,$2,'HOST_COUNTY')", [body, place]);
+    const [copy] = await db.query(`INSERT INTO source_copy(url,final_url,fetched_at,sha256,blob_key)
+      VALUES('https://example.gov/board','https://example.gov/board','2026-10-01',repeat('a',64),'fixture') RETURNING id`);
+    await db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,produced_by)
+      VALUES($1,'name','"Fixture Board"','Fixture Board','live','OFFICIAL',$2,'Fixture Board','2026-10-01','fixture')`, [body, copy.id]);
+    const { readBodyDetail } = await import("../lib/reader/body-detail-read.ts");
+    const detail = await readBodyDetail(db.query, "AZ", body);
+    assert.deepEqual(Object.keys(detail.fieldSources ?? {}).sort(), ["governmentId", "governmentName", "governmentType", "name", "ocdId", "placementBasis", "registeredName"].sort());
+    for (const source of Object.values(detail.fieldSources ?? {})) assert.equal(source.sourceUrl, "https://example.gov/board");
+  } finally { await db.pg.close(); }
+});

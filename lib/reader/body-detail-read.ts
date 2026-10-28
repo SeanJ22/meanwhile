@@ -18,7 +18,11 @@ export const BODY_ROWS_SQL = `WITH requested AS (SELECT unnest($2::text[]) AS id
     JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
     WHERE r.promotion_key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
       AND r.collection IN ('registry.bodies','bodyRosters')
-  UNION ALL SELECT 'entity',e.id,jsonb_build_object('id',e.id) FROM entity e
+  UNION ALL SELECT 'entity',e.id,jsonb_build_object('id',e.id,'name',e.name,'parentId',e.parent_id,
+    'parentKind',parent.kind,'parentName',parent.name,
+    'hasDivision',EXISTS(SELECT 1 FROM entity_place ep WHERE ep.entity_id=e.id AND ep.place_id LIKE 'ocd-division/%'),
+    'hostCounty',EXISTS(SELECT 1 FROM entity_place ep WHERE ep.entity_id=e.id AND ep.placement_basis='HOST_COUNTY'))
+    FROM entity e LEFT JOIN entity parent ON parent.id=e.parent_id
     WHERE e.kind='body' AND e.state=$1::char(2) AND e.id IN (SELECT canonical FROM aliases)`;
 
 /** Selected people get their own portrait and disposition, never the state record. */
@@ -52,5 +56,18 @@ export async function readBodyDetail(query: Query, state: string, bodyId: string
     statewideExecutives: [], officialCandidacies: { formatVersion: 1, rule: "EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE", rows: [] },
     officialPhotos: { photos: selected?.photos as RegistryRuntimeReadModel["officialPhotos"]["photos"] ?? [] },
     rosterPhotos: selected?.roster_photos as Record<string, string> ?? {} };
-  return projectBodyDetail(state, bodyId, registry, facts);
+  const detail = projectBodyDetail(state, bodyId, registry, facts);
+  // The place composer attaches the checked body source to its own derived
+  // identity fields. Recreate those citations from the same small entity row.
+  const entity = rows.find(row => row.collection === "entity" && row.canonical === bodyId)?.value as Record<string, unknown> | undefined;
+  const fact = facts.find(row => row.id === bodyId), source = fact?.fields.provenance;
+  if (!entity || !source || bodies.some(body => body.id === bodyId)) return detail;
+  const derived = [
+    ...(entity.hasDivision || bodyId.startsWith("ocd-division/") ? ["ocdId"] : []),
+    ...(entity.parentKind === "government" ? ["governmentId", ...(entity.parentName ? ["governmentName"] : []),
+      ...(/^(?:[a-z]{2}:(?:special|school|depschool):|government:US-)/i.test(String(entity.parentId)) ? ["governmentType"] : [])] : []),
+    ...(typeof entity.name === "string" && entity.name !== bodyId ? ["registeredName"] : []),
+    ...(entity.hostCounty ? ["placementBasis"] : []),
+  ];
+  return { ...detail, fieldSources: { ...Object.fromEntries(derived.map(field => [field, source])), ...detail.fieldSources } };
 }

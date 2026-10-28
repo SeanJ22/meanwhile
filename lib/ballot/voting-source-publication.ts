@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
 import { recordDoorOutcome } from "../doors/outcome.ts";
 import { pageAddress, pageDoorId, checkEveryFor } from "../doors/page-doors.ts";
-import { applyDerivedRow, checkDoorDraft, isDoorRecord, type DoorRepository } from "../doors/registry.ts";
+import { applyDerivedRow, checkDoorDraft, isDoorRecord, type DoorRecord, type DoorRepository } from "../doors/registry.ts";
 import type { VotingRawCapture } from "./voting-sites-data-plane.ts";
 import { mergeVotingSiteRows, type VotingJurisdiction, type VotingSitesFile, type VotingSource, type VotingSite } from "./voting-sites.ts";
 import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
@@ -52,7 +52,10 @@ export async function saveVotingSourceDoor(repo: DoorRepository, door: VotingSou
 }
 
 export async function registeredVotingSourceDoors(repo: DoorRepository, state: string): Promise<VotingSourceDoor[]> {
-  return (await repo.listWhere(["config", `votingState_${requireBallotState(state)}`], "true")).map(row => row.value).filter(row => row.kind === VOTING_SOURCE_DOOR_KIND && row.status !== "SUSPENDED").flatMap(row => {
+  const rows = await repo.listWhereNarrowed(["config", `votingState_${requireBallotState(state)}`], "true",
+    { doorId: true, kind: true, status: true, config: ["votingSource", "votingMappings"] });
+  return rows.map(row => row.value as Pick<DoorRecord, "doorId" | "kind" | "status" | "config">)
+    .filter(row => row.kind === VOTING_SOURCE_DOOR_KIND && row.status !== "SUSPENDED").flatMap(row => {
     const sources = [JSON.parse(String(row.config.votingSource)) as VotingSourceDoor,
       ...JSON.parse(String(row.config.votingMappings ?? "[]")) as VotingSourceDoor[]];
     for (const source of sources) if (!source.scope?.ocdId || !source.url || !source.publisher) throw new Error(`Unreadable voting source door ${row.doorId}`);
@@ -63,7 +66,10 @@ export async function registeredVotingSourceDoors(repo: DoorRepository, state: s
 /** A bounded pass resumes at untried/oldest lists on its next scheduled run. */
 export async function votingSourceReadOrder(repo: DoorRepository, state: string, doors: readonly VotingSourceDoor[]): Promise<VotingSourceDoor[]> {
   const checked = new Map<string, number>();
-  for (const { value } of await repo.listWhere(["config", `votingState_${requireBallotState(state)}`], "true")) {
+  const rows = await repo.listWhereNarrowed(["config", `votingState_${requireBallotState(state)}`], "true",
+    { lastSuccessAt: true, lastFailureAt: true, config: ["url"] });
+  for (const row of rows) {
+    const value = row.value as Pick<DoorRecord, "lastSuccessAt" | "lastFailureAt" | "config">;
     const at = Math.max(Date.parse(value.lastSuccessAt ?? "") || 0, Date.parse(value.lastFailureAt ?? "") || 0);
     checked.set(String(value.config.url), at);
   }
@@ -220,5 +226,5 @@ export async function recordVotingSourceRead(repo: DoorRepository, door: VotingS
 }
 
 export function replaceVotingJurisdiction(file: VotingSitesFile | null, jurisdiction: VotingJurisdiction, now: string): VotingSitesFile {
-  return { generatedAt: now.slice(0, 10), jurisdictions: [...(file?.jurisdictions ?? []).filter(row => row.ocdId !== jurisdiction.ocdId), jurisdiction].sort((a, b) => a.ocdId.localeCompare(b.ocdId)) };
+  return { ...file, generatedAt: now.slice(0, 10), jurisdictions: [...(file?.jurisdictions ?? []).filter(row => row.ocdId !== jurisdiction.ocdId), jurisdiction].sort((a, b) => a.ocdId.localeCompare(b.ocdId)) };
 }

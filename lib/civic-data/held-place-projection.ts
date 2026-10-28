@@ -1,6 +1,6 @@
 import type { HeldPlaceCapture } from "./held-place-capture.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
-import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import type { RegistryPlanningView } from "./keyed-registry-planning.ts";
 import type { MeetingsSnapshot } from "../meetings/snapshot.ts";
 import type { OutcomeSnapshot } from "../outcomes/types.ts";
 import { projectHeldPlaceFamilies, type HeldPlaceFamilies } from "./held-place-families.ts";
@@ -10,7 +10,7 @@ import { reconcilePublicationObservations } from "../outcomes/publication.ts";
 import { FRESHNESS_HOURS, meetingFreshnessHours } from "../coverage/checklist-map.ts";
 
 export function projectHeldPlaceCapture(
-  divisionIds: readonly string[], registryRead: PlaceCaptureRead<RegistryRuntimeReadModel> | null,
+  divisionIds: readonly string[], registryRead: PlaceCaptureRead<RegistryPlanningView> | null,
   meetingReads: readonly PlaceCaptureRead<MeetingsSnapshot>[], now: string,
   families: HeldPlaceFamilies = {},
   outcomeReads: readonly PlaceCaptureRead<OutcomeSnapshot>[] = [],

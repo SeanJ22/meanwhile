@@ -695,8 +695,13 @@ export function validateRoutineCandidate(
   const inheritedAuthorityIssue = manualPriorAuthorityIssue(candidate, lastKnownGood);
   const inheritedAuthority = manualPriorAuthorityOf(candidate);
   const sourceCheck = candidate.retrieval.sourceCheck;
+  const checkedAuthority = !sourceCheck || (candidate.retrieval.manualSourceReceipt
+    ? authority.ok && candidate.retrieval.manualSourceReceipt.sources.some(source =>
+      source.requestedUrl === sourceCheck.requestedUrl && source.finalUrl === sourceCheck.finalUrl && source.rawHash === sourceCheck.rawHash &&
+      source.retrievedAt === sourceCheck.checkedAt && source.httpStatus === sourceCheck.httpStatus && source.reviewOutcome !== "BLOCKED")
+    : [sourceCheck.requestedUrl, sourceCheck.finalUrl].every(url => authorityFor(candidate.sourceId, candidate.recordClass, url).ok));
   const checkIssue = sourceCheckIssue(sourceCheck, validatedAt) ?? (sourceCheck &&
-    [sourceCheck.requestedUrl, sourceCheck.finalUrl].some(url => !authorityFor(candidate.sourceId, candidate.recordClass, url).ok)
+    !checkedAuthority
     ? "The checked source URL is outside this source's registered authority." : null);
 
   const retirementAuthorized = candidate.stateRetirement !== undefined && retirementAuthority === candidate.stateRetirement &&

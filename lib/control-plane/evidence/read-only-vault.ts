@@ -16,7 +16,9 @@ import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 
 import { netlifyEvidenceStoreFromEnv, VAULT_READ_TIMEOUT_MS, type NetlifyEvidenceStore } from "./netlify-store.ts";
-import { artifactMeta, extensionFor } from "./store.ts";
+import { artifactMeta, extensionFor, type ObjectMeta } from "./store.ts";
+import { rawCaptureMetadata, rawCapturePointer, rawCapturePointerRef } from "./raw-pointer.ts";
+import { rawCaptureKey, type RawCaptureRef } from "../../civic-data/raw-capture-vault.ts";
 import { ARTIFACT_TIERS, artifactId, type Artifact, type ArtifactTier } from "./artifact.ts";
 import type { ArtifactRecord } from "../repository/types.ts";
 
@@ -26,6 +28,7 @@ const SIDECAR_SUFFIX = ".meta.json";
 const TEMP_PREFIX = ".wtp-evidence-tmp-";
 
 export interface HeldVaultArtifact {
+  readonly rawCapture?: RawCaptureRef;
   readonly id: string;
   readonly tier: ArtifactTier;
   /** `sha256-<hex>`, the vault's own form. */
@@ -70,14 +73,16 @@ const INDEX_READ_CONCURRENCY = 16;
 const capturesByIndex = new WeakMap<VaultIndex, Map<string, HeldVaultArtifact>>();
 
 function heldFromSidecar(sidecar: Sidecar, bodyPath: string): HeldVaultArtifact | null {
-  const meta = sidecar.meta, tier = meta?.custom?.tier, hash = meta?.contentHash;
+  const rawMeta = sidecar.meta as ObjectMeta | undefined;
+  const rawCapture = rawMeta ? rawCapturePointerRef(rawMeta) : null;
+  const meta = rawMeta ? rawCaptureMetadata(rawMeta) : undefined, tier = meta?.custom?.tier, hash = meta?.contentHash;
   if (!meta || typeof hash !== "string" || !/^sha256-[0-9a-f]{64}$/.test(hash) || typeof tier !== "string" || !TIERS.includes(tier) || typeof sidecar.bodySha256 !== "string") return null;
   const status = Number(meta.custom?.httpStatus);
   return { id:artifactId(tier as ArtifactTier,hash),tier:tier as ArtifactTier,contentHash:hash,contentType:meta.contentType??"",
     canonicalUrl:meta.custom?.canonicalUrl??null,retrievalUrl:meta.custom?.retrievalUrl??null,retrievedAt:meta.custom?.retrievedAt??null,
     httpStatus:Number.isInteger(status)?status:null,sourceId:meta.custom?.sourceId??null,workItemId:meta.custom?.workItemId??null,
     attemptId:meta.custom?.attemptId??null,methodRouteId:meta.custom?.methodRouteId??null,permission:meta.custom?.permission??null,
-    retentionPolicy:meta.custom?.retentionPolicy??null,bodyPath,bodySha256:sidecar.bodySha256 };
+    retentionPolicy:meta.custom?.retentionPolicy??null,bodyPath,bodySha256:sidecar.bodySha256,...(rawCapture ? {rawCapture} : {}) };
 }
 
 function populateIndex(index: VaultIndex, captures: ReadonlyMap<string,HeldVaultArtifact>): void {
@@ -101,7 +106,8 @@ export function heldVaultIndex(held: readonly HeldVaultArtifact[]): VaultIndex {
 /** Add a successfully vaulted capture without listing the vault again. */
 export function includeVaultCapture(index: VaultIndex, artifact: Artifact, key: string, root: string): void {
   const bodyPath=process.env.WTP_VAULT_PROVIDER==="netlify"?`netlify:${key}`:join(root,...key.split("/"));
-  const held=heldFromSidecar({meta:artifactMeta(artifact),bodySha256:artifact.contentHash},bodyPath)!;
+  const pointer = artifact.tier === "RAW" ? rawCapturePointer({vaultKey:rawCaptureKey(artifact.contentHash.slice(7)),rawHash:artifact.contentHash.slice(7),byteLength:artifact.byteLength},artifactMeta(artifact)) : null;
+  const held=heldFromSidecar({meta:pointer?.meta ?? artifactMeta(artifact),bodySha256:pointer?.meta.contentHash ?? artifact.contentHash},bodyPath)!;
   const captures=capturesByIndex.get(index)??new Map([...index.byId.values()].map(row=>[row.bodyPath,row]));
   captures.set(bodyPath,held);
   const ordered=new Map([...captures].sort(([a],[b])=>a<b?-1:a>b?1:0));
@@ -177,6 +183,20 @@ export function crosswalkEvidenceWorkItem(rawSha256: string): string {
 export async function readHeldBytes(artifact: HeldVaultArtifact, signal = AbortSignal.timeout(VAULT_READ_TIMEOUT_MS)): Promise<Uint8Array> {
   const remote = artifact.bodyPath.startsWith("netlify:") ? netlifyEvidenceStoreFromEnv() : null;
   if (artifact.bodyPath.startsWith("netlify:") && !remote) throw new Error("NETLIFY_VAULT_UNCONFIGURED");
+  if (artifact.rawCapture) {
+    const ref = artifact.rawCapture;
+    let raw: Uint8Array | undefined;
+    if (remote) raw = (await remote.get(artifact.bodyPath.slice("netlify:".length),signal))?.bytes;
+    else {
+      const pointer = await readFile(artifact.bodyPath,{signal});
+      if (`sha256-${createHash("sha256").update(pointer).digest("hex")}` !== artifact.bodySha256 ||
+          pointer.toString("utf8") !== JSON.stringify(ref)) throw new Error(`VAULT_BODY_CORRUPTED:${artifact.id}`);
+      raw = await readFile(join(artifact.bodyPath.slice(0,artifact.bodyPath.lastIndexOf("/project/")),ref.vaultKey),{signal});
+    }
+    if (!raw || raw.byteLength !== ref.byteLength || `sha256-${createHash("sha256").update(raw).digest("hex")}` !== artifact.contentHash)
+      throw new Error(`VAULT_BODY_CORRUPTED:${artifact.id}`);
+    return new Uint8Array(raw);
+  }
   const held = remote ? await remote.get(artifact.bodyPath.slice("netlify:".length),signal) : null;
   if (remote && !held) throw new Error(`VAULT_BODY_MISSING:${artifact.id}`);
   const bytes = held?.bytes ?? await readFile(artifact.bodyPath,{signal});
@@ -241,7 +261,9 @@ export async function findHeldCapture(root: string, record: ArtifactRecord,
 }
 
 function attributedCapture(record: ArtifactRecord, sidecar: Sidecar, bodyPath: string): HeldVaultArtifact | null {
-  const meta = sidecar.meta;
+  const rawMeta = sidecar.meta as ObjectMeta | undefined;
+  const rawCapture = rawMeta ? rawCapturePointerRef(rawMeta) : null;
+  const meta = rawMeta ? rawCaptureMetadata(rawMeta) : undefined;
   // Identical bytes acquired by another Attempt are not this record's capture.
   if (meta?.custom?.attemptId !== record.attemptId) return null;
   if (!meta || meta.contentHash !== record.contentHash || meta.custom?.tier !== record.tier ||
@@ -255,5 +277,5 @@ function attributedCapture(record: ArtifactRecord, sidecar: Sidecar, bodyPath: s
     httpStatus: Number.isInteger(status) ? status : null, sourceId: meta.custom.sourceId ?? null,
     workItemId: meta.custom.workItemId, attemptId: meta.custom.attemptId,
     methodRouteId: meta.custom.methodRouteId ?? null, permission: meta.custom.permission ?? null,
-    retentionPolicy: meta.custom.retentionPolicy ?? null, bodyPath, bodySha256: sidecar.bodySha256 };
+    retentionPolicy: meta.custom.retentionPolicy ?? null, bodyPath, bodySha256: sidecar.bodySha256,...(rawCapture ? {rawCapture} : {}) };
 }

@@ -1,4 +1,7 @@
-import { currentCuratedReaderRecords, refreshMemberOfficesFromPromoted, settleMemberOfficesRead } from "../civic-data/curated-reader-read-model.ts";
+import { readMemberOfficeMembers } from "./member-office-data.ts";
+import { readerQuery } from "../civic-data/promoted-reader-query.ts";
+import type { RoutineDataStore } from "../civic-data/store.ts";
+import { currentCuratedReaderRecords, readMemberOfficeStateProjection } from "../civic-data/curated-reader-read-model.ts";
 import { CivicDataStoreUnavailableError, type PromotedCivicDataReadOptions } from "../civic-data/read-model.ts";
 import { currentReaderAuthorityEdge, currentStateLegislatorsEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import { selectedRegistryStates } from "../registry/runtime-read-model.ts";
@@ -50,8 +53,15 @@ export async function readMemberOffices(officeholderId: string, state?: string, 
       if (records.length) return owned(officesForMember(records,matches[0].id));
     }
   }
-  try { if(options.store) await refreshMemberOfficesFromPromoted(options); else await settleMemberOfficesRead(); }
-  catch (error) { if (knownPerson) return []; throw error; }
+  if(jurisdiction) {
+    const read=await readMemberOfficeStateProjection(jurisdiction.slice(3),options,[...aliases]);
+    if(read.kind==="STORE_UNREACHABLE"){if(knownPerson)return [];throw new CivicDataStoreUnavailableError(read);}
+    if(read.kind==="PROMOTED"||read.kind==="BOOTSTRAP")return owned(read.value.records as unknown as readonly MemberOfficeRecord[]);
+  }
+  const store=options.store as Partial<Pick<RoutineDataStore,"readMemberOfficeMembers">> | undefined;
+  const query=store?.readMemberOfficeMembers ? null : readerQuery();
+  if(store?.readMemberOfficeMembers)return owned(await store.readMemberOfficeMembers([...aliases]));
+  if(query)return owned(await readMemberOfficeMembers(async(text,params)=>(await query([{text,params:params??[]}]))[0]??[],[...aliases]));
   return owned([...new Map([...aliases].flatMap(currentMemberOffices).map(row => [row.id,row])).values()]);
 }
 

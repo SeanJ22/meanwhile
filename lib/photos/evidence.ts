@@ -1,5 +1,5 @@
 import { verifiedCommonsPortrait, type CommonsCandidacyIdentity } from "./commons.ts";
-import { portraitPublisher, type PortraitVerification } from "./binding.ts";
+import { portraitVaultKeyMatches, portraitPublisher, type PortraitVerification } from "./binding.ts";
 import { createHash } from "node:crypto";
 import { imagesIn, pickPortraits } from "../hunt/portrait-pick.ts";
 import { parseCsv } from "../sources/plural/index.ts";
@@ -86,7 +86,7 @@ export function verifyPortraitSources(personId: string, input: PortraitSources, 
   const name = input.subject.name;
   const intact = input.captures.filter(c => {
     const age = Date.parse(now) - Date.parse(c.observedAt);
-    return !captureProblem(c) && Boolean(c.evidence.artifactId || c.evidence.vaultKey?.startsWith("project/freshness/source/")) &&
+    return !captureProblem(c) && Boolean(c.evidence.artifactId || portraitVaultKeyMatches(c.evidence.vaultKey,c.evidence.contentHash)) &&
       age >= 0 && age <= 7 * 86_400_000;
   });
   const commons = verifiedCommonsPortrait(input, intact, now);

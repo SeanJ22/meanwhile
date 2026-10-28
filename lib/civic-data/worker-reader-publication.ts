@@ -10,7 +10,7 @@ import type { ControlPlaneRepositories } from "../control-plane/repository/types
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import type { WorkItem } from "../control-plane/work-item.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
-import { readRegistryRuntimePrior, type RegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
+import type { RegistryLookup } from "./keyed-rows.ts";
 import type { RoutineDataStore } from "./store.ts";
 import type { CuratedReaderProjection, ManualProjectionPackage } from "./manual-projections.ts";
 import { readManualProjectionPrior } from "./manual-projections.ts";
@@ -57,7 +57,7 @@ export interface StancesInput {
   readonly ownSiteHosts?: (personId: string) => readonly string[];
 }
 
-function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryRuntimePrior | null }):
+function workerReaderPackageWithPulls(input: StancesInput & Parameters<typeof verifiedWorkerRecords>[0] & { registry: RegistryLookup | null }):
   { readonly package: ManualProjectionPackage; readonly pulledMemberIds: ReadonlySet<string> } {
   if (parseStateBallotContractId(input.plan.publication?.contractId ?? "")?.family === "ballot-contests") return { package: workerBallotContestsPackage(input).package, pulledMemberIds: new Set() };
   const target = input.plan.publication;
@@ -234,7 +234,7 @@ export async function publishWorkerReaderResults(input: {
     try {
       requirePublication(parser.result.role === "PARSER" && plan.contract.schemaVersion === 2, "INPUT_CHAIN_MISSING");
       captures = await capturesForPublication({ repos: input.repos, workItemId: id, primaryId: parser.result.artifactId, results, readCapture, officialLinks: manual.officialLinks });
-      const registry = await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state);
+      const registry = await input.store.readRegistrySlice(plan.contract.jurisdiction.state, [plan.publication!.bodyId], [plan.contract.jurisdiction.canonicalId]);
       const built = workerReaderPackageWithPulls({ plan, parser, captures, registry, now: input.now, results,
         ...(contractId === "stances" ? { stanceTopicIds: await readStanceTopicIds() } : {}) });
       const checked = built.package;

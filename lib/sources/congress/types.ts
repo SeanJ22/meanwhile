@@ -7,7 +7,7 @@ export interface FederalCapture {
   url: string;
   body: string;
   retrievedAt: string;
-  context?: { bioguideId?: string; billId?: string; packageId?: string; publishedAt?: string;
+  context?: { bioguideId?: string; billId?: string; packageId?: string; filingId?: string; publishedAt?: string;
     /** Immutable held roster evidence, referenced rather than copied into every filing. */
     honoreeRosterVersionId?: string; honoreeRosterFailure?: string };
 }
@@ -38,6 +38,9 @@ export interface FederalFact {
   official: true;
   publishedAt: string | null;
   checkedAt: string;
+  /** Binds a reader's check time to the exact validated acquisition and parser inputs. */
+  sourceKey?: string;
+  sourceHash?: string;
   bioguideId?: string;
   billId?: string;
   committeeId?: string;
@@ -79,4 +82,7 @@ export interface FederalProjection {
   /** A provider cursor advances only after every preceding page was saved and published. */
   cursor?: string;
   counts?: FederalCounts;
+  countsPrimary?: boolean;
+  sourceManifestVersion?: 1;
+  sourceHashes?: Record<string, string>;
 }

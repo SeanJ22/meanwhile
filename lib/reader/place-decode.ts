@@ -57,14 +57,15 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     const local = divisions.filter(id => id !== stateRoot);
     const served = local.length ? local : divisions;
     const division = served.find(id => divisionIds.includes(id)) ?? served[0] ?? String(e.division);
+    const governmentId=typeof e.government_id==="string"?e.government_id
+      :typeof e.government==="string"&&typeof e.parent_id==="string"?e.parent_id:null;
     const registeredName = typeof e.registered_name === "string" && e.registered_name.trim() ? e.registered_name : null;
     const governmentClass = typeof e.government_class === "string" ? e.government_class.toUpperCase() : "";
     const governmentType = /SPECIAL/.test(governmentClass) ? "special_district" : /SCHOOL/.test(governmentClass) ? "school_district"
       : /COUNTY/.test(governmentClass) ? "county" : /MUNICIPAL|TOWNSHIP|PLACE GOVERNMENT/.test(governmentClass) ? "city" : undefined;
     return { id, division, fields: fields[id] || e.placed === true || registeredName ? {...fields[id],
       ...(!fields[id]?.name && registeredName ? {name:registeredName} : {}),ocdId:division.startsWith("ocd-division/") ? division : null,
-      ...(typeof e.government === "string" ? { governmentName: e.government } : {}),
-      ...(typeof e.government_id === "string" ? { governmentId: e.government_id } : {}),
+      ...(governmentId ? {governmentId,...(typeof e.government==="string"?{governmentName:e.government}:{})} : {}),
       ...(governmentType ? {governmentType} : {}),
       ...(registeredName || typeof e.name === "string" && e.name !== id ? {registeredName:registeredName ?? String(e.name)} : {}),
       ...(served.some(id => id !== division) ? {alsoServesOcdIds:served.filter(id => id !== division)} : {}),
@@ -110,7 +111,7 @@ export async function composePlaceRow(input: PlaceInput,row: Row): Promise<Place
     const scope = /^source:([^:]+):body:([^:]+)(:route:[a-f0-9]{16})?(?::history)?$/.exec(r.scope);
     const sources = family ? familySources(r.payload,owned,selected) : r.payload.sources;
     const own = {...r.payload,sources,meetings:owned,agendaDocuments:r.payload.agendaDocuments.filter(d => ids.has(d.meetingId))};
-    const stamped = stampMeetingDoor({id:scope ? `meetings:${decodeURIComponent(scope[1]!)}:${scope[2]}${scope[3] ?? ""}` : r.scope,derivedFamily:family ? state : null},applyPartitionFreshCheck(own,checked));
+    const stamped = stampMeetingDoor({id:scope ? `meetings:${decodeURIComponent(scope[1]!)}:${scope[2]}${scope[3] ?? ""}` : r.scope,derivedFamily:family||scope?.[1]?.startsWith("derived~") ? state : null},applyPartitionFreshCheck(own,checked));
     const owners = family ? [...new Set([...owned.flatMap(m => m.bodyId ?? []),...r.payload.derivedMembers?.filter(m => selected.has(m.bodyId)).map(m => m.bodyId) ?? []])]
       : scope ? [decodeURIComponent(scope[2]!)] : [];
     for (const bodyId of owners) {

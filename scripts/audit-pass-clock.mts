@@ -17,6 +17,7 @@
  * read on the reader database or the live site, not the control plane.
  */
 import type { ChildProcess } from "node:child_process";
+import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
 import { mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname } from "node:path";
 
@@ -26,6 +27,8 @@ const HOUR = 60 * 60_000;
 const DAY = 24 * HOUR;
 
 export interface AuditPass {
+  /** Observed process bytes from database_transfer_hourly; unsampled work uses the routine supervisor estimate. */
+  readonly databaseBytesPerRun?: number;
   readonly id: string;
   /** What it does, in the runner's log. */
   readonly says: string;
@@ -34,14 +37,14 @@ export interface AuditPass {
 }
 
 export const AUDIT_PASSES: readonly AuditPass[] = [
-  { id: "look-check", says: "look check of the latest deploy (FE-21)", args: ["scripts/look-pass.mts"], everyMs: 15 * 60_000 },
-  { id: "live-audit", says: "live audit of published facts (DP-13)", args: ["scripts/live-audit-pass.mts"], everyMs: HOUR },
-  { id: "first-tasks", says: "resident tasks at newly published ZIPs (FE-18)", args: ["scripts/resident-tasks.mts", "--if-queued"], everyMs: HOUR },
-  { id: "resident-tasks", says: "daily resident tasks (FE-18)", args: ["scripts/resident-tasks.mts"], everyMs: DAY },
-  { id: "speed", says: "worst-case speed on production (FE-02)", args: ["scripts/worst-case-speed-pass.mts"], everyMs: DAY },
-  { id: "claim-audit", says: "claim audit and Proven labels (DP-33, DP-34)", args: ["scripts/claim-audit-pass.mts"], everyMs: DAY },
-  { id: "loss-study", says: "loss study (DP-29)", args: ["scripts/loss-study-pass.mts"], everyMs: DAY },
-  { id: "break-patterns", says: "break patterns (DP-32)", args: ["scripts/break-pattern-pass.mts"], everyMs: DAY },
+  { id: "look-check", databaseBytesPerRun: 307_409, says: "look check of the latest deploy (FE-21)", args: ["scripts/look-pass.mts"], everyMs: 15 * 60_000 },
+  { id: "live-audit", databaseBytesPerRun: 1_907_347_669, says: "live audit of published facts (DP-13)", args: ["scripts/live-audit-pass.mts"], everyMs: HOUR },
+  { id: "first-tasks", databaseBytesPerRun: 19_639, says: "resident tasks at newly published ZIPs (FE-18)", args: ["scripts/resident-tasks.mts", "--if-queued"], everyMs: HOUR },
+  { id: "resident-tasks", databaseBytesPerRun: 8_136, says: "daily resident tasks (FE-18)", args: ["scripts/resident-tasks.mts"], everyMs: DAY },
+  { id: "speed", databaseBytesPerRun: 2_551_356, says: "worst-case speed on production (FE-02)", args: ["scripts/worst-case-speed-pass.mts"], everyMs: DAY },
+  { id: "claim-audit", databaseBytesPerRun: 15_942, says: "claim audit and Proven labels (DP-33, DP-34)", args: ["scripts/claim-audit-pass.mts"], everyMs: DAY },
+  { id: "loss-study", databaseBytesPerRun: 31_052_492, says: "loss study (DP-29)", args: ["scripts/loss-study-pass.mts"], everyMs: DAY },
+  { id: "break-patterns", databaseBytesPerRun: 2_772_310, says: "break patterns (DP-32)", args: ["scripts/break-pattern-pass.mts"], everyMs: DAY },
 ];
 
 /** A look check may wait up to 60 minutes on its batch; past 75 minutes with no output a pass is ended. */
@@ -111,6 +114,7 @@ const lastLine = (text: string) => text.split("\n").map((l) => l.trim()).filter(
 function defaultRunPass(pass: AuditPass, root: string, env: NodeJS.ProcessEnv, onStarted: (child: ChildProcess) => void): Promise<PassRun> {
   return runRuntimeChildren([{
     id: `audit-pass:${pass.id}`,
+    databaseBytesPerRun: pass.databaseBytesPerRun,
     executable: process.execPath,
     args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", ...pass.args],
     env,
@@ -133,7 +137,7 @@ export function auditPassClock(options: AuditPassClockOptions): AuditPassClock {
   const tick = (): string | null => {
     if (current !== null || timer === null) return null;
     const starts = readStarts(options.statePath);
-    const pass = duePasses(passes, starts, now())[0];
+    const pass = duePasses(passes, starts, now()).find(pass => admitJobLaunch(`audit-pass:${pass.id}`, options.env()));
     if (!pass) return null;
     const startedAt = new Date(now()).toISOString();
     try {

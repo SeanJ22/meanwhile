@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { afterEach, describe, it } from "node:test";
+import { afterEach, beforeEach, describe, it } from "node:test";
 import { MEETING_PARTITION_CONTRACTS, refreshMeetingPartitions, sittingWindowSourceIds } from "../lib/civic-data/meeting-partitions.ts";
 import { activeWiring, type BodySourceWiring } from "../lib/registry/source-wiring.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
@@ -11,6 +11,7 @@ const code = FIXTURE_DOOR_ROWS.slice();
 const AT = "2026-10-04T12:00:00.000Z";
 
 describe("DB-13: meeting work follows the doors in use each pass", () => {
+  beforeEach(() => installFixtureDoors());
   afterEach(() => installFixtureDoors());
 
   it("adds a partition for a new door, and takes it away again", () => {
@@ -42,6 +43,16 @@ describe("DB-13: meeting work follows the doors in use each pass", () => {
     assert.equal(result.rows, 0);
     assert.match(result.reason ?? "", /could not be read/);
     assert.equal(result.partitions, null);
+  });
+
+  it("store-selected meeting doors retain the registry's shut-before-open installation order", async () => {
+    const repos = createMemoryRepositories();
+    await seedMeetingDoors({ repo: repos.doors, wiring: code, derived: [], deriveInputAt: AT, at: AT });
+    const rows = [...await repos.doors.list()].slice(0, 2);
+    assert.equal(rows.length, 2);
+    const selected = rows.map((row, index) => ({ ...row, value: { ...row.value, status: index === 0 ? "OPEN" as const : "SHUT" as const } }));
+    const pass = await refreshDoorsForPass({ ...repos.doors, meetingRecords: async () => selected });
+    assert.deepEqual(pass.doors?.map(row => row.status), ["SHUT", "OPEN"]);
   });
 
   it("a door added in the registry becomes meeting work on the next pass, with no deploy", async () => {

@@ -39,7 +39,11 @@ export function stateCalendarsCovers(authorityContract: string | null, partition
 
 export function assertMeetingPartitionAuthority(partitionId: string, env: Readonly<Record<string, string | undefined>> = process.env): void {
   const envelope = runtimeAuthorityEnvelope(env);
-  if (envelope?.capability !== "STATE_CALENDARS") return assertRegisteredRuntimeContract(partitionId, "routine", env);
+  if (envelope?.capability !== "STATE_CALENDARS") {
+    const child=meetingPartitionContract(partitionId);
+    // The same admitted family still owns these exact state/body facts; each body gets its own CAS and pointer.
+    return assertRegisteredRuntimeContract(child?.derivedParentId??partitionId,"routine",env);
+  }
   assertRuntimeAuthority({ capabilities: ["STATE_CALENDARS"] }, env);
   if (!stateCalendarsCovers(envelope.contract, partitionId)) {
     throw new RuntimeAuthorityRefused(`admitted ${envelope.contract ?? "no state"} does not cover ${partitionId}`);

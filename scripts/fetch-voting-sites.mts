@@ -43,6 +43,9 @@ import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { ROUTINE_SOURCE_ACQUISITION_TIMEOUT_MS, ROUTINE_SOURCE_SETTLEMENT_BUDGET_MS } from "../lib/sources/acquisition-deadline.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import { readCountyCivicCoverage } from "../lib/sources/google-civic/coverage.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
+import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { votingSourceContentHash, votingSourceHashKey, votingSourceManifest, votingSourceManifestHash, votingSourceReadComplete } from "../lib/ballot/voting-source-hash.ts";
 // Registers the saved-source replacement verifier this job's promotions need (see voting-source-replacement-contract.ts).
 import "../lib/ballot/voting-source-replacement.ts";
 
@@ -230,7 +233,7 @@ export async function refreshVotingSources(input: {
   registry?: Pick<Registry, "divisions" | "bodies">;
   vault?: CycleVault;
   seeds?: VotingSourceDoor[];
-}): Promise<{ terminal: RoutineRunnerReceipt | null; publications: number; attemptedSourceIds: string[] }> {
+}): Promise<{ terminal: RoutineRunnerReceipt | null; publications: number; confirmedSources: number; attemptedSourceIds: string[] }> {
   const state = requireBallotState(input.state), contract = votingSitesContract(state);
   const { store, context } = input;
   const now = input.now ?? (() => new Date().toISOString());
@@ -240,15 +243,33 @@ export async function refreshVotingSources(input: {
     JSON.parse(readFileSync(join(REFERENCE_DIR, name), "utf8")) as VotingSourceDoor[])).filter(door => door.scope.state === state);
   const election = JSON.parse(readFileSync(join(REFERENCE_DIR, "voting-election.json"), "utf8")) as { electionDate: string };
   let terminal: RoutineRunnerReceipt | null = null, publications = 0;
+  const checkedHashes = new Map<string, string>();
+  const checkedAt = new Map<string, string>();
+  let confirmedSources = 0;
+  let successfulSourceReads = 0;
+  let latestSourceRead: { requestedUrl: string; finalUrl: string; at: string } | null = null;
   const attemptedSourceIds: string[] = [];
   try {
-    let priorRead: Awaited<ReturnType<typeof readPromotedCivicData<VotingSitesFile>>> | null = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, { store });
-    if (priorRead.kind !== "PROMOTED" && priorRead.kind !== "NOT_RECORDED") throw new Error("Voting-source holding is unavailable; preserve its last verified facts.");
-    if (priorRead.kind === "PROMOTED" && priorRead.metadata.sourceId !== contract.sourceId) throw new Error("Voting-source holding names a different publisher.");
-    if (priorRead.kind === "PROMOTED") rememberStatePublicationPrior(store, priorRead.projection);
-    let held = priorRead.kind === "PROMOTED" ? priorRead.value : null;
-    let version = priorRead.kind === "PROMOTED" ? priorRead.metadata.versionId : null;
-    priorRead = null;
+    // This manifest is a few hashes, never the held sites or their candidate/event bodies.
+    const fields = await store.readPromotionPayloadFields(contract.recordClass, contract.scope, ["sourceHashes", "sourceManifestVersion", "supersededSources"]);
+    const initialHead = await store.readSourceHead(contract.recordClass, contract.scope);
+    if (initialHead && initialHead.sourceId !== contract.sourceId) throw new Error("Voting-source holding names a different publisher.");
+    let sourceHashes: Record<string, string | null> = fields?.sourceHashes && typeof fields.sourceHashes === "object" && !Array.isArray(fields.sourceHashes)
+      ? Object.fromEntries(Object.entries(fields.sourceHashes).filter((row): row is [string, string | null] => row[1] === null || typeof row[1] === "string" && /^[a-f0-9]{64}$/.test(row[1]))) : {};
+    let held: VotingSitesFile | null = null, heldLoaded = false, version: string | null = initialHead?.versionId ?? null;
+    let publishedMappings: readonly VotingSourceDoor[] = [];
+    const loadHeld = async (): Promise<VotingSitesFile | null> => {
+      if (heldLoaded) return held;
+      const prior = await readPromotedCivicData<VotingSitesFile>(contract.recordClass, contract.scope, { store });
+      if (prior.kind !== "PROMOTED" && prior.kind !== "NOT_RECORDED") throw new Error("Voting-source holding is unavailable; preserve its last verified facts.");
+      if (prior.kind === "PROMOTED" && prior.metadata.sourceId !== contract.sourceId) throw new Error("Voting-source holding names a different publisher.");
+      if (prior.kind === "PROMOTED") rememberStatePublicationPrior(store, prior.projection);
+      held = prior.kind === "PROMOTED" ? prior.value : null;
+      version = prior.kind === "PROMOTED" ? prior.metadata.versionId : null;
+      sourceHashes = votingSourceManifest(held, publishedMappings);
+      heldLoaded = true;
+      return held;
+    };
     const registration = input.registration ?? await readRegistrationProjection(state, { store });
     const savedDoors = await registeredVotingSourceDoors(context.repos.doors, state);
     const registered = await votingSourceReadOrder(context.repos.doors, state,
@@ -261,14 +282,24 @@ export async function refreshVotingSources(input: {
       const bodies = [...new Map([...(registration.kind === "PROMOTED" ? registration.value.bodies : []),
         ...(input.registry?.bodies ?? reviewed?.payload.registry.bodies ?? [])].map(row => [row.id, row])).values()];
       const localRegistry = { divisions, bodies };
+      const sourceContextHash = canonicalCivicDataHash({ parserVersion: contract.parserVersion,
+        divisions: divisions.map(({ ocdId, divisionType, label, state, geoid, parentOcdId }) => ({ ocdId, divisionType, label, state, geoid, parentOcdId }))
+          .sort((a, b) => a.ocdId.localeCompare(b.ocdId)),
+        bodies: bodies.map(({ id, ocdId, name, homepageUrl }) => ({ id, ocdId, name, homepageUrl })).sort((a, b) => a.id.localeCompare(b.id)),
+      });
       const stateDoors = registered.filter(door => door.scope.state === state);
+      publishedMappings = stateDoors;
       const roots = votingChiefRoots(stateDoors);
-      const superseded = votingSupersededSources(stateDoors, held);
+      // The first run of an older package has no source hashes to compare yet.
+      if (fields?.sourceManifestVersion !== 1) await loadHeld();
+      const superseded = new Set<string>(Array.isArray(fields?.supersededSources) ? fields.supersededSources.filter((url): url is string => typeof url === "string") : []);
+      if (heldLoaded) for (const url of votingSupersededSources(stateDoors, held)) superseded.add(url);
       const doors = new Map<string, VotingSourceDoor>();
       const reads = new Map<string, VotingSourceRead>(), walked = new Set<string>();
       const evidenceSources = new Map<string, VotingSourceDoor>();
       const observations = new Map<string, "DOOR" | "EVIDENCE" | "SKIP">();
       const geocodes = new Map<string, { lat: number; lng: number } | null>(heldVotingSiteCoordinates(held));
+      let unmatchedSourceReads = false;
       let callbackFailure: unknown;
       const runtime: VotingSourceRuntime = {
         fetch: fetchSource, now, deadlineMs, captureCache: new Map(), discoverySeen: new Set(), ...votingScopeResolvers(localRegistry),
@@ -291,7 +322,22 @@ export async function refreshVotingSources(input: {
           geocodes.set(key, point); return point;
       });
       const publishedReads = new Map<string, { door: VotingSourceDoor; read: VotingSourceRead; acquisition: VotingRawCapture[]; mappings: VotingSourceDoor[] }>();
+      const sourceCheck = async (door: VotingSourceDoor, read: VotingSourceRead, rawHash: string, at: string) => {
+        if (!store.recordSourceCheck || !version || !votingSourceReadComplete(read)) return;
+        const check = { sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
+          pointerVersionId: version, sourceKey: votingSourceHashKey(door), rawHash, parserVersion: contract.parserVersion, checkedAt: at,
+          sourceUrls: [...new Set([door.url, ...read.sources.map(source => source.url), ...read.rawBodies.filter(isVotingSourceContent).map(body => body.url)])].sort(),
+          jurisdictionIds: [...new Set([door.scope.ocdId, ...(read.contacts ?? []).map(contact => contact.scope.ocdId)])].sort() };
+        try {
+          if (await store.recordSourceCheck(check)) return;
+          const current = await store.readSourceHead(contract.recordClass, contract.scope);
+          if (current?.sourceId === contract.sourceId && await store.recordSourceCheck({ ...check, pointerVersionId: current.versionId })) return;
+          recordVotingFailure({ stage: "source-check", state }, new Error(`The published source changed while ${door.url} was checked; its earlier check is retained.`));
+        } catch (error) { recordVotingFailure({ stage: "source-check", state }, error); }
+      };
       const publishRead = async (door: VotingSourceDoor, read: VotingSourceRead, acquisition: VotingRawCapture[], at: string, mappings: VotingSourceDoor[]) => {
+        await loadHeld();
+        for (const [key, point] of heldVotingSiteCoordinates(held)) if (!geocodes.has(key)) geocodes.set(key, point);
         let before = held;
         const jurisdiction = mergeVotingSourceRead(held?.jurisdictions.find(row => row.ocdId === door.scope.ocdId), door, read, at);
         let current = replaceVotingJurisdiction(held, jurisdiction, at);
@@ -306,6 +352,13 @@ export async function refreshVotingSources(input: {
           current = replaceVotingJurisdiction(current, local, at);
         }
         const observed = read.rawBodies.filter(isVotingSourceContent);
+        const key = votingSourceHashKey(door);
+        const supersededSources = [...votingSupersededSources(stateDoors, current)].sort();
+        const replaced = new Set(supersededSources);
+        const nextHashes = Object.fromEntries(Object.entries({ ...sourceHashes,
+          [key]: votingSourceReadComplete(read) ? votingSourceContentHash(mappings, read, sourceContextHash) : null,
+        }).filter(([source]) => !replaced.has(normalizeUrl(source.slice(source.indexOf("|") + 1)))));
+        current = { ...current, sourceHashes: nextHashes, sourceManifestVersion: 1, supersededSources };
         const candidate = votingSitesCandidate({ state, current, prior: before, failures: [], acquisition,
           successfulAuthorityReads: observed.length, requestedUrl: door.url, finalUrl: observed.at(-1)?.url ?? door.url,
           retrievedAt: at, carriedFromVersionId: version,
@@ -314,6 +367,8 @@ export async function refreshVotingSources(input: {
         const outcome = await processRegisteredManualCandidate(store, contract.id, candidate, at, version);
         if (outcome.promoted) {
           held = outcome.promoted.payload as VotingSitesFile; version = outcome.promoted.versionId;
+          sourceHashes = { ...(held.sourceHashes ?? {}) };
+          if (typeof sourceHashes[key] === "string") { checkedHashes.set(key, sourceHashes[key]); checkedAt.set(key, at); }
           rememberStatePublicationPrior(store, outcome.promoted);
           for (const url of votingSupersededSources(stateDoors, held)) superseded.add(url);
           terminal = { source: contract.id, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS }; publications++;
@@ -366,12 +421,26 @@ export async function refreshVotingSources(input: {
           sourceBytes: read.rawBodies.reduce((sum, capture) => sum + capture.bytes.byteLength, 0),
           failures: read.blanks.filter(blank => blank.reason === "access" || blank.reason === "extraction").map(blank => ({ reason: blank.reason, detail: blank.tried })) }));
         if (!await votingReadHasFacts(door, read)) {
+          unmatchedSourceReads = true;
           if (persistent && (read.rawBodies.length || read.blanks.length)) await recordVotingSourceRead(context.repos.doors, door, read, at);
           return;
         }
-        const acquisition = await votingSourceEvidence(door, read, captures);
         if (persistent) await recordVotingSourceRead(context.repos.doors, door, read, at);
-        if (await publishRead(publicationDoor, read, acquisition, at, mappings)) publishedReads.set(door.id, { door: publicationDoor, read, acquisition, mappings });
+        const hashKey = votingSourceHashKey(door), contentHash = votingSourceContentHash(mappings, read, sourceContextHash);
+        latestSourceRead = { requestedUrl: door.url, finalUrl: read.rawBodies.filter(isVotingSourceContent).at(-1)?.url ?? door.url, at };
+        successfulSourceReads++;
+        if (votingSourceReadComplete(read) && sourceHashes[hashKey] === contentHash) {
+          checkedHashes.set(hashKey, contentHash); checkedAt.set(hashKey, at); confirmedSources++;
+          await sourceCheck(publicationDoor, read, contentHash, at);
+          console.info(JSON.stringify({ event: "voting_source_read", state, source: door.url, at, result: "CONFIRMED_UNCHANGED" }));
+          return;
+        }
+        unmatchedSourceReads = true;
+        const acquisition = await votingSourceEvidence(door, read, captures);
+        if (await publishRead(publicationDoor, read, acquisition, at, mappings)) {
+          publishedReads.set(door.id, { door: publicationDoor, read, acquisition, mappings });
+          await sourceCheck(publicationDoor, read, contentHash, at);
+        }
       };
       runtime.onDiscoveredDoor = async (found, captures) => {
         if (callbackFailure) throw callbackFailure;
@@ -459,19 +528,42 @@ export async function refreshVotingSources(input: {
       }
       const scope = root?.scope ?? stateDoors[0]?.scope;
       if (!scope) throw new Error(`No registered voting source for ${state}.`);
+      // Unchanged sources keep their existing open work. A changed or failed read replans from the preserved state.
+      if (heldLoaded || unmatchedSourceReads) {
+      const currentHeld = await loadHeld();
       const delegation = stateDoors.find(door => door.delegation)?.delegation ?? "county";
       const coverage = await readCountyCivicCoverage(store, state, election.electionDate);
       const populations = await votingSourcePopulations({ state, bodies, divisions, coverage });
       const places = votingSourcePlaces({ state: scope, divisions, delegation, populations, coverage });
       const sourceDoors = [...doors.values(), ...evidenceSources.values()];
-      const jurisdictions = held?.jurisdictions.filter(jurisdiction => jurisdiction.state === state) ?? [];
+      const jurisdictions = currentHeld?.jurisdictions.filter(jurisdiction => jurisdiction.state === state) ?? [];
       const blanks = [...planVotingSourceBlanks({ electionDate: election.electionDate, places, doors: sourceDoors, reads: [...reads.values()], jurisdictions, coverage }),
         ...votingBoundaryBlanks(places, jurisdictions, sourceDoors)];
       await persistVotingSourceBlanks({ repos: context.repos, blanks, electionDate: election.electionDate, now: now(), coverage });
       console.log(`${state}: ${[...observations.values()].filter(kind => kind === "DOOR").length} publishing doors, ${[...observations.values()].filter(kind => kind === "EVIDENCE").length} evidence captures, ${[...observations.values()].filter(kind => kind === "SKIP").length} skips, ${[...reads.values()].reduce((sum, read) => sum + read.sites.length, 0)} site observations, ${blanks.length} open place blanks`);
+      }
     }
-    if (!publications) throw new Error("No official voting-source result could be published; prior facts and open hunter work are retained.");
-    return { terminal, publications, attemptedSourceIds };
+    const sourceRead = latestSourceRead as { requestedUrl: string; finalUrl: string; at: string } | null;
+    const represented = Object.keys(sourceHashes);
+    if (sourceRead && represented.length && represented.every(key => typeof sourceHashes[key] === "string" && checkedHashes.get(key) === sourceHashes[key])) {
+      const rawHash = votingSourceManifestHash(sourceHashes);
+      const retrievedAt = represented.map(key => checkedAt.get(key)!).sort((a, b) => Date.parse(a) - Date.parse(b))[0]!;
+      const confirmation = await confirmSourceHashUnchanged({ store, sourceId: contract.sourceId, recordClass: contract.recordClass,
+        scope: contract.scope, parserVersion: contract.parserVersion, rawHash,
+        retrieval: { requestedUrl: sourceRead.requestedUrl, finalUrl: sourceRead.finalUrl, httpStatus: 200, rawHash, retrievedAt },
+        now: now(), complete: true });
+      if (confirmation) terminal = { source: contract.id, ...sourceHashReceiptFields(confirmation), structuralReleaseContract: ZERO_RELEASE_EVENTS };
+    }
+    if (!terminal && checkedHashes.size) {
+      // A cutoff confirms its completed sources on their doors, without claiming that the whole state was refreshed.
+      const head = await store.readSourceHead(contract.recordClass, contract.scope);
+      if (head?.candidateState === "PROMOTED" && head.acquisitionSucceeded && head.sourceId === contract.sourceId && head.versionId === head.lastKnownGoodVersionId && !head.imported) {
+        terminal = { source: contract.id, candidateId: head.versionId, acquisitionSucceeded: true, state: "PROMOTED", decision: "GOOD",
+          promotedVersion: head.versionId, lastKnownGoodVersion: head.lastKnownGoodVersionId, structuralReleaseContract: ZERO_RELEASE_EVENTS };
+      }
+    }
+    if (!terminal || !publications && !successfulSourceReads) throw new Error("No official voting-source result could be published; prior facts and open hunter work are retained.");
+    return { terminal, publications, confirmedSources, attemptedSourceIds };
   } catch (error) {
     const at = now();
     try {

@@ -12,13 +12,16 @@ import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-stor
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
-import { openArchiveSource, type ArchiveObjectStore } from "../lib/sources/archive-download.ts";
-import { streamCsvObjects } from "../lib/sources/prl/streaming.ts";
+import { openArchiveSource, type ArchiveObjectStore, type ArchiveSourceOpen } from "../lib/sources/archive-download.ts";
 import { recordDoorEvidence } from "../lib/doors/shut.ts";
 import { feedDoorId } from "../lib/doors/registry.ts";
 import { recordDoorOutcome } from "../lib/doors/outcome.ts";
-import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, SOCRATA_CATALOG, ECHO_EXPORT, zipPartition, type OpenDataSource, type OpenDataReport,type OpenDataPartitionRef } from "../lib/sources/open-data/model.ts";
-import { normalizeEcho, openDataReports, type GovernmentJoin } from "../lib/sources/open-data/normalize.ts";
+import { readSourceChangeHistory } from "../lib/civic-data/source-change-cadence.ts";
+import { routineTaskFromContract } from "../lib/civic-data/runner.ts";
+import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { readerFactDb } from "../lib/facts/db.ts";
+import { OPEN_DATA_SOURCES, OPEN_DATA_PARSER, SOCRATA_CATALOG, ECHO_EXPORT, zipPartition, openDataScope, type OpenDataSource, type OpenDataReport,type OpenDataPartitionRef } from "../lib/sources/open-data/model.ts";
+import { openDataReports, type GovernmentJoin } from "../lib/sources/open-data/normalize.ts";
 import { openDataFetch, socrataPages } from "../lib/sources/open-data/acquire.ts";
 import { OpenDataSpool } from "../lib/sources/open-data/spool.ts";
 import { publishOpenData, readOpenDataProjection, type OpenDataCapture } from "../lib/sources/open-data/publication.ts";
@@ -28,9 +31,19 @@ import { facilityPoint,facilityCell } from "../lib/sources/open-data/geography.t
 import { saveOpenDataPartition,openDataVault } from "../lib/sources/open-data/artifacts.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
-import { refreshSocrata, socrataStateDivisionId, type SocrataGovernmentState } from "../lib/sources/open-data/socrata.ts";
-import { echoMinimumGap, retainEchoMinimumGaps, mergeEchoRetainedPartition, type EchoMinimumGap } from "../lib/sources/open-data/echo-gaps.ts";
+import { prepareSocrataCatalog,refreshSocrata, socrataStateDivisionId, type SocrataGovernmentState } from "../lib/sources/open-data/socrata.ts";
+import { retainEchoMinimumGaps, mergeEchoRetainedPartition, type EchoMinimumGap } from "../lib/sources/open-data/echo-gaps.ts";
 import { materializeEchoPartitions } from "../lib/sources/open-data/echo-materialization.ts";
+import { echoSourceProgress,type EchoProjectionProgress } from "../lib/sources/open-data/echo-progress.ts";
+import { canonicalCivicDataJson } from "../lib/civic-data/changes.ts";
+import { confirmSourceHashUnchanged,sourceHashReceiptFields,type SourceHashConfirmation } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { openDataProbeContentHash,openDataSourceProbe,readOpenDataSourceDependencies,type OpenDataSourceProbe } from "../lib/sources/open-data/source-probe.ts";
+import { confirmSocrataSource } from "../lib/sources/open-data/socrata-source-probe.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import type { AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import type { CatalogPage } from "../lib/sources/open-data/acquire.ts";
+import { socrataDiscoveryProgress } from "../lib/sources/open-data/socrata-discovery-progress.ts";
 
 export function parseOpenDataArguments(args:readonly string[]):OpenDataSource {
   if(args.length!==2 || !args.includes("--promote"))throw Error("SRC-SO requires --promote and one --source.");
@@ -55,13 +68,18 @@ export function openDataArchiveStore(vault:EvidenceStore=new DurableEvidenceStor
 type Spool=Awaited<ReturnType<typeof OpenDataSpool.create>>;
 type Publication=Awaited<ReturnType<typeof publishOpenData>>;
 /** One national run: the prior manifest, the partitions this run replaces, per-state reports and the registered publisher. */
-async function openDataRun(input:{source:OpenDataSource;store:RoutineDataStore;vault:EvidenceStore;now:()=>string}) {
-  const prior=await readOpenDataProjection(input.source,"national",{store:input.store});
+async function openDataRun(input:{source:OpenDataSource;store:RoutineDataStore;vault:EvidenceStore;now:()=>string;
+  projection?:EchoProjectionProgress;prior?:Awaited<ReturnType<typeof readOpenDataProjection>>}) {
+  const prior=input.prior??await readOpenDataProjection(input.source,"national",{store:input.store});
   if(prior.kind==="STORE_UNREACHABLE")throw Error("Source manifest could not be read; the prior source stays live.");
-  const partitions=new Map<string,OpenDataPartitionRef>((prior.kind==="PROMOTED"?prior.value.partitions??[]:[]).map(p=>[p.id,p]));
-  const replacedLogicalPartitions=new Set<string>();
+  const partitions=new Map<string,OpenDataPartitionRef>((input.projection?.partitions??(prior.kind==="PROMOTED"?prior.value.partitions??[]:[])).map(p=>[p.id,p]));
+  const replacedLogicalPartitions=new Set<string>(input.projection?.replaced??[]);
   const reports=new Map<string,OpenDataReport>(US_JURISDICTIONS.map(s=>[s.usps,{id:`state:${s.usps}`,state:s.usps,loaded:0,joined:0,unjoined:0}]));
+  for(const report of input.projection?.reports??[])reports.set(report.state,report);
+  let baseVersionId=prior.kind==="PROMOTED"?prior.metadata.versionId:null,priorCaptures:readonly OpenDataCapture[]|undefined;
   return {prior,reports,
+    projection:(context:string,position:number):EchoProjectionProgress=>({context,position,
+      partitions:[...partitions.values()],replaced:[...replacedLogicalPartitions],reports:[...reports.values()]}),
     addReports(rows:Parameters<typeof openDataReports>[0]){for(const row of openDataReports(rows)){const held=reports.get(row.state);reports.set(row.state,{...row,loaded:row.loaded+(held?.loaded??0),joined:row.joined+(held?.joined??0),unjoined:row.unjoined+(held?.unjoined??0)});}},
     async writePartition(partition:{partition:string;rows:Parameters<typeof openDataReports>[0];captures:readonly OpenDataCapture[]}) {
       if(input.source==="epa-echo") {
@@ -70,43 +88,112 @@ async function openDataRun(input:{source:OpenDataSource;store:RoutineDataStore;v
       }
       const reference=await saveOpenDataPartition({source:input.source,...partition,now:input.now()},input.vault);partitions.set(reference.id,reference);
     },
-    publish:(capture:OpenDataCapture,excludedFacts:RoutineCandidate["excludedFacts"]=[])=>publishOpenData({store:input.store,source:input.source,rows:[],reports:[...reports.values()],
-      partitions:[...partitions.values()].sort((a,b)=>a.id.localeCompare(b.id)),captures:[capture],excludedFacts,now:input.now(),replace:true}),
+    async publish(capture:OpenDataCapture,excludedFacts:RoutineCandidate["excludedFacts"]=[],sourceProbe?:OpenDataSourceProbe,captures:readonly OpenDataCapture[]=[capture]) {
+      const result=await publishOpenData({store:input.store,source:input.source,rows:[],reports:[...reports.values()],
+        partitions:[...partitions.values()].sort((a,b)=>a.id.localeCompare(b.id)),captures,excludedFacts,sourceProbe,now:input.now(),replace:true,prior,baseVersionId,priorCaptures});
+      baseVersionId=result.outcome.promoted?.versionId??result.outcome.confirmed?.versionId??baseVersionId;
+      priorCaptures=(result.candidate.normalizedPayload as {captures:readonly OpenDataCapture[]}).captures;
+      return result;
+    },
   };
+}
+type EchoRefreshResult={publication:Publication;confirmation:null;reports:OpenDataReport[];gaps:EchoMinimumGap[];unchanged:boolean}|
+  {publication:null;confirmation:SourceHashConfirmation;reports:OpenDataReport[];gaps:EchoMinimumGap[];unchanged:true};
+function echoCapture(archive:ArchiveSourceOpen):OpenDataCapture {
+  return {url:ECHO_EXPORT,retrievedAt:archive.retrievedAt,rawHash:archive.sourceSha256,sourceRows:[],
+    ...(!archive.outage?{sourceCheck:{requestedUrl:ECHO_EXPORT,finalUrl:archive.finalUrl,httpStatus:archive.lastCheckStatus as 200|304,checkedAt:archive.checkedAt,rawHash:archive.sourceSha256}}:{}),
+    archive:{sha256:archive.sourceSha256,member:archive.member,publishedAt:archive.publishedAt}};
 }
 /** The scheduled EPA ECHO run: conditional check from the held source, minimum-fact gaps, bounded reader partitions, registered publication. */
 export async function refreshEchoNational(input:{store:RoutineDataStore;vault:EvidenceStore;archive:ArchiveObjectStore;spool:Spool;signal:AbortSignal;now:()=>string;
-  readStateJoins:(state:string)=>Promise<GovernmentJoin[]>;fetchImpl?:typeof fetch}):Promise<{publication:Publication;reports:OpenDataReport[];gaps:EchoMinimumGap[];unchanged:boolean}> {
-  const {store,vault,spool,signal}=input,run=await openDataRun({source:"epa-echo",store,vault,now:input.now}),prior=run.prior;
-  const candidate=prior.kind==="PROMOTED"?await store.readCandidate(prior.metadata.versionId!):null;
-  const priorCaptures=(candidate?.candidate.normalizedPayload as {captures?:OpenDataCapture[]}|null)?.captures??[];
-  const archive=await openArchiveSource({id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv-zip"},
+  readStateJoins:(state:string)=>Promise<GovernmentJoin[]>;fetchImpl?:typeof fetch}):Promise<EchoRefreshResult> {
+  const {store,vault,spool,signal}=input,scope=openDataScope("epa-echo","national");
+  const [head,dependencies]=await Promise.all([store.readSourceHead("CURATED_READER_RECORD",scope),readOpenDataSourceDependencies(store)]);
+  const plan=head?.parserVersion===OPEN_DATA_PARSER&&head.rawHashBasis==="SOURCE_CONTENT_V1"
+    ?await store.readCandidatePath<OpenDataSourceProbe>(head.versionId,["normalizedPayload","sourceProbe"]):null;
+  const canReuse=plan?.formatVersion===1&&plan.sourceId==="epa-echo"&&plan.parserVersion===OPEN_DATA_PARSER&&plan.complete&&
+    plan.requests.length===1&&plan.requests[0].url===ECHO_EXPORT&&canonicalCivicDataJson(plan.dependencies)===canonicalCivicDataJson(dependencies);
+  const acquire=(reuse?:string)=>openArchiveSource({id:"epa-echo",url:ECHO_EXPORT,file:"ECHO_EXPORTER.csv",format:"csv-zip"},
     (url,init)=>openDataFetch(url,{...init,signal:AbortSignal.any([signal,...(init?.signal?[init.signal]:[])])},input.fetchImpl),input.archive,
-    candidate?.candidate.normalization.parserVersion===OPEN_DATA_PARSER?priorCaptures.at(-1)?.archive?.sha256:undefined);
-  const gaps:EchoMinimumGap[]=[];let excluded:RoutineCandidate["excludedFacts"]=[];
-  const capture:OpenDataCapture={url:ECHO_EXPORT,retrievedAt:archive.retrievedAt,rawHash:archive.sourceSha256,sourceRows:[],
-    sourceCheck:{requestedUrl:ECHO_EXPORT,finalUrl:archive.finalUrl,httpStatus:archive.lastCheckStatus as 200|304,checkedAt:archive.checkedAt,rawHash:archive.sourceSha256},
-    archive:{sha256:archive.sourceSha256,member:archive.member,publishedAt:archive.publishedAt}};
+    reuse);
+  let archive=await acquire(canReuse?plan.requests[0].archive?.sha256:undefined),capture=echoCapture(archive);
   try {
-    if(archive.unchanged){excluded=candidate?.candidate.excludedFacts??[];for(const row of prior.kind==="PROMOTED"?prior.value.reports:[])run.reports.set(row.state,row);}
-    else {
-      if(archive.member!=="ECHO_EXPORTER.csv")throw Error("EPA exporter archive has a different source member.");
-      let count=0;
-      for await(const raw of streamCsvObjects(archive.textChunks)) {
+  const observed=openDataSourceProbe({sourceId:"epa-echo",captures:[capture],dependencies,complete:canReuse===true&&!archive.outage});
+  if(observed.complete) {
+    const rawHash=openDataProbeContentHash(observed);
+    const confirmation=await confirmSourceHashUnchanged({store,sourceId:"epa-echo",recordClass:"CURATED_READER_RECORD",scope,
+      parserVersion:OPEN_DATA_PARSER,rawHash,complete:true,now:input.now(),retrieval:{requestedUrl:ECHO_EXPORT,finalUrl:archive.finalUrl,
+        httpStatus:200,retrievedAt:archive.retrievedAt,rawHash,sourceCheck:capture.sourceCheck}});
+    if(confirmation)return {publication:null,confirmation,reports:[],gaps:[],unchanged:true};
+  }
+  // A moved pointer or changed normalization input still needs the exact source bytes for a new parse.
+  if(archive.unchanged){await archive.dispose();archive=await acquire();capture=echoCapture(archive);}
+  if(archive.member!=="ECHO_EXPORTER.csv")throw Error("EPA exporter archive has a different source member.");
+  const progress=await echoSourceProgress({archive,capture,vault,signal,now:input.now});
+  await progress.acquire();
+  const prior=await readOpenDataProjection("epa-echo","national",{store});
+  const projectionContext=createHash("sha256").update(canonicalCivicDataJson([archive.sourceSha256,OPEN_DATA_PARSER,dependencies,prior.kind==="PROMOTED"?prior.metadata.versionId:null])).digest("hex");
+  const checkpoint=progress.projection()?.context===projectionContext?progress.projection():undefined;
+  const run=await openDataRun({source:"epa-echo",store,vault,now:input.now,projection:checkpoint,prior});
+  const priorCaptures=prior.kind==="PROMOTED"?
+    await store.readCandidatePath<readonly OpenDataCapture[]>(prior.metadata.versionId!,["normalizedPayload","captures"])??[]:[];
+  const gaps=[...progress.gaps()];
+      for await(const row of progress.rows()) {
         signal.throwIfAborted();
-        const gap=echoMinimumGap(raw);if(gap){gaps.push(gap);continue;}
-        const row=normalizeEcho(raw,archive.retrievedAt,archive.publishedAt);
-        await spool.append(row.zip?`${zipPartition(row.zip)}:state:${row.state??"UNRESOLVED"}`:`unlocated:${row.state??"UNRESOLVED"}`,row,capture);count++;
+        await spool.append(row.zip?`${zipPartition(row.zip)}:state:${row.state??"UNRESOLVED"}`:`unlocated:${row.state??"UNRESOLVED"}`,row,capture);
         const point=facilityPoint(row);if(point)await spool.append(`${facilityCell(point.lat,point.lng)}:state:${row.state??"UNRESOLVED"}`,row,capture);
       }
-      await archive.accept?.();if(!count)throw Error("EPA exporter has no facility rows; prior data remain live.");
       const retained=await retainEchoMinimumGaps(gaps,prior.kind==="PROMOTED"?prior.value.partitions??[]:[],priorCaptures,vault);
-      const currentPartitions=async function*(){for await(const partition of spool.partitions({consume:true,maxRows:1000,maxBytes:4*1024*1024}))yield mergeEchoRetainedPartition(partition,retained);yield* retained.values();};
-      await materializeEchoPartitions({partitions:currentPartitions(),addReports:rows=>run.addReports(rows),writePartition:partition=>run.writePartition(partition),readStateJoins:input.readStateJoins});
-      excluded=gaps.map(gap=>gap.fact);
-    }
+      let position=0,completed=checkpoint?.position??0;
+      const currentPartitions=async function*(){
+        for await(const partition of spool.partitions({consume:true,maxRows:1000,maxBytes:4*1024*1024})) {
+          signal.throwIfAborted();const merged=mergeEchoRetainedPartition(partition,retained);if(position++>=completed)yield merged;
+        }
+        for(const partition of retained.values()){signal.throwIfAborted();if(position++>=completed)yield partition;}
+      };
+      await materializeEchoPartitions({partitions:currentPartitions(),pendingWrites:1,addReports:rows=>run.addReports(rows),
+        writePartition:async partition=>{await run.writePartition(partition);await progress.saveProjection(run.projection(projectionContext,++completed));},
+        readStateJoins:input.readStateJoins});
+  const sourceProbe=openDataSourceProbe({sourceId:"epa-echo",captures:[capture],dependencies,complete:!gaps.length&&!archive.outage});
+  const publication=await run.publish(capture,gaps.map(gap=>gap.fact),sourceProbe);
+  await progress.clearProjection();
+  return {publication,confirmation:null,reports:[...run.reports.values()],gaps,unchanged:plan?.requests[0]?.rawHash===archive.sourceSha256};
   } finally {await archive.dispose();}
-  return {publication:await run.publish(capture,excluded),reports:[...run.reports.values()],gaps,unchanged:archive.unchanged===true};
+}
+/** Acquire the native current scroll and every discovery root before deciding whether any held projection is needed. */
+export async function refreshSocrataNational(input:{store:RoutineDataStore;vault:EvidenceStore;signal:AbortSignal;now:()=>string;
+  states:AsyncIterable<SocrataGovernmentState>;saveLeads:Parameters<typeof refreshSocrata>[0]["saveLeads"];
+  gap:Parameters<typeof refreshSocrata>[0]["gap"];maxSourceAgeMs:number;pages?:AsyncIterable<CatalogPage>;token?:string}):Promise<EchoRefreshResult> {
+  const scope=openDataScope("socrata-discovery","national");
+  const [head,dependencies]=await Promise.all([input.store.readSourceHead("CURATED_READER_RECORD",scope),readOpenDataSourceDependencies(input.store)]);
+  const plan=head?.parserVersion===OPEN_DATA_PARSER&&head.rawHashBasis==="SOURCE_CONTENT_V1"
+    ?await input.store.readCandidatePath<OpenDataSourceProbe>(head.versionId,["normalizedPayload","sourceProbe"]):null;
+  // Credentials remain runtime headers in the normal provider, never in a saved request plan.
+  const catalog=await prepareSocrataCatalog(input.pages??socrataPages({signal:input.signal,token:input.token,maxSourceAgeMs:input.maxSourceAgeMs}),input.signal);
+  try {
+    const confirmation=await confirmSocrataSource({store:input.store,plan,versionId:head?.versionId??null,captures:catalog.captures,
+      dependencies,signal:input.signal,now:input.now(),maxAgeMs:input.maxSourceAgeMs});
+    if(confirmation)return {publication:null,confirmation,reports:[],gaps:[],unchanged:true};
+    const context=createHash("sha256").update(canonicalCivicDataJson([OPEN_DATA_PARSER,dependencies,
+      catalog.captures.map(capture=>[capture.url,capture.rawHash])])).digest("hex");
+    const sourceWork=await socrataDiscoveryProgress({context,captures:catalog.captures,now:input.now(),maxAgeMs:input.maxSourceAgeMs});
+    const run=await openDataRun({source:"socrata-discovery",store:input.store,vault:input.vault,now:input.now});
+    let publication:Publication|undefined;
+    const publish=async(reports:OpenDataReport[],captures:readonly OpenDataCapture[],sourceProbe:OpenDataSourceProbe)=>{
+      for(const [state,row]of run.reports)run.reports.set(state,{...row,loaded:0,joined:0,unjoined:0});
+      for(const row of reports)run.reports.set(row.state,row);
+      publication=await run.publish(captures.at(-1)!,[],sourceProbe,captures);
+    };
+    await refreshSocrata({preparedCatalog:catalog,states:input.states,signal:input.signal,sourceWork,
+      initialBindings:plan&&canonicalCivicDataJson(plan.dependencies)===canonicalCivicDataJson(dependencies)?plan.portalBindings:undefined,
+      writePartition:partition=>run.writePartition(partition),saveLeads:input.saveLeads,gap:input.gap,
+      publish:async(reports,_capture,captures=catalog.captures)=>publish(reports,captures,
+        openDataSourceProbe({sourceId:"socrata-discovery",captures,dependencies,complete:false})),
+      onDiscoveryComplete:async({reports,captures,observations,bindings,basis,complete})=>publish(reports,captures,
+        openDataSourceProbe({sourceId:"socrata-discovery",captures,dependencies,observations,portalBindings:bindings,basis,complete}))});
+    if(!publication)throw Error("Socrata produced no captured publication.");
+    return {publication,confirmation:null,reports:[...run.reports.values()],gaps:[],unchanged:false};
+  } finally {await catalog.spool.dispose();}
 }
 async function main() {
   const source=parseOpenDataArguments(process.argv.slice(2));installNeonRequestDeadline();prepareProductionCivicDataWrite();
@@ -117,28 +204,35 @@ async function main() {
   const signal=AbortSignal.timeout(20*60_000);
   try {
     const vault=openDataVault();
-    let publication:Publication|undefined,reports:OpenDataReport[]=[],gaps:EchoMinimumGap[]=[];
+    let publication:Publication|null|undefined,confirmation:SourceHashConfirmation|null=null,reports:OpenDataReport[]=[],gaps:EchoMinimumGap[]=[];
     if(source==="socrata-discovery") {
-      const run=await openDataRun({source,store,vault,now});
       const states=async function*():AsyncGenerator<SocrataGovernmentState>{
         for(const state of US_JURISDICTIONS) {
           const registration=await readRegistrationProjection(state.usps,{store});
+          if(registration.kind==="STORE_UNREACHABLE")throw Error(`Socrata registration joins are unavailable for ${state.usps}; prior facts remain live.`);
           if(registration.kind!=="PROMOTED"){console.log(`SRC_SO_JOIN_GAP=${JSON.stringify({state:state.usps,reason:registration.kind})}`);continue;}
           yield {state:state.usps,fips:state.fips,governments:registration.value.governments??[],divisionId:socrataStateDivisionId(registration.value.divisions,state.usps)};
         }
       };
-      await refreshSocrata({pages:socrataPages({signal,token:process.env.SOCRATA_APP_TOKEN}),states:states(),signal,writePartition:partition=>run.writePartition(partition),
-        saveLeads:rows=>saveSocrataLeads(repos,rows,now()).then(()=>{}),gap:detail=>console.log(`SRC_SO_PORTAL_GAPS=${JSON.stringify(detail)}`),
-        publish:async(rows,capture)=>{for(const [state,row]of run.reports)run.reports.set(state,{...row,loaded:0,joined:0,unjoined:0});for(const row of rows)run.reports.set(row.state,row);publication=await run.publish(capture);}});
-      if(!publication)throw Error("Source produced no captured publication.");
-      reports=[...run.reports.values()];
-    } else ({publication,reports,gaps}=await refreshEchoNational({store,vault,archive:openDataArchiveStore(),spool,signal,now,readStateJoins:async state=>{
+      const config=(await repos.adminConfig.readNarrowed("current",{settings:["facts.freshnessHours"]}))?.value as AdminConfig|null??null;
+      ({publication,confirmation,reports}=await refreshSocrataNational({store,vault,now,signal,states:states(),token:process.env.SOCRATA_APP_TOKEN,
+        maxSourceAgeMs:factClocks(config).windowHours("officeholder")*3_600_000,
+        saveLeads:rows=>saveSocrataLeads(repos,rows,now()).then(()=>{}),gap:detail=>console.log(`SRC_SO_PORTAL_GAPS=${JSON.stringify(detail)}`)}));
+    } else ({publication,confirmation,reports,gaps}=await refreshEchoNational({store,vault,archive:openDataArchiveStore(),spool,signal,now,readStateJoins:async state=>{
       const registration=await readRegistrationProjection(state,{store});
       if(registration.kind==="PROMOTED")return governmentJoinRows(registration.value.governments??[]);
+      if(registration.kind==="STORE_UNREACHABLE")throw Error(`EPA registration joins are unavailable for ${state}; prior facts remain live.`);
       console.log(`SRC_SO_JOIN_GAP=${JSON.stringify({state,reason:registration.kind})}`);return [];
     }}));
+    if(confirmation) {
+      await recordDoorOutcome(repos.doors,feedDoorId(source),"SUCCESS",now(),false);
+      console.log(`RCD_RECEIPT=${JSON.stringify({source,...sourceHashReceiptFields(confirmation),structuralReleaseContract:ZERO_RELEASE_EVENTS})}`);
+      return;
+    }
+    if(!publication)throw Error("Source produced no captured publication.");
     await recordDoorEvidence(repos.doors,feedDoorId(source),{kind:"GOOD",rows:reports.reduce((n,r)=>n+r.loaded,0)},now(),repos);
-    await recordDoorOutcome(repos.doors,feedDoorId(source),"SUCCESS",now(),!publication.outcome.confirmed);
+    const history = (await readSourceChangeHistory(readerFactDb().query, [routineTaskFromContract(requiredRoutineContract(source))])).get(source);
+    await recordDoorOutcome(repos.doors,feedDoorId(source),"SUCCESS",now(),false,undefined,history);
     console.log(`SRC_SO_ROWS=${JSON.stringify(reports)}`);
     if(gaps.length)console.log(`SRC_SO_FACILITY_GAPS=${JSON.stringify(gaps.map(({id,state,fact})=>({id,state,reason:fact.detail})))}`);
     printSourceRunnerReceipt(source,publication.candidate,publication.outcome);

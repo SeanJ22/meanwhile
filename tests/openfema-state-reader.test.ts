@@ -8,6 +8,7 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { FederalMoneySection } from "../components/funding/federal-money-section.tsx";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { requiredRoutineContract } from "../lib/civic-data/contracts.ts";
+import { factRefreshBounds } from "../lib/civic-data/source-change-cadence.ts";
 import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { processRegisteredFanOutCandidate } from "../lib/civic-data/promotion.ts";
@@ -67,25 +68,29 @@ test("OpenFEMA state associations require the exact publisher field and preserve
   assert.equal(federalMoneyRows([matched], { divisionId: planningRegions[0].ocdId }).length, 0);
 });
 
-test("CT source bytes publish through artifacts and the real card on initial, next20minute, and tomorrow replays", async t => {
+test("CT source bytes and real cards stay complete between fact-bounded source checks", async t => {
   const root = await mkdtemp(join(tmpdir(), "openfema-ct-reader-"));
   t.after(() => rm(root, { recursive: true, force: true }));
   const { evidenceStore, capture, facts } = await heldSource(), store = new MemoryRoutineDataStore(), artifactStore = new LocalFileArtifactStore(root);
   let clock = "2026-10-23T09:21:00.000Z";
   t.mock.method(Date, "now", () => Date.parse(clock));
   const task = routineTaskFromContract(requiredRoutineContract("openfema"));
+  let acquisitions = 0;
   const input = { source: "openfema" as const, store, states: ["CT"], now: () => clock,
-    acquireOptions: { evidenceStore }, acquire: async () => ({ facts, captures: [capture], complete: true, declaredTotal: 266 }),
+    acquireOptions: { evidenceStore }, acquire: async () => { acquisitions++; return { facts, captures: [capture], complete: true, declaredTotal: 266 }; },
     identities: async () => ({ divisions: planningRegions, bodies: [], governments: [] }),
     onPartition: (change: FederalMoneyPartitionChange) => publishFederalMoneyPartition({ ...change, store: artifactStore }),
     onProgress: (row: FederalMoneyStateProgress, checkedAt: string) => publishFederalMoneyProgress({ store: artifactStore, source: "openfema", state: row.state, checkedAt, complete: row.status === "COMPLETE", reason: row.reason }) };
-  for (const at of [clock, "2026-10-23T09:41:00.000Z", "2026-10-24T09:21:00.000Z"]) {
+  const nextCheck = new Date(Date.parse(clock) + Math.max(task.cadenceMs, factRefreshBounds(task).minimumRefreshMs)).toISOString();
+  for (const [at, due] of [[clock, true], ["2026-10-23T09:41:00.000Z", false], [nextCheck, true]] as const) {
     clock = at;
     const prior = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
-    assert.ok(routineTaskDue(task, prior, Date.parse(clock)));
-    const publication = await refreshFederalMoney(input);
-    assert.ok(publication.outcome.promoted, publication.outcome.candidate.failureDetail ?? "");
-    assert.deepEqual(publication.projection.counts, { loaded: 266, joined: 266, unjoined: 0 });
+    assert.equal(routineTaskDue(task, prior, Date.parse(clock)), due);
+    if (due) {
+      const publication = await refreshFederalMoney(input);
+      assert.ok(publication.outcome.promoted, publication.outcome.candidate.failureDetail ?? "");
+      assert.deepEqual(publication.projection.counts, { loaded: 266, joined: 266, unjoined: 0 });
+    }
     const firstPage = await readFederalMoneyForPlace({ divisionId }, { artifactStore });
     const found = new Set<string>();
     let page = firstPage;
@@ -100,6 +105,7 @@ test("CT source bytes publish through artifacts and the real card on initial, ne
     const unrelated = await readFederalMoneyForPlace({ divisionId: planningRegions[0].ocdId }, { artifactStore });
     assert.equal(unrelated.sources.find(source => source.source === "openfema")!.records.length, 0);
   }
+  assert.equal(acquisitions, 2, "the twenty-minute reader visit retains every fact without polling the source again");
 });
 
 test("old completed OpenFEMA projections rebuild once, retain LKG, resume pending pages and return to incremental reads", async t => {

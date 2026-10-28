@@ -440,6 +440,76 @@
       "idx": 62,
       "version": "7",
       "when": 1792834200010,
+      "tag": "DB-05_source_hash",
+      "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1792834200011,
+      "tag": "DB-05_keyed_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1792834200012,
+      "tag": "DB-05_source_checks",
+      "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1792834200013,
+      "tag": "DB-05_member_office_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1792834200014,
+      "tag": "DB-05_federal_money_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1792834200015,
+      "tag": "DB-05_lookup_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1792834200016,
+      "tag": "DB-05_venue_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1792834200017,
+      "tag": "DB-05_prl_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 70,
+      "version": "7",
+      "when": 1792834200018,
+      "tag": "VB-01_read_model_fingerprints",
+      "breakpoints": true
+    },
+    {
+      "idx": 71,
+      "version": "7",
+      "when": 1792834200019,
+      "tag": "VB-01_candidate_vault",
+      "breakpoints": true
+    },
+    {
+      "idx": 72,
+      "version": "7",
+      "when": 1792834200020,
       "tag": "ZP-01_expand",
       "breakpoints": true
     }

@@ -47,8 +47,9 @@ export interface PrlIngestReceipt {
   readonly attribution: typeof PRL_RHETORIC_ATTRIBUTION;
 }
 
-/** Deterministic receipt violations, checked before a receipt is written. */
-export function prlReceiptViolations(receipt: PrlIngestReceipt): string[] {
+export type PrlReceiptMetadata=Omit<PrlIngestReceipt,"profiles"|"objectKeys"|"newObjectKeys">;
+/** The source identity, dates and counters remain verifiable without unrelated person arrays or object lists. */
+export function prlReceiptMetadataViolations(receipt:PrlReceiptMetadata):string[] {
   const problems: string[] = [];
   if (receipt.formatVersion !== 1) problems.push("PRL ingest receipt format version is invalid.");
   if (!receipt.sourceUrl.startsWith(PRL_DATA_BASE)) problems.push("PRL ingest receipt cites an unregistered dataset route.");
@@ -60,6 +61,11 @@ export function prlReceiptViolations(receipt: PrlIngestReceipt): string[] {
   }
   if ([receipt.rowsWritten, receipt.rowsSeen, receipt.rowsAfterNow].some(count => !Number.isSafeInteger(count) || count < 0)) problems.push("PRL ingest receipt carries an invalid row count.");
   if (receipt.rowsWritten > receipt.rowsSeen) problems.push("PRL ingest receipt wrote more rows than it saw.");
-  if (receipt.profiles !== null && !Array.isArray(receipt.profiles)) problems.push("PRL ingest receipt carries a non-array precomputed profiles payload.");
+  return [...new Set(problems)];
+}
+/** Deterministic receipt violations, checked before a receipt is written. */
+export function prlReceiptViolations(receipt: PrlIngestReceipt): string[] {
+  const problems=prlReceiptMetadataViolations(receipt);
+  if(receipt.profiles!==null&&!Array.isArray(receipt.profiles))problems.push("PRL ingest receipt carries a non-array precomputed profiles payload.");
   return [...new Set(problems)];
 }

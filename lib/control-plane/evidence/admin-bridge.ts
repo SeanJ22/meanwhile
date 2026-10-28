@@ -65,8 +65,12 @@ export function assertOriginalCapture(record: ArtifactRecord, attempt: Attempt, 
       !attempt.artifactIds.includes(record.artifactId)) throw new AdminEvidenceRefusal("ATTRIBUTION_MISMATCH");
   if (record.byteLength > ADMIN_EVIDENCE_MAX_BYTES || bytes.byteLength > ADMIN_EVIDENCE_MAX_BYTES)
     throw new AdminEvidenceRefusal("EXCEEDS_PRIVATE_COPY_LIMIT_32_MIB");
-  if (bytes.byteLength !== record.byteLength ||
-      sha(bytes) !== record.contentHash || sha(bytes) !== held.bodySha256) throw new AdminEvidenceRefusal("BYTES_MISMATCH");
+  const raw = held.rawCapture;
+  const heldHash = raw ? `sha256-${raw.rawHash}` : held.bodySha256;
+  const validPointer = !raw || raw.vaultKey === `project/freshness/raw/sha256/${raw.rawHash}` &&
+    raw.byteLength === bytes.byteLength && sha(new TextEncoder().encode(JSON.stringify(raw))) === held.bodySha256;
+  if (!validPointer || bytes.byteLength !== record.byteLength ||
+      sha(bytes) !== record.contentHash || sha(bytes) !== heldHash) throw new AdminEvidenceRefusal("BYTES_MISMATCH");
   // The original scanner is also the mirror's final gate. A newly recognized credential
   // must never be exported merely because an older sidecar called the body RAW.
   if (!remainsRaw(record.contentType, bytes)) throw new AdminEvidenceRefusal("RESTRICTED_ON_RESCAN");

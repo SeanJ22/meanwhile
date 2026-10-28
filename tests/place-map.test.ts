@@ -19,44 +19,11 @@ import { censusGeographyCandidate } from "../lib/census-geography/candidate.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateBoundaries } from "../lib/place-map/acquire.ts";
-import { heldStateDataset, knownPostalZips, readLegacyStateMemberships } from "../lib/place-map/refresh.ts";
-import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
-import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
+import { knownPostalZips, readLegacyStateMemberships } from "../lib/place-map/refresh.ts";
 
 const date = "2026-10-24T08:00:00.000Z";
 const state = "ocd-division/country:us/state:az", county = `${state}/county:pima`;
 const square = (west: number, east: number): GeoFeature["geometry"] => ({ type: "Polygon", coordinates: [[[west, 32], [east, 32], [east, 33], [west, 33], [west, 32]]] });
-
-test("the held Census connection reads one state's inline or partitioned groupings", async () => {
-  const pg = new PGlite();
-  try {
-    await identitySourceTables(pg);
-    const dataset = JSON.parse(readFileSync("lib/census-geography/bootstrap-az.json", "utf8")) as BuiltDataset;
-    const az = dataset.scopes[0].groupings[0];
-    const ca = { ...az, geoid: "06001", label: "Alameda County", stateFips: "06", stateAbbr: "CA", memberStates: ["CA"],
-      overlaps: [{ zcta5: "94612", whole: true, fraction: 1 }] };
-    const scope = { ...dataset.scopes[0], groupings: [az, ca] };
-    const groups = scope.groupings.map(group => partitionCivicPayload(group, undefined, ["overlaps"]));
-    const scoped = partitionCivicPayload({ ...scope, groupings: groups.map(plan => plan.value) }, undefined, ["groupings", "versionMeta"]);
-    const root = partitionCivicPayload({ ...dataset, scopes: [scoped.value] }, undefined, ["scopes"]);
-    for (const part of [...groups.flatMap(plan => plan.parts), ...scoped.parts, ...root.parts]) {
-      await pg.query("INSERT INTO civic_data_payload_parts(hash,payload) VALUES($1,$2::jsonb) ON CONFLICT DO NOTHING", [part.hash, JSON.stringify(part.payload)]);
-    }
-    const query: Query = async (text, params = []) => (await pg.query(text, [...params])).rows as Record<string, unknown>[];
-    for (const payload of [{ ...dataset, scopes: [scope] }, root.value]) {
-      await pg.query(`INSERT INTO civic_data_promotions(key,record_class,scope,payload) VALUES('census','CENSUS_GEOGRAPHY','US:zcta-geography-overlaps',$1::jsonb)
-        ON CONFLICT(key) DO UPDATE SET payload=EXCLUDED.payload`, [JSON.stringify(payload)]);
-      const held = await heldStateDataset(query, "AZ");
-      assert.deepEqual(held?.scopes[0].groupings, [az]);
-      assert.deepEqual(held?.scopes[0].versionMeta, scope.versionMeta);
-    }
-    const statePayload = { ...dataset, scopes: [{ ...scope, groupings: [{ ...az, label: "State refresh" }] }] };
-    await pg.query(`INSERT INTO civic_data_promotions(key,record_class,scope,payload)
-      VALUES('state-map','CENSUS_GEOGRAPHY','US-AZ:place-map',$1::jsonb)`, [JSON.stringify(statePayload)]);
-    assert.equal((await heldStateDataset(query, "AZ"))?.scopes[0].groupings[0].label, "State refresh");
-    assert.deepEqual((await heldStateDataset(query, "CA"))?.scopes[0].groupings, [ca]);
-  } finally { await pg.close(); }
-});
 
 test("a newer release of the same legislative plan replaces the older geometry", async () => {
   const registration = JSON.parse(readFileSync("data/derived/registration/az.json", "utf8")) as RegistrationReference;

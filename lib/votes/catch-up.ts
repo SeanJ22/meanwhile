@@ -5,13 +5,13 @@
  * complete only if each window reaches back to the roll after the previous
  * version's newest.
  *
- * `windowStart` is the first roll to read: the usual `latest - window + 1`, or the roll after the previous version's
- * newest if that is earlier, but never further back than `maxCatchUp` rolls from the latest. A gap larger than that is
- * reported, not silently shortened, so the next run closes the rest.
+ * `windowStart` reads the usual recent window, or advances forward from the prior version's newest roll.
+ * A bounded catch-up ends after `maxCatchUp` rolls; its published end is the next pass's durable position.
  */
 export interface RollWindow {
   readonly start: number;
-  /** Rolls between the previous version's newest and this window's start that this run could not reach; 0 when none. */
+  readonly end:number;
+  /** Newer rolls after this bounded window which remain standing work. */
   readonly unreached: number;
 }
 
@@ -28,10 +28,9 @@ export function windowStart(input: {
 }): RollWindow {
   const window = input.window ?? ROLL_WINDOW;
   const maxCatchUp = input.maxCatchUp ?? ROLL_MAX_CATCH_UP;
-  const usual = Math.max(1, input.latest - window + 1);
-  if (input.previousNewest === null || input.previousNewest >= input.latest) return { start: usual, unreached: 0 };
+  const usual = Math.max(1, input.latest - Math.min(window,maxCatchUp) + 1);
+  if (input.previousNewest === null || input.previousNewest >= input.latest) return { start: usual,end:input.latest, unreached: 0 };
   const wanted = input.previousNewest + 1;
-  const floor = Math.max(1, input.latest - maxCatchUp + 1);
-  const start = Math.max(floor, Math.min(usual, wanted));
-  return { start, unreached: Math.max(0, start - wanted) };
+  const start = Math.min(usual,wanted),end=Math.min(input.latest,start+maxCatchUp-1);
+  return { start,end,unreached:Math.max(0,input.latest-end) };
 }

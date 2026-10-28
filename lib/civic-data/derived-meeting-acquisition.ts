@@ -5,6 +5,7 @@ import { municodePortalKey, type MunicodeRaw } from "../sources/municode/index.t
 import type { Meeting } from "../sources/types.ts";
 import { bodySourceWiringFor, DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringRecord } from "./derived-meeting-wiring.ts";
 import type { FamilyMemberRead } from "./derived-meeting-family.ts";
+import { withVenueEntries, type VenueEntry } from "../meetings/venue-cache.ts";
 
 export function* derivedFamilyReadGroups(members: readonly DerivedWiringRecord[]): Generator<DerivedWiringRecord[]> {
   const portals = new Map<string, DerivedWiringRecord[]>();
@@ -26,6 +27,7 @@ export async function readDerivedFamilyMembers(
   fetchImpl: typeof fetch,
   attribute: (meetings: Meeting[]) => Meeting[] = meetings => meetings,
   now = new Date(),
+  beforeNormalize?: () => Promise<readonly VenueEntry[] | void>,
 ): Promise<FamilyMemberRead[]> {
   if (members.length === 0) return [];
   const sourceName = DERIVED_WIRING_SOURCE_NAMES[members[0].row.kind];
@@ -37,6 +39,7 @@ export async function readDerivedFamilyMembers(
       startsAfter: new Date(now.getTime() - MEETING_HELD_LOOKBACK_DAYS * 86_400_000).toISOString(),
       startsBefore: new Date(now.getTime() + MEETING_HELD_HORIZON_DAYS * 86_400_000).toISOString() });
     const fetched = source.fetchedSourceReport(sourceName);
+    const venues = fetched?.ok ? await beforeNormalize?.() : undefined;
     const ownRaw = new Map<string, typeof raw>();
     if (sourceName === "municode") for (const tagged of raw) {
       const bodyId = (tagged.raw as MunicodeRaw).wiring.bodyId;
@@ -45,15 +48,17 @@ export async function readDerivedFamilyMembers(
       ownRaw.set(bodyId, own);
     }
     return members.map(member => {
-      const meetings = fetched?.ok ? attribute(source.normalize(sourceName === "municode" ? ownRaw.get(member.row.bodyId) ?? [] : raw)) : [];
+      const normalize = () => attribute(source.normalize(sourceName === "municode" ? ownRaw.get(member.row.bodyId) ?? [] : raw));
+      const meetings = fetched?.ok ? venues ? withVenueEntries(venues, normalize) : normalize() : [];
       const report = source.lastReport?.children.find(child => child.source === sourceName);
       const foreign = meetings.some(meeting => meeting.bodyId !== member.row.bodyId);
       const ok = fetched?.ok === true && report?.ok === true && !foreign;
-      return { member, acquisitions: fetched?.acquisitions ?? [], ok,
+      return { member, acquisitions: fetched?.acquisitions ?? [], ok, horizonDay: now.toISOString().slice(0, 10),
         error: ok ? null : foreign ? jobFailureDetail("the adapter returned another body's meetings") : fetched?.error ?? report?.error ?? `the composite produced no report for ${sourceName}`,
         freshMeetings: ok ? meetings : [], freshAgendaDocuments: [], retrievedAt: new Date().toISOString() };
     });
   } catch (error) {
+    if (error instanceof Error && error.message.startsWith("MEETING_VENUE_OWNER_INPUT_CHANGED")) throw error;
     const detail = jobFailureDetail(error instanceof Error ? error.message : String(error));
     const retrievedAt = new Date().toISOString();
     return members.map(member => ({ member, acquisitions: [], ok: false, error: detail,

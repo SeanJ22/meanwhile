@@ -6,6 +6,7 @@ import { createContext, runInContext } from "node:vm";
 import { IndependentRuntimeLaneScheduler, passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
+import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
 import { ROUTINE_ENTRY_PEAK_MIB, WORKER_MEMORY_HEADROOM_MIB, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { PLACE_PACKAGE_SQL } from "../lib/reader/place-builder.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, PLACE_PAGE_TURN_LINE,
@@ -44,7 +45,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
   let onTurn: (index: number) => void = () => {};
   const memory = routineProcessSlots({ availableBytes: () => 64 * 1024 * MIB, admissionsOpen: () => !context.runtimeAdmissionsHeld });
   const context = createContext({
-    provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false,
+    provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false, admitJobLaunch,
     pendingRestart: new PendingRestart(), standingBeat: async () => {}, researchCycleActive: false, researchCycleChild: null, drainHunterLane: () => {},
     TS_CHILD: ["--experimental-strip-types"], CODE_ROOT: process.cwd(), process,
     ownerRepositories: async () => ({}),
@@ -72,7 +73,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
     console: { log: (line: string) => log.push(line), error: (line: string) => log.push(line) },
     Date,
   });
-  runInContext(stripTypeScriptTypes(["placePagesAdmitted", "runPlacePageTurn", "runPlacePages", "holdForRestart",
+  runInContext(stripTypeScriptTypes(["jobLaunchAllowed", "placePagesAdmitted", "runPlacePageTurn", "runPlacePages", "holdForRestart",
     "checkReleaseForRestart", "runStandingRuntimeTick"].map(runnerFunction).join("\n")), context);
   context.standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([placePagesLane(context.runPlacePages)],
     outcome => { if (outcome.state === "FAILED") log.push(`FAILED ${outcome.error}`); });

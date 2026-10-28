@@ -13,9 +13,9 @@ export const MISSING_PIN_BLANKS_SQL = `WITH sittings AS MATERIALIZED (
       AND jsonb_typeof(reader_payload_value(s.value->'location')->'lng')='number'
       OR jsonb_typeof(reader_payload_value(s.value->'mapPin')->'lat')='number'
       AND jsonb_typeof(reader_payload_value(s.value->'mapPin')->'lng')='number') AS pinned
-  FROM civic_data_promotions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
-    LATERAL (SELECT reader_payload_node(m.item) AS value) s
-  WHERE p.record_class='MEETING' AND p.key=ANY($2::text[]) AND s.value->>'id' IS NOT NULL
+  FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id,
+    LATERAL (SELECT r.value) s
+  WHERE r.record_class='MEETING' AND r.collection='meetings' AND r.promotion_key=ANY($2::text[]) AND r.row_id IS NOT NULL
   GROUP BY s.value->>'id'
 ), missing AS MATERIALIZED (
   SELECT s.id,coalesce(s.body_id,e.parent_id) AS body_id,

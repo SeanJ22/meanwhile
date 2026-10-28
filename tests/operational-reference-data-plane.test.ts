@@ -349,8 +349,9 @@ test("the production promoter has no tracked-input or Git-writer fallback", () =
 
   const command = readFileSync(join(ROOT, "scripts/enumerate-jurisdictions.mts"), "utf8");
   assert.match(command, /acquireJurisdictionReferenceInputs/);
-  assert.doesNotMatch(command, /\b(?:readFileSync|readRecords|writeFileSync|appendFileSync|createWriteStream)\b/);
+  assert.doesNotMatch(command, /\b(?:readRecords|writeFileSync|appendFileSync|createWriteStream)\b/);
   assert.doesNotMatch(command, /tests\/fixtures|data\/reference\/census_govt_units_2022/);
+  assert.deepEqual([...command.matchAll(/readFileSync\(([^)]+)\)/g)].map(match => match[1]), ["new URL(import.meta.url"], "only the executing parser code is fingerprinted; civic input files are never read");
   const provider = readFileSync(join(ROOT, "lib/control-plane/scheduler/providers/local-jurisdictions.ts"), "utf8");
   assert.doesNotMatch(provider, /readFileSync|data\/states\/\$?\{?state|jurisdictionRegistryPath/);
   /* The one accessor: the promoted reviewed bundle, else a state's promoted registration the runner installed. */

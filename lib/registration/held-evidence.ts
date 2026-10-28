@@ -11,10 +11,15 @@ import {
 const object = (value: unknown): Record<string, unknown> | null =>
   value !== null && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : null;
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
+export type RegistrationHeldPrior=Pick<CandidateVersionRecord,"state"|"acquisitionSucceeded"|"promotedVersion"|"lastKnownGoodVersion"|"receipt">&{
+  readonly candidate:Pick<RoutineCandidate,"id"|"sourceId"|"recordClass"|"scope"|"retrieval"|"temporal"|"readModel"|"normalizedPayload">&{
+    readonly normalization:Pick<RoutineCandidate["normalization"],"parserVersion">;
+  };
+};
 
 /** Parser 3 called a conditional provider check an acquisition. Reconcile only
  * its exact GOOD source/reference; this is not permission to replay older facts. */
-function legacyEvidence(prior: CandidateVersionRecord | null) {
+function legacyEvidence(prior: RegistrationHeldPrior | null) {
   if (!prior || prior.state !== "PROMOTED" || !prior.acquisitionSucceeded ||
     prior.promotedVersion !== prior.candidate.id || prior.lastKnownGoodVersion !== prior.candidate.id ||
     prior.receipt?.decision !== "GOOD" || prior.receipt.candidateId !== prior.candidate.id) return null;
@@ -42,7 +47,7 @@ function legacyEvidence(prior: CandidateVersionRecord | null) {
 /** Keep the original capture date and retain the later real HTTP check as a
  * check. The immutable predecessor identifies why these dates differ. */
 export function reconcileRegistrationHeldReceipt(
-  receipt: RegistrationSourceReceipt, reference: LoadedReference, prior: CandidateVersionRecord | null,
+  receipt: RegistrationSourceReceipt, reference: LoadedReference, prior: RegistrationHeldPrior | null,
 ): RegistrationSourceReceipt {
   const held = legacyEvidence(prior);
   if (!held || receipt.confirmedBy !== "HELD_RELEASE" || receipt.retrievedAt !== REGISTRATION_HELD_RETRIEVED_AT ||

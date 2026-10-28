@@ -1,4 +1,5 @@
 import { execFile } from "node:child_process";
+import { admitJobLaunch } from "../control-plane/job-breaker-local.ts";
 
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { VITAL_SIGNS_LINE_PREFIX } from "../db/transfer-by-caller.ts";
@@ -37,6 +38,8 @@ export type BoundedChildTermination =
   | "SPAWN_FAILED";
 
 export interface BoundedChildCommand {
+  /** Production launch declarations are checked by lint against the source contract. */
+  readonly databaseBytesPerRun?: number;
   readonly id: string;
   readonly onStarted?: (pid: number) => void;
   /**
@@ -196,7 +199,11 @@ export async function runBoundedChildPass(
       if (options.deadlineMs !== undefined && Date.now() >= options.deadlineMs) {
         throw new Error("PASS_TIME_BUDGET: queued work remains owed");
       }
+      const held = () => new Error(`JOB_TRANSFER_BREAKER: ${command.id} is paused until released in Admin; work remains owed`);
+      if (!admitJobLaunch(command.id, options.env)) throw held();
       if (options.onStarting && await options.onStarting(command, index) === false) return false;
+      // A slot can wait across a breaker tick. Recheck immediately before the child starts.
+      if (!admitJobLaunch(command.id, options.env)) throw held();
       result = await launch(command, options);
     } catch (error) {
       result = {

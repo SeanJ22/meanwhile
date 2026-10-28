@@ -1,3 +1,4 @@
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
@@ -20,7 +21,9 @@ test("state bodies survive new stores, update on the next read, and cannot hide 
     current_version_id text,last_known_good_version_id text,promoted_at timestamptz,payload jsonb,validation_receipt jsonb);
     CREATE TABLE civic_data_candidates(id text PRIMARY KEY,candidate jsonb,state text,acquisition_succeeded boolean,
     promoted_version_id text,last_known_good_version_id text,failure_code text,failure_detail text,validation_receipt jsonb);
-    CREATE TABLE civic_data_candidate_events(candidate_id text,sequence integer,detail text);`);
+    CREATE TABLE civic_data_candidate_events(candidate_id text,sequence integer,detail text);
+    ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text,ADD COLUMN normalized_hash text;
+    ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
   const scope = "US-AZ:reader-registry-runtime", key = `REGISTRY_RUNTIME_BINDING:${scope}`;
   const payload = { label: "held-state-body", evidence: "evidence ".repeat(100_000) };
   const receipt = { decision: "GOOD", candidateId: "v1" };
@@ -28,12 +31,13 @@ test("state bodies survive new stores, update on the next read, and cannot hide 
     { id: "v1", sourceId: "state", recordClass: "REGISTRY_RUNTIME_BINDING", scope, readModel: payload, normalization: {} }, receipt,
   ]);
   await pg.query("INSERT INTO civic_data_promotions VALUES($1,'state','REGISTRY_RUNTIME_BINDING',$2,'v1','v1',now(),$3,$4)", [key, scope, payload, receipt]);
+  await pg.query("UPDATE civic_data_candidates SET normalized_hash=$1",[canonicalCivicDataHash(payload)]);
   let bodyReads = 0, versionReads = 0;
   neonConfig.fetchFunction = async (_input: RequestInfo | URL, init?: RequestInit) => {
     const request = JSON.parse(String(init?.body));
     assert.ok(!request.queries, "all fixture traffic is read only");
     if (request.query.includes("state_promotion AS MATERIALIZED")) bodyReads++;
-    else { assert.ok(request.query.includes("xmin"), "every stored body first asks for its database row versions"); versionReads++; }
+    else { assert.ok(request.query.includes("publication-v1/"), "every stored body first asks for its content fingerprint and small proof header"); versionReads++; }
     const result = await pg.query<Record<string, unknown>>(request.query, request.params);
     return new Response(JSON.stringify({ command: "SELECT", rowCount: result.rows.length, rowAsArray: true, fields: result.fields,
       rows: result.rows.map(row => result.fields.map(field => row[field.name] === null ? null : typeof row[field.name] === "object"
@@ -47,6 +51,7 @@ test("state bodies survive new stores, update on the next read, and cannot hide 
   const changed = { ...payload, label: "new-state-fact" };
   await pg.query("UPDATE civic_data_promotions SET payload=$1 WHERE key=$2", [changed, key]);
   await pg.query("UPDATE civic_data_candidates SET candidate=jsonb_set(candidate,'{readModel}',$1) WHERE id='v1'", [changed]);
+  await pg.query("UPDATE civic_data_candidates SET normalized_hash=$1",[canonicalCivicDataHash(changed)]);
   assert.deepEqual((await read())?.payload, changed, "same application version and timestamp still yield the next committed body");
   assert.equal(bodyReads, 2);
   await pg.query("UPDATE civic_data_candidates SET validation_receipt='{}' WHERE id='v1'");

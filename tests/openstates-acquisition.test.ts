@@ -87,14 +87,14 @@ test("two states use one validated archive and keep complete native identity, co
   assert.deepEqual(az.gaps, []);
   await acquire("az"); assert.equal(requests.length, 2, "reader/member-office consumers reuse the same release");
   const canonical = new MemoryRoutineDataStore();
-  const published = await publishStatePeople({ vault, store: canonical, ...az, now: at });
+  const published = await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store: canonical, ...az, now: at });
   assert.ok(published.outcome.promoted, JSON.stringify(published.outcome.candidate.receipt));
   const read = await readStatePeopleProjection("US-AZ", { store: canonical, now: at });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") assert.ok(read.value.roster.officeholders.some(row=>row.personId === "plural:one"));
   assert.equal((await readMemberOffices("plural:az:one", undefined, {store:canonical,now:at})).length, 2,
     "native office contacts reach the scoped reader immediately with the core people projection");
-  const offices = await publishMemberOffices({ store: canonical, now: at, jurisdictions: ["US-AZ"] });
+  const offices = await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store: canonical, now: at, jurisdictions: ["US-AZ"] });
   assert.ok(offices.outcome?.promoted, JSON.stringify(offices));
   await refreshMemberOfficesFromPromoted({ store: canonical, now: at });
   const shown = currentMemberOffices("plural:az:one");
@@ -107,7 +107,7 @@ test("two states use one validated archive and keep complete native identity, co
   assert.equal(checked.acquisitions[0].retrievedAt, at);
   assert.equal(checked.acquisitions[0].sourceCheck?.httpStatus, 304);
   assert.equal(checked.acquisitions[0].sourceCheck?.checkedAt, now);
-  const checkedPublication = await publishStatePeople({ vault, store:canonical,...checked,now});
+  const checkedPublication = await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store:canonical,...checked,now});
   assert.ok(checkedPublication.outcome.confirmed || checkedPublication.outcome.promoted,
     JSON.stringify(checkedPublication.outcome.candidate.receipt));
   const clock = () => canonical.clock("plural-openstates", "STATE_LEGISLATOR", "US-AZ:openstates-people:v1");
@@ -115,7 +115,7 @@ test("two states use one validated archive and keep complete native identity, co
   const checkedAt = now;
   now = "2026-10-03T01:00:00.000Z";
   const replayed = await acquire("az");
-  const replayedPublication = await publishStatePeople({ vault, store:canonical,...replayed,now});
+  const replayedPublication = await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store:canonical,...replayed,now});
   assert.ok(replayedPublication.outcome.confirmed, "identical source replay confirms existing facts without a new version");
   const replayedRead = await readStatePeopleProjection("US-AZ", {store:canonical,now});
   assert.equal(replayedRead.kind, "PROMOTED");
@@ -153,7 +153,7 @@ test("unread and unpublished Census slices publish a named gap alongside the sou
       fetchImpl: (async url => String(url) === PLURAL_REVISION_URL ? Response.json([{ sha }]) : new Response(archive)) as typeof fetch });
     assert.equal(result.roster.officeholders.length, 1);
     assert.ok(result.gaps.some(gap => gap.detail.startsWith(`CENSUS_GEOGRAPHY_${kind}:AZ:`)));
-    const publication = await publishStatePeople({ vault, store: new MemoryRoutineDataStore(), ...result, now: at });
+    const publication = await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store: new MemoryRoutineDataStore(), ...result, now: at });
     assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
     assert.ok(publication.candidate.excludedFacts?.some(gap => gap.code === `CENSUS_GEOGRAPHY_${kind}`));
   }
@@ -168,7 +168,7 @@ test("Open States offices publish outside the official pilot rosters with their 
   const body=JSON.stringify({result:{addressMatches:[{coordinates:{x:-121.49,y:38.58}}]}});
   const resolveOfficePoint=async(address:string)=>({lat:38.58,lng:-121.49,census:{body,rawHash:createHash("sha256").update(body).digest("hex"),retrievedAt:at,url:censusGeocodeUrl(address)}});
   assert.ok((await publishStatePeople({ vault, store, ...acquired, now: at,resolveOfficePoint })).outcome.promoted);
-  const publication = await publishMemberOffices({ store, now: at, jurisdictions: ["US-CA"] });
+  const publication = await publishMemberOffices({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), store, now: at, jurisdictions: ["US-CA"] });
   assert.ok(publication.outcome?.promoted, JSON.stringify(publication));
   assert.equal(publication.records, 2);
   await refreshMemberOfficesFromPromoted({ store, now: at });
@@ -219,7 +219,7 @@ test("one malformed native record leaves verified people publishable without cla
   assert.equal(result.acquisitions.length, 2, "the unresolved original member remains attributable held evidence");
   assert.ok(result.gaps.some(gap => /IDENTITY_INVALID/.test(gap.detail)));
   const canonical = new MemoryRoutineDataStore();
-  assert.ok((await publishStatePeople({ vault, store: canonical, ...result, now: at })).outcome.promoted);
+  assert.ok((await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store: canonical, ...result, now: at })).outcome.promoted);
 });
 test("known municipal roles preserve native identity, generic office contacts and precise durable gaps", async () => {
   const executive = (id:string,type:string,jurisdiction:string,extra="") => `id: ocd-person/${id}\nname: Person ${id}\nroles:\n  - type: ${type}\n    jurisdiction: ${jurisdiction}\n${extra}offices:\n  - name: City Hall\n    voice: '555-3000'\n    email: mayor@city.example.gov\nlinks:\n  - url: https://city.example.gov/mayor\n`;
@@ -242,7 +242,7 @@ test("known municipal roles preserve native identity, generic office contacts an
   assert.ok(result.gaps.some(row=>row.detail.startsWith("PLURAL_ROLE_DISTRICT_DIVISION_UNRESOLVED")));
   assert.ok(result.gaps.some(row=>row.detail.startsWith("PLURAL_ROLE_WRONG_STATE")));
   assert.ok(result.gaps.some(row=>row.detail.startsWith("PLURAL_ROLE_UNSUPPORTED")));
-  const canonical=new MemoryRoutineDataStore(),publication=await publishStatePeople({ vault, store:canonical,...result,now:at});
+  const canonical=new MemoryRoutineDataStore(),publication=await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store:canonical,...result,now:at});
   assert.ok(publication.outcome.promoted,JSON.stringify(publication.outcome.candidate.receipt));
   const saved=await canonical.readCandidate(publication.candidate.id);
   assert.ok(saved?.candidate.excludedFacts?.some(row=>row.code === "PLURAL_ROLE_WRONG_STATE" && (row.record as {sourceUrl:string}).sourceUrl.endsWith("/Wrong.yml")));
@@ -264,13 +264,13 @@ test("the same native person in legislative and municipal files keeps both membe
   assert.equal(result.roster.officeholders.length,1); assert.equal(result.roster.divisions.length,2);
   assert.equal(result.roster.officeholders[0].memberships?.filter(row=>row.current).length,2);
   assert.equal(indexByDivision([result.roster]).get("ocd-division/country:us/state:az/place:mesa")?.[0].officeTitle,"Mayor");
-  await publishStatePeople({ vault, store:canonical,...result,now:at});
+  await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store:canonical,...result,now:at});
   const read=await readStatePeopleProjection("US-AZ",{store:canonical,now:at});
   assert.equal(read.kind,"PROMOTED"); if(read.kind!=="PROMOTED")return;
   const held=heldOfficialStateLegislatorsFromRead("US-AZ",read),link=held.divisions.find(row=>row.ocdId.endsWith("/place:mesa"))!;
   assert.equal(seatHolderForMembership(held.seats[0],link.membershipId)?.officeTitle,"Mayor");
   const ended=await acquire("2026-09-01");
-  await publishStatePeople({ vault, store:canonical,...ended,now:at});
+  await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store:canonical,...ended,now:at});
   const after=await readStatePeopleProjection("US-AZ",{store:canonical,now:at});
   assert.equal(after.kind,"PROMOTED"); if(after.kind!=="PROMOTED")return;
   assert.deepEqual(after.value.roster.divisions.map(row=>row.ocdId),["ocd-division/country:us/state:az/sldu:7"]);
@@ -300,11 +300,11 @@ test("native tenure retirement survives the canonical office vocabulary with hel
     person.memberships = person.memberships?.map(row => ({ ...row,
       officeId: `openstates-office:az:${row.chamber}:${row.district ?? ""}` }));
   }
-  assert.ok((await publishStatePeople({ vault, store, ...initial, now: at })).outcome.promoted);
+  assert.ok((await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store, ...initial, now: at })).outcome.promoted);
   const successor = await acquire(true);
   assert.equal(successor.roster.currentMembershipComplete, false);
   assert.ok(successor.roster.endedMemberships?.some(row => row.personId === "plural:expired" && row.officeId.includes(":state_senator:")));
-  const publication = await publishStatePeople({ vault, store, ...successor, now: at });
+  const publication = await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store, ...successor, now: at });
   assert.ok(publication.outcome.promoted, JSON.stringify(publication.outcome.candidate.receipt));
   const read = await readStatePeopleProjection("US-AZ", { store, now: at });
   assert.equal(read.kind, "PROMOTED");
@@ -328,12 +328,12 @@ test("an explicitly ended final office retires during a partial refresh while ma
       fetchImpl:(async url=>String(url)===PLURAL_REVISION_URL ? new Response(JSON.stringify([{sha:release}])) : new Response(archive)) as typeof fetch});
   };
   const canonical=new MemoryRoutineDataStore(),initial=await acquire(0);
-  const initialPublication=await publishStatePeople({ vault, store:canonical,...initial,now:at});
+  const initialPublication=await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store:canonical,...initial,now:at});
   assert.ok(initialPublication.outcome.promoted);
   const endedId=initial.roster.officeholders.find(row=>row.personId === "plural:ended")!.memberships![0].id;
-  const malformed=await acquire(1),malformedPublication=await publishStatePeople({ vault, store:canonical,...malformed,now:at});
+  const malformed=await acquire(1),malformedPublication=await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store:canonical,...malformed,now:at});
   assert.ok(malformedPublication.outcome.promoted);
-  const held=(malformedPublication.candidate.normalizedPayload as {captures:StatePeopleCapture[]}).captures.filter(row=>row.requestedUrl.endsWith(sha));
+  const held=(malformedPublication.candidate.normalizedPayload as {sourceInputDigest:string;captures:StatePeopleCapture[]}).captures.filter(row=>row.requestedUrl.endsWith(sha));
   assert.ok((await Promise.all(held.map(row=>capturedText(vault,row)))).some(text=>text.includes("id: ocd-person/ended")),"partial refresh retains the original capture behind the still-serving prior tenure");
   const partial=await acquire(2);
   assert.equal(partial.roster.currentMembershipComplete,false);
@@ -343,7 +343,7 @@ test("an explicitly ended final office retires during a partial refresh while ma
   assert.ok(!partial.roster.endedMemberships?.some(row=>["plural:malformed","plural:wrong-jurisdiction"].includes(row.personId)),
     "an invalid date or a different native jurisdiction cannot invent retirement");
   assert.ok(partial.gaps.some(row=>row.detail.startsWith("PLURAL_ROLE_DATE_INVALID")));
-  const publication=await publishStatePeople({ vault, store:canonical,...partial,now:at});
+  const publication=await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store:canonical,...partial,now:at});
   assert.ok(publication.outcome.promoted,JSON.stringify(publication.outcome.candidate.receipt));
   assert.ok(publication.outcome.candidate.receipt?.checks.some(row=>row.code === "NATIVE_MEMBERSHIPS_EXPLICITLY_ENDED"));
   const read=await readStatePeopleProjection("US-AZ",{store:canonical,now:at});
@@ -359,7 +359,7 @@ test("an explicitly ended final office retires during a partial refresh while ma
   const history=read.value.roster.endedMemberships?.find(row=>row.id === endedId);
   assert.equal(history?.current,false); assert.equal(history?.termEnd,"2026-09-01");
   assert.match(history?.sourceUrl ?? "",/\/municipalities\/Ended\.yml$/);
-  const texts=await Promise.all((publication.candidate.normalizedPayload as {captures:StatePeopleCapture[]}).captures.map(row=>capturedText(vault,row)));
+  const texts=await Promise.all((publication.candidate.normalizedPayload as {sourceInputDigest:string;captures:StatePeopleCapture[]}).captures.map(row=>capturedText(vault,row)));
   assert.ok(texts.some(text=>text.includes("id: ocd-person/ended") && text.includes("2026-09-01")));
   assert.ok(JSON.stringify(publication.candidate).length < 64 * 1024 && !JSON.stringify(publication.candidate.normalizedPayload).includes("ocd-person/ended"),
     "the candidate holds references; the native YAML stays in the vault");
@@ -391,13 +391,13 @@ test("an explicitly ended final office retires during a partial refresh while ma
   await reject(candidate=>{(candidate.normalizedPayload as {endedMemberships:unknown[]}).endedMemberships=[];},"a reader-only end claim is not captured normalization evidence","INCOMPLETE_HORIZON_REMOVAL_UNEXPLAINED");
   for (const replacement of ["", "    end_date: '2026-08-01'\n"]) {
     const unproved=structuredClone(publication.candidate);
-    for (const row of (unproved.normalizedPayload as {captures:{capture:RawCaptureRef}[]}).captures) {
+    for (const row of (unproved.normalizedPayload as {sourceInputDigest:string;captures:{capture:RawCaptureRef}[]}).captures) {
       const text=await capturedText(vault,row as StatePeopleCapture);
       if (text.includes("id: ocd-person/ended")) row.capture=await holdRawCapture(vault,"plural-openstates",text.replace("    end_date: '2026-09-01'\n",replacement),"text/plain");
     }
     const store=new MemoryRoutineDataStore();
-    await publishStatePeople({ vault, store,...initial,now:at});
-    const lastGood=await publishStatePeople({ vault, store,...malformed,now:at});
+    await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store,...initial,now:at});
+    const lastGood=await publishStatePeople({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), vault, store,...malformed,now:at});
     const outcome=await processRegisteredRoutineCandidate(store,"openstates-people-az",{...unproved,
       normalization:{...unproved.normalization,normalizedPayloadHash:hash(unproved.normalizedPayload)}},at,undefined,{vault});
     assert.equal(outcome.promoted,null,"the real publication door reparses raw native evidence independently of agreeing projections");

@@ -93,5 +93,5 @@ test("the runner launches one program per state and the program reads its boards
   const ingest = readFileSync("scripts/ingest.ts", "utf8");
   assert.match(ingest, /async function readStateCalendars/);
   assert.match(ingest, /agendaDocumentStore\.clear\(\);/);
-  assert.equal((ingest.match(/await preloadCanonicalMeetingDependencies\(\{ sourceName: "composite", state \}\)/g) ?? []).length, 1, "the state's data loads once per program");
+  assert.equal((ingest.match(/held = await readMeetingFamilyDependencies\(query, state, members,/g) ?? []).length, 1, "the state's data loads once per program");
 });

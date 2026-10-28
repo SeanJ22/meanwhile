@@ -1,3 +1,4 @@
+import { outcomeSourcePlanHash, type OutcomeSourcePlan } from "./source-plan.ts";
 import { createHash } from "node:crypto";
 
 import { canonicalCivicDataJson } from "../civic-data/changes.ts";
@@ -398,6 +399,7 @@ function acquisitionHash(evidence: readonly SourceAcquisitionEvidence[]): string
 
 /** A Legistar candidate for one tenant, built only from exact HTTP-response receipts. */
 export function legistarOutcomesCandidate(input: {
+  readonly sourceProbe?: OutcomeSourcePlan;
   readonly snapshot: OutcomeSnapshot;
   readonly acquisitions: readonly SourceAcquisitionEvidence[];
   readonly retrievedAt: string;
@@ -420,8 +422,8 @@ export function legistarOutcomesCandidate(input: {
   if (new Set(members.map((member) => member.key)).size !== members.length) {
     violations.push("Outcome projection members do not have unique stable identities.");
   }
-  const rawHash = acquisitions.length > 0 ? acquisitionHash(acquisitions) : null;
-  const normalizedPayload = { acquisitions, snapshot };
+  const rawHash = acquisitions.length > 0 ? input.sourceProbe?outcomeSourcePlanHash(input.sourceProbe):acquisitionHash(acquisitions) : null;
+  const normalizedPayload = { acquisitions, snapshot,...(input.sourceProbe?{sourceProbe:input.sourceProbe}:{}) };
   const projectionHash = sha256(canonicalCivicDataJson(snapshot));
   const normalizedPayloadHash = sha256(canonicalCivicDataJson(normalizedPayload));
   const primary = acquisitions[0];
@@ -442,6 +444,7 @@ export function legistarOutcomesCandidate(input: {
       httpStatus: primary?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash,
+      ...(input.sourceProbe?{rawHashBasis:"SOURCE_CONTENT_V1" as const,complete:input.sourceProbe.complete}:{}),
       failureDetail: input.failureDetail ?? (acquisitions.length > 0 ? undefined : `No ${tenant.label} Legistar response bytes were acquired.`),
     },
     normalization: {

@@ -6,6 +6,8 @@ import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 
+import { factRefreshBounds } from "../lib/civic-data/source-change-cadence.ts";
+
 const echo = ROUTINE_SOURCE_TASKS.find(task => task.id === "epa-echo")!;
 const at = Date.parse("2026-10-01T08:00:00.000Z"), hour = 3_600_000;
 test("ECHO's repeat failures move its next attempt later, cap at one day, and success resets it", async () => {
@@ -19,8 +21,9 @@ test("ECHO's repeat failures move its next attempt later, cap at one day, and su
     await processRegisteredRoutineCandidate(store, echo.id, candidate, time);
     const clock = await store.clock(echo.sourceId, echo.recordClass, echo.scope, echo.parserVersion);
     assert.equal(clock.failureStreak, index + 1);
-    const delay = Math.min(24 * hour, hour * 2 ** index);
-    assert.equal(failureRetryMs(echo.retryMs, clock), delay);
+    const backoff = Math.min(24 * hour, hour * 2 ** index);
+    const delay = Math.max(factRefreshBounds(echo).minimumRefreshMs, backoff);
+    assert.equal(failureRetryMs(echo.retryMs, clock), backoff);
     assert.equal(routineTaskDue(echo, clock, Date.parse(time) + delay - 1), false);
     assert.equal(routineTaskDue(echo, clock, Date.parse(time) + delay), true);
   }
@@ -37,7 +40,7 @@ test("ECHO's repeat failures move its next attempt later, cap at one day, and su
   const succeeded = { ...clock, lastSucceededObservedAt: new Date(at + 7 * hour).toISOString() };
   assert.equal(failureRetryMs(echo.retryMs, succeeded), hour, "a success cancels the entire old streak");
   const firstNewFailure = { failureStreak: 1, lastAttemptedAt: new Date(at + 8 * hour).toISOString(), lastSucceededObservedAt: succeeded.lastSucceededObservedAt };
-  assert.equal(routineTaskDue(echo, firstNewFailure, at + 9 * hour), true, "the first failure after success gets the ordinary retry");
+  assert.equal(routineTaskDue(echo, firstNewFailure, at + 8 * hour + Math.max(hour, factRefreshBounds(echo).minimumRefreshMs)), true, "the first failure after success gets the ordinary retry");
 });
 
 test("a different source failure or a successful candidate ends the repeated-failure streak", () => {

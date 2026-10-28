@@ -5,8 +5,11 @@ import { GOOGLE_CIVIC_API, GOOGLE_CIVIC_PARSER_VERSION, GOOGLE_CIVIC_RECORD_CLAS
 import { assertCivicProjection, civicElectionRows, type CivicProjection } from "./model.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
 import { holdRawCapture } from "../../civic-data/raw-capture-vault.ts";
+import { civicInputHash,civicSourceContentHash,type CivicSourceProbe } from "./source-hash.ts";
+import type { SourceCheckEvidence } from "../../civic-data/types.ts";
 
-export async function civicCandidate(vault: EvidenceStore, scope: string, projection: CivicProjection, raw: string, route: "elections" | "voterinfo"): Promise<RoutineCandidate> {
+export async function civicCandidate(vault: EvidenceStore, scope: string, projection: CivicProjection, raw: string, route: "elections" | "voterinfo",
+  sourceInput?:{probe:CivicSourceProbe;sourceCheck?:SourceCheckEvidence;retrieval?:RoutineCandidate["retrieval"]}): Promise<RoutineCandidate> {
   if (route === "voterinfo" || projection.kind === "LOOKUP") throw new Error("Google voting answers are transient and cannot be published or saved.");
   assertCivicProjection(projection);
   const checkedAt = projection.checkedAt;
@@ -16,14 +19,18 @@ export async function civicCandidate(vault: EvidenceStore, scope: string, projec
   const records = civicRecordsFor(GOOGLE_CIVIC_RECORD_CLASS, projection);
   // Saved public-source evidence only; transient reader lookups never enter publication.
   const rawCapture = await holdRawCapture(vault, GOOGLE_CIVIC_SOURCE_ID, raw, "application/json");
-  const normalizedPayload = { projection, rawCapture };
-  const rawHash = sha256(rawCapture.rawHash);
+  const sourceProbe=sourceInput?.probe??{formatVersion:1 as const,catalogHash:rawCapture.rawHash,inputHash:civicInputHash([scope,projection.kind]),
+    responseHash:civicInputHash(projection.coverage),complete:false};
+  if(sourceProbe.catalogHash!==rawCapture.rawHash)throw Error("Google Civic source input is not bound to the public catalog bytes.");
+  const normalizedPayload = { projection, rawCapture,sourceProbe };
+  const rawHash = civicSourceContentHash(sourceProbe);
   return {
     id: `cv-${sha256(`${scope}:${rawHash}:${checkedAt}:${normalizedHash(projection)}`).slice(0, 32)}`,
     sourceId: GOOGLE_CIVIC_SOURCE_ID, recordClass: GOOGLE_CIVIC_RECORD_CLASS, scope,
     sourceProjectionEvidence: sourceProjectionEvidence(GOOGLE_CIVIC_SOURCE_ID, GOOGLE_CIVIC_RECORD_CLASS, scope),
-    retrieval: { succeeded: true, requestedUrl: `${GOOGLE_CIVIC_API}${route}`, finalUrl: `${GOOGLE_CIVIC_API}${route}`,
-      httpStatus: 200, retrievedAt: checkedAt, rawHash },
+    retrieval: { requestedUrl: `${GOOGLE_CIVIC_API}${route}`, finalUrl: `${GOOGLE_CIVIC_API}${route}`,
+      httpStatus: 200, retrievedAt: checkedAt,...(sourceInput?.retrieval??{}),succeeded:true,rawHash,rawHashBasis:"SOURCE_CONTENT_V1",complete:sourceProbe.complete,
+      ...(sourceInput?.sourceCheck?{sourceCheck:sourceInput.sourceCheck}:{}) },
     normalization: { succeeded: true, parserVersion: GOOGLE_CIVIC_PARSER_VERSION, schemaVersion: "google-civic/1",
       normalizedHash: normalizedHash(projection), normalizedPayloadHash: normalizedHash(normalizedPayload),
       inputRecords: records.length, outputRecords: records.length, droppedRecords: 0, missingRequiredFields: [] },

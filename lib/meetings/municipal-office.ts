@@ -10,21 +10,16 @@ import type { MeetingPinBody, MeetingPinLocation } from "./pin-location.ts";
 export type OfficeMeetingContext = Pick<Meeting,"id"|"bodyId"|"ocdId"|"bodyName"|"jurisdiction"|"provenance">
   & Partial<Pick<Meeting,"location"|"mapPin"|"venueGap"|"fieldSources">>;
 
-const OFFICE_CONTEXTS_SQL = `WITH partitions AS MATERIALIZED (
-  SELECT payload FROM civic_data_promotions WHERE record_class='MEETING' AND (
-    left(scope,7)='source:' AND split_part(scope,':',3)='body' AND split_part(scope,':',4)=ANY($2::text[])
-    OR key=ANY($3::text[])
-  )
-)
-SELECT DISTINCT ON(s.value->>'bodyId') s.value->>'id' AS id,s.value->>'bodyId' AS body_id,
-  s.value->>'ocdId' AS ocd_id,s.value->>'bodyName' AS body_name,s.value->>'jurisdiction' AS jurisdiction,
-  reader_payload_value(s.value->'provenance') AS provenance
-FROM partitions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
-  LATERAL (SELECT reader_payload_node(m.item) AS value) s
-WHERE s.value->>'bodyId'=ANY($1::text[]) AND s.value->>'id' IS NOT NULL
-  AND s.value->>'bodyName' IS NOT NULL AND s.value->>'jurisdiction' IS NOT NULL
-  AND jsonb_typeof(reader_payload_value(s.value->'provenance'))='object'
-ORDER BY s.value->>'bodyId',s.value->>'startsAt' DESC NULLS LAST,s.value->>'id'`;
+const OFFICE_CONTEXTS_SQL = `SELECT DISTINCT ON(r.body_id) r.row_id AS id,r.body_id,
+  r.value->>'ocdId' AS ocd_id,r.value->>'bodyName' AS body_name,r.value->>'jurisdiction' AS jurisdiction,
+  reader_payload_value(r.value->'provenance') AS provenance
+FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+WHERE r.record_class='MEETING' AND r.collection='meetings' AND r.body_id=ANY($1::text[])
+  AND (left(r.scope,7)='source:' AND split_part(r.scope,':',3)='body' AND split_part(r.scope,':',4)=ANY($2::text[])
+    OR r.promotion_key=ANY($3::text[]))
+  AND r.row_id IS NOT NULL AND r.value->>'bodyName' IS NOT NULL AND r.value->>'jurisdiction' IS NOT NULL
+  AND jsonb_typeof(reader_payload_value(r.value->'provenance'))='object'
+ORDER BY r.body_id,r.value->>'startsAt' DESC NULLS LAST,r.row_id`;
 
 /** One narrow held-source projection per admitted body; calendars and full meeting records are never reread. */
 export async function readOfficeContexts(query:Query,bodyIds:readonly string[]):Promise<readonly OfficeMeetingContext[]> {
@@ -56,27 +51,21 @@ function boundOwner(bodyId:string|undefined,ocdId:string|null|undefined,division
   return ocdId===division&&new RegExp(`^government:US-${state}:[^#]+$`).test(root);
 }
 
-// Only published hall/courthouse venue and address fields leave Postgres, in bounded pages.
-const HALL_ADDRESSES_SQL = `WITH partitions AS MATERIALIZED (
-  SELECT payload FROM civic_data_promotions WHERE record_class='MEETING' AND (
-    left(split_part(scope,':',4),length($2))=$2 AND left(scope,7)='source:' AND split_part(scope,':',3)='body' AND right(scope,8)<>':history'
-    OR key='MEETING:source:derived:family:US-'||$3
-    OR $1 ~ '/(place|county):' AND split_part(scope,':',4) LIKE 'government%3AUS-'||$3||'%3A%'
-      AND left(scope,7)='source:' AND split_part(scope,':',3)='body' AND right(scope,8)<>':history'
-  )
-), venues AS (
-  SELECT s.value->>'bodyId' AS body_id,s.value->>'ocdId' AS ocd_id,
-    s.value->>'jurisdiction' AS jurisdiction,s.value->>'startsAt' AS starts_at,
-    reader_payload_value(s.value->'location') AS location,
-    reader_payload_value(s.value->'venueGap') AS venue_gap,
-    reader_payload_value(s.value->'provenance') AS provenance,
-    reader_payload_value(s.value->'fieldSources')->'location' AS location_source,
-    coalesce(nullif(reader_payload_value(s.value->'mapPin'),'null'::jsonb),
-      (SELECT f.value FROM fact f WHERE f.entity_id='meeting:'||(s.value->>'id') AND f.field='map_pin' AND f.status='live')) AS map_pin
-  FROM partitions p,LATERAL reader_payload_members(reader_payload_node(p.payload)->'meetings') m,
-    LATERAL (SELECT reader_payload_node(m.item) AS value) s
-  WHERE split_part(s.value->>'bodyId','#',1)=$1
-    OR $1 ~ '/(place|county):' AND s.value->>'ocdId'=$1
+
+const HALL_ADDRESSES_SQL = `WITH venues AS (
+  SELECT r.body_id,r.value->>'ocdId' AS ocd_id,r.value->>'jurisdiction' AS jurisdiction,r.value->>'startsAt' AS starts_at,
+    reader_payload_value(r.value->'location') AS location,reader_payload_value(r.value->'venueGap') AS venue_gap,
+    reader_payload_value(r.value->'provenance') AS provenance,reader_payload_value(r.value->'fieldSources')->'location' AS location_source,
+    coalesce(nullif(reader_payload_value(r.value->'mapPin'),'null'::jsonb),
+      (SELECT f.value FROM fact f WHERE f.entity_id='meeting:'||r.row_id AND f.field='map_pin' AND f.status='live')) AS map_pin
+  FROM civic_data_rows r JOIN civic_data_promotions p ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+  WHERE r.record_class='MEETING' AND r.collection='meetings'
+    AND (split_part(r.body_id,'#',1)=$1 OR $1 ~ '/(place|county):' AND r.value->>'ocdId'=$1) AND (
+      left(split_part(r.scope,':',4),length($2))=$2 AND left(r.scope,7)='source:' AND split_part(r.scope,':',3)='body' AND right(r.scope,8)<>':history'
+      OR r.promotion_key='MEETING:source:derived:family:US-'||$3
+      OR $1 ~ '/(place|county):' AND split_part(r.scope,':',4) LIKE 'government%3AUS-'||$3||'%3A%'
+        AND left(r.scope,7)='source:' AND split_part(r.scope,':',3)='body' AND right(r.scope,8)<>':history'
+    )
 ), halls AS (
 SELECT DISTINCT ON (coalesce(location->>'address',location->>'name',venue_gap->>'publishedText'),ocd_id,jurisdiction)
   body_id,ocd_id,jurisdiction,starts_at,location,venue_gap,provenance,location_source,map_pin FROM venues
@@ -114,6 +103,11 @@ export async function withMunicipalHallOffices(
     const name=scope?.[2]==="county"?county(meeting.jurisdiction):municipality(meeting.jurisdiction);
     if(!scope||!name||words(scope[3].replace(/_(?:city|town|village|borough)$/, ""))!==words(name))continue;
     if(!boundOwner(meeting.bodyId,meeting.ocdId,division,scope[1].toUpperCase()))continue;
+    if(body?.governmentOwner){
+      const own=body.governmentOwner.name.replace(/,\s*[A-Z]{2}$/i,"").trim();
+      const ownerName=(scope[2]==="county"?county:municipality)(own)??own;
+      if(words(ownerName)!==words(name))continue;
+    }
     const group=groups.get(division)??{name,state:scope[1].toUpperCase(),kind:scope[2] as "place"|"county",bodies:new Set<string>()};
     group.bodies.add(meeting.bodyId);
     groups.set(division, group);

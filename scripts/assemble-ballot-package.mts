@@ -1,9 +1,10 @@
 import { dirname, resolve } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
+import { createHash } from "node:crypto";
 import { type GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { requireBallotState, stateBallotContractId, stateBallotScope, type BallotState } from "../lib/civic-data/state-scopes.ts";
 import { manualProjectionCandidate, readManualProjectionPrior } from "../lib/civic-data/manual-projections.ts";
-import { readPromotedCivicData, type CivicDataReadStore } from "../lib/civic-data/read-model.ts";
+import type { CivicDataReadStore } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { BallotContestMerge } from "../lib/civic-data/worker-ballot-contests.ts";
 import { ballotInputHash, ballotInputStamp, readBallotStateFile } from "../lib/civic-data/ballot-input.ts";
@@ -12,6 +13,7 @@ import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { routineReceiptFields, type RoutineRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const stateDirectory = resolve(root, "data/ballot/2026-general");
@@ -19,22 +21,25 @@ const stateDirectory = resolve(root, "data/ballot/2026-general");
 type PublicationStage = "input-metadata" | "prior-state" | "state-contests" | "state-records" | "candidate-build" | "promotion";
 type StageObserver = (stage: PublicationStage, phase: "start" | "end") => void;
 
-async function missingBallotInput(store: RoutineDataStore, state: BallotState, now: string): Promise<{
+async function missingBallotInput(store: RoutineDataStore, state: BallotState): Promise<{
   status: BallotPublicationResult["status"]; versionId: string | null; reason: string; receipt: RoutineRunnerReceipt | null;
 }> {
   const scope = stateBallotScope("ballot-contests", state), contractId = stateBallotContractId("ballot-contests", state);
-  const prior = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", scope, { store, now });
-  if (prior.kind !== "PROMOTED") return { status: "HELD", versionId: null, receipt: null,
+  const prior = await store.readSourceHead("BALLOT_CANDIDACY", scope);
+  if (!prior || prior.candidateState !== "PROMOTED" || !prior.acquisitionSucceeded || prior.versionId !== prior.lastKnownGoodVersionId) return { status: "HELD", versionId: null, receipt: null,
     reason: `BALLOT_INPUT_MISSING_NO_HELD_STATE:${state}: no verified state ballot data is available.` };
-  const versionId = prior.projection.versionId;
-  if (Object.keys(prior.value.ballots).length) return { status: "HELD", versionId, receipt: null,
+  const versionId = prior.versionId;
+  const records = await store.readCandidateField(versionId, ["normalization", "outputRecords"]);
+  if (typeof records !== "number" || !Number.isSafeInteger(records) || records < 0) return { status: "HELD", versionId: null, receipt: null,
+    reason: `BALLOT_INPUT_MISSING_PRIOR_UNVERIFIED:${state}: the held state version could not be reused.` };
+  if (records > 0) return { status: "HELD", versionId, receipt: null,
     reason: `BALLOT_INPUT_MISSING_PRIOR_RETAINED:${state}: the source file is missing; published ballot data remains available.` };
   const saved = await store.readCandidateSummary(versionId);
   const pointer = await store.readPromotionIdentity("BALLOT_CANDIDACY", scope);
   if (!saved || saved.state !== "PROMOTED" || !saved.acquisitionSucceeded || saved.receipt?.decision !== "GOOD" ||
     saved.candidate.scope !== scope || saved.candidate.recordClass !== "BALLOT_CANDIDACY" ||
-    saved.candidate.sourceId !== prior.projection.sourceId || saved.promotedVersion !== versionId || saved.lastKnownGoodVersion !== versionId ||
-    pointer?.versionId !== versionId || pointer.lastKnownGoodVersionId !== versionId || pointer.sourceId !== prior.projection.sourceId) {
+    saved.candidate.sourceId !== prior.sourceId || saved.promotedVersion !== versionId || saved.lastKnownGoodVersion !== versionId ||
+    pointer?.versionId !== versionId || pointer.lastKnownGoodVersionId !== versionId || pointer.sourceId !== prior.sourceId) {
     return { status: "HELD", versionId: null, receipt: null,
       reason: `BALLOT_INPUT_MISSING_PRIOR_UNVERIFIED:${state}: the held state version could not be reused.` };
   }
@@ -64,13 +69,26 @@ async function assembleBallotPackage(options: {
     sourceReceipt: { ...input.sourceReceipt, reviewedAt: now, reviewedBy: "assemble-ballot-package" },
     payload: { kind: "ballot-contests", ballots: input.ballots } }, prior, { checkAuthority: true });
   prior = null;
+  let inputComplete = Object.values(input.ballots).every(ballot => {
+    const progress = ballot as typeof ballot & { continuationPending?: boolean; nextCursor?: unknown };
+    return progress.continuationPending !== true && progress.nextCursor == null;
+  });
   options.onStage?.("state-contests", "start");
   await readBallotStateFile(path, (parts, row) => {
-    if (parts.length === 3 && ["contests", "heldContests"].includes(parts[2])) merge.add(parts[1], parts[2], row);
+    if (parts.length === 3 && parts[2] === "pending") inputComplete = false;
+    if (parts.length === 3 && ["contests", "heldContests"].includes(parts[2])) {
+      const contest = row as { type?: string; candidateListComplete?: boolean };
+      if (parts[2] === "heldContests" || contest.type !== "MEASURE" && contest.candidateListComplete !== true) inputComplete = false;
+      merge.add(parts[1], parts[2], row);
+    }
   });
   options.onStage?.("state-contests", "end");
   options.onStage?.("state-records", "start");
   await readBallotStateFile(path, (parts, row) => {
+    if (parts.length === 3 && parts[2] === "sourceAggregates") {
+      const aggregate = row as { retrieval?: { succeeded?: boolean; complete?: boolean }; continuationPending?: boolean; pending?: unknown[] };
+      if (aggregate.retrieval?.succeeded === false || aggregate.retrieval?.complete === false || aggregate.continuationPending || aggregate.pending?.length) inputComplete = false;
+    }
     if (parts.length !== 3 || !["contests", "heldContests"].includes(parts[2])) merge.add(parts[1], parts.slice(2).join("."), row);
   });
   const merged = merge.finish();
@@ -84,7 +102,7 @@ async function assembleBallotPackage(options: {
   options.onStage?.("candidate-build", "end");
   const heldContests: BallotContestHold[] = Object.values((merged.payload as GenericBallotProjection).ballots)
     .flatMap(ballot => (ballot.heldContests ?? []).map(row => ({ state, contestId: row.id, title: row.title, reason: row.reason })));
-  return { package: merged, candidate, merged: [file], skipped: [] as { file: string; reason: string }[], heldContests, priorVersionId };
+  return { package: merged, candidate, merged: [file], skipped: [] as { file: string; reason: string }[], heldContests, priorVersionId, inputComplete };
 }
 
 export async function runBallotPublication(options: { state: BallotState; directory?: string; store?: RoutineDataStore; now?: string; onStage?: StageObserver }) {
@@ -98,12 +116,34 @@ export async function runBallotPublication(options: { state: BallotState; direct
   let store = options.store;
   try {
     store ??= new PostgresRoutineDataStore();
+    const contract = requiredManualProductionContract(contractId), scope = stateBallotScope("ballot-contests", state);
+    const head = await store.readSourceHead("BALLOT_CANDIDACY", scope);
+    if (head && !head.imported && head.sourceId === contract.sourceId && head.recordClass === contract.recordClass && head.scope === scope &&
+      head.versionId === head.lastKnownGoodVersionId && head.candidateState === "PROMOTED" && head.acquisitionSucceeded && head.acquisitionComplete === true &&
+      head.rawHashBasis === "SOURCE_CONTENT_V1" && head.rawHash === inputHash && head.parserVersion === contract.parserNormalizerVersion) {
+      if (await ballotInputHash(directory, state) !== inputHash) throw new Error("BALLOT_INPUT_CHANGED_DURING_ASSEMBLY");
+      receipt = { source: contractId, candidateId: head.versionId, acquisitionSucceeded: true, state: "PROMOTED", decision: "GOOD",
+        promotedVersion: head.versionId, lastKnownGoodVersion: head.lastKnownGoodVersionId, structuralReleaseContract: ZERO_RELEASE_EVENTS };
+      report = { kind: "BALLOT_PUBLICATION", state, inputHash, inputStamp, at, merged: [`${state.toLowerCase()}.json`], skipped: [], heldContests: [],
+        status: "PUBLISHED", versionId: head.versionId, reason: "BALLOT_INPUT_CONFIRMED_UNCHANGED: the saved source input is unchanged; original source check times are retained." };
+      return { report, receipt, exitCode: 0 };
+    }
     const result = await assembleBallotPackage({ state, directory, store, now: at, onStage: options.onStage });
     ({ merged, skipped, heldContests } = result);
+    if (await ballotInputHash(directory, state) !== inputHash) throw new Error("BALLOT_INPUT_CHANGED_DURING_ASSEMBLY");
+    const source = result.package.sourceReceipt.sources.filter(row => row.reviewOutcome !== "BLOCKED" && row.httpStatus === 200)
+      .sort((a, b) => Date.parse(a.retrievedAt) - Date.parse(b.retrievedAt))[0];
+    const candidate = { ...result.candidate,
+      id: `${result.candidate.sourceId}:${createHash("sha256").update(`${result.candidate.id}\n${inputHash}`).digest("hex").slice(0, 32)}`,
+      retrieval: { ...result.candidate.retrieval, rawHash: inputHash, rawHashBasis: "SOURCE_CONTENT_V1" as const,
+        complete: result.inputComplete && !heldContests.length && result.candidate.normalization.droppedRecords === 0 && !(result.candidate.excludedFacts?.length) &&
+          result.package.sourceReceipt.sources.every(row => row.reviewOutcome !== "BLOCKED" && row.httpStatus === 200),
+        ...(source ? { sourceCheck: { requestedUrl: source.requestedUrl, finalUrl: source.finalUrl, httpStatus: 200 as const,
+          rawHash: source.rawHash, checkedAt: source.retrievedAt } } : {}) } };
     options.onStage?.("promotion", "start");
-    const outcome = await processRegisteredManualCandidate(store, contractId, result.candidate, at, result.priorVersionId);
+    const outcome = await processRegisteredManualCandidate(store, contractId, candidate, at, result.priorVersionId, { confirmUnchanged: false });
     options.onStage?.("promotion", "end");
-    receipt = { source: contractId, ...routineReceiptFields(result.candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
+    receipt = { source: contractId, ...routineReceiptFields(candidate, outcome), structuralReleaseContract: ZERO_RELEASE_EVENTS };
     if (outcome.confirmed && outcome.promoted) {
       const pointer = await store.readPromotionIdentity("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state));
       if (pointer?.versionId !== receipt.promotedVersion || pointer.lastKnownGoodVersionId !== receipt.promotedVersion ||
@@ -124,7 +164,7 @@ export async function runBallotPublication(options: { state: BallotState; direct
     let status: BallotPublicationResult["status"] = "HELD", versionId: string | null = null;
     const missing = error as NodeJS.ErrnoException;
     if (store && missing?.code === "ENOENT" && missing.path === resolve(directory, `${state.toLowerCase()}.json`)) {
-      try { ({ status, versionId, reason, receipt } = await missingBallotInput(store, state, at)); }
+      try { ({ status, versionId, reason, receipt } = await missingBallotInput(store, state)); }
       catch (priorError) { reason = `BALLOT_INPUT_MISSING_PRIOR_UNVERIFIED:${state}: ${priorError instanceof Error ? priorError.message : String(priorError)}`; }
     }
     if (!merged.length) skipped = [{ file: `${state.toLowerCase()}.json`, reason }];

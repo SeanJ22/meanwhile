@@ -23,7 +23,12 @@ export function* censusTextLines(bytes: Uint8Array): Generator<string> {
   if (remainder) yield remainder.replace(/\r$/, "");
 }
 
+export interface CensusSourceCapture {
+  readonly requestedUrl: string; readonly finalUrl: string; readonly rawHash: string; readonly checkedAt: string; readonly httpStatus: 200 | 304;
+}
+
 export interface CensusSourceOptions {
+  readonly sourceCaptures?: Map<string, CensusSourceCapture>;
   readonly fetchImpl?: typeof fetch;
   readonly signal?: AbortSignal;
   /** The same evidence vault and release lock used by other routine sources. */
@@ -32,9 +37,17 @@ export interface CensusSourceOptions {
   readonly releases?: Map<string, Promise<KnownRelease>>;
 }
 
+export function recordCensusSourceCapture(options: CensusSourceOptions, capture: CensusSourceCapture): void {
+  const prior = options.sourceCaptures?.get(capture.requestedUrl);
+  if (prior && (prior.rawHash !== capture.rawHash || prior.finalUrl !== capture.finalUrl))
+    throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `Census source changed within one acquisition: ${capture.requestedUrl}`);
+  options.sourceCaptures?.set(capture.requestedUrl, prior && Date.parse(prior.checkedAt) < Date.parse(capture.checkedAt) ? prior : capture);
+}
+
 export function censusSourceRelease(url: string, options: CensusSourceOptions, validate?: KnownReleaseOptions["validate"]): Promise<KnownRelease> {
   const held = options.releases?.get(url);
-  if (held) return held.then(async release => { await validate?.(release.bytes, release); return release; });
+  if (held) return held.then(async release => { await validate?.(release.bytes, release);
+    recordCensusSourceCapture(options, { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, rawHash: release.sha256, checkedAt: release.checkedAt, httpStatus: release.lastCheckStatus === 304 ? 304 : 200 }); return release; });
   const pending = acquireKnownRelease({
     ...options.cache,
     sourceId: "census-geography-relationships",
@@ -55,8 +68,12 @@ export function censusSourceRelease(url: string, options: CensusSourceOptions, v
       }
     } : undefined,
   });
-  options.releases?.set(url, pending);
-  return pending;
+  const observed = pending.then(release => {
+    recordCensusSourceCapture(options, { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, rawHash: release.sha256, checkedAt: release.checkedAt, httpStatus: release.lastCheckStatus === 304 ? 304 : 200 });
+    return release;
+  });
+  options.releases?.set(url, observed);
+  return observed;
 }
 
 export function sourceValidator(release: KnownRelease): NonNullable<Provenance["sourceValidators"]>[number] {

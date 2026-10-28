@@ -1,0 +1,371 @@
+{
+  "revision": "208916a2c6718bec4f0446780662b288fddbaab1",
+  "reads": [
+    {
+      "file": "lib/ballot/reader-data.ts",
+      "kind": "readCandidate",
+      "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
+      "line": 157
+    },
+    {
+      "file": "lib/civic-data/candidate-integrity.ts",
+      "kind": "readCandidate",
+      "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
+      "line": 354
+    },
+    {
+      "file": "lib/civic-data/candidate-lifecycle.ts",
+      "kind": "readCandidate",
+      "fingerprint": "988b8423f951fe30ebf96e3c6e31f1b260ba222f4f71aaa9d514a3692cc46e09",
+      "line": 114
+    },
+    {
+      "file": "lib/civic-data/candidate-lifecycle.ts",
+      "kind": "readCandidate",
+      "fingerprint": "76be3f738ac18b5e08cfd9b25408a0567eb4f22edc1d82e5dd9d9f18f595739e",
+      "line": 125
+    },
+    {
+      "file": "lib/civic-data/candidate-lifecycle.ts",
+      "kind": "readCandidate",
+      "fingerprint": "aa59de7bf1965ddbfc38731d37820051f69710a44c45d74461df59af171e68ec",
+      "line": 128
+    },
+    {
+      "file": "lib/civic-data/manual-projections.ts",
+      "kind": "readCandidate",
+      "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
+      "line": 623
+    },
+    {
+      "file": "lib/civic-data/navigation-successor.ts",
+      "kind": "readCandidate",
+      "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
+      "line": 21
+    },
+    {
+      "file": "lib/civic-data/planner-state-read.ts",
+      "kind": "SELECT *",
+      "fingerprint": "5d1f7879f343c28fffc5b971c03b26176e0a2b55246ef1444b0759acaa48ad53",
+      "line": 41
+    },
+    {
+      "file": "lib/civic-data/promotion.ts",
+      "kind": "readCandidate",
+      "fingerprint": "91a1ac426ef71aa614066a5cbdc96f2845d6e2faa714a87c7da6cc33ba384a3d",
+      "line": 173
+    },
+    {
+      "file": "lib/civic-data/promotion.ts",
+      "kind": "readCandidate",
+      "fingerprint": "91a1ac426ef71aa614066a5cbdc96f2845d6e2faa714a87c7da6cc33ba384a3d",
+      "line": 302
+    },
+    {
+      "file": "lib/civic-data/promotion.ts",
+      "kind": "readCandidate",
+      "fingerprint": "91a1ac426ef71aa614066a5cbdc96f2845d6e2faa714a87c7da6cc33ba384a3d",
+      "line": 449
+    },
+    {
+      "file": "lib/civic-data/read-model.ts",
+      "kind": "readCandidate",
+      "fingerprint": "97ecec3d55d6e00fe7241df8313aa18dbd914548d3637c84494820bd6483e773",
+      "line": 50
+    },
+    {
+      "file": "lib/civic-data/read-model.ts",
+      "kind": "readCandidate",
+      "fingerprint": "0bfb6f4adc51b838bc90681a88d1d1d68bbe1f70c5f7223403acf595ab4f2e1e",
+      "line": 482
+    },
+    {
+      "file": "lib/civic-data/read-model.ts",
+      "kind": "readCandidate",
+      "fingerprint": "294759cff30571b68ea9ae1344db460f3ce7fcd43c770ab29a8cdd8b0a5d1bf2",
+      "line": 831
+    },
+    {
+      "file": "lib/civic-data/store.ts",
+      "kind": "readCandidate",
+      "fingerprint": "85d10c08f9d5b0b2c59eab1a3895a504ab31eb61bdfdb76ae85657a674ed2c1d",
+      "line": 1180
+    },
+    {
+      "file": "lib/civic-data/store.ts",
+      "kind": "readCandidate",
+      "fingerprint": "85d10c08f9d5b0b2c59eab1a3895a504ab31eb61bdfdb76ae85657a674ed2c1d",
+      "line": 2620
+    },
+    {
+      "file": "lib/control-plane/admin-view/officials-results.ts",
+      "kind": "readCandidate",
+      "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
+      "line": 92
+    },
+    {
+      "file": "lib/control-plane/admin-view/stuck-summary.ts",
+      "kind": "SELECT *",
+      "fingerprint": "71a9c08230cdbf2e87f0a4f45208ab0f5821d1afc8002f34460066cd01573581",
+      "line": 32
+    },
+    {
+      "file": "lib/control-plane/operator-chat/contract.ts",
+      "kind": "SELECT *",
+      "fingerprint": "f3d77a2667e53b826b4447b57c0949bebfa96665f43501b3513221243dc6aab1",
+      "line": 87
+    },
+    {
+      "file": "lib/control-plane/repository/admin-config.ts",
+      "kind": "SELECT *",
+      "fingerprint": "4f78589382693b8f352753ccea66c4d6cff524f6aabe8262fcf736c04a42b155",
+      "line": 185
+    },
+    {
+      "file": "lib/control-plane/repository/dispatch-state.ts",
+      "kind": "SELECT *",
+      "fingerprint": "332768bb8ac7e07ae65f106e7d5cd6d579a341c0f3c478b3f60b5cce317358d9",
+      "line": 212
+    },
+    {
+      "file": "lib/control-plane/repository/dispatch-state.ts",
+      "kind": "SELECT *",
+      "fingerprint": "332768bb8ac7e07ae65f106e7d5cd6d579a341c0f3c478b3f60b5cce317358d9",
+      "line": 212
+    },
+    {
+      "file": "lib/control-plane/repository/dispatch-state.ts",
+      "kind": "SELECT *",
+      "fingerprint": "d63e9fe8f33b264ea3a60a05be02f7fc01dc830f0c384112c655b58e0cfc42ca",
+      "line": 265
+    },
+    {
+      "file": "lib/control-plane/repository/dispatch-state.ts",
+      "kind": "SELECT *",
+      "fingerprint": "81e2509f6b61743e1939d303b26efc748c84cab428b6fd95d64ca3d7fa0d7415",
+      "line": 267
+    },
+    {
+      "file": "lib/control-plane/repository/dispatch-state.ts",
+      "kind": "SELECT *",
+      "fingerprint": "bfe02eec9cc8bc7c860640cd9474099da02cc1ace27143e1a0eace99f502b899",
+      "line": 269
+    },
+    {
+      "file": "lib/control-plane/repository/migrations/RB-A8.ts",
+      "kind": "SELECT *",
+      "fingerprint": "ce19ed78276921cc18fb399930407f6d67b9311c10f29f458293f32647db62ee",
+      "line": 143
+    },
+    {
+      "file": "lib/control-plane/repository/pg-store.ts",
+      "kind": "SELECT *",
+      "fingerprint": "07fa0dc17a094e448310ab84b3c654e08e2a33ee2623ac7ee95f17f1cb49e981",
+      "line": 1108
+    },
+    {
+      "file": "lib/control-plane/worker-reader-readback.ts",
+      "kind": "readCandidate",
+      "fingerprint": "5deec1395ece98eae17c51e76496cbf8d1a0136c5c60d123adf9974edeee7c6e",
+      "line": 222
+    },
+    {
+      "file": "lib/control-plane/worker-reader-readback.ts",
+      "kind": "readCandidate",
+      "fingerprint": "5deec1395ece98eae17c51e76496cbf8d1a0136c5c60d123adf9974edeee7c6e",
+      "line": 295
+    },
+    {
+      "file": "lib/coverage/owed-read.ts",
+      "kind": "SELECT *",
+      "fingerprint": "a92f08b06546d5f137726211bbefa41c722230cf21c9702a6a2cc7d8cfcbd155",
+      "line": 122
+    },
+    {
+      "file": "lib/db/migrations/0026_lame_sunset_bain.sql",
+      "kind": "SELECT *",
+      "fingerprint": "c2aa28d7f86552cbdf45c94153b9ef17d62e97021ba0a86e95ad1bb8cf13509a",
+      "line": 194
+    },
+    {
+      "file": "lib/facts/carton-import.ts",
+      "kind": "readCandidate",
+      "fingerprint": "afddf6e029f125a2cfd59efcd865b5b7d1dcbf8dc2278db6145b2cd3568d01aa",
+      "line": 101
+    },
+    {
+      "file": "lib/facts/carton-import.ts",
+      "kind": "readCandidate",
+      "fingerprint": "afddf6e029f125a2cfd59efcd865b5b7d1dcbf8dc2278db6145b2cd3568d01aa",
+      "line": 117
+    },
+    {
+      "file": "lib/facts/entity-places.ts",
+      "kind": "SELECT *",
+      "fingerprint": "4117e6b57086c64eac6135fdfff2d3ef7d8009d0f15bd489d922e4c3c11736eb",
+      "line": 17
+    },
+    {
+      "file": "lib/facts/owner-flags.ts",
+      "kind": "SELECT *",
+      "fingerprint": "a306e652ef3b913e2bac212fb14b763f9adeda673d96d388a30def63a2798691",
+      "line": 155
+    },
+    {
+      "file": "lib/funding/state-cycles.ts",
+      "kind": "SELECT *",
+      "fingerprint": "11981806943fc8117b0fc7cddc2f4fea15fb3d640d81935cd954db875f3183b6",
+      "line": 26
+    },
+    {
+      "file": "lib/method/fix-map.ts",
+      "kind": "SELECT *",
+      "fingerprint": "2135a58f8008895421a793ed3a16dfd75ae2d7140cf63c9830a1ed9c767f5e8c",
+      "line": 124
+    },
+    {
+      "file": "lib/method/fix-map.ts",
+      "kind": "SELECT *",
+      "fingerprint": "2135a58f8008895421a793ed3a16dfd75ae2d7140cf63c9830a1ed9c767f5e8c",
+      "line": 126
+    },
+    {
+      "file": "lib/outcomes/data-plane.ts",
+      "kind": "readCandidate",
+      "fingerprint": "6323427df9747762ba194b0a32cea814fc12af457ed6c50eef985004df86a393",
+      "line": 201
+    },
+    {
+      "file": "lib/place-map/read.ts",
+      "kind": "SELECT *",
+      "fingerprint": "dce52e00818c153ffdc8b0ae784d491de09a807315e228525a9c7c690b0b9725",
+      "line": 93
+    },
+    {
+      "file": "lib/reader/canonical.ts",
+      "kind": "readCandidate",
+      "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
+      "line": 60
+    },
+    {
+      "file": "lib/reader/canonical.ts",
+      "kind": "readCandidate",
+      "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
+      "line": 154
+    },
+    {
+      "file": "lib/reader/canonical.ts",
+      "kind": "SELECT *",
+      "fingerprint": "08be67c81a10eaa313e03d3c5c7513d857c39e670f92deb09d0a1649615f964b",
+      "line": 110
+    },
+    {
+      "file": "lib/reader/canonical.ts",
+      "kind": "SELECT *",
+      "fingerprint": "53c4f0abf7abbbf0554b3151506b4edeef5076703e66a2bb5e73c6279129d6a7",
+      "line": 111
+    },
+    {
+      "file": "lib/reader/place-builder.ts",
+      "kind": "SELECT *",
+      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
+      "line": 155
+    },
+    {
+      "file": "lib/reader/place-builder.ts",
+      "kind": "SELECT *",
+      "fingerprint": "af4fe9f76821bff7351787f1fad68fd21acd35531afa8f0ab0bdcbc941dcb8ce",
+      "line": 209
+    },
+    {
+      "file": "lib/sources/legiscan/reader.ts",
+      "kind": "readCandidate",
+      "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
+      "line": 32
+    },
+    {
+      "file": "lib/sources/legiscan/reader.ts",
+      "kind": "readCandidate",
+      "fingerprint": "55c342842a9a2b3402c4c672ae19d68fd56085705011bb8edf425e6b2d6fbd61",
+      "line": 50
+    },
+    {
+      "file": "scripts/ingest.ts",
+      "kind": "readCandidate",
+      "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
+      "line": 1307
+    },
+    {
+      "file": "scripts/legistar-insite-minutes-ingest.mts",
+      "kind": "readCandidate",
+      "fingerprint": "1898e3118e239b70ddaf9cfb14b3d52773fbf54c25dcc1d188849351963db97b",
+      "line": 233
+    },
+    {
+      "file": "scripts/rb-a3-production-copy.sql",
+      "kind": "SELECT *",
+      "fingerprint": "d22e85daa32152c090687905fb00d423e1376c8878e9f4931dc734c3fb7591b5",
+      "line": 4
+    },
+    {
+      "file": "scripts/rb-a3-production-copy.sql",
+      "kind": "SELECT *",
+      "fingerprint": "65f1e5d5f4d3a43118515eba82facfac6b217253dba7e22fcff26873865f821b",
+      "line": 15
+    },
+    {
+      "file": "scripts/rb-a6-place-replay.mts",
+      "kind": "SELECT *",
+      "fingerprint": "a92f08b06546d5f137726211bbefa41c722230cf21c9702a6a2cc7d8cfcbd155",
+      "line": 55
+    },
+    {
+      "file": "scripts/rb-a6-place-replay.mts",
+      "kind": "SELECT *",
+      "fingerprint": "65f1e5d5f4d3a43118515eba82facfac6b217253dba7e22fcff26873865f821b",
+      "line": 62
+    },
+    {
+      "file": "scripts/rb-a6-place-replay.mts",
+      "kind": "SELECT *",
+      "fingerprint": "d22e85daa32152c090687905fb00d423e1376c8878e9f4931dc734c3fb7591b5",
+      "line": 63
+    },
+    {
+      "file": "scripts/replay-legiscan-all-states.mts",
+      "kind": "readCandidate",
+      "fingerprint": "96ed04d68b2d6858bb32d31246223736a276bb355067be4eb009bf5e0e680b8b",
+      "line": 187
+    },
+    {
+      "file": "scripts/routine-civic-data-runner.mts",
+      "kind": "readCandidate",
+      "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
+      "line": 857
+    },
+    {
+      "file": "scripts/routine-civic-data-runner.mts",
+      "kind": "readCandidate",
+      "fingerprint": "494a7673110ecc70f37b0d9296396ca62bd9c5669b8d369e9733c6c674a9a757",
+      "line": 866
+    },
+    {
+      "file": "scripts/split-federal-people.mts",
+      "kind": "readCandidate",
+      "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
+      "line": 19
+    },
+    {
+      "file": "scripts/vs07-replay.mts",
+      "kind": "readCandidate",
+      "fingerprint": "bd26374f153813332eb6fe45756cd7795450b66a2e7aadf9103530142b2bcb6a",
+      "line": 178
+    },
+    {
+      "file": "scripts/vs07-replay.mts",
+      "kind": "readCandidate",
+      "fingerprint": "009005af569b584b1ffbe35d88ec5f568ac5a08577a152640e2a36033ed9b081",
+      "line": 193
+    }
+  ]
+}

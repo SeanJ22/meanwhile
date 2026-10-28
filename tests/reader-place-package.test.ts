@@ -17,6 +17,7 @@ import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plan
 import type { CivicDataReadResult } from "../lib/civic-data/read-model.ts";
 import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
 import type { Meeting } from "../lib/sources/types.ts";
+import { installKeyedRows } from "./helpers/keyed-rows.ts";
 import { factDb } from "./helpers/fact-db.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
@@ -46,6 +47,7 @@ async function canonicalTables(db: Awaited<ReturnType<typeof factDb>>) {
   const functions = readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint")
     .filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
   for (const sql of functions) await db.pg.exec(sql);
+  await installKeyedRows(db.pg);
 }
 
 async function readReadyPackage(db: Awaited<ReturnType<typeof factDb>>,input: PlaceInput,query: Query = db.query) {
@@ -898,4 +900,41 @@ test("a special district's board on a city's territory reads under the district,
     assert.deepEqual(coverage.bodies.map(b => [b.name, b.divisionLabel]).sort(), [["City of Mobile Council", "Mobile city"], ["Mobile Housing Authority Board of Commissioners", "Mobile Housing Authority"]]);
     assert.equal(coverage.bodies.find(b=>b.bodyId===board)?.bodyClass,"GOVERNING");
   } finally { await db.pg.close(); }
+});
+
+
+test("derived body pointer cutover keeps other governments and historical agendas while an empty body edition cannot revive legacy sittings",async()=>{
+  const db=await factDb();
+  try{
+    await canonicalTables(db);
+    const first=BODY,second=COUNTY_BODY;
+    for(const id of [first,second])await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body',$1,'AZ')",[id]);
+    const meeting=(id:string,bodyId:string,startsAt:string):Meeting=>({id,bodyId,ocdId:bodyId.split("#")[0]!,bodyName:bodyId,title:id,startsAt,timeZone:"America/Phoenix",location:null,
+      agendaUrl:`https://example.gov/${id}`,jurisdiction:"Held government",status:"SCHEDULED",provenance:{sourceUrl:SOURCE,sourceOrg:"Government",collectedAt:AT,verifiedAt:AT,doorId:`ical:${bodyId}`}});
+    const a=meeting("ical:first-live",first,"2026-10-22T17:00:00Z"),b=meeting("ical:second-live",second,"2026-10-23T17:00:00Z");
+    const oldA=meeting("ical:first-history",first,"2020-10-22T17:00:00Z"),oldB=meeting("ical:second-history",second,"2020-10-23T17:00:00Z");
+    const doc=(row:Meeting)=>({id:`agenda:${row.id}`,meetingId:row.id,documentUrl:row.agendaUrl,text:`All original agenda words for ${row.id} α𐐀`,sourceOrg:"Government",extraction:"html",collectedAt:AT,retrievedAt:AT});
+    const snapshot=(rows:Meeting[])=>({formatVersion:1,generatedAt:AT,meetings:rows,agendaDocuments:rows.map(doc),sources:[],counts:{fresh:rows.length,carried:0,total:rows.length},
+      derivedMembers:[first,second].map(bodyId=>({id:`ical:${bodyId}`,source:"ical",bodyId,status:"ACTIVE",outcome:"FRESH"}))});
+    let serial=0;
+    const put=async(scope:string,value:unknown)=>{const encoded=partitionCivicPayload(value);for(const part of encoded.parts)await db.query("INSERT INTO civic_data_payload_parts VALUES($1,$2) ON CONFLICT DO NOTHING",[part.hash,JSON.stringify(part.payload)]);
+      await db.query(`INSERT INTO civic_data_promotions VALUES($1,'MEETING',$2,$3,$4,$5) ON CONFLICT(key) DO UPDATE SET payload=excluded.payload,current_version_id=excluded.current_version_id`,
+        [`MEETING:${scope}`,scope,JSON.stringify(encoded.value),AT,`body-version-${++serial}`]);};
+    const family=derivedMeetingFamilyScope("US-AZ"),bodyScope=meetingPartitionScope("derived~US-AZ",first);
+    await put(family,snapshot([a,b]));await put(`${family}:history`,snapshot([oldA,oldB]));
+    const input={state:"AZ",divisionIds:[],bodyIds:[first,second],includeHistory:true,includeAgenda:true};
+    const baseline=await buildPlacePackage(input,db.query);
+    assert.deepEqual(baseline.meetings.map(row=>row.id).sort(),[a.id,b.id,oldA.id,oldB.id].sort());
+    const changed={...a,title:"New verified first-body title"},own={...snapshot([changed]),derivedMembers:snapshot([changed]).derivedMembers.filter(member=>member.bodyId===first)};
+    await put(bodyScope,own);
+    const after=await buildPlacePackage(input,db.query);
+    assert.equal(after.meetings.find(row=>row.id===a.id)?.title,changed.title);
+    assert.deepEqual(after.bodySnapshots[second].meetings,baseline.bodySnapshots[second].meetings,"another government's meetings stay exactly as shown before cutover");
+    assert.deepEqual(after.snapshot.agendaDocuments.map(row=>[row.id,row.text]).sort(),baseline.snapshot.agendaDocuments.map(row=>[row.id,row.text]).sort());
+    assert.deepEqual(after.meetings.find(row=>row.id===a.id)?.provenance,a.provenance,"native member source/door evidence stays attached");
+    await put(bodyScope,{...own,meetings:[],agendaDocuments:[],counts:{fresh:0,carried:0,total:0}});
+    const empty=await buildPlacePackage(input,db.query);
+    assert.equal(empty.meetings.some(row=>row.id===a.id),false,"an accepted empty body edition overrides the old live family body");
+    assert.deepEqual(empty.meetings.map(row=>row.id).sort(),[b.id,oldA.id,oldB.id].sort(),"all independently held historical facts and other bodies remain visible");
+  }finally{await db.pg.close();}
 });

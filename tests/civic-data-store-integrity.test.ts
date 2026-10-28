@@ -1,3 +1,4 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { immutableStateHash, immutableStateValue, rememberStatePublicationHashes, rememberStatePublicationPrior, withStateRecordHashes } from "../lib/civic-data/state-publication.ts";
 import assert from "node:assert/strict";
@@ -732,7 +733,7 @@ test("Reader evidence names a pointer and a candidate by identity; neither datas
     /store\.readPromotions?\(|store\.readCandidates?\(/,
     "readback evidence reads identity; only the typed Reader reads and proves the dataset",
   );
-  assert.match(verification, /store\.readPromotionIdentity\(contract\.recordClass, contract\.scope\)/);
+  assert.match(verification, /publicationFingerprintIssue\(promoted\)/, "publication readback checks the returned fingerprint without another database read");
 });
 
 test("the Reader-evidence door's narrow read decides authority exactly as the whole envelope does", () => {
@@ -783,7 +784,7 @@ test("the Reader-evidence door's narrow read decides authority exactly as the wh
 test("the Postgres promotion transaction is selected from the exact persisted proof", () => {
   const source = readFileSync(join(ROOT, "lib", "civic-data", "store.ts"), "utf8");
   const promote = source.slice(source.indexOf("  async promote(candidateId", source.indexOf("export class Postgres")), source.indexOf("  async events(candidateId", source.indexOf("export class Postgres")));
-  assert.match(promote, /validationReceipt\} = \$\{receiptJson\}::jsonb/);
+  assert.match(promote, /validationReceipt\} - 'excludedFacts' = \$\{receiptJson\}::jsonb - 'excludedFacts'/);
   assert.match(promote, /state\} = 'VALIDATED'/);
   assert.match(promote, /insert\(civicDataPromotions\)\.select/);
   assert.match(promote, /insert\(civicDataCandidateEvents\)\.select/);
@@ -792,7 +793,7 @@ test("the Postgres promotion transaction is selected from the exact persisted pr
   assert.match(promote, /civicDataPromotions\.currentVersionId, expectedVersionId/);
   assert.match(promote, /pointerOwnsCandidate/);
   assert.match(promote, /where \$\{eligibility\} and \$\{pointerOwnsCandidate\}/);
-  assert.match(promote, /validationReceipt: storedReceipt/);
+  assert.doesNotMatch(promote.slice(promote.indexOf("const candidateWrite")), /validationReceipt:/,"promotion preserves the already validated receipt, including legacy rows");
   assert.doesNotMatch(promote, /validationReceipt: receipt[,\n]/);
   assert.doesNotMatch(promote, /\.returning\(\)/, "a bare RETURNING ships the whole payload or envelope back");
   assert.match(promote, /\.onConflictDoUpdate\(\{[\s\S]*\}\)\.returning\(PROMOTED_POINTER_COLUMNS\)/);
@@ -848,6 +849,7 @@ async function withCannedNeon<T>(
   process.env.WTP_VITAL_SIGNS_REPORT = "1";
   const sent: NeonStatement[] = [];
   const epoch = String(++cannedVersion);
+  const headers = new Map<string, Record<string, unknown>>();
   neonConfig.fetchFunction = (async (_endpoint: unknown, init: { readonly body: string }) => {
     const body = JSON.parse(init.body) as { query?: string; params?: unknown[]; queries?: NeonStatement[] };
     const statements = body.queries ?? [{ query: body.query ?? "", params: body.params ?? [] }];
@@ -860,19 +862,32 @@ async function withCannedNeon<T>(
       let metadata: NeonAnswer | null = null;
       if (version !== "POSTGRES") {
         const { query, params } = statement;
-        if (query.includes("civic_data_clock_versions")) metadata = { columns: [["etag", "text"]], rows: [[current]] };
-        else if (query.includes(".xmin::text")) {
+        if (query.includes("civic_data_clock_versions")||query.startsWith("WITH publication_head")) metadata = { columns: [["etag", "text"],["eligible","bool"]], rows: [[current,true]] };
+        else if (query.includes(".xmin::text") || query.includes("content-v1/") || query.includes("publication-v1/") || query.includes("part-v1/")) {
           const keys = params.flatMap(value => Array.isArray(value) ? value : [value]).filter((value): value is string =>
             typeof value === "string" && !value.startsWith("UNCHANGED_CONFIRMATION") &&
             (query.includes("civic_data_payload_parts") ? /^[a-f0-9]{64}$/.test(value) :
               query.includes("civic_data_promotions") ? /^[A-Z_]+:/.test(value) : true));
-          metadata = { columns: [["key", "text"], ["etag", "text"], ["latestConfirmation", "text"]], rows: keys.map(key => [key,current,null]) };
+          if (query.includes("content-v1/")) {
+            const fields = [["state","state","text"],["acquisitionSucceeded","acquisition_succeeded","bool"],
+              ["validationReceipt","validation_receipt","jsonb"],["promotedVersionId","promoted_version_id","text"],
+              ["lastKnownGoodVersionId","last_known_good_version_id","text"],["failureCode","failure_code","text"],
+              ["failureDetail","failure_detail","text"]] as const;
+            metadata = { columns: [["key","text"],["etag","text"],...fields.map(([name,,type]) => [name,type] as NeonColumn)],
+              rows: keys.map(key => [key,current,...fields.map(([,column]) => headers.get(key)?.[column] ?? null)]) };
+          } else if(query.includes('"civic_data_promotions"."validation_receipt"='))
+            metadata={columns:[["key","text"],["etag","text"],["coupled","bool"],["confirmation","text"]],rows:keys.map(key=>[key,current,true,null])};
+          else metadata = { columns: [["key", "text"], ["etag", "text"], ["latestConfirmation", "text"]], rows: keys.map(key => [key,current,null]) };
         }
       }
       // Existing fixtures count body statements. Version behavior itself is
       // covered by real PostgreSQL fixtures below and state-row-version-read.
       if (!metadata) sent.push(statement);
       const { columns, rows } = metadata ?? await answer(statement);
+      if (!metadata) for (const row of rows) {
+        const record = Object.fromEntries(columns.map(([name], index) => [name, row[index]]));
+        if (typeof record.id === "string" && typeof record.state === "string") headers.set(record.id, record);
+      }
       return wire.wrap({
         command: "SELECT",
         rowCount: rows.length,
@@ -893,7 +908,7 @@ async function withCannedNeon<T>(
   }) as typeof neonConfig.fetchFunction;
   process.env.DATABASE_URL = "postgresql://canned:canned@ep-canned-store-proof.us-east-2.aws.neon.tech/neondb";
   try {
-    const store = new PostgresRoutineDataStore();
+    const store = new PostgresRoutineDataStore({vault:new MemoryEvidenceStore()});
     Object.assign(store as unknown as Record<string, unknown>, {
       writeAuthority: {
         repo: ROOT,
@@ -953,6 +968,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     [["acquisition_succeeded", "bool"], true],
     [["raw_hash", "text"], value.retrieval.rawHash],
     [["normalized_hash", "text"], value.normalization.normalizedHash],
+    [["read_model_fingerprint", "text"], value.normalization.normalizedHash],
     [["retrieved_at", "timestamptz"], "2026-09-08 12:00:00+00"],
     [["source_through", "text"], value.temporal.sourceThrough],
     [["parser_version", "text"], value.normalization.parserVersion],
@@ -972,6 +988,7 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     [["current_version_id", "text"], value.id],
     [["last_known_good_version_id", "text"], value.id],
     [["promoted_at", "timestamptz"], "2026-09-08 12:01:00+00"],
+    [["payload_fingerprint", "text"], value.normalization.normalizedHash],
     [["validation_receipt", "jsonb"], persisted],
   ];
   const answer = (cells: readonly (readonly [NeonColumn, unknown])[]): NeonAnswer => ({
@@ -1017,6 +1034,8 @@ test("Postgres promotion ships no dataset back and returns the pointer with the 
     lastKnownGoodVersionId: value.id,
     promotedAt,
     payload: value.readModel,
+    payloadFingerprint: value.normalization.normalizedHash,
+    writeFingerprint: { expected: value.normalization.normalizedHash, stored: value.normalization.normalizedHash },
     receipt: persisted,
   });
 });
@@ -1330,10 +1349,10 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
       return none;
     }
     if (query.includes("WITH state_promotion")) return {
-      columns: [["projection", "jsonb"], ["coupled", "bool"], ["confirmation", "text"]],
+      columns: [["projection", "jsonb"], ["coupled", "bool"], ["expected_hash", "text"], ["confirmation", "text"]],
       rows: [[{ key: `${value.recordClass}:${value.scope}`, sourceId: value.sourceId, recordClass: value.recordClass,
         scope: value.scope, versionId: value.id, lastKnownGoodVersionId: value.id, promotedAt: "2026-09-08T12:01:00.000Z",
-        payload: envelope.readModel, receipt }, true, null]],
+        payload: envelope.readModel, receipt }, true, value.normalization.normalizedHash, null]],
     };
     if (query.includes('from "civic_data_promotions"')) return {
       columns: [["key", "text"], ["source_id", "text"], ["record_class", "text"], ["scope", "text"],
@@ -1369,7 +1388,8 @@ for (const family of STATE_BALLOT_FAMILIES) test(`${family} stores bounded state
     const decoded = await new CivicPayloadParts({ existing: async () => [], write: async () => {},
       read: async hashes => hashes.map(hash => ({ hash, payload: parts.get(hash) })),
     }).load(envelope!);
-    assert.deepEqual(decodeStateCandidate(decoded), value, "source evidence, identities, and reader values survive the encoding exactly");
+    const {vault:_vault,...logical}=decodeStateCandidate(decoded) as Record<string,unknown>;
+    assert.deepEqual(logical, value, "source evidence, identities, and reader values survive the encoding exactly");
     const readAt = sent.length;
     const lineageRef = (envelope!.retrieval.derived as unknown as { $civicPayloadPart: string }).$civicPayloadPart;
     assert.equal(typeof lineageRef, "string");
@@ -1454,7 +1474,9 @@ test("the keyed state read hydrates selected parts and rejects forged durable co
       state text, acquisition_succeeded boolean, promoted_version_id text, last_known_good_version_id text,
       normalized_hash text, validation_receipt jsonb, failure_code text, failure_detail text);
     CREATE TABLE civic_data_candidate_events(candidate_id text, sequence integer, detail text);
-    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY, payload jsonb);`);
+    CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY, payload jsonb);
+    ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text, ADD COLUMN raw_hash text, ADD COLUMN parser_version text;
+    ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
   const payload = { temporal: candidate("joined-state").temporal,
     rows: Array.from({ length: 40 }, (_, id) => ({ id, source: "https://az.gov/official", text: "Official source ".repeat(1000) })) };
   const value = withStateRecordHashes({ ...candidate("joined-state"), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots",
@@ -1509,9 +1531,9 @@ test("the keyed state read hydrates selected parts and rejects forged durable co
         assert.deepEqual(metadata?.candidate.temporal, read.value.temporal);
         assert.equal(Object.hasOwn(metadata!.candidate, "readModel"), false);
       })();
-      await pg.query("UPDATE civic_data_promotions SET payload='{}'");
+      await pg.query("UPDATE civic_data_promotions SET payload='{}',payload_fingerprint=$1",["0".repeat(64)]);
       await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /POINTER_PROOF_INVALID/);
-      await pg.query("UPDATE civic_data_promotions SET payload=$1, validation_receipt='{}'", [encoded.readModel]);
+      await pg.query("UPDATE civic_data_promotions SET payload=$1,payload_fingerprint=NULL,validation_receipt='{}'", [encoded.readModel]);
       await assert.rejects(() => store.readPromotion(value.recordClass, value.scope), /POINTER_PROOF_INVALID/);
       await pg.query("UPDATE civic_data_promotions SET validation_receipt=$1", [receipt]);
       copies.clear();
@@ -1609,7 +1631,8 @@ for (const family of ["candidate-profiles", "candidate-corpus", "candidate-campa
     assert.equal(parts.size, 1);
     const codec = new CivicPayloadParts({ existing: async () => [], write: async () => assert.fail("readback cannot write"),
       read: async hashes => hashes.map(hash => ({ hash, payload: parts.get(hash) })) });
-    assert.deepEqual(decodeStateCandidate(await codec.load(envelope)), value);
+    const {vault:_vault,...logical}=decodeStateCandidate(await codec.load(envelope)) as Record<string,unknown>;
+    assert.deepEqual(logical, value);
     assert.deepEqual(await codec.load(envelope.readModel), payload, "the promotion's exact stored reference resolves to the same payload");
   });
 }

@@ -4,7 +4,7 @@ import { canonicalCivicDataJson, civicRecordsFor } from "../civic-data/changes.t
 import { authorityFor } from "../civic-data/source-authority.ts";
 import { sourceProjectionEvidence, type RoutineCandidate } from "../civic-data/types.ts";
 import { holdRawCapture, type RawCaptureRef } from "../civic-data/raw-capture-vault.ts";
-import { REGISTRY_STATES, requireRegistryState } from "../civic-data/state-scopes.ts";
+import { requireRegistryState } from "../civic-data/state-scopes.ts";
 import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { OfficeholderSet, SeatVacancy } from "./types.ts";
 import type { DirectoryFile } from "./directory.ts";
@@ -12,17 +12,10 @@ import { CHAMBER_DIRECTORY_URLS } from "./chamber-directory.ts";
 import type { RosterChange } from "./roster-changes.ts";
 import { publishFederalDirectoryOfficePoints, type OfficePointResolver } from "./office-points-publication.ts";
 
-export const FEDERAL_DIRECTORY_SOURCE_ID = "congress-directory-project" as const;
-export type FederalDirectoryState = typeof REGISTRY_STATES[number];
-export const FEDERAL_DIRECTORY_STATES: readonly FederalDirectoryState[] = REGISTRY_STATES;
-export const federalDirectoryScope = (state: string) => `US-${requireRegistryState(state)}:current-congress-directory`;
-export type FederalDirectoryContractId = `congress-bulk-roster:${FederalDirectoryState}`;
-export const federalDirectoryContractId = (state: string): FederalDirectoryContractId => `congress-bulk-roster:${requireRegistryState(state)}`;
-export function federalDirectoryStateOf(contractId: string): FederalDirectoryState | null {
-  const state = /^congress-bulk-roster:([A-Z]{2})$/.exec(contractId)?.[1];
-  return FEDERAL_DIRECTORY_STATES.find(place => place === state) ?? null;
-}
-export const FEDERAL_DIRECTORY_PARSER_VERSION = "congress-directory/5" as const;
+import { FEDERAL_DIRECTORY_SOURCE_ID, FEDERAL_DIRECTORY_PARSER_VERSION, federalDirectoryScope } from "./federal-directory-scope.ts";
+export { FEDERAL_DIRECTORY_SOURCE_ID, FEDERAL_DIRECTORY_STATES, FEDERAL_DIRECTORY_PARSER_VERSION,
+  federalDirectoryScope, federalDirectoryContractId, federalDirectoryStateOf } from "./federal-directory-scope.ts";
+export type { FederalDirectoryState, FederalDirectoryContractId } from "./federal-directory-scope.ts";
 
 export interface FederalDirectoryAcquisition {
   readonly requestedUrl: string;
@@ -81,6 +74,20 @@ function rawSetHash(captures: readonly FederalDirectoryCapture[]): string {
     rawHash: raw.rawHash,
     byteCount: raw.byteLength,
   })).sort((left, right) => left.finalUrl.localeCompare(right.finalUrl))));
+}
+
+/** Actual source bytes and active native memberships, independent of observation clocks. */
+export function federalDirectoryCaptureHash(capture:FederalDirectoryCapture):string {
+  const address=(value:string)=>{
+    const url=new URL(value);
+    if(url.hostname==="raw.githubusercontent.com")url.pathname=url.pathname.replace(/^\/unitedstates\/congress-legislators\/[a-f0-9]{40}\//,"/unitedstates/congress-legislators/SOURCE_REVISION/");
+    return url.href;
+  };
+  return sha256(canonicalCivicDataJson([address(capture.requestedUrl),address(capture.finalUrl),capture.httpStatus,capture.raw.rawHash,capture.raw.byteLength]));
+}
+export function federalDirectorySourceContentHash(captures:readonly FederalDirectoryCapture[],normalizationInputHash:string):string {
+  return sha256(canonicalCivicDataJson({sourceId:FEDERAL_DIRECTORY_SOURCE_ID,parserVersion:FEDERAL_DIRECTORY_PARSER_VERSION,
+    normalizationInputHash,captures:captures.map(federalDirectoryCaptureHash).sort()}));
 }
 
 export function federalDirectoryProjectionIssues(value: FederalDirectoryReadModel): string[] {
@@ -159,6 +166,9 @@ export function heldDirectoryCandidate(input: {
   readonly excludedFacts?: RoutineCandidate["excludedFacts"];
   /** Seats this read changed against the last published one, for Admin's officials check. */
   readonly changes?: readonly RosterChange[];
+  readonly sourceInputHash?:string;
+  readonly sourceComplete?:boolean;
+  readonly sourceWorkPending?:boolean;
 }): RoutineCandidate {
   const scope = federalDirectoryScope(input.state), place = requireRegistryState(input.state);
   const issues = federalDirectoryProjectionIssues(input.projection);
@@ -177,10 +187,11 @@ export function heldDirectoryCandidate(input: {
   }).sort();
   if (!acquiredFiles.includes("legislators-current.yaml")) issues.push("CORE_SOURCE_MISSING");
   if (new Set(acquiredFiles).size !== acquiredFiles.length) issues.push("DUPLICATE_SOURCE_FILE");
-  const rawHash = rawSetHash(input.acquisitions);
-  const sourceCheck = input.acquisitions.flatMap(row=>row.sourceCheck ? [row.sourceCheck] : []).sort((a,b)=>b.checkedAt.localeCompare(a.checkedAt))[0];
+  const rawHash = input.sourceInputHash ? federalDirectorySourceContentHash(input.acquisitions,input.sourceInputHash) : rawSetHash(input.acquisitions);
+  const sourceCheck = input.acquisitions.flatMap(row=>row.sourceCheck ? [row.sourceCheck] : []).sort((a,b)=>a.checkedAt.localeCompare(b.checkedAt))[0];
   const normalizedPayload = {
     sourceSha: input.projection.sourceSha,
+    ...(input.sourceInputHash?{sourceInputHash:input.sourceInputHash,continuationPending:input.sourceWorkPending??false}:{}),
     ...(input.excludedFacts?.length ? { excludedFacts: input.excludedFacts } : {}),
     ...(input.changes?.length ? { changes: input.changes } : {}),
     acquisitions: input.acquisitions.map(({ requestedUrl, finalUrl, httpStatus, raw, retrievedAt, sourceCheck }) => ({ requestedUrl, finalUrl, httpStatus, raw, ...(retrievedAt ? {retrievedAt} : {}),...(sourceCheck ? {sourceCheck} : {}) })),
@@ -201,6 +212,7 @@ export function heldDirectoryCandidate(input: {
       httpStatus: input.acquisitions[0]?.httpStatus ?? null,
       retrievedAt: input.retrievedAt,
       rawHash: input.acquisitions.length ? rawHash : null,
+      ...(input.sourceInputHash?{rawHashBasis:"SOURCE_CONTENT_V1" as const,complete:input.sourceComplete??false}:{}),
       ...(sourceCheck ? {sourceCheck} : {}),
       failureDetail: acquiredFiles.includes("legislators-current.yaml") ? undefined : "The current membership source was unavailable.",
     },

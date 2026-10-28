@@ -6,12 +6,15 @@ import { STATE_BINDING_REFRESH_TASKS } from "../lib/civic-data/state-binding-ref
 import { CENSUS_STATE_IDENTITIES_URL, censusStateIdentity, parseStateBindingRefreshArguments, refreshStateBinding, stateBindingRefreshPackage } from "../lib/civic-data/state-binding-refresh.ts";
 import { REGISTRY_STATES, stateRegistryRuntimeContractId, stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
+import { factRefreshBounds } from "../lib/civic-data/source-change-cadence.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { registryRuntimeCandidate, type RegistryRuntimeCarton } from "../lib/registry/runtime-data-plane.ts";
 import type { KnownRelease } from "../lib/sources/known-release.ts";
 import { withMigratedRoutineStore } from "./helpers/migrated-routine-store.ts";
 
 const AT = "2026-10-20T12:00:00.000Z", DAY = 86_400_000;
+/** A failed read waits its own retry clock, and never less than the owner's retry minutes for its fact kind. */
+const failureRetry = (task: typeof STATE_BINDING_REFRESH_TASKS[number]) => Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
 const bytes = new Uint8Array(readFileSync(new URL("fixtures/reference/census-state-identities.txt", import.meta.url)));
 function release(at = AT): KnownRelease {
   return { sourceId: "registry-reviewed-bindings", releaseId: "census-state-identities", bytes,
@@ -34,8 +37,8 @@ test("each state and DC owes its binding automatically on its daily clock and re
     const checked = { lastAttemptedAt: AT, lastSucceededObservedAt: AT, lastSucceededParserVersion: task.parserVersion };
     assert.equal(routineTaskDue(task, checked, Date.parse(AT) + DAY - 1), false);
     assert.equal(routineTaskDue(task, checked, Date.parse(AT) + DAY), true);
-    assert.equal(routineTaskDue(task, { lastAttemptedAt: AT }, Date.parse(AT) + task.retryMs - 1), false);
-    assert.equal(routineTaskDue(task, { lastAttemptedAt: AT }, Date.parse(AT) + task.retryMs), true);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: AT }, Date.parse(AT) + failureRetry(task) - 1), false);
+    assert.equal(routineTaskDue(task, { lastAttemptedAt: AT }, Date.parse(AT) + failureRetry(task)), true);
   }
   assert.equal(new Set(STATE_BINDING_REFRESH_TASKS.map(task => task.acquisitionFailureDomain)).size, REGISTRY_STATES.length);
 });
@@ -89,8 +92,8 @@ test("a missing binding publishes through the real migrations, then scheduled co
     assert.equal((await store.readPromotion("REGISTRY_RUNTIME_BINDING", task.scope))?.versionId, before?.versionId);
     const failedClock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
     assert.equal(failedClock.lastAttemptedAt, new Date().toISOString());
-    assert.equal(routineTaskDue(task, failedClock, Date.now() + task.retryMs - 1), false);
-    assert.equal(routineTaskDue(task, failedClock, Date.now() + task.retryMs), true);
+    assert.equal(routineTaskDue(task, failedClock, Date.now() + failureRetry(task) - 1), false);
+    assert.equal(routineTaskDue(task, failedClock, Date.now() + failureRetry(task)), true);
   });
 });
 

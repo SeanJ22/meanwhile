@@ -135,7 +135,7 @@ export async function publishLegistarMembers(input: {
     for (const bodyId of new Set(rosters.map(roster => roster.bodyId))) {
       const members = rosters.filter(roster => roster.bodyId === bodyId).flatMap(roster => roster.members);
       const departed = await input.facts.query(`WITH own AS MATERIALIZED (
-        SELECT id, field, status, provenance_kind, source_copy_id FROM fact WHERE entity_id = $1
+        SELECT id, field, status, provenance_kind, source_copy_id FROM checked_fact WHERE entity_id = $1
       ) UPDATE fact f SET status = 'superseded', held_reason = 'NOT_ON_CURRENT_OFFICIAL_ROSTER'
         FROM own WHERE f.id = own.id AND own.status = 'live' AND own.provenance_kind = 'OFFICIAL' AND own.field LIKE 'member:%'
           AND (SELECT starts_with(url, $2) FROM source_copy WHERE id = own.source_copy_id)

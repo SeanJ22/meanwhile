@@ -63,7 +63,7 @@ export async function readCampaignFinanceForPlace(division: string, options: Opt
       AND ($4::text IS NULL OR e.id=$4 OR EXISTS(SELECT 1 FROM entity_external_id WHERE entity_id=e.id AND scheme='campaign-person:'||$2 AND value=$4))
       AND EXISTS(SELECT 1 FROM published p WHERE p.name=e.name AND (p.id=e.id OR p.aliases ? e.id OR EXISTS(
         SELECT 1 FROM entity_external_id x WHERE x.entity_id=e.id AND x.scheme='campaign-person:'||$2 AND (x.value=p.id OR p.aliases ? x.value))))
-      AND EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=e.id AND f.field LIKE 'campaign-cycle:%' AND f.status='live')
+      AND EXISTS(SELECT 1 FROM checked_fact f WHERE f.entity_id=e.id AND f.field LIKE 'campaign-cycle:%' AND f.status='live')
       ORDER BY e.id LIMIT 2`,[division,state,cursor,options.personId??null,`US-${state}`,!!donorCursor]);
   const committee=committees[0];
   if(!committee){
@@ -78,10 +78,10 @@ export async function readCampaignFinanceForPlace(division: string, options: Opt
     const reason=missing?.detail;
     return {...empty("NOT_HELD"),...(typeof reason==="string" && (Object.values(CAMPAIGN_MONEY_MISSING_REASONS) as readonly string[]).includes(reason)?{missingReason:reason}:{})};
   }
-  const rows=await query(`SELECT value,checked_at FROM fact WHERE entity_id=$1 AND field LIKE 'campaign-cycle:%' AND status='live'
+  const rows=await query(`SELECT value,checked_at FROM checked_fact WHERE entity_id=$1 AND field LIKE 'campaign-cycle:%' AND status='live'
     AND value#>>'{person,name}'=(SELECT name FROM entity WHERE id=$1) ORDER BY (value->>'cycle')::int DESC,field`,[committee.id]);
-  const donors=await query(`SELECT field,value FROM fact WHERE entity_id=$1 AND field LIKE 'campaign-donor:%' AND status='live' AND field>$2
-    AND value#>>'{person,name}'=(SELECT name FROM entity WHERE id=$1) AND
+  const donors=await query(`SELECT field,value FROM checked_fact WHERE entity_id=$1 AND field LIKE 'campaign-donor:%' AND status='live' AND field>$2
+    AND value#>>'{person,id}'=$1 AND
       (value->>'kind'='COMMITTEE_OR_ORGANIZATION' OR value->>'kind'='INDIVIDUAL' AND (value->>'amount')::numeric>200)
     ORDER BY field LIMIT 101`,[committee.id,donorCursor]);
   const records:CampaignMoneyCycle[]=[];

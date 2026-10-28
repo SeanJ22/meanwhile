@@ -8,7 +8,7 @@ export const COMMENT_PERIOD = "comment:period";
 
 const COMMENT_SQL = `SELECT f.entity_id, f.field, f.value, f.quote, f.checked_at, (SELECT s.url FROM source_copy s WHERE s.id = f.source_copy_id) AS url,
   (SELECT b.parent_id FROM entity b WHERE b.id = f.entity_id) AS parent_id
-  FROM fact f
+  FROM checked_fact f
   WHERE f.status = 'live' AND f.field LIKE 'comment:%' AND ($1::text[] IS NULL OR f.entity_id = ANY($1::text[]))
   ORDER BY f.entity_id, f.field`;
 

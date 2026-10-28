@@ -56,7 +56,8 @@ test("HTTP reads finish before publication is dated; identical probes stop witho
   const livePeople = await facts.query(`SELECT DISTINCT x.value FROM fact f JOIN entity_external_id x ON x.entity_id=substr(f.field,8)
     WHERE f.entity_id=$1 AND f.field LIKE 'member:%' AND f.status='live' AND x.scheme='legistar:pima' ORDER BY x.value`, [board]);
   assert.deepEqual(livePeople.map(row => row.value), expectedPeople, "all selectors' current members remain live on the real board");
-  const firstChecks = await facts.query("SELECT id, checked_at FROM fact ORDER BY id");
+  const stored = await facts.query("SELECT id,xmin::text AS version,ctid::text AS slot FROM fact ORDER BY id");
+  const firstChecks = await facts.query("SELECT id, checked_at FROM checked_fact ORDER BY id");
   const copies = await facts.query("SELECT id, fetched_at, blob_key FROM source_copy ORDER BY id");
   assert.equal(copies.length, 2, "the body's name and its office records retain their own saved source pages");
   assert.ok((await readFactRosters(facts.query, rows.map(row => row.bodyId))).rosters.flatMap(row => row.members).some(member => member.name === "Rex Scott"));
@@ -69,7 +70,8 @@ test("HTTP reads finish before publication is dated; identical probes stop witho
   assert.ok(calls.length > 0 && calls.every(memberProbe), "unchanged fingerprints stop before the full pages");
   assert.deepEqual(await facts.query("SELECT id, fetched_at, blob_key FROM source_copy ORDER BY id"), copies,
     "reading identical bytes again preserves the original immutable saved-copy row and fetched date");
-  const secondChecks = await facts.query("SELECT id, checked_at FROM fact ORDER BY id");
+  assert.deepEqual(await facts.query("SELECT id,xmin::text AS version,ctid::text AS slot FROM fact ORDER BY id"),stored);
+  const secondChecks = await facts.query("SELECT id, checked_at FROM checked_fact ORDER BY id");
   assert.equal(secondChecks.length, firstChecks.length);
   assert.deepEqual(secondChecks, firstChecks, "a probe does not redate the full source evidence");
 
@@ -78,7 +80,7 @@ test("HTTP reads finish before publication is dated; identical probes stop witho
   const third = await refreshLegistarMembers({ facts, clocks, now: new Date().toISOString(), slug: "pima", vault, doors, fetchImpl });
   assert.equal(third.unchanged, true);
   assert.ok(calls.length > 0 && calls.every(memberProbe));
-  assert.deepEqual(await facts.query("SELECT id, checked_at FROM fact ORDER BY id"), secondChecks,
+  assert.deepEqual(await facts.query("SELECT id, checked_at FROM checked_fact ORDER BY id"), secondChecks,
     "a fresh probe alone does not invent a new full capture or advance the facts' checked dates");
 });
 
@@ -99,11 +101,11 @@ test("a Date-valued load clock retains milliseconds when comparing cached full e
   const held = { query: async (text: string, params?: readonly unknown[]) => text === "SELECT sha256, loaded_at FROM fact_store_load WHERE source = $1"
     ? [{ sha256: prior.sha256, loaded_at: new Date(Date.parse(NOW) + 500) }] : facts.query(text, params),
     transaction: async <T>(work: (query: import("../lib/facts/publish.ts").Query) => Promise<T>) => { transactions++; return facts.transaction(work); } };
-  const before = await facts.query("SELECT id, checked_at FROM fact ORDER BY id");
+  const before = await facts.query("SELECT id, checked_at FROM checked_fact ORDER BY id");
   const result = await publishLegistarMembers({ facts: held, vault, raw, rows, clocks: factClocks(null), now: new Date(Date.parse(NOW) + 1_000).toISOString() });
   assert.equal(result.unchanged, true);
   assert.equal(transactions, 0, "a .300 full capture is older than the Date-valued .500 load, not newer than a truncated whole second");
-  assert.deepEqual(await facts.query("SELECT id, checked_at FROM fact ORDER BY id"), before);
+  assert.deepEqual(await facts.query("SELECT id, checked_at FROM checked_fact ORDER BY id"), before);
 });
 
 test("a changed source whose full read fails leaves existing facts dated at the last complete read", async t => {
@@ -115,7 +117,7 @@ test("a changed source whose full read fails leaves existing facts dated at the 
   let current = source;
   const originalFetch = recordedMemberFetch(() => current, calls);
   await refreshLegistarMembers({ facts, clocks, now: NOW, slug: "pima", vault, doors, fetchImpl: originalFetch });
-  const before = await facts.query("SELECT id, checked_at FROM fact ORDER BY id");
+  const before = await facts.query("SELECT id, checked_at FROM checked_fact ORDER BY id");
   t.mock.timers.tick(2 * 3_600_000);
   current = { ...source, offices: source.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
   const fetchImpl: typeof fetch = async (input, init) => {
@@ -123,5 +125,5 @@ test("a changed source whose full read fails leaves existing facts dated at the 
     return !memberProbe(url) && url.pathname.endsWith("officerecords") ? new Response("unavailable", { status: 500 }) : originalFetch(input, init);
   };
   await assert.rejects(refreshLegistarMembers({ facts, clocks, now: new Date().toISOString(), slug: "pima", vault, doors, fetchImpl }), /not a Legistar client/);
-  assert.deepEqual(await facts.query("SELECT id, checked_at FROM fact ORDER BY id"), before);
+  assert.deepEqual(await facts.query("SELECT id, checked_at FROM checked_fact ORDER BY id"), before);
 });

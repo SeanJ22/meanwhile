@@ -1,3 +1,4 @@
+import { REGISTRY_STATES } from "../civic-data/state-scopes.ts";
 import type { VersionedRowRetention } from "../db/versioned-query.ts";
 import { sharedPlaceBuildRead, type PlaceBuildTransfer } from "./place-build-transfer.ts";
 import { readPlaceBuild, reusePlaceBuild, type PlaceBuildRead } from "./place-build-reuse.ts";
@@ -20,6 +21,7 @@ import type { PlacePackage } from "./place-types.ts";
 import { readZipLocation } from "../place-map/locations.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "./location.ts";
 import { selectBodyTerritory, type BodyTerritorySelection } from "../registry/body-territory.ts";
+import { resolveProductionWriteHandle } from "../db/write-handle.ts";
 
 const everydayRoutingKey = `${EVERYDAY_ROUTING_POINTER.recordClass}:${EVERYDAY_ROUTING_POINTER.scope}`.replaceAll("'","''");
 const rosterPersonFieldsSql = ROSTER_PERSON_FIELDS.map(field => `'${field}'`).join(",");
@@ -565,12 +567,17 @@ export async function buildPlacePackage(input: PlaceInput, query: Query) {
   return composePlaceRow(input, await buildPlaceRow(input,query));
 }
 
-/** Until its first page is built, a place is composed from the same fact-store selection the builder reads, as before ready pages. */
-export async function composeUnbuiltPlace(input:PlaceInput,query:Query):Promise<{place:PlacePackage;territory?:BodyTerritorySelection|null}> {
-  const flags={...input,includeAgenda:input.includeAgenda ?? false};
-  if(!input.placeId || !/^zip:\d{5}$/.test(input.placeId))return {place:await buildPlacePackage(flags,query)};
-  const {input:selected,territory}=await placeBuildSelection(input.placeId,'place',input.state.toUpperCase());
-  return {place:await buildPlacePackage({...flags,...selected},query),territory};
+/** First use publishes the same page as the standing builder. Concurrent visits share the saved result. */
+export async function buildMissingPlacePages(pages:readonly {id:string;kind:string;state:string}[],db?:FactDb):Promise<void> {
+  const writer=db ?? readerFactDb(process.env.WTP_DB_ROLE==='local' ? process.env.DATABASE_URL
+    : resolveProductionWriteHandle().connection);
+  for(const {id,kind,state} of pages) await writer.transaction(async query=>{
+    await query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",[`place-page:${id}`]);
+    const [saved]=await query("SELECT place_id FROM place_page WHERE place_id=$1",[id]);
+    if(saved)return;
+    await query("INSERT INTO entity(id,kind,name,state) VALUES($1,$2,$1,$3) ON CONFLICT DO NOTHING",[id,kind,state]);
+    await storePlacePage(query,id,await buildPageBody(id,kind,state,query));
+  });
 }
 
 export interface StoredPlacePage {
@@ -649,6 +656,30 @@ function currentPlaceRow(history:Record<string,unknown>):Record<string,unknown> 
   return {...history,meeting_rows:(history.meeting_rows as Record<string,unknown>[])
     .filter(row=>!String(row.scope).endsWith(':history')),
     archived_meetings:[],archived_documents:[],archived_document_links:[]};
+}
+
+/** The page is the allowed derived copy: every later website visit reads this answer. */
+export async function storePlacePage(query:Query,id:string,page:StoredPlacePage,fingerprint:string|null=null):Promise<void> {
+  const {readyCurrent,readyHistory,territory,prints,...rawContext}=page;
+  const context={...(/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext)),...(prints?{prints}:{})};
+  await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context,build_fingerprint)
+    VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb,$5)
+    ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
+      body=excluded.body,history_body=excluded.history_body,context=excluded.context,build_fingerprint=excluded.build_fingerprint`,
+  [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context),fingerprint]);
+  const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
+    !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
+  const dependencies=new Set<string>([id,...rows.flatMap(row=>[
+    ...row.division_ids as string[] ?? [],
+    ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
+    ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
+      [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
+        .filter((value):value is string=>typeof value==='string')),
+    ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
+  ])]);
+  await query("DELETE FROM place_page_dependency WHERE page_id=$1",[id]);
+  await query(`INSERT INTO place_page_dependency(page_id,entity_id)
+    SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
 }
 
 export interface RebuildOptions {
@@ -746,26 +777,7 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<R
             } else if(prepared.body && "unchanged" in prepared.body) {
               await query("UPDATE place_page SET built_at=clock_timestamp() WHERE place_id=$1",[id]);
             } else {
-              const {readyCurrent,readyHistory,territory,prints,...rawContext}=prepared.body as StoredPlacePage;
-              const context={...(/^zip:\d{5}$/.test(id)?{formatVersion:1}:packPlaceContext(rawContext)),...(prints?{prints}:{})};
-              await query(`INSERT INTO place_page(place_id,version,built_at,body,history_body,context,build_fingerprint)
-                VALUES($1,1,clock_timestamp(),$2::jsonb,$3::jsonb,$4::jsonb,$5)
-                ON CONFLICT(place_id) DO UPDATE SET version=place_page.version+1,built_at=excluded.built_at,
-                  body=excluded.body,history_body=excluded.history_body,context=excluded.context,build_fingerprint=excluded.build_fingerprint`,
-              [id,JSON.stringify(packReadyPlace(readyCurrent,territory)),JSON.stringify(readyHistory ? packReadyPlace(readyHistory) : {}),JSON.stringify(context),prepared.read?.fingerprint ?? null]);
-              const rows=Object.values(rawContext).filter((row):row is Record<string,unknown>=>
-                !!row && typeof row==='object' && Array.isArray((row as Record<string,unknown>).entities));
-              const dependencies=new Set<string>([id,...rows.flatMap(row=>[
-                ...row.division_ids as string[] ?? [],
-                ...(row.divisions as Record<string,unknown>[] ?? []).map(division=>String(division.ocdId)),
-                ...(row.entities as Record<string,unknown>[] ?? []).flatMap(entity=>
-                  [entity.id,entity.parent_id,entity.division,...entity.divisions as string[] ?? []]
-                    .filter((value):value is string=>typeof value==='string')),
-                ...(row.rosters as Record<string,unknown>[] ?? []).map(member=>String(member.person_id)),
-              ])]);
-              await query("DELETE FROM place_page_dependency WHERE page_id=$1",[id]);
-              await query(`INSERT INTO place_page_dependency(page_id,entity_id)
-                SELECT $1,id FROM entity WHERE id=ANY($2::text[]) ON CONFLICT DO NOTHING`,[id,[...dependencies]]);
+              await storePlacePage(query,id,prepared.body as StoredPlacePage,prepared.read?.fingerprint ?? null);
             }
             await query(`UPDATE rebuild_queue q SET built_generation=$3::bigint,priority=e.page_priority
               FROM entity e WHERE q.place_id=$1 AND q.lease_token=$2 AND e.id=q.place_id`,[id,token,claim.generation]);
@@ -800,4 +812,29 @@ export async function rebuildPlacePages(options: RebuildOptions = {}): Promise<R
   await Promise.all(Array.from({length:concurrency},work));
   const [remaining]=await db.transaction(query=>query("SELECT count(*)::int AS n FROM rebuild_queue"));
   return {rebuilt,failed,remaining:Number(remaining?.n ?? 0),...(unchanged?{unchanged}:{})};
+}
+
+/** Registry-only boards already serve readers; give their existing identities their own body pages. */
+export async function seedRuntimeBodyPageSubjects(query:Query,states:readonly string[]=REGISTRY_STATES):Promise<number> {
+  let inserted=0;
+  for(const state of states) {
+    const [result]=await query(`WITH runtime AS (
+      SELECT reader_payload_node(reader_payload_node(payload)->'registry') AS registry
+      FROM civic_data_promotions WHERE record_class='REGISTRY_RUNTIME_BINDING'
+        AND key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
+    ), bodies AS (
+      SELECT reader_payload_node(b.item) AS value FROM runtime r,LATERAL reader_payload_members(r.registry->'bodies') b
+    ), seeded AS (
+      INSERT INTO entity(id,kind,name,state,parent_id)
+        SELECT coalesce(alias.entity_id,b.value->>'id'),'body',coalesce(b.value->>'name',b.value->>'id'),$1,parent.id
+        FROM bodies b
+        LEFT JOIN entity_external_id alias ON alias.scheme='body-alias' AND alias.value=b.value->>'id'
+        LEFT JOIN entity canonical ON canonical.id=alias.entity_id
+        LEFT JOIN entity parent ON parent.id=b.value->>'ocdId' AND parent.kind='place'
+        WHERE nullif(b.value->>'id','') IS NOT NULL AND (alias.entity_id IS NULL OR canonical.state=$1::char(2))
+        ORDER BY b.value->>'id' ON CONFLICT(id) DO NOTHING RETURNING id
+    ) SELECT count(*)::int AS n FROM seeded`,[state]);
+    inserted+=Number(result?.n ?? 0);
+  }
+  return inserted;
 }

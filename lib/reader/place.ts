@@ -1,5 +1,5 @@
 import { factReader, statementQuery } from "../facts/db.ts";
-import type { Query } from "../facts/publish.ts";
+import type { Query, FactDb } from "../facts/publish.ts";
 import { snapshotCounts } from "../meetings/snapshot.ts";
 import { combineStateRegistries } from "../registry/state-composition.ts";
 import { ocdStateCode } from "../ocd/state-of.ts";
@@ -9,7 +9,7 @@ import { readerDatabaseQuery } from "./database.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
 import { composePlaceRow } from "./place-decode.ts";
-import { composeUnbuiltPlace } from "./place-builder.ts";
+import { buildMissingPlacePages } from "./place-builder.ts";
 import { mergePlaceRows } from "./place-compose.ts";
 import { unpackPlaceContextRow, unpackReadyPlace, unpackReadyTerritory } from "./place-ready.ts";
 import type { BodyTerritorySelection } from "../registry/body-territory.ts";
@@ -60,7 +60,8 @@ export function placePageTerritory(place:PlacePackage):BodyTerritorySelection|nu
 }
 
 export function readPlacePackage(input:PlaceInput,query?:Query|null):Promise<PlacePackage> {
-  if(query!==undefined || currentReaderAuthorityEdge())return loadPlacePackage(input,query===undefined?factReader():query);
+  if(query!==undefined || currentReaderAuthorityEdge())return loadPlacePackage(input,query===undefined?factReader():query,
+    query?{transaction:work=>work(query)}:undefined);
   return readCachedPlacePackage(input,()=>{
     const socket=readerDatabaseQuery();
     return socket?statementQuery(socket):factReader();
@@ -112,12 +113,15 @@ function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<P
   return read;
 }
 
-async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<PlacePackage> {
+async function loadPlacePackage(input:PlaceInput,query:Query|null,writer?:FactDb):Promise<PlacePackage> {
   if(!query)throw new Error("FACT_STORE_DATABASE_URL_MISSING");
   if(input.placeId && !(input.placeId.startsWith("zip:") && input.includeHistory)
     && !input.includeAgenda && !input.bodyFactsOnly && !input.meetingIds && !input.allBodies) {
     const [saved]=await query(READY_PLACE_SQL,[input.placeId,input.includeHistory??false]);
-    if(!saved?.page)return readUnbuiltPlace(input,query);
+    if(!saved?.page){
+      await buildMissingPlacePages([{id:input.placeId,kind:'place',state:input.state.toUpperCase()}],writer);
+      return loadPlacePackage(input,query,writer);
+    }
     const place=unpackReadyPlace(saved.page);
     const territory=unpackReadyTerritory(saved.page);
     if(territory!==undefined)pageTerritories.set(place,territory);
@@ -126,20 +130,16 @@ async function loadPlacePackage(input:PlaceInput,query:Query|null):Promise<Place
   }
   const rows=await query(PLACE_PAGES_SQL,[input.state.toUpperCase(),input.divisionIds,input.bodyIds??[],input.namedDivisionIds??[],
     input.neighbors??false,input.allBodies??false,input.includeHistory??false,input.includeAgenda??false,input.bodyFactsOnly??false]);
-  if(rows.some(row=>!row.row))return readUnbuiltPlace(input,query);
+  const missing=rows.filter(row=>!row.row);
+  if(missing.length){
+    await buildMissingPlacePages(missing.map(row=>({id:String(row.page_id),kind:row.page_kind==='body'?'body':'place',state:input.state.toUpperCase()})),writer);
+    return loadPlacePackage(input,query,writer);
+  }
   const empty=!input.allBodies&&!input.divisionIds.length&&!input.bodyIds?.length;
   const canonical={...input,bodyIds:rows[0]?.body_ids as string[]??input.bodyIds};
   const merged=mergePlaceRows(canonical,rows.map(row=>({...unpackPlaceContextRow(row.row),page_id:row.page_id,
     page_kind:empty?'empty':row.page_kind,built_at:row.built_at})));
   const place=await composePlaceRow(canonical,merged);
   pageIds.set(place,rows.flatMap(row=>typeof row.page_id==='string'?[row.page_id]:[]));
-  return place;
-}
-
-/** A place whose first page is still queued is read as it was before ready pages; its page tag is purged when the page is built. */
-async function readUnbuiltPlace(input:PlaceInput,query:Query):Promise<PlacePackage> {
-  const {place,territory}=await composeUnbuiltPlace(input,query);
-  if(territory!==undefined)pageTerritories.set(place,territory);
-  if(input.placeId)pageIds.set(place,[input.placeId]);
   return place;
 }

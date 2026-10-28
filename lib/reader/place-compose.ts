@@ -87,16 +87,16 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     rosterReaderDispositions: agendaOnly ? [] : unique(registries.flatMap(({ value }) => records(value.rosterReaderDispositions)), row => String(row.sourceId)),
     statewideExecutives: agendaOnly ? [] : unique(registries.flatMap(({ value }) => records(value.statewideExecutives))
       .filter(executive => selected.has(String(executive.stateOcdId))), row => `${row.stateOcdId}:${record(row.holder).id}`),
-    officialCandidacies: {
+    officialCandidacies: registries.some(({value})=>value.officialCandidacies) ? {
       ...record(lastRegistry.officialCandidacies),
       rows: agendaOnly ? [] : unique(registries.flatMap(({ value }) => records(record(value.officialCandidacies).rows)),
         row => JSON.stringify([record(row.holder).id, record(row.holder).officeTitle, record(row.holder).divisions])),
-    },
-    officialPhotos: {
+    } : null,
+    officialPhotos: registries.some(({value})=>value.officialPhotos) ? {
       ...record(lastRegistry.officialPhotos),
       photos: agendaOnly ? [] : unique(registries.flatMap(({ value }) => records(record(value.officialPhotos).photos)),
         row => JSON.stringify([row.officeholderId, row.personId])),
-    },
+    } : null,
     rosterPhotos: agendaOnly ? {} : Object.assign({}, ...registries.map(({ value }) => record(value.rosterPhotos))),
   } : null;
 

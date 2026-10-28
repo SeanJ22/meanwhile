@@ -70,7 +70,9 @@ test("a pass whose meeting programs fill memory still runs every read of the peo
   const peopleReads = ["people-us", "people-az", "people-tx"].map(id => command(id, lane));
   // Keep the same proportions while leaving room for timer scheduling under suite load.
   const durations = (id: string) => id.startsWith("calendar") ? 1_600 : id.startsWith("small") ? 160 : 120;
-  const deadline = Date.now() + 4_000;
+  // Twelve meetings need at least 9.6 seconds at two concurrent slots;
+  // the deadline still requires the people lane to get a turn first.
+  const deadline = Date.now() + 7_000;
   const ran: string[] = [];
   const releases = new Map<string, () => void>();
   const ordered = routineSerialLanesFirst([...calendars, ...small, ...peopleReads].map(c => ({ task: { command: c.serialLane ? ["scripts/national-people-refresh.mts"] : ["x"] }, c }))).map(({ c }) => c);

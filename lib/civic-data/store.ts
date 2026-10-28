@@ -2625,6 +2625,12 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readCandidatePath<T = unknown>(candidateId: string, path: readonly string[]): Promise<T | null> {
     if (!path.length) throw new Error("CANDIDATE_FIELD_PATH_REQUIRED");
+    if (["readModel", "normalizedPayload", "excludedFacts", "civicRecords"].includes(path[0])) {
+      const [{readCivicCandidatePath},{rawCaptureVault}]=await Promise.all([import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
+      const vault=this.cacheOptions.vault??rawCaptureVault;
+      return (await this.candidateValue(`candidate-path:${JSON.stringify(path)}`, candidateId,
+        async()=>await readCivicCandidatePath((text,params)=>this.readerRows(text,params),vault,candidateId,path) as T|null))??null;
+    }
     // Walk inline fields inside Postgres; stop at the first immutable part reference.
     // Returning the parent field would still ship a whole inline roster for its captures.
     const keys = sql`ARRAY[${sql.join(path.map(key => sql`${key}`), sql`, `)}]::text[]`;
@@ -2997,14 +3003,11 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async readCandidateCaptures(candidateId: string, urls: readonly string[], members: readonly string[]): Promise<readonly unknown[]> {
     return (await this.candidateValue(`candidate-captures:${JSON.stringify([urls,members])}`, candidateId, async () => {
-      const list = (values: readonly string[]) => `{${values.map(value => `"${value.replace(/["\\]/g, "\\$&")}"`).join(",")}}`;
-      const [row] = (await this.db.execute(sql`select coalesce((select jsonb_agg(x) from jsonb_array_elements(case when jsonb_typeof(c.candidate#>'{normalizedPayload,captures}') = 'array'
-        then c.candidate#>'{normalizedPayload,captures}' else '[]'::jsonb end) x
-        where x->>'finalUrl' = any(${list(urls)}::text[]) or x->>'requestedUrl' = any(${list(urls)}::text[])
-          or x#>>'{extractedFrom,member}' = any(${list(members)}::text[])), '[]'::jsonb) as captures
-      from civic_data_candidates c where c.id = ${candidateId}`)).rows as { captures: unknown[] }[];
-      return row?.captures ?? [];
-
+      const [{readCivicCandidateEvidenceRows},{rawCaptureVault}]=await Promise.all([import("./candidate-vault.ts"),import("./raw-capture-remote.ts")]);
+      const vault=this.cacheOptions.vault??rawCaptureVault,query=(text:string,params:readonly unknown[])=>this.readerRows(text,params);
+      const requests=[{path:["finalUrl"],values:urls},{path:["requestedUrl"],values:urls},{path:["extractedFrom","member"],values:members}].filter(x=>x.values.length);
+      const selected=await Promise.all(requests.map(match=>readCivicCandidateEvidenceRows(query,vault,candidateId,["captures"],{match})));
+      return [...new Map(selected.flat().map(row=>[row.ordinal,row.value])).entries()].sort((a,b)=>a[0]-b[0]).map(([,value])=>value);
     })) ?? [];
   }
 
@@ -3019,6 +3022,8 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
   }
 
   async readCandidateField(candidateId: string, path: readonly string[]): Promise<unknown> {
+    if (["readModel", "normalizedPayload", "excludedFacts", "civicRecords"].includes(path[0]))
+      return (await this.readCandidatePath(candidateId,path))??undefined;
     return (await this.candidateValue(`candidate-field:${JSON.stringify(path)}`, candidateId, async () => {
       const [row] = (await this.db.execute(sql`select candidate #> ${`{${path.map(key => `"${key}"`).join(",")}}`}::text[] as value
       from civic_data_candidates where id = ${candidateId}`)).rows as { value: unknown }[];

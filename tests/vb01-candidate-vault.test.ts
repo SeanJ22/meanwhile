@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { candidateChangeSet, civicRecordsFor } from "../lib/civic-data/changes.ts";
-import { holdCandidateFacts, hydrateCandidateFacts, readCivicCandidatePath, rebuildCandidateChanges } from "../lib/civic-data/candidate-vault.ts";
+import { holdCandidateFacts, hydrateCandidateFacts, readCivicCandidatePath, readCivicCandidateEvidenceRows, rebuildCandidateChanges } from "../lib/civic-data/candidate-vault.ts";
 import { civicVersionRef, holdCivicVersion } from "../lib/civic-data/version-vault.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
@@ -37,6 +37,17 @@ test("candidate format stores small pointers, restores exact evidence, and deriv
   assert.deepEqual(await readCivicCandidatePath(query,vault,input.id,["normalizedPayload","sourceProbe"]),(input.normalizedPayload as Record<string,unknown>).sourceProbe);
   assert.deepEqual(await readCivicCandidatePath(query,vault,input.id,["excludedFacts"]),input.excludedFacts);
   assert.ok(seen.every(text=>text==="SELECT candidate->'vault' AS vault FROM civic_data_candidates WHERE id=$1"));
+});
+
+test("source-evidence selection reads only the matching capture from the vault",async()=>{
+  const vault=new MemoryEvidenceStore(),input=candidate();
+  const captures=[{finalUrl:"https://one.example.gov",capture:{vaultKey:"raw/one"}},
+    {finalUrl:"https://two.example.gov",capture:{vaultKey:"raw/two"},text:"unrelated ".repeat(20_000)}];
+  const stored=await holdCandidateFacts(vault,{...input,normalizedPayload:{captures}},null,{retainReadModel:false});
+  const query=async()=>[{vault:stored.vault}];
+  const rows=await readCivicCandidateEvidenceRows(query,vault,input.id,["captures"],{match:{path:["finalUrl"],values:[captures[0].finalUrl]}});
+  assert.deepEqual(rows,[{ordinal:1,value:captures[0]}]);
+  assert.equal(JSON.stringify(rows).includes("unrelated"),false);
 });
 
 test("transition format retains readModel until historical readers switch; failed evidence keeps its actual vault identity",async()=>{

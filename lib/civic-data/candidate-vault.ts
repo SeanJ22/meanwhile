@@ -133,3 +133,28 @@ export const readCivicCandidateRows = (query: Query, vault: EvidenceStore | (() 
   path: readonly string[], selection: CivicVersionRowSelection = {}) => readCivicVersionRows(query, vault, id, path, selection);
 export const readCivicCandidateText = (query: Query, vault: EvidenceStore | (() => EvidenceStore), id: string,
   path: readonly string[], range: CivicVersionTextRange = {}) => readCivicVersionText(query, vault, id, path, range);
+
+/** Select source-evidence rows without returning the complete candidate envelope. */
+export async function readCivicCandidateEvidenceRows(query:Query,vault:EvidenceStore|(()=>EvidenceStore),id:string,
+  path:readonly string[],selection:CivicVersionRowSelection={}) {
+  if (!path.length || !Number.isSafeInteger(selection.afterOrdinal??0) || (selection.afterOrdinal??0)<0 ||
+      selection.limit!==undefined && (!Number.isSafeInteger(selection.limit)||selection.limit<1)) throw new Error("CIVIC_CANDIDATE_ROW_RANGE_INVALID");
+  const [header]=await query("SELECT candidate->'vault' AS vault FROM civic_data_candidates WHERE id=$1",[id]);
+  if(!header)return [];
+  const format=candidateVaultFormat(header);
+  if(format){
+    if(!format.normalizedPayload)return [];
+    return civicVersionVault(typeof vault==="function"?vault():vault).rows(format.normalizedPayload,path,selection);
+  }
+  const rows=await query(`WITH RECURSIVE selected(value,depth) AS (
+    SELECT candidate->'normalizedPayload',0 FROM civic_data_candidates WHERE id=$1
+    UNION ALL SELECT reader_payload_node(value)->($2::text[])[depth+1],depth+1 FROM selected WHERE depth<cardinality($2::text[])
+  ), members AS (SELECT ordinal_index,reader_payload_node(item) AS value FROM selected,
+    LATERAL reader_payload_members(selected.value) WHERE depth=cardinality($2::text[]))
+  SELECT ordinal_index AS ordinal,reader_payload_value(CASE WHEN $5::text[] IS NULL THEN value-$6::text[]
+    ELSE (SELECT coalesce(jsonb_object_agg(key,value->key),'{}'::jsonb) FROM unnest($5::text[]) key WHERE value?key) END) AS value
+  FROM members WHERE ordinal_index>$7::int AND ($3::text[] IS NULL OR reader_payload_value(value)#>>$3::text[]=ANY($4::text[]))
+    ORDER BY ordinal_index LIMIT $8::int`,[id,[...path],selection.match?[...selection.match.path]:null,
+      selection.match?[...selection.match.values]:null,selection.fields?[...selection.fields]:null,[...selection.omit??[]],selection.afterOrdinal??0,selection.limit??null]);
+  return rows.map(row=>({ordinal:Number(row.ordinal),value:row.value as Record<string,unknown>}));
+}

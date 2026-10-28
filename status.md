@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 139 (main c8f768f98, RB-A10) since 12:59 PM EDT Oct 28; river = cee2c2cd0 (GitHub CI passed). Release 140 (search log fit) open: https://github.com/SeanJ22/meanwhile/pull/853.
+build_state: LIVE: release 139 (main c8f768f98, RB-A10). Release 140 (VP-01, ZP-01, door-checks fix, search log) in CI: https://github.com/SeanJ22/meanwhile/pull/853 head aef12de48. Next: 141 ZIP districts fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -70,6 +70,10 @@ heartbeat: 2026-10-28T08:35:00Z
   - Meetings: same or more in all 32. Gains: 90210 103->168, 60601 103->122, 33602 9->13, 43215 0->1, 48226 0->25.
   - Bodies: same or more in 31. LOSS in 19712 (Delaware City, DE): the Colonial School District board is gone. Cause: postal-only ZIPs (no Census ZIP area) get only county/cousub/place/state rows in the place map, no school or legislative districts; 29224 (SC) and 21123 (MD) also lost school-district divisions without a visible body change. Builder measuring every ZIP and fixing on stream/river-zipdistricts-141.
   - EMPTY (no meetings and no local bodies, before and after 139; officials still shown): 10032 (New York), 19103 (Philadelphia), 63101 (St. Louis), 46204 (Indianapolis), 25067 (WV), 02891 (RI), 74080 (OK), 58734 (ND), 29224 (SC), 68734 (NE), 57061 (SD), 54129 (WI), 42202 (KY). Not caused by 139; these places have no local bodies or meetings held yet.
+- RB-A10 panel speed on 139 (first visit, fresh browser, mobile size; panel ready = the meetings count the API returned is shown): 32 of 32 under 3 s on retry, median 1.2 s, max 2.2 s. One first visit to 60601 waited 15.8 s for its data (cold); the next two took 0.8 and 1.2 s.
+- 140 rebuilt (2:08 PM): VP-01 6a805640b + ZP-01 926cd6b07 folded (stream/river-fold-140: VP-01's ZIP path ported onto the place map; ZP-01 migrations renumbered 74-75), + RIVER-DOORPROBES-141 2aab88ef6. Quick check clean. Neon meter hour before (1 PM EDT, request + response): reader 1.125 + control plane 0.208 = 1.333 GB/h.
+- FOR SEAN after 140 is live and the runner is on it: press Release on Admin Now for place-pages (ZP-01 needs it; paused since 3:52 AM) and for door-probes (the fix should hold it near 0.03 GB/h; paused since 4:52 AM). River will post here when 140 is live.
+- FOR SEAN (decision): 5,700 of 5,796 meeting pointers keep their sittings in a separate payload part, so the hot-partition rule (old and new) sees no sittings and checks those bodies twice a day instead of hourly, even in a week they meet. Fixing it means reading the stored part's sitting times in the same query and changes which doors are hot; River kept today's behavior until you say.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

@@ -15,7 +15,7 @@ import type { CoveredBody } from "../lib/registry/coverage.ts";
 import { bodyRosterSummaries } from "../lib/reader/body-summary.ts";
 
 const registryPointerSchema = `CREATE TABLE civic_data_promotions(key text PRIMARY KEY,current_version_id text,payload jsonb,
-  last_known_good_version_id text,source_id text,record_class text,scope text,payload_fingerprint text,validation_receipt jsonb);
+  last_known_good_version_id text,source_id text,record_class text,scope text,payload_fingerprint text,validation_receipt jsonb,promoted_at timestamptz);
   CREATE TABLE civic_data_candidates(id text PRIMARY KEY,state text,acquisition_succeeded boolean,promoted_version_id text,
     last_known_good_version_id text,source_id text,record_class text,scope text,read_model_fingerprint text,
     validation_receipt jsonb,candidate jsonb,normalized_hash text);`;
@@ -99,12 +99,13 @@ test("the keyed reader selects one body and its people, including its portrait",
     const member = { id: "roster:pima#one", name: "A Person", officeTitle: "Chair", termNote: null,
       email: null, phone: "520-555-0100", websiteUrl: null, fieldSources: { phone: source } };
     const key = "REGISTRY_RUNTIME_BINDING:US-AZ:reader-registry-runtime";
-    await db.query(`INSERT INTO civic_data_promotions(key,current_version_id,payload,last_known_good_version_id,source_id,record_class,scope,validation_receipt)
-      VALUES($1,'v1',$2::jsonb,'v1','fixture','REGISTRY_RUNTIME_BINDING','US-AZ:reader-registry-runtime','{"decision":"GOOD"}')`, [key, JSON.stringify({
+    await db.query(`INSERT INTO civic_data_promotions(key,current_version_id,payload,last_known_good_version_id,source_id,record_class,scope,validation_receipt,promoted_at)
+      VALUES($1,'v1',$2::jsonb,'v1','fixture','REGISTRY_RUNTIME_BINDING','US-AZ:reader-registry-runtime','{"decision":"GOOD"}','2026-10-01')`, [key, JSON.stringify({
       officialPhotos: { photos: [] }, rosterPhotos: { [member.id]: "/portrait.jpg", "other:person": "/other.jpg" },
     })]);
     await db.query(`INSERT INTO civic_data_candidates VALUES('v1','PROMOTED',true,'v1','v1','fixture','REGISTRY_RUNTIME_BINDING',
-      'US-AZ:reader-registry-runtime',NULL,'{"decision":"GOOD"}','{"normalization":{"normalizedHash":"abc"}}','abc')`);
+      'US-AZ:reader-registry-runtime',NULL,'{"decision":"GOOD"}',$1::jsonb,$2)`,
+      [JSON.stringify({ normalization: { normalizedHash: "a".repeat(64) } }), "a".repeat(64)]);
     const add = (collection: string, id: string, value: unknown) => db.query("INSERT INTO civic_data_rows VALUES($1,'v1',$2,1,$3,$3,ARRAY[$3],$4::jsonb)",
       [key, collection, id, JSON.stringify(value)]);
     await add("registry.bodies", body, { id: body, fieldSources: { officePhone: source } });
@@ -131,7 +132,10 @@ test("the keyed reader retains checked sources for derived body identity fields"
   try {
     await db.pg.exec(`${registryPointerSchema}
       CREATE TABLE civic_data_rows(promotion_key text,version_id text,collection text,ordinal bigint,row_id text,body_id text,aliases text[],value jsonb);
-      CREATE FUNCTION reader_payload_value(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';`);
+      CREATE FUNCTION reader_payload_node(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';
+      CREATE FUNCTION reader_payload_value(jsonb) RETURNS jsonb LANGUAGE sql IMMUTABLE AS 'SELECT $1';
+      CREATE FUNCTION reader_payload_members(jsonb) RETURNS TABLE(item jsonb,ordinal_index bigint) LANGUAGE sql IMMUTABLE AS
+        'SELECT value,ordinality FROM jsonb_array_elements(coalesce($1,''[]''::jsonb)) WITH ORDINALITY';`);
     const government = "az:special:fixture", body = "government:US-AZ:fixture#board", place = "ocd-division/country:us/state:az/county:pima";
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'government','Fixture District','AZ'),($2,'place','Pima','AZ')", [government, place]);
     await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'body','Board','AZ',$2)", [body, government]);

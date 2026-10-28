@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { readFileSync } from "node:fs";
 import { PGlite } from "@electric-sql/pglite";
 import { neonConfig } from "../lib/db/client.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -16,6 +17,9 @@ test("candidate fields cross Postgres inline or through just their own payload p
     await pg.close();
   });
   await pg.exec("CREATE TABLE civic_data_candidates(id text PRIMARY KEY,candidate jsonb,raw_hash text,normalized_hash text,parser_version text,state text,acquisition_succeeded boolean,validation_receipt jsonb,promoted_version_id text,last_known_good_version_id text,failure_code text,failure_detail text); CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb)");
+  const readerFunctions = readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8")
+    .split("--> statement-breakpoint").filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
+  for (const statement of readerFunctions) await pg.exec(statement);
   const captures = [{ requestedUrl: "https://publisher.example/old-release", rawHash: "old-capture" }];
   const ref = (hash: string) => ({ $civicPayloadPart: hash.repeat(64) });
   const unused = "unrelated_roster_must_not_cross_the_wire";
@@ -45,7 +49,7 @@ test("candidate fields cross Postgres inline or through just their own payload p
   for (const id of ["inline", "partitioned"]) assert.deepEqual(await store.readCandidatePath(id, ["normalizedPayload", "captures"]), captures);
   assert.equal(await store.readCandidatePath("missing", ["normalizedPayload", "captures"]), null);
   assert.equal(await store.readCandidatePath("inline", ["normalizedPayload", "missing"]), null);
-  assert.ok(statements.some(query => query.includes("civic_data_payload_parts")), "partitioned field actually resolves its parts");
+  assert.ok(statements.some(query => query.includes("reader_payload_node")), "partitioned field is selected through the payload accessor");
   for (const body of bodies) {
     assert.ok(!body.includes(unused));
     assert.ok(!body.includes("new-capture"), "the source pointer moving cannot change a pinned version's captures");

@@ -28,6 +28,10 @@ export async function holdRawCapture(vault: EvidenceStore, _sourceId: string, bo
 }
 
 export async function readRawCapture(vault: EvidenceStore, ref: RawCaptureRef): Promise<Uint8Array> {
+  if (!/^[a-f0-9]{64}$/.test(ref.rawHash) || ref.vaultKey !== rawCaptureKey(ref.rawHash) ||
+      !Number.isSafeInteger(ref.byteLength) || ref.byteLength < 0) {
+    throw Error(`RAW_CAPTURE_MISSING_OR_CORRUPT:${ref.vaultKey}`);
+  }
   const object = await vault.get(ref.vaultKey);
   if (!object || object.bytes.byteLength !== ref.byteLength || sha256(object.bytes) !== ref.rawHash) {
     throw Error(`RAW_CAPTURE_MISSING_OR_CORRUPT:${ref.vaultKey}`);

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { holdRawCapture, readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
+import { holdRawCapture, readRawCapture, readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import { RawCaptureFailure, rawResponseCapture, vaultSourceResponse } from "../lib/sources/raw-response.ts";
 import { readPublisherBody } from "../lib/civic-data/source-acquisition-error.ts";
 
@@ -12,6 +12,17 @@ test("different publishers and MIME labels hold one copy of identical bytes", as
   assert.deepEqual(a, b);
   assert.equal(vault.size, 1);
   assert.equal(await readRawCaptureText(vault, b), "same source");
+});
+
+test("source readback rejects a different vault key before reading its body", async () => {
+  const vault = new MemoryEvidenceStore();
+  const ref = await holdRawCapture(vault, "a", "same source", "text/plain");
+  let reads = 0;
+  const get = vault.get.bind(vault);
+  vault.get = async key => { reads++; return get(key); };
+  await assert.rejects(readRawCapture(vault, { ...ref, vaultKey: "another/source" }), /RAW_CAPTURE_MISSING_OR_CORRUPT/);
+  assert.equal(reads, 0);
+  assert.equal(await readRawCaptureText(vault, ref), "same source");
 });
 
 test("a source consumer receives its original bytes only after the capture is durable", async () => {

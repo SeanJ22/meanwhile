@@ -127,8 +127,7 @@ test("corrupt or unwritable disposable copies fall back to the actual database r
     keyOf: (row: { hash: string; payload: { verified: boolean } }) => row.hash,
   };
   await cache(root).rows(input);
-  const [file] = await readdir(root);
-  await writeFile(join(root, file!), "truncated json");
+  await Promise.all((await readdir(root)).map(file => writeFile(join(root, file), "truncated json")));
   assert.deepEqual(await cache(root).rows(input), [{ hash: "hash", payload: { verified: true } }]);
   assert.equal(calls, 2);
   const blocked = join(root, "file-cannot-be-directory");

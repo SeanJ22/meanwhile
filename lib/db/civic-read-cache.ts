@@ -10,6 +10,7 @@ interface CacheIO {
 }
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 const rowContentKey = (namespace: string, key: string, etag: string) => JSON.stringify([namespace, key, etag]);
+const rowHeadKey = (namespace: string, key: string) => JSON.stringify(["head", namespace, key]);
 
 /** A held copy that does not answer this fast is a miss: the database read goes ahead without it. */
 const CIVIC_READ_CACHE_LOOKUP_MS = 2_000;
@@ -51,6 +52,18 @@ export class CivicReadCache {
     } catch { /* A failed disposable copy never changes the actual read. */ }
   }
 
+  private async latest<T>(namespace: string, key: string): Promise<Entry<T> | null> {
+    const head = await this.read<null>(rowHeadKey(namespace, key));
+    if (!head) return null;
+    const body = await this.read<T>(rowContentKey(namespace, key, head.etag));
+    return body?.etag === head.etag ? body : null;
+  }
+
+  private async saveVersion<T>(namespace: string, key: string, entry: Entry<T>): Promise<void> {
+    await this.save(rowContentKey(namespace, key, entry.etag), entry);
+    await this.save(rowHeadKey(namespace, key), { etag: entry.etag, value: null });
+  }
+
   /** A job's own continuation, never reader truth. Source hashes decide whether it still applies. */
   async readCheckpoint<T>(namespace: string, key: string): Promise<T | null> {
     return (await this.read<T>(namespace + ":" + key, true))?.value ?? null;
@@ -65,11 +78,10 @@ export class CivicReadCache {
     readonly source?: { readonly namespace: string; readonly project: (value: T) => T;
       readonly newer?: (sourceEtag: string, heldEtag: string) => boolean };
     readonly current: (etag: string | null, held?: T) => Promise<{ readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null> }): Promise<T | null> {
-    const key = input.namespace + ":" + input.key;
-    let held = await this.read<T>(key);
+    let held = await this.latest<T>(input.namespace, input.key);
     let projectedSource = false;
     if (input.source && (!held || input.source.newer)) {
-      const source = await this.read<T>(input.source.namespace + ":" + input.key);
+      const source = await this.latest<T>(input.source.namespace, input.key);
       if (source && (!held || input.source.newer?.(source.etag, held.etag))) {
         held = { etag: source.etag, value: input.source.project(source.value) };
         projectedSource = true;
@@ -80,10 +92,10 @@ export class CivicReadCache {
     if (typeof current.etag !== "string" || current.etag.length === 0) throw new Error("A stored row read returned no database version");
     if ("unchanged" in current) {
       if (held?.etag !== current.etag) throw new Error("A changed-row read confirmed an unavailable revision");
-      if (projectedSource) await this.save(key, held);
+      if (projectedSource) await this.saveVersion(input.namespace, input.key, held);
       return held.value;
     }
-    await boundedWait(this.save(key, current));
+    await boundedWait(this.saveVersion(input.namespace, input.key, current));
     return current.value;
   }
 
@@ -125,7 +137,7 @@ export class CivicReadCache {
         result.set(key, version && input.freshen ? input.freshen(value, version) : value);
         if (input.etagOf || before.get(key) !== undefined && before.get(key) === version?.etag) {
           const etag = input.etagOf?.(value) ?? before.get(key)!;
-          saves.push(this.save(rowContentKey(input.namespace, key, etag), { etag, value }));
+          saves.push(this.saveVersion(input.namespace, key, { etag, value }));
         }
       }
       await boundedWait(Promise.all(saves));

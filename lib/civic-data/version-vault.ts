@@ -85,6 +85,8 @@ export interface CivicVersionRowSelection {
   readonly match?: {readonly path: readonly string[]; readonly values: readonly string[]};
   readonly fields?: readonly string[];
   readonly omit?: readonly string[];
+  readonly afterOrdinal?: number;
+  readonly limit?: number;
 }
 export interface CivicVersionRow {readonly ordinal: number; readonly value: Record<string,unknown>}
 export interface CivicVersionTextRange {readonly offset?:number;readonly count?:number}
@@ -92,6 +94,10 @@ export interface CivicVersionTextWindow {
   readonly text:string;readonly offset:number;readonly nextOffset:number;readonly totalLength:number;
   /** Legacy SQL offsets count Unicode code points; archived string parts count UTF-16 units. Keep this with a lazy text locator. */
   readonly offsetUnit:"UNICODE_CODE_POINTS"|"UTF16_CODE_UNITS";
+}
+function validateRowRange(selection: CivicVersionRowSelection): void {
+  if (!Number.isSafeInteger(selection.afterOrdinal ?? 0) || (selection.afterOrdinal ?? 0) < 0 ||
+      selection.limit !== undefined && (!Number.isSafeInteger(selection.limit) || selection.limit < 1)) throw new Error("CIVIC_VERSION_ROW_RANGE_INVALID");
 }
 function textRange(range:CivicVersionTextRange):{offset:number;count:number}{
   const offset=range.offset??0,count=range.count??32768;
@@ -129,21 +135,25 @@ export function civicVersionVault(vault: EvidenceStore) {
     }
     return value;
   };
-  async function* encodedRows(value: unknown): AsyncGenerator<unknown> {
+  async function* encodedRows(value: unknown, afterOrdinal = 0): AsyncGenerator<unknown> {
     const node = await nodeOf(value) as Node | unknown[] | null;
-    if (Array.isArray(node)) { yield* node; return; }
+    if (Array.isArray(node)) { yield* node.slice(afterOrdinal); return; }
     if (!isCivicPayloadPart(value) || node?.kind !== "array" || !Array.isArray(node.groups)) throw new Error("CIVIC_VERSION_COLLECTION_INVALID");
     const order = JSON.parse(await parts.load(node.order) as string) as number[];
     const remaining = new Map<number,number>();
     for(const group of order)remaining.set(group,(remaining.get(group)??0)+1);
-    const held = new Map<number,{rows:unknown[];next:number}>();
-    for(const group of order){
+    const held = new Map<number,unknown[]>(), positions = new Map<number,number>();
+    for(let index=0;index<order.length;index++){
+      const group=order[index], position=positions.get(group)??0;
+      positions.set(group,position+1);
+      remaining.set(group,remaining.get(group)!-1);
+      if(index<afterOrdinal)continue;
       let chunk=held.get(group);
       if(!chunk){const rows=await parts.node(node.groups[group]);if(!Array.isArray(rows))throw new Error("CIVIC_VERSION_COLLECTION_INVALID");
-        chunk={rows,next:0};held.set(group,chunk);}
-      if(chunk.next>=chunk.rows.length)throw new Error("CIVIC_VERSION_COLLECTION_INVALID");
-      yield chunk.rows[chunk.next++];
-      remaining.set(group,remaining.get(group)!-1);if(!remaining.get(group))held.delete(group);
+        chunk=rows;held.set(group,chunk);}
+      if(position>=chunk.length)throw new Error("CIVIC_VERSION_COLLECTION_INVALID");
+      yield chunk[position];
+      if(!remaining.get(group))held.delete(group);
     }
   }
   return {
@@ -181,17 +191,19 @@ export function civicVersionVault(vault: EvidenceStore) {
       return{text:count?text.slice(start,end):"",offset:base+start,nextOffset:count?base+end:base+start,totalLength,offsetUnit:"UTF16_CODE_UNITS"};
     },
     async rows(ref:CivicVersionVaultRef,path:readonly string[],selection:CivicVersionRowSelection={}):Promise<readonly CivicVersionRow[]>{
+      validateRowRange(selection);
       const value=await pathOf(rootOf(ref),path);if(value===undefined)return [];
       const rows:CivicVersionRow[]=[],wanted=selection.match?new Set(selection.match.values):null;
       if(wanted?.size===0)return [];
-      let ordinal=0;
-      for await(const encoded of encodedRows(value)){
+      let ordinal=selection.afterOrdinal??0;
+      for await(const encoded of encodedRows(value,ordinal)){
         ordinal++;
         if(selection.match&&!wanted!.has(String(await parts.load(await pathOf(encoded,selection.match.path)))))continue;
         const node=await nodeOf(encoded);if(!node||typeof node!=="object"||Array.isArray(node))throw new Error("CIVIC_VERSION_ROW_INVALID");
         const fields=selection.fields??Object.keys(node).filter(key=>!selection.omit?.includes(key));
         const selected=Object.fromEntries(fields.filter(key=>Object.hasOwn(node,key)).map(key=>[key,(node as Record<string,unknown>)[key]]));
         rows.push({ordinal,value:await parts.load(selected) as Record<string,unknown>});
+        if(selection.limit !== undefined && rows.length >= selection.limit) break;
       }
       return rows;
     },
@@ -239,6 +251,7 @@ export async function readCivicVersionPath(query:Query,vault:VaultProvider,id:st
 
 /** The four historical readers can keep their exact version/row selection without downloading a former candidate. */
 export async function readCivicVersionRows(query:Query,vault:VaultProvider,id:string,path:readonly string[],selection:CivicVersionRowSelection={}):Promise<readonly CivicVersionRow[]>{
+  validateRowRange(selection);
   const head=await versionHead(query,id);if(!head)return [];
   const archive=await versionArchive(vault,head);
   if(archive)return civicVersionVault(archive.vault).rows(archive.ref,path,selection);
@@ -250,9 +263,9 @@ export async function readCivicVersionRows(query:Query,vault:VaultProvider,id:st
     LATERAL reader_payload_members(selected.value) WHERE depth=cardinality($2::text[]))
   SELECT ordinal_index AS ordinal,reader_payload_value(CASE WHEN $5::text[] IS NULL THEN value-$6::text[]
     ELSE (SELECT coalesce(jsonb_object_agg(key,value->key),'{}'::jsonb) FROM unnest($5::text[]) key WHERE value?key) END) AS value
-  FROM members WHERE $3::text[] IS NULL OR reader_payload_value(value)#>>$3::text[]=ANY($4::text[]) ORDER BY ordinal_index`,
+  FROM members WHERE ordinal_index > $7::int AND ($3::text[] IS NULL OR reader_payload_value(value)#>>$3::text[]=ANY($4::text[])) ORDER BY ordinal_index LIMIT $8::int`,
     [id,[...path],selection.match?[...selection.match.path]:null,selection.match?[...selection.match.values]:null,
-      selection.fields?[...selection.fields]:null,[...selection.omit??[]]]);
+      selection.fields?[...selection.fields]:null,[...selection.omit??[]],selection.afterOrdinal??0,selection.limit??null]);
   return rows.map(row=>({ordinal:Number(row.ordinal),value:row.value as Record<string,unknown>}));
 }
 

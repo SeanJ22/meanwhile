@@ -2,7 +2,8 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { Query } from "../facts/publish.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { candidateChangeSet, civicRecordsFor } from "./changes.ts";
-import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionPath, type CivicVersionVaultRef } from "./version-vault.ts";
+import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionPath, readCivicVersionRows, readCivicVersionText,
+  type CivicVersionVaultRef, type CivicVersionRowSelection, type CivicVersionTextRange } from "./version-vault.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "./types.ts";
 
 interface VaultPath { readonly version: CivicVersionVaultRef; readonly path: readonly string[] }
@@ -126,3 +127,9 @@ export async function readCivicCandidatePath(query:Query,vault:EvidenceStore,id:
   ) SELECT reader_payload_value(value) AS value FROM selected ORDER BY depth DESC LIMIT 1`,[id,[...path]]);
   return row?.value??null;
 }
+
+/** Bounded historical model access for readers that need selected rows or text. */
+export const readCivicCandidateRows = (query: Query, vault: EvidenceStore | (() => EvidenceStore), id: string,
+  path: readonly string[], selection: CivicVersionRowSelection = {}) => readCivicVersionRows(query, vault, id, path, selection);
+export const readCivicCandidateText = (query: Query, vault: EvidenceStore | (() => EvidenceStore), id: string,
+  path: readonly string[], range: CivicVersionTextRange = {}) => readCivicVersionText(query, vault, id, path, range);

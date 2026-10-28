@@ -99,6 +99,9 @@ test("version accessor reads new history from the vault and selects legacy/curre
       assert.deepEqual(await readCivicVersionRows(query,vault,id,["meetings"],{match:{path:["id"],values:["sitting/second"]},fields:["id","location"]}),
         [{ordinal:2,value:before.meetings[1]}]);
       assert.deepEqual(await readCivicVersionRows(query,vault,id,["records"],{fields:["bodyIds","divisionIds"]}),before.records.map((row,index)=>({ordinal:index+1,value:{bodyIds:row.bodyIds,divisionIds:row.divisionIds}})));
+      const page1 = await readCivicVersionRows(query,vault,id,["records"],{fields:["bodyIds"],limit:1});
+      const page2 = await readCivicVersionRows(query,vault,id,["records"],{fields:["bodyIds"],afterOrdinal:page1[0]!.ordinal,limit:1});
+      assert.deepEqual([...page1,...page2], before.records.map((row,index)=>({ordinal:index+1,value:{bodyIds:row.bodyIds}})));
     }
     let received=0;
     const bounded:Query=async(text,params)=>{const rows=await query(text,params);received+=Buffer.byteLength(JSON.stringify(rows));return rows;};
@@ -114,6 +117,9 @@ test("version accessor reads new history from the vault and selects legacy/curre
     const ref=await civicVersionRef(vault,hash);assert.ok(ref);
     await pg.query("INSERT INTO civic_data_candidates VALUES ('root',$1,$1,$2)",[hash,{vault:{readModel:ref}}]);
     assert.equal(await readCivicVersionPath(query,()=>vault,"root",["kind"]),"open-data");
+    const first = await readCivicVersionRows(query,()=>vault,"root",["records"],{fields:["bodyIds"],limit:1});
+    const second = await readCivicVersionRows(query,()=>vault,"root",["records"],{fields:["bodyIds"],afterOrdinal:first[0]!.ordinal,limit:1});
+    assert.deepEqual([...first,...second],before.records.map((row,index)=>({ordinal:index+1,value:{bodyIds:row.bodyIds}})));
     assert.deepEqual((await pg.query("SELECT read_model_fingerprint,candidate FROM civic_data_candidates WHERE id='legacy'")).rows,
       [{read_model_fingerprint:null,candidate:{readModel:before}}],"legacy versions are unchanged");
   }finally{await pg.close();}

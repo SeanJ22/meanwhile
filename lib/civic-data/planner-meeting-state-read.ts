@@ -3,12 +3,16 @@ import { buildPlacePackage } from "../reader/place-builder.ts";
 import { readReaderMeetingSettings } from "../meetings/reader-settings.ts";
 import { snapshotCounts } from "../meetings/snapshot.ts";
 import { readPlannerMeetingArchives, plannerCurrentMeetingSql } from "./planner-archive-state-read.ts";
+import { readCivicCandidateText } from "./candidate-vault.ts";
+import { rawCaptureVault } from "./raw-capture-remote.ts";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { StateMeetingBody } from "../meetings/edge-serving.ts";
 
 /** Reuse the canonical merge, history, cancellation and fact-overlay rules.
  * Selecting only the meeting columns lets Postgres discard reader-only joins
  * (people, money, geography, inventories and routing) before doing their work. */
-export async function* readPlannerMeetingBodies(state: string, query: ReadOnlyQuery, now: string): AsyncGenerator<StateMeetingBody> {
+export async function* readPlannerMeetingBodies(state: string, query: ReadOnlyQuery, now: string,
+  vault: EvidenceStore | (() => EvidenceStore) = rawCaptureVault): AsyncGenerator<StateMeetingBody> {
   if (!/^[a-z]{2}$/i.test(state)) throw new Error(`PLANNER_MEETING_STATE_INVALID:${state}`);
   const [[bodies], settings] = await Promise.all([
     query([{ text: `SELECT id FROM entity WHERE state=$1 AND kind='body'
@@ -23,7 +27,7 @@ export async function* readPlannerMeetingBodies(state: string, query: ReadOnlyQu
     const held = await buildPlacePackage({ state, divisionIds: [], bodyIds: bodies.slice(first, first + 16).map(body => String(body.id)),
       includeHistory: true, includeAgenda: true }, async (text, params) => {
       const [archive, [current]] = await Promise.all([archives ??= readPlannerMeetingArchives(text,
-        [...params!.slice(0, 2), bodies.map(body => String(body.id)), ...params!.slice(3)], query),
+        [...params!.slice(0, 2), bodies.map(body => String(body.id)), ...params!.slice(3)], query, vault),
         query([{ text: `WITH RECURSIVE planner_input AS MATERIALIZED (
         SELECT entities,sittings,meeting_rows,archived_meetings,archived_documents FROM (${plannerCurrentMeetingSql(text)}) planner_meetings
       ), planner_rows AS MATERIALIZED (
@@ -66,14 +70,23 @@ export async function* readPlannerMeetingBodies(state: string, query: ReadOnlyQu
       for (let at = 0; at < pending.length; at += 4) await Promise.all(pending.slice(at, at + 4).map(async document => {
         const text = document.$plannerAgendaText as { hash?: string; candidate?: string; scope: string; version: string; ordinal: number; chars: number };
         const chunks: string[] = [];
+        if (text.candidate) {
+          let offset = 0;
+          const read = async (sql: string, params: readonly unknown[]) => (await query([{ text: sql, params }]))[0] ?? [];
+          while (offset < text.chars) {
+            const window = await readCivicCandidateText(read, vault, text.candidate,
+              ["agendaDocuments", String(text.ordinal - 1), "text"], { offset, count: 32768 });
+            if (!window || window.nextOffset <= offset) throw new Error(`PLANNER_MEETING_CHANGED:${state}:${text.candidate}`);
+            chunks.push(window.text); offset = window.nextOffset;
+          }
+          document.text = chunks.join("");
+          delete document.$plannerAgendaText;
+          return;
+        }
         for (let offset = 0; offset < text.chars; offset += 32768) {
           const [[chunk]] = await query([text.hash ? {
             text: `SELECT substring(reader_payload_value(jsonb_build_object('$civicPayloadPart',$1::text))#>>'{}' FROM $2::int FOR 32768) AS value`,
             params: [text.hash, offset + 1],
-          } : text.candidate ? {
-            text: `SELECT substring(reader_payload_value(reader_payload_node(d.item)->'text')#>>'{}' FROM $3::int FOR 32768) AS value
-              FROM civic_data_candidates c,LATERAL reader_payload_members(reader_payload_node(c.candidate->'readModel')->'agendaDocuments') d
-              WHERE c.id=$1 AND d.ordinal_index=$2`, params: [text.candidate,text.ordinal,offset+1],
           } : { text: `SELECT substring(reader_payload_value(r.value->'text')#>>'{}'
             FROM $4::int FOR 32768) AS value FROM civic_data_rows r JOIN civic_data_promotions p
               ON p.key=r.promotion_key AND p.current_version_id=r.version_id

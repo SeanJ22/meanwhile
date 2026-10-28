@@ -3,6 +3,9 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { factDb } from "./helpers/fact-db.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { holdCivicVersion } from "../lib/civic-data/version-vault.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
 import { readPlannerMeetingBodies } from "../lib/civic-data/planner-meeting-state-read.ts";
 import { buildPlacePackage } from "../lib/reader/place-builder.ts";
@@ -22,6 +25,7 @@ async function fixture() {
     const sql = readFileSync(new URL(`../lib/db/migrations/${name}`, import.meta.url), "utf8");
     for (const statement of sql.split("--> statement-breakpoint")) await db.pg.exec(statement);
   }
+  await db.pg.exec("ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text");
   const readerFunctions = readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8")
     .split("--> statement-breakpoint").filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
   for (const sql of readerFunctions) await db.pg.exec(sql);
@@ -107,6 +111,12 @@ test("planner meetings preserve canonical gap decisions and exact bounded agenda
       [`meeting:${id}`, JSON.stringify({ startsAt, timeZone: "UTC" }), AT]);
   }
   const canonical = await buildPlacePackage({ state: "AZ", divisionIds: [], allBodies: true, includeHistory: true, includeAgenda: true }, db.query);
+  const vault = new MemoryEvidenceStore();
+  const archivedModel = snapshot([], [doc(archived, oldText, "pdf"), doc(movedArchive, movedArchiveText, "pdf")]);
+  const fingerprint = canonicalCivicDataHash(archivedModel, { durable: true });
+  const archivedRef = await holdCivicVersion(vault, archivedModel, fingerprint);
+  await db.query("UPDATE civic_data_candidates SET candidate=$1,read_model_fingerprint=$2 WHERE id='archive-v2'",
+    [JSON.stringify({ vault: { readModel: archivedRef } }), fingerprint]);
   const responses: { bytes: number; text: string }[] = [];
   const query: ReadOnlyQuery = async statements => {
     const result = await Promise.all(statements.map(async s => (await db.pg.query<Record<string, unknown>>(s.text, [...s.params])).rows));
@@ -115,7 +125,7 @@ test("planner meetings preserve canonical gap decisions and exact bounded agenda
   };
   const upper = Date.parse(AT) + meetingSettingsFromValues().shownAheadDays * 86_400_000;
   const actual = new Map<string, MeetingsSnapshot>();
-  for await (const body of readPlannerMeetingBodies("AZ", query, AT)) {
+  for await (const body of readPlannerMeetingBodies("AZ", query, AT, vault)) {
     const loaded = await body.load();
     assert.ok(loaded);
     actual.set(body.bodyId, loaded.snapshot);

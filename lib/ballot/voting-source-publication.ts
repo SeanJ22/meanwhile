@@ -1,6 +1,8 @@
 import { requireBallotState } from "../civic-data/state-scopes.ts";
 import { createHash } from "node:crypto";
-import { gzipSync } from "node:zlib";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { rawCaptureVault } from "../civic-data/raw-capture-remote.ts";
+import { holdRawCapture } from "../civic-data/raw-capture-vault.ts";
 import { recordDoorOutcome } from "../doors/outcome.ts";
 import { pageAddress, pageDoorId, checkEveryFor } from "../doors/page-doors.ts";
 import { applyDerivedRow, checkDoorDraft, isDoorRecord, type DoorRecord, type DoorRepository } from "../doors/registry.ts";
@@ -198,12 +200,11 @@ export function mergeVotingSourceRead(prior: VotingJurisdiction | undefined, doo
 }
 
 /** Save each source's copy with the publication, atomically, in the standing data system. A key-like string is blanked in the copy; the page still publishes. */
-export async function holdVotingRawEvidence(read: Pick<VotingSourceRead, "rawBodies">, at = new Date().toISOString()): Promise<VotingRawCapture[]> {
+export async function holdVotingRawEvidence(read: Pick<VotingSourceRead, "rawBodies">, at = new Date().toISOString(), vault: EvidenceStore = rawCaptureVault()): Promise<VotingRawCapture[]> {
   const copies = await Promise.all(read.rawBodies.map(body => savedVotingCopy(body, at)));
-  return copies.map(body => ({ url: body.url, ...(body.requestedUrl ? { requestedUrl: body.requestedUrl } : {}), contentType: body.contentType,
-    rawHash: createHash("sha256").update(body.bytes).digest("hex"), byteLength: body.bytes.byteLength,
-    ...(body.derivation ? { derivation: body.derivation } : {}),
-    savedDocument: { encoding: "gzip-base64", body: gzipSync(body.bytes).toString("base64") } }));
+  return Promise.all(copies.map(async body => ({ url: body.url, ...(body.requestedUrl ? { requestedUrl: body.requestedUrl } : {}), contentType: body.contentType,
+    ...await holdRawCapture(vault, "voting-sites", body.bytes, body.contentType),
+    ...(body.derivation ? { derivation: body.derivation } : {}) })));
 }
 
 export async function recordVotingSourceRead(repo: DoorRepository, door: VotingSourceDoor, read: VotingSourceRead, now: string): Promise<void> {

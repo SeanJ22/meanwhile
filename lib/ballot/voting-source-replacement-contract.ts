@@ -3,7 +3,8 @@ import type { VotingSourceDoor } from "./voting-source-types.ts";
 export const VOTING_SOURCE_REPLACEMENT_VERIFIER = "lib/ballot/voting-source-replacement.ts#verifyVotingSourceReplacement";
 
 type ReplacementVerifier = (candidate: import("../civic-data/types.ts").RoutineCandidate,
-  predecessor: import("../civic-data/types.ts").RoutineCandidate | null) => Promise<string | null>;
+  predecessor: import("../civic-data/types.ts").RoutineCandidate | null,
+  vault?: import("../control-plane/evidence/store.ts").EvidenceStore) => Promise<string | null>;
 let replacementVerifier: ReplacementVerifier | null = null;
 
 /** The saved-source replay re-reads official documents with the whole voting reader stack. It registers itself

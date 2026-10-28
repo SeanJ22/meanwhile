@@ -1,10 +1,11 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import "./helpers/linking-copies.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { spawnSync } from "node:child_process";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
-import { holdVotingRawEvidence, mergeVotingSourceRead, replaceVotingJurisdiction } from "../lib/ballot/voting-source-publication.ts";
+import { holdVotingRawEvidence as holdVotingRawEvidenceInVault, mergeVotingSourceRead, replaceVotingJurisdiction } from "../lib/ballot/voting-source-publication.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
 import { verifyVotingSourceReplacement } from "../lib/ballot/voting-source-replacement.ts";
 import { candidateChangeSet } from "../lib/civic-data/changes.ts";
@@ -12,6 +13,9 @@ import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
+
+const evidenceVault = new MemoryEvidenceStore();
+const holdVotingRawEvidence = (read: Parameters<typeof holdVotingRawEvidenceInVault>[0], at?: string) => holdVotingRawEvidenceInVault(read, at, evidenceVault);
 
 const directory = "tests/fixtures/voting-sources/vs-07/";
 const door = (JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[])
@@ -52,9 +56,9 @@ async function setup(fetchSource: typeof fetch = fetchNative) {
 test("a complete native current-map replay retires only the 19 out-of-filter Pima rows through the real promotion door", async () => {
   const { previous, candidate } = await setup();
   const store = new MemoryRoutineDataStore();
-  const first = await processRegisteredManualCandidate(store, "voting-sites:AZ", previous, beforeAt);
+  const first = await processRegisteredManualCandidate(store, "voting-sites:AZ", previous, beforeAt, undefined, { vault: evidenceVault });
   assert.ok(first.promoted, first.candidate.failureDetail ?? "the native prior publishes");
-  const second = await processRegisteredManualCandidate(store, "voting-sites:AZ", candidate, at);
+  const second = await processRegisteredManualCandidate(store, "voting-sites:AZ", candidate, at, undefined, { vault: evidenceVault });
   assert.ok(second.promoted, second.candidate.failureDetail ?? "the complete current native list replaces only its own rows");
   assert.equal(second.readerReadback?.status, "PASS");
   assert.equal(second.candidate.candidate.changeSet?.removed.length, 19);
@@ -65,20 +69,20 @@ test("a complete native current-map replay retires only the 19 out-of-filter Pim
 test("removal cannot be authorized by self-asserted checks, missing bytes, an omitted current row or a different publisher", async () => {
   const { previous, candidate, prior, next, read } = await setup();
   const store = new MemoryRoutineDataStore();
-  await processRegisteredManualCandidate(store, "voting-sites:AZ", previous, beforeAt);
+  await processRegisteredManualCandidate(store, "voting-sites:AZ", previous, beforeAt, undefined, { vault: evidenceVault });
   const held = (await store.readCandidate(previous.id))!;
   const changed = { ...candidate, changeSet: candidateChangeSet(candidate, prior) };
   const unchecked = validateRoutineCandidate(changed, held, at);
   assert.ok(unchecked.receipt.checks.some(check => check.code === "VOTING_SOURCE_REPLACEMENT_UNPROVEN" && check.verdict === "FAIL"));
-  const normalized = candidate.normalizedPayload as { acquisition: { savedDocument?: unknown }[] };
-  const missing = { ...candidate, normalizedPayload: { ...normalized, acquisition: normalized.acquisition.map((capture, index) => index ? capture : { ...capture, savedDocument: undefined }) } };
-  assert.match((await verifyVotingSourceReplacement(missing, previous))!, /bytes are unavailable/);
+  const normalized = candidate.normalizedPayload as { acquisition: { vaultKey?: string }[] };
+  const missing = { ...candidate, normalizedPayload: { ...normalized, acquisition: normalized.acquisition.map((capture, index) => index ? capture : { ...capture, vaultKey: undefined }) } };
+  assert.match((await verifyVotingSourceReplacement(missing, previous, evidenceVault))!, /bytes are unavailable/);
   const omitted = { ...candidate, readModel: { ...next, jurisdictions: next.jurisdictions.map(row => ({ ...row, sites: row.sites.slice(1) })) } };
-  assert.match((await verifyVotingSourceReplacement(omitted, previous))!, /differ from the complete saved-source/);
+  assert.match((await verifyVotingSourceReplacement(omitted, previous, evidenceVault))!, /differ from the complete saved-source/);
   const independent = { ...prior.jurisdictions[0]!.sites[0]!, id: "protocol-independent-publisher-alias",
     sources: [{ publisher: "Independent official publisher", url: "https://www.pima.gov/independent-current-list" }] };
   const withIndependent = { ...previous, readModel: { ...prior, jurisdictions: prior.jurisdictions.map(row => ({ ...row, sites: [...row.sites, independent] })) } };
-  assert.match((await verifyVotingSourceReplacement(candidate, withIndependent))!, /independently held sites/);
+  assert.match((await verifyVotingSourceReplacement(candidate, withIndependent, evidenceVault))!, /independently held sites/);
   assert.equal(read.sites.filter(site => site.election === "All").length, 3, "the official definition keeps its three All-election centers");
 });
 
@@ -93,10 +97,10 @@ test("a redirected official election page still replays from its saved bytes, so
   const { previous, candidate } = await setup(redirecting);
   const acquisition = (candidate.normalizedPayload as { acquisition: { url: string; requestedUrl?: string }[] }).acquisition;
   assert.ok(acquisition.some(capture => capture.url === moved && capture.requestedUrl === door.electionPageUrl));
-  assert.equal(await verifyVotingSourceReplacement(candidate, previous), null);
+  assert.equal(await verifyVotingSourceReplacement(candidate, previous, evidenceVault), null);
   const unmapped = { ...candidate, normalizedPayload: { ...candidate.normalizedPayload as object,
     acquisition: acquisition.map(({ requestedUrl: _requestedUrl, ...capture }) => capture) } };
-  assert.match((await verifyVotingSourceReplacement(unmapped, previous))!, /not a complete site read/);
+  assert.match((await verifyVotingSourceReplacement(unmapped, previous, evidenceVault))!, /not a complete site read/);
 });
 
 test("the voting job loads the saved-source verifier; promotion code shared with reader routes does not bundle it", () => {

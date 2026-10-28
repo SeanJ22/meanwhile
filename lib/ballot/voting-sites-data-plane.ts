@@ -26,9 +26,7 @@ export interface VotingRawCapture {
   readonly rawHash: string;
   readonly byteLength: number;
   /** A capture already held in the shared evidence vault. */
-  readonly vaultKey?: string;
-  /** The data plane deduplicates this document in its existing immutable payload parts. */
-  readonly savedDocument?: { readonly encoding: "gzip-base64"; readonly body: string };
+  readonly vaultKey: string;
   /** Saved official-link HTML may be the existing sanitizer's derivative. */
   readonly derivation?: import("../control-plane/evidence/artifact.ts").ArtifactDerivation;
 }

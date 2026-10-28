@@ -1,10 +1,14 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { readRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
+import { moveVotingCaptures } from "../lib/ballot/voting-capture-move.ts";
+import { createHash } from "node:crypto";
+import { gzipSync } from "node:zlib";
 import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
-import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
 import test from "node:test";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
-import { combineVotingSourceReads, mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { combineVotingSourceReads, mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction, saveVotingSourceDoor, holdVotingRawEvidence as holdVotingRawEvidenceInVault } from "../lib/ballot/voting-source-publication.ts";
 import { votingSupersededSources } from "../scripts/fetch-voting-sites.mts";
 import type { VotingRawCapture } from "../lib/ballot/voting-sites-data-plane.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
@@ -17,6 +21,31 @@ import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { checkEveryFor } from "../lib/doors/page-doors.ts";
 import { listDoors } from "../lib/doors/registry.ts";
+
+const evidenceVault = new MemoryEvidenceStore();
+const holdVotingRawEvidence = (read: Parameters<typeof holdVotingRawEvidenceInVault>[0], at?: string) => holdVotingRawEvidenceInVault(read, at, evidenceVault);
+
+test("identical voting documents share one fingerprint-filed vault body", async () => {
+  const vault = new MemoryEvidenceStore();
+  const bytes = new TextEncoder().encode("polling places");
+  const first = await holdVotingRawEvidenceInVault({ rawBodies: [{ url: "https://one.example.gov/list", contentType: "text/plain", bytes }] }, undefined, vault);
+  const second = await holdVotingRawEvidenceInVault({ rawBodies: [{ url: "https://two.example.gov/list", contentType: "text/plain", bytes }] }, undefined, vault);
+  assert.equal(first[0]!.vaultKey, second[0]!.vaultKey);
+  assert.equal(vault.size, 1);
+  assert.deepEqual(await readRawCapture(vault, first[0]!), bytes);
+  assert.equal(JSON.stringify(first).includes("polling places"), false);
+});
+
+test("moving a legacy voting capture verifies its bytes before removing the inline copy", async () => {
+  const vault = new MemoryEvidenceStore(), bytes = Buffer.from("official polling list");
+  const legacy = { url: "https://example.gov/list", contentType: "text/plain", rawHash: createHash("sha256").update(bytes).digest("hex"),
+    byteLength: bytes.length, savedDocument: { encoding: "gzip-base64", body: gzipSync(bytes).toString("base64") } };
+  const [moved] = await moveVotingCaptures(vault, [legacy]);
+  assert.deepEqual(Buffer.from(await readRawCapture(vault, moved!)), bytes);
+  assert.equal("savedDocument" in moved!, false);
+  assert.deepEqual(await moveVotingCaptures(vault, [moved]), [moved]);
+  await assert.rejects(moveVotingCaptures(vault, [{ ...legacy, rawHash: "0".repeat(64) }]), /FINGERPRINT_MISMATCH/);
+});
 
 const at = "2026-10-13T00:00:00.000Z";
 const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
@@ -45,8 +74,8 @@ test("saved official tables reach the existing public read model with hours, loc
   if (projection.kind === "PROMOTED") assert.deepEqual(projection.value, JSON.parse(JSON.stringify(current)));
   const saved = (await store.readCandidate(candidate.id))!.candidate;
   const page = (saved.normalizedPayload as { acquisition: VotingRawCapture[] }).acquisition.find(ref => ref.url === door.url)!;
-  assert.ok(page.savedDocument);
-  assert.deepEqual(gunzipSync(Buffer.from(page.savedDocument.body, "base64")), bytes);
+  assert.ok(page.vaultKey);
+  assert.deepEqual(Buffer.from(await readRawCapture(evidenceVault, page)), bytes);
   assert.equal(JSON.stringify(saved.readModel).includes(bytes.toString("base64")), false, "source documents stay outside the reader payload");
 });
 

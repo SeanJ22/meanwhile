@@ -1,8 +1,9 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { readRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
 import { fixtureLinkingPage } from "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { mkdtemp, readdir, rm } from "node:fs/promises";
 import { readFileSync } from "node:fs";
-import { gunzipSync } from "node:zlib";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import test from "node:test";
@@ -10,11 +11,14 @@ import { votingScopeResolvers, votingSourceEvidence } from "../scripts/fetch-vot
 import { recordSourceObservation } from "../lib/doors/source-capture.ts";
 import { discoverVotingDoors } from "../lib/ballot/voting-source-discovery.ts";
 import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
-import { combineVotingSourceReads, holdVotingRawEvidence, mergeVotingSourceRead } from "../lib/ballot/voting-source-publication.ts";
+import { combineVotingSourceReads, holdVotingRawEvidence as holdVotingRawEvidenceInVault, mergeVotingSourceRead } from "../lib/ballot/voting-source-publication.ts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { cycleVault } from "../lib/control-plane/scheduler/vault.ts";
 import type { VotingSourceDoor, VotingSourceRuntime } from "../lib/ballot/voting-source-types.ts";
+
+const evidenceVault = new MemoryEvidenceStore();
+const holdVotingRawEvidence = (read: Parameters<typeof holdVotingRawEvidenceInVault>[0], at?: string) => holdVotingRawEvidenceInVault(read, at, evidenceVault);
 
 const at = "2026-10-21T05:00:00.000Z";
 const door = (JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[])
@@ -75,16 +79,16 @@ test("an unrelated storage failure still fails the source run", async () => {
 
 test("voting documents that print a key are saved cleaned; official linking pages use a traced sanitized derivative", async () => {
   const [document] = await holdVotingRawEvidence({ rawBodies: [{ url: door.url, contentType: "text/html", bytes: keyed }] }, at);
-  const documentCopy = gunzipSync(Buffer.from(document!.savedDocument!.body, "base64")).toString("utf8");
+  const documentCopy = Buffer.from(await readRawCapture(evidenceVault, document!)).toString("utf8");
   assert.equal(documentCopy.includes(credential), false);
   assert.deepEqual(document!.derivation?.redactionsByClass, { google_api_key: 1 });
   const read = await readVotingSource(door, { fetch: (async () => new Response(clean, { headers: { "content-type": "text/html" } })) as typeof fetch, now: () => at });
   const linking = { ...door, linkingPage: fixtureLinkingPage({ url: "https://elections.example.gov/link", html: new TextDecoder().decode(keyed) }) };
-  const evidence = await votingSourceEvidence(linking, read);
+  const evidence = await votingSourceEvidence(linking, read, [], evidenceVault);
   const page = evidence.find(capture => capture.url === linking.linkingPage.url)!;
   assert.ok(page.derivation);
   assert.notEqual(page.derivation.rawHash, page.derivation.derivedHash);
-  const saved = gunzipSync(Buffer.from(page.savedDocument!.body, "base64")).toString("utf8");
+  const saved = Buffer.from(await readRawCapture(evidenceVault, page)).toString("utf8");
   assert.equal(saved.includes(credential), false);
   assert.match(saved, /North Dakota polling places/);
   assert.equal(page.derivation.derivedHash, `sha256-${page.rawHash}`);

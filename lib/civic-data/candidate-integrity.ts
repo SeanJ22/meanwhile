@@ -271,6 +271,7 @@ export async function verifySourceScopedCandidateProjection(
   observedAt: string,
   predecessor: CandidateVersionRecord | null = null,
   proofStore?: RoutineDataStore,
+  vault?: import("../control-plane/evidence/store.ts").EvidenceStore,
 ): Promise<RoutineReaderVerification> {
   if (!candidate.retrieval.succeeded || !candidate.normalization.succeeded) {
     return pass(
@@ -354,7 +355,7 @@ export async function verifySourceScopedCandidateProjection(
       if (pointer) predecessor = await proofStore.readCandidate(pointer.versionId);
     }
     const verify = votingSourceReplacementVerifier();
-    const issue = verify ? await verify(candidate, predecessor?.candidate ?? null)
+    const issue = verify ? await verify(candidate, predecessor?.candidate ?? null, vault)
       : "The saved-source replacement verifier is not loaded in this process; the replacement stays held.";
     if (issue) return fail(VOTING_SOURCE_REPLACEMENT_VERIFIER, issue);
   }

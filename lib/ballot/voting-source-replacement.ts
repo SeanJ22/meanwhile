@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
-import { gunzipSync } from "node:zlib";
+import type { EvidenceStore } from "../control-plane/evidence/store.ts";
+import { rawCaptureVault } from "../civic-data/raw-capture-remote.ts";
+import { rawCaptureKey, readRawCapture } from "../civic-data/raw-capture-vault.ts";
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import { isOfficialVotingSource } from "../facts/linking-copy.ts";
 import { stateBallotScope } from "../civic-data/state-scopes.ts";
@@ -12,7 +14,7 @@ import { combineVotingSourceReads, mergeVotingSourceRead } from "./voting-source
 import { registerVotingSourceReplacementVerifier, votingSourceReplacement } from "./voting-source-replacement-contract.ts";
 
 /** Reconstruct the entire replacement from immutable evidence, with no network fallback. */
-export async function verifyVotingSourceReplacement(candidate: RoutineCandidate, predecessor: RoutineCandidate | null): Promise<string | null> {
+export async function verifyVotingSourceReplacement(candidate: RoutineCandidate, predecessor: RoutineCandidate | null, vault?: EvidenceStore): Promise<string | null> {
   const proof = votingSourceReplacement(candidate.normalizedPayload);
   if (!proof) return "Voting-source replacement has no exact source-group proof.";
   if (candidate.recordClass !== "VOTING_SITE" || candidate.sourceId !== "voting-sites" || !predecessor ||
@@ -31,8 +33,8 @@ export async function verifyVotingSourceReplacement(candidate: RoutineCandidate,
   const redirects = new Map<string, string>();
   try {
     for (const capture of acquisition) {
-      if (!capture.savedDocument || capture.savedDocument.encoding !== "gzip-base64") return `Replacement source bytes are unavailable: ${capture.url}.`;
-      const bytes = gunzipSync(Buffer.from(capture.savedDocument.body, "base64"));
+      if (!/^[a-f0-9]{64}$/.test(capture.rawHash) || capture.vaultKey !== rawCaptureKey(capture.rawHash)) return `Replacement source bytes are unavailable: ${capture.url}.`;
+      const bytes = await readRawCapture(vault ?? rawCaptureVault(), capture);
       const hash = createHash("sha256").update(bytes).digest("hex");
       if (hash !== capture.rawHash || bytes.length !== capture.byteLength) return `Replacement source bytes do not match their saved digest: ${capture.url}.`;
       const url = new URL(capture.url).href;

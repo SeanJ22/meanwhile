@@ -1,3 +1,4 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import "./helpers/linking-copies.ts";
 import test from "node:test";
 import assert from "node:assert/strict";
@@ -10,6 +11,8 @@ import { combineVotingSourceReads, mergeVotingSourceRead, saveVotingSourceDoor, 
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
+
+const evidenceVault = new MemoryEvidenceStore();
 
 const now = "2026-10-23T08:00:00.000Z";
 const doors = JSON.parse(readFileSync("data/reference/voting-source-doors.json", "utf8")) as VotingSourceDoor[];
@@ -92,7 +95,7 @@ test("the scheduled job reads a known HTML list before discovery and keeps it on
     t.mock.method(Date, "now", () => clock);
     for (const at of [now, "2026-10-24T08:00:00.000Z"]) {
       clock = Date.parse(at);
-      const report = await refreshVotingSources({ state: "ND", store, context: { repos }, now: () => at,
+      const report = await refreshVotingSources({ state: "ND", store, evidenceVault, context: { repos }, now: () => at,
         deadlineMs: Date.now() + 10_000, fetch: fetchSource, geocode: async () => null,
         registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: [door] });
       assert.ok(report.terminal?.acquisitionSucceeded);
@@ -147,7 +150,7 @@ test("a cutoff records only its completed unchanged sources, resumes the other s
     if (url.endsWith("/robots.txt")) return new Response("User-agent: *\nAllow: /", { headers: { "content-type": "text/plain" } });
     return [source.url, second.url].includes(url) ? new Response(sourceBytes, { headers: { "content-type": "text/csv" } }) : new Response(null, { status: 404 });
   }) as typeof fetch;
-  const run = (at: string) => refreshVotingSources({ state: "ND", store, context: { repos }, now: () => at,
+  const run = (at: string) => refreshVotingSources({ state: "ND", store, evidenceVault, context: { repos }, now: () => at,
     deadlineMs: at === "2026-10-24T08:00:00.000Z" ? deadline : clock + 10_000,
     fetch: fetchSource, geocode: async () => null, registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: [source, second] });
   try {

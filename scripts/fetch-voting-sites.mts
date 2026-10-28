@@ -18,6 +18,7 @@ import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
 import { recordSourceObservation } from "../lib/doors/source-capture.ts";
 import { cycleVault, VAULT_DIR, type CycleVault } from "../lib/control-plane/scheduler/vault.ts";
+import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { pageAddress } from "../lib/doors/page-doors.ts";
 import { discoverVotingDoors } from "../lib/ballot/voting-source-discovery.ts";
 import { mergeVotingSourceRead, recordVotingSourceRead, registeredVotingSourceDoors, replaceVotingJurisdiction,
@@ -177,7 +178,7 @@ function registeredElectionOfficeDoors(root: VotingSourceDoor, registry: Pick<Re
 }
 
 /** A publication retains its own read and official linking chain, never unrelated statewide captures. */
-export async function votingSourceEvidence(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"] = []): Promise<VotingRawCapture[]> {
+export async function votingSourceEvidence(door: VotingSourceDoor, read: VotingSourceRead, captures: VotingSourceRead["rawBodies"] = [], evidenceVault?: EvidenceStore): Promise<VotingRawCapture[]> {
   const bodyKey = (body: VotingSourceRead["rawBodies"][number]) => `${body.url}#${createHash("sha256").update(body.bytes).digest("hex")}`;
   const bodies = new Map(read.rawBodies.map(body => [bodyKey(body), body]));
   const links = new Set<string>();
@@ -192,7 +193,7 @@ export async function votingSourceEvidence(door: VotingSourceDoor, read: VotingS
   const linked = (body: VotingSourceRead["rawBodies"][number]) => links.has(body.url) || Boolean(body.requestedUrl && links.has(body.requestedUrl));
   for (const capture of captures) if (linked(capture) || capture.url === door.url || capture.requestedUrl === door.url) bodies.set(bodyKey(capture), capture);
   // A linking page held on an older saved door may still print its key; every copy is cleaned as it is saved.
-  const saved = await holdVotingRawEvidence({ rawBodies: [...bodies.values()] }, read.sources[0]?.checkedAt ?? new Date().toISOString());
+  const saved = await holdVotingRawEvidence({ rawBodies: [...bodies.values()] }, read.sources[0]?.checkedAt ?? new Date().toISOString(), evidenceVault);
   return [...new Map(saved.map(body => [`${body.url}#${body.rawHash}`, body])).values()];
 }
 
@@ -232,6 +233,7 @@ export async function refreshVotingSources(input: {
   registration?: Awaited<ReturnType<typeof readRegistrationProjection>>;
   registry?: Pick<Registry, "divisions" | "bodies">;
   vault?: CycleVault;
+  evidenceVault?: EvidenceStore;
   seeds?: VotingSourceDoor[];
 }): Promise<{ terminal: RoutineRunnerReceipt | null; publications: number; confirmedSources: number; attemptedSourceIds: string[] }> {
   const state = requireBallotState(input.state), contract = votingSitesContract(state);
@@ -364,7 +366,7 @@ export async function refreshVotingSources(input: {
           retrievedAt: at, carriedFromVersionId: version,
           sourceReplacementDoors: !read.blanks.some(blank => ["access", "extraction", "missing-sites"].includes(blank.reason)) ? mappings : undefined });
         before = null; held = null;
-        const outcome = await processRegisteredManualCandidate(store, contract.id, candidate, at, version);
+        const outcome = await processRegisteredManualCandidate(store, contract.id, candidate, at, version, { vault: input.evidenceVault });
         if (outcome.promoted) {
           held = outcome.promoted.payload as VotingSitesFile; version = outcome.promoted.versionId;
           sourceHashes = { ...(held.sourceHashes ?? {}) };
@@ -436,7 +438,7 @@ export async function refreshVotingSources(input: {
           return;
         }
         unmatchedSourceReads = true;
-        const acquisition = await votingSourceEvidence(door, read, captures);
+        const acquisition = await votingSourceEvidence(door, read, captures, input.evidenceVault);
         if (await publishRead(publicationDoor, read, acquisition, at, mappings)) {
           publishedReads.set(door.id, { door: publicationDoor, read, acquisition, mappings });
           await sourceCheck(publicationDoor, read, contentHash, at);

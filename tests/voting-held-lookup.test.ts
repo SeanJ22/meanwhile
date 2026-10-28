@@ -1,3 +1,4 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { projectVotingJurisdiction, votingJurisdictionCovers } from "../lib/ballot/voting-answer.ts";
@@ -7,11 +8,14 @@ import { withReaderAuthorityEdge, type ReaderAuthorityEdgeBundle } from "../lib/
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
 import { votingSitesCandidate } from "../lib/ballot/voting-sites-data-plane.ts";
-import { holdVotingRawEvidence } from "../lib/ballot/voting-source-publication.ts";
+import { holdVotingRawEvidence as holdVotingRawEvidenceInVault } from "../lib/ballot/voting-source-publication.ts";
 import { votingFailureDetail } from "../lib/ballot/voting-errors.ts";
 import { readVotingBoundaries, votingBoundaryBlanks } from "../lib/ballot/voting-source-boundaries.ts";
 import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
 import { mergeVotingSiteRows, type VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+
+const evidenceVault = new MemoryEvidenceStore();
+const holdVotingRawEvidence = (read: Parameters<typeof holdVotingRawEvidenceInVault>[0], at?: string) => holdVotingRawEvidenceInVault(read, at, evidenceVault);
 
 const at = "2026-10-20T00:00:00.000Z";
 const source = { publisher: "Protocol fixture", url: "https://protocol.example.gov/polling", checkedAt: at };

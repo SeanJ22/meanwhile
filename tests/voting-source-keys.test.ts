@@ -1,3 +1,5 @@
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { readRawCapture } from "../lib/civic-data/raw-capture-vault.ts";
 import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
@@ -5,12 +7,10 @@ import { mkdtemp, readdir, readFile, rm } from "node:fs/promises";
 import { readFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { gunzipSync } from "node:zlib";
 import test from "node:test";
 import { refreshVotingSources, votingSourceEvidence } from "../scripts/fetch-voting-sites.mts";
 import { readVotingSource } from "../lib/ballot/voting-source-readers.ts";
-import { holdVotingRawEvidence, recordVotingSourceRead, saveVotingSourceDoor } from "../lib/ballot/voting-source-publication.ts";
-import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { holdVotingRawEvidence as holdVotingRawEvidenceInVault, recordVotingSourceRead, saveVotingSourceDoor } from "../lib/ballot/voting-source-publication.ts";
 import { vaultCapture } from "../lib/facts/capture.ts";
 import { readVotingSitesProjection } from "../lib/ballot/voting-sites-server.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
@@ -23,6 +23,9 @@ import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 // These are the real served pages. Each was committed with its Maps key replaced by the placeholder at the
 // exact place the page printed it; the test puts a key-shaped value back there, built at runtime so no
 // usable credential enters the repository.
+const evidenceVault = new MemoryEvidenceStore();
+const holdVotingRawEvidence = (read: Parameters<typeof holdVotingRawEvidenceInVault>[0], at?: string) => holdVotingRawEvidenceInVault(read, at, evidenceVault);
+
 const key = (fill: string) => ["AI", "za"].join("") + fill.repeat(35);
 const served = (path: string, value: string) => {
   const page = readFileSync(path, "utf8");
@@ -66,7 +69,7 @@ for (const [state, ids, place, counts, keyed] of [
     let clock = Date.parse(now);
     t.mock.method(Date, "now", () => clock);
     try {
-      const report = await refreshVotingSources({ state, store, context: { repos }, now: () => now,
+      const report = await refreshVotingSources({ state, store, evidenceVault, context: { repos }, now: () => now,
         deadlineMs: clock + 60_000, fetch: fetchPages(credential), geocode: async () => null,
         registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: ids.map(door) });
       clock += 1;
@@ -97,9 +100,9 @@ test("El Paso: the saved copy blanks the key, keeps every location, and records 
     const read = await readVotingSource(source, { fetch: fetchPages(credential), now: () => now });
     assert.equal(read.sites.length, count, id);
     assert.equal(read.blanks.filter(blank => blank.reason === "access" || blank.reason === "extraction").length, 0, id);
-    const evidence = await votingSourceEvidence(source, read);
+    const evidence = await votingSourceEvidence(source, read, [], evidenceVault);
     const page = evidence.find(capture => capture.url === source.url)!;
-    const saved = gunzipSync(Buffer.from(page.savedDocument!.body, "base64")).toString("utf8");
+    const saved = Buffer.from(await readRawCapture(evidenceVault, page)).toString("utf8");
     assert.equal(saved.includes(credential), false);
     assert.ok(saved.includes(`key=${REDACTION_PLACEHOLDER}&callback=initMap`));
     assert.equal(classifyAcquisition(saved).tier, "RAW");
@@ -147,7 +150,7 @@ for (const [file, type, expected] of [
       assert.equal(saved!.rawHash, sha256(bytes), id);
       assert.equal(saved!.contentType, type);
       assert.equal(saved!.derivation, undefined);
-      assert.deepEqual(new Uint8Array(gunzipSync(Buffer.from(saved!.savedDocument!.body, "base64"))), bytes);
+      assert.deepEqual(new Uint8Array(Buffer.from(await readRawCapture(evidenceVault, saved!))), bytes);
     }
   });
 }
@@ -159,7 +162,7 @@ test("a spreadsheet or PDF whose bytes hold a key is never re-saved; its extract
   const read = await readVotingSource({ ...door("mt-statewide-polling-2026"), electionAssociationVerified: false }, { fetch: fileFetch(workbook, "application/octet-stream"), now: () => now });
   assert.equal(read.sites.length, 304, "the workbook is still parsed from its own bytes");
   const [sheet] = (await holdVotingRawEvidence(read, now)).filter(capture => !capture.url.endsWith("/robots.txt"));
-  const sheetCopy = gunzipSync(Buffer.from(sheet!.savedDocument!.body, "base64")).toString("utf8");
+  const sheetCopy = Buffer.from(await readRawCapture(evidenceVault, sheet!)).toString("utf8");
   assert.equal(sheet!.contentType, "text/plain; charset=utf-8");
   assert.equal(sheetCopy.includes(credential), false);
   assert.equal(sheetCopy.startsWith("PK"), false, "never the workbook decoded as text");
@@ -168,7 +171,7 @@ test("a spreadsheet or PDF whose bytes hold a key is never re-saved; its extract
 
   const pdf = new Uint8Array([...readFileSync("tests/fixtures/cochise-2026-vote-centers.pdf"), ...new TextEncoder().encode(`%${credential}\n`)]);
   const [copy] = await holdVotingRawEvidence({ rawBodies: [{ url: "https://cochise.az.gov/DocumentCenter/View/4575/Vote-Center-Locations-PDF", contentType: "application/pdf", bytes: pdf }] }, now);
-  const pdfCopy = gunzipSync(Buffer.from(copy!.savedDocument!.body, "base64")).toString("utf8");
+  const pdfCopy = Buffer.from(await readRawCapture(evidenceVault, copy!)).toString("utf8");
   assert.equal(pdfCopy.includes(credential), false);
   assert.equal(pdfCopy.startsWith("%PDF"), false);
   assert.match(pdfCopy, /Shiloh Christian Ministries/);

@@ -433,7 +433,7 @@ export async function processRegisteredManualCandidate(
   candidate: RoutineCandidate,
   now: string = new Date().toISOString(),
   expectedBaseVersionId: string | null | undefined = undefined,
-  options: { readonly confirmUnchanged?: boolean } = {},
+  options: { readonly confirmUnchanged?: boolean; readonly vault?: EvidenceStore } = {},
 ): Promise<PromotionOutcome> {
   if (store instanceof PostgresRoutineDataStore) assertRegisteredRuntimeContract(contractId, "manual");
   if (candidate.stateRetirement) throw new Error("STATE_RETIREMENT_REQUIRES_TERMINAL_DOOR");
@@ -449,6 +449,7 @@ export async function processRegisteredManualCandidate(
       ? await store.readCandidate(trustedLkgPredecessorVersionId(boundedCandidate)!)
       : null,
     boundedCandidate.recordClass === "VOTING_SITE" ? store : undefined,
+    options.vault,
   );
   return appendTypedReaderProjectionReadback(
     store,

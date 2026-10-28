@@ -1,3 +1,4 @@
+import { LEGISTAR_WORK_MIGRATION_SOURCE,legistarWorkMigrationDefinition,expandLegistarWork } from "../lib/control-plane/repository/migrations/RB-A9.ts";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -48,6 +49,7 @@ const MIGRATIONS = [
     } },
   { id: "BB-01_expand", source: "lib/control-plane/repository/migrations/BB-01.ts", declarations: [] as readonly string[],
     definition: jobBreakerMigrationDefinition, apply: installJobBreaker },
+  { id:"RB-A9_expand",source:"lib/control-plane/repository/migrations/RB-A9.ts",declarations:[LEGISTAR_WORK_MIGRATION_SOURCE],definition:legistarWorkMigrationDefinition,apply:expandLegistarWork },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand"; readonly hash: string }
 interface Dependencies {

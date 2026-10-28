@@ -275,7 +275,7 @@ test("DURABLE READ: bytes that no longer hash to what was written are a FAILED R
   assert.ok(err instanceof EvidenceStoreRefusal);
 
   await assert.rejects(() => readArtifact(store, PROJECT, artifact, "AUDITOR"), EvidenceCorrupted);
-  await assert.rejects(() => store.head(key), EvidenceCorrupted);
+  assert.equal((await store.head(key))?.contentHash,artifact.contentHash,"metadata reads do not download evidence; get verifies the bytes");
   await assert.rejects(() => store.put(rawKey, utf8(PUBLIC_PAGE), {contentType:"application/octet-stream",contentHash:artifact.contentHash,byteLength:artifact.byteLength}), EvidenceCorrupted);
   await assert.rejects(() => putArtifact(store, PROJECT, artifact, utf8(PUBLIC_PAGE)), EvidenceCorrupted);
 });

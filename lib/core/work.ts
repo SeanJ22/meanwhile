@@ -59,6 +59,7 @@ export function workId(input: Pick<WorkInput, "kind" | "url" | "subjectId" | "fi
 
 export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (
   SELECT id FROM work_row WHERE kind = $1 AND status = 'ready' AND not_before <= $2::timestamptz
+    AND ($6::text IS NULL OR starts_with(subject_id,$6))
   ORDER BY priority DESC, not_before, id FOR UPDATE SKIP LOCKED LIMIT $3
 ) UPDATE work_row w SET status = 'taken', lease_owner = $4,
     lease_until = $2::timestamptz + $5::int * interval '1 millisecond',
@@ -72,17 +73,26 @@ export const EXPIRE_WORK_SQL = `WITH expired AS MATERIALIZED (
 ) UPDATE work_row w SET status = 'ready', lease_until = NULL, lease_owner = NULL, lease_version = NULL
   FROM expired WHERE w.id = expired.id RETURNING w.id`;
 
+// A source fingerprint identifies the record, independently of the page pointer it came in on.
+const VALUE_CHANGED_SQL = `(CASE WHEN EXCLUDED.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$'
+  AND work_row.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$'
+  THEN work_row.value->>'$sourceFingerprint' IS DISTINCT FROM EXCLUDED.value->>'$sourceFingerprint'
+  ELSE work_row.value IS DISTINCT FROM EXCLUDED.value END OR work_row.quote IS DISTINCT FROM EXCLUDED.quote
+  OR work_row.refusal='COPY_OUTSIDE_FRESHNESS_WINDOW' AND work_row.value IS DISTINCT FROM EXCLUDED.value)`;
 const ADD_WORK_SQL = `INSERT INTO work_row
   (id,kind,state,place_id,subject_id,url,reports,priority,not_before,field,value,quote,received_at,sources)
   VALUES ($1,$2,$12,$3,$4,$5,jsonb_build_array($6::jsonb),$7,$8,$9,$10::jsonb,$11,$8,$13::jsonb)
   ON CONFLICT (id) DO UPDATE SET
+    state = CASE WHEN EXCLUDED.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$' THEN EXCLUDED.state ELSE work_row.state END,
+    place_id = CASE WHEN EXCLUDED.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$' THEN EXCLUDED.place_id ELSE work_row.place_id END,
     reports = CASE WHEN work_row.reports @> EXCLUDED.reports THEN work_row.reports ELSE work_row.reports || EXCLUDED.reports END,
-    sources = (SELECT coalesce(jsonb_agg(DISTINCT item),'[]'::jsonb) FROM jsonb_array_elements(work_row.sources || EXCLUDED.sources) item),
-    content_version = work_row.content_version + CASE WHEN work_row.value IS DISTINCT FROM EXCLUDED.value OR work_row.quote IS DISTINCT FROM EXCLUDED.quote THEN 1 ELSE 0 END,
-    status = CASE WHEN work_row.status <> 'taken' AND (work_row.value IS DISTINCT FROM EXCLUDED.value OR work_row.quote IS DISTINCT FROM EXCLUDED.quote) THEN 'ready' ELSE work_row.status END,
-    not_before = CASE WHEN work_row.status <> 'taken' AND (work_row.value IS DISTINCT FROM EXCLUDED.value OR work_row.quote IS DISTINCT FROM EXCLUDED.quote) THEN EXCLUDED.not_before ELSE work_row.not_before END,
-    refusal = CASE WHEN work_row.value IS DISTINCT FROM EXCLUDED.value OR work_row.quote IS DISTINCT FROM EXCLUDED.quote THEN NULL ELSE work_row.refusal END,
-    url = CASE WHEN work_row.value IS DISTINCT FROM EXCLUDED.value OR work_row.quote IS DISTINCT FROM EXCLUDED.quote THEN EXCLUDED.url ELSE work_row.url END,
+    sources = CASE WHEN EXCLUDED.value->>'$sourceFingerprint' ~ '^[a-f0-9]{64}$' THEN EXCLUDED.sources
+      ELSE (SELECT coalesce(jsonb_agg(DISTINCT item),'[]'::jsonb) FROM jsonb_array_elements(work_row.sources || EXCLUDED.sources) item) END,
+    content_version = work_row.content_version + CASE WHEN ${VALUE_CHANGED_SQL} THEN 1 ELSE 0 END,
+    status = CASE WHEN work_row.status <> 'taken' AND ${VALUE_CHANGED_SQL} THEN 'ready' ELSE work_row.status END,
+    not_before = CASE WHEN work_row.status <> 'taken' AND ${VALUE_CHANGED_SQL} THEN EXCLUDED.not_before ELSE work_row.not_before END,
+    refusal = CASE WHEN ${VALUE_CHANGED_SQL} THEN NULL ELSE work_row.refusal END,
+    url = EXCLUDED.url,
     value = EXCLUDED.value, quote = EXCLUDED.quote
   RETURNING *`;
 
@@ -108,21 +118,45 @@ export function workList(query: Query, options: { readonly owner: string; readon
         timestamp(), input.field ?? null, canonicalJson(input.value ?? null), input.quote ?? null, state, canonicalJson(input.sources ?? [])]);
       return row(saved!);
     },
-    async claim(kind: WorkKind, n: number): Promise<readonly WorkRow[]> {
+    /** One tenant's pointer rows cross together; no response or parsed record is copied into the list. */
+    async addMany(inputs: readonly WorkInput[]): Promise<number> {
+      if(inputs.length>1_000)throw Error("WORK_INVALID_BATCH");
+      if(!inputs.length)return 0;
+      const at=timestamp();
+      const values=inputs.map(input=>{
+        const state=(input.state??registryJurisdictions(input.placeId)[0]??"US").toUpperCase();
+        if(!input.placeId||!input.subjectId||!input.field?.trim()||!(state==="US"||(REGISTRY_STATES as readonly string[]).includes(state))
+          ||!["read","check","load","hunt","detect","audit"].includes(input.kind)||!Number.isSafeInteger(input.priority??0))throw Error("WORK_INVALID_INPUT");
+        if((input.kind==="load"||input.kind==="read")&&!input.url)throw Error("WORK_HTTP_URL_REQUIRED");
+        return {id:workId(input),kind:input.kind,state,place_id:input.placeId,subject_id:input.subjectId,url:input.url?link(input.url):null,
+          reports:[{placeId:input.placeId,subjectId:input.subjectId,url:input.url??null,...input.source}],priority:input.priority??0,
+          field:input.field,value:input.value??null,quote:input.quote??null,sources:input.sources??[]};
+      });
+      const sql=ADD_WORK_SQL.slice(0,ADD_WORK_SQL.indexOf("  VALUES"))+` SELECT id,kind,state,place_id,subject_id,url,reports,priority,$2::timestamptz,field,value,quote,$2::timestamptz,sources
+        FROM jsonb_to_recordset($1::jsonb) AS r(id text,kind text,state text,place_id text,subject_id text,url text,reports jsonb,
+          priority int,field text,value jsonb,quote text,sources jsonb) `+ADD_WORK_SQL.slice(ADD_WORK_SQL.indexOf("  ON CONFLICT")).replace("RETURNING *","RETURNING id");
+      return (await query(sql,[canonicalJson(values),at])).length;
+    },
+    async claim(kind: WorkKind, n: number, subjectPrefix?: string): Promise<readonly WorkRow[]> {
       if (!Number.isSafeInteger(n) || n < 1 || n > 1_000) throw new Error("WORK_INVALID_BATCH");
       await recover();
-      return (await query(CLAIM_WORK_SQL, [kind, timestamp(), n, `${options.owner}:${randomUUID()}`, leaseMs])).map(row);
+      return (await query(CLAIM_WORK_SQL, [kind, timestamp(), n, `${options.owner}:${randomUUID()}`, leaseMs, subjectPrefix ?? null])).map(row);
     },
     recover,
-    async finish(claim: WorkRow): Promise<boolean> {
+    async renew(claim: WorkRow): Promise<boolean> {
+      return (await query(`UPDATE work_row SET lease_until=$3::timestamptz+$4::int*interval '1 millisecond'
+        WHERE id=$1 AND lease_owner=$2 AND status='taken' AND lease_until>$3::timestamptz RETURNING id`, [...fenced(claim),leaseMs])).length === 1;
+    },
+    async finish(claim: WorkRow, againMs?: number): Promise<boolean> {
+      if (againMs !== undefined && (!Number.isSafeInteger(againMs) || againMs < 1)) throw new Error("WORK_INVALID_CADENCE");
       const [saved] = await query(`UPDATE work_row SET
-        status = CASE WHEN content_version = lease_version THEN 'done' ELSE 'ready' END,
+        status = CASE WHEN content_version = lease_version AND $4::bigint IS NULL THEN 'done' ELSE 'ready' END,
         refusal = NULL,
         done_times = CASE WHEN content_version = lease_version THEN array_append(done_times,$3::timestamptz) ELSE done_times END,
-        not_before = CASE WHEN content_version <> lease_version THEN $3::timestamptz ELSE not_before END,
+        not_before = CASE WHEN content_version <> lease_version THEN $3::timestamptz WHEN $4::bigint IS NOT NULL THEN $3::timestamptz+$4::bigint*interval '1 millisecond' ELSE not_before END,
         lease_owner = NULL, lease_until = NULL, lease_version = NULL
-        WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING status`, fenced(claim));
-      return saved?.status === "done";
+        WHERE id = $1 AND lease_owner = $2 AND status = 'taken' AND lease_until > $3::timestamptz RETURNING status,content_version`, [...fenced(claim),againMs ?? null]);
+      return Number(saved?.content_version)===claim.leaseVersion && (saved?.status === "done" || againMs !== undefined && saved?.status === "ready");
     },
     async later(claim: WorkRow, reason: string): Promise<boolean> {
       if (!reason.trim()) throw new Error("WORK_REASON_REQUIRED");

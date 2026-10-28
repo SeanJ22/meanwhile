@@ -656,7 +656,10 @@ const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
 ), next AS (
   SELECT q.place_id,slot.n FROM rebuild_queue q JOIN entity e ON e.id=q.place_id CROSS JOIN slot
   WHERE q.lease_until IS NULL OR q.lease_until<clock_timestamp()
-  ORDER BY q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
+  ORDER BY (q.next_queued_at IS NOT NULL) DESC,
+    (q.next_queued_at IS NOT NULL AND q.place_id LIKE 'ocd-division/%' AND q.place_id NOT LIKE '%#%') DESC,
+    (q.next_queued_at IS NOT NULL AND q.place_id NOT LIKE 'zip:%') DESC,
+    q.next_queued_at DESC NULLS LAST,q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
 ) UPDATE rebuild_queue q SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes',lease_slot=next.n,next_queued_at=NULL
   FROM next,entity e WHERE q.place_id=next.place_id AND e.id=q.place_id
   RETURNING q.place_id,q.generation,q.built_generation,e.kind,e.state,

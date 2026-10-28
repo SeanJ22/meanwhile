@@ -181,12 +181,13 @@ export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query)
       OR d.entity_id IN (SELECT id FROM service_places)
       OR d.entity_id IN (SELECT id FROM subjects WHERE kind<>'place')
     UNION SELECT e.id FROM entity e WHERE e.kind='place' AND e.id=ANY($2::text[])
-  ) INSERT INTO rebuild_queue(place_id,queued_at)
-    SELECT id,clock_timestamp() FROM affected ORDER BY id
+  ) INSERT INTO rebuild_queue(place_id,queued_at,next_queued_at)
+    SELECT id,clock_timestamp(),CASE WHEN $5::boolean THEN clock_timestamp() END FROM affected ORDER BY id
     ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+1,
       next_queued_at=CASE WHEN rebuild_queue.lease_token IS NOT NULL
-        THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp()) ELSE rebuild_queue.next_queued_at END`,
-  [broad ? states : [],places,entities,broad && scope.national === true]);
+        THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp())
+        WHEN $5::boolean THEN clock_timestamp() ELSE rebuild_queue.next_queued_at END`,
+  [broad ? states : [],places,entities,broad && scope.national === true,!broad]);
 }
 
 async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {

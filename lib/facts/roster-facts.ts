@@ -1,3 +1,4 @@
+import { retireRosterThroughDoor } from "../core/door.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import { personName } from "../officials/person-name.ts";
 import type { Provenance as FieldSource } from "../sources/types.ts";
@@ -8,7 +9,7 @@ import { readCheckEntity } from "./entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishInput, type PublishOutcome } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { governingBodyNameOn } from "./body-name.ts";
-import { invalidateReaderCache, readerCacheScopeForEntity, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
+import { withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
 import { withFactConfirmations } from "./confirmation.ts";
 import type { EntityPlace } from "./entity-places.ts";
 
@@ -157,12 +158,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     }
   }
   if (input.complete && provenance === "OFFICIAL" && seated.size) {
-    const gone = await db.transaction(query => query(`UPDATE fact f SET status = 'superseded', held_reason = 'NOT_ON_CURRENT_OFFICIAL_ROSTER'
-      FROM checked_fact current,source_copy s WHERE current.id=f.id AND s.id=current.source_copy_id AND s.url = $2 AND f.entity_id = $1 AND f.status = 'live'
-        AND f.field LIKE 'member:%' AND NOT (substr(f.field, 8) = ANY($3::text[])) RETURNING f.id`,
-    [body.id, capture.evidence.canonicalUrl, [...seated]]));
-    tally.departed = gone.length;
-    if (gone.length) await invalidateReaderCache(await readerCacheScopeForEntity(db.query, body.id), input.purge, db.query);
+    tally.departed = await retireRosterThroughDoor(db,{bodyId:body.id,copy,seated:[...seated],producedBy:input.producedBy,purge:input.purge});
   }
   if ((tally.live || tally.confirmed) && input.nameFromPage !== false) await publishBodyNameFromPage(db, { entity: bodyEntity, copy, provenance, producedBy: input.producedBy, acquisition: input.acquisition, purge: input.purge }, clocks, now);
   return tally;

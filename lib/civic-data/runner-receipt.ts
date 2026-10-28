@@ -2,7 +2,6 @@ import { US_JURISDICTIONS } from "../coverage/states.ts";
 import { isScopedManualContractScope } from "./scoped-manual-contracts.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import { factReader } from "../facts/db.ts";
-import { legistarMemberReceiptIssue } from "../sources/legistar/members-tasks.ts";
 import { CANDIDATE_STATES, type CandidateDecision, type CandidateState } from "./types.ts";
 import { ZERO_RELEASE_EVENTS, type ZeroReleaseEvents } from "./release.ts";
 import { canonicalCivicDataJson } from "./changes.ts";
@@ -281,11 +280,6 @@ export async function durableRoutineRunnerReceiptIssue(
 ): Promise<string | null> {
   try {
     let expected = expectedTask;
-    if (/^legistar-members:[a-z0-9_-]+$/.test(expected.id)) {
-      const query = factReader();
-      if (!query) return "The tenant fact check is unavailable";
-      return await legistarMemberReceiptIssue(query, receipt, expected.id);
-    }
     if (receipt.source !== expected.id && receipt.source !== expected.registeredContractId) {
       return `receipt source ${receipt.source} does not match registered task ${expected.id}`;
     }

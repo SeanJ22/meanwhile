@@ -15,10 +15,10 @@
  */
 
 import { netlifyEvidenceStoreFromEnv } from "./netlify-store.ts";
-import { resolveRawCapturePointer } from "./raw-pointer.ts";
+import { resolveRawCapturePointer, rawCaptureMetadata } from "./raw-pointer.ts";
 import { randomBytes } from "node:crypto";
 import type { Dirent } from "node:fs";
-import { mkdir, readFile, readdir, rename, rm, writeFile } from "node:fs/promises";
+import { mkdir, readFile, readdir, rename, rm, stat, writeFile } from "node:fs/promises";
 import { dirname, join, resolve, sep } from "node:path";
 
 import { contentHash } from "../ids.ts";
@@ -411,7 +411,13 @@ export class DurableEvidenceStore implements EvidenceStore {
       if (fromProvider) return fromProvider;
     }
     if (this.remote) return this.remote.head(key);
-    return (await this.get(key))?.meta ?? null;
+    const sidecar=await this.readSidecar(key);
+    if(!sidecar)return null;
+    let size:number;
+    try{size=(await stat(this.bodyPath(key))).size;}
+    catch{throw new EvidenceStoreRefusal(`The body for key ${key} is missing or unreadable.`);}
+    if(size!==sidecar.bodyBytes)throw new EvidenceStoreRefusal(`The body for key ${key} has a different length from its metadata.`);
+    return rawCaptureMetadata(sidecar.meta);
   }
 
   /**

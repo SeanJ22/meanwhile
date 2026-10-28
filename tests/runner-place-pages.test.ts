@@ -48,7 +48,8 @@ async function placePageRunner(options: { readonly turnMs: number }) {
   const memory = routineProcessSlots({ availableBytes: () => 64 * 1024 * MIB, admissionsOpen: () => !context.runtimeAdmissionsHeld });
   const context = createContext({
     provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false, admitJobLaunch,
-    pendingRestart: new PendingRestart(), standingBeat: async () => {}, researchCycleActive: false, researchCycleChild: null, drainHunterLane: () => {},
+    pendingRestart: new PendingRestart(), standingBeat: async () => {}, researchCycleActive: false, researchCycleChild: null,
+    drainHunterLane: () => {}, drainMemberLane: () => {},
     TS_CHILD: ["--experimental-strip-types"], CODE_ROOT: process.cwd(), process,
     ownerRepositories: async () => ({}),
     readRunnerPauseIntents: async () => { if (pause instanceof Error) throw pause; return pause; },

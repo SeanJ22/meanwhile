@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 132 (main 76fa94388). Release 133 = https://github.com/SeanJ22/meanwhile/pull/846 (9530f6529: MD-02 + RIVER-DOORS-133; resumes the held lanes), CI running. 134 being built: RC-01, RIVER-BREAKER-134, RIVER-PORTRAITS-134, DB-06
+build_state: LIVE: release 133 (main 14d57ddd0) since 10:51 PM EDT; runner on 133 since ~10:58 PM, all three lanes launching. 134 (RC-01, RIVER-BREAKER-134, RIVER-PORTRAITS-134, DB-06) on river-next-134 fff87c9e8: pnpm gates running
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-28T02:00:00Z
+heartbeat: 2026-10-28T03:20:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -39,6 +39,9 @@ heartbeat: 2026-10-28T02:00:00Z
 - Built: READY: RIVER-BREAKER-134 eade57e55 (stream/river-breaker-134): each in-process routine task metered and admitted under its own job name with bytes per run; no self-resume; Admin Now lists paused jobs with Release (jobs.release gateway action writes a RESUME row; runner applies it within 10 minutes). Supervisors (routine-civic-data, publish-now) keep their names for their own scheduling reads and are never paused (open: fingerprint-only clock checks). After deploy, the old place-pages pause shows on Now for Sean to release.
 - Built: READY: RIVER-PORTRAITS-134 7aedef6bd (stream/river-portraits-134): the 319 MB/h was the hourly need-check, not portrait runs. 55 of 57 state portrait records predate DB-03's schedule stamp, so every hour the check rebuilt each state's full people list from every roster, found nobody due and saved nothing. Now the check reads only small version rows; runs read in SQL only changed rosters' people without a shown portrait. Expected ~0.0002 GB/h for the check + ~0.01-0.018 GB/h for runs; one-time catch-up ~0.27 GB as 55 states stamp. Open: each run still reads its own portrait record whole (1-4 MB).
 - Baselines (reader DB): place_boundary 26,546 rows (21 state prefixes); rebuild_queue 86,904 pending; facts going live per hour: ~7,400-7,900 on Oct 26 before 130, near zero until 132, 1,232 (4 PM) and 2,412 (5 PM) on 132, 104 (6 PM) once the breaker held the lanes.
+- 133: #846 merged 10:48 PM, /api/build 14d57ddd0 at 10:51 PM. Runner loaded 133 ~10:58 PM (new pid 3841347); breaker RESUME place-pages, publish-now, routine-civic-data at 10:58 (code changed). Within 15 minutes all three launched: by 11:14 PM routine 299.5 MB, publish-now 132 MB (690 meeting-task digests, first launch 11:09), place-pages 47.7 MB with 2,589 place pages built; rebuild_queue 86,904 → 84,317; 291 facts live in the first 16 minutes (~1,100/h pace). publish-now's first pass still hit its 10-minute deadline (11:09). Routine's 0.3 GB in 14 minutes means it trips again this hour (portrait sweep + one job name); 134 fixes both.
+- 134 fold: DB-05 b445d2278 folded as DB-06 on river-next-134-db06 (96a2966ae, 17 conflicts resolved: breaker job names and portrait reads kept, measured bytes win, DB-05's door change-rate removal replaces RIVER-DOORS-133). Fold fixes: evidence store decides from metadata (head), never downloads a body (3f7f24836); measure explanations accept fingerprint-filed captures (dcdfc4124); explicit columns for the five SELECT * (922ec8aac; rulings read list 79 → 61); paused-jobs card Eastern time + two runner tests (fff87c9e8). Suite before the last fix: 10,523 pass, 3 fail (the 3 River fixed).
+- For Sean: DB-06's civic_data_rows (DB-05_keyed_rows.sql) stores jsonb copies of payload members, which can be rebuilt; it stays as approved unless Sean says otherwise.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.
 - Two production copies on the reader project from the OB-01 lane: ob-01-check-20261027 (1:45 PM EDT) and ob-01-metered-body-fold (2:02 PM EDT); both expire on their own tomorrow. Sean (2:20 PM): OB-01 uses one of them and opens no more. River opens none.

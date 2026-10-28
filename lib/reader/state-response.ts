@@ -26,7 +26,7 @@ async function stateResponse(request: Request) {
   catch { return Response.json({ error: "A US state or territory is required" }, { status: 400 }); }
   try {
     const divisionIds = indexed?.ids ?? [];
-    const [value, places] = await withReaderRoute("/api/reader/state", () => Promise.all([readStatePackage(state, divisionIds, zip ?? undefined),
+    const [value, places] = await withReaderRoute("/api/reader/state", () => Promise.all([readStatePackage(state, divisionIds, zip ?? undefined, { earlyDistricts: true }),
       zip ? Promise.resolve(new Map(indexed ? [[zip, indexed]] : [])) : readStateZipPlaces(state)]));
     const versions = value.districts.kind === "HELD" ? value.districts.value.scopes.map(scope => ({ ...scope, key: scope.version })) : [];
     const selection = currentRepresentationSelection();

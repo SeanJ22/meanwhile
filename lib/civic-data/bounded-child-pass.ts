@@ -1,4 +1,5 @@
 import { execFile } from "node:child_process";
+import { admitJobLaunch } from "../control-plane/job-breaker-local.ts";
 
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { VITAL_SIGNS_LINE_PREFIX } from "../db/transfer-by-caller.ts";
@@ -15,8 +16,6 @@ export const ROUTINE_CHILD_MAX_BUFFER_BYTES = 16 * 1024 * 1024;
 export const ROUTINE_CHILD_CONCURRENCY = 4;
 /** Two reads in one failure domain start at least a minute apart, so a host's published Crawl-delay holds. */
 export const ROUTINE_SAME_DOMAIN_CHILD_GAP_MS = 60_000;
-export const ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS = 10 * 60_000;
-export const ROUTINE_RUNNER_OUTER_GRACE_MS = 60_000;
 
 export interface RoutineRunnerOuterBounds {
   readonly neonRequestDeadlineMs: number;
@@ -39,6 +38,8 @@ export type BoundedChildTermination =
   | "SPAWN_FAILED";
 
 export interface BoundedChildCommand {
+  /** Production launch declarations are checked by lint against the source contract. */
+  readonly databaseBytesPerRun?: number;
   readonly id: string;
   readonly onStarted?: (pid: number) => void;
   /**
@@ -76,7 +77,8 @@ export interface BoundedChildPassOptions {
   readonly deadlineMs?: number;
   readonly maxBufferBytes?: number;
   readonly concurrency?: number;
-  readonly onStarting?: (command: BoundedChildCommand, index: number) => Promise<void> | void;
+  /** False leaves the command queued and returns its domain's turn without a source attempt or gap. */
+  readonly onStarting?: (command: BoundedChildCommand, index: number) => Promise<void | false> | void | false;
   readonly onSettled?: (result: BoundedChildResult, index: number) => Promise<void> | void;
   readonly discardOutputAfterSettlement?: boolean;
 }
@@ -190,11 +192,18 @@ export async function runBoundedChildPass(
     throw new Error(`BOUNDED_CHILD_CONCURRENCY_INVALID:${concurrency}`);
   }
   const results = new Array<BoundedChildResult>(commands.length);
-  const runAt = async (index: number): Promise<void> => {
+  const runAt = async (index: number): Promise<boolean> => {
     const command = commands[index]!;
     let result: BoundedChildResult;
     try {
-      if (options.onStarting) await options.onStarting(command, index);
+      if (options.deadlineMs !== undefined && Date.now() >= options.deadlineMs) {
+        throw new Error("PASS_TIME_BUDGET: queued work remains owed");
+      }
+      const held = () => new Error(`JOB_TRANSFER_BREAKER: ${command.id} is paused until released in Admin; work remains owed`);
+      if (!admitJobLaunch(command.id, options.env)) throw held();
+      if (options.onStarting && await options.onStarting(command, index) === false) return false;
+      // A slot can wait across a breaker tick. Recheck immediately before the child starts.
+      if (!admitJobLaunch(command.id, options.env)) throw held();
       result = await launch(command, options);
     } catch (error) {
       result = {
@@ -219,6 +228,7 @@ export async function runBoundedChildPass(
       stderr: options.discardOutputAfterSettlement ? "" : result.stderr,
       settlementErrorMessage,
     };
+    return true;
   };
 
   // A central dispatcher is necessary here: workers that dequeue a second
@@ -232,7 +242,10 @@ export async function runBoundedChildPass(
   const activeDomains = new Set<string>();
   const activeLanes = new Set<string>();
   const domainFreeAt = new Map<string, number>();
+  const retryAt = new Map<number, number>();
   const activeRuns = new Map<number, Promise<void>>();
+  const readyAt = (index: number) => Math.min(options.deadlineMs ?? Infinity,
+    Math.max(domainFreeAt.get(failureDomains[index]!) ?? 0, retryAt.get(index) ?? 0));
   let completed = 0;
   const waiting = () => commands
     .map((_, index) => index)
@@ -242,7 +255,7 @@ export async function runBoundedChildPass(
   while (completed < commands.length) {
     while (activeRuns.size < concurrency) {
       const now = Date.now();
-      const index = waiting().find((candidate) => (domainFreeAt.get(failureDomains[candidate]!) ?? 0) <= now);
+      const index = waiting().find((candidate) => readyAt(candidate) <= now);
       if (index === undefined) break;
 
       const failureDomain = failureDomains[index]!;
@@ -250,18 +263,22 @@ export async function runBoundedChildPass(
       started.add(index);
       activeDomains.add(failureDomain);
       if (lane !== undefined) activeLanes.add(lane);
-      const activeRun = runAt(index).finally(() => {
+      const activeRun = runAt(index).then(settled => {
         activeDomains.delete(failureDomain);
         if (lane !== undefined) activeLanes.delete(lane);
-        if (gapMs > 0) domainFreeAt.set(failureDomain, Date.now() + gapMs);
+        if (settled && gapMs > 0) domainFreeAt.set(failureDomain, Date.now() + gapMs);
         activeRuns.delete(index);
-        completed += 1;
+        if (settled) completed += 1;
+        else {
+          started.delete(index);
+          retryAt.set(index, Date.now() + 1000);
+        }
       });
       activeRuns.set(index, activeRun);
     }
 
     const pending = waiting();
-    const gated = pending.map((index) => domainFreeAt.get(failureDomains[index]!) ?? 0).filter((at) => at > Date.now());
+    const gated = pending.map(readyAt).filter((at) => at > Date.now());
     if (activeRuns.size === 0 && gated.length === 0) {
       // A host's gap can expire between dispatch and this clock read. Offer that waiting work again.
       if (pending.length > 0) continue;
@@ -325,17 +342,6 @@ export function routineChildPassWorstCaseMs(
   return waves * childTimeoutMs;
 }
 
-export function routineRunnerOuterTimeoutMs(
-  commandCount: number,
-  largestFailureDomainSize: number = commandCount === 0 ? 0 : 1,
-  bounds?: RoutineRunnerOuterBounds,
-): number {
-  const work = routineRunnerBoundedWorkMs(commandCount, largestFailureDomainSize, bounds);
-  return work +
-    ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS +
-    ROUTINE_RUNNER_OUTER_GRACE_MS;
-}
-
 function nonNegativeSafeInteger(value: number, code: string): void {
   if (!Number.isSafeInteger(value) || value < 0) throw new Error(`${code}:${value}`);
 }
@@ -389,17 +395,4 @@ export function routineRunnerBoundedWorkMs(
       bounds.readerSingleTimeoutMs +
     bounds.readerMeetingDomains * bounds.readerMeetingTimeoutMs;
   return acquisitionMs + clockMs + coordinationMs + readerMs;
-}
-
-export function routineRunnerOuterTimeoutCompatible(
-  outerTimeoutMs: number,
-  commandCount: number,
-  largestFailureDomainSize: number = commandCount === 0 ? 0 : 1,
-  bounds?: RoutineRunnerOuterBounds,
-): boolean {
-  return outerTimeoutMs > routineRunnerBoundedWorkMs(
-    commandCount,
-    largestFailureDomainSize,
-    bounds,
-  ) + ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS;
 }

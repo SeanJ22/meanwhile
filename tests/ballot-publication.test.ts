@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { isPlaceMapTask } from "../lib/civic-data/place-map-lane.ts";
 import { spawnSync } from "node:child_process";
 import { mkdir, mkdtemp, readFile, rm, utimes, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -51,11 +52,15 @@ for (const provider of ["memory", "file", "postgres"] as const) {
         const db = new PGlite();
         cleanup = () => db.close();
         await db.exec(`CREATE TABLE cp_log_heads(log_table text,log_key text,next_position bigint,PRIMARY KEY(log_table,log_key));
-          CREATE TABLE cp_log_owner_digests(log_key text,record_id text,position bigint,recorded_at timestamptz,record jsonb,
+          CREATE TABLE cp_log_owner_digests(log_key text,record_id text,position bigint,recorded_at timestamptz,record jsonb,changed_at timestamptz NOT NULL DEFAULT now(),
             PRIMARY KEY(log_key,record_id),UNIQUE(log_key,position));`);
         const sql = { query: async (text: string, params?: readonly unknown[]) => {
           const rows = (await db.query(text, params ? [...params] : [])).rows;
-          transferred = rows;
+          const bodies = rows.filter(row => Object.hasOwn(row as object, "record"));
+          if (bodies.length) transferred = bodies.map(row => {
+            const value = row as { log_key: string; record: unknown };
+            return { log_key: value.log_key, record: value.record };
+          });
           return rows;
         } };
         repos = { ...repos, ownerDigests: pgAppendOnlyRepository(sql, "owner_digests") };
@@ -215,8 +220,8 @@ test("the runner's ballot child publishes only its state under exact authority a
     const parentEnv = { ...process.env, NODE_ENV: "development", WTP_RUNTIME_MODE: "staging", WTP_DB_ROLE: "local",
       DATABASE_URL: "postgresql://local:local@staging.invalid/reader", WTP_CONTROL_PLANE_DATABASE_URL: "postgresql://local:local@staging.invalid/control" };
     const passEnds = Date.parse(now) + 20 * 60_000;
-    const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "withPassDeadline", "PASS_LAUNCH_DEADLINE_MS", "process",
-      `${snippet} return sourceChildCommand;`)(admittedRuntimeChildEnvironment, automaticRefreshContract, routineSerialLane, withPassDeadline, passEnds, { ...process, env: parentEnv });
+    const commandFor = new Function("admittedRuntimeChildEnvironment", "automaticRefreshContract", "routineSerialLane", "withPassDeadline", "SOURCE_CHILD_DEADLINE_MS", "isPlaceMapTask", "process",
+      `${snippet} return sourceChildCommand;`)(admittedRuntimeChildEnvironment, automaticRefreshContract, routineSerialLane, withPassDeadline, passEnds, isPlaceMapTask, { ...process, env: parentEnv });
     assert.deepEqual(ballotTask.command, ["scripts/assemble-ballot-package.mts", "--state=TX"]);
     const command = commandFor({ id: ballotTask.id, kind: "SOURCE", task: ballotTask, command: ballotTask.command });
     assert.equal(passDeadlineFromEnv(command.env), passEnds, "the child is told when the pass ends");

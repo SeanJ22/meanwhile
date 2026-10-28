@@ -38,11 +38,29 @@ test("each sitting a body's door reads becomes facts found on the saved feed; a 
     const report = await publishMeetingFacts(db, { meeting, capture: capture(bytes, FEED), producedBy: "door:legistar:pima" }, factClocks(null), NOW);
     totals.live += report.live; totals.blanks += report.blanks;
   }
-  assert.equal(totals.blanks,0,"the exact published room and online labels are facts before their pins are placed");
+  const unpinned=meetings.filter(meeting=>!meeting.mapPin&&!meeting.location);
+  assert.equal(totals.blanks,unpinned.length,"published room and online labels stay live while every missing point remains standing work");
   const first = meetings[0]!;
   const facts = await db.query("SELECT field, quote FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [meetingEntityId(first.id)]);
   assert.deepEqual(facts.map(row => [row.field, row.quote]), [["agenda_url", first.agendaUrl], ["location",first.venueGap?.publishedText], ["starts_at", "2026-05-12T00:00:00 1:00 PM"], ["title", "Study Session"]]);
-  assert.deepEqual(await db.query("SELECT DISTINCT stage, reason FROM blank"), []);
+  const blanks=await db.query("SELECT entity_id,field,stage,reason FROM blank ORDER BY entity_id,field");
+  assert.deepEqual(blanks,[...unpinned.map(meeting=>({entity_id:meetingEntityId(meeting.id),field:"map_pin",stage:"ACQUIRE",
+    reason:meeting.venueGap?.publishedText?"MEETING_ADDRESS_NOT_PLACED":meeting.online?"ONLINE_OFFICE_ADDRESS_MISSING":"BODY_OFFICE_ADDRESS_MISSING"})),
+    ...meetings.filter(meeting=>meeting.online&&!meeting.online.joinUrl).map(meeting=>({entity_id:meetingEntityId(meeting.id),
+      field:"online_access",stage:"ACQUIRE",reason:"ONLINE_JOIN_LINK_MISSING"}))]
+    .sort((a,b)=>a.entity_id.localeCompare(b.entity_id)||a.field.localeCompare(b.field)));
+  const entityId=meetingEntityId(first.id);
+  const [clock]=await db.query("SELECT now() AS at");
+  const due=new Date(Date.parse(String(clock.at))-60000).toISOString();
+  await db.query("UPDATE blank SET next_try_at=$1 WHERE entity_id=$2 AND field='map_pin'",[due,entityId]);
+  const [before]=await db.query("SELECT next_try_at,attempts FROM blank WHERE entity_id=$1 AND field='map_pin'",[entityId]);
+  for(const offset of [60000,120000]){
+    const checkedAt=new Date(NOW.getTime()+offset).toISOString();
+    const fresh={...first,provenance:{...first.provenance,collectedAt:checkedAt}};
+    await publishMeetingFacts(db,{meeting:fresh,capture:capture(bytes,FEED,checkedAt),producedBy:"door:legistar:pima"},factClocks(null),new Date(checkedAt));
+    const [after]=await db.query("SELECT next_try_at,attempts FROM blank WHERE entity_id=$1 AND field='map_pin'",[entityId]);
+    assert.deepEqual(after,before,"ordinary calendar refreshes cannot postpone the pin worker's due blank or pretend another pin attempt ran");
+  }
 });
 
 test("a promoted partition's fresh sittings become facts on the very bytes its door read, saved to the vault", async () => {
@@ -69,7 +87,7 @@ test("a promoted partition's fresh sittings become facts on the very bytes its d
     WHERE f.entity_id = $1 AND f.status = 'live' ORDER BY f.field`, [meetingEntityId(meeting.id)]);
   assert.deepEqual(live.map(row => [row.field, row.quote]), [["starts_at", "20261020T190000"], ["title", "Regular Council Meeting"]]);
   assert.ok(live.every(row => row.url === feed && String(row.blob_key).startsWith("artifact:")));
-  assert.equal((await vault.list("project/freshness/")).filter(key => !key.endsWith(".meta.json")).length, 1, "the feed's bytes are in the vault");
+  assert.equal((await vault.list("project/freshness/")).filter(key => key.startsWith("project/freshness/raw/sha256/")).length, 1, "one fingerprint-filed copy of the feed's bytes is in the vault");
 });
 
 test("readers see each sitting with its live facts and the saved page every one was found on", async () => {

@@ -163,7 +163,7 @@ test("the runner opens clocks without the retired method-adoption gate and invok
   assert.match(runner, /const reopenStandingClock = standingRuntimeTimer !== null;[\s\S]*if \(reopenStandingClock\) startStandingRuntimeClock\(\);/);
   assert.match(
     runner,
-    /if \(first\.state === "CURRENT"\) \{\s*runtimeAdmissionsHeld = false;\s*startStandingRuntimeClock\(\);\s*startAdminCopyClock\(\);\s*runtimeContracts\.request\(RUNNING_CODE_SHA, CODE_ROOT\);/,
+    /if \(first\.state === "CURRENT"\) \{\s*pendingRestart\.clear\(\);\s*runtimeAdmissionsHeld = false;\s*startStandingRuntimeClock\(\);\s*startAdminCopyClock\(\);\s*runtimeContracts\.request\(RUNNING_CODE_SHA, CODE_ROOT\);/,
     "a CURRENT release opens every work clock while migrations run independently",
   );
   assert.doesNotMatch(runner, /if \(!await applyRuntimeContracts/);

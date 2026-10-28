@@ -1,11 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync } from "node:fs";
-import { tmpdir } from "node:os";
-import { join } from "node:path";
-import { openHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { projectRecord, type ArtifactRecord, type ChangedRecords, type RecordProjection } from "../lib/control-plane/repository/types.ts";
+import { projectRecord, type ArtifactRecord, type RecordProjection } from "../lib/control-plane/repository/types.ts";
 import { nativeAbortLine } from "../lib/ops/fatal-line.ts";
 import { databaseReadsOf } from "../lib/control-plane/admin-view/v6-workers-read.ts";
 
@@ -13,18 +9,10 @@ const capture = (i: number) => ({ artifactId: `art-${i}`, workItemId: `wi-${i % 
   canonicalUrl: `https://county.example.gov/agenda/${i}`, recordedAt: "2026-10-13T18:00:00.000Z",
   extraction: { text: "x".repeat(4_000), complete: true }, contentHash: "h".repeat(64) }) as unknown as ArtifactRecord;
 
-test("held-copy and repository projections keep only requested capture fields", async () => {
+test("repository projections keep only requested capture fields", async () => {
   const fields: RecordProjection = { artifactId: true, workItemId: true, attemptId: true, partial: true, canonicalUrl: true };
   const records = Array.from({ length: 300 }, (_, i) => ({ key: `wi-${i % 7}`, recordId: `art-${i}`, position: i + 1, record: capture(i) }));
-  const copies = openHeldCopies(mkdtempSync(join(tmpdir(), "narrowed-")), { log: () => {} });
-  const changedSince = async (): Promise<ChangedRecords<ArtifactRecord>> => ({ records, through: "2026-10-13T19:00:00.000Z" });
   const project = (record: ArtifactRecord) => projectRecord(record, fields);
-  for (const narrowed of [await copies.logReadAll("cp_log_artifacts", changedSince, project),
-    await copies.logReadAll("cp_log_artifacts", changedSince, project)]) {
-    assert.equal(narrowed.length, 300);
-    assert.deepEqual(Object.keys(narrowed[0] as object).sort(), ["artifactId", "attemptId", "canonicalUrl", "partial", "workItemId"]);
-    assert.ok(JSON.stringify(narrowed).length < JSON.stringify(records).length / 20, "a capture's text never enters the projection");
-  }
   const repos = createMemoryRepositories();
   for (const row of records.slice(0, 3)) await repos.artifacts.append(row.key, row.recordId, row.record, row.record.recordedAt);
   assert.deepEqual(await repos.artifacts.readAllNarrowed(fields), (await repos.artifacts.readAll()).map(project));

@@ -1,46 +1,27 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import test from "node:test";
-
 import {
   HOT_READ_CATCH_UP_CONCURRENCY,
-  HOT_READ_CATCH_UP_READ_BUDGET_MS,
   HOT_READ_CATCH_UP_RECHECK_MS,
   hotReadCatchUpAdmission,
   hotReadCatchUpReadWorstCaseMs,
-  repairDomainRacesHotReads,
-  routinePassSourceCatchUpDeadlineMs,
-  routinePassWorkDeadlineMs,
   runHotReadCatchUp,
-  runRoutinePassWithHotReadCatchUp,
   type HotReadCandidate,
 } from "../lib/civic-data/hot-read-catch-up.ts";
 import {
-  ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-  ROUTINE_CLOCK_READ_CONCURRENCY,
   ROUTINE_PASS_BUDGET_MS,
   ROUTINE_SOURCE_TASKS,
-  routineFrontierPassBound,
   routineTaskDeadlineMs,
   routineTaskDue,
   type RoutineSourceTask,
   type RoutineTaskClock,
 } from "../lib/civic-data/runner.ts";
 import {
-  ROUTINE_CHILD_CONCURRENCY,
-  ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS,
-  ROUTINE_RUNNER_OUTER_GRACE_MS,
   ROUTINE_SAME_DOMAIN_CHILD_GAP_MS,
-  routineRunnerOuterTimeoutMs,
 } from "../lib/civic-data/bounded-child-pass.ts";
-import {
-  ROUTINE_READER_CHILD_CONCURRENCY,
-  ROUTINE_READER_MEETING_TIMEOUT_MS,
-  ROUTINE_READER_SINGLE_TIMEOUT_MS,
-  routineReaderRepairDomains,
-} from "../lib/civic-data/reader-repair-protocol.ts";
-import { ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS, routineSupervisorOuterEvidence } from "../lib/civic-data/runner-receipt.ts";
-import { STANDING_NEON_REQUEST_DEADLINE_MS } from "../lib/ops/neon-request-deadline.ts";
+
+import { routineSupervisorOuterEvidence } from "../lib/civic-data/runner-receipt.ts";
 
 const MIN = 60_000;
 const T0 = Date.parse("2026-10-12T15:00:00.000Z");
@@ -223,63 +204,6 @@ test("C6: a lane with many due reads keeps reading, one read at a time a minute 
   assert.equal(HOT_READ_CATCH_UP_CONCURRENCY, 2);
 });
 
-test("C6: catch-up runs beside the source reads, and the Reader repair starts only once every read begun there has settled", async () => {
-  const task = meetingTasks[0]!;
-  const clock = hotClock(T0 - 44 * MIN); // due from T0 - 9 min: read beside the source reads
-  const late = meetingTasks.find((row) => row.acquisitionFailureDomain !== task.acquisitionFailureDomain)!;
-  const lateClock = hotClock(T0 - 26 * MIN); // due from T0 + 9 min
-  const fake = new FakeClock(T0);
-  const started: { readonly id: string; readonly atMs: number; readonly phase: string }[] = [];
-  let repairStartedAtMs = Number.NaN;
-  const launched = new Set<string>();
-  const laneLastEndedMs = new Map<string, number>();
-  const candidates = [candidateFor(task, clock), candidateFor(late, lateClock)];
-  const clockReads = candidates.map((row) => ({ task: row.task, ok: true as const, clock: row.clock }));
-  const run = runRoutinePassWithHotReadCatchUp({
-    source: fake.sleepUntil(T0 + 10 * MIN).then(() => "source settled" as const),
-    startRepair: (source) => {
-      assert.equal(source, "source settled", "the repair receives the source reads' result");
-      repairStartedAtMs = fake.now();
-      return { repair: fake.sleepUntil(fake.now() + 4 * MIN).then(() => "repair settled" as const), unblocked: fake.sleepUntil(fake.now() + MIN) };
-    },
-    now: fake.now,
-    sleepUntil: fake.sleepUntil,
-    concurrency: HOT_READ_CATCH_UP_CONCURRENCY,
-    admit: (phase, nowMs, slots, runningLanes) => {
-      const plan = hotReadCatchUpAdmission({
-        nowMs,
-        candidates: candidates.filter((row) => !launched.has(row.task.id)),
-        clockReads,
-        statedEnds: new Map(),
-        laneLastEndedMs,
-        busyLanes: runningLanes,
-        slots,
-        limitMs: Number.POSITIVE_INFINITY,
-      });
-      for (const row of plan.start) started.push({ id: row.id, atMs: nowMs, phase });
-      return plan;
-    },
-    read: async (row, atMs) => {
-      launched.add(row.id);
-      await fake.sleepUntil(atMs + 3 * MIN);
-      laneLastEndedMs.set(row.acquisitionFailureDomain, fake.now());
-    },
-  });
-  await fake.runUntil(run);
-  const result = await run;
-  assert.equal(result.source, "source settled");
-  assert.equal(result.repair, "repair settled");
-  assert.deepEqual(result.errors, []);
-  assert.deepEqual(started, [
-    { id: task.id, atMs: T0, phase: "SOURCE" },
-    // Due at T0 + 9 min, seen by the minute's recheck.
-    { id: late.id, atMs: T0 + 9 * MIN, phase: "SOURCE" },
-  ]);
-  assert.ok(HOT_READ_CATCH_UP_RECHECK_MS <= MIN);
-  // The source reads ended at +10; the read begun at +9 ran until +12, and only then did the repair start.
-  assert.equal(repairStartedAtMs, T0 + 12 * MIN);
-});
-
 test("C6: a short phase with nothing due starts no read, a failed phase still fails, and a catch-up defect stops catch-up without costing the phase", async () => {
   const fake = new FakeClock(T0 + 30_000);
   let admissions = 0;
@@ -412,64 +336,6 @@ test("C6: known-due catch-up reads fit the server's 20-minute source and 25-minu
   const latestStartMs = repairDeadlineMs - hotReadCatchUpReadWorstCaseMs();
   assert.deepEqual(hotReadCatchUpAdmission({ ...base, nowMs: latestStartMs, limitMs: repairDeadlineMs }).start.map(({ id }) => id), [task.id]);
   assert.deepEqual(hotReadCatchUpAdmission({ ...base, nowMs: latestStartMs + 1, limitMs: repairDeadlineMs }).pastLimit.map(({ id }) => id), [task.id]);
-});
-
-test("C6: catch-up reads reserve repair time without restoring the retired pilot timeout", () => {
-  const domains = routineReaderRepairDomains();
-  const bound = routineFrontierPassBound();
-  const outer = routineRunnerOuterTimeoutMs(bound.commandCount, bound.largestFailureDomainSize, {
-    neonRequestDeadlineMs: STANDING_NEON_REQUEST_DEADLINE_MS,
-    settlementRequestsPerCommand: ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS,
-    clockTaskCount: ROUTINE_SOURCE_TASKS.length,
-    clockConcurrency: ROUTINE_CLOCK_READ_CONCURRENCY,
-    clockRequestsPerTask: ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK,
-    coordinationRequests: 4,
-    readerSingleDomains: domains.filter(({ mode }) => mode === "SINGLE").length,
-    readerSingleTimeoutMs: ROUTINE_READER_SINGLE_TIMEOUT_MS,
-    readerMeetingDomains: domains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length,
-    readerMeetingTimeoutMs: ROUTINE_READER_MEETING_TIMEOUT_MS,
-    readerConcurrency: ROUTINE_READER_CHILD_CONCURRENCY,
-  });
-  const work = T0 + outer - ROUTINE_RUNNER_COORDINATION_AND_PERSISTENCE_BUDGET_MS - ROUTINE_RUNNER_OUTER_GRACE_MS;
-  assert.equal(routinePassWorkDeadlineMs(T0, domains), work);
-  // The Reader repair's worst case: its singles four at a time, then the meeting aggregate.
-  const readerWorst = Math.ceil(domains.filter(({ mode }) => mode === "SINGLE").length / ROUTINE_READER_CHILD_CONCURRENCY) * ROUTINE_READER_SINGLE_TIMEOUT_MS +
-    domains.filter(({ mode }) => mode === "MEETING_AGGREGATE").length * ROUTINE_READER_MEETING_TIMEOUT_MS;
-  assert.equal(routinePassSourceCatchUpDeadlineMs(T0, domains), work - readerWorst);
-  // The parent launcher imposes no whole-pass timeout.
-  const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
-  assert.match(pilot, /await runRuntimeChildren\(/);
-  const launcher = readFileSync("scripts/pilot-runtime-child.mts", "utf8");
-  assert.doesNotMatch(launcher, /\btimeout\s*:/);
-  // A read has its own enforced wall limit; the generic idle timeout cannot block admission.
-  const settlementMs = ROUTINE_DURABLE_RECEIPT_MAX_REQUESTS * STANDING_NEON_REQUEST_DEADLINE_MS;
-  assert.equal(HOT_READ_CATCH_UP_READ_BUDGET_MS, 5 * MIN);
-  assert.equal(hotReadCatchUpReadWorstCaseMs(), HOT_READ_CATCH_UP_READ_BUDGET_MS + settlementMs);
-  assert.equal(HOT_READ_CATCH_UP_CONCURRENCY, ROUTINE_CHILD_CONCURRENCY / 2, "four pass children plus two reads at the peak");
-});
-
-test("C6: the repairs a catch-up read could race run first", () => {
-  const domains = routineReaderRepairDomains();
-  const hot = new Set(ROUTINE_SOURCE_TASKS.filter((task) => task.contract.schedule?.kind === "SITTING_WINDOW").map(({ id }) => id));
-  const racing = domains.filter((domain) => repairDomainRacesHotReads(domain, hot)).map(({ id }) => id);
-  assert.ok(racing.some(id => /^reader-readback:meetings-aggregate:[A-Z]{2}:/.test(id)));
-  assert.ok(domains.some(domain => racing.includes(domain.id) && domain.contracts.some(contract => contract.id === "pima-legistar-outcomes")), "the outcome routine follows the Board's sittings");
-  assert.ok(!racing.includes("reader-readback:fec-funding"));
-  assert.ok(racing.length < domains.length, "unrelated state repairs never delay catch-up");
-
-  const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /const readerLaunch = \[\s*\.\.\.readerDomains\.filter\(\(domain\) => repairDomainRacesHotReads\(domain, hotReadTaskIds\)\),\s*\.\.\.readerDomains\.filter\(\(domain\) => !repairDomainRacesHotReads/);
-  assert.match(runner, /const active = planned\.domains;\s*return runBoundedChildPass\(\s*active\.map/);
-  assert.match(runner, /return \{ repair: readerPass, unblocked: Promise\.resolve\(\) \};/);
-  assert.match(runner, /repairingContractIds\.add\(contract.id\)/);
-  assert.match(runner, /!launchedTaskIds\.has\(id\) && !repairingContractIds\.has\(id\)/);
-  assert.match(runner, /for \(const contract of domain.contracts\) repairingContractIds\.delete\(contract.id\)/);
-  assert.match(runner, /await runRoutinePassWithHotReadCatchUp\(\{\s*source: sourcePass,\s*startRepair: runs =>/);
-  assert.match(runner, /onSettled: async \(result\) => settlePendingRun\(run, result\)/, "catch-up reads settle exactly as the pass's own");
-  assert.match(runner, /\.\.\.\[\.\.\.unsettledSourceRuns\]\.map\(\(id\) => pendingByTaskId\.get\(id\)!\.task\.acquisitionFailureDomain\)/, "never beside a read of the same lane");
-  assert.match(runner, /limitMs: hotReadLimitsMs\[phase\]/);
-  assert.match(runner, /setTimeout\(resolve, Math\.max\(0, atMs - Date\.now\(\)\)\)\.unref\(\)/);
-  assert.match(runner, /const hotReadTasks = FORCE \|\| PUBLISH_NOW\s*\? \[\]/, "a forced pass keeps its exact selection");
 });
 
 test("C6: the parent's account of a killed pass counts the reads admitted during repair", () => {

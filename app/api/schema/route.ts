@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../../lib/db/client.ts";
 
 import {
   compareSchemaState,

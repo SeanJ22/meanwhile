@@ -12,7 +12,7 @@ import s from "./v6.module.css";
 const percentWords = (p: number | null) => (p === null ? "—" : `${p}%`);
 
 export function TopicCountsPanel() {
-  const { reading, reload } = useReading<TopicCountsView>("/api/admin/v6/topic-counts", 5 * 60_000);
+  const { reading, reload, status } = useReading<TopicCountsView>("/api/admin/v6/topic-counts");
   const [period, setPeriod] = useState("all");
   const [topic, setTopic] = useState("all");
   const data = reading.kind === "ready" && reading.data.kind === "READ" ? reading.data : null;
@@ -20,6 +20,7 @@ export function TopicCountsPanel() {
   const { page, pager } = usePager(rows, 15);
   return (
     <Card title="What residents ask about" id="topic-counts">
+      {status}
       {reading.kind === "loading" && <Loading what="the topic counts" />}
       {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
       {reading.kind === "ready" && reading.data.kind === "NOT_INSTALLED" && <Empty>—</Empty>}

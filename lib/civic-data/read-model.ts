@@ -1,18 +1,19 @@
+import { isTranslationProjection } from "./published-projection-base.ts";
 import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
-import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
+import { currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import { OPEN_DATA_READER_PAYLOAD } from "../sources/open-data/reader-sql.ts";
 import {createRequire} from "node:module";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
 import { readerCanonicalEntry } from "../reader/canonical-context.ts";
+import { registrationRecipientNamesSql } from "../registration/recipient-names.ts";
 
 import type {
   CandidateEvent,
   CandidateVersionRecord,
-  PromotedPointerIdentity,
   PromotedProjection,
   RoutineRecordClass,
   ValidationReceipt,
@@ -31,7 +32,6 @@ export type { CivicDataFixtureEnvironment } from "./fixture-policy.ts";
 import type { CandidateVersionReadback, PublishedCandidateMetadata, RoutineDataStore } from "./store.ts";
 import { projectionKey } from "./projection-key.ts";
 
-const TTL_MS = 30_000;
 const SHA256 = /^[a-f0-9]{64}$/;
 const proofRequire=createRequire(import.meta.url);
 
@@ -99,7 +99,7 @@ export type CivicDataReadResult<T> =
 export type CivicDataReadStore = Pick<
   RoutineDataStore,
   "readPromotion" | "readCandidate"
-> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata">> & {
+> & Partial<Pick<RoutineDataStore, "readPromotions" | "readCandidates" | "readPromotionIdentity" | "readPromotionIdentities" | "readPublishedCandidateMetadata" | "readVersioned" | "readPublicationBase" | "readLegiscanPersonParts" | "readLegiscanStateCatalog">> & {
   /** Already published canonical database rows, read together for the reader shelf. */
   readonly readPromotedEntry?: (recordClass: RoutineRecordClass, scope: string) => Promise<PromotedEdgeEntry>;
 };
@@ -114,27 +114,8 @@ export interface PromotedCivicDataReadOptions {
   readonly now?: string;
   /** Age from the actual retrieval instant, not from process start. */
   readonly maxAgeMs?: number;
-  readonly bypassCache?: boolean;
-  /** Used only for its own class and scope, while the pointer still names it and its payload hashes to the proven payload; never with `bypassCache`. */
-  readonly attested?: AttestedPromotion;
   /** When present the read is answered from it and the store is not opened. The runner and verification paths never pass it. */
   readonly edge?: PromotedEdgeEntry<unknown>;
-}
-
-function attestationHolds(
-  attested: AttestedPromotion,
-  recordClass: RoutineRecordClass,
-  scope: string,
-  projection: PromotedProjection<unknown>,
-): boolean {
-  return attested.recordClass === recordClass &&
-    attested.scope === scope &&
-    projection.recordClass === recordClass &&
-    projection.scope === scope &&
-    projection.key === projectionKey(recordClass, scope) &&
-    projection.versionId === attested.versionId &&
-    projection.lastKnownGoodVersionId === attested.versionId &&
-    promotedPayloadSha256(projection.payload) === attested.payloadSha256;
 }
 
 function attestedCandidate(attested: AttestedPromotion, projection: PromotedProjection<unknown>): CandidateVersionRecord {
@@ -159,17 +140,6 @@ function attestedCandidate(attested: AttestedPromotion, projection: PromotedProj
     failureCode: null,
     failureDetail: null,
   };
-}
-
-export function attestPromotedVersion(
-  recordClass: RoutineRecordClass,
-  scope: string,
-  store: CivicDataReadStore,
-): AttestedPromotion | null {
-  if (isStateAuthorityScope(scope)) return stateAttestations.get(store)?.get(projectionKey(recordClass, scope)) ?? null;
-  const proven = provenPointersOf(store, scope).get(projectionKey(recordClass, scope));
-  if (!proven) return null;
-  return attestationOf(recordClass, scope, proven.projection, proven.candidate);
 }
 
 function attestationOf(
@@ -221,7 +191,7 @@ export function promotedEdgeEntryOf<T>(
     verifiedEdgeEntries.add(entry);
     return entry;
   }
-  const proven = provenPointersOf(store, scope).get(projectionKey(recordClass, scope));
+  const proven = provenPointersOf(store).get(projectionKey(recordClass, scope));
   if (!proven || proven.projection.versionId !== result.projection.versionId) return null;
   const attested = attestationOf(recordClass, scope, result.projection, proven.candidate);
   return attested === null ? null : { kind: "PROMOTED", projection: result.projection, attested };
@@ -321,46 +291,15 @@ type ProvenCandidate = { readonly candidate: {
   readonly temporal: Pick<CandidateVersionRecord["candidate"]["temporal"], "version" | "sourceThrough" | "staleAtRetrieval">;
 } };
 type ProvenPair = { readonly projection: PromotedProjection; readonly candidate: ProvenCandidate };
-interface CachedPromotion extends ProvenPair { readonly expiresAt: number }
-
-const cache = new Map<string, CachedPromotion | { readonly expiresAt: number; readonly projection: null }>();
-const provenByVersion = new Map<string, ProvenPair>();
 const DEFAULT_STORE: object = {};
-let inflight = new WeakMap<object, Map<string, Promise<ProvenPair | null>>>();
 let provenPointers = new WeakMap<object, Map<string, ProvenPair>>();
-const stateRequests = new WeakMap<object, WeakMap<object, {
-  pointers: Map<string, ProvenPair>;
-  flights: Map<string, Promise<ProvenPair | null>>;
-}>>();
 const stateProofs = new WeakMap<PromotedProjection, { candidate: ProvenCandidate; attested: AttestedPromotion }>();
-const stateAttestations = new WeakMap<object, Map<string, AttestedPromotion>>();
 
 function isStateAuthorityScope(scope: string): boolean {
   return statePublicationScope(scope);
 }
 
-function stateRequest(store: CivicDataReadStore | undefined) {
-  const request = currentReaderAuthorityEdge() ?? currentReaderSelection();
-  if (!request) return null;
-  let stores = stateRequests.get(request);
-  if (!stores) { stores = new WeakMap(); stateRequests.set(request, stores); }
-  const identity = store ?? DEFAULT_STORE;
-  let reads = stores.get(identity);
-  if (!reads) { reads = { pointers: new Map(), flights: new Map() }; stores.set(identity, reads); }
-  return reads;
-}
-
-function inflightOf(store: CivicDataReadStore | undefined, scope: string): Map<string, Promise<ProvenPair | null>> {
-  const request = isStateAuthorityScope(scope) ? stateRequest(store) : null;
-  if (request) return request.flights;
-  const identity = store ?? DEFAULT_STORE;
-  let flights = inflight.get(identity);
-  if (!flights) { flights = new Map(); inflight.set(identity, flights); }
-  return flights;
-}
-
-function provenPointersOf(store: CivicDataReadStore | undefined, scope?: string): Map<string, ProvenPair> {
-  if (scope && isStateAuthorityScope(scope)) return stateRequest(store)?.pointers ?? new Map();
+function provenPointersOf(store: CivicDataReadStore | undefined): Map<string, ProvenPair> {
   const identity = store ?? DEFAULT_STORE;
   let pointers = provenPointers.get(identity);
   if (!pointers) { pointers = new Map(); provenPointers.set(identity, pointers); }
@@ -370,9 +309,7 @@ function provenPointersOf(store: CivicDataReadStore | undefined, scope?: string)
 function rememberStateProof(
   projection: PromotedProjection,
   candidate: ProvenCandidate,
-  store: CivicDataReadStore | undefined,
   payloadSha256: string,
-  retainAttestation: boolean,
 ): ProvenPair {
   const { retrieval, temporal } = candidate.candidate;
   const metadata: ProvenCandidate = { candidate: {
@@ -380,31 +317,8 @@ function rememberStateProof(
     temporal: { version: temporal.version, sourceThrough: temporal.sourceThrough, staleAtRetrieval: temporal.staleAtRetrieval },
   } };
   const attested = attestationOf(projection.recordClass, projection.scope, projection, metadata, payloadSha256);
-  if (attested) {
-    stateProofs.set(projection, { candidate: metadata, attested });
-    if (retainAttestation) {
-      const identity = store ?? DEFAULT_STORE;
-      let attestations = stateAttestations.get(identity);
-      if (!attestations) { attestations = new Map(); stateAttestations.set(identity, attestations); }
-      attestations.set(projection.key, attested);
-    }
-  }
+  if (attested) stateProofs.set(projection, { candidate: metadata, attested });
   return { projection, candidate: metadata };
-}
-
-function withLatestConfirmation<T>(projection: PromotedProjection<T>, identity: PromotedPointerIdentity): PromotedProjection<T> {
-  const { latestConfirmation: _proven, ...rest } = projection;
-  return identity.latestConfirmation ? { ...rest, latestConfirmation: identity.latestConfirmation } : rest;
-}
-
-function samePointer(identity: PromotedPointerIdentity, projection: PromotedProjection): boolean {
-  return identity.key === projection.key &&
-    identity.sourceId === projection.sourceId &&
-    identity.recordClass === projection.recordClass &&
-    identity.scope === projection.scope &&
-    identity.versionId === projection.versionId &&
-    identity.lastKnownGoodVersionId === projection.lastKnownGoodVersionId &&
-    Date.parse(identity.promotedAt) === Date.parse(projection.promotedAt);
 }
 
 function emptyMetadata(recordClass: RoutineRecordClass, scope: string): CivicDataReadMetadata {
@@ -479,7 +393,7 @@ export async function readPromotedCivicData<T>(
   if (options.store?.readPromotedEntry) return readPromotedFromEdge<T>(recordClass, scope, await options.store.readPromotedEntry(recordClass, scope), now, options.maxAgeMs);
   if (options.edge !== undefined) return readPromotedFromEdge<T>(recordClass, scope, options.edge, now, options.maxAgeMs);
   const injected = options.store !== undefined;
-  const canonical = !injected && !currentReaderAuthorityEdge() && !options.bypassCache && !isStateAuthorityScope(scope)
+  const canonical = !injected && !currentReaderAuthorityEdge() && !isStateAuthorityScope(scope)
     ? readerCanonicalEntry(recordClass, scope) : undefined;
   if (canonical) {
     try { return readPromotedFromEdge<T>(recordClass, scope, await canonical, now, options.maxAgeMs); }
@@ -499,7 +413,7 @@ export async function readPromotedCivicData<T>(
     return storeReadFailedResult<T>(recordClass, scope, null, new Error(`STATE_READER_SCOPE_INVALID:${recordClass}:${scope}`));
   }
 
-  if (!injected && (!options.bypassCache || currentReaderSelection() || currentReaderRoute() !== "unattributed" || currentReaderAuthorityEdge()?.edgeOnly)) {
+  if (!injected) {
     const edge = await ensurePromotedEdge(recordClass, scope);
     if (edge !== null) return readPromotedFromEdge<T>(recordClass, scope, edge.value, now, options.maxAgeMs);
     refuseDatabaseInEdgeOnlyContext(`${recordClass}:${scope}`);
@@ -523,41 +437,7 @@ export async function readPromotedCivicData<T>(
   }
 
   const key = `${recordClass}:${scope}`;
-  const held = !injected && !isStateAuthorityScope(scope) && !options.bypassCache ? cache.get(key) : undefined;
-  if (held && held.expiresAt > Date.now()) {
-    if (held.projection === null) {
-      return {
-        kind: "NOT_RECORDED",
-        value: null,
-        metadata: emptyMetadata(recordClass, scope),
-        detail: `The routine civic-data store answered and holds no canonical pointer for ${key}.`,
-      };
-    }
-    return promotedResult(held.projection as PromotedProjection<T>, held.candidate, now, options.maxAgeMs);
-  }
-  if (options.bypassCache) return loadPromotedCivicData<T>(recordClass, scope, options, now, key);
-
-  const flights = inflightOf(options.store, scope);
-  const pending = flights.get(key);
-  if (pending !== undefined) {
-    const proven = await pending;
-    if (proven !== null) return promotedResult(proven.projection as PromotedProjection<T>, proven.candidate, now, options.maxAgeMs);
-  }
-  let settle: (proven: ProvenPair | null) => void = () => undefined;
-  const flight = new Promise<ProvenPair | null>((resolve) => { settle = resolve; });
-  flights.set(key, flight);
-  try {
-    const result = await loadPromotedCivicData<T>(recordClass, scope, options, now, key);
-    const proof = result.kind === "PROMOTED" && isStateAuthorityScope(scope) ? stateProofs.get(result.projection) : null;
-    settle(result.kind === "PROMOTED" ? proof ? { projection: result.projection, candidate: proof.candidate }
-      : provenPointersOf(options.store, scope).get(key) ?? null : null);
-    return result;
-  } catch (error) {
-    settle(null);
-    throw error;
-  } finally {
-    if (flights.get(key) === flight) flights.delete(key);
-  }
+  return loadPromotedCivicData<T>(recordClass, scope, options, now, key);
 }
 
 async function loadPromotedCivicData<T>(
@@ -567,28 +447,14 @@ async function loadPromotedCivicData<T>(
   now: string,
   key: string,
 ): Promise<CivicDataReadResult<T>> {
-  const injected = options.store !== undefined;
   const stateAuthority = isStateAuthorityScope(scope);
-  const cacheable = !injected && !stateAuthority;
   let observedProjection: PromotedProjection<T> | null = null;
   try {
     const store = options.store ?? new (await import("./store.ts")).PostgresRoutineDataStore();
-    const known = options.bypassCache ? undefined : provenPointersOf(options.store, scope).get(key);
-    if (known !== undefined && typeof store.readPromotionIdentity === "function") {
-      const identity = await store.readPromotionIdentity(recordClass, scope);
-      if (identity !== null && samePointer(identity, known.projection)) {
-        const projection = withLatestConfirmation(known.projection, identity);
-        if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: known.candidate });
-        if (stateAuthority) {
-          const proof = stateProofs.get(known.projection);
-          if (proof) rememberStateProof(projection, known.candidate, options.store, proof.attested.payloadSha256, true);
-        }
-        return promotedResult(projection as PromotedProjection<T>, known.candidate, now, options.maxAgeMs);
-      }
-    }
-    const projection = await store.readPromotion<T>(recordClass, scope);
+    const base=recordClass==="FEDERAL_MONEY"
+      ? await (store.readPublicationBase?.(recordClass,scope)??Promise.reject(new Error("FEDERAL_PUBLICATION_BASE_READER_REQUIRED"))) : null;
+    const projection = base ? base.current as PromotedProjection<T>|null : await store.readPromotion<T>(recordClass, scope);
     if (projection === null) {
-      if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection: null });
       return {
         kind: "NOT_RECORDED",
         value: null,
@@ -597,23 +463,7 @@ async function loadPromotedCivicData<T>(
       };
     }
     observedProjection = projection;
-    // The supervisor already proved this exact version in this pass.
-    if (!options.bypassCache && options.attested && attestationHolds(options.attested, recordClass, scope, projection)) {
-      const candidate = attestedCandidate(options.attested, projection);
-      if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
-      if (stateAuthority) rememberStateProof(projection, candidate, options.store, options.attested.payloadSha256, true);
-      return promotedResult(projection, candidate, now, options.maxAgeMs);
-    }
-    // Immutable non-state versions reuse their proof; verification reads always re-prove.
-    if (!options.bypassCache && !stateAuthority) {
-      const proven = provenByVersion.get(projection.versionId);
-      if (proven) {
-        if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
-        provenPointersOf(options.store, scope).set(key, { projection, candidate: proven.candidate });
-        return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
-      }
-    }
-    if (stateAuthority) {
+    if (stateAuthority || isTranslationProjection(recordClass, scope)) {
       if (!store.readPublishedCandidateMetadata) throw new Error("STATE_PUBLISHED_METADATA_READ_REQUIRED");
       const candidate = await store.readPublishedCandidateMetadata(projection.versionId);
       if (!candidate) return {
@@ -623,11 +473,10 @@ async function loadPromotedCivicData<T>(
       const issue = publishedStateProofIssue(recordClass, scope, projection, candidate);
       if (issue) return promotionProofInvalidResult(recordClass, scope, projection, issue);
       if (candidate.candidate.normalization.stateRecordHashes) rememberStatePublicationHashes(projection, candidate.candidate.normalization);
-      const proven = rememberStateProof(projection, candidate, options.store, candidate.candidate.normalization.normalizedHash!, !options.bypassCache);
-      if (!options.bypassCache) provenPointersOf(options.store, scope).set(key, proven);
+      const proven = rememberStateProof(projection, candidate, candidate.candidate.normalization.normalizedHash!);
       return promotedResult(projection, proven.candidate, now, options.maxAgeMs);
     }
-    const candidate = await readProofCandidate(store, projection.versionId);
+    const candidate = base ? base.lkg : await readProofCandidate(store, projection.versionId);
     const predecessorVersionId = trustedLkgPredecessorVersionId(candidate);
     const predecessor = predecessorVersionId !== null
       ? await store.readCandidate(predecessorVersionId)
@@ -642,11 +491,7 @@ async function loadPromotedCivicData<T>(
       options.maxAgeMs,
     );
     if (result.kind === "PROMOTED" && candidate !== null) {
-      if (cacheable) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
-      if (!options.bypassCache) {
-        provenByVersion.set(projection.versionId, { projection, candidate });
-        provenPointersOf(options.store, scope).set(key, { projection, candidate });
-      }
+      provenPointersOf(options.store).set(key, { projection, candidate });
     }
     return result;
   } catch (error) {
@@ -708,45 +553,7 @@ export async function readPromotedCivicDataBatch<T>(
   const now = options.now ?? new Date().toISOString();
   const uniqueScopes = [...new Set(scopes)];
   const results = new Map<string, CivicDataReadResult<T>>();
-  let misses: string[] = [];
-  for (const scope of uniqueScopes) {
-    const key = projectionKey(recordClass, scope);
-    const held = !injected && !options.bypassCache ? cache.get(key) : undefined;
-    if (!held || held.expiresAt <= Date.now()) {
-      misses.push(scope);
-      continue;
-    }
-    results.set(scope, held.projection === null
-      ? notRecordedResult(recordClass, scope)
-      : promotedResult(held.projection as PromotedProjection<T>, held.candidate, now, options.maxAgeMs));
-  }
-
-  const pointers = options.bypassCache ? null : provenPointersOf(options.store);
-  const known = pointers === null ? [] : misses.filter((scope) => pointers.has(projectionKey(recordClass, scope)));
-  if (pointers !== null && known.length > 0 && typeof store.readPromotionIdentities === "function") {
-    let identities: readonly PromotedPointerIdentity[] | null = null;
-    try {
-      identities = await store.readPromotionIdentities(recordClass, known);
-    } catch {
-      identities = null;
-    }
-    if (identities !== null) {
-      const identitiesByScope = new Map<string, PromotedPointerIdentity[]>();
-      for (const identity of identities) {
-        identitiesByScope.set(identity.scope, [...(identitiesByScope.get(identity.scope) ?? []), identity]);
-      }
-      misses = misses.filter((scope) => {
-        const key = projectionKey(recordClass, scope);
-        const proven = pointers.get(key);
-        const rows = identitiesByScope.get(scope) ?? [];
-        if (proven === undefined || rows.length !== 1 || !samePointer(rows[0]!, proven.projection)) return true;
-        const projection = withLatestConfirmation(proven.projection, rows[0]!);
-        results.set(scope, promotedResult(projection as PromotedProjection<T>, proven.candidate, now, options.maxAgeMs));
-        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
-        return false;
-      });
-    }
-  }
+  const misses = uniqueScopes;
 
   if (misses.length > 0) {
     let projections: readonly PromotedProjection<T>[];
@@ -773,13 +580,7 @@ export async function readPromotedCivicDataBatch<T>(
     const uniqueProjections = [...projectionsByScope.values()]
       .filter((rows) => rows.length === 1)
       .map((rows) => rows[0]!);
-        // Only fetch candidates for versions not already proven in this instance; a moved pointer is a memo miss.
-    const memoUsable = !options.bypassCache;
-    const candidateIds = [...new Set(
-      uniqueProjections
-        .filter((projection) => !(memoUsable && provenByVersion.has(projection.versionId)))
-        .map((projection) => projection.versionId),
-    )];
+    const candidateIds = [...new Set(uniqueProjections.map(projection => projection.versionId))];
     let candidates: readonly CandidateVersionReadback[] = [];
     if (candidateIds.length > 0) {
       try {
@@ -855,7 +656,6 @@ export async function readPromotedCivicDataBatch<T>(
       if (pointerRows.length === 0) {
         const result = notRecordedResult<T>(recordClass, scope);
         results.set(scope, result);
-        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection: null });
         continue;
       }
       const projection = pointerRows[0]!;
@@ -866,16 +666,6 @@ export async function readPromotedCivicDataBatch<T>(
           projection,
           "the batch read returned more than one canonical pointer for the requested scope",
         ));
-        continue;
-      }
-            // Already proven: no candidate was fetched for it, so `candidatesById` will not hold it.
-      const proven = memoUsable ? provenByVersion.get(projection.versionId) : undefined;
-      if (proven) {
-        results.set(scope, promotedResult(projection, proven.candidate, now, options.maxAgeMs));
-        if (!injected) {
-          cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate: proven.candidate });
-        }
-        provenPointersOf(options.store).set(key, { projection, candidate: proven.candidate });
         continue;
       }
       const candidateRows = candidatesById.get(projection.versionId) ?? [];
@@ -927,11 +717,7 @@ export async function readPromotedCivicDataBatch<T>(
       }
       results.set(scope, result);
       if (result.kind === "PROMOTED" && candidate !== null) {
-        if (!injected) cache.set(key, { expiresAt: Date.now() + TTL_MS, projection, candidate });
-        if (!options.bypassCache) {
-          provenByVersion.set(projection.versionId, { projection, candidate });
-          provenPointersOf(options.store).set(key, { projection, candidate });
-        }
+        provenPointersOf(options.store).set(key, { projection, candidate });
       }
     }
   }
@@ -956,12 +742,7 @@ export interface ProvenCivicDataHistoryOptions {
   /** Payloads per page, not a cap on the historical chain. */
   readonly pageSize?: number;
   readonly now?: string;
-  readonly bypassCache?: boolean;
 }
-
-const HISTORY_TTL_MS = 60_000;
-const historicalPages = new Map<string, { readonly expiresAt: number; readonly value: ProvenCivicDataHistory<unknown> }>();
-const historicalFlights = new Map<string, Promise<ProvenCivicDataHistory<unknown>>>();
 
 export async function readPromotedCivicDataPredecessors<T>(
   recordClass: RoutineRecordClass,
@@ -978,13 +759,6 @@ export async function readPromotedCivicDataPredecessors<T>(
   const cursor = options.cursor ?? null;
   if (cursor !== null && (!cursor || cursor.length > 256 || /\s/.test(cursor))) {
     return { versions: [], complete: false, nextVersionId: null, issue: "Historical continuation is malformed." };
-  }
-  const cacheKey = `${key}|${currentId}|${cursor ?? ""}|${pageSize}|${options.voteBill ?? ""}`;
-  if (!options.store && !options.bypassCache) {
-    const cached = historicalPages.get(cacheKey);
-    if (cached && cached.expiresAt > Date.now()) return cached.value as ProvenCivicDataHistory<T>;
-    const pending = historicalFlights.get(cacheKey);
-    if (pending) return pending as Promise<ProvenCivicDataHistory<T>>;
   }
   const work = (async (): Promise<ProvenCivicDataHistory<T>> => {
     const { PostgresRoutineDataStore, readPointerMoveEvents } = await import("./store.ts");
@@ -1072,16 +846,7 @@ export async function readPromotedCivicDataPredecessors<T>(
       return fail(`Historical store read failed (${error instanceof Error ? error.name : "unknown error"}).`);
     }
   })();
-  if (options.store || options.bypassCache) return work;
-  historicalFlights.set(cacheKey, work as Promise<ProvenCivicDataHistory<unknown>>);
-  try {
-    const result = await work;
-    if (result.issue === null) historicalPages.set(cacheKey,
-      { expiresAt: Date.now() + HISTORY_TTL_MS, value: result as ProvenCivicDataHistory<unknown> });
-    return result;
-  } finally {
-    historicalFlights.delete(cacheKey);
-  }
+  return work;
 }
 
 function observedProjectionMetadata<T>(
@@ -1185,6 +950,7 @@ function publishedStateProofIssue(
   if (!candidate.temporal || typeof candidate.temporal.version !== "string" || typeof candidate.temporal.sourceThrough !== "string")
     return "the published candidate lacks temporal metadata";
   const hash = candidate.normalization.normalizedHash;
+  if (isTranslationProjection(recordClass, scope) && candidate.normalization.normalizedPayloadHash !== hash) return "the normalized evidence and reader payload hashes differ";
   if (typeof hash !== "string" || !SHA256.test(hash)) return "the published candidate lacks its validated payload hash";
   try {
     const owned = immutableStateValue(projection.payload);
@@ -1379,13 +1145,10 @@ export function promotedVersionOrThrow<T>(result: CivicDataReadResult<T>): strin
 }
 
 export function clearPromotedReadModelCache(): void {
-  cache.clear();
-  provenByVersion.clear();
   provenPointers = new WeakMap();
-  inflight = new WeakMap();
 }
 
-const readerProjectionReads = new WeakMap<ReaderSelection, Map<string, Promise<PromotedEdgeEntry>>>();
+const readerProjectionSelections = new WeakMap<ReaderSelection, Map<string, { selection: ReaderSelection; exactKeys: boolean }>>();
 
 /** The reviewed national question catalog stays whole; only the requested
  * members' position cells cross the wire. Generic geographic slicing would
@@ -1444,31 +1207,20 @@ const BALLOT_FEC_MONEY_PAYLOAD = `(WITH root AS MATERIALIZED (SELECT reader_payl
 export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[], options: {readonly exactKeys?: true} = {}): Promise<PromotedEdgeEntry> {
   const selection = currentReaderSelection();
   if (!selection) throw new Error("READER_SELECTION_REQUIRED");
-  let held = readerProjectionReads.get(selection);
-  if (!held) { held = new Map(); readerProjectionReads.set(selection, held); }
+  let held = readerProjectionSelections.get(selection);
+  if (!held) { held = new Map(); readerProjectionSelections.set(selection, held); }
   const pointer = `${recordClass}:${scope}`;
-  const existing = held.get(pointer);
-  if (existing) return existing;
-  const read = loadReaderProjection(recordClass, scope, { ...selection, keys: new Set(options.exactKeys ? keys : [...selection.keys, ...keys]) },options.exactKeys === true);
-  held.set(pointer, read);
-  void read.catch(() => undefined);
-  return read;
+  const primed = held.get(pointer) ?? {
+    selection: { ...selection, keys: new Set(options.exactKeys ? keys : [...selection.keys, ...keys]) },
+    exactKeys: options.exactKeys === true,
+  };
+  held.set(pointer, primed);
+  return loadReaderProjection(recordClass, scope, primed.selection, primed.exactKeys);
 }
 
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
-  let held = readerProjectionReads.get(selection);
-  if (!held) { held = new Map(); readerProjectionReads.set(selection, held); }
-  const pointer = `${recordClass}:${scope}`;
-  const key = pointer + JSON.stringify([...selection.keys].sort());
-  const prior = held.get(pointer) ?? held.get(key);
-  if (prior) return prior;
-  const read = loadReaderProjection(recordClass, scope, selection);
-  held.set(key, read);
-  try {
-    const value = await read;
-    if (value.kind === "NOT_RECORDED") held.set(pointer, read);
-    return value;
-  } catch (error) { held.delete(key); throw error; }
+  const primed = readerProjectionSelections.get(selection)?.get(`${recordClass}:${scope}`);
+  return loadReaderProjection(recordClass, scope, primed?.selection ?? selection, primed?.exactKeys ?? false);
 }
 
 // On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.
@@ -1479,10 +1231,11 @@ async function loadReaderProjection(recordClass: RoutineRecordClass, scope: stri
   const money = recordClass === "STATE_CAMPAIGN_FINANCE";
   const fec = exactKeys && recordClass === "FEC_FUNDING";
   const openData=recordClass==="CURATED_READER_RECORD"&&(scope==="epa-echo:national"||scope==="socrata-discovery:national");
-  const payload = fec ? BALLOT_FEC_MONEY_PAYLOAD : recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD
+  const selectedPayload = fec ? BALLOT_FEC_MONEY_PAYLOAD : recordClass === "FEDERAL_KEY_VOTE" ? FEDERAL_KEY_VOTE_READER_PAYLOAD
     : money ? exactKeys ? BALLOT_STATE_MONEY_PAYLOAD : STATE_MONEY_READER_PAYLOAD
     : openData ? OPEN_DATA_READER_PAYLOAD
     : window ? `reader_inventory_payload(p.payload,$4::int,$5::int)` : `reader_place_payload(p.payload,$3::text[],$4::jsonb)`;
+  const payload = recordClass === "REGISTRATION" ? registrationRecipientNamesSql("p.payload", selectedPayload) : selectedPayload;
   const [rows] = await query([{ text: `SELECT p.key, p.source_id, p.record_class, p.scope, p.current_version_id, p.last_known_good_version_id,
     p.promoted_at, (p.validation_receipt - 'excludedFacts') || jsonb_build_object('excludedFacts','[]'::jsonb) validation_receipt,
     ${payload} payload,

@@ -6,7 +6,7 @@ import type { ReadOnlyQuery } from "../../lib/control-plane/admin-view/promoted-
 import type { OpenDataFact } from "../../lib/sources/open-data/model.ts";
 import { openDataFactIssue } from "../../lib/sources/open-data/model.ts";
 import { GET } from "../../app/api/open-data/route.ts";
-import { neon, neonConfig } from "@neondatabase/serverless";
+import { neon, neonConfig } from "../../lib/db/client.ts";
 import { installPlaceMapQuery } from "../../lib/place-map/reader.ts";
 
 let mapHost: string | undefined;

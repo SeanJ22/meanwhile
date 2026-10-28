@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
@@ -11,7 +12,7 @@ export const runtime = "nodejs";
 const headers = { "cache-control": "no-store, no-cache, must-revalidate" };
 
 /** Durable order history, one bounded page of authoritative receipts. */
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const asOf = new Date().toISOString();
   const guard = await guardAdminRequest({ headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
@@ -42,3 +43,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ code: "HISTORY_READ_UNAVAILABLE" }, { status: 503, headers });
   }
 }
+
+export const GET = adminRead(get);

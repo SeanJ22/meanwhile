@@ -42,7 +42,7 @@ export function readDoorImport(root = process.cwd()): { readonly generatedAt: st
 /** Derived rows come from the promoted wiring, timed at its promotion; when it cannot be read the other doors still import. */
 export async function readDerivedForSeed(now: string): Promise<{ records: readonly DerivedWiringRecord[]; note: string; at: string }> {
   try {
-    const read = await readDerivedMeetingWiring({ bypassCache: true, now });
+    const read = await readDerivedMeetingWiring({  now });
     if (read.kind === "PROMOTED") {
       return { records: read.value.records, note: `${read.value.records.length} derived rows read from the promoted wiring.`, at: read.metadata.promotedAt ?? now };
     }

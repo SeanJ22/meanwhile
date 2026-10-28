@@ -5,8 +5,17 @@ import { join } from "node:path";
 import { execFileSync } from "node:child_process";
 import test from "node:test";
 import ts from "typescript";
-import { READER_REPAIR_PEAK_MIB, CALENDAR_READ_PEAK_MIB, memoryReading, RESEARCH_PARENT_PEAK_MIB, ROUTINE_ENTRY_PEAK_MIB, routineProcessSlots,
-  WORKER_ENTRY_PEAK_MIB, workerJobType, workerMemoryHost, workerProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
+import {
+  CALENDAR_READ_PEAK_MIB,
+  memoryReading,
+  RESEARCH_PARENT_PEAK_MIB,
+  ROUTINE_ENTRY_PEAK_MIB,
+  routineProcessSlots,
+  WORKER_ENTRY_PEAK_MIB,
+  workerJobType,
+  workerMemoryHost,
+  workerProcessSlots,
+} from "../lib/control-plane/workers/worker-slots.ts";
 
 const mib = 1024 ** 2;
 
@@ -21,21 +30,20 @@ test("the runner forwards ordered memory reservations without losing a catch-up 
     requests.push({ deadline, order });
     return Object.assign(() => {}, { observe: (pid: number) => observed.push(pid) });
   } };
-  const repairDeadline = Date.now() + 300_000, launchDeadline = Date.now() + 600_000;
+  const launchDeadline = Date.now() + 600_000;
   const started = new Set<string>(), ran = new Set<string>();
-  const acquire = new Function("routineMemorySlots", "PASS_REPAIR_DEADLINE_MS", "PASS_LAUNCH_DEADLINE_MS", "ROUTINE_CHILD_TIMEOUT_MS",
+  const acquire = new Function("routineMemorySlots", "PASS_LAUNCH_DEADLINE_MS", "ROUTINE_CHILD_TIMEOUT_MS",
     "childMemoryReleases", "startedSourceChildren", "ranThisPass",
     ts.transpileModule(source.slice(start, end), { compilerOptions: { target: ts.ScriptTarget.ESNext, module: ts.ModuleKind.ESNext } }).outputText + "\nreturn acquireChildMemory;")(
-    slots, repairDeadline, launchDeadline, 900_000, new Map(), started, ran) as (...args: unknown[]) => Promise<void>;
-  const order = { priority: 2, hold: true };
+    slots, launchDeadline, 900_000, new Map(), started, ran) as (...args: unknown[]) => Promise<void>;
+  const order = { priority: 2, first: true };
   const ordinary = { id: "state", args: ["scripts/ingest.ts"] };
   await acquire(ordinary, ["board"], order);
   const catchup = { id: "catchup", args: ["scripts/ingest.ts"], onStarted: undefined as ((pid: number) => void) | undefined };
   const earlierDeadline = Date.now() + 5_000;
   await acquire(catchup, ["catchup-board"], earlierDeadline);
-  await acquire({ id: "repair", args: ["scripts/routine-civic-data-reader-repair.mts"] });
   assert.deepEqual(requests, [
-    { deadline: launchDeadline, order }, { deadline: earlierDeadline, order: undefined }, { deadline: repairDeadline, order: undefined },
+    { deadline: launchDeadline, order }, { deadline: earlierDeadline, order: undefined },
   ]);
   catchup.onStarted?.(123);
   assert.deepEqual([...ran], ["catchup-board"]);
@@ -100,9 +108,11 @@ test("four lease workers acquire memory alongside a standing job and the full re
 
 test("small-state observations cannot lower complete native vote or ACS reservations", async () => {
   const host = workerMemoryHost({ processes: () => [] });
-  host.transact(state => { state.peaks = { "openstates-votes-refresh.mts": [100 * mib], "legiscan-votes-refresh.mts": [100 * mib] }; }, false);
+  host.transact(state => { state.peaks = { "openstates-votes-refresh.mts": [100 * mib], "legiscan-votes-refresh.mts": [100 * mib], "legiscan-bulk.mts": [100 * mib],
+    "place-map-tx/place-map-refresh.mts": [100 * mib] }; }, false);
   const slots = routineProcessSlots({ host, availableBytes: () => 10000 * mib });
-  for (const [entry, expected] of [["openstates-votes-refresh.mts", 3574], ["legiscan-votes-refresh.mts", 1312], ["acs-population-promote.mts", 3928]] as const) {
+  for (const [entry, expected] of [["openstates-votes-refresh.mts", 3574], ["legiscan-votes-refresh.mts", 1312], ["legiscan-bulk.mts", 2130], ["acs-population-promote.mts", 3928],
+    ["place-map-tx/place-map-refresh.mts", 1672], ["place-map-as/place-map-refresh.mts", 502]] as const) {
     const release = await slots.acquire(entry);
     host.transact(state => assert.equal(state.reservations[0].peak, expected * mib), false);
     release();
@@ -138,7 +148,7 @@ test("small calendar runs retain the measured large-state floor and a larger obs
   release();
 });
 
-test("memory samples survive a stopped service and pool a new tenant, readback and ZIP by family", async () => {
+test("memory samples survive a stopped service and pool a new tenant, calendar and ZIP by family", async () => {
   const directory = mkdtempSync(join(tmpdir(), "rn02-worker-memory-"));
   const path = join(directory, "meanwhile-worker-memory.json");
   try {
@@ -146,14 +156,14 @@ test("memory samples survive a stopped service and pool a new tenant, readback a
     const deadPid = 2147483647;
     writeFileSync(path, JSON.stringify({ parents: [], reservations: [
       { id: "tenant", owner: deadPid, pid: deadPid, entry: "legistar-members:old/legistar-members-refresh.mts", peak: 512 * mib, measured: 170 * mib },
-      { id: "reader", owner: deadPid, pid: deadPid, entry: "reader-readback:old/routine-civic-data-reader-repair.mts", peak: 342 * mib, measured: 120 * mib },
+      { id: "reader", owner: deadPid, pid: deadPid, entry: "meetings:legistar:old/ingest.ts", peak: 342 * mib, measured: 120 * mib },
       { id: "zip", owner: deadPid, pid: deadPid, entry: "national-place:10001/promote-registry-runtime.mts", peak: 3181 * mib, measured: 900 * mib },
     ] }));
     const restarted = workerMemoryHost({ shared: true, directory, processes: () => [] });
     const slots = routineProcessSlots({ host: restarted, availableBytes: () => 10000 * mib });
     for (const [entry, expected] of [
       ["legistar-members:new/legistar-members-refresh.mts", 179],
-      ["reader-readback:new/routine-civic-data-reader-repair.mts", READER_REPAIR_PEAK_MIB],
+      ["meetings:legistar:new/ingest.ts", CALENDAR_READ_PEAK_MIB],
       ["national-place:90210/promote-registry-runtime.mts", 1229],
     ] as const) {
       const release = await slots.acquire(entry);
@@ -222,18 +232,4 @@ test("the runner admits its door-publication and federal-split children through 
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.ok(runner.indexOf("const routineMemorySlots = routineProcessSlots();") < runner.indexOf('"scripts/publish-meeting-doors.mts"'));
   assert.equal((runner.match(/onStarting: command => acquireChildMemory\(command(?:, \[\], deadlineMs)?\), onSettled: run => releaseChildMemory\(run\.id\)/g) ?? []).length, 2);
-});
-
-
-test("the measured reader fits 2,036 MiB while a calendar waits for its complete observed peak", async () => {
-  const host = workerMemoryHost({ processes: () => [] });
-  const slots = routineProcessSlots({ host, availableBytes: () => 2036 * mib });
-  const reader = await slots.acquire("reader-readback:next/routine-civic-data-reader-repair.mts", Date.now() + 1000);
-  host.transact(state => assert.equal(state.reservations[0].peak, READER_REPAIR_PEAK_MIB * mib), false);
-  reader();
-  await assert.rejects(slots.acquire("meetings-state:CA/ingest.ts", Date.now() + 40), /WORKER_MEMORY_DEADLINE/);
-  const room = routineProcessSlots({ host, availableBytes: () => 3000 * mib });
-  const calendar = await room.acquire("meetings-state:CA/ingest.ts", Date.now() + 1000);
-  host.transact(state => assert.equal(state.reservations[0].peak, CALENDAR_READ_PEAK_MIB * mib), false);
-  calendar();
 });

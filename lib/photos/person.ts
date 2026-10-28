@@ -26,20 +26,27 @@ function candidatePhoto(id:string,url:string,source:string,verification?:Portrai
   }};
 }
 
+type NativePerson=Pick<Officeholder,'id'|'personId'|'nativeIds'>;
+/** A held record naming several people of a one-ID-per-person publisher is a collapsed merge (one Idaho official
+ * record carried 37 OpenStates people). It keeps its own ids and links no one else, so it cannot join their portraits. */
+function linkKeys(person:NativePerson):ReadonlySet<string> {
+  const collapsed=(['plural','ocd-person'] as const).some(source=>new Set(person.nativeIds?.[source] ?? []).size>1);
+  return collapsed ? new Set([person.id,person.personId ?? person.id]) : personIdentityKeys(person);
+}
+
 const rosterPhotos=new WeakMap<readonly Officeholder[],ReadonlyMap<string,Officeholder[]>>();
 function matchingPortraits(people:readonly Officeholder[],keys:ReadonlySet<string>):Officeholder[] {
   let index=rosterPhotos.get(people);
   if(!index){const built=new Map<string,Officeholder[]>();for(const person of people)if(person.photo)
-    for(const key of personIdentityKeys(person))built.set(key,[...built.get(key) ?? [],person]);index=built;rosterPhotos.set(people,index);}
+    for(const key of linkKeys(person))built.set(key,[...built.get(key) ?? [],person]);index=built;rosterPhotos.set(people,index);}
   return [...new Set([...keys].flatMap(key=>index.get(key) ?? []))];
 }
 
-type NativePerson=Pick<Officeholder,'id'|'personId'|'nativeIds'>;
 const nativeAliases=new WeakMap<object,ReadonlyMap<string,readonly string[]>>();
 function aliasIndex(source:object,people:()=>readonly NativePerson[]):ReadonlyMap<string,readonly string[]> {
   let index=nativeAliases.get(source);
   if(!index){const built=new Map<string,readonly string[]>();for(const person of people()){
-    const aliases=[...personIdentityKeys(person)];for(const key of aliases)built.set(key,[...new Set([...built.get(key) ?? [],...aliases])]);
+    const aliases=[...linkKeys(person)];for(const key of aliases)built.set(key,[...new Set([...built.get(key) ?? [],...aliases])]);
   }index=built;nativeAliases.set(source,index);}
   return index;
 }
@@ -63,7 +70,7 @@ function statewideAliasIndex(people:readonly StatewideExecutive[]):ReadonlyMap<s
     // Use CL-01's same pairwise rule as its publication path. An unidentified
     // office slot cannot bridge two conflicting native people.
     if(!linked.every(left=>linked.every(right=>sameSourcedExecutivePerson(left,right))))continue;
-    const keys=[...new Set(linked.flatMap(person=>[...personIdentityKeys(person)]))];
+    const keys=[...new Set(linked.flatMap(person=>[...linkKeys(person)]))];
     for(const key of keys)aliases.set(key,[...new Set([...aliases.get(key) ?? [],...keys])]);
   }
   statewideAliases.set(people,aliases);return aliases;

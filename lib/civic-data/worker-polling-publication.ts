@@ -11,7 +11,6 @@ import { readPollingDoor, POLLING_DOOR_KINDS } from "../ballot/polling-door-read
 import { votingSitesCandidate, votingSitesScopedSuccessor, votingSitesContract } from "../ballot/voting-sites-data-plane.ts";
 import type { VotingSitesFile } from "../ballot/voting-sites.ts";
 import { readPromotedCivicData } from "./read-model.ts";
-import { readRegistryRuntimePrior } from "../registry/runtime-data-plane.ts";
 import type { WorkerPublicationCapture } from "./worker-roster-publication.ts";
 import { captureIntact, capturesForPublication, jobWorkerResults, latestParserResult, verifiedWorkerRecords, requirePublication } from "./worker-publication-evidence.ts";
 import { section3Page, linkingPageFrom } from "../control-plane/promotion/section3.ts";
@@ -32,7 +31,7 @@ async function publishPollingDoor(input: {
   requirePublication(input.door.status !== "SUSPENDED" && section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text,
     retrievedAt: capture.observedAt, sourcePolicy: capture.sourcePolicy, linkingPage }, "VOTING_SITE", input.now).ok, "POLLING_SOURCE_NOT_ADMITTED");
   const jurisdiction = readPollingDoor({ ...input, linkingPage: linkingPage ?? undefined });
-  let prior: Awaited<ReturnType<typeof readPromotedCivicData<VotingSitesFile>>> | null = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now, bypassCache: true });
+  let prior: Awaited<ReturnType<typeof readPromotedCivicData<VotingSitesFile>>> | null = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now });
   requirePublication(prior.kind === "PROMOTED" || prior.kind === "NOT_RECORDED", "POLLING_PRIOR_UNAVAILABLE");
   requirePublication(prior.kind !== "PROMOTED" || prior.metadata.sourceId === votingSitesContract(jurisdiction.state).sourceId, "POLLING_PRIOR_PUBLISHER_MISMATCH");
   if (prior.kind === "PROMOTED") rememberStatePublicationPrior(input.store, prior.projection);
@@ -46,7 +45,7 @@ async function publishPollingDoor(input: {
     retrievedAt: input.now, carriedFromVersionId: base });
   prior = null; held = null;
   const published = await processRegisteredManualCandidate(input.store, stateBallotContractId("voting-sites", jurisdiction.state), candidate, input.now, base);
-  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now, bypassCache: true });
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", jurisdiction.state), { store: input.store, now: input.now });
   requirePublication(published.promoted && read.kind === "PROMOTED" && read.metadata.versionId === published.promoted.versionId,
     `POLLING_TYPED_READBACK_FAILED:${published.candidate.failureDetail ?? "pointer not readable"}`);
   return { ...published, jurisdiction };
@@ -76,7 +75,7 @@ export async function publishWorkerPollingResults(input: {
       requirePublication(plan.contract.schemaVersion === 2 && plan.contract.recordClass === "VOTING_SITE", "POLLING_CONTRACT_UNRESOLVED");
       const divisionIds = [plan.contract.jurisdiction.canonicalId], bodyIds = [plan.publication!.bodyId];
       const registry = input.readRegistrySlice ? await input.readRegistrySlice(divisionIds, bodyIds)
-        : (await readRegistryRuntimePrior(input.store, input.now, plan.contract.jurisdiction.state))?.payload.registry;
+        : (await input.store.readRegistrySlice(plan.contract.jurisdiction.state, [plan.publication!.bodyId], [plan.contract.jurisdiction.canonicalId]))?.payload.registry;
       const body = registry?.bodies.find(row => row.id === plan.publication!.bodyId);
       const divisionId = body?.ocdId ?? plan.publication!.bodyId;
       const division = registry?.divisions.find(row => row.ocdId === divisionId);

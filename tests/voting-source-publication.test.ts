@@ -1,3 +1,4 @@
+import "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import { gunzipSync } from "node:zlib";
 import { readFileSync } from "node:fs";
@@ -39,7 +40,7 @@ test("saved official tables reach the existing public read model with hours, loc
   const outcome = await processRegisteredManualCandidate(store, "voting-sites:ND", candidate, at);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "the saved official table should publish");
   assert.equal(outcome.readerReadback?.status, "PASS", outcome.readerReadback?.detail);
-  const projection = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "ND"), { store, now: at, bypassCache: true });
+  const projection = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "ND"), { store, now: at });
   assert.equal(projection.kind, "PROMOTED");
   if (projection.kind === "PROMOTED") assert.deepEqual(projection.value, JSON.parse(JSON.stringify(current)));
   const saved = (await store.readCandidate(candidate.id))!.candidate;

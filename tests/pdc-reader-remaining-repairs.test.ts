@@ -14,6 +14,8 @@ import { CardGapContribution } from "../components/ui/card-gap-context.tsx";
 
 import { telHref } from "../lib/officials/phone-numbers.ts";
 
+import { readerText } from "../lib/text/reader-names.ts";
+
 import { currentReaderSelection, withReaderSelection } from "../lib/db/reader-route.ts";
 
 const compile = (source: string) => ts.transpileModule(source, { compilerOptions: { jsx: ts.JsxEmit.React, target: ts.ScriptTarget.ES2022, module: ts.ModuleKind.None } }).outputText;
@@ -33,7 +35,7 @@ test("contactless grounded bodies retain the routed topic and correctly attribut
   const predicate = all.find((node) => ts.isVariableDeclaration(node) && node.name.getText() === "preservedRoutedContact")!;
   const block = all.find((node) => ts.isJsxElement(node) && node.openingElement.attributes.properties.some((prop) => ts.isJsxAttribute(prop) && prop.name.getText() === "data-ask-preserved-contact"))!;
   assert.ok(cited && cards && predicate && block, "exercise the production card, URL guard and actual placement predicate");
-  const render = new Function("telHref", "React", "asked", "grounded", compile(`${cited.getText()} ${cards.getText()} const ${predicate.getText()}; return preservedRoutedContact ? (${block.getText()}) : null;`)).bind(null, telHref);
+  const render = new Function("telHref", "readerText", "React", "asked", "grounded", compile(`${cited.getText()} ${cards.getText()} const ${predicate.getText()}; return preservedRoutedContact ? (${block.getText()}) : null;`)).bind(null, telHref, readerText);
   const contact = { body: "Borough of Rockaway — Tax Collector", service: "Property tax payments", phone: "973-627-2000 ext 228", email: "taxcollector@rockawayborough.org", sourceOrg: "Borough of Rockaway", sourceUrl: "https://www.rockawayborough.org/departments/tax-collector/" };
   const asked = { answer: { kind: "ROUTED", topic: { label: "Property taxes" } }, contacts: [contact] };
   const grounded = { subject: { name: "Board of Assessment Commissioners" }, contacts: [] };
@@ -79,5 +81,9 @@ test("ballot leaves empty funding fields out and contributes partial holdings to
   assert.equal(gap.type, CardGapContribution);
   assert.equal(gap.props.label, "campaign money records");
   assert.equal(gap.props.id, "funding-holdings:congress:test");
-  assert.equal(renderToStaticMarkup(gap), "", "the card frame displays the gap once");
+  const markup = renderToStaticMarkup(gap);
+  assert.match(markup, /working on getting this info/, "partial holdings explain the gap inside the funding section");
+  assert.match(markup, /Want us to get this sooner\?/);
+  assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1);
+  assert.doesNotMatch(markup, /Still gathering|data-card-footer/);
 });

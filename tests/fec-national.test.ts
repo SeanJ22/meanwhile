@@ -48,7 +48,7 @@ test("real FEC bulk files promote every 2026 congressional registration across a
   const candidate = fecFundingCandidate({ snapshot, rawBodies: [master, summary], finalUrl: fecBulkUrls(cycle).master, retrievedAt: NOW, excludedFacts: [] });
   const outcome = await processRegisteredRoutineCandidate(store, "fec-funding", candidate, NOW);
   assert.ok(outcome.promoted, JSON.stringify(outcome.candidate.receipt));
-  await refreshFundingFromPromoted({ store, now: NOW, bypassCache: true });
+  await refreshFundingFromPromoted({ store, now: NOW });
   assert.equal((await store.readPromotion<FundingSnapshot>("FEC_FUNDING", "federal-supported"))?.payload.candidates.length, rows.length);
   assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify(outcome.readerReadback));
   console.log("FEC fixture registrations by state:", JSON.stringify(Object.fromEntries(Object.entries(counts).sort())));
@@ -157,7 +157,11 @@ test("an out-of-pilot challenger gets a sourced money profile, funding API respo
   assert.match(profile, /registered with the FEC for House TX-07/); assert.match(profile, /data-funding-section/); assert.match(profile, /Federal Election Commission/);
   // A share the weball totals cannot establish is a card gap, never an invented figure or a field placeholder.
   assert.equal(answer.data.totals?.smallDonorShare, null);
-  assert.doesNotMatch(profile, /small-donor share|working on getting/i);
+  const shareGap = profile.match(/<div data-card-gap="money-small-donor-share:H2TX07119"[\s\S]*?<\/div>/)?.[0];
+  assert.ok(shareGap);
+  assert.match(shareGap, /We[’']re working on getting this info/);
+  assert.match(shareGap, /Want us to get this sooner\?/);
+  assert.doesNotMatch(profile, /small-donor share/i);
   assert.doesNotMatch(JSON.stringify(json) + profile, /address_street|address_zip|CAND_ST1|donor_name/);
 });
 

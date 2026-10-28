@@ -5,6 +5,7 @@ import { createContext, useContext } from "react";
 
 import type { CoverageSummary, CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
+import { groupBodiesByGovernment } from "@/lib/registry/body-groups";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import type { Meeting } from "@/lib/sources/types";
 import {
@@ -21,7 +22,7 @@ import {
   type TierGroup,
 } from "@/lib/officials/tier-grouping";
 
-import { bodyDisplayName } from "@/lib/text/reader-names";
+import { bodyDisplayName, readerText } from "@/lib/text/reader-names";
 
 
 
@@ -103,7 +104,7 @@ export function DoorOverlay({
         onClick={(e) => e.stopPropagation()}
       >
         <div className={embedded ? "sr-only" : "flex items-center justify-between"}>
-          <h2 className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-signal">
+          <h2 className="font-mono t-caption trailing-space-trimmed-20 tracking-[0.2em] text-signal">
             {title}
           </h2>
           <button
@@ -160,33 +161,48 @@ function BodiesDoor({
       </p>
     );
   }
-  const bodies = [...coverage.bodies].sort(
-    (a, b) => Number(b.bodyClass === "GOVERNING") - Number(a.bodyClass === "GOVERNING"),
-  );
+  const sections = groupBodiesByGovernment(coverage.bodies);
+  const bodyButton = (body: CoveredBody) => {
+    const label = bodyDisplayName(body);
+    return <button
+      type="button"
+      onClick={() => onOpenBody(body)}
+      title={`More about ${label}`}
+      className="flex w-full cursor-pointer items-baseline justify-between gap-3 text-left t-body leading-snug hover:text-link"
+    >
+      <span>{label}</span>
+      <span className="trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em] text-muted">
+        {bodyClassShort(body.bodyClass)}
+      </span>
+    </button>;
+  };
   return (
-    <ul className="mt-3 space-y-2">
-      {bodies.map((body) => {
-        const label = bodyDisplayName(body);
-        return (
-          <li
-            key={body.bodyId}
-            className="border-b border-[var(--panel-border)] pb-2 last:border-0"
-          >
-            <button
-              type="button"
-              onClick={() => onOpenBody(body)}
-              title={`More about ${label}`}
-              className="flex w-full cursor-pointer items-baseline justify-between gap-3 text-left t-body leading-snug hover:text-link"
+    <div className="mt-3 space-y-4">
+      {sections.map(section => <section key={section.type} data-body-section={section.type}>
+        <h3 className="t-structure text-local">{section.label}</h3>
+        {section.governments.map(government => <section key={government.id} className="mt-2" data-body-government={government.id}>
+          <h4 className="t-detail font-semibold text-voice">{government.name}</h4>
+          <ul className="mt-1 space-y-2">
+            {government.rows.map(({ body, meetingTypes }) => <li
+              key={body.bodyId}
+              data-body-row=""
+              data-body-id={body.bodyId}
+              className="border-b border-[var(--panel-border)] pb-2 last:border-0"
             >
-              <span>{label}</span>
-              <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
-                {bodyClassShort(body.bodyClass)}
-              </span>
-            </button>
-          </li>
-        );
-      })}
-    </ul>
+              {bodyButton(body)}
+              {meetingTypes.length > 0 && <div className="mt-2 border-l border-[var(--panel-border)] pl-3">
+                <p className="t-caption text-muted">Meeting types</p>
+                <ul className="mt-1 space-y-2">
+                  {meetingTypes.map(meeting => <li key={meeting.bodyId} data-body-row="" data-body-id={meeting.bodyId} data-meeting-type-row="">
+                    {bodyButton(meeting)}
+                  </li>)}
+                </ul>
+              </div>}
+            </li>)}
+          </ul>
+        </section>)}
+      </section>)}
+    </div>
   );
 }
 
@@ -298,7 +314,7 @@ function DoorSection({
   return (
     <section className="mt-3">
       <div className="flex items-baseline gap-2">
-        <h3 className="trailing-space-trimmed-16 font-mono t-caption uppercase tracking-[0.16em] text-paper-dim">
+        <h3 className="trailing-space-trimmed-16 font-mono t-caption  tracking-[0.16em] text-paper-dim">
           {heading}
         </h3>
         {count !== null && (
@@ -339,8 +355,8 @@ function DistrictRows({
           className="border-b border-[var(--panel-border)] pb-2 last:border-0"
         >
           <div className="flex items-baseline justify-between gap-3">
-            <p className="t-body">{row.label}</p>
-            <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
+            <p className="t-body">{readerText(row.label)}</p>
+            <span className="trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em] text-muted">
               {row.typeLabel}
             </span>
           </div>
@@ -366,7 +382,7 @@ function DistrictRows({
               }
               className="mt-0.5 mr-3 cursor-pointer t-detail text-signal underline decoration-dotted"
             >
-              {holder.name} →
+              {readerText(holder.name, "name")} →
             </button>
           ))}
           <RosterCompletenessGaps gaps={projectedRosterGapsForDivision(coverage, row.ocdId)} />
@@ -421,7 +437,7 @@ function OfficialsDoor({
                     onClick={() => onOpenOfficial(holder, seatLabel, tier)}
                     className="cursor-pointer t-body text-signal underline decoration-dotted"
                   >
-                    {holder.name} →
+                    {readerText(holder.name, "name")} →
                   </button>
                   <span className="shrink-0 text-right t-caption text-muted">
                     {seatLabel}

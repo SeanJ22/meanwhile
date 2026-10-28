@@ -1,7 +1,7 @@
 "use client";
 
+import { readerText } from "@/lib/text/reader-names";
 import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
-import { CardGapContext, useCardGapRegistry } from "@/components/ui/card-gap-context";
 import { CardFooter } from "@/components/ui/card-footer";
 import { CardSubjectContext } from "@/components/ui/card-subject-context";
 import type { CardGap } from "@/lib/design/card-gaps";
@@ -39,7 +39,6 @@ export function ReaderCard({
   enter,
   children,
   sources = [],
-  gaps = [],
   subject,
 }: {
   /** Identity of the view on screen; a new key starts at the top. */
@@ -64,11 +63,9 @@ export function ReaderCard({
   enter?: "rise";
   children: ReactNode;
   sources?: readonly CardSource[];
-  gaps?: readonly CardGap[];
   subject?: CardGap["subject"];
 }) {
   const { register, sources: allSources } = useCardSourceRegistry(sources, viewKey);
-  const { register: registerGaps, gaps: allGaps } = useCardGapRegistry(gaps, viewKey);
   const cardRef = useRef<HTMLElement>(null);
   const bodyRef = useRef<HTMLDivElement>(null);
   const closeRef = useRef<HTMLButtonElement>(null);
@@ -116,14 +113,14 @@ export function ReaderCard({
   }, [onClose]);
 
   return (
-    <CardSubjectContext.Provider value={subject ?? null}><CardSourceContext.Provider value={register}><CardGapContext.Provider value={registerGaps}>
+    <CardSubjectContext.Provider value={subject ?? null}><CardSourceContext.Provider value={register}>
       <div className={fixed ? "mw-scrim mw-fixed" : "mw-scrim"} onClick={onClose} aria-hidden="true" />
       <section
         ref={cardRef}
         className={fixed ? "mw-card mw-fixed" : "mw-card"}
         role="dialog"
         aria-modal="true"
-        aria-label={kicker}
+        aria-label={readerText(kicker)}
         data-reader-card={viewKey}
         data-enter={enter}
       >
@@ -131,7 +128,7 @@ export function ReaderCard({
           {backLabel && (
             <button type="button" className="mw-card-back" onClick={onBack}>
               <span aria-hidden="true">← </span>
-              <span className="mw-card-back-label">Back to {backLabel}</span>
+              <span className="mw-card-back-label">Back to {readerText(backLabel)}</span>
             </button>
           )}
           <div className="mw-card-kicker-wrap">
@@ -139,7 +136,7 @@ export function ReaderCard({
               className="mw-card-kicker"
               style={kickerTone ? { color: kickerTone } : undefined}
             >
-              {kicker}
+              {readerText(kicker)}
             </span>
             {zipContext && <span className="mw-card-zipctx">{zip ? `Near ${zip}` : zipContext}</span>}
           </div>
@@ -161,7 +158,7 @@ export function ReaderCard({
           onScroll={(e) => onScroll?.(e.currentTarget.scrollTop)}
         >
           {children}
-          <CardFooter gaps={allGaps} sources={allSources} />
+          <CardFooter sources={allSources} />
         </div>
         {/* Feedback opens in a new tab so the view and any draft stay put. */}
         <footer className="mw-card-foot">
@@ -175,7 +172,7 @@ export function ReaderCard({
           </a>
         </footer>
       </section>
-    </CardGapContext.Provider></CardSourceContext.Provider></CardSubjectContext.Provider>
+    </CardSourceContext.Provider></CardSubjectContext.Provider>
   );
 }
 

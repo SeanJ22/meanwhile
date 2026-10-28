@@ -40,9 +40,9 @@ export async function retainEchoMinimumGaps(gaps:readonly EchoMinimumGap[],refer
       if(!rows.length)continue;
       const rowCaptures:OpenDataCapture[]=[];
       for(const row of rows) {
-        const original=captures.find(capture=>capture.retrievedAt===row.capturedAt);
+        const original=captures.find(capture=>capture.retrievedAt===row.capturedAt||capture.captureDates?.includes(row.capturedAt));
         if(!original)throw Error(`Prior EPA source capture is missing for retained identity ${row.id}.`);
-        rowCaptures.push({...original,sourceRows:[row.sourceRow]});
+        rowCaptures.push({...original,retrievedAt:row.capturedAt,sourceRows:[row.sourceRow]});
       }
       retained.set(reference.id,{partition:reference.id,rows,captures:rowCaptures});
       for(let index=0;index<rows.length;index++) {

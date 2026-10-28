@@ -1,10 +1,9 @@
 /**
- * Refresh follows how often each door actually changes. A read that promotes
- * something different from the version before it is a change; the door keeps
+ * Refresh follows how often each door's source content actually changes; the door keeps
  * the last change time and a running average gap (`observedChangeMinutes`:
  * the plain mean of the first few gaps, then each new gap weighted a quarter).
- * Its check is the faster of its policy and that observed rate, never faster
- * than hourly and never slower than the policy. A check set on the door stays
+ * An observed interval can be slower than its standing policy. Routine sources
+ * also apply their own fact retry/freshness bounds. A check set on the door stays
  * as set.
  */
 
@@ -38,16 +37,17 @@ export function observeChange(door: Pick<DoorRecord, "lastChangedAt" | "observed
   return { lastChangedAt: at, observedChangeMinutes: Math.round(average * 10) / 10, observedChanges: (kept.observedChanges ?? 0) + 1 };
 }
 
-/** The check a door is owed, in minutes: its own setting, else the faster of `policyMinutes` and its observed rate. */
+/** The check a door is owed: its own setting, else its actual source interval. A time-sensitive caller supplies its maximum. */
 export function checkEveryWithObserved(
   door: Pick<DoorRecord, "checkEveryMinutes" | "observedChangeMinutes">,
   policyMinutes: number,
+  maximumMinutes = Number.POSITIVE_INFINITY,
 ): { readonly minutes: number; readonly basis: "SET_ON_DOOR" | "OBSERVED" | "POLICY" } {
   if (door.checkEveryMinutes !== null) return { minutes: door.checkEveryMinutes, basis: "SET_ON_DOOR" };
   const observed = door.observedChangeMinutes;
   if (observed === null || observed === undefined || !(observed > 0)) return { minutes: policyMinutes, basis: "POLICY" };
-  const bounded = Math.max(observed, MIN_OBSERVED_CHECK_MINUTES);
-  return bounded < policyMinutes ? { minutes: Math.round(bounded), basis: "OBSERVED" } : { minutes: policyMinutes, basis: "POLICY" };
+  const bounded = Math.min(maximumMinutes, Math.max(observed, MIN_OBSERVED_CHECK_MINUTES));
+  return bounded !== policyMinutes ? { minutes: Math.round(bounded), basis: "OBSERVED" } : { minutes: policyMinutes, basis: "POLICY" };
 }
 
 /** What Admin's door list shows for one door: how often it changes and the check that produces. */
@@ -61,7 +61,7 @@ export interface DoorRateRow {
 }
 
 export function doorRateRow(door: DoorRecord, policyMinutes: number): DoorRateRow {
-  const check = checkEveryWithObserved(door, policyMinutes);
+  const check = checkEveryWithObserved(door, policyMinutes, door.meeting !== null ? policyMinutes : Number.POSITIVE_INFINITY);
   return {
     doorId: door.doorId,
     observedChangeMinutes: door.observedChangeMinutes ?? null,
@@ -70,17 +70,6 @@ export function doorRateRow(door: DoorRecord, policyMinutes: number): DoorRateRo
     checkEveryMinutes: check.minutes,
     basis: check.basis,
   };
-}
-
-/** Door id → observed change minutes, for the runner's due check. Doors with no observation yet are absent. */
-export function observedChangeMinutesByDoor(doors: readonly DoorRecord[]): ReadonlyMap<string, number> {
-  const out = new Map<string, number>();
-  for (const door of doors) {
-    if (door.status === "OPEN" && door.checkEveryMinutes === null && typeof door.observedChangeMinutes === "number" && door.observedChangeMinutes > 0) {
-      out.set(door.doorId, door.observedChangeMinutes);
-    }
-  }
-  return out;
 }
 
 /** Record a changed promotion on a door. False when there is no such door (nothing is invented). A system write: it leaves `updatedAt` alone. */

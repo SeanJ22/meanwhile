@@ -362,7 +362,7 @@ test("all production ballot entry points use state-scoped selection", () => {
     "supporting authorities were opened before the requested ballot authority was selected",
   );
   assert.match(page, /<CardGapContribution id=\{`ballot-holding:\$\{family\}`\} label=\{HOLDING_LABEL\[family\]\}/,
-    "supporting authority failures contribute to the card footer");
+    "supporting authority failures keep their own missing-information message");
   assert.match(page, /matched\.contests\.some\(nhLegislativeRosterAppliesTo\)/);
   assert.match(page, /preload\("nh-members", settleNhSeatHolders\)/);
 
@@ -375,7 +375,7 @@ test("all production ballot entry points use state-scoped selection", () => {
   assert.match(demand, /getCandidateTargetIds\(divisions, submission\.subjectId\)/);
 });
 
-test("supporting authority failures contribute reader labels without field placeholders", () => {
+test("supporting authority failures show their own plain message and request link", () => {
   const page = ts.createSourceFile("ballot.tsx", readFileSync("app/ballot/page.tsx", "utf8"), ts.ScriptTarget.Latest, true, ts.ScriptKind.TSX);
   const all: ts.Node[] = [];
   const visit = (node: ts.Node) => { all.push(node); ts.forEachChild(node, visit); };
@@ -398,7 +398,11 @@ test("supporting authority failures contribute reader labels without field place
     assert.equal(gap.type, CardGapContribution);
     assert.equal(gap.props.id, `ballot-holding:${family}`);
     assert.equal(gap.props.label, label);
-    assert.equal(renderToStaticMarkup(gap), "", "only the card footer displays the missing information");
+    const markup = renderToStaticMarkup(gap);
+    assert.match(markup, /We[’']re working on getting this info/);
+    assert.match(markup, />Want us to get this sooner\?<\/a>/);
+    assert.ok(markup.includes(`data-card-gap="ballot-holding:${family}"`));
+    assert.doesNotMatch(markup, /Still gathering/);
   }
 });
 

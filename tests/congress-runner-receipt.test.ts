@@ -54,7 +54,7 @@ test("one national acquisition publishes every due Congress state in one memory 
   assert.equal(admitted.length, FEDERAL_DIRECTORY_STATES.length);
   const groups = groupCongressReads(admitted.map(({ task }) => ({ id: task.id, kind: "MANUAL" })));
   assert.equal(groups.length, 1);
-  await refreshCongressDirectory({ states: FEDERAL_DIRECTORY_STATES, store, vault: new MemoryEvidenceStore(), now: () => NOW,
+  await refreshCongressDirectory({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), states: FEDERAL_DIRECTORY_STATES, store, vault: new MemoryEvidenceStore(), now: () => NOW,
     revision: async () => { revisions++; return revision(); }, acquire: async options => {
       assert.equal(acquired.has(options.url), false, "each national file is read once across every place");
       acquired.add(options.url); let held = fixtureRelease(options);
@@ -90,7 +90,7 @@ test("one national acquisition publishes every due Congress state in one memory 
   assert.equal(interrupted.filter(member => member.run).length, 1);
   assert.equal(interrupted.filter(member => member.owed).length, 55, "unreached states remain due after a drain");
   for (const state of FEDERAL_DIRECTORY_STATES) {
-    const read = await readStateFederalDirectory(state, { store, now: NOW, bypassCache: true });
+    const read = await readStateFederalDirectory(state, { store, now: NOW });
     assert.equal(read.kind, "PROMOTED", state);
     if (read.kind === "PROMOTED") assert.ok(read.value.roster.officeholders.every(holder => holder.state === state), state);
   }
@@ -104,17 +104,17 @@ test("the Congress runner publishes core first, attaches chamber contacts, and e
     await create(...args); stages.push(args[0].candidate.id);
   });
   let acquired = 0;
-  await refreshCongressDirectory({ state: "AZ", store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
+  await refreshCongressDirectory({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), state: "AZ", store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
     acquire: async options => {
       if (acquired++) {
-        const held = await readStateFederalDirectory("AZ", { store, now: NOW, bypassCache: true });
+        const held = await readStateFederalDirectory("AZ", { store, now: NOW });
         assert.equal(held.kind, "PROMOTED", "accepted people publish before the next optional acquisition starts");
       }
       const held = fixtureRelease(options); await options.validate?.(held.bytes, held); return held;
     },
   });
   assert.equal(acquired, 7);
-  assert.equal(stages.length, 5, "core and each enrichment publish independently; unrelated chamber rows confirm without writing");
+  assert.equal(stages.length, 7, "each acquired source set publishes independently, including the final acquisition-complete state");
   for (const id of stages) {
     const held = await store.readCandidate(id);
     assert.equal(held?.state, "PROMOTED");
@@ -125,7 +125,7 @@ test("the Congress runner publishes core first, attaches chamber contacts, and e
   if (!parsed.ok) return;
   assert.equal(parsed.receipt.candidateId, stages.at(-1));
   assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt, expected, store, "SUCCESS"), null);
-  const read = await readStateFederalDirectory("AZ", { store, now: NOW, bypassCache: true });
+  const read = await readStateFederalDirectory("AZ", { store, now: NOW });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.deepEqual(read.value.roster.officeholders.map(row => row.id), ["congress:A000001"], "a place's record holds only that place's members");
@@ -140,7 +140,7 @@ test("an unavailable optional Congress file keeps accepted people and a single d
   const store = new MemoryRoutineDataStore(), lines: string[] = [], diagnostics: string[] = [];
   t.mock.method(console, "log", (line: string) => { lines.push(line); });
   t.mock.method(console, "error", (line: string) => { diagnostics.push(line); });
-  await refreshCongressDirectory({ state: "AZ", store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
+  await refreshCongressDirectory({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), state: "AZ", store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
     acquire: async options => {
       if (options.releaseId.endsWith("legislators-social-media")) throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture optional file unavailable");
       const held = fixtureRelease(options); await options.validate?.(held.bytes, held); return held;
@@ -156,7 +156,7 @@ test("an unavailable optional Congress file keeps accepted people and a single d
 test("a Congress core-source failure emits one durable held receipt and never invents a successful publication", async t => {
   const store = new MemoryRoutineDataStore(), lines: string[] = [];
   t.mock.method(console, "log", (line: string) => { lines.push(line); });
-  await assert.rejects(refreshCongressDirectory({ state: "AZ", store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
+  await assert.rejects(refreshCongressDirectory({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}), state: "AZ", store, vault: new MemoryEvidenceStore(), now: () => NOW, revision,
     acquire: async () => { throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture core file unavailable"); },
   }), /Fixture core file unavailable/);
   const parsed = parseRoutineRunnerReceipt(lines.join("\n"));
@@ -166,4 +166,49 @@ test("a Congress core-source failure emits one durable held receipt and never in
   assert.equal(parsed.receipt.promotedVersion, null);
   assert.equal(await durableRoutineRunnerReceiptIssue(parsed.receipt, expected, store, "HELD"), null);
   assert.equal(await store.readPromotion("FEDERAL_DIRECTORY", expected.scope), null);
+});
+
+
+test("Congress confirms every unchanged source by hashes before held directory reads",async t=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore(),lines:string[]=[];
+  t.mock.method(console,"log",(line:string)=>{lines.push(line);});
+  const acquire:typeof import("../lib/sources/known-release.ts").acquireKnownRelease=async options=>{
+    const held=fixtureRelease(options);await options.validate?.(held.bytes,held);return held;
+  };
+  await refreshCongressDirectory({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}),state:"AZ",store,vault,now:()=>NOW,revision,acquire});
+  const pointer=await store.readPromotionIdentity("FEDERAL_DIRECTORY",expected.scope);assert.ok(pointer);
+  lines.length=0;let sources=0,revisionRead=false;
+  for(const method of ["readPromotion","readCandidate","readCandidateProof","events"] as const)
+    Object.assign(store,{[method]:async()=>{throw Error(`unchanged Congress loaded ${method}`);}});
+  await refreshCongressDirectory({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}),state:"AZ",store,vault,now:()=>NOW,revision:async()=>{revisionRead=true;return {...await revision(),sha:"c".repeat(40)};},
+    acquire:async options=>{assert.equal(revisionRead,true);sources++;return acquire(options);}});
+  assert.equal(sources,7,"live revision and both chamber feeds are still checked");
+  const parsed=parseRoutineRunnerReceipt(lines.join("\n"));assert.equal(parsed.ok,true,JSON.stringify(parsed));
+  if(parsed.ok){assert.equal(parsed.receipt.candidateId,pointer.versionId);assert.ok(parsed.receipt.confirmedAt);}
+});
+
+test("a changed Congress chamber feed opens held people only after its new bytes arrive",async t=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();t.mock.method(console,"log",()=>{});
+  const acquire:typeof import("../lib/sources/known-release.ts").acquireKnownRelease=async options=>{
+    const held=fixtureRelease(options);await options.validate?.(held.bytes,held);return held;
+  };
+  await refreshCongressDirectory({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}),state:"AZ",store,vault,now:()=>NOW,revision,acquire});
+  const read=store.readPromotion.bind(store);let sources=0,heldReads=0;
+  store.readPromotion=(async(...args:Parameters<typeof read>)=>{assert.ok(sources>=6,"unchanged core/optional files never open the held directory");heldReads++;return read(...args);}) as typeof store.readPromotion;
+  await refreshCongressDirectory({ resolveOfficePoint: async () => ({reason:"NO_MATCH"}),state:"AZ",store,vault,now:()=>NOW,revision,acquire:async options=>{
+    sources++;let held=await acquire(options);
+    if(options.releaseId==="chamber-directory:house"){
+      const bytes=new TextEncoder().encode(new TextDecoder().decode(held.bytes).replace("202-225-1000","202-225-2000"));
+      held={...held,bytes,sha256:createHash("sha256").update(bytes).digest("hex")};await options.validate?.(bytes,held);
+    }
+    return held;
+  }});
+  assert.ok(heldReads>0);
+  const result=await readStateFederalDirectory("AZ",{store,now:NOW});assert.equal(result.kind,"PROMOTED");
+  if(result.kind==="PROMOTED"){
+    const member=result.value.roster.officeholders[0];assert.equal(member.phone,"202-225-2000");
+    assert.equal(member.fieldSources?.phone?.sourceUrl,"https://clerk.house.gov/xml/lists/MemberData.xml");
+    assert.equal(member.offices?.find(office=>office.id==="capitol:A000001")?.phone,"202-225-2000");
+    assert.equal(result.value.directory.byMember.A000001.districtOffices[0].address,"1 Example Street");
+  }
 });

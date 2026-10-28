@@ -37,13 +37,21 @@ const publicationLogKey = (state: BallotState, family: BallotPublicationFamily =
   family === "ballot-navigation" ? `ballot-navigation-publication:${requireBallotState(state)}` : `ballot-publication:${requireBallotState(state)}`;
 
 /**
- * Election work leads the pass, after the pass is ordered by how long its work is owed: a due state ballot file already
- * holds its source evidence, and a due state's voting sites tell readers where to vote before a fixed date. Memory goes
- * in launch order and the overdue meeting backlog holds it to the pass deadline, so work queued behind it never starts.
+ * Due state ballot files lead the pass because they already hold their source evidence. The national bill fan-out comes
+ * next: it runs one child at a time in its own lane, so it asks for memory before long reads fill it. Voting sites,
+ * measure explainers and the remaining work then take turns, retaining the order of how long each family's work is owed.
+ * A child can hold memory until the pass deadline, so each family needs its turn before another fills the existing
+ * worker pool.
  */
 export function electionLaunchOrder<T extends { readonly task: { readonly id: string } }>(jobs: readonly T[]): T[] {
-  const election = (job: T) => ["ballot-contests", "voting-sites"].includes(parseStateBallotContractId(job.task.id)?.family ?? "");
-  return [...jobs.filter(election), ...jobs.filter(job => !election(job))];
+  const family = (job: T) => parseStateBallotContractId(job.task.id)?.family;
+  const translation = (job: T) => /^measure-translations:[A-Z]{2}$/.test(job.task.id);
+  const bills = (job: T) => job.task.id === "legiscan-bulk";
+  const voting = jobs.filter(job => family(job) === "voting-sites");
+  const translations = jobs.filter(translation);
+  const rest = jobs.filter(job => family(job) !== "ballot-contests" && family(job) !== "voting-sites" && !translation(job) && !bills(job));
+  return [...jobs.filter(job => family(job) === "ballot-contests"), ...jobs.filter(bills), ...Array.from({ length: Math.max(voting.length, translations.length, rest.length) },
+    (_, index) => [voting[index], translations[index], rest[index]]).flat().filter((job): job is T => job !== undefined)];
 }
 
 export function ballotPublicationHasNoInput(report: BallotPublicationResult): boolean {

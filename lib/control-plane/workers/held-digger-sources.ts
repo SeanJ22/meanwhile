@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { AGGREGATE_LIST_READ_PAGE, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { boundedQuery, type BoundableSql } from "../repository/request-bounds.ts";
 import type { RecordProjection } from "../repository/types.ts";

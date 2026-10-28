@@ -31,8 +31,7 @@ import type { ResolvedScope } from "./membership.ts";
 import { buildPlaceOwedList, type PlaceOwedItem } from "../../coverage/place-owed.ts";
 import { placePercent } from "../../coverage/place-measures.ts";
 import { readHeldPlaceCapture } from "../../civic-data/held-place-capture.ts";
-import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
-import { setActiveOwedOverlay } from "../../coverage/owed-overlay.ts";
+import { ADMIN_CONFIG_ID } from "../gateway/admin-config.ts";
 import { VERSION_PREFIX, type ExpansionScopeDecision } from "./scopes.ts";
 import { readExpansionScopesForZips, resolveScopes } from "./runner-load.ts";
 import { loadPublishedAreaLookupState } from "../../census-geography/area-lookup.ts";
@@ -92,9 +91,6 @@ const memoKeyOf = (decision: ExpansionScopeDecision): string =>
   [decision.receiptId, decision.latestDecisionReceiptId ?? "", decision.decidedAt, decision.geography.type, decision.geography.geoid].join("|");
 
 async function nationalPlaceContext(repos: ControlPlaneRepositories, zips: readonly string[]) {
-  const row = await repos.adminConfig.read(ADMIN_CONFIG_ID);
-
-  setActiveOwedOverlay(row !== null && isAdminConfig(row.value) ? row.value.owedOverlay : null);
   const decisions = await readExpansionScopesForZips(repos,zips);
   if (!decisions.scopes.length) return { lookup: null, scopes: [], targets: null };
   const lookup = decisions.lookup;
@@ -179,7 +175,7 @@ async function placeReading(repos: ControlPlaneRepositories, zips: readonly stri
   const rebuiltItems = new Map<string, PlaceOwedItem[]>();
   for (const group of readingGroups.values()) {
     const ids = [...new Set(group.flatMap(scope => [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])]))];
-    const capture = ids.length ? await readHeldPlaceCapture(ids, { now, bypassCache: true }) : { subjects: [], held: [] };
+    const capture = ids.length ? await readHeldPlaceCapture(ids, { now }) : { subjects: [], held: [] };
     for (const scope of group) {
       const items = buildPlaceOwedList({ divisions: [...(divisionsByReceipt.get(scope.decision.receiptId) ?? [])].map(id => ({ id, label: id })),
         subjects: capture.subjects, held: capture.held, now, zips: [...(inScope.get(scope.decision.receiptId) ?? [])] });

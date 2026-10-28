@@ -1,12 +1,13 @@
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { Meeting } from "../sources/types.ts";
 import { captureProvenance } from "./capture.ts";
-import { boundedIndexOf, normalizeText, type CheckEntity } from "./check.ts";
+import { boundedIndexOf, normalizeText, type CheckEntity, type SavedCopy } from "./check.ts";
 import { ensureEntity, learnDoorChannel } from "./entities.ts";
 import { meetingEntityId } from "./meeting-read.ts";
 import { readCheckEntity } from "./entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishOutcome, type Query } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
+import type { PinGeocodeAttempt } from "../meetings/publish-pins.ts";
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -61,6 +62,13 @@ export interface MeetingFactsReport { readonly live: number; readonly confirmed:
 
 type MeetingFactDb = FactDb & { readonly query: Query };
 
+async function keepJoinLinkWork(query:Query,meeting:Meeting,clocks:Clocks):Promise<void>{
+  if(!meeting.online||meeting.online.joinUrl)return;
+  await query(`INSERT INTO blank(entity_id,field,stage,reason,detail,next_try_at,attempts)
+    VALUES($1,'online_access','ACQUIRE','ONLINE_JOIN_LINK_MISSING',$2,now()+make_interval(mins=>$3::int),0)
+    ON CONFLICT(entity_id,field) DO NOTHING`,[meetingEntityId(meeting.id),meeting.online.label,clocks.retryMinutes("meeting")]);
+}
+
 async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl: string): Promise<CheckEntity> {
   const id = meetingEntityId(meeting.id);
   let state = /\/(?:state|district|territory):([a-z]{2})/.exec(meeting.ocdId ?? meeting.bodyId ?? "")?.[1]?.toUpperCase() ?? null;
@@ -71,40 +79,82 @@ async function meetingFactEntity(db: MeetingFactDb, meeting: Meeting, sourceUrl:
     if(sourceUrl)await learnDoorChannel(db.query, owner, sourceUrl);
   }
   await ensureEntity(db.query, { id, kind: "meeting", name: meeting.bodyName, state, parentId: owner ?? null });
-  if (owner) await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING", [id, owner]);
   return (await readCheckEntity(db.query, id))!;
 }
 
 async function publishPinClaim(db: MeetingFactDb, entity: CheckEntity, input: {
-  readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly producedBy: string;
+  readonly meeting: Meeting; readonly capture?: WorkerPublicationCapture; readonly copy?: SavedCopy; readonly producedBy: string;
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
   const pin = input.meeting.mapPin!;
-  const copy = await db.transaction(query => saveCaptureCopy(query, input.capture));
-  for(;;)try{
+  const copy = input.copy ?? await db.transaction(query => saveCaptureCopy(query, input.capture!));
+  for(let attempt=0;;attempt++)try{
     return await publishClaim(db, {entity, field:"map_pin", fieldKind:"contact", provenance:"OFFICIAL", value:pin,
       valueText:pin.matchedAddress!, quote:pin.matchedAddress!, copy, producedBy:input.producedBy, costUsd:0}, clocks, now);
   }catch(error){
     const conflict=error as {code?:string;constraint?:string}|null;
-    // A competing first publication won. Decide again against its committed point without geocoding again.
-    if(conflict?.code!=="23505"||conflict.constraint!=="fact_one_live")throw error;
+    // Re-read after a rolled-back deadlock or competing first publication, using the same saved Census copy.
+    const retryable=conflict?.code==="40P01"||(conflict?.code==="23505"&&conflict.constraint==="fact_one_live");
+    if(!retryable||attempt>=2)throw error;
   }
 }
 
 /** An already-published sitting can gain its checked point independently of another calendar read. */
 export async function publishMeetingPinFact(db: MeetingFactDb, input: {
   readonly meeting: Meeting; readonly capture?: WorkerPublicationCapture; readonly producedBy: string;
+  readonly geocodeAttempts?: readonly PinGeocodeAttempt[];
+  readonly registered?: boolean;
 }, clocks: Clocks, now: Date): Promise<PublishOutcome> {
   // The pin claim cites its saved Census copy; it does not register the old calendar as a new source door.
-  const entity = await meetingFactEntity(db, input.meeting, "");
-  if (input.meeting.mapPin?.matchedAddress && input.capture) return publishPinClaim(db, entity, {...input, capture:input.capture}, clocks, now);
-  await openBlank(db.query, {entityId:entity.id, field:"map_pin", stage:"ACQUIRE", reason:"MEETING_ADDRESS_NOT_PLACED",
-    detail:input.meeting.venueGap?.publishedText ?? input.meeting.online?.label ?? null, retryMinutes:clocks.retryMinutes("meeting")});
-  return {blank:"MEETING_ADDRESS_NOT_PLACED"};
+  const pin=input.meeting.mapPin;
+  const entity = input.registered&&!pin?null:await meetingFactEntity(db, input.meeting, "");
+  const entityId=entity?.id??meetingEntityId(input.meeting.id);
+  await keepJoinLinkWork(db.query,input.meeting,clocks);
+  let published: PublishOutcome | undefined;
+  if(pin?.matchedAddress){
+    if(input.capture)published=await publishPinClaim(db,entity!,input,clocks,now);
+    else {
+      // Reuse the receipt of an already verified point for this exact body and address. No source is reread.
+      const [held]=await db.query(`SELECT s.id,s.final_url,s.fetched_at FROM source_copy s JOIN fact f ON f.source_copy_id=s.id
+        WHERE s.url=$1 AND f.field='map_pin' AND f.status='live'
+          AND f.value->>'coordinateSourceUrl'=$1 AND f.value->>'matchedAddress'=$2
+          AND (f.value->>'lat')::double precision=$3 AND (f.value->>'lng')::double precision=$4 LIMIT 1`,
+        [pin.coordinateSourceUrl,pin.matchedAddress,pin.lat,pin.lng]);
+      if(held)published=await publishPinClaim(db,entity!,{...input,copy:{id:Number(held.id),finalUrl:String(held.final_url),
+        fetchedAt:new Date(held.fetched_at as string),text:"",isArchive:false}},clocks,now);
+    }
+    if(published&&!pin.pendingReplacement)return published;
+  }
+  const attempts=input.geocodeAttempts;
+  const transient=attempts?.filter(attempt=>attempt.outcome==="TRANSIENT");
+  const reason=pin&&!pin.pendingReplacement?"PIN_EVIDENCE_UNAVAILABLE"
+    :transient?.some(attempt=>attempt.httpStatus===429)?"GEOCODER_RATE_LIMITED"
+    :transient?.length?"GEOCODER_RETRY_LATER"
+    :attempts?.some(attempt=>attempt.outcome==="NO_MATCH")?"GEOCODER_NO_MATCH"
+    :input.meeting.venueGap?.publishedText?"MEETING_ADDRESS_NOT_PLACED"
+    :input.meeting.online?"ONLINE_OFFICE_ADDRESS_MISSING":"BODY_OFFICE_ADDRESS_MISSING";
+  const retryMinutes=Math.max(clocks.retryMinutes("meeting"),...transient?.map(attempt=>
+    attempt.retryAt?Math.max(0,Math.ceil((Date.parse(attempt.retryAt)-now.getTime())/60000)):0)??[]);
+  // Calendar refreshes can omit geocoder diagnostics; preserve the attempts the pin worker learned.
+  await db.query(`INSERT INTO blank(entity_id,field,stage,reason,detail,next_try_at,attempts)
+    VALUES($1,'map_pin','ACQUIRE',$2,$3,now()+make_interval(mins=>$4::int),1)
+    ON CONFLICT(entity_id,field) DO UPDATE SET reason=EXCLUDED.reason,stage='ACQUIRE',
+      detail=CASE WHEN $5 THEN EXCLUDED.detail
+        ELSE (coalesce(CASE WHEN left(blank.detail,1)='{' THEN blank.detail::jsonb END,'{}'::jsonb)||EXCLUDED.detail::jsonb)::text END,
+      next_try_at=CASE WHEN $5 THEN EXCLUDED.next_try_at ELSE least(blank.next_try_at,EXCLUDED.next_try_at) END,
+      attempts=blank.attempts+CASE WHEN $5 THEN 1 ELSE 0 END,updated_at=now()
+    WHERE blank.reason IS DISTINCT FROM EXCLUDED.reason OR blank.stage<>'ACQUIRE'
+      OR blank.detail::jsonb IS DISTINCT FROM CASE WHEN $5 THEN EXCLUDED.detail::jsonb
+        ELSE coalesce(CASE WHEN left(blank.detail,1)='{' THEN blank.detail::jsonb END,'{}'::jsonb)||EXCLUDED.detail::jsonb END
+      OR $5 AND blank.next_try_at<=now()`,
+    [entityId,reason,JSON.stringify({publishedText:input.meeting.venueGap?.publishedText??null,
+      online:input.meeting.online??null,...(attempts?{geocodeAttempts:attempts}:{})}),retryMinutes,attempts!==undefined]);
+  return {blank:reason};
 }
 
 /** One sitting read from its body's door becomes facts, each found on the saved copy: title, start, place and links. */
 export async function publishMeetingFacts(db: FactDb & { readonly query: Query }, input: {
   readonly meeting: Meeting; readonly capture: WorkerPublicationCapture; readonly pinCapture?: WorkerPublicationCapture; readonly producedBy: string;
+  readonly geocodeAttempts?: readonly PinGeocodeAttempt[];
 }, clocks: Clocks, now: Date): Promise<MeetingFactsReport> {
   const { meeting, capture } = input;
   const id = meetingEntityId(meeting.id);
@@ -135,8 +185,13 @@ export async function publishMeetingFacts(db: FactDb & { readonly query: Query }
   if (meeting.location) await claim("location", {...meeting.location,...(meeting.mapPin?.coordinateSourceUrl ? {coordinateSourceUrl:meeting.mapPin.coordinateSourceUrl} : {})}, meeting.location.address ?? meeting.location.name);
   else if(meeting.venueGap?.publishedText)await claim("location",{name:meeting.venueGap.publishedText,address:null},meeting.venueGap.publishedText);
   if(meeting.online)await claim("online_access",meeting.online,meeting.online.label);
-  if(meeting.mapPin?.matchedAddress&&input.pinCapture) count(await publishPinClaim(db,entity,{meeting,capture:input.pinCapture,producedBy:input.producedBy},clocks,now));
+  if(meeting.mapPin?.pendingReplacement)count(await publishMeetingPinFact(db,{meeting,capture:input.pinCapture,registered:true,
+    geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));
+  else if(meeting.mapPin?.matchedAddress&&input.pinCapture) count(await publishPinClaim(db,entity,{meeting,capture:input.pinCapture,producedBy:input.producedBy},clocks,now));
+  else if(!meeting.mapPin&&!meeting.location) count(await publishMeetingPinFact(db,{meeting,registered:true,
+    geocodeAttempts:input.geocodeAttempts,producedBy:input.producedBy},clocks,now));
   if (meeting.agendaUrl) await claim("agenda_url", meeting.agendaUrl, meeting.agendaUrl);
   if (meeting.videoUrl) await claim("video_url", meeting.videoUrl, meeting.videoUrl);
+  await keepJoinLinkWork(db.query,meeting,clocks);
   return tally;
 }

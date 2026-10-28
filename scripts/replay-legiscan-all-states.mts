@@ -6,7 +6,7 @@ import { spawn } from "node:child_process";
 import { pathToFileURL,fileURLToPath } from "node:url";
 import { dirname,resolve,join,basename } from "node:path";
 import { createHash } from "node:crypto";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { acquireDatasetList,acquireDataset } from "../lib/sources/legiscan/acquisition.ts";
 import { LEGISCAN_BULK_PARSER,billScope,stateOfDataset,type BillSession,type BillPart,type BillPartPointer,type HeldPerson } from "../lib/sources/legiscan/bills.ts";
 import { publishBulkCandidate,confirmBulkSession } from "../lib/sources/legiscan/publication.ts";
@@ -183,7 +183,7 @@ async function replayState(state:string) {
     if(!marker.outcome.promoted)throw Error(`Dataset index rejected: ${JSON.stringify(marker.outcome.candidate.receipt?.checks.filter(row=>row.verdict!=="PASS"))}`);
     let published:Awaited<ReturnType<typeof publishBulkCandidate>>;
     if(resumePublication){
-      const prior=await readBulkProjection(billScope(dataset.session_id),{store,now:at,bypassCache:true});
+      const prior=await readBulkProjection(billScope(dataset.session_id),{store,now:at});
       const saved=prior.kind==="PROMOTED"?await store.readCandidate(prior.metadata.versionId!):null;
       if(prior.kind!=="PROMOTED"||prior.value.kind!=="SESSION"||prior.metadata.versionId!==priorProof!.initialPublication!.sessionVersion||
         prior.value.dataset.dataset_hash!==dataset.dataset_hash||prior.value.dataset.dataset_date!==dataset.dataset_date||!saved||saved.state!=="PROMOTED"||saved.receipt?.decision!=="GOOD")throw Error("Previously published replay no longer names the exact source edition");

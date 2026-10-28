@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "../../reader/database.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { readDailyDatabaseTransfer, readRunnerDatabaseTransfer, type DailyDatabaseTransferRead } from "../../db/transfer.ts";
@@ -13,8 +13,6 @@ import { readV6Sources } from "./v6-money-hunts-route.ts";
 import { validateV6Query } from "./v6-hunts-read.ts";
 
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
-const MEMO_MS = 90_000;
-let memo: { at: number; data: AdminV6SpendView } | null = null;
 
 const UNREAD = { setAsideUsd: null, dailyLimitUsd: null, huntersNow: null, worstCaseCharges: null } as const;
 
@@ -55,13 +53,10 @@ export async function v6SpendGet(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ says: "Choose a recorded hour." }, { status: 400, headers: NO_STORE });
       return NextResponse.json(await readRunnerDatabaseTransfer(runnerHour), { headers: NO_STORE });
     }
-    if (!memo || Date.now() - memo.at > MEMO_MS) {
-      let transfer: DailyDatabaseTransferRead | null = null;
-      try { transfer = await readDailyDatabaseTransfer(SPEND_DAYS); } catch { transfer = null; }
-      const [spend, held] = await Promise.all([readSpend(neon(url), transfer), limitsAndHolds(now)]);
-      memo = { at: Date.now(), data: { ...spend, ...held } };
-    }
-    const data = memo.data;
+    let transfer: DailyDatabaseTransferRead | null = null;
+    try { transfer = await readDailyDatabaseTransfer(SPEND_DAYS); } catch { transfer = null; }
+    const [spend, held] = await Promise.all([readSpend(databaseReadOnlySql(url), transfer), limitsAndHolds(now)]);
+    const data: AdminV6SpendView = { ...spend, ...held };
     return NextResponse.json({ contract: ADMIN_V6_SPEND_CONTRACT, scope: query.scopeKey, revision: `spend:${now.slice(0, 16)}`, asOf: now, data,
       missingParts: data.neon.kind === "not-recorded" ? [`Neon: ${data.neon.detail ?? "not recorded yet"}`] : [] }, { headers: NO_STORE });
   } catch {

@@ -1,35 +1,38 @@
 /** Standing own-page portrait work, scheduled separately from roster readers. */
 import { pathToFileURL } from "node:url";
 import { STATE_PEOPLE_JURISDICTIONS } from "../lib/officials/people-identity.ts";
-import { readStatePeopleProjection } from "../lib/state-rollcalls/legislators.ts";
 import { statePeoplePortraits } from "../lib/civic-data/state-people-publication.ts";
-import { readPeopleSourceProjection, publishPeopleSource } from "../lib/civic-data/people-source-publication.ts";
-import { readStateFederalDirectory, withFederalPortraits } from "../lib/officials/federal-directory-read-model.ts";
+import { publishPeopleSource, readHeldPeopleSource, type HeldPeopleSource } from "../lib/civic-data/people-source-publication.ts";
 import { congressPortraits } from "../lib/officials/congress-portraits.ts";
-import { ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
-import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
-import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { portraitInputScopes, portraitList, portraitNextDueAt, portraitSnapshotSettled, readPortraitSourceSnapshot, samePortraitStamp, type PortraitList, type PortraitSourceProbe } from "../lib/photos/portrait-run.ts";
+import { derivedRetrieval, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { derivedSourceContentHash } from "../lib/civic-data/derived-source-hash.ts";
+import { confirmSourceHashUnchanged, sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { sourceAuthority } from "../lib/civic-data/source-authority.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
-import { PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
+import { PORTRAIT_SCHEDULE_CODE, PostgresRoutineDataStore, type RoutineDataStore } from "../lib/civic-data/store.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import type { PortraitAttempt, StandingPortraitOptions } from "../lib/photos/portrait-work.ts";
 import { portraitHash, type PortraitCapture } from "../lib/photos/evidence.ts";
 import { pacedPortraitAcquire, storeStandingPortrait } from "../lib/photos/portrait-work.ts";
+import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
 import { capturedText, type StatePeopleCapture } from "../lib/civic-data/state-people-publication.ts";
 import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
 import type { EvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { peopleJurisdiction } from "../lib/civic-data/people-source-read.ts";
-import { readStateRegistryRuntimeProjection } from "../lib/civic-data/read-model.ts";
+import { peopleSourceScope } from "../lib/officials/people-sources.ts";
 import { factReader } from "../lib/facts/db.ts";
-import { readFactRosters } from "../lib/facts/roster-read.ts";
-import { mergePeopleSets } from "../lib/officials/merge-people.ts";
+import { personIdentityKeys } from "../lib/officials/people-identity.ts";
+import type { Query } from "../lib/facts/publish.ts";
 
 export function parsePeoplePortraitArguments(args:readonly string[]):string {
   const state=args.find(arg=>arg.startsWith("--state="))?.slice(8).toLowerCase();
-  if (args.filter(arg=>arg === "--promote").length !== 1 || args.length !== 2 ||
+  const force=args.filter(arg=>arg === "--force").length;
+  if (args.filter(arg=>arg === "--promote").length !== 1 || force>1 || args.length !== 2+force ||
     !state || state !== "us" && !STATE_PEOPLE_JURISDICTIONS.includes(`US-${state.toUpperCase()}`)) throw Error("PEOPLE_PORTRAITS_EXACT_SCOPE_REQUIRED");
   return state;
 }
@@ -44,26 +47,46 @@ function portraitPerson(person:Officeholder):Officeholder {
       ...(person.fieldSources?.photo ? {photo:person.fieldSources.photo} : {})}};
 }
 
-async function sourceInputs(store:RoutineDataStore,jurisdiction:string,linking?:{vault:EvidenceStore;captures:PortraitCapture[]}):Promise<DerivedInputRef[]> {
-  const contracts=[...ROUTINE_SOURCE_CONTRACTS,...MANUAL_PRODUCTION_SOURCE_CONTRACTS]
-    .filter(row=>row.sourceId !== "people-portraits" && ["STATE_LEGISLATOR","FEDERAL_DIRECTORY"].includes(row.recordClass) &&
-      (row.scope === jurisdiction || row.scope.startsWith(`${jurisdiction}:`)));
-  const found=await Promise.all(contracts.map(async contract=>{
-    const promotion=await store.readPromotion(contract.recordClass,contract.scope);
-    if (!promotion) return null;
-    if(linking){
-      const saved=await store.readCandidate(promotion.versionId);
-      const captures=(saved?.candidate.normalizedPayload as {captures?:StatePeopleCapture[]}|undefined)?.captures ?? [];
-      for(const row of captures){
-        const text=await capturedText(linking.vault,row);
-        linking.captures.push({transport:"REACHABLE",partial:false,httpStatus:row.httpStatus,
-          observedAt:row.sourceCheck?.checkedAt ?? row.retrievedAt,evidence:{canonicalUrl:row.finalUrl,sourceId:contract.sourceId,
-            contentHash:portraitHash(new TextEncoder().encode(text)),text,retrievedAt:row.retrievedAt,vaultKey:row.capture.vaultKey}});
-      }
+/** The pages a person's own facts cite: their roster rows, profile and portrait lead, and an Open States archive file by its path. */
+function personSources(person:Officeholder):{urls:string[];members:string[]} {
+  const urls=[person.provenance?.sourceUrl,...Object.values(person.fieldSources ?? {}).map(source=>source?.sourceUrl),
+    person.portraitCandidate?.sourceUrl,person.websiteUrl,...(person.profileUrls ?? [])].filter((url):url is string=>Boolean(url));
+  const members=urls.flatMap(url=>/^https:\/\/raw\.githubusercontent\.com\/openstates\/people\/[a-f0-9]{40}\/(data\/.+)$/.exec(url)?.[1] ?? []);
+  return {urls:[...new Set(urls)],members:[...new Set(members)]};
+}
+
+/** Only the saved pages of the people whose portraits are due; no state's whole file set is loaded. */
+async function personCaptures(store:RoutineDataStore,vault:EvidenceStore,list:PortraitList,people:readonly Officeholder[]):Promise<PortraitCapture[]> {
+  if(!people.length)return [];
+  const wanted=people.map(personSources),urls=[...new Set(wanted.flatMap(row=>row.urls))],members=[...new Set(wanted.flatMap(row=>row.members))];
+  const captures:PortraitCapture[]=[],sourceIds=new Map(portraitInputScopes(list.state).map(row=>[row.scope,row.sourceId]));
+  for(const roster of list.rosters){
+    for(const row of await store.readCandidateCaptures(roster.versionId,urls,members) as StatePeopleCapture[]){
+      const text=await capturedText(vault,row);
+      captures.push({transport:"REACHABLE",partial:false,httpStatus:row.httpStatus,
+        observedAt:row.sourceCheck?.checkedAt ?? row.retrievedAt,evidence:{canonicalUrl:row.finalUrl,sourceId:sourceIds.get(roster.scope) ?? roster.scope,
+          contentHash:portraitHash(new TextEncoder().encode(text)),text,retrievedAt:row.retrievedAt,vaultKey:row.capture.vaultKey}});
     }
-    return promotedInputRef(contract.recordClass,contract.scope,promotion.versionId,promotion.payload,promotion.promotedAt);
-  }));
-  return found.filter((ref):ref is DerivedInputRef=>ref !== null);
+  }
+  return captures;
+}
+
+/** The promotions a save's people came from, named by their immutable source headers. */
+async function sourceInputs(store:RoutineDataStore,list:PortraitList):Promise<(people:readonly Officeholder[])=>DerivedInputRef[]> {
+  const rosters=list.rosters.flatMap(row=>row.readModelSha256 ? [{row,ref:{kind:"PROMOTED_VERSION" as const,recordClass:row.recordClass,scope:row.scope,
+    versionId:row.versionId,readModelSha256:row.readModelSha256,promotedAt:row.promotedAt}}] : []);
+  const promotion=list.registry ? await store.readSourceHead("REGISTRY_RUNTIME_BINDING",list.registry) : null;
+  const registry:DerivedInputRef|null=promotion?.normalizedHash && promotion.candidateState === "PROMOTED" ? {kind:"PROMOTED_VERSION",
+    recordClass:promotion.recordClass,scope:promotion.scope,versionId:promotion.versionId,readModelSha256:promotion.normalizedHash,promotedAt:promotion.promotedAt} : null;
+  const place=list.placeInput,members=new Set(list.place?.roster.officeholders.map(person=>person.id) ?? []);
+  const fallback=registry ?? place ?? rosters[0]?.ref ?? null;
+  return people=>{
+    const keys=new Set(people.flatMap(person=>[...personIdentityKeys(person)]));
+    const refs:DerivedInputRef[]=rosters.filter(({row})=>row.roster.officeholders.some(person=>[...personIdentityKeys(person)].some(key=>keys.has(key)))).map(({ref})=>ref);
+    if(registry && people.some(person=>person.level === "LOCAL"))refs.push(registry);
+    if(place?.kind === "PROMOTED_VERSION" && people.some(person=>members.has(person.id)) && !refs.some(ref=>ref.kind === "PROMOTED_VERSION" && ref.scope === place.scope))refs.push(place);
+    return refs.length || !fallback ? refs : [fallback];
+  };
 }
 
 function portraitInputs(person:Officeholder,facts:readonly PortraitAttempt[]):DerivedInputRef[] {
@@ -78,84 +101,98 @@ function portraitInputs(person:Officeholder,facts:readonly PortraitAttempt[]):De
   return saved;
 }
 
-export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault:EvidenceStore;state:string;options?:StandingPortraitOptions}) {
+/** A run saves its finished people this many at a time, and once more at its end. */
+export const PORTRAIT_BATCH_SIZE = 50;
+/** Time a run cut off by its pass deadline keeps for its last save. */
+const PORTRAIT_SAVE_MARGIN_MS = 45_000;
+
+export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault:EvidenceStore;state:string;query?:Query|null;options?:StandingPortraitOptions;force?:boolean}) {
   const {store,vault,state}=input,options=input.options ?? {},clock=options.now ?? (()=>new Date().toISOString());
+  const query=input.query === undefined ? factReader() : input.query;
   const pacing={sizeFor:websiteSizeFromHoldings([state])};
   const acquire=options.acquire ?? ((request:Parameters<typeof pacedPortraitAcquire>[0])=>pacedPortraitAcquire(request,pacing));
   const portraitOptions={...options,acquire,storePortrait:options.storePortrait ?? ((...args:Parameters<typeof storeStandingPortrait>)=>storeStandingPortrait(args[0],args[1],args[2],args[3],pacing))};
   const jurisdiction=peopleJurisdiction(state);
   const contractId=`people-portraits-${state.toLowerCase()}`;
-  const prior=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
-  if(prior.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
-  const previous=prior.kind === "PROMOTED" ? await store.readCandidate(prior.metadata.versionId!) : null;
-  const priorFacts=previous?.candidate.excludedFacts ?? [];
-  const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? [])];
-  const sources=await sourceInputs(store,jurisdiction,{vault,captures:linkingCaptures});
-  let baseRoster:OfficeholderSet|null=null,last=null as Awaited<ReturnType<typeof publishPeopleSource>>|null;
+  const snapshot=await readPortraitSourceSnapshot(store,state,query),at=clock();
+  // A settled record confirms unchanged only when its schedule names the list it was built from; otherwise the run records one.
+  const runState=await store.readPortraitRunState(peopleSourceScope(jurisdiction,"people-portraits"));
+  const listed=Boolean(runState?.seen && samePortraitStamp(snapshot.stamp,runState.seen));
+  const rawHash=snapshot.probe?.sourceContentHash ?? "";
+  const confirmation=await confirmSourceHashUnchanged({store,sourceId:"people-portraits",recordClass:"STATE_LEGISLATOR",
+    scope:peopleSourceScope(jurisdiction,"people-portraits"),parserVersion:sourceAuthority("people-portraits")!.parserVersion,
+    rawHash,retrieval:{requestedUrl:`derived:people-portraits:${peopleSourceScope(jurisdiction,"people-portraits")}`,finalUrl:null,httpStatus:null,
+      rawHash,retrievedAt:snapshot.probe?.retrievedAt ?? at},now:at,complete:!input.force && listed && portraitSnapshotSettled(snapshot,at)});
+  if(confirmation){
+    console.log("RCD_RECEIPT="+JSON.stringify({source:contractId,...sourceHashReceiptFields(confirmation),structuralReleaseContract:ZERO_RELEASE_EVENTS}));
+    return {kind:"CONFIRMED_UNCHANGED" as const,confirmation};
+  }
+  // The held record is read once; every save builds on the version the run itself last saved.
+  let held:HeldPeopleSource=await readHeldPeopleSource(store,jurisdiction,"people-portraits",clock());
+  const heldFacts=(base:HeldPeopleSource)=>(base.normalizedPayload as {excludedFacts?:PortraitAttempt[]}|undefined)?.excludedFacts ?? [];
+  const priorFacts=heldFacts(held);
+  // Work starts from the people without a portrait readers are shown; everyone else is never read again.
+  const list=await portraitList(store,state,clock(),priorFacts,query,snapshot.stamp);
+  const sourceContentInputs=[...snapshot.sourceContentInputs,...list.everyone.flatMap(person=>portraitInputs(person,
+    priorFacts.filter(fact=>(fact.record as {personId?:string}|undefined)?.personId === (person.personId ?? person.id))))];
+  const sources=await sourceInputs(store,list);
+  const linkingCaptures:PortraitCapture[]=[...(options.linkingCaptures ?? []),...await personCaptures(store,vault,list,list.due.people)];
+  let last=null as Awaited<ReturnType<typeof publishPeopleSource>>|null;
   let finished=new Map<string,{person:Officeholder;facts:readonly PortraitAttempt[]}>(),queue=Promise.resolve();
-  const publish=async(continuation:readonly PortraitAttempt[]|null)=>{
+  // The last save carries the run's end state: what is left to do, when the next person is due, and what the list was built from.
+  const publish=async(end:{continuation:readonly PortraitAttempt[];schedule:PortraitAttempt}|null)=>{
     const batch=[...finished.values()];
     finished=new Map();
     const people=new Set(batch.map(row=>row.person.personId ?? row.person.id));
-    const officeholders=batch.length ? batch.map(row=>portraitPerson(row.person)) : baseRoster!.officeholders.map(portraitPerson);
     for(;;){
-      const held=await readPeopleSourceProjection(jurisdiction,"people-portraits",{store,now:clock(),bypassCache:true});
-      if(held.kind === "STORE_UNREACHABLE")throw Error("PEOPLE_PORTRAIT_MARKER_UNAVAILABLE");
-      const current=held.kind === "PROMOTED" ? await store.readCandidate(held.metadata.versionId!) : null;
-      const kept=(current?.candidate.excludedFacts ?? priorFacts).filter(fact=>!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
-        !(continuation && fact.code.endsWith("_WORK_REMAINS")));
+      // A state's first record names everyone listed; later saves carry only the people they finished.
+      const officeholders=batch.length ? batch.map(row=>portraitPerson(row.person)) : held.versionId ? [] : list.everyone.map(portraitPerson);
+      const kept=heldFacts(held).filter(fact=>!people.has((fact.record as {personId?:string}|undefined)?.personId ?? "") &&
+        fact.code !== PORTRAIT_SCHEDULE_CODE && !(end && fact.code.endsWith("_WORK_REMAINS")));
+      sourceContentInputs.push(...batch.flatMap(row=>portraitInputs(row.person,row.facts)));
+      const sourceProbe:PortraitSourceProbe={formatVersion:1,sourceId:"people-portraits",state:state.toUpperCase(),
+        complete:Boolean(end && end.continuation.length===0),normalizationInputHash:snapshot.normalizationInputHash,
+        dependencies:snapshot.dependencies,discovery:snapshot.discovery,
+        nextTermAt:end ? (end.schedule.record as {nextDueAt:string|null}).nextDueAt : null,
+        sourceContentHash:derivedSourceContentHash(sourceContentInputs),retrievedAt:derivedRetrieval(sourceContentInputs).retrievedAt ?? clock()};
       const publication=await publishPeopleSource({store,vault,state,contractId,sourceId:"people-portraits",
         roster:{scope:state,generatedAt:clock(),officeholders,divisions:[],unmatched:[]},acquisitions:[],releaseId:clock(),now:clock(),
-        derivedInputs:[...sources,...batch.flatMap(row=>portraitInputs(row.person,row.facts))],
-        excludedFacts:[...kept,...batch.flatMap(row=>row.facts),...continuation ?? []],confirmUnchanged:true});
-      if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED")continue;
+        derivedInputs:[...sources(batch.length ? batch.map(row=>row.person) : held.versionId ? [] : list.everyone),...batch.flatMap(row=>portraitInputs(row.person,row.facts))],
+        sourceContentInputs,sourceProbe,
+        excludedFacts:[...kept,...batch.flatMap(row=>row.facts),...end ? [...end.continuation,end.schedule] : []],confirmUnchanged:false,held});
+      if(publication.outcome.candidate.failureCode === "PROMOTION_BASE_CHANGED"){held=await readHeldPeopleSource(store,jurisdiction,"people-portraits",clock());continue;}
       if(!publication.outcome.promoted && !publication.outcome.confirmed)throw Error(`PEOPLE_PORTRAIT_PUBLICATION_REFUSED:${publication.outcome.candidate.failureDetail}`);
+      if(publication.outcome.promoted)held={versionId:publication.outcome.promoted.versionId,
+        roster:(publication.candidate.readModel as {roster:OfficeholderSet}).roster,normalizedPayload:publication.candidate.normalizedPayload};
       last=publication;return;
     }
   };
+  const runFacts:PortraitAttempt[]=[],runPeople=new Map<string,Officeholder>();
   const marker=async(person:Officeholder,facts:readonly PortraitAttempt[])=>{
     finished.set(person.personId ?? person.id,{person,facts});
-    const operation=queue.then(async()=>{if(finished.size)await publish(null);});
-    queue=operation.catch(()=>{});await operation;
+    runPeople.set(person.personId ?? person.id,person);runFacts.push(...facts);
+    if(finished.size>=PORTRAIT_BATCH_SIZE){
+      const operation=queue.then(async()=>{if(finished.size>=PORTRAIT_BATCH_SIZE)await publish(null);});
+      queue=operation.catch(()=>{});await operation;
+    }
     await options.onPerson?.(person,facts);
   };
-  // The place's members of Congress share its portrait record; readers lay their photos on the place directory.
-  const [peopleRead,placeRead]=await Promise.all([state === "us" ? readPeopleSourceProjection("US","statewide-executive-sources",{store,now:clock(),bypassCache:true}) : readStatePeopleProjection(jurisdiction as `US-${string}`,{store,now:clock(),bypassCache:true}),
-    state === "us" ? Promise.resolve(null) : readStateFederalDirectory(state,{store,now:clock(),bypassCache:true})]);
-  const people=peopleRead.kind === "PROMOTED" || peopleRead.kind === "BOOTSTRAP" ? peopleRead.value.roster : null;
-  const place=placeRead?.kind === "PROMOTED" ? {...placeRead.value,
-    roster:prior.kind === "PROMOTED" ? withFederalPortraits(placeRead.value.roster,prior.value.roster) : placeRead.value.roster} : null;
-  if(!people && !place)throw Error("PEOPLE_PORTRAIT_ROSTER_UNAVAILABLE");
-  const local:Officeholder[]=[];
-  if(state !== "us") {
-    const registry=await readStateRegistryRuntimeProjection(state,{store,now:clock(),bypassCache:true});
-    if(registry.kind === "PROMOTED" || registry.kind === "BOOTSTRAP") {
-      const query=factReader();
-      const bodies=query ? await query("SELECT id FROM entity WHERE kind='body' AND state=$1",[state.toUpperCase()]) : [];
-      const rosters=[...registry.value.bodyRosters,...query ? (await readFactRosters(query,[...new Set([...registry.value.registry.bodies.map(body=>body.id),...bodies.map(body=>String(body.id))])])).rosters : []];
-      for(const roster of rosters) for(const member of roster.members) local.push({id:member.id,personId:member.personId ?? member.id,
-        nativeIds:member.nativeIds,name:member.name,officeTitle:member.officeTitle,level:"LOCAL",state:state.toUpperCase(),
-        termStart:member.termStart ?? "",termEnd:member.termEnd ?? "",birthDate:null,partyLabel:member.partyLabel ?? null,
-        websiteUrl:member.websiteUrl,profileUrls:[...new Set([member.websiteUrl,roster.sourceUrl].filter((url):url is string=>Boolean(url)))],
-        contactFormUrl:null,phone:member.phone,email:member.email,campaignUrl:null,photo:null,social:{},
-        provenance:{sourceUrl:roster.sourceUrl,sourceOrg:roster.sourceOrg,collectedAt:roster.collectedAt,verifiedAt:null}});
-      const promotion=await store.readPromotion("REGISTRY_RUNTIME_BINDING",`US-${state.toUpperCase()}:reader-registry-runtime`);
-      if(promotion){const reference=promotedInputRef("REGISTRY_RUNTIME_BINDING",promotion.scope,promotion.versionId,promotion.payload,promotion.promotedAt);if(reference)sources.push(reference);}
-    }
-  }
-  const combined=mergePeopleSets([...(people ? [people] : []),{scope:state,generatedAt:clock(),officeholders:local,divisions:[],unmatched:[]}])!;
-  if(prior.kind === "PROMOTED") {
-    const held=new Map(prior.value.roster.officeholders.filter(person=>person.photo).map(person=>[person.personId ?? person.id,person.photo]));
-    for(const person of combined.officeholders) person.photo=person.photo ?? held.get(person.personId ?? person.id) ?? null;
-  }
-  baseRoster={...(people ?? place!.roster),officeholders:[...combined.officeholders,...place?.roster.officeholders ?? []]};
-  const stateResult=combined.officeholders.length ? await statePeoplePortraits({roster:combined,state,now:clock(),signal:options.signal},{...portraitOptions,linkingCaptures,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
-  const congressResult=place ? await congressPortraits(place,clock(),options.signal,{...portraitOptions,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
+  const stateResult=list.due.people.length ? await statePeoplePortraits({roster:{scope:state,generatedAt:clock(),officeholders:[...list.due.people],divisions:[],unmatched:[]},
+    state,now:clock(),signal:options.signal},{...portraitOptions,linkingCaptures,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
+  const congressResult=list.place && list.due.members.length ? await congressPortraits({...list.place,roster:{...list.place.roster,officeholders:[...list.due.members]}},
+    clock(),options.signal,{...portraitOptions,previousExcludedFacts:priorFacts,onPerson:marker}) : null;
   const continuationFacts=[...stateResult?.excludedFacts.filter(fact=>fact.code === "STATE_PORTRAIT_WORK_REMAINS") ?? [],
     ...congressResult?.excludedFacts.filter(fact=>fact.code === "CONGRESS_PORTRAIT_WORK_REMAINS") ?? []];
   await queue;
-  // The last batch carries the remaining work; a run that finished nothing still advances its own clock.
-  if(finished.size || !last || continuationFacts.length)await publish(continuationFacts);
+  // The last save carries the remaining work, the next due time, the list's inputs and the roster versions it read,
+  // so a cut-off run resumes, a settled state rests, and the next list reads only rosters that changed.
+  const factsNow=[...priorFacts.filter(fact=>!runPeople.has((fact.record as {personId?:string}|undefined)?.personId ?? "")),...runFacts];
+  const now=(person:Officeholder)=>runPeople.get(person.personId ?? person.id) ?? person;
+  const nextDueAt=portraitNextDueAt(list.unverified.people.map(now),list.unverified.members.map(now),factsNow,clock(),continuationFacts.length>0,list.restingDueAt);
+  await publish({continuation:continuationFacts,schedule:{key:`${jurisdiction}:portrait-schedule`,code:PORTRAIT_SCHEDULE_CODE,
+    detail:nextDueAt ? `The next person without a portrait in this state is due ${nextDueAt}; until then the runner skips the state unless its rosters name someone new.`
+      : "Everyone this state's rosters name has a portrait; the runner skips the state until they name someone new.",
+    record:{nextDueAt,seen:list.stamp,read:list.read}}});
   if(!last)throw Error("PEOPLE_PORTRAIT_NO_HELD_PEOPLE");
   printSourceRunnerReceipt(contractId,last.candidate,last.outcome);
   return last;
@@ -165,6 +202,10 @@ export async function refreshPeoplePortraits(input:{store:RoutineDataStore;vault
 async function main(){
   const state=parsePeoplePortraitArguments(process.argv.slice(2));
   installNeonRequestDeadline();prepareProductionCivicDataWrite();
-  await refreshPeoplePortraits({store:new PostgresRoutineDataStore(),vault:rawCaptureVault(),state});
+  // Told when its pass ends, the run stops taking people in time to save where it stopped and print its receipt.
+  const stop=new AbortController(),deadline=passDeadlineFromEnv();
+  if(Number.isFinite(deadline))setTimeout(()=>stop.abort(Error("PASS_TIME_BUDGET")),Math.max(0,deadline-PORTRAIT_SAVE_MARGIN_MS-Date.now())).unref();
+  process.once("SIGTERM",()=>stop.abort(Error("PASS_TIME_BUDGET")));
+  await refreshPeoplePortraits({store:new PostgresRoutineDataStore(),vault:rawCaptureVault(),state,force:process.argv.includes("--force"),options:{signal:stop.signal}});
 }
 if(process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href)await main();

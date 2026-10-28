@@ -16,7 +16,7 @@ import { schoolDependency, type SchoolDependency } from "../officials/school-dep
 
 import { bodiesAt, type GeoFeature } from "./resolve.ts";
 import { slotsFor } from "./derive.ts";
-import type { BodyTerritoryFile } from "./body-territory.ts";
+import type { BodyTerritory } from "./body-territory.ts";
 import type { RosterReaderGap } from "./body-rosters.ts";
 import { heldDivisionRepresentatives } from "./representation-server.ts";
 import type {
@@ -37,6 +37,7 @@ import { historyGapFor, type HistoryGap } from "../meetings/history-gaps.ts";
 import type { RegistrationGovernmentListing } from "../registration/listings.ts";
 import type { StateOfficeContact } from "../reference/state-offices.ts";
 import type { SeatVacancy } from "../officials/types.ts";
+import { prepareBodyIdentities, type GovernmentType } from "./body-identity.ts";
 
 /** A dated cited source hunt is evidence; a registry status alone is not.
  * New control-plane attempts are not present in this historic audit yet, so
@@ -101,11 +102,17 @@ export function stateLegislatorCoverageAuthority(
 ;
 
 /**
- * A body covering the point. `divisionLabel` is the division's sourced name, or the special district's
- * registered name for that district's board; the body's own name is never invented.
+ * A body covering the point. `divisionLabel` names its established district owner or the sourced
+ * geographic division; the body's own name is never invented.
  */
 export interface CoveredBody {
   bodyId: string;
+  /** Exact held government and body aliases for this government's records. */
+  recipientIds?: readonly string[];
+  recipientNames?: readonly string[];
+  recipientState?: string;
+  /** This same government's exact source-coded county, city or school area. */
+  moneyDivisionId?: string;
   ocdId: string | null;
   /**
    * The body's own name, non-null only when read off a cited page. Derived rows render their division's
@@ -113,6 +120,13 @@ export interface CoveredBody {
    */
   name: string | null;
   divisionLabel: string;
+  governmentId?: string;
+  governmentName?: string;
+  governmentType?: GovernmentType;
+  /** A retained calendar category, filed under the body holding that meeting. */
+  meetingBodyId?: string;
+  meetingTypes?: CoveredBody[];
+  placementBasis?: "SERVICE_AREA" | "HOST_COUNTY";
   /**
    * Null where the body has no division; never a placeholder type, which would attach a class
    * definition to a body nobody has classified.
@@ -131,12 +145,14 @@ export interface CoveredBody {
   bodyClass: BodyClass;
   coverageStatus: CoverageStatus;
   homepageUrl: string | null;
+  /** The body's own source page when a contact has no more specific field source. */
+  provenance?: RegistryProvenance;
   /** Saved sources for each published body field shown on its card. */
   fieldSources?: Body["fieldSources"];
   /** Where this body's agendas live, when a hunt found them. */
   agendaSourceRef: string | null;
-  /** The body's office address and phone, with the saved page that states them. */
-  officeContact?: { address: string | null; phone: string | null; provenance: RegistryProvenance } | null;
+  /** The body's published office contacts, with the saved page that states them. */
+  officeContact?: { address: string | null; phone: string | null; email?: string | null; provenance: RegistryProvenance } | null;
   /** When the body regularly meets, in its official page's words, with that page. */
   meetingCadence?: { text: string; sourceUrl: string | null } | null;
   /**
@@ -170,6 +186,7 @@ export interface CoveredBody {
    */
   readerRoster?: {
     members: SeatHolder[];
+    earlierMembers?: SeatHolder[];
     gaps: RosterReaderGap[];
     officePhone: {
       phone: string;
@@ -314,11 +331,12 @@ export function summarizeCoverage(
    * resolved here.
    */
   resolvedDivisions?: Division[],
-  /** Committed body-territory polygons for governments with no division. */
-  territory?: BodyTerritoryFile | null,
+  /** Territory polygons or their exact saved selection for this point. */
+  territory?: BodyTerritory | null,
   /** Exact per-scope state-roster read dispositions settled by the caller. */
   stateLegislatorAuthorities: StateLegislatorCoverageAuthority[] = [],
   heldMeetings: readonly Meeting[] = [],
+  rosterNames: ReadonlyMap<string, string> = new Map(),
 ): CoverageSummary {
   const { divisions, bodies } = bodiesAt(
     point,
@@ -329,36 +347,44 @@ export function summarizeCoverage(
     territory,
   );
 
+  const identities = prepareBodyIdentities(bodies, divisionsById, rosterNames);
   const covered: CoveredBody[] = bodies.map((body) => {
     const division = body.ocdId ? divisionsById.get(body.ocdId) : undefined;
+    const namedOwner=Boolean(body.governmentId || body.censusId || /^(?:[a-z]{2}:(?:special|school|depschool):|government:US-[A-Z]{2}:)/i.test(body.id));
     const held = heldMeetings.find(meeting => meeting.bodyId === body.id);
     const historyGap = historyGapFor(body.id);
     return {
       bodyId: body.id,
       ocdId: body.ocdId,
-      name: body.name,
+      ...identities.get(body.id)!,
       // A body with no division: real, hyperlocal, and not a division.
-      divisionLabel: body.governmentName ?? division?.label ?? "",
+      divisionLabel: (namedOwner ? body.governmentName : null) ?? division?.label ?? body.governmentName ?? "",
+      ...(body.placementBasis ? {placementBasis:body.placementBasis} : {}),
       // Null, never a placeholder type.
       divisionType: division?.divisionType ?? null,
       lsad: division?.lsad ?? null,
       schoolDependency: schoolDependency(body.ocdId),
-      bodyClass: body.bodyClass,
       coverageStatus: held ? "LIVE" : body.coverageStatus,
       homepageUrl: body.homepageUrl,
+      ...(body.homepageUrl && !body.fieldSources?.homepageUrl ? { provenance: body.provenance } : {}),
       ...(body.fieldSources ? { fieldSources: body.fieldSources } : {}),
       agendaSourceRef: held?.provenance.sourceUrl ?? body.agendaSourceRef,
       meetingCadence: body.meetingCadence
         ? { text: body.meetingCadence, sourceUrl: body.meetingCadenceSource?.sourceUrl ?? body.provenance.sourceUrl ?? null }
         : null,
-      ...(body.officeAddress || body.officePhone
-        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, provenance: body.fieldSources?.officeAddress ?? body.fieldSources?.officePhone ?? body.provenance } }
+      ...(body.officeAddress || body.officePhone || body.officeEmail
+        ? { officeContact: { address: body.officeAddress ?? null, phone: body.officePhone ?? null, email: body.officeEmail ?? null,
+          provenance: body.fieldSources?.officeAddress ?? body.fieldSources?.officePhone ?? body.fieldSources?.officeEmail ?? body.provenance } }
         : {}),
       lookedAt: held !== undefined || DOCUMENTED_SEARCHES.has(body.id),
       ...(historyGap ? { historyGap } : {}),
       tier: division?.tier ?? "local",
     };
   });
+  for (const parent of covered) {
+    const meetingTypes = covered.filter(body => body.meetingBodyId === parent.bodyId);
+    if (meetingTypes.length) parent.meetingTypes = meetingTypes;
+  }
 
   const rootLegislators = (d: Division) => stateOcdIdFrom(d.ocdId) === d.ocdId
     ? holdersFor(officials, d.ocdId).filter(holder => holder.chamber === "upper" || holder.chamber === "lower") : [];

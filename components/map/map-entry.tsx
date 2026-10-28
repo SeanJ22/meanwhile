@@ -34,7 +34,7 @@ import { stateAbbrFromOcdId } from "@/lib/map/state-focus";
 import { captureEvent } from "@/lib/events/client";
 import { useActiveScroll } from "@/hooks/use-active-scroll";
 import { readLocationOriginFor } from "@/lib/state/location-origin";
-import { bodyDisplayName, readerGovernmentName, withReaderNames } from "@/lib/text/reader-names";
+import { bodyDisplayName, readerGovernmentName, withReaderNames, readerText } from "@/lib/text/reader-names";
 import { requestRadiusKm, shouldRequery } from "@/lib/map/viewport-radius";
 import { useStateFocus } from "@/hooks/use-state-focus";
 import { StateCrossingPrompt } from "./state-crossing-prompt";
@@ -54,7 +54,6 @@ import type { MeetingSearchResult } from "@/lib/meetings/query";
 import type { SnapshotStatus } from "@/lib/meetings/freshness";
 import { logEvent } from "@/lib/log/client";
 import { groupByVenue, placelessSittingsOfVenueBodies, type Venue } from "@/lib/meetings/venues";
-import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { heldSnapshot, lastReadByDivision, snapshotInView } from "@/lib/meetings/freshness";
 import type { MeetingListingIdentityReadback } from "@/lib/meetings/listing-identity";
@@ -69,6 +68,7 @@ import {
 import type { CoveredBody } from "@/lib/registry/coverage";
 import { bodyClassLong } from "@/lib/registry/body-class-labels";
 import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
+import { bodyContactRows, bodyContactSources } from "@/lib/registry/body-contact";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { definitionsForBody } from "@/lib/officials/body-definitions";
 import { divisionTypeLabel, tierForMeeting } from "@/lib/state/derive";
@@ -1859,8 +1859,6 @@ function MapEntryInner() {
               ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meeting => meetingCardSources(meeting, []))
               : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.sources
                 : cardView.kind === "large" && cardView.surface.kind === "official" ? personCardSources(cardView.surface.holder) : []}
-            gaps={cardView.kind === "venue" ? [...cardView.venue.meetings, ...selectedVenuePlaceless].flatMap(meetingCardGaps)
-              : cardView.kind === "large" && cardView.surface.kind === "entity" ? cardView.surface.subject.meetings.flatMap(meetingCardGaps) : []}
             subject={cardView.kind === "large" && cardView.surface.kind === "official" ? { type: "CANDIDATE", id: cardView.surface.holder.id }
               : cardView.kind === "large" && cardView.surface.kind === "entity" && cardView.surface.subject.subjectKind === "BODY" ? { type: "BODY", id: cardView.surface.subject.subjectId } : undefined}
             kicker={cardKicker}
@@ -2054,9 +2052,11 @@ export function bodySubject(
 ): ModalSubject {
 
   const roster = [...projectedBodyRoster(body).members];
+  const earlierMembers = body.readerRoster?.earlierMembers ?? [];
 
+  const meetingBodyIds = new Set([body.bodyId, ...(body.meetingTypes ?? []).map(type => type.bodyId)]);
   const meetings = allMeetings
-    .filter((m) => m.bodyId !== undefined && m.bodyId === body.bodyId)
+    .filter((m) => m.bodyId !== undefined && meetingBodyIds.has(m.bodyId))
     .sort((a, b) => a.startsAt.localeCompare(b.startsAt));
 
   /* The superintendent is hired by the board, so is shown only under "Runs the district day to day". */
@@ -2077,7 +2077,7 @@ export function bodySubject(
     publicRecordsDivisionId: body.ocdId,
     subjectKind: "BODY" as const,
     title: bodyDisplayName(body),
-    subtitle: readerGovernmentName(body.divisionLabel, body.divisionType),
+    subtitle: body.governmentName ?? readerGovernmentName(body.divisionLabel, body.divisionType),
     tier: body.tier,
     // Decides whether the card carries "Who runs it".
     divisionKind: body.divisionType,
@@ -2085,30 +2085,8 @@ export function bodySubject(
     facts: [
       { label: "Type", value: BODY_TYPE_LABEL(body) },
       { label: "Tier", value: TIER_LABEL[body.tier] },
-      // Absent where no hunt found one; never a guessed URL.
-      ...(body.homepageUrl
-        ? [
-            {
-              label: "Official site",
-              value: (
-                <a
-                  href={body.homepageUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-link underline decoration-dotted underline-offset-2 hover:decoration-solid"
-                >
-                  {new URL(body.homepageUrl).hostname.replace(/^www\./, "")} →
-                </a>
-              ),
-            },
-          ]
-        : []),
-      // As the body's own page states them; sourced in this card's Sources.
-      ...(body.officeContact?.address
-        ? [{ label: "Office address", value: <>{body.officeContact.address}</> }]
-        : []),
-      ...(body.officeContact?.phone
-        ? [{ label: "Office phone", value: <>{body.officeContact.phone}</> }]
+      ...(body.placementBasis === "HOST_COUNTY"
+        ? [{label:"Service area",value:<>Filed under its host county; service boundary not available</>}]
         : []),
       // The body's own statement of when it meets, never turned into dates.
       ...(body.meetingCadence && meetings.length === 0
@@ -2117,7 +2095,7 @@ export function bodySubject(
               label: "Regular meetings",
               value: (
                 <>
-                  {body.meetingCadence.text}
+                  {readerText(body.meetingCadence.text, "sentence", [body.name ?? body.divisionLabel])}
 
                 </>
               ),
@@ -2129,9 +2107,13 @@ export function bodySubject(
     rosterGaps: [...projectedBodyRoster(body).gaps],
     representationNote: representationNoteForClaim(claim),
     meetings,
-    sources: [...districtCardSources(roster, meetings, body.officeContact?.provenance, body.fieldSources), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
+    sources: [...districtCardSources([...roster, ...earlierMembers], meetings, body.officeContact?.provenance, body.fieldSources), ...bodyContactSources(body), ...(body.meetingCadence ? [{ what: "Regular meeting cadence", provenance: { sourceOrg: body.name ?? "", sourceUrl: body.meetingCadence.sourceUrl, collectedAt: "", verifiedAt: null } }] : [])],
     // Every section renders for every body: content, or its own absence line.
     bodyCard: {
+      recipientIds: body.recipientIds,
+      recipientNames: body.recipientNames,
+      recipientState: body.recipientState,
+      moneyDivisionId: body.moneyDivisionId,
       /* A body with no division has a null `divisionType` and gets no class definition. */
       whatItDoes:
         body.divisionType === null
@@ -2148,6 +2130,7 @@ export function bodySubject(
       isSchoolDistrict: body.divisionType === "school_district",
       // Not in the elected roster; null renders the named gap.
       superintendent: superintendent,
+      ...(earlierMembers.length ? { earlierMembers } : {}),
       contact: bodyContactRows(body),
       /* The claim is made only in lib/meetings/jurisdiction-badge.ts; no published boundary, no Governs row. */
       jurisdiction: [
@@ -2156,22 +2139,6 @@ export function bodySubject(
       ],
     },
   };
-}
-
-/** A body's published contact routes: only what the registry holds, never a guessed address. */
-function bodyContactRows(
-  body: CoveredBody,
-): { label: string; value: string; href: string | null }[] {
-  const rows: { label: string; value: string; href: string | null }[] = [];
-  if (body.homepageUrl) {
-    rows.push({
-      label: "Official site",
-      value: new URL(body.homepageUrl).hostname.replace(/^www\./, ""),
-      href: body.homepageUrl,
-    });
-  }
-  // The registry holds no phone or email for a body; those are on the people's cards.
-  return rows;
 }
 
 function placeSubject(
@@ -2264,7 +2231,7 @@ function SearchFailedNotice({
 }) {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
+      <p className="font-mono t-caption trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Search failed
       </p>
       <p className="mt-1.5 t-body leading-relaxed text-text-dim">
@@ -2291,7 +2258,7 @@ function SearchFailedNotice({
 function TileNotice() {
   return (
     <div className="panel pointer-events-auto max-w-md px-4 py-3.5">
-      <p className="font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] text-danger">
+      <p className="font-mono t-caption trailing-space-trimmed-20 tracking-[0.2em] text-danger">
         Basemap unavailable
       </p>
       <p className="mt-1.5 t-body leading-relaxed text-text-dim">

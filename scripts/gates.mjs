@@ -25,7 +25,7 @@ const GATES = [
     id: "lint",
     ciJob: "gates (test · lint · tsc)",
     command: "pnpm lint",
-    why: "the gate that was missing — it is why RO04 exists",
+    why: "lint and the rulings: shrinking record reads, no proof files, stated job bytes, and browser privacy",
   },
   {
     id: "tsc",
@@ -208,6 +208,8 @@ for (const gate of GATES) {
         ),
       ].slice(0, 10);
       if (lines.length) detail += `\n${lines.map((l) => `        ${l.trim()}`).join("\n")}`;
+      const rulingFailures = out.split("\n").filter(line => /violates docs\/rulings\.md:\d/.test(line));
+      if (rulingFailures.length) detail += `\n${rulingFailures.map(line => `        ${line.trim()}`).join("\n")}`;
       if (failingTests.length) {
         detail += `\n${failingTests.map((n) => `        ✖ ${n}`).join("\n")}`;
       }

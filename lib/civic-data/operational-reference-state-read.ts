@@ -1,6 +1,5 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlyQuery } from "../reader/database.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
-import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { installConnectAttemptWindow } from "../ops/connect-attempt-window.ts";
 import type { JurisdictionRegistry } from "../hunt/jurisdiction-universe.ts";
 import { parseValidationReceipt } from "./receipt.ts";
@@ -27,9 +26,7 @@ export async function readOperationalReferenceState(state: string, query?: ReadO
     const url = process.env.DATABASE_URL;
     if (!url) throw new Error("OPERATIONAL_REFERENCE_STORE_UNCONFIGURED");
     installConnectAttemptWindow();
-    installDatabaseTransferCounter();
-    const sql = neon(url);
-    query = statements => sql.transaction(statements.map(statement => sql.query(statement.text, [...statement.params])), { readOnly: true });
+    query = databaseReadOnlyQuery(url);
   }
   const scopes = [...(key === "az" ? ["US-AZ:covered-jurisdiction-routing:v1"] : []), "US:covered-jurisdiction-routing:v1"];
   const started = performance.now();

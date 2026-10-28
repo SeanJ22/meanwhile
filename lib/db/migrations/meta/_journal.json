@@ -398,6 +398,125 @@
       "idx": 56,
       "version": "7",
       "when": 1792834200004,
+      "tag": "RB-A4_entity_places",
+      "breakpoints": true
+    },
+    {
+      "idx": 57,
+      "version": "7",
+      "when": 1792834200005,
+      "tag": "GB-01_la_metro_boards",
+      "breakpoints": true
+    },
+    {
+      "idx": 58,
+      "version": "7",
+      "when": 1792834200006,
+      "tag": "RB-A7_expand",
+      "breakpoints": true
+    },
+    {
+      "idx": 59,
+      "version": "7",
+      "when": 1792834200007,
+      "tag": "RB-A7_bootstrap_expand",
+      "breakpoints": true
+    },
+    {
+      "idx": 60,
+      "version": "7",
+      "when": 1792834200008,
+      "tag": "RB-A7_bootstrap_contract",
+      "breakpoints": true
+    },
+    {
+      "idx": 61,
+      "version": "7",
+      "when": 1792834200009,
+      "tag": "DB-03_process_transfer",
+      "breakpoints": true
+    },
+    {
+      "idx": 62,
+      "version": "7",
+      "when": 1792834200010,
+      "tag": "DB-05_source_hash",
+      "breakpoints": true
+    },
+    {
+      "idx": 63,
+      "version": "7",
+      "when": 1792834200011,
+      "tag": "DB-05_keyed_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 64,
+      "version": "7",
+      "when": 1792834200012,
+      "tag": "DB-05_source_checks",
+      "breakpoints": true
+    },
+    {
+      "idx": 65,
+      "version": "7",
+      "when": 1792834200013,
+      "tag": "DB-05_member_office_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 66,
+      "version": "7",
+      "when": 1792834200014,
+      "tag": "DB-05_federal_money_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 67,
+      "version": "7",
+      "when": 1792834200015,
+      "tag": "DB-05_lookup_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 68,
+      "version": "7",
+      "when": 1792834200016,
+      "tag": "DB-05_venue_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 69,
+      "version": "7",
+      "when": 1792834200017,
+      "tag": "DB-05_prl_rows",
+      "breakpoints": true
+    },
+    {
+      "idx": 70,
+      "version": "7",
+      "when": 1792834200018,
+      "tag": "VB-01_read_model_fingerprints",
+      "breakpoints": true
+    },
+    {
+      "idx": 71,
+      "version": "7",
+      "when": 1792834200019,
+      "tag": "VB-01_candidate_vault",
+      "breakpoints": true
+    },
+    {
+      "idx": 72,
+      "version": "7",
+      "when": 1792834200020,
+      "tag": "WR-01_fact_confirmations",
+      "breakpoints": true
+    },
+    {
+      "idx": 73,
+      "version": "7",
+      "when": 1792834200021,
       "tag": "RB-A10_zip_locations",
       "breakpoints": true
     }

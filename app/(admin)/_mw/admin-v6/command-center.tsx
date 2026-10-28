@@ -26,7 +26,7 @@ import { ScoreboardScreen } from "./screen-scoreboard.tsx";
 import { MoneyScreen } from "./screen-money.tsx";
 import { DataBusinessScreen } from "./screen-data.tsx";
 import { NowScreen, Readers } from "./screen-now.tsx";
-import { ReportsView, DailyBrief, AlertStrip } from "./reports-view.tsx";
+import { BriefView, DailyBrief, AlertStrip } from "./brief-view.tsx";
 import { OwedPanel } from "./owed-panel.tsx";
 import { RunnerSettingsPanel, SettingsScreen } from "./screen-settings.tsx";
 import { DoorsPanel } from "./doors-panel.tsx";
@@ -225,6 +225,7 @@ export function CommandCenter(props: CommandCenterProps) {
     if (!last) return;
     setStack(stack.slice(0, -1));
     setView(last.view);
+    props.onViewChange?.(last.view);
     setDetail(last.detail);
   };
 
@@ -297,7 +298,7 @@ export function CommandCenter(props: CommandCenterProps) {
 
   return (
     <V6Context.Provider value={v6}>
-      <div ref={rootRef} className={cx(s.root, view === "now" && !detail && s.rootNow)}>
+      <div ref={rootRef} className={cx(s.root, view === "now" && !detail && s.rootNow, view === "reports" && s.rootBrief)}>
         <a className={s.skip} href="#v6-main">Skip to the page</a>
         <header ref={headerRef} className={s.header}>
           <div className={s.headerTop}>
@@ -307,7 +308,7 @@ export function CommandCenter(props: CommandCenterProps) {
                 <button key={id} type="button" className={s.navBtn} aria-current={view === id && !detail ? "page" : undefined} onClick={() => goView(id)}>{label}</button>
               ))}
             </nav>
-            {props.mode === "sample" ? <span className={s.badge}>SAMPLE DATA</span> : null}
+            {props.mode === "sample" ? <span className={s.badge}>Sample data</span> : null}
             <button type="button" className={s.navBtn} onClick={() => setBulk({ pick: isZipPlace(scopeKey) ? null : bulkPickOf(scopeKey, place.name) })}>Start hunts or send leads</button>
             <form className={s.search} role="search" onSubmit={(e) => { e.preventDefault(); if (query.trim()) openDetail({ type: "search", query: query.trim() }); }}>
               <input className={s.input} aria-label="Search everything in the selected place" placeholder="Search bodies, people, meetings, requirements, failures" value={query}
@@ -388,7 +389,7 @@ export function CommandCenter(props: CommandCenterProps) {
               {view === "work" && <WorkScreen />}
               {view === "scoreboard" && <ScoreboardScreen />}
               {view === "settings" && <><SettingsScreen /><OwedPanel /></>}
-              {view === "reports" && <ReportsView />}
+        {view === "reports" && <BriefView />}
               {view === "changes" && <ChangesView />}
               {view === "chat" && <ChatView controls={props.chatControls ?? []} />}
             </>

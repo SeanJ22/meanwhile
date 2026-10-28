@@ -1,3 +1,4 @@
+import { versionedRowsFor } from "../../db/versioned-rows.ts";
 import { createHash } from "node:crypto";
 import { withCallerSite } from "../../db/transfer-by-caller.ts";
 import { boundedQuery, CONTROL_PLANE_REQUEST_BOUNDS_MS, type ControlPlaneRequestBounds } from "./request-bounds.ts";
@@ -20,12 +21,29 @@ export interface DispatchRead {
 }
 export interface DispatchStateRepository {
   readOpen(input?: DispatchRead): Promise<DispatchSnapshot>;
+  /** The same live selection without advancing the runner's durable cursor. */
+  inspectOpen?(input?: DispatchRead): Promise<DispatchSnapshot>;
   archiveOccurrence(id: string, now: string): Promise<void>;
   prepareLineages(ids: readonly string[]): Promise<void>;
   lineages(obligationId: string, load: () => Promise<readonly StandingLineage[]>, stamp?: string): Promise<readonly StandingLineage[]>;
 }
 
 const OPEN_STATES = ["PENDING", "CLAIMED", "RECLAIMABLE", "POLICY_DENIED"];
+
+/** Sparse state walks start from the existing work-item and task-work indexes.
+ * A LIMIT on the outer task id must not walk every unrelated pending task.
+ */
+export function workItemStateFilter(table: string, state: string): string {
+  const parent = `SELECT 1 FROM cp_work_items_history w
+    WHERE w.id=${table}.value #>> '{workItemId}' AND cp_control_state(w.value)='${state}'`;
+  if (table !== "cp_route_tasks") return `EXISTS (${parent})`;
+  // Most pending tasks belong to system. Probe their exact parents instead of
+  // scanning every system work item, including hundreds of thousands archived.
+  if (state === "system") return `EXISTS (${parent} OFFSET 0)`;
+  const owned = `(SELECT id FROM cp_work_items_history WHERE cp_control_state(value)='${state}' ORDER BY id)`;
+  return `${table}.id=ANY(ARRAY(SELECT matched.id FROM ${owned} w CROSS JOIN LATERAL (
+    SELECT id FROM ${table} by_work WHERE by_work.value #>> '{workItemId}'=w.id OFFSET 0) matched))`;
+}
 const byId = <T>(rows: readonly Persisted<T>[]) => new Map(rows.map(row => [row.id, row]));
 const ordered = <T>(rows: readonly Persisted<T>[]) => {
   const unique = new Map<string, Persisted<T>>();
@@ -113,21 +131,29 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
   const run = (operation: string, text: string, params: readonly unknown[] = [], page = false) =>
     boundedQuery(sql, { operation: `cp_dispatch.${operation}`, callClass: page ? "PAGE" : "POINT" }, text, params, { bounds });
   async function rows<T>(table: string, predicate: string, params: readonly unknown[]): Promise<Persisted<T>[]> {
-    const out: Persisted<T>[] = [];
-    let after = "";
-    for (;;) {
-      const page = await run(`readOpen:${table}`, `SELECT id, revision, updated_at, value FROM ${table}
-        WHERE ${predicate} ${state ? table === 'cp_route_tasks' ? `AND EXISTS (SELECT 1 FROM cp_work_items_history w WHERE w.id=${table}.value->>'workItemId' AND cp_control_state(w.value)='${state}')` : `AND cp_control_state(value)='${state}'` : ""} AND id > $${params.length + 1} ORDER BY id LIMIT 100`, [...params, after], true) as Record<string, unknown>[];
-      out.push(...page.map(row => persisted<T>(row)));
-      if (page.length < 100) return out;
-      after = String(page[page.length - 1].id);
-    }
+    const scoped = state ? table === 'cp_route_tasks'
+      ? workItemStateFilter(table, state)
+      : `cp_control_state(value)='${state}'` : "";
+    const found = await versionedRowsFor(sql).rows((text, args) => run(`readOpen:${table}`, text, args, true),
+      table, [predicate, scoped].filter(Boolean).map(filter => `(${filter})`).join(" AND "), params);
+    return found.map(row => persisted<T>(row));
   }
-  const lineageCache=new Map<string,{stamp:string;value:StandingLineage[];dirty:boolean;generation:number}>();
-  return {
-    async readOpen(input = {}) {
-      return withCallerSite(async () => {
-      const scope = state ?? (input.obligationIds ? createHash("sha256").update([...input.obligationIds].sort().join("\n")).digest("hex") : "*");
+
+  type LineageRow={id:string;stamp:string;value:StandingLineage[];dirty:boolean;generation:number;__etag:string};
+  async function currentLineages(ids:readonly string[]):Promise<readonly LineageRow[]> {
+    if(!ids.length)return [];
+    const versions=await run("lineages:versions",`SELECT id,concat(xmin::text,'/',ctid::text) AS revision
+      FROM cp_lineage_cache WHERE id=ANY($1::text[])`,[ids],true) as {id:string;revision:string}[];
+    return versionedRowsFor(sql).known("cp_lineage_cache",versions,"lineage",async selected=>
+      await run("lineages:values",`SELECT id,stamp,value,dirty,generation,concat(xmin::text,'/',ctid::text) AS __etag
+        FROM cp_lineage_cache WHERE id=ANY($1::text[])`,[selected],true) as LineageRow[],row=>row.id,row=>row.__etag);
+  }
+
+  const scopeFor = (input: DispatchRead) => state ?? (input.obligationIds
+    ? createHash("sha256").update([...input.obligationIds].sort().join("\n")).digest("hex") : "*");
+  async function inspectOpen(input: DispatchRead = {}): Promise<DispatchSnapshot> {
+    return withCallerSite(async () => {
+      const scope = scopeFor(input);
       const clock = await run("readOpen:cursor", "SELECT now() AS at, (SELECT through FROM cp_dispatch_cursors WHERE id=$1) AS since", [scope]) as { at: string; since: string | null }[];
       const through = new Date(clock[0].at).toISOString();
       const since = input.since ?? (clock[0].since ? new Date(Date.parse(String(clock[0].since)) - 120_000).toISOString() : null);
@@ -145,34 +171,31 @@ export function createPgDispatchState(sql: Sql, repos: () => ControlPlaneReposit
       const workIds = [...new Set([...occurrences.map(row => row.value.workItemId), ...[...taskMap.values()].map(row => row.value.workItemId)])];
       const work = repos().workItems;
       const items = work.readMany ? await work.readMany(workIds) : (await Promise.all(workIds.map(id => work.read(id)))).filter(row => row !== null);
-      await run("readOpen:cursor", "INSERT INTO cp_dispatch_cursors (id, through) VALUES ($1,$2) ON CONFLICT (id) DO UPDATE SET through=GREATEST(cp_dispatch_cursors.through, EXCLUDED.through)", [scope, through]);
       return { occurrences: byId(occurrences), routeTasks: taskMap, workItems: byId(items), through };
-      });
+    });
+  }
+
+  return {
+    inspectOpen,
+    async readOpen(input = {}) {
+      const snapshot = await inspectOpen(input);
+      await run("readOpen:cursor", "INSERT INTO cp_dispatch_cursors (id, through) VALUES ($1,$2) ON CONFLICT (id) DO UPDATE SET through=GREATEST(cp_dispatch_cursors.through, EXCLUDED.through)", [scopeFor(input), snapshot.through]);
+      return snapshot;
     },
     async archiveOccurrence(id) { await withCallerSite(() => run("archiveOccurrence", "SELECT cp_archive_occurrences(ARRAY[$1]::text[])", [id])); },
     async prepareLineages(ids) {
-      lineageCache.clear();
-      for(let at=0;at<ids.length;at+=100) {
-        const rows=await run("lineages:prepare","SELECT id,stamp,value,dirty,generation FROM cp_lineage_cache WHERE id=ANY($1::text[])",[ids.slice(at,at+100)],true) as {id:string;stamp:string;value:StandingLineage[];dirty:boolean;generation:number}[];
-        for(const row of rows)lineageCache.set(row.id,{...row,generation:Number(row.generation)});
-      }
+      for(let at=0;at<ids.length;at+=100)await currentLineages(ids.slice(at,at+100));
     },
     async lineages(obligationId,load,stamp) {
       return withCallerSite(async()=>{
-        let held=lineageCache.get(obligationId);
-        if(stamp===undefined) {
-          const rows=await run("lineages:revision","SELECT dirty,generation FROM cp_lineage_cache WHERE id=$1",[obligationId]) as {dirty:boolean;generation:number}[];
-          if(rows[0])held=held?{...held,dirty:rows[0].dirty || Number(rows[0].generation)!==held.generation,generation:Number(rows[0].generation)}
-            :{stamp:"",value:[],dirty:true,generation:Number(rows[0].generation)};
-        }
+        const [held]=await currentLineages([obligationId]);
         const currentStamp=stamp??held?.stamp??"";
-        if(held && !held.dirty && held.stamp===currentStamp)return held.value;
+        if(held&&!held.dirty&&held.stamp===currentStamp)return held.value;
         const value=await load();
-        const rows=await run("lineages:save",held
+        await run("lineages:save",held
           ? "UPDATE cp_lineage_cache SET stamp=$2,value=$3::jsonb,dirty=false WHERE id=$1 AND generation=$4 RETURNING generation"
           : "INSERT INTO cp_lineage_cache(id,stamp,value,dirty,generation) VALUES($1,$2,$3::jsonb,false,$4) ON CONFLICT(id) DO NOTHING RETURNING generation",
-        [obligationId,currentStamp,JSON.stringify(value),held?.generation??1],true) as {generation:number}[];
-        if(rows.length)lineageCache.set(obligationId,{stamp:currentStamp,value:[...value],dirty:false,generation:Number(rows[0].generation)});
+        [obligationId,currentStamp,JSON.stringify(value),held?Number(held.generation):1],true);
         return value;
       });
     },

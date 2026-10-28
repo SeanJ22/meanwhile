@@ -4,6 +4,7 @@ import { Fragment, useMemo, useState } from "react";
 
 import { periodLabel } from "@/lib/control-plane/admin-view/periods.ts";
 
+import { PausedJobsPanel } from "./paused-jobs-panel.tsx";
 import { useKeeperScoreboard } from "./use-keeper-scoreboard.ts";
 import { useV6 } from "./context.tsx";
 import { count, mst, usd, type Hunt, type Lane, type ReaderResult, type StateRow, type StuckItem } from "./model.ts";
@@ -42,6 +43,7 @@ export function NowScreen() {
       <DirectWork />
       <OfficialsChecks />
       <IsItWorking />
+      <PausedJobsPanel />
       <OrdersInMotion />
       <NeedsMe />
     </>
@@ -101,10 +103,11 @@ export function motionRows(rows: readonly QueueRow[]): MotionRow[] {
 
 function OrdersInMotion() {
   const v = useV6();
-  const { rows, unread } = useQueueRows();
+  const { rows, unread, status } = useQueueRows();
   const motion = motionRows(rows).slice(0, 5);
   return (
     <Card title="Orders in motion" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>
+      {status}
       {motion.length === 0 && <Empty>{unread.length > 0 ? "—" : "Nothing in motion."}</Empty>}
       <div className={s.stack}>
         {motion.map((r) => (
@@ -120,10 +123,11 @@ function OrdersInMotion() {
 
 function NeedsMe() {
   const v = useV6();
-  const { rows, unread } = useQueueRows();
+  const { rows, unread, status } = useQueueRows();
   const needs = rows.filter((r) => r.filter === "needs-me");
   return (
     <Card title="Needs me" aside={<button type="button" className={s.btnLink} onClick={() => v.go("queue")}>Open the queue →</button>}>
+      {status}
       <div><span className={cx(s.big, needs.length > 0 && s.textWarn)}>{unread.includes("stuck cases") && unread.includes("orders") ? "—" : needs.length}</span></div>
       <p className={s.small}>{unread.length > 0 ? `Counted without ${unread.join(", ")}, which could not be read.` : needs.length === 0 ? "Good: nothing is waiting on you." : `Not good until they are cleared: ${needs.length === 1 ? "one thing is" : `${needs.length} things are`} waiting on you.`}</p>
       <div className={s.stack}>
@@ -147,7 +151,7 @@ function IsItWorking() {
   const hours = board?.vital ?? null;
   const last = hours?.[0] ?? null, before = hours?.[1] ?? null;
   const rows: readonly { readonly name: string; readonly says: string; readonly of: (h: NonNullable<typeof last>) => { readonly text: string; readonly bad?: boolean } }[] = [
-    { name: "Facts marked live", says: "New or changed facts reported by writers. Counts alone do not prove delivery to a reader.", of: (h) => ({ text: orDash(h.factsLive, n=>`${count(n)}${h.factsLiveConfirmed?" confirmed":""}`) }) },
+    { name: "Facts marked live", says: "New or changed live facts counted by the database. “At least” means counting began partway through the hour.", of: (h) => ({ text: orDash(h.factsLive, n=>`${h.factsLiveAtLeast?"at least ":""}${count(n)}`) }) },
     { name: "Cost per fact", says: "Money spent divided by facts live. Lower is better.", of: (h) => ({ text: orDash(h.costPerFactUsd, (n) => (n >= 1 ? usd(n) : `$${n.toFixed(4)}`)) }) },
     { name: "Data read from the database", says: "Target: under 0.7 GB an hour.", of: (h) => ({ text: `${h.neonAtLeast&&h.neonGb!==null?"at least ":""}${gb(h.neonGb)}`, bad: h.overNeonTarget === true }) },
     { name: "Research rounds", says: "Finished, against killed by the watchdog.", of: (h) => ({ text: h.roundsFinished === null || h.roundsKilled === null ? "—" : `${count(h.roundsFinished)} finished · ${count(h.roundsKilled)} killed` }) },

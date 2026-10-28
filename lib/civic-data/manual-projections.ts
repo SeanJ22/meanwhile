@@ -98,7 +98,12 @@ export interface CuratedReaderProjection {
   /** Stable exact members. Each family has its own contract, pointer, and LKG. */
   readonly records: readonly (Readonly<Record<string, unknown>> & { readonly id: string })[];
   readonly formatVersion?: number;
+  /** State-sized member-office publication; older national editions remain selectable by their keyed state rows. */
+  readonly state?: string;
   readonly denominator?: Readonly<Record<string, number>>;
+  /** Member offices: the lawmaker list each state's offices were built from, and the changed states still owed this round. */
+  readonly rosterDigests?: Readonly<Record<string, string>>;
+  readonly pending?: readonly string[];
 }
 
 type ManualProjectionPayload =
@@ -508,9 +513,16 @@ function rebuildSourceScopedPayload(
       members.map((member) => member.record as EverydayRoutingRecord),
     );
   }
+  // Member offices keep which roster each state was built from and which states a cut-off run still owes.
+  const progress = contractId === "member-offices" ? {
+    ...(typeof current.state === "string" ? { state: current.state } : {}),
+    ...(object(current.rosterDigests) ? { rosterDigests: current.rosterDigests } : {}),
+    ...(Array.isArray(current.pending) && current.pending.length ? { pending: current.pending } : {}),
+  } : {};
   return {
     kind: string(current.kind) || contractId,
     records: members.map((member) => member.record),
+    ...progress,
   } as CuratedReaderProjection;
 }
 
@@ -614,7 +626,7 @@ export async function readManualProjectionPrior(
   const read = await readPromotedCivicData<ManualProjectionPayload>(contract.recordClass, scope ?? contract.scope, {
     store: readStore,
     now,
-    bypassCache: true,
+
   });
   if (read.kind === "NOT_RECORDED") return null;
   if (read.kind !== "PROMOTED") {

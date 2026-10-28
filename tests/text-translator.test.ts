@@ -59,34 +59,34 @@ test("legal class, exact body, state office, agenda and minutes publish independ
     assert.equal((await run()).outcomes[0]?.status, "REUSED");
   }
   assert.equal(calls, 10);
-  const body = await readBodyTranslations({ ocdId: division, bodyId, classKey: "library" }, { store, now, bypassCache: true });
+  const body = await readBodyTranslations({ ocdId: division, bodyId, classKey: "library" }, { store, now });
   assert.equal(body.classDefinition?.text, specs[0].text); assert.equal(body.bodyDefinition?.text, specs[1].text);
-  const other = await readBodyTranslations({ ocdId: division, bodyId: "another-body", classKey: "library" }, { store, now, bypassCache: true });
+  const other = await readBodyTranslations({ ocdId: division, bodyId: "another-body", classKey: "library" }, { store, now });
   assert.equal(other.bodyDefinition, null); assert.equal(other.classDefinition?.text, specs[0].text);
-  assert.equal((await readOfficeTranslation({ state: "MI", officeKey: "library-trustee" }, { store, now, bypassCache: true }))?.text, specs[2].text);
-  assert.equal(await readOfficeTranslation({ state: "NH", officeKey: "library-trustee" }, { store, now, bypassCache: true }), null);
+  assert.equal((await readOfficeTranslation({ state: "MI", officeKey: "library-trustee" }, { store, now }))?.text, specs[2].text);
+  assert.equal(await readOfficeTranslation({ state: "NH", officeKey: "library-trustee" }, { store, now }), null);
   assert.equal(blurbForTitle("Library Trustee"), null);
-  assert.equal((await readCuratedOfficeBlurb("Library Trustee", division, { store, now, bypassCache: true }))?.text, specs[2].text);
+  assert.equal((await readCuratedOfficeBlurb("Library Trustee", division, { store, now }))?.text, specs[2].text);
   const contestBlurbs = await readCuratedContestOfficeBlurbs([{ id: "library-contest", title: "Library Trustee - District 1", ocdId: division }],
-    { store, now, bypassCache: true });
+    { store, now });
   assert.equal(contestBlurbs.get("library-contest")?.text, specs[2].text);
   assert.equal(calls, 10, "office explanations reuse the already published text");
   const agenda = capture(specs[3]);
   const document = { kind: "AGENDA" as const, meetingId: "library-meeting", ocdId: division,
     documentUrl: agenda.evidence.canonicalUrl, contentHash: agenda.evidence.contentHash };
-  assert.equal((await readMeetingTranslation(document, { store, now, bypassCache: true }))?.text, specs[3].text);
-  assert.equal(await readMeetingTranslation({ ...document, contentHash: translationHash("revised") }, { store, now, bypassCache: true }), null);
-  assert.equal(await readMeetingTranslation({ ...document, meetingId: "other-meeting" }, { store, now, bypassCache: true }), null);
-  assert.equal(await readMeetingTranslation({ ...document, bodyId: "other-body" }, { store, now, bypassCache: true }), null);
+  assert.equal((await readMeetingTranslation(document, { store, now }))?.text, specs[3].text);
+  assert.equal(await readMeetingTranslation({ ...document, contentHash: translationHash("revised") }, { store, now }), null);
+  assert.equal(await readMeetingTranslation({ ...document, meetingId: "other-meeting" }, { store, now }), null);
+  assert.equal(await readMeetingTranslation({ ...document, bodyId: "other-body" }, { store, now }), null);
   const snapshot = { meetings: [{ id: "library-meeting", bodyId, ocdId: division, title: "Library meeting", startsAt: "2026-10-06T18:00:00Z" }],
     agendaDocuments: [{ id: "held-agenda", meetingId: "library-meeting", ocdId: division, documentUrl: agenda.evidence.canonicalUrl,
       contentHash: agenda.evidence.contentHash.replace(/^sha256-/, ""), retrievedAt: now, text: agenda.evidence.text, sourceOrg: "Birch library" }] } as unknown as MeetingsSnapshot;
-  assert.equal((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "What is on the agenda?", snapshot, { store, now, bypassCache: true })).records[0]?.kind, "MEETING_NOTICE_SUMMARY");
-  assert.equal((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "What happened in the minutes?", snapshot, { store, now, bypassCache: true })).records[0]?.kind, "MEETING_MINUTES_SUMMARY");
-  assert.deepEqual((await translatedMeetingEvidenceFor("other-body", "library-meeting", "What happened?", snapshot, { store, now, bypassCache: true })).records, []);
-  assert.deepEqual((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "How did they vote?", snapshot, { store, now, bypassCache: true })).records, []);
-  assert.deepEqual((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "What is on the agenda?", { ...snapshot, agendaDocuments: snapshot.agendaDocuments?.map(row => ({ ...row, contentHash: translationHash("revised") })) }, { store, now, bypassCache: true })).records, []);
-  assert.equal((await readTranslations([division, stateDivision], { store, now, bypassCache: true })).length, 5);
+  assert.equal((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "What is on the agenda?", snapshot, { store, now })).records[0]?.kind, "MEETING_NOTICE_SUMMARY");
+  assert.equal((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "What happened in the minutes?", snapshot, { store, now })).records[0]?.kind, "MEETING_MINUTES_SUMMARY");
+  assert.deepEqual((await translatedMeetingEvidenceFor("other-body", "library-meeting", "What happened?", snapshot, { store, now })).records, []);
+  assert.deepEqual((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "How did they vote?", snapshot, { store, now })).records, []);
+  assert.deepEqual((await translatedMeetingEvidenceFor(bodyId, "library-meeting", "What is on the agenda?", { ...snapshot, agendaDocuments: snapshot.agendaDocuments?.map(row => ({ ...row, contentHash: translationHash("revised") })) }, { store, now })).records, []);
+  assert.equal((await readTranslations([division, stateDivision], { store, now })).length, 5);
 });
 
 test("failed independent checks retain GOOD text and both calls' charges; unchanged sources reuse and changed sources rewrite", async () => {
@@ -102,7 +102,7 @@ test("failed independent checks retain GOOD text and both calls' charges; unchan
   assert.equal((await run()).status, "REUSED"); assert.equal(calls, 2);
   const revised = capture(spec, " The board cannot set property tax rates."); supported = false;
   const held = await run(revised); assert.equal(held.status, "HELD"); assert.equal(held.usage.length, 4);
-  assert.deepEqual((await readTranslations([division], { store, now, bypassCache: true }))[0], first.record);
+  assert.deepEqual((await readTranslations([division], { store, now }))[0], first.record);
   supported = true; const rewritten = await run(revised); assert.equal(rewritten.status, "PUBLISHED", JSON.stringify(rewritten));
   assert.notEqual(rewritten.versionId, first.versionId);
 });

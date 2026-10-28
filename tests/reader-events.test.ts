@@ -44,7 +44,7 @@ test("archive failure prevents database totals; retries reuse the archive and ex
     await assert.rejects(() => appendReaderEvents(batch, {
       archive: { put: async () => { throw new Error("archive down"); } },
       query: async () => { queried++; return []; },
-    }), /archive down/);
+    }), error=>error instanceof Error&&/history could not be saved/.test(error.message)&&error.cause instanceof Error&&error.cause.message==="archive down");
     assert.equal(queried, 0);
     const saved = new Map<string, { bytes: Uint8Array; hash: string }>();
     let recorded = false;
@@ -77,4 +77,25 @@ test("archive failure prevents database totals; retries reuse the archive and ex
   } finally {
     if (original === undefined) delete process.env.WTP_DB_ROLE; else process.env.WTP_DB_ROLE = original;
   }
+});
+
+test("transient database failures retry the same batch; a lost commit response never counts it twice",async()=>{
+  const before=process.env.WTP_DB_ROLE;process.env.WTP_DB_ROLE="local";
+  const logs:unknown[][]=[];const error=console.error;console.error=(...args:unknown[])=>{logs.push(args);};
+  try {
+    let calls=0,commits=0;const hashes=new Map<string,unknown>();
+    const result=await appendReaderEvents(batch,{archive:{put:async()=>{}},query:async(_sql,params)=>{
+      calls++;
+      if(calls===1)throw new Error("Server error (HTTP status 503): upstream connection reset");
+      if(!hashes.has(String(params[0]))){hashes.set(String(params[0]),params[2]);commits++;}
+      if(calls===2)throw new Error("Error connecting to database: response lost after commit");
+      return [{recorded:false,previous_hash:hashes.get(String(params[0]))}];
+    }});
+    assert.equal(result.kind,"RECORDED");assert.equal(result.duplicate,true);assert.equal(commits,1);assert.equal(calls,3);
+    assert.equal(logs.length,2);
+    assert.equal((logs[0][1] as {error:Error}).error.message,"Server error (HTTP status 503): upstream connection reset");
+    calls=0;
+    await assert.rejects(()=>appendReaderEvents(batch,{archive:{put:async()=>{}},query:async()=>{calls++;throw Object.assign(new Error("missing table"),{code:"42P01"});}}),/totals could not be saved/);
+    assert.equal(calls,1,'a schema error is logged and refused immediately');
+  } finally {console.error=error;if(before===undefined)delete process.env.WTP_DB_ROLE;else process.env.WTP_DB_ROLE=before;}
 });

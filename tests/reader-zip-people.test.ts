@@ -86,13 +86,15 @@ test("ZIP people selection joins the held Census districts and official aliases 
     if(entry.kind!=="PROMOTED")return;
     const payload=entry.projection.payload as {roster:{officeholders:unknown[]}};
     assert.deepEqual(payload.roster.officeholders,people.slice(0,3));
-    const held=(await pg.query<Record<string,unknown>>(geography.text,[...geography.params])).rows[0];
     await publish({id:"changed-geography",recordClass:geography.params[0] as "CENSUS_GEOGRAPHY",scope:String(geography.params[1]),sourceId:"census-geography",
       value:{scopes:[{type:"state_leg_lower",version:"2025",versionMeta:{plan:"2025"},groupings:[
         {geoid:"33028",stateFips:"33",stateAbbr:"NH",label:"District 28",overlaps:[{zcta5:"03046",whole:true,fraction:1}]}]}]},at:AT});
-    const selected=statePackageStatement("NH",[],"03046",held);
-    const reused=(await pg.query<Record<string,unknown>>(selected.text,[...selected.params])).rows[0];
-    assert.deepEqual(reused,row,"the later people query uses the exact held geography even if Census publishes in between");
+    const selected=statePackageStatement("NH",[],"03046");
+    const next=(await pg.query<{zip_people:Record<string,unknown>}>(selected.text,[...selected.params])).rows[0];
+    const changed=zipPeopleEntry("NH",next.zip_people);assert.equal(changed.kind,"PROMOTED");
+    if(changed.kind==="PROMOTED")assert.deepEqual((changed.projection.payload as typeof payload).roster.officeholders,[],
+      "the next request selects people against its newly published geography in the same query");
+    assert.deepEqual(payload.roster.officeholders,people.slice(0,3),"an older answer keeps its own geography and people together");
     const missing=statePackageStatement("NH",[],"00000");
     const absent=zipPeopleEntry("NH",(await pg.query<{zip_people:Record<string,unknown>}>(missing.text,[...missing.params])).rows[0].zip_people);assert.equal(absent.kind,"PROMOTED");
     if(absent.kind==="PROMOTED")assert.deepEqual((absent.projection.payload as typeof payload).roster.officeholders,[]);

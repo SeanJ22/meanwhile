@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { Pool, neonConfig } from "@neondatabase/serverless";
+import { Pool, neonConfig } from "../lib/db/client.ts";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
 import { CP_MIGRATIONS_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { CP01_DECLARATION_SOURCES, controlReadsMigrationDefinition, expandControlReads } from "../lib/control-plane/repository/migrations/CP-01.ts";
@@ -13,6 +13,11 @@ import { reopenHeldDoors, reopenHeldDoorsMigrationDefinition } from "../lib/cont
 import { reopenKeyHeldDoors, reopenKeyHeldDoorsMigrationDefinition } from "../lib/control-plane/repository/migrations/RIVER-KEYS-FX.ts";
 
 import { COUNT_SCHEMA_SOURCE, countHourMigrationDefinition, installHourlyCounts } from "../lib/control-plane/repository/migrations/RB-A8.ts";
+import { buildResearchRevisionIndexes, researchRevisionIndexesMigrationDefinition } from "../lib/control-plane/repository/migrations/DB-03.ts";
+import { boxDueIndexesMigrationDefinition, buildBoxDueIndexes } from "../lib/control-plane/repository/migrations/RV-BOX.ts";
+import { LINKING_SEEDS, linkingPagesMigrationDefinition, migrateLinkingPages } from "../lib/control-plane/repository/migrations/DB-03A.ts";
+import { resolveProductionWriteHandle } from "../lib/db/write-handle.ts";
+import { installJobBreaker, jobBreakerMigrationDefinition } from "../lib/control-plane/repository/migrations/BB-01.ts";
 
 const JOURNAL = "lib/control-plane/repository/migrations/meta/_journal.json";
 const MIGRATIONS = [
@@ -30,6 +35,19 @@ const MIGRATIONS = [
     definition: workMigrationDefinition, apply: expandWorkList },
   { id: "RB-A8_expand", source: "lib/control-plane/repository/migrations/RB-A8.ts", declarations: [COUNT_SCHEMA_SOURCE],
     definition: countHourMigrationDefinition, apply: async (sql: Sql) => { await installHourlyCounts(sql); return "hourly counts"; } },
+  { id: "RV-BOX_expand", source: "lib/control-plane/repository/migrations/RV-BOX.ts", declarations: ["lib/control-plane/repository/pg-schema.ts"],
+    definition: boxDueIndexesMigrationDefinition, apply: buildBoxDueIndexes },
+  { id: "DB-03_expand", source: "lib/control-plane/repository/migrations/DB-03.ts", declarations: ["lib/control-plane/repository/pg-schema.ts"],
+    definition: researchRevisionIndexesMigrationDefinition, apply: buildResearchRevisionIndexes },
+  { id: "DB-03A_expand", source: "lib/control-plane/repository/migrations/DB-03A.ts", declarations: [LINKING_SEEDS, "lib/facts/linking-copy.ts"],
+    definition: linkingPagesMigrationDefinition, apply: async (sql: Sql, env: NodeJS.ProcessEnv, connect: NonNullable<Dependencies["withDatabase"]>) => {
+      const reader = resolveProductionWriteHandle(env);
+      if (reader.host.replace("-pooler.", ".") !== "ep-dry-river-axwtolzc.c-4.us-east-2.aws.neon.tech")
+        throw Error("db:apply: REFUSED — saved linking pages require the production reader database");
+      return connect(reader.connection, async readerSql => migrateLinkingPages(sql, readerSql));
+    } },
+  { id: "BB-01_expand", source: "lib/control-plane/repository/migrations/BB-01.ts", declarations: [] as readonly string[],
+    definition: jobBreakerMigrationDefinition, apply: installJobBreaker },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand"; readonly hash: string }
 interface Dependencies {
@@ -112,7 +130,7 @@ export async function applyControlPlaneMigrations(args: string[], deps: Dependen
     try {
       await sql.query(CP_MIGRATIONS_DDL);
       for (const entry of pendingOf(await readApplied())) {
-        const done = await MIGRATIONS.find(migration => migration.id === entry.id)!.apply(sql);
+        const done = await MIGRATIONS.find(migration => migration.id === entry.id)!.apply(sql, env, deps.withDatabase ?? withDatabase);
         await sql.query("INSERT INTO cp_migrations(id,hash,completed_at) VALUES ($1,$2,now())", [entry.id, entry.hash]);
         console.log(`control-plane: ${entry.id} applied to ${new URL(connection).hostname} (${done})`);
       }

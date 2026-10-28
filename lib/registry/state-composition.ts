@@ -31,7 +31,7 @@ function memberSource(member: RosterMember, roster: BodyRoster, field: string): 
     ...(roster.kind ? { kind: roster.kind } : {}), verifiedAt: null };
 }
 
-function mergeMember(prior: RosterMember, incoming: RosterMember, priorRoster: BodyRoster, incomingRoster: BodyRoster): RosterMember {
+export function mergeRosterMemberSources(prior: RosterMember, incoming: RosterMember, priorRoster: BodyRoster, incomingRoster: BodyRoster): RosterMember {
   const old = membership(prior, priorRoster), next = membership(incoming, incomingRoster);
   const newer = checkedAt(next.membershipSource) >= checkedAt(old.membershipSource) ? next : old;
   const result = known(newer === next ? old : next, newer);
@@ -60,7 +60,7 @@ function mergeRoster(prior: BodyRoster, incoming: BodyRoster): BodyRoster {
   const members = new Map(prior.members.map(member => [member.id, membership(member, prior)]));
   for (const row of incoming.members) {
     const old = members.get(row.id);
-    members.set(row.id, old ? mergeMember(old, row, prior, incoming) : membership(row, incoming));
+    members.set(row.id, old ? mergeRosterMemberSources(old, row, prior, incoming) : membership(row, incoming));
   }
   const newer = checkedAt(incoming) >= checkedAt(prior) ? incoming : prior;
   const older = newer === incoming ? prior : incoming;
@@ -96,7 +96,7 @@ function mergeBody(prior: Body, incoming: Partial<Body>): Body {
   return { ...result, fieldSources };
 }
 
-export function withStateRegistryFacts(carton: RegistryRuntimeCarton & Partial<RegistryRuntimeReadModel>, facts: readonly BodyFacts[]): RegistryRuntimeReadModel {
+export function withStateRegistryFacts<T extends Pick<RegistryRuntimeCarton,"registry"|"bodyRosters"|"rosterReaderDispositions">>(carton: T, facts: readonly BodyFacts[]): T & Required<Pick<RegistryRuntimeReadModel,"bodyRosters"|"rosterReaderDispositions">> {
   const rosters = new Map((carton.bodyRosters ?? []).map(roster => [roster.bodyId, roster]));
   const dispositions = new Map((carton.rosterReaderDispositions ?? []).map(row => [row.sourceId, row]));
   const byBody = new Map(facts.map(body => [body.id, body.fields]));

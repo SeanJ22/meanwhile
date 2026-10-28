@@ -1,0 +1,2000 @@
+{
+  "checkedAt": "2026-10-24T18:04:47.866Z",
+  "baseline": "Original scoped-holders versus current reader including native profile bridge, portrait alias rebinding and raw-source preservation",
+  "database": {
+    "projectId": "tiny-hill-13996172",
+    "branchId": "br-delicate-lab-ax02xuo5",
+    "role": "readonly"
+  },
+  "scope": "Actual full federal officeholder+membership records, state-sized source shards; composed through mergePeopleSets and indexByDivision as reader coverage",
+  "states": [
+    {
+      "state": "AK",
+      "sources": 1,
+      "divisions": 2,
+      "beforeRows": 3,
+      "afterRows": 3,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 3,
+      "aliasKeysChecked": 43,
+      "portraitsChecked": 3,
+      "socialAccountsChecked": 11,
+      "membershipsChecked": 8,
+      "termsChecked": 22,
+      "contactsChecked": 8,
+      "failures": 0,
+      "sourceUrlsChecked": 17,
+      "datePrecisionChecks": 9,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-AK:current-congress-directory",
+          "versionId": "cv-6e1918207ea464a0163eabe590d0e6eb",
+          "promotedAt": "2026-10-21T06:34:45.000Z"
+        }
+      ]
+    },
+    {
+      "state": "AL",
+      "sources": 1,
+      "divisions": 8,
+      "beforeRows": 9,
+      "afterRows": 9,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 9,
+      "aliasKeysChecked": 119,
+      "portraitsChecked": 9,
+      "socialAccountsChecked": 30,
+      "membershipsChecked": 49,
+      "termsChecked": 116,
+      "contactsChecked": 20,
+      "failures": 0,
+      "sourceUrlsChecked": 47,
+      "datePrecisionChecks": 27,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-AL:current-congress-directory",
+          "versionId": "cv-660df222e63feb35bcd27152ddb3c3ef",
+          "promotedAt": "2026-10-20T08:03:59.637Z"
+        }
+      ]
+    },
+    {
+      "state": "AR",
+      "sources": 1,
+      "divisions": 5,
+      "beforeRows": 6,
+      "afterRows": 6,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 6,
+      "aliasKeysChecked": 97,
+      "portraitsChecked": 6,
+      "socialAccountsChecked": 22,
+      "membershipsChecked": 39,
+      "termsChecked": 90,
+      "contactsChecked": 14,
+      "failures": 0,
+      "sourceUrlsChecked": 32,
+      "datePrecisionChecks": 18,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-AR:current-congress-directory",
+          "versionId": "cv-432ff2e07c6191c7a6b666a8e09f2c81",
+          "promotedAt": "2026-10-22T03:49:39.499Z"
+        }
+      ]
+    },
+    {
+      "state": "AS",
+      "sources": 2,
+      "divisions": 1,
+      "beforeRows": 1,
+      "afterRows": 1,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 1,
+      "aliasKeysChecked": 15,
+      "portraitsChecked": 1,
+      "socialAccountsChecked": 3,
+      "membershipsChecked": 6,
+      "termsChecked": 14,
+      "contactsChecked": 2,
+      "failures": 0,
+      "sourceUrlsChecked": 5,
+      "datePrecisionChecks": 3,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-AS:current-congress-directory",
+          "versionId": "cv-cf66a09dd95fd7c82983bba0bf7f8bb1",
+          "promotedAt": "2026-10-23T17:33:38.894Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-AS:people:portraits:v1",
+          "versionId": "cv-813105671dd73d9512bc5fb4d3a2a4ac",
+          "promotedAt": "2026-10-24T07:59:49.161Z"
+        }
+      ]
+    },
+    {
+      "state": "AZ",
+      "sources": 1,
+      "divisions": 10,
+      "beforeRows": 11,
+      "afterRows": 11,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 11,
+      "aliasKeysChecked": 138,
+      "portraitsChecked": 11,
+      "socialAccountsChecked": 32,
+      "membershipsChecked": 40,
+      "termsChecked": 102,
+      "contactsChecked": 23,
+      "failures": 0,
+      "sourceUrlsChecked": 55,
+      "datePrecisionChecks": 33,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-AZ:current-congress-directory",
+          "versionId": "cv-172d8ec074c1b421b2f418c2175e2eb0",
+          "promotedAt": "2026-10-22T08:41:03.038Z"
+        }
+      ]
+    },
+    {
+      "state": "CA",
+      "sources": 1,
+      "divisions": 53,
+      "beforeRows": 54,
+      "afterRows": 54,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 54,
+      "aliasKeysChecked": 712,
+      "portraitsChecked": 54,
+      "socialAccountsChecked": 166,
+      "membershipsChecked": 338,
+      "termsChecked": 784,
+      "contactsChecked": 109,
+      "failures": 0,
+      "sourceUrlsChecked": 266,
+      "datePrecisionChecks": 162,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-CA:current-congress-directory",
+          "versionId": "cv-42c6210ddbf2793f95595671b6fcfc51",
+          "promotedAt": "2026-10-21T08:24:15.591Z"
+        }
+      ]
+    },
+    {
+      "state": "CO",
+      "sources": 1,
+      "divisions": 9,
+      "beforeRows": 10,
+      "afterRows": 10,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 10,
+      "aliasKeysChecked": 117,
+      "portraitsChecked": 10,
+      "socialAccountsChecked": 30,
+      "membershipsChecked": 36,
+      "termsChecked": 92,
+      "contactsChecked": 22,
+      "failures": 0,
+      "sourceUrlsChecked": 52,
+      "datePrecisionChecks": 30,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-CO:current-congress-directory",
+          "versionId": "cv-09109336ea41b96fc18ad565f43c1d07",
+          "promotedAt": "2026-10-22T05:36:16.048Z"
+        }
+      ]
+    },
+    {
+      "state": "CT",
+      "sources": 1,
+      "divisions": 6,
+      "beforeRows": 7,
+      "afterRows": 7,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 7,
+      "aliasKeysChecked": 110,
+      "portraitsChecked": 7,
+      "socialAccountsChecked": 27,
+      "membershipsChecked": 64,
+      "termsChecked": 142,
+      "contactsChecked": 16,
+      "failures": 0,
+      "sourceUrlsChecked": 37,
+      "datePrecisionChecks": 21,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-CT:current-congress-directory",
+          "versionId": "cv-503bb7dabd65d109ce8d848c990865f4",
+          "promotedAt": "2026-10-21T05:23:35.745Z"
+        }
+      ]
+    },
+    {
+      "state": "DC",
+      "sources": 3,
+      "divisions": 1,
+      "beforeRows": 1,
+      "afterRows": 1,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 1,
+      "aliasKeysChecked": 15,
+      "portraitsChecked": 1,
+      "socialAccountsChecked": 4,
+      "membershipsChecked": 18,
+      "termsChecked": 38,
+      "contactsChecked": 2,
+      "failures": 0,
+      "sourceUrlsChecked": 5,
+      "datePrecisionChecks": 3,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-DC:current-congress-directory",
+          "versionId": "cv-e7d523f1f3b556d1f5c7a2211190f66c",
+          "promotedAt": "2026-10-22T00:31:58.720Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-DC:people:congress-api:v1",
+          "versionId": "cv-0e9a51072dd21b71d3b830f57dfa8143",
+          "promotedAt": "2026-10-15T16:08:55.035Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-DC:people:portraits:v1",
+          "versionId": "cv-859372bc41e9306473c8ba61f5fae0c0",
+          "promotedAt": "2026-10-24T08:51:56.443Z"
+        }
+      ]
+    },
+    {
+      "state": "DE",
+      "sources": 3,
+      "divisions": 2,
+      "beforeRows": 3,
+      "afterRows": 3,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 3,
+      "aliasKeysChecked": 45,
+      "portraitsChecked": 3,
+      "socialAccountsChecked": 9,
+      "membershipsChecked": 3,
+      "termsChecked": 10,
+      "contactsChecked": 7,
+      "failures": 0,
+      "sourceUrlsChecked": 17,
+      "datePrecisionChecks": 9,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-DE:current-congress-directory",
+          "versionId": "cv-8ded2bc5418a7728205059070b01bea8",
+          "promotedAt": "2026-10-20T10:57:55.242Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-DE:people:congress-api:v1",
+          "versionId": "cv-e95cd9d4eb1911eed05b88c96a57fea5",
+          "promotedAt": "2026-10-15T16:08:50.083Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-DE:people:portraits:v1",
+          "versionId": "cv-e97632f2137958871392a95ed2dc6ea5",
+          "promotedAt": "2026-10-24T08:51:18.266Z"
+        }
+      ]
+    },
+    {
+      "state": "FL",
+      "sources": 3,
+      "divisions": 28,
+      "beforeRows": 56,
+      "afterRows": 29,
+      "beforeDuplicateRows": 27,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 27,
+      "oldRowsChecked": 56,
+      "aliasKeysChecked": 483,
+      "portraitsChecked": 38,
+      "socialAccountsChecked": 90,
+      "membershipsChecked": 159,
+      "termsChecked": 374,
+      "contactsChecked": 115,
+      "failures": 0,
+      "sourceUrlsChecked": 189,
+      "datePrecisionChecks": 114,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-FL:current-congress-directory",
+          "versionId": "cv-5c87e86260fec1e205b021fa06b9fcbe",
+          "promotedAt": "2026-10-22T02:14:45.783Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-FL:people:congress-api:v1",
+          "versionId": "cv-3edb41e95dfd9687bd6385c7d3c5e78b",
+          "promotedAt": "2026-10-15T16:11:02.164Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-FL:people:portraits:v1",
+          "versionId": "cv-f1bfd3b6bc14766eee52ef07a4140a99",
+          "promotedAt": "2026-10-24T11:53:17.265Z"
+        }
+      ]
+    },
+    {
+      "state": "GA",
+      "sources": 3,
+      "divisions": 15,
+      "beforeRows": 30,
+      "afterRows": 16,
+      "beforeDuplicateRows": 14,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 14,
+      "oldRowsChecked": 30,
+      "aliasKeysChecked": 261,
+      "portraitsChecked": 18,
+      "socialAccountsChecked": 47,
+      "membershipsChecked": 86,
+      "termsChecked": 202,
+      "contactsChecked": 62,
+      "failures": 0,
+      "sourceUrlsChecked": 97,
+      "datePrecisionChecks": 62,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-GA:current-congress-directory",
+          "versionId": "cv-c57021818342cb773f63241a62267a04",
+          "promotedAt": "2026-10-20T10:23:18.304Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-GA:people:congress-api:v1",
+          "versionId": "cv-d959d4e549034c4a227185a4e50ed0bf",
+          "promotedAt": "2026-10-15T16:11:19.708Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-GA:people:portraits:v1",
+          "versionId": "cv-f0bc3f1d7a96d8820989ca39f1488e35",
+          "promotedAt": "2026-10-24T10:39:27.271Z"
+        }
+      ]
+    },
+    {
+      "state": "GU",
+      "sources": 2,
+      "divisions": 1,
+      "beforeRows": 1,
+      "afterRows": 1,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 1,
+      "aliasKeysChecked": 10,
+      "portraitsChecked": 1,
+      "socialAccountsChecked": 3,
+      "membershipsChecked": 2,
+      "termsChecked": 6,
+      "contactsChecked": 2,
+      "failures": 0,
+      "sourceUrlsChecked": 5,
+      "datePrecisionChecks": 3,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-GU:current-congress-directory",
+          "versionId": "cv-3d716cdce193b3e22b6cfbb849e2932b",
+          "promotedAt": "2026-10-23T17:33:40.703Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-GU:people:portraits:v1",
+          "versionId": "cv-d5268941fe49327cb5b95daddc49d447",
+          "promotedAt": "2026-10-24T07:59:56.292Z"
+        }
+      ]
+    },
+    {
+      "state": "HI",
+      "sources": 3,
+      "divisions": 3,
+      "beforeRows": 6,
+      "afterRows": 4,
+      "beforeDuplicateRows": 2,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 2,
+      "oldRowsChecked": 6,
+      "aliasKeysChecked": 71,
+      "portraitsChecked": 5,
+      "socialAccountsChecked": 16,
+      "membershipsChecked": 12,
+      "termsChecked": 30,
+      "contactsChecked": 14,
+      "failures": 0,
+      "sourceUrlsChecked": 26,
+      "datePrecisionChecks": 14,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-HI:current-congress-directory",
+          "versionId": "cv-dc3ba1c4af2287ddbf53abdc743b38a8",
+          "promotedAt": "2026-10-21T10:42:57.486Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-HI:people:congress-api:v1",
+          "versionId": "cv-46534ecc307d30183b84676af0bfd754",
+          "promotedAt": "2026-10-15T16:11:37.757Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-HI:people:portraits:v1",
+          "versionId": "cv-389bd0e171139711df8a053327d4e0c9",
+          "promotedAt": "2026-10-24T11:51:12.798Z"
+        }
+      ]
+    },
+    {
+      "state": "IA",
+      "sources": 3,
+      "divisions": 5,
+      "beforeRows": 10,
+      "afterRows": 6,
+      "beforeDuplicateRows": 4,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 4,
+      "oldRowsChecked": 10,
+      "aliasKeysChecked": 98,
+      "portraitsChecked": 6,
+      "socialAccountsChecked": 18,
+      "membershipsChecked": 17,
+      "termsChecked": 44,
+      "contactsChecked": 22,
+      "failures": 0,
+      "sourceUrlsChecked": 36,
+      "datePrecisionChecks": 22,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-IA:current-congress-directory",
+          "versionId": "cv-e904282122196f9a197439545af9f99e",
+          "promotedAt": "2026-10-20T08:56:21.576Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-IA:people:congress-api:v1",
+          "versionId": "cv-9f59950c945946845ee174031f78e034",
+          "promotedAt": "2026-10-15T16:13:35.739Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-IA:people:portraits:v1",
+          "versionId": "cv-cf6e27eb33c53703dcdd27590950f298",
+          "promotedAt": "2026-10-24T08:55:12.314Z"
+        }
+      ]
+    },
+    {
+      "state": "ID",
+      "sources": 3,
+      "divisions": 3,
+      "beforeRows": 6,
+      "afterRows": 4,
+      "beforeDuplicateRows": 2,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 2,
+      "oldRowsChecked": 6,
+      "aliasKeysChecked": 74,
+      "portraitsChecked": 4,
+      "socialAccountsChecked": 15,
+      "membershipsChecked": 22,
+      "termsChecked": 50,
+      "contactsChecked": 14,
+      "failures": 0,
+      "sourceUrlsChecked": 24,
+      "datePrecisionChecks": 14,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-ID:current-congress-directory",
+          "versionId": "cv-e9e69bdb2db873d540d4ca27e1bab231",
+          "promotedAt": "2026-10-22T06:51:55.759Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-ID:people:congress-api:v1",
+          "versionId": "cv-b6d4ac1b9bbef97f0ee5251d2cd2955b",
+          "promotedAt": "2026-10-15T16:12:52.772Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-ID:people:portraits:v1",
+          "versionId": "cv-5cf232e50f1d5bf0ef90690c14b627ea",
+          "promotedAt": "2026-10-24T08:55:23.216Z"
+        }
+      ]
+    },
+    {
+      "state": "IL",
+      "sources": 3,
+      "divisions": 18,
+      "beforeRows": 36,
+      "afterRows": 19,
+      "beforeDuplicateRows": 17,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 17,
+      "oldRowsChecked": 36,
+      "aliasKeysChecked": 340,
+      "portraitsChecked": 21,
+      "socialAccountsChecked": 57,
+      "membershipsChecked": 119,
+      "termsChecked": 274,
+      "contactsChecked": 74,
+      "failures": 0,
+      "sourceUrlsChecked": 118,
+      "datePrecisionChecks": 74,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-IL:current-congress-directory",
+          "versionId": "cv-992723b7028d6d926c1d849ae755e37f",
+          "promotedAt": "2026-10-21T10:03:10.456Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-IL:people:congress-api:v1",
+          "versionId": "cv-d69f88cfd8290ad7c1132250ca21afc0",
+          "promotedAt": "2026-10-15T16:13:22.531Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-IL:people:portraits:v1",
+          "versionId": "cv-d4affcdfa444bf591cf6dc7736c5615e",
+          "promotedAt": "2026-10-24T13:56:32.514Z"
+        }
+      ]
+    },
+    {
+      "state": "IN",
+      "sources": 3,
+      "divisions": 10,
+      "beforeRows": 20,
+      "afterRows": 11,
+      "beforeDuplicateRows": 9,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 9,
+      "oldRowsChecked": 20,
+      "aliasKeysChecked": 180,
+      "portraitsChecked": 13,
+      "socialAccountsChecked": 32,
+      "membershipsChecked": 43,
+      "termsChecked": 106,
+      "contactsChecked": 41,
+      "failures": 0,
+      "sourceUrlsChecked": 70,
+      "datePrecisionChecks": 42,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-IN:current-congress-directory",
+          "versionId": "cv-53e0b2368a3a3c1bb54e9e0aa04c93d6",
+          "promotedAt": "2026-10-21T11:10:24.800Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-IN:people:congress-api:v1",
+          "versionId": "cv-cb4ab88434ad6ab373603db7eec91c03",
+          "promotedAt": "2026-10-15T16:13:29.278Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-IN:people:portraits:v1",
+          "versionId": "cv-f65aa714bbc9bf2742fbc02ecf3fc408",
+          "promotedAt": "2026-10-24T07:41:52.624Z"
+        }
+      ]
+    },
+    {
+      "state": "KS",
+      "sources": 3,
+      "divisions": 5,
+      "beforeRows": 10,
+      "afterRows": 6,
+      "beforeDuplicateRows": 4,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 4,
+      "oldRowsChecked": 10,
+      "aliasKeysChecked": 100,
+      "portraitsChecked": 9,
+      "socialAccountsChecked": 19,
+      "membershipsChecked": 19,
+      "termsChecked": 48,
+      "contactsChecked": 22,
+      "failures": 0,
+      "sourceUrlsChecked": 42,
+      "datePrecisionChecks": 22,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-KS:current-congress-directory",
+          "versionId": "cv-fd299dd1b7a5c1c10551bcbc1523cc60",
+          "promotedAt": "2026-10-22T03:25:11.598Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-KS:people:congress-api:v1",
+          "versionId": "cv-e5884d74f1a95269de5160ae6fab7d24",
+          "promotedAt": "2026-10-15T16:13:40.241Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-KS:people:portraits:v1",
+          "versionId": "cv-ee10d27fb953640815dbadaf32da69fb",
+          "promotedAt": "2026-10-24T13:55:42.030Z"
+        }
+      ]
+    },
+    {
+      "state": "KY",
+      "sources": 3,
+      "divisions": 7,
+      "beforeRows": 14,
+      "afterRows": 8,
+      "beforeDuplicateRows": 6,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 6,
+      "oldRowsChecked": 14,
+      "aliasKeysChecked": 147,
+      "portraitsChecked": 8,
+      "socialAccountsChecked": 29,
+      "membershipsChecked": 63,
+      "termsChecked": 140,
+      "contactsChecked": 30,
+      "failures": 0,
+      "sourceUrlsChecked": 49,
+      "datePrecisionChecks": 30,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-KY:current-congress-directory",
+          "versionId": "cv-56236d90743b645a0552c113b3a4eb95",
+          "promotedAt": "2026-10-21T09:33:11.361Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-KY:people:congress-api:v1",
+          "versionId": "cv-581b50664c375bef0413dfd0de80064e",
+          "promotedAt": "2026-10-15T16:13:45.503Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-KY:people:portraits:v1",
+          "versionId": "cv-4e9120201212d526bcff88bac4d16278",
+          "promotedAt": "2026-10-24T08:30:10.948Z"
+        }
+      ]
+    },
+    {
+      "state": "LA",
+      "sources": 3,
+      "divisions": 7,
+      "beforeRows": 14,
+      "afterRows": 8,
+      "beforeDuplicateRows": 6,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 6,
+      "oldRowsChecked": 14,
+      "aliasKeysChecked": 139,
+      "portraitsChecked": 11,
+      "socialAccountsChecked": 26,
+      "membershipsChecked": 37,
+      "termsChecked": 88,
+      "contactsChecked": 30,
+      "failures": 0,
+      "sourceUrlsChecked": 54,
+      "datePrecisionChecks": 30,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-LA:current-congress-directory",
+          "versionId": "cv-100dedcde5069afea77d5b60023c7a76",
+          "promotedAt": "2026-10-22T00:58:57.637Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-LA:people:congress-api:v1",
+          "versionId": "cv-37c30756f8e365758341ba9471eb95d6",
+          "promotedAt": "2026-10-15T16:13:50.811Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-LA:people:portraits:v1",
+          "versionId": "cv-0f6fe62ffd8470b165933a49cc991e20",
+          "promotedAt": "2026-10-24T08:32:01.217Z"
+        }
+      ]
+    },
+    {
+      "state": "MA",
+      "sources": 3,
+      "divisions": 10,
+      "beforeRows": 20,
+      "afterRows": 11,
+      "beforeDuplicateRows": 9,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 9,
+      "oldRowsChecked": 20,
+      "aliasKeysChecked": 207,
+      "portraitsChecked": 12,
+      "socialAccountsChecked": 41,
+      "membershipsChecked": 90,
+      "termsChecked": 200,
+      "contactsChecked": 42,
+      "failures": 0,
+      "sourceUrlsChecked": 68,
+      "datePrecisionChecks": 42,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-MA:current-congress-directory",
+          "versionId": "cv-0e3c1c4ceea5c087f8d84c86808a8ef0",
+          "promotedAt": "2026-10-22T06:00:41.383Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-MA:people:congress-api:v1",
+          "versionId": "cv-9d1efeedde910d702dab181a5d98dec5",
+          "promotedAt": "2026-10-15T16:14:11.104Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-MA:people:portraits:v1",
+          "versionId": "cv-fa9d8ce495aab25f532f69610f8ecc54",
+          "promotedAt": "2026-10-24T14:20:46.095Z"
+        }
+      ]
+    },
+    {
+      "state": "MD",
+      "sources": 3,
+      "divisions": 9,
+      "beforeRows": 18,
+      "afterRows": 10,
+      "beforeDuplicateRows": 8,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 8,
+      "oldRowsChecked": 18,
+      "aliasKeysChecked": 168,
+      "portraitsChecked": 13,
+      "socialAccountsChecked": 32,
+      "membershipsChecked": 60,
+      "termsChecked": 138,
+      "contactsChecked": 38,
+      "failures": 0,
+      "sourceUrlsChecked": 66,
+      "datePrecisionChecks": 38,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-MD:current-congress-directory",
+          "versionId": "cv-3c7d42fdbe26672de72ac1027593af5e",
+          "promotedAt": "2026-10-20T06:14:56.923Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-MD:people:congress-api:v1",
+          "versionId": "cv-563533baf7eb9e706e73acac9476a360",
+          "promotedAt": "2026-10-15T16:14:01.694Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-MD:people:portraits:v1",
+          "versionId": "cv-0622a909197302eab2afce91ef4a9d44",
+          "promotedAt": "2026-10-24T08:53:24.652Z"
+        }
+      ]
+    },
+    {
+      "state": "ME",
+      "sources": 3,
+      "divisions": 3,
+      "beforeRows": 6,
+      "afterRows": 4,
+      "beforeDuplicateRows": 2,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 2,
+      "oldRowsChecked": 6,
+      "aliasKeysChecked": 74,
+      "portraitsChecked": 4,
+      "socialAccountsChecked": 9,
+      "membershipsChecked": 19,
+      "termsChecked": 45,
+      "contactsChecked": 14,
+      "failures": 0,
+      "sourceUrlsChecked": 20,
+      "datePrecisionChecks": 14,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-ME:current-congress-directory",
+          "versionId": "cv-beba3e1c3e1cf1bea9fa8d0f0fea4dab",
+          "promotedAt": "2026-10-21T06:57:23.219Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-ME:people:congress-api:v1",
+          "versionId": "cv-c160dff3e21ee1e61dd9585eb7c6d91f",
+          "promotedAt": "2026-10-15T16:13:55.463Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-ME:people:portraits:v1",
+          "versionId": "cv-3f89e357f983c4f60355d72a2a5e285f",
+          "promotedAt": "2026-10-24T08:55:40.063Z"
+        }
+      ]
+    },
+    {
+      "state": "MI",
+      "sources": 3,
+      "divisions": 14,
+      "beforeRows": 28,
+      "afterRows": 15,
+      "beforeDuplicateRows": 13,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 13,
+      "oldRowsChecked": 28,
+      "aliasKeysChecked": 253,
+      "portraitsChecked": 18,
+      "socialAccountsChecked": 51,
+      "membershipsChecked": 68,
+      "termsChecked": 164,
+      "contactsChecked": 57,
+      "failures": 0,
+      "sourceUrlsChecked": 96,
+      "datePrecisionChecks": 58,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-MI:current-congress-directory",
+          "versionId": "cv-96b33ffe1abf6e7369d7c6b807a43014",
+          "promotedAt": "2026-10-21T07:38:47.427Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-MI:people:congress-api:v1",
+          "versionId": "cv-8f0eaf2b56d947a0f6d6a779cb83fd41",
+          "promotedAt": "2026-10-15T16:14:19.323Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-MI:people:portraits:v1",
+          "versionId": "cv-fdcc57df4df84334e911f2c50b89edd7",
+          "promotedAt": "2026-10-24T08:10:06.905Z"
+        }
+      ]
+    },
+    {
+      "state": "MN",
+      "sources": 3,
+      "divisions": 9,
+      "beforeRows": 18,
+      "afterRows": 10,
+      "beforeDuplicateRows": 8,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 8,
+      "oldRowsChecked": 18,
+      "aliasKeysChecked": 168,
+      "portraitsChecked": 10,
+      "socialAccountsChecked": 29,
+      "membershipsChecked": 48,
+      "termsChecked": 114,
+      "contactsChecked": 38,
+      "failures": 0,
+      "sourceUrlsChecked": 60,
+      "datePrecisionChecks": 38,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-MN:current-congress-directory",
+          "versionId": "cv-a3f412e24c77cd0ad1dd994bc29b3e4e",
+          "promotedAt": "2026-10-20T06:35:55.121Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-MN:people:congress-api:v1",
+          "versionId": "cv-edd25d0199418b0441c41a7094fd7c7e",
+          "promotedAt": "2026-10-15T16:14:26.070Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-MN:people:portraits:v1",
+          "versionId": "cv-68c705d7de091259858d318b43ef6aaa",
+          "promotedAt": "2026-10-24T08:52:41.558Z"
+        }
+      ]
+    },
+    {
+      "state": "MO",
+      "sources": 3,
+      "divisions": 9,
+      "beforeRows": 18,
+      "afterRows": 10,
+      "beforeDuplicateRows": 8,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 8,
+      "oldRowsChecked": 18,
+      "aliasKeysChecked": 165,
+      "portraitsChecked": 11,
+      "socialAccountsChecked": 36,
+      "membershipsChecked": 54,
+      "termsChecked": 126,
+      "contactsChecked": 38,
+      "failures": 0,
+      "sourceUrlsChecked": 62,
+      "datePrecisionChecks": 38,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-MO:current-congress-directory",
+          "versionId": "cv-0d278e8fdf89823bdbe8fb90a1238078",
+          "promotedAt": "2026-10-21T04:42:21.778Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-MO:people:congress-api:v1",
+          "versionId": "cv-9351c0ff15b06f82312cfbbea03549a0",
+          "promotedAt": "2026-10-15T16:14:37.442Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-MO:people:portraits:v1",
+          "versionId": "cv-931f57679696e03a0d2b9c9a91223ca6",
+          "promotedAt": "2026-10-24T11:53:32.171Z"
+        }
+      ]
+    },
+    {
+      "state": "MP",
+      "sources": 2,
+      "divisions": 1,
+      "beforeRows": 1,
+      "afterRows": 1,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 1,
+      "aliasKeysChecked": 7,
+      "portraitsChecked": 1,
+      "socialAccountsChecked": 3,
+      "membershipsChecked": 1,
+      "termsChecked": 4,
+      "contactsChecked": 2,
+      "failures": 0,
+      "sourceUrlsChecked": 5,
+      "datePrecisionChecks": 3,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-MP:current-congress-directory",
+          "versionId": "cv-77a28dc9f816fe0193ba9de88ccf4948",
+          "promotedAt": "2026-10-23T17:33:42.577Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-MP:people:portraits:v1",
+          "versionId": "cv-d0b687583255510c227b83893c893d52",
+          "promotedAt": "2026-10-24T07:59:58.000Z"
+        }
+      ]
+    },
+    {
+      "state": "MS",
+      "sources": 3,
+      "divisions": 5,
+      "beforeRows": 10,
+      "afterRows": 6,
+      "beforeDuplicateRows": 4,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 4,
+      "oldRowsChecked": 10,
+      "aliasKeysChecked": 106,
+      "portraitsChecked": 7,
+      "socialAccountsChecked": 22,
+      "membershipsChecked": 35,
+      "termsChecked": 80,
+      "contactsChecked": 22,
+      "failures": 0,
+      "sourceUrlsChecked": 38,
+      "datePrecisionChecks": 22,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-MS:current-congress-directory",
+          "versionId": "cv-81805a3ff8f732c4dcd43fa7c6f2b008",
+          "promotedAt": "2026-10-21T04:23:11.188Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-MS:people:congress-api:v1",
+          "versionId": "cv-e63c4b979faf4b5a0f4fc8522a201069",
+          "promotedAt": "2026-10-15T16:14:30.807Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-MS:people:portraits:v1",
+          "versionId": "cv-b2fc1720fe3b3c18f31620ff40d4ddbe",
+          "promotedAt": "2026-10-24T08:04:52.618Z"
+        }
+      ]
+    },
+    {
+      "state": "MT",
+      "sources": 3,
+      "divisions": 3,
+      "beforeRows": 6,
+      "afterRows": 4,
+      "beforeDuplicateRows": 2,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 2,
+      "oldRowsChecked": 6,
+      "aliasKeysChecked": 63,
+      "portraitsChecked": 4,
+      "socialAccountsChecked": 10,
+      "membershipsChecked": 9,
+      "termsChecked": 24,
+      "contactsChecked": 13,
+      "failures": 0,
+      "sourceUrlsChecked": 23,
+      "datePrecisionChecks": 14,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-MT:current-congress-directory",
+          "versionId": "cv-96762b61aa1aa86aa5f6f3564193c2a1",
+          "promotedAt": "2026-10-22T01:23:25.633Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-MT:people:congress-api:v1",
+          "versionId": "cv-68ce280422879de66221a67411638958",
+          "promotedAt": "2026-10-15T16:14:41.448Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-MT:people:portraits:v1",
+          "versionId": "cv-ecc2bc01011bf5762b733a7dc3e5f646",
+          "promotedAt": "2026-10-24T10:15:22.742Z"
+        }
+      ]
+    },
+    {
+      "state": "NC",
+      "sources": 3,
+      "divisions": 15,
+      "beforeRows": 30,
+      "afterRows": 16,
+      "beforeDuplicateRows": 14,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 14,
+      "oldRowsChecked": 30,
+      "aliasKeysChecked": 255,
+      "portraitsChecked": 19,
+      "socialAccountsChecked": 54,
+      "membershipsChecked": 65,
+      "termsChecked": 160,
+      "contactsChecked": 62,
+      "failures": 0,
+      "sourceUrlsChecked": 102,
+      "datePrecisionChecks": 62,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-NC:current-congress-directory",
+          "versionId": "cv-716a1f881574ae9e2eb62245bc7ed4fb",
+          "promotedAt": "2026-10-20T05:53:23.410Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-NC:people:congress-api:v1",
+          "versionId": "cv-ea57357ec9446354e0614df003d8538b",
+          "promotedAt": "2026-10-15T16:15:53.802Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-NC:people:portraits:v1",
+          "versionId": "cv-5edaf5db76b5bd29e5985989353fc9ae",
+          "promotedAt": "2026-10-24T13:03:38.509Z"
+        }
+      ]
+    },
+    {
+      "state": "ND",
+      "sources": 3,
+      "divisions": 2,
+      "beforeRows": 3,
+      "afterRows": 3,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 3,
+      "aliasKeysChecked": 48,
+      "portraitsChecked": 3,
+      "socialAccountsChecked": 11,
+      "membershipsChecked": 3,
+      "termsChecked": 10,
+      "contactsChecked": 8,
+      "failures": 0,
+      "sourceUrlsChecked": 17,
+      "datePrecisionChecks": 9,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-ND:current-congress-directory",
+          "versionId": "cv-0841091bc96ccd66504817e05d6ae41a",
+          "promotedAt": "2026-10-20T09:38:24.141Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-ND:people:congress-api:v1",
+          "versionId": "cv-0b732f21476dce920e26c3536f627a43",
+          "promotedAt": "2026-10-15T16:15:57.711Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-ND:people:portraits:v1",
+          "versionId": "cv-0d5c3f4605e4690f240501b09c61f139",
+          "promotedAt": "2026-10-24T08:05:10.102Z"
+        }
+      ]
+    },
+    {
+      "state": "NE",
+      "sources": 3,
+      "divisions": 4,
+      "beforeRows": 8,
+      "afterRows": 5,
+      "beforeDuplicateRows": 3,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 3,
+      "oldRowsChecked": 8,
+      "aliasKeysChecked": 85,
+      "portraitsChecked": 7,
+      "socialAccountsChecked": 18,
+      "membershipsChecked": 23,
+      "termsChecked": 54,
+      "contactsChecked": 18,
+      "failures": 0,
+      "sourceUrlsChecked": 34,
+      "datePrecisionChecks": 18,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-NE:current-congress-directory",
+          "versionId": "cv-b5e7fac41199d6a37b85b75cf552b4e0",
+          "promotedAt": "2026-10-20T06:59:28.620Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-NE:people:congress-api:v1",
+          "versionId": "cv-2a46140d0ce78ae03c80ccf191f3748b",
+          "promotedAt": "2026-10-15T16:14:45.130Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-NE:people:portraits:v1",
+          "versionId": "cv-cffff7aab41a40ba1ea481ccabe89164",
+          "promotedAt": "2026-10-24T07:24:58.719Z"
+        }
+      ]
+    },
+    {
+      "state": "NH",
+      "sources": 3,
+      "divisions": 3,
+      "beforeRows": 6,
+      "afterRows": 4,
+      "beforeDuplicateRows": 2,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 2,
+      "oldRowsChecked": 6,
+      "aliasKeysChecked": 67,
+      "portraitsChecked": 5,
+      "socialAccountsChecked": 11,
+      "membershipsChecked": 9,
+      "termsChecked": 24,
+      "contactsChecked": 14,
+      "failures": 0,
+      "sourceUrlsChecked": 26,
+      "datePrecisionChecks": 14,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-NH:current-congress-directory",
+          "versionId": "cv-e6b245badb451d61c77b3456c998adc8",
+          "promotedAt": "2026-10-20T07:42:32.057Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-NH:people:congress-api:v1",
+          "versionId": "cv-7d296d29004bd7f03c714643e608fafa",
+          "promotedAt": "2026-10-15T16:15:01.782Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-NH:people:portraits:v1",
+          "versionId": "cv-2ebd83bb1262979c5062d15f87ce1817",
+          "promotedAt": "2026-10-24T07:24:01.480Z"
+        }
+      ]
+    },
+    {
+      "state": "NJ",
+      "sources": 3,
+      "divisions": 13,
+      "beforeRows": 26,
+      "afterRows": 14,
+      "beforeDuplicateRows": 12,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 12,
+      "oldRowsChecked": 26,
+      "aliasKeysChecked": 229,
+      "portraitsChecked": 17,
+      "socialAccountsChecked": 41,
+      "membershipsChecked": 88,
+      "termsChecked": 202,
+      "contactsChecked": 53,
+      "failures": 0,
+      "sourceUrlsChecked": 89,
+      "datePrecisionChecks": 54,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-NJ:current-congress-directory",
+          "versionId": "cv-259dd729ba3788db965ae5637e60ded1",
+          "promotedAt": "2026-10-20T11:14:59.635Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-NJ:people:congress-api:v1",
+          "versionId": "cv-db327b67ae58b446e4ec6367467d2a78",
+          "promotedAt": "2026-10-15T16:15:18.818Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-NJ:people:portraits:v1",
+          "versionId": "cv-413bd6ff02683461ae17e17b45abbf14",
+          "promotedAt": "2026-10-24T07:36:51.725Z"
+        }
+      ]
+    },
+    {
+      "state": "NM",
+      "sources": 3,
+      "divisions": 4,
+      "beforeRows": 8,
+      "afterRows": 5,
+      "beforeDuplicateRows": 3,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 3,
+      "oldRowsChecked": 8,
+      "aliasKeysChecked": 84,
+      "portraitsChecked": 6,
+      "socialAccountsChecked": 16,
+      "membershipsChecked": 13,
+      "termsChecked": 34,
+      "contactsChecked": 18,
+      "failures": 0,
+      "sourceUrlsChecked": 32,
+      "datePrecisionChecks": 18,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-NM:current-congress-directory",
+          "versionId": "cv-09e8efb4dbf2b2b2da2714a057c35ace",
+          "promotedAt": "2026-10-20T11:57:31.019Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-NM:people:congress-api:v1",
+          "versionId": "cv-549e2220e943e532e3237f532b11f3bf",
+          "promotedAt": "2026-10-15T16:15:25.651Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-NM:people:portraits:v1",
+          "versionId": "cv-f63dfee95b3d97157cf2fdbb0be2f66a",
+          "promotedAt": "2026-10-24T07:37:24.908Z"
+        }
+      ]
+    },
+    {
+      "state": "NV",
+      "sources": 3,
+      "divisions": 5,
+      "beforeRows": 10,
+      "afterRows": 6,
+      "beforeDuplicateRows": 4,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 4,
+      "oldRowsChecked": 10,
+      "aliasKeysChecked": 112,
+      "portraitsChecked": 8,
+      "socialAccountsChecked": 21,
+      "membershipsChecked": 31,
+      "termsChecked": 72,
+      "contactsChecked": 22,
+      "failures": 0,
+      "sourceUrlsChecked": 40,
+      "datePrecisionChecks": 22,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-NV:current-congress-directory",
+          "versionId": "cv-2c12cb9496fbaa4ce94ba32a3faa5f52",
+          "promotedAt": "2026-10-22T07:24:23.223Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-NV:people:congress-api:v1",
+          "versionId": "cv-cf404e3841d285d67ad7ba02176882a2",
+          "promotedAt": "2026-10-15T16:14:49.252Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-NV:people:portraits:v1",
+          "versionId": "cv-0512465008e0725fb91d576d1a249c85",
+          "promotedAt": "2026-10-24T07:24:49.654Z"
+        }
+      ]
+    },
+    {
+      "state": "NY",
+      "sources": 3,
+      "divisions": 27,
+      "beforeRows": 54,
+      "afterRows": 28,
+      "beforeDuplicateRows": 26,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 26,
+      "oldRowsChecked": 54,
+      "aliasKeysChecked": 473,
+      "portraitsChecked": 32,
+      "socialAccountsChecked": 86,
+      "membershipsChecked": 166,
+      "termsChecked": 386,
+      "contactsChecked": 110,
+      "failures": 0,
+      "sourceUrlsChecked": 176,
+      "datePrecisionChecks": 110,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-NY:current-congress-directory",
+          "versionId": "cv-e7d43f3e7c3d0716954e2c5dc83a8c31",
+          "promotedAt": "2026-10-20T08:37:55.344Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-NY:people:congress-api:v1",
+          "versionId": "cv-9bf74198dfb4cf007a1969b993d9bf99",
+          "promotedAt": "2026-10-15T16:15:44.330Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-NY:people:portraits:v1",
+          "versionId": "cv-0488610ae8d86a1e5eb613d0bbdf1362",
+          "promotedAt": "2026-10-24T07:41:35.136Z"
+        }
+      ]
+    },
+    {
+      "state": "OH",
+      "sources": 3,
+      "divisions": 16,
+      "beforeRows": 32,
+      "afterRows": 17,
+      "beforeDuplicateRows": 15,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 15,
+      "oldRowsChecked": 32,
+      "aliasKeysChecked": 280,
+      "portraitsChecked": 20,
+      "socialAccountsChecked": 51,
+      "membershipsChecked": 111,
+      "termsChecked": 254,
+      "contactsChecked": 64,
+      "failures": 0,
+      "sourceUrlsChecked": 106,
+      "datePrecisionChecks": 66,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-OH:current-congress-directory",
+          "versionId": "cv-83d08099c676f2ab45044ea9f6fa3789",
+          "promotedAt": "2026-10-21T09:12:30.319Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-OH:people:congress-api:v1",
+          "versionId": "cv-ac7ac0dc4403126612a30fac55604308",
+          "promotedAt": "2026-10-15T16:16:08.797Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-OH:people:portraits:v1",
+          "versionId": "cv-87e24f5563fcbb80c84991a753444061",
+          "promotedAt": "2026-10-24T09:21:15.967Z"
+        }
+      ]
+    },
+    {
+      "state": "OK",
+      "sources": 3,
+      "divisions": 6,
+      "beforeRows": 12,
+      "afterRows": 7,
+      "beforeDuplicateRows": 5,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 5,
+      "oldRowsChecked": 12,
+      "aliasKeysChecked": 116,
+      "portraitsChecked": 7,
+      "socialAccountsChecked": 21,
+      "membershipsChecked": 46,
+      "termsChecked": 104,
+      "contactsChecked": 25,
+      "failures": 0,
+      "sourceUrlsChecked": 42,
+      "datePrecisionChecks": 26,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-OK:current-congress-directory",
+          "versionId": "cv-844d3ff9abb99037a16444e5d02999bd",
+          "promotedAt": "2026-10-21T10:28:36.105Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-OK:people:congress-api:v1",
+          "versionId": "cv-525800f0ab1c27d129341fd0afa187e9",
+          "promotedAt": "2026-10-15T16:16:16.389Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-OK:people:portraits:v1",
+          "versionId": "cv-a0a6c0d4bc1b354ecb8ea8aeb7eedd3c",
+          "promotedAt": "2026-10-24T08:06:58.221Z"
+        }
+      ]
+    },
+    {
+      "state": "OR",
+      "sources": 3,
+      "divisions": 7,
+      "beforeRows": 14,
+      "afterRows": 8,
+      "beforeDuplicateRows": 6,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 6,
+      "oldRowsChecked": 14,
+      "aliasKeysChecked": 130,
+      "portraitsChecked": 9,
+      "socialAccountsChecked": 27,
+      "membershipsChecked": 25,
+      "termsChecked": 64,
+      "contactsChecked": 30,
+      "failures": 0,
+      "sourceUrlsChecked": 50,
+      "datePrecisionChecks": 30,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-OR:current-congress-directory",
+          "versionId": "cv-630b9f2060397e92f8dfc9f4fd0e20dc",
+          "promotedAt": "2026-10-22T01:48:03.999Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-OR:people:congress-api:v1",
+          "versionId": "cv-2f7d7afc4b0eabd7f843ae3d49b9859f",
+          "promotedAt": "2026-10-15T16:16:22.179Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-OR:people:portraits:v1",
+          "versionId": "cv-1719f1dcc5d8a469b77a7fdc68a06da4",
+          "promotedAt": "2026-10-24T09:21:01.336Z"
+        }
+      ]
+    },
+    {
+      "state": "PA",
+      "sources": 3,
+      "divisions": 18,
+      "beforeRows": 36,
+      "afterRows": 19,
+      "beforeDuplicateRows": 17,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 17,
+      "oldRowsChecked": 36,
+      "aliasKeysChecked": 309,
+      "portraitsChecked": 22,
+      "socialAccountsChecked": 60,
+      "membershipsChecked": 96,
+      "termsChecked": 228,
+      "contactsChecked": 74,
+      "failures": 0,
+      "sourceUrlsChecked": 120,
+      "datePrecisionChecks": 74,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-PA:current-congress-directory",
+          "versionId": "cv-5b1163943cdeacf804c773d5c2bf51fb",
+          "promotedAt": "2026-10-22T03:05:45.426Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-PA:people:congress-api:v1",
+          "versionId": "cv-6b2d9919cb5598476576f646b5bb838f",
+          "promotedAt": "2026-10-15T16:16:34.416Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-PA:people:portraits:v1",
+          "versionId": "cv-0a86c710dbdd8f5fdd01153a2d1c1b25",
+          "promotedAt": "2026-10-24T08:04:19.128Z"
+        }
+      ]
+    },
+    {
+      "state": "PR",
+      "sources": 1,
+      "divisions": 1,
+      "beforeRows": 1,
+      "afterRows": 1,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 1,
+      "aliasKeysChecked": 9,
+      "portraitsChecked": 1,
+      "socialAccountsChecked": 3,
+      "membershipsChecked": 1,
+      "termsChecked": 4,
+      "contactsChecked": 2,
+      "failures": 0,
+      "sourceUrlsChecked": 5,
+      "datePrecisionChecks": 3,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-PR:current-congress-directory",
+          "versionId": "cv-63f65190dd30106332c25154af972e2f",
+          "promotedAt": "2026-10-21T05:06:03.385Z"
+        }
+      ]
+    },
+    {
+      "state": "RI",
+      "sources": 3,
+      "divisions": 3,
+      "beforeRows": 6,
+      "afterRows": 4,
+      "beforeDuplicateRows": 2,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 2,
+      "oldRowsChecked": 6,
+      "aliasKeysChecked": 67,
+      "portraitsChecked": 4,
+      "socialAccountsChecked": 12,
+      "membershipsChecked": 8,
+      "termsChecked": 22,
+      "contactsChecked": 14,
+      "failures": 0,
+      "sourceUrlsChecked": 24,
+      "datePrecisionChecks": 14,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-RI:current-congress-directory",
+          "versionId": "cv-79e6e37cce8cb7d43e797206a3a26ae0",
+          "promotedAt": "2026-10-20T07:23:22.933Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-RI:people:congress-api:v1",
+          "versionId": "cv-807a705f7c50691aed18861f945e2fdc",
+          "promotedAt": "2026-10-15T16:16:38.194Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-RI:people:portraits:v1",
+          "versionId": "cv-e667782d63185a2ef344f7fb684d3195",
+          "promotedAt": "2026-10-24T09:44:01.405Z"
+        }
+      ]
+    },
+    {
+      "state": "SC",
+      "sources": 3,
+      "divisions": 8,
+      "beforeRows": 16,
+      "afterRows": 9,
+      "beforeDuplicateRows": 7,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 7,
+      "oldRowsChecked": 16,
+      "aliasKeysChecked": 147,
+      "portraitsChecked": 13,
+      "socialAccountsChecked": 29,
+      "membershipsChecked": 54,
+      "termsChecked": 124,
+      "contactsChecked": 33,
+      "failures": 0,
+      "sourceUrlsChecked": 60,
+      "datePrecisionChecks": 34,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-SC:current-congress-directory",
+          "versionId": "cv-24d5bc5f35e4b5ab44959de19d752a25",
+          "promotedAt": "2026-10-22T02:39:17.697Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-SC:people:congress-api:v1",
+          "versionId": "cv-ed82d78fdcae32bb46a825953499ff2e",
+          "promotedAt": "2026-10-15T16:16:44.080Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-SC:people:portraits:v1",
+          "versionId": "cv-d4726049c6b186dd5a09ab09181eb45c",
+          "promotedAt": "2026-10-24T08:06:20.284Z"
+        }
+      ]
+    },
+    {
+      "state": "SD",
+      "sources": 3,
+      "divisions": 2,
+      "beforeRows": 3,
+      "afterRows": 3,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 3,
+      "aliasKeysChecked": 50,
+      "portraitsChecked": 3,
+      "socialAccountsChecked": 9,
+      "membershipsChecked": 6,
+      "termsChecked": 16,
+      "contactsChecked": 8,
+      "failures": 0,
+      "sourceUrlsChecked": 17,
+      "datePrecisionChecks": 9,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-SD:current-congress-directory",
+          "versionId": "cv-2da2d8913b69a367c256cc47c741dde1",
+          "promotedAt": "2026-10-20T10:04:02.721Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-SD:people:congress-api:v1",
+          "versionId": "cv-59559c50935031bc9aa9f202dfdc2d32",
+          "promotedAt": "2026-10-15T16:16:47.587Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-SD:people:portraits:v1",
+          "versionId": "cv-0795d87ef7f7125cb2fd473682274a25",
+          "promotedAt": "2026-10-24T08:05:35.027Z"
+        }
+      ]
+    },
+    {
+      "state": "TN",
+      "sources": 3,
+      "divisions": 10,
+      "beforeRows": 20,
+      "afterRows": 11,
+      "beforeDuplicateRows": 9,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 9,
+      "oldRowsChecked": 20,
+      "aliasKeysChecked": 187,
+      "portraitsChecked": 12,
+      "socialAccountsChecked": 31,
+      "membershipsChecked": 56,
+      "termsChecked": 132,
+      "contactsChecked": 42,
+      "failures": 0,
+      "sourceUrlsChecked": 67,
+      "datePrecisionChecks": 42,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-TN:current-congress-directory",
+          "versionId": "cv-0773d93403baf232d9686d1fd080748f",
+          "promotedAt": "2026-10-22T04:25:39.332Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-TN:people:congress-api:v1",
+          "versionId": "cv-74bbc58f376838c599e8079afd6b9a06",
+          "promotedAt": "2026-10-15T16:16:54.630Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-TN:people:portraits:v1",
+          "versionId": "cv-488b8d621e050aba70dd3bfa1b1ead12",
+          "promotedAt": "2026-10-24T08:07:56.949Z"
+        }
+      ]
+    },
+    {
+      "state": "TX",
+      "sources": 3,
+      "divisions": 38,
+      "beforeRows": 76,
+      "afterRows": 39,
+      "beforeDuplicateRows": 37,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 37,
+      "oldRowsChecked": 76,
+      "aliasKeysChecked": 645,
+      "portraitsChecked": 52,
+      "socialAccountsChecked": 128,
+      "membershipsChecked": 223,
+      "termsChecked": 522,
+      "contactsChecked": 154,
+      "failures": 0,
+      "sourceUrlsChecked": 259,
+      "datePrecisionChecks": 154,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-TX:current-congress-directory",
+          "versionId": "cv-a656d6171014adf60f150bd0fd0acf93",
+          "promotedAt": "2026-10-20T05:35:28.376Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-TX:people:congress-api:v1",
+          "versionId": "cv-d4dcc4421598cb92629bdbaed356fefc",
+          "promotedAt": "2026-10-15T16:17:16.078Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-TX:people:portraits:v1",
+          "versionId": "cv-f0b8c83dec4419c2f9c468d5488bf48d",
+          "promotedAt": "2026-10-24T11:00:24.845Z"
+        }
+      ]
+    },
+    {
+      "state": "UT",
+      "sources": 3,
+      "divisions": 5,
+      "beforeRows": 10,
+      "afterRows": 6,
+      "beforeDuplicateRows": 4,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 4,
+      "oldRowsChecked": 10,
+      "aliasKeysChecked": 90,
+      "portraitsChecked": 7,
+      "socialAccountsChecked": 23,
+      "membershipsChecked": 15,
+      "termsChecked": 40,
+      "contactsChecked": 21,
+      "failures": 0,
+      "sourceUrlsChecked": 38,
+      "datePrecisionChecks": 22,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-UT:current-congress-directory",
+          "versionId": "cv-d04bc2857c2ec0556f172983c4faf977",
+          "promotedAt": "2026-10-21T08:47:40.071Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-UT:people:congress-api:v1",
+          "versionId": "cv-c7f2fe0f14430aeca54d47ceac7f8d3f",
+          "promotedAt": "2026-10-15T16:17:21.052Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-UT:people:portraits:v1",
+          "versionId": "cv-0a9b60c56a282f28e7ac22ff6d85b467",
+          "promotedAt": "2026-10-24T10:14:07.122Z"
+        }
+      ]
+    },
+    {
+      "state": "VA",
+      "sources": 3,
+      "divisions": 12,
+      "beforeRows": 24,
+      "afterRows": 13,
+      "beforeDuplicateRows": 11,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 11,
+      "oldRowsChecked": 24,
+      "aliasKeysChecked": 216,
+      "portraitsChecked": 14,
+      "socialAccountsChecked": 42,
+      "membershipsChecked": 66,
+      "termsChecked": 156,
+      "contactsChecked": 50,
+      "failures": 0,
+      "sourceUrlsChecked": 79,
+      "datePrecisionChecks": 50,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-VA:current-congress-directory",
+          "versionId": "cv-5cad08c035166c4844dbea18fdca9d7e",
+          "promotedAt": "2026-10-20T11:37:06.957Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-VA:people:congress-api:v1",
+          "versionId": "cv-4dc07fb8fef6a30febb48c991628affc",
+          "promotedAt": "2026-10-15T16:17:31.859Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-VA:people:portraits:v1",
+          "versionId": "cv-2ad7081559e2b338f12e9974739c23bf",
+          "promotedAt": "2026-10-24T08:12:31.473Z"
+        }
+      ]
+    },
+    {
+      "state": "VI",
+      "sources": 2,
+      "divisions": 1,
+      "beforeRows": 1,
+      "afterRows": 1,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 1,
+      "aliasKeysChecked": 15,
+      "portraitsChecked": 1,
+      "socialAccountsChecked": 4,
+      "membershipsChecked": 6,
+      "termsChecked": 14,
+      "contactsChecked": 2,
+      "failures": 0,
+      "sourceUrlsChecked": 5,
+      "datePrecisionChecks": 3,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-VI:current-congress-directory",
+          "versionId": "cv-ca271938b9dd923960e8899553581cf5",
+          "promotedAt": "2026-10-22T05:09:13.294Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-VI:people:portraits:v1",
+          "versionId": "cv-3d2a6bbac0efd41deeae1dbcea4b2652",
+          "promotedAt": "2026-10-24T08:00:14.483Z"
+        }
+      ]
+    },
+    {
+      "state": "VT",
+      "sources": 3,
+      "divisions": 2,
+      "beforeRows": 3,
+      "afterRows": 3,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 3,
+      "aliasKeysChecked": 52,
+      "portraitsChecked": 3,
+      "socialAccountsChecked": 11,
+      "membershipsChecked": 4,
+      "termsChecked": 12,
+      "contactsChecked": 8,
+      "failures": 0,
+      "sourceUrlsChecked": 17,
+      "datePrecisionChecks": 9,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-VT:current-congress-directory",
+          "versionId": "cv-1dbb2e99fb866af1fa43437e4c3b3145",
+          "promotedAt": "2026-10-20T05:22:30.485Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-VT:people:congress-api:v1",
+          "versionId": "cv-43e28061c85dd9d1eb3fc38b80709248",
+          "promotedAt": "2026-10-15T16:17:24.671Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-VT:people:portraits:v1",
+          "versionId": "cv-8aa9286f786211074f23e25306483485",
+          "promotedAt": "2026-10-24T08:08:30.720Z"
+        }
+      ]
+    },
+    {
+      "state": "WA",
+      "sources": 3,
+      "divisions": 11,
+      "beforeRows": 22,
+      "afterRows": 12,
+      "beforeDuplicateRows": 10,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 10,
+      "oldRowsChecked": 22,
+      "aliasKeysChecked": 208,
+      "portraitsChecked": 14,
+      "socialAccountsChecked": 38,
+      "membershipsChecked": 70,
+      "termsChecked": 162,
+      "contactsChecked": 46,
+      "failures": 0,
+      "sourceUrlsChecked": 75,
+      "datePrecisionChecks": 46,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-WA:current-congress-directory",
+          "versionId": "cv-8bd7c354d6f3f73eb20fe8c7c108d269",
+          "promotedAt": "2026-10-21T06:09:46.125Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-WA:people:congress-api:v1",
+          "versionId": "cv-07316247b0e3a7ef08876c4f17c356d6",
+          "promotedAt": "2026-10-15T16:17:41.771Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-WA:people:portraits:v1",
+          "versionId": "cv-0d9016da6dc18c6d9bc485253b6fa067",
+          "promotedAt": "2026-10-24T08:30:57.491Z"
+        }
+      ]
+    },
+    {
+      "state": "WI",
+      "sources": 3,
+      "divisions": 9,
+      "beforeRows": 18,
+      "afterRows": 10,
+      "beforeDuplicateRows": 8,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 8,
+      "oldRowsChecked": 18,
+      "aliasKeysChecked": 167,
+      "portraitsChecked": 11,
+      "socialAccountsChecked": 31,
+      "membershipsChecked": 49,
+      "termsChecked": 116,
+      "contactsChecked": 38,
+      "failures": 0,
+      "sourceUrlsChecked": 62,
+      "datePrecisionChecks": 38,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-WI:current-congress-directory",
+          "versionId": "cv-27cab826a8b78e2ddd18ca9287c1763a",
+          "promotedAt": "2026-10-20T09:17:52.510Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-WI:people:congress-api:v1",
+          "versionId": "cv-17d9a8952a3746064a90d267f9313a41",
+          "promotedAt": "2026-10-23T04:56:31.102Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-WI:people:portraits:v1",
+          "versionId": "cv-9a4fbe6bda63090633b3e05e07c1059d",
+          "promotedAt": "2026-10-24T09:41:44.027Z"
+        }
+      ]
+    },
+    {
+      "state": "WV",
+      "sources": 3,
+      "divisions": 3,
+      "beforeRows": 6,
+      "afterRows": 4,
+      "beforeDuplicateRows": 2,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 2,
+      "oldRowsChecked": 6,
+      "aliasKeysChecked": 57,
+      "portraitsChecked": 4,
+      "socialAccountsChecked": 10,
+      "membershipsChecked": 9,
+      "termsChecked": 24,
+      "contactsChecked": 13,
+      "failures": 0,
+      "sourceUrlsChecked": 24,
+      "datePrecisionChecks": 14,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-WV:current-congress-directory",
+          "versionId": "cv-1fa40654198386abeacd2b87c5e050ef",
+          "promotedAt": "2026-10-21T11:28:46.698Z"
+        },
+        {
+          "key": "FEDERAL_DIRECTORY:US-WV:people:congress-api:v1",
+          "versionId": "cv-9616d14a3f3ec6e810285d5646d7720a",
+          "promotedAt": "2026-10-15T16:17:45.480Z"
+        },
+        {
+          "key": "STATE_LEGISLATOR:US-WV:people:portraits:v1",
+          "versionId": "cv-0240c5876a6afb986f93bc65f94baab8",
+          "promotedAt": "2026-10-24T08:04:05.141Z"
+        }
+      ]
+    },
+    {
+      "state": "WY",
+      "sources": 1,
+      "divisions": 2,
+      "beforeRows": 3,
+      "afterRows": 3,
+      "beforeDuplicateRows": 0,
+      "afterDuplicateRows": 0,
+      "newlyJoinedRows": 0,
+      "oldRowsChecked": 3,
+      "aliasKeysChecked": 46,
+      "portraitsChecked": 3,
+      "socialAccountsChecked": 8,
+      "membershipsChecked": 11,
+      "termsChecked": 28,
+      "contactsChecked": 8,
+      "failures": 0,
+      "sourceUrlsChecked": 17,
+      "datePrecisionChecks": 9,
+      "pointers": [
+        {
+          "key": "FEDERAL_DIRECTORY:US-WY:current-congress-directory",
+          "versionId": "cv-9ef2db1e2e1c2a50944d08a8cd0674d8",
+          "promotedAt": "2026-10-22T04:48:30.946Z"
+        }
+      ]
+    }
+  ],
+  "total": {
+    "sources": 146,
+    "divisions": 489,
+    "beforeRows": 881,
+    "afterRows": 539,
+    "beforeDuplicateRows": 342,
+    "afterDuplicateRows": 0,
+    "newlyJoinedRows": 342,
+    "oldRowsChecked": 881,
+    "aliasKeysChecked": 8669,
+    "portraitsChecked": 616,
+    "socialAccountsChecked": 1715,
+    "membershipsChecked": 2818,
+    "termsChecked": 6631,
+    "contactsChecked": 1850,
+    "failures": 0,
+    "sourceUrlsChecked": 3264,
+    "datePrecisionChecks": 1959
+  },
+  "failures": [],
+  "projectionFailures": [],
+  "alternatePortraitsChecked": 78,
+  "dateRefinements": 375,
+  "ballotProjectionsChecked": 342,
+  "fullReplaySha256": "d85a1a40928bfd70de26c19e69c619bbd41cbb7b4d66817a774763e67e9dac2e",
+  "detail": "Compact final replay. Original full federal source audit: federal-source-preservation.json. Full final local replay: /tmp/cl01-federal-native-preservation-after.json."
+}

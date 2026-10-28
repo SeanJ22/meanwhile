@@ -73,8 +73,10 @@ export async function POST(request: Request) {
       })),
     });
     return new Response(null, { status: 204 });
-  } catch {
-    // The store is the one thing that can fail here, and the batcher retries the same batch id.
+  } catch (error) {
+    console.error("Reader events could not be saved", {
+      batchId:batch.batchId,eventCount:batch.events.length,requestId:request.headers.get("x-nf-request-id"),error,
+    });
     return Response.json({ error: "event store unavailable" }, { status: 503 });
   }
 }

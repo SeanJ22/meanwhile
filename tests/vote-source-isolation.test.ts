@@ -220,7 +220,7 @@ test("R9: retired jurisdiction pointers are refused before any store opens", asy
     get() { throw new Error("the store was opened for a retired scope"); },
   });
   for (const scope of ["US-AZ", "US-NH"] as const) {
-    await assert.rejects(readOfficialStateVotesProjection(scope, { store: store as never, bypassCache: true }),
+    await assert.rejects(readOfficialStateVotesProjection(scope, { store: store as never }),
       new RegExp(`STATE_ROLL_CALL_SCOPE_RETIRED:${scope}`));
   }
 });

@@ -5,6 +5,7 @@ import { execFile } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { join } from "node:path";
 import { operationalStatePath } from "../../ops/operational-state-path.ts";
+import { placeMapReservationMiB } from "../../place-map/memory.ts";
 
 const MIB = 1024 * 1024;
 /** Fixed glibc thresholds release response buffers between reads instead of retaining an adaptive process heap. */
@@ -20,7 +21,6 @@ const STATE_PUBLICATION_PEAK_MIB = 512;
  * with 64-part reads and two typed checks together. Summed process-tree /proc VmHWM sampled every
  * 100 ms on the execution host during an 11,451-contract replay using production SELECT-only roles
  * (Node 24.19). Retain that peak plus 5%, rounded up to MiB, even after small CURRENT-only batches. */
-export const READER_REPAIR_PEAK_MIB = 1106;
 const NAVIGATION_PUBLICATION_PEAK_MIB = 768;
 /** Bulk data families use the retained data-worker bound until their own runs are measured on this host. */
 export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
@@ -28,24 +28,24 @@ export const ROUTINE_ENTRY_PEAK_MIB: Readonly<Record<string, number>> = {
   // 1,249 MiB LegiScan, each with 5% and rounded up to a whole MiB.
   "openstates-votes-refresh.mts": 3574,
   "legiscan-votes-refresh.mts": 1312,
+  // BL-02 production-copy fan-out (four states, two parts each):
+  // 2,127,003,648-byte /proc VmHWM plus 5%, rounded up to MiB.
+  "legiscan-bulk.mts": 2130,
   "federal-money-refresh.mts": 768,
   "state-campaign-finance.mts": 384,
   "census-geography-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
-  // RB-A2: complete Texas source acquisition, native map import and
-  // Census publication on a production-data copy peaked at 3,703,468,032
-  // bytes (2026-10-24, Node 24.19), plus 5%, rounded up to MiB.
-  "place-map-refresh.mts": 3709,
   "promote-manual-civic-projection.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "state-rollcalls.mts": WORKER_ENTRY_PEAK_MIB.national!,
   "legistar-outcomes-ingest.mts": 355,
   "legistar-members-refresh.mts": 512,
-  "routine-civic-data-reader-repair.mts": READER_REPAIR_PEAK_MIB,
   // RH-01 measured complete native ACS peak: 3,922,288,640 bytes.
   "acs-population-promote.mts": 3928,
   "fetch-congress-legislators.mts": 384,
   "national-people-refresh.mts": WORKER_ENTRY_PEAK_MIB.national!,
   // One state's portrait pass at full size peaked at 390 MiB (New Hampshire, 407 people); the federal pass at 354 MiB.
   "people-portraits-refresh.mts": 448,
+  // One place-page turn builds four bodies at once; four real body builds peaked at 403 MiB, plus 5%, rounded up to MiB.
+  "rebuild-place-pages.mts": 424,
   "campaign-finance-az-pima-transactions.mts": 368,
   "assemble-ballot-package.mts": STATE_PUBLICATION_PEAK_MIB,
   "ballot-navigation-refresh.mts": NAVIGATION_PUBLICATION_PEAK_MIB,
@@ -193,6 +193,8 @@ export function workerJobType(entry: string): string | null {
   if (!/[.](?:mts|ts|mjs|js)$/.test(script)) return null;
   const task = parts.slice(0, -1).join("/");
   if (/^meetings(?:-state)?:/.test(task)) return CALENDAR_READ_JOB;
+  // Each state's map keeps its own history: a small state's reservation never follows Texas's peak.
+  if (/^place-map-[a-z]{2}$/.test(task)) return `${task}/${script}`;
   const pooled = /^(legistar-members|reader-readback|national-place):/.exec(task)?.[1];
   if (pooled) return `${pooled}/${script}`;
   if (!task) return script;
@@ -301,14 +303,24 @@ export interface WorkerProcessSlots {
   acquire(entry?: string, deadlineMs?: number, order?: WorkerMemoryOrder): Promise<WorkerMemoryRelease>;
 }
 
-/** A lower priority is offered memory first; equal priorities keep their arrival order. A held waiter that does not
- * fit keeps later waiters out for up to MEMORY_HOLD_MS, so the memory a finishing child frees is not taken first. */
+/** A lower priority is offered memory first; equal priorities keep their arrival order. */
 export interface WorkerMemoryOrder {
   readonly priority: number;
-  readonly hold?: boolean;
+  /** Work that has already waited a full pass goes to the front and takes the next freed memory that fits its own
+   * reservation: nothing queued behind it starts until it fits or its deadline passes. */
+  readonly first?: true;
   readonly stillNeeded?: () => boolean;
+  /** Offer this slot once; the caller keeps the work queued if it does not fit. */
+  readonly wait?: false;
 }
-export const MEMORY_HOLD_MS = 5 * 60_000;
+
+/** A state map reserves that state's own measured or block-file-derived peak (lib/place-map/memory.json). */
+function placeMapPeakBytes(entry: string): number {
+  if (entry.split(/[\\/]/).at(-1) !== "place-map-refresh.mts") return 0;
+  const state = /^place-map-([a-z]{2})\//.exec(entry)?.[1];
+  if (!state) throw new Error(`PLACE_MAP_STATE_UNKNOWN:${entry}`);
+  return placeMapReservationMiB(state) * MIB;
+}
 
 function statePublicationPeakBytes(entry: string): number {
   const script = entry.split(/[\\/]/).at(-1)!;
@@ -322,9 +334,8 @@ function routineMinimumPeakBytes(entry: string): number {
   // New ZIPs must retain room for the measured 0.87–1.21 GB native publication, including unseen growth.
   if (entry.startsWith("national-place:")) return Math.ceil(1.2 * 1024) * MIB;
   if (workerJobType(entry) === CALENDAR_READ_JOB) return CALENDAR_READ_PEAK_MIB * MIB;
-  if (entry.split(/[\\/]/).at(-1) === "routine-civic-data-reader-repair.mts") return READER_REPAIR_PEAK_MIB * MIB;
   const script = entry.split(/[\\/]/).at(-1)!;
-  return statePublicationPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "acs-population-promote.mts", "place-map-refresh.mts"].includes(script)
+  return statePublicationPeakBytes(entry) || placeMapPeakBytes(entry) || (["openstates-votes-refresh.mts", "legiscan-votes-refresh.mts", "legiscan-bulk.mts", "acs-population-promote.mts"].includes(script)
     ? ROUTINE_ENTRY_PEAK_MIB[script]! * MIB : 0);
 }
 
@@ -332,7 +343,7 @@ export function routineProcessSlots(memory: WorkerMemoryLimit = {}): WorkerProce
   return workerProcessSlots(() => Number.MAX_SAFE_INTEGER, { ...memory,
     // Recent small-state runs cannot lower the full-state publication reservation.
     minimumPeakBytes: memory.minimumPeakBytes ?? routineMinimumPeakBytes,
-    peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : statePublicationPeakBytes(entry) || (workerJobType(entry) === CALENDAR_READ_JOB ? CALENDAR_READ_PEAK_MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
+    peakBytes: memory.peakBytes ?? (entry => entry.startsWith("national-place:") ? NATIONAL_PLACE_PEAK_MIB * MIB : statePublicationPeakBytes(entry) || placeMapPeakBytes(entry) || (workerJobType(entry) === CALENDAR_READ_JOB ? CALENDAR_READ_PEAK_MIB : (/^state-money-.+[.]mts$/.test(entry.split(/[\\/]/).at(-1)!)
           ? WORKER_ENTRY_PEAK_MIB.national! : ROUTINE_ENTRY_PEAK_MIB[entry.split(/[\\/]/).at(-1)!] ?? WORKER_ENTRY_PEAK_MIB.lease!)) * MIB) });
 }
 
@@ -348,7 +359,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     const kind = /(?:^|\/|\\)(route|scout|lease|national)-worker[.]ts$/.exec(entry)?.[1] ?? "lease";
     return WORKER_ENTRY_PEAK_MIB[kind]! * MIB;
   });
-  const waiting: { entry: string; deadline: number; priority: number; holdUntil: number; stillNeeded?: () => boolean; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
+  const waiting: { entry: string; deadline: number; priority: number; first: boolean; stillNeeded?: () => boolean; wait?: false; resolve: (release: WorkerMemoryRelease) => void; reject: (error: Error) => void }[] = [];
   const mutate = (operation: (state: HostState, processes: readonly WorkerProcessMemory[]) => void): void => {
     try {
       void Promise.resolve(host.transact(operation, false)).then(applied => {
@@ -377,6 +388,11 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
     clearTimeout(wake); wake = undefined;
     if (waiting.length) wake = setTimeout(() => { void drain(); }, Math.max(1, Math.min(1000, ...waiting.map(item => item.deadline - Date.now()))));
   };
+  const returnUnready = (): void => {
+    for (let index = waiting.length - 1; index >= 0; index--) if (waiting[index]!.wait === false) {
+      waiting.splice(index, 1)[0]!.reject(new Error("WORKER_MEMORY_BUSY: work remains queued"));
+    }
+  };
   const drain = async (): Promise<void> => {
     expire();
     const maximum = capacity();
@@ -385,7 +401,10 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
       scheduleWake();
       return;
     }
-    if (draining || !waiting.length || active >= maximum) { scheduleWake(); return; }
+    if (draining || !waiting.length || active >= maximum) {
+      if (!draining) returnUnready();
+      scheduleWake(); return;
+    }
     draining = true;
     scheduleWake();
     try { await host.transact((state, rows) => {
@@ -425,7 +444,7 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
           for (const [at, item] of waiting.entries()) {
             if (Date.now() >= item.deadline) continue;
             if (inherited || free >= headroom + growth + reserve(item.entry)) { index = at; break; }
-            if (item.holdUntil > Date.now()) break;
+            if (item.first) break;
           }
           if (index < 0) break;
           const [item] = waiting.splice(index, 1);
@@ -465,7 +484,10 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
         }
       }); } catch (error) {
         console.warn(`Host memory admission unavailable; queued work keeps its deadline: ${error instanceof Error ? error.message : String(error)}`);
-    } finally { draining = false; scheduleWake(); }
+    } finally {
+      returnUnready();
+      draining = false; scheduleWake();
+    }
   };
   const requestDrain = (): void => {
     if (drainScheduled) return;
@@ -475,10 +497,10 @@ export function workerProcessSlots(capacity: () => number, memory: WorkerMemoryL
   return { acquire: (entry = "lease-worker.ts", deadlineMs = Date.now() + (memory.waitMs ?? 120_000), order) =>
     new Promise<WorkerMemoryRelease>((resolve, reject) => {
       // A child that starts late in a pass, the next read in a serial lane, keeps the place its pass gave it.
-      const priority = order?.priority ?? Number.POSITIVE_INFINITY;
+      const priority = order?.first ? Number.NEGATIVE_INFINITY : order?.priority ?? Number.POSITIVE_INFINITY;
       const at = waiting.findIndex(item => item.priority > priority);
       waiting.splice(at < 0 ? waiting.length : at, 0,
-        { entry, deadline: deadlineMs, priority, holdUntil: order?.hold ? Date.now() + MEMORY_HOLD_MS : 0, stillNeeded: order?.stillNeeded, resolve, reject });
+        { entry, deadline: deadlineMs, priority, first: order?.first === true, stillNeeded: order?.stillNeeded, wait: order?.wait, resolve, reject });
       requestDrain();
     }) };
 }

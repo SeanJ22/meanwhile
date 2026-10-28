@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import type { NextRequest } from "next/server";
 
 import { adminGet } from "@/lib/control-plane/gateway/admin-get.ts";
@@ -8,6 +9,8 @@ export const revalidate = 0;
 export const runtime = "nodejs";
 
 /** "Report a problem" submissions from the live site and the tester site, labeled by site. Read only. */
-export async function GET(request: NextRequest) {
+async function get(request: NextRequest) {
   return adminGet(request, (observedAt) => readReports(observedAt));
 }
+
+export const GET = adminRead(get);

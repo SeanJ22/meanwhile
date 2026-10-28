@@ -31,12 +31,17 @@ import type {
   VotePosition,
   VotesSnapshot,
 } from "../lib/votes/types.ts";
+import { createHash } from "node:crypto";
+import { canonicalCivicDataHash } from "../lib/civic-data/changes.ts";
+import { rawCaptureVault } from "../lib/civic-data/raw-capture-remote.ts";
+import { continueOfficialVoteDocument } from "../lib/state-rollcalls/source-continuation.ts";
+import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { federalMemberVotesCandidate, federalPartyBreakdowns, federalRollCallsCandidate, heldAcquisitions, FEDERAL_ROLLCALL_SCOPE, FEDERAL_VOTES_PARSER_VERSION, FEDERAL_VOTES_SOURCE_ID,
-  type OfficialAcquisition } from "../lib/votes/data-plane.ts";
-import {
-  billSummariesForRollCallAcquisition,
-  readFederalRollCallsProjection,
-} from "../lib/votes/snapshot.ts";
+  federalVotesSourceHash,federalVotesSourceObservation,type FederalRollCallWindow, type OfficialAcquisition } from "../lib/votes/data-plane.ts";
+import type { BillSummariesFile } from "../lib/votes/bill-summaries.ts";
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { settleFederalVoteSources } from "../lib/votes/source-fanout.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { windowStart } from "../lib/votes/catch-up.ts";
 import { failedAcquisitionCandidate } from "../lib/civic-data/candidate-builders.ts";
 import { processRegisteredManualCandidate } from "../lib/civic-data/promotion.ts";
@@ -55,8 +60,17 @@ if (!process.argv.includes("--promote")) throw new Error("PASS_--promote: this c
 prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
-const previous = await readFederalRollCallsProjection({ store, bypassCache: true });
-const billSummaries = billSummariesForRollCallAcquisition(previous);
+const head = await store.readSourceHead("FEDERAL_ROLL_CALL", FEDERAL_ROLLCALL_SCOPE);
+if (!head) throw new Error("FEDERAL_ROLLCALL_PRIOR_NOT_RECORDED");
+const vault=rawCaptureVault();
+const sourceBase=canonicalCivicDataHash([head.versionId,FEDERAL_VOTES_PARSER_VERSION,CONGRESS,SESSION]);
+let sourceContext=sourceBase,lastSourceObservedAt="",lastSourceRawHash="";
+const sourceSignal=()=>{
+  const deadline=passDeadlineFromEnv();
+  return Number.isFinite(deadline)?AbortSignal.timeout(Math.max(1,Math.min(60_000,deadline-Date.now()))):AbortSignal.timeout(60_000);
+};
+// Only the request's continuation bounds are needed before acquiring its current bytes.
+const heldWindow = await store.readCandidatePath<FederalRollCallWindow["window"]>(head.versionId, ["readModel", "snapshot", "window"]);
 const acquisitions: OfficialAcquisition[] = [];
 let failureRecorded = false;
 
@@ -77,20 +91,27 @@ async function recordFailure(url: string, detail: string): Promise<void> {
   printSourceRunnerReceipt("congress-rollcalls", failed, outcome);
 }
 
-async function get(url: string, proveOfficial: boolean = true): Promise<string> {
+async function get(url: string, proveOfficial: boolean = true,reuse:boolean=true): Promise<string> {
+  const captured=await continueOfficialVoteDocument({sourceId:FEDERAL_VOTES_SOURCE_ID,parserVersion:FEDERAL_VOTES_PARSER_VERSION,
+    context:sourceContext,url,vault,signal:sourceSignal(),reuse:proveOfficial&&reuse,read:async()=>{
   let response: Response;
   try {
-    response = await fetch(url, { headers: { "user-agent": UA } });
+    response = await fetch(url, { headers: { "user-agent": UA },signal:sourceSignal() });
   } catch (error) {
-    await recordFailure(url, error instanceof Error ? error.message : "official fetch failed");
+    if(Date.now()<passDeadlineFromEnv())await recordFailure(url, error instanceof Error ? error.message : "official fetch failed");
     throw error;
   }
   if (!response.ok) {
     await recordFailure(url, `${url} -> HTTP ${response.status}`);
     throw new Error(`${url} -> HTTP ${response.status}`);
   }
-  const body = await response.text();
-  if (proveOfficial) acquisitions.push({ requestedUrl: url, finalUrl: response.url || url, httpStatus: response.status, body });
+  const bytes=new Uint8Array(await response.arrayBuffer());
+  return{requestedUrl:url,finalUrl:response.url||url,httpStatus:response.status,bytes,retrievedAt:new Date().toISOString()};
+  }});
+  const body=new TextDecoder().decode(captured.bytes);
+  lastSourceObservedAt=captured.retrievedAt;lastSourceRawHash=createHash("sha256").update(captured.bytes).digest("hex");
+  if (proveOfficial) acquisitions.push({ requestedUrl:url,finalUrl:captured.finalUrl,httpStatus:captured.httpStatus,body,
+    rawHash:lastSourceRawHash,byteCount:captured.bytes.length,retrievedAt:captured.retrievedAt });
   return body;
 }
 
@@ -109,12 +130,13 @@ function mapPosition(raw: string): VotePosition | null {
 }
 
 // ---- The wired federal members and the LIS bridge --------------------------
-const legislators = JSON.parse(
-  await get(
+const legislatorsRaw = await get(
     "https://unitedstates.github.io/congress-legislators/legislators-current.json",
     false,
-  ),
-) as { id: { bioguide: string; lis?: string }; terms?: { party?: string }[] }[];
+  );
+const identifierSourceHash = lastSourceRawHash;
+sourceContext=canonicalCivicDataHash([sourceBase,identifierSourceHash]);
+const legislators = JSON.parse(legislatorsRaw) as { id: { bioguide: string; lis?: string }; terms?: { party?: string }[] }[];
 const lisToBioguide = new Map<string, string>();
 const bioguides = new Set<string>();
 const parties = new Map<string, string | null>();
@@ -153,13 +175,13 @@ let houseMatched = 0;
 let houseTotal = 0;
 
 // Each window reaches back to the roll after the previous version's newest, so none is skipped between versions.
-const heldWindow = previous.kind === "PROMOTED" || previous.kind === "BOOTSTRAP" ? previous.value.snapshot.window : null;
 const newestHeld = (rolls: readonly number[] | undefined): number | null => rolls !== undefined && rolls.length > 0 ? Math.max(...rolls) : null;
 const latestHouse = await latestHouseRoll();
+sourceContext=canonicalCivicDataHash([sourceBase,identifierSourceHash,latestHouse]);
 const houseWindow = windowStart({ latest: latestHouse, previousNewest: newestHeld(heldWindow?.houseRolls), window: WINDOW });
-if (houseWindow.unreached > 0) console.warn(`  House: ${houseWindow.unreached} roll(s) between the held version and this window were not reached; the next run continues from here`);
+if (houseWindow.unreached > 0) console.warn(`  House: ${houseWindow.unreached} newer roll(s) remain after ${houseWindow.end}; the next pass continues from there`);
 const houseRolls: number[] = [];
-for (let n = houseWindow.start; n <= latestHouse; n++) {
+for (let n = houseWindow.start; n <= houseWindow.end; n++) {
   houseRolls.push(n);
 }
 
@@ -200,7 +222,7 @@ for (const n of houseRolls) {
     result: `${result}${tally}`,
     billUrl: null,
     rollCallUrl: `https://clerk.house.gov/Votes/${YEAR}${n}`,
-    retrievedAt: new Date().toISOString(),
+    retrievedAt:lastSourceObservedAt,
   });
   if (legisNum) billNums.add(legisNum);
 
@@ -235,8 +257,8 @@ const menuEntries = [...menu.matchAll(/<vote>[\s\S]*?<\/vote>/g)].map((m) => {
 menuEntries.sort((a, b) => a.number - b.number);
 const latestSenate = menuEntries.at(-1)?.number ?? 0;
 const senateStart = windowStart({ latest: latestSenate, previousNewest: newestHeld(heldWindow?.senateRolls), window: WINDOW });
-if (senateStart.unreached > 0) console.warn(`  Senate: ${senateStart.unreached} roll(s) between the held version and this window were not reached; the next run continues from here`);
-const senateWindow = menuEntries.filter((entry) => entry.number >= senateStart.start);
+if (senateStart.unreached > 0) console.warn(`  Senate: ${senateStart.unreached} newer roll(s) remain after ${senateStart.end}; the next pass continues from there`);
+const senateWindow = menuEntries.filter((entry) => entry.number >= senateStart.start&&entry.number<=senateStart.end);
 
 let senateMatched = 0;
 let senateTotal = 0;
@@ -245,7 +267,9 @@ for (const entry of senateWindow) {
   const padded = String(entry.number).padStart(5, "0");
   const xml = await get(
     `https://www.senate.gov/legislative/LIS/roll_call_votes/vote${CONGRESS}${SESSION}/vote_${CONGRESS}_${SESSION}_${padded}.xml`,
+    true,false,
   );
+sourceContext=canonicalCivicDataHash([sourceContext,lastSourceRawHash]);
   const date = tag(xml, "vote_date") ?? "";
   const tally =
     entry.yeas && entry.nays ? ` ${entry.yeas}–${entry.nays}` : "";
@@ -266,7 +290,7 @@ for (const entry of senateWindow) {
     result: `${entry.result}${tally}`,
     billUrl: null,
     rollCallUrl: `https://www.senate.gov/legislative/LIS/roll_call_votes/vote${CONGRESS}${SESSION}/vote_${CONGRESS}_${SESSION}_${padded}.htm`,
-    retrievedAt: new Date().toISOString(),
+    retrievedAt:lastSourceObservedAt,
   });
   if (entry.issue) billNums.add(entry.issue);
 
@@ -318,13 +342,16 @@ if (apiKey) {
       // evidence. The authority/route is provable without its query string.
       const requestedUrl = `https://api.congress.gov/v3/bill/${CONGRESS}/${parsed.type}/${parsed.num}`;
       const credentialedUrl = `${requestedUrl}?api_key=${encodeURIComponent(apiKey)}&format=json`;
-      const response = await fetch(
-        credentialedUrl,
-        { headers: { "user-agent": UA } },
-      );
-      if (!response.ok) continue;
-      const raw = await response.text();
-      acquisitions.push({ requestedUrl, finalUrl: requestedUrl, httpStatus: response.status, body: raw });
+      const captured=await continueOfficialVoteDocument({sourceId:FEDERAL_VOTES_SOURCE_ID,parserVersion:FEDERAL_VOTES_PARSER_VERSION,
+        context:sourceContext,url:requestedUrl,vault,signal:sourceSignal(),read:async()=>{
+        const response = await fetch(credentialedUrl,{headers:{"user-agent":UA},signal:sourceSignal()});
+        if(!response.ok)throw Error(`FEDERAL_BILL_TITLE_HTTP_${response.status}`);
+        const bytes=new Uint8Array(await response.arrayBuffer());
+        return{requestedUrl,finalUrl:requestedUrl,httpStatus:response.status,bytes,retrievedAt:new Date().toISOString()};
+      }});
+      const raw=new TextDecoder().decode(captured.bytes);
+      acquisitions.push({requestedUrl,finalUrl:requestedUrl,httpStatus:captured.httpStatus,body:raw,retrievedAt:captured.retrievedAt,
+        rawHash:createHash("sha256").update(captured.bytes).digest("hex"),byteCount:captured.bytes.length});
       const data = JSON.parse(raw) as {
         bill?: { title?: string };
       };
@@ -351,15 +378,8 @@ if (apiKey) {
           titled++;
         }
       }
-      if (
-        !billSummaries.summaries[billUrl] &&
-        !billSummaries.pending.some((pending) => pending.billUrl === billUrl)
-      ) {
-        console.warn(
-          `  UNSUMMARIZED: ${legis} (${billUrl}) has no reviewed explanation in the current canonical projection`,
-        );
-      }
-    } catch {
+    } catch(error) {
+      if(Date.now()>=passDeadlineFromEnv())throw error;
       // A missing title leaves the chamber's own words — honest either way.
     }
   }
@@ -381,21 +401,34 @@ const snapshot: VotesSnapshot = {
 };
 
 const attemptedAt = new Date().toISOString(), held = heldAcquisitions(acquisitions);
+const rawHash = federalVotesSourceHash(held, identifierSourceHash);
 const { positions: _positions, ...window } = snapshot;
-// A member no roll in this window records keeps the record from the last window that did.
-const byMember = new Map<string, MemberVote[]>();
-for (const position of positions) byMember.set(position.officeholderId, [...byMember.get(position.officeholderId) ?? [], position]);
-const refused: string[] = [];
-for (const [officeholderId, recorded] of byMember) {
-  const member = federalMemberVotesCandidate({ acquisitions: held, retrievedAt: attemptedAt, expectedCongress: CONGRESS, expectedSession: SESSION, snapshot: window, officeholderId, positions: recorded });
-  const result = await processRegisteredManualCandidate(store, "congress-rollcalls", member, attemptedAt);
-  if (!result.promoted && !result.confirmed) refused.push(`${officeholderId}:${result.candidate.failureCode ?? result.candidate.state}`);
+// A member with no recorded roll in this window keeps their last recorded window.
+const byMember=new Map<string,MemberVote[]>();
+for(const position of positions)byMember.set(position.officeholderId,[...byMember.get(position.officeholderId)??[],position]);
+function* memberCandidates(){
+  for(const[officeholderId,recorded]of byMember)yield federalMemberVotesCandidate({acquisitions:held,identifierSourceHash,retrievedAt:attemptedAt,
+    expectedCongress:CONGRESS,expectedSession:SESSION,snapshot:window,officeholderId,positions:recorded});
 }
+const {confirmed:unchanged,refused}=await settleFederalVoteSources({store,members:memberCandidates(),source:{sourceId: FEDERAL_VOTES_SOURCE_ID, recordClass: "FEDERAL_ROLL_CALL",
+  scope: FEDERAL_ROLLCALL_SCOPE, parserVersion: FEDERAL_VOTES_PARSER_VERSION, rawHash, now: attemptedAt,
+  complete: houseWindow.unreached === 0 && senateStart.unreached === 0 && positions.length > 0,
+  retrieval: { requestedUrl: held[0]?.requestedUrl ?? "", finalUrl: held[0]?.finalUrl ?? null,
+    httpStatus: held[0]?.httpStatus ?? null, rawHash,...federalVotesSourceObservation(held,attemptedAt) } }});
 if (refused.length) {
   await recordFailure(acquisitions[0]?.requestedUrl ?? "https://www.senate.gov/legislative/", `Member positions refused: ${refused.join(", ")}`);
   throw new Error(`FEDERAL_MEMBER_POSITIONS_REFUSED:${refused.join(",")}`);
 }
+if (unchanged) {
+  console.log("RCD_RECEIPT=" + JSON.stringify({ source: "congress-rollcalls", ...sourceHashReceiptFields(unchanged), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+} else {
+const publicationBase=await store.readSourceHead("FEDERAL_ROLL_CALL",FEDERAL_ROLLCALL_SCOPE);
+const billSummaries = publicationBase?await store.readCandidatePath<BillSummariesFile>(publicationBase.versionId, ["readModel", "billSummaries"]):null;
+if (!billSummaries || !billSummaries.summaries || !Array.isArray(billSummaries.pending)) throw new Error("FEDERAL_ROLLCALL_BILL_SUMMARIES_UNAVAILABLE");
 const candidate = federalRollCallsCandidate({
+  complete:houseWindow.unreached===0&&senateStart.unreached===0,
+  continuationPending:houseWindow.unreached>0||senateStart.unreached>0,
+  identifierSourceHash,
   acquisitions: held,
   retrievedAt: attemptedAt,
   expectedCongress: CONGRESS,
@@ -404,7 +437,7 @@ const candidate = federalRollCallsCandidate({
   partyBreakdowns: federalPartyBreakdowns(snapshot, parties),
   billSummaries,
 });
-const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, attemptedAt);
+const outcome = await processRegisteredManualCandidate(store, "congress-rollcalls", candidate, attemptedAt,publicationBase!.versionId);
 printSourceRunnerReceipt("congress-rollcalls", candidate, outcome);
 
 console.log(
@@ -431,4 +464,5 @@ if (positions.length === 0) {
 }
 if (outcome.candidate.state !== "PROMOTED") {
   throw new Error(`FEDERAL_ROLLCALL_PROMOTION_REFUSED:${outcome.candidate.failureCode ?? outcome.candidate.state}`);
+}
 }

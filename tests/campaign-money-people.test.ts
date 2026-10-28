@@ -6,6 +6,7 @@ import { bindCampaignMoney as bindIndexedMoney,campaignMoneyPeopleIndex, campaig
 import { campaignSourceRecord } from "../lib/funding/state-source-records.ts";
 import { CAMPAIGN_MONEY_SCOPE,CAMPAIGN_FINANCE_SOURCES, campaignFinanceSource } from "../lib/funding/state-sources.ts";
 import { refreshCampaignMoneyState } from "../lib/funding/state-publication.ts";
+import {campaignMoneyDependencyHash} from "../lib/funding/state-source-probe.ts";
 import {rebuildCampaignCycles} from "../lib/funding/state-cycles.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -18,6 +19,7 @@ import {campaignDb,publishMoneyFixture} from "./helpers/campaign-money-db.ts";
 import { installFactReader } from "../lib/facts/db.ts";
 import {publishCampaignMoneyWork} from "../lib/funding/work-publication.ts";
 import {runCampaignMoneyStates} from "../lib/funding/state-sources.ts";
+import {CAMPAIGN_PEOPLE_SQL} from "../lib/funding/state-people.ts";
 import { renderCardWithSources } from "./helpers/render-card.ts";
 
 const bindCampaignMoney=(row:Parameters<typeof bindIndexedMoney>[0],people:readonly CampaignMoneyPerson[])=>bindIndexedMoney(row,campaignMoneyPeopleIndex(people));
@@ -38,6 +40,42 @@ async function publishPerson(db:Awaited<ReturnType<typeof campaignDb>>,person:Ca
   if(!retained.includes(body))retained.push(body);
   await publishMoneyFixture(db,{recordClass:"REGISTRY_RUNTIME_BINDING",scope,payload:{bodyRosters:retained}});
 }
+
+test("campaign hashes keep honest provider dates before the fact floor and admit changed filings at the next check",async()=>{
+  const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-source-first-"));
+  let now=at,revision=1792454400,requests=0,filed={...raw,contributions_amount:"100"};
+  const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
+    fetch:async(url:RequestInfo|URL)=>{requests++;return Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:revision}:[filed]);}};
+  const read=()=>readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id});
+  try{
+    await publishPerson(db,person);await refreshCampaignMoneyState(options);
+    assert.equal((await read()).records[0].totals.find(total=>total.label==="Contributions")?.amount,100);
+    // First publication also creates its place entities; their input revision is saved by the next ordinary pass.
+    now="2026-10-20T01:00:00.000Z";await refreshCampaignMoneyState(options);
+    const guarded:typeof db.query=async(text,params=[])=>{
+      assert.notEqual(text,CAMPAIGN_PEOPLE_SQL,"unchanged native sources do not read held people");
+      assert.doesNotMatch(text,/WITH people AS MATERIALIZED/);
+      assert.doesNotMatch(text,/SELECT DISTINCT wanted.id,wanted.seat/);
+      return db.query(text,params);
+    };
+    now="2026-10-20T03:00:00.000Z";
+    const checked=await refreshCampaignMoneyState({...options,query:guarded,facts:{...db,query:guarded}});
+    assert.equal(checked.report.records[0].peopleWorked,0);
+    assert.equal((await read()).records[0].sources[0].checkedAt,at,"held cache use does not manufacture a new provider observation");
+    assert.equal(requests,2,"neither source version nor filing is polled before the active money floor");
+    assert.equal(Number((await db.query("SELECT count(*) AS n FROM fact WHERE field LIKE 'campaign-cycle:%'"))[0].n),1);
+    now="2026-10-21T00:00:00.000Z";revision++;filed={...filed,contributions_amount:"200"};
+    await refreshCampaignMoneyState(options);
+    assert.equal((await read()).records[0].totals.find(total=>total.label==="Contributions")?.amount,200,
+      "the changed official filing reaches the reader at its admitted provider check");
+    await db.query("DELETE FROM fact WHERE entity_id=$1 AND field LIKE 'campaign-cycle:%'",[person.id]);
+    now="2026-10-21T00:05:00.000Z";
+    const beforeRepair=requests;
+    await refreshCampaignMoneyState({...options,heldOnly:true,query:guarded,facts:{...db,query:guarded}});
+    assert.equal(requests,beforeRepair,"a derived repair uses held native bytes without a provider poll");
+    assert.equal((await read()).records.length,1,"an unchanged native source can repair a missing derived cycle without rereading people");
+  }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
+});
 
 test("money requires a published person, exact seat and a filed period from 2020 onward",()=>{
   assert.ok(CAMPAIGN_FINANCE_SOURCES.every(source => source.minimumYear === 2020));
@@ -110,24 +148,50 @@ test("a partial source update retains the older amount's filing and capture in S
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 
-test("a failed daily source check stays due for the next hour and keeps verified totals",async()=>{
+test("new campaign facts keep the provider's actual check time and their current delivery time",async()=>{
+  const db=await campaignDb();
+  try{
+    const checkedAt="2026-10-19T23:00:00.000Z",bound=bindCampaignMoney(row,[person])!;
+    await fileCampaignMoneyFacts(db,"WA",[{...bound,provenance:{...bound.provenance,retrievedAt:checkedAt,checkedAt}}],at);
+    const [held]=await db.query("SELECT checked_at,live_at FROM fact WHERE field LIKE 'campaign-money:%' AND status='live'");
+    assert.equal(new Date(held.checked_at as string).toISOString(),checkedAt);
+    assert.equal(new Date(held.live_at as string).toISOString(),at);
+  }finally{await db.pg.close();}
+});
+
+test("a failed source check keeps the money fact retry floor and verified totals",async()=>{
   const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-daily-retry-"));
   let now=at,unavailable=false;
   const options={state:"WA",facts:db,query:db.query,vault,directory,now:()=>now,
     fetch:async(url:RequestInfo|URL)=>unavailable?new Response("Unavailable",{status:404}):Response.json(String(url).includes("/api/views/")?{rowsUpdatedAt:1792454400}:[{...raw,contributions_amount:"100"}])};
   try{
-    await publishPerson(db,person);await refreshCampaignMoneyState(options);
+    const absent={...person,id:"failure-still-unmatched",name:"No Filing",seat:person.seat+"-unmatched"};
+    await publishPerson(db,person);await publishPerson(db,absent);await refreshCampaignMoneyState(options);
     now="2026-10-21T12:00:00.000Z";unavailable=true;
     await refreshCampaignMoneyState(options);
-    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T13:00:00.000Z")).length,1);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T13:00:00.000Z")).length,1,"missing local work remains open without admitting an early provider retry");
+    const failedClock=await readCampaignMoneyStateWork(db.query,"WA");
+    assert.equal(campaignMoneyStateDue(failedClock,"2026-10-21T13:00:00.000Z"),false);
+    assert.equal(campaignMoneyStateDue(failedClock,"2026-10-22T12:00:00.000Z"),true);
     const held=(await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records[0];
     assert.equal(held.totals.find(total=>total.label==="Contributions")?.amount,100);
-    unavailable=false;now="2026-10-21T13:00:00.000Z";await refreshCampaignMoneyState(options);
-    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T14:00:00.000Z")).length,0);
+    const guarded:typeof db.query=async(text,params=[])=>{
+      assert.notEqual(text,CAMPAIGN_PEOPLE_SQL,"exact-byte recovery does not reread held people");
+      assert.doesNotMatch(text,/WITH people AS MATERIALIZED|SELECT DISTINCT wanted.id,wanted.seat/);
+      return db.query(text,params);
+    };
+    unavailable=false;now="2026-10-22T12:00:00.000Z";
+    const recovered=await refreshCampaignMoneyState({...options,query:guarded,facts:{...db,query:guarded}});
+    assert.equal(recovered.report.records[0].peopleWorked,0);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-22T13:00:00.000Z")).length,0);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[absent],"2026-10-22T13:00:00.000Z")).length,1);
+    const [missing]=await db.query("SELECT detail FROM blank WHERE entity_id=$1 AND field=$2",[absent.id,`campaign-money:${absent.seat}`]);
+    assert.equal(missing.detail,CAMPAIGN_MONEY_MISSING_REASONS.absent,"source recovery preserves the person's own unmatched-filing reason");
+    assert.equal((await db.query("SELECT 1 FROM blank WHERE entity_id=$1 AND field=$2",[person.id,`campaign-money:${person.seat}`])).length,0);
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 
-test("missing people keep their own filing reason through tomorrow's refresh and the reader card",async()=>{
+test("missing people keep their filing reason for the work and a plain request on the reader card",async()=>{
   const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-person-reasons-"));
   const unreadable={...person,id:"unreadable-period",name:"Unreadable Period",seat:person.seat+"-unreadable"};
   const absent={...person,id:"no-filing",name:"No Filing",seat:person.seat+"-absent"};
@@ -155,7 +219,9 @@ test("missing people keep their own filing reason through tomorrow's refresh and
       assert.equal(response.status,200);const data=await response.json();assert.deepEqual(data,read);
       const markup=await renderCardWithSources({modulePath:"./components/funding/state-campaign-section.tsx",exportName:"StateCampaignSection",
         props:{divisionId:unreadable.division,personId:unreadable.id,data},sourceUrls:[]});
-      assert.match(markup,/The source has no readable filing period/);assert.doesNotMatch(markup,/The filing predates January 1, 2020/);
+      assert.match(markup,/working on getting this info/);
+      assert.match(markup,/Want us to get this sooner\?/);
+      assert.doesNotMatch(markup,/The source has no readable filing period|The filing predates January 1, 2020/);
     }
     await db.query("UPDATE blank SET detail='SourceAcquisitionFailure(PUBLISHER_UNAVAILABLE): raw technical failure' WHERE entity_id=$1",[unreadable.id]);
     assert.equal((await readCampaignFinanceForPlace(unreadable.division,{query:db.query,personId:unreadable.id})).missingReason,undefined);
@@ -195,6 +261,16 @@ test("a special-district member's money reason uses its government's held canoni
     const [copy]=await db.query("INSERT INTO source_copy(url,final_url,fetched_at,http_status,sha256,blob_key) VALUES($1,$1,$2,200,$3,'body-place-fixture') RETURNING id",[url,at,"a".repeat(64)]);
     await db.query("INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by) VALUES($1,$2,$3,$4,'live','OFFICIAL',$5,'',$6,$6,'fixture')",[body,`member:${id}`,JSON.stringify({name,office:""}),name,copy.id,at]);
     const [person]=await readCampaignMoneyPeople(db.query,"AL");assert.equal(person.id,id);assert.equal(person.seat,body);assert.equal(person.division,division);
+    const originalInputs=await campaignMoneyDependencyHash(db.query,"AL"),otherDivision=division+"/county:unrelated";
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','An unrelated place','AL')",[otherDivision]);
+    assert.equal(await campaignMoneyDependencyHash(db.query,"AL"),originalInputs,"unreferenced places are not identity inputs");
+    await db.query("UPDATE entity_place SET place_id=$2 WHERE entity_id=$1",[government,otherDivision]);
+    assert.notEqual(await campaignMoneyDependencyHash(db.query,"AL"),originalInputs,"a government's resolved place changes its member bindings");
+    assert.equal((await readCampaignMoneyPeople(db.query,"AL"))[0].division,otherDivision);
+    await db.query("UPDATE entity_place SET place_id=$2 WHERE entity_id=$1",[government,division]);
+    assert.equal(await campaignMoneyDependencyHash(db.query,"AL"),originalInputs);
+    await db.query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'roster-member','native-member-alias')",[id]);
+    assert.notEqual(await campaignMoneyDependencyHash(db.query,"AL"),originalInputs,"a native person alias changes the identity inputs");
     await refreshCampaignMoneyState({state:"AL",query:db.query,facts:db,vault,directory,now:()=>at,fetch:async()=>{throw new Error("An unsupported profile must not fetch");}});
     installFactReader(db.query);const {GET}=await import("../app/api/campaign-finance/route.ts");
     const response=await GET(new Request(`${PUBLIC_SITE_ORIGIN}/api/campaign-finance?${new URLSearchParams({division:person.division,person:id})}`));
@@ -243,11 +319,14 @@ test("an amended native row moves between published people without leaving money
     assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records.length,1);
     now="2026-10-20T02:00:00.000Z";revision+=3600;filed={...filed,filer_id:"second-filer",filer_name:other.name,expenditures_amount:"",url:"https://www.pdc.wa.gov/filings/amended"};
     await refreshCampaignMoneyState(options);
+    assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records.length,1,"an unpolled amendment cannot erase held verified money before its fact floor");
+    assert.equal((await readCampaignFinanceForPlace(other.division,{query:db.query,personId:other.id})).records.length,0);
+    now="2026-10-21T00:00:00.000Z";await refreshCampaignMoneyState(options);
     assert.equal((await readCampaignFinanceForPlace(person.division,{query:db.query,personId:person.id})).records.length,0);
     const records=(await readCampaignFinanceForPlace(other.division,{query:db.query,personId:other.id})).records;
     assert.equal(records[0]?.totals.find(total=>total.label==="Contributions")?.amount,100);
     assert.equal(records[0]?.totals.some(total=>total.label==="Expenditures"),false);
-    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-20T03:00:00.000Z")).length,1);
+    assert.equal((await campaignMoneyWork(db.query,"WA",[person],"2026-10-21T01:00:00.000Z")).length,1);
   }finally{await db.pg.close();await rm(directory,{recursive:true,force:true});}
 });
 
@@ -268,7 +347,7 @@ test("two ID-less filed committees remain distinct and a named committee never o
   }finally{await db.pg.close();}
 });
 
-test("hourly work picks up a newly published person from cached state bytes and skips a completed daily check",async()=>{
+test("held source bytes admit a new person while provider checks keep the money fact floor",async()=>{
   const db=await campaignDb(),vault=new MemoryEvidenceStore(),directory=await mkdtemp(join(tmpdir(),"campaign-next-person-"));
   let now=at,downloads=0;
   const first={...person,id:"another-published-person",name:"Another Person",seat:person.seat+"-another"};
@@ -284,7 +363,8 @@ test("hourly work picks up a newly published person from cached state bytes and 
     const stateClock=await readCampaignMoneyStateWork(query,"WA");
     assert.equal(stateClock?.startedAt,at);assert.equal(stateClock?.checkedAt,now);
     assert.equal(campaignMoneyStateDue(stateClock,"2026-10-20T00:59:59.999Z"),false);
-    assert.equal(campaignMoneyStateDue(stateClock,"2026-10-20T01:00:00.000Z"),true,"processing time must not move the next hourly scan");
+    assert.equal(campaignMoneyStateDue(stateClock,"2026-10-20T01:00:00.000Z"),false,"local materialization never accelerates the provider clock");
+    assert.equal(campaignMoneyStateDue(stateClock,"2026-10-21T00:20:00.000Z"),true,"the actual provider observation owns its fact retry floor");
     now="2026-10-20T01:00:00.000Z";
     await publishPerson(db,person);
     const next=await refreshCampaignMoneyState(options);assert.equal(next.report.records[0].peopleWithMoney,1);assert.equal(downloads,1);
@@ -350,4 +430,22 @@ test("the completed hourly pass uses the registered promotion door for its refre
     id:"hourly",state:"US",checkedAt:at,publishedPeople:1,peopleWorked:1,peopleWithMoney:1,loaded:1,unmatched:0,reasons:{},peakMemoryBytes:1,
   }]},at);
   assert.ok(saved.outcome.promoted);assert.equal((await store.readPromotion("CAMPAIGN_FINANCE",CAMPAIGN_MONEY_SCOPE))?.versionId,saved.candidate.id);
+});
+
+test("campaign work history hashes source content independently of run counts and observation times",async()=>{
+  const store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
+  const row={id:"hourly",state:"US",checkedAt:at,publishedPeople:1,peopleWorked:1,peopleWithMoney:1,loaded:1,unmatched:0,reasons:{},peakMemoryBytes:1,
+    sourceHash:"legacy-input-and-output-hash",providerRawHash:"a".repeat(64),providerHashBasis:"SOURCE_CONTENT_V1" as const,sourceComplete:true};
+  const report={kind:"campaign-finance-work-check" as const,state:"US",resource:"people" as const,records:[row]};
+  const first=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,report,at);
+  assert.ok(first.outcome.promoted);assert.equal(first.candidate.retrieval.rawHashBasis,"SOURCE_CONTENT_V1");
+  const later="2026-10-20T01:00:00.000Z";
+  const second=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,peopleWorked:0,loaded:0,peakMemoryBytes:100,sourceHash:"changed-identity-inputs"}]},later);
+  assert.ok(second.outcome.promoted||second.outcome.confirmed);
+  assert.equal(second.candidate.retrieval.rawHash,first.candidate.retrieval.rawHash,"run activity never looks like a publisher change");
+  const failed=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,sourceComplete:false}]},later);
+  assert.equal(failed.candidate.retrieval.complete,false,"partial source work keeps its existing retry pace");
+  assert.equal(failed.candidate.retrieval.rawHash,first.candidate.retrieval.rawHash);
+  const changed=await publishCampaignMoneyWork(store,vault,CAMPAIGN_MONEY_SCOPE,{...report,records:[{...row,checkedAt:later,providerRawHash:"b".repeat(64)}]},later);
+  assert.notEqual(changed.candidate.retrieval.rawHash,first.candidate.retrieval.rawHash);
 });

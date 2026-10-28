@@ -10,15 +10,14 @@ import { assertProductionDatabaseTarget } from "./pilot-runtime-config.mjs";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
-import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories } from "../lib/control-plane/repository/pg-store.ts";
-import { CONTROL_PLANE_READS_DIR_ENV, readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
+import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, readRunnerPauseIntents, researchPlanningStates, honorStoppedHunts } from "../lib/control-plane/repository/pg-store.ts";
 import {
   assertDurableRepositories,
   type ControlPlaneRepositories,
 } from "../lib/control-plane/repository/types.ts";
 import { DIGEST_LOG_KEY, RUNNER_ID } from "../lib/control-plane/admin-data.ts";
 import { unacknowledgedResearchResume } from "../lib/control-plane/scheduler/launch-wake.ts";
-import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type OwnerDigestRecord, type RunnerHeartbeat } from "../lib/control-plane/owner-surface.ts";
+import { OWNER_SURFACE_FORMAT_VERSION, assertAggregateOnly, type OwnerDigestRecord, type RunnerHeartbeat, type RoutineSupervisorLane } from "../lib/control-plane/owner-surface.ts";
 import {
   parseIntakeRuntimeObservation,
   unreadableIntakeRuntimeObservation,
@@ -43,17 +42,18 @@ import {
 } from "../lib/control-plane/fleet-safety.ts";
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
 import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
-import { liveCycleHeartbeat } from "../lib/control-plane/runner-standing.ts";
+import { liveCycleHeartbeat, standingHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { parseRoutineSupervisorFailureSummary } from "../lib/control-plane/routine-outcome-summary.ts";
 import { VITAL_SIGNS_REPORT_ENV, countVitalSign, formatNeonBytesLine, hourStart, keepNeonBytesInProcess,
   summarizeNeonBytes, takeNeonBytesHours, type NeonBytesHour } from "../lib/db/transfer-by-caller.ts";
-import { keepRunnerTransfer } from "../lib/db/transfer.ts";
+import { collectDatabaseTransferJournals, keepRunnerTransfer } from "../lib/db/transfer.ts";
+import { transferJournalDir } from "../lib/db/transfer-journal.ts";
 import { startCivicReadCacheHost } from "../lib/db/civic-read-cache-host.ts";
 import { keepNeonBytesPart, pruneNeonBytes, readNeonBytesHour } from "../lib/ops/vital-signs-hours.ts";
 import { VITAL_COUNTERS, composeVitalSignsRow, formatVitalSignsLine, readHourCosts, writeVitalSignsRow,
   type HourCosts } from "../lib/control-plane/vital-signs.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import type { ChildProcess } from "node:child_process";
 import { startHangWatchdog, hangWatchdogDisabled, type HangWatchdog } from "./runner-hang-watchdog.mts";
 import {
@@ -61,8 +61,9 @@ import {
   neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher } from "./pilot-runtime-publish.mts";
+import { consoleInputReader, consolePublisher, consolePublishClock } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
+import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { auditPassClock } from "./audit-pass-clock.mts";
 import { lastChildLines, recordFailedCycle } from "../lib/control-plane/scheduler/cycle-finalization.ts";
 import {
@@ -79,6 +80,8 @@ import { HUNTER_LANE_LIFE_MS, HUNTER_WORKER_WALL_MS } from "../lib/control-plane
 import { IndependentRuntimeLaneScheduler, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { publishNowLane } from "../lib/civic-data/publish-now.ts";
+import { placeMapsLane } from "../lib/civic-data/place-map-lane.ts";
+import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, type PlacePageTurn } from "../lib/reader/place-page-worker.ts";
 import {
   appendIntakeRuntimeObservationDigest,
   appendRoutineCivicDataSupervisorDigest,
@@ -97,7 +100,7 @@ import {
   writeRuntimeReleaseHold,
   type RuntimeReleaseInspection,
 } from "../lib/ops/runtime-release-handoff.ts";
-import { discardStagedReleases, defaultAsyncRunCommand, stageRuntimeRelease, stagedReleaseDirectory, stagedReleaseIsReady } from "../lib/ops/runtime-release-stage.ts";
+import { discardStagedReleases, defaultAsyncRunCommand, ReleaseStaging, stagedReleaseDirectory } from "../lib/ops/runtime-release-stage.ts";
 import { parentCodeChanged } from "../lib/ops/runtime-release-switch.ts";
 import { fetchServedCommit, PRODUCTION_BASE_URL } from "./post-deploy-observer.mts";
 import {
@@ -116,8 +119,16 @@ import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
 import { runtimeContractRetry, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
+import { JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB } from "../lib/control-plane/job-transfer-breaker.ts";
+import { admitJobLaunch, JOB_BREAKER_PATH_ENV } from "../lib/control-plane/job-breaker-local.ts";
+import { JobTransferBreaker } from "../lib/control-plane/job-breaker-loop.ts";
+import { withDatabaseJob, processNeonBytes } from "../lib/db/transfer-by-caller.ts";
+import { isControlPlaneRequestTimeout } from "../lib/control-plane/repository/request-bounds.ts";
+import { controlPlaneTimeoutLine, keepRunningThroughControlPlaneTimeouts } from "../lib/ops/control-plane-timeout-guard.ts";
 
 installConnectAttemptWindow();
+// A control-plane read that did not answer in time ends its pass, never the runner.
+keepRunningThroughControlPlaneTimeouts();
 
 const TS_CHILD = ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs"] as const;
 
@@ -126,10 +137,10 @@ const STDERR_TAIL_LINES = 40;
 const ROOT = process.cwd();
 
 const VITAL_SIGNS_DIR = join(ROOT, ".runtime", "vital-signs");
+const DATABASE_TRANSFER_DIR = transferJournalDir();
+if (DATABASE_TRANSFER_DIR) process.env.WTP_DATABASE_TRANSFER_DIR = DATABASE_TRANSFER_DIR;
 process.env[VITAL_SIGNS_REPORT_ENV] = "1";
 
-process.env[CONTROL_PLANE_READS_DIR_ENV] = join(ROOT, ".runtime", "control-plane", "reads");
-readFromHeldCopies();
 
 keepNeonBytesInProcess();
 
@@ -140,6 +151,9 @@ function keepHourPart(part: NeonBytesHour): void {
 receiveChildVitalSigns(keepHourPart);
 
 function keepOwnNeonBytes(nowMs: number): void {
+  if (DATABASE_TRANSFER_DIR) {
+    for (const part of collectDatabaseTransferJournals(DATABASE_TRANSFER_DIR)) keepNeonBytesPart(VITAL_SIGNS_DIR, part);
+  }
   for (const part of takeNeonBytesHours(nowMs)) keepHourPart(part);
 }
 process.once("exit", () => { keepOwnNeonBytes(Date.now()); });
@@ -192,6 +206,46 @@ const PARENT_CODE_SHA = headSha(ROOT);
 
 let RUNNING_CODE_SHA = PARENT_CODE_SHA;
 let CODE_ROOT = ROOT;
+const jobBreakerPath = process.env[JOB_BREAKER_PATH_ENV] ?? join(ROOT, ".mirror", "job-transfer-breaker.json");
+if (provider === "postgres" && !STAGING) process.env[JOB_BREAKER_PATH_ENV] = jobBreakerPath;
+let jobBreaker: JobTransferBreaker | null = null;
+let jobBreakerWork: Promise<void> | null = null;
+let jobBreakerTimer: ReturnType<typeof setInterval> | null = null;
+function breakerOwnBytes() {
+  return processNeonBytes().map(part => ({ hour: part.hour, counts: Object.entries(part.reads ?? {})
+    .filter(([key]) => key.split("\t")[1] === JOB_BREAKER_JOB).map(([,counts]) => counts) }))
+    .map(part => ({ hour: part.hour, requests: part.counts.reduce((n,c)=>n+c[0],0),
+      bytes: part.counts.reduce((n,c)=>n+c[1]+c[2],0) }));
+}
+async function checkJobTransfers(): Promise<void> {
+  if (provider !== "postgres" || STAGING || canary) return;
+  const controlUrl = controlPlaneUrlFromEnv(), readerUrl = process.env.DATABASE_URL;
+  if (!controlUrl || !readerUrl) throw new Error("Job transfer breaker requires both databases");
+  await withDatabaseJob(JOB_BREAKER_JOB, async () => {
+    if (!jobBreaker) {
+      const bounded = (url: string) => { const sql=neon(url); return {query:(text:string,params:readonly unknown[]=[])=>
+        sql.query(text,[...params],{fetchOptions:{signal:AbortSignal.timeout(10_000)}})}; };
+      jobBreaker = new JobTransferBreaker({path:jobBreakerPath,control:bounded(controlUrl),reader:bounded(readerUrl),
+        release:()=>RUNNING_CODE_SHA??"unknown",meter:breakerOwnBytes,
+        log:line=>console.log(`  job transfer breaker: ${line}`)});
+    }
+    await jobBreaker.check();
+  });
+  // The hunter lane's one child lives up to 55 minutes; a pause asks it to finish its tasks in hand and take no more.
+  if (!admitJobLaunch("hunter-lane")) drainHunterLane();
+}
+function jobTransferTick(): Promise<void> {
+  if (jobBreakerWork) return jobBreakerWork;
+  jobBreakerWork = checkJobTransfers().catch(error => {
+    console.error(`  job transfer breaker check failed; existing job holds stay in place: ${error instanceof Error ? error.message : String(error)}`);
+  }).finally(() => { jobBreakerWork = null; });
+  return jobBreakerWork;
+}
+function jobLaunchAllowed(job: string): boolean {
+  const admitted = admitJobLaunch(job);
+  if (!admitted) console.log(`  job transfer breaker: ${job} is paused until released in Admin; its work remains owed`);
+  return admitted;
+}
 const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
 const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinity;
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
@@ -332,6 +386,7 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
   ];
   const [run] = await runRuntimeChildren([{
     id: "research-cycle",
+    databaseBytesPerRun: 2_583_549_313,
     executable: process.execPath,
     args,
     env: standingChildEnvironment("RESEARCH_CYCLE"),
@@ -349,6 +404,9 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     onStarted: (_id, child) => { researchCycleChild = child; },
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
+  // An owner's stop is neither a provider outage nor a failed research pass.
+  if (researchStoppedByOwner) return { ok:false, recordPath:null, stdout:run.stdout ?? "",
+    stderrTail:"", signal:run.signal ?? null, exitCode:run.status, circuit:null };
   const failedAtMs = Date.now();
   let supervisorRecordPath: string | null = null;
   if (run.termination === "TIMED_OUT") {
@@ -581,9 +639,9 @@ function deliver(body: string, headline: string): { readonly where: string } {
   return { where: path };
 }
 
-const CONSOLE_PUBLISHERS: readonly { readonly name: string; readonly args: readonly string[] }[] = [
+const CONSOLE_PUBLISHERS: readonly { readonly databaseBytesPerRun: number; readonly name: string; readonly args: readonly string[] }[] = [
 
-  { name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
+  { databaseBytesPerRun: 255_016_765, name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
 ];
 
 const publishChangedConsole = consolePublisher({
@@ -599,7 +657,10 @@ const publishChangedConsole = consolePublisher({
   publish: publishConsoleChildren,
 });
 
-async function publishConsole(): Promise<void> {
+const consoleClock=consolePublishClock(INTERVAL_MIN*60_000);
+async function publishConsole(onlyWhenDue=false): Promise<void> {
+  if(onlyWhenDue&&!consoleClock.due())return;
+  consoleClock.attempted();
   if (canary && STAGING) {
     console.log("  console publish: staging canary is scoped to research; billing and live-site readbacks are skipped");
     return;
@@ -621,9 +682,11 @@ async function publishConsole(): Promise<void> {
 async function publishConsoleChildren(): Promise<boolean> {
   let succeeded = true;
   for (const publisher of CONSOLE_PUBLISHERS) {
+    if (!jobLaunchAllowed(`console-publish:${publisher.name}`)) { succeeded = false; continue; }
     const started = Date.now();
     const [run] = await runRuntimeChildren([{
       id: `console-publish:${publisher.name}`,
+      databaseBytesPerRun: publisher.databaseBytesPerRun,
       executable: process.execPath,
 
       args: [...TS_CHILD, ...publisher.args],
@@ -671,10 +734,10 @@ async function runRoutineCivicData(deadlineMs: number): Promise<void> {
     },
   );
 
-  const beat = boundedBeat(() => writeLiveCycleBeat(null), BEAT_BOUND_MS, lateBeat);
-  const beatTimer = setInterval(() => { if (!researchCycleActive) void beat(); }, 60_000);
+  const beatTimer = setInterval(() => { if (!researchCycleActive) void standingBeat(); }, 60_000);
   const [run] = await runRuntimeChildren([{
     id: "routine-civic-data",
+    databaseBytesPerRun: 128_890_931,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", ...(ownerRefresh?.args ?? [])],
     env: withPassDeadline(childEnvironment, deadlineMs),
@@ -728,6 +791,7 @@ async function runPublishNow(deadlineMs: number): Promise<void> {
   const startedAt = new Date().toISOString();
   const [run] = await runRuntimeChildren([{
     id: "publish-now",
+    databaseBytesPerRun: 137_544_447,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/publish-now-runner.mts"],
     env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
@@ -746,14 +810,41 @@ async function runPublishNow(deadlineMs: number): Promise<void> {
   }
 }
 
+/** Each state's map runs in its own lane, one at a time, with the same source children, receipts and launch log as the
+ * routine pass, so the routine pass's time and memory never hold it back. */
+async function runPlaceMaps(deadlineMs: number): Promise<void> {
+  if (provider !== "postgres" || canary) return;
+  if (!jobLaunchAllowed("place-maps")) return;
+  const startedAt = new Date().toISOString();
+  const [run] = await runRuntimeChildren([{
+    id: "place-maps",
+    databaseBytesPerRun: 16_777_216,
+    executable: process.execPath,
+    args: [...TS_CHILD, "scripts/routine-civic-data-runner.mts", "--place-maps"],
+    env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR", { ...process.env, [ROUTINE_SUPERVISOR_STARTED_AT_ENV]: startedAt }), deadlineMs),
+  }], {
+    cwd: CODE_ROOT,
+    env: process.env,
+    deadlineMs,
+    maxBufferBytes: 16 * 1024 * 1024,
+    onStdout: (_id, output) => process.stdout.write(output),
+    onStderr: (_id, output) => process.stderr.write(output),
+  });
+  if (!run) throw new Error("PLACE_MAPS_CHILD_RESULT_MISSING");
+  if (run.status !== 0) {
+    await persistOuterRoutineChildFailure(routineSupervisorCycleId(hostname(), startedAt, "place-maps"), startedAt, run,
+      `${run.stdout ?? ""}\n${run.stderr ?? ""}`, "place-maps");
+  }
+}
+
 async function persistOuterRoutineChildFailure(
   cycleId: string,
   startedAt: string,
   run: Awaited<ReturnType<typeof runRuntimeChildren>>[number],
   output: string,
-  lane: "routine-civic-data" | "publish-now" = "routine-civic-data",
+  lane: RoutineSupervisorLane = "routine-civic-data",
 ): Promise<void> {
-  const name = lane === "publish-now" ? "publish now" : "routine civic data";
+  const name = lane === "publish-now" ? "publish now" : lane === "place-maps" ? "state place maps" : "routine civic data";
   const outer = routineSupervisorOuterEvidence({
     output,
     termination: run.termination,
@@ -815,6 +906,7 @@ async function persistOuterRoutineChildFailure(
 }
 
 async function runIntakeRuntime(deadlineMs: number): Promise<void> {
+  if (!jobLaunchAllowed("intake-runtime")) return;
   if (provider !== "postgres" || canary) {
     console.log("  intake runtime: skipped — only the standing production runner owns this observation");
     return;
@@ -822,6 +914,7 @@ async function runIntakeRuntime(deadlineMs: number): Promise<void> {
   const startedAt = new Date().toISOString();
   const [run] = await runRuntimeChildren([{
     id: "intake-runtime",
+    databaseBytesPerRun: 22_277,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/intake-tripwire.mts"],
     env: withPassDeadline(standingChildEnvironment("INTAKE_RUNTIME"), deadlineMs),
@@ -951,32 +1044,18 @@ let currentCycleErrors = "";
 
 let currentCycleOutput = "";
 let researchCycleChild: ChildProcess | null = null;
+let researchStoppedByOwner = false;
 
 const RELEASE_QUICK_SWITCH = process.env.WTP_RELEASE_QUICK_SWITCH === "1";
-const stagingAttempted = new Set<string>();
-let stagingInFlight: string | null = null;
-function startReleaseStaging(targetSha: string): void {
-  if (stagingInFlight !== null) return;
-  stagingInFlight = targetSha;
-  stagingAttempted.add(targetSha);
-  console.log(`  release ${targetSha.slice(0, 8)} is installing in its own checkout; partition admissions continue`);
-  void stageRuntimeRelease({ root: ROOT, targetSha, keep: CODE_ROOT === ROOT ? [] : [CODE_ROOT] }).then(result => {
-    if (result.state === "READY") console.log(`  release ${targetSha.slice(0, 8)} is installed beside the running one; the switch can now be quick`);
-    else console.error(`  release ${targetSha.slice(0, 8)} could not be installed beside the running one (${result.code ?? "unknown"}); the drain-first path will apply it`);
-  }).catch(error => {
-    console.error(`  staging release ${targetSha.slice(0, 8)} failed (${error instanceof Error ? error.name : "error"}); the drain-first path will apply it`);
-  }).finally(() => { stagingInFlight = null; });
-}
+/** One bounded staging at a time, for the newest target only; its state rides on the standing heartbeat. */
+const releaseStaging = new ReleaseStaging({ root: ROOT, log: line => console.log(`  ${line}`), error: line => console.error(`  ${line}`) });
 
 type StagedReleaseStep = "STAGING" | "SWITCHED" | "DRAIN";
 const parentChangeReported = new Set<string>();
 async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseStep> {
-  if (!stagedReleaseIsReady(ROOT, targetSha)) {
-    if (!stagingAttempted.has(targetSha)) startReleaseStaging(targetSha);
-
-    return stagingInFlight !== null ? "STAGING" : "DRAIN";
-  }
-  if (!RELEASE_QUICK_SWITCH || PARENT_CODE_SHA === null) return "DRAIN";
+  const staged = releaseStaging.advance(targetSha, CODE_ROOT === ROOT ? [] : [CODE_ROOT]);
+  if (staged === "STAGING") return "STAGING";
+  if (staged === "FAILED" || !RELEASE_QUICK_SWITCH || PARENT_CODE_SHA === null) return "DRAIN";
   const parent = await parentCodeChanged({ root: ROOT, parentSha: PARENT_CODE_SHA, targetSha, run: defaultAsyncRunCommand });
   if (parent.changed) {
     if (!parentChangeReported.has(targetSha)) {
@@ -995,18 +1074,31 @@ async function advanceStagedRelease(targetSha: string): Promise<StagedReleaseSte
   return "SWITCHED";
 }
 
-async function requestQueuedReleaseDrain(): Promise<void> {
-  if (!AUTO_RELEASE_HANDOFF || !researchCycleActive || !researchCycleChild?.connected) return;
-  const release = await inspectRuntimeRelease();
-  if (release.state !== "UPDATE_REQUIRED") return;
+const pendingRestart = new PendingRestart();
+let releaseCheck: Promise<void> | null = null;
+/** The standing clock looks for a new release every minute, whether or not a research cycle is running. */
+function checkReleaseForRestart(): void {
+  if (!AUTO_RELEASE_HANDOFF || pendingRestart.target !== null || releaseCheck !== null) return;
+  releaseCheck = (async () => {
+    const release = await inspectRuntimeRelease();
+    if (release.state !== "UPDATE_REQUIRED" || release.targetSha === null) return;
+    if (await advanceStagedRelease(release.targetSha) !== "DRAIN") return;
+    holdForRestart(release.targetSha);
+  })().catch(error => {
+    console.error(`  runtime release inspection failed (${error instanceof Error ? error.name : "error"}); standing work continues and the next minute looks again`);
+  }).finally(() => { releaseCheck = null; });
+}
 
-  if (release.targetSha !== null && await advanceStagedRelease(release.targetSha) !== "DRAIN") return;
-  if (!researchCycleChild?.connected) return;
-
+/** No new standing run starts; the runs already started end by their deadlines, research ends its current wave, and the main loop wakes to restart. */
+function holdForRestart(targetSha: string): void {
+  if (!pendingRestart.mark(targetSha)) return;
   runtimeAdmissionsHeld = true;
+  const running = standingRuntimeScheduler.inFlightIds();
+  console.log(`  release ${targetSha.slice(0, 8)} loads by restart: no new standing run starts; ` +
+    `${running.length ? `${running.join(", ")} end by their deadlines` : "nothing is running"}, then the runner restarts`);
   drainHunterLane();
-  researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
-    if (error) console.error("  runtime release drain message could not be delivered; existing cycle continues");
+  if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
+    if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
   });
 }
 
@@ -1048,6 +1140,7 @@ const vitalSignsTimer = setInterval(() => {
       vitalSignsFinalHour = previous;
       await writeVitalSigns(previous, "last full hour", nowMs);
       pruneNeonBytes(VITAL_SIGNS_DIR, nowMs);
+      if (DATABASE_TRANSFER_DIR) pruneNeonBytes(DATABASE_TRANSFER_DIR, nowMs);
     }
     if (nowMs - vitalSignsPartialAt >= 600_000) {
       vitalSignsPartialAt = nowMs;
@@ -1079,14 +1172,19 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
     const memory = await hostMemoryReading().catch(() => null);
     let neonBytes: RunnerHeartbeat["neonBytes"] = null;
     try { neonBytes = neonBytesReading(); } catch {  }
+    let codeIdentity: RunnerHeartbeat["codeIdentity"] = null;
+    if (startedAt === null) {
+      try { codeIdentity = readCodeIdentity({ cwd: CODE_ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: new Date().toISOString(), fetch: false }); }
+      catch {  }
+    }
     for (let attempt = 0; attempt < 3; attempt++) {
       const at = new Date().toISOString();
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
-      if (startedAt === null && current === null) return;
 
       if (!exit && startedAt !== null && Date.parse(current?.value.lastCycleFinishedAt ?? "") >= Date.parse(startedAt)) return;
       const next = startedAt === null
-        ? { ...current!.value, beatAt: at, memory: memory ?? current!.value.memory ?? null, neonBytes: neonBytes ?? current!.value.neonBytes ?? null }
+        ? standingHeartbeat(current?.value ?? null, { at, testedSha: RUNNING_CODE_SHA, host: hostname(), codeIdentity,
+          releaseStaging: releaseStaging.status(), memory, neonBytes })
         : liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
           testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
           ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
@@ -1103,8 +1201,14 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
 
 const BEAT_BOUND_MS = 45_000;
 const lateBeat = () => console.error("  live cycle heartbeat did not answer in time; the next beat starts fresh");
-
-const sleep = (ms: number): Promise<void> => new Promise((r) => setTimeout(r, ms));
+/** Startup and the standing clock write which code runs, at most once a minute, whether or not research runs. */
+const STANDING_BEAT_MS = 60_000;
+let standingBeatAt = 0;
+const standingBeat = boundedBeat(async () => {
+  if (Date.now() - standingBeatAt < STANDING_BEAT_MS) return;
+  standingBeatAt = Date.now();
+  await writeLiveCycleBeat(null);
+}, BEAT_BOUND_MS, lateBeat);
 
 const POLL_MS = 60_000;
 const PAUSE_BEAT_MS = 30 * 60_000;
@@ -1137,8 +1241,10 @@ const CONTINUOUS_HUNTERS = process.env.WTP_CONTINUOUS_HUNTERS === "1";
 let hunterLaneChild: ChildProcess | null = null;
 async function runHunterLane(deadlineMs: number): Promise<void> {
   if (!CONTINUOUS_HUNTERS || canary || runtimeAdmissionsHeld) return;
+  if (!jobLaunchAllowed("hunter-lane")) return;
   const [run] = await runRuntimeChildren([{
     id: "hunter-lane",
+    databaseBytesPerRun: 1_907_347_669,
     executable: process.execPath,
     args: [...TS_CHILD, "scripts/hunter-lane.mts", `--provider=${provider}`],
     env: withPassDeadline(standingChildEnvironment("RESEARCH_CYCLE"), deadlineMs),
@@ -1173,10 +1279,12 @@ const auditPasses = auditPassClock({
 const censusMemory = routineProcessSlots();
 async function runPlatformCensus(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary || runtimeAdmissionsHeld) return;
+  if (!jobLaunchAllowed("platform-census")) return;
   const release = await censusMemory.acquire("platform-census-runner.mts", Date.now() + 60_000);
   try {
     const [run] = await runRuntimeChildren([{
-      id: "platform-census", executable: process.execPath,
+      id: "platform-census",
+      databaseBytesPerRun: 11_852_414, executable: process.execPath,
       args: [...TS_CHILD, "scripts/platform-census-runner.mts"],
       env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
     }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs,
@@ -1186,13 +1294,56 @@ async function runPlatformCensus(deadlineMs: number): Promise<void> {
   } finally { release(); }
 }
 
+/** Place pages are built by the runner, the one process holding the production write address. */
+const placePageMemory = routineProcessSlots({ admissionsOpen: () => !runtimeAdmissionsHeld });
+let placePagePauseUnread = false;
+async function placePagesAdmitted(): Promise<boolean> {
+  // Asked before every turn, so a breaker pause stops the run within one turn of the check that wrote it.
+  if (runtimeAdmissionsHeld || !jobLaunchAllowed("place-pages")) return false;
+  try {
+    const repos = await ownerRepositories();
+    if (repos && readIntents([...await readRunnerPauseIntents(repos)]).runnerPause.paused) return false;
+    placePagePauseUnread = false;
+  } catch (error) {
+    if (!placePagePauseUnread) console.error(`  place pages: the owner's pause could not be read (${error instanceof Error ? error.message : String(error)}); no turn starts until it reads`);
+    placePagePauseUnread = true;
+    return false;
+  }
+  return !runtimeAdmissionsHeld;
+}
+
+async function runPlacePageTurn(deadlineMs: number): Promise<PlacePageTurn> {
+  const release = await placePageMemory.acquire("rebuild-place-pages.mts", Math.min(deadlineMs, Date.now() + 60_000));
+  try {
+    const [run] = await runRuntimeChildren([{
+      id: "place-pages",
+      databaseBytesPerRun: 132_198_128, executable: process.execPath,
+      args: [...TS_CHILD, "scripts/rebuild-place-pages.mts"],
+      env: withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"), deadlineMs),
+    }], { cwd: CODE_ROOT, env: process.env, maxBufferBytes: 16 * 1024 * 1024, deadlineMs: deadlineMs + PLACE_PAGE_TURN_GRACE_MS,
+      onStarted: (_id, child) => { if (child.pid) release.observe?.(child.pid); },
+      onStdout: (_id, output) => process.stdout.write(output), onStderr: (_id, output) => process.stderr.write(output) });
+    const result = run?.status === 0 ? placePageTurnResult(run.stdout ?? "") : null;
+    if (!result) throw new Error(`PLACE_PAGE_TURN_FAILED: ${run?.errorMessage ?? run?.status ?? "no child result"}`);
+    return result;
+  } finally { release(); }
+}
+
+async function runPlacePages(deadlineMs: number): Promise<void> {
+  if (provider !== "postgres" || canary) return;
+  if (!jobLaunchAllowed("place-pages")) return;
+  await drainPlacePageQueue({ deadlineMs, admitted: placePagesAdmitted, turn: runPlacePageTurn, log: line => console.log(line) });
+}
+
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, budgetMs: CENSUS_LANE_BUDGET_MS, run: runPlatformCensus },
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, budgetMs: INTAKE_RUNTIME_BUDGET_MS, run: runIntakeRuntime },
   // The lane retires at its life; the wall covers the last task a worker still holds.
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
+  placePagesLane(runPlacePages),
   publishNowLane(runPublishNow),
+  placeMapsLane(runPlaceMaps),
 ], (outcome) => {
   if (outcome.state === "FAILED") {
     console.error(`  ${outcome.id}: standing operation failed — ${outcome.error}`);
@@ -1279,6 +1430,8 @@ async function stopScheduledOrderClock(): Promise<void> {
 }
 
 function runStandingRuntimeTick(reason: string, force = false): void {
+  if (!canary) void standingBeat();
+  checkReleaseForRestart();
   if (runtimeAdmissionsHeld) return;
   const launched = standingRuntimeScheduler.tick(Date.now(), force);
   if (launched.length > 0) {
@@ -1301,8 +1454,14 @@ function startStandingRuntimeClock(): void {
 
   ownerControlTimer = setInterval(() => {
     if (researchCycleActive && !canary && activeControlRead === null) {
-      activeControlRead = ownerSays().then(says => {
+      activeControlRead = ownerSays().then(async says => {
         if (says === "START_NOW") ownerWakePending = true;
+        const repos = await ownerRepositories(), child = researchCycleChild;
+        if (repos && child && !(await researchPlanningStates(repos,(await readRunnerControls(repos)).research)).length) {
+          researchStoppedByOwner = true;
+          await endOwnedProcessTree(child);
+          await honorStoppedHunts(repos,new Date().toISOString());
+        }
       }).catch(error => {
         console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
       }).finally(() => { activeControlRead = null; });
@@ -1434,6 +1593,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
   }
   const first = await inspectRuntimeRelease();
   if (first.state === "CURRENT") {
+    pendingRestart.clear();
     runtimeAdmissionsHeld = false;
     startStandingRuntimeClock();
     startAdminCopyClock();
@@ -1465,7 +1625,7 @@ async function reconcileRuntimeReleaseAtBoundary(): Promise<number | null> {
     return 2;
   }
   if (final.state === "CURRENT") {
-
+    pendingRestart.clear();
     runtimeAdmissionsHeld = false;
     if (reopenStandingClock) startStandingRuntimeClock();
     if (reopenAdminCopyClock) startAdminCopyClock();
@@ -1505,7 +1665,7 @@ const runtimeContracts = runtimeContractRetry({
   },
 });
 async function applyRuntimeContracts(sha: string, cwd: string): Promise<boolean> {
-  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", executable: process.execPath,
+  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", databaseBytesPerRun: 19_776, executable: process.execPath,
     args: [...TS_CHILD, "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
     cwd, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
@@ -1732,7 +1892,8 @@ async function sleepUnlessRunNow(totalMs: number): Promise<void> {
   if (ownerWakePending) { ownerWakePending = false; return; }
   const until = Date.now() + totalMs;
   while (Date.now() < until) {
-    await sleep(Math.min(CONTROL_WAKE_POLL_MS, until - Date.now()));
+    await pendingRestart.sleep(Math.min(CONTROL_WAKE_POLL_MS, until - Date.now()));
+    if (pendingRestart.target !== null) return;
 
     const says = await ownerSays();
     if (says === "START_NOW") return;
@@ -1790,13 +1951,16 @@ async function nextCycleWaitMs(cycleOk: boolean): Promise<number> {
 async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boolean }> {
   if (canary) return { ownerIntentsUnreadable: false };
   let says = await ownerSays();
-  while (says === "HOLD") {
-    await sleep(CONTROL_WAKE_POLL_MS);
+  while (says === "HOLD" && pendingRestart.target === null) {
+    await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
     says = await ownerSays();
   }
   return { ownerIntentsUnreadable: says === "UNREADABLE" };
 }
 
+// The breaker's first check writes this release's snapshot before anything can launch, including the standing clock a
+// release handoff reopens below.
+await jobTransferTick();
 let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();
 let cycle = 0;
 
@@ -1810,18 +1974,38 @@ console.log(
 
 console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
 
+jobBreakerTimer = setInterval(() => { void jobTransferTick(); },JOB_BREAKER_INTERVAL_MS);
+jobBreakerTimer.unref();
 startStandingRuntimeClock();
 startAdminCopyClock();
 await publishConsole();
 
 while (cycle < CYCLES) {
+try {
 
   const owner = await holdWhilePaused();
+
 
   const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary();
   if (wakeReleaseExit !== null) {
     handoffExitCode = wakeReleaseExit;
     break;
+  }
+  if (provider === "postgres" && !canary && !STAGING) {
+    const repos = await ownerRepositories();
+    if (repos && !(await researchPlanningStates(repos, (await readRunnerControls(repos)).research)).length) {
+      await honorStoppedHunts(repos,new Date().toISOString());
+      await publishConsole(true);
+      // The parent's control clock still sees a new Send; there is no research child to read data while stopped.
+      await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
+      continue;
+    }
+  }
+
+
+  if (!jobLaunchAllowed("research-cycle")) {
+    await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
+    continue;
   }
   cycle += 1;
   const startedAt = new Date().toISOString();
@@ -1839,27 +2023,30 @@ while (cycle < CYCLES) {
     boundedBeat(() => writeLiveCycleBeat(startedAt, exit), BEAT_BOUND_MS, lateBeat)();
   await beat();
   let cycleBeat = Promise.resolve();
-
-  let releaseDrain: Promise<void> | null = null;
   const cycleBeatTimer = setInterval(() => {
     if (!researchCycleActive) return;
     cycleBeat = beat();
-    releaseDrain ??= requestQueuedReleaseDrain().catch(error => {
-      console.error(`  runtime release inspection during work failed (${error instanceof Error ? error.name : "error"}); active work continues`);
-    }).finally(() => { releaseDrain = null; });
   }, 60_000);
   const result = await runOneCycle(owner).finally(async () => {
     researchCycleActive = false;
     researchCycleChild = null;
     clearInterval(cycleBeatTimer);
-    await Promise.all([cycleBeat, releaseDrain]);
+    await cycleBeat;
   }).catch(async error => {
     currentCycleErrors = error instanceof Error ? error.message : "research child launch failed";
     await lastBeat({ code: null, signal: null });
     throw error;
   });
-  await lastBeat({ code: result.exitCode, signal: result.signal });
   await activeControlRead;
+  if (researchStoppedByOwner) {
+    researchStoppedByOwner = false;
+    const repos = await ownerRepositories(), current = await repos?.runnerHeartbeat.read(RUNNER_ID);
+    if (repos && current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,current.revision,
+      {...current.value,lastCycleFinishedAt:new Date().toISOString(),lastCycleOk:null},new Date().toISOString());
+    console.log("Research stopped by the owner's Stop every hunt order; the next Send resumes retained work.");
+    continue;
+  }
+  await lastBeat({ code: result.exitCode, signal: result.signal });
   if (result.circuit) {
     const c = result.circuit;
     const headline = `${new Date().toISOString()} - cycle ${cycle} - CIRCUIT BROKEN - ${c.provider} latched until ${c.eligibleAt}`;
@@ -1963,9 +2150,18 @@ while (cycle < CYCLES) {
   if (cycle >= CYCLES) break;
   const waitMs = await nextCycleWaitMs(result.ok);
   await sleepUnlessRunNow(result.failedAtMs === undefined ? waitMs : Math.max(0, waitMs - (Date.now() - result.failedAtMs)));
+} catch (error) {
+  if (!isControlPlaneRequestTimeout(error)) throw error;
+  researchCycleActive = false;
+  researchCycleChild = null;
+  console.error(controlPlaneTimeoutLine(error));
+  await sleepUnlessRunNow(POLL_MS);
+}
 }
 }
 
+if (jobBreakerTimer !== null) clearInterval(jobBreakerTimer);
+await jobBreakerWork;
 if (standingRuntimeTimer !== null) clearInterval(standingRuntimeTimer);
 if (ownerControlTimer !== null) clearInterval(ownerControlTimer);
 await runtimeContracts.stop();

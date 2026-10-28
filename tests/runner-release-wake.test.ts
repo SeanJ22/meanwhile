@@ -10,6 +10,7 @@ import { spawnSync } from "node:child_process";
 import ts from "typescript";
 import { DEFAULT_HANG_KILL_MS } from "../scripts/runner-hang-watchdog.mts";
 import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
+import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
 
 const source = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
 const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & {
@@ -150,7 +151,7 @@ test("CURRENT uses initialized contracts with the running SHA and directory whil
       return ok;
     };
     const context = createContext({ AUTO_RELEASE_HANDOFF: true, ROOT: ".", CODE_ROOT: "/running-release", RUNNING_CODE_SHA: "a".repeat(40),
-      runtimeAdmissionsHeld: true, resumeRuntimeReleaseInstall: () => { calls.push("install recovery"); return null; },
+      runtimeAdmissionsHeld: true, pendingRestart: { clear: () => calls.push("restart cleared") }, resumeRuntimeReleaseInstall: () => { calls.push("install recovery"); return null; },
       inspectRuntimeRelease: async () => { calls.push("inspect"); return { state: "CURRENT" }; },
       applyRuntimeContracts,
       runtimeContractRetry: ({ run }: { run: typeof applyRuntimeContracts }) => {
@@ -173,7 +174,7 @@ test("CURRENT uses initialized contracts with the running SHA and directory whil
     assert.equal(context.runtimeAdmissionsHeld, false);
     assert.equal(resolved, false, "a pending migration cannot block collection");
     assert.deepEqual(requests, [["a".repeat(40), "/running-release"]]);
-    assert.deepEqual(calls, ["contracts initialized", "install recovery", "inspect", "routine clock", "Admin copy clock", "contracts requested", "contracts"]);
+    assert.deepEqual(calls, ["contracts initialized", "install recovery", "inspect", "restart cleared", "routine clock", "Admin copy clock", "contracts requested", "contracts"]);
     finish(contractsOk);
     await contractWork;
     assert.equal(resolved, true);
@@ -199,6 +200,7 @@ test("console children use the research idle guard", async () => {
     assert.ok(fn);
     let observed: number | undefined;
     const context = createContext({ CONSOLE_PUBLISHERS: [{ name: "fixture", args: [] }], TS_CHILD: [], ROOT: ".", CODE_ROOT: ".", process,
+      admitJobLaunch, INTERVAL_MIN:60,
       RUNTIME_NO_PROGRESS_MS: 600_000, standingChildEnvironment: () => process.env,
       recoverExitedWindowHolder: async () => {}, console: { log: () => {}, error: () => {} },
       runRuntimeChildren: async (_children: unknown, options: { noProgressMs?: number }) => {
@@ -206,7 +208,8 @@ test("console children use the research idle guard", async () => {
         return [{ status: 0, stdout: "", stderr: "" }];
       },
     });
-    await runInContext(stripTypeScriptTypes(fn) + `\n${name}('fixture')`, context);
+    const admission=source.match(/function jobLaunchAllowed\([\s\S]*?\n\}/)![0];
+    await runInContext(stripTypeScriptTypes(admission+"\n"+fn) + `\n${name}('fixture')`, context);
     assert.equal(observed, 600_000);
     console.log(`${name}: noProgressMs=${observed}`);
   }

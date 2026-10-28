@@ -35,6 +35,14 @@ test("settings reads transfer a body only when the revision changes and history 
     const log = await repo.mustRead("current", { settingHistory: { latestPerKey: 10 } });
     assert.equal(log.value.settingHistory?.length, 10);
     assert.equal(log.value.settingHistory?.at(-1)?.id, "change-1999");
+    const bodyRows = () => transferred.flat().filter(row=>String(row.id).startsWith("change-")&&Object.hasOwn(row,"value")).length;
+    const beforeBodies = bodyRows();
+    assert.deepEqual((await repo.mustRead("current", { settingHistory: { latestPerKey: 10 } })).value.settingHistory,log.value.settingHistory);
+    assert.equal(bodyRows(),beforeBodies,"unchanged section bodies do not cross again");
+    await pg.exec(`UPDATE cp_admin_setting_history SET value=value||'{"why":"changed externally"}'::jsonb WHERE id='change-1999'`);
+    assert.equal((await repo.mustRead("current", { settingHistory: { latestPerKey: 10 } })).value.settingHistory?.at(-1)?.why,"changed externally",
+      "a section's next read sees an update even when its head revision and timestamp stay unchanged");
+    assert.equal(bodyRows(),beforeBodies+1,"only the changed section row crosses");
     const settings = await repo.save(log, withSetting(log.value, { id: "next", key: "alerts.on", after: true, at: now, why: "turn on" }), now);
     assert.deepEqual(settingUndo(settings.value, "next"), { key: "alerts.on", value: false, why: "Undo: turn on", undoOf: "next" });
     await assert.rejects(repo.save(log, withSetting(log.value, { id: "stale", key: "alerts.on", after: false, at: now, why: "" }), now), /modified concurrently/);
@@ -127,12 +135,14 @@ test("a delayed revision-cache read uses its own cached body and cannot replace 
   const pause = Promise.withResolvers<void>();
   const started = Promise.withResolvers<void>();
   const initial = { ...defaultAdminConfig(now), settings: { "alerts.on": false } };
+  let stored = initial;
   const repo = pgAdminConfigRepository(memoryAggregateRepository<AdminConfig>("AdminConfig"), async (statement, params) => {
-    if (statement.startsWith("WITH saved")) { revision = 2; return [{ id: "current", revision, updated_at: now }]; }
+    if (statement.startsWith("WITH saved")) { revision = 2; stored=JSON.parse(String(params?.[2])); return [{ id: "current", revision, updated_at: now }]; }
     const observed = revision;
+    const observedValue=structuredClone(stored),unchanged=String(params?.[1])===String(observed);
     reads++;
     if (reads === 2) { started.resolve(); await pause.promise; }
-    return [{ id: "current", revision: observed, updated_at: now, value: params?.[1] === observed ? null : initial }];
+    return [{ id: "current", revision: observed, updated_at: now, __unchanged:unchanged,value: unchanged ? null : observedValue }];
   });
   const held = await repo.mustRead("current");
   const delayed = repo.mustRead("current");
@@ -176,8 +186,8 @@ test("a config read retries when a section changes after its revision was read",
     const first = await writer.save(null, { ...defaultAdminConfig(now), settings: { "alerts.on": false }, settingHistory: [] }, now);
     let headers = 0, changed = false;
     const reader = pgAdminConfigRepository(base, async (statement, params) => {
-      if (statement.startsWith("SELECT id, revision")) headers++;
-      if (statement.startsWith("SELECT id, value, ordinal") && !changed) {
+      if (/^SELECT id,\s*revision/.test(statement)) headers++;
+      if (statement.startsWith("SELECT picked.id") && !changed) {
         changed = true;
         await writer.save(first, withSetting(first.value, { id: "concurrent", key: "alerts.on", after: true, at: now, why: "" }), now);
       }

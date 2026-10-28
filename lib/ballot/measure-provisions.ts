@@ -23,7 +23,8 @@ export interface MeasureProvision {
 function provisions(records: readonly MeasureRecord[]): MeasureProvision[] {
   return records.flatMap(record => record.parts.map(part => ({
     id: part.id, contestId: record.contestId, kind: part.kind, label: part.label,
-    what: part.what, citesUrl: record.sourceUrl, writtenAt: record.writtenAt,
+    what: part.what, citesUrl: record.partSources?.[part.id]?.sourceUrl ?? record.sourceUrl,
+    writtenAt: record.partSources?.[part.id]?.writtenAt ?? record.writtenAt,
   })));
 }
 

@@ -4,15 +4,16 @@ import "../../ask/model.ts";
 import "../../hunt/settings.ts";
 import "../../design/copy-settings.ts";
 import "../../facts/clocks.ts";
+import "../../coverage/owed-table.ts";
 import { requestRoutineDue } from "../../civic-data/routine-due-request.ts";
 import { playbookUpdateAction } from "./playbook-action.ts";
 import { auditFlagAction, auditFlagRaiseAction } from "./audit-flag-action.ts";
 import { officialsCheckAction } from "./officials-action.ts";
+import { jobReleaseAction } from "./job-release-action.ts";
 import { appendDecisionIntent, RUNNER_ID, SNAPSHOT_ID } from "../admin-data.ts";
 import { fixConsequence, fixSubjectId, parseFixField, WHERE_SEPARATOR } from "../fix-queue.ts";
 import { addFixItem, completeFixItem, fixItems, fixDispatchNote, recordFixDispatch } from "../fix-list.ts";
 import { addUpdate } from "../updates.ts";
-import { OWED_ACTIONS } from "./owed-actions.ts";
 import { parseWhen, scheduledOrders, withScheduled, withoutScheduled, type ScheduledOrder } from "./scheduled-orders.ts";
 import {
   ANSWERED_IN_OWN_WORDS,
@@ -1264,10 +1265,10 @@ const REGISTRY: readonly RegisteredAction[] = [
     },
   },
 
-  ...OWED_ACTIONS,
   auditFlagAction,
   auditFlagRaiseAction,
   officialsCheckAction(),
+  jobReleaseAction,
 ];
 
 export const ACTION_REGISTRY: Readonly<Record<string, RegisteredAction>> = Object.freeze(

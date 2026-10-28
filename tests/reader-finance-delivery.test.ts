@@ -5,7 +5,7 @@ import { mkdtempSync, mkdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
-import { neonConfig } from "@neondatabase/serverless";
+import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import { campaignMoneyApiAnswer, campaignMoneyForTarget, currentOfficialIdentity, resolvedCandidacyForOfficial, officialFinanceIdentityMatches } from "../lib/funding/campaign-money.ts";
 import { ROSTER_READER_DISPOSITIONS } from "./fixtures/held-body-rosters.ts";
 import { fundingAnswerForTarget } from "../lib/funding/display.ts";
@@ -206,12 +206,11 @@ test("a missing canonical ballot identity projection cannot become a display-key
       if (family === "ballot-contests" && state === "AZ") return null;
       return base.stateAuthorities!.load(family, state);
     } } };
-  const previous = neonConfig.fetchFunction;
-  neonConfig.fetchFunction = async () => { throw new Error("Planted canonical database failure"); };
+  installReaderDatabaseQuery(async () => { throw new Error("Planted canonical database failure"); });
   try {
     await withReaderAuthorityEdge(edge, async () => {
       assert.equal((await readGenericBallotProjection("AZ")).kind, "STORE_UNREACHABLE");
 
     });
-  } finally { neonConfig.fetchFunction = previous; }
+  } finally { installReaderDatabaseQuery(undefined); }
 });

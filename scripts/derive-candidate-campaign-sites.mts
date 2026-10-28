@@ -1,4 +1,4 @@
-import { requireBallotState, stateBallotScope, stateBallotContractId } from "../lib/civic-data/state-scopes.ts";
+import { requireBallotState, stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { assignment } from "./cli-args.mts";
 import type { GenericBallotProjection } from "../lib/ballot/generic-projection.ts";
 import { deriveCandidateUniverse } from "../lib/hunt/candidate-universe.ts";
@@ -8,23 +8,33 @@ import { publishCandidatePortraits } from "../lib/ballot/portrait-refresh.ts";
 import { campaignSiteHostRefusal } from "../lib/candidates/campaign-site-verifier.ts";
 import { join } from "node:path";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
-import { promotedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
+import { confirmDerivedSourceUnchanged, withDerivedSourceContent } from "../lib/civic-data/derived-source-hash.ts";
+import { readCampaignSourceInputs, readCampaignProfileLinks } from "../lib/civic-data/campaign-source-inputs.ts";
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
+import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
+import { factClocks } from "../lib/facts/clocks.ts";
+import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
+import { settingDefinition } from "../lib/control-plane/settings.ts";
 import { derivedCampaignSitesContractId, DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope,
-  type DerivedCampaignSitesProjection, type CandidateLinksShape } from "../lib/civic-data/derived-campaign-sites.ts";
+  type DerivedCampaignSitesProjection } from "../lib/civic-data/derived-campaign-sites.ts";
 import {
   deriveCampaignSitesFromCaptures,
   derivedCampaignSitesCandidate,
+  derivedCampaignSitesFailedCandidate,
+  DERIVED_CAMPAIGN_SITES_PARSER,
   isPublishableCampaignSiteApproval,
   heldCampaignSiteReads,
   type HeldVerifyingRead,
   type DerivedCampaignSitesPlan,
   type HeldLinkedPublicationRead,
   type PublishableCampaignSiteApproval,
+  type CampaignPortraitWork,
 } from "../lib/civic-data/derived-campaign-site-writer.ts";
 import { promoteDerivedCandidate } from "../lib/civic-data/derived-child-receipt.ts";
-import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
@@ -45,10 +55,13 @@ prepareProductionCivicDataWrite();
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
 const state = requireBallotState(assignment(process.argv, "state") ?? "");
-const PROFILES = requiredManualProductionContract(stateBallotContractId("candidate-profiles", state));
+let sourceInputs: readonly DerivedInputRef[] | null = null;
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
-  await promoteDerivedCandidate(store, derivedCampaignSitesContractId(state), candidate, now);
+  await promoteDerivedCandidate(store, derivedCampaignSitesContractId(state),
+    sourceInputs ? withDerivedSourceContent(candidate, sourceInputs) : candidate, now,
+    // A completed or stopped portrait pass saves its progress even when it found no new image.
+    { confirmUnchanged: false });
 }
 
 async function readApprovals(): Promise<PublishableCampaignSiteApproval[] | { readonly unreadable: string }> {
@@ -141,27 +154,13 @@ async function linkedPublicationReads(vaultRoot: string, approvals: readonly Pub
 }
 
 async function readPrior() {
-  const priorRead = await readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state), { store, bypassCache: true, now });
+  const priorRead = await readPromotedCivicData<DerivedCampaignSitesProjection>(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state), { store,  now });
   if (priorRead.kind === "PROMOTED") rememberStatePublicationPrior(store, priorRead.projection);
   const priorInput = priorRead.kind === "PROMOTED" ? promotedInputRef(DERIVED_CAMPAIGN_SITES_RECORD_CLASS,
     derivedCampaignSitesScope(state), priorRead.metadata.versionId, priorRead.value, priorRead.metadata.promotedAt) : null;
   return priorRead.kind === "PROMOTED" && priorInput?.kind === "PROMOTED_VERSION"
     ? { input: priorInput, projection: priorRead.value } : priorRead.kind === "NOT_RECORDED" ? null
       : { unreadable: `${priorRead.kind}${"detail" in priorRead ? `: ${priorRead.detail}` : ": no exact promoted version reference"}` };
-}
-
-async function readProfiles() {
-  const profilesRead = await readPromotedCivicData<{ readonly links?: { readonly links?: Readonly<Record<string, CandidateLinksShape>> } }>(
-    PROFILES.recordClass, PROFILES.scope, { store, bypassCache: true, now },
-  );
-  const profilesInput = profilesRead.kind === "PROMOTED"
-    ? promotedInputRef(PROFILES.recordClass, PROFILES.scope, profilesRead.metadata.versionId, profilesRead.value, profilesRead.metadata.promotedAt)
-    : null;
-  return profilesRead.kind === "PROMOTED" && profilesInput !== null && profilesInput.kind === "PROMOTED_VERSION"
-    ? { input: profilesInput, links: profilesRead.value.links?.links ?? {} }
-    : profilesRead.kind === "NOT_RECORDED"
-      ? null
-      : { unreadable: `${profilesRead.kind}${"detail" in profilesRead ? `: ${profilesRead.detail}` : ": the promoted version names no version or promotion time"}` };
 }
 
 async function readApprovedPages(approvals: readonly PublishableCampaignSiteApproval[]) {
@@ -185,7 +184,36 @@ async function readCaptures(approvals: readonly PublishableCampaignSiteApproval[
 }
 
 async function main(): Promise<void> {
-  const profiles = await readProfiles();
+  const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
+  let progress: CampaignPortraitWork | undefined;
+  let retryMinutes = factClocks(null).retryMinutes("portrait");
+  if (controlPlane) {
+    try {
+    const sql = neon(controlPlane);
+    sourceInputs = await readCampaignSourceInputs(store, state, async (text, params = []) => await sql.query(text, [...params]));
+    const [config] = await sql.query("SELECT value #> '{settings,facts.retryMinutes}' AS retry FROM cp_admin_config WHERE id=$1", [ADMIN_CONFIG_ID]);
+    const heldRetry = config?.retry;
+    if (settingDefinition("facts.retryMinutes")?.validate(heldRetry)) retryMinutes = factClocks({
+      ...defaultAdminConfig(), settings: { "facts.retryMinutes": heldRetry },
+    }).retryMinutes("portrait");
+    const head = await store.readSourceHead(DERIVED_CAMPAIGN_SITES_RECORD_CLASS, derivedCampaignSitesScope(state));
+    progress = head ? await store.readCandidateField(head.versionId, ["normalizedPayload", "portraitWork"]) as CampaignPortraitWork | undefined : undefined;
+    const confirmed = await confirmDerivedSourceUnchanged({ store, sourceId: "candidate-campaign-site-chain",
+      recordClass: DERIVED_CAMPAIGN_SITES_RECORD_CLASS, scope: derivedCampaignSitesScope(state), parserVersion: DERIVED_CAMPAIGN_SITES_PARSER,
+      sourceContentInputs: sourceInputs, now,
+      complete: Boolean(progress?.inputsComplete && progress.retryMinutes === retryMinutes && !progress.pending.length &&
+        (progress.nextDueAt === null || Date.parse(progress.nextDueAt) > Date.parse(now))) });
+    if (confirmed) {
+      console.log("RCD_RECEIPT=" + JSON.stringify({ source: derivedCampaignSitesContractId(state), ...sourceHashReceiptFields(confirmed), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+      return;
+    }
+    } catch (error) {
+      await finish(derivedCampaignSitesFailedCandidate(state, now,
+        `The campaign source inputs could not be read: ${error instanceof Error ? error.message : String(error)}`));
+      return;
+    }
+  }
+  const profiles = await readCampaignProfileLinks(store, state);
   let prior = await readPrior();
   const approvals = await readApprovals();
   const pass = await deriveCampaignSitesFromCaptures({ state, approvals, prior, profiles, now, readCaptures });
@@ -195,11 +223,14 @@ async function main(): Promise<void> {
   if (!plan && !(prior && "unreadable" in prior)) plan = (await deriveCampaignSitesFromCaptures({
     state, approvals: [], prior, profiles: null, now, readCaptures,
   })).plan;
+  if (plan && progress) plan = { ...plan, portraitWork: progress };
   prior = null;
   let subjects: ReturnType<typeof campaignSiteSubjects> = new Map();
+  let subjectsComplete = false;
   try {
-    const ballotRead = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store, bypassCache: true, now });
+    const ballotRead = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", state), { store,  now });
     if (ballotRead.kind === "PROMOTED") {
+      subjectsComplete = pass.plan !== null;
       const groups = new Map<string, BallotSet[]>();
       for (const ballot of Object.values(ballotRead.value.ballots)) {
         const key = `${ballot.election.state}:${ballot.election.date.slice(0, 4)}`;
@@ -216,21 +247,26 @@ async function main(): Promise<void> {
     }
   } catch (error) { console.error(`State candidate portrait subjects could not be read: ${error instanceof Error ? error.message : String(error)}`); }
   let sites=new Map<string,string[]>();
-  try {sites=await foundPortraitSites([...subjects.keys()]);} catch(error){console.error(`Found campaign portrait pages could not be read: ${error instanceof Error ? error.message : String(error)}`);}
+  try {sites=await foundPortraitSites([...subjects.keys()]);} catch(error){subjectsComplete=false;console.error(`Found campaign portrait pages could not be read: ${error instanceof Error ? error.message : String(error)}`);}
   if(profiles && !("unreadable" in profiles)) for(const subject of subjects.values())
     sites.set(subject.candidacyId,[...sites.get(subject.candidacyId) ?? [],...subject.readerKeys.flatMap(key=>profiles.links[key]?.campaign?.url ? [profiles.links[key].campaign!.url] : [])]);
   for(const record of plan?.records ?? [])sites.set(record.candidacyId,[...sites.get(record.candidacyId) ?? [],record.campaign.url]);
   let publishedPortrait=false;
-  if (plan) await publishCandidatePortraits({
-    plan, sites, subjects: [...subjects.values()], now,
+  const stop = new AbortController(), deadline = passDeadlineFromEnv();
+  const timer = Number.isFinite(deadline) ? setTimeout(() => stop.abort(Error("PASS_TIME_BUDGET")), Math.max(0, deadline - 45_000 - Date.now())) : undefined;
+  timer?.unref();
+  process.once("SIGTERM", () => stop.abort(Error("PASS_TIME_BUDGET")));
+  if (plan) plan = await publishCandidatePortraits({
+    plan, sites, subjects: [...subjects.values()], now, signal: stop.signal, retryMinutes, subjectsComplete,
     onPublished: async published => {
       await finish(derivedCampaignSitesCandidate(state, published, now));
       publishedPortrait=true;
     },
   });
+  clearTimeout(timer);
   // A portrait publication already includes the site's held facts. A failed
   // campaign-link pass cannot replace that result or mark its child as failed.
-  if (!publishedPortrait) await finish(pass.candidate);
+  await finish(plan && (pass.plan || publishedPortrait) ? derivedCampaignSitesCandidate(state, plan, now) : pass.candidate);
 }
 
 

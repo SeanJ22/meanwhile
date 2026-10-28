@@ -168,14 +168,20 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "RB-A10_zip_locations": { phase: "expand", why: "Adds imported ZIP display points; existing memberships, identities and readers are unaffected." },
+  "WR-01_fact_confirmations": { phase: "expand", why: "Adds scoped source confirmations and their reader view without rewriting existing facts." },
   "RB-A8_count_hour": { phase: "expand", why: "Adds hourly counters and their writer hooks before the compact observer is deployed.",
     // Its trigger on fact, then a 1M-row backfill, then triggers on civic_data_promotions and entity deadlocked with the runner at the 9:47 PM EDT Oct 24 build.
     lockFirst: ["fact", "civic_data_promotions", "entity"] },
-
+  "GB-01_la_metro_boards": { phase: "expand", why: "Moves LA Metro's boards filed under Oregon to their California government and its places, keeping their ids and facts; no table or column changes." },
+  "RB-A4_entity_places": { phase: "expand", why: "Adds the host-county filing marker after RB-A1 supplies boundary-year identity." },
   "RB-A2_place_boundaries": { phase: "contract", why: "Extends RB-A1's year-aware place tables after they exist, allows source-unknown shares and indexes source polygons without changing readers." },
+  "RB-A7_bootstrap_expand": { phase: "expand", why: "Retains changes from the preceding deployment while the first ready pages are built.", lockFirst: ["fact", "civic_data_promotions", "entity", "entity_place", "entity_host", "entity_external_id", "civic_data_candidate_events", "rebuild_queue"] },
+  "RB-A7_bootstrap_contract": { phase: "contract", why: "Removes temporary compatibility hooks after writers queue pages directly.", lockFirst: ["fact", "civic_data_promotions", "entity", "entity_place", "entity_host", "entity_external_id", "civic_data_candidate_events", "rebuild_queue"] },
+  "RB-A7_expand": { phase: "expand", why: "Leases queued page rebuilds and indexes the entities each saved reader page uses.",
+    // Dependency foreign keys also lock entity; take it before queue DDL while publishers write both.
+    lockFirst: ["entity", "rebuild_queue"] },
   "RB-A3_expand": { phase: "expand", why: "Adds place rebuild requests and hourly fact counts alongside the live fact table before the shared door writes them." },
   "0051_rb_a1_shared": { phase: "contract", why: "Widens the existing entity kinds and place key, preserving old rows with unknown year zero; installs the reader id lookup and fills existing event identities after deploy.",
-    // Rebuilding the entity_place key and indexing 593k external ids takes about 1.7s at production size.
     contractStatementTimeoutMs: 10_000 },
   "0050_pk01_saved_picks": { phase: "expand", why: "Adds private ballot storage before the new save endpoint serves readers." },
   "0045_src_mn_retire_campaign_load": { phase: "contract", why: "After the native writer is retired, deletes its state campaign load and publications while preserving captured source files." },
@@ -396,6 +402,17 @@ const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   },
   "0039_sb01b_state_pointer_retirement": { phase: "expand", why: "Permits retiring replaced national pointers only after every exact state replacement is GOOD; existing writers retain their mutation rules." },
   "DB-01_read_versions": { phase: "expand", why: "Adds hourly runner transfer aggregates, per-scope clock versions and targeted open-flag indexes; existing readers and writers keep working." },
+  "VB-01_read_model_fingerprints": {phase: "expand", why: "Adds nullable validated candidate and promotion fingerprints before readers compare current version identities without loading stored models."},
+  "VB-01_candidate_vault": {phase: "expand", why: "Admits vault-backed candidates through their immutable model fingerprint while preserving the exact legacy payload guard and all atomic publication checks."},
+  "DB-05_source_hash": { phase: "expand", why: "Extends the unchanged source confirmation with an atomic raw-hash and parser comparison; every existing event shape remains valid." },
+  "DB-05_keyed_rows": { phase: "expand", why: "Materializes government, registry and meeting members as keyed rows in the same transaction as their published pointer; existing payload readers remain valid.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
+  "DB-05_venue_rows": { phase: "expand", why: "Keeps source/body/tenant venue lookups on exact rows with complete shared source and placement evidence.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
+  "DB-05_lookup_rows": { phase: "expand", why: "Materializes current registry holders, member identities, federal people, governments and wiring as keyed rows while retaining their immutable shared payload parts.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
+  "DB-05_member_office_rows": { phase: "expand", why: "Materializes exact member offices and cited source reviews by state from the current GOOD editions; existing inline and payload-part readers remain valid.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
+  "DB-05_source_checks": { phase: "expand", why: "Adds one source check row per independently refreshed source, so current check times can reach readers without reading or rewriting the containing package." },
+  "DB-05_federal_money_rows": { phase: "expand", why: "Extends the same transactional keyed rows to source-native federal facts and registration bodies/divisions, with an exact native recipient index; existing payload readers stay valid.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts"] },
+  "DB-05_prl_rows": { phase: "expand", why: "Adds exact PRL person/profile rows and small dataset headers alongside existing published payloads before person readers select them.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts", "civic_data_rows"] },
+  "DB-03_process_transfer": { phase: "expand", why: "Adds defaulted process counters to the existing daily and hourly transfer tables before the accounting writer uses them; existing readers and writers keep working." },
 };
 
 /** The declaration for a tag, or null when there is none. Never a default. */

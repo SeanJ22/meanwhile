@@ -22,6 +22,11 @@ import { isCensusPlaceholderDivision } from "../../lib/registry/census-placehold
 import type { RegistrationReadModel } from "../../lib/registration/candidate.ts";
 import { manualEdgeEntry, provenEdgeEntry } from "./promoted-edge-entry.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../../lib/routing/everyday-data-plane.ts";
+import { PLACE_PAGES_SQL, READY_PLACE_SQL } from "../../lib/reader/place.ts";
+import { composePlaceRow } from "../../lib/reader/place-decode.ts";
+import { placeBuildInput } from "../../lib/reader/place-builder.ts";
+import { fixturePostalArea } from "./zip-location.ts";
+import type { PlaceInput } from "../../lib/reader/place-types.ts";
 
 export interface ReaderValue { readonly value: unknown; readonly versionId: string }
 export interface ReaderValues {
@@ -64,14 +69,15 @@ function canonicalRows(sql: string, params: readonly unknown[]): Record<string, 
     || states.includes(meetingStateOf(sitting.bodyId));
   const stateScoped = (p: PromotedProjection) => keys.some(prefix => p.scope.startsWith(String(prefix).replace(/%$/, ""))) || doorPrefixes.some(prefix => p.scope.startsWith(prefix));
   const additional: Record<string, unknown>[] = [];
-  if (selectedKeys && sql.includes("AS local_divisions") && params[2] === "CENSUS_GEOGRAPHY") {
+  const accompanying = params.slice(1);
+  if (selectedKeys && sql.includes("AS local_divisions") && accompanying[0] === "CENSUS_GEOGRAPHY") {
     const census = fixture().values?.authority?.["census-districts"];
     const value = census?.value as CensusDistrictEdge | undefined;
-    const state = String(params[5]);
-    const divisionIds = params[6] as readonly string[];
+    const state = String(accompanying[3]);
+    const divisionIds = accompanying[4] as readonly string[];
     const registration = held.promotions.get(`REGISTRATION:US-${state}:registration:v1`)?.payload as RegistrationReadModel | undefined;
-    const types = params[4] as readonly string[];
-    const canonicalKeys = value && typeof params[7] === "string" ? [...new Set((value.codes[params[7]] ?? []).flatMap(([index]) => {
+    const types = accompanying[2] as readonly string[];
+    const canonicalKeys = value && typeof accompanying[5] === "string" ? [...new Set((value.codes[accompanying[5]] ?? []).flatMap(([index]) => {
       const { ref } = value.containers[index];
       if (!types.includes(ref.type) || ref.stateAbbr !== state && !ref.memberStates?.includes(state)) return [];
       const id = censusWorkDivision(ref);
@@ -82,11 +88,11 @@ function canonicalRows(sql: string, params: readonly unknown[]): Record<string, 
       geography: value ? censusRows(value, state).filter(row => row.row_kind === "scope" || types.includes(String(row.type))) : [],
       local_divisions: registration?.divisions.filter(row => divisionIds.includes(row.ocdId)) ?? [], canonical_keys: canonicalKeys }] });
   }
-  const zipKey = zipPeople ? `STATE_LEGISLATOR:US-${String(params[5])}:openstates-people:v1` : null;
-  const registryKey = sql.includes("AS zip_registry") ? `REGISTRY_RUNTIME_BINDING:US-${String(params[5])}:reader-registry-runtime` : null;
-  const officialKey = sql.includes("AS zip_official") ? `STATE_LEGISLATOR:US-${String(params[5])}` : null;
-  const sourceKeys=sql.includes("AS zip_sources") ? [`FEDERAL_DIRECTORY:US-${String(params[5])}:current-congress-directory`,
-    ...PEOPLE_SOURCE_IDS.map(source=>`${peopleSourceRecordClass(source)}:${peopleSourceScope(`US-${String(params[5])}`,source)}`)] : [];
+  const zipKey = zipPeople ? `STATE_LEGISLATOR:US-${String(accompanying[3])}:openstates-people:v1` : null;
+  const registryKey = sql.includes("AS zip_registry") ? `REGISTRY_RUNTIME_BINDING:US-${String(accompanying[3])}:reader-registry-runtime` : null;
+  const officialKey = sql.includes("AS zip_official") ? `STATE_LEGISLATOR:US-${String(accompanying[3])}` : null;
+  const sourceKeys=sql.includes("AS zip_sources") ? [`FEDERAL_DIRECTORY:US-${String(accompanying[3])}:current-congress-directory`,
+    ...PEOPLE_SOURCE_IDS.map(source=>`${peopleSourceRecordClass(source)}:${peopleSourceScope(`US-${String(accompanying[3])}`,source)}`)] : [];
   const queryKeys = [...keys,...sourceKeys,...(zipKey?[zipKey]:[]),...(registryKey?[registryKey]:[]),...(officialKey?[officialKey]:[])];
   const rows: Record<string, unknown>[] = [...held.promotions.values()].filter(p => selectedOutcomes
     ? p.recordClass === "MEETING_OUTCOME" && (stateScoped(p) || exactKeys.includes(p.key)
@@ -138,7 +144,7 @@ function patchStore() {
     });
     return Response.json(request.queries ? { results } : results[0]);
   };
-  for (const method of ["readPromotion", "readPromotions", "readPromotionIdentity", "readPromotionIdentities", "readCandidate", "readCandidates", "readCandidateProof", "readCandidateProofs", "readPublishedCandidateMetadata", "listPromotionScopes"] as const) {
+  for (const method of ["readPromotion", "readPromotions", "readPromotionIdentity", "readPromotionIdentities", "readCandidate", "readCandidates", "readCandidateProof", "readCandidateProofs", "readPublishedCandidateMetadata", "readSourceHead", "readSlimRosters", "readHistoricalRosterIdentities", "listPromotionScopes"] as const) {
     Object.defineProperty(PostgresRoutineDataStore.prototype, method, { configurable: true, writable: true,
       value: function(...args: unknown[]) { const held = fixture().store; return Reflect.apply(held[method], held, args); } });
   }
@@ -215,15 +221,10 @@ export function activateCanonicalFixture(key: string): void {
   } as unknown as ReaderAuthorityEdgeBundle;
   if (held.values) { clearPromotedReadModelCache(); enterReaderAuthorityEdge(bundle); }
   if(input.authority?.["meeting-outcomes"]) primeOutcomeProjection(input.authority["meeting-outcomes"].value as OutcomeSnapshot,input.authority["meeting-outcomes"].versionId);
-  const readFacts: Query = async (sql,params=[]) => {
+  const fixturePlaceRow = async(params: readonly unknown[]) => {
     const values = [...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];
     const registries = values.filter(p => p.recordClass === "REGISTRY_RUNTIME_BINDING").map(p => p.payload as RegistryRuntimeReadModel);
     const rosters = registries.flatMap(r => r.bodyRosters ?? []);
-    if (!sql.includes("AS registration_held") && !sql.includes("WITH RECURSIVE ancestors AS")) {
-      if (sql.startsWith("SELECT id FROM entity")) return registries.flatMap(r => r.registry.bodies).filter(b => (params[0] as string[]).includes(meetingStateOf(b.id))).map(b => ({id:b.id}));
-      if (sql.includes("SELECT place_id FROM entity_place")) return (params[0] as string[]).map(id => ({place_id:id.split("#")[0]}));
-      return rosterFactReader(rosters)(sql,params);
-    }
     const state = String(params[0]), named = params[2] as string[], all = params[4] === true;
     const divisions = [...new Set([...(params[1] as string[]), ...(params[8] ? named.filter(id => id.startsWith("ocd-division/")).map(id => id.split("#")[0]) : [])])];
     const registration = values.find(p => p.recordClass === "REGISTRATION" && p.scope === `US-${state}:registration:v1`)?.payload as RegistrationReadModel | undefined;
@@ -241,8 +242,48 @@ export function activateCanonicalFixture(key: string): void {
       .map(p => ({scope:p.scope,payload:structuredClone(p.payload),current_version_id:p.versionId,confirmation:p.latestConfirmation ? serializeUnchangedConfirmation(p.latestConfirmation) : null}));
     const registry = registries.find(value => value.registry.bodies.some(body => meetingStateOf(body.id) === state)) ?? null;
     const everydayRouting = values.find(p => p.recordClass === EVERYDAY_ROUTING_POINTER.recordClass && p.scope === EVERYDAY_ROUTING_POINTER.scope)?.payload ?? null;
-    return [{registry,everyday_routing:everydayRouting,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
+    return [{division_ids:divisions,registry,everyday_routing:everydayRouting,registration_held:registration !== undefined,governments,divisions:registrationDivisions,entities,fields:[],rosters:await rosterFactReader(rosters)("'member:%'",[ids]),comments:[],sittings:[],meeting_rows,parts:{}}];
   };
+  const pages = new Map<string,Promise<Record<string,unknown>[]>>();
+  const savedRows = (input: PlaceInput,ready: boolean): Promise<Record<string,unknown>[]> => {
+    const key=JSON.stringify([input,ready]);
+    let saved=pages.get(key);
+    if(!saved){
+      saved=(async()=>{
+        const [row]=await fixturePlaceRow([input.state,input.divisionIds,input.bodyIds??[],`ocd-division/country:us/state:${input.state.toLowerCase()}`,
+          input.allBodies??false,input.includeHistory??false,true,null,input.neighbors??false,input.namedDivisionIds??[]]);
+        if(ready)return [{page:await composePlaceRow(input,row),version:1}];
+        return [{page_id:input.divisionIds[0]??input.bodyIds?.[0]??`ocd-division/country:us/state:${input.state.toLowerCase()}`,
+          page_kind:input.bodyIds?.length?"body":input.divisionIds.length?"place":"empty",built_at:new Date().toISOString(),body_ids:input.bodyIds??[],row}];
+      })();
+      pages.set(key,saved);
+    }
+    return saved.then(rows=>structuredClone(rows));
+  };
+  const readFacts: Query = async (sql,params=[]) => {
+    if(sql===READY_PLACE_SQL){
+      const id=String(params[0]),state=id.startsWith("zip:")?fixturePostalArea(id.slice(4))?.state:meetingStateOf(id);
+      if(!state)throw new Error("The fixture page must name a held state");
+      const input=await placeBuildInput(id,id.startsWith("zip:") || id.startsWith("ocd-division/") && !id.includes("#")?"place":"body",state);
+      return savedRows({...input,includeHistory:params[1]===true},true);
+    }
+    if(sql===PLACE_PAGES_SQL)return savedRows({state:String(params[0]),divisionIds:params[1] as string[],bodyIds:params[2] as string[],
+      namedDivisionIds:params[3] as string[],neighbors:params[4]===true,allBodies:params[5]===true,includeHistory:params[6]===true},false);
+    if(sql.includes("AS registration_held") || sql.includes("WITH RECURSIVE ancestors AS"))return fixturePlaceRow(params);
+    const values=[...(held.store as unknown as {promotions:Map<string,PromotedProjection>}).promotions.values()];
+    const registries=values.filter(p=>p.recordClass==="REGISTRY_RUNTIME_BINDING").map(p=>p.payload as RegistryRuntimeReadModel);
+    const rosters=registries.flatMap(r=>r.bodyRosters??[]);
+    if(sql.startsWith("SELECT id FROM entity")){
+      const sourceStore=held.meetings??held.store;
+      const scopes=await sourceStore.listPromotionScopes?.(["MEETING"])??[];
+      const pointers=await sourceStore.readPromotions<MeetingsSnapshot>("MEETING",scopes.map(p=>p.scope));
+      const ids=new Set([...registries.flatMap(r=>r.registry.bodies.map(b=>b.id)),...pointers.flatMap(p=>p.payload.meetings.flatMap(m=>m.bodyId??[]))]);
+      return [...ids].filter(id=>(params[0] as string[]).includes(meetingStateOf(id))).sort().map(id=>({id}));
+    }
+    if(sql.includes("SELECT place_id FROM entity_place"))return(params[0] as string[]).map(id=>({place_id:id.split("#")[0]}));
+    return rosterFactReader(rosters)(sql,params);
+  };
+
   installFactReader(readFacts);
   installReaderDatabaseQuery(async statements => Promise.all(statements.map(statement =>
     canonicalRows(statement.text, statement.params) ?? readFacts(statement.text, statement.params))));

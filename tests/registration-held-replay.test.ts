@@ -1,3 +1,4 @@
+import { factRefreshBounds } from "../lib/civic-data/source-change-cadence.ts";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
@@ -86,7 +87,7 @@ test("the current registration parser replays original held listings after the r
   assert.equal(unproven.state, "TEMPORAL_INVALID", "a bare older capture remains refused");
   const outcome = await processRegisteredRoutineCandidate(store, target.contractId, candidate, replayAt);
   assert.equal(outcome.promoted?.versionId, candidate.id, outcome.candidate.failureDetail ?? "");
-  const read = await readRegistrationProjection(target.state, { store, now: replayAt, bypassCache: true });
+  const read = await readRegistrationProjection(target.state, { store, now: replayAt });
   assert.equal(read.kind, "PROMOTED");
   const delivered = read.value as RegistrationReadModel;
   assert.ok(delivered.governments!.length > 0);
@@ -101,8 +102,8 @@ test("the current registration parser replays original held listings after the r
   const clock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
   assert.equal(clock.lastSucceededAt, REGISTRATION_HELD_RETRIEVED_AT);
   assert.equal(clock.lastSucceededObservedAt, recheckedAt, "reparse does not claim a new publisher check");
-  assert.equal(routineTaskDue(task, clock, Date.parse(recheckedAt) + task.cadenceMs - 1), false);
-  assert.equal(routineTaskDue(task, clock, Date.parse(recheckedAt) + task.cadenceMs), true);
+  assert.equal(routineTaskDue(task, clock, Date.parse(recheckedAt) + Math.max(task.minimumRefreshMs ?? factRefreshBounds(task).minimumRefreshMs, Math.min(task.cadenceMs, task.freshnessWindowMs ?? factRefreshBounds(task).freshnessWindowMs)) - 1), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse(recheckedAt) + Math.max(task.minimumRefreshMs ?? factRefreshBounds(task).minimumRefreshMs, Math.min(task.cadenceMs, task.freshnessWindowMs ?? factRefreshBounds(task).freshnessWindowMs))), true);
   const normal = registrationCandidate({ target, reference, receipt: heldRegistrationReceipt(), previous: delivered });
   assert.notEqual(normal.id, candidate.id, "different replay evidence has a distinct immutable candidate identity");
   const unchanged = await processRegisteredRoutineCandidate(store, target.contractId, normal, replayAt);

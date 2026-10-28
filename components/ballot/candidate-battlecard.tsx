@@ -1,7 +1,9 @@
 "use client";
 
+import { useHydrated } from "@/hooks/use-hydrated";
+
 import { PersonCard } from "@/components/ui/person-card";
-import { CardGapContext, CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { CardSourceContext } from "@/components/ui/card-source-context";
 import { useEffect, useState } from "react";
 
@@ -18,7 +20,7 @@ import type { PrlReaderProfile } from "@/lib/sources/prl/snapshot";
 import { incumbencyLabel, type Incumbency, type IncumbencyGap } from "@/lib/ballot/incumbency";
 import { SpeakYourMind } from "@/components/speak/speak-your-mind";
 import { partyColorVar } from "@/lib/officials/party-color";
-import { readerPartyLabel } from "@/lib/text/reader-names";
+import { readerPartyLabel, readerText } from "@/lib/text/reader-names";
 import type { Tier } from "@/lib/ocd/tiers";
 import { PositionsSection } from "@/components/officials/positions-section";
 import { PublicStatementsProfile } from "@/components/officials/public-statements-profile";
@@ -72,6 +74,7 @@ export function CandidateBattlecard({
   sections?: Partial<Record<BattlecardSectionId, React.ReactNode>>;
 
 }) {
+  const hydrated = useHydrated();
   const [open, setOpen] = useState(false);
   const [prlProfile, setPrlProfile] = useState<PrlReaderProfile | null>(null);
 
@@ -90,6 +93,8 @@ export function CandidateBattlecard({
       <button
         type="button"
         data-battlecard-pill
+        disabled={!hydrated}
+        aria-busy={!hydrated}
         onClick={() => {
           captureEvent({ type: "CARD_OPEN", cardId: `BATTLECARD:${subjectId}`, cardKind: "BATTLECARD" });
           setOpen(true);
@@ -97,7 +102,7 @@ export function CandidateBattlecard({
         aria-haspopup="dialog"
         aria-expanded={open}
 
-        className="battlecard-cta w-full"
+        className="battlecard-cta w-full disabled:cursor-wait disabled:opacity-60"
       >
         View Battlecard
       </button>
@@ -107,13 +112,13 @@ export function CandidateBattlecard({
           className="account-modal-overlay" data-candidate-battlecard data-candidate-subject={subjectId} data-tier={tier ?? undefined}
           role="dialog"
           aria-modal="true"
-          aria-label={name}
+          aria-label={readerText(name, "name")}
           onClick={(event) => {
             if (event.target === event.currentTarget) setOpen(false);
           }}
         >
-          <CardSourceContext.Provider value={null}><CardGapContext.Provider value={null}><PersonCard
-            title={name}
+          <CardSourceContext.Provider value={null}><PersonCard
+            title={readerText(name, "name")}
             className="account-modal"
             onClose={() => setOpen(false)}
             subject={{ type: "CANDIDATE", id: subjectId }}
@@ -133,7 +138,7 @@ export function CandidateBattlecard({
                     Candidate
                   </p>
                   <p className="truncate t-title font-semibold tracking-tight">
-                    {name}
+                    {readerText(name, "name")}
                   </p>
 
                   <div className="id-chip-row">
@@ -164,7 +169,7 @@ export function CandidateBattlecard({
               <OfficialActions context={speakContext} divisionIds={divisionIds} subjectId={contactHolder?.id ?? subjectId} gapWhenEmpty={actionsGap} />
               <div className="mt-5"><SpeakYourMind subjectType="CANDIDATE" subjectId={subjectId} subject={name} context={speakContext ?? undefined} /></div>
             </>}
-          /></CardGapContext.Provider></CardSourceContext.Provider>
+          /></CardSourceContext.Provider>
         </div>
       )}
     </>

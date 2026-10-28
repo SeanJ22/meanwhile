@@ -39,6 +39,7 @@ interface Slot {
   retry: (() => void) | null;
   gaveUpAt: string | null;
   params: Readonly<Record<string, string>>;
+  checkedAt: number | null;
 }
 
 export class LiveSync {
@@ -48,13 +49,32 @@ export class LiveSync {
   private readonly slots = new Map<SectionId, Slot>();
   private readonly listeners = new Set<() => void>();
   private snapshotCache: Readonly<Record<SectionId, SectionState>> | null = null;
+  private active: ReadonlySet<SectionId>;
+  private screen: string;
+  private pulseAt: number | null = null;
+  private enabled = true;
 
   private readonly opts: { readonly scope: string; readonly fetch: SyncFetch; readonly schedule: Schedule };
 
-  constructor(opts: { readonly scope: string; readonly fetch: SyncFetch; readonly schedule: Schedule }) {
+  constructor(opts: { readonly scope: string; readonly fetch: SyncFetch; readonly schedule: Schedule; readonly sections: readonly SectionId[]; readonly screen: string }) {
     this.opts = opts;
     this.scope = opts.scope;
-    for (const id of SECTION_IDS) this.slots.set(id, { state: WAITING, wanted: null, seq: 0, inFlight: null, retry: null, gaveUpAt: null, params: {} });
+    this.active = new Set(opts.sections);
+    this.screen = opts.screen;
+    for (const id of SECTION_IDS) this.slots.set(id, { state: WAITING, wanted: null, seq: 0, inFlight: null, retry: null, gaveUpAt: null, params: {}, checkedAt:null });
+  }
+
+  setScreen(screen: string, sections: readonly SectionId[]) {
+    this.screen = screen;
+    this.active = new Set(sections);
+    for (const [id, slot] of this.slots) {
+      if (!this.active.has(id)) {
+        slot.inFlight?.abort(); slot.inFlight = null;
+        slot.retry?.(); slot.retry = null;
+        slot.seq += 1;
+      } else if (this.caps?.sections[id] && slot.inFlight === null) this.read(id);
+    }
+    this.emit();
   }
 
   subscribe(fn: () => void): () => void {
@@ -69,6 +89,20 @@ export class LiveSync {
 
   capabilities(): V6Capabilities | null {
     return this.caps;
+  }
+
+  /** Stop pending reads and retry deadlines when the shell pauses. Resume on its next pulse. */
+  setActive(active: boolean) {
+    this.enabled = active;
+    if (active) return;
+    for (const slot of this.slots.values()) {
+      if (slot.inFlight || slot.retry) slot.wanted = null;
+      slot.inFlight?.abort();
+      slot.inFlight = null;
+      slot.retry?.();
+      slot.retry = null;
+      slot.seq += 1;
+    }
   }
 
   /** The latest pulse revision: the state an action rendered from this page quotes. */
@@ -103,7 +137,7 @@ export class LiveSync {
       slot.gaveUpAt = null;
       slot.params = {};
       slot.state = WAITING;
-      if (this.caps?.sections[id]) this.read(id);
+      if (this.active.has(id) && this.caps?.sections[id]) this.read(id);
     }
     this.emit();
   }
@@ -116,16 +150,20 @@ export class LiveSync {
     // A new period, filter or page is a different answer. Do not display the
     // previous answer under its new label while the read is pending/refused.
     this.set(id, WAITING);
-    if (this.caps?.sections[id]) { this.read(id); this.emit(); }
+    if (this.active.has(id) && this.caps?.sections[id]) { this.read(id); this.emit(); }
   }
 
   onPulse(pulse: unknown) {
+    if (!this.enabled) return;
+    const at=Date.parse(String((pulse as {at?:unknown}|null)?.at??''));
+    this.pulseAt=Number.isFinite(at)?at:null;
     const rev = (pulse as { revision?: unknown } | null)?.revision;
     this.lastRevision = typeof rev === "string" ? rev : null;
     const caps = capabilitiesOf(pulse);
     this.caps = caps;
     let changed = false;
     for (const [id, slot] of this.slots) {
+      if (!this.active.has(id)) continue;
       const a = caps?.sections[id];
       if (!a) {
         // Withdrawn: keep last good data but say it is no longer being served.
@@ -155,7 +193,8 @@ export class LiveSync {
         slot.wanted = a.revision;
         continue;
       }
-      const moved = slot.wanted !== a.revision || slot.state.phase === "incompatible";
+      const moved = slot.wanted !== a.revision || slot.state.phase === "incompatible" ||
+        (slot.inFlight===null && this.pulseAt!==null && slot.checkedAt!==null && this.pulseAt-slot.checkedAt>=30_000 && slot.state.phase==='live');
       if (moved) {
         slot.gaveUpAt = null;
         this.read(id);
@@ -167,7 +206,7 @@ export class LiveSync {
 
   catchUp() {
     for (const [id, slot] of this.slots) {
-      if (this.caps?.sections[id] && slot.inFlight === null && slot.state.phase !== "denied" && slot.state.phase !== "incompatible") this.read(id);
+      if (this.active.has(id) && this.caps?.sections[id] && slot.inFlight === null && slot.state.phase !== "denied" && slot.state.phase !== "incompatible") this.read(id);
     }
     this.emit();
   }
@@ -175,21 +214,23 @@ export class LiveSync {
   private read(id: SectionId) {
     const a = this.caps?.sections[id];
     const slot = this.slots.get(id)!;
-    if (!a) return;
+    if (!this.enabled || !a || !this.active.has(id)) return;
     slot.retry?.();
     slot.retry = null;
     slot.inFlight?.abort();
     const ctrl = typeof AbortController === "undefined" ? null : new AbortController();
     slot.inFlight = ctrl ?? ({ abort() {} } as AbortController);
     slot.wanted = a.revision;
+    slot.checkedAt = this.pulseAt;
     const seq = ++slot.seq;
     const scope = this.scope;
     if (slot.state.data === null) this.set(id, { phase: "loading" });
     const q = new URLSearchParams({ scope });
+    if (id === "scoreboard" && this.screen === "now") q.set("reading", "hourly");
     if (PAGED_SECTIONS.includes(id)) q.set("limit", String(PAGE_LIMIT));
     for (const [k, v] of Object.entries(slot.params)) if (k !== "scope" && k !== "limit") q.set(k, v);
     const url = `${a.href}${a.href.includes("?") ? "&" : "?"}${q.toString()}`;
-    void this.opts.fetch(url, { headers: { accept: "application/json" }, signal: ctrl?.signal })
+    void this.opts.fetch(url, { headers: { accept: "application/json", "x-admin-screen": this.screen }, signal: ctrl?.signal })
       .then(async (res) => ({ status: res.status, body: await res.json().catch(() => null) }))
       .then(({ status, body }) => this.settle(id, seq, scope, status, body))
       .catch(() => this.settle(id, seq, scope, null, null));

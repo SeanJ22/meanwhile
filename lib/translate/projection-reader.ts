@@ -4,6 +4,9 @@ import { translationProjectionProblems, type TranslationProjection } from "./pro
 import { currentReaderAuthorityEdge, ensurePromotedEdge } from "../registry/runtime-edge.ts";
 import type { BallotSet } from "../ballot/types.ts";
 import { measureLabels, pageNamesMeasure } from "./routine-measure-pages.ts";
+import { currentReaderSelection } from "../db/reader-route.ts";
+import { readerCanonicalEntry, primeReaderCanonicalStore } from "../reader/canonical-context.ts";
+import { readCanonicalShelf } from "../reader/canonical.ts";
 
 export async function readTranslationProjection(options: PromotedCivicDataReadOptions & { scope?: string } = {}) {
   const { scope = TRANSLATION_SCOPE, ...readOptions } = options;
@@ -16,6 +19,11 @@ export async function readTranslationProjection(options: PromotedCivicDataReadOp
 export async function readTranslations(divisions: readonly string[], options: PromotedCivicDataReadOptions = {}): Promise<readonly TranslationRecord[]> {
   const divisionsToRead = [...new Set(divisions)].filter(division => /^ocd-division\/country:us\/(state|district|territory):/.test(division));
   const edgeContext = options.store === undefined && currentReaderAuthorityEdge() !== null;
+  if (!edgeContext && !Object.keys(options).length && currentReaderSelection()) {
+    const missing = divisionsToRead.map(division => ({ recordClass: "CURATED_READER_RECORD" as const, scope: translationScope(division) }))
+      .filter(pointer => !readerCanonicalEntry(pointer.recordClass, pointer.scope));
+    if (missing.length) await primeReaderCanonicalStore(missing, readCanonicalShelf(missing));
+  }
   // Request bundles that do not name this family keep their held ballot records
   // without adding optional database reads on every cold visit.
   const results = await Promise.all(divisionsToRead.map(async division => {
@@ -47,7 +55,11 @@ export function withMeasureTranslations(ballot: BallotSet, records: readonly Tra
     // Legacy reaction targets remain available while the summary and vote
     // meanings acquire independent sentence checks.
     const parts = prior?.parts.filter(part => !translation.measure.parts.some(row => row.id === part.id)) ?? [];
-    const record = parts.length ? { ...translation.measure, parts: [...translation.measure.parts, ...parts] } : translation.measure;
+    const record = parts.length ? { ...translation.measure, parts: [...translation.measure.parts, ...parts],
+      partSources: { ...translation.measure.partSources, ...Object.fromEntries(parts.map(part => [part.id, prior!.partSources?.[part.id] ?? {
+        sourceUrl: prior!.sourceUrl, sourceHash: prior!.sourceHash, writtenAt: prior!.writtenAt,
+        ...(prior!.sourceHashKind ? { sourceHashKind: prior!.sourceHashKind } : {}),
+      }])) } } : translation.measure;
     if (at < 0) translated.push(record);
     else translated[at] = record;
   }

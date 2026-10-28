@@ -9,6 +9,7 @@ import { acquireStateVotes } from "../lib/sources/plural/vote-acquisition.ts";
 import { pluralVoteJurisdiction, pluralVotesScope, parsePluralBill, type PluralBillEvidence, type PluralVoteAcquisition } from "../lib/sources/plural/votes.ts";
 import { readRawCaptureText } from "../lib/civic-data/raw-capture-vault.ts";
 import { refreshStateVotes } from "../scripts/openstates-votes-refresh.mts";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 
 const candidateCount = (store: MemoryRoutineDataStore) => (store as unknown as { candidates: Map<string, unknown> }).candidates.size;
 
@@ -47,6 +48,7 @@ test("repeated native vote or person IDs cannot silently overwrite acquired evid
 });
 function harness() {
   const store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories();
+  const copies=new Map<string,string>(),cache=new CivicReadCache({read:async key=>copies.get(key)??null,write:async(key,value)=>{copies.set(key,value);}});
   const requested: string[] = [];
   let failFirst = false;
   const fetchImpl: typeof fetch = async (raw, init) => {
@@ -61,7 +63,8 @@ function harness() {
     if (failFirst && value === 1) return new Response("unavailable", { status: 503 });
     return new Response(evidence(value).body);
   };
-  return { input: { state: "az", store, locks, vault: new MemoryEvidenceStore(), fetchImpl, apiKey: "held-test-key", now: () => AT, signal: AbortSignal.timeout(10_000) }, requested, failFirst: () => { failFirst = true; } };
+  return { input: { state: "az", store, locks, cache, vault: new MemoryEvidenceStore(), fetchImpl, apiKey: "held-test-key", now: () => AT, signal: AbortSignal.timeout(10_000) }, requested,
+    failFirst: () => { failFirst = true; },restoreFirst:()=>{failFirst=false;} };
 }
 test("known cached bill evidence reuses original source observations and one bad bill leaves the next fact available", async () => {
   const h = harness(); h.failFirst();
@@ -73,16 +76,28 @@ test("known cached bill evidence reuses original source observations and one bad
   assert.equal(replayed[0]!.sourceCheck?.checkedAt, AT);
   assert.equal(h.requested.length, priorRequests + 1, "only the unavailable bill remains due");
 });
-test("a session's bills publish once, after the last of them, and the typed reader needs no roster or global marker", async () => {
+test("each bill publishes and checkpoints before the next one, and the typed reader retains every earlier bill", async () => {
   const h = harness(), civicStore = new MemoryRoutineDataStore();
+  let published=0;
   const result = await refreshStateVotes({ ...h.input, civicStore, onBill: async () => {
-    assert.equal(await civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope("az")), null, "no candidate is written per bill");
+    published++;
+    assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,published);
   } });
-  assert.ok(result.publication.outcome.promoted);
-  assert.equal(candidateCount(civicStore), 1, "both bills of one session are one candidate");
-  const rows = await readPluralVotesForPerson("az", person, { store: civicStore, bypassCache: true, now: AT });
+  assert.ok(result.publication!.outcome.promoted);
+  assert.equal(candidateCount(civicStore), 2, "a pass cut between bills has already published the first one");
+  const rows = await readPluralVotesForPerson("az", person, { store: civicStore,  now: AT });
   assert.equal(rows.length, 2); assert.equal(rows[0].position, "yes");
   assert.deepEqual(await readPluralVotesForPerson("az", "az-legislature:1", { store: civicStore, now: AT }), []);
+});
+
+test("a failed bill stays due while another bill's independently published positions remain live",async()=>{
+  const h=harness(),civicStore=new MemoryRoutineDataStore();h.failFirst();
+  await assert.rejects(refreshStateVotes({...h.input,civicStore}),/PLURAL_VOTES_ACQUISITION_INCOMPLETE/);
+  assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,1);
+  h.restoreFirst();const resumed:string[]=[];
+  await refreshStateVotes({...h.input,civicStore,onBill:async result=>{resumed.push(...result.votes.map(vote=>vote.id));}});
+  assert.deepEqual(resumed,[native("vote",1)],"the completed bill is not replayed to recover the failed bill");
+  assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,2);
 });
 
 test("each vote candidate holds a raw-capture reference, never the bill bytes, and the vault returns them exactly", async () => {
@@ -90,12 +105,36 @@ test("each vote candidate holds a raw-capture reference, never the bill bytes, a
   const result = await refreshStateVotes({ ...h.input, civicStore });
   const saved = await civicStore.readCandidate((await civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope("az")))!.versionId);
   const held = (saved!.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions;
-  assert.ok(result.publication.outcome.promoted); assert.equal(held.length, 2);
+  assert.ok(result.publication!.outcome.promoted); assert.equal(held.length, 2);
   for (const [index, acquisition] of held.entries()) {
     const body = evidence(index + 1).body;
     assert.equal("body" in acquisition, false); assert.equal(acquisition.raw?.rawHash, acquisition.sha256);
     assert.equal(await readRawCaptureText(h.input.vault, acquisition.raw!), body);
   }
+});
+
+test("a pass interrupted after one publication resumes at the next bill with its earlier visible facts and evidence intact",async()=>{
+  const h=harness(),civicStore=new MemoryRoutineDataStore(),held=new Map<string,string>(),controller=new AbortController();
+  const cache=()=>new CivicReadCache({read:async key=>held.get(key)??null,write:async(key,value)=>{held.set(key,value);}});
+  await assert.rejects(refreshStateVotes({...h.input,civicStore,cache:cache(),signal:controller.signal,onBill:async()=>{
+    controller.abort(Error("pass deadline"));throw controller.signal.reason;
+  }}),/pass deadline/);
+  assert.equal((await readPluralVotesForPerson("az",person,{store:civicStore,now:AT})).length,1);
+  const partialHead=await civicStore.readSourceHead("STATE_ROLL_CALL",pluralVotesScope("az"));
+  assert.equal(partialHead?.acquisitionComplete,false);
+  assert.equal((await civicStore.readCandidatePath<{continuationPending:boolean}>(partialHead!.versionId,["normalizedPayload","sourceProbe"]))?.continuationPending,true,
+    "a successful publication cut short remains immediate work for the generic clock");
+  const cursor=await cache().readCheckpoint<Record<string,{position:number;complete:boolean}>>("openstates-vote-progress",pluralVotesScope("az"));
+  assert.equal(cursor?.["api-session:az:57th-2nd-regular"].position,1);
+  const resumed:string[]=[];
+  await refreshStateVotes({...h.input,civicStore,cache:cache(),signal:new AbortController().signal,onBill:async result=>{resumed.push(...result.votes.map(row=>row.id));}});
+  assert.deepEqual(resumed,[native("vote",2)]);
+  const shown=await readPluralVotesForPerson("az",person,{store:civicStore,now:AT});
+  assert.equal(shown.length,2);assert.ok(shown.some(row=>row.id===native("vote",1)));
+  const pointer=await civicStore.readPromotion("STATE_ROLL_CALL",pluralVotesScope("az"));
+  const saved=await civicStore.readCandidate(pointer!.versionId);
+  assert.equal(saved?.candidate.retrieval.complete,true,"the source clock sees completed acquisition after the final existing bill publication");
+  assert.equal((saved!.candidate.normalizedPayload as {acquisitions:unknown[]}).acquisitions.length,2);
 });
 
 test("a source check with no votes succeeds, then confirms the held empty projection unchanged", async () => {
@@ -106,12 +145,12 @@ test("a source check with no votes succeeds, then confirms the held empty projec
     return transport(raw, init);
   };
   const first = await refreshStateVotes({...h.input, civicStore, fetchImpl});
-  assert.ok(first.publication.outcome.promoted);
-  assert.deepEqual((first.publication.candidate.readModel as {rollCalls:unknown[]}).rollCalls, []);
+  assert.ok(first.publication!.outcome.promoted);
+  assert.deepEqual((first.publication!.candidate.readModel as {rollCalls:unknown[]}).rollCalls, []);
   const next = await refreshStateVotes({...h.input, civicStore, fetchImpl});
-  assert.ok(next.publication.outcome.confirmed);
-  assert.equal(next.publication.outcome.confirmed.versionId, first.publication.outcome.promoted.versionId);
-  assert.equal(next.held.length, 0);
+  assert.ok(next.confirmation);
+  assert.equal(next.confirmation!.head.versionId, first.publication!.outcome.promoted.versionId);
+  assert.equal(next.held, null, "the unchanged source reads no held failure list");
 });
 test("a conflicting native person never hides other independently verified positions", () => {
   const parsed = parsePluralBill("az", evidence(1, [vote(1, {votes: [

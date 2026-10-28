@@ -135,14 +135,14 @@ test("shared release acquisition refuses empty and wrong-format documents before
 
 const html404 = "<html><body><h1>404 Not Found</h1></body></html>";
 
-/** A 403 on the first call — the trigger for the whole escalation. */
-const refuse403 = (): Promise<Response> =>
-  Promise.resolve(new Response("forbidden", { status: 403 }));
+/** A challenge page at 200 exercises format validation on the identified curl transport. */
+const challenge200 = (): Promise<Response> =>
+  Promise.resolve(new Response("<html><title>Just a moment...</title></html>", { status: 200 }));
 
 test("A-003 · a rung-4 200 carrying the wrong format is a WALL, not a document", async () => {
   await assert.rejects(
     politeGetText("https://town.example/export.ics", {
-      fetchImpl: refuse403 as unknown as typeof fetch,
+      fetchImpl: challenge200 as unknown as typeof fetch,
       expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
       ladder: {
         // Rung 4 answers 200 with an HTML error page.
@@ -161,7 +161,7 @@ test("A-003 · a rung-4 200 carrying the wrong format is a WALL, not a document"
 test("A-003 · a rung-4 200 with an EMPTY body is a WALL — the case challengeIn cannot see", async () => {
   await assert.rejects(
     politeGetText("https://town.example/export.ics", {
-      fetchImpl: refuse403 as unknown as typeof fetch,
+      fetchImpl: challenge200 as unknown as typeof fetch,
       ladder: {
         curl: async () => ({ status: 200, contentType: "", text: "   \n  " }),
       },
@@ -173,7 +173,7 @@ test("A-003 · a rung-4 200 with an EMPTY body is a WALL — the case challengeI
 test("A-003 · the rung-4 curl fallback is validated too — it used to be returned raw", async () => {
   await assert.rejects(
     politeGetText("https://town.example/export.ics", {
-      fetchImpl: refuse403 as unknown as typeof fetch,
+      fetchImpl: challenge200 as unknown as typeof fetch,
       expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
       ladder: {
         // Node's client is refused, so the same identity is asked through
@@ -193,7 +193,7 @@ test("A-003 · the rung-4 curl fallback is validated too — it used to be retur
 test("A-003 · a rung-4 200 that IS the document still succeeds, and reports rung 4's bytes", async () => {
   const feed = "BEGIN:VCALENDAR\nBEGIN:VEVENT\nSUMMARY:Selectboard\nEND:VEVENT\nEND:VCALENDAR";
   const got = await politeGetText("https://town.example/export.ics", {
-    fetchImpl: refuse403 as unknown as typeof fetch,
+    fetchImpl: challenge200 as unknown as typeof fetch,
     expect: { label: "an .ics feed", marker: "BEGIN:VCALENDAR" },
     ladder: {
       curl: async () => ({ status: 200, contentType: "text/calendar", text: feed }),
@@ -207,7 +207,7 @@ test("A-003 · injecting a fetchImpl alone still does NOT walk the ladder", asyn
   // A test's fake fetch is the thing under test: without `ladder`, a 403 is a 403.
   await assert.rejects(
     politeGetText("https://town.example/export.ics", {
-      fetchImpl: refuse403 as unknown as typeof fetch,
+      fetchImpl: (async () => new Response("Forbidden", { status: 403 })) as typeof fetch,
     }),
     (error: unknown) => {
       assert.ok(error instanceof SourceHttpError);

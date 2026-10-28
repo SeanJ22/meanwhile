@@ -1,4 +1,5 @@
-import { acquireKnownRelease, checkKnownSourceRetry, recordKnownSourceRetry, resolveKnownReleaseCache, type KnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
+import { sourceFetch } from "../sources/http.ts";
+import { acquireKnownRelease, type KnownRelease, type KnownReleaseOptions } from "../sources/known-release.ts";
 import { isSourceAcquisitionFailure, readPublisherBody, requestPublisher, sourceAcquisitionFailure } from "../civic-data/source-acquisition-error.ts";
 import type { Provenance } from "./contract.ts";
 import { censusGeographyUserAgent } from "./http.ts";
@@ -22,7 +23,12 @@ export function* censusTextLines(bytes: Uint8Array): Generator<string> {
   if (remainder) yield remainder.replace(/\r$/, "");
 }
 
+export interface CensusSourceCapture {
+  readonly requestedUrl: string; readonly finalUrl: string; readonly rawHash: string; readonly checkedAt: string; readonly httpStatus: 200 | 304;
+}
+
 export interface CensusSourceOptions {
+  readonly sourceCaptures?: Map<string, CensusSourceCapture>;
   readonly fetchImpl?: typeof fetch;
   readonly signal?: AbortSignal;
   /** The same evidence vault and release lock used by other routine sources. */
@@ -31,9 +37,17 @@ export interface CensusSourceOptions {
   readonly releases?: Map<string, Promise<KnownRelease>>;
 }
 
+export function recordCensusSourceCapture(options: CensusSourceOptions, capture: CensusSourceCapture): void {
+  const prior = options.sourceCaptures?.get(capture.requestedUrl);
+  if (prior && (prior.rawHash !== capture.rawHash || prior.finalUrl !== capture.finalUrl))
+    throw sourceAcquisitionFailure("PUBLISHER_DOCUMENT_INVALID", `Census source changed within one acquisition: ${capture.requestedUrl}`);
+  options.sourceCaptures?.set(capture.requestedUrl, prior && Date.parse(prior.checkedAt) < Date.parse(capture.checkedAt) ? prior : capture);
+}
+
 export function censusSourceRelease(url: string, options: CensusSourceOptions, validate?: KnownReleaseOptions["validate"]): Promise<KnownRelease> {
   const held = options.releases?.get(url);
-  if (held) return held.then(async release => { await validate?.(release.bytes, release); return release; });
+  if (held) return held.then(async release => { await validate?.(release.bytes, release);
+    recordCensusSourceCapture(options, { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, rawHash: release.sha256, checkedAt: release.checkedAt, httpStatus: release.lastCheckStatus === 304 ? 304 : 200 }); return release; });
   const pending = acquireKnownRelease({
     ...options.cache,
     sourceId: "census-geography-relationships",
@@ -54,8 +68,12 @@ export function censusSourceRelease(url: string, options: CensusSourceOptions, v
       }
     } : undefined,
   });
-  options.releases?.set(url, pending);
-  return pending;
+  const observed = pending.then(release => {
+    recordCensusSourceCapture(options, { requestedUrl: release.requestedUrl, finalUrl: release.finalUrl, rawHash: release.sha256, checkedAt: release.checkedAt, httpStatus: release.lastCheckStatus === 304 ? 304 : 200 });
+    return release;
+  });
+  options.releases?.set(url, observed);
+  return observed;
 }
 
 export function sourceValidator(release: KnownRelease): NonNullable<Provenance["sourceValidators"]>[number] {
@@ -67,16 +85,13 @@ export async function heldSourcesUnchanged(provenance: Provenance, urls: readonl
   if (provenance.parserVersion !== parserVersion || !provenance.sourceValidators) return false;
   const validators = urls.map(url => provenance.sourceValidators!.find(row => row.url === url));
   if (validators.some(row => !row || !row.etag && !row.lastModified)) return false;
-  const { store } = await resolveKnownReleaseCache(options.cache);
   for (const held of validators) {
     const headers = new Headers({ "user-agent": censusGeographyUserAgent() });
     if (held!.etag) headers.set("if-none-match", held!.etag);
     else if (held!.lastModified) headers.set("if-modified-since", held!.lastModified);
-    await checkKnownSourceRetry(store, "census-geography-relationships", held!.url, new Date().toISOString());
     const response = await requestPublisher("Census geography source check", () =>
-      (options.fetchImpl ?? fetch)(held!.url, { method: "HEAD", headers, signal: options.signal }));
+      sourceFetch(held!.url, { method: "HEAD", headers, signal: options.signal }, options.fetchImpl));
     await readPublisherBody("Census geography source check", async () => { await response.body?.cancel(); });
-    await recordKnownSourceRetry(store, "census-geography-relationships", held!.url, response, new Date().toISOString());
     if (response.status === 304) continue;
     if (response.status === 405 || response.status === 501) return false;
     if (!response.ok) throw sourceAcquisitionFailure("PUBLISHER_RESPONSE_REFUSED", `Census source check returned HTTP ${response.status}: ${held!.url}`);

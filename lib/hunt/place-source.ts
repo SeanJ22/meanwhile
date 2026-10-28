@@ -44,7 +44,7 @@ export async function runPlaceSource(input: {
   const knowledge = input.knowledge ?? await readFieldManual(input.repos, { ocdIds: divisions.map(division => division.id),limit:40 });
   const ids = divisions.map(division => division.id);
   const readHeld = input.readHeld ?? (divisionIds => readHeldPlaceCapture(divisionIds,
-    { store: input.store, now: input.clock?.() ?? input.now, bypassCache: true }));
+    { store: input.store, now: input.clock?.() ?? input.now }));
   let sources: NationalPlaceSources | null = null;
   let publication: unknown = null;
   const publications: unknown[] = [];

@@ -11,7 +11,7 @@ import { GET as aliasesGET } from "../app/api/admin/v6/data/aliases/route.ts";
 import { adminSessionCookie, ADMIN_HOST, withAdminSessionKey } from "./admin-session.ts";
 
 async function database() {
-  const db = await factDb({ withResolver: false });
+  const db = await factDb({ withResolver: false, withPlacePages: false });
   await identitySourceTables(db.pg);
   await identityEventTables(db.pg);
   return db;

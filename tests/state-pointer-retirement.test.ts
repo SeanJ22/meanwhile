@@ -18,7 +18,9 @@ test("the production progress SQL reads partitioned proof metadata and survives 
     await db.exec(`CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
       CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,
         acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,validation_receipt jsonb,normalized_hash text,candidate jsonb);
-      CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,current_version_id text,last_known_good_version_id text,validation_receipt jsonb,payload jsonb);`);
+      CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,current_version_id text,last_known_good_version_id text,validation_receipt jsonb,payload jsonb);
+      ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text;
+      ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
     const migration = await readFile("lib/db/migrations/0036_ne01.sql", "utf8"), start = migration.indexOf("CREATE FUNCTION reader_payload_node(");
     await db.exec(migration.slice(start, migration.indexOf("--> statement-breakpoint", start)));
     const origin = { versionId: "old-national", recordClass: "CANDIDATE_PROFILE", scope: "US-AZ+US-NH+US-NJ:2026-supported-candidates", readModelHash: "a".repeat(64) };
@@ -41,13 +43,13 @@ test("the production progress SQL reads partitioned proof metadata and survives 
 test("a pass with too little time skips the actual cleanup block and still saves its results", async () => {
   const source = await readFile("scripts/routine-civic-data-runner.mts", "utf8");
   const operation = source.indexOf("    const deadlineMs = PASS_DEADLINE_MS - 30_000, sql = neon(");
-  const start = source.lastIndexOf("if (!PUBLISH_NOW", operation), end = source.indexOf("for (const run of readerRuns)", operation);
+  const start = source.lastIndexOf("if (!PUBLISH_NOW", operation), end = source.indexOf('step = "persisting the supervisor outcome";', operation);
   let saved = false;
   const code = transpileModule(`(async () => { ${source.slice(start, end)} await saveResults(); })()`, {
     compilerOptions: { target: ScriptTarget.ES2022, module: ModuleKind.CommonJS },
   }).outputText;
-  await runInNewContext(code, { PUBLISH_NOW: false, ONLY: null, PASS_DEADLINE_MS: 1_000_000,
-    Date: { now: () => 980_000 }, supervisorFailures: [],
+  await runInNewContext(code, { PUBLISH_NOW: false, PLACE_MAPS: false, ONLY: null, PASS_DEADLINE_MS: 1_000_000,
+    Date: { now: () => 980_000 }, supervisorFailures: [], recordHeldJobs: () => {}, flushLaunchDecisions: async () => {},
     neon: () => { throw Error("cleanup must not open the database"); },
     saveResults: async () => { saved = true; } });
   assert.equal(saved, true);

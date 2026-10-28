@@ -59,6 +59,19 @@ function zipOf(raw: string | null): string | null {
   }
 }
 
+/** The saved choice is usable before the place's asynchronous lookup finishes. */
+export function useSavedZipChoice(): string | null {
+  return useSyncExternalStore(subscribe, () => zipOf(readZipChoice()), () => null);
+}
+
+export function rememberZipChoice(zip: string): void {
+  if (!/^\d{5}$/.test(zip)) return;
+  commitStorageWrite(
+    () => window.localStorage.setItem(STORAGE_KEY, JSON.stringify({ zip, savedAt: new Date().toISOString() })),
+    () => publishToListeners(listeners),
+  );
+}
+
 export async function resolveStoredZip(raw: string | null): Promise<StoredLocation | null> {
   const zip = zipOf(raw);
   if (!zip) return null;

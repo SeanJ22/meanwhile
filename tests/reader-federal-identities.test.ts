@@ -8,7 +8,7 @@ import type { FederalDirectoryReadModel } from "../lib/officials/federal-directo
 import { personIdentityKeys } from "../lib/officials/people-identity.ts";
 import { stateMemberDirectories, zipMemberDirectories } from "../lib/reader/member-directories.ts";
 import { scopedHolders } from "../lib/officials/scoped-holders.ts";
-import { indexByDivision, type SeatHolder } from "../lib/officials/lookup.ts";
+import { indexByDivision, toSeatHolder, type SeatHolder } from "../lib/officials/lookup.ts";
 import type { MemberOfficeRecord } from "../lib/officials/member-offices.ts";
 import { civicDataReadNotInitialized } from "../lib/civic-data/read-model.ts";
 import { heldPersonSources } from "../lib/officials/held-sources.ts";
@@ -254,7 +254,7 @@ test("both held portraits and their exact image sources stay accessible through 
       assert.deepEqual(new Set(sources.map(source => source.photoUrl)), new Set([prior.photo!.url, current.photo!.url]));
       assert.deepEqual(new Set(sources.map(source => source.fieldSources?.portraitImage.sourceUrl)), new Set([oldImage, newImage]));
       const cardSources = personCardSources(merged).flatMap(source => source.details ?? [source]);
-      for (const image of [oldImage, newImage]) assert.ok(cardSources.some(source => source.provenance.sourceUrl === image && source.what.includes("Portrait image")), image);
+      for (const image of [oldImage, newImage]) assert.ok(cardSources.some(source => source.provenance.sourceUrl === image && source.what === "Their portrait"), image);
       const again = scopedHolders([merged], [first, second, merged]);
       assert.equal(again.length, 1);
       merged = again[0];
@@ -268,7 +268,7 @@ test("both held portraits and their exact image sources stay accessible through 
     assert.ok(shared.every(holder=>holder.photoUrl === current.photo!.url),"every card uses the person's selected photo");
     const merged=scopedHolders([shared[0]],[shared[1]])[0];
     const sources=personCardSources(merged).flatMap(source=>source.details ?? [source]);
-    for(const image of [oldImage,newImage])assert.ok(sources.some(source=>source.provenance.sourceUrl === image && source.what.includes("Portrait image")),image);
+    for(const image of [oldImage,newImage])assert.ok(sources.some(source=>source.provenance.sourceUrl === image && source.what === "Their portrait"),image);
     assert.ok(sources.some(source=>source.provenance.sourceUrl === oldImage && source.provenance.sourceOrg.includes(prior.photo!.attribution!)));
   }));
 });
@@ -311,7 +311,7 @@ test("state office directories retain exact aliases, order, and provenance witho
 
 test("indexed multi-seat identities keep first-match order and never join another office", () => {
   const holder = (id: string, aliases: string[], officeTitle = "State Representative"): SeatHolder => ({
-    ...person(id, id, []), officeTitle, partyLabel: null, websiteUrl: null, sourceUrl: "https://www.myfloridahouse.gov/member", photoUrl: null,
+    ...toSeatHolder(person(id, id, [])), officeTitle, partyLabel: null, websiteUrl: null, sourceUrl: "https://www.myfloridahouse.gov/member", photoUrl: null,
     nativeIds: { reader: aliases }, social: [],
   });
   const first = holder("first", ["shared-first"]), second = holder("second", ["shared-second"]);

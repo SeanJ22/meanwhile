@@ -1,5 +1,6 @@
 import { AsyncLocalStorage } from "node:async_hooks";
 import type { BodySourceWiring } from "../registry/source-wiring.ts";
+import { sourceFetch } from "../sources/http.ts";
 
 const publisher = new AsyncLocalStorage<{ website: string; origin: string }>();
 const origin = (value: string) => { try { return new URL(/^https?:\/\//i.test(value) ? value : `https://${value}`).origin; } catch { return null; } };
@@ -27,9 +28,8 @@ export function platformPublisherFetch(rows: readonly BodySourceWiring[], fetchI
   }
   if (!websites.size) return fetchImpl;
   return (input, init) => {
-    const read = fetchImpl ?? globalThis.fetch;
     const url = typeof input === "string" ? input : input instanceof URL ? input.href : input.url;
     const own = websites.get(origin(url) ?? "");
-    return own?.size === 1 ? withPlatformPublisher([...own][0], url, () => read(input, init)) : read(input, init);
+    return own?.size === 1 ? withPlatformPublisher([...own][0], url, () => sourceFetch(url, init, fetchImpl)) : sourceFetch(url, init, fetchImpl);
   };
 }

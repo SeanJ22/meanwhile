@@ -1,3 +1,4 @@
+import "./helpers/linking-copies.ts";
 import { rememberStatePublicationPrior, takeStatePublicationPrior } from "../lib/civic-data/state-publication.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
 import { readPromotedCivicData } from "../lib/civic-data/read-model.ts";
@@ -90,7 +91,7 @@ test("a scoped county successor promotes through the existing pointer and leaves
   const published = await processRegisteredManualCandidate(store, "voting-sites:AZ", candidate, T1);
   assert.ok(published.promoted);
   assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
-  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store, now: T1, bypassCache: true });
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store, now: T1 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.kind === "PROMOTED" && read.value.jurisdictions.find(row => row.ocdId === COCHISE)?.sites.length, 18);
   assert.equal((await store.readPromotion(votingSitesContract("AZ").recordClass, votingSitesContract("AZ").scope))?.versionId, candidate.id);
@@ -157,7 +158,7 @@ test("voting successors release unchanged prior rows and retain exact changed or
   const base = votingSitesCandidate({ state: "AZ", current: original, prior: null, failures: [], acquisition,
     successfulAuthorityReads: 1, requestedUrl: url, finalUrl: url, retrievedAt: T0 });
   assert.ok((await processRegisteredManualCandidate(store, "voting-sites:AZ", base, T0)).promoted);
-  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store, now: T1, bypassCache: true });
+  const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "AZ"), { store, now: T1 });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") throw new Error("Missing voting fixture");
   rememberStatePublicationPrior(store, read.projection);

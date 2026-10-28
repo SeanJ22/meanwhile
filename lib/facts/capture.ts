@@ -42,7 +42,7 @@ export async function fetchCapture(input: {
   let response;
   try { response = await input.fetch(input.url, {}); } catch (error) { return { error: `FETCH_FAILED:${error instanceof Error ? error.message : String(error)}` }; }
   if (response.status < 200 || response.status >= 300) return { error: `HTTP_${response.status}` };
-  return saveCapture({ repos: input.repos, vault: input.vault, url: input.url, bytes: await response.bytes(), httpStatus: response.status,
+  return saveCapture({ repos: input.repos, vault: input.vault, url: response.finalUrl??input.url, bytes: await response.bytes(), httpStatus: response.status,
     contentType: response.headers.get("content-type") ?? "text/html", retrievedAt: input.now });
 }
 

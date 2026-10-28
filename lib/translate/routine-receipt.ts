@@ -29,13 +29,13 @@ export async function measureTranslationRoutineReceipt(input: {
   for (const division of divisions) {
     if (holdReason !== null) break;
     const scope = translationScope(division);
-    const read = await readTranslationProjection({ scope, store: input.store, now: input.now, bypassCache: true });
+    const read = await readTranslationProjection({ scope, store: input.store, now: input.now });
     if (read.kind !== "PROMOTED") holdReason = "No checked explainer is held for a measure scope on this translation clock.";
     else if (input.ballots.some(ballot => ballot.contests.some(contest => contest.type === "MEASURE" && contest.ocdId === division &&
       !isCheckedMeasureTranslation(ballot, { subjectId: contest.id, division }, read.value.records)))) {
       holdReason = "A measure still has no checked explainer on its ballot card.";
     } else {
-      const current = await input.store.readCandidate(read.projection.versionId);
+      const current = await input.store.readPublishedCandidateMetadata(read.projection.versionId);
       const candidate = current?.candidate;
       if (!candidate?.normalization.normalizedHash || !candidate.retrieval.succeeded ||
           !candidate.retrieval.rawHash || !input.store.confirmUnchanged) {

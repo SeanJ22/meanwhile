@@ -12,9 +12,7 @@ import { routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runne
 
 import { agendaDocumentRecordKey } from "../lib/civic-data/changes.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import type { RoutineRecordClass } from "../lib/civic-data/types.ts";
-import { repairMeetingReaderProjectionReadbacks } from "../lib/civic-data/reader-verification.ts";
-import { installMeetingPartitionSelection } from "../lib/civic-data/reader-repair-protocol.ts";
+
 import { READER_PROJECTION_READBACK_PREFIX } from "../lib/civic-data/reader-readback.ts";
 import { parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import type { Meeting } from "../lib/sources/types.ts";
@@ -23,7 +21,6 @@ import { wiringForSelectedMeetingSource } from "../lib/sources/composite/wiring.
 import { promoteMeetingPartition, promoteMeetingPartitions, reconcileSuccessfulMeetingPartition, selectedMeetingPartitions } from "../scripts/ingest.ts";
 
 import { readEveryBody } from "./helpers/meeting-body-national.ts";
-import { FIXTURE_DOOR_ROWS, installFixtureDoors } from "./helpers/meeting-doors-fixture.ts";
 
 const FIRST = "2026-09-08T12:00:00.000Z";
 const SECOND = "2026-09-08T13:00:00.000Z";
@@ -117,60 +114,15 @@ function agendaDocument(row: Meeting, retrievedAt: string): AgendaDocument {
   };
 }
 
-class CountingMeetingStore extends MemoryRoutineDataStore {
-  readPromotionCalls = 0;
-  readPromotionsCalls = 0;
-  readPromotionIdentitiesCalls = 0;
-  latestReaderReadbacksCalls = 0;
-
-  reset(): void {
-    this.readPromotionCalls = 0;
-    this.readPromotionsCalls = 0;
-    this.readPromotionIdentitiesCalls = 0;
-    this.latestReaderReadbacksCalls = 0;
-  }
-
-  override async latestReaderReadbacks(candidateIds: readonly string[]) {
-    this.latestReaderReadbacksCalls++;
-    return super.latestReaderReadbacks(candidateIds);
-  }
-
-  override async readPromotion<T = unknown>(recordClass: RoutineRecordClass, scope: string) {
-    this.readPromotionCalls += 1;
-    return super.readPromotion<T>(recordClass, scope);
-  }
-
-  override async readPromotions<T = unknown>(
-    recordClass: RoutineRecordClass,
-    scopes: readonly string[],
-  ) {
-    this.readPromotionsCalls += 1;
-    return super.readPromotions<T>(recordClass, scopes);
-  }
-
-  override async readPromotionIdentities(recordClass: RoutineRecordClass, scopes: readonly string[]) {
-    this.readPromotionIdentitiesCalls += 1;
-    return super.readPromotionIdentities(recordClass, scopes);
-  }
-}
-
-test("an authenticated zero-row meeting response is CANNOT_TELL, never false healthy or promoted absence", async () => {
+test("an empty calendar keeps its pointer without loading the held payload or writing a failed candidate", async t => {
   const store = new MemoryRoutineDataStore();
-  const source = report(legistar.meetingSource, FIRST);
-  const [result] = await promoteMeetingPartitions({
-    store,
-    partitions: [legistar],
-    meetings: [],
-    agendaDocuments: [],
-    reports: [{ ...source, fetched: 0, normalized: 0 }],
-    generatedAt: FIRST,
-  });
-  assert.equal(result?.outcome.promoted, null);
-  assert.equal(result?.outcome.candidate.state, "CANNOT_TELL");
-  assert.equal(result?.outcome.candidate.failureCode, "ZERO_IS_NOT_ABSENCE");
-  assert.equal(result?.outcome.candidate.receipt?.checks.find(({ check }) => check === "SOURCE_AUTHENTICITY")?.verdict, "PASS");
+  const heldRead = t.mock.method(store, "readPromotion");
+  const result = await promoteMeetingPartitions({ store, partitions: [legistar], meetings: [], agendaDocuments: [],
+    reports: [{ ...report(legistar.meetingSource, FIRST), fetched: 0, normalized: 0 }], generatedAt: FIRST });
+  assert.deepEqual(result, []);
+  assert.equal(heldRead.mock.callCount(), 0, "retaining the pointer requires no download of its held meeting payload");
+  heldRead.mock.restore();
   assert.equal(await store.readPromotion("MEETING", legistar.scope), null);
-  assert.deepEqual((await store.events(result!.candidate.id)).map(({ state }) => state), ["FETCHED", "NORMALIZED", "CANNOT_TELL"]);
 });
 
 test("a successful thin response retains unexplained in-window rows with exact held evidence", async () => {
@@ -259,7 +211,7 @@ test("only exact out-of-window meeting evidence removes a row and its attached a
   assert.equal(seeded[0]?.outcome.candidate.state, "PROMOTED");
 
   const fresh = meeting(legistar, SECOND, "still-served");
-  const previous = await readMeetingPartitionProjection(legistar, { store, bypassCache: true, now: SECOND });
+  const previous = await readMeetingPartitionProjection(legistar, { store,  now: SECOND });
   assert.equal(previous.kind, "PROMOTED");
   const priorPartition = previous.kind === "PROMOTED"
     ? previous.value
@@ -369,145 +321,6 @@ test("one meeting source/body failure retains only its LKG while another partiti
   assert.equal(routineTaskDue(healthyTask, healthyClock, Date.parse(SECOND) + 35 * 60_000, true), true);
 });
 
-test("meeting Reader repair reads each partition once and correlates exact partition receipts", async () => {
-  const store = new CountingMeetingStore();
-  const promoted = await promoteMeetingPartitions({
-    store,
-    partitions: [legistar, insite],
-    meetings: [meeting(legistar, FIRST, "aggregate-pima"), meeting(insite, FIRST, "aggregate-mesa")],
-    agendaDocuments: [],
-    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
-    generatedAt: FIRST,
-  });
-  assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
-  // Publication stamps its own partition without waiting for the later fleet repair.
-  assert.equal(store.readPromotionsCalls, 0, "a partition promotion never reads the sibling partitions' payloads");
-  assert.equal(promoted.every(({ outcome }) => outcome.readerReadback?.status === "PASS"), true,JSON.stringify(promoted.map(p=>p.outcome.readerReadback)));
-  const before = await Promise.all(promoted.map(async ({ candidate }) => ({
-    contractId: candidate.scope === legistar.scope ? legistar.id : insite.id,
-    pointer: await store.readPromotion("MEETING", candidate.scope),
-    candidate: await store.readCandidate(candidate.id),
-    events: await store.events(candidate.id),
-  })));
-  store.reset();
-
-  const repairs = await repairMeetingReaderProjectionReadbacks(
-    store,
-    [legistar, insite],
-    SECOND,
-    "f".repeat(40),
-  );
-  assert.equal(store.readPromotionIdentitiesCalls, 1, "one identity-only pointer batch names every partition version");
-  assert.equal(store.latestReaderReadbacksCalls, 1, "the bounded domain reads every latest receipt in one indexed request");
-  assert.equal(store.readPromotionCalls, 2, "each partition's payload crosses once, as its own Reader reads it");
-  assert.equal(store.readPromotionsCalls, 0, "no national batch of payloads is read");
-  assert.deepEqual(repairs.map(({ contractId, ok }) => ({ contractId, ok })), [
-    { contractId: legistar.id, ok: true },
-    { contractId: insite.id, ok: true },
-  ]);
-  for (const repair of repairs) {
-    assert.equal(repair.ok, true);
-    if (!repair.ok) continue;
-    assert.equal(repair.value.kind, "RECORDED");
-    if (repair.value.kind !== "RECORDED") continue;
-    const expected = promoted.find(({ candidate }) => candidate.scope ===
-      (repair.contractId === legistar.id ? legistar.scope : insite.scope));
-    assert.equal(repair.value.receipt.contractId, repair.contractId);
-    assert.equal(repair.value.receipt.versionId, expected?.candidate.id);
-    assert.equal(repair.value.receipt.status, "PASS");
-  }
-
-  for (const snapshot of before) {
-    const contract = snapshot.contractId === legistar.id ? legistar : insite;
-    const candidateId = snapshot.candidate!.candidate.id;
-    assert.deepEqual(await store.readPromotion("MEETING", contract.scope), snapshot.pointer);
-    assert.deepEqual(await store.readCandidate(candidateId), snapshot.candidate);
-    const afterEvents = await store.events(candidateId);
-    assert.deepEqual(afterEvents.slice(0, snapshot.events.length), snapshot.events);
-    assert.equal(afterEvents.length, snapshot.events.length + 1);
-    assert.equal(afterEvents.at(-1)?.state, "PROMOTED");
-    assert.match(afterEvents.at(-1)?.detail ?? "", new RegExp(`^${READER_PROJECTION_READBACK_PREFIX}`));
-  }
-
-  // The ordinary pass: every receipt is already current, so no partition's
-  // payload crosses the wire at all; the identity batch alone decides it.
-  store.reset();
-  const current = await repairMeetingReaderProjectionReadbacks(
-    store,
-    [legistar, insite],
-    new Date(Date.parse(SECOND) + 1).toISOString(),
-    "f".repeat(40),
-  );
-  assert.deepEqual(current.map((repair) => repair.ok ? repair.value.kind : repair.error), ["CURRENT", "CURRENT"]);
-  assert.equal(store.readPromotionIdentitiesCalls, 1);
-  assert.equal(store.latestReaderReadbacksCalls, 1);
-  assert.equal(store.readPromotionCalls + store.readPromotionsCalls, 0, "a current pass reads no partition payload");
-});
-
-test("a parent-selected meeting partition is checked from its handed snapshot after the registry changes", async () => {
-  const store = new CountingMeetingStore();
-  const snapshot = structuredClone(legistar);
-  const promoted = await promoteMeetingPartitions({
-    store, partitions: [snapshot], meetings: [meeting(snapshot, FIRST, "handed-snapshot")], agendaDocuments: [],
-    reports: [report(snapshot.meetingSource, FIRST)], generatedAt: FIRST,
-  });
-  assert.ok(promoted[0]!.outcome.promoted);
-  try {
-    installFixtureDoors(FIXTURE_DOOR_ROWS.filter(row => row.bodyId !== snapshot.bodyId));
-    assert.equal(MEETING_PARTITION_CONTRACTS.some(partition => partition.id === snapshot.id), false);
-    installMeetingPartitionSelection([snapshot]);
-    assert.deepEqual(MEETING_PARTITION_CONTRACTS.map(partition => partition.id), [snapshot.id]);
-    store.reset();
-    const [repair] = await repairMeetingReaderProjectionReadbacks(store, [snapshot], SECOND, "f".repeat(40));
-    assert.ok(repair?.ok, JSON.stringify(repair));
-    assert.equal(repair.value.kind, "RECORDED");
-    assert.equal(repair.value.receipt?.status, "PASS", "the child's newer door registry cannot replace the parent's exact partition");
-    assert.equal(store.readPromotionCalls, 1, "the handed partition's typed reader actually reads its saved version");
-  } finally { installFixtureDoors(); }
-});
-
-test("R31: meeting receipts carry across a commit that changed no Reader code without reading the partitions", async () => {
-  const store = new CountingMeetingStore();
-  const promoted = await promoteMeetingPartitions({
-    store,
-    partitions: [legistar, insite],
-    meetings: [meeting(legistar, FIRST, "attest-pima"), meeting(insite, FIRST, "attest-mesa")],
-    agendaDocuments: [],
-    reports: [report("legistar", FIRST), report("legistar-insite", FIRST)],
-    generatedAt: FIRST,
-  });
-  assert.equal(promoted.every(({ outcome }) => outcome.promoted !== null), true);
-  const first = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], SECOND, "f".repeat(40));
-  assert.deepEqual(first.map((repair) => repair.ok ? repair.value.kind : repair.error), ["RECORDED", "RECORDED"]);
-
-  const later = (ms: number) => new Date(Date.parse(SECOND) + ms).toISOString();
-
-  // An unchanged closure: every partition's PASS carries to the new commit; nothing is read.
-  store.reset();
-  const attested = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], later(1), "e".repeat(40), {
-    attestor: () => ({ identical: true, detail: "closure byte-identical" }),
-  });
-  for (const repair of attested) {
-    assert.equal(repair.ok, true);
-    if (!repair.ok || repair.value.kind !== "RECORDED") throw new Error(`not recorded: ${repair.contractId}`);
-    assert.equal(repair.value.receipt.status, "PASS");
-    assert.equal(repair.value.receipt.verifierCodeSha, "e".repeat(40));
-    assert.match(repair.value.receipt.detail, /^ATTESTED, not re-read/);
-  }
-  assert.equal(store.readPromotionCalls + store.readPromotionsCalls, 0, "no partition payload crosses the wire");
-
-  // A changed closure: each partition is read again.
-  store.reset();
-  const reread = await repairMeetingReaderProjectionReadbacks(store, [legistar, insite], later(2), "d".repeat(40), {
-    attestor: () => ({ identical: false, detail: "closure changed" }),
-  });
-  assert.deepEqual(reread.map((repair) => repair.ok && repair.value.kind === "RECORDED" ? repair.value.receipt.status : "not recorded"), ["PASS", "PASS"]);
-  assert.equal(store.readPromotionCalls, 2, "a changed closure reads each partition once");
-  for (const repair of reread) {
-    if (repair.ok && repair.value.kind === "RECORDED") assert.doesNotMatch(repair.value.receipt.detail, /ATTESTED/);
-  }
-});
-
 test("a semantic refusal holds only the exact source/body partition", async () => {
   const store = new MemoryRoutineDataStore();
   const goodMeeting = meeting(legistar, FIRST, "good");
@@ -610,28 +423,14 @@ test("production Reader configuration cannot reopen live composite acquisition",
   }
 });
 
-test("a meeting child takes the supervisor's registry attestation, and a malformed one leaves its own full proof", async () => {
-  const attestation = {
-    recordClass: "REGISTRY_RUNTIME_BINDING",
-    scope: "US-AZ:reader-registry-runtime",
-    versionId: "registry-reviewed-bindings:trusted-lkg:bb4500a518c9712b66e104569e74b71b",
-    payloadSha256: "d".repeat(64),
-    retrievedAt: "2026-09-14T04:24:35.148Z",
-    staleAtRetrieval: false,
-    version: "2026",
-    sourceThrough: null,
-  };
+test("a meeting child loads its registry through the current store path", async () => {
   const seen: unknown[] = [];
-  const run = (value: string | undefined) => preloadCanonicalMeetingDependencies({
+  await preloadCanonicalMeetingDependencies({
     sourceName: "composite", state: "AZ",
     refreshRegistry: async (states, options) => { assert.deepEqual(states, ["AZ"]); seen.push(options); },
     refreshVenues: async () => undefined,
-    env: { WTP_ROUTINE_ATTESTED_PROMOTIONS: value },
   });
-  await run(JSON.stringify([attestation]));
-  await run(JSON.stringify([{ ...attestation, payloadSha256: "not-a-hash" }]));
-  await run(undefined);
-  assert.deepEqual(seen, [{ attested: attestation }, {}, {}]);
+  assert.deepEqual(seen, [{}]);
 });
 
 test("a meeting re-check that finds no new fact is confirmed on the pointed version; a real change still promotes", async () => {
@@ -775,7 +574,7 @@ test("DB-01: the validator accepts a V1 removal for one pass and refuses removin
   assert.equal(accepted.outcome.candidate.state, "PROMOTED", accepted.outcome.candidate.failureDetail ?? "");
 });
 
-test('an unavailable meeting stamp writer never holds publication, and the next unchanged check repairs its stamp',async()=>{
+test('meeting publication and unchanged checks use their returned fingerprints without writing readback evidence',async()=>{
  class StampFailureStore extends MemoryRoutineDataStore {
    fail=true;
    override async appendEvidence(...args:Parameters<MemoryRoutineDataStore['appendEvidence']>){
@@ -786,11 +585,33 @@ test('an unavailable meeting stamp writer never holds publication, and the next 
  const store=new StampFailureStore();
  const [first]=await promoteMeetingPartitions({store,partitions:[legistar],meetings:[meeting(legistar,FIRST,'stamp-retry')],agendaDocuments:[],reports:[report(legistar.meetingSource,FIRST)],generatedAt:FIRST});
  assert.equal(first.outcome.candidate.state,'PROMOTED');assert.ok(first.outcome.promoted);
- assert.equal(first.outcome.readerReadback,null);
+ assert.equal(first.outcome.readerReadback?.status,'PASS');
  assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),false);
  store.fail=false;
  const [second]=await promoteMeetingPartitions({store,partitions:[legistar],meetings:[meeting(legistar,SECOND,'stamp-retry')],agendaDocuments:[],reports:[report(legistar.meetingSource,SECOND)],generatedAt:SECOND});
  assert.equal(second.outcome.promoted?.versionId,first.outcome.promoted?.versionId);
- assert.equal(second.outcome.readerReadback?.status,'PASS');
- assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),true);
+ assert.equal(second.outcome.readerReadback?.status,'PASS',second.outcome.readerReadback?.detail);
+ assert.equal((await store.events(first.candidate.id)).some(e=>e.detail.startsWith(READER_PROJECTION_READBACK_PREFIX)),false);
+});
+
+test("a failed archive or upcoming scope never withholds the other scope's independently read meeting", async () => {
+  for (const scope of ["ARCHIVE", "UPCOMING"] as const) {
+    const store = new MemoryRoutineDataStore();
+    const prior = meeting(legistar, FIRST, `held-${scope}`);
+    const [seed] = await promoteMeetingPartitions({ store, partitions: [legistar], meetings: [prior], agendaDocuments: [],
+      reports: [report(legistar.meetingSource, FIRST)], generatedAt: FIRST });
+    assert.ok(seed?.outcome.promoted);
+    const fresh = meeting(legistar, SECOND, `new-${scope}`);
+    const [read] = await promoteMeetingPartitions({ store, partitions: [legistar], meetings: [fresh], agendaDocuments: [],
+      reports: [{ ...report(legistar.meetingSource, SECOND), partialScopes: [{ scope, ocdIds: [legistar.ocdId], cause: "HTTP404 archive moved" }] }], generatedAt: SECOND });
+    assert.ok(read?.outcome.promoted, read?.outcome.candidate.failureDetail ?? "the healthy scope was held");
+    const payload = read.outcome.promoted.payload as { meetings: Meeting[] };
+    assert.deepEqual(new Set(payload.meetings.map(row => row.id)), new Set([prior.id, fresh.id]));
+    assert.ok(read.candidate.excludedFacts?.some(fact => fact.code === "MEETING_SCOPE_UNREAD"));
+    const pointer = await store.readPromotion("MEETING", legistar.scope);
+    const empty = await promoteMeetingPartitions({ store, partitions: [legistar], meetings: [], agendaDocuments: [],
+      reports: [report(legistar.meetingSource, SECOND)], generatedAt: SECOND });
+    assert.deepEqual(empty, []);
+    assert.equal((await store.readPromotion("MEETING", legistar.scope))?.versionId, pointer?.versionId);
+  }
 });

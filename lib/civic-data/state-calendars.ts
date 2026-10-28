@@ -39,7 +39,11 @@ export function stateCalendarsCovers(authorityContract: string | null, partition
 
 export function assertMeetingPartitionAuthority(partitionId: string, env: Readonly<Record<string, string | undefined>> = process.env): void {
   const envelope = runtimeAuthorityEnvelope(env);
-  if (envelope?.capability !== "STATE_CALENDARS") return assertRegisteredRuntimeContract(partitionId, "routine", env);
+  if (envelope?.capability !== "STATE_CALENDARS") {
+    const child=meetingPartitionContract(partitionId);
+    // The same admitted family still owns these exact state/body facts; each body gets its own CAS and pointer.
+    return assertRegisteredRuntimeContract(child?.derivedParentId??partitionId,"routine",env);
+  }
   assertRuntimeAuthority({ capabilities: ["STATE_CALENDARS"] }, env);
   if (!stateCalendarsCovers(envelope.contract, partitionId)) {
     throw new RuntimeAuthorityRefused(`admitted ${envelope.contract ?? "no state"} does not cover ${partitionId}`);
@@ -108,7 +112,8 @@ function namedLines(output: string, prefix: string): Map<string, string> {
     try {
       const value = JSON.parse(line.slice(prefix.length)) as { source?: unknown; partitionId?: unknown; detail?: unknown };
       const id = typeof value.source === "string" ? value.source : typeof value.partitionId === "string" ? value.partitionId : null;
-      if (id !== null) named.set(id, prefix === "RCD_MEETING_PARTITION_UNREAD=" ? String(value.detail ?? "") : line);
+      if (id !== null) named.set(id, prefix === "RCD_MEETING_PARTITION_UNREAD=" ? String(value.detail ?? "")
+        : prefix === "RCD_MEETING_PARTITION_DEFERRED=" ? String(value.detail ?? "not started before the pass deadline") : line);
     } catch { /* A malformed line names no board; the board is settled from what else the program said. */ }
   }
   return named;
@@ -131,7 +136,7 @@ export function stateCalendarMemberResults(run: BoundedChildResult, memberIds: r
     const ok = { id, signal: null, termination: "EXITED" as const, errorMessage: null, settlementErrorMessage: null };
     if (receipts.has(id)) return { id, run: { ...ok, status: 0, stdout: receipts.get(id)!, stderr: "" } };
     if (unread.has(id)) return { id, run: { ...ok, status: 1, stdout: "", stderr: unread.get(id)!, errorMessage: `MEETING_PARTITION_READ_FAILED:${unread.get(id)!}` } };
-    if (deferred.has(id)) return { id, owed: "not started before the pass deadline" };
+    if (deferred.has(id)) return { id, owed: deferred.get(id)! };
     if (cutAtDeadline) return { id, owed: run.errorMessage! };
     if (ending !== null) return { id, owed: `the state's calendar program ended while reading ${ending}` };
     ending = id;

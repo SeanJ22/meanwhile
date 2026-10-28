@@ -2,22 +2,24 @@ import { parse } from "yaml";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
 import { readRawCaptureText } from "../../civic-data/raw-capture-vault.ts";
 import type { EvidenceStore } from "../../control-plane/evidence/store.ts";
-import { FEDERAL_DIRECTORY_SOURCE_ID, FEDERAL_DIRECTORY_STATES, federalDirectoryProjectionIssues, federalDirectoryScope, type FederalDirectoryCapture, type FederalDirectoryReadModel } from "../../officials/federal-directory-data-plane.ts";
-import { readStateFederalDirectory } from "../../officials/federal-directory-read-model.ts";
+import { FEDERAL_DIRECTORY_SOURCE_ID, FEDERAL_DIRECTORY_STATES, federalDirectoryScope, type FederalDirectoryCapture } from "../../officials/federal-directory-data-plane.ts";
+import type { Officeholder } from "../../officials/types.ts";
 import { FIPS_TO_STATE } from "../../ocd/fips.ts";
 import type { LdaRoster } from "./types.ts";
 
 const placeScopes = new Set(FEDERAL_DIRECTORY_STATES.map(federalDirectoryScope));
 const caches = new WeakMap<RoutineDataStore, Map<string, Promise<LdaRoster | undefined>>>();
 /** Every place's held members of Congress as one roster, named by the place versions it was read from. */
-export async function readHeldCongressRoster(store: RoutineDataStore, vault: EvidenceStore, now: string): Promise<LdaRoster | undefined> {
-  const versions: string[] = [];
-  for (const state of FEDERAL_DIRECTORY_STATES) {
-    const read = await readStateFederalDirectory(state, { store, now, bypassCache: true });
-    if (read.kind === "STORE_UNREACHABLE") throw new Error(read.detail);
-    if (read.kind === "PROMOTED") versions.push(read.metadata.versionId!);
-  }
+export async function readHeldCongressRoster(store: RoutineDataStore, vault: EvidenceStore, _now: string): Promise<LdaRoster | undefined> {
+  const versions = await heldCongressRosterVersions(store);
   return versions.length ? readLdaRosterVersion(store, vault, versions.join("|")) : undefined;
+}
+
+/** Changes to the identity join are visible from the keyed current versions, without opening any roster payload. */
+export async function heldCongressRosterVersions(store: RoutineDataStore): Promise<string[]> {
+  return (await store.readPromotionIdentities("FEDERAL_DIRECTORY", FEDERAL_DIRECTORY_STATES.map(federalDirectoryScope)))
+    .filter(pointer => pointer.sourceId === FEDERAL_DIRECTORY_SOURCE_ID && pointer.versionId === pointer.lastKnownGoodVersionId)
+    .sort((a, b) => a.scope.localeCompare(b.scope)).map(pointer => pointer.versionId);
 }
 
 /** Resolve immutable promoted place rosters; every LDA filing keeps this evidence reference. */
@@ -57,20 +59,24 @@ async function sourceNames(vault: EvidenceStore, core: FederalDirectoryCapture):
 
 // Every place reads the same national source file; its names are parsed once per roster.
 async function readPlaceRoster(store: RoutineDataStore, vault: EvidenceStore, versionId: string, parsed: Map<string, Promise<Names>>): Promise<LdaRoster["members"] | undefined> {
-  const saved = await store.readCandidate(versionId);
+  const saved = await store.readCandidateSummary(versionId);
   if (!saved || saved.state !== "PROMOTED" || saved.candidate.recordClass !== "FEDERAL_DIRECTORY" ||
-    saved.candidate.sourceId !== FEDERAL_DIRECTORY_SOURCE_ID || !placeScopes.has(saved.candidate.scope)) return undefined;
-  const projection = saved.candidate.readModel as FederalDirectoryReadModel;
-  if (federalDirectoryProjectionIssues(projection).length) return undefined;
-  const acquisitions = (saved.candidate.normalizedPayload as { acquisitions?: FederalDirectoryCapture[] })?.acquisitions ?? [];
-  const core = acquisitions.find(row => row.finalUrl.endsWith(`/${projection.sourceSha}/legislators-current.yaml`));
+    saved.candidate.sourceId !== FEDERAL_DIRECTORY_SOURCE_ID || !placeScopes.has(saved.candidate.scope) ||
+    saved.candidate.id !== versionId || saved.promotedVersion !== versionId || saved.lastKnownGoodVersion !== versionId || saved.receipt?.decision !== "GOOD") return undefined;
+  const [holders, sourceSha, acquisitions] = await Promise.all([
+    store.readCandidatePath<Officeholder[]>(versionId, ["readModel", "roster", "officeholders"]),
+    store.readCandidatePath<string>(versionId, ["readModel", "sourceSha"]),
+    store.readCandidatePath<FederalDirectoryCapture[]>(versionId, ["normalizedPayload", "acquisitions"]),
+  ]);
+  if (!Array.isArray(holders) || !sourceSha || !/^[a-f0-9]{40}$/.test(sourceSha)) return undefined;
+  const core = acquisitions?.find(row => row.finalUrl.endsWith(`/${sourceSha}/legislators-current.yaml`));
   let names: Promise<Names> = Promise.resolve(new Map());
   if (core) {
     names = parsed.get(core.raw.rawHash) ?? sourceNames(vault, core);
     parsed.set(core.raw.rawHash, names);
   }
   const held = await names;
-  return projection.roster.officeholders.flatMap((holder): LdaRoster["members"] => {
+  return holders.flatMap((holder): LdaRoster["members"] => {
     const bioguideId = holder.id.slice("congress:".length);
     const chamber = holder.chamber === "senate" || holder.chamber === "house" ? holder.chamber : null;
     if (!chamber || !holder.provenance.sourceUrl || !Object.values(FIPS_TO_STATE).some(row => row.postal === holder.state)) return [];

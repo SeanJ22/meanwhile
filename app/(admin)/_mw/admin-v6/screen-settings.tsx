@@ -75,8 +75,8 @@ function SettingCard(props: { readonly row: SettingRow }) {
 }
 
 export function SettingsScreen() {
-  const { reading, reload } = useReading<SettingsView>(SETTINGS_ROUTE, 20_000);
-  const books = useReading<PlaybooksView>(PLAYBOOKS_ROUTE, 20_000);
+  const { reading, reload, status } = useReading<SettingsView>(SETTINGS_ROUTE);
+  const books = useReading<PlaybooksView>(PLAYBOOKS_ROUTE);
   async function sendPlaybook(send: PlaybookSend, key: string) {
     const says = await savePlaybook(send, key);
     books.reload();
@@ -85,9 +85,11 @@ export function SettingsScreen() {
   const data = reading.kind === "ready" ? reading.data : null;
   return (
     <Card title="Settings" id="settings">
+      {status}
       {reading.kind === "loading" && <Loading what="the settings" />}
       {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}
       <div className={s.stack}>
+        {books.status}
         <h3 className={s.h3}>Worker instructions</h3>
         {books.reading.kind === "loading" && <Loading what="the worker instructions" />}
         {books.reading.kind === "failed" && <p role="status">Worker instructions could not be read. <button className={s.btn} onClick={books.reload}>Try again</button></p>}
@@ -102,7 +104,7 @@ export function SettingsScreen() {
       {data && (
         <div className={s.stack}>
           {!data.rows.length && <Empty>No settings</Empty>}
-          {data.rows.map((row) => <SettingCard key={row.key} row={row} />)}
+          {data.rows.filter(row => row.key !== "coverage.owedTable").map((row) => <SettingCard key={row.key} row={row} />)}
           <p className={cx(s.p, s.meta)}>Read {mst(data.observedAt)}</p>
         </div>
       )}
@@ -111,11 +113,11 @@ export function SettingsScreen() {
 }
 
 export function RunnerSettingsPanel() {
-  const { reading } = useReading<SettingsView>(SETTINGS_ROUTE, 30_000);
+  const { reading, status } = useReading<SettingsView>(SETTINGS_ROUTE);
   const rows = reading.kind === "ready" ? reading.data.rows.filter((row) => row.inForce.where === "runner") : [];
-  if (reading.kind !== "ready" || !rows.length) return null;
   return (
     <Card title="Runner settings" id="runner-settings">
+      {status}
       <div className={s.stack} style={{ gap: 6 }}>
         {rows.map((row) => {
           const force = inForceWords(row);

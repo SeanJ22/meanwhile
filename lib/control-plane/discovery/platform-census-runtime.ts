@@ -1,5 +1,5 @@
 import { EMPTY_SPEND } from "../spend-window.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
 import { createPgRepositories, controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
@@ -13,7 +13,6 @@ import { CENSUS_LANE_BUDGET_MS } from "./census-lane.ts";
 import type { FieldManualEntry } from "../field-manual.ts";
 import type { PlatformRegistrationPage } from "./platform-registration.ts";
 import type { DiscoveryRuntime } from "./meetings-discovery-executor.ts";
-import { platformRequestPacer } from "./platform-request-pacing.ts";
 import { runPlatformCensusPass, ownerPlatformGovernments } from "./platform-census-pass.ts";
 import { readPlatformOrders, orderedPlatformGovernments } from "./platform-orders.ts";
 import { heldPlatformTenants } from "./platform-enumeration.ts";
@@ -26,6 +25,8 @@ import { knownRecipes, RECIPE_KIND } from "../../hunt/meetings-recipes.ts";
 import { readDiscoveryRouteHints, routeHintEntriesBySubject } from "./route-hints.ts";
 import { platformFetch } from "../../doors/platform-http.ts";
 import { platformCensusWatchdog } from "./platform-census-watchdog.ts";
+import { readerFactDb } from "../../facts/db.ts";
+import { withdrawPlatformPublication,confirmPlatformPublication } from "../../facts/portal-publication.ts";
 
 /** Targeted reads of CP-01's per-entry store, shared with the schema integration check. */
 export const PLATFORM_CENSUS_NOTES_SQL = {
@@ -41,6 +42,9 @@ export const PLATFORM_CENSUS_NOTES_SQL = {
       AND value->>'url' IS NOT NULL ORDER BY id LIMIT 1`,
   government: `SELECT value FROM cp_field_manual_entries WHERE (value #>> '{payload,jurisdictionId}'=$1 OR value #>> '{payload,subjectId}'=$1)
     AND value->>'kind' IN ('SCOUT_DISCOVERY','ROUTE','GOVERNMENT_WEBSITE','NCES_WEBSITE','PLATFORM_CENSUS_DOMAIN')`,
+  portals: `SELECT DISTINCT value #>> '{config,governmentId}' AS subject FROM cp_doors
+    WHERE value->'config' ? 'crosswalkRowId' AND value #>> '{config,governmentId}'>$1
+    ORDER BY subject LIMIT 1`,
 } as const;
 
 /** The runner child admits one government or one directory page per worker and retains only their inventory cursors. */
@@ -66,7 +70,7 @@ export async function runNationalPlatformCensus() {
   const query = async (sql: string, parameters: readonly unknown[]) => {
     const rows = await reader.query(sql, [...parameters]); progress.note("registration read"); return rows;
   };
-  const vault = cycleVault(join(root, ...VAULT_DIR)), pace = platformRequestPacer();
+  const vault = cycleVault(join(root, ...VAULT_DIR));
   const sizeReaders = new Map<PlatformRegistrationPage, ReturnType<typeof websiteSizeFromHoldings>>();
   const fleet = new FleetSafetyController({ now: now(), spend: EMPTY_SPEND, modelHold: "Plain-code national platform census", websitePacing: repos.websitePacing,
     websiteSize: url => { const values = [...new Map([...sizeReaders.values()].flatMap(read => read(url) ?? []).map(size => [JSON.stringify(size), size])).values()]; return values.length === 1 ? values[0] : null; } });
@@ -74,7 +78,6 @@ export async function runNationalPlatformCensus() {
     now, spaceOut: async () => {}, vault: vault.put, budget: { spent: ended, remainingMs: () => remaining() },
     open: async input => {
       if (ended()) throw new Error("Platform census reading interrupted");
-      await pace(input.url);
       const got = await fleet.guardedOpenBytes("discovery-web", "platform-census", (url, init) => platformFetch(url, {
         ...init, method: input.method ?? "GET", body: input.body, redirect: "manual", signal: AbortSignal.timeout(Math.min(input.timeoutMs, remaining())),
       }), { followRedirects: false })(input);
@@ -99,10 +102,19 @@ export async function runNationalPlatformCensus() {
     });
     const states = REGISTRATION_TARGETS.map(target => target.state.toLowerCase());
     const report = await runPlatformCensusPass({ repos, query, states, now, stopped: ended, reviewer,
+      withdraw:(door,portal) => withdrawPlatformPublication(readerFactDb(readerConnection),door,portal),
+      confirm:door=>confirmPlatformPublication(readerFactDb(readerConnection),door),
       ownerSubjects: async () => { orders = await readPlatformOrders(controlQuery); if (orders.paused) stopped = true; return orders.subjects; },
       ownerGovernments: subjects => orderedPlatformGovernments(controlQuery, query, subjects),
       tenantFor: page => dotgov ? dotgovTenantForGovernment(dotgov.body, dotgov.sourceVersion, platformRegistrationNeed(page)!) : undefined,
       retryGovernments: async function* () {
+        let government = '';
+        for (;;) {
+          const [row] = await controlQuery(PLATFORM_CENSUS_NOTES_SQL.portals,[government]);
+          if (!row || ended()) break;
+          government = String(row.subject);
+          yield* ownerPlatformGovernments(query,[government]);
+        }
         let after = "";
         for (;;) {
           const [row] = await controlQuery(PLATFORM_CENSUS_NOTES_SQL.retry, [after, now()]);

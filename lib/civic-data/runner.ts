@@ -1,4 +1,5 @@
 import { failureRetryMs } from "./failure-backoff.ts";
+import { factRefreshBounds, timeSensitiveSource } from "./source-change-cadence.ts";
 import { WORKER_PUBLICATION_TASK_IDS } from "./worker-reader-contracts.ts";
 import { VALIDATION_CHECKS, type RoutineRecordClass } from "./types.ts";
 import {
@@ -18,24 +19,49 @@ import {
 } from "./runner-receipt.ts";
 import { runBoundedWorkPool } from "../ops/bounded-work-pool.ts";
 import type { BoundedChildResult } from "./bounded-child-pass.ts";
+import { withDatabaseByteContract } from "./database-byte-contract.ts";
+import { meetingSourceContinuationPending } from "./meeting-source-progress.ts";
+import type { WorkerMemoryOrder } from "../control-plane/workers/worker-slots.ts";
+import type { RoutineSupervisorLane } from "../control-plane/owner-surface.ts";
 
 /** A command never spawned because memory stayed full or the pass's time ran out, or ended at the pass deadline: still owed, not failed. */
 export function routineDeferral(run: BoundedChildResult, childStarted: boolean): string | null {
   const unsent = !childStarted && run.termination === "SPAWN_FAILED" && run.status === null && run.signal === null &&
-    run.stdout === "" && run.stderr === "" && /^(?:WORKER_MEMORY_DEADLINE|PASS_TIME_BUDGET):/.test(run.errorMessage ?? "");
+    run.stdout === "" && run.stderr === "" && /^(?:WORKER_MEMORY_DEADLINE|PASS_TIME_BUDGET|JOB_TRANSFER_BREAKER):/.test(run.errorMessage ?? "");
   const cut = childStarted && run.termination === "TIMED_OUT" && /^PASS_TIME_BUDGET:/.test(run.errorMessage ?? "");
   return unsent || cut ? run.errorMessage : null;
 }
 
-/** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane. */
-const ROUTINE_SERIAL_SCRIPTS: ReadonlySet<string> = new Set(["scripts/national-people-refresh.mts"]);
+/** One national people child holds gigabytes, so every state and source of it runs one at a time in its own lane, as does
+ * the national bill fan-out and the national Census overlap child. Each state's map child runs in the place-map lane
+ * (place-map-lane.ts), one at a time. */
+const ROUTINE_SERIAL_SCRIPTS: ReadonlyMap<string, string> = new Map([
+  ["scripts/national-people-refresh.mts", "serial:scripts/national-people-refresh.mts"],
+  ["scripts/legiscan-bulk.mts", "serial:scripts/legiscan-bulk.mts"],
+  ["scripts/census-geography-refresh.mts", "serial:census-geography"],
+]);
 export function routineSerialLane(command: readonly string[]): string | undefined {
-  return ROUTINE_SERIAL_SCRIPTS.has(command[0] ?? "") ? `serial:${command[0]}` : undefined;
+  return ROUTINE_SERIAL_SCRIPTS.get(command[0] ?? "");
+}
+
+/**
+ * Work whose one child reserves more than a finishing read frees, and that has waited a full pass, goes first for memory.
+ * The national bill fan-out (2,130 MiB) continues from pass to pass with no owed instant, so whenever it is admitted it
+ * has waited. A state map waits in its own lane (place-map-lane.ts), where every map goes first.
+ */
+export function routineWaitedFullPass(candidate: Pick<RoutineTaskAdmissionCandidate, "task">): boolean {
+  return candidate.task.command[0] === "scripts/legiscan-bulk.mts";
+}
+
+/** Waited work goes to the front and takes the next freed memory that fits its own reservation; every other child
+ * takes a free turn and stays queued if it does not fit. */
+export function routineChildMemoryOrder(priority: number, waited: boolean): WorkerMemoryOrder {
+  return waited ? { priority, first: true } : { priority, wait: false };
 }
 
 export const ROUTINE_SUPERVISOR_STARTED_AT_ENV = "WTP_ROUTINE_SUPERVISOR_STARTED_AT";
 
-export function routineSupervisorCycleId(host: string, startedAt: string, lane: "routine-civic-data" | "publish-now" = "routine-civic-data"): string {
+export function routineSupervisorCycleId(host: string, startedAt: string, lane: RoutineSupervisorLane = "routine-civic-data"): string {
   const parsed = Date.parse(startedAt);
   if (!Number.isFinite(parsed) || new Date(parsed).toISOString() !== startedAt) {
     throw new Error(`ROUTINE_SUPERVISOR_STARTED_AT_INVALID:${startedAt}`);
@@ -57,7 +83,10 @@ export interface RoutineSourceTask {
   readonly command: readonly string[];
   readonly cadenceMs: number;
   readonly retryMs: number;
-  readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection" | "fanOut">;
+  /** Read from the owner's fact settings for this pass, using the source's fact kind. */
+  readonly minimumRefreshMs?: number;
+  readonly freshnessWindowMs?: number;
+  readonly contract: Pick<RoutineSourceContract, "cadence" | "schedule" | "readerProjection" | "fanOut" | "databaseBytesPerRun" | "databaseBytesPerUnchangedRun" | "databaseByteBasis">;
   readonly childTimeoutMs?: number;
   readonly ownerInvocation?: {
     readonly publicationPending?: true;
@@ -69,6 +98,7 @@ export interface RoutineSourceTask {
 }
 
 export function routineTaskFromContract(contract: RoutineSourceContract): RoutineSourceTask {
+  if (contract.databaseBytesPerRun === undefined) contract = withDatabaseByteContract(contract);
   if (contract.authorityConstraint.registry !== "SOURCE_AUTHORITIES" || contract.authorityConstraint.sourceId !== contract.sourceId) {
     throw new Error(`ROUTINE_CONTRACT_AUTHORITY_MISMATCH:${contract.id}`);
   }
@@ -132,13 +162,10 @@ onMeetingPartitionsRefreshed(() => {
   (ROUTINE_SOURCE_TASKS as RoutineSourceTask[]).splice(0, ROUTINE_SOURCE_TASKS.length, ...routineSourceTasks());
 });
 
-/** At most one child from any shared upstream per pass; the next pass rotates to the least-recently-considered task. */
-export const ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS = 1;
-/** A sitting-window lane takes up to three reads a pass, run one after another with the same-host gap. Other lanes take one. */
+/** Sitting-window lanes retain their existing three-read turn so long passes keep their hourly catch-up. */
 export const SITTING_WINDOW_LANE_SLOTS_PER_PASS = 3;
 export { ROUTINE_DATA_ADMISSION_MS, ROUTINE_PASS_BUDGET_MS };
 export const ROUTINE_CLOCK_READ_CONCURRENCY = 8;
-export const ROUTINE_CLOCK_MAX_REQUESTS_PER_TASK = 2;
 
 export interface RoutineTaskAdmissionCandidate {
   readonly task: RoutineSourceTask;
@@ -165,12 +192,8 @@ function consideredAtMs(candidate: Pick<RoutineTaskAdmissionCandidate, "lastCons
 
 export function routineFailureDomainFrontier(
   candidates: readonly RoutineTaskAdmissionCandidate[],
-  perDomain: number = ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   rotationSeed: number = 0,
 ): readonly RoutineTaskAdmissionCandidate[] {
-  if (!Number.isSafeInteger(perDomain) || perDomain <= 0) {
-    throw new Error(`ROUTINE_FAILURE_DOMAIN_FRONTIER_INVALID:${perDomain}`);
-  }
   if (!Number.isSafeInteger(rotationSeed) || rotationSeed < 0) {
     throw new Error(`ROUTINE_FAILURE_DOMAIN_FRONTIER_ROTATION_INVALID:${rotationSeed}`);
   }
@@ -196,8 +219,8 @@ export function routineFailureDomainFrontier(
     // These place projections share one national acquisition and one child, rather than 56 source reads.
     const slots = group.every(({ task }) => task.sourceId === "congress-directory-project" && task.recordClass === "FEDERAL_DIRECTORY") ? group.length
       : group.every(({ deadlineMs }) => deadlineMs !== undefined)
-      ? Math.max(perDomain, SITTING_WINDOW_LANE_SLOTS_PER_PASS)
-      : perDomain;
+      ? SITTING_WINDOW_LANE_SLOTS_PER_PASS
+      : group.length;
     group
       .sort((left, right) =>
         deadlineOrder(left) - deadlineOrder(right) ||
@@ -285,7 +308,7 @@ export function routineFrontierPassBound(
     lanes.set(task.acquisitionFailureDomain, { windowed: lane.windowed && windowed, size: lane.size + 1 });
   }
   const slots = [...lanes.values()].map(({ windowed, size }) =>
-    Math.min(size, windowed ? SITTING_WINDOW_LANE_SLOTS_PER_PASS : ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS));
+    Math.min(size, windowed ? SITTING_WINDOW_LANE_SLOTS_PER_PASS : size));
   return { commandCount: slots.reduce((sum, n) => sum + n, 0), largestFailureDomainSize: Math.max(...slots) };
 }
 
@@ -523,9 +546,13 @@ export interface RoutineTaskClock {
   readonly lastAttemptedAt?: string;
   readonly lastSucceededAt?: string;
   readonly lastSucceededObservedAt?: string;
+  /** Local successful processing event, separate from the source's actual check date. */
+  readonly lastCompletedAt?:string;
+  readonly nextWorkAt?:string;
+  readonly sourceComplete?:boolean;
   readonly lastSucceededParserVersion?: string;
   readonly sittingStarts?: readonly string[];
-  /** A verified national federal source marker still holds unfinished state pages. */
+  /** A source's explicit successful cutoff still holds unfinished work. */
   readonly continuationPending?: boolean;
 }
 
@@ -548,7 +575,10 @@ export async function readRoutineTaskClocks(
   readClock: (task: RoutineSourceTask) => Promise<RoutineTaskClock | undefined>,
   concurrency: number = ROUTINE_CLOCK_READ_CONCURRENCY,
 ): Promise<readonly RoutineTaskClockRead[]> {
-  const reads = await runBoundedWorkPool(tasks, concurrency, readClock);
+  const reads = await runBoundedWorkPool(tasks, concurrency,async task=>{
+    const clock=await readClock(task);
+    return task.recordClass==="MEETING"&&await meetingSourceContinuationPending(task.scope)?{...clock,continuationPending:true}:clock;
+  });
   return reads.map((read) => read.ok
     ? { task: tasks[read.index]!, ok: true as const, clock: read.value, error: null }
     : { task: tasks[read.index]!, ok: false as const, clock: undefined, error: read.error });
@@ -586,7 +616,7 @@ export function routineTaskDeadlineMs(
   return sittingWindowObligation(
     schedule,
     failureRetryMs(task.retryMs, clock),
-    { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) },
+    { attemptedMs: attempted, succeededMs: succeeded,completedMs:successfulProcessingMs(clock),published: sittingTaskPublished(task, clock) },
     sittingHot,
   ).deadlineMs;
 }
@@ -634,9 +664,6 @@ export function unchangedRoutineProtocolFailure(
     .some(at => Number.isFinite(Date.parse(at ?? "")) && Date.parse(at!) > failedAt && Date.parse(at!) <= nowMs);
 }
 
-/** The hourly floor: an observed change rate never makes a door's check faster than this. Same number as lib/doors/observed-rate.ts. */
-const MIN_OBSERVED_CHECK_MS = 60 * 60_000;
-
 export function routineBaselineOwed(task: RoutineSourceTask, clock: RoutineTaskClock | undefined): boolean {
   return !task.ownerInvocation && task.authorityMode !== "DERIVED" &&
     task.recordClass !== "MEETING" && task.recordClass !== "MEETING_OUTCOME" && (
@@ -653,6 +680,13 @@ export function routineCodeChangeRetryTaskIds(reads: readonly RoutineTaskClockRe
   ) ? [read.task.id] : []));
 }
 
+function successfulProcessingMs(clock:RoutineTaskClock|undefined):number{
+  const times=[clock?.lastCompletedAt,clock?.lastSucceededObservedAt].flatMap(value=>{
+    const at=Date.parse(value??"");return Number.isFinite(at)?[at]:[];
+  });
+  return times.length?Math.max(...times):Number.NaN;
+}
+
 export function routineTaskNextDueMs(
   task: RoutineSourceTask,
   clock: RoutineTaskClock | undefined,
@@ -660,47 +694,73 @@ export function routineTaskNextDueMs(
   sittingHot?: boolean,
   observedEveryMs?: number,
 ): number {
+  const defaults = factRefreshBounds(task);
+  const continuationPending = clock?.continuationPending === true && (Number.isFinite(Date.parse(clock.lastCompletedAt ?? "")) || ["MEETING", "MEETING_OUTCOME", "STATE_BILL", "CURATED_READER_RECORD"].includes(task.recordClass) || task.recordClass === "FEDERAL_MONEY" &&
+    task.contract.fanOut !== undefined && task.scope === `${task.sourceId}:US`);
+  const policyNowMs = cadenceMsAt(task.contract, nowMs);
+  // The explicit election/sitting obligation keeps its installed pace even when its broad fact kind retries more slowly.
+  const sensitive = timeSensitiveSource(task, nowMs);
+  const minimumMs = sensitive ? Math.min(task.minimumRefreshMs ?? defaults.minimumRefreshMs, policyNowMs)
+    : task.minimumRefreshMs ?? defaults.minimumRefreshMs;
+  const retryDelayMs = sensitive ? failureRetryMs(task.retryMs, clock)
+    : Math.max(minimumMs, failureRetryMs(task.retryMs, clock));
+  const sourceAttempted = Date.parse(clock?.lastAttemptedAt ?? "");
+  const sourceSucceeded = Date.parse(clock?.lastSucceededObservedAt ?? "");
+  // A successful replay may finish local work; only a newer provider check recovers a recorded source failure.
+  const sourceFailed = (clock?.failureStreak ?? 0) > 0 && Number.isFinite(sourceAttempted) &&
+    (!Number.isFinite(sourceSucceeded) || sourceAttempted > sourceSucceeded);
   if (task.ownerInvocation) {
     const requested = Date.parse(task.ownerInvocation.requestedAt);
     const succeeded = Date.parse(clock?.lastSucceededObservedAt ?? clock?.lastSucceededAt ?? "");
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
+    const completed=successfulProcessingMs(clock);
+    if(sourceFailed && attempted >= requested)return attempted + retryDelayMs;
+    if(continuationPending&&Number.isFinite(attempted)&&Number.isFinite(completed)&&completed>=attempted&&completed<=nowMs)return nowMs;
     if (task.ownerInvocation.publicationPending) return !Number.isFinite(attempted) || attempted < requested ||
-      (Number.isFinite(succeeded) && succeeded >= attempted && succeeded <= nowMs) ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+      (!clock?.lastSucceededObservedAt && Number.isFinite(Date.parse(clock?.lastSucceededAt ?? "")) && Date.parse(clock!.lastSucceededAt!) >= attempted) ||
+      (Number.isFinite(completed) && completed >= attempted && completed <= nowMs) ? nowMs : attempted + retryDelayMs;
     if (Number.isFinite(succeeded) && succeeded >= requested && succeeded <= nowMs) return Number.POSITIVE_INFINITY;
-    return !Number.isFinite(attempted) || attempted < requested ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+    return !Number.isFinite(attempted) || attempted < requested ? nowMs : attempted + retryDelayMs;
   }
   if (clock?.lastSucceededParserVersion !== undefined && clock.lastSucceededParserVersion !== task.parserVersion) {
     // The store scopes attempts to this parser. A prior parser's GOOD remains live,
     // but cannot postpone a held-byte reparse for the source's full refresh cadence.
     const attempted = Date.parse(clock.lastAttemptedAt ?? "");
-    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + retryDelayMs;
   }
   if (task.contract?.cadence.requiredScopeVersions?.some(version => !clock?.publishedScopeVersions?.includes(version))) {
     const attempted = Date.parse(clock?.lastAttemptedAt ?? "");
-    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + failureRetryMs(task.retryMs, clock);
+    return !Number.isFinite(attempted) || attempted > nowMs ? nowMs : attempted + retryDelayMs;
   }
   if (!clock?.lastAttemptedAt) return nowMs;
   const attempted = Date.parse(clock.lastAttemptedAt);
   const succeeded = clock.lastSucceededObservedAt ? Date.parse(clock.lastSucceededObservedAt) : Number.NaN;
+  const completed=successfulProcessingMs(clock);
   if (!Number.isFinite(attempted)) return nowMs;
-  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)) return nowMs;
+  if (attempted > nowMs || (Number.isFinite(succeeded) && succeeded > nowMs)||(Number.isFinite(completed)&&completed>nowMs)) return nowMs;
+  if(sourceFailed && task.contract?.schedule?.kind !== "SITTING_WINDOW")return attempted + retryDelayMs;
+  if(Number.isFinite(completed)&&attempted<=completed&&continuationPending)return nowMs;
+  if(clock.sourceComplete===false)return Math.max(attempted,Number.isFinite(completed)?completed:attempted)+retryDelayMs;
+  const capWorkDue=(due:number)=>{
+    const next=Date.parse(clock.nextWorkAt??"");
+    return Number.isFinite(next)&&Number.isFinite(succeeded)?Math.min(due,Math.max(succeeded+minimumMs,next)):due;
+  };
   const schedule = task.contract?.schedule;
-  if (schedule?.kind === "SITTING_WINDOW") return sittingWindowObligation(schedule, failureRetryMs(task.retryMs, clock),
-    { attemptedMs: attempted, succeededMs: succeeded, published: sittingTaskPublished(task, clock) }, sittingHot).eligibleAtMs;
-  if (!Number.isFinite(succeeded)) return attempted + failureRetryMs(task.retryMs, clock);
+  if (schedule?.kind === "SITTING_WINDOW") return capWorkDue(sittingWindowObligation(schedule, retryDelayMs,
+    { attemptedMs: attempted, succeededMs: succeeded,completedMs:completed,published: sittingTaskPublished(task, clock) }, sittingHot).eligibleAtMs);
+  if (!Number.isFinite(succeeded)) return attempted + retryDelayMs;
     // Once a due read fails, the source's retry clock owns the next attempt.
-  if (attempted > succeeded) return attempted + failureRetryMs(task.retryMs, clock);
-  if (task.recordClass === "FEDERAL_MONEY" && task.contract.fanOut === true &&
-      task.scope === `${task.sourceId}:US` && clock.continuationPending === true) return nowMs;
+  if (attempted > completed) return attempted + retryDelayMs;
   const boundaries = [...new Set((task.contract.cadence.phases ?? []).map(phase => Date.parse(phase.through))
     .filter(at => Number.isFinite(at) && at > nowMs))].sort((a, b) => a - b);
   const starts = [nowMs, ...boundaries];
   for (const [index, start] of starts.entries()) {
     const policyMs = cadenceMsAt(task.contract, start);
-    const everyMs = observedEveryMs === undefined ? policyMs
-      : Math.min(policyMs, Math.max(observedEveryMs, MIN_OBSERVED_CHECK_MS));
+    const observed = observedEveryMs !== undefined && Number.isFinite(observedEveryMs) && observedEveryMs > 0 ? observedEveryMs : policyMs;
+    const everyMs = timeSensitiveSource(task, start) ? Math.min(policyMs, Math.max(observed, Math.min(minimumMs, policyMs)))
+      : Math.max(minimumMs, Math.min(task.freshnessWindowMs ?? defaults.freshnessWindowMs, observed));
     const due = index === 0 ? succeeded + everyMs : Math.max(start, succeeded + everyMs);
-    if (due < (starts[index + 1] ?? Number.POSITIVE_INFINITY)) return due;
+    if (due < (starts[index + 1] ?? Number.POSITIVE_INFINITY)) return capWorkDue(due);
   }
   return Number.POSITIVE_INFINITY;
 }

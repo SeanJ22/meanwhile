@@ -20,6 +20,14 @@ export interface OfficialLinkingPage {
   readonly linkingPage?: OfficialLinkingPage | null;
 }
 
+/** A saved page's identity; authority chains contain references, never page bodies. */
+export interface OfficialLinkingPageRef {
+  readonly url: string;
+  readonly sourceCopyId: number;
+  readonly linkingPage?: OfficialLinkingPageRef | null;
+}
+export type OpenOfficialLinkingPage = (page: OfficialLinkingPageRef) => Promise<{ readonly url: string; readonly html: string }>;
+
 export interface GovernmentWebsiteDelegation {
   readonly governmentUrl: string;
   readonly html: string;
@@ -71,13 +79,23 @@ function delegatedGovernmentWebsite(url: string, proof: GovernmentWebsiteDelegat
   } catch { return false; }
 }
 
-export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null, websiteDelegation?: GovernmentWebsiteDelegation | null): boolean {
+export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | null, websiteDelegation?: GovernmentWebsiteDelegation | null): boolean;
+export function isOfficialSource(url: string, linkingPage: OfficialLinkingPageRef | null | undefined, websiteDelegation: GovernmentWebsiteDelegation | null | undefined, open: OpenOfficialLinkingPage): Promise<boolean>;
+export function isOfficialSource(url: string, linkingPage?: OfficialLinkingPage | OfficialLinkingPageRef | null, websiteDelegation?: GovernmentWebsiteDelegation | null, open?: OpenOfficialLinkingPage): boolean | Promise<boolean> {
   const host = hostOf(url);
-  if (host === null) return false;
-  if (/(^|\.)gov$/.test(host)) return true;
-  if (websiteDelegation && delegatedGovernmentWebsite(url, websiteDelegation)) return true;
-  if (!linkingPage || !isOfficialSource(linkingPage.url, linkingPage.linkingPage)) return false;
-  return pageLinksSource(url, linkingPage);
+  const result = (value: boolean) => open ? Promise.resolve(value) : value;
+  if (host === null) return result(false);
+  if (/(^|\.)gov$/.test(host)) return result(true);
+  if (websiteDelegation && delegatedGovernmentWebsite(url, websiteDelegation)) return result(true);
+  if (open) {
+    const page = linkingPage as OfficialLinkingPageRef | null | undefined;
+    if (!page) return Promise.resolve(false);
+    return isOfficialSource(page.url, page.linkingPage, undefined, open).then(async official =>
+      official && pageLinksSource(url, await open(page)));
+  }
+  const page = linkingPage as OfficialLinkingPage | null | undefined;
+  if (!page || !isOfficialSource(page.url, page.linkingPage)) return false;
+  return pageLinksSource(url, page);
 }
 
 /** A source's host is linked in this saved page; authority belongs to the caller's page check. */
@@ -503,10 +521,15 @@ const AUTHORITIES = {
     publisher: "U.S. Census Bureau",
     trust: "T1_AUTHORITATIVE_STRUCTURED",
     sourceClass: "FEDERAL_AGENCY",
-    routePrefixes: ["https://www2.census.gov/geo/docs/maps-data/data/rel2020/"],
+    routePrefixes: [
+      "https://www2.census.gov/geo/docs/maps-data/data/rel2020/",
+      "https://www2.census.gov/geo/docs/maps-data/data/grf/",
+      "https://www2.census.gov/geo/tiger/",
+      "https://www2.census.gov/programs-surveys/metro-micro/geographies/reference-files/",
+    ],
     jurisdictions: ["US"],
     recordClasses: ["CENSUS_GEOGRAPHY"],
-    competentFacts: ["ZCTA-to-geography area overlap (2020 tab20 relationship file)", "Census GEOID"],
+    competentFacts: ["ZCTA-to-geography area overlap (2020 tab20 relationship file)", "current GRF district-plan relationships", "TIGER district and ZCTA boundaries", "OMB CBSA delineations", "Census GEOID"],
     expectedIdentifierKeys: ["type", "geoid", "version"],
     expectedTemporalFields: ["version", "source_through"],
     horizonSemantics: "Complete for the exact built scopes: each geography's every wholly-or-partly overlapping ZCTA. It never claims a wider geography universe and never substitutes a different Census vintage.",
@@ -743,7 +766,7 @@ const AUTHORITIES = {
     absencePolicy: { kind: "NEVER_FROM_ZERO" },
     routineAutoPromotion: true,
     derivedPromotion: {
-      inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE", "PIPELINE_APPROVAL"],
+      inputKinds: ["PROMOTED_VERSION", "VAULTED_EVIDENCE", "PIPELINE_APPROVAL", "DISCOVERY_ATTEMPT"],
       authorization: "Sean, 2026-09-21: \"You may enable automatic promotion for qualifying results. Fix the gap, recover value already paid for.\"",
     },
   },

@@ -1,10 +1,9 @@
-import { readDerivedMeetingWiring, type DerivedWiringProjection } from "../../civic-data/derived-meeting-wiring.ts";
+import type { DerivedWiringProjection } from "../../civic-data/derived-meeting-wiring.ts";
 import { MEETING_PARTITION_CONTRACTS } from "../../civic-data/meeting-partitions.ts";
 import type { CivicDataReadResult } from "../../civic-data/read-model.ts";
-import type { RegistrationReadModel } from "../../registration/candidate.ts";
-import { readRegistrationProjection } from "../../registration/reader.ts";
 import { loadRegistrationReference, type LoadedReference } from "../../registration/reference.ts";
-import { readRegistryRuntimeProjection } from "../../registry/runtime-read-model.ts";
+import { readOwnershipLookup,readOwnershipWiring,type RegistrationOwnershipRows } from "../../civic-data/keyed-government-lookup.ts";
+import { factReader } from "../../facts/db.ts";
 import { sanitizedErrorDiagnostic } from "../../ops/error-diagnostic.ts";
 import { promotedRegistries, type MeetingPartitionOwnership } from "./provider-inputs.ts";
 
@@ -25,7 +24,7 @@ export function reviewedGovernmentPairs(reference: LoadedReference, referenceSha
 export function createMeetingPartitionOwnership(input: {
   readonly root?: string;
   readonly readWiring?: () => Promise<CivicDataReadResult<DerivedWiringProjection>>;
-  readonly readRegistration?: (state: string) => Promise<CivicDataReadResult<RegistrationReadModel>>;
+  readonly readRegistration?: (state: string) => Promise<{kind:string;value:RegistrationOwnershipRows|null}>;
   readonly staticBodies?: ReadonlySet<string>;
   readonly registryBodies?: () => Iterable<{ readonly id: string; readonly bodyId?: string | null }>;
 } = {}): MeetingPartitionOwnership & { readStates(states: Iterable<string>): Promise<void> } {
@@ -79,9 +78,10 @@ export function createMeetingPartitionOwnership(input: {
       if (!wiringRead) {
         wiringRead = true;
         try {
-          const read = await (input.readWiring ?? (() => readDerivedMeetingWiring({ bypassCache: true })))();
+          const query=factReader();
+          const read = input.readWiring ? await input.readWiring() : query ? await readOwnershipWiring(query) : (()=>{throw new Error("The held meeting ownership source is unavailable.");})();
           wiringKnown = read.kind === "PROMOTED" || read.kind === "NOT_RECORDED";
-          if (read.kind === "PROMOTED") {
+          if (read.kind === "PROMOTED" && read.value) {
             for (const { row } of read.value.records) {
               if (!familyStates.has(row.state)) continue;
               // Suspended routes still own their partition and its last verified data.
@@ -99,18 +99,15 @@ export function createMeetingPartitionOwnership(input: {
         if (states.has(state)) continue;
         states.add(state);
         let reviewedBodies: ReadonlySet<string> | null = null;
-        if (input.root) {
-          try {
-            const read = await readRegistryRuntimeProjection([state]);
-            if (read.kind === "PROMOTED") reviewedBodies = new Set(read.value.registry.bodies.map(body => body.id));
-            else failures.set(state, `${state.toUpperCase()} reviewed body registry is ${read.kind}; unpaired governments remain UNKNOWN`);
-          } catch (error) {
-            failures.set(state, `${state.toUpperCase()} reviewed body registry unread: ${sanitizedErrorDiagnostic(error)}`);
-          }
-        }
         try {
-          const read = await (input.readRegistration ?? ((s) => readRegistrationProjection(s, { bypassCache: true })))(state);
-          if (read.kind !== "PROMOTED") {
+          const query=factReader();
+          const lookup=input.readRegistration ? null : query ? await readOwnershipLookup(query,state) : null;
+          const read=input.readRegistration?await input.readRegistration(state):lookup?.registration?{kind:"PROMOTED",value:lookup.registration}:{kind:"NOT_RECORDED",value:null};
+          if (input.root) {
+            if(lookup?.reviewedIds)reviewedBodies=new Set(lookup.reviewedIds);
+            else if(query){const reviewed=await readOwnershipLookup(query,state);if(reviewed.reviewedIds)reviewedBodies=new Set(reviewed.reviewedIds);}
+          }
+          if (read.kind !== "PROMOTED" || !read.value) {
             failures.set(state, `${state.toUpperCase()} registration is ${read.kind}; unpaired governments remain UNKNOWN`);
             continue;
           }

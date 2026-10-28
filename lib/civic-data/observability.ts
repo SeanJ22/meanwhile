@@ -230,7 +230,7 @@ export interface ReaderProjectionObservation {
   readonly versionId: string;
   readonly observedAt: string;
   readonly eventId: string;
-  readonly evidenceKind: "TYPED_READER_READ_MODEL";
+  readonly evidenceKind: "TYPED_READER_READ_MODEL" | "WRITE_CONTENT_FINGERPRINT";
   readonly verifierId: string;
   readonly verifierCodeSha: string;
   readonly detail: string;

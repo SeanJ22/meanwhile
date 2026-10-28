@@ -226,7 +226,7 @@ test("a fresh ballot process preloads the permanent NH roster and fails closed o
     "an office without the exact district identity cannot consume the NH authority",
   );
 
-  const promoted = await refreshNhSeatHolders({ store: promotedNhMembersStore(), now: AT, bypassCache: true });
+  const promoted = await refreshNhSeatHolders({ store: promotedNhMembersStore(), now: AT });
   assert.equal(promoted.kind, "PROMOTED");
   const complete = await resolveMerrimackSeven();
   assert.equal(complete.eligibility.officeholderUniverse.complete, true);
@@ -237,7 +237,7 @@ test("a fresh ballot process preloads the permanent NH roster and fails closed o
   assert.equal(complete.eligibility.eligible, false, "the independent filed-candidate universe still refuses labels");
   assert.equal(complete.decisions.get("rusis")?.standing, "UNKNOWN");
 
-  const unavailable = await refreshNhSeatHolders({ store: unavailableStore, now: AT, bypassCache: true });
+  const unavailable = await refreshNhSeatHolders({ store: unavailableStore, now: AT });
   assert.equal(unavailable.kind, "STORE_UNREACHABLE");
   assert.deepEqual(nhLegislativeHolders(CONTEST.title), []);
   const failedClosed = await resolveMerrimackSeven();
@@ -248,7 +248,7 @@ test("a fresh ballot process preloads the permanent NH roster and fails closed o
   const priorNodeEnv = process.env.NODE_ENV;
   try {
     Reflect.set(process.env, "NODE_ENV", "production");
-    const absent = await refreshNhSeatHolders({ store: absentStore, now: AT, bypassCache: true });
+    const absent = await refreshNhSeatHolders({ store: absentStore, now: AT });
     assert.equal(absent.kind, "NOT_RECORDED", "production must not reopen the tracked first seed");
     assert.deepEqual(nhLegislativeHolders(CONTEST.title), []);
     assert.equal((await resolveMerrimackSeven()).eligibility.officeholderUniverse.complete, false);

@@ -8,7 +8,7 @@ import { summarizePlanningRound, mergeStatePlanningPass, STATE_PLANNING_WALK_MS,
 import { fork } from "node:child_process";
 import { applyHuntOrders, scopeControlKey } from "../lib/control-plane/hunt-orders.ts";
 import { backfillBox } from "../lib/control-plane/box.ts";
-import { readMaterializedPlanningIds, readPlanningIntents, readPlanningStateOrder, deactivateUnfundedHunts } from "../lib/control-plane/repository/pg-store.ts";
+import { readMaterializedPlanningIds, readPlanningIntents, readPlanningStateOrder, deactivateUnfundedHunts, researchPlanningStates } from "../lib/control-plane/repository/pg-store.ts";
 import { expansionScopesOf } from "../lib/control-plane/expansion/scopes.ts";
 import { loadCandidateEnrichmentProvider } from "../lib/control-plane/scheduler/providers/candidate-enrichment-loader.ts";
 import { huntPacketsProvider } from "../lib/control-plane/scheduler/providers/hunt-packets.ts";
@@ -191,7 +191,8 @@ import {
 } from "../lib/control-plane/scheduler/research-policy.ts";
 import { readResearchProgression } from "../lib/control-plane/research-progression.ts";
 import { readMethodKnowledge } from "../lib/method/manual-bridge.ts";
-import { candidateCounts as countMethodCandidates, emptyCandidateStore } from "../lib/method/candidate.ts";
+import { readMethodCandidateSummary } from "../lib/control-plane/repository/pg-store.ts";
+import { candidateCounts as countMethodCandidates } from "../lib/method/candidate.ts";
 import { readConclusionStore } from "../lib/method/conclusions.ts";
 import {
   NO_PIPELINE_RECORDED,
@@ -289,9 +290,7 @@ import { today } from "./doc-dates.mjs";
 import { admittedRuntimeChildEnvironment, assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 import { countVitalSign } from "../lib/db/transfer-by-caller.ts";
 import { VITAL_COUNTERS } from "../lib/control-plane/vital-signs.ts";
-import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
-readFromHeldCopies();
 
 let releaseDrainRequested=false;
 process.on("message", message => {
@@ -415,6 +414,11 @@ if(STATE===null) {
   const parentRepos=await createPgRepositories(url,NOW,{skipBootstrap:true});
   crashRepos=parentRepos;
   const roundIntents=await readPlanningIntents(parentRepos);
+  const liveStates = await researchPlanningStates(parentRepos, roundIntents);
+  if (!liveStates.length) {
+    console.log("All hunts are stopped; no research state or history is read.");
+    process.exit(0);
+  }
   if(parentRepos.controlReadsBackfill && !await parentRepos.controlReadsBackfill.finished()) {
     if(dry || filteredCycle)throw new Error("Complete the scoped control backfill in a full runner round before filtered planning");
     for(const state of PLANNING_STATES) {
@@ -448,10 +452,11 @@ if(STATE===null) {
       void cleanup.then(()=>resolve(completed),reject);
     });
   });
-  const states=await readPlanningStateOrder(parentRepos, IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))]:PLANNING_STATES);
+  const states=await readPlanningStateOrder(parentRepos, IDS?[...new Set([...IDS].map(id=>planningStateOf(id)??"system"))].filter(state=>liveStates.includes(state)):liveStates);
   let result=await runStatePlanningRound(runState,states);
   if(!releaseDrainRequested && !filteredCycle && parentRepos.planningControls)for(;;) {
-    const pending=(await parentRepos.planningControls.pendingStates()).filter(state=>!result.failed.includes(state));
+    const active=await researchPlanningStates(parentRepos,await readPlanningIntents(parentRepos));
+    const pending=(await parentRepos.planningControls.pendingStates()).filter(state=>active.includes(state)&&!result.failed.includes(state));
     if(!pending.length)break;
     const extra=await runStatePlanningRound(runState,await readPlanningStateOrder(parentRepos,pending));
     result={...result,failed:[...result.failed,...extra.failed]};
@@ -791,7 +796,7 @@ const heldRouteRead = retirementOutside === null ? null : await (async () => {
     const bodyIdFor = (id: string): string | null => meetingPartitions.bodyIdFor?.(id) ?? null;
     const divisions = [...new Set(heldRouteCandidates.flatMap((id) => bodyIdFor(id)?.split("#")[0] ?? []))];
     if (divisions.length === 0) return { bodyIdFor, held: new Set<string>() };
-    const capture = await readHeldPlaceCapture(divisions, { now: NOW, bypassCache: true });
+    const capture = await readHeldPlaceCapture(divisions, { now: NOW });
     const rows = buildPlaceOwedList({ divisions: divisions.map((id) => ({ id, label: id })), subjects: capture.subjects, held: capture.held, now: NOW });
     const held = heldCalendarRouteBodies(rows);
     console.log(`  retirement evidence: ${heldRouteCandidates.length} government(s) with an old meetings row, ${held.size} body(ies) with a held calendar route`);
@@ -1102,7 +1107,7 @@ async function refreshPlaceOrder(): Promise<void> {
       [...new Set([...scope.members].map(subject => subject.split("#")[0]).filter(id => id.startsWith("ocd-division/")))]]));
     const divisionIds = [...new Set([...divisionsByReceipt.values()].flat())];
     const [row, capture] = await Promise.all([repos.adminConfig.read(ADMIN_CONFIG_ID,planningSections),
-      readHeldPlaceCapture(divisionIds, { now: nowIso(), bypassCache: true })]);
+      readHeldPlaceCapture(divisionIds, { now: nowIso() })]);
     const shortType: Readonly<Record<string, string>> = { zcta: "zcta", county: "county", congressional_district: "cd",
       cbsa: "cbsa", state_leg_upper: "sldu", state_leg_lower: "sldl", state: "state" };
     const places = scopes.map(scope => ({
@@ -2579,7 +2584,7 @@ const finalizationReads = canary ? null : Promise.allSettled([
   repos.ownerDigests.readRecentWhere(DIGEST_LOG_KEY, ["runtimeOutcome", "kind"], "FRESHNESS_CYCLE",
     Number.MAX_SAFE_INTEGER, { runtimeOutcome: ["kind", "startedAt", "research"] },
     new Date(Date.parse(nowIso()) - RESEARCH_BOUNDS.windowHours * 3_600_000).toISOString()),
-  repos.methodCandidates.read("live").then(row => row?.value ?? emptyCandidateStore()),
+  readMethodCandidateSummary(repos),
   dry ? Promise.resolve(null) : readMethodKnowledge(repos),
 ] as const);
 async function computeMetrics(): Promise<ResearchMetrics | null> {
@@ -2616,7 +2621,7 @@ async function computeMetrics(): Promise<ResearchMetrics | null> {
   }
   let counts: ReturnType<typeof countMethodCandidates> | null = null;
   if (candidatesRead.status === "fulfilled") {
-    try { counts = countMethodCandidates(candidatesRead.value); } catch {  }
+    try { counts = countMethodCandidates({ candidates: candidatesRead.value }); } catch {  }
   }
   const candidateCounts = counts === null ? null : { proposed: counts.PROPOSED, validated: counts.VALIDATED, admitted: counts.ADMITTED, rejected: counts.REJECTED };
   const pipeline = await NO_PIPELINE_RECORDED();
@@ -2662,7 +2667,7 @@ if (!dry && !canary) {
     if (scoutsRead.status === "rejected") throw scoutsRead.reason;
     researchProgression = await readResearchProgression(repos, {
       windowId: researchWindowId, through: finishedAt,
-      candidates: candidatesRead.value.candidates,
+      candidates: candidatesRead.value,
       knowledge: knowledgeRead.value,
       scouts: scoutsRead.value,
       conclusions: readConclusionStore(join(ROOT,"data","method","conclusions.json")),

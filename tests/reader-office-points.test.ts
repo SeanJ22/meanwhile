@@ -1,13 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { POST } from "../app/api/geocode/route.ts";
-import { publishDirectoryOfficePoints, publishRosterOfficePoints, resolvePublishedOfficePoint } from "../lib/officials/office-points-publication.ts";
+import { holdOfficePointEvidence, officePointSourceReview, publishDirectoryOfficePoints, publishRosterOfficePoints, resolvePublishedOfficePoint } from "../lib/officials/office-points-publication.ts";
+import { censusGeocodeUrl } from "../lib/geo/census-geocoder.ts";
 import { stateMemberDirectories } from "../lib/reader/member-directories.ts";
 import { directoryOffices } from "../lib/map/office-pins.ts";
 import type { Officeholder, OfficeholderSet } from "../lib/officials/types.ts";
 import type { DirectoryOffice } from "../lib/officials/directory.ts";
 import { mergePeopleSets } from "../lib/officials/merge-people.ts";
+import {toSeatHolder} from "../lib/officials/lookup.ts";
 
 const at = "2026-10-23T12:00:00.000Z";
 const holder: Officeholder = { id: "plural:az:one", name: "Public Representative", officeTitle: "State Representative", state: "AZ", level: "STATE",
@@ -17,6 +21,18 @@ const holder: Officeholder = { id: "plural:az:one", name: "Public Representative
     name: "district", address, sourceUrl: "https://legislature.example.gov/contact", collectedAt: at,
   })) };
 const roster: OfficeholderSet = { scope: "US-AZ", generatedAt: at, officeholders: [holder], divisions: [], unmatched: [] };
+
+test("new office versions retain one fingerprint-addressed Census reply and preserve the exact source review",async()=>{
+  const vault=new MemoryEvidenceStore(),address="100 Main Street, Tucson, AZ 85701",url=censusGeocodeUrl(address);
+  const body=JSON.stringify({result:{addressMatches:[{coordinates:{x:-110,y:32},addressComponents:{zip:"85701"}}]}});
+  const point={lat:32,lng:-110,address,sourceUrl:url,census:{body,url,retrievedAt:at,rawHash:createHash("sha256").update(body).digest("hex")}};
+  const held=await holdOfficePointEvidence(point,vault);
+  assert.equal(held.census?.body,undefined);assert.ok(held.census?.capture);
+  assert.deepEqual(await holdOfficePointEvidence(point,vault),held);assert.equal(vault.size,1);
+  const review=await officePointSourceReview(JSON.parse(JSON.stringify(held)),vault);
+  assert.equal(review?.rawHash,point.census.rawHash);assert.equal(review?.reviewOutcome,"SUPPORTED");
+  assert.equal(point.census.body,body,"the legacy source object is untouched");
+});
 
 test("published office points reach the reader directory and map; tomorrow reuses them without a lookup", async () => {
   const calls: string[] = [];
@@ -29,7 +45,7 @@ test("published office points reach the reader directory and map; tomorrow reuse
     assert.fail("the next scheduled publication must reuse the saved point");
   });
   const [entry] = stateMemberDirectories(tomorrow);
-  const offices = directoryOffices({ holder: { ...holder, social: undefined, sourceUrl: holder.provenance.sourceUrl, photoUrl: null }, tier: "state", role: "State office", seatLabel: null }, entry.directory);
+  const offices = directoryOffices({ holder: toSeatHolder(holder), tier: "state", role: "State office", seatLabel: null }, entry.directory);
   assert.deepEqual(offices[0].point, { lat: 32, lng: -110 });
   assert.equal(offices[1].point, undefined, "postal boxes remain contacts without a guessed map pin");
   assert.equal(tomorrow.officeholders[0].offices![1].pointUnavailable?.reason,"MAILING_ADDRESS");

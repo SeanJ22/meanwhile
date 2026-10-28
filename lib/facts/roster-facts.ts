@@ -8,7 +8,9 @@ import { readCheckEntity } from "./entity-read.ts";
 import { openBlank, publishClaim, type Clocks, type FactDb, type PublishInput, type PublishOutcome } from "./publish.ts";
 import { saveCaptureCopy } from "./source-copy.ts";
 import { governingBodyNameOn } from "./body-name.ts";
-import { invalidateReaderCache, readerCacheScopeForPublication, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
+import { invalidateReaderCache, readerCacheScopeForEntity, withBatchedReaderInvalidation, type ReaderCachePurger } from "../reader/cache.ts";
+import { withFactConfirmations } from "./confirmation.ts";
+import type { EntityPlace } from "./entity-places.ts";
 
 const rosterCopies = new WeakMap<FactDb, WeakMap<WorkerPublicationCapture, Promise<SavedCopy>>>();
 
@@ -32,7 +34,7 @@ export interface RosterMember {
 }
 
 interface RosterFactsInput {
-  readonly body: { readonly id: string; readonly name: string | null; readonly state: string | null; readonly parentId: string | null; readonly government?: string | null };
+  readonly body: { readonly id: string; readonly name: string | null; readonly state: string | null; readonly parentId: string | null; readonly government?: string | null; readonly places?: readonly EntityPlace[] };
   readonly capture: WorkerPublicationCapture;
   readonly members: readonly RosterMember[];
   /** Every member row on the page was read, so a member it no longer lists has left. */
@@ -86,13 +88,13 @@ export async function publishBodyNameFromPage(db: FactDb & { readonly query: (te
 /** One saved roster page becomes facts, each on its own: who sits on the body, their title, contacts and term. */
 export async function publishRosterFacts(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: RosterFactsInput, clocks: Clocks, now: Date): Promise<RosterFactsReport> {
-  return withBatchedReaderInvalidation(purge => publishRosterFields(db, { ...input, purge }, clocks, now), input.purge);
+  return withBatchedReaderInvalidation(purge => withFactConfirmations(db,() => publishRosterFields(db, { ...input, purge }, clocks, now),purge), input.purge);
 }
 
 async function publishRosterFields(db: FactDb & { readonly query: (text: string, params?: readonly unknown[]) => Promise<readonly Record<string, unknown>[]> },
   input: RosterFactsInput, clocks: Clocks, now: Date): Promise<RosterFactsReport> {
   const { capture } = input;
-  const bodyId = await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId, government: input.body.government });
+  const bodyId = await ensureEntity(db.query, { id: input.body.id, kind: "body", name: input.body.name ?? input.body.id, state: input.body.state, parentId: input.body.parentId, government: input.body.government, places: input.body.places });
   const [held] = bodyId !== input.body.id ? await db.query("SELECT name, state, parent_id FROM entity WHERE id = $1", [bodyId]) : [];
   const body = held ? { id: bodyId, name: String(held.name), state: held.state as string | null, parentId: held.parent_id as string | null } : input.body;
   const bodyEntity = (await readCheckEntity(db.query, bodyId))!;
@@ -110,7 +112,8 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
     else if (outcome.decision === "CONFIRM") tally.confirmed++;
     else tally.held++;
   };
-  const place = (await db.query("SELECT place_id FROM entity_place WHERE entity_id = $1 LIMIT 1", [body.id]))[0]?.place_id as string | undefined;
+  const places = (await db.query("SELECT place_id,boundary_year,placement_basis FROM entity_place WHERE entity_id=$1",[body.id]))
+    .map(row => ({placeId:String(row.place_id),boundaryYear:Number(row.boundary_year),basis:row.placement_basis as EntityPlace["basis"]}));
   const seated = new Set<string>();
   for (const member of input.members) {
     const name = text(member.fields.name), written = text(member.fields.nameAsWritten) ?? name, office = text(member.fields.office);
@@ -121,7 +124,7 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
       count({ blank: reason }, member.recordId, "name");
       continue;
     }
-    const personId = await resolvePerson(db, { name, state: body.state, placeId: place ?? body.parentId,
+    const personId = await resolvePerson(db, { name, state: body.state, places,placeId:places.length ? null : body.parentId,
       externalIds: [...(member.externalIds ?? []), ["roster-name:" + body.id, nameKey(name)],
         ...(body.id !== input.body.id ? [["roster-name:" + input.body.id, nameKey(name)] as const] : []),
         ...(input.shownMemberIds?.has(nameKey(name)) ? [["roster-member", input.shownMemberIds.get(nameKey(name))!] as const] : [])] });
@@ -155,11 +158,11 @@ async function publishRosterFields(db: FactDb & { readonly query: (text: string,
   }
   if (input.complete && provenance === "OFFICIAL" && seated.size) {
     const gone = await db.transaction(query => query(`UPDATE fact f SET status = 'superseded', held_reason = 'NOT_ON_CURRENT_OFFICIAL_ROSTER'
-      FROM source_copy s WHERE s.id = f.source_copy_id AND s.url = $2 AND f.entity_id = $1 AND f.status = 'live'
+      FROM checked_fact current,source_copy s WHERE current.id=f.id AND s.id=current.source_copy_id AND s.url = $2 AND f.entity_id = $1 AND f.status = 'live'
         AND f.field LIKE 'member:%' AND NOT (substr(f.field, 8) = ANY($3::text[])) RETURNING f.id`,
     [body.id, capture.evidence.canonicalUrl, [...seated]]));
     tally.departed = gone.length;
-    if (gone.length) await invalidateReaderCache(readerCacheScopeForPublication(body.state ?? body.id), input.purge);
+    if (gone.length) await invalidateReaderCache(await readerCacheScopeForEntity(db.query, body.id), input.purge, db.query);
   }
   if ((tally.live || tally.confirmed) && input.nameFromPage !== false) await publishBodyNameFromPage(db, { entity: bodyEntity, copy, provenance, producedBy: input.producedBy, acquisition: input.acquisition, purge: input.purge }, clocks, now);
   return tally;
@@ -172,7 +175,7 @@ export async function publishBodyFacts(db: FactDb & { readonly query: (text: str
     readonly purge?: ReaderCachePurger;
     readonly facts: readonly { readonly field: "name" | "meeting_cadence" | "agenda_url" | "office_address" | "office_phone"; readonly value: string; readonly quote: string }[] },
   clocks: Clocks, now: Date): Promise<readonly PublishOutcome[]> {
-  return withBatchedReaderInvalidation(async purge => {
+  return withBatchedReaderInvalidation(purge => withFactConfirmations(db,async () => {
     const entity = await readCheckEntity(db.query, input.bodyId);
     if (!entity || !input.facts.length) return [];
     const copy = await rosterCopy(db, input.capture);
@@ -184,5 +187,5 @@ export async function publishBodyFacts(db: FactDb & { readonly query: (text: str
     }
     if (!input.facts.some(row => row.field === "name")) await publishBodyNameFromPage(db, { entity, copy, provenance, producedBy: input.producedBy, acquisition: input.acquisition, purge }, clocks, now);
     return out;
-  }, input.purge);
+  },purge), input.purge);
 }

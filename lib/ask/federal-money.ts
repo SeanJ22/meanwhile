@@ -1,5 +1,6 @@
 import { readFederalMoneyForPlace, type FederalMoneyReadOptions } from "../federal-money/reader.ts";
-import { federalMoneyDetails, federalMoneyRows, FEDERAL_MONEY_SOURCE_LABELS, type FederalMoneyTarget } from "../federal-money/view.ts";
+import { federalMoneyDetails, federalMoneyRows, writeFederalMoneyCard, FEDERAL_MONEY_SOURCE_LABELS, type FederalMoneyTarget } from "../federal-money/view.ts";
+import { compareFederalMoneyActions } from "../federal-money/model.ts";
 import type { FederalMoneyFact } from "../federal-money/model.ts";
 import type { EvidenceGap, EvidenceRecord, EvidenceSubject } from "./evidence.ts";
 import { overLengthBudget } from "./length-contract.ts";
@@ -33,7 +34,7 @@ export async function federalMoneyEvidence(targets: readonly FederalMoneyTarget[
     const target = unique[index];
     for (const source of result.value.sources) {
       const key = `federalMoney:${source.source}`;
-      const rows = federalMoneyRows(source.records, target);
+      const rows = federalMoneyRows(source.records, { ...target, bodyIds: result.value.recipientIds ?? target.bodyIds });
       denominators[`${key}:recordsReturned`] = (denominators[`${key}:recordsReturned`] ?? 0) + rows.length;
       denominators[`${key}:moreRecords`] = (denominators[`${key}:moreRecords`] ?? 0) + (source.moreRecords ? 1 : 0);
       denominators[`${key}:unavailableReads`] = (denominators[`${key}:unavailableReads`] ?? 0) + (source.status === "UNAVAILABLE" ? 1 : 0);
@@ -65,22 +66,12 @@ function wantedKinds(question: string): ReadonlySet<FederalMoneyFact["kind"]> {
   return kinds;
 }
 
-function brief(record: EvidenceRecord): string {
-  const { fact, relationship } = record.federalMoney!;
-  const parts = [fact.title];
-  if (fact.amount !== null) parts.push(`${fact.amountLabel ?? "Amount"}: ${new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 }).format(fact.amount)}`);
-  if (["GRANT", "CONTRACT", "LOAN"].includes(fact.kind) && fact.recipient) parts.push(`recipient: ${fact.recipient}`);
-  if (["GRANT", "CONTRACT", "LOAN"].includes(fact.kind)) parts.push(relationship === "GEOGRAPHY" ? "reaching this place" : "received by this government");
-  if (fact.kind === "ENTITY" && fact.uei) parts.push(`UEI ${fact.uei}`);
-  if (fact.kind === "AUDIT" || fact.kind === "DISASTER" || fact.kind === "ENTITY") {
-    const details = federalMoneyDetails(fact);
-    for (const detail of details) {
-      const expanded = [...parts, `${detail.label}: ${detail.value}`].join("; ");
-      if (expanded.length < 500) parts.push(`${detail.label}: ${detail.value}`);
-    }
-  }
-  parts.push(`${FEDERAL_MONEY_SOURCE_LABELS[fact.source]}${fact.provenance.publicationDate ? `, published ${fact.provenance.publicationDate.slice(0, 10)}` : ", publication date not provided"}`);
-  return `${parts.join("; ")}.`;
+function brief(record: EvidenceRecord, question: string): string {
+  const { fact } = record.federalMoney!;
+  if (/\bUEI\b/i.test(question) && fact.uei) return `${fact.recipient ?? "This government"} has federal entity identifier ${fact.uei}.`;
+  // A direct question about a native fact still answers it from the same record.
+  const detail = federalMoneyDetails(fact).find(row => new RegExp(`\\b${row.label.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i").test(question));
+  return detail ? `${fact.recipient ?? fact.title}: ${detail.label.toLowerCase()} is ${detail.value}.` : writeFederalMoneyCard(fact);
 }
 
 /** A direct federal-source question can answer from its native fields without
@@ -89,11 +80,13 @@ export function composeFederalMoneyAnswer(input: { question: string; subject: Ev
   if (!federalMoneyQuestion(input.question) || input.subject && input.subject.kind !== "BODY") return null;
   const kinds = wantedKinds(input.question);
   const year = input.question.match(/\b((?:19|20)\d{2})\b/)?.[1];
-  const held = input.records.filter(record => record.kind === "FEDERAL_MONEY" && record.federalMoney && (!input.subject || record.subjectId === input.subject.id) && kinds.has(record.federalMoney.fact.kind) && (!year || (record.federalMoney.fact.period ?? record.federalMoney.fact.provenance.publicationDate ?? "").includes(year)));
+  const received = input.subject?.kind === "BODY" && /\b(?:receiv\w*|got|awarded to)\b/i.test(input.question) && !/\b(?:area|reach\w*|spent in)\b/i.test(input.question);
+  const held = input.records.filter(record => record.kind === "FEDERAL_MONEY" && record.federalMoney && (!input.subject || record.subjectId === input.subject.id) && (!received || record.federalMoney.relationship !== "GEOGRAPHY") && kinds.has(record.federalMoney.fact.kind) && (!year || (record.federalMoney.fact.period ?? record.federalMoney.fact.provenance.publicationDate ?? "").includes(year)))
+    .sort((a, b) => compareFederalMoneyActions(a.federalMoney!.fact, b.federalMoney!.fact));
   const selected: EvidenceRecord[] = [];
   let answer = "";
   for (const record of held) {
-    const sentence = brief(record);
+    const sentence = brief(record, input.question);
     const next = `${answer}${answer ? " " : ""}${sentence}`;
     if (overLengthBudget(next)) continue;
     answer = next;

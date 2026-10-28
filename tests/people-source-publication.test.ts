@@ -38,7 +38,7 @@ test("a named-entity accent and the office's short title publish through the nor
   const result=await publishPeopleSource({store,vault:new MemoryEvidenceStore(),state:"az",sourceId:"statewide-executive-sources",releaseId:"accented-commissioner",now:at,
     roster:statewideRoster("az",[checked.person],at),acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,body,retrievedAt:at}]});
   assert.ok(result.outcome.promoted,JSON.stringify(result.outcome.candidate.receipt));
-  const read=await readStatePeopleProjection("US-AZ",{store,now:at,bypassCache:true});
+  const read=await readStatePeopleProjection("US-AZ",{store,now:at});
   assert.ok(read.kind==="PROMOTED"||read.kind==="BOOTSTRAP");
   assert.ok(read.value.roster.officeholders.some(row=>row.name==="René Lopez"&&row.officeTitle==="Corporation Commissioner"));
 });
@@ -51,6 +51,18 @@ test("shared cross-source IDs join transitively and every source's IDs survives"
   assert.equal(merged.officeholders.length,1);
   const keys=personIdentityKeys(merged.officeholders[0]);
   for(const key of ["ocd-person:a","legiscan:9","wikidata:Q91","votesmart:27","congress:R000001"])assert.ok(keys.has(key),key);
+});
+test("replayed sources retain the same durable records when optional fields were undefined",()=>{
+  const reference=person("reference:a",{nativeIds:undefined,
+    provenance:{sourceUrl:"https://reference.example/a",sourceOrg:"Reference fixture",collectedAt:at,verifiedAt:at,evidenceExcerpt:undefined}});
+  const official=person("official:a",{provenance:{sourceUrl:"https://state.example.gov/jordan",sourceOrg:"Official state page",collectedAt:at,verifiedAt:at}});
+  const originals=structuredClone([reference,official]);
+  const first=mergePeopleSets([set(reference),set(official)])!;
+  const replay=mergePeopleSets([JSON.parse(JSON.stringify(first)),set(reference),set(official)])!;
+  assert.equal(first.officeholders[0].sourceHolders?.length,2);
+  assert.deepEqual(replay,first,"an identical source replay keeps the same person and original source snapshots");
+  assert.deepEqual(first.officeholders[0].sourceHolders,JSON.parse(JSON.stringify(originals)));
+  assert.deepEqual([reference,official],originals,"the publisher's original optional fields are not rewritten");
 });
 test("unique full name, office and state binds an association lead without merging namesakes in another state",()=>{
   const merged=mergePeopleSets([set(person("openstates:a")),set(person("association:a")),set(person("association:b",{state:"NM"}))])!;
@@ -86,7 +98,7 @@ test("a verified appointed secretary reaches the state root, its card and Ask",a
   const published=await publishPeopleSource({ vault, store,state:"nj",sourceId:"statewide-executive-sources",roster,
     acquisitions:[{requestedUrl:sourceUrl,finalUrl:sourceUrl,httpStatus:200,body:html,retrievedAt:at}],releaseId:"fixture-1",now:at});
   assert.ok(published.outcome.promoted,JSON.stringify(published.outcome.candidate.receipt));
-  const read=await readStatePeopleProjection("US-NJ",{store,now:at,bypassCache:true});assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
+  const read=await readStatePeopleProjection("US-NJ",{store,now:at});assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
   const holder=indexByDivision([read.value.roster]).get("ocd-division/country:us/state:nj")![0];
   assert.ok(isStatewideExecutive(holder));assert.equal(holder.selectionMethod,"APPOINTED");
   assert.ok(identityChipsFor(holder,"state","INCUMBENT").includes("Appointed"));
@@ -105,7 +117,7 @@ test("Open States and an official association officer produce one reader person 
   const official=await publishPeopleSource({ vault, store,state:"nj",sourceId:"statewide-executive-sources",contractId:peopleSourceContractId("nj","statewide-executive-sources"),
     roster:statewideRoster("nj",[bound.person],at),acquisitions:[{requestedUrl:url,finalUrl:url,httpStatus:200,body:html,retrievedAt:at}],releaseId:"association-1",now:at});
   assert.ok(official.outcome.promoted,JSON.stringify(official.outcome.candidate.receipt));
-  const read=await readStatePeopleProjection("US-NJ",{store,now:at,bypassCache:true});assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
+  const read=await readStatePeopleProjection("US-NJ",{store,now:at});assert.equal(read.kind,"PROMOTED");if(read.kind!=="PROMOTED")return;
   assert.equal(read.value.roster.officeholders.length,1);
   const ids=indexByOfficeholderId([read.value.roster]);assert.equal(ids.get(roster.officeholders[0].id),ids.get(bound.person.id));
   const holder=ids.get(bound.person.id)!;assert.equal(holder.selectionMethod,"APPOINTED");
@@ -136,7 +148,7 @@ test("field source rechecks retain the same facts and disagreement blank identit
   assert.equal(mergePeopleSets([set(prior),set(first)])!.disagreements?.[0].key,mergePeopleSets([set(prior),set(next)])!.disagreements?.[0].key);
 });
 test("coverage reports preserve unknown sources and refuse a one-day claim before its observation exists",async()=>{
-  const before=await collectPeopleCoverage({store:new MemoryRoutineDataStore(),now:at,bypassCache:true});
+  const before=await collectPeopleCoverage({store:new MemoryRoutineDataStore(),now:at});
   assert.equal(before.states.length,56);
   const state=before.states.find(row=>(row as {state:string}).state==="WA") as {sources:{people:number|null}[];photos:null};
   assert.ok(state.sources.every(source=>source.people===null));assert.equal(state.photos,null);

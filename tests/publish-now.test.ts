@@ -131,9 +131,9 @@ test("publication admission filters and projects work-item metadata in the datab
 
 test("BX-12: the executable selects only publication work and never holds the routine singleton", () => {
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
-  assert.match(runner, /PUBLISH_NOW \? \[\] : await withNationalPlaceTasks/);
-  assert.match(runner, /return \[\.\.\.publication, \.\.\.publishNowDoorTasks/);
+  assert.match(runner, /PUBLISH_NOW \? PUBLISH_NOW_SINGLETON_PORT : PLACE_MAPS \? PLACE_MAP_SINGLETON_PORT : ROUTINE_DATA_RUNNER_SINGLETON_PORT/);
+  assert.match(runner, /PUBLISH_NOW \? \[\] : PLACE_MAPS \? laneSourceTasks\(ROUTINE_SOURCE_TASKS, true, \[\]\)\s+: await withNationalPlaceTasks/);
+  assert.match(runner, /return \[\.\.\.publication, \.\.\.(?:await routineJob\(ROUTINE_JOBS\.doorPublication, async \(\) => )?publishNowDoorTasks/);
   assert.doesNotMatch(runner, /publishChangedReaderEdge|publishNowEdgeChecks/);
 });
 
@@ -149,7 +149,9 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
   assert.match(quietBranch, /console\.log\("publish-now: nothing owed this minute"\);/);
   assert.doesNotMatch(quietBranch, /supervisorFailures\.push|ownerDigests\.append|RCD_OPERATIONAL_OUTCOME|floored/);
   const exit = runner.slice(quiet, runner.indexOf("\n}\n", quiet));
-  assert.match(exit, /await ROUTINE_DATA_PROCESS_LEASE\.release\(\);[\s\S]*process\.exit\(supervisorFailures\.length === 0 \? 0 : 2\);/);
+  assert.match(exit, /await endPassEarly\(supervisorFailures\.length === 0 \? 0 : 2\);/);
+  const end = runner.slice(runner.indexOf("async function endPassEarly("), quiet);
+  assert.match(end, /await ROUTINE_DATA_PROCESS_LEASE!\.release\(\);[\s\S]*process\.exit\(exitCode\);/);
   assert.match(exit, /attemptedTasks: 0, verifiedSourceSuccesses: 0, verifiedSourceFailures: 0/);
   assert.match(exit, /taskReceipts: \[\], dueRequestLines: \[\]/);
   assert.doesNotMatch(exit, /floored|RCD_RUN=/, "an empty publication pass does not fabricate a source denominator");
@@ -161,14 +163,15 @@ test("a publish-now minute with nothing owed ends quietly with exit 0, before an
 test("the standing runner starts publish-now each minute on its own lane, beside the routine pass", () => {
   const pilot = readFileSync("scripts/pilot-runner.mts", "utf8");
   const lanes = pilot.slice(pilot.indexOf("const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler(["));
-  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n$/);
-  const run = pilot.slice(pilot.indexOf("async function runPublishNow("), pilot.indexOf("async function persistOuterRoutineChildFailure("));
+  assert.match(lanes.slice(0, lanes.indexOf("], (outcome) =>")), /\{ id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData \},[\s\S]*publishNowLane\(runPublishNow\),\n  placeMapsLane\(runPlaceMaps\),\n$/);
+  const run = pilot.slice(pilot.indexOf("async function runPublishNow("), pilot.indexOf("async function runPlaceMaps("));
   assert.match(run, /if \(provider !== "postgres" \|\| canary\) return;/, "only the standing production runner publishes");
   assert.match(run, /args: \[\.\.\.TS_CHILD, "scripts\/publish-now-runner\.mts"\]/);
   assert.match(run, /standingChildEnvironment\("ROUTINE_SUPERVISOR", \{ \.\.\.process\.env, \[ROUTINE_SUPERVISOR_STARTED_AT_ENV\]: startedAt \}\)/);
   assert.match(run, /persistOuterRoutineChildFailure\(routineSupervisorCycleId\(hostname\(\), startedAt, "publish-now"\)/, "a crash still reaches Admin, under its own lane");
   const routine = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
-  assert.match(routine, /routineSupervisorCycleId\(hostname\(\), RUN_STARTED_AT, PUBLISH_NOW \? "publish-now" : "routine-civic-data"\)/);
+  assert.match(routine, /const LANE = PUBLISH_NOW \? "publish-now" : PLACE_MAPS \? "place-maps" : "routine-civic-data";/);
+  assert.match(routine, /routineSupervisorCycleId\(hostname\(\), RUN_STARTED_AT, LANE\)/);
 });
 
 test("the two lanes started in one millisecond never share an outcome's identity", () => {

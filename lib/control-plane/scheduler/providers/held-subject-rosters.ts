@@ -3,13 +3,13 @@ import type { BodyFacts } from "../../../facts/registry-overlay.ts";
 import { nameKey } from "../../../facts/roster-facts.ts";
 import { rosterMemberId } from "../../../facts/roster-read.ts";
 import type { BodyRoster } from "../../../registry/body-rosters.ts";
-import type { RegistryRuntimeReadModel } from "../../../registry/runtime-data-plane.ts";
+import type { RegistryPlanningView } from "../../../civic-data/keyed-registry-planning.ts";
 import { withStateRegistryFacts } from "../../../registry/state-composition.ts";
 
 /** The published membership's minimum identity; person contacts and saved source contents stay on the server. */
 export const HELD_MEMBER_FACTS_SQL = `SELECT f.entity_id body_id,substr(f.field,8) person_id,
     f.value->>'name' name,f.value->>'office' office_title,s.final_url source_url,f.checked_at
-  FROM fact f JOIN entity b ON b.id=f.entity_id AND b.kind='body'
+  FROM checked_fact f JOIN entity b ON b.id=f.entity_id AND b.kind='body'
     JOIN entity p ON p.id=substr(f.field,8) AND p.kind='person'
     JOIN source_copy s ON s.id=f.source_copy_id
   WHERE f.status='live' AND f.field LIKE 'member:%' AND jsonb_typeof(f.value)='object'
@@ -26,8 +26,8 @@ const publicUrl = (value: unknown): value is string => {
 };
 
 /** Live memberships join only bodies already held in this provider's selected state. */
-export async function readHeldRosterSubjects(query: Query, registry: RegistryRuntimeReadModel, state: string, now: string):
-  Promise<{ readonly registry: RegistryRuntimeReadModel; readonly identityGaps: readonly string[] }> {
+export async function readHeldRosterSubjects<T extends RegistryPlanningView>(query: Query, registry: T, state: string, now: string):
+  Promise<{ readonly registry: T; readonly identityGaps: readonly string[] }> {
   if (!/^[a-z]{2}$/i.test(state)) return { registry, identityGaps: [] };
   const own = new RegExp(`/(?:state|territory|district):${state.toLowerCase()}(?:/|$)`);
   const divisions = new Set(registry.registry.divisions.filter(division => own.test(division.ocdId)).map(division => division.ocdId));

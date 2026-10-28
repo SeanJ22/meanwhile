@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../db/client.ts";
 import { REGISTRY_RUNTIME_PARSER_VERSION } from "../../registry/runtime-version.ts";
 import { createHash } from "node:crypto";
 import { ZERO_RELEASE_EVENTS } from "../../civic-data/release.ts";

@@ -3,6 +3,7 @@ import { test } from "node:test";
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
+import { gunzipSync } from "node:zlib";
 import { renderToStaticMarkup } from "react-dom/server";
 import { GET as meetingsGET } from "../app/api/meetings/route.ts";
 import { fixtureZipResolution } from "./helpers/zip-location.ts";
@@ -267,6 +268,10 @@ for (const zip of ["85643", "85122", "85701"]) {
       const populated = await populatedResponse.json() as import("../lib/meetings/query.ts").MeetingSearchResult;
       assert.equal(populated.tier, "exact");
       assert.deepEqual(populated.meetings.map(row => row.id).sort(), [...expected, ownMeeting].map(row => row.id).sort());
+      const compressed = await meetingsGET(new Request(`https://example.test/api/meetings?zip=${zip}&lat=${at.lat}&lng=${at.lng}&radiusKm=25`,
+        { headers: { "Accept-Encoding": "gzip" } }));
+      assert.equal(compressed.headers.get("content-encoding"), "gzip");
+      assert.deepEqual(JSON.parse(gunzipSync(Buffer.from(await compressed.arrayBuffer())).toString()), populated);
     } finally {
       context.mock.timers.reset();
       if (previous === undefined) delete process.env.WTP_READER_EDGE_DIR;

@@ -129,7 +129,7 @@ test("registered polling workers publish all source formats and retain every jur
     const state = jurisdictionFromOcdId(ocdId)!.usps;
     const published = await pollingWorker(input, store, vault);
     assert.equal(published.outcome.status, "PUBLISHED", published.outcome.detail);
-    const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store, now: published.now, bypassCache: true });
+    const read = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store, now: published.now });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind !== "PROMOTED") throw new Error("Polling sites absent");
     const current = read.value.jurisdictions.find(j => j.ocdId === ocdId)!;
@@ -139,13 +139,13 @@ test("registered polling workers publish all source formats and retain every jur
     const failed = await pollingWorker({ ...input, capture: { ...input.capture, partial: true } }, store, vault);
     assert.equal(failed.outcome.status, "HELD");
     assert.match(failed.outcome.detail, /INCOMPLETE/);
-    assert.equal((await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store, now: failed.now, bypassCache: true })).metadata.versionId, published.outcome.versionId);
+    assert.equal((await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store, now: failed.now })).metadata.versionId, published.outcome.versionId);
   }
-  const final = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "OH"), { store, now: at, bypassCache: true });
+  const final = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", "OH"), { store, now: at });
   assert.equal(final.kind, "PROMOTED");
   if (final.kind === "PROMOTED") assert.equal(final.value.jurisdictions.length, 2);
   for (const state of ["MI", "DC"]) {
-    const separate = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store, now: at, bypassCache: true });
+    const separate = await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites", state), { store, now: at });
     assert.equal(separate.kind, "PROMOTED");
     if (separate.kind === "PROMOTED") assert.equal(separate.value.jurisdictions.length, 1);
   }

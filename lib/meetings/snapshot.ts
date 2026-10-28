@@ -379,7 +379,7 @@ export async function readMeetingPartitionProjection(
     ...(options.store ? { store: options.store } : {}),
     now,
     maxAgeMs: options.maxAgeMs ?? meetingPartitionFreshnessMs(now),
-    bypassCache: options.bypassCache,
+
   });
   return validateMeetingPartitionProjection(partition, result);
 }
@@ -403,13 +403,15 @@ function validateMeetingPartitionProjection(
     if (partition.historyOf !== undefined) {
       const family = partition.meetingSource === DERIVED_FAMILY_SOURCE;
       for (const meeting of result.value.meetings) {
-        if (!meeting.id || !meeting.bodyId || (!family && (meeting.bodyId !== partition.bodyId || !meeting.id.startsWith(`${partition.meetingSource}:`)))) {
+        if (!meeting.id || !meeting.bodyId || ("derivedParentId" in partition&&partition.derivedParentId&&meeting.bodyId!==partition.bodyId) || (!family && (meeting.bodyId !== partition.bodyId || !meeting.id.startsWith(`${partition.meetingSource}:`)))) {
           throw new Error(`MEETING_HISTORY_ROW_SCOPE_MISMATCH:${partition.id}:${meeting.id}`);
         }
       }
       return result;
     }
     if (partition.derivedFamily) {
+      if("derivedParentId" in partition&&partition.derivedParentId&&result.value.meetings.some(meeting=>meeting.bodyId!==partition.bodyId))
+        throw new Error(`MEETING_DERIVED_BODY_SCOPE_MISMATCH:${partition.id}`);
       const members = result.value.derivedMembers;
       if (!Array.isArray(members) || members.length === 0) throw new Error(`MEETING_FAMILY_MEMBERS_MISSING:${partition.id}`);
       const memberSources = new Set(members.map((member) => member.source));

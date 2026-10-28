@@ -11,7 +11,7 @@ import { PGlite } from "@electric-sql/pglite";
 import { loadStatePlaceMap, type StatePlaceMap } from "../lib/place-map/load.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { readZipLocation } from "../lib/place-map/locations.ts";
-import { placeBoundaryMigration, zipLocationMigration } from "./helpers/reader-identity-db.ts";
+import { identityEventTables, identitySourceTables, placeBoundaryMigration, readerIdentityMigration, zipLocationMigration } from "./helpers/reader-identity-db.ts";
 import { legacyZipEntry, type LegacyZipShard } from "../lib/place-map/legacy.ts";
 import { ballotPlaceFromParams, ballotPlaceDivisions } from "../lib/ballot/reader-place.ts";
 import { currentReaderSelection } from "../lib/db/reader-route.ts";
@@ -221,11 +221,13 @@ test("a crossing ZIP's display point stays a ZIP selection when its mailing stat
 test("the next map refresh uses the current point boundary and retains unreplaced ZIP evidence and place ids", async () => {
   const db = new PGlite(), county = `${state("AZ")}/county:fixture`;
   try {
-    await db.exec(`CREATE TABLE entity(id text PRIMARY KEY,kind text,name text,state char(2));
-      CREATE TABLE entity_external_id(entity_id text REFERENCES entity(id),scheme text,value text,PRIMARY KEY(scheme,value));
-      CREATE TABLE zip_place(zip text,place_id text REFERENCES entity(id),share float8 CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zip,place_id,boundary_year));
-      CREATE TABLE zcta_place(zcta text,place_id text REFERENCES entity(id),share float8 CHECK(share>0 AND share<=1),boundary_year integer,PRIMARY KEY(zcta,place_id,boundary_year));`);
+    // The production map tables, with the page queue the loader feeds after each commit.
+    await db.exec(readFileSync("lib/db/migrations/0035_r1_fact_store.sql", "utf8"));
+    await identitySourceTables(db);
+    await identityEventTables(db);
+    await db.exec(readerIdentityMigration());
     await db.exec(placeBoundaryMigration());
+    await db.exec(readFileSync("lib/db/migrations/RB-A7_expand.sql", "utf8").replaceAll("--> statement-breakpoint", ""));
     await db.exec(zipLocationMigration());
     const square = (west:number,east:number):import("../lib/registry/resolve.ts").GeoFeature["geometry"] => ({type:"Polygon",coordinates:[[[west,30],[east,30],[east,34],[west,34],[west,30]]]});
     const map = (year:number,west:number,east:number,zip:string):StatePlaceMap => ({

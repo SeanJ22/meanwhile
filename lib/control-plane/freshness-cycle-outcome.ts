@@ -13,6 +13,7 @@ import {
   type RoutineCivicDataSupervisorOutcome,
   type RoutineCivicDataReaderReadbackReference,
   type RoutineCivicDataTaskReceiptReference,
+  type RoutineSupervisorLane,
 } from "./owner-surface.ts";
 import { canonicalJson, type ControlPlaneRepositories } from "./repository/types.ts";
 import type { MapTilerUsageSnapshot } from "./maptiler/types.ts";
@@ -78,7 +79,7 @@ export interface RoutineCivicDataReaderReadbackOutcomeInput {
 interface RoutineCivicDataSupervisorOutcomeInput {
   readonly ballotPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
   readonly ballotNavigationPublications?: import("../civic-data/ballot-publication.ts").BallotPublicationSummaries;
-  readonly lane?: "routine-civic-data" | "publish-now";
+  readonly lane?: RoutineSupervisorLane;
   readonly campaignPublicationApprovalsByState?: Readonly<Record<string, number>>;
   readonly cycleId: string;
   readonly startedAt: string;

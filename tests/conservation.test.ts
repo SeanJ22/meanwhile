@@ -152,11 +152,13 @@ test("the zero-row predicate has ONE implementation and both callers use it", ()
   );
 });
 
-test("documents in hand and nothing out still throws", () => {
+test("documents whose logical rows were not counted cannot silently extract nothing", () => {
   assert.throws(
-    () => accountedNormalize("ical", rows(3), { meetings: [], drops: {} }, { logicalInput: 0 }),
+    () => accountedNormalize("ical", rows(3), { meetings: [], drops: {} }, { logicalInput: null }),
     ZeroRowExtractionError,
   );
+  assert.doesNotThrow(() => accountedNormalize("ical", rows(3), { meetings: [], drops: {} }, { logicalInput: 0 }),
+    "three complete calendar documents can explicitly list zero events");
 });
 
 test("legistar's composite wrapper conserves, and agrees with the adapter EXACTLY", async () => {

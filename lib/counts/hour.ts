@@ -22,6 +22,9 @@ export interface OldestWaiting {
   readonly owner: string;
 }
 export interface CountProblem {
+  readonly kind: "cache" | "untimed" | "expired" | "growing" | "waiting";
+  readonly state: string;
+  readonly items: number;
   readonly key: string;
   readonly where: string;
   readonly says: string;
@@ -59,19 +62,34 @@ export function countProblems(current: readonly HourCount[], previous: readonly 
   const problems: CountProblem[] = [];
   for(const row of current.filter(row=>row.stage==='cache')) {
     const failed=(row.observedIn??row.incoming??0)-(row.observedOut??row.outgoing??0);
-    if(failed>0)problems.push({key:`counts:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · reader updates`,
-      says:`${failed.toLocaleString("en-US")} reader cache refresh${failed===1?'':'es'} failed in the recorded part of the hour.`,owner:"the runner",
-      next:"Repair the cache refresh and check the published records on the live page."});
+    if(failed>0)problems.push({kind:"cache",state:row.state,items:failed,key:`counts:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · reader updates`,
+      says:`${failed.toLocaleString("en-US")} reader update${failed===1?'':'s'} failed in the recorded part of the hour.`,owner:"the runner",
+      next:"Repair the reader updates and check the published records on the live page."});
   }
   const old = new Map(previous.map(row => [JSON.stringify([row.state,row.family,row.stage]),row]));
-  for (const row of waiting) {
+  const piles=new Map<string,OldestWaiting>();
+  for(const row of waiting){
+    const key=JSON.stringify([row.state,row.family,row.stage]),held=piles.get(key);
+    piles.set(key,held?{...row,count:held.count+row.count,
+      oldestAt:held.oldestAt===null||row.oldestAt===null?null:held.oldestAt<row.oldestAt?held.oldestAt:row.oldestAt,
+      owner:held.owner===row.owner?row.owner:"The team"}:row);
+  }
+  for (const row of piles.values()) {
     const key = JSON.stringify([row.state,row.family,row.stage]);
     const now = current.find(c => JSON.stringify([c.state,c.family,c.stage]) === key);
     const before = old.get(key);
     const age = row.oldestAt === null ? null : Date.parse(at) - Date.parse(row.oldestAt);
+    if(row.family==='Place pages'&&row.stage==='rebuilt') {
+      if(row.count>0&&(age===null||age>=5*60_000))problems.push({kind:age===null?"untimed":"waiting",state:row.state,items:row.count,
+        key:`counts:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · reader updates`,
+        says:age===null?"Waiting place pages have no recorded starting time.":`${row.count.toLocaleString("en-US")} place ${row.count===1?'page is':'pages are'} waiting; the oldest update has waited at least five minutes.`,
+        owner:countOwner(row.owner),next:"Repair the page builder and check the updated places on the live site.",
+      });
+      continue;
+    }
     if(row.count>0&&row.oldestAt===null) {
-      problems.push({key:`count-age:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · ${countLabel(row.family)}`,
-        says:"Waiting work has no recorded starting time.",owner:row.owner,next:"Restore the waiting time on this work list."});
+      problems.push({kind:"untimed",state:row.state,items:row.count,key:`count-age:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · ${countLabel(row.family)}`,
+        says:`${row.count.toLocaleString("en-US")} waiting items have no recorded starting time.`,owner:countOwner(row.owner),next:"Restore the waiting time on this work list."});
       continue;
     }
     const total=now?.total??row.count;
@@ -83,13 +101,16 @@ export function countProblems(current: readonly HourCount[], previous: readonly 
     const flat=aged&&now?.outgoing===0;
     const unknownFlow=aged&&(now?.outgoing===null||now===undefined);
     if(!growing&&!partialGrowth&&!flat&&!unknownFlow&&!expired)continue;
-    const says=expired?`${row.count.toLocaleString("en-US")} worker leases expired and the work is still waiting.`:
+    const says=expired?`${row.count.toLocaleString("en-US")} assignments stopped before the work finished.`:
       growing?`${total.toLocaleString("en-US")} items are waiting; the pile grew since the previous hour.`:
       partialGrowth?`${row.count.toLocaleString("en-US")} items are waiting; more came in than moved on in the recorded part of this hour.`:
       flat?`${row.count.toLocaleString("en-US")} items are waiting and none moved on in the last full hour.`:
       `${row.count.toLocaleString("en-US")} items are waiting; the oldest has waited at least an hour.`;
-    problems.push({key:`counts:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · ${countLabel(row.family)}`,
-      says,owner:expired?"the runner":row.owner,next:"Repair the blocked handoff and check the same records on the live page."});
+    problems.push({kind:expired?"expired":growing||partialGrowth?"growing":"waiting",state:row.state,items:growing?total:row.count,
+      key:`counts:${row.state}:${row.family}:${row.stage}`,where:`${row.state} · ${countLabel(row.family)}`,
+      says,owner:expired?"the runner":countOwner(row.owner),next:"Repair the blocked handoff and check the same records on the live page."});
   }
   return problems;
 }
+
+export const countOwner = (owner:string):string => owner === "diggers" ? "The research team" : owner;

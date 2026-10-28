@@ -34,6 +34,7 @@ import {
 } from "@/lib/state/resolved-location";
 import { useConfirmedDivisions } from "@/hooks/use-confirmed-divisions";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
+import { groupBodiesByGovernment } from "@/lib/registry/body-groups";
 import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
 import {
   hasRepresentation,
@@ -52,7 +53,7 @@ import { agendaAbsenceNote, collapseFootnotes } from "@/lib/registry/wording";
 import { formatDateLong } from "@/lib/text/format-date";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
-import { bodyDisplayName, readerPartyLabel } from "@/lib/text/reader-names";
+import { bodyDisplayName, readerPartyLabel, readerText } from "@/lib/text/reader-names";
 import { groupBySeatLabel } from "@/lib/officials/seat-grouping";
 import { GovernmentListings } from "./government-listings";
 import { NationalLink } from "../shell/national-link";
@@ -117,6 +118,26 @@ const BODY_CLASS_NOUN = (bodyClass: CoveredBody["bodyClass"]): string =>
 /** Type labels are structural and render neutral; tier accents belong to section headers. */
 const TYPE_LABEL_CLASS = "text-label";
 
+function groupedBodyList<T extends CoveredBody>(
+  bodies: readonly T[],
+  renderRow: (body: T, meetingTypes: ReactNode) => ReactNode,
+) {
+  return <div className="mt-1 space-y-3">
+    {groupBodiesByGovernment(bodies).map(section => <section key={section.type} data-body-section={section.type}>
+      <h4 className="t-structure text-local">{section.label}</h4>
+      {section.governments.map(government => <section key={government.id} className="mt-1" data-body-government={government.id}>
+        <h5 className="t-detail font-semibold text-voice">{government.name}</h5>
+        <ul className="mt-1 space-y-1">
+          {government.rows.map(({ body, meetingTypes }) => renderRow(body, meetingTypes.length ? <div className="mt-1 basis-full border-l border-[var(--panel-border)] pl-3">
+            <p className="t-caption text-muted">Meeting types</p>
+            <ul className="mt-1 space-y-1">{meetingTypes.map(type => renderRow(type, null))}</ul>
+          </div> : null))}
+        </ul>
+      </section>)}
+    </section>)}
+  </div>;
+}
+
 /**
  * Says whose question the card answers: the ZIP typed, refined by the address
  * if one was given. The district popup's subject is whatever was tapped.
@@ -159,7 +180,7 @@ function marksOverlap(standing: BodyStanding | undefined): boolean {
   return standing === "OVERLAP_NOT_RULED_OUT";
 }
 
-/** A seat shows its held name and representatives; gaps join the card footer. */
+/** A seat shows its held name and representatives; missing information stays with the seat. */
 function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; onOpenOfficial?: OpenOfficial }) {
   return <>
     {!seat.label && seat.sourcing !== "looking" && <CardGapContribution id={`seat-name:${seat.ocdId}`} label="district names" unit="district" />}
@@ -169,9 +190,9 @@ function SeatRow({ seat, zip, onOpenOfficial }: { seat: PanelSeat; zip: string; 
       data-seat-sourcing={seat.sourcing}
       className="t-detail leading-snug"
     >
-      {seat.label && <span className={TYPE_LABEL_CLASS}>{seat.label}</span>}
+      {seat.label && <span className={TYPE_LABEL_CLASS}>{readerText(seat.label)}</span>}
       {marksOverlap(seat.standing) && <OverlapMark zip={zip} />}
-      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">{seat.vacancy.since ? `Vacant since ${new Date(`${seat.vacancy.since}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}` : "Seat vacant"} · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">{seat.vacancy.sourceOrg}</a></span>}
+      {seat.representatives.length === 0 && seat.vacancy && <span className="block person-under-heading">{seat.vacancy.since ? `Vacant since ${new Date(`${seat.vacancy.since}T12:00:00Z`).toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric", timeZone: "UTC" })}` : "Seat vacant"} · <a href={seat.vacancy.sourceUrl} target="_blank" rel="noopener noreferrer">{readerText(seat.vacancy.sourceOrg)}</a></span>}
       {seat.representatives.length > 0 && <span className="block person-under-heading">
         <HolderList holders={[...seat.representatives]} seatLabel={seat.label ?? ""} seatOcdId={seat.ocdId} tier={seat.tier} onOpenOfficial={onOpenOfficial} />
       </span>}
@@ -203,7 +224,7 @@ function Holder({
    */
   return (
     <div className="person-row">
-      {holder.photoUrl && <Image src={holder.photoUrl} alt={holder.name} width={36} height={44} unoptimized className="mr-2 h-11 w-9 shrink-0 rounded object-cover" />}
+      {holder.photoUrl && <Image src={holder.photoUrl} alt={readerText(holder.name, "name")} width={36} height={44} unoptimized className="mr-2 h-11 w-9 shrink-0 rounded object-cover" />}
       <span className="person-row-name">
         {onOpen ? (
           <button
@@ -211,10 +232,10 @@ function Holder({
             onClick={onOpen}
             className="cursor-pointer text-left hover:text-link hover:underline"
           >
-            {holder.name}
+            {readerText(holder.name, "name")}
           </button>
         ) : (
-          holder.name
+          readerText(holder.name, "name")
         )}
         {showOfficeTitle && <span className="block t-caption text-muted">{readerOfficeTitle(holder.officeTitle)}</span>}
         {holder.selectionMethod === "APPOINTED" && <span className="block t-caption text-muted">Appointed</span>}
@@ -356,6 +377,9 @@ function CoverageBody({
 
   const derived = deriveWhoGoverns(bodiesHere, selected);
   const shown = derived.rows;
+  const shownIds = new Set(shown.map(body => body.bodyId));
+  const filedMeetings = derived.otherRows.filter(body => body.meetingBodyId && shownIds.has(body.meetingBodyId));
+  const otherBodies = derived.otherRows.filter(body => !body.meetingBodyId || !shownIds.has(body.meetingBodyId));
   // "" when unknown, so the sentence stands without a date.
   const lastCheckedLong = formatDateLong(lastCheckedAt);
   const lastCheckedClause = lastCheckedLong ? `, ${lastCheckedLong}` : "";
@@ -386,7 +410,7 @@ function CoverageBody({
 
   const othersLine = kind !== "unmapped" && others > 0 ? (
     <>
-      {others} more boards, committees and commissions serve the area.
+      {others} more boards, commissions, offices and meeting types are listed for the area.
       {othersWithSource > 0 && <> We track {othersWithSource === others ? "all of their calendars" : `${othersWithSource} of their calendars`}.</>}
     </>
   ) : null;
@@ -427,7 +451,7 @@ function CoverageBody({
       {coverage.federalDirectoryUnavailable && <p className="mt-1 t-detail text-voice">We could not load the federal directory just now.</p>}
       <GovernmentListings records={coverage.governments ?? []} states={coverage.governmentInventoryStates ?? []} unavailableStates={coverage.governmentInventoryUnavailableStates} />
       {coverage.fringeDivisions && coverage.fringeDivisions.length > 0 && <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-fringe>
-        A small part of {zip} is in {coverage.fringeDivisions.map(division => division.label).join(", ")}. Enter your street address to see if one of them is yours.
+        A small part of {zip} is in {coverage.fringeDivisions.map(division => readerText(division.label)).join(", ")}. Enter your street address to see if one of them is yours.
       </p>}
 
       {!localPending && othersLine && (
@@ -436,18 +460,17 @@ function CoverageBody({
         </p>
       )}
 
-      {/* Opens in place; the label's count is `derived.otherRows.length`. */}
-      {derived.otherRows.length > 0 && (
+      {/* Meeting types already filed below their governing body stay out of this disclosure. */}
+      {otherBodies.length > 0 && (
         <details className="mt-1" data-other-bodies-disclosure="">
           <summary className="cursor-pointer t-caption text-link">
-            See the rest ({derived.otherRows.length})
+            See the rest ({otherBodies.length})
           </summary>
-          <ul className="mt-1 space-y-1">
-            {derived.otherRows.map((body) => (
+          {groupedBodyList(otherBodies, (body, meetingTypes) => (
               <li
                 key={body.bodyId}
                 data-other-body-row=""
-                className="flex items-baseline justify-between gap-3 pb-1"
+                className="flex flex-wrap items-baseline justify-between gap-x-3 pb-1"
               >
                 <button
                   type="button"
@@ -457,9 +480,9 @@ function CoverageBody({
                   {bodyDisplayName(body)}
                 </button>
                 <span className={TYPE_LABEL_CLASS}>{bodyClassShort(body.bodyClass)}</span>
+                {meetingTypes}
               </li>
             ))}
-          </ul>
         </details>
       )}
 
@@ -477,24 +500,28 @@ function CoverageBody({
               ? "This is the government whose boundary covers this area"
               : `These are ${shown.length} of the governments whose boundaries cover this area`}{" "}
             — the county, the city or town, the school district, and any
-            special district that governs here. They are ordered by what kind
-            of government each one is — county, then city or town, then school
-            district, then other districts — and by nothing else. Nothing here
-            is scored, and no order on this panel says one government matters
-            more than another.
+            special district that governs here. They are grouped by government,
+            with special districts in their own section.
             {others > 0 &&
-              ` Boards, committees and commissions are real bodies you can follow, but they aren't governments, so they're counted separately: ${others} of them here.`}
+              ` The ${others} other boards, commissions, offices and meeting types are listed separately.`}
           </p>
         </details>
       )}
       {shown.length > 0 && (
-        <ul className="mt-1 space-y-1">
-          {shown.map((body) => (
+        <>
+          {groupedBodyList([...shown, ...filedMeetings], (body, meetingTypes) => body.meetingBodyId ? (
+            <li key={body.bodyId} data-meeting-type-row="" className="flex items-baseline justify-between gap-3 pb-1">
+              <button type="button" onClick={onOpenBody ? () => onOpenBody(body) : undefined} className="text-left t-detail text-paper hover:underline">
+                {bodyDisplayName(body)}
+              </button>
+              <span className={TYPE_LABEL_CLASS}>{bodyClassShort(body.bodyClass)}</span>
+            </li>
+          ) : (
             <li
               key={body.bodyId}
               /* Hook for the walk check that counts rendered government rows. */
               data-governing-row=""
-              className="flex items-baseline justify-between gap-3 pb-1"
+              className="flex flex-wrap items-baseline justify-between gap-x-3 pb-1"
             >
               {/* The mark sits inside the name's flex item so it stays against the word. */}
               <span className="inline-flex items-baseline">
@@ -517,17 +544,20 @@ function CoverageBody({
                   <CouldGovernMark jurisdiction={bodyDisplayName(body)} />
                 )}
                 {marksOverlap(body.standing) && <OverlapMark zip={zip} />}
+                {body.placementBasis === "HOST_COUNTY" && <span className="t-detail text-paper-dim">Filed under its host county; service boundary not available</span>}
               </span>
               <span
-                className={`trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
+                className={`trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em] ${TYPE_LABEL_CLASS}`}
               >
                 {/* Derived rows tag by division type; curated rows by what they are; a body with no division renders its class. */}
                 {body.name === null && body.divisionType !== null
                   ? DIVISION_NOUN[body.divisionType]
                   : BODY_CLASS_NOUN(body.bodyClass)}
               </span>
+              {meetingTypes}
             </li>
           ))}
+        <ul className="mt-1 space-y-1">
           {/* A town with no mayor gets its substitute office named and its members shown. */}
           {shown.flatMap((body) => {
             const board = projectedBodyRoster(body).members.filter((holder) =>
@@ -575,6 +605,7 @@ function CoverageBody({
             ];
           })}
         </ul>
+        </>
       )}
 
       {localSeats.length > 0 && (
@@ -868,7 +899,7 @@ export function CoverageNotice({
       {/* Pinned: the header never scrolls, so the ballot entry stays reachable. */}
       <div className="coverage-notice-head">
         <p
-          className={`font-mono t-caption uppercase trailing-space-trimmed-20 tracking-[0.2em] ${accent}`}
+          className={`font-mono t-caption trailing-space-trimmed-20 tracking-[0.2em] ${accent}`}
         >
           {label}
         </p>
@@ -898,7 +929,7 @@ export function CoverageNotice({
           <h3 className="t-heading text-paper">Governments at this place</h3>
           <ul className="mt-2 space-y-2">
             {result.readerScope.governments.map(body => <li key={body.bodyId} data-upcoming-body={body.bodyId}>
-              <span className="t-body text-paper">{body.name}</span>
+              <span className="t-body text-paper">{readerText(body.name)}</span>
               {body.upcoming > 0 ? <p className="t-detail text-muted">{body.upcoming} upcoming {body.upcoming === 1 ? "meeting" : "meetings"} held{body.agendasLinked > 0 ? ` · ${body.agendasLinked} ${body.agendasLinked === 1 ? "agenda" : "agendas"} linked` : ""}</p>
                 : <CardGapContribution id={`area-upcoming:${body.bodyId}`} label="upcoming meetings" unit="body" subject={{ type: "BODY", id: body.bodyId }} />}
               {body.upcoming > body.agendasLinked && <CardGapContribution id={`area-agendas:${body.bodyId}`} label="agendas" count={body.upcoming - body.agendasLinked} unit="meeting" kind="not-posted" subject={{ type: "BODY", id: body.bodyId }} />}

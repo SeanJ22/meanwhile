@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { parse } from "yaml";
-import { CardSourcesList } from "../components/officials/card-sources-list.tsx";
+import { CardSourcesList, readableSourceQuotes } from "../components/officials/card-sources-list.tsx";
+import { ReaderNamesProvider } from "../components/ui/reader-names-context.tsx";
 import { PersonIdentity } from "../components/officials/person-identity.tsx";
 import { PopupRow } from "../components/map/popup/popup-row.tsx";
 import { fieldSourceLabel, mergeSources, personCardSources } from "../lib/officials/card-sources.ts";
@@ -24,12 +25,13 @@ test("the saved Congress source renders held metadata and reader field labels", 
   assert.equal(holder.provenance?.verifiedAt, null);
   assert.ok(holder.fieldSources?.districtOffices);
   const html = renderToStaticMarkup(<CardSourcesList sources={personCardSources(holder)} />);
-  assert.match(html, /District offices/);
+  assert.match(html, /District offices and how to reach them/);
   assert.match(html, /Published by/);
   assert.match(html, /Read from/);
   assert.match(html, /Last checked/);
   assert.doesNotMatch(html, /Verified|Other ·|districtOffices|and \d+ more from this source|working on getting this info|Want us to get|not yet|no published page/);
-  assert.equal(fieldSourceLabel("committees"), "Committees");
+  assert.equal(fieldSourceLabel("committees"), "The committees they serve on");
+  assert.equal(fieldSourceLabel("new_internal_field"), "The facts shown on this card");
 });
 
 test("a source with no held publisher, page or dates renders coverage alone", () => {
@@ -40,11 +42,26 @@ test("a source with no held publisher, page or dates renders coverage alone", ()
   assert.doesNotMatch(html, /popup-row|Published by|Read from|Last checked|Verified|working on|not yet/);
 });
 
-test("a held verification date renders as its own date", () => {
+test("a held confirmation date renders as a readable date", () => {
   const html = renderToStaticMarkup(<CardSourcesList sources={[{
     what: "District offices", provenance: { ...holder.provenance!, verifiedAt: "2026-10-11T12:00:00Z" },
   }]} />);
-  assert.match(html, /Verified<\/span><span[^>]*>2026-10-11/);
+  assert.match(html, /Confirmed<\/span><span[^>]*>October 11, 2026/);
+});
+
+test("source quotes read as sentences with held names while saved evidence stays exact", () => {
+  const sources = [{ what: "COMMON COUNCIL MEMBERS", provenance: {
+    sourceOrg: "CITY OF MILWAUKEE", sourceUrl: "https://city.milwaukee.gov/",
+    collectedAt: "2026-10-23", verifiedAt: null,
+    quote: "ALD. MOORE SERVES ON THE COMMON COUNCIL IN MILWAUKEE. FEMA SUPPORT IS AVAILABLE.",
+  } }];
+  const saved = structuredClone(sources);
+  const html = renderToStaticMarkup(<ReaderNamesProvider names={["Ald. Moore", "Common Council", "Milwaukee"]}>
+    <CardSourcesList sources={sources} />
+  </ReaderNamesProvider>);
+  assert.match(html, /Ald\. Moore serves on the Common Council in Milwaukee\. FEMA support is available\./);
+  assert.match(html, /City of Milwaukee/);
+  assert.deepEqual(sources, saved);
 });
 
 test("one source preserves captured identities and last checked dates", () => {
@@ -59,7 +76,8 @@ test("one source preserves captured identities and last checked dates", () => {
   assert.equal((html.match(/>Read from</g) ?? []).length, 1);
   assert.match(html, /data-captured-office="current"/);
   assert.match(html, /data-captured-office="previous"/);
-  assert.match(html, /2026-10-10/);
+  assert.match(html, /October 10, 2026/);
+  assert.doesNotMatch(html, /2026-10-10/);
   assert.deepEqual(mergeSources([...sources, ...sources]), sources);
 });
 
@@ -77,7 +95,7 @@ test("a held source URL appears once when contributions differ in publisher know
   const html = renderToStaticMarkup(<CardSourcesList sources={sources} />);
   assert.equal((html.match(/>Published by</g) ?? []).length, 1);
   assert.equal((html.match(/>Read from</g) ?? []).length, 1);
-  assert.match(html, /Identity; Office; Term/);
+  for (const coverage of ["Identity", "Office", "Term"]) assert.match(html, new RegExp(`>${coverage}<`));
   assert.equal(mergeSources(entries.map(entry => ({ ...entry, provenance: { ...entry.provenance, sourceUrl: null } }))).length, 3,
     "without a held URL, distinct recorded publishers remain separate sources");
 });
@@ -87,4 +105,50 @@ test("empty popup values disappear while a held zero remains", () => {
     assert.equal(renderToStaticMarkup(<PopupRow label="Upcoming">{value}</PopupRow>), "");
   }
   assert.match(renderToStaticMarkup(<PopupRow label="Upcoming">{0}</PopupRow>), />0<\/span>/);
+});
+
+
+test("raw roster evidence shows only its readable supporting words", () => {
+  const quote = "2028-12-31T00:00:00 2021-01-01T00:00:00 Member Supervisor Rex Scott 138 206 571";
+  assert.deepEqual(readableSourceQuotes(quote), ["Member Supervisor Rex Scott"]);
+  assert.deepEqual(readableSourceQuotes("571"), []);
+  assert.deepEqual(readableSourceQuotes("PersonId 571"), []);
+  assert.deepEqual(readableSourceQuotes("McDonald and LeBron spoke about iPhone access"), ["McDonald and LeBron spoke about iPhone access"]);
+  assert.deepEqual(readableSourceQuotes('{"id":571,"name":"Rex Scott"}'), []);
+  assert.deepEqual(readableSourceQuotes("Elected November 2024 to a four-year term"), ["Elected November 2024 to a four-year term"]);
+  assert.deepEqual(readableSourceQuotes("Their term runs through 2028"), ["Their term runs through 2028"]);
+  const html = renderToStaticMarkup(<CardSourcesList sources={[{ what: "Who sits on this board and their terms", provenance: {
+    sourceUrl: "https://pima.gov/board/571", sourceOrg: "Pima County", collectedAt: "2026-10-23T12:34:56Z", verifiedAt: null, quote,
+  } }]} />);
+  assert.match(html, /Member Supervisor Rex Scott/);
+  assert.match(html, /October 23, 2026/);
+  assert.match(html, /href="https:\/\/pima.gov\/board\/571"/);
+  assert.doesNotMatch(html.replace(/href="[^"]*"/g, ""), /2028-12-31|2021-01-01|00:00:00|138 206 571|2026-10-23T/);
+});
+
+test("stored roster keys become descriptions while every linked source remains", () => {
+  const provenance = { sourceUrl: "https://county.gov/roster", sourceOrg: "County Clerk", collectedAt: "2026-10-23", verifiedAt: null };
+  const sources = personCardSources({ ...holder, provenance, fieldSources: {
+    termStart: { ...provenance, sourceUrl: "https://county.gov/terms" },
+    internal_record_id: { ...provenance, sourceUrl: "https://county.gov/person/571", quote: "571" },
+    officeEmail: { ...provenance, sourceUrl: "https://county.gov/contact" },
+  } });
+  const html = renderToStaticMarkup(<CardSourcesList sources={sources} />);
+  assert.match(html, /Their name, office and term/);
+  assert.match(html, /How to email the office/);
+  assert.match(html, /The facts shown on this card/);
+  assert.doesNotMatch(html, /termStart|Term start date|internal_record_id|Internal record id|officeEmail|>571</);
+  for (const url of ["https://county.gov/roster", "https://county.gov/terms", "https://county.gov/person/571", "https://county.gov/contact"]) assert.ok(html.includes(`href="${url}"`));
+});
+
+
+test("encoded record versions never appear as source quotations", () => {
+  const quote = "Commissioner Vickie Adamson AAAAAACaASQ= AAAAAACaASY= AAAAAACaASA= AAAAAACaASI= Elected in 2024";
+  assert.deepEqual(readableSourceQuotes(quote), ["Commissioner Vickie Adamson", "Elected in 2024"]);
+  const html = renderToStaticMarkup(<CardSourcesList sources={[{ what: "Who sits on this board and their terms", provenance: {
+    sourceUrl: "https://wake.gov/board", sourceOrg: "Wake County", collectedAt: "2026-10-25", verifiedAt: null, quote,
+  } }]} />);
+  assert.match(html, /Commissioner Vickie Adamson/);
+  assert.match(html, /Elected in 2024/);
+  assert.doesNotMatch(html, /AAAAAACa/);
 });

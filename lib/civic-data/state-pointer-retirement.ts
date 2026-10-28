@@ -5,7 +5,7 @@ import { STATE_RETIREMENT_KEY_ENV } from "./state-retirement-proof.ts";
 import { readFile, mkdir, writeFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join, resolve } from "node:path";
-import { databaseIdentity } from "../control-plane/repository/incremental-reads.ts";
+import { databaseIdentity } from "../db/database-identity.ts";
 import { routineProcessSlots, type WorkerMemoryRelease, type WorkerProcessSlots } from "../control-plane/workers/worker-slots.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { runBoundedChildPass, ROUTINE_CHILD_TIMEOUT_MS, type BoundedChildLauncher } from "./bounded-child-pass.ts";
@@ -79,7 +79,7 @@ export async function reconcileNationalStatePointers(input: {
   const release = (id: string) => { releases.get(id)?.(); releases.delete(id); };
   try {
     let manifestPath: string | null = null;
-    await runBoundedChildPass([{ id: "state-retirement:prepare", executable: process.execPath,
+    await runBoundedChildPass([{ id: "state-retirement:prepare", databaseBytesPerRun: 1_907_347_669, executable: process.execPath,
       args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", script, `--prepare=${directory}`, `--origins=${originsFile}`, `--states=${states.join(",")}`],
       env: admittedRuntimeChildEnvironment({ parentEnv: childEnv, capability: "ROUTINE_SUPERVISOR", contract: null, parentPid: process.pid }) }],
     { ...options, onSettled: run => {
@@ -107,7 +107,7 @@ export async function reconcileNationalStatePointers(input: {
       if (Date.now() >= deadlineMs) return [];
       const units = [...pending.values()].map(queue => queue.shift()!);
       for (const [key, queue] of pending) if (!queue.length) pending.delete(key);
-      await runBoundedChildPass(units.map(unit => ({ id: `${unit.contractId}:retirement:${unit.originVersionId}`, executable: process.execPath,
+      await runBoundedChildPass(units.map(unit => ({ id: `${unit.contractId}:retirement:${unit.originVersionId}`, databaseBytesPerRun: 1_907_347_669, executable: process.execPath,
         args: ["--experimental-strip-types", "--import", "./scripts/register-test-loader.mjs", script, `--unit=${unit.inputFile}`, `--sha256=${unit.fileSha256}`, `--contract=${unit.contractId}`, `--seal=${unit.seal}`],
         env: admittedRuntimeChildEnvironment({ parentEnv: childEnv, capability: unit.family === "candidate-campaign-sites-derived" ? "ROUTINE_CONTRACT" : "MANUAL_CONTRACT",
           contract: unit.contractId, parentPid: process.pid }),

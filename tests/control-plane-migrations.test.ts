@@ -5,7 +5,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { applyControlPlaneMigrations, controlPlaneMigrationHash, productionControlPlaneTarget } from "../scripts/control-plane-migrations.mts";
-import { BOOTSTRAP_DDL, CONTROL_READS_EXPAND_DDL } from "../lib/control-plane/repository/pg-schema.ts";
+import { BOOTSTRAP_DDL, CONTROL_READS_EXPAND_DDL, RESEARCH_REVISION_INDEXES } from "../lib/control-plane/repository/pg-schema.ts";
 import { pgControlReadsBackfill } from "../lib/control-plane/repository/control-reads-backfill.ts";
 import { runStateControlBackfill,PLANNING_STATES } from "../lib/control-plane/scheduler/state-planning.ts";
 import type { Sql } from "../lib/control-plane/repository/pg-store.ts";
@@ -16,7 +16,8 @@ import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 
 const connection = "postgresql://writer:fixture@ep-dark-night-aeo1ekz3.c-2.us-east-2.aws.neon.tech/control";
-const buildEnv: NodeJS.ProcessEnv = { NODE_ENV: "test", NETLIFY: "true", CONTEXT: "production", BRANCH: "main", WTP_CONTROL_PLANE_DATABASE_URL: connection };
+const buildEnv: NodeJS.ProcessEnv = { NODE_ENV: "test", NETLIFY: "true", CONTEXT: "production", BRANCH: "main", WTP_CONTROL_PLANE_DATABASE_URL: connection,
+  WTP_PRODUCTION_DATABASE_URL_WRITE: "postgresql://writer:fixture@ep-dry-river-axwtolzc.c-4.us-east-2.aws.neon.tech/neondb" };
 const expandArgs = ["--target=production", "--phase=expand", "--production-build"];
 const committed = (path: string) => readFileSync(path);
 const now = "2026-10-15T12:00:00.000Z";
@@ -39,7 +40,7 @@ test("control-plane migrations use only the declared production context and its 
 
 test("committed journal hashes cover the expand-only definition", () => {
   const journal = JSON.parse(readFileSync("lib/control-plane/repository/migrations/meta/_journal.json", "utf8"));
-  assert.deepEqual(journal.entries.map((row: { id: string }) => row.id), ["CP-01_expand", "DT-01_expand", "RB-A1_expand", "RIVER-KEYS_expand", "RIVER-KEYS-FX_expand", "RB-A5_expand", "RB-A8_expand"]);
+  assert.deepEqual(journal.entries.map((row: { id: string }) => row.id), ["CP-01_expand", "DT-01_expand", "RB-A1_expand", "RIVER-KEYS_expand", "RIVER-KEYS-FX_expand", "RB-A5_expand", "RB-A8_expand", "RV-BOX_expand", "DB-03_expand", "DB-03A_expand", "BB-01_expand"]);
   for (const row of journal.entries) assert.equal(row.hash, controlPlaneMigrationHash(process.cwd(), row.id));
 });
 
@@ -82,12 +83,14 @@ test("wrong database, applied hash drift and missing expand never issue DDL", as
 test("expand copies no production rows; runner jobs backfill one state and retain exact charge prices", async()=>{
   const db=new PGlite();
   let requests=0;
-  const sql={query:async(text:string,params:readonly unknown[]=[]) => {requests++;return (await db.query<Record<string,unknown>>(text,[...params])).rows;}};
+  const sql={query:async(text:string,params:readonly unknown[]=[]) => {requests++;return (await db.query<Record<string,unknown>>(text.replace("INDEX CONCURRENTLY", "INDEX"),[...params])).rows;}};
   try {
-    const skipped=new Set(CONTROL_READS_EXPAND_DDL);
+    const skipped=new Set([...CONTROL_READS_EXPAND_DDL,...RESEARCH_REVISION_INDEXES.map(index=>index.ddl)]);
     for(const ddl of BOOTSTRAP_DDL) if(!skipped.has(ddl) || ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_pass_cursors"))
       await sql.query(ddl.replace("CREATE INDEX CONCURRENTLY","CREATE INDEX"));
     await sql.query("CREATE TABLE cp_spend_window(id text PRIMARY KEY,value jsonb)");
+    // This fixture connects both migration handles to the same local database.
+    await sql.query("CREATE TABLE source_copy(id bigint PRIMARY KEY,url text,final_url text,fetched_at timestamptz,http_status int,sha256 char(64),blob_key text UNIQUE,is_archive boolean)");
     await sql.query((await import("../lib/control-plane/repository/control-reads-backfill.ts")).CONTROL_READS_BACKFILL_DDL[0]!);
     const az={...entry("az"),jurisdiction:"ocd-division/country:us/state:az/county:pima"};
     const nh={...entry("nh"),jurisdiction:"ocd-division/country:us/state:nh/county:coos"};
@@ -138,7 +141,7 @@ test("expand copies no production rows; runner jobs backfill one state and retai
     assert.deepEqual((await sql.query("SELECT id FROM cp_admin_expansion_scopes ORDER BY id")).map(row=>row.id),["new-az","st:nh"]);
     assert.equal((await sql.query("SELECT count(*)::integer AS n FROM cp_occurrences"))[0].n,0);
     assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,18);
-    assert.deepEqual((await sql.query("SELECT id FROM cp_migrations ORDER BY id")).map(row=>row.id),["CP-01_expand","DT-01_expand","RB-A1_expand","RB-A5_expand","RB-A8_expand","RIVER-KEYS-FX_expand","RIVER-KEYS_expand"]);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_migrations ORDER BY id")).map(row=>row.id),["BB-01_expand","CP-01_expand","DB-03A_expand","DB-03_expand","DT-01_expand","RB-A1_expand","RB-A5_expand","RB-A8_expand","RIVER-KEYS-FX_expand","RIVER-KEYS_expand","RV-BOX_expand"]);
     assert.equal((await sql.query("SELECT value ? 'placeTargets' AS embedded FROM cp_admin_config"))[0].embedded,false);
     assert.deepEqual(await sql.query("SELECT to_regclass('cp_spend_window') AS old"),[{old:null}]);
     assert.equal((await sql.query("SELECT (value #>> '{payload,count}')::integer AS n FROM cp_field_manual_entries WHERE id=$1",[BANK_WRITE_HEALTH_ID]))[0].n,5);

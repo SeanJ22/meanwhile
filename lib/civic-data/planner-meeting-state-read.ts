@@ -1,5 +1,5 @@
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
-import { readPlacePackage } from "../reader/place.ts";
+import { buildPlacePackage } from "../reader/place-builder.ts";
 import { readReaderMeetingSettings } from "../meetings/reader-settings.ts";
 import { snapshotCounts } from "../meetings/snapshot.ts";
 import { readPlannerMeetingArchives, plannerCurrentMeetingSql } from "./planner-archive-state-read.ts";
@@ -12,15 +12,15 @@ export async function* readPlannerMeetingBodies(state: string, query: ReadOnlyQu
   if (!/^[a-z]{2}$/i.test(state)) throw new Error(`PLANNER_MEETING_STATE_INVALID:${state}`);
   const [[bodies], settings] = await Promise.all([
     query([{ text: `SELECT id FROM entity WHERE state=$1 AND kind='body'
-      UNION SELECT reader_payload_node(b.item)->>'id' AS id FROM civic_data_promotions p,
-        LATERAL reader_payload_members(reader_payload_node(reader_payload_node(p.payload)->'registry')->'bodies') b
+      UNION SELECT r.row_id AS id FROM civic_data_rows r JOIN civic_data_promotions p
+        ON p.key=r.promotion_key AND p.current_version_id=r.version_id
         WHERE p.key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
-          AND p.record_class='REGISTRY_RUNTIME_BINDING' ORDER BY id`, params: [state.toUpperCase()] }]),
+          AND r.collection='registry.bodies' ORDER BY id`, params: [state.toUpperCase()] }]),
     readReaderMeetingSettings(),
   ]);
   let archives: ReturnType<typeof readPlannerMeetingArchives> | undefined;
   for (let first = 0; first < bodies.length; first += 16) {
-    const held = await readPlacePackage({ state, divisionIds: [], bodyIds: bodies.slice(first, first + 16).map(body => String(body.id)),
+    const held = await buildPlacePackage({ state, divisionIds: [], bodyIds: bodies.slice(first, first + 16).map(body => String(body.id)),
       includeHistory: true, includeAgenda: true }, async (text, params) => {
       const [archive, [current]] = await Promise.all([archives ??= readPlannerMeetingArchives(text,
         [...params!.slice(0, 2), bodies.map(body => String(body.id)), ...params!.slice(3)], query),
@@ -74,10 +74,10 @@ export async function* readPlannerMeetingBodies(state: string, query: ReadOnlyQu
             text: `SELECT substring(reader_payload_value(reader_payload_node(d.item)->'text')#>>'{}' FROM $3::int FOR 32768) AS value
               FROM civic_data_candidates c,LATERAL reader_payload_members(reader_payload_node(c.candidate->'readModel')->'agendaDocuments') d
               WHERE c.id=$1 AND d.ordinal_index=$2`, params: [text.candidate,text.ordinal,offset+1],
-          } : { text: `SELECT substring(reader_payload_value(reader_payload_node(d.item)->'text')#>>'{}'
-            FROM $4::int FOR 32768) AS value FROM civic_data_promotions p,
-            LATERAL reader_payload_members(reader_payload_node(p.payload)->'agendaDocuments') d
-            WHERE p.key=$1 AND p.current_version_id=$2 AND d.ordinal_index=$3`,
+          } : { text: `SELECT substring(reader_payload_value(r.value->'text')#>>'{}'
+            FROM $4::int FOR 32768) AS value FROM civic_data_rows r JOIN civic_data_promotions p
+              ON p.key=r.promotion_key AND p.current_version_id=r.version_id
+            WHERE p.key=$1 AND p.current_version_id=$2 AND r.collection='agendaDocuments' AND r.ordinal=$3`,
             params: [`MEETING:${text.scope}`, text.version, text.ordinal, offset + 1] }]);
           if (typeof chunk?.value !== "string") throw new Error(`PLANNER_MEETING_CHANGED:${state}:${text.scope}`);
           chunks.push(chunk.value);

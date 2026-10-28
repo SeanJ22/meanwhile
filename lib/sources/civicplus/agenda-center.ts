@@ -19,16 +19,16 @@ export interface ArchivedSitting {
 
 function categoryBlocks(html: string): { id: string; name: string; html: string }[] {
   const blocks: { id: string; name: string; html: string }[] = [];
-  for (const match of html.matchAll(/<div\b[^>]*\bid\s*=\s*["']cat(\d+)["'][^>]*>/gi)) {
+  for (const match of html.matchAll(/<(div|section)\b[^>]*\bid\s*=\s*["']cat(\d+)["'][^>]*>/gi)) {
     const start = match.index! + match[0].length;
     let depth = 1, end = html.length;
-    for (const tag of html.slice(start).matchAll(/<\/?div\b[^>]*>/gi)) {
+    for (const tag of html.slice(start).matchAll(new RegExp(`<\\/?${match[1]}\\b[^>]*>`, "gi"))) {
       depth += /^<\//.test(tag[0]) ? -1 : 1;
       if (depth === 0) { end = start + tag.index!; break; }
     }
     const block = html.slice(start, end);
     const heading = /<h[23]\b[^>]*>([\s\S]*?)<\/h[23]>/i.exec(block)?.[1] ?? "";
-    blocks.push({ id: match[1], name: plain(heading).replace(/^[▼▶\s]+/, ""), html: block });
+    blocks.push({ id: match[2], name: plain(heading).replace(/^[▼▶\s]+/, ""), html: block });
   }
   return blocks;
 }

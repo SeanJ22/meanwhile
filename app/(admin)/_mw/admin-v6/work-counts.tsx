@@ -18,10 +18,11 @@ export function WorkCounts() {
   const scope = /^st:([a-z]{2})$/.exec(v.scopeKey)?.[1] ?? /^geo:([a-z]{2})\./.exec(v.scopeKey)?.[1];
   const [chosen, choose] = useState<string | null>(null);
   const state = chosen ?? scope ?? "";
-  const { reading, reload } = useReading<Counts>(`/api/admin/v6/work-counts${state ? `?state=${state}` : ""}`);
+  const { reading, reload, status } = useReading<Counts>(`/api/admin/v6/work-counts${state ? `?state=${state}` : ""}`);
   const rows = reading.kind === "ready" ? reading.data.rows : [];
   const { page, pager } = usePager(rows, 12);
   return <Card title="Work by hour">
+      {status}
     <p className={s.meta}>Last 24 hours</p>
     <select className={s.select} value={state} aria-label="State for hourly work counts" onChange={event => choose(event.target.value)}>
       <option value="">Every state</option>

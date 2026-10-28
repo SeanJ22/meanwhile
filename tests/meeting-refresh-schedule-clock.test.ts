@@ -7,7 +7,6 @@ import { meetingPartitionId } from "../lib/civic-data/meeting-partitions.ts";
 import { ControlledClock, nextAdmissionMs, recordedPasses, replayPass } from "./helpers/routine-pass-replay.ts";
 import {
   ROUTINE_DATA_ADMISSION_MS,
-  ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS,
   ROUTINE_SOURCE_TASKS,
   SITTING_WINDOW_LANE_SLOTS_PER_PASS,
   routineFailureDomainFrontier,
@@ -435,7 +434,7 @@ async function simulateRegistry(options: {
         task: body.task,
         lastConsideredAt: clocks.get(body.task.id)?.lastAttemptedAt ?? null,
         deadlineMs: routineTaskDeadlineMs(body.task, clocks.get(body.task.id), signals.get(body.task.id)),
-      })), ROUTINE_FAILURE_DOMAIN_FRONTIER_PER_PASS, pass);
+      })), pass);
       for (const lane of new Set(admitted.map(({ task }) => task.acquisitionFailureDomain))) {
         assert.ok(admitted.filter(({ task }) => task.acquisitionFailureDomain === lane).length <= SITTING_WINDOW_LANE_SLOTS_PER_PASS);
       }
@@ -443,7 +442,6 @@ async function simulateRegistry(options: {
         clock,
         admittedAtMs: at,
         recorded: options.recordedPasses ? recorded[Math.floor(rand() * recorded.length)] : undefined,
-        cleanRepairMs: 15_000,
         launched: routinePassLaunchOrder(admitted).map(({ task }) => task),
         windowed: tasks,
         passClocks: new Map(tasks.map((task) => [task.id, clocks.get(task.id)])),
@@ -506,7 +504,7 @@ test("controlled clock, whole registry under the passes production ran (2026-09-
     const result = await simulateRegistry({ recordedPasses: true, days: 14, seed });
     const detail = `seed ${seed}: longest hourly gap ${(result.maxHotGapMs / MIN).toFixed(2)} min, longest gap ${(result.maxGapMs / HOUR).toFixed(2)} h, ` +
       `longest pass ${(result.longestPassMs / MIN).toFixed(2)} min, ${result.reads} reads, ${result.catchUpReads} by catch-up`;
-    assert.ok(result.longestPassMs >= 952_000, `the run drew the longest recorded pass (${detail})`);
+    assert.ok(result.longestPassMs >= Math.max(...recordedPasses().map(pass => pass.sourceMs ?? 0)), `the run drew the longest recorded source phase (${detail})`);
     assert.equal(result.twiceDailyLate.length, 0, `no body waits past 12 hours for the hourly ones (${detail}): ${result.twiceDailyLate.slice(0, 6).join(" | ")}`);
     assert.equal(result.hourlyLate.length, 0, `late hourly reads (${detail}): ${result.hourlyLate.slice(0, 6).join(" | ")}`);
     assert.ok(result.maxHotGapMs <= HOUR && result.maxGapMs <= 12 * HOUR, detail);

@@ -24,6 +24,7 @@
   max-width: none;
   padding: 0;
 }
+.root.rootBrief { max-width: 76rem; }
 
 .root :where(button, input, select, textarea) {
   font-family: inherit;
@@ -275,7 +276,6 @@
 .eyebrow {
   font-size: 11px;
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--text-dim);
   margin: 0;
 }
@@ -533,7 +533,6 @@
   font-weight: 500;
   font-size: 11px;
   letter-spacing: 0.04em;
-  text-transform: uppercase;
   color: var(--text-dim);
   padding: 6px 10px;
   border-bottom: 1px solid var(--panel-border);
@@ -548,6 +547,27 @@
   font-family: var(--v6-mono);
   text-align: right;
   white-space: nowrap;
+}
+@media (max-width: 600px) {
+  .runnerFamilyTable {
+    table-layout: fixed;
+  }
+  .runnerFamilyTable th,
+  .runnerFamilyTable td {
+    padding-inline: 2px;
+    white-space: normal;
+    overflow-wrap: anywhere;
+  }
+  .runnerFamilyTable th {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+  .runnerFamilyTable thead th:first-child {
+    width: 34%;
+  }
+  .runnerFamilyTable thead th:not(:first-child) {
+    width: 22%;
+  }
 }
 .thSort {
   border: 0;
@@ -721,7 +741,6 @@
 .statLabel {
   font-size: 12px;
   letter-spacing: 0.06em;
-  text-transform: uppercase;
   color: var(--text-dim);
 }
 .statSep {
@@ -1306,7 +1325,6 @@
 .legacyScopeLabel {
   font: 500 11px var(--mw-sans);
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--mw-muted);
 }
 .legacySelect {
@@ -1661,7 +1679,6 @@
 .legacyLabel {
   font: 500 12px var(--mw-sans);
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--mw-muted);
   margin-bottom: 10px;
 }
@@ -1805,7 +1822,6 @@
   font: 500 11px var(--mw-mono);
   letter-spacing: 0.08em;
   white-space: nowrap;
-  text-transform: uppercase;
 }
 .legacyTeal {
   background: var(--mw-teal-bg);
@@ -1840,7 +1856,6 @@
   font: 500 11px var(--mw-mono);
   letter-spacing: 0.08em;
   white-space: nowrap;
-  text-transform: uppercase;
 }
 .legacyDashLarge {
   padding: 5px 11px;
@@ -2174,7 +2189,6 @@
 }
 .legacyKvMetaKey {
   letter-spacing: 0.06em;
-  text-transform: uppercase;
 }
 .legacyKvKey {
   color: var(--mw-muted);
@@ -2207,7 +2221,6 @@
   border-bottom: 1px solid var(--mw-rule);
   font: 500 11px var(--mw-sans);
   letter-spacing: 0.08em;
-  text-transform: uppercase;
   color: var(--mw-muted);
 }
 .legacyTd {
@@ -2340,3 +2353,10 @@
 details[open] > summary .caret {
   transform: rotate(90deg);
 }
+.briefGrid { display: grid; grid-template-columns: minmax(160px, .8fr) minmax(340px, 1.8fr) minmax(150px, .8fr); gap: 12px; align-items: start; }
+.briefGrid > section { padding: 16px; gap: 10px; }
+.briefProblems { margin: 0; padding: 0; list-style: none; }
+.briefProblems li { padding: 6px 0; border-bottom: 1px solid var(--panel-border); }
+.briefProblems li:last-child { border-bottom: 0; }
+.briefProblems p { margin: 3px 0; }
+@media (max-width: 1000px) { .briefGrid { grid-template-columns: 1fr; } }

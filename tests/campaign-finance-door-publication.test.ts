@@ -71,7 +71,7 @@ test("incomplete source, wrong candidate, corrupted bytes and unverified source 
       changed.door = { ...changed.door, hosts: ["filings.example.com"] };
     }
     assert.throws(() => campaignFinancePackage(changed), kind);
-    const read = await readCampaignFinance(division, { store, now, bypassCache: true });
+    const read = await readCampaignFinance(division, { store, now });
     assert.equal(read.metadata.versionId, good.promoted!.versionId, kind);
   }
 });
@@ -82,7 +82,7 @@ test("same-place successor retains prior reported periods with their original au
   const changed = source();
   changed.now = "2026-10-05T19:00:00Z";
   await publishCampaignFinance(store, changed);
-  const read = await readCampaignFinance(division, { store, now: changed.now, bypassCache: true });
+  const read = await readCampaignFinance(division, { store, now: changed.now });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind === "PROMOTED") {
     assert.deepEqual(new Set(read.value.records.map(row => row.reportId)), new Set(["R1", "R2"]));

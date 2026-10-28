@@ -54,7 +54,7 @@ test("legacy positions migrate to compact pages and the existing typed person re
     const candidate = pluralVotesCandidate({ projection, acquired: [acquisition], held: [], checkedAt: evidence.retrievedAt });
     const outcome = await processRegisteredRoutineCandidate(civicStore, pluralVotesContract("WA"), candidate, evidence.retrievedAt);
     assert.ok(outcome.promoted);
-    const rows = await readPluralVotesForPerson("WA", sample.readerExample.personId, { store: civicStore, bypassCache: true, now: evidence.retrievedAt });
+    const rows = await readPluralVotesForPerson("WA", sample.readerExample.personId, { store: civicStore,  now: evidence.retrievedAt });
     assert.equal(rows.length, 1);
     assert.equal(rows[0].position, sample.readerExample.position);
     assert.equal(rows[0].billTitle, original.billTitle);

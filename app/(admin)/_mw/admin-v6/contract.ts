@@ -93,6 +93,8 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return {};
     case "officials-check":
       return { placeKey: s.target || s.scopeKey, note: s.words.trim() || null };
+    case "job-release":
+      return { job: s.target };
     case "decide":
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {
@@ -144,12 +146,6 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return JSON.parse(s.payload?.scheduledInput??"{}") as Readonly<Record<string,unknown>>;
     case "order-unschedule":
       return { id: s.target };
-    case "owed-add":
-      return { group: s.option ?? "", requirement: s.amount.trim(), why: s.words.trim() };
-    case "owed-decline":
-      return { placeKey: s.target, rows: JSON.parse(s.payload?.rows ?? "[]") as unknown, why: s.words.trim() };
-    case "owed-undo":
-      return { undoChangeId: s.target };
     case "setting-set":
 
       return { key: s.target, value: s.target==="brief.time" && s.amount.trim()==="" ? "" : settingValueFromInput(s.payload?.control ?? "text", s.amount, s.option) ?? null, why: s.words.trim() };

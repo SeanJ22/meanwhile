@@ -15,6 +15,7 @@ import { publishFederalMoneyPartition, publishFederalMoneyProgress } from "../li
 import type { FederalMoneyStateProgress } from "../lib/federal-money/candidate.ts";
 import type { FederalMoneyPartitionChange } from "../lib/federal-money/partitions.ts";
 import { readFederalMoneyForPlace } from "../lib/federal-money/reader.ts";
+import { federalMoneyRows, federalMoneySources } from "../lib/federal-money/view.ts";
 import { refreshFederalMoney } from "../lib/federal-money/refresh.ts";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 
@@ -66,5 +67,11 @@ test("SAM extract notices publish to cards on both daily admissions without dupl
   const held = data.sources.find(row => row.source === "sam-gov-entities")!;
   assert.equal(held.status, "HELD"); assert.equal(held.records.length, 1);
   const html = renderToStaticMarkup(createElement(FederalMoneySection, { divisionId, bodyId, data }));
-  assert.match(html, /Federal registration/); assert.match(html, /9TH CIRCUIT COURT OF APPEALS/);
+  assert.match(html, /9th Circuit Court of Appeals has a federal registration\./);
+  assert.doesNotMatch(html, /UEI:|Registration status:|Registration expires:/);
+  const sources = federalMoneySources(federalMoneyRows(held.records, { divisionId, bodyId }));
+  assert.equal(sources.length, 1);
+  assert.equal(sources[0].provenance.sourceUrl, held.records[0].provenance.sourceUrl);
+  assert.ok(sources[0].what.includes(template.entityRegistration.legalBusinessName));
+  assert.ok(sources[0].what.includes(template.entityRegistration.ueiSAM));
 });

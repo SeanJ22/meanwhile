@@ -2,6 +2,9 @@ import { countReaderInvalidation } from "../counts/cache.ts";
 import { createHash } from "node:crypto";
 import { REGISTRY_STATES, registryJurisdictions } from "../civic-data/state-scopes.ts";
 import {FIPS_TO_STATE} from "../ocd/fips.ts";
+import type { Query } from "../facts/publish.ts";
+import { readerFactDb } from "../facts/db.ts";
+import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 export interface ReaderCachePurgeResult {
   readonly purged: boolean;
   readonly detail?: string;
@@ -35,11 +38,19 @@ export interface ReaderCacheScope {
   readonly places?: readonly string[];
   readonly national?: boolean;
   readonly nationalPeople?: boolean;
+  readonly entities?: readonly string[];
 }
 
 export const READER_NATIONAL_CACHE_TAG = "reader-national";
 export const READER_NATIONAL_PEOPLE_CACHE_TAG = "reader-national-people";
 export const READER_CACHE_SECONDS = 15 * 60;
+
+/** Publication data read by the place builder; other families refresh their own endpoints. */
+export function placePageConsumesPublication(scope: string, recordClass?: string): boolean {
+  return recordClass === "REGISTRATION" || recordClass === "REGISTRY_RUNTIME_BINDING" || recordClass === "MEETING"
+    || recordClass === "DOTGOV_REFERENCE" || recordClass === "CURATED_READER_RECORD"
+      && scope === requiredManualProductionContract("everyday-routing").scope;
+}
 
 export function readerCacheTags(scope: ReaderCacheScope): string[] {
   const states = [...new Set((scope.states ?? []).flatMap(state => registryJurisdictions(state)))].sort();
@@ -59,6 +70,12 @@ export function readerCacheHeaders(scope: ReaderCacheScope): Record<string, stri
     "Netlify-CDN-Cache-Control": `public, durable, max-age=${READER_CACHE_SECONDS}, stale-while-revalidate=${READER_CACHE_SECONDS}`,
     "Netlify-Cache-Tag": [...readerCacheTags({ ...scope, nationalPeople: true }), "reader-settings"].join(","),
   };
+}
+
+/** Ready place answers are cleared only after their own replacement is committed. */
+export function readerPlaceCacheHeaders(places:readonly string[]):Record<string,string> {
+  return {...readerCacheHeaders({places}),
+    "Netlify-Cache-Tag":[...readerCacheTags({places}),"reader-settings"].join(",")};
 }
 
 /** Geography is read from typed fields, never from an incidental two-letter word in source text. */
@@ -84,10 +101,17 @@ function publicationStates(models: readonly unknown[]): string[] {
 function namedPublicationScope(scope: string, recordClass?: string): ReaderCacheScope | null {
   let decoded = scope;
   try { decoded = decodeURIComponent(scope); } catch { /* Retain the literal scope. */ }
+  if (recordClass === "DOTGOV_REFERENCE") return { national: true };
+  const bodyScope=/^source:[^:]+:body:(.+?)(?::route:[a-f0-9]{16})?(?::history)?$/.exec(scope);
+  if(bodyScope && (!recordClass || recordClass==='MEETING')) {
+    let body=bodyScope[1]!;
+    try{body=decodeURIComponent(body);}catch{ /* Keep a literal legacy identity. */ }
+    return {states:[...new Set([...registryJurisdictions(body),...registryJurisdictions(/^source:derived~(US-[A-Z]{2}):body:/.exec(scope)?.[1])])],entities:[body]};
+  }
   // These feed and vote publications have no reader response cache.
   if (/(?:^|:)(?:govinfo|congress-api|regulations-gov|federal-register|senate-lda)(?=:|$)/i.test(decoded)
       || /roll-?calls?(?=:|$)/i.test(decoded)
-      || /^(?:STATE_ROLL_CALL|STATE_LEGISLATOR_VOTES|FEDERAL_ROLL_CALL|FEDERAL_KEY_VOTE|DOTGOV_REFERENCE|OPERATIONAL_REFERENCE)$/.test(recordClass ?? "")
+      || /^(?:STATE_ROLL_CALL|STATE_LEGISLATOR_VOTES|FEDERAL_ROLL_CALL|FEDERAL_KEY_VOTE|OPERATIONAL_REFERENCE)$/.test(recordClass ?? "")
       || /:(?:legiscan|openstates)-votes(?=:|$)/i.test(decoded)
       || /^(?:federal-supported|campaign-money:hourly|US:reviewed-key-vote-selection:v1|US:reader-registry-runtime-bindings)$/.test(decoded)) return {};
   if (/^US:people:/i.test(decoded)
@@ -104,7 +128,8 @@ function namedPublicationScope(scope: string, recordClass?: string): ReaderCache
 }
 
 export function readerPublicationNeedsGeography(scope: string, recordClass?: string): boolean {
-  return namedPublicationScope(scope, recordClass) === null;
+  const named=namedPublicationScope(scope, recordClass);
+  return named===null || !!named.entities?.length && !named.states?.length;
 }
 
 /** Only publications consumed by a saved reader answer invalidate that answer. */
@@ -113,17 +138,55 @@ export function readerCacheScopeForPublication(scope: string, context: {
   readonly readModels?: readonly unknown[];
 } = {}): ReaderCacheScope {
   const named = namedPublicationScope(scope, context.recordClass);
-  if (named !== null) return named;
+  if (named !== null && (!named.entities?.length || named.states?.length)) return named;
   // A shared curated shelf may contain only a few states. Include its previous payload
   // as well, so removing its last record for a state still invalidates that state's copy.
   const footprint = publicationStates(context.readModels ?? []);
-  return footprint.length ? { states: footprint } : {};
+  return footprint.length ? {...named,states:footprint} : named ?? {};
 }
 
 /** Run after the database commit. Purge failure is visible without hiding the newly published fact. */
-export async function invalidateReaderCache(scope: ReaderCacheScope, purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {
+export async function invalidateReaderCache(scope: ReaderCacheScope, purge: ReaderCachePurger = purgeReaderCacheTags,
+  query?: Query | null): Promise<ReaderCachePurgeResult> {
+  if (query !== null && (query || process.env.DATABASE_URL)) await enqueueReaderPlaces(scope, query ?? readerFactDb().query);
   // Explicit global owner actions and outcomes without a known place still clear place answers.
   return invalidateReaderCacheTags(readerCacheTags(scope.national ? { ...scope, nationalPeople: true } : scope), purge);
+}
+
+/** Queue inside a writer's transaction; a newer arrival survives an in-flight rebuild. */
+export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query): Promise<void> {
+  const states = [...new Set((scope.states ?? []).flatMap(registryJurisdictions))];
+  const places = [...new Set((scope.places ?? []).map(id => id.split("#")[0]!.trim().toLowerCase()).filter(Boolean))];
+  const entities = [...new Set(scope.entities ?? [])];
+  const broad = places.length === 0 && entities.length === 0;
+  if (!states.length && !places.length && !entities.length && !scope.national) return;
+  await query(`WITH RECURSIVE requested_entities AS (
+    SELECT unnest($3::text[]) AS id
+    UNION SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=ANY($3::text[])
+  ), subjects AS (
+    SELECT id,kind,state,parent_id,ARRAY[id] AS path FROM entity WHERE id IN (SELECT id FROM requested_entities)
+    UNION ALL SELECT e.id,e.kind,e.state,e.parent_id,s.path||e.id FROM entity e JOIN subjects s ON e.id=s.parent_id
+      WHERE NOT e.id=ANY(s.path)
+  ), service_places AS (
+    SELECT ep.place_id AS id FROM entity_place ep JOIN subjects s ON s.id=ep.entity_id
+      WHERE s.kind NOT IN ('person','committee')
+        OR ep.place_id !~ '^ocd-division/country:us(/(state|territory|district):[a-z]{2})?$'
+    UNION SELECT id FROM subjects WHERE kind='place'
+      AND id !~ '^ocd-division/country:us(/(state|territory|district):[a-z]{2})?$'
+  ), affected AS (
+    SELECT id FROM entity WHERE kind IN ('place','body') AND ($4::boolean OR state=ANY($1::text[]) OR id=ANY($2::text[]))
+    UNION SELECT id FROM subjects WHERE kind IN ('place','body')
+    UNION SELECT ep.place_id FROM entity_place ep JOIN subjects s ON s.id=ep.entity_id
+    UNION SELECT d.page_id FROM place_page_dependency d WHERE d.entity_id=ANY($3::text[]) OR d.entity_id=ANY($2::text[])
+      OR d.entity_id IN (SELECT id FROM service_places)
+      OR d.entity_id IN (SELECT id FROM subjects WHERE kind<>'place')
+    UNION SELECT e.id FROM entity e WHERE e.kind='place' AND e.id=ANY($2::text[])
+  ) INSERT INTO rebuild_queue(place_id,queued_at)
+    SELECT id,clock_timestamp() FROM affected ORDER BY id
+    ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+1,
+      next_queued_at=CASE WHEN rebuild_queue.lease_token IS NOT NULL
+        THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp()) ELSE rebuild_queue.next_queued_at END`,
+  [broad ? states : [],places,entities,broad && scope.national === true]);
 }
 
 async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {
@@ -161,7 +224,8 @@ export async function readerCacheScopeForEntity(
   entityId: string,
 ): Promise<ReaderCacheScope> {
   const states = registryJurisdictions(entityId);
-  if (states.length) return { states };
+  if (states.length) return { states, entities: [entityId] };
   const [entity] = await query("SELECT state FROM entity WHERE id = $1", [entityId]);
-  return entity?.state === "US" ? { nationalPeople: true } : readerCacheScopeForPublication(String(entity?.state ?? ""));
+  return entity?.state === "US" ? { nationalPeople: true, entities: [entityId] }
+    : { ...readerCacheScopeForPublication(String(entity?.state ?? "")), entities: [entityId] };
 }

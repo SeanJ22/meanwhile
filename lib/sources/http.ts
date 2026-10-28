@@ -1,21 +1,21 @@
 /**
  * The retrieval discipline, shared by every adapter that speaks HTTP: identify yourself, go at a human
- * pace, honour `Retry-After`, and never parallelize against a single tenant.
+ * pace, honour `Retry-After`, and serialize requests to shared vendor servers.
  *
- * Honest identity, never a disguise. Reading public pages whatever robots.txt says is allowed; bypassing
- * authentication or other access controls is not. Every request carries the project's own identified
- * `User-Agent` (`sourceUserAgent()`), and when a filter refuses Node's own client (a 403, or a challenge
- * page at 200) the same identity is asked once more through `curl`, a different HTTP client, with its
- * purpose and contact in the fields built for them (`identificationHeaders`). The client is never
- * dressed as a browser. No challenge or CAPTCHA is ever answered or scripted past: a challenge from the
- * `curl` request is a WALL naming rung 4, and a 401 or 407 is never re-asked.
- * `tests/robots-recorded-not-blocking.test.ts` holds this.
+ * Every request carries the project's identified User-Agent. A named refusal leaves that website alone
+ * and keeps its coverage blank open. A challenge is never answered or scripted past.
  */
 
 import { readCompleteResponse } from "./source-bytes.ts";
+import { createHash } from "node:crypto";
 import { decodeHTMLStrict } from "entities";
 import { recordAcquiredResponse } from "./acquisition-trace.ts";
 import { challengeIn } from "./challenge-signatures.ts";
+import type { HostStateStore } from "./host-state.ts";
+import { currentSourceVendor, withSourceVendor } from "./host-context.ts";
+import { nativeSourceFetch, sourceTransportRoot } from "./host-transport.ts";
+import { rawCaptureVault } from "../civic-data/raw-capture-remote.ts";
+import { RawCaptureFailure, vaultSourceResponse } from "./raw-response.ts";
 import {
   sourceAcquisitionSecondsRemaining,
   sourceAcquisitionSleep,
@@ -23,6 +23,156 @@ import {
 
 const REQUEST_SPACING_MS = 400;
 const MAX_RETRIES = 2;
+
+/** A publisher's capacity is shared by its tenants, including CivicPlus custom government domains. */
+export function sourceHost(url: string, vendor?: string): string {
+  const target = new URL(url), host = target.hostname.toLowerCase().replace(/^www\./, "");
+  const providers = ["civicplus", "legistar", "civicclerk", "granicus", "boarddocs", "primegov", "escribemeetings", "diligent", "iqm2", "municode", "swagit"];
+  if (vendor === "legistar-insite") return "legistar";
+  if (vendor && providers.includes(vendor)) return vendor;
+  const provider = providers.find(name => host.split(".").some(part => part === name));
+  if (provider) return provider;
+  if (/(?:^|\.)legistar\d+\.com$/.test(host)) return "legistar";
+  if (/\/(?:AgendaCenter|common\/modules\/iCalendar)(?:\/|$)/i.test(target.pathname)) return "civicplus";
+  return host;
+}
+
+export class SourceReadDeferred extends Error {
+  readonly until: number;
+  readonly url: string;
+  readonly reason: "THROTTLED" | "REFUSED" | "RESOURCE_REFUSED" | "EMPTY";
+  readonly attempted: boolean;
+  constructor(url: string, until: number, reason: "THROTTLED" | "REFUSED" | "RESOURCE_REFUSED" | "EMPTY", attempted = false) {
+    const visible = new URL(url);
+    visible.username = ""; visible.password = "";
+    for (const key of [...visible.searchParams.keys()]) if (/key|token|secret|password|address/i.test(key)) visible.searchParams.set(key, "redacted");
+    super(`SOURCE_READ_DEFERRED:${new Date(until).toISOString()}:${reason}:${visible.href}`);
+    this.name = "SourceReadDeferred"; this.url = visible.href; this.until = until; this.reason = reason; this.attempted = attempted;
+  }
+}
+
+export function sourceReadDeferred(error: unknown): boolean {
+  return error instanceof SourceReadDeferred || /SOURCE_READ_DEFERRED:/.test(error instanceof Error ? error.message : String(error));
+}
+
+export interface SourceRequestInit extends RequestInit {
+  /** A publisher's documented quota, applied by the same shared host clock. Never sent as an HTTP field. */
+  minimumSpacingMs?: number;
+}
+
+export interface SourceHostPacer {
+  fetch(url: string | URL, init?: SourceRequestInit, fetchImpl?: typeof fetch, vendor?: string): Promise<Response>;
+  defer(url: string, until: number, vendor?: string): Promise<void>;
+}
+
+/** RB-A9 and every HTTP reader can call this same transport with their own clock and shared state. */
+export function createSourceHostPacer(options: {
+  store: HostStateStore; clock?: () => number; sleep?: (ms: number, signal?: AbortSignal) => Promise<void>; spacingMs?: number;
+}): SourceHostPacer {
+  const clock = options.clock ?? Date.now, sleep = options.sleep ?? sourceAcquisitionSleep;
+  return { async defer(url, until, vendor) {
+    await options.store.withHost(sourceHost(url, vendor), undefined, async state => { state.routes[url] = Math.max(state.routes[url] ?? 0, until); });
+  }, async fetch(target, init, fetchImpl = globalThis.fetch, vendor) {
+    const url = String(target), address = new URL(url), host = sourceHost(url, vendor), origin = address.origin;
+    const { minimumSpacingMs = 0, ...request } = init ?? {};
+    const base = options.spacingMs ?? Math.max(["civicplus", "legistar"].includes(host) ? 2_000 : REQUEST_SPACING_MS,
+      Number.isFinite(minimumSpacingMs) ? minimumSpacingMs : 0);
+    return options.store.withHost(host, init?.signal ?? undefined, async state => {
+      init?.signal?.throwIfAborted();
+      for (const [route, until] of Object.entries(state.routes)) if (until <= clock()) delete state.routes[route];
+      const nativeResource = address.hostname === "webapi.legistar.com" || address.pathname === "/robots.txt" || /\/day\/\d{8}\/?$/.test(address.pathname);
+      const document = /\.(?:pdf|docx?|xlsx?|pptx?|csv|ics|jpe?g|png|gif|webp|svg)$/i.test(address.pathname)
+        || /\/(?:View\.ashx|FileStream\.ashx|MeetingDetail\.aspx)$|\/ImageRepository\/Document\b|\/AgendaCenter\/ViewFile\/(?:Agenda|Minutes)\b/i.test(address.pathname);
+      const refusalKey = nativeResource ? `${origin}${address.pathname}`
+        : document ? `${origin}#resource:${createHash("sha256").update(url).digest("hex")}` : origin;
+      if (state.refused[origin]) throw new SourceReadDeferred(url, Date.parse("9999-12-31T00:00:00Z"), "REFUSED");
+      if (refusalKey !== origin && state.refused[refusalKey]) {
+        const until = Date.parse(state.refused[refusalKey]);
+        if (until > clock()) throw new SourceReadDeferred(url, until, "RESOURCE_REFUSED");
+        delete state.refused[refusalKey];
+      }
+      if (state.until > clock()) throw new SourceReadDeferred(url, state.until, "THROTTLED");
+      if (state.routes[url] > clock()) throw new SourceReadDeferred(url, state.routes[url], "EMPTY");
+      state.intervalMs = state.intervalMs > (state.baseMs ?? base) ? Math.max(base, state.intervalMs) : base;
+      state.baseMs = base;
+      if (state.lastAt !== undefined) state.nextAt = Math.max(state.until, state.lastAt + state.intervalMs);
+      const wait = state.nextAt - clock();
+      if (wait > 0) await sleep(wait, init?.signal ?? undefined);
+      init?.signal?.throwIfAborted();
+      const headers = new Headers(init?.headers);
+      if (!headers.has("user-agent")) headers.set("user-agent", sourceUserAgent());
+      // Keep the caller's header shape for transports that inspect their options.
+      const response = await withSourceVendor(vendor ?? currentSourceVendor(), () => fetchImpl(typeof target === "string" ? target : address, { ...request, headers: init?.headers && new Headers(init.headers).has("user-agent") ? init.headers : Object.fromEntries(headers) }))
+        .catch(error => {
+          state.lastAt = clock(); state.nextAt = state.lastAt + state.intervalMs;
+          throw error;
+        });
+      const now = clock();
+      state.lastAt = now;
+      state.intervalMs = Math.max(base, state.intervalMs);
+      state.nextAt = now + state.intervalMs;
+      const retry = response.headers.get("retry-after")?.trim();
+      const requested = retry && /^\d+(?:\.\d+)?$/.test(retry) ? now + Number(retry) * 1000 : retry ? Date.parse(retry) : 0;
+      const retryAt = Number.isFinite(requested) ? requested : 0;
+      if (response.status === 429 || response.status >= 500 && response.headers.get("retry-after")) {
+        state.intervalMs = Math.min(60_000, Math.max(base, state.intervalMs) * 2);
+        state.healthy = 0;
+        state.until = Math.max(now + 60_000, retryAt);
+        state.nextAt = Math.max(state.nextAt, state.until);
+        await response.body?.cancel().catch(() => {});
+        throw new SourceReadDeferred(url, state.until, "THROTTLED", true);
+      }
+      const challenged = address.pathname !== "/robots.txt" && response.headers.get("cf-mitigated") === "challenge";
+      if (response.status === 403 && (challenged || !keyedApiRequest(address, init?.headers))) {
+        // A document can become public later. A named site wall stays open for separate work.
+        const siteWall = refusalKey === origin || challenged;
+        state.refused[siteWall ? origin : refusalKey] = new Date(siteWall ? now : Math.max(now + 3_600_000, retryAt)).toISOString();
+      }
+      if (response.ok || response.status === 304) {
+        if (++state.healthy >= 32) { state.intervalMs = Math.max(base, state.intervalMs / 2); state.healthy = 0; }
+      }
+      return response;
+    });
+  } };
+}
+
+/**
+ * A keyed publisher API (LegiScan, Congress, Google Civic) answers a 403 for that key and record, not as a
+ * website refusing our identified reader. Its caller records the failure and asks again on its own schedule,
+ * so one refused dataset never holds every other record, or the whole API, behind a permanent site wall.
+ */
+function keyedApiRequest(address: URL, headers: HeadersInit | undefined): boolean {
+  const sent = new Headers(headers);
+  return sent.has("authorization") || sent.has("x-api-key") ||
+    [...address.searchParams.keys()].some(name => /^(?:key|api_?key|access_?key|access_?token|token)$/i.test(name));
+}
+
+let sharedPacer: Promise<SourceHostPacer> | undefined;
+const injectedPacers = new WeakMap<typeof fetch, Promise<SourceHostPacer>>();
+
+/** The only source fetch: production children share host state; an injected transport owns isolated test state. */
+export async function sourceFetch(url: string | URL, init?: SourceRequestInit, fetchImpl?: typeof fetch, vendor?: string, sharedTransport = false): Promise<Response> {
+  const transport = fetchImpl ?? globalThis.fetch;
+  const root = sourceTransportRoot(transport);
+  const injected = root !== nativeSourceFetch && !sharedTransport;
+  let pacer = injected ? injectedPacers.get(root) : sharedPacer;
+  if (!pacer) {
+    pacer = import("./host-state.ts").then(({ fileHostState, memoryHostState }) => createSourceHostPacer({
+      store: injected ? memoryHostState() : fileHostState(), ...(injected ? { spacingMs: 0 } : {}),
+    }));
+    if (injected) injectedPacers.set(root, pacer); else sharedPacer = pacer;
+  }
+  const response = await (await pacer).fetch(url, init, transport, vendor ?? currentSourceVendor());
+  if(injected)return response;
+  try{return vaultSourceResponse(response, rawCaptureVault(), vendor ?? new URL(url).hostname);}
+  catch(error){throw new RawCaptureFailure(error);}
+}
+
+export async function deferSourceRead(url: string, until: number): Promise<void> {
+  if (until <= Date.now()) return;
+  sharedPacer ??= import("./host-state.ts").then(({ fileHostState }) => createSourceHostPacer({ store: fileHostState() }));
+  await (await sharedPacer).defer(url, until);
+}
 
 /**
  * Who is calling, so an administrator seeing this in a log has somewhere to
@@ -190,7 +340,7 @@ export async function curlGetText(
   bytes: Uint8Array;
   finalUrl: string;
 }> {
-  const args = ["-s", "-S", "-L", "--compressed", "-w", "\n%{http_code}\t%{content_type}\t%{url_effective}"];
+  const args = ["-s", "-S", "-L", "--include", "--suppress-connect-headers", "--compressed", "-w", "\n%{http_code}\t%{content_type}\t%{url_effective}"];
   if (form) args.push("--data", new URLSearchParams(form).toString());
   const remainingSeconds = sourceAcquisitionSecondsRemaining(signal);
   if (remainingSeconds !== null) args.push("--max-time", String(remainingSeconds));
@@ -199,32 +349,33 @@ export async function curlGetText(
   }
   args.push(url);
 
-  const stdout = await runProcess(args, {
-    maxBuffer: 32 * 1024 * 1024,
-    signal,
-  });
+  const response = await sourceFetch(url, { signal, headers }, async () => {
+    const stdout = await runProcess(args, { maxBuffer: 32 * 1024 * 1024, signal });
+    const cut = stdout.lastIndexOf(0x0a);
+    if (cut < 0) throw new SourceHttpError(`curl returned no response trailer for ${url}`, 0, url, 4);
+    const [code, contentType = "", finalUrl = url] = stdout.subarray(cut + 1).toString("utf8").split("\t");
+    const status = Number(code);
+    if (!Number.isInteger(status) || status < 200 || status > 599) throw new SourceHttpError(`curl returned no status for ${url}`, 0, url, 4);
+    let start = 0;
+    const received = new Headers({ "content-type": contentType });
+    while (stdout.subarray(start, start + 5).toString() === "HTTP/") {
+      const end = stdout.indexOf("\r\n\r\n", start);
+      if (end < 0 || end >= cut) break;
+      for (const line of stdout.subarray(start, end).toString().split("\r\n").slice(1)) {
+        const colon = line.indexOf(":");
+        if (colon > 0) received.set(line.slice(0, colon), line.slice(colon + 1).trim());
+      }
+      start = end + 4;
+    }
+    const reply = new Response([204, 304].includes(status) ? null : new Uint8Array(stdout.subarray(start, cut)), { status, headers: received });
+    Object.defineProperty(reply, "url", { value: finalUrl });
+    return reply;
+  }, currentSourceVendor(), runProcess === nativeCurlProcess);
   signal?.throwIfAborted();
 
-  const cut = stdout.lastIndexOf(0x0a);
-  if (cut < 0) {
-    throw new SourceHttpError(`curl returned no response trailer for ${url}`, 0, url, 4);
-  }
-  const [code, contentType = "", finalUrl = url] = stdout.subarray(cut + 1).toString("utf8").split("\t");
-  const status = Number(code);
-  if (!Number.isFinite(status)) {
-    throw new SourceHttpError(`curl returned no status for ${url}`, 0, url, 4);
-  }
-  if (status < 200 || status >= 300) {
-    throw new SourceHttpError(`HTTP ${status} for ${url}`, status, url);
-  }
-  const body = stdout.subarray(0, cut);
-  return {
-    status,
-    contentType,
-    text: body.toString("utf8"),
-    bytes: new Uint8Array(body),
-    finalUrl,
-  };
+  if (!response.ok) throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 4);
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  return { status: response.status, contentType: response.headers.get("content-type") ?? "", text: new TextDecoder().decode(bytes), bytes, finalUrl: response.url || url };
 }
 
 /**
@@ -322,10 +473,9 @@ async function curlRung(
 }
 
 /**
- * One polite GET returning the body as text. Retries 429 and 5xx a small
+ * One polite GET returning the body as text. Defers 429; retries 5xx a small
  * number of times, honouring `Retry-After`; everything else fails immediately.
- * A 403 or a challenge page from Node's client is asked once more with the same
- * identity through `curl` (rung 4); a 401 or 407 is never re-asked.
+ * A challenge page may use the same identified curl transport; a 401, 403 or 407 is never re-asked.
  */
 export async function politeGetText(
   url: string,
@@ -340,11 +490,11 @@ export async function politeGetText(
   let lastStatus = 0;
 
   for (let attempt = 0; attempt <= MAX_RETRIES; attempt++) {
-    const response = await impl(url, {
+    const response = await sourceFetch(url, {
       headers: options.form ? { ...headers, "Content-Type": "application/x-www-form-urlencoded" } : headers,
       signal: options.signal,
       ...(options.form ? { method: "POST", body: new URLSearchParams(options.form).toString() } : {}),
-    });
+    }, impl);
     lastStatus = response.status;
 
     if (response.ok) {
@@ -375,7 +525,6 @@ export async function politeGetText(
 
     if (response.status === 403) {
       // The same identity, once, through another client. A refusal there is the wall.
-      if (escalates) return await curlRung(url, curl, options.accept, options.signal, options.expect, options.form);
       throw new SourceHttpError(
         `HTTP 403 for ${url} — an access control refused the identified client. A WALL, never bypassed with ` +
           "another identity.",
@@ -385,7 +534,7 @@ export async function politeGetText(
       );
     }
 
-    const retryable = response.status === 429 || response.status >= 500;
+    const retryable = response.status >= 500;
     if (!retryable || attempt === MAX_RETRIES) {
       throw new SourceHttpError(`HTTP ${response.status} for ${url}`, response.status, url, 2);
     }
@@ -423,7 +572,7 @@ export async function politeGetBytes(
   options: HttpOptions = {},
 ): Promise<{ status: number; contentType: string; bytes: Uint8Array; rung: number }> {
   const impl = options.fetchImpl ?? fetch;
-  const response = await impl(url, { headers: sourceRequestHeaders(options.accept), signal: options.signal });
+  const response = await sourceFetch(url, { headers: sourceRequestHeaders(options.accept), signal: options.signal }, impl);
   if (!response.ok) {
     throw new SourceHttpError(
       `HTTP ${response.status} for ${url}. This is a WALL on rung 2, not an absent document` +

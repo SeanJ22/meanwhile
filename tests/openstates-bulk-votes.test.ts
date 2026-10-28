@@ -5,6 +5,7 @@ import test from "node:test";
 import { readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { acquireStateVotes, currentPluralSessions, PLURAL_SESSION_CATALOG, pluralJurisdictionsUrl } from "../lib/sources/plural/vote-acquisition.ts";
@@ -27,6 +28,7 @@ const sourceEvidence = (sample: Sample, bytes: Uint8Array): PluralBillEvidence =
  * Native IDs, labels, public archive URL and every CSV field remain sourced. */
 async function harness(sample: Sample) {
   const store = new MemoryEvidenceStore(), { locks } = createMemoryRepositories(), civicStore = new MemoryRoutineDataStore();
+  const copies=new Map<string,string>(),cache=new CivicReadCache({read:async key=>copies.get(key)??null,write:async(key,value)=>{copies.set(key,value);}});
   const zip = await readFile(new URL(sample.fixtureArchive, ROOT));
   const metadata = JSON.parse(await readFile(new URL(sample.metadataFixture, ROOT), "utf8")) as { legislative_sessions: { identifier: string }[] };
   const body = JSON.stringify({ results: [{ ...metadata, legislative_sessions: metadata.legislative_sessions.filter(session => session.identifier === sample.session) }], pagination: { max_page: 1 } });
@@ -51,7 +53,7 @@ async function harness(sample: Sample) {
     throw new Error(`unexpected fixture request: ${url}`);
   };
   return { zip, civicStore, requests,
-    input: { state: sample.state, store, locks, civicStore, vault: new MemoryEvidenceStore(), apiKey: "fixture-key", fetchImpl, signal: AbortSignal.timeout(10_000), now: () => checkedAt },
+    input: { state: sample.state, store, locks, civicStore, cache, vault: new MemoryEvidenceStore(), apiKey: "fixture-key", fetchImpl, signal: AbortSignal.timeout(10_000), now: () => checkedAt },
     nextCheck: () => { checkedAt = new Date(Date.parse(checkedAt) + 86_400_001).toISOString(); },
   };
 }
@@ -67,16 +69,16 @@ for (const sample of manifest.states.filter(sample => sample.readerExample)) {
       assert.equal(result.votes.length, 1);
     } });
     assert.equal(published, 1);
-    assert.ok(first.publication.outcome.promoted);
-    assert.equal((first.publication.candidate.readModel as { formatVersion: number }).formatVersion, 2);
+    assert.ok(first.publication!.outcome.promoted);
+    assert.equal((first.publication!.candidate.readModel as { formatVersion: number }).formatVersion, 2);
     assert.ok(await h.civicStore.readPromotion("STATE_ROLL_CALL", pluralVotesScope(sample.state)));
-    const [archive] = (first.publication.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions;
+    const [archive] = (first.publication!.candidate.normalizedPayload as { acquisitions: PluralVoteAcquisition[] }).acquisitions;
     assert.equal("body" in archive, false); assert.equal(archive.sha256, sample.fixtureArchiveSha256);
     if (sample.state === "GA") {
       assert.deepEqual(first.held, [{ key: `${example.voteId}:ocd-person/546d682f-b256-4060-8fd3-084d7f118d43`, detail: "the native person has conflicting publisher positions" }]);
-      assert.deepEqual(await readPluralVotesForPerson(sample.state, "ocd-person/546d682f-b256-4060-8fd3-084d7f118d43", { store: h.civicStore, bypassCache: true, now: h.input.now() }), []);
+      assert.deepEqual(await readPluralVotesForPerson(sample.state, "ocd-person/546d682f-b256-4060-8fd3-084d7f118d43", { store: h.civicStore,  now: h.input.now() }), []);
     } else assert.deepEqual(first.held, []);
-    const rows = await readPluralVotesForPerson(sample.state, example.personId, { store: h.civicStore, bypassCache: true, now: h.input.now() });
+    const rows = await readPluralVotesForPerson(sample.state, example.personId, { store: h.civicStore,  now: h.input.now() });
     assert.equal(rows.length, 1);
     assert.equal(rows[0].id, example.voteId);
     assert.equal(rows[0].position, example.position);
@@ -87,13 +89,13 @@ for (const sample of manifest.states.filter(sample => sample.readerExample)) {
     if (sample.state !== "GA") assert.ok(rows[0].sourceUrls.length, "the publisher's original HTTPS source links survive");
     // Georgia supplies only its HTTP SOAP service WSDL as a vote source. The
     // original row remains in the archive and the public bulk URL cites the vote.
-    const version = first.publication.outcome.promoted!.versionId;
+    const version = first.publication!.outcome.promoted!.versionId;
     h.nextCheck();
     const unchanged = await refreshStateVotes(h.input);
-    assert.ok(unchanged.publication.outcome.confirmed, "no new votes is a successful unchanged check");
-    assert.equal(unchanged.publication.outcome.confirmed!.versionId, version);
-    assert.deepEqual(unchanged.held, first.held);
-    assert.deepEqual(await readPluralVotesForPerson(sample.state, example.personId, { store: h.civicStore, bypassCache: true, now: h.input.now() }), rows);
+    assert.ok(unchanged.confirmation, "no new votes is a successful hash-first source check");
+    assert.equal(unchanged.confirmation!.head.versionId, version);
+    assert.equal(unchanged.held, null, "the unchanged source reads no held failure list");
+    assert.deepEqual(await readPluralVotesForPerson(sample.state, example.personId, { store: h.civicStore,  now: h.input.now() }), rows);
   });
 }
 
@@ -102,11 +104,11 @@ test("NJ: the actual current archive omits vote files and checks successfully wi
   const parsed = await parsePluralBulkSession(sample.state, sample.session, h.zip, sourceEvidence(sample, h.zip));
   assert.deepEqual(parsed.votes, []); assert.deepEqual(parsed.held, []);
   const first = await refreshStateVotes(h.input);
-  assert.ok(first.publication.outcome.promoted);
+  assert.ok(first.publication!.outcome.promoted);
   h.nextCheck();
   const next = await refreshStateVotes(h.input);
-  assert.ok(next.publication.outcome.confirmed);
-  assert.deepEqual(next.held, []);
+  assert.ok(next.confirmation);
+  assert.equal(next.held, null, "an unchanged empty archive does not read or invent held rows");
 });
 
 test("real API v3 fallback resolves nested voter IDs and counts-only responses publish no person positions", async () => {

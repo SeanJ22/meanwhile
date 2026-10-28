@@ -4,7 +4,7 @@ import test, { after } from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { pgAggregateRepository, pgCoordinatorWorkItems, readCoordinatorWorkItems, type Sql } from "../lib/control-plane/repository/pg-store.ts";
-import { archivedAggregateRepository, createPgDispatchState, DISPATCH_STATE_DDL } from "../lib/control-plane/repository/dispatch-state.ts";
+import { archivedAggregateRepository, createPgDispatchState, DISPATCH_STATE_DDL, workItemStateFilter } from "../lib/control-plane/repository/dispatch-state.ts";
 import { closeOccurrence, openOccurrence, resumeOpenOccurrence, scanOccurrences, settledRouteTaskIds, standing, type FreshnessOccurrence } from "../lib/control-plane/scheduler/durable.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import type { ScoutResult } from "../lib/control-plane/scheduler/scout-result.ts";
@@ -47,6 +47,50 @@ async function fixture() {
   return { db, sql, repos, statements, obligation, hooks };
 }
 
+test("a read-only dispatch inspection selects the same open work without moving any cursor", async () => {
+  const f = await fixture();
+  const opened = await openOccurrence(f.repos, { obligation: f.obligation, dueAt: NOW, now: NOW });
+  assert.ok(opened);
+  f.statements.length = 0;
+  const inspected = await f.repos.dispatchState.inspectOpen!();
+  assert.deepEqual([...inspected.occurrences.keys()], [opened.occurrence.id]);
+  assert.deepEqual([...inspected.workItems.keys()], [opened.workItem.id]);
+  assert.deepEqual([...inspected.routeTasks.keys()], [opened.routeTask.id]);
+  assert.ok(f.statements.every(text => !/\b(?:INSERT|UPDATE|DELETE)\b/.test(text)));
+  assert.deepEqual((await f.db.query("SELECT * FROM cp_dispatch_cursors")).rows, []);
+  const ordinary = await f.repos.dispatchState.readOpen();
+  assert.deepEqual(ordinary.occurrences, inspected.occurrences);
+  assert.deepEqual(ordinary.routeTasks, inspected.routeTasks);
+  assert.deepEqual(ordinary.workItems, inspected.workItems);
+});
+
+test("indexed state task selections retain hot and archived parents and every pending page", async () => {
+  const f = await fixture();
+  for (const [id, subject, archive] of [["nh-hot", "ocd-division/country:us/state:nh", false],
+    ["nh-archived", "ocd-division/country:us/state:nh", true],
+    ["ca-hot", "ocd-division/country:us/state:ca", false], ["system-hot", "global", false]] as const) {
+    await f.db.query(`INSERT INTO cp_work_items${archive ? "_archive" : ""} (id,revision,updated_at,value)
+      VALUES ($1,1,$2,$3::jsonb)`, [id, NOW, JSON.stringify({ id, subject })]);
+    await f.db.query(`INSERT INTO cp_route_tasks (id,revision,updated_at,value)
+      SELECT $1||'-'||n,1,$2,jsonb_build_object('workItemId',$1::text,'state','PENDING')
+      FROM generate_series(1,205) n`, [id, NOW]);
+  }
+  await f.db.query(`INSERT INTO cp_route_tasks (id,revision,updated_at,value)
+    VALUES ('orphan',1,$1,'{"workItemId":"missing","state":"PENDING"}'::jsonb)`, [NOW]);
+  for (const state of ["nh", "ca", "system"]) {
+    const original = (await f.db.query<{ id: string }>(`SELECT id FROM cp_route_tasks
+      WHERE EXISTS (SELECT 1 FROM cp_work_items_history w
+        WHERE w.id=cp_route_tasks.value->>'workItemId' AND cp_control_state(w.value)=$1)
+      ORDER BY id`, [state])).rows.map(row => row.id);
+    const scoped = pgAggregateRepository(f.sql, "RouteTask", "cp_route_tasks", { state });
+    assert.deepEqual((await scoped.listWhere(["state"], "PENDING")).map(row => row.id), original);
+    const snapshot = await createPgDispatchState(f.sql, () => f.repos, undefined, state).inspectOpen!();
+    assert.deepEqual([...snapshot.routeTasks.keys()], original);
+    assert.deepEqual((await f.db.query<{ id: string }>(`SELECT id FROM cp_route_tasks
+      WHERE ${workItemStateFilter("cp_route_tasks", state)} ORDER BY id`)).rows.map(row => row.id), original);
+  }
+});
+
 test("closed occurrences leave hot tables; exact and scoped history and later publication remain available", async () => {
   const f = await fixture();
   const opened = await openOccurrence(f.repos, { obligation: f.obligation, dueAt: NOW, now: NOW });
@@ -88,7 +132,7 @@ test("archived publication work is selected when its result or saved body page c
   assert.ok(opened);
   await closeOccurrence(f.repos, { occurrenceId: opened.occurrence.id, disposition: "INGESTED", unresolvedReason: null, now: NOW });
   const before = "2026-10-01T11:00:00.000Z", after = "2026-10-01T13:00:00.000Z";
-  await f.db.query("UPDATE cp_work_items_archive SET value = value || $2::jsonb, changed_at = $3 WHERE id = $1", [opened.workItem.id,
+  await f.db.query("UPDATE cp_work_items_archive SET value = value || $2::jsonb, revision=revision+1, changed_at = $3 WHERE id = $1", [opened.workItem.id,
     JSON.stringify({ subject: "place", autonomousPlan: { publication: { contractId: "ballot-navigation", bodyId: "body" }, contract: { recordClass: "VOTER_ACCESS_ROUTE" } } }), before]);
   const read = async (sharedInputsMoved = false) => (await readWorkerPublicationItems(f.sql.query, ["ballot-navigation"], { at: NOW, until: "2026-10-01T14:00:00.000Z", sharedInputsMoved })).items;
   const ids = async (shared = false) => (await read(shared)).map(row => row.id);
@@ -317,7 +361,11 @@ test("a planner's owed work is decided once, however many pages of values it rea
   // Release 95 re-ran the whole candidate query for every 100 rows: the system planner's 37 pages took five minutes.
   assert.equal(f.statements.filter(statement => statement.includes("FROM cp_log_scout_results pending")).length, 1);
   assert.ok(f.statements.every(statement => !/FROM cp_route_tasks\s+WHERE value->>'state' IN/.test(statement)), "never every pending route task");
-  assert.equal(f.statements.filter(statement => /id = ANY\(\$1::text\[\]\)/.test(statement)).length, 3);
+  assert.equal(f.statements.filter(statement => /SELECT id,revision,updated_at,(?:changed_at,)?value AS value/.test(statement)).length, 3);
+  f.statements.length = 0;
+  assert.deepEqual((await pgCoordinatorWorkItems(f.sql)).map(row => row.id), ids);
+  assert.equal(f.statements.filter(statement => /SELECT id,revision,updated_at,(?:changed_at,)?value AS value/.test(statement)).length, 0,
+    "an unchanged wave fetches revisions without any work-item values");
   await f.db.exec("CREATE TABLE cp_obligations (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL)");
   const hunt: WorkItem = { ...item, id: "owed-hunt", subject: "place-hunt", createdAt: NOW, autonomousPlan: { ...item.autonomousPlan!, capability: "hunt-packet" } };
   await f.db.query("INSERT INTO cp_work_items (id, revision, updated_at, value) VALUES ($1,1,$2,$3::jsonb)", [hunt.id, NOW, JSON.stringify(hunt)]);

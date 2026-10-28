@@ -4,6 +4,7 @@ import test from "node:test";
 import { zip } from "../scripts/xlsx.mjs";
 import { requiredRoutineContract, ROUTINE_SOURCE_CONTRACTS } from "../lib/civic-data/contracts.ts";
 import { processRegisteredRoutineCandidate } from "../lib/civic-data/promotion.ts";
+import { factRefreshBounds } from "../lib/civic-data/source-change-cadence.ts";
 import { routineBaselineOwed, routineTaskDue, routineTaskFromContract } from "../lib/civic-data/runner.ts";
 import { durableRoutineRunnerReceiptIssue, routineReceiptFields } from "../lib/civic-data/runner-receipt.ts";
 import { recordRegisteredSourceAcquisitionFailure, sourceAcquisitionFailure } from "../lib/civic-data/source-acquisition-failure.ts";
@@ -38,7 +39,7 @@ test("held native listings promote and read independently; a replay keeps their 
   const first = registrationCandidate(args);
   const outcome = await processRegisteredRoutineCandidate(store, args.target.contractId, first, observed);
   assert.equal(outcome.promoted?.versionId, first.id, outcome.candidate.failureDetail ?? "");
-  const read = await readRegistrationProjection("NH", { store, now: observed, bypassCache: true });
+  const read = await readRegistrationProjection("NH", { store, now: observed });
   assert.equal(read.kind, "PROMOTED");
   const model = read.value as RegistrationReadModel;
   assert.equal(model.bodies.length, 0);
@@ -70,7 +71,7 @@ async function registrationWithPreviousParser() {
   return { store, args, previous, next, task };
 }
 
-test("the current registration parser replays held evidence after registration/3 GOOD, then keeps the 90-day source clock", async () => {
+test("the current registration parser replays held evidence after registration/3 GOOD, then keeps the actual source check and fact freshness window", async () => {
   const { store, args, previous, next, task } = await registrationWithPreviousParser();
   const clock = await store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion);
   assert.equal(clock.lastSucceededParserVersion, "registration/3");
@@ -78,7 +79,7 @@ test("the current registration parser replays held evidence after registration/3
   assert.equal(clock.lastSucceededAt, previous.retrieval.retrievedAt);
   assert.equal(routineBaselineOwed(task, clock), true);
   assert.equal(routineTaskDue(task, clock, Date.parse(observed)), true);
-  assert.equal((await readRegistrationProjection("NH", { store, now: observed, bypassCache: true })).kind, "PROMOTED",
+  assert.equal((await readRegistrationProjection("NH", { store, now: observed })).kind, "PROMOTED",
     "the prior GOOD stays readable while its held evidence awaits reparse");
   const result = await processRegisteredRoutineCandidate(store, args.target.contractId, next, observed);
   assert.equal(result.promoted?.versionId, next.id, result.candidate.failureDetail ?? "");
@@ -87,12 +88,12 @@ test("the current registration parser replays held evidence after registration/3
   assert.equal(replayed.lastSucceededAt, clock.lastSucceededAt);
   assert.equal(replayed.lastSucceededObservedAt, clock.lastSucceededObservedAt, "reprocessing does not manufacture a publisher check");
   assert.equal(routineBaselineOwed(task, replayed), false);
-  const nextCheck = Date.parse(replayed.lastSucceededObservedAt!) + 90 * 86400000;
+  const nextCheck = Date.parse(replayed.lastSucceededObservedAt!) + Math.min(task.cadenceMs, factRefreshBounds(task).freshnessWindowMs);
   assert.equal(routineTaskDue(task, replayed, nextCheck - 1), false);
   assert.equal(routineTaskDue(task, replayed, nextCheck), true);
 });
 
-test("a failed current-parser registration attempt keeps the prior GOOD and its existing six-hour retry", async () => {
+test("a failed current-parser registration attempt keeps the prior GOOD and its configured source retry floor", async () => {
   const { store, args, previous, task } = await registrationWithPreviousParser();
   const failedAt = "2026-10-01T13:00:00.000Z";
   await recordRegisteredSourceAcquisitionFailure({ store, contractId: args.target.contractId, attemptedAt: failedAt,
@@ -101,8 +102,9 @@ test("a failed current-parser registration attempt keeps the prior GOOD and its 
   assert.equal(clock.lastSucceededParserVersion, "registration/3");
   assert.equal(clock.lastAttemptedAt, failedAt);
   assert.equal((await store.readPromotionIdentity(task.recordClass, task.scope))?.versionId, previous.id);
-  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs - 1), false);
-  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs), true);
+  const retryMs = Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + retryMs - 1), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + retryMs), true);
 });
 
 test("registration held replay and independent school delivery do not erase a later source failure or delay its retry", async () => {
@@ -128,8 +130,9 @@ test("registration held replay and independent school delivery do not erase a la
   const clock = await store.clock(first.sourceId, first.recordClass, first.scope);
   assert.deepEqual(clock, failedClock, "newly delivered school facts retain the failed Census check and its retry");
   const task = routineTaskFromContract(requiredRoutineContract(args.target.contractId));
-  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs - 1), false);
-  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + task.retryMs), true);
+  const retryMs = Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + retryMs - 1), false);
+  assert.equal(routineTaskDue(task, clock, Date.parse(failedAt) + retryMs), true);
   const finalFailure = await recordRegisteredSourceAcquisitionFailure({ store, contractId: args.target.contractId, attemptedAt: "2026-10-01T14:00:01.000Z",
     requestedUrl: REGISTRATION_SOURCE_URL,
     failure: sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Census release remains unavailable.") });
@@ -165,7 +168,9 @@ test("the oldest acquired input check can be NCES; unchanged delivery receipts n
   const failedClock = await store.clock(first.sourceId, first.recordClass, first.scope);
   await processRegisteredRoutineCandidate(store, args.target.contractId, proposal, "2026-10-01T15:00:00.000Z");
   assert.deepEqual(await store.clock(first.sourceId, first.recordClass, first.scope), failedClock);
-  assert.equal(routineTaskDue(task, failedClock, Date.parse("2026-10-01T14:00:00.000Z") + task.retryMs), true);
+  const retryMs = Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
+  assert.equal(routineTaskDue(task, failedClock, Date.parse("2026-10-01T14:00:00.000Z") + retryMs - 1), false);
+  assert.equal(routineTaskDue(task, failedClock, Date.parse("2026-10-01T14:00:00.000Z") + retryMs), true);
 });
 
 test("different native governments sharing a geometry stay separate; reviewed bodies bind only by native ID", () => {

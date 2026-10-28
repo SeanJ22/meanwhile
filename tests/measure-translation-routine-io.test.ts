@@ -1,3 +1,4 @@
+import { fixtureLinkingPage } from "./helpers/linking-copies.ts";
 import assert from "node:assert/strict";
 import test, { type TestContext } from "node:test";
 import { mkdtemp, readFile, rm } from "node:fs/promises";
@@ -8,6 +9,7 @@ import { saveVotingSourceDoor } from "../lib/ballot/voting-source-publication.ts
 import type { VotingSourceDoor } from "../lib/ballot/voting-source-types.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
 import { contentHash } from "../lib/control-plane/ids.ts";
+import { readEvidenceObject } from "../lib/control-plane/evidence/raw-pointer.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { captureIntact } from "../lib/civic-data/worker-publication-evidence.ts";
@@ -97,9 +99,9 @@ test("routine source reads retain exact UTF-8 bytes and attributable completed a
   assert.equal(metadata.length, 1);
   assert.equal(metadata[0].attemptId, attempt.id);
   assert.equal(metadata[0].canonicalUrl, sourceUrl);
-  const keys = await vault.list("project/freshness/");
+  const keys = (await vault.list("project/freshness/")).filter(key => !key.startsWith("project/freshness/raw/sha256/"));
   assert.equal(keys.length, 1);
-  const retained = await vault.get(keys[0]);
+  const retained = await readEvidenceObject(vault, keys[0]);
   assert.ok(retained);
   assert.equal(Buffer.from(retained.bytes).toString("utf8"), text);
   assert.equal(retained.meta.custom?.attemptId, attempt.id);
@@ -156,9 +158,9 @@ test("complete PDF source capture retains the original bytes and a source-bound 
   assert.equal(capture.evidence.sourceDocument?.kind, "PDF_TEXT");
   assert.notEqual(capture.evidence.contentHash, capture.evidence.sourceDocument?.contentHash);
   assert.match(capture.evidence.text, /\[Page 1\]/);
-  const keys = await vault.list("project/freshness/");
+  const keys = (await vault.list("project/freshness/")).filter(key => !key.startsWith("project/freshness/raw/sha256/"));
   assert.equal(keys.length, 2);
-  const objects = await Promise.all(keys.map(key => vault.get(key)));
+  const objects = await Promise.all(keys.map(key => readEvidenceObject(vault,key)));
   const original = objects.find(object => object?.meta.contentType === "application/pdf");
   const transcription = objects.find(object => object?.meta.custom?.tier === "EXTRACTED_DERIVED");
   assert.ok(original); assert.ok(transcription);
@@ -179,7 +181,7 @@ test("registered official linking pages are re-read and vaulted before admitting
     url: "https://www.sos.state.co.us/pubs/elections/main.html", shape: "list-page", covers: ["BALLOT_MEASURES"],
     scope: { state: "CO", ocdId: "ocd-division/country:us/state:co", name: "Colorado" },
     electionDate: "2026-11-03", electionPageUrl: measureUrl,
-    officialLinkingPage: { url: officialUrl, html: "This stored excerpt is not current response evidence." },
+    linkingPage: fixtureLinkingPage({ url: officialUrl, html: "This stored excerpt is not current response evidence." }),
   };
   await saveVotingSourceDoor(repos.doors, door, now);
   const provenance = { ...ballot.contests[0].provenance, sourceUrl: measureUrl, doorId: door.id };
@@ -193,8 +195,8 @@ test("registered official linking pages are re-read and vaulted before admitting
     open: async url => { opened.push(url); return new Response(url === officialUrl ? freshIndex : text); },
   });
   assert.deepEqual(result.failures, []);
-  assert.deepEqual(new Set(opened), new Set([measureUrl, officialUrl]));
-  assert.equal(result.captures.length, 2);
+  assert.deepEqual(new Set(opened), new Set(["https://leg.colorado.gov/bluebook", measureUrl, officialUrl]));
+  assert.equal(result.captures.length, 3);
   const primary = result.captures.find(capture => capture.evidence.canonicalUrl === measureUrl)!;
   const links = linkingPageFrom(measureUrl, result.captures.map(capture => capture.evidence));
   assert.equal(links?.html, freshIndex, "authority uses the actual saved HTTP response, never the registry's stored excerpt");
@@ -215,7 +217,7 @@ test("a registry linking excerpt cannot authorize a source when the freshly read
     url: "https://www.dcboe.org/", shape: "list-page", covers: ["BALLOT_MEASURES"],
     scope: { state: "DC", ocdId: "ocd-division/country:us/district:dc", name: "District of Columbia" },
     electionDate: "2026-11-03", electionPageUrl: measureUrl,
-    officialLinkingPage: { url: officialUrl, html: `<a href="${measureUrl}">Stored old authority</a>` },
+    linkingPage: fixtureLinkingPage({ url: officialUrl, html: `<a href="${measureUrl}">Stored old authority</a>` }),
   };
   await saveVotingSourceDoor(repos.doors, door, now);
   const provenance = { ...ballot.contests[0].provenance, sourceUrl: measureUrl, doorId: door.id };

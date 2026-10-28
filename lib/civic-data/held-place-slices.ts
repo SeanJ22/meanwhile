@@ -3,15 +3,8 @@ import type { CivicDataReadResult, CivicDataReadMetadata } from "./read-model.ts
 import { readPlacePayloadParts } from "./place-payload-slices.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
 
-const slices = new Map<string, Map<string, { version: string; value: unknown }>>();
-const queryIds = new WeakMap<ReadOnlyQuery, number>();
-let nextQueryId = 0;
-
 /** A view of an already promoted pointer, like Admin's promoted slices. It
  * carries pointer metadata; it is not a newly validated candidate or receipt. */
-/** A caller retaining immutable inputs can reuse an unchanged source read. */
-export type PlaceInputMemo = <T>(recordClass:string,scope:string,load:()=>Promise<T>)=>Promise<T>;
-
 export type PlaceCaptureRead<T> = {
   readonly kind: CivicDataReadResult<T>["kind"];
   readonly value: T | null;
@@ -42,13 +35,6 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
     throw new Error("STATE_AUTHORITY_REQUIRES_KEYED_READ");
   const query = injected ?? readerQuery();
   if (!query) throw new Error(`HELD_PLACE_READ_FAILED:${recordClass}:${scopes.join(",")}:STORE_UNCONFIGURED`);
-  if (injected && !queryIds.has(injected)) queryIds.set(injected, ++nextQueryId);
-  const cacheKey = JSON.stringify([injected ? queryIds.get(injected) : process.env.DATABASE_URL, recordClass,
-    [...new Set(ids)].sort(), [...new Set(bodies)].sort(), [...new Set(targets)].sort()]);
-  const cached = slices.get(cacheKey) ?? new Map<string, { version: string; value: unknown }>();
-  // Pin this call's carried values before any concurrent read can move the cache.
-  const carried = new Map(cached);
-  const versions = JSON.stringify(Object.fromEntries(scopes.flatMap(scope => carried.has(scope) ? [[scope, carried.get(scope)!.version]] : [])));
   let value: string;
   if (recordClass === "MEETING") {
     value = `jsonb_build_object('meetings', ${array("payload->'meetings'", `${division} OR x->>'bodyId'=ANY($4::text[])`)})`;
@@ -68,24 +54,19 @@ export async function readPlacePointerSlices<T>(recordClass: CivicDataReadMetada
   }
   const [rows] = await query([{ text: `WITH selected AS (SELECT $3::text[] ids, $4::text[] bodies, $5::text[] targets),
     projections AS (SELECT record_class,scope,current_version_id,payload FROM civic_data_promotions)
-    SELECT scope, current_version_id, CASE WHEN ($6::jsonb->>scope)=current_version_id THEN NULL ELSE ${value} END AS value,
-      CASE WHEN ($6::jsonb->>scope)=current_version_id THEN false ELSE jsonb_path_exists(payload, '$.**."$civicPayloadPart"') END AS encoded
+    SELECT scope, current_version_id, ${value} AS value,
+      jsonb_path_exists(payload, '$.**."$civicPayloadPart"') AS encoded
       FROM projections WHERE record_class=$1 AND scope=ANY($2::text[])`,
-    params: [recordClass, [...new Set(scopes)], [...ids], [...bodies], [...targets], versions] }]);
+    params: [recordClass, [...new Set(scopes)], [...ids], [...bodies], [...targets]] }]);
   const byScope = new Map(rows?.map(row => [row.scope, row]));
   const encoded = rows.filter(row => row.encoded).map(row => row.scope as string);
   const decoded = encoded.length ? await readPlacePayloadParts(query, recordClass, encoded, ids, bodies, targets,
     new Map(rows.map(row => [row.scope as string, row.current_version_id as string]))) : new Map();
   const result = scopes.map(scope => {
     const row = byScope.get(scope);
-    const value = row ? carried.get(scope)?.version === row.current_version_id
-      ? carried.get(scope)!.value : decoded.get(scope) ?? row.value : null;
-    if (row) cached.set(scope, { version: row.current_version_id as string, value });
-    else cached.delete(scope);
+    const value = row ? decoded.get(scope) ?? row.value : null;
     return { kind: row ? "PROMOTED" as const : "NOT_RECORDED" as const, value: value as T ?? null,
       metadata: { recordClass, scope, ...(row ? { versionId: row.current_version_id as string } : {}) } };
   });
-  if (!slices.has(cacheKey) && slices.size >= 64) slices.delete(slices.keys().next().value!);
-  slices.set(cacheKey, cached);
   return result;
 }

@@ -32,7 +32,7 @@ import {
   verifySession,
 } from "@/lib/control-plane/admin-auth.ts";
 import { movedAdminPage } from "@/lib/control-plane/moved-pages.ts";
-import { BALLOT_CACHE_HEADER } from "@/lib/reader/ballot-cache.ts";
+import { BALLOT_CACHE_HEADER, BALLOT_CACHE_VARY } from "@/lib/reader/ballot-cache.ts";
 import { ballotCacheValue } from "@/lib/reader/ballot-cache-value.ts";
 
 /** The command center and its authenticated API. */
@@ -85,7 +85,15 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     const headers = new Headers(request.headers), verdict = await ballotCacheValue(request);
     headers.delete(BALLOT_CACHE_HEADER);
     if (verdict) headers.set(BALLOT_CACHE_HEADER, verdict);
-    return NextResponse.next({ request: { headers } });
+    const response = NextResponse.next({ request: { headers } });
+    if (verdict) {
+      const [ttl, tags] = verdict.split(";");
+      response.headers.set("Cache-Control", `private, max-age=${Math.min(30, Number(ttl))}, must-revalidate`);
+      response.headers.set("Netlify-CDN-Cache-Control", `public, durable, max-age=${ttl}, must-revalidate`);
+      response.headers.set("Netlify-Cache-Tag", `${tags},reader-national-people,reader-settings`);
+      response.headers.set("Netlify-Vary", BALLOT_CACHE_VARY);
+    }
+    return response;
   }
 
   /* ---------------------------------------------------------------- *

@@ -1,3 +1,5 @@
+import { routineTaskFromContract,routineTaskNextDueMs } from "../lib/civic-data/runner.ts";
+import {retainUnwiredDerivedBodyFacts,type DerivedMeetingFamilyProgress} from "../lib/civic-data/derived-meeting-body.ts";
 import { preloadCanonicalMeetingDependencies } from "../lib/meetings/ingest-dependencies.ts";
 import { clearPromotedReadModelCache } from "../lib/civic-data/read-model.ts";
 import { readOncePerRun } from "../lib/meetings/read-once-fetch.ts";
@@ -44,7 +46,8 @@ import {
   MEETINGS_SOURCE_ID,
   type MeetingsSnapshot,
 } from "../lib/meetings/snapshot.ts";
-import { failedAcquisitionCandidate, meetingsCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
+import { meetingsCandidate, sha256 } from "../lib/civic-data/candidate-builders.ts";
+import { failedMeetingAcquisitionCandidate } from "../lib/civic-data/failed-meeting-acquisition.ts";
 import { jobFailureDetail } from "../lib/sources/composite/failure-kind.ts";
 import { agendaDocumentRecordKey, candidateChangeSet } from "../lib/civic-data/changes.ts";
 import {
@@ -60,6 +63,7 @@ import {
 import type { RoutineCandidate, RoutineRemovalEvidence } from "../lib/civic-data/types.ts";
 import {
   meetingPartitionContract,
+  derivedMeetingBodyContract,
   refreshMeetingPartitions,
   type MeetingPartitionContract,
 } from "../lib/civic-data/meeting-partitions.ts";
@@ -83,15 +87,15 @@ import { activeWiring, installMeetingDoors, isUnreadableRetiredMeetingHost, wiri
 import { ensureMeetingDoors, installDoorRecords, installMeetingWiring } from "../lib/doors/meeting-doors.ts";
 import { isDoorRecord, type DoorRecord } from "../lib/doors/registry.ts";
 import { hostsOfConfig } from "../lib/doors/seed-meetings.ts";
-import { installMeetingPartitionSelection } from "../lib/civic-data/reader-repair-protocol.ts";
+import { installMeetingPartitionSelection } from "../lib/civic-data/meeting-partition-selection.ts";
 import { isLegistarDocumentHost } from "../lib/sources/legistar/routes.ts";
 import { isLegistarMeetingDetailUrl, isPortalAgendaLinkFor, portalAgendaLinkFrom } from "../lib/sources/legistar/portal-agenda-link.ts";
-import { sourceUserAgent } from "../lib/sources/http.ts";
+import { deferSourceRead, sourceFetch, sourceReadDeferred, sourceUserAgent } from "../lib/sources/http.ts";
 import type { Registry } from "../lib/registry/types.ts";
 import { getRegistryRuntimeReadModel, withRegistryRuntimeStates } from "../lib/registry/runtime-read-model.ts";
 import { requireRegistryState, statesForRegistryDivisions } from "../lib/civic-data/state-scopes.ts";
 import { normalizeFamilyMeetingCitations, placePublishedMeetingPins, retainPreviouslyVerifiedVenuePoints } from "../lib/meetings/publish-pins.ts";
-import { currentVenueCache, type VenueEntry } from "../lib/meetings/venue-cache.ts";
+import { currentVenueCache, withVenueEntries, type VenueEntry } from "../lib/meetings/venue-cache.ts";
 import { scopedMeetingSource } from "./lib/scoped-meeting-source.ts";
 import { placeUnplacedFromAgendas } from "./lib/agenda-meeting-location.ts";
 import type { Meeting, MeetingSource, PublisherExclusion, RecurrenceReport } from "../lib/sources/types.ts";
@@ -102,16 +106,25 @@ import { DERIVED_WIRING_RECORD_CLASS, DERIVED_WIRING_SCOPE } from "../lib/civic-
 import {
   DERIVED_WIRING_SOURCE_NAMES,
   familyMembers,
-  readDerivedMeetingWiring,
+  type DerivedWiringRecord,
 } from "../lib/civic-data/derived-meeting-wiring.ts";
+import { readStateWiringRows,readStateWiringBodyIds } from "../lib/civic-data/keyed-government-lookup.ts";
+import { readMeetingFamilyDependencies } from "../lib/civic-data/meeting-family-dependencies.ts";
+import { meetingVenueChoiceHash, meetingVenueChoices } from "../lib/civic-data/meeting-venue-inputs.ts";
 import {
   buildDerivedFamily,
   derivedFamilyCandidate,
   derivedFamilyFailedCandidate,
+  DERIVED_FAMILY_SOURCE_ID,
+  familyMemberReadIssue,
   type FamilyMemberRead,
 } from "../lib/civic-data/derived-meeting-family.ts";
-import { retainingFetch, retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
-import { publishReadMeetingFacts } from "../lib/civic-data/meeting-fact-publication.ts";
+import { retainingFetch, retainMeetingFetchBytes, retainMeetingCandidateEvidence, tracedResponses, bindMeetingSourceObservations, type RetainedSourceResponse } from "../lib/civic-data/retained-meeting-bytes.ts";
+import { stageMeetingFactPublication, continueMeetingFactPublication, meetingFactsAfterSourceCheck } from "../lib/civic-data/meeting-fact-progress.ts";
+import { confirmMeetingFactsFromSources, meetingFactWorkRemains } from "../lib/civic-data/meeting-source-confirmation.ts";
+import { withDerivedSourceContent } from "../lib/civic-data/derived-source-hash.ts";
+import { sourceHashReceiptFields, type SourceHashConfirmation } from "../lib/civic-data/source-hash.ts";
+import type { DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import { factReader, readerFactDb } from "../lib/facts/db.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
@@ -123,6 +136,12 @@ import { diggerMeasurement, type DiggerMeasurement } from "./lib/digger-measurem
 import { validateRoutineCandidate } from "../lib/civic-data/validate.ts";
 import { currentMeetingClock, installMeetingClock, type MeetingClock } from "../lib/civic-data/contracts.ts";
 import { readHeldMeetingInput } from "../lib/control-plane/scheduler/providers/held-meeting-input.ts";
+import { meetingSourceSession, meetingSourceInputHash, probeMeetingSource, confirmAcquiredMeetingSource, withMeetingSourceProbe, meetingSourceBudgetAvailable } from "../lib/civic-data/meeting-source-probe.ts";
+import { meetingSourceContinuationPending } from "../lib/civic-data/meeting-source-progress.ts";
+import { readSourceProbeDependencies } from "../lib/civic-data/source-probe.ts";
+import { requiredManualProductionContract } from "../lib/civic-data/manual-contracts.ts";
+import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
+import { linkedMeetingSourceInputs } from "../lib/civic-data/meeting-linked-source.ts";
 
 let REGISTRY: Registry | null = null;
 
@@ -236,7 +255,7 @@ export function refusalCheckedFetch(base?: typeof fetch): typeof fetch {
     const impl = base ?? globalThis.fetch;
     let url = String(input instanceof Request ? input.url : input);
     for (let hop = 0; ; hop++) {
-      const response = await impl(url, { ...init, redirect: "manual" });
+      const response = await sourceFetch(url, { ...init, redirect: "manual" }, impl);
       const location = response.status >= 300 && response.status < 400 ? response.headers.get("location") : null;
       if (!location) return response;
       await response.body?.cancel().catch(() => undefined);
@@ -360,7 +379,7 @@ export function agendaRetrievalOrder(
     .map(({ meeting }) => meeting);
 }
 
-export async function retrieveAgendas(meetings: Meeting[], store: AgendaDocumentStore = agendaDocumentStore, nowMs = Date.now()) {
+export async function retrieveAgendas(meetings: Meeting[], store: AgendaDocumentStore = agendaDocumentStore, nowMs = Date.now(), sourceRecheck = false) {
 
   const heldAsLinks = meetings.filter((m) => {
     const url = documentUrlFor(m);
@@ -422,7 +441,7 @@ export async function retrieveAgendas(meetings: Meeting[], store: AgendaDocument
         const saved = store.latestFor(meeting.id);
         const savedAt = saved ? Date.parse(saved.retrievedAt) : Number.NaN;
         const sourcePostedAt = meeting.postedAt ? Date.parse(meeting.postedAt) : Number.NaN;
-        if (saved?.text && saved.extraction !== "failed" && saved.documentUrl === url &&
+        if (!sourceRecheck && saved?.text && saved.extraction !== "failed" && saved.documentUrl === url &&
           savedAt <= nowMs && nowMs - savedAt < freshForMs && !(sourcePostedAt > savedAt)) {
           reusedFresh++;
           readableMeetingIds.push(meeting.id);
@@ -526,10 +545,20 @@ export async function retrieveAgendas(meetings: Meeting[], store: AgendaDocument
 }
 
 /** Recurring meeting details follow the held calendar window; permanent outcome readers own older history. */
-export async function retrieveHeldAgendas(meetings: readonly Meeting[], store: AgendaDocumentStore, nowMs = Date.now()) {
+export async function retrieveHeldAgendas(meetings: readonly Meeting[], store: AgendaDocumentStore, nowMs = Date.now(), sourceRecheck = false) {
   const window = meetingHeldWindowAt(new Date(nowMs).toISOString())!;
   const held = meetings.filter(meeting => Date.parse(meeting.startsAt) >= Date.parse(window.lowerBound) && Date.parse(meeting.startsAt) <= Date.parse(window.upperBound));
-  return { ...await retrieveAgendas(held, store, nowMs), heldMeetingIds: held.map(meeting => meeting.id) };
+  return { ...await retrieveAgendas(held, store, nowMs, sourceRecheck), heldMeetingIds: held.map(meeting => meeting.id) };
+}
+
+/** A resumed or replayed document keeps the instant those exact bytes were actually acquired. */
+export function bindAgendaSourceObservations(meetings: readonly Meeting[], store: AgendaDocumentStore, responses: readonly RetainedSourceResponse[]): void {
+  for (const meeting of meetings) {
+    const document = store.latestFor(meeting.id);
+    const source = document && responses.find(page => page.rawHash === document.contentHash &&
+      (page.requestedUrl === document.documentUrl || page.finalUrl === document.documentUrl));
+    if (document && source) { document.retrievedAt = source.retrievedAt; document.collectedAt = source.retrievedAt; }
+  }
 }
 
 async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): Promise<void> {
@@ -555,62 +584,207 @@ async function recordFamilyMemberOutcomes(reads: readonly FamilyMemberRead[]): P
   }
 }
 
+/** The state route remains the scheduler unit; every changed body publishes independently. */
 export async function promoteDerivedMeetingFamily(
-  store: RoutineDataStore,
-  partition: MeetingPartitionContract,
-  /* The registry and venue preload, run only once the family has a member: a family with none reads nothing else. */
-  prepare: () => Promise<void> = async () => {},
-  facts?: Omit<MeetingFactsTarget, "responses">,
-): Promise<PromotionOutcome> {
+  store:RoutineDataStore,partition:MeetingPartitionContract,
+  prepare:(members?:readonly DerivedWiringRecord[])=>Promise<readonly VenueEntry[]|void>=async()=>{},
+  facts?:Omit<MeetingFactsTarget,"responses">,
+):Promise<MeetingIngestResult>{
+  const query=facts?.db.query??factReader();
+  const empty=(succeeded:boolean):MeetingIngestResult=>({measurement:null,partitions:[],confirmations:[],succeeded,sourceSucceeded:succeeded,exitCode:succeeded?0:2,sourceReads:[]});
+  if(!partition.derivedFamily||partition.derivedParentId)throw new Error("DERIVED_MEETING_FAMILY_REQUIRED");
+  const unavailable=async(detail:string)=>{
+    const at=new Date().toISOString(),candidate=derivedFamilyFailedCandidate(partition,at,detail);
+    const outcome=await processRegisteredMeetingPartitionCandidate(store,partition.id,candidate,at);
+    printMeetingPartitionReceipt(partition,candidate,outcome,detail,"JOB");
+    return {...empty(false),partitions:[{partition,candidate,outcome}]};
+  };
+  if(!query)return unavailable("The reader connection for this state's derived body routes is unavailable.");
+  const bodyIds=await readStateWiringBodyIds(query,partition.derivedFamily);
+  if(!bodyIds.length)return unavailable(`No reviewed calendar is connected in ${partition.derivedFamily} yet; existing body pointers remain held.`);
+  if(!store.readDerivedMeetingProgress||!store.writeDerivedMeetingProgress)throw new Error("DERIVED_MEETING_PROGRESS_STORE_UNAVAILABLE");
+  const saved=await store.readDerivedMeetingProgress(partition.scope);
+  const order=[...new Set([...saved.pending.filter(id=>bodyIds.includes(id)),...bodyIds])];
+  let progress:DerivedMeetingFamilyProgress={...saved,pending:order};
+  let passSucceeded=true;
+  const result=empty(true),results:MeetingPartitionPromotionResult[]=[],confirmations:NonNullable<MeetingIngestResult["confirmations"]>[number][]=[];
+  const pending=new Set(order),nextDue:number[]=[];
+  await store.writeDerivedMeetingProgress(partition.scope,progress);
+  for(const bodyId of order){
+    if(!meetingSourceBudgetAvailable()){nextDue.push(Date.now());break;}
+    const body=derivedMeetingBodyContract(partition,bodyId);
+    const at=new Date().toISOString(),task=routineTaskFromContract(body);
+    const [clock,head]=await Promise.all([store.clock(body.sourceId,"MEETING",body.scope,task.parserVersion),store.readSourceHead("MEETING",body.scope)]);
+    const sourceContinuation=await meetingSourceContinuationPending(body.scope);
+    const acceptedSinceStart=head?.acquisitionComplete===true&&head.versionId!==(saved.startedVersions?.[bodyId]??null);
+    const resumePending=saved.pending.includes(bodyId)&&!acceptedSinceStart;
+    const due=sourceContinuation||resumePending?Date.now():routineTaskNextDueMs(task,clock,Date.now());
+    if(due>Date.now()){pending.delete(bodyId);nextDue.push(due);continue;}
+    progress={...progress,pending:[...pending],startedVersions:{...progress.startedVersions,[bodyId]:head?.versionId??null},attemptedAt:at,completedAt:at,nextWorkAt:undefined};
+    await store.writeDerivedMeetingProgress(partition.scope,progress);
+    try{
+      const outcome=await promoteDerivedMeetingBody(store,body,prepare,facts,()=>readStateWiringRows(query,partition.derivedFamily!,[bodyId]));
+      const succeeded="head" in outcome||!!outcome.promoted||!!outcome.confirmed;
+      if("head" in outcome)confirmations.push({partition:body,confirmation:outcome});
+      else results.push({partition:body,candidate:outcome.candidate.candidate,outcome});
+      const publicationPending=await meetingSourceContinuationPending(body.scope);
+      const complete=("head" in outcome||outcome.candidate.candidate.retrieval.complete!==false)&&!publicationPending;
+      if(succeeded&&complete){
+        pending.delete(bodyId);
+        const bodyClock=await store.clock(body.sourceId,"MEETING",body.scope,task.parserVersion),checked=bodyClock.lastSucceededObservedAt;
+        if(checked)progress={...progress,checkedAt:!progress.checkedAt||Date.parse(checked)>Date.parse(progress.checkedAt)?checked:progress.checkedAt};
+        nextDue.push(routineTaskNextDueMs(task,bodyClock,Date.now()));
+      }else{
+        passSucceeded=false;
+        const continuation=await meetingSourceContinuationPending(body.scope)||!meetingSourceBudgetAvailable();
+        if(complete||!continuation){pending.delete(bodyId);nextDue.push(routineTaskNextDueMs(task,await store.clock(body.sourceId,"MEETING",body.scope,task.parserVersion),Date.now()));}
+        else nextDue.push(Date.now());
+      }
+    }catch(error){
+      passSucceeded=false;
+      const continuation=error instanceof Error&&/^(MEETING_SOURCE_CONTINUATION_PENDING|MEETING_FACT_PUBLICATION_CONTINUATION_PENDING|MEETING_VENUE_OWNER_INPUT_CHANGED)/.test(error.message);
+      if(continuation)nextDue.push(Date.now());
+      else{
+        pending.delete(bodyId);
+        const failedAt=new Date().toISOString();
+        const failed=derivedFamilyFailedCandidate(body,failedAt,jobFailureDetail(error instanceof Error?error.message:String(error)));
+        const outcome=await processRegisteredMeetingPartitionCandidate(store,body.id,failed,failedAt);
+        results.push({partition:body,candidate:failed,outcome});
+        printMeetingPartitionReceipt(body,failed,outcome,outcome.candidate.failureDetail,"JOB");
+        nextDue.push(routineTaskNextDueMs(task,await store.clock(body.sourceId,"MEETING",body.scope,task.parserVersion),Date.now()));
+      }
+    }
+    const now=new Date().toISOString();
+    progress={...progress,pending:[...pending],completedAt:now,nextWorkAt:pending.size?now:undefined};
+    await store.writeDerivedMeetingProgress(partition.scope,progress);
+  }
+  const now=new Date().toISOString();
+  const deadlines=nextDue.filter(Number.isFinite);
+  progress={...progress,pending:[...pending],completedAt:now,nextWorkAt:pending.size?now:deadlines.length?new Date(Math.min(...deadlines)).toISOString():undefined};
+  await store.writeDerivedMeetingProgress(partition.scope,progress);
+  const succeeded=passSucceeded&&pending.size===0;
+  if(pending.size||results.length+confirmations.length===0)console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({partitionId:partition.id})}`);
+  return {...result,partitions:results,confirmations,succeeded,sourceSucceeded:succeeded,exitCode:succeeded?0:2};
+}
+
+async function promoteDerivedMeetingBody(
+  store:RoutineDataStore,partition:MeetingPartitionContract,
+  prepare:(members?:readonly DerivedWiringRecord[])=>Promise<readonly VenueEntry[]|void>,
+  facts:Omit<MeetingFactsTarget,"responses">|undefined,
+  loadWiring:()=>ReturnType<typeof readStateWiringRows>,
+):Promise<PromotionOutcome|SourceHashConfirmation>{
+  let sourceSession:Awaited<ReturnType<typeof meetingSourceSession>>|undefined,sourceInputHash:string|undefined;
+  let stopWatch:(()=>void)|undefined;
+  try{
   const generatedAt = new Date().toISOString();
+  if (!sourceSession) {
+    const state = statesForRegistryDivisions([partition.derivedFamily ?? partition.bodyId])[0]!;
+    const venue = requiredManualProductionContract("venue-resolutions");
+    const sourceDependencies = await readSourceProbeDependencies(store, [
+      { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
+      { recordClass: venue.recordClass, scope: venue.scope },
+      { recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE },
+    ]);
+    sourceInputHash = meetingSourceInputHash(partition, generatedAt, { sources: sourceDependencies, venueChoices: await meetingVenueChoiceHash(facts?.db.query ?? factReader()) });
+    const heldBodies=[partition.bodyId];
+    sourceSession = await meetingSourceSession(partition, sourceInputHash, store, generatedAt,
+      facts?.vault ?? new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)), facts ? response => confirmMeetingFactsFromSources({ facts: facts.db,
+        vault: facts.vault, bodyIds: heldBodies, responses: [response] }).then(() => {}) : undefined);
+    stopWatch=sourceSession.watchTermination();
+    const confirmed = await probeMeetingSource({ store, partition, normalizationInputHash: sourceInputHash, now: generatedAt, session: sourceSession,
+      workRemains: plan => facts ? sourceSession!.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
+        clocks:factClocks(null),at:generatedAt,meetingIds:plan.meetingIds,bodyIds:[partition.bodyId]})) : Promise.resolve(false) });
+    if (confirmed) {
+      console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
+        bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(confirmed), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+      await sourceSession.clear(); return confirmed;
+    }
+  }
   const refuse = async (detail: string, kind: "WALL" | "JOB"): Promise<PromotionOutcome> => {
     const failed = derivedFamilyFailedCandidate(partition, generatedAt, detail);
     const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, failed, generatedAt);
     printMeetingPartitionReceipt(partition, failed, outcome, detail, kind);
     return outcome;
   };
-  const wiring = await readDerivedMeetingWiring({ store, bypassCache: true, now: generatedAt });
-  if (wiring.kind !== "PROMOTED") {
-    return refuse(
-      wiring.kind === "NOT_RECORDED"
-        ? "No meeting-source wiring version is promoted yet, so this family has no member to read."
-        : jobFailureDetail(`The meeting-source wiring could not be read (${wiring.kind}): ${"detail" in wiring ? wiring.detail : ""}`),
-      "JOB",
-    );
-  }
-  const members = familyMembers(wiring.value, partition.derivedFamily!);
+  const wiring=await loadWiring();
+  if (!wiring) return refuse("No meeting-source wiring version is promoted yet, so this family has no member to read.", "JOB");
+  const members=familyMembers(wiring.value,partition.derivedFamily!).filter(member=>member.row.bodyId===partition.bodyId);
   if (members.length === 0) {
     return refuse(`No reviewed calendar is connected in ${partition.derivedFamily} yet, so this family has no member to read.`, "JOB");
   }
-  await prepare();
-  const previous = await readPreviousMeetingPartition(store, partition);
-  const reads: FamilyMemberRead[] = [];
+  let reads: FamilyMemberRead[] = [];
   const pass = meetingFetchPass();
   const retaining = retainingFetch(pass);
-  const fetchImpl = retaining.fetch;
+  const fetchImpl = sourceSession?.fetch ?? retaining.fetch;
   for (const group of derivedFamilyReadGroups(members)) {
-    const acquired = await readDerivedFamilyMembers(group, fetchImpl, resolveAttribution);
-    for (const read of acquired) console.log(`  ${read.member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
-    reads.push(...acquired);
-    if (group[0].row.kind === "MUNICODE") pass.forgetGet(acquired.flatMap(read => read.acquisitions.map(row => row.requestedUrl)));
+    if (!meetingSourceBudgetAvailable()) { await sourceSession?.defer(); break; }
+    const acquire = () => readDerivedFamilyMembers(group, fetchImpl, undefined, undefined,
+      () => sourceSession ? sourceSession.inputs(() => prepare(members)) : prepare(members));
+    const acquired = sourceSession ? await sourceSession.run(acquire) : await acquire();
+    const pages=sourceSession?[...sourceSession.responses.values()]:retaining.responses;
+    const observed=acquired.map(read=>{
+      const own=pages.filter(page=>read.acquisitions.some(acquisition=>acquisition.requestedUrl===page.requestedUrl&&acquisition.finalUrl===page.finalUrl&&acquisition.rawHash===page.rawHash));
+      return {...read,freshMeetings:bindMeetingSourceObservations(read.freshMeetings,own),retrievedAt:own.map(page=>page.retrievedAt).sort()[0]??read.retrievedAt};
+    });
+    for (const read of observed) console.log(`  ${read.member.id}: ${read.ok ? `${read.freshMeetings.length} sitting(s) read` : `held: ${read.error}`}`);
+    reads.push(...observed);
+    if (group[0].row.kind === "MUNICODE") {
+      const urls = acquired.flatMap(read => read.acquisitions.map(row => row.requestedUrl));
+      pass.forgetGet(urls); sourceSession?.forgetGet(urls);
+    }
   }
   await recordFamilyMemberOutcomes(reads);
-  const versionId = wiring.metadata.versionId;
-  const promotedAt = wiring.metadata.promotedAt;
-  if (versionId === null || promotedAt === null) {
-    return refuse(jobFailureDetail("The promoted meeting-source wiring carries no version id or promotion time."), "JOB");
+  const wiringInput = wiring.input;
+  const sourceContentInputs: DerivedInputRef[] = [wiringInput, ...reads.flatMap(read => read.acquisitions.map(acquisition => ({
+    kind: "MEMBER_ACQUISITION" as const, memberKey: read.member.id, requestedUrl: acquisition.requestedUrl, finalUrl: acquisition.finalUrl,
+    httpStatus: acquisition.httpStatus, rawHash: acquisition.rawHash, retrievedAt: read.retrievedAt, horizonDay: read.horizonDay ?? generatedAt.slice(0, 10),
+  })))];
+  let complete = reads.length === members.filter(member => member.status === "ACTIVE").length && reads.every(read => familyMemberReadIssue(read) === null);
+  const acquiredConfirmation = complete && sourceSession && sourceInputHash ? await confirmAcquiredMeetingSource({ store, partition, session: sourceSession,
+    normalizationInputHash: sourceInputHash, now: new Date().toISOString(), workRemains: plan => facts
+      ? sourceSession!.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession!.head,observations:[...sourceSession!.responses.values()],
+        clocks:factClocks(null),at:new Date().toISOString(),meetingIds:plan.meetingIds,bodyIds:[partition.bodyId]})) : Promise.resolve(true) }) : null;
+  if (acquiredConfirmation && sourceSession) {
+    console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
+      bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(acquiredConfirmation), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+    await sourceSession.clear(); return acquiredConfirmation;
   }
-  const history = await moveConcludedMeetingsForPartition(store, partition, previous, generatedAt);
+  if(!meetingSourceBudgetAvailable()&&!reads.some(read=>familyMemberReadIssue(read)===null))throw new Error("MEETING_SOURCE_CONTINUATION_PENDING");
+  if (!reads.some(read => familyMemberReadIssue(read) === null)) return refuse(jobFailureDetail("No member source completed; held meeting rows remain pointed without a payload read."), "JOB");
+  await prepare(members);
+  reads = reads.map(read => read.ok ? { ...read, freshMeetings: resolveAttribution([...read.freshMeetings]) } : read);
+  if(!store.readDerivedMeetingBody)throw new Error("DERIVED_MEETING_KEYED_STORE_UNAVAILABLE");
+  const base=await store.readDerivedMeetingBody(partition.derivedFamily!,partition.bodyId);
+  const previous=base?.snapshot??null;
+  const history=base?.expectedBaseVersionId?await moveConcludedMeetingsForPartition(store,partition,previous,generatedAt):{moved:new Map()};
   const restoredPrevious = await restoreRemovedHistoryForPartition(store, partition, previous, generatedAt);
-  const build = buildDerivedFamily({
-    wiringInput: {
-      kind: "PROMOTED_VERSION",
-      recordClass: DERIVED_WIRING_RECORD_CLASS,
-      scope: DERIVED_WIRING_SCOPE,
-      versionId,
-      readModelSha256: sha256(canonicalCivicDataJson(wiring.value)),
-      promotedAt,
-    },
+  const agendaSources: { source: string; response: RetainedSourceResponse }[] = [];
+  for (let index = 0; index < reads.length; index++) {
+    const read = reads[index]!;
+    if (familyMemberReadIssue(read) !== null) continue;
+    const agendaStore = new AgendaDocumentStore();
+    if (restoredPrevious) seedHeldAgendaDocuments(restoredPrevious, agendaStore);
+    const acquire = () => retrieveHeldAgendas(read.freshMeetings, agendaStore, Date.parse(generatedAt), true);
+    const acquired = sourceSession ? await sourceSession.collect(() => sourceSession!.run(acquire))
+      : await retainMeetingFetchBytes(acquire);
+    const agendaRead = acquired.value;
+    if (agendaRead.failed || agendaRead.failedExtractions || agendaRead.redirectsRefused) complete = false;
+    const responses = sourceSession ? [...sourceSession.responses.values()] : [...retaining.responses, ...acquired.responses];
+    const roots = sourceContentInputs.filter((input): input is Extract<DerivedInputRef, { kind: "MEMBER_ACQUISITION" }> => input.kind === "MEMBER_ACQUISITION" && input.memberKey === read.member.id);
+    const rootPages = responses.filter(page => roots.some(root => root.rawHash === page.rawHash && root.requestedUrl === page.requestedUrl && root.finalUrl === page.finalUrl));
+    const linked = linkedMeetingSourceInputs({ memberKey: read.member.id, officialHost: read.member.row.officialHost, roots,
+      pages: [...rootPages, ...acquired.responses], horizonDay: read.horizonDay ?? generatedAt.slice(0, 10) });
+    if (linked.unlinked.length) { complete = false; console.warn(`Agenda source link evidence unavailable for ${read.member.id}: ${linked.unlinked.join(", ")}`); }
+    sourceContentInputs.push(...linked.inputs);
+    const accepted = new Set([...roots, ...linked.inputs].map(input => `${input.finalUrl}:${input.rawHash}`));
+    for (const response of acquired.responses) if (accepted.has(`${response.finalUrl}:${response.rawHash}`)) agendaSources.push({ source: DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind], response });
+    bindAgendaSourceObservations(read.freshMeetings, agendaStore, responses);
+    const freshAgendaDocuments = read.freshMeetings.flatMap(meeting => agendaStore.versionsFor(meeting.id))
+      .filter(document => !acquired.responses.some(page => page.rawHash === document.contentHash && page.requestedUrl === document.documentUrl && !accepted.has(`${page.finalUrl}:${page.rawHash}`)));
+    reads[index] = { ...read, freshAgendaDocuments };
+  }
+  const assembled = buildDerivedFamily({
+    wiringInput,
     members,
     reads,
     previous: restoredPrevious,
@@ -627,26 +801,45 @@ export async function promoteDerivedMeetingFamily(
       return { meetings: reconciled.meetings, agendaDocuments: reconciled.agendaDocuments, removalEvidence: reconciled.removalEvidence };
     },
   });
+  const build={...assembled,snapshot:retainUnwiredDerivedBodyFacts(assembled.snapshot,base?.snapshot??null)};
   const memberRoutes = new Map(members.filter((member) => member.status === "ACTIVE").map((member) =>
     [`${DERIVED_WIRING_SOURCE_NAMES[member.row.kind]}:${member.row.bodyId}`, member.row.route] as const));
   const cited = normalizeFamilyMeetingCitations(build.snapshot.meetings, memberRoutes);
   const census = await placePublishedMeetingPins({meetings:cited,previous:previous?.meetings,query:facts?.db.query,fetchImpl});
   for (const hold of census.held) console.warn(`MEETING_PIN_UNRESOLVED ${hold}`);
-  const finalBuild = { ...build,snapshot:{...build.snapshot,meetings:[...census.meetings]} };
-  const candidate = retainMeetingCandidateEvidence(derivedFamilyCandidate(partition, finalBuild),finalBuild.snapshot,[...retaining.responses,...census.responses]);
-  // An unchanged family pass is receipted on the pointed version.
-  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, new Date().toISOString(), undefined, { confirmUnchanged: true });
+  const finalBuild = { ...build,inputs:[...build.inputs,...(base?[base.input]:[])], snapshot: { ...build.snapshot, meetings: [...census.meetings], sources: build.snapshot.sources.map(source => source.ok ? {
+    ...source, acquisitions: [...(source.acquisitions ?? []), ...agendaSources.filter(page => page.source === source.source).map(({ response }) => ({
+      source: source.source, requestedUrl: response.requestedUrl, finalUrl: response.finalUrl, httpStatus: response.httpStatus, rawHash: response.rawHash, byteCount: response.byteCount,
+    }))],
+  } : source) } };
+  const captured = sourceSession ? [...sourceSession.responses.values()] : retaining.responses;
+  const sourced = withDerivedSourceContent(derivedFamilyCandidate(partition, finalBuild), sourceContentInputs);
+  const planned = sourceSession && sourceInputHash ? withMeetingSourceProbe(sourced, partition, sourceInputHash, captured, complete && sourceSession.complete,
+    complete && sourceSession.acquisitionComplete) : sourced;
+  const candidate = retainMeetingCandidateEvidence(planned,finalBuild.snapshot,[...captured,...agendaSources.map(page => page.response),...census.responses]);
+  if(facts){
+    const freshIds=new Set(reads.filter(read=>familyMemberReadIssue(read)===null).flatMap(read=>read.freshMeetings.map(meeting=>meeting.id)));
+    const stage=()=>stageMeetingFactPublication({facts:facts.db,vault:facts.vault,scope:partition.scope,candidateId:candidate.id,
+      meetings:finalBuild.snapshot.meetings.filter(meeting=>freshIds.has(meeting.id)&&!meeting.carried),
+      responses:[...tracedResponses(finalBuild.snapshot.sources,[...captured,...agendaSources.map(page=>page.response),...census.responses]),...census.responses],geocodeAttempts:census.attempts});
+    if(sourceSession)await sourceSession.inputs(stage);else await stage();
+  }
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate,new Date().toISOString(),base?.expectedBaseVersionId??null,{confirmUnchanged:false});
   printMeetingPartitionReceipt(partition, candidate, outcome, outcome.promoted ? null : outcome.candidate.failureDetail);
   if (outcome.promoted || outcome.confirmed) {
     for (const read of facts ? reads.filter(row => row.ok) : []) {
-      await publishPartitionFacts({ ...facts!, responses: [...retaining.responses,...census.responses] }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
-        census.meetings.filter(meeting=>read.freshMeetings.some(fresh=>fresh.id===meeting.id)), read.acquisitions, outcome.candidate.candidate.id, generatedAt);
+      await publishPartitionFacts({ ...facts!, responses: [...captured,...census.responses],geocodeAttempts:census.attempts }, read.member.id, DERIVED_WIRING_SOURCE_NAMES[read.member.row.kind],
+        census.meetings.filter(meeting=>read.freshMeetings.some(fresh=>fresh.id===meeting.id)), read.acquisitions,outcome.candidate.candidate.id,generatedAt,partition.scope);
     }
   }
   console.log(`Meeting pins: ${census.placedCount} placed, ${census.responses.length} new Census reads, ${census.held.length} unresolved`);
+  if ((outcome.promoted || outcome.confirmed) && sourceSession && complete && sourceSession.acquisitionComplete) await sourceSession.clear();
   return outcome;
+  }catch(error){
+    if(error instanceof Error&&/^(MEETING_SOURCE_CONTINUATION_PENDING|MEETING_FACT_PUBLICATION_CONTINUATION_PENDING|MEETING_VENUE_OWNER_INPUT_CHANGED)/.test(error.message))await sourceSession?.defer();
+    throw error;
+  }finally{stopWatch?.();}
 }
-
 export interface MeetingIngestResult {
   readonly measurement: DiggerMeasurement | null;
   readonly partitions: readonly MeetingPartitionPromotionResult[];
@@ -654,6 +847,14 @@ export interface MeetingIngestResult {
   readonly sourceSucceeded: boolean;
   readonly exitCode: 0 | 2;
   readonly sourceReads: readonly Omit<RetainedSourceResponse, "bytes">[];
+  readonly confirmations?: readonly { readonly partition: MeetingPartitionContract; readonly confirmation: SourceHashConfirmation }[];
+}
+
+interface MeetingSourcePlan {
+  readonly inputHash: string;
+  readonly responses: readonly RetainedSourceResponse[];
+  readonly complete: boolean;
+  readonly acquisitionComplete: boolean;
 }
 
 export interface MeetingIngestOptions {
@@ -667,6 +868,10 @@ export interface MeetingIngestOptions {
   readonly venues?: readonly VenueEntry[];
   readonly venuesUnavailable?: string;
   readonly meetingClock?: MeetingClock;
+  readonly sourceSession?: Awaited<ReturnType<typeof meetingSourceSession>>;
+  readonly sourceInputHash?: string;
+  readonly ownerChoiceHash?: string;
+  readonly measurement?: ReturnType<typeof diggerMeasurement>;
 }
 
 /** The ordinary registered child acquires exactly its own door and reader slice. */
@@ -697,9 +902,7 @@ export async function readHeldMeetingCliOptions(args: readonly string[], depende
   installDoorRecords([door], "the ordinary registered subject's own door");
   const partition = meetingPartitionContract(id);
   if (!partition || partition.derivedFamily !== null || partition.bodyId !== door.bodyIds[0]) throw new Error(`HELD_MEETING_DOOR_PARTITION_MISMATCH:${id}`);
-  const query = dependencies?.query ?? factReader();
-  if (!query) throw new Error("HELD_MEETING_READER_STORE_UNAVAILABLE");
-  return readHeldMeetingInput(query, partition);
+  return { partition };
 }
 
 function measureMeetingFields(measurement: ReturnType<typeof diggerMeasurement>, partition: MeetingPartitionContract,
@@ -817,23 +1020,40 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
   options: MeetingIngestOptions, dryRun: boolean): Promise<MeetingIngestResult> {
   const store = options.store ?? new PostgresRoutineDataStore();
   let prepared = false;
-  const prepare = async () => {
-    if (prepared) return;
+  let preparedVenues: readonly VenueEntry[] | undefined;
+  let ownerChoiceHash: string | undefined, preparedInputs: string | undefined;
+  let sourceSessionForInputs: Awaited<ReturnType<typeof meetingSourceSession>> | undefined;
+  const prepare = async (members?: readonly DerivedWiringRecord[]) => {
+    const inputs = JSON.stringify([ownerChoiceHash, members?.map(member => member.id).sort()]);
+    if (prepared && preparedInputs === inputs) return preparedVenues;
     if (options.registry) {
       if (partitions.length !== 1 || options.registry.bodies.length !== 1 || options.registry.bodies[0]!.id !== partitions[0]!.bodyId) {
         throw new Error("INGEST_PREPARED_REGISTRY_NOT_ONE_BODY");
       }
       REGISTRY = options.registry;
+      preparedVenues = options.venues;
     } else {
-      await preloadCanonicalMeetingDependencies({ sourceName: "composite", state });
-      REGISTRY = getRegistryRuntimeReadModel().registry;
+      const query = options.facts?.db.query ?? factReader();
+      if (!query || !members || !ownerChoiceHash) throw new Error("INGEST_MEETING_FAMILY_DEPENDENCIES_UNAVAILABLE");
+      let held: Awaited<ReturnType<typeof readMeetingFamilyDependencies>>;
+      try { held = await readMeetingFamilyDependencies(query, state, members, new Date().toISOString(), ownerChoiceHash); }
+      catch (error) {
+        if (error instanceof Error && error.message.startsWith("MEETING_VENUE_OWNER_INPUT_CHANGED")) await sourceSessionForInputs?.defer();
+        throw error;
+      }
+      REGISTRY = held.registry;
+      preparedVenues = held.venues;
     }
     prepared = true;
+    preparedInputs = inputs;
+    return preparedVenues;
   };
   const results: MeetingIngestResult[] = [];
-  const lastStartMs = passDeadlineFromEnv() - STANDING_PARTITION_ACQUISITION_TIMEOUT_MS;
+  const lastStartMs = passDeadlineFromEnv() - 45_000;
   const ordered = calendarReadOrder(partitions);
   for (const [index, partition] of ordered.entries()) {
+    sourceSessionForInputs = undefined;
+    let stopWatch: (() => void) | undefined;
     if (Date.now() >= lastStartMs) {
       for (const owed of ordered.slice(index)) console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: owed.id })}`);
       break;
@@ -841,34 +1061,67 @@ async function readStateCalendars(partitions: readonly MeetingPartitionContract[
     agendaDocumentStore.clear();
     clearPromotedReadModelCache();
     try {
-      if (partition.derivedFamily !== null) {
-        const outcome = await promoteDerivedMeetingFamily(store, partition, prepare,
-          options.facts ?? { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) });
-        const succeeded = outcome.promoted !== null || outcome.confirmed !== undefined;
-        results.push({ measurement: null, partitions: [{ partition, candidate: outcome.candidate.candidate, outcome }],
-          succeeded, sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: [] });
+      if (dryRun) {
+        results.push(await readMeetingPartition(partition, store, options, true));
+        continue;
+      }
+      const at = new Date().toISOString(), venue = requiredManualProductionContract("venue-resolutions");
+      const facts = options.facts ?? { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) };
+      if(partition.derivedFamily!==null){
+        ownerChoiceHash=await meetingVenueChoiceHash(facts.db.query);
+        results.push(await promoteDerivedMeetingFamily(store,partition,prepare,facts));
+        continue;
+      }
+      const sourceDependencies = await readSourceProbeDependencies(store, [
+        { recordClass: "REGISTRY_RUNTIME_BINDING", scope: stateRegistryRuntimeScope(state) },
+        { recordClass: venue.recordClass, scope: venue.scope },
+        ...(partition.derivedFamily ? [{ recordClass: DERIVED_WIRING_RECORD_CLASS, scope: DERIVED_WIRING_SCOPE }] : []),
+      ]);
+      ownerChoiceHash = await meetingVenueChoiceHash(facts.db.query);
+      const sourceInputHash = meetingSourceInputHash(partition, at, { sources: sourceDependencies, venueChoices: ownerChoiceHash });
+      const sourceHead = partition.derivedFamily ? await store.readSourceHead("MEETING", partition.scope) : null;
+      const sourceBodies = partition.derivedFamily ? sourceHead ? await store.readCandidatePath<string[]>(sourceHead.versionId, ["normalizedPayload", "sourceProbe", "bodyIds"]) ?? [] : [] : [partition.bodyId];
+      const sourceSession = dryRun ? undefined : await meetingSourceSession(partition, sourceInputHash, store, at, facts.vault,
+        response => confirmMeetingFactsFromSources({ facts: facts.db, vault: facts.vault, bodyIds: sourceBodies, responses: [response] }).then(() => {}), options.initialResponse);
+      sourceSessionForInputs = sourceSession;
+      stopWatch = sourceSession?.watchTermination();
+      const measurement = diggerMeasurement(partition.bodyId, dryRun);
+      measurement.worked();
+      const confirmed = sourceSession ? await measurement.read(() => sourceSession.run(() => probeMeetingSource({ store, partition, normalizationInputHash: sourceInputHash, now: at, session: sourceSession,
+        workRemains: plan => sourceSession.inputs(()=>meetingFactsAfterSourceCheck({facts:facts.db,vault:facts.vault,head:sourceSession.head,
+          observations:[...sourceSession.responses.values()],clocks:factClocks(null),at,meetingIds:plan.meetingIds,bodyIds:[...new Set(plan.bodyIds ?? [partition.bodyId])]})) }))) : null;
+      if (confirmed && sourceSession) {
+        console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
+          bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(confirmed), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+        await sourceSession.clear();
+        results.push({ measurement: measurement.result(), partitions: [], confirmations: [{ partition, confirmation: confirmed }], succeeded: true, sourceSucceeded: true, exitCode: 0,
+          sourceReads: [...sourceSession.responses.values()].map(({ bytes: _bytes, ...response }) => response) });
       } else {
-        await prepare();
-        results.push(await readMeetingPartition(partition, store, options, dryRun));
+        results.push(await readMeetingPartition(partition, store, { ...options, facts, sourceSession, sourceInputHash, ownerChoiceHash, measurement }, dryRun));
       }
     } catch (error) {
+      if (error instanceof Error && error.message.startsWith("MEETING_VENUE_OWNER_INPUT_CHANGED")) await sourceSessionForInputs?.defer();
       // A one-body caller owns its failure; a state program keeps the next board moving.
       if (partitions.length === 1) throw error;
       console.error(error);
       console.log(`RCD_MEETING_PARTITION_UNREAD=${JSON.stringify({ partitionId: partition.id,
         detail: (error instanceof Error ? error.stack ?? error.message : String(error)).split("\n").slice(0, 8).join(" | ") })}`);
+    } finally {
+      stopWatch?.();
     }
     console.log("RCD_PROGRESS=" + JSON.stringify({ key: partition.id, records: 1 }));
   }
   if (results.length === 1 && partitions.length === 1) return results[0]!;
   const succeeded = results.length === partitions.length && results.every(result => result.succeeded);
   return { measurement: null, partitions: results.flatMap(result => result.partitions), succeeded,
-    sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: results.flatMap(result => result.sourceReads) };
+    sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads: results.flatMap(result => result.sourceReads),
+    confirmations: results.flatMap(result => result.confirmations ?? []) };
 }
 
 async function readMeetingPartition(partition: MeetingPartitionContract, promotionStore: RoutineDataStore,
   options: MeetingIngestOptions, dryRun: boolean): Promise<MeetingIngestResult> {
-  const source = scopedMeetingSource(partition) ?? buildCompositeSource({
+  const source = scopedMeetingSource(partition, options.sourceSession?.fetch) ?? buildCompositeSource({
+    fetchImpl: options.sourceSession?.fetch,
     timeoutMs: STANDING_PARTITION_ACQUISITION_TIMEOUT_MS,
     captureAcquisitionEvidence: true,
     sourceNames: [partition.meetingSource],
@@ -880,14 +1133,11 @@ async function readMeetingPartition(partition: MeetingPartitionContract, promoti
 async function readMeetingSource(source: MeetingSource<unknown>, partitions: readonly MeetingPartitionContract[],
   promotionStore: RoutineDataStore | null, options: MeetingIngestOptions, dryRun = false): Promise<MeetingIngestResult> {
   const { initialResponse } = options;
-  const measurement = partitions.length === 1 ? diggerMeasurement(partitions[0]!.bodyId, dryRun) : null;
-  measurement?.worked();
+  const measurement = options.measurement ?? (partitions.length === 1 ? diggerMeasurement(partitions[0]!.bodyId, dryRun) : null);
+  if (!options.measurement) measurement?.worked();
   if (options.venuesUnavailable) measurement?.fail(`Verified venue projection unavailable: ${options.venuesUnavailable}; calendar facts remain independently readable.`);
   const agendaStore = new AgendaDocumentStore();
-  const previous = options.previous !== undefined ? options.previous : source instanceof CompositeSource && promotionStore
-    ? await readPreviousMeetingPartition(promotionStore, partitions[0]!)
-    : null;
-  if (previous && partitions.length === 1 && previous.meetings.some(meeting => meeting.bodyId !== partitions[0]!.bodyId)) throw new Error("INGEST_PREVIOUS_NOT_ONE_BODY");
+
 
   // Registered bodies select the work. Geography covers every state and territory; the date window is stated
   // because some upstreams default to upcoming-only when it is omitted.
@@ -901,23 +1151,69 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
       now + MEETING_HELD_HORIZON_DAYS * 86_400_000,
     ).toISOString(),
   }));
-  const retained = measurement ? await measurement.read(fetchMeetings) : await fetchMeetings();
+  const fetchSources = () => options.sourceSession ? options.sourceSession.run(fetchMeetings) : fetchMeetings();
+  const retained = measurement ? await measurement.read(fetchSources) : await fetchSources();
   if (initialResponse) for (let index = 0; index < retained.responses.length; index++) {
     const response = retained.responses[index]!;
     if (response.rawHash === initialResponse.rawHash && response.requestedUrl === initialResponse.requestedUrl && response.finalUrl === initialResponse.finalUrl) {
       retained.responses[index] = initialResponse;
     }
   }
-  const sourceReads = retained.responses.map(({ bytes: _bytes, ...read }) => read);
+  const sourceReads = (options.sourceSession ? [...options.sourceSession.responses.values()] : retained.responses).map(({ bytes: _bytes, ...read }) => read);
   const workerResponses = retained.responses.filter(response => {
     const url = new URL(response.finalUrl);
     return url.hostname === "webapi.legistar.com" && partitions.some(partition =>
       partition.meetingSource === "legistar" && url.pathname.toLowerCase() === `/v1/${partition.wiring?.config.slug}/events`);
   });
+  const fetched = source instanceof CompositeSource && partitions.length === 1 ? source.fetchedSourceReport(partitions[0]!.meetingSource) : null;
+  if (fetched && !fetched.ok) {
+    const partition = partitions[0]!, detail = fetched.error ?? "The source acquisition did not complete.";
+    measurement?.fail(detail);
+    if (dryRun || !promotionStore) return { measurement: measurement?.result() ?? null, partitions: [], succeeded: false, sourceSucceeded: false, exitCode: 2, sourceReads };
+    const candidate = failedMeetingAcquisitionCandidate({ sourceId: partition.sourceId, scope: partition.scope,
+      acquisitions: fetched.acquisitions, attemptedAt: new Date().toISOString(), failureDetail: detail });
+    const outcome = await processRegisteredMeetingPartitionCandidate(promotionStore, partition.id, candidate, new Date().toISOString());
+    printMeetingPartitionReceipt(partition, candidate, outcome, detail, "JOB");
+    return { measurement: measurement?.result() ?? null, partitions: [{ partition, candidate, outcome }], succeeded: false, sourceSucceeded: false, exitCode: 2, sourceReads };
+  }
+  if (promotionStore && partitions.length === 1 && options.sourceSession && options.sourceInputHash) {
+    const session = options.sourceSession, partition = partitions[0]!, query = options.facts?.db.query ?? factReader();
+    const compare = () => session.run(() => confirmAcquiredMeetingSource({ store: promotionStore, partition, session,
+      normalizationInputHash: options.sourceInputHash!, now: new Date().toISOString(), workRemains: plan => query
+        ? options.facts ? session.inputs(()=>meetingFactsAfterSourceCheck({facts:options.facts!.db,vault:options.facts!.vault,head:session.head,
+          observations:[...session.responses.values()],clocks:factClocks(null),at:new Date().toISOString(),meetingIds:plan.meetingIds,bodyIds:plan.bodyIds}))
+          : meetingFactWorkRemains(query, plan.meetingIds, plan.bodyIds, new Date().toISOString()) : Promise.resolve(true) }));
+    const confirmed = measurement ? await measurement.read(compare) : await compare();
+    if (confirmed) {
+      console.log("RCD_MEETING_PARTITION_RECEIPT=" + JSON.stringify({ source: partition.id, partitionId: partition.id, meetingSource: partition.meetingSource,
+        bodyId: partition.bodyId, scope: partition.scope, ...sourceHashReceiptFields(confirmed), failureDetail: null, structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+      await session.clear();
+      return { measurement: measurement?.result() ?? null, partitions: [], confirmations: [{ partition, confirmation: confirmed }], succeeded: true, sourceSucceeded: true,
+        exitCode: 0, sourceReads: [...session.responses.values()].map(({ bytes: _bytes, ...response }) => response) };
+    }
+  }
+  if (partitions.length === 1 && partitions[0]!.derivedFamily === null && !options.registry) {
+    const query = options.facts?.db.query ?? factReader();
+    if (!query) throw new Error("HELD_MEETING_READER_STORE_UNAVAILABLE");
+    options = { ...options, ...await readHeldMeetingInput(query, partitions[0]!) };
+  }
+  if (options.registry) REGISTRY = options.registry;
+  if (options.venues && options.ownerChoiceHash) {
+    const query = options.facts?.db.query ?? factReader();
+    if (!query) throw new Error("MEETING_VENUE_OWNER_INPUT_UNREADABLE");
+    options = { ...options, venues: await meetingVenueChoices(query, options.venues, options.ownerChoiceHash) };
+  }
+  const previous = options.previous !== undefined ? options.previous : source instanceof CompositeSource && promotionStore
+    ? await readPreviousMeetingPartition(promotionStore, partitions[0]!)
+    : null;
+  if (previous && partitions.length === 1 && previous.meetings.some(meeting => meeting.bodyId !== partitions[0]!.bodyId)) throw new Error("INGEST_PREVIOUS_NOT_ONE_BODY");
   const raw = retained.value;
+  const normalize = () => (source as MeetingSource<unknown>).normalize(raw as unknown[]);
+  const normalizedRows = options.venues ? withVenueEntries(options.venues, normalize) : normalize();
+  const normalized = options.sourceSession ? bindMeetingSourceObservations(normalizedRows,[...options.sourceSession.responses.values()]) : normalizedRows;
 
   const meetings: Meeting[] = resolveAttribution(
-    [...retainPreviouslyVerifiedVenuePoints((source as MeetingSource<unknown>).normalize(raw as unknown[]), previous?.meetings ?? [])]
+    [...retainPreviouslyVerifiedVenuePoints(normalized, previous?.meetings ?? [])]
       .map(meeting => {
         const prior = previous?.meetings.find(row => row.id === meeting.id);
         return prior?.location && meeting.location === prior.location ? { ...meeting,
@@ -970,8 +1266,9 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
       }
     }
 
-    const readAgendas = () => retrieveHeldAgendas(meetings, agendaStore, now);
+    const readAgendas = () => options.sourceSession ? options.sourceSession.run(() => retrieveHeldAgendas(meetings, agendaStore, now, true)) : retrieveHeldAgendas(meetings, agendaStore, now);
     const agendaRead = measurement ? await measurement.read(readAgendas) : await readAgendas();
+    if (options.sourceSession) bindAgendaSourceObservations(meetings, agendaStore, [...options.sourceSession.responses.values()]);
     const heldMeetingIds = new Set(agendaRead.heldMeetingIds);
     if (agendaRead.failed || agendaRead.failedExtractions || agendaRead.redirectsRefused) measurement?.fail(
       `Agenda reads: ${agendaRead.failed} failed requests, ${agendaRead.failedExtractions} failed extractions, ${agendaRead.redirectsRefused} refused redirects.`);
@@ -1024,17 +1321,21 @@ async function readMeetingSource(source: MeetingSource<unknown>, partitions: rea
       previous,
       promotionStore,
       partitions,
-      workerResponses,
-      retained.responses,
+      options.sourceSession ? [...options.sourceSession.responses.values()] : workerResponses,
+      options.sourceSession ? [...options.sourceSession.responses.values()] : retained.responses,
       agendaStore,
       options.facts,
       options.venues,
+      options.sourceSession && options.sourceInputHash ? { inputHash: options.sourceInputHash, responses: [...options.sourceSession.responses.values()],
+        complete: options.sourceSession.complete && agendaRead.failed === 0 && agendaRead.failedExtractions === 0 && agendaRead.redirectsRefused === 0,
+        acquisitionComplete: options.sourceSession.acquisitionComplete && agendaRead.failed === 0 && agendaRead.failedExtractions === 0 && agendaRead.redirectsRefused === 0 } : undefined,
     );
     for (const refusal of retained.refusals) console.error(refusal);
     for (const result of partitionResults) if (measurement) measureMeetingFields(measurement, result.partition, agendaPlaced.rows.filter(meeting => heldMeetingIds.has(meeting.id)), previous,
       agendaStore, agendaRead.readableMeetingIds, result.outcome.promoted !== null || result.outcome.confirmed !== undefined);
     const succeeded = partitionResults.every(result => result.outcome.promoted !== null || result.outcome.confirmed !== undefined);
     for (const result of partitionResults) if (!result.outcome.promoted && !result.outcome.confirmed) measurement?.fail(result.outcome.candidate.failureDetail ?? result.outcome.candidate.state);
+    if (succeeded && options.sourceSession?.acquisitionComplete && agendaRead.failed === 0 && agendaRead.failedExtractions === 0 && agendaRead.redirectsRefused === 0) await options.sourceSession.clear();
     return { measurement: measurement?.result() ?? null, partitions: partitionResults, succeeded, sourceSucceeded: succeeded, exitCode: succeeded ? 0 : 2, sourceReads };
   } else {
     const dropped = raw.length - meetings.length;
@@ -1093,9 +1394,13 @@ export async function readPreviousMeetingPartition(
   store: RoutineDataStore,
   partition: MeetingPartitionContract,
 ): Promise<MeetingsSnapshot | null> {
+  if(partition.derivedParentId&&partition.derivedFamily){
+    if(!store.readDerivedMeetingBody)throw new Error("DERIVED_MEETING_KEYED_STORE_UNAVAILABLE");
+    return (await store.readDerivedMeetingBody(partition.derivedFamily,partition.bodyId))?.snapshot??null;
+  }
   const read = await readMeetingPartitionProjection(partition, {
     store,
-    bypassCache: true,
+
   });
   if (read.kind === "PROMOTED") {
     console.log(`partition LKG base: ${partition.id} at ${read.metadata.versionId}`);
@@ -1450,6 +1755,8 @@ export async function promoteMeetingPartition(
   heldFacts: NonNullable<RoutineCandidate["excludedFacts"]> = [],
   idSuffix = "",
   sourceResponse?: Omit<RetainedSourceResponse, "bytes">,
+  sourcePlan?: MeetingSourcePlan,
+  facts?:Omit<MeetingFactsTarget,"responses">,
 ): Promise<{
   readonly candidate: RoutineCandidate;
   readonly outcome: PromotionOutcome;
@@ -1466,10 +1773,14 @@ export async function promoteMeetingPartition(
     retainedResponses,
   );
   // A second attempt on the same readings needs its own candidate id.
-  const candidate = idSuffix === "" ? built : { ...built, id: `${built.id}${idSuffix}` };
+  const planned = sourcePlan ? withMeetingSourceProbe(built, partition, sourcePlan.inputHash, sourcePlan.responses, sourcePlan.complete, sourcePlan.acquisitionComplete) : built;
+  const candidate = idSuffix === "" ? planned : { ...planned, id: `${planned.id}${idSuffix}` };
+  if(facts)await stageMeetingFactPublication({facts:facts.db,vault:facts.vault,scope:partition.scope,candidateId:candidate.id,
+    meetings:snapshot.meetings.filter(meeting=>!meeting.carried),responses:[...tracedResponses(snapshot.sources,retainedResponses),
+      ...retainedResponses.filter(response=>response.source==="census-geocoder")],geocodeAttempts:facts.geocodeAttempts});
   // An ordinary routine re-check that found nothing new is confirmed on the
   // pointed version, not republished.
-  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt, undefined, { confirmUnchanged: true });
+  const outcome = await processRegisteredMeetingPartitionCandidate(store, partition.id, candidate, snapshot.generatedAt, undefined, { confirmUnchanged: sourcePlan === undefined });
   return { candidate, outcome };
 }
 
@@ -1505,18 +1816,22 @@ export function printMeetingPartitionReceipt(
 
 /** The fresh sittings a promoted partition read become facts; a failure here never holds the partition. */
 async function publishPartitionFacts(facts: MeetingFactsTarget, label: string, source: string,
-  meetings: readonly Meeting[], acquisitions: Parameters<typeof tracedResponses>[0][number]["acquisitions"], producedBy: string, at: string): Promise<void> {
+  meetings: readonly Meeting[], acquisitions: Parameters<typeof tracedResponses>[0][number]["acquisitions"], producedBy: string, at: string,
+  scope=meetingPartitionContract(label)?.scope??label): Promise<void> {
   try {
     const responses = [...tracedResponses([{ source, acquisitions }], facts.responses),...facts.responses.filter(response=>response.source==="census-geocoder")];
-    const report = await publishReadMeetingFacts({ facts: facts.db, vault: facts.vault, meetings, responses, producedBy, clocks: factClocks(null), now: new Date(at) });
-    console.log(`  ${label}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.unsaved.length ? `; unsaved ${report.unsaved.join("; ")}` : ""}`);
+    // The native promoter stages before pointer movement; direct held-reader callers also retain their admitted work.
+    await stageMeetingFactPublication({facts:facts.db,vault:facts.vault,scope,candidateId:producedBy,meetings,responses,geocodeAttempts:facts.geocodeAttempts});
+    const report = await continueMeetingFactPublication({facts:facts.db,vault:facts.vault,candidateId:producedBy,meetings,observations:responses,clocks:factClocks(null),now:new Date(at)});
+    console.log(`  ${label}: facts ${report.live} new, ${report.confirmed} confirmed, ${report.blanks} blank${report.complete ? "" : "; remaining fields continue from the existing cursor"}`);
   } catch (error) {
     console.error(`MEETING_FACTS_FAILED ${label}: ${error instanceof Error ? error.message : String(error)}`);
   }
 }
 
 /** Where the sittings each door read become facts, on every response the read made. */
-interface MeetingFactsTarget { readonly db: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly responses: readonly RetainedSourceResponse[] }
+interface MeetingFactsTarget { readonly db: FactDb & { readonly query: Query }; readonly vault: EvidenceStore; readonly responses: readonly RetainedSourceResponse[];
+  readonly geocodeAttempts?: import("../lib/meetings/publish-pins.ts").PublishedPinResult["attempts"] }
 
 export interface MeetingPartitionPromotionResult {
   readonly partition: MeetingPartitionContract;
@@ -1532,6 +1847,7 @@ export async function promoteMeetingPartitions(input: {
   readonly reports: NonNullable<CompositeSource["lastReport"]>["children"];
   readonly generatedAt: string;
   readonly previousByContract?: ReadonlyMap<string, MeetingsSnapshot | null>;
+  readonly sourcePlan?: MeetingSourcePlan;
   readonly retainedResponses?: readonly RetainedSourceResponse[];
   readonly facts?: MeetingFactsTarget;
   readonly venues?: readonly VenueEntry[];
@@ -1542,18 +1858,20 @@ export async function promoteMeetingPartitions(input: {
   for (const partition of input.partitions) {
     const report = input.reports.find((candidate) => candidate.source === partition.meetingSource);
     if (!report || !report.ok) {
+      if (report && sourceReadDeferred(report.error)) {
+        console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: partition.id, detail: report.error })}`);
+        continue;
+      }
       const failureKind = report ? (report.failure ?? "WALL") : "JOB";
       const failureDetail = report?.error
         ? failureKind === "JOB" ? jobFailureDetail(report.error) : report.error
         : jobFailureDetail(`The composite produced no report for ${partition.meetingSource}.`);
-      const failed = failedAcquisitionCandidate({
+      const failed = failedMeetingAcquisitionCandidate({
         sourceId: MEETINGS_SOURCE_ID,
-        recordClass: MEETINGS_RECORD_CLASS,
         scope: partition.scope,
-        requestedUrl: report?.acquisitions?.[0]?.requestedUrl ?? "",
+        acquisitions: report?.acquisitions,
         attemptedAt: input.generatedAt,
         failureDetail,
-        parserVersion: "meetings-composite/2",
       });
       const outcome = await processRegisteredMeetingPartitionCandidate(input.store, partition.id, failed, input.generatedAt);
       printMeetingPartitionReceipt(partition, failed, outcome, failureDetail, failureKind);
@@ -1566,6 +1884,17 @@ export async function promoteMeetingPartitions(input: {
     );
     const freshRowIds = new Set(freshRows.map((meeting) => meeting.id));
     const freshDocuments = input.agendaDocuments.filter((document) => freshRowIds.has(document.meetingId));
+    if (freshRows.length === 0) {
+      // An empty read says nothing about meetings we already hold. Keep the pointer and revisit the route later.
+      // A body selecting nothing from a shared feed cannot defer the feed's other bodies.
+      if (report.accounting?.logicalInput === 0) {
+        for (const url of report.acquisitions?.map(row => row.requestedUrl) ?? []) await deferSourceRead(url, Date.parse(input.generatedAt) + 3_600_000);
+      }
+      console.log(`RCD_MEETING_PARTITION_DEFERRED=${JSON.stringify({ partitionId: partition.id,
+        detail: "The calendar returned no matching meetings; held meetings remain live and the source will be checked again.",
+        fetched: report.fetched, normalized: report.normalized, drops: report.drops, accounting: report.accounting })}`);
+      continue;
+    }
     const previous = input.previousByContract?.has(partition.id)
       ? input.previousByContract.get(partition.id) ?? null
       : await readPreviousMeetingPartition(input.store, partition);
@@ -1588,14 +1917,7 @@ export async function promoteMeetingPartitions(input: {
       const census = await placePublishedMeetingPins({meetings:reconciled.meetings,previous:restoredPrevious?.meetings,
         query:input.facts?.db.query,fetchImpl:input.venueFetch});
       for (const hold of census.held) console.warn(`MEETING_PIN_UNRESOLVED ${hold}`);
-      const scopeFailures = [
-        ...(partition.ocdId !== null && report.unreachableOcdIds?.includes(partition.ocdId)
-          ? [`${partition.meetingSource} reported ${partition.ocdId} unreachable.`]
-          : []),
-        ...(report.partialScopes ?? [])
-          .filter((failure) => failure.ocdIds.includes(partition.ocdId))
-          .map((failure) => `${failure.scope} incomplete: ${failure.cause}`),
-      ];
+      const incomplete = (report.partialScopes ?? []).filter(failure => failure.ocdIds.includes(partition.ocdId));
       const snapshot: MeetingsSnapshot = {
         formatVersion: 1,
         generatedAt: input.generatedAt,
@@ -1619,13 +1941,15 @@ export async function promoteMeetingPartitions(input: {
         input.store,
         partition,
         snapshot,
-        scopeFailures,
+        [],
         reconciled.removalEvidence,
-        [...input.retainedResponses??[],...census.responses],
-        recurrence.held,
+        [...input.retainedResponses??input.facts?.responses??[],...census.responses],
+        [...recurrence.held, ...incomplete.map(failure => ({ key: `${partition.id}:${failure.scope}`, code: "MEETING_SCOPE_UNREAD", detail: `${failure.scope}: ${failure.cause}` }))],
         idSuffix,
         tracedResponses([{ source: partition.meetingSource, acquisitions: report.acquisitions }], input.facts?.responses ?? input.retainedResponses ?? [])
           .sort((a, b) => a.retrievedAt.localeCompare(b.retrievedAt))[0],
+        input.sourcePlan,
+        input.facts,
       );
       return { reconciled, candidate, outcome, census };
     };
@@ -1645,7 +1969,7 @@ export async function promoteMeetingPartitions(input: {
       outcome.promoted ? null : outcome.candidate.failureDetail,
     );
     if (outcome.promoted || outcome.confirmed) {
-      if (input.facts) await publishPartitionFacts({...input.facts,responses:[...input.facts.responses,...attempted.census.responses]}, partition.id, partition.meetingSource, attempted.census.meetings.filter(meeting=>freshRowIds.has(meeting.id)), report.acquisitions ?? [], outcome.candidate.candidate.id, input.generatedAt);
+      if (input.facts) await publishPartitionFacts({...input.facts,responses:[...input.facts.responses,...attempted.census.responses],geocodeAttempts:attempted.census.attempts}, partition.id, partition.meetingSource, attempted.census.meetings.filter(meeting=>freshRowIds.has(meeting.id)), report.acquisitions ?? [], outcome.candidate.candidate.id, input.generatedAt);
     }
     results.push({ partition, candidate, outcome });
   }
@@ -1663,6 +1987,7 @@ async function promoteSelectedMeetingPartitions(
   agendaStore: AgendaDocumentStore = agendaDocumentStore,
   facts?: Omit<MeetingFactsTarget, "responses">,
   venues?: readonly VenueEntry[],
+  sourcePlan?: MeetingSourcePlan,
 ): Promise<readonly MeetingPartitionPromotionResult[]> {
   const report = source.lastReport;
   if (!report) {
@@ -1720,6 +2045,7 @@ async function promoteSelectedMeetingPartitions(
     previousByContract: new Map(partitions.map((partition) => [partition.id, previous])),
     retainedResponses,
     venues,
+    sourcePlan,
     facts: { ...(facts ?? { db: readerFactDb(), vault: new DurableEvidenceStore(join(process.cwd(), ...VAULT_DIR)) }), responses: readResponses },
   });
   const promotedCount = partitionResults.filter((result) => result.outcome.promoted !== null).length;

@@ -62,7 +62,7 @@ test("the census promotion wires the floor into its acquisition, not the reader-
   // The floor lives here, not in lib/sources/census-acs-population/index.ts,
   // because that adapter is bound by the reader closure receipt; the promotion
   // script is the one production caller of its fetch and is not reader-bound.
-  const promote = readFileSync("scripts/acs-population-promote.mts", "utf8");
+  const promote = readFileSync("lib/sources/census-acs-population/refresh.ts", "utf8");
   assert.match(promote, /acsTableTooShort\(/, "the census promotion must enforce the row floor on what it fetched");
   const adapter = readFileSync("lib/sources/census-acs-population/index.ts", "utf8");
   assert.doesNotMatch(adapter, /acsTableTooShort|bulk-completeness/, "the reader-bound adapter must stay byte-clean of the floor");

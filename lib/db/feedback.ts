@@ -9,7 +9,7 @@ import {
 import { scrubFreeText } from "../log/scrub.ts";
 import { randomUUID } from "node:crypto";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "./client.ts";
 import { drizzle } from "drizzle-orm/neon-http";
 import { and, desc, eq, gt } from "drizzle-orm";
 import * as schema from "./schema.ts";

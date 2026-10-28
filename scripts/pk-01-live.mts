@@ -2,7 +2,7 @@
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { US_JURISDICTIONS } from "../lib/coverage/states.ts";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { installPlaceMapQuery, readStateZipPlaces } from "../lib/place-map/reader.ts";
 import { readZipLocations } from "../lib/place-map/locations.ts";
 import { launchGuarded } from "./browser.mts";

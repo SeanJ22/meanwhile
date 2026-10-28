@@ -21,7 +21,7 @@ test("planner ownership reuses exact state reads and refuses unproved reviewed p
     clearRegistrationJurisdictionRegistries();
     await pg.close();
   });
-  for (const name of ["0025_typical_fixer", "0030_database_transfer_daily", "0031_civic_payload_parts", "0036_ne01"])
+  for (const name of ["0025_typical_fixer", "0030_database_transfer_daily", "0031_civic_payload_parts", "0036_ne01", "DB-05_keyed_rows", "DB-05_federal_money_rows", "DB-05_lookup_rows"])
     await pg.exec(readFileSync(`lib/db/migrations/${name}.sql`, "utf8"));
   const put = async (recordClass: string, scope: string, version: string, payload: unknown) => {
     const encoded = partitionCivicPayload(payload);
@@ -83,15 +83,15 @@ test("planner ownership reuses exact state reads and refuses unproved reviewed p
     return { reads, owner: plannerMeetingOwnership({ root: process.cwd(), reads, registryBodies }) };
   };
 
-  await t.test("registration, reviewed IDs and wiring are read once for the same state", async () => {
+  await t.test("fresh registration reads preserve the same reviewed IDs and wiring for the state", async () => {
     const { reads, owner } = makeOwner();
     const alreadyHeld = await reads.registration("NH");
     await owner.readStates(["NH", "nh"]);
     await owner.readStates(["nh"]);
-    assert.equal(await reads.registration("nh"), alreadyHeld);
+    assert.deepEqual(await reads.registration("nh"), alreadyHeld);
     assert.equal(calls.filter(params => params[0] === "nh").length, 1, "one RN-01 state read");
-    assert.equal(calls.filter(params => params[0] === "REGISTRATION:US-NH:registration:v1").length, 2,
-      "one registration header and one identity page, shared with ownership");
+    assert.equal(calls.filter(params => params[0] === "REGISTRATION:US-NH:registration:v1").length, 8,
+      "each registration read checks its current header and identity page");
     assert.equal(calls.filter(params => params[0] === "REGISTRY_RUNTIME_BINDING:US-NH:reader-registry-runtime").length, 1);
     assert.equal(calls.filter(params => params[0] === "CURATED_READER_RECORD:US:meeting-source-wiring").length, 1);
     assert.equal(owner.bodyIdFor!(belknap), belknapBody, "the omitted reviewed government gets its exact Census body");

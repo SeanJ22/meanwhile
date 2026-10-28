@@ -1,4 +1,4 @@
-import { setTimeout as delay } from "node:timers/promises";
+import { sourceFetch } from "../http.ts";
 import { FEDERAL_SOURCES, type FederalSourceId } from "./targets.ts";
 import { object, rows, string } from "./normalize.ts";
 import type { FederalCapture } from "./types.ts";
@@ -18,54 +18,44 @@ export interface FederalClientOptions {
   source: FederalSourceId;
   env?: Record<string, string | undefined>;
   fetchImpl?: typeof fetch;
-  sleep?: (ms: number) => Promise<unknown>;
   now?: () => string;
 }
 
-/** Provider quotas alone pace national APIs. No local-government request cap applies. */
+/** Provider quotas enter the shared host clock. No local-government request cap applies. */
 export function federalClient(options: FederalClientOptions) {
   const config = FEDERAL_SOURCES[options.source], env = options.env ?? process.env;
   const key = config.key ? env[config.key] : undefined;
-  const sleep = options.sleep ?? delay;
   const clock = options.now ?? (() => new Date().toISOString());
-  let nextAt = 0, pace: number = options.source === "senate-lda" && !key ? 4000 : config.paceMs;
+  let pace: number = options.source === "senate-lda" && !key ? 4000 : config.paceMs;
   async function get(urlValue: string, kind: FederalCapture["kind"], context?: FederalCapture["context"]): Promise<FederalCapture> {
     const url = publicFederalUrl(urlValue);
     if (!sourceUrlAllowed(options.source, url)) throw new Error(`Refused a page outside ${config.publisher}: ${url}`);
     if (config.key && !key && options.source !== "senate-lda") throw new Error(`${config.key} is unavailable in this workspace.`);
     const headers = new Headers({ Accept: kind === "bill-text" ? "text/plain, text/html" : "application/json", "User-Agent": `Meanwhile/1.0 (+${PUBLIC_SITE_ORIGIN})` });
     if (key) headers.set(options.source === "senate-lda" ? "Authorization" : "X-Api-Key", options.source === "senate-lda" ? `Token ${key}` : key);
-    for (let attempt = 0; ; attempt++) {
-      const wait = nextAt - Date.parse(clock());
-      if (wait > 0) await sleep(wait);
-      const response = await (options.fetchImpl ?? fetch)(url, { headers, signal: AbortSignal.timeout(30_000), redirect: "manual" });
-      nextAt = Date.parse(clock()) + pace;
-      const limit = Number(response.headers.get("x-ratelimit-limit"));
-      if (limit > 0 && Number.isFinite(limit) && options.source !== "senate-lda") pace = 3_600_000 / limit;
-      if (response.status === 429 || response.status >= 500) {
-        const retry = response.headers.get("retry-after"), seconds = retry === null ? NaN : Number(retry);
-        const waitMs = Number.isFinite(seconds) ? seconds * 1000 : retry ? Date.parse(retry) - Date.parse(clock()) : 1000 * 2 ** attempt;
-        if (attempt >= 2) throw new Error(`${url} answered HTTP ${response.status}; Retry-After: ${retry ?? "not supplied"}.`);
-        await response.body?.cancel();
-        nextAt = Date.parse(clock()) + Math.max(pace, waitMs);
-        continue;
-      }
-      if (!response.ok) {
-        let diagnostic = await response.text();
-        if (key) diagnostic = diagnostic.split(key).join("[redacted]");
-        throw new Error(`${url} answered HTTP ${response.status}: ${diagnostic.slice(0, 1000)}`);
-      }
-      let body = await response.text();
-      // Request metadata may echo a key. Saved evidence excludes only those secret values.
-      if (key) body = body.split(key).join("[redacted]");
-      if (!body.trim()) throw new Error(`${url} returned an empty source document.`);
-      return { source: options.source, kind, url, body, retrievedAt: clock(), ...(context ? { context } : {}) };
+    const response = await sourceFetch(url, { headers, signal: AbortSignal.timeout(30_000), redirect: "manual", minimumSpacingMs: pace }, options.fetchImpl);
+    const limit = Number(response.headers.get("x-ratelimit-limit"));
+    if (limit > 0 && Number.isFinite(limit) && options.source !== "senate-lda") pace = 3_600_000 / limit;
+    if (!response.ok) {
+      let diagnostic = await response.text();
+      if (key) diagnostic = diagnostic.split(key).join("[redacted]");
+      throw new Error(`${url} answered HTTP ${response.status}: ${diagnostic.slice(0, 1000)}`);
     }
+    let body = await response.text();
+    // Request metadata may echo a key. Saved evidence excludes only those secret values.
+    if (key) body = body.split(key).join("[redacted]");
+    if (!body.trim()) throw new Error(`${url} returned an empty source document.`);
+    return { source: options.source, kind, url, body, retrievedAt: clock(), ...(context ? { context } : {}) };
   }
   return { get };
 }
 
-export interface FederalPage { capture: FederalCapture; items: Record<string, unknown>[]; next: string | null; total: number }
+export interface RegulationPageWork { readonly from: string; readonly through: string; readonly url?: string }
+export interface FederalPage {
+  capture: FederalCapture; items: Record<string, unknown>[]; next: string | null; total: number;
+  /** Remaining date partitions and pages, after this page is published. */
+  continuation?: { readonly today: string; readonly pending: readonly RegulationPageWork[] };
+}
 export async function* federalPages(client: ReturnType<typeof federalClient>, source: FederalSourceId, start: string, kind: FederalCapture["kind"], context?: FederalCapture["context"]): AsyncGenerator<FederalPage> {
   const seen = new Set<string>();
   let url: string | null = publicFederalUrl(start);
@@ -93,24 +83,33 @@ export async function* federalPages(client: ReturnType<typeof federalClient>, so
 }
 
 /** Split document queries at the published 5,000-row limit; never clip page 20. */
-export async function* regulationPages(client: ReturnType<typeof federalClient>, today: string, from = "1900-01-01", through = today): AsyncGenerator<FederalPage> {
-  const u = new URL("https://api.regulations.gov/v4/documents");
-  u.searchParams.set("page[size]", "250"); u.searchParams.set("page[number]", "1");
-  u.searchParams.set("filter[documentType]", "Proposed Rule,Rule,Notice");
-  u.searchParams.set("filter[commentEndDate][ge]", today); u.searchParams.set("filter[postedDate][ge]", from); u.searchParams.set("filter[postedDate][le]", through);
-  u.searchParams.set("sort", "postedDate,documentId");
-  const pages = federalPages(client, "regulations-gov", u.href, "rules");
-  const first = await pages.next();
-  if (first.done) return;
-  if (first.value.total > 5000) {
-    await pages.return(undefined);
-    const lo = Date.parse(from), hi = Date.parse(through);
-    if (lo >= hi) throw new Error(`Regulations.gov reports ${first.value.total} documents on ${from}; date partition cannot prove complete pagination.`);
-    const middle = Math.floor((lo + hi) / 2 / 86_400_000) * 86_400_000;
-    yield* regulationPages(client, today, from, new Date(middle).toISOString().slice(0, 10));
-    yield* regulationPages(client, today, new Date(middle + 86_400_000).toISOString().slice(0, 10), through);
-    return;
+export async function* regulationPages(client: ReturnType<typeof federalClient>, today: string, from = "1900-01-01", through = today,
+  pending?: readonly RegulationPageWork[]): AsyncGenerator<FederalPage> {
+  const work: RegulationPageWork[] = pending?.length ? [...pending] : [{ from, through }];
+  while (work.length) {
+    const range = work.shift()!;
+    const u = new URL("https://api.regulations.gov/v4/documents");
+    u.searchParams.set("page[size]", "250"); u.searchParams.set("page[number]", "1");
+    u.searchParams.set("filter[documentType]", "Proposed Rule,Rule,Notice");
+    u.searchParams.set("filter[commentEndDate][ge]", today); u.searchParams.set("filter[postedDate][ge]", range.from); u.searchParams.set("filter[postedDate][le]", range.through);
+    u.searchParams.set("sort", "postedDate,documentId");
+    const pages = federalPages(client, "regulations-gov", range.url ?? u.href, "rules");
+    const first = await pages.next();
+    if (first.done) continue;
+    if (first.value.total > 5000) {
+      await pages.return(undefined);
+      const lo = Date.parse(range.from), hi = Date.parse(range.through);
+      if (lo >= hi) throw new Error(`Regulations.gov reports ${first.value.total} documents on ${range.from}; date partition cannot prove complete pagination.`);
+      const middle = Math.floor((lo + hi) / 2 / 86_400_000) * 86_400_000;
+      work.unshift({ from: range.from, through: new Date(middle).toISOString().slice(0, 10) },
+        { from: new Date(middle + 86_400_000).toISOString().slice(0, 10), through: range.through });
+      continue;
+    }
+    let selected: IteratorResult<FederalPage> = first;
+    while (!selected.done) {
+      const page = selected.value;
+      yield { ...page, continuation: { today, pending: [...(page.next ? [{ ...range, url: page.next }] : []), ...work] } };
+      selected = await pages.next();
+    }
   }
-  yield first.value;
-  for await (const page of pages) yield page;
 }

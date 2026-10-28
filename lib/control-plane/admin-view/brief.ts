@@ -13,11 +13,12 @@ import { fixQueueView } from "../fix-queue.ts";
 import { buildQueue, type QueueRow } from "../../../app/(admin)/_mw/admin-v6/queue.ts";
 import type { UiReceipt, StuckItem } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { listDoors } from "../../doors/registry.ts";
-import { projectDoors } from "./v6-doors-read.ts";
+import { readAdminDoors } from "./door-queries.ts";
+import { recordUndescribedCauses } from "./undescribed-causes.ts";
 import { scheduledView } from "./v6-scheduled-read.ts";
 import { plainWords } from "./plain-words.ts";
 import { TERMINAL_WORK_ITEM_STATES, type WorkItem } from "../work-item.ts";
+import { compactKeeperProblems, type BriefProblem } from "../../counts/problem-groups.ts";
 
 /** Unanswered organic Ask questions stay visible while their sourced answer is owed. */
 export async function readerQuestionRows(repos: Pick<ControlPlaneRepositories, "workItems">): Promise<readonly QueueRow[]> {
@@ -39,7 +40,7 @@ export interface BriefSnapshot {
   /** Hourly findings may arrive before the scheduled daily snapshot. */
   readonly lineKeeperOnly?:boolean;
   readonly updates: readonly UpdateLine[];
-  readonly problems: readonly {key:string;what:string;owner:string;next:string}[];
+  readonly problems: readonly BriefProblem[];
   readonly decisions: readonly {key:string;what:string;next:string}[];
   readonly alerts: readonly {key:string;what:string;next:string}[];
   readonly unread: readonly string[];
@@ -70,9 +71,9 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   const config=held?.value??defaultAdminConfig(at);const unread:string[]=[];
   const [history,stuck,reports,doors,questions]=await Promise.all([
     readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>{unread.push("orders");return null;}),
-    population().catch(()=>null).then(p=>{if(!p){unread.push("stuck cases");return null;}return stuckViews(p.rows,"us",at).items;}),
+    population().catch(()=>null).then(p=>{if(!p){unread.push("stuck cases");return null;}return stuckViews(p.rows,"us",at,[],p.summary).items;}),
     readReports(at).catch(()=>{unread.push("reader problems");return null;}),
-    listDoors(repos.doors).then(d=>{if(d.unreadable)unread.push("some doors");const view=projectDoors({...d,saves:[],observedAt:at});if(view.counts.shut>view.rows.filter(r=>r.status==="Shut").length)unread.push("shut doors outside the current page");return view.rows.filter(r=>r.status==="Shut");}).catch(()=>{unread.push("doors");return null;}),
+    readAdminDoors(repos,[],at).then(view=>{if(view.counts.unreadable)unread.push("some doors");if(view.counts.shut>view.rows.filter(r=>r.status==="Shut").length)unread.push("shut doors outside the current page");return view.rows.filter(r=>r.status==="Shut");}).catch(()=>{unread.push("doors");return null;}),
     readerQuestionRows(repos).catch(()=>{unread.push("unanswered reader questions");return [];}),
   ]);
   if(history?.page.nextCursor)unread.push("older orders outside the current page");
@@ -82,11 +83,12 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   if(reports?.sites.some(s=>s.kind==="READ"&&s.total>s.rows.length))unread.push("older reader problems outside the current page");
   const projected=projectBrief(config,[...rows,...(reports?readerProblemRows(reports):[]),...questions],at,unread);
   const keeperFixKeys=new Set(fixItems(config).filter(f=>f.addedBy==='The line keeper').map(f=>`fix:${f.id}`));
-  const keeperProblems=config.latestBrief?.problems.filter(p=>p.key.startsWith('line-keeper:'))??[];
+  const keeperProblems=compactKeeperProblems(config.latestBrief?.problems.filter(p=>p.key.startsWith('line-keeper:'))??[]);
   const fresh={...projected,problems:[...projected.problems.filter(p=>!keeperFixKeys.has(p.key)),...keeperProblems]};
 
-  return {fresh,latest:config.latestBrief??null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
+  return {fresh,latest:config.latestBrief?compactBrief(config.latestBrief):null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
 }
+export const compactBrief=(brief:BriefSnapshot):BriefSnapshot=>({...brief,problems:compactKeeperProblems(brief.problems)});
 function dailySnapshotSaved(config:AdminConfig,day:string):boolean{
  const saved=config.latestBrief;return !!saved&&(saved.day>day||saved.day===day&&saved.lineKeeperOnly!==true);
 }
@@ -97,6 +99,8 @@ export async function writeDailyBrief(repos:ControlPlaneRepositories,at:string,r
   const time=readSetting<string>(held.value,BRIEF_TIME_SETTING,"");
   if(!time||clock.time<time||dailySnapshotSaved(held.value,clock.day))return false;
   const snapshot=(await read(repos,at)).fresh;
+ if(read===readBrief){const held=await population().catch(()=>null);if(held)await recordUndescribedCauses(repos,
+   held.summary?held.summary.groups.map(group=>group.sample):held.rows,at).catch(()=>undefined);}
   for(let n=0;n<4;n++){
     const latest=await repos.adminConfig.read(ADMIN_CONFIG_ID);if(!latest||!isAdminConfig(latest.value)||dailySnapshotSaved(latest.value,clock.day))return false;
     const currentTime=readSetting<string>(latest.value,BRIEF_TIME_SETTING,"");if(!currentTime||clock.time<currentTime)return false;

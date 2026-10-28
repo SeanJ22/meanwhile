@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * The cheap half of a two-step loop: the page polls this pulse and asks for a fresh render only when the
  * revision differs. Host and session are enforced; there is no origin check because a cross-site reader
@@ -36,7 +37,7 @@ function unreadPulse(at: string): LivePulse {
   };
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({
     headers: request.headers,
     cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
@@ -58,3 +59,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     headers: { "cache-control": "no-store, no-cache, must-revalidate" },
   });
 }
+
+export const GET = adminRead(get);

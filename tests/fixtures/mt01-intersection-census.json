@@ -1,0 +1,42 @@
+{
+  "result": {
+    "input": {
+      "address": {
+        "address": "Jackson Park \u2013 Pickle Ball Courts, S. 43rd St. and Kinnickinnic River Parkway, Milwaukee, WI 53215"
+      },
+      "benchmark": {
+        "isDefault": true,
+        "benchmarkDescription": "Public Address Ranges - Current Benchmark",
+        "id": "4",
+        "benchmarkName": "Public_AR_Current"
+      }
+    },
+    "addressMatches": [
+      {
+        "tigerLine": {
+          "side": "",
+          "tigerLineId": ""
+        },
+        "coordinates": {
+          "x": -87.967808021712,
+          "y": 42.995655990398
+        },
+        "addressComponents": {
+          "zip": "53219",
+          "streetName": "",
+          "preType": "",
+          "city": "MILWAUKEE",
+          "preDirection": "",
+          "suffixDirection": "",
+          "fromAddress": "",
+          "state": "WI",
+          "suffixType": "",
+          "toAddress": "",
+          "suffixQualifier": "",
+          "preQualifier": ""
+        },
+        "matchedAddress": "S 43RD ST & W KINNICKINNIC RIVER PKWY, MILWAUKEE, WI, 53219"
+      }
+    ]
+  }
+}

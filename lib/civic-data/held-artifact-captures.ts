@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlyQuery } from "../reader/database.ts";
 import { crosswalkEvidenceWorkItem, findHeldCapture, indexVault, READ_ONLY_VAULT_PROJECT, type HeldVaultArtifact } from "../control-plane/evidence/read-only-vault.ts";
 import type { ArtifactRecord } from "../control-plane/repository/types.ts";
 
@@ -7,10 +7,10 @@ import type { ArtifactRecord } from "../control-plane/repository/types.ts";
  * a lookup; each record still has to match its original sidecar. */
 export async function heldArtifactCaptures(root: string, artifactIds: readonly string[], controlPlane: string) {
   const ids = [...new Set(artifactIds)];
-  const rows = ids.length === 0 ? [] : await neon(controlPlane).query(
-    `SELECT record FROM cp_log_artifacts WHERE record->>'artifactId' = ANY($1::text[])
-     ORDER BY record->>'recordedAt' DESC, log_key, position DESC`, [ids],
-  ) as { record: ArtifactRecord | string }[];
+  const rows = ids.length === 0 ? [] : (await databaseReadOnlyQuery(controlPlane)([{
+    text: `SELECT record FROM cp_log_artifacts WHERE record->>'artifactId' = ANY($1::text[])
+     ORDER BY record->>'recordedAt' DESC, log_key, position DESC`, params: [ids],
+  }]))[0] as { record: ArtifactRecord | string }[];
   return heldArtifactCaptureLookup(root, rows.map(row => typeof row.record === "string" ? JSON.parse(row.record) as ArtifactRecord : row.record));
 }
 

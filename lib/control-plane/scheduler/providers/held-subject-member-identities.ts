@@ -1,20 +1,20 @@
 import { ensureEntity } from "../../../facts/entities.ts";
 import { nameKey } from "../../../facts/roster-facts.ts";
 import type { FactDb, Query } from "../../../facts/publish.ts";
+import { enqueueReaderPlaces } from "../../../reader/cache.ts";
 
 export interface HeldMemberIdentity { readonly id: string; readonly name: string; readonly personId: string }
 
 /** Exact body identities only. Contacts, biographies and the remainder of the state's registry stay in Postgres. */
 export const HELD_MEMBER_IDENTITIES_SQL = `WITH runtime AS MATERIALIZED (
-    SELECT reader_payload_node(payload) value FROM civic_data_promotions
+    SELECT key,current_version_id FROM civic_data_promotions
       WHERE key='REGISTRY_RUNTIME_BINDING:US-'||$1||':reader-registry-runtime'
   ), native AS (
-    SELECT reader_payload_node(m.item) member FROM runtime root,
-      LATERAL reader_payload_members(root.value->'bodyRosters') r,
-      LATERAL reader_payload_members(reader_payload_node(r.item)->'members') m
-      WHERE reader_payload_node(r.item)->>'bodyId'=$2 AND EXISTS (
-        SELECT 1 FROM reader_payload_members(reader_payload_node(root.value->'registry')->'bodies') b
-          WHERE reader_payload_node(b.item)->>'id'=$2)
+    SELECT reader_payload_node(r.value->'member') member FROM runtime p JOIN civic_data_rows r
+      ON r.promotion_key=p.key AND r.version_id=p.current_version_id
+      WHERE r.collection='registry.rosterMembers' AND r.body_id=$2 AND EXISTS (
+        SELECT 1 FROM civic_data_rows b WHERE b.promotion_key=p.key AND b.version_id=p.current_version_id
+          AND b.collection='registry.bodies' AND b.row_id=$2)
   ) SELECT member->>'id' id,member->>'name' name,coalesce(nullif(member->>'personId',''),member->>'id') person_id FROM native
     UNION ALL SELECT coalesce((SELECT x.value FROM entity_external_id x
       WHERE x.entity_id=substr(f.field,8) AND x.scheme='roster-member' LIMIT 1),
@@ -53,9 +53,10 @@ export async function bindHeldMemberIdentity(db: FactDb, input: { readonly ident
       if ((await read(query)).some(row => row.entity_id !== identity.personId)) return false;
       await ensureEntity(query, { id: identity.personId, kind: "person", name: identity.name, state, parentId: bodyId });
       if ((await query("SELECT kind FROM entity WHERE id=$1", [identity.personId]))[0]?.kind !== "person") return false;
-      await query(`INSERT INTO entity_external_id (entity_id,scheme,value)
-        SELECT $1,* FROM unnest($2::text[],$3::text[]) ON CONFLICT (scheme,value) DO NOTHING`, [identity.personId, schemes, values]);
+      const aliases = await query(`INSERT INTO entity_external_id (entity_id,scheme,value)
+        SELECT $1,* FROM unnest($2::text[],$3::text[]) ON CONFLICT (scheme,value) DO NOTHING RETURNING entity_id`, [identity.personId, schemes, values]);
       if ((await read(query)).some(row => row.entity_id !== identity.personId)) throw new Error("HELD_MEMBER_IDENTITY_CONFLICT");
+      if (aliases.length) await enqueueReaderPlaces({ entities: [identity.personId, bodyId] }, query);
       return true;
     });
   } catch (error) {

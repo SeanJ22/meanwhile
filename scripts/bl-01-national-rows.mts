@@ -25,7 +25,7 @@ const selected=process.argv.find(arg=>arg.startsWith('--state='))?.slice(8);
 assert.ok(!selected || REGISTRY_STATES.includes(selected as typeof REGISTRY_STATES[number]));
 for(const state of selected?[selected]:REGISTRY_STATES){
  try{
-  const read=await readPromotedCivicData<GenericBallotProjection>('BALLOT_CANDIDACY',stateBallotScope('ballot-contests',state),{store,bypassCache:true});
+  const read=await readPromotedCivicData<GenericBallotProjection>('BALLOT_CANDIDACY',stateBallotScope('ballot-contests',state),{store});
   assert.equal(read.kind,'PROMOTED',`${state}: real promoted ballot read`);if(read.kind!=='PROMOTED')continue;
   const ballots=Object.values(read.value.ballots),contests=ballots.flatMap(b=>b.contests);
   const held=await store.readCandidateProof(read.metadata.versionId!);assert.ok(held?.candidate.retrieval.manualSourceReceipt,`${state}: published candidate lacks its manual source receipt`);

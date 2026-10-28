@@ -3,29 +3,40 @@
  * River: the one path code takes from the build streams to `main`.
  *
  * Builders push `stream/<lane>` and mark finished work with a `READY: <step ids>`
- * commit. River folds those exact commits into `river-next`, numbers any
- * step-named migrations, runs `pnpm gates` once on the combination, fast-forwards
- * `river` to the tested SHA, and ships `river` to `main` through one
- * `release/<n>` pull request. A READY whose message does not state that the
- * work is connected end to end and still works on the next scheduled run is
- * refused and returned, never folded. Every decision a fresh session needs to resume is
- * kept on `board/river` (`integration.json`, `releases/<n>.json`) or in
+ * commit after the full suite and `pnpm lint` pass on current river. River folds
+ * those exact commits into `river-next`, merges `main` in, numbers any
+ * step-named migrations and runs only the quick check: the fold is clean, the
+ * migrations are numbered, and `pnpm lint` and the type check pass. It then opens
+ * one `release/<n>` pull request from that commit with the `run-full-ci` label
+ * and auto-merge on, so GitHub CI runs the one full test. `settle` moves `river`
+ * to the release commit only after GitHub CI passes, so lanes always cut from
+ * fully tested code. When CI fails, `settle` reads which tests failed, returns
+ * the lane that caused them, folds again without it and opens the next release.
+ * A READY whose message does not state that the work is connected end to end and
+ * still works on the next scheduled run is refused and returned, never folded.
+ * Every decision a fresh session needs to resume is kept on `board/river`
+ * (`integration.json`, `releases/<n>.json`, `returns/<lane>.md`) or in
  * `.scratch/river/`, so the same inputs always give the same fold.
  *
  *   node scripts/river.mjs scan                          what is ready, as JSON
  *   node scripts/river.mjs fold [--lanes a,b] [--order dep|a,b,...]
  *   node scripts/river.mjs migrations                    number step-named migrations on river-next
- *   node scripts/river.mjs test [--heartbeat --token T]  pnpm gates on river-next
- *   node scripts/river.mjs promote                       fast-forward river to the tested SHA
+ *   node scripts/river.mjs check                         the quick check on river-next
+ *   node scripts/river.mjs release <n> [--dry-run]       quick check, then release/<n> PR: run-full-ci, auto-merge
+ *   node scripts/river.mjs settle <n> [--ci pass|fail --log-file F --lanes a,b]   act on GitHub CI's verdict
  *   node scripts/river.mjs return <lane> --check C [--output-file F]   send a failure back (returns/<lane>.md)
- *   node scripts/river.mjs release <n> [--dry-run]       one release/<n> PR to main
- *   node scripts/river.mjs release --check-main          did main move after river was tested?
  *   node scripts/river.mjs lock claim|heartbeat|release --branch B --file F --token T [--worker W --run-id R]
  *   node scripts/river.mjs observe <sha> [--dry-run]     one post-deploy reading per deployed SHA
  *
+ * A release, in order: `fold`, `migrations`, `release <n>`, then `settle <n>`
+ * once GitHub CI has finished. `fold` leaves out a lane whose open return names
+ * the same READY, unless `--lanes` names it.
+ *
  * GitHub API calls use GITHUB_TOKEN or GH_TOKEN over REST. Without a token, or
  * when the call fails, the command prints `ACTION NEEDED:` with the exact request
- * so the session can make it with its own GitHub tool, and exits 0.
+ * so the session can make it with its own GitHub tool, and exits 0. `settle`
+ * then takes the verdict by hand: `--ci pass`, or `--ci fail --log-file F` with
+ * the failed jobs' logs (and `--lanes` when River names the cause itself).
  *
  * Pushes are always normal fast-forwards. A rejected push refetches and decides
  * again; nothing here force-pushes. Lock and board writes are built with git
@@ -35,11 +46,13 @@
  * 3 lock held by a live owner, 4 lock ownership changed.
  */
 
-import { execFileSync, spawn, spawnSync } from "node:child_process";
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { execFileSync, spawnSync } from "node:child_process";
+import { existsSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, posix, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+
+import { REQUIRED_CONTEXTS } from "../lib/ops/required-contexts.ts";
 
 /* -------------------------------------------------------------------------- */
 /* Constants                                                                  */
@@ -48,11 +61,18 @@ import { fileURLToPath } from "node:url";
 /** A heartbeat younger than this keeps a lock (briefs/common.md, startup step 4). */
 export const STALE_LOCK_MS = 45 * 60 * 1000;
 
-/** Variables cloud sessions set that CI does not; `test` removes them. */
-export const CI_ABSENT_ENV = ["DATABASE_URL", "WTP_ASSET_STORE"];
+/**
+ * The label that makes a ready pull request's CI the full test as soon as it
+ * is opened (`lib/ops/pull-request-ci-tier.ts`); without it, or auto-merge, the
+ * run waits with lint and types only.
+ */
+export const FULL_CI_LABEL = "run-full-ci";
 
-/** How often `test --heartbeat` refreshes River's lock while gates run. */
-const HEARTBEAT_EVERY_MS = 10 * 60 * 1000;
+/** River's quick check after the fold: `pnpm <args>` for each. */
+export const QUICK_CHECKS = Object.freeze([
+  { id: "lint", args: ["lint"] },
+  { id: "types", args: ["exec", "tsc", "--noEmit"] },
+]);
 
 /**
  * Default fold order: lanes that others build on go first (measures owns what a
@@ -235,20 +255,113 @@ export function decideLock({ mode, fields, token, now }) {
 }
 
 /**
- * The integration entries a new release carries: everything recorded after the
- * previous release's `integration_count`, and their step ids in order.
- * @param {{ lane: string, steps: string[] }[]} integration
- * @param {{ n: number, integration_count: number }[]} releases
+ * Whether a lane's open return on the board holds back this READY: the return
+ * is still `returned` and names the same READY commit. A new READY, or a
+ * cleared return, folds again.
+ * @param {string | null} text `returns/<lane>.md`
+ * @param {string} readySha
  */
-export function releaseContents(integration, releases) {
-  const previous = releases.reduce((last, release) => (release.n > (last?.n ?? -Infinity) ? release : last), null);
-  const from = previous ? previous.integration_count : 0;
-  const entries = integration.slice(from);
+export function returnHolds(text, readySha) {
+  if (!text) return false;
+  const fields = parseStatus(text);
+  const named = (fields.ready ?? "").split(/\s+/).at(-1) ?? "";
+  return fields.state === "returned" && /^[0-9a-f]{7,40}$/.test(named) && readySha.startsWith(named);
+}
+
+/**
+ * What stops river-next's migrations from shipping as they are: a migration
+ * this fold added that is still named by step, a journal entry out of sequence
+ * or out of time order, or a journal entry and a file that do not name each
+ * other. Step-named migrations river already shipped keep their names.
+ * @param {{ files: string[], added: string[], journal: { idx: number, when: number, tag: string }[] }} input
+ */
+export function migrationProblems({ files, added, journal }) {
+  const problems = [];
+  const sql = files.filter((name) => name.endsWith(".sql"));
+  for (const name of added.filter((file) => isStepNamed(file) && sql.includes(file))) problems.push(`${name} is still named by step; run migrations`);
+  const tags = new Set(journal.map((entry) => entry.tag));
+  journal.forEach((entry, i) => {
+    if (entry.idx !== i) problems.push(`journal entry ${entry.tag} has idx ${entry.idx}, expected ${i}`);
+    if (i > 0 && !(entry.when > journal[i - 1].when)) problems.push(`journal entry ${entry.tag} is not later than ${journal[i - 1].tag}`);
+    if (!sql.includes(`${entry.tag}.sql`)) problems.push(`journal entry ${entry.tag} has no ${entry.tag}.sql`);
+  });
+  for (const name of sql) {
+    if (!tags.has(name.slice(0, -4))) problems.push(`${name} has no journal entry`);
+  }
+  return problems;
+}
+
+/** A job that ran and failed. A cancelled job is left out: it is a run a newer one replaced. */
+const RED = new Set(["failure", "timed_out", "action_required", "startup_failure", "stale"]);
+
+/**
+ * GitHub CI's verdict on a release head, from its check runs. Only the newest
+ * run of each name counts (a newer workflow run replaces an older one). The
+ * verdict waits until every required check has finished, then passes only when
+ * each one succeeded (a cancelled or skipped required check is not a pass).
+ * Every failed job is named so its log can be read.
+ * @param {{ id: number, name: string, status: string, conclusion: string | null }[]} runs
+ * @param {readonly string[]} [required]
+ * @returns {{ state: "pending" | "pass" | "fail", waiting: string[], failed: { id: number, name: string, conclusion: string | null }[] }}
+ */
+export function decideCi(runs, required = REQUIRED_CONTEXTS) {
+  const latest = new Map();
+  for (const run of runs) if (!latest.has(run.name) || latest.get(run.name).id < run.id) latest.set(run.name, run);
+  const failed = [...latest.values()]
+    .filter((run) => run.status === "completed" && RED.has(run.conclusion ?? ""))
+    .map((run) => ({ id: run.id, name: run.name, conclusion: run.conclusion }))
+    .sort((a, b) => (a.name < b.name ? -1 : a.name > b.name ? 1 : 0));
+  const waiting = required.filter((name) => latest.get(name)?.status !== "completed");
+  if (waiting.length) return { state: "pending", waiting, failed };
+  return { state: required.every((name) => latest.get(name).conclusion === "success") ? "pass" : "fail", waiting, failed };
+}
+
+const FAILING_AT = /^\s*test at (?:.*\/)?((?:tests|lib\/sources\/platform-adapters)\/.+?\.test\.tsx?):\d+:\d+\s*$/;
+
+/**
+ * The failing tests a CI job log names, from the spec reporter's
+ * `✖ failing tests:` list (`test at <file>:<line>:<col>`, then `✖ <name>`).
+ * GitHub's timestamp prefixes and absolute checkout paths are dropped.
+ * @param {string} log
+ * @returns {{ file: string, name: string }[]}
+ */
+export function failingTests(log) {
+  const lines = log.replace(/\r\n/g, "\n").split("\n").map((line) => line.replace(/^\d{4}-\d{2}-\d{2}T[\d:.]+Z ?/, ""));
+  const found = new Map();
+  lines.forEach((line, i) => {
+    const file = FAILING_AT.exec(line)?.[1];
+    if (!file) return;
+    const named = lines.slice(i + 1, i + 4).find((next) => /^\s*✖ /.test(next));
+    const name = named ? named.trim().replace(/^✖ /, "").replace(/ \([\d.]+m?s\)$/, "") : file;
+    found.set(`${file}\0${name}`, { file, name });
+  });
+  return [...found.values()].sort((a, b) => (a.file < b.file ? -1 : a.file > b.file ? 1 : a.name < b.name ? -1 : 1));
+}
+
+/**
+ * Which folded lane caused each failing test file. A lane that changed the
+ * test file itself is its cause; otherwise every lane whose change reaches the
+ * test is a suspect (`reaches` gives the test files a lane's change reaches, or
+ * "all"). A test with exactly one suspect returns that lane. A test with none
+ * (it fails on river's own code) or several is left for River to judge.
+ * @param {{ tests: string[], lanes: { lane: string, changed: string[] }[], reaches: (lane: { lane: string, changed: string[] }) => Set<string> | "all" }} input
+ */
+export function blameLanes({ tests, lanes, reaches }) {
+  const reached = new Map();
+  const reach = (lane) => {
+    if (!reached.has(lane.lane)) reached.set(lane.lane, reaches(lane));
+    const set = reached.get(lane.lane);
+    return set === "all" ? () => true : (file) => set.has(file);
+  };
+  const byTest = [...new Set(tests)].map((file) => {
+    const direct = lanes.filter((lane) => lane.changed.includes(file));
+    const suspects = (direct.length ? direct : lanes.filter((lane) => reach(lane)(file))).map((lane) => lane.lane);
+    return { file, suspects };
+  });
   return {
-    from,
-    entries,
-    steps: [...new Set(entries.flatMap((entry) => entry.steps))],
-    lanes: [...new Set(entries.map((entry) => entry.lane))],
+    byTest,
+    returned: [...new Set(byTest.filter((entry) => entry.suspects.length === 1).map((entry) => entry.suspects[0]))],
+    unresolved: byTest.filter((entry) => entry.suspects.length !== 1),
   };
 }
 
@@ -585,11 +698,16 @@ async function fold(flags) {
     console.log(`river fold: REFUSED ${lane.lane} ${short(sha)}: lacks ${missing.join("; ")}`);
     await recordReturn({ lane: lane.lane, check: "connection proofs", output, readySha: sha, steps, riverSha: plan.river });
   }
-  const ready = offered.filter((lane) => !refused.includes(lane));
+  // A READY River already returned stays out until its lane posts a new one.
+  const held = offered.filter((lane) => !refused.includes(lane) && !wanted?.has(lane.lane)
+    && returnHolds(readAt(remoteRef(BOARD), `returns/${lane.lane}.md`), lane.ready.ready_sha));
+  for (const lane of held) console.log(`river fold: HELD ${lane.lane} ${short(lane.ready.ready_sha)}: returns/${lane.lane}.md is open for this READY`);
+  const ready = offered.filter((lane) => !refused.includes(lane) && !held.includes(lane));
   const order = foldOrder(ready.map((lane) => lane.lane), flags.order);
   const record = {
-    base_river_sha: plan.river, folded_at: nowIso(), order, lanes: [], head: plan.river, conflict: null,
+    base_river_sha: plan.river, folded_at: nowIso(), order, lanes: [], head: plan.river, conflict: null, main_sha: null,
     refused: refused.map((lane) => ({ lane: lane.lane, ready_sha: lane.ready.ready_sha, missing: lane.ready.missing_proofs })),
+    held: held.map((lane) => ({ lane: lane.lane, ready_sha: lane.ready.ready_sha })),
   };
   if (!order.length) {
     writeScratch("fold.json", record);
@@ -633,9 +751,26 @@ async function fold(flags) {
     record.lanes.push({ lane: name, steps, ready_sha: sha, result_sha: result });
     console.log(`river fold: ${name} ${short(sha)} → ${short(result)} (${steps.join(", ")})`);
   }
+  // The release head carries main, so the pull request is up to date with its
+  // base and the commit CI tests is the commit river moves to.
+  if (fetchBranches(["main"]).has("main")) {
+    const main = git(["rev-parse", "--verify", remoteRef("main")]);
+    if (!ok(["merge-base", "--is-ancestor", main, "HEAD"])) {
+      const merged = gitTry(["merge", "--no-ff", "--no-edit", "-m", `River: merge main ${short(main)} into river-next`, main]);
+      if (!merged.ok) {
+        git(["merge", "--abort"], { allowFail: true });
+        record.conflict = { lane: "main", ready_sha: main, steps: [] };
+        record.head = git(["rev-parse", "HEAD"]);
+        writeScratch("fold.json", record);
+        throw new Refusal(`fold stopped: main ${short(main)} conflicts with river-next; merge aborted at ${short(record.head)}. Resolve by hand.`);
+      }
+      record.main_sha = main;
+      console.log(`river fold: merged main ${short(main)}`);
+    }
+  }
   record.head = git(["rev-parse", "HEAD"]);
   writeScratch("fold.json", record);
-  console.log(`river fold: river-next ${short(record.head)} from river ${short(plan.river)}; next: migrations, then test`);
+  console.log(`river fold: river-next ${short(record.head)} from river ${short(plan.river)}; next: migrations, then release <n>`);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -685,7 +820,7 @@ function migrations() {
   writeFileSync(join(ROOT, JOURNAL), `${JSON.stringify({ ...journal, entries: plan.journal }, null, 2)}\n`.replace(/\n/g, eol), "utf8");
   git(["add", JOURNAL]);
   git(["commit", "--quiet", "--no-verify", "-m", `River: number migrations ${plan.renames.map((r) => r.to.slice(0, 4)).join(", ")}\n\n${plan.renames.map((r) => `${r.from} -> ${r.to}`).join("\n")}`]);
-  console.log(`river migrations: committed ${short(git(["rev-parse", "HEAD"]))}; run test next.`);
+  console.log(`river migrations: committed ${short(git(["rev-parse", "HEAD"]))}; run release <n> next.`);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -712,85 +847,55 @@ export function lock(mode, { branch, file, token, worker, runId }) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* test                                                                       */
+/* check                                                                      */
 /* -------------------------------------------------------------------------- */
 
-async function test(flags) {
+/**
+ * The quick check on river-next before it is released: the fold finished and
+ * river-next carries river, every folded lane and main; the migrations are
+ * numbered; `pnpm lint` and the type check pass. No suite and no build: GitHub
+ * CI on the release pull request is the one full test.
+ * @param {{ commands?: boolean }} [options] false checks the fold and migrations only
+ */
+function quickCheck({ commands = true } = {}) {
   requireClean();
   if (git(["rev-parse", "--abbrev-ref", "HEAD"]) !== NEXT) throw new Refusal(`check out ${NEXT} first`);
-  if (flags.heartbeat && !flags.token) throw new Refusal("--heartbeat needs --token", 2);
-  const sha = git(["rev-parse", "HEAD"]);
-  // `pnpm gates` when pnpm is on PATH: gates.mjs warns that a corepack shim can
-  // make its nested pnpm calls refuse on the version guard.
-  const [command, ...args] = whichPnpm() ? ["pnpm", "gates"] : ["corepack", "pnpm", "gates"];
-  const startedAt = nowIso();
-  console.log(`river test: ${command} ${args.join(" ")} on ${short(sha)}`);
-  // Output is passed through as it runs and its tail kept, so a failure can be
-  // returned to the lane that wrote it with the lines that show it.
-  // Gates run as CI runs them. Cloud sessions export a real DATABASE_URL and
-  // asset store that CI does not have; with them set, store-reading tests try
-  // the network and fail as STORE_UNREACHABLE. The postinstall projection is
-  // ignored by git, so a fresh worktree needs it rebuilt before tests read it.
-  const env = { ...process.env };
-  for (const name of CI_ABSENT_ENV) delete env[name];
-  // A previous gates run leaves its untracked run record behind, and the
-  // visible-tree gate then fails on a file this fold never made.
-  for (const path of (git(["ls-files", "--others", "--exclude-standard", "data/ops/gate-runs"], { allowFail: true }) ?? "").split("\n").filter(Boolean)) {
-    rmSync(join(ROOT, path), { force: true });
+  const folded = readScratch("fold.json");
+  if (!folded?.lanes?.length) throw new Refusal("no fold.json with folded lanes; run fold first");
+  if (folded.conflict) throw new Refusal(`the fold stopped on ${folded.conflict.lane}; fold again first`);
+  const head = git(["rev-parse", "HEAD"]);
+  for (const sha of [folded.base_river_sha, ...folded.lanes.map((lane) => lane.result_sha)]) {
+    if (!ok(["merge-base", "--is-ancestor", sha, head])) throw new Refusal(`river-next ${short(head)} does not carry ${short(sha)} from the fold; fold again`);
   }
-  // A stale .next from an earlier build feeds tsc route types that may no longer exist.
-  rmSync(join(ROOT, ".next"), { recursive: true, force: true });
-  const projection = spawnSync(process.execPath, ["--experimental-strip-types", "scripts/project-place-references.mts"], { cwd: ROOT, env, encoding: "utf8" });
-  if (projection.status !== 0) throw new Refusal(`place-reference generation failed: ${projection.error?.message ?? projection.stderr ?? "no diagnostic"}`, 2);
-  const child = spawn(command, args, { cwd: ROOT, env, stdio: ["inherit", "pipe", "pipe"], shell: process.platform === "win32" });
-  const tail = [];
-  const keep = (sink) => (chunk) => {
-    sink.write(chunk);
-    tail.push(...`${chunk}`.split("\n"));
-    if (tail.length > 2000) tail.splice(0, tail.length - 2000);
-  };
-  child.stdout.on("data", keep(process.stdout));
-  child.stderr.on("data", keep(process.stderr));
-  let abandoned = null;
-  const timer = flags.heartbeat ? setInterval(() => {
-    try {
-      lock("heartbeat", { branch: flags.branch ?? BOARD, file: flags.file ?? "status.md", token: flags.token });
-    } catch (error) {
-      abandoned = error.message;
-      console.error(`river test: ${error.message}; stopping gates`);
-      child.kill();
-    }
-  }, HEARTBEAT_EVERY_MS) : null;
-  const exit = await new Promise((done) => child.on("close", (code) => done(code ?? 1)));
-  if (timer) clearInterval(timer);
-  const result = {
-    sha,
-    tree: git(["rev-parse", "HEAD^{tree}"]),
-    gates: abandoned ? "abandoned" : exit === 0 ? "pass" : "fail",
-    exit,
-    command: [command, ...args].join(" "),
-    started_at: startedAt,
-    finished_at: nowIso(),
-    ...(abandoned ? { reason: abandoned } : {}),
-  };
-  writeScratch("test.json", result);
-  console.log(`river test: gates ${result.gates} on ${short(sha)} (recorded in .scratch/river/test.json)`);
-  if (result.gates === "fail") {
-    const output = tail.join("\n");
-    mkdirSync(SCRATCH, { recursive: true });
-    writeFileSync(join(SCRATCH, "test-output.txt"), `${output}\n`, "utf8");
-    const folded = readScratch("fold.json");
-    const lanes = folded?.lanes ?? [];
-    const only = lanes.length === 1 ? lanes[0] : null;
-    if (only?.lane.startsWith("adapter-")) {
-      // A fold of one adapter stream: the failure is that stream's.
-      await recordReturn({ lane: only.lane, check: "gates", output, readySha: only.ready_sha, steps: only.steps, riverSha: folded.base_river_sha });
-    } else if (lanes.some((lane) => lane.lane.startsWith("adapter-"))) {
-      console.log("river test: an adapter stream is in this fold. Isolate it with `fold --lanes adapter-<kind>` and test again (a failure is then returned to it),");
-      console.log("  or return it directly: river.mjs return adapter-<kind> --check gates --output-file .scratch/river/test-output.txt");
+  if (fetchBranches(["main"]).has("main")) {
+    const main = git(["rev-parse", "--verify", remoteRef("main")]);
+    if (!ok(["merge-base", "--is-ancestor", main, head])) throw new Refusal(`main moved since the fold (${short(main)} is not in river-next); fold again`);
+  }
+  const dir = join(ROOT, MIGRATIONS_DIR);
+  const files = existsSync(dir) ? readdirSync(dir) : [];
+  const journal = existsSync(join(ROOT, JOURNAL)) ? JSON.parse(readFileSync(join(ROOT, JOURNAL), "utf8")).entries : [];
+  const added = git(["diff", "--name-only", "--no-renames", "--diff-filter=A", `${folded.base_river_sha}...${head}`, "--", `${MIGRATIONS_DIR}/*.sql`])
+    .split("\n").filter(Boolean).map((path) => posix.basename(path));
+  const problems = migrationProblems({ files, added, journal });
+  if (problems.length) {
+    for (const problem of problems) console.error(`  - ${problem}`);
+    throw new Refusal("river-next's migrations are not ready to ship");
+  }
+  if (commands) {
+    const [command, prefix] = whichPnpm() ? ["pnpm", []] : ["corepack", ["pnpm"]];
+    // A stale .next feeds tsc route types that may no longer exist, and a warm
+    // incremental build can skip a just-written file; CI checks types on a fresh checkout.
+    rmSync(join(ROOT, ".next"), { recursive: true, force: true });
+    rmSync(join(ROOT, "tsconfig.tsbuildinfo"), { force: true });
+    const env = { ...process.env, NODE_OPTIONS: process.env.NODE_OPTIONS || "--max-old-space-size=8192" };
+    for (const check of QUICK_CHECKS) {
+      console.log(`river check: ${command} ${[...prefix, ...check.args].join(" ")} on ${short(head)}`);
+      const run = spawnSync(command, [...prefix, ...check.args], { cwd: ROOT, env, stdio: "inherit", shell: process.platform === "win32" });
+      if (run.status !== 0) throw new Refusal(`${check.id} failed on river-next ${short(head)}; fix it in the fold or return the lane that broke it`);
     }
   }
-  if (result.gates !== "pass") throw new Refusal(`gates ${result.gates}; isolate the failing lane before promoting`);
+  console.log(`river check: river-next ${short(head)} folds clean with numbered migrations${commands ? "; lint and types pass" : ""}`);
+  return { folded, head };
 }
 
 function whichPnpm() {
@@ -800,57 +905,6 @@ function whichPnpm() {
   } catch {
     return false;
   }
-}
-
-/* -------------------------------------------------------------------------- */
-/* promote                                                                    */
-/* -------------------------------------------------------------------------- */
-
-function promote() {
-  const folded = readScratch("fold.json");
-  const tested = readScratch("test.json");
-  if (!folded?.lanes?.length) throw new Refusal("nothing folded; nothing to promote");
-  if (folded.conflict) throw new Refusal(`the fold stopped on ${folded.conflict.lane}; fold again before promoting`);
-  const head = git(["rev-parse", "--verify", NEXT]);
-  if (!tested || tested.gates !== "pass" || tested.sha !== head) {
-    throw new Refusal(`gates have not passed on river-next ${short(head)} (test.json: ${tested ? `${tested.gates} on ${short(tested.sha)}` : "absent"})`);
-  }
-  fetchBranches([RIVER]);
-  const river = git(["rev-parse", "--verify", remoteRef(RIVER)]);
-  if (river !== folded.base_river_sha) throw new Refusal(`river moved since the fold (${short(folded.base_river_sha)} → ${short(river)}); fold again`);
-  if (!ok(["merge-base", "--is-ancestor", river, head])) throw new Refusal("river-next does not contain river; fold again");
-  if (!ok(["push", "--quiet", "origin", `${head}:refs/heads/${RIVER}`])) throw new Refusal("river rejected the fast-forward; fold again");
-  console.log(`river promote: river ${short(river)} → ${short(head)}`);
-  const at = nowIso();
-  const entries = folded.lanes.map((lane) => ({
-    lane: lane.lane, steps: lane.steps, ready_sha: lane.ready_sha, merge_sha: lane.result_sha,
-    river_sha: head, tested_sha: tested.sha, gates: "pass", at,
-  }));
-  commitToBranch(BOARD, (tip) => {
-    const integration = readJson(tip, "integration.json", []);
-    const fresh = entries.filter((entry) => !integration.some((old) => old.lane === entry.lane && old.ready_sha === entry.ready_sha));
-    if (!fresh.length) return null;
-    const markdown = (readAt(tip, "integration.md") ?? "# Integration record").replace(/\n\(none yet\)\n?/, "\n").trimEnd();
-    const separator = /\n- [^\n]*$/.test(markdown) ? "\n" : "\n\n";
-    const lines = fresh.map((entry) => `- ${entry.at} · ${entry.lane} · ${entry.steps.join(", ")} · ready ${short(entry.ready_sha)} · river ${short(entry.river_sha)} · pnpm gates pass on ${short(entry.tested_sha)}`);
-    // An adapter stream's open return is cleared by the integration that repairs it.
-    const cleared = {};
-    for (const entry of fresh) {
-      const open = entry.lane.startsWith("adapter-") ? readAt(tip, `returns/${entry.lane}.md`) : null;
-      if (open !== null && parseStatus(open).state === "returned") {
-        cleared[`returns/${entry.lane}.md`] = `${setStatusFields(open, { state: `cleared: integrated ready ${entry.ready_sha} on river ${entry.river_sha}` })}\n`;
-      }
-    }
-    return {
-      files: {
-        "integration.json": `${JSON.stringify([...integration, ...fresh], null, 2)}\n`,
-        "integration.md": `${markdown}${separator}${lines.join("\n")}\n`,
-        ...cleared,
-      },
-      message: `integration: ${fresh.map((entry) => `${entry.lane} ${entry.steps.join(",")}`).join("; ")} on river ${short(head)}`,
-    };
-  });
-  console.log(`river promote: recorded ${entries.length} lane(s) on ${BOARD}`);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -902,68 +956,34 @@ async function returnCommand(lane, flags) {
 /* release                                                                    */
 /* -------------------------------------------------------------------------- */
 
-function releaseRecords(ref) {
-  const names = git(["ls-tree", "--name-only", `${ref}:releases`], { allowFail: true }) ?? "";
-  return names.split("\n").filter((name) => /^\d+\.json$/.test(name)).map((name) => readJson(ref, `releases/${name}`, null)).filter(Boolean);
-}
-
 /**
- * Whether river's tip carries only tested code: it is the tested SHA, it is
- * main (a river restarted from main after a release), or its tree is the
- * tested SHA's tree byte for byte (main merged in after gates, changing no file).
+ * Open release/<n> from river-next after the quick check: push the branch,
+ * open the pull request into main, put `run-full-ci` on it at once and turn
+ * auto-merge on, so its first CI run is the full test. Record it on the board
+ * for `settle`.
  */
-export function riverIsTested({ tested, river, main, treeOf }) {
-  if (tested === river || river === main) return true;
-  if (!tested) return false;
-  const testedTree = treeOf(tested);
-  return testedTree !== null && testedTree === treeOf(river);
-}
-
-/** Main must be inside the river that was tested, or the river is tested again first. */
-function checkMain() {
-  fetchBranches(["main", RIVER, BOARD]);
-  const main = git(["rev-parse", "--verify", remoteRef("main")]);
-  const river = git(["rev-parse", "--verify", remoteRef(RIVER)]);
-  const integration = readJson(remoteRef(BOARD), "integration.json", []);
-  const tested = integration.length ? integration[integration.length - 1].tested_sha : null;
-  const mainInRiver = ok(["merge-base", "--is-ancestor", main, river]);
-  const treeOf = (sha) => git(["rev-parse", `${sha}^{tree}`], { allowFail: true });
-  return { main, river, tested, main_in_river: mainInRiver, river_is_tested: riverIsTested({ tested, river, main, treeOf }) };
-}
-
 async function release(n, flags) {
-  if (flags["check-main"]) {
-    const state = checkMain();
-    console.log(JSON.stringify(state, null, 2));
-    if (!state.main_in_river) throw new Refusal("main moved after river was tested: fold main into river-next, run gates, promote, then release");
-    if (!state.river_is_tested) throw new Refusal("river's tip is not the last tested SHA on the board");
-    console.log("river release --check-main: main is inside the tested river.");
-    return;
-  }
-  if (!/^\d+$/.test(n ?? "")) throw new Refusal("usage: river.mjs release <n> | --check-main", 2);
-  const state = checkMain();
-  if (!state.main_in_river) throw new Refusal("main moved after river was tested; integrate main and test again first");
-  if (!state.river_is_tested) throw new Refusal(`river ${short(state.river)} is not the last tested SHA (${state.tested ? short(state.tested) : "none"})`);
-  const releases = releaseRecords(remoteRef(BOARD));
-  const integration = readJson(remoteRef(BOARD), "integration.json", []);
-  const existing = releases.find((record) => record.n === Number(n));
-  if (existing && existing.river_sha !== state.river) throw new Refusal(`release ${n} already records river ${short(existing.river_sha)}`);
-  const fresh = releaseContents(integration, releases.filter((record) => record.n !== Number(n)));
-  const contents = existing
-    ? { steps: existing.steps, lanes: existing.lanes, from: existing.integration_from, count: existing.integration_count }
-    : { ...fresh, count: fresh.from + fresh.entries.length };
-  if (!contents.steps.length) throw new Refusal("no integrated steps since the last release; no release PR");
+  if (!/^\d+$/.test(n ?? "")) throw new Refusal("usage: river.mjs release <n> [--dry-run]", 2);
+  const { folded, head } = quickCheck({ commands: !flags["dry-run"] });
+  fetchBranches([BOARD]);
+  const existing = readJson(remoteRef(BOARD), `releases/${n}.json`, null);
+  if (existing && existing.head_sha !== head) throw new Refusal(`release ${n} is already recorded at ${short(existing.head_sha ?? existing.river_sha ?? "unknown")}`);
+  const steps = [...new Set(folded.lanes.flatMap((lane) => lane.steps))];
+  const lanes = folded.lanes.map((lane) => lane.lane);
+  if (!steps.length) throw new Refusal("the fold carries no step ids; no release PR");
 
   const repo = repoSlug();
   const branch = `release/${n}`;
-  const title = `Release ${n}: ${contents.steps.length} step${contents.steps.length === 1 ? "" : "s"} from river`;
+  const title = `Release ${n}: ${steps.length} step${steps.length === 1 ? "" : "s"} from river`;
   const body = [
-    `River release ${n}. Tested river SHA \`${state.river}\` (pnpm gates passed on that exact SHA).`,
+    `River release ${n}: river-next \`${head}\`, river \`${folded.base_river_sha}\` with these READY commits folded${folded.main_sha ? " and main merged in" : ""}.`,
     "",
-    `Lanes: ${contents.lanes.join(", ")}`,
+    `Lanes: ${lanes.join(", ")}`,
     "",
     "Steps:",
-    ...contents.steps.map((step) => `- ${step}`),
+    ...steps.map((step) => `- ${step}`),
+    "",
+    `GitHub CI on this pull request is the full test of this exact commit (\`${FULL_CI_LABEL}\`, auto-merge). River moves \`river\` here only after it passes.`,
     "",
     "Built by `scripts/river.mjs release`. Data never rides the river; this carries code only.",
   ].join("\n");
@@ -972,34 +992,41 @@ async function release(n, flags) {
   const open = await github("GET", `repos/${repo}/pulls?state=open&base=main&per_page=100`);
   if (open.ok) {
     const rival = open.body.find((pr) => pr.head.ref.startsWith("release/") && pr.head.ref !== branch);
-    if (rival) throw new Refusal(`#${rival.number} from ${rival.head.ref} is still open; close it or merge it before release ${n}`);
+    if (rival) throw new Refusal(`#${rival.number} from ${rival.head.ref} is still open; settle or close it before release ${n}`);
   }
   if (flags["dry-run"]) {
-    console.log(JSON.stringify({ branch, river: state.river, title, body, steps: contents.steps }, null, 2));
+    console.log(JSON.stringify({ branch, head, title, body, steps, label: FULL_CI_LABEL }, null, 2));
     return;
   }
 
   const remote = git(["ls-remote", "--heads", "origin", `refs/heads/${branch}`]).split("\t")[0];
-  if (remote && remote !== state.river) throw new Refusal(`${branch} already exists at ${short(remote)}`);
-  if (!remote && !ok(["push", "--quiet", "origin", `${state.river}:refs/heads/${branch}`])) throw new Refusal(`could not push ${branch}`);
+  if (remote && remote !== head) throw new Refusal(`${branch} already exists at ${short(remote)}`);
+  if (!remote && !ok(["push", "--quiet", "origin", `${head}:refs/heads/${branch}`])) throw new Refusal(`could not push ${branch}`);
 
-  let pr = null;
   const create = { title, head: branch, base: "main", body };
-  if (!open.ok) {
-    actionNeeded(`confirm no other release/* PR is open into main, then create the release PR`, "POST", `repos/${repo}/pulls`, create,
-      `listing open PRs failed (${open.status}: ${typeof open.body === "string" ? open.body : open.body?.message})`);
-  } else {
+  const labels = { labels: [FULL_CI_LABEL] };
+  const autoMerge = "mutation($id: ID!) { enablePullRequestAutoMerge(input: { pullRequestId: $id, mergeMethod: MERGE }) { clientMutationId } }";
+  let pr = null;
+  if (open.ok) {
     const mine = open.body.find((candidate) => candidate.head.ref === branch);
     const made = mine ? { ok: true, body: mine } : await github("POST", `repos/${repo}/pulls`, create);
     if (made.ok) pr = made.body;
     else actionNeeded("create the release PR", "POST", `repos/${repo}/pulls`, create, `${made.status}: ${made.body?.message ?? made.body}`);
+  } else {
+    actionNeeded(`confirm no other release/* PR is open into main, then create the release PR`, "POST", `repos/${repo}/pulls`, create,
+      `listing open PRs failed (${open.status}: ${typeof open.body === "string" ? open.body : open.body?.message})`);
   }
-  if (pr) {
+  if (!pr) {
+    actionNeeded(`right after creating it, label the new PR ${FULL_CI_LABEL} (without it the first CI run waits and skips the tests)`, "POST", `repos/${repo}/issues/<new PR number>/labels`, labels);
+    actionNeeded("then enable auto-merge (merge commit) on it", "POST", "graphql", { query: autoMerge, variables: { id: "<new PR node_id>" } });
+  } else {
     console.log(`river release: PR #${pr.number} ${pr.html_url}`);
-    const query = "mutation($id: ID!) { enablePullRequestAutoMerge(input: { pullRequestId: $id, mergeMethod: MERGE }) { clientMutationId } }";
-    const auto = await github("POST", "graphql", { query, variables: { id: pr.node_id } });
+    const labelled = await github("POST", `repos/${repo}/issues/${pr.number}/labels`, labels);
+    if (labelled.ok) console.log(`river release: ${FULL_CI_LABEL} on #${pr.number}`);
+    else actionNeeded(`label #${pr.number} ${FULL_CI_LABEL} now`, "POST", `repos/${repo}/issues/${pr.number}/labels`, labels, `${labelled.status}: ${labelled.body?.message ?? labelled.body}`);
+    const auto = await github("POST", "graphql", { query: autoMerge, variables: { id: pr.node_id } });
     if (!auto.ok || auto.body?.errors) {
-      actionNeeded(`enable auto-merge (merge commit) on #${pr.number}`, "POST", "graphql", { query, variables: { id: pr.node_id } },
+      actionNeeded(`enable auto-merge (merge commit) on #${pr.number}`, "POST", "graphql", { query: autoMerge, variables: { id: pr.node_id } },
         `${auto.status}: ${JSON.stringify(auto.body?.errors ?? auto.body)}`);
     } else {
       console.log(`river release: auto-merge enabled on #${pr.number}`);
@@ -1007,16 +1034,195 @@ async function release(n, flags) {
   }
 
   commitToBranch(BOARD, (tip) => {
-    const record = {
-      n: Number(n), branch, river_sha: state.river, tested_sha: state.tested, steps: contents.steps, lanes: contents.lanes,
-      integration_from: contents.from, integration_count: contents.count,
-      pr: pr ? { number: pr.number, url: pr.html_url } : null, at: nowIso(),
-    };
     const old = readJson(tip, `releases/${n}.json`, null);
-    if (old && old.pr && !record.pr) return null;
-    return { files: { [`releases/${n}.json`]: `${JSON.stringify(record, null, 2)}\n` }, message: `release ${n}: ${contents.steps.length} steps at river ${short(state.river)}` };
+    if (old && old.pr && !pr) return null;
+    const record = {
+      n: Number(n), branch, head_sha: head, base_river_sha: folded.base_river_sha, main_sha: folded.main_sha ?? null,
+      lanes: folded.lanes.map((lane) => ({ lane: lane.lane, steps: lane.steps, ready_sha: lane.ready_sha, result_sha: lane.result_sha })),
+      steps, pr: pr ? { number: pr.number, url: pr.html_url } : old?.pr ?? null, ci: "running", at: nowIso(),
+    };
+    return { files: { [`releases/${n}.json`]: `${JSON.stringify(record, null, 2)}\n` }, message: `release ${n}: ${steps.length} steps at river-next ${short(head)}; GitHub CI running` };
   });
-  console.log(`river release: recorded releases/${n}.json on ${BOARD}`);
+  console.log(`river release: recorded releases/${n}.json on ${BOARD}; when GitHub CI finishes: node scripts/river.mjs settle ${n}`);
+}
+
+/* -------------------------------------------------------------------------- */
+/* settle                                                                     */
+/* -------------------------------------------------------------------------- */
+
+/**
+ * Act on GitHub CI's verdict for release/<n>. Pass: fast-forward river to the
+ * release commit and record the integration. Fail: name the failing tests,
+ * return the lane that caused them, close the pull request, fold again without
+ * that lane and open release <n+1>. Still running: say so and change nothing.
+ */
+async function settle(n, flags) {
+  const usage = "usage: river.mjs settle <n> [--ci pass | --ci fail --log-file F [--lanes a,b]]";
+  if (!/^\d+$/.test(n ?? "") || (flags.ci !== undefined && !["pass", "fail"].includes(flags.ci))) throw new Refusal(usage, 2);
+  if (flags.ci === "fail" && typeof flags["log-file"] !== "string") throw new Refusal(usage, 2);
+  const branch = `release/${n}`;
+  fetchBranches([RIVER, BOARD, branch]);
+  const record = readJson(remoteRef(BOARD), `releases/${n}.json`, null);
+  if (!record?.head_sha) throw new Refusal(`${BOARD} has no releases/${n}.json with a head_sha; open it with river.mjs release ${n}`);
+  if (record.ci === "pass" || record.ci === "fail") {
+    console.log(`river settle: release ${n} is already settled (${record.ci})`);
+    return;
+  }
+  const head = record.head_sha;
+  const repo = repoSlug();
+  if (flags.ci === "pass") return settlePass(n, record);
+  if (flags.ci === "fail") {
+    return settleFail(n, record, { failed: [], log: readFileSync(resolve(ROOT, flags["log-file"]), "utf8"), lanes: flags.lanes, repo });
+  }
+  const checksPath = `repos/${repo}/commits/${head}/check-runs?filter=latest&per_page=100`;
+  const listed = await github("GET", checksPath);
+  if (!listed.ok) {
+    actionNeeded(`read GitHub CI on ${branch} ${short(head)}; the required checks are ${REQUIRED_CONTEXTS.join(", ")}`, "GET", checksPath, undefined,
+      listed.status ? `${listed.status}` : listed.body);
+    console.log(`  all of them succeeded: node scripts/river.mjs settle ${n} --ci pass`);
+    console.log(`  any failed: save the failed jobs' logs to one file, then: node scripts/river.mjs settle ${n} --ci fail --log-file <file>`);
+    return;
+  }
+  const verdict = decideCi(listed.body.check_runs ?? []);
+  if (verdict.state === "pending") {
+    console.log(`river settle: GitHub CI is still running on ${branch} ${short(head)} (${verdict.waiting.join(", ")}); river stays where it is`);
+    return;
+  }
+  if (verdict.state === "pass") return settlePass(n, record);
+  const logs = [];
+  for (const job of verdict.failed) {
+    const logPath = `repos/${repo}/actions/jobs/${job.id}/logs`;
+    const got = await github("GET", logPath);
+    if (got.ok && typeof got.body === "string") logs.push(got.body);
+    else actionNeeded(`read the log of failed job ${job.name}`, "GET", logPath, undefined, `${got.status}: ${got.body?.message ?? got.body}`);
+  }
+  return settleFail(n, record, { failed: verdict.failed, log: logs.join("\n"), lanes: flags.lanes, repo });
+}
+
+function settlePass(n, record) {
+  const head = record.head_sha;
+  fetchBranches([RIVER]);
+  const river = git(["rev-parse", "--verify", remoteRef(RIVER)]);
+  if (river !== head) {
+    if (!ok(["merge-base", "--is-ancestor", river, head])) throw new Refusal(`river ${short(river)} is not inside release/${n} ${short(head)}; it cannot fast-forward`);
+    if (!ok(["push", "--quiet", "origin", `${head}:refs/heads/${RIVER}`])) throw new Refusal("river rejected the fast-forward; settle again");
+  }
+  console.log(`river settle: GitHub CI passed on release/${n}; river ${short(river)} → ${short(head)}`);
+  const at = nowIso();
+  const entries = record.lanes.map((lane) => ({
+    lane: lane.lane, steps: lane.steps, ready_sha: lane.ready_sha, merge_sha: lane.result_sha, river_sha: head, release: Number(n), ci: "pass", at,
+  }));
+  commitToBranch(BOARD, (tip) => {
+    const integration = readJson(tip, "integration.json", []);
+    const fresh = entries.filter((entry) => !integration.some((old) => old.lane === entry.lane && old.ready_sha === entry.ready_sha));
+    const markdown = (readAt(tip, "integration.md") ?? "# Integration record").replace(/\n\(none yet\)\n?/, "\n").trimEnd();
+    const separator = /\n- [^\n]*$/.test(markdown) ? "\n" : "\n\n";
+    const lines = fresh.map((entry) => `- ${entry.at} · ${entry.lane} · ${entry.steps.join(", ")} · ready ${short(entry.ready_sha)} · river ${short(entry.river_sha)} · GitHub CI passed on release ${n}`);
+    // A lane's open return is cleared by the integration that repairs it.
+    const cleared = {};
+    for (const entry of fresh) {
+      const open = readAt(tip, `returns/${entry.lane}.md`);
+      if (open !== null && parseStatus(open).state === "returned") {
+        cleared[`returns/${entry.lane}.md`] = `${setStatusFields(open, { state: `cleared: integrated ready ${entry.ready_sha} on river ${entry.river_sha}` })}\n`;
+      }
+    }
+    return {
+      files: {
+        ...(fresh.length ? { "integration.json": `${JSON.stringify([...integration, ...fresh], null, 2)}\n`, "integration.md": `${markdown}${separator}${lines.join("\n")}\n` } : {}),
+        [`releases/${n}.json`]: `${JSON.stringify({ ...record, ci: "pass", settled_at: at }, null, 2)}\n`,
+        ...cleared,
+      },
+      message: `release ${n}: GitHub CI passed; river ${short(head)}${fresh.length ? `; integration: ${fresh.map((entry) => `${entry.lane} ${entry.steps.join(",")}`).join("; ")}` : ""}`,
+    };
+  });
+  console.log(`river settle: recorded ${entries.length} lane(s) on ${BOARD}`);
+}
+
+/** The test files each folded lane's change reaches, by the import graph CI selects tests with. */
+async function laneReach() {
+  const { selectTests } = await import("./ci-affected-tests.mjs");
+  const { discoverTests } = await import("./ci-tests.mjs");
+  const { filesThatWouldBeCommitted } = await import("../lib/ops/repo-files.ts");
+  const tracked = filesThatWouldBeCommitted({ cwd: ROOT });
+  const tests = discoverTests(ROOT);
+  const texts = new Map();
+  const readText = (path) => {
+    if (!texts.has(path)) texts.set(path, readFileSync(join(ROOT, path), "utf8"));
+    return texts.get(path);
+  };
+  return (lane) => {
+    const plan = selectTests({ changed: lane.changed, tracked, tests, readText });
+    return plan.plan === "full" ? "all" : new Set(plan.files);
+  };
+}
+
+async function settleFail(n, record, { failed, log, lanes: named, repo }) {
+  const head = record.head_sha;
+  const tests = failingTests(log);
+  console.log(`river settle: GitHub CI FAILED on release/${n} ${short(head)}${failed.length ? ` (${failed.map((job) => job.name).join(", ")})` : ""}`);
+  for (const failure of tests) console.log(`  ✖ ${failure.file} — ${failure.name}`);
+  /** @type {{ byTest: { file: string, suspects: string[] }[], returned: string[], unresolved: { file: string, suspects: string[] }[] }} */
+  let blame = { byTest: [], returned: [], unresolved: [] };
+  if (typeof named === "string") {
+    const names = named.split(",").map((lane) => lane.trim()).filter(Boolean);
+    const unknown = names.filter((lane) => !record.lanes.some((entry) => entry.lane === lane));
+    if (!names.length || unknown.length) throw new Refusal(`--lanes must name lanes in release ${n} (${record.lanes.map((lane) => lane.lane).join(", ")})`, 2);
+    blame.returned = names;
+  } else if (tests.length) {
+    // Read the import graph at the release commit itself.
+    requireClean();
+    git(["checkout", "--quiet", "-B", NEXT, head]);
+    const lanes = record.lanes.map((lane) => ({
+      lane: lane.lane,
+      changed: git(["diff", "--name-only", "--no-renames", `${record.base_river_sha}...${lane.ready_sha}`]).split("\n").filter((path) => path && !path.startsWith(".factory/")),
+    }));
+    blame = blameLanes({ tests: tests.map((failure) => failure.file), lanes, reaches: await laneReach() });
+  }
+  for (const entry of blame.unresolved) {
+    console.log(`  not attributed: ${entry.file} (${entry.suspects.length ? `reached by ${entry.suspects.join(", ")}` : "reached by no folded lane"})`);
+  }
+  if (!blame.returned.length) {
+    console.log(`ACTION NEEDED: no folded lane is the single cause of the CI failure on release/${n}; the PR stays open and river stays where it is.`);
+    console.log("  Read the failed jobs. A test that never ran means the run was not the full tier: label the PR run-full-ci and settle again.");
+    console.log(`  A flaky or infrastructure failure: re-run the failed jobs and settle again. A lane's fault: node scripts/river.mjs settle ${n} --ci fail --log-file <file> --lanes <lane>`);
+    return;
+  }
+  for (const name of blame.returned) {
+    const lane = record.lanes.find((entry) => entry.lane === name);
+    const mine = new Set(blame.byTest.filter((entry) => entry.suspects.length === 1 && entry.suspects[0] === name).map((entry) => entry.file));
+    const output = [
+      `GitHub CI failed on release/${n} (${head}).${mine.size ? " Failing tests this lane's change reaches:" : ""}`,
+      ...tests.filter((failure) => mine.has(failure.file)).map((failure) => `✖ ${failure.file} — ${failure.name}`),
+      ...(mine.size ? [] : [log.trim().split("\n").slice(-40).join("\n")]),
+      "",
+      "Fix on your stream, run the full suite and pnpm lint on current river, and post a new READY.",
+    ].join("\n");
+    await recordReturn({ lane: name, check: "GitHub CI", output, readySha: lane.ready_sha, steps: lane.steps, riverSha: record.base_river_sha });
+  }
+  if (record.pr?.number) {
+    const closed = await github("PATCH", `repos/${repo}/pulls/${record.pr.number}`, { state: "closed" });
+    if (closed.ok) console.log(`river settle: closed #${record.pr.number}`);
+    else actionNeeded(`close #${record.pr.number} (release/${n} failed CI)`, "PATCH", `repos/${repo}/pulls/${record.pr.number}`, { state: "closed" }, `${closed.status}: ${closed.body?.message ?? closed.body}`);
+  } else {
+    actionNeeded(`close the release/${n} pull request (it failed CI)`, "PATCH", `repos/${repo}/pulls/<release/${n} PR number>`, { state: "closed" });
+  }
+  commitToBranch(BOARD, (tip) => {
+    const current = readJson(tip, `releases/${n}.json`, record);
+    if (current.ci === "fail") return null;
+    const settled = { ...current, ci: "fail", failed_jobs: failed.map((job) => job.name), failed_tests: tests, returned: blame.returned, settled_at: nowIso() };
+    return { files: { [`releases/${n}.json`]: `${JSON.stringify(settled, null, 2)}\n` }, message: `release ${n}: GitHub CI failed; returned ${blame.returned.join(", ")}` };
+  });
+
+  // Fold again without the returned lanes (their open returns hold them back) and release again.
+  const next = String(Number(n) + 1);
+  console.log(`river settle: folding again without ${blame.returned.join(", ")} for release ${next}`);
+  await fold({});
+  if (!readScratch("fold.json")?.lanes?.length) {
+    console.log("river settle: nothing left to fold; no new release");
+    return;
+  }
+  migrations();
+  await release(next, {});
 }
 
 /* -------------------------------------------------------------------------- */
@@ -1067,7 +1273,7 @@ export function parseArgs(argv) {
   return { flags, positional };
 }
 
-const BOOLEAN_FLAGS = new Set(["heartbeat", "dry-run", "check-main"]);
+const BOOLEAN_FLAGS = new Set(["dry-run"]);
 
 async function main(argv) {
   const [command, ...rest] = argv;
@@ -1081,9 +1287,9 @@ async function main(argv) {
     case "fold": await fold(flags); return;
     case "return": await returnCommand(positional[0], flags); return;
     case "migrations": migrations(); return;
-    case "test": await test(flags); return;
-    case "promote": promote(); return;
+    case "check": quickCheck(); return;
     case "release": await release(positional[0], flags); return;
+    case "settle": await settle(positional[0], flags); return;
     case "observe": await observe(positional[0], flags); return;
     case "lock": {
       const mode = positional[0];
@@ -1092,11 +1298,11 @@ async function main(argv) {
       return;
     }
     default:
-      throw new Refusal("usage: river.mjs scan | fold | migrations | test | promote | return <lane> | release <n> | lock <mode> | observe <sha>", 2);
+      throw new Refusal("usage: river.mjs scan | fold | migrations | check | release <n> | settle <n> | return <lane> | lock <mode> | observe <sha>", 2);
   }
 }
 
-const NEEDS_GITHUB = new Set(["release", "observe"]);
+const NEEDS_GITHUB = new Set(["release", "settle", "observe"]);
 const PROXY = process.env.HTTPS_PROXY || process.env.https_proxy;
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)

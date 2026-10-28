@@ -4,6 +4,7 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { deriveWhoGoverns } from "../lib/registry/who-governs.ts";
+import { bodyContactRows } from "../lib/registry/body-contact.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";
 
 let seq = 0;
@@ -161,8 +162,7 @@ test("the click grammar: a person opens a small card, a body opens a large one",
     /onOpenBody=\{\(body\) =>[\s\S]{0,160}openLarge\(\{[\s\S]{0,120}kind: "entity"/.test(entry),
     "the body row must open the large entity card, not a popup",
   );
-  assert.ok(
-    /label: "Official site"/.test(entry),
-    "the body battlecard must carry the official site the row stopped linking to",
-  );
+  assert.deepEqual(bodyContactRows(body("GOVERNING", { homepageUrl: "https://board.example.gov/" })), [
+    { label: "Website", value: "board.example.gov", href: "https://board.example.gov/" },
+  ], "the body battlecard keeps the official site in Contact");
 });

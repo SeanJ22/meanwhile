@@ -1,168 +1,100 @@
-/**
- * `pgAggregateRepository.list()` reads through its changed-since read, which pages by key so it never
- * exceeds the Neon HTTP driver's 64 MiB response cap. The fake `Sql` throws on any scan without a
- * `LIMIT` (the one-row read clock aside), and the paged concatenation must equal the whole table in id order.
- */
-
 import assert from "node:assert/strict";
-import test from "node:test";
+import test, { after } from "node:test";
+import { PGlite } from "@electric-sql/pglite";
+import { pgAggregateRepository, type Sql } from "../lib/control-plane/repository/pg-store.ts";
+import { projectAggregate } from "../lib/control-plane/repository/types.ts";
 
-import {
-  AGGREGATE_LIST_READ_PAGE,
-  pgAggregateRepository,
-} from "../lib/control-plane/repository/pg-store.ts";
-import { jsonTextAtPath, projectAggregate } from "../lib/control-plane/repository/types.ts";
+// Execute PostgreSQL instead of teaching a fake parser each reader's SQL shape.
+const db = new PGlite();
+after(() => db.close());
+const at = "2026-09-17T00:00:00.000Z";
+const seq = (n: number) => Array.from({ length: n }, (_, i) => ({ id: `row-${String(i).padStart(6, "0")}`, seq: i,
+  routeTaskId: i % 3 === 0 ? "wanted" : "other", dropped: "saved source ".repeat(100), nested: { kept: 1, gone: 2 } }));
 
-interface Row {
-  readonly id: string;
-  readonly revision: number;
-  readonly updated_at: string;
-  readonly value: Record<string, unknown>;
+async function fixture(n: number, table = "cp_work_items") {
+  await db.exec(`DROP SCHEMA public CASCADE; CREATE SCHEMA public;
+    CREATE TABLE ${table}(id text PRIMARY KEY,revision bigint NOT NULL,updated_at timestamptz NOT NULL,
+      changed_at timestamptz NOT NULL DEFAULT now(),value jsonb NOT NULL)`);
+  const values = seq(n);
+  await db.query(`INSERT INTO ${table} SELECT v->>'id',1,$1::timestamptz,now(),v
+    FROM jsonb_array_elements($2::jsonb) v`, [at, JSON.stringify(values)]);
+  const calls: { text: string; params: readonly unknown[]; rows: Record<string, unknown>[] }[] = [];
+  const sql: Sql = { query: async (text, params = []) => {
+    if (!/LIMIT\s+100/.test(text) && !text.includes(" AS etag")) {
+      assert.ok(text.includes("id=ANY("), `unbounded aggregate read: ${text}`);
+      assert.ok(Array.isArray(params.at(-1)) && (params.at(-1) as unknown[]).length <= 100);
+    }
+    const rows = (await db.query<Record<string, unknown>>(text, [...params])).rows;
+    if (text.includes(" AS etag")) assert.equal(rows.length, 1, "a whole-selection confirmation returns one scalar version");
+    calls.push({ text, params, rows });
+    return rows;
+  } };
+  const repo = pgAggregateRepository<(typeof values)[number]>(sql, "Aggregate", table);
+  const bodies = () => calls.flatMap(call => call.rows.filter(row => Object.hasOwn(row, "value")));
+  return { repo, values, calls, bodies, table };
 }
 
-/** A minimal stand-in that understands the paged `list()` shapes and refuses
- *  any scan without a `LIMIT`, so an unbounded regression is caught here. */
-function fakeAggregateSql(rows: readonly Row[]) {
-  const calls: string[] = [];
-  const byId = (a: Row, b: Row) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
-  const sql = {
-    async query(text: string, params: readonly unknown[] = []): Promise<unknown> {
-      calls.push(text);
-      if (/^SELECT now\(\) AS read_at$/.test(text)) return [{ read_at: "2026-09-17T00:00:00.000Z" }];
-      const litLimit = /LIMIT\s+(\d+)/.exec(text);
-      if (litLimit === null) {
-        throw new Error(`unbounded scan would risk the 64 MiB cap: ${text.replace(/\s+/g, " ").trim()}`);
-      }
-      const limit = Number(litLimit[1]);
-      const project = (r: Row) => ({ id: r.id, revision: r.revision, updated_at: r.updated_at, value: r.value });
-      // listWhere(): WHERE value #>> '{path}' = $1, next pages add AND id > $2
-      const filter = /value #>> '\{([^}]*)\}' = \$1/.exec(text);
-      if (filter !== null) {
-        const [value, after] = params as [string, string | undefined];
-        const path = filter[1].split(",");
-        const paged = /AND\s+id\s*>\s*\$2/i.test(text);
-        return rows
-          .filter((r) => jsonTextAtPath(r.value, path) === value && (!paged || r.id > String(after)))
-          .sort(byId)
-          .slice(0, limit)
-          .map(project);
-      }
-      // list() next page: WHERE id > $1
-      if (/WHERE\s+id\s*>\s*\$1/i.test(text)) {
-        const [after] = params as [string];
-        return rows.filter((r) => r.id > after).sort(byId).slice(0, limit).map(project);
-      }
-      // list() first page: ORDER BY id ASC, no WHERE cursor
-      if (/ORDER BY\s+id ASC/i.test(text) && !/WHERE\s+id\s*>/i.test(text)) {
-        return rows.slice().sort(byId).slice(0, limit).map(project);
-      }
-      throw new Error(`fake Sql did not recognize query: ${text.replace(/\s+/g, " ").trim()}`);
-    },
-  };
-  return { sql, calls };
+for (const table of ["cp_work_items", "cp_attempts"]) {
+  test(`${table}: list pages every value in order and fetches only changed values on another pass`, async () => {
+    const f = await fixture(230, table);
+    const first = await f.repo.list();
+    assert.deepEqual(first.map(row => row.value), f.values);
+    assert.equal(f.calls.length, table === "cp_work_items" ? 7 : 6);
+    f.calls.length = 0;
+    assert.deepEqual(await f.repo.list(), first);
+    assert.equal(f.calls.length, table === "cp_work_items" ? 1 : 3);
+    assert.equal(f.bodies().length, 0);
+    await db.query(`UPDATE ${table} SET revision=2,value=jsonb_set(value,'{seq}','-150') WHERE id=$1`, [f.values[150].id]);
+    f.calls.length = 0;
+    const changed = await f.repo.list();
+    assert.equal(changed[150].value.seq, -150);
+    assert.equal(changed[150].revision, 2);
+    assert.deepEqual(f.bodies().map(row => row.id), [f.values[150].id]);
+  });
+
+  test(`${table}: empty and exact-page reads terminate on a bounded empty version page`, async () => {
+    const empty = await fixture(0, table);
+    assert.deepEqual(await empty.repo.list(), []);
+    assert.equal(empty.calls.length, 1);
+    const exact = await fixture(100, table);
+    assert.equal((await exact.repo.list()).length, 100);
+    assert.equal(exact.calls.length, table === "cp_work_items" ? 4 : 3);
+    assert.ok(exact.calls.some(call => call.text.includes("LIMIT 100") && call.rows.length === 0));
+  });
+
+  test(`${table}: listNarrowed transfers only projected fields across all pages`, async () => {
+    const f = await fixture(201, table);
+    const projection = { seq: true, nested: ["kept"] } as const;
+    const rows = await f.repo.listNarrowed(projection);
+    assert.deepEqual(rows.map(row => row.id), f.values.map(row => row.id));
+    assert.deepEqual(rows.map(row => row.value), f.values.map(value => projectAggregate(value, projection)));
+    assert.ok(f.bodies().every(row => !Object.hasOwn(row.value as object, "dropped")));
+    assert.deepEqual((await f.repo.listNarrowed({})).map(row => row.value), f.values.map(() => ({})));
+  });
+
+  test(`${table}: filtered field reads preserve database membership and omit unselected sources`, async () => {
+    const f = await fixture(307, table);
+    const expected = (await f.repo.list()).filter(row => row.value.routeTaskId === "wanted");
+    assert.ok(expected.length > 100);
+    assert.deepEqual(await f.repo.listWhere(["routeTaskId"], "wanted"), expected);
+    f.calls.length = 0;
+    const rows = await f.repo.listWhereNarrowed(["routeTaskId"], "wanted", { seq: true });
+    assert.deepEqual(rows.map(row => row.value), expected.map(row => ({ seq: row.value.seq })));
+    assert.ok(f.bodies().every(row => !Object.hasOwn(row.value as object, "dropped")));
+    assert.ok(f.calls.every(call => !call.text.includes("wanted") && call.params.includes("wanted")));
+    const scans = f.calls.filter(call => call.text.includes("LIMIT 100"));
+    assert.equal(scans.length, 2);
+    if (table === "cp_work_items") assert.equal(new Set(scans.map(call => call.text)).size, 1);
+  });
 }
 
-/** ids zero-padded so lexicographic order matches numeric order. */
-const seq = (n: number) =>
-  Array.from({ length: n }, (_, i) => ({
-    id: `wi-${String(i).padStart(6, "0")}`,
-    revision: 1,
-    updated_at: "2026-09-17T00:00:00.000Z",
-    value: { seq: i },
-  }));
-
-test("list() pages an aggregate larger than one response and returns every row in id order", async () => {
-  const n = AGGREGATE_LIST_READ_PAGE * 2 + 30;
-  const { sql, calls } = fakeAggregateSql(seq(n));
-  const repo = pgAggregateRepository<{ seq: number }>(sql, "WorkItem", "cp_work_items");
-
-  const out = await repo.list();
-  assert.equal(out.length, n);
-  assert.deepEqual(out.map((r) => r.value.seq), Array.from({ length: n }, (_, i) => i));
-  assert.ok(calls.length >= 4, `expected the read clock and multiple bounded pages, saw ${calls.length}`);
-  assert.match(calls[0]!, /SELECT now\(\) AS read_at/);
-  assert.ok(calls.slice(1).every((c) => /LIMIT/i.test(c)), "every list statement must carry LIMIT");
-});
-
-test("list() of an empty table is the read clock and one empty bounded page", async () => {
-  const { sql, calls } = fakeAggregateSql([]);
-  const repo = pgAggregateRepository<{ seq: number }>(sql, "WorkItem", "cp_work_items");
-  assert.deepEqual(await repo.list(), []);
-  assert.equal(calls.length, 2);
-});
-
-test("listNarrowed reads the same bounded pages and projects each row exactly as the database projection would", async () => {
-  const rows = seq(AGGREGATE_LIST_READ_PAGE * 2 + 1).map(row => ({ ...row, value: { ...row.value, dropped: "x".repeat(20), nested: { kept: 1, gone: 2 } } }));
-  const { sql, calls } = fakeAggregateSql(rows);
-  const repo = pgAggregateRepository<Record<string, unknown>>(sql, "WorkItem", "cp_work_items");
-  const projection = { seq: true, nested: ["kept"] } as const;
-  const out = await repo.listNarrowed(projection);
-  assert.deepEqual(out.map(row => row.id), rows.map(row => row.id));
-  assert.deepEqual(out.map(row => row.value), rows.map(row => projectAggregate(row.value, projection)));
-  assert.deepEqual(out[0]!.value, { seq: 0, nested: { kept: 1 } });
-  assert.equal(calls.length, 4, "the read clock and three bounded pages");
-  assert.match(calls[2]!, /WHERE id > \$1/);
-  const empty = fakeAggregateSql(seq(2));
-  assert.deepEqual((await pgAggregateRepository(empty.sql, "WorkItem", "cp_work_items").listNarrowed({})).map(row => row.value), [{}, {}]);
-});
-
-test("listWhereNarrowed() pages like listWhere() and has the database project each row instead of sending its value", async () => {
-  const { sql, calls } = fakeAggregateSql(tagged(AGGREGATE_LIST_READ_PAGE + 3, () => true));
-  const repo = pgAggregateRepository<{ seq: number; routeTaskId: string }>(sql, "WorkItem", "cp_work_items");
-  const out = await repo.listWhereNarrowed(["routeTaskId"], "rt-want", { seq: true });
-  assert.equal(out.length, AGGREGATE_LIST_READ_PAGE + 3);
-  assert.equal(calls.length, 2, "two bounded pages");
-  for (const statement of calls) {
-    assert.match(statement, /jsonb_each\(cp_work_items\.value\)/, "the projection is computed in the database");
-    assert.doesNotMatch(statement, /updated_at, value AS value FROM/);
-  }
-});
-
-test("list() of exactly one full page still terminates on the short second page", async () => {
-  const { sql, calls } = fakeAggregateSql(seq(AGGREGATE_LIST_READ_PAGE));
-  const repo = pgAggregateRepository<{ seq: number }>(sql, "WorkItem", "cp_work_items");
-  const out = await repo.list();
-  assert.equal(out.length, AGGREGATE_LIST_READ_PAGE);
-  // One full page forces a second (empty) page to confirm the end.
-  assert.equal(calls.length, 3);
-  assert.ok(calls.slice(1).every((c) => /LIMIT/i.test(c)));
-});
-
-/* `listWhere()` is `list()` filtered by the database, bounded, with the value as a parameter. */
-const tagged = (n: number, wanted: (seq: number) => boolean) =>
-  seq(n).map((r) => ({ ...r, value: { seq: r.value.seq, routeTaskId: wanted(r.value.seq) ? "rt-want" : "rt-other" } }));
-
-test("listWhere() pages a large match set and equals list() filtered, row for row in id order", async () => {
-  const { sql, calls } = fakeAggregateSql(tagged(AGGREGATE_LIST_READ_PAGE * 3 + 7, (i) => i % 3 === 0));
-  const repo = pgAggregateRepository<{ seq: number; routeTaskId: string }>(sql, "Attempt", "cp_attempts");
-
-  const expected = (await repo.list()).filter((r) => r.value.routeTaskId === "rt-want");
-  const before = calls.length;
-  const out = await repo.listWhere(["routeTaskId"], "rt-want");
-  const statements = calls.slice(before);
-  assert.ok(expected.length > AGGREGATE_LIST_READ_PAGE, "the match set spans more than one page");
-  assert.deepEqual(out, expected);
-  assert.equal(statements.length, 2, "two bounded pages for 103 matches");
-  assert.ok(
-    statements.every((c) => /LIMIT/i.test(c) && /value #>> '\{routeTaskId\}' = \$1/.test(c)),
-    "every statement is bounded and filtered in the database",
-  );
-  assert.ok(statements.every((c) => !c.includes("rt-want")), "the value is a parameter, never SQL text");
-});
-
-test("listWhere() of a selective filter is ONE bounded statement where list() pages the whole table", async () => {
-  const { sql, calls } = fakeAggregateSql(tagged(AGGREGATE_LIST_READ_PAGE * 4, (i) => i === 7 || i === 391));
-  const repo = pgAggregateRepository<{ seq: number; routeTaskId: string }>(sql, "Attempt", "cp_attempts");
-  const out = await repo.listWhere(["routeTaskId"], "rt-want");
-  assert.deepEqual(out.map((r) => r.value.seq), [7, 391], "a match near the start and one near the end");
-  assert.equal(calls.length, 1, "one round trip");
-  assert.deepEqual(await repo.listWhere(["routeTaskId"], "rt-absent"), [], "no match is an empty answer");
-});
-
-test("listWhere() refuses an unsafe JSON path segment rather than building SQL from it", async () => {
-  const { sql, calls } = fakeAggregateSql([]);
-  const repo = pgAggregateRepository<{ seq: number }>(sql, "Attempt", "cp_attempts");
-  await assert.rejects(() => repo.listWhere(["routeTaskId'); drop table cp_attempts; --"], "x"), /unsafe JSON path/);
-  await assert.rejects(() => repo.listWhere([], "x"), /empty JSON path/);
-  assert.equal(calls.length, 0, "refused before any statement was sent");
+test("selective filters read only their matches and unsafe paths never reach the database", async () => {
+  const f = await fixture(400);
+  const rows = await f.repo.listWhere(["seq"], "391");
+  assert.deepEqual(rows.map(row => row.value.seq), [391]);
+  assert.equal(f.calls.length, 3);
+  assert.deepEqual(f.bodies().map(row => row.id), [f.values[391].id]);
+  f.calls.length = 0;
+  await assert.rejects(f.repo.listWhere(["bad'path"], "anything"), /unsafe JSON path/);
+  assert.equal(f.calls.length, 0);
 });

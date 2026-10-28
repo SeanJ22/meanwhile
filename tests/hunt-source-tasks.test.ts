@@ -4,6 +4,7 @@ import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hun
 import { manualProducerInvocationMatrix } from "../lib/civic-data/manual-producer-invocation.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
 import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
+import { factRefreshBounds } from "../lib/civic-data/source-change-cadence.ts";
 import { routineTaskDue, ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
 import { runtimeAuthorityIssue, type RuntimeAuthorityEnvelope } from "../lib/civic-data/runtime-authority.ts";
@@ -58,11 +59,11 @@ test("all registered manual contracts have an invocation disposition; PRL, votin
 
 test("source admission resumes from durable failure/success clocks rather than rerunning each pass or restart", () => {
   const task = huntSourceTasks([scope("AZ")], NOW)[0]!;
-  const now = Date.parse(NOW);
+  const now = Date.parse(NOW), retryMs = Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
   assert.equal(routineTaskDue(task, undefined, now), true);
   assert.equal(routineTaskDue(task, { lastSucceededObservedAt: "2026-09-26T02:00:00.000Z" }, now), true);
   assert.equal(routineTaskDue(task, { lastAttemptedAt: NOW }, now + 60_000), false);
-  assert.equal(routineTaskDue(task, { lastAttemptedAt: NOW }, now + task.retryMs), true);
+  assert.equal(routineTaskDue(task, { lastAttemptedAt: NOW }, now + retryMs), true);
   assert.equal(routineTaskDue(task, { lastAttemptedAt: NOW, lastSucceededObservedAt: NOW }, now + 2 * 86400_000), false);
   const base = scope("AZ", "next-send");
   const next = { ...base, decision: { ...base.decision, decidedAt: "2026-09-28T02:00:00.000Z" } };
@@ -130,7 +131,9 @@ test("a pending publication is not hidden by another body's later success and ke
   const source = huntSourceTasks([scope("AZ")], NOW)[0]!;
   const task = { ...source, ownerInvocation: { ...source.ownerInvocation!, publicationPending: true as const } };
   const later = new Date(Date.parse(NOW) + 60_000).toISOString();
+  const retryMs = Math.max(task.retryMs, factRefreshBounds(task).minimumRefreshMs);
   assert.equal(routineTaskDue(task, { lastAttemptedAt: later, lastSucceededObservedAt: later }, Date.parse(later)), true);
   assert.equal(routineTaskDue(task, { lastAttemptedAt: later }, Date.parse(later) + 1), false);
-  assert.equal(routineTaskDue(task, { lastAttemptedAt: later }, Date.parse(later) + task.retryMs), true);
+  assert.equal(routineTaskDue(task, { lastAttemptedAt: later }, Date.parse(later) + retryMs - 1), false);
+  assert.equal(routineTaskDue(task, { lastAttemptedAt: later }, Date.parse(later) + retryMs), true);
 });

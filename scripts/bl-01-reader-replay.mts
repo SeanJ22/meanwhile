@@ -1,7 +1,7 @@
 /** Read-only source-to-page replay. The named environment variable must select an isolated production copy. */
 import assert from 'node:assert/strict';
 import {mkdir,writeFile} from 'node:fs/promises';
-import {neon} from '@neondatabase/serverless';
+import {neon} from '../lib/db/client.ts';
 import {cloneElement,isValidElement,type ReactElement} from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {installReaderDatabaseQuery} from '../lib/reader/database.ts';

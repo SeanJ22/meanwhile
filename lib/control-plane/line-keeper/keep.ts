@@ -4,9 +4,13 @@ import { fixItems, withFixAdded } from "../fix-list.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig, type AdminConfig } from "../gateway/admin-config.ts";
 import { projectBrief, easternBriefClock } from "../admin-view/brief.ts";
 import { processNeonBytes } from "../../db/transfer-by-caller.ts";
-import { countProblems } from "../../counts/hour.ts";
-import { readHour, query } from "./read.ts";
+import { countProblems, type CountProblem } from "../../counts/hour.ts";
+import { groupCountProblems } from "../../counts/problem-groups.ts";
+import { readHour, readRunnerReadProblems, readJobBreakerEvents, query } from "./read.ts";
+import { jobLabel } from "../job-names.ts";
+import { formatEastern } from "../eastern-time.ts";
 import { LINE_KEEPER_BY, type LineHour } from "./model.ts";
+import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
 function ownBytes() { return processNeonBytes().reduce((n,h)=>n+Object.values(h.byCaller).reduce((a,b)=>a+b,0),0); }
 /** Deduplicated owned repairs use the existing list and brief. A quiet counter cannot close a repair. */
@@ -22,19 +26,31 @@ export function withKeeperFixes(config: AdminConfig, hour: LineHour): AdminConfi
   })};
   const day=easternBriefClock(hour.measuredAt).day;
   const latest=next.latestBrief?.day===day?next.latestBrief:projectBrief(next,[],hour.measuredAt);
-  const problems=new Map(latest.problems.map(p=>[p.key,p]));
-  for(const p of hour.problems)problems.set(`line-keeper:${p.key}`,{key:`line-keeper:${p.key}`,what:p.says,owner:p.owner,next:p.next});
-  return {...next,latestBrief:{...latest,lineKeeperOnly:next.latestBrief?.day===day?next.latestBrief.lineKeeperOnly:true,createdAt:hour.measuredAt,problems:[...problems.values()]},updatedAt:hour.measuredAt};
+  const counted=hour.problems.filter((problem):problem is CountProblem=>"kind" in problem);
+  const observations=hour.problems.filter(problem=>!("kind" in problem)).map(problem=>({
+    key:`line-keeper:${problem.key}`,what:problem.says,owner:problem.owner,next:problem.next,
+  }));
+  const problems=[...latest.problems.filter(p=>!p.key.startsWith("line-keeper:")),...groupCountProblems(counted),...observations];
+  const breakerUpdates=(hour.breakerEvents??[]).map(event=>({id:`job-breaker:${event.id}`,
+    what:event.action === "PAUSE" ? `${jobLabel(event.job!)} paused after ${Number(event.gb).toFixed(3)} GB in one hour. It waits until you release it in Admin.`
+      : `${jobLabel(event.job!)} was released and may start again.`,
+    when:formatEastern(event.checked_at),label:"Proven",isWin:false,before:null,after:null,evidenceHref:null}));
+  const ids=new Set(breakerUpdates.map(update=>update.id));
+  const updates=[...breakerUpdates,...latest.updates.filter(update=>!ids.has(update.id))];
+  return {...next,latestBrief:{...latest,updates,lineKeeperOnly:next.latestBrief?.day===day?next.latestBrief.lineKeeperOnly:true,createdAt:hour.measuredAt,problems},updatedAt:hour.measuredAt};
 }
 async function writeFixes(sql:Sql,hour:LineHour) {
-  if(!hour.problems.length)return;
   const keys=hour.problems.map(p=>`line-keeper:${p.key}`);
+  const reads=versionedRowsFor(sql);
   for(let attempt=0;attempt<4;attempt++) {
-    const [row]=await query(sql,"fix-settings",`SELECT revision,value->'latestBrief' AS brief FROM cp_admin_config WHERE id=$1`,[ADMIN_CONFIG_ID]);
+    const row=await reads.one((text,params)=>query(sql,"fix-settings",text,params),"cp_admin_config",ADMIN_CONFIG_ID,"value->'latestBrief'");
     if(!row)throw Error("Admin settings are unavailable; the hourly repair work was not saved");
-    const fixes=await query(sql,"affected-fixes",`SELECT value FROM cp_admin_fix_list WHERE config_id=$1
-      AND value->'technical' ?| $2::text[]`,[ADMIN_CONFIG_ID,keys]);
-    const before={...defaultAdminConfig(hour.measuredAt),latestBrief:row.brief as AdminConfig['latestBrief'],fixList:fixes.map(f=>f.value as import('../fix-list.ts').FixItem)};
+    const versions=await query(sql,"affected-fixes",`SELECT id,concat(xmin::text,'/',ctid::text) AS revision FROM cp_admin_fix_list WHERE config_id=$1
+      AND value->'technical' ?| $2::text[]`,[ADMIN_CONFIG_ID,keys]) as {id:string;revision:string}[];
+    const fixes=await reads.known("cp_admin_fix_list",versions,`line-keeper:${ADMIN_CONFIG_ID}`,async ids=>query(sql,"affected-fix-values",
+      "SELECT id,value,concat(xmin::text,'/',ctid::text) AS revision FROM cp_admin_fix_list WHERE config_id=$1 AND id=ANY($2::text[])",[ADMIN_CONFIG_ID,ids]),
+      row=>String(row.id),row=>String(row.revision));
+    const before={...defaultAdminConfig(hour.measuredAt),latestBrief:row.value as AdminConfig['latestBrief'],fixList:fixes.map(f=>f.value as import('../fix-list.ts').FixItem)};
     const next=withKeeperFixes(before,hour);
     const saved=await query(sql,"save-fixes",`WITH saved AS (
       UPDATE cp_admin_config SET revision=revision+1,updated_at=$2::timestamptz,
@@ -60,8 +76,16 @@ export async function retireLineInventory(control:Sql) {
 export async function runLineKeeper(control:Sql,reader:Sql,at:string,options:{readonly readOnly?:boolean}={}) {
   const baseline=ownBytes();
   const input=await readHour(control,reader,at);
+  const readProblems=await readRunnerReadProblems(reader,input.window.from,input.window.through).catch(()=>[{
+    key:"runner-reads:unread",where:"Runner database reads",says:"The runner’s hourly database reads could not be compared with the previous 24 hours.",
+    owner:"the database workers",next:"Restore the hourly read comparison and check the affected job families.",
+  }]);
+  let breakerEvents: Awaited<ReturnType<typeof readJobBreakerEvents>> = [];
+  try { breakerEvents=await readJobBreakerEvents(control,input.window.from,input.window.through); }
+  catch { readProblems.push({key:"job-breaker:unread",where:"Job transfer protection",
+    says:"The hourly pause and resume report could not be read.",owner:"the runner workers",next:"Restore the job transfer control log."}); }
   const hour:LineHour={...input.window,measuredAt:at,counts:input.counts,waiting:input.waiting,
-    problems:countProblems(input.counts,input.previous,input.waiting,at),own:{bytesRead:Math.max(0,ownBytes()-baseline)}};
+    breakerEvents,problems:[...countProblems(input.counts,input.previous,input.waiting,at),...readProblems],own:{bytesRead:Math.max(0,ownBytes()-baseline)}};
   const oldest:Record<string,{n:number;at:string|null}>={};
   for(const waiting of input.waiting) {
     const code=REGISTRY_STATES.some(state=>state===waiting.state)?waiting.state:"US";

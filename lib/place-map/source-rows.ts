@@ -4,6 +4,7 @@ export interface ZipSourceMetadata {
   source?: string;
   typeSource?: string;
   vintage?: string | number;
+  generatedAt?: string;
 }
 
 /** Acquired ZIP files have a flat row object after their source metadata. */
@@ -19,6 +20,7 @@ export async function* zipSourceRows(path: string, metadata: ZipSourceMetadata =
       if (!started) {
         const header = JSON.parse(prefix + "}}") as ZipSourceMetadata;
         metadata.source = header.source; metadata.typeSource = header.typeSource; metadata.vintage = header.vintage;
+        metadata.generatedAt = header.generatedAt;
         started = true;
       } else if (!/^\s*,\s*$/.test(prefix)) throw new Error("Invalid acquired ZIP row separator");
       consumed = pattern.lastIndex;

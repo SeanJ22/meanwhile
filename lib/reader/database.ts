@@ -1,19 +1,19 @@
-import { neonConfig, Pool, type PoolClient } from "@neondatabase/serverless";
+import { neon, neonConfig, Pool, type PoolClient } from "../db/client.ts";
 import type { ReadOnlyQuery, Statement } from "../control-plane/admin-view/promoted-slices.ts";
 import { installDatabaseTransferCounter } from "../db/transfer.ts";
 import { serverReaderValue } from "./memory.ts";
 import { installDatabaseClientAccounting, withCallerSite, withDatabaseQuery } from "../db/transfer-by-caller.ts";
+import { versionedSelect } from "../db/versioned-query.ts";
+import { shareVersionedRows } from "../db/versioned-rows.ts";
+import { currentReaderRoute } from "../db/reader-route.ts";
 
 let installed: ReadOnlyQuery | null | undefined;
 
 const queryOn = (client: PoolClient, text: string, params: readonly unknown[] = []) =>
   withDatabaseQuery(text, async () => (await client.query(text, [...params])).rows);
 
-async function queryWithDeadline(pool: Pool, statements: readonly Statement[], deadlineMs?: number) {
-  if (deadlineMs === undefined && statements.length === 1) {
-    const statement = statements[0];
-    return withDatabaseQuery(statement.text, async () => [(await pool.query(statement.text, [...statement.params])).rows]);
-  }
+async function queryWithDeadline(pool: Pool, connection: string, statements: readonly Statement[], deadlineMs?: number) {
+  if (statements.length === 0) return [];
   const timeout = new Error("READER_DATABASE_TIMEOUT");
   timeout.name = "TimeoutError";
   let expired = false, release: ((error?: Error) => void) | undefined;
@@ -27,17 +27,17 @@ async function queryWithDeadline(pool: Pool, statements: readonly Statement[], d
     let released = false;
     release = error => { if (!released) { released = true; client.release(error); } };
     try {
-      if (statements.length === 1) {
-        const statement = statements[0];
-        return [await queryOn(client, statement.text, statement.params)];
-      }
-      await queryOn(client, "BEGIN READ ONLY");
+      if (statements.length > 1) await queryOn(client, "BEGIN ISOLATION LEVEL REPEATABLE READ READ ONLY");
+      const selected = versionedSelect(connection);
       const rows = [];
-      for (const statement of statements) rows.push(await queryOn(client, statement.text, statement.params));
-      await queryOn(client, "COMMIT");
+      for (const statement of statements) rows.push(await selected((text, params) => {
+        if (expired) throw timeout;
+        return queryOn(client, text, params);
+      }, statement.text, statement.params));
+      if (statements.length > 1) await queryOn(client, "COMMIT");
       return rows;
     } catch (error) {
-      if (!expired && statements.length !== 1) await queryOn(client, "ROLLBACK").catch(() => {});
+      if (!expired && statements.length > 1) await queryOn(client, "ROLLBACK").catch(() => {});
       release(error instanceof Error ? error : new Error(String(error)));
       throw error;
     } finally { release(); }
@@ -51,19 +51,47 @@ async function queryWithDeadline(pool: Pool, statements: readonly Statement[], d
 const readerConnectionError = (error: Error) =>
   console.error(`Reader database connection failed: ${error.message}`);
 
+// The still-mounted map keeps loading behind an intercepted ballot. Its reads
+// must not occupy every connection needed by the reader's foreground action.
+const poolLane = () => currentReaderRoute() === "/ballot" ? "ballot" : "shared";
+
+async function ballotHttpRead(connection: string, statement: Statement, deadlineMs?: number) {
+  const sql = serverReaderValue(`ballot-http:${connection}`, () => neon(connection));
+  const controller = new AbortController();
+  const timer = deadlineMs === undefined ? undefined : setTimeout(() => controller.abort(), deadlineMs);
+  try {
+    return [await versionedSelect(connection)((text, params) => withDatabaseQuery(text, async () =>
+      (await sql.transaction([sql.query(text, [...params])], {
+        readOnly: true, isolationLevel: "RepeatableRead", fetchOptions: { signal: controller.signal },
+      }))[0]), statement.text, statement.params)];
+  } catch (error) {
+    if (controller.signal.aborted) {
+      const timeout = new Error("READER_DATABASE_TIMEOUT");
+      timeout.name = "TimeoutError";
+      throw timeout;
+    }
+    throw error;
+  } finally { clearTimeout(timer); }
+}
+
 /** A caller already holding a read-only connection can supply it; undefined restores the configured socket pool. */
 export function installReaderDatabaseQuery(query: ReadOnlyQuery | null | undefined): void {
   installed = query;
 }
 
-/** Reuse the database connection and binary WebSocket transport beside the functions. */
+/** Foreground ballots use read-only HTTP; other readers reuse their socket transaction. */
 export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
   if (installed !== undefined) return installed;
   const connectionString = process.env.DATABASE_URL?.trim();
   if (!connectionString) return null;
+  return databaseReadOnlyQuery(connectionString, deadlineMs);
+}
+
+/** The same row-version protocol also serves explicit control-plane evidence reads. */
+function readOnlyPool(connectionString: string): Pool {
   installDatabaseClientAccounting(neonConfig, installDatabaseTransferCounter);
   neonConfig.webSocketConstructor ??= globalThis.WebSocket;
-  const pool = serverReaderValue(`database-pool:${connectionString}`, () => {
+  return serverReaderValue(`database-pool:${connectionString}`, () => {
     const created = new Pool({
       connectionString, max: 4, allowExitOnIdle: true,
       options: "-c default_transaction_read_only=on",
@@ -74,5 +102,42 @@ export function readerDatabaseQuery(deadlineMs?: number): ReadOnlyQuery | null {
     created.on("connect", (client: PoolClient) => client.on("error", readerConnectionError));
     return created;
   });
-  return statements => withCallerSite(() => queryWithDeadline(pool, statements, deadlineMs));
+}
+
+/** Begin handshakes during code loading, without reading or saving civic data. */
+export function warmReaderConnections(): Promise<void> {
+  const connection = process.env.DATABASE_URL?.trim();
+  if (!connection) return Promise.resolve();
+  return serverReaderValue(`reader-connection-start:${connection}`, async () => {
+    const pool = readOnlyPool(connection);
+    const sql = serverReaderValue(`ballot-http:${connection}`, () => neon(connection));
+    await Promise.allSettled([
+      ...[0, 1].map(async () => { const client = await pool.connect(); client.release(); }),
+      withDatabaseQuery("SELECT 1", () => sql.transaction([sql.query("SELECT 1 AS ready")], {
+        readOnly: true, isolationLevel: "RepeatableRead", fetchOptions: { signal: AbortSignal.timeout(3000) },
+      })),
+    ]);
+  });
+}
+
+export function databaseReadOnlyQuery(connectionString: string, deadlineMs?: number): ReadOnlyQuery {
+  const lane = poolLane(), pool = readOnlyPool(connectionString);
+  const canonicalBody: ReadOnlyQuery = statements =>
+    withCallerSite(() => queryWithDeadline(pool, connectionString, statements, deadlineMs));
+  return Object.assign((statements: readonly Statement[]) =>
+    lane === "ballot" && statements.length === 1
+      ? withCallerSite(() => ballotHttpRead(connectionString, statements[0], deadlineMs))
+      : canonicalBody(statements),
+  { publicationFingerprints: true as const, canonicalBody });
+}
+
+/** SQL-shaped adapter for readers which issue one parameterized statement at a time. */
+export function databaseReadOnlySql(connectionString: string, deadlineMs?: number) {
+  return serverReaderValue(`database-sql:${poolLane()}:${connectionString}:${deadlineMs ?? ""}`, () => {
+    const read = databaseReadOnlyQuery(connectionString, deadlineMs);
+    const sql = { query: async (text: string, params: readonly unknown[] = []) =>
+      (await read([{ text, params }]))[0] ?? [] };
+    shareVersionedRows(sql, connectionString);
+    return sql;
+  });
 }

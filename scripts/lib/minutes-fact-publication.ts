@@ -16,6 +16,7 @@ import { minutesLinkFor } from "../../lib/outcomes/minutes-ingest.ts";
 import { parseCalendarRows } from "../../lib/sources/legistar-insite/calendar.ts";
 import type { InSiteTenant } from "../../lib/sources/legistar-insite/tenant-registry.ts";
 import { decodeEntities } from "../../lib/sources/http.ts";
+import { enqueueReaderPlaces } from "../../lib/reader/cache.ts";
 
 export type MinutesFactSink = (claim: PublishInput) => Promise<PublishOutcome>;
 
@@ -62,7 +63,8 @@ export function minutesFactPublisher(input: {
       await ensureEntity(db.query, { id: input.tenant.bodyId, kind: "body", name: input.tenant.bodyName, state, parentId: input.tenant.ocdId });
       await learnDoorChannel(db.query, input.tenant.bodyId, response.finalUrl);
       await ensureEntity(db.query, { id, kind: "meeting", name: input.tenant.bodyName, state, parentId: input.tenant.bodyId });
-      await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING", [id, input.tenant.bodyId]);
+      const placed = await db.query("INSERT INTO entity_place (entity_id, place_id) SELECT $1, place_id FROM entity_place WHERE entity_id = $2 ON CONFLICT DO NOTHING RETURNING place_id", [id, input.tenant.bodyId]);
+      if (placed.length) await enqueueReaderPlaces({ entities: [id] }, db.query);
       const heldEntity = await readCheckEntity(db.query, id);
       if (!heldEntity) return { blank: "MEETING_ENTITY_NOT_READ_BACK" };
       entity = heldEntity;

@@ -33,6 +33,7 @@ import type { Meeting } from "../lib/sources/types.ts";
 import { EntityModal, type ModalSubject } from "../components/map/popup/entity-modal.tsx";
 import { DataProvider, type ShellData } from "../lib/state/data.tsx";
 import { rowMarkup } from "./helpers/reader-markup.ts";
+import { readerText } from "../lib/text/reader-names.ts";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (p: string): string => readFileSync(join(ROOT, p), "utf8");
@@ -114,7 +115,7 @@ test("MTG-14: the shared files are in ONE of the two honest states, never half-w
   );
 });
 
-test("MTG-14: meeting lists and body cards show the held online label without a missing join-link placeholder", async (t) => {
+test("MTG-14: meeting lists and body cards preserve the held online label and meeting page with local gaps", async (t) => {
   for (const file of ["components/map/list-overlay.tsx", "components/map/popup/entity-modal.tsx"]) {
     const src = read(file);
     assert.match(src, /<MeetingRow/, `${file} must mount the shared row`);
@@ -123,9 +124,11 @@ test("MTG-14: meeting lists and body cards show the held online label without a 
   t.mock.timers.enable({ apis: ["Date"], now: 0 });
   for (const meeting of [NAMED, CONTROL]) {
     const markup = renderToStaticMarkup(createElement(MeetingRow, { meeting }));
-    const label = renderToStaticMarkup(createElement("span", null, meeting.online!.label)).slice(6, -7);
+    const label = renderToStaticMarkup(createElement("span", null, readerText(meeting.online!.label))).slice(6, -7);
     assert.ok(markup.includes(`data-meeting-where="online">Online · ${label}</div>`), meeting.id);
-    assert.doesNotMatch(markup, /data-working-on-it|working on getting this info|Want us|Join online/);
+    assert.doesNotMatch(markup, /Join online|Still gathering/);
+    assert.match(markup, /working on getting this info/);
+    assert.match(markup, /Want us to get this sooner\?/);
     const subject: ModalSubject = {
       subjectId: meeting.bodyId!, subjectKind: "BODY", title: meeting.bodyName,
       subtitle: meeting.jurisdiction, tier: "local", facts: [], representation: [],
@@ -149,7 +152,9 @@ test("MTG-14: meeting lists and body cards show the held online label without a 
       const row = rowMarkup(card, meeting.id);
       assert.ok(row.includes(`>${heading}</h3>`), `${meeting.id}: ${heading}`);
       assert.ok(row.includes(`data-meeting-where="online">Online · ${label}</div>`), `${meeting.id}: ${heading}`);
-      assert.doesNotMatch(row, /data-working-on-it|working on getting this info|Want us|Join online/);
+      assert.doesNotMatch(row, /Join online|Still gathering/);
+      assert.match(row, /working on getting this info/);
+      assert.match(row, /Want us to get this sooner\?/);
     }
   }
 });

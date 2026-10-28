@@ -210,7 +210,7 @@ test("F01 5.2: every position the store can hold has a pill, in both views", () 
   // The vocabulary the fetcher can actually produce, read off the fetcher so
   // this cannot drift from what lands in the store.
   const fetcher = readFileSync(
-    join(ROOT, "scripts", "fetch-key-vote-positions.mts"),
+    join(ROOT, "lib", "votes", "key-vote-refresh.ts"),
     "utf8",
   );
   const produced = [...fetcher.matchAll(/return "(YES|NO|PRESENT|NOT_VOTING)"/g)].map(

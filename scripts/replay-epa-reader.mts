@@ -106,7 +106,7 @@ try{
     const before=await store.clock(task.sourceId,task.recordClass,task.scope,task.parserVersion),at=label==="initial"?firstAt:label==="tomorrow"?firstAt+86400000:Date.parse(before.lastSucceededObservedAt??before.lastSucceededAt!)+task.cadenceMs;
     controlledAt=at;await store.setReplayClock(at);const due=routineTaskDue(task,before,at);if(args.get("--read-only")!=="true")assert.equal(due,label!=="tomorrow");
     const publishStart=performance.now(),publication=due&&args.get("--read-only")!=="true"?await publishOpenData({store,source:"epa-echo",rows:[],reports,partitions:references,captures:[capture],excludedFacts:rejected,now:new OriginalDate(at).toISOString(),replace:true}):null,publishMs=performance.now()-publishStart;
-    const projection=await readOpenDataProjection("epa-echo","national",{store,now:new OriginalDate(at).toISOString(),bypassCache:true});assert.equal(projection.kind,"PROMOTED");if(projection.kind!=="PROMOTED")throw Error("No promoted manifest.");
+    const projection=await readOpenDataProjection("epa-echo","national",{store,now:new OriginalDate(at).toISOString()});assert.equal(projection.kind,"PROMOTED");if(projection.kind!=="PROMOTED")throw Error("No promoted manifest.");
     assert.equal(projection.value.partitions?.length,references.length);assert.equal(projection.value.reports.length,reports.length);
     for(const report of reports)assert.deepEqual(projection.value.reports.find(value=>value.state===report.state),report);
     const typed=await verifyRoutineReaderProjection(requiredRoutineContract("epa-echo"),{store,now:new OriginalDate(at).toISOString(),expectedVersionId:projection.metadata.versionId!});assert.equal(typed.status,"PASS");

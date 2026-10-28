@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 /**
  * ```
  *   GET  ?list=county|congressional_district|cbsa|state_leg_upper|state_leg_lower&state=<code>
@@ -58,7 +59,7 @@ async function guard(request: NextRequest, write: boolean) {
   });
 }
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const verdict = await guard(request, false);
   if (!verdict.ok) {
     return verdict.status === 404 ? new NextResponse(null, { status: 404, headers }) : NextResponse.json({ says: verdict.says }, { status: verdict.status, headers });
@@ -72,7 +73,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   return read.ok ? NextResponse.json({ items: read.items }, { headers }) : NextResponse.json({ says: read.why }, { status: 503, headers });
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+async function post(request: NextRequest): Promise<NextResponse> {
   const verdict = await guard(request, true);
   if (!verdict.ok) {
     return verdict.status === 404 ? new NextResponse(null, { status: 404, headers }) : NextResponse.json({ says: verdict.says }, { status: verdict.status, headers });
@@ -161,3 +162,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     { headers },
   );
 }
+
+export const GET = adminRead(get);
+
+export const POST = adminRead(post);

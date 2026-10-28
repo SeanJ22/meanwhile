@@ -199,12 +199,12 @@ export function meetingHistoryCandidate(
 
 export async function readMeetingHistory(
   partition: MeetingPartitionContract,
-  options: { readonly store: RoutineDataStore; readonly now?: string; readonly bypassCache?: boolean },
+  options: { readonly store: RoutineDataStore; readonly now?: string;  },
 ): Promise<CivicDataReadResult<MeetingsSnapshot>> {
   return readMeetingPartitionProjection(meetingHistoryContract(partition), {
     store: options.store,
     now: options.now,
-    bypassCache: options.bypassCache ?? true,
+
     maxAgeMs: HISTORY_MAX_AGE_MS,
   });
 }
@@ -224,7 +224,7 @@ export async function moveConcludedMeetingsToHistory(input: {
   if (movableToHistory(input.previous, input.generatedAt) === null) {
     return { outcome: "NONE", moved: NOTHING, detail: "no concluded sitting with a record is older than the held window" };
   }
-  const live = await readMeetingPartitionProjection(input.partition, { store: input.store, now: input.generatedAt, bypassCache: true });
+  const live = await readMeetingPartitionProjection(input.partition, { store: input.store, now: input.generatedAt });
   if (live.kind !== "PROMOTED") {
     return { outcome: "UNAVAILABLE", moved: NOTHING, detail: `the live partition could not be read (${live.kind})` };
   }

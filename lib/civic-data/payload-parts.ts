@@ -18,15 +18,11 @@ function refsIn(value: unknown, into: Set<string>): Set<string> {
   return into;
 }
 
-/* Parts are immutable by hash, so the most recently read are kept, up to a fixed size. */
-const CACHED_PART_BYTES = 64 * 1024 * 1024;
 // Array groups are bounded at 256 KiB; 64 keeps ordinary requests near 16 MiB instead of one round trip per 64 KiB of agenda text.
 const READ_BATCH = 64;
 
 export class CivicPayloadParts {
   private readonly io: CivicPayloadPartIO;
-  private readonly cached = new Map<string, { readonly payload: unknown; readonly size: number }>();
-  private cachedBytes = 0;
   constructor(io: CivicPayloadPartIO) { this.io = io; }
 
   async node(value: unknown): Promise<unknown> {
@@ -58,38 +54,17 @@ export class CivicPayloadParts {
         let chunk = held.get(group);
         if (!chunk) {
           chunk = { rows: await this.load(node.groups![group]) as unknown[], position: 0 };
-          this.cached.clear(); this.cachedBytes = 0;
           held.set(group, chunk);
         }
         yield chunk.rows[chunk.position++];
         remaining.set(group, remaining.get(group)! - 1);
         if (remaining.get(group) === 0) held.delete(group);
       }
-    } finally { this.cached.clear(); this.cachedBytes = 0; }
+    } finally { held.clear(); }
   }
 
-  private remember(part: Part): void {
-    const size = civicPayloadBytes(part.payload);
-    if (size > CACHED_PART_BYTES / 8 || this.cached.has(part.hash)) return;
-    this.cached.set(part.hash, { payload: part.payload, size });
-    this.cachedBytes += size;
-    for (const [hash, held] of this.cached) {
-      if (this.cachedBytes <= CACHED_PART_BYTES) break;
-      this.cached.delete(hash); this.cachedBytes -= held.size;
-    }
-  }
-
-  private async read(hashes: readonly string[]): Promise<readonly Part[]> {
-    const hit = hashes.flatMap(hash => {
-      const held = this.cached.get(hash);
-      if (!held) return [];
-      this.cached.delete(hash); this.cached.set(hash, held);
-      return [{ hash, payload: held.payload }];
-    });
-    const missing = hashes.filter(hash => !this.cached.has(hash));
-    const read = missing.length ? await this.io.read(missing) : [];
-    read.forEach(part => this.remember(part));
-    return [...hit, ...read];
+  private read(hashes: readonly string[]): Promise<readonly Part[]> {
+    return this.io.read(hashes);
   }
 
   async store(input: unknown, inlineFields?: readonly string[], referencedFields?: readonly string[]): Promise<unknown> {

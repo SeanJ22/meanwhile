@@ -21,7 +21,7 @@ test("same names do not join people and declared native aliases do",()=>{
 test("a canonical person and its declared source aliases use one portrait without a name join",()=>{
   const executive=STATEWIDE_EXECUTIVES.find(row=>row.holder.id === 'statewide:nh/governor')!;
   const person:Officeholder={...executive.holder,id:'plural:nh:source-person',personId:'plural:source-person',
-    nativeIds:{reader:[executive.holder.id]},name:executive.holder.name,level:'STATE',state:'NH',termStart:'',termEnd:'',photo:null,
+    nativeIds:{reader:[executive.holder.id]},sourceHolders:undefined,name:executive.holder.name,level:'STATE',state:'NH',termStart:'',termEnd:'',photo:null,
     provenance:{sourceUrl:executive.sourceUrl,sourceOrg:executive.sourceOrg,collectedAt:executive.collectedAt,verifiedAt:null}};
   const roster:OfficeholderSet={scope:'NH',generatedAt:executive.collectedAt,officeholders:[person],divisions:[],unmatched:[]};
   const runtime={formatVersion:1,registry:{generatedAt:executive.collectedAt,divisions:[],bodies:[]},statewideExecutives:[executive],
@@ -70,4 +70,24 @@ test("CL-01's official statewide source links share a photo before the next sour
       assert.equal(photoForPerson(executive.holder.id,'AZ')?.url,executive.holder.photoUrl);
     });
   }));
+});
+
+test("a held record that collapsed several OpenStates people links none of them to each other's portraits",()=>{
+  const at='2026-10-15T00:00:00.000Z';
+  const provenance={sourceUrl:'https://legislature.idaho.gov/house/membership/',sourceOrg:'Idaho Legislature',collectedAt:at,verifiedAt:null};
+  const person=(id:string,personId:string,collectedAt:string,nativeIds?:Record<string,string[]>):Officeholder=>({id,personId,nativeIds,name:id,
+    officeTitle:'State Representative',level:'STATE',state:'ID',termStart:'',termEnd:'',provenance,
+    photo:{url:`/officials/${personId}.jpg`,sourceUrl:`https://example.org/${personId}.jpg`,attribution:null,license:'Public domain',collectedAt}}) as Officeholder;
+  const one=person('plural:id:one','plural:one','2026-01-01T00:00:00.000Z');
+  const two=person('plural:id:two','plural:two','2026-03-01T00:00:00.000Z');
+  // One official record that absorbed every member sharing the chamber's membership page.
+  const collapsed=person('official-legislature:id:collapsed','official-legislature:collapsed','2026-02-01T00:00:00.000Z',
+    {plural:['one','two'],'ocd-person':['one','two'],reader:['plural:id:one','plural:one','plural:id:two','plural:two']});
+  const roster:OfficeholderSet={scope:'ID',generatedAt:at,officeholders:[one,two,collapsed],divisions:[],unmatched:[]};
+  withReaderAuthorityEdge({},()=>{
+    primeStatePeopleProjection({formatVersion:1,sourceId:'plural-openstates',jurisdiction:'US-ID',term:'2026',generatedAt:at,roster});
+    assert.equal(photoForPerson(one.personId!,'ID')?.url,one.photo!.url);
+    assert.equal(photoForPerson(two.personId!,'ID')?.url,two.photo!.url);
+    assert.equal(photoForPerson(collapsed.id,'ID')?.url,collapsed.photo!.url);
+  });
 });

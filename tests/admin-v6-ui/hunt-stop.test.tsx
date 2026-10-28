@@ -42,7 +42,9 @@ test("state and country stop controls stay pending until their runner orders are
     priority:1,budgetUsd:10,decidedAt:at,decidedBy:"owner",receiptId:`send-${state}`,previous:null,note:null,
   }))},at);
   const bundle=await build({stdin:{contents:entry,resolveDir:process.cwd(),sourcefile:"hunt-stop-browser.tsx",loader:"tsx"},
-    alias:{"@":process.cwd()},bundle:true,platform:"browser",format:"iife",write:false,outfile:"hunt-stop.js"});
+    alias:{"@":process.cwd()},bundle:true,platform:"browser",format:"iife",write:false,outfile:"hunt-stop.js",
+    // Next's navigation hooks read process.env at load; Next defines it in a real build.
+    define:{"process.env.NODE_ENV":JSON.stringify("test"),"process.env.__NEXT_CACHE_COMPONENTS":"false"}});
   const browser=await launchGuarded({label:"admin-hunt-stop",headless:true});
   const outcomes=new Map<string,ActionOutcome>();
   let writes=0;

@@ -21,7 +21,7 @@ test("Admin keeps the runner readings after the line inventory is retired, witho
     query = text; params = values;
     return [{ hour: HOUR, facts_live: null, cost_per_fact_usd: null, neon_bytes_read: "800000000",
       rounds_finished: 4, rounds_killed: 1, paid_jobs_ended_empty: 2, paid_jobs_ended: 3 }];
-  } }, "2020-02-03T06:05:00Z");
+  } }, "2020-02-03T06:05:00Z",null);
   assert.match(query, /FROM cp_vital_signs WHERE hour >=/);
   assert.doesNotMatch(query, /cp_owner_snapshots/);
   assert.deepEqual(params, ["2020-02-03T06:00:00.000Z"]);

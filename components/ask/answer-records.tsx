@@ -1,26 +1,31 @@
+"use client";
+
 import { MeetingRow } from "@/components/ui/meeting-row";
 import type { EvidenceRecord } from "@/lib/ask/evidence";
 import { hostOf } from "@/lib/ask/host";
 import { formatDateMDY } from "@/lib/map/format";
+import { readerText } from "@/lib/text/reader-names";
+import { useReaderNames } from "@/components/ui/reader-names-context";
 
-function RecordContents({ record }: { record: EvidenceRecord }) {
+function RecordContents({ record, knownNames }: { record: EvidenceRecord; knownNames: readonly string[] }) {
+  const inheritedNames = useReaderNames();
   if (["MEETING", "AGENDA_ITEM", "AGENDA_DOCUMENT", "MEETING_NOTICE_SUMMARY", "AGENDA_MENTION"].includes(record.kind)) return <MeetingRow record={record} compact />;
   return (
     <>
-      <p>{record.text}</p>
+      <p>{readerText(record.text, "sentence", [...inheritedNames, ...knownNames, record.sourceOrg ?? "", record.fecProfile?.name ?? ""])}</p>
       {record.sourceUrl ? (
         <a href={record.sourceUrl} target="_blank" rel="noreferrer noopener"
           className="t-caption text-link underline decoration-dotted underline-offset-2">
-          {record.sourceOrg ?? hostOf(record.sourceUrl)}
+          {readerText(record.sourceOrg ?? hostOf(record.sourceUrl), "title")}
         </a>
-      ) : record.sourceOrg ? <span className="t-caption text-muted">{record.sourceOrg}</span> : null}
+      ) : record.sourceOrg ? <span className="t-caption text-muted">{readerText(record.sourceOrg, "title")}</span> : null}
       {record.retrievedAt && <span className="t-caption text-muted"> · Read {formatDateMDY(record.retrievedAt.slice(0, 10))}</span>}
     </>
   );
 }
 
 /** Every grounded record remains reachable, including when prose is available. */
-export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, prose }: { records: readonly EvidenceRecord[]; initiallyOpen: boolean; agendaLead?: boolean; prose?: string | null }) {
+export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, prose, knownNames = [] }: { records: readonly EvidenceRecord[]; initiallyOpen: boolean; agendaLead?: boolean; prose?: string | null; knownNames?: readonly string[] }) {
   const visible = records.filter((record) => record.kind !== "CONTACT");
   if (!visible.length) return null;
   const agenda = agendaLead ? visible.filter(record => ["MEETING", "AGENDA_ITEM", "AGENDA_DOCUMENT", "MEETING_NOTICE_SUMMARY"].includes(record.kind)) : [];
@@ -40,7 +45,7 @@ export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, p
         {detailRecords.map((record, index) => (
           <li key={`${record.kind}:${record.id}:${index}`} data-ask-record-id={record.id}
             className="border-l-2 border-[var(--panel-border)] pl-3 t-detail leading-relaxed text-paper-dim">
-            <RecordContents record={record} />
+            <RecordContents record={record} knownNames={knownNames} />
           </li>
         ))}
       </ul>
@@ -55,11 +60,11 @@ export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, p
           data-ask-meeting-id={record.meetingId ?? (record.kind === "MEETING" ? record.id : undefined)}
           data-ask-document-id={record.documentId}
           className="border-l-2 border-[var(--panel-border)] pl-3 t-body leading-relaxed text-paper">
-          <RecordContents record={record} />
+          <RecordContents record={record} knownNames={knownNames} />
         </li>)}
       </ul>
     </section>}
-    {prose && <p className="mt-2 t-body leading-relaxed text-paper-dim">{prose}</p>}
+    {prose && <p className="mt-2 t-body leading-relaxed text-paper-dim">{readerText(prose, "sentence", knownNames)}</p>}
     {disclosure}
   </div>;
   if (!summaries.length) return disclosure;
@@ -70,7 +75,7 @@ export function AskAnswerRecords({ records, initiallyOpen, agendaLead = false, p
           <li key={`${record.kind}:${record.id}:${index}`} data-ask-record-id={record.id}
             className="rounded-md bg-[var(--surface)] p-3 t-body leading-relaxed text-paper">
             <p className="t-eyebrow mb-1.5 text-muted">Plain-language summary</p>
-            <RecordContents record={record} />
+            <RecordContents record={record} knownNames={knownNames} />
           </li>
         ))}
       </ul>

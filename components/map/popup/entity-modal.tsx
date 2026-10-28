@@ -6,7 +6,7 @@ import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-s
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { StateCampaignSection } from "@/components/funding/state-campaign-section";
 import { FederalMoneySection } from "@/components/funding/federal-money-section";
-import { CardGapContext, CardGapContribution, useCardGapRegistry } from "@/components/ui/card-gap-context";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
 import { CardFooter } from "@/components/ui/card-footer";
 import { blurbForTitle } from "@/lib/officials/office-blurbs";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
@@ -35,7 +35,7 @@ import { displayPersonName } from "@/lib/officials/person-name";
 import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import type { SeatHolder } from "@/lib/officials/lookup";
 import { partyColorVar } from "@/lib/officials/party-color";
-import { readerPartyLabel } from "@/lib/text/reader-names";
+import { readerPartyLabel, readerText } from "@/lib/text/reader-names";
 import {
   type CardSource,
   meetingCardSources,
@@ -70,7 +70,7 @@ export type ModalTab =
 
 
 /**
- * One held section of a body's card. Missing sections contribute to its footer.
+ * One section of a body's card, including its own missing-information message.
  */
 export interface BodyCardSection {
   id: string;
@@ -99,6 +99,11 @@ export interface BodyDefinitionText {
 }
 
 export interface BodyCardData {
+  /** Held government identities that receive money for this body. */
+  recipientIds?: readonly string[];
+  recipientNames?: readonly string[];
+  recipientState?: string;
+  moneyDivisionId?: string;
   /**
    * Two layers: `classDefinition` (what this kind of body does) always renders
    * where the class is known; `formDefinition` (its own charter or statute)
@@ -112,6 +117,8 @@ export interface BodyCardData {
   };
   /** A school district's superintendent, who is neither on the board nor elected. */
   superintendent: SeatHolder | null;
+  /** Earlier sourced memberships remain available apart from the current seats. */
+  earlierMembers?: SeatHolder[];
   /** Whether this body is a school district; decides section 3's line. */
   isSchoolDistrict: boolean;
   /** Section 5. Empty means no contact route has been sourced. */
@@ -266,10 +273,10 @@ function PlaceSections({
                 className="flex w-full items-baseline justify-between gap-2 rounded border border-[var(--panel-border)] px-2.5 py-1.5 text-left hover:border-[var(--accent-local)]"
               >
                 <span className="min-w-0 truncate t-body text-paper">
-                  {body.name}
+                  {readerText(body.name)}
                 </span>
                 <span
-                  className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em]"
+                  className="trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em]"
                   style={{ color: `var(--accent-${body.tier})` }}
                 >
                   {TIER_LABEL[body.tier]}
@@ -296,11 +303,12 @@ function PublicRecordSection({ subject, zip }: { subject: ModalSubject; zip?: st
 }
 
 function MoneyRecordSection({ subject }: { subject: ModalSubject }) {
-  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId;
+  const divisionId = subject.publicRecordsDivisionId ?? subject.divisionOcdId ?? subject.bodyCard?.moneyDivisionId;
   if (subject.subjectKind === "MEETING" || !divisionId || !subject.bodyCard && !/\/(?:county|place|school_district|cd):|\/(?:state|district|territory):[a-z]{2}$/.test(divisionId)) return null;
   return <CardSection title="Money and records">
     <StateCampaignSection key={`campaign:${divisionId}`} divisionId={divisionId} />
-    <FederalMoneySection key={`${divisionId}:${subject.bodyCard ? subject.subjectId : "place"}`} divisionId={divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined} />
+    <FederalMoneySection key={`${subject.bodyCard?.moneyDivisionId ?? divisionId}:${subject.bodyCard ? subject.subjectId : "place"}`} divisionId={subject.bodyCard?.moneyDivisionId ?? divisionId} bodyId={subject.bodyCard ? subject.subjectId : undefined}
+      recipientIds={subject.bodyCard?.recipientIds} recipientNames={subject.bodyCard?.recipientNames} recipientState={subject.bodyCard?.recipientState} />
   </CardSection>;
 }
 
@@ -356,16 +364,20 @@ function BodySections({
           ? `${subject.representation.length}`
           : undefined,
       content:
-        subject.representation.length > 0 || card.superintendent ? (
+        subject.representation.length > 0 || card.superintendent || card.earlierMembers?.length ? (
           <>
             <Representation
               holders={subject.representation}
               gaps={subject.rosterGaps}
               note={subject.representationNote}
               onOpenHolder={onOpenHolder}
-              /* No "Who runs it" where nothing is run. */
-              showTopOffices={runsSomething(subject.divisionKind)}
+              /* Each member has one row, with their role beside their name. */
+              showTopOffices={false}
             />
+            {card.earlierMembers && card.earlierMembers.length > 0 && <details className="mt-3">
+              <summary className="cursor-pointer t-detail text-muted">Earlier membership records ({card.earlierMembers.length})</summary>
+              <Representation holders={card.earlierMembers} note="" showTopOffices={false} earlier onOpenHolder={onOpenHolder} />
+            </details>}
             {/* Rendered only for school districts. */}
             {card.isSchoolDistrict && (
               <div className="mt-2 border-t border-[var(--panel-border)] pt-2">
@@ -457,9 +469,11 @@ function BodySections({
 
       {/* One group, one open pill. */}
       <CardSectionGroup>
-        {sections.map((section) => section.content ? (
-          <CardSection key={section.id} title={section.title} meta={section.meta} defaultOpen={section.id === "meetings"}>{section.content}</CardSection>
-        ) : <CardGapContribution key={section.id} id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />)}
+        {sections.map((section) => (
+          <CardSection key={section.id} title={section.title} meta={section.meta} defaultOpen={section.id === "meetings"}>
+            {section.content || <CardGapContribution id={`body:${subject.subjectId}:${section.id}`} label={section.title.toLowerCase()} />}
+          </CardSection>
+        ))}
         <PublicRecordSection subject={subject} zip={homeZip} />
         <MoneyRecordSection subject={subject} />
       </CardSectionGroup>
@@ -483,7 +497,6 @@ export function EntityModal({
   const tab = initialTab;
   const listingCount = readerMeetingCount(subject.meetings, useMeetingListingIdentity());
   const { register, sources: allSources, insideCard } = useCardSourceRegistry(subject.sources, `${subject.subjectKind}:${subject.subjectId}`);
-  const { register: registerGaps, gaps: allGaps } = useCardGapRegistry([], `${subject.subjectKind}:${subject.subjectId}`);
 
   useEffect(() => {
     if (embedded) return;
@@ -540,6 +553,7 @@ export function EntityModal({
                   <>
                     <PopupSectionLabel>What this meeting is about</PopupSectionLabel>
                     <AgendaSection
+                      knownNames={[subject.title, ...subject.representation.map(person => person.name), ...subject.meetings.flatMap(meeting => [meeting.bodyName, meeting.jurisdiction])]}
                       meetingId={subject.agenda.meetingId}
                       bodyId={subject.agenda.bodyId}
                       agendaUrl={subject.agenda.agendaUrl}
@@ -568,8 +582,8 @@ export function EntityModal({
           <button type="button" className="mw-row-link" onClick={onOpenVenue}>
             <span className="mw-row-link-label">{subject.mapPin ? "Map pin" : "Where"}</span>
             <span className="mw-row-link-value">
-              {subject.mapPin ? `${pinBasisLabel(subject.mapPin.basis)} · ${subject.mapPin.address}`
-                : subject.meetings[0].location!.name ?? subject.meetings[0].location!.address}
+              {subject.mapPin ? `${pinBasisLabel(subject.mapPin.basis)} · ${readerText(subject.mapPin.address, "address")}`
+                : readerText(subject.meetings[0].location!.name ?? subject.meetings[0].location!.address, "address")}
             </span>
             <span aria-hidden="true">›</span>
           </button>
@@ -589,18 +603,18 @@ export function EntityModal({
     ) : null;
 
   if (subject.subjectKind === "MEETING" && subject.meetings[0]) return <div ref={cardRef}
-    className={embedded ? "mw-embedded" : "account-modal-overlay"} role={embedded ? undefined : "dialog"} aria-modal={embedded ? undefined : "true"} aria-label={subject.title}
+    className={embedded ? "mw-embedded" : "account-modal-overlay"} role={embedded ? undefined : "dialog"} aria-modal={embedded ? undefined : "true"} aria-label={readerText(subject.title)}
     onClick={event => { if (!embedded && event.target === event.currentTarget) onClose(); }}>
-    <MeetingCard meeting={subject.meetings[0]} title={subject.title} subtitle={subject.subtitle} representation={subject.representation} sources={subject.sources} onClose={embedded ? undefined : onClose}>
+    <MeetingCard meeting={subject.meetings[0]} title={readerText(subject.title)} subtitle={subject.subtitle} representation={subject.representation} sources={subject.sources} onClose={embedded ? undefined : onClose}>
       {meetingLinks}
       <CardSection title="What this meeting is about" defaultOpen>{overview}</CardSection>
       <CardSection title="Who sits on it"><Representation holders={subject.representation} note={subject.representationNote} gaps={subject.rosterGaps} onOpenHolder={onOpenHolder} /></CardSection>
-      <SpeakYourMind subjectType="MEETING" subjectId={subject.subjectId} subject={subject.title} />
+      <SpeakYourMind subjectType="MEETING" subjectId={subject.subjectId} subject={readerText(subject.title)} />
     </MeetingCard>
   </div>;
 
   return (
-    <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><CardGapContext.Provider value={registerGaps}><div
+    <CardSubjectContext.Provider value={subject.subjectKind === "BODY" ? { type: "BODY", id: subject.subjectId } : null}><CardSourceContext.Provider value={register}><div
       ref={cardRef}
       className={embedded ? "account-modal-overlay mw-embedded" : "account-modal-overlay"}
       role={embedded ? undefined : "dialog"}
@@ -624,16 +638,16 @@ export function EntityModal({
                   className="popup-badge"
                   data-status={badge.status}
                 >
-                  {badge.label}
+                  {readerText(badge.label)}
                 </span>
               ))}
             </p>
-            <h2 className="account-modal-title">{subject.title}</h2>
+            <h2 className="account-modal-title">{readerText(subject.title)}</h2>
             <p className="account-modal-subtitle">{subject.subtitle}</p>
             {/* Only when this modal is about a division. */}
             {subject.divisionOcdId != null && (
               <BrowsingSubjectLine
-                label={subject.title}
+                label={readerText(subject.title)}
                 homeZip={homeZip}
                 ocdId={subject.divisionOcdId}
               />
@@ -675,7 +689,7 @@ export function EntityModal({
               <CardSection title="Who represents this spot" defaultOpen>
                 {subject.spotRepresentation.map(division => (
                   <div key={division.ocdId} data-spot-division={division.ocdId} className="mb-4 last:mb-0">
-                    <PopupSectionLabel>{division.label}</PopupSectionLabel>
+                    <PopupSectionLabel>{readerText(division.label)}</PopupSectionLabel>
                     <Representation holders={division.holders} vacancy={division.vacancy} gaps={division.rosterGaps} note={division.note}
                       onOpenHolder={onOpenHolder} showTopOffices={false} />
                   </div>
@@ -697,13 +711,13 @@ export function EntityModal({
               key={`${tab}:${subject.subjectId}`}
               subjectType={subject.subjectKind}
               subjectId={subject.subjectId}
-              subject={subject.title}
+              subject={readerText(subject.title)}
             />
           </div>
         )}
-        {!insideCard && <CardFooter gaps={allGaps} sources={allSources} />}
+        {!insideCard && <CardFooter sources={allSources} />}
       </div>
-    </div></CardGapContext.Provider></CardSourceContext.Provider></CardSubjectContext.Provider>
+    </div></CardSourceContext.Provider></CardSubjectContext.Provider>
   );
 }
 
@@ -714,6 +728,7 @@ export function Representation({
   onOpenHolder,
   /** Lead with the top offices. False only where the list already is the top office. */
   showTopOffices = true,
+  earlier = false,
 }: {
   holders: SeatHolder[];
   vacancy?: import("@/lib/officials/types").SeatVacancy;
@@ -721,6 +736,7 @@ export function Representation({
   gaps?: readonly RosterReaderGap[];
   onOpenHolder?: (holder: SeatHolder) => void;
   showTopOffices?: boolean;
+  earlier?: boolean;
 }) {
   if (holders.length === 0 && vacancy) return <p className="t-detail leading-relaxed">This seat is vacant.</p>;
   if (holders.length === 0) return <><RosterCompletenessGaps gaps={gaps} /><CardGapContribution id="representation" label="who sits on it" /></>;
@@ -761,13 +777,10 @@ export function Representation({
           ))}
         </div>
       )}
-      {showTopOffices && topOffices.length === 0 && (
-        <CardGapContribution id="top-offices" label="who runs it" />
-      )}
       {ordered.map((holder) => (
-        <div key={holder.id} data-roster-holder={holder.id} className="account-modal-person flex items-start gap-3">
+        <div key={holder.id} data-roster-holder={earlier ? undefined : holder.id} data-earlier-roster-holder={earlier ? holder.id : undefined} className="account-modal-person flex items-start gap-3">
           {/* `IdentityPortrait` renders initials where no portrait exists. */}
-          <IdentityPortrait name={holder.name} photoUrl={holder.photoUrl} />
+          <IdentityPortrait name={readerText(holder.name, "name")} photoUrl={holder.photoUrl} />
 
           <div className="min-w-0 flex-1">
           <div className="flex items-baseline justify-between gap-3">
@@ -779,7 +792,7 @@ export function Representation({
                   onClick={() => onOpenHolder(holder)}
                   className="cursor-pointer hover:text-signal hover:underline"
                 >
-                  {holder.name}
+                  {readerText(holder.name, "name")}
                 </button>
               ) : holder.websiteUrl ? (
                 <CheckedLink
@@ -788,20 +801,20 @@ export function Representation({
                   rel="noreferrer"
                   className="hover:text-signal hover:underline"
                 >
-                  {holder.name}
+                  {readerText(holder.name, "name")}
                 </CheckedLink>
               ) : (
-                holder.name
+                readerText(holder.name, "name")
               )}
             </span>
             {/* trailing-space-trimmed removes the tracking's trailing space from the box. */}
-            <span className="trailing-space-trimmed shrink-0 font-mono t-caption uppercase tracking-[0.15em] text-muted">
+            <span className="trailing-space-trimmed shrink-0 font-mono t-caption  tracking-[0.15em] text-muted">
               {readerOfficeTitle(holder.officeTitle)}
             </span>
           </div>
 
           {holder.partyLabel && <p className="mt-1 t-caption" style={{ color: partyColorVar(holder.partyLabel) }}>{readerPartyLabel(holder.partyLabel)}</p>}
-          <CardSourcesContribution id={`holder:${holder.id}`} sources={holder.provenance ? [{ what: `Who represents it — ${holder.name}`, provenance: holder.provenance }] : holder.sourceUrl ? [{ what: `Who represents it — ${holder.name}`, provenance: { sourceUrl: holder.sourceUrl, sourceOrg: "", collectedAt: "", verifiedAt: null } }] : []} />
+          <CardSourcesContribution id={`holder:${holder.id}`} sources={holder.provenance ? [{ what: `Who represents it — ${readerText(holder.name, "name")}`, provenance: holder.provenance }] : holder.sourceUrl ? [{ what: `Who represents it — ${readerText(holder.name, "name")}`, provenance: { sourceUrl: holder.sourceUrl, sourceOrg: "", collectedAt: "", verifiedAt: null } }] : []} />
           </div>
         </div>
       ))}
@@ -827,13 +840,13 @@ export function Meetings({ meetings }: { meetings: Meeting[] }) {
       {groups.map((group) => (
         <section key={group.id}>
           <p className="t-structure mt-3 mb-1 text-label first:mt-0">
-            {group.label}
+            {readerText(group.label)}
           </p>
           {group.meetings.map((meeting) => (
             <div key={meeting.id} data-meeting-id={meeting.id} className="account-modal-person">
               <div className="flex items-baseline justify-between gap-3">
                 <span className="t-body text-paper">
-                  {meeting.title}
+                  {readerText(meeting.title)}
                 </span>
                 <span className="shrink-0 font-mono t-caption text-muted">
                   {formatMeetingDate(meeting)}
@@ -856,7 +869,7 @@ export function Meetings({ meetings }: { meetings: Meeting[] }) {
                       target="_blank"
                       rel="noreferrer"
                       title={directions.hint}
-                      className="trailing-space-trimmed-14 mt-1 inline-flex items-baseline gap-1 font-mono t-caption uppercase tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
+                      className="trailing-space-trimmed-14 mt-1 inline-flex items-baseline gap-1 font-mono t-caption  tracking-[0.14em] text-muted underline-offset-2 hover:text-signal"
                     >
                       Directions
                     </CheckedLink>

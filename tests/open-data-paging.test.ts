@@ -30,7 +30,7 @@ test("Cursor pages retain all ZIP and nearby facts once, and refuse another plac
   const cell=facilityCell(point.lat,point.lng),parts:[string,OpenDataFact[]][]=[...Array.from({length:2},(_,index)=>[`zip:${zip}:state:AZ:part:${index}`,exact.slice(index*30,index*30+30)] as [string,OpenDataFact[]]),...Array.from({length:3},(_,index)=>[`${cell}:state:AZ:part:${index}`,all.slice(index*40,index*40+40)] as [string,OpenDataFact[]])];
   await publish(store,vault,all,parts);
   let requests=0;const measured:EvidenceStore={put:vault.put.bind(vault),head:vault.head.bind(vault),list:vault.list.bind(vault),async get(key){requests++;return vault.get(key);}};
-  const options={store,vault:measured,now:NOW,bypassCache:true},first=await readerOpenData({zip},options);
+  const options={store,vault:measured,now:NOW},first=await readerOpenData({zip},options);
   assert.equal(first.records.length,50);assert.ok(first.nextCursor);assert.ok(requests<=4);
   const found:OpenDataFact[]=[];for await(const page of readerOpenDataPages({zip},options)){assert.ok(page.records.length<=50);found.push(...page.records);}
   assert.deepEqual(found.map(row=>row.id),all.map(row=>row.id));assert.equal(new Set(found.map(row=>row.id)).size,120);
@@ -48,7 +48,7 @@ test("A page bounds rejected spatial work and continues through empty slices wit
   const outside=await rows(5,{...far,zip:"85332"}),near=await rows(3,{...point,zip:"85332"},5),all=[...outside,...near],store=new MemoryRoutineDataStore(),vault=new MemoryEvidenceStore();
   const parts:[string,OpenDataFact[]][]=[...outside.map((row,index)=>[`${facilityCell(far.lat,far.lng)}:state:AZ:part:${index}`,[row]] as [string,OpenDataFact[]]),[`${facilityCell(point.lat,point.lng)}:state:AZ:part:0`,near]];
   await publish(store,vault,all,parts);
-  const options={store,vault,now:NOW,bypassCache:true},first=await readerOpenData({zip},options);assert.deepEqual(first.records,[]);assert.ok(first.nextCursor);
+  const options={store,vault,now:NOW},first=await readerOpenData({zip},options);assert.deepEqual(first.records,[]);assert.ok(first.nextCursor);
   const found:OpenDataFact[]=[];for await(const page of readerOpenDataPages({zip},options))found.push(...page.records);
   assert.deepEqual(found.map(row=>row.id),near.map(row=>row.id));
 });

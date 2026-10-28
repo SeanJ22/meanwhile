@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { mkdirSync, writeFileSync } from "node:fs";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { launchGuarded } from "./browser.mts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import type { CoveredBody } from "../lib/registry/coverage.ts";

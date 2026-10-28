@@ -1,4 +1,4 @@
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../../../db/client.ts";
 import type { HeldPlaceField } from "../../../coverage/place-owed.ts";
 import { factClocks } from "../../../facts/clocks.ts";
 import { officialTermScope } from "./held-subject-fields.ts";
@@ -10,9 +10,10 @@ import { boundedQuery } from "../../repository/request-bounds.ts";
 import type { HeldSubjectDetails } from "./held-subject-enrichment.ts";
 
 export const HELD_FACT_CLOCKS_SQL = `SELECT (SELECT value->'settings'->'facts.freshnessHours'
-  FROM cp_admin_config WHERE id='current') AS freshness_hours`;
+  FROM cp_admin_config WHERE id='current') AS freshness_hours,
+  (SELECT value->'settings'->'facts.retryMinutes' FROM cp_admin_config WHERE id='current') AS retry_minutes`;
 
-/** One settings value, once per provider pass; neither source bodies nor the full Admin config travel here. */
+/** The active fact windows and retry floors, once per provider pass; the full Admin config stays behind. */
 export async function readHeldFactClocks(query?: Query): Promise<Clocks> {
   if (!query) {
     const url = controlPlaneUrlFromEnv();
@@ -24,7 +25,7 @@ export async function readHeldFactClocks(query?: Query): Promise<Clocks> {
   const [row] = await query(HELD_FACT_CLOCKS_SQL);
   if (!row) throw new Error("HELD_FACT_CLOCKS_UNREADABLE");
   // The fact store has checked_at, not a persisted fresh_until. Use the same per-kind Admin clock as publication.
-  return factClocks({ settings: { "facts.freshnessHours": row.freshness_hours } } as unknown as AdminConfig);
+  return factClocks({ settings: { "facts.freshnessHours": row.freshness_hours, "facts.retryMinutes": row.retry_minutes } } as unknown as AdminConfig);
 }
 
 /** Values stay on the server: the owed list needs only the live field's identity, type, source and clock. */
@@ -41,8 +42,8 @@ export const HELD_SUBJECT_PROGRESS_SQL = `WITH held AS (
       WHEN jsonb_typeof(f.value)='object' THEN f.value<>'{}'::jsonb
       WHEN jsonb_typeof(f.value)='array' THEN jsonb_array_length(f.value)>0 ELSE false END nonempty,
     s.final_url source_url,f.checked_at
-    FROM identities h JOIN fact f ON f.entity_id=h.canonical_id AND f.status='live'
-      AND (h.kind='person' AND h.body_id IS NOT NULL AND EXISTS(SELECT 1 FROM fact membership
+    FROM identities h JOIN checked_fact f ON f.entity_id=h.canonical_id AND f.status='live'
+      AND (h.kind='person' AND h.body_id IS NOT NULL AND EXISTS(SELECT 1 FROM checked_fact membership
         WHERE membership.entity_id=h.body_id AND membership.field='member:'||h.canonical_id AND membership.status='live')
         AND (f.field IN ('email','phone','website')
         OR f.field IN ('term_start:'||h.term_scope,'term_end:'||h.term_scope,'term_note:'||h.term_scope)

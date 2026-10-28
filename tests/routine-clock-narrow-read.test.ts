@@ -32,7 +32,6 @@ import { normalizedHash } from "../lib/civic-data/candidate-builders.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { AUTOMATIC_REFRESH_TASKS } from "../lib/civic-data/automatic-refresh.ts";
 import {
-  attestPromotedVersion,
   clearPromotedReadModelCache,
   promotionProofIssue,
   readPromotedCivicData,
@@ -40,11 +39,7 @@ import {
 } from "../lib/civic-data/read-model.ts";
 import { isUnchangedConfirmationEvent, parseUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 import {
-  attestedPromotionFor,
-  parseAttestedPromotions,
   promotedPayloadSha256,
-  serializeAttestedPromotions,
-  type AttestedPromotion,
 } from "../lib/civic-data/attested-promotion.ts";
 import {
   VALIDATION_CHECKS,
@@ -171,7 +166,9 @@ test("the routine clock reads a pointer's identity and proof, never its promoted
 
 test("the routine clock builds its candidate view in Postgres; the payload and read model never leave the database", () => {
   const select = selectList(routineClockCandidateRead(drizzle.mock({ schema }), "cv-example"));
-  assert.doesNotMatch(select, DATASET);
+  assert.doesNotMatch(select,/->'readModel'|->'retainedSourceResponses'|->'identities'/);
+  assert.match(select,/'nextWorkAt',\(SELECT min\(value\)/,"only an aggregated work date leaves source plans");
+  assert.match(select,/'workPending',CASE WHEN/,"continuation leaves source plans as one boolean");
   assert.doesNotMatch(select, /"candidate"(?!\s*(?:->|#>))/, "the whole candidate column is never selected");
   assert.match(select, /jsonb_strip_nulls\(jsonb_build_object\(/);
   for (const field of ROUTINE_CLOCK_CANDIDATE_FIELDS.top) {
@@ -186,7 +183,7 @@ test("the routine clock builds its candidate view in Postgres; the payload and r
 test("the clock view names exactly the fields the clock proves; widening it is a visible cost decision", () => {
   assert.deepEqual(ROUTINE_CLOCK_CANDIDATE_FIELDS, {
     top: ["id", "sourceId", "recordClass", "scope", "bootstrapImport", "stateRetirement"],
-    retrieval: ["retrievedAt", "sourceCheck"],
+    retrieval: ["retrievedAt", "sourceCheck","complete"],
     normalization: ["parserVersion"],
   });
   const view = routineClockCandidateView(candidate("view-shape"));
@@ -194,6 +191,17 @@ test("the clock view names exactly the fields the clock proves; widening it is a
   assert.deepEqual(view.retrieval, { retrievedAt: "2026-09-08T12:00:00.000Z" });
   assert.deepEqual(view.normalization, { parserVersion: "fec-funding/4" });
   assert.doesNotMatch(JSON.stringify(view), /view-shape-\d/, "no dataset row survives the view");
+});
+
+test("source plans and portrait blank schedules expose only their earliest work date and explicit cutoff",()=>{
+  const next="2026-09-15T12:00:00.000Z";
+  const value=candidate("work-clock",{normalizedPayload:{sourceProbe:{nextTermAt:next,complete:false,requests:["large source metadata"]}},
+    excludedFacts:[{key:"portrait",code:"STATE_PORTRAIT_WORK_REMAINS",detail:"remaining work",record:{people:["held person"]}}]});
+  const view=routineClockCandidateView(value);
+  assert.equal(view.nextWorkAt,next);assert.equal(view.workPending,true);
+  assert.doesNotMatch(JSON.stringify(view),/large source metadata|held person|sourceProbe/);
+  const failed=routineClockCandidateView({...value,excludedFacts:[],retrieval:{...value.retrieval,complete:false}});
+  assert.equal(failed.workPending,undefined,"an incomplete HTTP/parser result alone does not declare a successful cutoff");
 });
 
 test("both stores' clocks read through the narrowed view, never a whole row", () => {
@@ -351,7 +359,7 @@ test("a live candidate's proof reads neither its identity set nor its change set
   }
   const [batch] = await store.readCandidateProofs([value.id, "cv-missing"]);
   assert.deepEqual(batch, { candidateId: value.id, record: narrowed });
-  const read = await readPromotedCivicData(value.recordClass, value.scope, { store, bypassCache: true, now: "2026-09-08T13:00:00.000Z" });
+  const read = await readPromotedCivicData(value.recordClass, value.scope, { store,  now: "2026-09-08T13:00:00.000Z" });
   assert.equal(read.kind, "PROMOTED");
 });
 
@@ -367,91 +375,8 @@ test("the proof view is built in Postgres; the identity column and a live row's 
   assert.deepEqual(CANDIDATE_PROOF_OMITTED, { unlessImported: ["changeSet", "civicRecords", "identities"] });
 });
 
-test("an attested version is served from its pointer alone; any mismatch runs the full proof", async () => {
-  class CountingStore extends MemoryRoutineDataStore {
-    candidateReads = 0;
-    override async readCandidate(candidateId: string) {
-      this.candidateReads += 1;
-      return super.readCandidate(candidateId);
-    }
-    override async readCandidateProof(candidateId: string) {
-      this.candidateReads += 1;
-      return super.readCandidateProof(candidateId);
-    }
-  }
-  const supervisor = new CountingStore();
-  const value = candidate("attested");
-  await supervisor.create({ ...promoted(value), state: "FETCHED", receipt: null, promotedVersion: null, lastKnownGoodVersion: null }, {
-    candidateId: value.id,
-    sequence: 1,
-    state: "FETCHED",
-    at: value.retrieval.retrievedAt,
-    detail: "persisted acquisition",
-  });
-  await supervisor.transition(value.id, "NORMALIZED", value.retrieval.retrievedAt, "persisted normalization");
-  const receipt = receiptFor(value);
-  await supervisor.transition(value.id, "VALIDATED", value.retrieval.retrievedAt, "persisted validation", receipt);
-  await supervisor.promote(value.id, receipt, "2026-09-08T12:01:00.000Z");
-  const now = "2026-09-08T13:00:00.000Z";
-  clearPromotedReadModelCache();
-  assert.equal(attestPromotedVersion(value.recordClass, value.scope, supervisor), null, "nothing is attested before a proof");
-  const proven = await readPromotedCivicData(value.recordClass, value.scope, { store: supervisor, now });
-  assert.equal(proven.kind, "PROMOTED");
-  const attested = attestPromotedVersion(value.recordClass, value.scope, supervisor);
-  assert.ok(attested);
-  assert.equal(attested.versionId, value.id);
-  assert.equal(attested.retrievedAt, value.retrieval.retrievedAt);
-
-  // A child is a fresh process: a different store object over the same rows.
-  const child = () => {
-    clearPromotedReadModelCache();
-    const store = new CountingStore();
-    Object.assign(store, {
-      candidates: (supervisor as unknown as { candidates: unknown }).candidates,
-      history: (supervisor as unknown as { history: unknown }).history,
-      promotions: (supervisor as unknown as { promotions: unknown }).promotions,
-    });
-    return store;
-  };
-  const exact = child();
-  const read = await readPromotedCivicData(value.recordClass, value.scope, { store: exact, now, attested });
-  assert.equal(exact.candidateReads, 0, "the attested version's candidate is not read again");
-  assert.deepEqual(read, proven, "the attested read reports exactly what the proof reported");
-
-  for (const [name, mismatch] of [
-    ["another version", { ...attested, versionId: "cv-other" }],
-    ["another payload", { ...attested, payloadSha256: "b".repeat(64) }],
-    ["another scope", { ...attested, scope: "other-scope" }],
-  ] as const) {
-    const store = child();
-    const again = await readPromotedCivicData(value.recordClass, value.scope, { store, now, attested: mismatch });
-    assert.equal(store.candidateReads, 1, `${name}: the full proof runs`);
-    assert.equal(again.kind, "PROMOTED");
-  }
-  const verifying = child();
-  await readPromotedCivicData(value.recordClass, value.scope, { store: verifying, now, attested, bypassCache: true });
-  assert.equal(verifying.candidateReads, 1, "verification never takes an attestation");
-});
-
-test("attestations parse whole or not at all", () => {
-  const good: AttestedPromotion = {
-    recordClass: "REGISTRY_RUNTIME_BINDING",
-    scope: "US:reader-registry-runtime-bindings",
-    versionId: "cv-1",
-    payloadSha256: "c".repeat(64),
-    retrievedAt: "2026-09-14T04:24:35.148Z",
-    staleAtRetrieval: false,
-    version: "2026",
-    sourceThrough: null,
-  };
-  assert.deepEqual(parseAttestedPromotions(serializeAttestedPromotions([good])), [good]);
-  assert.equal(attestedPromotionFor([good], "REGISTRY_RUNTIME_BINDING", good.scope), good);
-  assert.equal(attestedPromotionFor([good], "MEETING", good.scope), null);
-  for (const bad of [undefined, "", "{", "{}", "[1]", JSON.stringify([{ ...good, payloadSha256: "short" }]),
-    JSON.stringify([good, { ...good, retrievedAt: "not a time" }]), JSON.stringify([{ ...good, staleAtRetrieval: "no" }])]) {
-    assert.deepEqual(parseAttestedPromotions(bad), [], `refused: ${String(bad).slice(0, 40)}`);
-  }
-  assert.equal(promotedPayloadSha256({ b: 1, a: 2 }), promotedPayloadSha256({ a: 2, b: 1 }), "canonical, key order free");
+test("reader payload digests use canonical key order", () => {
+  assert.equal(promotedPayloadSha256({ b: 1, a: 2 }), promotedPayloadSha256({ a: 2, b: 1 }));
 });
 
 async function promotedStore(value: RoutineCandidate, promotedAt = "2026-09-08T12:01:00.000Z"): Promise<MemoryRoutineDataStore> {
@@ -564,13 +489,19 @@ test("a real 304 advances the source clock while held replay preserves both chec
   assert.equal(checked.lastSucceededAt, value.retrieval.retrievedAt);
   assert.equal(checked.lastSucceededObservedAt, checkedAt);
   assert.equal(checked.lastAttemptedAt, checkedAt);
+  assert.equal(checked.lastCompletedAt,"2026-09-09T12:00:03.000Z","local completion remains separate from the provider's actual 304 observation");
   const upgradedParser = await store.clock(value.sourceId, value.recordClass, value.scope, "fec-funding/5");
   assert.equal(upgradedParser.lastAttemptedAt, undefined, "an older parser's confirmation cannot postpone the upgraded parser's first attempt");
   assert.equal(upgradedParser.lastSucceededParserVersion, "fec-funding/4");
   assert.equal(upgradedParser.lastSucceededObservedAt, checkedAt, "the real source check remains true for the prior GOOD");
-  assert.equal((await store.confirmUnchanged(input, "2026-09-09T18:00:00.000Z")).kind, "CONFIRMED");
-  assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked);
-  const read = await readPromotedCivicData(value.recordClass, value.scope, { store, now: "2026-09-09T18:00:00.000Z", maxAgeMs: 86400000, bypassCache: true });
+  const eventsBeforeReplay = (await store.events(value.id)).length;
+  assert.deepEqual(await store.confirmUnchanged(input, "2026-09-09T18:00:00.000Z"), {
+    kind: "CONFIRMED", versionId: value.id, at: "2026-09-09T12:00:03.000Z",
+  });
+  assert.equal((await store.events(value.id)).length, eventsBeforeReplay, "the identical provider receipt adds no new completion event");
+  assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked,
+    "retained-byte processing alone changes no source or completion clock");
+  const read = await readPromotedCivicData(value.recordClass, value.scope, { store, now: "2026-09-09T18:00:00.000Z", maxAgeMs: 86400000 });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.retrievedAt, value.retrieval.retrievedAt);
   assert.equal(read.metadata.checkedAt, checkedAt);
@@ -578,7 +509,7 @@ test("a real 304 advances the source clock while held replay preserves both chec
   const beforeDelayedReplay = (await store.events(value.id)).length;
   assert.deepEqual(await store.confirmUnchanged({ ...input, retrieval: { ...input.retrieval,
     sourceCheck: value.retrieval.sourceCheck } }, "2026-09-09T19:00:00.000Z"), {
-    kind: "CONFIRMED", versionId: value.id, at: "2026-09-09T18:00:00.000Z",
+    kind: "CONFIRMED", versionId: value.id, at: "2026-09-09T12:00:03.000Z",
   });
   assert.equal((await store.events(value.id)).length, beforeDelayedReplay, "a delayed older check cannot replace the newest provider receipt");
   assert.deepEqual(await store.clock(value.sourceId, value.recordClass, value.scope), checked);

@@ -1,4 +1,7 @@
+import { orderedDeadlines } from "./deadline-summary.ts";
+
 export interface DatedStep {
+  audience?: "GENERAL" | "MILITARY_OVERSEAS";
   label: string;
   date: string;
   detail: string | null;
@@ -12,6 +15,24 @@ export interface ElectionDates {
   state: string;
   electionDay: string;
   steps: DatedStep[];
+}
+
+/** Display cleanup only: keep the source's words, dates, times and conditions. */
+export function ballotDateText(text: string | null): string | null {
+  if (!text?.trim()) return null;
+  const cleaned = text.trim()
+    .replace(/\s+([.,;:!?\)\]])/g, "$1")
+    .replace(/\.{2,}$/, ".")
+    .replace(/\b(january|february|april|june|july|august|september|october|november|december|jan|feb|mar|apr|jun|jul|aug|sep|sept|oct|nov|dec|monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:may|march)(?=\s+\d))\b/gi,
+      word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .replace(/(^|\n\s*|[.!?]["'”’\)\]]*\s+)([a-z])/g, (whole, boundary: string, letter: string, offset: number, input: string) => {
+      // A time, legal citation or month abbreviation does not end a sentence.
+      const preceding = input.slice(0, offset + boundary.length).trimEnd();
+      if (boundary.startsWith(".") && /(?:\b[ap]\.m|\b[A-Za-z](?:\.[A-Za-z])+|\b(?:Jan|Feb|Mar|Apr|Jun|Jul|Aug|Sep|Sept|Oct|Nov|Dec|Sec|par|s))\.$/i.test(preceding)) return whole;
+      return boundary + letter.toUpperCase();
+    })
+    .replace(/\s+/g, " ");
+  return /[.!?]["'”’\)\]]*$/.test(cleaned) ? cleaned : `${cleaned}.`;
 }
 
 function dateTopic(label: string): string {
@@ -29,11 +50,11 @@ export function electionDatesFor(state: string, projection: readonly ElectionDat
   const published = projection.find(calendar => calendar.state === state && calendar.electionDay === electionDay) ?? null;
   const held = builtInElectionDatesFor(state);
   if (!held?.verifiedAt || held.electionDay !== electionDay) return published;
-  const supplied = new Set(published?.steps.map(step => dateTopic(step.label)) ?? []);
+  const supplied = new Set(published?.steps.filter(step => step.audience !== "MILITARY_OVERSEAS").map(step => dateTopic(step.label)) ?? []);
   const retained = held.steps.filter(step => step.label !== "Election Day" && !supplied.has(dateTopic(step.label)))
     .map(step => ({ ...step, label: DATE_LABELS[dateTopic(step.label)] ?? step.label,
       sourceUrl: held.sourceUrl, sourceOrg: held.sourceOrg, collectedAt: held.collectedAt, verifiedAt: held.verifiedAt! }));
-  return { state, electionDay, steps: [...(published?.steps ?? []), ...retained] };
+  return { state, electionDay, steps: orderedDeadlines([...(published?.steps ?? []), ...retained]) };
 }
 
 /** Existing sourced dates remain available until that field has a replacement. */

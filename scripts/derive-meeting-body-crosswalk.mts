@@ -1,11 +1,12 @@
 import { join } from "node:path";
 
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 
 import { promotedInputRef, type DerivedInputRef } from "../lib/civic-data/derived-authority.ts";
 import {
   DERIVED_CROSSWALK_CONTRACT_ID,
   DERIVED_CROSSWALK_RECORD_CLASS,
+  DERIVED_CROSSWALK_SOURCE_ID,
   DERIVED_CROSSWALK_SCOPE,
   derivedCrosswalkCandidate,
   derivedCrosswalkFailedCandidate,
@@ -18,19 +19,17 @@ import { printSourceRunnerReceipt } from "../lib/civic-data/runner-receipt.ts";
 import { PostgresRoutineDataStore } from "../lib/civic-data/store.ts";
 import type { RoutineCandidate } from "../lib/civic-data/types.ts";
 import { AUTO_CROSSWALK_VENDORS, autoCrosswalkReviewerId, reviewDiscoveryWalk, type HeldBytes, type RegisteredGovernment } from "../lib/control-plane/discovery/auto-crosswalk.ts";
-import { CURRENT_CALENDAR_READS_SQL } from "../lib/control-plane/discovery/derived-wiring.ts";
+import { confirmMeetingDerivationSource, meetingDerivationCanContinue, meetingDerivationConfig, meetingDerivationPending, readMeetingDerivationSource, readMeetingDerivationWalks, withMeetingDerivationProbe } from "../lib/civic-data/meeting-derivation-source.ts";
+import { sourceHashReceiptFields } from "../lib/civic-data/source-hash.ts";
+import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
 import { readCensusGovernmentFacts } from "../lib/registration/jurisdictions.ts";
 import { reviewedBodyForGovernment } from "../lib/control-plane/discovery/reviewed-body.ts";
 import { readHeldBytes, type HeldVaultArtifact } from "../lib/control-plane/evidence/read-only-vault.ts";
 import { heldArtifactCaptures } from "../lib/civic-data/held-artifact-captures.ts";
 import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-write.ts";
-import type { MeetingsDiscoveryAttempt } from "../lib/hunt/meetings-site-discovery.ts";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { installNeonRequestDeadline } from "../lib/ops/neon-request-deadline.ts";
-import { readRegistrationProjection } from "../lib/registration/reader.ts";
 import { loadRegistrationReference } from "../lib/registration/reference.ts";
-import { readRegistryRuntimeProjection } from "../lib/registry/runtime-read-model.ts";
-import { stateRegistryRuntimeScope } from "../lib/civic-data/state-scopes.ts";
 import { activeWiring } from "../lib/registry/source-wiring.ts";
 import { ensureMeetingDoors } from "../lib/doors/meeting-doors.ts";
 
@@ -42,67 +41,78 @@ prepareProductionCivicDataWrite();
 
 const store = new PostgresRoutineDataStore();
 const now = new Date().toISOString();
-// A body a hand-wired door already serves gets no derived row; without the doors, that cannot be told, so nothing is derived.
-const doors = await ensureMeetingDoors();
-if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
 
 const AUTO_CROSSWALK_REVIEW_VERSION = "37f3d4f2533c";
 const REVIEWER = autoCrosswalkReviewerId(AUTO_CROSSWALK_REVIEW_VERSION);
 
 async function finish(candidate: RoutineCandidate): Promise<void> {
-  const outcome = await processRegisteredRoutineCandidate(store, DERIVED_CROSSWALK_CONTRACT_ID, candidate, now);
+  const outcome = await processRegisteredRoutineCandidate(store, DERIVED_CROSSWALK_CONTRACT_ID, candidate, now, undefined, { confirmUnchanged: false });
   printSourceRunnerReceipt(DERIVED_CROSSWALK_CONTRACT_ID, candidate, outcome);
   if (!outcome.promoted) process.exitCode = 2;
 }
 
 async function main(): Promise<void> {
-  const lkg = await readDerivedMeetingBodyCrosswalk({ store, bypassCache: true, now });
-  if (lkg.kind === "STORE_UNREACHABLE") {
-    await finish(derivedCrosswalkFailedCandidate(now, `The previous automatic crosswalk could not be read (${lkg.code}): ${lkg.detail}`));
-    return;
-  }
-  const previous = lkg.kind === "PROMOTED" ? lkg.value.records : [];
-  const lkgInput = lkg.kind === "PROMOTED"
-    ? promotedInputRef(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
-    : null;
-
-  /* Each route's newest actual read, with the original walk and saved evidence. */
   const controlPlane = process.env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!controlPlane) {
     await finish(derivedCrosswalkFailedCandidate(now, "The control plane's attempt log is not configured (WTP_CONTROL_PLANE_DATABASE_URL), so no walk can be read."));
     return;
   }
-  let walks: { attempt: MeetingsDiscoveryAttempt; recordId: string; recordedAt: string; routes: string[] }[];
+  const sql = neon(controlPlane), query = async (text: string, params: readonly unknown[] = []) => sql.query(text, [...params]);
+  let source: Awaited<ReturnType<typeof readMeetingDerivationSource>>;
   try {
-    const sql = neon(controlPlane);
-    const found = await sql.query(
-      CURRENT_CALENDAR_READS_SQL, [null],
-    ) as { id: string; position: number | string; value: MeetingsDiscoveryAttempt; routes: string[] }[];
-    walks = found.map((row) => ({ attempt: row.value, recordId: String(row.position), recordedAt: row.value.finishedAt, routes: row.routes }));
+    source = await readMeetingDerivationSource({ store, query, sourceId: DERIVED_CROSSWALK_SOURCE_ID,
+      recordClass: DERIVED_CROSSWALK_RECORD_CLASS, scope: DERIVED_CROSSWALK_SCOPE,
+      configHash: meetingDerivationConfig(process.cwd(), ["data/derived/registration/index.json", "lib/control-plane/discovery/auto-crosswalk.ts",
+        "lib/control-plane/discovery/reviewed-body.ts", "lib/registration/jurisdictions.ts", "lib/time/county-time-zones.ts"], [REVIEWER]) });
+    const confirmed = await confirmMeetingDerivationSource({ source, store, sourceId: DERIVED_CROSSWALK_SOURCE_ID,
+      recordClass: DERIVED_CROSSWALK_RECORD_CLASS, scope: DERIVED_CROSSWALK_SCOPE, parserVersion: "meeting-source-wiring/1", now,
+      force: process.argv.includes("--force") });
+    if (confirmed) {
+      console.log("RCD_RECEIPT=" + JSON.stringify({ source: DERIVED_CROSSWALK_CONTRACT_ID,
+        ...sourceHashReceiptFields(confirmed), structuralReleaseContract: ZERO_RELEASE_EVENTS }));
+      return;
+    }
   } catch (error) {
-    await finish(derivedCrosswalkFailedCandidate(now, `The discovery-attempt log could not be read: ${error instanceof Error ? error.message : String(error)}`));
+    await finish(derivedCrosswalkFailedCandidate(now, `The discovery source metadata could not be read: ${error instanceof Error ? error.message : String(error)}`));
     return;
   }
+  const doors = await ensureMeetingDoors();
+  if (!doors.ready) throw new Error(`MEETING_DOORS_UNREADABLE: ${doors.reason}`);
+  const lkg = await readDerivedMeetingBodyCrosswalk({ store,  now });
+  if (lkg.kind === "STORE_UNREACHABLE") {
+    await finish(derivedCrosswalkFailedCandidate(now, `The previous automatic crosswalk could not be read (${lkg.code}): ${lkg.detail}`));
+    return;
+  }
+  const previous = lkg.kind === "PROMOTED" ? lkg.value.records : [];
+  const previousHeld = source.outputHead ? await store.readCandidatePath<NonNullable<RoutineCandidate["excludedFacts"]>>(
+    source.outputHead.versionId, ["excludedFacts"]) ?? [] : [];
+  const lkgInput = lkg.kind === "PROMOTED"
+    ? promotedInputRef(DERIVED_CROSSWALK_RECORD_CLASS, DERIVED_CROSSWALK_SCOPE, lkg.metadata.versionId, lkg.value, lkg.metadata.promotedAt)
+    : null;
 
+
+  const pending = new Set(meetingDerivationPending(source, process.argv.includes("--force")));
+  const completed = { ...source.priorProbe?.groups };
   /* Registration: which body each government is, per state. An unreadable state holds its governments by name. */
   const registrations = new Map<string, {
     readonly input: DerivedInputRef;
     readonly bodies: ReadonlyMap<string, RegisteredGovernment>;
     readonly reviewedStatus: string;
   } | { readonly unread: string }>();
-  for (const state of new Set(walks.map((w) => w.attempt.stateCode.toUpperCase()))) {
+  const loadRegistration = async (state: string): Promise<void> => {
+    if (registrations.has(state)) return;
     console.log(`RCD_PROGRESS meeting-body-crosswalk registration ${state}`);
     try {
-      const read = await readRegistrationProjection(state, { store, bypassCache: true, now });
-      const input = read.kind === "PROMOTED" ? promotedInputRef("REGISTRATION", read.metadata.scope, read.metadata.versionId, read.value, read.metadata.promotedAt) : null;
-      if (read.kind !== "PROMOTED" || input === null) {
-        registrations.set(state, { unread: `${state} registration is ${read.kind}` });
-        continue;
-      }
       const reference = loadRegistrationReference(process.cwd(), state);
+      const wanted = source.walks.filter(walk => walk.state === state && pending.has(walk.jurisdiction)).map(walk => walk.jurisdiction);
+      const ids = new Set(wanted), censusIds = reference.reference.governments.filter(row => ids.has(row[1])).map(row => row[0]);
+      const lookup = await store.readGovernmentLookup(state,wanted,censusIds);
+      const read=lookup.registration, reviewed=lookup.reviewed;
+      if (!read) { registrations.set(state,{unread:`${state} registration is NOT_RECORDED`});return; }
+      const input=read.input;
       if (reference.sha256 !== read.value.vintage.referenceSha256) {
         registrations.set(state, { unread: `${state} registration does not name the committed Census government pairing` });
-        continue;
+        return;
       }
       const labels = new Map(read.value.divisions.map((d) => [d.ocdId, d.label] as const));
       const census = readCensusGovernmentFacts(process.cwd(), [state]);
@@ -113,27 +123,22 @@ async function main(): Promise<void> {
         bodies.set(body.jurisdictionId, { bodyId: body.id, ocdId: body.ocdId, publishingOrg: labels.get(body.ocdId) ?? body.jurisdictionId,
           countyFips: body.censusId ? countyByPid.get(body.censusId) ?? census.byPid.get(body.censusId)?.countyFips ?? null : null, input });
       }
-      const reviewed = await readRegistryRuntimeProjection([state], { store, bypassCache: true, now });
-      const reviewedInput = reviewed.kind === "PROMOTED"
-        ? promotedInputRef("REGISTRY_RUNTIME_BINDING", stateRegistryRuntimeScope(state), reviewed.metadata.versionId, reviewed.value, reviewed.metadata.promotedAt)
-        : null;
-      if (reviewed.kind === "PROMOTED" && reviewedInput) {
-        for (const walk of walks.filter(row => row.attempt.stateCode.toUpperCase() === state)) {
-          if (bodies.has(walk.attempt.jurisdictionId)) continue;
-          const resolved = reviewedBodyForGovernment(reference, walk.attempt.jurisdictionId, reviewed.value.registry.bodies);
-          if (resolved) bodies.set(walk.attempt.jurisdictionId, { ...resolved, input: reviewedInput });
+      if (reviewed) {
+        for (const jurisdiction of wanted) {
+          if (bodies.has(jurisdiction)) continue;
+          const resolved = reviewedBodyForGovernment(reference, jurisdiction, reviewed.bodies);
+          if (resolved) bodies.set(jurisdiction, { ...resolved, input: reviewed.input });
         }
       }
-      registrations.set(state, { input, bodies, reviewedStatus: reviewed.kind });
+      registrations.set(state, { input, bodies, reviewedStatus: reviewed ? "PROMOTED" : "NOT_RECORDED" });
     } catch (error) {
       registrations.set(state, { unread: `${state} registration could not be read: ${error instanceof Error ? error.message : String(error)}` });
     }
-  }
+  };
 
   /* The vault, read only: every body the reviewed walks saved, read once. */
   const capture = await heldArtifactCaptures(join(process.cwd(), "data", "control-plane", "vault"),
-    walks.filter(({ attempt }) => attempt.found.some(row => AUTO_CROSSWALK_VENDORS.has(row.vendor)))
-      .flatMap(({ attempt }) => [...attempt.found, ...attempt.steps].flatMap(row => row.artifactId ? [row.artifactId] : [])), controlPlane);
+    source.walks.filter(walk => pending.has(walk.jurisdiction)).flatMap(walk => walk.inputs.flatMap(input => input.kind === "VAULTED_EVIDENCE" ? [input.artifactId] : [])), controlPlane);
   const held = new Map<string, HeldBytes>();
   const cite = async (artifactId: string | null): Promise<void> => {
     if (artifactId === null || held.has(artifactId)) return;
@@ -158,31 +163,50 @@ async function main(): Promise<void> {
     }
   };
   const reviews: AutoCrosswalkReview[] = [];
-  for (const walk of walks) {
-    console.log(`RCD_PROGRESS meeting-body-crosswalk ${walk.attempt.jurisdictionId}`);
-    if (!walk.attempt.found.some((f) => AUTO_CROSSWALK_VENDORS.has(f.vendor))) continue;
-    for (const f of walk.attempt.found) await cite(f.artifactId);
-    for (const s of walk.attempt.steps) if (s.status !== null && s.status >= 200 && s.status < 300) await cite(s.artifactId);
-    const state = walk.attempt.stateCode.toUpperCase();
-    const registration = registrations.get(state);
-    const registered = registration === undefined
-      ? { notRegistered: `no registration was read for ${state}` }
-      : "unread" in registration
-        ? { notRegistered: registration.unread }
-        : registration.bodies.get(walk.attempt.jurisdictionId) ?? {
-            notRegistered: `${state} registration and ${registration.reviewedStatus} reviewed registry do not pair ${walk.attempt.jurisdictionId} with one exact governing body`,
-          };
-    reviews.push(reviewDiscoveryWalk({
-      walk,
-      routes: walk.routes,
-      registered,
-      held: (artifactId) => held.get(artifactId) ?? null,
-      handWired: (bodyId) => activeWiring().some((wiring) => wiring.bodyId === bodyId),
-      reviewer: REVIEWER,
-      now,
-    }));
+  const processed = new Set<string>();
+  const retriable = new Set<string>();
+  for (const jurisdiction of pending) {
+    if (!meetingDerivationCanContinue()) break;
+    const walks = await readMeetingDerivationWalks(query, source.walks.filter(walk => walk.jurisdiction === jurisdiction));
+    for (const walk of walks) {
+      processed.add(`${walk.attempt.attemptId}:${walk.recordId}`);
+      console.log(`RCD_PROGRESS meeting-body-crosswalk ${walk.attempt.jurisdictionId}`);
+      if (!walk.attempt.found.some((f) => AUTO_CROSSWALK_VENDORS.has(f.vendor))) continue;
+      await loadRegistration(walk.attempt.stateCode.toUpperCase());
+      for (const f of walk.attempt.found) await cite(f.artifactId);
+      for (const s of walk.attempt.steps) if (s.status !== null && s.status >= 200 && s.status < 300) await cite(s.artifactId);
+      const state = walk.attempt.stateCode.toUpperCase();
+      const registration = registrations.get(state);
+      const registered = registration === undefined
+        ? { notRegistered: `no registration was read for ${state}` }
+        : "unread" in registration
+          ? { notRegistered: registration.unread }
+          : registration.bodies.get(walk.attempt.jurisdictionId) ?? {
+              notRegistered: `${state} registration and ${registration.reviewedStatus} reviewed registry do not pair ${walk.attempt.jurisdictionId} with one exact governing body`,
+            };
+      const review = reviewDiscoveryWalk({
+        walk,
+        routes: walk.routes,
+        registered,
+        held: (artifactId) => held.get(artifactId) ?? null,
+        handWired: (bodyId) => activeWiring().some((wiring) => wiring.bodyId === bodyId),
+        reviewer: REVIEWER,
+        now,
+      });
+      reviews.push(review);
+      if (review.held.some(hold => ["EVIDENCE_NOT_VAULTED", "CALENDAR_UNREADABLE", "BODY_NOT_REGISTERED"].includes(hold.reason))) retriable.add(walk.attempt.jurisdictionId);
+    }
   }
 
+  for (const jurisdiction of pending) {
+    if (retriable.has(jurisdiction)) continue;
+    const expected = source.walks.filter(walk => walk.jurisdiction === jurisdiction);
+    const finished = expected.every(walk => {
+      const attempt = walk.inputs.find(input => input.kind === "DISCOVERY_ATTEMPT");
+      return attempt?.kind === "DISCOVERY_ATTEMPT" && processed.has(`${attempt.attemptId}:${walk.position}`);
+    });
+    if (finished && expected.length > 0) { completed[jurisdiction] = source.groupHashes[jurisdiction]!; pending.delete(jurisdiction); }
+  }
   const plan = planDerivedCrosswalk({ previous, reviews });
   for (const id of plan.accepted) console.log(`  accepted ${id}`);
   for (const id of plan.renewed) console.log(`  renewed ${id}`);
@@ -195,10 +219,14 @@ async function main(): Promise<void> {
     decided,
     reviews.length === 0 ? "no discovery walk was held for any registered government" : "the walks reviewed produced no body to accept, renew or hold",
   )));
-  await finish(derivedCrosswalkCandidate(plan, [
+  const candidate = derivedCrosswalkCandidate(plan, [
     ...(lkgInput === null ? [] : [lkgInput]),
     ...[...registrations.values()].flatMap((entry) => "input" in entry ? [entry.input] : []),
-  ], now));
+  ], now);
+  const reviewedJurisdictions = new Set(reviews.map(review => review.jurisdictionId));
+  await finish(withMeetingDerivationProbe({ ...candidate, excludedFacts: [...previousHeld.filter(fact =>
+    !reviewedJurisdictions.has(String((fact.record as { jurisdictionId?: string } | undefined)?.jurisdictionId ?? ""))),
+    ...(candidate.excludedFacts ?? [])] }, source, completed, [...pending]));
 }
 
 await main();

@@ -1,7 +1,5 @@
-import { neon } from "@neondatabase/serverless";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
-import { installReaderDatabaseQuery } from "../reader/database.ts";
-import { installDatabaseTransferCounter } from "../db/transfer.ts";
+import { databaseReadOnlyQuery, installReaderDatabaseQuery } from "../reader/database.ts";
 import { installConnectAttemptWindow } from "../ops/connect-attempt-window.ts";
 import type { CivicDataReadResult } from "./read-model.ts";
 import { parseValidationReceipt } from "./receipt.ts";
@@ -16,26 +14,27 @@ import { withControlPlaneConnectRetry, isTransientControlPlaneConnectError } fro
 export const PLANNER_REGISTRATION_PAYLOAD = `json_strip_nulls(json_build_object(
   'formatVersion',root->'formatVersion','state',root->'state','scope',root->'scope',
   'vintage',reader_payload_value(root->'vintage'),
-  'bodyCount',(SELECT count(*) FROM reader_payload_members(root->'bodies')),
-  'governmentCount',CASE WHEN root ? 'governments' THEN (SELECT count(*) FROM reader_payload_members(root->'governments')) END,
-  'bodies',COALESCE((SELECT json_agg(json_build_array(b->'id',b->'jurisdictionId',b->'censusId',b->'ocdId') ORDER BY ordinal_index)
-    FROM reader_payload_members(root->'bodies'),LATERAL (SELECT reader_payload_node(item) AS b) body
-    WHERE ordinal_index>$3 AND ordinal_index<=$4),'[]'::json),
+  'bodyCount',(SELECT count(*) FROM civic_data_rows r WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='registration.bodies'),
+  'governmentCount',CASE WHEN root ? 'governments' THEN (SELECT count(*) FROM civic_data_rows r WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='governments') END,
+  'bodies',COALESCE((SELECT json_agg(json_build_array(r.value->'id',r.value->'jurisdictionId',r.value->'censusId',r.value->'ocdId') ORDER BY r.ordinal)
+    FROM civic_data_rows r WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='registration.bodies'
+      AND r.ordinal>$3 AND r.ordinal<=$4),'[]'::json),
   'governments',CASE WHEN root ? 'governments' THEN COALESCE((SELECT json_agg(json_build_array(
     g->'id',g->'jurisdictionId',reader_payload_value(g->'name'),g->'governmentClass',
     reader_payload_node(g->'nativeIds')->'census_pid6',reader_payload_node(g->'nativeIds')->'tiger_geoid',
     reader_payload_value(g->'website'),g->'countyFips',
-    (SELECT reader_payload_value(item) FROM reader_payload_members(g->'associations') LIMIT 1)) ORDER BY ordinal_index)
-    FROM reader_payload_members(root->'governments'),LATERAL (SELECT reader_payload_node(item) AS g) government
-    WHERE ordinal_index>$3 AND ordinal_index<=$4),'[]'::json) END,
+    (SELECT reader_payload_value(item) FROM reader_payload_members(g->'associations') LIMIT 1)) ORDER BY r.ordinal)
+    FROM civic_data_rows r,LATERAL (SELECT r.value AS g) government
+    WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='governments'
+      AND r.ordinal>$3 AND r.ordinal<=$4),'[]'::json) END,
   'counts',reader_payload_value(root->'counts'),
   'functionalStatus',reader_payload_value(root->'functionalStatus'),
   'divisions','[]'::jsonb,'reviewedRegistryVersionId',root->'reviewedRegistryVersionId'))`;
 
 const PLANNER_WIRING_PAYLOAD = `jsonb_build_object('kind',root->'kind','formatVersion',root->'formatVersion',
-  'records',COALESCE((SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
-    FROM reader_payload_members(root->'records')
-    WHERE reader_payload_node(reader_payload_node(item)->'row')->>'state'=$2),'[]'::jsonb))`;
+  'records',COALESCE((SELECT jsonb_agg(reader_payload_value(r.value) ORDER BY r.ordinal)
+    FROM civic_data_rows r WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id
+      AND r.collection='derivedWiring' AND r.state=regexp_replace($2::text,'^US-','')),'[]'::jsonb))`;
 
 export function plannerProjectionSql(payload: string): string {
   return `WITH pointer AS MATERIALIZED (
@@ -51,8 +50,7 @@ export function plannerProjectionSql(payload: string): string {
     FROM pointer,LATERAL (SELECT reader_payload_node(payload) AS root) header`;
 }
 
-/** The planner uses the same direct, read-only HTTP transport for its state
- * packages and fact queries. It has no reader route, selection or page timer. */
+/** The planner uses the shared version-checked reader for state packages and facts. */
 export function plannerStateReads(state: string, query?: ReadOnlyQuery, observe?: (read: {
   readonly name: string; readonly elapsedMs: number; readonly bytes: number; readonly ok: boolean;
 }) => void) {
@@ -61,9 +59,7 @@ export function plannerStateReads(state: string, query?: ReadOnlyQuery, observe?
   if (!query) {
     if (!process.env.DATABASE_URL) throw new Error("PLANNER_STORE_UNCONFIGURED");
     installConnectAttemptWindow();
-    installDatabaseTransferCounter();
-    const sql = neon(process.env.DATABASE_URL);
-    query = statements => sql.transaction(statements.map(statement => sql.query(statement.text, [...statement.params])), { readOnly: true });
+    query = databaseReadOnlyQuery(process.env.DATABASE_URL);
   }
   const direct: ReadOnlyQuery = async statements => {
     const started = performance.now();
@@ -112,15 +108,12 @@ export function plannerStateReads(state: string, query?: ReadOnlyQuery, observe?
       projection: { key, recordClass, scope, sourceId: row.source_id as string, versionId: version,
         lastKnownGoodVersionId: version, promotedAt, receipt, payload: row.payload as T } };
   }
-  // One small identity read is shared by registration and partition ownership;
-  // refresh at the next pass rather than retaining duplicate payloads in a round.
-  let registration: Promise<CivicDataReadResult<RegistrationReadModel>> | undefined;
   return {
     query: direct,
     install: () => installReaderDatabaseQuery(direct),
     registration: (wanted: string) => {
       if (wanted.toUpperCase() !== postal) throw new Error(`PLANNER_STATE_BOUNDARY:${postal}:${wanted}`);
-      return registration ??= projection<RegistrationReadModel>("REGISTRATION", registrationTarget(wanted).scope, PLANNER_REGISTRATION_PAYLOAD, [0, 0])
+      return projection<RegistrationReadModel>("REGISTRATION", registrationTarget(wanted).scope, PLANNER_REGISTRATION_PAYLOAD, [0, 0])
         .then(async read => {
           if (read.kind === "PROMOTED" && (read.value.state.toUpperCase() !== postal || read.value.formatVersion !== 1))
             throw new Error(`PLANNER_REGISTRATION_INVALID:${postal}`);
@@ -154,11 +147,11 @@ export function plannerStateReads(state: string, query?: ReadOnlyQuery, observe?
             });
           }
           return read;
-        }).catch(error => { registration = undefined; throw error; });
+        });
     },
     wiring: () => projection<DerivedWiringProjection>("CURATED_READER_RECORD", "US:meeting-source-wiring", PLANNER_WIRING_PAYLOAD),
     bodyIds: () => projection<{ readonly ids: readonly string[] }>("REGISTRY_RUNTIME_BINDING", `US-${postal}:reader-registry-runtime`,
-      `jsonb_build_object('ids',COALESCE((SELECT jsonb_agg(reader_payload_node(item)->'id' ORDER BY ordinal_index)
-        FROM reader_payload_members(reader_payload_node(root->'registry')->'bodies')),'[]'::jsonb))`),
+      `jsonb_build_object('ids',COALESCE((SELECT jsonb_agg(r.row_id ORDER BY r.ordinal) FROM civic_data_rows r
+        WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='registry.bodies'),'[]'::jsonb))`),
   };
 }

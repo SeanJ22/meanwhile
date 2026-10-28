@@ -8,6 +8,7 @@ import { currentReaderSelection, withReaderSelection, type ReaderSelection } fro
 import { stateOfficesForDivisions } from "../../lib/reference/state-offices.ts";
 import { StateOfficeContacts } from "../../components/state-office-contacts.tsx";
 import { Card } from "@/components/ui/card";
+import { CardSection } from "@/components/officials/card-section";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { ContactPills } from "@/components/officials/contact-pills";
 import { OfficialTermNote } from "@/components/officials/official-term-note";
@@ -35,6 +36,8 @@ import { phoenixToday } from "@/lib/ballot/dated-events";
 import { needsPill, zipCertainty } from "@/lib/geo/zip-certainty";
 import { analysisForContest } from "@/lib/ballot/analyses";
 import { orderMeasures } from "@/lib/ballot/measure-order";
+import { measureTitle } from "@/lib/ballot/measure-title";
+import { BallotZipForm } from "@/components/ballot/ballot-zip-form";
 import { summaryForContest } from "@/lib/ballot/measure-summary";
 import {
   PROVISION_KIND_LABEL,
@@ -113,7 +116,8 @@ import {
   STATE_FUNDING_NOTE,
   type FundingAnswer,
 } from "@/lib/funding/display";
-import { settleFundingRead } from "@/lib/funding/snapshot";
+import { settleFundingSnapshotRead } from "@/lib/funding/snapshot";
+import { promotedVersionOrThrow } from "@/lib/civic-data/read-model";
 import { officeIdentity } from "@/lib/officials/office-identity";
 import { settleFundingHoldingAnswer } from "@/lib/funding/holding-answer";
 
@@ -130,7 +134,7 @@ import {
 } from "@/components/funding/funding-section";
 import { ReactionControl } from "@/components/reactions/reaction-control";
 import { questionForTargetType } from "@/lib/signal/reactions";
-import { builtInElectionDatesFor, electionDatesFor } from "@/lib/ballot/election-dates";
+import { ballotDateText, builtInElectionDatesFor, electionDatesFor } from "@/lib/ballot/election-dates";
 import {
   calendarableSteps,
   isUpcoming,
@@ -160,7 +164,7 @@ import { tierForOcdId, tierForOffice } from "@/lib/ocd/tiers";
 import { RetentionCard } from "@/components/ballot/retention-card";
 import { Logo } from "@/components/brand/logo";
 import { PRODUCT_NAME, titleFor } from "@/lib/brand";
-import { readerPartyLabel } from "@/lib/text/reader-names";
+import { readerPartyLabel, readerText } from "@/lib/text/reader-names";
 
 export const runtime = "nodejs";
 
@@ -228,18 +232,22 @@ function withBallotReader<T>(selection: ReaderSelection | undefined, read: () =>
   return withReaderSelection(selection, read);
 }
 
+type FederalFundingRead = NonNullable<Parameters<typeof settleFundingHoldingAnswer>[2]>["federal"];
+
 async function CandidateFunding({
   divisions,
   targetKey,
   context,
   available,
   readerSelection,
+  fundingRead,
 }: {
   divisions: readonly string[];
   targetKey: string;
   context: { zip: string; lat: number; lng: number } | null;
   available: boolean;
   readerSelection: ReaderSelection | undefined;
+  fundingRead: FederalFundingRead;
 }) {
   if (!available) return unavailableHolding("federal campaign-finance");
   let answer: FundingAnswer;
@@ -250,7 +258,8 @@ async function CandidateFunding({
   }
   let partial = false;
   try {
-    const settled = await withBallotReader(readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined, undefined, divisions));
+    const settled = await withBallotReader(readerSelection, () => settleFundingHoldingAnswer(targetKey, undefined,
+      fundingRead ? { federal: fundingRead } : undefined, divisions));
     partial = settled.kind !== "ANSWER" || settled.holdingStatus === "PARTIAL";
     if (settled.kind === "ANSWER" && (settled.answer?.kind === "funding" || settled.answer?.kind === "absence"))
       answer = settled.answer;
@@ -289,6 +298,7 @@ async function BallotBattlecard({
   context,
   authorityAvailability,
   readerSelection,
+  fundingRead,
   stanceTopics,
 }: {
   name: string;
@@ -316,6 +326,7 @@ async function BallotBattlecard({
   authorityAvailability: BallotAuthorityAvailability;
 
   readerSelection: ReaderSelection | undefined;
+  fundingRead: FederalFundingRead;
   stanceTopics: ReturnType<typeof readStanceTopics>;
 }) {
   const state = ocdStateCode(contestOcdId)!.toUpperCase();
@@ -403,7 +414,7 @@ async function BallotBattlecard({
             <MemberOfficesContent holder={recordHolder} />
           ) : null,
         money: !has("money") ? null : <>
-          {(federal || heldFederal) && <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerSelection={readerSelection} />}
+          {(federal || heldFederal) && <CandidateFunding divisions={[contestOcdId]} targetKey={recordHolder?.id ?? targetKey} context={context} available={authorityAvailability.funding} readerSelection={readerSelection} fundingRead={fundingRead} />}
           {!federal && <StateCampaignSection divisionId={contestOcdId} personId={targetKey} bare context={context}/>}
         </>,
 
@@ -500,6 +511,7 @@ export default readerRoute("/ballot", async function BallotPage({
     : ballotPointDivisions(readerSelection?.states ?? [], centroid.lat, centroid.lng) : Promise.resolve([]);
   void pointDivisionsRead.catch(() => undefined);
   const readerData = await readBallotReaderData(place);
+  if (centroid) filingRead = readOfficialFilingsForReader().catch(() => null);
   const stanceTopics = readStanceTopics();
   void stanceTopics.catch(()=>undefined);
   const knownState = place.state?.code ?? (readerSelection?.states?.length === 1 ? readerSelection.states[0] : null);
@@ -512,7 +524,6 @@ export default readerRoute("/ballot", async function BallotPage({
   const zipEntry = readerData ? await readerData.entry() : undefined;
   let certainty = await zipCertainty(zip, undefined, zipEntry);
   if (centroid) {
-    filingRead = readOfficialFilingsForReader().catch(() => null);
     attempted = true;
     const pointDivisionIds = [...certainty?.all ?? []];
     divisionHoldingUnavailable = pointDivisionIds.length === 0 && !place.state;
@@ -556,6 +567,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
   const officeBlurbsRead = readCuratedContestOfficeBlurbs(matched?.contests ?? []);
   const auxiliaryPreloads = new Map<BallotAuxiliaryFamily, () => Promise<unknown>>();
+  let fundingRead: FederalFundingRead;
   const preload = (family: BallotAuxiliaryFamily, read: () => Promise<unknown>) =>
     auxiliaryPreloads.set(family, startRead(family, read));
   const navigationStates = [...new Set(askOcdIds.map(electionFieldState).filter((state): state is string => state !== null))];
@@ -606,16 +618,22 @@ export default readerRoute("/ballot", async function BallotPage({
       preload("nh-members", settleNhSeatHolders);
     }
     if (matched.contests.some((contest) => isFederalContest(contest))) {
-      preload("federal-funding", async () => {
+      const snapshot = (async () => {
         if (readerData) await primeBallotFundingRead(set!, matched.contests.filter(isFederalContest));
-        return settleFundingRead();
+        return settleFundingSnapshotRead();
+      })();
+      fundingRead = snapshot.then(read => {
+        if (read.kind !== "PROMOTED" && read.kind !== "BOOTSTRAP") throw new Error(read.detail);
+        return { kind: read.kind, metadata: read.metadata };
       });
+      void fundingRead.catch(() => undefined);
+      preload("federal-funding", async () => promotedVersionOrThrow(await snapshot));
     }
 
   }
   const candidacyContests =
     matched?.contests.filter((c) => c.type === "CANDIDACY") ?? [];
-  const officeholderReads = ["registry-runtime", "federal-directory", "nh-members", "federal-funding"] as const;
+  const officeholderReads = ["registry-runtime", "federal-directory", "nh-members"] as const;
   const personResolutionsRead = Promise.allSettled(officeholderReads.flatMap(family => {
     const read = auxiliaryPreloads.get(family);
     return read ? [read()] : [];
@@ -821,7 +839,7 @@ export default readerRoute("/ballot", async function BallotPage({
         .filter(state => !navigation.has(state) && !(dates && set?.election.state === state)).map(state => {
           const registration = registrationLinkFor(state, registrationLinks);
           if (!registration) return null;
-          return <section key={state} aria-label={`${state} voting information`} className="my-6 space-y-2">
+        return <section key={state} aria-label={`${state} voting information`} className="my-6 space-y-2">
             <h2 className="text-lg font-semibold">{state} voting information</h2>
             {registration && <p><a href={registration.url}>{registration.label}</a></p>}
           </section>;
@@ -870,7 +888,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             title: `Voter registration deadline (${set.election.state})`,
                             allDayDate: regStep.date,
                             description:
-                              regStep.detail ??
+                              ballotDateText(regStep.detail) ??
                               `Last day to register to vote in ${set.election.state} for the November 3rd, 2026 general election. Your ballot, with sources: found via ${PRODUCT_NAME}.`,
                           }}
                         />
@@ -896,7 +914,7 @@ export default readerRoute("/ballot", async function BallotPage({
                               title: `${earlyStep.label} (${set.election.state})`,
                               allDayDate: w.start,
                               allDayEndDate: w.end ?? undefined,
-                              description: earlyStep.detail ?? undefined,
+                              description: ballotDateText(earlyStep.detail) ?? undefined,
                             }}
                           />
                         </>
@@ -945,16 +963,17 @@ export default readerRoute("/ballot", async function BallotPage({
           ...links.map(link => ({ what: link.label, provenance: { sourceUrl: link.sourceUrl, sourceOrg: link.sourceOrg, collectedAt: link.verifiedAt, verifiedAt: link.verifiedAt } })),
           ...(calendar?.steps ?? []).map(step => ({ what: step.label, provenance: { sourceUrl: step.sourceUrl, sourceOrg: step.sourceOrg, collectedAt: step.collectedAt, verifiedAt: step.verifiedAt } })),
         ];
-        return <section key={state} className="my-6 lg:max-w-3xl" aria-label={`${state} voting information`}>
-          <Card title={`${state} voting information`} attrs={{ "data-ballot-navigation": state }} sources={sources}
-            gaps={[
+          const missing = [
               ...(!offices.length ? [{ id: `election-office:${state}`, label: "election office" }] : []),
               ...(!links.some(link => link.purpose === "registration_page") ? [{ id: `registration-page:${state}`, label: "voter registration" }] : []),
               ...(registrationRequired && !links.some(link => link.purpose === "registration_lookup") ? [{ id: `registration-lookup:${state}`, label: "registration status" }] : []),
               ...(!links.some(link => link.purpose === "ballot_lookup") ? [{ id: `sample-ballot:${state}`, label: "sample-ballot lookup" }] : []),
               ...["Voter registration", "Mail-ballot request", "Early voting"].flatMap(label => calendar?.steps.some(step => step.label === label)
                 ? [] : [{ id: `election-dates:${state}:${label}`, label: `${label.toLowerCase()} deadlines` }]),
-            ]}>
+        ];
+
+        return <section key={state} className="my-6 lg:max-w-3xl" aria-label={`${state} voting information`}>
+          <Card title={`${state} voting information`} attrs={{ "data-ballot-navigation": state }} sources={sources}>
             {offices.map(office => <p key={`${office.divisionId}:${office.phone}`} className="mt-2" data-ballot-election-offices>
               <a href={office.navigationUrl ?? office.url}>{office.text}</a>
               {office.phone && <> · <a href={`tel:+1${office.phone.replace(/\D/g, "").slice(-10)}`}>{office.phone}</a></>}
@@ -971,42 +990,41 @@ export default readerRoute("/ballot", async function BallotPage({
               <h3 className="mt-4 font-semibold">Election Day: {formatDateMDY(calendar.electionDay)}</h3>
               <AddToCalendar event={{ id: `election-day-${state}-${calendar.electionDay}`, title: `Election Day — vote (${state})`,
                 allDayDate: calendar.electionDay, description: `Your ballot, with sources: found via ${PRODUCT_NAME}.` }} />
+              {(["GENERAL", "MILITARY_OVERSEAS"] as const).map(audience => {
+                const steps = calendar.steps.filter(step => (step.audience ?? "GENERAL") === audience);
+                if (!steps.length) return null;
+                return <div key={audience} data-deadline-audience={audience}>
+                {audience === "MILITARY_OVERSEAS" && <h4 className="mt-4 font-semibold">Military and overseas voters</h4>}
               <ul className="mt-3 space-y-3">
-                {calendarableSteps(calendar.steps).map(({ step, window, upcoming }, index) => <li key={`${step.label}:${index}`} data-dated-event>
+                {calendarableSteps(steps).map(({ step, window, upcoming }, index) => <li key={`${step.label}:${index}`} data-dated-event>
                   <p className="font-semibold">{step.label}</p>
                   {step.date && <p className="font-mono text-[0.875rem]" data-navigation-date>
                     {formatDateMDY(step.date.replaceAll(" – ", ", "))}
                   </p>}
-                  <p className="t-body">{step.detail}</p>
+                  {step.detail && <p className="t-body" data-navigation-detail>{ballotDateText(step.detail)}</p>}
                   {window && upcoming && !window.end && <AddToCalendar event={{
                     id: `ballot-${state}-${window.start}-${step.label.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`,
                     title: `${step.label} (${state})`, allDayDate: window.start,
-                    description: step.detail ?? undefined,
+                    description: ballotDateText(step.detail) ?? undefined,
                   }} />}
                 </li>)}
               </ul>
+              </div>;
+              })}
             </>}
+            {missing.map(gap => <CardSection key={gap.id} title={gap.label.charAt(0).toUpperCase() + gap.label.slice(1)}><CardGapContribution {...gap} /></CardSection>)}
           </Card>
         </section>;
       })}
 
-      {!centroid && !zip && (
-        <p className="mt-6 t-body text-muted lg:max-w-2xl">
-          Open this page with a zip, e.g.{" "}
-          <Link href="/ballot?zip=07866" className="underline decoration-dotted">
-            /ballot?zip=07866
-          </Link>
-          .
-        </p>
-      )}
+      {!centroid && <BallotZipForm />}
 
       {zip && !centroid && (
         <p className="mt-6 t-body text-muted lg:max-w-2xl">
           We couldn&apos;t place that zip. Try another, or return to{" "}
           <Link href="/" className="underline decoration-dotted">
             the map
-          </Link>
-          .
+          </Link>.
         </p>
       )}
 
@@ -1051,7 +1069,7 @@ export default readerRoute("/ballot", async function BallotPage({
                           title: `${step.label} (${set?.election.state ?? ""})`,
                           allDayDate: window.start,
                           allDayEndDate: window.end ?? undefined,
-                          description: step.detail ?? undefined,
+                          description: ballotDateText(step.detail) ?? undefined,
                         }}
                       />
                     </>
@@ -1071,7 +1089,7 @@ export default readerRoute("/ballot", async function BallotPage({
           return (
             <Card
               key={contest.id}
-              title={contest.title}
+              title={readerText(contest.title)}
               titleVisible={false}
               attrs={{
                 "data-contest-id": contest.id,
@@ -1083,13 +1101,12 @@ export default readerRoute("/ballot", async function BallotPage({
                 ...(filingSources.get(contest.id) ?? []).map(provenance => ({ what: "Candidate filings", provenance })),
                 ...(lineup && set.generalLineup ? [{ what: "Primary election canvass", provenance: { sourceUrl: set.generalLineup.canvass.url, sourceOrg: set.generalLineup.canvass.issuedBy, collectedAt: set.generalLineup.canvass.readAt, verifiedAt: null } }] : []),
                 ...(lineup ? [...new Map(lineup.nominees.map(nominee => { const provenance = nomineeProvenance(nominee, contest, set!.election.state); return [provenance.sourceUrl, { what: "General-election candidates", provenance }] as const; })).values()] : [])]}
-              gaps={contest.voteFor === null ? [{ id: `contest-voting:${contest.id}`, label: "voting instructions" }] : []}
               className="ballot-office-card rounded-[10px] border border-[var(--panel-border)] bg-[var(--panel-bg)] p-5 shadow-[var(--shadow-panel)] [&>.reader-card-header]:sr-only [&>.reader-card-body]:p-0"
             >
               <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-0.5">
                 <h2 className="text-[1.0625rem] font-semibold tracking-tight">
-                  {contest.title}
-
+                  {readerText(contest.title)}
+                  {" "}
                   <LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />
 
                   {certainty && needsPill(certainty.certaintyOf(contest.ocdId)) && (
@@ -1101,6 +1118,8 @@ export default readerRoute("/ballot", async function BallotPage({
                   {[contest.voteFor !== null ? `Vote for ${contest.voteFor}` : null, contest.termYears ? `${contest.termYears}-year term` : null].filter(Boolean).join(" · ")}
                 </p>}
               </div>
+
+              {contest.voteFor === null && <CardSection title="Voting instructions"><CardGapContribution id={`contest-voting:${contest.id}`} label="voting instructions" /></CardSection>}
 
               {(() => {
                 const blurb = officeBlurbs.get(contest.id) ?? null;
@@ -1135,7 +1154,7 @@ export default readerRoute("/ballot", async function BallotPage({
                       const memberContest = { ...contest, title: office };
                       const context = centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null;
                       return <div key={candidate.id} data-candidate-person={holder?.personId ?? holder?.id ?? candidate.personId ?? candidate.id}>
-                        {choice.ticket && <p className="mt-2 t-detail text-muted">{office}</p>}
+                        {choice.ticket && <p className="mt-2 t-detail text-muted">{readerText(office)}</p>}
                         <CandidateCard name={name}
                           partyLine={<>
                             {candidate.partyLabel !== null && <span style={{ color: partyColorVar(candidate.partyLabel) }}>
@@ -1151,11 +1170,11 @@ export default readerRoute("/ballot", async function BallotPage({
                           battlecardSlot={<BallotBattlecard name={name}
                             partyLine={readerPartyLabel(candidate.partyLabel)} partyLabel={readerPartyLabel(candidate.partyLabel)}
                             card={card} links={links} targetKey={candidate.id} filingSource={candidate.provenance}
-                            contestTitle={office} contestOcdId={contest.ocdId}
+                            contestTitle={readerText(office)} contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(memberContest)}
                             resolvedStanding={personResolutions.get(candidate.id) ?? null} linkedHolder={holder}
                             context={context} authorityAvailability={authorityAvailability}
-                            readerSelection={readerSelection} stanceTopics={stanceTopics} />}
+                            readerSelection={readerSelection} fundingRead={fundingRead} stanceTopics={stanceTopics} />}
                         />
                       </div>;
                     })}
@@ -1166,7 +1185,7 @@ export default readerRoute("/ballot", async function BallotPage({
                 ))}
               </ul>
               {!isFederalContest(contest) && <StateFundingNote note={STATE_FUNDING_NOTE} />}
-              {contest.voteFor !== null && <PickControl contestId={contest.id} contestAliases={contest.aliases} contestTitle={contest.title}
+              {contest.voteFor !== null && <PickControl contestId={contest.id} contestAliases={contest.aliases} contestTitle={readerText(contest.title)}
                 voteFor={contest.voteFor} options={pickOptionsFor(set, contest)} />}
               {(earlierFilings.get(contest.id)?.length ?? 0) > 0 && (
                 <details className="mt-5 border-t border-subtle pt-3" data-earlier-filings={contest.id}>
@@ -1181,11 +1200,11 @@ export default readerRoute("/ballot", async function BallotPage({
                           battlecardSlot={<BallotBattlecard name={ballotCandidateDisplayName(candidate)}
                             partyLine={readerPartyLabel(candidate.partyLabel)} partyLabel={readerPartyLabel(candidate.partyLabel)}
                             card={availableCardForCandidacy(candidate.id)} links={availableLinksForCandidacy(candidate.id)} targetKey={candidate.id}
-                            filingSource={provenance} contestTitle={contest.title} contestOcdId={contest.ocdId}
+                            filingSource={provenance} contestTitle={readerText(contest.title)} contestOcdId={contest.ocdId}
                             officeBlurb={officeBlurbs.get(contest.id) ?? null} federal={isFederalContest(contest)}
                             resolvedStanding={null} linkedHolder={resolvedHolder(candidate.id)}
                             context={centroid && zip ? { zip, lat: centroid.lat, lng: centroid.lng } : null}
-                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} stanceTopics={stanceTopics} />}
+                            authorityAvailability={authorityAvailability} readerSelection={readerSelection} fundingRead={fundingRead} stanceTopics={stanceTopics} />}
                         />
 
                       </li>;
@@ -1233,7 +1252,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
             const measure = measureFor(contest.id);
             return (
-              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={contest.title} titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
+              <Card key={contest.id} attrs={{"data-contest-id": contest.id}} title={readerText(measureTitle(contest, measure))} titleAfter={certainty && needsPill(certainty.certaintyOf(contest.ocdId)) ? <JurisdictionMark /> : null} eyebrow={<LevelTag tier={tierForOffice(contest.title, contest.ocdId)} />} sources={[{ what: contest.scopeNote ?? "Measure filing", provenance: contest.provenance }]}>
               <div>
 
                 {summary ? (
@@ -1246,10 +1265,10 @@ export default readerRoute("/ballot", async function BallotPage({
                       Plain-language summary — read the official text below
                     </p>
                     <p className="mt-1.5 t-body font-semibold leading-relaxed">
-                      {summary.summary}
+                      {readerText(summary.summary, "sentence", askSubjects.map(subject => subject.name))}
                     </p>
-                    {summary.yesMeans && <p className="mt-2 t-body leading-relaxed" data-measure-yes><strong>YES:</strong> {summary.yesMeans}</p>}
-                    {summary.noMeans && <p className="mt-2 t-body leading-relaxed" data-measure-no><strong>NO:</strong> {summary.noMeans}</p>}
+                    {summary.yesMeans && <p className="mt-2 t-body leading-relaxed" data-measure-yes><strong>Yes:</strong> {readerText(summary.yesMeans, "sentence", askSubjects.map(subject => subject.name))}</p>}
+                    {summary.noMeans && <p className="mt-2 t-body leading-relaxed" data-measure-no><strong>No:</strong> {readerText(summary.noMeans, "sentence", askSubjects.map(subject => subject.name))}</p>}
                   </div>
                 ) : (
                   measure && (
@@ -1273,7 +1292,7 @@ export default readerRoute("/ballot", async function BallotPage({
                           className="border-l-2 border-[var(--panel-border)] pl-3"
                         >
                           <p className="t-body font-semibold leading-snug">
-                            {provision.label}
+                            {readerText(provision.label)}
                           </p>
 
                           <p className="t-eyebrow mt-0.5 text-muted">
@@ -1312,7 +1331,7 @@ export default readerRoute("/ballot", async function BallotPage({
                         className="t-record mt-1.5 whitespace-pre-line t-body leading-relaxed text-paper-dim"
                         data-measure-question={measure.id}
                       >
-                        {measure.questionText}
+                        {readerText(measure.questionText, "sentence", askSubjects.map(subject => subject.name))}
                       </p>
                       {measure.officialStatement ? (
                         <div className="mt-3" data-measure-statement="PRESENT">
@@ -1320,7 +1339,7 @@ export default readerRoute("/ballot", async function BallotPage({
                             What the authority published with it
                           </p>
                           <p className="t-record mt-1.5 whitespace-pre-line t-body leading-relaxed text-paper-dim">
-                            {measure.officialStatement}
+                            {readerText(measure.officialStatement, "sentence", askSubjects.map(subject => subject.name))}
                           </p>
                         </div>
                       ) : (
@@ -1351,7 +1370,7 @@ export default readerRoute("/ballot", async function BallotPage({
 
                 <PickControl
                   contestId={contest.id}
-                  contestTitle={contest.title}
+                  contestTitle={readerText(contest.title)}
                   voteFor={1}
                   prominent
                   options={pickOptionsFor(set, contest)}
@@ -1383,7 +1402,7 @@ export default readerRoute("/ballot", async function BallotPage({
           <p className="mt-2 t-body text-muted">We&apos;re working on finding verified candidates for these contests.</p>
           <ul className="mt-2 space-y-2 t-body text-paper-dim">
             {matched.heldContests?.map(contest => <li key={contest.id} data-contest-id={contest.id}>
-              <strong>{contest.title}</strong>: {contest.reason}
+              <strong>{readerText(contest.title)}</strong>: {readerText(contest.reason, "sentence", askSubjects.map(subject => subject.name))}
             </li>)}
           </ul>
         </section>
@@ -1397,7 +1416,7 @@ export default readerRoute("/ballot", async function BallotPage({
               key={note}
               className="mt-2 text-[0.75rem] leading-relaxed text-voice"
             >
-              {note}
+              {readerText(note, "sentence", askSubjects.map(subject => subject.name))}
             </p>
           ))}
         </section>

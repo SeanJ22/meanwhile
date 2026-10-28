@@ -1,3 +1,4 @@
+import { SECTION_IDS } from '../../app/(admin)/_mw/admin-v6/contract.ts';
 import assert from "node:assert/strict";
 import { mock, test } from "node:test";
 import { createElement as h } from "react";
@@ -114,7 +115,7 @@ const occurrences = (hay: string, needle: string) => hay.split(needle).length - 
 
 async function livePage(scopeKey: string) {
   const b = backend();
-  const sync = new LiveSync({ scope: scopeKey, fetch: b.fetch, schedule: () => () => {} });
+  const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: scopeKey, fetch: b.fetch, schedule: () => () => {} });
   sync.onPulse(pulse("w1"));
   await settle(sync);
   assert.equal(sync.snapshot().workers.phase, "live", scopeKey);
@@ -139,7 +140,7 @@ async function ballotPublicationPage(state?: string) {
   const scopeKey = state ? `st:${state.toLowerCase()}` : "us";
   const reports = state ? { [state]: BALLOT_REPORTS[state] }
     : Object.fromEntries(Object.entries(BALLOT_REPORTS).map(([key, report]) => [key, ballotPublicationSummary(report)]));
-  const sync = new LiveSync({ scope: scopeKey, schedule: () => () => {}, fetch: async () => ({ status: 200, json: async () => ({
+  const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: scopeKey, schedule: () => () => {}, fetch: async () => ({ status: 200, json: async () => ({
     contract: "admin-v6/publication@1", scope: scopeKey, revision: "fixture-ballots", asOf: READ_AT, missingParts: [],
     data: { total: Object.keys(reports).length, counts: [], latestAttemptFailing: 0, notVisible: [], notVisibleHidden: 0,
       ballotPublications: reports },
@@ -190,7 +191,7 @@ test("parent cycle metadata reaches the existing Workers round through bounded r
   try {
     const repos = createMemoryRepositories();
     const b = backend();
-    const sync = new LiveSync({ scope: "us", fetch: b.fetch, schedule: () => () => {} });
+    const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: "us", fetch: b.fetch, schedule: () => () => {} });
     for (const ended of [false, true]) {
       const beat = liveCycleHeartbeat(null, {
         at: READ_AT, startedAt: "2026-09-28T22:05:00.000Z", testedSha: "a".repeat(40), host: "runner",
@@ -240,7 +241,7 @@ test("a migration failure reaches the existing Workers card through saved histor
   assert.ok("data" in reading);
   assert.equal(reading.data.status.lastUsefulProgress, null);
   const b = backend(); b.set(() => ({ status: 200, body: reading }));
-  const sync = new LiveSync({ scope: "us", fetch: b.fetch, schedule: () => () => {} });
+  const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: "us", fetch: b.fetch, schedule: () => () => {} });
   sync.onPulse(pulse("migration-failed")); await settle(sync);
   const html = page(sync, { kind: "all" }, "us", "workers");
   const rendered = text(html);
@@ -319,7 +320,7 @@ test("running jobs show as a count and a list on Workers, with no explanation te
       const b = backend();
       const running = { count: 2, system: key === "us" ? 2 : 41, lowerBound: false };
       b.set((sc) => ({ status: 200, body: section(sc, 9, running) }));
-      const sync = new LiveSync({ scope: key, fetch: b.fetch, schedule: () => () => {} });
+      const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: key, fetch: b.fetch, schedule: () => () => {} });
       sync.onPulse(pulse("w1"));
       await settle(sync);
       const w = text(page(sync, scope, key, "workers"));
@@ -341,7 +342,7 @@ test("a read that stopped at its row limit shows the count as a lower bound", as
   try {
     const b = backend();
     b.set((sc) => ({ status: 200, body: section(sc, 9, { count: 2, system: 2, lowerBound: true }) }));
-    const sync = new LiveSync({ scope: "us", fetch: b.fetch, schedule: () => () => {} });
+    const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: "us", fetch: b.fetch, schedule: () => () => {} });
     sync.onPulse(pulse("w1"));
     await settle(sync);
     assert.match(text(page(sync, { kind: "all" }, "us", "workers")), /2\+ working now/);
@@ -372,7 +373,7 @@ test("an open page: unavailable → live → a later revision → an age step wi
   try {
     const [key, scope] = SCOPES[2];
     const b = backend();
-    const sync = new LiveSync({ scope: key, fetch: b.fetch, schedule: () => () => {} });
+    const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: key, fetch: b.fetch, schedule: () => () => {} });
 
     // 1. The backend doesn't offer the section yet: the pulse's facts show, lists are unknown, never empty.
     sync.onPulse(pulse(null));
@@ -405,12 +406,12 @@ test("an open page: unavailable → live → a later revision → an age step wi
     assert.doesNotMatch(t, /9 failed tries since/);
     assert.equal(occurrences(t, "failed tries since"), 1, "replaced, not appended");
 
-    // 4. Five minutes on, the same revision: no read, but the ages step on.
+    // 4. The freshness check still runs when a coarse source revision stays the same.
     assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 10 minutes ago/);
     mock.timers.setTime(Date.parse(PULSE_AT) + 5 * 60_000);
     sync.onPulse(pulse("w2", new Date(Date.now()).toISOString()));
     await settle(sync);
-    assert.equal(b.log.length, 2, "an unchanged revision reads nothing");
+    assert.equal(b.log.length, 3, "the screen checks for changed rows within a minute even with an unchanged announcement");
     t = text(page(sync, scope, key, "workers"));
     assert.match(t, /Workers last checked in Sep 28, 5:58 PM ET about 15 minutes ago/);
     assert.match(t, /The next round is late/);
@@ -424,7 +425,7 @@ test("an open page: unavailable → live → a later revision → an age step wi
     // 6. Reconnected: one catch-up read, no double counting, no action sent.
     sync.catchUp();
     await settle(sync);
-    assert.equal(b.log.length, 3, "exactly one catch-up read");
+    assert.equal(b.log.length, 4, "exactly one catch-up read");
     t = text(page(sync, scope, key, "workers"));
     assert.equal(occurrences(t, "failed tries since"), 1);
     assert.ok(b.log.every((r) => r.method === "GET" && r.url.startsWith("/api/admin/v6/workers?scope=")), "reads only; no action is sent");
@@ -436,7 +437,7 @@ test("an authentication failure is never shown as an empty, successful reading",
   for (const status of [401, 403]) {
     const b = backend();
     b.set(() => ({ status, body: { says: "Sign in again." } }));
-    const sync = new LiveSync({ scope: "us", fetch: b.fetch, schedule: () => () => {} });
+    const sync = new LiveSync({ screen: "now", sections: SECTION_IDS, scope: "us", fetch: b.fetch, schedule: () => () => {} });
     sync.onPulse(pulse("w1"));
     await settle(sync);
     assert.equal(sync.snapshot().workers.phase, "denied");

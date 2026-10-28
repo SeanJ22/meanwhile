@@ -11,6 +11,7 @@ import { Card } from "../components/ui/card.tsx";
 import { LocalFileArtifactStore } from "../lib/meetings/edge-store.ts";
 import type { CuratedReaderProjection, ManualProjectionPackage } from "../lib/civic-data/manual-projections.ts";
 import { electionDatesFor } from "../lib/ballot/election-dates.ts";
+import { deadlineSummary } from "../lib/ballot/deadline-summary.ts";
 import { electionFieldIssue, type PublishedElectionField } from "../lib/civic-data/election-fields.ts";
 import { formatDateMDY } from "../lib/map/format.ts";
 import { absentEdgeEntry, manualEdgeEntry, promotedFamily, provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
@@ -21,7 +22,7 @@ import { publishPointers } from "./helpers/edge-pointers.ts";
 
 const zips: Readonly<Record<string, string>> = {
   AL: "35004", AK: "99501", AZ: "85003", AR: "71601", CA: "90001", CO: "80002", CT: "06001", DE: "19701", DC: "20001",
-  FL: "32003", GA: "30002", HI: "96701", ID: "83120", IL: "60002", IN: "46001", IA: "50001", KS: "66002", KY: "40003",
+  FL: "32003", GA: "30002", HI: "96701", ID: "83702", IL: "60002", IN: "46001", IA: "50001", KS: "66002", KY: "40003",
   LA: "70001", ME: "03579", MD: "20601", MA: "01001", MI: "48001", MN: "55001", MS: "38601", MO: "63005", MT: "59001",
   NE: "68001", NV: "89001", NH: "03031", NJ: "07001", NM: "87001", NY: "10001", NC: "27006", ND: "58002", OH: "43001",
   OK: "73002", OR: "97002", PA: "15001", RI: "02804", SC: "29001", SD: "57001", TN: "37010", TX: "75001", UT: "82930",
@@ -68,7 +69,7 @@ async function navigationCard(node: unknown, state: string): Promise<React.React
 }
 
 test("sourced no-date rules remain text and primary deadlines cannot stand in for November", () => {
-  const rule = fields.find(row => row.value.fieldKind === "registration_deadline" && row.value.dates.length === 0)!;
+  const rule = fields.find(row => row.value.state === "ND" && row.value.fieldKind === "registration_deadline" && row.value.dates.length === 0)!;
   assert.ok(rule);
   assert.equal(electionFieldIssue(rule), null);
   const calendar = electionDatesFor(rule.value.state, ballotNavigationFor(rule.value.state, { ...projection, records: [{ ...rule }] }, "BL-20:no-date-rule", []).dates)!;
@@ -94,8 +95,8 @@ test("a ZIP in every state and DC renders acquired official navigation and deadl
       const start = performance.now();
       const card = await navigationCard(BallotPage({ searchParams: Promise.resolve({ zip }) }), state);
       assert.ok(card, `${state}: ZIP ${zip} has no navigation`);
-      assert.deepEqual(card.props.gaps, [], `${state}: false missing-information gap`);
       await page.setContent(renderToStaticMarkup(card));
+      assert.equal(await page.locator("[data-card-gap]").count(), 0, `${state}: false missing-information gap`);
       const stateFields = fields.filter(row => row.value.state === state);
       const stateRecords = projection.records.filter(row => (row.value as { state?: string } | undefined)?.state === state);
       const noRegistration = stateFields.some(row => row.value.fieldKind === "registration_deadline" &&
@@ -124,6 +125,19 @@ test("a ZIP in every state and DC renders acquired official navigation and deadl
         }
       }
       const displayedDates = await page.locator("[data-navigation-date]").allTextContents();
+      const displayedDetails = await page.locator("[data-navigation-detail]").allTextContents();
+      for (const detail of displayedDetails) {
+        assert.doesNotMatch(detail, /^[a-z]|\s+[.,;:!?]|\.{2,}$/, `${state}: unclean date sentence: ${detail}`);
+        assert.match(detail, /[.!?]["'”’\)\]]*$/, `${state}: unfinished date sentence: ${detail}`);
+        assert.doesNotMatch(detail, /\b(?:january|february|april|june|july|august|september|october|november|december|monday|tuesday|wednesday|thursday|friday|saturday|sunday|(?:may|march)(?=\s+\d))\b/,
+          `${state}: lowercase date: ${detail}`);
+      }
+      if (state === "ID") {
+        assert.ok(displayedDetails.includes("Voter pre-registration ends on October 23."));
+        assert.ok(displayedDetails.includes("Visit an early voting or in-person absentee location from October 13 to October 30."));
+        assert.ok(displayedDetails.includes("Request an absentee ballot by 5:00 p.m. local time on October 23."));
+        await page.screenshot({ path: ".scratch/ci/CT-01-boise-ballot-dates.png" });
+      }
       const text = await page.locator("article").innerText();
       assert.match(text, /Election Day: November 3rd, 2026/);
       for (const kind of ["registration_deadline", "mail_ballot_request_deadline", "early_voting"]) {
@@ -131,7 +145,8 @@ test("a ZIP in every state and DC renders acquired official navigation and deadl
         assert.ok(deadlines.length, `${state}: no acquired ${kind}`);
         for (const { value } of deadlines) {
           for (const date of value.dates) assert.ok(displayedDates.some(rendered => rendered.includes(formatDateMDY(date))), `${state}: missing displayed ${date}`);
-          assert.ok(text.replace(/\s+/g, " ").includes(value.quote.replace(/\s+/g, " ")), `${state}: deadline clock or method disappeared`);
+          const words = (value: string) => value.toLowerCase().replace(/[^\p{L}\p{N}]/gu, "");
+          assert.ok(displayedDetails.some(detail => words(detail) === words(deadlineSummary(value))), `${state}: deadline instruction disappeared`);
           assert.ok(card.props.sources.some(source => source.provenance.sourceUrl === value.url && source.provenance.collectedAt === value.collectedAt), `${state}: original deadline provenance missing`);
         }
       }

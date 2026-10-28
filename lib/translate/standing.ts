@@ -6,7 +6,8 @@ import { jurisdictionFromOcdId } from "../coverage/states.ts";
 import { linkingPageFrom, section3Page } from "../control-plane/promotion/section3.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { measureLabels, pageNamesMeasure } from "./routine-measure-pages.ts";
-import { translationHash, translationScope } from "./records.ts";
+import { translationHash, translationScope, type TranslationRecord } from "./records.ts";
+import { isColoradoBlueBook } from "./blue-book.ts";
 import { runMeasureTranslation } from "./runtime.ts";
 import { runTextTranslation } from "./text-runtime.ts";
 
@@ -23,6 +24,7 @@ export interface TranslationAttempt {
   readonly usage: TranslationResult["usage"];
   readonly versionId: string | null;
   readonly detail?: string;
+  readonly repairCapture?: import("../civic-data/raw-capture-vault.ts").RawCaptureRef;
 }
 
 /** The parent leased worker names source-backed subjects; no global document sweep. */
@@ -89,7 +91,7 @@ export async function runHeldTextTranslations(input: Pick<Parameters<typeof runT
  * guarded transport. Attempts use that worker's existing durable attempt
  * repository; this creates no separate clock, spend guard or production table.
  */
-export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "repos" | "store" | "transportFor" | "now"> & {
+export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "repos" | "store" | "transportFor" | "now" | "vault"> & {
   readonly divisions: readonly string[];
   readonly ballots: readonly BallotSet[];
   readonly captures: readonly WorkerPublicationCapture[];
@@ -97,6 +99,8 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
   readonly saveAttempt: (attempt: TranslationAttempt) => Promise<void>;
   /** Pages found on the election office's own site for measures whose cited pages never name them, by contest. */
   readonly foundSources?: ReadonlyMap<string, readonly string[]>;
+  /** Checked records the pass already read for these divisions; see runMeasureTranslation. */
+  readonly held?: readonly TranslationRecord[];
 }) {
   const nowMs = Date.parse(input.now);
   if (!Number.isFinite(nowMs)) throw new Error("Translation admission requires a clock.");
@@ -132,7 +136,14 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
         (!measure || (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") === measure.sourceHash ||
           Date.parse(capture.evidence.retrievedAt) >= Date.parse(measure.writtenAt)))
         .sort((a, b) => Date.parse(b.evidence.retrievedAt) - Date.parse(a.evidence.retrievedAt));
-      const primary = candidates[0];
+      // Retrieval order across different URLs is not a document revision.
+      // Prefer the ballot's own measure text over a guide fetched seconds later.
+      const sourcePage = (capture: WorkerPublicationCapture) => section3Page({ url: capture.evidence.canonicalUrl, text: capture.evidence.text,
+        retrievedAt: capture.evidence.retrievedAt, linkingPage: linkingPageFrom(capture.evidence.canonicalUrl, pages.map(row => row.evidence)), sourcePolicy: capture.sourcePolicy },
+      PLAIN_ENGLISH_TRANSLATION_ROUTINE.inputRecordClass, input.now);
+      const primary = candidates.find(capture => contest.ocdId === "ocd-division/country:us/state:co" &&
+        isColoradoBlueBook(capture.evidence.canonicalUrl) && sourcePage(capture).ok) ??
+        candidates.find(capture => capture.evidence.canonicalUrl === contest.measureTextUrl && sourcePage(capture).ok) ?? candidates[0];
       if (!primary) { deferred.push({ subjectId: contest.id, reason: "No complete current source capture is held." }); continue; }
       const sourceHash = (primary.evidence.sourceDocument?.contentHash ?? primary.evidence.contentHash).replace(/^sha256-/, "");
       const sourceTextHash = translationHash(primary.evidence.text);
@@ -142,9 +153,7 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
           (capture.evidence.sourceDocument?.contentHash ?? capture.evidence.contentHash).replace(/^sha256-/, "") !== sourceHash)) {
         deferred.push({ subjectId: contest.id, reason: "Current source captures disagree." }); continue;
       }
-      const page = section3Page({ url: primary.evidence.canonicalUrl, text: primary.evidence.text,
-        retrievedAt: primary.evidence.retrievedAt, linkingPage: linkingPageFrom(primary.evidence.canonicalUrl, pages.map(row => row.evidence)), sourcePolicy: primary.sourcePolicy },
-      PLAIN_ENGLISH_TRANSLATION_ROUTINE.inputRecordClass, input.now);
+      const page = sourcePage(primary);
       if (!page.ok) { deferred.push({ subjectId: contest.id, reason: page.reason ?? "Source is not yet verified." }); continue; }
       const matchingAttempts = input.attempts.filter(attempt => attempt.scope === scope && attempt.subjectId === contest.id &&
         attempt.sourceHash === sourceHash && attempt.sourceTextHash === sourceTextHash);
@@ -163,13 +172,15 @@ export async function runHeldMeasureTranslations(input: Pick<TranslationInput, "
       // Refuse to spend if the worker cannot first retain its running attempt.
       await input.saveAttempt(attempt);
       const result = await runMeasureTranslation({ ...input, primary, captures: pages,
+        ...(last?.status === "HELD" && last.detail ? { priorFeedback: last.detail, ...(last.repairCapture ? { priorRepairCapture: last.repairCapture } : {}) } : {}),
         batchPriority: { now: input.now, electionAt: [ballot.election?.date ?? ""] },
         subject: { contestId: contest.id, title: contest.title, ocdId: contest.ocdId,
           state: jurisdictionFromOcdId(contest.ocdId)!.usps,
           sourceQuote: labels.find(value => pageNamesMeasure(primary.evidence.text, [value])) ?? primary.evidence.text,
-          prior: measure ? { ...measure, parts: measure.parts.filter(part => part.number) } : null } });
+          prior: measure } });
       const finished: TranslationAttempt = { ...attempt, status: result.status, usage: result.usage,
-        versionId: result.versionId, ...("detail" in result ? { detail: result.detail } : {}) };
+        versionId: result.versionId, ...("detail" in result ? { detail: result.detail } : {}),
+        ...("repairCapture" in result ? { repairCapture: result.repairCapture } : {}) };
       outcomes.push(finished);
       try { await input.saveAttempt(finished); }
       catch (error) {

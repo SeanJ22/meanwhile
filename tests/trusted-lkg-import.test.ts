@@ -7,7 +7,7 @@ import { type PromotionOutcome } from "../lib/civic-data/promotion.ts";
 import { processRoutineCandidate } from "../lib/civic-data/candidate-lifecycle.ts";
 import { promotionProofIssue, readPromotedCivicData } from "../lib/civic-data/read-model.ts";
 import { MemoryRoutineDataStore, trustedLkgImportClock } from "../lib/civic-data/store.ts";
-import { routineTaskDue, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
+import { routineTaskDue, ROUTINE_SOURCE_TASKS, type RoutineSourceTask } from "../lib/civic-data/runner.ts";
 import {
   PDC_V2_FROZEN_BASE_SHA,
   TRUSTED_LKG_IMPORT_AUTHORIZATION,
@@ -582,7 +582,7 @@ test("retired trusted-LKG doors refuse new imports while retained history remain
   const read = await readPromotedCivicData(MANUAL_RECORD_CLASS, MANUAL_SCOPE, {
     store,
     now: SECOND,
-    bypassCache: true,
+
   });
   assert.equal(read.kind, "PROMOTED");
   assert.equal(read.metadata.stale, "STALE", "Reader serves the LKG but never confuses it with current source truth");
@@ -775,7 +775,7 @@ function withLiveAttempt(store: MemoryRoutineDataStore, template: CandidateVersi
 test("a failed live read after a trusted-LKG import waits its retry clock; an earlier attempt never postpones the first live read", async () => {
   const { store, outcome } = retainedHistoricalLkg();
   const importedAt = outcome.promoted!.promotedAt;
-  const retry = { retryMs: 60 * 60 * 1000 } as RoutineSourceTask;
+  const retry = { ...ROUTINE_SOURCE_TASKS[0], id: "trusted-import-retry", recordClass: "MEETING" as const, retryMs: 60 * 60 * 1000, contract: {cadence: {defaultEveryMs: 60 * 60 * 1000, description: "Fixture live retry"}} } as RoutineSourceTask;
 
   withLiveAttempt(store, outcome.candidate, "live-before-import", "2026-09-09T11:00:00.000Z");
   assert.ok(Date.parse("2026-09-09T11:00:00.000Z") < Date.parse(importedAt));
@@ -824,6 +824,6 @@ test("an import is read whole by its proof: its evidence binds the complete enve
     assert.ok(issue, "the whole row refuses the tamper");
     assert.equal(decide(tamper(narrowed)), issue);
   }
-  const read = await readPromotedCivicData(MANUAL_RECORD_CLASS, MANUAL_SCOPE, { store, bypassCache: true, now: SECOND });
+  const read = await readPromotedCivicData(MANUAL_RECORD_CLASS, MANUAL_SCOPE, { store,  now: SECOND });
   assert.equal(read.kind, "PROMOTED", "the Reader proves an import through the narrowed door");
 });

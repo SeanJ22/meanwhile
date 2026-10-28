@@ -9,7 +9,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { parseEnv } from "node:util";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "../lib/db/client.ts";
 import { PLURAL_STATES } from "../lib/sources/plural/targets.ts";
 import { currentPluralSessions, pluralJurisdictionsUrl } from "../lib/sources/plural/vote-acquisition.ts";
 import { parsePluralBulkSessionFile } from "../lib/sources/plural/vote-bulk.ts";
@@ -62,7 +62,7 @@ async function productionPriorIdentities(state: string, source: string) {
     const result = await sql.transaction([sql.query(`WITH RECURSIVE root AS MATERIALIZED (
       SELECT p.payload FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
       WHERE p.record_class='STATE_ROLL_CALL' AND p.scope=$1 AND p.source_id='plural-openstates-votes'
-        AND c.state='PROMOTED' AND p.current_version_id=p.last_known_good_version_id AND p.payload=c.candidate->'readModel'
+        AND c.state='PROMOTED' AND p.current_version_id=p.last_known_good_version_id AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint)
     ), hashes(hash) AS (
       SELECT ref#>>'{}' FROM root,LATERAL jsonb_path_query(payload,'strict $.**."$civicPayloadPart"','{}',true) ref
       UNION SELECT ref#>>'{}' FROM hashes JOIN civic_data_payload_parts part USING(hash),
@@ -92,7 +92,7 @@ async function productionRoster(state: string) {
       SELECT p.current_version_id,p.payload FROM civic_data_promotions p JOIN civic_data_candidates c ON c.id=p.current_version_id
       WHERE p.record_class='STATE_LEGISLATOR' AND p.scope=$1 AND p.source_id='plural-openstates'
         AND c.state='PROMOTED' AND p.current_version_id=p.last_known_good_version_id
-        AND p.payload=c.candidate->'readModel' AND p.validation_receipt->>'decision'='GOOD'
+        AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt->>'decision'='GOOD'
     ), hashes(hash) AS (
       SELECT ref#>>'{}' FROM root,LATERAL jsonb_path_query(payload,'strict $.**."$civicPayloadPart"','{}',true) ref
       UNION SELECT ref#>>'{}' FROM hashes JOIN civic_data_payload_parts part USING(hash),

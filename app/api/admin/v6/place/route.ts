@@ -1,3 +1,4 @@
+import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { owedStatesOf } from "@/lib/control-plane/admin-view/place-scorecard.ts";
@@ -9,7 +10,7 @@ import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { readPlaceHistory } from "@/lib/control-plane/admin-view/place-history-read.ts";
 import type { PlaceHistoryPoint } from "@/lib/coverage/place-history.ts";
 import { controlPlaneUrlFromEnv } from "@/lib/control-plane/repository/pg-store.ts";
-import { neon } from "@neondatabase/serverless";
+import { databaseReadOnlySql } from "@/lib/reader/database.ts";
 import { missionStartOf } from "@/lib/control-plane/admin-view/mission-start.ts";
 import { owedKindUpdates } from "@/lib/control-plane/admin-view/updates-read.ts";
 import { addUpdates } from "@/lib/control-plane/updates.ts";
@@ -31,7 +32,7 @@ async function configFor(placeKey: string): Promise<{ target: { goalPercent: num
 async function historyFor(placeKey: string): Promise<readonly PlaceHistoryPoint[]> {
   try {
     const url = controlPlaneUrlFromEnv();
-    return url ? await readPlaceHistory(neon(url), placeKey) : [];
+    return url ? await readPlaceHistory(databaseReadOnlySql(url), placeKey) : [];
   } catch { return []; }
 }
 
@@ -41,7 +42,7 @@ export const runtime = "nodejs";
 const NO_STORE = { "cache-control": "no-store, no-cache, must-revalidate" };
 const PARAMS = new Set(["scope", "group", "status", "q", "cursor", "limit", "fresh"]);
 
-export async function GET(request: NextRequest): Promise<NextResponse> {
+async function get(request: NextRequest): Promise<NextResponse> {
   const guard = await guardAdminRequest({ headers: request.headers, cookie: request.cookies.get(ADMIN_SESSION_COOKIE)?.value,
     checkOrigin: false, nowSeconds: Math.floor(Date.now() / 1000) });
   if (!guard.ok) return guard.status === 404 ? new NextResponse(null, { status: 404 })
@@ -72,3 +73,5 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
   }
   return NextResponse.json(v6PlaceSection(read, { group, states: status === null ? null : owedStatesOf(status), q, offset, limit }, target, await historyFor(read.placeKey), missionStart), { headers: NO_STORE });
 }
+
+export const GET = adminRead(get);

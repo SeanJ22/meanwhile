@@ -6,7 +6,7 @@ import type { FactDb, Query } from "../lib/facts/publish.ts";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { COUNT_SCHEMA_SOURCE } from "../lib/control-plane/repository/migrations/RB-A8.ts";
-import { readerIdentityMigration } from "../tests/helpers/reader-identity-db.ts";
+import { readerIdentityMigration,placePageMigration } from "../tests/helpers/reader-identity-db.ts";
 
 type Row = Record<string, unknown>;
 export interface FactSnapshot {
@@ -23,10 +23,11 @@ export interface FactSnapshot {
 
 /** Open only a fresh local database; restore permanent ids before their relationships. */
 export async function openFactCopy(snapshot: FactSnapshot) {
-  const db = await factDb({ withResolver: false });
+  const db = await factDb({ withResolver: false, withPlacePages: false });
   try {
     for (const statement of readerIdentityMigration().split("--> statement-breakpoint"))
       if (!/SELECT reader_sync_ids\(\)/.test(statement)) await db.pg.exec(statement);
+    await db.pg.exec(placePageMigration());
     const entities = JSON.stringify(snapshot.entities ?? []);
     await db.query(`INSERT INTO entity(id,kind,name,state,created_at)
       SELECT id,kind,name,state,created_at FROM jsonb_populate_recordset(NULL::entity,$1::jsonb)`, [entities]);
@@ -35,7 +36,7 @@ export async function openFactCopy(snapshot: FactSnapshot) {
     await db.query("INSERT INTO source_copy SELECT * FROM jsonb_populate_recordset(NULL::source_copy,$1::jsonb)", [JSON.stringify(snapshot.sourceCopies ?? [])]);
     for (const [table, rows] of [["entity_host", snapshot.hosts], ["entity_external_id", snapshot.externalIds], ["entity_place", snapshot.places]] as const)
       await db.query(`INSERT INTO ${table} SELECT * FROM jsonb_populate_recordset(NULL::${table},$1::jsonb)`,
-        [JSON.stringify(table === "entity_place" ? (rows ?? []).map(row => ({ ...row, boundary_year: row.boundary_year ?? 0 })) : rows ?? [])]);
+        [JSON.stringify(table === "entity_place" ? (rows ?? []).map(row => ({ ...row, boundary_year: row.boundary_year ?? 0, placement_basis: row.placement_basis ?? "SERVICE_AREA" })) : rows ?? [])]);
     await db.query("INSERT INTO fact SELECT * FROM jsonb_populate_recordset(NULL::fact,$1::jsonb)", [JSON.stringify(snapshot.facts ?? [])]);
     for (const table of ["source_copy", "fact"])
       await db.query(`SELECT setval(pg_get_serial_sequence('${table}','id'),greatest(coalesce(max(id),0),1),count(*)>0) FROM ${table}`);

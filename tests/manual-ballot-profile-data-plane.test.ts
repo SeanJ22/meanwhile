@@ -207,13 +207,13 @@ test("national ballot and candidate authorities promote through the canonical ca
     assert.equal(outcome.candidate.state, "PROMOTED", id);
     assert.equal(outcome.candidate.receipt?.decision, "GOOD", id);
     assert.equal(outcome.readerReadback?.status, "PASS", JSON.stringify({ id, readback: outcome.readerReadback }));
-    assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED", "PROMOTED"]);
+    assert.deepEqual((await store.events(candidate.id)).map((event) => event.state), ["FETCHED", "NORMALIZED", "VALIDATED", "PROMOTED"]);
   }
 
   const reads = await Promise.all([
-    readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store, bypassCache: true, now: T0 }),
-    readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", "AZ"), { store, bypassCache: true, now: T0 }),
-    readPromotedCivicData<CandidateCorpus>("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", "AZ"), { store, bypassCache: true, now: T0 }),
+    readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store,  now: T0 }),
+    readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", "AZ"), { store,  now: T0 }),
+    readPromotedCivicData<CandidateCorpus>("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", "AZ"), { store,  now: T0 }),
   ]);
   assert.deepEqual(reads.map((read) => read.kind), ["PROMOTED", "PROMOTED", "PROMOTED"]);
 });
@@ -233,7 +233,7 @@ test("measure records survive civic-data promotion and change without a software
     const candidate = manualProjectionCandidate(input);
     const published = await processRegisteredManualCandidate(store, "ballot-contests:NH", candidate, at);
     assert.equal(published.candidate.state, "PROMOTED");
-    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store, now: at, bypassCache: true });
+    const read = await readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store, now: at });
     assert.equal(read.kind, "PROMOTED");
     assert.ok(read.value);
     assert.equal(summaryForContest(contest.id, measureRecordsForBallot(read.value.ballots["NH:nh-2026"]))?.summary, whatItDoes);
@@ -351,9 +351,9 @@ test("store failure never opens a bundled ballot/profile/corpus seed", async () 
     async readCandidate() { candidateReads += 1; return null; },
   };
   const reads = await Promise.all([
-    readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store: brokenStore, bypassCache: true }),
-    readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", "AZ"), { store: brokenStore, bypassCache: true }),
-    readPromotedCivicData<CandidateCorpus>("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", "AZ"), { store: brokenStore, bypassCache: true }),
+    readPromotedCivicData<GenericBallotProjection>("BALLOT_CANDIDACY", stateBallotScope("ballot-contests", "NH"), { store: brokenStore }),
+    readPromotedCivicData<CandidateProfilesProjection>("CANDIDATE_PROFILE", stateBallotScope("candidate-profiles", "AZ"), { store: brokenStore }),
+    readPromotedCivicData<CandidateCorpus>("CANDIDATE_PUBLICATION", stateBallotScope("candidate-corpus", "AZ"), { store: brokenStore }),
   ]);
   assert.ok(reads.every((read) => read.kind === "STORE_UNREACHABLE"));
   assert.equal(candidateReads, 0);

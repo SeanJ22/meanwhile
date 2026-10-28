@@ -2,11 +2,10 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { factDb } from "./helpers/fact-db.ts";
-import { BOOTSTRAP_DDL } from "../lib/control-plane/repository/pg-schema.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { derivedMeetingFamilyScope, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
 import { readPlannerMeetingBodies } from "../lib/civic-data/planner-meeting-state-read.ts";
-import { readPlacePackage } from "../lib/reader/place.ts";
+import { buildPlacePackage } from "../lib/reader/place-builder.ts";
 import { heldBodyGaps } from "../lib/ask/held-gaps.ts";
 import { meetingSettingsFromValues } from "../lib/meetings/settings.ts";
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
@@ -26,7 +25,7 @@ async function fixture() {
   const readerFunctions = readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8")
     .split("--> statement-breakpoint").filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
   for (const sql of readerFunctions) await db.pg.exec(sql);
-  await db.pg.exec(BOOTSTRAP_DDL.find(ddl => ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_work_items ("))!);
+  await db.pg.exec(readFileSync(new URL("../lib/db/migrations/DB-05_keyed_rows.sql", import.meta.url), "utf8"));
   const publish = async (recordClass: string, scope: string, payload: unknown, version: string, at = AT) => {
     const encoded = partitionCivicPayload(payload);
     for (const part of encoded.parts) await db.query("INSERT INTO civic_data_payload_parts(hash,payload) VALUES($1,$2) ON CONFLICT DO NOTHING", [part.hash, JSON.stringify(part.payload)]);
@@ -107,7 +106,7 @@ test("planner meetings preserve canonical gap decisions and exact bounded agenda
       VALUES($1,'starts_at',$2,'new date','live','OFFICIAL',1,'Official rescheduling notice',$3,'fixture')`,
       [`meeting:${id}`, JSON.stringify({ startsAt, timeZone: "UTC" }), AT]);
   }
-  const canonical = await readPlacePackage({ state: "AZ", divisionIds: [], allBodies: true, includeHistory: true, includeAgenda: true }, db.query);
+  const canonical = await buildPlacePackage({ state: "AZ", divisionIds: [], allBodies: true, includeHistory: true, includeAgenda: true }, db.query);
   const responses: { bytes: number; text: string }[] = [];
   const query: ReadOnlyQuery = async statements => {
     const result = await Promise.all(statements.map(async s => (await db.pg.query<Record<string, unknown>>(s.text, [...s.params])).rows));
@@ -179,7 +178,7 @@ test("planner meetings reject a pointer advance between archive inventory and th
   await assert.rejects(async () => {
     for await (const body of readPlannerMeetingBodies("AZ", query, AT)) await body.load();
   }, /PLANNER_MEETING_CHANGED:AZ:/);
-  const canonical = await readPlacePackage({ state: "AZ", divisionIds: [], allBodies: true, includeHistory: true, includeAgenda: true }, db.query);
+  const canonical = await buildPlacePackage({ state: "AZ", divisionIds: [], allBodies: true, includeHistory: true, includeAgenda: true }, db.query);
   assert.ok(canonical.meetings.some(row => row.id === historical.id),
     "after the advance, the former current calendar belongs in history; silently combining the old archive inventory with the new current calendar would drop it");
 });

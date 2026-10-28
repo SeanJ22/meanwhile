@@ -88,7 +88,7 @@ test("an unreachable store is reported as unreachable", async () => {
       },
     },
     now: GENERATED_AT,
-    bypassCache: true,
+
   });
   assert.equal(read.kind, "STORE_UNREACHABLE");
   if (read.kind === "STORE_UNREACHABLE") assert.equal(read.code, "STORE_READ_FAILED");
@@ -286,6 +286,7 @@ test("production-capable composite ingest has no non-promotion file door", () =>
     ["--experimental-strip-types", "scripts/ingest.ts", "composite"],
     { cwd: process.cwd(), encoding: "utf8" },
   );
+  assert.ifError(run.error);
   assert.equal(run.status, 1);
   assert.match(run.stderr, /requires --promote/);
 });

@@ -1,15 +1,18 @@
+import { decodedMeasurePassages, measureDraft, measureRequestContext } from "./helpers/measure-translation.ts";
 import { fixturePlaybooks } from "./helpers/playbooks.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { newFieldManualEntry, writeFieldManual } from "../lib/control-plane/field-manual.ts";
-import type { ModelRequest, ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
+import { cacheTtlOrderProblems, type ModelRequest, type ModelResponse } from "../lib/control-plane/scheduler/scout-executor.ts";
 import type { WorkerEvidence } from "../lib/control-plane/workers/types.ts";
 import { translateMeasure, translationPlaybook } from "../lib/translate/worker.ts";
 import { translationHash, translationRecordIssue } from "../lib/translate/records.ts";
 import { publishTranslation, readTranslations, withMeasureTranslations } from "../lib/translate/publication.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import type { MeasureRecord } from "../lib/ballot/measure-records.ts";
+import { measureRecordIssue, type MeasureRecord } from "../lib/ballot/measure-records.ts";
+import { provisionsForContest, getProvisionTargetIds } from "../lib/ballot/measure-provisions.ts";
+import { MODELS } from "../lib/models.ts";
 import type { BallotSet } from "../lib/ballot/types.ts";
 import { runMeasureTranslation } from "../lib/translate/runtime.ts";
 
@@ -29,8 +32,12 @@ const response = (request: ModelRequest, input: unknown): ModelResponse => ({ mo
 test("the guarded writer and independent checker publish exact source-supported meanings into the typed reader", async () => {
   const requests: ModelRequest[] = [];
   const result = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
-    transportFor: () => async request => { requests.push(request); return response(request, requests.length === 1 ? { measure, sentences } : { checked }); } });
+    transportFor: () => async request => { requests.push(request); return response(request, requests.length === 1 ? measureDraft(measure, sentences) : { checked }); } });
+  assert.equal(requests[1].tools[0].strict, true);
+  assert.match(measureRequestContext(requests[1]).instruction, /these vote definitions/);
   assert.equal(requests.length, 2); assert.notEqual(requests[0].model, requests[1].model);
+  assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5"]);
+  assert.match(measureRequestContext(requests[1]).instruction, /Reject recommendations, judgments, persuasion/);
   assert.equal(translationRecordIssue(result.record), null);
   assert.ok(result.usage.every(row => typeof row.usd === "number"));
   const store = new MemoryRoutineDataStore();
@@ -38,26 +45,140 @@ test("the guarded writer and independent checker publish exact source-supported 
     captures: [{ evidence, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" }] });
   assert.ok(published.promoted, JSON.stringify(published.candidate));
   assert.equal(published.readerReadback?.status, "PASS", JSON.stringify(published.readerReadback));
-  const held = await readTranslations([subject.ocdId], { store, now, bypassCache: true });
+  const held = await readTranslations([subject.ocdId], { store, now });
   assert.deepEqual(held, [result.record]);
   const ballot = { contests: [{ id: subject.contestId, ocdId: subject.ocdId, type: "MEASURE" }], measureRecords: [{ ...measure, noMeans: null }] } as unknown as BallotSet;
   assert.equal(withMeasureTranslations(ballot, held).measureRecords![0].noMeans, measure.noMeans);
   assert.equal(withMeasureTranslations(ballot, [{ ...result.record, ocdId: "ocd-division/country:us/state:mi" }]).measureRecords![0].noMeans, null);
 });
 
+test("the application owns measure identity, source hashes and timestamps, even if a model supplies other metadata", async () => {
+  const result = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+    transportFor: () => async request => {
+      const draft = measureDraft(measure, sentences);
+      return response(request, request.tools[0].name === "write_measure_translation" ? { ...draft, measure: {
+        ...draft.measure, contestId: "a-different-measure", sourceUrl: "https://other.example.gov/",
+        sourceHash: "f".repeat(64), writtenAt: "2001-01-01T00:00:00Z",
+      } } : { checked });
+    } });
+  assert.deepEqual(result.record.measure, measure);
+  assert.equal(result.record.subjectId, subject.contestId);
+  assert.ok(result.record.sentences.every(sentence => sentence.quote === source));
+});
+
+test("a whole source used as a binding quote is sent once, before the measure context, with a reusable cache breakpoint", async () => {
+  const text = `${source}\n\n${"The official guide retains this additional legal condition. ".repeat(2500)}`;
+  const requests: ModelRequest[] = [];
+  const result = await translateMeasure({ repos: createMemoryRepositories(),
+    evidence: { ...evidence, text, contentHash: `sha256-${translationHash(text)}` }, subject: { ...subject, sourceQuote: text }, now,
+    transportFor: () => async request => { requests.push(request); return response(request,
+      request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked }); } });
+  assert.equal(result.record.sourceCapture?.rawHash, translationHash(text));
+  assert.equal(result.record.sourceCapture?.byteLength, Buffer.byteLength(text));
+  assert.ok(result.record.sourceText.length < text.length / 10);
+  assert.equal(result.record.sourceTextHash, translationHash(result.record.sourceText));
+  for (const request of requests) {
+    assert.deepEqual(cacheTtlOrderProblems(request), []);
+    const blocks = request.messages[0].content as { text: string; cache_control?: { ttl: string } }[];
+    assert.equal(decodedMeasurePassages(blocks[0].text).map(row => row.text).join(""), text);
+    assert.equal(blocks[0].cache_control?.ttl, "5m");
+    const context = measureRequestContext(request);
+    assert.equal("sourceQuote" in context.subject, false);
+    assert.ok(JSON.stringify(context.subject).length < 1000);
+    assert.ok(context.subject.sourceReference);
+  }
+  assert.equal(requests[0].model, "claude-haiku-5-5");
+  assert.equal(requests[0].output_config?.effort, "low");
+  assert.equal(requests[0].tools[0].strict, true);
+  const schema = requests[0].tools[0].input_schema as { properties: { measure: { properties: Record<string, unknown> } } };
+  assert.deepEqual(Object.keys(schema.properties.measure.properties), ["whatItDoes", "yesMeans", "noMeans", "parts"]);
+});
+
 test("an unsupported writer sentence or failed independent check never publishes a translation", async () => {
-  for (const failure of ["quote", "checker", "truncation", "identity"]) {
+  for (const failure of ["passage", "checker", "truncation"]) {
     let calls = 0;
     await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
       transportFor: () => async request => {
         calls++;
-        if (request.tools[0].name === "write_measure_translation") return { ...response(request, { measure: failure === "identity" ? { ...measure, contestId: "other" } : measure,
-          sentences: failure === "quote" ? [{ ...sentences[0], quote: "Invented benefit." }, ...sentences.slice(1)] : sentences }),
-          ...(failure === "truncation" ? { stop_reason: "max_tokens" } : {}) };
+        if (request.tools[0].name === "write_measure_translation") {
+          const draft = measureDraft(measure, sentences);
+          if (failure === "passage") draft.sentences[0].passageFrom = "p999999";
+          return { ...response(request, draft), ...(failure === "truncation" ? { stop_reason: "max_tokens" } : {}) };
+        }
         return response(request, { checked: checked.map((row, at) => ({ ...row, supported: failure !== "checker" || at !== 0 })) });
       } }));
     assert.equal(calls, failure === "checker" ? 4 : 2);
   }
+});
+
+test("a missing sentence annotation is rewritten before paying an independent checker", async () => {
+  const requests: ModelRequest[] = [];
+  const result = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+    transportFor: () => async request => {
+      requests.push(request);
+      if (request.tools[0].name === "write_measure_translation") {
+        const draft = measureDraft(measure, sentences);
+        if (requests.length === 1) draft.sentences.splice(1, 1);
+        else assert.match(measureRequestContext(request).feedback, /source passage/);
+        return response(request, draft);
+      }
+      assert.equal(request.model, "claude-opus-5-5");
+      return response(request, { checked });
+    } });
+  assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"]);
+  assert.equal(result.record.writerModel, "claude-sonnet-5-5");
+  assert.equal(result.record.checkerModel, "claude-opus-5-5");
+  assert.equal(result.usage.length, 3);
+  assert.deepEqual(result.usage.map(row => row.role), ["TRANSLATOR", "TRANSLATOR", "TRANSLATION_CHECKER"]);
+  assert.equal(translationRecordIssue(result.record), null);
+});
+
+test("a writer grouping two sentences under one citation cannot buy a checker or publish", async () => {
+  const requests: ModelRequest[] = [];
+  const proposed = { ...measure, whatItDoes: `${measure.whatItDoes} ${measure.yesMeans}` };
+  await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
+    transportFor: () => async request => {
+      requests.push(request);
+      assert.equal(request.tools[0].name, "write_measure_translation");
+      return response(request, measureDraft(proposed, [{ ...sentences[0], text: proposed.whatItDoes }, ...sentences.slice(1)]));
+    } }), /source passage/);
+  assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5"]);
+});
+
+test("an approved measure sentence containing No. IL26-001 reaches the independent checker without a rewrite", async () => {
+  // One bounded production checker diagnostic retained this approved sentence.
+  // This is a synthetic source/transport fixture, not a production source replay.
+  const meaning = "If approved by voters, Initiative Measure No. IL26-001 would restore RCW 28A.605.005 as originally passed by the Legislature in the 2024 session.";
+  const text = `${source}\n${meaning}`;
+  const primary = { ...evidence, text, contentHash: `sha256-${translationHash(text)}` };
+  const proposed = { ...measure, whatItDoes: meaning, sourceHash: translationHash(text) };
+  const annotated = [{ field: "whatItDoes", text: meaning, quote: meaning }, ...sentences.slice(1)];
+  const requests: ModelRequest[] = [];
+  const { record } = await translateMeasure({ repos: createMemoryRepositories(), evidence: primary, subject, now,
+    transportFor: () => async request => {
+      requests.push(request);
+      return response(request, request.tools[0].name === "write_measure_translation"
+        ? measureDraft(proposed, annotated)
+        : { checked: annotated.map(({ field, text }) => ({ field, text, supported: true })) });
+    } });
+  assert.deepEqual(requests.map(request => request.model), [MODELS.haiku.model, MODELS.sonnet.model]);
+  assert.equal(record.measure.whatItDoes, meaning);
+  assert.equal(translationRecordIssue(record), null);
+});
+
+test("a numbered-measure abbreviation cannot hide a second sentence from independent checking", async () => {
+  const meaning = "Initiative Measure No. IL26-001 would restore the law. It would repeal the amendments.";
+  const text = `${source}\n${meaning}`;
+  const proposed = { ...measure, whatItDoes: meaning, sourceHash: translationHash(text) };
+  const requests: ModelRequest[] = [];
+  await assert.rejects(translateMeasure({ repos: createMemoryRepositories(),
+    evidence: { ...evidence, text, contentHash: `sha256-${translationHash(text)}` }, subject, now,
+    transportFor: () => async request => {
+      requests.push(request);
+      assert.equal(request.tools[0].name, "write_measure_translation");
+      return response(request, measureDraft(proposed, [{ field: "whatItDoes", text: meaning, quote: meaning }, ...sentences.slice(1)]));
+    } }), /source passage/);
+  assert.deepEqual(requests.map(request => request.model), [MODELS.haiku.model, MODELS.sonnet.model]);
 });
 
 test("source replay accepts official HTML entities and PDF line breaks while rejecting invented passages", async () => {
@@ -65,14 +186,14 @@ test("source replay accepts official HTML entities and PDF line breaks while rej
   const primary = { ...evidence, text, contentHash: `sha256-${translationHash(text)}` };
   const proposed = { ...measure, sourceHash: translationHash(text) };
   const result = await translateMeasure({ repos: createMemoryRepositories(), evidence: primary, subject, now,
-    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? { measure: proposed, sentences } : { checked }) });
+    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? measureDraft(proposed, sentences) : { checked }) });
   assert.equal(translationRecordIssue(result.record), null);
   assert.match(translationRecordIssue({ ...result.record, sentences: [{ ...sentences[0], quote: "An invented benefit." }, ...sentences.slice(1)] })!, /source passage/);
 });
 
 test("a checked explainer attaches to a measure with no hand-made record and retains the official Sources link", async () => {
   const { record } = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
-    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences } : { checked }) });
+    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked }) });
   const ballot = { contests: [{ id: subject.contestId, ocdId: subject.ocdId, type: "MEASURE", provenance: { sourceUrl: evidence.canonicalUrl } }],
     measures: [{ contestId: subject.contestId, questionText: source, provenance: { sourceUrl: evidence.canonicalUrl } }],
   } as unknown as BallotSet;
@@ -88,14 +209,28 @@ test("a checked explainer attaches to a measure with no hand-made record and ret
 });
 
 test("checked summary and vote meanings preserve legacy reaction parts and ignore an older translation", async () => {
-  const { record } = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
-    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences } : { checked }) });
   const parts = [{ id: `${measure.contestId}#funding`, number: null, kind: "FUNDING", label: "Funding", what: measure.whatItDoes }];
-  const prior = { ...measure, noMeans: null, parts };
-  const ballot = { contests: [{ id: subject.contestId, ocdId: subject.ocdId, type: "MEASURE" }], measureRecords: [prior] } as unknown as BallotSet;
+  const prior = { ...measure, noMeans: null, parts, sourceUrl: "https://example.gov/original-analysis", sourceHash: "b".repeat(64), writtenAt: "2026-10-01" };
+  const requests: ModelRequest[] = [];
+  const { record } = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject: { ...subject, prior }, now,
+    transportFor: () => async request => { requests.push(request); return response(request,
+      request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked }); } });
+  assert.deepEqual(requests.map(request => request.model), [MODELS.haiku.model, MODELS.sonnet.model]);
+  const ballot = { contests: [{ id: subject.contestId, ocdId: subject.ocdId, type: "MEASURE", measureTextUrl: evidence.canonicalUrl }], measureRecords: [prior] } as unknown as BallotSet;
   const translated = withMeasureTranslations(ballot, [record]);
   assert.equal(translated.measureRecords![0].noMeans, measure.noMeans);
   assert.deepEqual(translated.measureRecords![0].parts, parts);
+  assert.deepEqual(translated.measureRecords![0].partSources?.[parts[0].id], {
+    sourceUrl: prior.sourceUrl, sourceHash: prior.sourceHash, writtenAt: prior.writtenAt,
+  });
+  assert.equal(measureRecordIssue(translated.measureRecords![0]), null);
+  assert.deepEqual(record.measure.parts, [], "the new checker confirms the new summary; it does not pretend the old parts are newly numbered");
+  assert.ok(getProvisionTargetIds(translated.measureRecords!).has(parts[0].id));
+  const provision = provisionsForContest(subject.contestId, translated.measureRecords!)[0];
+  assert.deepEqual([provision.id, provision.label, provision.what, provision.citesUrl, provision.writtenAt],
+    [parts[0].id, parts[0].label, parts[0].what, prior.sourceUrl, prior.writtenAt]);
+  assert.deepEqual(provisionsForContest(subject.contestId, withMeasureTranslations(translated, [record]).measureRecords!), [provision],
+    "reading the composition again cannot move an old part's source to the new summary's source");
   const newer = { ...ballot, measureRecords: [{ ...prior, sourceHash: "a".repeat(64), writtenAt: "2026-10-06T18:00:00Z" }] };
   assert.equal(withMeasureTranslations(newer, [record]), newer);
 });
@@ -107,11 +242,11 @@ test("writer and checker require both vote meanings and forbid favoring a side",
       transportFor: () => async request => {
         requests.push(request);
         return response(request, request.tools[0].name === "write_measure_translation"
-          ? { measure: { ...measure, [missing]: null }, sentences: sentences.filter(row => row.field !== missing) }
+          ? measureDraft({ ...measure, [missing]: null }, sentences.filter(row => row.field !== missing))
           : { checked: checked.filter(row => row.field !== missing) });
       } }), /vote meanings/);
-    assert.match(requests[0].messages[0].content as string, /Never recommend, judge, endorse, favor/);
-    assert.match(requests[1].messages[0].content as string, /Reject recommendations, judgments, persuasion/);
+    assert.match(JSON.stringify(measureRequestContext(requests[0])), /Never recommend, judge, endorse, favor/);
+    assert.ok(requests.every(request => request.tools[0].name === "write_measure_translation"), "no checker is bought for missing required vote meanings");
   }
 });
 
@@ -131,7 +266,7 @@ test("the next translator start reads the latest Bank playbook and distinct allo
   let system = "";
   await translateMeasure({ repos, evidence, subject, now, transportFor: () => async request => {
     system = request.system[0].text;
-    return response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences } : { checked });
+    return response(request, request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked });
   } });
   assert.match(system, /Keep every material exception/);
   assert.match(system, /Preserve existing spending limits/);
@@ -147,7 +282,7 @@ test("a changed source is rewritten, an unchanged source costs nothing, and a fa
   transportFor: () => async request => {
     calls++;
     return response(request, request.tools[0].name === "write_measure_translation"
-      ? { measure: { ...measure, sourceHash: primary.contentHash.replace(/^sha256-/, "") }, sentences }
+      ? measureDraft(measure, sentences)
       : { checked: checked.map(row => ({ ...row, supported: !rejectCheck })) });
   } });
   const first = await run(); assert.equal(first.status, "PUBLISHED", JSON.stringify(first)); assert.equal(calls, 2);
@@ -155,7 +290,8 @@ test("a changed source is rewritten, an unchanged source costs nothing, and a fa
   rejectCheck = true;
   const changed = { ...evidence, text: `${source} The next review is in 2028.`, contentHash: `sha256-${translationHash(`${source} The next review is in 2028.`)}` };
   const refused = await run(changed); assert.equal(refused.status, "HELD"); assert.equal(refused.usage.length, 4);
-  assert.deepEqual((await readTranslations([subject.ocdId], { store, now, bypassCache: true }))[0], first.record);
+  assert.deepEqual(refused.usage.map(row => row.role), ["TRANSLATOR", "TRANSLATION_CHECKER", "TRANSLATOR", "TRANSLATION_CHECKER"]);
+  assert.deepEqual((await readTranslations([subject.ocdId], { store, now }))[0], first.record);
   rejectCheck = false;
   const rewritten = await run(changed); assert.equal(rewritten.status, "PUBLISHED", JSON.stringify(rewritten));
   assert.equal(rewritten.record?.sourceHash, changed.contentHash.replace(/^sha256-/, ""));
@@ -165,24 +301,24 @@ test("a changed source is rewritten, an unchanged source costs nothing, and a fa
 test("a translation for another exact district remains separate and same-place publication retains another checked subject", async () => {
   const store = new MemoryRoutineDataStore(), repos = createMemoryRepositories();
   const translate = () => translateMeasure({ repos, subject, evidence, now,
-    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences } : { checked }) });
+    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked }) });
   const { record } = await translate();
   const captures = [{ evidence, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" as const }];
   await publishTranslation(store, { record, captures, now });
   const other = { ...record, id: "translation:measure:13", subjectId: "measure:13", measure: { ...measure, contestId: "measure:13" } };
   const published = await publishTranslation(store, { record: other, captures, now });
   assert.ok(published.promoted, JSON.stringify(published.candidate));
-  assert.equal((await readTranslations([subject.ocdId], { store, now, bypassCache: true })).length, 2);
+  assert.equal((await readTranslations([subject.ocdId], { store, now })).length, 2);
   const elsewhere = "ocd-division/country:us/state:mi/county:birch";
   await publishTranslation(store, { record: { ...record, ocdId: elsewhere }, captures, now });
-  assert.equal((await readTranslations([elsewhere], { store, now, bypassCache: true })).length, 1);
-  assert.equal((await readTranslations([subject.ocdId], { store, now, bypassCache: true })).length, 2);
+  assert.equal((await readTranslations([elsewhere], { store, now })).length, 1);
+  assert.equal((await readTranslations([subject.ocdId], { store, now })).length, 2);
 });
 
 test("a checked measure captured earlier publishes beside a newer source without losing either retrieval date", async () => {
   const store = new MemoryRoutineDataStore();
   const { record } = await translateMeasure({ repos: createMemoryRepositories(), subject, evidence, now,
-    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences } : { checked }) });
+    transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences) : { checked }) });
   const captured = { evidence, observedAt: now, httpStatus: 200, partial: false, transport: "REACHABLE" as const };
   await publishTranslation(store, { record, captures: [captured], now });
   const earlierAt = "2026-10-05T17:59:00Z";
@@ -191,7 +327,7 @@ test("a checked measure captured earlier publishes beside a newer source without
   const result = await publishTranslation(store, { record: older,
     captures: [{ ...captured, evidence: { ...evidence, retrievedAt: earlierAt }, observedAt: earlierAt }], now });
   assert.equal(result.readerReadback?.status, "PASS", JSON.stringify(result));
-  const records = await readTranslations([subject.ocdId], { store, now, bypassCache: true });
+  const records = await readTranslations([subject.ocdId], { store, now });
   assert.equal(records.length, 2);
   assert.equal(records.find(row => row.subjectId === "measure:13")!.retrievedAt, earlierAt);
   assert.equal(records.find(row => row.subjectId === "measure:12")!.retrievedAt, now);
@@ -212,12 +348,12 @@ test("officially numbered parts retain their reaction identities on a checked re
   const result = await translateMeasure({ repos: createMemoryRepositories(), evidence: primary, subject: { ...subject, prior: proposed }, now,
     transportFor: () => async request => {
       if (request.tools[0].name === "write_measure_translation") {
-        assert.match(request.messages[0].content as string, /parts\.<exact part id>\.label/);
+        assert.match(JSON.stringify(measureRequestContext(request)), /parts\.<exact part id>\.label/);
         assert.match(JSON.stringify(request.tools[0].input_schema), /exact contestId followed by #/);
-        assert.match(JSON.stringify(request.tools[0].input_schema), /One contiguous exact supporting passage/);
+        assert.match(JSON.stringify(request.tools[0].input_schema), /contiguous source span/);
       }
       return response(request, request.tools[0].name === "write_measure_translation"
-        ? { measure: proposed, sentences: support } : { checked: support.map(({ field, text }) => ({ field, text, supported: true })) });
+        ? measureDraft(proposed, support) : { checked: support.map(({ field, text }) => ({ field, text, supported: true })) });
     } });
   assert.deepEqual(result.record.measure.parts.map(part => [part.id, part.number]), parts.map(part => [part.id, part.number]));
 });
@@ -228,7 +364,7 @@ test("an independent checker cannot authorize an invented official part number",
     { field: `parts.${part.id}.what`, text: part.what, quote: part.what }];
   await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now,
     transportFor: () => async request => response(request, request.tools[0].name === "write_measure_translation"
-      ? { measure: { ...measure, parts: [part] }, sentences: support }
+      ? measureDraft({ ...measure, parts: [part] }, support)
       : { checked: support.map(({ field, text }) => ({ field, text, supported: true })) }) }), /unique numbering/);
 });
 
@@ -237,7 +373,7 @@ test("a rewrite cannot drop or move a prior reaction identity to another officia
   for (const parts of [[], [{ ...prior.parts[0], number: "2" }]]) {
     let calls = 0;
     await assert.rejects(translateMeasure({ repos: createMemoryRepositories(), evidence, subject: { ...subject, prior }, now,
-      transportFor: () => async request => { calls++; return response(request, { measure: { ...measure, parts }, sentences }); } }), /reaction identity/);
+      transportFor: () => async request => { calls++; return response(request, measureDraft({ ...measure, parts }, sentences)); } }), /reaction identity/);
     assert.equal(calls, 2, "both writers must preserve the same reaction identity; no checker is bought for invalid parts");
   }
 });
@@ -247,15 +383,35 @@ test("a failed Sonnet check buys a Sonnet rewrite and an Opus check, metering al
   const repos = createMemoryRepositories();
   const result = await translateMeasure({ repos, evidence, subject, now, transportFor: () => async request => {
     requests.push(request);
-    return response(request, request.tools[0].name === "write_measure_translation" ? { measure, sentences }
+    return response(request, request.tools[0].name === "write_measure_translation" ? measureDraft(measure, sentences)
       : { checked: checked.map(row => ({ ...row, supported: requests.length > 2 })) });
   } });
   assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-sonnet-5-5", "claude-opus-5-5"]);
   assert.match(requests[2].system[0].text, /Write|write/);
   assert.equal(result.record.writerModel, "claude-sonnet-5-5");
+  assert.match(measureRequestContext(requests[2]).feedback, /previousProposal/);
   assert.equal(result.record.checkerModel, "claude-opus-5-5");
   assert.equal(result.record.subjectId, subject.contestId);
   assert.equal(result.usage.length, 4);
+  assert.deepEqual(result.usage.map(row => row.role), ["TRANSLATOR", "TRANSLATION_CHECKER", "TRANSLATOR", "TRANSLATION_CHECKER"]);
   assert.ok(result.usage.every(row => row.usd !== null));
+  const costs = await repos.costs.readAll();
+  assert.equal(costs.length, 4);
+  assert.ok(costs.every(row => row.jurisdiction === subject.ocdId && row.workItemId === subject.contestId), "every rung keeps the job ID and attributes dollars to its real state, including legacy ballot IDs");
   assert.equal(translationRecordIssue({ ...result.record, checkerModel: `${result.record.writerModel}-20261024` })?.includes("independent checker"), true);
+});
+
+test("a truncated repair retains its draft context and enough output space under the same guarded transport", async () => {
+  const requests: ModelRequest[] = [], priorDraft = measureDraft(measure, sentences);
+  const result = await translateMeasure({ repos: createMemoryRepositories(), evidence, subject, now, priorDraft,
+    priorFeedback: "Retain the levy condition in the working draft.", transportFor: () => async request => {
+      requests.push(request);
+      if (requests.length === 1) return { ...response(request, {}), stop_reason: "max_tokens" };
+      return response(request, request.tools[0].name === "write_measure_translation" ? priorDraft : { checked });
+    } });
+  assert.equal(result.record.measure.whatItDoes, measure.whatItDoes);
+  assert.match(measureRequestContext(requests[1]).feedback, /Retain the levy condition/);
+  assert.match(measureRequestContext(requests[1]).feedback, /previousProposal/);
+  assert.ok(requests.every(request => request.max_tokens === 16384));
+  assert.deepEqual(requests.map(request => request.model), ["claude-haiku-5-5", "claude-sonnet-5-5", "claude-opus-5-5"]);
 });

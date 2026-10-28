@@ -7,7 +7,7 @@ import { type GenericBallotProjection } from "../ballot/generic-projection.ts";
 import type { VotingSitesFile } from "../ballot/voting-sites.ts";
 import type { OfficeholderSet } from "../officials/types.ts";
 import { federalDirectoryScope, type FederalDirectoryReadModel } from "../officials/federal-directory-data-plane.ts";
-import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
+import type { RegistryPlanningView } from "./keyed-registry-planning.ts";
 import type { FundingSnapshot } from "../funding/types.ts";
 import type { StateMoneySnapshot } from "../funding/state-money.ts";
 import { isRenderable } from "../funding/state-money-reader.ts";
@@ -21,7 +21,7 @@ import { officialFilingIssue, type OfficialFiling } from "./official-filings.ts"
 import { readPromotedCivicData, type PromotedCivicDataReadOptions } from "./read-model.ts";
 import type { HeldPlaceCapture } from "./held-place-capture.ts";
 import { electionFieldIssue, type PublishedElectionField } from "./election-fields.ts";
-import { heldPlaceValue as value, readPlacePointerSlice,type PlaceInputMemo } from "./held-place-slices.ts";
+import { heldPlaceValue as value, readPlacePointerSlice } from "./held-place-slices.ts";
 import type { PlaceCaptureKind } from "../coverage/place-owed.ts";
 import type { CandidateProfilesProjection } from "./manual-projections.ts";
 import { currentExtraction, type CandidateDocument, type CandidateCorpus } from "../candidates/corpus.ts";
@@ -78,18 +78,17 @@ function placeBallot(ballot: BallotSet, divisions: ReadonlySet<string>): BallotS
   };
 }
 
-export async function readHeldPlaceFamilies(divisionIds: readonly string[], options: PromotedCivicDataReadOptions, registry?: RegistryRuntimeReadModel | null,memo?:PlaceInputMemo): Promise<HeldPlaceFamilies> {
-  const remember:PlaceInputMemo=memo??((_class,_scope,load)=>load());
+export async function readHeldPlaceFamilies(divisionIds: readonly string[], options: PromotedCivicDataReadOptions, registry?: RegistryPlanningView | null): Promise<HeldPlaceFamilies> {
   const sliced = registry !== undefined, divisions = new Set(divisionIds);
   const targets = [...new Set([...(registry?.bodyRosters.flatMap(roster => roster.members.map(member => member.id)) ?? []),
     ...(registry?.officialCandidacies.rows.flatMap(row => row.status === "RESOLVED" && row.candidacy ? [row.candidacy.candidacyId] : []) ?? [])])];
-  const read = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => remember(recordClass,scope,()=>sliced
+  const read = <T>(recordClass: Parameters<typeof readPlacePointerSlice>[0], scope: string) => sliced
     ? readPlacePointerSlice<T>(recordClass, scope, divisionIds, [], targets)
-    : readPromotedCivicData<T>(recordClass, scope, options));
+    : readPromotedCivicData<T>(recordClass, scope, options);
   const stateRead = async <T>(family: Exclude<StateAuthorityFamily, "registry-runtime" | "federal-directory">, recordClass: Parameters<typeof readPlacePointerSlice>[0], state: string) => {
     const { scope } = stateAuthorityPointers(family, state)[0];
-    return remember(recordClass, scope, async () => options.store ? readPromotedCivicData<T>(recordClass, scope, options)
-      : (await readStateAuthorityProjection<T>(family, state)).result);
+    return options.store ? readPromotedCivicData<T>(recordClass, scope, options)
+      : (await readStateAuthorityProjection<T>(family, state)).result;
   };
   const states = new Set(statesForRegistryDivisions(divisionIds));
   const stateTargets = OFFICIAL_STATE_LEGISLATOR_TARGETS.filter(target => states.has(target.state));
@@ -99,7 +98,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const fec = requiredRoutineContract("fec-funding");
   const [federal, legislators] = await Promise.all([
     Promise.all([...states].filter(state => (REGISTRY_STATES as readonly string[]).includes(state)).map(state => read<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state)))),
-    Promise.all(stateTargets.map(target => remember("STATE_LEGISLATOR",target.jurisdiction,()=>readOfficialStateLegislatorsProjection(target.jurisdiction, options)))),
+    Promise.all(stateTargets.map(target => readOfficialStateLegislatorsProjection(target.jurisdiction, options))),
   ]);
   const rosters = [...federal.map(read => value(read)?.roster), ...legislators.map(read => value(read)?.roster)].filter((row): row is OfficeholderSet => row !== undefined);
   targets.push(...rosters.flatMap(roster => roster.divisions.filter(row => divisions.has(row.ocdId)).map(row => row.officeholderId)));
@@ -143,7 +142,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
 }
 
 /** No names, state-wide money expansion, or original-job/ZIP filters participate in joins. */
-export function projectHeldPlaceFamilies(divisionIds: readonly string[], registry: RegistryRuntimeReadModel | null, families: HeldPlaceFamilies): HeldPlaceCapture {
+export function projectHeldPlaceFamilies(divisionIds: readonly string[], registry: RegistryPlanningView | null, families: HeldPlaceFamilies): HeldPlaceCapture {
   const wanted = new Set(divisionIds);
   const subjects = new Map<string, HeldPlaceCapture["subjects"][number]>();
   const held: HeldPlaceCapture["held"][number][] = [];

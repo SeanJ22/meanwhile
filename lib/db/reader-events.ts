@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
 import { getStore } from "@netlify/blobs";
-import { neon } from "@neondatabase/serverless";
+import { neon } from "./client.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
 import { redactSelfDisclosure } from "../speak/self-disclosure.ts";
 import { classifyReaderEventTopic, readerTopicInCode } from "./reader-event-topics.ts";
@@ -123,8 +123,10 @@ export async function appendReaderEvents(input: ReaderEventBatchInput, options: 
 } = {}): Promise<{ readonly kind: "RECORDED"; readonly events: number; readonly duplicate: boolean }> {
   assertWriteAllowed("reader events");
   const prepared = prepareReaderEventBatch(input);
-  const archive = options.archive ?? netlifyEventArchive();
-  await archive.put(prepared.archiveKey, gzipSync(prepared.json), prepared.sha256);
+  try {
+    const archive = options.archive ?? netlifyEventArchive();
+    await archive.put(prepared.archiveKey, gzipSync(prepared.json), prepared.sha256);
+  } catch(error) { throw new Error("Reader event history could not be saved",{cause:error}); }
   // The archive/retry digest remains the exact captured input. Derived model
   // labels affect totals only, so an unavailable classifier on the first send
   // cannot make the same captured batch fail its later retry.
@@ -140,7 +142,17 @@ export async function appendReaderEvents(input: ReaderEventBatchInput, options: 
   }));
   const aggregates = prepareReaderEventBatch({ ...input,
     events: input.events.map((event, index) => ({ ...event, topic: classified[index]! })) }).aggregates;
-  const query = options.query ?? ((statement, params) => neon(process.env.DATABASE_URL!).query(statement, [...params]));
+  const database = options.query ?? ((statement:string, params:readonly unknown[]) => neon(process.env.DATABASE_URL!).query(statement, [...params]));
+  // The batch claim and totals commit together. Retrying this same statement after a lost
+  // response is safe: the claim prevents counting it twice, even if the first commit succeeded.
+  const query=async(statement:string,params:readonly unknown[])=>{
+    for(let attempt=1;;attempt++)try { return await database(statement,params); }
+    catch(error) {
+      console.error("Reader event database request failed",{batchId:input.batchId,attempt,error});
+      if(attempt>=3||!transientDatabaseError(error))throw new Error("Reader event totals could not be saved",{cause:error});
+      await new Promise(resolve=>setTimeout(resolve,attempt*50));
+    }
+  };
   const result = await query(`WITH claimed AS (
     INSERT INTO reader_event_batches (batch_id, archive_key, payload_sha256, event_count)
     VALUES ($1, $2, $3, $4) ON CONFLICT (batch_id) DO NOTHING RETURNING batch_id
@@ -171,4 +183,11 @@ export async function appendReaderEvents(input: ReaderEventBatchInput, options: 
     if (existing[0]?.payload_sha256 !== prepared.sha256) throw new Error("READER_EVENT_BATCH_CONTENT_CHANGED");
   }
   return { kind: "RECORDED", events: prepared.body.events.length, duplicate: !result[0]?.recorded };
+}
+
+function transientDatabaseError(error:unknown):boolean {
+  if(!(error instanceof Error))return false;
+  const code=(error as Error&{code?:string}).code;
+  return !!code&&(/^(08|53)/.test(code)||["40001","40P01","57P01","57P02","57P03"].includes(code))||
+    /Error connecting to database|fetch failed|HTTP status (429|50[0234])/.test(error.message);
 }

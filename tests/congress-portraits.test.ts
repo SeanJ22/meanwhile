@@ -59,7 +59,7 @@ test("same-day API captures verify after acquisition while source and image vint
   assert.equal(images.writes.length, 1);
 });
 
-test("a failed member retains its old verified portrait and cannot block another member or durable gap publication", async () => {
+test("a member with a shown portrait is never read again, and a member without one still gets one", async () => {
   const images = await imageStore(), model = directory(2), signal = new AbortController().signal;
   const oldPage = release({ sourceId: "congress-member", releaseId: "A000001", url: "https://api.congress.gov/v3/member/A000001?format=json" } as KnownReleaseOptions, apiText("A000001"), PAST, PAST);
   const oldPhoto = await images.store("congress:A000001", { subject: { personId: "congress:A000001", name: "Jane A000001", nativeIds: { congress: ["A000001"] }, profileUrls: [oldPage.finalUrl] }, imageUrl,
@@ -68,21 +68,21 @@ test("a failed member retains its old verified portrait and cannot block another
   model.roster.officeholders[0].photo = oldPhoto;
   const result = await congressPortraits(model, START, signal, { apiKeyConfigured: true, now: () => VERIFIED, storePortrait: images.store,
     acquire: async options => {
-      if (options.releaseId === "A000001") throw sourceAcquisitionFailure("PUBLISHER_UNAVAILABLE", "Fixture member route unavailable");
+      if (options.releaseId === "A000001") assert.fail("A shown portrait is never read again");
       const page = release(options); await options.validate?.(page.bytes, page); return page;
     } });
   assert.deepEqual(result.projection.roster.officeholders[0].photo, oldPhoto);
   assert.ok(result.projection.roster.officeholders[1].photo?.verification);
   assert.equal(result.projection.roster.officeholders[0].phone, "202-225-1000");
-  assert.ok(result.excludedFacts.some(row => row.key === "congress:A000001:portrait" && row.code === "CONGRESS_PORTRAIT_SOURCE_FAILED"));
+  assert.ok(!result.excludedFacts.some(row => row.key === "congress:A000001:portrait"));
   const sourceUrl = `https://raw.githubusercontent.com/unitedstates/congress-legislators/${SHA}/legislators-current.yaml`;
   const candidate = await federalDirectoryCandidate({ state: "AZ", vault: new MemoryEvidenceStore(), projection: result.projection, excludedFacts: result.excludedFacts, retrievedAt: ORIGINAL,
     acquisitions: [{ requestedUrl: sourceUrl, finalUrl: sourceUrl, httpStatus: 200, body: JSON.stringify(raw(2)["legislators-current"]), retrievedAt: ORIGINAL }] });
   const store = new MemoryRoutineDataStore(), outcome = await processRegisteredManualCandidate(store, "congress-bulk-roster:AZ", candidate, VERIFIED);
   assert.ok(outcome.promoted, outcome.candidate.failureDetail ?? "");
   const saved = await store.readCandidate(candidate.id);
-  assert.deepEqual(saved?.candidate.excludedFacts, result.excludedFacts);
-  const read = await readFederalDirectoryProjection(["AZ"], { store, now: VERIFIED, bypassCache: true });
+  assert.deepEqual(saved?.candidate.excludedFacts ?? [], result.excludedFacts);
+  const read = await readFederalDirectoryProjection(["AZ"], { store, now: VERIFIED });
   assert.equal(read.kind, "PROMOTED");
   if (read.kind !== "PROMOTED") return;
   assert.equal(read.value.roster.officeholders.length, 2);
@@ -182,7 +182,9 @@ test("portrait image transport receives the existing caller cancellation signal"
     }, "officials", signal) });
   assert.equal(observed, true); assert.equal(wrote, false);
   assert.equal(result.projection.roster.officeholders[0].photo, null);
-  assert.ok(result.excludedFacts.some(row => row.code === "CONGRESS_PORTRAIT_PROCESSING_FAILED"));
+  // Cancelled mid-image, the member is unfinished rather than failed, and stays due for the next pass.
+  assert.ok(result.excludedFacts.some(row => row.code === "CONGRESS_PORTRAIT_INTERRUPTED" && (row.record as { interrupted?: boolean }).interrupted));
+  assert.ok(!result.excludedFacts.some(row => row.code === "CONGRESS_PORTRAIT_PROCESSING_FAILED"));
 });
 
 test("directory image leads publish only when the exact person's own official page labels that image",async()=>{

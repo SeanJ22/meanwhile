@@ -8,19 +8,18 @@ import { personIdentityKeys } from "../officials/people-identity.ts";
 import { indexByDivision } from "../officials/lookup.ts";
 import { withStateRegistryFacts } from "../registry/state-composition.ts";
 import { rosterGapForBody } from "../registry/body-rosters.ts";
-import { membersOfBody } from "../registry/body-membership.ts";
+import { earlierMembersOfBody, membersOfBody } from "../registry/body-membership.ts";
 import { officePhoneForBody } from "../meetings/office-phone.ts";
 import { stateOfficesForStates } from "../reference/state-offices.ts";
 import type { BodyFacts } from "../facts/registry-overlay.ts";
 import type { Body, Division } from "../registry/types.ts";
 import type { Meeting } from "../sources/types.ts";
-import type { BodyTerritoryFile } from "../registry/body-territory.ts";
+import type { BodyTerritory } from "../registry/body-territory.ts";
 import { serverReaderValue } from "./memory.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { primeStatePeopleProjection } from "../state-rollcalls/legislators.ts";
 import { withFederalDirectoryProjection } from "../officials/federal-directory-read-model.ts";
 import { primeStateAuthorityProjection } from "../civic-data/state-reader.ts";
-import { bodyClassFromIdentity } from "../registry/kinds.ts";
 
 /** Place reads carry canonical local boards; the state still supplies its official people and portraits. */
 export function withPlaceRegistry<T extends { readonly registry: RegistryRuntimeReadModel }>(state: T, place: RegistryRuntimeReadModel): T {
@@ -29,7 +28,7 @@ export function withPlaceRegistry<T extends { readonly registry: RegistryRuntime
 }
 
 type CoverageState = Pick<ReaderStatePackage, "state" | "registry" | "version"> & Partial<Pick<ReaderStatePackage,
-  "people" | "peopleRead" | "candidateProfilesRead" | "candidatePortraitsRead" | "ballotRead" | "legislativePeople" | "federal" | "federalRead" | "president" | "stateLegislatorAuthority">>;
+  "people" | "peopleRead" | "candidateProfilesRead" | "candidatePortraitsRead" | "ballotRead" | "legislativePeople" | "federal" | "federalRead" | "stateLegislatorAuthority">>;
 type Officials = { photos: ReaderStatePackage["registry"]["officialPhotos"]; federal: CoverageState["federal"]; people: CoverageState["legislativePeople"]; version: string; officials: ReturnType<typeof indexByDivision> };
 const heldOfficials = serverReaderValue("state-official-index", () => new WeakMap<object, Officials>());
 
@@ -70,22 +69,23 @@ export function stateCoverage(
   meetings: readonly Meeting[] = [],
   bodyFacts: readonly BodyFacts[] = [],
   extraDivisions: readonly Division[] = [],
-  territory: BodyTerritoryFile | null = null,
+  territory: BodyTerritory | null = null,
   meetingCount: number = meetings.length,
 ): CoverageSummary {
   const known = new Set(state.registry.registry.bodies.map(body => body.id));
   const acquired = bodyFacts.flatMap((fact): Body[] => {
     const fields = fact.fields;
-    if (known.has(fact.id) || !fields.name || !fields.provenance?.sourceUrl) return [];
-    return [{ id: fact.id, ocdId: fact.division, name: fields.name, bodyClass: fields.bodyClass ?? "body", bodyOrigin: "SOURCED",
+    // A board no source names yet (one made from its government's Census record) shows under its held name, sourced by that record.
+    const name = fields.name ?? fact.name, provenance = fields.provenance ?? Object.values(fields.fieldSources ?? {})[0];
+    if (known.has(fact.id) || !name || !provenance?.sourceUrl) return [];
+    return [{ id: fact.id, ocdId: fact.division, bodyClass: fields.bodyClass ?? "body", bodyOrigin: "SOURCED",
       coverageStatus: "NOT_ATTEMPTED", agendaSourceType: "NONE", agendaSourceRef: null, meetingCadence: null,
-      homepageUrl: null, demandCount: 0, sourceDataset: "GOV_DIRECTORY", ...fields, provenance: fields.provenance,
+      homepageUrl: null, demandCount: 0, sourceDataset: "GOV_DIRECTORY", ...fields, name, provenance,
       ...(fact.government ? { governmentName: fact.government } : {}) }];
   });
   const composed = withStateRegistryFacts({ ...state.registry, registry: { ...state.registry.registry,
     bodies: [...state.registry.registry.bodies, ...acquired] } }, bodyFacts);
-  const runtime = { ...composed,registry:{...composed.registry,bodies:composed.registry.bodies.map(body => ({...body,
-    bodyClass:bodyClassFromIdentity(body.id,body.bodyClass) ?? body.bodyClass}))} };
+  const runtime = composed;
   const divisions = new Map([...runtime.registry.divisions, ...extraDivisions].map(division => [division.ocdId, division]));
   const resolved = divisionIds.flatMap(id => divisions.get(id) ?? []);
   const bodies = runtime.registry.bodies;
@@ -97,7 +97,8 @@ export function stateCoverage(
     if(state.candidatePortraitsRead)primeStateAuthorityProjection("candidate-campaign-sites-derived",state.state,state.candidatePortraitsRead);
     if(state.ballotRead)primeStateAuthorityProjection("ballot-contests",state.state,state.ballotRead);
     const { officials } = stateOfficials(state);
-    const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings);
+    const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings,
+      new Map(state.registry.bodyRosters.map(roster => [roster.bodyId,roster.bodyName])));
     const seats = coverage.seats.map(seat => {
       const vacancy = !seat.representatives.length && [...state.federal?.vacancies ?? [], ...(state.legislativePeople ?? state.people)?.vacancies ?? []]
         .find(row => row.ocdId === seat.ocdId);
@@ -114,7 +115,13 @@ export function stateCoverage(
       ...(state.federal === undefined ? {} : { federalDirectoryUnavailable: state.federal === null }),
       bodies: coverage.bodies.map(body => {
         const gap = rosterGapForBody(body.bodyId);
-        return { ...body, readerRoster: { members: membersOfBody(body.bodyId).members, gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };
+        const earlierMembers = earlierMembersOfBody(body.bodyId);
+        const fact = bodyFacts.find(fact => fact.id === body.bodyId);
+        return { ...body, ...(fact?.recipientIds?.length ? { recipientIds: fact.recipientIds,
+          recipientNames: fact.recipientNames, recipientState: fact.recipientState,
+          ...(fact.moneyDivisionId ? { moneyDivisionId: fact.moneyDivisionId } : {}) } : {}),
+          readerRoster: { members: membersOfBody(body.bodyId).members, ...(earlierMembers.length ? { earlierMembers } : {}),
+            gaps: gap ? [gap] : [], officePhone: officePhoneForBody(body.bodyId) } };
       }),
     };
   }))));

@@ -37,7 +37,7 @@ test("official calendar shorthand and relative statutory rules resolve to the he
     const field = { ...make(text), electionDate: "2026-11-03", dates: [] };
     const result = await publishElectionFields({ store, now, fields: [field], verify });
     assert.ok(result.promotedVersionId, JSON.stringify(result.gaps));
-    const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+    const read = await readElectionFieldsForDivisions([division], { store, now });
     assert.deepEqual(read.fields[0].value.dates, [...dates].sort());
   }
 });
@@ -47,7 +47,7 @@ test("a changed abbreviated calendar deadline replaces its existing contextual f
   const first = await publishElectionFields({ store, now, fields: [{ ...make("26-October Registration closes"), electionDate: "2026-11-03", dates: ["2026-10-26"] }], verify });
   const next = await publishElectionFields({ store, now, fields: [{ ...make("27-October Registration closes"), electionDate: "2026-11-03", dates: ["2026-10-27"] }], verify });
   assert.equal(first.fields[0], next.fields[0]);
-  const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+  const read = await readElectionFieldsForDivisions([division], { store, now });
   assert.equal(read.fields.length, 1);
   assert.deepEqual(read.fields[0].value.dates, ["2026-10-27"]);
 });
@@ -59,7 +59,7 @@ test("the same election-field publication and Reader path accepts every national
     const field = { ...make("Registration deadline October 5, 2026"), divisionId };
     const result = await publishElectionFields({ store, now, fields: [field], verify });
     assert.ok(result.promotedVersionId, `${state}: ${JSON.stringify(result.gaps)}`);
-    const read = await readElectionFieldsForDivisions([divisionId], { store, now, bypassCache: true });
+    const read = await readElectionFieldsForDivisions([divisionId], { store, now });
     assert.equal(read.fields.length, 1);
     assert.equal(read.fields[0].value.state, state);
   }
@@ -75,7 +75,7 @@ test("one verified election field publishes while an unrelated unconfirmed field
   assert.ok(result.promotedVersionId);
   assert.equal(result.fields.length, 1);
   assert.equal(result.gaps.length, 1);
-  const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+  const read = await readElectionFieldsForDivisions([division], { store, now });
   assert.equal(read.reads[0].kind, "PROMOTED");
   assert.equal(read.fields[0].value.collectedAt, now);
   assert.deepEqual(read.fields[0].value.dates, ["2026-10-05"]);
@@ -104,7 +104,7 @@ test("missing/corrupt captures and invented calendar dates never replace the cur
   const held = await publishElectionFields({ store, now, fields: [corrupt, absent, invented], verify });
   assert.equal(held.promotedVersionId, null);
   assert.equal(held.gaps.length, 3);
-  const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+  const read = await readElectionFieldsForDivisions([division], { store, now });
   assert.equal(read.reads[0].metadata.versionId, prior.promotedVersionId);
   assert.equal(read.fields[0].value.text, field.value);
 });
@@ -117,7 +117,7 @@ test("a changed deadline replaces its contextual field and preserves unrelated s
   const replacement = make("Registration deadline October 6, 2026");
   const next = await publishElectionFields({ store, now, fields: [{ ...replacement, dates: ["2026-10-06"] }], verify });
   assert.equal(next.fields[0], first.fields[0]);
-  const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+  const read = await readElectionFieldsForDivisions([division], { store, now });
   assert.equal(read.fields.length, 2);
   assert.ok(!read.fields.some(row => row.value.dates.includes("2026-10-05")));
   assert.ok(read.fields.some(row => row.value.fieldKind === "early_voting"));
@@ -149,7 +149,7 @@ test("an unchanged partial review confirms the publication and keeps its inherit
   const summary = await store.readCandidateSummary(partial.candidateId!);
   assert.ok(complete?.receipt?.excludedFacts.some(fact => fact.code === "MANUAL_MEMBER_HELD_LKG"));
   assert.ok(summary?.receipt && !("excludedFacts" in summary.receipt));
-  const read = await readElectionFieldsForDivisions([division], { store, now, bypassCache: true });
+  const read = await readElectionFieldsForDivisions([division], { store, now });
   assert.equal(read.fields.length, 2);
   assert.ok(read.fields.some(field => field.value.navigationUrl === target));
 });

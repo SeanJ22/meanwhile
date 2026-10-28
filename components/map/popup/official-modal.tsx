@@ -1,5 +1,6 @@
 "use client";
 
+import { readerText } from "@/lib/text/reader-names";
 import { memberDirectoryReaches } from "@/lib/officials/member-directory-scope";
 import { PersonCard } from "@/components/ui/person-card";
 import { useEffect, useRef, useState } from "react";
@@ -41,7 +42,7 @@ import { LegislatorBills } from "@/components/officials/legislator-bills";
 interface OfficialModalProps {
   holder: SeatHolder;
   seatLabel: string | null;
-  tier: Tier;
+  tier: Tier | null;
   reactionContext: ReactionViewContext | null;
   onClose: () => void;
   /** Rendered as the body of the reader's one large card, which owns the frame, Escape, Back and Close. */
@@ -100,7 +101,7 @@ export function OfficialModal({
         title={holder.name}
         identityKey={holder.id}
         subject={{ type: "CANDIDATE", id: holder.id }}
-        eyebrow={<span style={{ color: `var(--accent-${tier})` }}>{TIER_LABEL[tier]}</span>}
+        eyebrow={tier ? <span style={{ color: `var(--accent-${tier})` }}>{TIER_LABEL[tier]}</span> : undefined}
         onClose={embedded ? undefined : onClose}
         className={embedded ? "account-modal mw-entity mw-person" : "account-modal"}
         independent={embedded}
@@ -135,7 +136,7 @@ function DistrictOffice({ office }: { office: OfficePin }) {
   return (
     <div className="mw-district-office" data-office-id={office.id}>
       <p className="mw-district-office__label">District office</p>
-      <p className="mw-district-office__address">{office.address}</p>
+      <p className="mw-district-office__address">{readerText(office.address, "address")}</p>
       {office.hours && <p className="mw-district-office__hours">Hours: {office.hours}</p>}
       {directions && (
         <CheckedLink className="mw-directions" href={directions.url} target="_blank" rel="noreferrer" title={directions.hint}>

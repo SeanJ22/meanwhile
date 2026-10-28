@@ -49,9 +49,7 @@ import { readAskGapObservations } from "../lib/control-plane/ask-gap-observation
 import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
 import { RESEARCH_STATE_ID, type ResearchState } from "../lib/control-plane/scheduler/research-policy.ts";
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
-import { readFromHeldCopies } from "../lib/control-plane/repository/incremental-reads.ts";
 
-readFromHeldCopies();
 const NOW = new Date();
 const NOW_ISO = NOW.toISOString();
 const HEAD = headSha();

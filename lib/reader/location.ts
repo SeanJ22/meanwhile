@@ -1,7 +1,7 @@
 import { readStateGeometryText } from "../geo/state-geometry.ts";
 import { readZipPlace, readPointPlace } from "../place-map/reader.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
-import type { BodyTerritoryFile } from "../registry/body-territory.ts";
+import type { BodyTerritory, BodyTerritoryFile } from "../registry/body-territory.ts";
 import { bodyIdsAtPoint } from "../registry/body-territory.ts";
 
 let territory: Promise<BodyTerritoryFile> | undefined;
@@ -21,6 +21,6 @@ export async function readerLocation(lat: number, lng: number, zip?: string | nu
   return { state, states: entry.states ?? [state], zip: zip ?? null, divisionIds: entry.ids, partial: entry.partial, fringe: entry.fringe ?? [] };
 }
 
-export function territoryBodies(lat: number, lng: number, territory: BodyTerritoryFile | null): readonly string[] {
+export function territoryBodies(lat: number, lng: number, territory: BodyTerritory | null): readonly string[] {
   return [...bodyIdsAtPoint([lng, lat], territory)];
 }

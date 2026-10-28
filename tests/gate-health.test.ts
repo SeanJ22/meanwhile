@@ -49,6 +49,15 @@ test("a runner behind the released code is attention and quotes the reason", () 
   assert.equal(byId(r, "GATE-02").sentence, "behind by two");
 });
 
+test("a failed release staging is attention on the release gate and names the release and why", () => {
+  const releaseStaging = { targetSha: "e673c5143e968387d8c4d590112ad01ded3b39ae", state: "FAILED" as const, code: "STAGING_TIMED_OUT",
+    detail: "still unsettled after 15 minutes", startedAt: "2026-10-04T11:00:00Z", at: "2026-10-04T11:15:00Z" };
+  const failed = byId({ ...base, heartbeat: beat({ releaseStaging }) }, "GATE-02");
+  assert.equal(failed.state, "attention");
+  assert.match(failed.sentence, /e673c514.*STAGING_TIMED_OUT: still unsettled after 15 minutes.*draining and restarting/);
+  assert.equal(byId({ ...base, heartbeat: beat({ releaseStaging: { ...releaseStaging, state: "INSTALLING", code: null } }) }, "GATE-02").state, "pass");
+});
+
 test("spend over the ceiling or counted at worst case is attention", () => {
   assert.equal(byId({ ...base, spend: { rolling24HoursUsd: 25, effectiveCeilingUsd: 20, worstCaseCharges: 0 } }, "GATE-06").state, "attention");
   const w = byId({ ...base, spend: { rolling24HoursUsd: 4, effectiveCeilingUsd: 20, worstCaseCharges: 2 } }, "GATE-06");

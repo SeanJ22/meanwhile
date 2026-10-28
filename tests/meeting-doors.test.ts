@@ -80,7 +80,7 @@ describe("the published meeting doors", () => {
     const three = await processRegisteredRoutineCandidate(store, MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(rows, tomorrow), tomorrow, undefined, { confirmUnchanged: true });
     assert.equal(three.promoted?.versionId, two.promoted?.versionId);
     assert.ok(three.confirmed);
-    const read = await readMeetingDoors({ store, bypassCache: true, now: tomorrow });
+    const read = await readMeetingDoors({ store,  now: tomorrow });
     assert.equal(read.kind, "PROMOTED");
     if (read.kind === "PROMOTED") assert.deepEqual(read.value.doors.map(door => door.doorId).sort(), rows.slice(1).map(row => row.value.doorId).sort());
   });
@@ -139,7 +139,7 @@ describe("the published meeting doors", () => {
     const two = await processRegisteredRoutineCandidate(store, MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(grown.rows, later), later, undefined, { confirmUnchanged: true });
     assert.equal(two.candidate.state, "PROMOTED");
     assert.notEqual(two.promoted?.versionId, one.promoted?.versionId);
-    const read = await readMeetingDoors({ store, bypassCache: true, now: later });
+    const read = await readMeetingDoors({ store,  now: later });
     assert.equal(read.kind, "PROMOTED");
     assert.equal(read.kind === "PROMOTED" ? read.value.doors.length : 0, grown.rows.length);
   });
@@ -151,7 +151,7 @@ describe("the published meeting doors", () => {
     const outcome = await processRegisteredRoutineCandidate(store, MEETING_DOORS_CONTRACT_ID, meetingDoorsCandidate(rows, AT), AT);
     assert.equal(outcome.candidate.state, "PROMOTED");
     assert.ok(outcome.promoted !== null);
-    const read = await readMeetingDoors({ store, bypassCache: true, now: AT });
+    const read = await readMeetingDoors({ store,  now: AT });
     assert.equal(read.kind, "PROMOTED");
 
     assert.ok(!activeWiring().some((row) => row.bodyId === door.bodyId));

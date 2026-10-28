@@ -85,6 +85,10 @@ export interface CivicVersionRowSelection {
   readonly match?: {readonly path: readonly string[]; readonly values: readonly string[]};
   readonly fields?: readonly string[];
   readonly omit?: readonly string[];
+  /** Ignore non-object array elements when a consumer selects object fields. */
+  readonly skipNonObjects?: boolean;
+  /** A legacy history proof is anchored to its candidate, even if it is currently promoted. */
+  readonly preferLegacyCandidate?: boolean;
   readonly afterOrdinal?: number;
   readonly limit?: number;
 }
@@ -166,6 +170,18 @@ export function civicVersionVault(vault: EvidenceStore) {
       const value=await pathOf(rootOf(ref),path);
       return value===undefined?null:parts.load(value);
     },
+    /** Inspect a field's shape without loading the collection it names. */
+    async kind(ref:CivicVersionVaultRef,path:readonly string[]):Promise<string|null>{
+      const value=await pathOf(rootOf(ref),path);
+      if(value===undefined)return null;
+      if(value===null)return "null";
+      const node=await nodeOf(value);
+      if(node===null)return "null";
+      if(Array.isArray(node))return "array";
+      if(isCivicPayloadPart(value)&&node&&typeof node==="object"&&"kind" in node)
+        return (node as Node).kind??null;
+      return typeof node;
+    },
     /** Zero count returns the length. A text window opens only its immutable string chunks, plus the final chunk for length. */
     async text(ref:CivicVersionVaultRef,path:readonly string[],range:CivicVersionTextRange={}):Promise<CivicVersionTextWindow|null>{
       const {offset,count}=textRange(range),value=await pathOf(rootOf(ref),path);
@@ -199,7 +215,11 @@ export function civicVersionVault(vault: EvidenceStore) {
       for await(const encoded of encodedRows(value,ordinal)){
         ordinal++;
         if(selection.match&&!wanted!.has(String(await parts.load(await pathOf(encoded,selection.match.path)))))continue;
-        const node=await nodeOf(encoded);if(!node||typeof node!=="object"||Array.isArray(node))throw new Error("CIVIC_VERSION_ROW_INVALID");
+        const node=await nodeOf(encoded);
+        if(!node||typeof node!=="object"||Array.isArray(node)){
+          if(selection.skipNonObjects)continue;
+          throw new Error("CIVIC_VERSION_ROW_INVALID");
+        }
         const fields=selection.fields??Object.keys(node).filter(key=>!selection.omit?.includes(key));
         const selected=Object.fromEntries(fields.filter(key=>Object.hasOwn(node,key)).map(key=>[key,(node as Record<string,unknown>)[key]]));
         rows.push({ordinal,value:await parts.load(selected) as Record<string,unknown>});
@@ -229,9 +249,25 @@ async function versionArchive(provider:VaultProvider,head:VersionHead):Promise<{
   const ref=head.ref??(head.fingerprint?await civicVersionRef(vault,head.fingerprint):null);
   return ref?{vault,ref}:null;
 }
-const sourceRoot=(head:VersionHead)=>head.current
+const sourceRoot=(head:VersionHead,preferLegacyCandidate=false)=>head.current&&!(preferLegacyCandidate&&head.legacy)
   ? "SELECT payload AS value,0 AS depth FROM civic_data_promotions WHERE current_version_id=$1"
   : "SELECT candidate->'readModel' AS value,0 AS depth FROM civic_data_candidates WHERE id=$1";
+
+/** Inspect a selected collection's shape without returning its members. */
+export async function readCivicVersionKind(query:Query,vault:VaultProvider,id:string,path:readonly string[],preferLegacyCandidate=false):Promise<string|null>{
+  const head=await versionHead(query,id);if(!head)return null;
+  const archive=await versionArchive(vault,head);
+  if(archive)return civicVersionVault(archive.vault).kind(archive.ref,path);
+  if(!head.current&&!head.legacy)throw new Error(`CIVIC_VERSION_VAULT_MISSING:${id}`);
+  if(!path.length)throw new Error("CIVIC_VERSION_LEGACY_PATH_REQUIRED");
+  const [row]=await query(`WITH RECURSIVE selected(value,depth) AS (
+    ${sourceRoot(head,preferLegacyCandidate)}
+    UNION ALL SELECT reader_payload_node(value)->($2::text[])[depth+1],depth+1 FROM selected WHERE depth<cardinality($2::text[])
+  ), result AS (SELECT reader_payload_node(value) AS value FROM selected ORDER BY depth DESC LIMIT 1)
+  SELECT CASE WHEN value->>'kind'='array' THEN 'array' WHEN value->>'kind'='string' THEN 'string'
+    ELSE jsonb_typeof(value) END AS kind FROM result`,[id,[...path]]);
+  return typeof row?.kind==="string"?row.kind:null;
+}
 
 /** Legacy versions keep their original rows; a legacy read selects only the requested path. */
 export async function readCivicVersionPath(query:Query,vault:VaultProvider,id:string,path:readonly string[]):Promise<unknown>{
@@ -257,15 +293,16 @@ export async function readCivicVersionRows(query:Query,vault:VaultProvider,id:st
   if(archive)return civicVersionVault(archive.vault).rows(archive.ref,path,selection);
   if(!head.current&&!head.legacy)throw new Error(`CIVIC_VERSION_VAULT_MISSING:${id}`);
   const rows=await query(`WITH RECURSIVE selected(value,depth) AS (
-    ${sourceRoot(head)}
+    ${sourceRoot(head,selection.preferLegacyCandidate)}
     UNION ALL SELECT reader_payload_node(value)->($2::text[])[depth+1],depth+1 FROM selected WHERE depth<cardinality($2::text[])
   ), members AS (SELECT ordinal_index,reader_payload_node(item) AS value FROM selected,
     LATERAL reader_payload_members(selected.value) WHERE depth=cardinality($2::text[]))
   SELECT ordinal_index AS ordinal,reader_payload_value(CASE WHEN $5::text[] IS NULL THEN value-$6::text[]
     ELSE (SELECT coalesce(jsonb_object_agg(key,value->key),'{}'::jsonb) FROM unnest($5::text[]) key WHERE value?key) END) AS value
-  FROM members WHERE ordinal_index > $7::int AND ($3::text[] IS NULL OR reader_payload_value(value)#>>$3::text[]=ANY($4::text[])) ORDER BY ordinal_index LIMIT $8::int`,
+  FROM members WHERE ordinal_index > $7::int AND ($9::int=0 OR jsonb_typeof(value)='object')
+    AND ($3::text[] IS NULL OR reader_payload_value(value)#>>$3::text[]=ANY($4::text[])) ORDER BY ordinal_index LIMIT $8::int`,
     [id,[...path],selection.match?[...selection.match.path]:null,selection.match?[...selection.match.values]:null,
-      selection.fields?[...selection.fields]:null,[...selection.omit??[]],selection.afterOrdinal??0,selection.limit??null]);
+      selection.fields?[...selection.fields]:null,[...selection.omit??[]],selection.afterOrdinal??0,selection.limit??null,selection.skipNonObjects?1:0]);
   return rows.map(row=>({ordinal:Number(row.ordinal),value:row.value as Record<string,unknown>}));
 }
 

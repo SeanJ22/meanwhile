@@ -2,7 +2,7 @@ import type { EvidenceStore } from "../control-plane/evidence/store.ts";
 import type { Query } from "../facts/publish.ts";
 import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import { candidateChangeSet, civicRecordsFor } from "./changes.ts";
-import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionPath, readCivicVersionRows, readCivicVersionText,
+import { civicVersionRef, civicVersionVault, holdCivicVersion, readCivicVersionKind, readCivicVersionPath, readCivicVersionRows, readCivicVersionText,
   type CivicVersionVaultRef, type CivicVersionRowSelection, type CivicVersionTextRange } from "./version-vault.ts";
 import type { RoutineCandidate, RoutineChangeSet } from "./types.ts";
 
@@ -131,6 +131,17 @@ export async function readCivicCandidatePath(query:Query,vault:EvidenceStore|(()
 /** Bounded historical model access for readers that need selected rows or text. */
 export const readCivicCandidateRows = (query: Query, vault: EvidenceStore | (() => EvidenceStore), id: string,
   path: readonly string[], selection: CivicVersionRowSelection = {}) => readCivicVersionRows(query, vault, id, path, selection);
+export const readCivicCandidateKind = (query: Query, vault: EvidenceStore | (() => EvidenceStore), id: string,
+  path: readonly string[], preferLegacyCandidate=false) => readCivicVersionKind(query, vault, id, path, preferLegacyCandidate);
+
+/** Legacy encoded history must still reach the ordinary proof reader, even when its selected rows do not match. */
+export async function readCivicCandidateLegacyEncoding(query:Query,ids:readonly string[]):Promise<ReadonlyMap<string,{encoded:boolean;hasModel:boolean}>> {
+  const rows=await query(`SELECT id,candidate IS NULL OR coalesce(jsonb_path_exists(candidate->'readModel',
+    'strict $.**."$civicPayloadPart"','{}'::jsonb,true),false) AS encoded,
+    coalesce(candidate ? 'readModel' OR candidate#>'{vault,readModel}' IS NOT NULL,false) AS has_model
+    FROM civic_data_candidates WHERE id=ANY($1::text[])`,[[...ids]]);
+  return new Map(rows.map(row=>[String(row.id),{encoded:row.encoded===true,hasModel:row.has_model===true}]));
+}
 export const readCivicCandidateText = (query: Query, vault: EvidenceStore | (() => EvidenceStore), id: string,
   path: readonly string[], range: CivicVersionTextRange = {}) => readCivicVersionText(query, vault, id, path, range);
 
@@ -153,8 +164,9 @@ export async function readCivicCandidateEvidenceRows(query:Query,vault:EvidenceS
     LATERAL reader_payload_members(selected.value) WHERE depth=cardinality($2::text[]))
   SELECT ordinal_index AS ordinal,reader_payload_value(CASE WHEN $5::text[] IS NULL THEN value-$6::text[]
     ELSE (SELECT coalesce(jsonb_object_agg(key,value->key),'{}'::jsonb) FROM unnest($5::text[]) key WHERE value?key) END) AS value
-  FROM members WHERE ordinal_index>$7::int AND ($3::text[] IS NULL OR reader_payload_value(value)#>>$3::text[]=ANY($4::text[]))
+  FROM members WHERE ordinal_index>$7::int AND ($9::int=0 OR jsonb_typeof(value)='object')
+    AND ($3::text[] IS NULL OR reader_payload_value(value)#>>$3::text[]=ANY($4::text[]))
     ORDER BY ordinal_index LIMIT $8::int`,[id,[...path],selection.match?[...selection.match.path]:null,
-      selection.match?[...selection.match.values]:null,selection.fields?[...selection.fields]:null,[...selection.omit??[]],selection.afterOrdinal??0,selection.limit??null]);
+      selection.match?[...selection.match.values]:null,selection.fields?[...selection.fields]:null,[...selection.omit??[]],selection.afterOrdinal??0,selection.limit??null,selection.skipNonObjects?1:0]);
   return rows.map(row=>({ordinal:Number(row.ordinal),value:row.value as Record<string,unknown>}));
 }

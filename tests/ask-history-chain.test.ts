@@ -2,25 +2,42 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { PgDialect } from "drizzle-orm/pg-core";
+import { readFileSync } from "node:fs";
 import { historicalVoteBillVersionsRead, pointerMoveChainRead } from "../lib/civic-data/store.ts";
+import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
+import { holdCivicVersion } from "../lib/civic-data/version-vault.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 
 test("bill history searches only anchored candidates, distinguishes HR1 from HR10, and retains unreadable candidates for proof", async () => {
   const pg = new PGlite();
   try {
-    await pg.exec("CREATE TABLE civic_data_candidates(id text, candidate jsonb)");
+    await pg.exec("CREATE TABLE civic_data_candidates(id text, candidate jsonb, normalized_hash text, read_model_fingerprint text); CREATE TABLE civic_data_promotions(current_version_id text, payload jsonb); CREATE TABLE civic_data_payload_parts(hash text, payload jsonb)");
+    const readerFunctions = readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8")
+      .split("--> statement-breakpoint").filter(sql=>/^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
+    for(const statement of readerFunctions)await pg.exec(statement);
     for (const [id, readModel] of Object.entries({
       member: { votes: [{ legisNum: "H.R. 1" }] },
       window: { snapshot: { votes: [{ title: "On passage of H.R. 1" }] } },
       otherBill: { snapshot: { votes: [{ legisNum: "H.R. 10" }] } },
+      directEmpty: { votes: [], snapshot: { votes: [{ legisNum: "H.R. 1" }] } },
+      scalars: { votes: [null, 42, "H.R. 1", { legisNum: "H.R. 1" }] },
+      encodedNonmatch: { votes: [{ legisNum: "H.R. 10", detail: { $civicPayloadPart: "encoded" } }] },
       encoded: { $civicPayloadPart: "encoded" },
       unrelated: { votes: [{ legisNum: "H.R. 1" }] },
-    })) await pg.query("INSERT INTO civic_data_candidates VALUES($1,$2)", [id, { readModel }]);
-    const db = { execute: async (statement: Parameters<PgDialect["sqlToQuery"]>[0]) => {
-      const query = new PgDialect().sqlToQuery(statement); return pg.query(query.sql, query.params);
-    } } as unknown as Parameters<typeof historicalVoteBillVersionsRead>[0];
-    const result = await historicalVoteBillVersionsRead(db, ["member", "window", "otherBill", "encoded", "missing"], "hr1");
-    assert.deepEqual(result.rows.map(row => row.id).sort(), ["encoded", "member", "missing", "window"]);
-    assert.throws(() => historicalVoteBillVersionsRead(db, ["member"], "hr1) OR true"), /BILL_INVALID/);
+    })) await pg.query("INSERT INTO civic_data_candidates(id,candidate) VALUES($1,$2)", [id, { readModel }]);
+    await pg.query("INSERT INTO civic_data_candidates(id,candidate) VALUES($1,$2)",["encodedEnvelope",{$civicPayloadPart:"encoded"}]);
+    await pg.query("INSERT INTO civic_data_promotions VALUES($1,$2)",["member",{votes:[{legisNum:"H.R. 10"}]}]);
+    const vault=new MemoryEvidenceStore();
+    const model={votes:[{title:"On passage of H.R. 1",text:"unrelated source text ".repeat(20_000)}]};
+    const fingerprint=canonicalCivicDataHash(model,{durable:true}),ref=await holdCivicVersion(vault,model,fingerprint);
+    await pg.query("INSERT INTO civic_data_candidates VALUES($1,$2,$3,$3)",["vaulted",{vault:{readModel:ref}},fingerprint]);
+    const get=vault.get.bind(vault);let unrelatedRead=false;
+    vault.get=async key=>{const object=await get(key);if(object&&new TextDecoder().decode(object.bytes).includes("unrelated source text"))unrelatedRead=true;return object;};
+    const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+    const result = await historicalVoteBillVersionsRead(query,vault, ["member", "window", "otherBill", "directEmpty", "scalars", "encoded", "encodedNonmatch", "encodedEnvelope", "missing", "vaulted"], "hr1");
+    assert.deepEqual(result.rows.map(row => row.id).sort(), ["encoded", "encodedNonmatch", "member", "missing", "scalars", "vaulted", "window"]);
+    assert.equal(unrelatedRead,false,"the vault scan does not load unrelated source text");
+    assert.throws(() => historicalVoteBillVersionsRead(query,vault, ["member"], "hr1) OR true"), /BILL_INVALID/);
   } finally { await pg.close(); }
 });
 

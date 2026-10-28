@@ -2150,18 +2150,42 @@ export function pointerMoveChainRead(db: Pick<ReturnType<typeof getDb>, "execute
   WHERE e.state = 'PROMOTED' AND left(e.detail, ${prefix.length}) = ${prefix}`);
 }
 
-/** Filter only the already anchored history, without transferring unrelated
- * roll calls. Encoded payloads remain candidates for the normal full reader. */
-export function historicalVoteBillVersionsRead(db: Pick<ReturnType<typeof getDb>, "execute">, ids: readonly string[], bill: string) {
+/** Filter only the already anchored history, selecting vote identifiers and titles through the candidate accessor. */
+export function historicalVoteBillVersionsRead(query: (text:string,params?:readonly unknown[])=>Promise<readonly Record<string,unknown>[]>,
+  vault: EvidenceStore | (()=>EvidenceStore), ids: readonly string[], bill: string): Promise<{rows:{id:string}[]}> {
   const parsed = /^(hr|s|hres|hconres|sres|sconres)([0-9]+)$/.exec(bill);
   if (!parsed) throw new Error("HISTORICAL_VOTE_BILL_INVALID");
-  const titlePattern = `\\m${parsed[1].split("").join("[[:space:].]*")}[[:space:].]*${parsed[2]}\\M`;
-  return db.execute<{ id: string }>(sql`SELECT requested.id FROM unnest(${sql.param([...ids])}::text[]) requested(id)
-    LEFT JOIN civic_data_candidates USING(id) WHERE candidate IS NULL OR (
-      jsonb_path_exists(candidate->'readModel', 'strict $.**."$civicPayloadPart"', '{}'::jsonb, true)
-      OR EXISTS (SELECT 1 FROM jsonb_array_elements(coalesce(candidate#>'{readModel,votes}', candidate#>'{readModel,snapshot,votes}', '[]'::jsonb)) vote
-        WHERE regexp_replace(lower(coalesce(vote->>'legisNum','')), '[^a-z0-9]', '', 'g') = ${bill}
-          OR lower(coalesce(vote->>'title','')) ~ ${titlePattern}))`);
+  const titlePattern = new RegExp(`(?:^|[^\\p{L}\\p{N}_])${parsed[1].split("").join("[\\s.]*")}[\\s.]*${parsed[2]}(?![\\p{L}\\p{N}_])`,"iu");
+  return (async()=>{
+    const {readCivicCandidateKind,readCivicCandidateRows,readCivicCandidateLegacyEncoding}=await import("./candidate-vault.ts");
+    const existing=await readCivicCandidateLegacyEncoding(query,ids),matches:boolean[]=[];
+    for(let first=0;first<ids.length;first+=4)matches.push(...await Promise.all(ids.slice(first,first+4).map(async id=>{
+      if(!existing.has(id)||existing.get(id)!.encoded)return true;
+      if(!existing.get(id)!.hasModel)return false;
+      try {
+        const direct=await readCivicCandidateKind(query,vault,id,["votes"],true);
+        const path=direct===null?["snapshot","votes"]:["votes"];
+        if(direct!==null&&direct!=="array")throw new Error("HISTORICAL_VOTE_COLLECTION_INVALID");
+        let afterOrdinal=0;
+        for(;;){
+          const rows=await readCivicCandidateRows(query,vault,id,path,{fields:["legisNum","title"],afterOrdinal,limit:64,skipNonObjects:true,preferLegacyCandidate:true});
+          if(rows.some(({value})=>String(value.legisNum??"").toLowerCase().replace(/[^a-z0-9]/g,"")===bill||
+            titlePattern.test(String(value.title??""))))return true;
+          if(rows.length<64)return false;
+          afterOrdinal=rows.at(-1)!.ordinal;
+        }
+      } catch(error) {
+        // An unreadable legacy part still enters the normal proof reader; it must not disappear from the anchored chain.
+        const seen=new Set<unknown>();
+        for(let cause:unknown=error;cause&&typeof cause==="object"&&!seen.has(cause);cause=(cause as {cause?:unknown}).cause){
+          seen.add(cause);
+          if(String((cause as {message?:unknown}).message??"").includes("CIVIC_PAYLOAD_PART_MISSING"))return true;
+        }
+        throw error;
+      }
+    })));
+    return {rows:ids.flatMap((id,index)=>matches[index]?[{id}]:[])};
+  })();
 }
 
 function postgresCandidateEventRowToEvent(row: PostgresCandidateEventRow): CandidateEvent {
@@ -3484,7 +3508,9 @@ export class PostgresRoutineDataStore implements RoutineDataStore {
 
   async historicalVoteBillVersions(ids: readonly string[], bill: string): Promise<readonly string[]> {
     if (!ids.length) return [];
-    return (await historicalVoteBillVersionsRead(this.db, ids, bill)).rows.map(row => row.id);
+    const {rawCaptureVault}=await import("./raw-capture-remote.ts");
+    return (await historicalVoteBillVersionsRead((text,params=[])=>this.readerRows(text,params),
+      this.cacheOptions.vault??rawCaptureVault,ids,bill)).rows.map(row => row.id);
   }
 
   /** Every input to a clock is a candidate row or event of its record class and scope, or that scope's pointer, so their versions decide a held clock's use. */

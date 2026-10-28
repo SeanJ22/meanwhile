@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 141. Release 142 (read lock + Now reading line) in CI: https://github.com/SeanJ22/meanwhile/pull/855. RIVER-PROBERATE being built. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 142 (read lock + Now reading line) since 7:14 PM EDT, main 96d0852a7, river 7bcfbd100. RIVER-PROBERATE being built. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -121,6 +121,9 @@ heartbeat: 2026-10-28T08:35:00Z
   - Admin Now line: "Database reading: yesterday 32.8 GB, today 38.8 GB so far, against the 10 GB a day target" (6:38 PM numbers). It reads 86 hour rows (~12.7 KB) by key and equals a direct SQL sum: Oct 27 32.788909 GB both ways; Oct 28 equal on one snapshot.
   - Hour before, from database_transfer_hourly: 5 PM 2.83 GB/h. The 6 PM hour follows.
 - RIVER-PROBERATE-142 (Sean's yes, 6:20 PM): River builder working on stream/river-proberate-142. Door probes get their own standing turn with several websites in parallel and each site's request limits unchanged; the routine scheduler's two sitting reads follow stored parts like the hot rule. Admin's sitting read is left to CP-01.
+- WIN 7:14 PM: RELEASE 142 IS LIVE (main 96d0852a7; full GitHub CI passed; river = 7bcfbd100). New readers of the bundle tables, and new whole reads of cp_* records, now fail lint with a sentence naming the file and table; the lists only shrink.
+  - Sean, on Admin Now: one line reads "Database reading: yesterday X GB, today Y GB so far, against the 10 GB a day target." River can't log in to Admin, so it has not seen the line rendered. The route (/api/admin/v6/database-reading) is deployed behind the same Admin guard as paused-jobs (both answer 404 without a session). Its totals were matched to a direct SQL sum before shipping.
+  - Neon (database_transfer_hourly, request + response): hour before, 6 PM: reader 2.002 + control plane 0.991 = 2.99 GB/h. Hour after (8 PM) follows; 142 changes no runner reads.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

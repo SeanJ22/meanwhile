@@ -943,6 +943,13 @@ test("a vote job reads only the retained source references, without loading its 
   const encoded=await codec.store(value);
   const fetched:unknown[]=[];
   await withCannedNeon(statement=>{
+    if(statement.query.includes("candidate->'vault' AS vault")) return {columns:[["vault","jsonb"]],rows:[[null]]};
+    if(statement.query.includes("reader_payload_node")) {
+      assert.equal(statement.params[0], "held-votes");
+      assert.equal(statement.params[1], '{"normalizedPayload","acquisitions"}');
+      fetched.push(value.acquisitions);
+      return {columns:[["value","jsonb"]],rows:[[value.acquisitions]]};
+    }
     if(statement.query.includes('FROM "civic_data_candidates"')) {
       assert.deepEqual(statement.params.slice(0,3), ["held-votes", "normalizedPayload", "acquisitions"]);
       return {columns:[["value","jsonb"],["depth","text"]],rows:[[encoded,1]]};
@@ -1470,6 +1477,9 @@ test("the keyed state read hydrates selected parts and rejects forged durable co
     CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY, payload jsonb);
     ALTER TABLE civic_data_candidates ADD COLUMN read_model_fingerprint text, ADD COLUMN raw_hash text, ADD COLUMN parser_version text;
     ALTER TABLE civic_data_promotions ADD COLUMN payload_fingerprint text;`);
+  const readerFunctions = readFileSync(new URL("../lib/db/migrations/0036_ne01.sql", import.meta.url), "utf8")
+    .split("--> statement-breakpoint").filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
+  for (const statement of readerFunctions) await pg.exec(statement);
   const payload = { temporal: candidate("joined-state").temporal,
     rows: Array.from({ length: 40 }, (_, id) => ({ id, source: "https://az.gov/official", text: "Official source ".repeat(1000) })) };
   const value = withStateRecordHashes({ ...candidate("joined-state"), recordClass: "BALLOT_CANDIDACY" as const, scope: "US-AZ:state-election-ballots",

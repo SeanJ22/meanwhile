@@ -97,7 +97,7 @@ test("readNarrowed in Postgres narrows in the database, reads no value for an un
   await assert.rejects(() => snapshots.readNarrowed(SNAPSHOT_ID, { "decisionCards') --": true }), /unsafe projection key/);
   assert.equal(calls.length, 3, "the unsafe key was refused before any statement was sent");
   await snapshots.readNarrowed(SNAPSHOT_ID, { settings: ["fetch.hostConcurrency"] });
-  assert.match(flat(calls[3]!.text), /WHERE f\.key IN \('fetch\.hostConcurrency'\)/, "an Admin setting's dotted key is narrowed in the database");
+  assert.match(flat(calls[3]!.text), /jsonb_build_object\('fetch\.hostConcurrency',cp_owner_snapshots\.value->'settings'->'fetch\.hostConcurrency'\)/, "an Admin setting's dotted key is narrowed in the database");
 });
 
 /* ------------------------------------------------------------------ the pulse */

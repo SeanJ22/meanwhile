@@ -39,11 +39,12 @@ const unrecorded = (recordClass: RoutineRecordClass,scope: string): Extract<Civi
 });
 
 async function canonicalTables(db: Awaited<ReturnType<typeof factDb>>) {
-  await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,promoted_at timestamptz,current_version_id text);
+  await db.pg.exec(`CREATE TABLE civic_data_promotions(key text PRIMARY KEY,record_class text,scope text,payload jsonb,promoted_at timestamptz,current_version_id text,
+    source_id text,last_known_good_version_id text,validation_receipt jsonb,payload_fingerprint text);
     CREATE TABLE civic_data_candidate_events(candidate_id text,detail text,sequence bigint);
     CREATE TABLE civic_data_payload_parts(hash text PRIMARY KEY,payload jsonb);
     CREATE TABLE civic_data_candidates(id text PRIMARY KEY,record_class text,scope text,source_id text,retrieved_at timestamptz,candidate jsonb,state text,
-      acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,normalized_hash text,validation_receipt jsonb)`);
+      acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,normalized_hash text,validation_receipt jsonb,read_model_fingerprint text)`);
   const functions = readFileSync(new URL("../lib/db/migrations/0036_ne01.sql",import.meta.url),"utf8").split("--> statement-breakpoint")
     .filter(sql => /^\s*CREATE FUNCTION reader_payload_(?:value|node|members)\(/.test(sql));
   for (const sql of functions) await db.pg.exec(sql);
@@ -64,6 +65,12 @@ async function agendaRuntime(db: Awaited<ReturnType<typeof factDb>>) {
     rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{rows:[]},officialPhotos:{photos:[]},rosterPhotos:{}};
   await db.query("INSERT INTO civic_data_promotions VALUES($1,'REGISTRY_RUNTIME_BINDING',$2,$3,$4,'runtime-version')",
     ["REGISTRY_RUNTIME_BINDING:US-AZ:reader-registry-runtime","US-AZ:reader-registry-runtime",JSON.stringify(runtime),AT]);
+  const receipt={decision:'GOOD',candidateId:'runtime-version',sourceId:'fixture-registry',recordClass:'REGISTRY_RUNTIME_BINDING',scope:'US-AZ:reader-registry-runtime'};
+  await db.query(`INSERT INTO civic_data_candidates(id,record_class,scope,source_id,retrieved_at,candidate,state,acquisition_succeeded,
+    promoted_version_id,last_known_good_version_id,normalized_hash,validation_receipt)
+    VALUES('runtime-version','REGISTRY_RUNTIME_BINDING','US-AZ:reader-registry-runtime','fixture-registry',$1,'{}','PROMOTED',true,'runtime-version','runtime-version',$2,$3)`,
+    [AT,canonicalCivicDataHash(runtime),JSON.stringify(receipt)]);
+  await db.query("UPDATE civic_data_promotions SET source_id='fixture-registry',last_known_good_version_id=current_version_id,validation_receipt=$1 WHERE current_version_id='runtime-version'",[JSON.stringify(receipt)]);
 }
 
 /** The actual agenda route receives only already built rows, never the fact query. */
@@ -167,8 +174,8 @@ test("a map's cache follows its canonical territory and fringe pages while an or
     await seedPlacePages(db.query,input);
     const zipId = `zip:${zip}`, page = await buildPageBody(zipId,"place","AZ",db.query);
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,'AZ')",[zipId]);
-    await db.query("INSERT INTO place_page(place_id,version,built_at,body,history_body,context) VALUES($1,1,clock_timestamp(),$2::jsonb,'{}','{}')",
-      [zipId,JSON.stringify(packReadyPlace(page.readyCurrent))]);
+    await db.query("INSERT INTO place_page(place_id,version,built_at,body,history_body,context) VALUES($1,1,clock_timestamp(),$2::jsonb,'{}',$3::jsonb)",
+      [zipId,JSON.stringify(packReadyPlace(page.readyCurrent)),JSON.stringify({readerFormat:1})]);
     const reads:string[] = [];
     installReaderDatabaseQuery(async statements=>Promise.all(statements.map(statement=>{
       assert.ok(statement.text===PLACE_PAGES_SQL || statement.text===READY_PLACE_SQL,"cache identities require no additional query");

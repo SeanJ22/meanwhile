@@ -40,7 +40,7 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   const places = packages.map(async ({ state, read }, index) => {
     const territory = territories[index];
     if (territory.status === "rejected") throw territory.reason;
-    const local = readPlacePackage({ state, divisionIds: rawEntry ? [...rawEntry.ids, ...rawEntry.fringe ?? []] : selection.divisions ?? [], bodyFactsOnly: true,
+    const local = readPlacePackage({ state,...(zip?{placeId:`zip:${zip}`} : {}), divisionIds: rawEntry ? [...rawEntry.ids, ...rawEntry.fringe ?? []] : selection.divisions ?? [], bodyFactsOnly: true,
       bodyIds: territoryBodies(point.lat, point.lng, territory.value) });
     const [held, facts] = await Promise.all([readStateAuthorities(read), local]);
     if (held.registryRead.kind !== "PROMOTED" && held.registryRead.kind !== "BOOTSTRAP") throw new Error(`STATE_PACKAGE_NOT_RECORDED:${state}`);

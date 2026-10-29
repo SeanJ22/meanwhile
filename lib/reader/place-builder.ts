@@ -639,6 +639,14 @@ export async function buildMissingPlacePages(pages:readonly {id:string;kind:stri
     }
     if(existing && authorities&&!reader&&!roster){
       const {input}=await placeBuildSelection(id,targetKind,state);
+      if(existing.authority_format==='1'){
+        const missing=(authorityKeys??[]).filter(key=>!(existing.keys as string[]??[]).includes(key));
+        const sections=await buildPageAuthorities(input,query,missing,[],true);
+        await query(`UPDATE place_page SET context=jsonb_set(context,'{authorities}',coalesce(context->'authorities','{}'::jsonb)||$2::jsonb)
+          ||jsonb_build_object('authorityKeys',(SELECT jsonb_agg(DISTINCT key) FROM jsonb_array_elements_text(coalesce(context->'authorityKeys','[]'::jsonb)||$3::jsonb) key)),
+          version=version+1,build_fingerprint=NULL WHERE place_id=$1`,[id,JSON.stringify(sections.authorities),JSON.stringify(missing)]);
+        return;
+      }
       const sections=await buildPageAuthorities(input,query,authorityKeys,existing.keys as string[]??[]);
       await query(`UPDATE place_page SET context=context||$2::jsonb,version=version+1,build_fingerprint=NULL
         WHERE place_id=$1 AND encode(sha256(convert_to(jsonb_build_array(context->'authorities',context->'authorityGeography',context->'authorityGeographies',context->'authorityKeys')::text,'UTF8')),'hex')=$3`,[id,JSON.stringify(sections),existing.authority_fingerprint]);
@@ -1373,11 +1381,11 @@ async function pageAuthorityFingerprint(input:PlaceInput,query:Query):Promise<st
 }
 
 /** Publication metadata, selected officials and their Checked dates travel with the ready page. */
-export async function buildPageAuthorities(input:PlaceInput,query:Query,requestedKeys:readonly string[]=[],knownKeys?:readonly string[]) {
+export async function buildPageAuthorities(input:PlaceInput,query:Query,requestedKeys:readonly string[]=[],knownKeys?:readonly string[],requestedOnly=false) {
   const states=authorityStates(input);
   const sections=await Promise.all(states.map(state=>buildStatePageAuthorities({...input,state},query,requestedKeys.filter(key=>{
     const own=/US-([A-Z]{2}):/.exec(key)?.[1];return !own||own===state;
-  }),knownKeys?.filter(key=>{const own=/US-([A-Z]{2}):/.exec(key)?.[1];return !own||own===state;}))));
+  }),knownKeys?.filter(key=>{const own=/US-([A-Z]{2}):/.exec(key)?.[1];return !own||own===state;}),requestedOnly)));
   const authorities:Record<string,Record<string,unknown>>={},authorityGeographies:Record<string,Record<string,unknown>>={};
   for(const [index,section] of sections.entries()){
     authorityGeographies[states[index]]=section.authorityGeography??{};
@@ -1404,10 +1412,10 @@ function mergeAuthorityValues(a:unknown,b:unknown):unknown {
   throw Error('PLACE_AUTHORITY_SECTION_CONFLICT');
 }
 
-async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedKeys:readonly string[]=[],knownKeys?:readonly string[]):Promise<Pick<StoredPlacePage,'authorities'|'authorityGeography'|'authorityGeographies'|'authorityFormat'|'authorityKeys'>> {
+async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedKeys:readonly string[]=[],knownKeys?:readonly string[],requestedOnly=false):Promise<Pick<StoredPlacePage,'authorities'|'authorityGeography'|'authorityGeographies'|'authorityFormat'|'authorityKeys'>> {
   const state=input.state.toUpperCase(),zip=input.placeId?.startsWith('zip:')?input.placeId.slice(4):undefined;
   const root=/^ocd-division\/country:us(?:\/(?:state|territory|district):[a-z]{2})?$/.test(input.divisionIds[0]??'');
-  const additional=state!=='US'&&(zip||root)?buildStatePackageStatement(state,input.divisionIds,zip):undefined;
+  const additional=!requestedOnly&&state!=='US'&&(zip||root)?buildStatePackageStatement(state,input.divisionIds,zip):undefined;
   const detailKeys=new Set(state==='US'?[]:['candidate-profiles','candidate-publications','candidate-campaign-sites-derived'].flatMap(family=>
     stateAuthorityPointers(family as 'candidate-profiles'|'candidate-publications'|'candidate-campaign-sites-derived',state)).map(row=>`${row.recordClass}:${row.scope}`));
   const [prior]=knownKeys===undefined&&input.placeId?await query("SELECT context->'authorityKeys' AS keys FROM place_page WHERE place_id=$1",[input.placeId]):[];
@@ -1416,13 +1424,13 @@ async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedK
     {recordClass:'STATE_LEGISLATOR',scope:`US-${state}`},{recordClass:'STATE_LEGISLATOR',scope:`US-${state}:openstates-people:v1`},
     ...stateAuthorityPointers('ballot-contests',state)]:[]].map(row=>`${row.recordClass}:${row.scope}`))];
   const allKeys=[...new Set([...requestedKeys,...knownKeys??prior?.keys as string[]??[]])];
-  const wantedDetails=new Set([...allKeys,...fixedKeys].filter(key=>detailKeys.has(key)));
-  const dynamicKeys=allKeys.filter(key=>!fixedKeys.includes(key)&&!detailKeys.has(key));
+  const wantedDetails=new Set([...allKeys,...(requestedOnly?[]:fixedKeys)].filter(key=>detailKeys.has(key)));
+  const dynamicKeys=allKeys.filter(key=>(requestedOnly||!fixedKeys.includes(key))&&!detailKeys.has(key));
   const votingKeys=dynamicKeys.filter(key=>key.startsWith('VOTING_SITE:'));
   const contextKeys=new Set(additional?memberContextPointers.map(row=>`${row.recordClass}:${row.scope}`):[]);
-  const keys=pageAuthorityPointers(input).map(row=>`${row.recordClass}:${row.scope}`).filter(key=>!detailKeys.has(key)&&!contextKeys.has(key));
+  const keys=pageAuthorityPointers(input).map(row=>`${row.recordClass}:${row.scope}`).filter(key=>!detailKeys.has(key)&&!contextKeys.has(key)&&(!requestedOnly||requestedKeys.includes(key)));
   const statement=buildCanonicalStatement(keys,additional);
-  const loaded=await query(statement.text,statement.params);
+  const loaded=keys.length||additional?await query(statement.text,statement.params):[];
   const preloaded=Object.fromEntries(loaded.filter(row=>row.row_kind==='part').map(row=>[String(row.part_hash),row.part_payload]));
   const parts=new CivicPayloadParts({existing:async()=>[],write:async()=>{},read:async()=>{throw new Error('PLACE_AUTHORITY_PART_MISSING');}});
   const rows=await parts.loadOwned(loaded.filter(row=>row.row_kind==='promotion'),preloaded) as Record<string,unknown>[];
@@ -1433,13 +1441,18 @@ async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedK
   }
   if(state!=='US'&&(zip||root)&&wantedDetails.size) {
     const ballots=rows.filter(row=>row.record_class==='BALLOT_CANDIDACY'||String(row.key).startsWith('BALLOT_CANDIDACY:'));
+    if(requestedOnly){
+      const [saved]=await query("SELECT context->'authorities'->$2 AS ballot FROM place_page WHERE place_id=$1",[input.placeId??input.divisionIds[0],`BALLOT_CANDIDACY:${stateBallotScope('ballot-contests',state)}`]);
+      const row=saved?.ballot as Record<string,unknown>|undefined;
+      if(row)ballots.push({...row,payload:unpackPlaceContextRow(row.payload)});
+    }
     const candidateKeys=new Set<string>();
     for(const row of ballots)for(const set of Object.values((row.payload as {ballots?:Record<string,BallotSet>}).ballots??{}))
       for(const key of ballotCandidateKeys(set,[...set.contests,...set.heldContests??[]]))candidateKeys.add(key);
     const selected=buildBallotCandidateDetailsStatement(state,[...candidateKeys]);
     rows.push(...await query(selected.text,[[...wantedDetails],selected.params[1]]));
   }
-  const otherKeys=dynamicKeys.filter(key=>!votingKeys.includes(key));
+  const otherKeys=dynamicKeys.filter(key=>!votingKeys.includes(key)&&!keys.includes(key));
   if(otherKeys.length){
     const selected=await query(`WITH pointer AS (${buildSelectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')})
       SELECT ${buildSelectedMetadataSql},pointer.record_class,pointer.scope,
@@ -1459,12 +1472,12 @@ async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedK
   }
   for(const key of votingKeys){const row=await compileVotingPageRow(query,key);if(row)authorities[key]=row;}
   const authorityGeography=extra?Object.fromEntries(Object.entries(extra).filter(([key])=>!key.startsWith('zip_'))):{};
-  if(state!=='US'&&(zip||root))authorityGeography.member_offices=await buildMemberOffices(query,state,zip?[...new Set(rows.flatMap(row=>{
+  if(!requestedOnly&&state!=='US'&&(zip||root))authorityGeography.member_offices=await buildMemberOffices(query,state,zip?[...new Set(rows.flatMap(row=>{
     const payload=row.payload as {roster?:{officeholders?:import('../officials/types.ts').Officeholder[]};statewideExecutives?:{holder?:import('../officials/types.ts').Officeholder}[]};
     return [...payload.roster?.officeholders??[],...payload.statewideExecutives?.flatMap(row=>row.holder?[row.holder]:[])??[]]
       .flatMap(holder=>[...personIdentityKeys(holder)]);
   }))]:undefined);
-  return {authorities,authorityGeography,authorityFormat:1,authorityKeys:[...new Set([...fixedKeys,...dynamicKeys,...wantedDetails,...extra?.canonical_keys as string[]??[]])]};
+  return {authorities,authorityGeography,authorityFormat:1,authorityKeys:requestedOnly?[...requestedKeys]:[...new Set([...fixedKeys,...dynamicKeys,...wantedDetails,...extra?.canonical_keys as string[]??[]])]};
 }
 
 async function compileVotingPageRow(query:Query,key:string) {

@@ -1,9 +1,29 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
-import { buildPageBody,storePlacePage } from "../lib/reader/place-builder.ts";
+import { buildMissingPlacePages,buildPageBody,storePlacePage } from "../lib/reader/place-builder.ts";
 import { readCanonicalShelf } from "../lib/reader/canonical.ts";
 import type { Query } from "../lib/facts/publish.ts";
+import {unpackPlaceContextRow} from "../lib/reader/place-ready.ts";
+
+test('adding a requested section preserves the other saved sections and never recompiles their sources',async()=>{
+  const {pg,publish}=await migratedReaderDb(),id='ocd-division/country:us/state:az/place:extra';
+  const query:Query=async(text,params=[])=>(await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  try{
+    await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Extra','AZ')",[id]);
+    await storePlacePage(query,id,await buildPageBody(id,'place','AZ',query));
+    const scopes=['US-AZ:detail:one','US-AZ:detail:two'];
+    for(const scope of scopes)await publish({id:scope,recordClass:'CURATED_READER_RECORD',scope,sourceId:'official',at:'2026-10-28T00:00:00.000Z',value:{records:[{id:scope,ocdId:id,text:'sourced detail'}]}});
+    const reads:string[]=[];
+    const tracked:Query=async(text,params=[])=>{if(text.includes('civic_data_promotions')){reads.push(text);assert.deepEqual(params[0],['CURATED_READER_RECORD:'+scopes[reads.length-1]]);}return query(text,params);};
+    const db={transaction:<T>(work:(q:Query)=>Promise<T>)=>work(tracked)};
+    for(const scope of scopes)await buildMissingPlacePages([{id,kind:'place',state:'AZ',authorities:true,authorityKeys:['CURATED_READER_RECORD:'+scope]}],db);
+    const [saved]=await query("SELECT context->'authorities' AS sections,context->'authorityKeys' AS keys FROM place_page WHERE place_id=$1",[id]);
+    for(const scope of scopes){const key='CURATED_READER_RECORD:'+scope;assert.ok((saved.keys as string[]).includes(key));
+      assert.deepEqual(unpackPlaceContextRow((saved.sections as Record<string,{payload:unknown}>)[key].payload),{records:[{id:scope,ocdId:id,text:'sourced detail'}]});}
+    assert.equal(reads.length,2);
+  }finally{await pg.close();}
+});
 
 test("a ready place carries its source section and Checked metadata without any bundle lookup",async()=>{
   const {pg,publish}=await migratedReaderDb();

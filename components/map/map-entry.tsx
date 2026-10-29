@@ -89,7 +89,7 @@ import { jurisdictionClaim, representationNoteForClaim } from "@/lib/meetings/ju
 import { CoverageNotice } from "./coverage-notice";
 import { GoverningSkeleton } from "./governing-skeleton";
 import { DistrictPicker } from "./district-picker";
-import type { CameraTarget, MapFocus, VotingSitePin } from "./map-canvas";
+import { MapCanvas, prepareMapWorkers, type CameraTarget, type MapFocus, type VotingSitePin } from "./map-canvas";
 import type { ModalSubject } from "./popup/entity-modal";
 
 const MeetingPanel = dynamic(
@@ -140,9 +140,7 @@ interface ViewTarget {
 }
 
 const EMPTY_MEETINGS: Meeting[] = [];
-// Start the split map download when its client module arrives, before hydration's effects.
-let arrivingMap = typeof window === "undefined" ? null : import("./map-canvas");
-void arrivingMap?.catch(() => { arrivingMap=null; });
+if (typeof window !== "undefined") prepareMapWorkers();
 let arrivingAsk: Promise<typeof import("@/components/ask/ask-box")> | null = null;
 function prepareAsk() {
   if (!arrivingAsk) {
@@ -161,19 +159,10 @@ export function MapEntry() {
 }
 
 function MapEntryInner() {
-  const [MapCanvas, setMapCanvas] = useState<typeof import("./map-canvas").MapCanvas | null>(null);
+  const [overlayLoadError, setOverlayLoadError] = useState<Error | null>(null);
   const [AskBox, setAskBox] = useState<typeof import("@/components/ask/ask-box").AskBox | null>(null);
   const [DoorOverlay, setDoorOverlay] = useState<typeof import("./door-overlay").DoorOverlay | null>(null);
   const [ListOverlay, setListOverlay] = useState<typeof import("./list-overlay").ListOverlay | null>(null);
-  const [mapLoadError, setMapLoadError] = useState<Error | null>(null);
-  useEffect(() => {
-    let active = true;
-    void (arrivingMap ?? import("./map-canvas")).then(module => {
-      module.prepareMapWorkers();
-      if (active) setMapCanvas(() => module.MapCanvas);
-    }).catch(error => { if (active) setMapLoadError(error); });
-    return () => { active = false; };
-  }, []);
   const { location, restored, remember } = useStoredZip();
   const { theme } = useStoredTheme();
   const ui = useUi();
@@ -1106,9 +1095,9 @@ function MapEntryInner() {
   const cardKind = cardView?.kind;
   useEffect(() => {
     let active = true;
-    // Publish a downloaded panel directly, as with the map. Suspending an
+    // Publish a downloaded panel directly. Suspending an
     // already-open card adds React's reveal delay after its module arrives.
-    const failed = (kind: "list" | "door" | "ask", error: Error) => { if (active && (cardKind === kind || kind === "ask" && pop === "ask")) setMapLoadError(error); };
+    const failed = (kind: "list" | "door" | "ask", error: Error) => { if (active && (cardKind === kind || kind === "ask" && pop === "ask")) setOverlayLoadError(error); };
     const phoneMenu = layoutBp === "phone" && sidebarState === "open";
     if ((cardKind === "list" || phoneMenu) && !ListOverlay) void import("./list-overlay")
       .then(module => { if (active) setListOverlay(() => module.ListOverlay); }).catch(error=>failed("list",error));
@@ -1611,7 +1600,7 @@ function MapEntryInner() {
   const popTitle =
     pop === "zip" ? "Show me a ZIP" : pop === "vote" ? "Where can I vote?" : "Ask";
 
-  if (mapLoadError) throw mapLoadError;
+  if (overlayLoadError) throw overlayLoadError;
   return (
     <DataProvider value={data}>
       {/* The jurisdiction badge can open the address prompt anywhere; the page re-resolves from the answer. */}
@@ -1636,7 +1625,7 @@ function MapEntryInner() {
         }
       >
         <div className="mw-map-layer absolute inset-0">
-          {MapCanvas && districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
+          {districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
             camera={camera}

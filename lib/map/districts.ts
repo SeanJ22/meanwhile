@@ -1,3 +1,5 @@
+import { BOUNDARY_ARCHIVE_URL } from "./boundary-archive.ts";
+export { BOUNDARY_ARCHIVE_URL, BOUNDARY_ARCHIVE_FALLBACK } from "./boundary-archive.ts";
 import { filterStateAbbr, stateFilter } from "./state-focus.ts";
 import { mapPresentationHeld } from "./flight-presentation.ts";
 import type { Map as MapLibreMap, MapGeoJSONFeature, FilterSpecification, StyleSpecification, LayerSpecification, VectorSourceSpecification } from "maplibre-gl";
@@ -124,25 +126,18 @@ export function preserveDistrictStyle(previous: StyleSpecification | undefined, 
   if (!source) return next;
   // Rebuild, never copy: paint is baked from theme tokens, so a copied layer
   // keeps the previous theme's halo and accent.
-  const types = new Set<DistrictType>();
-  for (const layer of previous.layers) {
-    const m = /^district-(.+)-(?:fill|line|label)$/.exec(layer.id);
-    if (m && m[1] in DISTRICT_LAYERS) types.add(m[1] as DistrictType);
-  }
-  const boundaries = [...types]
-    .flatMap(type => {
-      const layer = previous.layers.find(value => value.id === lineLayerId(type));
-      return districtStyleLayers(type, filterStateAbbr(layer && "filter" in layer ? layer.filter : undefined));
-    })
-    .filter(layer => layer.type !== "symbol" || next.glyphs);
-  const layers = next.layers.filter(layer => !layer.id.startsWith("district-"));
-  const labels = layers.findIndex(layer => layer.type === "symbol");
-  layers.splice(labels < 0 ? layers.length : labels, 0, ...boundaries);
-  return { ...next, sources: { ...next.sources, [NATIONAL_BOUNDARIES_SOURCE]: source }, layers };
+  const boundaries = DISTRICT_TYPES.flatMap(type => {
+    const layer = previous.layers.find(value => value.id === lineLayerId(type));
+    return layer ? districtStyleLayers(type, filterStateAbbr("filter" in layer ? layer.filter : undefined)) : [];
+  });
+  return attachDistricts(next, source, boundaries);
+}
+function attachDistricts(style: StyleSpecification, source: StyleSpecification["sources"][string], boundaries: LayerSpecification[]): StyleSpecification {
+  const layers = style.layers.filter(layer => !layer.id.startsWith("district-")), labels = layers.findIndex(layer => layer.type === "symbol");
+  layers.splice(labels < 0 ? layers.length : labels, 0, ...boundaries.filter(layer => layer.type !== "symbol" || style.glyphs));
+  return { ...style, sources: { ...style.sources, [NATIONAL_BOUNDARIES_SOURCE]: source }, layers };
 }
 const sourceId = (_type: DistrictType) => NATIONAL_BOUNDARIES_SOURCE;
-export const BOUNDARY_ARCHIVE_FALLBACK = "/api/boundaries/census-2025-b24d0345381f69be.pmtiles";
-export const BOUNDARY_ARCHIVE_URL = process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL || BOUNDARY_ARCHIVE_FALLBACK;
 export function boundarySource(archive = BOUNDARY_ARCHIVE_URL): VectorSourceSpecification {
   return { type: "vector", url: `pmtiles://${new URL(archive, typeof window === "undefined" ? "http://localhost" : window.location.href).href}`, promoteId: "ocdId" };
 }
@@ -150,11 +145,7 @@ export function boundarySource(archive = BOUNDARY_ARCHIVE_URL): VectorSourceSpec
 /** Start fetching visible boundaries as soon as MapLibre constructs its style. */
 export function withDistricts(style: StyleSpecification, types: readonly DistrictType[], state: string | null): StyleSpecification {
   if (!types.length) return style;
-  return {
-    ...style,
-    sources: { ...style.sources, [NATIONAL_BOUNDARIES_SOURCE]: boundarySource() },
-    layers: [...style.layers, ...types.flatMap(type => districtStyleLayers(type, state)).filter(layer => layer.type !== "symbol" || style.glyphs)],
-  };
+  return attachDistricts(style, boundarySource(), types.flatMap(type => districtStyleLayers(type, state)));
 }
 export const fillLayerId = (type: DistrictType) => `district-${type}-fill`;
 export const lineLayerId = (type: DistrictType) => `district-${type}-line`;

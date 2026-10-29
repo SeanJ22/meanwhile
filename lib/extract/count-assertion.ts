@@ -89,11 +89,6 @@ export function assertCount(
   };
 }
 
-/** True where the verdict means the extraction did not get what the source says exists. */
-export function isShort(a: CountAssertion): boolean {
-  return a.verdict === "SHORT";
-}
-
 const WORD_NUMBERS: Readonly<Record<string, number>> = {
   one: 1,
   two: 2,

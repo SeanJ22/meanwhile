@@ -81,3 +81,25 @@ test("a question waiting in the work list is already owed in the daily brief", a
   await claims.claim(true);
   assert.deepEqual(await unhandedQuestionRows({ query: rows }), [], "once a hunter has claimed it, their hunt carries it");
 });
+
+test("a claimed row is finished by what its hunt did: done when it ran, waiting again when it did not, handed back when never reached", async t => {
+  const pg = new PGlite();
+  t.after(() => pg.close());
+  for (const ddl of WORK_DDL) await pg.exec(ddl);
+  const rows = async (text: string, params: readonly unknown[] = []) => (await pg.query<Record<string, unknown>>(text, [...params])).rows;
+  const list = workList(rows, { owner: "claims-test", now: () => new Date(now) });
+  const repos = createMemoryRepositories();
+  for (const question of ["First question?", "Second question?", "Third question?"]) {
+    await recordQuestionWork({ question, divisions: [division], place: "85701", subjectId: `${division}#board`, runClass: "ORGANIC", now: `${now}-${question}` }, list);
+  }
+  const claims = claimsOf(list, repos);
+  await claims.select(["az"], false);
+  const queue = (await claims.claim(true))!;
+  assert.equal(queue.taskIds.length, 3);
+  const result = (routeTaskId: string, outcome: "WORKED" | "FAILED") => ({ obligationId: routeTaskId, routeTaskId, outcome, detail: "ran" }) as never;
+  await claims.settle(result(queue.taskIds[0]!, "WORKED"));
+  await claims.settle(result(queue.taskIds[1]!, "FAILED"));
+  await claims.endWave();
+  const statuses = (await rows("SELECT status, attempts FROM work ORDER BY status, attempts")).map(row => `${row.status}:${row.attempts}`);
+  assert.deepEqual(statuses, ["done:1", "waiting:0", "waiting:1"], "the third was never reached and is as if untouched; the failed one waits out its back-off");
+});

@@ -83,6 +83,9 @@ test("one Oregon pass makes Portland's city, county and school boards through th
       { entity_id: "or:county:county-of-multnomah#governing", field: "homepage", value: "http://www.multco.us/", provenance_kind: "OFFICIAL", url: CENSUS },
       { entity_id: "or:county:county-of-multnomah#governing", field: "mailing_address", value: "501 SE HAWTHORNE BLVD, STE 600, PORTLAND, OR, 97214-3588", provenance_kind: "OFFICIAL", url: CENSUS },
     ]);
+    const quotes = await db.query("SELECT quote FROM fact WHERE produced_by = 'census-governing:OR' AND status = 'live'");
+    assert.equal(quotes.length, 5);
+    assert.ok(quotes.every(row => /^\d+,\d+,[A-Z]/.test(String(row.quote))), "each fact keeps the Census release's own row for its government");
     // The door queued each board's places; the scheduled page worker builds their ready pages before a reader opens them.
     const pages = await rebuildPlacePages({ db, purge, concurrency: 1 });
     assert.equal(pages.failed, 0);

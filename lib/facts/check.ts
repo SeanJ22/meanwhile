@@ -113,6 +113,70 @@ function quoteHolds(copy: SavedCopy, quote: string, valueText: string, kind: Fie
   return start;
 }
 
+/** The line of the saved copy that shows a value, exactly as saved (a long line is cut to the words around the value), to quote for it; null when the copy does not show the value on its own. */
+export function lineOf(copy: SavedCopy, valueText: string): string | null {
+  const value = normalizeText(valueText), raw = copy.text, at = boundedIndexOf(raw, value), end = raw.indexOf("\n", at);
+  const line = at === -1 ? copyText(copy) : normalizeText(raw.slice(raw.lastIndexOf("\n", at) + 1, end === -1 ? undefined : end));
+  const found = boundedIndexOf(line, value);
+  if (found === -1) return null;
+  if (line.length <= 240) return line;
+  const reach = 80, from = found <= reach ? 0 : line.indexOf(" ", found - reach) + 1, to = line.lastIndexOf(" ", found + value.length + reach);
+  return line.slice(Math.min(from, found), Math.max(to, found + value.length));
+}
+
+const csvCells = (row: string): string[] => {
+  const cells: string[] = [];
+  let cell = "", quoted = false;
+  for (let i = 0; i < row.length; i++) {
+    const ch = row[i]!;
+    if (quoted) { if (ch !== '"') cell += ch; else if (row[i + 1] === '"') { cell += '"'; i++; } else quoted = false; }
+    else if (ch === '"') quoted = true;
+    else if (ch === ",") { cells.push(cell); cell = ""; }
+    else cell += ch;
+  }
+  return [...cells, cell];
+};
+
+/** A string or bare token as JSON writes it, starting at `at`: where it ends and what it says. */
+function jsonToken(text: string, at: number): { readonly end: number; readonly says: string } | null {
+  if (text[at] === '"') {
+    for (let end = at + 1; end < text.length; end++) {
+      if (text[end] === "\\") end++;
+      else if (text[end] === '"') { try { return { end: end + 1, says: String(JSON.parse(text.slice(at, end + 1))) }; } catch { return null; } }
+    }
+    return null;
+  }
+  const end = at + (/^[^\s,}\]]+/.exec(text.slice(at, at + 64))?.[0].length ?? 0);
+  return end > at ? { end, says: text.slice(at, end) } : null;
+}
+
+/**
+ * The exact text of a saved API or filing copy that shows one field's value, to quote for a fact from it:
+ * `"amount": 113895` in JSON, `<amount>113895</amount>` in XML, the row of a CSV whose `amount` column holds it.
+ * Null when the copy has no such field with that value.
+ */
+export function exactLine(text: string, field: string, valueText: string): string | null {
+  if (/^\s*[[{]/.test(text)) {
+    for (const key of text.matchAll(new RegExp(`"${escapeRegExp(field)}"\\s*:\\s*`, "g"))) {
+      const token = jsonToken(text, key.index + key[0].length);
+      if (token?.says === valueText) return text.slice(key.index, token.end);
+    }
+    return null;
+  }
+  if (/^\s*</.test(text)) {
+    const shown = [valueText, valueText.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")].map(escapeRegExp).join("|");
+    const tag = escapeRegExp(field);
+    return new RegExp(`<${tag}(?:\\s[^>]*)?>\\s*(?:<!\\[CDATA\\[)?(?:${shown})(?:\\]\\]>)?\\s*</${tag}>`).exec(text)?.[0] ?? null;
+  }
+  const header = text.indexOf("\n"), column = csvCells((header === -1 ? text : text.slice(0, header)).replace(/\r$/, "")).indexOf(field);
+  if (column === -1 || !valueText) return null;
+  for (let at = text.indexOf(valueText); at !== -1; at = text.indexOf(valueText, at + 1)) {
+    const end = text.indexOf("\n", at), row = text.slice(text.lastIndexOf("\n", at) + 1, end === -1 ? undefined : end).replace(/\r$/, "");
+    if (csvCells(row)[column] === valueText) return row;
+  }
+  return null;
+}
+
 /** A link's own address is on the saved copy when the sentence beside it does not spell it out. */
 export const linkQuote = (value: string, quote: string): string =>
   /^https?:\/\//i.test(value) && boundedIndexOf(normalizeText(quote), value) === -1 ? value : quote;

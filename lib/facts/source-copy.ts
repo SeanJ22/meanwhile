@@ -1,4 +1,4 @@
-import { visibleText } from "../extract/visible-text.ts";
+import { decodeEntities, visibleText } from "../extract/visible-text.ts";
 import type { WorkerPublicationCapture } from "../civic-data/worker-roster-publication.ts";
 import type { SavedCopy } from "./check.ts";
 import type { Query } from "./publish.ts";
@@ -9,7 +9,8 @@ const isArchive = (url: string) => ARCHIVE_HOSTS.test(new URL(url).hostname);
 /** The saved bytes as a reader would read them: HTML's visible text and absolute links, JSON's values, a calendar's unfolded lines. */
 function checkText(body: string, contentType: string, base: string): string {
   if (/html/i.test(contentType) || /^\s*</.test(body)) {
-    const links = [...body.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi)].flatMap(([, href]) => URL.canParse(href!, base) ? [new URL(href!, base).href] : []);
+    const targets = [...body.matchAll(/\b(?:href|src)\s*=\s*["']([^"']+)["']/gi), ...body.matchAll(/\bon\w+\s*=\s*"[^"]*?'((?:https?:)?\/\/[^']+)'/gi)];
+    const links = targets.flatMap(([, href]) => { const link = decodeEntities(href!); return URL.canParse(link, base) ? [new URL(link, base).href] : []; });
     return `${visibleText(body)}\n${body}\n${links.join("\n")}`;
   }
   if (/^\s*BEGIN:VCALENDAR/.test(body)) return `${body}\n${body.replace(/\r?\n[ \t]/g, "").replace(/\\([,;\\])/g, "$1").replace(/\\n/gi, " ")}`;

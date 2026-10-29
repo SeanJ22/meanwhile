@@ -23,8 +23,8 @@ export interface PublishInput extends Claim {
   readonly value: unknown;
   readonly producedBy: string;
   readonly costUsd: number;
-  /** Findings from a hunter or walker carry claims to check against the saved page. */
-  readonly acquisition?: "loader" | "hunter" | "walker";
+  /** Findings from a hunter or walker carry claims to check against the saved page. A "loader" is not checked yet; a "checked" loader quotes the exact line of its saved copy and is. */
+  readonly acquisition?: "loader" | "hunter" | "walker" | "checked";
   /** A parsed field of an official source already held by its ordinary loader. */
   readonly sourceField?: { readonly record: Readonly<Record<string, unknown>>; readonly key: string };
 }

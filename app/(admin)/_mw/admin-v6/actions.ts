@@ -359,16 +359,6 @@ const defs: ActionDef[] = [
     dependency: null,
   },
   {
-    kind: "job-release",
-    label: "Release",
-    needs: "owner",
-    doneWords: "Released.",
-    preview: (ctx) => ({ title: `Release ${ctx.targetName || "this job"}`, level: "global",
-      rows: [["What changes", "It may start again"], ["When", "The runner's next check, within ten minutes"], ["Limit", "It pauses again after 0.5 GB in one hour"]] }),
-    gateway: { type: "jobs.release" },
-    dependency: null,
-  },
-  {
     kind: "send-agents",
     label: "Send agents",
     needs: "owner",

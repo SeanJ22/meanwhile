@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import * as nodeModule from "node:module";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -7,7 +7,7 @@ import test from "node:test";
 import { createContext, runInContext } from "node:vm";
 
 import { MEETING_PARTITION_CONTRACTS } from "@/lib/civic-data/meeting-partitions.ts";
-import { admitJobLaunch, JOB_BREAKER_PATH_ENV } from "@/lib/control-plane/job-breaker-local.ts";
+import { admitJobLaunch, JOB_BREAKER_PATH_ENV, JOB_SLOWED_WORDS, saveBreakerSnapshot } from "@/lib/control-plane/job-breaker-local.ts";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { pgAggregateRepository } from "@/lib/control-plane/repository/pg-store.ts";
 import { routineProcessSlots } from "@/lib/control-plane/workers/worker-slots.ts";
@@ -148,33 +148,27 @@ test("a small town's used hour on a shared vendor host holds only the town's pag
   assert.equal(report.waiting, 2);
 });
 
-test("a breaker pause stops the turn within it, and a drained turn starts no new look", async () => {
+test("a door-probes spike spaces its hourly turns out and never stops them; a drained turn starts no new look", async () => {
   const root = mkdtempSync(join(tmpdir(), "door-probes-")), path = join(root, "breaker.json");
   try {
-    const env = { ...process.env, [JOB_BREAKER_PATH_ENV]: path };
-    writeFileSync(path, JSON.stringify({ checkedAt: new Date(START).toISOString(), states: {} }));
-    let now = START;
-    const clock = () => now;
+    const env = { ...process.env, [JOB_BREAKER_PATH_ENV]: path }, launches: number[] = [];
+    let busyUntil = 0;
+    // The breaker writes its snapshot every ten minutes; the lane asks every minute once its hour-long turn ends.
+    for (let minute = 0; minute <= 660; minute++) {
+      const at = START + minute * MINUTE, times = minute >= 180 && minute < 500 ? 2 : undefined;
+      if (minute % 10 === 0) saveBreakerSnapshot(path, { checkedAt: new Date(at).toISOString(), hour: "", jobs: times ? { [DOOR_PROBES_JOB.id]: { seen: "", times } } : {} });
+      if (at >= busyUntil && admitJobLaunch(DOOR_PROBES_JOB.id, env, at)) { launches.push(minute); busyUntil = at + 60 * MINUTE; }
+    }
+    assert.deepEqual(launches, [0, 60, 120, 240, 360, 480, 540, 600, 660], "an hour on and an hour off while slowed, then back to back again");
     const doors = Array.from({ length: 12 }, (_, i) => door(`hot-${i}`, `https://city.example.gov/${i}.ics`));
     const held = await registry(doors);
-    const site = websites({ clock });
-    const fetchFn: typeof site.fetchFn = async (url, headers) => {
-      const answer = await site.fetchFn(url, headers);
-      if (site.asked.length === 3) writeFileSync(path, JSON.stringify({ checkedAt: new Date(now).toISOString(),
-        states: { [DOOR_PROBES_JOB.id]: { job: DOOR_PROBES_JOB.id, mode: "PAUSED", at: new Date(now).toISOString(), hour: new Date(now).toISOString(), offsetBytes: 0 } } }));
-      return answer;
-    };
-    const report = await runDoorProbeTurn({ repo: held.repo, readDoors: held.readDoors, readHot: async () => new Set(doors.map((d) => d.doorId)), fetchFn,
-      websites: 8, admitted: () => admitJobLaunch(DOOR_PROBES_JOB.id, env), deadlineMs: START + 60 * MINUTE, log: () => undefined, clock,
-      sleep: async (ms) => { now += ms; } });
-    assert.equal(report.ended, "HELD");
-    assert.equal(site.asked.length, 3, "no look starts after the pause");
-    let drained = false;
+    let now = START, drained = false;
+    const site = websites({ clock: () => now });
     const drainedReport = await runDoorProbeTurn({ repo: held.repo, readDoors: held.readDoors, readHot: async () => new Set(doors.map((d) => d.doorId)),
       fetchFn: async (url, headers) => { drained = true; return site.fetchFn(url, headers); }, websites: 8, admitted: () => !drained,
-      deadlineMs: START + 60 * MINUTE, log: () => undefined, clock, sleep: async (ms) => { now += ms; } });
+      deadlineMs: START + 60 * MINUTE, log: () => undefined, clock: () => now, sleep: async (ms) => { now += ms; } });
     assert.equal(drainedReport.ended, "HELD");
-    assert.equal(site.asked.length, 4, "the look in flight finishes; none starts after");
+    assert.equal(site.asked.length, 1, "the look in flight finishes; none starts after");
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -255,7 +249,7 @@ test("the runner's door-probes lane looks at due hot doors while bulk work holds
   const asked: string[] = [];
   const log: string[] = [];
   const context = createContext({
-    provider: "postgres", canary: false, runtimeAdmissionsHeld: false, admitJobLaunch, DOOR_PROBES_JOB,
+    provider: "postgres", canary: false, runtimeAdmissionsHeld: false, admitJobLaunch, DOOR_PROBES_JOB, JOB_SLOWED_WORDS,
     pendingRestart: new PendingRestart(), researchCycleActive: false, researchCycleChild: null, drainHunterLane: () => {},
     ownerRepositories: async () => ({ adminConfig: owner.adminConfig, doors: held.repo, websitePacing: pacing }),
     readerFactDb: () => ({ query: readerQuery }),
@@ -281,7 +275,7 @@ test("the runner's door-probes lane looks at due hot doors while bulk work holds
   assert.ok(new Set(asked).size === doors.length, "every due hot door's page was asked");
   for (const d of doors) assert.ok((await held.repo.read(d.doorId))!.value.validators?.checkedAt, `${d.doorId}: its look is stored`);
   assert.equal(context.runtimeAdmissionsHeld, true);
-  assert.ok(log.some((line) => /^RCD_PROBE turn ended \(paused or drained\)/.test(line)), "the release drain ends the turn");
+  assert.ok(log.some((line) => /^RCD_PROBE turn ended \(drained\)/.test(line)), "the release drain ends the turn");
   assert.ok(asked.length > doors.length && asked.length <= doors.length + 4, "only looks already started (one per website) finish after the drain");
   const reads = owner.statements.length, looks = asked.length;
   context.standingRuntimeScheduler.tick(Date.now() + 2 * MINUTE);
@@ -291,11 +285,11 @@ test("the runner's door-probes lane looks at due hot doors while bulk work holds
 
 test("door probes run in their own standing lane, not inside the publish-now pass", () => {
   const lane = doorProbesLane(async () => undefined);
-  assert.equal(lane.id, "door-probes", "the breaker, Admin's pause and release and the meter rows keep the name");
+  assert.equal(lane.id, "door-probes", "the breaker's pace, Admin's slowed jobs and the meter rows keep the name");
   assert.ok(lane.budgetMs >= 60 * MINUTE && lane.everyMs <= MINUTE);
   assert.match(runnerSource, /doorProbesLane\(runDoorProbes\)/);
   assert.match(runnerFunction("runDoorProbes"), /if \(!jobLaunchAllowed\(DOOR_PROBES_JOB\.id\)\) return;/);
-  assert.match(runnerFunction("runDoorProbes"), /admitted: \(\) => !runtimeAdmissionsHeld && admitJobLaunch\(DOOR_PROBES_JOB\.id\)/);
+  assert.match(runnerFunction("runDoorProbes"), /admitted: \(\) => !runtimeAdmissionsHeld, log/, "a running turn is never stopped by the breaker");
   const turn = readFileSync("lib/doors/probe-lane.ts", "utf8");
   assert.match(turn, /withDatabaseJob\(DOOR_PROBES_JOB\.id/);
   assert.match(turn, /readRunnerDoors\(repos\.doors, \["status"\], "OPEN", "probes"\)/);

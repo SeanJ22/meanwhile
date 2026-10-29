@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { admitJobLaunch } from "../control-plane/job-breaker-local.ts";
+import { admitJobLaunch, JOB_SLOWED_WORDS } from "../control-plane/job-breaker-local.ts";
 
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { VITAL_SIGNS_LINE_PREFIX } from "../db/transfer-by-caller.ts";
@@ -199,11 +199,10 @@ export async function runBoundedChildPass(
       if (options.deadlineMs !== undefined && Date.now() >= options.deadlineMs) {
         throw new Error("PASS_TIME_BUDGET: queued work remains owed");
       }
-      const held = () => new Error(`JOB_TRANSFER_BREAKER: ${command.id} is paused until released in Admin; work remains owed`);
-      if (!admitJobLaunch(command.id, options.env)) throw held();
+      const slowed = () => new Error(`JOB_TRANSFER_BREAKER: ${command.id} ${JOB_SLOWED_WORDS}`);
+      if (!admitJobLaunch(command.id, options.env, Date.now(), false)) throw slowed();
       if (options.onStarting && await options.onStarting(command, index) === false) return false;
-      // A slot can wait across a breaker tick. Recheck immediately before the child starts.
-      if (!admitJobLaunch(command.id, options.env)) throw held();
+      if (!admitJobLaunch(command.id, options.env)) throw slowed();
       result = await launch(command, options);
     } catch (error) {
       result = {

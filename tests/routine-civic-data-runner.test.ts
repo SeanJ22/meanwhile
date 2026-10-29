@@ -6,7 +6,7 @@ import { readFileSync } from "node:fs";
 import test, { type TestContext } from "node:test";
 import { withReaderRoute } from "../lib/db/reader-route.ts";
 import { childCrash } from "../lib/ops/fatal-line.ts";
-import { JOB_HELD_WORDS, ROUTINE_JOBS, runRoutineJob } from "../lib/civic-data/routine-jobs.ts";
+import { ROUTINE_JOBS, runRoutineJob } from "../lib/civic-data/routine-jobs.ts";
 import { runInNewContext } from "node:vm";
 import { transpileModule, ScriptTarget, ModuleKind, createSourceFile, isFunctionDeclaration } from "typescript";
 
@@ -192,7 +192,7 @@ test("meeting pins and Box facts publish beside admission, so the first source l
 
   const order: string[] = [];
   const failures: { taskId: string; code: string; detail: string }[] = [];
-  const context: Record<string, unknown> = { heldPublication: Promise.resolve(), runRoutineJob, heldJobs: new Set(), JOB_HELD_WORDS, console,
+  const context: Record<string, unknown> = { heldPublication: Promise.resolve(), runRoutineJob, heldJobs: new Set(), console,
     withReaderRoute, safeFailure: (value: string) => value,
     sanitizedErrorDiagnostic: (error: unknown) => error instanceof Error ? error.message : String(error) };
   const start = runInNewContext(transpileModule(functionSource(source, "routineJob") + "\n" + functionSource(source, "publishHeldBesideSources"), {

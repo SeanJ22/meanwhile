@@ -20,12 +20,17 @@ import test from "node:test";
 import {
   FULL_CI_LABEL,
   STALE_LOCK_MS,
+  FIFTY_STATES,
   blameLanes,
+  countsAsCode,
   decideCi,
   decideLock,
   decideObserve,
+  drawZips,
   failingTests,
   foldOrder,
+  linesOfCode,
+  measureSql,
   migrationProblems,
   missingProofs,
   parseArgs,
@@ -36,6 +41,7 @@ import {
   setStatusFields,
   slugOf,
   stepIds,
+  zipsByState,
 } from "../scripts/river.mjs";
 import { REQUIRED_CONTEXTS } from "../lib/ops/required-contexts.ts";
 
@@ -297,6 +303,40 @@ test("step-named migrations are numbered after the journal in fold order, matchi
   assert.ok(clash.problems.some((p) => /two streams added migration 0002/.test(p)));
 });
 
+test("lines of code: tracked source, styles and SQL, counted as wc -l counts newlines", () => {
+  for (const path of ["a.ts", "b.tsx", "c.mts", "d.cts", "e.mjs", "f.cjs", "g.js", "h.jsx", "app/x.css", "lib/db/migrations/0001_a.sql"]) assert.ok(countsAsCode(path), path);
+  for (const path of ["types.d.ts", "lib/x.min.js", "node_modules/p/i.js", "lib/node_modules/p/i.js", ".next/a.js", "public/vendor/maplibre.js", "a.json", "a.md", "a.tsbuildinfo"]) {
+    assert.equal(countsAsCode(path), false, path);
+  }
+  const repo = mkdtempSync(join(tmpdir(), "river-lines-"));
+  try {
+    for (const [path, text] of [["a.ts", "1\n2\n"], ["b.css", "no newline"], ["c.sql", "\n\n\n"], ["d.md", "x\ny\n"], ["e.d.ts", "x\n"]]) put(repo, path, text);
+    sh(repo, ["init", "--quiet"]);
+    sh(repo, ["add", "-A"]);
+    sh(repo, ["commit", "--quiet", "-m", "x"]);
+    assert.equal(linesOfCode("HEAD", repo), 5);
+  } finally {
+    rmSync(repo, { recursive: true, force: true });
+  }
+});
+
+test("ZIP sampling: one random ZIP in each of the 50 states, from the ZIP index", () => {
+  const byState = zipsByState(process.cwd());
+  assert.equal(FIFTY_STATES.length, 50);
+  let calls = 0;
+  const drawn = drawZips(byState, () => ((calls += 1) * 0.37) % 1);
+  assert.equal(drawn.length, 50);
+  assert.equal(new Set(drawn.map((place: { state: string }) => place.state)).size, 50, "50 distinct states");
+  assert.equal(new Set(drawn.map((place: { zip: string }) => place.zip)).size, 50);
+  for (const { state, zip } of drawn) assert.ok(byState.get(state).includes(zip), `${zip} is a ${state} ZIP`);
+  assert.ok(!FIFTY_STATES.includes("DC") && !FIFTY_STATES.includes("PR"));
+  assert.notDeepEqual(drawZips(byState).map((place: { zip: string }) => place.zip), drawZips(byState).map((place: { zip: string }) => place.zip), "drawn fresh each time");
+  assert.throws(() => drawZips(new Map([["AL", ["35004"]]])), /no ZIP for AK/);
+  const sql = measureSql("2026-10-29T06:51:00Z", false);
+  assert.match(sql.facts, /status <> 'held' AND live_at >= timestamptz '2026-10-29T06:51:00Z' - interval '24 hours'/);
+  assert.match(measureSql("2026-10-29T06:51:00Z", true).reads, /request_bytes \+ response_bytes/);
+});
+
 test("arguments: --k v, --k=v and bare boolean flags", () => {
   assert.deepEqual(parseArgs(["claim", "--branch", "board/river", "--token=t", "--heartbeat"]), {
     flags: { branch: "board/river", token: "t", heartbeat: true },
@@ -358,6 +398,9 @@ test("fold, migrations, the quick check, release, settle and the lock protocol w
     put(work, "lib/db/migrations/meta/_journal.json", `${JSON.stringify(journal, null, 2)}\n`);
     put(work, "lib/db/migrations/0000_first.sql", "CREATE TABLE a (id int);\n");
     put(work, "lib/db/migration-phases.ts", 'export const MIGRATION_PHASES = {\n  "0000_first": "expand",\n};\n');
+    // Code the lanes delete, so their releases keep the code the same size or smaller.
+    put(work, "lib/old.ts", "export const a = 1;\nexport const b = 2;\nexport const c = 3;\n");
+    for (const lane of ["ballot", "people"]) put(work, `lib/old-${lane}.ts`, "export const old = 1;\n");
     sh(work, ["add", "-A"]);
     sh(work, ["commit", "--quiet", "-m", "base"]);
     sh(work, ["push", "--quiet", "origin", "main", "main:river"]);
@@ -427,6 +470,14 @@ test("fold, migrations, the quick check, release, settle and the lock protocol w
     assert.match(readFileSync(join(riverCheckout, "lib/db/migration-phases.ts"), "utf8"), /"0001_db09_place_owed": "expand"/);
     assert.equal(river(riverCheckout, "migrations").code, 0, "a second run finds nothing left to number");
 
+    // The fold grows the code by two lines: no release until River makes it smaller.
+    const grown = river(riverCheckout, "release", "1");
+    assert.equal(grown.code, 1, grown.out);
+    assert.match(grown.out, /grows the code from 9 to 11 lines \(\+2\)/);
+    assert.equal(remoteSha(riverCheckout, "release/1"), "", "a release that grows the code pushes no release branch");
+    sh(riverCheckout, ["rm", "--quiet", "lib/old.ts"]);
+    sh(riverCheckout, ["commit", "--quiet", "-m", "River: remove unused code"]);
+
     // The quick check fails on lint: nothing is released.
     const base = remoteSha(riverCheckout, "river");
     const head = sh(riverCheckout, ["rev-parse", "HEAD"]);
@@ -447,6 +498,8 @@ test("fold, migrations, the quick check, release, settle and the lock protocol w
     assert.match(released.out, /POST https:\/\/api\.github\.com\/repos\/[^ ]+\/issues\/<new PR number>\/labels\n  body: \{"labels":\["run-full-ci"\]\}/);
     assert.match(released.out, /ACTION NEEDED: then enable auto-merge \(merge commit\)/);
     assert.match(released.out, /GitHub CI on this pull request is the full test of this exact commit/);
+    assert.match(released.out, /Lines of code: 9 before, 8 after \(−1\)/);
+    assert.match(released.out, /ZIPs usable in under 3 seconds \(of 50\): phone not measured→measuring/);
     assert.doesNotMatch(released.out, /pnpm gates/);
     assert.equal(remoteSha(riverCheckout, "release/1"), head);
     assert.equal(remoteSha(riverCheckout, "river"), base, "river waits for GitHub CI");
@@ -510,6 +563,7 @@ test("fold, migrations, the quick check, release, settle and the lock protocol w
       sh(work, ["fetch", "--quiet", "origin", "+refs/heads/river:refs/remotes/origin/river"]);
       sh(work, ["checkout", "--quiet", "-f", "-B", lane, "origin/river"]);
       put(work, file, `export const ${lane} = 1;\n`);
+      rmSync(join(work, `lib/old-${lane}.ts`));
       sh(work, ["add", "-A"]);
       sh(work, ["commit", "--quiet", "-m", `READY: ${step}`, "-m", PROOFS]);
       lanes[lane] = sh(work, ["rev-parse", "HEAD"]);

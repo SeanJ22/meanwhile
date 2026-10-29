@@ -1,4 +1,6 @@
 import { requireBallotState } from "../civic-data/state-scopes.ts";
+import type { OfficialLinkingPage } from "../civic-data/source-authority.ts";
+import { saveLinkingCopy } from "../facts/linking-copy.ts";
 import { createHash } from "node:crypto";
 import { gzipSync } from "node:zlib";
 import { recordDoorOutcome } from "../doors/outcome.ts";
@@ -22,8 +24,11 @@ export async function saveVotingSourceDoor(repo: DoorRepository, door: VotingSou
       const matches = heldPages.filter(row => row.value.kind === VOTING_SOURCE_DOOR_KIND &&
         pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
       const prior = matches.find(row => row.value.status !== "SUSPENDED") ?? matches[0] ?? heldPages.find(row => row.value.status !== "SUSPENDED");
-      const mappings = [...new Map([...matches.flatMap(row => [JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor,
-        ...JSON.parse(String(row.value.config.votingMappings ?? "[]")) as VotingSourceDoor[]]), door].map(source => [source.id, source])).values()];
+      // A run that read the door before its retired page moved writes the page back; the vault keeps it once, the door a reference.
+      const mappings = await Promise.all([...new Map([...matches.flatMap(row => [JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor,
+        ...JSON.parse(String(row.value.config.votingMappings ?? "[]")) as VotingSourceDoor[]]), door].map(source => [source.id, source])).values()]
+        .map(async ({ officialLinkingPage: page, ...source }: VotingSourceDoor & { officialLinkingPage?: OfficialLinkingPage }) =>
+          page && !source.linkingPage ? { ...source, linkingPage: await saveLinkingCopy(page, now) } : source));
       const primary = mappings[0]!;
       const holds = mappings.flatMap(source => source.covers.map(kind => isVotingSiteKind(kind) ? "voting-sites" :
         kind === "CANDIDATE_LIST" ? "ballot-contests" : "ballot-measures"));
@@ -211,7 +216,9 @@ export async function recordVotingSourceRead(repo: DoorRepository, door: VotingS
   // Fetched bodies are the cleaned copies, so a rotating key alone is never a change.
   const hash = createHash("sha256").update(read.rawBodies.map(body => createHash("sha256").update(body.bytes).digest("hex")).join("\n")).digest("hex");
   const address = pageAddress(door.url)!;
-  const old = (await repo.listWhere(["config", "url"], address.url)).find(row => row.value.kind === VOTING_SOURCE_DOOR_KIND && row.value.status !== "SUSPENDED" &&
+  const held = await repo.listWhereNarrowed(["config", "url"], address.url, { kind: true, status: true, validators: true, config: ["votingSource"] }) as
+    readonly { id: string; value: Pick<DoorRecord, "kind" | "status" | "validators" | "config"> }[];
+  const old = held.find(row => row.value.kind === VOTING_SOURCE_DOOR_KIND && row.value.status !== "SUSPENDED" &&
     pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);
   if (!old) return;
   const doorId = old.id;

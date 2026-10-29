@@ -69,6 +69,11 @@
       "id": "RB-A9_expand",
       "phase": "expand",
       "hash": "fe8925eac21c924cc0a884f31ff37e78ec440a65aa4989457ffdb4291eaf4872"
+    },
+    {
+      "id": "RIVER-DOORCFG-149_expand",
+      "phase": "expand",
+      "hash": "cdebc77f9f442d688e1e1c3b84565d34738ebe6debd29669585d0830aa0e4794"
     }
   ]
 }

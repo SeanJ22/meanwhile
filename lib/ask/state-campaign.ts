@@ -1,5 +1,6 @@
 import { readCampaignFinanceForPlace,readCampaignMoneyForTarget } from "../funding/state-reader.ts";
 import { campaignFinanceRecordText } from "../funding/state-view.ts";
+import { campaignPeriodText } from "../funding/money-card-view.ts";
 import type { EvidenceGap, EvidenceRecord } from "./evidence.ts";
 import { normalizeName } from "../routing/exact-name.ts";
 import { statesNamedInQuestion } from "./reader-officials.ts";
@@ -52,7 +53,7 @@ export async function resolveStateCampaignRecordsAsk(question: string, divisions
   const query = factReader();
   if (!query) return [];
   const rows = await query(`SELECT DISTINCT p.place_id FROM entity_place p JOIN entity e ON e.id=p.entity_id
-    WHERE e.state=ANY($1::text[]) AND e.kind='person' AND EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=e.id AND f.field LIKE 'campaign-cycle:%' AND f.status='live')
+    WHERE e.state=ANY($1::text[]) AND e.kind='person' AND EXISTS(SELECT 1 FROM fact f WHERE f.entity_id=e.id AND (f.field LIKE 'campaign-cycle:%' OR f.field LIKE 'money-campaign:%') AND f.status='live')
       AND p.place_id ~ ('^ocd-division/country:us/(state|district|territory):' || lower(e.state) || '/')
       AND p.place_id ~ '/(place|county):[^/]+$'
       AND (replace(regexp_replace(p.place_id, '^.*/(place|county):', ''), '_', ' ')=$2
@@ -72,6 +73,14 @@ export async function stateCampaignEvidence(divisions: readonly string[], subjec
       if(!read){unavailable++;continue;}
       if (read.nextCursor) more++;
       if (read.status !== "HELD") { unavailable++; continue; }
+      // A person with rebuilt money is read from it; today's records are read only where there is none.
+      for (const period of read.rebuilt?.periods ?? []) {
+        const id = `money-campaign:${read.rebuilt!.subjectId}:${period.key}`;
+        filers.add(period.filerName);
+        records.set(id, { id, kind: "FINANCE_COMMITTEE", subjectId: subjectId ?? options.aboutSubjectId ?? read.rebuilt!.subjectId, canonicalSubjectId: read.rebuilt!.subjectId,
+          text: campaignPeriodText(period), sourceUrl: period.filingUrl, sourceOrg: period.publisher || period.filerName,
+          retrievedAt: period.checkedAt, publicationDate: period.to, official: true });
+      }
       for (const row of read.records) {
         if (row.sources.length) filers.add(row.committee);
         for (const [index, source] of row.sources.entries()) records.set(`${row.id}:${index}`, {

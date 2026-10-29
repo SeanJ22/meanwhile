@@ -3,7 +3,7 @@ import type { DoorInput, DoorOutcome } from "../core/door.ts";
 import type { SavedCopy } from "../facts/check.ts";
 import type { Query } from "../facts/publish.ts";
 import {
-  campaignClaims, moneyDoorInput,
+  campaignClaims, campaignFieldKey, moneyDoorInput,
   type CampaignPeriodRecord, type FilerIdentity, type FilingPeriod, type FiledAmount, type NamedLine,
 } from "./money-records.ts";
 import { isSmallDonorTotal } from "./small-donors.ts";
@@ -117,6 +117,17 @@ export type HolderMatcher = (filer: FilerIdentity, cycle: number) => Promise<Hol
 
 export interface DetectiveCase { readonly id: string; readonly reason: "HOLDER_TIE"; readonly filer: FilerIdentity; readonly cycle: number; readonly candidates: readonly string[] }
 
+export interface RetireAbsentInput {
+  readonly subjectId: string;
+  readonly fieldPrefix: string;
+  readonly sourceUrl: string;
+  readonly copyId: number;
+  /** Every field under `fieldPrefix` that this read still shows. */
+  readonly stillShown: readonly string[];
+  /** When the source was read. */
+  readonly at: Date;
+}
+
 /** A saved filing, listed without reading it. */
 export interface FilingRef {
   /** The saved bytes' fingerprint. */
@@ -160,6 +171,8 @@ export interface StateMoneyOptions {
   readonly match: HolderMatcher;
   /** The Slide. */
   readonly publish: (input: DoorInput) => Promise<DoorOutcome>;
+  /** The Slide's one rule for a source read in full: facts under `fieldPrefix` that the copy no longer shows move to history. Builder C's version is wired here. */
+  readonly retireAbsent: (input: RetireAbsentInput) => Promise<number>;
   readonly detective: (item: DetectiveCase) => Promise<void>;
 }
 
@@ -169,6 +182,7 @@ export interface StateMoneySummary {
   readonly loaded: number;
   readonly published: number;
   readonly confirmed: number;
+  readonly retired: number;
   readonly refused: readonly { readonly field: string; readonly reason: string }[];
   readonly unmatched: number;
   readonly ties: number;
@@ -184,7 +198,7 @@ export async function loadStateMoney(options: StateMoneyOptions): Promise<StateM
   const groups = new Map<string, FilingRef[]>();
   for (const ref of options.filings) groups.set(`${ref.filerId}|${ref.cycle}`, [...groups.get(`${ref.filerId}|${ref.cycle}`) ?? [], ref]);
   const held = await options.cursor.read([...groups.keys()]);
-  const total = { unchanged: 0, loaded: 0, published: 0, confirmed: 0, unmatched: 0, ties: 0, spendingLinesIgnored: 0,
+  const total = { unchanged: 0, loaded: 0, published: 0, confirmed: 0, retired: 0, unmatched: 0, ties: 0, spendingLinesIgnored: 0,
     smallIndividuals: { amount: 0, donors: 0 }, refused: [] as { field: string; reason: string }[], blanks: [] as BuiltMoney["blanks"][number][] };
   const done: (readonly [string, string])[] = [];
   for (const [key, refs] of groups) {
@@ -215,12 +229,18 @@ export async function loadStateMoney(options: StateMoneyOptions): Promise<StateM
         } else if (match.status === "none") total.unmatched++;
       }
       if (match.status !== "matched") { clean = false; continue; }
-      for (const claim of campaignClaims(match.subjectId, record)) {
+      const claims = campaignClaims(match.subjectId, record);
+      let refused = false;
+      for (const claim of claims) {
         const outcome = await options.publish(moneyDoorInput(claim, record.copy, `money:${options.state}`));
-        if ("refused" in outcome) { total.refused.push({ field: claim.field, reason: outcome.refused }); clean = false; }
+        if ("refused" in outcome) { total.refused.push({ field: claim.field, reason: outcome.refused }); refused = true; }
         else if (outcome.decision === "PUBLISH") total.published++;
         else if (outcome.decision === "CONFIRM") total.confirmed++;
       }
+      // The filing was read in full: a line this period no longer shows moves to history. A refused line is not gone, so it waits.
+      if (refused) clean = false;
+      else total.retired += await options.retireAbsent({ subjectId: match.subjectId, fieldPrefix: campaignFieldKey(record.filer.id, record.period.key),
+        sourceUrl: record.copy.finalUrl, copyId: record.copy.id, stillShown: claims.map(claim => claim.field), at: record.copy.fetchedAt });
     }
     if (clean) done.push([key, fingerprint]);
   }

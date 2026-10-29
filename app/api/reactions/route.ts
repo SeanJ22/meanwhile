@@ -54,7 +54,10 @@ const reactionAuthorityReaders = (divisions: readonly string[]): ReactionAuthori
   },
   refreshFunding: refreshFundingFromPromoted,
   fundingTargets: getFundingTargetIds,
-  stateMoneyTargets: async targetId => (await readCampaignMoneyForTarget(targetId,divisions))?.records.length ? new Set([targetId]) : new Set(),
+  stateMoneyTargets: async targetId => {
+    const read = await readCampaignMoneyForTarget(targetId, divisions);
+    return read?.rebuilt || read?.records.length ? new Set([targetId]) : new Set<string>();
+  },
   contributorTargets: getContributorReactionTargetIds,
   refreshVotes: refreshFederalVotesFromPromoted,
   voteTargets: getVoteIds,

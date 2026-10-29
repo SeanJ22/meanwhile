@@ -17,6 +17,11 @@
 import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 
+/** Both Next chunks and first-paint scripts in public count toward the reader's bytes. */
+export function clientScriptFile(next, src) {
+  return src.startsWith("/_next/") ? join(next, src.slice(7)) : join(dirname(next), "public", src.replace(/^\//, ""));
+}
+
 /** Source paths that ARE the map library. Matched on the module path. */
 const MAP_LIBRARY = /(?:^|[/\\])(?:maplibre-gl|mapbox-gl)(?:[/\\@]|$)/i;
 
@@ -152,7 +157,7 @@ export function attributeByProvenance({ next, srcs }) {
   let chunksWithMaps = 0;
 
   for (const src of srcs) {
-    const file = join(next, src.replace(/^\/_next\//, ""));
+    const file = clientScriptFile(next, src);
     if (!existsSync(file)) continue;
     const code = readFileSync(file, "utf8");
     total += Buffer.byteLength(code);

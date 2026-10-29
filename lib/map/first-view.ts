@@ -3,14 +3,31 @@ import { mapGlyphs } from "./style.ts";
 import { viewportTiles } from "./viewport-tiles.ts";
 import { initialZoomForZip } from "./initial-zoom.ts";
 
-type TileSource = { tiles?: string[]; minzoom?: number; maxzoom?: number; tileSize?: number; scheme?: "xyz" | "tms"; bounds?: [number, number, number, number]; attribution?: string };
+type TileSource = { tiles?: string[]; minzoom?: number; maxzoom?: number; scheme?: "xyz" | "tms"; bounds?: [number, number, number, number]; attribution?: string };
+type MapResource = { data: ArrayBuffer; cacheControl?: string; expires?: string };
 type MapStart = { url: string; vector: Promise<StyleSpecification>; raster: Promise<StyleSpecification> };
-declare global { interface Window { __readerMapStart?: MapStart } }
+declare global { interface Window { __readerMapStart?: MapStart; __readerMapResources?: Map<string, Promise<MapResource>> } }
 
 /** Consume the styles started by the HTML, retaining the provider's complete layers. */
 export function arrivingMapStyle(url: string, software: boolean): Promise<StyleSpecification> | undefined {
   const start = window.__readerMapStart;
   return start?.url === url ? start[software ? "raster" : "vector"] : undefined;
+}
+
+/** Use the early bytes even when browser HTTP caching is disabled. */
+export function arrivingMapRequest(url: string) {
+  return { url: window.__readerMapResources?.has(url) ? `first-map://${url}` : url };
+}
+export async function firstMapProtocol(params: { url: string; type?: string }, controller: AbortController) {
+  const resource = await readMapResource(params.url.slice("first-map://".length), controller.signal);
+  return params.type === "json" ? { ...resource, data: JSON.parse(new TextDecoder().decode(resource.data)) } : resource;
+}
+async function readMapResource(url: string, signal?: AbortSignal): Promise<MapResource> {
+  const resources = window.__readerMapResources, held = resources?.get(url);
+  if (held) { resources!.delete(url); return held; }
+  const response = await fetch(url, { signal });
+  if (!response.ok) throw new Error(`Map resource: ${response.status}`);
+  return { data: await response.arrayBuffer(), cacheControl: response.headers.get("Cache-Control") ?? undefined, expires: response.headers.get("Expires") ?? undefined };
 }
 
 const script = typeof document === "undefined" ? null : document.currentScript as HTMLScriptElement | null;
@@ -25,13 +42,18 @@ if (url && location.pathname === "/") {
     const { tiles, minzoom, maxzoom, bounds, attribution, scheme } = await json<TileSource>(url);
     return Object.fromEntries(Object.entries({ tiles, minzoom, maxzoom, bounds, attribution, scheme }).filter(([, value]) => value !== undefined)) as TileSource;
   };
-  const warm = (url: string) => { void fetch(url).then(response => response.arrayBuffer()).catch(() => {}); };
+  const resources = window.__readerMapResources ??= new Map<string, Promise<MapResource>>();
+  const warm = (url: string) => {
+    if (resources.has(url)) return;
+    const value = readMapResource(url); resources.set(url, value);
+    void value.catch(() => { if (resources.get(url) === value) resources.delete(url); });
+  };
   const point = window.__readerStart?.location;
-  const warmTiles = (source: TileSource) => {
+  const warmTiles = (source: TileSource, raster = false) => {
     if (!source.tiles?.length || !point) return;
     void point.then(p => {
       if (!p) return;
-      const z = Math.min(source.maxzoom ?? 22, Math.max(source.minzoom ?? 0, Math.floor(initialZoomForZip(p.zip))));
+      const z = Math.min(source.maxzoom ?? 22, Math.max(source.minzoom ?? 0, (raster ? Math.round : Math.floor)(initialZoomForZip(p.zip))));
       for (const { x, y } of viewportTiles({ ...p, width: innerWidth, height: innerHeight }, initialZoomForZip(p.zip), z)) {
         warm(source.tiles![(x + y) % source.tiles!.length].replaceAll("{z}", String(z)).replaceAll("{x}", String(x))
           .replaceAll("{y}", String(source.scheme === "tms" ? 2 ** z - 1 - y : y)));
@@ -45,7 +67,7 @@ if (url && location.pathname === "/") {
     const metadata = sourceUrl ? await tileMetadata(base) : {};
     const resolved = { ...metadata, ...inline };
     if (resolved.tiles) resolved.tiles = resolved.tiles.map(tile => new URL(tile, base).href.replaceAll("%7B", "{").replaceAll("%7D", "}"));
-    warmTiles(resolved);
+    warmTiles(resolved, value.type !== "vector");
     return resolved;
   };
   const vector = json<StyleSpecification>(url).then(async style => {
@@ -70,7 +92,7 @@ if (url && location.pathname === "/") {
     return { ...style, sources: Object.fromEntries(sources) };
   });
   const raster = tileMetadata(url.replace("/style.json?", "/tiles.json?")).then(metadata => {
-    warmTiles({ ...metadata, tileSize: 512 });
+    warmTiles(metadata, true);
     return { version: 8, transition: { duration: 0, delay: 0 },
       glyphs: mapGlyphs(url),
       sources: { basemap: { ...metadata, type: "raster", tileSize: 512 } },

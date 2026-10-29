@@ -79,7 +79,7 @@ import {
 } from "@/lib/map/marker-pool";
 import { fanOffsets, findCollisionGroups } from "@/lib/map/spiderfy";
 
-import { arrivingMapStyle } from "@/lib/map/first-view";
+import { arrivingMapStyle, arrivingMapRequest, firstMapProtocol } from "@/lib/map/first-view";
 
 /** Where the map should be looking. A new object means a new fly-to. */
 export interface CameraTarget {
@@ -339,6 +339,7 @@ export function MapCanvas({
     // scripts/build-map-worker.mjs bundles a copy here. Must precede the first map.
     prepareMapWorkers();
     addProtocol("pmtiles", boundaryProtocol);
+    addProtocol("first-map", firstMapProtocol);
 
     // No key: fall through to the plain ground colour and say so, never another provider.
     const basemap = resolveBasemap(documentTheme());
@@ -351,6 +352,7 @@ export function MapCanvas({
     const container = containerRef.current;
     const map = startMap(() => new MapLibreMap({
       container,
+      transformRequest: arrivingMapRequest,
       ...(camera
         ? { center: [camera.lng, camera.lat] as [number, number], zoom: initialZoomForZip(camera.zip) }
         : remembered
@@ -466,8 +468,9 @@ export function MapCanvas({
     window.addEventListener("keydown", onKeyDown);
 
     const degradeInMotion = raster.kind === "software";
+    let presented = false;
     const enterMotionDegrade = () => {
-      if (!degradeInMotion) return;
+      if (!degradeInMotion || !presented) return;
       holdMapPresentation(map);
       shellRef.current?.setAttribute("data-camera-moving", "1");
       setPresentationVisible(map, false);
@@ -538,6 +541,7 @@ export function MapCanvas({
     };
     map.on("moveend", reportBounds);
     map.once("load", () => {
+      presented = true;
       reportBounds();
       setOfficeMap(map);
     });

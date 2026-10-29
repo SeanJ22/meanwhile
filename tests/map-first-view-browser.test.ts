@@ -5,7 +5,7 @@ import { build } from "esbuild";
 import { launchGuarded } from "../scripts/browser.mts";
 
 test("HTML starts the full style, fonts and only visible tiles before the page module", async () => {
-  const bundle = await build({ entryPoints: ["lib/map/first-view.ts"], bundle: true, write: false, format: "iife", platform: "browser" });
+  const bundle = await build({ stdin: { resolveDir: process.cwd(), contents: `import * as map from "./lib/map/first-view.ts"; window.consumeFirstMap=(url,type)=>map.firstMapProtocol({...map.arrivingMapRequest(url),type},new AbortController());` }, bundle: true, write: false, format: "iife", platform: "browser" });
   const requests: string[] = [];
   const server = createServer((request, response) => {
     const url = request.url!; requests.push(url);
@@ -21,6 +21,7 @@ test("HTML starts the full style, fonts and only visible tiles before the page m
       tilejson: "3.0.0", name: "provider metadata", minzoom: 0, maxzoom: 14,
       tiles: [`${origin}/${url === "/source.json" ? "vector" : "raster"}/{z}/{x}/{y}`],
     }));
+    if (url === "/sprite.json") return response.setHeader("Content-Type", "application/json").end(JSON.stringify({ icon: { width: 1 } }));
     response.end(new Uint8Array());
   });
   await new Promise<void>(resolve => server.listen(0, "127.0.0.1", resolve));
@@ -43,5 +44,13 @@ test("HTML starts the full style, fonts and only visible tiles before the page m
     assert.ok(!requests.some(url => /\/(vector|raster)\/10\//.test(url)), "no off-screen overview delays the first view");
     assert.ok(!requests.includes("/offscreen.json"), "off-screen sources never hold up the first style");
     assert.ok(!requests.some(url => url.startsWith("/api/")), "map warmup adds no database-backed request");
+    const before = requests.length;
+    await page.evaluate(async ({ origin, tile }) => {
+      const consume = (window as unknown as { consumeFirstMap: (url: string, type: string) => Promise<{ data: unknown }> }).consumeFirstMap;
+      const sprite = await consume(`${origin}/sprite.json`, "json");
+      if (JSON.stringify(sprite.data) !== '{"icon":{"width":1}}') throw new Error("Sprite metadata lost");
+      await consume(`${origin}${tile}`, "arrayBuffer");
+    }, { origin, tile: requests.find(url => url.startsWith("/vector/11/"))! });
+    assert.equal(requests.length, before, "renderer consumes the first tile and sprite without a second request, even with HTTP caching disabled");
   } finally { await browser.close(); await new Promise<void>(resolve => server.close(() => resolve())); }
 });

@@ -118,6 +118,32 @@ test("HTML success pages and provider failures never count as working or expose 
   }) as typeof fetch)).working, true);
 });
 
+test("key checks use current provider routes, reporting scope and the dedicated map test origin", async t => {
+  const { store } = await fixture(t);
+  await store.save("WTP_MAPTILER_SMOKE_KEY", SECRET, "maptiler", AT);
+  await testDueKeys(store, AT, undefined, async (service, value, _fetch, companion) => testKey(service, value,
+    (async (_url, init) => {
+      assert.equal(new Headers(init?.headers).get("origin"), "http://maptiler-smoke.localhost");
+      return Response.json({ version: 8, layers: [{}] });
+    }) as typeof fetch, companion));
+  assert.equal((await store.list())[0].working, true);
+  for (const [service, path, body] of [
+    ["lda", "https://lda.gov/api/v1/filings/", { results: [{}] }],
+    ["sam", "https://api.sam.gov/opportunities/v2/search", { totalRecords: 0, opportunitiesData: [] }],
+    ["neon", "https://console.neon.tech/api/v2/users/me/organizations", { organizations: [] }],
+  ] as const) {
+    assert.equal((await testKey(service, SECRET, (async (url, init) => {
+      assert.equal(String(url).split("?")[0], path);
+      assert.equal(init?.redirect, "error");
+      return Response.json(body);
+    }) as typeof fetch)).working, true);
+  }
+  assert.equal((await testKey("neon", SECRET, (async url => {
+    assert.equal(new URL(String(url)).searchParams.get("org_id"), "existing-billing-account");
+    return Response.json({ projects: [] });
+  }) as typeof fetch, { neonOrganization: "existing-billing-account" })).working, true);
+});
+
 test("search keys are checked against a rejected control without submitting paid searches", async () => {
   for (const service of ["brave", "exa"] as const) {
     let calls = 0;

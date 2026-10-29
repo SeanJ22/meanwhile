@@ -19,6 +19,8 @@ export function keyProblems(keys: readonly KeyView[], at: string): readonly Brie
   });
 }
 
+let checkFailuresAfterStart = true;
+
 /** Uses the same control-plane connection as Admin. No Admin request or Google session is involved. */
 export async function keysRunnerPass(store: KeysStore = productionKeysStore(), at = new Date().toISOString()): Promise<void> {
   if (process.env.WTP_RUNTIME_MODE === "production") {
@@ -28,6 +30,10 @@ export async function keysRunnerPass(store: KeysStore = productionKeysStore(), a
       env.GH_TOKEN = runtimeGithubCredential({ root: process.cwd(), env }) ?? undefined;
     }
     await importExistingKeys(env, store, at);
+    if (checkFailuresAfterStart) {
+      for (const row of await store.list()) if (!row.working) await store.retest(row.name, at);
+      checkFailuresAfterStart = false;
+    }
   }
   await testDueKeys(store, at);
   const keys = await store.list();

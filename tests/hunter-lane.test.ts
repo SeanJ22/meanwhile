@@ -121,8 +121,7 @@ test("CH-24 lane: the runner starts the lane only under the switch, names one re
   assert.ok(!runner.includes("process.env.WTP_HUNTER_LANE_ARMING ="));
   assert.match(runner, /\{ id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS \+ HUNTER_WORKER_WALL_MS, run: runHunterLane \}/);
   assert.match(runner, /noProgressMs: RUNTIME_NO_PROGRESS_MS,\n    onStdout: \(_id, output\) => process\.stdout\.write\(output\),\n    onStderr: \(_id, output\) => process\.stderr\.write\(output\),\n    onStarted: \(_id, child\) => \{ hunterLaneChild = child; \},/);
-  assert.equal(runner.match(/drainHunterLane\(\);/g)?.length, 3, "both release paths and a breaker pause drain the lane");
-  assert.match(runner, /if \(!admitJobLaunch\("hunter-lane"\)\) drainHunterLane\(\);/);
+  assert.equal(runner.match(/drainHunterLane\(\);/g)?.length, 2, "both release paths drain the lane; the breaker never stops it");
   const lane = readFileSync(new URL("../scripts/hunter-lane.mts", import.meta.url), "utf8");
   assert.ok(!/deadlineMs,\n/.test(lane.slice(lane.indexOf("runLeaseWorkerProcesses({"))), "no worker is ended mid-task by the lane's life");
   assert.match(lane, /orderPending: async ids => !handingOut\(\) \? \[\] :/);

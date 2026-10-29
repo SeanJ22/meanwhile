@@ -52,13 +52,12 @@ test("a finished receipt no longer blocks a new send of the same action", () => 
 test("only the kinds a real registry action carries out are wired, each to its own gateway type", () => {
   assert.deepEqual([...connectedKinds()].sort(), [
     "ballot-publish",
-    "cancel-send", "data-switch-off", "data-switch-on", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "hunt-stop-all", "hunt-stop-state", "job-release", "leads-send", "officials-check", "order-schedule", "order-unschedule", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
+    "cancel-send", "data-switch-off", "data-switch-on", "global-ceiling", "global-paid", "global-paid-resume", "global-runner-pause", "global-runner-resume", "global-search-off", "global-search-on", "hunt-limit", "hunt-pause", "hunt-resume", "hunt-start", "hunt-start-many", "hunt-stop", "hunt-stop-all", "hunt-stop-state", "leads-send", "officials-check", "order-schedule", "order-unschedule", "send-agents", "setting-set", "setting-undo", "target-clear", "target-set",
   ]);
   assert.equal(actionDef("cancel-send").gateway?.type, "fleet.cancelDispatch");
   assert.equal(actionDef("send-agents").gateway?.type, "fleet.deployHere");
   assert.equal(actionDef("global-runner-pause").gateway?.type, "runner.pause");
   assert.equal(actionDef("global-runner-resume").gateway?.type, "runner.resume");
-  assert.equal(actionDef("job-release").gateway?.type, "jobs.release");
   assert.equal(actionDef("global-paid").gateway?.type, "research.pause");
   assert.equal(actionDef("global-paid-resume").gateway?.type, "research.resume");
   assert.equal(actionDef("global-ceiling").gateway?.type, "config.setFleetSpendCeiling");

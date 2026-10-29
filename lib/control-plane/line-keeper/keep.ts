@@ -31,10 +31,10 @@ export function withKeeperFixes(config: AdminConfig, hour: LineHour): AdminConfi
     key:`line-keeper:${problem.key}`,what:problem.says,owner:problem.owner,next:problem.next,
   }));
   const problems=[...latest.problems.filter(p=>!p.key.startsWith("line-keeper:")),...groupCountProblems(counted),...observations];
-  const breakerUpdates=(hour.breakerEvents??[]).map(event=>({id:`job-breaker:${event.id}`,
-    what:event.action === "PAUSE" ? `${jobLabel(event.job!)} paused after ${Number(event.gb).toFixed(3)} GB in one hour. It waits until you release it in Admin.`
-      : `${jobLabel(event.job!)} was released and may start again.`,
-    when:formatEastern(event.checked_at),label:"Proven",isWin:false,before:null,after:null,evidenceHref:null}));
+  const breakerUpdates=(hour.breakerEvents??[]).map(event=>({id:`job-breaker:${event.id}:${event.kind}`,
+    what:event.kind === "SLOW" ? `${jobLabel(event.job)} read ${(event.bytes/1e9).toFixed(3)} GB in one hour against its normal ${(event.normal/1e9).toFixed(3)} GB. It keeps running with launches ${event.times} times further apart until it reads at its normal again; its fix is first on the builders' list.`
+      : `${jobLabel(event.job)} reads at its normal again and is back to its usual pace.`,
+    when:formatEastern(event.kind === "SLOW" ? event.at : event.back!),label:"Proven",isWin:false,before:null,after:null,evidenceHref:null}));
   const ids=new Set(breakerUpdates.map(update=>update.id));
   const updates=[...breakerUpdates,...latest.updates.filter(update=>!ids.has(update.id))];
   return {...next,latestBrief:{...latest,updates,lineKeeperOnly:next.latestBrief?.day===day?next.latestBrief.lineKeeperOnly:true,createdAt:hour.measuredAt,problems},updatedAt:hour.measuredAt};
@@ -83,7 +83,7 @@ export async function runLineKeeper(control:Sql,reader:Sql,at:string,options:{re
   let breakerEvents: Awaited<ReturnType<typeof readJobBreakerEvents>> = [];
   try { breakerEvents=await readJobBreakerEvents(control,input.window.from,input.window.through); }
   catch { readProblems.push({key:"job-breaker:unread",where:"Job transfer protection",
-    says:"The hourly pause and resume report could not be read.",owner:"the runner workers",next:"Restore the job transfer control log."}); }
+    says:"The hourly slowed-jobs report could not be read.",owner:"the runner workers",next:"Restore the job transfer control log."}); }
   const hour:LineHour={...input.window,measuredAt:at,counts:input.counts,waiting:input.waiting,
     breakerEvents,problems:[...countProblems(input.counts,input.previous,input.waiting,at),...readProblems],own:{bytesRead:Math.max(0,ownBytes()-baseline)}};
   const oldest:Record<string,{n:number;at:string|null}>={};

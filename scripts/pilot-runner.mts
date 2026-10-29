@@ -123,7 +123,7 @@ import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
 import { runtimeContractRetry, runtimeContractContinues, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
 import { JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB } from "../lib/control-plane/job-transfer-breaker.ts";
-import { admitJobLaunch, JOB_BREAKER_PATH_ENV } from "../lib/control-plane/job-breaker-local.ts";
+import { admitJobLaunch, JOB_BREAKER_PATH_ENV, JOB_SLOWED_WORDS } from "../lib/control-plane/job-breaker-local.ts";
 import { JobTransferBreaker } from "../lib/control-plane/job-breaker-loop.ts";
 import { withDatabaseJob, processNeonBytes } from "../lib/db/transfer-by-caller.ts";
 import { isControlPlaneRequestTimeout } from "../lib/control-plane/repository/request-bounds.ts";
@@ -234,20 +234,17 @@ async function checkJobTransfers(): Promise<void> {
     }
     await jobBreaker.check();
   });
-  // The hunter lane's one child lives up to 55 minutes; a pause asks it to finish its tasks in hand and take no more.
-  if (!admitJobLaunch("hunter-lane")) drainHunterLane();
-  if (!admitJobLaunch("legistar-members")) drainMemberLane();
 }
 function jobTransferTick(): Promise<void> {
   if (jobBreakerWork) return jobBreakerWork;
   jobBreakerWork = checkJobTransfers().catch(error => {
-    console.error(`  job transfer breaker check failed; existing job holds stay in place: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`  job transfer breaker check failed; each job keeps its current pace: ${error instanceof Error ? error.message : String(error)}`);
   }).finally(() => { jobBreakerWork = null; });
   return jobBreakerWork;
 }
 function jobLaunchAllowed(job: string): boolean {
   const admitted = admitJobLaunch(job);
-  if (!admitted) console.log(`  job transfer breaker: ${job} is paused until released in Admin; its work remains owed`);
+  if (!admitted) console.log(`  job transfer breaker: ${job} ${JOB_SLOWED_WORDS}`);
   return admitted;
 }
 const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
@@ -1331,7 +1328,7 @@ async function runPlatformCensus(deadlineMs: number): Promise<void> {
 const placePageMemory = routineProcessSlots({ admissionsOpen: () => !runtimeAdmissionsHeld });
 let placePagePauseUnread = false;
 async function placePagesAdmitted(): Promise<boolean> {
-  // Asked before every turn, so a breaker pause stops the run within one turn of the check that wrote it.
+  // Asked before every turn: each turn is a launch, so a slowed run spaces its turns out.
   if (runtimeAdmissionsHeld || !jobLaunchAllowed("place-pages")) return false;
   try {
     const repos = await ownerRepositories();
@@ -1364,7 +1361,6 @@ async function runPlacePageTurn(deadlineMs: number): Promise<PlacePageTurn> {
 
 async function runPlacePages(deadlineMs: number): Promise<void> {
   if (provider !== "postgres" || canary) return;
-  if (!jobLaunchAllowed("place-pages")) return;
   await drainPlacePageQueue({ deadlineMs, admitted: placePagesAdmitted, turn: runPlacePageTurn, log: line => console.log(line) });
 }
 
@@ -1378,7 +1374,7 @@ async function runDoorProbes(deadlineMs: number): Promise<void> {
   const repos = await ownerRepositories();
   if (!repos) return;
   await runStandingDoorProbes({ repos, readerQuery: readerFactDb().query, deadlineMs,
-    admitted: () => !runtimeAdmissionsHeld && admitJobLaunch(DOOR_PROBES_JOB.id), log: line => console.log(line) });
+    admitted: () => !runtimeAdmissionsHeld, log: line => console.log(line) });
 }
 
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([

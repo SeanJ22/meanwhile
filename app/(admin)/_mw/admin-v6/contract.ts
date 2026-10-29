@@ -93,8 +93,6 @@ export function actionInput(kind: ActionKind, s: ActionInputSource): Readonly<Re
       return {};
     case "officials-check":
       return { placeKey: s.target || s.scopeKey, note: s.words.trim() || null };
-    case "job-release":
-      return { job: s.target };
     case "decide":
       return { decisionId: s.target, option: s.option, words: s.words.trim() || null };
     case "hunt-start": {

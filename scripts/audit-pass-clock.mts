@@ -138,7 +138,7 @@ export function auditPassClock(options: AuditPassClockOptions): AuditPassClock {
   const tick = (): string | null => {
     if (current !== null || timer === null) return null;
     const starts = readStarts(options.statePath);
-    const pass = duePasses(passes, starts, now()).find(pass => admitJobLaunch(`audit-pass:${pass.id}`, options.env()));
+    const pass = duePasses(passes, starts, now()).find(pass => admitJobLaunch(`audit-pass:${pass.id}`, options.env(), now()));
     if (!pass) return null;
     const startedAt = new Date(now()).toISOString();
     try {

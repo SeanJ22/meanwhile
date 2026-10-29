@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
 import { hourStart } from "../db/transfer-by-caller.ts";
 import { saveBreakerSnapshot } from "./job-breaker-local.ts";
-import { evaluateJobBreaker, JOB_TRANSFER_SQL, jobTransfers, pausedStates, readJobBreakerLatest, readJobReleases, writeJobBreakerEvents,
-  type BreakerSql, type JobBreakerSnapshot } from "./job-transfer-breaker.ts";
+import { evaluateJobBreaker, JOB_TRANSFER_SQL, jobTransfers, readJobBreakerState, readJobNormalSeed, writeJobBreakerEvents,
+  type BreakerSql, type JobBreakerSnapshot, type JobTransfer } from "./job-transfer-breaker.ts";
 
 export interface BreakerOwnTransfer { hour: string; requests: number; bytes: number }
 interface Options {
@@ -14,10 +14,12 @@ interface Options {
   log?: (line: string) => void;
 }
 
-/** The standing parent owns this loop. Children only consult its atomic local snapshot. */
+/** The standing parent owns this loop. Launches only consult its atomic local snapshot. */
 export class JobTransferBreaker {
   readonly #options: Options;
   #snapshot: JobBreakerSnapshot | null = null;
+  /** The last check's totals: when the hour turns they are the finished hour, read up to ten minutes before its end. */
+  #lastRows: JobTransfer[] | undefined;
   #running: Promise<void> | null = null;
   constructor(options: Options) { this.#options = options; }
   check(now = Date.now()): Promise<void> {
@@ -25,42 +27,39 @@ export class JobTransferBreaker {
     this.#running = this.#check(now).finally(()=>{this.#running=null;});
     return this.#running;
   }
-  /** The control plane is the record; a pause still in this host's outbox stands unless a later entry for that job is held. */
+  /** The newer of this host's file and the control plane's last check. Only a breaker with no saved state learns a first normal from the last day. */
   async #start(now: number): Promise<JobBreakerSnapshot> {
-    let cached: JobBreakerSnapshot | null = null;
+    let cached: Partial<JobBreakerSnapshot> | null = null;
     try { cached = JSON.parse(readFileSync(this.#options.path,"utf8")); } catch { /* A new host reads the control plane. */ }
-    const latest = await readJobBreakerLatest(this.#options.control), states = pausedStates(latest);
-    for (const event of cached?.pendingEvents ?? []) {
-      const held = latest.find(row => row.job === event.job);
-      if (event.action === "PAUSE" && event.job && (!held || Date.parse(held.at) < Date.parse(event.checked_at)))
-        states[event.job] = { job: event.job, mode: "PAUSED", at: event.checked_at, hour: event.hour, offsetBytes: 0 };
-    }
-    return { checkedAt: new Date(now).toISOString(), states, releasesThrough: latest.reduce<string | null>((newest, row) =>
-      newest !== null && newest >= row.at ? newest : row.at, null), ...(cached?.pendingEvents?.length ? { pendingEvents: cached.pendingEvents } : {}) };
+    const saved = await readJobBreakerState(this.#options.control);
+    const local = cached && typeof cached.hour === "string" && cached.jobs && typeof cached.checkedAt === "string" ? cached as JobBreakerSnapshot : null;
+    const state = local && (!saved?.state || local.checkedAt >= saved.checkedAt) ? local : saved?.state
+      ?? { hour: hourStart(now), jobs: await readJobNormalSeed(this.#options.reader, now) };
+    const pendingEvents = cached?.pendingEvents?.filter(event => event.action === "CHECK");
+    return { checkedAt: new Date(now).toISOString(), hour: state.hour, jobs: state.jobs, ...(pendingEvents?.length ? { pendingEvents } : {}) };
   }
   async #check(now: number): Promise<void> {
-    const options = this.#options;
+    const options = this.#options, at = new Date(now).toISOString(), hour = hourStart(now);
     this.#snapshot ??= await this.#start(now);
     const before = options.meter();
-    const releases = await readJobReleases(options.control, this.#snapshot.releasesThrough ?? null);
-    const rows = jobTransfers(await options.reader.query(JOB_TRANSFER_SQL,[hourStart(now)]));
-    const result = evaluateJobBreaker({now,rows,states:this.#snapshot.states,releases});
-    const releasesThrough = [this.#snapshot.releasesThrough ?? null, releases.at(-1)?.at ?? null].reduce((a, b) => a === null || (b !== null && b > a) ? b : a);
-    const own = options.meter(), currentOwn = own.find(part=>part.hour === hourStart(now));
-    const pending: JobBreakerSnapshot = {...result.snapshot,releasesThrough,pendingEvents:[...this.#snapshot.pendingEvents??[],...result.events,{
-      id:`check:${new Date(now).toISOString()}`,checked_at:new Date(now).toISOString(),hour:hourStart(now),action:"CHECK",
-      job:null,gb:(currentOwn?.bytes??0)/1e9,top_table:"database_transfer_hourly",
-      bytes_per_request:currentOwn?.requests?currentOwn.bytes/currentOwn.requests:null,state:null,
-      detail:{jobs:rows.length,before,throughRead:own,release:options.release(),
-        pauses:result.events.map(event=>event.job),released:result.released},
+    const rows = jobTransfers(await options.reader.query(JOB_TRANSFER_SQL,[hour]));
+    const { state, changes } = evaluateJobBreaker({ now, rows, state: this.#snapshot, closed: this.#lastRows });
+    this.#lastRows = rows;
+    const own = options.meter(), currentOwn = own.find(part=>part.hour === hour);
+    // Only the newest check carries the state, so an outbox held through an outage stays small.
+    const pending: JobBreakerSnapshot = {checkedAt:at,...state,pendingEvents:[...(this.#snapshot.pendingEvents??[]).map(event=>({...event,state:null})),{
+      id:`check:${at}`,checked_at:at,hour,action:"CHECK",job:null,gb:(currentOwn?.bytes??0)/1e9,top_table:"database_transfer_hourly",
+      bytes_per_request:currentOwn?.requests?currentOwn.bytes/currentOwn.requests:null,state,
+      detail:{jobs:rows.length,before,throughRead:own,release:options.release(),changes},
     }]};
     // An uncertain control write leaves an idempotent outbox beside the enforced decision.
     saveBreakerSnapshot(options.path,pending);
     this.#snapshot=pending;
     await writeJobBreakerEvents(options.control,pending.pendingEvents!);
-    this.#snapshot={...result.snapshot,releasesThrough};
+    this.#snapshot={checkedAt:at,...state};
     saveBreakerSnapshot(options.path,this.#snapshot);
-    for(const event of result.events) options.log?.(`PAUSE ${event.job}; ${event.gb.toFixed(3)} GB; ${event.detail.reason}`);
-    for(const job of result.released) options.log?.(`RELEASED ${job}; new launches allowed`);
+    for(const change of changes) options.log?.(change.kind === "SLOW"
+      ? `SLOW ${change.job}; ${(change.bytes/1e9).toFixed(3)} GB against its normal ${(change.normal/1e9).toFixed(3)} GB; launches ${change.times}x further apart`
+      : `NORMAL ${change.job}; back at its ordinary pace`);
   }
 }

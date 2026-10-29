@@ -8,8 +8,8 @@ export interface RoutineJob {
 }
 
 /**
- * Work the routine and publish-now runners do in their own process. Each is metered under its own name, pauses alone when it
- * passes 0.5 GB in an hour, and runs again when the owner releases it in Admin. Source children and the reads made for one
+ * Work the routine and publish-now runners do in their own process. Each is metered under its own name and slows alone when it
+ * reads far more than its normal. Source children and the reads made for one
  * source (its portrait list, its voting doors, its settlement) run under that source's task id. Bytes per run are the busiest
  * measured hour of the files each job calls (database_transfer_hourly, Oct 26–27); box-fact-audit and state-pointer-retirement
  * had no separate measurement and carry conservative figures.
@@ -33,11 +33,9 @@ export const ROUTINE_JOBS = {
   statePointerRetirement: { id: "state-pointer-retirement", label: "Old state data cleanup", databaseBytesPerRun: 10_000_000 },
 } as const satisfies Record<string, RoutineJob>;
 
-export const JOB_HELD_WORDS = "paused until released in Admin; its work remains owed";
-
-/** In-process work runs under its own meter once its breaker admits it. A paused job is skipped; its fallback stands and its work stays owed. */
-export async function runRoutineJob<T>(job: Pick<RoutineJob, "id">, run: () => Promise<T>, held: (id: string) => T,
+/** In-process work runs under its own meter. A job slowed for reading far more than its normal skips a turn now and then; its fallback stands and its work stays owed. */
+export async function runRoutineJob<T>(job: Pick<RoutineJob, "id">, run: () => Promise<T>, slowed: (id: string) => T,
   env: NodeJS.ProcessEnv = process.env): Promise<T> {
-  if (!admitJobLaunch(job.id, env)) return held(job.id);
+  if (!admitJobLaunch(job.id, env)) return slowed(job.id);
   return withDatabaseJob(job.id, run);
 }

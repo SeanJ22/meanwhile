@@ -6,15 +6,26 @@
  * hourly allowance, Retry-After and refusals hold exactly as for every other reader. A breaker pause or a release
  * drain stops new looks within the turn.
  */
+import { ADMIN_CONFIG_ID, type AdminConfig } from "../control-plane/gateway/admin-config.ts";
+import type { ControlPlaneRepositories } from "../control-plane/repository/types.ts";
+import { websiteSizeFromHoldings, type WebsiteSizeForUrl } from "../control-plane/scheduler/host-supervision.ts";
+import { HOST_CONCURRENCY_DEFAULT, HOST_CONCURRENCY_SETTING } from "../control-plane/scheduler/provider-limits.ts";
+import { readSetting } from "../control-plane/settings.ts";
+import { withDatabaseJob } from "../db/transfer-by-caller.ts";
+import type { Query } from "../facts/publish.ts";
+import { installMeetingClockFrom, MEETING_SETTING_DEFAULTS } from "../meetings/settings.ts";
+import { stateOfPlace } from "../method/fix-map.ts";
 import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
+import { hotMeetingPartitions } from "./hot-partitions.ts";
 import { nextProbeAtMs, probeHolds, runHourlyProbes, type ProbeRunReport } from "./hourly-check.ts";
+import { doorPartitionIds } from "./mission-refresh.ts";
 import type { ProbeFetch } from "./probe.ts";
+import { pacedProbeFetch } from "./probe-fetch.ts";
 import type { DoorRecord, DoorRepository } from "./registry.ts";
+import { readRunnerDoors } from "./runner-reads.ts";
 
-/** One turn. Its open-door list is read in full once, so a longer turn reads less. */
+/** One turn. Its open-door list is read in full once, so a longer turn reads less. A look already started when it ends still finishes. */
 export const DOOR_PROBE_TURN_MS = 60 * 60_000;
-/** Past its turn a look already started still finishes (one page timeout and its write) before the lane ends the process. */
-export const DOOR_PROBE_TURN_GRACE_MS = 60_000;
 /** Doors (changed rows only) and hot partitions are read again this often within a turn. */
 export const DOOR_PROBE_REFRESH_MS = 10 * 60_000;
 /** Rounds start at least this far apart, so a door whose look cannot be stored is not asked again at once. */
@@ -25,8 +36,6 @@ const SLEEP_STEP_MS = 5_000;
 const QUIET_LINE_MS = 5 * 60_000;
 /** The lane's clock: a turn that ended is followed by the next within this. */
 const DOOR_PROBE_LANE_EVERY_MS = 60_000;
-/** One turn at a time on the host. */
-export const DOOR_PROBES_SINGLETON_PORT = 49_376;
 
 /**
  * Its own meter, breaker and Admin release. Bytes per turn (one hour), from the Oct 28 21:00 UTC hour of this job:
@@ -37,7 +46,60 @@ export const DOOR_PROBES_SINGLETON_PORT = 49_376;
 export const DOOR_PROBES_JOB = { id: "door-probes", databaseBytesPerRun: 18_000_000 } as const;
 
 export function doorProbesLane(run: (deadlineMs: number) => Promise<void>): IndependentRuntimeLane {
-  return { id: DOOR_PROBES_JOB.id, everyMs: DOOR_PROBE_LANE_EVERY_MS, budgetMs: DOOR_PROBE_TURN_MS + DOOR_PROBE_TURN_GRACE_MS, run };
+  return { id: DOOR_PROBES_JOB.id, everyMs: DOOR_PROBE_LANE_EVERY_MS, budgetMs: DOOR_PROBE_TURN_MS, run };
+}
+
+export interface StandingDoorProbeInput {
+  readonly repos: Pick<ControlPlaneRepositories, "adminConfig" | "doors" | "websitePacing">;
+  /** The reader database, for the hot-partition statement. */
+  readonly readerQuery: Query;
+  /** The lane's deadline: no look starts after it. */
+  readonly deadlineMs: number;
+  /** False once the breaker pauses door-probes or the runner holds admissions for a release. */
+  readonly admitted: () => boolean;
+  readonly log: (line: string) => void;
+  readonly fetchImpl?: typeof fetch;
+  readonly clock?: () => number;
+  readonly sleep?: (ms: number) => Promise<void>;
+}
+
+/**
+ * One turn inside the standing runner's own process. It starts no child, so it never waits for host memory that bulk
+ * workers hold: its memory is the open-door list's probe fields and a few pages in flight. Every database read is
+ * metered under door-probes, so the breaker, Admin's pause and release and the hourly meter rows name it.
+ */
+export function runStandingDoorProbes(input: StandingDoorProbeInput): Promise<DoorProbeTurnReport> {
+  return withDatabaseJob(DOOR_PROBES_JOB.id, async () => {
+    const { repos } = input;
+    // The owner's check clock (the hour, the seven-day window). The owner's in-flight bound (fetch.hostConcurrency) is how
+    // many websites one turn looks at side by side; each website still has one request in flight at a time.
+    const owner = (await repos.adminConfig.readNarrowed(ADMIN_CONFIG_ID,
+      { settings: [HOST_CONCURRENCY_SETTING, ...Object.keys(MEETING_SETTING_DEFAULTS)] }))?.value as AdminConfig | null ?? null;
+    installMeetingClockFrom(owner);
+    const websites = readSetting(owner, HOST_CONCURRENCY_SETTING, HOST_CONCURRENCY_DEFAULT);
+    let sizeFor: WebsiteSizeForUrl = () => null;
+    let sizeStates = "";
+    const report = await runDoorProbeTurn({
+      repo: repos.doors,
+      readDoors: async () => {
+        const listed = await readRunnerDoors(repos.doors, ["status"], "OPEN", "probes");
+        const states = [...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))].sort();
+        if (states.join() !== sizeStates) { sizeStates = states.join(); sizeFor = websiteSizeFromHoldings(states); }
+        return listed;
+      },
+      readHot: (doors) => hotMeetingPartitions(input.readerQuery, (input.clock ?? Date.now)(), doors.flatMap(doorPartitionIds)),
+      fetchFn: pacedProbeFetch({ pacing: repos.websitePacing, sizeFor: (url) => sizeFor(url), clock: input.clock, fetchImpl: input.fetchImpl }),
+      websites,
+      admitted: input.admitted,
+      deadlineMs: input.deadlineMs,
+      log: input.log,
+      clock: input.clock,
+      sleep: input.sleep,
+    });
+    input.log(`RCD_PROBE turn ended (${report.ended === "HELD" ? "paused or drained" : "its hour is up"}): ${report.rounds} round(s), ` +
+      `${report.looked} door(s) looked at with ${report.requests} request(s); ${report.changed} changed, ${report.failed} failed, ${report.waiting} waited on their website`);
+    return report;
+  });
 }
 
 export interface DoorProbeTurnInput {

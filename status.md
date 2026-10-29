@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 147 on runner (~6:17 AM EDT; a33c7a264). Release 148 live on site 6:20 AM (c93705e75, river dc862583b); runner to follow. place-pages running again (147's breaker never pauses).
+build_state: LIVE: release 148 (site 6:20 AM, runner ~6:43 AM EDT; main c93705e75, river dc862583b). Research cycle running again (started 6:48 AM). Pin pass walking windows; first published pin not yet seen — checking 7:11 AM.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T10:22:00Z
+heartbeat: 2026-10-29T10:58:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -198,6 +198,8 @@ heartbeat: 2026-10-29T10:22:00Z
   - 147 release numbers (PR #865 block, shown in Admin Changes): code 696,315 → 695,446 (−869); ZIPs usable <3 s, same 50: phone 22→36, tablet 28→41, desktop 23→33. 147 changed no reader code, so the gain is most likely lighter early-morning load; noted in the PR. Facts and reads after: measuring.
   - CI on 147 first failed shard 4: tests/river-adapter-streams.test.ts fixture grew code and the new refusal stopped it; River fixed the fixture (3694db1a4), reproduced first, 25/25.
 - 148 merged 6:16 AM (PR #866: research runs again + stalled-job flag; meeting pins publish again), site 6:20 AM. Runner switch, research cycle start and pin cursor next.
+- 148 live on runner ~6:43 AM: research cycle started 6:48 AM (first since Oct 26 00:47Z); heartbeat `jobs` record present (line keeper). Pin pass: held-meeting-pins:window cursor exists for the first time, 1,298 sittings marked by 6:51 AM, 0 held-pin map_pin facts live yet. The 6:50 AM routine pass's pin failure is now per-site fetch errors (404/403/timeouts), not the query timeout.
+  - ZIPs on 148, same 50: run 1 (6:37 AM) phone 34, tablet 44, desktop 39; run 2 (6:46 AM) phone 44, tablet 48, desktop 44. Same code minutes apart moves up to 10 ZIPs: one run can't call a release worse. PR #866 block holds run 2 with run 1 noted.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

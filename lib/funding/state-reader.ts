@@ -3,6 +3,8 @@ import { CAMPAIGN_PEOPLE_SQL, CAMPAIGN_MONEY_MISSING_REASONS } from "./state-peo
 import { factReader } from "../facts/db.ts";
 import type { Query } from "../facts/publish.ts";
 import type { CampaignSourceCapture } from "./state-source-records.ts";
+import type { CampaignMoneyView } from "./money-card-view.ts";
+import { readCampaignMoneyView } from "./money-read.ts";
 
 export interface CampaignMoneyCycle {
   readonly id: string;
@@ -25,6 +27,8 @@ export interface CampaignFinancePlaceRead {
   readonly count: number | null;
   readonly nextCursor: string | null;
   readonly missingReason?: string;
+  /** The person's money rebuilt from the filings; when present the card shows it in place of `records`. */
+  readonly rebuilt?: CampaignMoneyView;
 }
 interface Options { readonly query?: Query | null; readonly cursor?: string | null; readonly personId?: string }
 
@@ -57,7 +61,11 @@ export async function readCampaignFinanceForPlace(division: string, options: Opt
   const query = options.query === undefined ? factReader() : options.query;
   const empty = (status: CampaignFinancePlaceRead["status"]): CampaignFinancePlaceRead => ({ division, state, status, checkedAt: null, records: [], count: null, nextCursor: null });
   if (!query) return empty("UNAVAILABLE");
-  if(cursor && !(await query("SELECT id FROM entity WHERE id=$1 AND state=$2 AND kind='person'",[cursor,state])).length)throw new Error("The campaign records page is invalid");
+  if (options.personId && !cursor) {
+    const rebuilt = await readCampaignMoneyView(query, options.personId);
+    if (rebuilt) return { ...empty("HELD"), checkedAt: rebuilt.checkedAt, rebuilt };
+  }
+  if(cursor &&!(await query("SELECT id FROM entity WHERE id=$1 AND state=$2 AND kind='person'",[cursor,state])).length)throw new Error("The campaign records page is invalid");
   const committees=await query(`WITH published AS MATERIALIZED (${CAMPAIGN_PEOPLE_SQL.replaceAll("$1","$5")}) SELECT e.id FROM entity_place ep JOIN entity e ON e.id=ep.entity_id
     WHERE ep.place_id=$1 AND e.state=$2 AND e.kind='person' AND (e.id>$3 OR ($6::boolean AND e.id=$3))
       AND ($4::text IS NULL OR e.id=$4 OR EXISTS(SELECT 1 FROM entity_external_id WHERE entity_id=e.id AND scheme='campaign-person:'||$2 AND value=$4))

@@ -28,13 +28,17 @@ import {registryRuntimeProjectionIssues} from "./runtime-issues.ts";
 export {registryRuntimeProjectionIssues} from "./runtime-issues.ts";
 import { officeIdentity, sameOffice } from "../officials/office-identity.ts";
 import { sameSeatDiscriminators } from "../officials/office-seat.ts";
-import { nameParts, namesAgree, namesAgreeLoosely, splitDisplayName } from "../ballot/incumbency.ts";
+import { samePerson } from "../identity/match-person.ts";
+import { nameParts, splitDisplayName } from "../identity/name-parts.ts";
 import { REGISTRY_RUNTIME_PARSER_VERSION } from "./runtime-version.ts";
 export { REGISTRY_RUNTIME_PARSER_VERSION } from "./runtime-version.ts";
 import { ballotCandidateDisplayName } from "../ballot/name-case.ts";
 import { withCandidateTickets } from "../ballot/tickets.ts";
 import type { BallotSet, Candidacy, Contest } from "../ballot/types.ts";
 import { sameSourcedExecutivePerson } from "./candidacy-holder-identity.ts";
+
+/** Two names standing in one exact seat (a division and an office), which the surrounding code has already established. */
+const seatedName = (division: string, office: string | null, id: string, name: ReturnType<typeof nameParts>) => ({ id, name, seats: [`${division}\u0000${office}`] });
 
 export const REGISTRY_RUNTIME_SOURCE_ID = "registry-reviewed-bindings" as const;
 
@@ -99,7 +103,7 @@ export function officialCandidacySeatMatches(row: OfficialCandidacyBridgeRow): b
     !personSeatMatches(candidacy.contestTitle, row.holder, candidacy.divisionId)) return false;
   const holder = splitDisplayName(row.holder.name), candidate = splitDisplayName(candidacy.candidateName);
   const left = nameParts(holder.givenName, holder.familyName), right = nameParts(candidate.givenName, candidate.familyName);
-  return namesAgree(left, right) || namesAgreeLoosely(left, right);
+  return samePerson(seatedName(candidacy.divisionId, office, "holder", left), seatedName(candidacy.divisionId, office, "candidacy", right));
 }
 
 /** A ticket elects two people. A joint label never becomes a person's name. */
@@ -166,7 +170,8 @@ export function reconcileOfficialCandidacies(input: {
     const ids = new Set([prior.candidacy.candidacyId, ...prior.candidacy.aliases ?? []]);
     if (!candidateIds(current.candidate).some(id => ids.has(id))) return false;
     const previous = splitDisplayName(prior.candidacy.candidateName);
-    return namesAgree(nameParts(previous.givenName, previous.familyName), current.name);
+    return samePerson(seatedName(prior.candidacy.divisionId, current.office, "prior", nameParts(previous.givenName, previous.familyName)),
+      seatedName(prior.candidacy.divisionId, current.office, "current", current.name));
   };
   for (const holder of holders.values()) {
     const office = officeIdentity(holder.officeTitle, holder.divisions[0]);
@@ -177,7 +182,8 @@ export function reconcileOfficialCandidacies(input: {
     const latest = exact.map(row => row.ballot.election.date).sort().at(-1);
     const current = exact.filter(row => row.ballot.election.date === latest);
     const parts = splitDisplayName(holder.name), name = nameParts(parts.givenName, parts.familyName);
-    const found = current.flatMap(row => row.candidates.filter(candidate => namesAgree(name, candidate.name) || committedMatch(holder, candidate)));
+    const found = current.flatMap(row => row.candidates.filter(candidate =>
+      samePerson(seatedName(row.contest.ocdId, office, holder.id, name), seatedName(row.contest.ocdId, office, candidate.candidate.id, candidate.name)) || committedMatch(holder, candidate)));
     // Source normalization retains explicit aliases for duplicate entries.
     // Distinct native person identities remain separate despite a shared name.
     const groups: { row: typeof found[number]; ids: Set<string>; sources: Set<string> }[] = [];
@@ -216,7 +222,7 @@ export function reconcileOfficialCandidacies(input: {
       personSeatMatches(match.contest.title, other, match.contest.ocdId));
     const matchingHolders = seatHolders.filter(other => {
       const parts = splitDisplayName(other.name), otherName = nameParts(parts.givenName, parts.familyName);
-      return namesAgree(otherName, match.name) || committedMatch(other, match);
+      return samePerson(seatedName(match.contest.ocdId, office, other.id, otherName), seatedName(match.contest.ocdId, office, match.candidate.id, match.name)) || committedMatch(other, match);
     });
     const onePerson = matchingHolders.length === 1 || matchingHolders.length > 1 &&
       matchingHolders.every(left => matchingHolders.every(right => sameSourcedExecutivePerson(left, right)));

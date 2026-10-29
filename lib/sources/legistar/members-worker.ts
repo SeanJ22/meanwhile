@@ -71,9 +71,11 @@ export function legistarMemberPublisher(input:{facts:FactDb&{query:Query};vault:
       if(!name||seats.get(office.OfficeRecordPersonId)?.OfficeRecordId!==office.OfficeRecordId)return {published:0,retired:0};
       const places=(await input.facts.query("SELECT place_id,boundary_year,placement_basis FROM entity_place WHERE entity_id=$1",[bodyId]))
         .map(row=>({placeId:String(row.place_id),boundaryYear:Number(row.boundary_year),basis:row.placement_basis as "SERVICE_AREA"|"HOST_COUNTY"}));
-      const personId=await resolvePerson(input.facts,{name,state:body.state,places,placeId:places.length?null:body.parentId,
+      const resolved=await resolvePerson(input.facts,{name,state:body.state,places,placeId:places.length?null:body.parentId,
         externalIds:[[ `legistar:${value.slug}`,String(office.OfficeRecordPersonId)],[`roster-name:${bodyId}`,nameKey(name)],
-          ["roster-member",`legistar:${value.slug}:person:${office.OfficeRecordPersonId}:office:${office.OfficeRecordId}`]]});
+          ["roster-member",`legistar:${value.slug}:person:${office.OfficeRecordPersonId}:office:${office.OfficeRecordId}`]]},input.clocks.retryMinutes("officeholder"));
+      if(typeof resolved!=="string")return {published:0,retired:0,refused:"IDENTITY_TIE"};
+      const personId=resolved;
       const title=office.OfficeRecordTitle?.trim()||office.OfficeRecordMemberType?.trim()||"";
       await publish(bodyId,`member:${personId}`,{name,office:title||null},"OfficeRecordFullName","membership");
       await publish(personId,"name",name,"OfficeRecordFullName");

@@ -1,12 +1,6 @@
-import {
-  nameParts,
-  namesAgree,
-  namesAgreeLoosely,
-  splitDisplayName,
-  type ComparableName,
-  type Incumbency,
-  type IncumbencyDecision,
-} from "./incumbency.ts";
+import { samePerson } from "../identity/match-person.ts";
+import { nameParts, splitDisplayName, type ComparableName } from "../identity/name-parts.ts";
+import type { Incumbency, IncumbencyDecision } from "./incumbency.ts";
 
 /** NOT_INCUMBENT is a claim about the person and needs a complete officeholder universe; absence from our store is UNRESOLVED. Labels are decided per contest. */
 export type CandidateIncumbencyState = "INCUMBENT" | "NOT_INCUMBENT" | "UNRESOLVED";
@@ -62,37 +56,29 @@ export function reconcileCandidateIdentities(
   const sawSomebodyLeft = new Set<number>();
   const sawSomebodyRight = new Set<number>();
 
-  const pass = (agree: (a: ComparableName, b: ComparableName) => boolean): void => {
-    const hits = new Map<number, number[]>();
-    const hitters = new Map<number, number[]>();
-    for (let i = 0; i < left.length; i += 1) {
-      if (pairedLeft.has(i)) continue;
-      for (let j = 0; j < right.length; j += 1) {
-        if (pairedRight.has(j)) continue;
-        if (!agree(left[i].parts, right[j].parts)) continue;
-        hits.set(i, [...(hits.get(i) ?? []), j]);
-        hitters.set(j, [...(hitters.get(j) ?? []), i]);
-        sawSomebodyLeft.add(i);
-        sawSomebodyRight.add(j);
-      }
+  // Both lists name the people of one contest, so the contest is the seat each name is in.
+  const evidence = (parsed: Parsed, id: string) => ({ id, name: parsed.parts, seats: ["this contest"] });
+  const hits = new Map<number, number[]>();
+  const hitters = new Map<number, number[]>();
+  for (let i = 0; i < left.length; i += 1) {
+    for (let j = 0; j < right.length; j += 1) {
+      if (!samePerson(evidence(left[i], `certified:${i}`), evidence(right[j], `rendered:${j}`))) continue;
+      hits.set(i, [...(hits.get(i) ?? []), j]);
+      hitters.set(j, [...(hitters.get(j) ?? []), i]);
+      sawSomebodyLeft.add(i);
+      sawSomebodyRight.add(j);
     }
-    for (const [i, js] of hits) {
-      // Exactly one counterpart, and that counterpart wants only us. Anything
-      // else stays unpaired and is reported as ambiguous below.
-      if (js.length !== 1) continue;
-      const j = js[0];
-      if ((hitters.get(j) ?? []).length !== 1) continue;
-      pairedLeft.add(i);
-      pairedRight.add(j);
-      pairs.push({ certified: left[i].raw, rendered: right[j].raw });
-    }
-  };
-
-  pass(namesAgree);
-  // The serving-name / filed-name gap, over the leftovers only. See
-  // `namesAgreeLoosely` — an exact surname plus a first-name prefix of three
-  // characters or more, inside a two-to-five person contest.
-  pass(namesAgreeLoosely);
+  }
+  for (const [i, js] of hits) {
+    // Exactly one counterpart, and that counterpart wants only us. Anything
+    // else stays unpaired and is reported as ambiguous below.
+    if (js.length !== 1) continue;
+    const j = js[0];
+    if ((hitters.get(j) ?? []).length !== 1) continue;
+    pairedLeft.add(i);
+    pairedRight.add(j);
+    pairs.push({ certified: left[i].raw, rendered: right[j].raw });
+  }
 
   const ambiguous: string[] = [];
   const missingFromRendered: string[] = [];

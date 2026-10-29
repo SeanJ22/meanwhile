@@ -19,12 +19,10 @@ import {
   type HolderSourceShape,
 } from "./contest-universe.ts";
 import { getGeneralLineup, lineupForContest } from "./general-lineup.ts";
+import { matchPerson } from "../identity/match-person.ts";
+import { nameParts, splitDisplayName } from "../identity/name-parts.ts";
 import {
-  nameParts,
-  namesAgree,
-  namesAgreeLoosely,
   resolveContestIncumbency,
-  splitDisplayName,
   type IncumbencyDecision,
   type SeatHolderRef,
 } from "./incumbency.ts";
@@ -188,13 +186,13 @@ export async function contestIncumbency(
       holderFor.set(c.key, exact);
       continue;
     }
-    const cand = nameParts(splitDisplayName(c.display).givenName, splitDisplayName(c.display).familyName);
-    const hit = registryHolders.find((h) => {
-      const parts = splitDisplayName(h.name);
-      const hp = nameParts(parts.givenName, parts.familyName);
-      return namesAgree(cand, hp) || namesAgreeLoosely(cand, hp);
-    });
-    if (hit) holderFor.set(c.key, hit);
+    const candidate = splitDisplayName(c.display);
+    const found = matchPerson({ id: `candidate:${c.key}`, name: nameParts(candidate.givenName, candidate.familyName), seats: ["this contest"] },
+      registryHolders.map((h) => {
+        const parts = splitDisplayName(h.name);
+        return { id: h.id, holder: h, name: nameParts(parts.givenName, parts.familyName), seats: ["this contest"] };
+      }));
+    if (found.kind === "MATCH") holderFor.set(c.key, found.candidate.holder);
   }
 
   const candidateKeys = contest.candidates.map((c) => c.key);

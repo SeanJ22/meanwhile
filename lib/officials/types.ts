@@ -43,6 +43,14 @@ export interface PersonFieldDisagreement {
   readonly status: "OPEN";
 }
 
+/** Records that might be one person but share no identifier: they stay separate until a detective settles it. */
+export interface PersonIdentityQuestion {
+  readonly key: string;
+  readonly state: string;
+  readonly personIds: readonly string[];
+  readonly reason: "NAME_ONLY" | "KEY_CONFLICT" | "SEAT_AND_NAME_AMBIGUOUS";
+}
+
 export interface Officeholder {
   /** Original publisher records retained behind a merged person. */
   readonly sourceHolders?: readonly Officeholder[];
@@ -168,6 +176,7 @@ export interface OfficeholderSet {
   /** Explicit empty seats published by the office's own source. */
   vacancies?: readonly SeatVacancy[];
   readonly disagreements?: readonly PersonFieldDisagreement[];
+  readonly identityQuestions?: readonly PersonIdentityQuestion[];
   /** Complete enumerated current source memberships; permits retiring omitted memberships, never required for adding facts. */
   currentMembershipComplete?: boolean;
   /** Explicitly ended native tenures, retained even when the person has no current office. */

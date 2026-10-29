@@ -1,7 +1,8 @@
 import type { CandidateLinks } from "./candidate-sites.ts";
 import type { Candidacy } from "./types.ts";
 import { ballotCandidateDisplayName } from "./name-case.ts";
-import { nameParts, namesAgree, splitDisplayName } from "./incumbency.ts";
+import { samePerson } from "../identity/match-person.ts";
+import { nameParts, splitDisplayName } from "../identity/name-parts.ts";
 import { nativePersonIdFromUrl, personIdentityKeys } from "../officials/people-identity.ts";
 
 export interface HeldCandidatePerson {
@@ -39,22 +40,21 @@ export function verifiedCandidateProfilePerson(
   if (!candidate.provenance.sourceUrl || !source || !profile || source === profile || !official?.verification.trim() ||
       !Number.isFinite(Date.parse(official.attemptedAt))) return null;
   const parts = splitDisplayName(ballotCandidateDisplayName({ ...candidate, ticket: undefined }));
-  const name = nameParts(parts.givenName, parts.familyName);
   const native = nativePersonIdFromUrl(official.url);
   const nativeKey = native ? `${native.source}:${native.id}` : null;
   const usesPage = (holder: HeldCandidatePerson) => [holder.websiteUrl, holder.sourceUrl, holder.provenance?.sourceUrl, ...holder.profileUrls ?? []]
     .some(url => pageKey(url) === profile);
-  if (!nativeKey && holders.some(holder => {
-    if (!usesPage(holder)) return false;
-    const parts = splitDisplayName(holder.name);
-    return !namesAgree(name, nameParts(parts.givenName, parts.familyName));
-  })) return null;
-  const matches = holders.filter(holder => {
-    const parts = splitDisplayName(holder.name);
-    if (!namesAgree(name, nameParts(parts.givenName, parts.familyName))) return false;
-    if (nativeKey && personIdentityKeys(holder).has(nativeKey)) return true;
-    return usesPage(holder);
-  });
+  // The verified profile page is the seat both sides stand on. A holder is tied to it by the native id the page carries or by publishing the
+  // page, and the name must agree as well: the identifier alone does not outrank a name the page does not show.
+  const page = `profile ${profile}`;
+  const probe = { id: candidate.id, name: nameParts(parts.givenName, parts.familyName), seats: [page] };
+  const atPage = (holder: HeldCandidatePerson) => {
+    const held = splitDisplayName(holder.name);
+    const linked = (nativeKey !== null && personIdentityKeys(holder).has(nativeKey)) || usesPage(holder);
+    return { id: holder.id, name: nameParts(held.givenName, held.familyName), seats: linked ? [page] : [] };
+  };
+  if (!nativeKey && holders.some(holder => usesPage(holder) && !samePerson(probe, atPage(holder)))) return null;
+  const matches = holders.filter(holder => samePerson(probe, atPage(holder)));
   if (!matches.length) return null;
   // All matches point to the same exact sourced profile, so aliases of that
   // native person remain available even when two publishers use different ids.

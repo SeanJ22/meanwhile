@@ -1,3 +1,9 @@
+import { identityKeys } from "../core/ids.ts";
+import { matchPerson } from "../identity/match-person.ts";
+import { nameParts } from "../identity/name-parts.ts";
+
+const personKeys = (key: string | null | undefined) => (key?.trim() ? identityKeys(key.trim(), []) : []);
+
 export type Incumbency = "INCUMBENT" | "CHALLENGER" | "UNKNOWN";
 
 export interface IncumbencyDecision {
@@ -19,93 +25,6 @@ export interface SeatHolderRef {
   readonly givenName: string;
   readonly personKey?: string | null;
   readonly source: string;
-}
-
-const SUFFIXES = new Set(["jr", "sr", "ii", "iii", "iv", "v"]);
-
-/** The shape both name comparisons take. `aliases` is optional for callers
- * that build one by hand; `nameParts` always fills it. */
-export interface ComparableName {
-  first: string;
-  middles: string[];
-  last: string;
-  aliases?: string[];
-}
-
-/** Drops case, punctuation and generational suffixes; middle names come back separately. A name the record prints in double quotes or parentheses is an alias; an apostrophe never delimits one. */
-export function nameParts(given: string, family: string): Required<ComparableName> {
-  const clean = (s: string) =>
-    s
-      .toLowerCase()
-      .replace(/[.,'"`]/g, " ")
-      .replace(/\s+/g, " ")
-      .trim();
-
-  const aliases: string[] = [];
-  const givenWithoutAliases = String(given ?? "")
-    .replace(/[“"]([^”"]+)[”"]/g, (_match, inner: string) => {
-      aliases.push(inner);
-      return " ";
-    })
-    .replace(/\(([^)]+)\)/g, (_match, inner: string) => {
-      aliases.push(inner);
-      return " ";
-    });
-
-  const givenTokens = clean(givenWithoutAliases).split(" ").filter(Boolean);
-  const familyTokens = clean(family)
-    .split(" ")
-    .filter((t) => t.length > 0 && !SUFFIXES.has(t));
-
-  return {
-    first: givenTokens[0] ?? "",
-    middles: givenTokens.slice(1),
-    last: familyTokens.join(" "),
-    aliases: aliases.map(clean).filter(Boolean),
-  };
-}
-
-function firstNames(n: ComparableName): string[] {
-  return [n.first, ...(n.aliases ?? [])].filter((s) => s.length > 0);
-}
-
-/** Exact surname and first name; a middle name matches its own initial, and a missing middle never disqualifies. A miss reads as UNKNOWN, never a wrong label. */
-export function namesAgree(a: ComparableName, b: ComparableName): boolean {
-  if (a.last.length === 0 || b.last.length === 0) return false;
-  if (a.last !== b.last) return false;
-  const firstsA = firstNames(a);
-  const firstsB = firstNames(b);
-  if (firstsA.length === 0 || firstsB.length === 0) return false;
-  const agreedFirst = firstsA.some((x) => firstsB.includes(x));
-  if (!agreedFirst) return false;
-
-  if (a.middles.length === 0 || b.middles.length === 0) return true;
-  const initials = (m: string[]) => m.map((x) => x[0]).join("");
-  const full = (m: string[]) => m.join(" ");
-  if (full(a.middles) === full(b.middles)) return true;
-  return initials(a.middles) === initials(b.middles);
-}
-
-/** Exact surname plus a first-name prefix of three characters or more. Safe only inside one contest; an initial is never a nickname. */
-export function namesAgreeLoosely(a: ComparableName, b: ComparableName): boolean {
-  if (a.last.length === 0 || a.last !== b.last) return false;
-  for (const x of firstNames(a)) {
-    for (const y of firstNames(b)) {
-      if (x.length < 3 || y.length < 3) continue;
-      if (x.startsWith(y) || y.startsWith(x)) return true;
-    }
-  }
-  return false;
-}
-
-export function splitDisplayName(display: string): { givenName: string; familyName: string } {
-  const tokens = display.trim().replace(/\s+/g, " ").split(" ").filter(Boolean);
-  if (tokens.length === 0) return { givenName: "", familyName: "" };
-  if (tokens.length === 1) return { givenName: "", familyName: tokens[0] };
-
-  let end = tokens.length - 1;
-  while (end > 0 && SUFFIXES.has(tokens[end].toLowerCase().replace(/[.,]/g, ""))) end -= 1;
-  return { givenName: tokens.slice(0, end).join(" "), familyName: tokens[end] };
 }
 
 export interface ContestIncumbencyInput {
@@ -141,26 +60,20 @@ export function resolveContestIncumbency(input: ContestIncumbencyInput): Map<str
     );
   }
 
-  // A published person key is preferred over every name comparison.
-  const matchesFor = (h: SeatHolderRef): { candidates: CandidateRef[]; byKey: boolean } => {
-    const key = h.personKey?.trim() || null;
-    if (key) {
-      const byKey = input.candidates.filter((c) => (c.personKey?.trim() || null) === key);
-      if (byKey.length > 0) return { candidates: byKey, byKey: true };
-    }
-    const parts = nameParts(h.givenName, h.familyName);
-    const strict = input.candidates.filter((c) => namesAgree(nameParts(c.givenName, c.familyName), parts));
-    if (strict.length > 0) return { candidates: strict, byKey: false };
-    return {
-      candidates: input.candidates.filter((c) => namesAgreeLoosely(nameParts(c.givenName, c.familyName), parts)),
-      byKey: false,
-    };
+  // Every holder and candidate here is in this one contest, so the contest is the seat; a published person key outranks the name.
+  const seat = ["this contest"];
+  const candidateEvidence = input.candidates.map((c) => ({ id: c.id, name: nameParts(c.givenName, c.familyName), keys: personKeys(c.personKey), seats: seat }));
+  const matchesFor = (h: SeatHolderRef, at: number): { candidates: CandidateRef[]; byKey: boolean; tied: boolean } => {
+    const found = matchPerson({ id: `holder:${at}`, name: nameParts(h.givenName, h.familyName), keys: personKeys(h.personKey), seats: seat }, candidateEvidence);
+    if (found.kind === "MATCH") return { candidates: input.candidates.filter((c) => c.id === found.candidate.id), byKey: found.basis === "KEY", tied: false };
+    const tied = found.kind === "TIE" ? new Set(found.candidates.map((c) => c.id)) : new Set<string>();
+    return { candidates: input.candidates.filter((c) => tied.has(c.id)), byKey: false, tied: tied.size > 0 };
   };
 
   const incumbentIds = new Set<string>();
   let anyByKey = false;
-  for (const h of input.holders) {
-    const { candidates: hit, byKey } = matchesFor(h);
+  for (const [at, h] of input.holders.entries()) {
+    const { candidates: hit, byKey, tied } = matchesFor(h, at);
 
     if (hit.length === 0) {
       const sameSurname = input.candidates.filter(
@@ -179,7 +92,7 @@ export function resolveContestIncumbency(input: ContestIncumbencyInput): Map<str
     }
 
     // Fail closed: one sitting member matching two candidates would be a guess.
-    if (hit.length > 1) {
+    if (tied) {
       return unknown(
         `${hit.length} candidates in this contest could be the same sitting member on the record we ` +
           "hold. Choosing between them would be a guess about a named person, so the whole contest " +

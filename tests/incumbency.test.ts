@@ -7,13 +7,10 @@ import { test } from "node:test";
 
 import {
   incumbencyLabel,
-  nameParts,
-  namesAgree,
-  namesAgreeLoosely,
   resolveContestIncumbency,
-  splitDisplayName,
   type SeatHolderRef,
 } from "../lib/ballot/incumbency.ts";
+import { splitDisplayName } from "../lib/identity/name-parts.ts";
 import { nhLegislativeHolders, nhSeatKeyFromTitle, refreshNhSeatHolders, sits } from "../lib/ballot/seat-holders.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
 import { claimsInText } from "../lib/text/absence-claims.ts";
@@ -38,39 +35,31 @@ const holder = (given: string, family: string): SeatHolderRef => ({
   source: "the body's own roster",
 });
 
-test("a sitting officeholder resolves to INCUMBENT even when the name forms differ", () => {
-  // One person, three name forms across the ballot, the roster and the registry.
+test("a sitting officeholder resolves to INCUMBENT when the name forms differ only by a middle name", () => {
   const out = resolveContestIncumbency({
-    candidates: [cand("Karen Elizabeth Ebel"), cand("Gregory M. Sargent")],
-    holders: [holder("Karen E.", "Ebel"), holder("Greg", "Sargent")],
+    candidates: [cand("Karen Elizabeth Ebel"), cand("Bob Brown")],
+    holders: [holder("Karen E.", "Ebel")],
     officeIsElected: true,
   });
   assert.equal(out.get("Karen Elizabeth Ebel")?.standing, "INCUMBENT", out.get("Karen Elizabeth Ebel")?.basis);
+  assert.equal(out.get("Bob Brown")?.standing, "CHALLENGER");
 });
 
-test("DERIVED CASE — Gregory M. Sargent and Daniel E. Innis, whom the first matcher got WRONG", () => {
-  /* Nicknames: the matcher must pair a filed name with its short serving form. */
-  const house = resolveContestIncumbency({
+test("a diminutive is never inferred — Greg Sargent against Gregory M. Sargent reads UNKNOWN, and a published person key settles it", () => {
+  const bare = resolveContestIncumbency({
     candidates: [cand("Karen Elizabeth Ebel"), cand("Gregory M. Sargent")],
     holders: [holder("Karen E.", "Ebel"), holder("Greg", "Sargent")],
     officeIsElected: true,
   });
-  assert.equal(house.get("Gregory M. Sargent")?.standing, "INCUMBENT", house.get("Gregory M. Sargent")?.basis);
+  assert.deepEqual([...bare.values()].map((d) => d.standing), ["UNKNOWN", "UNKNOWN"], "the surname collision fails the whole contest closed");
 
-  const senate = resolveContestIncumbency({
-    candidates: [cand("Daniel E. Innis")],
-    holders: [holder("Dan", "Innis")],
+  const keyed = resolveContestIncumbency({
+    candidates: [cand("Karen Elizabeth Ebel"), { ...cand("Gregory M. Sargent"), personKey: "nh-general-court:2080" }],
+    holders: [holder("Karen E.", "Ebel"), { ...holder("Greg", "Sargent"), personKey: "nh-general-court:2080" }],
     officeIsElected: true,
   });
-  assert.equal(senate.get("Daniel E. Innis")?.standing, "INCUMBENT", senate.get("Daniel E. Innis")?.basis);
-});
-
-test("an initial is not a nickname — J. does not match James", () => {
-  // The loose match must not become a first-letter match, or it would pair any
-  // two people whose first names start with the same letter.
-  assert.equal(namesAgreeLoosely(nameParts("J.", "Smith"), nameParts("James", "Smith")), false);
-  assert.equal(namesAgreeLoosely(nameParts("Greg", "Sargent"), nameParts("Gregory", "Sargent")), true);
-  assert.equal(namesAgreeLoosely(nameParts("Greg", "Sargent"), nameParts("Gregory", "Sargeant")), false);
+  assert.equal(keyed.get("Gregory M. Sargent")?.standing, "INCUMBENT", keyed.get("Gregory M. Sargent")?.basis);
+  assert.match(keyed.get("Gregory M. Sargent")?.basis ?? "", /stable identifier/);
 });
 
 test("a generational suffix never lands in the surname", () => {

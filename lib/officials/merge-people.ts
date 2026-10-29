@@ -6,19 +6,23 @@ import { canonicalCivicDataJson } from "../civic-data/changes.ts";
 import { officeIdentity } from "./office-identity.ts";
 import { nativePersonIdFromUrl, personIdentityKeys } from "./people-identity.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
+import { matchPerson, samePerson, type PersonEvidence } from "../identity/match-person.ts";
+import { parsePersonName } from "../identity/name-parts.ts";
 import { mergeExecutiveFacts } from "./national-executive.ts";
 import { heldPersonSources } from "./held-sources.ts";
-import type { Officeholder, OfficeholderSet, PersonFieldDisagreement } from "./types.ts";
+import type { Officeholder, OfficeholderSet, PersonFieldDisagreement, PersonIdentityQuestion } from "./types.ts";
 
 const normalized = (value: string) => value.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 const present = (value: unknown) => value !== null && value !== undefined && value !== "" && !(Array.isArray(value) && value.length === 0);
 const sourceFor = (person: Officeholder, field: string): Provenance => person.fieldSources?.[field] ?? person.provenance;
-/** Shared identifiers first; a unique full name, office and state is the second binding. */
+/** Records join on a shared identifier, or on a name in the same seat. A name that is not in a seat both records share is only a question for a detective. */
 export function mergePeopleSets(input: readonly OfficeholderSet[]): OfficeholderSet | null {
   const sets = input.map(withoutInvalidStatewidePeople);
   if (!sets.length) return null;
   const people: Officeholder[] = [], aliases = new Map<string, string>();
   const originalSources = new WeakMap<Officeholder, readonly Officeholder[]>();
+  // Which of the input sets each held person came from: one source never joins two of its own records on a name, because it already tells them apart.
+  const origins = new WeakMap<Officeholder, ReadonlySet<number>>();
   // A reference profile can carry the current publisher ID before its stored native-ID list does.
   // Bind it only against the held official page, with the person's current seat corroborating it.
   const profileKeys = new WeakMap<Officeholder, Set<string>>();
@@ -37,15 +41,19 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     const key = `${binding.source}:${binding.id}`, held = officialProfiles.get(key) ?? [];
     held.push(person); officialProfiles.set(key, held);
   }
+  // The seat is the person's districts, or all of their divisions when they have none, together with the office.
+  const seatsOf = (person: Officeholder, office: string) => {
+    const divisions = [...personDivisions.get(person) ?? []];
+    const districts = divisions.filter(id => /\/(?:sldu|sldl|cd|ward|council_district):/.test(id));
+    return (districts.length ? districts : divisions).map(id => `${id}|${person.level}|${office}`);
+  };
+  const profileEvidence = (person: Officeholder): PersonEvidence => ({ id: person.id, name: person.name, state: person.state,
+    seats: seatsOf(person, officeIdentity(person.officeTitle) ?? normalized(person.officeTitle)) });
   const compatibleProfile = (source: Officeholder, target: Officeholder, namespace: string) => {
     if (!source.state || !target.state || source.state.toUpperCase() !== target.state.toUpperCase() || source.level !== target.level ||
       (source.chamber && target.chamber && source.chamber !== target.chamber) ||
       (officeIdentity(source.officeTitle) ?? normalized(source.officeTitle)) !== (officeIdentity(target.officeTitle) ?? normalized(target.officeTitle))) return false;
-    const left = normalized(source.name).split(" "), right = normalized(target.name).split(" ");
-    if (left.length < 2 || right.length < 2 || left[0] !== right[0] || left.at(-1) !== right.at(-1) ||
-      !(left.every(token => right.includes(token)) || right.every(token => left.includes(token)))) return false;
-    const sourceDivisions = personDivisions.get(source)!, targetDivisions = personDivisions.get(target)!;
-    if (!sourceDivisions.size || !targetDivisions.size || ![...sourceDivisions].some(id => targetDivisions.has(id))) return false;
+    if (!samePerson(profileEvidence(source), profileEvidence(target))) return false;
     if (!knownDistrictsAgree(source,target)) return false;
     if (source.birthDate && target.birthDate && source.birthDate !== target.birthDate) return false;
     for (const [key, ids] of Object.entries(source.nativeIds ?? {})) {
@@ -77,7 +85,7 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     if (new Set(bindings.values()).size === 1) profileKeys.set(person, new Set(bindings.keys()));
   }
   const offices = new Map<string, string>(), officialUrls = new Map<string, boolean>();
-  const info = new WeakMap<Officeholder, { office: string; name: string; state: string; fallback: string; nameKey: string; keys: ReadonlySet<string>; ownUrls: Set<string> }>();
+  const info = new WeakMap<Officeholder, { office: string; name: string; surname: string; nameKey: string; keys: ReadonlySet<string>; ownUrls: Set<string> }>();
   const infoOf = (person: Officeholder) => {
     let held = info.get(person);
     if (!held) {
@@ -85,7 +93,7 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
       if (office === undefined) { office = officeIdentity(person.officeTitle) ?? normalized(person.officeTitle); offices.set(person.officeTitle, office); }
       if (person.level === "STATE" && ["upper", "lower"].includes(person.chamber ?? "")) office = person.chamber === "upper" ? "state_senator" : "state_lower_house";
       const name = normalized(person.name), state = normalized(person.state ?? "");
-      held = { office, name, state, fallback: `${person.state?.toUpperCase()}|${person.level}|${office}|${name}`,
+      held = { office, name, surname: parsePersonName(person.name).last,
         nameKey: `${state}|${person.level}|${office}|${name}`, keys: new Set([...personIdentityKeys(person), ...(profileKeys.get(person) ?? [])]),
         ownUrls: new Set([person.websiteUrl, ...person.profileUrls ?? []].filter((url): url is string => Boolean(url))) };
       info.set(person, held);
@@ -93,7 +101,6 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     return held;
   };
   const personOffice = (person: Officeholder) => infoOf(person).office;
-  const fallbackKey = (person: Officeholder) => infoOf(person).fallback;
   const official = (url: string) => {
     let held = officialUrls.get(url);
     if (held === undefined) { held = isOfficialSource(url); officialUrls.set(url, held); }
@@ -108,13 +115,17 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     const rightRank = rank(right, r), leftRank = rank(left, l);
     return rightRank > leftRank || rightRank === leftRank && r.collectedAt >= l.collectedAt;
   };
-  const ambiguousNames = new Set<string>();
+  // A name one source already gives to two different people never joins anyone on the name, even after an identifier joins those two.
+  const sharedNames = new Set<string>();
   for (const set of sets) {
-    const identities = new Map<string,Set<string>>();
-    for (const person of set.officeholders) {const key=fallbackKey(person), ids=identities.get(key) ?? new Set<string>();ids.add(person.personId ?? person.id);identities.set(key,ids);}
-    for (const [key,ids] of identities) if (ids.size>1) ambiguousNames.add(key);
+    const identities = new Map<string, Set<string>>();
+    for (const person of set.officeholders) {
+      const key = infoOf(person).nameKey, ids = identities.get(key) ?? new Set<string>();
+      ids.add(person.personId ?? person.id); identities.set(key, ids);
+    }
+    for (const [key, ids] of identities) if (ids.size > 1) sharedNames.add(key);
   }
-  const byIdentity = new Map<string, Set<Officeholder>>(), byName = new Map<string, Set<Officeholder>>();
+  const byIdentity = new Map<string, Set<Officeholder>>(), byName = new Map<string, Set<Officeholder>>(), bySeat = new Map<string, Set<Officeholder>>();
   const positions = new Map<Officeholder, number>();
   const register = (person: Officeholder, position: number) => {
     positions.set(person, position);
@@ -124,6 +135,10 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     }
     const key = infoOf(person).nameKey, names = byName.get(key) ?? new Set<Officeholder>();
     names.add(person); byName.set(key, names);
+    for (const seat of seatsOf(person, infoOf(person).office)) {
+      const holders = bySeat.get(seat) ?? new Set<Officeholder>();
+      holders.add(person); bySeat.set(seat, holders);
+    }
   };
   const unregister = (person: Officeholder) => {
     positions.delete(person);
@@ -135,7 +150,23 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     const key = infoOf(person).nameKey, names = byName.get(key);
     names?.delete(person);
     if (names?.size === 0) byName.delete(key);
+    for (const seat of seatsOf(person, infoOf(person).office)) {
+      const holders = bySeat.get(seat);
+      holders?.delete(person);
+      if (holders?.size === 0) bySeat.delete(seat);
+    }
   };
+  const evidenceOf = (person: Officeholder): PersonEvidence => ({ id: person.id, name: person.name, state: person.state,
+    keys: infoOf(person).keys, seats: seatsOf(person, infoOf(person).office), term: { start: person.termStart, end: person.termEnd } });
+  // Two records the publishers' own identifiers already tell apart are never offered to the matcher on a name.
+  const knownDifferent = (incoming: Officeholder, holder: Officeholder) => {
+    const publisher = /^([a-z]{2}-(?:legislature|general-court)):/.exec(incoming.id)?.[1];
+    return Boolean(publisher && holder.id.startsWith(`${publisher}:`) && holder.id !== incoming.id) ||
+      Object.entries(incoming.nativeIds ?? {}).some(([key, ids]) => key !== "reader" && !/^[a-z]{2}-(?:legislature|general-court)$/.test(key) &&
+        ids.length && holder.nativeIds?.[key]?.length && !ids.some(id => holder.nativeIds![key].includes(id)));
+  };
+  const questions = new Map<string, PersonIdentityQuestion>();
+  for (const set of sets) for (const question of set.identityQuestions ?? []) questions.set(question.key, question);
   const disagreements = new Map<string, PersonFieldDisagreement>();
   for (const set of sets) for (const disagreement of set.disagreements ?? []) disagreements.set(disagreement.key, disagreement);
   const fields = ["name", "officeTitle", "level", "state", "chamber", "termStart", "termEnd", "birthDate", "partyLabel", "websiteUrl", "contactFormUrl", "phone", "email", "campaignUrl", "selectionMethod", "selectionMethodSourceUrl", "portraitCandidate", "photo"] as const;
@@ -204,32 +235,35 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     if (prefers(right, left, "name")) merged.provenance = right.provenance;
     return merged;
   };
-  for (const set of sets) for (const incoming of set.officeholders) {
-    const candidates = new Set<number>();
-    for (const key of infoOf(incoming).keys) for (const holder of byIdentity.get(key) ?? []) {
-      const position = positions.get(holder);
-      if (position !== undefined) candidates.add(position);
-    }
-    const matches = [...candidates].sort((a, b) => a - b);
-    if (!matches.length && !ambiguousNames.has(fallbackKey(incoming))) {
-      const nameMatches = incoming.state ? [...byName.get(infoOf(incoming).nameKey) ?? []].flatMap(holder => {
-        const position = positions.get(holder);
-        const publisher = /^([a-z]{2}-(?:legislature|general-court)):/.exec(incoming.id)?.[1];
-        const conflictingPublisher = publisher && holder.id.startsWith(`${publisher}:`) && holder.id !== incoming.id;
-        const conflictingNative = Object.entries(incoming.nativeIds??{}).some(([key,ids])=>key!=="reader"&&!/^[a-z]{2}-(?:legislature|general-court)$/.test(key)&&
-          ids.length&&holder.nativeIds?.[key]?.length&&!ids.some(id=>holder.nativeIds![key].includes(id)));
-        return holder.state && position !== undefined && !conflictingPublisher && !conflictingNative && knownDistrictsAgree(incoming,holder) ? [position] : [];
-      }) : [];
-      if (nameMatches.length === 1) matches.push(nameMatches[0]);
+  for (const [at, set] of sets.entries()) for (const incoming of set.officeholders) {
+    const sharing = new Set<Officeholder>(), pool = new Set<Officeholder>();
+    for (const key of infoOf(incoming).keys) for (const holder of byIdentity.get(key) ?? []) sharing.add(holder);
+    for (const holder of sharing) pool.add(holder);
+    // Holders that share no key are offered only when both records state a state and their known districts agree.
+    if (incoming.state) for (const holder of [...seatsOf(incoming, infoOf(incoming).office).flatMap(seat => [...bySeat.get(seat) ?? []]), ...byName.get(infoOf(incoming).nameKey) ?? []])
+      if (holder.state && infoOf(holder).surname === infoOf(incoming).surname && !origins.get(holder)?.has(at) && !knownDifferent(incoming, holder) && knownDistrictsAgree(incoming, holder)) pool.add(holder);
+    const probe = evidenceOf(incoming);
+    let found = matchPerson(probe, [...pool].filter(holder => positions.has(holder)).map(holder => ({ ...evidenceOf(holder), holder })));
+    if (found.kind === "MATCH" && found.basis === "SEAT_AND_NAME" && sharedNames.has(infoOf(incoming).nameKey))
+      found = { kind: "TIE", reason: "SEAT_AND_NAME_AMBIGUOUS", candidates: [found.candidate] };
+    // Several records tied together by the incoming record's own identifiers are one person; any other tie, and a name alone, wait for a detective.
+    const matches = (found.kind === "MATCH" ? [found.candidate.holder] : found.kind === "TIE" && found.reason === "KEYS_JOIN_CANDIDATES" ? found.candidates.map(row => row.holder) : [])
+      .map(holder => positions.get(holder)!).sort((a, b) => a - b);
+    if (found.kind === "NAME_ONLY" || found.kind === "TIE" && found.reason !== "KEYS_JOIN_CANDIDATES") {
+      const personIds = [...new Set([incoming, ...found.candidates.map(row => row.holder)].map(person => person.personId ?? person.id))].sort();
+      const key = `${found.kind}:${personIds.join("+")}`;
+      questions.set(key, { key, state: incoming.state ?? "", personIds, reason: found.kind === "NAME_ONLY" ? "NAME_ONLY" : found.reason as PersonIdentityQuestion["reason"] });
     }
     if (!matches.length) {
       const person = {...incoming, fieldSources: {...Object.fromEntries(fields.filter(field=>present(incoming[field])).map(field=>[field, sourceFor(incoming,field)])), ...incoming.fieldSources}};
       originalSources.set(person,heldPersonSources(incoming));
       personDivisions.set(person,personDivisions.get(incoming)!);
       if (profileKeys.has(incoming)) profileKeys.set(person, profileKeys.get(incoming)!);
+      origins.set(person, new Set([at]));
       people.push(person); register(person, people.length - 1); continue;
     }
     const first = matches[0];
+    const joined = new Set([at, ...matches.flatMap(index => [...origins.get(people[index]) ?? []])]);
     unregister(people[first]);
     let merged = merge(people[first], incoming);
     aliases.set(incoming.id, merged.id);
@@ -239,6 +273,7 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
       unregister(prior); aliases.set(prior.id, merged.id); merged = merge(merged, prior); people.splice(index, 1);
     }
     if (matches.length > 1) for (let index = first + 1; index < people.length; index++) positions.set(people[index], index);
+    origins.set(merged, joined);
     people[first] = merged;
     register(merged, first);
   }
@@ -257,5 +292,6 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     unmatched: [...new Map(unmatched.map(row=>[`${row.officeholderId}|${row.reason}`,row])).values()],
     endedMemberships: [...new Map(sets.flatMap(set=>set.endedMemberships ?? []).map(row=>[row.id,row])).values()],
     disagreements: [...disagreements.values()].map(row=>({...row,personId:canonical(row.personId)})),
+    ...(questions.size ? { identityQuestions: [...questions.values()].map(row => ({...row, personIds: [...new Set(row.personIds.map(canonical))]})) .filter(row => row.personIds.length > 1) } : {}),
     ...(vacancies.length ? { vacancies } : {})}));
 }

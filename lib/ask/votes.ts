@@ -1,4 +1,4 @@
-import { nameParts, splitDisplayName } from "../ballot/incumbency.ts";
+import { nameParts, splitDisplayName } from "../identity/name-parts.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { formatDateLong } from "../text/format-date.ts";
 import {

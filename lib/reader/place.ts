@@ -21,7 +21,7 @@ export const READY_PLACE_SQL = `SELECT CASE WHEN $2::boolean THEN history_body E
   FROM place_page WHERE place_id=$1 AND context->>'readerFormat'='1'`;
 
 /** Map and body selections use only ready pages and their existing identity aliases. */
-export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
+function placePagesSql(readyCondition:string):string {return `WITH requested_bodies AS (
   SELECT coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=id),id) AS id
     FROM unnest($3::text[]) AS requested(id)
 ), state_bodies AS (
@@ -37,7 +37,7 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
     AND (NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
       OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies))
 ) SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies) THEN 'empty' ELSE e.kind END AS page_kind,p.built_at,
-  CASE WHEN p.context->>'readerFormat'='1' OR $8::boolean OR $9::boolean
+  CASE WHEN ${readyCondition}
     THEN coalesce(saved.value->CASE WHEN $8::boolean THEN 'full' WHEN $9::boolean THEN 'facts' ELSE 'brief' END,saved.value) END AS row,
   ARRAY(SELECT id FROM requested_bodies) AS body_ids
   FROM selected s LEFT JOIN entity e ON e.id=s.id LEFT JOIN place_page p ON p.place_id=s.id
@@ -45,7 +45,11 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
     OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies)
     THEN CASE WHEN $7::boolean THEN 'emptyHistory' ELSE 'emptyCurrent' END
     ELSE CASE WHEN $7::boolean THEN 'history' ELSE 'current' END END AS value) saved ON true
-  WHERE e.state=$1::char(2) OR e.state IS NULL ORDER BY s.id`;
+  WHERE e.state=$1::char(2) OR e.state IS NULL ORDER BY s.id`;}
+
+export const PLACE_PAGES_SQL=placePagesSql("p.context->>'readerFormat'='1' OR $8::boolean OR $9::boolean");
+/** The builder can compose already saved legacy contexts while upgrading a place. */
+export const PLACE_BUILD_PAGES_SQL=placePagesSql('true');
 
 const requests = serverReaderValue("place-requests", () => new WeakMap<object, Map<string, Promise<PlacePackage>>>());
 const pageIds = serverReaderValue("place-page-ids", () => new WeakMap<PlacePackage, readonly string[]>());

@@ -6,6 +6,7 @@ import { readCanonicalShelf } from "../lib/reader/canonical.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import {packReadyPlace,unpackPlaceContextRow} from "../lib/reader/place-ready.ts";
 import {withReaderSelection} from "../lib/db/reader-route.ts";
+import {statePackageStatement} from "../lib/reader/state.ts";
 
 test('parallel first ZIP readers compile one page and discard its unused legacy context',async()=>{
   const {query,transaction,pg}=await migratedReaderDb(),id='zip:85701';
@@ -18,13 +19,15 @@ test('parallel first ZIP readers compile one page and discard its unused legacy 
       if(text.startsWith('WITH RECURSIVE additional'))compiles++;
       return q(text,params);
     }))};
-    await withReaderSelection({zip:'85701',states:['AZ'],keys:new Set()},()=>Promise.all([
-      buildMissingPlacePages([{id,kind:'place',state:'AZ',reader:true}],db),
-      buildMissingPlacePages([{id,kind:'place',state:'AZ',authorities:true,authorityKeys:['CURATED_READER_RECORD:US-AZ:official-ballot-navigation']}],db),
-    ]));
+    await Promise.all([
+      withReaderSelection({zip:'85701',states:['AZ'],keys:new Set()},()=>buildMissingPlacePages([{id,kind:'place',state:'AZ',reader:true}],db)),
+      withReaderSelection({zip:'85701',states:['AZ'],keys:new Set()},()=>buildMissingPlacePages([{id,kind:'place',state:'AZ',authorities:true,authorityKeys:['CURATED_READER_RECORD:US-AZ:official-ballot-navigation']}],db)),
+    ]);
     const [saved]=await query("SELECT context->>'readerFormat' AS reader,context->>'authorityFormat' AS authorities,context?'current' AS raw FROM place_page WHERE place_id=$1",[id]);
     assert.deepEqual(saved,{reader:'1',authorities:'1',raw:false});
     assert.equal(compiles,1,'the meeting and state requests share the source compilation');
+    const state=await readCanonicalShelf([],batch=>Promise.all(batch.map(s=>query(s.text,s.params))),statePackageStatement('AZ',[],'85701'));
+    assert.equal(state.additionalRows.length,1,'the complete saved ZIP query binds exactly its declared parameters');
   }finally{await pg.close();}
 });
 

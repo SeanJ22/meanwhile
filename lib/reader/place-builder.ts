@@ -1,5 +1,5 @@
 import {personIdentityKeys} from "../officials/people-identity.ts";
-import {currentReaderSelection} from "../db/reader-route.ts";
+import {serverReaderValue} from "./memory.ts";
 import {keyedReaderPointers} from "../civic-data/keyed-reader.ts";
 import {readPublishedSourceChecks} from "../civic-data/source-checks.ts";
 import {votingPageFingerprintSql} from "./voting-page.ts";
@@ -595,21 +595,23 @@ export async function buildPlacePackage(input: PlaceInput, query: Query) {
 }
 
 type MissingPage={id:string;kind:string;state:string;authorities?:boolean;authorityKeys?:readonly string[];roster?:boolean;reader?:boolean};
-const firstBuilds=new WeakMap<object,Map<string,Promise<void>>>();
+const firstBuilds=serverReaderValue('place-first-builds',()=>({
+  injected:new WeakMap<object,Map<string,Promise<void>>>(),connections:new Map<string,Map<string,Promise<void>>>(),
+}));
 
 /** The ZIP's meeting and state readers share one first build and one saved publication. */
 export async function buildMissingPlacePages(pages:readonly MissingPage[],db?:FactDb):Promise<void> {
-  const selection=currentReaderSelection();
-  let held=selection?firstBuilds.get(selection):undefined;
-  if(selection&&!held){held=new Map();firstBuilds.set(selection,held);}
+  const supplied=db??installedFactConnection(),connection=process.env.DATABASE_URL??'reader';
+  let held=supplied?firstBuilds.injected.get(supplied):firstBuilds.connections.get(connection);
+  if(!held){held=new Map();if(supplied)firstBuilds.injected.set(supplied,held);else firstBuilds.connections.set(connection,held);}
   for(const requested of pages){
     const page=requested.id.startsWith('zip:')&&(requested.reader||requested.authorities)
       ?{...requested,reader:true,authorities:true}:requested;
-    const prior=held?.get(page.id);
+    const prior=held.get(page.id);
     if(prior){await prior;continue;}
     const build=buildUnsavedPlacePages([page],db);
-    held?.set(page.id,build);
-    try{await build;}finally{held?.delete(page.id);}
+    held.set(page.id,build);
+    try{await build;}finally{held.delete(page.id);}
   }
 }
 
@@ -725,11 +727,9 @@ async function placeBuildSelection(id:string,kind:string,state:string):Promise<{
 export async function buildPageBody(id:string,kind:string,state:string,query:Query,shared?:PlaceTurnReads):Promise<StoredPlacePage> {
   if(id.startsWith('zip:')){
     const {input,territory}=await placeBuildSelection(id,kind,state);
-    const {PLACE_PAGES_SQL}=await import('./place.ts');
+    const {PLACE_BUILD_PAGES_SQL}=await import('./place.ts');
     // A new ZIP can assemble the already published division/body pages without reopening their sources.
-    const selectedSql=PLACE_PAGES_SQL.replace("CASE WHEN p.context->>'readerFormat'='1' THEN coalesce",'coalesce')
-      .replace("END,saved.value) END AS row","END,saved.value) AS row");
-    const saved=await query(selectedSql,[state,input.divisionIds,input.bodyIds??[],input.namedDivisionIds??[],false,false,false,false,false]);
+    const saved=await query(PLACE_BUILD_PAGES_SQL,[state,input.divisionIds,input.bodyIds??[],input.namedDivisionIds??[],false,false,false,false,false]);
     if(saved.length&&saved.every(row=>row.row)){
       const row=mergePlaceRows(input,saved.map(page=>({...unpackPlaceContextRow(page.row),page_id:page.page_id,
         page_kind:page.page_kind,built_at:page.built_at})));

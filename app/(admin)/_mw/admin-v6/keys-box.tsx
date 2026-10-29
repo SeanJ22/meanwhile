@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { KEY_NAMES, KEY_SERVICES, type KeyService, type KeyView } from "@/lib/core/keys-model.ts";
+import { useRef, useState, type FormEvent } from "react";
+import { knownKeyService, KEY_SERVICES, type KeyService, type KeyView } from "@/lib/core/keys-model.ts";
 import { mst } from "./model.ts";
 import { useReading } from "./use-reading.ts";
 import { Pill } from "./ui.tsx";
@@ -12,7 +12,13 @@ export function KeysBox() {
   const { reading, reload, status } = useReading<{ rows: readonly KeyView[] }>(ROUTE);
   const [busy, setBusy] = useState(false), [says, setSays] = useState("");
   const [name, setName] = useState("");
+  const [replacing, setReplacing] = useState<KeyView | null>(null);
+  const keyInput = useRef<HTMLInputElement>(null);
   const [service, setService] = useState<KeyService>("anthropic");
+  function replace(row: KeyView | null) {
+    setReplacing(row); setName(row?.label ?? ""); setService(row?.service ?? "anthropic"); setSays("");
+    if (keyInput.current) { keyInput.current.value = ""; keyInput.current.focus(); }
+  }
   async function send(method: "POST" | "DELETE", body: unknown) {
     setBusy(true); setSays("");
     try {
@@ -30,20 +36,21 @@ export function KeysBox() {
     // Clear before the request starts; a response, reload or validation error cannot redisplay it.
     const input = form.elements.namedItem("key") as HTMLInputElement;
     input.value = "";
-    await send("POST", { name, value, service });
+    await send("POST", { name: replacing?.name ?? name, value, service });
   }
   return <section aria-labelledby="keys-title" className={s.stack}>
     <h3 id="keys-title" className={s.h3}>Keys</h3>
     {status}
     <form onSubmit={save} className={s.stack} autoComplete="off">
-      <label className={s.stack}>Name <input className={s.input} name="name" required maxLength={80} value={name} onChange={event => {
-        setName(event.target.value); const known = KEY_NAMES[event.target.value.trim()]; if (known) setService(known);
+      <label className={s.stack}>Name <input className={s.input} name="name" required maxLength={80} value={name} readOnly={Boolean(replacing)} onChange={event => {
+        setName(event.target.value); const known = knownKeyService(event.target.value.trim()); if (known) setService(known);
       }} /></label>
-      <div className={s.stack}><label htmlFor="saved-key-service">What it is for</label><select id="saved-key-service" className={s.select} value={service} onChange={event => setService(event.target.value as KeyService)}>
+      <div className={s.stack}><label htmlFor="saved-key-service">What it is for</label><select id="saved-key-service" className={s.select} value={service} disabled={Boolean(knownKeyService(replacing?.name ?? name))} onChange={event => setService(event.target.value as KeyService)}>
         {Object.entries(KEY_SERVICES).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
       </select></div>
-      <label className={s.stack}>Key <input className={s.input} name="key" type="password" required maxLength={16_384} autoComplete="new-password" spellCheck={false} /></label>
-      <button className={s.btn} type="submit" disabled={busy}>{busy ? "Saving and testing…" : "Save and test"}</button>
+      <label className={s.stack}>Key <input ref={keyInput} className={s.input} name="key" type="password" required maxLength={16_384} autoComplete="new-password" spellCheck={false} /></label>
+      <button className={s.btn} type="submit" disabled={busy}>{busy ? "Saving and testing…" : replacing ? "Replace and test" : "Save and test"}</button>
+      {replacing && <button type="button" className={s.btn} disabled={busy} onClick={() => replace(null)}>Add a different key</button>}
     </form>
     {says && <p role="status">{says}</p>}
     {reading.kind === "failed" && <p>The saved keys could not be read. <button className={s.btn} onClick={reload}>Try again</button></p>}
@@ -55,6 +62,7 @@ export function KeysBox() {
         {!row.working && <p>{row.says}</p>}
         <p>Runner last read {row.runnerReadAt ? mst(row.runnerReadAt) : "—"}</p>
         <p>Changed {mst(row.changedAt)}</p>
+        <button type="button" className={s.btn} disabled={busy} onClick={() => replace(row)}>Replace {row.label}</button>
         <button type="button" className={s.btn} disabled={busy} onClick={() => void send("DELETE", { name: row.name })}>Delete {row.label}</button>
         {row.canUndo && <button type="button" className={s.btn} disabled={busy} onClick={() => void send("POST", { name: row.name, action: "undo" })}>Undo last change</button>}
         <details><summary>Earlier changes</summary>{row.history.map((change, i) => <p key={i}>{mst(change.at)} · {change.before} → {change.after}</p>)}</details>

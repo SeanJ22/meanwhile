@@ -27,7 +27,7 @@ function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoaut
     case "exa-admin": return { url: "https://admin-api.exa.ai/team-management/api-keys", headers: { "x-api-key": key }, accepts: b => Array.isArray(record(b).apiKeys) };
     case "neon": return { url: "https://console.neon.tech/api/v2/projects?limit=1", headers: { Authorization: `Bearer ${key}` }, accepts: b => Array.isArray(record(b).projects) };
     case "maptiler-service": return { url: "https://service.maptiler.com/v1/analytics/api_usage/timeline?period=current_billing_period&classifier=api_keys&group=request&format=json",
-      headers: { Authorization: `Bearer ${key}` }, accepts: b => Array.isArray(record(b).datasets) };
+      headers: { Authorization: `Token ${key}` }, accepts: b => Array.isArray(record(b).datasets) };
   }
 }
 

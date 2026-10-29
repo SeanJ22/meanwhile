@@ -65,9 +65,14 @@ export const KEY_NAMES: Readonly<Record<string, KeyService>> = {
   PRL_ARCHIVE_S3_ACCESS_KEY_ID: "other", PRL_ARCHIVE_S3_SECRET_ACCESS_KEY: "other", WTP_MAPTILER_SMOKE_KEY: "maptiler",
 };
 
+export function knownKeyService(name: string): KeyService | undefined {
+  const base = name.replace(/\.(runner|website)$/, "");
+  return Object.hasOwn(KEY_NAMES, base) ? KEY_NAMES[base] : undefined;
+}
+
 export function keyLabel(name: string, service: KeyService): string {
   const [base, runtime] = name.split(".");
-  if (!KEY_NAMES[base]) return name;
+  if (!knownKeyService(name)) return name;
   const label = KEY_SERVICES[service];
   const use = base.includes("WORKERS") ? "Research workers" : runtime === "runner" ? "Runner" : runtime === "website" ? "Website" : null;
   return use ? `${label} (${use})` : label;

@@ -153,6 +153,13 @@ FROM (SELECT c.record->>'role' AS role, (c.record->'cost'->>'usd')::float8 AS us
 export const OUTCOMES_SQL = `SELECT s.record->>'recordClass' AS record_class, s.record->>'outcome' AS outcome, count(*)::int AS n
 FROM cp_log_scout_results s WHERE s.recorded_at > now() - interval '24 hours' GROUP BY 1, 2`;
 
+/** Month choices need only the dates of priced charges; resolving an attempt's model cannot change its month. */
+export const CHECKLIST_MONTHS_SQL = `SELECT DISTINCT to_char(c.recorded_at AT TIME ZONE 'America/New_York','YYYY-MM') AS month
+FROM cp_log_costs c LEFT JOIN LATERAL jsonb_array_elements(CASE WHEN jsonb_typeof(c.record->'byModel')='array' THEN c.record->'byModel' END) m ON true
+WHERE c.recorded_at >= ((date_trunc('month',now() AT TIME ZONE 'America/New_York')-($1::int-1)*interval '1 month') AT TIME ZONE 'America/New_York')
+  AND (c.record->>'role'<>'ACQUIRER' OR coalesce((m->>'usd')::float8,(c.record #>> '{cost,usd}')::float8) IS NOT NULL)
+  AND coalesce((m->>'usd')::float8,(c.record #>> '{cost,usd}')::float8)>0 ORDER BY month DESC`;
+
 export function scoutOutcomeLines(rows: readonly { readonly recordClass: string | null; readonly outcome: string | null; readonly n: number }[]): readonly ScoutOutcomeLine[] {
   const by = new Map<string, { found: number; route: number; total: number }>();
   for (const r of rows) {
@@ -227,6 +234,15 @@ export function workCosts(rows: readonly WorkRowRaw[]): readonly WorkCost[] {
 }
 
 const strings = (value: unknown): string[] => Array.isArray(value) ? value.filter((x): x is string => typeof x === "string") : [];
+
+export async function readChecklistSpend(sql:Sql):Promise<{readonly byMonth:readonly Pick<MonthSpend,"month">[];readonly scoutOutcomes:AdminV6SpendView["scoutOutcomes"]}> {
+  const [raw,outcomes]=await Promise.all([
+    boundedQuery(sql,{operation:"cp_log_costs.checklist_months",callClass:"PAGE"},CHECKLIST_MONTHS_SQL,[SPEND_MONTHS]) as Promise<readonly {month:string}[]>,
+    (boundedQuery(sql,{operation:"cp_log_scout_results.outcomes_24h",callClass:"PAGE"},OUTCOMES_SQL,[]) as Promise<readonly Record<string,unknown>[]>).catch(()=>null),
+  ]);
+  return {byMonth:raw.map(row=>({month:row.month})),scoutOutcomes:outcomes===null?null:scoutOutcomeLines(outcomes.map(r=>({
+    recordClass:typeof r.record_class==="string"?r.record_class:null,outcome:typeof r.outcome==="string"?r.outcome:null,n:Number(r.n)||0})))};
+}
 
 export async function readSpend(sql: Sql, transfer: DailyDatabaseTransferRead | null): Promise<AdminV6SpendView> {
   const [raw, workRaw, rolling, outcomes, modelRaw, factsRaw, huntCostRaw, huntFactsRaw] = await Promise.all([

@@ -126,7 +126,7 @@ test("a registry publication failure leaves its fields open while later election
     publishElection: async (fields, publishedAt) => {
       assert.equal(publishedAt, now);
       assert.equal(fields[0].kind, "registration_deadline");
-      return { candidateId: "election-candidate", promotedVersionId: "election-version", fields: ["deadline"], gaps: [] };
+      return { candidateId: "election-candidate", promotedVersionId: "election-version", fields: ["deadline"], newFields: ["deadline"], gaps: [] };
     } });
   assert.equal(offers, 2, "later publication batches survive the earlier rejected call");
   assert.deepEqual(result.publications, [{ error: "Registry temporarily unavailable" }, { error: "Registry temporarily unavailable" }]);

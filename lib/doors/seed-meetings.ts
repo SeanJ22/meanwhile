@@ -2,7 +2,7 @@ import { derivedMeetingFamilyId, meetingAcquisitionFailureDomain, meetingPartiti
 import { DERIVED_WIRING_SOURCE_NAMES, type DerivedWiringRecord } from "../civic-data/derived-meeting-wiring.ts";
 import type { DerivedMeetingFamilyState } from "../civic-data/contracts.ts";
 import { meetingSourceNamesForWiring, type BodySourceWiring } from "../registry/source-wiring.ts";
-import { normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
+import { normalizeHost, seedDerivedDoors, type DoorDraft, type DoorRepository } from "./registry.ts";
 
 /** Every host a wiring row's settings name: full URLs, and settings that are a bare host. */
 export function hostsOfConfig(config: Readonly<Record<string, string>>, extraUrls: readonly (string | undefined)[] = []): string[] {
@@ -94,7 +94,6 @@ export async function seedMeetingDoors(input: {
   readonly deriveInputAt: string;
   readonly at: string;
 }): Promise<MeetingSeedCounts> {
-  const counts: MeetingSeedCounts = { created: 0, updated: 0, unchanged: 0, keptManualEdit: 0, refused: [] };
   const refused: string[] = [];
   const drafts: DoorDraft[] = [];
   for (const row of input.wiring) {
@@ -105,16 +104,6 @@ export async function seedMeetingDoors(input: {
     }
   }
   for (const record of input.derived) drafts.push(doorFromDerivedRecord(record));
-  for (const draft of drafts) {
-    try {
-      const result = await upsertDerivedDoor(input.repo, draft, input.deriveInputAt, input.at);
-      if (result === "created") counts.created += 1;
-      else if (result === "updated") counts.updated += 1;
-      else if (result === "unchanged") counts.unchanged += 1;
-      else counts.keptManualEdit += 1;
-    } catch (error) {
-      refused.push(`${draft.doorId}: ${(error as Error).message}`);
-    }
-  }
-  return { ...counts, refused };
+  const counts = await seedDerivedDoors(input.repo, drafts, input.deriveInputAt, input.at);
+  return { ...counts, refused: [...refused, ...counts.refused] };
 }

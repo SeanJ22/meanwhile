@@ -33,6 +33,7 @@ import { declaredPhase, phaseFromSql } from "../lib/db/migration-phases.ts";
 
 export const RUNTIME_CONTRACT_RETRY_MS = 15 * 60_000;
 export const RUNTIME_CONTRACT_ATTEMPT_MS = 5 * 60_000;
+export { runtimeContractContinues } from "../lib/db/migration-phases.ts";
 // Contracts can take exclusive reader-table locks (0045 does). The complete
 // journalled DO statement must release them inside the reader query deadline.
 export const RUNTIME_CONTRACT_SQL_SETTINGS = ["SET LOCAL lock_timeout = '250ms'", "SET LOCAL statement_timeout = '1000ms'"] as const;
@@ -51,14 +52,16 @@ export const LOCK_FIRST_ATTEMPT = "500ms";
  * upgrades a lock it already holds. Its own statements then run under the caller's lock timeout again.
  */
 export function lockFirstStatement(tag: string): string {
-  const tables = declaredPhase(tag)?.lockFirst ?? [];
+  const declaration = declaredPhase(tag);
+  const tables = declaration?.lockFirst ?? [];
+  const mode = declaration?.lockFirstMode ?? "ACCESS EXCLUSIVE";
   if (tables.some(table => !/^[a-z_][a-z0-9_]*$/.test(table))) throw new Error(`db:apply: REFUSED — ${tag} declares an invalid table to lock`);
   return tables.length ? `DECLARE lock_first_prior text := current_setting('lock_timeout');
     BEGIN
     <<lock_first>> LOOP
       BEGIN
         PERFORM set_config('lock_timeout', '${LOCK_FIRST_ATTEMPT}', true);
-        LOCK TABLE ${tables.join(", ")} IN ACCESS EXCLUSIVE MODE;
+        LOCK TABLE ${tables.join(", ")} IN ${mode} MODE;
         EXIT lock_first;
       EXCEPTION WHEN lock_not_available OR deadlock_detected THEN
         IF clock_timestamp() > statement_timestamp() + interval '${LOCK_FIRST_WAIT}' THEN

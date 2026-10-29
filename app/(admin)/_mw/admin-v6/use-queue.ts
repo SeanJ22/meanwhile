@@ -1,7 +1,7 @@
 "use client";
 
 /** The Queue's rows from the sections already loaded plus the two small readings it needs (shut doors, scheduled orders). Shared by the Queue and Now. */
-import type { DoorsView } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
+import type { QueueDoorsView } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
 import { createElement, Fragment, type ReactNode } from "react";
 import type { ScheduledView } from "@/lib/control-plane/admin-view/v6-scheduled-read.ts";
 
@@ -12,7 +12,7 @@ import { stateKeyOf } from "./places.ts";
 
 export function useQueueRows(): { readonly rows: readonly QueueRow[]; readonly unread: readonly string[]; readonly status: ReactNode } {
   const v = useV6();
-  const doorRead = useReading<DoorsView>("/api/admin/v6/doors", "Shut doors");
+  const doorRead = useReading<QueueDoorsView>("/api/admin/v6/doors?reading=queue", "Shut doors");
   const scheduledRead = useReading<ScheduledView>("/api/admin/v6/scheduled", "Scheduled orders");
   const problemRead = useReading<{rows:readonly QueueRow[];unread:boolean}>("/api/admin/v6/reader-problems", "Reader problems");
   const doors = doorRead.reading;
@@ -25,7 +25,7 @@ export function useQueueRows(): { readonly rows: readonly QueueRow[]; readonly u
     hunts: v.data.hunts.data,
     stuck: v.data.stuck.data,
     fixes: v.data.fixes.data,
-    doors: doors.kind === "ready" ? doors.data.rows.filter((d) => d.status === "Shut") : null,
+    doors: doors.kind === "ready" ? doors.data.rows : null,
     scheduled: scheduled.kind === "ready" ? scheduled.data.rows : null,
   });
   const unread = ([

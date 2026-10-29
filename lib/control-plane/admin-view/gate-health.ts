@@ -1,6 +1,16 @@
 /** Read-only health rows: no gate here can hold publishing. A gate with no reading says "not measured" and why, never a guessed pass. */
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { livenessOf } from "../owner-surface.ts";
+import { RUNNER_ID } from "../admin-data.ts";
+import type { ControlPlaneRepositories } from "../repository/types.ts";
+
+export async function readGateHeartbeat(repos: ControlPlaneRepositories): Promise<RunnerHeartbeat | null> {
+  const row = await repos.runnerHeartbeat.readNarrowed(RUNNER_ID, {
+    beatAt: true, lastCycleOk: true, nextCycleDueAt: true, pause: true,
+    codeIdentity: ["verdict", "detail"], releaseStaging: ["state", "targetSha", "code", "detail"],
+  });
+  return row?.value as RunnerHeartbeat | undefined ?? null;
+}
 
 export type GateHealthState = "pass" | "attention" | "not_measured";
 

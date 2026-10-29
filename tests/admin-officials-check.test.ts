@@ -13,7 +13,7 @@ import { peopleDoorCovers } from "../lib/doors/people-feeds.ts";
 import { feedDoorDrafts } from "../lib/doors/seed-feeds.ts";
 import { routineDueRequestFor } from "../lib/civic-data/routine-due-request.ts";
 import { MemoryRoutineDataStore } from "../lib/civic-data/store.ts";
-import type { CandidateVersionRecord, PromotedProjection } from "../lib/civic-data/types.ts";
+import type { PromotedPointerIdentity } from "../lib/civic-data/types.ts";
 import type { RosterChange } from "../lib/officials/roster-changes.ts";
 import type { ReadOnlyQuery, Row } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import { actionInput } from "../app/(admin)/_mw/admin-v6/contract.ts";
@@ -67,8 +67,8 @@ test("an Admin state check marks its people sources, the next pass reads them, a
     ["US-FL:people:official-state-people:v1", [{ kind: "appointed", name: "New Member", divisionId: `${FL}/sldl:5`, officeTitle: "State Representative", sourceUrl: "https://www.flhouse.gov/" },
       { kind: "appointed", name: "Elsewhere", divisionId: "ocd-division/country:us/state:ga/sldl:1", officeTitle: "State Representative", sourceUrl: "https://www.legis.ga.gov/" }]],
   ]);
-  t.mock.method(store, "readPromotion", async (_recordClass: string, scope: string) => changes.has(scope) ? { scope, versionId: scope, promotedAt: PASS } as PromotedProjection : null);
-  t.mock.method(store, "readCandidate", async (id: string) => ({ candidate: { normalizedPayload: { changes: changes.get(id) } } } as CandidateVersionRecord));
+  t.mock.method(store, "readPromotionIdentity", async (_recordClass: string, scope: string) => changes.has(scope) ? { scope, versionId: scope, promotedAt: PASS } as PromotedPointerIdentity : null);
+  t.mock.method(store, "readCandidatePath", async <T>(id: string,path:readonly string[]) => {assert.deepEqual(path,["normalizedPayload","changes"]);return (changes.get(id)??null) as T|null;});
   const waiting = await readOfficialsResults({ repos, store, placeKey: "st:fl" });
   assert.ok(!("says" in waiting) && waiting.status === "waiting" && waiting.changes.length === 0, "a mark is not a check");
   for (const id of expected) await recordDoorOutcome(repos.doors, id, "SUCCESS", PASS, id === "feed:congress-bulk-roster:FL" || id === "feed:people-official-state-people-fl");

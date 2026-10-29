@@ -5,7 +5,7 @@ import { openControlPlane } from "@/lib/control-plane/admin-data.ts";
 import { DOOR_CHANGES_SHOWN } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
 import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "@/lib/control-plane/gateway/contract.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
-import { readAdminDoors } from "@/lib/control-plane/admin-view/door-queries.ts";
+import { readAdminDoors, readAdminQueueDoors } from "@/lib/control-plane/admin-view/door-queries.ts";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
@@ -22,6 +22,8 @@ async function get(request: NextRequest): Promise<NextResponse> {
   try {
     const opened = await openControlPlane();
     if (!opened.ok) return NextResponse.json({ says: UNREAD }, { status: 503, headers: NO_STORE });
+    if (request.nextUrl.searchParams.get("reading") === "queue")
+      return NextResponse.json(await readAdminQueueDoors(opened.repos, new Date().toISOString()), { headers: NO_STORE });
     const saves = await (
       // The newest door changes only, narrowed in the store: no full log read.
       opened.repos.adminReceipts.readRecentWhere(ADMIN_RECEIPT_LOG_KEY, ["type"], "door.save", DOOR_CHANGES_SHOWN,

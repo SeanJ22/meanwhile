@@ -79,9 +79,11 @@ test("readNarrowed in Postgres narrows in the database, reads no value for an un
   const row = await snapshots.readNarrowed(SNAPSHOT_ID, { decisionCards: true });
   assert.deepEqual(row, { id: SNAPSHOT_ID, revision: 7, updatedAt: NOW, value: { decisionCards: [] } });
   const [narrow] = calls;
-  assert.match(flat(narrow.text), /THEN NULL ELSE CASE WHEN jsonb_typeof\(cp_owner_snapshots\.value\) = 'object' THEN /);
-  assert.match(flat(narrow.text), /FROM jsonb_each\(cp_owner_snapshots\.value\) AS t WHERE t\.key IN \('decisionCards'\)\) ELSE cp_owner_snapshots\.value END END AS value FROM cp_owner_snapshots WHERE id=\$1$/,
-    "the projection is computed in the database");
+  assert.match(flat(narrow.text), /THEN NULL ELSE CASE WHEN jsonb_typeof\(cp_owner_snapshots\.value\)='object' THEN /);
+  assert.match(flat(narrow.text), /jsonb_build_object\('decisionCards',cp_owner_snapshots\.value->'decisionCards'\)/,
+    "the projection selects the requested field in the database");
+  assert.doesNotMatch(narrow.text, /jsonb_each/,
+    "selecting one field never expands the complete saved object");
   assert.deepEqual(narrow.params, [SNAPSHOT_ID, null], "the first read holds no revision");
 
   assert.deepEqual(await snapshots.readNarrowed(SNAPSHOT_ID, { decisionCards: true }), row, "the held copy answers an unchanged revision");

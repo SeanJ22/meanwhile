@@ -19,6 +19,7 @@ export interface DoorRowView {
   readonly lastFailed: string | null;
 }
 export interface DoorChangeView { readonly at: string; readonly says: string }
+export interface QueueDoorsView { readonly rows: readonly Pick<DoorRowView, "name" | "why" | "since">[] }
 export interface DoorsView {
   readonly observedAt: string;
   readonly counts: { readonly open: number; readonly shut: number; readonly setAside: number; readonly unreadable: number };
@@ -32,11 +33,19 @@ const HOLD_WORDS: Readonly<Record<string, string>> = {
   meetings: "meetings", votes: "votes", money: "money filings", officials: "officials", agendas: "agendas", minutes: "minutes",
 };
 
-export function doorName(door: DoorRecord): string {
+export function doorName(door: Pick<DoorRecord,"holds"|"hosts"> & {readonly meeting: Pick<NonNullable<DoorRecord["meeting"]>,"jurisdiction">|null}): string {
   const holds = door.holds.map((h) => HOLD_WORDS[h] ?? h.replace(/-/g, " ")).join(", ") || "records";
   const who = door.meeting?.jurisdiction ? ` for ${door.meeting.jurisdiction}` : "";
   const host = door.hosts[0] ? ` on ${door.hosts[0]}` : "";
   return `${holds[0].toUpperCase()}${holds.slice(1)}${who}${host}`;
+}
+
+export function doorWhy(door: Pick<DoorRecord,"shutReason"|"lastFailureReason">): string|null {
+  return door.shutReason ?? (door.lastFailureReason ? /API_KEY|key.*unavailable/i.test(door.lastFailureReason)
+    ? "The source's API key is unavailable in this runtime."
+    : /PUBLISHER_DOCUMENT_INVALID|schema|parse/i.test(door.lastFailureReason)
+      ? "The publisher's response could not be read."
+      : "The latest source check could not reach the publisher." : null);
 }
 
 /** An adapter kind in plain words: `official-page-events` reads as "Official page events". */
@@ -55,11 +64,7 @@ export function projectDoors(input: { readonly doors: readonly DoorRecord[]; rea
   const ordered = doors.map((d, n) => ({ d, n })).sort((a, b) => (STATE_ORDER[a.d.status] ?? 3) - (STATE_ORDER[b.d.status] ?? 3) || a.n - b.n);
   const rows = ordered.slice(0, DOORS_SHOWN).map(({ d }) => ({
     name: doorName(d), kind: kindName(d.kind), body: d.meeting?.publishingOrg || d.meeting?.jurisdiction || "—", status: status(d),
-    why: d.shutReason ?? (d.lastFailureReason ? /API_KEY|key.*unavailable/i.test(d.lastFailureReason)
-      ? "The source's API key is unavailable in this runtime."
-      : /PUBLISHER_DOCUMENT_INVALID|schema|parse/i.test(d.lastFailureReason)
-        ? "The publisher's response could not be read."
-        : "The latest source check could not reach the publisher." : null),
+    why: doorWhy(d),
     since: d.shutSince ?? null, lastWorked: d.lastSuccessAt, lastFailed: d.lastFailureAt,
   }));
   const changes = [...input.saves].filter((r) => r.outcome === "DONE")

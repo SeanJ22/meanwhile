@@ -5,11 +5,13 @@ import { PGlite } from "@electric-sql/pglite";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { shareVersionedRows } from "../lib/db/versioned-rows.ts";
 import { pgAppendOnlyRepository, pgDoorRepository, pgMethodCandidateSummary, type Sql } from "../lib/control-plane/repository/pg-store.ts";
+import { CONTROL_COUNTS_DDL } from "../lib/control-plane/repository/control-counts.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { recordArtifactMetadata } from "../lib/control-plane/repository/coordinator.ts";
 import { AppendOnlyViolation, type ArtifactRecord } from "../lib/control-plane/repository/types.ts";
 import type { Attempt } from "../lib/control-plane/attempt.ts";
 import { CENSUS_DOOR_MATCH_FIELDS, handWiredMeetingDoor } from "../lib/doors/platform-census.ts";
+import { DOOR_READS_DDL } from "../lib/doors/read-changes.ts";
 import { applyDerivedRow, checkDoorDraft, type DoorRecord } from "../lib/doors/registry.ts";
 import { readRunnerDoors } from "../lib/doors/runner-reads.ts";
 import { planProbes, runHourlyProbes } from "../lib/doors/hourly-check.ts";
@@ -28,6 +30,11 @@ async function database(t: test.TestContext) {
     CREATE TABLE cp_method_candidates(LIKE cp_doors INCLUDING ALL);
     CREATE TABLE cp_log_artifacts(log_key text,record_id text,position bigint,record jsonb,PRIMARY KEY(log_key,position));
     CREATE FUNCTION cp_control_state(value jsonb) RETURNS text LANGUAGE sql IMMUTABLE AS $$SELECT substring(value->>'ocdId' from '/state:([a-z]{2})')$$;`);
+  for (const ddl of CONTROL_COUNTS_DDL) await db.exec(ddl);
+  await db.exec(`INSERT INTO cp_control_counts(table_name,bucket,n) VALUES('cp_doors','*',0);
+    CREATE TRIGGER a_cp_control_counts AFTER INSERT OR UPDATE OR DELETE ON cp_doors
+      FOR EACH ROW EXECUTE FUNCTION cp_touch_control_counts()`);
+  for (const ddl of DOOR_READS_DDL) await db.exec(ddl);
   const copies = new Map<string, string>(), received: Record<string, unknown>[] = [];
   const sql: Sql = { query: async (text, params = []) => {
     const rows = (await db.query<Record<string, unknown>>(text, [...params])).rows;

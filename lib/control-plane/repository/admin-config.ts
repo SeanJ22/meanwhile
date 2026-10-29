@@ -2,6 +2,7 @@ import { randomUUID } from "node:crypto";
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../gateway/admin-config.ts";
 import { ConcurrentModification, IdentityCollision, UnknownAggregate, canonicalJson, type AggregateRepository, type LockManager, type Persisted } from "./types.ts";
 import { versionedRowsFor, type VersionedRows } from "../../db/versioned-rows.ts";
+import type { FixItem } from "../fix-list.ts";
 
 export const ADMIN_SECTIONS = {
   settingHistory: "setting_history", updates: "updates", fixList: "fix_list", methodStandings: "method_standings",
@@ -20,12 +21,23 @@ export interface AdminSectionQuery {
   readonly activeAt?: string;
   readonly latestPerKey?: number;
   readonly activeAndRecent?: number;
+  /** Fields used by this read; proof and history are selected separately by key. */
+  readonly fieldsProjection?: readonly string[];
+  /** The Queue uses a fix's location only for its state prefix. */
+  readonly queueFixSummary?: boolean;
+}
+export const QUEUE_FIX_FIELDS = ["id", "where", "says", "addedBy", "addedAt", "owner", "state", "fixedAt", "whatChanged", "cameBackAt"] as const;
+function projectedFields(fields: readonly string[] | undefined): readonly string[] | undefined {
+  if (fields && (!fields.length || fields.some(key => !/^[a-zA-Z][a-zA-Z0-9]*$/.test(key)))) throw new Error("Invalid Admin projection fields");
+  return fields ? [...new Set(["id", ...fields])].sort() : undefined;
 }
 export type AdminSectionsQuery = Partial<Record<AdminSection, true | AdminSectionQuery>>;
 export interface AdminConfigRepository extends AggregateRepository<AdminConfig> {
+  readSections(id: string, sections: AdminSectionsQuery): Promise<Persisted<AdminConfig> | null>;
   read(id: string, sections?: AdminSectionsQuery): Promise<Persisted<AdminConfig> | null>;
   mustRead(id: string, sections?: AdminSectionsQuery): Promise<Persisted<AdminConfig>>;
   save(held: Persisted<AdminConfig> | null, next: AdminConfig, now: string): Promise<Persisted<AdminConfig>>;
+  readFixes(selection: AdminSectionQuery & { readonly fieldsProjection: readonly string[] }): Promise<readonly FixItem[]>;
 }
 
 export const ADMIN_SECTION_TABLES = Object.values(ADMIN_SECTIONS).map(name => `cp_admin_${name}`);
@@ -144,9 +156,18 @@ export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, 
         const versions = await query(`SELECT picked.id,concat(source.xmin::text,'/',source.ctid::text) AS revision
           FROM (${selected}) picked JOIN ${table} source ON source.config_id=$1 AND source.id=picked.id
           ORDER BY picked.${options.afterId !== undefined ? "id ASC" : "ordinal DESC"}`,params) as {id:string;revision:string}[];
-        const bodies = await reads.known(table,versions,`config:${id}`,async ids=>await query(
-          `SELECT id,value,concat(xmin::text,'/',ctid::text) AS revision FROM ${table} WHERE config_id=$1 AND id=ANY($2::text[])`,[id,ids]),
-          row=>String(row.id),row=>String(row.revision));
+        const fields = projectedFields(options.fieldsProjection);
+        const queueFixSummary = section === "fixList" && options.queueFixSummary;
+        const bodies = await reads.known(table,versions,`config:${id}${fields ? `:fields:${fields.join(",")}:${queueFixSummary ? "queue" : "full"}` : ""}`,async ids=>{
+          if (!fields) return query(`SELECT id,value,concat(xmin::text,'/',ctid::text) AS revision FROM ${table} WHERE config_id=$1 AND id=ANY($2::text[])`,[id,ids]);
+          const valueFields = fields.filter(field => field !== "id");
+          const [packed] = await query(`SELECT coalesce(jsonb_agg(jsonb_build_array(id,concat(xmin::text,'/',ctid::text),
+            jsonb_build_array(${valueFields.map(key => key === "where" && queueFixSummary
+              ? "CASE WHEN value->>'addedBy'='The line keeper' THEN coalesce(substring(value->>'where' FROM '^[A-Z]{2} · '),'') ELSE '' END" : `value->'${key}'`).join(",")}))),'[]'::jsonb) AS projected
+            FROM ${table} WHERE config_id=$1 AND id=ANY($2::text[])`,[id,ids]) as { projected: readonly [string,string,readonly unknown[]][] }[];
+          return packed.projected.map(([key,revision,values]) => ({id:key,revision,
+            value:{id:key,...Object.fromEntries(valueFields.flatMap((field,n) => values[n] === null ? [] : [[field,values[n]]]))}}));
+        },row=>String(row.id),row=>String(row.revision),fields ? 1_000 : 100);
         const items = bodies.map(row => row.value);
         loaded[section] = options.afterId !== undefined ? items : items.reverse();
       }));
@@ -193,6 +214,8 @@ export function pgAdminConfigRepository(base: AggregateRepository<AdminConfig>, 
 function adminMethods(base: AggregateRepository<AdminConfig>, read: AdminConfigRepository["read"], save: AdminConfigRepository["save"]): AdminConfigRepository {
   return {
     ...base, read, save,
+    readSections: read,
+    async readFixes(selection) { return (await read(ADMIN_CONFIG_ID, { fixList: selection }))?.value.fixList ?? []; },
     async mustRead(id, sections) { const row = await read(id, sections); if (!row) throw new UnknownAggregate("AdminConfig", id); return row; },
     async put(id, value, now) {
       if (id !== ADMIN_CONFIG_ID) throw new Error("Invalid Admin config id");
@@ -284,7 +307,10 @@ export function storedAdminConfigRepository(base: AggregateRepository<AdminConfi
           selected = [...new Map([...selected, ...extras.filter(row => row.item !== null).map(row => row.item!)].map(item => [itemId(section, item), item])).values()]
             .sort((a, b) => options.afterId !== undefined ? itemId(section, a).localeCompare(itemId(section, b)) : ordinals.get(itemId(section, a))! - ordinals.get(itemId(section, b))!);
         }
-        loaded[section] = selected;
+        const fields = projectedFields(options.fieldsProjection);
+        loaded[section] = fields ? selected.map(item => Object.fromEntries(fields.filter(key => item[key] !== undefined).map(key => [key,
+          key === "where" && section === "fixList" && options.queueFixSummary
+            ? item.addedBy === "The line keeper" ? /^[A-Z]{2} · /.exec(String(item.where))?.[0] ?? "" : "" : item[key]]))) : selected;
       }
       if (Object.keys(query).length && (await base.read(id))?.revision !== held.revision) continue;
       return { ...held, value: copy({ ...currentSettings(held.value), ...loaded }) };

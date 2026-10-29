@@ -9,7 +9,6 @@ import { pageWords, section3Record } from "../control-plane/promotion/section3.t
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 import { captureIntact, heldPageCopies } from "./worker-publication-evidence.ts";
 import { publishElectionFields } from "./election-field-publication.ts";
-import { readManualProjectionPrior } from "./manual-projections.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { US_STATES } from "../control-plane/readiness/catalog.ts";
 import { inventoryRecordEvidence, RecordEvidenceRefusal } from "../control-plane/workers/record-evidence.ts";
@@ -159,6 +158,9 @@ const SIBLING_FIELDS: RecordProjection = { autonomousPlan: ["contract"] };
 type HeldRoute = { readonly id: string; readonly autonomousPlan?: Partial<Pick<NonNullable<WorkItem["autonomousPlan"]>, "contract" | "publication">> };
 /* Places read at once: each is a few database and saved-page reads, none sent to a government's website. */
 const PLACES_AT_ONCE = 8;
+/** Capture pointers only: publication quotations are already held in the fingerprinted vault source. */
+const HELD_CAPTURE_FIELDS: RecordProjection = { artifactId: true, workItemId: true, routeTaskId: true, attemptId: true,
+  tier: true, contentHash: true, byteLength: true, contentType: true, canonicalUrl: true, partial: true, recordedAt: true };
 
 export async function publishHeldElectionOffices(input: {
   readonly repos: ControlPlaneRepositories; readonly store: RoutineDataStore;
@@ -175,7 +177,7 @@ export async function publishHeldElectionOffices(input: {
   let nationalFields: readonly ElectionFieldInput[] = [], nationalFailure: string | null = null;
   try {
     const nationalArtifacts = owed.length && input.repos.artifactsByCanonicalUrl
-      ? await input.repos.artifactsByCanonicalUrl(NATIONAL_ELECTION_OFFICES_URL, input.limit ?? 60) : [];
+      ? await input.repos.artifactsByCanonicalUrl(NATIONAL_ELECTION_OFFICES_URL, input.limit ?? 60, HELD_CAPTURE_FIELDS) : [];
     for (const artifact of heldPageCopies(nationalArtifacts, input.limit ?? 60)) {
       const capture = await input.readHeld(artifact);
       if (!capture || !captureIntact(capture)) continue;
@@ -185,11 +187,25 @@ export async function publishHeldElectionOffices(input: {
   } catch (error) {
     nationalFailure = `NATIONAL_ELECTION_OFFICE_SOURCE_UNAVAILABLE:${sanitizedErrorDiagnostic(error)}`;
   }
+  const registryRequests = new Map<string, { bodies: Set<string>; divisions: Set<string> }>();
+  for (const item of owed) {
+    const plan = item.autonomousPlan!;
+    if (plan.contract?.schemaVersion !== 2) continue;
+    const state = plan.contract.jurisdiction.state;
+    const request = registryRequests.get(state) ?? { bodies: new Set<string>(), divisions: new Set<string>() };
+    request.bodies.add(plan.publication!.bodyId);
+    request.divisions.add(plan.contract.jurisdiction.canonicalId);
+    registryRequests.set(state, request);
+  }
+  const registries = new Map<string, Awaited<ReturnType<RoutineDataStore["readRegistrySlice"]>>>();
+  await runPool([...registryRequests], PLACES_AT_ONCE, async ([state, request]) => {
+    registries.set(state, await input.store.readRegistrySlice(state, [...request.bodies], [...request.divisions]));
+  });
   const places = new Map<string, { readonly subjectId: string; readonly ocdId: string; readonly label: string }>(), placeOf = new Map<string, string>();
   for (const item of owed) {
     const plan = item.autonomousPlan!;
     if (plan.contract?.schemaVersion !== 2) { fieldsByItem.set(item.id, -1); continue; }
-    const registry = await input.store.readRegistrySlice(plan.contract.jurisdiction.state, [plan.publication!.bodyId], [plan.contract.jurisdiction.canonicalId]);
+    const registry = registries.get(plan.contract.jurisdiction.state);
     const body = registry?.payload.registry.bodies.find(row => row.id === plan.publication!.bodyId);
     const divisionId = body?.ocdId ?? null;
     const division = divisionId ? registry!.payload.registry.divisions.find(row => row.ocdId === divisionId) : undefined;
@@ -201,8 +217,8 @@ export async function publishHeldElectionOffices(input: {
   const read = new Map<string, readonly ElectionFieldInput[]>();
   await runPool([...places], PLACES_AT_ONCE, async ([key, place]) => {
     const ids = await placeWork(place.subjectId);
-    const artifacts = input.repos.artifacts.readKeys ? [...(await input.repos.artifacts.readKeys(ids)).values()].flat()
-      : (await Promise.all(ids.map(id => input.repos.artifacts.read(id)))).flat();
+    if (!input.repos.artifacts.readKeys) throw new Error("HELD_CAPTURE_POINTER_READER_UNAVAILABLE");
+    const artifacts = [...(await input.repos.artifacts.readKeys(ids, HELD_CAPTURE_FIELDS)).values()].flat();
     const found: ElectionFieldInput[] = [];
     // The newest usable copy of each page speaks for it; a later "Access Denied" capture never shadows a good one.
     const readUrls = new Set<string>();
@@ -228,11 +244,8 @@ export async function publishHeldElectionOffices(input: {
   if (fields.length) {
     try {
       // Delivery counts what this pass newly put in front of readers, once, not each re-verified office per owed item.
-      const states = [...new Set(fields.flatMap(field => electionFieldState(field.divisionId) ?? []))];
-      const before = new Set((await Promise.all(states.map(state => readManualProjectionPrior("ballot-navigation", input.store, input.now, ballotNavigationScope(state)))))
-        .flatMap(prior => (prior?.payload as { records?: readonly { id: string }[] } | undefined)?.records?.map(row => row.id) ?? []));
       published = await publishElectionFields({ store: input.store, now: input.now, fields, verify: section3Record });
-      fresh = published.fields.filter(id => !before.has(id));
+      fresh = published.newFields;
     } catch (error) { failure = sanitizedErrorDiagnostic(error); }
   }
   const report: { workItemId: string; outcome: NonNullable<WorkItem["publicationOutcome"]> }[] = [];

@@ -6,7 +6,7 @@
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
 import { feedDoorDrafts } from "./seed-feeds.ts";
 import { ocdInside } from "./mission-refresh.ts";
-import { isDoorRecord, listDoors, upsertDerivedDoor, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { isDoorRecord, upsertDerivedDoor, type DoorRecord, type DoorRepository } from "./registry.ts";
 import type { MissionRefreshCount } from "./mission-refresh.ts";
 
 const PEOPLE_HOLDS = new Set(["state-legislator", "federal-directory"]);
@@ -61,9 +61,4 @@ export async function markPeopleDoorsReadNow(repo: DoorRepository, divisions: re
     } catch { counts.raced++; }
   }
   return { ...counts, doors };
-}
-
-/** The people doors over a place, as currently held. */
-export async function peopleDoorsFor(repo: DoorRepository, divisions: readonly string[]): Promise<readonly DoorRecord[]> {
-  return (await listDoors(repo)).doors.filter(door => peopleDoorCovers(door, divisions));
 }

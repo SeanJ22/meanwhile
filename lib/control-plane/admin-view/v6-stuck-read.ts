@@ -1,24 +1,15 @@
 import { plainWords } from "./plain-words.ts";
 import type { Sql } from "../repository/pg-store.ts";
-import { readStuckSummary, type StuckSummary } from "./stuck-summary.ts";
+import type { StuckSummary } from "./stuck-summary.ts";
+import { readOwnerStuckSummary } from "../repository/owner-stuck-counts.ts";
 import { US_STATES } from "../readiness/catalog.ts";
 import { ageOf, causeOf, NEED_WORDS, placeKeyOfRow, sendWordsFor, stateOfRow, type BlockerLane, type Cause, type StuckRowLike } from "./blocker-causes.ts";
 import { parseV6PlaceKey, type V6PlaceScope } from "./v6-hunts-read.ts";
 
-/** Each state's index is unpacked inside the database, each row as it holds at the database's clock; only stuck rows (failed, blocked, unknown, or waiting past due) return. */
+/** The work list holds one assignment per key; only its current stuck segments return. */
 export const ADMIN_V6_STUCK_CONTRACT = "admin-v6/stuck@1" as const;
 export const ADMIN_V6_SAME_CAUSE_CONTRACT = "admin-v6/sameCause@1" as const;
 export const STUCK_ITEM_LIMIT = 300;
-
-export const STUCK_INDEX_SQL = `SELECT x->>'id' AS id, x->>'state' AS state, x->>'lane' AS lane, x->>'owner' AS owner,
-  left(x->>'blocker', 400) AS blocker, left(x->>'label', 200) AS label, left(x->>'subjectName', 160) AS subject_name,
-  x->>'stateCode' AS state_code, (x->>'overdue')::boolean AS overdue, (x->>'band')::int AS band,
-  x->>'waitingSince' AS waiting_since, x->>'eligibleAt' AS eligible_at, x->>'lastActivityAt' AS last_activity_at,
-  left(x->>'nextAction', 240) AS next_action, x->'assignmentKeys' AS assignment_keys,
-  (SELECT updated_at FROM cp_owner_snapshots WHERE id = 'current') AS published_at
-  FROM cp_owner_snapshots s, jsonb_array_elements(s.value->'allRowsIndex') AS x
-  WHERE s.id LIKE 'current:%' AND (x->>'from' IS NULL OR (x->>'from')::timestamptz <= now()) AND (x->>'until' IS NULL OR (x->>'until')::timestamptz > now())
-    AND (x->>'state' IN ('FAILED', 'BLOCKED', 'UNKNOWN') OR (x->>'state' = 'WAITING' AND x->>'overdue' = 'true'))`;
 
 export interface StuckPopulation {
   readonly state: "READ";
@@ -28,13 +19,17 @@ export interface StuckPopulation {
 }
 
 export async function readStuckPopulation(sql: Sql, scope = "us"): Promise<StuckPopulation> {
-  const state=/^(?:st:|geo:)([a-z]{2})(?:[.:]|$)/.exec(scope)?.[1];
-  const index=state?STUCK_INDEX_SQL.replace("s.id LIKE 'current:%'",`s.id = 'current:${state}'`):STUCK_INDEX_SQL;
-  const summary = await readStuckSummary(sql,index,STUCK_ITEM_LIMIT,scope);
+  const summary = await readOwnerStuckSummary(sql,STUCK_ITEM_LIMIT,scope);
   const raw = summary.rows as readonly Record<string,unknown>[];
   let publishedAt: string | null = summary.published_at instanceof Date ? summary.published_at.toISOString() : typeof summary.published_at==='string' ? summary.published_at : null;
-  const rows = raw.map((r): StuckRowLike => {
-    publishedAt = typeof r.published_at === "string" ? r.published_at : r.published_at instanceof Date ? r.published_at.toISOString() : publishedAt;
+  const rows = stuckRowsOf(raw);
+  for (const r of raw) publishedAt = typeof r.published_at === "string" ? r.published_at : r.published_at instanceof Date ? r.published_at.toISOString() : publishedAt;
+  return { state: "READ", rows, publishedAt, summary:{total:Number(summary.total),groups:summary.groups as StuckSummary['groups'],
+    counts:{states:summary.states as Record<string,number>,places:summary.places as Record<string,number>}} };
+}
+
+export function stuckRowsOf(raw:readonly Record<string,unknown>[]):readonly StuckRowLike[] {
+  return raw.map((r): StuckRowLike => {
     const text = (v: unknown) => (typeof v === "string" ? v : null);
     return { id: String(r.id), state: String(r.state), lane: text(r.lane), owner: text(r.owner), blocker: text(r.blocker), label: text(r.label),
       subjectName: text(r.subject_name), stateCode: text(r.state_code), overdue: typeof r.overdue === "boolean" ? r.overdue : null,
@@ -42,8 +37,6 @@ export async function readStuckPopulation(sql: Sql, scope = "us"): Promise<Stuck
       lastActivityAt: text(r.last_activity_at), nextAction: text(r.next_action),
       assignmentKeys: Array.isArray(r.assignment_keys) ? r.assignment_keys.filter((k): k is string => typeof k === "string") : [] };
   });
-  return { state: "READ", rows, publishedAt, summary:{total:Number(summary.total),groups:summary.groups as StuckSummary['groups'],
-    counts:{states:summary.states as Record<string,number>,places:summary.places as Record<string,number>}} };
 }
 
 export interface StuckActionRef { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: Readonly<Record<string, string>> }
@@ -75,7 +68,7 @@ function sendAction(target: string, label: string, words: string): StuckActionRe
   return { kind: "send-agents", target, label, payload: { words } };
 }
 
-export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowIso: string, shutDoors: readonly AdminV6StuckItem[] = [], summary?: StuckSummary): {
+export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowIso: string, shutDoors: readonly AdminV6StuckItem[] = [], summary?: StuckSummary, shutDoorCount = shutDoors.length): {
   readonly items: readonly AdminV6StuckItem[]; readonly sameCause: readonly AdminV6SameCause[]; readonly total: number;
 } {
   const scope = parseV6PlaceKey(scopeKey);
@@ -88,7 +81,8 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
     return { row, cause, age, score: urgency * 100 + harm * 30 + Math.min(age.rank, 60) };
   }).sort((a, b) => b.score - a.score || a.row.id.localeCompare(b.row.id));
   const place = (row: StuckRowLike) => placeKeyOfRow(row);
-  const items = [...shutDoors, ...scored.slice(0, STUCK_ITEM_LIMIT - shutDoors.length).map(({ row, cause, age }): AdminV6StuckItem => {
+  const shownDoors = shutDoors.slice(0, STUCK_ITEM_LIMIT);
+  const items = [...shownDoors, ...scored.slice(0, STUCK_ITEM_LIMIT - shownDoors.length).map(({ row, cause, age }): AdminV6StuckItem => {
     const at = place(row);
     const title = plainWords([row.label, row.subjectName && row.label && !row.label.includes(row.subjectName) ? row.subjectName : null].filter(Boolean).join(" — ") || "Work waiting for repair", "Work waiting for repair");
     const state = stateNameOf(stateOfRow(row));
@@ -124,5 +118,5 @@ export function stuckViews(rows: readonly StuckRowLike[], scopeKey: string, nowI
         itemIds: g.rows.filter((r) => shownIds.has(r.id)).map((r) => r.id),
         ...(words === null ? {} : { action: sendAction(target, `Send agents to all ${g.count}`, words) }) } as AdminV6SameCause;
     });
-  return { items, sameCause, total: (summary?.total ?? scored.length) + shutDoors.length };
+  return { items, sameCause, total: (summary?.total ?? scored.length) + shutDoorCount };
 }

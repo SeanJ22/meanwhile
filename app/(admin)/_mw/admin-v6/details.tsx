@@ -9,7 +9,7 @@ import type { ReactNode } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, Swatch } from "./charts.tsx";
 import { useV6, type Detail } from "./context.tsx";
-import { mst, STAGE_NAMES, type ActionRef, type FixShot, type SavedDoc } from "./model.ts";
+import { mst, STAGE_NAMES, type ActionRef, type FixShot, type FixView, type SavedDoc } from "./model.ts";
 import { relation } from "./places.ts";
 import { ReceiptCard } from "./receipt-view.tsx";
 import { TaskStages } from "./task-stages.tsx";
@@ -17,6 +17,7 @@ import { EvidenceTrail } from "./trail-view.tsx";
 import { LANE_TONE, LANE_WORDS, StuckRow } from "./screen-now.tsx";
 import { Actions, Card, cx, Empty, Facts, markWords, Pill, Technical } from "./ui.tsx";
 import s from "./v6.module.css";
+import { useReading } from "./use-reading.ts";
 
 function Panel(props: { readonly eyebrow: string; readonly title: string; readonly badge?: ReactNode; readonly summary?: string; readonly actions?: readonly ActionRef[]; readonly targets: readonly string[]; readonly children?: ReactNode }) {
   const v = useV6();
@@ -70,6 +71,54 @@ function Doc(props: { readonly doc: SavedDoc }) {
       {ready && d.preview && <pre className={cx(s.tech)} style={{ whiteSpace: "pre-wrap", padding: 8 }}>{d.preview}</pre>}
     </div>
   );
+}
+
+/** The Queue carries list fields; opening a fix reads its own proof and history. */
+function FixDetail(props: { readonly id: string }) {
+  const { reading, status } = useReading<{ readonly data: FixView }>(`/api/admin/v6/fixes?id=${encodeURIComponent(props.id)}`, "Fix details");
+  const view = reading.kind === "ready" ? reading.data.data : null;
+  if (reading.kind !== "ready") return <>{status}{reading.kind === "failed" && <Empty>{reading.says}</Empty>}</>;
+  return <>{status}<FixDetailContents id={props.id} view={view!} /></>;
+}
+
+function FixDetailContents(props: { readonly id: string; readonly view: FixView }) {
+  const v = useV6();
+  const view = props.view;
+    const f = view?.open.find((x) => x.id === props.id);
+    const c = f ? undefined : [...(view?.returned ?? []), ...(view?.closed ?? [])].find((x) => x.id === props.id);
+    if (c) {
+      return (
+        <Panel eyebrow={`Fix list · ${c.origin}`} title={c.title} summary={c.changed} targets={[c.id]}>
+          <Card title="What happened">
+            <Facts rows={[
+              ["Where", c.places],
+              ["What changed", c.whatChanged],
+              ["Checked on the reader page", c.readerRecheck],
+              ["Since the fix", c.since],
+              ...(c.returnedDetail ? [["When it came back", c.returnedDetail] as const] : []),
+              ...(c.history ? [["History", c.history] as const] : []),
+              ["Saved to prevent it", c.saved],
+              ["Used by", c.usedBy],
+            ]} />
+            <Technical lines={[c.technical]} />
+          </Card>
+          <Shots shots={c.shots} />
+        </Panel>
+      );
+    }
+    if (!f) return <Empty>This fix isn’t available.</Empty>;
+    return (
+      <Panel eyebrow={`Fix list · ${f.owner}`} title={f.title} summary={f.problem} badge={<Pill>{({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[f.tab]}</Pill>}
+        actions={[]} targets={[f.id]}>
+        <Card title="Where it stands">
+          <Facts rows={[["What it helps", f.helps], ["Place in line", f.placeInLine], ["Resources now", f.resourcesNow]]} />
+          {f.origin === "engineering" && <TaskStages stage={f.taskStage} />}
+          {!!f.linkedStuck.length && <div className={s.stack}>{f.linkedStuck.map((id) => { const i = v.data.stuck.data?.find((x) => x.id === id); return i ? <StuckRow key={id} item={i} /> : null; })}</div>}
+          <Technical lines={[f.technical]} />
+        </Card>
+        <Shots shots={f.shots} />
+      </Panel>
+    );
 }
 
 export function DetailPanel(props: { readonly detail: Detail }) {
@@ -179,43 +228,7 @@ export function DetailPanel(props: { readonly detail: Detail }) {
     );
   }
 
-  if (d.type === "fix") {
-    const f = v.data.fixes.data?.open.find((x) => x.id === d.id);
-    const c = f ? undefined : [...(v.data.fixes.data?.returned ?? []), ...(v.data.fixes.data?.closed ?? [])].find((x) => x.id === d.id);
-    if (c) {
-      return (
-        <Panel eyebrow={`Fix list · ${c.origin}`} title={c.title} summary={c.changed} targets={[c.id]}>
-          <Card title="What happened">
-            <Facts rows={[
-              ["Where", c.places],
-              ["What changed", c.whatChanged],
-              ["Checked on the reader page", c.readerRecheck],
-              ["Since the fix", c.since],
-              ...(c.returnedDetail ? [["When it came back", c.returnedDetail] as const] : []),
-              ...(c.history ? [["History", c.history] as const] : []),
-              ["Saved to prevent it", c.saved],
-              ["Used by", c.usedBy],
-            ]} />
-            <Technical lines={[c.technical]} />
-          </Card>
-          <Shots shots={c.shots} />
-        </Panel>
-      );
-    }
-    if (!f) return <Empty>This fix isn’t available.</Empty>;
-    return (
-      <Panel eyebrow={`Fix list · ${f.owner}`} title={f.title} summary={f.problem} badge={<Pill>{({ attention: "Needs attention", fixing: "Being fixed", update: "Waiting for update" })[f.tab]}</Pill>}
-        actions={[]} targets={[f.id]}>
-        <Card title="Where it stands">
-          <Facts rows={[["What it helps", f.helps], ["Place in line", f.placeInLine], ["Resources now", f.resourcesNow]]} />
-          {f.origin === "engineering" && <TaskStages stage={f.taskStage} />}
-          {!!f.linkedStuck.length && <div className={s.stack}>{f.linkedStuck.map((id) => { const i = v.data.stuck.data?.find((x) => x.id === id); return i ? <StuckRow key={id} item={i} /> : null; })}</div>}
-          <Technical lines={[f.technical]} />
-        </Card>
-        <Shots shots={f.shots} />
-      </Panel>
-    );
-  }
+  if (d.type === "fix") return <FixDetail key={d.id} id={d.id} />;
 
   if (d.type === "look") {
     const l = v.data.fixes.data?.look;

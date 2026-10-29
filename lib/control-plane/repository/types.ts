@@ -313,7 +313,7 @@ export interface AppendOnlyRepository<T> {
   /** Exactly `keys()` narrowed to keys holding a matching record, sorted. */
   keysWhere(path: readonly string[], value: string): Promise<readonly string[]>;
   /** Exactly `read(key)` for each key, in one batched read; a key with no record is absent. */
-  readKeys?(keys: readonly string[]): Promise<ReadonlyMap<string, readonly T[]>>;
+  readKeys?(keys: readonly string[], projection?: RecordProjection): Promise<ReadonlyMap<string, readonly T[]>>;
   /** Records whose `changed_at` is at or after `since` (all when null), less any `held` names, in `readAll()` order, with coordinates. */
   readChangedSince(since: string | null, held?: HeldSlots, options?: ChangedReadOptions<ChangedRecord<T>>): Promise<ChangedRecords<T>>;
   /** Records the appender stamped at or after `from` and before `until`, handed over page by page with both clocks. */
@@ -442,6 +442,8 @@ export interface RecordedTransition {
 }
 
 export interface ControlPlaneRepositories {
+  /** Projection-specific lease change versions, separate from aggregate write revisions. */
+  readonly ownerLeaseChanges?: import("./owner-lease-changes.ts").OwnerLeaseChanges;
 
   readonly adminActionHistoryPage?: (query: import("./action-history-atomic.ts").ActionHistoryReadQuery) => Promise<readonly import("./action-history-atomic.ts").ActionHistoryReadRow[]>;
   readonly workItems: AggregateRepository<WorkItem>;
@@ -461,7 +463,7 @@ export interface ControlPlaneRepositories {
   readonly dispositions: AppendOnlyRepository<DispositionCommit>;
   readonly artifacts: AppendOnlyRepository<ArtifactRecord>;
 
-  readonly artifactsByCanonicalUrl?: (url: string, limit: number) => Promise<readonly ArtifactRecord[]>;
+  readonly artifactsByCanonicalUrl?: (url: string, limit: number, projection?: RecordProjection) => Promise<readonly ArtifactRecord[]>;
 
   readonly capturedCanonicalUrls?: (urls: readonly string[]) => Promise<ReadonlySet<string>>;
 
@@ -471,6 +473,8 @@ export interface ControlPlaneRepositories {
   readonly ownerSnapshots: AggregateRepository<OwnerSnapshot>;
   /** The running totals the snapshot is folded from, and where each of its reads last stopped. */
   readonly ownerSnapshotTotals: AggregateRepository<OwnerSnapshotTotals>;
+  readonly ownerAssignmentRows: import("./owner-assignment-rows.ts").OwnerAssignmentRows;
+  readonly ownerCostRefs: import("./owner-cost-refs.ts").OwnerCostRefs;
   /** Each state's published rows, its running totals, and the rows a publish routed to it before folding it. */
   readonly ownerSnapshotStates: AggregateRepository<OwnerSnapshotState>;
   readonly ownerSnapshotStateTotals: AggregateRepository<StateTotals>;

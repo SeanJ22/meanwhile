@@ -3,7 +3,7 @@ import "server-only";
 /** Aggregates over the Scout result log, never the log itself: database transfer is billed. A failure is returned as unread, never as an empty week. */
 import { neon } from "../../../../lib/db/client.ts";
 
-import type { WeekLearningRow } from "@/lib/control-plane/admin-view/learning-trends.ts";
+import { SCOUT_LEARNING_SQL, type WeekLearningRow } from "@/lib/control-plane/admin-view/learning-trends.ts";
 import { CONTROL_PLANE_URL_VAR } from "@/lib/control-plane/repository/pg-store.ts";
 
 import { ADMIN_READ_DEADLINE_MS, lateWords, sharedRead } from "./shared-read.ts";
@@ -25,68 +25,6 @@ export interface LearningTrendFacts {
   readonly bankWriteErrors: number;
 }
 
-// A CASE, not an AND: SQL does not promise to short-circuit, and jsonb_array_length of a non-array throws.
-const REFUSED = `(case when jsonb_typeof(record->'refusal') = 'array' then jsonb_array_length(record->'refusal') else 0 end) > 0`;
-const FOUND = `record->>'outcome' in ('ROUTE_CANDIDATE', 'EVIDENCE_FOUND')`;
-const RESUMED = `coalesce((record->>'resumedFromRungs')::numeric, 0)`;
-const arr = (key: string): string => `(case when jsonb_typeof(record->'${key}') = 'array' then jsonb_array_length(record->'${key}') else 0 end)`;
-const isArr = (key: string): string => `jsonb_typeof(record->'${key}') = 'array'`;
-
-const WEEKS = `
-  with bank_entries as (
-    select id, value->>'foundBy' as finder
-    from cp_field_manual_entries
-    where value->>'foundBy' in ('SCOUT', 'DETECTIVE')
-  ), finder_reuse as (
-    select to_char(date_trunc('week', (r.record->>'startedAt')::timestamptz at time zone 'UTC'), 'YYYY-MM-DD') as wk,
-      count(*)::int as attributed,
-      count(*) filter (where b.finder = 'SCOUT')::int as scouts,
-      count(*) filter (where b.finder = 'DETECTIVE')::int as detectives
-    from cp_log_scout_results r cross join lateral jsonb_array_elements_text(
-      case when jsonb_typeof(r.record->'usedFieldManualEntryIds') = 'array' then r.record->'usedFieldManualEntryIds' else '[]'::jsonb end) used(id)
-    join bank_entries b on b.id = used.id
-    where r.record->>'startedAt' is not null group by 1
-  )
-  select to_char(date_trunc('week', (record->>'startedAt')::timestamptz at time zone 'UTC'), 'YYYY-MM-DD') as wk,
-    count(*)::int as walks,
-    count(*) filter (where (record->'inheritedFieldManual') is not null)::int as pair_recorded,
-    count(*) filter (where coalesce((record->>'inheritedFieldManual')::numeric, 0) > 0)::int as handed,
-    count(*) filter (where ${isArr("usedFieldManualEntryIds")} and ${arr("inheritedFieldManualEntryIds")} > 0)::int as used_recorded,
-    count(*) filter (where ${arr("usedFieldManualEntryIds")} > 0)::int as used_walks,
-    coalesce(sum(${arr("usedFieldManualEntryIds")}), 0)::int as reused_doors,
-    coalesce(max(finder_reuse.attributed), 0)::int as finder_attributed,
-    coalesce(max(finder_reuse.scouts), 0)::int as scout_reused,
-    coalesce(max(finder_reuse.detectives), 0)::int as detective_reused,
-    count(*) filter (where ${isArr("rebuiltExistingRoutes")})::int as rebuilt_recorded,
-    coalesce(sum(${arr("rebuiltExistingRoutes")}), 0)::int as rebuilt_routes,
-    count(*) filter (where not (${REFUSED}) and ${RESUMED} > 0)::int as resumed,
-    count(*) filter (where not (${REFUSED}) and ${RESUMED} > 0 and ${FOUND})::int as resumed_found,
-    count(*) filter (where not (${REFUSED}) and (record->'resumedFromRungs') is not null and ${RESUMED} = 0)::int as fresh,
-    count(*) filter (where not (${REFUSED}) and (record->'resumedFromRungs') is not null and ${RESUMED} = 0 and ${FOUND})::int as fresh_found,
-    count(*) filter (where not (${REFUSED}) and ${FOUND})::int as found,
-    coalesce(sum((record->>'usd')::numeric), 0)::float8 as usd,
-    count(*) filter (where record->>'usd' is null)::int as unpriced,
-    count(*) filter (where (record->'modelClass') is not null)::int as ladder_recorded,
-    count(*) filter (where coalesce(record->>'escalatedFrom', '') <> '')::int as escalated
-  from cp_log_scout_results left join finder_reuse on finder_reuse.wk = to_char(date_trunc('week', (record->>'startedAt')::timestamptz at time zone 'UTC'), 'YYYY-MM-DD')
-  where record->>'startedAt' is not null
-  group by 1 order by 1`;
-
-const DOORS = `
-  select count(*)::int as walks,
-    coalesce(sum(${arr("inheritedFieldManualEntryIds")}), 0)::int as given,
-    coalesce(sum(${arr("usedFieldManualEntryIds")}), 0)::int as used,
-    min(record->>'startedAt') as since
-  from cp_log_scout_results
-  where ${isArr("usedFieldManualEntryIds")}`;
-
-const NAMED = `
-  select e.id, count(*)::int as n
-  from cp_log_scout_results r
-  cross join lateral jsonb_array_elements_text(
-    case when jsonb_typeof(r.record->'usedFieldManualEntryIds') = 'array' then r.record->'usedFieldManualEntryIds' else '[]'::jsonb end) as e(id)
-  group by e.id order by n desc, e.id limit 5`;
-
 type Rows = Record<string, unknown>[];
 
 function num(v: unknown): number {
@@ -101,15 +39,16 @@ function str(v: unknown): string | null {
 export async function readLearningTrends(connection: string, nowIso: string): Promise<LearningTrendFacts> {
   const sql = neon(connection);
   const results = await sql.transaction(
-    [sql.query(`SET LOCAL statement_timeout = ${LEARNING_TRENDS_STATEMENT_TIMEOUT_MS}`), sql.query(WEEKS), sql.query(DOORS), sql.query(NAMED),
-      sql.query("select coalesce((select sum((value #>> '{payload,count}')::bigint) from cp_field_manual_entries where value->>'kind' = 'WRITE_HEALTH'), 0) as write_errors")],
+    [sql.query(`SET LOCAL statement_timeout = ${LEARNING_TRENDS_STATEMENT_TIMEOUT_MS}`), sql.query(SCOUT_LEARNING_SQL)],
     { readOnly: true, isolationLevel: "RepeatableRead" },
   );
-  const [, weekRows, doorRows, namedRows, healthRows] = results as unknown as Rows[];
-  const d = doorRows[0] ?? {};
+  const [, aggregate] = results as unknown as Rows[];
+  const row = aggregate[0] ?? {};
+  const weekRows = row.week_rows as Rows, namedRows = row.named_rows as Rows;
+  const d = row.door_row as Record<string, unknown>;
   return {
     asOf: nowIso,
-    bankWriteErrors: num(healthRows[0]?.write_errors),
+    bankWriteErrors: num(row.write_errors),
     weeks: weekRows.map((w) => ({
       week: String(w.wk ?? ""),
       walks: num(w.walks),

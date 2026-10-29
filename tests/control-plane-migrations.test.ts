@@ -13,6 +13,7 @@ import { pgSpendRepository } from "../lib/control-plane/repository/model-charges
 import { pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
 import { costRecordId } from "../lib/control-plane/spend-window.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
+import { ADMIN_ASK_MEMBERSHIP_DDL } from "../lib/control-plane/repository/control-counts.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 
 const connection = "postgresql://writer:fixture@ep-dark-night-aeo1ekz3.c-2.us-east-2.aws.neon.tech/control";
@@ -38,9 +39,9 @@ test("control-plane migrations use only the declared production context and its 
   assert.throws(() => productionControlPlaneTarget(["--phase=expand"], buildEnv), /REFUSED/);
 });
 
-test("committed journal hashes cover the expand-only definition", () => {
+test("committed journal hashes cover each expand and contract definition", () => {
   const journal = JSON.parse(readFileSync("lib/control-plane/repository/migrations/meta/_journal.json", "utf8"));
-  assert.deepEqual(journal.entries.map((row: { id: string }) => row.id), ["CP-01_expand", "DT-01_expand", "RB-A1_expand", "RIVER-KEYS_expand", "RIVER-KEYS-FX_expand", "RB-A5_expand", "RB-A8_expand", "RV-BOX_expand", "DB-03_expand", "DB-03A_expand", "BB-01_expand"]);
+  assert.deepEqual(journal.entries.map((row: { id: string }) => row.id), ["CP-01_expand", "DT-01_expand", "RB-A1_expand", "RIVER-KEYS_expand", "RIVER-KEYS-FX_expand", "RB-A5_expand", "RB-A8_expand", "RV-BOX_expand", "DB-03_expand", "DB-03A_expand", "BB-01_expand", "CP-01_counts_expand", "CP-01_counts_contract"]);
   for (const row of journal.entries) assert.equal(row.hash, controlPlaneMigrationHash(process.cwd(), row.id));
 });
 
@@ -85,7 +86,7 @@ test("expand copies no production rows; runner jobs backfill one state and retai
   let requests=0;
   const sql={query:async(text:string,params:readonly unknown[]=[]) => {requests++;return (await db.query<Record<string,unknown>>(text.replace("INDEX CONCURRENTLY", "INDEX"),[...params])).rows;}};
   try {
-    const skipped=new Set([...CONTROL_READS_EXPAND_DDL,...RESEARCH_REVISION_INDEXES.map(index=>index.ddl)]);
+    const skipped=new Set([...CONTROL_READS_EXPAND_DDL,...RESEARCH_REVISION_INDEXES.map(index=>index.ddl),...ADMIN_ASK_MEMBERSHIP_DDL]);
     for(const ddl of BOOTSTRAP_DDL) if(!skipped.has(ddl) || ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_pass_cursors"))
       await sql.query(ddl.replace("CREATE INDEX CONCURRENTLY","CREATE INDEX"));
     await sql.query("CREATE TABLE cp_spend_window(id text PRIMARY KEY,value jsonb)");
@@ -141,10 +142,24 @@ test("expand copies no production rows; runner jobs backfill one state and retai
     assert.deepEqual((await sql.query("SELECT id FROM cp_admin_expansion_scopes ORDER BY id")).map(row=>row.id),["new-az","st:nh"]);
     assert.equal((await sql.query("SELECT count(*)::integer AS n FROM cp_occurrences"))[0].n,0);
     assert.equal((await pgSpendRepository(sql).aggregate({since:"2026-10-14T12:00:00Z",until:now})).usd,18);
-    assert.deepEqual((await sql.query("SELECT id FROM cp_migrations ORDER BY id")).map(row=>row.id),["BB-01_expand","CP-01_expand","DB-03A_expand","DB-03_expand","DT-01_expand","RB-A1_expand","RB-A5_expand","RB-A8_expand","RIVER-KEYS-FX_expand","RIVER-KEYS_expand","RV-BOX_expand"]);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_migrations ORDER BY id")).map(row=>row.id),["BB-01_expand","CP-01_counts_expand","CP-01_expand","DB-03A_expand","DB-03_expand","DT-01_expand","RB-A1_expand","RB-A5_expand","RB-A8_expand","RIVER-KEYS-FX_expand","RIVER-KEYS_expand","RV-BOX_expand"]);
     assert.equal((await sql.query("SELECT value ? 'placeTargets' AS embedded FROM cp_admin_config"))[0].embedded,false);
     assert.deepEqual(await sql.query("SELECT to_regclass('cp_spend_window') AS old"),[{old:null}]);
     assert.equal((await sql.query("SELECT (value #>> '{payload,count}')::integer AS n FROM cp_field_manual_entries WHERE id=$1",[BANK_WRITE_HEALTH_ID]))[0].n,5);
     requests=0;assert.equal(await jobs.finished(),true);assert.equal(requests,1,"completed backfills read one marker and perform no writes");
   } finally {await db.close();}
+});
+
+test("control-plane cleanup refuses a different serving commit before writing", async () => {
+  const sha = "a".repeat(40), queries: string[] = [];
+  const journal = JSON.parse(readFileSync("lib/control-plane/repository/migrations/meta/_journal.json", "utf8"));
+  await assert.rejects(applyControlPlaneMigrations(["--target=production", "--phase=contract", "--production-runtime", `--runtime-commit=${sha}`], {
+    env: { ...buildEnv, WTP_RUNTIME_MODE: "production" }, committed, head: () => sha, servedCommit: async () => "b".repeat(40),
+    withDatabase: async (_connection, operation) => operation({ query: async statement => {
+      queries.push(statement);
+      return statement.includes("to_regclass") ? [{ schema: "cp_schema_version", journal: "cp_migrations" }]
+        : journal.entries.filter((entry: { phase: string }) => entry.phase === "expand");
+    } }),
+  }), /exact loaded commit to be serving/);
+  assert.ok(queries.length > 0 && queries.every(query => query.startsWith("SELECT")));
 });

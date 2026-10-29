@@ -131,6 +131,35 @@ export function databaseReadOnlyQuery(connectionString: string, deadlineMs?: num
   { publicationFingerprints: true as const, canonicalBody });
 }
 
+/** Compact Admin reads use one read-only HTTP transaction, including the same driver content-version checks. */
+export function databaseHttpReadOnlyQuery(connectionString: string, deadlineMs?: number) {
+  const sql = serverReaderValue(`http-read-only:${connectionString}`, () => neon(connectionString));
+  const read: ReadOnlyQuery = async statements => {
+    if (!statements.length) return [];
+    const controller = new AbortController();
+    const timer = deadlineMs === undefined ? undefined : setTimeout(() => controller.abort(), deadlineMs);
+    try {
+      return await withCallerSite(() => withDatabaseQuery(statements[0].text, () => sql.transaction(
+        statements.map(statement => sql.query(statement.text, [...statement.params])), {
+          readOnly: true, isolationLevel: "RepeatableRead", fetchOptions: { signal: controller.signal },
+        })));
+    } catch (error) {
+      if (controller.signal.aborted) { const timeout = new Error("READER_DATABASE_TIMEOUT"); timeout.name = "TimeoutError"; throw timeout; }
+      throw error;
+    } finally { clearTimeout(timer); }
+  };
+  return Object.assign(read, { publicationFingerprints: true as const, canonicalBody: read });
+}
+
+export function databaseHttpReadOnlySql(connectionString: string, deadlineMs?: number) {
+  return serverReaderValue(`database-http-sql:${connectionString}:${deadlineMs ?? ""}`, () => {
+    const read = databaseHttpReadOnlyQuery(connectionString, deadlineMs);
+    const sql = { query: async (text: string, params: readonly unknown[] = []) => (await read([{ text, params }]))[0] ?? [] };
+    shareVersionedRows(sql, connectionString);
+    return sql;
+  });
+}
+
 /** SQL-shaped adapter for readers which issue one parameterized statement at a time. */
 export function databaseReadOnlySql(connectionString: string, deadlineMs?: number) {
   return serverReaderValue(`database-sql:${poolLane()}:${connectionString}:${deadlineMs ?? ""}`, () => {

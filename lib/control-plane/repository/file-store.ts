@@ -1,3 +1,6 @@
+import { storedOwnerCostRefs, type OwnerCostRef } from "./owner-cost-refs.ts";
+import { storedOwnerAssignmentRows } from "./stored-owner-assignment-rows.ts";
+import type { OwnerAssignmentRow } from "./owner-assignment-rows.ts";
 import type { HuntOrder } from "../hunt-orders.ts";
 import { createDispatchState } from "./dispatch-state.ts";
 import { ADMIN_SECTIONS, migrateStoredAdminConfig, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "./admin-config.ts";
@@ -491,6 +494,15 @@ export function fileAppendOnlyRepository<T>(
         .map((record) => projectRecord(record, projection));
     },
 
+    readKeys: async (keys: readonly string[], projection?: RecordProjection): Promise<ReadonlyMap<string, readonly T[]>> => {
+      const out = new Map<string, readonly T[]>();
+      for (const key of new Set(keys)) {
+        const records = (await readLines(key)).map(line => projection ? projectRecord(line.record, projection) as T : line.record);
+        if (records.length) out.set(key, records);
+      }
+      return out;
+    },
+
     readLatest: async (keys: readonly string[], projection: RecordProjection): Promise<ReadonlyMap<string, unknown>> => {
       const out = new Map<string, unknown>();
       for (const key of new Set(keys)) {
@@ -701,6 +713,8 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
   const scoutResults = fileAppendOnlyRepository<ScoutResult>(resolved, "scout-results");
   const adminBase = fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config");
 
+  const ownerStateTotals = fileAggregateRepository<StateTotals>(resolved, "StateTotals", "owner-snapshot-state-totals");
+  const ownerTotals = fileAggregateRepository<OwnerSnapshotTotals>(resolved, "OwnerSnapshotTotals", "owner-snapshot-totals");
   const repositories: ControlPlaneRepositories = {
     dispatchState: createDispatchState(() => repositories),
     workItems: fileAggregateRepository<WorkItem>(resolved, "WorkItem", "work-items"),
@@ -723,10 +737,10 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
     escalations: fileAppendOnlyRepository<Escalation>(resolved, "escalations"),
     dispositions: fileAppendOnlyRepository<DispositionCommit>(resolved, "dispositions"),
     artifacts,
-    artifactsByCanonicalUrl: async (url, limit) =>
+    artifactsByCanonicalUrl: async (url, limit, projection) =>
       (await artifacts.readAll()).filter(record => record.canonicalUrl === url)
         .sort((a, b) => b.recordedAt.localeCompare(a.recordedAt) || a.artifactId.localeCompare(b.artifactId))
-        .slice(0, Math.max(0, Math.trunc(limit))),
+        .slice(0, Math.max(0, Math.trunc(limit))).map(record => projection ? projectRecord(record, projection) as ArtifactRecord : record),
     capturedCanonicalUrls: async (urls) => {
       const wanted = new Set(urls);
       return new Set((await artifacts.readAll()).map(record => record.canonicalUrl).filter(url => wanted.has(url)));
@@ -738,9 +752,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       "OwnerSnapshot",
       "owner-snapshots",
     ),
-    ownerSnapshotTotals: fileAggregateRepository<OwnerSnapshotTotals>(resolved, "OwnerSnapshotTotals", "owner-snapshot-totals"),
+    ownerSnapshotTotals: ownerTotals,
     ownerSnapshotStates: fileAggregateRepository<OwnerSnapshotState>(resolved, "OwnerSnapshotState", "owner-snapshot-states"),
-    ownerSnapshotStateTotals: fileAggregateRepository<StateTotals>(resolved, "StateTotals", "owner-snapshot-state-totals"),
+    ownerSnapshotStateTotals: ownerStateTotals,
+    ownerAssignmentRows: storedOwnerAssignmentRows(fileAggregateRepository<OwnerAssignmentRow | null>(resolved, "OwnerAssignmentRow", "owner-assignment-rows"), ownerStateTotals),
+    ownerCostRefs: storedOwnerCostRefs(fileAggregateRepository<OwnerCostRef | null>(resolved, "OwnerCostRef", "owner-cost-refs"),ownerTotals),
     ownerSnapshotInboxes: fileAggregateRepository<SpilledInbox>(resolved, "SpilledInbox", "owner-snapshot-inboxes"),
     fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries"),()=>repositories.fixMap),
     fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),

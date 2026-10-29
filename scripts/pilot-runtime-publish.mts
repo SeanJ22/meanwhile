@@ -7,6 +7,13 @@ const AGGREGATES = ["work_items", "route_tasks", "attempts", "leases",
   "obligations", "occurrences", "debts", "admin_config", "ask_gap_observations", "doors"];
 const LOGS = ["artifacts", "costs", "scout_results", "worker_results", "promotion_pipeline", "research_intents", "window_intents", "admin_receipts"];
 
+/** Schema initialization is a publisher dependency, so waiting for it never starts a failed owner job. */
+export async function ownerCountsReady(controlUrl: string, sql: Sql = neon(controlUrl)): Promise<boolean> {
+  const rows = await boundedQuery(sql,{operation:"console.ownerCountsReady",callClass:"POINT"},
+    "SELECT value->>'formatVersion' AS format,value->>'initializing' AS initializing,value->>'ownerWorkListReady' AS ready FROM cp_owner_snapshots WHERE id='totals'",[]) as {format:string|null;initializing:string|null;ready:string|null}[];
+  return rows.length > 0 && rows[0].format === "4" && rows[0].ready === "true" && rows[0].initializing !== "true";
+}
+
 /** The existing console interval still elapses when no research cycle is admitted. */
 export function consolePublishClock(everyMs: number, now:()=>number=Date.now) {
   let attemptedAt=Number.NEGATIVE_INFINITY;

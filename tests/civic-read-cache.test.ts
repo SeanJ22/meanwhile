@@ -13,6 +13,20 @@ function cache(root: string) {
     write: (key, saved) => saveCivicReadCopy(root, key, saved) });
 }
 
+test("local job continuations survive eviction of unrelated disposable source copies", async t => {
+  const url = process.env.WTP_CIVIC_READ_CACHE_URL, token = process.env.WTP_CIVIC_READ_CACHE_TOKEN;
+  delete process.env.WTP_CIVIC_READ_CACHE_URL; delete process.env.WTP_CIVIC_READ_CACHE_TOKEN;
+  t.after(() => {
+    if (url === undefined) delete process.env.WTP_CIVIC_READ_CACHE_URL; else process.env.WTP_CIVIC_READ_CACHE_URL = url;
+    if (token === undefined) delete process.env.WTP_CIVIC_READ_CACHE_TOKEN; else process.env.WTP_CIVIC_READ_CACHE_TOKEN = token;
+  });
+  const read = runtimeCivicReadCache("postgres://local:local@cp01-continuation.invalid/db");
+  await read.jobState().checkpoint("door-cursor", "current", { generation: "42", doors: ["calendar"] });
+  for (let index = 0; index < 40; index++) await read.row({ namespace: "disposable", key: String(index),
+    current: async () => ({ etag: "source", value: "x".repeat(1024 * 1024) }) });
+  assert.deepEqual(await read.jobState().readCheckpoint("door-cursor", "current"), { generation: "42", doors: ["calendar"] });
+});
+
 async function scratch(t: { after: (fn: () => Promise<void>) => void }) {
   const root = await mkdtemp(join(tmpdir(), "civic-read-cache-"));
   t.after(() => rm(root, { recursive: true, force: true }));

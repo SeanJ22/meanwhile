@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { ageOf, causeOf, placeKeyOfRow, sendWordsFor, stateOfRow, type StuckRowLike } from "../lib/control-plane/admin-view/blocker-causes.ts";
-import { STUCK_INDEX_SQL, stuckViews } from "../lib/control-plane/admin-view/v6-stuck-read.ts";
+import { stuckViews } from "../lib/control-plane/admin-view/v6-stuck-read.ts";
 import { parseDispatchTarget, unitMatchesTarget } from "../lib/control-plane/scheduler/dispatch-target.ts";
 
 const row = (id: string, blocker: string | null, extra: Partial<StuckRowLike> = {}): StuckRowLike => ({
@@ -83,8 +83,6 @@ test("the views count every stuck row by cause, list the most urgent, scope them
   assert.equal(zip.sameCause[0].action?.target, "st:az");
   const az = stuckViews(rows, "st:az", "2026-09-30T00:00:00.000Z");
   assert.equal(az.total, 2);
-  assert.match(STUCK_INDEX_SQL, /allRowsIndex/, "the published index is unpacked in the database, not loaded whole");
-  assert.match(STUCK_INDEX_SQL, /FAILED.*BLOCKED.*UNKNOWN/);
 });
 
 import { causeOf as br09CauseOf, needOf as br09NeedOf } from "../lib/control-plane/admin-view/blocker-causes.ts";

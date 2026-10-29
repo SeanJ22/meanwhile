@@ -1,9 +1,8 @@
 import { readDerivedMeetingWiring, type DerivedWiringRecord } from "../civic-data/derived-meeting-wiring.ts";
-import type { Persisted } from "../control-plane/repository/types.ts";
 import { ROUTE_HINTS } from "../hunt/meetings-route-hints.ts";
 import { readFileSync } from "node:fs";
 import type { BodySourceWiring } from "../registry/source-wiring.ts";
-import { type DoorRecord, type DoorRepository } from "./registry.ts";
+import { type DoorRepository } from "./registry.ts";
 import { seedRouteHintDoors } from "./route-hints.ts";
 import { seedFeedDoors } from "./seed-feeds.ts";
 import { seedMeetingDoors } from "./seed-meetings.ts";
@@ -52,19 +51,6 @@ export async function readDerivedForSeed(now: string): Promise<{ records: readon
   }
 }
 
-/** Each door's first read comes from one listing; a door read again (after a write or a lost race) is read from the store. */
-function readFromListing(repo: DoorRepository, rows: readonly Persisted<DoorRecord>[]): DoorRepository {
-  const held = new Map(rows.map((row) => [row.id, row] as const));
-  const served = new Set<string>();
-  return Object.assign(Object.create(repo) as DoorRepository, {
-    read: async (id: string) => {
-      if (served.has(id)) return repo.read(id);
-      served.add(id);
-      return held.get(id) ?? null;
-    },
-  });
-}
-
 export async function seedAllDoors(input: {
   readonly repo: DoorRepository;
   readonly imported: { readonly generatedAt: string; readonly rows: readonly BodySourceWiring[] };
@@ -75,8 +61,7 @@ export async function seedAllDoors(input: {
   readonly now: string;
 }): Promise<SeedAllResult> {
   const { now } = input;
-  const rows = await input.repo.list();
-  const repo = readFromListing(input.repo, rows);
+  const repo = input.repo;
   // Feeds and route hints come with the code, as the import does: a hand edit made since is kept.
   const codeAt = input.imported.generatedAt;
   const imported = await seedMeetingDoors({ repo, wiring: input.imported.rows, derived: [], deriveInputAt: codeAt, at: now });
@@ -84,7 +69,7 @@ export async function seedAllDoors(input: {
   const feeds = await seedFeedDoors({ repo, deriveInputAt: codeAt, at: now });
   const routeHints = await seedRouteHintDoors({ repo, hints: ROUTE_HINTS, deriveInputAt: codeAt, at: now });
   const retired = await retireCensusDuplicates(input.repo, now);
-  const total = rows.length + imported.created + meetings.created + feeds.created + routeHints.created;
+  const total = repo.count ? await repo.count() : (await repo.listNarrowed({})).length;
   return { imported, meetings, feeds, routeHints, retired, derivedNote: input.derivedNote ?? "", total };
 }
 

@@ -92,3 +92,26 @@ test("a turn cannot bypass active leases or the shared four-worker limit", async
     assert.deepEqual(await db.query("SELECT place_id,lease_token,lease_slot,lease_until FROM rebuild_queue ORDER BY place_id"), before);
   } finally { await db.pg.close(); }
 });
+
+test("a targeted source update rebuilds ahead of older bulk work without resetting its age",async()=>{
+  const {db,wrapped}=await queuedPlace();
+  try{
+    const old=PLACE+'/place:bulk';
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Bulk place','AZ')",[old]);
+    await db.query("INSERT INTO rebuild_queue(place_id,queued_at,next_queued_at) VALUES($1,clock_timestamp()-interval '1 day',clock_timestamp()-interval '1 hour')",[old]);
+    const [age]=await db.query("SELECT queued_at FROM rebuild_queue WHERE place_id=$1",[old]);
+    await db.query("UPDATE rebuild_queue SET queued_at=clock_timestamp()-interval '1 day' WHERE place_id=$1",[PLACE]);
+    const [targetAge]=await db.query("SELECT queued_at FROM rebuild_queue WHERE place_id=$1",[PLACE]);
+    await enqueueReaderPlaces({places:[PLACE]},db.query);
+    const body=PLACE+'#body:bulk';
+    await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'body','Body page','AZ')",[body]);
+    await db.query("INSERT INTO rebuild_queue(place_id,next_queued_at) VALUES($1,clock_timestamp())",[body]);
+    await db.query("INSERT INTO entity(id,kind,name,state,page_priority) VALUES('zip:85701','place','85701','AZ',5000)");
+    await db.query("INSERT INTO rebuild_queue(place_id,priority) VALUES('zip:85701',1000005000)");
+    assert.deepEqual(await db.query("SELECT queued_at FROM rebuild_queue WHERE place_id=$1",[PLACE]),[targetAge]);
+    const result=await rebuildPlacePages({db:wrapped,limit:1,concurrency:1,purge:async()=>({purged:true})});
+    assert.equal(result.rebuilt,1);assert.equal(result.failed,0);
+    assert.deepEqual(await db.query("SELECT place_id FROM place_page"),[{place_id:PLACE}]);
+    assert.deepEqual(await db.query("SELECT queued_at FROM rebuild_queue WHERE place_id=$1",[old]),[age]);
+  }finally{await db.pg.close();}
+});

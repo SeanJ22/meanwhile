@@ -1,5 +1,5 @@
 import type { JurisdictionRouteHints, OfficialSiteHint, RouteHint } from "../hunt/meetings-route-hints.ts";
-import { isDoorRecord, normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRecord, type DoorRepository } from "./registry.ts";
+import { isDoorRecord, normalizeHost, seedDerivedDoors, type DoorDraft, type DoorRecord, type DoorRepository } from "./registry.ts";
 
 export const ROUTE_HINTS_KIND = "route-hints";
 export const routeHintsDoorId = (jurisdictionId: string): string => `route-hints:${jurisdictionId}`;
@@ -58,19 +58,7 @@ export async function seedRouteHintDoors(input: {
   readonly deriveInputAt: string;
   readonly at: string;
 }): Promise<{ created: number; updated: number; unchanged: number; keptManualEdit: number; refused: readonly string[] }> {
-  const counts = { created: 0, updated: 0, unchanged: 0, keptManualEdit: 0 };
-  const refused: string[] = [];
-  for (const hints of input.hints) {
-    const draft = routeHintDoorDraft(hints);
-    try {
-      const result = await upsertDerivedDoor(input.repo, draft, input.deriveInputAt, input.at);
-      if (result === "kept-manual-edit") counts.keptManualEdit += 1;
-      else counts[result] += 1;
-    } catch (error) {
-      refused.push(`${draft.doorId}: ${(error as Error).message}`);
-    }
-  }
-  return { ...counts, refused };
+  return seedDerivedDoors(input.repo, input.hints.map(routeHintDoorDraft), input.deriveInputAt, input.at);
 }
 
 export async function readRouteHints(repo: DoorRepository, jurisdictionId: string,

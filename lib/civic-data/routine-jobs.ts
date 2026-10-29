@@ -13,10 +13,12 @@ export interface RoutineJob {
  * source (its portrait list, its voting doors, its settlement) run under that source's task id. Bytes per run are the busiest
  * measured hour of the files each job calls (database_transfer_hourly, Oct 26–27); box-fact-audit and state-pointer-retirement
  * had no separate measurement and carry conservative figures.
+ * Door sync/install declarations round up the CP-01 production-copy cold runs on Oct 28 (request plus response):
+ * 2,603,964 and 14,631,412 bytes. Unchanged passes use 53,803 and 2,766 bytes, including a fresh repository instance.
  */
 export const ROUTINE_JOBS = {
-  doors: { id: "doors", label: "Door install", databaseBytesPerRun: 145_000_000 },
-  doorSync: { id: "door-sync", label: "Door registry sync", databaseBytesPerRun: 140_000_000 },
+  doors: { id: "doors", label: "Door install", databaseBytesPerRun: 15_000_000 },
+  doorSync: { id: "door-sync", label: "Door registry sync", databaseBytesPerRun: 3_000_000 },
   meetingPins: { id: "meeting-pins", label: "Meeting map pins", databaseBytesPerRun: 6_000_000 },
   boxFacts: { id: "box-facts", label: "Box findings publication", databaseBytesPerRun: 4_500_000 },
   workerPublication: { id: "worker-publication", label: "Saved worker results scan", databaseBytesPerRun: 40_000_000 },

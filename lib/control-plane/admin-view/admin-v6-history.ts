@@ -1,9 +1,10 @@
 import { createHash } from "node:crypto";
-import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "../gateway/contract.ts";
+import { ADMIN_RECEIPT_LOG_KEY, type HistoryReceipt } from "../gateway/contract.ts";
 import { gatewayActionKind } from "../../../app/(admin)/_mw/admin-v6/actions.ts";
 import type { ActionKind } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import { confirmationReadSession, confirmReceipt, type Confirmation } from "../gateway/confirmation.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
+import { historyReceiptSupported } from "./history-receipt-selection.ts";
 
 export const ADMIN_V6_HISTORY_CONTRACT = "admin-v6/history@1" as const;
 export const ADMIN_V6_HISTORY_MAX_LIMIT = 50;
@@ -40,7 +41,7 @@ type Cursor = { readonly v: 1; readonly scope: string; readonly q: string; reado
 function eventTime(value: string | null): string | null {
   return value && Number.isFinite(Date.parse(value)) ? value : null;
 }
-function statusOf(receipt: ActionReceipt): V6ReceiptStatus {
+function statusOf(receipt: HistoryReceipt): V6ReceiptStatus {
   if (receipt.outcome === "REFUSED") return "refused";
   if (receipt.outcome === "QUEUED") return "queued";
   if (receipt.outcome === "IN_PROGRESS") return "running";
@@ -58,7 +59,7 @@ function targetWords(kind: ActionKind): string {
   if (kind === "leads-send") return "research leads";
   return "";
 }
-function mapped(receipt: ActionReceipt, scope: string, confirmation: Confirmation | null = null): V6HistoryReceipt | null {
+function mapped(receipt: HistoryReceipt, scope: string, confirmation: Confirmation | null = null): V6HistoryReceipt | null {
   const target = receipt.requestedSubject || receipt.subject;
   const kind = gatewayActionKind(receipt.type, { subject: target, says: receipt.says });
   if (receipt.formatVersion !== 1 || !kind || !receipt.receiptId || !receipt.idempotencyKey || !eventTime(receipt.startedAt)) return null;
@@ -113,7 +114,7 @@ function parseCursor(raw: string | null | undefined, query: { scope: string; q: 
 }
 
 export function projectV6History(
-  rows: readonly ActionReceipt[],
+  rows: readonly HistoryReceipt[],
   query: V6HistoryQuery,
   confirmations: ReadonlyMap<string, Confirmation> = new Map(),
 ): V6HistorySection {
@@ -160,7 +161,9 @@ export async function readV6History(repos: ControlPlaneRepositories, query: V6Hi
   const window = rows.slice(0, limit);
   const confirmations = new Map<string, Confirmation>();
   const reading = confirmationReadSession(repos);
-  await Promise.all(window.map(async row => { confirmations.set(row.receipt.receiptId, await confirmReceipt(reading, row.receipt)); }));
+  await Promise.all(window.filter(row => historyReceiptSupported(row.receipt)).map(async row => {
+    confirmations.set(row.receipt.receiptId, await confirmReceipt(reading, row.receipt));
+  }));
   const receipts = window.map(row => query.scope === "us" ? row.receipt : { ...row.receipt, requestedSubject: query.scope });
   const section = projectV6History(receipts, { ...query, cursor: null }, confirmations);
   const nextCursor = rows.length > limit && window.length ? Buffer.from(JSON.stringify({ v: 2, scope: query.scope,

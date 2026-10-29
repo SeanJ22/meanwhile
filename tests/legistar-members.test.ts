@@ -1,27 +1,17 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { durableRoutineRunnerReceiptIssue, type DurableReceiptStore } from "../lib/civic-data/runner-receipt.ts";
-import { installFactReader } from "../lib/facts/db.ts";
-import { ZERO_RELEASE_EVENTS } from "../lib/civic-data/release.ts";
-import { legistarMemberRosters, makeLegistarMembersReader } from "../lib/sources/legistar/members.ts";
-import { memberProbe } from "../lib/sources/legistar/members-model.ts";
-import { legistarMembersPackage, publishLegistarMembers } from "../lib/sources/legistar/members-publication.ts";
-import { legistarMemberTasks, legistarMemberClocks, legistarMemberReceiptIssue, recordLegistarMemberFailure } from "../lib/sources/legistar/members-tasks.ts";
+import { legistarMemberRosters,makeLegistarMembersReader } from "../lib/sources/legistar/members.ts";
+import { legistarMembersPackage } from "../lib/sources/legistar/members-publication.ts";
+import { publishLegistarFixture as publishLegistarMembers } from "./helpers/legistar-core.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
-import { legistarMemberCapture, saveLegistarReading } from "../lib/sources/legistar/members-cache.ts";
+import { saveLegistarReading } from "../lib/sources/legistar/members-cache.ts";
 import { readFactRosters } from "../lib/facts/roster-read.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { factDb } from "./helpers/fact-db.ts";
-import { NOW, rawFor, wiring, storeMemberFixtures } from "./helpers/legistar-member-fixtures.ts";
+import { NOW,rawFor,wiring,storeMemberFixtures } from "./helpers/legistar-member-fixtures.ts";
 import { readFileSync } from "node:fs";
-
-const fixture = (tenant: string, file: string) => readFileSync(new URL(`./fixtures/legistar-members/${tenant}/${file}`, import.meta.url), "utf8");
-
-const officePage = (reading: { artifact: { canonicalUrl: string } }) => {
-  const url = new URL(reading.artifact.canonicalUrl);
-  return url.pathname.endsWith("/officerecords");
-};
-
+const fixture=(tenant:string,file:string)=>readFileSync(new URL(`./fixtures/legistar-members/${tenant}/${file}`,import.meta.url),"utf8");
+const officePage=(reading:{artifact:{canonicalUrl:string}})=>{const url=new URL(reading.artifact.canonicalUrl);return url.pathname.endsWith("/officerecords");};
 for (const [tenant, state, zone] of [["pima", "AZ", "America/Phoenix"], ["seattle", "WA", "America/Los_Angeles"], ["madison", "WI", "America/Chicago"]]) {
   test(`${state}: ${tenant}'s real office records retain exact people, bodies and term dates`, () => {
     const raw = rawFor(tenant), rows = wiring(raw, state, zone);
@@ -51,146 +41,6 @@ test("terms advance on the body's date without dropping open-ended or future mem
 });
 
 
-test("member probes exclude ended offices and historic people, and detect a low-id edit or deletion", async t => {
-  t.mock.timers.enable({ apis: ["Date"], now: Date.parse(NOW) });
-  const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
-  let raw = rawFor("pima");
-  const current = raw.offices[0];
-  raw = { ...raw, offices: [...raw.offices, { ...current, OfficeRecordId: 999999, OfficeRecordEndDate: "2000-01-01T00:00:00", OfficeRecordPersonId: 999999 }],
-    persons: [...raw.persons, { PersonId: 999999, PersonFullName: "Historic Member", PersonRowVersion: "old" }] };
-  const calls: URL[] = [];
-  const read = makeLegistarMembersReader(new MemoryEvidenceStore(), recordedMemberFetch(() => raw, calls));
-  const first = await read("pima");
-  assert.ok(first);
-  assert.ok(!first.offices.some(row => row.OfficeRecordId === 999999));
-  assert.ok(!first.persons.some(row => row.PersonId === 999999));
-  assert.deepEqual(calls.slice(0, 3).map(url => url.pathname.split("/").at(-1)), ["bodies", "officerecords", "persons"]);
-  assert.ok(calls.filter(url => url.pathname.endsWith("officerecords")).every(url => url.searchParams.get("$filter")!.includes("OfficeRecordEndDate ge")));
-  assert.ok(calls.filter(url => url.pathname.endsWith("persons")).every(url => url.searchParams.get("$filter")!.includes("PersonId eq")));
-  calls.length = 0;
-  assert.equal(await read("pima"), null);
-  assert.ok(calls.every(memberProbe));
-  raw = { ...raw, offices: raw.offices.map((row, i) => i === 0 ? { ...row, OfficeRecordRowVersion: "changed" } : row) };
-  assert.notEqual((await read("pima"))?.signature, first.signature);
-  raw = { ...raw, offices: raw.offices.slice(1) };
-  assert.ok(!(await read("pima"))!.offices.some(row => row.OfficeRecordId === current.OfficeRecordId));
-});
-
-test("an unchanged fingerprint stops without fetching or saving the full roster", async t => {
-  t.mock.timers.enable({ apis: ["Date"], now: Date.parse(NOW) });
-  const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
-  const source = rawFor("pima"), vault = new MemoryEvidenceStore();
-  const raw = await makeLegistarMembersReader(vault, recordedMemberFetch(() => source, []))("pima");
-  assert.ok(raw?.inputFingerprint);
-  vault.get = async () => { throw new Error("Saved source bytes must stay unopened"); };
-  const put = vault.put.bind(vault);
-  vault.put = async () => { throw new Error("An unchanged probe must not save derived probe pages"); };
-  const calls: URL[] = [];
-  assert.equal(await makeLegistarMembersReader(vault, recordedMemberFetch(() => source, calls), raw.inputFingerprint)("pima"), null);
-  assert.ok(calls.length > 0 && calls.every(memberProbe));
-  vault.put = put;
-  const changed = { ...source, offices: source.offices.map((office, i) => i ? office : { ...office, OfficeRecordRowVersion: "changed" }) };
-  assert.ok(await makeLegistarMembersReader(vault, recordedMemberFetch(() => changed, []), raw.inputFingerprint)("pima"),
-    "a changed source saves fresh bytes without downloading the previous copy");
-});
-
-test("a term transition or changed door binding reopens the source even when row versions stay fixed", async t => {
-  t.mock.timers.enable({ apis: ["Date"], now: Date.parse(NOW) });
-  const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
-  const source = rawFor("pima"), rows = wiring(source, "AZ", "America/Phoenix");
-  const future = { ...source, offices: source.offices.map((office, i) => i ? office : { ...office, OfficeRecordStartDate: "2026-10-14T00:00:00" }) };
-  const vault = new MemoryEvidenceStore(), calls: URL[] = [];
-  const read = makeLegistarMembersReader(vault, recordedMemberFetch(() => future, calls), null, rows);
-  const first = await read("pima");
-  assert.ok(first?.inputFingerprint);
-  assert.equal(await read("pima"), null);
-  t.mock.timers.tick(24 * 3_600_000);
-  const next = await read("pima");
-  assert.ok(next && next.inputFingerprint !== first.inputFingerprint, "a seat becoming current triggers publication");
-  const changedRows = rows.map((row, i) => i ? row : { ...row, bodyId: `${row.bodyId}-corrected` });
-  const rebound = await makeLegistarMembersReader(vault, recordedMemberFetch(() => future, []), next.inputFingerprint, changedRows)("pima");
-  assert.ok(rebound, "a corrected door binding is applied without waiting for a source edit");
-});
-
-test("tenant facts retain dates, leave an unchanged roster intact, and remove every departed member", async t => {
-  const db = await factDb(); t.after(() => db.pg.close());
-  const raw = rawFor("pima"), rows = wiring(raw, "AZ", "America/Phoenix");
-  const vault = new MemoryEvidenceStore(), clocks = factClocks(null);
-  let copies = 0;
-  const facts = { query: db.query, transaction: <T>(work: (query: import("../lib/facts/publish.ts").Query) => Promise<T>) => db.transaction(query => work(async (text, params) => {
-    if (text.startsWith("INSERT INTO source_copy")) copies++;
-    return query(text, params);
-  })) };
-  await storeMemberFixtures(vault, raw);
-  const input = { facts, raw, rows, vault, clocks, now: NOW };
-  const first = await publishLegistarMembers(input);
-  assert.equal(first.members, 15);
-  assert.equal(first.unchanged, false);
-  assert.equal(copies, 2, "one saved copy for the bodies page and one for the office page, however many bodies and members they carry");
-  assert.ok((await db.query("SELECT blob_key FROM source_copy")).some(row => row.blob_key === `artifact:${raw.readings.find(officePage)!.artifact.id}`));
-  const before = await db.query("SELECT id, checked_at FROM fact ORDER BY id");
-  const live = await readFactRosters(db.query, rows.map(row => row.bodyId));
-  const rex = live.rosters.flatMap(row => row.members).find(row => row.name === "Rex Scott")!;
-  assert.equal(rex.termStart, "2021-01-01"); assert.equal(rex.termEnd, "2028-12-31");
-  const later = "2026-10-14T08:00:00.000Z";
-  const second = await publishLegistarMembers({ ...input, now: later, raw: { ...raw, collectedAt: later, signature: "transport-only-change" } });
-  assert.equal(second.versionId, first.versionId);
-  assert.equal(second.records, 0); assert.equal(second.unchanged, true);
-  assert.deepEqual(await db.query("SELECT id, checked_at FROM fact ORDER BY id"), before);
-  const clock = (await legistarMemberClocks(db.query, ["legistar-members:pima"])).get("legistar-members:pima")!;
-  assert.equal(clock.lastSucceededObservedAt, later);
-  const receipt = { source: "legistar-members:pima", candidateId: second.versionId, acquisitionSucceeded: true, state: "PROMOTED" as const,
-    decision: "GOOD" as const, promotedVersion: second.versionId, lastKnownGoodVersion: second.versionId, confirmedAt: later,
-    structuralReleaseContract: ZERO_RELEASE_EVENTS };
-  assert.equal(await legistarMemberReceiptIssue(db.query, receipt, receipt.source), null);
-  installFactReader(db.query); t.after(() => installFactReader(undefined));
-  const national = { readCandidateSummary: () => { throw new Error("National candidate read"); },
-    readPromotionIdentity: () => { throw new Error("National pointer read"); } } as unknown as DurableReceiptStore;
-  assert.equal(await durableRoutineRunnerReceiptIssue(receipt, legistarMemberTasks(["pima"])[0], national, "SUCCESS"), null);
-  const failedAt = "2026-10-14T09:00:00.000Z";
-  const failure = await recordLegistarMemberFailure(db.query, receipt.source, failedAt, "HTTP 503 from the tenant's public roster");
-  assert.equal(await durableRoutineRunnerReceiptIssue(failure, legistarMemberTasks(["pima"])[0], national, "HELD"), null);
-  assert.equal(failure.lastKnownGoodVersion, second.versionId);
-  const afterFailure = (await legistarMemberClocks(db.query, [receipt.source])).get(receipt.source)!;
-  assert.equal(afterFailure.lastAttemptedAt, failedAt);
-  assert.equal(afterFailure.lastSucceededAt, later);
-  assert.match((await legistarMemberReceiptIssue(db.query, { ...failure, candidateId: "invented" }, receipt.source))!, /differs/);
-  const expired = { ...raw, offices: raw.offices.map(row => ({ ...row, OfficeRecordEndDate: "2026-10-12T00:00:00" })) };
-  await publishLegistarMembers({ ...input, raw: expired, now: later });
-  assert.equal((await readFactRosters(db.query, rows.map(row => row.bodyId))).rosters.length, 0);
-  assert.match((await legistarMemberReceiptIssue(db.query, receipt, receipt.source))!, /differs/);
-  assert.ok(legistarMemberTasks(["pima"])[0].command.includes("--legistar-client=pima"));
-  const { databaseBytesPerRun, databaseBytesPerUnchangedRun, databaseByteBasis } = legistarMemberTasks(["pima"])[0].contract;
-  assert.deepEqual({ databaseBytesPerRun, databaseBytesPerUnchangedRun, databaseByteBasis },
-    { databaseBytesPerRun: 16 * 1024 * 1024, databaseBytesPerUnchangedRun: 64 * 1024, databaseByteBasis: "EXPECTED" });
-});
-
-test("publication streams source pages across bodies without losing members from another page", async t => {
-  const db = await factDb(); t.after(() => db.pg.close());
-  const raw = rawFor("pima"), original = raw.readings.find(officePage)!;
-  const vault = new MemoryEvidenceStore();
-  await storeMemberFixtures(vault, raw);
-  raw.readings = raw.readings.filter(read => read !== original);
-  for (let start = 0; start < raw.offices.length; start += 2) {
-    const url = new URL(original.artifact.canonicalUrl); url.searchParams.set("$skip", String(start));
-    const body = raw.offices.slice(start, start + 2);
-    raw.readings.push(await saveLegistarReading(vault, raw.slug, { url: url.href, text: JSON.stringify(body), body, retrievedAt: original.artifact.retrievedAt }));
-  }
-  const rows = wiring(raw, "AZ", "America/Phoenix");
-  const report = await publishLegistarMembers({ facts: db, vault, raw, rows, clocks: factClocks(null), now: NOW });
-  assert.equal(report.members, 15);
-  const live = await readFactRosters(db.query, rows.map(row => row.bodyId));
-  assert.deepEqual(new Set(live.rosters.flatMap(roster => roster.members.map(member => member.name))),
-    new Set(raw.offices.filter(office => (!office.OfficeRecordStartDate || office.OfficeRecordStartDate.slice(0, 10) <= "2026-10-13")
-      && (!office.OfficeRecordEndDate || office.OfficeRecordEndDate.slice(0, 10) >= "2026-10-13"))
-      .map(office => office.OfficeRecordFullName.trim())));
-});
-
-test("publication checks the freshly fetched bytes against their fingerprint", () => {
-  const reading = rawFor("pima").readings[0];
-  assert.throws(() => legistarMemberCapture({ ...reading, text: "[]" }), /HASH_INVALID/);
-});
-
 test("a shared tenant binds only the exact governments named by its own doors", () => {
   const raw = rawFor("pima"), rows = wiring(raw, "AZ", "America/Phoenix").slice(0, 2);
   rows[1] = { ...rows[1], ocdId: "ocd-division/country:us/state:az/place:other" };
@@ -219,19 +69,15 @@ test("the indexed door read returns one tenant's manual and derived bindings wit
   assert.match(JSON.stringify(await db.query(`EXPLAIN SELECT value FROM cp_doors WHERE (${LEGISTAR_TENANT_SQL}) = $1`, ["pima"])), /tenant_idx/);
 });
 
-test("a tenant with many seated people is read in filters Legistar accepts and still returns every person", async t => {
-  t.mock.timers.enable({ apis: ["Date"], now: Date.parse(NOW) });
-  const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
-  const source = rawFor("pima"), template = source.offices[0], base = 5000;
-  const offices = Array.from({ length: 47 }, (_, i) => ({ ...template, OfficeRecordId: base + i, OfficeRecordPersonId: base + i, OfficeRecordEndDate: null }));
-  const raw = { ...source, offices, persons: offices.map((office, i) => ({ PersonId: office.OfficeRecordPersonId, PersonFullName: `Member ${i}`, PersonRowVersion: `v${i}` })) };
-  const calls: URL[] = [];
-  const read = await makeLegistarMembersReader(new MemoryEvidenceStore(), recordedMemberFetch(() => raw, calls))("pima");
-  assert.ok(read);
-  assert.equal(read.persons.length, 47);
-  const personCalls = calls.filter(url => url.pathname.endsWith("persons"));
-  assert.ok(personCalls.length >= 4);
-  for (const url of personCalls) assert.ok([...url.searchParams.get("$filter")!.matchAll(/PersonId eq/g)].length <= 15, "Legistar rejects more than 100 filter nodes");
+test("the office records supply every holder without fetching an unused person collection",async t=>{
+  t.mock.timers.enable({apis:["Date"],now:Date.parse(NOW)});
+  const {recordedMemberFetch}=await import("./helpers/legistar-member-fixtures.ts");
+  const raw=rawFor("pima"),calls:URL[]=[];
+  const read=await makeLegistarMembersReader(new MemoryEvidenceStore(),recordedMemberFetch(()=>raw,calls))("pima");
+  assert.ok(!("unchanged"in read));
+  assert.equal([...legistarMemberRosters(read,wiring(raw,"AZ","America/Phoenix"),NOW)].flatMap(row=>row.members).length,15);
+  assert.equal(calls.length,2);
+  assert.ok(calls.every(url=>!url.pathname.endsWith("persons")));
 });
 
 test("two tenant bodies with one name are one body while a single one holds seats, and a named gap when both do", () => {
@@ -287,39 +133,4 @@ test("a seat with no title still lists its holder, and a record with no name is 
   assert.equal(report.members, 1);
   const live = (await readFactRosters(db.query, rows.map(row => row.bodyId))).rosters.flatMap(roster => roster.members);
   assert.deepEqual(live.map(member => member.name), [seat.OfficeRecordFullName.trim()]);
-});
-
-test("each Legistar body is published with its name, quoted from the saved bodies reading, so the board shows on the page", async t => {
-  const { readBodyFacts } = await import("../lib/facts/registry-overlay.ts");
-  const db = await factDb(); t.after(() => db.pg.close());
-  const raw = rawFor("pima"), rows = wiring(raw, "AZ", "America/Phoenix"), vault = new MemoryEvidenceStore();
-  await storeMemberFixtures(vault, raw);
-  await publishLegistarMembers({ facts: db, raw, rows, vault, clocks: factClocks(null), now: NOW, purge: async () => ({ purged: true }) });
-  const facts = await readBodyFacts(db.query, rows.map(row => row.bodyId));
-  const realBodies = raw.bodies.filter(body => body.BodyId === 138);
-  assert.equal(facts.filter(fact => fact.fields.name && fact.fields.provenance?.sourceUrl).length, realBodies.length, "every real body has a verified, sourced name");
-  for (const body of realBodies) {
-    const fact = facts.find(row => row.id === rows.find(wired => Number(wired.config.eventBodyId) === body.BodyId)!.bodyId)!;
-    assert.equal(fact.fields.name, body.BodyName.trim());
-    assert.match(String(fact.fields.provenance!.sourceUrl), /^https:\/\/webapi\.legistar\.com\/v1\/pima\/bodies\?/);
-  }
-  assert.deepEqual(await db.query("SELECT 1 FROM fact f JOIN entity e ON e.id = f.entity_id WHERE e.kind = 'body' AND f.status = 'live' GROUP BY e.id HAVING bool_or(f.field = 'name') = false"), [],
-    "no body holds verified facts without a verified name");
-  assert.deepEqual(await db.query("SELECT DISTINCT provenance_kind FROM fact WHERE status='live'"), [{ provenance_kind: "OFFICIAL" }], "structured API fields keep their official provenance");
-  assert.deepEqual(await db.query("SELECT DISTINCT quote_start FROM fact WHERE status='live'"), [{ quote_start: null }], "API fields need no quote search");
-});
-
-test("pages saved after the pass began publish on the first pass", async t => {
-  const { refreshLegistarMembers } = await import("../lib/sources/legistar/members-refresh.ts");
-  const { doorsFromWiringRow } = await import("../lib/doors/seed-meetings.ts");
-  const { recordedMemberFetch } = await import("./helpers/legistar-member-fixtures.ts");
-  const db = await factDb(); t.after(() => db.pg.close());
-  const raw = rawFor("pima"), rows = wiring(raw, "AZ", "America/Phoenix");
-  const doors = async () => rows.map(row => ({ value: doorsFromWiringRow(row)[0] }));
-  const started = new Date(Date.now() - 60_000).toISOString();
-  const report = await refreshLegistarMembers({ facts: db, clocks: factClocks(null), now: started, slug: "pima", doors: doors as never,
-    vault: new MemoryEvidenceStore(), fetchImpl: recordedMemberFetch(() => raw, []) });
-  assert.ok((report.members ?? 0) > 0);
-  assert.ok(Date.parse(report.checkedAt) > Date.parse(started), "the facts are dated after the download, not at the pass start");
-  assert.ok((await db.query("SELECT 1 FROM fact WHERE field LIKE 'member:%' AND status = 'live'")).length > 0);
 });

@@ -104,7 +104,17 @@ export type DoorRepository = AggregateRepository<DoorRecord> & {
   meetingRecords?(): Promise<readonly Persisted<DoorRecord>[]>;
   /** Current store-filtered descriptors for hand-wired calendars or census calendars. */
   meetingMatches?(census: boolean, projection: RecordProjection): Promise<readonly Persisted<DoorRecord>[]>;
+  /** Current narrow rows maintained from changed-door pointers, including removals. */
+  currentRecords?(projection: RecordProjection): Promise<readonly Persisted<unknown>[]>;
+  count?(): Promise<number>;
+  /** Compare derive fingerprints and keep operational fields in the store, without reading records back. */
+  deriveMany?(drafts: readonly Required<DoorDraft>[], deriveInputAt: string, at: string): Promise<readonly DerivedDoorOutcome[]>;
+  suspendDuplicate?(id: string, revision: number, heldDoorId: string, at: string): Promise<boolean>;
+  retireDuplicates?(at: string): Promise<readonly string[]>;
 };
+
+export type DerivedDoorResult = "created" | "updated" | "unchanged" | "kept-manual-edit";
+export interface DerivedDoorOutcome { readonly doorId: string; readonly result: DerivedDoorResult }
 
 /** The fields a person or a derive step supplies; the rest the system keeps. */
 export interface DoorDraft {
@@ -404,9 +414,10 @@ export async function upsertDerivedDoor(
   draft: DoorDraft,
   deriveInputAt: string,
   at: string,
-): Promise<"created" | "updated" | "unchanged" | "kept-manual-edit"> {
+): Promise<DerivedDoorResult> {
   const checked = checkDoorDraft(draft);
   if (!checked.ok) throw new Error(`DOOR_DRAFT_INVALID: ${checked.why}`);
+  if (repo.deriveMany) return (await repo.deriveMany([checked.value], deriveInputAt, at))[0].result;
   for (let attempt = 0; attempt < 2; attempt += 1) {
     const existing = await repo.read(checked.value.doorId);
     const previous = existing !== null && isDoorRecord(existing.value) ? existing.value : null;
@@ -425,4 +436,34 @@ export async function upsertDerivedDoor(
     }
   }
   return "unchanged";
+}
+
+/** Seed batches send the proposed fields once; fingerprints decide equality inside the store. */
+export async function seedDerivedDoors(repo: DoorRepository, drafts: readonly DoorDraft[], deriveInputAt: string, at: string): Promise<{
+  created: number; updated: number; unchanged: number; keptManualEdit: number; refused: readonly string[];
+}> {
+  const counts = { created: 0, updated: 0, unchanged: 0, keptManualEdit: 0 }, refused: string[] = [];
+  const valid: Required<DoorDraft>[] = [];
+  for (const draft of drafts) {
+    const checked = checkDoorDraft(draft);
+    if (!checked.ok) refused.push(`${draft.doorId}: DOOR_DRAFT_INVALID: ${checked.why}`);
+    else valid.push(checked.value);
+  }
+  const record = (result: DerivedDoorResult) => {
+    if (result === "kept-manual-edit") counts.keptManualEdit++;
+    else counts[result]++;
+  };
+  if (repo.deriveMany) {
+    for (let start = 0; start < valid.length; start += 100) {
+      const batch = valid.slice(start, start + 100);
+      try { for (const outcome of await repo.deriveMany(batch, deriveInputAt, at)) record(outcome.result); }
+      catch (error) { for (const draft of batch) refused.push(`${draft.doorId}: ${(error as Error).message}`); }
+    }
+  } else {
+    for (const draft of valid) {
+      try { record(await upsertDerivedDoor(repo, draft, deriveInputAt, at)); }
+      catch (error) { refused.push(`${draft.doorId}: ${(error as Error).message}`); }
+    }
+  }
+  return { ...counts, refused };
 }

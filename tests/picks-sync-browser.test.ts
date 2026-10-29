@@ -114,7 +114,9 @@ test("two fresh browsers restore, sync in both directions, keep offline edits an
   try {
     browser = await launchGuarded({ label: "PK-01-browser-sync" });
     const first = await browser.page({ viewport: { width: 1200, height: 900 }, extraHTTPHeaders: { "x-pk-test-device": "first" } });
-    await first.clock.install({ time: new Date("2026-10-23T12:00:00Z") });
+    // Count only the commanded minute, regardless of time spent between browser calls.
+    await first.clock.install({ time: new Date("2026-10-23T11:59:00Z") });
+    await first.clock.pauseAt(new Date("2026-10-23T12:00:00Z"));
     const errors: string[] = [];
     first.on("pageerror", error => errors.push(error.message));
     await first.goto(`${base}/ballot?zip=85701`);
@@ -126,7 +128,8 @@ test("two fresh browsers restore, sync in both directions, keep offline edits an
     const secret = new URL(link).hash.slice("#picks=".length);
     assert.match(secret, /^[A-Za-z0-9_-]{43}$/);
     const fresh = await browser.page({ viewport: { width: 390, height: 844 }, extraHTTPHeaders: { "x-pk-test-device": "fresh" } });
-    await fresh.clock.install({ time: new Date("2026-10-23T12:00:00Z") });
+    await fresh.clock.install({ time: new Date("2026-10-23T11:59:00Z") });
+    await fresh.clock.pauseAt(new Date("2026-10-23T12:00:00Z"));
     fresh.on("pageerror", error => errors.push(error.message));
     const restoredAt = Date.now();
     await fresh.goto(link);

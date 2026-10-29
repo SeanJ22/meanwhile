@@ -4,7 +4,6 @@ import {
   assignmentCostSummaryOf,
   assignmentCostTotals,
   assignmentPartOf,
-  assignmentStateRowsOf,
   deriveAssignmentEntries,
   mergeAssignmentParts,
   pipelineLinked,
@@ -27,7 +26,6 @@ import {
   foldPlace,
   foldSpendDay,
   mergePlaceTotals,
-  placeRowsOf,
   placeSumOf,
   placeTotals,
   spendByPlaceOf,
@@ -38,11 +36,11 @@ import {
   type PlaceTotals,
   type SpendByPlaceView,
 } from "./cost-panel.ts";
-import type { ExactSum } from "./exact-sum.ts";
+import { exactSum, mergeExact, subtractExact, type ExactSum } from "./exact-sum.ts";
+import type { OwnerAssignmentRow } from "./repository/owner-assignment-rows.ts";
 import type { ExpansionScopeDecision } from "./expansion/scopes.ts";
 import type { AskGapCode } from "../ask/gap-codes.ts";
 import { askGapObligationId } from "./ask-gap-id.ts";
-import { assertAggregateOnly, ownerSnapshotStateId, type OwnerSnapshotState } from "./owner-surface.ts";
 import { deriveItemState, isPipelineRecord } from "./promotion/pipeline.ts";
 import type { PromotionPipelineRecord } from "./promotion/types.ts";
 import type { ProviderReading } from "./provider-billing.ts";
@@ -71,7 +69,7 @@ import type { WorkItem } from "./work-item.ts";
 
 /** The national totals row beside the published snapshot in `cp_owner_snapshots`; each state's rows sit beside it. */
 export const OWNER_SNAPSHOT_TOTALS_ID = "totals";
-const OWNER_SNAPSHOT_TOTALS_FORMAT = 3;
+const OWNER_SNAPSHOT_TOTALS_FORMAT = 4;
 const OTHER_STATE = "other";
 const stateTotalsId = (state: string): string => `totals:${state}`;
 const stateInboxId = (state: string): string => `inbox:${state}`;
@@ -90,6 +88,9 @@ export interface OwnerSnapshotTotals {
   readonly formatVersion: number;
   readonly costs: CostTotals | null;
   readonly assignments: AssignmentTotals | null;
+  readonly initializing?: boolean;
+  readonly initialization?: OwnerSnapshotInitialization;
+  readonly ownerWorkListReady?: boolean;
 }
 
 /** A log slot already folded, with the database clock it was appended at. */
@@ -139,9 +140,6 @@ export interface CostTotals {
   ahead: { readonly entry: CostEntry; readonly worker: WorkerRef | null }[];
   /** Charges whose `recorded_at` is too far from their stamp to be found by it when they leave a window. */
   skewed: CarriedCharge[];
-  /** Attempts not on record when their charges were folded, and work items no assignment held. */
-  orphans: string[];
-  unassigned: string[];
 }
 
 /** One assignment's carried figures beside its published rows. */
@@ -158,28 +156,24 @@ export interface GroupTotals {
   readonly clause: string | null;
 }
 
-/** One state's assignments and spend by jurisdiction between publishes, in `totals:<state>`. */
+/** One state's running counts and spend by jurisdiction, in `totals:<state>`. */
 export interface StateTotals {
   readonly builtAt: string;
-  readonly groups: Readonly<Record<string, GroupTotals>>;
   readonly places: Readonly<Record<string, PlaceTotals>>;
-  /** The list rows of the state's ranked assignments, each until the instant it could next change on the clock alone. */
-  readonly lists: Readonly<Record<string, TimedList>>;
+  readonly part: StatePart;
+  readonly inboxRun?: string;
 }
 
-interface TimedList {
+export interface TimedList {
   readonly row: AssignmentListRow;
   readonly until: string | null;
 }
 
-/** What a state adds to the national figures, kept so a publish that leaves the state alone need not read it. */
-/** Its figures are as of `builtAt`, the last publish whose changed rows reached the state; its rows carry their own instants. */
+/** What a state adds to the national figures; changed assignments update these counts by subtraction and addition. */
 export interface StatePart {
   readonly builtAt: string;
+  readonly usdRows: number;
   readonly assignments: AssignmentPart;
-  readonly publications: readonly WorkItem[];
-  /** The subjects of the standing obligations each instruction marks, by `<assignment key>\n<receipt>`: the hunts' members. */
-  readonly marks: Readonly<Record<string, readonly string[]>>;
   /** Standing obligations by the state name their id and subject carry, "other" for none. */
   readonly obligations: Readonly<Record<string, number>>;
   readonly spend: PlaceTotals;
@@ -198,7 +192,8 @@ export interface AssignmentTotals {
   readonly through: string;
   /** Versions already folded inside each table's overlapping read window. */
   readonly cursors?: Readonly<Record<string, LogCursor>>;
-  readonly states: Readonly<Record<string, StatePart>>;
+  /** Counts live in their state's keyed row; the national cursor keeps only its small clock pointer. */
+  readonly states: Readonly<Record<string, Pick<StatePart, "builtAt"> | StatePart>>;
   /** A work item held by an assignment in another state than its own clause or id names. */
   readonly crossings: Readonly<Record<string, string>>;
   /** A work item joined through a parent (directory or repair), by the parent it names. */
@@ -274,6 +269,20 @@ function foldedBefore(cursor: LogCursor | null, slackMs: number): (r: ChangedRec
   return (r) => Date.parse(r.changedAt!) < since || held.has(slotKey(r.key, r.position));
 }
 
+/** Lease heartbeats do not change assignment state; this cursor tracks the four fields that do. */
+async function eachLeaseChanged(repos:ControlPlaneRepositories,since:string|null,page:(rows:readonly {routeTaskId:string}[])=>Promise<void>,
+  remember:{cursors:Record<string,LogCursor>;name:string;slackMs:number}):Promise<string>{
+  if(!repos.ownerLeaseChanges)return eachChanged(repos.leases,since,{routeTaskId:true},page,remember);
+  const prior=remember.cursors[remember.name];
+  if(since!==null&&prior)since=iso(Date.parse(prior.through)-remember.slackMs);
+  const held=(prior?.held??[]).filter(([, ,at])=>since===null||at>=since),taken:Slot[]=[];
+  const through=await repos.ownerLeaseChanges.read(since,held.map(([id,version])=>[id,version]),async rows=>{
+    for(const row of rows)taken.push([row.id,row.version,row.changedAt]);await page(rows);
+  });
+  remember.cursors[remember.name]={through,held:[...held,...taken].filter(([, ,at])=>Date.parse(at)>=Date.parse(through)-remember.slackMs)};
+  return through;
+}
+
 /** An aggregate's rows changed since `since`, narrowed, page by page; answers the clock the read began at. */
 async function eachChanged<R>(repo: AggregateRepository<unknown>, since: string | null, projection: RecordProjection, page: (rows: readonly R[]) => void | Promise<void>,
   remember: { readonly cursors: Record<string, LogCursor>; readonly name: string; readonly slackMs: number }): Promise<string> {
@@ -329,6 +338,9 @@ type PipelineSource = { readonly source?: { readonly kind?: string; readonly att
 
 /* ------------------------------------------------------------------ costs */
 
+type CostRefUpdate={readonly replace:boolean;readonly orphans:readonly string[];readonly unassigned:readonly string[]};
+const costRefUpdates=new WeakMap<CostTotals,CostRefUpdate>();
+
 function billingFrame(scopes: readonly ExpansionScopeDecision[], members: ReadonlyMap<string, ReadonlySet<string>>): BillingFrame {
   const held = scopes.filter((s) => s.budgetStartedAt).map(({ key, receiptId, budgetStartedAt, budgetUsd }) => ({ key, receiptId, budgetStartedAt, budgetUsd }))
     .sort((a, b) => a.key.localeCompare(b.key) || a.receiptId.localeCompare(b.receiptId));
@@ -346,7 +358,7 @@ const billed = (r: ReadingPeriod): boolean => (BILLING_PROVIDERS as readonly str
 function emptyCosts(billing: BillingFrame, carried: readonly ReadingPeriod[]): CostTotals {
   return { cursor: { through: iso(0), held: [] }, foldedAt: iso(0), billing, ledger: costLedgerTotals(), days: {}, scouts: measuredSum(),
     assignments: assignmentCostTotals(), hunts: {}, providerMonths: {}, windows: Object.fromEntries(carried.map((r) => [periodKey(r), windowTotals()])),
-    searches: {}, ahead: [], skewed: [], orphans: [], unassigned: [] };
+    searches: {}, ahead: [], skewed: [] };
 }
 
 /** Every figure that ends at a clock: the month, the readings made in it, and the month's search requests. */
@@ -389,15 +401,17 @@ async function foldCosts(repos: ControlPlaneRepositories, prior: CostTotals | nu
   const frame = input.scopes === null && prior !== null ? prior.billing : billingFrame(input.scopes ?? [], input.scopeMembers);
   const carried = input.carried.filter(billed);
   const readWorkers = needs(repos.attempts.readManyNarrowed, "attempt read by id");
+  const orphanAttempts = await repos.ownerCostRefs.matching("orphan",[...input.changed.attempts]);
+  const unassignedItems = await repos.ownerCostRefs.matching("unassigned",[...input.changed.workItems]);
   const rebuild = prior === null || JSON.stringify(prior.billing) !== JSON.stringify(frame) || now < Date.parse(prior.foldedAt) ||
-    carried.some((r) => !(periodKey(r) in prior.windows)) || prior.orphans.some((id) => input.changed.attempts.has(id)) ||
-    (await heldWorkItems(repos, prior.unassigned.filter((id) => input.changed.workItems.has(id)))).size > 0;
+    carried.some((r) => !(periodKey(r) in prior.windows)) || orphanAttempts.length > 0 ||
+    (await heldWorkItems(repos,unassignedItems)).size > 0;
   const t = rebuild ? emptyCosts(frame, carried) : prior;
   t.windows = Object.fromEntries(carried.map((r) => [periodKey(r), t.windows[periodKey(r)]!]));
   const ctx = contextOf(frame);
   const from = rebuild ? now : Date.parse(t.foldedAt);
-  const orphans = new Set(t.orphans);
-  const unassigned = new Set(t.unassigned);
+  const orphans = new Set<string>();
+  const unassigned = new Set<string>();
   const placed = rebuild ? foldedBefore(prior?.cursor ?? null, slackMs) : () => false;
   const ahead = t.ahead;
   t.ahead = [];
@@ -459,8 +473,9 @@ async function foldCosts(repos: ControlPlaneRepositories, prior: CostTotals | nu
   t.cursor = next;
   t.foldedAt = input.nowIso;
   t.billing = frame;
-  t.orphans = [...orphans].sort();
-  t.unassigned = [...unassigned].sort();
+  const staged=costRefUpdates.get(t);
+  costRefUpdates.set(t,{replace:rebuild||staged?.replace===true,
+    orphans:unique([...(rebuild?[]:staged?.orphans??[]),...orphans]),unassigned:unique([...(rebuild?[]:staged?.unassigned??[]),...unassigned])});
   return t;
 }
 
@@ -511,6 +526,8 @@ class Inboxes {
     this.bound = bound;
   }
 
+  resume(states: readonly string[]): void { for (const state of states) this.#spilled.add(state); }
+
   states(): string[] {
     return unique([...this.#held.keys(), ...this.#spilled]).sort();
   }
@@ -530,8 +547,8 @@ class Inboxes {
   pipeline(state: string, ref: string | undefined, key: string): void { if (ref) (this.#of(state).pipeline[ref] ??= []).push(key); }
   place(state: string, place: string, totals: PlaceTotals): void { mergePlaceTotals(this.#of(state).places[place] ??= placeTotals(), totals); }
 
-  async settle(): Promise<void> {
-    if (!this.write || this.#size < this.bound) return;
+  async settle(force=false): Promise<void> {
+    if (!this.write || !force && this.#size < this.bound) return;
     for (const [state, inbox] of this.#held) {
       const row = await this.repos.ownerSnapshotInboxes.read(stateInboxId(state));
       const merged = mergeInbox(row?.value.run === this.run ? row.value : emptyInbox(), inbox);
@@ -545,15 +562,20 @@ class Inboxes {
   }
 
   /** Everything routed to the state, held and written out; it is then gone from both. */
-  async take(state: string): Promise<StateInbox> {
+  async take(state: string, retain=false): Promise<StateInbox> {
     let inbox = this.#held.get(state) ?? emptyInbox();
     this.#held.delete(state);
     if (this.#spilled.delete(state)) {
       const row = await this.repos.ownerSnapshotInboxes.read(stateInboxId(state));
       if (row?.value.run === this.run) inbox = mergeInbox(row.value, inbox);
-      await this.repos.ownerSnapshotInboxes.compareAndSet(stateInboxId(state), row!.revision, { run: "", ...emptyInbox() }, this.nowIso);
+      if (!retain && row?.value.run === this.run) await this.repos.ownerSnapshotInboxes.compareAndSet(stateInboxId(state), row.revision, { run: "", ...emptyInbox() }, this.nowIso);
     }
     return inbox;
+  }
+
+  async ack(state:string):Promise<void>{
+    const row=await this.repos.ownerSnapshotInboxes.read(stateInboxId(state));
+    if(row?.value.run===this.run)await this.repos.ownerSnapshotInboxes.compareAndSet(stateInboxId(state),row.revision,{run:"",...emptyInbox()},this.nowIso);
   }
 }
 
@@ -568,18 +590,56 @@ function mergeInbox(a: StateInbox, b: StateInbox): StateInbox {
   return { groups: unique([...a.groups, ...b.groups]), items: unique([...a.items, ...b.items]), scouts: refs(a.scouts, b.scouts), pipeline: refs(a.pipeline, b.pipeline), places };
 }
 
-/** A state's rows were not written by the publish whose national totals name them, so every state is derived again. */
-class StaleState extends Error {}
-
 interface Loaded {
   readonly totals: Persisted<StateTotals> | null;
-  readonly snapshot: Persisted<Pick<OwnerSnapshotState, "builtAt" | "allRowsIndex" | "bodyAttempts">> | null;
   readonly groups: Set<string>;
   readonly lists: Map<string, TimedList>;
   places: Record<string, PlaceTotals>;
+  inboxRun?: string;
 }
 
 type StateEntry = readonly [string, GroupTotals & Pick<AssignmentEntry, "index" | "bodyAttempts">];
+
+/** Subtract the replaced entries and add their new contributions; every other count stays in its small row. */
+export function updateAssignmentPart(prior: AssignmentPart, before: readonly AssignmentPart[], after: readonly AssignmentPart[], usdRows: number): AssignmentPart {
+  const out = structuredClone(prior) as { -readonly [K in keyof AssignmentPart]: AssignmentPart[K] };
+  const add = (into: Record<string, number>, from: Readonly<Record<string, number>>, sign: number) => {
+    for (const [key, n] of Object.entries(from)) { into[key] = (into[key] ?? 0) + sign * n; if (into[key] === 0) delete into[key]; }
+  };
+  const states = (into: Record<string, Readonly<Record<string, number>>>, from: Record<string, Readonly<Record<string, number>>>, sign: number) => {
+    for (const [key, counts] of Object.entries(from)) {
+      const target = into[key] = { ...into[key] };
+      for (const [state, n] of Object.entries(counts)) (target as Record<string, number>)[state] = (target[state] ?? 0) + sign * n;
+      if (Object.values(target).every(n => n === 0)) delete into[key];
+    }
+  };
+  const open = [...out.askGaps.open];
+  let askRows = out.askGaps.rows;
+  const sum = structuredClone(out.usd ?? exactSum());
+  for (const [sign, parts] of [[-1, before], [1, after]] as const) for (const part of parts) {
+    out.total += sign * part.total;
+    add(out.groups as Record<string, number>, part.groups, sign);
+    states(out.geographic, part.geographic, sign);
+    states(out.instruction, part.instruction, sign);
+    states(out.instructionByReceipt, part.instructionByReceipt, sign);
+    for (const key of ["active", "eligible", "overdue", "backoff"] as const) (out.clocks as Record<string, number>)[key] += sign * part.clocks[key];
+    askRows += sign * part.askGaps.rows;
+    for (const gap of part.askGaps.open) {
+      if (sign === 1) open.push(gap);
+      else { const index = open.findIndex(row => row.bodyId === gap.bodyId && row.code === gap.code); if (index >= 0) open.splice(index, 1); }
+    }
+    if (part.usd !== null) {
+      if (sign === 1) mergeExact(sum, part.usd);
+      else {
+        for (const value of part.usd.p) subtractExact(sum, value);
+        for (const key of ["nan", "pinf", "ninf"] as const) if (part.usd[key]) { sum[key] = (sum[key] ?? 0) - part.usd[key]!; if (sum[key] === 0) delete sum[key]; }
+      }
+    }
+  }
+  out.usd = usdRows === 0 ? null : sum;
+  out.askGaps = { rows: askRows, open };
+  return out;
+}
 
 /** The segment of an assignment's index row that holds at `at`. */
 const segmentAt = (segments: readonly IndexSegment[], at: string): IndexSegment =>
@@ -671,6 +731,13 @@ const obligationStateName = (id: string, subjectId: string): string => {
   return US_STATES.find((s) => unitCarriesState(hay, s.code))?.name ?? "other";
 };
 
+export interface OwnerSnapshotInitialization {
+  readonly at:string;
+  readonly run:string;
+  readonly phase:"states"|"costs"|"finalStates"|"refresh";
+  readonly pending:readonly string[];
+}
+
 export interface OwnerSnapshotFoldInput {
   readonly nowIso: string;
   readonly slackMs?: number;
@@ -685,11 +752,17 @@ export interface OwnerSnapshotFoldInput {
   /** Routed rows held in memory before they are written to their states' inboxes. */
   readonly heldRows?: number;
   readonly log: (line: string) => void;
+  /** Contract migration only: preserve each inbox until its rows and national cursor are durable. */
+  readonly checkpoint?: {
+    readonly run:string;
+    readonly maxStates:number;
+    readonly canContinue:()=>boolean;
+    readonly save:(fold:OwnerSnapshotFold,progress:OwnerSnapshotInitialization|null)=>Promise<void>;
+  };
 }
 
 /**
- * The snapshot's totals with every row changed since the last publish folded in, one state at a time: each state's assignments and
- * spend are read from its own rows, folded, written back and let go before the next, and only each state's part is held nationally.
+ * Fold changes into keyed work-list entries and their running state counts. A changed assignment never loads another assignment's history.
  */
 export class OwnerSnapshotFold {
   readonly #repos: ControlPlaneRepositories;
@@ -701,6 +774,7 @@ export class OwnerSnapshotFold {
   readonly #priorCosts: CostTotals | null;
   costs!: CostTotals;
   readonly #states: Record<string, StatePart>;
+  readonly #stateHeads: string[];
   readonly #crossings: Record<string, string>;
   readonly #links: Record<string, string>;
   readonly #dependencies: Record<string, readonly string[]>;
@@ -711,6 +785,7 @@ export class OwnerSnapshotFold {
   /** The states loaded now, and every assignment they hold. */
   readonly #loaded = new Map<string, Loaded>();
   readonly #groups = new Map<string, GroupTotals>();
+  readonly #priorRows = new Map<string, OwnerAssignmentRow>();
   readonly #stateOfGroup = new Map<string, string>();
   /** Each assignment's index row, segment by segment over the instants the clock alone changes it at. */
   readonly #index = new Map<string, IndexSegment[]>();
@@ -722,6 +797,10 @@ export class OwnerSnapshotFold {
   readonly #written = new Set<string>();
   /** Attempts changed since the last publish. */
   readonly #changedAttempts = new Set<string>();
+  #checkpointStates=0;
+  #initialization:OwnerSnapshotInitialization|null=null;
+  complete=true;
+  get checkpointedStates():number{return this.#checkpointStates;}
 
   private constructor(repos: ControlPlaneRepositories, prior: OwnerSnapshotTotals | null, input: OwnerSnapshotFoldInput) {
     this.#repos = repos;
@@ -730,9 +809,18 @@ export class OwnerSnapshotFold {
     this.#servedReader = input.servedReader;
     const a = prior?.formatVersion === OWNER_SNAPSHOT_TOTALS_FORMAT ? prior.assignments : null;
     this.#rebuild = a === null || prior?.costs === null;
-    this.#inboxes = new Inboxes(repos, input.nowIso, `${input.nowIso} ${this.#rebuild ? "rebuild" : "fold"}`, input.write, input.heldRows ?? INBOX_HELD);
+    this.#initialization=prior?.initialization??null;
+    const run=this.#initialization?.phase==="costs"?`${this.#initialization.run}:final:${crypto.randomUUID()}`:
+      this.#initialization?.run??input.checkpoint?.run??`${input.nowIso} ${this.#rebuild ? "rebuild" : "fold"}`;
+    this.#inboxes = new Inboxes(repos,input.nowIso,run,input.write,input.heldRows??INBOX_HELD);
+    if(this.#initialization)this.#inboxes.resume(this.#initialization.pending);
     this.#priorCosts = this.#rebuild ? null : prior!.costs;
-    this.#states = this.#rebuild ? {} : { ...a!.states };
+    this.#states = {};
+    this.#stateHeads = [];
+    if (!this.#rebuild) for (const [state, part] of Object.entries(a!.states)) {
+      if ("assignments" in part) this.#states[state] = part;
+      else this.#stateHeads.push(state);
+    }
     this.#crossings = this.#rebuild ? {} : { ...a!.crossings };
     this.#links = this.#rebuild ? {} : { ...a!.links };
     this.#dependencies = this.#rebuild ? {} : { ...a!.dependencies };
@@ -742,43 +830,80 @@ export class OwnerSnapshotFold {
     this.#cursors = this.#rebuild ? {} : structuredClone(a!.cursors ?? {});
   }
 
-  /** The totals with every changed row folded in; with no usable prior, or a state whose rows do not pair with it, every state is derived from scratch. */
+  /** The totals with changed records and due work-list clocks folded in. */
   static async fold(repos: ControlPlaneRepositories, prior: OwnerSnapshotTotals | null, input: OwnerSnapshotFoldInput): Promise<OwnerSnapshotFold> {
-    try {
-      return await new OwnerSnapshotFold(repos, prior, input).#run(prior);
-    } catch (error) {
-      if (!(error instanceof StaleState)) throw error;
-      input.log(`assignments: ${error.message}; every state is derived again`);
-      return await new OwnerSnapshotFold(repos, null, input).#run(prior);
+    if (prior !== null && (prior.formatVersion !== OWNER_SNAPSHOT_TOTALS_FORMAT || prior.initializing && !input.checkpoint)) {
+      throw new Error("OWNER_WORK_LIST_MIGRATION_REQUIRED: the deployed runner must finish the owner work-list contract migration before publishing counts");
     }
+    return await new OwnerSnapshotFold(repos, prior, input).#run(prior);
   }
 
   async #run(prior: OwnerSnapshotTotals | null): Promise<this> {
+    if (this.#stateHeads.length) {
+      const rows = await needs(this.#repos.ownerSnapshotStateTotals.readManyNarrowed,"state count rows by key")(
+        this.#stateHeads.map(stateTotalsId),{part:true});
+      const found = new Map(rows.map(row => [row.id,(row.value as Pick<StateTotals,"part">).part]));
+      for (const state of this.#stateHeads) {
+        const part = found.get(stateTotalsId(state));
+        if (!part?.assignments) throw new Error(`OWNER_STATE_COUNTS_MISSING: ${state}`);
+        this.#states[state] = part;
+      }
+    }
+    const checkpoint=this.#input.checkpoint;
+    const costs=async(prior:CostTotals|null,changed:ReadonlySet<string>=new Set<string>())=>foldCosts(this.#repos,prior,{
+      nowIso:this.#input.nowIso,slackMs:this.#slackMs,scopes:this.#input.scopes,scopeMembers:await this.#scopeMembers(),carried:this.#input.carried,
+      changed:{attempts:this.#changedAttempts,workItems:changed},places:charges=>this.#place(charges)});
+    if(checkpoint&&this.#initialization){
+      this.costs=structuredClone(this.#priorCosts!);
+      if(this.#initialization.phase==="costs"){
+        // Recheck the billing frame after every changed state is durable.
+        this.#inboxes.resume([]);
+        this.costs=await costs(this.costs);
+        await this.#inboxes.settle(true);
+        this.#initialization={at:this.#initialization.at,run:this.#inboxes.run,phase:"finalStates",pending:this.#inboxes.states()};
+        await checkpoint.save(this,this.#initialization);
+        this.complete=false;return this;
+      }
+      if(!await this.#drain())return this;
+      if(this.#initialization.phase==="states"){
+        this.#initialization={at:this.#initialization.at,run:this.#initialization.run,phase:"costs",pending:[]};
+        await checkpoint.save(this,this.#initialization);this.complete=false;return this;
+      }
+      this.#initialization=null;await checkpoint.save(this,null);return this;
+    }
+    if (this.#rebuild && this.#input.write) await this.#repos.ownerAssignmentRows.clear();
     const changed = this.#rebuild ? new Set<string>() : await this.#routeChanges();
     if (this.#rebuild) {
       await this.#routeEverything();
       for (const state of Object.keys(prior?.formatVersion === OWNER_SNAPSHOT_TOTALS_FORMAT ? prior.assignments?.states ?? {} : {})) this.#inboxes.touch(state);
     }
-    const costs = (prior: CostTotals | null) => foldCosts(this.#repos, prior, { nowIso: this.#input.nowIso, slackMs: this.#slackMs, scopes: this.#input.scopes,
-      scopeMembers: this.#scopeMembers(), carried: this.#input.carried, changed: { attempts: this.#changedAttempts, workItems: changed },
-      places: (charges) => this.#place(charges) });
-    const membersOf = () => JSON.stringify([...this.#scopeMembers()].map(([key, subjects]) => [key, [...subjects].sort()]));
-    const members = membersOf();
-    this.costs = await costs(this.#priorCosts);
-    await this.#drain();
-    /* Hunt members are read off the states' clocks, so a folded state can change the frame every charge was attributed against. */
-    if (membersOf() !== members) {
-      this.costs = await costs(this.costs);
-      await this.#drain();
+    const membersOf=async()=>JSON.stringify([...await this.#scopeMembers()].map(([key,subjects])=>[key,[...subjects].sort()]));
+    const members=await membersOf();
+    this.costs=await costs(this.#priorCosts,changed);
+    if(!this.#rebuild){
+      const due=await this.#repos.ownerAssignmentRows.find({dueAt:this.#input.nowIso});
+      await this.#acceptRows(due);
+      for(const row of due)this.#inboxes.group(row.state,row.id);
     }
-    if (this.#rebuild) this.#cursors.costs = structuredClone(this.costs.cursor);
+    if(checkpoint){
+      await this.#foldPipeline(this.#rebuild);
+      await this.#inboxes.settle(true);
+      this.#initialization={at:this.#input.nowIso,run:checkpoint.run,phase:"states",pending:this.#inboxes.states()};
+      await checkpoint.save(this,this.#initialization);
+      // Preparation is durable; the migration driver may continue while its deadline permits.
+      this.complete=false;return this;
+    }
+    await this.#drain();
+    if(await membersOf()!==members){this.costs=await costs(this.costs,changed);await this.#drain();}
+    if(this.#rebuild)this.#cursors.costs=structuredClone(this.costs.cursor);
     await this.#foldPipeline(this.#rebuild);
     return this;
   }
 
-  #scopeMembers(): ReadonlyMap<string, ReadonlySet<string>> {
-    return new Map((this.#input.scopes ?? []).map((scope) => [scope.key,
-      new Set(Object.values(this.#states).flatMap((s) => s.marks[`${scope.key}\n${scope.receiptId}`] ?? []))]));
+  async #scopeMembers(): Promise<ReadonlyMap<string, ReadonlySet<string>>> {
+    const scopes = (this.#input.scopes ?? []).filter(isFundedHunt);
+    const held = await this.#repos.ownerAssignmentRows.scopeMembers(scopes.map(scope => ({key:scope.key,ref:scope.receiptId})));
+    return new Map(scopes.map(scope => [scope.key,new Set(held.get(`${scope.key}\n${scope.receiptId}`) ?? [])]));
   }
 
   async #place(charges: readonly CostEntry[]): Promise<void> {
@@ -793,8 +918,8 @@ export class OwnerSnapshotFold {
   }
 
   /** Every work item with a publication outcome, as the public readbacks read it. */
-  publications(): WorkItem[] {
-    return Object.values(this.#states).flatMap((s) => s.publications);
+  publications(readbackOnly = false): Promise<readonly WorkItem[]> {
+    return this.#repos.ownerAssignmentRows.publications(readbackOnly);
   }
 
   /** Standing obligations by the state name each carries. */
@@ -838,26 +963,37 @@ export class OwnerSnapshotFold {
   }
 
   /** The national view from every state's part, as of each state's last fold. */
-  async view(input: Omit<Parameters<typeof assembleAssignmentView>[0], "nowIso" | "part" | "lists" | "totals">): Promise<AssignmentView> {
-    const part = this.#part();
-    const kept = new Set(part.candidates.map((c) => c.id));
-    for (const [state, s] of Object.entries(this.#states)) {
-      const wanted = s.assignments.candidates.map((c) => c.id).filter((id) => kept.has(id) && !this.#lists.has(id));
-      if (wanted.length === 0) continue;
-      const row = await this.#repos.ownerSnapshotStateTotals.readNarrowed(stateTotalsId(state), { lists: true });
-      const lists = (row?.value as Pick<StateTotals, "lists"> | undefined)?.lists ?? {};
-      for (const id of wanted) if (lists[id] !== undefined) this.#lists.set(id, lists[id]!.row);
+  async view(input: Omit<Parameters<typeof assembleAssignmentView>[0], "nowIso" | "part" | "lists" | "totals">,
+    options: { readonly rows?: boolean } = {}): Promise<AssignmentView> {
+    let part = this.#part();
+    if (options.rows !== false) {
+      const candidates = (await Promise.all(Object.keys(this.#states).map(state => this.#repos.ownerAssignmentRows.candidates(state,this.#input.nowIso)))).flat();
+      part = { ...part,candidates: mergeAssignmentParts([{...assignmentPartOf([],this.#input.nowIso),candidates}],this.#input.nowIso).candidates };
+      for (const row of await this.#repos.ownerAssignmentRows.read(part.candidates.map(candidate => candidate.id))) if (row.list) this.#lists.set(row.id,row.list.row);
+      const missing = part.candidates.map(candidate=>candidate.id).filter(id=>!this.#lists.has(id));
+      if (missing.length) { await this.#derive(missing,[]); await this.#emit(); return this.view(input,options); }
     }
-    for (const id of [...this.#lists.keys()]) if (!kept.has(id)) this.#lists.delete(id);
     const pipeline = this.pipeline;
-    return assembleAssignmentView({ ...input, nowIso: this.#input.nowIso, part, lists: (id) => this.#lists.get(id),
+    const view = assembleAssignmentView({ ...input, nowIso: this.#input.nowIso, part, lists: (id) => this.#lists.get(id),
       totals: { costs: assignmentCostSummaryOf(this.costs.assignments), pipeline: { items: pipeline.items, linked: pipeline.linked },
         askGapObservations: this.#input.askGapObservations } });
+    if (options.rows === false) {
+      const {geographicCounts:_geography,instructionCounts:_instructions,instructionCountsByReceipt:_receipts,...counts}=view;
+      return counts;
+    }
+    return view;
+  }
+
+  async saveTotals(prior:Persisted<OwnerSnapshotTotals>|null,initialization:OwnerSnapshotInitialization|null=null):Promise<void>{
+    const value:OwnerSnapshotTotals={...this.totals(),...(initialization?{initializing:true,initialization}:{ownerWorkListReady:true})};
+    await this.#repos.ownerCostRefs.persist({expectedRevision:prior?.revision??null,value,now:this.#input.nowIso},costRefUpdates.get(this.costs)??null);
+    costRefUpdates.delete(this.costs);
   }
 
   totals(): OwnerSnapshotTotals {
-    return { formatVersion: OWNER_SNAPSHOT_TOTALS_FORMAT, costs: this.costs, assignments: { through: this.#through, cursors: this.#cursors, states: this.#states,
-      crossings: this.#crossings, links: this.#links, dependencies: this.#dependencies, lists: Object.fromEntries(this.#lists), pipeline: this.#pipeline } };
+    return { formatVersion: OWNER_SNAPSHOT_TOTALS_FORMAT, costs: this.costs, assignments: { through: this.#through, cursors: this.#cursors,
+      states: Object.fromEntries(Object.entries(this.#states).map(([state,part])=>[state,{builtAt:part.builtAt}])),
+      crossings: this.#crossings, links: this.#links, dependencies: this.#dependencies, lists: {}, pipeline: this.#pipeline } };
   }
 
   #part(): AssignmentPart {
@@ -912,7 +1048,7 @@ export class OwnerSnapshotFold {
       eachChanged<{ id: string; workItemId: string }>(repos.attempts, since, { id: true, workItemId: true }, (rows) => {
         for (const a of rows) { this.#changedAttempts.add(a.id); items.push(a.workItemId); }
       }, this.#remember("attempts")),
-      eachChanged<{ routeTaskId: string }>(repos.leases, since, { routeTaskId: true }, async (rows) => {
+      eachLeaseChanged(repos, since, async (rows) => {
         const tasks = await needs(repos.routeTasks.readManyNarrowed, "route-task read by id")(unique(rows.map((l) => l.routeTaskId)), CHANGE_PROJECTIONS.byWorkItem);
         for (const t of tasks) items.push((t.value as { workItemId: string }).workItemId);
       }, this.#remember("leases")),
@@ -1018,15 +1154,22 @@ export class OwnerSnapshotFold {
   /* ----------------------------------------------------------- states */
 
   /** Folds every state with rows routed to it, one at a time, until none is left. */
-  async #drain(): Promise<void> {
+  async #drain(): Promise<boolean> {
     for (let states = this.#inboxes.states(); states.length > 0; states = this.#inboxes.states()) {
       for (const state of states) {
+        const checkpoint=this.#input.checkpoint;
+        if(checkpoint&&(this.#checkpointStates>=checkpoint.maxStates||!checkpoint.canContinue())){this.complete=false;return false;}
         await this.#load(state);
-        const inbox = await this.#inboxes.take(state);
+        const inbox = await this.#inboxes.take(state,!!checkpoint);
         const loaded = this.#loaded.get(state)!;
         for (const [ref, keys] of Object.entries(inbox.scouts)) for (const key of keys) addRef(this.#scouts, ref, key);
         for (const [ref, keys] of Object.entries(inbox.pipeline)) for (const key of keys) addRef(this.#pipelineItems, ref, key);
-        for (const [place, totals] of Object.entries(inbox.places)) mergePlaceTotals(loaded.places[place] ??= placeTotals(), totals);
+        if(!checkpoint||loaded.inboxRun!==this.#inboxes.run){
+          for(const[place,totals]of Object.entries(inbox.places))mergePlaceTotals(loaded.places[place]??=placeTotals(),totals);
+          if(checkpoint)loaded.inboxRun=this.#inboxes.run;
+        }
+        await this.#loadRows(inbox.groups);
+        await this.#acceptRows(await this.#repos.ownerAssignmentRows.find({ members: inbox.items, clauses: inbox.groups }));
         const targets = new Set(inbox.groups);
         /* A new obligation takes in the created work items whose clause names it. */
         for (const id of loaded.groups) { const clause = this.#groups.get(id)!.clause; if (clause !== null && targets.has(clause) && !this.#groups.has(clause)) targets.add(id); }
@@ -1037,32 +1180,39 @@ export class OwnerSnapshotFold {
         await this.#derive([], probes);
         this.#input.log(`assignments: ${state} folded — ${touched} derived again, ${probes.length} work item(s) no assignment held`);
         await this.#emit();
+        if(checkpoint){
+          this.#checkpointStates+=1;
+          this.#initialization={...this.#initialization!,pending:this.#inboxes.states()};
+          await checkpoint.save(this,this.#initialization);
+          await this.#inboxes.ack(state);
+        }
       }
     }
+    return true;
   }
 
   async #load(state: string): Promise<void> {
     if (this.#loaded.has(state)) return;
-    const [totals, snapshot] = await Promise.all([this.#repos.ownerSnapshotStateTotals.read(stateTotalsId(state)),
-      this.#repos.ownerSnapshotStates.readNarrowed(ownerSnapshotStateId(state), { builtAt: true, allRowsIndex: true, bodyAttempts: true })
-        .then(row => row as Loaded["snapshot"])]);
-    const part = this.#states[state];
-    const carried = part !== undefined && (!this.#rebuild || this.#written.has(state));
-    if (carried && (totals?.value.builtAt !== part.builtAt || snapshot?.value.builtAt !== part.builtAt)) {
-      throw new StaleState(`the rows of ${state} were not written by the publish that last folded it`);
+    const totals = await this.#repos.ownerSnapshotStateTotals.readNarrowed(stateTotalsId(state), { builtAt: true, places: true, part: true, inboxRun:true }) as Persisted<StateTotals> | null;
+    const carried = !this.#rebuild || this.#written.has(state);
+    if (carried && totals?.value.part) this.#states[state] = totals.value.part;
+    this.#loaded.set(state, { totals, groups: new Set(), lists: new Map(), places: carried ? structuredClone(totals?.value.places ?? {}) : {},inboxRun:totals?.value.inboxRun });
+  }
+
+  async #loadRows(ids: readonly string[]): Promise<void> {
+    await this.#acceptRows(await this.#repos.ownerAssignmentRows.read(ids.filter(id => !this.#priorRows.has(id))));
+  }
+
+  async #acceptRows(rows: readonly OwnerAssignmentRow[]): Promise<void> {
+    for (const row of rows) {
+      if (this.#priorRows.has(row.id)) continue;
+      await this.#load(row.state);
+      this.#priorRows.set(row.id, row);
+      this.#setGroup(row.state, row.id, row.group);
+      this.#index.set(row.id, [...row.indexSegments]);
+      this.#bodies.set(row.id, row.bodyAttempts);
+      if (row.list) this.#loaded.get(row.state)!.lists.set(row.id, row.list);
     }
-    const loaded: Loaded = { totals, snapshot, groups: new Set(), lists: new Map(), places: carried ? structuredClone(totals!.value.places) : {} };
-    this.#loaded.set(state, loaded);
-    if (!carried) return;
-    for (const [id, g] of Object.entries(totals!.value.groups)) this.#setGroup(state, id, g);
-    for (const row of snapshot!.value.allRowsIndex) this.#index.set(row.id, [...(this.#index.get(row.id) ?? []), row]);
-    for (const [id, list] of Object.entries(totals!.value.lists)) loaded.lists.set(id, list);
-    const bodies = new Map<string, BodyPublicationAttempt[]>();
-    for (const body of snapshot!.value.bodyAttempts) {
-      const id = this.#groupOf.get(body.workItemId);
-      if (id !== undefined) bodies.set(id, [...(bodies.get(id) ?? []), body]);
-    }
-    for (const [id, list] of bodies) this.#bodies.set(id, list);
   }
 
   /** Each loaded state's assignments as they stand at this publish's clock. */
@@ -1081,36 +1231,40 @@ export class OwnerSnapshotFold {
       if (stale.length === 0) break;
       await this.#derive(stale, []);
     }
-    const rows = new Map<string, StateEntry[]>();
+    const saved: OwnerAssignmentRow[] = [];
+    const removed = [...this.#priorRows.keys()].filter(id => !this.#groups.has(id));
     for (const [state, loaded] of this.#loaded) {
       const entries = this.#entriesAt(loaded);
-      rows.set(state, entries);
-      const obligations: Record<string, number> = {};
-      const marks: Record<string, string[]> = {};
-      for (const [id, g] of entries) {
-        if (g.obligation !== null) { const name = obligationStateName(id, g.obligation.subjectId); obligations[name] = (obligations[name] ?? 0) + 1; }
-        for (const a of g.obligation?.assignments ?? []) (marks[`${a.assignmentKey}\n${a.ref}`] ??= []).push(g.obligation!.subjectId);
+      const before = [...this.#priorRows.values()].filter(row => row.state === state);
+      const after = entries.map(([id, entry]) => {
+        const indexSegments = this.#index.get(id)!;
+        const nextAt = indexSegments.map(segment => segment.until).filter((at): at is string => at !== null && at > now).sort()[0] ?? null;
+        const row: OwnerAssignmentRow = { id, state, builtAt: now, group: this.#groups.get(id)!, indexSegments,
+          list: loaded.lists.get(id) ?? null, bodyAttempts: entry.bodyAttempts,
+          part: assignmentPartOf([[id, entry]], now), nextAt };
+        saved.push(row);
+        return row;
+      });
+      const previous = this.#states[state];
+      const obligations = { ...previous?.obligations };
+      for (const [sign, list] of [[-1, before], [1, after]] as const) for (const row of list) {
+        const obligation = row.group.obligation;
+        if (obligation !== null) {
+          const name = obligationStateName(row.id, obligation.subjectId);
+          obligations[name] = (obligations[name] ?? 0) + sign;
+          if (obligations[name] === 0) delete obligations[name];
+        }
       }
-      this.#states[state] = { builtAt: now, assignments: assignmentPartOf(entries, now), obligations, spend: placeSumOf(loaded.places),
-        publications: entries.flatMap(([, g]) => g.publications), marks };
+      const usdRows = (previous?.usdRows ?? 0) - before.filter(row => row.group.usd !== null).length + after.filter(row => row.group.usd !== null).length;
+      this.#states[state] = { builtAt: now, usdRows, assignments: { ...updateAssignmentPart(previous?.assignments ?? assignmentPartOf([], now), before.map(row => row.part), after.map(row => row.part), usdRows),candidates:[] },
+        obligations, spend: placeSumOf(loaded.places) };
     }
-    /* List rows are kept for the rows the national ranking reaches as far as the states folded so far show it. */
-    const ranked = new Set(this.#part().candidates.map((c) => c.id));
-    for (const [state, loaded] of this.#loaded) {
-      const local = this.#states[state]!.assignments.candidates.map((c) => c.id);
-      for (const id of local) { const row = listAt(loaded.lists.get(id), now); if (row !== undefined && (ranked.has(id) || this.#lists.has(id))) this.#lists.set(id, row); }
-      if (!this.#input.write) continue;
-      const entries = rows.get(state)!;
-      const totals: StateTotals = { builtAt: now, groups: Object.fromEntries(entries.map(([id]) => [id, this.#groups.get(id)!])), places: loaded.places,
-        lists: Object.fromEntries(local.map((id) => [id, loaded.lists.get(id)!])) };
-      const snapshot: OwnerSnapshotState = { builtAt: now, allRowsIndex: entries.flatMap(([id]) => this.#index.get(id)!),
-        bodyAttempts: assignmentStateRowsOf(entries).bodyAttempts, spendByPlace: placeRowsOf(state, loaded.places) };
-      assertAggregateOnly(snapshot, `owner snapshot rows of ${state}`);
-      await (loaded.totals === null ? this.#repos.ownerSnapshotStateTotals.put(stateTotalsId(state), totals, now)
-        : this.#repos.ownerSnapshotStateTotals.compareAndSet(stateTotalsId(state), loaded.totals.revision, totals, now));
-      await (loaded.snapshot === null ? this.#repos.ownerSnapshotStates.put(ownerSnapshotStateId(state), snapshot, now)
-        : this.#repos.ownerSnapshotStates.compareAndSet(ownerSnapshotStateId(state), loaded.snapshot.revision, snapshot, now));
-      this.#written.add(state);
+    if (this.#input.write) {
+      await this.#repos.ownerAssignmentRows.save(saved, removed, [...this.#loaded].map(([state, loaded]) => ({
+        id: stateTotalsId(state), expectedRevision: loaded.totals?.revision ?? null,
+        value: { builtAt: now, places: loaded.places, part: this.#states[state]!,...(loaded.inboxRun?{inboxRun:loaded.inboxRun}:{}) },
+      })));
+      for (const state of this.#loaded.keys()) this.#written.add(state);
     }
     this.#unload();
   }
@@ -1118,6 +1272,7 @@ export class OwnerSnapshotFold {
   #unload(): void {
     this.#loaded.clear();
     this.#groups.clear();
+    this.#priorRows.clear();
     this.#stateOfGroup.clear();
     this.#index.clear();
     this.#bodies.clear();
@@ -1178,6 +1333,9 @@ export class OwnerSnapshotFold {
     const extra = new Set(probes);
     const replay = new Replay();
     const recording = replay.recording(this.#repos);
+    await this.#loadRows(targets);
+    await this.#acceptRows(await this.#repos.ownerAssignmentRows.find({ members: probes }));
+    for (const id of probes) { const group = this.#groupOf.get(id); if (group) ids.add(group); }
     for (let round = 0; ; round += 1) {
       if (round > 16) throw new Error(`assignment membership did not settle for ${[...ids].slice(0, 5).join(", ")}`);
       const members = new Set(extra);
@@ -1189,6 +1347,12 @@ export class OwnerSnapshotFold {
       /* Each state an assignment or a claimed work item sits in is loaded first, so a work item moving between states leaves its old row. */
       const needed = new Set([...produced].map(([id, entry]) => stateOfEntry(id, entry)));
       for (const m of members) if (!this.#groupOf.has(m)) needed.add(this.#crossings[m] ?? homeOf(m, items.get(m)));
+      const missingIds = [...produced.keys()].filter(id => !this.#priorRows.has(id));
+      const ownerRows = await this.#repos.ownerAssignmentRows.find({ members: [...members] });
+      const unseen = ownerRows.filter(row => !this.#priorRows.has(row.id));
+      await this.#loadRows(missingIds);
+      await this.#acceptRows(unseen);
+      if (unseen.length) continue;
       const unloaded = [...needed].filter((state) => !this.#loaded.has(state));
       if (unloaded.length > 0) {
         for (const state of unloaded) await this.#load(state);

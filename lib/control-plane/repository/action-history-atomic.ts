@@ -1,13 +1,20 @@
 /** One data-modifying SQL statement, so receipt, companion, scope ref and readiness invalidation commit or roll back together. */
-import type { ActionReceipt } from "../gateway/contract.ts";
+import type { ActionReceipt, HistoryReceipt } from "../gateway/contract.ts";
 import { prepareActionHistoryProjection, type ValidatedActionEvidence } from "../admin-view/action-history-projection.ts";
+import { HISTORY_RECEIPT_SUPPORTED_SQL } from "../admin-view/history-receipt-selection.ts";
 import { canonicalJson } from "./types.ts";
 import { boundedQuery, type ControlPlaneRequestBounds } from "./request-bounds.ts";
 import type { Sql } from "./pg-store.ts";
 import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
 export interface ActionHistoryReadQuery { readonly scope: string; readonly beforePosition?: number | null; readonly limit: number; }
-export interface ActionHistoryReadRow { readonly position: number; readonly receipt: ActionReceipt; }
+export interface ActionHistoryReadRow { readonly position: number; readonly receipt: HistoryReceipt; }
+const HISTORY_RECEIPT_FIELDS = ["formatVersion", "receiptId", "idempotencyKey", "type", "label", "subject", "requestedSubject",
+  "startedAt", "completedAt", "outcome", "says", "openedWork", "readBackAt", "huntScores", "scheduleOrigin"] as const;
+// Unsupported receipts still occupy the original page window; only their unused change body stays in Postgres.
+export const ACTION_HISTORY_RECEIPT_SQL = `(jsonb_build_object(${HISTORY_RECEIPT_FIELDS.flatMap(field => [`'${field}'`, `record->'${field}'`]).join(",")}) -
+  ARRAY(SELECT field FROM unnest(ARRAY[${HISTORY_RECEIPT_FIELDS.map(field => `'${field}'`).join(",")}]) fields(field) WHERE NOT (record ? field)))
+  || CASE WHEN (${HISTORY_RECEIPT_SUPPORTED_SQL}) AND record ? 'change' THEN jsonb_build_object('change',record->'change') ELSE '{}'::jsonb END`;
 export const ACTION_HISTORY_PAGE_SQL = `
 SELECT a.log_key,p.source_position AS position
 FROM cp_admin_action_history_projection p
@@ -26,9 +33,9 @@ export async function readActionHistoryPage(sql: Sql, query: ActionHistoryReadQu
     query.beforePosition != null && (!Number.isSafeInteger(query.beforePosition) || query.beforePosition < 0)) throw new Error("INVALID_HISTORY_QUERY");
   const result = await versionedRowsFor(sql).selectedLogs(async(text,params)=>await boundedQuery(sql,
     {operation:"cp_admin_action_history.page",callClass:"PAGE"},text,params,bounds?{bounds}:{}),"cp_log_admin_receipts",
-    ACTION_HISTORY_PAGE_SQL,[query.scope,query.beforePosition??null,query.limit]);
+    ACTION_HISTORY_PAGE_SQL,[query.scope,query.beforePosition??null,query.limit],ACTION_HISTORY_RECEIPT_SQL);
   return rows(result).map(row => ({ position: integer(row.position),
-    receipt: (typeof row.record === "string" ? JSON.parse(row.record) : row.record) as ActionReceipt }));
+    receipt: (typeof row.record === "string" ? JSON.parse(row.record) : row.record) as HistoryReceipt }));
 }
 
 /** One SQL statement; the CTE dependency chain is receipt -> projection -> scope. */

@@ -1,3 +1,5 @@
+import { CP01_COUNTS_DECLARATIONS, controlCountsMigrationDefinition, expandControlCounts, contractControlCounts, contractControlCountsMigrationDefinition } from "../lib/control-plane/repository/migrations/CP-01-counts.ts";
+import { LEGISTAR_WORK_MIGRATION_SOURCE,legistarWorkMigrationDefinition,expandLegistarWork } from "../lib/control-plane/repository/migrations/RB-A9.ts";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -48,11 +50,18 @@ const MIGRATIONS = [
     } },
   { id: "BB-01_expand", source: "lib/control-plane/repository/migrations/BB-01.ts", declarations: [] as readonly string[],
     definition: jobBreakerMigrationDefinition, apply: installJobBreaker },
+  { id: "CP-01_counts_expand", source: "lib/control-plane/repository/migrations/CP-01-counts.ts", declarations: CP01_COUNTS_DECLARATIONS,
+    definition: controlCountsMigrationDefinition, apply: expandControlCounts },
+  { id: "CP-01_counts_contract", source: "lib/control-plane/repository/migrations/CP-01-counts.ts", declarations: CP01_COUNTS_DECLARATIONS,
+    definition: contractControlCountsMigrationDefinition, apply: contractControlCounts },
+  { id:"RB-A9_expand",source:"lib/control-plane/repository/migrations/RB-A9.ts",declarations:[LEGISTAR_WORK_MIGRATION_SOURCE],definition:legistarWorkMigrationDefinition,apply:expandLegistarWork },
 ] as const;
-interface Entry { readonly id: string; readonly phase: "expand"; readonly hash: string }
+interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }
 interface Dependencies {
   readonly root?: string;
   readonly env?: NodeJS.ProcessEnv;
+  readonly head?: () => string;
+  readonly servedCommit?: () => Promise<string | null>;
   readonly committed?: (path: string) => Buffer;
   readonly withDatabase?: <T>(connection: string, operation: (sql: Sql) => Promise<T>) => Promise<T>;
 }
@@ -66,8 +75,10 @@ export function controlPlaneMigrationHash(root = process.cwd(), id: string = MIG
 export function productionControlPlaneTarget(args: readonly string[], env: NodeJS.ProcessEnv): string {
   const phase = args.find(arg => arg.startsWith("--phase="))?.slice(8);
   const build = args.includes("--production-build") && env.NETLIFY === "true" && env.CONTEXT === "production" && env.BRANCH === "main";
-  if (!args.includes("--target=production") || !(phase === "expand" && build)) {
-    throw new Error("db:apply: REFUSED — control-plane migrations require the production main build");
+  const runtimeCommit = args.find(arg => arg.startsWith("--runtime-commit="))?.slice(17);
+  const runtime = args.includes("--production-runtime") && env.WTP_RUNTIME_MODE === "production" && /^[0-9a-f]{40}$/.test(runtimeCommit ?? "");
+  if (!args.includes("--target=production") || !(phase === "expand" && build || phase === "contract" && runtime)) {
+    throw new Error("db:apply: REFUSED — control-plane migrations require the production main build or the loaded production runtime");
   }
   const connection = env.WTP_CONTROL_PLANE_DATABASE_URL;
   let url: URL;
@@ -98,12 +109,17 @@ export async function applyControlPlaneMigrations(args: string[], deps: Dependen
   const connection = productionControlPlaneTarget(args, env);
   const phase = args.find(arg => arg.startsWith("--phase="))!.slice(8) as Entry["phase"];
   const dry = args.includes("--dry");
+  if (phase === "contract") {
+    const sha = (deps.head ?? (() => execFileSync("git", ["rev-parse", "HEAD"], { cwd: root, encoding: "utf8" }).trim()))();
+    if (args.find(arg => arg.startsWith("--runtime-commit="))?.slice(17) !== sha)
+      throw new Error("db:apply: REFUSED — control-plane contracts require the exact loaded commit");
+  }
   const committed = deps.committed ?? (path => execFileSync("git", ["show", `HEAD:${path}`], { cwd: root, stdio: ["ignore", "pipe", "pipe"] }));
   for (const path of [JOURNAL, ...MIGRATIONS.flatMap(migration => [migration.source, ...migration.declarations])]) {
     if (!committed(path).equals(readFileSync(join(root, path)))) throw new Error(`db:apply: REFUSED — ${path} differs from its committed version`);
   }
   const journal = JSON.parse(readFileSync(join(root, JOURNAL), "utf8")) as { entries: Entry[] };
-  if (journal.entries.length !== MIGRATIONS.length || journal.entries.some((row, at) => row.id !== MIGRATIONS[at].id || row.phase !== phase)) {
+  if (journal.entries.length !== MIGRATIONS.length || journal.entries.some((row, at) => row.id !== MIGRATIONS[at].id || row.phase !== (MIGRATIONS[at].id.endsWith("_contract") ? "contract" : "expand"))) {
     throw new Error("db:apply: REFUSED — control-plane migration journal is invalid");
   }
   await (deps.withDatabase ?? withDatabase)(connection, async sql => {
@@ -116,16 +132,27 @@ export async function applyControlPlaneMigrations(args: string[], deps: Dependen
         if (declared && declared.hash !== row.hash) throw new Error(`db:apply: REFUSED — ${row.id} differs from the applied journal hash`);
       }
       const pending = journal.entries.filter(entry => !rows.some(row => row.id === entry.id));
+      if (phase === "contract" && pending.some(entry => entry.phase === "expand"))
+        throw new Error("db:apply: REFUSED — control-plane expand migrations must finish before cleanup");
       for (const entry of pending) {
         if (entry.hash !== controlPlaneMigrationHash(root, entry.id)) throw new Error(`db:apply: REFUSED — ${entry.id} definition differs from the committed journal hash`);
       }
-      return pending;
+      return pending.filter(entry => entry.phase === phase);
     };
     const waiting = pendingOf(present[0].journal ? await readApplied() : []);
     if (waiting.length === 0) {
-      console.log(`control-plane: ${journal.entries.map(entry => entry.id).join(", ")} already applied; writes=0`); return;
+      console.log(`control-plane: ${phase} already applied; writes=0`); return;
     }
     if (dry) { console.log(`control-plane: pending ${waiting.map(entry => entry.id).join(", ")}; DRY RUN; writes=0`); return; }
+    if (phase === "contract") {
+      const served = deps.servedCommit ?? (async () => {
+        const { fetchServedCommit } = await import("./post-deploy-observer.mts");
+        const { PUBLIC_SITE_ORIGIN } = await import("../lib/ops/origins.ts");
+        return (await fetchServedCommit(PUBLIC_SITE_ORIGIN)).sha;
+      });
+      if (await served() !== args.find(arg => arg.startsWith("--runtime-commit="))?.slice(17))
+        throw new Error("db:apply: REFUSED — control-plane contracts require the exact loaded commit to be serving");
+    }
     await sql.query("SELECT pg_advisory_lock(1835360622,2)");
     try {
       await sql.query(CP_MIGRATIONS_DDL);

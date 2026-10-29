@@ -57,6 +57,59 @@ const pulse = (sections: Record<string, unknown> = {}, actions: Record<string, u
 const stuckAnn = (revision: string, contract = "admin-v6/stuck@1") => ({ stuck: { contract, href: "/api/admin/v6/stuck", revision } });
 const ok = (scope: string, revision: string, data: unknown) => ({ status: 200, body: { contract: "admin-v6/stuck@1", scope, revision, asOf: "2026-09-28T19:00:00.000Z", data } });
 
+test("Now reads only its hourly numbers and look status; opening Queue reads the full fix list",async()=>{
+  const {sync,calls}=harness();
+  sync.onPulse(pulse({fixes:{contract:"admin-v6/fixes@1",href:"/api/admin/v6/fixes",revision:"f1"},
+    scoreboard:{contract:"admin-v6/scoreboard@1",href:"/api/admin/v6/scoreboard",revision:"s1"}}));
+  assert.match(calls.find(call=>call.url.includes("/fixes?"))!.url,/reading=now/);
+  assert.match(calls.find(call=>call.url.includes("/scoreboard?"))!.url,/reading=hourly/);
+  for(const call of calls)call.resolve({status:200,body:{contract:call.url.includes("/fixes?")?"admin-v6/fixes@1":"admin-v6/scoreboard@1",
+    scope:"st:az",revision:"one",asOf:"2026-09-28T19:00:00Z",data:{}}});
+  await flush();
+  sync.setScreen("queue",VIEW_SECTIONS.queue);
+  assert.doesNotMatch(calls.at(-1)!.url,/reading=now/);
+  assert.match(calls.at(-1)!.url,/\/fixes\?/);
+  sync.dispose();
+});
+
+test("changing screens discards an in-flight compact Now answer before reading the complete section",async()=>{
+  const {sync,calls}=harness();
+  sync.onPulse(pulse({fixes:{contract:"admin-v6/fixes@1",href:"/api/admin/v6/fixes",revision:"f1"}}));
+  assert.equal(calls.length,1);
+  sync.setScreen("queue",VIEW_SECTIONS.queue);
+  assert.equal(calls.length,2,"the full list starts immediately while the old compact request is pending");
+  assert.doesNotMatch(calls[1].url,/reading=now/);
+  const reply=(data:unknown)=>({status:200,body:{contract:"admin-v6/fixes@1",scope:"st:az",revision:"f1",asOf:"2026-09-28T19:00:00Z",data}});
+  calls[1].resolve(reply({open:[{id:"full-list"}]}));
+  await flush();
+  calls[0].resolve(reply({open:[]}));
+  await flush();
+  assert.deepEqual(sync.snapshot().fixes.data,{open:[{id:"full-list"}]});
+  sync.dispose();
+});
+
+test("Now leaves worker and result reads to their visible screens and navigation still loads them",async()=>{
+ const calls:string[]=[];const sync=new LiveSync({scope:"us",screen:"now",sections:VIEW_SECTIONS.now,schedule:()=>()=>{},
+  fetch:async url=>{calls.push(url);const id=url.includes("/workers?")?"workers":"results";return{status:200,json:async()=>({contract:`admin-v6/${id}@1`,scope:"us",revision:"one",asOf:"2026-10-29T00:00:00Z",data:[]})};}});
+ sync.onPulse(pulse({workers:{contract:"admin-v6/workers@1",href:"/api/admin/v6/workers",revision:"one"},results:{contract:"admin-v6/results@1",href:"/api/admin/v6/results",revision:"one"}}));
+ await flush();assert.deepEqual(calls,[]);
+ sync.setScreen("workers",VIEW_SECTIONS.workers);await flush();assert.match(calls[0],/\/workers\?/);
+ sync.setScreen("checklist",VIEW_SECTIONS.checklist);await flush();assert.match(calls[1],/\/results\?/);
+ assert.deepEqual(sync.snapshot().results.data,[],"Checklist's mounted Readers panel loads its result rows after Now");
+ sync.setScreen("work",VIEW_SECTIONS.work);await flush();assert.match(calls.at(-1)!,/\/results\?/);assert.deepEqual(sync.snapshot().results.data,[]);sync.dispose();
+});
+
+test("Checklist reads its spend fields and a late compact reply cannot overwrite Money",async()=>{
+ const {sync,calls}=harness();sync.setScreen("checklist",VIEW_SECTIONS.checklist);
+ sync.onPulse(pulse({spend:{contract:"admin-v6/spend@1",href:"/api/admin/v6/spend",revision:"one"}}));
+ assert.match(calls[0].url,/reading=checklist/);
+ sync.setScreen("money",VIEW_SECTIONS.money);assert.equal(calls.length,2);assert.doesNotMatch(calls[1].url,/reading=checklist/);
+ const reply=(data:unknown)=>({status:200,body:{contract:"admin-v6/spend@1",scope:"st:az",revision:"one",asOf:"2026-10-29T00:00:00Z",data}});
+ calls[1].resolve(reply({byMonth:[],neon:{kind:"recorded"}}));await flush();calls[0].resolve(reply({byMonth:[]}));await flush();
+ assert.deepEqual(sync.snapshot().spend.data,{byMonth:[],neon:{kind:"recorded"}});
+ sync.setScreen("checklist",VIEW_SECTIONS.checklist);assert.match(calls.at(-1)!.url,/reading=checklist/);sync.dispose();
+});
+
 test("pausing cancels pending retries and rejects late responses until the next active pulse", async () => {
   const { sync, calls, timers } = harness();
   sync.onPulse(pulse(stuckAnn("v1")));

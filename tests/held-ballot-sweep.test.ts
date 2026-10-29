@@ -169,8 +169,17 @@ test("a batch reads each place once, narrowed, several places at a time", async 
       canonicalUrl: `https://place-${n}.example.gov/parks`, partial: false, recordedAt: CHECKED };
     await repos.artifacts.append(artifact.workItemId, artifact.artifactId, artifact, CHECKED);
   }
+  let registryReads = 0, capturePointerReads = 0;
+  const registrySlice = store.readRegistrySlice.bind(store);
+  store.readRegistrySlice = async (...args) => { registryReads++; return registrySlice(...args); };
   const calls = { listWhere: 0, listWhereNarrowed: 0, read: 0 };
-  const counted: ControlPlaneRepositories = { ...repos, workItems: { ...repos.workItems,
+  const counted: ControlPlaneRepositories = { ...repos, artifacts: { ...repos.artifacts,
+    read: async () => { throw new Error("A held task must not read complete artifact records"); },
+    readKeys: async (keys, projection) => {
+      capturePointerReads++;
+      assert.ok(projection && !("publicationLink" in projection), "capture quotes remain in the vault");
+      return repos.artifacts.readKeys!(keys, projection);
+    } }, workItems: { ...repos.workItems,
     listWhere: (...args) => { calls.listWhere++; return repos.workItems.listWhere(...args); },
     listWhereNarrowed: (...args) => { calls.listWhereNarrowed++; return repos.workItems.listWhereNarrowed(...args); },
     read: (...args) => { calls.read++; return repos.workItems.read(...args); } } };
@@ -183,6 +192,8 @@ test("a batch reads each place once, narrowed, several places at a time", async 
     return null;
   } });
   assert.equal(outcomes.length, owed.length);
+  assert.equal(registryReads, 1, "all requested bodies share one keyed state registry slice");
+  assert.equal(capturePointerReads, bodies.length);
   assert.ok(outcomes.every(row => row.outcome.code === "ELECTION_OFFICE_NOT_ON_SAVED_PAGES"));
   assert.deepEqual(calls, { listWhere: 0, listWhereNarrowed: bodies.length, read: 0 }, "each place's work is listed once, narrowed; no whole work item is read for it");
   assert.ok(most > 1 && most <= 8, `${most} places read at once`);

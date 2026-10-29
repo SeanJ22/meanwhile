@@ -31,7 +31,6 @@ import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-h
 
 import { hostname } from "node:os";
 import { resolve } from "node:path";
-import { heldLegistarMemberTasks, legistarMemberClocks } from "../lib/sources/legistar/members-tasks.ts";
 import { AUTOMATIC_REFRESH_TASKS, automaticRefreshContract } from "../lib/civic-data/automatic-refresh.ts";
 import { STATE_BINDING_REFRESH_TASKS } from "../lib/civic-data/state-binding-refresh-contracts.ts";
 import { ballotInputStamp } from "../lib/civic-data/ballot-input.ts";
@@ -274,7 +273,6 @@ const STANDING_SOURCE_TASKS: readonly RoutineSourceTask[] = PUBLISH_NOW ? [] : P
   ...OUTCOME_PARTITION_CONTRACTS.map(routineTaskFromContract),
   ...AUTOMATIC_REFRESH_TASKS,
   ...STATE_BINDING_REFRESH_TASKS,
-  ...await heldLegistarMemberTasks().catch(error => { console.warn(`RCD_TASK legistar-members: ${sanitizedErrorDiagnostic(error)}`); return []; }),
 ], false, process.argv.slice(2)), process.argv.slice(2));
 const TASK_SELECTION = routineTaskSelection(process.argv.slice(2), [...STANDING_SOURCE_TASKS, ...WORKER_PUBLICATION_TASK_IDS.map(id => ({ id }))]);
 const ONLY = TASK_SELECTION.ok ? TASK_SELECTION.only : null;
@@ -958,17 +956,14 @@ if (PUBLISH_NOW && selectedTasks.length === 0) {
   await endPassEarly(supervisorFailures.length === 0 ? 0 : 2);
 }
 step = "reading the routine task clocks";
-const memberClocks = !FORCE && selectedTasks.some(task => task.id.startsWith("legistar-members:"))
-  ? await legistarMemberClocks(readerFactDb().query, selectedTasks.filter(task => task.id.startsWith("legistar-members:")).map(task => task.id)) : new Map();
 const emptyClockIds = FORCE ? new Set<string>() : await routineTasksWithoutClocks(
-  selectedTasks.filter(task => !task.id.startsWith("legistar-members:")), readerFactDb().query,
+  selectedTasks, readerFactDb().query,
 ).catch(error => { console.log(`RCD_CLOCK_PRESENCE ${safeFailure(sanitizedErrorDiagnostic(error))}; full clock proofs retained`); return new Set<string>(); });
 const clockReads = FORCE
   ? selectedTasks.map((task) => ({ task, ok: true as const, clock: undefined, error: null }))
   : await readRoutineTaskClocks(
       selectedTasks,
-      (task) => task.id.startsWith("legistar-members:") ? Promise.resolve(memberClocks.get(task.id))
-        : emptyClockIds.has(task.id) ? Promise.resolve(undefined) : store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
+      (task) => emptyClockIds.has(task.id) ? Promise.resolve(undefined) : store.clock(task.sourceId, task.recordClass, task.scope, task.parserVersion),
     );
 
 let statedEndsByTask: ReadonlyMap<string, ReadonlyMap<string, number>> = new Map();
@@ -1631,9 +1626,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     child.kind === "SUPERVISOR_FAILURE" ? null : child.receipt.candidateId);
   if (child.kind === "VERIFIED_SOURCE_SUCCESS") {
     await recordTaskDoorOutcome(pending.task.id, "SUCCESS", null,
-      () => pending.task.id.startsWith("legistar-members:")
-        ? Promise.resolve({ lastSucceededObservedAt: child.receipt.confirmedAt })
-        : store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope), pending.task);
+      () => store.clock(pending.task.sourceId, pending.task.recordClass, pending.task.scope), pending.task);
     verifiedSourceSuccesses += 1;
     captureTaskReceipt(pending, child.receipt, "VERIFIED_SOURCE_SUCCESS");
     console.log("RCD_RECEIPT=" + JSON.stringify(child.receipt));

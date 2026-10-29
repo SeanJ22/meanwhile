@@ -386,7 +386,8 @@ test("a queued body fold immediately corrects ready ZIP and saved contexts befor
       assert.equal(duplicate.status,'CANCELED');assert.equal(duplicate.startsAt,fresh.startsAt);
       assert.equal(duplicate.agendaUrl,older.agendaUrl,'the newer cancellation retains its earlier published agenda link');
     }
-    await query("UPDATE rebuild_queue SET queued_at='1970-01-01' WHERE place_id=$1",[body]);
+    // Fresh geographic updates are claimed before body work; hold the other rows so this turn rebuilds the body alone.
+    await query("UPDATE rebuild_queue SET lease_until=clock_timestamp()+interval '1 hour' WHERE place_id<>$1",[body]);
     assert.equal((await rebuildPlacePages({db,limit:1,concurrency:1,purge:async()=>({purged:true})})).rebuilt,1);
     assert.equal((await query('SELECT 1 FROM rebuild_queue WHERE place_id=$1',[body])).length,0);
     assert.ok((await query('SELECT 1 FROM rebuild_queue WHERE place_id=$1',[alias])).length>0);

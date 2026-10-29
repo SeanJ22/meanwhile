@@ -20,8 +20,8 @@ function withinPass(table: string): void {
 
 /** SQL adapters only. CivicReadCache owns every held body and validates each use. */
 export class VersionedRows {
-  private readonly database: string;
-  private readonly cache: CivicReadCache;
+  readonly database: string;
+  readonly cache: CivicReadCache;
   private readonly values: ValueRows;
   constructor(database: string, cache: CivicReadCache) {
     this.database=database;this.cache=cache;this.values=new ValueRows(database,cache);
@@ -57,11 +57,12 @@ export class VersionedRows {
 
   async known<T>(table: string, versions: readonly {id:string;revision:number|string}[], selected: string,
     values: (ids: readonly string[]) => Promise<readonly T[]>, keyOf: (row:T)=>string,
-    revisionOf:(row:T)=>string): Promise<readonly T[]> {
+    revisionOf:(row:T)=>string, pageSize = PAGE): Promise<readonly T[]> {
+    if (!Number.isSafeInteger(pageSize) || pageSize < 1 || pageSize > 1_000) throw new Error("Invalid projected row page size");
     const result = new Map<string,T>();
-    for (let at=0;at<versions.length;at+=PAGE) {
+    for (let at=0;at<versions.length;at+=pageSize) {
       withinPass(table);
-      const page=versions.slice(at,at+PAGE);
+      const page=versions.slice(at,at+pageSize);
       const rows=await this.cache.rows({namespace:this.namespace(table,selected),keys:page.map(row=>row.id),
         versions:async()=>page.map(row=>({key:row.id,etag:String(row.revision)})),values,keyOf,etagOf:revisionOf});
       for (const row of rows) result.set(keyOf(row),row);

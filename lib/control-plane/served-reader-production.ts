@@ -1,5 +1,5 @@
 import { readDerivedCampaignSites } from "../civic-data/derived-campaign-sites.ts";
-import { lowestZipByDivision } from "../place-map/reader.ts";
+import { lowestZipForDivision, lowestZipsForDivisions } from "../place-map/reader.ts";
 import { canonicalContestId, canonicalCandidacyId } from "../hunt/candidate-universe.ts";
 import { readGenericBallotProjection } from "../ballot/generic-projection.ts";
 import { collectServedReader } from "./served-reader-collector.ts";
@@ -34,12 +34,11 @@ export async function collectPublishedCampaignReadback(state: string, now: strin
     }
   }
   const destinations = new Map<string, string>();
-  const lowest = await lowestZipByDivision(state);
+  const lowest = await lowestZipsForDivisions(state,[...new Set(derived.value.records.flatMap(record=>subjects.get(record.candidacyId)?.ocdId??[]))],{stateFallback:true});
   for (const record of derived.value.records) {
     const subject = subjects.get(record.candidacyId);
     if (!subject) continue;
-    const stateDivision = `ocd-division/country:us/state:${subject.stateCode.toLowerCase()}`;
-    const zip = lowest?.get(subject.ocdId) ?? (subject.ocdId === stateDivision ? [...(lowest ?? [])].filter(([id]) => id.startsWith(`${stateDivision}/`)).map(([, z]) => z).sort()[0] : undefined);
+    const zip = lowest.get(subject.ocdId);
     if (zip) destinations.set(record.candidacyId, `${PUBLIC_SITE_ORIGIN}/ballot?zip=${zip}`);
   }
   // Campaign links deliberately live behind Battlecard → Sources. Serialized RSC props are not a public witness.
@@ -68,14 +67,14 @@ export async function collectPublishedCampaignReadback(state: string, now: strin
 export async function collectPublishedWorkerReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null): Promise<ServedReaderReadback> {
   let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   let deadline: ReturnType<typeof setTimeout> | undefined;
-  const destinations = new Map<string, Awaited<ReturnType<typeof lowestZipByDivision>>>();
+  const destinations = new Map<string,Promise<string|null>>();
   try {
     const result = await collectWorkerRosterReadback({ items, now, previous, store: new PostgresRoutineDataStore(),
       zipForDivision: async division => {
         const state = /\/state:([a-z]{2})(?:\/|$)/.exec(division)?.[1]?.toUpperCase();
         if (!state) return null;
-        if (!destinations.has(state)) destinations.set(state, await lowestZipByDivision(state));
-        return destinations.get(state)?.get(division) ?? null;
+        if (!destinations.has(division)) destinations.set(division,lowestZipForDivision(state,division));
+        return destinations.get(division)!;
       },
       observe: async input => {
         if (!browser) {
@@ -100,18 +99,14 @@ export async function collectPublishedWorkerReadback(items: readonly WorkItem[],
 export async function collectPublishedManualReaderReadback(items: readonly WorkItem[], now: string, previous: ServedReaderReadback | null): Promise<ServedReaderReadback> {
   let browser: Awaited<ReturnType<typeof launchGuarded>> | null = null;
   let deadline: ReturnType<typeof setTimeout> | undefined;
-  const destinations = new Map<string, Awaited<ReturnType<typeof lowestZipByDivision>>>();
+  const destinations = new Map<string,Promise<string|null>>();
   try {
     const result = await collectWorkerManualReadback({ items, now, previous, store: new PostgresRoutineDataStore(),
       zipForDivision: async division => {
         const state = /\/state:([a-z]{2})(?:\/|$)/.exec(division)?.[1]?.toUpperCase();
         if (!state) return null;
-        if (!destinations.has(state)) destinations.set(state, await lowestZipByDivision(state));
-        const held = destinations.get(state);
-        const exact = held?.get(division);
-        if (exact) return exact;
-        const stateDivision = `ocd-division/country:us/state:${state.toLowerCase()}`;
-        return division === stateDivision ? [...(held ?? [])].filter(([id]) => id.startsWith(`${stateDivision}/`)).map(([, zip]) => zip).sort()[0] ?? null : null;
+        if (!destinations.has(division)) destinations.set(division,lowestZipForDivision(state,division,{stateFallback:true}));
+        return destinations.get(division)!;
       },
       observe: async visit => {
         if (!browser) {

@@ -7,10 +7,16 @@ import type { JobBreakerEvent } from "../job-transfer-breaker.ts";
 export const query = (sql: Sql, operation: string, text: string, args: readonly unknown[] = []) =>
   boundedQuery(sql,{operation:`line-keeper.${operation}`,callClass:"PAGE"},text,args) as Promise<Record<string,unknown>[]>;
 export const countTimestamp = (value: unknown) => value instanceof Date?value.toISOString():new Date(String(value)).toISOString();
+/** One compact response carries the same running counters without thousands of repeated column names and clocks. */
+export const PACKED_HOUR_COUNTS_SQL = `WITH counted AS (${COUNT_HOUR_SQL})
+  SELECT coalesce(jsonb_agg(jsonb_build_array(state,family,stage,total,closed_total,incoming,outgoing,changed,observed_in,observed_out)
+    ORDER BY state,family,stage),'[]'::jsonb) AS counts FROM counted`;
 export async function readCounts(sql: Sql, from: string, through: string, at=new Date().toISOString()): Promise<HourCount[]> {
-  const rows = await query(sql,"hourly-counts",COUNT_HOUR_SQL,[from,through,at]);
-  return rows.map(r=>({hour:countTimestamp(r.hour),state:String(r.state),family:String(r.family),stage:String(r.stage),
-    total:Number(r.total),closedTotal:r.closed_total===null?null:Number(r.closed_total),incoming:r.incoming===null?null:Number(r.incoming),outgoing:r.outgoing===null?null:Number(r.outgoing),changed:r.changed===null?null:Number(r.changed),observedIn:Number(r.observed_in),observedOut:Number(r.observed_out)}));
+  const [row] = await query(sql,"hourly-counts",PACKED_HOUR_COUNTS_SQL,[from,through,at]);
+  const counts = typeof row?.counts === "string" ? JSON.parse(row.counts) : row?.counts;
+  if (!Array.isArray(counts)) throw new Error("Hourly counts could not be read");
+  return counts.map((r: unknown[])=>({hour:countTimestamp(from),state:String(r[0]),family:String(r[1]),stage:String(r[2]),
+    total:Number(r[3]),closedTotal:r[4]===null?null:Number(r[4]),incoming:r[5]===null?null:Number(r[5]),outgoing:r[6]===null?null:Number(r[6]),changed:r[7]===null?null:Number(r[7]),observedIn:Number(r[8]),observedOut:Number(r[9])}));
 }
 export async function readOldest(sql: Sql,at=new Date().toISOString()): Promise<OldestWaiting[]> {
   const rows = await query(sql,"oldest-waiting","SELECT state,family,stage,count,oldest_at,owner FROM count_oldest_waiting($1::timestamptz) ORDER BY state,family,stage",[at]);

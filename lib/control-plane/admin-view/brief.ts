@@ -3,7 +3,7 @@ import { BRIEF_TIME_SETTING, ALERTS_ON_SETTING, readSetting } from "../settings.
 import { updateRecords } from "../updates.ts";
 import { updatesView, type UpdateLine } from "./updates-read.ts";
 import { readV6History } from "./admin-v6-history.ts";
-import { population } from "./v6-stuck-population.ts";
+import { population, populationRows } from "./v6-stuck-population.ts";
 import { stuckViews } from "./v6-stuck-read.ts";
 import { readReports, type ReportsReading } from "../reports/read-reports.ts";
 import { fixItems } from "../fix-list.ts";
@@ -13,17 +13,21 @@ import { fixQueueView } from "../fix-queue.ts";
 import { buildQueue, type QueueRow } from "../../../app/(admin)/_mw/admin-v6/queue.ts";
 import type { UiReceipt, StuckItem } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { readAdminDoors } from "./door-queries.ts";
+import { readAdminQueueDoors, readDoorCounts } from "./door-queries.ts";
+import { QUEUE_FIX_FIELDS } from "../repository/admin-config.ts";
 import { recordUndescribedCauses } from "./undescribed-causes.ts";
 import { scheduledView } from "./v6-scheduled-read.ts";
 import { plainWords } from "./plain-words.ts";
 import { TERMINAL_WORK_ITEM_STATES, type WorkItem } from "../work-item.ts";
 import { compactKeeperProblems, type BriefProblem } from "../../counts/problem-groups.ts";
+import { placeReadConnection, pgActiveReaderQuestions } from "../repository/pg-store.ts";
 
 /** Unanswered organic Ask questions stay visible while their sourced answer is owed. */
-export async function readerQuestionRows(repos: Pick<ControlPlaneRepositories, "workItems">): Promise<readonly QueueRow[]> {
-  const rows = await repos.workItems.listWhereNarrowed(["autonomousPlan", "readerQuestion", "origin"], "ASK",
-    { id: true, state: true, createdAt: true, autonomousPlan: ["readerQuestion"] });
+export async function readerQuestionRows(repos: ControlPlaneRepositories): Promise<readonly QueueRow[]> {
+  const fields = { id: true, state: true, createdAt: true, autonomousPlan: ["readerQuestion"] } as const;
+  const sql = placeReadConnection(repos);
+  const rows = sql ? await pgActiveReaderQuestions(sql)
+    : await repos.workItems.listWhereNarrowed(["autonomousPlan", "readerQuestion", "origin"], "ASK", fields);
   return rows.flatMap(row => {
     const item = row.value as Pick<WorkItem, "id" | "state" | "createdAt" | "autonomousPlan">;
     const question = item.autonomousPlan?.readerQuestion;
@@ -64,18 +68,34 @@ export function projectBrief(config:AdminConfig,rows:readonly QueueRow[],at:stri
   return {day:easternBriefClock(at).day,createdAt:at,updates:updatesView(updateRecords(config),at).updates.slice(0,50).map(u=>({...u,what:plainWords(u.what),before:u.before===null?null:plainWords(u.before),after:u.after===null?null:plainWords(u.after)})),
     problems:rows.filter(r=>r.tone==="warn").map(r=>({key:r.key,what:r.what,owner:r.owner,next:r.next})),decisions:alerts,alerts,unread};
 }
+
+/** Only order failures and the displayed decision work can ask the owner to act. */
+export async function readFreshAlerts(repos:ControlPlaneRepositories,at:string,
+  readStuck=()=>populationRows("us",at)):Promise<BriefSnapshot["alerts"]> {
+  const [history,stuck]=await Promise.all([
+    readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>null),
+    readStuck().catch(()=>null).then(rows=>rows?stuckViews(rows,"us",at).items:null),
+  ]);
+  const rows=buildQueue({receipts:history?.data as readonly UiReceipt[]|null ?? null,stuck:stuck as readonly StuckItem[]|null,
+    fixes:null,sends:null,hunts:null,doors:null,scheduled:null});
+  return [...new Map(rows.filter(row=>row.filter==="needs-me").map(row=>[row.key,{key:row.key,what:row.what,next:row.next}])).values()];
+}
 /** Same inputs as Queue; failures name the unread part instead of claiming there are no problems. */
 export async function readBrief(repos:ControlPlaneRepositories,at:string):Promise<BriefReading> {
-  const held=await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 50 }, fixList: { activeAndRecent: 500 } });
-  if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
-  const config=held?.value??defaultAdminConfig(at);const unread:string[]=[];
-  const [history,stuck,reports,doors,questions]=await Promise.all([
+  const unread:string[]=[];
+  const [held,history,stuck,reports,doors,questions]=await Promise.all([
+    repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 50 },
+      fixList: { activeAndRecent: 500, fieldsProjection: QUEUE_FIX_FIELDS, queueFixSummary: true } }),
     readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>{unread.push("orders");return null;}),
     population().catch(()=>null).then(p=>{if(!p){unread.push("stuck cases");return null;}return stuckViews(p.rows,"us",at,[],p.summary).items;}),
     readReports(at).catch(()=>{unread.push("reader problems");return null;}),
-    readAdminDoors(repos,[],at).then(view=>{if(view.counts.unreadable)unread.push("some doors");if(view.counts.shut>view.rows.filter(r=>r.status==="Shut").length)unread.push("shut doors outside the current page");return view.rows.filter(r=>r.status==="Shut");}).catch(()=>{unread.push("doors");return null;}),
+    Promise.all([readAdminQueueDoors(repos,at),readDoorCounts(repos)]).then(([view,counts])=>{
+      if(counts.unreadable)unread.push("some doors");if(counts.shut>view.rows.length)unread.push("shut doors outside the current page");return view.rows;
+    }).catch(()=>{unread.push("doors");return null;}),
     readerQuestionRows(repos).catch(()=>{unread.push("unanswered reader questions");return [];}),
   ]);
+  if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
+  const config=held?.value??defaultAdminConfig(at);
   if(history?.page.nextCursor)unread.push("older orders outside the current page");
   if(reports?.sites.some(s=>s.kind==="UNREADABLE"))unread.push("reader problems from an unread site");
   const fixes=v6FixesView(fixQueueView(collapseDecisionLog([])),fixItems(config));

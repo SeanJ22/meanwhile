@@ -91,6 +91,16 @@ function repeatLessons(readings: readonly LossReading[], now: string): LossLesso
   });
 }
 
+/** Fold compact population counts through the same lesson wording and identity as individual readings. */
+export function lossStudyLessons(studies: readonly LossStudy[], now: string): LossLesson[] {
+  return studies.filter(study => study.shared.length > 0).map(study => {
+    const bar = study.methodId.indexOf("|");
+    const kind = study.methodId.slice(0, bar) as LossKind, subject = study.methodId.slice(bar + 1);
+    const words = kind === "empty-hunt" ? `hunts for ${subject.replace(/[_-]+/g, " ").replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase().trim()}` : subject;
+    return lessonFor(kind, subject, words, study, now);
+  });
+}
+
 /** Study every kind of loss. One lesson per kind, subject and shared cause; a subject whose failures share nothing yields no lesson here. */
 export function studyAllLosses(readings: readonly LossReading[], placeTraits: ReadonlyMap<string, PlaceTraits>, now: string): LossLesson[] {
   const words = new Map(readings.map((r) => [`${r.kind}|${r.subject}`, r.subjectWords]));

@@ -1,3 +1,6 @@
+import { planCampaignReadbacks } from "../lib/control-plane/campaign-readback-heads.ts";
+import { pathToFileURL } from "node:url";
+import { resolve } from "node:path";
 import { REGISTRY_STATES } from "../lib/civic-data/state-scopes.ts";
 
 import { collectPlaceHistory } from "../lib/control-plane/admin-view/place-history-collect.ts";
@@ -51,7 +54,6 @@ import { RESEARCH_STATE_ID, type ResearchState } from "../lib/control-plane/sche
 import { assertRuntimeAuthority } from "../lib/civic-data/runtime-authority.ts";
 
 const NOW = new Date();
-const NOW_ISO = NOW.toISOString();
 const HEAD = headSha();
 
 const arg = (name: string): string | null => {
@@ -68,7 +70,13 @@ function stepDone(what: string): void {
   log(`${what} (${Math.round((Date.now() - NOW.getTime()) / 1000)}s into this publish)`);
 }
 
-const publisherRepos = await repositories();
+/** The runner entry owns authority; an injected repository lets copy tests exercise the same complete publisher. */
+export async function publishOwnerSnapshot(suppliedRepositories?: ControlPlaneRepositories | null, now: Date = NOW): Promise<void> {
+const NOW = now;
+const NOW_ISO = NOW.toISOString();
+const collectionStarted = performance.now();
+const collectionClock = () => new Date(NOW.getTime() + performance.now() - collectionStarted).toISOString();
+const publisherRepos = suppliedRepositories === undefined ? await repositories() : suppliedRepositories;
 const canonicalCycle = publisherRepos === null ? null : await readLatestFreshnessCycleOutcome(publisherRepos);
 const newestCycle: { record: CycleRecord; file: string } | null = canonicalCycle
   ? { record: canonicalCycle.outcome as unknown as CycleRecord, file: canonicalCycle.digestId }
@@ -189,7 +197,7 @@ function assignmentView(fold: OwnerSnapshotFold): Promise<AssignmentView> {
         says: "not read for the counts: each state's figures stand as of the last publish whose changed rows reached it; each state's index rows carry the instants they change at, so a reader shows them as they hold when read",
       },
     ],
-  });
+  }, { rows: false });
 }
 
 function obligationsByState(reads: ControlPlaneReads | null): OwnerSnapshot["obligationsByState"] {
@@ -341,7 +349,7 @@ async function main(): Promise<void> {
     const outcome = mapTilerUsageCollectionOutcome({
       candidate: maptilerCandidate,
       visible: maptiler,
-      finishedAt: new Date().toISOString(),
+      finishedAt: collectionClock(),
       testedSha: HEAD,
       host: process.env.COMPUTERNAME ?? process.env.HOSTNAME ?? "standing-runner",
       provider: repos.describe(),
@@ -366,15 +374,19 @@ async function main(): Promise<void> {
   let servedReader = existing?.value.servedReaderReadback ?? null;
   if (!DRY_RUN) {
     const combined = { checkedAt: NOW_ISO, witnesses: [] as NonNullable<typeof servedReader>["witnesses"][number][], errors: [] as string[] };
-    for (const state of REGISTRY_STATES) {
+    const campaignPlan = await planCampaignReadbacks(REGISTRY_STATES,NOW_ISO,existing?.value.servedReaderReadback ?? null).catch(()=>null);
+    if (campaignPlan === null) combined.errors.push("Campaign source fingerprints could not be read; prior public observations retain their original time and expiry.");
+    for (const state of campaignPlan ? REGISTRY_STATES : []) {
       try {
-        const read = await collectPublishedCampaignReadback(state, NOW_ISO);
+        const read = campaignPlan!.carried(state) ?? await collectPublishedCampaignReadback(state, NOW_ISO);
+        campaignPlan!.record(state,read);
         combined.witnesses.push(...read.witnesses);
         combined.errors.push(...read.errors);
       } catch {
         combined.errors.push(`${state} public readback collection failed; earlier witnesses retain their original expiry.`);
       }
     }
+    await campaignPlan?.finish().catch(()=>{combined.errors.push("Campaign source fingerprints could not be saved for the next reading.");});
     const observed = new Set(combined.witnesses.map(row => `${row.itemId}:${row.readerKey}`));
     combined.witnesses.push(...(servedReader?.witnesses ?? []).filter(row => !observed.has(`${row.itemId}:${row.readerKey}`)));
     servedReader = combined;
@@ -382,7 +394,7 @@ async function main(): Promise<void> {
   stepDone("campaign page readback collected");
   const fold = reads?.fold ?? null;
   if (!DRY_RUN && fold) {
-    const publications = fold.publications();
+    const publications = await fold.publications(true);
     const [workerReadback, manualReadback] = await Promise.all([
       collectPublishedWorkerReadback(publications, NOW_ISO, existing?.value.servedReaderReadback ?? null)
         .catch(() => ({ checkedAt: NOW_ISO, witnesses: [], errors: ["Worker public readback collection failed; prior observations retain their original time and expiry."] })),
@@ -483,9 +495,7 @@ async function main(): Promise<void> {
   /* The totals go first, by compare-and-set, so two publishers never fold the same rows into one total; they pair with the
      state rows the fold already wrote, so they are written even when the view could not be assembled. */
   if (reads) {
-    const totals: OwnerSnapshotTotals = reads.fold.totals();
-    if (reads.prior === null) await repos.ownerSnapshotTotals.put(OWNER_SNAPSHOT_TOTALS_ID, totals, NOW_ISO);
-    else await repos.ownerSnapshotTotals.compareAndSet(OWNER_SNAPSHOT_TOTALS_ID, reads.prior.revision, totals, NOW_ISO);
+    await reads.fold.saveTotals(reads.prior);
   }
   // The snapshot is one aggregate that moves, so compare-and-set is the write that replaces it.
   if (existing === null) await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO);
@@ -519,3 +529,6 @@ async function main(): Promise<void> {
 }
 
 await main();
+}
+
+if (process.argv[1] && pathToFileURL(resolve(process.argv[1])).href === import.meta.url) await publishOwnerSnapshot();

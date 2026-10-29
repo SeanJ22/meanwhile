@@ -5,7 +5,7 @@ import { NextRequest } from "next/server";
 import { createMemoryRepositories } from "@/lib/control-plane/repository/memory.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "@/lib/control-plane/gateway/admin-config.ts";
 import { readSetting, ALERTS_ON_SETTING, BRIEF_TIME_SETTING } from "@/lib/control-plane/settings.ts";
-import { projectBrief, readerProblemRows, writeDailyBrief, easternBriefClock, type BriefReading } from "@/lib/control-plane/admin-view/brief.ts";
+import { projectBrief, readBrief, readFreshAlerts, readerProblemRows, writeDailyBrief, easternBriefClock, type BriefReading } from "@/lib/control-plane/admin-view/brief.ts";
 import { briefGet } from "@/lib/control-plane/admin-view/brief-route.ts";
 import { buildQueue, type QueueInput } from "@/app/(admin)/_mw/admin-v6/queue.ts";
 import { fireDueOrders } from "@/lib/control-plane/gateway/scheduled-fire.ts";
@@ -13,6 +13,21 @@ import { actionInput } from "@/app/(admin)/_mw/admin-v6/contract.ts";
 import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 const at="2026-10-06T13:00:00Z";
 const empty:QueueInput={receipts:null,sends:null,hunts:null,stuck:null,fixes:null,doors:null,scheduled:null};
+test("focused fresh alerts match the full brief with alerts on or off and either source unread",async()=>{
+ const repos=createMemoryRepositories();await repos.adminConfig.put(ADMIN_CONFIG_ID,defaultAdminConfig(at),at);
+ await submit({type:"config.setSetting",subject:ALERTS_ON_SETTING,input:{key:ALERTS_ON_SETTING,value:"not a boolean"},stateVersion:null,
+  idempotencyKey:"alert-refused-setting",caller:"OWNER_SESSION",actorRef:"owner"},{repos,now:()=>at,currentStateVersion:null,codeSha:null});
+ for(const on of [false,true]){
+  const held=await repos.adminConfig.mustRead(ADMIN_CONFIG_ID);
+  await repos.adminConfig.save(held,{...held.value,settings:{...held.value.settings,[ALERTS_ON_SETTING]:on}},at);
+  const full=await readBrief(repos,at);
+  assert.ok(full.fresh.alerts.length>0,"the fixture includes a real refused owner order");
+  assert.deepEqual(await readFreshAlerts(repos,at,async()=>null),full.fresh.alerts);
+  assert.deepEqual(await readFreshAlerts(repos,at,async()=>{throw Error("stuck unread");}),full.fresh.alerts);
+ }
+ const unreadRepos={...repos,adminActionHistoryPage:async()=>{throw Error("history unread");}};
+ assert.deepEqual(await readFreshAlerts(unreadRepos,at,async()=>null),(await readBrief(unreadRepos,at)).fresh.alerts);
+});
 test("brief keeps expected updates separate and includes real decision rows while alerts are off",()=>{
  const config={...defaultAdminConfig(at),updates:[{id:"expected",what:"A method is ready for testing",at,label:"EXPECTED" as const,before:null,after:null,evidenceHref:null,shownAt:null}]};
  const rows=buildQueue({...empty,doors:[{name:"Town agendas",why:"The page moved; the team is finding it.",since:at}]});

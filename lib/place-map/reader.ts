@@ -112,6 +112,68 @@ export async function lowestZipByDivision(state: string): Promise<ReadonlyMap<st
   return out;
 }
 
+export interface DivisionZipOptions {
+  /** Manual state-wide records may use the first ZIP holding a child division when the state itself has no row. */
+  readonly stateFallback?: boolean;
+  readonly selection?: GeographySelection;
+}
+const DIVISION_ZIP_PAGE = 16;
+const DIVISION_ZIP_MEMBERSHIPS_SQL = `SELECT m.zip,json_agg(json_build_object(
+    'placeId',e.id,'state',e.state,'layer',b.layer,'boundaryYear',b.boundary_year,'version',b.version,'fringe',m.fringe)
+    ORDER BY e.id,b.boundary_year) AS memberships
+  FROM zip_place m JOIN entity e ON e.id=m.place_id
+  JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
+  WHERE m.zip=ANY($1::text[]) AND e.kind='place' GROUP BY m.zip ORDER BY m.zip`;
+
+/** Read only candidate ZIPs for these divisions. Selection uses the same per-ZIP plans and latest local boundaries as a typed ZIP.
+ * Postal links stay out: a witness ZIP must hold its division directly. */
+export async function lowestZipsForDivisions(input: string, divisions: readonly string[], options: DivisionZipOptions = {}): Promise<ReadonlyMap<string,string>> {
+  const state=requireRegistryState(input.replace(/^US-/i,"")),wanted=[...new Set(divisions)],out=new Map<string,string>();
+  if(!wanted.length)return out;
+  const query=placeMapQuery(),selection=options.selection??currentRepresentationSelection(),contexts=new Map<string,PlaceMapResult>();
+  const readCodes=async(codes:readonly string[])=>{
+    const missing=[...new Set(codes)].filter(code=>!contexts.has(code));
+    if(!missing.length)return;
+    const rows=await query(DIVISION_ZIP_MEMBERSHIPS_SQL,[missing]);
+    for(const code of missing){
+      const row=rows.find(row=>row.zip===code);
+      const result=row?await placesForCode(async()=>[row],"zip",code,selection):{memberships:[],states:[]};
+      contexts.set(code,result);
+    }
+  };
+  const find=async(targets:readonly string[],children:boolean)=>{
+    const pending=new Set(targets),after:Record<string,string>={};
+    while(pending.size){
+      const rows=await query(`SELECT wanted.division,p.zip FROM unnest($1::text[]) wanted(division)
+        CROSS JOIN LATERAL(SELECT DISTINCT m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id
+          WHERE ${children?"m.place_id LIKE wanted.division||'/%'":"m.place_id=wanted.division"} AND e.kind='place'
+            AND m.zip>coalesce($3::jsonb->>wanted.division,'')
+            AND(e.state=$2::char(2) OR EXISTS(SELECT 1 FROM zip_place own JOIN entity owner_place ON owner_place.id=own.place_id
+              WHERE own.zip=m.zip AND owner_place.state=$2::char(2) AND owner_place.kind='place'))
+          ORDER BY m.zip LIMIT ${DIVISION_ZIP_PAGE}) p ORDER BY wanted.division,p.zip`,[[...pending],state,JSON.stringify(after)]);
+      const pages=new Map<string,string[]>();
+      for(const row of rows){const id=String(row.division);pages.set(id,[...(pages.get(id)??[]),String(row.zip)]);}
+      for(let position=0;position<DIVISION_ZIP_PAGE&&pending.size;position++){
+        const candidates=[...pending].flatMap(id=>pages.get(id)?.[position]?[{id,zip:pages.get(id)![position]}]:[]);
+        if(!candidates.length)break;
+        await readCodes(candidates.map(candidate=>candidate.zip));
+        for(const{id,zip}of candidates){
+          const context=contexts.get(zip)!;
+          if(context.states.includes(state)&&context.memberships.some(row=>!row.fringe&&(children?row.placeId.startsWith(`${id}/`):row.placeId===id))){out.set(id,zip);pending.delete(id);}
+        }
+      }
+      for(const id of pending){const page=pages.get(id)??[];if(page.length<DIVISION_ZIP_PAGE)pending.delete(id);else after[id]=page.at(-1)!;}
+    }
+  };
+  await find(wanted,false);
+  if(options.stateFallback)await find(wanted.filter(id=>!out.has(id)&&/^ocd-division\/country:us\/state:[a-z]{2}$/.test(id)),true);
+  return out;
+}
+
+export async function lowestZipForDivision(state:string,division:string,options:DivisionZipOptions={}):Promise<string|null>{
+  return(await lowestZipsForDivisions(state,[division],options)).get(division)??null;
+}
+
 /** Identity and source metadata come from the same selected map memberships. */
 export async function readZipDivisions(zip: string, selection: GeographySelection = currentRepresentationSelection()): Promise<import("../registry/types.ts").Division[]> {
   const query = placeMapQuery(), result = await placesForCode(query, "zip", zip, selection);

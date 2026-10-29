@@ -31,7 +31,10 @@ export interface PublicationStatusRows {
     readonly attemptedAt: string;
     readonly failureCode: string | null;
   }[];
-  readonly readbacks: readonly { readonly candidateId: string; readonly at: string; readonly detail: string }[];
+  readonly readbacks: readonly ({ readonly candidateId: string; readonly at: string } & (
+    { readonly detail: string; readonly summary?: never } |
+    { readonly summary: { readonly contractId: string; readonly versionId: string; readonly status: "PASS" | "FAIL" }; readonly detail?: never }
+  ))[];
 }
 
 export type PublicationVerdict =
@@ -121,7 +124,7 @@ export function projectPublicationStatus(
     const receipts = rows.readbacks
       .filter((event) => event.candidateId === pointer.currentVersionId)
       .flatMap((event) => {
-        const receipt = parseReaderProjectionReadback(event.detail);
+        const receipt = event.summary ?? parseReaderProjectionReadback(event.detail ?? "");
         return receipt !== null && receipt.versionId === pointer.currentVersionId && receipt.contractId === contract.id
           ? [{ status: receipt.status, at: event.at, versionId: receipt.versionId }]
           : [];

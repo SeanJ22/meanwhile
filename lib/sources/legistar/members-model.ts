@@ -1,8 +1,9 @@
+import {rosterHolderName} from "../../facts/roster-name.ts";
 import { createHash } from "node:crypto";
 import { isoTermDate } from "../../civic-data/term-dates.ts";
 import type { Artifact } from "../../control-plane/evidence/artifact.ts";
 
-export interface MemberReading { readonly artifact: Artifact; readonly ids: readonly number[]; readonly text: string }
+export interface MemberReading { readonly artifact: Artifact; readonly ids: readonly number[] }
 
 export interface MemberBody { BodyId: number; BodyName: string; BodyRowVersion: string; }
 export interface MemberPerson { PersonId: number; PersonFullName: string; PersonRowVersion: string }
@@ -14,7 +15,6 @@ export interface MemberOffice {
 export interface LegistarMembers {
   slug: string; bodies: MemberBody[]; persons: MemberPerson[]; offices: MemberOffice[];
   signature: string; collectedAt: string;
-  inputFingerprint?: string;
   readings: MemberReading[];
 }
 
@@ -38,6 +38,7 @@ export function validateLegistarMembers(raw: LegistarMembers): void {
   if (bodies.size !== raw.bodies.length || persons.size !== raw.persons.length || new Set(raw.offices.map(office => office.OfficeRecordId)).size !== raw.offices.length) throw new Error("LEGISTAR_MEMBERS_DUPLICATE_ID");
   for (const body of raw.bodies) if (!body.BodyName?.trim()) throw new Error("LEGISTAR_MEMBERS_BODY_NAME_MISSING");
   for (const office of raw.offices) {
+    if (rosterHolderName(office.OfficeRecordFullName) && (!Number.isSafeInteger(office.OfficeRecordPersonId) || office.OfficeRecordPersonId<=0)) throw new Error("LEGISTAR_MEMBERS_PERSON_ID_MISSING");
     const start = termDate(office.OfficeRecordStartDate), end = termDate(office.OfficeRecordEndDate);
     if (start && end && start > end) throw new Error("LEGISTAR_MEMBERS_TERM_REVERSED");
   }
@@ -50,16 +51,20 @@ export function termDate(value: string | null): string | null {
   return date;
 }
 
-export function memberReading(artifact: Artifact, rows: unknown, text: string): MemberReading {
+export function memberReading(artifact: Artifact, rows: unknown): MemberReading {
   const url = new URL(artifact.canonicalUrl), collection = url.pathname.split("/").at(-1);
   const key = collection === "bodies" ? "BodyId" : collection === "persons" ? "PersonId" : "OfficeRecordId";
   if (!Array.isArray(rows)) throw new Error("LEGISTAR_MEMBERS_SOURCE_PAGE_INVALID");
   const ids = rows.map(row => row[key]);
   if (ids.some(id => !Number.isSafeInteger(id) || id <= 0)) throw new Error("LEGISTAR_MEMBERS_SOURCE_PAGE_INVALID");
-  return { artifact, ids, text };
+  return { artifact, ids };
 }
 
 export function memberProbe(url: URL): boolean {
   const selected = url.searchParams.get("$select");
   return selected !== null && !selected.split(",").some(field => ["BodyName", "PersonFullName", "OfficeRecordFullName"].includes(field));
 }
+
+export const memberDay = (now: string, timeZone: string) => new Intl.DateTimeFormat("en-CA", { timeZone, year:"numeric",month:"2-digit",day:"2-digit" }).format(new Date(now));
+export const currentMemberOffice = (office: MemberOffice, day: string) => (!termDate(office.OfficeRecordStartDate) || termDate(office.OfficeRecordStartDate)! <= day) && (!termDate(office.OfficeRecordEndDate) || termDate(office.OfficeRecordEndDate)! >= day);
+export const memberName = (office: MemberOffice) => rosterHolderName(office.OfficeRecordFullName);

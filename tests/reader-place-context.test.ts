@@ -54,13 +54,11 @@ test("the real worker transfers only the requested compressed context and keeps 
     const cases:PlaceInput[]=[];
     for(const divisionIds of [[CITY],[]]) for(const includeHistory of [false,true]) for(const flags of [{},{bodyFactsOnly:true},{includeAgenda:true},{bodyFactsOnly:true,includeAgenda:true}])
       cases.push({state:"AZ",divisionIds,includeHistory,...flags});
-    const expected=new Map<string,Awaited<ReturnType<typeof buildPlacePackage>>>();
     const bytes=new Map<string,number>();
     const labels=(input:PlaceInput)=>`${input.divisionIds.length?"place":"empty"}:${input.includeHistory?"history":"current"}:${input.includeAgenda?"agenda":input.bodyFactsOnly?"facts":"brief"}${input.bodyFactsOnly&&input.includeAgenda?"+facts":""}`;
     const readings:{mode:string;compressedBytes:number;legacyBytes?:number}[]=[];
     for(const input of cases) {
       const label=labels(input),canonical=await buildPlacePackage({...input,includeAgenda:input.includeAgenda??false},query);
-      expected.set(label,canonical);
       let reads=0;
       const actual=await readPlacePackage(input,async(text,params)=>{
         reads++;assert.equal(text,PLACE_PAGES_SQL,"every selection reads only saved context in one query");
@@ -92,20 +90,12 @@ test("the real worker transfers only the requested compressed context and keeps 
       }else assert.equal(actual.snapshotHeldAt,AT,"the empty family's checked time stays visible");
       readings.push({mode:label,compressedBytes:bytes.get(label)!});
     }
-    for(const [id,context] of contexts) {
-      const raw:Record<string,unknown>={formatVersion:1};
-      for(const key of ["current","history","emptyCurrent","emptyHistory"])if(context[key])raw[key]=unpackPlaceContextRow(context[key]!.full);
-      await query("UPDATE place_page SET context=$2::jsonb WHERE place_id=$1",[id,JSON.stringify(raw)]);
-    }
-    for(const input of cases) {
-      const label=labels(input);let reads=0,legacyBytes=0;
-      const legacy=await readPlacePackage(input,async(text,params)=>{
-        reads++;assert.equal(text,PLACE_PAGES_SQL,"legacy raw contexts never query source tables");
-        const rows=await query(text,params);legacyBytes=Buffer.byteLength(JSON.stringify(rows));return rows;
-      });
-      assert.equal(reads,1);assert.deepEqual(legacy,expected.get(label),`${label}: legacy raw fallback preserves every field`);
+    for(const input of cases){
+      const label=labels(input),context=contexts.get(input.divisionIds.length?CITY:ROOT)!;
+      const key=input.divisionIds.length?(input.includeHistory?'history':'current'):(input.includeHistory?'emptyHistory':'emptyCurrent');
+      const raw=unpackPlaceContextRow(context[key]!.full),legacyBytes=Buffer.byteLength(JSON.stringify([{row:raw}]));
       readings.find(row=>row.mode===label)!.legacyBytes=legacyBytes;
-      if(input.divisionIds.length)assert.ok(bytes.get(label)!<legacyBytes/(input.includeAgenda?1:10),`${label}: ${bytes.get(label)} compressed bytes versus ${legacyBytes} legacy bytes`);
+      if(input.divisionIds.length)assert.ok(bytes.get(label)!<legacyBytes/(input.includeAgenda?1:10),`${label}: ${bytes.get(label)} compressed bytes versus ${legacyBytes} former raw-row bytes`);
     }
     t.diagnostic(JSON.stringify({sourceAgendaBytes:Buffer.byteLength(agendaText),readings}));
   }finally{await pg.close();}

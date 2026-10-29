@@ -1,10 +1,32 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
-import { buildMissingPlacePages,buildPageBody,storePlacePage } from "../lib/reader/place-builder.ts";
+import { buildMissingPlacePages,buildPageBody,buildPlacePackage,storePlacePage } from "../lib/reader/place-builder.ts";
 import { readCanonicalShelf } from "../lib/reader/canonical.ts";
 import type { Query } from "../lib/facts/publish.ts";
-import {unpackPlaceContextRow} from "../lib/reader/place-ready.ts";
+import {packReadyPlace,unpackPlaceContextRow} from "../lib/reader/place-ready.ts";
+import {withReaderSelection} from "../lib/db/reader-route.ts";
+
+test('parallel first ZIP readers compile one page and discard its unused legacy context',async()=>{
+  const {query,transaction,pg}=await migratedReaderDb(),id='zip:85701';
+  try{
+    const legacy=await buildPlacePackage({state:'AZ',divisionIds:[]},query);
+    await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','ZIP 85701','AZ')",[id]);
+    await query("INSERT INTO place_page(place_id,body,context) VALUES($1,$2::jsonb,$3::jsonb)",[id,JSON.stringify(packReadyPlace(legacy)),JSON.stringify({current:{unused:'legacy'}})]);
+    let compiles=0;
+    const db={transaction:<T>(work:(q:Query)=>Promise<T>)=>transaction(q=>work(async(text,params=[])=>{
+      if(text.startsWith('WITH RECURSIVE additional'))compiles++;
+      return q(text,params);
+    }))};
+    await withReaderSelection({zip:'85701',states:['AZ'],keys:new Set()},()=>Promise.all([
+      buildMissingPlacePages([{id,kind:'place',state:'AZ',reader:true}],db),
+      buildMissingPlacePages([{id,kind:'place',state:'AZ',authorities:true,authorityKeys:['CURATED_READER_RECORD:US-AZ:official-ballot-navigation']}],db),
+    ]));
+    const [saved]=await query("SELECT context->>'readerFormat' AS reader,context->>'authorityFormat' AS authorities,context?'current' AS raw FROM place_page WHERE place_id=$1",[id]);
+    assert.deepEqual(saved,{reader:'1',authorities:'1',raw:false});
+    assert.equal(compiles,1,'the meeting and state requests share the source compilation');
+  }finally{await pg.close();}
+});
 
 test('adding a requested section preserves the other saved sections and never recompiles their sources',async()=>{
   const {pg,publish}=await migratedReaderDb(),id='ocd-division/country:us/state:az/place:extra';

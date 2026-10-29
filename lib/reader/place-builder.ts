@@ -1,4 +1,5 @@
 import {personIdentityKeys} from "../officials/people-identity.ts";
+import {currentReaderSelection} from "../db/reader-route.ts";
 import {keyedReaderPointers} from "../civic-data/keyed-reader.ts";
 import {readPublishedSourceChecks} from "../civic-data/source-checks.ts";
 import {votingPageFingerprintSql} from "./voting-page.ts";
@@ -593,8 +594,27 @@ export async function buildPlacePackage(input: PlaceInput, query: Query) {
   return composePlaceRow(input, await buildPlaceRow(input,query));
 }
 
-/** First use publishes the same page as the standing builder. Concurrent visits share the saved result. */
-export async function buildMissingPlacePages(pages:readonly {id:string;kind:string;state:string;authorities?:boolean;authorityKeys?:readonly string[];roster?:boolean;reader?:boolean}[],db?:FactDb):Promise<void> {
+type MissingPage={id:string;kind:string;state:string;authorities?:boolean;authorityKeys?:readonly string[];roster?:boolean;reader?:boolean};
+const firstBuilds=new WeakMap<object,Map<string,Promise<void>>>();
+
+/** The ZIP's meeting and state readers share one first build and one saved publication. */
+export async function buildMissingPlacePages(pages:readonly MissingPage[],db?:FactDb):Promise<void> {
+  const selection=currentReaderSelection();
+  let held=selection?firstBuilds.get(selection):undefined;
+  if(selection&&!held){held=new Map();firstBuilds.set(selection,held);}
+  for(const requested of pages){
+    const page=requested.id.startsWith('zip:')&&(requested.reader||requested.authorities)
+      ?{...requested,reader:true,authorities:true}:requested;
+    const prior=held?.get(page.id);
+    if(prior){await prior;continue;}
+    const build=buildUnsavedPlacePages([page],db);
+    held?.set(page.id,build);
+    try{await build;}finally{held?.delete(page.id);}
+  }
+}
+
+/** First use runs the standing builder's compiler and saves its result. */
+async function buildUnsavedPlacePages(pages:readonly MissingPage[],db?:FactDb):Promise<void> {
   const supplied=installedFactConnection();
   const writer=db ?? (supplied?{transaction:<T>(work:(query:Query)=>Promise<T>)=>work(supplied)}:readerFactDb(process.env.WTP_DB_ROLE==='local' ? process.env.DATABASE_URL
     : resolveProductionWriteHandle().connection));
@@ -610,13 +630,15 @@ export async function buildMissingPlacePages(pages:readonly {id:string;kind:stri
     const existing=found?.place_id?found:undefined;
     const targetKind=typeof found?.kind==='string'?found.kind:kind;
     if(existing?.ready===true)return;
-    if(existing&&(reader||roster&&existing.reader_format!=='1')){
+    if(existing&&(reader||roster)&&existing.reader_format!=='1'){
       const zip=id.startsWith('zip:');
       const [saved]=await query(`SELECT body,history_body,CASE WHEN NOT $2::boolean THEN jsonb_build_object('formatVersion',context->'formatVersion',
         'current',coalesce(context#>'{current,full}',context->'current'),'history',coalesce(context#>'{history,full}',context->'history'),
         'emptyCurrent',coalesce(context#>'{emptyCurrent,full}',context->'emptyCurrent'),'emptyHistory',coalesce(context#>'{emptyHistory,full}',context->'emptyHistory')) END AS rows,
         encode(sha256(convert_to(jsonb_build_array(body,history_body,context->'current',context->'history',context->'emptyCurrent',context->'emptyHistory')::text,'UTF8')),'hex') AS fingerprint FROM place_page WHERE place_id=$1`,[id,zip]);
       const held=unpackReadyPlace(saved.body);
+      const needsAuthorities=authorities&&(existing.authority_format!=='1'||(authorityKeys??[]).some(key=>!(existing.keys as string[]??[]).includes(key)));
+      const sections=needsAuthorities?placeBuildSelection(id,targetKind,state).then(({input})=>buildPageAuthorities(input,query,authorityKeys,existing.keys as string[]??[])):Promise.resolve({});
       const current=held.rosterRefs?{place:held,rosters:new Map<string,ReaderBodyRoster>()}:preparePlaceRosters(held);
       const context:Record<string,unknown>={readerFormat:1};
       if(!zip){
@@ -632,12 +654,15 @@ export async function buildMissingPlacePages(pages:readonly {id:string;kind:stri
       const previousHistory=unpackReadyPlace(saved.history_body);
       const history=Array.isArray(previousHistory?.bodies)?packReadyPlace(preparePlaceRosters(previousHistory).place):saved.history_body;
       const territory=unpackReadyTerritory(saved.body);
-      await query(`UPDATE place_page SET body=$2::jsonb,history_body=$5::jsonb,context=context||$3::jsonb,version=version+1,build_fingerprint=NULL
-        WHERE place_id=$1 AND encode(sha256(convert_to(jsonb_build_array(body,history_body,context->'current',context->'history',context->'emptyCurrent',context->'emptyHistory')::text,'UTF8')),'hex')=$4`,
-      [id,JSON.stringify(packReadyPlace(current.place,territory)),JSON.stringify(context),saved.fingerprint,JSON.stringify(history)]);
+      Object.assign(context,await sections);
+      await query(`UPDATE place_page SET body=$2::jsonb,history_body=$5::jsonb,
+        context=(CASE WHEN $7::boolean THEN context-'current'-'history'-'emptyCurrent'-'emptyHistory' ELSE context END)||$3::jsonb,
+        version=version+1,build_fingerprint=NULL WHERE place_id=$1 AND version=$6::bigint
+        AND encode(sha256(convert_to(jsonb_build_array(body,history_body,context->'current',context->'history',context->'emptyCurrent',context->'emptyHistory')::text,'UTF8')),'hex')=$4`,
+      [id,JSON.stringify(packReadyPlace(current.place,territory)),JSON.stringify(context),saved.fingerprint,JSON.stringify(history),existing.version,zip]);
       return;
     }
-    if(existing && authorities&&!reader&&!roster){
+    if(existing && authorities&&!roster){
       const {input}=await placeBuildSelection(id,targetKind,state);
       if(existing.authority_format==='1'){
         const missing=(authorityKeys??[]).filter(key=>!(existing.keys as string[]??[]).includes(key));

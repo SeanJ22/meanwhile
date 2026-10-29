@@ -7,6 +7,7 @@ export interface SavedValues {
   readonly openings?: readonly { readonly name: string; readonly version: string; readonly at: string }[];
 }
 const KEY_STATE = Symbol.for("meanwhile.saved-keys");
+const KEY_ENVIRONMENT = Symbol.for("meanwhile.saved-key-environment");
 const host = globalThis as typeof globalThis & { [KEY_STATE]?: SavedValues };
 const declared = new Set(Object.keys(KEY_NAMES));
 
@@ -22,13 +23,14 @@ export function selectSavedDatabase(source: string | undefined): void {
 }
 export function storedKeyValue(name: string, injected?: Environment): string | undefined {
   if (typeof window !== "undefined") throw new Error("Saved keys are available only on the server.");
-  if (injected && injected !== process.env && injected !== environment) return injected[name];
+  if (injected && injected !== process.env && Reflect.get(injected, KEY_ENVIRONMENT) !== true) return injected[name];
   const source = process.env[SAVED_DATABASE_SOURCE];
   return host[KEY_STATE]?.values.get(name === "DATABASE_URL" && source && databaseSources.has(source) ? source : name);
 }
 
 const environment = new Proxy(process.env, {
   get(target, field) {
+    if (field === KEY_ENVIRONMENT) return true;
     if (typeof field === "string" && declared.has(field)) return storedKeyValue(field);
     return Reflect.get(target, field);
   },

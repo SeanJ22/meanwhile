@@ -33,6 +33,9 @@ test("saved snapshots fetch only changes, retain the last complete read, and nev
     assert.equal(storedKeyValue("CENSUS_API_KEY"), "shared-source-key", "a key already saved by either runtime is available to the other");
     assert.equal(storedKeyValue("NODE_OPTIONS"), "a-key-with-a-human-chosen-name");
     assert.equal(storedKeyValue("NODE_OPTIONS", storedKeyEnvironment()), "a-key-with-a-human-chosen-name", "computed saved names remain readable without becoming OS settings");
+    const duplicate = await import(new URL("../lib/core/keys-values.ts?other-bundle", import.meta.url).href);
+    assert.equal(duplicate.storedKeyValue("NODE_OPTIONS", storedKeyEnvironment()), "a-key-with-a-human-chosen-name");
+    assert.equal(storedKeyValue("NODE_OPTIONS", duplicate.storedKeyEnvironment()), "a-key-with-a-human-chosen-name");
     assert.equal({...storedKeyEnvironment()}.NODE_OPTIONS, "--no-warnings", "arbitrary saved names cannot change child runtime settings");
     assert.equal(storedKeyValue("ANTHROPIC_API_KEY", { ANTHROPIC_API_KEY: "injected-fixture" }), "injected-fixture");
     selectSavedDatabase("WTP_PRODUCTION_DATABASE_URL_READONLY");

@@ -20,6 +20,7 @@
         "lib/facts/portal-publication.ts",
         "lib/funding/state-publication.ts",
         "lib/funding/state-source-probe.ts",
+        "lib/meetings/office-facts.ts",
         "lib/meetings/pin-blanks.ts"
       ]
     },
@@ -36,9 +37,7 @@
         "lib/civic-data/store.ts"
       ],
       "bypass": [
-        "scripts/lib/federal-money-benchmark-identities.mts",
-        "scripts/rb-a4-portal-copy.mts",
-        "scripts/rb-a4-portals.mts"
+        "scripts/lib/federal-money-benchmark-identities.mts"
       ]
     },
     "civic_data_clock_versions": {
@@ -65,10 +64,7 @@
       ],
       "bypass": [
         "lib/civic-data/state-pointer-retirement.ts",
-        "scripts/lib/federal-money-benchmark-identities.mts",
-        "scripts/rb-a4-portal-copy.mts",
-        "scripts/rb-a4-portals.mts",
-        "scripts/rb-a4-replay.mts"
+        "scripts/lib/federal-money-benchmark-identities.mts"
       ]
     },
     "civic_data_reader_projections": {
@@ -186,9 +182,7 @@
         "lib/meetings/pin-blanks.ts",
         "lib/place-map/load.ts",
         "lib/reader/page-subjects.ts",
-        "scripts/prepare-place-pages.mts",
-        "scripts/rb-a3-copy.mts",
-        "scripts/rb-a4-replay.mts"
+        "scripts/prepare-place-pages.mts"
       ]
     },
     "entity_external_id": {
@@ -203,8 +197,7 @@
         "lib/facts/portal-publication.ts",
         "lib/funding/state-facts.ts",
         "lib/funding/state-publication.ts",
-        "lib/place-map/load.ts",
-        "scripts/rb-a4-replay.mts"
+        "lib/place-map/load.ts"
       ]
     },
     "entity_host": {
@@ -245,8 +238,7 @@
         "lib/funding/state-cycles.ts",
         "lib/funding/state-facts.ts",
         "lib/funding/state-publication.ts",
-        "lib/funding/state-source-probe.ts",
-        "scripts/rb-a3-copy.mts"
+        "lib/funding/state-source-probe.ts"
       ]
     },
     "fact_confirmation": {
@@ -389,12 +381,10 @@
       ],
       "bypass": [
         "lib/control-plane/scheduler/providers/held-subject-copy.ts",
-        "lib/facts/census-governing.ts",
         "lib/facts/linking-copy.ts",
         "lib/facts/owner-flags.ts",
         "lib/funding/state-facts.ts",
-        "lib/funding/state-publication.ts",
-        "scripts/rb-a3-copy.mts"
+        "lib/funding/state-publication.ts"
       ]
     },
     "speak_your_mind": {
@@ -509,8 +499,7 @@
     "lib/control-plane/repository/pg-store.ts",
     "lib/control-plane/vital-signs.ts",
     "lib/db/process-transfer.ts",
-    "lib/place-map/load.ts",
-    "scripts/rb-a3-copy.mts"
+    "lib/place-map/load.ts"
   ],
   "dynamicTables": [
     "lib/control-plane/repository/admin-config.ts",

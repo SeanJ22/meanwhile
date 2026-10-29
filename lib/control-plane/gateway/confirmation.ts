@@ -6,7 +6,7 @@ import { confirmHuntScores, type PlaceScoreReader } from "./hunt-score.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { RESEARCH_INTENT_LOG_KEY, RESEARCH_STATE_ID, type ResearchIntent } from "../scheduler/research-policy.ts";
 import { readConfirmationHeartbeat, readDispatchConfirmation } from "./confirmation-read.ts";
-import type { ActionReceipt } from "./contract.ts";
+import type { ActionReceipt, ConfirmationReceipt } from "./contract.ts";
 import type { RunnerHeartbeat } from "../owner-surface.ts";
 import { formatEastern } from "../eastern-time.ts";
 import { isLeadOrder, leadCounts, leadCountsWords, leadItems, LEADS_ACTION, rowOpen, type LeadOrder } from "../leads/order.ts";
@@ -143,7 +143,7 @@ export function confirmationReadSession(repos: ControlPlaneRepositories): Contro
   };
 }
 
-export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
+export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: ConfirmationReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
   if (receipt.type === LEADS_ACTION && receipt.outcome !== "REFUSED") return confirmLeads(repos, receipt, nowMs);
   if (receipt.type === OFFICIALS_CHECK_ACTION && receipt.outcome !== "REFUSED") return confirmOfficials(repos, receipt, nowMs);
   let core = await confirmCore(repos, receipt, nowMs, readPlaceScore);
@@ -160,7 +160,7 @@ export async function confirmReceipt(repos: ControlPlaneRepositories, receipt: A
   return confirmDispatch(repos, receipt, result);
 }
 
-async function confirmLeads(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number): Promise<Confirmation> {
+async function confirmLeads(repos: ControlPlaneRepositories, receipt: ConfirmationReceipt, nowMs: number): Promise<Confirmation> {
   let beat: RunnerHeartbeat | null = null;
   let order: LeadOrder | null = null;
   try {
@@ -184,7 +184,7 @@ function leadsPlan(receipt: Pick<ActionReceipt, "label" | "requestedSubject" | "
 export const RUNNER_SILENT_MS = 15 * 60 * 1000;
 
 /** An officials check, from each people source's own runner outcome since the check and the Scout's verification of any lead. */
-async function confirmOfficials(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number): Promise<Confirmation> {
+async function confirmOfficials(repos: ControlPlaneRepositories, receipt: ConfirmationReceipt, nowMs: number): Promise<Confirmation> {
   try {
     const [feeds, beat] = await Promise.all([officialsReceiptFeeds(repos, receipt), readConfirmationHeartbeat(repos)]);
     const leadRef = receipt.openedWork.find(work => work.kind === "officials-lead");
@@ -242,7 +242,7 @@ export function orderProgress(receipt: Pick<ActionReceipt, "type" | "openedWork"
   return { done: null, of: null };
 }
 
-async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
+async function confirmCore(repos: ControlPlaneRepositories, receipt: ConfirmationReceipt, nowMs: number = Date.now(), readPlaceScore?: PlaceScoreReader): Promise<Confirmation> {
   if (receipt.outcome === "REFUSED") return { state: "not-needed", at: null, words: receipt.says };
   const type = receipt.type;
   if (type === "orders.schedule") {
@@ -353,7 +353,7 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: ActionRecei
   }
 }
 
-async function confirmDispatch(repos: ControlPlaneRepositories, receipt: ActionReceipt, core: Confirmation): Promise<Confirmation> {
+async function confirmDispatch(repos: ControlPlaneRepositories, receipt: ConfirmationReceipt, core: Confirmation): Promise<Confirmation> {
   if (receipt.type !== "fleet.deployHere" || receipt.outcome === "REFUSED") return core;
   try {
     const work = await readDispatchConfirmation(repos, receipt.subject);

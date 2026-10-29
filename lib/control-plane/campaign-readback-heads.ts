@@ -1,3 +1,4 @@
+import { readPublishedCampaignHeads } from "../civic-data/keyed-rows.ts";
 import { readerQuery } from "../civic-data/promoted-reader-query.ts";
 import { CivicReadCache, runtimeCivicReadCache } from "../db/civic-read-cache.ts";
 import { SERVED_READER_MAX_AGE_MS, type ServedReaderReadback } from "./served-reader.ts";
@@ -8,16 +9,7 @@ interface Held { readonly version:string; readonly fingerprint:string; readonly 
 const NAMESPACE="owner-campaign-readback-heads:v1";
 
 /** Immutable source fingerprints and pointer identity only; campaign documents stay in their source vault. */
-export const CAMPAIGN_READBACK_HEADS_SQL = `SELECT w.state,p.current_version_id AS version,
-  coalesce(p.payload_fingerprint,p.payload->>'$civicPayloadPart',c.normalized_hash) AS fingerprint,
-  (p.current_version_id=p.last_known_good_version_id AND c.id=p.current_version_id
-    AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope
-    AND c.state='PROMOTED' AND c.acquisition_succeeded AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
-    AND p.validation_receipt=c.validation_receipt AND p.validation_receipt->>'decision'='GOOD'
-    AND p.validation_receipt->>'candidateId'=c.id AND c.normalized_hash ~ '^[a-f0-9]{64}$') IS TRUE AS valid
-  FROM unnest($1::text[]) w(state) LEFT JOIN civic_data_promotions p
-    ON p.key='CURATED_READER_RECORD:US-'||w.state||':candidate-campaign-sites-derived'
-  LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id ORDER BY w.state`;
+
 
 export interface CampaignReadbackPlan {
   carried(state:string): ServedReaderReadback|null;
@@ -31,7 +23,7 @@ export async function planCampaignReadbacks(states:readonly string[],now:string,
   const batch=deps.query?null:readerQuery();
   const query=deps.query??(async(text,params)=>{if(!batch)throw new Error("CAMPAIGN_READBACK_HEADS_UNAVAILABLE");return (await batch([{text,params}]))[0];});
   const cache=deps.cache??runtimeCivicReadCache().jobState();
-  const headsOf=async(wanted:readonly string[])=>new Map((await query(CAMPAIGN_READBACK_HEADS_SQL,[wanted])).map(row=>[String(row.state),row as unknown as Head]));
+  const headsOf=async(wanted:readonly string[])=>new Map((await readPublishedCampaignHeads((text,params)=>query(text,params??[]),wanted)).map(row=>[String(row.state),row as unknown as Head]));
   const heads=await headsOf(states);
   if(heads.size!==new Set(states).size)throw new Error("CAMPAIGN_READBACK_HEADS_INCOMPLETE");
   const held=new Map(await Promise.all(states.map(async state=>[state,await cache.readCheckpoint<Held>(NAMESPACE,state)] as const)));

@@ -12,6 +12,7 @@ import { fixesInTesting } from "@/lib/control-plane/fix-standing.ts";
 import { readFixProofBar } from "@/lib/method/fix-status.ts";
 import { readLatestLookPasses } from "@/lib/control-plane/live-audit-log.ts";
 import { lookShotsByFix, lookView } from "@/lib/frontend/look-pass.ts";
+import { QUEUE_FIX_FIELDS } from "@/lib/control-plane/repository/admin-config.ts";
 
 /** Look-check screenshots are served by the signed-in screenshot route, never the public portrait route. */
 const shotUrl = (key: string): string => `/api/admin/v6/resident-tasks/shot/${key.replace(/^resident-tasks\//, "")}`;
@@ -35,14 +36,18 @@ async function get(request: NextRequest) {
         missingParts: [],
       };
     }
-    const decisions = await readDecisions(opened.repos);
+    const id = request.nextUrl.searchParams.get("id");
+    const [decisions, held, looks] = await Promise.all([
+      readDecisions(opened.repos),
+      opened.repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: id ? { ids: [id] } : { activeAndRecent: 500, fieldsProjection: QUEUE_FIX_FIELDS, queueFixSummary: true }, methodStandings: true }),
+      readLatestLookPasses(opened.repos, 5).catch(() => null),
+    ]);
     if (decisions.kind !== "HELD") throw new Error(decisions.detail);
-    const queue = fixQueueView(collapseDecisionLog(decisions.value));
-    const held = await opened.repos.adminConfig.read(ADMIN_CONFIG_ID, { fixList: { activeAndRecent: 500 }, methodStandings: true });
+    const allQueue = fixQueueView(collapseDecisionLog(decisions.value));
+    const queue = id ? { ...allQueue, items: allQueue.items.filter(item => item.subjectId === id) } : allQueue;
     const config = held && isAdminConfig(held.value) ? held.value : null;
     const list = config ? fixItems(config) : [];
     // The last few deploys' look checks, so a red flag's fix item keeps its screenshot after the next deploy.
-    const looks = await readLatestLookPasses(opened.repos, 5).catch(() => null);
     return {
       contract: "admin-v6/fixes@1",
       scope: request.nextUrl.searchParams.get("scope") ?? "united-states",

@@ -113,7 +113,7 @@
       "file": "lib/control-plane/repository/admin-config.ts",
       "kind": "SELECT *",
       "fingerprint": "4f78589382693b8f352753ccea66c4d6cff524f6aabe8262fcf736c04a42b155",
-      "line": 185
+      "line": 201
     },
     {
       "file": "lib/control-plane/repository/dispatch-state.ts",
@@ -155,7 +155,7 @@
       "file": "lib/control-plane/repository/pg-store.ts",
       "kind": "SELECT *",
       "fingerprint": "07fa0dc17a094e448310ab84b3c654e08e2a33ee2623ac7ee95f17f1cb49e981",
-      "line": 1300
+      "line": 1309
     },
     {
       "file": "lib/control-plane/worker-reader-readback.ts",
@@ -578,14 +578,6 @@
     {
       "file": "lib/civic-data/portrait-rosters.ts",
       "table": "civic_data_promotions"
-    },
-    {
-      "file": "lib/civic-data/publication-status-store.ts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "lib/civic-data/publication-status-store.ts",
-      "table": "civic_data_candidates"
     },
     {
       "file": "lib/civic-data/publication-status-store.ts",
@@ -1282,10 +1274,6 @@
       "table": "cp_admin_config"
     },
     {
-      "file": "app/api/admin/v6/scoreboard/route.ts",
-      "table": "cp_runner_heartbeat"
-    },
-    {
       "file": "app/api/admin/v6/settings/route.ts",
       "table": "cp_admin_config"
     },
@@ -1472,10 +1460,6 @@
     {
       "file": "lib/control-plane/admin-view/brief.ts",
       "table": "cp_admin_config"
-    },
-    {
-      "file": "lib/control-plane/admin-view/door-queries.ts",
-      "table": "cp_doors"
     },
     {
       "file": "lib/control-plane/admin-view/fix-prevention-history.ts",
@@ -1716,14 +1700,6 @@
     {
       "file": "lib/control-plane/gateway/confirmation.ts",
       "table": "cp_lead_orders"
-    },
-    {
-      "file": "lib/control-plane/gateway/confirmation.ts",
-      "table": "cp_log_research_intents"
-    },
-    {
-      "file": "lib/control-plane/gateway/confirmation.ts",
-      "table": "cp_runner_heartbeat"
     },
     {
       "file": "lib/control-plane/gateway/fix-migrate.ts",
@@ -2536,14 +2512,6 @@
     {
       "file": "scripts/lib/held-meeting-child-input.ts",
       "table": "cp_doors"
-    },
-    {
-      "file": "scripts/loss-study-pass.mts",
-      "table": "cp_obligations"
-    },
-    {
-      "file": "scripts/loss-study-pass.mts",
-      "table": "cp_work_items"
     },
     {
       "file": "scripts/measure-translation-cost-check.mts",

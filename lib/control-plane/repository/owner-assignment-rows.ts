@@ -57,18 +57,21 @@ export const OWNER_ASSIGNMENT_ROWS_DDL = [
 const parse = (value: unknown): OwnerAssignmentRow => (typeof value === "string" ? JSON.parse(value) : value) as OwnerAssignmentRow;
 const groups = ["WORKING", "BLOCKED", "FAILED", "WAITING", "SUCCEEDED", "RETIRED", "UNKNOWN"];
 const lanes = ["SCOUT", "ROUTINE", "CREATED", "UNASSIGNED", "PROOF"];
+const ROW_FIELDS = `jsonb_build_object('id',id,'state',state_code,'builtAt',value->'builtAt',
+  'group',value->'group','indexSegments',index_segments,'list',value->'list',
+  'bodyAttempts',value->'bodyAttempts','part',value->'part','nextAt',value->'nextAt')`;
 
 export function pgOwnerAssignmentRows(sql: Sql): OwnerAssignmentRows {
   const rows = async (text: string, args: readonly unknown[]) =>
     (await sql.query(text, args) as { value: unknown }[]).map(row => parse(row.value));
   return {
-    read: async ids => ids.length ? rows("SELECT value FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id", [ids]) : [],
+    read: async ids => ids.length ? rows(`SELECT ${ROW_FIELDS} AS value FROM cp_owner_assignment_rows WHERE id=ANY($1::text[]) ORDER BY id`, [ids]) : [],
     async find(input) {
       const predicates: string[] = [], params: unknown[] = [];
       if (input.members?.length) predicates.push(`members ?| $${params.push(input.members)}::text[]`);
       if (input.clauses?.length) predicates.push(`clause=ANY($${params.push(input.clauses)}::text[])`);
       if (input.dueAt) predicates.push(`next_at <= $${params.push(input.dueAt)}`);
-      return predicates.length ? rows(`SELECT value FROM cp_owner_assignment_rows WHERE ${predicates.join(" OR ")} ORDER BY id`, params) : [];
+      return predicates.length ? rows(`SELECT ${ROW_FIELDS} AS value FROM cp_owner_assignment_rows WHERE ${predicates.join(" OR ")} ORDER BY id`, params) : [];
     },
     async save(next, removed, states = []) {
       const write = async (connection: Sql) => {

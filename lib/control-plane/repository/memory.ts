@@ -351,6 +351,7 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
   const scoutResults = memoryAppendOnlyRepository<ScoutResult>("scout_results");
 
   const ownerStateTotals = memoryAggregateRepository<StateTotals>("StateTotals");
+  const ownerTotals = memoryAggregateRepository<OwnerSnapshotTotals>("OwnerSnapshotTotals");
   const repositories: ControlPlaneRepositories = {
     async adminActionHistoryPage(query) {
 
@@ -383,11 +384,11 @@ export function createMemoryRepositories(): ControlPlaneRepositories {
     adminEvidenceCopyRequests: memoryAggregateRepository<AdminEvidenceCopyRequest>("AdminEvidenceCopyRequest"),
     costs: memoryAppendOnlyRepository<CostEntry>("costs"),
     ownerSnapshots: memoryAggregateRepository<OwnerSnapshot>("OwnerSnapshot"),
-    ownerSnapshotTotals: memoryAggregateRepository<OwnerSnapshotTotals>("OwnerSnapshotTotals"),
+    ownerSnapshotTotals: ownerTotals,
     ownerSnapshotStates: memoryAggregateRepository<OwnerSnapshotState>("OwnerSnapshotState"),
     ownerSnapshotStateTotals: ownerStateTotals,
     ownerAssignmentRows: storedOwnerAssignmentRows(memoryAggregateRepository<OwnerAssignmentRow | null>("OwnerAssignmentRow"), ownerStateTotals),
-    ownerCostRefs: storedOwnerCostRefs(memoryAggregateRepository<OwnerCostRef | null>("OwnerCostRef")),
+    ownerCostRefs: storedOwnerCostRefs(memoryAggregateRepository<OwnerCostRef | null>("OwnerCostRef"),ownerTotals),
     ownerSnapshotInboxes: memoryAggregateRepository<SpilledInbox>("SpilledInbox"),
     fieldManual: fieldManualRows(memoryAggregateRepository<FieldManualEntry>("FieldManualEntry"),()=>repositories.fixMap),
     fixMap: aggregateFixMap(memoryAggregateRepository<FixMapRow>("FixMapRow")),

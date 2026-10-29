@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { runtimeContractRetry, RUNTIME_CONTRACT_RETRY_MS, RUNTIME_CONTRACT_SQL_SETTINGS } from "../scripts/apply-migrations.mts";
+import { runtimeContractRetry, runtimeContractContinues, RUNTIME_CONTRACT_RETRY_MS, RUNTIME_CONTRACT_SQL_SETTINGS } from "../scripts/apply-migrations.mts";
 
 const settle = () => new Promise<void>(resolve => setImmediate(resolve));
+
+test("only the exact durable initialization continuation is treated as unfinished cleanup",()=>{
+  assert.equal(runtimeContractContinues(75,"CP01_OWNER_INITIALIZATION_PENDING: checkpoint saved\n"),true);
+  assert.equal(runtimeContractContinues(1,"CP01_OWNER_INITIALIZATION_PENDING: failed\n"),false);
+  assert.equal(runtimeContractContinues(75,"migration failed\n"),false);
+});
 
 test("contract SQL bounds are local to the migration transaction", async () => {
   const { PGlite } = await import("@electric-sql/pglite");

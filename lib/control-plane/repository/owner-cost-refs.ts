@@ -1,5 +1,7 @@
+import { versionedRowsFor } from "../../db/versioned-rows.ts";
 import type { Sql } from "./pg-store.ts";
 import type { AggregateRepository } from "./types.ts";
+import type { OwnerSnapshotTotals } from "../owner-snapshot-totals.ts";
 
 export type OwnerCostRefKind = "orphan" | "unassigned";
 export interface OwnerCostRef { readonly kind: OwnerCostRefKind; readonly id: string }
@@ -7,6 +9,8 @@ export interface OwnerCostRefs {
   matching(kind: OwnerCostRefKind, ids: readonly string[]): Promise<readonly string[]>;
   add(orphans: readonly string[], unassigned: readonly string[]): Promise<void>;
   replace(orphans: readonly string[], unassigned: readonly string[]): Promise<void>;
+  persist(write:{readonly expectedRevision:number|null;readonly value:OwnerSnapshotTotals;readonly now:string},
+    refs:{readonly replace:boolean;readonly orphans:readonly string[];readonly unassigned:readonly string[]}|null):Promise<void>;
 }
 export const OWNER_COST_REFS_DDL = `CREATE TABLE IF NOT EXISTS cp_owner_cost_refs (
   kind text NOT NULL CHECK(kind IN ('orphan','unassigned')),id text NOT NULL,PRIMARY KEY(kind,id))`;
@@ -37,11 +41,32 @@ export function pgOwnerCostRefs(sql: Sql): OwnerCostRefs {
       };
       if(sql.withPinnedConnection) await sql.withPinnedConnection(apply); else await apply(sql);
     },
+    async persist(write,refs){
+      let committed:{id:string;revision:number|string;updated_at:unknown}|undefined;
+      const apply=async(connection:Sql)=>{
+        await connection.query("BEGIN");
+        try{
+          if(refs?.replace)await connection.query("DELETE FROM cp_owner_cost_refs");
+          if(refs)for(const[kind,ids]of[["orphan",refs.orphans],["unassigned",refs.unassigned]]as const)if(ids.length)
+            await connection.query("INSERT INTO cp_owner_cost_refs(kind,id) SELECT $1,id FROM unnest($2::text[]) id ON CONFLICT DO NOTHING",[kind,ids]);
+          const rows=await connection.query(write.expectedRevision===null
+            ?"INSERT INTO cp_owner_snapshots(id,revision,updated_at,value) VALUES('totals',1,$1,$2::jsonb) ON CONFLICT DO NOTHING RETURNING id,revision,updated_at"
+            :"UPDATE cp_owner_snapshots SET revision=revision+1,updated_at=$1,value=$2::jsonb WHERE id='totals' AND revision=$3 RETURNING id,revision,updated_at",
+          write.expectedRevision===null?[write.now,JSON.stringify(write.value)]:[write.now,JSON.stringify(write.value),write.expectedRevision]) as {id:string;revision:number|string;updated_at:unknown}[];
+          if(rows.length!==1)throw new Error("Owner cost totals changed during publication");
+          await connection.query("COMMIT");
+          committed=rows[0];
+        }catch(error){await connection.query("ROLLBACK");throw error;}
+      };
+      if(sql.withPinnedConnection)await sql.withPinnedConnection(apply);else await apply(sql);
+      // The caller already owns these committed bytes. The next read still verifies the database revision.
+      if(committed)await versionedRowsFor(sql).remember("cp_owner_snapshots",{...committed,value:write.value});
+    },
   };
 }
 
 /** Local stores keep the same keyed markers, with nulls as fixture tombstones. */
-export function storedOwnerCostRefs(store: AggregateRepository<OwnerCostRef|null>): OwnerCostRefs {
+export function storedOwnerCostRefs(store: AggregateRepository<OwnerCostRef|null>,totals:AggregateRepository<OwnerSnapshotTotals>): OwnerCostRefs {
   const key=(kind:OwnerCostRefKind,id:string)=>JSON.stringify([kind,id]);
   const add=async(orphans:readonly string[],unassigned:readonly string[])=>{
     for(const [kind,ids] of [["orphan",orphans],["unassigned",unassigned]] as const) for(const id of new Set(ids)){
@@ -53,5 +78,10 @@ export function storedOwnerCostRefs(store: AggregateRepository<OwnerCostRef|null
     async matching(kind,ids){const rows=await Promise.all([...new Set(ids)].map(id=>store.read(key(kind,id))));return rows.flatMap(row=>row?.value?[row.value.id]:[]).sort();},
     add,
     async replace(orphans,unassigned){for(const row of await store.list()) if(row.value)await store.compareAndSet(row.id,row.revision,null,new Date().toISOString());await add(orphans,unassigned);},
+    async persist(write,refs){
+      if(write.expectedRevision===null)await totals.put("totals",write.value,write.now);else await totals.compareAndSet("totals",write.expectedRevision,write.value,write.now);
+      if(refs?.replace)for(const row of await store.list())if(row.value)await store.compareAndSet(row.id,row.revision,null,write.now);
+      if(refs)await add(refs.orphans,refs.unassigned);
+    },
   };
 }

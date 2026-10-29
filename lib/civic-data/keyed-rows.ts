@@ -64,3 +64,20 @@ export async function readKeyedRegistryDivisions(query: Query, state: string, la
   requireRegistryPointer(row,scope);
   return row.divisions as Pick<Division, "ocdId" | "label" | "state" | "sourceDataset">[];
 }
+
+
+/** Bulk pointer identity and fingerprints for the campaign readback scheduler. */
+export const CAMPAIGN_READBACK_HEADS_SQL = `SELECT w.state,p.current_version_id AS version,
+  coalesce(p.payload_fingerprint,p.payload->>'$civicPayloadPart',c.normalized_hash) AS fingerprint,
+  (p.current_version_id=p.last_known_good_version_id AND c.id=p.current_version_id
+    AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope
+    AND c.state='PROMOTED' AND c.acquisition_succeeded AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
+    AND p.validation_receipt=c.validation_receipt AND p.validation_receipt->>'decision'='GOOD'
+    AND p.validation_receipt->>'candidateId'=c.id AND c.normalized_hash ~ '^[a-f0-9]{64}$') IS TRUE AS valid
+  FROM unnest($1::text[]) w(state) LEFT JOIN civic_data_promotions p
+    ON p.key='CURATED_READER_RECORD:US-'||w.state||':candidate-campaign-sites-derived'
+  LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id ORDER BY w.state`;
+
+export async function readPublishedCampaignHeads(query: Query, states: readonly string[]) {
+  return query(CAMPAIGN_READBACK_HEADS_SQL, [states]);
+}

@@ -60,17 +60,17 @@ CREATE OR REPLACE FUNCTION civic_refresh_current_readbacks(pointer text) RETURNS
   END $$;
 --> statement-breakpoint
 CREATE OR REPLACE FUNCTION civic_source_status_event() RETURNS trigger LANGUAGE plpgsql AS $$
-  DECLARE candidate text; meta record; pointer record; BEGIN
-    FOR candidate IN SELECT DISTINCT id FROM unnest(ARRAY[
+  DECLARE candidate_key text; meta record; pointer record; BEGIN
+    FOR candidate_key IN SELECT DISTINCT id FROM unnest(ARRAY[
       CASE WHEN TG_OP<>'INSERT' THEN OLD.candidate_id END,CASE WHEN TG_OP<>'DELETE' THEN NEW.candidate_id END]) AS ids(id) WHERE id IS NOT NULL LOOP
     IF (TG_OP<>'DELETE' AND (NEW.sequence=1 OR (NEW.state='PROMOTED' AND left(NEW.detail,26)='UNCHANGED_CONFIRMATION_V1 ')))
       OR (TG_OP<>'INSERT' AND (OLD.sequence=1 OR (OLD.state='PROMOTED' AND left(OLD.detail,26)='UNCHANGED_CONFIRMATION_V1 '))) THEN
-      SELECT source_id,record_class,scope INTO meta FROM civic_data_candidates WHERE id=candidate;
+      SELECT source_id,record_class,scope INTO meta FROM civic_data_candidates WHERE id=candidate_key;
       IF FOUND THEN PERFORM civic_refresh_source_status(meta.source_id,meta.record_class,meta.scope); END IF;
     END IF;
     IF (TG_OP<>'DELETE' AND left(NEW.detail,30)='READER_PROJECTION_READBACK_V2 ')
       OR (TG_OP<>'INSERT' AND left(OLD.detail,30)='READER_PROJECTION_READBACK_V2 ') THEN
-      FOR pointer IN SELECT key FROM civic_data_promotions WHERE current_version_id=candidate LOOP
+      FOR pointer IN SELECT key FROM civic_data_promotions WHERE current_version_id=candidate_key LOOP
         PERFORM civic_refresh_current_readbacks(pointer.key);
       END LOOP;
     END IF;

@@ -117,7 +117,7 @@ import { releaseWindowLeaseOfExitedLocalHolder } from "../lib/control-plane/prom
 import { ADMIN_COPY_POLL_MS, runAuthorizedAdminCopyTick } from "../lib/control-plane/evidence/admin-copy-runner.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
-import { runtimeContractRetry, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
+import { runtimeContractRetry, runtimeContractContinues, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
 import { JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB } from "../lib/control-plane/job-transfer-breaker.ts";
 import { admitJobLaunch, JOB_BREAKER_PATH_ENV } from "../lib/control-plane/job-breaker-local.ts";
@@ -1667,16 +1667,18 @@ const runtimeContracts = runtimeContractRetry({
   },
 });
 async function applyRuntimeContracts(sha: string, cwd: string): Promise<boolean> {
+  const deadlineMs = Date.now() + RUNTIME_CONTRACT_ATTEMPT_MS;
   const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", databaseBytesPerRun: 19_776, executable: process.execPath,
     args: [...TS_CHILD, "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
-    cwd, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
-    deadlineMs: Date.now() + RUNTIME_CONTRACT_ATTEMPT_MS,
+    cwd, env: withPassDeadline(process.env, deadlineMs), maxBufferBytes: 16 * 1024 * 1024,
+    deadlineMs,
     onStarted: (_id, child) => { runtimeContractChild = child; },
     onStdout: (_id, output) => process.stdout.write(output),
     onStderr: (_id, output) => process.stderr.write(output),
   }).finally(() => { runtimeContractChild = null; });
   if (result?.status === 0) return true;
+  if (result && runtimeContractContinues(result.status, `${result.stdout}\n${result.stderr}`)) return false;
   if (runtimeContractsStopping) return false;
   await persistRuntimeBoundaryFailure(releaseInspectionRefusal("PRODUCTION_CONTRACT_MIGRATION_FAILED",
     "Production cleanup failed; collection continues and cleanup will retry automatically.", sha), new Date().toISOString(),

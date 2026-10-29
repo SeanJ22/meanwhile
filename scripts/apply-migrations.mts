@@ -33,6 +33,7 @@ import { declaredPhase, phaseFromSql } from "../lib/db/migration-phases.ts";
 
 export const RUNTIME_CONTRACT_RETRY_MS = 15 * 60_000;
 export const RUNTIME_CONTRACT_ATTEMPT_MS = 5 * 60_000;
+export { runtimeContractContinues } from "../lib/db/migration-phases.ts";
 // Contracts can take exclusive reader-table locks (0045 does). The complete
 // journalled DO statement must release them inside the reader query deadline.
 export const RUNTIME_CONTRACT_SQL_SETTINGS = ["SET LOCAL lock_timeout = '250ms'", "SET LOCAL statement_timeout = '1000ms'"] as const;

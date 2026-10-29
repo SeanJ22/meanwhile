@@ -1,4 +1,5 @@
 import type { Sql } from "./pg-store.ts";
+import { DOOR_HEADER_FIELDS, doorFieldsSql } from "../../doors/record-fields.ts";
 
 export interface ControlCount { readonly bucket: string; readonly count: number; readonly generation: string; readonly changedAt: string }
 
@@ -25,8 +26,8 @@ export const CONTROL_COUNTS_DDL = [
     INSERT INTO cp_control_counts(table_name,bucket,n,generation,changed_at) VALUES(TG_TABLE_NAME,'*',delta,1,clock_timestamp())
       ON CONFLICT(table_name,bucket) DO UPDATE SET n=cp_control_counts.n+delta,generation=cp_control_counts.generation+1,changed_at=excluded.changed_at;
     IF TG_TABLE_NAME='cp_doors' THEN
-      IF TG_OP<>'INSERT' THEN old_bucket:=cp_door_count_bucket(OLD.value); END IF;
-      IF TG_OP<>'DELETE' THEN new_bucket:=cp_door_count_bucket(NEW.value); END IF;
+      IF TG_OP<>'INSERT' THEN old_bucket:=cp_door_count_bucket(${doorFieldsSql("OLD.value", DOOR_HEADER_FIELDS)}); END IF;
+      IF TG_OP<>'DELETE' THEN new_bucket:=cp_door_count_bucket(${doorFieldsSql("NEW.value", DOOR_HEADER_FIELDS)}); END IF;
       IF old_bucket IS DISTINCT FROM new_bucket THEN
         IF old_bucket IS NOT NULL THEN INSERT INTO cp_control_counts(table_name,bucket,n,generation) VALUES(TG_TABLE_NAME,old_bucket,-1,1)
           ON CONFLICT(table_name,bucket) DO UPDATE SET n=cp_control_counts.n-1,generation=cp_control_counts.generation+1,changed_at=clock_timestamp(); END IF;
@@ -48,7 +49,8 @@ export const CONTROL_COUNTS_INITIALIZE_DDL = `DO $$ DECLARE t text; BEGIN
       EXECUTE format('INSERT INTO cp_control_counts(table_name,bucket,n) SELECT %L,''*'',count(*) FROM %I ON CONFLICT DO NOTHING',t,t);
       IF t='cp_doors' THEN
         INSERT INTO cp_control_counts(table_name,bucket,n)
-          SELECT 'cp_doors',cp_door_count_bucket(value),count(*) FROM cp_doors GROUP BY cp_door_count_bucket(value) ON CONFLICT DO NOTHING;
+          SELECT 'cp_doors',cp_door_count_bucket(${doorFieldsSql("value", DOOR_HEADER_FIELDS)}),count(*) FROM cp_doors
+          GROUP BY cp_door_count_bucket(${doorFieldsSql("value", DOOR_HEADER_FIELDS)}) ON CONFLICT DO NOTHING;
         INSERT INTO cp_control_counts(table_name,bucket,n)
           SELECT 'cp_doors',bucket,0 FROM unnest(ARRAY['OPEN','SHUT','SUSPENDED','UNREADABLE']) bucket ON CONFLICT DO NOTHING;
       END IF;

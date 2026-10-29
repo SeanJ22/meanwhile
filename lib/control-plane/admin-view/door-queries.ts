@@ -2,7 +2,7 @@ import { placeReadConnection } from "../repository/pg-store.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { isDoorRecord, type DoorRecord } from "../../doors/registry.ts";
 import { deadLinkReadings } from "../../health/surface-speed.ts";
-import { DOORS_SHOWN, projectDoors, type DoorsView } from "./v6-doors-read.ts";
+import { DOORS_SHOWN, doorName, doorWhy, projectDoors, type DoorsView, type QueueDoorsView } from "./v6-doors-read.ts";
 import type { ActionReceipt } from "../gateway/contract.ts";
 import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
@@ -52,6 +52,28 @@ export async function readAdminDoors(repos: ControlPlaneRepositories, saves: rea
   const doors = rows.map(row=>typeof row.value==='string'?JSON.parse(row.value):row.value).filter(isDoorRecord);
   return { ...projectDoors({ doors, unreadable:counts.unreadable, saves, observedAt }), counts,
     total:counts.open+counts.shut+counts.setAside };
+}
+
+/** The Queue displays a shut source's name, reason and clock; the registry has its own wider reading. */
+export async function readAdminQueueDoors(repos: ControlPlaneRepositories, observedAt: string): Promise<QueueDoorsView> {
+  const sql = placeReadConnection(repos);
+  if (sql) return readQueueDoorsFromSql(sql);
+  const rows = await repos.doors.listWhereNarrowed(["status"],"SHUT",{formatVersion:true,doorId:true,kind:true,bodyIds:true,
+      hosts:true,holds:true,status:true,updatedAt:true,shutSince:true,shutReason:true,lastFailureReason:true,meeting:["jurisdiction"]});
+  const doors = rows.map(row=>typeof row.value==='string'?JSON.parse(row.value):row.value).filter(isDoorRecord);
+  return {rows:projectDoors({doors,unreadable:0,saves:[],observedAt}).rows.map(({name,why,since})=>({name,why,since}))};
+}
+
+/** The ordinary checked SQL connection fingerprints this small selected result on every use. */
+export async function readQueueDoorsFromSql(sql: Sql): Promise<QueueDoorsView> {
+  const [row] = await boundedQuery(sql,{operation:"cp_doors.queue",callClass:"PAGE"},
+    `SELECT coalesce(jsonb_agg(jsonb_build_array(value->'holds',value->'hosts'->0,value #> '{meeting,jurisdiction}',
+      value->'shutReason',value->'lastFailureReason',value->'shutSince') ORDER BY id),'[]'::jsonb) AS doors
+     FROM cp_doors WHERE id IN (SELECT id FROM cp_doors WHERE value->>'status'='SHUT' AND (${VALID_DOOR_SQL}) ORDER BY id LIMIT ${DOORS_SHOWN})`,[]) as {doors: readonly [readonly string[],string|null,string|null,string|null,string|null,string|null][]}[];
+  if (!row || !Array.isArray(row.doors)) throw new Error("Shut sources could not be read");
+  return {rows:row.doors.map(([holds,host,jurisdiction,shutReason,lastFailureReason,since])=>({
+    name:doorName({holds,hosts:host?[host]:[],meeting:jurisdiction?{jurisdiction}:null}),why:doorWhy({shutReason,lastFailureReason}),since,
+  }))};
 }
 
 /** Link health is a few summary records; document contents never enter Admin. */

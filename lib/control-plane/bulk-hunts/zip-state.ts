@@ -12,8 +12,9 @@ export async function divisionIdsOfZip(zip: string): Promise<readonly string[] |
 
 export async function zipCountsByState(query?: Query): Promise<ReadonlyMap<string, number> | null> {
   try {
-    const rows = await (query??placeMapQuery())(`SELECT lower(e.state) state,count(DISTINCT m.zip)::int count
-      FROM zip_place m JOIN entity e ON e.id=m.place_id WHERE e.state IS NOT NULL GROUP BY e.state`);
+    const rows = await (query??placeMapQuery())(`SELECT lower(state) state,count(*)::int count FROM (
+      SELECT DISTINCT e.state,m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id WHERE e.state IS NOT NULL
+    ) memberships GROUP BY state`);
     return new Map(rows.map(row => [String(row.state), Number(row.count)]));
   } catch { return null; }
 }

@@ -36,7 +36,6 @@ import { readVitalSigns } from "@/lib/control-plane/admin-view/vital-signs-read.
 import { readFactStore } from "@/lib/facts/admin-read.ts";
 import { readerQuery } from "@/lib/civic-data/promoted-reader-query.ts";
 import { provenFixesReading } from "@/lib/control-plane/fix-standing.ts";
-import { readScoreboardFixes } from "@/lib/control-plane/admin-view/scoreboard-fixes-read.ts";
 
 const shotUrl = (key: string): string => `/api/admin/v6/resident-tasks/shot/${key.replace(/^resident-tasks\//, "")}`;
 
@@ -69,7 +68,7 @@ async function get(request: NextRequest) {
     const url = controlPlaneUrlFromEnv();
     const [configRow, fixes] = await Promise.all([
       opened ? attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID, { methodStandings: true })) : null,
-      opened ? attempt(() => readScoreboardFixes(opened)) : null,
+      opened ? attempt(() => opened.adminConfig.readFixes({ activeAndRecent: 500, fieldsProjection: ["id", "state", "addedBy", "addedAt", "fixedAt", "changedBy"] })) : null,
     ]);
     const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
     const repairConfig = config !== null && fixes !== null ? { ...config, fixList: fixes } : null;

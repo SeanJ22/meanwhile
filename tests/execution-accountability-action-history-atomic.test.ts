@@ -100,7 +100,7 @@ test("native receipt joins reuse unchanged bodies and observe changes in every j
     let readbackBodies=0,pageBodies=0;
     const sql:Sql={query:async(text,params=[])=>{
       if(/SELECT a\.position, a\.recorded_at, a\.record,/.test(text))readbackBodies++;
-      if(/\brecord AS record\b/.test(text))pageBodies++;
+      if(/\bAS record\b/.test(text)&&text.includes("FROM cp_log_admin_receipts"))pageBodies++;
       return (await pg.query<Record<string,unknown>>(text,[...params])).rows;
     }};
     assert.equal((await appendActionReceiptWithHistoryAtomic({sql,receipt,sourceRecordedAt:at,validatedAction})).state,"APPENDED");

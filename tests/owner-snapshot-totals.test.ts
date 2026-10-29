@@ -18,6 +18,7 @@ import type { Attempt, AttemptCost, ExecutionLease, WorkerRef } from "../lib/con
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 import { buildCostPanel, buildSpendByPlace, costPanelOf, spendByDay, spendByDayOf, placeRowsOf } from "../lib/control-plane/cost-panel.ts";
 import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
+import { initializeOwnerSnapshot } from "../lib/control-plane/owner-snapshot-initialize.ts";
 import { OWNER_SNAPSHOT_TOTALS_ID, OwnerSnapshotFold, readingWindows, type OwnerSnapshotTotals } from "../lib/control-plane/owner-snapshot-totals.ts";
 import { type OwnerSnapshotState } from "../lib/control-plane/owner-surface.ts";
 import { stageCounts } from "../lib/control-plane/promotion/pipeline.ts";
@@ -341,8 +342,7 @@ async function publish(repos: ControlPlaneRepositories, now: string, prior: Publ
     publications: (await fold.publications()).map((w) => w.id).sort(),
     rows: rowsAt(states, now),
   };
-  if (priorRow === null) await repos.ownerSnapshotTotals.put(OWNER_SNAPSHOT_TOTALS_ID, totals, now);
-  else await repos.ownerSnapshotTotals.compareAndSet(OWNER_SNAPSHOT_TOTALS_ID, priorRow.revision, totals, now);
+  await fold.saveTotals(priorRow);
   return { panels: json(panels), view: json(view), states, published: { totals, servedReader: served, readings: read } satisfies Published };
 }
 
@@ -528,4 +528,36 @@ test("an interrupted snapshot publish resumes from the state count row without r
   const now = at(T1, 1);
   const two = await publish(repos, now, one.published, [HUNT], null);
   assertSamePanels("after an unpaired state", two.panels, await fromScratch(repos, now, [HUNT], null, two.published.readings));
+});
+
+
+test("the owner contract checkpoints a backlog before publication and replays a post-state crash without adding spend twice",async()=>{
+  const repos=createMemoryRepositories(),world=initialWorld();
+  await seed(repos,world);
+  const initial=await publish(repos,T1,null,[],null);
+  await seed(repos,changesBeforeT2(world));
+  const top=(await repos.ownerSnapshotTotals.read("totals"))!;
+  await repos.ownerSnapshotTotals.compareAndSet("totals",top.revision,{...top.value,ownerWorkListReady:false,initializing:true},T2);
+  const attempt=()=>initializeOwnerSnapshot(repos,{deadline:Infinity,now:()=>T2,maxStates:1,slackMs:0,log:()=>{}});
+  assert.equal(await attempt(),false,"preparation persists source cursors and all state inboxes before deriving states");
+  const prepared=(await repos.ownerSnapshotTotals.read("totals"))!;
+  assert.ok(prepared.value.initialization!.pending.length>5);
+  await assert.rejects(OwnerSnapshotFold.fold(repos,prepared.value,{
+    nowIso:T2,servedReader:null,askGapObservations:[],scopes:[],carried:[],write:true,log:()=>{},
+  }),/OWNER_WORK_LIST_MIGRATION_REQUIRED/,"ordinary publisher remains ineligible while backlog is partial");
+  const persist=repos.ownerCostRefs.persist;
+  let crash=true;
+  repos.ownerCostRefs.persist=async(...args)=>{if(crash){crash=false;throw Error("crash after durable state output");}return persist(...args);};
+  await assert.rejects(attempt(),/crash after durable state output/);
+  repos.ownerCostRefs.persist=persist;
+  let complete=false,attempts=0;
+  while(!complete&&attempts++<30)complete=await attempt();
+  assert.equal(complete,true,"bounded state batches resume until initialization finishes");
+  const ready=(await repos.ownerSnapshotTotals.read("totals"))!.value;
+  assert.equal(ready.initializing,undefined);
+  assert.equal(ready.ownerWorkListReady,true);
+  assert.equal(ready.initialization,undefined);
+  assert.equal(await attempt(),true,"a completed initializer performs no additional fold");
+  const after=await publish(repos,T2,initial.published,[],null);
+  assertSamePanels("resumed contract",after.panels,await fromScratch(repos,T2,[],null,after.published.readings));
 });

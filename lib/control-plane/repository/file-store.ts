@@ -714,6 +714,7 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
   const adminBase = fileAggregateRepository<AdminConfig>(resolved, "AdminConfig", "admin-config");
 
   const ownerStateTotals = fileAggregateRepository<StateTotals>(resolved, "StateTotals", "owner-snapshot-state-totals");
+  const ownerTotals = fileAggregateRepository<OwnerSnapshotTotals>(resolved, "OwnerSnapshotTotals", "owner-snapshot-totals");
   const repositories: ControlPlaneRepositories = {
     dispatchState: createDispatchState(() => repositories),
     workItems: fileAggregateRepository<WorkItem>(resolved, "WorkItem", "work-items"),
@@ -751,11 +752,11 @@ export async function createFileRepositories(root: string): Promise<ControlPlane
       "OwnerSnapshot",
       "owner-snapshots",
     ),
-    ownerSnapshotTotals: fileAggregateRepository<OwnerSnapshotTotals>(resolved, "OwnerSnapshotTotals", "owner-snapshot-totals"),
+    ownerSnapshotTotals: ownerTotals,
     ownerSnapshotStates: fileAggregateRepository<OwnerSnapshotState>(resolved, "OwnerSnapshotState", "owner-snapshot-states"),
     ownerSnapshotStateTotals: ownerStateTotals,
     ownerAssignmentRows: storedOwnerAssignmentRows(fileAggregateRepository<OwnerAssignmentRow | null>(resolved, "OwnerAssignmentRow", "owner-assignment-rows"), ownerStateTotals),
-    ownerCostRefs: storedOwnerCostRefs(fileAggregateRepository<OwnerCostRef | null>(resolved, "OwnerCostRef", "owner-cost-refs")),
+    ownerCostRefs: storedOwnerCostRefs(fileAggregateRepository<OwnerCostRef | null>(resolved, "OwnerCostRef", "owner-cost-refs"),ownerTotals),
     ownerSnapshotInboxes: fileAggregateRepository<SpilledInbox>(resolved, "SpilledInbox", "owner-snapshot-inboxes"),
     fieldManual: fieldManualRows(fileAggregateRepository<FieldManualEntry>(resolved, "FieldManualEntry", "field-manual-entries"),()=>repositories.fixMap),
     fixMap: aggregateFixMap(fileAggregateRepository<FixMapRow>(resolved, "FixMapRow", "fix-map")),

@@ -495,9 +495,7 @@ async function main(): Promise<void> {
   /* The totals go first, by compare-and-set, so two publishers never fold the same rows into one total; they pair with the
      state rows the fold already wrote, so they are written even when the view could not be assembled. */
   if (reads) {
-    const totals: OwnerSnapshotTotals = reads.fold.totals();
-    if (reads.prior === null) await repos.ownerSnapshotTotals.put(OWNER_SNAPSHOT_TOTALS_ID, totals, NOW_ISO);
-    else await repos.ownerSnapshotTotals.compareAndSet(OWNER_SNAPSHOT_TOTALS_ID, reads.prior.revision, totals, NOW_ISO);
+    await reads.fold.saveTotals(reads.prior);
   }
   // The snapshot is one aggregate that moves, so compare-and-set is the write that replaces it.
   if (existing === null) await repos.ownerSnapshots.put(SNAPSHOT_ID, snapshot, NOW_ISO);

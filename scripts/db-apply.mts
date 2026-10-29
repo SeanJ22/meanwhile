@@ -3,7 +3,7 @@ import { createHash } from "node:crypto";
 import { pathToFileURL } from "node:url";
 import { config as loadEnv } from "dotenv";
 import { OWNER_SURFACE_FORMAT_VERSION, type OwnerDigestRecord } from "../lib/control-plane/owner-surface.ts";
-import { PRODUCTION_MIGRATION_HEADLINE, redactMigrationOutput, type ProductionMigrationOutcome } from "../lib/db/migration-phases.ts";
+import { PRODUCTION_MIGRATION_HEADLINE, redactMigrationOutput, runtimeContractContinues, type ProductionMigrationOutcome } from "../lib/db/migration-phases.ts";
 
 type MigrationRecord = OwnerDigestRecord & { readonly migration: ProductionMigrationOutcome };
 interface ApplyDeps {
@@ -41,7 +41,7 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
   } else {
     const execute = deps.execute ?? ((childArgs, childEnv) => {
       const child = spawnSync(process.execPath, ["--experimental-strip-types", "--input-type=module", "-e",
-        "import { applyMigrations } from './scripts/apply-migrations.mts'; import { applyControlPlaneMigrations } from './scripts/control-plane-migrations.mts'; const args = process.argv.slice(1); await applyMigrations(args); if (args.includes('--target=production')) await applyControlPlaneMigrations(args);", "--", ...childArgs], {
+        "import { applyMigrations } from './scripts/apply-migrations.mts'; import { applyControlPlaneMigrations } from './scripts/control-plane-migrations.mts'; const args = process.argv.slice(1); try { await applyMigrations(args); if (args.includes('--target=production')) await applyControlPlaneMigrations(args); } catch (error) { if (error?.code !== 'CP01_OWNER_INITIALIZATION_PENDING') throw error; console.log('CP01_OWNER_INITIALIZATION_PENDING: durable counts checkpoint saved; cleanup will continue on its existing clock'); process.exitCode = 75; }", "--", ...childArgs], {
         cwd: process.cwd(), env: childEnv, encoding: "utf8", windowsHide: true, maxBuffer: 16 * 1024 * 1024,
       });
       return { status: child.status, stdout: child.stdout ?? "", stderr: child.stderr ?? child.error?.name ?? "" };
@@ -54,6 +54,7 @@ export async function runDbApply(args: string[], env = process.env, deps: ApplyD
   process.stdout.write(stdout);
   process.stderr.write(stderr);
   const status = result.status ?? 1;
+  if (contract && runtimeContractContinues(status, `${stdout}\n${stderr}`)) return status;
   if (!production || dry) return status;
   const lines = `${stdout}\n${stderr}`.split(/\r?\n/).filter(Boolean);
   const state = status === 0 ? "SUCCEEDED" : lines.some(line => /REFUSED/.test(line)) ? "REFUSED" : "FAILED";

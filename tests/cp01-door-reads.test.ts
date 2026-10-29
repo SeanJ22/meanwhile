@@ -9,6 +9,7 @@ import { applyManualEdit, editableFieldsOf, seedDerivedDoors, type DoorDraft } f
 import { DOOR_READS_DDL } from "../lib/doors/read-changes.ts";
 import { readDoorImport, seedAllDoors } from "../lib/doors/seed-all.ts";
 import { retireCensusDuplicates } from "../lib/doors/platform-census.ts";
+import { DOOR_DERIVE_FIELDS, DOOR_HEADER_FIELDS, DOOR_INSTALL_FIELDS, doorFieldsSql } from "../lib/doors/record-fields.ts";
 
 const AT = "2026-10-28T12:00:00.000Z";
 const LATER = "2026-10-28T13:00:00.000Z";
@@ -107,6 +108,24 @@ test("explicit JSON projections preserve absent fields, JSON nulls and nested fi
     const [row] = await f.freshRepo().currentRecords!({ present: true, absent: true, nested: ["kept", "missing"], scalar: ["kept"] });
     assert.deepEqual(row.value, { present: null, nested: { kept: null }, scalar: "text" });
     assert.ok(f.queries.every(query => !query.text.includes("jsonb_each")));
+  } finally { await f.db.close(); }
+});
+
+test("door function inputs retain missing fields, JSON nulls and the same count and fingerprints", async () => {
+  const f = await fixture();
+  try {
+    for (const value of [{}, { meeting: null, config: null, status: null }, { config: {}, bodyIds: [], hosts: [] },
+      { formatVersion: 1, ...draft("door"), status: "OPEN", updatedAt: AT }]) {
+      for (const [name, fields] of [["cp_door_count_bucket", DOOR_HEADER_FIELDS], ["cp_door_derive_fingerprint", DOOR_DERIVE_FIELDS],
+        ["cp_door_install_fingerprint", Object.keys(DOOR_INSTALL_FIELDS)]] as const) {
+        const projection = doorFieldsSql("input.value", fields);
+        const { rows: [row] } = await f.db.query<{ original: string | null; narrowed: string | null; projected: Record<string, unknown> }>(
+          `SELECT ${name}(input.value) AS original,${name}(${projection}) AS narrowed,${projection} AS projected
+            FROM (SELECT $1::jsonb AS value) input`, [JSON.stringify(value)]);
+        assert.equal(row.original, row.narrowed);
+        assert.deepEqual(row.projected, Object.fromEntries(Object.entries(value).filter(([key]) => (fields as readonly string[]).includes(key))));
+      }
+    }
   } finally { await f.db.close(); }
 });
 

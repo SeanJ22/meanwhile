@@ -12,11 +12,11 @@ const at=(hour:number)=>`2026-10-28T${String(hour).padStart(2,"0")}:00:00.000Z`;
 test("source status follows committed events, state changes, pointer replacements and typed current-version readbacks",async()=>{
   const pg=new PGlite();
   try {
-    await pg.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,failure_code text);
+    await pg.exec(`CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,failure_code text,candidate jsonb DEFAULT '{}'::jsonb);
       CREATE TABLE civic_data_candidate_events(id serial PRIMARY KEY,candidate_id text,sequence int,state text,at timestamptz,detail text);
       CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,record_class text,scope text,current_version_id text);`);
     for(const ddl of SOURCE_STATUS_DDL)await pg.exec(ddl);
-    const candidate=async(id:string,state:string,failure:string|null=null)=>pg.query("INSERT INTO civic_data_candidates VALUES($1,$2,$3,$4,$5,$6)",[id,source,kind,scope,state,failure]);
+    const candidate=async(id:string,state:string,failure:string|null=null)=>pg.query("INSERT INTO civic_data_candidates(id,source_id,record_class,scope,state,failure_code) VALUES($1,$2,$3,$4,$5,$6)",[id,source,kind,scope,state,failure]);
     const event=async(id:string,sequence:number,state:string,hour:number,detail:string)=>pg.query("INSERT INTO civic_data_candidate_events(candidate_id,sequence,state,at,detail) VALUES($1,$2,$3,$4,$5)",[id,sequence,state,at(hour),detail]);
     const receipt=(id:string,status:"PASS"|"FAIL",hour:number)=>serializeReaderProjectionReadback({contractVersion:2,kind:"READER_PROJECTION_READBACK",
       contractId:"contract",sourceId:source,recordClass:"MEETING",scope,projectionId:"reader",versionId:id,pointerKey:pointer,

@@ -3,8 +3,7 @@ import "server-only";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "./manual-contracts.ts";
 import { observableRoutineContracts } from "./meeting-partitions.ts";
 import { projectPublicationStatus, type PublicationStatusRead } from "./publication-status.ts";
-import { readPublicationStatusRows } from "./publication-status-store.ts";
-import { readPublicationCounts } from "./publication-counts.ts";
+import { readPublicationStatusRows, readPublicationCounts } from "./publication-status-store.ts";
 import { databaseReadOnlySql } from "../reader/database.ts";
 
 export const ADMIN_PUBLICATION_STATUS_STATEMENT_TIMEOUT_MS = 4_000;

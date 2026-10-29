@@ -442,6 +442,8 @@ export interface RecordedTransition {
 }
 
 export interface ControlPlaneRepositories {
+  /** Projection-specific lease change versions, separate from aggregate write revisions. */
+  readonly ownerLeaseChanges?: import("./owner-lease-changes.ts").OwnerLeaseChanges;
 
   readonly adminActionHistoryPage?: (query: import("./action-history-atomic.ts").ActionHistoryReadQuery) => Promise<readonly import("./action-history-atomic.ts").ActionHistoryReadRow[]>;
   readonly workItems: AggregateRepository<WorkItem>;

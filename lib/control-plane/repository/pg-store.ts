@@ -19,6 +19,7 @@ import { installDatabaseClientAccounting, withCallerSite } from "../../db/transf
 import type { AskGapObservation } from "../ask-gap-observations.ts";
 import { applyDerivedRow, type DerivedDoorOutcome, type DoorRecord, type DoorRepository } from "../../doors/registry.ts";
 import { DOOR_DERIVE_FIELDS, DOOR_INSTALL_FIELDS } from "../../doors/read-changes.ts";
+import { DOOR_HEADER_FIELDS, doorFieldsSql } from "../../doors/record-fields.ts";
 import { controlCounts } from "./control-counts.ts";
 import { pageAddress } from "../../doors/page-doors.ts";
 import { requireBallotState } from "../../civic-data/state-scopes.ts";
@@ -66,6 +67,7 @@ import type {
 import type { Attempt, ExecutionLease } from "../attempt.ts";
 import type { BudgetLedger } from "../budget.ts";
 import type { CostEntry } from "../cost.ts";
+import { pgOwnerLeaseChanges } from "./owner-lease-changes.ts";
 import type { Escalation } from "../work-item.ts";
 import type { RouteTask } from "../route-task.ts";
 import type { WorkItem } from "../work-item.ts";
@@ -516,6 +518,14 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
   const table = "cp_doors", repo = pgAggregateRepository<DoorRecord>(sql, "Door", table, options);
   const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const reader = versionedRowsFor(sql);
+  const installFields = doorFieldsSql("cp_doors.value", Object.keys(DOOR_INSTALL_FIELDS));
+  const deriveFields = doorFieldsSql("cp_doors.value", DOOR_DERIVE_FIELDS);
+  const headerFields = doorFieldsSql("cp_doors.value", DOOR_HEADER_FIELDS);
+  const stateFields = recordProjectionSql(table, {
+    subjectId: true, subject: true, jurisdictionId: true, ocdId: true, bodyId: true, obligationId: true,
+    jurisdiction: true, key: true, id: true, stateCode: true, state: true, placeKey: true, scope: true,
+    partitionScope: true, metered: ["jurisdiction"], geography: ["stateAbbr"],
+  }, "value");
   const fingerprinted = (operation: string, text: string, params: readonly unknown[]) =>
     checkedValueQuery((query, values) => run(operation, "PAGE", query, values), text, params);
   type CachedDoor = { readonly version: string; readonly row: Persisted<unknown> };
@@ -535,11 +545,11 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
         // its fingerprint once, instead of downloading a separate pointer preflight.
         for (;;) {
           const values = await fingerprinted("currentRecords:first", `SELECT c.id,c.generation::text,cp_doors.revision,cp_doors.updated_at,
-            ${selected} AS value,${installFingerprint ? "cp_door_install_fingerprint(cp_doors.value)" : valueVersionSql(selected)} AS fingerprint
+            ${selected} AS value,${installFingerprint ? `cp_door_install_fingerprint(${installFields})` : valueVersionSql(selected)} AS fingerprint
             FROM cp_door_changes c JOIN cp_doors ON cp_doors.id=c.id
             WHERE (c.generation,c.id)>($1::bigint,$2::text) AND c.generation<=$3::bigint AND NOT c.deleted
               ${meetingsOnly ? "AND c.install_version IS NOT NULL" : ""}
-              ${options.state ? "AND cp_control_state(cp_doors.value)=$5::text" : ""}
+              ${options.state ? `AND cp_control_state(${stateFields})=$5::text` : ""}
               ${options.activeOnly ? "AND cp_doors.value->>'active'='true'" : ""}
             ORDER BY c.generation,c.id LIMIT $4`, [cursor, after, counter.generation, 100, ...(options.state ? [options.state] : [])]) as {
               id: string; generation: string; revision: number | string; updated_at: string; value: unknown; fingerprint: string;
@@ -556,7 +566,7 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
       for (;;) {
         const changes = await fingerprinted("currentRecords:changes", `SELECT c.id,c.generation::text,c.revision,c.updated_at,c.deleted,
           ${installFingerprint ? "c.install_version" : `CASE WHEN NOT c.deleted${meetingsOnly ? " AND c.install_version IS NOT NULL" : ""} THEN ${valueVersionSql(selected)} END`} AS fingerprint,
-          ${[options.state ? "cp_control_state(cp_doors.value)=$5::text" : "true", ...(options.activeOnly ? ["cp_doors.value->>'active'='true'"] : [])].join(" AND ")} AS in_scope
+          ${[options.state ? `cp_control_state(${stateFields})=$5::text` : "true", ...(options.activeOnly ? ["cp_doors.value->>'active'='true'"] : [])].join(" AND ")} AS in_scope
           FROM cp_door_changes c LEFT JOIN cp_doors ON cp_doors.id=c.id
           WHERE (c.generation,c.id)>($1::bigint,$2::text) AND c.generation<=$3::bigint
           ORDER BY c.generation,c.id LIMIT $4`, [cursor, after, counter.generation, 100, ...(options.state ? [options.state] : [])]) as {
@@ -572,7 +582,7 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
         });
         if (changed.length) {
           const values = await fingerprinted("currentRecords:values", `SELECT id,revision,updated_at,${selected} AS value,
-            ${installFingerprint ? "cp_door_install_fingerprint(value)" : valueVersionSql(selected)} AS fingerprint
+            ${installFingerprint ? `cp_door_install_fingerprint(${installFields})` : valueVersionSql(selected)} AS fingerprint
             FROM cp_doors WHERE id=ANY($1::text[])`, [changed.map(row => row.id)]) as {
               id: string; revision: number | string; updated_at: string; value: unknown; fingerprint: string | null;
             }[];
@@ -641,12 +651,12 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
               INSERT INTO cp_doors(id,revision,updated_at,value)
                 SELECT id,1,$3::timestamptz,value FROM incoming
               ON CONFLICT(id) DO UPDATE SET revision=cp_doors.revision+1,updated_at=excluded.updated_at,changed_at=now(),
-                value=CASE WHEN cp_door_count_bucket(cp_doors.value)='UNREADABLE' THEN excluded.value ELSE
+                value=CASE WHEN cp_door_count_bucket(${headerFields})='UNREADABLE' THEN excluded.value ELSE
                   (excluded.value || ${operational}) - CASE WHEN cp_doors.value->>'status'='SHUT' THEN ARRAY[]::text[] ELSE ARRAY['shutReason'] END END
-              WHERE (cp_door_count_bucket(cp_doors.value)='UNREADABLE' OR cp_doors.value->>'editedAt' IS NULL OR cp_doors.value->>'editedAt'<=$2)
-                AND (cp_door_count_bucket(cp_doors.value)='UNREADABLE' OR cp_door_derive_fingerprint(cp_doors.value)<>cp_door_derive_fingerprint(excluded.value))
+              WHERE (cp_door_count_bucket(${headerFields})='UNREADABLE' OR cp_doors.value->>'editedAt' IS NULL OR cp_doors.value->>'editedAt'<=$2)
+                AND (cp_door_count_bucket(${headerFields})='UNREADABLE' OR cp_door_derive_fingerprint(${deriveFields})<>cp_door_derive_fingerprint(${doorFieldsSql("excluded.value", DOOR_DERIVE_FIELDS)}))
               RETURNING id,(xmax=0) AS created
-            ) SELECT i.id AS door_id,cp_door_derive_fingerprint(i.value) AS target,CASE WHEN w.created THEN 'created' WHEN w.id IS NOT NULL THEN 'updated'
+            ) SELECT i.id AS door_id,cp_door_derive_fingerprint(${doorFieldsSql("i.value", DOOR_DERIVE_FIELDS)}) AS target,CASE WHEN w.created THEN 'created' WHEN w.id IS NOT NULL THEN 'updated'
               WHEN p.edited_at>$2 THEN 'kept-manual-edit' ELSE 'unchanged' END AS result
               FROM incoming i LEFT JOIN written w USING(id) LEFT JOIN prior p USING(id) ORDER BY i.id`,
           [JSON.stringify(values), deriveInputAt, at]) as { door_id: string; target: string; result: DerivedDoorOutcome["result"] }[];
@@ -1856,6 +1866,7 @@ export async function createPgRepositories(
     ownerSnapshotStates: pgAggregateRepository<OwnerSnapshotState>(sql, "OwnerSnapshotState", "cp_owner_snapshots", bounded),
     ownerSnapshotStateTotals: pgAggregateRepository<StateTotals>(sql, "StateTotals", "cp_owner_snapshots", bounded),
     ownerAssignmentRows: pgOwnerAssignmentRows(sql),
+    ownerLeaseChanges: pgOwnerLeaseChanges(sql),
     ownerCostRefs: pgOwnerCostRefs(sql),
     ownerSnapshotInboxes: pgAggregateRepository<SpilledInbox>(sql, "SpilledInbox", "cp_owner_snapshots", bounded),
     fieldManual: pgFieldManualRepository(sql,bounded,()=>repositories.fixMap),

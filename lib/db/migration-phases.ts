@@ -1,4 +1,11 @@
+import { CIVIC_DATA_STATUS_WRITE_TABLES } from "./schema.ts";
+
 export type MigrationPhase = "expand" | "contract";
+
+/** A durable owner-count checkpoint owes another cleanup attempt; it is neither complete nor failed. */
+export function runtimeContractContinues(status: number | null, output: string): boolean {
+  return status === 75 && output.split(/\r?\n/).some(line => line.startsWith("CP01_OWNER_INITIALIZATION_PENDING:"));
+}
 
 export const PRODUCTION_MIGRATION_HEADLINE = "Production migrations";
 export interface ProductionMigrationOutcome {
@@ -170,7 +177,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
   "CP-01_source_status": { phase: "expand", why: "Adds source-attempt and current-readback counters maintained by existing writers before Admin reads the small rows.",
-    lockFirst: ["civic_data_candidates", "civic_data_candidate_events", "civic_data_promotions"], lockFirstMode: "SHARE ROW EXCLUSIVE" },
+    lockFirst: CIVIC_DATA_STATUS_WRITE_TABLES, lockFirstMode: "SHARE ROW EXCLUSIVE" },
   "ZP-01_build_fingerprint": { phase: "expand", why: "ZIP builds compare selected-input fingerprints before transferring or copying an answer.", lockFirst: ["place_page"] },
   "ZP-01_expand": { phase: "expand", why: "Prioritizes queued ZIP pages by their held Census population before builders claim them.", lockFirst: ["rebuild_queue", "entity"] },
   "RB-A10_zip_locations": { phase: "expand", why: "Adds imported ZIP display points; existing memberships, identities and readers are unaffected." },

@@ -1,4 +1,4 @@
-import { sql } from "drizzle-orm";
+import { getTableName, sql } from "drizzle-orm";
 import {
   boolean,
   char,
@@ -991,6 +991,10 @@ export const countHour = pgTable("count_hour", {
   state: char("state",{length:2}).notNull(),hour: timestamp("hour", {withTimezone:true}).notNull(),step: text("step").notNull(),
   n: bigint("n",{mode:"number"}).notNull().default(0),
 }, table=>[primaryKey({columns:[table.state,table.hour,table.step]}),check("count_hour_n_check",sql`${table.n} >= 0`)]);
+/** The additive publication-status migration locks these writers together before installing their hooks. */
+export const CIVIC_DATA_STATUS_WRITE_TABLES = Object.freeze([
+  getTableName(civicDataCandidates),getTableName(civicDataCandidateEvents),getTableName(civicDataPromotions),
+]);
 export const lineKeeperRun = pgTable("line_keeper_run", {
   hour: timestamp("hour",{withTimezone:true}).primaryKey(),
   checkedAt: timestamp("checked_at",{withTimezone:true}).notNull(),

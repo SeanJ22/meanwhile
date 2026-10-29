@@ -4,13 +4,15 @@ import { PGlite } from "@electric-sql/pglite";
 import { readPlaceHistory } from "../lib/control-plane/admin-view/place-history-read.ts";
 import { readExactServedWitness } from "../lib/control-plane/admin-view/public-reader-observation-read.ts";
 import { readShutDoorRecords } from "../lib/control-plane/admin-view/v6-stuck-doors.ts";
+import { readQueueDoorsFromSql } from "../lib/control-plane/admin-view/door-queries.ts";
+import { projectDoors } from "../lib/control-plane/admin-view/v6-doors-read.ts";
 import { applyManualEdit,checkDoorDraft } from "../lib/doors/registry.ts";
 import type { WorkItem } from "../lib/control-plane/work-item.ts";
 import { PUBLIC_SITE_ORIGIN } from "../lib/ops/origins.ts";
 import { existsSync,readdirSync,readFileSync } from "node:fs";
 import { DISPATCH_CONFIRMATION_SQL } from "../lib/control-plane/gateway/confirmation-read.ts";
 import { ownerDispatchWorkOf, type DispatchWorkReading } from "../lib/control-plane/expansion/dispatch-work.ts";
-import { readPublicationCounts, PUBLICATION_READBACK_ROWS_SQL, publicationContractInputs } from "../lib/civic-data/publication-counts.ts";
+import { readPublicationCounts, PUBLICATION_READBACK_ROWS_SQL, publicationContractInputs } from "../lib/civic-data/publication-status-store.ts";
 import { projectPublicationStatus, type PublicationContract } from "../lib/civic-data/publication-status.ts";
 import { serializeReaderProjectionReadback } from "../lib/civic-data/reader-readback.ts";
 import { SOURCE_STATUS_DDL } from "../lib/civic-data/source-status-index.ts";
@@ -75,6 +77,10 @@ test("Admin shut doors reuse unchanged records and immediately observe an edit o
     const first=await readShutDoorRecords(sql);
     assert.equal(first[0].doorId,door.doorId);
     assert.ok(JSON.stringify(first).length<2_000,"the shut-source list carries only the displayed reason, identity and clocks");
+    const queue=await readQueueDoorsFromSql(sql);
+    assert.deepEqual(queue.rows,projectDoors({doors:[door],unreadable:0,saves:[],observedAt:door.updatedAt}).rows
+      .filter(row=>row.status==="Shut").map(({name,why,since})=>({name,why,since})));
+    assert.ok(JSON.stringify(queue).length<1_000,"Queue door fields exclude saved source settings and registry metadata");
     assert.equal((await readShutDoorRecords(sql))[0].doorId,door.doorId);
     assert.equal(bodies,1);
     // Admin reads only the bounded door fields it shows; an edit to one of them is seen at once.
@@ -106,7 +112,7 @@ test("publication counters match the typed readback verdict for current, failed,
   const pg=new PGlite();
   try {
     await pg.exec(`CREATE TABLE civic_data_promotions(key text,source_id text,record_class text,scope text,current_version_id text,promoted_at timestamptz);
-      CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,failure_code text);
+      CREATE TABLE civic_data_candidates(id text PRIMARY KEY,source_id text,record_class text,scope text,state text,failure_code text,candidate jsonb DEFAULT '{}'::jsonb);
       CREATE TABLE civic_data_candidate_events(candidate_id text,at timestamptz,detail text,sequence int,state text DEFAULT 'PROMOTED');`);
     for(const ddl of SOURCE_STATUS_DDL)await pg.exec(ddl);
     const contracts:PublicationContract[]=["visible","failed","stale","never","foreign","misfiled","no-surface","malformed","later-failure"].map(id=>({
@@ -123,7 +129,7 @@ test("publication counters match the typed readback verdict for current, failed,
         status:c.id==="failed"?"FAIL":"PASS",detail:c.id==="malformed"?"":c.id==="visible"?"x".repeat(1_000_000):"observed"});
       return [{candidateId:versionId,at,detail},...(c.id==="later-failure"?[{candidateId:versionId,at:"2026-10-28T11:00:00.000Z",detail:detail.replace('"status":"PASS"','"status":"FAIL"')}]:[])];
     });
-    for(const c of contracts)await pg.query("INSERT INTO civic_data_candidates VALUES($1,$2,$3,$4,'PROMOTED',NULL)",[`current:${c.id}`,c.sourceId,c.recordClass,c.scope]);
+    for(const c of contracts)await pg.query("INSERT INTO civic_data_candidates(id,source_id,record_class,scope,state,failure_code) VALUES($1,$2,$3,$4,'PROMOTED',NULL)",[`current:${c.id}`,c.sourceId,c.recordClass,c.scope]);
     for(const p of promotions)await pg.query("INSERT INTO civic_data_promotions VALUES($1,$2,$3,$4,$5,$6)",[p.key,p.sourceId,p.recordClass,p.scope,p.currentVersionId,p.promotedAt]);
     for(const [index,r] of readbacks.entries())await pg.query("INSERT INTO civic_data_candidate_events(candidate_id,at,detail,sequence) VALUES($1,$2,$3,$4)",[r.candidateId,r.at,r.detail,index]);
     const sql={query:async(text:string,params:readonly unknown[]=[]) => (await pg.query(text,[...params])).rows};

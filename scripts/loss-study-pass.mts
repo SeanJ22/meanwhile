@@ -22,7 +22,7 @@ import { addUpdates } from "../lib/control-plane/updates.ts";
 import { auditReadings, doorReadings, holdReadings, lookReadings, placeTraitsFrom } from "../lib/method/loss-readings.ts";
 import { readLossCheckerItems, readLossObligationStudies } from "../lib/method/loss-study-counts.ts";
 import type { DoorLike } from "../lib/method/loss-readings.ts";
-import type { RecordProjection } from "../lib/control-plane/repository/types.ts";
+import type { RecordProjection, Persisted, PassCursor } from "../lib/control-plane/repository/types.ts";
 import { LOSS_KIND_WORDS, lessonKinds, lossLessonUpdates, lossStudyLessons, studyAllLosses } from "../lib/method/study-all-losses.ts";
 
 
@@ -44,7 +44,7 @@ const doorFields: RecordProjection = { kind: true, ocdId: true, holds: true, sta
 const doors = await read("doors", async () => (await (repos.doors.currentRecords
   ? repos.doors.currentRecords(doorFields) : repos.doors.listNarrowed(doorFields))).map(row => row.value as DoorLike), []);
 const cursorId = "loss-study:obligations";
-const cursor = await repos.passCursors.read(cursorId);
+const cursor = await repos.passCursors.readNarrowed(cursorId, { through: true }) as Persisted<PassCursor> | null;
 const obligationStudy = await read<Awaited<ReturnType<typeof readLossObligationStudies>> | null>("hunts", async () => {
   const sql = placeReadConnection(repos);
   if (!sql) throw new Error("The loss-study count reader is unavailable");

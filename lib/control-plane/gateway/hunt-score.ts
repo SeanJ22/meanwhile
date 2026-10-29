@@ -34,7 +34,7 @@ export async function scoresAtAcceptance(type:string,input:Readonly<Record<strin
   return result;
 }
 const scoreWords=(score:PlaceScoreReading|null)=>score===null?"—":`${score.percent===null?"—":`${score.percent}%`} (${score.captured} of ${score.owed})`;
-export async function confirmHuntScores(repos:ControlPlaneRepositories,receipt:ActionReceipt,core:Confirmation,read:PlaceScoreReader=livePlaceScore):Promise<Confirmation>{
+export async function confirmHuntScores(repos:ControlPlaneRepositories,receipt:Pick<ActionReceipt,"huntScores"|"receiptId">,core:Confirmation,read:PlaceScoreReader=livePlaceScore):Promise<Confirmation>{
   const accepted=receipt.huntScores;
   if(!accepted?.length)return core;
   try{

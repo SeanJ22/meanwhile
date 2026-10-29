@@ -1,13 +1,5 @@
-import type { RecordProjection } from "../control-plane/repository/types.ts";
-
-/** Only the fields consumed by wiring, partitions, hosts and outcome installation. */
-export const DOOR_INSTALL_FIELDS = {
-  formatVersion: true, doorId: true, kind: true, ocdId: true, bodyIds: true, hosts: true,
-  config: true, holds: true, meeting: true, status: true,
-} as const satisfies RecordProjection;
-
-/** Status and read-now belong to the live door, so a derive never overrides them. */
-export const DOOR_DERIVE_FIELDS = ["kind", "ocdId", "bodyIds", "hosts", "config", "holds", "checkEveryMinutes", "notes", "meeting"] as const;
+import { DOOR_DERIVE_FIELDS, DOOR_HEADER_FIELDS, DOOR_INSTALL_FIELDS, doorFieldsSql } from "./record-fields.ts";
+export { DOOR_DERIVE_FIELDS, DOOR_INSTALL_FIELDS } from "./record-fields.ts";
 
 /** Small changed-door pointers, including deletions. The count generation is a committed cursor:
  * every door transaction locks that counter before its pointer is written. */
@@ -29,9 +21,9 @@ export const DOOR_READS_DDL = [
     SELECT generation INTO STRICT g FROM cp_control_counts WHERE table_name='cp_doors' AND bucket='*';
     IF TG_OP='DELETE' THEN r:=OLD; ELSE r:=NEW; END IF;
     INSERT INTO cp_door_changes(id,generation,revision,updated_at,install_version,derive_version,edited_at,readable,deleted)
-      VALUES(r.id,g,r.revision,r.updated_at,CASE WHEN TG_OP='DELETE' THEN NULL ELSE cp_door_install_fingerprint(r.value) END,
-        CASE WHEN TG_OP='DELETE' THEN NULL ELSE cp_door_derive_fingerprint(r.value) END,r.value->>'editedAt',
-        cp_door_count_bucket(r.value)<>'UNREADABLE',TG_OP='DELETE')
+      VALUES(r.id,g,r.revision,r.updated_at,CASE WHEN TG_OP='DELETE' THEN NULL ELSE cp_door_install_fingerprint(${doorFieldsSql("r.value", Object.keys(DOOR_INSTALL_FIELDS))}) END,
+        CASE WHEN TG_OP='DELETE' THEN NULL ELSE cp_door_derive_fingerprint(${doorFieldsSql("r.value", DOOR_DERIVE_FIELDS)}) END,r.value->>'editedAt',
+        cp_door_count_bucket(${doorFieldsSql("r.value", DOOR_HEADER_FIELDS)})<>'UNREADABLE',TG_OP='DELETE')
       ON CONFLICT(id) DO UPDATE SET generation=excluded.generation,revision=excluded.revision,
         updated_at=excluded.updated_at,install_version=excluded.install_version,derive_version=excluded.derive_version,
         edited_at=excluded.edited_at,readable=excluded.readable,deleted=excluded.deleted;
@@ -41,8 +33,9 @@ export const DOOR_READS_DDL = [
   `CREATE TRIGGER z_cp_door_changes AFTER INSERT OR UPDATE OR DELETE ON cp_doors
     FOR EACH ROW EXECUTE FUNCTION cp_touch_door_changes()`,
   `INSERT INTO cp_door_changes(id,generation,revision,updated_at,install_version,derive_version,edited_at,readable)
-    SELECT d.id,c.generation,d.revision,d.updated_at,cp_door_install_fingerprint(d.value),cp_door_derive_fingerprint(d.value),
-      d.value->>'editedAt',cp_door_count_bucket(d.value)<>'UNREADABLE'
+    SELECT d.id,c.generation,d.revision,d.updated_at,cp_door_install_fingerprint(${doorFieldsSql("d.value", Object.keys(DOOR_INSTALL_FIELDS))}),
+      cp_door_derive_fingerprint(${doorFieldsSql("d.value", DOOR_DERIVE_FIELDS)}),
+      d.value->>'editedAt',cp_door_count_bucket(${doorFieldsSql("d.value", DOOR_HEADER_FIELDS)})<>'UNREADABLE'
     FROM cp_doors d CROSS JOIN cp_control_counts c WHERE c.table_name='cp_doors' AND c.bucket='*'
     ON CONFLICT(id) DO UPDATE SET derive_version=excluded.derive_version,edited_at=excluded.edited_at,readable=excluded.readable
       WHERE cp_door_changes.derive_version IS NULL AND NOT cp_door_changes.deleted`,

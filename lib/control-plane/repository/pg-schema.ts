@@ -1,4 +1,5 @@
 import { OWNER_COST_REFS_DDL } from "./owner-cost-refs.ts";
+import { OWNER_LEASE_CHANGES_DDL } from "./owner-lease-changes.ts";
 import { OWNER_STUCK_COUNTS_DDL, OWNER_STUCK_COUNTS_BACKFILL_DDL } from "./owner-stuck-counts.ts";
 import { CONTROL_COUNTS_DDL, CONTROL_COUNTS_INITIALIZE_DDL } from "./control-counts.ts";
 import { OWNER_ASSIGNMENT_ROWS_DDL } from "./owner-assignment-rows.ts";
@@ -722,6 +723,7 @@ END $$;`,
   ...WEBSITE_PACING_DDL,
   FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL,
   ...OWNER_ASSIGNMENT_ROWS_DDL,
+  ...OWNER_LEASE_CHANGES_DDL,
   OWNER_COST_REFS_DDL,
   ...OWNER_STUCK_COUNTS_DDL,
   OWNER_STUCK_COUNTS_BACKFILL_DDL,

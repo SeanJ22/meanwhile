@@ -15,6 +15,7 @@ import { databaseHttpReadOnlySql, databaseHttpReadOnlyQuery } from "../../reader
 import { controlPlaneUrlFromEnv } from "../repository/pg-store.ts";
 import { readCountryScores } from "../line-keeper/country.ts";
 import { readOwnerDistrictStuckCounts } from "../repository/owner-stuck-counts.ts";
+import { US_STATES } from "../readiness/catalog.ts";
 
 const NO_STORE = { "cache-control": "private, no-store, no-cache, must-revalidate" };
 
@@ -40,6 +41,10 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
   const deps = options.deps ?? defaultNationalDeps;
   const opened = await openControlPlane();
   if (!opened.ok) return NextResponse.json({ state: "UNREAD", code: "CONTROL_PLANE_UNREAD", says: opened.detail }, { status: 503, headers: NO_STORE });
+  const populationQuery = process.env.DATABASE_URL ? databaseHttpReadOnlyQuery(process.env.DATABASE_URL, 2_000) : undefined;
+  const earlyPopulation = query.scope.kind === "country"
+    ? readPopulationFacts(US_STATES.map(state => statePopulationId(state.code)).filter((key): key is string => key !== null), populationQuery) : null;
+  const earlyZips = query.scope.kind === "country" ? deps.zipCounts().catch(() => null) : null;
   const quick=async<T>(read:Promise<T>):Promise<T|null>=>{
     let timer:ReturnType<typeof setTimeout>;
     try{return await Promise.race([read.catch(()=>null),new Promise<null>(resolve=>{timer=setTimeout(()=>resolve(null),SCORE_BUDGET_MS);})]);}
@@ -57,12 +62,12 @@ export async function v6NationalGet(request: NextRequest, options: { readonly de
     sources: { hunts: { scopes:config?scopes.scopes:null, malformedScopes:scopes.malformed, attribution }, stuck:stuck?.rows??null,
       stuckCounts:stuck?.summary?.counts,
       ...(controlPlaneUrlFromEnv()?{countDistrictStuck:(districts:readonly import('./v6-national-geography.ts').DistrictInfo[])=>
-        readOwnerDistrictStuckCounts(databaseHttpReadOnlySql(controlPlaneUrlFromEnv()!),districts)}:{}) }, deps,
+        readOwnerDistrictStuckCounts(databaseHttpReadOnlySql(controlPlaneUrlFromEnv()!),districts)}:{}) },
+    deps: earlyZips ? { ...deps, zipCounts: () => earlyZips } : deps,
     ...(!options.deps && query.scope.kind==='country'?{publishedScores:new Map((country??[]).map(s=>[`st:${s.state}`,s.score]))}:{}) });
   if ("kind" in out) return NextResponse.json({ code: out.code, says: out.says }, { status: out.status, headers: NO_STORE });
   const keys = out.data.map(row => row.kind === "State" ? statePopulationId(row.code) : row.kind === "ZIP" ? `zcta:${row.code}` : `congressional_district:${row.placeKey.split(".").at(-1)}`);
-  const acs = await readPopulationFacts(keys.filter((id): id is string => id !== null),
-    process.env.DATABASE_URL ? databaseHttpReadOnlyQuery(process.env.DATABASE_URL,2_000) : undefined);
+  const acs = earlyPopulation ? await earlyPopulation : await readPopulationFacts(keys.filter((id): id is string => id !== null), populationQuery);
   const countryGaps=!options.deps&&query.scope.kind==='country'?(country===null||country.length===0?['The country’s published Readers have report is unavailable.']:country.filter(s=>s.error!==null).map(s=>`${s.state.toUpperCase()}: ${s.error}`)):[];
   return NextResponse.json({ ...out,missingParts:[...out.missingParts,...countryGaps], data: out.data.map((row, index) => ({ ...row,
     population: acs.rows.find(fact => `${fact.geography}:${fact.code}` === keys[index]) ?? null })) }, { headers: NO_STORE });

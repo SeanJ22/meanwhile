@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
-import { assignmentPartOf, type AssignmentIndexRow } from "../lib/control-plane/assignment-view.ts";
-import { expandControlCounts, contractControlCounts } from "../lib/control-plane/repository/migrations/CP-01-counts.ts";
+import { assignmentPartOf, ASSIGNMENT_STATES, type AssignmentIndexRow } from "../lib/control-plane/assignment-view.ts";
+import { expandControlCounts, contractControlCounts, OWNER_ASSIGNMENT_PARTS_SQL } from "../lib/control-plane/repository/migrations/CP-01-counts.ts";
 import { CONTROL_COUNT_TABLES, controlCounts } from "../lib/control-plane/repository/control-counts.ts";
-import { pgOwnerAssignmentRows } from "../lib/control-plane/repository/owner-assignment-rows.ts";
+import { OWNER_ASSIGNMENT_ROWS_DDL, pgOwnerAssignmentRows } from "../lib/control-plane/repository/owner-assignment-rows.ts";
 
 test("control counts follow committed changes and owner migration retires blobs only after fresh contract catchup", async () => {
   const db = new PGlite();
@@ -29,7 +29,7 @@ test("control counts follow committed changes and owner migration retires blobs 
     assert.equal((await db.query<{value:Record<string,unknown>}>("SELECT value FROM cp_owner_snapshots WHERE id='totals:az'")).rows[0].value.groups !== undefined,true,"expand keeps the serving version readable");
     assert.equal((await pgOwnerAssignmentRows(sql).read(["one"]))[0].group.members[0],"task-one");
     await db.query("UPDATE cp_owner_snapshots SET value=jsonb_set(value,'{groups,one,members}',$1::jsonb) WHERE id='totals:az'",[JSON.stringify(["task-one","task-two"])]);
-    await contractControlCounts(sql);
+    await contractControlCounts(sql,{}, {initialize:async()=>true});
     assert.deepEqual((await pgOwnerAssignmentRows(sql).read(["one"]))[0].group.members,["task-one","task-two"],"contract includes the last old-runner write");
     assert.equal((await db.query<{value:Record<string,unknown>}>("SELECT value FROM cp_owner_snapshots WHERE id='totals:az'")).rows[0].value.groups,undefined);
     assert.equal((await db.query<{value:Record<string,unknown>}>("SELECT value FROM cp_owner_snapshots WHERE id='current:az'")).rows[0].value.allRowsIndex,undefined);
@@ -56,4 +56,27 @@ test("control counts follow committed changes and owner migration retires blobs 
     assert.equal(counts.find(row=>row.bucket==='*')?.count,1);
     assert.equal(counts.find(row=>row.bucket==='*')?.generation,"2");
   } finally { await db.close(); }
+});
+
+
+test("server-side owner migration contributions equal direct assignment counts for every state and clock",async()=>{
+  const db=new PGlite(),at="2026-10-28T16:00:00.000Z";
+  try{
+    for(const ddl of OWNER_ASSIGNMENT_ROWS_DDL)await db.exec(ddl);
+    const expected=new Map<string,unknown>();
+    for(const[stateIndex,state]of ASSIGNMENT_STATES.entries())for(const active of[true,false]){
+      const id=`freshness:ask-gap:body-${stateIndex}-${active}#CALENDAR_STALE`;
+      const index={id,kind:"STANDING_OBLIGATION",lane:"ROUTINE",state,label:"Fixture",subjectName:null,stateCode:stateIndex%2?null:"az",
+        assignmentKeys:["hunt"],instructionStates:{"hunt#receipt":state},lastActivityAt:null,band:1,overdue:false,waitingSince:at,
+        eligibleAt:at,blocker:null,owner:"FLEET",nextAction:"Read source"} as AssignmentIndexRow;
+      const usd=stateIndex%2?{p:[.25]}:null,obligation={active,eligibleAt:stateIndex%3?at:null,backoff:stateIndex%2===0,subjectId:"subject",assignments:[]};
+      expected.set(id,assignmentPartOf([[id,{index,usd,obligation}]],at));
+      await db.query("INSERT INTO cp_owner_assignment_rows(id,state_code,value) VALUES($1,'az',$2::jsonb)",[id,JSON.stringify({id,state:"az",builtAt:at,
+        group:{members:[],usd,items:[],scoutKeys:[],obligation,publications:[],clause:null},indexSegments:[{...index,from:null,until:null}],list:null,bodyAttempts:[],nextAt:null})]);
+    }
+    await db.query(OWNER_ASSIGNMENT_PARTS_SQL);
+    for(const row of(await db.query<{id:string;part:unknown}>("SELECT id,value->'part' AS part FROM cp_owner_assignment_rows")).rows)
+      assert.deepEqual(row.part,expected.get(row.id),row.id);
+    assert.equal((await db.query<{n:string}>(OWNER_ASSIGNMENT_PARTS_SQL)).rows[0].n,"0","retries retain already-computed work-row contributions");
+  }finally{await db.close();}
 });

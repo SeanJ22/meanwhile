@@ -13,7 +13,8 @@ import { fixQueueView } from "../fix-queue.ts";
 import { buildQueue, type QueueRow } from "../../../app/(admin)/_mw/admin-v6/queue.ts";
 import type { UiReceipt, StuckItem } from "../../../app/(admin)/_mw/admin-v6/model.ts";
 import type { ControlPlaneRepositories } from "../repository/types.ts";
-import { readAdminDoors } from "./door-queries.ts";
+import { readAdminQueueDoors, readDoorCounts } from "./door-queries.ts";
+import { QUEUE_FIX_FIELDS } from "../repository/admin-config.ts";
 import { recordUndescribedCauses } from "./undescribed-causes.ts";
 import { scheduledView } from "./v6-scheduled-read.ts";
 import { plainWords } from "./plain-words.ts";
@@ -66,14 +67,17 @@ export function projectBrief(config:AdminConfig,rows:readonly QueueRow[],at:stri
 }
 /** Same inputs as Queue; failures name the unread part instead of claiming there are no problems. */
 export async function readBrief(repos:ControlPlaneRepositories,at:string):Promise<BriefReading> {
-  const held=await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 50 }, fixList: { activeAndRecent: 500 } });
+  const held=await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 50 },
+    fixList: { activeAndRecent: 500, fieldsProjection: QUEUE_FIX_FIELDS, queueFixSummary: true } });
   if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
   const config=held?.value??defaultAdminConfig(at);const unread:string[]=[];
   const [history,stuck,reports,doors,questions]=await Promise.all([
     readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>{unread.push("orders");return null;}),
     population().catch(()=>null).then(p=>{if(!p){unread.push("stuck cases");return null;}return stuckViews(p.rows,"us",at,[],p.summary).items;}),
     readReports(at).catch(()=>{unread.push("reader problems");return null;}),
-    readAdminDoors(repos,[],at).then(view=>{if(view.counts.unreadable)unread.push("some doors");if(view.counts.shut>view.rows.filter(r=>r.status==="Shut").length)unread.push("shut doors outside the current page");return view.rows.filter(r=>r.status==="Shut");}).catch(()=>{unread.push("doors");return null;}),
+    Promise.all([readAdminQueueDoors(repos,at),readDoorCounts(repos)]).then(([view,counts])=>{
+      if(counts.unreadable)unread.push("some doors");if(counts.shut>view.rows.length)unread.push("shut doors outside the current page");return view.rows;
+    }).catch(()=>{unread.push("doors");return null;}),
     readerQuestionRows(repos).catch(()=>{unread.push("unanswered reader questions");return [];}),
   ]);
   if(history?.page.nextCursor)unread.push("older orders outside the current page");

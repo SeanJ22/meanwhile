@@ -43,7 +43,7 @@ export function officialsFeedResult(door: DoorRecord, requestedAt: string | null
   return { id: door.doorId, name: /^US-[A-Z]{2}/.test(scope) ? `${publisher} (${scope.slice(3, 5)})` : publisher, sourceUrl: peopleSourceUrl(door), state, checkedAt };
 }
 
-export async function officialsReceiptFeeds(repos: ControlPlaneRepositories, receipt: ActionReceipt): Promise<readonly OfficialsFeedResult[]> {
+export async function officialsReceiptFeeds(repos: ControlPlaneRepositories, receipt: Pick<ActionReceipt, "openedWork" | "startedAt">): Promise<readonly OfficialsFeedResult[]> {
   const ids = receipt.openedWork.filter(work => work.kind === "people-feed").map(work => work.id);
   const rows = repos.doors.readMany ? await repos.doors.readMany(ids) : (await Promise.all(ids.map(id => repos.doors.read(id)))).filter(row => row !== null);
   const byId = new Map(rows.map(row => [row.id, row.value]));

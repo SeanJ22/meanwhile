@@ -119,6 +119,14 @@ export interface ActionReceipt {
   readonly huntScores?: readonly import("./hunt-score.ts").HuntAcceptanceScore[];
 }
 
+/** The saved facts needed to confirm an order's current result. */
+export type ConfirmationReceipt = Pick<ActionReceipt, "receiptId" | "type" | "label" | "subject" | "requestedSubject" |
+  "startedAt" | "completedAt" | "outcome" | "says" | "openedWork" | "huntScores">;
+
+/** History displays the result and timing; its reader does not load undo commands or audit metadata. */
+export type HistoryReceipt = ConfirmationReceipt & Pick<ActionReceipt, "formatVersion" | "idempotencyKey" | "scheduleOrigin" |
+  "readBackAt" | "change">;
+
 export interface ActionOutcome {
   readonly ok: boolean;
   readonly receipt: ActionReceipt;

@@ -5,7 +5,7 @@
       "file": "lib/ballot/reader-data.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 119
+      "line": 93
     },
     {
       "file": "lib/civic-data/candidate-integrity.ts",
@@ -239,13 +239,13 @@
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 65
+      "line": 66
     },
     {
       "file": "lib/reader/canonical.ts",
       "kind": "readCandidate",
       "fingerprint": "7254688ccec1e27d14980f9abb1ad90847e5d8e4c064edd0781c8a85aefa0c35",
-      "line": 113
+      "line": 114
     },
     {
       "file": "lib/sources/legiscan/reader.ts",

@@ -639,3 +639,7 @@ export function tablesInClass(storeClass: StoreClass): string[] {
     .map(([t]) => t)
     .sort();
 }
+
+/** Shared identifiers for publication schema metadata, including migration lock declarations. */
+export const CIVIC_DATA_TABLES={candidates:'civic_data_candidates',promotions:'civic_data_promotions',
+  events:'civic_data_candidate_events',payloadParts:'civic_data_payload_parts'} as const;

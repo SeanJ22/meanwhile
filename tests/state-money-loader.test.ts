@@ -4,7 +4,7 @@ import type { DoorInput, DoorOutcome } from "../lib/core/door.ts";
 import { checkFact, type SavedCopy } from "../lib/facts/check.ts";
 import { campaignClaims, federalAwardClaim, filedAmount, moneyDoorInput, type FiledAmount } from "../lib/funding/money-records.ts";
 import {
-  buildPeriodRecords, loadStateMoney, passFilingCursor, type DetectiveCase, type FilingCursor, type FilingLine, type FilingRef, type HolderMatch, type ParsedFiling,
+  buildPeriodRecords, loadStateMoney, passFilingCursor, type DetectiveCase, type FilingCursor, type FilingLine, type FilingRef, type HolderMatch, type ParsedFiling, type RetireAbsentInput,
 } from "../lib/funding/state-money-loader.ts";
 
 const NOW = new Date("2026-10-29T12:00:00Z");
@@ -53,6 +53,7 @@ const SMALL_NAMES = ["Pamela Roach", "Catherine Knaus"];
 function harness(copies: readonly SavedCopy[], match: HolderMatch = { status: "matched", subjectId: "person:ky:dana-hart" }) {
   const calls = { load: 0, parse: 0, match: 0 };
   const published: DoorInput[] = [], cases: DetectiveCase[] = [], stored = new Map<string, string>();
+  const retired: RetireAbsentInput[] = [];
   const ref = (copy: SavedCopy): FilingRef => ({ fingerprint: `sha256-${copy.id}`, filerId: FILER.id, cycle: 2026, load: async () => { calls.load++; return copy; } });
   const refs = copies.map(ref);
   const cursor: FilingCursor = {
@@ -64,9 +65,10 @@ function harness(copies: readonly SavedCopy[], match: HolderMatch = { status: "m
     parse: (copy: SavedCopy) => { calls.parse++; return parseFixture(copy); },
     match: async () => { calls.match++; return match; },
     publish: async (input: DoorInput): Promise<DoorOutcome> => { published.push(input); return { decision: "PUBLISH", factId: published.length }; },
+    retireAbsent: async (input: RetireAbsentInput) => { retired.push(input); return 0; },
     detective: async (item: DetectiveCase) => { cases.push(item); },
   };
-  return { calls, published, cases, stored, options, ref };
+  return { calls, published, retired, cases, stored, options, ref };
 }
 
 test("donors giving $200 or less in the cycle are folded into a sum and their names never leave the loader", async () => {
@@ -182,6 +184,20 @@ test("a federal award is filed to its recipient with its stated total, and $0 or
   assert.equal(checkFact({ ...moneyDoorInput(good, copy, "money:federal"), entity: { id: "government:us-az:university", fullName: "University of Arizona", stateName: "Arizona", hosts: [], externalIds: [] } } as never, NOW, () => 2160).ok, true);
   assert.equal(federalAwardClaim("government:x", award("A2", `"Award Amount":"0.00"`, "0.00")), null);
   assert.equal(federalAwardClaim("government:x", award("A3", `"Award Amount":"-85912.00"`, "-85912.00")), null);
+});
+
+test("after each period is filed, what the read no longer shows is retired, and a refused line holds the retire back", async () => {
+  const run = harness([q1, q2]);
+  const summary = await loadStateMoney(run.options);
+  assert.deepEqual(run.retired.map(item => [item.subjectId, item.fieldPrefix]), [["person:ky:dana-hart", "money-campaign:C-100:2026-Q1:"], ["person:ky:dana-hart", "money-campaign:C-100:2026-Q2:"]]);
+  for (const item of run.retired) assert.ok(item.stillShown.length > 0 && item.stillShown.every(field => field.startsWith(item.fieldPrefix)) && item.at.getTime() === NOW.getTime() && item.sourceUrl.startsWith("https://kref.ky.gov/"));
+  assert.equal(summary.retired, 0);
+
+  const refusing = harness([q1, q2]);
+  const refused = await loadStateMoney({ ...refusing.options, publish: async () => ({ refused: "QUOTE_NOT_IN_COPY" }) });
+  assert.equal(refusing.retired.length, 0, "a line the Slide refused is not a line the source stopped showing");
+  assert.ok(refused.refused.length > 0);
+  assert.equal(refusing.stored.size, 0, "and the set is read again");
 });
 
 test("the pass cursor keeps one fingerprint per filer and cycle under the state's own names", async () => {

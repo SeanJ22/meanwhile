@@ -1,5 +1,6 @@
 import { readFinanceDoor } from "../funding/finance-door-reader.ts";
 import { validFinanceDoorDetailSource } from "../funding/finance-detail-source.ts";
+import { filedOrganizations } from "../funding/state-money-funding.ts";
 import type { DoorRecord } from "../doors/registry.ts";
 import type { EvidenceRecord } from "./evidence.ts";
 import type { FinanceDetailRead } from "./fetch-through-key.ts";
@@ -42,7 +43,7 @@ export async function fetchFinanceDocument(input: {
       let unknownClassification = false;
       for (const filing of filings) {
         if (!filing.period || !filing.funding) continue;
-        for (const [index, organization] of filing.funding.organizations.entries()) {
+        for (const [index, organization] of filedOrganizations(filing.funding).entries()) {
           if (onlyPacs && !/\b(?:pac|political action committee)\b/i.test(organization.filedType ?? "")) {
             if (!organization.filedType || /^committee$/i.test(organization.filedType)) unknownClassification = true;
             continue;

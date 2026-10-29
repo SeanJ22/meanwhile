@@ -78,23 +78,25 @@ const cents = (amount: number) => Math.round(amount * 100);
 const latest = (rows: readonly { readonly checkedAt: string }[]) => rows.map(row => row.checkedAt).sort().at(-1) ?? "";
 
 export function campaignMoneyView(subjectId: string, rows: readonly MoneyFactRow[]): CampaignMoneyView | null {
-  interface Part { readonly row: MoneyFactRow; readonly value: Record<string, unknown>; readonly amount: number }
+  interface Part { readonly row: MoneyFactRow; readonly value: Record<string, unknown>; readonly amount: number; readonly full: boolean }
+  // The reader sends a period's filing details once; its other donor and committee lines come short. Rows with the details come first.
   const parts: Part[] = rows.flatMap(row => {
-    const value = row.value;
-    if (!record(value) || value.v !== 1 || !num(value.amount) || !record(value.filer) || !text(value.filer.id) || !text(value.periodKey)
-      || !Number.isInteger(value.cycle) || !text(value.filingUrl) || !/^https:\/\//.test(value.filingUrl)) return [];
-    return [{ row, value, amount: value.amount }];
-  });
+    const value = row.value, full = record(value) && text(value.filingUrl);
+    if (!record(value) || value.v !== 1 || !num(value.amount) || !record(value.filer) || !text(value.filer.id) || !text(value.periodKey) || !Number.isInteger(value.cycle)
+      || (full ? !/^https:\/\//.test(String(value.filingUrl)) : value.measure !== "donor" && value.measure !== "pac")) return [];
+    return [{ row, value, amount: value.amount, full }];
+  }).sort((a, b) => Number(b.full) - Number(a.full));
   // A donor is named by what the cycle's lines add up to, whatever periods they fall in.
   const cycleCents = new Map<string, number>();
   const donorKey = (value: Record<string, unknown>) => `${(value.filer as Record<string, unknown>).id}|${value.cycle}|${value.partyKey}`;
   for (const { value, amount } of parts) if (value.measure === "donor" && text(value.partyKey))
     cycleCents.set(donorKey(value), (cycleCents.get(donorKey(value)) ?? 0) + cents(amount));
   const periods = new Map<string, { -readonly [K in keyof CampaignPeriodView]: CampaignPeriodView[K] } & { donorSums: Map<string, NamedAmount>; committeeSums: Map<string, NamedAmount> }>();
-  for (const { row, value, amount } of parts) {
+  for (const { row, value, amount, full } of parts) {
     const filer = value.filer as Record<string, unknown>;
     const key = `${filer.id}|${value.periodKey}`;
     let period = periods.get(key);
+    if (!period && !full) continue;
     if (!period) {
       period = { key, filerName: String(filer.name ?? ""), seat: text(value.seat) ? value.seat : null, label: text(value.periodLabel) ? value.periodLabel : String(value.periodKey),
         cycle: Number(value.cycle), to: text(value.to) ? value.to : null, publisher: text(value.publisher) ? value.publisher : "", filingUrl: String(value.filingUrl), checkedAt: row.checkedAt,
@@ -132,6 +134,19 @@ export function campaignMoneyView(subjectId: string, rows: readonly MoneyFactRow
   const money = [raised === null ? null : `raised ${plainMoney(raised)}`, spent === null ? null : `spent ${plainMoney(spent)}`].filter(Boolean);
   const summary = [money.length ? `${money.join(" and ").replace(/^./, letter => letter.toUpperCase())} in the ${cycle} cycle.` : `${inCycle.length} filing${inCycle.length === 1 ? "" : "s"} in the ${cycle} cycle.`, share].filter(Boolean).join(" ");
   return { subjectId, summary, periods: ordered, checkedAt: latest(ordered) };
+}
+
+const dollars = new Intl.NumberFormat("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 2 });
+
+/** One filing period as Ask reads it: the stated totals, donors over $200 and committees; no name the card does not show. */
+export function campaignPeriodText(period: CampaignPeriodView): string {
+  const named = (title: string, rows: readonly NamedAmount[]) => rows.length ? `${title}: ${rows.map(row => `${row.name} ${dollars.format(row.amount)}`).join("; ")}` : null;
+  const { individual, individualSmall } = period;
+  return [period.filerName, period.label, `${period.cycle} cycle`,
+    ...([["Raised", period.raised], ["Spent", period.spent], ["Individual money", individual]] as const).flatMap(([label, stated]) => stated ? [`${label}: ${dollars.format(stated.amount)}`] : []),
+    individual && individualSmall ? smallDonorSentence(individual.amount - individualSmall.amount, individualSmall.amount) : null,
+    named("Donors over $200", period.donors), named("Committees and organizations", period.committees),
+  ].filter(Boolean).join(" · ");
 }
 
 export interface AwardYearSum { readonly year: string; readonly agency: string; readonly amount: number }

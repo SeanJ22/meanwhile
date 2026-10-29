@@ -157,12 +157,13 @@ test("the reader files a person's rebuilt money through the person's own id and 
   const asked: string[] = [];
   const query: Query = async (text, params = []) => {
     asked.push(text);
-    if (text.includes("entity_external_id") && text.includes("coalesce")) return [{ id: params[0] }];
-    if (text.includes("checked_fact")) return params[0] === "person:ky:dana-hart" ? stored : [];
-    return [];
+    return params[0] === "person:ky:dana-hart" ? stored.map(item => ({ subject: params[0], ...item }))
+      : params[0] === "person:ky:no-money" ? [{ subject: params[0], entity_id: null, field: null }] : [{ subject: null, entity_id: null, field: null }];
   };
   const view = await readCampaignMoneyView(query, "person:ky:dana-hart");
   assert.equal(view?.periods.length, 1);
+  assert.equal(asked.length, 1, "the id lookup and the facts are one statement");
+  assert.equal(await readCampaignMoneyView(query, "person:ky:no-money"), null, "a known person with no rebuilt money");
   assert.equal(await readCampaignMoneyView(query, "person:ky:nobody"), null);
   assert.ok(asked.every(text => !/campaign-money:|campaign-cycle:|campaign-donor:/.test(text)), "the old stored lines are not read");
 

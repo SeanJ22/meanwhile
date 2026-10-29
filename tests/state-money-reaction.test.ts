@@ -45,5 +45,5 @@ test("state and local money reactions: the section carries the same control as t
   assert.match(section, /targetType="FUNDING_TOTAL_REACTION"/);
   assert.match(section, /How do you feel about how this campaign is funded\?/);
   // Only where there is money to feel something about.
-  assert.match(section, /if\(!value\?\.records.length\)/);
+  assert.match(section, /!value\?\.records\.length\?<CardGapContribution/);
 });

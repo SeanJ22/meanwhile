@@ -20,25 +20,36 @@ import { scheduledView } from "./v6-scheduled-read.ts";
 import { plainWords } from "./plain-words.ts";
 import { TERMINAL_WORK_ITEM_STATES, type WorkItem } from "../work-item.ts";
 import { compactKeeperProblems, type BriefProblem } from "../../counts/problem-groups.ts";
-import { placeReadConnection, pgActiveReaderQuestions } from "../repository/pg-store.ts";
+import { placeReadConnection, pgActiveReaderQuestions, type Sql } from "../repository/pg-store.ts";
 import { keysStore } from "../../core/keys-store.ts";
+import { boundedQuery } from "../repository/request-bounds.ts";
 import { keyProblems } from "../../core/keys-runner.ts";
 
-/** Unanswered organic Ask questions stay visible while their sourced answer is owed. */
+const questionRow = (key: string, place: string | null | undefined, text: string, at: string): QueueRow => ({ key: `ask-question:${key}`, kind: "hunt" as const,
+  what: `${place ? `ZIP ${place}: ` : ""}${text}`, chip: "Answer owed", tone: "warn" as const,
+  filter: "waiting" as const, owner: "Hunters", due: null, next: "Find and publish a sourced answer.",
+  progress: null, actions: [], open: null, at, receipt: null, sendId: null });
+
+/** Questions still in the work list, before the hunters take them up. */
+export async function unhandedQuestionRows(sql: Sql): Promise<readonly QueueRow[]> {
+  const waiting = await boundedQuery(sql, { operation: "work.unhandedQuestions", callClass: "PAGE" },
+    `SELECT id,value->>'question' AS question,value->>'place' AS place,received_at FROM work
+    WHERE kind='ask' AND status='waiting' ORDER BY received_at LIMIT 100`, []) as Record<string, unknown>[];
+  return waiting.map(ask => questionRow(String(ask.id), ask.place as string | null, String(ask.question), new Date(ask.received_at as string | Date).toISOString()));
+}
+
+/** Unanswered organic Ask questions stay visible while their sourced answer is owed, in the work list and then in the hunters' queue. */
 export async function readerQuestionRows(repos: ControlPlaneRepositories): Promise<readonly QueueRow[]> {
   const fields = { id: true, state: true, createdAt: true, autonomousPlan: ["readerQuestion"] } as const;
   const sql = placeReadConnection(repos);
   const rows = sql ? await pgActiveReaderQuestions(sql)
     : await repos.workItems.listWhereNarrowed(["autonomousPlan", "readerQuestion", "origin"], "ASK", fields);
-  return rows.flatMap(row => {
-    const item = row.value as Pick<WorkItem, "id" | "state" | "createdAt" | "autonomousPlan">;
+  return [...sql ? await unhandedQuestionRows(sql) : [], ...rows.flatMap(held => {
+    const item = held.value as Pick<WorkItem, "id" | "state" | "createdAt" | "autonomousPlan">;
     const question = item.autonomousPlan?.readerQuestion;
     if (!question || TERMINAL_WORK_ITEM_STATES.includes(item.state)) return [];
-    return [{ key: `ask-question:${item.id}`, kind: "hunt" as const,
-      what: `${question.place ? `ZIP ${question.place}: ` : ""}${question.text}`, chip: "Answer owed", tone: "warn" as const,
-      filter: "waiting" as const, owner: "Hunters", due: null, next: "Find and publish a sourced answer.",
-      progress: null, actions: [], open: null, at: item.createdAt, receipt: null, sendId: null }];
-  });
+    return [questionRow(item.id, question.place, question.text, item.createdAt)];
+  })];
 }
 
 export interface BriefSnapshot {

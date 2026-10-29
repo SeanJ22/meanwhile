@@ -1256,14 +1256,6 @@
       "table": "cp_runner_heartbeat"
     },
     {
-      "file": "lib/ask/question-work.ts",
-      "table": "cp_route_tasks"
-    },
-    {
-      "file": "lib/ask/question-work.ts",
-      "table": "cp_work_items"
-    },
-    {
       "file": "lib/ballot/voting-source-blanks.ts",
       "table": "cp_obligations"
     },

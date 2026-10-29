@@ -79,6 +79,16 @@
       "id": "KB-01_expand",
       "phase": "expand",
       "hash": "630dd43ac3af3fc0ad42892d5239139442d1b5bcbf9933e12a027a6c662f8a4e"
+    },
+    {
+      "id": "SPN-01B_expand",
+      "phase": "expand",
+      "hash": "1ac89d8ca90c7e231e46ed732391fef37153f151374baa07ccc043cef9f5512d"
+    },
+    {
+      "id": "SPN-01B_contract",
+      "phase": "contract",
+      "hash": "ab6e45827bb47bab1cc7a3ab118f84fca60147b9ea0881838932fb3a103377bd"
     }
   ]
 }

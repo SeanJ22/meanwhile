@@ -17,7 +17,7 @@ import { LEGISTAR_TENANT_SQL } from "../../doors/legistar-tenant.ts";
 import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 import { MANUAL_ORDER_INDEXES } from "./field-manual-sql.ts";
-import { SHARED_WORK_DDL } from "./migrations/RB-A1.ts";
+import { WORK_DDL } from "../../core/work.ts";
 import { KEYS_DDL } from "../../core/keys-store.ts";
 
 export const BOOTSTRAP_VERSION = 34;
@@ -721,7 +721,7 @@ END $$;`,
   VITAL_SIGNS_TABLE_DDL,
   ...CONTROL_READS_EXPAND_DDL,
   ...RESEARCH_REVISION_INDEXES.map(index => index.ddl),
-  ...SHARED_WORK_DDL,
+  ...WORK_DDL,
 
   ...WEBSITE_PACING_DDL,
   FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL,

@@ -36,6 +36,8 @@ import { researchPaidWorkerCapacity } from "../lib/control-plane/scheduler/resea
 import { serializeHostSpacing } from "../lib/control-plane/workers/host-spacing.ts";
 import { projectFleetPipeline } from "../lib/control-plane/workers/pipeline.ts";
 import { plannedForHunters } from "../lib/control-plane/workers/route-plan.ts";
+import { openQuestionHunts } from "../lib/ask/question-hunt.ts";
+import { controlPlaneQuery, workList } from "../lib/core/work.ts";
 import { readHeldDiggerWorkItems, readHeldDiggerPriorities, heldDiggerNamedOrder, compareNamedBeforeBackground, type HeldDiggerWorkItem } from "../lib/control-plane/workers/held-digger-priority.ts";
 import { observeCyclePhases, type CyclePhase } from "../lib/control-plane/scheduler/cycle-phases.ts";
 import { cycleStateWriter } from "../lib/control-plane/scheduler/cycle-state-writer.ts";
@@ -2205,6 +2207,10 @@ async function makeAutonomousFleet() {
 async function runAutonomousWave() {
   placeOrderDirty = true;
   await refreshPlaceOrder();
+  // Reader questions Meanwhile could not answer are hunted whether or not an order covers their government.
+  await openQuestionHunts({ list: workList(controlPlaneQuery(), { owner: `ask-hunts:${process.pid}`, leaseMs: 300_000 }), repos, now: nowIso() })
+    .then(opened => { if (opened > 0) console.log(`  Ask questions handed to the hunters: ${opened}`); })
+    .catch(error => console.error(`  Ask questions could not be handed to the hunters: ${error instanceof Error ? error.message : String(error)}`));
   const fleet = await makeAutonomousFleet();
 
   const legacyRepos = await legacyArtifactActivityRepositories(repos, artifact => heldEventContract(ROOT, artifact) !== null,
@@ -2212,8 +2218,10 @@ async function runAutonomousWave() {
   const legacyFleet = legacyRepos ? { ...fleet, repos: legacyRepos } : fleet;
   const held = legacyFleet && await legacyHeldWorkOwed(ROOT, legacyFleet) ? await planHeldWorkerFleet(ROOT, legacyFleet, true) : [];
   const workItemsById = new Map<string, WorkItem>();
-  const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan) && (item.autonomousPlan?.capability!=="hunt-packet" || activeHuntSubjects.has(item.subject)),
-    onSelectionSnapshot: items => { for (const item of items) if(item.autonomousPlan?.capability!=="hunt-packet" || activeHuntSubjects.has(item.subject))workItemsById.set(item.id, item); },
+  // A packet is hunted when an order funds its government, or when a reader asked a question it should answer.
+  const huntable = (item: WorkItem) => item.autonomousPlan?.capability !== "hunt-packet" || activeHuntSubjects.has(item.subject) || item.autonomousPlan.readerQuestion !== undefined;
+  const planned = await runAutonomousCoordinator(fleet, { planOnly: true, acceptsWorkItem: item => plannedForHunters(item.autonomousPlan) && huntable(item),
+    onSelectionSnapshot: items => { for (const item of items) if(huntable(item))workItemsById.set(item.id, item); },
     prioritizedInstructions: placeOrder.map((receiptId, priority) => ({ receiptId, priority })),
     ...(squadReading ? { squads: squadReading } : {}) });
 

@@ -38,7 +38,7 @@ test("tenant fingerprint stops unchanged reads without downloading any saved rec
 
 test("source records flow through claimed work, preserve identity, and retire departed holders through the door",async t=>{
   const f=await fixture(t);const loaded=await f.load();
-  assert.equal(loaded.records,(await f.facts.query("SELECT 1 FROM work_row WHERE kind='check'")).length);
+  assert.equal(loaded.records,(await f.facts.query("SELECT 1 FROM work WHERE kind='check'")).length);
   assert.equal((await f.drain()).failed,0);
   const before=(await readFactRosters(f.facts.query,f.rows.map(row=>row.bodyId))).rosters.flatMap(row=>row.members);
   assert.ok(before.some(member=>member.name==="Rex Scott"));
@@ -53,16 +53,20 @@ test("source records flow through claimed work, preserve identity, and retire de
   assert.ok((await f.facts.query("SELECT 1 FROM rebuild_queue")).length>=0);
 });
 
-test("tenant completion becomes due again at twelve hours and another family cannot be claimed",async t=>{
+test("tenant completion makes a new row at twelve hours and another family cannot be claimed",async t=>{
   const f=await fixture(t),url="https://webapi.legistar.com/v1/pima/officerecords";
-  await f.facts.query("DELETE FROM work_row");
-  await f.facts.query(`INSERT INTO work_row(id,kind,state,place_id,subject_id,url) VALUES('tenant','load','AZ','place','legistar-members:pima',$1),('other','load','AZ','place','other:source',$1)`,[url]);
+  await f.facts.query("DELETE FROM work");
+  await f.facts.query(`INSERT INTO work(id,kind,state,place_id,subject_id,url,series) VALUES('tenant','load','AZ','place','legistar-members:pima',$1,'tenant'),('other','load','AZ','place','other:source',$1,'other')`,[url]);
   const work=await memberCore(f.facts,()=>new Date());
   const [tenant]=await work.claim("load",10,"legistar-members:");assert.equal(tenant.id,"tenant");
   assert.equal(await work.finish(tenant,12*3600_000),true);
   assert.equal((await work.claim("load",1,"legistar-members:")).length,0);
-  t.mock.timers.tick(12*3600_000-1);assert.equal((await work.claim("load",1,"legistar-members:")).length,0);
-  t.mock.timers.tick(1);assert.equal((await work.claim("load",1,"legistar-members:")).length,1);
+  t.mock.timers.tick(12*3600_000-1);assert.equal(await work.spawnDue(),0);assert.equal((await work.claim("load",1,"legistar-members:")).length,0);
+  t.mock.timers.tick(1);assert.equal(await work.spawnDue(),1);
+  const [again]=await work.claim("load",1,"legistar-members:");
+  assert.notEqual(again.id,"tenant","a repeat is a new row");assert.equal(again.series,"tenant");
+  assert.equal((await f.facts.query("SELECT status FROM work WHERE id='tenant'"))[0].status,"done","the finished row stays as it was");
+  assert.equal(await work.spawnDue(),0,"a finished row repeats once");
 });
 
 test("a complete roster that ages while queued cannot retire a holder or change any fact",async t=>{

@@ -4,7 +4,6 @@
  * Detail panels. Every panel ends with "Instructions about this item, and what
  * happened". Technical identifiers live only under "Technical details".
  */
-import { plainWords } from "@/lib/control-plane/admin-view/plain-words.ts";
 import type { ReactNode } from "react";
 
 import { STATUS_COLOR, STATUS_LABEL, Swatch } from "./charts.tsx";
@@ -250,12 +249,6 @@ export function DetailPanel(props: { readonly detail: Detail }) {
         <Technical lines={[`Commit ${l.sha}`]} />
       </Panel>
     );
-  }
-
-  if (d.type === "work") {
-    const row = v.data.workRows?.data?.rows.find(r => r.id === d.id);
-    if (!row) return <Empty>This work row is not available.</Empty>;
-    return <Panel eyebrow="Work row" title={plainWords(row.title)} summary={row.age} targets={[row.id]}><Card title="Details"><Facts rows={[["Where",v.index.get(row.placeKey)?.name ?? "—"],["Stage",row.stage]]}/></Card></Panel>;
   }
 
   const q = d.query.toLowerCase();

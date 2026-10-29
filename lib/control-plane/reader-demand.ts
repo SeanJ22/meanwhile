@@ -1,5 +1,7 @@
 /** Aggregate counts only, organic traffic only. A count larger than its denominator refuses the panel. */
 import { displayNameOf } from "./display-name.ts";
+import { controlPlaneQuery } from "../core/work.ts";
+import type { Query } from "../facts/publish.ts";
 import {
   impossibleNumbersIn,
   openReaderStore,
@@ -21,6 +23,13 @@ export interface DemandList {
   readonly distinct: number;
 }
 
+/** Where the presses of "get this sooner" stand in the one work list: one hunt per subject, in the reader tier. */
+export interface DemandInLine {
+  readonly waiting: number;
+  readonly working: number;
+  readonly rows: readonly { readonly key: string; readonly label: string; readonly presses: number; readonly working: boolean; readonly since: string }[];
+}
+
 export type ReaderDemandReading =
   | {
       readonly kind: "READ";
@@ -35,6 +44,8 @@ export type ReaderDemandReading =
       readonly askTopics: DemandList;
       readonly wantedSooner: DemandList;
       readonly wantedSoonerTotal: number;
+      /** Null when the work list could not be read just now. */
+      readonly inLine: DemandInLine | null;
     }
   | { readonly kind: "NOT_READ"; readonly observedAt: string; readonly says: string };
 
@@ -50,7 +61,25 @@ const named = (list: TopList): DemandList => {
   };
 };
 
-export async function readReaderDemand(observedAt: string): Promise<ReaderDemandReading> {
+/** Small by construction: a count per status and the few busiest subjects. Nothing else of any job is read. */
+export async function readDemandInLine(query: Query): Promise<DemandInLine> {
+  const [counts, top] = await Promise.all([
+    query(`SELECT status,count(*)::int AS n FROM work WHERE tier='reader' AND kind='hunt' AND status IN ('waiting','taken') GROUP BY status`),
+    query(`SELECT subject_id,status,coalesce((origin->>'presses')::int,0) AS presses,received_at FROM work
+      WHERE tier='reader' AND kind='hunt' AND status IN ('waiting','taken') ORDER BY priority DESC,received_at LIMIT ${SHOWN * 4}`),
+  ]);
+  const count = (status: string) => Number(counts.find(row => row.status === status)?.n ?? 0);
+  return {
+    waiting: count("waiting"), working: count("taken"),
+    rows: top.flatMap(row => {
+      const name = displayNameOf(String(row.subject_id));
+      return name.recognised ? [{ key: String(row.subject_id), label: name.name, presses: Number(row.presses), working: row.status === "taken",
+        since: new Date(row.received_at as string | Date).toISOString() }] : [];
+    }).slice(0, SHOWN),
+  };
+}
+
+export async function readReaderDemand(observedAt: string, inLine: () => Promise<DemandInLine> = () => readDemandInLine(controlPlaneQuery())): Promise<ReaderDemandReading> {
   const store = openReaderStore();
   if (!store.ok) return { kind: "NOT_READ", observedAt, says: store.detail };
   const intel = await readReaderIntel(store.sql, readerWindow(observedAt, READER_DEMAND_DAYS), "ORGANIC");
@@ -61,6 +90,7 @@ export async function readReaderDemand(observedAt: string): Promise<ReaderDemand
   }
   const a = intel.activity.value;
   const demand = intel.demand.kind === "HELD" ? intel.demand.value : null;
+  const waiting = await inLine().catch(() => null);
   return {
     kind: "READ",
     observedAt,
@@ -74,5 +104,6 @@ export async function readReaderDemand(observedAt: string): Promise<ReaderDemand
     askTopics: top(a.topAskTopics),
     wantedSooner: demand ? named(demand.topSubjects) : { rows: [], distinct: 0 },
     wantedSoonerTotal: demand ? demand.total : 0,
+    inLine: waiting,
   };
 }

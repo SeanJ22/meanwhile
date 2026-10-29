@@ -84,7 +84,7 @@ export async function enqueueLegistarMemberRecords(input:{facts:FactDb&{query:Qu
     };
     const route=new URL(url);route.search="";
     offered.push({kind:"check",subjectId:source,field:`${type}:${nativeId}`,placeId:owner?.ocdId??"ocd-division/country:us",state,url:route.href,value,
-      sources:[`source_copy:${value.source.copyId}`],source:{source:"Legistar members"},priority:type==="member"?20:10});
+      sources:[`source_copy:${value.source.copyId}`],source:{source:"Legistar members"},origin:{from:"loader"},priority:type==="member"?20:10});
     records++;
   };
   // Every returned record has one work row, including empty boards and vacant offices.

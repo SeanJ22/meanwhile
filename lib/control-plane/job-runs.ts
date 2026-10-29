@@ -8,7 +8,7 @@ export interface JobRun {
   readonly lastFinishedAt: string | null;
   readonly lastFailedAt: string | null;
   readonly lastError: string | null;
-  /** Why the runner is not launching it, when it knows. */
+  /** Why the runner is not launching it now (an owner pause, or the breaker spacing its launches), when it knows. */
   readonly heldBy: string | null;
 }
 export type JobRuns = Readonly<Record<string, JobRun>>;

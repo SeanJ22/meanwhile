@@ -8,10 +8,10 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { PGlite } from "@electric-sql/pglite";
 import { neonConfig } from "@neondatabase/serverless";
 import { neon } from "../lib/db/client.ts";
-import { evaluateJobBreaker, JOB_TRANSFER_SQL, jobTransfers, pausedStates, readJobBreakerLatest, releaseJob, writeJobBreakerEvents,
-  JOB_BREAKER_INTERVAL_MS, type BreakerSql, type JobBreakerState, type JobTransfer } from "../lib/control-plane/job-transfer-breaker.ts";
+import { evaluateJobBreaker, JOB_TRANSFER_SQL, jobTransfers, readJobBreakerState, JOB_BREAKER_INTERVAL_MS, NORMAL_FLOOR_BYTES, SPIKE_TIMES,
+  type BreakerSql, type JobBreakerState, type JobTransfer } from "../lib/control-plane/job-transfer-breaker.ts";
 import { JOB_BREAKER_DDL } from "../lib/control-plane/repository/migrations/BB-01.ts";
-import { admitJobLaunch, JOB_BREAKER_PATH_ENV, saveBreakerSnapshot } from "../lib/control-plane/job-breaker-local.ts";
+import { admitJobLaunch, JOB_BREAKER_PATH_ENV, jobSlowTimes, saveBreakerSnapshot } from "../lib/control-plane/job-breaker-local.ts";
 import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
 import { routineDeferral } from "../lib/civic-data/runner.ts";
 import { ROUTINE_JOBS, runRoutineJob } from "../lib/civic-data/routine-jobs.ts";
@@ -20,293 +20,278 @@ import { readJobBreakerEvents } from "../lib/control-plane/line-keeper/read.ts";
 import { withKeeperFixes } from "../lib/control-plane/line-keeper/keep.ts";
 import { defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { countNeonBytes, processNeonBytes } from "../lib/db/transfer-by-caller.ts";
-import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
-import { submit } from "../lib/control-plane/gateway/gateway.ts";
-import { pausedJobsView } from "../lib/control-plane/admin-view/paused-jobs.ts";
+import { slowedJobsView } from "../lib/control-plane/admin-view/slowed-jobs.ts";
 import { jobLabel } from "../lib/control-plane/job-names.ts";
-import { PausedJobsList } from "../app/(admin)/_mw/admin-v6/paused-jobs-panel.tsx";
-import { V6Context, type V6 } from "../app/(admin)/_mw/admin-v6/context.tsx";
-import { actionDef } from "../app/(admin)/_mw/admin-v6/actions.ts";
-import { actionInput } from "../app/(admin)/_mw/admin-v6/contract.ts";
+import { SlowedJobsList } from "../app/(admin)/_mw/admin-v6/slowed-jobs-panel.tsx";
 
-const HOUR = Date.parse("2026-10-26T18:00:00Z");
-const INCIDENT = 1_990_727_885;
-const normal = {job:"other-source",requests:10,bytes:1_000_000,topTable:"cp_doors"};
-const incident = {job:"legiscan-bulk",requests:933,bytes:INCIDENT,topTable:"civic_data_candidates"};
+const HOUR = Date.parse("2026-10-28T22:00:00Z"), H = 3_600_000, MINUTE = 60_000, MB = 1_000_000;
+const iso = (at: number) => new Date(at).toISOString();
+const row = (job: string, bytes: number, topTable: string | null = "civic_data_promotions"): JobTransfer => ({ job, requests: 10, bytes, topTable });
 const pglite = (db: PGlite): BreakerSql => ({ query: async (text, params = []) => (await db.query<Record<string, unknown>>(text, [...params])).rows });
 const hourly = (db: PGlite, at: number, reads: Record<string, readonly number[]>) =>
   db.query("INSERT INTO database_transfer_hourly VALUES($1,'reader',$2::jsonb) ON CONFLICT (hour,database_name) DO UPDATE SET reads=excluded.reads",
-    [new Date(at).toISOString(), JSON.stringify(reads)]);
+    [iso(at), JSON.stringify(reads)]);
+const TABLES = `CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,reads jsonb,PRIMARY KEY(hour,database_name));${JOB_BREAKER_DDL}`;
+function breakerFiles() {
+  const root = mkdtempSync(join(tmpdir(), "bb-")), path = join(root, "breaker.json");
+  return { root, path, env: { ...process.env, [JOB_BREAKER_PATH_ENV]: path } };
+}
+/** Hour by hour, each check closing the hour before with that hour's last totals, as the controller does. */
+function hours(state: JobBreakerState) {
+  let previous: JobTransfer[] = [];
+  const changes: string[] = [];
+  return { changes, get state() { return state; }, at(n: number, rows: JobTransfer[]) {
+    const result = evaluateJobBreaker({ now: HOUR + n * H + MINUTE, rows, state, closed: previous });
+    state = result.state; previous = rows;
+    changes.push(...result.changes.map(c => `${c.kind} ${c.times}`));
+    return state.jobs;
+  } };
+}
 
-test("the 26 October 2 PM totals pause only the bill job, and it stays paused through the next hour, midnight, a restart and a code change", async () => {
+test("the 6:59 PM ET place-pages hour is inside its own normal; only a job far above its own normal slows, alone", async () => {
   const db = new PGlite();
   try {
-    await db.exec(`CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,reads jsonb,PRIMARY KEY(hour,database_name));${JOB_BREAKER_DDL}`);
-    // The real 26 October 2 PM Admin-hour totals, transferred as aggregates only.
-    await db.query("INSERT INTO database_transfer_hourly VALUES($1,'control-plane',$2::jsonb)",[
-      new Date(HOUR).toISOString(),JSON.stringify({
-        "legiscan-bulk\tcivic_data_candidates":[390,126850,1623621517],
-        "legiscan-bulk\tother":[543,340082568,26896950],
-        "other-source\tcp_doors":[10,0,1_000_000],
-        "pilot-runner\tcp_budget":[100,0,9e9],"index\tentity":[100,0,9e9],"admin:Now\tcp_doors":[100,0,9e9],
-        "routine-civic-data\tcp_doors":[100,0,9e9],"publish-now\tcp_doors":[100,0,9e9],
-      })]);
-    await hourly(db, HOUR-3_600_000, {"other-source\told":[1,0,9e12]});
-    const sql = pglite(db);
-    let states: Record<string,JobBreakerState> = {};
-    const check = async (now:number,rows:readonly JobTransfer[]=[incident,normal]) => {
-      const result=evaluateJobBreaker({now,rows,states});
-      await writeJobBreakerEvents(sql,result.events);
-      states=result.snapshot.states;
-      return result;
-    };
-    const aggregate=jobTransfers(await sql.query(JOB_TRANSFER_SQL,[new Date(HOUR).toISOString()]));
-    assert.equal(aggregate.find(row=>row.job==="legiscan-bulk")?.bytes,INCIDENT);
-    assert.equal(aggregate.find(row=>row.job==="legiscan-bulk")?.topTable,"civic_data_candidates");
-    assert.equal(aggregate.find(row=>row.job==="other-source")?.bytes,1_000_000,"historical read maps are excluded");
-    const first=await check(HOUR+JOB_BREAKER_INTERVAL_MS,aggregate);
-    assert.deepEqual(first.events.map(row=>[row.action,row.job]),[["PAUSE","legiscan-bulk"]],"supervisors and serving identities never pause");
-    assert.equal(first.events[0]!.gb,1.990727885);
-    assert.equal(first.events[0]!.bytes_per_request,INCIDENT/933);
-    assert.equal(first.events[0]!.top_table,"civic_data_candidates");
-    assert.equal((await check(HOUR+2*JOB_BREAKER_INTERVAL_MS)).events.length,0,"rechecks are not new trips");
-    for (const at of [HOUR+3_600_000, HOUR+86_400_000, HOUR+7*86_400_000]) {
-      const later=await check(at,[normal]);
-      assert.deepEqual(later.events,[],"no automatic resume, in the next hour or any later one");
-      assert.equal(states["legiscan-bulk"]?.mode,"PAUSED");
-    }
-    states=pausedStates(await readJobBreakerLatest(sql)); // The runner restarted, on new code.
-    assert.equal(states["legiscan-bulk"]?.mode,"PAUSED","a restart and a code change keep the pause");
-    assert.equal((await check(HOUR+8*86_400_000,[normal])).events.length,0);
-    const audit=await sql.query("SELECT action,job FROM cp_job_transfer_breaker ORDER BY checked_at,id");
-    assert.deepEqual(audit.map(row=>[row.action,row.job]),[["PAUSE","legiscan-bulk"]],"the breaker itself never writes a resume");
+    await db.exec(TABLES);
+    await hourly(db, HOUR, { "place-pages\tcivic_data_promotions": [400, 0, 525 * MB], "legiscan-bulk\tcivic_data_candidates": [390, 126850, 1_623_621_517],
+      "legiscan-bulk\tother": [543, 340_082_568, 26_896_950], "door-probes\tcp_doors": [10, 0, 41 * MB],
+      "pilot-runner\tcp_budget": [100, 0, 9e9], "index\tentity": [100, 0, 9e9], "admin:Now\tcp_doors": [100, 0, 9e9], "publish-now\tcp_doors": [100, 0, 9e9] });
+    const rows = jobTransfers(await pglite(db).query(JOB_TRANSFER_SQL, [iso(HOUR)]));
+    assert.equal(rows.find(r => r.job === "legiscan-bulk")?.bytes, 1_990_727_885);
+    assert.equal(rows.find(r => r.job === "legiscan-bulk")?.topTable, "civic_data_candidates");
+    const state: JobBreakerState = { hour: iso(HOUR), jobs: { "place-pages": { normal: 317 * MB, seen: iso(HOUR - H) } } };
+    const { state: next, changes } = evaluateJobBreaker({ now: HOUR + 59 * MINUTE, rows, state });
+    assert.deepEqual(changes.map(c => [c.kind, c.job, c.times, c.normal, c.topTable]), [["SLOW", "legiscan-bulk", 2, NORMAL_FLOOR_BYTES, "civic_data_candidates"]],
+      "0.525 GB is under three times place-pages' normal; supervisors and serving identities are never slowed");
+    assert.deepEqual(Object.keys(next.jobs).sort(), ["legiscan-bulk", "place-pages"]);
+    assert.equal(next.jobs["place-pages"]!.times, undefined, "place-pages keeps its ordinary pace");
+    assert.equal(evaluateJobBreaker({ now: HOUR + 59 * MINUTE, rows, state: next }).changes.length, 0, "a recheck in the same hour is not a new spike");
+    for (const bytes of [SPIKE_TIMES * NORMAL_FLOOR_BYTES, 3 * 317 * MB])
+      assert.deepEqual(evaluateJobBreaker({ now: HOUR, rows: [row("place-pages", bytes)], state }).changes, [], "three times its normal is not yet a spike");
   } finally { await db.close(); }
 });
 
-test("a normal hour and the exact threshold pause nothing; both database byte totals are used",()=>{
-  for(const rows of [[normal],[{...incident,bytes:500_000_000}]])
-    assert.deepEqual(evaluateJobBreaker({now:HOUR,rows,states:{}}).events,[]);
-  assert.match(JOB_TRANSFER_SQL,/WHERE h\.hour=\$1::timestamptz/);
+test("each job learns its own normal from its ordinary hours; a spike or a slowed hour teaches it nothing", () => {
+  const run = hours({ hour: iso(HOUR), jobs: {} });
+  run.at(0, [row("place-pages", 400 * MB), row("door-probes", 40 * MB), row("people-portraits-ca", 250 * MB)]);
+  let jobs = run.at(1, [row("place-pages", 480 * MB), row("people-portraits-ca", 250 * MB)]);
+  assert.deepEqual([jobs["place-pages"]?.normal, jobs["door-probes"], jobs["people-portraits-ca"]?.normal], [400 * MB, undefined, 250 * MB],
+    "a first ordinary hour at the floor or above is its normal; a job under the floor keeps none");
+  jobs = run.at(2, [row("place-pages", 1_500 * MB)]);
+  assert.deepEqual([jobs["place-pages"]!.normal, jobs["place-pages"]!.times], [410 * MB, 2], "an eighth of the way to 480 MB, then 1.5 GB is a spike");
+  assert.equal(jobs["people-portraits-ca"]!.normal, 250 * MB, "one job's hours never move another's normal");
+  run.at(3, [row("place-pages", 300 * MB)]);
+  jobs = run.at(4, []);
+  assert.deepEqual([jobs["place-pages"]!.normal, jobs["place-pages"]!.times], [410 * MB, undefined], "neither the spike hour nor the slowed hour taught it");
 });
 
-test("a hot in-process routine task is metered under its own name and pauses alone; the other tasks and children still run",async()=>{
-  const root=mkdtempSync(join(tmpdir(),"bb-routine-")),path=join(root,"breaker.json");
-  const env={...process.env,[JOB_BREAKER_PATH_ENV]:path};
-  const previousJournal=process.env.WTP_DATABASE_TRANSFER_DIR;
-  process.env.WTP_DATABASE_TRANSFER_DIR=join(root,"transfer");
+test("each spiking hour doubles the spacing up to 8 times; an hour at its normal brings it back; the record stays a week", () => {
+  const run = hours({ hour: iso(HOUR), jobs: { "place-pages": { normal: 400 * MB, seen: iso(HOUR) } } });
+  const pace = (n: number, bytes: number) => run.at(n, [row("place-pages", bytes)])["place-pages"]!;
+  for (const [n, times] of [[0, 2], [1, 4], [2, 8], [3, 8]] as const) assert.equal(pace(n, 2_000 * MB).times, times);
+  assert.equal(pace(4, 1_000 * MB).times, 8, "an hour between its normal and three times it keeps the spacing");
+  assert.equal(pace(5, 300 * MB).times, 8, "the hour is judged once it is over");
+  const back = pace(6, 0);
+  assert.equal(back.times, undefined, "after an hour at its normal it is back at its ordinary pace");
+  assert.equal(back.slowed!.back, iso(HOUR + 6 * H + MINUTE));
+  assert.deepEqual(run.changes, ["SLOW 2", "SLOW 4", "SLOW 8", "SLOW 8", "NORMAL 8"]);
+  assert.ok(pace(150, 0).slowed, "the slow-down stays on Admin's record for the week");
+  assert.equal(pace(200, 0).slowed, undefined);
+});
+
+test("a slowed job's launches wait its own gap times the slow-down, at most an hour more, and never stop; others keep their pace", () => {
+  const { root, path, env } = breakerFiles();
   try {
-    saveBreakerSnapshot(path,{checkedAt:new Date().toISOString(),states:{}});
-    const now=Date.now(), portraits="people-portraits-ca";
-    // One pass: the portrait list reads 0.6 GB in process; door install and meeting pins read a little.
-    await runRoutineJob({id:portraits},async()=>{countNeonBytes("reader",600_000_000,now,{requests:40,bytes:0},undefined,"civic_data_promotions:STATE_LEGISLATOR");},()=>undefined,env);
-    await runRoutineJob(ROUTINE_JOBS.doors,async()=>{countNeonBytes("control-plane",20_000_000,now,{requests:5,bytes:0},undefined,"cp_doors");},()=>undefined,env);
-    await runRoutineJob(ROUTINE_JOBS.meetingPins,async()=>{countNeonBytes("reader",3_000_000,now,{requests:5,bytes:0},undefined,"fact");},()=>undefined,env);
-    const reads=processNeonBytes().find(part=>Object.keys(part.reads??{}).some(key=>key.includes(portraits)))!.reads!;
-    const byJob=new Map<string,number>();
-    for(const [key,[,sent,received]] of Object.entries(reads)) {
-      const job=key.split("\t")[1]!;
-      if([portraits,"doors","meeting-pins"].includes(job)) byJob.set(job,(byJob.get(job)??0)+sent!+received!);
+    const launched = new Map<string, number[]>();
+    // place-pages takes a turn every 4 minutes, door-probes an hour-long turn, box-facts runs in each publish-now pass.
+    const every: Record<string, number> = { "place-pages": 4, "door-probes": 60, "box-facts": 10, "publish-now": 10, "meeting-pins": 10 };
+    for (let minute = 0; minute <= 8 * 60; minute++) {
+      const slowed = minute >= 120 && minute < 360;
+      if (minute % 10 === 0) saveBreakerSnapshot(path, { checkedAt: iso(HOUR + minute * MINUTE), hour: "", jobs: slowed
+        ? { "place-pages": { seen: "", times: 8 }, "door-probes": { seen: "", times: 2 }, "box-facts": { seen: "", times: 4 }, "publish-now": { seen: "", times: 8 } } : {} });
+      for (const [job, gap] of Object.entries(every)) {
+        const times = launched.get(job) ?? [];
+        if ((times.at(-1) ?? -Infinity) + gap <= minute && admitJobLaunch(job, env, HOUR + minute * MINUTE)) launched.set(job, [...times, minute]);
+      }
     }
-    assert.deepEqual([...byJob].sort(),[["doors",20_000_000],["meeting-pins",3_000_000],[portraits,600_000_000]],"each task's bytes carry its own name");
-    assert.ok(!Object.keys(reads).some(key=>key.split("\t")[1]==="routine-civic-data"),"none count as the routine lane's");
-    const checked=evaluateJobBreaker({now,rows:[...byJob].map(([job,bytes])=>({job,requests:1,bytes,topTable:null})),states:{}});
-    assert.deepEqual(checked.events.map(event=>event.job),[portraits],"only the hot task pauses");
-    saveBreakerSnapshot(path,checked.snapshot);
-
-    const ran:string[]=[];
-    for(const job of [{id:portraits},ROUTINE_JOBS.doors,ROUTINE_JOBS.meetingPins,ROUTINE_JOBS.boxFacts])
-      await runRoutineJob(job,async()=>{ran.push(job.id);},id=>{ran.push(`held ${id}`);},env);
-    assert.deepEqual(ran,[`held ${portraits}`,"doors","meeting-pins","box-facts"]);
-
-    const launched:string[]=[];
-    const results=await runBoundedChildPass([{id:portraits,executable:process.execPath,args:["scripts/people-portraits-refresh.mts"]},
-      {id:"place-map-ca",executable:process.execPath,args:["scripts/place-map-refresh.mts"]}],{cwd:root,env},async command=>{
-      launched.push(command.id);return {id:command.id,status:0,signal:null,stdout:"",stderr:"",termination:"EXITED",errorMessage:null};
-    });
-    assert.deepEqual(launched,["place-map-ca"],"the paused task's child waits; another state's map still launches");
-    assert.match(routineDeferral(results[0]!,false)!,/^JOB_TRANSFER_BREAKER:.*paused until released in Admin/);
-    for(const supervisor of ["routine-civic-data","publish-now","pilot-runner"]) assert.equal(admitJobLaunch(supervisor,env),true);
-  } finally {
-    if(previousJournal===undefined)delete process.env.WTP_DATABASE_TRANSFER_DIR;else process.env.WTP_DATABASE_TRANSFER_DIR=previousJournal;
-    rmSync(root,{recursive:true,force:true});
-  }
+    const within = (job: string, from: number, to: number) => launched.get(job)!.filter(m => m >= from && m < to);
+    assert.deepEqual(within("place-pages", 120, 360).slice(0, 4), [148, 180, 212, 244], "eight 4-minute gaps apart");
+    assert.deepEqual(within("door-probes", 120, 360), [180, 300], "an hour on, an hour off");
+    assert.equal(within("box-facts", 120, 360).length, 6, "a publish-now task every 40 minutes instead of 10");
+    assert.equal(within("publish-now", 120, 360).length, 24, "the publish-now supervisor is never slowed");
+    assert.equal(within("meeting-pins", 120, 360).length, 24, "a job that did not spike keeps its pace");
+    for (const job of Object.keys(every)) {
+      const minutes = launched.get(job)!;
+      assert.ok(minutes.every((m, i) => i === 0 || m - minutes[i - 1]! <= 120), `${job} never waits more than two hours`);
+      assert.ok(within(job, 360, 480).length >= 120 / every[job]! - 1, `${job} is back at its ordinary pace`);
+    }
+  } finally { rmSync(root, { recursive: true, force: true }); }
 });
 
-test("Admin lists the paused job with a Release button; Release resumes it on the runner's next check, and it can pause again",async()=>{
-  const db=new PGlite(),root=mkdtempSync(join(tmpdir(),"bb-release-")),path=join(root,"breaker.json");
-  const env={...process.env,[JOB_BREAKER_PATH_ENV]:path},job="people-portraits-ca";
+test("production's paused state upgrades to running on deploy: every job launches and Admin lists nothing", async () => {
+  const db = new PGlite(), { root, path, env } = breakerFiles();
   try {
-    await db.exec(`CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,reads jsonb,PRIMARY KEY(hour,database_name));${JOB_BREAKER_DDL}`);
-    const sql=pglite(db);
-    await hourly(db,HOUR,{[`${job}\tcivic_data_promotions:STATE_LEGISLATOR\tlib/photos/portrait-run.ts`]:[40,0,600_000_000],"doors\tcp_doors":[5,0,20_000_000]});
-    const breaker=new JobTransferBreaker({path,reader:sql,control:sql,release:()=>"v1",meter:()=>[]});
-    await breaker.check(HOUR+JOB_BREAKER_INTERVAL_MS);
-    assert.equal(admitJobLaunch(job,env),false);
-    assert.equal(admitJobLaunch("doors",env),true);
-    await breaker.check(HOUR+3_600_000+JOB_BREAKER_INTERVAL_MS);
-    assert.equal(admitJobLaunch(job,env),false,"the next hour does not resume it");
-
-    // Admin: the command center lists it in plain words, with the Release control.
-    const repos={...createMemoryRepositories(),jobTransferPauses:{latest:()=>readJobBreakerLatest(sql),
-      release:(input:Parameters<typeof releaseJob>[1])=>releaseJob(sql,input)}};
-    const view=pausedJobsView(await repos.jobTransferPauses.latest(),new Date(HOUR+3_700_000).toISOString());
-    assert.deepEqual(view.jobs.map(row=>[row.job,row.label,row.gb,row.topTableWords]),[[job,"Portraits · CA",0.6,"civic data promotions (state legislator)"]]);
-    const v6={place:{key:"us",name:"United States",kind:"Country",navParent:null,within:[]},access:{role:"owner",canSpend:true,outreachAuthorized:false},
-      defOf:(ref:{kind:Parameters<typeof actionDef>[0]})=>actionDef(ref.kind),whyNot:()=>null,act:()=>{}} as unknown as V6;
-    const html=renderToStaticMarkup(h(V6Context.Provider,{value:v6},h(PausedJobsList,{jobs:view.jobs})));
-    const face=html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g,"").replace(/<[^>]+>/g," ").replace(/\s+/g," ");
-    assert.match(face,/Portraits · CA Paused Paused Oct 26, 2:10 PM ET after reading 0\.60 GB in one hour, most of it from civic data promotions \(state legislator\)\./);
-    assert.match(html,/<button[^>]*>Release<\/button>/);
-    assert.doesNotMatch(face,/people-portraits-ca|civic_data_promotions/,"the job id and table name stay behind Technical details");
-    assert.match(html,/<summary>Technical details<\/summary><ul[^>]*><li>Job: people-portraits-ca<\/li>/);
-    assert.equal(actionDef("job-release").gateway?.type,"jobs.release");
-    const input=actionInput("job-release",{target:job,scopeKey:"us",option:null,words:"",amount:"",selected:[]});
-
-    // Release: a control-plane write through the gateway, with a receipt, needing nothing from the owner's PC.
-    const request={type:"jobs.release",subject:job,input,caller:"OWNER_SESSION" as const,actorRef:"owner-session",stateVersion:null,idempotencyKey:"release-portraits-ca"};
-    const at=new Date(HOUR+3_600_000+15*60_000).toISOString();
-    const deps={repos,now:()=>at,currentStateVersion:null,codeSha:null};
-    const released=await submit(request,deps);
-    assert.equal(released.ok,true,released.receipt.says);
-    assert.equal(released.receipt.outcome,"DONE");
-    assert.equal(released.receipt.says,"Released Portraits · CA. It starts again within ten minutes.");
-    assert.equal((await submit(request,deps)).replayed,true,"a double click is one release");
-    const resume=await sql.query("SELECT detail FROM cp_job_transfer_breaker WHERE action='RESUME'");
-    assert.equal(resume.length,1);
-    const detail=resume[0]!.detail as Record<string,unknown>;
-    assert.deepEqual([detail.receiptId,detail.actorRef],[released.receipt.receiptId,"owner-session"],"the release says who and when, beside its receipt");
-    assert.equal(admitJobLaunch(job,env),false,"launches wait for the runner's next check");
-    assert.deepEqual(pausedJobsView(await repos.jobTransferPauses.latest(),at).jobs,[],"Admin no longer lists it");
-    const refused=await submit({...request,idempotencyKey:"release-again"},deps);
-    assert.equal(refused.ok,false);
-    assert.equal(refused.receipt.says,"Portraits · CA is not paused.");
-
-    await hourly(db,HOUR+3_600_000,{[`${job}\tcivic_data_promotions:STATE_LEGISLATOR`]:[10,0,450_000_000]});
-    await breaker.check(HOUR+3_600_000+2*JOB_BREAKER_INTERVAL_MS);
-    assert.equal(admitJobLaunch(job,env),true,"the next check, within ten minutes, lets its launches start again");
-    const checks=await sql.query("SELECT detail FROM cp_job_transfer_breaker WHERE action='CHECK' ORDER BY checked_at DESC LIMIT 1");
-    assert.deepEqual((checks[0]!.detail as {released:string[]}).released,[job]);
-    await hourly(db,HOUR+3_600_000,{[`${job}\tcivic_data_promotions:STATE_LEGISLATOR`]:[20,0,900_000_000]});
-    await breaker.check(HOUR+3_600_000+3*JOB_BREAKER_INTERVAL_MS);
-    assert.equal(admitJobLaunch(job,env),true,"bytes read before the release do not count again");
-    await hourly(db,HOUR+3_600_000,{[`${job}\tcivic_data_promotions:STATE_LEGISLATOR`]:[30,0,950_000_001]});
-    await breaker.check(HOUR+3_600_000+4*JOB_BREAKER_INTERVAL_MS);
-    assert.equal(admitJobLaunch(job,env),false,"over 0.5 GB after its release, it pauses again and waits for another release");
-    assert.equal(pausedJobsView(await repos.jobTransferPauses.latest(),at).jobs.length,1);
-
-    const events=await readJobBreakerEvents(sql,new Date(HOUR+3_600_000).toISOString(),new Date(HOUR+7_200_000).toISOString());
-    const saved=withKeeperFixes({...defaultAdminConfig(at),settingHistory:[]},{from:new Date(HOUR+3_600_000).toISOString(),through:new Date(HOUR+7_200_000).toISOString(),
-      measuredAt:new Date(HOUR+7_200_001).toISOString(),counts:[],waiting:[],problems:[],own:{bytesRead:0},breakerEvents:events});
-    assert.deepEqual(saved.latestBrief!.updates.map(update=>update.what).sort(),["Portraits · CA paused after 0.950 GB in one hour. It waits until you release it in Admin.",
-      "Portraits · CA was released and may start again."]);
-  } finally {await db.close();rmSync(root,{recursive:true,force:true});}
+    await db.exec(TABLES);
+    const sql = pglite(db);
+    // The control log as release 146 left it, and the snapshot its runner wrote, in its words and an earlier release's.
+    for (const [id, at, action, job] of [["p1", "2026-10-28T03:18:18Z", "PAUSE", "routine-civic-data"], ["p2", "2026-10-28T22:59:02Z", "PAUSE", "place-pages"],
+      ["p3", "2026-10-28T08:52:31Z", "PAUSE", "door-probes"], ["c1", "2026-10-29T06:30:00Z", "CHECK", null]] as const)
+      await db.query(`INSERT INTO cp_job_transfer_breaker VALUES($1,$2::timestamptz,date_trunc('hour',$2::timestamptz),$3,$4,0.525,NULL,NULL,NULL,'{"pauses":[]}')`, [id, at, action, job]);
+    writeFileSync(path, JSON.stringify({ checkedAt: "2026-10-29T06:30:00.000Z", releasesThrough: null, states: {
+      "place-pages": { job: "place-pages", mode: "PAUSED", at: "2026-10-28T22:59:02.729Z", hour: "2026-10-28T22:00:00.000Z", offsetBytes: 0 },
+      "door-probes": { job: "door-probes", mode: "PAUSED_CODE" }, "voting-sites:WI": { job: "voting-sites:WI", mode: "HALF_RATE" } },
+      pendingEvents: [{ id: "old", action: "PAUSE", job: "place-pages" }] }));
+    for (const job of ["place-pages", "door-probes", "voting-sites:WI"]) assert.equal(admitJobLaunch(job, env), true, `${job} launches`);
+    const now = Date.parse("2026-10-29T06:40:00Z"), top = Date.parse("2026-10-29T06:00:00Z");
+    for (let n = 1; n <= 24; n++) await hourly(db, top - n * H, { "place-pages\tcivic_data_promotions": [10, 0, n % 4 ? 317 * MB : 1_500 * MB], "door-probes\tcp_doors": [10, 0, 41 * MB] });
+    await hourly(db, top, { "place-pages\tcivic_data_promotions": [10, 0, 600 * MB] });
+    await new JobTransferBreaker({ path, reader: sql, control: sql, release: () => "147", meter: () => [] }).check(now);
+    assert.deepEqual(JSON.parse(readFileSync(path, "utf8")).jobs, { "place-pages": { normal: 317 * MB, seen: iso(top) } },
+      "with no saved state its first normal is its median hour of the last day");
+    for (const job of ["place-pages", "door-probes", "voting-sites:WI"]) assert.equal(jobSlowTimes(job, env, now), 1);
+    assert.deepEqual((await sql.query("SELECT id FROM cp_job_transfer_breaker WHERE action<>'CHECK' ORDER BY id")).map(r => r.id), ["p1", "p2", "p3"],
+      "the old pause entries are history; nothing new is paused");
+    assert.deepEqual(slowedJobsView(await readJobBreakerState(sql), iso(now)).jobs, []);
+  } finally { await db.close(); rmSync(root, { recursive: true, force: true }); }
 });
 
-test("a hold stands whatever release wrote it; a snapshot that cannot be read admits only the supervisors that never pause",()=>{
-  const root=mkdtempSync(join(tmpdir(),"bb-admit-")),path=join(root,"breaker.json"),env={...process.env,[JOB_BREAKER_PATH_ENV]:path};
+test("the controller survives an uncertain control write and a restart; Admin and the daily brief name the slowed job in plain words", async () => {
+  const db = new PGlite(), { root, path, env } = breakerFiles(), job = "people-portraits-ca";
   try {
-    // A release's first launches can read the snapshot the previous release wrote, in its own words.
-    writeFileSync(path,JSON.stringify({checkedAt:"2026-10-28T04:48:18.539Z",states:{
-      "place-pages":{job:"place-pages",mode:"PAUSED_HOUR",trips:1},"publish-now":{job:"publish-now",mode:"PAUSED_CODE"},
-      "voting-sites:WI":{job:"voting-sites:WI",mode:"HALF_RATE"},"doors":{job:"doors",mode:"RELEASED"}}}));
-    for(const job of ["place-pages","voting-sites:WI"]) assert.equal(admitJobLaunch(job,env),false,`${job} stays held`);
-    for(const job of ["doors","meeting-pins","publish-now","routine-civic-data"]) assert.equal(admitJobLaunch(job,env),true,`${job} launches`);
-    rmSync(path);
-    for(const job of ["place-pages","doors","people-portraits-ca"]) assert.equal(admitJobLaunch(job,env),false,`${job} waits while the snapshot is missing`);
-    writeFileSync(path,"{");
-    assert.equal(admitJobLaunch("place-pages",env),false,"a torn snapshot holds too");
-    for(const supervisor of ["routine-civic-data","publish-now","pilot-runner"]) assert.equal(admitJobLaunch(supervisor,env),true);
-  } finally { rmSync(root,{recursive:true,force:true}); }
-});
-
-test("the runner's first breaker check runs before the release handoff can reopen the standing clock",()=>{
-  const runner=readFileSync(new URL("../scripts/pilot-runner.mts",import.meta.url),"utf8");
-  const first=runner.indexOf("\nawait jobTransferTick();"),handoff=runner.indexOf("\nlet handoffExitCode = await reconcileRuntimeReleaseAtBoundary();");
-  assert.ok(first>0&&handoff>first,"the breaker writes this release's snapshot before anything launches");
-  assert.equal(runner.split("\nawait jobTransferTick();").length,2,"one startup check");
-});
-
-test("plain job names: per-state tasks say their state, in-process tasks their own words",()=>{
-  assert.equal(jobLabel("people-portraits-ca"),"Portraits · CA");
-  assert.equal(jobLabel("voting-sites:TX"),"Voting places · TX");
-  assert.equal(jobLabel("place-map-ny"),"Place maps · NY");
-  assert.equal(jobLabel("door-sync"),"Door registry sync");
-  assert.equal(jobLabel("place-pages"),"Place pages");
-  assert.equal(jobLabel("meeting-partition:legistar-tucson"),"Meeting calendar");
-  for(const job of Object.values(ROUTINE_JOBS)) {
-    assert.ok(Number.isSafeInteger(job.databaseBytesPerRun) && job.databaseBytesPerRun > 0,`${job.id} states its bytes per run`);
-    assert.ok(job.databaseBytesPerRun <= 500_000_000,`${job.id} fits under the hourly limit in one run`);
-  }
-});
-
-test("the actual controller survives an uncertain control write, restarts and sends each pause exactly once",async()=>{
-  const db=new PGlite(),root=mkdtempSync(join(tmpdir(),"bb-outbox-")),path=join(root,"breaker.json");
-  try {
-    await db.exec(`CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,reads jsonb);${JOB_BREAKER_DDL}`);
-    await db.query("INSERT INTO database_transfer_hourly VALUES($1,'reader',$2::jsonb)",[new Date(HOUR).toISOString(),
-      JSON.stringify({"legiscan-bulk\tcivic_data_candidates":[incident.requests,0,incident.bytes]})]);
-    let fail=true;
-    const sql={query:async(text:string,params:readonly unknown[]=[])=>{
-      const result=await db.query<Record<string,unknown>>(text,[...params]);
-      if(text.startsWith("INSERT INTO cp_job_transfer_breaker")&&fail){fail=false;throw new Error("Connection lost after commit");}
+    await db.exec(TABLES);
+    let fail = true;
+    const sql: BreakerSql = { query: async (text, params = []) => {
+      const result = await db.query<Record<string, unknown>>(text, [...params]);
+      if (text.startsWith("INSERT INTO cp_job_transfer_breaker") && fail) { fail = false; throw new Error("Connection lost after commit"); }
       return result.rows;
-    }};
-    const options={path,reader:sql,control:sql,release:()=>"release-v1",meter:()=>[]};
-    await assert.rejects(new JobTransferBreaker(options).check(HOUR+JOB_BREAKER_INTERVAL_MS),/Connection lost after commit/);
-    const local=JSON.parse(readFileSync(path,"utf8"));
-    assert.equal(local.states[incident.job].mode,"PAUSED");
-    assert.equal(local.pendingEvents.length,2,"the pause and check survived the uncertain commit");
-    assert.equal(admitJobLaunch(incident.job,{...process.env,[JOB_BREAKER_PATH_ENV]:path}),false);
-    await new JobTransferBreaker(options).check(HOUR+2*JOB_BREAKER_INTERVAL_MS);
-    assert.equal((await sql.query("SELECT count(*)::int n FROM cp_job_transfer_breaker WHERE action='PAUSE'"))[0]!.n,1);
-    assert.equal((await sql.query("SELECT count(*)::int n FROM cp_job_transfer_breaker WHERE action='CHECK'"))[0]!.n,2);
-    assert.equal(JSON.parse(readFileSync(path,"utf8")).pendingEvents,undefined);
-    assert.equal(admitJobLaunch(incident.job,{...process.env,[JOB_BREAKER_PATH_ENV]:path}),false);
-    const events=await readJobBreakerEvents(sql,new Date(HOUR).toISOString(),new Date(HOUR+3_600_000).toISOString());
-    assert.equal(events.length,1);
-    const config={...defaultAdminConfig(new Date(HOUR).toISOString()),settings:{"fleet.budget.dailyUsd":{key:"fleet.budget.dailyUsd",value:0}},
-      settingHistory:[]};
-    const saved=withKeeperFixes(config,{from:new Date(HOUR).toISOString(),through:new Date(HOUR+3_600_000).toISOString(),
-      measuredAt:new Date(HOUR+3_600_001).toISOString(),counts:[],waiting:[],problems:[],own:{bytesRead:0},breakerEvents:events});
-    assert.match(saved.latestBrief!.updates[0]!.what,/Legiscan bulk paused after 1\.991 GB in one hour/);
-    assert.deepEqual(saved.settings,config.settings,"the hourly report leaves the owner's settings alone");
-    assert.deepEqual(saved.settingHistory,config.settingHistory);
-  } finally {await db.close();rmSync(root,{recursive:true,force:true});}
+    } };
+    const options = { path, reader: sql, control: sql, release: () => "147", meter: () => [] };
+    await hourly(db, HOUR, { [`${job}\tcivic_data_promotions:STATE_LEGISLATOR\tlib/photos/portrait-run.ts`]: [40, 0, 700 * MB], "doors\tcp_doors": [5, 0, 20 * MB] });
+    await assert.rejects(new JobTransferBreaker(options).check(HOUR + JOB_BREAKER_INTERVAL_MS), /Connection lost after commit/);
+    assert.equal(JSON.parse(readFileSync(path, "utf8")).pendingEvents.length, 1, "the check survived the uncertain commit");
+    assert.deepEqual([jobSlowTimes(job, env, HOUR + JOB_BREAKER_INTERVAL_MS), jobSlowTimes("doors", env, HOUR + JOB_BREAKER_INTERVAL_MS)], [2, 1]);
+    await new JobTransferBreaker(options).check(HOUR + 2 * JOB_BREAKER_INTERVAL_MS);
+    assert.equal((await sql.query("SELECT count(*)::int n FROM cp_job_transfer_breaker WHERE action='CHECK'"))[0]!.n, 2, "each check written once");
+    assert.equal(JSON.parse(readFileSync(path, "utf8")).pendingEvents, undefined);
+    rmSync(path); // A new host: the control plane's last check carries the state.
+    await new JobTransferBreaker(options).check(HOUR + 3 * JOB_BREAKER_INTERVAL_MS);
+    assert.equal(jobSlowTimes(job, env, HOUR + 3 * JOB_BREAKER_INTERVAL_MS), 2);
+
+    const at = iso(HOUR + 3 * JOB_BREAKER_INTERVAL_MS), view = slowedJobsView(await readJobBreakerState(sql), at);
+    assert.deepEqual(view.jobs.map(j => [j.job, j.label, j.gb, j.normalGb, j.times, j.backAt]), [[job, "Portraits · CA", 0.7, 0.2, 2, null]]);
+    const html = renderToStaticMarkup(h(SlowedJobsList, { jobs: view.jobs }));
+    const face = html.replace(/<details\b[^>]*>[\s\S]*?<\/details>/g, "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+    assert.match(face, /Portraits · CA Slowed 2× Read 0\.70 GB in the hour from Oct 28, 6:00 PM ET against its normal 0\.20 GB, most of it from civic data promotions \(state legislator\)\. It keeps running, with launches 2 times further apart, until it reads at its normal again\. Its fix is first on the builders’ list\./);
+    assert.doesNotMatch(face, /release|paused/i);
+    assert.doesNotMatch(face, /people-portraits-ca|civic_data_promotions/, "the job id and table name stay behind Technical details");
+
+    const events = await readJobBreakerEvents(sql, iso(HOUR), iso(HOUR + H));
+    const saved = withKeeperFixes({ ...defaultAdminConfig(at), settingHistory: [] }, { from: iso(HOUR), through: iso(HOUR + H), measuredAt: iso(HOUR + H + 1),
+      counts: [], waiting: [], problems: [], own: { bytesRead: 0 }, breakerEvents: events });
+    assert.deepEqual(saved.latestBrief!.updates.map(update => update.what), ["Portraits · CA read 0.700 GB in one hour against its normal 0.200 GB. "
+      + "It keeps running with launches 2 times further apart until it reads at its normal again; its fix is first on the builders' list."]);
+  } finally { await db.close(); rmSync(root, { recursive: true, force: true }); }
 });
 
-test("six scheduled checks use under 5 MB/hour including real Neon request and response envelopes",async(t)=>{
-  const db=new PGlite(),root=mkdtempSync(join(tmpdir(),"bb-wire-")),previous=neonConfig.fetchFunction;
-  const previousReport=process.env.WTP_VITAL_SIGNS_REPORT;
-  process.env.WTP_VITAL_SIGNS_REPORT="1";
-  let requests=0,sent=0,received=0;
+test("a hot in-process routine task is metered under its own name and slows alone; the other tasks and children still run", async () => {
+  const { root, path, env } = breakerFiles(), previousJournal = process.env.WTP_DATABASE_TRANSFER_DIR;
+  process.env.WTP_DATABASE_TRANSFER_DIR = join(root, "transfer");
   try {
-    await db.exec(`CREATE TABLE database_transfer_hourly(hour timestamptz,database_name text,reads jsonb);${JOB_BREAKER_DDL}`);
-    await db.query("INSERT INTO database_transfer_hourly VALUES($1,'reader',$2::jsonb)",[new Date(HOUR).toISOString(),
-      JSON.stringify({"normal\tcp_doors":[10,1000,10000]})]);
-    neonConfig.fetchFunction=async(_input:Parameters<typeof fetch>[0],init?:RequestInit)=>{
-      const body=String(init?.body);requests++;sent+=Buffer.byteLength(body);
-      const query=JSON.parse(body),result=await db.query<Record<string,unknown>>(query.query,query.params);
-      const fields=result.fields;
-      const encode=(value:unknown)=>value==null?null:value instanceof Date?value.toISOString():typeof value==="object"?JSON.stringify(value):String(value);
-      const answer=JSON.stringify({command:"SELECT",rowCount:result.rows.length,rowAsArray:true,fields,
-        rows:result.rows.map(row=>fields.map(field=>encode(row[field.name])))});
-      received+=Buffer.byteLength(answer);
+    saveBreakerSnapshot(path, { checkedAt: new Date().toISOString(), hour: "", jobs: {} });
+    const now = Date.now(), portraits = "people-portraits-ca";
+    await runRoutineJob({ id: portraits }, async () => { countNeonBytes("reader", 700 * MB, now, { requests: 40, bytes: 0 }, undefined, "civic_data_promotions:STATE_LEGISLATOR"); }, () => undefined, env);
+    await runRoutineJob(ROUTINE_JOBS.doors, async () => { countNeonBytes("control-plane", 20 * MB, now, { requests: 5, bytes: 0 }, undefined, "cp_doors"); }, () => undefined, env);
+    const reads = processNeonBytes().find(part => Object.keys(part.reads ?? {}).some(key => key.includes(portraits)))!.reads!;
+    const byJob = new Map<string, number>();
+    for (const [key, [, sent, received]] of Object.entries(reads)) {
+      const job = key.split("\t")[1]!;
+      if ([portraits, "doors"].includes(job)) byJob.set(job, (byJob.get(job) ?? 0) + sent! + received!);
+    }
+    assert.deepEqual([...byJob].sort(), [["doors", 20 * MB], [portraits, 700 * MB]], "each task's bytes carry its own name");
+    assert.ok(!Object.keys(reads).some(key => key.split("\t")[1] === "routine-civic-data"), "none count as the routine lane's");
+    const checked = evaluateJobBreaker({ now, rows: [...byJob].map(([job, bytes]) => row(job, bytes)), state: null });
+    assert.deepEqual(checked.changes.map(change => change.job), [portraits], "only the hot task slows");
+    saveBreakerSnapshot(path, { checkedAt: new Date().toISOString(), ...checked.state });
+    const ran: string[] = [];
+    for (const job of [{ id: portraits }, ROUTINE_JOBS.doors, ROUTINE_JOBS.meetingPins])
+      await runRoutineJob(job, async () => { ran.push(job.id); }, id => { ran.push(`slowed ${id}`); }, env);
+    assert.deepEqual(ran, [`slowed ${portraits}`, "doors", "meeting-pins"], "it ran a moment ago, so its next run waits; the others run");
+    const launched: string[] = [];
+    const results = await runBoundedChildPass([{ id: portraits, executable: process.execPath, args: ["scripts/people-portraits-refresh.mts"] },
+      { id: "place-map-ca", executable: process.execPath, args: ["scripts/place-map-refresh.mts"] }], { cwd: root, env }, async command => {
+      launched.push(command.id); return { id: command.id, status: 0, signal: null, stdout: "", stderr: "", termination: "EXITED", errorMessage: null };
+    });
+    assert.deepEqual(launched, ["place-map-ca"], "the slowed task's child waits its turn; another state's map launches");
+    assert.match(routineDeferral(results[0]!, false)!, /^JOB_TRANSFER_BREAKER: people-portraits-ca read far more than its normal, so its launches are spaced out/);
+  } finally {
+    if (previousJournal === undefined) delete process.env.WTP_DATABASE_TRANSFER_DIR; else process.env.WTP_DATABASE_TRANSFER_DIR = previousJournal;
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test("a missing, torn or stale snapshot slows nothing; supervisors are never slowed", () => {
+  const { root, path, env } = breakerFiles();
+  try {
+    assert.equal(jobSlowTimes("place-pages", env), 1, "no snapshot");
+    writeFileSync(path, "{");
+    assert.equal(jobSlowTimes("place-pages", env), 1, "a torn snapshot");
+    saveBreakerSnapshot(path, { checkedAt: iso(HOUR), hour: "", jobs: { "place-pages": { seen: "", times: 8 }, "routine-civic-data": { seen: "", times: 8 } } });
+    assert.equal(jobSlowTimes("place-pages", env, HOUR + H), 8);
+    assert.equal(jobSlowTimes("place-pages", env, HOUR + 2 * H), 1, "a snapshot two hours old");
+    for (const supervisor of ["routine-civic-data", "publish-now", "pilot-runner"]) assert.equal(jobSlowTimes(supervisor, env, HOUR), 1);
+  } finally { rmSync(root, { recursive: true, force: true }); }
+});
+
+test("the runner's first breaker check runs before the release handoff can reopen the standing clock", () => {
+  const runner = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
+  const first = runner.indexOf("\nawait jobTransferTick();"), handoff = runner.indexOf("\nlet handoffExitCode = await reconcileRuntimeReleaseAtBoundary();");
+  assert.ok(first > 0 && handoff > first, "the breaker writes this release's snapshot before anything launches");
+  assert.equal(runner.split("\nawait jobTransferTick();").length, 2, "one startup check");
+});
+
+test("plain job names: per-state tasks say their state, in-process tasks their own words", () => {
+  assert.equal(jobLabel("people-portraits-ca"), "Portraits · CA");
+  assert.equal(jobLabel("voting-sites:TX"), "Voting places · TX");
+  assert.equal(jobLabel("place-map-ny"), "Place maps · NY");
+  assert.equal(jobLabel("door-sync"), "Door registry sync");
+  assert.equal(jobLabel("place-pages"), "Place pages");
+  assert.equal(jobLabel("meeting-partition:legistar-tucson"), "Meeting calendar");
+  for (const job of Object.values(ROUTINE_JOBS)) {
+    assert.ok(Number.isSafeInteger(job.databaseBytesPerRun) && job.databaseBytesPerRun > 0, `${job.id} states its bytes per run`);
+    assert.ok(job.databaseBytesPerRun <= SPIKE_TIMES * NORMAL_FLOOR_BYTES, `${job.id}: one run alone never reads as a spike`);
+  }
+});
+
+test("each scheduled check reads one keyed hour, under 5 MB/hour including real Neon request and response envelopes", async (t) => {
+  const db = new PGlite(), { root } = breakerFiles(), previous = neonConfig.fetchFunction, previousReport = process.env.WTP_VITAL_SIGNS_REPORT;
+  process.env.WTP_VITAL_SIGNS_REPORT = "1";
+  let sent = 0, received = 0;
+  const queries: string[] = [];
+  try {
+    await db.exec(TABLES);
+    await hourly(db, HOUR, { "normal\tcp_doors": [10, 1000, 10000] });
+    neonConfig.fetchFunction = async (_input: Parameters<typeof fetch>[0], init?: RequestInit) => {
+      const body = String(init?.body); sent += Buffer.byteLength(body);
+      const query = JSON.parse(body), result = await db.query<Record<string, unknown>>(query.query, query.params);
+      queries.push(String(query.query).trim().split(/\s+/)[0]!);
+      const fields = result.fields;
+      const encode = (value: unknown) => value == null ? null : value instanceof Date ? value.toISOString() : typeof value === "object" ? JSON.stringify(value) : String(value);
+      const answer = JSON.stringify({ command: "SELECT", rowCount: result.rows.length, rowAsArray: true, fields,
+        rows: result.rows.map(r => fields.map(field => encode(r[field.name]))) });
+      received += Buffer.byteLength(answer);
       return new Response(answer);
     };
-    const sql=neon("postgresql://fixture:fixture@ep-bb-wire-fixture.us-east-2.aws.neon.tech/neondb");
-    const breaker=new JobTransferBreaker({path:join(root,"breaker.json"),reader:sql,control:sql,release:()=>"v1",
-      meter:()=>[{hour:new Date(HOUR).toISOString(),requests,bytes:sent+received}]});
-    const before=sent+received;
-    for(let tick=0;tick<6;tick++)await breaker.check(HOUR+tick*JOB_BREAKER_INTERVAL_MS);
-    const after=sent+received;
-    assert.ok(after-before<5_000_000,`${after-before} bytes/hour`);
-    const checks=(await db.query<{n:number}>("SELECT count(*)::int n FROM cp_job_transfer_breaker WHERE action='CHECK'")).rows[0]!.n;
-    assert.equal(checks,6);
-    assert.equal((await db.query<{n:number}>("SELECT count(*)::int n FROM cp_job_transfer_breaker WHERE action='PAUSE'")).rows[0]!.n,0);
-    t.diagnostic(JSON.stringify({testStore:true,beforeGbPerHour:before/1e9,afterGbPerHour:after/1e9,requestBytes:sent,responseBytes:received,requests}));
+    const sql = neon("postgresql://fixture:fixture@ep-bb-wire-fixture.us-east-2.aws.neon.tech/neondb");
+    const breaker = new JobTransferBreaker({ path: join(root, "breaker.json"), reader: sql, control: sql, release: () => "v1", meter: () => [] });
+    await breaker.check(HOUR);
+    const reads = () => queries.splice(0).filter(query => query !== "INSERT").length;
+    assert.equal(reads(), 3, "start: the saved state, the one-time first normals, the hour");
+    for (let tick = 1; tick <= 6; tick++) await breaker.check(HOUR + tick * JOB_BREAKER_INTERVAL_MS);
+    assert.equal(reads(), 6, "each check reads only its hour; closing the hour reads nothing more");
+    assert.ok(sent + received < 5_000_000, `${sent + received} bytes/hour`);
+    t.diagnostic(JSON.stringify({ testStore: true, requestBytes: sent, responseBytes: received }));
   } finally {
-    neonConfig.fetchFunction=previous;
-    if(previousReport===undefined)delete process.env.WTP_VITAL_SIGNS_REPORT;else process.env.WTP_VITAL_SIGNS_REPORT=previousReport;
-    await db.close();rmSync(root,{recursive:true,force:true});
+    neonConfig.fetchFunction = previous;
+    if (previousReport === undefined) delete process.env.WTP_VITAL_SIGNS_REPORT; else process.env.WTP_VITAL_SIGNS_REPORT = previousReport;
+    await db.close(); rmSync(root, { recursive: true, force: true });
   }
 });

@@ -24,8 +24,8 @@ import { publishHeldMeetingPins } from "../lib/civic-data/held-meeting-pins.ts";
 import { receiptCapture } from "../lib/facts/capture.ts";
 import { withReaderRoute } from "../lib/db/reader-route.ts";
 import { withDatabaseJob } from "../lib/db/transfer-by-caller.ts";
-import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
-import { JOB_HELD_WORDS, ROUTINE_JOBS, runRoutineJob, type RoutineJob } from "../lib/civic-data/routine-jobs.ts";
+import { admitJobLaunch, JOB_SLOWED_WORDS } from "../lib/control-plane/job-breaker-local.ts";
+import { ROUTINE_JOBS, runRoutineJob, type RoutineJob } from "../lib/civic-data/routine-jobs.ts";
 import type { WorkerPublicationCapture } from "../lib/civic-data/worker-roster-publication.ts";
 import { readHeldInputs, readHeldPointerTimes } from "../lib/civic-data/worker-held-elections.ts";
 
@@ -225,7 +225,7 @@ if (PUBLISH_NOW && PLACE_MAPS) throw new Error("Publish-now cannot run the place
 const ADMITTED_CODE_SHA = assertRuntimeAuthority({ capabilities: ["ROUTINE_SUPERVISOR"] }).sha;
 installNeonRequestDeadline();
 
-/** In-process work this pass found paused; each stays owed and is recorded as deferred. */
+/** In-process work slowed this pass; each stays owed and is recorded as deferred. */
 const heldJobs = new Set<string>();
 function routineJob<T>(job: RoutineJob, run: () => Promise<T>, fallback: T): Promise<T> {
   return runRoutineJob(job, run, id => { heldJobs.add(id); return fallback; });
@@ -715,10 +715,11 @@ function recordLaunchDecision(task: Pick<RoutineSourceTask, "id" | "sourceId" | 
   console.log(`RCD_${action} ${task.id}: ${detail}`);
   launchDecisions.push(routineLaunchDecision(task, action, reason, safeFailure(detail), new Date().toISOString()));
 }
-/** In-process work its breaker held this pass is deferred like a held source: owed, with its reason. */
+const SLOWED_REASON = "Spacing out its launches: it read far more than its normal";
+/** In-process work its breaker slowed this pass is deferred like a slowed source: owed, with its reason. */
 function recordHeldJobs(): void {
-  for (const id of heldJobs) recordLaunchDecision({ id, sourceId: id, scope: "US" }, "DEFER", "Holding this work to reduce database traffic",
-    `JOB_TRANSFER_BREAKER: ${id} is ${JOB_HELD_WORDS}`);
+  for (const id of heldJobs) recordLaunchDecision({ id, sourceId: id, scope: "US" }, "DEFER", SLOWED_REASON,
+    `JOB_TRANSFER_BREAKER: ${id} ${JOB_SLOWED_WORDS}`);
   heldJobs.clear();
 }
 async function flushLaunchDecisions(): Promise<void> {
@@ -914,10 +915,10 @@ if (controlPlaneUrlFromEnv() && !PLACE_MAPS) try {
 const offeredTasks = [...STANDING_SOURCE_TASKS, ...candidateFindingTasks, ...huntTasks.filter(task => !STANDING_SOURCE_TASKS.some(standing => standing.id === task.id))]
   .filter((task) => !ONLY || ONLY.has(task.id) || (task.registeredContractId !== undefined && ONLY.has(task.registeredContractId)))
   .map(task => ({ ...task, ...factRefreshBounds(task, sourceFactClocks) }));
-/** A source its transfer breaker paused is not read for, clocked or launched; its work stays owed until it is released. */
+/** A slowed source not yet due is not read for, clocked or launched this pass; its work stays owed. Its child's launch records it. */
 const selectedTasks = offeredTasks.filter(task => {
-  if (admitJobLaunch(task.id)) return true;
-  recordLaunchDecision(task, "DEFER", "Holding this source to reduce database traffic", `JOB_TRANSFER_BREAKER: ${task.id} is ${JOB_HELD_WORDS}`);
+  if (admitJobLaunch(task.id, process.env, Date.now(), false)) return true;
+  recordLaunchDecision(task, "DEFER", SLOWED_REASON, `JOB_TRANSFER_BREAKER: ${task.id} ${JOB_SLOWED_WORDS}`);
   return false;
 });
 /** A pass with nothing further to do saves its byte counter and frees its host-local resources. */
@@ -1465,7 +1466,7 @@ async function settlePendingRunResult(pending: PendingRun, run: BoundedChildResu
     attempted -= 1;
 
     const detail = safeFailure(deferral);
-    recordLaunchDecision(pending.task, "DEFER", /^JOB_TRANSFER_BREAKER:/.test(detail) ? "Holding this source to reduce database traffic"
+    recordLaunchDecision(pending.task, "DEFER", /^JOB_TRANSFER_BREAKER:/.test(detail) ? SLOWED_REASON
       : /MEMORY/.test(detail) ? "Waiting for a worker slot" : "Next pass will continue the source read", `${detail}; source work remains owed`);
     notStarted.push(pending.task.id);
     return;

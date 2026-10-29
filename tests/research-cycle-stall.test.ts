@@ -13,9 +13,10 @@ import { stalledJobs } from "../lib/control-plane/line-keeper/jobs.ts";
 
 const intent = (action: string, at: string) => ({ formatVersion: 1, kind: "INTENT", intentId: `${action}:${at}`, action, actor: "admin",
   adminSessionRef: "s", requestedAt: at, note: null }) as ResearchIntent;
-const breaker = (states: object) => {
+const T0 = Date.parse("2026-10-29T07:00:00Z");
+const breaker = (jobs: object) => {
   const path = join(mkdtempSync(join(tmpdir(), "breaker-")), "breaker.json");
-  writeFileSync(path, JSON.stringify({ checkedAt: "2026-10-29T07:00:00Z", states }));
+  writeFileSync(path, JSON.stringify({ checkedAt: new Date(T0).toISOString(), hour: new Date(T0).toISOString(), jobs }));
   return { ...process.env, [JOB_BREAKER_PATH_ENV]: path };
 };
 
@@ -35,16 +36,18 @@ test("Stop every hunt in every state, with no Send, no longer holds the research
   const intents = [intent("PAUSE_RUNNER", "2026-10-25T05:03:54.068Z"), intent("RESUME_RUNNER", "2026-10-26T03:38:06.420Z"),
     intent("RUN_CYCLE_NOW", "2026-10-29T06:33:22.288Z")];
   assert.equal(readIntents(intents).runnerPause.paused, false);
-  const env = breaker({ "routine-civic-data": { job: "routine-civic-data", mode: "PAUSED" } });
-  assert.deepEqual(await loop(() => admitJobLaunch("research-cycle", env) ? null : "breaker"), ["cycle 1"]);
+  const env = breaker({ "place-maps": { seen: new Date(T0).toISOString(), times: 8 } });
+  assert.deepEqual(await loop(() => admitJobLaunch("research-cycle", env, T0) ? null : "slowed"), ["cycle 1"]);
   for (const script of ["scripts/pilot-runner.mts", "scripts/freshness-shadow.mts"])
     assert.doesNotMatch(readFileSync(script, "utf8"), /researchPlanningStates|honorStoppedHunts|All hunts are stopped/);
 });
 
-test("a held research cycle names its hold and launches once released", async () => {
-  const env = breaker({ "research-cycle": { job: "research-cycle", mode: "PAUSED" } });
-  let looks = 0;
-  assert.deepEqual(await loop(() => ++looks < 3 && !admitJobLaunch("research-cycle", env) ? "breaker" : null), ["held: breaker", "held: breaker", "cycle 1"]);
+test("a research cycle slowed by the breaker names its wait and launches at its spaced turn, never refused for good", async () => {
+  const env = breaker({ "research-cycle": { seen: new Date(T0).toISOString(), times: 4 } });
+  assert.equal(admitJobLaunch("research-cycle", env, T0), true);
+  let now = T0;
+  assert.deepEqual(await loop(() => admitJobLaunch("research-cycle", env, now += 60_000) ? null : "slowed"),
+    ["held: slowed", "held: slowed", "held: slowed", "cycle 1"]);
 });
 
 test("the line keeper flags a job past two intervals, names why, and clears it after a finish", () => {
@@ -70,8 +73,8 @@ test("the line keeper flags a job past two intervals, names why, and clears it a
   assert.equal(flag!.job, "research-cycle");
   assert.equal(flag!.says, "Paid research rounds has not finished a run since it was scheduled October 25, 8:47 PM ET; it runs every hour. " +
     "Its last run failed October 25, 9:54 PM ET: FATAL ERROR: Ineffective mark-compacts near heap limit Allocation failed - JavaScript heap out of memory");
-  restarted.held("research-cycle", "Held by the job transfer breaker until you release it in Admin.");
-  assert.match(stalledJobs(restarted.merged(stored), now, now)[0]!.says, /Held by the job transfer breaker/);
+  restarted.held("research-cycle", "Slowed by the job transfer breaker: its launches are spaced out.");
+  assert.match(stalledJobs(restarted.merged(stored), now, now)[0]!.says, /Slowed by the job transfer breaker/);
   assert.match(stalledJobs(stored, "2026-10-29T05:00:00.000Z", now)[0]!.says, /The runner itself last reported October 29, 1:00 AM ET/);
   restarted.started("research-cycle");
   restarted.finished("research-cycle");

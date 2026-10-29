@@ -149,8 +149,6 @@ test("no file URL is used as a path without fileURLToPath", () => {
       [["new URL(source.requestedUrl)", "pathname"].join("."), 1],
       [["new URL(url)", "pathname"].join("."), 1],
     ]],
-    // Browser resource paths check HTTP request counts and scope, never filesystem paths.
-    ["scripts/rs-02-browser-check.mjs", [[["new URL(resource.name)", "pathname"].join("."), 3]]],
   ]);
 
   const offenders: string[] = [];

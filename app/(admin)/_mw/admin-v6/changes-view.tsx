@@ -15,6 +15,7 @@ function Line({ row }: { readonly row: ChangeRow }) {
     <li>
       <a href={row.url} rel="noreferrer" target="_blank">{row.line}</a>
       <span className={cx(s.meta)}> · {row.session ? `${row.session} · ` : ""}{row.why} · {mst(row.at)}</span>
+      {row.measures && <ul>{row.measures.map((line) => <li key={line} className={s.meta}>{line}</li>)}</ul>}
     </li>
   );
 }

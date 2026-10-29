@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import { changeRowOf, groupChanges, plainLine, sessionOf, type ChangePr } from "../lib/control-plane/changes/model.ts";
 import { forgetChanges, readChanges } from "../lib/control-plane/changes/source.ts";
+import { measureLines, measuresBlock, parseMeasures, type Measures } from "../lib/control-plane/changes/measures.ts";
 
 const pr = (over: Partial<ChangePr>): ChangePr => ({
   number: 1,
@@ -98,4 +99,34 @@ test("a refused token reads as unavailable, never as an empty list", async () =>
   const refuse = (async () => new Response("{}", { status: 401 })) as typeof fetch;
   const reading = await readChanges({ env: { WTP_GITHUB_READ_TOKEN: "bad" }, force: true, fetchImpl: refuse });
   assert.equal(reading.kind, "UNAVAILABLE");
+});
+
+test("a release's four numbers round-trip: River writes the block, Admin reads the same plain lines", async () => {
+  const pending: Measures = {
+    facts: { before: 12081, after: null, early: { perHour: 512, hours: 3 } },
+    zips: { phone: { before: 21, after: null }, tablet: { before: 30, after: null }, desktop: { before: 0, after: null } },
+    reads: { before: 3.42, after: null },
+    lines: { before: 696315, after: 695402 },
+  };
+  const filled: Measures = { ...pending, facts: { before: 12081, after: 13002, early: null }, zips: { phone: { before: 21, after: 24 }, tablet: { before: 30, after: 30 }, desktop: { before: 0, after: 50 } }, reads: { before: 3.42, after: 2.9 } };
+  const unmeasured: Measures = { facts: { before: null, after: null, early: null }, zips: { phone: { before: null, after: null }, tablet: { before: null, after: null }, desktop: { before: null, after: null } }, reads: { before: null, after: null }, lines: { before: 10, after: 10 } };
+  for (const m of [pending, filled, unmeasured]) assert.deepEqual(parseMeasures(`notes\n${measuresBlock(m, ["Slowest ZIPs before: phone 59801 MT 4.1 s."])}\nmore`), m);
+  assert.deepEqual(measureLines(pending), [
+    "Facts reaching readers: 12,081 a day before, after: measuring (first 3 hours: 512 an hour)",
+    "ZIPs usable in under 3 seconds (of 50): phone 21→measuring, tablet 30→measuring, desktop 0→measuring",
+    "Database reads: 3.42 GB an hour before, after: measuring",
+    "Lines of code: 696,315 before, 695,402 after (−913)",
+  ]);
+  assert.match(measureLines(filled)[0], /12,081 a day before, 13,002 after$/);
+  assert.match(measureLines(unmeasured)[3], /\(no change\)$/);
+  assert.equal(parseMeasures("a release body with no block"), null);
+
+  const release = (n: number, headRefName: string) => node(n, { headRefName, body: `River release.\n\n${measuresBlock(pending, [])}` });
+  forgetChanges();
+  const reading = await readChanges({ env: { WTP_GITHUB_READ_TOKEN: "t", WTP_BUILD_COMMIT: LIVE }, force: true, fetchImpl: fakeGithub([release(20, "release/147"), release(21, "stream/x")], {}) });
+  assert.equal(reading.kind, "OBSERVED");
+  if (reading.kind !== "OBSERVED") return;
+  const byNumber = Object.fromEntries(reading.rows.map((r) => [r.number, r]));
+  assert.deepEqual(byNumber[20].measures, measureLines(pending), "Admin shows the release's lines, after: measuring until River fills them");
+  assert.equal(byNumber[21].measures, null, "only release pull requests carry the numbers");
 });

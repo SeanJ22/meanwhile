@@ -485,11 +485,8 @@ export interface ControlPlaneRepositories {
   readonly fixMap: FixMapRepository;
 
   readonly websitePacing: WebsitePacing;
-  /** The job transfer breaker's log: each job's latest pause or release, and the owner's release from Admin. */
-  readonly jobTransferPauses?: {
-    readonly latest: () => Promise<readonly import("../job-transfer-breaker.ts").JobBreakerLatest[]>;
-    readonly release: (input: { readonly job: string; readonly at: string; readonly receiptId: string; readonly actorRef: string }) => Promise<boolean>;
-  };
+  /** The job transfer breaker's last saved check: each job's normal and its slow-downs this week. */
+  readonly jobSlowdowns?: { readonly latest: () => Promise<import("../job-transfer-breaker.ts").SavedJobBreakerState | null> };
 
   readonly runnerHeartbeat: AggregateRepository<RunnerHeartbeat>;
   readonly cacheObservations: AggregateRepository<CacheObservationRecord>;

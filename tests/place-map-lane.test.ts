@@ -103,8 +103,7 @@ test("the lane runs maps smallest first, one at a time, each under its own job n
   });
   assert.deepEqual(results.map(run => run.stdout.trim()), ["place-map-dc", "place-map-wy"]);
   assert.deepEqual(seen, ["place-map-dc", "place-map-wy"]);
-  // Each map is admitted by the job breaker under its own name before its clock is read.
-  assert.match(runner, /const selectedTasks = offeredTasks\.filter\(task => \{\s*if \(admitJobLaunch\(task\.id\)\) return true;/);
+  // Each map asks the job breaker's pace under its own name before its clock is read; its child's launch records it.
+  assert.match(runner, /const selectedTasks = offeredTasks\.filter\(task => \{\s*if \(admitJobLaunch\(task\.id, process\.env, Date\.now\(\), false\)\) return true;/);
   assert.ok(MAPS.every(task => task.contract.databaseBytesPerRun === 60_592_693), "each run states its database bytes");
-  assert.ok(60_592_693 < 500_000_000, "one run an hour per state stays under the 0.5 GB job breaker");
 });

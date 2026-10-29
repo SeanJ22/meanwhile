@@ -3,7 +3,7 @@
  * looking: every hot door that falls due is looked at, oldest look first, several publishers side by side and never
  * two requests at once on one publisher's request clock. A look starts the moment a place is free, so a publisher with
  * hundreds of pages never holds back another's due door. When nothing is due it sleeps until the next door falls due. Every look goes through the shared per-website count (`pacedProbeFetch`), so each website's
- * hourly allowance, Retry-After and refusals hold exactly as for every other reader. A breaker pause or a release
+ * hourly allowance, Retry-After and refusals hold exactly as for every other reader. A release
  * drain stops new looks within the turn.
  */
 import { ADMIN_CONFIG_ID, type AdminConfig } from "../control-plane/gateway/admin-config.ts";
@@ -29,7 +29,7 @@ import { readRunnerDoors } from "./runner-reads.ts";
 export const DOOR_PROBE_TURN_MS = 60 * 60_000;
 /** Doors (changed rows only) and hot partitions are read again this often within a turn. */
 export const DOOR_PROBE_REFRESH_MS = 10 * 60_000;
-/** A pause or a drain is noticed within this while the turn sleeps. */
+/** A drain is noticed within this while the turn sleeps. */
 const SLEEP_STEP_MS = 5_000;
 /** A turn says what it has looked at, or when its next look is, this often. */
 const LINE_MS = 5 * 60_000;
@@ -37,7 +37,7 @@ const LINE_MS = 5 * 60_000;
 const DOOR_PROBE_LANE_EVERY_MS = 60_000;
 
 /**
- * Its own meter, breaker and Admin release. Bytes per turn (one hour), from the Oct 28 21:00 UTC hour of this job:
+ * Its own meter and breaker pace. Bytes per turn (one hour), from the Oct 28 21:00 UTC hour of this job:
  * the open-door list read in full once (4.0 MB), its changed rows on five refreshes (1.5 MB), six hot-partition
  * statements (0.3 MB), 1,399 hot doors' look writes at 5.2 KB (the door read and compare-and-set: 7.3 MB) and 504
  * pages' pacing rows at 4.6 KB (2.3 MB): 15.4 MB, with room for every hot partition's door.
@@ -54,7 +54,7 @@ export interface StandingDoorProbeInput {
   readonly readerQuery: Query;
   /** The lane's deadline: no look starts after it. */
   readonly deadlineMs: number;
-  /** False once the breaker pauses door-probes or the runner holds admissions for a release. */
+  /** False once the runner holds admissions for a release. */
   readonly admitted: () => boolean;
   readonly log: (line: string) => void;
   readonly fetchImpl?: typeof fetch;
@@ -65,7 +65,7 @@ export interface StandingDoorProbeInput {
 /**
  * One turn inside the standing runner's own process. It starts no child, so it never waits for host memory that bulk
  * workers hold: its memory is the open-door list's probe fields and a few pages in flight. Every database read is
- * metered under door-probes, so the breaker, Admin's pause and release and the hourly meter rows name it.
+ * metered under door-probes, so the breaker, its slowed-jobs record and the hourly meter rows name it.
  */
 export function runStandingDoorProbes(input: StandingDoorProbeInput): Promise<DoorProbeTurnReport> {
   return withDatabaseJob(DOOR_PROBES_JOB.id, async () => {
@@ -95,7 +95,7 @@ export function runStandingDoorProbes(input: StandingDoorProbeInput): Promise<Do
       clock: input.clock,
       sleep: input.sleep,
     });
-    input.log(`RCD_PROBE turn ended (${report.ended === "HELD" ? "paused or drained" : "its hour is up"}): ` +
+    input.log(`RCD_PROBE turn ended (${report.ended === "HELD" ? "drained" : "its hour is up"}): ` +
       `${report.looked} door(s) looked at with ${report.requests} request(s); ${report.changed} changed, ${report.failed} failed, ${report.waiting} waited on their website`);
     return report;
   });
@@ -109,7 +109,7 @@ export interface DoorProbeTurnInput {
   readonly fetchFn: ProbeFetch;
   /** Websites looked at side by side. */
   readonly websites: number;
-  /** False once the breaker pauses door-probes or the runner drains for a release. */
+  /** False once the runner drains for a release. */
   readonly admitted: () => boolean;
   readonly deadlineMs: number;
   readonly log: (line: string) => void;

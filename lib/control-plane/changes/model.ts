@@ -11,6 +11,7 @@
  *
  * Pure. No fetch, no clock, no environment.
  */
+import { measureLines, parseMeasures } from "./measures.ts";
 
 export const CHANGE_STATUSES = ["building", "on-test", "deploying", "live"] as const;
 export type ChangeStatus = (typeof CHANGE_STATUSES)[number];
@@ -36,6 +37,8 @@ export interface ChangePr {
   readonly headRefName: string;
   readonly baseRefName: string;
   readonly checks: ChecksState;
+  /** The pull request's description; a release's carries its four numbers. */
+  readonly body?: string;
 }
 
 /** What was worked out about a merged pull request's place on the live site. */
@@ -53,6 +56,8 @@ export interface ChangeRow {
   readonly url: string;
   /** When it last moved: merged time for merged work, else last update. */
   readonly at: string;
+  /** A release's four numbers before and after (rulings §5), in plain English; null for other work. */
+  readonly measures: readonly string[] | null;
 }
 
 const SESSION_TITLE = /^\s*(S\d+)(?:\s+draft)?\s*[:\-–—]\s*/i;
@@ -91,11 +96,13 @@ export function plainLine(title: string): string {
  */
 export function changeRowOf(pr: ChangePr, live: LiveReading = "unknown"): ChangeRow | null {
   if (pr.state === "CLOSED") return null;
+  const measured = pr.headRefName.startsWith("release/") ? parseMeasures(pr.body) : null;
   const base = {
     number: pr.number,
     session: sessionOf(pr),
     line: plainLine(pr.title),
     url: pr.url,
+    measures: measured ? measureLines(measured) : null,
   };
   if (pr.state === "OPEN") {
     const at = pr.updatedAt;

@@ -10,6 +10,7 @@ import { readHour, readRunnerReadProblems, readJobBreakerEvents, query } from ".
 import { jobLabel } from "../job-names.ts";
 import { formatEastern } from "../eastern-time.ts";
 import { LINE_KEEPER_BY, type LineHour } from "./model.ts";
+import { readRunnerJobs, stalledJobProblems, stalledJobs } from "./jobs.ts";
 import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
 function ownBytes() { return processNeonBytes().reduce((n,h)=>n+Object.values(h.byCaller).reduce((a,b)=>a+b,0),0); }
@@ -66,13 +67,6 @@ async function writeFixes(sql:Sql,hour:LineHour) {
   }
   throw Error("Admin settings changed during every hourly repair save");
 }
-/** Both normal and deploy invocations retire the old store without downloading it. */
-export async function retireLineInventory(control:Sql) {
-  await query(control,"retire-inventory","DELETE FROM cp_owner_snapshots WHERE id='line-keeper:current'");
-  await query(control,"retire-country-inputs",`UPDATE cp_owner_snapshots SET value=value-ARRAY['capture','inputs']::text[],
-    revision=revision+1,updated_at=statement_timestamp() WHERE id LIKE 'line-keeper:country:%'
-    AND value ?| ARRAY['capture','inputs']::text[]`);
-}
 export async function runLineKeeper(control:Sql,reader:Sql,at:string,options:{readonly readOnly?:boolean}={}) {
   const baseline=ownBytes();
   const input=await readHour(control,reader,at);
@@ -80,6 +74,8 @@ export async function runLineKeeper(control:Sql,reader:Sql,at:string,options:{re
     key:"runner-reads:unread",where:"Runner database reads",says:"The runner’s hourly database reads could not be compared with the previous 24 hours.",
     owner:"the database workers",next:"Restore the hourly read comparison and check the affected job families.",
   }]);
+  readProblems.push(...await readRunnerJobs(control).then(read=>stalledJobProblems(stalledJobs(read.jobs,read.beatAt,at))).catch(()=>[{key:"runner-jobs:unread",
+    where:"Runner jobs",says:"The runner’s job finish times could not be read.",owner:"the runner workers",next:"Restore the runner heartbeat read."}]));
   let breakerEvents: Awaited<ReturnType<typeof readJobBreakerEvents>> = [];
   try { breakerEvents=await readJobBreakerEvents(control,input.window.from,input.window.through); }
   catch { readProblems.push({key:"job-breaker:unread",where:"Job transfer protection",
@@ -94,7 +90,6 @@ export async function runLineKeeper(control:Sql,reader:Sql,at:string,options:{re
       held?.at&&held.at<waiting.oldestAt?held.at:waiting.oldestAt};
   }
   if(!options.readOnly) {
-    await retireLineInventory(control);
     await writeFixes(control,hour);
     await query(control,"retire-old-runs",`DELETE FROM line_keeper_run WHERE hour < $1::timestamptz - interval '2 hours'`,[hour.from]);
     await query(control,"save-run",`INSERT INTO line_keeper_run(hour,checked_at,problems,bytes_read,oldest)

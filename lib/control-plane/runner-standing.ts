@@ -30,7 +30,7 @@ export function runnerCycleOf(value: unknown): RunnerCycle | null {
 export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
   readonly at: string; readonly startedAt: string; readonly testedSha: string | null; readonly host: string;
   readonly finishedAt?: string; readonly exitCode?: number | null; readonly signal?: string | null;
-  readonly lastError?: string | null;
+  readonly lastError?: string | null; readonly nextCycleDueAt?: string;
 
   readonly memory?: import("./workers/worker-slots.ts").HostMemoryReading | null;
 
@@ -44,7 +44,7 @@ export function liveCycleHeartbeat(previous: RunnerHeartbeat | null, input: {
     beatAt: input.at, lastCycleStartedAt: input.startedAt,
     lastCycleFinishedAt: input.finishedAt ?? previous?.lastCycleFinishedAt ?? null,
     lastCycleOk: input.finishedAt ? input.exitCode === 0 : previous?.lastCycleOk ?? null,
-    nextCycleDueAt: input.finishedAt ? previous?.nextCycleDueAt ?? null : null,
+    nextCycleDueAt: input.finishedAt ? input.nextCycleDueAt ?? previous?.nextCycleDueAt ?? null : null,
     nextCycleReason:input.finishedAt?previous?.nextCycleReason??null:null,
     testedSha: input.testedSha, host: input.host, pause: null,
     cycle: { startedAt: input.startedAt, finishedAt: input.finishedAt ?? null,

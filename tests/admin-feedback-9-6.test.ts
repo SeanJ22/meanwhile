@@ -76,7 +76,7 @@ test("a count agrees with its noun, and a duration is in seconds", () => {
 
 test("the console is published before the first cycle, not only after one", () => {
   const runner = readFileSync(join(ROOT, "scripts", "pilot-runner.mts"), "utf8");
-  const loopAt = runner.indexOf("while (cycle < CYCLES)");
+  const loopAt = runner.indexOf("const loop = await runResearchLoop(");
   assert.ok(loopAt > 0);
   const before = runner.slice(0, loopAt);
   assert.match(

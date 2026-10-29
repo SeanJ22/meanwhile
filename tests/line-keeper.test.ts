@@ -43,7 +43,7 @@ async function readerDatabase() {
 async function controlDatabase(withLeasedWork = false) {
   const db=new PGlite();
   await db.exec(JOB_BREAKER_DDL);
-  for(const table of ['cp_work_items','cp_work_items_archive','cp_doors','cp_box_findings','cp_owner_snapshots'])
+  for(const table of ['cp_work_items','cp_work_items_archive','cp_doors','cp_box_findings','cp_owner_snapshots','cp_runner_heartbeat'])
     await db.exec(`CREATE TABLE ${table}(id text PRIMARY KEY,revision integer NOT NULL DEFAULT 1,updated_at timestamptz NOT NULL DEFAULT now(),value jsonb NOT NULL)`);
   await db.exec(`CREATE VIEW cp_work_items_history AS SELECT * FROM cp_work_items UNION ALL SELECT * FROM cp_work_items_archive;
     CREATE TABLE cp_admin_config(id text PRIMARY KEY,revision integer NOT NULL,updated_at timestamptz,value jsonb);
@@ -268,12 +268,13 @@ test('door and work changes are atomic, retries add no movement, and archival pr
 test('a waiting pile becomes owned Admin work and a brief item on the next hourly invocation, with a tiny saved state',async()=>{
   const [control,reader]=await Promise.all([controlDatabase(),readerDatabase()]);
   try {
-    await control.exec(`INSERT INTO cp_owner_snapshots(id,value) VALUES('line-keeper:current',jsonb_build_object('inventory',repeat('x',1000000)));
-      INSERT INTO cp_box_findings(id,value) VALUES('AZ:pile','{"subjectId":"AZ:body","state":"waiting","origins":[{"recordedAt":"2026-10-20T07:00:00Z"}],"fact":{"recordClass":"MEETING"}}');`);
+    await control.exec(`INSERT INTO cp_box_findings(id,value) VALUES('AZ:pile','{"subjectId":"AZ:body","state":"waiting","origins":[{"recordedAt":"2026-10-20T07:00:00Z"}],"fact":{"recordClass":"MEETING"}}');`);
     const first=new Date(Date.now()+3_600_000).toISOString();
+    await control.query(`INSERT INTO cp_runner_heartbeat(id,value) VALUES('pilot-runner',$1::jsonb)`,[JSON.stringify({beatAt:first,memory:{reservations:[]},
+      jobs:{'research-cycle':{everyMs:3_600_000,since:'2026-10-25T00:00:00Z',lastStartedAt:null,lastFinishedAt:'2026-10-26T01:54:09Z',lastFailedAt:null,lastError:null,heldBy:null}}})]);
     const result=await runLineKeeper(query(control),query(reader),first);
     assert.ok(result.hour.problems.some(p=>p.owner==='The research team'&&p.key==='counts:AZ:MEETING:box:waiting'));
-    assert.equal((await control.query<{n:number}>("SELECT count(*)::int AS n FROM cp_owner_snapshots")).rows[0].n,0);
+    assert.match(result.hour.problems.find(p=>p.key==='stalled-job:research-cycle')!.says,/since October 25, 9:54 PM ET; it runs every hour/);
     await control.exec(`INSERT INTO cp_owner_snapshots(id,value) VALUES('other-owner','{}');`);
     await assert.rejects(()=>control.exec(`DELETE FROM cp_owner_snapshots WHERE id='other-owner'`),/only the retired/);
     const fixes=(await control.query<{value:{owner:string}}>('SELECT value FROM cp_admin_fix_list')).rows;

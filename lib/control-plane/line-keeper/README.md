@@ -18,11 +18,16 @@ hour, finish time, problem count, bytes read and one oldest-waiting summary per
 state; at most three rows are retained. Admin reads those small summaries; the
 full age query runs only in the hourly job.
 It never loads or saves records, source documents, page targets or replay caches.
-The former `line-keeper:current` inventory is deleted when the replacement runs.
 
 Admin uses the same counters, by state, family, stage and hour. Eastern hour labels
 include EST or EDT. Oldest waiting times keep ageing on Admin even when a writer
 or the keeper stops. A missing or late completed run is stated on Now.
+
+The runner records on its heartbeat when each job it schedules last started,
+finished or failed (`jobs`). The hourly run and Admin's Now read only those clocks
+and flag every job that has not finished a run within two of its own intervals,
+with its last finish in Eastern time, its interval and the reason when one is
+recorded. A heartbeat that keeps beating never clears that flag; a finish does.
 
 A growing waiting pile or an hour with no movement creates owned work in the
 existing fix list and daily brief. Counters never close a fix: its owner still

@@ -164,6 +164,7 @@ function IsItWorking() {
       <div className={s.stack}>
         <p className={s.small}>{last !== null ? `${mst(last.hour)}${before !== null ? ` · the hour before: ${mst(before.hour)}` : ""}` : hours === null ? "Not measured yet." : "The hour has not been recorded yet."}</p>
         <p className={s.small}>{board?.lineKeeper ?? "The line keeper has not reported yet."}</p>
+        {board?.stalledJobs?.map((line) => <p key={line} className={cx(s.small, s.textWarn)}>{line}</p>)}
         {rows.map((r) => {
           const now = last === null ? { text: "—" } : r.of(last), earlier = before === null ? null : r.of(before);
           return (

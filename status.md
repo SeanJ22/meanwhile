@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 151 (site aaa9f62cf 4:45 PM EDT; runner on aaa9f62 by 5:15 PM): Keys box; 31 keys imported (runner+website), 25 Working, 6 Not working. river e279020cc. 152 in wt-fold152 (walls, huntstop, facts, worked) — quick check running; waiting tour + votingfeeds.
+build_state: LIVE: release 151 (site aaa9f62cf; runner aaa9f62). 152 in wt-fold152 (f99e41498): walls + huntstop + facts + worked + votingfeeds 30d3f4e5b + tour 7c47f8cb6 + CX-MAP 7218cf260 + deleted 9 unused proof scripts → code 691,176 → 690,151 (−1,025). pnpm gates running.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T21:20:00Z
+heartbeat: 2026-10-29T22:40:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -211,6 +211,7 @@ heartbeat: 2026-10-29T21:20:00Z
 - 4:30 PM EDT Oct 29: Sean changed 'facts reaching readers': count once, only a new value for that thing+field, still current (live), on a reader's page (page built since live depends on it; meeting via its body). READY RIVER-FACTS-152 e057d2a42. Yesterday (24 h to 3:30 PM) 7,336 new count vs 10,442 old. Used from 151 on. 151 shard 1 failed on OB-01 tour race (also fails on 150 code 2/5) → rerun once, builder stream/river-tour-152. Walls READY 812fcb515.
 - 4:40 PM EDT Oct 29: runner on 150. Voting feeds: 13/56 state feeds failing — DE, MA, OR since Oct 26 (sites answer); AZ, WA today's 3:47 PM run; AK GU KY ME MT RI VT WI never succeeded (SHUT, unreachable). Builder stream/river-votingfeeds-152 (urgent: Election Day Nov 3). 151 ZIP before (on 150): phone 38, tablet 44, desktop 40. Huntstop READY fe6b3c969 (−3 lines). Worked-date + dead blackout code → builder stream/river-worked-152. Runner notes: place-pages slowed by breaker; research cycle CONTROL_PLANE_REQUEST_TIMEOUTs; legistar-members 'stopped; queued records remain due'; platform-census CENSUS_LANE_FAILED.
 - 5:20 PM EDT Oct 29: 151 numbers: facts before 7,408 (new count), reads before 5.59 GB/h, ZIPs 38/44/40 → 43/48/49 (load; 151 no reader code); phone 60169 IL and 07501 NJ over 15 s after — first-visit tour open over the panel (sent to tour builder); 07501 Paterson shows 0 meetings. Keys not working: NEON_BILLING_API_KEY, PLURAL_API_KEY, WTP_MAPTILER_SMOKE_KEY, DATA_GOV_API_KEY, LDA_API_KEY, SAM_GOV_API_KEY. Worked READY 2fcf3a56a: AZ 79 national-place obligations not worked since Oct 23 (shared state clock skipped them); folded in 152. Line keeper blind to overdue standing obligations → asked Sean.
+- 6:40 PM EDT Oct 29, Sean: fold CX-MAP 7218cf26 into 152; code must not grow (delete unnecessary code); NO more KB-01 READYs until KB-01 deletes the old key readers and the ledger; run pnpm gates; if CX-MAP breaks a test, `river.mjs return cx-map` naming the test (don't fix its code); notes line: ZIP count treats the map as drawn when it reports loaded, before district lines show; stop when 152 is on main and deployed, then tell the oversight chat. Voting feeds: one validate.ts bug held DE/MA/OR/KY/AZ/WA (replacement check never passed in production since Oct 24); VT linking-copy permission crash; AK/GU missing intermediate certs; MT/RI/WI Cloudflare 403 — needs Sean.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

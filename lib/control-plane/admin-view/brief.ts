@@ -79,11 +79,10 @@ export async function readFreshAlerts(repos:ControlPlaneRepositories,at:string,
 }
 /** Same inputs as Queue; failures name the unread part instead of claiming there are no problems. */
 export async function readBrief(repos:ControlPlaneRepositories,at:string):Promise<BriefReading> {
-  const held=await repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 50 },
-    fixList: { activeAndRecent: 500, fieldsProjection: QUEUE_FIX_FIELDS, queueFixSummary: true } });
-  if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
-  const config=held?.value??defaultAdminConfig(at);const unread:string[]=[];
-  const [history,stuck,reports,doors,questions]=await Promise.all([
+  const unread:string[]=[];
+  const [held,history,stuck,reports,doors,questions]=await Promise.all([
+    repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 50 },
+      fixList: { activeAndRecent: 500, fieldsProjection: QUEUE_FIX_FIELDS, queueFixSummary: true } }),
     readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>{unread.push("orders");return null;}),
     population().catch(()=>null).then(p=>{if(!p){unread.push("stuck cases");return null;}return stuckViews(p.rows,"us",at,[],p.summary).items;}),
     readReports(at).catch(()=>{unread.push("reader problems");return null;}),
@@ -92,6 +91,8 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
     }).catch(()=>{unread.push("doors");return null;}),
     readerQuestionRows(repos).catch(()=>{unread.push("unanswered reader questions");return [];}),
   ]);
+  if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
+  const config=held?.value??defaultAdminConfig(at);
   if(history?.page.nextCursor)unread.push("older orders outside the current page");
   if(reports?.sites.some(s=>s.kind==="UNREADABLE"))unread.push("reader problems from an unread site");
   const fixes=v6FixesView(fixQueueView(collapseDecisionLog([])),fixItems(config));

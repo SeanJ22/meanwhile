@@ -2,7 +2,7 @@ import { adminRead } from "@/lib/control-plane/admin-read.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "@/lib/control-plane/admin-auth.ts";
 import { owedStatesOf } from "@/lib/control-plane/admin-view/place-scorecard.ts";
-import { readPlaceOwed } from "@/lib/control-plane/admin-view/place-owed-read.ts";
+import { readPlaceOwed, resolvePlaceKey } from "@/lib/control-plane/admin-view/place-owed-read.ts";
 import { PLACE_ITEM_PAGE, v6PlaceNotMeasured, v6PlaceSection } from "@/lib/control-plane/admin-view/v6-place-section.ts";
 import { guardAdminRequest } from "@/lib/control-plane/gateway/admin-guard.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig, placeTargetOf } from "@/lib/control-plane/gateway/admin-config.ts";
@@ -61,17 +61,23 @@ async function get(request: NextRequest): Promise<NextResponse> {
   if (!Number.isInteger(limit) || limit < 1 || limit > 200 || !Number.isInteger(offset) || (status !== null && owedStatesOf(status) === null) ||
     (group !== null && !/^[A-Z]{2,4}$/.test(group)) || (q !== null && q.length > 80))
     return NextResponse.json({ code: "INVALID_QUERY" }, { status: 400, headers: NO_STORE });
-  const read = await readPlaceOwed(params.get("scope")!, undefined, { fresh: params.get("fresh") === "1" });
+  const placeKey = params.get("scope")!;
+  const isPlace = !("says" in resolvePlaceKey(placeKey));
+  const [read, config, history] = await Promise.all([
+    readPlaceOwed(placeKey, undefined, { fresh: params.get("fresh") === "1" }),
+    isPlace ? configFor(placeKey) : Promise.resolve({ target: null, missionStart: null, repos: null }),
+    isPlace ? historyFor(placeKey) : Promise.resolve([]),
+  ]);
   if (read.state === "REFUSED") {
     if (read.code === "NOT_A_PLACE" || read.code === "UNSUPPORTED_PLACE") return NextResponse.json(v6PlaceNotMeasured(params.get("scope")!, read.says, new Date().toISOString()), { headers: NO_STORE });
     return NextResponse.json({ code: read.code, says: read.says }, { status: 503, headers: NO_STORE });
   }
-  const { target, missionStart, repos } = await configFor(read.placeKey);
+  const { target, missionStart, repos } = config;
   // New kinds of things found for a sent place join the updates feed, once each. A feed that cannot be written never fails the read.
   if (repos !== null) {
     try { await addUpdates(repos, owedKindUpdates({ placeKey: read.placeKey, placeLabel: read.label, rows: read.rows, missionStart }), read.observedAt); } catch { /* the feed is retried on the next read */ }
   }
-  return NextResponse.json(v6PlaceSection(read, { group, states: status === null ? null : owedStatesOf(status), q, offset, limit }, target, await historyFor(read.placeKey), missionStart), { headers: NO_STORE });
+  return NextResponse.json(v6PlaceSection(read, { group, states: status === null ? null : owedStatesOf(status), q, offset, limit }, target, history, missionStart), { headers: NO_STORE });
 }
 
 export const GET = adminRead(get);

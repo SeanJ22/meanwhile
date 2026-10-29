@@ -88,6 +88,26 @@ test("changing screens discards an in-flight compact Now answer before reading t
   sync.dispose();
 });
 
+test("Now leaves worker and result reads to their visible screens and navigation still loads them",async()=>{
+ const calls:string[]=[];const sync=new LiveSync({scope:"us",screen:"now",sections:VIEW_SECTIONS.now,schedule:()=>()=>{},
+  fetch:async url=>{calls.push(url);const id=url.includes("/workers?")?"workers":"results";return{status:200,json:async()=>({contract:`admin-v6/${id}@1`,scope:"us",revision:"one",asOf:"2026-10-29T00:00:00Z",data:[]})};}});
+ sync.onPulse(pulse({workers:{contract:"admin-v6/workers@1",href:"/api/admin/v6/workers",revision:"one"},results:{contract:"admin-v6/results@1",href:"/api/admin/v6/results",revision:"one"}}));
+ await flush();assert.deepEqual(calls,[]);
+ sync.setScreen("workers",VIEW_SECTIONS.workers);await flush();assert.match(calls[0],/\/workers\?/);
+ sync.setScreen("work",VIEW_SECTIONS.work);await flush();assert.match(calls[1],/\/results\?/);sync.dispose();
+});
+
+test("Checklist reads its spend fields and a late compact reply cannot overwrite Money",async()=>{
+ const {sync,calls}=harness();sync.setScreen("checklist",VIEW_SECTIONS.checklist);
+ sync.onPulse(pulse({spend:{contract:"admin-v6/spend@1",href:"/api/admin/v6/spend",revision:"one"}}));
+ assert.match(calls[0].url,/reading=checklist/);
+ sync.setScreen("money",VIEW_SECTIONS.money);assert.equal(calls.length,2);assert.doesNotMatch(calls[1].url,/reading=checklist/);
+ const reply=(data:unknown)=>({status:200,body:{contract:"admin-v6/spend@1",scope:"st:az",revision:"one",asOf:"2026-10-29T00:00:00Z",data}});
+ calls[1].resolve(reply({byMonth:[],neon:{kind:"recorded"}}));await flush();calls[0].resolve(reply({byMonth:[]}));await flush();
+ assert.deepEqual(sync.snapshot().spend.data,{byMonth:[],neon:{kind:"recorded"}});
+ sync.setScreen("checklist",VIEW_SECTIONS.checklist);assert.match(calls.at(-1)!.url,/reading=checklist/);sync.dispose();
+});
+
 test("pausing cancels pending retries and rejects late responses until the next active pulse", async () => {
   const { sync, calls, timers } = harness();
   sync.onPulse(pulse(stuckAnn("v1")));

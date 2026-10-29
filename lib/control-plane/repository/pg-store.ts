@@ -518,6 +518,12 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
   const table = "cp_doors", repo = pgAggregateRepository<DoorRecord>(sql, "Door", table, options);
   const run = boundedRunner(sql, table, options.bounds ?? CONTROL_PLANE_REQUEST_BOUNDS_MS);
   const reader = versionedRowsFor(sql);
+  // The door job owns its narrowed cursor state. Unrelated disposable source
+  // copies must not evict it and force every installed adapter to be read again.
+  const continuations = reader.cache.jobState();
+  const continuation = <T>(namespace: string, key: string, current: (etag: string | null, held?: T) => Promise<
+    { readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null>) =>
+    continuations.row({ namespace: `${reader.database}:${namespace}`, key, current });
   const installFields = doorFieldsSql("cp_doors.value", Object.keys(DOOR_INSTALL_FIELDS));
   const deriveFields = doorFieldsSql("cp_doors.value", DOOR_DERIVE_FIELDS);
   const headerFields = doorFieldsSql("cp_doors.value", DOOR_HEADER_FIELDS);
@@ -534,7 +540,7 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
     const selected = recordProjectionSql(table, projection, "value");
     const installFingerprint = projection === DOOR_INSTALL_FIELDS;
     const namespace = `door-current:2:${createHash("sha256").update(JSON.stringify({ projection, meetingsOnly, state: options.state, activeOnly: options.activeOnly })).digest("hex")}`;
-    const held = await reader.cached<DoorContinuation>(namespace, "rows", async (etag, previous) => {
+    const held = await continuation<DoorContinuation>(namespace, "rows", async (etag, previous) => {
       const [counter] = await controlCounts(sql, table);
       if (!counter) throw new Error("The door change counter is unavailable");
       if (counter.generation === etag) return { etag: counter.generation, unchanged: true };
@@ -616,7 +622,7 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
         DOOR_DERIVE_FIELDS.map(field => draft[field]))).digest("hex")]));
       const namespace = `door-derive:1:${createHash("sha256").update(canonicalJson([...source.keys()].sort())).digest("hex")}`;
       const outcomes: DerivedDoorOutcome[] = [];
-      await reader.cached<DeriveContinuation>(namespace, "fingerprints", async (etag, previous) => {
+      await continuation<DeriveContinuation>(namespace, "fingerprints", async (etag, previous) => {
         const [counter] = await controlCounts(sql, table);
         if (!counter) throw new Error("The door change counter is unavailable");
         const pointers: Record<string, DerivedPointer> = { ...previous?.rows };
@@ -683,7 +689,7 @@ export function pgDoorRepository(sql: Sql, options: PgRepositoryBounds = {}): Do
     },
     async retireDuplicates(at) {
       const retired: string[] = [];
-      await reader.cached<{ readonly generation: string }>("door-duplicate-cursor:1", "current", async (etag, previous) => {
+      await continuation<{ readonly generation: string }>("door-duplicate-cursor:1", "current", async (etag, previous) => {
         const [counter] = await controlCounts(sql, table);
         if (!counter) throw new Error("The door change counter is unavailable");
         if (etag === counter.generation) return { etag: counter.generation, unchanged: true };

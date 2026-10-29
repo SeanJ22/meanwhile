@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test,{after} from 'node:test';
 import {PGlite} from '@electric-sql/pglite';
-import {OWNER_STUCK_COUNTS_DDL,OWNER_STUCK_COUNTS_BACKFILL_DDL,readOwnerStuckSummary,readOwnerDistrictStuckCounts} from '../lib/control-plane/repository/owner-stuck-counts.ts';
+import {OWNER_STUCK_COUNTS_DDL,OWNER_STUCK_COUNTS_BACKFILL_DDL,readOwnerStuckSummary,readOwnerStuckRows,readOwnerDistrictStuckCounts} from '../lib/control-plane/repository/owner-stuck-counts.ts';
 import {stuckViews} from '../lib/control-plane/admin-view/v6-stuck-read.ts';
 import {placeKeyOfRow,stateOfRow,type StuckRowLike} from '../lib/control-plane/admin-view/blocker-causes.ts';
 import type {StuckSummary} from '../lib/control-plane/admin-view/stuck-summary.ts';
@@ -43,6 +43,8 @@ test('typed top rows and running cohorts preserve complete cause, state, place a
  const{sql,calls}=await fixture(rows);
  for(const scope of ['us','st:az','geo:az.zcta.85001']){
   const raw=await readOwnerStuckSummary(sql,300,scope,NOW),read=population(raw);
+  assert.deepEqual(await readOwnerStuckRows(sql,300,scope,NOW),raw.rows,'the decision strip receives the same ranked rows without unrelated cause cohorts');
+  assert.doesNotMatch(calls.at(-1)!,/cp_owner_stuck_counts|samples AS/);
   assert.deepEqual(stuckViews(read.rows,scope,NOW,[],read.summary),stuckViews(rows,scope,NOW));
   assert.ok(read.rows.length<=300);
  }

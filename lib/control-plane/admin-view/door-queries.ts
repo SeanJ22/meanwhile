@@ -8,6 +8,7 @@ import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { versionedRowsFor } from "../../db/versioned-rows.ts";
 import { controlCounts } from "../repository/control-counts.ts";
+import { peopleDoorCovers } from "../../doors/people-feeds.ts";
 
 // The same validity test as isDoorRecord, evaluated before a row leaves PostgreSQL.
 export const VALID_DOOR_SQL = `value->'formatVersion'='1'::jsonb
@@ -15,6 +16,8 @@ export const VALID_DOOR_SQL = `value->'formatVersion'='1'::jsonb
   AND jsonb_typeof(value->'bodyIds')='array' AND jsonb_typeof(value->'hosts')='array'
   AND value->>'status' IN ('OPEN','SHUT','SUSPENDED') AND jsonb_typeof(value->'updatedAt')='string'`;
 const DOOR_KEYS = ["doorId", "kind", "bodyIds", "hosts", "holds", "status", "updatedAt", "shutSince", "lastSuccessAt", "lastFailureAt", "shutReason", "lastFailureReason", "notes"];
+export const OFFICIALS_DOOR_FIELDS = {formatVersion:true,doorId:true,kind:true,bodyIds:true,hosts:true,holds:true,status:true,updatedAt:true,
+  lastSuccessAt:true,lastFailureAt:true,lastChangedAt:true,config:["sourceId","scope","sourceUrl","url","route","listUrl"]} as const;
 export const ADMIN_DOOR_VALUE_SQL = `jsonb_build_object('formatVersion',1,'config','{}'::jsonb,
   ${DOOR_KEYS.map(key => `'${key}',value->'${key}'`).join(",")},
   'meeting',CASE WHEN value->'meeting' IS NULL OR value->'meeting'='null'::jsonb THEN NULL ELSE
@@ -74,6 +77,25 @@ export async function readQueueDoorsFromSql(sql: Sql): Promise<QueueDoorsView> {
   return {rows:row.doors.map(([holds,host,jurisdiction,shutReason,lastFailureReason,since])=>({
     name:doorName({holds,hosts:host?[host]:[],meeting:jurisdiction?{jurisdiction}:null}),why:doorWhy({shutReason,lastFailureReason}),since,
   }))};
+}
+
+/** A people-source list carries its identity, links and outcome clocks, never saved configuration payloads. */
+export async function readOfficialsDoors(repos:ControlPlaneRepositories,divisions:readonly string[]):Promise<readonly DoorRecord[]> {
+  const sql=placeReadConnection(repos);
+  const fields=Object.keys(OFFICIALS_DOOR_FIELDS).filter(key=>key!=="config");
+  const selected=`jsonb_build_object(${fields.map(key=>`'${key}',value->'${key}'`).join(",")},'config',
+    jsonb_build_object(${OFFICIALS_DOOR_FIELDS.config.map(key=>`'${key}',value #> '{config,${key}}'`).join(",")}))`;
+  const states=[...new Set(divisions.flatMap(id=>/^ocd-division\/country:us\/(?:state|district|territory):([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase()??[]))];
+  const rows=sql?await versionedRowsFor(sql).selectedRows(async(text,params)=>await boundedQuery(sql,
+    {operation:"cp_doors.officials",callClass:"PAGE"},text,params),"cp_doors",
+    `SELECT id FROM cp_doors WHERE (${VALID_DOOR_SQL}) AND value->>'doorId' LIKE 'feed:%'
+      AND value->'holds' ?| ARRAY['state-legislator','federal-directory']
+      AND coalesce(value #>> '{config,sourceId}','')<>'people-portraits'
+      AND (value #>> '{config,scope}'='US' OR value #>> '{config,scope}' LIKE 'US:%'
+        OR substring(value #>> '{config,scope}' FROM '^US-([A-Z]{2})(?:$|:)')=ANY($1::text[])) ORDER BY id`,[states],selected)
+    :await repos.doors.listNarrowed(OFFICIALS_DOOR_FIELDS);
+  return rows.map(row=>typeof row.value==='string'?JSON.parse(row.value):row.value).filter(isDoorRecord)
+    .filter(door=>peopleDoorCovers(door,divisions));
 }
 
 /** Link health is a few summary records; document contents never enter Admin. */

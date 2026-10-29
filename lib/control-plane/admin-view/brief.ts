@@ -3,7 +3,7 @@ import { BRIEF_TIME_SETTING, ALERTS_ON_SETTING, readSetting } from "../settings.
 import { updateRecords } from "../updates.ts";
 import { updatesView, type UpdateLine } from "./updates-read.ts";
 import { readV6History } from "./admin-v6-history.ts";
-import { population } from "./v6-stuck-population.ts";
+import { population, populationRows } from "./v6-stuck-population.ts";
 import { stuckViews } from "./v6-stuck-read.ts";
 import { readReports, type ReportsReading } from "../reports/read-reports.ts";
 import { fixItems } from "../fix-list.ts";
@@ -64,6 +64,18 @@ export function projectBrief(config:AdminConfig,rows:readonly QueueRow[],at:stri
   const alerts=[...needed.values()];
   return {day:easternBriefClock(at).day,createdAt:at,updates:updatesView(updateRecords(config),at).updates.slice(0,50).map(u=>({...u,what:plainWords(u.what),before:u.before===null?null:plainWords(u.before),after:u.after===null?null:plainWords(u.after)})),
     problems:rows.filter(r=>r.tone==="warn").map(r=>({key:r.key,what:r.what,owner:r.owner,next:r.next})),decisions:alerts,alerts,unread};
+}
+
+/** Only order failures and the displayed decision work can ask the owner to act. */
+export async function readFreshAlerts(repos:ControlPlaneRepositories,at:string,
+  readStuck=()=>populationRows("us",at)):Promise<BriefSnapshot["alerts"]> {
+  const [history,stuck]=await Promise.all([
+    readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>null),
+    readStuck().catch(()=>null).then(rows=>rows?stuckViews(rows,"us",at).items:null),
+  ]);
+  const rows=buildQueue({receipts:history?.data as readonly UiReceipt[]|null ?? null,stuck:stuck as readonly StuckItem[]|null,
+    fixes:null,sends:null,hunts:null,doors:null,scheduled:null});
+  return [...new Map(rows.filter(row=>row.filter==="needs-me").map(row=>[row.key,{key:row.key,what:row.what,next:row.next}])).values()];
 }
 /** Same inputs as Queue; failures name the unread part instead of claiming there are no problems. */
 export async function readBrief(repos:ControlPlaneRepositories,at:string):Promise<BriefReading> {

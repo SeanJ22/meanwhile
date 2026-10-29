@@ -130,6 +130,17 @@ export async function readOwnerStuckSummary(sql:Sql,limit:number,scope:string,no
   return row;
 }
 
+/** The same bounded work rows without counts or cause samples that a decision strip never displays. */
+export async function readOwnerStuckRows(sql:Sql,limit:number,scope:string,nowIso=new Date().toISOString()):Promise<readonly Record<string,unknown>[]> {
+  if(!Number.isSafeInteger(limit)||limit<0||limit>300)throw Error('Stuck rows limit must be between 0 and 300');
+  const state=/^(?:st:|geo:)([a-z]{2})(?:[.:]|$)/.exec(scope)?.[1]??null;
+  const [row]=await sql.query(`WITH shown AS MATERIALIZED(
+    SELECT id,state,lane,owner,blocker,label,subject_name,state_code,overdue,band,waiting_since,eligible_at,last_activity_at,next_action,assignment_keys,${SCORE} AS score
+    FROM cp_owner_stuck_rows WHERE ${ACTIVE} AND ${STORAGE} AND ${SCOPE} ORDER BY score DESC,id LIMIT ${limit})
+    SELECT coalesce(jsonb_agg(${ROW_JSON('shown')} ORDER BY score DESC,id),'[]'::jsonb) AS rows FROM shown`,[scope,nowIso,state]) as {rows:Record<string,unknown>[]}[];
+  return row.rows;
+}
+
 export async function readOwnerDistrictStuckCounts(sql:Sql,districts:readonly {readonly state:string;readonly placeKey:string;readonly zips:readonly string[]}[],nowIso=new Date().toISOString()):Promise<ReadonlyMap<string,number>> {
   if(!districts.length)return new Map();
   const state=districts[0].state;

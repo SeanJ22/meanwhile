@@ -20,17 +20,11 @@ function withinPass(table: string): void {
 
 /** SQL adapters only. CivicReadCache owns every held body and validates each use. */
 export class VersionedRows {
-  private readonly database: string;
-  private readonly cache: CivicReadCache;
+  readonly database: string;
+  readonly cache: CivicReadCache;
   private readonly values: ValueRows;
   constructor(database: string, cache: CivicReadCache) {
     this.database=database;this.cache=cache;this.values=new ValueRows(database,cache);
-  }
-
-  /** A job's narrowed continuation, scoped to this database and confirmed by its current fingerprint. */
-  async cached<T>(namespace: string, key: string, current: (etag: string | null, held?: T) => Promise<
-    { readonly etag: string; readonly value: T } | { readonly etag: string; readonly unchanged: true } | null>): Promise<T | null> {
-    return this.cache.jobState().row({ namespace: `${this.database}:${namespace}`, key, current });
   }
 
   private namespace(table: string, selected: string): string {

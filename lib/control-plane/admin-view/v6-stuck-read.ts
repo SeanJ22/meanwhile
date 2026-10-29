@@ -22,8 +22,14 @@ export async function readStuckPopulation(sql: Sql, scope = "us"): Promise<Stuck
   const summary = await readOwnerStuckSummary(sql,STUCK_ITEM_LIMIT,scope);
   const raw = summary.rows as readonly Record<string,unknown>[];
   let publishedAt: string | null = summary.published_at instanceof Date ? summary.published_at.toISOString() : typeof summary.published_at==='string' ? summary.published_at : null;
-  const rows = raw.map((r): StuckRowLike => {
-    publishedAt = typeof r.published_at === "string" ? r.published_at : r.published_at instanceof Date ? r.published_at.toISOString() : publishedAt;
+  const rows = stuckRowsOf(raw);
+  for (const r of raw) publishedAt = typeof r.published_at === "string" ? r.published_at : r.published_at instanceof Date ? r.published_at.toISOString() : publishedAt;
+  return { state: "READ", rows, publishedAt, summary:{total:Number(summary.total),groups:summary.groups as StuckSummary['groups'],
+    counts:{states:summary.states as Record<string,number>,places:summary.places as Record<string,number>}} };
+}
+
+export function stuckRowsOf(raw:readonly Record<string,unknown>[]):readonly StuckRowLike[] {
+  return raw.map((r): StuckRowLike => {
     const text = (v: unknown) => (typeof v === "string" ? v : null);
     return { id: String(r.id), state: String(r.state), lane: text(r.lane), owner: text(r.owner), blocker: text(r.blocker), label: text(r.label),
       subjectName: text(r.subject_name), stateCode: text(r.state_code), overdue: typeof r.overdue === "boolean" ? r.overdue : null,
@@ -31,8 +37,6 @@ export async function readStuckPopulation(sql: Sql, scope = "us"): Promise<Stuck
       lastActivityAt: text(r.last_activity_at), nextAction: text(r.next_action),
       assignmentKeys: Array.isArray(r.assignment_keys) ? r.assignment_keys.filter((k): k is string => typeof k === "string") : [] };
   });
-  return { state: "READ", rows, publishedAt, summary:{total:Number(summary.total),groups:summary.groups as StuckSummary['groups'],
-    counts:{states:summary.states as Record<string,number>,places:summary.places as Record<string,number>}} };
 }
 
 export interface StuckActionRef { readonly kind: "send-agents"; readonly target: string; readonly label: string; readonly payload: Readonly<Record<string, string>> }

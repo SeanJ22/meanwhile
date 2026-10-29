@@ -1,4 +1,4 @@
-import { peopleDoorsFor } from "../../doors/people-feeds.ts";
+import { readOfficialsDoors, OFFICIALS_DOOR_FIELDS } from "./door-queries.ts";
 import { ocdInside } from "../../doors/mission-refresh.ts";
 import type { DoorRecord } from "../../doors/registry.ts";
 import type { RoutineDataStore } from "../../civic-data/store.ts";
@@ -9,6 +9,8 @@ import { OFFICIALS_CHECK_ACTION, peopleSourceUrl } from "../gateway/officials-ac
 import type { ControlPlaneRepositories } from "../repository/types.ts";
 import { officialsLeadStatus } from "../officials-leads.ts";
 import { resolveOfficialsScope, type OfficialsScope } from "./officials-scope.ts";
+import { placeReadConnection } from "../repository/pg-store.ts";
+import { versionedRowsFor } from "../../db/versioned-rows.ts";
 
 export const OFFICIALS_RESULTS_CONTRACT = "admin-v6/officials@1";
 export type OfficialsChange = RosterChange;
@@ -45,8 +47,9 @@ export function officialsFeedResult(door: DoorRecord, requestedAt: string | null
 
 export async function officialsReceiptFeeds(repos: ControlPlaneRepositories, receipt: Pick<ActionReceipt, "openedWork" | "startedAt">): Promise<readonly OfficialsFeedResult[]> {
   const ids = receipt.openedWork.filter(work => work.kind === "people-feed").map(work => work.id);
-  const rows = repos.doors.readMany ? await repos.doors.readMany(ids) : (await Promise.all(ids.map(id => repos.doors.read(id)))).filter(row => row !== null);
-  const byId = new Map(rows.map(row => [row.id, row.value]));
+  const rows = repos.doors.readManyNarrowed ? await repos.doors.readManyNarrowed(ids,OFFICIALS_DOOR_FIELDS)
+    : (await Promise.all(ids.map(id=>repos.doors.readNarrowed(id,OFFICIALS_DOOR_FIELDS)))).filter(row=>row!==null);
+  const byId = new Map(rows.map(row => [row.id, row.value as DoorRecord]));
   return ids.map(id => {
     const door = byId.get(id);
     return door ? officialsFeedResult(door, receipt.startedAt) : { id, name: "People source", sourceUrl: null, state: "waiting", checkedAt: null };
@@ -64,6 +67,18 @@ function readChanges(payload: unknown): readonly OfficialsChange[] {
   });
 }
 
+async function latestOfficialsReceipt(repos:ControlPlaneRepositories,placeKey:string) {
+  const fields={type:true,outcome:true,startedAt:true,openedWork:true} as const,sql=placeReadConnection(repos);
+  const selected=`jsonb_build_object(${Object.keys(fields).map(key=>`'${key}',record->'${key}'`).join(",")})`;
+  const rows=sql?(await versionedRowsFor(sql).selectedLogs(sql.query.bind(sql),"cp_log_admin_receipts",
+    `SELECT log_key,position FROM cp_log_admin_receipts WHERE log_key=$1 AND record->>'subject'=$2
+      AND record->>'type'=$3 AND record->>'outcome'<>'REFUSED' ORDER BY record->>'startedAt' DESC,position ASC LIMIT 1`,
+    [ADMIN_RECEIPT_LOG_KEY,placeKey,OFFICIALS_CHECK_ACTION],selected)).map(row=>row.record)
+    :await repos.adminReceipts.readRecentWhere(ADMIN_RECEIPT_LOG_KEY,["subject"],placeKey,Number.MAX_SAFE_INTEGER,fields);
+  return (rows as readonly Pick<ActionReceipt,"type"|"outcome"|"startedAt"|"openedWork">[])
+    .filter(row=>row.type===OFFICIALS_CHECK_ACTION&&row.outcome!=="REFUSED").sort((a,b)=>b.startedAt.localeCompare(a.startedAt))[0]??null;
+}
+
 /** A change belongs to the place when its seat covers the place or lies inside it, so a state check sees the whole state. */
 export function changeTouches(divisionId: string, divisions: readonly string[]): boolean {
   return divisions.some(division => ocdInside(division, divisionId) || ocdInside(divisionId, division));
@@ -71,26 +86,23 @@ export function changeTouches(divisionId: string, divisions: readonly string[]):
 
 export async function readOfficialsResults(input: {
   readonly repos: ControlPlaneRepositories;
-  readonly store: Pick<RoutineDataStore, "readPromotion" | "readCandidate">;
+  readonly store: Pick<RoutineDataStore, "readPromotionIdentity" | "readCandidatePath">;
   readonly placeKey: string;
   readonly resolve?: (placeKey: string) => Promise<OfficialsScope>;
 }): Promise<OfficialsResults | { readonly says: string }> {
   const scope = await (input.resolve ?? resolveOfficialsScope)(input.placeKey);
   if (!scope.ok) return { says: scope.says };
-  const receipts = await input.repos.adminReceipts.readWhere(ADMIN_RECEIPT_LOG_KEY, ["subject"], scope.placeKey);
-  const receipt = receipts.filter(row => row.type === OFFICIALS_CHECK_ACTION && row.outcome !== "REFUSED")
-    .sort((a, b) => b.startedAt.localeCompare(a.startedAt))[0] ?? null;
-  const doors = await peopleDoorsFor(input.repos.doors, scope.divisions);
+  const [receipt,doors] = await Promise.all([latestOfficialsReceipt(input.repos,scope.placeKey),readOfficialsDoors(input.repos,scope.divisions)]);
   const feeds = receipt === null ? doors.map(door => officialsFeedResult(door, null)) : await officialsReceiptFeeds(input.repos, receipt);
   const changes: OfficialsChange[] = [];
   if (receipt !== null) {
     const checked = doors.filter(door => feeds.some(feed => feed.id === door.doorId && feed.state !== "waiting"));
     const records = await Promise.all(checked.map(async door => {
       const recordClass = door.holds.includes("federal-directory") ? "FEDERAL_DIRECTORY" as const : "STATE_LEGISLATOR" as const;
-      const pointer = await input.store.readPromotion(recordClass, String(door.config.scope));
+      const pointer = await input.store.readPromotionIdentity(recordClass, String(door.config.scope));
       if (pointer === null || !since(pointer.promotedAt, receipt.startedAt)) return [];
-      const record = await input.store.readCandidate(pointer.versionId);
-      return readChanges(record?.candidate.normalizedPayload);
+      const changes = await input.store.readCandidatePath(pointer.versionId,["normalizedPayload","changes"]);
+      return readChanges({changes});
     }));
     for (const rows of records) changes.push(...rows.filter(change => changeTouches(change.divisionId, scope.divisions)));
   }

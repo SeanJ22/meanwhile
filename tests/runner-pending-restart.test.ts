@@ -49,7 +49,7 @@ test("a pending restart stops relaunching routine children and restarts within o
     applyRuntimeRelease: ({ targetSha }: { targetSha: string }) => { applied.push(targetSha); return { state: "UPDATED", detail: `installed ${targetSha.slice(0, 8)}` }; },
     discardStagedReleases: async () => {}, persistRuntimeBoundaryFailure: async () => { throw new Error("no refusal expected"); },
     stopAdminCopyClock: async () => {}, stopScheduledOrderClock: async () => {}, auditPasses: { stop: async () => {} },
-    drainHunterLane: () => {}, drainDoorProbes: () => {}, waitForRuntimeQuiescence, ownerSays: async () => "NOTHING",
+    drainHunterLane: () => {}, waitForRuntimeQuiescence, ownerSays: async () => "NOTHING",
     console: { log: (line: string) => log.push(line), error: (line: string) => log.push(line) },
     clearInterval, setInterval, Date,
   });
@@ -116,7 +116,7 @@ test("a staging stuck on an older release cannot hold a newer one: the newer one
         : stageRuntimeRelease({ ...input, run: okRun }) }),
       inspectRuntimeRelease: async () => ({ state: "UPDATE_REQUIRED", targetSha: deployed }),
       parentCodeChanged: async () => ({ changed: false, why: [] }), defaultAsyncRunCommand: okRun, stagedReleaseDirectory,
-      runtimeContracts: { request: () => {} }, standingRuntimeScheduler: { inFlightIds: () => [] }, drainHunterLane: () => {}, drainDoorProbes: () => {},
+      runtimeContracts: { request: () => {} }, standingRuntimeScheduler: { inFlightIds: () => [] }, drainHunterLane: () => {},
       console: { log: () => {}, error: () => {} },
     });
     runInContext(stripTypeScriptTypes(["advanceStagedRelease", "checkReleaseForRestart", "holdForRestart"].map(runnerFunction).join("\n")), context);

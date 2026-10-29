@@ -265,8 +265,9 @@ function jsonPathLiteral(table: string, path: readonly string[]): string {
 function recordProjectionSql(table: string, projection: RecordProjection, column: "record" | "value" = "record"): string {
 
   const source = column === "record" ? "record" : `${table}.value`;
+  // Admin setting keys are dotted ("fetch.hostConcurrency"); a dot is plain text inside the quoted literal.
   const literal = (key: string): string => {
-    if (!/^[A-Za-z0-9_]+$/.test(key)) {
+    if (!/^[A-Za-z0-9_.]+$/.test(key)) {
       throw new Error(`${table}: unsafe projection key ${JSON.stringify(key)}`);
     }
     return `'${key}'`;

@@ -8,6 +8,7 @@ import { keyProblems, keysRunnerPass, savedKeysLane } from "../lib/core/keys-run
 import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { importExistingKeys } from "../lib/core/keys-import.ts";
 import { handleKeys } from "../lib/core/keys-http.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN, hostOf } from "../lib/ops/origins.ts";
 import { adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const MASTER = "42".repeat(32), SECRET = "test-private-key-never-display";
@@ -168,13 +169,13 @@ test("the protected Settings API saves, tests, lists and deletes without returni
   const { store } = await fixture(t);
   const cookie = (await adminSessionCookie()).split("=")[1];
   const deps = { store: () => store, test: (s: typeof store, at: string, name?: string) => testDueKeys(s, at, name, good) };
-  const request = (method: string, body?: unknown, host = "admin.meanwhileusa.com", origin = "https://admin.meanwhileusa.com") =>
+  const request = (method: string, body?: unknown, host = hostOf(ADMIN_ORIGIN), origin = ADMIN_ORIGIN) =>
     new Request(`https://${host}/api/admin/v6/keys`, { method, headers: { host, origin, "content-type": "application/json" },
       ...(body ? { body: JSON.stringify(body) } : {}) });
   await withAdminSessionKey(async () => {
     let opened = false;
     const blocked = { store: () => { opened = true; return store; } };
-    assert.equal((await handleKeys(request("GET", undefined, "meanwhileusa.com"), cookie, blocked)).status, 404);
+    assert.equal((await handleKeys(request("GET", undefined, hostOf(PUBLIC_SITE_ORIGIN)), cookie, blocked)).status, 404);
     assert.equal((await handleKeys(request("GET"), undefined, blocked)).status, 401);
     assert.equal((await handleKeys(request("POST", {}, undefined, "https://elsewhere.example"), cookie, blocked)).status, 403);
     assert.equal(opened, false);
@@ -197,8 +198,8 @@ test("known credentials cannot skip their provider check by choosing a different
   await withAdminSessionKey(async () => {
     const cookie = (await adminSessionCookie()).split("=")[1];
     for (const name of ["CONGRESS_API_KEY", "CONGRESS_API_KEY.website"]) {
-      const response = await handleKeys(new Request("https://admin.meanwhileusa.com/api/admin/v6/keys", {
-        method: "POST", headers: { host: "admin.meanwhileusa.com", origin: "https://admin.meanwhileusa.com", "content-type": "application/json" },
+      const response = await handleKeys(new Request(`${ADMIN_ORIGIN}/api/admin/v6/keys`, {
+        method: "POST", headers: { host: hostOf(ADMIN_ORIGIN), origin: ADMIN_ORIGIN, "content-type": "application/json" },
         body: JSON.stringify({ name, value: SECRET, service: "signing" }),
       }), cookie, { store: () => store, test: (saved, at, key) => testDueKeys(saved, at, key, async service => {
         assert.equal(service, "congress"); return good();

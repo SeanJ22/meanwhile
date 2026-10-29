@@ -20,6 +20,7 @@ import { PROBE_RETRY_MS, runHourlyProbes } from "@/lib/doors/hourly-check.ts";
 import { DOOR_PROBE_REFRESH_MS, DOOR_PROBES_JOB, doorProbesLane, runDoorProbeTurn, runStandingDoorProbes,
   type StandingDoorProbeInput } from "@/lib/doors/probe-lane.ts";
 import { pacedProbeFetch } from "@/lib/doors/probe-fetch.ts";
+import { probeUrlFor } from "@/lib/doors/probe.ts";
 import { applyManualEdit, checkDoorDraft, type DoorRecord } from "@/lib/doors/registry.ts";
 
 const START = Date.parse("2026-10-28T21:00:00.000Z");
@@ -227,7 +228,7 @@ test("a standing turn reads the owner's dotted settings from Postgres and looks 
   assert.equal(report.looked, 6, "every due hot door is looked at");
   for (const d of doors) assert.ok((await held.repo.read(d.doorId))!.value.validators?.checkedAt, `${d.doorId}: its look is stored`);
   assert.ok(lines.some((line) => /up to 2 websites at once/.test(line)), "the owner's in-flight bound is used");
-  assert.ok(lines.some((line) => /^RCD_PROBE turn ended \(its hour is up\): .* 6 door\(s\) looked at/.test(line)));
+  assert.ok(lines.some((line) => /^RCD_PROBE turn ended \(its hour is up\): 6 door\(s\) looked at/.test(line)));
   const meter = processNeonBytes().find((hour) => Date.parse(hour.hour) === METER_HOUR)?.reads ?? {};
   const metered = (prefix: string) => Object.keys(meter).some((key) => key.startsWith(prefix));
   assert.ok(metered("reader\tdoor-probes\thot-partition-test"), "the reader read is metered under door-probes");
@@ -300,4 +301,78 @@ test("door probes run in their own standing lane, not inside the publish-now pas
   assert.match(turn, /readRunnerDoors\(repos\.doors, \["status"\], "OPEN", "probes"\)/);
   const runner = readFileSync("scripts/routine-civic-data-runner.mts", "utf8");
   assert.doesNotMatch(runner, /runHourlyProbes|ROUTINE_JOBS\.doorProbes|hotMeetingPartitions/);
+});
+
+test("a CivicClerk or Apptegy door is looked at through its read's own first request, never the API root that answers 404", () => {
+  const base = door("civicclerk-board", "https://example.gov/feed.ics");
+  const route = "https://town.api.civicclerk.com/v1/Events?%24filter=categoryId+eq+29&%24top=200&%24orderby=id+desc";
+  assert.equal(probeUrlFor({ ...base, kind: "civicclerk", config: { apiBase: "https://town.api.civicclerk.com", route } }), route);
+  assert.equal(probeUrlFor({ ...base, kind: "civicclerk", config: { apiBase: "https://town.api.civicclerk.com" } }), null, "no route: nothing to look at, not the 404 root");
+  assert.equal(probeUrlFor({ ...base, kind: "apptegy", config: { apiBase: "https://district.thrillshare.com/api/v4/o/8164/" } }),
+    "https://district.thrillshare.com/api/v4/o/8164/cms/events?locale=en&page_no=1");
+  assert.equal(probeUrlFor({ ...base, kind: "escribe", config: { portalUrl: "https://pub-city.escribemeetings.com", route: "https://pub-city.escribemeetings.com/x" } }),
+    "https://pub-city.escribemeetings.com", "other kinds keep their own page");
+});
+
+test("InSite calendars and Legistar's web API share one request clock, so they hold one place and every other publisher's page goes ahead", async () => {
+  const insite = Array.from({ length: 12 }, (_, i) => door(`a-insite-${i}`, `https://town${i}.legistar.com/Calendar.aspx`));
+  const webapi = Array.from({ length: 12 }, (_, i) => door(`b-webapi-${i}`, `https://webapi.legistar.com/v1/city${i}/events`));
+  const others = Array.from({ length: 12 }, (_, i) => door(`z-ical-${i}`, `https://city${i}.example.gov/feed.ics`));
+  const doors = [...insite, ...webapi, ...others];
+  const { repo } = await registry(doors);
+  const order: string[] = [];
+  let legistarInFlight = 0, mostLegistar = 0;
+  const fetchImpl = (async (url: string) => {
+    const legistar = url.includes("legistar.com");
+    if (legistar) { legistarInFlight += 1; mostLegistar = Math.max(mostLegistar, legistarInFlight); }
+    await new Promise((resolve) => setTimeout(resolve, legistar ? 5 : 1));
+    if (legistar) legistarInFlight -= 1;
+    order.push(url);
+    return new Response(`page ${url}`);
+  }) as unknown as typeof fetch;
+  const fetchFn = pacedProbeFetch({ pacing: memoryWebsitePacing(), fetchImpl, clock: () => START });
+  const report = await runHourlyProbes(repo, doors, new Set(doors.map((d) => d.doorId)), fetchFn, new Date(START).toISOString(), { websites: 8, clock: () => START });
+  assert.equal(report.looked, 36);
+  assert.equal(mostLegistar, 1, "one Legistar request at a time, as the shared host clock allows");
+  const lastOther = Math.max(...others.map((d) => order.indexOf(d.config.feedUrl as string)));
+  assert.ok(lastOther < 16, `every other publisher's page is done while the Legistar line, first in age, still waits (${lastOther})`);
+});
+
+test("a publisher with a long line never holds back another's due door: each keeps its look every hour", async () => {
+  let now = START;
+  const clock = () => now;
+  // 150 pages on one request clock at 30 seconds each: 75 minutes of looking, longer than the hour.
+  const slow = Array.from({ length: 150 }, (_, i) => door(`slow-${i}`, `https://webapi.legistar.com/v1/city${i}/events`));
+  const town = Array.from({ length: 5 }, (_, i) => door(`town-${i}`, `https://town${i}.example.gov/feed.ics`));
+  const all = [...slow, ...town];
+  const held = await registry(all);
+  const asked: { url: string; at: number }[] = [];
+  const fetchImpl = (async (url: string) => {
+    asked.push({ url, at: now });
+    if (url.includes("legistar")) now += 30_000;
+    return new Response(`page ${url} at ${now}`);
+  }) as unknown as typeof fetch;
+  const fetchFn = pacedProbeFetch({ pacing: memoryWebsitePacing(), fetchImpl, clock });
+  const report = await runDoorProbeTurn({ repo: held.repo, readDoors: held.readDoors, readHot: async () => new Set(all.map((d) => d.doorId)), fetchFn,
+    websites: 8, admitted: () => true, deadlineMs: START + 3 * 60 * MINUTE, log: () => undefined, clock, sleep: async (ms) => { now += ms; } });
+  assert.equal(report.ended, "DEADLINE");
+  for (const d of town) {
+    const times = asked.filter((ask) => ask.url === d.config.feedUrl).map((ask) => ask.at);
+    assert.ok(times.length >= 3, `${d.doorId}: looked at every hour of the turn (${times.length})`);
+    for (let i = 1; i < times.length; i += 1) assert.ok(times[i]! - times[i - 1]! <= 60 * MINUTE, `${d.doorId}: never more than an hour between looks`);
+  }
+});
+
+test("a look whose result cannot be stored waits its retry, never asked again at once", async () => {
+  let now = START;
+  const clock = () => now;
+  const gone = door("gone", "https://gone.example.gov/feed.ics");
+  const repos = createMemoryRepositories();
+  const asked: number[] = [];
+  const fetchFn = pacedProbeFetch({ pacing: memoryWebsitePacing(), clock,
+    fetchImpl: (async () => { asked.push(now); return new Response(`page ${asked.length}`); }) as unknown as typeof fetch });
+  await runDoorProbeTurn({ repo: repos.doors, readDoors: async () => [gone], readHot: async () => new Set(["gone"]), fetchFn,
+    websites: 8, admitted: () => true, deadlineMs: START + 30 * MINUTE, log: () => undefined, clock, sleep: async (ms) => { now += ms; } });
+  assert.equal(asked.length, 3, "at the start, then ten and twenty minutes on");
+  for (let i = 1; i < asked.length; i += 1) assert.ok(asked[i]! - asked[i - 1]! >= PROBE_RETRY_MS);
 });

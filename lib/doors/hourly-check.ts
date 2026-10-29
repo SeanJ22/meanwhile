@@ -4,11 +4,12 @@
  * the publish-now lane to read at once. Every look asks the one per-website
  * count all readers share (`pacedProbeFetch`): a small publisher gets at most
  * ten requests an hour across every reader, and a look that cannot be made
- * now waits, oldest first. Several websites are looked at side by side, never
- * more than one request at a time to any one website. Plain code, no AI.
+ * now waits, oldest first. Several publishers are looked at side by side, never
+ * more than one request at a time on one publisher's request clock. Plain code, no AI.
  */
 
 import { websiteOf } from "../control-plane/website-pacing.ts";
+import { sourceHost } from "../sources/http.ts";
 import { doorPartitionIds } from "./mission-refresh.ts";
 import { firstLook, probeUrlFor, recordProbe, type ProbeFetch } from "./probe.ts";
 import { hotCheckMinutes } from "./overdue.ts";
@@ -60,11 +61,11 @@ export function planProbes(doors: readonly DoorRecord[], hotPartitions: Readonly
   return { doors: due, deferred: hot.length - due.length };
 }
 
-/** A failed page is looked at again no sooner than this, so a broken page is never asked every round of a turn. */
+/** A failed page, or a look whose result could not be stored, is looked at again no sooner than this. */
 export const PROBE_RETRY_MS = 10 * 60_000;
 
 /**
- * What a turn learned it must wait for, kept across its rounds: failed pages and pages whose small publisher's hour is
+ * What a turn learned it must wait for, kept for the whole turn: failed pages and pages whose small publisher's hour is
  * used, by URL; websites that asked every reader to wait (or refuse us), by site. A small publisher's hour holds only its
  * own pages, since a vendor host can serve a larger government with no hourly cap beside it.
  */
@@ -109,11 +110,11 @@ export interface ProbeRunReport {
 export interface ProbeRunOptions {
   /** No look starts at or after this instant; the doors not looked at stay owed. */
   readonly deadlineMs?: number;
-  /** Websites looked at side by side. Each website has at most one request in flight, whatever this is. */
+  /** Request clocks looked at side by side. Each has at most one request in flight, whatever this is. */
   readonly websites?: number;
   /** Asked before every look: false (a breaker pause, a release drain) starts no more looks. */
   readonly admitted?: () => boolean;
-  /** Failed pages and waiting websites from earlier rounds of the same turn; this round adds its own. */
+  /** Failed pages and waiting websites from earlier looks of the same turn; these looks add their own. */
   readonly holds?: ProbeHolds;
   /** Each door a look was stored on, with what was stored. */
   readonly onRecorded?: (doorId: string, validators: DoorValidators) => void;
@@ -121,10 +122,133 @@ export interface ProbeRunOptions {
 }
 
 /**
- * Make this minute's first looks and store what each saw on its door. One look per distinct page: the doors behind
- * one feed share it. Pages go oldest look first, up to `websites` at once and never two at once to one website. A
- * look that fails or waits stores nothing; a failed page is looked at again after `PROBE_RETRY_MS`, and a website
- * that waits is asked again when its wait ends.
+ * The request clock a page waits on: every reader's requests to one publisher's servers go one at a time through the
+ * shared host clock (`sourceHost`, lib/sources/http.ts), so InSite calendars on their many `*.legistar.com` names and
+ * Legistar's web API are one clock. A turn keeps one look in flight per clock: a second would only wait in that line
+ * while holding a place another publisher's page could use.
+ */
+function probeClockOf(url: string): string {
+  try { return sourceHost(url); } catch { return url; }
+}
+
+/** A page, and the due doors read through it. */
+export interface ProbePage {
+  readonly url: string;
+  readonly doors: readonly DoorRecord[];
+}
+
+/** Due doors by page, oldest look first: the doors behind one feed share its look. */
+export function probePages(due: readonly DoorRecord[]): readonly ProbePage[] {
+  const pages = new Map<string, DoorRecord[]>();
+  for (const door of due) {
+    const url = probeUrlFor(door)!;
+    const sharing = pages.get(url);
+    if (sharing) sharing.push(door);
+    else pages.set(url, [door]);
+  }
+  return [...pages].map(([url, doors]) => ({ url, doors }));
+}
+
+/** OPEN: a look may start. WAITING: its website or its small publisher's hour holds it. RETRY: it failed a moment ago. */
+export function probeHoldOf(url: string, holds: ProbeHolds, nowMs: number): "OPEN" | "WAITING" | "RETRY" {
+  if (heldUntil(holds.websites, siteOf(url)) > nowMs || heldUntil(holds.allowance, url) > nowMs) return "WAITING";
+  return heldUntil(holds.failed, url) > nowMs ? "RETRY" : "OPEN";
+}
+
+/** Where the looks come from. */
+export interface ProbeSource {
+  /** The next page to look at now, among those `free` allows (its clock idle, no look of it running); null when none can start. */
+  next(free: (url: string) => boolean): Promise<ProbePage | null>;
+  /** No look is running and none can start: wait for the next, and say whether to go on. */
+  idle(): Promise<boolean>;
+}
+
+export interface ProbeTally {
+  looked: number;
+  changed: number;
+  unchanged: number;
+  failed: number;
+  waiting: number;
+  requests: number;
+}
+
+/**
+ * Look at pages as `source` names them, up to `websites` request clocks side by side and never two looks at once on one
+ * clock. A look starts the moment a place is free, so a long line on one publisher's clock never holds back another
+ * publisher's due page. A look that fails, or whose result cannot be stored, holds its page for `PROBE_RETRY_MS`; a
+ * website that waits is asked again when its wait ends. Looks that throw are returned, never lost.
+ */
+export async function runProbeLooks(repo: DoorRepository, fetchFn: ProbeFetch, source: ProbeSource, tally: ProbeTally,
+  options: ProbeRunOptions & { readonly stamp?: string } = {}): Promise<readonly unknown[]> {
+  const clock = options.clock ?? Date.now;
+  const deadlineMs = options.deadlineMs ?? Number.POSITIVE_INFINITY;
+  const parallel = Math.max(1, Math.floor(options.websites ?? 1));
+  const holds = options.holds ?? probeHolds();
+  const busy = new Set<string>();
+  const looking = new Set<string>();
+  const running = new Set<Promise<void>>();
+  const errors: unknown[] = [];
+
+  const look = async (page: ProbePage): Promise<void> => {
+    const { url } = page;
+    // Stamped when this look starts, so a look late in a long line falls due an hour after it was made.
+    const at = options.stamp ?? new Date(clock()).toISOString();
+    let recorded = false;
+    try {
+      const result = await firstLook(url, page.doors[0]!.validators, fetchFn, at);
+      tally.requests += result.requests;
+      if (result.verdict === "WAITING") {
+        tally.waiting += 1;
+        const site = siteOf(url);
+        const until = result.wait?.until ?? clock() + PROBE_RETRY_MS;
+        if (result.wait?.why === "HOURLY_ALLOWANCE") holds.allowance.set(url, until);
+        else holds.websites.set(site, Math.max(heldUntil(holds.websites, site), until));
+        recorded = true;
+        return;
+      }
+      if (result.verdict === "CHANGED") tally.changed += 1;
+      else if (result.verdict === "UNCHANGED") tally.unchanged += 1;
+      else tally.failed += 1;
+      holds.allowance.delete(url);
+      for (const door of page.doors) {
+        tally.looked += 1;
+        if (await recordProbe(repo, door.doorId, result, at) && result.validators) {
+          recorded = true;
+          options.onRecorded?.(door.doorId, result.validators);
+        }
+      }
+    } finally {
+      if (recorded) holds.failed.delete(url);
+      else holds.failed.set(url, clock() + PROBE_RETRY_MS);
+    }
+  };
+
+  const free = (url: string): boolean => !busy.has(probeClockOf(url)) && !looking.has(url);
+  for (;;) {
+    const open = clock() < deadlineMs && (options.admitted?.() ?? true);
+    if (open && running.size < parallel) {
+      let page: ProbePage | null;
+      try { page = await source.next(free); }
+      catch (error) { await Promise.allSettled(running); throw error; }
+      if (page) {
+        const lane = probeClockOf(page.url);
+        busy.add(lane);
+        looking.add(page.url);
+        const task: Promise<void> = look(page).catch((error: unknown) => { errors.push(error); })
+          .finally(() => { busy.delete(lane); looking.delete(page.url); running.delete(task); });
+        running.add(task);
+        continue;
+      }
+    }
+    if (running.size > 0) { await Promise.race(running); continue; }
+    if (!open || !(await source.idle())) break;
+  }
+  return errors;
+}
+
+/**
+ * Make this minute's first looks and store what each saw on its door: the pages due now, oldest look first, each looked
+ * at once (the doors behind one feed share it). The doors not looked at by the deadline stay owed.
  */
 export async function runHourlyProbes(
   repo: DoorRepository,
@@ -135,73 +259,29 @@ export async function runHourlyProbes(
   options: ProbeRunOptions = {},
 ): Promise<ProbeRunReport> {
   const clock = options.clock ?? Date.now;
-  const deadlineMs = options.deadlineMs ?? Number.POSITIVE_INFINITY;
-  const parallel = Math.max(1, Math.floor(options.websites ?? 1));
   const holds = options.holds ?? probeHolds();
   const plan = planProbes(doors, hotPartitions, now);
-  const pages = new Map<string, DoorRecord[]>();
-  for (const door of plan.doors) {
-    const url = probeUrlFor(door)!;
-    const sharing = pages.get(url);
-    if (sharing) sharing.push(door);
-    else pages.set(url, [door]);
-  }
-  const queue = [...pages.keys()];
-  const sites = new Map(queue.map((url) => [url, siteOf(url)] as const));
-  const busy = new Set<string>();
-  const running = new Set<Promise<void>>();
-  const errors: unknown[] = [];
-  let looked = 0;
-  let changed = 0;
-  let unchanged = 0;
-  let failed = 0;
-  let waiting = 0;
-  let requests = 0;
+  const queue = [...probePages(plan.doors)];
+  const tally: ProbeTally = { looked: 0, changed: 0, unchanged: 0, failed: 0, waiting: 0, requests: 0 };
   let deferred = plan.deferred;
-
-  const look = async (url: string, site: string): Promise<void> => {
-    const sharing = pages.get(url)!;
-    // Stamped when this look starts, so a look late in a long round falls due an hour after it was made.
-    const at = options.clock ? new Date(clock()).toISOString() : now;
-    const result = await firstLook(url, sharing[0]!.validators, fetchFn, at);
-    requests += result.requests;
-    if (result.verdict === "WAITING") {
-      waiting += 1;
-      const until = result.wait?.until ?? clock() + PROBE_RETRY_MS;
-      if (result.wait?.why === "HOURLY_ALLOWANCE") holds.allowance.set(url, until);
-      else holds.websites.set(site, Math.max(heldUntil(holds.websites, site), until));
-      return;
-    }
-    if (result.verdict === "CHANGED") changed += 1;
-    else if (result.verdict === "UNCHANGED") unchanged += 1;
-    else failed += 1;
-    holds.allowance.delete(url);
-    if (result.verdict === "FAILED") holds.failed.set(url, clock() + PROBE_RETRY_MS);
-    else holds.failed.delete(url);
-    for (const door of sharing) {
-      looked += 1;
-      if (await recordProbe(repo, door.doorId, result, at) && result.validators) options.onRecorded?.(door.doorId, result.validators);
-    }
+  const source: ProbeSource = {
+    next: async (free) => {
+      for (let index = 0; index < queue.length; index += 1) {
+        const page = queue[index]!;
+        if (!free(page.url)) continue;
+        queue.splice(index, 1);
+        index -= 1;
+        const hold = probeHoldOf(page.url, holds, clock());
+        if (hold === "WAITING") tally.waiting += 1;
+        else if (hold === "RETRY") deferred += page.doors.length;
+        else return page;
+      }
+      return null;
+    },
+    idle: async () => false,
   };
-
-  for (;;) {
-    const open = clock() < deadlineMs && (options.admitted?.() ?? true);
-    const next = open && running.size < parallel ? queue.findIndex((url) => !busy.has(sites.get(url)!)) : -1;
-    if (next >= 0) {
-      const [url] = queue.splice(next, 1) as [string];
-      const site = sites.get(url)!;
-      if (heldUntil(holds.websites, site) > clock() || heldUntil(holds.allowance, url) > clock()) { waiting += 1; continue; }
-      if (heldUntil(holds.failed, url) > clock()) { deferred += pages.get(url)!.length; continue; }
-      busy.add(site);
-      const task: Promise<void> = look(url, site).catch((error: unknown) => { errors.push(error); })
-        .finally(() => { busy.delete(site); running.delete(task); });
-      running.add(task);
-      continue;
-    }
-    if (running.size === 0) break;
-    await Promise.race(running);
-  }
-  for (const url of queue) deferred += pages.get(url)!.length;
+  const errors = await runProbeLooks(repo, fetchFn, source, tally, { ...options, holds, ...(options.clock ? {} : { stamp: now }) });
+  for (const page of queue) deferred += page.doors.length;
   if (errors.length > 0) throw errors[0];
-  return { looked, changed, unchanged, failed, waiting, deferred, requests };
+  return { ...tally, deferred };
 }

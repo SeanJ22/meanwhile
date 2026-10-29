@@ -16,7 +16,21 @@ export type ProbeFetch = (url: string, headers: Readonly<Record<string, string>>
 /** Settings that name the one page or feed a door's read starts from, most specific first. */
 export const PROBE_URL_KEYS = ["feedUrl", "icalUrl", "pageUrl", "schedulePage", "documentsPage", "documentsUrl", "portalUrl", "serviceBase", "apiBase", "baseUrl", "base", "route", "url"] as const;
 
+/**
+ * Kinds whose configured base answers no page of its own (CivicClerk's API root and Apptegy's organization root are
+ * 404s): their first look asks the read's own first request, which lists the body's meetings.
+ */
+const KIND_PROBE_URL: ReadonlyMap<string, (config: DoorRecord["config"]) => unknown> = new Map<string, (config: DoorRecord["config"]) => unknown>([
+  ["civicclerk", (config) => config.route],
+  ["apptegy", (config) => typeof config.apiBase === "string" ? `${config.apiBase.trim().replace(/\/+$/, "")}/cms/events?locale=en&page_no=1` : null],
+]);
+
 export function probeUrlFor(door: DoorRecord): string | null {
+  const own = KIND_PROBE_URL.get(door.kind);
+  if (own) {
+    const url = own(door.config);
+    return typeof url === "string" && /^https:\/\//i.test(url.trim()) ? url.trim() : null;
+  }
   for (const key of PROBE_URL_KEYS) {
     const value = door.config[key];
     if (typeof value === "string" && /^https:\/\//i.test(value.trim())) return value.trim();

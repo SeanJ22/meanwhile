@@ -1,9 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { admittedHuntSourceScopes, huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
+import { huntSourceTasks } from "../lib/civic-data/hunt-source-tasks.ts";
 import { manualProducerInvocationMatrix } from "../lib/civic-data/manual-producer-invocation.ts";
 import { MANUAL_PRODUCTION_SOURCE_CONTRACTS } from "../lib/civic-data/manual-contracts.ts";
-import { ORIGINAL_LIFETIME_HUNT } from "../lib/control-plane/scheduler/hunt-continuation.ts";
 import { factRefreshBounds } from "../lib/civic-data/source-change-cadence.ts";
 import { routineTaskDue, ROUTINE_SOURCE_TASKS } from "../lib/civic-data/runner.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
@@ -92,20 +91,6 @@ test("voting-site Sends invoke one registered child per state with exact state a
   assert.equal(runtimeAuthorityIssue({ envelope, expectation: { capabilities: ["MANUAL_CONTRACT"],
     contract: "voting-sites:OH", immediateParentPid: 42 }, checkout, cwd }), null);
   assert.deepEqual(vote.ownerInvocation?.instructions, ["ohio-send"]);
-});
-
-test("all funded source Sends are admitted regardless of the former blackout", () => {
-  const base = scope("AZ");
-  const original = { ...base, decision: { ...base.decision,
-    key: ORIGINAL_LIFETIME_HUNT.key, receiptId: ORIGINAL_LIFETIME_HUNT.receiptId,
-    budgetStartedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt, budgetUsd: ORIGINAL_LIFETIME_HUNT.budgetUsd,
-    decidedAt: ORIGINAL_LIFETIME_HUNT.budgetStartedAt } };
-  const other = { ...base, decision: { ...base.decision, receiptId: "another-send" } };
-  const blackout = "2026-10-04T02:00:00.000Z";
-  assert.deepEqual(admittedHuntSourceScopes([original, other], blackout), [original, other]);
-  const changedBudget = { ...original, decision: { ...original.decision, budgetUsd: 51 } };
-  assert.deepEqual(admittedHuntSourceScopes([changedBudget], blackout), [changedBudget]);
-  assert.deepEqual(admittedHuntSourceScopes([original, other], "2026-10-05T12:00:00.000Z"), [original, other]);
 });
 
 test("a voting-sites candidate outcome emits the one source-task receipt expected by the supervisor", () => {

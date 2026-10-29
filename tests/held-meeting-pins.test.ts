@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { readFileSync } from "node:fs";
 import { factDb } from "./helpers/fact-db.ts";
-import { publishHeldMeetingPins, HELD_PIN_PRIOR_VENUES_SQL } from "../lib/civic-data/held-meeting-pins.ts";
+import { publishHeldMeetingPins, HELD_PIN_PRIOR_VENUES_SQL, HELD_PIN_ROWS_SQL, HELD_PIN_WINDOW } from "../lib/civic-data/held-meeting-pins.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import { readSittingFacts,withSittingFacts } from "../lib/facts/meeting-read.ts";
@@ -53,7 +53,7 @@ test("a cutoff saves its admitted batch, resumes the rest, and a later run reads
   let officeReads=0,cutoff=false;
   const facts={...db,query:async(text:string,params:readonly unknown[]=[])=>{
     const rows=await db.query(text,params);
-    if(text.includes("AS retry_key")&&text.includes("AS advances"))selected.push(rows.map(row=>(row.value as Meeting).id));
+    if(text.includes("AS edge_key"))selected.push(rows.flatMap(row=>row.value?[(row.value as Meeting).id]:[]));
     if(text.includes("SELECT id,name,state,parent_id FROM entity"))officeReads++;
     return rows;
   }};
@@ -62,9 +62,9 @@ test("a cutoff saves its admitted batch, resumes the rest, and a later run reads
     const first=await publishHeldMeetingPins({facts,vault,clocks:factClocks(null),now:NOW,
       deadlineMs:Date.parse(NOW)+60_000,clock:()=>Date.parse(NOW)+(cutoff?60_001:0),fetchImpl});
     assert.equal(first.published,32);assert.deepEqual(first.failures,[]);
-    const [held]=await db.query("SELECT position FROM pass_cursor WHERE name='held-meeting-pins'");
+    const [held]=await db.query("SELECT position FROM pass_cursor WHERE name='held-meeting-pins:window'");
     const progress=JSON.parse(String(held.position));
-    assert.equal(progress.after[2],32);assert.deepEqual(progress.pending,[]);
+    assert.equal(progress.after[1],32);assert.deepEqual(progress.pending,[]);
     selected.length=0;
     const nextAt=new Date(Date.parse(NOW)+120_000).toISOString();
     const second=await publishHeldMeetingPins({facts,vault,clocks:factClocks(null),now:nextAt,
@@ -87,6 +87,16 @@ test("a cutoff saves its admitted batch, resumes the rest, and a later run reads
   }finally{await db.pg.close();}
 });
 
+test("one held-pin read stays inside one keyed window and fingerprints each body once, however many sittings are held",async()=>{
+  const db=await setup(Array.from({length:3*HELD_PIN_WINDOW},(_,index)=>({...online,id:`fixture:window:${index}`}))),params=[NOW,"MEETING:",0,[],[]];
+  type Plan={"Subplan Name"?:string;"Actual Rows":number;Plans?:Plan[]};
+  try{
+    const [explained]=await db.query(`EXPLAIN (ANALYZE,FORMAT JSON) ${HELD_PIN_ROWS_SQL}`,params),nodes=(plan:Plan):Plan[]=>[plan,...(plan.Plans??[]).flatMap(nodes)];
+    const rows=(name:string)=>nodes((explained["QUERY PLAN"] as {Plan:Plan}[])[0]!.Plan).find(node=>node["Subplan Name"]===`CTE ${name}`)!["Actual Rows"];
+    assert.equal(rows("scan"),HELD_PIN_WINDOW);assert.equal(rows("signature"),1);assert.equal((await db.query(HELD_PIN_ROWS_SQL,params)).length,32);
+  }finally{await db.pg.close();}
+});
+
 test("a crash after admission leaves the unfinished pin owed without a new source version",async()=>{
   const db=await setup([online]),vault=new MemoryEvidenceStore();
   const put=vault.put.bind(vault);
@@ -96,7 +106,7 @@ test("a crash after admission leaves the unfinished pin owed without a new sourc
     fetchImpl:async()=>new Response(JSON.stringify(geocode("2238","GINTER","RD","E","TUCSON","85706")))};
   try{
     await assert.rejects(publishHeldMeetingPins(input),/fixture vault crash/);
-    const saved=JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='held-meeting-pins'"))[0].position));
+    const saved=JSON.parse(String((await db.query("SELECT position FROM pass_cursor WHERE name='held-meeting-pins:window'"))[0].position));
     assert.equal(saved.pending.length,1);
     fail=false;
     const recovered=await publishHeldMeetingPins(input);

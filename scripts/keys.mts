@@ -13,7 +13,11 @@ try {
   const store = productionKeysStore();
   const command = process.argv[2] ?? "list";
   if (command === "import") await importExistingKeys(process.env, store, new Date().toISOString(), productionBuild ? "website" : "runner");
-  else if (command === "test") await testDueKeys(store, new Date().toISOString());
+  else if (command === "test") {
+    const name = process.argv[3], at = new Date().toISOString();
+    if (name) await store.retest(name, at);
+    await testDueKeys(store, at, name);
+  }
   else if (command === "verify") {
     const name = process.argv[3];
     if (!name || !await readSavedKey(name)) throw new Error("Saved key unavailable");

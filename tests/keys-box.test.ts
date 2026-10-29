@@ -67,6 +67,24 @@ test("daily checks run at 24 hours, survive restart and are claimed once by comp
   assert.equal(tests, 2);
 });
 
+test("a saved key can be retested without its value, without stealing an active test or reviving a deleted key", async t => {
+  const { store } = await fixture(t);
+  const version = await store.save("Example", SECRET, "signing", AT);
+  await testDueKeys(store, AT, "Example", async () => ({ working: false, says: "The service could not be reached." }));
+  const next = "2026-10-29T12:01:00.000Z";
+  await store.retest("Example", next);
+  assert.equal((await store.claimTests(next, "Example")).length, 1);
+  await store.retest("Example", next);
+  assert.equal((await store.claimTests(next, "Example")).length, 0);
+  await store.tested("Example", version, await good(), next);
+  assert.equal((await store.list())[0].working, true);
+  assert.equal((await store.claimTests("2026-10-30T12:00:59.999Z")).length, 0);
+  await store.remove("Example", next);
+  await store.retest("Example", next);
+  assert.equal((await store.claimTests(next)).length, 0);
+  assert.equal(await store.read("Example"), undefined);
+});
+
 test("a killed test is reclaimed and old results cannot overwrite a replacement or resurrect a deleted key", async t => {
   const { store } = await fixture(t);
   const old = await store.save("Example", SECRET, "anthropic", AT);
@@ -88,6 +106,7 @@ test("HTML success pages and provider failures never count as working or expose 
   assert.equal((await testKey("census", SECRET, fake(new Response("<html>Invalid Key</html>")))).working, false);
   assert.equal((await testKey("anthropic", SECRET, fake(Response.json({ error: "no" })))).working, false);
   assert.equal((await testKey("anthropic", SECRET, fake(Response.json({ data: [{ id: "claude" }] })))).working, true);
+  assert.equal((await testKey("signing", "internal-setting")).working, true, "use the website's actual signing behavior");
   const failure = await testKey("anthropic", SECRET, (async () => { throw new Error(SECRET); }) as typeof fetch);
   assert.equal(failure.working, false);
   assert.equal(JSON.stringify(failure).includes(SECRET), false);
@@ -184,6 +203,9 @@ test("the protected Settings API saves, tests, lists and deletes without returni
     const listed = await handleKeys(request("GET"), cookie, deps);
     assert.match(listed.headers.get("cache-control")!, /no-store/);
     assert.equal((await listed.json()).rows[0].working, true);
+    const retested = await handleKeys(request("POST", { name: "Example", action: "test" }), cookie, deps);
+    assert.equal(retested.status, 200);
+    assert.equal((await retested.text()).includes(SECRET), false);
     await keysRunnerPass(store);
     assert.ok((await store.list())[0].runnerReadAt);
     const deleted = await handleKeys(request("DELETE", { name: "Example" }), cookie, deps);

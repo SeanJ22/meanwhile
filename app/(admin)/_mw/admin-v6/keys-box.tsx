@@ -38,7 +38,7 @@ export function KeysBox() {
     input.value = "";
     await send("POST", { name: replacing?.name ?? name, value, service });
   }
-  return <section aria-labelledby="keys-title" className={s.stack}>
+  return <section aria-labelledby="keys-title" className={`${s.stack} ${s.keysBox}`}>
     <h3 id="keys-title" className={s.h3}>Keys</h3>
     {status}
     <form onSubmit={save} className={s.stack} autoComplete="off">
@@ -62,6 +62,7 @@ export function KeysBox() {
         {!row.working && <p>{row.says}</p>}
         <p>Runner last read {row.runnerReadAt ? mst(row.runnerReadAt) : "—"}</p>
         <p>Changed {mst(row.changedAt)}</p>
+        <button type="button" className={s.btn} disabled={busy} onClick={() => void send("POST", { name: row.name, action: "test" })}>Test {row.label} now</button>
         <button type="button" className={s.btn} disabled={busy} onClick={() => replace(row)}>Replace {row.label}</button>
         <button type="button" className={s.btn} disabled={busy} onClick={() => void send("DELETE", { name: row.name })}>Delete {row.label}</button>
         {row.canUndo && <button type="button" className={s.btn} disabled={busy} onClick={() => void send("POST", { name: row.name, action: "undo" })}>Undo last change</button>}

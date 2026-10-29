@@ -70,11 +70,30 @@ export function knownKeyService(name: string): KeyService | undefined {
   return Object.hasOwn(KEY_NAMES, base) ? KEY_NAMES[base] : undefined;
 }
 
+const KEY_LABELS: Readonly<Record<string, string>> = {
+  ANTHROPIC_API_KEY: "Anthropic AI", WTP_WORKERS_ANTHROPIC_API_KEY: "Research worker AI",
+  CONGRESS_API_KEY: "Congress.gov", CENSUS_API_KEY: "Census", FEC_API_KEY: "Federal Election Commission",
+  PLURAL_API_KEY: "Open States", LEGISCAN_API_KEY: "LegiScan", DATA_GOV_API_KEY: "Government documents",
+  LDA_API_KEY: "Federal lobbying", SOCRATA_APP_TOKEN: "Government open data", GOOGLE_CIVIC_API_KEY: "Google voting information",
+  SAM_GOV_API_KEY: "Federal contracts", BRAVE_SEARCH_API_KEY: "Brave search", EXA_API_KEY: "Exa research",
+  NEXT_PUBLIC_MAPTILER_KEY: "MapTiler maps", WTP_MAPTILER_SMOKE_KEY: "MapTiler test maps",
+  WTP_BLOBS_TOKEN: "Evidence vault", NETLIFY_BLOBS_TOKEN: "Website file storage", NETLIFY_API_TOKEN: "Website publishing",
+  NETLIFY_AUTH_TOKEN: "Netlify account", NETLIFY_TOKEN: "Netlify deployment", WTP_GITHUB_READ_TOKEN: "Software change reports",
+  GH_TOKEN: "GitHub commands", GITHUB_TOKEN: "GitHub access", DATABASE_URL: "Website database",
+  WTP_PRODUCTION_DATABASE_URL_WRITE: "Database publishing", WTP_PRODUCTION_DATABASE_URL_READONLY: "Database reading",
+  FEEDBACK_DATABASE_URL: "Feedback database", WTP_ADMIN_SECRET: "Emergency Admin sign-in", WTP_ADMIN_SESSION_KEY: "Admin sign-in",
+  WTP_STAGING_MANIFEST_COOKIE: "Staging sign-in", GOOGLE_OAUTH_CLIENT_SECRET: "Google sign-in secret",
+  GOOGLE_OAUTH_CLIENT_ID: "Google sign-in application", ANTHROPIC_ADMIN_API_KEY: "Anthropic spending",
+  EXA_SERVICE_API_KEY: "Exa spending", NEON_BILLING_API_KEY: "Database spending", NEON_API_KEY: "Neon account",
+  GITHUB_BILLING_TOKEN: "GitHub spending", NETLIFY_BILLING_TOKEN: "Netlify spending", MAPTILER_SERVICE_TOKEN: "MapTiler spending",
+  PRL_ARCHIVE_S3_ACCESS_KEY_ID: "Research archive account", PRL_ARCHIVE_S3_SECRET_ACCESS_KEY: "Research archive secret",
+};
+
 export function keyLabel(name: string, service: KeyService): string {
   const [base, runtime] = name.split(".");
   if (!knownKeyService(name)) return name;
-  const label = KEY_SERVICES[service];
-  const use = base.includes("WORKERS") ? "Research workers" : runtime === "runner" ? "Runner" : runtime === "website" ? "Website" : null;
+  const label = KEY_LABELS[base] ?? KEY_SERVICES[service];
+  const use = runtime === "runner" ? "Runner" : runtime === "website" ? "Website" : null;
   return use ? `${label} (${use})` : label;
 }
 

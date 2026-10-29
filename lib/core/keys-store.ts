@@ -85,6 +85,11 @@ export function keysStore(query: KeysQuery, encryptionKey: string | undefined) {
         RETURNING name,version,service,locked`, params);
       return rows.map(row => ({ name: String(row.name), version: String(row.version), service: row.service as KeyService, locked: String(row.locked) }));
     },
+    async retest(name: string, at: string): Promise<void> {
+      // Move a completed test's daily appointment; never steal a test that another worker has claimed.
+      await query(`UPDATE cp_keys SET next_test_at=$2::timestamptz WHERE name=$1 AND NOT deleted
+        AND tested_at IS NOT NULL AND next_test_at=tested_at + interval '1 day'`, [keyName(name), at]);
+    },
     open(name: string, locked: string): string { return unlockKey(name, locked, encryptionKey); },
     async tested(name: string, version: string, result: { working: boolean; says: string }, at: string): Promise<void> {
       // An old result must never overwrite a replacement key, or recreate a deleted key.

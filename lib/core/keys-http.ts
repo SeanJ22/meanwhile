@@ -25,6 +25,12 @@ export async function handleKeys(request: Request, cookie: string | undefined, d
     let name: string;
     try { name = keyName(body.name); } catch { return json({ says: "Give the key a name using letters, numbers, spaces, dots or dashes." }, 400); }
     if (request.method === "DELETE") { await store.remove(name); return json({ says: "Key deleted." }); }
+    if (body.action === "test") {
+      const at = new Date().toISOString(); await store.retest(name, at);
+      const checked = await testSaved(store, at, name);
+      if (!checked && !(await store.list()).some(row => row.name === name)) return json({ says: "That key is no longer saved." }, 404);
+      return json({ says: checked ? "The saved key was tested." : "Its test is running." });
+    }
     if (body.action === "undo") {
       const at = new Date().toISOString(); await store.undo(name, at); await testSaved(store, at, name);
       return json({ says: "The earlier key setting was restored and tested." });

@@ -448,6 +448,8 @@
 .btn:hover:not([aria-disabled="true"]) {
   background: var(--surface);
 }
+.keysBox { overflow-wrap: anywhere; }
+.keysBox button { white-space: normal; }
 .btnPrimary {
   background: var(--link);
   color: var(--bg);

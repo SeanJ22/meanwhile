@@ -57,7 +57,6 @@ export async function testKey(service: KeyService, value: string, fetchImpl: typ
     if (service === "brave" || service === "exa") return await testSearchKey(service, value, fetchImpl);
     if (service === "other") return { working: false, says: "The team needs to add a key check for this service." };
     if (service === "signing") {
-      if (value.length < 24) return { working: false, says: "This sign-in key is too short." };
       const { signEnvelope, openEnvelope } = await import("../control-plane/admin-auth.ts");
       const signed = await signEnvelope({ check: "saved key" }, value);
       const result = await openEnvelope(signed, value);

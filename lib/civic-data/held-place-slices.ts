@@ -2,6 +2,11 @@ import { readerQuery } from "./promoted-reader-query.ts";
 import type { CivicDataReadResult, CivicDataReadMetadata } from "./read-model.ts";
 import { readPlacePayloadParts } from "./place-payload-slices.ts";
 import type { ReadOnlyQuery } from "../control-plane/admin-view/promoted-slices.ts";
+import type { OfficeholderSet } from "../officials/types.ts";
+import type { VotingSitesFile } from "../ballot/voting-sites.ts";
+import type { DerivedCampaignSitesProjection } from "./derived-campaign-sites.ts";
+import { readPlaceOfficialLegislatorRows, readPlaceVotingSiteRows, readPlaceCampaignSiteRows } from "./keyed-rows.ts";
+import type { Query } from "../facts/publish.ts";
 
 /** A view of an already promoted pointer, like Admin's promoted slices. It
  * carries pointer metadata; it is not a newly validated candidate or receipt. */
@@ -19,6 +24,37 @@ export function heldPlaceValue<T>(read: PlaceCaptureRead<T>): T | null {
 
 const array = (path: string, where: string) => `(SELECT COALESCE(jsonb_agg(x), '[]'::jsonb) FROM jsonb_array_elements(CASE WHEN jsonb_typeof(${path})='array' THEN ${path} ELSE '[]'::jsonb END) x WHERE ${where})`;
 const division = "x->>'ocdId'=ANY($3::text[]) OR x->>'divisionId'=ANY($3::text[])";
+
+/** Read only the checklist fields of the selected canonical roster. */
+export async function readPlaceOfficialLegislatorRoster(scope: string, sourceId: string, ids: readonly string[],
+  injected?: ReadOnlyQuery): Promise<PlaceCaptureRead<{ readonly roster: OfficeholderSet }>> {
+  const metadata = { recordClass: "STATE_LEGISLATOR" as const, scope };
+  const row = await readPlaceOfficialLegislatorRows(placeQuery(metadata, injected), scope, sourceId, ids);
+  return row ? { kind: "PROMOTED", value: row.payload, metadata: { ...metadata, versionId: row.versionId } }
+    : { kind: "NOT_RECORDED", value: null, metadata };
+}
+
+export async function readPlaceVotingSites(scope: string, ids: readonly string[], injected?: ReadOnlyQuery): Promise<PlaceCaptureRead<VotingSitesFile>> {
+  const metadata = { recordClass: "VOTING_SITE" as const, scope };
+  const row = await readPlaceVotingSiteRows(placeQuery(metadata, injected), scope, ids);
+  return row ? { kind: "PROMOTED", value: row.payload, metadata: { ...metadata, versionId: row.versionId } }
+    : { kind: "NOT_RECORDED", value: null, metadata };
+}
+
+export async function readPlaceDerivedCampaignSites(scope: string, keys: readonly string[], injected?: ReadOnlyQuery): Promise<PlaceCaptureRead<Pick<DerivedCampaignSitesProjection, "records">>> {
+  const metadata = { recordClass: "CURATED_READER_RECORD" as const, scope };
+  const row = await readPlaceCampaignSiteRows(placeQuery(metadata, injected), scope, keys);
+  return row ? { kind: "PROMOTED", value: row.payload, metadata: { ...metadata, versionId: row.versionId } }
+    : { kind: "NOT_RECORDED", value: null, metadata };
+}
+
+function placeQuery(metadata: Pick<CivicDataReadMetadata, "recordClass" | "scope">, injected?: ReadOnlyQuery): Query {
+  return async (text, params = []) => {
+    const query = injected ?? readerQuery();
+    if (!query) throw new Error(`HELD_PLACE_READ_FAILED:${metadata.recordClass}:${metadata.scope}:STORE_UNCONFIGURED`);
+    return (await query([{ text, params }]))[0];
+  };
+}
 
 
 /** Only the selected divisions and their bodies cross the wire. All filters

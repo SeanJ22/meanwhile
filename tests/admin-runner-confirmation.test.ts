@@ -118,7 +118,7 @@ test("a failing read is unread, never applied", async () => {
     ...repos,
     researchIntents: {
       ...repos.researchIntents,
-      readWhere: async () => {
+      readRecentWhere: async () => {
         throw new Error("down");
       },
     },

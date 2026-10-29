@@ -6,7 +6,7 @@ import { guardAdminRequest } from "../gateway/admin-guard.ts";
 import { ADMIN_CONFIG_ID, isAdminConfig } from "../gateway/admin-config.ts";
 import { ALERTS_ON_SETTING, readSetting } from "../settings.ts";
 import { readReports } from "../reports/read-reports.ts";
-import { readBrief, readerProblemRows, compactBrief } from "./brief.ts";
+import { readBrief, readFreshAlerts, readerProblemRows, compactBrief } from "./brief.ts";
 const headers={"cache-control":"no-store"};
 export async function briefGet(request:NextRequest,which:"brief"|"alerts"|"daily-brief"|"reader-problems"):Promise<NextResponse>{
  const guard=await guardAdminRequest({headers:request.headers,cookie:request.cookies.get(ADMIN_SESSION_COOKIE)?.value,checkOrigin:false,nowSeconds:Math.floor(Date.now()/1000)});
@@ -22,6 +22,6 @@ export async function briefGet(request:NextRequest,which:"brief"|"alerts"|"daily
    return NextResponse.json({latest:latest?compactBrief(latest):null,observedAt:at},{headers});
   }
   const on=readSetting(held?.value??null,ALERTS_ON_SETTING,false);
-  return NextResponse.json({on,alerts:on?(await readBrief(opened.repos,at)).fresh.alerts:[],observedAt:at},{headers});
+  return NextResponse.json({on,alerts:on?await readFreshAlerts(opened.repos,at):[],observedAt:at},{headers});
  }catch{return NextResponse.json({says:"The brief could not be read just now."},{status:503,headers});}
 }

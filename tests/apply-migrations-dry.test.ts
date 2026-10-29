@@ -392,3 +392,19 @@ test("writerless production inspection still refuses the wrong endpoint and appl
   assert.equal(drift.status, 1);
   assert.match(drift.output, /does not match the applied journal hash/);
 });
+
+test("publication counter backfill takes writer locks together while leaving readers serving", () => {
+  const statement = lockFirstStatement("CP-01_source_status");
+  assert.match(statement, /LOCK TABLE civic_data_candidates, civic_data_candidate_events, civic_data_promotions IN SHARE ROW EXCLUSIVE MODE;/);
+  assert.match(statement, /EXCEPTION WHEN lock_not_available OR deadlock_detected/);
+});
+
+test("a durable owner initialization checkpoint requests continuation without recording a failed or completed migration", async () => {
+  const sha="c".repeat(40),records:unknown[]=[];
+  const status=await runDbApply(["--target=production","--phase=contract","--production-runtime",`--runtime-commit=${sha}`],
+    {NODE_ENV:"test",WTP_RUNTIME_MODE:"production"},{head:()=>sha,
+      execute:()=>({status:75,stdout:"CP01_OWNER_INITIALIZATION_PENDING: checkpoint saved\n",stderr:""}),
+      record:async record=>{records.push(record);}});
+  assert.equal(status,75);
+  assert.deepEqual(records,[]);
+});

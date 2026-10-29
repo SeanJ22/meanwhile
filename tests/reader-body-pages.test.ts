@@ -10,6 +10,9 @@ import type { FactDb, Query } from "../lib/facts/publish.ts";
 import type { Meeting } from "../lib/sources/types.ts";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 import { seedPlacePages } from "./helpers/place-pages.ts";
+import { stateCoverage } from "../lib/reader/coverage.ts";
+import type { Division } from "../lib/registry/types.ts";
+import { readerCacheTags } from "../lib/reader/cache.ts";
 
 const AT = "2026-10-24T12:00:00.000Z", AZ = "ocd-division/country:us/state:az", CA = "ocd-division/country:us/state:ca";
 const FIRST = `${AZ}/place:example#council`, SECOND = `${AZ}/place:example#planning`, FOREIGN = `${CA}/place:example#council`;
@@ -264,4 +267,134 @@ test("an explicit state resolves a short body alias for current and held agendas
     assert.deepEqual(states,["OR","US"],"a named national division retains its national selection");
     if(divisionRead.kind==="PROMOTED")assert.deepEqual(divisionRead.value.meetings.map(row=>row.id),[federal.id]);
   } finally {await pg.close();}
+});
+
+test("an in-place governing-name correction reaches saved runtime bodies and current/history meetings",async()=>{
+  const {pg,publish}=await migratedReaderDb();
+  const query:Query=async(text,params=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  const division=`${AZ}/place:mesa`,body=`${division}#governing`;
+  const source={sourceUrl:'https://example.gov/council',sourceOrg:'City Council',collectedAt:AT,verifiedAt:AT};
+  const geography:Division={ocdId:division,divisionType:'place',label:'Mesa',tier:'local',state:'AZ',parentOcdId:null,
+    lsad:null,funcstat:null,classfp:null,geoid:null,canonicalOcdId:division,canonicalMatch:'exact',sourceDataset:'TIGER_CB2023',provenance:source};
+  const current={...meeting(body,'renamed-current',AT),bodyName:'City Council Special Meeting'};
+  const past={...meeting(body,'renamed-past','2020-01-01T12:00:00Z'),bodyName:'City Council Special Meeting'};
+  try {
+    await query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Mesa','AZ',NULL),($2,'body','City Council','AZ',$1)",[division,body]);
+    await query('INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2)',[body,division]);
+    await publish({id:'runtime-renamed',recordClass:'REGISTRY_RUNTIME_BINDING',scope:'US-AZ:reader-registry-runtime',sourceId:'fixture',at:AT,
+      value:{formatVersion:1,registry:{generatedAt:AT,bodies:[{id:body,ocdId:division,name:'City Council Special Meeting',bodyClass:'GOVERNING',
+        bodyOrigin:'SOURCED',coverageStatus:'NOT_ATTEMPTED',agendaSourceType:'NONE',agendaSourceRef:null,meetingCadence:null,
+        homepageUrl:null,demandCount:0,sourceDataset:'GOV_DIRECTORY',provenance:source}],divisions:[geography]},
+        bodyRosters:[{bodyId:body,bodyName:'City Council Special Meeting',members:[],partisanship:'NONPARTISAN',...source}],
+        rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{rows:[]},officialPhotos:{photos:[]},rosterPhotos:{}}});
+    for(const [suffix,sitting,history] of [['current',current,false],['past',past,true]] as const)await publish({id:`renamed-${suffix}`,recordClass:'MEETING',scope:`source:fixture:body:${encodeURIComponent(body)}${history?':history':''}`,sourceId:'fixture',at:AT,
+      value:{formatVersion:1,generatedAt:AT,meetings:[sitting],sources:[],counts:snapshotCounts([sitting],0),agendaDocuments:[]}});
+    await seedPlacePages(query,{state:'AZ',divisionIds:[division],bodyIds:[body]});
+    for(const includeHistory of [false,true]) {
+      const place=await readPlacePackage({state:'AZ',divisionIds:[division],includeHistory},query);
+      assert.equal(place.registry?.registry.bodies[0]?.name,'City Council');
+      assert.equal(place.registry?.bodyRosters[0]?.bodyName,'City Council');
+      assert.equal(place.bodies[0]?.name,'City Council');
+      assert.ok(place.meetings.every(meeting=>meeting.bodyId===body&&meeting.bodyName==='City Council'));
+      assert.deepEqual(place.meetings.map(meeting=>meeting.id).sort(),(includeHistory?[current.id,past.id]:[current.id]).sort());
+      const coverage=stateCoverage({state:'AZ',registry:place.registry!,version:'renamed-body'},[division],0,0,place.meetings,place.bodies);
+      assert.equal(coverage.bodies.find(shown=>shown.bodyId===body)?.name,'City of Mesa Council');
+    }
+    assert.deepEqual(await query("SELECT value FROM entity_external_id WHERE scheme='body-alias'"),[],"the same governing ID needed no alias");
+  }finally{await pg.close();}
+});
+
+test("saved division contexts read current alias pointers without storing a second alias map",async()=>{
+  const {pg,publish}=await migratedReaderDb();
+  const query:Query=async(text,params=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  const db:FactDb={transaction:work=>pg.transaction(tx=>work(async(text,params=[])=>(await tx.query<Record<string,unknown>>(text,[...params])).rows))};
+  const division=`${AZ}/place:alias-example`,body=`${division}#governing`,alias=`${division}#body:special-meeting`;
+  const current={...meeting(alias,'transient-current',AT),bodyName:'Special Meeting'};
+  const past={...meeting(alias,'transient-past','2020-01-01T12:00:00Z'),bodyName:'Special Meeting'};
+  try {
+    await query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Example','AZ',NULL),($2,'body','City Council','AZ',$1),($3,'body','Special Meeting','AZ',$1)",[division,body,alias]);
+    await query('INSERT INTO entity_place(entity_id,place_id) VALUES($1,$2)',[body,division]);
+    await query("INSERT INTO entity_external_id(entity_id,scheme,value) VALUES($1,'body-alias',$2)",[body,alias]);
+    for(const [suffix,sitting,history] of [['current',current,false],['past',past,true]] as const)await publish({id:`transient-${suffix}`,recordClass:'MEETING',scope:`source:fixture:body:${encodeURIComponent(alias)}${history?':history':''}`,sourceId:'fixture',at:AT,
+      value:{formatVersion:1,generatedAt:AT,meetings:[sitting],sources:[],counts:snapshotCounts([sitting],0),agendaDocuments:[]}});
+    await query('DELETE FROM rebuild_queue');
+    await query('INSERT INTO rebuild_queue(place_id) VALUES($1)',[division]);
+    assert.equal((await rebuildPlacePages({db,limit:1,concurrency:1,purge:async()=>({purged:true})})).rebuilt,1);
+    const [saved]=await query('SELECT context FROM place_page WHERE place_id=$1',[division]);
+    for(const key of ['current','history'])for(const mode of ['full','brief','facts'])
+      assert.equal(Object.hasOwn(unpackPlaceContextRow((saved.context as Record<string,Record<string,unknown>>)[key]![mode]),'body_aliases'),false);
+    for(const includeHistory of [false,true]) {
+      let reads=0;
+      const place=await readPlacePackage({state:'AZ',divisionIds:[division],includeHistory},async(text,params)=>{
+        reads++;assert.equal(text,PLACE_PAGES_SQL);
+        const rows=await query(text,params);
+        assert.deepEqual(rows[0]?.body_headers,{[alias]:{id:body,name:'City Council'},[body]:{id:body,name:'City Council'}},'one indexed query supplies only this saved page\'s identity headers');
+        return rows;
+      });
+      assert.equal(reads,1);
+      assert.deepEqual(place.meetings.map(meeting=>meeting.id).sort(),(includeHistory?[current.id,past.id]:[current.id]).sort());
+      assert.ok(place.meetings.every(meeting=>meeting.bodyId===body&&meeting.bodyName==='City Council'));
+    }
+  }finally{await pg.close();}
+});
+
+test("a queued body fold immediately corrects ready ZIP and saved contexts before their rebuild",async()=>{
+  const {pg,publish}=await migratedReaderDb();
+  const query:Query=async(text,params=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  const db={query,transaction:<T>(work:(q:Query)=>Promise<T>)=>pg.transaction(tx=>work(async(text,params=[])=>(await tx.query<Record<string,unknown>>(text,[...params])).rows))};
+  const division=`${AZ}/place:queued-example`,body=`${division}#governing`,alias=`${division}#body:special-meeting`,zip='zip:85701';
+  const current={...meeting(alias,'queued-current',AT),bodyName:'Special Meeting'};
+  const past={...meeting(alias,'queued-past','2020-01-01T12:00:00Z'),bodyName:'Special Meeting'};
+  const normal={...meeting(body,'queued-normal',AT),bodyName:'City Council'};
+  const fresh={...meeting(body,'queued-duplicate','2026-10-25T16:00:00Z'),bodyName:'City Council',status:'CANCELED' as const,
+    provenance:{...normal.provenance,collectedAt:'2026-10-25T12:00:00Z'}};
+  const older={...fresh,bodyId:alias,bodyName:'Special Meeting',startsAt:AT,status:'SCHEDULED' as const,
+    agendaUrl:'https://example.gov/held-agenda',provenance:normal.provenance};
+  try {
+    await query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Example','AZ',NULL),($2,'body','City Council','AZ',$1),($3,'body','Special Meeting','AZ',$1),($4,'place','Fixture ZIP','AZ',NULL)",[division,body,alias,zip]);
+    await query('INSERT INTO entity_place(entity_id,place_id) VALUES($1,$3),($2,$3)',[body,alias,division]);
+    for(const [suffix,sitting,history] of [['current',current,false],['past',past,true]] as const)await publish({id:`queued-${suffix}`,recordClass:'MEETING',scope:`source:fixture:body:${encodeURIComponent(alias)}${history?':history':''}`,sourceId:'fixture',at:AT,
+      value:{formatVersion:1,generatedAt:AT,meetings:history?[sitting]:[sitting,older],sources:[],counts:snapshotCounts(history?[sitting]:[sitting,older],0),agendaDocuments:[]}});
+    await publish({id:'queued-normal',recordClass:'MEETING',scope:`source:fixture:body:${encodeURIComponent(body)}`,sourceId:'fixture',at:AT,
+      value:{formatVersion:1,generatedAt:AT,meetings:[normal,fresh],sources:[],counts:snapshotCounts([normal,fresh],0),agendaDocuments:[]}});
+    await query('DELETE FROM rebuild_queue');
+    await query('INSERT INTO rebuild_queue(place_id) SELECT unnest($1::text[])',[[division,body,alias]]);
+    assert.equal((await rebuildPlacePages({db,limit:3,concurrency:1,purge:async()=>({purged:true})})).rebuilt,3);
+    // A ZIP's ready payload is the same composed answer stored by the worker, without source contexts.
+    await query(`INSERT INTO place_page(place_id,body,history_body,context) SELECT $1,body,history_body,'{"formatVersion":1}'::jsonb FROM place_page WHERE place_id=$2`,[zip,division]);
+    await query('INSERT INTO place_page_dependency(page_id,entity_id) SELECT $1,entity_id FROM place_page_dependency WHERE page_id=$2',[zip,division]);
+    const old=await readPlacePackage({state:'AZ',placeId:zip,divisionIds:[]},query);
+    assert.ok(old.bodies.some(row=>row.name==='Special Meeting'),'the cached fixture starts with the reported defect');
+    const {foldPortalBodyLabels}=await import('../lib/facts/portal-publication.ts');
+    const purged:string[]=[];
+    assert.equal((await foldPortalBodyLabels(db,'AZ',async tags=>{purged.push(...tags);return {purged:true};})).folded,1);
+    assert.ok(readerCacheTags({places:[zip,division,body,alias]}).every(tag=>purged.includes(tag)),'cached ZIP, division and body responses are purged before queued rebuilds');
+    assert.equal(purged.includes('reader-settings'),false);
+    assert.ok(Number((await query('SELECT count(*) AS n FROM rebuild_queue'))[0]?.n)>0,'replacement pages are still queued');
+    for(const selected of [
+      {state:'AZ',placeId:zip,divisionIds:[]},
+      {state:'AZ',divisionIds:[division]},
+      {state:'AZ',placeId:alias,divisionIds:[],bodyIds:[alias]},
+      {state:'AZ',placeId:body,divisionIds:[],bodyIds:[body]},
+    ])for(const includeHistory of [false,true]) {
+      const input=selected.placeId===zip&&includeHistory?{...selected,divisionIds:[division],includeHistory}:{...selected,includeHistory};
+      const place=await readPlacePackage(input,query);
+      assert.deepEqual(place.bodies.map(row=>[row.id,row.name]),[[body,'City Council']]);
+      assert.deepEqual(place.meetings.map(row=>row.id).sort(),(includeHistory?[current.id,past.id,normal.id,fresh.id]:[current.id,normal.id,fresh.id]).sort());
+      assert.ok(place.meetings.every(row=>row.bodyId===body&&row.bodyName==='City Council'));
+      const duplicate=place.meetings.find(row=>row.id===fresh.id)!;
+      assert.equal(duplicate.status,'CANCELED');assert.equal(duplicate.startsAt,fresh.startsAt);
+      assert.equal(duplicate.agendaUrl,older.agendaUrl,'the newer cancellation retains its earlier published agenda link');
+    }
+    // Fresh geographic updates are claimed before body work; hold the other rows so this turn rebuilds the body alone.
+    await query("UPDATE rebuild_queue SET lease_until=clock_timestamp()+interval '1 hour' WHERE place_id<>$1",[body]);
+    assert.equal((await rebuildPlacePages({db,limit:1,concurrency:1,purge:async()=>({purged:true})})).rebuilt,1);
+    assert.equal((await query('SELECT 1 FROM rebuild_queue WHERE place_id=$1',[body])).length,0);
+    assert.ok((await query('SELECT 1 FROM rebuild_queue WHERE place_id=$1',[alias])).length>0);
+    for(const includeHistory of [false,true]) {
+      const place=await readPlacePackage({state:'AZ',placeId:alias,divisionIds:[],includeHistory},query);
+      assert.deepEqual(place.meetings.map(row=>row.id).sort(),(includeHistory?[normal.id,current.id,past.id,fresh.id]:[normal.id,current.id,fresh.id]).sort());
+      assert.deepEqual(placePageCacheIds(place),[body],'an old alias URL uses the rebuilt canonical page while other rebuilds remain queued');
+    }
+  }finally{await pg.close();}
 });

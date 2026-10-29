@@ -29,6 +29,25 @@ test("reader text cases shouting words inside mixed source text", () => {
   assert.equal(readerPartyLabel("NO LABELS / PND"), "No Labels / Party Not Designated");
 });
 
+test("state codes keep their postal casing on their own and inside labels", () => {
+  for (const raw of ["WI", "Wi", "wi"]) assert.equal(readerText(raw), "WI");
+  assert.equal(readerText("Madison, Wi"), "Madison, WI");
+  assert.equal(readerText("State: wi", "sentence"), "State: WI");
+  assert.equal(readerText("WI-2"), "WI-2");
+  assert.equal(readerText("AZ State Senate District 6 (2024 plan)"), "AZ State Senate District 6 (2024 plan)");
+  assert.equal(readerText("Az State House District 6 (2024 plan)"), "AZ State House District 6 (2024 plan)");
+  assert.equal(readerText("WI Congressional District 2 (119th Congress)"), "WI Congressional District 2 (119th Congress)");
+  assert.equal(readerText("WI voting information"), "WI voting information");
+  assert.equal(readerText("Tx voting information"), "TX voting information");
+  assert.equal(readerText("IN voting information"), "IN voting information");
+  assert.equal(readerText("CA election office"), "CA election office");
+  assert.equal(readerText("OR government and school listings"), "OR government and school listings");
+  assert.equal(readerText("Election Day (wi)"), "Election Day (WI)");
+  assert.equal(readerText("In the house", "sentence"), "In the house");
+  assert.equal(readerText("In the House"), "In the House");
+  assert.equal(readerText("We are in Wisconsin", "sentence"), "We are in Wisconsin");
+});
+
 test("addresses keep postal codes and PO while casing the street", () => {
   assert.equal(readerText("PO BOX 19, 100 N MAIN STREET, MILWAUKEE, WI 53202", "address"),
     "PO Box 19, 100 N Main Street, Milwaukee, WI 53202");

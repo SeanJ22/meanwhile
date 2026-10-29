@@ -136,3 +136,17 @@ test("a replacement that became valid before the session lock is never dropped",
   assert.equal(statusReads, 2);
   assert.ok(!mock.calls.some(text => /CREATE INDEX|DROP INDEX/.test(text)));
 });
+
+for (const provider of ["memory", "file"] as const) test(provider + ": capture pointer reads omit publication quotations", async () => {
+  const root = await mkdtemp(join(tmpdir(), "cp-01-artifact-pointers-"));
+  try {
+    const repos = provider === "memory" ? createMemoryRepositories() : await createFileRepositories(root);
+    const record = { artifactId: "a", workItemId: "w", canonicalUrl: "https://example.gov", recordedAt: "2026-10-28T00:00:00Z",
+      contentHash: "sha256-fingerprint", publicationLink: { quote: "x".repeat(100_000) } } as ArtifactRecord;
+    await repos.artifacts.append("w", "a", record, record.recordedAt);
+    const projection = { artifactId: true, contentHash: true } as const;
+    const expected = [{ artifactId: "a", contentHash: "sha256-fingerprint" }];
+    assert.deepEqual((await repos.artifacts.readKeys!(["w"], projection)).get("w"), expected);
+    assert.deepEqual(await repos.artifactsByCanonicalUrl!(record.canonicalUrl, 1, projection), expected);
+  } finally { await rm(root, { recursive: true, force: true }); }
+});

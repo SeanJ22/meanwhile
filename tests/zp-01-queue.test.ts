@@ -20,7 +20,8 @@ test('pending publications do no row updates; an in-flight page retains exactly 
     const waiting=await stamp();
     for(let n=0;n<1000;n++)await enqueueReaderPlaces({places:[root]},db.query);
     assert.deepEqual(await stamp(),waiting,'1,000 publications are coalesced without rewriting the pending row');
-    await db.query("UPDATE rebuild_queue SET lease_token='building',lease_slot=1,lease_until=clock_timestamp()+interval '5 minutes'");
+    // The real claim consumes the source-priority marker before a snapshot starts.
+    await db.query("UPDATE rebuild_queue SET lease_token='building',lease_slot=1,lease_until=clock_timestamp()+interval '5 minutes',next_queued_at=NULL");
     await enqueueReaderPlaces({places:[root]},db.query);
     const active=await stamp();
     assert.equal(active[0]!.generation,2);assert.ok(active[0]!.next_queued_at);

@@ -9,7 +9,7 @@ import { AUTOMATIC_REFRESH_CONTRACT_IDS } from "../civic-data/automatic-refresh.
 import { ROUTINE_SOURCE_CONTRACTS } from "../civic-data/contracts.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import { sourceAuthority } from "../civic-data/source-authority.ts";
-import { feedDoorId, normalizeHost, upsertDerivedDoor, type DoorDraft, type DoorRepository } from "./registry.ts";
+import { feedDoorId, normalizeHost, seedDerivedDoors, type DoorDraft, type DoorRepository } from "./registry.ts";
 
 const MINUTE = 60_000;
 
@@ -123,16 +123,5 @@ export async function seedFeedDoors(input: {
   readonly deriveInputAt: string;
   readonly at: string;
 }): Promise<{ created: number; updated: number; unchanged: number; keptManualEdit: number; refused: readonly string[] }> {
-  const counts = { created: 0, updated: 0, unchanged: 0, keptManualEdit: 0 };
-  const refused: string[] = [];
-  for (const draft of feedDoorDrafts()) {
-    try {
-      const result = await upsertDerivedDoor(input.repo, draft, input.deriveInputAt, input.at);
-      if (result === "kept-manual-edit") counts.keptManualEdit += 1;
-      else counts[result] += 1;
-    } catch (error) {
-      refused.push(`${draft.doorId}: ${(error as Error).message}`);
-    }
-  }
-  return { ...counts, refused };
+  return seedDerivedDoors(input.repo, feedDoorDrafts(), input.deriveInputAt, input.at);
 }

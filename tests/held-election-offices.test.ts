@@ -131,6 +131,7 @@ test("a city's saved voting page puts its county election offices on the ballot 
   const stale = heldElectionOfficeFields({ divisionId: CITY, capture: capture(PAGE, URL_, "2026-07-01T00:00:00.000Z") });
   const result = await publishElectionFields({ store, now: NOW, fields: [...fields, ...stale], verify: section3Record });
   assert.equal(result.fields.length, 2);
+  assert.deepEqual(result.newFields, result.fields, "new delivery IDs come from the existing publication comparison");
   assert.equal(result.gaps.length, 2, "a capture outside the contact window publishes nothing");
   const read = await readElectionFieldsForDivisions([CITY], { store, now: NOW });
   const elections = read.fields.find(row => row.value.text === "Cochise County Elections Office")!;
@@ -142,6 +143,9 @@ test("a city's saved voting page puts its county election offices on the ballot 
     capture: capture(`<html><head><title>Elections | Cochise County, AZ</title></head><body><main><p>Questions about early ballots? Call the Cochise County Elections Department at (520) 432-8970.</p></main></body></html>`, countyUrl) });
   const successor = await publishElectionFields({ store, now: NOW, fields: county, verify: section3Record });
   assert.equal(successor.fields.length, 1);
+  assert.deepEqual(successor.newFields, successor.fields);
+  const repeated = await publishElectionFields({ store, now: NOW, fields: county, verify: section3Record });
+  assert.deepEqual(repeated.newFields, [], "reusing an existing office credits no new delivery");
   assert.ok(successor.promotedVersionId);
   const invented = heldElectionOfficeFields({ divisionId: CITY, capture: capture(PAGE) }).map(row => ({ ...row, phone: "(520) 555-0100" }));
   const refused = await publishElectionFields({ store, now: NOW, fields: invented, verify: section3Record });

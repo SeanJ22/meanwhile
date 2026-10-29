@@ -479,7 +479,7 @@ test("BL-10: assembly through promotion and the canonical reader shows complete 
       const rendered = await renderBallot("77002");
       assert.match(rendered.text, /Contests we don't hold yet/);
       assert.match(rendered.text, /Governor.*The official candidate list hasn.t been fully checked/);
-      assert.match(rendered.text, /We're working on finding verified candidates/);
+      assert.match(rendered.text, /ballot-held-contests:77002 verified candidates for these contests/, "the held-contest section contributes its missing candidates to the shared reader gap");
       assert.doesNotMatch(rendered.text, /Alice Adams|Fixture District 99|We do not have a ballot for this location yet/);
       assert.equal(rendered.text.includes("Bob Baker"), !allHeld);
       assert.deepEqual([...rendered.contestIds].sort(), ["fixture-tx-governor", "fixture-tx-senate"]);

@@ -18,7 +18,8 @@ export async function readRecentPostingToLive(): Promise<readonly PostingToLiveR
   return readPostingWindow(databaseReadOnlySql(url),new Date(now.getTime()-7*86_400_000).toISOString(),now.toISOString());
 }
 
-export async function readDoorNumbers(input: { readonly now: string; readonly config: AdminConfig | null;readonly keeper?:LineState|null }): Promise<Omit<DoorNumberReadings, "shutDoors">> {
-  const posting=await attempt(() => readRecentPostingToLive());
+export async function readDoorNumbers(input: { readonly now: string; readonly config: AdminConfig | null;readonly keeper?:LineState|null;
+  readonly posting?:Promise<readonly PostingToLiveRow[]|null> }): Promise<Omit<DoorNumberReadings, "shutDoors">> {
+  const posting=await (input.posting??attempt(() => readRecentPostingToLive()));
   return {now:input.now,overdue:null,scheduled:null,posting,fixes:input.config===null?null:fixItems(input.config)};
 }

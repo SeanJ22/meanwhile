@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import test from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import { parse } from "yaml";
-import { CardSourcesList, readableSourceQuotes } from "../components/officials/card-sources-list.tsx";
+import { CardSourcesList, readableSourceQuotes, sourceDate } from "../components/officials/card-sources-list.tsx";
 import { ReaderNamesProvider } from "../components/ui/reader-names-context.tsx";
 import { PersonIdentity } from "../components/officials/person-identity.tsx";
 import { PopupRow } from "../components/map/popup/popup-row.tsx";
@@ -28,7 +28,7 @@ test("the saved Congress source renders held metadata and reader field labels", 
   assert.match(html, /District offices and how to reach them/);
   assert.match(html, /Published by/);
   assert.match(html, /Read from/);
-  assert.match(html, /Last checked/);
+  assert.doesNotMatch(html, /Last checked/, "timestamp dates wait for the reader zone after hydration");
   assert.doesNotMatch(html, /Verified|Other ·|districtOffices|and \d+ more from this source|working on getting this info|Want us to get|not yet|no published page/);
   assert.equal(fieldSourceLabel("committees"), "The committees they serve on");
   assert.equal(fieldSourceLabel("new_internal_field"), "The facts shown on this card");
@@ -44,7 +44,7 @@ test("a source with no held publisher, page or dates renders coverage alone", ()
 
 test("a held confirmation date renders as a readable date", () => {
   const html = renderToStaticMarkup(<CardSourcesList sources={[{
-    what: "District offices", provenance: { ...holder.provenance!, verifiedAt: "2026-10-11T12:00:00Z" },
+    what: "District offices", provenance: { ...holder.provenance!, verifiedAt: "2026-10-11" },
   }]} />);
   assert.match(html, /Confirmed<\/span><span[^>]*>October 11, 2026/);
 });
@@ -121,7 +121,7 @@ test("raw roster evidence shows only its readable supporting words", () => {
     sourceUrl: "https://pima.gov/board/571", sourceOrg: "Pima County", collectedAt: "2026-10-23T12:34:56Z", verifiedAt: null, quote,
   } }]} />);
   assert.match(html, /Member Supervisor Rex Scott/);
-  assert.match(html, /October 23, 2026/);
+  assert.doesNotMatch(html, /October 23, 2026/, "the server does not substitute its UTC date for the reader date");
   assert.match(html, /href="https:\/\/pima.gov\/board\/571"/);
   assert.doesNotMatch(html.replace(/href="[^"]*"/g, ""), /2028-12-31|2021-01-01|00:00:00|138 206 571|2026-10-23T/);
 });
@@ -151,4 +151,15 @@ test("encoded record versions never appear as source quotations", () => {
   assert.match(html, /Commissioner Vickie Adamson/);
   assert.match(html, /Elected in 2024/);
   assert.doesNotMatch(html, /AAAAAACa/);
+});
+
+
+test("source instants use the reader day while published calendar dates keep their day", () => {
+  const instant = "2026-09-24T05:55:08.378Z";
+  assert.equal(sourceDate(instant, "America/Phoenix"), "September 23, 2026");
+  assert.equal(sourceDate(instant, "Asia/Tokyo"), "September 24, 2026");
+  assert.equal(sourceDate(instant, null), null, "SSR waits for the reader zone");
+  assert.equal(sourceDate("2026-09-24", "America/Phoenix"), "September 24, 2026");
+  assert.equal(sourceDate("2026-09-24", null), "September 24, 2026");
+  assert.equal(sourceDate("not a date", "America/Phoenix"), null);
 });

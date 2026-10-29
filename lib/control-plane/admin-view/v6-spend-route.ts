@@ -1,4 +1,4 @@
-import { databaseReadOnlySql } from "../../reader/database.ts";
+import { databaseReadOnlySql, databaseHttpReadOnlySql } from "../../reader/database.ts";
 import { NextResponse, type NextRequest } from "next/server";
 import { ADMIN_SESSION_COOKIE } from "../admin-auth.ts";
 import { readDailyDatabaseTransfer, readRunnerDatabaseTransfer, type DailyDatabaseTransferRead } from "../../db/transfer.ts";
@@ -8,7 +8,7 @@ import { openControlPlane } from "../admin-data.ts";
 import { resolveRollingCeiling } from "../fleet-safety.ts";
 import { huntersTheDialBuys } from "../scheduler/research-policy.ts";
 import { fleetSpendCeilingOverrideUsd, type AdminConfig } from "../gateway/admin-config.ts";
-import { ADMIN_V6_SPEND_CONTRACT, SPEND_DAYS, readSpend, type AdminV6SpendView } from "./v6-spend-read.ts";
+import { ADMIN_V6_SPEND_CONTRACT, SPEND_DAYS, readSpend, readChecklistSpend, type AdminV6SpendView } from "./v6-spend-read.ts";
 import { readV6Sources } from "./v6-money-hunts-route.ts";
 import { validateV6Query } from "./v6-hunts-read.ts";
 
@@ -42,6 +42,8 @@ export async function v6SpendGet(request: NextRequest): Promise<NextResponse> {
   const parameters = new URLSearchParams(request.nextUrl.searchParams);
   const runnerHour = parameters.get("runnerHour");
   parameters.delete("runnerHour");
+  const reading=parameters.get("reading");parameters.delete("reading");
+  if(reading!==null&&reading!=="checklist")return NextResponse.json({code:"INVALID_QUERY"},{status:400,headers:NO_STORE});
   const query = validateV6Query(parameters);
   if (!query.ok) return NextResponse.json({ code: query.code }, { status: 400, headers: NO_STORE });
   const url = controlPlaneUrlFromEnv();
@@ -53,6 +55,8 @@ export async function v6SpendGet(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ says: "Choose a recorded hour." }, { status: 400, headers: NO_STORE });
       return NextResponse.json(await readRunnerDatabaseTransfer(runnerHour), { headers: NO_STORE });
     }
+    if(reading==="checklist")return NextResponse.json({contract:ADMIN_V6_SPEND_CONTRACT,scope:query.scopeKey,
+      revision:`spend-checklist:${now.slice(0,16)}`,asOf:now,data:await readChecklistSpend(databaseHttpReadOnlySql(url)),missingParts:[]},{headers:NO_STORE});
     let transfer: DailyDatabaseTransferRead | null = null;
     try { transfer = await readDailyDatabaseTransfer(SPEND_DAYS); } catch { transfer = null; }
     const [spend, held] = await Promise.all([readSpend(databaseReadOnlySql(url), transfer), limitsAndHolds(now)]);

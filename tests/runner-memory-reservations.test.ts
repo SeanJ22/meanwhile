@@ -155,14 +155,14 @@ test("memory samples survive a stopped service and pool a new tenant, calendar a
     // Persisted before release: a stopped service leaves its latest sample behind.
     const deadPid = 2147483647;
     writeFileSync(path, JSON.stringify({ parents: [], reservations: [
-      { id: "tenant", owner: deadPid, pid: deadPid, entry: "legistar-members:old/legistar-members-refresh.mts", peak: 512 * mib, measured: 170 * mib },
+      { id: "tenant", owner: deadPid, pid: deadPid, entry: "legistar-members:old/legistar-members-worker.mts", peak: 512 * mib, measured: 170 * mib },
       { id: "reader", owner: deadPid, pid: deadPid, entry: "meetings:legistar:old/ingest.ts", peak: 342 * mib, measured: 120 * mib },
       { id: "zip", owner: deadPid, pid: deadPid, entry: "national-place:10001/promote-registry-runtime.mts", peak: 3181 * mib, measured: 900 * mib },
     ] }));
     const restarted = workerMemoryHost({ shared: true, directory, processes: () => [] });
     const slots = routineProcessSlots({ host: restarted, availableBytes: () => 10000 * mib });
     for (const [entry, expected] of [
-      ["legistar-members:new/legistar-members-refresh.mts", 179],
+      ["legistar-members:new/legistar-members-worker.mts", 179],
       ["meetings:legistar:new/ingest.ts", CALENDAR_READ_PEAK_MIB],
       ["national-place:90210/promote-registry-runtime.mts", 1229],
     ] as const) {
@@ -173,7 +173,7 @@ test("memory samples survive a stopped service and pool a new tenant, calendar a
       release();
     }
     const secondRestart = workerMemoryHost({ shared: true, directory, processes: () => [] });
-    await secondRestart.transact(state => assert.deepEqual(state.peaks?.["legistar-members/legistar-members-refresh.mts"], [170 * mib]), false);
+    await secondRestart.transact(state => assert.deepEqual(state.peaks?.["legistar-members/legistar-members-worker.mts"], [170 * mib]), false);
   } finally { rmSync(directory, { recursive: true, force: true }); }
 });
 
@@ -183,7 +183,7 @@ test("observing a running job persists its peak before release even below the or
   let release: (() => void) | undefined;
   try {
     const host = workerMemoryHost({ shared: true, directory, processes: () => [] });
-    const lease = await routineProcessSlots({ host, availableBytes: () => 10000 * mib }).acquire("legistar-members:running/legistar-members-refresh.mts");
+    const lease = await routineProcessSlots({ host, availableBytes: () => 10000 * mib }).acquire("legistar-members:running/legistar-members-worker.mts");
     release = lease;
     lease.observe!(process.pid);
     // The first sample is immediate; allow its asynchronous continuation to persist.
@@ -208,7 +208,7 @@ test("a service process exits without release and the next process recovers its 
     execFileSync(process.execPath, ["--experimental-strip-types", "--input-type=module", "-e", `
       import {workerMemoryHost,routineProcessSlots} from ${JSON.stringify(new URL("../lib/control-plane/workers/worker-slots.ts", import.meta.url).href)};
       const host=workerMemoryHost({shared:true,directory:${JSON.stringify(directory)},processes:()=>[]});
-      const release=await routineProcessSlots({host,availableBytes:()=>10000*1024**2}).acquire('legistar-members:before/legistar-members-refresh.mts');
+      const release=await routineProcessSlots({host,availableBytes:()=>10000*1024**2}).acquire('legistar-members:before/legistar-members-worker.mts');
       release.observe(process.pid);
       await new Promise(resolve=>setTimeout(resolve,30));
       process.exit(0);
@@ -218,9 +218,9 @@ test("a service process exits without release and the next process recovers its 
     assert.ok(sampled > 0);
     const host = workerMemoryHost({ shared: true, directory, processes: () => [] });
     const release = await routineProcessSlots({ host, availableBytes: () => 10000 * mib })
-      .acquire("legistar-members:after/legistar-members-refresh.mts");
+      .acquire("legistar-members:after/legistar-members-worker.mts");
     await host.transact(state => {
-      assert.deepEqual(state.peaks?.["legistar-members/legistar-members-refresh.mts"], [sampled]);
+      assert.deepEqual(state.peaks?.["legistar-members/legistar-members-worker.mts"], [sampled]);
       assert.equal(state.reservations[0].peak, Math.ceil(sampled * 1.05 / mib) * mib);
     }, false);
     release();

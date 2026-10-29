@@ -1,11 +1,32 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { SPEND_SQL, WORK_SQL, modelLabel, neonTransferOf, spendView, workCosts, workName, type SpendRowRaw } from "../lib/control-plane/admin-view/v6-spend-read.ts";
+import { SPEND_SQL, WORK_SQL, OUTCOMES_SQL, CHECKLIST_MONTHS_SQL, readSpend, readChecklistSpend, modelLabel, neonTransferOf, spendView, workCosts, workName, type SpendRowRaw } from "../lib/control-plane/admin-view/v6-spend-read.ts";
+import { PGlite } from "@electric-sql/pglite";
 
 const row = (day: string, role: string, model: string | null, usd: number | null, n = 1): SpendRowRaw => ({ month: day.slice(0, 7), day, role, model, usd, n });
 /** A row older than the day window: it counts toward its month only. */
 const old = (month: string, role: string, model: string | null, usd: number | null, n = 1): SpendRowRaw => ({ month, day: null, role, model, usd, n });
 const NOT_RECORDED = neonTransferOf({ kind: "NOT_INSTALLED", rows: [], detail: "Daily database transfer is not recorded until migration 0030 is applied." });
+
+test("Checklist keeps the full spend reader's month choices and Scout counts with two narrow reads",async()=>{
+ const calls:string[]=[];const sql={query:async(text:string)=>{calls.push(text);return text===SPEND_SQL?[{month:"2026-10",day:"2026-10-28",role:"SCOUT",model:"claude-haiku-5-5-20261001",usd:2,n:1},
+  {month:"2026-09",day:null,role:"DISCOVERY_SEARCH",model:null,usd:1,n:1}]:text===CHECKLIST_MONTHS_SQL?[{month:"2026-10"},{month:"2026-09"}]:text===OUTCOMES_SQL?[{record_class:"local-jurisdiction",outcome:"EVIDENCE_FOUND",n:4},{record_class:"local-jurisdiction",outcome:"ROUTE_CANDIDATE",n:2}]:[];}};
+ const full=await readSpend(sql,null);calls.length=0;const compact=await readChecklistSpend(sql);
+ assert.deepEqual(compact,{byMonth:full.byMonth.map(({month})=>({month})),scoutOutcomes:full.scoutOutcomes});
+ assert.deepEqual(new Set(calls),new Set([CHECKLIST_MONTHS_SQL,OUTCOMES_SQL]));assert.equal(calls.length,2);
+});
+
+test("the month-only SQL matches priced months across per-model, empty, unpriced and acquirer entries",async()=>{
+ const pg=new PGlite();try{
+  await pg.exec("CREATE TABLE cp_log_costs(recorded_at timestamptz,record jsonb);CREATE TABLE cp_attempts(id text,value jsonb)");
+  const entries=[{offset:0,cost:{usd:2}},{offset:0,cost:{usd:3},byModel:[]},{offset:1,cost:{usd:5},byModel:[{usd:0}]},
+   {offset:2,cost:{usd:4},byModel:[{usd:null}]},{offset:3,cost:{usd:null},role:"ACQUIRER",byModel:[{usd:2},{usd:3}]},
+   {offset:4,cost:{usd:null}},{offset:5,cost:{usd:0}},{offset:13,cost:{usd:10}}];
+  for(const {offset,...entry}of entries)await pg.query("INSERT INTO cp_log_costs VALUES((date_trunc('month',now() AT TIME ZONE 'America/New_York')-$1::int*interval '1 month'+interval '2 days') AT TIME ZONE 'America/New_York',$2::jsonb)",[offset,JSON.stringify({role:"SCOUT",...entry})]);
+  const raw=await pg.query<SpendRowRaw>(SPEND_SQL,[31,12]);const full=spendView(raw.rows,NOT_RECORDED);
+  const months=await pg.query(CHECKLIST_MONTHS_SQL,[12]);assert.deepEqual(months.rows,full.byMonth.map(({month})=>({month})));
+ }finally{await pg.close();}
+});
 
 test("models are named by catalog tier, older versions by family, and anything else is not recorded", () => {
   assert.deepEqual(modelLabel("claude-haiku-5-5-20261001"), { key: "haiku", tier: "haiku", name: "Claude Haiku 5.5" });

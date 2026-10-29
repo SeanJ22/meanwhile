@@ -1,3 +1,4 @@
+import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
@@ -61,7 +62,7 @@ import {
   neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher, consolePublishClock } from "./pilot-runtime-publish.mts";
+import { consoleInputReader, consolePublisher, consolePublishClock, ownerCountsReady } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { auditPassClock } from "./audit-pass-clock.mts";
@@ -119,7 +120,7 @@ import { releaseWindowLeaseOfExitedLocalHolder } from "../lib/control-plane/prom
 import { ADMIN_COPY_POLL_MS, runAuthorizedAdminCopyTick } from "../lib/control-plane/evidence/admin-copy-runner.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { fireDueOrders } from "../lib/control-plane/gateway/scheduled-fire.ts";
-import { runtimeContractRetry, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
+import { runtimeContractRetry, runtimeContractContinues, RUNTIME_CONTRACT_ATTEMPT_MS } from "./apply-migrations.mts";
 import { wakeHintWriterFromEnv } from "../lib/control-plane/gateway/wake-hint.ts";
 import { JOB_BREAKER_INTERVAL_MS, JOB_BREAKER_JOB } from "../lib/control-plane/job-transfer-breaker.ts";
 import { admitJobLaunch, JOB_BREAKER_PATH_ENV } from "../lib/control-plane/job-breaker-local.ts";
@@ -235,6 +236,7 @@ async function checkJobTransfers(): Promise<void> {
   });
   // The hunter lane's one child lives up to 55 minutes; a pause asks it to finish its tasks in hand and take no more.
   if (!admitJobLaunch("hunter-lane")) drainHunterLane();
+  if (!admitJobLaunch("legistar-members")) drainMemberLane();
 }
 function jobTransferTick(): Promise<void> {
   if (jobBreakerWork) return jobBreakerWork;
@@ -643,7 +645,9 @@ function deliver(body: string, headline: string): { readonly where: string } {
 
 const CONSOLE_PUBLISHERS: readonly { readonly databaseBytesPerRun: number; readonly name: string; readonly args: readonly string[] }[] = [
 
-  { databaseBytesPerRun: 255_016_765, name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
+  // CP-01 full production-copy publisher: 4,657,448 cold bytes; 452,484 steady; 452,413 after a lease heartbeat and five minutes.
+  // Reserve the observed cold run; source fingerprints keep a cold-plus-eleven-pass hour under 0.01 GB.
+  { databaseBytesPerRun: 5_000_000, name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
 ];
 
 const publishChangedConsole = consolePublisher({
@@ -684,6 +688,16 @@ async function publishConsole(onlyWhenDue=false): Promise<void> {
 async function publishConsoleChildren(): Promise<boolean> {
   let succeeded = true;
   for (const publisher of CONSOLE_PUBLISHERS) {
+    if (publisher.name === "owner snapshot") {
+      const env = STAGING ? process.env : runtimeProductionReadEnvironment(process.env);
+      const controlUrl = controlPlaneUrlFromEnv(env);
+      const ready = controlUrl ? await ownerCountsReady(controlUrl).catch(() => false) : false;
+      if (!ready) {
+        console.log("  console publish: owner count inputs are unavailable or initializing; retaining the last snapshot until they are ready");
+        succeeded = false;
+        continue;
+      }
+    }
     if (!jobLaunchAllowed(`console-publish:${publisher.name}`)) { succeeded = false; continue; }
     const started = Date.now();
     const [run] = await runRuntimeChildren([{
@@ -1099,6 +1113,7 @@ function holdForRestart(targetSha: string): void {
   console.log(`  release ${targetSha.slice(0, 8)} loads by restart: no new standing run starts; ` +
     `${running.length ? `${running.join(", ")} end by their deadlines` : "nothing is running"}, then the runner restarts`);
   drainHunterLane();
+  drainMemberLane();
   if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
   });
@@ -1272,6 +1287,22 @@ function drainHunterLane(): void {
   });
 }
 
+let memberLaneChild: ChildProcess | null = null;
+async function runMemberLane(deadlineMs: number): Promise<void> {
+  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed("legistar-members")) return;
+  const [run] = await runRuntimeChildren([{id:"legistar-members",databaseBytesPerRun:LEGISTAR_MEMBER_DATABASE_BYTES,
+    executable:process.execPath,args:[...TS_CHILD,"scripts/legistar-members-worker.mts"],
+    env:withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"),deadlineMs)}],{
+    cwd:CODE_ROOT,env:process.env,deadlineMs,maxBufferBytes:16*1024*1024,noProgressMs:RUNTIME_NO_PROGRESS_MS,
+    onStdout:(_id,output)=>process.stdout.write(output),onStderr:(_id,output)=>process.stderr.write(output),
+    onStarted:(_id,child)=>{memberLaneChild=child;}});
+  memberLaneChild=null;
+  if(!run || run.status!==0) throw Error("Legistar members stopped; queued records remain due");
+}
+function drainMemberLane():void {
+  if(memberLaneChild?.connected)memberLaneChild.send({kind:"RUNTIME_RELEASE_DRAIN"},error=>{if(error)console.error("Legistar member drain failed",error);});
+}
+
 const auditPasses = auditPassClock({
   statePath: join(ROOT, ".mirror", "audit-pass-clock.json"),
   codeRoot: () => CODE_ROOT,
@@ -1355,6 +1386,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, budgetMs: INTAKE_RUNTIME_BUDGET_MS, run: runIntakeRuntime },
   // The lane retires at its life; the wall covers the last task a worker still holds.
+  { id: "legistar-members", everyMs: 60_000, budgetMs: 55*60_000, run: runMemberLane },
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   placePagesLane(runPlacePages),
   publishNowLane(runPublishNow),
@@ -1681,16 +1713,19 @@ const runtimeContracts = runtimeContractRetry({
   },
 });
 async function applyRuntimeContracts(sha: string, cwd: string): Promise<boolean> {
-  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", databaseBytesPerRun: 19_776, executable: process.execPath,
+  const deadlineMs = Date.now() + RUNTIME_CONTRACT_ATTEMPT_MS;
+  // CP-01's one-time, checkpointed backlog used at most 90,725,008 bytes in one bounded copy attempt.
+  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", databaseBytesPerRun: 100_000_000, executable: process.execPath,
     args: [...TS_CHILD, "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
-    cwd, env: process.env, maxBufferBytes: 16 * 1024 * 1024,
-    deadlineMs: Date.now() + RUNTIME_CONTRACT_ATTEMPT_MS,
+    cwd, env: withPassDeadline(process.env, deadlineMs), maxBufferBytes: 16 * 1024 * 1024,
+    deadlineMs,
     onStarted: (_id, child) => { runtimeContractChild = child; },
     onStdout: (_id, output) => process.stdout.write(output),
     onStderr: (_id, output) => process.stderr.write(output),
   }).finally(() => { runtimeContractChild = null; });
   if (result?.status === 0) return true;
+  if (result && runtimeContractContinues(result.status, `${result.stdout}\n${result.stderr}`)) return false;
   if (runtimeContractsStopping) return false;
   await persistRuntimeBoundaryFailure(releaseInspectionRefusal("PRODUCTION_CONTRACT_MIGRATION_FAILED",
     "Production cleanup failed; collection continues and cleanup will retry automatically.", sha), new Date().toISOString(),

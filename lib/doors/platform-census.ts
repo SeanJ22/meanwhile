@@ -92,6 +92,7 @@ async function censusDoorMatches(repo: DoorRepository, census: boolean) {
 
 /** Census doors that copy a hand-wired door are set aside, so each board is read once. Returns the doors set aside. */
 export async function retireCensusDuplicates(repo: DoorRepository, at: string): Promise<string[]> {
+  if (repo.retireDuplicates) return [...await repo.retireDuplicates(at)];
   const [rows, handWiredRows] = await Promise.all([censusDoorMatches(repo, true), censusDoorMatches(repo, false)]);
   const handWired = handWiredRows.map(row => row.value);
   const retired: string[] = [];
@@ -100,6 +101,10 @@ export async function retireCensusDuplicates(repo: DoorRepository, at: string): 
     if (door.config.crosswalkRowId === undefined || door.status === "SUSPENDED" || door.meeting == null) continue;
     const held = handWiredDoorFor(door, handWired);
     if (held === null) continue;
+    if (repo.suspendDuplicate) {
+      if (await repo.suspendDuplicate(row.id, row.revision, held.doorId, at)) retired.push(row.id);
+      continue;
+    }
     const current = await repo.mustRead(row.id);
     if (current.value.config.crosswalkRowId === undefined || current.value.status === "SUSPENDED" || current.value.meeting == null) continue;
     const currentHeld = handWiredDoorFor(current.value, handWired);

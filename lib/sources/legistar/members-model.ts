@@ -1,3 +1,4 @@
+import {rosterHolderName} from "../../facts/roster-name.ts";
 import { createHash } from "node:crypto";
 import { isoTermDate } from "../../civic-data/term-dates.ts";
 import type { Artifact } from "../../control-plane/evidence/artifact.ts";
@@ -15,11 +16,6 @@ export interface LegistarMembers {
   slug: string; bodies: MemberBody[]; persons: MemberPerson[]; offices: MemberOffice[];
   signature: string; collectedAt: string;
   readings: MemberReading[];
-}
-export interface CachedLegistarMembers {
-  readonly signature: string;
-  readonly collectedAt: string;
-  read(): Promise<LegistarMembers>;
 }
 
 export function legistarMemberSignature(raw: Pick<LegistarMembers, "bodies" | "persons" | "offices">): string {
@@ -42,6 +38,7 @@ export function validateLegistarMembers(raw: LegistarMembers): void {
   if (bodies.size !== raw.bodies.length || persons.size !== raw.persons.length || new Set(raw.offices.map(office => office.OfficeRecordId)).size !== raw.offices.length) throw new Error("LEGISTAR_MEMBERS_DUPLICATE_ID");
   for (const body of raw.bodies) if (!body.BodyName?.trim()) throw new Error("LEGISTAR_MEMBERS_BODY_NAME_MISSING");
   for (const office of raw.offices) {
+    if (rosterHolderName(office.OfficeRecordFullName) && (!Number.isSafeInteger(office.OfficeRecordPersonId) || office.OfficeRecordPersonId<=0)) throw new Error("LEGISTAR_MEMBERS_PERSON_ID_MISSING");
     const start = termDate(office.OfficeRecordStartDate), end = termDate(office.OfficeRecordEndDate);
     if (start && end && start > end) throw new Error("LEGISTAR_MEMBERS_TERM_REVERSED");
   }
@@ -67,3 +64,7 @@ export function memberProbe(url: URL): boolean {
   const selected = url.searchParams.get("$select");
   return selected !== null && !selected.split(",").some(field => ["BodyName", "PersonFullName", "OfficeRecordFullName"].includes(field));
 }
+
+export const memberDay = (now: string, timeZone: string) => new Intl.DateTimeFormat("en-CA", { timeZone, year:"numeric",month:"2-digit",day:"2-digit" }).format(new Date(now));
+export const currentMemberOffice = (office: MemberOffice, day: string) => (!termDate(office.OfficeRecordStartDate) || termDate(office.OfficeRecordStartDate)! <= day) && (!termDate(office.OfficeRecordEndDate) || termDate(office.OfficeRecordEndDate)! >= day);
+export const memberName = (office: MemberOffice) => rosterHolderName(office.OfficeRecordFullName);

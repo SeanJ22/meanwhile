@@ -133,7 +133,8 @@ export async function* readMeetingBodies(options: Pick<ReaderMeetingsOptions, "s
 export async function readHeldBodyIds(options: { readonly states: readonly string[]; readonly query?: Query }): Promise<ReadonlySet<string>> {
   const query = options.query ?? factReader();
   if (!query) throw new Error("FACT_STORE_DATABASE_URL_MISSING");
-  const rows = await query("SELECT id FROM entity WHERE kind='body' AND state=ANY($1::char(2)[]) ORDER BY id", [options.states.map(state => state.toUpperCase())]);
+  const rows = await query(`SELECT id FROM entity b WHERE kind='body' AND state=ANY($1::char(2)[])
+    AND NOT EXISTS(SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=b.id) ORDER BY id`, [options.states.map(state => state.toUpperCase())]);
   return new Set(rows.map(row => String(row.id)));
 }
 

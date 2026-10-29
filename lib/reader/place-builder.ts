@@ -60,12 +60,14 @@ const agendaDocumentLinksSql = (owned = "true") => `coalesce((
 const PLACE_ROW_GROUPS: Readonly<Record<string, readonly string[]>> = {
   meetings: ["agenda_texts","meeting_rows","archived_meetings","archived_documents","parts"],
   everyday_routing: ["everyday_routing"],
+  // Printed so a fold changes the page; always returned, since the stored context does not keep it.
+  body_aliases: ["body_aliases"],
   ...Object.fromEntries(["registration_held","division_ids","publication_attempts","registry","governments","divisions","entities",
     "fields","rosters","comments","sittings","archived_document_links"].map(column => [column,[column]])),
 };
 const PLACE_ROW_COLUMNS = ["registration_held","division_ids","agenda_texts","everyday_routing","publication_attempts","registry",
   "governments","divisions","entities","fields","rosters","comments","sittings","meeting_rows","archived_meetings","archived_documents",
-  "archived_document_links","parts"] as const;
+  "archived_document_links","parts","body_aliases"] as const;
 const groupOf = (column: string) => Object.entries(PLACE_ROW_GROUPS).find(([,columns]) => columns.includes(column))![0];
 
 /** The place indexes lead to bodies; live facts and canonical source calendars are read together. */
@@ -113,7 +115,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
       bool_or(place_id !~ '^ocd-division/country:us/(state|district|territory):[^/]+$') AS local
       FROM entity_place WHERE entity_id=coalesce(alias.entity_id,original.value->>'id')) served_places ON true
     CROSS JOIN LATERAL (SELECT CASE WHEN alias.entity_id IS NULL THEN original.value ELSE original.value || jsonb_build_object(
-      'id',alias.entity_id) END || jsonb_build_object('ocdId',CASE WHEN served_places.local
+      'id',alias.entity_id,'name',canonical.name) END || jsonb_build_object('ocdId',CASE WHEN served_places.local
         AND original.value->>'ocdId' ~ '^ocd-division/country:us/(state|district|territory):[^/]+$'
         THEN NULL ELSE original.value->>'ocdId' END) || CASE WHEN served_places.ids IS NOT NULL
         THEN jsonb_build_object('alsoServesOcdIds',to_jsonb(served_places.ids)
@@ -158,7 +160,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
   UNION
   SELECT e.id,e.kind,e.name,e.parent_id,e.state FROM entity e JOIN owned p ON e.parent_id=p.id
     WHERE e.state=$1::char(2) AND e.kind IN ('government','body')
-), bodies AS MATERIALIZED (
+), raw_bodies AS MATERIALIZED (
   SELECT id,kind,name,parent_id,state FROM owned WHERE kind='body'
   UNION SELECT id,kind,name,parent_id,state FROM entity
     WHERE (id=ANY($3::text[]) OR id IN (SELECT x.entity_id FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=ANY($3::text[]))
@@ -168,6 +170,11 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     LEFT JOIN runtime_bodies r ON r.value->>'id'=requested.id
     WHERE NOT EXISTS (SELECT 1 FROM entity e WHERE e.id=requested.id)
       AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.scheme='body-alias' AND x.value=requested.id)
+), bodies AS MATERIALIZED (
+  SELECT DISTINCT coalesce(b.id,raw.id) AS id,coalesce(b.kind,raw.kind) AS kind,coalesce(b.name,raw.name) AS name,
+    coalesce(b.parent_id,raw.parent_id) AS parent_id,coalesce(b.state,raw.state) AS state FROM raw_bodies raw
+    LEFT JOIN entity_external_id alias ON alias.scheme='body-alias' AND alias.value=raw.id
+    LEFT JOIN entity b ON b.id=coalesce(alias.entity_id,raw.id)
 ), body_facts AS MATERIALIZED (
   SELECT f.entity_id,f.field,f.value,f.quote,f.checked_at,f.provenance_kind,s.url,b.name AS body_name,b.parent_id FROM bodies b
     CROSS JOIN LATERAL (SELECT entity_id,field,value,quote,checked_at,provenance_kind,source_copy_id FROM checked_fact WHERE entity_id=b.id AND status='live'
@@ -229,7 +236,8 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     LEFT JOIN source_copy s ON s.id=f.source_copy_id
     WHERE $8::text[] IS NULL OR EXISTS (SELECT 1 FROM agenda_calendar_fallback) OR substr(m.id,9) IN (SELECT id FROM agenda_fact_ids)
 ), encoded_bodies AS MATERIALIZED (
-  SELECT b.id,encoded.id AS encoded_id FROM bodies b
+  SELECT b.id,encoded.id AS encoded_id FROM (SELECT id FROM bodies UNION SELECT x.value FROM entity_external_id x
+    JOIN bodies b ON b.id=x.entity_id WHERE x.scheme='body-alias') b
   CROSS JOIN LATERAL (SELECT string_agg(CASE WHEN ch ~ '^[A-Za-z0-9_.!~*''()-]$' THEN ch
     ELSE regexp_replace(upper(encode(convert_to(ch,'UTF8'),'hex')),'(..)','%\\1','g') END,'' ORDER BY n) AS id
     FROM regexp_split_to_table(b.id,'') WITH ORDINALITY AS chars(ch,n)) encoded
@@ -253,8 +261,8 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     LATERAL (SELECT reader_payload_node(m.item) AS value) header
   WHERE p.scope LIKE 'source:derived:family:%' AND NOT (right(p.scope,8)<>':history' AND EXISTS(SELECT 1 FROM encoded_bodies held_body JOIN civic_data_promotions own
       ON own.key='MEETING:source:derived~US-'||$1||':body:'||held_body.encoded_id AND own.record_class='MEETING'
-      WHERE held_body.id=header.value->>'bodyId')) AND (
-    header.value->>'bodyId' IN (SELECT id FROM bodies)
+      WHERE held_body.id=coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId'))) AND (
+    coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId') IN (SELECT id FROM bodies)
     OR coalesce(header.value->>'bodyId','')='' AND header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), meeting_rows AS MATERIALIZED (
   SELECT p.scope,CASE WHEN p.scope LIKE 'source:derived:family:%' THEN
@@ -291,7 +299,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     CROSS JOIN LATERAL (SELECT candidate->'readModel' AS payload FROM civic_data_candidates WHERE id=v.id LIMIT 1) candidate
     CROSS JOIN LATERAL reader_payload_members(reader_payload_node(candidate.payload)->'meetings') m
     CROSS JOIN LATERAL (SELECT reader_payload_node(m.item) AS value) header
-    WHERE header.value->>'bodyId' IN (SELECT id FROM bodies) AND header.value->>'id' IS NOT NULL
+    WHERE coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId') IN (SELECT id FROM bodies) AND header.value->>'id' IS NOT NULL
       AND CASE WHEN header.value->>'startsAt' ~ '^\\d{4}-\\d{2}-\\d{2}T'
         THEN (header.value->>'startsAt')::timestamptz < now()-make_interval(days=>${MEETING_HELD_LOOKBACK_DAYS}) ELSE false END
 ), archived_calendar AS MATERIALIZED (
@@ -316,7 +324,7 @@ const placePackageSql = (bodyFactsOnly: boolean) => `WITH RECURSIVE selected_pla
     LATERAL (SELECT reader_payload_node(m.item) AS value) header
     WHERE $8::text[] IS NOT NULL AND (p.scope NOT LIKE 'source:derived:family:%' OR NOT (right(p.scope,8)<>':history' AND EXISTS(SELECT 1 FROM encoded_bodies held_body JOIN civic_data_promotions own
       ON own.key='MEETING:source:derived~US-'||$1||':body:'||held_body.encoded_id AND own.record_class='MEETING'
-      WHERE held_body.id=header.value->>'bodyId'))) AND (header.value->>'bodyId' IN (SELECT id FROM bodies)
+      WHERE held_body.id=coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId')))) AND (coalesce((SELECT entity_id FROM entity_external_id WHERE scheme='body-alias' AND value=header.value->>'bodyId'),header.value->>'bodyId') IN (SELECT id FROM bodies)
       OR coalesce(header.value->>'bodyId','')='' AND header.value->>'ocdId'=ANY(ARRAY(SELECT id FROM selected_places)))
 ), agenda_raw_headers AS MATERIALIZED (
   SELECT * FROM agenda_current_headers
@@ -450,6 +458,8 @@ SELECT ${bodyFactsOnly ? 'false' : 'EXISTS(SELECT 1 FROM registration)'} AS regi
   coalesce((SELECT jsonb_agg(to_jsonb(f)) FROM body_facts f WHERE field IN ('name','homepage','meeting_cadence','agenda_url','office_address','office_phone','office_email','mailing_address')),'[]'::jsonb) AS fields,
   coalesce((SELECT jsonb_agg(to_jsonb(m) ORDER BY body_id,person_id) FROM members m),'[]'::jsonb) AS rosters,
   coalesce((SELECT jsonb_agg(to_jsonb(f) ORDER BY entity_id,field) FROM body_facts f WHERE field LIKE 'comment:%'),'[]'::jsonb) AS comments,
+  coalesce((SELECT jsonb_object_agg(x.value,x.entity_id) FROM entity_external_id x JOIN bodies b ON b.id=x.entity_id
+    WHERE x.scheme='body-alias'),'{}'::jsonb) AS body_aliases,
   coalesce((SELECT jsonb_agg(to_jsonb(s)) FROM sittings s),'[]'::jsonb) AS sittings,
   coalesce((SELECT jsonb_agg(to_jsonb(m)) FROM meeting_rows m),'[]'::jsonb) AS meeting_rows,
   coalesce((SELECT jsonb_agg(item) FROM archived_meetings),'[]'::jsonb) AS archived_meetings,
@@ -471,6 +481,7 @@ SELECT h.unchanged,CASE WHEN NOT h.unchanged THEN p.prints END AS prints,h.group
   ${PLACE_ROW_COLUMNS.map(column => column === "everyday_routing"
     // $11 is the routing version a rebuild turn already holds; that body does not cross the connection again.
     ? `CASE WHEN NOT h.unchanged AND (SELECT version FROM everyday_routing) IS DISTINCT FROM $11::text THEN page.everyday_routing END AS everyday_routing`
+    : column === "body_aliases" ? `CASE WHEN NOT h.unchanged THEN page.body_aliases END AS body_aliases`
     : `CASE WHEN NOT '${groupOf(column)}'=ANY(h.groups) THEN page.${column} END AS ${column}`).join(",\n  ")}
 FROM page,printed p,held_prints h`;
 
@@ -539,7 +550,7 @@ async function readPlaceRow(input: PlaceInput,query: Query,shared?: PlaceTurnRea
     if (version === turn?.version) row.everyday_routing = structuredClone(turn.value);
     else shared.everydayRouting = {version,value:structuredClone(row.everyday_routing)};
   }
-  const behind = [...kept].filter(group => group !== "everyday_routing");
+  const behind = [...kept].filter(group => group !== "everyday_routing" && group !== "body_aliases");
   if (behind.length) {
     const stored = await held?.stored?.();
     if (!stored) return {prints:printed,row:(await readPlaceRow(input,query,shared)).row};
@@ -668,7 +679,10 @@ const CLAIM_PAGE_SQL = `WITH slot AS MATERIALIZED (
   SELECT q.place_id,slot.n FROM rebuild_queue q JOIN entity e ON e.id=q.place_id CROSS JOIN slot
   WHERE (q.lease_until IS NULL OR q.lease_until<clock_timestamp())
     AND NOT EXISTS (SELECT 1 FROM place_page p WHERE p.place_id=q.place_id AND p.built_at>=$2::timestamptz)
-  ORDER BY q.priority DESC,q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
+  ORDER BY (q.next_queued_at IS NOT NULL AND q.place_id ~ '^ocd-division/country:us/(state|territory|district):[a-z]{2}/' AND q.place_id NOT LIKE '%#%') DESC,
+    q.priority DESC,(q.next_queued_at IS NOT NULL) DESC,
+    (q.next_queued_at IS NOT NULL AND q.place_id NOT LIKE 'zip:%') DESC,
+    q.next_queued_at DESC NULLS LAST,q.queued_at,q.place_id FOR UPDATE OF q SKIP LOCKED LIMIT 1
 ) UPDATE rebuild_queue q SET lease_token=$1,lease_until=clock_timestamp()+interval '5 minutes',lease_slot=next.n,next_queued_at=NULL
   FROM next,entity e WHERE q.place_id=next.place_id AND e.id=q.place_id
   RETURNING q.place_id,q.generation,q.built_generation,e.kind,e.state,

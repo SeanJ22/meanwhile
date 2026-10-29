@@ -1099,8 +1099,6 @@ export interface OwnerSnapshotState {
   readonly spendByPlace: readonly import("./cost-panel.ts").SpendByPlaceRow[];
 }
 
-export const ownerSnapshotStateId = (state: string): string => `current:${state}`;
-
 export interface OwnerSnapshot {
 
   readonly placeHistory?: Readonly<Record<string, readonly import("../coverage/place-history.ts").PlaceHistoryPoint[]>>;

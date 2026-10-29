@@ -72,7 +72,8 @@ test("a government card pages exact-place federal facts, deduplicates rows, and 
     assert.equal(requests[1].searchParams.get("cursor"), "next-page");
     assert.equal(await browserPage.locator("[data-card-sources]").count(), 1);
     const gaps = browserPage.locator('[aria-label="Federal money and records"] [data-card-gap]');
-    assert.equal(await gaps.count(), 3, "each missing source family says so beside the held records");
+    await gaps.first().waitFor({ state: "visible" });
+    assert.equal(await gaps.count(), 1, "the federal records section shows one line for all missing source families");
     for (const gap of await gaps.all()) {
       assert.match(await gap.innerText(), /working on getting this info/);
       assert.equal(await gap.getByRole("link", { name: "Want us to get this sooner?" }).count(), 1);

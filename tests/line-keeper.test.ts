@@ -135,6 +135,9 @@ test('Now agrees with SQL for three full hours and reports the completed check a
       await runLineKeeper(query(control),query(reader),at);
       const report=await readLineReport(query(control),query(reader));
       assert.equal(keeperStatus(report,at),'The line keeper is checking every hour.');
+      const clockOnly=await readLineReport(query(control),query(reader),{includeCounts:false});
+      assert.equal(keeperStatus(clockOnly,at),keeperStatus(report,at));
+      assert.ok(clockOnly!.hours.every(hour=>hour.counts===null),'Now reads the completed check clock; the inventory stays on the Scoreboard');
       const numbers=await readVitalSigns(query(control),at,query(reader));
       const direct=(await reader.query<{n:number}>(`SELECT coalesce(sum(n),0)::int AS n FROM count_hour
         WHERE hour=$1::timestamptz AND step LIKE 'v1:%' AND substring(step FROM 4)::jsonb->>1='fact:live'

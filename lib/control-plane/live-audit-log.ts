@@ -1,6 +1,7 @@
 import type { AuditCorrection } from "./admin-view/v6-audit-read.ts";
 import { AUDIT_WEEK_DAYS } from "./admin-view/v6-audit-read.ts";
 import type { ControlPlaneRepositories } from "./repository/types.ts";
+import { readByKeys } from "./repository/types.ts";
 import type { LiveAuditResult } from "./workers/live-audit.ts";
 import type { TaskPass } from "../health/resident-tasks.ts";
 import type { SpeedPass } from "../health/worst-case-speed.ts";
@@ -42,12 +43,12 @@ export async function recordAuditCorrection(repos: LiveAuditRepos, correction: A
 }
 
 export async function readAuditWeek(repos: LiveAuditRepos, now: string): Promise<{ results: LiveAuditResult[]; corrections: AuditCorrection[] }> {
-  const [days, corrections] = await Promise.all([
-    Promise.all(weekDayKeys(now).map((key) => repos.liveAudits.read(key))),
-    repos.liveAudits.read(CORRECTIONS_KEY),
-  ]);
+  const keys = weekDayKeys(now);
+  const rows = await readByKeys(repos.liveAudits, [...keys, CORRECTIONS_KEY]);
+  const days = keys.flatMap(key => rows.get(key) ?? []);
+  const corrections = rows.get(CORRECTIONS_KEY) ?? [];
   return {
-    results: days.flat().flatMap((row) => (row.kind === "RESULT" ? [row.result] : [])),
+    results: days.flatMap((row) => (row.kind === "RESULT" ? [row.result] : [])),
     corrections: corrections.flatMap((row) => (row.kind === "CORRECTION" ? [row.correction] : [])),
   };
 }
@@ -61,7 +62,8 @@ export async function recordSpeedPass(repos: LiveAuditRepos, pass: SpeedPass): P
 export async function readLatestSpeedPass(repos: LiveAuditRepos, now: string): Promise<SpeedPass | null> {
   const end = Date.parse(now);
   const keys = [0, 1].map((d) => speedDayKey(new Date(end - d * 86_400_000).toISOString()));
-  const rows = (await Promise.all(keys.map((k) => repos.liveAudits.read(k)))).flat();
+  const held = await readByKeys(repos.liveAudits, keys);
+  const rows = keys.flatMap(key => held.get(key) ?? []);
   const passes = rows.flatMap((row) => (row.kind === "SPEED" ? [row.pass] : [])).sort((a, b) => a.at.localeCompare(b.at));
   return passes.at(-1) ?? null;
 }
@@ -79,7 +81,8 @@ export async function readTaskZips(repos: LiveAuditRepos): Promise<Set<string>> 
 export async function readLatestTaskPass(repos: LiveAuditRepos, now: string): Promise<TaskPass | null> {
   const end = Date.parse(now);
   const keys = [0, 1].map((d) => tasksDayKey(new Date(end - d * 86_400_000).toISOString()));
-  const rows = (await Promise.all(keys.map((k) => repos.liveAudits.read(k)))).flat();
+  const held = await readByKeys(repos.liveAudits, keys);
+  const rows = keys.flatMap(key => held.get(key) ?? []);
   const passes = rows.flatMap((row) => (row.kind === "TASKS" ? [row.pass] : [])).sort((a, b) => a.at.localeCompare(b.at));
   return passes.at(-1) ?? null;
 }
@@ -92,7 +95,9 @@ export async function recordClaimPass(repos: LiveAuditRepos, pass: ClaimPass): P
 
 /** This week's and last week's claim checks (two keys, never the whole log). */
 export async function readRecentClaimPasses(repos: LiveAuditRepos, weeks: readonly string[]): Promise<ClaimPass[]> {
-  const rows = (await Promise.all(weeks.map((w) => repos.liveAudits.read(claimsWeekKey(w))))).flat();
+  const keys = weeks.map(claimsWeekKey);
+  const held = await readByKeys(repos.liveAudits, keys);
+  const rows = keys.flatMap(key => held.get(key) ?? []);
   return rows.flatMap((row) => (row.kind === "CLAIMS" && !row.pass.synthetic ? [row.pass] : []));
 }
 
@@ -109,6 +114,8 @@ export async function readLookedCommits(repos: LiveAuditRepos): Promise<readonly
 export async function readLatestLookPasses(repos: LiveAuditRepos, count = 1): Promise<LookPass[]> {
   const looked = [...(await readLookedCommits(repos))].sort((a, b) => b.at.localeCompare(a.at));
   const shas = [...new Set(looked.map((l) => l.sha))].slice(0, count);
-  const rows = (await Promise.all(shas.map((sha) => repos.liveAudits.read(lookKey(sha))))).flat();
+  const keys = shas.map(lookKey);
+  const held = await readByKeys(repos.liveAudits, keys);
+  const rows = keys.flatMap(key => held.get(key) ?? []);
   return rows.flatMap((row) => (row.kind === "LOOK" ? [row.pass] : [])).sort((a, b) => b.at.localeCompare(a.at));
 }

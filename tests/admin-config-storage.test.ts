@@ -5,14 +5,49 @@ import { join } from "node:path";
 import assert from "node:assert/strict";
 import { PGlite } from "@electric-sql/pglite";
 import { pgAggregateRepository } from "../lib/control-plane/repository/pg-store.ts";
-import { ADMIN_SECTIONS, ADMIN_SECTIONS_EXPAND_DDL, pgAdminConfigRepository, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "../lib/control-plane/repository/admin-config.ts";
+import { ADMIN_SECTIONS, ADMIN_SECTIONS_EXPAND_DDL, QUEUE_FIX_FIELDS, pgAdminConfigRepository, storedAdminConfigRepository, type AdminSection, type StoredAdminSection } from "../lib/control-plane/repository/admin-config.ts";
 import { createFileRepositories, fileAggregateRepository } from "../lib/control-plane/repository/file-store.ts";
 import { memoryAggregateRepository, memoryLockManager } from "../lib/control-plane/repository/memory.ts";
 import type { AggregateRepository } from "../lib/control-plane/repository/types.ts";
 import { defaultAdminConfig, type AdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import { settingUndo, withSetting } from "../lib/control-plane/settings.ts";
+import { v6FixesView } from "../lib/control-plane/admin-view/v6-fixes-read.ts";
+import { buildQueue } from "../app/(admin)/_mw/admin-v6/queue.ts";
+import type { FixItemWithHistory } from "../lib/control-plane/fix-history.ts";
 
 const now = "2026-10-15T12:00:00.000Z";
+
+test("projected fix rows preserve every Queue row while history and proof are read only for the selected id", async () => {
+  const pg = new PGlite();
+  try {
+    await pg.exec("CREATE TABLE cp_admin_config (id text PRIMARY KEY, revision bigint NOT NULL, updated_at timestamptz NOT NULL, value jsonb NOT NULL, changed_at timestamptz DEFAULT now())");
+    for (const ddl of ADMIN_SECTIONS_EXPAND_DDL) await pg.exec(ddl);
+    const fixes: FixItemWithHistory[] = ["OPEN", "FIXING", "FIXED", "CAME_BACK"].map((state,n) => ({
+      id: `fix-${n}`, state: state as FixItemWithHistory["state"], where: "AZ · Source doors", says: "A source stopped opening. Keep every word of the next step.",
+      owner: "River", addedBy: "The line keeper", addedAt: "2026-10-14T10:00:00.000Z", startedAt: now,
+      fixedAt: now, cameBackAt: now, whatChanged: "The source address was corrected.",
+      technical: ["x".repeat(300_000)], before: "x".repeat(300_000), after: "x".repeat(300_000), undo: { type: "settings", input: { saved: "x".repeat(300_000) } },
+      earlier: [{ brokeAt: now, fixedAt: now, cameBackAt: now, changedBy: "River", whatChanged: "x".repeat(300_000) }],
+    }));
+    await pg.query("INSERT INTO cp_admin_config VALUES('current',1,$1,$2,now())", [now,JSON.stringify(defaultAdminConfig(now))]);
+    for (const fix of fixes) await pg.query("INSERT INTO cp_admin_fix_list(config_id,id,updated_at,value) VALUES('current',$1,$2,$3)",[fix.id,now,JSON.stringify(fix)]);
+    const transferred: Record<string,unknown>[][] = [];
+    const sql = { async query(text:string,params?:readonly unknown[]) { const rows=(await pg.query(text,[...(params??[])])).rows as Record<string,unknown>[]; transferred.push(rows); return rows; } };
+    const repo=pgAdminConfigRepository(pgAggregateRepository<AdminConfig>(sql,"AdminConfig","cp_admin_config"),sql.query);
+    const summary=await repo.readFixes({activeAndRecent:500,fieldsProjection:QUEUE_FIX_FIELDS,queueFixSummary:true});
+    assert.ok(JSON.stringify(transferred).length<10_000,"saved proof never crosses the list query");
+    const queue={items:[],lastGo:null,counts:{queued:0,sent:0,opened:0,refused:0}};
+    const rows=(items:readonly FixItemWithHistory[])=>buildQueue({receipts:null,sends:null,hunts:null,stuck:null,doors:null,scheduled:null,fixes:v6FixesView(queue,items,now)},Date.parse(now));
+    assert.deepEqual(rows(summary),rows(fixes));
+    const detail=(await repo.mustRead("current",{fixList:{ids:["fix-2"]}})).value.fixList!;
+    assert.deepEqual(detail,[fixes[2]],"full keyed details cannot reuse a list projection");
+    const before=transferred.length;
+    assert.deepEqual(await repo.readFixes({activeAndRecent:500,fieldsProjection:QUEUE_FIX_FIELDS,queueFixSummary:true}),summary);
+    assert.ok(JSON.stringify(transferred.slice(before)).length<5_000,"unchanged summaries return fingerprints only");
+    await pg.query("UPDATE cp_admin_fix_list SET value=jsonb_set(value,'{says}','\"The page moved.\"') WHERE id='fix-0'");
+    assert.equal((await repo.readFixes({activeAndRecent:500,fieldsProjection:QUEUE_FIX_FIELDS,queueFixSummary:true}))[0].says,"The page moved.");
+  } finally { await pg.close(); }
+});
 
 test("settings reads transfer a body only when the revision changes and history stays indexed", async () => {
   const pg = new PGlite();

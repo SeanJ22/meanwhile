@@ -65,9 +65,19 @@ export class LiveSync {
   }
 
   setScreen(screen: string, sections: readonly SectionId[]) {
+    const previous = this.screen;
     this.screen = screen;
     this.active = new Set(sections);
     for (const [id, slot] of this.slots) {
+      if (previous !== screen && (((previous === "now" || screen === "now") && (id === "fixes" || id === "scoreboard")) ||
+        ((previous === "checklist" || screen === "checklist") && id === "spend"))) {
+        slot.inFlight?.abort(); slot.inFlight = null;
+        slot.retry?.(); slot.retry = null;
+        slot.seq += 1;
+        slot.state = WAITING;
+        slot.wanted = null;
+        slot.checkedAt = null;
+      }
       if (!this.active.has(id)) {
         slot.inFlight?.abort(); slot.inFlight = null;
         slot.retry?.(); slot.retry = null;
@@ -227,6 +237,8 @@ export class LiveSync {
     if (slot.state.data === null) this.set(id, { phase: "loading" });
     const q = new URLSearchParams({ scope });
     if (id === "scoreboard" && this.screen === "now") q.set("reading", "hourly");
+    if (id === "fixes" && this.screen === "now") q.set("reading", "now");
+    if (id === "spend" && this.screen === "checklist") q.set("reading", "checklist");
     if (PAGED_SECTIONS.includes(id)) q.set("limit", String(PAGE_LIMIT));
     for (const [k, v] of Object.entries(slot.params)) if (k !== "scope" && k !== "limit") q.set(k, v);
     const url = `${a.href}${a.href.includes("?") ? "&" : "?"}${q.toString()}`;

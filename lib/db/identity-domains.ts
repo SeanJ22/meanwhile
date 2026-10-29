@@ -592,6 +592,28 @@ export const IDENTITY_DOMAINS: Record<string, TableDomain> = {
     },
   },
 
+  civic_data_source_status: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying("source_id", "record_class", "scope", "state", "failure_code", "attempted_at"),
+      candidate_id: { space: "OPAQUE_HANDLE", why: "The current public-source candidate's internal processing handle, never a reader identity." },
+    },
+  },
+
+  civic_data_current_readbacks: {
+    storeClass: "OPERATIONAL",
+    columns: {
+      ...nonIdentifying("contract_id", "at", "status"),
+      pointer_key: { space: "OPAQUE_HANDLE", why: "The routine data plane's record-class/scope projection key." },
+      candidate_id: { space: "OPAQUE_HANDLE", why: "The public-source candidate checked against a publication contract." },
+    },
+  },
+
+  civic_data_source_status_ready: {
+    storeClass: "OPERATIONAL",
+    columns: nonIdentifying("id"),
+  },
+
   civic_data_promotions: {
     storeClass: "OPERATIONAL",
     columns: {

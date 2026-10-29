@@ -91,13 +91,13 @@ export async function publishElectionFields(input: {
   readonly onFieldResult?: (field: ElectionFieldInput, valid: boolean) => void;
   readonly flushCompletedSources?: boolean;
   readonly onPublished?: (outcome: { readonly candidateId: string; readonly promotedVersionId: string }) => Promise<void>;
-}): Promise<{ candidateId: string | null; promotedVersionId: string | null; fields: string[]; gaps: { divisionId: string; kind: string; detail: string }[] }> {
+}): Promise<{ candidateId: string | null; promotedVersionId: string | null; fields: string[]; newFields: string[]; gaps: { divisionId: string; kind: string; detail: string }[] }> {
   const records = new Map<string, PublishedElectionField>();
   let heldCapture: ElectionFieldInput["document"]["capture"], heldPage: Section3Page | undefined;
   const conflicts: NonNullable<import("./types.ts").RoutineCandidate["excludedFacts"]>[number][] = [];
   const sources = new Map<string, ManualSourceReview>();
   const gaps: { divisionId: string; kind: string; detail: string }[] = [];
-  const fields: string[] = [];
+  const fields: string[] = [], newFields: string[] = [];
   let candidateId: string | null = null, promotedVersionId: string | null = null, currentState: string | null = null;
   const publish = async () => {
     if (!records.size) return;
@@ -108,6 +108,7 @@ export async function publishElectionFields(input: {
         payload: { kind: "ballot-navigation", records: [...records.values()] as unknown as readonly (Record<string, unknown> & { id: string })[] },
       }, input.store, { forceMerge: Boolean(input.sourceContentHash) });
       fields.push(...records.keys());
+      newFields.push(...comparison.changes.added.map(delta => delta.key.replace(/^curated-reader:/, "")));
       const held = [...conflicts];
       records.clear(); sources.clear(); conflicts.length = 0;
       const rawHash = input.sourceContentHash?.();
@@ -181,5 +182,5 @@ export async function publishElectionFields(input: {
     }
   }
   await publish();
-  return { candidateId, promotedVersionId, fields, gaps };
+  return { candidateId, promotedVersionId, fields, newFields, gaps };
 }

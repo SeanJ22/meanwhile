@@ -10,6 +10,8 @@ import { Logo } from "@/components/brand/logo";
 import { titleFor } from "@/lib/brand";
 import { stateOfficesForStates } from "@/lib/reference/state-offices";
 import { StateOfficeContacts } from "@/components/state-office-contacts";
+import { CardGapContribution } from "@/components/ui/card-gap-context";
+import { US_STATES } from "@/lib/control-plane/readiness/catalog";
 
 export const runtime = "nodejs";
 
@@ -30,6 +32,7 @@ export default readerRoute("/about-area", async function AboutAreaPage({
     state = await stateForZip(zip);
   }
 
+  const stateName = US_STATES.find(row => row.code.toUpperCase() === state)?.name ?? state;
   const facts = state ? areaFactsForState(state) : null;
 
   return (
@@ -47,7 +50,7 @@ export default readerRoute("/about-area", async function AboutAreaPage({
       </div>
       <h1 className="mt-1 text-xl font-semibold">
         The basics of living here
-        {facts ? ` — ${facts.stateName}` : ""}
+        {stateName ? ` — ${stateName}` : ""}
       </h1>
       <p className="mt-3 text-[0.8125rem] leading-relaxed text-paper-dim">
         The questions people ask before moving, answered from official
@@ -56,7 +59,11 @@ export default readerRoute("/about-area", async function AboutAreaPage({
       </p>
 
       {/* The card markup lives inside ShuffledFacts: a render prop would be a function crossing the server/client boundary. */}
-      {facts && <ShuffledFacts facts={facts.facts} />}
+      {facts ? <ShuffledFacts facts={facts.facts} /> : <section className="mt-4 rounded border border-[var(--panel-border)] p-4" aria-label="Living here coverage">
+        <p className="t-body">{stateName ? `We haven’t covered the basics of living in ${stateName} yet.` : "Choose a state to see the basics of living there."}</p>
+        {stateName && <CardGapContribution id={`area-facts:${state}`} label={`the basics of living in ${stateName}`} />}
+        {!state && <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2">{US_STATES.map(row => <Link key={row.code} href={`/about-area?state=${row.code.toUpperCase()}`} className="text-link underline">{row.name}</Link>)}</div>}
+      </section>}
       <StateOfficeContacts offices={state ? stateOfficesForStates([state]) : []} />
 
       {facts && (

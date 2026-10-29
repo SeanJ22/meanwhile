@@ -4,6 +4,7 @@ import { CheckedLink } from "@/components/ui/checked-link";
 import { CardGapContribution } from "@/components/ui/card-gap-context";
 import type { CardSource } from "@/lib/officials/card-sources";
 import { readerText } from "@/lib/text/reader-names";
+import { useReaderTimeZone } from "@/hooks/use-reader-time-zone";
 import { useReaderNames } from "@/components/ui/reader-names-context";
 
 import { PopupRow } from "@/components/map/popup/popup-row";
@@ -14,6 +15,7 @@ import { PopupRow } from "@/components/map/popup/popup-row";
  */
 export function CardSourcesList({ sources }: { sources: CardSource[] }) {
   const knownNames = useReaderNames();
+  const timeZone = useReaderTimeZone();
   if (!sources.length) return <CardGapContribution id="sources" label="sources" />;
   return (
     <div data-source-list>
@@ -43,19 +45,19 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
             <p key={quote} className="t-body text-voice">“{readerText(quote, "sentence", [...knownNames, entry.provenance.sourceOrg])}”</p>
           ))}
 
-          {[...new Set((entry.details ?? [entry]).map(detail => sourceDate(detail.publishedAt)).filter(Boolean))].map(date => <PopupRow key={`published:${date}`} label="Published">{date}</PopupRow>)}
-          {[...new Set((entry.details ?? [entry]).map(detail => sourceDate(detail.updatedAt)).filter(Boolean))].map(date => <PopupRow key={`updated:${date}`} label="File last updated">{date}</PopupRow>)}
+          {[...new Set((entry.details ?? [entry]).map(detail => sourceDate(detail.publishedAt, timeZone)).filter(Boolean))].map(date => <PopupRow key={`published:${date}`} label="Published">{date}</PopupRow>)}
+          {[...new Set((entry.details ?? [entry]).map(detail => sourceDate(detail.updatedAt, timeZone)).filter(Boolean))].map(date => <PopupRow key={`updated:${date}`} label="File last updated">{date}</PopupRow>)}
 
           <PopupRow label="Last checked">
-            {sourceDate(entry.provenance.collectedAt)}
+            {sourceDate(entry.provenance.collectedAt, timeZone)}
           </PopupRow>
 
-          <PopupRow label="Confirmed">{sourceDate(entry.provenance.verifiedAt) !== sourceDate(entry.provenance.collectedAt) ? sourceDate(entry.provenance.verifiedAt) : null}</PopupRow>
+          <PopupRow label="Confirmed">{sourceDate(entry.provenance.verifiedAt, timeZone) !== sourceDate(entry.provenance.collectedAt, timeZone) ? sourceDate(entry.provenance.verifiedAt, timeZone) : null}</PopupRow>
           {entry.details?.filter(detail => detail.dataAttrs || detail.status).map((detail, index) => (
             <div key={index} {...detail.dataAttrs}>
               {detail.status && <p className="t-caption text-muted">{detail.verbatim ? detail.what : readerText(detail.what, "title")}</p>}
               {detail.provenance.collectedAt !== entry.provenance.collectedAt && (
-                <PopupRow label="Last checked">{sourceDate(detail.provenance.collectedAt)}</PopupRow>
+                <PopupRow label="Last checked">{sourceDate(detail.provenance.collectedAt, timeZone)}</PopupRow>
               )}
             </div>
           ))}
@@ -65,11 +67,19 @@ export function CardSourcesList({ sources }: { sources: CardSource[] }) {
   );
 }
 
-const dateFormat = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
-function sourceDate(value: string | null | undefined): string | null {
+const dateFormats = new Map<string, Intl.DateTimeFormat>();
+/** Official calendar dates keep their day; instants wait for the reader's zone. */
+export function sourceDate(value: string | null | undefined, timeZone: string | null): string | null {
   if (!value) return null;
+  const zone = /^\d{4}-\d{2}-\d{2}$/.test(value.trim()) ? "UTC" : timeZone;
   const time = Date.parse(value);
-  return Number.isFinite(time) ? dateFormat.format(time) : null;
+  if (!zone || !Number.isFinite(time)) return null;
+  let format = dateFormats.get(zone);
+  if (!format) {
+    format = new Intl.DateTimeFormat("en-US", { year: "numeric", month: "long", day: "numeric", timeZone: zone });
+    dateFormats.set(zone, format);
+  }
+  return format.format(time);
 }
 
 /** Show exact readable spans from the saved evidence, leaving API syntax in the linked source. */

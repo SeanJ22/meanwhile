@@ -10,6 +10,7 @@ import { submit } from "@/lib/control-plane/gateway/gateway.ts";
 import { ADMIN_RECEIPT_LOG_KEY, type ActionReceipt } from "@/lib/control-plane/gateway/contract.ts";
 import { listDoors } from "@/lib/doors/registry.ts";
 import { DOOR_CHANGES_SHOWN, projectDoors } from "@/lib/control-plane/admin-view/v6-doors-read.ts";
+import { readAdminQueueDoors } from "@/lib/control-plane/admin-view/door-queries.ts";
 
 const AT = "2026-10-04T12:00:00.000Z";
 
@@ -32,4 +33,14 @@ test("doors show counts, shut doors first in words, and the newest door changes 
   assert.deepEqual(view.rows.map((r) => [r.body, r.lastWorked, r.lastFailed]), [["—", null, null], ["—", null, null]]);
   assert.deepEqual(view.changes.map((c) => c.says), ["Door added: Votes on votes.example.gov (set aside)", "Door added: Meetings on calendar.example.gov (open)"]);
   for (const text of [...view.rows.map((r) => r.name), ...view.changes.map((c) => c.says)]) assert.doesNotMatch(text, /body-one|body-two|meetings:|votes:/);
+});
+
+test("the Queue's shut-source reading preserves the registry's names, reasons and clocks", async () => {
+  const repos = createMemoryRepositories();
+  await save(repos, {doorId:"shut-one",kind:"ical",hosts:["calendar.example.gov"],holds:["meetings"],status:"SHUT"},"queue-shut",AT);
+  await save(repos, {doorId:"open-one",kind:"rollcall",hosts:["votes.example.gov"],holds:["votes"]},"queue-open",AT);
+  await save(repos, {doorId:"aside-one",kind:"rollcall",hosts:["archive.example.gov"],holds:["votes"],status:"SUSPENDED"},"queue-aside",AT);
+  const {doors,unreadable}=await listDoors(repos.doors);
+  const expected=projectDoors({doors,unreadable,saves:[],observedAt:AT}).rows.filter(row=>row.status==="Shut").map(({name,why,since})=>({name,why,since}));
+  assert.deepEqual((await readAdminQueueDoors(repos,AT)).rows,expected);
 });

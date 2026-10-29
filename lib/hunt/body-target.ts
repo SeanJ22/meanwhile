@@ -3,7 +3,7 @@ import {readCheckEntity} from '../facts/entity-read.ts';
 import {checkFact,hostOf} from '../facts/check.ts';
 import {captureProvenance} from '../facts/capture.ts';
 import {saveCaptureCopy} from '../facts/source-copy.ts';
-import {canonicalSubject} from '../facts/entities.ts';
+import {ensureEntity,canonicalSubject} from '../facts/entities.ts';
 import type {FactDb,Query,Clocks} from '../facts/publish.ts';
 import type {WorkerPublicationCapture} from '../civic-data/worker-roster-publication.ts';
 import {enqueueReaderPlaces} from '../reader/cache.ts';
@@ -26,17 +26,19 @@ export async function ensureHuntBodyTarget(input:{facts:FactDb&{query:Query};sub
  const copy=await input.facts.transaction(q=>saveCaptureCopy(q,input.capture));
  const checked=checkFact({entity,fieldKind:'officeholder',provenance:captureProvenance(input.capture,entity.hosts),valueText:input.name,quote:input.quote,copy},input.now,input.clocks.windowHours);
  if(!checked.ok)return null;
- const id=huntBodySubject(subject,input.name);
- const other=await input.facts.query("SELECT id FROM entity WHERE parent_id=$1 AND kind='body' AND lower(name)=lower($2) AND id<>$3 LIMIT 1",[government.id,input.name,id]);
+ const requested=huntBodySubject(subject,input.name);
+ const other=await input.facts.query("SELECT id FROM entity WHERE parent_id=$1 AND kind='body' AND lower(name)=lower($2) AND id<>$3 LIMIT 1",[government.id,input.name,requested]);
  if(other.length)return null;
- const existing=await input.facts.query('SELECT id,name,state,parent_id,kind FROM entity WHERE id=$1',[id]);
+ const existing=await input.facts.query('SELECT id,name,state,parent_id,kind FROM entity WHERE id=$1',[requested]);
  if(existing.length && (existing[0].kind!=='body' || existing[0].state!==government.state || existing[0].parent_id!==government.id))return null;
- const added=!existing.length?await input.facts.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'body',$2,$3,$4) ON CONFLICT DO NOTHING RETURNING id`,[id,input.name,government.state,government.id]):[];
+ const id=await ensureEntity(input.facts.query,{id:requested,kind:'body',name:input.name,state:government.state as string|null,parentId:String(government.id)});
  // Preserve the government's held division relation, including registrations
  // whose parent is their place but which have no separate entity_place row.
  const placed=await input.facts.query(`INSERT INTO entity_place(entity_id,place_id)
    SELECT $1,place_id FROM entity_place WHERE entity_id=$2
    UNION SELECT $1,p.id FROM entity p WHERE p.id=$3 AND p.kind='place' ON CONFLICT DO NOTHING RETURNING place_id`,[id,government.id,government.parent_id]);
- if(added.length||placed.length)await enqueueReaderPlaces({entities:[id]},input.facts.query);
- return existing.length?{id:String(existing[0].id),name:String(existing[0].name),state:existing[0].state as string|null,parentId:existing[0].parent_id as string|null}:{id,name:input.name,state:government.state as string|null,parentId:String(government.id)};
+ if(!existing.length||placed.length)await enqueueReaderPlaces({entities:[id]},input.facts.query);
+ const [body]=id!==requested?await input.facts.query('SELECT id,name,state,parent_id FROM entity WHERE id=$1',[id]):existing;
+ return body?{id:String(body.id),name:String(body.name),state:body.state as string|null,parentId:body.parent_id as string|null}
+   :{id,name:input.name,state:government.state as string|null,parentId:String(government.id)};
 }

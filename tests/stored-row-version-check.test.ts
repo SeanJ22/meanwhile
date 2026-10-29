@@ -138,8 +138,7 @@ test("runtime sources expose no flag that can skip the shared version path",asyn
         // callers must enter through the shared database client.
         const rawDriverOwners = new Set(["lib/db/client.ts", "lib/db/transfer.ts"]);
         const isolatedReplayDrivers = new Set(["scripts/rb-a5-production-copy.mts", "scripts/rb-a5-connection-copy.mts",
-          "scripts/lib/rb-a2-copy.ts", "scripts/lib/local-postgres-replay.mts", "scripts/lib/local-postgres-reader.mts",
-          "scripts/legistar-members-scale.mts"]);
+          "scripts/lib/rb-a2-copy.ts", "scripts/lib/local-postgres-replay.mts", "scripts/lib/local-postgres-reader.mts"]);
         for (const match of source.matchAll(/(?:\bfrom\s*|\bimport\s*\(\s*|\brequire\s*\(\s*)["'](@neondatabase\/serverless|pg|postgres)["']/g)) {
           const statement = source.slice(source.lastIndexOf(";", match.index) + 1, match.index);
           if (/\b(?:import|export)\s+type\b/.test(statement)) continue;

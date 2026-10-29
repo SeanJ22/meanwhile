@@ -179,8 +179,8 @@ export function formatDateMDY(iso: string): string {
 }
 
 /**
- * Meeting times render in the zone the meeting is held in, never the
- * reader's: the time they will be expected in the room.
+ * Meeting clocks and their calendar dates use the reader's time zone.
+ * A caller rendering on the server supplies the reader zone after hydration.
  */
 
 type MeetingFormatters = {
@@ -207,15 +207,16 @@ function formatsForZone(timeZone: string): MeetingFormatters {
 
 export function formatMeetingDate(
   // Widened to the two fields it reads so other row types share this formatter.
-  meeting: Pick<Meeting, "startsAt" | "timeZone">,
+  meeting: Pick<Meeting, "startsAt" | "timeZone"> & Partial<Pick<Meeting, "startPrecision">>,
+  timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone,
 ): string {
   /*
    * The date spells out here too, with the weekday. The calendar date is
-   * resolved in the meeting's zone; slicing the ISO string would read whatever
+   * resolved in the reader's zone; slicing the ISO string would read whatever
    * offset it carries and can land an evening meeting on the previous day.
    */
   const d = new Date(meeting.startsAt);
-  const formats = formatsForZone(meeting.timeZone);
+  const formats = formatsForZone(meeting.startPrecision === "DAY" ? meeting.timeZone : timeZone);
   const weekday = formats.weekday.format(d);
   const local = formats.date.format(d);
   return `${weekday}, ${formatDateLong(local) ?? local}`;
@@ -240,10 +241,10 @@ export function meetingLocalDate(meeting: CalendarSafeMeeting): string {
   return formatsForZone(meeting.timeZone).date.format(new Date(meeting.startsAt));
 }
 
-export function formatMeetingTime(meeting: Meeting): string {
+export function formatMeetingTime(meeting: Pick<Meeting, "startsAt" | "timeZone"> & Partial<Pick<Meeting, "startPrecision">>, timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone): string {
   // The single choke point for a meeting's clock.
-  if (!startTimeIsKnown(meeting)) return TIME_NOT_POSTED;
-  return formatsForZone(meeting.timeZone).time.format(new Date(meeting.startsAt));
+  if (meeting.startPrecision === "DAY") return TIME_NOT_POSTED;
+  return formatsForZone(timeZone).time.format(new Date(meeting.startsAt));
 }
 
 /** "in 3 days", "tomorrow", "12 days ago". */

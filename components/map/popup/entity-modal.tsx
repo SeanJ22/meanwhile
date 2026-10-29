@@ -1,5 +1,7 @@
 "use client";
 
+import { ReaderMeetingDate, ReaderMeetingTime } from "@/components/ui/reader-meeting-time";
+
 import { CardSubjectContext } from "@/components/ui/card-subject-context";
 import { CheckedLink } from "@/components/ui/checked-link";
 import { CardSourceContext, useCardSourceRegistry } from "@/components/ui/card-source-context";
@@ -19,7 +21,6 @@ import { useEffect, useRef, useState, type ReactNode } from "react";
 
 import { useCardVisibility } from "@/hooks/use-card-visibility";
 
-import { formatMeetingDate, formatMeetingTime } from "@/lib/map/format";
 import { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
 import { useMeetingListingIdentity } from "@/lib/state/data";
 import { MeetingListingNotice } from "../meeting-listing-notice";
@@ -849,11 +850,11 @@ export function Meetings({ meetings }: { meetings: Meeting[] }) {
                   {readerText(meeting.title)}
                 </span>
                 <span className="shrink-0 font-mono t-caption text-muted">
-                  {formatMeetingDate(meeting)}
+                  <ReaderMeetingDate meeting={meeting} />
                 </span>
               </div>
               <p className="mt-0.5 t-caption text-muted">
-                {formatMeetingTime(meeting)}
+                <ReaderMeetingTime meeting={meeting} />
               </p>
               {meeting.status === "SCHEDULED" && (
                 <CalendarLinks meeting={meeting} />

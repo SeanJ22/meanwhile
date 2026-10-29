@@ -55,6 +55,7 @@ test("the real worker transfers only the requested compressed context and keeps 
     for(const divisionIds of [[CITY],[]]) for(const includeHistory of [false,true]) for(const flags of [{},{bodyFactsOnly:true},{includeAgenda:true},{bodyFactsOnly:true,includeAgenda:true}])
       cases.push({state:"AZ",divisionIds,includeHistory,...flags});
     const bytes=new Map<string,number>();
+    const verified=new Map<string,Awaited<ReturnType<typeof buildPlacePackage>>>();
     const labels=(input:PlaceInput)=>`${input.divisionIds.length?"place":"empty"}:${input.includeHistory?"history":"current"}:${input.includeAgenda?"agenda":input.bodyFactsOnly?"facts":"brief"}${input.bodyFactsOnly&&input.includeAgenda?"+facts":""}`;
     const readings:{mode:string;compressedBytes:number;legacyBytes?:number}[]=[];
     for(const input of cases) {
@@ -80,6 +81,7 @@ test("the real worker transfers only the requested compressed context and keeps 
         return rows;
       });
       assert.equal(reads,1);
+      verified.set(label,actual);
       const visible=(value:object)=>Object.fromEntries(Object.entries(value).filter(([key])=>!['rosterRefs','rosterPreviews','rosterIds'].includes(key)));
       assert.deepEqual(visible(actual),visible(input.bodyFactsOnly||input.includeAgenda?canonical:preparePlaceRosters(canonical).place),`${label}: every visible field keeps its canonical value`);
       if(input.divisionIds.length) {
@@ -96,6 +98,15 @@ test("the real worker transfers only the requested compressed context and keeps 
       const raw=unpackPlaceContextRow(context[key]!.full),legacyBytes=Buffer.byteLength(JSON.stringify([{row:raw}]));
       readings.find(row=>row.mode===label)!.legacyBytes=legacyBytes;
       if(input.divisionIds.length)assert.ok(bytes.get(label)!<legacyBytes/(input.includeAgenda?1:10),`${label}: ${bytes.get(label)} compressed bytes versus ${legacyBytes} former raw-row bytes`);
+    }
+    await query("UPDATE place_page SET context=context-'readerFormat'");
+    for(const input of cases.filter(input=>input.bodyFactsOnly||input.includeAgenda)){
+      let reads=0;
+      const held=await readPlacePackage(input,async(text,params)=>{
+        reads++;assert.equal(text,PLACE_PAGES_SQL,'already built detail shapes need no format rebuild');
+        return query(text,params);
+      });
+      assert.equal(reads,1);assert.deepEqual(held,verified.get(labels(input)));
     }
     t.diagnostic(JSON.stringify({sourceAgendaBytes:Buffer.byteLength(agendaText),readings}));
   }finally{await pg.close();}

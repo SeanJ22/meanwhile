@@ -37,7 +37,8 @@ export const PLACE_PAGES_SQL = `WITH requested_bodies AS (
     AND (NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0
       OR $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies))
 ) SELECT s.id AS page_id,CASE WHEN $6::boolean AND NOT EXISTS (SELECT 1 FROM state_bodies) THEN 'empty' ELSE e.kind END AS page_kind,p.built_at,
-  CASE WHEN p.context->>'readerFormat'='1' THEN coalesce(saved.value->CASE WHEN $8::boolean THEN 'full' WHEN $9::boolean THEN 'facts' ELSE 'brief' END,saved.value) END AS row,
+  CASE WHEN p.context->>'readerFormat'='1' OR $8::boolean OR $9::boolean
+    THEN coalesce(saved.value->CASE WHEN $8::boolean THEN 'full' WHEN $9::boolean THEN 'facts' ELSE 'brief' END,saved.value) END AS row,
   ARRAY(SELECT id FROM requested_bodies) AS body_ids
   FROM selected s LEFT JOIN entity e ON e.id=s.id LEFT JOIN place_page p ON p.place_id=s.id
   LEFT JOIN LATERAL (SELECT p.context->CASE WHEN NOT $6::boolean AND cardinality($2::text[])=0 AND cardinality($3::text[])=0

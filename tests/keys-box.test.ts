@@ -4,7 +4,8 @@ import { PGlite } from "@electric-sql/pglite";
 import { lockKey, unlockKey } from "../lib/core/keys-crypto.ts";
 import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { testDueKeys, testKey } from "../lib/core/keys-test.ts";
-import { keyProblems, keysRunnerPass } from "../lib/core/keys-runner.ts";
+import { keyProblems, keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
+import { IndependentRuntimeLaneScheduler } from "../lib/ops/independent-runtime-pass.ts";
 import { importExistingKeys } from "../lib/core/keys-import.ts";
 import { handleKeys } from "../lib/core/keys-http.ts";
 import { adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
@@ -91,6 +92,23 @@ test("HTML success pages and provider failures never count as working or expose 
   assert.equal(failure.working, false);
   assert.equal(JSON.stringify(failure).includes(SECRET), false);
   assert.match((await testKey("anthropic", SECRET, fake(new Response(null, { status: 429 })))).says, /usage limit/);
+});
+
+test("search keys are checked against a rejected control without submitting paid searches", async () => {
+  for (const service of ["brave", "exa"] as const) {
+    let calls = 0;
+    const fetcher = (async (url: string | URL | Request, init?: RequestInit) => {
+      calls++;
+      if (service === "brave") assert.match(String(url), /count=-1/);
+      else assert.equal(JSON.parse(String(init?.body)).numResults, -1);
+      const headers = new Headers(init?.headers);
+      const actual = (headers.get("x-api-key") ?? headers.get("x-subscription-token")) === SECRET;
+      return actual ? Response.json({ error: "Invalid search parameters" }, { status: 400 })
+        : Response.json({ error: "Invalid API key" }, { status: 401 });
+    }) as typeof fetch;
+    assert.equal((await testKey(service, SECRET, fetcher)).working, true);
+    assert.equal(calls, 2);
+  }
 });
 
 test("failed and overdue key checks appear in the brief and disappear after recovery", async t => {
@@ -181,4 +199,26 @@ test("simultaneous runtime imports preserve both keys, and a later owner edit wi
   await store.save("ANTHROPIC_API_KEY", SECRET, "signing", AT);
   await importExistingKeys({ ANTHROPIC_API_KEY: "old-website-setting" }, store, AT, "website");
   assert.equal(await store.read("ANTHROPIC_API_KEY", false, AT, "website"), SECRET);
+});
+
+test("the standing clock picks up saved keys on its next tick and tests again on the following day", async t => {
+  const { store } = await fixture(t);
+  let at = AT, checked = 0;
+  const clock = new IndependentRuntimeLaneScheduler([savedKeysLane(async () => {
+    await testDueKeys(store, at, undefined, async () => { checked++; return good(); });
+    for (const key of await store.list()) await store.read(key.name, true, at);
+  })]);
+  clock.tick(Date.parse(at)); await clock.waitForIdle();
+  await store.save("Clock check", SECRET, "signing", at);
+  assert.equal(checked, 0);
+  at = "2026-10-29T12:01:00.000Z";
+  clock.tick(Date.parse(at)); await clock.waitForIdle();
+  assert.equal(checked, 1);
+  assert.equal((await store.list())[0].runnerReadAt, at);
+  at = "2026-10-30T12:00:00.000Z";
+  clock.tick(Date.parse(at)); await clock.waitForIdle();
+  assert.equal(checked, 1);
+  at = "2026-10-30T12:01:00.000Z";
+  clock.tick(Date.parse(at)); await clock.waitForIdle();
+  assert.equal(checked, 2);
 });

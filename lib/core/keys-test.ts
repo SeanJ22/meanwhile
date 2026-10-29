@@ -6,7 +6,7 @@ interface Probe { readonly url: string; readonly method?: string; readonly body?
 const record = (body: unknown): Record<string, unknown> => body && typeof body === "object" ? body as Record<string, unknown> : {};
 const array = (value: unknown): boolean => Array.isArray(value) && value.length > 0;
 
-function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoauth" | "google-client" | "other">, key: string): Probe {
+function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoauth" | "google-client" | "other" | "brave" | "exa">, key: string): Probe {
   const q = encodeURIComponent(key);
   switch (service) {
     case "anthropic": return { url: "https://api.anthropic.com/v1/models?limit=1", headers: { "x-api-key": key, "anthropic-version": "2023-06-01" }, accepts: b => array(record(b).data) };
@@ -20,8 +20,6 @@ function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoaut
     case "socrata": return { url: "https://data.cityofnewyork.us/resource/erm2-nwe9.json?$limit=1", headers: { "X-App-Token": key }, accepts: array };
     case "civic": return { url: `https://www.googleapis.com/civicinfo/v2/elections?key=${q}`, accepts: b => Array.isArray(record(b).elections) };
     case "sam": return { url: `https://api.sam.gov/opportunities/v2/opportunities?api_key=${q}&postedFrom=10/01/2026&postedTo=10/02/2026&limit=1`, accepts: b => typeof record(b).totalRecords === "number" && Array.isArray(record(b).opportunitiesData) };
-    case "brave": return { url: "https://api.search.brave.com/res/v1/web/search?q=usa.gov&count=1", headers: { "X-Subscription-Token": key }, accepts: b => array(record(record(b).web).results) };
-    case "exa": return { url: "https://api.exa.ai/search", method: "POST", body: JSON.stringify({ query: "site:usa.gov government", numResults: 1, type: "fast" }), headers: { "x-api-key": key, "content-type": "application/json" }, accepts: b => array(record(b).results) };
     case "maptiler": return { url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${q}`, headers: { Origin: "https://meanwhileusa.com", Referer: "https://meanwhileusa.com/" }, accepts: b => record(b).version === 8 && array(record(b).layers) };
     case "netlify": return { url: "https://api.netlify.com/api/v1/user", headers: { Authorization: `Bearer ${key}` }, accepts: b => typeof record(b).id === "string" };
     case "github": return { url: "https://api.github.com/user", headers: { Authorization: `Bearer ${key}`, "User-Agent": "Meanwhile keys check", Accept: "application/vnd.github+json" }, accepts: b => typeof record(b).login === "string" };
@@ -33,10 +31,30 @@ function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoaut
   }
 }
 
+/** Invalid search parameters exercise authentication without starting paid research. */
+async function testSearchKey(service: "brave" | "exa", value: string, fetchImpl: typeof fetch): Promise<KeyTestResult> {
+  const invalid = [...value].map((char, at) => at < 4 || !/[a-z0-9]/i.test(char) ? char : char === "0" ? "1" : "0").join("");
+  const signal = AbortSignal.timeout(2_000);
+  async function attempt(key: string) {
+    const response = service === "brave"
+      ? await fetchImpl("https://api.search.brave.com/res/v1/web/search?q=&count=-1", { headers: { "X-Subscription-Token": key }, signal, redirect: "error" })
+      : await fetchImpl("https://api.exa.ai/search", { method: "POST", headers: { "x-api-key": key, "content-type": "application/json" },
+        body: JSON.stringify({ query: "", numResults: -1, type: "keys-box-invalid-mode" }), signal, redirect: "error" });
+    return { status: response.status, body: await response.text() };
+  }
+  const [real, control] = await Promise.all([attempt(value), attempt(invalid)]);
+  const refused = (answer: { status: number; body: string }) => [401,403].includes(answer.status)
+    || /(?:invalid|unauthorized|rejected)[_\s-]*(?:api[_\s-]*)?(?:key|token)|(?:key|token)[_\s-]*(?:is[_\s-]*)?(?:invalid|unauthorized|rejected)/i.test(answer.body);
+  if (refused(real)) return { working: false, says: "The service refused this key or its access." };
+  if ([400,422].includes(real.status) && refused(control)) return { working: true, says: "The service accepted the key. No paid search was started." };
+  return { working: false, says: "The service did not confirm the key without starting paid search." };
+}
+
 /** Response shape matters: Census can return an invalid-key HTML page with status 200. */
 export async function testKey(service: KeyService, value: string, fetchImpl: typeof fetch = fetch,
   companion?: { readonly clientId?: string; readonly clientSecret?: string }): Promise<KeyTestResult> {
   try {
+    if (service === "brave" || service === "exa") return await testSearchKey(service, value, fetchImpl);
     if (service === "other") return { working: false, says: "The team needs to add a key check for this service." };
     if (service === "signing") {
       if (value.length < 24) return { working: false, says: "This sign-in key is too short." };

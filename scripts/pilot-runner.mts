@@ -1,5 +1,5 @@
 import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
-import { keysRunnerPass } from "../lib/core/keys-runner.ts";
+import { keysRunnerPass, savedKeysLane } from "../lib/core/keys-runner.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
@@ -1355,9 +1355,9 @@ async function runDoorProbes(deadlineMs: number): Promise<void> {
 }
 
 const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
-  { id: "saved-keys", everyMs: 60_000, budgetMs: 30_000, run: async () => {
+  savedKeysLane(async () => {
     if (provider === "postgres" && !canary) await keysRunnerPass();
-  } },
+  }),
   { id: "platform-census", everyMs: CENSUS_LANE_INTERVAL_MS, budgetMs: CENSUS_LANE_BUDGET_MS, run: runPlatformCensus },
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, budgetMs: INTAKE_RUNTIME_BUDGET_MS, run: runIntakeRuntime },

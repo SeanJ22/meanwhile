@@ -4,6 +4,11 @@ import type { BriefProblem } from "../counts/problem-groups.ts";
 import type { KeyView } from "./keys-model.ts";
 import { importExistingKeys } from "./keys-import.ts";
 import { billingCollectorEnvironment } from "../control-plane/provider-billing-environment.ts";
+import type { IndependentRuntimeLane } from "../ops/independent-runtime-pass.ts";
+
+export function savedKeysLane(run: () => Promise<void>): IndependentRuntimeLane {
+  return { id: "saved-keys", everyMs: 60_000, budgetMs: 30_000, run };
+}
 
 export function keyProblems(keys: readonly KeyView[], at: string): readonly BriefProblem[] {
   return keys.flatMap(key => {

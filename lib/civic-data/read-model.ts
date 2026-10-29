@@ -3,7 +3,7 @@ import { stateRegistryRuntimeScope } from "./state-scopes.ts";
 import type { RegistryRuntimeReadModel } from "../registry/runtime-data-plane.ts";
 import { statePublicationPriorOf, rememberStatePublicationHashes } from "./state-publication.ts";
 import { readerDatabaseQuery } from "../reader/database.ts";
-import { currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
+import { currentReaderRoute, currentReaderSelection, type ReaderSelection } from "../db/reader-route.ts";
 import {createRequire} from "node:module";
 import { sourceCheckedAt } from "./source-check.ts";
 import { currentReaderAuthorityEdge, ensurePromotedEdge, refuseDatabaseInEdgeOnlyContext } from "../registry/runtime-edge.ts";
@@ -416,9 +416,9 @@ export async function readPromotedCivicData<T>(
     if (edge !== null) return readPromotedFromEdge<T>(recordClass, scope, edge.value, now, options.maxAgeMs);
     refuseDatabaseInEdgeOnlyContext(`${recordClass}:${scope}`);
     const selection = currentReaderSelection();
-    if (selection && process.env.DATABASE_URL) {
+    if ((selection || currentReaderRoute()!=="unattributed") && process.env.DATABASE_URL) {
       try {
-        return readPromotedFromEdge<T>(recordClass, scope, await readReaderProjection(recordClass, scope, selection), now, options.maxAgeMs);
+        return readPromotedFromEdge<T>(recordClass, scope, await readReaderProjection(recordClass, scope, selection ?? {keys:new Set()}), now, options.maxAgeMs);
       } catch (error) {
         return storeReadFailedResult<T>(recordClass, scope, null, error);
       }
@@ -1148,59 +1148,6 @@ export function clearPromotedReadModelCache(): void {
 
 const readerProjectionSelections = new WeakMap<ReaderSelection, Map<string, { selection: ReaderSelection; exactKeys: boolean }>>();
 
-/** The reviewed national question catalog stays whole; only the requested
- * members' position cells cross the wire. Generic geographic slicing would
- * mistake the catalog's entry IDs for place IDs and discard every question. */
-export const FEDERAL_KEY_VOTE_READER_PAYLOAD = `(SELECT jsonb_set(full_value, '{positions,positions}',
-  coalesce((SELECT jsonb_object_agg(roll_key, coalesce((SELECT jsonb_object_agg(member, position)
-    FROM jsonb_each(member_positions) cells(member, position) WHERE member = ANY($3::text[])), '{}'::jsonb))
-    FROM jsonb_each(full_value#>'{positions,positions}') rolls(roll_key, member_positions)), '{}'::jsonb))
-  #- '{positions,retiredMappings}' FROM (SELECT reader_payload_value(p.payload) AS full_value) decoded)`;
-
-/** Find the requested source filer, without joining their name to an official
- * or ballot identity. The normal reader still validates the selected holding. */
-export const STATE_MONEY_READER_PAYLOAD = `(SELECT reader_payload_value(header - 'records') || jsonb_build_object('records',
-  coalesce((SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
-    FROM reader_payload_members(header->'records') members
-    WHERE EXISTS (SELECT 1 FROM jsonb_path_query(reader_payload_node(item),'$.**') cell(v) WHERE cell.v#>>'{}'=ANY($3::text[]))
-      OR EXISTS (SELECT 1 FROM unnest($3::text[]) wanted(name) WHERE name LIKE 'ask-money-name:%'
-        AND regexp_split_to_array(trim(regexp_replace(lower(reader_payload_node(item)->>'candidateNameAsFiled'), '[^a-z0-9]+', ' ', 'g')), ' +')
-          @> string_to_array(substring(name FROM 16), ' '))), '[]'::jsonb))
-  FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
-
-/** Ballot cards join by reviewed target keys, not by a mention inside a filing. */
-const BALLOT_STATE_MONEY_PAYLOAD = `(SELECT reader_payload_value(header - 'records') || jsonb_build_object('records',
-  coalesce((SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
-    FROM reader_payload_members(header->'records') members
-    WHERE EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(item)->'targetKeys') target
-      WHERE reader_payload_value(target.item)#>>'{}'=ANY($3::text[]))), '[]'::jsonb))
-  FROM (SELECT reader_payload_node(p.payload) AS header) decoded)`;
-
-/** Keep every field and cycle for selected candidates, and their one-hop committee books. */
-const BALLOT_FEC_MONEY_PAYLOAD = `(WITH root AS MATERIALIZED (SELECT reader_payload_node(p.payload) AS value),
-  chosen AS MATERIALIZED (
-    SELECT members.ordinal_index,reader_payload_value(members.item) AS value FROM root,
-      LATERAL reader_payload_members(root.value->'candidates') members
-    WHERE EXISTS(SELECT 1 FROM reader_payload_members(reader_payload_node(members.item)->'targetKeys') target
-      WHERE reader_payload_value(target.item)#>>'{}'=ANY($3::text[]))
-      OR reader_payload_node(members.item)->>'fecCandidateId'=ANY($3::text[])
-      OR 'fec:'||(reader_payload_node(members.item)->>'fecCandidateId')=ANY($3::text[])
-  ), committees AS MATERIALIZED (
-    SELECT DISTINCT receipt->>'contributorCommitteeId' AS id FROM chosen,
-      LATERAL jsonb_array_elements(coalesce(chosen.value->'topContributions','[]'::jsonb)) receipt
-    WHERE receipt->>'contributorCommitteeId' IS NOT NULL
-  ) SELECT reader_payload_value(root.value-'candidates'-'absences'-'secondHop')
-    || CASE WHEN root.value ? 'candidates' THEN jsonb_build_object('candidates',coalesce((
-      SELECT jsonb_agg(value ORDER BY ordinal_index) FROM chosen),'[]'::jsonb)) ELSE '{}'::jsonb END
-    || CASE WHEN root.value ? 'absences' THEN jsonb_build_object('absences',coalesce((
-      SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
-      FROM reader_payload_members(root.value->'absences')
-      WHERE reader_payload_value(reader_payload_node(item)->'targetKey')#>>'{}'=ANY($3::text[])), '[]'::jsonb)) ELSE '{}'::jsonb END
-    || CASE WHEN root.value ? 'secondHop' THEN jsonb_build_object('secondHop',coalesce((
-      SELECT jsonb_agg(reader_payload_value(item) ORDER BY ordinal_index)
-      FROM reader_payload_members(root.value->'secondHop')
-      WHERE reader_payload_node(item)->>'committeeId' IN (SELECT id FROM committees)), '[]'::jsonb)) ELSE '{}'::jsonb END
-  FROM root)`;
 /** Keep a place's complete selected slice when later card reads add aliases to its selection. */
 export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[], options: {readonly exactKeys?: true} = {}): Promise<PromotedEdgeEntry> {
   const selection = currentReaderSelection();

@@ -15,14 +15,21 @@ import { votingFetchSession } from "../lib/ballot/voting-source-fetch.ts";
 import { mergeVotingSiteRows, type VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { installReaderDatabaseQuery } from "../lib/reader/database.ts";
 import type { PublishedElectionField } from "../lib/civic-data/election-fields.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
 
 const at = "2026-10-20T00:00:00.000Z";
 const source = { publisher: "Protocol fixture", url: "https://protocol.example.gov/polling", checkedAt: at };
 const navigation = JSON.parse(readFileSync("data/ballot/2026-navigation/tx.json", "utf8"));
 const lookups = (navigation.package.payload.records as PublishedElectionField[]).filter(record =>
   record.kind === "ELECTION_FIELD" && record.value.fieldKind === "polling_lookup");
-test.before(() => installReaderDatabaseQuery(async statements => statements.map(statement =>
-  statement.text.includes("WITH pointers") ? lookups.map(record => ({ ...record, valid: true })) : [])));
+test.before(() => installReaderDatabaseQuery(async statements => statements.map(statement => {
+  if(!statement.text.includes('shelf AS MATERIALIZED'))return [];
+  return (JSON.parse(String(statement.params[0])) as {key:string}[]).map(({key})=>{
+    const payload={records:lookups};return {row_kind:'promotion',key,record_class:'CURATED_READER_RECORD',scope:key.slice('CURATED_READER_RECORD:'.length),
+      source_id:'curated-reader-primary-sources',current_version_id:'nav-v1',last_known_good_version_id:'nav-v1',published:true,
+      promoted_at:at,retrieved_at:at,payload,normalized_hash:canonicalCivicDataHash(payload),validation_receipt:{decision:'GOOD'}};
+  });
+})));
 test.after(() => installReaderDatabaseQuery(undefined));
 // Controlled protocol data exercises requests and persistence, and asserts no real precinct assignment.
 const file: VotingSitesFile = { generatedAt: "2026-10-20", jurisdictions: [{

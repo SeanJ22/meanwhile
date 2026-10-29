@@ -36,9 +36,11 @@ export async function readKeyedSelection(query:Query,recordClass:RoutineRecordCl
       LATERAL jsonb_array_elements_text(h.value->'collections') field WHERE h.collection='rp01.header' AND h.promotion_key=($1::text[])[1])
     SELECT ${AUTHORITY_COLUMNS.split(",").map(column=>`pointer.${column}`).join(",")},pointer.payload||coalesce(arrays.value,'{}'::jsonb)||CASE WHEN pointer.record_class='FEDERAL_KEY_VOTE'
       THEN jsonb_build_object('positions',pointer.payload->'positions'||jsonb_build_object('positions',coalesce((
-        SELECT jsonb_object_agg(roll,positions) FROM (SELECT r.value->>'roll' AS roll,jsonb_object_agg(r.row_id,r.value->'position') AS positions
-          FROM civic_data_rows r WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='rp01.positions'
-            AND r.body_id=ANY($2::text[]) GROUP BY r.value->>'roll') positions),'{}'::jsonb))) ELSE '{}'::jsonb END AS payload
+        SELECT jsonb_object_agg(roll,coalesce((SELECT jsonb_object_agg(r.row_id,r.value->'position') FROM civic_data_rows r
+          WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='rp01.positions'
+            AND r.body_id=ANY($2::text[]) AND r.value->>'roll'=roll),'{}'::jsonb))
+        FROM (SELECT DISTINCT r.value->>'roll' AS roll FROM civic_data_rows r WHERE r.promotion_key=pointer.key
+          AND r.version_id=pointer.current_version_id AND r.collection='rp01.positions') rolls),'{}'::jsonb))) ELSE '{}'::jsonb END AS payload
     FROM pointer CROSS JOIN arrays`,[[`${recordClass}:${scope}`],[...keys]]);
   return selectedStateEntry(recordClass,scope,row);
 }

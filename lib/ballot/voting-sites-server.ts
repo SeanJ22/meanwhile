@@ -1,4 +1,4 @@
-import { decodeSelectedVoting, selectedVotingStatement } from "../reader/selected-voting.ts";
+import { readSelectedVoting } from "../reader/selected-voting.ts";
 import { selectedStateEntry } from "../reader/selected-entry.ts";
 import { currentReaderAuthorityEdge } from "../registry/runtime-edge.ts";
 import type { VotingReaderPlace } from "./voting-answer.ts";
@@ -17,7 +17,7 @@ export async function readVotingSitesProjection(state: string, options: Promoted
   const key = requireBallotState(state);
   const query = deadlineMs === undefined ? null : readerQuery(deadlineMs);
   const selectedQuery = place && !Object.keys(options).length && !currentReaderAuthorityEdge() ? query ?? readerQuery() : null;
-  const selected = selectedQuery ? await decodeSelectedVoting((await selectedQuery([selectedVotingStatement(key,place!)]))[0][0]) : undefined;
+  const selected = selectedQuery ? await readSelectedVoting(selectedQuery,key,place!) : undefined;
   const result = selectedQuery
     ? await readPromotedCivicData<VotingSitesFile>("VOTING_SITE", stateBallotScope("voting-sites",key),
       {edge:selectedStateEntry("VOTING_SITE",stateBallotScope("voting-sites",key),selected)})
@@ -31,10 +31,10 @@ export async function readVotingSitesProjection(state: string, options: Promoted
   const confirmation = result.projection.latestConfirmation;
   const wholeCheckedAt = confirmation?.versionId === result.projection.versionId && confirmation.basis === "RAW_HASH_UNCHANGED"
     ? confirmation.retrieval.retrievedAt : undefined;
-  let checks: Awaited<ReturnType<typeof readPublishedSourceChecks>> = [];
+  let checks: Awaited<ReturnType<typeof readPublishedSourceChecks>> = (result.value as VotingSitesFile & {readerSourceChecks?:Awaited<ReturnType<typeof readPublishedSourceChecks>>}).readerSourceChecks??[];
   try {
     if (store?.readSourceChecks) checks = await store.readSourceChecks("VOTING_SITE", scope, keys);
-    else if (!Object.keys(options).length) {
+    else if (!Object.keys(options).length && currentReaderAuthorityEdge()) {
       const selected = deadlineMs === undefined ? query ?? readerQuery() : readerQuery(Math.max(1, deadlineMs - (Date.now() - startedAt)));
       if (selected) checks = await readPublishedSourceChecks(async (text, params) => (await selected([{ text, params }]))[0] ?? [], "VOTING_SITE", scope, keys);
     }

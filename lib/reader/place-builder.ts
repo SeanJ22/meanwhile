@@ -1,4 +1,7 @@
 import {personIdentityKeys} from "../officials/people-identity.ts";
+import {keyedReaderPointers} from "../civic-data/keyed-reader.ts";
+import {readPublishedSourceChecks} from "../civic-data/source-checks.ts";
+import {votingPageFingerprintSql} from "./voting-page.ts";
 import {AUTHORITY_COLUMNS} from "./page-authorities.ts";
 import { requiredManualProductionContract } from "../civic-data/manual-contracts.ts";
 import {ballotCandidateKeys} from "../ballot/candidate-keys.ts";
@@ -1138,8 +1141,6 @@ function zipRegistryStatement(state: string, divisions: readonly string[]) {
         SELECT payload->'roster' AS value FROM zip_people UNION ALL SELECT payload->'roster' FROM zip_official
         UNION ALL SELECT payload->'roster' FROM zip_sources
       ) roster,LATERAL reader_payload_members(roster.value->'officeholders') h
-      UNION ALL SELECT reader_payload_node(m.item) FROM root,LATERAL reader_payload_members(root.value->'bodyRosters') r,
-        LATERAL reader_payload_members(reader_payload_node(r.item)->'members') m
       UNION ALL SELECT reader_payload_node(e.item)->'holder' FROM root,LATERAL reader_payload_members(root.value->'statewideExecutives') e
     ), identities AS MATERIALIZED (
       SELECT unnest(${peopleIdentityKeysSql("value")}) AS id FROM people
@@ -1154,7 +1155,6 @@ function zipRegistryStatement(state: string, divisions: readonly string[]) {
         LATERAL reader_payload_members(reader_payload_node(root.value->'officialPhotos')->'photos') p
       WHERE reader_payload_node(p.item)->>'officeholderId' IN (SELECT id FROM identities UNION SELECT reader_payload_node(value->'holder')->>'id' FROM candidacies)
         OR reader_payload_node(p.item)->>'personId' IN (SELECT id FROM identities)
-        OR reader_payload_node(p.item)->>'url' IN (SELECT r.value FROM jsonb_each_text(reader_payload_value(root.value->'rosterPhotos')) r)
     ) SELECT ${buildSelectedMetadataSql}, CASE WHEN published THEN
       reader_payload_value(root.value-'registry'-'officialPhotos'-'officialCandidacies'-'bodyRosters'-'rosterReaderDispositions'-'rosterPhotos') || jsonb_build_object(
         'bodyRosters','[]'::jsonb,'rosterReaderDispositions','[]'::jsonb,'rosterPhotos','{}'::jsonb,
@@ -1418,6 +1418,7 @@ async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedK
   const allKeys=[...new Set([...requestedKeys,...knownKeys??prior?.keys as string[]??[]])];
   const wantedDetails=new Set([...allKeys,...fixedKeys].filter(key=>detailKeys.has(key)));
   const dynamicKeys=allKeys.filter(key=>!fixedKeys.includes(key)&&!detailKeys.has(key));
+  const votingKeys=dynamicKeys.filter(key=>key.startsWith('VOTING_SITE:'));
   const contextKeys=new Set(additional?memberContextPointers.map(row=>`${row.recordClass}:${row.scope}`):[]);
   const keys=pageAuthorityPointers(input).map(row=>`${row.recordClass}:${row.scope}`).filter(key=>!detailKeys.has(key)&&!contextKeys.has(key));
   const statement=buildCanonicalStatement(keys,additional);
@@ -1438,11 +1439,12 @@ async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedK
     const selected=buildBallotCandidateDetailsStatement(state,[...candidateKeys]);
     rows.push(...await query(selected.text,[[...wantedDetails],selected.params[1]]));
   }
-  if(dynamicKeys.length){
+  const otherKeys=dynamicKeys.filter(key=>!votingKeys.includes(key));
+  if(otherKeys.length){
     const selected=await query(`WITH pointer AS (${buildSelectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')})
       SELECT ${buildSelectedMetadataSql},pointer.record_class,pointer.scope,
         CASE WHEN pointer.published THEN reader_place_payload(pointer.payload,$2::text[],NULL) END AS payload FROM pointer`,
-      [dynamicKeys,[...input.divisionIds,...input.bodyIds??[]]]);
+      [otherKeys,[...input.divisionIds,...input.bodyIds??[]]]);
     rows.push(...selected);
   }
   const authorities:Record<string,Record<string,unknown>>={};
@@ -1455,6 +1457,7 @@ async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedK
       rosterReaderDispositions:[],rosterPhotos:{}}:row.payload;
     authorities[key]={...source,payload:packPlaceAuthority(payload),record_class:key.slice(0,colon),scope:key.slice(colon+1),normalized_hash:canonicalCivicDataHash(payload)};
   }
+  for(const key of votingKeys){const row=await compileVotingPageRow(query,key);if(row)authorities[key]=row;}
   const authorityGeography=extra?Object.fromEntries(Object.entries(extra).filter(([key])=>!key.startsWith('zip_'))):{};
   if(state!=='US'&&(zip||root))authorityGeography.member_offices=await buildMemberOffices(query,state,zip?[...new Set(rows.flatMap(row=>{
     const payload=row.payload as {roster?:{officeholders?:import('../officials/types.ts').Officeholder[]};statewideExecutives?:{holder?:import('../officials/types.ts').Officeholder}[]};
@@ -1462,6 +1465,40 @@ async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedK
       .flatMap(holder=>[...personIdentityKeys(holder)]);
   }))]:undefined);
   return {authorities,authorityGeography,authorityFormat:1,authorityKeys:[...new Set([...fixedKeys,...dynamicKeys,...wantedDetails,...extra?.canonical_keys as string[]??[]])]};
+}
+
+async function compileVotingPageRow(query:Query,key:string) {
+  const [row]=await query(`WITH pointer AS (${keyedReaderPointers}),head AS (${votingPageFingerprintSql})
+    SELECT pointer.key,pointer.record_class,pointer.scope,pointer.source_id,pointer.current_version_id,pointer.last_known_good_version_id,
+      pointer.promoted_at,pointer.validation_receipt,pointer.payload,pointer.retrieved_at,pointer.confirmation,pointer.published,
+      head.fingerprint AS page_fingerprint FROM pointer JOIN head USING(key)`,[[key]]);
+  if(!row)return undefined;
+  if(row.published!==true)throw Error('PLACE_VOTING_PUBLICATION_INVALID');
+  const payload=row.payload as Record<string,unknown>;
+  const checks=await readPublishedSourceChecks(query,'VOTING_SITE',String(row.scope),Object.keys(payload.sourceHashes??{}));
+  return {...row,payload:{...payload,readerSourceChecks:checks},normalized_hash:canonicalCivicDataHash({...payload,readerSourceChecks:checks})};
+}
+
+/** The same place builder saves voting's small admitted header and source-check snapshot. */
+export async function buildVotingPage(state:string,id:string,db?:FactDb):Promise<void> {
+  const supplied=installedFactConnection();
+  const writer=db??(supplied?{transaction:<T>(work:(query:Query)=>Promise<T>)=>work(supplied)}:readerFactDb(process.env.WTP_DB_ROLE==='local'?process.env.DATABASE_URL:resolveProductionWriteHandle().connection));
+  await writer.transaction(async query=>{
+    const key=`VOTING_SITE:${stateBallotScope('voting-sites',state)}`;
+    const [held]=await query(`WITH head AS (${votingPageFingerprintSql}) SELECT page.place_id,
+      page.context->'authorities'->$2->>'page_fingerprint'=head.fingerprint AS ready
+      FROM head LEFT JOIN place_page page ON page.place_id=$3`,[[key],key,id]);
+    if(held?.ready===true)return;
+    if(!held)return;
+    if(!held.place_id){
+      await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place',$1,$2) ON CONFLICT DO NOTHING",[id,state]);
+      await storePlacePage(query,id,await buildPageBody(id,'place',state,query),null,true);
+    }
+    const row=await compileVotingPageRow(query,key);if(!row)return;
+    await query(`UPDATE place_page SET context=jsonb_set(context,'{authorities}',coalesce(context->'authorities','{}'::jsonb)||jsonb_build_object($2::text,$3::jsonb))
+      ||jsonb_build_object('authorityKeys',coalesce(context->'authorityKeys','[]'::jsonb)||to_jsonb(ARRAY[$2::text])),version=version+1
+      WHERE place_id=$1`,[id,key,JSON.stringify(row)]);
+  });
 }
 
 /** Member offices are facts selected by state; source envelopes and national review lists stay behind. */

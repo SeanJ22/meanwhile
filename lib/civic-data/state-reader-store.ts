@@ -1,5 +1,5 @@
 import {stateBallotScope} from "./state-scopes.ts";
-import {selectedVotingStatement} from "../reader/selected-voting.ts";
+import {readSelectedVoting} from "../reader/selected-voting.ts";
 import {selectedStateEntry} from "../reader/selected-entry.ts";
 import { REGISTRY_STATES, STATE_BALLOT_FAMILIES, stateFromBallotScope,stateFromRegistryRuntimeScope } from "./state-scopes.ts";
 import { ballotNavigationState } from "./ballot-navigation-scope.ts";
@@ -25,8 +25,7 @@ export async function readStateReaderEntry(query:Query,recordClass:RoutineRecord
   if (!state) throw new Error(`STATE_READER_SCOPE_INVALID:${recordClass}:${scope}`);
   if(recordClass==='VOTING_SITE'){
     const postal=REGISTRY_STATES.find(state=>stateBallotScope('voting-sites',state)===scope)!;
-    const statement=selectedVotingStatement(postal,{countyFips:[]});
-    return selectedStateEntry(recordClass,scope,(await query(statement.text,statement.params))[0]);
+    return selectedStateEntry(recordClass,scope,await readSelectedVoting(async statements=>Promise.all(statements.map(s=>query(s.text,s.params))),postal,{countyFips:[]}));
   }
   const shelf=await readCanonicalShelf([{recordClass,scope}],async statements=>Promise.all(statements.map(statement=>query(statement.text,statement.params))));
   return shelf.readPromotedEntry!(recordClass,scope);

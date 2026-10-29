@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import {statePackageStatement,zipPeopleEntry} from "../lib/reader/state.ts";
+import {zipPeopleEntry} from "../lib/reader/state.ts";
+import {buildStatePackageStatement as statePackageStatement} from "../lib/reader/place-builder.ts";
 import {partitionCivicPayload} from "../lib/civic-data/payload-codec.ts";
 import {canonicalCivicDataHash} from "../lib/civic-data/canonical-hash.ts";
 import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
@@ -124,7 +125,7 @@ test("NH Members.txt identities retain ZIP aliases and name candidates for House
   }finally{await pg.close();}
 });
 
-test("ZIP registry SQL preserves held rosters, their definitions, statewide bodies, aliases and source metadata",async()=>{
+test("ZIP registry SQL keeps body definitions and relevant official sources while unopened rosters stay behind",async()=>{
   const {pg,publish}=await migratedReaderDb();
   const state="ocd-division/country:us/state:nh",town=`${state}/place:dunbarton`,county=`${state}/county:merrimack`,
     alias=`${state}/cousub:alias`,outside=`${state}/place:elsewhere`,unrelated=`${state}/place:unrelated`;
@@ -147,7 +148,7 @@ test("ZIP registry SQL preserves held rosters, their definitions, statewide bodi
     const statement=statePackageStatement("NH",[town,county],"03046");
     const row=(await pg.query<{zip_registry:{published:boolean;payload:typeof payload}}>(statement.text,[...statement.params])).rows[0];
     assert.equal(row.zip_registry.published,true);
-    assert.deepEqual(row.zip_registry.payload,{...payload,padding:"Source metadata ".repeat(4000),
+    assert.deepEqual(row.zip_registry.payload,{...payload,bodyRosters:[],padding:"Source metadata ".repeat(4000),
       officialPhotos:{...payload.officialPhotos,photos:payload.officialPhotos.photos.slice(0,1)},
       officialCandidacies:{...payload.officialCandidacies,rows:payload.officialCandidacies.rows.slice(0,1)},registry:{...payload.registry,
       divisions:divisions.filter(d=>d.ocdId!==unrelated),bodies:bodies.filter(b=>b.id!=="unrelated")}});

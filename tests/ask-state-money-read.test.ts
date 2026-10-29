@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import test from "./helpers/playbooks.ts";
-import { STATE_MONEY_READER_PAYLOAD } from "../lib/civic-data/read-model.ts";
+import {readKeyedSelection} from "../lib/civic-data/keyed-reader.ts";
+import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
 import { withReaderSelection } from "../lib/db/reader-route.ts";
 import { requestedStateMoneySubjects } from "../lib/ask/state-money-subjects.ts";
 import { stateCampaignRecordsAsk } from "../lib/ask/state-campaign.ts";
@@ -8,15 +9,17 @@ import {campaignDb,publishMoneyFixture} from "./helpers/campaign-money-db.ts";
 import{installFactReader}from"../lib/facts/db.ts";
 
 test("a named campaign question reads its source filer's rows without name-joining an officeholder", async () => {
-  const db=await campaignDb(),pg=db.pg;
+  const {pg,publish}=await migratedReaderDb();
   try {
     const records = [{ candidateNameAsFiled: "SELEN, TAYFUN", targetKeys: ["native:first"], totals: { receipts: 42 } },
       { candidateNameAsFiled: "Another Person", targetKeys: ["native:second"] },
       { candidateNameAsFiled: "Tayfun Someone", targetKeys: ["native:third"] }];
-    const read = (keys: string[]) => pg.query<{ value: { records: unknown } }>(`SELECT ${STATE_MONEY_READER_PAYLOAD} value FROM (VALUES($4::jsonb)) p(payload) WHERE $1::text=$2::text`, ["fixture", "fixture", keys,JSON.stringify({cycle:2026,formatVersion:1,records})]);
-    assert.deepEqual((await read(["ask-money-name:tayfun selen"])).rows[0]!.value.records, [records[0]]);
-    assert.deepEqual((await read(["native:second"])).rows[0]!.value.records, [records[1]]);
-    assert.deepEqual((await read(["ask-money-name:tayfun other"])).rows[0]!.value.records, []);
+    await publish({id:'money-v1',recordClass:'STATE_CAMPAIGN_FINANCE',scope:'US-NJ:campaign',sourceId:'official',at:'2026-10-20T00:00:00.000Z',value:{cycle:2026,formatVersion:1,records}});
+    const read=async(keys:string[])=>{const entry=await readKeyedSelection(async(text,params=[])=>(await pg.query(text,[...params])).rows,'STATE_CAMPAIGN_FINANCE','US-NJ:campaign',keys);
+      assert.equal(entry.kind,'PROMOTED');return entry.kind==='PROMOTED'?(entry.projection.payload as {records:unknown}).records:undefined;};
+    assert.deepEqual(await read(["ask-money-name:tayfun selen"]), [records[0]]);
+    assert.deepEqual(await read(["native:second"]), [records[1]]);
+    assert.deepEqual(await read(["ask-money-name:tayfun other"]), []);
   } finally { await pg.close(); }
 });
 

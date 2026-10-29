@@ -6,7 +6,8 @@ import type { GenericBallotProjection } from "../lib/ballot/generic-projection.t
 import { answerVotingSites, type VotingReaderPlace } from "../lib/ballot/voting-answer.ts";
 import type { VotingJurisdiction, VotingSitesFile } from "../lib/ballot/voting-sites.ts";
 import { stateBallotScope } from "../lib/civic-data/state-scopes.ts";
-import { buildSelectedBallotStatement as selectedBallotStatement } from "../lib/reader/place-builder.ts";
+import { buildVotingPage, buildSelectedBallotStatement as selectedBallotStatement } from "../lib/reader/place-builder.ts";
+import { statePageId } from "../lib/reader/page-authorities.ts";
 import { decodeSelectedVoting, selectedVotingStatement } from "../lib/reader/selected-voting.ts";
 import { partitionCivicPayload } from "../lib/civic-data/payload-codec.ts";
 import { canonicalCivicDataHash } from "../lib/civic-data/canonical-hash.ts";
@@ -56,6 +57,11 @@ test("county-selected voting holdings preserve every location, rule, lookup and 
     for(const part of encoded.parts)await pg.query("INSERT INTO civic_data_payload_parts(hash,payload) VALUES($1,$2)",[part.hash,JSON.stringify(part.payload)]);
     await publish({ id: "voting:FL", recordClass: "VOTING_SITE", scope: stateBallotScope("voting-sites", "FL"), sourceId: "voting", at,
       value:encoded.value,payloadHash:canonicalCivicDataHash(value) });
+    const pageId=statePageId('FL');
+    await pg.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Florida','FL')",[pageId]);
+    await pg.query("INSERT INTO place_page(place_id,body,context) VALUES($1,'{}','{}')",[pageId]);
+    const db={transaction:async <T>(work:(query:(text:string,params?:readonly unknown[])=>Promise<readonly Record<string,unknown>[]>)=>Promise<T>)=>work(async(text,params=[])=>(await pg.query<Record<string,unknown>>(text,[...params])).rows)};
+    await buildVotingPage('FL',pageId,db);
     const statement = selectedVotingStatement("FL", place);
     const { rows } = await pg.query<{ published: boolean; payload: VotingSitesFile }>(statement.text, statement.params);
     assert.equal(rows[0].published, true);
@@ -63,5 +69,13 @@ test("county-selected voting holdings preserve every location, rule, lookup and 
     assert.deepEqual(await answerVotingSites(selected!.payload as VotingSitesFile, place), await answerVotingSites(JSON.parse(JSON.stringify(value)), place));
     assert.ok(!JSON.stringify(rows).includes("FOREIGN_COUNTY"), "the unrelated county's stored records never reach the server");
     assert.ok(!JSON.stringify(rows).includes("FOREIGN_SITE"), "foreign sites inside the statewide holding never reach the server");
+    assert.doesNotMatch(statement.text,/civic_data_(promotions|candidates|candidate_events|payload_parts)/);
+    const later='2026-10-20T00:00:00.000Z';
+    await publish({id:'voting:FL:checked',recordClass:'VOTING_SITE',scope:stateBallotScope('voting-sites','FL'),sourceId:'voting',at:later,
+      value:encoded.value,payloadHash:canonicalCivicDataHash(value)});
+    assert.equal((await pg.query<{needs_voting_page:boolean}>(statement.text,statement.params)).rows[0].needs_voting_page,true,
+      'a changed Checked fingerprint asks the builder to refresh the saved page');
+    await buildVotingPage('FL',pageId,db);
+    assert.equal(new Date((await pg.query<{retrieved_at:string}>(statement.text,statement.params)).rows[0].retrieved_at).toISOString(),later);
   } finally { await pg.close(); }
 });

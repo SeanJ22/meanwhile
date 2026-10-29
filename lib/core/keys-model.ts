@@ -1,6 +1,7 @@
 /** Safe to send to Admin. Key values and encrypted values never enter this view. */
 export interface KeyView {
   readonly name: string;
+  readonly version: string;
   readonly purpose: string;
   readonly service: KeyService;
   readonly changedAt: string;
@@ -40,6 +41,7 @@ export const KEY_SERVICES = {
   neon: "Database spending reports",
   "maptiler-service": "Map spending reports",
   "google-client": "Google sign-in application",
+  other: "Other service",
 } as const;
 export type KeyService = keyof typeof KEY_SERVICES;
 
@@ -60,6 +62,7 @@ export const KEY_NAMES: Readonly<Record<string, KeyService>> = {
   EXA_SERVICE_API_KEY: "exa-admin", NEON_BILLING_API_KEY: "neon", NEON_API_KEY: "neon",
   GITHUB_BILLING_TOKEN: "github", NETLIFY_BILLING_TOKEN: "netlify",
   MAPTILER_SERVICE_TOKEN: "maptiler-service", GOOGLE_OAUTH_CLIENT_ID: "google-client",
+  PRL_ARCHIVE_S3_ACCESS_KEY_ID: "other", PRL_ARCHIVE_S3_SECRET_ACCESS_KEY: "other", WTP_MAPTILER_SMOKE_KEY: "maptiler",
 };
 
 export function keyLabel(name: string, service: KeyService): string {

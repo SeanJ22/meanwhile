@@ -6,7 +6,7 @@ interface Probe { readonly url: string; readonly method?: string; readonly body?
 const record = (body: unknown): Record<string, unknown> => body && typeof body === "object" ? body as Record<string, unknown> : {};
 const array = (value: unknown): boolean => Array.isArray(value) && value.length > 0;
 
-function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoauth" | "google-client">, key: string): Probe {
+function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoauth" | "google-client" | "other">, key: string): Probe {
   const q = encodeURIComponent(key);
   switch (service) {
     case "anthropic": return { url: "https://api.anthropic.com/v1/models?limit=1", headers: { "x-api-key": key, "anthropic-version": "2023-06-01" }, accepts: b => array(record(b).data) };
@@ -22,12 +22,12 @@ function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoaut
     case "sam": return { url: `https://api.sam.gov/opportunities/v2/opportunities?api_key=${q}&postedFrom=10/01/2026&postedTo=10/02/2026&limit=1`, accepts: b => typeof record(b).totalRecords === "number" && Array.isArray(record(b).opportunitiesData) };
     case "brave": return { url: "https://api.search.brave.com/res/v1/web/search?q=usa.gov&count=1", headers: { "X-Subscription-Token": key }, accepts: b => array(record(record(b).web).results) };
     case "exa": return { url: "https://api.exa.ai/search", method: "POST", body: JSON.stringify({ query: "site:usa.gov government", numResults: 1, type: "fast" }), headers: { "x-api-key": key, "content-type": "application/json" }, accepts: b => array(record(b).results) };
-    case "maptiler": return { url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${q}`, accepts: b => record(b).version === 8 && array(record(b).layers) };
+    case "maptiler": return { url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${q}`, headers: { Origin: "https://meanwhileusa.com", Referer: "https://meanwhileusa.com/" }, accepts: b => record(b).version === 8 && array(record(b).layers) };
     case "netlify": return { url: "https://api.netlify.com/api/v1/user", headers: { Authorization: `Bearer ${key}` }, accepts: b => typeof record(b).id === "string" };
     case "github": return { url: "https://api.github.com/user", headers: { Authorization: `Bearer ${key}`, "User-Agent": "Meanwhile keys check", Accept: "application/vnd.github+json" }, accepts: b => typeof record(b).login === "string" };
     case "anthropic-admin": return { url: "https://api.anthropic.com/v1/organizations/me", headers: { "x-api-key": key, "anthropic-version": "2023-06-01" }, accepts: b => typeof record(b).id === "string" };
     case "exa-admin": return { url: "https://admin-api.exa.ai/team-management/api-keys", headers: { "x-api-key": key }, accepts: b => Array.isArray(record(b).apiKeys) };
-    case "neon": return { url: "https://console.neon.tech/api/v2/users/me", headers: { Authorization: `Bearer ${key}` }, accepts: b => typeof record(record(b).user).id === "string" };
+    case "neon": return { url: "https://console.neon.tech/api/v2/projects?limit=1", headers: { Authorization: `Bearer ${key}` }, accepts: b => Array.isArray(record(b).projects) };
     case "maptiler-service": return { url: "https://service.maptiler.com/v1/analytics/api_usage/timeline?period=current_billing_period&classifier=api_keys&group=request&format=json",
       headers: { Authorization: `Bearer ${key}` }, accepts: b => Array.isArray(record(b).datasets) };
   }
@@ -37,6 +37,7 @@ function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoaut
 export async function testKey(service: KeyService, value: string, fetchImpl: typeof fetch = fetch,
   companion?: { readonly clientId?: string; readonly clientSecret?: string }): Promise<KeyTestResult> {
   try {
+    if (service === "other") return { working: false, says: "The team needs to add a key check for this service." };
     if (service === "signing") {
       if (value.length < 24) return { working: false, says: "This sign-in key is too short." };
       const { signEnvelope, openEnvelope } = await import("../control-plane/admin-auth.ts");
@@ -77,8 +78,8 @@ export async function testKey(service: KeyService, value: string, fetchImpl: typ
 }
 
 export async function testDueKeys(store: KeysStore, at: string, name?: string,
-  check: typeof testKey = testKey): Promise<number> {
-  const due = await store.claimTests(at, name);
+  check: typeof testKey = testKey, source?: "runner" | "website"): Promise<number> {
+  const due = await store.claimTests(at, name, source);
   await Promise.all(due.map(async row => {
     let result: KeyTestResult;
     try {

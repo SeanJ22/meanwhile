@@ -169,3 +169,16 @@ test("the protected Settings API saves, tests, lists and deletes without returni
     assert.equal(await store.read("Example"), undefined);
   });
 });
+
+test("simultaneous runtime imports preserve both keys, and a later owner edit wins over a first import", async t => {
+  const { store } = await fixture(t);
+  await Promise.all([
+    importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner"),
+    importExistingKeys({ WTP_ADMIN_SESSION_KEY: "website-".repeat(8) }, store, AT, "website"),
+  ]);
+  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "runner"), "runner-".repeat(8));
+  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "website"), "website-".repeat(8));
+  await store.save("ANTHROPIC_API_KEY", SECRET, "signing", AT);
+  await importExistingKeys({ ANTHROPIC_API_KEY: "old-website-setting" }, store, AT, "website");
+  assert.equal(await store.read("ANTHROPIC_API_KEY", false, AT, "website"), SECRET);
+});

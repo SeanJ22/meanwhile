@@ -9,11 +9,17 @@ export async function importExistingKeys(env: Readonly<Record<string, string | u
   for (const [name, service] of Object.entries(KEY_NAMES)) {
     const value = env[name]?.trim();
     if (!value) continue;
-    const existing = held.get(`${name}.${source}`) ?? held.get(name);
+    let existing = held.get(`${name}.${source}`) ?? held.get(name);
+    if (!existing) {
+      if (await store.save(name, value, service, at, true, source)) continue;
+      // Another runtime may have won the insert with a different key under the same name.
+      existing = (await store.list(true)).find(row => row.name === name);
+      if (!existing) continue;
+    }
     if (existing?.deleted || existing?.importedFrom.includes(source)) continue;
-    if (existing && (existing.importedFrom.length === 0 || await store.read(existing.name) === value)) {
+    if (existing.importedFrom.length === 0 || existing.importedFrom.includes("owner") || await store.read(existing.name) === value) {
       await store.markImported(existing.name, source);
-    } else await store.save(existing ? `${name}.${source}` : name, value, service, at, true, source);
+    } else await store.save(`${name}.${source}`, value, service, at, true, source, { name: existing.name, version: existing.version });
   }
-  await testDueKeys(store, at);
+  await testDueKeys(store, at, undefined, undefined, source);
 }

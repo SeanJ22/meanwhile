@@ -39,9 +39,9 @@ export function KeysBox() {
       <label className={s.stack}>Name <input className={s.input} name="name" required maxLength={80} value={name} onChange={event => {
         setName(event.target.value); const known = KEY_NAMES[event.target.value.trim()]; if (known) setService(known);
       }} /></label>
-      <label className={s.stack}>What it is for <select className={s.select} value={service} onChange={event => setService(event.target.value as KeyService)}>
+      <div className={s.stack}><label htmlFor="saved-key-service">What it is for</label><select id="saved-key-service" className={s.select} value={service} onChange={event => setService(event.target.value as KeyService)}>
         {Object.entries(KEY_SERVICES).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
-      </select></label>
+      </select></div>
       <label className={s.stack}>Key <input className={s.input} name="key" type="password" required maxLength={16_384} autoComplete="new-password" spellCheck={false} /></label>
       <button className={s.btn} type="submit" disabled={busy}>{busy ? "Saving and testing…" : "Save and test"}</button>
     </form>

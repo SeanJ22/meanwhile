@@ -1,7 +1,7 @@
 import { censusWorkDivision } from "../census-geography/division-id";
 import { selectGeographyVersion, currentRepresentationSelection } from "../census-geography/selection";
 import type { Division } from "../registry/types";
-import { readStateZipPlaces, readZipPlace, withPlaceMapReads, type PlaceEntry } from "../place-map/reader";
+import { readZipPlace, withPlaceMapReads, type PlaceEntry } from "../place-map/reader";
 import { stateCoverage } from "../reader/coverage";
 import { readStatePackage } from "../reader/state";
 import { requireRegistryState } from "../civic-data/state-scopes";
@@ -26,8 +26,7 @@ async function stateResponse(request: Request) {
   catch { return Response.json({ error: "A US state or territory is required" }, { status: 400 }); }
   try {
     const divisionIds = indexed?.ids ?? [];
-    const [value, places] = await withReaderRoute("/api/reader/state", () => Promise.all([readStatePackage(state, divisionIds, zip ?? undefined, { earlyDistricts: true }),
-      zip ? Promise.resolve(new Map(indexed ? [[zip, indexed]] : [])) : readStateZipPlaces(state)]));
+    const value = await withReaderRoute("/api/reader/state", () => readStatePackage(state, divisionIds, zip ?? undefined, { earlyDistricts: true }));
     const versions = value.districts.kind === "HELD" ? value.districts.value.scopes.map(scope => ({ ...scope, key: scope.version })) : [];
     const selection = currentRepresentationSelection();
     const selected = new Map((["congressional_district", "state_leg_upper", "state_leg_lower"] as const).map(type => [type, selectGeographyVersion(versions, type, selection, state)]));
@@ -38,15 +37,10 @@ async function stateResponse(request: Request) {
       return [{ ocdId: id, divisionType: container.ref.type === "congressional_district" ? "cd" : container.ref.type === "state_leg_upper" ? "sldu" : "sldl", tier: container.ref.type === "congressional_district" ? "national" : "state", state, label: container.ref.label, parentOcdId: id.slice(0, id.lastIndexOf("/")), lsad: null, funcstat: null, classfp: null, geoid: container.ref.geoid, canonicalOcdId: null, canonicalMatch: "none", canonicalGap: "UNDETERMINED", sourceDataset: "CENSUS_RELATIONSHIPS", provenance: { sourceUrl: scope.sourceUrls[0], sourceOrg: "U.S. Census Bureau", collectedAt: scope.observedAt, verifiedAt: null } }];
     }) : [])];
     const ownState = new RegExp(`/(?:state|territory|district):${state.toLowerCase()}(?:/|$)`);
-    const zipPlaces: Record<string, PlaceEntry> = {};
-    const selectedPlaces = zip ? [[zip, places.get(zip)] as const] : places;
-    for (const [code, entry] of selectedPlaces) {
-      if (!entry) continue;
-      const ids = entry.ids.filter(id => ownState.test(id));
-      const ownIds = new Set(ids);
-      zipPlaces[code] = { ...entry, ids, partial: entry.partial.filter(id => ownIds.has(id)) };
-    }
-    const ids = zip ? zipPlaces[zip]?.ids ?? []
+    // Only a ZIP's own places are sent; a state answer without a ZIP names no ZIP.
+    const own = indexed?.ids.filter(id => ownState.test(id)) ?? [];
+    const zipPlaces: Record<string, PlaceEntry> = zip && indexed ? { [zip]: { ...indexed, ids: own, partial: indexed.partial.filter(id => own.includes(id)) } } : {};
+    const ids = zip ? own
       : [...new Set([...value.registry.registry.divisions.map(division => division.ocdId), ...extraDivisions.map(division => division.ocdId)])];
     const divisionsById = new Map(value.registry.registry.divisions.map(division => [division.ocdId, division]));
     const statewide = { ...value, registry: { ...value.registry, bodyRosters: [],

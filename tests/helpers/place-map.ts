@@ -6,7 +6,7 @@ import { contains, type GeoFeature } from "../../lib/registry/resolve.ts";
 import { postalAreaNeedsAddress } from "../../lib/geo/postal-core.ts";
 import { isTownOrCountyDivision } from "../../lib/geo/postal-core.ts";
 import { placesForCode } from "../../lib/place-map/read.ts";
-import { placeEntry } from "../../lib/place-map/reader.ts";
+import { placeEntry, placeMapQuery } from "../../lib/place-map/reader.ts";
 import { censusWorkDivision } from "../../lib/census-geography/division-id.ts";
 import type { GeographySelection } from "../../lib/census-geography/selection.ts";
 import type { CodeSlice, Slice } from "../../lib/control-plane/admin-view/promoted-slices.ts";
@@ -129,4 +129,18 @@ export async function entryForCensusFixture(slice:Slice<CodeSlice>,zip:string,se
     return [row(id,{version:container.ref.version,share:overlap.fraction,partial:!overlap.whole})];
   }):[];
   return placeEntry(await placesForCode(async()=>fixtureCodeRows(rows),'zip',zip,selection));
+}
+
+/** The whole-state walk that keyed witnesses replaced, kept as their oracle: every ZIP holding one of the state's places, lowest first. */
+export async function wholeStateLowestZips(state:string):Promise<ReadonlyMap<string,string>>{
+  const out=new Map<string,string>(),code=state.toUpperCase();
+  for(const row of await placeMapQuery()(`SELECT m.zip,json_agg(json_build_object('placeId',e.id,'state',e.state,'layer',b.layer,
+      'boundaryYear',b.boundary_year,'version',b.version,'fringe',m.fringe) ORDER BY e.id,b.boundary_year) AS memberships
+    FROM zip_place m JOIN entity e ON e.id=m.place_id JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
+    WHERE e.kind='place' AND m.zip IN(SELECT own.zip FROM zip_place own JOIN entity p ON p.id=own.place_id WHERE p.state=$1 AND p.kind='place')
+    GROUP BY m.zip ORDER BY m.zip`,[code])){
+    const result=await placesForCode(async()=>[row],"zip",String(row.zip));
+    if(result.states.includes(code))for(const id of placeEntry(result).ids)if(!out.has(id))out.set(id,String(row.zip));
+  }
+  return out;
 }

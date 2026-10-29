@@ -13,6 +13,7 @@ import { pgSpendRepository } from "../lib/control-plane/repository/model-charges
 import { pricedModelCharge } from "../lib/control-plane/fleet-safety.ts";
 import { costRecordId } from "../lib/control-plane/spend-window.ts";
 import { ZERO_COST } from "../lib/control-plane/attempt.ts";
+import { ADMIN_ASK_MEMBERSHIP_DDL } from "../lib/control-plane/repository/control-counts.ts";
 import type { CostEntry } from "../lib/control-plane/cost.ts";
 
 const connection = "postgresql://writer:fixture@ep-dark-night-aeo1ekz3.c-2.us-east-2.aws.neon.tech/control";
@@ -85,7 +86,7 @@ test("expand copies no production rows; runner jobs backfill one state and retai
   let requests=0;
   const sql={query:async(text:string,params:readonly unknown[]=[]) => {requests++;return (await db.query<Record<string,unknown>>(text.replace("INDEX CONCURRENTLY", "INDEX"),[...params])).rows;}};
   try {
-    const skipped=new Set([...CONTROL_READS_EXPAND_DDL,...RESEARCH_REVISION_INDEXES.map(index=>index.ddl)]);
+    const skipped=new Set([...CONTROL_READS_EXPAND_DDL,...RESEARCH_REVISION_INDEXES.map(index=>index.ddl),...ADMIN_ASK_MEMBERSHIP_DDL]);
     for(const ddl of BOOTSTRAP_DDL) if(!skipped.has(ddl) || ddl.startsWith("CREATE TABLE IF NOT EXISTS cp_pass_cursors"))
       await sql.query(ddl.replace("CREATE INDEX CONCURRENTLY","CREATE INDEX"));
     await sql.query("CREATE TABLE cp_spend_window(id text PRIMARY KEY,value jsonb)");

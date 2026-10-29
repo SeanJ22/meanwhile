@@ -112,6 +112,8 @@ test("imports preserve distinct runtime credentials and never replace an owner's
   assert.equal((await store.list()).length, 2);
   assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), "runner-".repeat(8));
   assert.equal(await store.read("WTP_ADMIN_SESSION_KEY.website"), "website-".repeat(8));
+  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", false, AT, "website"), "website-".repeat(8));
+  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY", true, AT, "runner"), "runner-".repeat(8));
   await store.save("WTP_ADMIN_SESSION_KEY", SECRET, "signing", AT);
   await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
   assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), SECRET);

@@ -36,13 +36,13 @@ export function KeysBox() {
     <h3 id="keys-title" className={s.h3}>Keys</h3>
     {status}
     <form onSubmit={save} className={s.stack} autoComplete="off">
-      <label>Name <input name="name" required maxLength={80} value={name} onChange={event => {
+      <label className={s.stack}>Name <input className={s.input} name="name" required maxLength={80} value={name} onChange={event => {
         setName(event.target.value); const known = KEY_NAMES[event.target.value.trim()]; if (known) setService(known);
       }} /></label>
-      <label>What it is for <select value={service} onChange={event => setService(event.target.value as KeyService)}>
+      <label className={s.stack}>What it is for <select className={s.select} value={service} onChange={event => setService(event.target.value as KeyService)}>
         {Object.entries(KEY_SERVICES).map(([key, label]) => <option key={key} value={key}>{label}</option>)}
       </select></label>
-      <label>Key <input name="key" type="password" required maxLength={16_384} autoComplete="new-password" spellCheck={false} /></label>
+      <label className={s.stack}>Key <input className={s.input} name="key" type="password" required maxLength={16_384} autoComplete="new-password" spellCheck={false} /></label>
       <button className={s.btn} type="submit" disabled={busy}>{busy ? "Saving and testing…" : "Save and test"}</button>
     </form>
     {says && <p role="status">{says}</p>}

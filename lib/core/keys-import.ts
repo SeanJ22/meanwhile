@@ -3,7 +3,7 @@ import { productionKeysStore, type KeysStore } from "./keys-store.ts";
 import { testDueKeys } from "./keys-test.ts";
 
 /** Migration only: an existing saved key wins over a stale server setting. Removed after both runtimes migrate. */
-export async function importExistingKeys(env: NodeJS.ProcessEnv, store: KeysStore = productionKeysStore(env),
+export async function importExistingKeys(env: Readonly<Record<string, string | undefined>>, store: KeysStore = productionKeysStore(env),
   at = new Date().toISOString(), source: "runner" | "website" = "runner"): Promise<void> {
   const held = new Map((await store.list(true)).map(row => [row.name, row]));
   for (const [name, service] of Object.entries(KEY_NAMES)) {

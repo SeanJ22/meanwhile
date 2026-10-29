@@ -47,13 +47,15 @@ export function keysStore(query: KeysQuery, encryptionKey: string | undefined) {
     async markImported(name: string, source: string): Promise<void> {
       await query("UPDATE cp_keys SET imported_from=array_append(imported_from,$2) WHERE name=$1 AND NOT ($2=ANY(imported_from))", [name, source]);
     },
-    async read(nameInput: string, runner = false, at = new Date().toISOString()): Promise<string | undefined> {
+    async read(nameInput: string, runner = false, at = new Date().toISOString(), source?: "runner" | "website"): Promise<string | undefined> {
       const name = keyName(nameInput);
-      const rows = await query("SELECT locked, version FROM cp_keys WHERE name=$1 AND NOT deleted", [name]);
-      if (!rows[0]) return undefined;
-      const value = unlockKey(name, String(rows[0].locked), encryptionKey);
+      const rows = source ? await query("SELECT name,locked,version,deleted FROM cp_keys WHERE name=ANY($1::text[]) ORDER BY (name=$2) DESC LIMIT 1", [[name, `${name}.${source}`], `${name}.${source}`])
+        : await query("SELECT name,locked,version,deleted FROM cp_keys WHERE name=$1", [name]);
+      if (!rows[0] || rows[0].deleted) return undefined;
+      const actualName = String(rows[0].name);
+      const value = unlockKey(actualName, String(rows[0].locked), encryptionKey);
       // A receipt means the runner actually opened this version, not just that it saw the name.
-      if (runner) await query("UPDATE cp_keys SET runner_read_at=$3 WHERE name=$1 AND version=$2", [name, rows[0].version, at]);
+      if (runner) await query("UPDATE cp_keys SET runner_read_at=$3 WHERE name=$1 AND version=$2", [actualName, rows[0].version, at]);
       return value;
     },
     async remove(nameInput: string, at = new Date().toISOString()): Promise<void> {
@@ -88,7 +90,7 @@ export function keysStore(query: KeysQuery, encryptionKey: string | undefined) {
 }
 export type KeysStore = ReturnType<typeof keysStore>;
 
-export function productionKeysStore(env: NodeJS.ProcessEnv = process.env): KeysStore {
+export function productionKeysStore(env: Readonly<Record<string, string | undefined>> = process.env): KeysStore {
   const url = env.WTP_CONTROL_PLANE_DATABASE_URL;
   if (!url) throw new Error("The Keys box cannot reach its saved keys.");
   const sql = neon(url);
@@ -97,5 +99,5 @@ export function productionKeysStore(env: NodeJS.ProcessEnv = process.env): KeysS
 
 /** Server and session entry point. Missing keys stay missing; no environment or Admin-HTTP fallback. */
 export async function readSavedKey(name: string, runner = false): Promise<string | undefined> {
-  return productionKeysStore().read(name, runner);
+  return productionKeysStore().read(name, runner, new Date().toISOString(), runner ? "runner" : "website");
 }

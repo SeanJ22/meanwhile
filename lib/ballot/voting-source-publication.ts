@@ -8,6 +8,7 @@ import type { VotingRawCapture } from "./voting-sites-data-plane.ts";
 import { mergeVotingSiteRows, type VotingJurisdiction, type VotingSitesFile, type VotingSource, type VotingSite } from "./voting-sites.ts";
 import { isVotingSiteKind, type VotingSourceDoor, type VotingSourceRead } from "./voting-source-types.ts";
 import { savedVotingCopy } from "./voting-source-evidence.ts";
+import { votingSourceContentHash } from "./voting-source-hash.ts";
 import { sourceTextWithoutNuls } from "../doors/source-text.ts";
 
 export const VOTING_SOURCE_DOOR_KIND = "official-voting-source";
@@ -208,8 +209,8 @@ export async function holdVotingRawEvidence(read: Pick<VotingSourceRead, "rawBod
 
 export async function recordVotingSourceRead(repo: DoorRepository, door: VotingSourceDoor, read: VotingSourceRead, now: string): Promise<void> {
   read = sourceTextWithoutNuls(read);
-  // Fetched bodies are the cleaned copies, so a rotating key alone is never a change.
-  const hash = createHash("sha256").update(read.rawBodies.map(body => createHash("sha256").update(body.bytes).digest("hex")).join("\n")).digest("hex");
+  // The publication's fingerprint: a rotating key or a firewall's per-response script is never a change.
+  const hash = votingSourceContentHash([door], read);
   const address = pageAddress(door.url)!;
   const old = (await repo.listWhere(["config", "url"], address.url)).find(row => row.value.kind === VOTING_SOURCE_DOOR_KIND && row.value.status !== "SUSPENDED" &&
     pageAddress((JSON.parse(String(row.value.config.votingSource)) as VotingSourceDoor).url)?.url === address.url);

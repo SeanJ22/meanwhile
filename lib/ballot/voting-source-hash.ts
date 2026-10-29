@@ -9,17 +9,17 @@ export function votingSourceHashKey(door: VotingSourceDoor): string {
   return `${door.scope.ocdId}|${pageAddress(door.url)?.url ?? door.url}`;
 }
 
-/** Source bytes and the extraction configuration decide change, independently of check times and robots.txt. */
+/**
+ * What a reader could be shown from this read, and the extraction configuration, decide change. Fetch noise never does:
+ * check times, robots.txt, a byte hash, or a firewall's per-response script (Incapsula appends a random `cb=` to every page).
+ */
 export function votingSourceContentHash(mappings: readonly VotingSourceDoor[], read: VotingSourceRead, contextHash: string | null = null): string {
-  const records = read.rawBodies.filter(body => !new URL(body.url).pathname.endsWith("/robots.txt")).map(body =>
-    [body.url, body.requestedUrl ?? null, body.contentType, createHash("sha256").update(body.bytes).digest("hex")]);
   const stable = (value: unknown): unknown => Array.isArray(value) ? value.map(stable) : value && typeof value === "object"
-    ? Object.fromEntries(Object.entries(value).filter(([key]) => !["checkedAt", "retrievedAt", "collectedAt"].includes(key)).map(([key, child]) => [key, stable(child)])) : value;
+    ? Object.fromEntries(Object.entries(value).filter(([key]) => !["checkedAt", "retrievedAt", "collectedAt", "documentHash"].includes(key)).map(([key, child]) => [key, stable(child)])) : value;
   const inputs = mappings.map(({ access: _access, linkingPage: _linkingPage, discoveredFrom: _discoveredFrom, ...door }) =>
     ({ id: door.id, value: stable(door) })).sort((a, b) => a.id.localeCompare(b.id));
-  return createHash("sha256").update(canonicalCivicDataJson({ inputs, contextHash,
-    records: [...new Set(records.map(row => canonicalCivicDataJson(row)))].sort(),
-  })).digest("hex");
+  const { rawBodies: _bytes, attempts: _attempts, ...facts } = read;
+  return createHash("sha256").update(canonicalCivicDataJson({ inputs, contextHash, facts: stable(facts) })).digest("hex");
 }
 
 /** Partial extraction remains owed even when the bytes happen to match a previous attempt. */

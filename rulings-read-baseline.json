@@ -221,7 +221,7 @@
       "file": "lib/place-map/read.ts",
       "kind": "SELECT *",
       "fingerprint": "dce52e00818c153ffdc8b0ae784d491de09a807315e228525a9c7c690b0b9725",
-      "line": 120
+      "line": 119
     },
     {
       "file": "lib/reader/canonical.ts",
@@ -306,18 +306,6 @@
       "kind": "readCandidate",
       "fingerprint": "947160abd2b4fa6a83335f622f9e594279a00a3c7a62c43763d471e57dcedf07",
       "line": 19
-    },
-    {
-      "file": "scripts/vs07-replay.mts",
-      "kind": "readCandidate",
-      "fingerprint": "bd26374f153813332eb6fe45756cd7795450b66a2e7aadf9103530142b2bcb6a",
-      "line": 177
-    },
-    {
-      "file": "scripts/vs07-replay.mts",
-      "kind": "readCandidate",
-      "fingerprint": "009005af569b584b1ffbe35d88ec5f568ac5a08577a152640e2a36033ed9b081",
-      "line": 192
     }
   ],
   "bundleTables": [
@@ -2558,10 +2546,6 @@
     {
       "file": "scripts/vault-restore.mts",
       "table": "cp_log_artifacts"
-    },
-    {
-      "file": "scripts/vs07-replay.mts",
-      "table": "cp_work_items"
     }
   ]
 }

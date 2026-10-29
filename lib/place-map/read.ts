@@ -83,16 +83,15 @@ const postalLinkRows = (codes: string) => `SELECT l.zip AS code,x.place_id,x.bou
       WHERE m.zcta=l.zcta AND e.kind='place' AND b.layer NOT IN ('state','county','place','cousub','cd','sldu','sldl') OFFSET 0) x
     WHERE l.type IS DISTINCT FROM 'standard' AND l.zcta<>l.zip`;
 
-/** Every membership row of the requested codes, grouped per code. ZIP reads include what a mail-only ZIP's postal link
- * supplies unless `postalLinks` is false. */
-export function codeMembershipsSql(kind: "zip" | "zcta", codes: string, postalLinks = true): string {
+/** Every membership row of the requested codes, grouped per code. ZIP reads include what a mail-only ZIP's postal link supplies. */
+export function codeMembershipsSql(kind: "zip" | "zcta", codes: string): string {
   const table = kind === "zip" ? "zip_place" : "zcta_place";
   const own = `SELECT m.${kind} AS code,e.id AS place_id,b.boundary_year,${CODE_MEMBERSHIP_SQL} AS membership
     FROM ${table} m JOIN entity e ON e.id=m.place_id
     JOIN place_boundary b ON b.place_id=m.place_id AND b.boundary_year=m.boundary_year
     WHERE m.${kind}=ANY(${codes}) AND e.kind='place'`;
   return `SELECT r.code AS ${kind},json_agg(r.membership ORDER BY r.place_id,r.boundary_year) AS memberships
-    FROM (${own}${kind === "zip" && postalLinks ? ` UNION ALL ${postalLinkRows(codes)}` : ""}) r GROUP BY r.code ORDER BY r.code`;
+    FROM (${own}${kind === "zip" ? ` UNION ALL ${postalLinkRows(codes)}` : ""}) r GROUP BY r.code ORDER BY r.code`;
 }
 
 /** RB-A10's ZIP and ZCTA entry point. Each call performs one indexed statement. */

@@ -77,7 +77,7 @@ test("saved current county lists survive the reader and publication merge withou
     assert.equal(reads.get(id)!.blanks.some(blank => blank.reason === "earlier-election"), false, id);
   }
   // Trimmed excerpts: the first printed page of each multi-page list (Palm Beach's map panels are on page 2,
-  // Tarrant's early schedule keeps both pages). Full documents are saved evidence for scripts/vs07-replay.mts.
+  // Tarrant's early schedule keeps both pages). Full documents are not code-tree fixtures.
   const expected: Record<string, number> = {
     "vs07-miami-ev": 28, "vs07-fulton-early": 33, "vs07-gwinnett-early": 13,
     "vs07-gwinnett-drop": 7, "vs07-franklin-early": 1, "vs07-broward-polls": 19,

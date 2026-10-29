@@ -1,5 +1,4 @@
 import type {RegistryRuntimeReadModel} from "../registry/runtime-data-plane.ts";
-import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import { withStateRegistryFacts } from "../registry/state-composition.ts";
 import { withRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
 import { membersOfBody, earlierMembersOfBody } from "../registry/body-membership.ts";
@@ -15,7 +14,6 @@ export type ReaderBodyRoster = NonNullable<CoveredBody["readerRoster"]>;
 export type ReaderRosterRefs = Readonly<Record<string, string>>;
 export type ReaderRosterPreviews = Readonly<Record<string, SeatHolder[]>>;
 export type ReaderRosterIds = Readonly<Record<string, readonly string[]>>;
-export const readerRosterKey = (roster: ReaderBodyRoster): string => canonicalCivicDataHash(roster, { durable: true });
 
 const EMPTY_REGISTRY:RegistryRuntimeReadModel={formatVersion:1,registry:{generatedAt:'',bodies:[],divisions:[]},bodyRosters:[],
   rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{formatVersion:1,rule:'EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE',rows:[]},
@@ -33,7 +31,7 @@ function projectRoster(bodyId: string): ReaderBodyRoster {
     gaps: gap ? [gap] : [], officePhone: officePhoneForBody(bodyId) };
 }
 
-/** Keep only list data in ready pages. Immutable roster resources are shared across places and bodies. */
+/** Unopened lists keep body keys, identities and named previews; details stay on the body page. */
 export function preparePlaceRosters(place: PlacePackage): { place: PlacePackage; rosters: Map<string, ReaderBodyRoster> } {
   const rosters = new Map<string, ReaderBodyRoster>(), refs: Record<string, string> = {}, previews: Record<string, SeatHolder[]> = {},ids:Record<string,string[]>={};
   const runtime = withStateRegistryFacts(place.registry??EMPTY_REGISTRY, place.bodies);
@@ -45,8 +43,7 @@ export function preparePlaceRosters(place: PlacePackage): { place: PlacePackage;
       ...roster.members.filter(holder => /select\s?board/i.test(holder.officeTitle))];
     if (shown.length) previews[bodyId] = [...new Map(shown.map(holder => [holder.id, holder])).values()];
     if (!roster.members.length && !roster.earlierMembers?.length && !roster.gaps.length && !roster.officePhone) continue;
-    const hash = readerRosterKey(roster);
-    refs[bodyId] = hash; rosters.set(hash, roster);
+    refs[bodyId] = bodyId; rosters.set(bodyId, roster);
   } });
   return { rosters, place: { ...place, rosterRefs: refs, rosterPreviews: previews,rosterIds:ids,
     registry: place.registry?{ ...place.registry, bodyRosters: place.registry.bodyRosters.map(roster => ({ ...roster, members: [], membershipHistory: [] })),

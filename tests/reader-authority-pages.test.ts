@@ -37,16 +37,17 @@ test('adding a requested section preserves the other saved sections and never re
   try{
     await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Extra','AZ')",[id]);
     await storePlacePage(query,id,await buildPageBody(id,'place','AZ',query));
-    const scopes=['US-AZ:detail:one','US-AZ:detail:two'];
-    for(const scope of scopes)await publish({id:scope,recordClass:'CURATED_READER_RECORD',scope,sourceId:'official',at:'2026-10-28T00:00:00.000Z',value:{records:[{id:scope,ocdId:id,text:'sourced detail'}]}});
+    const body='curated:az-special#board',scopes=['US-AZ:detail:one','US-AZ:detail:two',`US:plain-english-translations:${body}`];
+    const record=(scope:string)=>({id:scope,...scope.startsWith('US:plain-english-translations:')?{bodyId:body}:{ocdId:id},text:'sourced detail'});
+    for(const scope of scopes)await publish({id:scope,recordClass:'CURATED_READER_RECORD',scope,sourceId:'official',at:'2026-10-28T00:00:00.000Z',value:{records:[record(scope)]}});
     const reads:string[]=[];
     const tracked:Query=async(text,params=[])=>{if(text.includes('civic_data_promotions')){reads.push(text);assert.deepEqual(params[0],['CURATED_READER_RECORD:'+scopes[reads.length-1]]);}return query(text,params);};
     const db={transaction:<T>(work:(q:Query)=>Promise<T>)=>work(tracked)};
     for(const scope of scopes)await buildMissingPlacePages([{id,kind:'place',state:'AZ',authorities:true,authorityKeys:['CURATED_READER_RECORD:'+scope]}],db);
     const [saved]=await query("SELECT context->'authorities' AS sections,context->'authorityKeys' AS keys FROM place_page WHERE place_id=$1",[id]);
     for(const scope of scopes){const key='CURATED_READER_RECORD:'+scope;assert.ok((saved.keys as string[]).includes(key));
-      assert.deepEqual(unpackPlaceContextRow((saved.sections as Record<string,{payload:unknown}>)[key].payload),{records:[{id:scope,ocdId:id,text:'sourced detail'}]});}
-    assert.equal(reads.length,2);
+      assert.deepEqual(unpackPlaceContextRow((saved.sections as Record<string,{payload:unknown}>)[key].payload),{records:[record(scope)]});}
+    assert.equal(reads.length,scopes.length);
   }finally{await pg.close();}
 });
 

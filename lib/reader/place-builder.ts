@@ -45,6 +45,7 @@ import { composePlaceRow } from "./place-decode.ts";
 import { packPlaceContext,packPlaceAuthority, packReadyPlace, unpackPlaceContextRow,unpackReadyPlace,unpackReadyTerritory } from "./place-ready.ts";
 import type { PlacePackage } from "./place-types.ts";
 import { readZipLocation } from "../place-map/locations.ts";
+import { readZipPlace } from "../place-map/reader.ts";
 import { readerLocation, readerTerritory, territoryBodies } from "./location.ts";
 import { selectBodyTerritory, type BodyTerritorySelection } from "../registry/body-territory.ts";
 import { resolveProductionWriteHandle } from "../db/write-handle.ts";
@@ -636,11 +637,11 @@ async function buildUnsavedPlacePages(pages:readonly MissingPage[],db?:FactDb):P
       const zip=id.startsWith('zip:');
       const [saved]=await query(`SELECT body,history_body,CASE WHEN NOT $2::boolean THEN jsonb_build_object('formatVersion',context->'formatVersion',
         'current',coalesce(context#>'{current,full}',context->'current'),'history',coalesce(context#>'{history,full}',context->'history'),
-        'emptyCurrent',coalesce(context#>'{emptyCurrent,full}',context->'emptyCurrent'),'emptyHistory',coalesce(context#>'{emptyHistory,full}',context->'emptyHistory')) END AS rows,
-        encode(sha256(convert_to(jsonb_build_array(body,history_body,context->'current',context->'history',context->'emptyCurrent',context->'emptyHistory')::text,'UTF8')),'hex') AS fingerprint FROM place_page WHERE place_id=$1`,[id,zip]);
+        'emptyCurrent',coalesce(context#>'{emptyCurrent,full}',context->'emptyCurrent'),'emptyHistory',coalesce(context#>'{emptyHistory,full}',context->'emptyHistory')) END AS rows
+        FROM place_page WHERE place_id=$1`,[id,zip]);
       const held=unpackReadyPlace(saved.body);
       const needsAuthorities=authorities&&(existing.authority_format!=='1'||(authorityKeys??[]).some(key=>!(existing.keys as string[]??[]).includes(key)));
-      const sections=needsAuthorities?placeBuildSelection(id,targetKind,state).then(({input})=>buildPageAuthorities(input,query,authorityKeys,existing.keys as string[]??[])):Promise.resolve({});
+      const sections=needsAuthorities?authorityBuildInput(id,targetKind,state).then(input=>buildPageAuthorities(input,query,authorityKeys,existing.keys as string[]??[])):Promise.resolve({});
       const current=held.rosterRefs?{place:held,rosters:new Map<string,ReaderBodyRoster>()}:preparePlaceRosters(held);
       const context:Record<string,unknown>={readerFormat:1};
       if(!zip){
@@ -657,15 +658,14 @@ async function buildUnsavedPlacePages(pages:readonly MissingPage[],db?:FactDb):P
       const history=Array.isArray(previousHistory?.bodies)?packReadyPlace(preparePlaceRosters(previousHistory).place):saved.history_body;
       const territory=unpackReadyTerritory(saved.body);
       Object.assign(context,await sections);
-      await query(`UPDATE place_page SET body=$2::jsonb,history_body=$5::jsonb,
-        context=(CASE WHEN $7::boolean THEN context-'current'-'history'-'emptyCurrent'-'emptyHistory' ELSE context END)||$3::jsonb,
-        version=version+1,build_fingerprint=NULL WHERE place_id=$1 AND version=$6::bigint
-        AND encode(sha256(convert_to(jsonb_build_array(body,history_body,context->'current',context->'history',context->'emptyCurrent',context->'emptyHistory')::text,'UTF8')),'hex')=$4`,
-      [id,JSON.stringify(packReadyPlace(current.place,territory)),JSON.stringify(context),saved.fingerprint,JSON.stringify(history),existing.version,zip]);
+      await query(`UPDATE place_page SET body=$2::jsonb,history_body=$4::jsonb,
+        context=(CASE WHEN $6::boolean THEN context-'current'-'history'-'emptyCurrent'-'emptyHistory' ELSE context END)||$3::jsonb,
+        version=version+1,build_fingerprint=NULL WHERE place_id=$1 AND version=$5::bigint`,
+      [id,JSON.stringify(packReadyPlace(current.place,territory)),JSON.stringify(context),JSON.stringify(history),existing.version,zip]);
       return;
     }
     if(existing && authorities&&!roster){
-      const {input}=await placeBuildSelection(id,targetKind,state);
+      const input=await authorityBuildInput(id,targetKind,state);
       if(existing.authority_format==='1'){
         const missing=(authorityKeys??[]).filter(key=>!(existing.keys as string[]??[]).includes(key));
         const sections=await buildPageAuthorities(input,query,missing,[],true);
@@ -710,6 +710,14 @@ export interface StoredPlacePage {
 /** A ZIP page selects from the shared place map, the same selection used by the public endpoint. */
 export async function placeBuildInput(id:string,kind:string,state:string):Promise<PlaceInput> {
   return (await placeBuildSelection(id,kind,state)).input;
+}
+
+/** Authority sections use keyed divisions; the saved territory belongs to the ready body. */
+async function authorityBuildInput(id:string,kind:string,state:string):Promise<PlaceInput> {
+  if(!id.startsWith('zip:'))return (await placeBuildSelection(id,kind,state)).input;
+  const entry=await readZipPlace(id.slice(4));
+  if(!entry)throw Error(`Place memberships are missing for ${id}`);
+  return {state,placeId:id,divisionIds:entry.ids,namedDivisionIds:entry.fringe};
 }
 
 async function placeBuildSelection(id:string,kind:string,state:string):Promise<{input:PlaceInput;territory?:BodyTerritorySelection|null}> {
@@ -1479,10 +1487,12 @@ async function buildStatePageAuthorities(input:PlaceInput,query:Query,requestedK
   }
   const otherKeys=dynamicKeys.filter(key=>!votingKeys.includes(key)&&!keys.includes(key));
   if(otherKeys.length){
+    const translation='CURATED_READER_RECORD:US:plain-english-translations:';
+    const subjects=otherKeys.filter(key=>key.startsWith(translation)).map(key=>key.slice(translation.length));
     const selected=await query(`WITH pointer AS (${buildSelectedPointerSql.replace('p.key=$1','p.key=ANY($1::text[])')})
       SELECT ${buildSelectedMetadataSql},pointer.record_class,pointer.scope,
         CASE WHEN pointer.published THEN reader_place_payload(pointer.payload,$2::text[],NULL) END AS payload FROM pointer`,
-      [otherKeys,[...input.divisionIds,...input.bodyIds??[]]]);
+      [otherKeys,[...input.divisionIds,...input.bodyIds??[],...subjects]]);
     rows.push(...selected);
   }
   const authorities:Record<string,Record<string,unknown>>={};

@@ -27,7 +27,8 @@ import { runBoundedChildPass } from "../lib/civic-data/bounded-child-pass.ts";
 import { routineTaskDue } from "../lib/civic-data/runner.ts";
 import { nationalPlaceJobs, dueNationalPlaceZips, runNationalPlaceTask, scheduleNationalPlace, placeMadeProgress, nationalPlaceSendRequests } from "../lib/hunt/place-source-task.ts";
 import type { ResolvedScope } from "../lib/control-plane/expansion/membership.ts";
-import type { ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
+import { expansionScopesOf, isHunt, type ExpansionScopeDecision } from "../lib/control-plane/expansion/scopes.ts";
+import { applyHuntOrders, HUNT_STATES, requestHuntStop } from "../lib/control-plane/hunt-orders.ts";
 import { ADMIN_CONFIG_ID, defaultAdminConfig } from "../lib/control-plane/gateway/admin-config.ts";
 import type { BuiltDataset } from "../lib/census-geography/dataset.ts";
 import { nationalPlaceWorkReading } from "../lib/control-plane/expansion/dispatch-work.ts";
@@ -265,14 +266,18 @@ test("Send wake uses the original hunt instant and only valid resolved scope rec
   assert.equal(nationalPlaceSendRequests([], ["03060"], now).size, 0, "absence never defaults to now");
 });
 
-test("the admitted worker rereads the saved Send and publishes once through its ordinary lease", async t => {
+test("with every hunt stopped in every state, the admitted worker rereads the saved Send and publishes once through its ordinary lease", async t => {
   const repos = createMemoryRepositories();
-  const completedAt = "2026-10-01T01:00:00.000Z", requestedAt = "2026-10-01T02:00:00.000Z";
+  const completedAt = "2026-10-01T01:00:00.000Z", requestedAt = "2026-10-01T02:00:00.000Z", stoppedAt = "2026-10-01T02:30:00.000Z";
   let now = "2026-10-01T03:00:00.000Z";
   await settledPlace(repos, "03060", completedAt);
   await settledPlace(repos, "03101", completedAt);
   const send = placeSend("03060", requestedAt, "send:03060");
   await repos.adminConfig.put(ADMIN_CONFIG_ID, { ...defaultAdminConfig(now), expansionScopes: [send] }, now);
+  await requestHuntStop(repos, { receiptId: "stop-every-hunt", at: stoppedAt, actor: "owner" });
+  for (const state of HUNT_STATES) await applyHuntOrders(repos, state, stoppedAt);
+  const [kept] = expansionScopesOf((await repos.adminConfig.mustRead(ADMIN_CONFIG_ID, { expansionScopes: true })).value).scopes;
+  assert.deepEqual([isHunt(kept!), kept!.receiptId, kept!.sourceWorkVersion], [false, "send:03060", 1], "the hunt ended; the place keeps its free Send");
   const dataset: BuiltDataset = { formatVersion: 1, builtAt: completedAt, coverage: "Two fixture ZIPs in New Hampshire", zctaUniverse: ["03060", "03101"],
     scopes: [{ type: "county", version: "county:2020", fractionBasis: "area", instanceCount: 1, zctaEdgeCount: 2,
       versionMeta: { key: "county:2020", type: "county", plan: "2020 county", zctaTabulation: "2020", effectiveFor: "fixture",

@@ -1,4 +1,5 @@
 import type { KeyService } from "./keys-model.ts";
+import { ADMIN_ORIGIN, PUBLIC_SITE_ORIGIN } from "../ops/origins.ts";
 import type { KeysStore } from "./keys-store.ts";
 
 export interface KeyTestResult { readonly working: boolean; readonly says: string }
@@ -20,7 +21,7 @@ function probe(service: Exclude<KeyService, "postgres" | "signing" | "googleoaut
     case "socrata": return { url: "https://data.cityofnewyork.us/resource/erm2-nwe9.json?$limit=1", headers: { "X-App-Token": key }, accepts: array };
     case "civic": return { url: `https://www.googleapis.com/civicinfo/v2/elections?key=${q}`, accepts: b => Array.isArray(record(b).elections) };
     case "sam": return { url: `https://api.sam.gov/opportunities/v2/opportunities?api_key=${q}&postedFrom=10/01/2026&postedTo=10/02/2026&limit=1`, accepts: b => typeof record(b).totalRecords === "number" && Array.isArray(record(b).opportunitiesData) };
-    case "maptiler": return { url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${q}`, headers: { Origin: "https://meanwhileusa.com", Referer: "https://meanwhileusa.com/" }, accepts: b => record(b).version === 8 && array(record(b).layers) };
+    case "maptiler": return { url: `https://api.maptiler.com/maps/basic-v2/style.json?key=${q}`, headers: { Origin: PUBLIC_SITE_ORIGIN, Referer: `${PUBLIC_SITE_ORIGIN}/` }, accepts: b => record(b).version === 8 && array(record(b).layers) };
     case "netlify": return { url: "https://api.netlify.com/api/v1/user", headers: { Authorization: `Bearer ${key}` }, accepts: b => typeof record(b).id === "string" };
     case "github": return { url: "https://api.github.com/user", headers: { Authorization: `Bearer ${key}`, "User-Agent": "Meanwhile keys check", Accept: "application/vnd.github+json" }, accepts: b => typeof record(b).login === "string" };
     case "anthropic-admin": return { url: "https://api.anthropic.com/v1/organizations/me", headers: { "x-api-key": key, "anthropic-version": "2023-06-01" }, accepts: b => typeof record(b).id === "string" };
@@ -70,7 +71,7 @@ export async function testKey(service: KeyService, value: string, fetchImpl: typ
       const response = await fetchImpl("https://oauth2.googleapis.com/token", { method: "POST", redirect: "error",
         headers: { "content-type": "application/x-www-form-urlencoded" }, signal: AbortSignal.timeout(2_000),
         body: new URLSearchParams({ client_id: clientId, client_secret: clientSecret, code: "keys-box-invalid-code",
-          grant_type: "authorization_code", redirect_uri: "https://admin.meanwhileusa.com/admin/auth/callback" }) });
+          grant_type: "authorization_code", redirect_uri: `${ADMIN_ORIGIN}/admin/auth/callback` }) });
       const body: unknown = await response.json();
       return record(body).error === "invalid_grant" ? { working: true, says: "Google accepted the sign-in application's credentials." }
         : { working: false, says: "Google did not confirm the sign-in application's credentials." };

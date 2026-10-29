@@ -28,6 +28,7 @@ import { readGovernmentPackets } from "./packet-read.ts";
 import { stateOfDivision } from "./packet-plan.ts";
 import type { HuntSearch, SearchCharge } from "./search.ts";
 import { foldAskGapObservations, readAskGapObservations, type AskedGap } from "../control-plane/ask-gap-observations.ts";
+import type { WorkCostKind } from "../core/work-kinds.ts";
 
 const NOTE_LIMIT = 12;
 
@@ -54,12 +55,14 @@ export async function deadEndWaitMs(repos: Pick<ControlPlaneRepositories, "admin
 }
 
 export function huntSearchCost(input: { readonly charge: SearchCharge; readonly attemptId: string; readonly workItemId: string;
-  readonly routeTaskId: string; readonly governmentId: string; readonly assignmentKeys: readonly string[]; readonly recordedAt: string }): CostEntry {
+  readonly routeTaskId: string; readonly governmentId: string; readonly assignmentKeys: readonly string[]; readonly recordedAt: string;
+  readonly workKind?: WorkCostKind }): CostEntry {
   return {
     attemptId: input.attemptId, workItemId: input.workItemId, routeTaskId: input.routeTaskId, routeId: HUNT_PACKET_ROUTE_ID,
     source: input.charge.host, jurisdiction: input.governmentId, project: FRESHNESS_PROJECT,
     role: DISCOVERY_SEARCH_ROLE, model: null, obligationId: huntPacketObligationId(input.governmentId),
     ...(input.assignmentKeys.length ? { assignmentKeys: [...input.assignmentKeys] } : {}),
+    ...(input.workKind ? { workKind: input.workKind } : {}),
     cost: { inputTokens: null, outputTokens: null, usd: input.charge.usd, durationMs: null, bytesFetched: input.charge.bytes, requestCount: 1,
       cacheReadInputTokens: null, cacheCreationInputTokens: null, cacheCreation5mInputTokens: null, cacheCreation1hInputTokens: null,
       uncachedInputTokens: null, batch: false },
@@ -178,7 +181,7 @@ export async function hunterFor(input: HunterRuntimeInput, item: WorkItem, task:
           ...(input.search ? { search: input.search } : {}),
           chargeSearch: async charge => {
             await recordCost(input.repos, huntSearchCost({ charge, attemptId: job.attemptId, workItemId: item.id, routeTaskId: task.id,
-              governmentId, assignmentKeys, recordedAt: input.now() }), input.now());
+              governmentId, assignmentKeys, recordedAt: input.now(), ...(item.autonomousPlan?.workKind ? { workKind: item.autonomousPlan.workKind } : {}) }), input.now());
           },
           reportFinding: {
             subjects,

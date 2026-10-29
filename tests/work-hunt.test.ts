@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test, { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { PGlite } from "@electric-sql/pglite";
-import { openQuestionHunts } from "../lib/ask/question-hunt.ts";
+import { openWorkHunts } from "../lib/hunt/work-hunt.ts";
 import { recordQuestionWork } from "../lib/ask/question-work.ts";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -23,8 +23,8 @@ test("an unanswered Ask question is handed to the hunter, reaches it with held p
   await recordQuestionWork({ question: "Who voted for the school budget?", divisions: [division],
     place: "85701", subjectId: `${division}#board`, runClass: "ORGANIC", now }, list);
   assert.equal((await repos.workItems.list()).length, 0, "the question waits as a row until a hunter's planner takes it");
-  assert.equal(await openQuestionHunts({ list, repos, now }), 1);
-  assert.equal(await openQuestionHunts({ list, repos, now }), 0, "a question is handed over once");
+  assert.equal(await openWorkHunts({ list, repos, now }), 1);
+  assert.equal(await openWorkHunts({ list, repos, now }), 0, "a question is handed over once");
   assert.deepEqual((await pg.query("SELECT status FROM work")).rows, [{ status: "done" }]);
   const item = (await repos.workItems.list())[0]!.value;
   const decision = await nextAutonomousOperation({ repos, now: () => now } as AutonomousCoordinatorRuntime, item.id);
@@ -72,6 +72,6 @@ test("a question waiting in the work list is already owed in the daily brief", a
   const waiting = await unhandedQuestionRows({ query: rows });
   assert.equal(waiting.length, 1);
   assert.match(waiting[0]!.what, /85701.*Who voted/);
-  await openQuestionHunts({ list, repos: createMemoryRepositories(), now });
+  await openWorkHunts({ list, repos: createMemoryRepositories(), now });
   assert.deepEqual(await unhandedQuestionRows({ query: rows }), [], "once handed to the hunters, their queue carries it");
 });

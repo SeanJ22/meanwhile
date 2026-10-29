@@ -13,6 +13,7 @@
 
 import type { Attempt, AttemptCost, WorkerRole } from "./attempt.ts";
 import type { WorkQuestion } from "./work-question.ts";
+import type { WorkCostKind } from "../core/work-kinds.ts";
 import { canonicalModelId, modelTierFor, MODEL_TIERS, MODELS, type ModelTier } from "../models.ts";
 import { CACHE_RATE_MULTIPLIERS, DEAREST_ACTIVE_RATES, rateFor, ratesForPrompt } from "./model-cost.ts";
 import { addExact, exactSum, exactValue, mergeExact, subtractExact, type ExactSum } from "./exact-sum.ts";
@@ -127,6 +128,8 @@ export interface CostEntry {
   /** Exact active instruction receipts at dispatch; absent on historical rows.
    * A key or matching geography alone cannot assign a charge to a new hunt. */
   readonly assignmentRefs?: readonly { readonly key: string; readonly ref: string }[];
+  /** The work row the hunt ran from (an Ask question, a reader's request, Sean's order, the planner). Absent on work no row started. */
+  readonly workKind?: WorkCostKind;
   /** The record class the work kept fresh. */
   readonly recordClass?: string;
   /** The question the work asked, when the round recorded one. */

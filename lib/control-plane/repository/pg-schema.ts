@@ -11,7 +11,7 @@ import { PLANNING_CONTROL_DDL } from "../scheduler/state-planning.ts";
 import { HUNT_ORDER_DDL } from "../hunt-orders.ts";
 import { CONTROL_READS_BACKFILL_DDL } from "./control-reads-backfill.ts";
 import { ADMIN_SECTION_TABLES, ADMIN_SECTIONS_DDL, ADMIN_SECTION_INDEXES, ADMIN_SCOPED_SAVE_DDL } from "./admin-config.ts";
-import { MODEL_CHARGES_DDL } from "./model-charges.ts";
+import { MODEL_CHARGES_DDL, MODEL_CHARGE_KIND_DDL } from "./model-charges.ts";
 import { DISPATCH_STATE_DDL, DISPATCH_ARCHIVE_TABLES } from "./dispatch-state.ts";
 import { LEGISTAR_TENANT_SQL } from "../../doors/legistar-tenant.ts";
 import { FIX_MAP_DDL } from "../../method/fix-map.ts";
@@ -722,6 +722,7 @@ END $$;`,
   ...CONTROL_READS_EXPAND_DDL,
   ...RESEARCH_REVISION_INDEXES.map(index => index.ddl),
   ...WORK_DDL,
+  ...MODEL_CHARGE_KIND_DDL,
 
   ...WEBSITE_PACING_DDL,
   FIELD_MANUAL_ENTRIES_KIND_INDEX_DDL,

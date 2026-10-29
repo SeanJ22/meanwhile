@@ -21,6 +21,12 @@ export const MODEL_CHARGES_DDL = [
   `CREATE INDEX IF NOT EXISTS cp_model_charges_attempt_time ON cp_model_charges (attempt_id, charged_at)`,
 ] as const;
 
+/** The work row a charge's hunt ran from, kept beside the dollars so Admin can sum by kind. Added after the table, so it is its own statement. */
+export const MODEL_CHARGE_KIND_DDL = [
+  `DO $$ BEGIN IF to_regclass('cp_model_charges') IS NOT NULL AND NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = current_schema() AND table_name = 'cp_model_charges' AND column_name = 'work_kind')
+    THEN ALTER TABLE cp_model_charges ADD COLUMN work_kind text; END IF; END $$`,
+] as const;
+
 export function storedSpendRepository(rows: AggregateRepository<PricedCharge>, results: Pick<AppendOnlyRepository<ScoutResult>, "readAll">): SpendRepository {
   return {
     async record(charge) { await rows.put(charge.id, charge, charge.at); },
@@ -54,12 +60,12 @@ export function modelChargeParams(charge: PricedCharge): readonly unknown[] {
     charge.metered.attemptId, charge.usd, charge.knownUsd, charge.measured, charge.bounded,
     charge.assignmentRefs === undefined ? null : JSON.stringify(charge.assignmentRefs),
     charge.metered.role === "SCOUT" && charge.metered.routeId !== SCOUT_PREWARM_ROUTE_ID,
-    Number.isNaN(charge.metered.cost.usd) ? null : charge.metered.cost.usd ?? null, JSON.stringify(cacheTotals(charge))];
+    Number.isNaN(charge.metered.cost.usd) ? null : charge.metered.cost.usd ?? null, JSON.stringify(cacheTotals(charge)), charge.workKind ?? null];
 }
 
 const INSERT_CHARGE = `INSERT INTO cp_model_charges
-  (id, charged_at, job_id, route_task_id, obligation_id, jurisdiction, attempt_id, usd, known_usd, measured, bounded, assignment_refs, is_scout, scout_usd, cache)
-  VALUES ($1, $2::timestamptz, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12::jsonb, $13, $14, $15::jsonb)
+  (id, charged_at, job_id, route_task_id, obligation_id, jurisdiction, attempt_id, usd, known_usd, measured, bounded, assignment_refs, is_scout, scout_usd, cache, work_kind)
+  VALUES ($1, $2::timestamptz, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12::jsonb, $13, $14, $15::jsonb, $16)
   ON CONFLICT (id) DO NOTHING`;
 
 export function spendWhere(query: SpendQuery): { sql: string; params: unknown[] } {

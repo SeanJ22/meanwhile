@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 145 (site 12:20 AM, runner 12:31 AM EDT). 146 open as PR #861 (CP-01 + RB-A9 + OB-01, head f41f87502): verify/lint/types/build green, tests running. 25 hot doors held by saved site refusals: Sean's call.
+build_state: LIVE on site: release 146 (merged 2:23 AM, site 2:34 AM EDT; main dc4a4202b, river f41f87502). Runner still on 145 at 2:48 AM. Reader + control-plane expand migrations applied; CP-01_counts_contract waits for the runner.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T06:09:00Z
+heartbeat: 2026-10-29T06:50:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -179,6 +179,9 @@ heartbeat: 2026-10-29T06:09:00Z
 - 146: OB-01 recut from river 6e9a415f9 passed (lint 0 errors, tsc, knip, 601/602 focused + feedback 16/16 after build, live-site before/after on welcome/tour), then carried onto RB-A9's Legistar core (calendar-selector aliases and binding/day inputs in RB-A9's loader/worker; RB-A9's own fingerprint stop kept) as e82e13c82; folded into river-next-146 4b786e598. River checks on the full combination running.
 - 2:05 AM: Neon, 1 AM EDT hour (first full hour on 145): reader 2.114 + control plane 1.064 = 3.18 GB/h; door-probes 0.050 GB/h. Hour before 145 (11 PM) was 2.71 GB/h; the 12 AM switch hour 3.59 GB/h.
 - 1:53 AM: release 146 opened, PR #861 (head f41f87502 = river 6e9a415f9 + CP-01 2c965e00f + RB-A9 da09af624 + OB-01 e82e13c82 + main 1acdc29e1 rulings). Quick check on the combination: lint 0 errors, tsc clean, knip clean, 124 focused files 1,231/1,232 (0 failed, 1 skipped needs a build), migration tests 99/99.
+- PAUSE missed on this board until now: place-pages paused at 6:59 PM EDT Oct 28 (0.52 GB in the 6 PM hour, top table civic_data_promotions; 0.49 GB the hour before). Sean released it in Admin at 2:33 AM Oct 29. Watching whether it pauses again on 146.
+- 2:20 AM: 146 CI green (4/4 shards, gates); river → f41f87502; PR #861 merged 2:23 AM; site serves dc4a4202b from 2:34 AM. Reader migrations CP-01_source_status (76) and RB-A9_legistar_members (77) applied; control plane CP-01_counts_expand and RB-A9_expand applied; CP-01_counts_contract runs once the runner serves 146.
+  - Runner at 2:48 AM: still tested 9662c1d56 (145); 46 processes, 14.3 GB RSS, four old legistar-members-refresh children still running.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

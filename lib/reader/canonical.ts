@@ -1,3 +1,4 @@
+import {unpackPlaceContextRow} from "./place-ready.ts";
 import {savedCanonicalStatement as canonicalStatement,type PageAdditional} from "./page-authorities.ts";
 import {buildMissingPlacePages} from "./place-builder.ts";
 import {currentReaderSelection} from "../db/reader-route.ts";
@@ -80,7 +81,7 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
   const additionalEntries: Pointer[] = additional?.canonicalKeys ? [...new Set((additionalRows ?? []).flatMap(row => row.canonical_keys as readonly string[] ?? []))]
     .map(key => { const colon = key.indexOf(":"); return { recordClass: key.slice(0, colon) as RoutineRecordClass, scope: key.slice(colon + 1) }; }) : [];
   keys.push(...additionalEntries.map(entry => `${entry.recordClass}:${entry.scope}`));
-  const rows = loaded.filter(row => row.row_kind === "promotion");
+  const rows = loaded.filter(row => row.row_kind === "promotion").map<Row>(row=>({...row,payload:unpackPlaceContextRow(row.payload)}));
   const preloaded = Object.fromEntries(loaded.filter(row => row.row_kind === "part").map(row => [String(row.part_hash),row.part_payload]));
   if (rows.some(row => row.published !== true)) throw new Error("READER_PUBLISHED_POINTER_INVALID");
   const parts = new CivicPayloadParts({
@@ -123,8 +124,9 @@ export async function readCanonicalShelf(entries: readonly { recordClass: Routin
 async function readReadyStatement(query:ReadOnlyQuery,statement:Statement):ReturnType<ReadOnlyQuery> {
   const run=(query as PublishedQuery).canonicalBody??query;
   let [rows]=await run([statement]);
-  const missing=rows.filter(row=>row.row_kind==='missing-page').map(row=>String(row.part_hash));
-  if(missing.length){
+  for(let attempt=0;attempt<2;attempt++){
+    const missing=rows.filter(row=>row.row_kind==='missing-page').map(row=>String(row.part_hash));
+    if(!missing.length)break;
     const pages=[];
     for(const id of missing){
       const state=/\/(?:state|territory|district):([a-z]{2})(?:\/|$)/.exec(id)?.[1]?.toUpperCase()
@@ -134,7 +136,7 @@ async function readReadyStatement(query:ReadOnlyQuery,statement:Statement):Retur
     }
     await buildMissingPlacePages(pages);
     [rows]=await run([statement]);
-    if(rows.some(row=>row.row_kind==='missing-page'))throw new Error('PLACE_AUTHORITY_BUILD_NOT_SAVED');
   }
+  if(rows.some(row=>row.row_kind==='missing-page'))throw new Error('PLACE_AUTHORITY_BUILD_NOT_SAVED');
   return [rows];
 }

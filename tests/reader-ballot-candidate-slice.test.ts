@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
-import {ballotCandidateDetailsStatement} from "../lib/ballot/reader-data.ts";
+import {buildBallotCandidateDetailsStatement as ballotCandidateDetailsStatement} from "../lib/reader/place-builder.ts";
 import {partitionCivicPayload} from "../lib/civic-data/payload-codec.ts";
 import {canonicalCivicDataHash} from "../lib/civic-data/canonical-hash.ts";
 import {selectedStateEntry} from "../lib/reader/selected-entry.ts";

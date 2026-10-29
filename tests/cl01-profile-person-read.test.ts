@@ -1,3 +1,4 @@
+import {canonicalStatementKeys} from "./helpers/ready-authorities.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { CivicDataReadStore, PromotedEdgeEntry } from "../lib/civic-data/read-model.ts";
@@ -96,8 +97,8 @@ test("the profile's default server read batches only people authorities and shar
   const entry = stateEntry([{...person, nativeIds: {reader: [person.id, "az-legislature:old-id"]}}]);
   const selected: unknown[] = [];
   installReaderDatabaseQuery(async statements => statements.map(statement => {
-    selected.push(statement.params[0]);
-    assert.deepEqual(statement.params[0], statePeopleSourcePointers("US-AZ").map(row => `${row.recordClass}:${row.scope}`));
+    selected.push(canonicalStatementKeys(statement.params[0]));
+    assert.deepEqual(canonicalStatementKeys(statement.params[0]), statePeopleSourcePointers("US-AZ").map(row => `${row.recordClass}:${row.scope}`));
     return [{row_kind: "promotion", key: entry.projection.key, record_class: entry.projection.recordClass, scope: entry.projection.scope,
       source_id: entry.projection.sourceId, current_version_id: entry.projection.versionId, last_known_good_version_id: entry.projection.versionId,
       promoted_at: entry.projection.promotedAt, validation_receipt: entry.projection.receipt, payload: entry.projection.payload,

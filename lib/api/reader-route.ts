@@ -57,15 +57,17 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
   let exactPoint: import("../place-map/reader.ts").PlaceEntry | undefined;
   if (zip) {
     const { readZipPlace, readPointPlace } = await import("../place-map/reader.ts");
-    zipPlace = await readZipPlace(zip);
+    const {resolveZipLocation}=await import('../place-map/locations.ts');
+    const [heldPlace,resolved]=await Promise.all([readZipPlace(zip),resolveZipLocation(zip)]);
+    zipPlace=heldPlace;
     if (namedState && Number.isFinite(lat) && Number.isFinite(lng) && Math.abs(lat!)<=90 && Math.abs(lng!)<=180) {
-      const { resolveZipLocation } = await import("../place-map/locations.ts");
-      const location = await resolveZipLocation(zip);
+      const location = resolved;
       if (!(location.ok && location.centroid.postal?.state === namedState)) {
         exactPoint = await readPointPlace(lat!,lng!);
         keys.delete(zip); zip = undefined;
       }
     }
+    if(zip&&(lat===undefined||lng===undefined)&&resolved.ok){lat=resolved.centroid.lat;lng=resolved.centroid.lng;}
     if (zip) for (const state of zipPlace?.states ?? []) keys.add(`state:${state}`);
   }
   const namedStates = question ? (await import("../ask/reader-officials.ts")).statesNamedInQuestion(question) : [];
@@ -78,11 +80,6 @@ async function selectionForReader(args: readonly unknown[]): Promise<{
         (key.startsWith("ocd-") && !registryJurisdictions(key).some(state => namedStates.includes(state)))) keys.delete(key);
     }
     for (const state of namedStates) keys.add(`ocd-division/country:us/${state === "DC" ? "district" : "state"}:${state.toLowerCase()}`);
-  }
-  if (zip && (lat === undefined || lng === undefined)) {
-    const { resolveZipLocation } = await import("../place-map/locations.ts");
-    const resolved = await resolveZipLocation(zip);
-    if (resolved.ok) { lat = resolved.centroid.lat; lng = resolved.centroid.lng; }
   }
   let point: readonly [number, number] | undefined, divisions: readonly string[] | undefined;
   let place: import("../place-map/reader.ts").PlaceEntry | undefined;

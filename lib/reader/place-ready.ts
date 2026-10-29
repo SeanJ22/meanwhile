@@ -57,3 +57,6 @@ export function packPlaceContext(context: Row): Row {
 }
 
 export function unpackPlaceContextRow(row:unknown):Row { return unpack(row); }
+
+/** The page owns one compressed compiled source section; metadata stays separately keyed. */
+export function packPlaceAuthority(payload:unknown):PackedReadyPlace {return pack(payload);}

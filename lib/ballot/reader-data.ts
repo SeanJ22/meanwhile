@@ -19,8 +19,6 @@ import type { RoutineRecordClass } from "../civic-data/types.ts";
 import type { BallotPlace } from "./reader-place.ts";
 import type { BallotSet, Contest } from "./types.ts";
 import {ballotCandidateKeys} from "./candidate-keys.ts";
-import {selectedPointerSql,selectedMetadataSql,selectedStateEntry} from "../reader/selected-entry.ts";
-import {readerDatabaseQuery} from "../reader/database.ts";
 import { settleFederalDirectoryRead } from "../registry/server.ts";
 import { getFederalOfficeholderSet } from "../officials/federal-directory-read-model.ts";
 import { personIdentityKeys } from "../officials/people-identity.ts";
@@ -89,30 +87,6 @@ export async function readBallotReaderData(place: BallotPlace, readTerritory = r
   return { registryRead, districtRead, entry };
 }
 
-/** Full facts for the ballot's candidates; other contests' records stay in the store. */
-export function ballotCandidateDetailsStatement(state: string, keys: readonly string[]) {
-  const pointers = (["candidate-profiles","candidate-publications","candidate-campaign-sites-derived"] as const)
-    .flatMap(family => stateAuthorityPointers(family,state));
-  const selectedArray = (value: string, field: string) => `coalesce((SELECT jsonb_agg((r.item) ORDER BY r.ordinal_index)
-    FROM jsonb_array_elements(${value}->'${field}') WITH ORDINALITY r(item,ordinal_index) WHERE (r.item)->>'candidateKey'=ANY($2::text[])
-      OR (r.item)->>'candidacyId'=ANY($2::text[])), '[]'::jsonb)`;
-  const selectedObject = (value: string) => `coalesce((SELECT jsonb_object_agg(r.key,(object.value->r.key))
-    FROM (SELECT (${value}) AS value) object,
-      (SELECT DISTINCT unnest($2::text[]) AS key) r WHERE object.value ? r.key), '{}'::jsonb)`;
-  return {pointers,params:[pointers.map(pointer=>`${pointer.recordClass}:${pointer.scope}`),keys],text:`WITH pointer AS MATERIALIZED (
-    ${selectedPointerSql().replace('p.key=$1','p.key=ANY($1::text[])')}
-  ), roots AS MATERIALIZED (SELECT key,(payload) AS value FROM pointer WHERE published)
-  SELECT ${selectedMetadataSql}, CASE WHEN published THEN CASE pointer.record_class
-    WHEN 'CANDIDATE_PROFILE' THEN (roots.value-'cards'-'links') || jsonb_build_object(
-      'cards',((roots.value->'cards')-'cards') || jsonb_build_object('cards',${selectedObject("(roots.value->'cards')->'cards'")}),
-      'links',((roots.value->'links')-'links') || jsonb_build_object('links',${selectedObject("(roots.value->'links')->'links'")}))
-    WHEN 'CANDIDATE_PUBLICATION' THEN (roots.value-'documents'-'failures') || jsonb_build_object(
-      'documents',${selectedArray('roots.value','documents')},'failures',${selectedArray('roots.value','failures')})
-    ELSE (roots.value-'records'-'portraits') || jsonb_build_object('records',${selectedArray('roots.value','records')})
-      || CASE WHEN roots.value ? 'portraits' THEN jsonb_build_object('portraits',${selectedArray('roots.value','portraits')}) ELSE '{}'::jsonb END
-    END END AS payload FROM pointer LEFT JOIN roots USING(key)`};
-}
-
 /** A ballot store primed from canonical entries; it never reads a promotion or a candidate body. */
 const CANONICAL_ENTRY_ONLY = {
   async readPromotion(): Promise<never> { throw new Error("READER_USES_CANONICAL_ENTRY"); },
@@ -121,22 +95,9 @@ const CANONICAL_ENTRY_ONLY = {
 
 export async function primeBallotCandidateDetails(set: BallotSet, contests: readonly Contest[]): Promise<void> {
   if (!currentReaderSelection() || currentReaderAuthorityEdge()) return;
-  const statement = ballotCandidateDetailsStatement(set.election.state,ballotCandidateKeys(set,contests));
-  const query = readerDatabaseQuery();
-  if (!query) throw new Error("READER_STORE_NOT_CONFIGURED");
-  const [rows] = await query([statement]);
-  const entries = new Map(statement.pointers.map(pointer => {
-    const key = `${pointer.recordClass}:${pointer.scope}`;
-    return [key,selectedStateEntry(pointer.recordClass,pointer.scope,rows.find(row=>row.key===key))];
-  }));
-  await primeReaderCanonicalStore(statement.pointers,{
-    ...CANONICAL_ENTRY_ONLY,
-    async readPromotedEntry(recordClass,scope) {
-      const entry = entries.get(`${recordClass}:${scope}`);
-      if (!entry) throw new Error("READER_SCOPE_NOT_SELECTED");
-      return entry;
-    },
-  });
+  const pointers=(["candidate-profiles","candidate-publications","candidate-campaign-sites-derived"] as const)
+    .flatMap(family=>stateAuthorityPointers(family,set.election.state));
+  await primeReaderCanonicalStore(pointers,readCanonicalShelf(pointers));
 }
 
 /** Read money for the exact displayed contests, retaining candidates and earlier filings. */

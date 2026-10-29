@@ -1,3 +1,4 @@
+import {canonicalStatementKeys} from "./helpers/ready-authorities.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { PromotedEdgeEntry } from "../lib/civic-data/read-model.ts";
@@ -24,18 +25,18 @@ function withCanonical(entries: readonly Entry[], run: (reads: readonly (readonl
   const reads: string[][] = [];
   installFactReader(async () => []);
   installReaderDatabaseQuery(async statements => statements.map(statement => {
-    const keys = statement.params[0] as string[];
+    const keys = canonicalStatementKeys(statement.params[0]);
     assert.ok(Array.isArray(keys), "these routes need only their batched canonical authorities");
     reads.push(keys);
-    if (statement.text.includes("r.collection='memberOffices'")) {
-      const entry = entries.find(entry => entry.projection.recordClass === "CURATED_READER_RECORD" && keys.includes(entry.projection.scope));
-      if (!entry) return [];
-      const payload = entry.projection.payload as {kind:string;records:MemberOfficeRecord[]};
-      const members = statement.params[3] as string[];
-      assert.ok(members.includes(person.id) && members.includes(person.personId!), "the keyed lookup retains exact person aliases");
-      return [{valid:true, scope:entry.projection.scope,version_id:entry.projection.versionId,source_id:entry.projection.sourceId,
-        promoted_at:entry.projection.promotedAt,retrieved_at:entry.attested.retrievedAt, temporal:{},header:{kind:payload.kind},normalization:{},
-        receipt:entry.projection.receipt,records:payload.records.filter(record=>members.includes(record.officeholderId)),sources:[]}];
+    if(statement.text.includes('office.value')){
+      const entry=entries.find(entry=>entry.projection.recordClass==='CURATED_READER_RECORD'&&entry.projection.scope.endsWith('state-legislator-member-offices'));
+      if(!entry)return [{value:null,format:'1'}];
+      const payload=entry.projection.payload as {kind:string;records:MemberOfficeRecord[]};
+      const members=statement.params[1] as string[];
+      assert.ok(members.includes(person.id)&&members.includes(person.personId!));
+      return [{format:'1',value:{scope:entry.projection.scope,versionId:entry.projection.versionId,sourceId:entry.projection.sourceId,
+        promotedAt:entry.projection.promotedAt,retrievedAt:entry.attested.retrievedAt,header:{kind:payload.kind},normalization:{},
+        receipt:entry.projection.receipt,records:payload.records.filter(record=>members.includes(record.officeholderId)),sources:[]}}];
     }
     return keys.flatMap(key => {
       const entry = byKey.get(key);
@@ -82,7 +83,7 @@ test("a person without native offices still receives the existing curated office
   await withCanonical([peopleEntry({...person, offices: []}), fallback], async reads => {
     assert.deepEqual(await readCardMemberOffices(person.id, "TX"), [record]);
     assert.equal(reads.length, 2);
-    assert.deepEqual(reads[1], ["US-TX:state-legislator-member-offices", curated.scope]);
+    assert.deepEqual(reads[1],["ocd-division/country:us/state:tx"]);
   });
 });
 

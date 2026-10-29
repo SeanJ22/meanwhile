@@ -1,3 +1,4 @@
+import {canonicalStatementKeys} from "./helpers/ready-authorities.ts";
 import assert from "node:assert/strict";
 import test from "node:test";
 import { GET as bills } from "../app/api/bills/route.ts";
@@ -55,7 +56,7 @@ test("native bill requests keep the full-holder answer and legacy alias without 
   const allowed = new Set([...peopleKeys, ...entries.map(entry => entry.projection.key)]);
   const selected: string[][] = [];
   installReaderDatabaseQuery(async statements => statements.map(statement => {
-    const keys = statement.params[0];
+    const keys = canonicalStatementKeys(statement.params[0]);
     assert.ok(Array.isArray(keys), "no geography/state-package query is allowed");
     assert.ok(keys.every(key => typeof key === "string" && allowed.has(key)), "only people and bill authorities are read");
     selected.push(keys);

@@ -1,3 +1,4 @@
+import type {RegistryRuntimeReadModel} from "../registry/runtime-data-plane.ts";
 import { canonicalCivicDataHash } from "../civic-data/canonical-hash.ts";
 import { withStateRegistryFacts } from "../registry/state-composition.ts";
 import { withRegistryRuntimeProjection } from "../registry/runtime-read-model.ts";
@@ -16,10 +17,13 @@ export type ReaderRosterPreviews = Readonly<Record<string, SeatHolder[]>>;
 export type ReaderRosterIds = Readonly<Record<string, readonly string[]>>;
 export const readerRosterKey = (roster: ReaderBodyRoster): string => canonicalCivicDataHash(roster, { durable: true });
 
+const EMPTY_REGISTRY:RegistryRuntimeReadModel={formatVersion:1,registry:{generatedAt:'',bodies:[],divisions:[]},bodyRosters:[],
+  rosterReaderDispositions:[],statewideExecutives:[],officialCandidacies:{formatVersion:1,rule:'EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE',rows:[]},
+  officialPhotos:{photos:[]},rosterPhotos:{}};
+
 /** One composed roster, including portraits and prior memberships, independent of the list. */
 export function placeBodyRoster(place: PlacePackage, bodyId: string): ReaderBodyRoster {
-  if (!place.registry) throw new Error("PLACE_REGISTRY_MISSING");
-  const runtime = withStateRegistryFacts(place.registry, place.bodies);
+  const runtime = withStateRegistryFacts(place.registry??EMPTY_REGISTRY, place.bodies);
   return withRegistryRuntimeProjection(runtime, [], () => projectRoster(bodyId));
 }
 
@@ -31,9 +35,8 @@ function projectRoster(bodyId: string): ReaderBodyRoster {
 
 /** Keep only list data in ready pages. Immutable roster resources are shared across places and bodies. */
 export function preparePlaceRosters(place: PlacePackage): { place: PlacePackage; rosters: Map<string, ReaderBodyRoster> } {
-  if (!place.registry) return { place, rosters: new Map() };
   const rosters = new Map<string, ReaderBodyRoster>(), refs: Record<string, string> = {}, previews: Record<string, SeatHolder[]> = {},ids:Record<string,string[]>={};
-  const runtime = withStateRegistryFacts(place.registry, place.bodies);
+  const runtime = withStateRegistryFacts(place.registry??EMPTY_REGISTRY, place.bodies);
   withRegistryRuntimeProjection(runtime, [], () => { for (const bodyId of new Set([...runtime.registry.bodies.map(body => body.id),...runtime.bodyRosters.map(roster=>roster.bodyId), ...place.bodies.map(body => body.id)])) {
     const roster = projectRoster(bodyId);
     ids[bodyId]=roster.members.map(member=>member.id);
@@ -46,9 +49,9 @@ export function preparePlaceRosters(place: PlacePackage): { place: PlacePackage;
     refs[bodyId] = hash; rosters.set(hash, roster);
   } });
   return { rosters, place: { ...place, rosterRefs: refs, rosterPreviews: previews,rosterIds:ids,
-    registry: { ...place.registry, bodyRosters: place.registry.bodyRosters.map(roster => ({ ...roster, members: [], membershipHistory: [] })),
+    registry: place.registry?{ ...place.registry, bodyRosters: place.registry.bodyRosters.map(roster => ({ ...roster, members: [], membershipHistory: [] })),
       rosterReaderDispositions: [], rosterPhotos: {}, officialPhotos: { photos: [] },
-      officialCandidacies: { ...place.registry.officialCandidacies, rows: [] } },
+      officialCandidacies: { ...place.registry.officialCandidacies, rows: [] } }:null,
     bodies: place.bodies.map(body => ({ ...body, roster: null, dispositions: [] })) } };
 }
 

@@ -167,6 +167,7 @@ export function phaseFromSql(sql: string): { phase: MigrationPhase; signals: Con
 
 /** Hand-written, one entry per committed migration; the suite checks each against phaseFromSql. */
 const MIGRATION_PHASES: Readonly<Record<string, PhaseDeclaration>> = {
+  "RP-01_reader_facts": { phase: "expand", why: "Adds keyed publication headers, voting places, funding, bills and outcomes before the website stops opening source bundles.", lockFirst: ["civic_data_promotions", "civic_data_payload_parts", "civic_data_rows", "civic_data_candidates", "civic_data_candidate_events", "civic_data_source_checks"] },
   "ZP-01_build_fingerprint": { phase: "expand", why: "ZIP builds compare selected-input fingerprints before transferring or copying an answer.", lockFirst: ["place_page"] },
   "ZP-01_expand": { phase: "expand", why: "Prioritizes queued ZIP pages by their held Census population before builders claim them.", lockFirst: ["rebuild_queue", "entity"] },
   "RB-A10_zip_locations": { phase: "expand", why: "Adds imported ZIP display points; existing memberships, identities and readers are unaffected." },

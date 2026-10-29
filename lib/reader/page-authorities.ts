@@ -24,7 +24,7 @@ export function authorityPageId(key:string):string {
 
 /** Each requested section is selected by its page primary key and its own source key. */
 export function savedCanonicalStatement(keys:readonly string[],additional?:PageAdditional):Statement {
-  const requested=keys.map(key=>({key,page_id:authorityPageId(key)}));
+  const requested=keys.map(key=>({key,page_id:additional?.pageId??authorityPageId(key)}));
   const extraSql=additional?.text.replace(/\$(\d+)/g,(_,n:string)=>`$${Number(n)+1}`);
   const more=additional?.canonicalKeys && additional.pageId
     ? ` UNION SELECT unnest(canonical_keys),${quote(additional.pageId)} FROM additional` : '';

@@ -1,3 +1,4 @@
+import {unpackPlaceContextRow} from "./place-ready.ts";
 import {PERSON_ID_NAMESPACES} from "../officials/people-identity.ts";
 import {promotedPayloadSha256} from "../civic-data/attested-promotion.ts";
 import {parseUnchangedConfirmation} from "../civic-data/unchanged-confirmation.ts";
@@ -10,6 +11,7 @@ export const selectedMetadataSql=`pointer.key,pointer.source_id,pointer.current_
 export function selectedStateEntry(recordClass: import("../civic-data/types.ts").RoutineRecordClass, scope: string,
   row: Record<string, unknown> | null | undefined): PromotedEdgeEntry {
   if (!row) return {kind:"NOT_RECORDED",recordClass,scope};
+  row={...row,payload:unpackPlaceContextRow(row.payload)};
   if (row.published !== true) throw new Error("READER_PUBLISHED_POINTER_INVALID");
   const entry: Extract<PromotedEdgeEntry,{kind:"PROMOTED"}> = {kind:"PROMOTED",projection:{key:String(row.key),sourceId:String(row.source_id),recordClass,scope,
     versionId:String(row.current_version_id),lastKnownGoodVersionId:String(row.last_known_good_version_id),

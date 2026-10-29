@@ -19,3 +19,10 @@ export async function writeReadyAuthorities(pg:PGlite,keys:readonly string[],pag
       [id,JSON.stringify({authorityFormat:1,authorities})]);
   }
 }
+
+/** Read-boundary mocks accept a keyed page section or a native keyed-fact source list. */
+export function canonicalStatementKeys(value:unknown):string[] {
+  if(Array.isArray(value))return value as string[];
+  if(typeof value==='string'&&value.startsWith('['))return (JSON.parse(value) as {key:string}[]).map(row=>row.key);
+  return [String(value)];
+}

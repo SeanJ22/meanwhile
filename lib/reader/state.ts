@@ -269,14 +269,15 @@ export function readStatePackage(value: string, divisionIds: readonly string[] =
 export function statePackageStatement(state:string,divisions:readonly string[]=[],zip?:string) {
   void divisions;
   const pageId=zip?`zip:${zip}`:statePageId(state);
+  const geo=`coalesce(page.context->'authorityGeographies'->'${state}',page.context->'authorityGeography')`;
   const source=(key:string)=>`page.context->'authorities'->'${key.replaceAll("'","''")}'`;
   const rows=(keys:readonly string[])=>`coalesce((SELECT jsonb_agg(value) FROM jsonb_each(page.context->'authorities') WHERE key=ANY(ARRAY[${keys.map(key=>`'${key.replaceAll("'","''")}'`).join(',')}]::text[])),'[]'::jsonb)`;
   return {pageId,canonicalKeys:true as const,params:[pageId],text:`SELECT
-    page.context->'authorityGeography'->>'version_id' AS version_id,
-    coalesce(page.context->'authorityGeography'->'geography','[]'::jsonb) AS geography,
-    coalesce(page.context->'authorityGeography'->'local_divisions','[]'::jsonb) AS local_divisions,
-    page.context->'authorityGeography'->'member_offices' AS member_offices,
-    ARRAY(SELECT jsonb_array_elements_text(coalesce(page.context->'authorityGeography'->'canonical_keys','[]'::jsonb))) AS canonical_keys,
+    ${geo}->>'version_id' AS version_id,
+    coalesce(${geo}->'geography','[]'::jsonb) AS geography,
+    coalesce(${geo}->'local_divisions','[]'::jsonb) AS local_divisions,
+    ${geo}->'member_offices' AS member_offices,
+    ARRAY(SELECT jsonb_array_elements_text(coalesce(${geo}->'canonical_keys','[]'::jsonb))) AS canonical_keys,
     ${source(`STATE_LEGISLATOR:US-${state}:openstates-people:v1`)} AS zip_people,
     ${source(`REGISTRY_RUNTIME_BINDING:${stateRegistryRuntimeScope(state)}`)} AS zip_registry,
     ${source(`STATE_LEGISLATOR:US-${state}`)} AS zip_official,

@@ -79,7 +79,7 @@ test("BR-24: a completed fix is one update on Now with its label and before/afte
   assert.equal(fixed.isWin, true);
   assert.equal(view.updates.find((u) => u.what.startsWith("Door"))!.isWin, false);
   assert.equal((await takeUnshownUpdates(repos, at)).length, 0, "it leaves Now after one showing");
-  const rows = updatesFromChanges([{ number: 1, session: null, line: "Faster pages", status: "live", statusWords: "Live", why: "", url: "u", at }], Date.parse(at));
+  const rows = updatesFromChanges([{ number: 1, session: null, line: "Faster pages", status: "live", statusWords: "Live", why: "", url: "u", at, measures: null }], Date.parse(at));
   assert.equal(rows[0].label, "TESTING");
 });
 

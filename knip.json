@@ -19,7 +19,6 @@
   "ignoreBinaries": [
     "tasklist",
     "taskkill.exe",
-    "openssl",
     "pwsh",
     "pdftotext"
   ],

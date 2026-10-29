@@ -1126,14 +1126,6 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "scripts/rs-02-check.mts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "scripts/rs-02-check.mts",
-      "table": "civic_data_promotions"
-    },
-    {
       "file": "scripts/rs-03-representation-check.mts",
       "table": "civic_data_promotions"
     },

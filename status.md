@@ -144,6 +144,21 @@ heartbeat: 2026-10-28T08:35:00Z
   - door-probes read 23.8 MB from 10:15 to 10:45 PM.
   - Website caps hold: the busiest small publishers are at exactly 10 requests in the last hour (cityofstroud.com, upperfrederick.org, colliertownship.net, redwoods.edu, cityofcatoosa.org). None is over its limit.
   - The full-hour check (every hot door looked at, by platform; door-probes GB/h; hour after) runs at 11:20 PM.
+- 11:22 PM: FULL-HOUR CHECK ON 144 (runner switched 10:15 PM). NOT MET YET: 77% of hot doors got their hourly look.
+  - Hot meeting doors with a probe URL (River's read-only method, which slightly undercounts): 1,372 on 504 pages across 263 websites. Looked at in the last 60 minutes: 1,056 doors on 406 pages.
+  - By platform:
+    - legistar 442/476
+    - legistar-insite 249/418
+    - ical 190/247
+    - granicus 84/84
+    - civicclerk 0/51 (no civicclerk door has ever had a probe look)
+    - primegov 24/24, civicplus 21/22, diligent 18/18, iqm2 17/17, schedulepage 7/7
+    - escribe 1/4, apptegy 0/1
+    - No hot doors of the page or source-feed kind.
+  - Website limits hold: the busiest small publishers are at exactly 10 requests in the last hour; none over. None of the missed doors' websites is at its cap or on a hold.
+  - door-probes: 24.8 MB in the 10 PM hour (45 min of the lane) and 21.1 MB in the first 22 minutes of 11 PM, about 0.05-0.06 GB/h, under 0.1.
+  - Neon: hour before 144 (9 PM, no probes running) 2.57 GB/h; 10 PM hour (switch at 10:15) 3.38 GB/h. The full hour after (11 PM) follows.
+  - A River builder (stream/river-probecover-145) is finding why civicclerk/apptegy are never looked at and why legistar-insite, ical and escribe are partly missed. If closing the gap would need more than one request at a time to a single website (e.g. webapi.legistar.com carries 157 hot pages), River will bring that to Sean as a decision rather than change it.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

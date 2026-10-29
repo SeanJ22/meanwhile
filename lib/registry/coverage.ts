@@ -205,8 +205,6 @@ export interface CoveredBody {
  * a division's representatives do not establish who sits on every board there.
  */
 export interface Seat {
-  /** Saved governing roster keys, including rosters without a visible body card. */
-  readerBodyIds?:readonly string[];
   ocdId: string;
   label: string;
   divisionType: DivisionType;
@@ -216,6 +214,10 @@ export interface Seat {
    * that the seat is vacant.
    */
   representatives: SeatHolder[];
+  /** A governing roster whose body is not among the visible coverage bodies. */
+  bodyRosterRefs?: readonly { bodyId: string; state: string }[];
+  /** Attached only after the keyed governing roster has been read. */
+  readerGoverningRoster?: { members: SeatHolder[]; gaps: RosterReaderGap[] };
   /** A vacancy is shown only when the office's own source explicitly states it. */
   vacancy?: SeatVacancy;
 }

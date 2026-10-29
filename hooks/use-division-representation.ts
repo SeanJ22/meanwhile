@@ -45,13 +45,11 @@ export function useDivisionsRepresentation(
     const holders = representationForDivision(coverage, id);
     return [id, holders.length ? holders : cached.get(id)?.holders ?? holders];
   }));
-  const localBodies = Object.fromEntries(ids.map(id => {
-    const bodies=(coverage?.bodies??[]).filter(body=>(body.bodyId===`${id}#governing`||body.bodyId===`${id}#board`)&&body.rosterSummary)
-      .map(body=>({id:body.bodyId,state:bodyDetailState(body)}));
-    for(const bodyId of coverage?.seats.find(seat=>seat.ocdId===id)?.readerBodyIds??[])if(!bodies.some(body=>body.id===bodyId))
-      bodies.push({id:bodyId,state:/\/(?:state|territory|district):([a-z]{2})/.exec(id)?.[1]?.toUpperCase()??null});
-    return [id,bodies];
-  }));
+  const localBodies = Object.fromEntries(ids.map(id => [id, [
+    ...(coverage?.bodies ?? []).filter(body => (body.bodyId === `${id}#governing` || body.bodyId === `${id}#board`) && body.rosterSummary)
+      .map(body => ({ id: body.bodyId, state: bodyDetailState(body) })),
+    ...(coverage?.seats.find(seat => seat.ocdId === id)?.bodyRosterRefs ?? []).map(ref => ({ id: ref.bodyId, state: ref.state })),
+  ]]));
   const localBodiesKey = JSON.stringify(localBodies);
   const remoteIdsKey = JSON.stringify(ids.filter(id => localBodies[id]?.length ||
     (!local.get(id)?.length && !vacancies.get(id) && !cached.get(id) && !isStateDivisionPending(id))).sort());
@@ -110,8 +108,8 @@ export function useDivisionsRepresentation(
     const cachedAnswer = cached.get(ocdId);
     const answer = answers.key === requestKey ? answers.values[ocdId] : undefined;
     if (localBodies[ocdId]?.length) {
-      if (!answer) return [ocdId, { holders, status: "looking" }];
-      if (answer.failed) return [ocdId, { holders, status: "unavailable" }];
+      if (!answer) return [ocdId, { holders: [], status: "looking" }];
+      if (answer.failed) return [ocdId, { holders: [], status: "unavailable" }];
       const merged = scopedHolders(answer.holders, holders);
       return [ocdId, { holders: merged, vacancy: vacancies.get(ocdId), rosterGaps: answer.rosterGaps ?? [],
         status: merged.length ? "resolved" : "unsourced" }];

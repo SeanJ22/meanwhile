@@ -9,7 +9,9 @@ import { indexByDivision } from "../officials/lookup.ts";
 import { withStateRegistryFacts } from "../registry/state-composition.ts";
 import { bodyRosterSummaries } from "./body-summary.ts";
 import { bodyDetailState } from "../registry/body-roster-client.ts";
+import { ocdStateCode } from "../ocd/state-of.ts";
 import { allOfficialRows } from "../officials/tier-grouping.ts";
+import { heldDivisionRepresentatives } from "../registry/representation-server.ts";
 import { stateOfficesForStates } from "../reference/state-offices.ts";
 import type { BodyFacts } from "../facts/registry-overlay.ts";
 import type { Body, Division } from "../registry/types.ts";
@@ -99,15 +101,27 @@ export function stateCoverage(
     const { officials } = stateOfficials(state);
     const coverage = summarizeCoverage([lng, lat], [], divisions, bodies, meetingCount, officials, resolved, territory, state.stateLegislatorAuthority ? [state.stateLegislatorAuthority] : [], meetings,
       new Map(state.registry.bodyRosters.map(roster => [roster.bodyId,roster.bodyName])));
+    const visibleBodyIds = new Set(coverage.bodies.map(body => body.bodyId));
+    const missingBodyIds = coverage.seats.filter(seat => seat.tier === "local").flatMap(seat =>
+      [`${seat.ocdId}#governing`, `${seat.ocdId}#board`].filter(id => !visibleBodyIds.has(id)));
+    const missing = bodyRosterSummaries(runtime, missingBodyIds).summaries;
     const seats = coverage.seats.map(seat => {
       const vacancy = !seat.representatives.length && [...state.federal?.vacancies ?? [], ...(state.legislativePeople ?? state.people)?.vacancies ?? []]
         .find(row => row.ocdId === seat.ocdId);
-      const readerBodyIds=[`${seat.ocdId}#governing`,`${seat.ocdId}#board`].filter(id=>state.rosterIds?.[id]?.length);
-      return {...seat,...(vacancy?{vacancy}:{}),...(readerBodyIds.length?{readerBodyIds}:{})};
+      const bodyRosterRefs=seat.tier==='local'?[`${seat.ocdId}#governing`,`${seat.ocdId}#board`]
+        .filter(id=>state.rosterIds?.[id]?.length||(missing.get(id)?.memberCount??0)>0)
+        .map(bodyId=>({bodyId,state:ocdStateCode(bodyId)?.toUpperCase()??state.state})):[];
+      return {...seat,...(vacancy?{vacancy}:{}),...(bodyRosterRefs.length?{bodyRosterRefs}:{})};
     });
     const { summaries, memberIds } = bodyRosterSummaries(runtime, coverage.bodies.map(body => body.bodyId));
     const officialIds = new Set([...memberIds,...Object.values(state.rosterIds??{}).flat()]);
-    for (const { holder } of allOfficialRows({ ...coverage, seats })) officialIds.add(holder.id);
+    const countSeats=seats.map(seat=>{
+      if(seat.tier!=='local'||!seat.representatives.length)return seat;
+      const ids=seat.bodyRosterRefs?.flatMap(ref=>state.rosterIds?.[ref.bodyId]??[]);
+      return {...seat,representatives:ids?.length?seat.representatives.filter(holder=>ids.includes(holder.id))
+        :heldDivisionRepresentatives(seat.ocdId,seat.representatives)};
+    });
+    for (const { holder } of allOfficialRows({ ...coverage, seats:countSeats })) officialIds.add(holder.id);
     return {
       ...coverage,
       seats,

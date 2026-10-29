@@ -18,7 +18,7 @@ export function representationForDivision(
 ): SeatHolder[] {
   if (!ocdId) return [];
   const seat = coverage?.seats.find((s) => s.ocdId === ocdId);
-  const governing = projectedGoverningHoldersForDivision(coverage, ocdId);
+  const governing = [...seat?.readerGoverningRoster?.members ?? [], ...projectedGoverningHoldersForDivision(coverage, ocdId)];
   return governing.length ? scopedHolders(governing, seat?.representatives ?? []) : seat?.representatives ?? [];
 }
 

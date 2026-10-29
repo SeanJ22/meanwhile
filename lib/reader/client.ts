@@ -132,7 +132,7 @@ export function mergeReaderCoverage(state: CoverageSummary | null, place: Covera
   }, meetingCount);
   const officialIds=new Set([...state.officialIds??allOfficialRows(state).map(row=>row.holder.id),
     ...place.officialIds??allOfficialRows(place).map(row=>row.holder.id)]);
-  const missingIds=!place.officialIds&&place.bodies.some(body=>(body.rosterSummary?.memberCount??0)>0&&!body.readerRoster);
+  const missingIds=!place.officialIds&&place.bodies.some(body=>(body.rosterSummary?.memberCount??0)>0&&!body.readerRoster) || !place.officialIds&&place.seats.some(seat=>seat.bodyRosterRefs?.length&&!seat.readerGoverningRoster);
   return {...merged,officialIds:missingIds?undefined:[...officialIds],officialCount:missingIds?null:officialIds.size};
 }
 

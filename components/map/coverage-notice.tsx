@@ -34,6 +34,7 @@ import {
 } from "@/lib/state/resolved-location";
 import { useConfirmedDivisions } from "@/hooks/use-confirmed-divisions";
 import { useBodyDetails } from "@/hooks/use-body-details";
+import { useDivisionsRepresentation } from "@/hooks/use-division-representation";
 import { bodyClassShort } from "@/lib/registry/body-class-labels";
 import { groupBodiesByGovernment } from "@/lib/registry/body-groups";
 import { projectedBodyRoster } from "@/lib/registry/body-roster-client";
@@ -41,7 +42,6 @@ import {
   hasRepresentation,
   leadKind,
   noticeLabel,
-  representationForDivision,
   shouldRenderNotice,
 } from "@/lib/registry/representation";
 import {
@@ -365,12 +365,11 @@ function CoverageBody({
   const stateSeats = statePanel.yours;
   const localTypes = new Set<string>(LOCAL_SEAT_TYPES);
   const localSeatIds = new Set(coverage.seats.filter(seat => localTypes.has(seat.divisionType)).map(seat => seat.ocdId));
-  const localBodyDetails = useBodyDetails(coverage.bodies.filter(body => body.ocdId && localSeatIds.has(body.ocdId) &&
-    (body.bodyId === `${body.ocdId}#governing` || body.bodyId === `${body.ocdId}#board`)), true);
-  const localBodiesById = new Map(localBodyDetails.bodies.map(body => [body.bodyId, body]));
-  const localCoverage = { ...coverage, bodies: coverage.bodies.map(body => localBodiesById.get(body.bodyId) ?? body) };
-  localCoverage.seats = coverage.seats.map(seat => localSeatIds.has(seat.ocdId)
-    ? { ...seat, representatives: representationForDivision(localCoverage, seat.ocdId) } : seat);
+  const localRepresentations = useDivisionsRepresentation(coverage, [...localSeatIds]);
+  const localBodyDetails = { pending: Object.values(localRepresentations).some(row => row.status === "looking"),
+    failed: Object.values(localRepresentations).some(row => row.status === "unavailable") };
+  const localCoverage = { ...coverage, seats: coverage.seats.map(seat => localSeatIds.has(seat.ocdId)
+    ? { ...seat, representatives: localRepresentations[seat.ocdId]?.holders ?? seat.representatives } : seat) };
   const localSeats = panelSeatsFor(localCoverage, subject.location, LOCAL_SEAT_TYPES, localConfirmed).yours;
   const federalSeats = federalPanel.yours;
   const stateLegislatorGaps = stateLegislatorAuthorities.filter(authority => authority.kind === "NOT_RECORDED" || authority.kind === "STORE_UNREACHABLE");

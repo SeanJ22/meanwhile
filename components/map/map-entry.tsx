@@ -730,7 +730,7 @@ function MapEntryInner() {
 
   const districtRepresentations = useDivisionsRepresentation(
     current?.coverage ?? null,
-    lastHits.flatMap(hit => [hit.ocdId, ...spotDivisionsFor(hit, lastHits).map(division => division.ocdId)]),
+    districtPopup ? [districtPopup.ocdId, ...spotDivisionsFor(districtPopup, lastHits).map(division => division.ocdId)] : [],
   );
 
   const bodyForMeeting = useCallback(

@@ -1078,30 +1078,6 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "scripts/rb-a4-replay.mts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "scripts/rb-a4-replay.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/rb-a4-replay.mts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "scripts/rb-a4-replay.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/replay-epa-all-states.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/replay-epa-sql.mts",
-      "table": "civic_data_promotions"
-    },
-    {
       "file": "scripts/replay-legiscan-all-states.mts",
       "table": "civic_data_promotions"
     },
@@ -1118,34 +1094,6 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "scripts/sp-01-audit.mts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "scripts/sp-01-audit.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/sp-01-audit.mts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "scripts/sp-01-audit.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/sp-01-check.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/sp-01-check.mts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "scripts/sp-01-check.mts",
-      "table": "civic_data_promotions"
-    },
-    {
       "file": "scripts/src-01-epa-scheduled-runs.mts",
       "table": "civic_data_candidates"
     },
@@ -1154,23 +1102,11 @@
       "table": "civic_data_promotions"
     },
     {
-      "file": "scripts/src-01-fac-all-states-read-only-replay.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/src-01-fac-all-states-read-only-replay.mts",
-      "table": "civic_data_promotions"
-    },
-    {
       "file": "scripts/src-01-fec-all-states-read-only.mts",
       "table": "civic_data_candidates"
     },
     {
       "file": "scripts/src-01-fec-all-states-read-only.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/src-01-openfema-all-states-replay.mts",
       "table": "civic_data_promotions"
     },
     {
@@ -2522,18 +2458,6 @@
     {
       "file": "scripts/rb-a4-portal-copy.mts",
       "table": "cp_doors"
-    },
-    {
-      "file": "scripts/rb-a6-admin-check.mts",
-      "table": "cp_admin_config"
-    },
-    {
-      "file": "scripts/rb-a6-admin-check.mts",
-      "table": "cp_admin_setting_history"
-    },
-    {
-      "file": "scripts/rb-a6-verify.mts",
-      "table": "cp_admin_config"
     },
     {
       "file": "scripts/routine-civic-data-runner.mts",

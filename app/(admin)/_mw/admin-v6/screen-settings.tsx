@@ -10,6 +10,7 @@ import { mst } from "./model.ts";
 import { Actions, Card, cx, Empty, Loading, Pill } from "./ui.tsx";
 import { useReading } from "./use-reading.ts";
 import s from "./v6.module.css";
+import { KeysBox } from "./keys-box.tsx";
 
 export const PLAYBOOKS_ROUTE = "/api/admin/v6/playbooks";
 type PlaybooksView = { observedAt: string; safetyFrame: string; rows: ReturnType<typeof playbookEditView>[] };
@@ -85,6 +86,7 @@ export function SettingsScreen() {
   const data = reading.kind === "ready" ? reading.data : null;
   return (
     <Card title="Settings" id="settings">
+      <KeysBox />
       {status}
       {reading.kind === "loading" && <Loading what="the settings" />}
       {reading.kind === "failed" && <p className={s.p}>— <button type="button" className={s.btn} onClick={reload}>Try again</button></p>}

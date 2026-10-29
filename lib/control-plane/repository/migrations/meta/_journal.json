@@ -74,6 +74,11 @@
       "id": "RIVER-DOORCFG-149_expand",
       "phase": "expand",
       "hash": "cdebc77f9f442d688e1e1c3b84565d34738ebe6debd29669585d0830aa0e4794"
+    },
+    {
+      "id": "KB-01_expand",
+      "phase": "expand",
+      "hash": "630dd43ac3af3fc0ad42892d5239139442d1b5bcbf9933e12a027a6c662f8a4e"
     }
   ]
 }

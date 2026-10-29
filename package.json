@@ -14,6 +14,7 @@
     "build": "next build",
     "contrast": "tsx scripts/contrast-audit.mts",
     "credentials": "tsx scripts/credential-ledger.mts",
+    "keys": "node --experimental-strip-types --import ./scripts/register-test-loader.mjs scripts/keys.mts",
     "db:apply": "tsx scripts/db-apply.mts",
     "db:check": "tsx scripts/check-schema-state.mts",
     "db:gate": "tsx scripts/db-shipping-gate.mts",

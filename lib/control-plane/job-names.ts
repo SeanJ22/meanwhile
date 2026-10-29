@@ -2,6 +2,7 @@ import { ROUTINE_JOBS } from "../civic-data/routine-jobs.ts";
 import { runnerFamilyLabel, runnerReadFamily } from "../db/runner-read-families.ts";
 
 const NAMED: Readonly<Record<string, string>> = {
+  "saved-keys": "Saved key checks",
   ...Object.fromEntries(Object.values(ROUTINE_JOBS).map(job => [job.id, job.label])),
   "door-probes": "Hourly door checks", "place-pages": "Place pages", "hunter-lane": "Hunters", "intake-runtime": "Intake checks", "platform-census": "Website platform census",
   "research-cycle": "Paid research rounds", "people-portraits": "Portraits", "place-map": "Place maps", "voting-sites": "Voting places",

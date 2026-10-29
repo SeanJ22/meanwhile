@@ -21,6 +21,8 @@ import { plainWords } from "./plain-words.ts";
 import { TERMINAL_WORK_ITEM_STATES, type WorkItem } from "../work-item.ts";
 import { compactKeeperProblems, type BriefProblem } from "../../counts/problem-groups.ts";
 import { placeReadConnection, pgActiveReaderQuestions } from "../repository/pg-store.ts";
+import { keysStore } from "../../core/keys-store.ts";
+import { keyProblems } from "../../core/keys-runner.ts";
 
 /** Unanswered organic Ask questions stay visible while their sourced answer is owed. */
 export async function readerQuestionRows(repos: ControlPlaneRepositories): Promise<readonly QueueRow[]> {
@@ -83,7 +85,7 @@ export async function readFreshAlerts(repos:ControlPlaneRepositories,at:string,
 /** Same inputs as Queue; failures name the unread part instead of claiming there are no problems. */
 export async function readBrief(repos:ControlPlaneRepositories,at:string):Promise<BriefReading> {
   const unread:string[]=[];
-  const [held,history,stuck,reports,doors,questions]=await Promise.all([
+  const [held,history,stuck,reports,doors,questions,keys]=await Promise.all([
     repos.adminConfig.read(ADMIN_CONFIG_ID, { updates: { limit: 50 },
       fixList: { activeAndRecent: 500, fieldsProjection: QUEUE_FIX_FIELDS, queueFixSummary: true } }),
     readV6History(repos,{scope:"us",asOf:at,limit:50}).catch(()=>{unread.push("orders");return null;}),
@@ -93,6 +95,10 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
       if(counts.unreadable)unread.push("some doors");if(counts.shut>view.rows.length)unread.push("shut doors outside the current page");return view.rows;
     }).catch(()=>{unread.push("doors");return null;}),
     readerQuestionRows(repos).catch(()=>{unread.push("unanswered reader questions");return [];}),
+    Promise.resolve().then(()=>{
+      const sql=placeReadConnection(repos);
+      return sql?keysStore(async(text,params)=>await sql.query(text,params) as Record<string,unknown>[],undefined).list():[];
+    }).catch(()=>{unread.push("saved keys");return null;}),
   ]);
   if(held&&!isAdminConfig(held.value))throw new Error("The settings could not be read.");
   const config=held?.value??defaultAdminConfig(at);
@@ -104,7 +110,7 @@ export async function readBrief(repos:ControlPlaneRepositories,at:string):Promis
   const projected=projectBrief(config,[...rows,...(reports?readerProblemRows(reports):[]),...questions],at,unread);
   const keeperFixKeys=new Set(fixItems(config).filter(f=>f.addedBy==='The line keeper').map(f=>`fix:${f.id}`));
   const keeperProblems=compactKeeperProblems(config.latestBrief?.problems.filter(p=>p.key.startsWith('line-keeper:'))??[]);
-  const fresh={...projected,problems:[...projected.problems.filter(p=>!keeperFixKeys.has(p.key)),...keeperProblems]};
+  const fresh={...projected,problems:[...projected.problems.filter(p=>!keeperFixKeys.has(p.key)),...keeperProblems,...(keys?keyProblems(keys,at):[])]};
 
   return {fresh,latest:config.latestBrief?compactBrief(config.latestBrief):null,alertsOn:readSetting(config,ALERTS_ON_SETTING,false)};
 }

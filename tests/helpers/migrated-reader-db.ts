@@ -33,5 +33,6 @@ export async function migratedReaderDb() {
       [key,scope,id,at,JSON.stringify(value),JSON.stringify(receipt),sourceId,recordClass]);
     });
   };
-  return {pg,publish};
+  const query=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+  return {pg,publish,query,transaction:<T>(work:(q:typeof query)=>Promise<T>)=>pg.transaction(tx=>work(async(text,params=[])=>(await tx.query<Record<string,unknown>>(text,[...params])).rows))};
 }

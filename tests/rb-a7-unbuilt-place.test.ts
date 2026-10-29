@@ -1,12 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {GET as meetingsGET} from "../app/api/meetings/route.ts";
-import {fixtureZipLocation as lookupZcta} from "./helpers/zip-location.ts";
-import {readerLocation} from "../lib/reader/location.ts";
 import {installReaderDatabaseQuery} from "../lib/reader/database.ts";
-import {PLACE_PAGES_SQL,READY_PLACE_SQL,placePageCacheIds,readPlacePackage} from "../lib/reader/place.ts";
-import {PLACE_PACKAGE_SQL} from "../lib/reader/place-builder.ts";
-import {readerCacheTags} from "../lib/reader/cache.ts";
+import {READY_PLACE_SQL,placePageCacheIds,readPlacePackage} from "../lib/reader/place.ts";
+import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
+import {installFactReader} from "../lib/facts/db.ts";
 import {snapshotCounts} from "../lib/meetings/snapshot.ts";
 import type {Query} from "../lib/facts/publish.ts";
 import type {Meeting} from "../lib/sources/types.ts";
@@ -21,62 +19,53 @@ const registry:RegistryRuntimeReadModel={formatVersion:1,registry:{generatedAt:A
   sourceDataset:"GOV_DIRECTORY",provenance:source}]},bodyRosters:[],rosterReaderDispositions:[],statewideExecutives:[],
   officialCandidacies:{formatVersion:1,rule:"EXACT_SEAT_CONSERVATIVE_NAME_OFFLINE_UNIQUE",rows:[]},officialPhotos:{photos:[]},rosterPhotos:{}};
 const snapshot={formatVersion:1 as const,generatedAt:AT,meetings:[meeting],agendaDocuments:[],sources:[],counts:snapshotCounts([meeting],0)};
-/** One fact-store row, as the pre-page reader read it and as the page builder reads it. */
-const raw=(divisionIds:readonly string[])=>({division_ids:divisionIds,registry,everyday_routing:null,registration_held:true,governments:[],divisions:[],
-  entities:[{id:BODY,division:CITY,kind:"body",state:"AZ"}],fields:[],rosters:[],comments:[],sittings:[],
-  meeting_rows:[{scope:`source:fixture:body:${encodeURIComponent(BODY)}`,payload:snapshot,current_version_id:"fixture",confirmation:null}],
-  archived_meetings:[],archived_documents:[],archived_document_links:[],agenda_texts:[],parts:{}});
+async function firstUse(){
+  const db=await migratedReaderDb();
+  await db.publish({id:'registry',recordClass:'REGISTRY_RUNTIME_BINDING',scope:'US-AZ:reader-registry-runtime',sourceId:'fixture',at:AT,value:registry});
+  await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','Arizona','AZ',NULL),($2,'place','Tucson','AZ',$1),($3,'body','Council','AZ',$2)",[ROOT,CITY,BODY]);
+  await db.publish({id:'meetings',recordClass:'MEETING',scope:`source:fixture:body:${encodeURIComponent(BODY)}`,sourceId:'fixture',at:AT,value:snapshot});
+  return db;
+}
 
-test("a body whose first page is still queued is composed from the fact store with one more read",async()=>{
-  const reads:string[]=[];
-  const query:Query=async(text,params=[])=>{
-    reads.push(text);
-    if(text===READY_PLACE_SQL)return [];
-    assert.equal(text,PLACE_PACKAGE_SQL);
-    assert.deepEqual(params[2],[BODY]);
-    assert.equal(params[6],false,"a reader read without agendas stays without agendas");
-    return [raw([])];
-  };
-  const place=await readPlacePackage({state:"AZ",placeId:BODY,divisionIds:[],bodyIds:[BODY]},query);
-  assert.deepEqual(reads,[READY_PLACE_SQL,PLACE_PACKAGE_SQL]);
-  assert.deepEqual(place.bodies.map(body=>body.id),[BODY]);
-  assert.deepEqual(place.meetings.map(m=>m.id),[meeting.id]);
-  assert.deepEqual(placePageCacheIds(place),[BODY],"the answer carries the page tag its first build purges");
+test('the first body visit builds and saves its page; the next visit reads only that page',async()=>{
+  const db=await firstUse(),reads:string[]=[];
+  const query:Query=async(text,params=[])=>{reads.push(text);return db.query(text,params);};
+  try{
+    const input={state:'AZ',placeId:BODY,divisionIds:[],bodyIds:[BODY]};
+    const first=await readPlacePackage(input,query);
+    assert.deepEqual(first.meetings.map(row=>row.id),[meeting.id]);
+    assert.deepEqual(placePageCacheIds(first),[BODY]);
+    assert.equal((await db.query('SELECT count(*)::int AS n FROM place_page WHERE place_id=$1',[BODY]))[0].n,1);
+    reads.length=0;assert.deepEqual(await readPlacePackage(input,query),first);
+    assert.deepEqual(reads,[READY_PLACE_SQL]);
+  }finally{await db.pg.close();}
 });
 
-test("a map selection with any unbuilt page is composed whole from the fact store",async()=>{
-  const reads:string[]=[];
-  const query:Query=async(text,params=[])=>{
-    reads.push(text);
-    if(text===PLACE_PAGES_SQL)return [{page_id:CITY,page_kind:"place",built_at:null,body_ids:[BODY],row:null}];
-    assert.equal(text,PLACE_PACKAGE_SQL);
-    assert.deepEqual(params[1],[CITY]);
-    return [raw([CITY])];
-  };
-  const place=await readPlacePackage({state:"AZ",divisionIds:[CITY],bodyIds:[BODY]},query);
-  assert.deepEqual(reads,[PLACE_PAGES_SQL,PLACE_PACKAGE_SQL]);
-  assert.deepEqual(place.meetings.map(m=>m.id),[meeting.id]);
+test('a map selection saves each missing place and body, then serves their saved answers',async()=>{
+  const db=await firstUse(),reads:string[]=[];
+  const query:Query=async(text,params=[])=>{reads.push(text);return db.query(text,params);};
+  try{
+    const input={state:'AZ',divisionIds:[CITY],bodyIds:[BODY]};
+    const first=await readPlacePackage(input,query);
+    assert.ok(first.meetings.some(row=>row.id===meeting.id));
+    assert.equal((await db.query('SELECT count(*)::int AS n FROM place_page WHERE place_id=ANY($1::text[])',[[CITY,BODY]]))[0].n,2);
+    reads.length=0;assert.deepEqual(await readPlacePackage(input,query),first);
+    assert.ok(reads.every(sql=>!(/civic_data_(?:promotions|candidates|candidate_events|payload_parts)/.test(sql))));
+  }finally{await db.pg.close();}
 });
 
-test("a reader visiting a ZIP with no built page still gets its meetings",async t=>{
-  t.mock.timers.enable({apis:["Date"],now:new Date(AT)});
-  t.mock.method(globalThis,"fetch",async()=>{throw Error("This fixture must not make network requests");});
-  const zip="85701",point=lookupZcta(zip)!,location=await readerLocation(point.lat,point.lng,zip);
-  const reads:string[]=[];
-  installReaderDatabaseQuery(async statements=>Promise.all(statements.map(async statement=>{
-    reads.push(statement.text);
-    if(statement.text===READY_PLACE_SQL)return [];
-    assert.equal(statement.text,PLACE_PACKAGE_SQL);
-    assert.deepEqual(statement.params[1],location.divisionIds,"the ZIP's own selection is the one its page would be built from");
-    return [raw(location.divisionIds)];
-  })));
-  try {
-    const response=await meetingsGET(new Request(`https://example.test/api/meetings?zip=${zip}`));
-    const payload=await response.json();
-    assert.equal(response.status,200,JSON.stringify(payload));
-    assert.deepEqual(reads,[READY_PLACE_SQL,PLACE_PACKAGE_SQL]);
-    assert.ok(payload.meetings.some((m:Meeting)=>m.id===meeting.id),"the held meeting is shown");
-    const tags=String(response.headers.get("Netlify-Cache-Tag")).split(",");
-    for(const tag of readerCacheTags({places:[`zip:${zip}`]}))assert.ok(tags.includes(tag),"building the page purges this answer");
-  } finally { installReaderDatabaseQuery(null); }
+test('a ZIP with no page gets its held meetings on first use and keeps the saved page for the next reader',async t=>{
+  t.mock.timers.enable({apis:['Date'],now:new Date(AT)});
+  t.mock.method(globalThis,'fetch',async()=>{throw Error('This fixture must stay local');});
+  const db=await firstUse(),reads:string[]=[];
+  const query:Query=async(text,params=[])=>{reads.push(text);return db.query(text,params);};
+  installFactReader(query);installReaderDatabaseQuery(async batch=>Promise.all(batch.map(s=>query(s.text,s.params))));
+  try{
+    const request=()=>new Request('https://example.test/api/meetings?zip=85701');
+    const first=await meetingsGET(request());assert.equal(first.status,200,await first.clone().text());
+    assert.ok((await first.json()).meetings.some((row:Meeting)=>row.id===meeting.id));
+    assert.equal((await db.query('SELECT count(*)::int AS n FROM place_page WHERE place_id=$1',['zip:85701']))[0].n,1);
+    reads.length=0;const next=await meetingsGET(request());assert.equal(next.status,200);
+    assert.ok(reads.every(sql=>!(/civic_data_(?:promotions|candidates|candidate_events|payload_parts)/.test(sql))));
+  }finally{installFactReader(undefined);installReaderDatabaseQuery(undefined);await db.pg.close();}
 });

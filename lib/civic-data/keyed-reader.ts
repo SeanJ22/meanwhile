@@ -11,7 +11,7 @@ export const keyedReaderPointers = `SELECT p.key,p.record_class,p.scope,p.source
   WHERE r.collection='rp01.header' AND r.promotion_key=ANY($1::text[])`;
 
 export async function readKeyedEntry(query:Query,recordClass:RoutineRecordClass,scope:string) {
-  const [row]=await query(`WITH pointer AS (${keyedReaderPointers}) SELECT ${AUTHORITY_COLUMNS.split(",").map(column=>`pointer.${column}`).join(",")},
+  const [row]=await query(`WITH pointer AS (${keyedReaderPointers}) SELECT ${AUTHORITY_COLUMNS.split(",").map(column=>`pointer.${column}`).join(",")},pointer.temporal,
     pointer.payload||coalesce((SELECT jsonb_object_agg(field,coalesce((SELECT jsonb_agg(r.value ORDER BY r.ordinal)
       FROM civic_data_rows r WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='rp01.'||field),'[]'::jsonb))
       FROM civic_data_rows h,LATERAL jsonb_array_elements_text(h.value->'collections') field
@@ -34,7 +34,7 @@ export async function readKeyedSelection(query:Query,recordClass:RoutineRecordCl
     arrays AS (SELECT jsonb_object_agg(field,coalesce((SELECT jsonb_agg(f.value ORDER BY f.ordinal) FROM facts f
       WHERE f.collection='rp01.'||field),'[]'::jsonb)) AS value FROM civic_data_rows h,
       LATERAL jsonb_array_elements_text(h.value->'collections') field WHERE h.collection='rp01.header' AND h.promotion_key=($1::text[])[1])
-    SELECT ${AUTHORITY_COLUMNS.split(",").map(column=>`pointer.${column}`).join(",")},pointer.payload||coalesce(arrays.value,'{}'::jsonb)||CASE WHEN pointer.record_class='FEDERAL_KEY_VOTE'
+    SELECT ${AUTHORITY_COLUMNS.split(",").map(column=>`pointer.${column}`).join(",")},pointer.temporal,pointer.payload||coalesce(arrays.value,'{}'::jsonb)||CASE WHEN pointer.record_class='FEDERAL_KEY_VOTE'
       THEN jsonb_build_object('positions',pointer.payload->'positions'||jsonb_build_object('positions',coalesce((
         SELECT jsonb_object_agg(roll,coalesce((SELECT jsonb_object_agg(r.row_id,r.value->'position') FROM civic_data_rows r
           WHERE r.promotion_key=pointer.key AND r.version_id=pointer.current_version_id AND r.collection='rp01.positions'

@@ -1146,7 +1146,7 @@ export function clearPromotedReadModelCache(): void {
   provenPointers = new WeakMap();
 }
 
-const readerProjectionSelections = new WeakMap<ReaderSelection, Map<string, { selection: ReaderSelection; exactKeys: boolean }>>();
+const readerProjectionSelections = new WeakMap<ReaderSelection, Map<string, { selection: ReaderSelection; exactKeys: boolean;pending?:Promise<PromotedEdgeEntry> }>>();
 
 /** Keep a place's complete selected slice when later card reads add aliases to its selection. */
 export function primeReaderProjection(recordClass: RoutineRecordClass, scope: string, keys: readonly string[], options: {readonly exactKeys?: true} = {}): Promise<PromotedEdgeEntry> {
@@ -1157,15 +1157,18 @@ export function primeReaderProjection(recordClass: RoutineRecordClass, scope: st
   const pointer = `${recordClass}:${scope}`;
   const primed = held.get(pointer) ?? {
     selection: { ...selection, keys: new Set(options.exactKeys ? keys : [...selection.keys, ...keys]) },
-    exactKeys: options.exactKeys === true,
+    exactKeys: options.exactKeys === true, pending:undefined as Promise<PromotedEdgeEntry>|undefined,
   };
   held.set(pointer, primed);
-  return loadReaderProjection(recordClass, scope, primed.selection, primed.exactKeys);
+  return primed.pending??=loadReaderProjection(recordClass, scope, primed.selection, primed.exactKeys);
 }
 
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
-  const primed = readerProjectionSelections.get(selection)?.get(`${recordClass}:${scope}`);
-  return loadReaderProjection(recordClass, scope, primed?.selection ?? selection, primed?.exactKeys ?? false);
+  let held=readerProjectionSelections.get(selection);
+  if(!held){held=new Map();readerProjectionSelections.set(selection,held);}
+  const key=`${recordClass}:${scope}`,primed=held.get(key)??{selection,exactKeys:false,pending:undefined};
+  held.set(key,primed);
+  return primed.pending??=loadReaderProjection(recordClass,scope,primed.selection,primed.exactKeys);
 }
 
 // On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.

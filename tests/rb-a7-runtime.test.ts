@@ -10,6 +10,7 @@ import { readerCacheTags,enqueueReaderPlaces,UNBUILT_ZIP_PRIORITY } from "../lib
 import { factDb } from "./helpers/fact-db.ts";
 import { zipLocationMigration } from "./helpers/reader-identity-db.ts";
 import { fillMissingZipLocations } from "../lib/place-map/location-import.ts";
+import {migratedReaderDb as pageDb} from "./helpers/migrated-reader-db.ts";
 
 test("the deployment queues every place and body that has no ready page for the runner", async () => {
   const db = await factDb();
@@ -151,6 +152,7 @@ test("a state-root rebuild never loads the statewide meeting corpus",async()=>{
   const state='ocd-division/country:us/state:az';
   const selections:unknown[][]=[];
   const query:Query=async(text,args=[])=>{
+    if(text!==PLACE_PACKAGE_SQL)return text.includes(' AS fingerprint')?[{fingerprint:'empty-authorities'}]:[];
     assert.equal(text,PLACE_PACKAGE_SQL);
     assert.equal(args[4],false,'all-body jobs read bounded body pages instead of one statewide source corpus');
     selections.push([...args]);
@@ -165,7 +167,8 @@ test("a state-root rebuild never loads the statewide meeting corpus",async()=>{
 test("ZIP construction reads one current projection without agenda or history data",async()=>{
   const id='ocd-division/country:us/state:ca/place:los_angeles';
   let reads=0;
-  const query:Query=async(_sql,args)=>{
+  const query:Query=async(sql,args)=>{
+    if(sql!==PLACE_PACKAGE_SQL)return sql.includes(' AS fingerprint')?[{fingerprint:'empty-authorities'}]:[];
     reads++;
     assert.equal(args?.[5],false);
     assert.equal(args?.[6],false);
@@ -180,7 +183,7 @@ test("ZIP construction reads one current projection without agenda or history da
 });
 
 test("a ZIP worker stores only its ready current page and retains the serving dependencies",async()=>{
-  const db=await factDb({withHourlyCounts:true});
+  const db=await pageDb();
   const zip='zip:90001',city='ocd-division/country:us/state:ca/place:los_angeles',body=`${city}#board`,fringe=`${city}/council_district:2`;
   try {
     await db.query("INSERT INTO entity(id,kind,name,state,parent_id) VALUES($1,'place','ZIP 90001','CA',NULL),($2,'place','Los Angeles','CA',NULL),($3,'body','Council','CA',$2),($4,'place','Neighbor district','CA',NULL)",
@@ -198,7 +201,10 @@ test("a ZIP worker stores only its ready current page and retains the serving de
     assert.equal(sourceReads,1);
     const [page]=await db.query('SELECT body,history_body,context FROM place_page WHERE place_id=$1',[zip]);
     assert.deepEqual(page!.history_body,{});
-    assert.deepEqual(page!.context,{formatVersion:1});
+    assert.equal((page!.context as Record<string,unknown>).formatVersion,1);
+    assert.equal((page!.context as Record<string,unknown>).readerFormat,1);
+    assert.equal((page!.context as Record<string,unknown>).authorityFormat,1);
+    assert.ok(!Object.hasOwn(page!.context as object,'current'),'the ZIP stores its ready answer and metadata without a second raw projection');
     assert.equal((page!.body as {encoding:string}).encoding,'br-json-v1');
     assert.equal(unpackReadyPlace(page!.body).bodies.length,1);
     assert.equal(unpackReadyTerritory(page!.body),null);
@@ -208,7 +214,7 @@ test("a ZIP worker stores only its ready current page and retains the serving de
 });
 
 test("a publication arriving during the data snapshot keeps its generation queued without aborting the built page", async () => {
-  const db=await factDb({withHourlyCounts:true});
+  const db=await pageDb();
   const id='ocd-division/country:us/state:az/county:pima';
   try {
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Pima County','AZ')",[id]);
@@ -246,7 +252,7 @@ test("a publication arriving during the data snapshot keeps its generation queue
 });
 
 test("a constantly changing place cannot reclaim its old queue position ahead of untouched places",async()=>{
-  const db=await factDb({withHourlyCounts:true});
+  const db=await pageDb();
   const hot='ocd-division/country:us/state:az/county:pima',untouched='ocd-division/country:us/state:az/county:maricopa';
   try {
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Pima','AZ'),($2,'place','Maricopa','AZ')",[hot,untouched]);
@@ -283,7 +289,7 @@ test("a constantly changing place cannot reclaim its old queue position ahead of
 });
 
 test("overlapping scheduled invocations share four page leases and reclaim an expired slot", async () => {
-  const db=await factDb({withHourlyCounts:true});
+  const db=await pageDb();
   try {
     for(let n=1;n<=5;n++) {
       const id=`ocd-division/country:us/state:az/county:test${n}`;

@@ -3,12 +3,12 @@ import test from "node:test";
 import { PLACE_PACKAGE_SQL, rebuildPlacePages } from "../lib/reader/place-builder.ts";
 import { enqueueReaderPlaces } from "../lib/reader/cache.ts";
 import type { FactDb } from "../lib/facts/publish.ts";
-import { factDb } from "./helpers/fact-db.ts";
+import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 
 const PLACE = "ocd-division/country:us/state:az/county:pima";
 
 async function queuedPlace() {
-  const db = await factDb({ withHourlyCounts: true });
+  const db = await migratedReaderDb();
   await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Pima County','AZ')", [PLACE]);
   await db.query("INSERT INTO rebuild_queue(place_id) VALUES($1)", [PLACE]);
   let reads = 0;

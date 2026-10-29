@@ -113,7 +113,7 @@ test("state selection reads individual body contexts and direct pages select sep
     const zip = "zip:85701";
     await query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Fixture ZIP','AZ')", [zip]);
     await query(`INSERT INTO place_page(place_id,body,history_body,context)
-      SELECT $1,body,'{}'::jsonb,'{"formatVersion":1}'::jsonb FROM place_page WHERE place_id=$2`, [zip, FIRST]);
+      SELECT $1,body,'{}'::jsonb,'{"formatVersion":1,"readerFormat":1}'::jsonb FROM place_page WHERE place_id=$2`, [zip, FIRST]);
     for (const includeHistory of [false, true]) {
       let zipReads = 0;
       const selected = await readPlacePackage({ state: "AZ", placeId: zip, divisionIds: [], bodyIds: [FIRST], includeHistory }, async (text, params) => {

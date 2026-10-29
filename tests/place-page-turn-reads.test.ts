@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
-import { buildPageBody, PLACE_PACKAGE_SQL, rebuildPlacePages, type PlaceTurnReads } from "../lib/reader/place-builder.ts";
-import { packPlaceContext, packReadyPlace, unpackReadyPlace } from "../lib/reader/place-ready.ts";
+import { buildPageBody,storePlacePage, PLACE_PACKAGE_SQL, rebuildPlacePages, type PlaceTurnReads } from "../lib/reader/place-builder.ts";
+import { unpackReadyPlace } from "../lib/reader/place-ready.ts";
 import { EVERYDAY_ROUTING_POINTER } from "../lib/routing/everyday-data-plane.ts";
 import type { FactDb, Query } from "../lib/facts/publish.ts";
 
@@ -45,12 +45,13 @@ test("one rebuild turn reads the national routing record once and stores the sam
     // Before: every page's read carried the whole national record.
     const before = meter(), expected = new Map<string, Record<string, unknown>>();
     for (let n = 0; n < PAGES; n++) {
-      const { readyCurrent, readyHistory, territory, ...context } = await buildPageBody(place(n), "place", "AZ", metered(query, before));
-      expected.set(place(n), JSON.parse(JSON.stringify({ body: packReadyPlace(readyCurrent, territory),
-        history_body: readyHistory ? packReadyPlace(readyHistory) : {}, context: packPlaceContext(context) })));
+      await storePlacePage(query,place(n),await buildPageBody(place(n), "place", "AZ", metered(query, before)));
+      const [saved]=await query("SELECT body,history_body,context-'prints' AS context FROM place_page WHERE place_id=$1",[place(n)]);
+      expected.set(place(n),saved);
     }
     assert.equal(before.routingBodies, PAGES);
-
+    await query('DELETE FROM place_page_dependency');
+    await query('DELETE FROM place_page');
     for (let n = 0; n < PAGES; n++) await pg.query("INSERT INTO rebuild_queue(place_id) VALUES($1)", [place(n)]);
     const after = meter();
     const db: FactDb = { transaction: work => pg.transaction(tx => work(metered(async (text, params = []) =>

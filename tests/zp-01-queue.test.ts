@@ -1,7 +1,7 @@
 import {fixturePlaceBuild} from "./helpers/place-build-row.ts";
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { factDb } from './helpers/fact-db.ts';
+import {migratedReaderDb} from './helpers/migrated-reader-db.ts';
 import { enqueueReaderPlaces } from '../lib/reader/cache.ts';
 import { PLACE_PACKAGE_SQL, rebuildPlacePages } from '../lib/reader/place-builder.ts';
 import type { FactDb } from '../lib/facts/publish.ts';
@@ -12,7 +12,7 @@ const residents:Record<string,number>={'85003':11042,'85701':5132,'86001':37093,
 const raw={division_ids:[],entities:[],fields:[],rosters:[],comments:[],sittings:[],meeting_rows:[],archived_meetings:[],archived_documents:[],parts:{},registry:null,governments:[],divisions:[]};
 
 test('pending publications do no row updates; an in-flight page retains exactly one later generation',async()=>{
-  const db=await factDb({withHourlyCounts:true});
+  const db=await migratedReaderDb();
   try {
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ')",[root]);
     await enqueueReaderPlaces({places:[root]},db.query);
@@ -30,7 +30,7 @@ test('pending publications do no row updates; an in-flight page retains exactly 
 });
 
 test('every pass grows ZIP pages, in descending held population, despite an always-changing large ZIP',async()=>{
-  const db=await factDb({withHourlyCounts:true});
+  const db=await migratedReaderDb();
   const zips=['85003','85701','86001','85004','85301','85302'];
   try {
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ')",[root]);
@@ -66,7 +66,7 @@ test('every pass grows ZIP pages, in descending held population, despite an alwa
 });
 
 test('a publication after queue deletion cannot rebuild that page twice in one pass',async()=>{
-  const db=await factDb({withHourlyCounts:true});
+  const db=await migratedReaderDb();
   try {
     await db.query("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ')",[root]);
     await enqueueReaderPlaces({places:[root]},db.query);

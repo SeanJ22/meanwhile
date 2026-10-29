@@ -95,9 +95,9 @@ test("reader answers keep national people, state and place tags with a fifteen-m
 });
 
 test("publication tags follow state scopes and encoded body partitions", () => {
-  for(const recordClass of ["REGISTRATION","REGISTRY_RUNTIME_BINDING","MEETING","DOTGOV_REFERENCE"])
+  for(const recordClass of ["REGISTRATION","REGISTRY_RUNTIME_BINDING","MEETING","DOTGOV_REFERENCE","FEDERAL_DIRECTORY","CURATED_READER_RECORD"])
     assert.equal(placePageConsumesPublication("US-AZ:reader",recordClass),true,recordClass);
-  for(const recordClass of ["FEDERAL_MONEY","STATE_CAMPAIGN_FINANCE","FEDERAL_DIRECTORY","CURATED_READER_RECORD"])
+  for(const recordClass of ["FEDERAL_MONEY","STATE_CAMPAIGN_FINANCE"])
     assert.equal(placePageConsumesPublication("US-AZ:other-reader",recordClass),false,recordClass);
   const routing=requiredManualProductionContract("everyday-routing");
   assert.equal(placePageConsumesPublication(routing.scope,routing.recordClass),true);

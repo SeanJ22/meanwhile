@@ -67,7 +67,7 @@ test("partitioned federal ballot money keeps full selected filings and committee
   process.env.DATABASE_URL="postgres://readonly:fixture@127.0.0.1/reader-migrations-test";
   installReaderDatabaseQuery(async statements=>{
     reads++;const statement=statements[0];
-    assert.equal(statements.length,1);assert.equal(statement.params.length,3,"a ballot slice has no geographic expansion");
+    assert.equal(statements.length,1);assert.equal(statement.params.length,2,"a ballot slice has no geographic expansion");
     return[await checked(statement.text,statement.params)];
   });
   try{
@@ -136,9 +136,9 @@ test("a cold Virginia ballot selects its held FEC registration after the concurr
   const checked=checkedFixture(pg,()=>fecBodies++);
   installReaderDatabaseQuery(async statements=>{
     const statement=statements[0];assert.equal(statements.length,1);
-    assert.equal(statement.params[0],"FEC_FUNDING");fecReads++;
-    assert.ok((statement.params[2]as string[]).includes("congress:S001230"),"the official key reaches the selected SQL before the FEC slice is pinned");
-    assert.ok((statement.params[2]as string[]).includes("fec:H4VA10279"),"the source-native FEC alias is selected too");
+    assert.deepEqual(statement.params[0],[`FEC_FUNDING:${contract.scope}`]);fecReads++;
+    assert.ok((statement.params[1]as string[]).includes("congress:S001230"),"the official key reaches the selected SQL before the FEC slice is pinned");
+    assert.ok((statement.params[1]as string[]).includes("fec:H4VA10279"),"the source-native FEC alias is selected too");
     return[await checked(statement.text,statement.params)];
   });
   try{

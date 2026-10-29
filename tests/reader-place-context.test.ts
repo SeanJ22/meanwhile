@@ -3,6 +3,7 @@ import {createHash} from "node:crypto";
 import test from "node:test";
 import {buildPlacePackage,rebuildPlacePages} from "../lib/reader/place-builder.ts";
 import {PLACE_PAGES_SQL,readPlacePackage,type PlaceInput} from "../lib/reader/place.ts";
+import {preparePlaceRosters} from "../lib/reader/body-roster.ts";
 import {unpackPlaceContextRow} from "../lib/reader/place-ready.ts";
 import type {FactDb,Query} from "../lib/facts/publish.ts";
 import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
@@ -81,9 +82,11 @@ test("the real worker transfers only the requested compressed context and keeps 
         return rows;
       });
       assert.equal(reads,1);
-      assert.deepEqual(actual,canonical,`${label}: every visible field keeps its canonical value`);
+      const visible=(value:object)=>Object.fromEntries(Object.entries(value).filter(([key])=>!['rosterRefs','rosterPreviews','rosterIds'].includes(key)));
+      assert.deepEqual(visible(actual),visible(input.bodyFactsOnly||input.includeAgenda?canonical:preparePlaceRosters(canonical).place),`${label}: every visible field keeps its canonical value`);
       if(input.divisionIds.length) {
-        assert.equal(actual.bodies[0]!.roster!.members[0]!.name,"Exact member — é");
+        if(input.bodyFactsOnly||input.includeAgenda)assert.equal(actual.bodies[0]!.roster!.members[0]!.name,"Exact member — é");
+        else assert.ok(actual.rosterIds?.[BODY]?.length===1,"the unopened page carries the exact identity without the full member card");
         assert.ok(actual.meetings.some(row=>row.id==="fixture:fact-only"));
         assert.equal(actual.snapshot.agendaDocuments.length,input.includeAgenda?(input.includeHistory?2:1):0);
       }else assert.equal(actual.snapshotHeldAt,AT,"the empty family's checked time stays visible");

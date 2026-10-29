@@ -1,5 +1,6 @@
-import {tableWords} from "@/lib/db/table-words";
 "use client";
+
+import {tableWords} from "@/lib/db/table-words";
 
 import { useEffect, useMemo, useState } from "react";
 

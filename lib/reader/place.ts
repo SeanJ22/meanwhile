@@ -116,7 +116,7 @@ function readCachedPlacePackage(input:PlaceInput,query:()=>Query|null):Promise<P
 async function loadPlacePackage(input:PlaceInput,query:Query|null,writer?:FactDb):Promise<PlacePackage> {
   if(!query)throw new Error("FACT_STORE_DATABASE_URL_MISSING");
   if(input.placeId && !(input.placeId.startsWith("zip:") && input.includeHistory)
-    && !input.includeAgenda && (!input.bodyFactsOnly||input.placeId.startsWith('zip:')) && !input.meetingIds && !input.allBodies) {
+    && !input.includeAgenda && !input.bodyFactsOnly && !input.meetingIds && !input.allBodies) {
     const [saved]=await query(READY_PLACE_SQL,[input.placeId,input.includeHistory??false]);
     if(!saved?.page){
       await buildMissingPlacePages([{id:input.placeId,kind:'place',state:input.state.toUpperCase(),reader:true}],writer);

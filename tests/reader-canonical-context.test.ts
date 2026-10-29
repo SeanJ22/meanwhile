@@ -14,6 +14,7 @@ import { provenEdgeEntry } from "./helpers/promoted-edge-entry.ts";
 import type { RegistryRuntimeReadModel } from "../lib/registry/runtime-data-plane.ts";
 import type { Division } from "../lib/registry/types.ts";
 import { PLACE_PAGES_SQL } from "../lib/reader/place.ts";
+import {buildPageBody,storePlacePage} from "../lib/reader/place-builder.ts";
 import { migratedReaderDb } from "./helpers/migrated-reader-db.ts";
 import { CivicReadCache } from "../lib/db/civic-read-cache.ts";
 import { versionedSelect } from "../lib/db/versioned-query.ts";
@@ -42,6 +43,12 @@ function stateRows(version: string, divisions: readonly string[], zip = false, w
     ...(zip?{zip_registry:row}:{}),local_divisions: divisions.map(ocdId => division(ocdId, ocdId, true)) }] }];
 }
 
+const queryKeys=(statement:{params:readonly unknown[]})=>{
+  const value=statement.params[0];
+  if(Array.isArray(value))return value as string[];
+  if(typeof value==='string'&&value.startsWith('['))return (JSON.parse(value) as {key:string}[]).map(row=>row.key);
+  return [];
+};
 const selection = (state: string): ReaderSelection => ({ states: [state], keys: new Set([`state:${state}`]) });
 const absentStore: CivicDataReadStore = {
   async readPromotion() { throw new Error("Unexpected second read"); },
@@ -85,7 +92,7 @@ test("settled state and geography reads stay consistent within one request while
   let queryStarted: (() => void) | undefined;
   installReaderDatabaseQuery(async statements => {
     assert.equal(statements.length, 1);
-    const statement = statements[0], keys = statement.params[0] as string[];
+    const statement = statements[0], keys = queryKeys(statement);
     if (!keys.some(key => key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
     reads++;
     queryStarted?.();
@@ -142,9 +149,14 @@ test("an independent state request checks a committed change while an older quer
   let reads=0,release=()=>{},started=()=>{};
   const held=new Promise<void>(resolve=>{release=resolve;});
   const queried=new Promise<void>(resolve=>{started=resolve;});
-  const publishState=async(version:string)=>publish({id:version,recordClass:"REGISTRY_RUNTIME_BINDING",
-    scope:stateRegistryRuntimeScope("AZ"),sourceId:"registry-reviewed-bindings",at:"2026-10-19T00:00:00.000Z",
-    value:(stateRows(version,[])[0] as {payload:RegistryRuntimeReadModel}).payload});
+  const publishState=async(version:string)=>{
+    await publish({id:version,recordClass:"REGISTRY_RUNTIME_BINDING",scope:stateRegistryRuntimeScope("AZ"),sourceId:"registry-reviewed-bindings",at:"2026-10-19T00:00:00.000Z",
+      value:(stateRows(version,[])[0] as {payload:RegistryRuntimeReadModel}).payload});
+    const id='ocd-division/country:us/state:az';
+    const q=async(text:string,params:readonly unknown[]=[]) => (await pg.query<Record<string,unknown>>(text,[...params])).rows;
+    await q("INSERT INTO entity(id,kind,name,state) VALUES($1,'place','Arizona','AZ') ON CONFLICT DO NOTHING",[id]);
+    await storePlacePage(q,id,await buildPageBody(id,'place','AZ',q));
+  };
   const firstSelection=selection("AZ"),secondSelection=selection("AZ");
   installReaderDatabaseQuery(async statements=>{
     const call=++reads,rows=[];
@@ -209,39 +221,30 @@ test("a ballot's geography, people and canonical pointers share one answer acros
   } finally {release();installReaderDatabaseQuery(undefined);}
 });
 
-test("the ballot receives verified state authorities without waiting for member-office details", async () => {
-  let release = () => {}, started = () => {};
-  const blocked = new Promise<void>(resolve => { release = resolve; });
-  const officeStarted = new Promise<void>(resolve => { started = resolve; });
-  installReaderDatabaseQuery(async statements => {
-    if (statements[0].text.includes("collection='memberOffices'")) {
-      started(); await blocked; return [[]];
-    }
-    return [stateRows("early-authorities", [], true, true)];
+test("the ballot receives state authorities and its member-office metadata from the same saved page",async()=>{
+  let reads=0;
+  installReaderDatabaseQuery(async statements=>{
+    reads++;assert.equal(statements.length,1);
+    assert.doesNotMatch(statements[0].text,/civic_data_(?:promotions|candidates|candidate_events|payload_parts)/);
+    return [stateRows("ready-authorities",[],true,true)];
   });
-  try {
-    await withReaderSelection(selection("AZ"), async () => {
-      const state = readStatePackage("AZ", [], "85701", { earlyDistricts: true });
-      const authorities = readStateAuthorities(state);
-      await officeStarted;
-      let stateFinished = false;
-      void state.then(() => { stateFinished = true; });
-      const early = await authorities;
-      assert.equal(early.registryRead.kind, "PROMOTED");
-      assert.equal(stateFinished, false, "the separate office query remains pending");
-      release();
-      const complete = await state;
-      assert.equal(early.registryRead, complete.registryRead);
-      assert.equal(early.federalRead, complete.federalRead);
+  try{
+    await withReaderSelection(selection("AZ"),async()=>{
+      const state=readStatePackage("AZ",[],"85701",{earlyDistricts:true});
+      const early=await readStateAuthorities(state),complete=await state;
+      assert.equal(early.registryRead.kind,"PROMOTED");
+      assert.equal(early.registryRead,complete.registryRead);
+      assert.equal(early.federalRead,complete.federalRead);
+      assert.equal(reads,1,"member-office metadata needs no second query");
     });
-  } finally { release(); installReaderDatabaseQuery(undefined); }
+  }finally{installReaderDatabaseQuery(undefined);}
 });
 
 test("a failed state read remains failed for that request and a later request can retry", async () => {
   const failure = new Error("The selected state could not be read");
   let reads = 0, failed = true;
   installReaderDatabaseQuery(async statements => {
-    const keys = statements[0].params[0] as string[];
+    const keys = queryKeys(statements[0]);
     if (!keys.some(key => key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
     reads++;
     if (failed) throw failure;
@@ -266,7 +269,7 @@ test("a ZIP-loaded state primes absent district pointers and satisfies later raw
   let reads = 0;
   const scope = "US:plain-english-translations:ocd-division/country:us/state:az/cd:7";
   installReaderDatabaseQuery(async statements => {
-    const statement = statements[0], keys = Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
+    const statement = statements[0], keys = queryKeys(statement);
     if (!statement.text.includes("AS zip_registry") && !keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [[]];
     reads++;
     const rows = stateRows(`zip-request:${statement.params[6]}`,[]);
@@ -304,7 +307,7 @@ test("the ballot submits state and place reads before its independent auxiliary 
   const blocked = new Promise<void>(resolve=>{ release=resolve; });
   installReaderDatabaseQuery(async statements=>{
     assert.equal(statements.length,1);
-    const statement=statements[0], keys=Array.isArray(statement.params[0]) ? statement.params[0] as string[] : [];
+    const statement=statements[0], keys=queryKeys(statement);
     if (keys.length && keys.every(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
     const family=statement.text.includes("additional AS MATERIALIZED") || statement.text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:")) ? "state" : statement.params[0] === "AZ" ? "place" : "auxiliary";
     order.push(family);
@@ -357,11 +360,7 @@ test("an unavailable local territory file leaves the ballot's canonical families
   const failure=new Error("The local territory file is unavailable");
   let auxiliaries=0;
   installReaderDatabaseQuery(async statements=>{
-    if(statements[0].text.includes("AS zip_registry")&&!Array.isArray(statements[0].params[0])) {
-      const row=stateRows("territory-failure-state",[],true).find(row=>"part_payload" in row);
-      assert.ok(row&&"part_payload" in row);return [[row.part_payload[0]]];
-    }
-    const keys=statements[0].params[0] as string[];
+    const keys=queryKeys(statements[0]);
     assert.ok(Array.isArray(keys),"a failed territory read cannot submit a local place query");
     if (statements[0].text.includes("additional AS MATERIALIZED") || statements[0].text.includes("AS zip_registry") || keys.some(key=>key.startsWith("REGISTRY_RUNTIME_BINDING:"))) return [stateRows("territory-failure-state",[],statements[0].text.includes("AS zip_registry"))];
     if (keys.length && keys.every(key=>key.startsWith("STATE_LEGISLATOR:US:people:"))) return [[]];
@@ -393,7 +392,7 @@ test("the selected funding slice stays scoped after aliases and sees the next cu
   const p = entry.projection;
   const row = { key: p.key, source_id: p.sourceId, record_class: p.recordClass, scope: p.scope, current_version_id: p.versionId,
     last_known_good_version_id: p.lastKnownGoodVersionId, promoted_at: p.promotedAt, validation_receipt: p.receipt, payload: p.payload,
-    retrieved_at: entry.attested.retrievedAt, temporal: { version: entry.attested.version, sourceThrough: entry.attested.sourceThrough } };
+    published:true,retrieved_at: entry.attested.retrievedAt, temporal: { version: entry.attested.version, sourceThrough: entry.attested.sourceThrough } };
   const originalUrl = process.env.DATABASE_URL, originalReport = process.env.WTP_VITAL_SIGNS_REPORT, originalFetch = neonConfig.fetchFunction;
   let reads = 0;
   process.env.DATABASE_URL = "postgresql://fixture:fixture@canonical-reader.invalid/fixture";
@@ -401,7 +400,7 @@ test("the selected funding slice stays scoped after aliases and sees the next cu
   neonConfig.fetchFunction = async () => { throw new Error("Selected projections must not fall back to HTTP"); };
   installReaderDatabaseQuery(async statements => {
     assert.equal(statements.length, 1);
-    const keys = statements[0].params[2] as readonly string[];
+    const keys = statements[0].params[1] as readonly string[];
     assert.ok(keys.includes("ballot-az-federal-candidate"));
     assert.ok(!keys.includes("ballot-nh-candidate"));
     reads++;
@@ -413,12 +412,18 @@ test("the selected funding slice stays scoped after aliases and sees the next cu
       await primeReaderProjection("FEC_FUNDING", contract.scope, ["ballot-az-federal-candidate"]);
       place.keys.add("congress:an-official-alias");
       assert.equal((await readPromotedCivicData("FEC_FUNDING", contract.scope)).kind, "PROMOTED");
-      assert.equal(reads, 2, "the next operation goes through the shared database query path again");
+      assert.equal(reads, 1, "cards share one keyed holding within the request");
       Object.assign(row, { payload: { candidates: [{ targetKeys: ["ballot-az-federal-candidate"], updated: true }] } });
       const changed = await readPromotedCivicData<{ candidates: { updated?: true }[] }>("FEC_FUNDING", contract.scope);
       assert.equal(changed.kind, "PROMOTED");
-      if (changed.kind === "PROMOTED") assert.equal(changed.value.candidates[0]?.updated, true);
-      assert.equal(reads, 3, "the next operation sees a changed row without a request snapshot bypass");
+      if (changed.kind === "PROMOTED") assert.equal(changed.value.candidates[0]?.updated, undefined);
+      assert.equal(reads, 1, "an already admitted request retains its coherent snapshot");
+    });
+    await withReaderSelection(selection("AZ"),async()=>{
+      await primeReaderProjection("FEC_FUNDING",contract.scope,["ballot-az-federal-candidate"]);
+      const changed=await readPromotedCivicData<{candidates:{updated?:true}[]}>("FEC_FUNDING",contract.scope);
+      assert.equal(changed.kind,'PROMOTED');if(changed.kind==='PROMOTED')assert.equal(changed.value.candidates[0]?.updated,true);
+      assert.equal(reads,2,"a new request sees the current keyed holding");
     });
   } finally {
     if (originalUrl === undefined) delete process.env.DATABASE_URL; else process.env.DATABASE_URL = originalUrl;

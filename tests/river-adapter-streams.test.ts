@@ -220,6 +220,7 @@ test("River takes an adapter stream like any lane, returns a conflicting one to 
     sh(root, ["clone", "--quiet", origin, work]);
     sh(work, ["checkout", "--quiet", "-b", "main"]);
     put(work, "lib/sources/platform-adapters/shared.ts", "export const v = 0;\n");
+    for (const kind of ["alpha", "beta"]) put(work, `lib/sources/platform-adapters/retired-${kind}.ts`, "// retired\n");
     sh(work, ["add", "-A"]);
     sh(work, ["commit", "--quiet", "-m", "base"]);
     sh(work, ["push", "--quiet", "origin", "main", "main:river"]);
@@ -238,7 +239,9 @@ test("River takes an adapter stream like any lane, returns a conflicting one to 
       sh(work, ["checkout", "--quiet", "-f", "-B", `adapter-${kind}`, exists ? `origin/stream/adapter-${kind}` : "origin/river"]);
       put(work, "lib/sources/platform-adapters/shared.ts", `export const v = "${value}";\n`);
       put(work, `lib/sources/platform-adapters/${kind}.test.ts`, "// test\n");
-      sh(work, ["add", "lib"]);
+      // A release keeps the code the same size or smaller: the stream retires one line as it adds its test.
+      rmSync(join(work, `lib/sources/platform-adapters/retired-${kind}.ts`), { force: true });
+      sh(work, ["add", "-A", "lib"]);
       sh(work, ["commit", "--quiet", "-m", `READY: adapter ${kind} reusable source adapter`, "-m", "Connected end to end and checked on the next scheduled run."]);
       const ready = sh(work, ["rev-parse", "HEAD"]);
       put(work, `.factory/adapter-${kind}.md`, adapterStatusRecord({ kind, readySha: ready, check: { ok: true, summary: "engineer check pass" }, runId: "engineer:x", now: new Date().toISOString(), reason: "why" }));

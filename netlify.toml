@@ -1,7 +1,7 @@
 # Deploy settings are pinned here rather than autodetected.
 
 [build]
-  command = "corepack enable && corepack pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm run build && node --experimental-strip-types scripts/prepare-place-pages.mts"
+  command = "corepack enable && corepack pnpm db:apply --target=production --phase=expand --production-build && corepack pnpm keys import --production-build && corepack pnpm run build && node --experimental-strip-types scripts/prepare-place-pages.mts"
   publish = ".next"
   # Exit 0 CANCELS the build; non-zero builds. Every failure path builds.
   ignore = "node scripts/netlify-ignore.mjs"

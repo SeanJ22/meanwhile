@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 144 (site 10:06 PM, runner 10:15 PM EDT; main 159f2b210, river c6317a7e0). Door probes looking again; full-hour check at 11:20 PM. Breaker sees every job (fixed in 141). Read lock live (142).
+build_state: LIVE: release 145 (site 12:20 AM, runner 12:31 AM EDT Oct 29; main 9662c1d56, river 6e9a415f9). CivicClerk/Apptegy doors now get looks; full-hour hot-door check at 1:37 AM. 146 folding (CP-01 + RB-A9; OB-01 only if its fresh cut passes).
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-28T08:35:00Z
+heartbeat: 2026-10-29T04:46:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -165,6 +165,12 @@ heartbeat: 2026-10-28T08:35:00Z
   - Expected: CivicClerk 51/51, Apptegy 1/1, ICS/InSite all answering due pages, webapi Legistar all while other readers leave its clock ~18 min/hour; ~97%+ overall (estimate, to be measured).
   - Open, for River: 3 hot eScribe doors (Sunline, two Bellbrook committees) have no look since Oct 26-28, though their portals answer 200. Suspected cause: a refusal saved in the runner's local host-clock state (not in the database). If that's it, it needs its own decision.
   - webapi.legistar.com fits in the hour today (~880 looks/hour at ~2.5 s = ~37 min of its clock). It would need Sean's decision (shorter spacing or more than one request at a time for that API host) only if other Legistar readers take more than ~18 min/hour of that clock.
+- 12:16 AM Oct 29: 145 CI green (4/4 shards); river → 6e9a415f9; PR #859 merged. Site live 12:20 AM, runner switched ~12:31 AM (breaker CHECK carries 9662c1d56 from 12:31:40).
+  - Neon, hour before 145 (11 PM EDT): reader 1.725 + control plane 0.986 = 2.71 GB/h; door-probes 0.047 GB/h.
+  - First 13 min on 145: CivicClerk 75 of 174 open doors looked (was 0), Apptegy 1/1 (was 0); eScribe 0/22 so far (not yet due, or still the open refusal).
+- Sean 12:25 AM: OB-01 recut fresh from river 6e9a415f9 on stream/river-ob-01-146 and re-tested against the current site; folds into 146 only if it passes. CP-01 and RB-A9 go in 146.
+  - river-next-146 (b7f0df38d): CP-01 2c965e00f + RB-A9 da09af624 + main. Fold fixes: migration numbering (CP-01_source_status 76, RB-A9_legistar_members 77; control-plane journal CP-01 counts then RB-A9), two exports left unused by the pair removed. Lint 0 errors, read lock shrank (whole-record reads 338 → 337), tsc clean, knip clean; focused tests running.
+  - OB-01 and RB-A9 both rewrite lib/sources/legistar/members-*; if OB-01 passes, its Legistar behaviors are carried into RB-A9's new core at the fold.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

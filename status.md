@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 142 (read lock + Now reading line) since 7:14 PM EDT, main 96d0852a7, river 7bcfbd100. RIVER-PROBERATE being built. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 142 since 7:14 PM EDT (main 96d0852a7, river 7bcfbd100). Release 143 (RIVER-PROBERATE) in CI: https://github.com/SeanJ22/meanwhile/pull/856. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -124,6 +124,12 @@ heartbeat: 2026-10-28T08:35:00Z
 - WIN 7:14 PM: RELEASE 142 IS LIVE (main 96d0852a7; full GitHub CI passed; river = 7bcfbd100). New readers of the bundle tables, and new whole reads of cp_* records, now fail lint with a sentence naming the file and table; the lists only shrink.
   - Sean, on Admin Now: one line reads "Database reading: yesterday X GB, today Y GB so far, against the 10 GB a day target." River can't log in to Admin, so it has not seen the line rendered. The route (/api/admin/v6/database-reading) is deployed behind the same Admin guard as paused-jobs (both answer 404 without a session). Its totals were matched to a direct SQL sum before shipping.
   - Neon (database_transfer_hourly, request + response): hour before, 6 PM: reader 2.002 + control plane 0.991 = 2.99 GB/h. Hour after (8 PM) follows; 142 changes no runner reads.
+- 8:10 PM: RELEASE 143 OPEN (RIVER-PROBERATE): https://github.com/SeanJ22/meanwhile/pull/856, head fa41b1e51, auto-merge on.
+  - Door probes run in their own standing lane and look at up to 8 websites at once, one request per website at a time. Every request still goes through each site's existing hourly cap, Retry-After and refusal handling. Today: 1,399 hot meeting doors on 504 pages across 261 websites. Expected ~0.015-0.018 GB/h.
+  - The routine scheduler's two sitting reads now follow stored parts: pointers with sitting starts 77 -> 5,332 of 5,332; hot by start 20 -> 1,522. The scheduler will owe hourly reads for ~1,500 more partitions, so routine reading will rise; River will measure it. Admin's sitting read is left to CP-01.
+  - 142's read lock worked on its first fold: the builder had moved the shared sitting walk into a file that had never named a bundle table, and lint refused it with a sentence naming the file and both tables. River moved the walk into lib/doors/hot-partitions.ts (already listed for both). The lists are unchanged.
+  - Quick check clean; focused tests 153/153.
+- Neon, after 142 (7 PM hour): reader 2.202 + control plane 2.288 = 4.49 GB/h. The control-plane jump was Admin screens in use (officials 461 MB of cp_doors, owner snapshot 357 MB, scoreboard 130 MB), not 142. The new Now reading line was loaded: 450 requests, 1.58 MB in the hour (~7 KB a load).
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

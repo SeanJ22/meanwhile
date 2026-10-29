@@ -1,6 +1,6 @@
 import { controlPlaneQuery, workList, type WorkList } from "../core/work.ts";
 import { neon } from "./client.ts";
-import type { Query } from "../facts/publish.ts";
+import { moveBlanksUp, type Query } from "../facts/publish.ts";
 import type { DemandSubjectType } from "./demand-signal.ts";
 import type { RunMarker } from "./run-marker.ts";
 import { assertWriteAllowed } from "./write-guard.ts";
@@ -40,7 +40,6 @@ export async function requestWorkSooner(request: DemandWorkRequest, stores: Dema
   const own = request.subjectId.split("#")[0]!;
   const placeId = own.startsWith("ocd-division/") ? own : request.ocdIds[0] ?? "ocd-division/country:us";
   await stores.work().sooner({ placeId, subjectId: request.subjectId, subjectType: request.subjectType });
-  await stores.blanks()(`UPDATE blank SET reader_requests = reader_requests + 1, next_try_at = least(next_try_at, now()), updated_at = now()
-    WHERE entity_id = $1`, [request.subjectId]);
+  await moveBlanksUp(stores.blanks(), request.subjectId);
   return true;
 }

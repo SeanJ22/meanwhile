@@ -42,6 +42,12 @@ export async function openBlank(query: Query, input: { readonly entityId: string
   [input.entityId, input.field, input.stage, input.reason, input.detail ?? null, Math.max(1, Math.round(input.retryMinutes)), input.countAttempt ?? false]);
 }
 
+/** A reader pressed "Want us to get this sooner?": the subject's blanks stop waiting out their back-off and the press is counted. */
+export async function moveBlanksUp(query: Query, entityId: string): Promise<void> {
+  await query(`UPDATE blank SET reader_requests = reader_requests + 1, next_try_at = least(next_try_at, now()), updated_at = now()
+    WHERE entity_id = $1`, [entityId]);
+}
+
 /** Older callers retain their blank result; every fact is written by the same door. */
 export async function publishClaim(db: FactDb, input: PublishInput, clocks: Clocks, now = new Date(),
   options: { readonly purge?: ReaderCachePurger } = {}): Promise<PublishOutcome> {

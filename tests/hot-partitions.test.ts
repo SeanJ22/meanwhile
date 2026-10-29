@@ -3,12 +3,12 @@ import test from "node:test";
 import { PGlite } from "@electric-sql/pglite";
 import { drizzle } from "drizzle-orm/pglite";
 
-import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
+import { hotMeetingPartitions, statedSittingEndsRead } from "../lib/doors/hot-partitions.ts";
 import { MEETING_PARTITION_CONTRACTS, meetingPartitionId, meetingPartitionScope } from "../lib/civic-data/meeting-partitions.ts";
 import { CivicPayloadParts } from "../lib/civic-data/payload-parts.ts";
 import { routineTaskFromContract, sittingWindowSignals } from "../lib/civic-data/runner.ts";
 import { meetingPayloadSittingStarts, sittingStartsRead } from "../lib/civic-data/store.ts";
-import { meetingPayloadStatedEnds, statedSittingEndsByScope, statedSittingEndsRead } from "../lib/civic-data/sitting-window-admission.ts";
+import { meetingPayloadStatedEnds, statedSittingEndsByScope } from "../lib/civic-data/sitting-window-admission.ts";
 import type { Query } from "../lib/facts/publish.ts";
 
 const DAY = 86_400_000;

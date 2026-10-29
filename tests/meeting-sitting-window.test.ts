@@ -20,8 +20,8 @@ import {
   sittingConclusionMs,
   sittingWindowHotByConclusion,
   statedSittingEndsByScope,
-  statedSittingEndsRead,
 } from "../lib/civic-data/sitting-window-admission.ts";
+import { statedSittingEndsRead } from "../lib/doors/hot-partitions.ts";
 import {
   ROUTINE_SOURCE_TASKS,
   routineTaskDeadlineMs,

@@ -22,7 +22,7 @@ import { federalDirectoryStateOf } from "../officials/federal-directory-data-pla
 import { decodeStateCandidate, durableStateHash, encodeStateCandidate, statePublicationScope } from "./state-publication.ts";
 
 import { and, desc, eq, getTableColumns, inArray, like, or, sql, type SQL } from "drizzle-orm";
-import { meetingSittingsSql } from "./sitting-window-admission.ts";
+import { meetingSittingsSql } from "../doors/hot-partitions.ts";
 
 import { getDb } from "../db/index.ts";
 import { runtimeCivicReadCache } from "../db/civic-read-cache.ts";

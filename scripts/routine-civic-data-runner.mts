@@ -118,7 +118,8 @@ import {
   hotReadCatchUpAdmission,
   runHotReadCatchUp,
 } from "../lib/civic-data/hot-read-catch-up.ts";
-import { statedSittingEndsByScope, statedSittingEndsRead } from "../lib/civic-data/sitting-window-admission.ts";
+import { statedSittingEndsByScope } from "../lib/civic-data/sitting-window-admission.ts";
+import { statedSittingEndsRead } from "../lib/doors/hot-partitions.ts";
 import {
   DOOR_DERIVE_CONTRACT_IDS,
   parseRoutineDueRequests,

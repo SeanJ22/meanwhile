@@ -22,7 +22,7 @@ export function selectSavedDatabase(source: string | undefined): void {
 }
 export function storedKeyValue(name: string, injected?: Environment): string | undefined {
   if (typeof window !== "undefined") throw new Error("Saved keys are available only on the server.");
-  if (injected && injected !== process.env) return injected[name];
+  if (injected && injected !== process.env && injected !== environment) return injected[name];
   const source = process.env[SAVED_DATABASE_SOURCE];
   return host[KEY_STATE]?.values.get(name === "DATABASE_URL" && source && databaseSources.has(source) ? source : name);
 }
@@ -50,6 +50,9 @@ const environment = new Proxy(process.env, {
 });
 
 /** Explicit fixture and admitted child environments remain dependencies, never a host fallback. */
-export function storedKeyEnvironment(injected: NodeJS.ProcessEnv = process.env): NodeJS.ProcessEnv {
+export function storedKeyEnvironment(): NodeJS.ProcessEnv;
+export function storedKeyEnvironment<T extends Environment>(injected: T): T;
+export function storedKeyEnvironment<T extends Environment>(injected: T | undefined): T | NodeJS.ProcessEnv;
+export function storedKeyEnvironment(injected: Environment = process.env): Environment {
   return injected === process.env ? environment : injected;
 }

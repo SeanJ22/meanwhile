@@ -8,6 +8,7 @@ import { assignment } from "./cli-args.mts";
 import { REFERENCE_DIR } from "../lib/reference/index.ts";
 import { readRegistryRuntimePrior } from "../lib/registry/runtime-data-plane.ts";
 import { readRegistrationProjection } from "../lib/registration/reader.ts";
+import { REGISTRATION_RECORD_CLASS, registrationTarget } from "../lib/registration/publication.ts";
 import { requireBallotState } from "../lib/civic-data/state-scopes.ts";
 import type { Division, Registry } from "../lib/registry/types.ts";
 import { CENSUS_BENCHMARK, CENSUS_GEOCODER_URL, parseCensusPoint } from "../lib/geo/census-geocoder.ts";
@@ -229,7 +230,6 @@ export async function refreshVotingSources(input: {
   deadlineMs?: number;
   fetch?: typeof fetch;
   geocode?: VotingSourceRuntime["geocode"];
-  registration?: Awaited<ReturnType<typeof readRegistrationProjection>>;
   registry?: Pick<Registry, "divisions" | "bodies">;
   vault?: CycleVault;
   seeds?: VotingSourceDoor[];
@@ -270,17 +270,19 @@ export async function refreshVotingSources(input: {
       heldLoaded = true;
       return held;
     };
-    const registration = input.registration ?? await readRegistrationProjection(state, { store });
+    // Registration changes about weekly: its pointer version, a small keyed read, decides whether the copy held since the last pass still stands.
+    const loadRegistration = async () => { const read = await readRegistrationProjection(state, { store });
+      if (read.kind !== "PROMOTED" && read.kind !== "NOT_RECORDED") throw new Error(`${state} registration is unavailable; prior facts are retained.`);
+      return read.kind === "PROMOTED" ? { divisions: read.value.divisions, bodies: read.value.bodies } : { divisions: [], bodies: [] }; };
+    const registration = await (store.readVersioned?.("voting-registration-v1", REGISTRATION_RECORD_CLASS, registrationTarget(state).scope, loadRegistration) ?? loadRegistration());
     const savedDoors = await registeredVotingSourceDoors(context.repos.doors, state);
     const registered = await votingSourceReadOrder(context.repos.doors, state,
       currentVotingSourceDoors(seeds, savedDoors));
     const vault = input.vault ?? cycleVault(join(process.cwd(), ...VAULT_DIR));
     {
-      const registeredDivisions = registration.kind === "PROMOTED" ? registration.value.divisions : [];
       const reviewed = input.registry ? null : await readRegistryRuntimePrior(store, now(), state);
-      const divisions = [...new Map([...registeredDivisions, ...(input.registry?.divisions ?? reviewed?.payload.registry.divisions ?? [])].map(row => [row.ocdId, row])).values()];
-      const bodies = [...new Map([...(registration.kind === "PROMOTED" ? registration.value.bodies : []),
-        ...(input.registry?.bodies ?? reviewed?.payload.registry.bodies ?? [])].map(row => [row.id, row])).values()];
+      const divisions = [...new Map([...registration.divisions, ...(input.registry?.divisions ?? reviewed?.payload.registry.divisions ?? [])].map(row => [row.ocdId, row])).values()];
+      const bodies = [...new Map([...registration.bodies, ...(input.registry?.bodies ?? reviewed?.payload.registry.bodies ?? [])].map(row => [row.id, row])).values()];
       const localRegistry = { divisions, bodies };
       const sourceContextHash = canonicalCivicDataHash({ parserVersion: contract.parserVersion,
         divisions: divisions.map(({ ocdId, divisionType, label, state, geoid, parentOcdId }) => ({ ocdId, divisionType, label, state, geoid, parentOcdId }))
@@ -321,7 +323,7 @@ export async function refreshVotingSources(input: {
           } catch (error) { recordVotingFailure({ stage: "site-geocode", state }, error); }
           geocodes.set(key, point); return point;
       });
-      const publishedReads = new Map<string, { door: VotingSourceDoor; read: VotingSourceRead; acquisition: VotingRawCapture[]; mappings: VotingSourceDoor[] }>();
+      const publishedReads = new Map<string, { door: VotingSourceDoor; read: VotingSourceRead; acquisition: VotingRawCapture[]; mappings: VotingSourceDoor[]; contentHash: string }>();
       const sourceCheck = async (door: VotingSourceDoor, read: VotingSourceRead, rawHash: string, at: string) => {
         if (!store.recordSourceCheck || !version || !votingSourceReadComplete(read)) return;
         const check = { sourceId: contract.sourceId, recordClass: contract.recordClass, scope: contract.scope,
@@ -335,7 +337,7 @@ export async function refreshVotingSources(input: {
           recordVotingFailure({ stage: "source-check", state }, new Error(`The published source changed while ${door.url} was checked; its earlier check is retained.`));
         } catch (error) { recordVotingFailure({ stage: "source-check", state }, error); }
       };
-      const publishRead = async (door: VotingSourceDoor, read: VotingSourceRead, acquisition: VotingRawCapture[], at: string, mappings: VotingSourceDoor[]) => {
+      const publishRead = async (door: VotingSourceDoor, read: VotingSourceRead, acquisition: VotingRawCapture[], at: string, mappings: VotingSourceDoor[], contentHash: string) => {
         await loadHeld();
         for (const [key, point] of heldVotingSiteCoordinates(held)) if (!geocodes.has(key)) geocodes.set(key, point);
         let before = held;
@@ -356,7 +358,7 @@ export async function refreshVotingSources(input: {
         const supersededSources = [...votingSupersededSources(stateDoors, current)].sort();
         const replaced = new Set(supersededSources);
         const nextHashes = Object.fromEntries(Object.entries({ ...sourceHashes,
-          [key]: votingSourceReadComplete(read) ? votingSourceContentHash(mappings, read, sourceContextHash) : null,
+          [key]: votingSourceReadComplete(read) ? contentHash : null,
         }).filter(([source]) => !replaced.has(normalizeUrl(source.slice(source.indexOf("|") + 1)))));
         current = { ...current, sourceHashes: nextHashes, sourceManifestVersion: 1, supersededSources };
         const candidate = votingSitesCandidate({ state, current, prior: before, failures: [], acquisition,
@@ -437,8 +439,8 @@ export async function refreshVotingSources(input: {
         }
         unmatchedSourceReads = true;
         const acquisition = await votingSourceEvidence(door, read, captures);
-        if (await publishRead(publicationDoor, read, acquisition, at, mappings)) {
-          publishedReads.set(door.id, { door: publicationDoor, read, acquisition, mappings });
+        if (await publishRead(publicationDoor, read, acquisition, at, mappings, contentHash)) {
+          publishedReads.set(door.id, { door: publicationDoor, read, acquisition, mappings, contentHash });
           await sourceCheck(publicationDoor, read, contentHash, at);
         }
       };
@@ -515,7 +517,8 @@ export async function refreshVotingSources(input: {
       for (const source of stateDoors) await walk(source);
       // Enrich already published rows only after every known list has had its turn.
       // The same captured evidence supplies the points; no source is downloaded or parsed twice.
-      for (const { door, read, acquisition, mappings } of publishedReads.values()) {
+      // Points are enrichment, not a source change: each republish keeps the fingerprint of the read as acquired.
+      for (const { door, read, acquisition, mappings, contentHash } of publishedReads.values()) {
         let changed = false;
         const missing = read.sites.filter(site => site.lat === null || site.lng === null);
         for (let at = 0; at < missing.length && Date.now() < deadlineMs; at += 8) {
@@ -524,7 +527,7 @@ export async function refreshVotingSources(input: {
             if (point) { site.lat = point.lat; site.lng = point.lng; site.geocodeSource = "CENSUS"; changed = true; }
           }));
         }
-        if (changed) await publishRead(door, read, acquisition, now(), mappings);
+        if (changed) await publishRead(door, read, acquisition, now(), mappings, contentHash);
       }
       const scope = root?.scope ?? stateDoors[0]?.scope;
       if (!scope) throw new Error(`No registered voting source for ${state}.`);

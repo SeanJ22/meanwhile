@@ -17,6 +17,8 @@ import { installRegistryAuthority, installFederalDirectory, syntheticFederalDire
 import { recordedMeetingsSnapshot } from "./helpers/reader-fixtures.ts";
 import { publishRecordedEdge } from "./helpers/reader-edge-meetings.ts";
 import { azDistricts } from "./helpers/ballot-district-fixtures.ts";
+import { fixturePlaceMapQuery } from "./helpers/place-map.ts";
+import { installPlaceMapQuery } from "../lib/place-map/reader.ts";
 
 await installRegistryAuthority();
 {
@@ -190,4 +192,13 @@ test("the counter can read two, so a one is a measurement and not a constant", (
     1,
     "handing the divisions in still costs two sweeps — the reuse is not happening",
   );
+});
+
+test("a state answer without a ZIP keeps the state's officials and reads no ZIP from the place map", async () => {
+  const held = fixturePlaceMapQuery(), mapReads: string[] = [];
+  installPlaceMapQuery(async (sql, params) => { mapReads.push(sql); return held(sql, params); });
+  try {
+    const state = await (await stateGET(new Request("https://example.test/api/reader/state?state=AZ"))).json() as ReaderStateResponse;
+    assert.deepEqual([state.zipPlaces, state.coverage.senators.length, mapReads], [{}, 2, []]);
+  } finally { installPlaceMapQuery(held); }
 });

@@ -1,11 +1,16 @@
 import assert from 'node:assert/strict';
 import test,{after}from'node:test';
 import{PGlite}from'@electric-sql/pglite';
-import{installPlaceMapQuery,lowestZipByDivision,lowestZipForDivision,lowestZipsForDivisions}from'../lib/place-map/reader.ts';
+import{installPlaceMapQuery,lowestZipForDivision,lowestZipsForDivisions}from'../lib/place-map/reader.ts';
+import{wholeStateLowestZips}from'./helpers/place-map.ts';
+import{GET}from'../app/api/reader/places/route.ts';
+import{installFactReader}from'../lib/facts/db.ts';
+import{readZipLocations}from'../lib/place-map/locations.ts';
+import{publishedCountyDivisions,warmPlacesForCounties}from'../lib/ops/warm-places.ts';
 import type{Query}from'../lib/facts/publish.ts';
-const db=new PGlite();after(async()=>{installPlaceMapQuery(undefined);await db.close();});
+const db=new PGlite();after(async()=>{installPlaceMapQuery(undefined);installFactReader(undefined);await db.close();});
 const state=(s:string)=>`ocd-division/country:us/state:${s}`;
-const az=state('az'),nj=state('nj'),town=`${az}/place:town`,school=`${az}/school_district:school`,oldCd=`${az}/cd:old`,newCd=`${az}/cd:new`,foreign=`${state('nv')}/county:neighbor`,tribe='ocd-division/country:us/aiannh:shared';
+const az=state('az'),border=`${state('az')}/county:border`,odd=`${state('az')}/county:odd`,nj=state('nj'),town=`${az}/place:town`,school=`${az}/school_district:school`,oldCd=`${az}/cd:old`,newCd=`${az}/cd:new`,foreign=`${state('nv')}/county:neighbor`,tribe='ocd-division/country:us/aiannh:shared';
 const selection={purpose:'representation' as const,asOf:'2026-10-28'},next={purpose:'representation' as const,asOf:'2027-01-03'};
 async function fixture(){
  await db.exec(`DROP SCHEMA public CASCADE;CREATE SCHEMA public;
@@ -13,7 +18,7 @@ async function fixture(){
   CREATE TABLE place_boundary(place_id text,boundary_year integer,layer text,version text,county_attachment boolean DEFAULT false,host_county_id text,PRIMARY KEY(place_id,boundary_year));
   CREATE TABLE zip_place(zip text,place_id text,boundary_year integer,share float DEFAULT 1,share_basis text DEFAULT 'unknown',partial boolean DEFAULT false,fringe boolean DEFAULT false,PRIMARY KEY(zip,place_id,boundary_year));
   CREATE TABLE zip_location(zip text,boundary_year integer,lat float,lng float,postal jsonb);
-  CREATE TABLE zcta_place(zcta text,place_id text,boundary_year integer,share float,share_basis text,fringe boolean);`);
+  CREATE TABLE zcta_place(zcta text,place_id text,boundary_year integer,share float,share_basis text,fringe boolean);CREATE TABLE entity_place(entity_id text,place_id text);`);
  const add=async(id:string,s:string,layer:string,year=2026,version='local:2026')=>{
   await db.query('INSERT INTO entity VALUES($1,$2,$3,$4) ON CONFLICT DO NOTHING',[id,id,s,'place']);
   await db.query('INSERT INTO place_boundary(place_id,boundary_year,layer,version) VALUES($1,$2,$3,$4)',[id,year,layer,version]);
@@ -28,13 +33,16 @@ async function fixture(){
  await member('00004',oldCd,2020);await member('00004',school,2026,true);
  await member('00005',school);await member('00000',`${az}/county:postal`);await member('00006',tribe);await member('00006',newCd);await member('00007',tribe);await member('00007',town);
  await member('00100',`${nj}/county:one`);await member('00090',`${nj}/county:fringe`,2026,true);
+ await add(border,'AZ','county');await add(odd,'NV','county');await member('00002',border);await member('00009',border);await member('00009',foreign);await member('00010',odd);
+ for(const id of[`${az}/county:postal#board`,`${az}/county:postal/school:x`,border,odd,town,foreign,`${nj}/county:one`,`${nj}/county:fringe#council`])await db.query('INSERT INTO entity_place VALUES($1,$1)',[id]);
+ for(const zip of['00001','00002','00009','00010','00100'])await db.query('INSERT INTO zip_location VALUES($1,2026,$2,1,NULL)',[zip,Number(zip)]);
  await db.query('INSERT INTO zip_location VALUES($1,2026,NULL,NULL,$2::jsonb)',['00000',JSON.stringify({type:'po-box',state:'AZ',zcta:'00005'})]);
  const calls:{sql:string;params:readonly unknown[]}[]=[];
  const query:Query=async(sql,params=[])=>{calls.push({sql,params});return(await db.query(sql,[...params])).rows as Record<string,unknown>[];};
- installPlaceMapQuery(query);return{calls};
+ installPlaceMapQuery(query);return{calls,query};
 }
 test('keyed witnesses equal the full current map and keep direct, fringe, per-ZIP boundary and crossing-state semantics',async()=>{
- const{calls}=await fixture();const full=await lowestZipByDivision('AZ');calls.length=0;
+ const{calls}=await fixture();const full=await wholeStateLowestZips('AZ');calls.length=0;
  const divisions=[town,school,oldCd,newCd,foreign,tribe,`${az}/missing`];
  const keyed=await lowestZipsForDivisions('AZ',divisions,{selection});
  for(const division of divisions)assert.equal(keyed.get(division),full.get(division),division);
@@ -55,4 +63,16 @@ test('state fallback is explicit and keeps an exact state row ahead of a lower c
  assert.equal(await lowestZipForDivision('NJ',nj,{selection}),null);
  assert.equal(await lowestZipForDivision('NJ',nj,{selection,stateFallback:true}),'00100');
  assert.equal(await lowestZipForDivision('NJ',`${nj}/county:absent`,{selection,stateFallback:true}),null);
+});
+test('published places equal the whole-state walks byte for byte, a later state\'s walk replacing a county\'s ZIP',async()=>{
+ const{calls,query}=await fixture(),counties=publishedCountyDivisions((await query("SELECT DISTINCT place_id FROM entity_place WHERE place_id LIKE '%/county:%'")).map(row=>String(row.place_id))),walked=new Map<string,string>();
+ for(const s of new Set(counties.map(id=>id.split('/state:')[1].split('/')[0])))for(const[id,zip]of await wholeStateLowestZips(s))walked.set(id,zip);
+ const points=await readZipLocations([...walked.values()]),expected=JSON.stringify(warmPlacesForCounties({counties,zipFor:id=>walked.get(id),centroidFor:zip=>points.get(zip)}));
+ installFactReader(query);calls.length=0;const response=await GET();
+ assert.equal(await response.text(),expected);assert.equal(response.headers.get('Netlify-CDN-Cache-Control'),'public, durable, max-age=86400');
+ assert.deepEqual(JSON.parse(expected),{places:['00009','00010','00100','00001'].map(zip=>({zip,lat:Number(zip),lng:1})),skipped:2},'Nevada replaces Border\'s Arizona ZIP and holds Odd');
+ assert.ok(calls.every(call=>!call.sql.includes('e.state=$1::char(2)')),'no state\'s whole ZIP map is read');
+});
+test('published places report an unavailable database as an uncached failure',async()=>{
+ installPlaceMapQuery(null);installFactReader(null);const response=await GET();assert.equal(response.status,503);assert.equal(response.headers.get('Cache-Control'),'no-store');
 });

@@ -84,32 +84,19 @@ export async function stateForZip(zip: string): Promise<string | null> {
 }
 
 /** Enumerate only the requested state's codes; their memberships use the same lookup as a typed ZIP. */
-export function readStateZipPlaces(input: string, selection: GeographySelection = currentRepresentationSelection()): Promise<ReadonlyMap<string, PlaceEntry>> {
-  return stateZipPlaces(input, selection, true);
-}
-
-async function stateZipPlaces(input: string, selection: GeographySelection, postalLinks: boolean): Promise<ReadonlyMap<string, PlaceEntry>> {
+export async function readStateZipPlaces(input: string, selection: GeographySelection = currentRepresentationSelection()): Promise<ReadonlyMap<string, PlaceEntry>> {
   const state = requireRegistryState(input.replace(/^US-/i, "")), query = placeMapQuery();
   const codes = await query("SELECT DISTINCT m.zip FROM zip_place m JOIN entity e ON e.id=m.place_id WHERE e.state=$1::char(2) AND e.kind='place' ORDER BY m.zip", [state]);
   const out = new Map<string, PlaceEntry>();
   // Read the state in one bounded query, then apply the shared year selection per code.
   if (!codes.length) return out;
-  const rows = await query(codeMembershipsSql("zip", "$1::text[]", postalLinks), [codes.map(row => String(row.zip))]);
+  const rows = await query(codeMembershipsSql("zip", "$1::text[]"), [codes.map(row => String(row.zip))]);
   for (const row of rows) {
     const code=String(row.zip),result = await placesForCode(async () => [row], "zip", code, selection);
     const entry = placeEntry(result);
     if (entry.states?.includes(state) && entry.ids.length) out.set(code, entry);
   }
   return orderZipStates(out);
-}
-
-/** A division's example ZIP holds that division itself, never only through a mail-only ZIP's postal link. */
-export async function lowestZipByDivision(state: string): Promise<ReadonlyMap<string, string>> {
-  const out = new Map<string, string>();
-  for (const [zip, entry] of await stateZipPlaces(state, currentRepresentationSelection(), false)) for (const id of entry.ids) {
-    if (!out.has(id)) out.set(id, zip);
-  }
-  return out;
 }
 
 export interface DivisionZipOptions {

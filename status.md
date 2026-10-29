@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 146. place-pages PAUSED since 3:21 AM (old breaker). 147 in CI (PR #865, head 537967dd5): breaker slows/never pauses + release numbers. 148 next: research-cycle fix + line-keeper flag (builder merging onto 147).
+build_state: LIVE: release 147 on runner (~6:17 AM EDT; a33c7a264). Release 148 live on site 6:20 AM (c93705e75, river dc862583b); runner to follow. place-pages running again (147's breaker never pauses).
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T08:57:00Z
+heartbeat: 2026-10-29T10:22:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -194,6 +194,10 @@ heartbeat: 2026-10-29T08:57:00Z
   - 146's first full hour (3 AM) read 5.25 GB: place-pages 0.95 backlog, people-portraits-wi 0.59, routine 0.52, CP-01 contract backfill 0.17, legistar-members one-time reopen 0.17. 4 AM hour 2.59 GB.
 - RIVER-CYCLE cause (builder, 8218f9444): Sean's Stop every hunt for all 56 states (Oct 25 1:03 AM) plus release 122's pre-launch gate (merged Oct 25 9:44 PM) left no state to plan, so the runner slept and retried forever with nothing visible. Resume and five Run cycle now presses were never honored (only the research child honors them). Fix: Stop every hunt stops current hunts as Admin describes (Pause runner holds research); the gate is deleted; the loop names any hold; a failed cycle is followed by the next; the line keeper flags any job without a finished run in two of its intervals. Rebasing onto 147 for release 148.
   - Separate: routine-civic-data digests read FAILED for hours while the lane returns normally; River looks after 147.
+- 147 live: merged 5:45 AM, site 5:49 AM, runner ~6:17 AM EDT (staged 5:53, switched after its jobs drained). The first breaker check on 147 (6:16 AM) records each job's learned normal (place-pages 485 MB/h, people-portraits-wi 590 MB/h); no PAUSE since. place-pages is rebuilding reader pages again (62 MB in the first minutes of the 6 AM hour), after being paused from 3:21 AM.
+  - 147 release numbers (PR #865 block, shown in Admin Changes): code 696,315 → 695,446 (−869); ZIPs usable <3 s, same 50: phone 22→36, tablet 28→41, desktop 23→33. 147 changed no reader code, so the gain is most likely lighter early-morning load; noted in the PR. Facts and reads after: measuring.
+  - CI on 147 first failed shard 4: tests/river-adapter-streams.test.ts fixture grew code and the new refusal stopped it; River fixed the fixture (3694db1a4), reproduced first, 25/25.
+- 148 merged 6:16 AM (PR #866: research runs again + stalled-job flag; meeting pins publish again), site 6:20 AM. Runner switch, research cycle start and pin cursor next.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

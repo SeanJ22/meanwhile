@@ -134,10 +134,6 @@ export async function fetchBodies<T extends { BodyId: number }>(slug: string, op
   return pageById<T>(`${slug}/bodies`, "BodyId", row => row.BodyId, undefined, options);
 }
 
-export async function fetchPersons<T extends { PersonId: number }>(slug: string, options: RequestOptions = {}): Promise<T[]> {
-  return pageById<T>(`${slug}/persons`, "PersonId", row => row.PersonId, options.filter, options);
-}
-
 export async function fetchOfficeRecords<T extends { OfficeRecordId: number }>(slug: string, options: RequestOptions = {}): Promise<T[]> {
   return pageById<T>(`${slug}/officerecords`, "OfficeRecordId", row => row.OfficeRecordId, options.filter, options);
 }

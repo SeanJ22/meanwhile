@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 142 since 7:14 PM EDT (main 96d0852a7, river 7bcfbd100). Release 143 (RIVER-PROBERATE) in CI: https://github.com/SeanJ22/meanwhile/pull/856. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 143 (site 8:34 PM, runner 8:51 PM EDT; main 699655cae, river fa41b1e51). The new door-probes lane has not looked at a door yet; River is checking. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -130,6 +130,10 @@ heartbeat: 2026-10-28T08:35:00Z
   - 142's read lock worked on its first fold: the builder had moved the shared sitting walk into a file that had never named a bundle table, and lint refused it with a sentence naming the file and both tables. River moved the walk into lib/doors/hot-partitions.ts (already listed for both). The lists are unchanged.
   - Quick check clean; focused tests 153/153.
 - Neon, after 142 (7 PM hour): reader 2.202 + control plane 2.288 = 4.49 GB/h. The control-plane jump was Admin screens in use (officials 461 MB of cp_doors, owner snapshot 357 MB, scoreboard 130 MB), not 142. The new Now reading line was loaded: 450 requests, 1.58 MB in the hour (~7 KB a load).
+- 9:10 PM: RELEASE 143 LIVE on the site (8:34 PM, main 699655cae; full CI passed; river fa41b1e51) and on the runner (8:51 PM).
+  - Neon after 142 (8 PM hour): reader 2.095 + control plane 1.310 = 3.41 GB/h. Hour before 143 (7 PM): 4.49 GB/h.
+  - NOT WORKING YET: the new door-probes lane has made no looks since the switch. No meeting door has a look after 8:38 PM, and there are no door-probes meter rows in the 9 PM hour. From 8:51 to about 9:06 the runner's memory admission had no room (bulk workers held it: about 17 promote-manual-civic-projection reservations at 1.26 GB each, plus ingest). At 9:07 memory freed (80 lease workers fit), but no door-probes.mts reservation had appeared by 9:09. River rechecks at 9:22 PM. If it is still silent then, the cause is only in the runner's log, and River will ask for the lines starting "door-probes:", "DOOR_PROBES_TURN_FAILED" or "RCD_PROBE".
+  - Before 143, the old probe path made ~60 meeting-door looks an hour (5 PM hour); in the builder's last measured hour, 11 of 191 looks were at hot doors.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

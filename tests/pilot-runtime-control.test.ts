@@ -4,7 +4,22 @@ import { createMemoryRepositories } from "../lib/control-plane/repository/memory
 import { buildResearchIntent } from "../lib/control-plane/research-view.ts";
 import { readIntents, type ResearchIntent } from "../lib/control-plane/scheduler/research-policy.ts";
 import { runnerControlReader, runnerWakeReaderFromEnv } from "../scripts/pilot-runtime-control.mts";
-import { consoleInputReader, CONSOLE_INPUT_SQL, CONSOLE_READER_INPUT_SQL } from "../scripts/pilot-runtime-publish.mts";
+import { consoleInputReader, CONSOLE_INPUT_SQL, CONSOLE_READER_INPUT_SQL, ownerCountsReady } from "../scripts/pilot-runtime-publish.mts";
+
+test("owner publication waits for structural and data initialization, then becomes eligible without a failed child",async()=>{
+  let rows: {format:string;initializing:string|null;ready:string|null}[]=[{format:"3",initializing:null,ready:null}];
+  const sql={query:async()=>rows};
+  assert.equal(await ownerCountsReady("unused",sql),false);
+  rows=[{format:"4",initializing:"true",ready:null}];
+  assert.equal(await ownerCountsReady("unused",sql),false);
+  rows=[{format:"4",initializing:null,ready:null}];
+  assert.equal(await ownerCountsReady("unused",sql),false);
+  rows=[{format:"4",initializing:null,ready:"true"}];
+  assert.equal(await ownerCountsReady("unused",sql),true);
+  rows=[];
+  assert.equal(await ownerCountsReady("unused",sql),false,"missing counts require initialization rather than a routine full rebuild");
+  await assert.rejects(()=>ownerCountsReady("unused",{query:async()=>{throw Error("unavailable");}}),/unavailable/);
+});
 
 test("console versions remain on the server and failed metadata reads cannot look unchanged", async () => {
   let control = "control-v1", reader = "reader-v1";

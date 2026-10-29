@@ -113,7 +113,7 @@
       "file": "lib/control-plane/repository/admin-config.ts",
       "kind": "SELECT *",
       "fingerprint": "4f78589382693b8f352753ccea66c4d6cff524f6aabe8262fcf736c04a42b155",
-      "line": 201
+      "line": 206
     },
     {
       "file": "lib/control-plane/repository/dispatch-state.ts",
@@ -155,7 +155,7 @@
       "file": "lib/control-plane/repository/pg-store.ts",
       "kind": "SELECT *",
       "fingerprint": "07fa0dc17a094e448310ab84b3c654e08e2a33ee2623ac7ee95f17f1cb49e981",
-      "line": 1309
+      "line": 1310
     },
     {
       "file": "lib/control-plane/worker-reader-readback.ts",

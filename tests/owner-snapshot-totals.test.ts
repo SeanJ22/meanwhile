@@ -538,13 +538,19 @@ test("the owner contract checkpoints a backlog before publication and replays a 
   await seed(repos,changesBeforeT2(world));
   const top=(await repos.ownerSnapshotTotals.read("totals"))!;
   await repos.ownerSnapshotTotals.compareAndSet("totals",top.revision,{...top.value,ownerWorkListReady:false,initializing:true},T2);
-  const attempt=()=>initializeOwnerSnapshot(repos,{deadline:Infinity,now:()=>T2,maxStates:1,slackMs:0,log:()=>{}});
+  let migrationNow=T2;
+  const attempt=()=>initializeOwnerSnapshot(repos,{deadline:Infinity,now:()=>migrationNow,maxStates:1,slackMs:0,log:()=>{}});
   assert.equal(await attempt(),false,"preparation persists source cursors and all state inboxes before deriving states");
   const prepared=(await repos.ownerSnapshotTotals.read("totals"))!;
   assert.ok(prepared.value.initialization!.pending.length>5);
   await assert.rejects(OwnerSnapshotFold.fold(repos,prepared.value,{
     nowIso:T2,servedReader:null,askGapObservations:[],scopes:[],carried:[],write:true,log:()=>{},
   }),/OWNER_WORK_LIST_MIGRATION_REQUIRED/,"ordinary publisher remains ineligible while backlog is partial");
+  migrationNow=at(T2,1);
+  const late=emptyWorld(),lateId="late-contract-state-az";
+  late.workItems.push(workItem(lateId,"late-contract",{subject:"state-az"}));
+  round(late,lateId,"late-contract-attempt",{worker:PLAIN,startedAt:at(T2,.5),usd:.019});
+  await seed(repos,late);
   const persist=repos.ownerCostRefs.persist;
   let crash=true;
   repos.ownerCostRefs.persist=async(...args)=>{if(crash){crash=false;throw Error("crash after durable state output");}return persist(...args);};
@@ -557,7 +563,22 @@ test("the owner contract checkpoints a backlog before publication and replays a 
   assert.equal(ready.initializing,undefined);
   assert.equal(ready.ownerWorkListReady,true);
   assert.equal(ready.initialization,undefined);
+  assert.equal(ready.costs!.foldedAt,migrationNow,"the final catchup uses the clock current after preparation");
+  assert.equal((await repos.ownerAssignmentRows.read([lateId])).length,1,"work created after preparation is folded before readiness");
   assert.equal(await attempt(),true,"a completed initializer performs no additional fold");
-  const after=await publish(repos,T2,initial.published,[],null);
-  assertSamePanels("resumed contract",after.panels,await fromScratch(repos,T2,[],null,after.published.readings));
+  const after=await publish(repos,migrationNow,initial.published,[],null);
+  assertSamePanels("resumed contract",after.panels,await fromScratch(repos,migrationNow,[],null,after.published.readings));
+});
+
+
+test("an empty owner contract finishes billing and refresh phases in one bounded attempt",async()=>{
+  const repos=createMemoryRepositories();
+  await publish(repos,T1,null,[],null);
+  const top=(await repos.ownerSnapshotTotals.read("totals"))!;
+  await repos.ownerSnapshotTotals.compareAndSet("totals",top.revision,{...top.value,ownerWorkListReady:false,initializing:true},T2);
+  assert.equal(await initializeOwnerSnapshot(repos,{deadline:Infinity,now:()=>T2,slackMs:0,log:()=>{}}),true);
+  const ready=(await repos.ownerSnapshotTotals.read("totals"))!.value;
+  assert.equal(ready.ownerWorkListReady,true);
+  assert.equal(ready.initializing,undefined);
+  assert.equal(ready.costs!.foldedAt,T2);
 });

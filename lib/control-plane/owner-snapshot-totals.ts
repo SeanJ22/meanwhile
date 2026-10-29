@@ -734,7 +734,7 @@ const obligationStateName = (id: string, subjectId: string): string => {
 export interface OwnerSnapshotInitialization {
   readonly at:string;
   readonly run:string;
-  readonly phase:"states"|"costs"|"finalStates";
+  readonly phase:"states"|"costs"|"finalStates"|"refresh";
   readonly pending:readonly string[];
 }
 
@@ -800,6 +800,7 @@ export class OwnerSnapshotFold {
   #checkpointStates=0;
   #initialization:OwnerSnapshotInitialization|null=null;
   complete=true;
+  get checkpointedStates():number{return this.#checkpointStates;}
 
   private constructor(repos: ControlPlaneRepositories, prior: OwnerSnapshotTotals | null, input: OwnerSnapshotFoldInput) {
     this.#repos = repos;
@@ -855,7 +856,7 @@ export class OwnerSnapshotFold {
     if(checkpoint&&this.#initialization){
       this.costs=structuredClone(this.#priorCosts!);
       if(this.#initialization.phase==="costs"){
-        // This separate phase gets its own bounded attempt, after every changed state is durable.
+        // Recheck the billing frame after every changed state is durable.
         this.#inboxes.resume([]);
         this.costs=await costs(this.costs);
         await this.#inboxes.settle(true);
@@ -889,7 +890,7 @@ export class OwnerSnapshotFold {
       await this.#inboxes.settle(true);
       this.#initialization={at:this.#input.nowIso,run:checkpoint.run,phase:"states",pending:this.#inboxes.states()};
       await checkpoint.save(this,this.#initialization);
-      // Preparation is durable. State derivation begins in the next attempt.
+      // Preparation is durable; the migration driver may continue while its deadline permits.
       this.complete=false;return this;
     }
     await this.#drain();

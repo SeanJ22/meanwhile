@@ -61,7 +61,7 @@ import {
   neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher, consolePublishClock } from "./pilot-runtime-publish.mts";
+import { consoleInputReader, consolePublisher, consolePublishClock, ownerCountsReady } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { auditPassClock } from "./audit-pass-clock.mts";
@@ -641,9 +641,9 @@ function deliver(body: string, headline: string): { readonly where: string } {
 
 const CONSOLE_PUBLISHERS: readonly { readonly databaseBytesPerRun: number; readonly name: string; readonly args: readonly string[] }[] = [
 
-  // CP-01 production-copy full publishes: 459,240 steady bytes; 698,718 with a changed lease and next-pass clock.
-  // A fresh shared cache read 4,670,309 bytes once; unchanged publishes reuse its confirmed source fingerprints.
-  { databaseBytesPerRun: 750_000, name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
+  // CP-01 full production-copy publisher: 4,657,448 cold bytes; 452,484 steady; 452,413 after a lease heartbeat and five minutes.
+  // Reserve the observed cold run; source fingerprints keep a cold-plus-eleven-pass hour under 0.01 GB.
+  { databaseBytesPerRun: 5_000_000, name: "owner snapshot", args: ["scripts/publish-owner-snapshot.mts"] },
 ];
 
 const publishChangedConsole = consolePublisher({
@@ -684,6 +684,16 @@ async function publishConsole(onlyWhenDue=false): Promise<void> {
 async function publishConsoleChildren(): Promise<boolean> {
   let succeeded = true;
   for (const publisher of CONSOLE_PUBLISHERS) {
+    if (publisher.name === "owner snapshot") {
+      const env = STAGING ? process.env : runtimeProductionReadEnvironment(process.env);
+      const controlUrl = controlPlaneUrlFromEnv(env);
+      const ready = controlUrl ? await ownerCountsReady(controlUrl).catch(() => false) : false;
+      if (!ready) {
+        console.log("  console publish: owner count inputs are unavailable or initializing; retaining the last snapshot until they are ready");
+        succeeded = false;
+        continue;
+      }
+    }
     if (!jobLaunchAllowed(`console-publish:${publisher.name}`)) { succeeded = false; continue; }
     const started = Date.now();
     const [run] = await runRuntimeChildren([{
@@ -1668,7 +1678,8 @@ const runtimeContracts = runtimeContractRetry({
 });
 async function applyRuntimeContracts(sha: string, cwd: string): Promise<boolean> {
   const deadlineMs = Date.now() + RUNTIME_CONTRACT_ATTEMPT_MS;
-  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", databaseBytesPerRun: 19_776, executable: process.execPath,
+  // CP-01's one-time, checkpointed backlog used at most 90,725,008 bytes in one bounded copy attempt.
+  const [result] = await runRuntimeChildren([{ id: "production-contract-migrations", databaseBytesPerRun: 100_000_000, executable: process.execPath,
     args: [...TS_CHILD, "scripts/db-apply.mts", "--target=production", "--phase=contract",
       "--production-runtime", `--runtime-commit=${sha}`] }], {
     cwd, env: withPassDeadline(process.env, deadlineMs), maxBufferBytes: 16 * 1024 * 1024,

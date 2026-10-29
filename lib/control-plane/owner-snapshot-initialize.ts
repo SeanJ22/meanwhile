@@ -21,18 +21,38 @@ export async function initializeOwnerSnapshot(repos:ControlPlaneRepositories,inp
   ]);
   const scopes=expansionScopesOf(config?.value??null);
   if(scopes.malformed)throw new Error("Owner initialization cannot read expansion scopes");
-  const at=prior.value.initialization?.at??(input.now??(()=>new Date().toISOString()))();
   const carried=current?.value as {servedReaderReadback?:ServedReaderReadback;providerBilling?:{readings:ProviderReading[]}}|undefined;
-  const fold=await OwnerSnapshotFold.fold(repos,prior.value,{
-    nowIso:at,slackMs:input.slackMs,servedReader:carried?.servedReaderReadback??null,askGapObservations:"unreadable"in ask?null:ask.rows,
-    scopes:scopes.scopes,carried:carried?.providerBilling?.readings??[],write:true,log:input.log,
-    checkpoint:{run:prior.value.initialization?.run??`${at}:contract:${crypto.randomUUID()}`,maxStates:input.maxStates??Infinity,
-      canContinue:()=>Date.now()+90_000<input.deadline,
-      save:async(fold,progress)=>{
-        await fold.saveTotals(prior,progress);
-        prior=await readTotals();
-        input.log(`owner initialization: ${progress?.phase??"complete"}; ${progress?.pending.length??0} states remain`);
-      }},
-  });
-  return fold.complete;
+  const clock=input.now??(()=>new Date().toISOString());
+  const canContinue=()=>Date.now()+90_000<input.deadline;
+  let refreshedThisAttempt=false,states=0;
+  while(canContinue()){
+    const refreshing=prior.value.initialization?.phase==="refresh";
+    const currentClock=clock();
+    const previousAt=prior.value.initialization?.at;
+    const at=refreshing&&previousAt?Date.parse(currentClock)>Date.parse(previousAt)?currentClock:previousAt:previousAt??currentClock;
+    const before=prior.revision;
+    const fold=await OwnerSnapshotFold.fold(repos,refreshing?{...prior.value,initialization:undefined}:prior.value,{
+      nowIso:at,slackMs:input.slackMs,servedReader:carried?.servedReaderReadback??null,askGapObservations:"unreadable"in ask?null:ask.rows,
+      scopes:scopes.scopes,carried:carried?.providerBilling?.readings??[],write:true,log:input.log,
+      checkpoint:{run:refreshing?`${at}:refresh:${crypto.randomUUID()}`:prior.value.initialization?.run??`${at}:contract:${crypto.randomUUID()}`,maxStates:(input.maxStates??Infinity)-states,
+        canContinue,
+        save:async(fold,progress)=>{
+          if(progress===null&&!refreshedThisAttempt){
+            // A backlog may span cleanup retries. Re-read its delta at the real current clock before publication is eligible.
+            const now=clock();
+            progress={at:Date.parse(now)>Date.parse(at)?now:at,run:`${now}:refresh:${crypto.randomUUID()}`,phase:"refresh",pending:[]};
+          }
+          await fold.saveTotals(prior,progress);
+          prior=await readTotals();
+          if(!prior)throw new Error("Owner initialization lost its national count row");
+          input.log(`owner initialization: ${progress?.phase??"complete"}; ${progress?.pending.length??0} states remain`);
+        }},
+    });
+    states+=fold.checkpointedStates;
+    if(refreshing)refreshedThisAttempt=true;
+    if(prior.value.ownerWorkListReady&&!prior.value.initializing)return true;
+    // A state-count test bound or the inherited deadline can leave this phase untouched; resume it on the next attempt.
+    if(prior.revision===before)return false;
+  }
+  return false;
 }

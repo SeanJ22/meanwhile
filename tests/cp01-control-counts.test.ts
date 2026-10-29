@@ -29,7 +29,7 @@ test("control counts follow committed changes and owner migration retires blobs 
     assert.equal((await db.query<{value:Record<string,unknown>}>("SELECT value FROM cp_owner_snapshots WHERE id='totals:az'")).rows[0].value.groups !== undefined,true,"expand keeps the serving version readable");
     assert.equal((await pgOwnerAssignmentRows(sql).read(["one"]))[0].group.members[0],"task-one");
     await db.query("UPDATE cp_owner_snapshots SET value=jsonb_set(value,'{groups,one,members}',$1::jsonb) WHERE id='totals:az'",[JSON.stringify(["task-one","task-two"])]);
-    await contractControlCounts(sql,{}, {initialize:async()=>true});
+  await contractControlCounts(sql,{NODE_ENV:"test"}, {initialize:async()=>true});
     assert.deepEqual((await pgOwnerAssignmentRows(sql).read(["one"]))[0].group.members,["task-one","task-two"],"contract includes the last old-runner write");
     assert.equal((await db.query<{value:Record<string,unknown>}>("SELECT value FROM cp_owner_snapshots WHERE id='totals:az'")).rows[0].value.groups,undefined);
     assert.equal((await db.query<{value:Record<string,unknown>}>("SELECT value FROM cp_owner_snapshots WHERE id='current:az'")).rows[0].value.allRowsIndex,undefined);

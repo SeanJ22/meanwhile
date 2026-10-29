@@ -48,14 +48,22 @@ export function KeysBox() {
     {says && <p role="status">{says}</p>}
     {reading.kind === "failed" && <p>The saved keys could not be read. <button className={s.btn} onClick={reload}>Try again</button></p>}
     {reading.kind === "ready" && <>
-      {reading.data.rows.length === 0 && <p>No keys saved yet.</p>}
-      {reading.data.rows.map(row => <div key={row.name} className={s.stack}>
-        <div className={s.inline}><strong>{row.name}</strong> <Pill tone={row.working ? "good" : "warn"}>{row.working ? "Working" : "Not working"}</Pill></div>
+      {reading.data.rows.every(row => row.deleted) && <p>No keys saved yet.</p>}
+      {reading.data.rows.filter(row => !row.deleted).map(row => <div key={row.name} className={s.stack}>
+        <div className={s.inline}><strong>{row.label}</strong> <Pill tone={row.working ? "good" : "warn"}>{row.working ? "Working" : "Not working"}</Pill></div>
         <p>{row.purpose}</p><p>Last tested {row.testedAt ? mst(row.testedAt) : "—"}</p>
         {!row.working && <p>{row.says}</p>}
         <p>Runner last read {row.runnerReadAt ? mst(row.runnerReadAt) : "—"}</p>
-        <button type="button" className={s.btn} disabled={busy} onClick={() => void send("DELETE", { name: row.name })}>Delete {row.name}</button>
+        <p>Changed {mst(row.changedAt)}</p>
+        <button type="button" className={s.btn} disabled={busy} onClick={() => void send("DELETE", { name: row.name })}>Delete {row.label}</button>
+        {row.canUndo && <button type="button" className={s.btn} disabled={busy} onClick={() => void send("POST", { name: row.name, action: "undo" })}>Undo last change</button>}
+        <details><summary>Earlier changes</summary>{row.history.map((change, i) => <p key={i}>{mst(change.at)} · {change.before} → {change.after}</p>)}</details>
+        <details><summary>Technical details</summary><p>{row.name}</p></details>
       </div>)}
+      {reading.data.rows.some(row => row.deleted) && <details><summary>Deleted keys</summary>
+        {reading.data.rows.filter(row => row.deleted).map(row => <p key={row.name}>{row.label} · Deleted {mst(row.changedAt)} {row.canUndo &&
+          <button type="button" className={s.btn} disabled={busy} onClick={() => void send("POST", { name: row.name, action: "undo" })}>Undo deletion</button>}</p>)}
+      </details>}
     </>}
   </section>;
 }

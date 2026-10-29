@@ -5,6 +5,9 @@ import { lockKey, unlockKey } from "../lib/core/keys-crypto.ts";
 import { KEYS_DDL, keysStore } from "../lib/core/keys-store.ts";
 import { testDueKeys, testKey } from "../lib/core/keys-test.ts";
 import { keyProblems, keysRunnerPass } from "../lib/core/keys-runner.ts";
+import { importExistingKeys } from "../lib/core/keys-import.ts";
+import { handleKeys } from "../lib/core/keys-http.ts";
+import { adminSessionCookie, withAdminSessionKey } from "./admin-session.ts";
 
 const MASTER = "42".repeat(32), SECRET = "test-private-key-never-display";
 const AT = "2026-10-29T12:00:00.000Z";
@@ -99,4 +102,68 @@ test("failed and overdue key checks appear in the brief and disappear after reco
   await testDueKeys(store, next, undefined, good);
   assert.deepEqual(keyProblems(await store.list(), next), []);
   assert.match(keyProblems(await store.list(), "2026-10-31T12:00:00.000Z")[0].what, /overdue/);
+});
+
+test("imports preserve distinct runtime credentials and never replace an owner's saved change", async t => {
+  const { store } = await fixture(t);
+  // Signing checks exercise the real site's HMAC without external services.
+  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
+  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "website-".repeat(8) }, store, AT, "website");
+  assert.equal((await store.list()).length, 2);
+  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), "runner-".repeat(8));
+  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY.website"), "website-".repeat(8));
+  await store.save("WTP_ADMIN_SESSION_KEY", SECRET, "signing", AT);
+  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
+  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), SECRET);
+  assert.equal((await store.list()).length, 2);
+  await store.remove("WTP_ADMIN_SESSION_KEY", AT);
+  await importExistingKeys({ WTP_ADMIN_SESSION_KEY: "runner-".repeat(8) }, store, AT, "runner");
+  assert.equal(await store.read("WTP_ADMIN_SESSION_KEY"), undefined, "the import cannot restore a deleted key");
+});
+
+test("undo restores the previous encrypted value, retests it, and keeps every value out of history", async t => {
+  const { store } = await fixture(t);
+  await store.save("Example", SECRET, "signing", AT);
+  await store.save("Example", "a-different-secret-long-enough", "signing", AT);
+  assert.equal((await store.list())[0].canUndo, true);
+  await store.undo("Example", AT);
+  assert.equal(await store.read("Example"), SECRET);
+  assert.equal((await store.list())[0].testedAt, null);
+  await testDueKeys(store, AT, undefined, good);
+  await store.remove("Example", AT);
+  assert.equal(await store.read("Example"), undefined);
+  await store.undo("Example", AT);
+  assert.equal(await store.read("Example"), SECRET);
+  const metadata = JSON.stringify(await store.list(true));
+  assert.equal(metadata.includes(SECRET), false);
+  assert.equal(metadata.includes("a-different-secret-long-enough"), false);
+  assert.match(metadata, /No key/);
+});
+
+test("the protected Settings API saves, tests, lists and deletes without returning the submitted secret", async t => {
+  const { store } = await fixture(t);
+  const cookie = (await adminSessionCookie()).split("=")[1];
+  const deps = { store: () => store, test: (s: typeof store, at: string, name?: string) => testDueKeys(s, at, name, good) };
+  const request = (method: string, body?: unknown, host = "admin.meanwhileusa.com", origin = "https://admin.meanwhileusa.com") =>
+    new Request(`https://${host}/api/admin/v6/keys`, { method, headers: { host, origin, "content-type": "application/json" },
+      ...(body ? { body: JSON.stringify(body) } : {}) });
+  await withAdminSessionKey(async () => {
+    let opened = false;
+    const blocked = { store: () => { opened = true; return store; } };
+    assert.equal((await handleKeys(request("GET", undefined, "meanwhileusa.com"), cookie, blocked)).status, 404);
+    assert.equal((await handleKeys(request("GET"), undefined, blocked)).status, 401);
+    assert.equal((await handleKeys(request("POST", {}, undefined, "https://elsewhere.example"), cookie, blocked)).status, 403);
+    assert.equal(opened, false);
+    const saved = await handleKeys(request("POST", { name: "Example", value: SECRET, service: "signing" }), cookie, deps);
+    assert.equal(saved.status, 200);
+    assert.equal((await saved.text()).includes(SECRET), false);
+    const listed = await handleKeys(request("GET"), cookie, deps);
+    assert.match(listed.headers.get("cache-control")!, /no-store/);
+    assert.equal((await listed.json()).rows[0].working, true);
+    await keysRunnerPass(store);
+    assert.ok((await store.list())[0].runnerReadAt);
+    const deleted = await handleKeys(request("DELETE", { name: "Example" }), cookie, deps);
+    assert.equal(deleted.status, 200);
+    assert.equal(await store.read("Example"), undefined);
+  });
 });

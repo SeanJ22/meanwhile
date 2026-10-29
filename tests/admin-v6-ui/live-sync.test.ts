@@ -94,7 +94,9 @@ test("Now leaves worker and result reads to their visible screens and navigation
  sync.onPulse(pulse({workers:{contract:"admin-v6/workers@1",href:"/api/admin/v6/workers",revision:"one"},results:{contract:"admin-v6/results@1",href:"/api/admin/v6/results",revision:"one"}}));
  await flush();assert.deepEqual(calls,[]);
  sync.setScreen("workers",VIEW_SECTIONS.workers);await flush();assert.match(calls[0],/\/workers\?/);
- sync.setScreen("work",VIEW_SECTIONS.work);await flush();assert.match(calls[1],/\/results\?/);sync.dispose();
+ sync.setScreen("checklist",VIEW_SECTIONS.checklist);await flush();assert.match(calls[1],/\/results\?/);
+ assert.deepEqual(sync.snapshot().results.data,[],"Checklist's mounted Readers panel loads its result rows after Now");
+ sync.setScreen("work",VIEW_SECTIONS.work);await flush();assert.match(calls.at(-1)!,/\/results\?/);assert.deepEqual(sync.snapshot().results.data,[]);sync.dispose();
 });
 
 test("Checklist reads its spend fields and a late compact reply cannot overwrite Money",async()=>{

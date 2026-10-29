@@ -7,7 +7,7 @@ export const VIEW_SECTIONS: Readonly<Record<View, readonly SectionId[]>> = {
   queue: ["hunts", "history", "sends", "stuck", "fixes"],
   workers: ["hunts", "workers", "agents", "sends", "reliability", "publication"],
   work: ["hunts", "results", "stuck", "sameCause", "history"],
-  checklist: ["hunts", "checklist", "spend"],
+  checklist: ["hunts", "checklist", "spend", "results"],
   money: ["hunts", "money", "spend"],
   scoreboard: ["hunts", "scoreboard"],
   reports: ["hunts"],

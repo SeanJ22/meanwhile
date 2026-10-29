@@ -8,16 +8,18 @@ const door: VotingSourceDoor = { id: "town-list", url: "https://elections.exampl
   scope: { state: "AZ", ocdId: "ocd-division/country:us/state:az/county:example", name: "Example County" },
   shape: "file", covers: ["ELECTION_DAY"], electionDate: "2026-11-03", electionPageUrl: "https://elections.example.gov/",
   extraction: { format: "csv", columns: { name: "Location", address: "Address" } } };
-const read: VotingSourceRead = { doorId: door.id, sites: [], rules: [], sources: [], blanks: [], attempts: [], rawBodies: [
+const site = { id: "voting-library", name: "Library", address: "1 Main St", sources: [{ publisher: door.publisher, url: door.url, checkedAt: "2026-10-25" }] } as VotingSourceRead["sites"][number];
+const read: VotingSourceRead = { doorId: door.id, sites: [site], rules: [], sources: site.sources!, blanks: [], attempts: [], rawBodies: [
   { url: door.url, contentType: "text/csv", bytes: new TextEncoder().encode("Location,Address\nLibrary,1 Main St") },
   { url: "https://elections.example.gov/robots.txt", contentType: "text/plain", bytes: new TextEncoder().encode("old robots") },
 ] };
 
-test("voting source hashes observe content and extraction changes, independently of body order, robots and check stamps", () => {
+test("voting source fingerprints observe what readers could see and the extraction, never fetch noise, robots or check stamps", () => {
   const hash = votingSourceContentHash([door], read);
-  const changedRobots = { ...read, rawBodies: [{ ...read.rawBodies[1]!, bytes: new TextEncoder().encode("new robots") }, read.rawBodies[0]!, read.rawBodies[0]!] };
-  assert.equal(votingSourceContentHash([{ ...door, access: { status: "open", checkedAt: "2026-11-01" } }], changedRobots), hash);
-  assert.notEqual(votingSourceContentHash([door], { ...read, rawBodies: [{ ...read.rawBodies[0]!, bytes: new TextEncoder().encode("Location,Address\nLibrary,2 Main St") }] }), hash);
+  const noise = { ...read, sites: [{ ...site, sources: [{ ...site.sources![0]!, checkedAt: "2026-11-01" }] }], attempts: [{ url: door.url, route: "direct" as const, outcome: "200" }],
+    rawBodies: [{ ...read.rawBodies[0]!, bytes: new TextEncoder().encode("Location,Address\nLibrary,1 Main St\n<script src=\"/_Incapsula_Resource?cb=7\"></script>") }] };
+  assert.equal(votingSourceContentHash([{ ...door, access: { status: "open", checkedAt: "2026-11-01" } }], noise), hash);
+  assert.notEqual(votingSourceContentHash([door], { ...read, sites: [{ ...site, address: "2 Main St" }] }), hash);
   assert.notEqual(votingSourceContentHash([{ ...door, extraction: { ...door.extraction, headerRow: 1 } }], read), hash);
   assert.equal(votingSourceReadComplete(read), true);
   assert.equal(votingSourceReadComplete({ ...read, blanks: [{ id: "more", doorId: door.id, scope: door.scope, reason: "access", status: "open", owed: "Remaining sections", tried: [], next: [] }] }), false);

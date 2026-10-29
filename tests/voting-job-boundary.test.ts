@@ -3,6 +3,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { sourceTextWithoutNuls } from "../lib/doors/source-text.ts";
+import { canonicalCivicDataHash } from "../lib/civic-data/changes.ts";
 import { recordSourceObservation } from "../lib/doors/source-capture.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { currentVotingSourceDoors, votingAcquisitionDeadline, votingReadHasFacts } from "../scripts/fetch-voting-sites.mts";
@@ -102,6 +103,7 @@ test("the scheduled job reads a known HTML list before discovery and keeps it on
       if (reader.kind !== "PROMOTED") continue;
       const sites = reader.value.jurisdictions.flatMap(row => row.sites);
       assert.equal(sites.length, 26);
+      assert.equal(canonicalCivicDataHash(reader.value), { [now]: "0195c81fa5f1bed62e2a905049114e01cb82fb5b9891d413294308fdb09c015b" }[at] ?? "09c62a4bd9a509d634f8da924b2a119b7beff422f841f142672fbfd39b4f54ee", "readers get exactly the package published before the fingerprint change");
       const ids = sites.map(site => site.id);
       if (yesterday.length) assert.deepEqual(ids, yesterday);
       yesterday = ids;
@@ -122,7 +124,7 @@ test("cleaned source metadata passes the actual PostgreSQL JSONB NUL constraint"
   } finally { await db.close(); }
 });
 
-test("a cutoff records only its completed unchanged sources, resumes the other source first, and never refreshes the whole state early", async (t) => {
+test("a cutoff records only its completed unchanged sources, resumes the other source first, and never refreshes the whole state early; fetch noise is no change, a moved site is", async (t) => {
   const { refreshVotingSources } = await import("../scripts/fetch-voting-sites.mts");
   const { MemoryRoutineDataStore } = await import("../lib/civic-data/store.ts");
   const { votingSitesContract } = await import("../lib/ballot/voting-sites-data-plane.ts");
@@ -135,7 +137,9 @@ test("a cutoff records only its completed unchanged sources, resumes the other s
     scope: { state: "ND", ocdId: "ocd-division/country:us/state:nd/county:adams", name: "Adams County", countyFips: "38001" },
     shape: "file", covers: ["ELECTION_DAY"], electionDate: "2026-11-03", electionPageUrl: "https://elections.example.gov/locations.csv",
     electionAssociationVerified: true, model: "ASSIGNED", extraction: { format: "csv", columns: { name: "Location", address: "Address", kind: "Kind", date: "Date" } } };
-  const sourceBytes = "Location,Address,Kind,Date\nPublic Library,1 Main St,ELECTION_DAY,2026-11-03\n";
+  // Every response differs (an export stamp no reader is shown), as a firewall's per-response script makes HTML differ.
+  let fetches = 0, address = "1 Main St";
+  const sourceBytes = () => `Location,Address,Kind,Date,Exported\nPublic Library,${address},ELECTION_DAY,2026-11-03,${++fetches}\n`;
   const second = { ...source, id: `${source.id}-second`, url: "https://elections.example.gov/second.csv" };
   const root = await mkdtemp(join(tmpdir(), "voting-hash-resume-"));
   const contract = votingSitesContract("ND");
@@ -145,18 +149,32 @@ test("a cutoff records only its completed unchanged sources, resumes the other s
   const fetchSource = (async input => {
     const url = String(input);
     if (url.endsWith("/robots.txt")) return new Response("User-agent: *\nAllow: /", { headers: { "content-type": "text/plain" } });
-    return [source.url, second.url].includes(url) ? new Response(sourceBytes, { headers: { "content-type": "text/csv" } }) : new Response(null, { status: 404 });
+    return [source.url, second.url].includes(url) ? new Response(sourceBytes(), { headers: { "content-type": "text/csv" } }) : new Response(null, { status: 404 });
   }) as typeof fetch;
   const run = (at: string) => refreshVotingSources({ state: "ND", store, context: { repos }, now: () => at,
     deadlineMs: at === "2026-10-24T08:00:00.000Z" ? deadline : clock + 10_000,
     fetch: fetchSource, geocode: async () => null, registry: { divisions: [], bodies: [] }, vault: cycleVault(root), seeds: [source, second] });
+  let bytesRead = 0;
+  // As PostgresRoutineDataStore.readVersioned: a proven read is reused until its pointer moves.
+  const versioned = new Map<string, { version: string; value: unknown }>();
+  Object.assign(store, { readVersioned: async (namespace: string, recordClass: "REGISTRATION", scope: string, read: () => Promise<unknown>) => {
+    const version = JSON.stringify(await store.readPromotionIdentity(recordClass, scope));
+    if (versioned.get(namespace + scope)?.version !== version) versioned.set(namespace + scope, { version, value: await read() });
+    return versioned.get(namespace + scope)!.value;
+  } });
+  for (const name of Object.getOwnPropertyNames(MemoryRoutineDataStore.prototype).filter(name => /^read|^eventObservedAt$/.test(name))) {
+    const original = (store as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>)[name]!.bind(store);
+    t.mock.method(store as unknown as Record<string, (...args: unknown[]) => Promise<unknown>>, name, async (...args: unknown[]) => {
+      const out = await original(...args); bytesRead += Buffer.byteLength(JSON.stringify(out) ?? ""); return out;
+    });
+  }
   try {
     const initial = await run(now);
     const firstConfirmation = (await store.readPromotionIdentity(contract.recordClass, contract.scope))!.latestConfirmation!.observedAt;
     let forbidHeld = true;
     const originalRead = store.readPromotion.bind(store);
     t.mock.method(store, "readPromotion", async (recordClass: Parameters<typeof originalRead>[0], scope: string) => {
-      if (forbidHeld) assert.notEqual(recordClass, "VOTING_SITE", "matching sources never load the held state, including after a cutoff");
+      if (forbidHeld) assert.ok(!["VOTING_SITE", "REGISTRATION"].includes(recordClass), "matching sources never load the held state or registration, including after a cutoff");
       return originalRead(recordClass, scope);
     });
     const originalCandidate = store.readCandidate.bind(store);
@@ -187,12 +205,18 @@ test("a cutoff records only its completed unchanged sources, resumes the other s
     assert.ok(sourceRows.some(row => row.url === checkedUrl && row.checkedAt === "2026-10-24T08:00:00.000Z"), "the completed source's actual check reaches Sources");
     assert.ok(sourceRows.filter(row => row.url !== checkedUrl).every(row => row.checkedAt === now), "the unread sibling keeps its earlier check");
     assert.equal(reader.metadata.retrievedAt, now, "a partial source check does not freshen the whole state");
-    forbidHeld = true;
+    forbidHeld = true; bytesRead = 0;
     clock = Date.parse("2026-10-25T08:00:00.000Z");
     const resumed = await run("2026-10-25T08:00:00.000Z");
+    console.info(`unchanged pass of two sources: ${resumed.publications} publications, ${bytesRead} bytes of stored reads`);
+    assert.ok(bytesRead < 10_000, `an unchanged pass reads only pointers and fingerprints (${bytesRead} bytes)`);
     assert.notEqual(resumed.attemptedSourceIds[0], partial.attemptedSourceIds[0], "the unread source keeps its earlier persisted attempt time");
     assert.equal(resumed.confirmedSources, 2);
     assert.equal(resumed.terminal?.confirmedAt, "2026-10-25T08:00:00.000Z");
     assert.equal(resumed.terminal?.candidateId, initial.terminal?.candidateId, "both source confirmations retain the same published facts");
+    forbidHeld = false; address = "2 Main St"; clock = Date.parse("2026-10-26T08:00:00.000Z");
+    assert.equal((await run("2026-10-26T08:00:00.000Z")).publications, 2, "a moved site publishes from each source as before");
+    const moved = await readVotingSitesProjection("ND", { store, now: "2026-10-26T08:00:00.000Z" });
+    assert.ok(moved.kind === "PROMOTED" && moved.value.jurisdictions.some(row => row.sites.some(site => site.address === "2 Main St")));
   } finally { await rm(root, { recursive: true, force: true }); }
 });

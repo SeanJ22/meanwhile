@@ -54,7 +54,9 @@ test("source fixtures reach the hydrated member card with bills, text, comment d
     assert.equal(await page.getByRole("link", { name: "Submit a comment", exact: true }).getAttribute("href"), "https://www.regulations.gov/commenton/FIXTURE-2026-0001");
     assert.equal(await page.getByText("Sources", { exact: true }).count(), 1);
     await page.getByRole("button", { name: "Lobbying contributions", exact: true }).click();
-    const missing = page.locator('[data-card-gap="federal-contributions:congress:C001078"]');
+    const missing = page.locator('[data-card-gap-contribution="federal-contributions:congress:C001078"]')
+      .locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' card-section-body ')]").locator("[data-card-gap]");
+    await missing.waitFor({ state: "visible" });
     assert.equal(await missing.count(), 1);
     assert.match(await missing.textContent() ?? "", /working on getting this info/);
     assert.equal(await missing.getByRole("link", { name: "Want us to get this sooner?" }).count(), 1);

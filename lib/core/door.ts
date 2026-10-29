@@ -265,7 +265,8 @@ export async function retireRosterThroughDoor(db: FactDb & { readonly query: Que
   readonly bodyId: string; readonly copy: import("../facts/check.ts").SavedCopy;
   readonly seated: readonly string[]; readonly producedBy: string; readonly sourcePrefix?: string;
   readonly nativeScheme?: string; readonly purge?: ReaderCachePurger;
-  readonly roster?: { readonly pages: readonly WorkerPublicationCapture[]; readonly bodyId: number; readonly day: string };
+  /** `bodyIds` are every source selector whose seats are this body's seats (a board and its folded calendar labels). */
+  readonly roster?: { readonly pages: readonly WorkerPublicationCapture[]; readonly bodyIds: readonly number[]; readonly day: string };
   readonly freshness?: { readonly windowHours: number; readonly now: Date };
 }): Promise<number> {
   if(input.freshness&&savedCopyFreshnessRefusal(input.copy.fetchedAt,input.freshness.windowHours,input.freshness.now))return 0;
@@ -276,13 +277,13 @@ export async function retireRosterThroughDoor(db: FactDb & { readonly query: Que
     if (!entity || !officialSource(input.copy.finalUrl,entity.hosts)) return 0;
     let seated=input.seated;
     if(input.roster) {
-      const active=new Set<string>();
+      const active=new Set<string>(),selectors=new Set(input.roster.bodyIds);
       for(const page of input.roster.pages) {
         if(!officialSource(page.evidence.canonicalUrl,entity.hosts) || !page.evidence.canonicalUrl.startsWith(input.sourcePrefix!)) throw Error("ROSTER_SOURCE_MISMATCH");
         const records:unknown=JSON.parse(page.evidence.text);
         if(!Array.isArray(records))throw Error("ROSTER_SOURCE_MISMATCH");
         for(const record of records) {
-          if(record.OfficeRecordBodyId!==input.roster.bodyId)continue;
+          if(!selectors.has(record.OfficeRecordBodyId))continue;
           const name=rosterHolderName(record.OfficeRecordFullName);
           if(!name)continue;
           if(record.OfficeRecordStartDate?.slice(0,10)>input.roster.day || record.OfficeRecordEndDate && record.OfficeRecordEndDate.slice(0,10)<input.roster.day)continue;

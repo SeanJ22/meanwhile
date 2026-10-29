@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardGapContribution, CardGapSection } from "@/components/ui/card-gap-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { FEDERAL_MONEY_SOURCES } from "@/lib/federal-money/model";
 import { federalMoneyRows, federalMoneySources } from "@/lib/federal-money/view";
@@ -35,7 +35,9 @@ function load(divisionId: string, bodyId?: string, cursor?: string | null, recip
   return pending;
 }
 
-export function FederalMoneySection({ divisionId, bodyId, recipientIds = [], recipientNames = [], recipientState, data }: { divisionId: string; bodyId?: string; recipientIds?: readonly string[]; recipientNames?: readonly string[]; recipientState?: string; data?: FederalMoneyPlaceRead }) {
+type Props = { divisionId: string; bodyId?: string; recipientIds?: readonly string[]; recipientNames?: readonly string[]; recipientState?: string; data?: FederalMoneyPlaceRead };
+
+export function FederalMoneySection({ divisionId, bodyId, recipientIds = [], recipientNames = [], recipientState, data }: Props) {
   const knownNames = useReaderNames();
   const [read, setRead] = useState<{ identity: string; value: FederalMoneyPlaceRead } | null>(null);
   const recipients = [...new Set(recipientIds)].sort().join("|");
@@ -82,6 +84,7 @@ export function FederalMoneySection({ divisionId, bodyId, recipientIds = [], rec
     { label: "Disaster declarations", rows: rows.filter(row => row.fact.kind === "DISASTER") },
   ];
   return <section aria-label="Federal money and records" className="space-y-5">
+    <CardGapSection label="federal money and records">
     {groups.filter(group => group.rows.length).map(group => <div key={group.label} aria-label={group.label}>
       <h4 className="t-detail font-medium text-paper">{group.label}</h4>
       <ul className="mt-2 space-y-3">{group.rows.map(row => <li key={row.fact.id} data-federal-source={row.fact.source} data-federal-record={row.fact.id} className="t-body leading-relaxed text-paper-dim">{readerText(row.text, "sentence", knownNames)}</li>)}</ul>
@@ -91,5 +94,6 @@ export function FederalMoneySection({ divisionId, bodyId, recipientIds = [], rec
       : source.coverageComplete === false && <CardGapContribution key={source.source} id={`federal-money:${identity}:${source.source}:more`} label="more records for this place" />)}
     {value.nextCursor && <button type="button" className="t-caption text-link" disabled={loadingMore} onClick={() => void loadMore()}>{loadingMore ? "Loading records…" : pageFailed ? "Try loading more records again" : "Load more records"}</button>}
     <CardSourcesContribution id={`federal-money:${divisionId}:${bodyId ?? "place"}`} sources={sources} />
+    </CardGapSection>
   </section>;
 }

@@ -37,6 +37,8 @@ import type { Body, Division, Registry } from "./types.ts";
 import { getRegistryRuntimeReadModel, registryRuntimeReadState, selectedRegistryStates } from "./runtime-read-model.ts";
 import { currentReaderAuthorityEdge, currentCampaignSitesEdge, currentCommentAccessEdge, currentRegistrationsEdge, currentStateLegislatorsEdge, ReaderEdgeOnlyRefusal, refuseDatabaseInEdgeOnlyContext, settleEdgeFirst } from "./runtime-edge.ts";
 import { currentReaderSelection } from "../db/reader-route.ts";
+import { factReader } from "../facts/db.ts";
+import type { Query } from "../facts/publish.ts";
 import { stateRegistryRuntimeScope, statesForRegistryDivisions } from "../civic-data/state-scopes.ts";
 import { curatedReaderReadState, primeCuratedReaderProjectionWithOwnerChoices, refreshCampaignSitesFromPromoted } from "../civic-data/curated-reader-read-model.ts";
 import { primeCommentAccess, readCommentAccessFacts } from "./comment-access.ts";
@@ -374,7 +376,17 @@ function subjectRegistryStates(id: string): readonly string[] {
   return named.length ? named : government ? [government.toUpperCase()] : selectedRegistryStates();
 }
 
-export async function knownBodySubjectIds(forSubjectId?: string): Promise<Set<string>> {
+export async function knownBodySubjectIds(forSubjectId?: string, query: Query | null = currentReaderAuthorityEdge() ? null : factReader()): Promise<Set<string>> {
+  // A request about one published subject needs its identity, not its state's
+  // complete registry, people, geography and ballot projections.
+  if (forSubjectId && query && !currentReaderAuthorityEdge()) {
+    const [row] = await query(`SELECT EXISTS (
+      SELECT 1 FROM entity WHERE id=$1 AND kind IN ('body','place','government')
+      UNION ALL SELECT 1 FROM entity_external_id x JOIN entity e ON e.id=x.entity_id
+        WHERE x.scheme='body-alias' AND x.value=$1 AND e.kind='body'
+    ) AS known`, [forSubjectId]);
+    return new Set(row?.known === true ? [forSubjectId] : []);
+  }
   const { registry, divisionsById } = await registryLoaded(forSubjectId ? subjectRegistryStates(forSubjectId) : selectedRegistryStates());
   const out = new Set<string>(registry.bodies.map((b) => b.id));
   for (const ocdId of divisionsById.keys()) out.add(ocdId);

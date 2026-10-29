@@ -9,7 +9,7 @@ export function NationalSection({ cards }: { readonly cards: readonly NationalCa
         <div className="mt-6 space-y-2" data-national-gap>
           <p className="t-body">National government, coming soon.</p>
           <p className="t-body">We&apos;re working on getting this info.</p>
-          <a className="t-detail text-link underline" href={feedbackHref({ about: "National government", zip: null })}>Want us to get this sooner?</a>
+          <a className="t-detail text-link underline" href={feedbackHref({ about: "National government", zip: null, intent: "sooner" })}>Want us to get this sooner?</a>
         </div>
   ) : (
         <ul className="mt-6 space-y-3" data-national-cards>

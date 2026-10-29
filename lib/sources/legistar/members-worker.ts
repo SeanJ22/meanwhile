@@ -29,6 +29,7 @@ export function legistarMemberPublisher(input:{facts:FactDb&{query:Query};vault:
   const parsed=new WeakMap<object,readonly Record<string,unknown>[]>();
   const recordsFor=(page:Awaited<ReturnType<typeof capture>>)=>{let rows=parsed.get(page);if(!rows){rows=JSON.parse(page.evidence.text);parsed.set(page,rows!);}return rows!;};
   const publishOne=async(value:MemberRecordWork,now:string,purge?:ReaderCachePurger):Promise<{published:number;retired:number;refused?:string}>=>{
+    if(value.selector)return {published:0,retired:0};
     if(value.reason||!value.body)return {published:0,retired:0,refused:value.reason??"Government binding missing"};
     const body=value.body,source=`legistar-members:${value.slug}`,saved=await capture(value.source);
     const stale=savedCopyFreshnessRefusal(new Date(saved.observedAt),input.clocks.windowHours("officeholder"),new Date(now));
@@ -36,19 +37,24 @@ export function legistarMemberPublisher(input:{facts:FactDb&{query:Query};vault:
     const records=recordsFor(saved);
     const record=records.find(row=>row[value.type==="body"?"BodyId":"OfficeRecordId"]===value.nativeId);
     if(!record)return {published:0,retired:0,refused:"The saved response does not contain this record"};
-    const day=memberDay(now,body.timeZone),seats=new Map<number,MemberOffice>();
+    const day=memberDay(now,body.timeZone),seats=new Map<number,MemberOffice>(),selectors=new Set(body.nativeIds??[body.nativeId]);
     for(const ref of value.officeSources??[]) {
       const officePage=await capture(ref);
       for(const office of recordsFor(officePage) as unknown as MemberOffice[]) {
-        if(office.OfficeRecordBodyId!==body.nativeId||!memberName(office)||!currentMemberOffice(office,day))continue;
+        if(!selectors.has(office.OfficeRecordBodyId)||!memberName(office)||!currentMemberOffice(office,day))continue;
         const held=seats.get(office.OfficeRecordPersonId);
         if(!held||(office.OfficeRecordStartDate??"")>(held.OfficeRecordStartDate??"")||office.OfficeRecordStartDate===held.OfficeRecordStartDate&&office.OfficeRecordId>held.OfficeRecordId)seats.set(office.OfficeRecordPersonId,office);
       }
     }
     if(value.type==="body" && !seats.size && !(await input.facts.query("SELECT 1 FROM entity WHERE id=$1",[body.id])).length)return {published:0,retired:0};
     if(value.type==="member" && seats.get(Number(record.OfficeRecordPersonId))?.OfficeRecordId!==value.nativeId)return {published:0,retired:0};
-    const bodyRecord=value.type==="body"?record:value.bodySource?recordsFor(await capture(value.bodySource)).find(row=>row.BodyId===body.nativeId):null;
+    const bodyRecord=value.type==="body"&&!body.label?record:value.bodySource?recordsFor(await capture(value.bodySource)).find(row=>row.BodyId===body.nativeId):null;
     const bodyId=await ensureEntity(input.facts.query,{id:body.id,kind:"body",name:typeof bodyRecord?.BodyName==="string"?bodyRecord.BodyName.trim():body.id,state:body.state,parentId:body.parentId,government:body.government});
+    if(value.type==="body"&&body.label) {
+      // The body is held first, so the label folds into it as an alias rather than becoming a second body.
+      const folded=await ensureEntity(input.facts.query,{id:body.label.id,kind:"body",name:body.label.name,state:body.state,parentId:body.parentId,government:body.government});
+      return folded===bodyId?{published:0,retired:0}:{published:0,retired:0,refused:"The calendar label resolved to a different body"};
+    }
     await learnDoorChannel(input.facts.query,bodyId,`https://webapi.legistar.com/v1/${value.slug}/officerecords`);
     let published=0,refused:string|undefined;
     const publish=async(subjectId:string,field:string,claim:unknown,key:string,form:"text"|"date"|"membership"="text")=>{
@@ -84,7 +90,7 @@ export function legistarMemberPublisher(input:{facts:FactDb&{query:Query};vault:
       const copy=await input.facts.transaction(query=>saveCaptureCopy(query,evidence));
       retired=await retireRosterThroughDoor(input.facts,{bodyId,copy,seated:[...seats.keys()].map(String),producedBy:source,
         freshness:{windowHours:input.clocks.windowHours("officeholder"),now:new Date(now)},
-        roster:{pages:await Promise.all(value.officeSources.map(capture)),bodyId:body.nativeId,day},
+        roster:{pages:await Promise.all(value.officeSources.map(capture)),bodyIds:[...selectors],day},
         nativeScheme:`legistar:${value.slug}`,sourcePrefix:`https://webapi.legistar.com/v1/${value.slug}/officerecords?`,purge});
     }
     return {published,retired,...(refused?{refused}:{})};

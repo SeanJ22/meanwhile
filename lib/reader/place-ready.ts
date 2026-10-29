@@ -41,8 +41,10 @@ type Row = Record<string,unknown>;
 export function packPlaceContext(context: Row): Row {
   const packed:Row={formatVersion:context.formatVersion};
   for(const key of ["current","history","emptyCurrent","emptyHistory"]) {
-    const full=context[key] as Row|undefined;
-    if(!full)continue;
+    const source=context[key] as Row|undefined;
+    if(!source)continue;
+    const full={...source};
+    delete full.body_aliases;
     const brief={...full,agenda_texts:[],archived_documents:[],archived_document_links:[],
       meeting_rows:(full.meeting_rows as Row[]).map(partition=>({...partition,
         payload:{...partition.payload as Row,agendaDocuments:[],agendaDocumentLinks:[]}}))};

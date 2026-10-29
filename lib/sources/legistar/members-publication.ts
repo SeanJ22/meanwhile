@@ -3,6 +3,7 @@ import type { BodySourceWiring } from "../../registry/source-wiring.ts";
 import { subBodyId } from "../../civic-data/meeting-body-crosswalk.ts";
 import { legistarMemberRosters } from "./members.ts";
 import { memberName, currentMemberOffice, memberDay, type LegistarMembers } from "./members-model.ts";
+import { bodyNameKey, publishedBodyLabel } from "../../civic-data/published-body-name.ts";
 
 export function legistarMembersPackage(raw: LegistarMembers, rows: readonly BodySourceWiring[], now: string) {
   const own = rows.filter(row => row.config.slug === raw.slug);
@@ -11,7 +12,15 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
   const parent = own[0];
   const unbound: { key: string; detail: string }[] = [];
   const candidates = new Map<string, { body: LegistarMembers["bodies"][number]; row: BodySourceWiring }[]>();
+  const selectors = new Set<number>();
   for (const body of raw.bodies) {
+    const label = publishedBodyLabel(body.BodyName);
+    // A calendar's meeting-type selector without seats is not a body and holds nothing up.
+    if (label.kind !== "body" && !raw.offices.some(office => office.OfficeRecordBodyId === body.BodyId)) { selectors.add(body.BodyId); continue; }
+    if (label.kind !== "body" && !label.name) {
+      unbound.push({ key: `${raw.slug}:body:${body.BodyId}`, detail: "The seated calendar label does not identify a body" });
+      continue;
+    }
     const exact = own.filter(row => Number(row.config.eventBodyId) === body.BodyId);
     const wired = exact.length ? exact : own.filter(row => !row.config.eventBodyId && (row.config.eventBodyName || row.config.insiteBodyName) === body.BodyName);
     if (wired.length > 1 || wired.length === 0 && (jurisdictions.size !== 1 || parent.ocdId === null)) {
@@ -35,9 +44,19 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
       for (const candidate of current) unbound.push({ key: `${raw.slug}:body:${candidate.body.BodyId}`, detail: "Two public bodies in this tenant carry the same name and both hold current seats" });
     } else bound.push((current[0] ?? group[0]).row);
   }
+  // A seated calendar label (a study session, an addendum) is its tenant's real body under another selector.
+  const folds = new Map<string, BodySourceWiring>();
+  for (const row of bound) {
+    const label = publishedBodyLabel(row.config.bodyName ?? "");
+    if (label.kind === "body" || !label.name) continue;
+    const real = bound.filter(other => other.ocdId === row.ocdId && publishedBodyLabel(other.config.bodyName ?? "").kind === "body"
+      && bodyNameKey(other.config.bodyName ?? "") === bodyNameKey(label.name!));
+    if (real.length === 1) folds.set(row.bodyId, real[0]);
+  }
   const hash = createHash("sha256");
   for (const row of bound) hash.update(JSON.stringify([row.bodyId, row.ocdId, row.timeZone]));
   hash.update(JSON.stringify(unbound));
+  hash.update(JSON.stringify([...folds].map(([label, real]) => [label, real.bodyId]).sort()));
   hash.update("body-names/1");
   let members = 0;
   for (const roster of legistarMemberRosters(raw, bound, now)) {
@@ -47,5 +66,5 @@ export function legistarMembersPackage(raw: LegistarMembers, rows: readonly Body
       members++;
     }
   }
-  return { bound, unbound, signature: hash.digest("hex"), members };
+  return { bound, unbound, selectors, folds, signature: hash.digest("hex"), members };
 }

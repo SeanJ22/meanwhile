@@ -12,16 +12,37 @@ export interface RegistryLookup {
   readonly payload: { readonly registry: Pick<Registry, "bodies" | "divisions"> };
 }
 
-const registryPointer = `SELECT p.key,p.current_version_id,
+const registryPointerWhere = (scope: string) => `SELECT p.key,p.current_version_id,
   (p.source_id='registry-reviewed-bindings' AND p.current_version_id=p.last_known_good_version_id
     AND c.state='PROMOTED' AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope
     AND (p.current_version_id=c.id AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint) AND p.validation_receipt=c.validation_receipt
     AND p.validation_receipt->>'decision'='GOOD') AS valid
   FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id
-  WHERE p.record_class='REGISTRY_RUNTIME_BINDING' AND p.scope=$1`;
+  WHERE p.record_class='REGISTRY_RUNTIME_BINDING' AND ${scope}`;
+const registryPointer = registryPointerWhere("p.scope=$1");
 
 function requireRegistryPointer(row: Record<string, unknown>, scope: string): void {
   if (row.valid !== true) throw new Error(`REGISTRY_RUNTIME_BASE_UNAVAILABLE:INVALID_PUBLISHED_POINTER:${scope}`);
+}
+
+/** A body's identity header: no calendar, roster, contact or source value leaves Postgres. */
+export interface RegistryBodyHeader { readonly id: string; readonly name: string; readonly ocdId: string | null }
+
+/**
+ * The published registry bodies of these states whose names match, as identity headers only.
+ * Null when any state's published pointer is invalid, so the caller keeps its complete path.
+ */
+export async function readKeyedRegistryBodyHeaders(query: Query, states: readonly string[], namePattern: string | null):
+  Promise<readonly RegistryBodyHeader[] | null> {
+  const scopes = [...new Set(states.map(state => stateRegistryRuntimeScope(requireRegistryState(state))))];
+  if (!scopes.length) return [];
+  const rows = await query(`WITH pointer AS MATERIALIZED (${registryPointerWhere("p.scope=ANY($1::text[])")})
+    SELECT p.valid,r.row_id AS id,r.value->>'name' AS name,r.value->>'ocdId' AS ocd_id FROM pointer p
+    LEFT JOIN civic_data_rows r ON p.valid AND r.promotion_key=p.key AND r.version_id=p.current_version_id
+      AND r.collection='registry.bodies' AND ($2::text IS NULL OR r.value->>'name' ~* $2)`, [scopes, namePattern]);
+  if (rows.some(row => row.valid !== true)) return null;
+  return rows.filter(row => typeof row.id === "string" && typeof row.name === "string")
+    .map(row => ({ id: String(row.id), name: String(row.name), ocdId: typeof row.ocd_id === "string" ? row.ocd_id : null }));
 }
 
 export function selectRegistryLookup(versionId: string, registry: Registry, bodyIds: readonly string[], divisionIds: readonly string[]): RegistryLookup {

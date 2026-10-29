@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardGapContribution, CardGapSection } from "@/components/ui/card-gap-context";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { campaignFinanceRecordSources } from "@/lib/funding/state-view";
 import { smallDonorSentence } from "@/lib/funding/small-donors";
@@ -39,10 +39,13 @@ function CampaignSection({divisionId,personId,data,bare=false,context=null}:Prop
     finally{if(request.current===current)setLoading(false);}
   }
   if(!value?.records.length)return <section aria-label="Campaign money" className="space-y-3">
+    <CardGapSection label="campaign money" inherit={bare}>
     {!bare&&<h4 className="t-detail font-medium text-paper">Campaign money</h4>}
     <CardGapContribution id={`campaign-finance:${divisionId}:${personId??"place"}`} label="campaign money"/>
+    </CardGapSection>
   </section>;
   return <section aria-label="Campaign money" className="space-y-3">
+    <CardGapSection label="campaign money" inherit={bare}>
     {!bare&&<h4 className="t-detail font-medium text-paper">Campaign money</h4>}
     {value.records.map(row=>{
       const small=smallDonorSentence(row.individualLarge??null,row.individualSmall??null);
@@ -58,5 +61,6 @@ function CampaignSection({divisionId,personId,data,bare=false,context=null}:Prop
     <ReactionControl targetType="FUNDING_TOTAL_REACTION" targetId={personId??value.records[0].person.id} prompt="How do you feel about how this campaign is funded?" context={context}/>
     {value.nextCursor&&<button type="button" disabled={loading} onClick={()=>void next()} className="t-caption text-link">{loading?"Loading campaign totals…":failed?"Try loading more totals again":"More campaign totals"}</button>}
     <CardSourcesContribution id={`campaign-finance:${divisionId}:${personId??"place"}`} sources={value.records.flatMap(campaignFinanceRecordSources)}/>
+    </CardGapSection>
   </section>;
 }

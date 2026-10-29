@@ -296,7 +296,7 @@ test("a requested past date with agenda material but no held decisions states th
 test("a meeting-time answer states the selected sitting in local time and stops", () => {
   const composed = composeSittingAnswer({ shape: "MEETING_TIME", subjectName: "Mesa", sittings: [STUDY, REGULAR], records: RECORDS, sittingGaps: [AGENDA_GAP], now: NOW });
   assert.ok(composed);
-  assert.equal(composed.answer, "The next Mesa meeting is the City Council Study Session on September 28 at 5:15 PM.");
+  assert.equal(composed.answer, "The next Mesa meeting is the City Council Study Session on September 28 at 5:15 PM MST.");
   assert.doesNotMatch(composed.answer, /agenda|extract|records|Later that day/);
   assert.deepEqual(composed.citedUrls, ["https://mesa.example.gov/m1"]);
 

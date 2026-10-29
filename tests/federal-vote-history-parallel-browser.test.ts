@@ -83,7 +83,8 @@ test("a first-click federal card reads current and earlier votes together and re
         assert.equal(pagination?.anchor, "fixture:current-window");
         assert.equal(pagination?.cursor, "fixture:older-page");
         assert.equal(await dialog.locator('[data-recent-vote-id="earlier"]').count(), 1, "history pages deduplicate without dropping held records");
-        const historyGap = dialog.locator('[data-card-gap="earlier-votes:congress:Z999994"]');
+        const historyGap = dialog.locator('[data-card-gap-contribution="earlier-votes:congress:Z999994"]')
+          .locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' card-section-body ')]").locator("[data-card-gap]");
         await historyGap.getByText(/We[’']re working on getting this info/).waitFor({ state: "visible" });
         assert.equal(await historyGap.getByRole("button", { name: "Want us to get this sooner?", exact: true }).count(), 1);
         releaseCurrent();
@@ -95,7 +96,8 @@ test("a first-click federal card reads current and earlier votes together and re
         await dialog.getByRole("button", { name: /^Earlier records/ }).click();
         await dialog.locator('[data-recent-vote-id="oldest"]').waitFor({ state: "visible" });
       } else {
-        const recentGap = dialog.locator('[data-card-gap="recent-votes:congress:Z999993"]');
+        const recentGap = dialog.locator('[data-card-gap-contribution="recent-votes:congress:Z999993"]')
+          .locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' card-section-body ')]").locator("[data-card-gap]");
         await recentGap.getByText(/We[’']re working on getting this info/).waitFor({ state: "visible" });
         assert.equal(await recentGap.getByRole("button", { name: "Want us to get this sooner?", exact: true }).count(), 1);
         assert.equal(await dialog.getByRole("button", { name: /^Recent/ }).count(), 0, "a current failure cannot hide held history behind an empty tab");

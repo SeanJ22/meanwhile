@@ -2,7 +2,7 @@
 import { PlaceOpenData } from "./open-data";
 
 import { useShellData } from "@/lib/state/data";
-import { CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardGapContribution, CardGapsContribution, CardGapSection } from "@/components/ui/card-gap-context";
 import { readerOfficeTitle } from "@/lib/officials/reader-office-title";
 import { staleDivisionRead, type DivisionRead } from "@/lib/meetings/freshness";
 import type { readerMeetingCount } from "@/lib/meetings/reader-listing-count";
@@ -410,7 +410,7 @@ function CoverageBody({
 
   const othersLine = kind !== "unmapped" && others > 0 ? (
     <>
-      {others} more boards, commissions, offices and meeting types are listed for the area.
+      {others === 1 ? "One more body is" : `${others} more bodies are`} listed for the area.
       {othersWithSource > 0 && <> We track {othersWithSource === others ? "all of their calendars" : `${othersWithSource} of their calendars`}.</>}
     </>
   ) : null;
@@ -434,10 +434,14 @@ function CoverageBody({
       )}
 
       {lead && <p className="mt-1.5 t-body leading-relaxed text-voice">{lead}</p>}
-      {!localPending && missingCalendars > 0 && <CardGapContribution id={`area-calendars:${zip}`} label="calendars" count={missingCalendars} unit="body" />}
-      {!hasFederalOfficials && <CardGapContribution id={`area-federal-officials:${zip}`} label="federal officials" />}
-      {!hasStateOfficials && <CardGapContribution id={`area-state-officials:${zip}`} label="state officials" />}
-      {!localPending && g.total === 0 && <CardGapContribution id={`area-local-bodies:${zip}`} label="local bodies" />}
+      <CardGapsContribution id={`area-coverage:${zip}`} gaps={[
+        ...(!localPending && missingCalendars > 0 ? [{ id: `area-calendars:${zip}`, label: "calendars", count: missingCalendars }] : []),
+        ...(!hasFederalOfficials ? [{ id: `area-federal-officials:${zip}`, label: "federal officials" }] : []),
+        ...(!hasStateOfficials ? [{ id: `area-state-officials:${zip}`, label: "state officials" }] : []),
+        ...(!localPending && g.total === 0 ? [{ id: `area-local-bodies:${zip}`, label: "local bodies" }] : []),
+        ...stateLegislatorGaps.map(authority => ({ id: `area-state-authority:${authority.scope}`, label: `state legislators in ${authority.scope.replace(/^US-/, "")}` })),
+        ...(shown.some(body => body.name === null) ? [{ id: `area-body-names:${zip}`, label: "body names" }] : []),
+      ]} />
 
       {/* Counts come from the same arrays the sections below render. */}
       {heldCoverage.length > 0 && <p className="mt-1 t-detail leading-relaxed text-voice" data-mw-covers>
@@ -493,7 +497,7 @@ function CoverageBody({
       {shown.length > 0 && (
         <details className="mt-1">
           <summary className="cursor-pointer t-caption text-link">
-            Why these {shown.length}?
+            {shown.length === 1 ? "Why this government?" : `Why these ${shown.length} governments?`}
           </summary>
           <p className="mt-1 t-caption leading-relaxed text-voice">
             {shown.length === 1
@@ -609,12 +613,12 @@ function CoverageBody({
       )}
 
       {localSeats.length > 0 && (
-        <>
+        <CardGapSection label="local officials">
           <p className="t-structure mt-4 text-local">Local officials</p>
           <ul className="mt-1 space-y-1">
             {localSeats.map(seat => <SeatRow key={seat.ocdId} seat={seat} zip={zip} onOpenOfficial={onOpenOfficial} />)}
           </ul>
-        </>
+        </CardGapSection>
       )}
 
       {/* One pill for the whole panel; affected rows above carry only an asterisk. */}
@@ -710,7 +714,7 @@ function CoverageBody({
         <>
           {/* State: legislators first, then statewide executives. */}
           {(stateSeats.length > 0 || statewideExecutives.length > 0) && (
-            <>
+            <CardGapSection label="state officials">
               <p className="t-structure mt-4 text-state">
                 State
               </p>
@@ -749,12 +753,12 @@ function CoverageBody({
                   </li>
                 ))}
               </ul>
-            </>
+            </CardGapSection>
           )}
 
           {/* Federal: the House member before the senators. "Federal", never "National". */}
           {(federalSeats.length > 0 || senators.length > 0) && (
-            <>
+            <CardGapSection label="federal officials">
               <p className="t-structure mt-4 text-national">
                 Federal
               </p>
@@ -793,19 +797,13 @@ function CoverageBody({
                   </li>
                 ))}
               </ul>
-            </>
+            </CardGapSection>
           )}
 
         </>
       )}
 
       <NationalLink className="national-link mt-3 block" />
-
-      {stateLegislatorGaps.map(authority => (
-        <CardGapContribution key={authority.scope} id={`area-state-authority:${authority.scope}`} label={`state legislators in ${authority.scope.replace(/^US-/, "")}`} />
-      ))}
-
-      {shown.filter(body => body.name === null).length > 0 && <CardGapContribution id={`area-body-names:${zip}`} label="names" count={shown.filter(body => body.name === null).length} unit="body" />}
 
       {/* The mover's page, one tap from who-governs. */}
       {/^\d{5}$/.test(zip) && (
@@ -927,14 +925,16 @@ export function CoverageNotice({
       {result?.readerScope?.governments && result.readerScope.governments.length > 0 && (
         <section className="mt-3" aria-label="Upcoming meetings of the place’s governments" data-place-government-meetings>
           <h3 className="t-heading text-paper">Governments at this place</h3>
+          <CardGapSection label="upcoming government meetings">
           <ul className="mt-2 space-y-2">
             {result.readerScope.governments.map(body => <li key={body.bodyId} data-upcoming-body={body.bodyId}>
               <span className="t-body text-paper">{readerText(body.name)}</span>
-              {body.upcoming > 0 ? <p className="t-detail text-muted">{body.upcoming} upcoming {body.upcoming === 1 ? "meeting" : "meetings"} held{body.agendasLinked > 0 ? ` · ${body.agendasLinked} ${body.agendasLinked === 1 ? "agenda" : "agendas"} linked` : ""}</p>
+              {body.upcoming > 0 ? <p className="t-detail text-muted">{body.upcoming} upcoming {body.upcoming === 1 ? "meeting" : "meetings"}{body.agendasLinked > 0 ? ` · ${body.agendasLinked} ${body.agendasLinked === 1 ? "agenda" : "agendas"} linked` : ""}</p>
                 : <CardGapContribution id={`area-upcoming:${body.bodyId}`} label="upcoming meetings" unit="body" subject={{ type: "BODY", id: body.bodyId }} />}
               {body.upcoming > body.agendasLinked && <CardGapContribution id={`area-agendas:${body.bodyId}`} label="agendas" count={body.upcoming - body.agendasLinked} unit="meeting" kind="not-posted" subject={{ type: "BODY", id: body.bodyId }} />}
             </li>)}
           </ul>
+          </CardGapSection>
         </section>
       )}
       {!localPending && tier === "concluded" && <p className="mt-2 t-body text-paper-dim">Recent meetings for this place.</p>}

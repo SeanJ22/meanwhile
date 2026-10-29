@@ -123,9 +123,9 @@ test("published Legistar native body IDs each become one derived door, including
     held: id => captures.get(id) ?? null, handWired: () => false, reviewer: "auto-crosswalk-reviewer@0123456789ab", now: NOW });
   const rows = result.accepted.map(record => wiringRowFor(record.row));
   assert.deepEqual(new Set(rows.map(row => row.config.eventBodyId)), new Set(bodies.map(body => String(body.BodyId))), JSON.stringify(result.held));
-  assert.equal(new Set(rows.map(row => derivedWiringKey(row.kind, row.bodyId, row.route))).size, bodies.length);
+  assert.equal(new Set(rows.map(row => derivedWiringKey(row.kind, row.bodyId, row.route, row.config))).size, bodies.length);
   for (const row of rows) {
-    const door = doorFromDerivedRecord({ id: derivedWiringKey(row.kind, row.bodyId, row.route), status: "ACTIVE", row });
+    const door = doorFromDerivedRecord({ id: derivedWiringKey(row.kind, row.bodyId, row.route, row.config), status: "ACTIVE", row });
     assert.deepEqual(door.bodyIds, [row.bodyId]);
     assert.equal(door.ocdId, ocdId);
   }

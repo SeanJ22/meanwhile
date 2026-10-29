@@ -17,10 +17,16 @@ export interface MemberRecordWork {
   readonly $sourceFingerprint:string;
   readonly slug:string; readonly nativeId:number; readonly type:"body"|"member";
   readonly source:MemberSource;
-  readonly body?:{ readonly id:string; readonly state:string|null; readonly parentId:string|null; readonly government?:string; readonly timeZone:string; readonly nativeId:number };
+  readonly body?:{ readonly id:string; readonly state:string|null; readonly parentId:string|null; readonly government?:string; readonly timeZone:string; readonly nativeId:number;
+    /** Every selector whose seats are this body's seats: the body itself and the calendar labels folded into it. */
+    readonly nativeIds?:readonly number[];
+    /** A calendar label folded into the body above: its own binding, filed as a body alias once the body is held. */
+    readonly label?:{ readonly id:string; readonly name:string } };
   readonly officeSources?:readonly MemberSource[];
   readonly bodySource?:MemberSource;
   readonly reason?:string;
+  /** A calendar's meeting-type selector without seats: not a body, and nothing to publish or hold. */
+  readonly selector?:true;
 }
 
 /** A matching source fingerprint ends the pass without opening any held source bytes. */
@@ -30,7 +36,11 @@ export async function loadLegistarMemberTenant(input:{facts:FactDb&{query:Query}
   const [prior]=await input.facts.query("SELECT sha256 FROM fact_store_load WHERE source=$1",[source]);
   const rows=await legistarTenantDoors(input.doors,input.slug);
   const days=[...new Set(rows.map(row=>memberDay(input.now,row.timeZone)))].sort().join(",");
-  const raw=await makeLegistarMembersReader(input.vault,input.fetchImpl,prior?{signature:String(prior.sha256)}:null,days)(input.slug,input.signal);
+  // A rebinding reopens the tenant as a new bound day does; the day already covers every term that starts or ends.
+  const bindings=rows.map(row=>[row.bodyId,row.ocdId,row.timeZone,row.config.eventBodyId??null,row.config.eventBodyName??null,
+    row.config.insiteBodyName??null,row.config.governmentId??null]).sort((a,b)=>canonicalJson(a).localeCompare(canonicalJson(b)));
+  const raw=await makeLegistarMembersReader(input.vault,input.fetchImpl,prior?{signature:String(prior.sha256)}:null,
+    canonicalJson(["legistar-members-tenant/2",days,bindings]))(input.slug,input.signal);
   if ("unchanged" in raw) return {unchanged:true,records:0};
   return enqueueLegistarMemberRecords({...input,raw,rows});
 }
@@ -50,11 +60,17 @@ export async function enqueueLegistarMemberRecords(input:{facts:FactDb&{query:Qu
   const bodyRecordsById=new Map(raw.bodies.map(body=>[body.BodyId,body]));
   const offices=[...copies.values()].filter(copy=>{const url=new URL(copy.artifact.canonicalUrl);return url.pathname.endsWith("/officerecords");});
   const owners=new Map(prepared.bound.map(row=>[Number(row.config.eventBodyId),row]));
+  const unboundReasons=new Map(prepared.unbound.map(gap=>[gap.key,gap.detail]));
+  const selectorsOf=(real:typeof prepared.bound[number])=>[Number(real.config.eventBodyId),...[...prepared.folds]
+    .filter(([,into])=>into.bodyId===real.bodyId).map(([label])=>Number(prepared.bound.find(row=>row.bodyId===label)!.config.eventBodyId))].sort((a,b)=>a-b);
   const offered:WorkInput[]=[];
   let records=0;
   const add=async(type:"body"|"member",nativeId:number,nativeBody:number)=>{
-    const owner=owners.get(nativeBody),state=owner?.ocdId?.match(/\/state:([a-z]{2})/)?.[1]?.toUpperCase()??"US";
-    const body=owner?{id:owner.bodyId,state:state==="US"?null:state,parentId:owner.ocdId,government:owner.config.governmentId,timeZone:owner.timeZone,nativeId:nativeBody}:undefined;
+    const owner=owners.get(nativeBody),real=owner?prepared.folds.get(owner.bodyId)??owner:undefined;
+    const state=real?.ocdId?.match(/\/state:([a-z]{2})/)?.[1]?.toUpperCase()??"US";
+    const body=real?{id:real.bodyId,state:state==="US"?null:state,parentId:real.ocdId,government:real.config.governmentId,timeZone:real.timeZone,
+      nativeId:Number(real.config.eventBodyId),nativeIds:selectorsOf(real),
+      ...(owner!==real?{label:{id:owner!.bodyId,name:owner!.config.bodyName??owner!.bodyId}}:{})}:undefined;
     const url=memberSourceUrl(raw,type==="body"?"bodies":"officerecords",type==="body"?"BodyId":"OfficeRecordId",nativeId);
     const roster=owner?rosters.get(owner.bodyId):undefined;
     const selected=type==="member"&&roster?.members.some(member=>member.id.endsWith(`:office:${nativeId}`));
@@ -62,8 +78,9 @@ export async function enqueueLegistarMemberRecords(input:{facts:FactDb&{query:Qu
       type==="body"?[memberDay(input.now,owner?.timeZone??"UTC"),roster?.members.map(member=>member.id).sort()??[]]:selected??false])).digest("hex");
     const value:MemberRecordWork={$sourceFingerprint:fingerprint,slug:raw.slug,type,nativeId,source:copies.get(url)!,body,
       officeSources:offices,
-      ...(raw.bodies.some(row=>row.BodyId===nativeBody)?{bodySource:copies.get(memberSourceUrl(raw,"bodies","BodyId",nativeBody))}:{}),
-      ...(!owner?{reason:"The source record has no unambiguous government binding"}:{}),
+      ...(raw.bodies.some(row=>row.BodyId===(body?.nativeId??nativeBody))?{bodySource:copies.get(memberSourceUrl(raw,"bodies","BodyId",body?.nativeId??nativeBody))}:{}),
+      ...(prepared.selectors.has(nativeBody)?{selector:true as const}
+        :!owner?{reason:unboundReasons.get(`${raw.slug}:body:${nativeBody}`)??"The source record has no unambiguous government binding"}:{}),
     };
     const route=new URL(url);route.search="";
     offered.push({kind:"check",subjectId:source,field:`${type}:${nativeId}`,placeId:owner?.ocdId??"ocd-division/country:us",state,url:route.href,value,

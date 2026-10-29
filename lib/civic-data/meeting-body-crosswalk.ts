@@ -69,8 +69,13 @@ export function meetingRouteIdentity(kind: string, route: string): string {
   return route;
 }
 
-export function crosswalkRowId(bodyId: string, kind: CrosswalkKind, route?: string): string {
-  return `${bodyId}|${kind}${typeof route === "string" && route ? `|${createHash("sha256").update(meetingRouteIdentity(kind, route)).digest("hex").slice(0, 16)}` : ""}`;
+export function meetingSelectorIdentity(kind: string, filter?: Readonly<Record<string,string>>): string {
+  const id=kind==='LEGISTAR'?filter?.eventBodyId:kind==='CIVICCLERK'?filter?.categoryId:undefined;
+  return id ? `\n${id}` : '';
+}
+
+export function crosswalkRowId(bodyId: string, kind: CrosswalkKind, route?: string, filter?: Readonly<Record<string,string>>): string {
+  return `${bodyId}|${kind}${typeof route === "string" && route ? `|${createHash("sha256").update(meetingRouteIdentity(kind, route)+meetingSelectorIdentity(kind,filter)).digest("hex").slice(0, 16)}` : ""}`;
 }
 
 /** A `feedScope: "category"` filter stands only on a CivicPlus category feed, and never beside another filter. */
@@ -111,7 +116,8 @@ export function crosswalkRowIssue(value: unknown): string | null {
   if (row.bodyId !== expectedBody && !nativeLegistarBody) return `${who}: a ${row.bodyRole} body's id is ${expectedBody}, derived from its division${row.bodyRole === "SUB_BODY" ? " and its printed name" : ""}`;
   if (!CROSSWALK_KINDS.includes(row.kind as CrosswalkKind)) return `${who}: no reviewed filter is defined for a ${String(row.kind)} calendar`;
   const kind = row.kind as CrosswalkKind;
-  if (row.id !== crosswalkRowId(row.bodyId, kind) && row.id !== crosswalkRowId(row.bodyId, kind, row.route)) {
+  if (row.id !== crosswalkRowId(row.bodyId, kind) && row.id !== crosswalkRowId(row.bodyId, kind, row.route)
+    && row.id !== crosswalkRowId(row.bodyId, kind, row.route,row.filter)) {
     return `${who}: the id must name its own body, kind and calendar route`;
   }
   const routeHost = text(row.route) ? httpsHost(row.route) : null;

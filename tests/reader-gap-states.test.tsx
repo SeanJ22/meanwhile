@@ -60,9 +60,7 @@ test("a sparse person card keeps held facts and puts each request in its own sec
   assert.match(sections.find(section => titleOf(section) === "Offices near you")!, /Waterloo/);
   for (const section of sections) {
     if (["Contact", "Offices near you", "Sources"].includes(titleOf(section)!)) continue;
-    assert.match(section, missingText, `${titleOf(section)} states its own gap`);
-    assert.match(section, /Want us to get this sooner\?/);
-    assert.equal((section.match(/data-demand-pill=/g) ?? []).length, 1);
+    assert.match(section, /data-card-gap-contribution=/, `${titleOf(section)} contributes its gap`);
   }
   for (const title of ["Contact", "Offices near you"]) {
     assert.doesNotMatch(sections.find(section => titleOf(section) === title)!, /data-card-gap/);
@@ -78,9 +76,7 @@ test("a person with no held contact or sections says so in every applicable sect
   const sections = sectionParts(html);
   assert.deepEqual(sections.map(titleOf), ["Contact", "What this office does", "Positions", "Committees", "Offices near you", "Campaign money", "Voting record", "Sources"]);
   for (const section of sections.filter(section => titleOf(section) !== "Sources")) {
-    assert.match(section, missingText);
-    assert.match(section, /Want us to get this sooner\?/);
-    assert.equal((section.match(/data-demand-pill=/g) ?? []).length, 1);
+    assert.match(section, /data-card-gap-contribution=/);
   }
   assert.doesNotMatch(html, /Still gathering/);
 });

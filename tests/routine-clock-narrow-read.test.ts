@@ -304,11 +304,13 @@ test("a MEETING clock reports its sitting starts, and the pointed success as its
 test("a MEETING pointer's sitting starts are built in Postgres; the promoted payload never leaves the database", () => {
   const text = sittingStartsRead(drizzle.mock({ schema }), "source:x:body:y").toSQL().sql;
   const select = text.slice(0, text.indexOf(" from \"civic_data_promotions\""));
-  assert.match(select, /jsonb_agg\(m->'startsAt'\)/);
-  assert.match(select, /'\[\]'::jsonb\)/, "a promoted scope with no sittings reports an empty list, never none (R20)");
+  assert.match(select, /WITH RECURSIVE walk\(/);
+  assert.match(select, /FROM civic_data_payload_parts WHERE hash = ref\.hash/, "sittings held in stored parts are followed inside the database");
+  assert.match(select, /SELECT CASE WHEN EXISTS \(SELECT 1 FROM unreadable\) THEN NULL ELSE coalesce\(\(SELECT jsonb_agg\(starts\) FROM meeting\), '\[\]'::jsonb\) END\)/,
+    "a promoted scope with no sittings reports an empty list, never none (R20); one naming a missing part reports unknown");
+  assert.match(select, /AND scope = \$1/, "only this pointer's sittings are walked");
   assert.deepEqual(meetingPayloadSittingStarts({ meetings: [] }), []);
   assert.deepEqual(meetingPayloadSittingStarts({}), []);
-  assert.match(select, /jsonb_array_elements\(case when jsonb_typeof\((?:"civic_data_promotions"\.)?"payload"->'meetings'\) = 'array'/);
   assert.doesNotMatch(select, /select (?:"civic_data_promotions"\.)?"payload"[,\s]/, "the payload column is never selected whole");
   assert.doesNotMatch(select, /::timestamptz/, "no cast can fail the clock; the runner parses the strings");
   const observed = routineClockPointedObservedRead(drizzle.mock({ schema }), "MEETING", "source:x:body:y").toSQL().sql;

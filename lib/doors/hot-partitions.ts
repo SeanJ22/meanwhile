@@ -3,40 +3,43 @@
  * publisher's stated end where one exists. A partition with no published sittings yet, or whose sittings cannot be
  * read, counts as hot.
  *
- * One statement per pass decides it inside the database, over the published meeting pointers' sittings, and returns
+ * One statement per pass decides it inside the database, over the published meeting pointers' sittings
+ * (`meetingSittingsSql`, which follows stored parts and keeps only each sitting's `startsAt` and `endsAt`), and returns
  * only an 8-byte fingerprint (the first 8 bytes of md5) of each cold partition's scope: no candidate, promotion,
- * stored part or clock is downloaded to decide. A meeting payload, its sitting list, the list's groups and a single
- * sitting may each be held in a stored part (`civic_data_payload_parts`) rather than inline; the statement follows
- * those references inside the database and keeps only each sitting's `startsAt` and `endsAt`. A partition whose
- * payload names a part that is missing, or whose sitting time is itself held as a part, cannot be read and counts as
- * hot. A partition whose fingerprint is not returned is hot, so a new or never-read partition stays hot. A sitting
- * time the database cannot read exactly as `Date.parse` does comes back as its start and end strings and is decided
- * here by the same rule.
+ * stored part or clock is downloaded to decide. A partition whose payload names a part that is missing, or whose
+ * sitting time is itself held as a part, cannot be read and counts as hot. A partition whose fingerprint is not
+ * returned is hot, so a new or never-read partition stays hot. A sitting time the database cannot read exactly as
+ * `Date.parse` does comes back as its start and end strings and is decided here by the same rule.
  */
 import { createHash } from "node:crypto";
+import { sql, type SQL } from "drizzle-orm";
 
-import type { SittingWindowSchedule } from "../civic-data/contracts.ts";
-import { routineTaskFromContract, type RoutineSourceTask } from "../civic-data/runner.ts";
+import { MEETING_PARTITION_POLICY, type SittingWindowSchedule } from "../civic-data/contracts.ts";
 import { SITTING_CONCLUSION_BOUND_MS, sittingWindowHotByConclusion, statedSittingEndsByScope } from "../civic-data/sitting-window-admission.ts";
-import { MEETING_PARTITION_CONTRACTS, sittingWindowSourceIds } from "../civic-data/meeting-partitions.ts";
+import { MEETING_PARTITION_CONTRACTS, meetingPartitionOfId, sittingWindowSourceIds } from "../civic-data/meeting-partitions.ts";
 import type { Query } from "../facts/publish.ts";
 import { sanitizedErrorDiagnostic } from "../ops/error-diagnostic.ts";
 
 /** An ISO instant with an explicit offset and at most millisecond precision, which the database and `Date.parse` read alike. */
 const EXACT_INSTANT = "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](\\.[0-9]{1,3})?)?(Z|[+-](0[0-9]|1[0-4]):[0-5][0-9])$";
 
+/** $1 now, $2 window, $3 the day bound for a sitting without a stated end (all in ms), $4 EXACT_INSTANT. */
 /**
- * $1 now, $2 window, $3 the day bound for a sitting without a stated end (all in ms), $4 EXACT_INSTANT.
+ * The meeting pointers' sitting times, read inside the database as three CTEs (`walk`, `unreadable`, `meeting`) for a
+ * `WITH RECURSIVE` statement. `pointers` narrows which MEETING pointers are read (SQL appended to their WHERE).
  *
- * `walk` reads each meeting pointer's payload down to its sittings, one stage at a time: the payload (`root`), its
- * `meetings` list, a held list's `groups`, one `group`, a sitting held as its own part (`row`), and the two sitting
- * times (`sitting`). A node that is a part reference is replaced by the part's value and read on in the same step; a
- * missing part leaves a `missing` row. Only part references, a held list's group references and the two times of each
- * sitting pass between steps: no payload, list or sitting is carried whole. A held payload is opened once, for its
- * `meetings` alone.
+ * A meeting payload, its sitting list, the list's groups and a single sitting may each be held in a stored part
+ * (`civic_data_payload_parts`) rather than inline. `walk` reads each pointer's payload down to its sittings, one stage at a
+ * time: the payload (`root`), its `meetings` list, a held list's `groups`, one `group`, a sitting held as its own part
+ * (`row`), and the two sitting times (`sitting`). A node that is a part reference is replaced by the part's value and read
+ * on in the same step; a missing part leaves a `missing` row. Only part references, a held list's group references and
+ * the two times of each sitting pass between steps: no payload, list or sitting is carried whole. A held payload is
+ * opened once, for its `meetings` alone. `unreadable` holds the scopes that name a missing part or hold a sitting time as
+ * a part; `meeting` holds every other scope's sittings as `starts` and, where stated, `ends` strings.
  */
-const HOT_PARTITIONS_SQL = `WITH RECURSIVE walk(scope, stage, node, missing) AS (
-  SELECT scope, 'root', payload, false FROM civic_data_promotions WHERE record_class = 'MEETING'
+export function meetingSittingsSql(pointers = ""): string {
+  return `walk(scope, stage, node, missing) AS (
+  SELECT scope, 'root', payload, false FROM civic_data_promotions WHERE record_class = 'MEETING'${pointers}
   UNION ALL
   SELECT w.scope, n.stage, n.node, n.missing
   FROM walk w
@@ -74,7 +77,18 @@ const HOT_PARTITIONS_SQL = `WITH RECURSIVE walk(scope, stage, node, missing) AS 
 ), meeting AS (
   SELECT scope, node->>'startsAt' AS starts, CASE WHEN jsonb_typeof(node->'endsAt') = 'string' THEN node->>'endsAt' END AS ends
   FROM walk WHERE stage = 'sitting' AND jsonb_typeof(node->'startsAt') = 'string' AND scope NOT IN (SELECT scope FROM unreadable)
-), sitting AS (
+)`;
+}
+
+/** Every meeting pointer's stated sitting ends, as [start, end] string pairs, read from inline sittings and stored parts alike in one statement. */
+export async function statedSittingEndsRead(db: { execute(query: SQL): PromiseLike<unknown> }): Promise<{ readonly scope: string; readonly pairs: unknown }[]> {
+  const result = await db.execute(sql.raw(`WITH RECURSIVE ${meetingSittingsSql()}
+SELECT scope, jsonb_agg(jsonb_build_array(starts, ends)) AS pairs FROM meeting WHERE ends IS NOT NULL GROUP BY scope`));
+  const rows = (Array.isArray(result) ? result : (result as { rows: unknown[] }).rows) as Record<string, unknown>[];
+  return rows.map((row) => ({ scope: String(row.scope), pairs: row.pairs }));
+}
+
+const HOT_PARTITIONS_SQL = `WITH RECURSIVE ${meetingSittingsSql()}, sitting AS (
   SELECT scope, starts, ends, starts ~ $4 AND pg_input_is_valid(starts, 'timestamptz') AS start_ok,
     ends IS NULL OR ends ~ $4 AND pg_input_is_valid(ends, 'timestamptz') AS end_ok
   FROM meeting
@@ -122,14 +136,29 @@ async function coldScopes(query: Query, nowMs: number, schedule: SittingWindowSc
   return (scope) => decided.get(scope) ?? cold.has(partitionScopeFingerprint(scope));
 }
 
+type Contracts = ReadonlyMap<string, (typeof MEETING_PARTITION_CONTRACTS)[number]>;
+
+/** A meeting partition's sitting window and the partitions whose sittings decide it: its registered contract, or, for a door's own partition this process has not installed, the meeting partition policy over its own scope. */
+function partitionWindow(id: string, contracts: Contracts): { readonly schedule: SittingWindowSchedule; readonly scopes: readonly (string | null)[] } | null {
+  const contract = contracts.get(id);
+  if (contract) {
+    return contract.schedule?.kind === "SITTING_WINDOW"
+      ? { schedule: contract.schedule, scopes: sittingWindowSourceIds(id).map((source) => contracts.get(source)?.scope ?? null) } : null;
+  }
+  const own = meetingPartitionOfId(id);
+  return own ? { schedule: MEETING_PARTITION_POLICY.schedule, scopes: [own.scope] } : null;
+}
+
+/** Which of these meeting partitions are hot. One statement per sitting window decides every partition at once. */
 export async function hotMeetingPartitions(query: Query, nowMs: number,
-  tasks: readonly RoutineSourceTask[] = MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract)): Promise<ReadonlySet<string>> {
-  const scopeOf = new Map(tasks.map((task) => [task.id, task.scope]));
+  partitionIds: Iterable<string> = MEETING_PARTITION_CONTRACTS.map((partition) => partition.id)): Promise<ReadonlySet<string>> {
+  const contracts: Contracts = new Map(MEETING_PARTITION_CONTRACTS.map((partition) => [partition.id, partition]));
   const coldByWindow = new Map<number, ((scope: string) => boolean) | null>();
   const hot = new Set<string>();
-  for (const task of tasks) {
-    const schedule = task.contract.schedule;
-    if (schedule?.kind !== "SITTING_WINDOW") continue;
+  for (const id of new Set(partitionIds)) {
+    const window = partitionWindow(id, contracts);
+    if (window === null) continue;
+    const { schedule, scopes } = window;
     if (!coldByWindow.has(schedule.windowMs)) {
       coldByWindow.set(schedule.windowMs, await coldScopes(query, nowMs, schedule).catch((error: unknown) => {
         console.warn(`RCD_HOT_PARTITIONS CANNOT_TELL — ${sanitizedErrorDiagnostic(error)}; every meeting partition counts as hot this pass`);
@@ -137,8 +166,7 @@ export async function hotMeetingPartitions(query: Query, nowMs: number,
       }));
     }
     const isCold = coldByWindow.get(schedule.windowMs)!;
-    const sources = sittingWindowSourceIds(task.id);
-    if (isCold === null || sources.length === 0 || !sources.every((id) => scopeOf.has(id) && isCold(scopeOf.get(id)!))) hot.add(task.id);
+    if (isCold === null || scopes.length === 0 || !scopes.every((scope) => scope !== null && isCold(scope))) hot.add(id);
   }
   return hot;
 }

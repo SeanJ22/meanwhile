@@ -118,7 +118,8 @@ import {
   hotReadCatchUpAdmission,
   runHotReadCatchUp,
 } from "../lib/civic-data/hot-read-catch-up.ts";
-import { statedSittingEndsByScope, statedSittingEndsRead } from "../lib/civic-data/sitting-window-admission.ts";
+import { statedSittingEndsByScope } from "../lib/civic-data/sitting-window-admission.ts";
+import { statedSittingEndsRead } from "../lib/doors/hot-partitions.ts";
 import {
   DOOR_DERIVE_CONTRACT_IDS,
   parseRoutineDueRequests,
@@ -140,11 +141,9 @@ import { runBoundedWorkPool } from "../lib/ops/bounded-work-pool.ts";
 import { groupCalendarReadsByState, stateCalendarEnvironment, stateCalendarMemberResults, type StateCalendarGroup } from "../lib/civic-data/state-calendars.ts";
 import { publishOwedRosterFacts } from "../lib/civic-data/worker-roster-publication.ts";
 import { publishOwedCommentFacts } from "../lib/civic-data/worker-comment-facts.ts";
-import { runHourlyProbes } from "../lib/doors/hourly-check.ts";
 import { refreshDuePageDoors } from "../lib/doors/page-refresh.ts";
 import { stateOfPlace } from "../lib/method/fix-map.ts";
 import { websiteSizeFromHoldings } from "../lib/control-plane/scheduler/host-supervision.ts";
-import { hotMeetingPartitions } from "../lib/doors/hot-partitions.ts";
 import { pacedProbeFetch } from "../lib/doors/probe-fetch.ts";
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
@@ -603,20 +602,6 @@ async function readHuntSourceTasks(store: PostgresRoutineDataStore, failures: Su
     }
     if (!PUBLISH_NOW) return publication;
 
-    try {
-      const report = await routineJob(ROUTINE_JOBS.doorProbes, async () => {
-        const listed = await readRunnerDoors(repos.doors, ["status"], "OPEN", "probes");
-        const sizeFor = websiteSizeFromHoldings([...new Set(listed.flatMap((door) => stateOfPlace(door.ocdId ?? "") ?? []))]);
-        return runHourlyProbes(repos.doors, listed, await hotMeetingPartitions(facts.query, Date.now()),
-          pacedProbeFetch({ pacing: repos.websitePacing, sizeFor }), new Date().toISOString(), Math.min(PASS_LAUNCH_DEADLINE_MS, Date.now() + 30_000));
-      }, null);
-      if (report && (report.looked > 0 || report.deferred > 0 || report.waiting > 0)) {
-        console.log(`RCD_PROBE ${report.looked} door(s) looked at (${report.requests} request(s)): ${report.changed} changed, ${report.unchanged} the same, ${report.failed} failed; ` +
-          `${report.waiting} waiting on their website's hour or its request to wait; ${report.deferred} not due`);
-      }
-    } catch (error) {
-      console.log(`RCD_PROBE CANNOT_TELL — ${safeFailure(sanitizedErrorDiagnostic(error))}; doors keep their routine schedule`);
-    }
     return [...publication, ...await routineJob(ROUTINE_JOBS.doorPublication, async () => publishNowDoorTasks(
       await readRunnerDoors(repos.doors, ["status"], "OPEN", "publication"), MEETING_PARTITION_CONTRACTS.map(routineTaskFromContract), RUN_STARTED_AT), [])];
   }

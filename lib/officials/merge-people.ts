@@ -246,8 +246,10 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     let found = matchPerson(probe, [...pool].filter(holder => positions.has(holder)).map(holder => ({ ...evidenceOf(holder), holder })));
     if (found.kind === "MATCH" && found.basis === "SEAT_AND_NAME" && sharedNames.has(infoOf(incoming).nameKey))
       found = { kind: "TIE", reason: "SEAT_AND_NAME_AMBIGUOUS", candidates: [found.candidate] };
-    // Several records tied together by the incoming record's own identifiers are one person; any other tie, and a name alone, wait for a detective.
-    const matches = (found.kind === "MATCH" ? [found.candidate.holder] : found.kind === "TIE" && found.reason === "KEYS_JOIN_CANDIDATES" ? found.candidates.map(row => row.holder) : [])
+    // Records tied together by the incoming record's own identifiers are one person, even where two of their identifiers disagree (that is asked about too).
+    // A tie on a name, and a name alone, join no one and wait for a detective.
+    const joinedByKeys = found.kind === "TIE" && (found.reason === "KEYS_JOIN_CANDIDATES" || found.reason === "KEY_CONFLICT");
+    const matches = (found.kind === "MATCH" ? [found.candidate.holder] : joinedByKeys ? found.candidates.map(row => row.holder) : [])
       .map(holder => positions.get(holder)!).sort((a, b) => a - b);
     if (found.kind === "NAME_ONLY" || found.kind === "TIE" && found.reason !== "KEYS_JOIN_CANDIDATES") {
       const personIds = [...new Set([incoming, ...found.candidates.map(row => row.holder)].map(person => person.personId ?? person.id))].sort();

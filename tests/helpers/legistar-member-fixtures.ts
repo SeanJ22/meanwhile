@@ -16,10 +16,10 @@ export const rawFor = (slug: string): LegistarMembers => {
     const { artifact } = recordAcquisition({ canonicalUrl: meta.sourceUrl, retrievedAt: meta.retrievedAt, httpStatus: 200, contentType: "application/json",
       sourceId: `legistar:${slug}`, methodRouteId: "legistar-members", workItemId: `legistar-members:${slug}`, attemptId: meta.retrievedAt,
       permission: "ALLOWED", transport: "REACHABLE" }, text);
-    return { artifact, rows: JSON.parse(text) };
+    return { artifact, rows: JSON.parse(text), text };
   });
   const raw = { slug, bodies: pages[0].rows, persons: pages[1].rows, offices: pages[2].rows,
-    signature: "", collectedAt: pages[2].artifact.retrievedAt, readings: pages.map(page => memberReading(page.artifact, page.rows)) };
+    signature: "", collectedAt: pages[2].artifact.retrievedAt, readings: pages.map(page => memberReading(page.artifact, page.rows, page.text)) };
   raw.signature = legistarMemberSignature(raw);
   return raw;
 };

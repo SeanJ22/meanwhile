@@ -68,7 +68,8 @@ test("Open data follows opaque cursors, replaces a changed publication, reaches 
     assert.deepEqual(sourceUrls.sort(),["b1","b2","b3"].map(id=>record(id).sourceUrl).sort());
     assert.equal(await version.getByRole("button",{name:"Show more",exact:true}).count(),0);
     await empty.getByRole("button",{name:"Show more",exact:true}).waitFor();
-    const emptyGap=empty.locator('[aria-label="Open data and regulated facilities"] [data-card-gap="open-data"]');
+    assert.equal(await empty.locator('[aria-label="Open data and regulated facilities"] [data-card-gap-contribution="open-data"]').count(),1);
+    const emptyGap=empty.locator('.reader-card-body > [data-card-gap]');
     await emptyGap.waitFor({state:"visible"});
     assert.match(await emptyGap.innerText(),/working on getting this info/);
     assert.equal(await emptyGap.getByRole("link",{name:"Want us to get this sooner?",exact:true}).count(),1);

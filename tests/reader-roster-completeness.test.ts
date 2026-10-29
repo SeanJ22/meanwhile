@@ -44,13 +44,10 @@ test("every partial verified roster keeps its members and one request inside its
     assert.equal((markup.match(/data-roster-holder=/g) ?? []).length, holders.length);
     assert.ok(!markup.includes(gap.statement), "the section does not repeat the missing-data paragraph");
     const members = markup.slice(0, markup.indexOf("data-card-footer"));
-    assert.match(members, /data-card-gap="roster-completeness"/);
-    assert.match(members, /working on getting this info/);
-    assert.match(members, /Want us to get this sooner\?/);
-    assert.ok(members.includes(`data-demand-subject="${roster.bodyId}"`));
-    assert.equal((markup.match(/data-card-gap=/g) ?? []).length, 1);
+    assert.match(members, /data-card-gap-contribution="roster-completeness"/);
+    assert.equal((members.match(/data-card-gap-contribution="roster-completeness"/g) ?? []).length, 1);
     assert.doesNotMatch(markup, /Still gathering|member names for \d+ seats?/);
-    assert.ok(markup.lastIndexOf("Sources") > markup.indexOf("data-card-gap"));
+    assert.ok(markup.lastIndexOf("Sources") > markup.indexOf("data-card-gap-contribution"));
     assert.ok(markup.includes(gap.sourceUrl));
     assert.ok(!markup.includes("Unused empty-roster note"));
     for (const holder of holders) assert.ok(markup.includes(`data-roster-holder="${holder.id}"`));

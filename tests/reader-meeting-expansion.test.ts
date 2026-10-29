@@ -74,14 +74,18 @@ test("Show more reveals added meetings inside closed groups across ZIPs and grou
         t.diagnostic(`${zip}/${group}: expansion usable in ${expansionMs} ms`);
         const addedIds = (await rowIds()).filter(id => !initialIds.has(id));
         assert.equal(addedIds.length, zip === "85701" ? 43 : 200, `${zip}/${group}: all newly added meetings are visible`);
-        const visibleCount = (await rowIds()).length;
-        const gaps = await page.locator(".al-row [data-card-gap]").allTextContents();
-        assert.equal(gaps.length, visibleCount, `${zip}/${group}: each visible meeting keeps its own missing-info message`);
-        assert.ok(gaps.every(text => /We[’']re working on getting this info/.test(text) && text.includes("Want us to get this sooner?")));
+        await page.locator("[data-meeting-section] > [data-card-gap]").first().waitFor();
+        const sections = await page.locator("[data-meeting-section]").evaluateAll(groups => groups.map(group => ({
+          rows: group.querySelectorAll(".al-row").length,
+          gaps: [...group.querySelectorAll(":scope > [data-card-gap]")].map(gap => gap.textContent ?? ""),
+        })));
+        assert.ok(sections.filter(section => section.rows > 0).every(section => section.gaps.length === 1 &&
+          /We[’']re working on getting this info/.test(section.gaps[0]) && section.gaps[0].includes("Want us to get this sooner?")),
+        `${zip}/${group}: every open group has one missing-info line and request link`);
         assert.ok((await page.locator(".al-row").evaluateAll(rows => rows.map(row => {
           const id = row.querySelector("[data-meeting-id]")?.getAttribute("data-meeting-id");
-          return row.querySelector("[data-card-gap]")?.getAttribute("data-card-gap") === `meeting:${id}`;
-        }))).every(Boolean), `${zip}/${group}: each missing-info message belongs to that row's meeting`);
+          return row.querySelector("[data-card-gap-contribution]")?.getAttribute("data-card-gap-contribution") === `meeting:${id}`;
+        }))).every(Boolean), `${zip}/${group}: each meeting contributes its own missing information`);
         // Every opened group still collapses and reopens, including with the keyboard.
         for (const head of await heads.all()) {
           const rows = head.locator("..").locator(".al-row");

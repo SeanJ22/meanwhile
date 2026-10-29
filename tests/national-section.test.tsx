@@ -56,7 +56,7 @@ test("every card is rendered, each with its sources section", () => {
 });
 
 test("both doors to the National section are on the shell: under the Local, State and Federal filter and in Who governs here", () => {
-  assert.match(readFileSync(new URL("../components/shell/sidebar.tsx", import.meta.url), "utf8"), /<ViewToggle \/>\s*<NationalLink \/>/);
+  assert.match(readFileSync(new URL("../components/shell/sidebar.tsx", import.meta.url), "utf8"), /<ViewToggle \/>[\s\S]*?<NationalLink \/>/);
   assert.match(readFileSync(new URL("../components/map/coverage-notice.tsx", import.meta.url), "utf8"), /<NationalLink className="national-link mt-3 block" \/>/);
 });
 

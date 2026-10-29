@@ -106,7 +106,7 @@ test("VS-01 native voting facts and one shared footer stay in the reader card sc
         await card.locator('[data-voting-site]').first().waitFor({ state: "visible" });
         assert.equal(await card.locator("[data-voting-lookup] a").first().getAttribute("href"), "https://example.gov/polling-place");
         await card.locator('[data-card-sources] a[href^="https:"]').first().waitFor({ state: "attached" });
-        assert.equal(await card.locator('[data-card-gap="voting-answer"]').count(), 0);
+        assert.equal(await card.locator('[data-card-gap-contribution="voting-answer"]').count(), 0);
         assert.equal(await card.locator("[data-card-footer] [data-card-gap]").count(), 0);
         assert.equal(await card.locator("[data-card-sources]").count(), 1);
         assert.equal(await card.getByRole("button", { name: /^Sources/ }).count(), 1);

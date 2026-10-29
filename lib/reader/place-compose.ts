@@ -35,36 +35,42 @@ function pageTime(row: Row): number {
  * county page cannot put back a member or field removed from its newer city page. */
 export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
   const selected = new Set(input.divisionIds), named = new Set(input.namedDivisionIds ?? []);
-  const explicitBodies = new Set(input.bodyIds ?? []);
   const pages = rows.map((row, order): Page => ({ row, order, at: pageTime(row) }));
+  const aliases = Object.assign({},...pages.sort((a,b)=>a.at-b.at).map(page=>record(page.row.body_aliases))) as Record<string,string>;
+  const canonical = (id: unknown): string => aliases[String(id)] ?? String(id);
+  const canonicalRow = (row: Row,key="bodyId"): Row => row[key] && canonical(row[key])!==row[key] ? {...row,[key]:canonical(row[key])} : row;
+  const explicitBodies = new Set((input.bodyIds ?? []).map(canonical));
   const active = pages.filter(({ row }) => input.allBodies || row.page_kind === "body"
     || row.page_kind === "empty" && input.divisionIds.length === 0 && !(input.bodyIds?.length)
     || strings(row.division_ids).some(id => selected.has(id))
     || typeof row.page_id === "string" && selected.has(row.page_id)
     || input.neighbors && !(typeof row.page_id === "string" && named.has(row.page_id))
-    || records(row.entities).some(body => explicitBodies.has(String(body.id))));
+    || records(row.entities).some(body => explicitBodies.has(canonical(body.id))));
   if (!active.length) throw Error("PLACE_PAGE_SELECTION_EMPTY");
   if (input.neighbors) for (const page of active) for (const id of strings(page.row.division_ids)) selected.add(id);
 
   const ordered = [...active].sort((a, b) => a.at - b.at || a.order - b.order);
   const bodyOwner = new Map<string, Page>();
+  const originalOwner=new Map<string,Page>();
   const entities = new Map<string, Row>();
   for (const page of ordered) for (const body of records(page.row.entities)) {
     if (typeof body.state === "string" && body.state.toUpperCase() !== input.state.toUpperCase()) continue;
-    const id = String(body.id), prior = entities.get(id);
+    const id = canonical(body.id), prior = entities.get(id);
+    originalOwner.set(String(body.id),page);
     bodyOwner.set(id, page);
     const placed = body.placed === true || prior?.placed === true;
     const linked = body.linked === true || prior?.linked === true;
     const divisions = [...new Set([...strings(prior?.divisions),...strings(body.divisions)])].sort();
-    entities.set(id, { ...body, divisions, ...(linked ? { linked: true } : {}), ...(placed ? { placed: true } : {}) });
+    entities.set(id, { ...body,id, divisions, ...(linked ? { linked: true } : {}), ...(placed ? { placed: true } : {}) });
   }
-  const owns = (page: Page, id: unknown) => bodyOwner.get(String(id)) === page;
-  const ownRows = (key: string, bodyKey: string) => ordered.flatMap(page => records(page.row[key]).filter(row => owns(page, row[bodyKey])));
+  const owns = (page: Page, id: unknown) => (originalOwner.get(String(id)) ?? bodyOwner.get(canonical(id))) === page;
+  const ownRows = (key: string, bodyKey: string) => ordered.flatMap(page => records(page.row[key]).filter(row => owns(page, row[bodyKey]))
+    .map(row=>({...row,[bodyKey]:canonical(row[bodyKey])})));
 
   const registries = ordered.flatMap(page => page.row.registry ? [{ page, value: record(page.row.registry) }] : []);
   const lastRegistry = registries.at(-1)?.value;
   const runtimeBodies = unique(registries.flatMap(({ page, value }) => records(record(value.registry).bodies)
-    .filter(body => owns(page, body.id))), row => String(row.id));
+    .filter(body => owns(page, body.id)).map(body=>canonicalRow(body,"id"))), row => String(row.id));
   const allRuntimeDivisions = unique(registries.flatMap(({ value }) => records(record(value.registry).divisions)), row => String(row.ocdId));
   const runtimeDivisionIds = new Set([...selected, ...runtimeBodies.flatMap(body => typeof body.ocdId === "string" ? [body.ocdId] : [])]);
   let added = true;
@@ -82,7 +88,7 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
       bodies: runtimeBodies,
       divisions: allRuntimeDivisions.filter(division => runtimeDivisionIds.has(String(division.ocdId))),
     },
-    bodyRosters: unique(registries.flatMap(({ page, value }) => records(value.bodyRosters).filter(roster => owns(page, roster.bodyId))), row => String(row.bodyId))
+    bodyRosters: unique(registries.flatMap(({ page, value }) => records(value.bodyRosters).filter(roster => owns(page, roster.bodyId)).map(roster=>canonicalRow(roster))), row => String(row.bodyId))
       .map(roster => agendaOnly ? { ...roster, members: [] } : roster),
     rosterReaderDispositions: agendaOnly ? [] : unique(registries.flatMap(({ value }) => records(value.rosterReaderDispositions)), row => String(row.sourceId)),
     statewideExecutives: agendaOnly ? [] : unique(registries.flatMap(({ value }) => records(value.statewideExecutives))
@@ -104,8 +110,8 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
   for (const page of ordered) for (const partition of records(page.row.meeting_rows)) {
     const source = record(restoreAgendaText(partition.payload, strings(page.row.agenda_texts)));
     const meetings = records(source.meetings).filter(meeting => meeting.bodyId ? owns(page, meeting.bodyId) : selected.has(String(meeting.ocdId))
-      && strings(page.row.division_ids).includes(String(meeting.ocdId)));
-    const members = records(source.derivedMembers).filter(member => owns(page, member.bodyId));
+      && strings(page.row.division_ids).includes(String(meeting.ocdId))).map(meeting=>canonicalRow(meeting));
+    const members = records(source.derivedMembers).filter(member => owns(page, member.bodyId)).map(member=>canonicalRow(member));
     const bodyScope = /^source:[^:]+:body:([^:]+)(?::|$)/.exec(String(partition.scope));
     const body = bodyScope ? decodeURIComponent(bodyScope[1]!) : null;
     if (!meetings.length && !members.length && !(body && owns(page, body)) && !String(partition.scope).startsWith("source:derived:family:")) continue;
@@ -120,11 +126,12 @@ export function mergePlaceRows(input: PlaceInput, rows: readonly Row[]): Row {
     }
   }
 
-  const archivedByPage = new Map(ordered.map(page => [page, records(page.row.archived_meetings).filter(meeting => owns(page, meeting.bodyId))]));
+  const archivedByPage = new Map(ordered.map(page => [page, records(page.row.archived_meetings).filter(meeting => owns(page, meeting.bodyId)).map(meeting=>canonicalRow(meeting))]));
   const archived = [...archivedByPage.values()].flat();
   const last = latest(active)!;
   const allDivisions = unique(pages.flatMap(page => records(page.row.divisions)), row => String(row.ocdId));
   return {
+    body_aliases: aliases,
     division_ids: [...new Set([...input.divisionIds, ...(input.neighbors ? active.flatMap(page => strings(page.row.division_ids)) : [])])],
     registry,
     everyday_routing: input.bodyFactsOnly || agendaOnly ? null : last.row.everyday_routing ?? null,

@@ -26,7 +26,7 @@ import { readHeldBodyIds, readReaderEdgeMeetings } from "@/lib/meetings/edge-ser
 import { type PromotedAuthorityFamily } from "@/lib/meetings/edge-artifacts";
 import type { Meeting } from "@/lib/sources/types";
 import type { AskSitting } from "@/lib/ask/answer";
-import { type AgendaDocumentLike } from "@/lib/routing/agenda-search";
+import type { AgendaDocument } from "@/lib/meetings/agenda-documents";
 import { divisionsByOcdIds, seatHolderById, settleFederalDirectoryRead, settleRegistryAuthorityReads } from "@/lib/registry/server";
 import { readAskCommentAccess } from "@/lib/ask/comment-access";
 import { officialIdsForCandidacy } from "@/lib/funding/campaign-money";
@@ -90,6 +90,8 @@ import { codeBestReading, speculationVerdict, type ReadingOutcome } from "@/lib/
 import { resolveInterpretation } from "@/lib/ask/resolve";
 import { readSubjectRefs, type AskSubjectRef } from "@/lib/ask/subject";
 import { readableSitting } from "@/lib/ask/meeting-time";
+import { withReaderTimeZone } from "@/lib/ask/reader-clock";
+import { bareNameIsUnheld } from "@/lib/ask/name-lookup";
 import {
   contactForOfficeholder,
   contactRecord,
@@ -168,6 +170,7 @@ import {
   clarifyAnswer,
   offAnswer,
   unresolvedAnswer,
+  deliveredAskText,
   unheldBodyAnswer,
   type AskAnswerPayload,
 } from "@/lib/ask/answer";
@@ -359,13 +362,13 @@ function personEntities(seats: readonly SeatHolder[]): BindableEntity[] {
 export const POST = readerRoute("/api/ask/grounded", async function POST(request: Request) {
   const requestStarted = Date.now();
   const settingsStarted = performance.now();
-  return withPublishedAskSettings(async () => {
+  return withReaderTimeZone(request.headers.get("x-wtp-time-zone"), () => withPublishedAskSettings(async () => {
     const settingsMs = performance.now() - settingsStarted;
     console.log(askModelStartupLine());
     const response = await answerWithSettings(request, requestStarted);
     response.headers.append("Server-Timing", `settings;dur=${Math.round(settingsMs)}`);
     return response;
-  });
+  }));
 });
 
 async function answerWithSettings(request: Request, started: number) {
@@ -492,6 +495,7 @@ async function answerWithSettings(request: Request, started: number) {
   }
 
   const stageMs: Record<string, number> = {};
+  trace.stages = stageMs;
   let stageMark = Date.now();
   const lap = (name: string) => { const now = Date.now(); stageMs[name] = now - stageMark; stageMark = now; };
 
@@ -517,6 +521,23 @@ async function answerWithSettings(request: Request, started: number) {
   const sittingShapes = new Set(["MEETING_TIME", "BODY_AGENDA", "MEETING_OUTCOME", "PUBLIC_COMMENT"]);
 
   const noPersonRecordShapes = new Set([...sittingShapes, "CONTACT", "BODY_ROSTER", "BODY_CIVICS", "CONTEST_CIVICS", "GOVERNMENT_MONEY", "MEASURE_EXPLAIN", "CONTEST_FIELD"]);
+  if (await bareNameIsUnheld(question, registryStates).catch(error => {
+    console.error("Ask name headers could not be read", { name: error instanceof Error ? error.name : "Error" });
+    return false;
+  })) {
+    const interpretation = interpretWithoutModel(question);
+    trace.interpretation = { ran: false, why: "unheld-name", intent: "UNKNOWN" };
+    trace.resolution = { state: "UNRESOLVED", basis: "PUBLISHED_NAME_HEADERS" };
+    trace.answerMode = "UNRESOLVED";
+    const payload = await completeMissingAnswer(unresolvedAnswer(question, trace));
+    await captureDelivered({ request, question, interpretation, resolutionState: "UNRESOLVED", mode: payload.mode,
+      subjectIds: [], answer: payload.answer, aiAnswer: payload.aiAnswer, answerModel: null, validationPassed: null,
+      records: [], gaps: [], surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
+      approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
+      ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
+      continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
+    return askResponse(payload);
+  }
   const deferShape = !topicRoute && !financeQuestionAsked(question) && (ballotReference || noPersonRecordShapes.has(lexicalQuestionShape(question)?.shape ?? ""));
   const deferSittingIdentity = !topicRoute && sittingShapes.has(lexicalQuestionShape(question)?.shape ?? "");
   const governmentMoneyAsk = !topicRoute && lexicalQuestionShape(question)?.shape === "GOVERNMENT_MONEY";
@@ -525,6 +546,7 @@ async function answerWithSettings(request: Request, started: number) {
   if (deferPersonRecords) selectStateMoneyNames(question);
   const federalMoneyOnly = deferPersonRecords && !moneyQuestionShape(question)?.raceWords;
   let needsOutcomePreload = registryQuestionShape !== "CONTACT" && !memberMeetingVote && !ballotReference && !deferSittingOutcomes && !governmentMoneyAsk && !deferPersonRecords && !readerVoteAsk && !personVotesQuestionShape(question);
+  const eagerOutcomes = Boolean(topicRoute || registryQuestionShape && sittingShapes.has(registryQuestionShape) || outcomeQuestionClass(question));
   /* Every read inside the stage is timed under its own name; the preloads run in parallel, so theirs overlap rather than sum. */
   const preloadMs: Record<string, number> = {};
   const timed = <T,>(name: string, read: () => Promise<T>) => async (): Promise<T> => {
@@ -545,7 +567,7 @@ async function answerWithSettings(request: Request, started: number) {
   const contestCivics = civicsReading?.shape === "CONTEST_CIVICS" ? civicsReading : null;
   if (contestCivics) needsOutcomePreload = false;
   const production = process.env.NODE_ENV === "production";
-  let outcomesFromDatabase = !registryStates.length || leanAsk || ballotOnlyHint || electionInfoAsk || !needsOutcomePreload || sittingShapes.has(registryQuestionShape ?? "") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+  let outcomesFromDatabase = !registryStates.length || leanAsk || ballotOnlyHint || electionInfoAsk || !needsOutcomePreload || !eagerOutcomes || sittingShapes.has(registryQuestionShape ?? "") ? null : timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
   outcomesFromDatabase?.catch(() => undefined);
   if (fecRaceMoneyQuestion(question)) {
     await timed("funding", settleFundingRead)().catch(() => undefined);
@@ -586,7 +608,7 @@ async function answerWithSettings(request: Request, started: number) {
     trace.answerMode = "NO_EVIDENCE";
     const payload = await completeMissingAnswer(askAnswer({ mode: "NO_EVIDENCE", pack, answer: null, contacts: [], trace }));
     await captureDelivered({ request, question, interpretation, resolutionState: "NONE", mode: payload.mode,
-      subjectIds: [], answer: payload.answer, answerModel: null, validationPassed: null, records: [], gaps: payload.gaps,
+      subjectIds: [], answer: payload.answer, aiAnswer: payload.aiAnswer, answerModel: null, validationPassed: null, records: [], gaps: payload.gaps,
       surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
       approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
       ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
@@ -623,7 +645,7 @@ async function answerWithSettings(request: Request, started: number) {
       const payload = askAnswer({ mode, pack, answer: composed.answer, contacts: [], trace });
       if (missingAnswer) await completeMissingAnswer(payload);
       await captureDelivered({ request, question, interpretation, resolutionState: "NONE",
-        mode, subjectIds: [], answer: payload.answer, answerModel: null,
+        mode, subjectIds: [], answer: payload.answer, aiAnswer: payload.aiAnswer, answerModel: null,
         validationPassed: true, records: [...pack.records], gaps: [...pack.gaps],
         surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
         approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null,
@@ -661,7 +683,7 @@ async function answerWithSettings(request: Request, started: number) {
         : askAnswer({ mode, pack, answer: verdict.kind === "PASSED" ? held.composed.answer : null, contacts: [], meetings: held.meetings, trace });
       if (mode === "NO_EVIDENCE") await completeMissingAnswer(payload);
       await captureDelivered({ request, question, interpretation, resolutionState: trace.resolution.state, mode,
-        subjectIds: held.subject ? [held.subject.id] : [], answer: payload.answer, answerModel: null, validationPassed: verdict.kind === "PASSED", records: held.records, gaps,
+        subjectIds: held.subject ? [held.subject.id] : [], answer: payload.answer, aiAnswer: payload.aiAnswer, answerModel: null, validationPassed: verdict.kind === "PASSED", records: held.records, gaps,
         surface: body.surface === "MAP" || body.surface === "BALLOT" ? body.surface : "UNKNOWN",
         approximateLocation: typeof body.approximateLocation === "string" ? body.approximateLocation : null, ocdIds,
         residency: stampResidency(readLocationOrigin(body.locationOrigin)), continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
@@ -675,7 +697,7 @@ async function answerWithSettings(request: Request, started: number) {
     confirmation: body.confirmation, activeSubjects: readSubjectRefs(body.activeSubjects), priorSubjects: readSubjectRefs(body.priorSubjects, 8),
     readerGoverning: registryBodies.filter(entity => entity.ocdId && ocdIds.includes(entity.ocdId) &&
       (entity.id === `${entity.ocdId}#governing` || entity.id === `${entity.ocdId}#board`)) }) : null;
-  if (!outcomesFromDatabase && needsOutcomePreload && !leanAsk && !(calendarReading && !calendarReading.subjectId)) {
+  if (!outcomesFromDatabase && needsOutcomePreload && eagerOutcomes && !leanAsk && !(calendarReading && !calendarReading.subjectId)) {
     outcomesFromDatabase = timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
     void outcomesFromDatabase.catch(() => undefined);
   }
@@ -689,10 +711,11 @@ async function answerWithSettings(request: Request, started: number) {
 
   const calendarTime = calendarReading?.interpretation.temporal.kind;
   const nearbyCalendar = calendarReading && (calendarTime === "NEXT" || deferSittingOutcomes && calendarTime === "LAST");
+  const agendaBeforeIdentity = !deferSittingOutcomes && Boolean(topicRoute || questionShape && sittingShapes.has(questionShape.shape));
   const meetingsRead = needsMeetings ? readReaderEdgeMeetings({
     now: new Date(requestNow).toISOString(),
     window: nearbyCalendar ? "SHOWN" : "HELD",
-    includeAgenda: !deferSittingOutcomes,
+    includeAgenda: agendaBeforeIdentity,
     states: statesOf(ocdIds),
     ocdIds: calendarReading ? [] : ocdIds,
     ...(calendarReading ? { bodyIds: [calendarReading.subjectId] } : {}),
@@ -709,7 +732,7 @@ async function answerWithSettings(request: Request, started: number) {
   const essentialPreloads = [
     timed("registry", () => settleRegistryAuthorityReads("REGISTRY")),
     ...(stateExecutiveOnly || nationalExecutiveOnly || contestCivics ? [async () => undefined] : earlyFederalDirectory ? [() => earlyFederalDirectory] : [timed("federalDirectory", () => settleFederalDirectoryRead())]),
-    ...(needsOutcomePreload && !(calendarReading && !calendarReading.subjectId) ? [outcomesFromDatabase ? () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead)] : []),
+    ...(needsOutcomePreload && eagerOutcomes && !(calendarReading && !calendarReading.subjectId) ? [outcomesFromDatabase ? async () => outcomesFromDatabase : timed("outcomes", settleOutcomeRead)] : []),
 
   ];
   const promotedSource = (_family: PromotedAuthorityFamily | "federal-directory" | "ballot-contests" | "candidate-profiles" | "candidate-publications"): "DATABASE" => "DATABASE";
@@ -728,7 +751,7 @@ async function answerWithSettings(request: Request, started: number) {
     officeholderStatements: promotedSource("officeholder-statements"),
     executiveActions: promotedSource("executive-actions"),
   };
-  if (!needsOutcomePreload) delete trace.preloadSources.outcomes;
+  if (!needsOutcomePreload || !eagerOutcomes) delete trace.preloadSources.outcomes;
   if (areaMeetingsAsk || stateExecutiveOnly || nationalExecutiveOnly || contestCivics) delete trace.preloadSources.federalDirectory;
   if (contestCivics) delete trace.preloadSources.funding;
   let stateMoneyFilers: Awaited<ReturnType<typeof requestedStateMoneySubjects>> = [];
@@ -807,7 +830,7 @@ async function answerWithSettings(request: Request, started: number) {
     const payload = askAnswer({ mode, pack, answer: mode === "GROUNDED_COMPOSED" ? answer : "We don't have that answer yet.", contacts: [], trace });
     if (mode === "NO_EVIDENCE") await completeMissingAnswer(payload);
     await captureDelivered({ request, question, interpretation: { ...unavailableInterpretation(), intent: "CIVICS" },
-      resolutionState: "NONE", mode, subjectIds: [], answer: payload.answer, answerModel: null,
+      resolutionState: "NONE", mode, subjectIds: [], answer: payload.answer, aiAnswer: payload.aiAnswer, answerModel: null,
       validationPassed: verdict.kind === "PASSED", records: pack.records, gaps: pack.gaps, surface: body.surface === "BALLOT" ? "BALLOT" : "MAP",
       approximateLocation: ballotZip ?? null, ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
       continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
@@ -851,7 +874,7 @@ async function answerWithSettings(request: Request, started: number) {
     trace.answerMode = "NO_EVIDENCE";
     const payload = await completeMissingAnswer(askAnswer({ mode: "NO_EVIDENCE", pack, answer: gap.statement, contacts: [], trace }));
     await captureDelivered({ request, question, interpretation: { ...unavailableInterpretation(), intent: "CIVICS" },
-      resolutionState: "NONE", mode: "NO_EVIDENCE", subjectIds: [], answer: payload.answer, answerModel: null,
+      resolutionState: "NONE", mode: "NO_EVIDENCE", subjectIds: [], answer: payload.answer, aiAnswer: payload.aiAnswer, answerModel: null,
       validationPassed: null, records: [], gaps: [gap], surface: body.surface === "BALLOT" ? "BALLOT" : "MAP",
       approximateLocation: ballotZip ?? null, ocdIds, residency: stampResidency(readLocationOrigin(body.locationOrigin)),
       continuityKey: typeof body.continuityKey === "string" ? body.continuityKey : "" });
@@ -873,7 +896,8 @@ async function answerWithSettings(request: Request, started: number) {
   lap("meetingsProjection");
   // A failed meeting read must not withhold an unrelated eligible ballot or money record.
   let meetings = (snapshot?.meetings ?? []) as MeetingLike[];
-  let documents = (snapshot?.agendaDocuments ?? []) as AgendaDocumentLike[];
+  let documents = snapshot?.agendaDocuments ?? [];
+  const agendaReads = new Map<string, Promise<readonly AgendaDocument[]>>();
   if (needsMeetings && snapshot) {
     const requestedStates = new Set(statesOf(ocdIds));
     const meetingLeads = [...new Map((snapshot?.meetings ?? []).flatMap(meeting => {
@@ -1274,6 +1298,7 @@ async function answerWithSettings(request: Request, started: number) {
       validationPassed: boolean | null,
       records: EvidenceRecord[],
       gaps: EvidenceGap[],
+      aiAnswer?: string,
     ) => captureDelivered({
       request,
       question,
@@ -1282,6 +1307,7 @@ async function answerWithSettings(request: Request, started: number) {
       mode,
       subjectIds,
       answer,
+      aiAnswer,
       answerModel,
       validationPassed,
       records,
@@ -1306,7 +1332,7 @@ async function answerWithSettings(request: Request, started: number) {
           : unheldBody.shape === "PUBLIC_COMMENT" ? "public-comment rules" : "calendar";
         const answer = unheldBodyAnswer(titleCaseName(unheldBody.name), information, trace);
         await completeMissingAnswer(answer);
-        await capture("NO_EVIDENCE", [], answer.answer, null, null, [], answer.gaps);
+        await capture("NO_EVIDENCE", [], answer.answer, null, null, [], answer.gaps, answer.aiAnswer);
         return askResponse(answer);
       } };
     }
@@ -1329,7 +1355,7 @@ async function answerWithSettings(request: Request, started: number) {
           answer.trace.answerMode = "NO_EVIDENCE";
           await completeMissingAnswer(answer);
         }
-        await capture(answer.mode, [], answer.answer, null, null, [], []);
+        await capture(answer.mode, [], answer.answer, null, null, [], [], answer.aiAnswer);
         return askResponse(answer);
       } };
     }
@@ -1364,7 +1390,6 @@ async function answerWithSettings(request: Request, started: number) {
       return { kind: "RESPONSE" as const, respond: async () => {
         trace.answerMode = "UNRESOLVED";
         trace.totalMs = Date.now() - started;
-        await capture("UNRESOLVED", [], null, null, null, [], holdingLoadGaps);
         const answer = unresolvedAnswer(binding.mention, trace);
         await completeMissingAnswer(answer);
         if (resolution.unresolvedCanonicalId) {
@@ -1374,6 +1399,7 @@ async function answerWithSettings(request: Request, started: number) {
         answer.gaps.push(...holdingLoadGaps);
         answer.denominators.ballotLoaderFailures = ballot.loaderFailures.length;
         answer.denominators.officeholderLoaderFailures = officeholders.loaderFailures;
+        await capture("UNRESOLVED", [], answer.answer, null, null, [], answer.gaps, answer.aiAnswer);
         return askResponse(answer);
       } };
     }
@@ -1397,7 +1423,33 @@ async function answerWithSettings(request: Request, started: number) {
               ? "NEXT"
               : "ANY";
 
+    // An unknown name or an ambiguous subject cannot use meeting history.
+    // Wait until identity resolves before reading the state's retained outcomes.
+    if (needsOutcomePreload && !eagerOutcomes && resolution.binding.kind === "BOUND") {
+      outcomesFromDatabase ??= timed("outcomes", refreshOutcomeSnapshotFromPromoted)();
+      await settleGroundedSourcePreloads([() => outcomesFromDatabase!]);
+      (trace.preloadSources ??= {}).outcomes = "DATABASE";
+    }
     const bound = resolution.binding.kind === "BOUND" ? resolution.binding.entity : null;
+    if (needsMeetings && !agendaBeforeIdentity && (bound || ["UPCOMING_AGENDA", "PAST_MEETING", "AGENDA_TOPIC"].includes(interpretation.intent))) {
+      const bodyId = bound?.level === "BODY" ? bound.id : null, key = bodyId ?? "area";
+      let pending = agendaReads.get(key);
+      if (!pending) {
+        pending = timed("boundAgendas", () => readReaderEdgeMeetings({ window: "HELD", includeAgenda: true,
+          states: statesOf(ocdIds), ocdIds: bodyId ? [] : ocdIds, ...(bodyId ? { bodyIds: [bodyId] } : {}) }))()
+          .then(read => {
+            if (read.kind === "STORE_UNREACHABLE") throw new Error("The selected agenda records are unavailable");
+            return read.kind === "PROMOTED" || read.kind === "BOOTSTRAP" ? read.value.agendaDocuments ?? [] : [];
+          }).catch(error => {
+            console.error("Ask agenda records could not be read", { name: error instanceof Error ? error.name : "Error" });
+            holdingLoadGaps.push({ whose: "OURS", statement: "We couldn't load these agenda records just now." });
+            return [];
+          });
+        agendaReads.set(key, pending);
+      }
+      const held = await pending;
+      documents = [...new Map([...documents, ...held].map(document => [document.id, document])).values()];
+    }
     const ballotRecord: BallotSubjectRecord | null = bound
       ? ballotInventory.subjects.get(bound.id) ?? null
       : null;
@@ -1440,7 +1492,7 @@ async function answerWithSettings(request: Request, started: number) {
         snapshot = { ...(snapshot ?? own.value), meetings: [...snapshot?.meetings ?? [], ...own.value.meetings.filter((meeting) => !heldIds.has(meeting.id))],
           agendaDocuments: [...snapshot?.agendaDocuments ?? [], ...own.value.agendaDocuments.filter((document) => !heldDocuments.has(document.id))] };
         meetings = snapshot.meetings as MeetingLike[];
-        documents = snapshot.agendaDocuments as AgendaDocumentLike[];
+        documents = snapshot.agendaDocuments;
         if (meetingDataState === "STORE_UNREACHABLE") meetingDataState = own.kind;
       } else meetingDataState = "STORE_UNREACHABLE";
     }
@@ -2544,11 +2596,8 @@ async function answerWithSettings(request: Request, started: number) {
   }
 
   lap(composed ? "composition" : "synthesisAndValidation");
-  trace.stages = stageMs;
   trace.answerMode = mode;
   trace.totalMs = Date.now() - started;
-
-  await capture(mode, subject ? [subject.id] : [], answer, answerModel, validationPassed, packRecords, packGaps);
 
   const gapObservations = planAskGapObservations({
     stated: statedAskGaps({ gaps: packGaps, timelines: topicTimeline ? [topicTimeline] : areaTimelines }),
@@ -2573,6 +2622,7 @@ async function answerWithSettings(request: Request, started: number) {
     payload.agendaLead = false;
   }
   else generalAbort.abort();
+  await capture(mode, subject ? [subject.id] : [], payload.answer, answerModel, validationPassed, packRecords, payload.gaps, payload.aiAnswer);
   trace.totalMs = Date.now() - started;
   payload.meetingListingIdentity = meetingListingKnowledgeFor(snapshot?.meetings ?? [], resolvedSittings.map(meeting => meeting.id)).readback;
   return askResponse(payload);
@@ -2586,6 +2636,7 @@ async function captureDelivered(input: {
   mode: AnswerMode;
   subjectIds: string[];
   answer: string | null;
+  aiAnswer?: string;
   answerModel: string | null;
   validationPassed: boolean | null;
   records: EvidenceRecord[];
@@ -2607,8 +2658,8 @@ async function captureDelivered(input: {
         subjectIds: input.subjectIds,
         resolutionState: input.resolutionState,
         answerMode: input.mode,
-        answerText: input.answer,
-        answerModel: input.answerModel,
+        answerText: deliveredAskText(input),
+        answerModel: input.aiAnswer ? resolveAskRoleModel("UNSOURCED") : input.answerModel,
         validationPassed: input.validationPassed,
         evidenceRecordCount: input.records.length,
         evidenceSourceCount: new Set(

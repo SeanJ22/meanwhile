@@ -68,7 +68,7 @@ test("M59: a date-only meeting renders the honest line where the clock goes", ()
 test("M59: a normal meeting is untouched by the new shape", () => {
   const timed = meeting({ startsAt: "2026-06-09T19:00:00-04:00" });
   assert.equal(startTimeIsKnown(timed), true);
-  assert.match(formatMeetingTime(timed), /7:00\s?PM/);
+  assert.match(formatMeetingTime(timed, "America/New_York"), /7:00\s?PM/);
 
   // Absent precision means MINUTE. Stated as a test so the default cannot be
   // quietly flipped to the permissive direction.

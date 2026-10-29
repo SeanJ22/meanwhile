@@ -1,4 +1,4 @@
-import { meetingRouteIdentity } from "./meeting-body-crosswalk.ts";
+import { meetingRouteIdentity,meetingSelectorIdentity } from "./meeting-body-crosswalk.ts";
 import { createHash } from "node:crypto";
 
 import type { BodySourceWiring } from "../registry/source-wiring.ts";
@@ -57,8 +57,8 @@ export interface DerivedWiringProjection {
 }
 
 /** The store key of a row: one route of one body, as its meetings' source names it. */
-export function derivedWiringKey(kind: DerivedWiringKind, bodyId: string, route?: string): string {
-  return `${DERIVED_WIRING_SOURCE_NAMES[kind]}:${bodyId}${typeof route === "string" && route ? `:${createHash("sha256").update(meetingRouteIdentity(kind, route)).digest("hex").slice(0, 16)}` : ""}`;
+export function derivedWiringKey(kind: DerivedWiringKind, bodyId: string, route?: string,filter?:Readonly<Record<string,string>>): string {
+  return `${DERIVED_WIRING_SOURCE_NAMES[kind]}:${bodyId}${typeof route === "string" && route ? `:${createHash("sha256").update(meetingRouteIdentity(kind, route)+meetingSelectorIdentity(kind,filter)).digest("hex").slice(0, 16)}` : ""}`;
 }
 
 /** A body's slug for meeting ids, from its id alone: stable, and never another body's. */
@@ -113,7 +113,8 @@ export function derivedWiringProjectionIssue(value: unknown): string | null {
     if (record.status !== "ACTIVE" && record.status !== "SUSPENDED") return `${record.id} has no status`;
     if ((record.status === "SUSPENDED") !== (record.suspension !== undefined)) return `${record.id}: only a suspended record carries a suspension`;
     if (!row || (!["ICAL", "OFFICIAL_PAGE_EVENTS", "DILIGENT"].includes(row.kind) && !isDataDoorKind(row.kind)) ||
-      (record.id !== derivedWiringKey(row.kind, row.bodyId) && record.id !== derivedWiringKey(row.kind, row.bodyId, row.route))) {
+      (record.id !== derivedWiringKey(row.kind, row.bodyId) && record.id !== derivedWiringKey(row.kind, row.bodyId, row.route)
+        && record.id !== derivedWiringKey(row.kind,row.bodyId,row.route,row.config))) {
       return `${record.id} is not keyed by its own route and body`;
     }
     if (!/^https:\/\//.test(row.route) || typeof row.officialHost !== "string" || new URL(row.route).hostname.toLowerCase() !== row.officialHost.toLowerCase()) {

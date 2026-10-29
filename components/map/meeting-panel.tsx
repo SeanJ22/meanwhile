@@ -5,7 +5,7 @@ import { MeetingRow } from "@/components/ui/meeting-row";
 import { CheckedLink } from "@/components/ui/checked-link";
 import { CardSourcesContribution } from "@/components/ui/card-sources-contribution";
 import { fieldSourceLabel, meetingCardSources, type CardSource } from "@/lib/officials/card-sources";
-import { CardGapContribution } from "@/components/ui/card-gap-context";
+import { CardGapContribution, CardGapSection } from "@/components/ui/card-gap-context";
 
 import { ExternalLink, Landmark, X } from "lucide-react";
 import { useState } from "react";
@@ -213,7 +213,8 @@ export function MeetingPanel({
           </div>
         )}
         {groups.map((group) => (
-          <section key={group.id}>
+          <section key={group.id} data-meeting-section={group.id}>
+            <CardGapSection label={`${group.label.toLowerCase()} meeting information`}>
             <p className="t-structure sticky top-0 z-[1] bg-[var(--panel)] px-5 py-2 text-label">
               {readerText(group.label)}
             </p>
@@ -232,6 +233,7 @@ export function MeetingPanel({
                 </MeetingRow>
               ))}
             </div>
+            </CardGapSection>
           </section>
         ))}
 

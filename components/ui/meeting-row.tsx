@@ -1,11 +1,13 @@
 "use client";
 
+import { ReaderMeetingDate, ReaderMeetingTime } from "@/components/ui/reader-meeting-time";
+
 import { ReaderText } from "@/components/ui/reader-text";
 import { readerText } from "@/lib/text/reader-names";
 import type { ReactNode } from "react";
 import type { Meeting } from "@/lib/sources/types";
 import type { EvidenceRecord } from "@/lib/ask/evidence";
-import { formatMeetingDate, formatMeetingTime, formatRelativeDay, locationLine, meetingEntryTitle, meetingSubline } from "@/lib/map/format";
+import { formatRelativeDay, locationLine, meetingEntryTitle, meetingSubline } from "@/lib/map/format";
 import { onlineAccessFor, venueGapOf, statedVenueText } from "@/lib/meetings/online";
 import { meetingCardGaps } from "@/lib/meetings/card-gaps";
 import { meetingCardSources } from "@/lib/officials/card-sources";
@@ -59,7 +61,7 @@ export function MeetingRow(props: RowProps) {
     <p className="mt-2 flex flex-wrap items-baseline gap-2 font-mono tabular-nums">
       {meeting.status === "CANCELED" && <MeetingStatusPill status="canceled" />}
       {meeting.status === "CONCLUDED" && <MeetingStatusPill status="concluded" />}
-      <span>{formatMeetingDate(meeting)}</span><span>{formatMeetingTime(meeting)}</span>
+      <span><ReaderMeetingDate meeting={meeting} /></span><span><ReaderMeetingTime meeting={meeting} /></span>
       {distance && <span className="text-muted">{distance}</span>}
     </p>
     {!compact && <p className="t-caption text-muted">{formatRelativeDay(meeting.startsAt)}</p>}

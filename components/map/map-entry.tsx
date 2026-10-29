@@ -1,5 +1,7 @@
 "use client";
 
+import { ReaderMeetingDate, ReaderMeetingTime } from "@/components/ui/reader-meeting-time";
+
 import { useOfficePins } from "@/hooks/use-office-pins";
 import { primeMemberDirectories, primeStateMemberDirectories } from "@/hooks/use-member-directory";
 import { loadReaderState, loadStateAndPlace, mergeReaderCoverage, stateCoverageForZip } from "@/lib/reader/client";
@@ -48,6 +50,7 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { useReaderLayout } from "@/hooks/use-reader-layout";
 import { ZipSwitcher } from "./zip-switcher";
 import { PostalZipNotice } from "./postal-zip-notice";
+import { TutorialReplayButton, useTutorialRequested } from "./tutorial-overlay";
 import { useSidebarVisible } from "@/hooks/use-sidebar-visible";
 import { UiProvider, useUi, useUiDispatch } from "@/lib/state/provider";
 import type { MeetingSearchResult } from "@/lib/meetings/query";
@@ -73,8 +76,6 @@ import { TIER_LABEL, type Tier } from "@/lib/ocd/tiers";
 import { definitionsForBody } from "@/lib/officials/body-definitions";
 import { divisionTypeLabel, tierForMeeting } from "@/lib/state/derive";
 import {
-  formatMeetingDate,
-  formatMeetingTime,
   locationLine,
   meetingEntryTitle,
 } from "@/lib/map/format";
@@ -184,10 +185,6 @@ function MapEntryInner() {
     dispatch({ type: "select/district", ocdId: null, districtType: null });
   }, [dispatch]);
 
-  const [mapPresentationReady, setMapPresentationReady] = useState(false);
-  const onMapPresentationReady = useCallback((ready: boolean) => {
-    setMapPresentationReady(ready);
-  }, []);
   const [result, setResult] = useState<TaggedResult | null>(null);
   /** How the meetings fetch failed: the HTTP status, or null for no answer. Named on the failure card. */
   const [failure, setFailure] = useState<{ status: number | null } | null>(null);
@@ -200,6 +197,8 @@ function MapEntryInner() {
   const [drawnDistricts, setDrawnDistricts] = useState<DrawnDistrict[]>([]);
   // Reopened by CHANGE and by reset; distinct from "no zip stored yet".
   const [welcomeRequested, setWelcomeRequested] = useState(false);
+  const [welcomeDismissed, setWelcomeDismissed] = useState(false);
+  const tutorialRequested = useTutorialRequested();
 
   // "default" is per-width (desktop visible, phone hidden); "open"/"closed" are
   // the reader's choice and win at any width. CSS keys off data-sidebar on <main>.
@@ -257,6 +256,10 @@ function MapEntryInner() {
     forZip: string | null;
     target: ViewTarget;
   } | null>(null);
+  // A located map point (no ZIP) counts as a place, like a stored ZIP.
+  const welcomeOpen = (!location && !settled && !welcomeDismissed) || welcomeRequested;
+  const tutorialActive = restored && !welcomeOpen;
+  const tutorialOpen = tutorialActive && tutorialRequested;
 
   const zipView = useMemo<ViewTarget | null>(
     () =>
@@ -1634,7 +1637,6 @@ function MapEntryInner() {
       >
         <div className="mw-map-layer absolute inset-0">
           {MapCanvas && districtsRestored && (view !== null || failure !== null || (restored && !location)) && <MapCanvas
-            onPresentationReadyChange={onMapPresentationReady}
             venues={allVenues}
             visibleVenueKeys={visibleVenueKeys}
             camera={camera}
@@ -1774,7 +1776,7 @@ function MapEntryInner() {
               <ResetViewButton onReset={onReset} />
               <ThemeToggle className="mw-header-theme" />
             </div>
-            <div className="mw-header-right">{cluster}</div>
+            <div className="mw-header-right">{cluster}<TutorialReplayButton /></div>
           </header>
         )}
 
@@ -1797,7 +1799,7 @@ function MapEntryInner() {
           onJurisdictionChosen={showDistrictOnMap}
         />
 
-        {pop && (
+        {pop && !welcomeOpen && !tutorialOpen && (
           <ReaderPopup
             pop={pop}
             anchor={sidebarUp ? "sidebar" : "header"}
@@ -1851,7 +1853,7 @@ function MapEntryInner() {
           </ReaderPopup>
         )}
 
-        {cardView && !parked && (
+        {cardView && !parked && !welcomeOpen && !tutorialOpen && (
           <ReaderCard
             viewKey={cardKey ?? "card"}
             sources={cardView.kind === "venue"
@@ -1891,18 +1893,16 @@ function MapEntryInner() {
         {/* Until the stored zip has resolved, so a returning reader never sees the prompt. */}
         {restored && (
           <WelcomeOverlay
-            open={(!location && !settled) || welcomeRequested}
+            open={welcomeOpen}
             onResolved={search}
             onAddressLocated={addressLocated}
             onPointLocated={pointLocated}
-            onDismiss={
-              location || settled ? () => setWelcomeRequested(false) : null
-            }
+            onDismiss={() => { setWelcomeRequested(false); setWelcomeDismissed(true); }}
           />
         )}
-        {location && <PostalZipNotice location={location} onLocated={addressLocated} hidden={welcomeRequested || pop !== null || cardView !== null} />}
+        {location && <PostalZipNotice location={location} onLocated={addressLocated} hidden={welcomeOpen || tutorialOpen || pop !== null || cardView !== null} />}
         {restored && (
-          <TutorialOverlay active={Boolean(location || settled) && !welcomeRequested && mapPresentationReady} />
+          <TutorialOverlay active={tutorialActive} />
         )}
       </main>
       </AddressResolutionProvider>
@@ -2000,8 +2000,8 @@ function meetingSubject(
         ? []
         : [{ label: STATUS_LABEL[meeting.status], status: meeting.status }],
     facts: [
-      { label: "Date", value: formatMeetingDate(meeting) },
-      { label: "Time", value: formatMeetingTime(meeting), mono: true },
+      { label: "Date", value: <ReaderMeetingDate meeting={meeting} /> },
+      { label: "Time", value: <ReaderMeetingTime meeting={meeting} />, mono: true },
       meeting.location
         ? {
             label: "Location",

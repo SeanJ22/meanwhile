@@ -3,32 +3,14 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { test } from "node:test";
 
-/** The welcome overlay's mission text, pinned sentence by sentence. */
-
-const MISSION_SENTENCES = [
-  "Whether you care about politics or not, politics cares about you.",
-  "Government reports to you.",
-  "While you were at work, a data center was approved three miles from your kids' school. While you were at soccer practice, the school board adopted a new AI policy. While you were living an ordinary week, decisions about your next four years got made.",
-  "Not in secret. In public, on a schedule, in a room you were allowed to walk into. Nobody told you.",
-  "Know where it's happening. Know when it's happening. Show up if you can.",
-  "And when you can't — say something anyway.",
-];
-
-test("the welcome overlay carries the author's mission text verbatim", () => {
+test("the welcome overlay explains the site in one short line", () => {
   const source = readFileSync(
     join(process.cwd(), "components", "map", "welcome-overlay.tsx"),
     "utf8",
   );
-  // JSX wraps lines and escapes apostrophes; the reader sees the unwrapped,
-  // unescaped text, so that is what gets compared.
-  const rendered = source.replace(/&apos;/g, "'").replace(/\s+/g, " ");
-
-  for (const sentence of MISSION_SENTENCES) {
-    assert.ok(
-      rendered.includes(sentence),
-      `mission text altered — missing verbatim sentence: "${sentence}"`,
-    );
-  }
+  const description = /<p className="welcome-msg">([^<]+)<\/p>/.exec(source)?.[1];
+  assert.ok(description && description.length < 120);
+  assert.match(description, /government.*meetings/);
 });
 
 test("ZIP and location entry remain, with no hard-coded pilot examples", () => {

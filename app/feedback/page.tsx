@@ -7,16 +7,18 @@ import { feedbackContext } from "@/lib/feedback/shape";
 
 /** `lib/db/feedback.ts` is the only write path; it scrubs before storing and the store carries no key. */
 
-export const metadata = {
-  title: titleFor("Feedback"),
-};
+type FeedbackPageProps = { searchParams: Promise<{ about?: string; zip?: string; recordId?: string; intent?: string }> };
+
+export async function generateMetadata({ searchParams }: FeedbackPageProps) {
+  return { title: titleFor((await searchParams).intent === "sooner" ? "Want us to get this sooner?" : "Tell us what’s wrong") };
+}
 
 export default async function FeedbackPage({
   searchParams,
-}: {
-  searchParams: Promise<{ about?: string; zip?: string; recordId?: string }>;
-}) {
-  const context = feedbackContext(await searchParams);
+}: FeedbackPageProps) {
+  const params = await searchParams;
+  const context = feedbackContext(params);
+  const sooner = params.intent === "sooner";
   // "Report a problem" on a card names the card, so the reader starts with
   // the part they would otherwise have to remember to say.
   const topic = context.about;
@@ -27,23 +29,21 @@ export default async function FeedbackPage({
           <Logo variant="wordmark" size={30} />
         </div>
         <h1 className="mt-2 text-xl font-semibold text-paper">
-          Tell us what&apos;s wrong
+          {sooner ? "Want us to get this sooner?" : "Tell us what’s wrong"}
         </h1>
 
         <p className="mt-4 text-[0.9375rem] leading-relaxed text-paper-dim">
-          A wrong meeting time, a missing board, a number that doesn&apos;t
-          ring, an official who isn&apos;t in office any more, a sentence that
-          made no sense — all of it is worth sending. So is anything else.
+          {sooner ? "Tell us which information you want us to get next." : "Tell us what is wrong, missing, or confusing."}
         </p>
 
         <FeedbackForm
           surface="SIDEBAR"
-          initialMessage={topic ? `About "${topic}": ` : ""}
+          initialMessage={sooner ? `Please get ${topic || "this information"} sooner. ` : topic ? `About "${topic}": ` : ""}
           context={context}
         />
         {(topic || context.zip) && (
           <p className="mt-3 text-sm text-paper-dim">
-            Report context: {topic || "Map"}{context.zip ? ` · ZIP ${context.zip}` : ""}.
+            {sooner ? "Requested information" : "Report context"}: {topic || "Map"}{context.zip ? ` · ZIP ${context.zip}` : ""}.
           </p>
         )}
 

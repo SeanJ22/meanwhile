@@ -42,7 +42,9 @@ test("a real joined LDA filing reaches the hydrated member card and its single S
     assert.ok(Date.now() - started < 3000, "First-use contributions must be usable within three seconds.");
     assert.equal(await page.getByText("Sources", { exact: true }).count(), 1);
     await page.getByText("Sponsored bills", { exact: true }).click();
-    const missing = page.locator('[data-card-gap="federal-bills:congress:C001056"]');
+    const missing = page.locator('[data-card-gap-contribution="federal-bills:congress:C001056"]')
+      .locator("xpath=ancestor::div[contains(concat(' ', normalize-space(@class), ' '), ' card-section-body ')]").locator("[data-card-gap]");
+    await missing.waitFor({ state: "visible" });
     assert.equal(await missing.count(), 1);
     assert.match(await missing.textContent() ?? "", /working on getting this info/);
     assert.equal(await missing.getByRole("link", { name: "Want us to get this sooner?" }).count(), 1);

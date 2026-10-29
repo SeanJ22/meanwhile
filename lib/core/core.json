@@ -20,7 +20,6 @@
         "lib/facts/portal-publication.ts",
         "lib/funding/state-publication.ts",
         "lib/funding/state-source-probe.ts",
-        "lib/meetings/office-facts.ts",
         "lib/meetings/pin-blanks.ts"
       ]
     },
@@ -395,7 +394,6 @@
         "lib/facts/owner-flags.ts",
         "lib/funding/state-facts.ts",
         "lib/funding/state-publication.ts",
-        "lib/meetings/office-facts.ts",
         "scripts/rb-a3-copy.mts"
       ]
     },

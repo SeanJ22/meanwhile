@@ -272,18 +272,6 @@
       "line": 233
     },
     {
-      "file": "scripts/rb-a3-production-copy.sql",
-      "kind": "SELECT *",
-      "fingerprint": "d22e85daa32152c090687905fb00d423e1376c8878e9f4931dc734c3fb7591b5",
-      "line": 4
-    },
-    {
-      "file": "scripts/rb-a3-production-copy.sql",
-      "kind": "SELECT *",
-      "fingerprint": "65f1e5d5f4d3a43118515eba82facfac6b217253dba7e22fcff26873865f821b",
-      "line": 15
-    },
-    {
       "file": "scripts/replay-legiscan-all-states.mts",
       "kind": "readCandidate",
       "fingerprint": "96ed04d68b2d6858bb32d31246223736a276bb355067be4eb009bf5e0e680b8b",
@@ -1039,58 +1027,6 @@
     },
     {
       "file": "scripts/portrait-census.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/rb-a3-capture.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/rb-a3-copy.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/rb-a3-reader-archives.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/rb-a3-reader-sample.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/rb-a3-reader-sample.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/rb-a4-portal-copy.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/rb-a4-portal-copy.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/rb-a4-portals.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/rb-a4-portals.mts",
-      "table": "civic_data_promotions"
-    },
-    {
-      "file": "scripts/rb-a4-replay.mts",
-      "table": "civic_data_candidate_events"
-    },
-    {
-      "file": "scripts/rb-a4-replay.mts",
-      "table": "civic_data_candidates"
-    },
-    {
-      "file": "scripts/rb-a4-replay.mts",
-      "table": "civic_data_payload_parts"
-    },
-    {
-      "file": "scripts/rb-a4-replay.mts",
       "table": "civic_data_promotions"
     },
     {
@@ -2510,22 +2446,6 @@
     {
       "file": "scripts/publish-owner-snapshot.mts",
       "table": "cp_owner_snapshots"
-    },
-    {
-      "file": "scripts/rb-a4-portal-copy.mts",
-      "table": "cp_doors"
-    },
-    {
-      "file": "scripts/rb-a6-admin-check.mts",
-      "table": "cp_admin_config"
-    },
-    {
-      "file": "scripts/rb-a6-admin-check.mts",
-      "table": "cp_admin_setting_history"
-    },
-    {
-      "file": "scripts/rb-a6-verify.mts",
-      "table": "cp_admin_config"
     },
     {
       "file": "scripts/routine-civic-data-runner.mts",

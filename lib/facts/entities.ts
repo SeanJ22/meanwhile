@@ -7,6 +7,7 @@ import { parseCsv } from "../reference/csv.ts";
 import { readCensusGovernmentFacts, type CensusGovernmentFacts } from "../registration/jurisdictions.ts";
 import type { FactDb, Query } from "./publish.ts";
 import { hostOf, isOfficialUrl } from "./check.ts";
+import { siteUrl } from "./entity-read.ts";
 import { subBodyId } from "../civic-data/meeting-body-crosswalk.ts";
 import { governingBoardName, type GoverningContext } from "../civic-data/governing-board-name.ts";
 import { isCensusPlaceholderDivision } from "../registry/census-placeholders.ts";
@@ -49,7 +50,7 @@ export interface RegistryBody {
 function hostOfAddress(address: string): string | null {
   if (!address.trim()) return null;
   try {
-    return new URL(/^https?:\/\//i.test(address) ? address : `http://${address}`).hostname.toLowerCase().replace(/^www\./, "") || null;
+    return new URL(siteUrl(address)).hostname.toLowerCase().replace(/^www\./, "") || null;
   } catch { return null; }
 }
 

@@ -59,11 +59,13 @@ function copyText(copy: SavedCopy): string {
 }
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-/** Finds needle only when it is not part of a longer word or number: "500" never matches inside "$1,500". */
+/** Finds needle only when it is not part of a longer word or number: "500" never matches inside "$1,500", while a cell of a CSV row ("62849,3621") is its own value. */
 export function boundedIndexOf(hay: string, needle: string): number {
   if (!needle) return -1;
   if (hay === needle) return 0;
-  const re = new RegExp(`(?<![\\p{L}\\p{N}]|\\p{N}[.,])${escapeRegExp(needle)}(?![\\p{L}\\p{N}]|[.,]\\p{N})`, "u");
+  // A number goes on in digits, a decimal point, or a comma and one more group of three digits.
+  const before = /^\p{N}/u.test(needle) ? "|\\p{N}\\.|(?<!\\p{N})\\p{N}{1,3}," : "", after = /\p{N}$/u.test(needle) ? "|\\.\\p{N}|,\\p{N}{3}(?!\\p{N})" : "";
+  const re = new RegExp(`(?<![\\p{L}\\p{N}]${before})${escapeRegExp(needle)}(?![\\p{L}\\p{N}]${after})`, "u");
   const m = re.exec(hay);
   return m ? m.index : -1;
 }
@@ -124,18 +126,28 @@ export function lineOf(copy: SavedCopy, valueText: string): string | null {
   return line.slice(Math.min(from, found), Math.max(to, found + value.length));
 }
 
-const csvCells = (row: string): string[] => {
-  const cells: string[] = [];
-  let cell = "", quoted = false;
+/** A CSV row's cells, each with where it starts and ends in the row as written. */
+const csvSpans = (row: string): { readonly value: string; readonly start: number; readonly end: number }[] => {
+  const cells: { value: string; start: number; end: number }[] = [];
+  let cell = "", quoted = false, start = 0;
   for (let i = 0; i < row.length; i++) {
     const ch = row[i]!;
     if (quoted) { if (ch !== '"') cell += ch; else if (row[i + 1] === '"') { cell += '"'; i++; } else quoted = false; }
     else if (ch === '"') quoted = true;
-    else if (ch === ",") { cells.push(cell); cell = ""; }
+    else if (ch === ",") { cells.push({ value: cell, start, end: i }); cell = ""; start = i + 1; }
     else cell += ch;
   }
-  return [...cells, cell];
+  return [...cells, { value: cell, start, end: row.length }];
 };
+export const csvCells = (row: string): string[] => csvSpans(row).map(cell => cell.value);
+
+/** What a CSV row writes from its `from` cell through the last filled cell up to `to`, exactly as written; null when the `from` cell is empty. */
+export function csvWritten(header: string, row: string, from: string, to: string): string | null {
+  const names = csvCells(header.replace(/\r$/, "")), cells = csvSpans(row.replace(/\r$/, ""));
+  const first = names.indexOf(from), last = names.indexOf(to);
+  if (first === -1 || last < first || !cells[first]?.value) return null;
+  return row.slice(cells[first]!.start, cells.slice(first, last + 1).filter(cell => cell.value !== "").at(-1)!.end);
+}
 
 /** A string or bare token as JSON writes it, starting at `at`: where it ends and what it says. */
 function jsonToken(text: string, at: number): { readonly end: number; readonly says: string } | null {

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import { door } from "../lib/core/door.ts";
-import { checkFact, exactLine, lineOf, type SavedCopy } from "../lib/facts/check.ts";
+import { boundedIndexOf, checkFact, csvWritten, exactLine, lineOf, type SavedCopy } from "../lib/facts/check.ts";
 import { factClocks } from "../lib/facts/clocks.ts";
 import type { PublishInput } from "../lib/facts/publish.ts";
 import { factDb } from "./helpers/fact-db.ts";
@@ -64,4 +64,21 @@ test("a checked loader's fact is checked against the line it quotes; an unchecke
     const unchecked = await door(db, claim({ field: "office_email", value: "a@example.gov", valueText: "a@example.gov", quote: "", acquisition: "loader" }), clocks, now);
     assert.ok("decision" in unchecked && unchecked.decision === "PUBLISH", "a loader not yet switched keeps publishing");
   } finally { await db.pg.close(); }
+});
+
+test("a CSV row writes an address from its first cell to its last filled one, and its cells are values of their own", () => {
+  const header = "id,title,address1,address2,city,state,zip,zip4,web,pop", row = "SUPT1777,SUPT1777,135 N COURT ST,,PRATTVILLE,AL,36067,3049,www.example.gov,318";
+  assert.equal(csvWritten(header, row, "address1", "zip4"), "135 N COURT ST,,PRATTVILLE,AL,36067,3049");
+  assert.equal(csvWritten(header, row, "web", "web"), "www.example.gov");
+  assert.equal(csvWritten(header, '1,CLERK,"1 MAIN ST, STE 2",,TOWN,AL,36067,,,12\r', "address1", "zip4"), '"1 MAIN ST, STE 2",,TOWN,AL,36067');
+  assert.equal(csvWritten(header, "1,CLERK,,PO BOX 5,TOWN,AL,36067,,,12", "address1", "zip4"), null, "no street, no address");
+  assert.equal(csvWritten(header, row, "nothing", "zip4"), null);
+  const copy = copyOf(`${header}\n${row}`);
+  for (const value of [csvWritten(header, row, "address1", "zip4")!, "www.example.gov"]) {
+    assert.equal(checkFact({ entity: example, fieldKind: "contact", provenance: "OFFICIAL", valueText: value, quote: row, copy }, now, clocks.windowHours).ok, true, value);
+  }
+  assert.equal(boundedIndexOf("rate $1,500 paid", "500"), -1);
+  assert.equal(boundedIndexOf("rate $1,500 paid", "1"), -1);
+  assert.equal(boundedIndexOf("rate 12.5 paid", "5"), -1);
+  assert.equal(boundedIndexOf("a,113895,2020,b", "113895"), 2, "a cell followed by a four-digit cell is its own number");
 });

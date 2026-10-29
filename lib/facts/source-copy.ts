@@ -24,7 +24,8 @@ export const jsonValues = (value: unknown): string[] => typeof value === "string
   : value && typeof value === "object" ? Object.values(value).flatMap(jsonValues) : [];
 
 interface CopyRow {
-  readonly artifactId: string;
+  /** What resolves to the exact bytes: `artifact:<id>` for a vault artifact. */
+  readonly key: string;
   readonly url: string;
   readonly finalUrl: string;
   readonly fetchedAt: string;
@@ -32,9 +33,9 @@ interface CopyRow {
   readonly contentHash: string;
 }
 
-/** One row per vault artifact: the key is the artifact id the vault resolves to its exact bytes. */
+/** One row per saved source: the key is what resolves to its exact bytes. */
 export async function saveSourceReference(query: Query, row: CopyRow): Promise<number> {
-  const key = `artifact:${row.artifactId}`;
+  const key = row.key;
   const [existing] = await query("SELECT id FROM source_copy WHERE blob_key = $1", [key]);
   if (existing) return Number(existing.id);
   const [saved] = await query(`INSERT INTO source_copy (url, final_url, fetched_at, http_status, sha256, blob_key, is_archive)
@@ -49,9 +50,17 @@ export async function saveSourceReference(query: Query, row: CopyRow): Promise<n
 
 export async function saveCaptureCopy(query: Query, capture: WorkerPublicationCapture): Promise<SavedCopy> {
   const { evidence } = capture;
-  const id = await saveSourceReference(query, { artifactId: evidence.artifactId, url: evidence.canonicalUrl, finalUrl: evidence.canonicalUrl,
+  const id = await saveSourceReference(query, { key: `artifact:${evidence.artifactId}`, url: evidence.canonicalUrl, finalUrl: evidence.canonicalUrl,
     fetchedAt: capture.observedAt, httpStatus: capture.httpStatus, contentHash: evidence.contentHash });
   return { id, finalUrl: evidence.canonicalUrl, text: checkText(evidence.text, "", evidence.canonicalUrl), fetchedAt: new Date(capture.observedAt), isArchive: isArchive(evidence.canonicalUrl) };
+}
+
+/** The rows of a published release the repo keeps beside its note, as a saved copy captured on the source's latest check: a re-check that finds the same fingerprint is a new capture of the same release. */
+export async function saveReleaseCopy(query: Query, release: { readonly name: string; readonly url: string; readonly sha256: string;
+  readonly checkedAt: string; readonly text: string }): Promise<SavedCopy> {
+  const id = await saveSourceReference(query, { key: `release:${release.name}:${release.sha256}:${release.checkedAt}`, url: release.url, finalUrl: release.url,
+    fetchedAt: release.checkedAt, httpStatus: 200, contentHash: release.sha256 });
+  return { id, finalUrl: release.url, text: release.text, fetchedAt: new Date(release.checkedAt), isArchive: false };
 }
 
 /** A page another store holds, as checkFact reads it; it has no row here. */

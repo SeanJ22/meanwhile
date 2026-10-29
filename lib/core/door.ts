@@ -1,4 +1,3 @@
-import {rosterHolderName} from "../facts/roster-name.ts";
 import { checkFact, isOfficialUrl, type CheckEntity, type Claim, type Provenance } from "../facts/check.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
@@ -23,8 +22,6 @@ export type DoorInput = Omit<PublishInput, "entity"> & (
 ) & {
   readonly linkingPage?: OfficialLinkingPage | null;
   readonly capture?: WorkerPublicationCapture;
-  /** A loader's parsed source record: use the publisher's field without a quote search. */
-  readonly sourceField?: { readonly record: Readonly<Record<string, unknown>>; readonly key: string };
   /** Select the publisher's record and field in the attached saved JSON response. */
   readonly savedField?: { readonly idField: string; readonly id: number; readonly key: string;
     readonly form?: "text" | "date" | "membership" };
@@ -159,9 +156,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     // A filing or a money claim is always checked against the line it quotes, whatever its host.
     const fast = loaded && acquisition === "loader" && input.provenance !== "FILING" && input.fieldKind !== "money";
     const provenance = input.provenance === "OWNER" ? "OWNER" : campaign ? "CAMPAIGN" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;
-    const value = fast && input.sourceField ? input.sourceField.record[input.sourceField.key] : input.value;
-    const valueText = fast && input.sourceField ? typeof value === "string" ? value : canonicalJson(value) : input.valueText;
-    const c: PublishInput = { ...input, entity, provenance, copy, value, valueText };
+    const c: PublishInput = { ...input, entity, provenance, copy };
     if (input.savedField) {
       const selector = input.savedField;
       const record = savedRecord(input);
@@ -262,57 +257,36 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
   return outcome;
 }
 
-/** Absence from a complete official roster is a door decision, with the same place rebuild as an addition. */
-export async function retireRosterThroughDoor(db: FactDb & { readonly query: Query }, input: {
-  readonly bodyId: string; readonly copy: import("../facts/check.ts").SavedCopy;
-  readonly seated: readonly string[]; readonly producedBy: string; readonly sourcePrefix?: string;
-  readonly nativeScheme?: string; readonly purge?: ReaderCachePurger;
-  /** `bodyIds` are every source selector whose seats are this body's seats (a board and its folded calendar labels). */
-  readonly roster?: { readonly pages: readonly WorkerPublicationCapture[]; readonly bodyIds: readonly number[]; readonly day: string };
-  readonly freshness?: { readonly windowHours: number; readonly now: Date };
+/**
+ * A source read in full no longer shows a fact it used to: the fact moves to history and keeps the last date the source showed it.
+ * `copyId` retires facts last read from that saved page; without one, `sourceUrl` retires those read from any address starting with it.
+ * `stillShown` are the fields under `fieldPrefix` the source still shows. Facts the source showed after `at` and a value Sean typed stay.
+ * Callers read the source in full first, so a source that could not be read or changed shape never gets here and retires nothing;
+ * a saved page that was not answered with success or is an archive retires nothing either.
+ */
+export async function retireAbsent(db: FactDb, input: {
+  readonly subjectId: string; readonly fieldPrefix: string; readonly copyId?: number; readonly sourceUrl?: string;
+  readonly stillShown: readonly string[]; readonly at: Date; readonly purge?: ReaderCachePurger;
 }): Promise<number> {
-  if(input.freshness&&savedCopyFreshnessRefusal(input.copy.fetchedAt,input.freshness.windowHours,input.freshness.now))return 0;
   let changed: ReaderCacheScope | undefined;
   const count = await db.transaction(async query => {
-    const bodyId = await resolveId(input.bodyId,query) ?? input.bodyId;
-    const entity = await readCheckEntity(query,bodyId);
-    if (!entity || !officialSource(input.copy.finalUrl,entity.hosts)) return 0;
-    let seated=input.seated;
-    if(input.roster) {
-      const active=new Set<string>(),selectors=new Set(input.roster.bodyIds);
-      for(const page of input.roster.pages) {
-        if(!officialSource(page.evidence.canonicalUrl,entity.hosts) || !page.evidence.canonicalUrl.startsWith(input.sourcePrefix!)) throw Error("ROSTER_SOURCE_MISMATCH");
-        const records:unknown=JSON.parse(page.evidence.text);
-        if(!Array.isArray(records))throw Error("ROSTER_SOURCE_MISMATCH");
-        for(const record of records) {
-          if(!selectors.has(record.OfficeRecordBodyId))continue;
-          const name=rosterHolderName(record.OfficeRecordFullName);
-          if(!name)continue;
-          if(record.OfficeRecordStartDate?.slice(0,10)>input.roster.day || record.OfficeRecordEndDate && record.OfficeRecordEndDate.slice(0,10)<input.roster.day)continue;
-          active.add(String(record.OfficeRecordPersonId));
-        }
-      }
-      seated=[...active];
-    }
-    await query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",[canonicalJson([bodyId,"roster"])]);
-    const gone = await query(`WITH current AS MATERIALIZED (
-      SELECT id,checked_at,source_copy_id FROM checked_fact WHERE entity_id=$1 AND field LIKE 'member:%' AND status='live'
-    ) UPDATE fact f SET status='superseded',held_reason='NOT_ON_CURRENT_OFFICIAL_ROSTER'
-      FROM source_copy s,current WHERE f.id=current.id
-      AND CASE WHEN $7::boolean THEN current.checked_at ELSE s.fetched_at END <=$6::timestamptz
-      AND f.entity_id=$1 AND f.field LIKE 'member:%' AND f.status='live'
-      AND f.provenance_kind='OFFICIAL' AND s.id=current.source_copy_id
-      AND CASE WHEN $4::text IS NULL THEN s.url=$2 ELSE starts_with(s.url,$4) END
-      AND NOT (substr(f.field,8)=ANY($3::text[]))
-      AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.entity_id=substr(f.field,8)
-        AND x.scheme=$5 AND x.value=ANY($3::text[])) RETURNING f.id`,
-    [bodyId,input.copy.finalUrl,seated,input.sourcePrefix ?? null,input.nativeScheme ?? null,input.copy.fetchedAt.toISOString(),!!input.roster]);
+    const subjectId = await resolveId(input.subjectId, query) ?? input.subjectId;
+    const [copy] = input.copyId === undefined ? [] : await query("SELECT url,http_status,is_archive FROM source_copy WHERE id=$1", [input.copyId]);
+    const url = input.copyId === undefined ? input.sourceUrl : copy && !copy.is_archive && (copy.http_status === null || Number(copy.http_status) < 300) ? String(copy.url) : undefined;
+    if (!url) return 0;
+    await query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))", [canonicalJson([subjectId, input.fieldPrefix])]);
+    const gone = await query(`UPDATE fact f SET status='superseded',held_reason='GONE_FROM_SOURCE'
+      FROM checked_fact c JOIN source_copy s ON s.id=c.source_copy_id
+      WHERE f.id=c.id AND f.entity_id=$1 AND starts_with(f.field,$2) AND f.status='live' AND f.provenance_kind<>'OWNER'
+      AND c.checked_at<=$5::timestamptz AND CASE WHEN $6::boolean THEN s.url=$3 ELSE starts_with(s.url,$3) END
+      AND NOT (f.field=ANY($4::text[])) RETURNING f.id`,
+    [subjectId, input.fieldPrefix, url, input.stillShown, input.at.toISOString(), input.copyId !== undefined]);
     if (gone.length) {
-      await enqueueReaderPlaces({entities:[bodyId]},query);
-      changed=await readerCacheScopeForEntity(query,bodyId);
+      await enqueueReaderPlaces({ entities: [subjectId] }, query);
+      changed = await readerCacheScopeForEntity(query, subjectId);
     }
     return gone.length;
   });
-  if (changed) await invalidateReaderCache(changed,input.purge,null);
+  if (changed) await invalidateReaderCache(changed, input.purge, null);
   return count;
 }

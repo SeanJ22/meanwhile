@@ -61,7 +61,7 @@ export async function acquireRegistrationSource(options: {
   try {
     const release = await acquireKnownRelease({
       sourceId: "census-governments-registration", releaseId: "cog-2022", url: REGISTRATION_SOURCE_URL,
-      parserVersion: REGISTRATION_PARSER_VERSION, signal: options.signal, maxBytes: 64 * 1024 * 1024, checkAfterMs: 90 * 24 * 60 * 60 * 1000,
+      parserVersion: REGISTRATION_PARSER_VERSION, signal: options.signal, maxBytes: 64 * 1024 * 1024, checkAfterMs: 15 * 24 * 60 * 60 * 1000,
       fetchImpl: options.fetchImpl, now: options.now ? () => options.now!().toISOString() : undefined,
       store: options.store, locks: options.locks, readHeld: options.readHeld ?? (() => heldRelease(options.signal)),
       validate: validateGovernmentRelease,

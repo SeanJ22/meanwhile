@@ -40,6 +40,9 @@ test("source records flow through claimed work, preserve identity, and retire de
   const f=await fixture(t);const loaded=await f.load();
   assert.equal(loaded.records,(await f.facts.query("SELECT 1 FROM work WHERE kind='check'")).length);
   assert.equal((await f.drain()).failed,0);
+  const quoted=await f.facts.query("SELECT quote,quote_start FROM fact WHERE produced_by LIKE 'legistar-members:%' AND status='live'");
+  assert.ok(quoted.length>0&&quoted.every(row=>/^"(?:Office|Body)\w+"\s*:/.test(String(row.quote))&&row.quote_start!==null),"each member fact quotes the exact line of its saved response and was checked there");
+  assert.deepEqual(await f.facts.query("SELECT field,reason FROM blank WHERE reason LIKE 'CHECK_FAILED%'"),[]);
   const before=(await readFactRosters(f.facts.query,f.rows.map(row=>row.bodyId))).rosters.flatMap(row=>row.members);
   assert.ok(before.some(member=>member.name==="Rex Scott"));
   const ids=await f.facts.query("SELECT id FROM entity ORDER BY id");
@@ -49,7 +52,7 @@ test("source records flow through claimed work, preserve identity, and retire de
   const after=(await readFactRosters(f.facts.query,f.rows.map(row=>row.bodyId))).rosters.flatMap(row=>row.members);
   assert.ok(after.length<before.length);
   assert.deepEqual(await f.facts.query("SELECT id FROM entity ORDER BY id"),ids);
-  assert.ok((await f.facts.query("SELECT 1 FROM fact WHERE held_reason='NOT_ON_CURRENT_OFFICIAL_ROSTER'")).length>0);
+  assert.ok((await f.facts.query("SELECT 1 FROM fact WHERE held_reason='GONE_FROM_SOURCE'")).length>0);
   assert.ok((await f.facts.query("SELECT 1 FROM rebuild_queue")).length>=0);
 });
 
@@ -106,7 +109,7 @@ test("a selector's seats never retire the board's other members",async t=>{
   const f=await fixture(t,{...source,offices:source.offices.filter(office=>office.OfficeRecordBodyId!==286||office.OfficeRecordId===only.OfficeRecordId)});
   await f.load();assert.equal((await f.drain()).failed,0);
   t.mock.timers.tick(1_000);await f.load();assert.equal((await f.drain()).failed,0);
-  assert.equal((await f.facts.query("SELECT 1 FROM fact WHERE held_reason='NOT_ON_CURRENT_OFFICIAL_ROSTER'")).length,0);
+  assert.equal((await f.facts.query("SELECT 1 FROM fact WHERE held_reason='GONE_FROM_SOURCE'")).length,0);
 });
 
 test("unseated meeting selectors cannot block real bodies and seated unidentified labels stay open",async t=>{

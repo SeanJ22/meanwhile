@@ -1,6 +1,5 @@
 import { normalizeText, type Claim, type FieldKind, type SavedCopy } from "./check.ts";
-import type { Decision } from "../core/door.ts";
-import { door } from "../core/door.ts";
+import { door, type Decision, type DoorInput, type DoorOutcome } from "../core/door.ts";
 import { enqueueReaderPlaces, type ReaderCachePurger } from "../reader/cache.ts";
 import { recordFactConfirmation } from "./confirmation.ts";
 
@@ -25,8 +24,6 @@ export interface PublishInput extends Claim {
   readonly costUsd: number;
   /** Findings from a hunter or walker carry claims to check against the saved page. A "loader" is not checked yet; a "checked" loader quotes the exact line of its saved copy and is. */
   readonly acquisition?: "loader" | "hunter" | "walker" | "checked";
-  /** A parsed field of an official source already held by its ordinary loader. */
-  readonly sourceField?: { readonly record: Readonly<Record<string, unknown>>; readonly key: string };
 }
 
 export type PublishOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly blank: string };
@@ -48,16 +45,41 @@ export async function moveBlanksUp(query: Query, entityId: string): Promise<void
     WHERE entity_id = $1`, [entityId]);
 }
 
+const failureDetail = (c: Pick<PublishInput, "copy" | "fieldKind" | "provenance" | "value" | "valueText" | "quote" | "producedBy">) =>
+  JSON.stringify({ sourceUrl: c.copy.finalUrl, copyId: c.copy.id, fieldKind: c.fieldKind, provenance: c.provenance,
+    value: c.value, valueText: c.valueText, quote: c.quote, producedBy: c.producedBy });
+
 /** Older callers retain their blank result; every fact is written by the same door. */
 export async function publishClaim(db: FactDb, input: PublishInput, clocks: Clocks, now = new Date(),
   options: { readonly purge?: ReaderCachePurger } = {}): Promise<PublishOutcome> {
   const outcome = await door(db, input, clocks, now, { ...options, refusal: async (claim, reason) => {
     if (reason === "SUBJECT_NOT_FOUND") return;
     await db.transaction(query => openBlank(query, { entityId: claim.entity.id, field: claim.field, stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
-      detail: JSON.stringify({ sourceUrl: claim.copy.finalUrl, copyId: claim.copy.id, fieldKind: claim.fieldKind, provenance: claim.provenance,
-        value: claim.value, valueText: claim.valueText, quote: claim.quote, producedBy: claim.producedBy }), retryMinutes: clocks.retryMinutes(claim.fieldKind) }));
+      detail: failureDetail(claim), retryMinutes: clocks.retryMinutes(claim.fieldKind) }));
   } });
   return "refused" in outcome ? { blank: outcome.refused } : outcome;
+}
+
+/**
+ * A loader's fact is checked at `line`, the text of its saved copy that shows the value. A fact whose line cannot be found, or that
+ * the check refuses, still publishes as the loader sends it (no loader stops), and its blank opens with the reason so a detective sees it.
+ */
+export async function publishLoaded(db: FactDb, input: DoorInput, line: { readonly quote: string; readonly valueText: string } | null,
+  clocks: Clocks, now: Date, options: { readonly purge?: ReaderCachePurger } = {}): Promise<DoorOutcome> {
+  let reason = "NO_EXACT_LINE";
+  if (line) {
+    const checked = await door(db, { ...input, ...line, acquisition: "checked" }, clocks, now, options);
+    if (!("refused" in checked)) return checked;
+    reason = checked.refused;
+  }
+  const outcome = await door(db, { ...input, acquisition: "loader" }, clocks, now, options);
+  if ("refused" in outcome || outcome.factId === null) return outcome;
+  await db.transaction(async query => {
+    const [fact] = await query("SELECT entity_id,field FROM fact WHERE id=$1", [outcome.factId]);
+    await openBlank(query, { entityId: String(fact!.entity_id), field: String(fact!.field), stage: "CHECK", reason: `CHECK_FAILED:${reason}`,
+      detail: failureDetail(input), retryMinutes: clocks.retryMinutes(input.fieldKind) });
+  });
+  return outcome;
 }
 
 /** A source recheck records its exact live fact versions together. */

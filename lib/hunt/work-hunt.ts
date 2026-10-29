@@ -47,7 +47,7 @@ export async function taskOfRow(repos: ControlPlaneRepositories, claim: WorkRow,
   const planned = plannedTaskOf(claim);
   if (planned !== null) {
     const task = await repos.routeTasks.readNarrowed(planned.routeTaskId, { state: true });
-    return task !== null && ["PENDING", "RECLAIMABLE"].includes(task.value.state as string) ? planned : null;
+    return task !== null && ["PENDING", "RECLAIMABLE"].includes((task.value as { state: string }).state) ? planned : null;
   }
   const { work, label } = huntOf(claim, now);
   if (!await repos.workItems.readNarrowed(work.id, { id: true })) await registerWorkItem(repos, work, now);

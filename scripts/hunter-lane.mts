@@ -61,7 +61,7 @@ const lane = hunterLane({
   selectState: async () => {
     let paidOpen = false;
     try { paidOpen = lane.current().closed === null; } catch { paidOpen = false; }
-    state = await claims.select(PLANNING_STATES, paidOpen);
+    state = await claims.select(PLANNING_STATES, !paidOpen);
     armingPath = hunterLaneArmingPath(ROOT, state);
     return state;
   },

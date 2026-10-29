@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test, { createMemoryRepositories } from "./helpers/playbooks.ts";
 import { PGlite } from "@electric-sql/pglite";
-import { openWorkHunts } from "../lib/hunt/work-hunt.ts";
+import { hunterClaims } from "../lib/control-plane/workers/hunter-claims.ts";
 import { recordQuestionWork } from "../lib/ask/question-work.ts";
 import { WORK_DDL, workList } from "../lib/core/work.ts";
 import { MemoryEvidenceStore } from "../lib/control-plane/evidence/store.ts";
@@ -13,6 +13,8 @@ import { hunterFor } from "../lib/hunt/runtime.ts";
 
 const now = "2026-10-18T00:00:00Z";
 const division = "ocd-division/country:us/state:az/county:pima";
+const claimsOf = (list: ReturnType<typeof workList>, repos: ReturnType<typeof createMemoryRepositories>) =>
+  hunterClaims({ list, repos, now: () => now, deadEndMs: async () => 5 * 86_400_000, log: () => {} });
 
 test("an unanswered Ask question is handed to the hunter, reaches it with held place facts, and appears in the daily brief", async t => {
   const repos = createMemoryRepositories();
@@ -23,9 +25,11 @@ test("an unanswered Ask question is handed to the hunter, reaches it with held p
   await recordQuestionWork({ question: "Who voted for the school budget?", divisions: [division],
     place: "85701", subjectId: `${division}#board`, runClass: "ORGANIC", now }, list);
   assert.equal((await repos.workItems.list()).length, 0, "the question waits as a row until a hunter's planner takes it");
-  assert.equal(await openWorkHunts({ list, repos, now }), 1);
-  assert.equal(await openWorkHunts({ list, repos, now }), 0, "a question is handed over once");
-  assert.deepEqual((await pg.query("SELECT status FROM work")).rows, [{ status: "done" }]);
+  const claims = claimsOf(list, repos);
+  await claims.select(["az"], false);
+  assert.equal((await claims.claim(true))?.taskIds.length, 1);
+  assert.equal(await claims.claim(true), null, "a question is claimed once");
+  assert.deepEqual((await pg.query("SELECT status FROM work")).rows, [{ status: "taken" }], "the row stays the hunters' until the hunt is done");
   const item = (await repos.workItems.list())[0]!.value;
   const decision = await nextAutonomousOperation({ repos, now: () => now } as AutonomousCoordinatorRuntime, item.id);
   assert.equal(decision.action, "SCOUT");
@@ -72,6 +76,8 @@ test("a question waiting in the work list is already owed in the daily brief", a
   const waiting = await unhandedQuestionRows({ query: rows });
   assert.equal(waiting.length, 1);
   assert.match(waiting[0]!.what, /85701.*Who voted/);
-  await openWorkHunts({ list, repos: createMemoryRepositories(), now });
-  assert.deepEqual(await unhandedQuestionRows({ query: rows }), [], "once handed to the hunters, their queue carries it");
+  const claims = claimsOf(list, createMemoryRepositories());
+  await claims.select(["az"], false);
+  await claims.claim(true);
+  assert.deepEqual(await unhandedQuestionRows({ query: rows }), [], "once a hunter has claimed it, their hunt carries it");
 });

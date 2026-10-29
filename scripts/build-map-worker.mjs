@@ -13,7 +13,7 @@ await mkdir(join(root, "public"), { recursive: true });
 for (const [entry, file, format] of [
   [join(dirname(require.resolve("maplibre-gl/package.json")), "dist/maplibre-gl-worker.mjs"), "maplibre-gl-worker.mjs", "esm"],
   [join(root, "lib/map/boundary-worker.ts"), "map-boundary-worker.mjs", "esm"],
-  [join(root, "lib/map/first-view.ts"), "map-first-view.js", "iife"],
+  [join(root, "lib/map/first-view.ts"), "map-first-view.mjs", "iife"],
 ]) {
   const outfile = join(root, "public", file);
   const result = await build({ entryPoints: [entry], outfile, bundle: true, format,

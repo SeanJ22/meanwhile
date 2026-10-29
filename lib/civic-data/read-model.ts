@@ -1164,11 +1164,9 @@ export function primeReaderProjection(recordClass: RoutineRecordClass, scope: st
 }
 
 async function readReaderProjection(recordClass: RoutineRecordClass, scope: string, selection: ReaderSelection): Promise<PromotedEdgeEntry> {
-  let held=readerProjectionSelections.get(selection);
-  if(!held){held=new Map();readerProjectionSelections.set(selection,held);}
-  const key=`${recordClass}:${scope}`,primed=held.get(key)??{selection,exactKeys:false,pending:undefined};
-  held.set(key,primed);
-  return primed.pending??=loadReaderProjection(recordClass,scope,primed.selection,primed.exactKeys);
+  const primed=readerProjectionSelections.get(selection)?.get(`${recordClass}:${scope}`);
+  return primed?(primed.pending??=loadReaderProjection(recordClass,scope,primed.selection,primed.exactKeys))
+    :loadReaderProjection(recordClass,scope,selection);
 }
 
 // On an edge miss, Postgres returns the requested records and small pointer metadata; candidate payloads stay there.

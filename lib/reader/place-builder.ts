@@ -629,14 +629,9 @@ export async function buildMissingPlacePages(pages:readonly {id:string;kind:stri
       const previousHistory=unpackReadyPlace(saved.history_body);
       const history=Array.isArray(previousHistory?.bodies)?packReadyPlace(preparePlaceRosters(previousHistory).place):saved.history_body;
       const territory=unpackReadyTerritory(saved.body);
-      const rosters=Object.entries(current.place.rosterRefs??{}).flatMap(([id,hash])=>{const roster=current.rosters.get(hash);return roster?[{id,roster}]:[];});
-      await query(`WITH updated AS (
-        UPDATE place_page SET body=$2::jsonb,history_body=$6::jsonb,context=context||$3::jsonb,version=version+1,build_fingerprint=NULL
-          WHERE place_id=$1 AND encode(sha256(convert_to(jsonb_build_array(body,history_body,context->'current',context->'history',context->'emptyCurrent',context->'emptyHistory')::text,'UTF8')),'hex')=$5 RETURNING place_id
-      ) UPDATE place_page p SET context=p.context||jsonb_build_object('bodyRoster',r.roster)
-        FROM jsonb_to_recordset($4::jsonb) r(id text,roster jsonb),updated
-        WHERE p.place_id=r.id AND NOT p.context?'bodyRoster'`,
-      [id,JSON.stringify(packReadyPlace(current.place,territory)),JSON.stringify(context),JSON.stringify(rosters),saved.fingerprint,JSON.stringify(history)]);
+      await query(`UPDATE place_page SET body=$2::jsonb,history_body=$5::jsonb,context=context||$3::jsonb,version=version+1,build_fingerprint=NULL
+        WHERE place_id=$1 AND encode(sha256(convert_to(jsonb_build_array(body,history_body,context->'current',context->'history',context->'emptyCurrent',context->'emptyHistory')::text,'UTF8')),'hex')=$4`,
+      [id,JSON.stringify(packReadyPlace(current.place,territory)),JSON.stringify(context),saved.fingerprint,JSON.stringify(history)]);
       return;
     }
     if(existing && authorities&&!reader&&!roster){
@@ -1161,7 +1156,8 @@ function zipRegistryStatement(state: string, divisions: readonly string[]) {
         OR reader_payload_node(p.item)->>'personId' IN (SELECT id FROM identities)
         OR reader_payload_node(p.item)->>'url' IN (SELECT r.value FROM jsonb_each_text(reader_payload_value(root.value->'rosterPhotos')) r)
     ) SELECT ${buildSelectedMetadataSql}, CASE WHEN published THEN
-      reader_payload_value(root.value-'registry'-'officialPhotos'-'officialCandidacies') || jsonb_build_object(
+      reader_payload_value(root.value-'registry'-'officialPhotos'-'officialCandidacies'-'bodyRosters'-'rosterReaderDispositions'-'rosterPhotos') || jsonb_build_object(
+        'bodyRosters','[]'::jsonb,'rosterReaderDispositions','[]'::jsonb,'rosterPhotos','{}'::jsonb,
         'officialPhotos',reader_payload_value(reader_payload_node(root.value->'officialPhotos')-'photos') || jsonb_build_object('photos',
           coalesce((SELECT jsonb_agg(reader_payload_value(value) ORDER BY ordinal_index) FROM photos),'[]'::jsonb)),
         'officialCandidacies',reader_payload_value(reader_payload_node(root.value->'officialCandidacies')-'rows') || jsonb_build_object('rows',

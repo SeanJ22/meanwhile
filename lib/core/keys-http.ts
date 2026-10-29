@@ -1,6 +1,6 @@
 import { guardAdminRequest } from "../control-plane/gateway/admin-guard.ts";
 import { productionKeysStore, type KeysStore } from "./keys-store.ts";
-import { KEY_NAMES, KEY_SERVICES, keyName, type KeyService } from "./keys-model.ts";
+import { KEY_SERVICES, keyName, knownKeyService, type KeyService } from "./keys-model.ts";
 import { testDueKeys } from "./keys-test.ts";
 
 const HEADERS = { "cache-control": "no-store, no-cache, must-revalidate" };
@@ -29,7 +29,7 @@ export async function handleKeys(request: Request, cookie: string | undefined, d
       const at = new Date().toISOString(); await store.undo(name, at); await testSaved(store, at, name);
       return json({ says: "The earlier key setting was restored and tested." });
     }
-    const service = body.service ?? KEY_NAMES[name];
+    const service = knownKeyService(name) ?? body.service;
     if (typeof body.value !== "string" || !body.value.trim() || body.value.length > 16_384 || typeof service !== "string" || !Object.hasOwn(KEY_SERVICES, service)) {
       return json({ says: "Enter the name, paste the key, and choose what it is for." }, 400);
     }

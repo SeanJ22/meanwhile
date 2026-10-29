@@ -92,6 +92,10 @@ test("HTML success pages and provider failures never count as working or expose 
   assert.equal(failure.working, false);
   assert.equal(JSON.stringify(failure).includes(SECRET), false);
   assert.match((await testKey("anthropic", SECRET, fake(new Response(null, { status: 429 })))).says, /usage limit/);
+  assert.equal((await testKey("maptiler-service", SECRET, (async (_url, init) => {
+    assert.equal(new Headers(init?.headers).get("authorization"), `Token ${SECRET}`);
+    return Response.json({ datasets: [] });
+  }) as typeof fetch)).working, true);
 });
 
 test("search keys are checked against a rejected control without submitting paid searches", async () => {
@@ -185,6 +189,23 @@ test("the protected Settings API saves, tests, lists and deletes without returni
     const deleted = await handleKeys(request("DELETE", { name: "Example" }), cookie, deps);
     assert.equal(deleted.status, 200);
     assert.equal(await store.read("Example"), undefined);
+  });
+});
+
+test("known credentials cannot skip their provider check by choosing a different purpose", async t => {
+  const { store } = await fixture(t);
+  await withAdminSessionKey(async () => {
+    const cookie = (await adminSessionCookie()).split("=")[1];
+    for (const name of ["CONGRESS_API_KEY", "CONGRESS_API_KEY.website"]) {
+      const response = await handleKeys(new Request("https://admin.meanwhileusa.com/api/admin/v6/keys", {
+        method: "POST", headers: { host: "admin.meanwhileusa.com", origin: "https://admin.meanwhileusa.com", "content-type": "application/json" },
+        body: JSON.stringify({ name, value: SECRET, service: "signing" }),
+      }), cookie, { store: () => store, test: (saved, at, key) => testDueKeys(saved, at, key, async service => {
+        assert.equal(service, "congress"); return good();
+      }) });
+      assert.equal(response.status, 200);
+    }
+    assert.ok((await store.list()).every(row => row.service === "congress"));
   });
 });
 

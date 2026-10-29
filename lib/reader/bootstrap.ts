@@ -1,3 +1,4 @@
+import { BOUNDARY_ARCHIVE_URL } from "../map/boundary-archive.ts";
 import type { ZctaCentroid } from "../geo/zcta-core.ts";
 import type { ReaderWorkerRequest } from "../map/boundary-worker.ts";
 
@@ -76,7 +77,7 @@ if(zip===null){try{zip=JSON.parse(localStorage.getItem("wtp.approximate_location
 window.__startReaderZip(zip);
 }}catch(e){}`; }
 
-export const READER_START_SCRIPT = readerStartScript(typeof process === "undefined" ? "" : process.env.NEXT_PUBLIC_BOUNDARY_PMTILES_URL ?? "");
+export const READER_START_SCRIPT = readerStartScript(BOUNDARY_ARCHIVE_URL);
 
 /** Consume each early response once; normal navigation keeps its abort behavior. */
 export function fetchReaderResponse(url: string, init?: RequestInit): Promise<Response> {

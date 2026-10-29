@@ -49,6 +49,7 @@ yarn-error.log*
 # generated on dev/build
 /public/maplibre-gl-worker.mjs
 /public/map-boundary-worker.mjs
+/public/map-first-view.js
 /public/states/
 /data/derived/place-reference/
 

@@ -30,7 +30,6 @@ import {
   CONUS_BOUNDS,
   FALLBACK_STYLE,
   basemapStyle,
-  prefetchRasterOverview,
   METRO_ZOOM,
   resolveBasemap,
 } from "@/lib/map/style";
@@ -80,7 +79,7 @@ import {
 } from "@/lib/map/marker-pool";
 import { fanOffsets, findCollisionGroups } from "@/lib/map/spiderfy";
 
-import "maplibre-gl/dist/maplibre-gl.css";
+import { arrivingMapStyle } from "@/lib/map/first-view";
 
 /** Where the map should be looking. A new object means a new fly-to. */
 export interface CameraTarget {
@@ -106,13 +105,10 @@ import type { MapBounds, OfficeSite } from "@/lib/map/office-pins";
 
 const NO_OFFICE_SITES: readonly OfficeSite[] = [];
 
-let workersPrepared = false;
 /** Download and initialize the map's existing worker pool while the ZIP reads run. */
 export function prepareMapWorkers(): void {
-  if (workersPrepared) return;
   setWorkerUrl("/maplibre-gl-worker.mjs");
   prewarm();
-  workersPrepared = true;
 }
 
 interface MapCanvasProps {
@@ -386,15 +382,16 @@ export function MapCanvas({
     // while avoiding four canvas pixels per CSS pixel on a 2x display.
     if (raster.kind === "software" && map.getPixelRatio() > 1) map.setPixelRatio(1);
 
-    // Start CPU graphics with its final style, rather than compile a fallback
-    // frame and then discard it. The district source remains independent.
-    const initialStyle = basemap && raster.kind === "software" ? basemapStyle(basemap, true) : FALLBACK_STYLE;
-    if (typeof initialStyle !== "string") map.setStyle(withDistricts(initialStyle, districtTypesRef.current, stateAbbrFromOcdId(focusOcdRef.current)));
-    const overview = new AbortController();
-    if (basemap && raster.kind === "software" && camera) {
-      void prefetchRasterOverview(basemap, camera, initialZoomForZip(camera.zip),
-        AbortSignal.any([overview.signal, AbortSignal.timeout(3000)])).catch(() => {});
-    }
+    const initialStyle = basemap ? basemapStyle(basemap, raster.kind === "software") : FALLBACK_STYLE;
+    // The HTML has already started the real style, its fonts and viewport tiles.
+    // Boundaries attach in the same style update, without a temporary style load.
+    const applyStyle = (style: typeof FALLBACK_STYLE | string) => {
+      if (mapRef.current !== map || appliedStyleRef.current !== basemap?.styleUrl) return;
+      map.setStyle(typeof style === "string" ? style : withDistricts(style, districtTypesRef.current, stateAbbrFromOcdId(focusOcdRef.current)));
+    };
+    const arriving = basemap && arrivingMapStyle(basemap.styleUrl, raster.kind === "software");
+    if (arriving) void arriving.then(applyStyle).catch(() => applyStyle(initialStyle));
+    else map.setStyle(typeof initialStyle === "string" ? initialStyle : withDistricts(initialStyle, districtTypesRef.current, stateAbbrFromOcdId(focusOcdRef.current)));
 
     holdMapPresentation(map);
 
@@ -442,10 +439,6 @@ export function MapCanvas({
 
     // Put the district overlay back on every style change; see ensureDistricts.
     map.on("styledata", ensureDistricts);
-    map.once("style.load", () => {
-      ensureDistricts();
-      if (basemap && raster.kind !== "software") map.setStyle(basemap.styleUrl, { transformStyle: preserveDistrictStyle });
-    });
 
     /* Click to select a district: one hit selects, several open a picker, none keeps the selection. */
     const onClick = (event: MapMouseEvent) => {
@@ -629,7 +622,6 @@ export function MapCanvas({
       };
 
     return () => {
-      overview.abort();
       window.clearTimeout(settleTimer);
       map.off("idle", onPresentationIdle);
       map.off("sourcedata", onBoundaryData);

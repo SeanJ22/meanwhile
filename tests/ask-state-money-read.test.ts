@@ -15,7 +15,7 @@ test("a named campaign question reads its source filer's rows without name-joini
       { candidateNameAsFiled: "Another Person", targetKeys: ["native:second"] },
       { candidateNameAsFiled: "Tayfun Someone", targetKeys: ["native:third"] }];
     await publish({id:'money-v1',recordClass:'STATE_CAMPAIGN_FINANCE',scope:'US-NJ:campaign',sourceId:'official',at:'2026-10-20T00:00:00.000Z',value:{cycle:2026,formatVersion:1,records}});
-    const read=async(keys:string[])=>{const entry=await readKeyedSelection(async(text,params=[])=>(await pg.query(text,[...params])).rows,'STATE_CAMPAIGN_FINANCE','US-NJ:campaign',keys);
+    const read=async(keys:string[])=>{const entry=await readKeyedSelection(async(text,params=[])=>(await pg.query<Record<string,unknown>>(text,[...params])).rows,'STATE_CAMPAIGN_FINANCE','US-NJ:campaign',keys);
       assert.equal(entry.kind,'PROMOTED');return entry.kind==='PROMOTED'?(entry.projection.payload as {records:unknown}).records:undefined;};
     assert.deepEqual(await read(["ask-money-name:tayfun selen"]), [records[0]]);
     assert.deepEqual(await read(["native:second"]), [records[1]]);

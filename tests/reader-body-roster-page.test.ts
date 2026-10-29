@@ -1,7 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {migratedReaderDb} from "./helpers/migrated-reader-db.ts";
-import {buildPageBody,storePlacePage} from "../lib/reader/place-builder.ts";
+import {buildPageBody,buildPlacePackage,storePlacePage} from "../lib/reader/place-builder.ts";
+import {packReadyPlace} from "../lib/reader/place-ready.ts";
 import {readPlacePackage} from "../lib/reader/place.ts";
 import {installFactReader} from "../lib/facts/db.ts";
 import {GET} from "../app/api/reader/body/route.ts";
@@ -33,5 +34,13 @@ test("the unopened place carries roster keys; opening a body reads its saved com
     assert.deepEqual(roster.members.map((row:{name:string})=>row.name),['Ada Sample','Bea Example','Cam Citizen']);
     assert.equal(response.headers.get('Netlify-Vary'),'query=state|body');
     assert.ok(statements.length>0&&statements.every(sql=>!(/civic_data_(?:promotions|candidates|candidate_events|payload_parts)/.test(sql))));
+    const legacy=await buildPlacePackage({state:'AZ',divisionIds:[],bodyIds:[body]},query);
+    await query("UPDATE place_page SET body=$2::jsonb,context=context-'readerFormat'-'bodyRoster' WHERE place_id=$1",[body,JSON.stringify(packReadyPlace(legacy))]);
+    statements.length=0;
+    const firstOpen=await GET(new Request(`https://example.com/api/reader/body?state=AZ&body=${encodeURIComponent(body)}`));
+    assert.equal(firstOpen.status,200);
+    assert.deepEqual((await firstOpen.json()).roster,roster,'the first open upgrades the saved legacy body without changing its answer');
+    assert.ok(statements.every(sql=>!(/civic_data_(?:promotions|candidates|candidate_events|payload_parts)/.test(sql))),
+      'an existing body page is upgraded without reopening its source bundles');
   }finally{installFactReader(undefined);await pg.close();}
 });

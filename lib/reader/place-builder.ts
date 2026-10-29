@@ -600,7 +600,7 @@ export async function buildMissingPlacePages(pages:readonly {id:string;kind:stri
     : resolveProductionWriteHandle().connection));
   for(const {id,kind,state,authorities,authorityKeys,roster,reader} of pages) await writer.transaction(async query=>{
     const [found]=await query(`WITH locked AS MATERIALIZED (SELECT pg_advisory_xact_lock(hashtextextended($6,0)))
-      SELECT p.place_id,e.kind,p.context->>'authorityFormat' AS authority_format,p.context->'authorityKeys' AS keys,p.version,
+      SELECT p.place_id,e.kind,p.context->>'readerFormat' AS reader_format,p.context->>'authorityFormat' AS authority_format,p.context->'authorityKeys' AS keys,p.version,
       encode(sha256(convert_to(jsonb_build_array(p.context->'authorities',p.context->'authorityGeography',p.context->'authorityGeographies',p.context->'authorityKeys')::text,'UTF8')),'hex') AS authority_fingerprint,
       (NOT $2::boolean OR p.context->>'authorityFormat'='1' AND NOT EXISTS(SELECT 1 FROM unnest($5::text[]) key
         WHERE NOT (coalesce(p.context->'authorityKeys','[]'::jsonb)?key OR p.context->'authorities'?key)))
@@ -610,7 +610,7 @@ export async function buildMissingPlacePages(pages:readonly {id:string;kind:stri
     const existing=found?.place_id?found:undefined;
     const targetKind=typeof found?.kind==='string'?found.kind:kind;
     if(existing?.ready===true)return;
-    if(existing&&reader){
+    if(existing&&(reader||roster&&existing.reader_format!=='1')){
       const zip=id.startsWith('zip:');
       const [saved]=await query(`SELECT body,history_body,CASE WHEN NOT $2::boolean THEN jsonb_build_object('formatVersion',context->'formatVersion',
         'current',coalesce(context#>'{current,full}',context->'current'),'history',coalesce(context#>'{history,full}',context->'history'),

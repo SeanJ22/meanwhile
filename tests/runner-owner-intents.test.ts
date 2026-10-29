@@ -201,7 +201,7 @@ function checkRunnerPublishesConsole(src: string): void {
   const snapshot = list[0].indexOf("scripts/publish-owner-snapshot.mts");
   assert.ok(snapshot >= 0, "publishConsole does not run publish-owner-snapshot.mts");
 
-  const fn = src.match(/async function publishConsole\(onlyWhenDue=false\): Promise<void> \{[\s\S]*?\n\}/);
+  const fn = src.match(/async function publishConsole\(\): Promise<void> \{[\s\S]*?\n\}/);
   assert.ok(fn, "pilot-runner.mts has no publishConsole()");
   assert.match(fn[0], /await publishChangedConsole\(\)/, "publishConsole does not check changed inputs");
   assert.match(src, /publish: publishConsoleChildren/, "changed inputs do not reach the publishers");
@@ -258,12 +258,12 @@ function checkRunnerHonorsOwnerIntents(src: string): void {
 
   assert.match(src, /new IndependentRuntimeLaneScheduler\(\[[\s\S]*run: runRoutineCivicData[\s\S]*run: runIntakeRuntime/, "the two permanent runtime lanes are not independently scheduled");
   assert.match(src, /function startStandingRuntimeClock\(\)[\s\S]*standingRuntimeTimer = setInterval\([\s\S]*runStandingRuntimeTick\("independent standing clock"\)/, "the runtime clock is not independently startable");
-  assert.ok(src.indexOf("startStandingRuntimeClock();") < src.indexOf("while (cycle < CYCLES)"), "the runtime clock starts after research");
+  assert.ok(src.indexOf("startStandingRuntimeClock();") < src.indexOf("const loop = await runResearchLoop("), "the runtime clock starts after research");
   assert.match(src, /if \(runtimeAdmissionsHeld\) return;/, "a release hold cannot close runtime admission");
   assert.match(src, /await standingRuntimeScheduler\.waitForIdle\(\)/, "release handoff does not wait for independently running source lanes");
   assert.match(src, /const AUTO_RELEASE_HANDOFF = !STAGING && argv\.includes\("--release-handoff"\)/, "developer checkouts cannot be distinguished from the installed runtime checkout");
   assert.doesNotMatch(src, /--installed-sha=/, "runner still relies on an immutable installed SHA instead of automatic release handoff");
-  assert.match(src, /await holdWhilePaused\(\);[\s\S]*cycle \+= 1;/, "the owner pause no longer holds research cycles");
+  assert.match(src, /waitForOwner: holdWhilePaused,/, "the owner pause no longer holds research cycles");
   const hold = src.match(/async function holdWhilePaused\(\): Promise<\{ readonly ownerIntentsUnreadable: boolean \}> \{[\s\S]*?\n\}/);
   assert.ok(hold, "pilot-runner.mts has no holdWhilePaused()");
   assert.doesNotMatch(hold[0], /runStandingRuntimeTick/, "a research pause must not own or stop the independent runtime clock");
@@ -346,7 +346,7 @@ test("POSITIVE CONTROL: a runner that drops the publish call or the dispatch che
   assert.notEqual(noDispatch, src);
   assert.ok(fails(() => checkRunnerHonorsOwnerIntents(noDispatch)), "a runner blind to DISPATCH passed");
 
-  const noHold = src.replace("const owner = await holdWhilePaused();", "const owner = { ownerIntentsUnreadable: false };");
+  const noHold = src.replace("waitForOwner: holdWhilePaused,", "waitForOwner: async () => ({ ownerIntentsUnreadable: false }),");
   assert.notEqual(noHold, src);
   assert.ok(fails(() => checkRunnerHonorsOwnerIntents(noHold)), "a runner that cycles through a pause passed");
 

@@ -6,6 +6,7 @@ import { createContext, runInContext } from "node:vm";
 import { boundedBeat } from "../lib/ops/bounded-beat.ts";
 import { createMemoryRepositories } from "../lib/control-plane/repository/memory.ts";
 import { liveCycleHeartbeat, standingHeartbeat } from "../lib/control-plane/runner-standing.ts";
+import { JobRunBook } from "../lib/control-plane/job-runs.ts";
 
 test("a hung beat is left behind after its bound and the next beat writes", async () => {
   let writes = 0, late = 0, landed = 0;
@@ -64,7 +65,7 @@ test("startup and the standing clock write the running code, at most once a minu
     RUNNING_CODE_SHA: running, nativeAbortLine: () => null, neonReadFailureLine: () => null, ownerRepositories: async () => repos,
     hostMemoryReading: async () => null, neonBytesReading: () => null, hostname: () => "meanwhile-runner",
     readCodeIdentity: (input: { runnerTestedSha: string }) => { identityReads += 1; return { verdict: "CONSISTENT", runnerTestedSha: input.runnerTestedSha }; },
-    releaseStaging: { status: () => staging }, standingHeartbeat, liveCycleHeartbeat, boundedBeat, BEAT_BOUND_MS: 45_000, lateBeat: () => {},
+    releaseStaging: { status: () => staging }, standingHeartbeat, liveCycleHeartbeat, jobRuns: new JobRunBook(), boundedBeat, BEAT_BOUND_MS: 45_000, lateBeat: () => {},
     console: { error: (line: string) => { throw new Error(line); } }, Date });
   runInContext(stripTypeScriptTypes(`${write}\n${clock}`), context);
   await runInContext("standingBeat()", context);

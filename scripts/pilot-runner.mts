@@ -11,7 +11,10 @@ import { assertProductionDatabaseTarget } from "./pilot-runtime-config.mjs";
 import { floored, floorLine } from "../lib/ops/denominator-floor.ts";
 import { headSha } from "../lib/ops/git-facts.ts";
 import { readCodeIdentity } from "../lib/control-plane/code-identity.ts";
-import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, readRunnerPauseIntents, researchPlanningStates, honorStoppedHunts } from "../lib/control-plane/repository/pg-store.ts";
+import { CONTROL_PLANE_URL_VAR, controlPlaneUrlFromEnv, createPgRepositories, readRunnerPauseIntents } from "../lib/control-plane/repository/pg-store.ts";
+import { JobRunBook } from "../lib/control-plane/job-runs.ts";
+import { runResearchLoop } from "../lib/control-plane/scheduler/research-loop.ts";
+import { formatEastern } from "../lib/control-plane/eastern-time.ts";
 import {
   assertDurableRepositories,
   type ControlPlaneRepositories,
@@ -42,7 +45,6 @@ import {
   type ProviderCircuit,
 } from "../lib/control-plane/fleet-safety.ts";
 import { installNeonCircuitBreaker, latchNeonCircuit, readNeonCircuit } from "../lib/control-plane/neon-circuit.ts";
-import { cycleLivenessBeat } from "../lib/control-plane/runner-liveness.ts";
 import { liveCycleHeartbeat, standingHeartbeat } from "../lib/control-plane/runner-standing.ts";
 import { hostMemoryReading, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { parseRoutineSupervisorFailureSummary } from "../lib/control-plane/routine-outcome-summary.ts";
@@ -62,7 +64,7 @@ import {
   neonReadFailureLine,
 } from "../lib/ops/neon-request-deadline.ts";
 import { CONTROL_WAKE_POLL_MS, runnerControlReader } from "./pilot-runtime-control.mts";
-import { consoleInputReader, consolePublisher, consolePublishClock, ownerCountsReady } from "./pilot-runtime-publish.mts";
+import { consoleInputReader, consolePublisher, ownerCountsReady } from "./pilot-runtime-publish.mts";
 import { endOwnedProcessTree, receiveChildVitalSigns, runRuntimeChildren, RUNTIME_NO_PROGRESS_MS, waitForRuntimeQuiescence } from "./pilot-runtime-child.mts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { auditPassClock } from "./audit-pass-clock.mts";
@@ -211,6 +213,10 @@ let RUNNING_CODE_SHA = PARENT_CODE_SHA;
 let CODE_ROOT = ROOT;
 const jobBreakerPath = process.env[JOB_BREAKER_PATH_ENV] ?? join(ROOT, ".mirror", "job-transfer-breaker.json");
 if (provider === "postgres" && !STAGING) process.env[JOB_BREAKER_PATH_ENV] = jobBreakerPath;
+/** When each job this runner schedules last started, finished or failed; it rides on the heartbeat for the line keeper. */
+const jobRuns = new JobRunBook();
+const RESEARCH_JOB = "research-cycle";
+const BREAKER_HOLD = "Held by the job transfer breaker until you release it in Admin.";
 let jobBreaker: JobTransferBreaker | null = null;
 let jobBreakerWork: Promise<void> | null = null;
 let jobBreakerTimer: ReturnType<typeof setInterval> | null = null;
@@ -240,20 +246,27 @@ async function checkJobTransfers(): Promise<void> {
 }
 function jobTransferTick(): Promise<void> {
   if (jobBreakerWork) return jobBreakerWork;
-  jobBreakerWork = checkJobTransfers().catch(error => {
-    console.error(`  job transfer breaker check failed; existing job holds stay in place: ${error instanceof Error ? error.message : String(error)}`);
+  jobRuns.started(JOB_BREAKER_JOB);
+  jobBreakerWork = checkJobTransfers().then(() => jobRuns.finished(JOB_BREAKER_JOB)).catch(error => {
+    const message = error instanceof Error ? error.message : String(error);
+    jobRuns.failed(JOB_BREAKER_JOB, message);
+    console.error(`  job transfer breaker check failed; existing job holds stay in place: ${message}`);
   }).finally(() => { jobBreakerWork = null; });
   return jobBreakerWork;
 }
 function jobLaunchAllowed(job: string): boolean {
   const admitted = admitJobLaunch(job);
-  if (!admitted) console.log(`  job transfer breaker: ${job} is paused until released in Admin; its work remains owed`);
+  if (!admitted) {
+    console.log(`  job transfer breaker: ${job} is paused until released in Admin; its work remains owed`);
+    jobRuns.held(job, BREAKER_HOLD);
+  }
   return admitted;
 }
 const cyclesArg = argv.find((a) => a.startsWith("--cycles="));
 const CYCLES = cyclesArg ? Number(cyclesArg.slice("--cycles=".length)) : Infinity;
 const intervalArg = argv.find((a) => a.startsWith("--interval="));
 const INTERVAL_MIN = intervalArg ? Number(intervalArg.slice("--interval=".length)) : 60;
+jobRuns.register(RESEARCH_JOB, INTERVAL_MIN * 60_000);
 
 const maxArg = argv.find((a) => a.startsWith("--max="));
 const onlyArg = argv.find((a) => a.startsWith("--only="));
@@ -408,9 +421,6 @@ async function runOneCycle(owner: { readonly ownerIntentsUnreadable: boolean }):
     onStarted: (_id, child) => { researchCycleChild = child; },
   });
   if (!run) throw new Error("RESEARCH_CYCLE_CHILD_RESULT_MISSING");
-  // An owner's stop is neither a provider outage nor a failed research pass.
-  if (researchStoppedByOwner) return { ok:false, recordPath:null, stdout:run.stdout ?? "",
-    stderrTail:"", signal:run.signal ?? null, exitCode:run.status, circuit:null };
   const failedAtMs = Date.now();
   let supervisorRecordPath: string | null = null;
   if (run.termination === "TIMED_OUT") {
@@ -663,10 +673,7 @@ const publishChangedConsole = consolePublisher({
   publish: publishConsoleChildren,
 });
 
-const consoleClock=consolePublishClock(INTERVAL_MIN*60_000);
-async function publishConsole(onlyWhenDue=false): Promise<void> {
-  if(onlyWhenDue&&!consoleClock.due())return;
-  consoleClock.attempted();
+async function publishConsole(): Promise<void> {
   if (canary && STAGING) {
     console.log("  console publish: staging canary is scoped to research; billing and live-site readbacks are skipped");
     return;
@@ -1025,42 +1032,10 @@ async function runIntakeRuntime(deadlineMs: number): Promise<void> {
   }
 }
 
-async function writeFailedCycleBeat(cycleStartedAt: string): Promise<void> {
-  if (provider !== "postgres") return;
-  try {
-    const repos = await ownerRepositories();
-    if (repos === null) return;
-    const finishedAt = new Date().toISOString();
-    let codeIdentity: RunnerHeartbeat["codeIdentity"] = null;
-    try {
-      codeIdentity = readCodeIdentity({ cwd: CODE_ROOT, runnerTestedSha: RUNNING_CODE_SHA, now: finishedAt, fetch: false });
-    } catch {
-
-    }
-    const current = await repos.runnerHeartbeat.read(RUNNER_ID);
-    const next = { ...current?.value, ...cycleLivenessBeat(current?.value ?? null, {
-      cycleStartedAt,
-      finishedAt,
-      ok: false,
-      testedSha: RUNNING_CODE_SHA,
-      host: hostname(),
-      intervalMin: Math.min(INTERVAL_MIN, 10),
-      codeIdentity,
-    }) };
-    if (current === null) await repos.runnerHeartbeat.put(RUNNER_ID, next, finishedAt);
-    else await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, finishedAt);
-  } catch (error) {
-    console.error(
-      `  the failed-cycle liveness beat could not be written (${error instanceof Error ? error.message : String(error)}); the cycle outcome above stands`,
-    );
-  }
-}
-
 let currentCycleErrors = "";
 
 let currentCycleOutput = "";
 let researchCycleChild: ChildProcess | null = null;
-let researchStoppedByOwner = false;
 
 const RELEASE_QUICK_SWITCH = process.env.WTP_RELEASE_QUICK_SWITCH === "1";
 /** One bounded staging at a time, for the newest target only; its state rides on the standing heartbeat. */
@@ -1199,12 +1174,13 @@ async function writeLiveCycleBeat(startedAt: string | null, exit?: { code: numbe
       const current = await repos.runnerHeartbeat.read(RUNNER_ID);
 
       if (!exit && startedAt !== null && Date.parse(current?.value.lastCycleFinishedAt ?? "") >= Date.parse(startedAt)) return;
-      const next = startedAt === null
+      const next = { ...(startedAt === null
         ? standingHeartbeat(current?.value ?? null, { at, testedSha: RUNNING_CODE_SHA, host: hostname(), codeIdentity,
           releaseStaging: releaseStaging.status(), memory, neonBytes })
         : liveCycleHeartbeat(current?.value ?? null, { at, startedAt,
           testedSha: RUNNING_CODE_SHA, host: hostname(), lastError, memory, neonBytes,
-          ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal } : {}) });
+          ...(exit ? { finishedAt: at, exitCode: exit.code, signal: exit.signal,
+            nextCycleDueAt: new Date(Date.parse(at) + (exit.code === 0 ? INTERVAL_MIN : Math.min(INTERVAL_MIN, 10)) * 60_000).toISOString() } : {}) })), jobs: jobRuns.merged(current?.value.jobs) };
       try {
         if (current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID, current.revision, next, at);
         else await repos.runnerHeartbeat.put(RUNNER_ID, next, at);
@@ -1394,9 +1370,12 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   doorProbesLane(runDoorProbes),
 ], (outcome) => {
   if (outcome.state === "FAILED") {
+    jobRuns.failed(outcome.id, outcome.error);
     console.error(`  ${outcome.id}: standing operation failed — ${outcome.error}`);
-  }
-});
+  } else jobRuns.completed(outcome.id);
+}, id => jobRuns.started(id));
+// A lane whose run may outlast its launch interval finishes at most once per run budget.
+for (const lane of standingRuntimeScheduler.lanes) jobRuns.register(lane.id, Math.max(lane.everyMs, lane.budgetMs));
 
 async function ownerRepositories(): Promise<ControlPlaneRepositories | null> {
   if (provider !== "postgres") return null;
@@ -1451,8 +1430,10 @@ async function readRunnerControls(repos: ControlPlaneRepositories, force = false
 }
 
 const SCHEDULED_ORDER_POLL_MS = 60_000;
+const SCHEDULED_ORDERS_JOB = "scheduled-orders";
 function runScheduledOrderTick(): void {
   if (runtimeAdmissionsHeld || scheduledOrderWork || provider !== "postgres" || canary) return;
+  jobRuns.started(SCHEDULED_ORDERS_JOB);
   scheduledOrderWork = (async () => {
     const repos = await ownerRepositories();
     if (!repos) return;
@@ -1461,13 +1442,16 @@ function runScheduledOrderTick(): void {
     for (const order of fired) {
       console.log(`  scheduled order ${order.id} (${order.orderType}) due ${order.occurrence}: ${order.ok ? "sent" : "refused by the gateway"}`);
     }
+    jobRuns.finished(SCHEDULED_ORDERS_JOB);
   })().catch(error => {
+    jobRuns.failed(SCHEDULED_ORDERS_JOB, error instanceof Error ? error.message : String(error));
     console.error(`  scheduled orders could not be checked (${error instanceof Error ? error.name : "error"}); the next tick tries again`);
   }).finally(() => { scheduledOrderWork = null; });
 }
 
 function startScheduledOrderClock(): void {
   if (runtimeAdmissionsHeld || scheduledOrderTimer !== null || provider !== "postgres" || canary) return;
+  jobRuns.register(SCHEDULED_ORDERS_JOB, SCHEDULED_ORDER_POLL_MS);
   runScheduledOrderTick();
   scheduledOrderTimer = setInterval(runScheduledOrderTick, SCHEDULED_ORDER_POLL_MS);
 }
@@ -1502,14 +1486,8 @@ function startStandingRuntimeClock(): void {
 
   ownerControlTimer = setInterval(() => {
     if (researchCycleActive && !canary && activeControlRead === null) {
-      activeControlRead = ownerSays().then(async says => {
+      activeControlRead = ownerSays().then(says => {
         if (says === "START_NOW") ownerWakePending = true;
-        const repos = await ownerRepositories(), child = researchCycleChild;
-        if (repos && child && !(await researchPlanningStates(repos,(await readRunnerControls(repos)).research)).length) {
-          researchStoppedByOwner = true;
-          await endOwnedProcessTree(child);
-          await honorStoppedHunts(repos,new Date().toISOString());
-        }
       }).catch(error => {
         console.error(`  active runner controls could not be applied: ${error instanceof Error ? error.message : String(error)}`);
       }).finally(() => { activeControlRead = null; });
@@ -1833,6 +1811,7 @@ async function ownerSays(): Promise<OwnerSays> {
   const pause = reading.runnerPause;
 
   if (pause.paused && pause.intent !== null) {
+    jobRuns.held(RESEARCH_JOB, `Paused by you in Admin since ${formatEastern(pause.intent.requestedAt)}.`);
     if (announcedPause !== pause.intent.intentId) {
       announcedPause = pause.intent.intentId;
       lastPauseBeatMs = 0;
@@ -2011,60 +1990,19 @@ async function holdWhilePaused(): Promise<{ readonly ownerIntentsUnreadable: boo
 
 // The breaker's first check writes this release's snapshot before anything can launch, including the standing clock a
 // release handoff reopens below.
+if (provider === "postgres" && !STAGING && !canary) jobRuns.register(JOB_BREAKER_JOB, JOB_BREAKER_INTERVAL_MS);
 await jobTransferTick();
 let handoffExitCode = await reconcileRuntimeReleaseAtBoundary();
 let cycle = 0;
 
-if (handoffExitCode === null) {
-console.log(
-  `pilot-runner · control plane ${provider}, interval ${INTERVAL_MIN} min, ` +
-    `${CYCLES === Infinity ? "running until stopped" : `${CYCLES} cycle(s)`}\n` +
-    `  singleton: ${PILOT_PROCESS_LEASE.host}:${PILOT_PROCESS_LEASE.port}\n` +
-    `  digest: ${DIGEST_DIR}`,
-);
-
-console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
-
-jobBreakerTimer = setInterval(() => { void jobTransferTick(); },JOB_BREAKER_INTERVAL_MS);
-jobBreakerTimer.unref();
-startStandingRuntimeClock();
-startAdminCopyClock();
-await publishConsole();
-
-while (cycle < CYCLES) {
-try {
-
-  const owner = await holdWhilePaused();
-
-
-  const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary();
-  if (wakeReleaseExit !== null) {
-    handoffExitCode = wakeReleaseExit;
-    break;
-  }
-  if (provider === "postgres" && !canary && !STAGING) {
-    const repos = await ownerRepositories();
-    if (repos && !(await researchPlanningStates(repos, (await readRunnerControls(repos)).research)).length) {
-      await honorStoppedHunts(repos,new Date().toISOString());
-      await publishConsole(true);
-      // The parent's control clock still sees a new Send; there is no research child to read data while stopped.
-      await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
-      continue;
-    }
-  }
-
-
-  if (!jobLaunchAllowed("research-cycle")) {
-    await pendingRestart.sleep(CONTROL_WAKE_POLL_MS);
-    continue;
-  }
-  cycle += 1;
+async function researchCycle(cycle: number, owner: { readonly ownerIntentsUnreadable: boolean }) {
   const startedAt = new Date().toISOString();
   console.log(
     `\npilot-runner · cycle ${cycle} started ${startedAt}` +
       (owner.ownerIntentsUnreadable ? " — the owner's intents could not be read, so its paid model lane is held closed" : ""),
   );
 
+  jobRuns.started(RESEARCH_JOB, startedAt);
   const leaseRecovered = await recoverExitedWindowHolder("research cycle");
   researchCycleActive = true;
   currentCycleErrors = "";
@@ -2085,18 +2023,14 @@ try {
     await cycleBeat;
   }).catch(async error => {
     currentCycleErrors = error instanceof Error ? error.message : "research child launch failed";
+    jobRuns.failed(RESEARCH_JOB, currentCycleErrors);
     await lastBeat({ code: null, signal: null });
     throw error;
   });
   await activeControlRead;
-  if (researchStoppedByOwner) {
-    researchStoppedByOwner = false;
-    const repos = await ownerRepositories(), current = await repos?.runnerHeartbeat.read(RUNNER_ID);
-    if (repos && current) await repos.runnerHeartbeat.compareAndSet(RUNNER_ID,current.revision,
-      {...current.value,lastCycleFinishedAt:new Date().toISOString(),lastCycleOk:null},new Date().toISOString());
-    console.log("Research stopped by the owner's Stop every hunt order; the next Send resumes retained work.");
-    continue;
-  }
+  if (result.ok) jobRuns.finished(RESEARCH_JOB);
+  else jobRuns.failed(RESEARCH_JOB, result.circuit ? `${result.circuit.provider}: ${result.circuit.condition}`
+    : nativeAbortLine(result.stderrTail) ?? result.stderrTail.split("\n").filter(Boolean).at(-1) ?? `exit ${result.exitCode ?? result.signal}`);
   await lastBeat({ code: result.exitCode, signal: result.signal });
   if (result.circuit) {
     const c = result.circuit;
@@ -2110,16 +2044,7 @@ try {
     console.error(`  ${headline}`);
     console.log(`  digest: ${delivered.where}`);
 
-    await writeFailedCycleBeat(startedAt);
-    const releaseExit = await reconcileRuntimeReleaseAtBoundary();
-    if (releaseExit !== null) {
-      handoffExitCode = releaseExit;
-      break;
-    }
-    if (cycle >= CYCLES) break;
-
-    await sleepUnlessRunNow(INTERVAL_MIN * 60_000);
-    continue;
+    return { ok: false, waitMs: async () => INTERVAL_MIN * 60_000 };
   }
   let record: RunRecord = {};
   if (result.recordPath !== null && existsSync(result.recordPath)) {
@@ -2188,27 +2113,47 @@ try {
   console.log(`  digest: ${delivered.where}`);
   console.log(`  ${headline}`);
 
-  if (!result.ok) await writeFailedCycleBeat(startedAt);
-
   await publishConsole();
-
-  const releaseExit = await reconcileRuntimeReleaseAtBoundary();
-  if (releaseExit !== null) {
-    handoffExitCode = releaseExit;
-    break;
-  }
-
-  if (cycle >= CYCLES) break;
-  const waitMs = await nextCycleWaitMs(result.ok);
-  await sleepUnlessRunNow(result.failedAtMs === undefined ? waitMs : Math.max(0, waitMs - (Date.now() - result.failedAtMs)));
-} catch (error) {
-  if (!isControlPlaneRequestTimeout(error)) throw error;
-  researchCycleActive = false;
-  researchCycleChild = null;
-  console.error(controlPlaneTimeoutLine(error));
-  await sleepUnlessRunNow(POLL_MS);
+  return { ok: result.ok, waitMs: async () => {
+    const waitMs = await nextCycleWaitMs(result.ok);
+    return result.failedAtMs === undefined ? waitMs : Math.max(0, waitMs - (Date.now() - result.failedAtMs));
+  } };
 }
-}
+
+if (handoffExitCode === null) {
+console.log(
+  `pilot-runner · control plane ${provider}, interval ${INTERVAL_MIN} min, ` +
+    `${CYCLES === Infinity ? "running until stopped" : `${CYCLES} cycle(s)`}\n` +
+    `  singleton: ${PILOT_PROCESS_LEASE.host}:${PILOT_PROCESS_LEASE.port}\n` +
+    `  digest: ${DIGEST_DIR}`,
+);
+
+console.log("\npilot-runner · publishing the console before the first cycle (the runner may have just come up on new code)");
+
+jobBreakerTimer = setInterval(() => { void jobTransferTick(); },JOB_BREAKER_INTERVAL_MS);
+jobBreakerTimer.unref();
+startStandingRuntimeClock();
+startAdminCopyClock();
+await publishConsole();
+
+const loop = await runResearchLoop({
+  cycles: CYCLES,
+  waitForOwner: holdWhilePaused,
+  releaseExit: reconcileRuntimeReleaseAtBoundary,
+  // jobLaunchAllowed records the breaker's hold on the heartbeat, where the line keeper names it.
+  hold: () => jobLaunchAllowed(RESEARCH_JOB) ? null : BREAKER_HOLD,
+  held: () => pendingRestart.sleep(CONTROL_WAKE_POLL_MS),
+  cycle: (n, owner) => { cycle = n; return researchCycle(n, owner); },
+  sleep: sleepUnlessRunNow,
+  recover: async error => {
+    if (!isControlPlaneRequestTimeout(error)) throw error;
+    researchCycleActive = false;
+    researchCycleChild = null;
+    console.error(controlPlaneTimeoutLine(error));
+    await sleepUnlessRunNow(POLL_MS);
+  },
+});
+handoffExitCode = loop.exitCode;
 }
 
 if (jobBreakerTimer !== null) clearInterval(jobBreakerTimer);

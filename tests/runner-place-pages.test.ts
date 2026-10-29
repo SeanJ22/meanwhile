@@ -9,6 +9,7 @@ import { IndependentRuntimeLaneScheduler, passDeadlineFromEnv, withPassDeadline 
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
 import { admitJobLaunch, JOB_BREAKER_PATH_ENV, saveBreakerSnapshot } from "../lib/control-plane/job-breaker-local.ts";
+import { JobRunBook } from "../lib/control-plane/job-runs.ts";
 import { ROUTINE_ENTRY_PEAK_MIB, WORKER_MEMORY_HEADROOM_MIB, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { PLACE_PACKAGE_SQL } from "../lib/reader/place-builder.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, PLACE_PAGE_TURN_LINE,
@@ -48,6 +49,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
   const memory = routineProcessSlots({ availableBytes: () => 64 * 1024 * MIB, admissionsOpen: () => !context.runtimeAdmissionsHeld });
   const context = createContext({
     provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false, admitJobLaunch,
+    jobRuns: new JobRunBook(), BREAKER_HOLD: "held",
     pendingRestart: new PendingRestart(), standingBeat: async () => {}, researchCycleActive: false, researchCycleChild: null,
     drainHunterLane: () => {}, drainMemberLane: () => {},
     TS_CHILD: ["--experimental-strip-types"], CODE_ROOT: process.cwd(), process,

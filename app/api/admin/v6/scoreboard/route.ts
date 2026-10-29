@@ -32,6 +32,7 @@ import { readDoorNumbers, readRecentPostingToLive } from "@/lib/control-plane/ad
 import { readLineReport } from "@/lib/control-plane/line-keeper/report.ts";
 import { readFlowWeek } from "@/lib/control-plane/admin-view/flow-read.ts";
 import { keeperStatus } from "@/lib/control-plane/line-keeper/model.ts";
+import { readRunnerJobs, stalledJobs } from "@/lib/control-plane/line-keeper/jobs.ts";
 import { readVitalSigns } from "@/lib/control-plane/admin-view/vital-signs-read.ts";
 import { readFactStore } from "@/lib/facts/admin-read.ts";
 import { readerQuery } from "@/lib/civic-data/promoted-reader-query.ts";
@@ -54,14 +55,15 @@ async function get(request: NextRequest) {
     const now = new Date(observedAt);
     if(request.nextUrl.searchParams.get('reading')==='hourly'){
       const url=controlPlaneUrlFromEnv();
-      const [keeper,vital]=await Promise.all([
+      const [keeper,vital,stalled]=await Promise.all([
         url?attempt(()=>readLineReport(databaseReadOnlySql(url),undefined,{includeCounts:false})):null,
         url?attempt(()=>readVitalSigns(databaseReadOnlySql(url),observedAt)):null,
+        url?attempt(async()=>{const read=await readRunnerJobs(databaseReadOnlySql(url));return stalledJobs(read.jobs,read.beatAt,observedAt).map(job=>job.says);}):null,
       ]);
       return {contract:'admin-v6/scoreboard@1',scope:request.nextUrl.searchParams.get('scope')??'us',revision:`line-keeper:${keeper?.checkedAt??'unavailable'}`,asOf:observedAt,
-        data:buildScoreboard({lineKeeper:keeper,observedAt,vital,factStore:null,places:null,placesUnread:0,orders:null,publication:null,shutDoors:null,returning:null,
+        data:{...buildScoreboard({lineKeeper:keeper,observedAt,vital,factStore:null,places:null,placesUnread:0,orders:null,publication:null,shutDoors:null,returning:null,
           learning:{trends:[],readings:[],notMeasured:[]},doors:null,
-          gates:null,readiness:readinessCounts({})}),
+          gates:null,readiness:readinessCounts({})}),stalledJobs:stalled??["The runner’s job finish times could not be read."]},
         missingParts:keeper?[]:[keeperStatus(null,observedAt)]};
     }
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });

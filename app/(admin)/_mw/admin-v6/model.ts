@@ -682,6 +682,8 @@ export interface ScoreboardVitalHour {
 
 export interface ScoreboardView {
   readonly lineKeeper?: string;
+  /** The line keeper's flags: each runner job that has not finished a run within two of its own intervals. */
+  readonly stalledJobs?: readonly string[];
   readonly rows: readonly ScoreboardRow[];
   readonly byPlace: readonly ScoreboardPlaceRow[];
   readonly byFamily: readonly ScoreboardFamilyRow[];

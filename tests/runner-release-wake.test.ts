@@ -11,6 +11,7 @@ import ts from "typescript";
 import { DEFAULT_HANG_KILL_MS } from "../scripts/runner-hang-watchdog.mts";
 import { RUNTIME_RELEASE_MAX_BLOCKING_MS } from "../lib/ops/runtime-release-handoff.ts";
 import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
+import { runResearchLoop } from "../lib/control-plane/scheduler/research-loop.ts";
 
 const source = readFileSync(new URL("../scripts/pilot-runner.mts", import.meta.url), "utf8");
 const { stripTypeScriptTypes } = nodeModule as typeof nodeModule & {
@@ -43,9 +44,7 @@ test("failed research rounds retry within ten minutes on every ordinary fallback
     assert.equal(await nextWait(overrides)(true), 60 * 60_000);
   }
   assert.equal(await nextWait({ INTERVAL_MIN: 5 })(false), 5 * 60_000);
-  const failedBeat = source.match(/async function writeFailedCycleBeat\([\s\S]*?\n\}/)?.[0];
-  assert.ok(failedBeat);
-  assert.match(failedBeat, /intervalMin: Math\.min\(INTERVAL_MIN, 10\)/);
+  assert.match(source, /exit\.code === 0 \? INTERVAL_MIN : Math\.min\(INTERVAL_MIN, 10\)/);
 });
 
 test("failed round continuation caps a long lifetime delay and retains shorter waits", async () => {
@@ -72,18 +71,16 @@ test("a paid pause or a stopped hunt clears the prior directed-hunt reason befor
   }
 });
 
-test("a wake reconciles the deployed release before admitting another research cycle", () => {
-  const loop = source.slice(source.indexOf("while (cycle < CYCLES) {"));
-  const held = loop.indexOf("const owner = await holdWhilePaused();");
-  const reconciled = loop.indexOf("const wakeReleaseExit = await reconcileRuntimeReleaseAtBoundary();");
-  const releaseExit = loop.indexOf("if (wakeReleaseExit !== null) {", reconciled);
-  const breakOnRelease = loop.indexOf("break;", releaseExit);
-  const incremented = loop.indexOf("cycle += 1;", held);
-  const child = loop.indexOf("const result = await runOneCycle(owner)", incremented);
-  const slept = loop.indexOf("await sleepUnlessRunNow(result.failedAtMs", child);
-  assert.ok(held >= 0 && held < reconciled);
-  assert.ok(reconciled < releaseExit && releaseExit < breakOnRelease && breakOnRelease < incremented);
-  assert.ok(incremented < child && child < slept);
+test("a wake reconciles the deployed release before each research cycle, and a failed cycle is followed by the next", async () => {
+  assert.match(source, /waitForOwner: holdWhilePaused,\s*releaseExit: reconcileRuntimeReleaseAtBoundary,/);
+  const steps: string[] = [];
+  const exits = [null, null, 0];
+  const result = await runResearchLoop({ cycles: Infinity, waitForOwner: async () => { steps.push("owner"); },
+    releaseExit: async () => { steps.push("release"); return exits.shift() ?? null; }, hold: () => null, held: async () => undefined,
+    cycle: async () => { steps.push("cycle"); return { ok: false, waitMs: async () => 600_000 }; },
+    sleep: async ms => { steps.push(`sleep ${ms}`); }, recover: async error => { throw error; } });
+  assert.deepEqual(steps, ["owner", "release", "cycle", "release", "sleep 600000", "owner", "release"]);
+  assert.deepEqual(result, { cycles: 1, exitCode: 0 });
 });
 
 test("both release and shutdown bound coordination and idle waits, and never await a timed-out drain again", () => {

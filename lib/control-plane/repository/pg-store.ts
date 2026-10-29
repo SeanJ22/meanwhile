@@ -5,8 +5,7 @@ import { checkedValueQuery, hasValueVersion, valueVersionSql } from "../../db/va
 import { MANUAL_SOURCE_HINTS_SQL } from "./manual-source-index.ts";
 import {MANUAL_METHOD_POOL_SQL} from "./manual-method-index.ts";
 import { PLANNING_STATES, PLANNING_SUMMARY_SQL, PLANNING_FINISHED_TIMES_SQL, planningStateOf, planningStateOrder } from "../scheduler/state-planning.ts";
-import { applyHuntOrders, type HuntOrder, type HuntOrderRepository } from "../hunt-orders.ts";
-import { parseDispatchTarget } from "../scheduler/dispatch-target.ts";
+import type { HuntOrder, HuntOrderRepository } from "../hunt-orders.ts";
 import { pgAdminConfigRepository } from "./admin-config.ts";
 import { archivedAggregateRepository, createPgDispatchState, workItemStateFilter } from "./dispatch-state.ts";
 import { pgSpendRepository } from "./model-charges.ts";
@@ -1504,45 +1503,6 @@ export async function readPlanningIntents(repos:ControlPlaneRepositories,state:s
   const sql=placeReadConnection(repos);
   if(!sql)return (await repos.researchIntents.read("level-1")).filter(record=>record.kind!=="INTENT" || record.action!=="DISPATCH" || stoppedAt===null || record.requestedAt>stoppedAt);
   return pgPlanningIntents(sql,state,stoppedAt);
-}
-
-/** Honor the existing Stop every hunt order before loading any research history. */
-export async function researchPlanningStates(repos: ControlPlaneRepositories, intents: readonly ResearchIntent[], states: readonly string[] = PLANNING_STATES): Promise<string[]> {
-  const sql = placeReadConnection(repos);
-  let stops: Record<string, string>;
-  let scopes: { state: string; at: string }[];
-  if (sql) {
-    const [row] = await boundedRunner(sql, "cp_hunt_orders", CONTROL_PLANE_REQUEST_BOUNDS_MS)("researchStopControls", "POINT", `SELECT
-      coalesce((SELECT jsonb_object_agg(state,at) FROM (SELECT DISTINCT ON(value->>'state') value->>'state' AS state,value->>'requestedAt' AS at
-        FROM cp_hunt_orders WHERE value->>'scopeKey' IS NULL ORDER BY value->>'state',value->>'requestedAt' DESC,id DESC) latest),'{}'::jsonb) AS stops,
-      coalesce((SELECT jsonb_agg(jsonb_build_object('state',lower(value#>>'{geography,stateAbbr}'),'at',value->>'decidedAt'))
-        FROM cp_admin_expansion_scopes WHERE config_id='current' AND (value->>'budgetUsd')::numeric>0),'[]'::jsonb) AS scopes`) as { stops: Record<string,string>; scopes: {state:string;at:string}[] }[];
-    ({stops,scopes}=row);
-  } else {
-    stops = {};
-    for (const row of await repos.huntOrders.list()) if (row.value.scopeKey === null && row.value.requestedAt > (stops[row.value.state] ?? "")) stops[row.value.state] = row.value.requestedAt;
-    scopes = (await repos.adminConfig.read("current", { expansionScopes: true }))?.value.expansionScopes
-      ?.filter(scope => scope.budgetUsd > 0).map(scope => ({ state: scope.geography.stateAbbr.toLowerCase(), at: scope.decidedAt })) ?? [];
-  }
-  const cancelled = new Set(intents.flatMap(row => row.kind === "INTENT" && row.action === "CANCEL_DISPATCH" && row.note ? [row.note] : []));
-  const dispatches = intents.filter((row): row is Extract<ResearchIntent,{kind:"INTENT"}> => row.kind === "INTENT")
-    .filter(row=>row.action === "DISPATCH" && !cancelled.has(row.intentId));
-  const active = states.filter(state => state !== "system" && (!stops[state] || scopes.some(scope => scope.state === state && scope.at > stops[state]) ||
-    dispatches.some(row => { const target = parseDispatchTarget(row.note ?? ""); return row.requestedAt > stops[state] && (!target.states.length || target.states.includes(state)); })));
-  if (states.includes("system") && (active.length > 0 || !Object.keys(stops).length)) active.push("system");
-  return active;
-}
-
-/** Apply an already-requested stop once in the parent, without launching a research cycle to acknowledge it. */
-export async function honorStoppedHunts(repos: ControlPlaneRepositories, now: string): Promise<void> {
-  const sql = placeReadConnection(repos), connection = controlPlaneUrlFromEnv();
-  const states = sql ? (await boundedRunner(sql,"cp_hunt_orders",CONTROL_PLANE_REQUEST_BOUNDS_MS)("pendingStopStates","PAGE",
-    "SELECT DISTINCT value->>'state' AS state FROM cp_hunt_orders WHERE value->>'confirmedAt' IS NULL ORDER BY state") as {state:string}[]).map(row=>row.state)
-    : [...new Set((await repos.huntOrders.list()).filter(row=>row.value.confirmedAt===null).map(row=>row.value.state))];
-  for (const state of states) {
-    const scoped = sql && connection ? await createPgRepositories(connection,now,{skipBootstrap:true,planningState:state}) : repos;
-    await applyHuntOrders(scoped,state,now);
-  }
 }
 
 export async function readPlanningStateOrder(repos: ControlPlaneRepositories, states: readonly string[]): Promise<string[]> {

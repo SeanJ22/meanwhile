@@ -277,31 +277,30 @@ test("isolation: the lane says it is working only while workers move, with new t
   assert.match(lines[1]!, /1 worker\(s\) running; 2 step\(s\) and 1 task\(s\) finished since the lane started; 1 stuck worker\(s\) ended alone$/);
 });
 
-test("isolation: the lane hands a running wave the round's newer queue once, and never re-runs it as a wave", async () => {
+test("isolation: the lane hands a running wave the hunts claimed meanwhile once, and never runs them as a wave of their own", async () => {
   const T0 = Date.parse("2026-10-06T05:00:00.000Z");
   let now = T0;
-  const q1: HunterQueue = { format: 1, writtenAt: "q1", taskIds: ["a"], plainTaskIds: [] };
-  const q2: HunterQueue = { format: 1, writtenAt: "q2", taskIds: ["b"], plainTaskIds: [] };
-  let written: HunterQueue = q1;
+  const batches: (HunterQueue | null)[] = [{ claimedAt: "q1", taskIds: ["a"], plainTaskIds: [] }, null, { claimedAt: "q2", taskIds: ["b"], plainTaskIds: [] }];
   const waves: string[] = [];
   const absorbed: (string | null)[] = [];
   const armed = { closed: null, armedAt: new Date(T0).toISOString(), fleetSafety: null, guards: { openJobs: () => [] } as never,
     arming: null, spendHolds: { settle: async () => null } as never, ceilingUsd: 5, discoverySearchOn: false } as ArmedHunterLane;
   const log: string[] = [];
+  const settle = () => new Promise(done => setImmediate(done));
   const lane = hunterLane({
     clock: () => now,
-    sleep: async ms => { if (ms >= 5 * 60_000) return new Promise<void>(() => {}); now += ms; await new Promise(done => setImmediate(done)); },
+    sleep: async ms => { if (ms >= 5 * 60_000) return new Promise<void>(() => {}); now += ms; await settle(); },
     arm: async () => armed,
-    readQueue: () => written,
+    selectState: async () => "az",
+    claim: async () => batches.shift() ?? null,
+    endWave: async () => {},
     runWave: async ({ queue, absorb }) => {
-      waves.push(queue.writtenAt);
-      absorbed.push(absorb()?.writtenAt ?? null);
-      written = q2;
-      absorbed.push(absorb()?.writtenAt ?? null);
-      now += 31_000;
-      absorbed.push(absorb()?.writtenAt ?? null);
-      now += 31_000;
-      absorbed.push(absorb()?.writtenAt ?? null);
+      waves.push(queue.claimedAt);
+      absorbed.push(absorb()?.claimedAt ?? null);
+      now += 31_000; absorb(); await settle();
+      absorbed.push(absorb()?.claimedAt ?? null);
+      now += 31_000; absorb(); await settle();
+      absorbed.push(absorb()?.claimedAt ?? null);
       return [];
     },
     stopRequested: () => false,
@@ -309,9 +308,9 @@ test("isolation: the lane hands a running wave the round's newer queue once, and
     lifeMs: 10 * 60_000,
   });
   await lane.run();
-  assert.deepEqual(absorbed, [null, null, "q2", null], "read at most every idle-read period, and each newer queue once");
-  assert.deepEqual(waves, ["q1"], "the joined queue is not worked again as its own wave");
-  assert.ok(log.some(line => /the queue written q2 joins the running wave: 1 task\(s\), 0 plain-code/.test(line)));
+  assert.deepEqual(absorbed, [null, null, "q2"], "claimed at most every idle-read period, and each claim joins once");
+  assert.deepEqual(waves, ["q1"], "the joined tasks are not worked again as their own wave");
+  assert.ok(log.some(line => /1 more task\(s\) from the work list join the running wave, 0 plain-code/.test(line)));
 });
 
 test("isolation: the runner's heartbeat carries the host's memory, its process tree, the reservations and how many workers fit", async () => {

@@ -67,6 +67,15 @@ export interface WorkRow {
 }
 
 const TIER_RANK = (tier: WorkTier): number => WORK_TIERS.indexOf(tier);
+const IN_TIER_ORDER = (a: WorkRow, b: WorkRow): number => TIER_RANK(a.tier) - TIER_RANK(b.tier) || b.priority - a.priority || a.dueAt.localeCompare(b.dueAt) || a.id.localeCompare(b.id);
+
+/** What a claim may be narrowed to. */
+export interface ClaimWhere {
+  readonly subjectPrefix?: string;
+  readonly state?: string;
+  /** Only rows a plain-code worker can do: no paid model is needed. */
+  readonly plainOnly?: boolean;
+}
 
 /** The work table, its claim indexes and its waiting counts. Applied by bootstrap and by the SPN-01B migration. */
 export const WORK_DDL = [
@@ -105,9 +114,11 @@ export const WORK_DDL = [
     CHECK ((lease_until IS NULL) = (lease_owner IS NULL))
   )`,
   `CREATE INDEX IF NOT EXISTS work_claim ON work (kind, work_tier_rank(tier), priority DESC, due_at, id) WHERE status = 'waiting'`,
+  `CREATE INDEX IF NOT EXISTS work_claim_state ON work (kind, state, work_tier_rank(tier), priority DESC, due_at, id) WHERE status = 'waiting'`,
   `CREATE INDEX IF NOT EXISTS work_expired ON work (lease_until, id) WHERE status = 'taken'`,
   `CREATE UNIQUE INDEX IF NOT EXISTS work_series_live ON work (series) WHERE series IS NOT NULL AND status IN ('waiting','taken')`,
   `CREATE INDEX IF NOT EXISTS work_repeat_due ON work (done_at, id) WHERE status = 'done' AND repeat_ms IS NOT NULL`,
+  `CREATE INDEX IF NOT EXISTS work_done_old ON work (done_at, id) WHERE status = 'done' AND repeat_ms IS NULL`,
   `CREATE INDEX IF NOT EXISTS work_reader_live ON work (priority DESC, received_at) WHERE tier = 'reader' AND status IN ('waiting','taken')`,
   `CREATE INDEX IF NOT EXISTS work_oldest_waiting ON work (state, kind, due_at) WHERE status = 'waiting'`,
   `CREATE INDEX IF NOT EXISTS work_oldest_refused ON work (state, kind, due_at) WHERE status = 'refused'`,
@@ -218,6 +229,8 @@ const COLUMNS = "id,kind,tier,priority,state,place_id,subject_id,field,url,repor
 export const CLAIM_WORK_SQL = `WITH selected AS MATERIALIZED (
   SELECT id FROM work WHERE kind = $1 AND status = 'waiting' AND due_at <= $2::timestamptz
     AND ($6::text IS NULL OR starts_with(subject_id,$6))
+    AND ($7::text IS NULL OR state = $7)
+    AND ($8::boolean IS NOT TRUE OR value->>'plain' = 'true')
   ORDER BY work_tier_rank(tier), priority DESC, due_at, id FOR UPDATE SKIP LOCKED LIMIT $3
 ) UPDATE work w SET status = 'taken', lease_owner = $4,
     lease_until = $2::timestamptz + $5::int * interval '1 millisecond',
@@ -278,16 +291,32 @@ const SOONER_SQL = `INSERT INTO work (${COLUMNS})
     origin = work.origin || jsonb_build_object('presses', coalesce((work.origin->>'presses')::int,0) + 1)
   RETURNING *`;
 
+const ORDER_SQL = `INSERT INTO work (id,kind,tier,priority,state,place_id,subject_id,reports,due_at,received_at,origin,steps)
+  VALUES ($1,'order','order',0,$2,$3,$4,jsonb_build_array($5::jsonb),$6::timestamptz,$6::timestamptz,$7::jsonb,$8::jsonb) ON CONFLICT (id) DO NOTHING`;
+/** A step is stored once; reaching Done also closes the row and keeps what the order finally said. */
+const ADVANCE_ORDER_SQL = `UPDATE work SET steps = steps || jsonb_build_array(jsonb_build_object('step',$2::text,'at',$3::timestamptz)),
+    status = CASE WHEN $2 = 'Done' THEN 'done' ELSE status END,
+    done_at = CASE WHEN $2 = 'Done' THEN $3::timestamptz ELSE done_at END,
+    done_times = CASE WHEN $2 = 'Done' THEN array_append(done_times,$3::timestamptz) ELSE done_times END,
+    value = CASE WHEN $2 = 'Done' THEN $4::jsonb ELSE value END
+  WHERE id = $1 AND kind = 'order' AND NOT steps @> jsonb_build_array(jsonb_build_object('step',$2::text)) RETURNING id`;
+/** Finished rows are kept for a time; an order's row is kept longer, since Admin's history reads it. */
+const RETIRE_WORK_SQL = `WITH old AS (
+  SELECT id FROM work WHERE status = 'done' AND repeat_ms IS NULL
+    AND done_at < CASE WHEN kind = 'order' THEN $2::timestamptz ELSE $1::timestamptz END ORDER BY done_at LIMIT $3
+) DELETE FROM work w USING old WHERE w.id = old.id RETURNING w.id`;
+
 /** A finished job that repeats gets its next row when it is due, so the list holds only what is owed now. */
 const SPAWN_WORK_SQL = `WITH due AS MATERIALIZED (
-  SELECT id, repeat_ms FROM work WHERE status = 'done' AND repeat_ms IS NOT NULL AND done_at + repeat_ms * interval '1 millisecond' <= $1::timestamptz
+  SELECT id, repeat_ms, series = ANY($3::text[]) AS asked FROM work WHERE status = 'done' AND repeat_ms IS NOT NULL
+    AND (done_at + repeat_ms * interval '1 millisecond' <= $1::timestamptz OR series = ANY($3::text[]))
   ORDER BY done_at, id FOR UPDATE SKIP LOCKED LIMIT $2
 ), spent AS (
-  UPDATE work w SET repeat_ms = NULL FROM due WHERE w.id = due.id RETURNING w.*, due.repeat_ms AS cadence
+  UPDATE work w SET repeat_ms = NULL FROM due WHERE w.id = due.id RETURNING w.*, due.repeat_ms AS cadence, due.asked
 )
 INSERT INTO work (${COLUMNS})
 SELECT 'work-' || md5(s.id || ':' || s.done_at::text), s.kind, s.tier, s.priority, s.state, s.place_id, s.subject_id, s.field, s.url, s.reports, s.sources,
-  s.value, s.quote, s.done_at + s.cadence * interval '1 millisecond', $1::timestamptz, s.origin,
+  s.value, s.quote, CASE WHEN s.asked THEN $1::timestamptz ELSE s.done_at + s.cadence * interval '1 millisecond' END, $1::timestamptz, s.origin,
   ${RECEIVED_STEP("s.tier", "$1::timestamptz")}, coalesce(s.series, s.id)
 FROM spent s ON CONFLICT DO NOTHING RETURNING id`;
 
@@ -305,6 +334,9 @@ export function workList(query: Query, options: { readonly owner: string; readon
     if (inputs.length > 1_000) throw new Error("WORK_INVALID_BATCH");
     return JSON.stringify(inputs.map(input => prepared(input, at)));
   };
+  const release = async (claim: WorkRow): Promise<boolean> => (await query(`UPDATE work SET status = 'waiting', lease_owner = NULL, lease_until = NULL,
+    lease_version = NULL, attempts = greatest(attempts - 1, 0) WHERE id = $1 AND lease_owner = $2 AND status = 'taken' RETURNING id`,
+  [claim.id, claim.leaseOwner])).length === 1;
   return {
     async add(input: WorkInput): Promise<WorkRow> {
       if (input.series !== undefined) throw new Error("WORK_INVALID_INPUT");
@@ -336,16 +368,58 @@ export function workList(query: Query, options: { readonly owner: string; readon
         one.subject_id, canonicalJson(one.reports[0]), at, canonicalJson(origin), series]);
       return row(saved!);
     },
+    /** An order Sean gave is on the list from the moment it is accepted; replaying it changes nothing. */
+    async order(input: { readonly receiptId: string; readonly label: string; readonly placeId?: string; readonly state?: string; readonly at: string }): Promise<void> {
+      await query(ORDER_SQL, [workId({ kind: "order", subjectId: input.receiptId }), (input.state ?? "US").toUpperCase(), input.placeId ?? "ocd-division/country:us",
+        input.receiptId, canonicalJson({ source: "Admin order", label: input.label }), input.at, canonicalJson({ from: "order", orderId: input.receiptId }),
+        canonicalJson([{ step: "Received", at: input.at }, { step: "Accepted", at: input.at }])]);
+    },
+    /** The order reaches a step; one it has already reached is left alone. */
+    async advanceOrder(receiptId: string, step: OrderStep["step"], at: string, final: unknown = null): Promise<boolean> {
+      return (await query(ADVANCE_ORDER_SQL, [workId({ kind: "order", subjectId: receiptId }), step, at, canonicalJson(final)])).length === 1;
+    },
+    /** What the order's row holds: the steps it has reached, and what it finally said once done. */
+    async readOrder(receiptId: string): Promise<{ readonly steps: readonly OrderStep[]; readonly final: unknown; readonly done: boolean } | null> {
+      const [saved] = await query("SELECT steps,value,status FROM work WHERE id = $1 AND kind = 'order'", [workId({ kind: "order", subjectId: receiptId })]);
+      return saved ? { steps: saved.steps as OrderStep[], final: saved.value, done: saved.status === "done" } : null;
+    },
+    /** Finished rows older than their keeping time are deleted, oldest first. */
+    async retire(input: { readonly rowsBefore: string; readonly ordersBefore: string; readonly limit?: number }): Promise<number> {
+      return (await query(RETIRE_WORK_SQL, [input.rowsBefore, input.ordersBefore, input.limit ?? 5_000])).length;
+    },
     /** Makes the next row of every finished job that has come due again. */
     async spawnDue(limit = 1_000): Promise<number> {
-      return (await query(SPAWN_WORK_SQL, [timestamp(), limit])).length;
+      return (await query(SPAWN_WORK_SQL, [timestamp(), limit, []])).length;
     },
-    async claim(kind: WorkKind, n: number, subjectPrefix?: string): Promise<readonly WorkRow[]> {
+    /** Finished jobs in these series that were waiting to repeat are made again now, because something new gave them a reason. */
+    async again(series: readonly string[]): Promise<number> {
+      return series.length ? (await query(SPAWN_WORK_SQL, [timestamp(), series.length, series])).length : 0;
+    },
+    /** The next rows of these kinds in tier order. A state, or only the rows that need no paid model, can be asked for. */
+    async claim(kinds: WorkKind | readonly WorkKind[], n: number, narrowed: string | ClaimWhere = {}): Promise<readonly WorkRow[]> {
       if (!Number.isSafeInteger(n) || n < 1 || n > 1_000) throw new Error("WORK_INVALID_BATCH");
+      const where: ClaimWhere = typeof narrowed === "string" ? { subjectPrefix: narrowed } : narrowed;
       await recover();
-      return (await query(CLAIM_WORK_SQL, [kind, timestamp(), n, `${options.owner}:${randomUUID()}`, leaseMs, subjectPrefix ?? null])).map(row)
-        .sort((a, b) => TIER_RANK(a.tier) - TIER_RANK(b.tier) || b.priority - a.priority || a.dueAt.localeCompare(b.dueAt) || a.id.localeCompare(b.id));
+      const owner = `${options.owner}:${randomUUID()}`, at = timestamp();
+      const taken: WorkRow[] = [];
+      for (const kind of typeof kinds === "string" ? [kinds] : kinds) {
+        taken.push(...(await query(CLAIM_WORK_SQL, [kind, at, n, owner, leaseMs, where.subjectPrefix ?? null, where.state?.toUpperCase() ?? null,
+          where.plainOnly ?? null])).map(row));
+      }
+      taken.sort(IN_TIER_ORDER);
+      for (const extra of taken.splice(n)) await release(extra);
+      return taken;
     },
+    /** Whether a claim of these kinds would find a row: one waiting and due, or one whose lease has run out. */
+    async ready(kinds: readonly WorkKind[], where: ClaimWhere = {}): Promise<boolean> {
+      const at = timestamp();
+      return (await query(`SELECT 1 AS ready FROM work WHERE kind = ANY($1::text[]) AND status = 'waiting' AND due_at <= $2::timestamptz
+          AND ($3::text IS NULL OR state = $3) AND ($4::boolean IS NOT TRUE OR value->>'plain' = 'true')
+        UNION ALL SELECT 1 FROM work WHERE kind = ANY($1::text[]) AND status = 'taken' AND lease_until <= $2::timestamptz AND ($3::text IS NULL OR state = $3) LIMIT 1`,
+      [kinds, at, where.state?.toUpperCase() ?? null, where.plainOnly ?? null])).length > 0;
+    },
+    /** A claimed row goes back to waiting as if it had never been taken. */
+    release,
     recover,
     async renew(claim: WorkRow): Promise<boolean> {
       return (await query(`UPDATE work SET lease_until=$3::timestamptz+$4::int*interval '1 millisecond'

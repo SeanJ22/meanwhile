@@ -18,6 +18,7 @@ import { FIX_MAP_DDL } from "../../method/fix-map.ts";
 import { WEBSITE_PACING_DDL } from "../website-pacing.ts";
 import { MANUAL_ORDER_INDEXES } from "./field-manual-sql.ts";
 import { SHARED_WORK_DDL } from "./migrations/RB-A1.ts";
+import { KEYS_DDL } from "../../core/keys-store.ts";
 
 export const BOOTSTRAP_VERSION = 34;
 export const CP_MIGRATIONS_DDL = `CREATE TABLE IF NOT EXISTS cp_migrations (
@@ -75,6 +76,7 @@ export const APPEND_ONLY_LOGS = [
 ] as const;
 
 export const DECLARED_TABLES: readonly string[] = [
+  "cp_keys",
   "cp_control_counts",
   "cp_owner_assignment_rows",
   "cp_owner_cost_refs",
@@ -497,6 +499,7 @@ export const CONTROL_READS_EXPAND_DDL: readonly string[] = [
 ];
 
 export const BOOTSTRAP_DDL: readonly string[] = [
+  KEYS_DDL,
   `CREATE TABLE IF NOT EXISTS cp_schema_version (
      singleton   boolean PRIMARY KEY DEFAULT true CHECK (singleton),
      version     integer NOT NULL,

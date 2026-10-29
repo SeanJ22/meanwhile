@@ -69,6 +69,11 @@
       "id": "RB-A9_expand",
       "phase": "expand",
       "hash": "fe8925eac21c924cc0a884f31ff37e78ec440a65aa4989457ffdb4291eaf4872"
+    },
+    {
+      "id": "KB-01_expand",
+      "phase": "expand",
+      "hash": "5adc41764e5ac5afa8e8e4a532a6195d5615b36444e55b6a6cf4e12c45aa2b3a"
     }
   ]
 }

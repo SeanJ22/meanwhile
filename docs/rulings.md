@@ -24,6 +24,8 @@ To show what that means, a resident sees, among other things:
 
 **Ask answers every question.** It answers from Meanwhile's data with sources when we hold the answer, and otherwise from the AI with a plain label saying so. Every question we can't answer from our data becomes acquisition work automatically and appears in the daily brief.
 
+**Work order.** Clock work from §4 comes first, then Sean's orders, then reader requests, then the least-complete places. A reader who asks for something we don't have, by clicking "Want us to get this sooner?" or asking Ask, moves that blank up on their own, with no approval, and the demand shows in Admin.
+
 Everything comes from sources a reader can follow, official ones replacing other values wherever they exist, shows when it was last checked, and stays current without anyone touching it. Where something is not covered yet, the page says so plainly, so a blank never reads as "nothing here." Every plan works backward from this picture. How information gets into the site is a means to it, never the goal. Every other section of this document serves this one.
 
 1. **Every hunt starts from the place.** Resolve every division the place touches, including ZIPs split across districts. List everything a reader there is owed from the picture above: every seat and who holds it, every body with its members, contact, calendar and decisions, every funding record, every contest on the ballot, every deadline. Fill it first from national sources, including but not limited to Congress, Census, Open States, FEC, the Polarization Research Lab and state election offices, and from everything already held for those places, whichever job, ZIP or pipeline captured it. Send agents only for what is still blank. A fact researched once for a county, city or district serves every ZIP it covers.
@@ -86,9 +88,9 @@ Before escalating a retrieval blocker, challenge it with another appropriate met
 
 1. Free code runs everywhere, all the time. Plain code reads every source and API we hold, for every place, on a schedule, and drops what it gets into the box. Nothing waits for a Send, a mission or a paid budget.
 2. Hunters go after what free code doesn't get. Before going anywhere, a hunter checks what the box already holds for that place, and what has worked in that state and in states whose governments are built the same way. Hunters drop every finding in the box and go straight back out. Paid hunters work where Sean points the money.
-3. The box is shared. Every finding carries its place, so each state has its own view of it, and every role can read all of it.
-4. Builders take findings from the box and turn them into records. Checkers confirm each fact against its saved source under §3. That is the only check. A fact that passes publishes.
-5. Anything that can't be built or confirmed goes to a detective with the reason. The detective finds another route or marks a true dead end under this section.
+3. The box is the one work list. It holds facts, leads (links to read) and jobs. Every finding carries its place, each state has its own view of it, and every role can read all of it. Many workers pull from it at the same time, and no row is worked twice.
+4. Readers open every lead, a page or a PDF, and pull out every fact on it. Builders match each fact to its one ID, or create the new thing on the spot. The door checks each fact against its saved source under §3. That is the only check. A fact that passes publishes at once, and nothing waits for review.
+5. A fact that fails the check gets one plain-code retry. If it still fails, or a blank is still open after the hunters, it goes to a detective with the reason. Free methods keep working on it nonstop. Paid tries return only with a new reason: a new lead, a method that just worked somewhere similar, a changed source, or the five-day dead-end clock in this section.
 6. Auditors re-read published facts afterward and report what still holds as well as what doesn't. A fact that looks wrong is flagged to be investigated and potentially pulled, and the flag shows in Admin with four choices for Sean: remove it, keep it, send the fleet to find the right value, or type the right value himself. A value Sean types publishes at once, with any link he adds shown in Sources, and stays until he changes it. If an official source later states something different from a value Sean typed, it comes back to him as a flag. A value the system found is simply replaced when an official source states something different.
 7. Every win and every loss is saved to that state's profile and to the shared methods. A method that works in one place is tried everywhere with the same kind of website or the same kind of government.
 
@@ -114,7 +116,7 @@ Portraits. A portrait from an official source publishes on its own: any official
 
 **Meanwhile never tells anyone how to vote. We will always do our best to ensure that every candidate in a contest gets equal effort.**
 
-**The State Run Checklist is Admin's capture scorecard.** Sean's State Run Checklist measures how much of what a place is owed has been captured, and Admin shows it. It never gates publishing: a fact that passes verification publishes whatever the checklist says. It is the scorecard for all of this work until Sean changes it. It defines each mission's map, its families decide how agents are grouped, and each blank carries six statuses. Completeness, coverage, freshness and delivery are reported separately, as bars in Admin rather than text. New finds join with a date, one line each in the daily brief. Sean's orders and the budget dial in Admin run the work.
+**The owed list is the State Run Checklist's owed items, kept as data.** It says what every kind of place is owed and which card each item shows on. Sean adds or changes items in Admin, with a log and undo, and every matching place gets the new blank at once with no code change. Admin shows owed, found and live for every place. The owed list never gates publishing: a fact that passes verification publishes whatever the list says. Sean's orders and the budget dial in Admin run the work.
 
 **Each fact publishes on its own.** A record goes live when its minimum facts are verified, and every other fact attaches as soon as it is verified. A meeting (with pin) is live when its body, date and time are found; its location (the body's own address when the meeting's location isn't published), agenda, minutes and outcomes attach as each is verified. An official is live with the seat, the holder's name and the source page it came from; contact details, portrait, term and the rest attach as each is verified. A body is live with its name, type and source; its members, contact and calendar attach as each is verified. A contest is live with the election, the office and the candidates its source lists; everything else attaches as it is verified. Every blank stays open as standing work until it is filled.
 
@@ -136,6 +138,7 @@ Check meeting sources:
 
 - **Twice daily** generally.
 - **Hourly, within 60 minutes**, for bodies with a meeting in the **next seven days OR concluded in the previous seven days**.
+- Where-to-vote sources (polling places, early voting sites and drop boxes) are checked twice daily.
 
 The seven-day window rolls automatically. Checks cover calendars, agendas, changes, cancellations, decisions, and minutes. This cadence is separate from the forward coverage window and does not change other data families' schedules.
 
@@ -158,6 +161,10 @@ Run independent work in parallel without conflicting edits or interfering tests.
 **How code ships.** Code reaches `main` a couple of times a day as one combined, tested change, not one pull request per session. Sessions work on their own branches in the cloud, a merge session folds them together and tests the result, and the combination merges to `main` as one pull request. Data, settings, doors and playbooks still go live with no release.
 
 Replaced code is removed, not amended. When code is changed to make things more efficient, the old code it overrides is deleted in the same change. It is never patched, left in place beside the new code, or kept behind an on/off switch. If new code fails, the release is reverted. Sean's own controls in Admin are not affected. Bloat in the code is not acceptable. Contradictory evidence must be called out as soon as it's found so it can be addressed. That includes two pieces of code doing the same job different ways, and code, tests or documents that disagree with each other or with how the system actually behaves.
+
+**How Meanwhile Works is the design.** docs/how-it-works.md describes how the system works, and every session reads it right after this document. Only Sean changes it. The code holds it in place: only the door writes facts, reader pages read only place slices, and a release fails if it adds a new table or writer outside the core. A builder that hits something the design doesn't cover sends it to the lead builder, and only real design questions reach Sean, in Admin's Decisions box.
+
+**Keep the repository small.** docs/ holds only How Meanwhile Works, the design system and documents that describe how code works. Reports, evidence and proof go in release notes and Admin, never into files. Data that changes lives in the store or the vault, never in git. Files and branches nothing uses are deleted.
 
 Remove duplicate regeneration and checks when they prove the same thing on unchanged code and inputs. Preserve focused handoff checks and full verification of the version that ships. Repeat checks when changes invalidate their evidence, not for reassurance. Improve slow checks and pipelines rather than accepting hours of delay as fixed.
 
@@ -191,7 +198,7 @@ Sean expects improvement every pass, significant daily progress, and order-of-ma
 
 Do not compound or generate massive data files for workers to read every time.  Data should be useful and succinct.  Information that impacts how hunters hunt, how detectives discover, how they all do their jobs should read what has CHANGED since the last read.  This keeps data transfer in check.  
 
-Data diet. Keep one saved copy of each source, in the vault, filed by its fingerprint; the database holds facts and small pointers only. Don’t store anything that can be rebuilt. A job decides “did it change?” from the fingerprint and stops if it matches; it never downloads a stored record to find out. Every job states its database bytes per run before it ships, and any job over its hourly budget pauses itself until Sean releases it. Test copies of production expire within a day.
+Data diet. Keep one saved copy of each source, in the vault, filed by its fingerprint; the database holds facts and small pointers only. Don't store copies that no reader or job reads. A job decides "did it change?" from the fingerprint and stops if it matches; it never downloads a stored record to find out. Every job's database reads and dollars show in Admin. A job that suddenly reads far more than its normal slows down alone, and its fix goes to the top of the builders' list. Near the monthly database limit Sean sets in Admin, background work (re-checks, page work, planning) slows. Finding and publishing never slow or pause for cost. Test copies of production expire within a day.
 
 ## 8. Carry decisions forward; ask only for real owner actions
 
@@ -205,7 +212,7 @@ Coverage is every place in the US at every level, and the team expands free cove
 
 **Sean sees everything in Admin,** including but not limited to what's running, what readers have, what's broken, what it costs and where money goes.
 
-**Sean sets every spending limit, including but not limited to AI token usage, in Admin. Nothing else sets a cap.** Sean can turn paid spending off at once from Admin, for everything or for one area, while a spike is investigated. Turning spending off never stops free data acquisition.
+**Sean sets every spending limit, including but not limited to AI token usage and the monthly database limit, in Admin. Nothing else sets a cap.** Money is counted as it's spent; nothing sets budget aside ahead of time. Sean can turn paid spending off at once from Admin, for everything or for one area, while a spike is investigated. Turning spending off never stops free data acquisition.
 
 Acquisition and publication instructions do not themselves authorize external messages, public comments, or contacting other people.
 

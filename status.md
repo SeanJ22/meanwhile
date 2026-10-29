@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 149 on site 1:41 PM EDT (main 943aec90a, river 2021cb17c): places list cached, voting sites stop on unchanged fingerprint. 150 in CI (PR #868): voting door cleanup + 22 sources refresh (Sean approved).
+build_state: LIVE: release 149 on site 1:41 PM EDT (main 943aec90a, river 2021cb17c): places list cached, voting sites stop on unchanged fingerprint. 150 rerunning CI (PR #868, head 38dce3be4): voting door cleanup + 22 sources refresh (Sean approved) + DC-01. First CI run: shard 3 failed after 46 min with no log; same commit passes locally 2,697/2,698.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T17:45:00Z
+heartbeat: 2026-10-29T19:05:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -205,6 +205,7 @@ heartbeat: 2026-10-29T17:45:00Z
   - Places verified live: first call 200, 121,229 bytes, 11.8 s, stored by Netlify Durable; second call 0.49 s, Durable hit (ttl 86,388 s). Before: CDN 504 after 30.7 s, ~139 MB read per call, 11.09 GB/24 h.
   - Before (24 h to 12:15 PM): index 12.47 GB (zip_place 11.09), voting-sites 9.95 GB, total 83.5 GB/24 h. After: measuring.
 - 150 (PR #868): RIVER-DOORCFG-149 3a25c09c2 — writer drops the retired officialLinkingPage HTML; migration RIVER-DOORCFG-149_expand clears 283 doors; voting door reads 2.20 GB/day → ~78 MB; 22 non-.gov voting sources pass the official-link check again (Sean: ship it, current voting information is what readers should see). Code 694,824 → 694,695.
+- 3:05 PM EDT Oct 29: DC-01 READY 7aca5cc59 folded into 150 (one conflict: docs/rs-02.md, kept DC-01's delete). Quick check clean. Code 694,824 → 690,349 (−4,475). 149 first partial hour: zip_place 754 MB/h → 1.8 MB, voting 693 → 82 MB, total ~2.7 GB/h vs 5.8.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

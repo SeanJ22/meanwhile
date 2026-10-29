@@ -6,11 +6,12 @@ import { buildStatePlaceMap } from "../lib/place-map/build.ts";
 import { loadStatePlaceMap } from "../lib/place-map/load.ts";
 import { legacyZipEntry, type LegacyZipShard } from "../lib/place-map/legacy.ts";
 import { stateZipLocations } from "../lib/place-map/location-import.ts";
-import { installPlaceMapQuery, lowestZipByDivision, lowestZipsForDivisions, readStateZipPlaces, readZipDivisions, readZipPlace, withPlaceMapReads } from "../lib/place-map/reader.ts";
+import { installPlaceMapQuery, lowestZipsForDivisions, readStateZipPlaces, readZipDivisions, readZipPlace, withPlaceMapReads } from "../lib/place-map/reader.ts";
 import type { Query } from "../lib/facts/publish.ts";
 import { divisionIdsForZipArea } from "../lib/ballot/zip-divisions.ts";
 import type { RegistrationReference } from "../lib/registration/reference.ts";
 import { identityEventTables, identitySourceTables, placeBoundaryMigration, readerIdentityMigration, zipLocationMigration } from "./helpers/reader-identity-db.ts";
+import { wholeStateLowestZips } from "./helpers/place-map.ts";
 
 const date = "2026-10-28T16:00:00.000Z";
 const school = (state: string, name: string) => `ocd-division/country:us/state:${state}/school_district:${name}`;
@@ -60,7 +61,7 @@ test("a mail-only ZIP keeps its linked ZCTA's school districts as ones that coul
         assert.ok((await divisionIdsForZipArea(zip, [])).every(id => !(lost as readonly string[]).includes(id)), "the ballot still waits for an address");
         const enumerated = (await readStateZipPlaces(state)).get(zip);
         for (const id of lost) assert.ok(enumerated?.ids.includes(id), `${state}'s ZIP list keeps ${id} for ${zip}`);
-        const lowest = await lowestZipByDivision(state);
+        const lowest = await wholeStateLowestZips(state);
         const keyed = await lowestZipsForDivisions(state,lost);
         for (const id of lost) {
           assert.equal(lowest.get(id), zcta, "a division's example ZIP holds it directly");

@@ -8,7 +8,7 @@ import { createContext, runInContext } from "node:vm";
 import { IndependentRuntimeLaneScheduler, passDeadlineFromEnv, withPassDeadline } from "../lib/ops/independent-runtime-pass.ts";
 import { PendingRestart } from "../lib/ops/pending-restart.ts";
 import { readIntents } from "../lib/control-plane/scheduler/research-policy.ts";
-import { admitJobLaunch, JOB_BREAKER_PATH_ENV, saveBreakerSnapshot } from "../lib/control-plane/job-breaker-local.ts";
+import { admitJobLaunch, JOB_BREAKER_PATH_ENV, JOB_SLOWED_WORDS, saveBreakerSnapshot } from "../lib/control-plane/job-breaker-local.ts";
 import { ROUTINE_ENTRY_PEAK_MIB, WORKER_MEMORY_HEADROOM_MIB, routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
 import { PLACE_PACKAGE_SQL } from "../lib/reader/place-builder.ts";
 import { drainPlacePageQueue, placePagesLane, placePageTurnResult, PLACE_PAGE_TURN_GRACE_MS, PLACE_PAGE_TURN_LINE,
@@ -45,9 +45,12 @@ async function placePageRunner(options: { readonly turnMs: number }) {
   let pause: unknown[] | Error = [];
   let childStatus = 0;
   let onTurn: (index: number) => void = () => {};
+  // Launch spacing reads this clock, so a test can step past a slowed job's wait without sleeping.
+  const clock = { now: Date.now() };
   const memory = routineProcessSlots({ availableBytes: () => 64 * 1024 * MIB, admissionsOpen: () => !context.runtimeAdmissionsHeld });
   const context = createContext({
-    provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false, admitJobLaunch,
+    provider: "postgres", canary: false, AUTO_RELEASE_HANDOFF: false, runtimeAdmissionsHeld: false, placePagePauseUnread: false, JOB_SLOWED_WORDS,
+    admitJobLaunch: (job: string) => admitJobLaunch(job, process.env, clock.now),
     pendingRestart: new PendingRestart(), standingBeat: async () => {}, researchCycleActive: false, researchCycleChild: null,
     drainHunterLane: () => {}, drainMemberLane: () => {},
     TS_CHILD: ["--experimental-strip-types"], CODE_ROOT: process.cwd(), process,
@@ -86,7 +89,7 @@ async function placePageRunner(options: { readonly turnMs: number }) {
     return queueUnbuiltPlacePages(db.query);
   };
   const count = async (table: string) => Number((await db.query(`SELECT count(*)::int AS n FROM ${table}`))[0]!.n);
-  return { db, context, turns, reservations, log, queuePlaces, count,
+  return { db, context, turns, reservations, log, queuePlaces, count, clock,
     setPause: (value: unknown[] | Error) => { pause = value; },
     setChildStatus: (status: number) => { childStatus = status; },
     onTurn: (hook: (index: number) => void) => { onTurn = hook; } };
@@ -140,27 +143,30 @@ test("a pending restart stops new place-page turns and waits for no more than th
   } finally { await runner.db.pg.close(); }
 });
 
-test("a breaker pause written during a run stops place pages after the turn in progress, until Release", async () => {
-  const runner = await placePageRunner({ turnMs: 150 });
+test("a place-pages spike spaces its turns out and never stops them; it returns to its pace when the slow-down ends", async () => {
+  const runner = await placePageRunner({ turnMs: 20 });
   const root = mkdtempSync(join(tmpdir(), "place-pages-breaker-")), path = join(root, "breaker.json"), previous = process.env[JOB_BREAKER_PATH_ENV];
-  const snapshot = (mode?: "PAUSED" | "RELEASED") => saveBreakerSnapshot(path, { checkedAt: new Date().toISOString(),
-    states: mode ? { "place-pages": { job: "place-pages", mode, at: new Date().toISOString(), hour: new Date().toISOString(), offsetBytes: 0 } } : {} });
+  const snapshot = (times?: number) => saveBreakerSnapshot(path, { checkedAt: new Date(runner.clock.now).toISOString(), hour: "", jobs: times
+    ? { "place-pages": { seen: "", times }, "door-probes": { seen: "", normal: 300_000_000 } } : {} });
   process.env[JOB_BREAKER_PATH_ENV] = path;
   try {
     snapshot();
     await runner.queuePlaces(0, 400);
-    let pausedAt = 0;
-    runner.onTurn(index => { if (index === 2) setTimeout(() => { pausedAt = Date.now(); snapshot("PAUSED"); }, 20); });
-    runInContext(`runStandingRuntimeTick("test", true)`, runner.context);
-    await runner.context.standingRuntimeScheduler.waitForIdle();
-    assert.equal(runner.turns.length, 2, "no turn starts after the check that paused the job, though the run's hour is not over");
-    assert.ok(runner.turns[1]!.at < pausedAt && runner.turns[1]!.ended! >= pausedAt, "the pause came during the second turn");
-    assert.ok(runner.log.some(line => /place-pages is paused until released in Admin/.test(line)), runner.log.join("\n"));
+    await runner.context.runPlacePages(Date.now() + 1_000);
+    const ordinary = runner.turns.length;
+    assert.ok(ordinary >= 2, `at its ordinary pace turns run back to back (${ordinary})`);
+    snapshot(2); // The 6:59 PM ET check: place-pages read far more than its normal.
     await runner.context.runPlacePages(Date.now() + 60_000);
-    assert.equal(runner.turns.length, 2, "a paused job launches nothing on the next run either");
-    snapshot("RELEASED");
-    await runner.context.runPlacePages(Date.now() + 60_000);
-    assert.ok(runner.turns.length > 2, "Release lets the next run take turns again");
+    assert.equal(runner.turns.length, ordinary, "within twice its gap of a minute, the next turn waits");
+    assert.ok(runner.log.some(line => /place-pages read far more than its normal, so its launches are spaced out/.test(line)), runner.log.join("\n"));
+    for (let minute = 1; minute <= 6; minute++) {
+      runner.clock.now += 60_000;
+      await runner.context.runPlacePages(Date.now() + 60_000);
+    }
+    assert.equal(runner.turns.length, ordinary + 3, "one turn every two minutes: slower, never stopped");
+    snapshot();
+    await runner.context.runPlacePages(Date.now() + 1_000);
+    assert.ok(runner.turns.length >= ordinary + 5, "back at its normal, turns run back to back again");
   } finally {
     if (previous === undefined) delete process.env[JOB_BREAKER_PATH_ENV]; else process.env[JOB_BREAKER_PATH_ENV] = previous;
     rmSync(root, { recursive: true, force: true });

@@ -1,6 +1,6 @@
 import { countWindow, type HourCount, type OldestWaiting, type CountProblem } from "../../counts/hour.ts";
 import { formatEastern } from "../eastern-time.ts";
-import type { JobBreakerEvent } from "../job-transfer-breaker.ts";
+import type { JobPaceChange } from "../job-transfer-breaker.ts";
 
 export const HOUR = 3_600_000;
 export const LINE_KEEPER_BY = "The line keeper";
@@ -12,7 +12,7 @@ export interface LineHour {
   readonly waiting: readonly OldestWaiting[] | null;
   readonly problems: readonly Omit<CountProblem,"kind"|"state"|"items">[];
   readonly own: { readonly bytesRead: number };
-  readonly breakerEvents?: readonly JobBreakerEvent[];
+  readonly breakerEvents?: readonly (JobPaceChange & { readonly id: string })[];
 }
 /** Counts stay in count_hour. A run saves only its hour, finish time, problem count and bytes read. */
 export interface LineState {

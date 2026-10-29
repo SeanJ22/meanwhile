@@ -5,7 +5,6 @@ import { prepareProductionCivicDataWrite } from "../lib/civic-data/production-wr
 import { DurableEvidenceStore } from "../lib/control-plane/evidence/durable-store.ts";
 import { VAULT_DIR } from "../lib/control-plane/scheduler/vault.ts";
 import { routineProcessSlots } from "../lib/control-plane/workers/worker-slots.ts";
-import { admitJobLaunch } from "../lib/control-plane/job-breaker-local.ts";
 import { passDeadlineFromEnv } from "../lib/ops/independent-runtime-pass.ts";
 import { legistarDoorQuery,legistarMemberWork,seedLegistarMemberWork } from "../lib/sources/legistar/members-queue.ts";
 import { loadLegistarMemberTenant,type MemberRecordWork } from "../lib/sources/legistar/members-loader.ts";
@@ -17,7 +16,7 @@ prepareProductionCivicDataWrite();
 let drain=false;
 process.on("SIGTERM",()=>{drain=true;});
 process.on("message",message=>{if(message&&typeof message==="object"&&"kind"in message&&message.kind==="RUNTIME_RELEASE_DRAIN")drain=true;});
-const stopRequested=()=>drain||Date.now()>=passDeadlineFromEnv()||!admitJobLaunch("legistar-members");
+const stopRequested=()=>drain||Date.now()>=passDeadlineFromEnv();
 const slots=routineProcessSlots({admissionsOpen:()=>!stopRequested()});
 const release=await slots.acquire("legistar-members-worker.mts",Date.now()+60_000);
 try {

@@ -2,7 +2,7 @@ import type { Sql } from "../repository/pg-store.ts";
 import { boundedQuery } from "../repository/request-bounds.ts";
 import { COUNT_HOUR_SQL, countWindow, type HourCount, type OldestWaiting } from "../../counts/hour.ts";
 import { runnerReadProblems } from "../../db/runner-read-families.ts";
-import type { JobBreakerEvent } from "../job-transfer-breaker.ts";
+import type { JobPaceChange } from "../job-transfer-breaker.ts";
 
 export const query = (sql: Sql, operation: string, text: string, args: readonly unknown[] = []) =>
   boundedQuery(sql,{operation:`line-keeper.${operation}`,callClass:"PAGE"},text,args) as Promise<Record<string,unknown>[]>;
@@ -41,13 +41,12 @@ export async function readHour(control: Sql, reader: Sql, at: string) {
   return {window,counts:[...currentControl,...currentReader],previous:[...previousControl,...previousReader],waiting:[...waiting,...rebuilds]};
 }
 
-/** Oversight reads the breaker's bounded event window; it never reopens transfer read maps. */
-export async function readJobBreakerEvents(control: Sql, from: string, through: string): Promise<JobBreakerEvent[]> {
-  const rows=await query(control,"job-transfer-breaker",`SELECT id,checked_at,hour,action,job,gb,top_table,bytes_per_request,state,detail
-    FROM cp_job_transfer_breaker WHERE checked_at >= $1::timestamptz AND checked_at < $2::timestamptz
-    AND action IN ('PAUSE','RESUME') ORDER BY checked_at,id`,[from,through]);
-  return rows.map(row=>({...row,checked_at:countTimestamp(row.checked_at),hour:countTimestamp(row.hour),gb:Number(row.gb),
-    bytes_per_request:row.bytes_per_request===null?null:Number(row.bytes_per_request)})) as unknown as JobBreakerEvent[];
+/** Oversight reads only the slow-downs and returns in the window's checks; it never reopens transfer read maps or saved state. */
+export async function readJobBreakerEvents(control: Sql, from: string, through: string): Promise<(JobPaceChange & { id: string })[]> {
+  const rows=await query(control,"job-transfer-breaker",`SELECT id,detail->'changes' AS changes FROM cp_job_transfer_breaker
+    WHERE checked_at >= $1::timestamptz AND checked_at < $2::timestamptz AND action='CHECK'
+    AND jsonb_array_length(coalesce(detail->'changes','[]'::jsonb))>0 ORDER BY checked_at,id`,[from,through]);
+  return rows.flatMap(row=>(row.changes as JobPaceChange[]).map(change=>({...change,id:`${String(row.id)}:${change.job}`})));
 }
 
 /** Aggregate beside the accounting rows; their large read maps never cross the wire. */

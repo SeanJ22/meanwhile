@@ -66,20 +66,22 @@ async function get(request: NextRequest) {
     }
     const opened = await attempt(async () => { const o = await openControlPlane(); return o.ok ? o.repos : null; });
     const url = controlPlaneUrlFromEnv();
-    const [configRow, fixes] = await Promise.all([
+    const settingsRead = Promise.all([
       opened ? attempt(() => opened.adminConfig.read(ADMIN_CONFIG_ID, { methodStandings: true })) : null,
       opened ? attempt(() => opened.adminConfig.readFixes({ activeAndRecent: 500, fieldsProjection: ["id", "state", "addedBy", "addedAt", "fixedAt", "changedBy"] })) : null,
-    ]);
-    const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
-    const repairConfig = config !== null && fixes !== null ? { ...config, fixList: fixes } : null;
-    const coreIds = new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT));
+    ]).then(([configRow, fixes]) => {
+      const config = configRow !== null && configRow !== undefined && isAdminConfig(configRow.value) ? configRow.value : null;
+      return { config, repairConfig: config !== null && fixes !== null ? { ...config, fixList: fixes } : null,
+        coreIds: new Set(readSetting(config, CORE_ITEMS_SETTING, CORE_ITEMS_DEFAULT)) };
+    });
     const keeperRead=attempt(async()=>url?readLineReport(databaseReadOnlySql(url)):null);
     const [learningRead, history, doors, heartbeat, doorNumbers, pipeline, contracts, capture, sentPlaces, audit, speed, provenFixes, claims, flow, factStore, keeper, deadLinks, looks, vital] = await Promise.all([
       attempt(async () => { const r = await loadLearningTrends(observedAt); return r.kind === "UNREAD" ? null : r.facts; }),
       attempt(async () => (opened ? (await readV6History(opened, { scope: "us", asOf: observedAt, limit: 50 })).data : null)),
       attempt(async () => (opened ? readDoorCounts(opened) : null)),
       attempt(async () => (opened ? readGateHeartbeat(opened) : null)),
-      attempt(async () => readDoorNumbers({ now: observedAt, config: repairConfig, keeper:await keeperRead })),
+      attempt(async () => { const [{ repairConfig }, keeper] = await Promise.all([settingsRead, keeperRead]);
+        return readDoorNumbers({ now: observedAt, config: repairConfig, keeper }); }),
       attempt(async () => { if (!url) return null; const r = await readPipeline(databaseReadOnlySql(url), observedAt); return r.state === "READ" ? r : null; }),
       attempt(() => readRoutinePublicationCounts()),
       attempt(async () => {
@@ -89,17 +91,18 @@ async function get(request: NextRequest) {
         return view.readers.kind === "READ" ? view.readers.rows : null;
       }),
       // The sent places' owed lists and history, as Admin's place view reads them; places not read in time are counted, not zeroed.
-      attempt(async () => (config === null ? { places: [], unread: 0 } : readScoreboardPlaces(config, coreIds, {
+      attempt(async () => { const { config, coreIds } = await settingsRead;
+        return config === null ? { places: [], unread: 0 } : readScoreboardPlaces(config, coreIds, {
         readOwed: (placeKey) => readPlaceOwed(placeKey),
         readHistory: async (placeKey) => (url ? readPlaceHistory(databaseReadOnlySql(url), placeKey) : []),
         budgetMs: 10_000,
-      }))),
+      }); }),
       // The week's live audits, read by day key (seven keys), never the whole log.
       attempt(async () => (opened ? weeklyAuditAccuracy({ ...(await readAuditWeek(opened, observedAt)), now: observedAt }) : null)),
       // The latest worst-case speed pass on the live site (today's and yesterday's keys).
       attempt(async () => (opened ? readLatestSpeedPass(opened, observedAt) : null)),
       // Where each reusable fix stands, from the config row.
-      attempt(async () => (opened ? provenFixesReading(config, observedAt) : null)),
+      attempt(async () => (opened ? provenFixesReading((await settingsRead).config, observedAt) : null)),
       // The latest weekly claim check, this week's and last week's keys.
       attempt(async () => (opened ? reportAccuracy(await readRecentClaimPasses(opened, [weekOf(observedAt), weekOf(new Date(now.getTime() - 7 * 86_400_000).toISOString())])) : null)),
       attempt(async () => (url ? readFlowWeek({control:databaseReadOnlySql(url),through:observedAt}) : null)),
@@ -113,6 +116,7 @@ async function get(request: NextRequest) {
       attempt(async () => (opened ? readLatestLookPasses(opened, 20) : null)),
       attempt(async () => (url ? readVitalSigns(databaseReadOnlySql(url), observedAt) : null)),
     ]);
+    const { config, repairConfig } = await settingsRead;
     const learning = learningRead === null ? null : { trends: buildLearningTrends(learningRead.weeks, observedAt), doors: learningRead.doors, bankWriteErrors: learningRead.bankWriteErrors };
     const readings: ScoreboardReadings = {
       places: sentPlaces === null ? null : sentPlaces.places,

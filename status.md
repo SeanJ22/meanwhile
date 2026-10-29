@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 144 (site 10:06 PM, runner 10:15 PM EDT; main 159f2b210, river c6317a7e0). door probes looking again since 144 (runner 10:15 PM). Full-hour check 11:20 PM. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 144 (site 10:06 PM, runner 10:15 PM EDT; main 159f2b210, river c6317a7e0). Door probes looking again; full-hour check at 11:20 PM. Breaker sees every job (fixed in 141). Read lock live (142).
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7

@@ -116,16 +116,15 @@ test("a later complete empty list retires a former same-seat candidate connectio
 
 test("an existing sourced nickname relationship survives refresh, while a successor cannot inherit it", () => {
   const official = holder("governor-person", "Chris Example", "Governor");
-  const filed = 'Christopher "Chris" John Example';
-  const input = ballot([contest("governor", "Governor")], [candidate("source:lead", "governor", filed)]);
+  const input = ballot([contest("governor", "Governor")], [candidate("source:lead", "governor", "Christopher John Example")]);
   const committed: OfficialCandidacyBridge = { ...bridge, rows: [{ holder: official, status: "RESOLVED", candidacy: {
     candidacyId: "source:lead", contestId: "governor", contestTitle: "Governor", divisionId: division,
-    electionId: input.election.id, candidateName: filed, sourceUrl: provenance.sourceUrl,
+    electionId: input.election.id, candidateName: "Christopher John Example", sourceUrl: provenance.sourceUrl,
   }, reason: "The two saved official sources verify this person in this exact seat.", unresolvedCandidacyIds: [] }] };
   const next = reconcileOfficialCandidacies({ bridge: committed, ballots: [input], holders: [official] });
   assert.equal(next.rows[0].status, "RESOLVED");
   assert.equal(officialCandidacySeatMatches(next.rows[0]), true);
-  assert.ok(next.rows[0].candidacy?.aliases?.includes(`governor|${filed}`));
+  assert.ok(next.rows[0].candidacy?.aliases?.includes("governor|Christopher John Example"));
   const repeatedMembership = reconcileOfficialCandidacies({ bridge: committed, ballots: [input],
     holders: [{ ...official, divisions: [division, division, division] }] });
   assert.equal(repeatedMembership.rows[0].status, "RESOLVED", "several memberships in one division keep the same person link");

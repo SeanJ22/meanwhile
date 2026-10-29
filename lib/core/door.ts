@@ -103,12 +103,9 @@ export async function ensureGoverningBody(query: Query, subjectId: string): Prom
   const school = kind === "school" || kind === "depschool";
   const name = `${government.name} ${school ? "school board" : "governing board"}`;
   const [held, ...rivals] = await query("SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND parent_id = $1 AND (id LIKE '%#governing' OR id LIKE '%#board') ORDER BY id LIMIT 5", [government.id]);
-  // Two held boards claim to be the government's governing board: nothing is chosen, and a detective is asked.
-  if (rivals.length) {
-    await sendToDetective(query, { entityId: government.id, field: "identity:governing-body", reason: "IDENTITY_TIE",
-      candidates: [held!, ...rivals].map(row => String(row.id)), about: { government: government.id } });
-    return null;
-  }
+  // Two held boards claim to be the government's governing board: writes go on to the first by id, and a detective is asked which is right.
+  if (rivals.length) await sendToDetective(query, { entityId: government.id, field: "identity:governing-body", reason: "IDENTITY_TIE",
+    candidates: [held!, ...rivals].map(row => String(row.id)), about: { government: government.id } });
   if (held) {
     if (String(held.name).endsWith(" governing")) {
       await query("UPDATE entity SET name=$2 WHERE id=$1 AND name=$3", [held.id, name, held.name]);

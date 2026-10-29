@@ -58,27 +58,35 @@ export function reconcileCandidateIdentities(
 
   // Both lists name the people of one contest, so the contest is the seat each name is in.
   const evidence = (parsed: Parsed, id: string) => ({ id, name: parsed.parts, seats: ["this contest"] });
-  const hits = new Map<number, number[]>();
-  const hitters = new Map<number, number[]>();
-  for (let i = 0; i < left.length; i += 1) {
-    for (let j = 0; j < right.length; j += 1) {
-      if (!samePerson(evidence(left[i], `certified:${i}`), evidence(right[j], `rendered:${j}`))) continue;
-      hits.set(i, [...(hits.get(i) ?? []), j]);
-      hitters.set(j, [...(hitters.get(j) ?? []), i]);
-      sawSomebodyLeft.add(i);
-      sawSomebodyRight.add(j);
+  const pass = (shortFirstNames: boolean): void => {
+    const hits = new Map<number, number[]>();
+    const hitters = new Map<number, number[]>();
+    for (let i = 0; i < left.length; i += 1) {
+      if (pairedLeft.has(i)) continue;
+      for (let j = 0; j < right.length; j += 1) {
+        if (pairedRight.has(j)) continue;
+        if (!samePerson(evidence(left[i], `certified:${i}`), evidence(right[j], `rendered:${j}`), { shortFirstNames })) continue;
+        hits.set(i, [...(hits.get(i) ?? []), j]);
+        hitters.set(j, [...(hitters.get(j) ?? []), i]);
+        sawSomebodyLeft.add(i);
+        sawSomebodyRight.add(j);
+      }
     }
-  }
-  for (const [i, js] of hits) {
-    // Exactly one counterpart, and that counterpart wants only us. Anything
-    // else stays unpaired and is reported as ambiguous below.
-    if (js.length !== 1) continue;
-    const j = js[0];
-    if ((hitters.get(j) ?? []).length !== 1) continue;
-    pairedLeft.add(i);
-    pairedRight.add(j);
-    pairs.push({ certified: left[i].raw, rendered: right[j].raw });
-  }
+    for (const [i, js] of hits) {
+      // Exactly one counterpart, and that counterpart wants only us. Anything
+      // else stays unpaired and is reported as ambiguous below.
+      if (js.length !== 1) continue;
+      const j = js[0];
+      if ((hitters.get(j) ?? []).length !== 1) continue;
+      pairedLeft.add(i);
+      pairedRight.add(j);
+      pairs.push({ certified: left[i].raw, rendered: right[j].raw });
+    }
+  };
+
+  pass(false);
+  // The serving-name / filed-name gap, over the leftovers only: a short first name in the same contest, inside a two-to-five person race.
+  pass(true);
 
   const ambiguous: string[] = [];
   const missingFromRendered: string[] = [];

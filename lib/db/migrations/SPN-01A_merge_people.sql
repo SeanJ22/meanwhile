@@ -1,15 +1,16 @@
--- One record per person where an identifier the sources themselves publish proves two records are the same person:
--- the same Open States id in any of its spellings (ocd-person/<uuid>, plural:<uuid>, plural:<st>:<uuid>), or one record
--- listing another's id as a key it is known by. A name is never used. The record carrying the most facts, children and
--- keys survives; every other id becomes an alias that points to it. Two records tied together that hold different
--- Open States ids are two people until a detective settles it, so they get a blank and stay as they are.
+-- Duplicate records proven to be one thing become one, and every old id stays as an alias of the survivor.
+-- People: the same Open States id in any of its spellings (ocd-person/<uuid>, plural:<uuid>, plural:<st>:<uuid>, person:<st>:<uuid>), or one
+-- record listing another's id as a key it is known by. A name is never used. Two records tied together that hold different Open States ids are
+-- two people until a detective settles it, so they get a blank and stay as they are.
+-- Governing boards: a government's records of its own governing board when each is provably that board. The record carrying the most facts,
+-- children and keys survives. A board with any other name stays, and the government gets a blank.
 DROP TABLE IF EXISTS spn01a_key, spn01a_edge, spn01a_group, spn01a_clean, spn01a_move;
 --> statement-breakpoint
 CREATE TEMP TABLE spn01a_key (entity_id text NOT NULL, key text NOT NULL);
 --> statement-breakpoint
 INSERT INTO spn01a_key
 SELECT p.id, 'ocd-person:' || lower(substring(p.id FROM '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'))
-FROM entity p WHERE p.kind = 'person' AND p.id ~ '^(ocd-person/|plural:([a-z]{2}:)?)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
+FROM entity p WHERE p.kind = 'person' AND p.id ~ '^(ocd-person/|plural:([a-z]{2}:)?|person:[a-z]{2}:)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
 --> statement-breakpoint
 INSERT INTO spn01a_key SELECT id, id FROM entity WHERE kind = 'person';
 --> statement-breakpoint
@@ -17,7 +18,7 @@ INSERT INTO spn01a_key
 SELECT x.entity_id, 'ocd-person:' || lower(substring(x.value FROM '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'))
 FROM entity_external_id x JOIN entity p ON p.id = x.entity_id AND p.kind = 'person'
 WHERE x.scheme NOT LIKE 'roster-name:%' AND x.scheme <> 'body-alias'
-  AND x.value ~ '^((ocd-person/|plural:([a-z]{2}:)?)?)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
+  AND x.value ~ '^((ocd-person/|plural:([a-z]{2}:)?|person:[a-z]{2}:)?)[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$';
 --> statement-breakpoint
 INSERT INTO spn01a_key
 SELECT x.entity_id, x.value FROM entity_external_id x JOIN entity p ON p.id = x.entity_id AND p.kind = 'person'
@@ -62,6 +63,28 @@ SELECT loser, survivor FROM (
   CROSS JOIN LATERAL (SELECT (SELECT count(*) FROM fact f WHERE f.entity_id = g.entity_id)
     + (SELECT count(*) FROM entity child WHERE child.parent_id = g.entity_id)
     + (SELECT count(*) FROM entity_external_id x WHERE x.entity_id = g.entity_id) AS weight) w
+) ranked WHERE loser <> survivor;
+--> statement-breakpoint
+-- A government's governing board is held twice when two records hang on it in the governing slot (#governing, or #board for a school) and both
+-- are provably that board: each is named for the government itself, or is its bare "City Council" / "Board of Education". A record with any other
+-- name (a joint meeting, another authority's board) is not provably the same and stays, with a detective asked.
+INSERT INTO spn01a_move
+SELECT loser, survivor FROM (
+  SELECT k.id AS loser, first_value(k.id) OVER (PARTITION BY k.parent_id ORDER BY w.weight DESC, k.id) AS survivor
+  FROM (
+    SELECT b.id, b.parent_id, CASE
+        WHEN lower(btrim(regexp_replace(regexp_replace(btrim(b.name), '\s+(governing|school) board$', '', 'i'), '[^a-zA-Z0-9]+', ' ', 'g')))
+          = lower(btrim(regexp_replace(g.name, '[^a-zA-Z0-9]+', ' ', 'g'))) THEN true
+        WHEN lower(btrim(b.name)) ~ '^(city|town|village|borough|township) council$' AND g.id ~ '^[a-z]{2}:city:' THEN true
+        WHEN lower(btrim(b.name)) = 'board of education' AND g.id ~ '^[a-z]{2}:(school|depschool):' THEN true
+        ELSE false END AS is_government_board
+    FROM entity b JOIN entity g ON g.id = b.parent_id AND g.kind = 'government'
+    WHERE b.kind = 'body' AND (b.id LIKE '%#governing' OR b.id LIKE '%#board')
+  ) k
+  CROSS JOIN LATERAL (SELECT (SELECT count(*) FROM fact f WHERE f.entity_id = k.id)
+    + (SELECT count(*) FROM entity child WHERE child.parent_id = k.id)
+    + (SELECT count(*) FROM entity_external_id x WHERE x.entity_id = k.id) AS weight) w
+  WHERE k.is_government_board
 ) ranked WHERE loser <> survivor;
 --> statement-breakpoint
 CREATE INDEX ON spn01a_move (loser);
@@ -124,7 +147,18 @@ ON CONFLICT DO NOTHING;
 INSERT INTO entity_external_id (entity_id, scheme, value) SELECT survivor, 'body-alias', loser FROM spn01a_move
 ON CONFLICT (scheme, value) DO UPDATE SET entity_id = EXCLUDED.entity_id;
 --> statement-breakpoint
+DELETE FROM place_page WHERE place_id IN (SELECT loser FROM spn01a_move);
+--> statement-breakpoint
+DELETE FROM rebuild_queue WHERE place_id IN (SELECT loser FROM spn01a_move);
+--> statement-breakpoint
 DELETE FROM entity WHERE id IN (SELECT loser FROM spn01a_move);
+--> statement-breakpoint
+-- A government still holding two records of its governing board is a question for a detective; writes go on to the first by id.
+INSERT INTO blank (entity_id, field, stage, reason, detail, next_try_at, attempts)
+SELECT g.id, 'identity:governing-body', 'CHECK', 'IDENTITY_TIE', jsonb_build_object('candidates', jsonb_agg(b.id ORDER BY b.id), 'why', 'GOVERNING_BOARD_HELD_TWICE')::text, now(), 1
+FROM entity g JOIN entity b ON b.parent_id = g.id AND b.kind = 'body' AND (b.id LIKE '%#governing' OR b.id LIKE '%#board')
+WHERE g.kind = 'government' GROUP BY g.id HAVING count(*) > 1
+ON CONFLICT (entity_id, field) DO NOTHING;
 --> statement-breakpoint
 -- People who share a name and a state but no identifier stay separate; a detective is asked, with every candidate named. Two people
 -- who hold different Open States ids are known to be different and are not asked about.
@@ -138,16 +172,16 @@ GROUP BY named.state, named.name
 HAVING count(*) > 1 AND (count(named.openstates) < count(*) OR count(DISTINCT named.openstates) < count(named.openstates))
 ON CONFLICT (entity_id, field) DO NOTHING;
 --> statement-breakpoint
--- Every page that shows or depends on a surviving person is rebuilt, so the duplicate is gone from the page, not only from the store.
-INSERT INTO rebuild_queue (place_id, queued_at, priority, next_queued_at)
-SELECT e.id, clock_timestamp(), e.page_priority, clock_timestamp() FROM entity e WHERE e.id IN (
-  SELECT p.place_id FROM entity_place p WHERE p.entity_id IN (SELECT survivor FROM spn01a_move)
-    AND p.place_id !~ '^ocd-division/country:us(/(state|territory|district):[a-z]{2})?$'
+-- Every page that shows or depends on a survivor is rebuilt, so a duplicate is gone from the page and not only from the store. These join the
+-- ordinary backlog in order of when they were queued, as a state-wide change does: none jumps the line, and a page already waiting is not queued again.
+INSERT INTO rebuild_queue (place_id, queued_at, priority)
+SELECT e.id, clock_timestamp(), e.page_priority FROM entity e WHERE e.id IN (
+  SELECT p.place_id FROM entity_place p JOIN entity s ON s.id = p.entity_id WHERE p.entity_id IN (SELECT survivor FROM spn01a_move)
+    AND (s.kind <> 'person' OR p.place_id !~ '^ocd-division/country:us(/(state|territory|district):[a-z]{2})?$')
   UNION SELECT d.page_id FROM place_page_dependency d WHERE d.entity_id IN (SELECT survivor FROM spn01a_move)
+  UNION SELECT survivor FROM spn01a_move m JOIN entity s ON s.id = m.survivor AND s.kind = 'body'
 ) ORDER BY e.id
-ON CONFLICT (place_id) DO UPDATE SET generation = rebuild_queue.generation
-    + CASE WHEN rebuild_queue.lease_token IS NOT NULL OR rebuild_queue.built_generation = rebuild_queue.generation THEN 1 ELSE 0 END,
-  next_queued_at = CASE WHEN rebuild_queue.lease_token IS NOT NULL THEN coalesce(rebuild_queue.next_queued_at, clock_timestamp()) ELSE clock_timestamp() END
-WHERE rebuild_queue.next_queued_at IS NULL OR rebuild_queue.built_generation = rebuild_queue.generation;
+ON CONFLICT (place_id) DO UPDATE SET generation = rebuild_queue.generation + 1
+WHERE rebuild_queue.built_generation = rebuild_queue.generation;
 --> statement-breakpoint
 DROP TABLE spn01a_key, spn01a_edge, spn01a_group, spn01a_clean, spn01a_move;

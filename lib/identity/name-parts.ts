@@ -10,7 +10,10 @@ export interface ComparableName {
   aliases?: string[];
 }
 
-const clean = (s: string) => s.normalize("NFKD").replace(/\p{M}/gu, "").toLowerCase().replace(/[.,'"`]/g, " ").replace(/\s+/g, " ").trim();
+const clean = (s: string) => s.toLowerCase().replace(/[.,'"`]/g, " ").replace(/\s+/g, " ").trim();
+
+/** A name with its accents taken off, for callers whose sources spell one person with and without them. */
+export const foldAccents = (name: string): string => name.normalize("NFKD").replace(/\p{M}/gu, "");
 
 /** Drops case, punctuation and generational suffixes; middle names come back separately. A name the record prints in double quotes or parentheses is an alias; an apostrophe never delimits one. */
 export function nameParts(given: string, family: string): Required<ComparableName> {

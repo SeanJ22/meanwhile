@@ -19,7 +19,7 @@ import {
   type HolderSourceShape,
 } from "./contest-universe.ts";
 import { getGeneralLineup, lineupForContest } from "./general-lineup.ts";
-import { matchPerson } from "../identity/match-person.ts";
+import { matchPerson, samePerson } from "../identity/match-person.ts";
 import { nameParts, splitDisplayName } from "../identity/name-parts.ts";
 import {
   resolveContestIncumbency,
@@ -191,8 +191,11 @@ export async function contestIncumbency(
       registryHolders.map((h) => {
         const parts = splitDisplayName(h.name);
         return { id: h.id, holder: h, name: nameParts(parts.givenName, parts.familyName), seats: ["this contest"] };
-      }));
-    if (found.kind === "MATCH") holderFor.set(c.key, found.candidate.holder);
+      }), { shortFirstNames: true });
+    // Holder rows that are one person in this seat (the same name from several publishers) stand for that person; any other tie shows nobody.
+    const one = found.kind === "MATCH" ? found.candidate
+      : found.kind === "TIE" && found.reason === "SEAT_AND_NAME_AMBIGUOUS" && found.candidates.every(row => samePerson(found.candidates[0]!, row)) ? found.candidates[0] : null;
+    if (one) holderFor.set(c.key, one.holder);
   }
 
   const candidateKeys = contest.candidates.map((c) => c.key);

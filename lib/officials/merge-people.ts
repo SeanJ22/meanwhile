@@ -7,7 +7,7 @@ import { officeIdentity } from "./office-identity.ts";
 import { nativePersonIdFromUrl, personIdentityKeys } from "./people-identity.ts";
 import { portraitBindingMatches } from "../photos/binding.ts";
 import { matchPerson, samePerson, type PersonEvidence } from "../identity/match-person.ts";
-import { parsePersonName } from "../identity/name-parts.ts";
+import { foldAccents, parsePersonName } from "../identity/name-parts.ts";
 import { mergeExecutiveFacts } from "./national-executive.ts";
 import { heldPersonSources } from "./held-sources.ts";
 import type { Officeholder, OfficeholderSet, PersonFieldDisagreement, PersonIdentityQuestion } from "./types.ts";
@@ -47,7 +47,7 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
     const districts = divisions.filter(id => /\/(?:sldu|sldl|cd|ward|council_district):/.test(id));
     return (districts.length ? districts : divisions).map(id => `${id}|${person.level}|${office}`);
   };
-  const profileEvidence = (person: Officeholder): PersonEvidence => ({ id: person.id, name: person.name, state: person.state,
+  const profileEvidence = (person: Officeholder): PersonEvidence => ({ id: person.id, name: foldAccents(person.name), state: person.state,
     seats: seatsOf(person, officeIdentity(person.officeTitle) ?? normalized(person.officeTitle)) });
   const compatibleProfile = (source: Officeholder, target: Officeholder, namespace: string) => {
     if (!source.state || !target.state || source.state.toUpperCase() !== target.state.toUpperCase() || source.level !== target.level ||
@@ -156,7 +156,7 @@ export function mergePeopleSets(input: readonly OfficeholderSet[]): Officeholder
       if (holders?.size === 0) bySeat.delete(seat);
     }
   };
-  const evidenceOf = (person: Officeholder): PersonEvidence => ({ id: person.id, name: person.name, state: person.state,
+  const evidenceOf = (person: Officeholder): PersonEvidence => ({ id: person.id, name: foldAccents(person.name), state: person.state,
     keys: infoOf(person).keys, seats: seatsOf(person, infoOf(person).office), term: { start: person.termStart, end: person.termEnd } });
   // Two records the publishers' own identifiers already tell apart are never offered to the matcher on a name.
   const knownDifferent = (incoming: Officeholder, holder: Officeholder) => {

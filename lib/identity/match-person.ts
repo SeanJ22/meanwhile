@@ -30,7 +30,7 @@ export type TieReason =
   | "SEAT_AND_NAME_AMBIGUOUS";
 
 export type PersonMatch<T extends PersonEvidence> =
-  | { readonly kind: "MATCH"; readonly basis: "KEY" | "SEAT_AND_NAME"; readonly candidate: T }
+  | { readonly kind: "MATCH"; readonly basis: "KEY" | "SEAT_AND_NAME" | "SEAT_AND_SHORT_NAME"; readonly candidate: T }
   | { readonly kind: "NEW" }
   | { readonly kind: "TIE"; readonly reason: TieReason; readonly candidates: readonly T[] }
   | { readonly kind: "NAME_ONLY"; readonly candidates: readonly T[] };
@@ -62,6 +62,12 @@ function sameName(a: ComparableName, b: ComparableName): boolean {
   return a.middles.join(" ") === b.middles.join(" ") || a.middles.map(m => m[0]).join("") === b.middles.map(m => m[0]).join("");
 }
 
+/** A first name of three or more letters that begins the other's (Greg, Gregory), or a printed nickname that does. An initial is never a short form. */
+function shortName(a: ComparableName, b: ComparableName): boolean {
+  if (!a.last || a.last !== b.last) return false;
+  return firstNames(a).some(x => firstNames(b).some(y => x.length >= 3 && y.length >= 3 && (x.startsWith(y) || y.startsWith(x))));
+}
+
 const namespaceOf = (key: string): string => key.slice(0, Math.max(key.indexOf(":"), 0));
 
 /** True when both carry a key from a namespace where a person holds one value, and the values differ. */
@@ -91,9 +97,17 @@ function termsConflict(a: PersonEvidence["term"], b: PersonEvidence["term"]): bo
 
 const sharesSeat = (a: Prepared, b: Prepared): boolean => [...a.seats].some(seat => b.seats.has(seat)) && !termsConflict(a.term, b.term);
 
-export function matchPerson<T extends PersonEvidence>(probe: PersonEvidence, candidates: readonly T[]): PersonMatch<T> {
+export interface MatchOptions {
+  /**
+   * For a contest, where a filing prints the full first name and the roster the short one: a short form counts as the same name
+   * in the same seat, but only when no candidate in that seat matches exactly. Elsewhere a short form is never inferred.
+   */
+  readonly shortFirstNames?: boolean;
+}
+
+export function matchPerson<T extends PersonEvidence>(probe: PersonEvidence, candidates: readonly T[], options: MatchOptions = {}): PersonMatch<T> {
   const p = prepare(probe);
-  const keyed: { candidate: T; held: Prepared }[] = [], conflicted: T[] = [], seated: T[] = [], named: T[] = [];
+  const keyed: { candidate: T; held: Prepared }[] = [], conflicted: T[] = [], seated: T[] = [], short: T[] = [], named: T[] = [];
   for (const candidate of candidates) {
     const c = prepare(candidate);
     if (p.state && c.state && p.state !== c.state) continue;
@@ -103,8 +117,9 @@ export function matchPerson<T extends PersonEvidence>(probe: PersonEvidence, can
       else keyed.push({ candidate, held: c });
       continue;
     }
-    if (conflict || !sameName(p.name, c.name)) continue;
-    (sharesSeat(p, c) ? seated : named).push(candidate);
+    if (conflict) continue;
+    if (sameName(p.name, c.name)) (sharesSeat(p, c) ? seated : named).push(candidate);
+    else if (options.shortFirstNames && shortName(p.name, c.name) && sharesSeat(p, c)) short.push(candidate);
   }
   if (conflicted.length) return { kind: "TIE", reason: "KEY_CONFLICT", candidates: [...conflicted, ...keyed.map(row => row.candidate)] };
   if (keyed.length === 1) return { kind: "MATCH", basis: "KEY", candidate: keyed[0].candidate };
@@ -115,8 +130,11 @@ export function matchPerson<T extends PersonEvidence>(probe: PersonEvidence, can
   }
   if (seated.length === 1) return { kind: "MATCH", basis: "SEAT_AND_NAME", candidate: seated[0] };
   if (seated.length > 1) return { kind: "TIE", reason: "SEAT_AND_NAME_AMBIGUOUS", candidates: seated };
+  if (short.length === 1) return { kind: "MATCH", basis: "SEAT_AND_SHORT_NAME", candidate: short[0] };
+  if (short.length > 1) return { kind: "TIE", reason: "SEAT_AND_NAME_AMBIGUOUS", candidates: short };
   return named.length ? { kind: "NAME_ONLY", candidates: named } : { kind: "NEW" };
 }
 
 /** True only when the probe and the candidate are one person by a key, or by name and seat. */
-export const samePerson = (probe: PersonEvidence, candidate: PersonEvidence): boolean => matchPerson(probe, [candidate]).kind === "MATCH";
+export const samePerson = (probe: PersonEvidence, candidate: PersonEvidence, options: MatchOptions = {}): boolean =>
+  matchPerson(probe, [candidate], options).kind === "MATCH";

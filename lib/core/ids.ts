@@ -16,7 +16,8 @@ export type MintedKind = "government" | "body" | "seat" | "person" | "meeting" |
 export type IdentityKey = readonly [scheme: string, value: string];
 
 const UUID = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
-const OPEN_STATES = new RegExp(`^(?:ocd-person/|plural:(?:[a-z]{2}:)?)?(${UUID})$`, "i");
+const OPEN_STATES = new RegExp(`^(?:ocd-person/|plural:(?:[a-z]{2}:)?|person:[a-z]{2}:)?(${UUID})$`, "i");
+const OPEN_STATES_ID = new RegExp(`^(?:(?:plural|person):([a-z]{2}):|ocd-person/|plural:)(${UUID})$`, "i");
 
 /**
  * Schemes in the order they are trusted to name a person. A person gets the first one the source supplied. The
@@ -36,6 +37,12 @@ function hash8(text: string): string {
   let hash = 0x811c9dc5;
   for (let at = 0; at < text.length; at += 1) hash = Math.imul(hash ^ text.charCodeAt(at), 0x01000193) >>> 0;
   return hash.toString(16).padStart(8, "0");
+}
+
+/** The Open States person an id names in any spelling it is kept in (`ocd-person/<uuid>`, `plural:<uuid>`, `plural:<st>:<uuid>`, `person:<st>:<uuid>`), with the state when the spelling states one. */
+export function openStatesPerson(id: string): { readonly id: string; readonly state: string | null } | null {
+  const found = OPEN_STATES_ID.exec(id);
+  return found ? { id: `ocd-person/${found[2]!.toLowerCase()}`, state: found[1]?.toUpperCase() ?? null } : null;
 }
 
 export const isSeatNameScheme = (scheme: string): boolean => scheme.startsWith("roster-name:");

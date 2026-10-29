@@ -3,6 +3,10 @@ import { join } from "node:path";
 import test from "node:test";
 
 import { ensureGoverningBody } from "../lib/core/door.ts";
+import { openStatesPerson } from "../lib/core/ids.ts";
+import { statePeopleScopeForId } from "../lib/officials/people-identity.ts";
+import { stateVoteStateForMember } from "../lib/state-rollcalls/reader-vote-visibility.ts";
+import { sourcePersonIds } from "../lib/sources/legiscan/dataset.ts";
 import { resolveId } from "../lib/core/resolve.ts";
 import { bodyNamed, canonicalSubject, ensureFactEntities, officeNamed, resolvePerson } from "../lib/facts/entities.ts";
 import { readCampaignMoneyInputs } from "../lib/funding/state-source-probe.ts";
@@ -90,18 +94,18 @@ test("an id that was merged into another still reaches it, for readers and for l
   } finally { await db.pg.close(); }
 });
 
-test("two held boards that both claim to be the governing board go to a detective and nothing is chosen", async () => {
+test("two held boards that both claim to be the governing board: writes go on to the first by id, and a detective is asked", async () => {
   const db = await seeded();
   try {
     await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES ('ocd-division/country:us/state:tn/place:example#governing','body','Example governing board','TN','tn:city:example')`);
-    assert.equal(await ensureGoverningBody(db.query, "tn:city:example"), null);
+    assert.equal((await ensureGoverningBody(db.query, "tn:city:example"))?.id, "ocd-division/country:us/state:tn/place:example#governing");
     const [question] = await blanks(db);
     assert.deepEqual([question!.entity_id, question!.reason, question!.detail.candidates],
       ["tn:city:example", "IDENTITY_TIE", [BODY, "ocd-division/country:us/state:tn/place:example#governing"].sort()]);
   } finally { await db.pg.close(); }
 });
 
-test("one governing board is found, and a board named twice is not chosen", async () => {
+test("one governing board is found; a board named twice goes on to the first by id and is asked about", async () => {
   const db = await seeded();
   try {
     assert.equal((await ensureGoverningBody(db.query, "tn:city:example"))?.id, BODY);
@@ -112,11 +116,26 @@ test("one governing board is found, and a board named twice is not chosen", asyn
       ('tn:city:example#office-recorder','body','Recorder office','TN','tn:city:example'),
       ('tn:city:example#office-recorder-2','body','Recorder office','TN','tn:city:example')`);
     const governing = await ensureGoverningBody(db.query, "tn:city:example");
-    assert.equal(await bodyNamed(db.query, "tn:city:example", governing, "Planning Commission"), null);
-    assert.equal(await officeNamed(db.query, "tn:city:example", governing, "recorder", "Recorder"), null);
+    assert.equal((await bodyNamed(db.query, "tn:city:example", governing, "Planning Commission"))?.id, "tn:city:example#body:planning");
+    assert.equal((await officeNamed(db.query, "tn:city:example", governing, "recorder", "Recorder"))?.id, "tn:city:example#office-recorder");
     assert.deepEqual((await blanks(db)).map(row => row.field), ["identity:body:planning commission", "identity:body:recorder"]);
     assert.equal(await canonicalSubject(db.query, BODY), BODY);
   } finally { await db.pg.close(); }
+});
+
+test("a person minted as person:<state>:<open states id> is accepted wherever plural: and ocd-person/ ids are", async () => {
+  const minted = `person:tn:${UUID}`;
+  assert.deepEqual(openStatesPerson(minted), { id: `ocd-person/${UUID}`, state: "TN" });
+  assert.deepEqual(openStatesPerson(`plural:${UUID}`), { id: `ocd-person/${UUID}`, state: null });
+  assert.equal(openStatesPerson("person:tn:legistar-pima-77"), null, "a person with no Open States id is not one");
+  assert.equal(stateVoteStateForMember(minted), "TN");
+  assert.equal(stateVoteStateForMember(`ocd-person/${UUID}`, "US-TN"), "TN");
+  assert.equal(statePeopleScopeForId(minted), "US-TN");
+  assert.equal(statePeopleScopeForId("person:tn:legistar-pima-77"), null, "a local person is not a state legislator");
+  assert.deepEqual(sourcePersonIds({ id: minted }), [`ocd-person/${UUID}`]);
+  const { GET } = await import("../app/api/directory/route.ts");
+  const refused = await GET(new Request(`https://example.org/api/directory?member=${encodeURIComponent(minted)}`));
+  assert.notEqual(refused.status, 400, "the directory route does not refuse the new shape as malformed");
 });
 
 test("campaign money files under the surviving person, and the merged id stays one of its aliases", async () => {

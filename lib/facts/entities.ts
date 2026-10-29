@@ -17,7 +17,7 @@ import { registeredPlaceIds } from "../place-map/build.ts";
 import { bodyNameKey, publishedBodyLabel } from "../civic-data/published-body-name.ts";
 import { ID_ALIAS, identityKeys, isSeatNameScheme, personId, saveAlias, strongestKeys, survivingIds } from "../core/ids.ts";
 import { matchPerson, type PersonEvidence } from "../identity/match-person.ts";
-import { parsePersonName } from "../identity/name-parts.ts";
+import { foldAccents, parsePersonName } from "../identity/name-parts.ts";
 import { sendToDetective } from "./identity-blank.ts";
 
 interface EntityRow extends Entity {
@@ -309,7 +309,7 @@ async function heldPeople(query: Query, person: PersonIds, namesakes: boolean): 
   [person.externalIds.map(([scheme]) => scheme), person.externalIds.map(([, value]) => value), ...withNamesakes ? [person.state, surname] : []]);
   return rows.map(row => {
     const external = row.external as [string, string][];
-    return { id: String(row.id), name: String(row.name), state: row.state as string | null, keys: identityKeys(String(row.id), external), seats: seatsOf(external) };
+    return { id: String(row.id), name: foldAccents(String(row.name)), state: row.state as string | null, keys: identityKeys(String(row.id), external), seats: seatsOf(external) };
   });
 }
 
@@ -322,7 +322,7 @@ async function heldPeople(query: Query, person: PersonIds, namesakes: boolean): 
 export async function resolvePerson(db: FactDb, person: PersonIds, retryMinutes = 24 * 60): Promise<string | { readonly tie: readonly string[] }> {
   return db.transaction(async query => {
     const schemes = person.externalIds.map(([scheme]) => scheme), values = person.externalIds.map(([, value]) => value);
-    const probe: PersonEvidence = { id: "probe", name: person.name, state: person.state, keys: identityKeys(null, person.externalIds), seats: seatsOf(person.externalIds) };
+    const probe: PersonEvidence = { id: "probe", name: foldAccents(person.name), state: person.state, keys: identityKeys(null, person.externalIds), seats: seatsOf(person.externalIds) };
     let found = matchPerson(probe, await heldPeople(query, person, false));
     // Namesakes are looked for only when no identifier or seat already settled it, so a refresh of a known person reads no more than before.
     if (found.kind === "NEW" || found.kind === "NAME_ONLY") found = matchPerson(probe, await heldPeople(query, person, true));
@@ -626,12 +626,11 @@ async function registeredGovernment(query: Query, id: string): Promise<string> {
     const found = await query(`SELECT g.id, g.id LIKE '%:school:%' AS school FROM entity_external_id x JOIN entity g ON g.parent_id = x.entity_id AND g.kind = 'government'
       WHERE x.scheme = ANY($1::text[]) AND x.value = $2 AND g.state = $3 ORDER BY school DESC, g.id LIMIT 5`, [SCHOOL_DISTRICT_LAYERS, school[2], school[1]]);
     const best = found.filter(row => row.school === found[0]?.school);
-    if (best.length === 1) return String(best[0]!.id);
-    if (best.length > 1) return heldTie(query, id, best.map(row => String(row.id)));
+    if (best.length) return heldFirst(query, id, best.map(row => String(row.id)));
     // A school district the registration never paired with a government is still a place: the place stands for its government, as it does for any board hung straight on a place.
     const places = await query(`SELECT x.entity_id AS id FROM entity_external_id x JOIN entity p ON p.id = x.entity_id AND p.kind = 'place'
       WHERE x.scheme = ANY($1::text[]) AND x.value = $2 AND p.state = $3 ORDER BY x.entity_id LIMIT 5`, [SCHOOL_DISTRICT_LAYERS, school[2], school[1]]);
-    return places.length === 1 ? String(places[0]!.id) : places.length > 1 ? heldTie(query, id, places.map(row => String(row.id))) : id;
+    return places.length ? heldFirst(query, id, places.map(row => String(row.id))) : id;
   }
   const census = /^government:US-([A-Z]{2}):cog:(\d+)$/.exec(id);
   if (census) {
@@ -642,10 +641,10 @@ async function registeredGovernment(query: Query, id: string): Promise<string> {
   return id;
 }
 
-/** Two held governments fit one native id equally: ask a detective and leave the id unresolved. */
-async function heldTie(query: Query, nativeId: string, candidates: readonly string[]): Promise<string> {
-  await sendToDetective(query, { entityId: candidates[0]!, field: `identity:${nativeId}`, reason: "IDENTITY_TIE", candidates, about: { nativeId } });
-  return nativeId;
+/** The first of the held governments that fit one native id; when several fit equally, a detective is asked which is right. */
+async function heldFirst(query: Query, nativeId: string, candidates: readonly string[]): Promise<string> {
+  if (candidates.length > 1) await sendToDetective(query, { entityId: candidates[0]!, field: `identity:${nativeId}`, reason: "IDENTITY_TIE", candidates, about: { nativeId } });
+  return candidates[0]!;
 }
 
 /** The subject under the one board name: its government's registered id, then its tail. */
@@ -675,15 +674,12 @@ export async function placeBody(query: Query, id: string, place: string): Promis
 
 }
 
-/** A body of a government held by name, or added under it: bodies hang on the government and sit on its place. Two held bodies that fit equally go to a detective and nothing is chosen. */
-async function bodyUnder(query: Query, government: GovernmentRef, find: { readonly sql: string; readonly param: string }, id: string, name: string): Promise<BodyRef | null> {
+/** A body of a government held by name, or added under it: bodies hang on the government and sit on its place. Two held bodies that fit equally are a question for a detective; writes go on to the first by id. */
+async function bodyUnder(query: Query, government: GovernmentRef, find: { readonly sql: string; readonly param: string }, id: string, name: string): Promise<BodyRef> {
   const fits = await query(`SELECT id, name, state, parent_id FROM entity WHERE kind = 'body' AND (parent_id = $1 OR id LIKE $2) AND ${find.sql} ORDER BY id LIMIT 5`,
     [government.id, `${government.placeId}#%`, find.param]);
-  if (fits.length > 1) {
-    await sendToDetective(query, { entityId: government.id, field: `identity:body:${find.param.toLowerCase()}`, reason: "IDENTITY_TIE",
-      candidates: fits.map(row => String(row.id)), about: { government: government.id, looking_for: find.param } });
-    return null;
-  }
+  if (fits.length > 1) await sendToDetective(query, { entityId: government.id, field: `identity:body:${find.param.toLowerCase()}`, reason: "IDENTITY_TIE",
+    candidates: fits.map(row => String(row.id)), about: { government: government.id, looking_for: find.param } });
   const [held] = fits;
   if (held) {
     await placeBody(query, String(held.id), government.placeId);

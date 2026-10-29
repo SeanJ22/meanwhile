@@ -64,7 +64,7 @@ export function resolveContestIncumbency(input: ContestIncumbencyInput): Map<str
   const seat = ["this contest"];
   const candidateEvidence = input.candidates.map((c) => ({ id: c.id, name: nameParts(c.givenName, c.familyName), keys: personKeys(c.personKey), seats: seat }));
   const matchesFor = (h: SeatHolderRef, at: number): { candidates: CandidateRef[]; byKey: boolean; tied: boolean } => {
-    const found = matchPerson({ id: `holder:${at}`, name: nameParts(h.givenName, h.familyName), keys: personKeys(h.personKey), seats: seat }, candidateEvidence);
+    const found = matchPerson({ id: `holder:${at}`, name: nameParts(h.givenName, h.familyName), keys: personKeys(h.personKey), seats: seat }, candidateEvidence, { shortFirstNames: true });
     if (found.kind === "MATCH") return { candidates: input.candidates.filter((c) => c.id === found.candidate.id), byKey: found.basis === "KEY", tied: false };
     const tied = found.kind === "TIE" ? new Set(found.candidates.map((c) => c.id)) : new Set<string>();
     return { candidates: input.candidates.filter((c) => tied.has(c.id)), byKey: false, tied: tied.size > 0 };

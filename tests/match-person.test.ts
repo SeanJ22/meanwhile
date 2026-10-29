@@ -3,7 +3,7 @@ import test from "node:test";
 
 import { identityKeys, mintId, personId } from "../lib/core/ids.ts";
 import { matchPerson, samePerson, type PersonEvidence } from "../lib/identity/match-person.ts";
-import { nameParts, parsePersonName } from "../lib/identity/name-parts.ts";
+import { foldAccents, nameParts, parsePersonName } from "../lib/identity/name-parts.ts";
 
 const UUID = "d3f48e28-4ee5-4027-9670-0d617ca6048e";
 const person = (id: string, name: string, extra: Partial<PersonEvidence> = {}): PersonEvidence => ({ id, name, state: "TN", ...extra });
@@ -76,7 +76,7 @@ test("names compare exactly: a middle initial matches its name, a nickname the r
   assert.equal(same("HEINZ, MATT J", "Matt James Heinz"), true);
   assert.equal(same("Smith, John", "Jane Smith"), false, "a shared surname is not a person");
   assert.equal(same("Smith", "Smith"), false, "a surname alone is not a name");
-  assert.equal(same("Alma Hernández", "Alma Hernandez"), true, "an accent is not a different name");
+  assert.equal(same(foldAccents("Alma Hernández"), "Alma Hernandez"), true, "folded, an accent is not a different name");
 });
 
 test("a comma form drops a trailing generational suffix", () => {

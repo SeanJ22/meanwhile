@@ -117,6 +117,43 @@ test("two records tied together that hold different Open States ids stay two and
   } finally { await db.pg.close(); }
 });
 
+test("a government's two records of its own governing board become one, and a board that is provably another body stays and is asked about", async () => {
+  const db = await factDb();
+  try {
+    const CITY = "tn:city:city-of-cocoa", LOSER = "tn:city:city-of-cocoa#governing", SURVIVOR = "ocd-division/country:us/state:tn/place:cocoa#governing";
+    const COUNTY = "tn:county:county-of-pima", PIMA = "tn:county:county-of-pima#governing", RTA = "ocd-division/country:us/state:tn/county:pima#governing";
+    await db.query(`INSERT INTO entity(id,kind,name,state,parent_id) VALUES
+      ('${STATE}','place','Tennessee','TN',NULL),('${CITY}','government','City Of Cocoa','TN','${STATE}'),('${COUNTY}','government','County Of Pima','TN','${STATE}'),
+      ('${LOSER}','body','City Of Cocoa governing board','TN','${CITY}'),('${SURVIVOR}','body','City Council','TN','${CITY}'),
+      ('${PIMA}','body','County Of Pima governing board','TN','${COUNTY}'),('${RTA}','body','Pima County Regional Transportation Authority governing board','TN','${COUNTY}'),
+      ('meeting:tn:a','meeting','Council meeting','TN','${SURVIVOR}')`);
+    await db.query("INSERT INTO source_copy(id,url,final_url,fetched_at,sha256,blob_key) VALUES (1,'https://a','https://a','2026-01-01',repeat('a',64),'a'),(2,'https://b','https://b','2026-06-01',repeat('b',64),'b')");
+    const fact = (entity: string, field: string, value: string, copy: number) => db.query(`INSERT INTO fact(entity_id,field,value,value_text,status,provenance_kind,source_copy_id,quote,checked_at,live_at,produced_by)
+      VALUES($1,$2,to_jsonb($3::text),$3,'live','OFFICIAL',$4,$3,now(),now(),'test')`, [entity, field, value, copy]);
+    await fact(LOSER, "homepage", "https://old.example", 1);
+    await fact(LOSER, "mailing_address", "1 Main St", 1);
+    await fact(SURVIVOR, "homepage", "https://new.example", 2);
+    await fact(SURVIVOR, "office_phone", "555", 2);
+    await fact(RTA, "homepage", "https://rta.example", 2);
+    await db.query("INSERT INTO entity_host(entity_id,host) VALUES ($1,'cocoa.example'),($2,'cocoa.example')", [LOSER, SURVIVOR]);
+    await db.query("INSERT INTO place_page(place_id,body) VALUES ($1,'{}')", [LOSER]);
+    await db.query("INSERT INTO rebuild_queue(place_id) VALUES ($1)", [LOSER]);
+    await db.pg.exec(MIGRATION);
+    const bodies = (await db.query("SELECT id FROM entity WHERE kind='body' ORDER BY id")).map(row => String(row.id));
+    assert.deepEqual(bodies, [SURVIVOR, PIMA, RTA].sort(), "Cocoa's two records are one; Pima's other record is another body and stays");
+    assert.equal(await resolveId(LOSER, db.query), SURVIVOR);
+    assert.deepEqual((await db.query("SELECT field, value_text FROM fact WHERE entity_id=$1 AND status='live' ORDER BY field", [SURVIVOR])).map(row => [row.field, row.value_text]),
+      [["homepage", "https://new.example"], ["mailing_address", "1 Main St"], ["office_phone", "555"]], "the newer homepage wins; the rest of both records' facts is kept");
+    assert.deepEqual(await db.query("SELECT parent_id FROM entity WHERE id='meeting:tn:a'"), [{ parent_id: SURVIVOR }]);
+    assert.deepEqual(await db.query("SELECT host FROM entity_host WHERE entity_id=$1", [SURVIVOR]), [{ host: "cocoa.example" }]);
+    assert.deepEqual(await db.query("SELECT 1 FROM place_page WHERE place_id=$1", [LOSER]), [], "the removed board's page goes with it");
+    assert.deepEqual((await db.query("SELECT place_id FROM rebuild_queue ORDER BY place_id")).map(row => row.place_id), [SURVIVOR], "and the surviving board's page is queued, behind the existing backlog");
+    assert.deepEqual((await db.query("SELECT 1 FROM rebuild_queue WHERE next_queued_at IS NOT NULL")), [], "no queued page jumps the line");
+    const [tie] = await db.query("SELECT entity_id, reason, detail FROM blank WHERE field='identity:governing-body'");
+    assert.deepEqual([tie!.entity_id, tie!.reason, JSON.parse(String(tie!.detail)).candidates], [COUNTY, "IDENTITY_TIE", [PIMA, RTA].sort()]);
+  } finally { await db.pg.close(); }
+});
+
 test("running the merge again changes nothing", async () => {
   const db = await seeded();
   try {

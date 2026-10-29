@@ -103,7 +103,7 @@ export function officialCandidacySeatMatches(row: OfficialCandidacyBridgeRow): b
     !personSeatMatches(candidacy.contestTitle, row.holder, candidacy.divisionId)) return false;
   const holder = splitDisplayName(row.holder.name), candidate = splitDisplayName(candidacy.candidateName);
   const left = nameParts(holder.givenName, holder.familyName), right = nameParts(candidate.givenName, candidate.familyName);
-  return samePerson(seatedName(candidacy.divisionId, office, "holder", left), seatedName(candidacy.divisionId, office, "candidacy", right));
+  return samePerson(seatedName(candidacy.divisionId, office, "holder", left), seatedName(candidacy.divisionId, office, "candidacy", right), { shortFirstNames: true });
 }
 
 /** A ticket elects two people. A joint label never becomes a person's name. */

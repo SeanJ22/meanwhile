@@ -66,6 +66,18 @@ export function censusBoards(root: string, state: string): CensusBoard[] {
   return boards.sort((a, b) => a.government < b.government ? -1 : a.government > b.government ? 1 : 0);
 }
 
+/** The saved release's own row for each government, by its Census id: the line each board fact is quoted from. */
+function censusRows(root: string, pids: ReadonlySet<string>): Map<string, string> {
+  const rows = new Map<string, string>();
+  for (const file of ["census_govt_units_2022.csv", "census_govt_units_2022_dependent_school_systems.csv"]) {
+    for (const line of readFileSync(join(root, "data", "reference", file), "utf8").split("\n")) {
+      const pid = line.slice(0, line.indexOf(","));
+      if (pids.has(pid)) rows.set(pid, line.replace(/\r$/, ""));
+    }
+  }
+  return rows;
+}
+
 /** The attested Census of Governments release every board fact cites (data/reference/census_govt_units_2022.md). */
 async function censusCopy(query: Query): Promise<SavedCopy> {
   const key = `release:census-governments-registration:${REGISTRATION_SOURCE_SHA256}`;
@@ -110,6 +122,7 @@ export async function makeCensusGoverningBodies(input: {
     const state = order[at]!;
     report.states.push(state.toUpperCase());
     const boards = censusBoards(input.root, state).filter(board => after === null || board.government > after);
+    const rows = censusRows(input.root, new Set(boards.flatMap(board => board.record.nativeIds.census_pid6 ?? [])));
     let finished = true;
     for (let start = 0; start < boards.length; start += BATCH) {
       if (!input.more()) { finished = false; break; }
@@ -124,7 +137,7 @@ export async function makeCensusGoverningBodies(input: {
           for (const [field, key] of FIELDS) {
             const value = board.record[key];
             if (typeof value !== "string" || !value.trim() || shown.has(field)) continue;
-            const outcome = await door(db, { subjectId: board.subject, field, fieldKind: "contact", value, valueText: value, quote: "",
+            const outcome = await door(db, { subjectId: board.subject, field, fieldKind: "contact", value, valueText: value, quote: rows.get(board.record.nativeIds.census_pid6 ?? "") ?? "",
               provenance: "OFFICIAL", producedBy: `census-governing:${state.toUpperCase()}`, acquisition: "loader", costUsd: 0, copy,
               sourceField: { record: board.record as unknown as Readonly<Record<string, unknown>>, key } }, input.clocks, new Date(), { purge });
             if ("refused" in outcome) report.refused[outcome.refused] = (report.refused[outcome.refused] ?? 0) + 1;

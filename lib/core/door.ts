@@ -155,7 +155,9 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const official = officialSource(copy.finalUrl, entity.hosts, input.linkingPage);
     const acquisition = input.acquisition ?? (input.producedBy === "box" ? "hunter" : input.producedBy.startsWith("carton:") ? "walker" : "loader");
     const campaign = input.provenance === "CAMPAIGN" && !isOfficialUrl(copy.finalUrl, []) && !isSourceApiUrl(copy.finalUrl);
-    const fast = official && acquisition === "loader" && !campaign;
+    const loaded = official && (acquisition === "loader" || acquisition === "checked") && !campaign;
+    // A filing or a money claim is always checked against the line it quotes, whatever its host.
+    const fast = loaded && acquisition === "loader" && input.provenance !== "FILING" && input.fieldKind !== "money";
     const provenance = input.provenance === "OWNER" ? "OWNER" : campaign ? "CAMPAIGN" : official ? input.provenance === "FILING" ? "FILING" : "OFFICIAL" : input.provenance;
     const value = fast && input.sourceField ? input.sourceField.record[input.sourceField.key] : input.value;
     const valueText = fast && input.sourceField ? typeof value === "string" ? value : canonicalJson(value) : input.valueText;
@@ -190,7 +192,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       f.second_copy_id, f.provenance_kind, f.status, f.held_reason, f.source_copy_id, f.checked_at,
       coalesce(s.fetched_at,f.checked_at) AS fetched_at,s.final_url AS source_url
       FROM own f LEFT JOIN source_copy s ON s.id=f.source_copy_id`,
-      [c.entity.id, c.field, JSON.stringify(c.value), c.valueText, c.quote, !fast && c.field === "agenda_url"]);
+      [c.entity.id, c.field, JSON.stringify(c.value), c.valueText, c.quote, !loaded && c.field === "agenda_url"]);
     const row = head?.status === "live" ? head : undefined;
     // Replaying an already checked source is a no-op, including after its freshness window.
     // It does not refresh the checked date, publish a value, or count another delivery.
@@ -216,7 +218,7 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       : row?.source_url && (isOfficialUrl(String(row.source_url),entity.hosts) || isSourceApiUrl(String(row.source_url))) ? "OFFICIAL" : row?.provenance_kind;
     const decision = !row ? "PUBLISH" : row.same_value ? "CONFIRM" : decideDifferent(
       { value: row.agenda_value, provenance: currentProvenance as Claim["provenance"], fetchedAt: new Date(row.fetched_at as string), sourceUrl: row.source_url as string },
-      { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt }, fast ? undefined : c.field);
+      { value: c.value, provenance: c.provenance, fetchedAt: c.copy.fetchedAt }, loaded ? undefined : c.field);
     if (decision === "CONFIRM") {
       if (row!.provenance_kind !== "OWNER" && rank[c.provenance] <= rank[row!.provenance_kind as Provenance]
         && (rank[c.provenance] < rank[row!.provenance_kind as Provenance] || c.copy.fetchedAt > new Date(row!.fetched_at as string))) {

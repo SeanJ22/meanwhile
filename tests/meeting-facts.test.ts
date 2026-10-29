@@ -42,7 +42,7 @@ test("each sitting a body's door reads becomes facts found on the saved feed; a 
   assert.equal(totals.blanks,unpinned.length,"published room and online labels stay live while every missing point remains standing work");
   const first = meetings[0]!;
   const facts = await db.query("SELECT field, quote FROM fact WHERE entity_id = $1 AND status = 'live' ORDER BY field", [meetingEntityId(first.id)]);
-  assert.deepEqual(facts.map(row => [row.field, row.quote]), [["agenda_url", first.agendaUrl], ["location",first.venueGap?.publishedText], ["starts_at", "2026-05-12T00:00:00 1:00 PM"], ["title", "Study Session"]]);
+  assert.deepEqual(facts.map(row => [row.field, row.quote]), [["agenda_url", `"EventAgendaFile": "${first.agendaUrl}",`], ["location", `"EventLocation": "${first.venueGap?.publishedText}",`], ["starts_at", "2026-05-12T00:00:00 1:00 PM"], ["title", `"EventComment": "Study Session",`]]);
   const blanks=await db.query("SELECT entity_id,field,stage,reason FROM blank ORDER BY entity_id,field");
   assert.deepEqual(blanks,[...unpinned.map(meeting=>({entity_id:meetingEntityId(meeting.id),field:"map_pin",stage:"ACQUIRE",
     reason:meeting.venueGap?.publishedText?"MEETING_ADDRESS_NOT_PLACED":meeting.online?"ONLINE_OFFICE_ADDRESS_MISSING":"BODY_OFFICE_ADDRESS_MISSING"})),
@@ -85,7 +85,7 @@ test("a promoted partition's fresh sittings become facts on the very bytes its d
   assert.equal(result?.outcome.candidate.state, "PROMOTED");
   const live = await db.query(`SELECT f.field, f.quote, s.url, s.blob_key FROM fact f JOIN source_copy s ON s.id = f.source_copy_id
     WHERE f.entity_id = $1 AND f.status = 'live' ORDER BY f.field`, [meetingEntityId(meeting.id)]);
-  assert.deepEqual(live.map(row => [row.field, row.quote]), [["starts_at", "20261020T190000"], ["title", "Regular Council Meeting"]]);
+  assert.deepEqual(live.map(row => [row.field, row.quote]), [["starts_at", "20261020T190000"], ["title", "SUMMARY:Regular Council Meeting"]]);
   assert.ok(live.every(row => row.url === feed && String(row.blob_key).startsWith("artifact:")));
   assert.equal((await vault.list("project/freshness/")).filter(key => key.startsWith("project/freshness/raw/sha256/")).length, 1, "one fingerprint-filed copy of the feed's bytes is in the vault");
 });

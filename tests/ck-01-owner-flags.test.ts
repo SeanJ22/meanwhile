@@ -145,7 +145,7 @@ test('the deployed target constraint permits scalar and named reader flags and r
 
 test("a flagged board member is gone from the next live roster, the reader cache is purged, and the same source words do not put the member back",async()=>{
  const {MemoryEvidenceStore}=await import("../lib/control-plane/evidence/store.ts");
- const {publishLegistarMembers}=await import("../lib/sources/legistar/members-publication.ts");
+ const {publishLegistarFixture:publishLegistarMembers}=await import("./helpers/legistar-core.ts");
  const {readFactRosters}=await import("../lib/facts/roster-read.ts");
  const {rawFor,wiring,storeMemberFixtures}=await import("./helpers/legistar-member-fixtures.ts");
  const db=await factDb();
@@ -164,11 +164,11 @@ test("a flagged board member is gone from the next live roster, the reader cache
  const [flag]=await readOwnerFlags(db.query);assert.equal(flag.factId,Number(target.id));
  assert.deepEqual(await members(),before,"a flag alone removes nothing");
  await resolveOwnerFlag(db,{id:Number(flag.id),choice:"REMOVE"},"2026-10-13T21:00:00.000Z",purge);
- const after=await members();assert.deepEqual(after,before.filter((name,index)=>!(name===person.name&&index===before.indexOf(name))));
+ const after=await members();assert.deepEqual([...after].sort(),before.filter((name,index)=>!(name===person.name&&index===before.indexOf(name))).sort());
  assert.ok(tags.some(list=>list.some(tag=>tag.startsWith("reader-state:"))),"readers are told the next version changed");
  await db.query("DELETE FROM fact_store_load");
  await publishLegistarMembers({...input,now:"2026-10-14T20:00:00.000Z"});
- assert.deepEqual(await members(),after,"the source repeating the removed value does not restore it");
+ assert.deepEqual((await members()).sort(),[...after].sort(),"the source repeating the removed value does not restore it");
  }finally{await db.pg.close();}
 });
 

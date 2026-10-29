@@ -32,7 +32,7 @@ interface CopyRow {
 }
 
 /** One row per vault artifact: the key is the artifact id the vault resolves to its exact bytes. */
-async function saveCopy(query: Query, row: CopyRow): Promise<number> {
+export async function saveSourceReference(query: Query, row: CopyRow): Promise<number> {
   const key = `artifact:${row.artifactId}`;
   const [existing] = await query("SELECT id FROM source_copy WHERE blob_key = $1", [key]);
   if (existing) return Number(existing.id);
@@ -48,7 +48,7 @@ async function saveCopy(query: Query, row: CopyRow): Promise<number> {
 
 export async function saveCaptureCopy(query: Query, capture: WorkerPublicationCapture): Promise<SavedCopy> {
   const { evidence } = capture;
-  const id = await saveCopy(query, { artifactId: evidence.artifactId, url: evidence.canonicalUrl, finalUrl: evidence.canonicalUrl,
+  const id = await saveSourceReference(query, { artifactId: evidence.artifactId, url: evidence.canonicalUrl, finalUrl: evidence.canonicalUrl,
     fetchedAt: capture.observedAt, httpStatus: capture.httpStatus, contentHash: evidence.contentHash });
   return { id, finalUrl: evidence.canonicalUrl, text: checkText(evidence.text, "", evidence.canonicalUrl), fetchedAt: new Date(capture.observedAt), isArchive: isArchive(evidence.canonicalUrl) };
 }

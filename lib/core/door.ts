@@ -1,3 +1,4 @@
+import {rosterHolderName} from "../facts/roster-name.ts";
 import { checkFact, isOfficialUrl, type CheckEntity, type Claim, type Provenance } from "../facts/check.ts";
 import { canonicalJson } from "../control-plane/repository/types.ts";
 import { enqueueReaderPlaces, invalidateReaderCache, readerCacheScopeForEntity, type ReaderCachePurger, type ReaderCacheScope } from "../reader/cache.ts";
@@ -24,17 +25,36 @@ export type DoorInput = Omit<PublishInput, "entity"> & (
   readonly capture?: WorkerPublicationCapture;
   /** A loader's parsed source record: use the publisher's field without a quote search. */
   readonly sourceField?: { readonly record: Readonly<Record<string, unknown>>; readonly key: string };
+  /** Select the publisher's record and field in the attached saved JSON response. */
+  readonly savedField?: { readonly idField: string; readonly id: number; readonly key: string;
+    readonly form?: "text" | "date" | "membership" };
   /** A board named by the government's own source, when it has no entity yet. */
   readonly board?: { readonly governmentId: string; readonly name: string };
   readonly places?: readonly EntityPlace[];
 };
 export type DoorOutcome = { readonly decision: Decision; readonly factId: number | null } | { readonly refused: string };
+export function savedCopyFreshnessRefusal(fetchedAt: Date, windowHours: number, now: Date): string | undefined {
+  const age=(now.getTime()-fetchedAt.getTime())/3_600_000;
+  return !Number.isFinite(age)||age<0||age>windowHours?"COPY_OUTSIDE_FRESHNESS_WINDOW":undefined;
+}
 interface DoorOptions {
   readonly purge?: ReaderCachePurger;
   readonly refusal?: (claim: PublishInput, reason: string) => Promise<void>;
 }
 
 const rank: Readonly<Record<Provenance, number>> = { OWNER: 0, OFFICIAL: 1, FILING: 1, REFERENCE: 2, NEWS: 3, CAMPAIGN: 4, OTHER: 5 };
+const savedFields=new WeakMap<object,Map<string,Map<unknown,Readonly<Record<string,unknown>>>>>();
+function savedRecord(input:DoorInput):Readonly<Record<string,unknown>>|undefined {
+  const selector=input.savedField!,holder=input.capture??input.copy;
+  let fields=savedFields.get(holder);if(!fields){fields=new Map();savedFields.set(holder,fields);}
+  let rows=fields.get(selector.idField);
+  if(!rows){
+    const response:unknown=JSON.parse(input.capture?.evidence.text??input.copy.text);
+    rows=new Map(Array.isArray(response)?response.map(row=>[row[selector.idField],row]):[]);
+    fields.set(selector.idField,rows);
+  }
+  return rows.get(selector.id);
+}
 
 function officialSource(url: string, hosts: readonly string[], linkingPage?: OfficialLinkingPage | null): boolean {
   return isOfficialUrl(url, hosts) || isSourceApiUrl(url) || isOfficialSource(url, linkingPage)
@@ -140,6 +160,20 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
     const value = fast && input.sourceField ? input.sourceField.record[input.sourceField.key] : input.value;
     const valueText = fast && input.sourceField ? typeof value === "string" ? value : canonicalJson(value) : input.valueText;
     const c: PublishInput = { ...input, entity, provenance, copy, value, valueText };
+    if (input.savedField) {
+      const selector = input.savedField;
+      const record = savedRecord(input);
+      const raw = record?.[selector.key];
+      const expected = selector.form === "membership" ? { name: String(raw ?? "").trim(),
+        office: typeof record?.OfficeRecordTitle === "string" && record.OfficeRecordTitle.trim()
+          || typeof record?.OfficeRecordMemberType === "string" && record.OfficeRecordMemberType.trim() || null }
+        : selector.form === "date" ? typeof raw === "string" ? raw.slice(0,10) : null
+        : typeof raw === "string" ? raw.trim() : raw;
+      if (!record || canonicalJson(expected) !== canonicalJson(c.value)) {
+        refusedClaim = c;
+        return { refused: "SOURCE_FIELD_MISMATCH" };
+      }
+    }
     const campaignSelf = c.provenance !== "CAMPAIGN" || c.sourceSubjectId !== undefined
       && await resolveId(c.sourceSubjectId, query) === entity.id;
     // Also serialize the first value for a field, before there is a head row to lock.
@@ -164,7 +198,8 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
       && c.copy.fetchedAt.getTime() <= Math.max(new Date(row.fetched_at as string).getTime(), new Date(row.checked_at as string).getTime())
       && row.same_quote && row.same_text && (row.second_copy_id === null ? null : Number(row.second_copy_id)) === (c.second?.copy.id ?? null)
       && row.same_value;
-    const verdict = repeated ? {ok:true as const,quoteStart:null} : !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
+    const verdict = repeated ? {ok:true as const,quoteStart:null} : input.savedField && savedCopyFreshnessRefusal(c.copy.fetchedAt,clocks.windowHours(c.fieldKind),now)
+      ? {ok:false as const,reason:"COPY_OUTSIDE_FRESHNESS_WINDOW"} : !campaignSelf ? { ok: false as const, reason: "CAMPAIGN_OTHER_SUBJECT" }
       : fast || provenance === "OWNER" ? { ok: true as const, quoteStart: null } : checkFact(c, now, clocks.windowHours);
     if (!verdict.ok) {
       refusedClaim = c;
@@ -223,4 +258,58 @@ export async function door(db: FactDb, input: DoorInput, clocks: Clocks, now: Da
   if (confirmation) await confirmFactSource(db,confirmation,options.purge);
   if (changed) await invalidateReaderCache(changed, options.purge, null);
   return outcome;
+}
+
+/** Absence from a complete official roster is a door decision, with the same place rebuild as an addition. */
+export async function retireRosterThroughDoor(db: FactDb & { readonly query: Query }, input: {
+  readonly bodyId: string; readonly copy: import("../facts/check.ts").SavedCopy;
+  readonly seated: readonly string[]; readonly producedBy: string; readonly sourcePrefix?: string;
+  readonly nativeScheme?: string; readonly purge?: ReaderCachePurger;
+  readonly roster?: { readonly pages: readonly WorkerPublicationCapture[]; readonly bodyId: number; readonly day: string };
+  readonly freshness?: { readonly windowHours: number; readonly now: Date };
+}): Promise<number> {
+  if(input.freshness&&savedCopyFreshnessRefusal(input.copy.fetchedAt,input.freshness.windowHours,input.freshness.now))return 0;
+  let changed: ReaderCacheScope | undefined;
+  const count = await db.transaction(async query => {
+    const bodyId = await resolveId(input.bodyId,query) ?? input.bodyId;
+    const entity = await readCheckEntity(query,bodyId);
+    if (!entity || !officialSource(input.copy.finalUrl,entity.hosts)) return 0;
+    let seated=input.seated;
+    if(input.roster) {
+      const active=new Set<string>();
+      for(const page of input.roster.pages) {
+        if(!officialSource(page.evidence.canonicalUrl,entity.hosts) || !page.evidence.canonicalUrl.startsWith(input.sourcePrefix!)) throw Error("ROSTER_SOURCE_MISMATCH");
+        const records:unknown=JSON.parse(page.evidence.text);
+        if(!Array.isArray(records))throw Error("ROSTER_SOURCE_MISMATCH");
+        for(const record of records) {
+          if(record.OfficeRecordBodyId!==input.roster.bodyId)continue;
+          const name=rosterHolderName(record.OfficeRecordFullName);
+          if(!name)continue;
+          if(record.OfficeRecordStartDate?.slice(0,10)>input.roster.day || record.OfficeRecordEndDate && record.OfficeRecordEndDate.slice(0,10)<input.roster.day)continue;
+          active.add(String(record.OfficeRecordPersonId));
+        }
+      }
+      seated=[...active];
+    }
+    await query("SELECT pg_advisory_xact_lock(hashtextextended($1,0))",[canonicalJson([bodyId,"roster"])]);
+    const gone = await query(`WITH current AS MATERIALIZED (
+      SELECT id,checked_at,source_copy_id FROM checked_fact WHERE entity_id=$1 AND field LIKE 'member:%' AND status='live'
+    ) UPDATE fact f SET status='superseded',held_reason='NOT_ON_CURRENT_OFFICIAL_ROSTER'
+      FROM source_copy s,current WHERE f.id=current.id
+      AND CASE WHEN $7::boolean THEN current.checked_at ELSE s.fetched_at END <=$6::timestamptz
+      AND f.entity_id=$1 AND f.field LIKE 'member:%' AND f.status='live'
+      AND f.provenance_kind='OFFICIAL' AND s.id=current.source_copy_id
+      AND CASE WHEN $4::text IS NULL THEN s.url=$2 ELSE starts_with(s.url,$4) END
+      AND NOT (substr(f.field,8)=ANY($3::text[]))
+      AND NOT EXISTS (SELECT 1 FROM entity_external_id x WHERE x.entity_id=substr(f.field,8)
+        AND x.scheme=$5 AND x.value=ANY($3::text[])) RETURNING f.id`,
+    [bodyId,input.copy.finalUrl,seated,input.sourcePrefix ?? null,input.nativeScheme ?? null,input.copy.fetchedAt.toISOString(),!!input.roster]);
+    if (gone.length) {
+      await enqueueReaderPlaces({entities:[bodyId]},query);
+      changed=await readerCacheScopeForEntity(query,bodyId);
+    }
+    return gone.length;
+  });
+  if (changed) await invalidateReaderCache(changed,input.purge,null);
+  return count;
 }

@@ -1,4 +1,5 @@
 import { CP01_COUNTS_DECLARATIONS, controlCountsMigrationDefinition, expandControlCounts, contractControlCounts, contractControlCountsMigrationDefinition } from "../lib/control-plane/repository/migrations/CP-01-counts.ts";
+import { LEGISTAR_WORK_MIGRATION_SOURCE,legistarWorkMigrationDefinition,expandLegistarWork } from "../lib/control-plane/repository/migrations/RB-A9.ts";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -53,6 +54,7 @@ const MIGRATIONS = [
     definition: controlCountsMigrationDefinition, apply: expandControlCounts },
   { id: "CP-01_counts_contract", source: "lib/control-plane/repository/migrations/CP-01-counts.ts", declarations: CP01_COUNTS_DECLARATIONS,
     definition: contractControlCountsMigrationDefinition, apply: contractControlCounts },
+  { id:"RB-A9_expand",source:"lib/control-plane/repository/migrations/RB-A9.ts",declarations:[LEGISTAR_WORK_MIGRATION_SOURCE],definition:legistarWorkMigrationDefinition,apply:expandLegistarWork },
 ] as const;
 interface Entry { readonly id: string; readonly phase: "expand" | "contract"; readonly hash: string }
 interface Dependencies {

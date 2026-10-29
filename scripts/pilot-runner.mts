@@ -1,3 +1,4 @@
+import { LEGISTAR_MEMBER_DATABASE_BYTES } from "../lib/sources/legistar/members-queue.ts";
 import { readPlanningContinuation } from "../lib/control-plane/scheduler/state-planning.ts";
 import { CENSUS_LANE_BUDGET_MS, CENSUS_LANE_INTERVAL_MS } from "../lib/control-plane/discovery/census-lane.ts";
 
@@ -235,6 +236,7 @@ async function checkJobTransfers(): Promise<void> {
   });
   // The hunter lane's one child lives up to 55 minutes; a pause asks it to finish its tasks in hand and take no more.
   if (!admitJobLaunch("hunter-lane")) drainHunterLane();
+  if (!admitJobLaunch("legistar-members")) drainMemberLane();
 }
 function jobTransferTick(): Promise<void> {
   if (jobBreakerWork) return jobBreakerWork;
@@ -1111,6 +1113,7 @@ function holdForRestart(targetSha: string): void {
   console.log(`  release ${targetSha.slice(0, 8)} loads by restart: no new standing run starts; ` +
     `${running.length ? `${running.join(", ")} end by their deadlines` : "nothing is running"}, then the runner restarts`);
   drainHunterLane();
+  drainMemberLane();
   if (researchCycleActive && researchCycleChild?.connected) researchCycleChild.send({ kind: "RUNTIME_RELEASE_DRAIN" }, error => {
     if (error) console.error("  runtime release drain message could not be delivered; the research cycle ends on its own");
   });
@@ -1284,6 +1287,22 @@ function drainHunterLane(): void {
   });
 }
 
+let memberLaneChild: ChildProcess | null = null;
+async function runMemberLane(deadlineMs: number): Promise<void> {
+  if (canary || runtimeAdmissionsHeld || provider !== "postgres" || !jobLaunchAllowed("legistar-members")) return;
+  const [run] = await runRuntimeChildren([{id:"legistar-members",databaseBytesPerRun:LEGISTAR_MEMBER_DATABASE_BYTES,
+    executable:process.execPath,args:[...TS_CHILD,"scripts/legistar-members-worker.mts"],
+    env:withPassDeadline(standingChildEnvironment("ROUTINE_SUPERVISOR"),deadlineMs)}],{
+    cwd:CODE_ROOT,env:process.env,deadlineMs,maxBufferBytes:16*1024*1024,noProgressMs:RUNTIME_NO_PROGRESS_MS,
+    onStdout:(_id,output)=>process.stdout.write(output),onStderr:(_id,output)=>process.stderr.write(output),
+    onStarted:(_id,child)=>{memberLaneChild=child;}});
+  memberLaneChild=null;
+  if(!run || run.status!==0) throw Error("Legistar members stopped; queued records remain due");
+}
+function drainMemberLane():void {
+  if(memberLaneChild?.connected)memberLaneChild.send({kind:"RUNTIME_RELEASE_DRAIN"},error=>{if(error)console.error("Legistar member drain failed",error);});
+}
+
 const auditPasses = auditPassClock({
   statePath: join(ROOT, ".mirror", "audit-pass-clock.json"),
   codeRoot: () => CODE_ROOT,
@@ -1367,6 +1386,7 @@ const standingRuntimeScheduler = new IndependentRuntimeLaneScheduler([
   { id: "routine-civic-data", everyMs: ROUTINE_DATA_ADMISSION_MS, budgetMs: ROUTINE_PASS_BUDGET_MS, run: runRoutineCivicData },
   { id: "intake-runtime", everyMs: INTAKE_RUNTIME_TICK_MS, budgetMs: INTAKE_RUNTIME_BUDGET_MS, run: runIntakeRuntime },
   // The lane retires at its life; the wall covers the last task a worker still holds.
+  { id: "legistar-members", everyMs: 60_000, budgetMs: 55*60_000, run: runMemberLane },
   { id: "hunter-lane", everyMs: 60_000, budgetMs: HUNTER_LANE_LIFE_MS + HUNTER_WORKER_WALL_MS, run: runHunterLane },
   placePagesLane(runPlacePages),
   publishNowLane(runPublishNow),

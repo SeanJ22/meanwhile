@@ -193,16 +193,19 @@ export async function enqueueReaderPlaces(scope: ReaderCacheScope, query: Query)
       OR d.entity_id IN (SELECT id FROM service_places)
       OR d.entity_id IN (SELECT id FROM subjects WHERE kind<>'place')
     UNION SELECT e.id FROM entity e WHERE e.kind='place' AND e.id=ANY($2::text[])
-  ) INSERT INTO rebuild_queue(place_id,queued_at,priority)
+  ) INSERT INTO rebuild_queue(place_id,queued_at,priority,next_queued_at)
     SELECT a.id,clock_timestamp(),e.page_priority+CASE WHEN e.page_priority>0
-      AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=e.id) THEN ${UNBUILT_ZIP_PRIORITY} ELSE 0 END
+      AND NOT EXISTS(SELECT 1 FROM place_page p WHERE p.place_id=e.id) THEN ${UNBUILT_ZIP_PRIORITY} ELSE 0 END,
+      CASE WHEN $5::boolean THEN clock_timestamp() END
     FROM affected a JOIN entity e ON e.id=a.id ORDER BY a.id
-    ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+1,
+    ON CONFLICT(place_id) DO UPDATE SET generation=rebuild_queue.generation+CASE
+      WHEN rebuild_queue.lease_token IS NOT NULL OR rebuild_queue.built_generation=rebuild_queue.generation THEN 1 ELSE 0 END,
       next_queued_at=CASE WHEN rebuild_queue.lease_token IS NOT NULL
-        THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp()) ELSE rebuild_queue.next_queued_at END
-    WHERE (rebuild_queue.lease_token IS NOT NULL AND rebuild_queue.next_queued_at IS NULL)
+        THEN coalesce(rebuild_queue.next_queued_at,clock_timestamp())
+        WHEN $5::boolean THEN clock_timestamp() ELSE rebuild_queue.next_queued_at END
+    WHERE (rebuild_queue.next_queued_at IS NULL AND (rebuild_queue.lease_token IS NOT NULL OR $5::boolean))
       OR rebuild_queue.built_generation=rebuild_queue.generation`,
-  [broad ? states : [],places,entities,broad && scope.national === true]);
+  [broad ? states : [],places,entities,broad && scope.national === true,!broad]);
 }
 
 async function invalidateReaderCacheTags(tags: readonly string[], purge: ReaderCachePurger = purgeReaderCacheTags): Promise<ReaderCachePurgeResult> {

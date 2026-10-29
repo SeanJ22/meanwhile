@@ -12,6 +12,8 @@ import type { DoorRecord } from "./registry.ts";
 export interface DoorRowOptions {
   /** Include derived family members as well as hand-wired doors. */
   readonly includeDerived?: boolean;
+  /** Tenant identity remains usable by another API family when its meeting route is suspended. */
+  readonly includeSuspended?: boolean;
 }
 
 function rowOf(door: DoorRecord): BodySourceWiring | null {
@@ -47,7 +49,7 @@ export function meetingDoorHosts(doors: readonly DoorRecord[]): string[] {
 export function wiringRowsFromDoors(doors: readonly DoorRecord[], options: DoorRowOptions = {}): BodySourceWiring[] {
   const rows = new Map<string, BodySourceWiring>();
   for (const door of doors) {
-    if (door.status === "SUSPENDED") continue;
+    if (door.status === "SUSPENDED" && options.includeSuspended !== true) continue;
     if (door.meeting == null) continue;
     if (door.meeting.family !== null && options.includeDerived !== true) continue;
     const row = rowOf(door);

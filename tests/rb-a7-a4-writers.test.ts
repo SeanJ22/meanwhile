@@ -50,7 +50,7 @@ test("an exact saved fact files a second served city while retaining page genera
     assert.ok(counts.length,"the real hourly hooks observed the first fact");
     await db.query(`INSERT INTO rebuild_queue(place_id,generation) SELECT id,7 FROM unnest($1::text[]) id
       ON CONFLICT(place_id) DO UPDATE SET generation=excluded.generation`,[[FIRST_PAGE,SECOND_PAGE]]);
-    await db.query(`UPDATE rebuild_queue SET lease_token='building-first-city',lease_until=clock_timestamp()+interval '5 minutes',lease_slot=1
+    await db.query(`UPDATE rebuild_queue SET lease_token='building-first-city',lease_until=clock_timestamp()+interval '5 minutes',lease_slot=1,next_queued_at=NULL
       WHERE place_id=$1`,[FIRST_PAGE]);
     const expanded=claim([served(FIRST),served(SECOND)]);
     assert.equal((await door(db,expanded,CLOCKS,AT,{purge}) as {decision:string}).decision,"CONFIRM");

@@ -5,7 +5,7 @@ worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T19:45:00Z
+heartbeat: 2026-10-29T19:55:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -207,6 +207,7 @@ heartbeat: 2026-10-29T19:45:00Z
 - 150 (PR #868): RIVER-DOORCFG-149 3a25c09c2 — writer drops the retired officialLinkingPage HTML; migration RIVER-DOORCFG-149_expand clears 283 doors; voting door reads 2.20 GB/day → ~78 MB; 22 non-.gov voting sources pass the official-link check again (Sean: ship it, current voting information is what readers should see). Code 694,824 → 694,695.
 - 3:05 PM EDT Oct 29: DC-01 READY 7aca5cc59 folded into 150 (one conflict: docs/rs-02.md, kept DC-01's delete). Quick check clean. Code 694,824 → 690,349 (−4,475). 149 first partial hour: zip_place 754 MB/h → 1.8 MB, voting 693 → 82 MB, total ~2.7 GB/h vs 5.8.
 - 3:45 PM EDT Oct 29: 150 merged 3:27 PM on 38dce3be4 (CI all green incl. shard 3 in 18 min) before KB-01 push; river → 38dce3be4. KB-01 → 151 using latest lane READY b597ff8a7 (Sean named 087d6cd8b). Fold fix: KB-01 host literals → lib/ops/origins.ts; deploy test expects keys import build step.
+- 3:55 PM EDT Oct 29, Sean decided: (1) refused site walls recheck on their own, at most every 5 days (rulings §2), no hand step → builder stream/river-walls-152; (2) one ZIP run per release, before and after (§5) — no noise reruns; (3) Stop every hunt stops hunts only; free sources and standing work keep running (§1, §8) → builder stream/river-huntstop-152. Both fold into the next release when READY.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

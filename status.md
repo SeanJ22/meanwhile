@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 146 (site 2:34 AM; runner switched ~2:51 AM EDT to main 912710f0d = 146 + rulings #862). 147 building: breaker slows, never pauses (urgent) + research-cycle stall fix and line-keeper flag.
+build_state: LIVE: release 146 (runner since ~2:51 AM). PAUSED: place-pages at 3:21 AM EDT by the old breaker (needs Sean's Admin release until 147). 147 building: breaker slows/never pauses, research-cycle fix + line-keeper flag, release numbers.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T07:05:00Z
+heartbeat: 2026-10-29T07:22:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -186,6 +186,9 @@ heartbeat: 2026-10-29T07:05:00Z
   - Neon 2 AM EDT hour: reader 2.104 + control plane 1.323 = 3.43 GB/h (146 deploy + place-pages backlog).
   - RISK until 147: place-pages is rebuilding the 7 PM–2:33 AM backlog: 0.149 GB in the 2 AM hour, 0.081 GB in the first minutes of 3 AM. The old breaker will likely pause it again this hour; if it does, it is posted here at once.
 - Sean 2:55 AM: (1) breaker must slow a spiking job against its own normal reads and never pause it; ship as an urgent fix with whatever is ready. (2) research cycle hasn't finished since Oct 25 9:53 PM while the heartbeat beat; find and fix the cause; line keeper flags any job without a finished run in two of its own intervals. Builders on stream/river-breaker-147 and stream/river-cycle-147 from river f41f87502.
+- PAUSE 3:21 AM EDT: place-pages paused by the job breaker (0.727 GB in the 3 AM hour, top table civic_data_promotions) while rebuilding the 7 PM–2:33 AM backlog after Sean's release. Reader pages stop rebuilding until Sean releases it in Admin; 147's breaker (slow, never pause) removes this. legistar-members read 0.095 GB in the same hour.
+- CP-01_counts_contract still not applied 30 min after the runner switched to 912710f0d; checking why.
+- Sean 3:10 AM: rulings §5 release numbers from 147 on (facts reaching readers per day, 50 random ZIPs one per state usable <3 s on phone/tablet/desktop, database reads per hour, lines of code). Builder on stream/river-measure-147 (river.mjs measure, notes block, Admin Changes view). 146 baseline: facts 12,045 in 24 h; reads 3.14 GB/h (6 h avg); code 696,315 lines; ZIPs pending the tool.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

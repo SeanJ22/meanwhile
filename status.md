@@ -1,6 +1,6 @@
 # River status
 
-build_state: LIVE: release 143 (site 8:34 PM, runner 8:51 PM EDT; main 699655cae, river fa41b1e51). The new door-probes lane has not looked at a door yet; River is checking. BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
+build_state: LIVE: release 143 (site 8:34 PM, runner 8:51 PM EDT; main 699655cae, river fa41b1e51). BROKEN: the door-probes lane has made no looks since 143; fix in progress (144). BREAKER BLIND since 10 AM (meter rows not written; see below). Next: 141 = ZIP districts + payload-part hot rule + meter fix.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
@@ -134,6 +134,7 @@ heartbeat: 2026-10-28T08:35:00Z
   - Neon after 142 (8 PM hour): reader 2.095 + control plane 1.310 = 3.41 GB/h. Hour before 143 (7 PM): 4.49 GB/h.
   - NOT WORKING YET: the new door-probes lane has made no looks since the switch. No meeting door has a look after 8:38 PM, and there are no door-probes meter rows in the 9 PM hour. From 8:51 to about 9:06 the runner's memory admission had no room (bulk workers held it: about 17 promote-manual-civic-projection reservations at 1.26 GB each, plus ingest). At 9:07 memory freed (80 lease workers fit), but no door-probes.mts reservation had appeared by 9:09. River rechecks at 9:22 PM. If it is still silent then, the cause is only in the runner's log, and River will ask for the lines starting "door-probes:", "DOOR_PROBES_TURN_FAILED" or "RCD_PROBE".
   - Before 143, the old probe path made ~60 meeting-door looks an hour (5 PM hour); in the builder's last measured hour, 11 of 191 looks were at hot doors.
+- 9:23 PM, FOR SEAN (one ask): the new door-probes lane is broken on 143, not just short of memory. Memory has had room since ~9:07 (80+ workers fit), but there is no door-probes.mts process or reservation, no door-probes meter rows this hour, and no meeting-door look since 8:38 PM. So no door is being checked hourly right now (the old in-pass probe path was removed in 143). The cause is only in the runner's own log. If you can, paste the runner log lines since 8:51 PM that start with "door-probes:", "  door-probes: standing operation failed", "DOOR_PROBES_TURN_FAILED", "RCD_PROBE" or "door probes:". A River builder (stream/river-probemem-144) is reproducing the lane locally meanwhile. It is also making probe turns independent of memory held by bulk work: from 8:51 to 9:06, about 17 promote-manual-civic-projection workers at 1.26 GB each filled the memory admission. The fix ships as 144.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

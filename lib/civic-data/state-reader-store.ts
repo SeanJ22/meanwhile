@@ -6,9 +6,76 @@ import { canonicalCivicDataHash } from "./canonical-hash.ts";
 import type { PublishedCandidateMetadata } from "./store.ts";
 import type { PromotedProjection, RoutineRecordClass } from "./types.ts";
 import type { PromotedEdgeEntry } from "./read-model.ts";
+import { NH_COUNTY, nhMembersReadModel } from "../state-rollcalls/legislators.ts";
+import type { NhMemberReadModel } from "./candidate-builders.ts";
+import type { OfficeholderSet } from "../officials/types.ts";
 
 type Query = (text: string, params: readonly unknown[]) => Promise<readonly Record<string, unknown>[]>;
 type StateReaderPromotion<T> = { readonly projection: PromotedProjection<T>; readonly candidate: PublishedCandidateMetadata };
+
+/** NH publishes Members.txt rows and an identity crosswalk, rather than the
+ * other states' roster shape. Keep that source contract while projecting only
+ * the selected districts' checklist fields and its scalar publication proof. */
+export async function readNhPlaceRosterRows(query: Query, ids: readonly string[]): Promise<{ readonly versionId: string; readonly payload: { readonly roster: OfficeholderSet } } | null> {
+  const [row] = await query(`WITH pointer AS MATERIALIZED (
+    SELECT p.current_version_id,reader_payload_node(p.payload) AS root,c.retrieved_at,
+      reader_payload_value(reader_payload_node(c.candidate->'temporal')->'sourceThrough')#>>'{}' AS source_through,
+      (p.source_id='nh-general-court' AND p.record_class='STATE_LEGISLATOR' AND p.scope='US-NH'
+        AND c.id=p.current_version_id AND c.source_id=p.source_id AND c.record_class=p.record_class AND c.scope=p.scope
+        AND c.state='PROMOTED' AND c.acquisition_succeeded AND p.current_version_id=p.last_known_good_version_id
+        AND c.promoted_version_id=c.id AND c.last_known_good_version_id=c.id
+        AND p.payload_fingerprint IS NOT DISTINCT FROM c.read_model_fingerprint
+        AND (c.read_model_fingerprint IS NULL OR c.read_model_fingerprint=c.normalized_hash)
+        AND c.normalized_hash ~ '^[a-f0-9]{64}$' AND c.candidate#>>'{normalization,normalizedHash}'=c.normalized_hash
+        AND c.candidate#>'{normalization,succeeded}'='true'::jsonb
+        AND c.validation_receipt=p.validation_receipt AND p.validation_receipt->>'decision'='GOOD'
+        AND p.validation_receipt->>'candidateId'=c.id AND p.validation_receipt->>'sourceId'=p.source_id
+        AND p.validation_receipt->>'recordClass'=p.record_class AND p.validation_receipt->>'scope'=p.scope
+        AND c.retrieved_at<=(p.validation_receipt->>'validatedAt')::timestamptz
+        AND (p.validation_receipt->>'validatedAt')::timestamptz<=p.promoted_at) IS TRUE AS published,
+      (SELECT detail FROM civic_data_candidate_events e WHERE e.candidate_id=p.current_version_id
+        AND left(e.detail,26)='UNCHANGED_CONFIRMATION_V1 ' ORDER BY sequence DESC LIMIT 1) AS confirmation
+    FROM civic_data_promotions p LEFT JOIN civic_data_candidates c ON c.id=p.current_version_id
+    WHERE p.key='STATE_LEGISLATOR:US-NH'
+  ), members AS MATERIALIZED (
+    SELECT m.ordinal_index,reader_payload_node(m.item) AS value FROM pointer p,LATERAL reader_payload_members(p.root->'members') m
+  ), identities AS MATERIALIZED (
+    SELECT i.ordinal_index,reader_payload_node(i.item) AS value FROM pointer p,LATERAL reader_payload_members(p.root->'identities') i
+  ), linked AS MATERIALIZED (
+    SELECT m.ordinal_index,m.value,i.value AS identity,CASE WHEN m.value->>'district' ~ '^[0-9]+$' THEN
+      CASE WHEN m.value->>'chamber'='S' THEN 'ocd-division/country:us/state:nh/sldu:'||(m.value->>'district')::numeric::text
+        WHEN (m.value->>'district')::numeric>0 AND array_position($2::text[],btrim(m.value->>'county')) IS NOT NULL
+        THEN 'ocd-division/country:us/state:nh/sldl:'||((
+          (array_position($2::text[],btrim(m.value->>'county'))-1)::text||lpad((m.value->>'district')::numeric::text,3,'0'))::numeric)::text
+      END END AS division FROM members m LEFT JOIN LATERAL (
+        SELECT value FROM identities i WHERE i.value->>'chamber'=m.value->>'chamber' AND i.value->>'seatNo'=m.value->>'seatNo'
+          AND i.value->>'district'=m.value->>'district' ORDER BY ordinal_index DESC LIMIT 1) i ON true
+  ), selected AS MATERIALIZED (SELECT ordinal_index,value,identity FROM linked WHERE division=ANY($1::text[]) AND identity IS NOT NULL)
+  SELECT p.current_version_id,p.retrieved_at,p.source_through,p.confirmation,
+    (p.published AND p.root->>'formatVersion'='1' AND p.root->>'jurisdiction'='US-NH'
+      AND jsonb_typeof(reader_payload_node(p.root->'members'))='array'
+      AND jsonb_typeof(reader_payload_node(p.root->'identities'))='array'
+      AND (SELECT count(*) FROM members)=(SELECT count(*) FROM identities)
+      AND NOT EXISTS(SELECT 1 FROM identities WHERE NOT coalesce(starts_with(value->>'officeholderId','nh-general-court:'),false))
+      AND (SELECT count(*)=count(DISTINCT identity->>'officeholderId') FROM linked WHERE identity IS NOT NULL)) IS TRUE AS valid,
+    jsonb_build_object('formatVersion',1,'jurisdiction','US-NH','term',reader_payload_value(p.root->'term'),
+      'members',coalesce((SELECT jsonb_agg(reader_payload_value(jsonb_build_object(
+        'chamber',value->'chamber','seatNo',value->'seatNo','district',value->'district','county',value->'county',
+        'givenName',value->'givenName','middleName',value->'middleName','familyName',value->'familyName',
+        'party',value->'party','phone',value->'phone','email',value->'email')) ORDER BY ordinal_index) FROM selected),'[]'::jsonb),
+      'identities',coalesce((SELECT jsonb_agg(reader_payload_value(identity) ORDER BY ordinal_index) FROM selected),'[]'::jsonb),
+      'memberSourceDates',coalesce((SELECT jsonb_object_agg(identity->>'officeholderId',
+        reader_payload_value(reader_payload_node(p.root->'memberSourceDates')->(identity->>'officeholderId'))) FROM selected),'{}'::jsonb)) AS payload
+    FROM pointer p`,[[...new Set(ids)],Object.keys(NH_COUNTY)]);
+  if (!row) return null;
+  if (row.valid !== true) throw new Error("HELD_PLACE_READ_FAILED:STATE_LEGISLATOR:US-NH:STORE_UNREACHABLE");
+  const confirmation = typeof row.confirmation === "string" ? parseUnchangedConfirmation(row.confirmation) : null;
+  const retrievedAt = new Date(row.retrieved_at as string).toISOString();
+  const confirmedAt = confirmation?.versionId === row.current_version_id && Date.parse(confirmation.retrieval.retrievedAt)>Date.parse(retrievedAt)
+    ? confirmation.retrieval.retrievedAt : retrievedAt;
+  const model = nhMembersReadModel(row.payload as NhMemberReadModel,{ retrievedAt: confirmedAt, sourceThrough: row.source_through as string | null });
+  return { versionId: row.current_version_id as string, payload: { roster: model.roster } };
+}
 const classes = { "ballot-contests": "BALLOT_CANDIDACY", "candidate-profiles": "CANDIDATE_PROFILE", "candidate-corpus": "CANDIDATE_PUBLICATION",
   "voting-sites": "VOTING_SITE", "candidate-campaign-sites-derived": "CURATED_READER_RECORD" } as const;
 

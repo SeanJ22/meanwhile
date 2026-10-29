@@ -99,7 +99,7 @@ export async function readHeldPlaceFamilies(divisionIds: readonly string[], opti
   const readRostersAndFunding = async () => {
     const [federal, legislators] = await Promise.all([
       Promise.all([...states].filter(state => (REGISTRY_STATES as readonly string[]).includes(state)).map(state => read<FederalDirectoryReadModel>("FEDERAL_DIRECTORY", federalDirectoryScope(state)))),
-      Promise.all(stateTargets.map(target => sliced && target.jurisdiction !== "US-NH"
+      Promise.all(stateTargets.map(target => sliced
         ? readPlaceOfficialLegislatorRoster(target.jurisdiction, target.sourceId, divisionIds)
         : readOfficialStateLegislatorsProjection(target.jurisdiction, options))),
     ]);

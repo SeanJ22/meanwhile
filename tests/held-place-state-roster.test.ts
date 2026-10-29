@@ -6,6 +6,9 @@ import { projectHeldPlaceFamilies } from "../lib/civic-data/held-place-families.
 import type { ReadOnlyQuery } from "../lib/control-plane/admin-view/promoted-slices.ts";
 import type { OfficeholderSet } from "../lib/officials/types.ts";
 import type { VotingSitesFile } from "../lib/ballot/voting-sites.ts";
+import { nhMembersReadModel } from "../lib/state-rollcalls/legislators.ts";
+import type { NhMemberReadModel } from "../lib/civic-data/candidate-builders.ts";
+import { serializeUnchangedConfirmation } from "../lib/civic-data/unchanged-confirmation.ts";
 
 const db = new PGlite();
 after(() => db.close());
@@ -32,7 +35,8 @@ async function fixture() {
       acquisition_succeeded boolean,promoted_version_id text,last_known_good_version_id text,
       read_model_fingerprint text,normalized_hash text,candidate jsonb,validation_receipt jsonb,retrieved_at timestamptz);
     CREATE TABLE civic_data_promotions(key text PRIMARY KEY,source_id text,record_class text,scope text,current_version_id text,
-      last_known_good_version_id text,payload_fingerprint text,payload jsonb,validation_receipt jsonb,promoted_at timestamptz);`);
+      last_known_good_version_id text,payload_fingerprint text,payload jsonb,validation_receipt jsonb,promoted_at timestamptz);
+    CREATE TABLE civic_data_candidate_events(candidate_id text,sequence int,detail text);`);
   const fingerprint = "a".repeat(64), receipt = { decision: "GOOD", candidateId: "v1", sourceId: source,
     recordClass: "STATE_LEGISLATOR", scope, validatedAt: at };
   await db.query(`INSERT INTO civic_data_candidates VALUES('v1',$1,'STATE_LEGISLATOR',$2,'PROMOTED',true,'v1','v1',$3,$3,$4,$5,$6)`,
@@ -124,4 +128,42 @@ test("place campaign-site reads use only exact ballot reader and candidacy keys"
   await assert.rejects(readPlaceDerivedCampaignSites("US:other", [], query), /HELD_PLACE_CAMPAIGN_SCOPE_INVALID/);
   await db.exec("DELETE FROM civic_data_promotions");
   assert.equal((await readPlaceDerivedCampaignSites(campaignScope, [], query)).kind, "NOT_RECORDED");
+});
+
+test("NH's selected member/crosswalk fields preserve the existing roster conversion and source dates", async () => {
+  await fixture();
+  const nh = "ocd-division/country:us/state:nh", later = "2026-10-29T11:00:00.000Z";
+  const members = [["S", "1", "Merrimack", "1"], ["H", "2", "Belknap", "1"],
+    ["H", "3", "Carroll", "5"], ["H", "4", "Carroll", "5"], ["H", "5", "Unmapped", "1"]].map(([chamber, seatNo, county, district], n) => ({
+    chamber, seatNo, county, district, givenName: `First${n}`, middleName: n ? "Middle" : "", familyName: `Last${n}`,
+    party: n ? "Party" : "", phone: n ? null : "603-555-0100", email: n ? `member${n}@gc.nh.gov` : null,
+    unusedHomeAddress: "unused source address",
+  }));
+  const identities = members.map((member, n) => ({ chamber: member.chamber, seatNo: member.seatNo, district: member.district,
+    officeholderId: `nh-general-court:${n}`, officialPersonId: String(n) }));
+  const model = { formatVersion: 1, jurisdiction: "US-NH", term: "2025-2026", members, identities,
+    memberSourceDates: { "nh-general-court:0": "2026-10-28T09:00:00.000Z" } } as unknown as NhMemberReadModel;
+  const receipt = { decision: "GOOD", candidateId: "v1", sourceId: "nh-general-court", recordClass: "STATE_LEGISLATOR", scope: "US-NH", validatedAt: at };
+  await db.query("UPDATE civic_data_candidates SET source_id='nh-general-court',scope='US-NH',validation_receipt=$1", [receipt]);
+  await db.query("UPDATE civic_data_promotions SET key='STATE_LEGISLATOR:US-NH',source_id='nh-general-court',scope='US-NH',validation_receipt=$1,payload=$2", [receipt, model]);
+  await db.query("INSERT INTO civic_data_candidate_events VALUES('v1',1,$1)", [serializeUnchangedConfirmation({
+    kind: "UNCHANGED_CONFIRMATION_V1", sourceId: "nh-general-court", recordClass: "STATE_LEGISLATOR", scope: "US-NH",
+    pointerKey: "STATE_LEGISLATOR:US-NH", versionId: "v1", readModelHash: "a".repeat(64), basis: "RAW_HASH_UNCHANGED", parserVersion: "nh-general-court/3",
+    retrieval: { requestedUrl: "https://gc.nh.gov/downloads/Members.txt", finalUrl: "https://gc.nh.gov/downloads/Members.txt", httpStatus: 200,
+      rawHash: "b".repeat(64), retrievedAt: later }, stamps: null, observedAt: later,
+  })]);
+  const ids = [`${nh}/sldu:1`, `${nh}/sldl:1`, `${nh}/sldl:1005`];
+  const read = await readPlaceOfficialLegislatorRoster("US-NH", "nh-general-court", ids, query);
+  assert.equal(read.kind, "PROMOTED");
+  assert.equal(read.value!.roster.officeholders.length, 4);
+  assert.ok(!JSON.stringify(read.value).includes("unused source address"));
+  const expected = nhMembersReadModel(model, { retrievedAt: later, sourceThrough: null }).roster;
+  assert.deepEqual(projectHeldPlaceFamilies(ids, null, { rosters: [read.value!.roster] }),
+    projectHeldPlaceFamilies(ids, null, { rosters: [expected] }));
+  assert.equal(read.value!.roster.officeholders[0].provenance.collectedAt, model.memberSourceDates![identities[0].officeholderId]);
+  assert.equal(read.value!.roster.officeholders[1].provenance.collectedAt, later, "legacy rows retain their exact confirmation fallback date");
+  assert.deepEqual((await readPlaceOfficialLegislatorRoster("US-NH", "nh-general-court", [nh], query)).value!.roster.officeholders, []);
+  await assert.rejects(readPlaceOfficialLegislatorRoster("US-NH", "different-source", ids, query), /STORE_UNREACHABLE/);
+  await db.exec("UPDATE civic_data_promotions SET payload=jsonb_set(payload,'{identities,0,officeholderId}','\"foreign:0\"')");
+  await assert.rejects(readPlaceOfficialLegislatorRoster("US-NH", "nh-general-court", ids, query), /STORE_UNREACHABLE/);
 });

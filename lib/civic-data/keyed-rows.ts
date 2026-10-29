@@ -4,6 +4,7 @@ import type { VotingSitesFile } from "../ballot/voting-sites.ts";
 import type { DerivedCampaignSitesProjection } from "./derived-campaign-sites.ts";
 import type { Division, Registry } from "../registry/types.ts";
 import { requireRegistryState, stateRegistryRuntimeScope } from "./state-scopes.ts";
+import { readNhPlaceRosterRows } from "./state-reader-store.ts";
 
 /** A lookup is a selection of a published registry, never a successor's complete base. */
 export interface RegistryLookup {
@@ -108,6 +109,10 @@ const placePublishedPointer = (recordClass: "STATE_LEGISLATOR" | "VOTING_SITE" |
 export interface PlacePublicationRows<T> { readonly versionId: string; readonly payload: T }
 
 export async function readPlaceOfficialLegislatorRows(query: Query, scope: string, sourceId: string, ids: readonly string[]): Promise<PlacePublicationRows<{ readonly roster: OfficeholderSet }> | null> {
+  if (scope === "US-NH") {
+    if (sourceId !== "nh-general-court") throw new Error("HELD_PLACE_READ_FAILED:STATE_LEGISLATOR:US-NH:STORE_UNREACHABLE");
+    return readNhPlaceRosterRows((text, params) => query(text, params), ids);
+  }
   const [row] = await query(`WITH pointer AS MATERIALIZED (${placePublishedPointer("STATE_LEGISLATOR")}), roster AS MATERIALIZED (
     SELECT current_version_id,published,root,reader_payload_node(root->'roster') AS value FROM pointer
   ), members AS MATERIALIZED (

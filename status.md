@@ -1,11 +1,11 @@
 # River status
 
-build_state: LIVE: release 145 (site 12:20 AM, runner 12:31 AM EDT; main 9662c1d56, river 6e9a415f9). Full hour: 1,322/1,347 hot doors looked (98%); 25 held by saved site refusals on 9 sites (Sean's call). 146 = CP-01 + RB-A9 + OB-01 on river-next-146, checks running.
+build_state: LIVE: release 145 (site 12:20 AM, runner 12:31 AM EDT). 146 open as PR #861 (CP-01 + RB-A9 + OB-01, head f41f87502): verify/lint/types/build green, tests running. 25 hot doors held by saved site refusals: Sean's call.
 worker: River
 provider: Claude
 run_id: session_01FMJNDyYmVQTXPTgkCx4hX7
 lock: session_01FMJNDyYmVQTXPTgkCx4hX7
-heartbeat: 2026-10-29T05:45:00Z
+heartbeat: 2026-10-29T06:09:00Z
 
 ## River session_01FMJNDyYmVQTXPTgkCx4hX7 (from Oct 27, 1:35 PM EDT)
 
@@ -177,6 +177,8 @@ heartbeat: 2026-10-29T05:45:00Z
   - The 25 unlooked doors are on 9 sites: CivicPlus iCal feeds champlinmn.gov 4, cityofinkstermi.gov 5, brainerdmn.gov 4, eastgrmi.gov 2, il-rockislandcountymtd.civicplus.com 1, laurelmd.gov 3, www.bsbmt.gov 3; eScribe pub-bellbrook 2, pub-sunlinetransit 1. Most last looked Oct 24–26. One request each from here: all nine answer 200 with real calendars/portals.
   - Cause (from code; unverified on the runner disk): lib/sources/http.ts saves a whole-site refusal after one 403 or Cloudflare challenge on a page (state.refused[origin], until 9999, "a named site wall stays open for separate work") in /var/lib/meanwhile/source-hosts/<sha256(host)>.source-host-state. The probe then holds the site forever and stores nothing. Needs Sean: clear these nine, and/or allow a once-a-day recheck of a saved site wall.
 - 146: OB-01 recut from river 6e9a415f9 passed (lint 0 errors, tsc, knip, 601/602 focused + feedback 16/16 after build, live-site before/after on welcome/tour), then carried onto RB-A9's Legistar core (calendar-selector aliases and binding/day inputs in RB-A9's loader/worker; RB-A9's own fingerprint stop kept) as e82e13c82; folded into river-next-146 4b786e598. River checks on the full combination running.
+- 2:05 AM: Neon, 1 AM EDT hour (first full hour on 145): reader 2.114 + control plane 1.064 = 3.18 GB/h; door-probes 0.050 GB/h. Hour before 145 (11 PM) was 2.71 GB/h; the 12 AM switch hour 3.59 GB/h.
+- 1:53 AM: release 146 opened, PR #861 (head f41f87502 = river 6e9a415f9 + CP-01 2c965e00f + RB-A9 da09af624 + OB-01 e82e13c82 + main 1acdc29e1 rulings). Quick check on the combination: lint 0 errors, tsc clean, knip clean, 124 focused files 1,231/1,232 (0 failed, 1 skipped needs a build), migration tests 99/99.
 - 141 plan per Sean: RIVER-ZIPDISTRICTS-141 (mail-only ZIPs keep their districts; folded and checked locally) + RIVER-HOTPARTS-141 (hot rule reads sitting times from stored parts in the same query; builder working) + the meter fix.
 - Lane renames from Sean: DB-05 is now DB-06, PP-01 is now PP-02.
 - New READY not in 132: MD-02 1f915db3c (1:45 PM; replay-based READY approved by Sean) goes in the next fold.

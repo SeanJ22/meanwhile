@@ -297,16 +297,7 @@ async function confirmCore(repos: ControlPlaneRepositories, receipt: Confirmatio
     if(type==="expansion.scope.budget") {
       const policy=await repos.adminConfig.read("current",{expansionScopes:{ids:[receipt.subject]}});
       const scope=policy?.value.expansionScopes?.find(scope=>scope.key===receipt.subject);
-      if(!scope) {
-        const stops = await repos.huntOrders.listWhere(["scopeKey"], receipt.subject);
-        const place = parseV6PlaceKey(receipt.requestedSubject ?? "");
-        const allStopped = place && place.kind !== "country" ? await repos.huntOrders.latestStop(place.state) : null;
-        const stopped = [...stops, ...(allStopped ? [allStopped] : [])].map(row => row.value)
-          .filter(order => order.confirmedAt && later(order.requestedAt, receipt.completedAt ?? receipt.startedAt))
-          .sort((a, b) => a.confirmedAt!.localeCompare(b.confirmedAt!)).at(-1);
-        return stopped ? { state: "applied", at: stopped.confirmedAt, words: "The hunt was stopped; this budget order is closed." }
-          : { state: "unread", at: null, words: "The budget change is saved, but its hunt could not be found." };
-      }
+      if(!scope) return { state: "unread", at: null, words: "The budget change is saved, but its hunt could not be found." };
       if (scope.latestDecisionReceiptId && scope.latestDecisionReceiptId !== receipt.receiptId && later(scope.decidedAt, receipt.completedAt ?? receipt.startedAt)) {
         return { state: "applied", at: scope.decidedAt, words: "A later hunt change replaced this budget order." };
       }

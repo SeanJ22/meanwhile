@@ -2,7 +2,7 @@ import { createHash } from "node:crypto";
 import { unitBelongsToState } from "./unit-state.ts";
 import type { AggregateRepository, ControlPlaneRepositories, Persisted } from "./repository/types.ts";
 import { ADMIN_CONFIG_ID, withExpansionScopes } from "./gateway/admin-config.ts";
-import { expansionScopesOf } from "./expansion/scopes.ts";
+import { expansionScopesOf, isHunt, type ExpansionScopeDecision } from "./expansion/scopes.ts";
 import { huntPlaceKey } from "./admin-view/v6-hunts-read.ts";
 import { HUNT_PACKET_NAMESPACE } from "../hunt/packet.ts";
 import { FIPS_TO_STATE } from "../ocd/fips.ts";
@@ -50,12 +50,18 @@ export async function applyHuntOrders(repos: ControlPlaneRepositories,state: str
   const held=await repos.adminConfig.read(ADMIN_CONFIG_ID,{expansionScopes:{where:{path:["geography","stateAbbr"],value:state.toUpperCase()}}});
   const parsed=expansionScopesOf(held?.value??null);
   if(parsed.malformed)throw new Error("Stored hunt scopes could not be read");
-  const removed=parsed.scopes.filter(scope=>orders.some(order=>scope.decidedAt<=order.value.requestedAt &&
-    (order.value.scopeKey===null || scope.key===order.value.scopeKey || huntPlaceKey(scope)===order.value.scopeKey)));
-  const removedKeys=new Set(removed.map(scope=>scope.key));
-  const remaining=parsed.scopes.filter(scope=>!removedKeys.has(scope.key));
-  if(held && removedKeys.size)await repos.adminConfig.save(held,withExpansionScopes(held.value,{scopes:remaining,decidedAt:now}),now);
-  const funded=new Set(remaining.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId));
+  const reaches=(order:Persisted<HuntOrder>,scope:ExpansionScopeDecision)=>scope.decidedAt<=order.value.requestedAt &&
+    (order.value.scopeKey===null || scope.key===order.value.scopeKey || huntPlaceKey(scope)===order.value.scopeKey);
+  // A stop ends the paid hunt. The place stays as a $0 Send, so its free source work keeps running.
+  const ended=new Map(parsed.scopes.flatMap(scope=>{
+    const order=isHunt(scope) && orders.find(stop=>reaches(stop,scope));
+    if(!order)return [];
+    const {budgetStartedAt:_,...free}=scope;
+    return [[scope.key,{...free,budgetUsd:0,previous:null,decidedAt:now,decidedBy:order.value.requestedBy,latestDecisionReceiptId:order.value.receiptId}]] as const;
+  }));
+  const scopes=parsed.scopes.map(scope=>ended.get(scope.key)??scope);
+  if(held && ended.size)await repos.adminConfig.save(held,withExpansionScopes(held.value,{scopes,decidedAt:now}),now);
+  const funded=new Set(scopes.filter(scope=>scope.budgetUsd>0).map(scope=>scope.receiptId));
   for(const row of await repos.obligations.listWhere(["materializedBy"],"OWNER_DISPATCH")) {
     if(!row.id.startsWith(HUNT_PACKET_NAMESPACE) || !row.value.active || !unitBelongsToState(row.id,row.value.subjectId,state))continue;
     const marks=row.value.assignments??[];
@@ -67,7 +73,6 @@ export async function applyHuntOrders(repos: ControlPlaneRepositories,state: str
     if(reached && !keep)await repos.obligations.compareAndSet(row.id,row.revision,{...row.value,active:false,nextDueAt:null,updatedAt:now},now);
   }
   for(const order of orders)await repos.huntOrders.compareAndSet(order.id,order.revision,{...order.value,confirmedAt:now,
-    affected:removed.filter(scope=>scope.decidedAt<=order.value.requestedAt && (order.value.scopeKey===null ||
-      scope.key===order.value.scopeKey || huntPlaceKey(scope)===order.value.scopeKey)).length},now);
+    affected:parsed.scopes.filter(scope=>ended.has(scope.key) && reaches(order,scope)).length},now);
   return orders.length;
 }
